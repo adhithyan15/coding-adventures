@@ -267,6 +267,39 @@ class DeckFourierSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class DeckOutputSelection:
+    """A parsed ``.save`` or ``.probe`` output selection card."""
+
+    directive: str
+    analysis: str | None
+    probes: tuple[str, ...]
+    line_number: int
+
+
+@dataclass(frozen=True, slots=True)
+class DeckOutputDiagnostic:
+    """A stable diagnostic emitted while resolving deck output selections."""
+
+    code: str
+    directive: str
+    line_number: int
+    message: str
+    severity: str
+    token: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckOutputSummary:
+    """Resolved active deck lines plus parsed ``.save`` / ``.probe`` cards."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    selections: tuple[DeckOutputSelection, ...]
+    diagnostics: tuple[DeckOutputDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReleaseReadinessIssue:
     """A release-readiness gate violation for a corpus deck."""
 
@@ -644,6 +677,61 @@ def resolve_deck_fourier(netlist: str) -> DeckFourierSummary:
     )
 
 
+def resolve_deck_outputs(netlist: str) -> DeckOutputSummary:
+    """Extract supported ``.save`` and ``.probe`` cards before ``.end``."""
+
+    state = _DeckOutputState()
+    active_lines: list[str] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive in {".save", ".probe"}:
+            _resolve_output_line(stripped, line_number, directive, state)
+            continue
+        active_lines.append(stripped)
+
+    return DeckOutputSummary(
+        active_lines=tuple(active_lines),
+        terminated=end_line_number is not None,
+        end_line_number=end_line_number,
+        selections=tuple(state.selections),
+        diagnostics=tuple(state.diagnostics),
+    )
+
+
+def select_deck_output_probes(netlist: str, analysis: str) -> list[str]:
+    """Return deduplicated output probes selected for an analysis."""
+
+    summary = resolve_deck_outputs(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"select_deck_output_probes: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    selected: list[str] = []
+    seen: set[str] = set()
+    for selection in summary.selections:
+        if selection.analysis is not None and not _deck_output_analysis_matches(
+            selection.analysis,
+            analysis,
+        ):
+            continue
+        for probe in selection.probes:
+            key = _deck_output_probe_key(probe)
+            if key in seen:
+                continue
+            seen.add(key)
+            selected.append(probe)
+    return selected
+
+
 def compatibility_corpus() -> tuple[CompatibilityDeck, ...]:
     """Return the canonical first release-readiness compatibility corpus."""
 
@@ -893,6 +981,15 @@ class _DeckFourierState:
     def __init__(self) -> None:
         self.diagnostics = []
         self.fourier = []
+
+
+class _DeckOutputState:
+    diagnostics: list[DeckOutputDiagnostic]
+    selections: list[DeckOutputSelection]
+
+    def __init__(self) -> None:
+        self.diagnostics = []
+        self.selections = []
 
 
 def _resolve_node_condition_line(
@@ -1472,6 +1569,27 @@ def _add_fourier_diagnostic(
     )
 
 
+def _add_output_diagnostic(
+    state: _DeckOutputState,
+    *,
+    code: str,
+    directive: str,
+    line_number: int,
+    message: str,
+    token: str | None = None,
+) -> None:
+    state.diagnostics.append(
+        DeckOutputDiagnostic(
+            code=code,
+            directive=directive,
+            line_number=line_number,
+            message=message,
+            severity="error",
+            token=token,
+        )
+    )
+
+
 def _parse_node_condition_target(target: str) -> str | None:
     if len(target) < 4 or not target.lower().startswith("v(") or not target.endswith(")"):
         return None
@@ -1901,6 +2019,66 @@ def _resolve_fourier_line(
     )
 
 
+def _resolve_output_line(
+    line: str,
+    line_number: int,
+    directive: str,
+    state: _DeckOutputState,
+) -> None:
+    tokens = _directive_tokens(line)
+    if len(tokens) < 2:
+        _add_output_diagnostic(
+            state,
+            code="SPICE_DECK_OUTPUT_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message=f"{directive} requires at least one probe token",
+        )
+        return
+
+    analysis: str | None = None
+    probe_tokens = tokens[1:]
+    if directive == ".probe" and _normalize_deck_output_analysis(tokens[1]) is not None:
+        analysis = _normalize_deck_output_analysis(tokens[1])
+        probe_tokens = tokens[2:]
+    if not probe_tokens:
+        _add_output_diagnostic(
+            state,
+            code="SPICE_DECK_OUTPUT_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message=f"{directive} requires at least one probe token",
+        )
+        return
+
+    probes: list[str] = []
+    for token in probe_tokens:
+        text = _unquote_token(token)
+        probe = _normalize_deck_output_probe(text)
+        if probe is None:
+            _add_output_diagnostic(
+                state,
+                code="SPICE_DECK_OUTPUT_PROBE",
+                directive=directive,
+                line_number=line_number,
+                message=f"{directive} probe must be V(node) or I(source), got {text!r}",
+                token=text,
+            )
+            continue
+        probes.append(probe)
+    if not probes:
+        return
+
+    state.selections.append(
+        DeckOutputSelection(
+            directive=directive,
+            analysis=analysis,
+            probes=tuple(probes),
+            line_number=line_number,
+        )
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class _ParsedMeasurementEdge:
     probe: str
@@ -2218,6 +2396,50 @@ def _normalize_measurement_mode_token(mode: str) -> str | None:
         if normalized in {"max", "min", "avg", "rms", "pp", "last", "find", "when"}
         else None
     )
+
+
+def _normalize_deck_output_analysis(analysis: str) -> str | None:
+    normalized = analysis.strip().lower()
+    if normalized in {"op", "dcop"}:
+        return "op"
+    if normalized == "dc":
+        return "dc"
+    if normalized == "ac":
+        return "ac"
+    if normalized in {"tran", "transient"}:
+        return "tran"
+    return None
+
+
+def _deck_output_analysis_matches(requested: str, analysis: str) -> bool:
+    return _normalize_deck_output_analysis(requested) == _normalize_deck_output_analysis(analysis)
+
+
+def _normalize_deck_output_probe(token: str) -> str | None:
+    text = token.strip()
+    if not text.endswith(")"):
+        return None
+    lower = text.lower()
+    if lower.startswith("v("):
+        prefix = "V"
+    elif lower.startswith("i("):
+        prefix = "I"
+    else:
+        return None
+    target = text[2:-1].strip()
+    if (
+        not target
+        or "(" in target
+        or ")" in target
+        or "," in target
+        or any(character.isspace() for character in target)
+    ):
+        return None
+    return f"{prefix}({target})"
+
+
+def _deck_output_probe_key(probe: str) -> str:
+    return probe.lower()
 
 
 def _strip_expression_delimiters(expression: str) -> str:

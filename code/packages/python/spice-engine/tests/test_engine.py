@@ -112,6 +112,7 @@ from spice_engine import (
     CurrentSource,
     CustomModel,
     CustomModelEvaluation,
+    DcResult,
     DcSweepPoint,
     DcSweepResult,
     DigitalEvent,
@@ -204,6 +205,10 @@ from spice_engine import (
     format_corner_transient_table,
     format_dc_sweep_table,
     format_dc_table,
+    format_deck_ac_table,
+    format_deck_dc_sweep_table,
+    format_deck_op_table,
+    format_deck_transient_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
     format_digital_event_stream_vcd,
@@ -6686,6 +6691,66 @@ def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
         "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
         "1\t1.000000e-03\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
     )
+
+
+def test_deck_output_tables_route_save_probe_cards() -> None:
+    netlist = """
+.save V(out)
+.probe dc I(V1)
+.probe tran V(clk)
+.probe ac I(V1)
+.end
+"""
+    dc_result = DcResult(
+        node_voltages={"in": 10.0, "out": 5.0},
+        branch_currents={"I(V1)": -0.005},
+        iterations=1,
+        converged=True,
+    )
+    dc_sweep_result = DcSweepResult(
+        points=[
+            DcSweepPoint(0.0, {"out": 0.0}, {"I(V1)": 0.0}, True),
+            DcSweepPoint(1.0, {"out": 0.5}, {"I(V1)": -5.0e-4}, True),
+        ],
+        source_name="V1",
+    )
+    transient_points = [
+        TransientPoint(0.0, {"clk": 0.0, "out": 0.0}, {"I(V1)": 0.0}),
+        TransientPoint(1.0e-3, {"clk": 1.0, "out": 0.5}, {"I(V1)": -5.0e-4}),
+    ]
+    ac_result = AcResult(
+        points=[
+            AcPoint(
+                freq=1000.0,
+                node_voltages={"out": 0.5 - 0.5j},
+                branch_currents={"I(V1)": -0.001 + 0.001j},
+            )
+        ]
+    )
+
+    assert format_deck_op_table(dc_result, netlist) == (
+        "Index\tV(out)\n"
+        "0\t5.000000e+00\n"
+    )
+    assert format_deck_dc_sweep_table(dc_sweep_result, netlist) == (
+        "Index\tSource\tValue\tV(out)\tI(V1)\n"
+        "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+    assert format_deck_transient_table(transient_points, netlist) == (
+        "Index\tTime\tV(out)\tV(clk)\n"
+        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t5.000000e-01\t1.000000e+00\n"
+    )
+    assert format_deck_ac_table(ac_result, netlist) == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+03\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n"
+        "0\t1.000000e+03\tI(V1)\t-1.000000e-03\t1.000000e-03\t1.414214e-03\t1.350000e+02\n"
+    )
+    assert format_deck_transient_table(
+        transient_points,
+        ".probe ac V(freq)\n.end\n",
+    ) == format_transient_table(transient_points)
 
 
 def test_transient_probe_measurements_are_stable() -> None:

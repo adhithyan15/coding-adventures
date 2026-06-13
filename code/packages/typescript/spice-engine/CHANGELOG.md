@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `resolveDeckOutputs`, `selectDeckOutputProbes`, and the
+  `formatDeck*Table` helpers so parsed `.save` / `.probe` cards route into
+  stable operating-point, DC sweep, AC sweep, and transient tables, matching
+  Python and Rust.
 - Add `resolveDeckFourier`, `fourierTransientCards`, and
   `fourierTransientDeck` so parsed `.four` / `.FOUR` deck cards can route
   transient samples into SPICE-style Fourier harmonic results with optional

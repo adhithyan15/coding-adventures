@@ -20,7 +20,7 @@ to thresholded transient probe outputs with stable schedule tables and VCD
 correlation output,
 stable text tables for selected node voltages, branch currents, AC phasors,
 Fourier harmonics, transfer-function results, pole-zero entries, and
-distortion harmonics,
+distortion harmonics, parsed `.save` / `.probe` deck-selected output tables,
 and backward-Euler reactive-element companion models.
 
 ```ts
@@ -82,6 +82,11 @@ transient `WHEN probe=target` cards report first or counted `RISE`, `FALL`, and
 cards report trigger-to-target crossing delays. The deck helpers route parsed
 transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those stable
 measurement rows.
+`resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save` and scoped
+or global `.probe` cards before `.end`, normalize and deduplicate output
+probes in deck order, and feed `formatDeckOpTable`,
+`formatDeckDcSweepTable`, `formatDeckAcTable`, and
+`formatDeckTransientTable` for stable deck-selected text output.
 `resolveDeckFourier`, `fourierTransientCards`, and `fourierTransientDeck`
 extract parsed `.four` / `.FOUR` cards before `.end` and route transient
 samples into the existing SPICE-style Fourier result shape with optional
@@ -136,3 +141,6 @@ cards before `.end`, keeps non-measure active lines, evaluates optional
 `FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
 `RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
 unsupported analyses, modes, options, expressions, and invalid windows.
+`resolveDeckOutputs` extracts `.save` and `.probe` cards before `.end`,
+preserves non-output active lines, and reports stable diagnostics for missing
+probe lists or malformed `V(node)` / `I(source)` probes.

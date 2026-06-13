@@ -271,10 +271,12 @@ downstream tools to compare.
       options, expressions, and invalid windows explicit.
 
 23. Parsed save/probe output execution routing.
-    - Status: completed in this parsed save/probe execution slice.
-    - The live Rust package now exposes `resolve_deck_outputs`,
-      `select_deck_output_probes`, and deck-aware table formatters that extract
-      `.save` plus scoped or global `.probe` cards before `.end`.
+    - Status: completed across Python, Rust, and TypeScript in this parsed
+      save/probe output-routing parity slice.
+    - The packages now expose `resolve_deck_outputs` / `resolveDeckOutputs`,
+      `select_deck_output_probes` / `selectDeckOutputProbes`, and deck-aware
+      table formatters that extract `.save` plus scoped or global `.probe`
+      cards before `.end`.
     - Selected probes are normalized, deduplicated in deck order, scoped by
       analysis for `.probe`, and routed into stable operating-point, DC sweep,
       AC sweep, and transient text tables.
@@ -365,8 +367,8 @@ downstream tools to compare.
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand remaining deck-controlled outputs and analysis-plan integration
-     toward full SPICE compatibility.
+   - Expand deck-controlled output-plan integration beyond stable table
+     routing toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

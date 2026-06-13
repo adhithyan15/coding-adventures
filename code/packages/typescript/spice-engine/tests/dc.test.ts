@@ -27,6 +27,7 @@ import {
   formatCornerDcSweepTable,
   formatCornerDcTable,
   formatCornerTemperatureDcTable,
+  formatDeckDcSweepTable,
   formatDcSweepTable,
   formatMeasurementTable,
   formatTemperatureDcTable,
@@ -764,6 +765,12 @@ describe("dcOp", () => {
     expectClose(points[2].value, 2.0);
     expectClose(points[2].result.voltage("mid"), 1.0);
     expect(formatDcSweepTable("V1", points, ["V(mid)", "I(V1)"])).toBe(
+      "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
+      "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+      "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n" +
+      "2\tV1\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n",
+    );
+    expect(formatDeckDcSweepTable("V1", points, ".save V(mid)\n.probe dc I(V1)\n.end\n")).toBe(
       "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
       "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
       "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n" +

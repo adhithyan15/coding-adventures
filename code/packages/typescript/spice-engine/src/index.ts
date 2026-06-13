@@ -588,6 +588,30 @@ export interface DeckFourierSummary {
   readonly diagnostics: readonly DeckFourierDiagnostic[];
 }
 
+export interface DeckOutputSelection {
+  readonly directive: ".save" | ".probe";
+  readonly analysis?: "op" | "dc" | "ac" | "tran";
+  readonly probes: readonly string[];
+  readonly lineNumber: number;
+}
+
+export interface DeckOutputDiagnostic {
+  readonly code: string;
+  readonly directive: ".save" | ".probe";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly token?: string;
+}
+
+export interface DeckOutputSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly selections: readonly DeckOutputSelection[];
+  readonly diagnostics: readonly DeckOutputDiagnostic[];
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -2982,6 +3006,66 @@ export function resolveDeckFourier(netlist: string): DeckFourierSummary {
   };
 }
 
+export function resolveDeckOutputs(netlist: string): DeckOutputSummary {
+  const state = new DeckOutputState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".save" || directive === ".probe") {
+      resolveOutputLine(stripped, lineNumber, directive, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    selections: state.selections,
+    diagnostics: state.diagnostics,
+  };
+}
+
+export function selectDeckOutputProbes(netlist: string, analysis: string): string[] {
+  const summary = resolveDeckOutputs(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0];
+    throw invalidElement(
+      "selectDeckOutputProbes",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  const selected: string[] = [];
+  const seen = new Set<string>();
+  for (const selection of summary.selections) {
+    if (selection.analysis !== undefined && !deckOutputAnalysisMatches(selection.analysis, analysis)) {
+      continue;
+    }
+    for (const probe of selection.probes) {
+      const key = deckOutputProbeKey(probe);
+      if (seen.has(key)) {
+        continue;
+      }
+      seen.add(key);
+      selected.push(probe);
+    }
+  }
+  return selected;
+}
+
 export function releaseReadinessGates(
   corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
 ): ReleaseReadinessReport {
@@ -3421,6 +3505,11 @@ class DeckMeasurementState {
 class DeckFourierState {
   readonly diagnostics: DeckFourierDiagnostic[] = [];
   readonly fourier: DeckFourierCard[] = [];
+}
+
+class DeckOutputState {
+  readonly diagnostics: DeckOutputDiagnostic[] = [];
+  readonly selections: DeckOutputSelection[] = [];
 }
 
 function resolveNodeConditionLine(
@@ -3990,6 +4079,70 @@ function resolveFourierLine(
     lineNumber,
     harmonics,
     fromValue,
+  });
+}
+
+function resolveOutputLine(
+  line: string,
+  lineNumber: number,
+  directive: ".save" | ".probe",
+  state: DeckOutputState,
+): void {
+  const tokens = directiveTokens(line);
+  if (tokens.length < 2) {
+    addOutputDiagnostic(state, {
+      code: "SPICE_DECK_OUTPUT_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${directive} requires at least one probe token`,
+    });
+    return;
+  }
+
+  let analysis: DeckOutputSelection["analysis"];
+  let probeTokens = tokens.slice(1);
+  if (directive === ".probe") {
+    const normalizedAnalysis = normalizeDeckOutputAnalysis(tokens[1]);
+    if (normalizedAnalysis !== undefined) {
+      analysis = normalizedAnalysis;
+      probeTokens = tokens.slice(2);
+    }
+  }
+  if (probeTokens.length === 0) {
+    addOutputDiagnostic(state, {
+      code: "SPICE_DECK_OUTPUT_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${directive} requires at least one probe token`,
+    });
+    return;
+  }
+
+  const probes: string[] = [];
+  for (const token of probeTokens) {
+    const text = unquoteToken(token);
+    const probe = normalizeDeckOutputProbe(text);
+    if (probe === undefined) {
+      addOutputDiagnostic(state, {
+        code: "SPICE_DECK_OUTPUT_PROBE",
+        directive,
+        lineNumber,
+        message: `${directive} probe must be V(node) or I(source), got ${JSON.stringify(text)}`,
+        token: text,
+      });
+      continue;
+    }
+    probes.push(probe);
+  }
+  if (probes.length === 0) {
+    return;
+  }
+
+  state.selections.push({
+    directive,
+    analysis,
+    probes,
+    lineNumber,
   });
 }
 
@@ -4737,6 +4890,18 @@ function addFourierDiagnostic(
   });
 }
 
+function addOutputDiagnostic(
+  state: DeckOutputState,
+  diagnostic: Omit<DeckOutputDiagnostic, "severity"> & {
+    readonly severity?: "error" | "warning";
+  },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
 function parseNodeConditionTarget(target: string): string | undefined {
   if (target.length < 4 || !target.toLowerCase().startsWith("v(") || !target.endsWith(")")) {
     return undefined;
@@ -4800,6 +4965,58 @@ function normalizeMeasurementModeToken(mode: string): string | undefined {
     default:
       return undefined;
   }
+}
+
+function normalizeDeckOutputAnalysis(analysis: string): DeckOutputSelection["analysis"] | undefined {
+  switch (analysis.trim().toLowerCase()) {
+    case "op":
+    case "dcop":
+      return "op";
+    case "dc":
+      return "dc";
+    case "ac":
+      return "ac";
+    case "tran":
+    case "transient":
+      return "tran";
+    default:
+      return undefined;
+  }
+}
+
+function deckOutputAnalysisMatches(requested: string, analysis: string): boolean {
+  return normalizeDeckOutputAnalysis(requested) === normalizeDeckOutputAnalysis(analysis);
+}
+
+function normalizeDeckOutputProbe(token: string): string | undefined {
+  const text = token.trim();
+  if (!text.endsWith(")")) {
+    return undefined;
+  }
+  const lower = text.toLowerCase();
+  let prefix: "V" | "I";
+  if (lower.startsWith("v(")) {
+    prefix = "V";
+  } else if (lower.startsWith("i(")) {
+    prefix = "I";
+  } else {
+    return undefined;
+  }
+  const target = text.slice(2, -1).trim();
+  if (
+    target.length === 0 ||
+    target.includes("(") ||
+    target.includes(")") ||
+    target.includes(",") ||
+    /\s/.test(target)
+  ) {
+    return undefined;
+  }
+  return `${prefix}(${target})`;
+}
+
+function deckOutputProbeKey(probe: string): string {
+  return probe.toLowerCase();
 }
 
 function stripExpressionDelimiters(expression: string): string {
@@ -6523,6 +6740,35 @@ export function formatAcTable(
   });
   rows.push("");
   return rows.join("\n");
+}
+
+export function formatDeckOpTable(result: DcResult, netlist: string): string {
+  const probes = selectDeckOutputProbes(netlist, "op");
+  return probes.length === 0 ? formatDcTable(result) : formatDcTable(result, probes);
+}
+
+export function formatDeckDcSweepTable(
+  sourceName: string,
+  points: readonly DcSweepPoint[],
+  netlist: string,
+): string {
+  const probes = selectDeckOutputProbes(netlist, "dc");
+  return probes.length === 0
+    ? formatDcSweepTable(sourceName, points)
+    : formatDcSweepTable(sourceName, points, probes);
+}
+
+export function formatDeckAcTable(points: readonly AcPoint[], netlist: string): string {
+  const probes = selectDeckOutputProbes(netlist, "ac");
+  return probes.length === 0 ? formatAcTable(points) : formatAcTable(points, probes);
+}
+
+export function formatDeckTransientTable(
+  points: readonly TransientPoint[],
+  netlist: string,
+): string {
+  const probes = selectDeckOutputProbes(netlist, "tran");
+  return probes.length === 0 ? formatTransientTable(points) : formatTransientTable(points, probes);
 }
 
 export function formatCornerAcTable(
