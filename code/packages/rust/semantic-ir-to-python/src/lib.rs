@@ -57,6 +57,12 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::Maps,
     Feature::ShortCircuit,
     Feature::StringInterpolation,
+    // SIR16 mutation & loops — emitted natively (assignment → `=`,
+    // indexed set → `s[i] = v` / `m[k] = v`, `while` →
+    // `while _sir_truthy(c):`, `for`-range → `for v in range(a, b, step):`,
+    // `for`-each → `for v in it:`), per code/specs/sir-runtime.md.
+    Feature::MutableBindings,
+    Feature::Loops,
 ];
 
 impl Backend for PythonBackend {
@@ -114,7 +120,7 @@ impl Backend for PythonBackend {
 mod tests {
     use super::*;
     use semantic_ir::{
-        Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Span,
+        Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Span,
     };
 
     fn s() -> Span {
@@ -380,5 +386,305 @@ mod tests {
             "expected interpolation via _sir_to_display; got:\n{}",
             a.source
         );
+    }
+
+    // ── SIR16 mutation & loops: Ruby / direct SIR → native Python ───
+
+    #[test]
+    fn end_to_end_ruby_while_loop() {
+        // Reassignment is a bare `=`; the condition routes through SIR
+        // truthiness via `_sir_truthy`.
+        let module = ruby_to_semantic_ir::compile_source(
+            "i = 0\nwhile i < 3\n  i = i + 1\nend\nputs(i)\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(a.source.contains("    i = 0\n"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("while _sir_truthy(_sir_lt(i, 3)):"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(a.source.contains("        i = _sir_plus(i, 1)"), "got:\n{}", a.source);
+    }
+
+    fn module_with_main_body(
+        stmts: Vec<semantic_ir::Stmt>,
+        value: Expr,
+        feats: &[Feature],
+    ) -> Module {
+        Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(feats),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block { stmts, value, span: s() },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn emit_for_range_uses_native_range() {
+        use semantic_ir::{Scope, Stmt};
+        // for i in range(0, 3, 1): arr[i] = i  (SeqSet inside body)
+        let body = Block {
+            stmts: vec![Stmt::SeqSet {
+                seq: Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+                index: Expr::VarRef { name: "i".into(), scope: Scope::Local, span: s() },
+                value: Expr::VarRef { name: "i".into(), scope: Scope::Local, span: s() },
+                span: s(),
+            }],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![
+                Stmt::LetBinding {
+                    name: "arr".into(),
+                    sir_type: None,
+                    value: Expr::SeqLit {
+                        items: vec![Expr::IntLit { value: 0, span: s() }],
+                        span: s(),
+                    },
+                    span: s(),
+                },
+                Stmt::ForRange {
+                    var: "i".into(),
+                    start: Expr::IntLit { value: 0, span: s() },
+                    stop: Expr::IntLit { value: 3, span: s() },
+                    step: Expr::IntLit { value: 1, span: s() },
+                    body,
+                    span: s(),
+                },
+            ],
+            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            &[Feature::Loops, Feature::Sequences, Feature::MutableBindings],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains("for i in range(0, 3, 1):"), "got:\n{}", a.source);
+        assert!(a.source.contains("arr[i] = i"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn emit_for_each_and_map_set() {
+        use semantic_ir::{Scope, Stmt};
+        // m = {}; for x in keys: m[x] = x
+        let body = Block {
+            stmts: vec![Stmt::MapSet {
+                map: Expr::VarRef { name: "m".into(), scope: Scope::Local, span: s() },
+                key: Expr::VarRef { name: "x".into(), scope: Scope::Local, span: s() },
+                value: Expr::VarRef { name: "x".into(), scope: Scope::Local, span: s() },
+                span: s(),
+            }],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![
+                Stmt::LetBinding {
+                    name: "m".into(),
+                    sir_type: None,
+                    value: Expr::MapLit { entries: vec![], span: s() },
+                    span: s(),
+                },
+                Stmt::LetBinding {
+                    name: "keys".into(),
+                    sir_type: None,
+                    value: Expr::SeqLit {
+                        items: vec![Expr::IntLit { value: 1, span: s() }],
+                        span: s(),
+                    },
+                    span: s(),
+                },
+                Stmt::ForEach {
+                    var: "x".into(),
+                    iter: Expr::VarRef { name: "keys".into(), scope: Scope::Local, span: s() },
+                    body,
+                    span: s(),
+                },
+            ],
+            Expr::VarRef { name: "m".into(), scope: Scope::Local, span: s() },
+            &[Feature::Loops, Feature::Sequences, Feature::Maps, Feature::MutableBindings],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains("for x in keys:"), "got:\n{}", a.source);
+        assert!(a.source.contains("m[x] = x"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn empty_loop_body_emits_pass() {
+        use semantic_ir::{Scope, Stmt};
+        let m = module_with_main_body(
+            vec![
+                Stmt::LetBinding {
+                    name: "i".into(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 0, span: s() },
+                    span: s(),
+                },
+                Stmt::While {
+                    cond: Expr::BoolLit { value: false, span: s() },
+                    body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+                    span: s(),
+                },
+            ],
+            Expr::VarRef { name: "i".into(), scope: Scope::Local, span: s() },
+            &[Feature::Loops, Feature::MutableBindings],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains("while _sir_truthy(False):"), "got:\n{}", a.source);
+        assert!(a.source.contains("        pass"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn loop_in_expression_position_lifts_to_nested_def_with_nonlocal() {
+        use semantic_ir::{Scope, Stmt};
+        // main value = (if true then { while k<2 { total+=1; k+=1 }; total } else 9).
+        // The loop block can't be walrus'd, so it lifts to a nested def
+        // that declares `nonlocal total` / `nonlocal k`.
+        let loop_block = Block {
+            stmts: vec![Stmt::While {
+                cond: Expr::BuiltinCall {
+                    name: "<".into(),
+                    args: vec![
+                        Expr::VarRef { name: "k".into(), scope: Scope::Local, span: s() },
+                        Expr::IntLit { value: 2, span: s() },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                body: Block {
+                    stmts: vec![
+                        Stmt::Assign {
+                            name: "total".into(),
+                            scope: Scope::Local,
+                            value: Expr::BuiltinCall {
+                                name: "+".into(),
+                                args: vec![
+                                    Expr::VarRef { name: "total".into(), scope: Scope::Local, span: s() },
+                                    Expr::IntLit { value: 1, span: s() },
+                                ],
+                                effects: EffectSet::PURE,
+                                span: s(),
+                            },
+                            span: s(),
+                        },
+                        Stmt::Assign {
+                            name: "k".into(),
+                            scope: Scope::Local,
+                            value: Expr::BuiltinCall {
+                                name: "+".into(),
+                                args: vec![
+                                    Expr::VarRef { name: "k".into(), scope: Scope::Local, span: s() },
+                                    Expr::IntLit { value: 1, span: s() },
+                                ],
+                                effects: EffectSet::PURE,
+                                span: s(),
+                            },
+                            span: s(),
+                        },
+                    ],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                span: s(),
+            }],
+            value: Expr::VarRef { name: "total".into(), scope: Scope::Local, span: s() },
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![
+                Stmt::LetBinding {
+                    name: "total".into(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 0, span: s() },
+                    span: s(),
+                },
+                Stmt::LetBinding {
+                    name: "k".into(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 0, span: s() },
+                    span: s(),
+                },
+            ],
+            Expr::If {
+                cond: Box::new(Expr::BoolLit { value: true, span: s() }),
+                then_branch: Box::new(loop_block),
+                else_branch: Box::new(Block {
+                    stmts: vec![],
+                    value: Expr::IntLit { value: 9, span: s() },
+                    span: s(),
+                }),
+                span: s(),
+            },
+            &[Feature::Loops, Feature::MutableBindings],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains("def __block_0():"), "expected lifted def; got:\n{}", a.source);
+        assert!(a.source.contains("nonlocal k"), "got:\n{}", a.source);
+        assert!(a.source.contains("nonlocal total"), "got:\n{}", a.source);
+        // The def is called from the ternary, and the loop lives inside it.
+        assert!(a.source.contains("__block_0() if _sir_truthy(True)"), "got:\n{}", a.source);
+        assert!(a.source.contains("while _sir_truthy(_sir_lt(k, 2)):"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn global_assign_writes_globals_dict() {
+        use semantic_ir::{Global, Scope, Stmt};
+        // A `Global`-scoped reassignment writes the module-level
+        // `_globals` dict (the same shape `_init`/`global_set` use).
+        // The global must be declared in `module.globals` to satisfy
+        // the validator's scope check.
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[Feature::MutableBindings, Feature::Globals]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![Stmt::Assign {
+                        name: "counter".into(),
+                        scope: Scope::Global,
+                        value: Expr::IntLit { value: 5, span: s() },
+                        span: s(),
+                    }],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![Global {
+                name: "counter".into(),
+                sir_type: None,
+                init_function: "_init".into(),
+                span: s(),
+            }],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains("_globals[\"counter\"] = 5"), "got:\n{}", a.source);
     }
 }
