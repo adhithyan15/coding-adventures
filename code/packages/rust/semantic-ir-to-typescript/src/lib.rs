@@ -78,6 +78,14 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,
     Feature::Globals,
+    // SIR16 expression features — emitted natively (sequences → Array,
+    // maps → Map, short-circuit → truthy-guarded arrow, interpolation →
+    // display-joined), per code/specs/sir-runtime.md.
+    Feature::Floats,
+    Feature::Sequences,
+    Feature::Maps,
+    Feature::ShortCircuit,
+    Feature::StringInterpolation,
 ];
 
 impl Backend for TypeScriptBackend {
@@ -292,5 +300,56 @@ mod tests {
         m.name = "compiler/lexer".into();
         let a = compile(&m).expect("compile");
         assert_eq!(a.filename, "compiler_lexer.ts");
+    }
+
+    // ── SIR16 expression features: Ruby → native TypeScript ─────────
+
+    #[test]
+    fn end_to_end_ruby_array_literal_ts() {
+        let module =
+            ruby_to_semantic_ir::compile_source("x = [10, 20, 30]\nputs(x)\n", "demo")
+                .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(a.source.contains("[10, 20, 30]"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn end_to_end_ruby_hash_literal_ts() {
+        let module =
+            ruby_to_semantic_ir::compile_source("puts({a: 1})\n", "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains("new Map<__Sir.Val, __Sir.Val>("),
+            "expected a native Map; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_short_circuit_ts() {
+        // case/in array pattern desugars to LogicalAnd → truthy-guarded arrow.
+        let module = ruby_to_semantic_ir::compile_source(
+            "x = [7, 8]\ncase x\nin [7, b]\n  puts(b)\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains("__Sir.truthy(__l)") && a.source.contains("(__l: __Sir.Val) =>"),
+            "expected truthy-guarded arrow for &&; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_interpolation_ts() {
+        let module = ruby_to_semantic_ir::compile_source("x = 5\nputs(\"v=#{x}\")\n", "demo")
+            .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains("__Sir.toDisplay("),
+            "expected interpolation via __Sir.toDisplay; got:\n{}",
+            a.source
+        );
     }
 }

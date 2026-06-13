@@ -2,6 +2,15 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.1.1] - 2026-06-13
+
+### Changed
+
+- Widened the `Val` union to include the SIR16 collection types — `Val[]`
+  (sequences) and `Map<Val, Val>` (maps) — so emitted native arrays/maps type as
+  `Val`. Additive; existing values are unaffected. Both are truthy under SIR
+  truthiness and display via `String(v)` in `toDisplay`.
+
 ## [0.1.0] - 2026-06-11
 
 ### Added
