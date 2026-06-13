@@ -202,6 +202,10 @@ class DeckMeasurementCard:
     target_value: float | None = None
     crossing_kind: str | None = None
     crossing_count: int | None = None
+    trigger_probe: str | None = None
+    trigger_value: float | None = None
+    trigger_crossing_kind: str | None = None
+    trigger_crossing_count: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -1443,6 +1447,10 @@ def _resolve_measurement_line(
         )
         return
 
+    if tokens[3].strip().lower() == "trig":
+        _resolve_measurement_delay_line(tokens, line_number, directive, state, analysis, name)
+        return
+
     mode = _normalize_measurement_mode_token(tokens[3])
     if mode is None:
         _add_measurement_diagnostic(
@@ -1654,8 +1662,309 @@ def _resolve_measurement_line(
             target_value=target_value,
             crossing_kind=crossing_kind,
             crossing_count=crossing_count,
+            trigger_probe=None,
+            trigger_value=None,
+            trigger_crossing_kind=None,
+            trigger_crossing_count=None,
         )
     )
+
+
+@dataclass(frozen=True, slots=True)
+class _ParsedMeasurementEdge:
+    probe: str
+    value: float
+    crossing_kind: str | None
+    crossing_count: int | None
+
+
+def _resolve_measurement_delay_line(
+    tokens: list[str],
+    line_number: int,
+    directive: str,
+    state: _DeckMeasurementState,
+    analysis: str,
+    name: str,
+) -> None:
+    if analysis not in {"tran", "transient"}:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message="TRIG/TARG measurements are only supported for transient analysis",
+            token=tokens[3],
+        )
+        return
+    try:
+        target_index = next(
+            index
+            for index, token in enumerate(tokens[4:], start=4)
+            if token.strip().lower() == "targ"
+        )
+    except StopIteration:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message="TRIG measurements require a TARG section",
+        )
+        return
+
+    empty_parameter_state = _DeckParameterState()
+    trigger = _parse_measurement_delay_edge(
+        tokens[4:target_index],
+        "TRIG",
+        directive,
+        line_number,
+        state,
+        empty_parameter_state,
+    )
+    if trigger is None:
+        return
+    target_result = _parse_measurement_delay_target_section(
+        tokens[target_index + 1 :],
+        directive,
+        line_number,
+        state,
+        empty_parameter_state,
+    )
+    if target_result is None:
+        return
+    target, from_value, to_value = target_result
+    if from_value is not None and to_value is not None and from_value > to_value:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_WINDOW",
+            directive=directive,
+            line_number=line_number,
+            message="measurement FROM value must be <= TO value",
+        )
+        return
+
+    state.measurements.append(
+        DeckMeasurementCard(
+            directive=directive,
+            analysis=analysis,
+            name=name,
+            mode="delay",
+            probe=target.probe,
+            line_number=line_number,
+            from_value=from_value,
+            to_value=to_value,
+            at_value=None,
+            target_value=target.value,
+            crossing_kind=target.crossing_kind,
+            crossing_count=target.crossing_count,
+            trigger_probe=trigger.probe,
+            trigger_value=trigger.value,
+            trigger_crossing_kind=trigger.crossing_kind,
+            trigger_crossing_count=trigger.crossing_count,
+        )
+    )
+
+
+def _parse_measurement_delay_target_section(
+    tokens: list[str],
+    directive: str,
+    line_number: int,
+    state: _DeckMeasurementState,
+    parameter_state: _DeckParameterState,
+) -> tuple[_ParsedMeasurementEdge, float | None, float | None] | None:
+    edge_tokens: list[str] = []
+    from_value: float | None = None
+    to_value: float | None = None
+    seen_window_tokens: set[str] = set()
+    for token in tokens:
+        if "=" not in token:
+            edge_tokens.append(token)
+            continue
+        key, expression = token.split("=", 1)
+        key = key.strip().lower()
+        if key not in {"from", "to"}:
+            edge_tokens.append(token)
+            continue
+        if key in seen_window_tokens:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"duplicate measurement option {key!r}",
+                token=token,
+            )
+            return None
+        seen_window_tokens.add(key)
+        try:
+            value = _evaluate_parameter_expression(
+                _strip_expression_delimiters(expression.strip()),
+                parameter_state,
+            )
+        except ValueError as error:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_EXPRESSION",
+                directive=directive,
+                line_number=line_number,
+                message=str(error),
+                token=token,
+            )
+            return None
+        if key == "from":
+            from_value = value
+        else:
+            to_value = value
+    edge = _parse_measurement_delay_edge(
+        edge_tokens,
+        "TARG",
+        directive,
+        line_number,
+        state,
+        parameter_state,
+    )
+    if edge is None:
+        return None
+    return edge, from_value, to_value
+
+
+def _parse_measurement_delay_edge(
+    tokens: list[str],
+    section: str,
+    directive: str,
+    line_number: int,
+    state: _DeckMeasurementState,
+    parameter_state: _DeckParameterState,
+) -> _ParsedMeasurementEdge | None:
+    if not tokens:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message=f"{section} measurements require a probe target",
+        )
+        return None
+    value: float | None = None
+    first = tokens[0]
+    if "=" in first:
+        probe_token, expression = first.split("=", 1)
+        try:
+            value = _evaluate_parameter_expression(
+                _strip_expression_delimiters(expression.strip()),
+                parameter_state,
+            )
+        except ValueError as error:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_EXPRESSION",
+                directive=directive,
+                line_number=line_number,
+                message=str(error),
+                token=first,
+            )
+            return None
+        probe = _unquote_token(probe_token.strip())
+    else:
+        probe = _unquote_token(first.strip())
+    if not probe:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_PROBE",
+            directive=directive,
+            line_number=line_number,
+            message=f"{section} measurement probe must not be empty",
+            token=first,
+        )
+        return None
+
+    crossing_kind: str | None = None
+    crossing_count: int | None = None
+    seen_tokens: set[str] = set()
+    for token in tokens[1:]:
+        if "=" not in token:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"{section} measurement option {token!r} must use name=value syntax",
+                token=token,
+            )
+            return None
+        key, expression = token.split("=", 1)
+        key = key.strip().lower()
+        if key not in {"val", "rise", "fall", "cross"}:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"unsupported {section} measurement option {key!r}",
+                token=token,
+            )
+            return None
+        if key in seen_tokens:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"duplicate {section} measurement option {key!r}",
+                token=token,
+            )
+            return None
+        seen_tokens.add(key)
+        try:
+            parsed = _evaluate_parameter_expression(
+                _strip_expression_delimiters(expression.strip()),
+                parameter_state,
+            )
+        except ValueError as error:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_EXPRESSION",
+                directive=directive,
+                line_number=line_number,
+                message=str(error),
+                token=token,
+            )
+            return None
+        if key == "val":
+            value = parsed
+        else:
+            if crossing_kind is not None:
+                _add_measurement_diagnostic(
+                    state,
+                    code="SPICE_DECK_MEASURE_ARGUMENT",
+                    directive=directive,
+                    line_number=line_number,
+                    message=f"only one {section} RISE, FALL, or CROSS option may be specified",
+                    token=token,
+                )
+                return None
+            if not isfinite(parsed) or parsed < 1.0 or not parsed.is_integer():
+                _add_measurement_diagnostic(
+                    state,
+                    code="SPICE_DECK_MEASURE_ARGUMENT",
+                    directive=directive,
+                    line_number=line_number,
+                    message=f"{section} RISE, FALL, and CROSS counts must be positive integers",
+                    token=token,
+                )
+                return None
+            crossing_kind = key
+            crossing_count = int(parsed)
+    if value is None:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message=f"{section} measurements require a VAL value or probe=value target",
+        )
+        return None
+    return _ParsedMeasurementEdge(probe, value, crossing_kind, crossing_count)
 
 
 def _normalize_measurement_mode_token(mode: str) -> str | None:

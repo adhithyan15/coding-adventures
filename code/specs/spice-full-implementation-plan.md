@@ -41,10 +41,11 @@ downstream tools to compare.
      optional transient windows into the shared measurement table; parsed
      transient `.measure ... WHEN probe=target RISE|FALL|CROSS=n` cards now
      route counted threshold occurrences into the same stable measurement
-     table.
-   - Expand remaining `.measure` trigger-delay forms and
-     non-DC/non-AC measurement analyses toward full SPICE compatibility while
-     keeping unsupported control-flow diagnostics explicit.
+     table; parsed transient `.measure ... TRIG ... TARG ...` cards now route
+     trigger-to-target delay measurements with counted crossing controls into
+     stable scalar rows.
+   - Expand remaining non-DC/non-AC measurement analyses toward full SPICE
+     compatibility while keeping unsupported control-flow diagnostics explicit.
 
 ## Completed Slices
 
@@ -333,14 +334,26 @@ downstream tools to compare.
     - Parsed `.measure tran ... WHEN probe=target RISE=n`, `FALL=n`, or
       `CROSS=n` cards route through the shared scalar measurement table over
       optional `FROM=` / `TO=` windows.
-    - Target-delay measurement forms remain in backlog.
+    - Target-delay measurement forms were routed in follow-up slice 29.
+
+29. Transient TRIG/TARG delay measurement routing.
+    - Status: completed in this transient trigger-delay measurement slice.
+    - Python, Rust, and TypeScript now expose matching transient delay helpers
+      that return target crossing time minus trigger crossing time for two
+      transient probes.
+    - Parsed `.measure tran ... TRIG probe VAL=value RISE|FALL|CROSS=n TARG
+      probe VAL=value RISE|FALL|CROSS=n` cards route through the shared scalar
+      measurement table over optional `FROM=` / `TO=` windows, with target
+      search beginning at the resolved trigger time.
+    - The parser also accepts compact `probe=value` trigger and target forms
+      for parity with the existing WHEN syntax.
 
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand `.measure` trigger-delay forms and remaining non-DC/non-AC
-     measurement analyses toward full SPICE compatibility.
+   - Expand remaining non-DC/non-AC `.measure` analyses toward full SPICE
+     compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

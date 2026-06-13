@@ -11,14 +11,14 @@ use spice_engine::{
     format_digital_bridge_schedule_table, format_digital_event_stream_table,
     format_digital_event_table, format_distortion_table, format_fourier_table,
     format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
-    fourier, fourier_corners, measure_transient_deck, measure_transient_find_at_probe,
-    measure_transient_probe, measure_transient_when_probe, measure_transient_when_probe_counted,
-    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
-    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, sample_transient_probe_as_digital_events,
+    fourier, fourier_corners, measure_transient_deck, measure_transient_delay_between_probes,
+    measure_transient_find_at_probe, measure_transient_probe, measure_transient_when_probe,
+    measure_transient_when_probe_counted, pole_zero_rc_highpass, pole_zero_rc_lowpass,
+    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
+    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, sample_transient_probe_as_digital_events,
     sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
     transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
@@ -1627,22 +1627,22 @@ fn transient_probe_measurements_are_stable() {
     let points = vec![
         TransientPoint {
             time: 0.0,
-            node_voltages: BTreeMap::from([("out".to_string(), 0.0)]),
+            node_voltages: BTreeMap::from([("in".to_string(), 0.0), ("out".to_string(), 0.0)]),
             branch_currents: BTreeMap::new(),
         },
         TransientPoint {
             time: 1.0e-3,
-            node_voltages: BTreeMap::from([("out".to_string(), 1.25)]),
+            node_voltages: BTreeMap::from([("in".to_string(), 1.0), ("out".to_string(), 1.25)]),
             branch_currents: BTreeMap::new(),
         },
         TransientPoint {
             time: 2.0e-3,
-            node_voltages: BTreeMap::from([("out".to_string(), -0.25)]),
+            node_voltages: BTreeMap::from([("in".to_string(), 1.0), ("out".to_string(), -0.25)]),
             branch_currents: BTreeMap::new(),
         },
         TransientPoint {
             time: 3.0e-3,
-            node_voltages: BTreeMap::from([("out".to_string(), 0.75)]),
+            node_voltages: BTreeMap::from([("in".to_string(), 1.0), ("out".to_string(), 0.75)]),
             branch_currents: BTreeMap::new(),
         },
     ];
@@ -1679,6 +1679,21 @@ fn transient_probe_measurements_are_stable() {
         Some(3.0e-3),
     )
     .unwrap();
+    let propagation_delay = measure_transient_delay_between_probes(
+        &points,
+        "prop_delay",
+        "V(in)",
+        0.5,
+        "rise",
+        1,
+        "V(out)",
+        0.5,
+        "fall",
+        1,
+        Some(0.0),
+        Some(3.0e-3),
+    )
+    .unwrap();
 
     assert_close(peak_to_peak.value, 1.5);
     assert_eq!(peak_to_peak.mode, "pp");
@@ -1690,15 +1705,19 @@ fn transient_probe_measurements_are_stable() {
     assert_eq!(crossing.mode, "when");
     assert_close(second_crossing.value, 2.75e-3);
     assert_eq!(second_crossing.mode, "when");
+    assert_close(propagation_delay.value, 1.0e-3);
+    assert_eq!(propagation_delay.probe, "V(in)->V(out)");
+    assert_eq!(propagation_delay.mode, "delay");
     assert_eq!(
         format_measurement_table(&[
             peak_to_peak,
             final_value,
             midpoint,
             crossing,
-            second_crossing
+            second_crossing,
+            propagation_delay
         ]),
-        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\nmidpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\ncrossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\nsecond_crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\nmidpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\ncrossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\nsecond_crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\nprop_delay\ttran\tV(in)->V(out)\tdelay\t0.000000e+00\t3.000000e-03\t1.000000e-03\n"
     );
 }
 
@@ -1707,22 +1726,22 @@ fn transient_deck_measurements_execute_parsed_cards() {
     let points = vec![
         TransientPoint {
             time: 0.0,
-            node_voltages: BTreeMap::from([("out".to_string(), 0.0)]),
+            node_voltages: BTreeMap::from([("in".to_string(), 0.0), ("out".to_string(), 0.0)]),
             branch_currents: BTreeMap::new(),
         },
         TransientPoint {
             time: 1.0e-3,
-            node_voltages: BTreeMap::from([("out".to_string(), 1.25)]),
+            node_voltages: BTreeMap::from([("in".to_string(), 1.0), ("out".to_string(), 1.25)]),
             branch_currents: BTreeMap::new(),
         },
         TransientPoint {
             time: 2.0e-3,
-            node_voltages: BTreeMap::from([("out".to_string(), -0.25)]),
+            node_voltages: BTreeMap::from([("in".to_string(), 1.0), ("out".to_string(), -0.25)]),
             branch_currents: BTreeMap::new(),
         },
         TransientPoint {
             time: 3.0e-3,
-            node_voltages: BTreeMap::from([("out".to_string(), 0.75)]),
+            node_voltages: BTreeMap::from([("in".to_string(), 1.0), ("out".to_string(), 0.75)]),
             branch_currents: BTreeMap::new(),
         },
     ];
@@ -1737,6 +1756,7 @@ V1 in 0 DC 1
 .measure tran second_cross WHEN V(out)=0.5 FROM=1m TO=3m CROSS=2
 .measure tran falling WHEN V(out)=0.5 FROM=1m TO=3m FALL=1
 .measure tran rising WHEN V(out)=0.5 FROM=1m TO=3m RISE=1
+.measure tran prop_delay TRIG V(in) VAL=0.5 RISE=1 TARG V(out) VAL=0.5 FALL=1 FROM=0 TO=3m
 .meas tran settled LAST V(out)
 .end
 ",
@@ -1745,7 +1765,7 @@ V1 in 0 DC 1
 
     assert_eq!(
         format_measurement_table(&measurements),
-        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nmidpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\ncrossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\nsecond_cross\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\nfalling\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\nrising\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nmidpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\ncrossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\nsecond_cross\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\nfalling\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\nrising\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\nprop_delay\ttran\tV(in)->V(out)\tdelay\t0.000000e+00\t3.000000e-03\t1.000000e-03\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
     );
 }
 

@@ -603,6 +603,7 @@ V1 in 0 DC 1
 .meas transient settled FINAL V(out)
 .measure tran sample FIND V(out) AT={1.5m}
 .measure tran crossing WHEN V(out)=0.5 FROM=1m TO=3m RISE=1
+.measure tran prop_delay TRIG V(in) VAL=0.5 RISE=1 TARG V(out) VAL=0.5 FALL=1 FROM=0 TO=4m
 .measure dc dcmax MAX V(out) FROM=1 TO=3
 .measure ac acmax MAX V(out) FROM=1k TO=10k
 .end
@@ -612,7 +613,7 @@ V1 in 0 DC 1
 
     assert_eq!(summary.active_lines, vec!["V1 in 0 DC 1"]);
     assert!(summary.terminated);
-    assert_eq!(summary.end_line_number, Some(9));
+    assert_eq!(summary.end_line_number, Some(10));
     assert!(summary.diagnostics.is_empty());
     assert_eq!(
         summary
@@ -630,6 +631,7 @@ V1 in 0 DC 1
             ("settled", "transient", "last", "V(out)"),
             ("sample", "tran", "find", "V(out)"),
             ("crossing", "tran", "when", "V(out)"),
+            ("prop_delay", "tran", "delay", "V(out)"),
             ("dcmax", "dc", "max", "V(out)"),
             ("acmax", "ac", "max", "V(out)")
         ]
@@ -645,10 +647,28 @@ V1 in 0 DC 1
         Some("rise")
     );
     assert_eq!(summary.measurements[3].crossing_count, Some(1));
-    assert!((summary.measurements[4].from_value.unwrap() - 1.0).abs() < 1.0e-12);
-    assert!((summary.measurements[4].to_value.unwrap() - 3.0).abs() < 1.0e-12);
-    assert!((summary.measurements[5].from_value.unwrap() - 1.0e3).abs() < 1.0e-9);
-    assert!((summary.measurements[5].to_value.unwrap() - 1.0e4).abs() < 1.0e-9);
+    assert!((summary.measurements[4].target_value.unwrap() - 0.5).abs() < 1.0e-12);
+    assert_eq!(
+        summary.measurements[4].crossing_kind.as_deref(),
+        Some("fall")
+    );
+    assert_eq!(summary.measurements[4].crossing_count, Some(1));
+    assert_eq!(
+        summary.measurements[4].trigger_probe.as_deref(),
+        Some("V(in)")
+    );
+    assert!((summary.measurements[4].trigger_value.unwrap() - 0.5).abs() < 1.0e-12);
+    assert_eq!(
+        summary.measurements[4].trigger_crossing_kind.as_deref(),
+        Some("rise")
+    );
+    assert_eq!(summary.measurements[4].trigger_crossing_count, Some(1));
+    assert!((summary.measurements[4].from_value.unwrap() - 0.0).abs() < 1.0e-12);
+    assert!((summary.measurements[4].to_value.unwrap() - 4.0e-3).abs() < 1.0e-12);
+    assert!((summary.measurements[5].from_value.unwrap() - 1.0).abs() < 1.0e-12);
+    assert!((summary.measurements[5].to_value.unwrap() - 3.0).abs() < 1.0e-12);
+    assert!((summary.measurements[6].from_value.unwrap() - 1.0e3).abs() < 1.0e-9);
+    assert!((summary.measurements[6].to_value.unwrap() - 1.0e4).abs() < 1.0e-9);
 }
 
 #[test]

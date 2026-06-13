@@ -230,6 +230,7 @@ from spice_engine import (
     measure_dc_sweep_deck,
     measure_dc_sweep_probe,
     measure_transient_deck,
+    measure_transient_delay_between_probes,
     measure_transient_find_at_probe,
     measure_transient_probe,
     measure_transient_when_probe,
@@ -6651,10 +6652,10 @@ def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
 
 def test_transient_probe_measurements_are_stable() -> None:
     transient_points = [
-        TransientPoint(0.0, {"out": 0.0}, {}),
-        TransientPoint(1.0e-3, {"out": 1.25}, {}),
-        TransientPoint(2.0e-3, {"out": -0.25}, {}),
-        TransientPoint(3.0e-3, {"out": 0.75}, {}),
+        TransientPoint(0.0, {"in": 0.0, "out": 0.0}, {}),
+        TransientPoint(1.0e-3, {"in": 1.0, "out": 1.25}, {}),
+        TransientPoint(2.0e-3, {"in": 1.0, "out": -0.25}, {}),
+        TransientPoint(3.0e-3, {"in": 1.0, "out": 0.75}, {}),
     ]
 
     peak_to_peak = measure_transient_probe(
@@ -6695,6 +6696,20 @@ def test_transient_probe_measurements_are_stable() -> None:
         from_time=1.0e-3,
         to_time=3.0e-3,
     )
+    propagation_delay = measure_transient_delay_between_probes(
+        transient_points,
+        "prop_delay",
+        "V(in)",
+        0.5,
+        "rise",
+        1,
+        "V(out)",
+        0.5,
+        "fall",
+        1,
+        from_time=0.0,
+        to_time=3.0e-3,
+    )
 
     assert peak_to_peak.value == pytest.approx(1.5)
     assert peak_to_peak.mode == "pp"
@@ -6706,8 +6721,18 @@ def test_transient_probe_measurements_are_stable() -> None:
     assert crossing.mode == "when"
     assert second_crossing.value == pytest.approx(2.75e-3)
     assert second_crossing.mode == "when"
+    assert propagation_delay.value == pytest.approx(1.0e-3)
+    assert propagation_delay.probe == "V(in)->V(out)"
+    assert propagation_delay.mode == "delay"
     assert format_measurement_table(
-        [peak_to_peak, final_value, midpoint, crossing, second_crossing]
+        [
+            peak_to_peak,
+            final_value,
+            midpoint,
+            crossing,
+            second_crossing,
+            propagation_delay,
+        ]
     ) == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
@@ -6715,15 +6740,16 @@ def test_transient_probe_measurements_are_stable() -> None:
         "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
         "crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
         "second_crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
+        "prop_delay\ttran\tV(in)->V(out)\tdelay\t0.000000e+00\t3.000000e-03\t1.000000e-03\n"
     )
 
 
 def test_transient_deck_measurements_execute_parsed_cards() -> None:
     transient_points = [
-        TransientPoint(0.0, {"out": 0.0}, {}),
-        TransientPoint(1.0e-3, {"out": 1.25}, {}),
-        TransientPoint(2.0e-3, {"out": -0.25}, {}),
-        TransientPoint(3.0e-3, {"out": 0.75}, {}),
+        TransientPoint(0.0, {"in": 0.0, "out": 0.0}, {}),
+        TransientPoint(1.0e-3, {"in": 1.0, "out": 1.25}, {}),
+        TransientPoint(2.0e-3, {"in": 1.0, "out": -0.25}, {}),
+        TransientPoint(3.0e-3, {"in": 1.0, "out": 0.75}, {}),
     ]
 
     measurements = measure_transient_deck(
@@ -6736,6 +6762,7 @@ V1 in 0 DC 1
 .measure tran second_cross WHEN V(out)=0.5 FROM=1m TO=3m CROSS=2
 .measure tran falling WHEN V(out)=0.5 FROM=1m TO=3m FALL=1
 .measure tran rising WHEN V(out)=0.5 FROM=1m TO=3m RISE=1
+.measure tran prop_delay TRIG V(in) VAL=0.5 RISE=1 TARG V(out) VAL=0.5 FALL=1 FROM=0 TO=3m
 .meas tran settled LAST V(out)
 .end
 """,
@@ -6749,6 +6776,7 @@ V1 in 0 DC 1
         "second_cross\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
         "falling\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
         "rising\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
+        "prop_delay\ttran\tV(in)->V(out)\tdelay\t0.000000e+00\t3.000000e-03\t1.000000e-03\n"
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
     )
 
