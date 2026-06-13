@@ -2,6 +2,45 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.107.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-100** — grouping parens around a `function`/`class`
+  EXPRESSION are elided in expression position:
+
+      a=(function(){})()       -> a=function(){}()
+      a=(class{})()            -> a=class{}()
+      a=(async function(){})() -> a=async function(){}()
+      b=1,(function(){})()     -> b=1,function(){}()
+
+  Those parens are only needed at STATEMENT position, where the
+  leading `function`/`class` keyword would otherwise start a
+  *declaration*. A new pass (after gap-099) finds a `(` immediately
+  followed by `function`/`class`/`async function`, locates the
+  matching `)` by a structural paren-depth scan, and drops the pair.
+
+  MINIMAL SAFE SLICE — fires only when the `(` is preceded by a
+  statement-level assignment `IDENT=` (the target is a plain
+  identifier at a `;`/`{`/`}`/start boundary) or by `,`. This
+  deliberately preserves two load-bearing cases:
+    - the statement-position IIFE `(function(){})();` (preceded by
+      `;`/`{`/`}`/start, never `=`/`,`) — unwrapping it would reparse
+      the function as a declaration;
+    - a DEFAULT-PARAMETER default value `function g(a=(function(){})())`
+      (the `=`'s target sits after `(`, not a statement boundary) —
+      unwrapping there exposes the body `}` to the function-decl
+      trailing-`;` rule and corrupts the output.
+  Broader expression contexts (after `(`/`[`/`return`/`=>`/operators,
+  member-target or `var`-target assignments) are left to a follow-up.
+  +3 `gap100_*` unit tests; JAR-verified. The funcexpr_iife_assign /
+  classexpr_call fixtures leave the ignore list.
+
+  (Note: a PRE-EXISTING corruption surfaced while testing —
+  `function g(a=(function(){})()){}` already mis-emits a stray `;`
+  inside the default value on origin/main, from the function-decl
+  trailing-`;` rule mis-firing on a nested function expression in a
+  param list. gap-100 does NOT touch that case; tracked separately.)
+
 ## [0.106.0] - 2026-06-12
 
 ### Fixed
