@@ -165,19 +165,17 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
-    // gap-102 (CLOC14.45): a `yield` operand's grouping parens are
-    // redundant and dropped upstream — `yield(a)` → `yield a`,
-    // `yield(a.b)` → `yield a.b`, `yield(a+b)` → `yield a+b`,
-    // `a=yield(b)` → `a=yield b`. `yield` (like `return`/`throw`,
-    // gap-056) takes an AssignmentExpression, which binds looser than
-    // every binary operator, so the parens never carry meaning EXCEPT
-    // around a comma-operator operand (`yield(a,b)` keeps its parens —
-    // `yield a,b` would parse as `(yield a),b`). Analogous to gap-056
-    // but anchored on the `yield` keyword; the `*` of `yield*` is a
-    // separate delegate form and is untouched.
-    ("yield_paren_ident",  "gap-102: yield operand paren elision (ident)"),
-    ("yield_paren_binary", "gap-102: yield operand paren elision (binary)"),
-    ("yield_paren_assign", "gap-102: yield operand paren elision (assignment RHS)"),
+    // gap-102 RESOLVED in CLOC12.105 — a `yield` operand's grouping
+    // parens (`yield(a)` → `yield a`, `yield(a+b)` → `yield a+b`,
+    // `a=yield(b)` → `a=yield b`) now elide via the gap-055/056
+    // prefix-classification block, which gained a `yield` anchor
+    // (`is_yield_prefix`). `yield` takes an AssignmentExpression, so
+    // the parens never carry meaning except around a comma operand
+    // (`yield(a,b)` stays wrapped via the shared top-level-comma
+    // guard); the property guard keeps `o.yield(x)` a method call, and
+    // the `yield*` delegate is excluded for free. `minify_yield_paren_*`
+    // enforced; `minify_yield_comma_kept` / `minify_yield_star_pass`
+    // guard the keep cases.
     // gap-101 RESOLVED in CLOC12.104 — a prefix unary operator
     // (`typeof`/`void`/`delete`/`!`/`-`/…) with a PARENTHESISED
     // higher-arity operand (a unary-expression or a call) now drops the

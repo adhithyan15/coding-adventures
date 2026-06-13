@@ -1279,8 +1279,25 @@ pub fn whitespace_only_minify(
                 && (i < 2
                     || (!is_structural_punct(&kept[i - 2], ".")
                         && !is_structural_punct(&kept[i - 2], "?.")));
-            let prefix_matches =
-                is_arm_prefix || is_arrow_prefix || is_ret_throw_prefix;
+            // gap-102: `yield` operand. `yield` takes an
+            // AssignmentExpression (binding looser than every binary
+            // operator), so a grouping paren around the operand is
+            // redundant — exactly like `return`/`throw`. The same
+            // property guard applies: `yield` must be the genuine
+            // generator keyword, not a property name (`o.yield(x)` is a
+            // method call). `yield*` delegate is excluded for free: the
+            // token after `yield` is then `*`, not `(`, so the pass
+            // never fires. The shared top-level-comma guard keeps
+            // `yield(a,b)` wrapped (`yield a,b` ≡ `(yield a),b`).
+            let is_yield_prefix = prev.value == "yield"
+                && !is_string_literal(prev)
+                && (i < 2
+                    || (!is_structural_punct(&kept[i - 2], ".")
+                        && !is_structural_punct(&kept[i - 2], "?.")));
+            let prefix_matches = is_arm_prefix
+                || is_arrow_prefix
+                || is_ret_throw_prefix
+                || is_yield_prefix;
             if prefix_matches && is_structural_punct(&kept[i], "(") {
                 let open_idx = i;
                 let mut depth: i32 = 1;
@@ -6367,6 +6384,55 @@ mod tests {
         assert_eq!(minify("a=typeof(a=b);"), "a=typeof(a=b);");
         assert_eq!(minify("a=typeof(b?c:d);"), "a=typeof(b?c:d);");
         assert_eq!(minify("a=void(b=c);"), "a=void(b=c);");
+    }
+
+    // ---- gap-102: yield operand paren elision ------------------
+
+    /// gap-102: a `yield` operand's grouping parens are redundant and
+    /// dropped (like `return`/`throw`, gap-056), since `yield` takes an
+    /// AssignmentExpression. Covers ident, member-chain, binary, and
+    /// assignment-RHS operands; the separator follows the usual rule
+    /// (`yield a` keeps the space, `yield-a` collapses it).
+    #[test]
+    fn gap102_yield_operand_elided() {
+        assert_eq!(minify("function*g(){yield(a);}"), "function*g(){yield a};");
+        assert_eq!(
+            minify("function*g(){yield(a.b);}"),
+            "function*g(){yield a.b};"
+        );
+        assert_eq!(
+            minify("function*g(){yield(a+b);}"),
+            "function*g(){yield a+b};"
+        );
+        assert_eq!(
+            minify("function*g(){a=yield(b);}"),
+            "function*g(){a=yield b};"
+        );
+        assert_eq!(
+            minify("function*g(){yield(-a);}"),
+            "function*g(){yield-a};"
+        );
+    }
+
+    /// gap-102 boundary: a comma-operator operand keeps its parens
+    /// (`yield a,b` ≡ `(yield a),b`), and the `yield*` delegate form is
+    /// left untouched (the token after `yield` is `*`, not `(`).
+    #[test]
+    fn gap102_yield_comma_and_delegate_kept() {
+        assert_eq!(
+            minify("function*g(){yield(a,b);}"),
+            "function*g(){yield(a,b)};"
+        );
+        assert_eq!(minify("function*g(){yield*a;}"), "function*g(){yield*a};");
+    }
+
+    /// gap-102 SAFETY: a PROPERTY named `yield` (`o.yield(x)`) is a
+    /// method call, NOT the generator keyword — its call parens must be
+    /// preserved.
+    #[test]
+    fn gap102_property_yield_not_elided() {
+        assert_eq!(minify("o.yield(a);"), "o.yield(a);");
+        assert_eq!(minify("a=b.yield(c);"), "a=b.yield(c);");
     }
 
     // ---- gap-078: binary symbol-operator right-operand elision --

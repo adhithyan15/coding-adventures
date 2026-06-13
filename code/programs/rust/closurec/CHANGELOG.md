@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.109.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-102** — a `yield` operand's grouping parens are
+  redundant and are now dropped, matching the upstream Closure JAR:
+
+      function*g(){yield(a);}     -> function*g(){yield a};
+      function*g(){yield(a.b);}   -> function*g(){yield a.b};
+      function*g(){yield(a+b);}   -> function*g(){yield a+b};
+      function*g(){a=yield(b);}   -> function*g(){a=yield b};
+
+  `yield` takes an `AssignmentExpression`, which binds looser than every
+  binary operator, so a grouping paren around the operand never carries
+  meaning — exactly like `return`/`throw` (gap-056, CLOC12.65). The fix
+  adds `yield` to the gap-055/056 prefix-classification block in
+  `whitespace_only.rs` (a new `is_yield_prefix`), reusing that pass's
+  structural matching-`)` scan and its two guards verbatim:
+  the top-level-comma guard keeps `yield(a,b)` wrapped (`yield a,b` ≡
+  `(yield a),b`), and the property guard keeps `o.yield(x)` a method
+  call (a `yield` preceded by `.`/`?.` is a property, not the keyword).
+  The `yield*` delegate form is excluded for free — the token after
+  `yield` is then `*`, not `(`, so the pass never fires. Verified
+  byte-identical against the upstream Closure JAR (v20240317) across
+  ident / member-chain / binary / call / unary / assignment-RHS
+  operands plus the comma, delegate, and property cases; +3 `gap102_*`
+  unit tests; the three `minify_yield_paren_*` fixtures from CLOC14.45
+  are now enforced. (The `yield(a).b` member-follower case stays wrapped
+  — a shared conservative limitation with `return`/`throw`, tracked
+  separately.)
+
 ## [0.108.0] - 2026-06-12
 
 ### Fixed
