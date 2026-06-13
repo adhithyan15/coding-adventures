@@ -822,15 +822,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-111 — reserved keyword before string literal missing separating space (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.53). `minify_case_string_space` / `minify_accessor_string_key` / `minify_new_string_callee` ignored.
+- **Status:** RESOLVED in CLOC12.114 (v0.118.0). `minify_case_string_space` / `minify_accessor_string_key` / `minify_new_string_callee` now ENFORCED.
 - **Input:** `switch(x){case"a":b()}` → **Upstream:** `switch(x){case "a":b()}` but **closurec:** `switch(x){case"a":b()}`. A reserved keyword immediately before a string literal that the keyword grammatically takes needs a separating space that closurec omits: `case"a":` → `case "a":` (case clause), `{get"a"(){}}`/`{set"a"…}` → `get "a"`/`set "a"` (string-keyed accessor — the case noted under gap-109), `new"s"` → `new "s"` (new callee). NOT all keyword+string pairs need it: `typeof"s"`, `void"s"`, `throw"e"`, `a in"s"` are already byte-identical (no space).
-- **What it needs:** a `needs_separator`-style rule keyed on the specific keyword set (`case`/`get`/`set`/`new`) immediately followed by a string literal, wired into the emit-time separator OR-chain. Verify the exact keyword set against the JAR (the `typeof`/`void`/`throw`/`in` non-cases confirm it is not "every keyword").
-
-### gap-112 — for-await-of header emits spurious await-before-paren space (WHITESPACE_ONLY)
-
-- **Status:** OPEN (discovered CLOC14.54). `minify_for_await_of` ignored.
-- **Input:** `async function f(){for await(const x of y)z()}` → **Upstream:** `async function f(){for await(const x of y)z()};` but **closurec:** `async function f(){for await (const x of y)z()};`. In a `for await(...)` loop header, closurec inserts a SPURIOUS SPACE between the `await` keyword and the opening `(` of the loop head. The `for`/`await` keyword pair is correct; only the `await`-before-`(` adjacency is wrong. (Observed with `const`/bare-`x` heads; a `let`-head with a `{...}` block body did NOT show the space but DID keep the block braces — a separate for-await body-flatten observation, sibling of gap-074.)
-- **What it needs:** a `needs_separator` exception so `await` immediately followed by `(` inside a `for await` header does not take a separator. Sibling of gap-069 (`new(` adjacency). Verify the `for await` context against the JAR (a bare `await(` outside a `for` header is an `await` expression — `await(x)` → `await(x)` — and must be checked separately so the exception is scoped to the loop header).
+- **Fix:** a `keyword_string_needs_space(kept, idx)` helper wired into the emit-time separator OR-chain in `whitespace_only.rs`. It returns true when the current token is a string literal and the previous token is a word-like keyword in the EXACT set `{case, get, set, new}` — inserting one space. The set is exact: `typeof`/`void`/`throw`/`in`/`instanceof` before a string stay adjacent (verified against the JAR). SAFE because in valid JS a bare `KEYWORD"string"` adjacency only occurs in these grammatical positions (two adjacent primaries are a syntax error; these words as property keys/values are always separated from a string by `:`/`(`). Nine `gap111_*` unit assertions cover the four wrap cases plus the excluded-keyword and keyword-as-key/identifier non-regressions. Verified byte-identical to upstream Closure v20240317.
 
 ### gap-112 — for-await-of header (bare-body) emits spurious await-before-paren space (WHITESPACE_ONLY)
 

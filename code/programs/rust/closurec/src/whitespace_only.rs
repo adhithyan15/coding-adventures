@@ -3355,6 +3355,7 @@ pub fn whitespace_only_minify(
                 || get_set_computed_needs_space(&kept, idx)
                 || async_gen_method_needs_space(&kept, idx)
                 || await_operator_needs_space(&kept, idx)
+                || keyword_string_needs_space(&kept, idx)
             {
                 out.push(' ');
             }
@@ -4555,6 +4556,44 @@ fn get_set_computed_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bo
     kept
         .get(k + 1)
         .is_some_and(|t| is_structural_punct(t, "{"))
+}
+
+/// gap-111: a keyword that grammatically takes a STRING LITERAL as its
+/// immediately-following operand needs a separating space that closurec
+/// otherwise omits. Upstream Closure v20240317 emits:
+///
+///   switch(x){case"a":…}  ->  switch(x){case "a":…}   (case clause label)
+///   ({get"a"(){}})        ->  ({get "a"(){}})          (string-keyed getter)
+///   ({set"a"(v){}})       ->  ({set "a"(v){}})         (string-keyed setter)
+///   new"s"                ->  new "s"                  (new on a string operand)
+///
+/// The keyword set is EXACTLY `{case, get, set, new}`. Other keyword +
+/// string pairs are already byte-identical with NO space and are
+/// deliberately EXCLUDED — verified against the JAR:
+///
+///   typeof"s"   ->  typeof"s"      (no space)
+///   void"s"     ->  void"s"        (no space)
+///   throw"e"    ->  throw"e"       (no space)
+///   a in"s"     ->  a in"s"        (no space)
+///   a instanceof"s" -> a instanceof"s" (no space)
+///
+/// SAFE: in valid JS a bare `KEYWORD"string"` adjacency (no operator
+/// between) only occurs in these grammatical positions — two adjacent
+/// primary expressions (`identifier"string"`) are a syntax error, and
+/// these four words used as property KEYS or VALUES are always separated
+/// from a string by `:` / `(` / etc., never directly adjacent. So there
+/// is no alternative reading to corrupt by inserting the space.
+fn keyword_string_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
+    if idx == 0 {
+        return false;
+    }
+    let tok = kept[idx];
+    if !is_string_literal(tok) {
+        return false;
+    }
+    let prev = kept[idx - 1];
+    is_word_like(prev)
+        && matches!(prev.value.as_str(), "case" | "get" | "set" | "new")
 }
 
 /// gap-097: True iff the token at `idx` is the `*` of an ASYNC GENERATOR
@@ -7929,6 +7968,63 @@ mod tests {
     #[test]
     fn gap110_multiply_string_call_untouched() {
         assert_eq!(minify("a*\"m\"(x);"), "a*\"m\"(x);");
+    }
+
+    /// gap-111 — `case` + string clause label needs a separating space.
+    #[test]
+    fn gap111_case_string_space() {
+        assert_eq!(
+            minify("switch(x){case\"a\":b()}"),
+            "switch(x){case \"a\":b()};"
+        );
+    }
+
+    /// gap-111 — string-keyed `get` accessor needs a separating space.
+    #[test]
+    fn gap111_get_string_accessor_space() {
+        assert_eq!(
+            minify("x={get\"a\"(){return 1}};"),
+            "x={get \"a\"(){return 1}};"
+        );
+    }
+
+    /// gap-111 — string-keyed `set` accessor needs a separating space.
+    #[test]
+    fn gap111_set_string_accessor_space() {
+        assert_eq!(
+            minify("x={set\"a\"(v){}};"),
+            "x={set \"a\"(v){}};"
+        );
+    }
+
+    /// gap-111 — `new` on a string operand needs a separating space.
+    #[test]
+    fn gap111_new_string_callee_space() {
+        assert_eq!(minify("x=new\"s\";"), "x=new \"s\";");
+    }
+
+    /// **Non-regression**: keyword+string pairs that upstream leaves
+    /// ADJACENT must NOT gain a space (`typeof`/`void`/`throw`/`in`/
+    /// `instanceof` are excluded from the gap-111 keyword set).
+    #[test]
+    fn gap111_other_keywords_stay_adjacent() {
+        assert_eq!(minify("x=typeof\"s\";"), "x=typeof\"s\";");
+        assert_eq!(minify("x=void\"s\";"), "x=void\"s\";");
+        assert_eq!(minify("throw\"e\";"), "throw\"e\";");
+        assert_eq!(minify("for(x in\"s\");"), "for(x in\"s\");");
+        assert_eq!(minify("x=a instanceof\"s\";"), "x=a instanceof\"s\";");
+    }
+
+    /// **Non-regression**: `case`/`get`/`set`/`new` used as a property
+    /// KEY/VALUE (`{get:1}`, `{new:2}`) or followed by an identifier
+    /// (`new C`, `get a(){}`) — never directly adjacent to a string —
+    /// is unaffected.
+    #[test]
+    fn gap111_keyword_non_string_untouched() {
+        assert_eq!(minify("x={get:1};"), "x={get:1};");
+        assert_eq!(minify("x={set:1,new:2};"), "x={set:1,new:2};");
+        assert_eq!(minify("x=new C;"), "x=new C;");
+        assert_eq!(minify("switch(x){case 1:b()}"), "switch(x){case 1:b()};");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
