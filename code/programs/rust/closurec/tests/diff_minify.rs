@@ -164,6 +164,16 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
+    // gap-101 (CLOC14.44): a prefix unary operator (`typeof`/`void`/`!`/
+    // `-`) with a PARENTHESISED unary-expression or CALL operand drops
+    // the parens upstream — `typeof(void 0)` → `typeof void 0`,
+    // `typeof(-b)` → `typeof-b`, `typeof(b())` → `typeof b()`. gap-054's
+    // safe-operand set (CLOC12.63) only covers identifier/literal/
+    // member-chain operands, so these higher-arity operands are kept.
+    // A parenthesised BINARY operand (`typeof(b+c)`) must stay wrapped.
+    ("unary_typeof_void",  "gap-101: unary op + unary-expr operand paren elision"),
+    ("unary_neg_operand",  "gap-101: typeof(-b) -> typeof-b paren elision"),
+    ("unary_call_operand", "gap-101: unary op + call operand paren elision"),
     // gap-081 RESOLVED in CLOC12.89 — a ternary CONDITION grouping
     // paren (`(a)?b:c` → `a?b:c`) now elides via the gap-077
     // left-operand pre-pass (a structural `?` joined its after-set).
