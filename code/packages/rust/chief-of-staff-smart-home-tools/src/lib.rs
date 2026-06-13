@@ -44,7 +44,7 @@ use smart_home_integration_catalog::{
     activation_deployment_records_from_delivery_manifests, activation_dossiers_from_candidates,
     activation_escalation_cases_from_rollups, activation_evidence_from_candidates,
     activation_execution_packets_from_handoff_packages,
-    activation_forecasts_from_timeline_milestones,
+    activation_forecasts_from_timeline_milestones, activation_guardrail_checks_from_rollups,
     activation_handoff_packages_from_runbook_entries, activation_health_from_candidates,
     activation_incident_briefs_from_observability_probes, activation_maintenance_from_candidates,
     activation_observability_probes_from_rollups, activation_operator_tasks_from_playbook_steps,
@@ -95,7 +95,9 @@ use smart_home_integration_catalog::{
     IntegrationActivationEvidenceSummary, IntegrationActivationExecutionPacket,
     IntegrationActivationExecutionStatus, IntegrationActivationExecutionSummary,
     IntegrationActivationForecastAction, IntegrationActivationForecastItem,
-    IntegrationActivationForecastSummary, IntegrationActivationHandoffPackage,
+    IntegrationActivationForecastSummary, IntegrationActivationGuardrailCheck,
+    IntegrationActivationGuardrailKind, IntegrationActivationGuardrailSummary,
+    IntegrationActivationGuardrailVerdict, IntegrationActivationHandoffPackage,
     IntegrationActivationHandoffStatus, IntegrationActivationHandoffSummary,
     IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
     IntegrationActivationHealthSummary, IntegrationActivationIncidentAction,
@@ -166,6 +168,7 @@ use smart_home_runtime::{
     WorkerHeartbeatSchedule, WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
+use std::collections::BTreeSet;
 use std::rc::Rc;
 
 pub const SMART_HOME_LIST_BRIDGES_TOOL_ID: &str = "smart_home.list_bridges";
@@ -391,6 +394,14 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_INCIDENTS_TOOL_ID: &str =
     "smart_home.list_integration_activation_incidents";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_incident_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_guardrails";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_guardrail_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_ASSURANCE_TOOL_ID: &str =
+    "smart_home.list_integration_activation_assurance";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_ASSURANCE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_assurance_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -897,6 +908,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID => {
                     let query = integration_activation_incident_query(&arguments)?;
                     Ok(get_integration_activation_incident_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID => {
+                    let query = integration_activation_guardrail_query(&arguments)?;
+                    Ok(list_integration_activation_guardrails_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_guardrail_query(&arguments)?;
+                    Ok(get_integration_activation_guardrail_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_ASSURANCE_TOOL_ID => {
+                    let query = integration_activation_assurance_query(&arguments)?;
+                    Ok(list_integration_activation_assurance_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_ASSURANCE_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_assurance_query(&arguments)?;
+                    Ok(get_integration_activation_assurance_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2900,6 +2929,64 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation incident summary",
             "Return compact D23A activation incident counts by severity, response action, observability status, blockers, watchtower signal coverage, verification, rollback, and readiness.",
             integration_activation_incident_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID,
+            "List smart-home integration activation guardrails",
+            "List Chief-facing D23A activation guardrail checks that normalize incidents, policy risk, dependencies, and readiness gaps into pass, monitor, review, or blocked verdicts.",
+            integration_activation_guardrail_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_guardrails", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_guardrails", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation guardrail summary",
+            "Return compact D23A activation guardrail counts by verdict, guardrail kind, policy surface, blocker, and review posture.",
+            integration_activation_guardrail_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_ASSURANCE_TOOL_ID,
+            "List smart-home integration activation assurance",
+            "List Chief-facing D23A activation assurance assessments that turn guardrail verdicts into owner-lane, recommended-view, blocker, review, and monitoring posture.",
+            integration_activation_assurance_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_assurance", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_assurance", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_ASSURANCE_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation assurance summary",
+            "Return compact D23A activation assurance counts by status, focus area, owner lane, policy surface, blocker, attention, and recommended view.",
+            integration_activation_assurance_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5872,6 +5959,323 @@ struct IntegrationActivationIncidentQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationGuardrailQuery {
+    incident: IntegrationActivationIncidentQuery,
+    risk: IntegrationActivationRiskQuery,
+    dependency: IntegrationActivationDependencyQuery,
+    gaps: IntegrationReadinessGapQuery,
+    kind: Option<IntegrationActivationGuardrailKind>,
+    verdict: Option<IntegrationActivationGuardrailVerdict>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    guardrail_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum IntegrationActivationAssuranceStatus {
+    Clear,
+    Monitor,
+    NeedsReview,
+    Blocked,
+}
+
+impl IntegrationActivationAssuranceStatus {
+    fn from_guardrail_verdict(verdict: IntegrationActivationGuardrailVerdict) -> Self {
+        match verdict {
+            IntegrationActivationGuardrailVerdict::Pass => Self::Clear,
+            IntegrationActivationGuardrailVerdict::Monitor => Self::Monitor,
+            IntegrationActivationGuardrailVerdict::NeedsReview => Self::NeedsReview,
+            IntegrationActivationGuardrailVerdict::Blocked => Self::Blocked,
+        }
+    }
+
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Clear => "clear",
+            Self::Monitor => "monitor",
+            Self::NeedsReview => "needs_review",
+            Self::Blocked => "blocked",
+        }
+    }
+
+    fn blocks_activation(self) -> bool {
+        matches!(self, Self::Blocked)
+    }
+
+    fn requires_attention(self) -> bool {
+        matches!(self, Self::NeedsReview | Self::Blocked)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationAssuranceAssessment {
+    sequence: usize,
+    assurance_id: String,
+    source_guardrail_id: String,
+    status: IntegrationActivationAssuranceStatus,
+    focus: IntegrationActivationGuardrailKind,
+    owner_lane: IntegrationActivationResponseOwnerLane,
+    recommended_view: IntegrationActivationPlaybookView,
+    title: String,
+    summary: String,
+    priority: u8,
+    integration_ids: Vec<IntegrationId>,
+    required_tier: PrivilegeTier,
+    policy_surface: Option<IntegrationPolicySurface>,
+    guardrail_verdict: IntegrationActivationGuardrailVerdict,
+    incident_severity: Option<IntegrationActivationIncidentSeverity>,
+    incident_action: Option<IntegrationActivationIncidentAction>,
+    risk_kind: Option<IntegrationActivationRiskKind>,
+    dependency_integration_id: Option<IntegrationId>,
+    dependent_integration_id: Option<IntegrationId>,
+    readiness_gap_kind: Option<String>,
+    blocks_activation: bool,
+    requires_attention: bool,
+}
+
+impl IntegrationActivationAssuranceAssessment {
+    fn from_guardrail_check(sequence: usize, check: &IntegrationActivationGuardrailCheck) -> Self {
+        let status = IntegrationActivationAssuranceStatus::from_guardrail_verdict(check.verdict);
+        let owner_lane = activation_assurance_owner_lane(check.kind);
+        let recommended_view = activation_assurance_recommended_view(check.kind);
+
+        Self {
+            sequence,
+            assurance_id: format!("activation-assurance-{sequence}"),
+            source_guardrail_id: check.guardrail_id.clone(),
+            status,
+            focus: check.kind,
+            owner_lane,
+            recommended_view,
+            title: check.title.clone(),
+            summary: check.summary.clone(),
+            priority: check.priority,
+            integration_ids: check.integration_ids.clone(),
+            required_tier: check.required_tier,
+            policy_surface: check.policy_surface,
+            guardrail_verdict: check.verdict,
+            incident_severity: check.incident_severity,
+            incident_action: check.incident_action,
+            risk_kind: check.risk_kind,
+            dependency_integration_id: check.dependency_integration_id.clone(),
+            dependent_integration_id: check.dependent_integration_id.clone(),
+            readiness_gap_kind: check.readiness_gap_kind.clone(),
+            blocks_activation: check.blocks_activation || status.blocks_activation(),
+            requires_attention: check.requires_attention || status.requires_attention(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationAssuranceSummary {
+    total_assessments: usize,
+    unique_integrations: usize,
+    assessments_requiring_attention: usize,
+    blocked_assessments: usize,
+    needs_review_assessments: usize,
+    monitor_assessments: usize,
+    clear_assessments: usize,
+    incident_assessments: usize,
+    policy_risk_assessments: usize,
+    dependency_assessments: usize,
+    readiness_gap_assessments: usize,
+    platform_owner_assessments: usize,
+    integration_owner_assessments: usize,
+    security_owner_assessments: usize,
+    reviewer_owner_assessments: usize,
+    verification_owner_assessments: usize,
+    audit_owner_assessments: usize,
+    assessments_with_policy_surface: usize,
+    assurance_ready_assessments: usize,
+    first_attention_priority: Option<u8>,
+    first_blocked_priority: Option<u8>,
+    first_review_priority: Option<u8>,
+    highest_policy_tier: PrivilegeTier,
+    overall_status: IntegrationActivationHealthStatus,
+}
+
+impl IntegrationActivationAssuranceSummary {
+    fn from_assessments<'a>(
+        assessments: impl IntoIterator<Item = &'a IntegrationActivationAssuranceAssessment>,
+    ) -> Self {
+        let mut summary = Self {
+            total_assessments: 0,
+            unique_integrations: 0,
+            assessments_requiring_attention: 0,
+            blocked_assessments: 0,
+            needs_review_assessments: 0,
+            monitor_assessments: 0,
+            clear_assessments: 0,
+            incident_assessments: 0,
+            policy_risk_assessments: 0,
+            dependency_assessments: 0,
+            readiness_gap_assessments: 0,
+            platform_owner_assessments: 0,
+            integration_owner_assessments: 0,
+            security_owner_assessments: 0,
+            reviewer_owner_assessments: 0,
+            verification_owner_assessments: 0,
+            audit_owner_assessments: 0,
+            assessments_with_policy_surface: 0,
+            assurance_ready_assessments: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_review_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for assessment in assessments {
+            summary.total_assessments += 1;
+            for integration_id in &assessment.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            if assessment.requires_attention {
+                summary.assessments_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, assessment.priority);
+            }
+            if assessment.blocks_activation {
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, assessment.priority);
+            }
+            match assessment.status {
+                IntegrationActivationAssuranceStatus::Clear => {
+                    summary.clear_assessments += 1;
+                    summary.assurance_ready_assessments += 1;
+                }
+                IntegrationActivationAssuranceStatus::Monitor => {
+                    summary.monitor_assessments += 1;
+                    summary.assurance_ready_assessments += 1;
+                }
+                IntegrationActivationAssuranceStatus::NeedsReview => {
+                    summary.needs_review_assessments += 1;
+                    summary.first_review_priority =
+                        min_optional_priority(summary.first_review_priority, assessment.priority);
+                }
+                IntegrationActivationAssuranceStatus::Blocked => {
+                    summary.blocked_assessments += 1;
+                }
+            }
+            match assessment.focus {
+                IntegrationActivationGuardrailKind::Incident => summary.incident_assessments += 1,
+                IntegrationActivationGuardrailKind::PolicyRisk => {
+                    summary.policy_risk_assessments += 1
+                }
+                IntegrationActivationGuardrailKind::Dependency => {
+                    summary.dependency_assessments += 1
+                }
+                IntegrationActivationGuardrailKind::ReadinessGap => {
+                    summary.readiness_gap_assessments += 1
+                }
+            }
+            match assessment.owner_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_owner_assessments += 1
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_owner_assessments += 1
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_owner_assessments += 1
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_owner_assessments += 1
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_owner_assessments += 1
+                }
+                IntegrationActivationResponseOwnerLane::Audit => {
+                    summary.audit_owner_assessments += 1
+                }
+            }
+            if assessment.policy_surface.is_some() {
+                summary.assessments_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(assessment.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.total_assessments == 0 {
+            IntegrationActivationHealthStatus::Empty
+        } else if summary.blocked_assessments > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.needs_review_assessments > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else {
+            IntegrationActivationHealthStatus::Ready
+        };
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_assessments > 0
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.assessments_requiring_attention > 0
+    }
+
+    fn is_empty(&self) -> bool {
+        self.total_assessments == 0
+    }
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationAssuranceQuery {
+    guardrail: IntegrationActivationGuardrailQuery,
+    status: Option<IntegrationActivationAssuranceStatus>,
+    focus: Option<IntegrationActivationGuardrailKind>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    assurance_limit: Option<usize>,
+}
+
+fn min_optional_priority(current: Option<u8>, priority: u8) -> Option<u8> {
+    Some(current.map_or(priority, |existing| existing.min(priority)))
+}
+
+fn activation_assurance_owner_lane(
+    focus: IntegrationActivationGuardrailKind,
+) -> IntegrationActivationResponseOwnerLane {
+    match focus {
+        IntegrationActivationGuardrailKind::Incident => {
+            IntegrationActivationResponseOwnerLane::Verification
+        }
+        IntegrationActivationGuardrailKind::PolicyRisk => {
+            IntegrationActivationResponseOwnerLane::Security
+        }
+        IntegrationActivationGuardrailKind::Dependency => {
+            IntegrationActivationResponseOwnerLane::Integration
+        }
+        IntegrationActivationGuardrailKind::ReadinessGap => {
+            IntegrationActivationResponseOwnerLane::Platform
+        }
+    }
+}
+
+fn activation_assurance_recommended_view(
+    focus: IntegrationActivationGuardrailKind,
+) -> IntegrationActivationPlaybookView {
+    match focus {
+        IntegrationActivationGuardrailKind::Incident => {
+            IntegrationActivationPlaybookView::StatusDashboard
+        }
+        IntegrationActivationGuardrailKind::PolicyRisk => {
+            IntegrationActivationPlaybookView::RiskRegister
+        }
+        IntegrationActivationGuardrailKind::Dependency => {
+            IntegrationActivationPlaybookView::DependencyGraph
+        }
+        IntegrationActivationGuardrailKind::ReadinessGap => {
+            IntegrationActivationPlaybookView::ConstraintQueue
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -6849,6 +7253,66 @@ fn integration_activation_incident_query(
     })
 }
 
+fn integration_activation_guardrail_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationGuardrailQuery, ToolCallError> {
+    let kind = optional_string(arguments, "guardrail_kind")?
+        .or(optional_string(arguments, "kind")?)
+        .map(|label| parse_activation_guardrail_kind(&label))
+        .transpose()?;
+    let verdict = optional_string(arguments, "guardrail_verdict")?
+        .or(optional_string(arguments, "verdict")?)
+        .map(|label| parse_activation_guardrail_verdict(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationGuardrailQuery {
+        incident: integration_activation_incident_query(arguments)?,
+        risk: integration_activation_risk_query(arguments)?,
+        dependency: integration_activation_dependency_query(arguments)?,
+        gaps: integration_readiness_gap_query(arguments)?,
+        kind,
+        verdict,
+        requires_attention: optional_bool(arguments, "guardrail_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "guardrail_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        guardrail_limit: optional_u64(arguments, "guardrail_limit")?
+            .or(optional_u64(arguments, "check_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_assurance_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationAssuranceQuery, ToolCallError> {
+    let status = optional_string(arguments, "assurance_status")?
+        .or(optional_string(arguments, "status")?)
+        .map(|label| parse_activation_assurance_status(&label))
+        .transpose()?;
+    let focus = optional_string(arguments, "assurance_focus")?
+        .or(optional_string(arguments, "focus")?)
+        .map(|label| parse_activation_guardrail_kind(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "assurance_owner_lane")?
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationAssuranceQuery {
+        guardrail: integration_activation_guardrail_query(arguments)?,
+        status,
+        focus,
+        owner_lane,
+        requires_attention: optional_bool(arguments, "assurance_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "assurance_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        assurance_limit: optional_u64(arguments, "assurance_limit")?
+            .or(optional_u64(arguments, "assessment_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
 fn integration_activation_risk_query(
     arguments: &JsonValue,
 ) -> Result<IntegrationActivationRiskQuery, ToolCallError> {
@@ -7515,7 +7979,13 @@ fn integration_activation_handoff_packages_for_query(
     let (entries, catalog_count) = integration_activation_runbook_entries_for_query(&query.runbook);
     let (risks, _) = integration_activation_risk_for_query(&query.risk);
     let (graph, _) = integration_activation_dependency_graph_for_query(&query.dependency);
-    let (gap_inventory, _) = integration_readiness_gap_inventory_for_query(&query.gaps.readiness);
+    let (mut gap_inventory, _) =
+        integration_readiness_gap_inventory_for_query(&query.gaps.readiness);
+    if let Some(limit) = query.gaps.limit_per_kind {
+        gap_inventory.primitive_gaps.truncate(limit);
+        gap_inventory.capability_gaps.truncate(limit);
+        gap_inventory.dependency_gaps.truncate(limit);
+    }
     let mut packages = activation_handoff_packages_from_runbook_entries(
         entries.iter(),
         &risks,
@@ -8274,6 +8744,71 @@ fn integration_activation_incident_briefs_for_query(
     }
 
     (briefs, catalog_count)
+}
+
+fn integration_activation_guardrail_checks_for_query(
+    query: &IntegrationActivationGuardrailQuery,
+) -> (Vec<IntegrationActivationGuardrailCheck>, usize) {
+    let (incidents, catalog_count) =
+        integration_activation_incident_briefs_for_query(&query.incident);
+    let (risks, _) = integration_activation_risk_for_query(&query.risk);
+    let (graph, _) = integration_activation_dependency_graph_for_query(&query.dependency);
+    let (gap_inventory, _) = integration_readiness_gap_inventory_for_query(&query.gaps.readiness);
+    let mut checks =
+        activation_guardrail_checks_from_rollups(&incidents, &risks, &graph, &gap_inventory);
+
+    if let Some(kind) = query.kind {
+        checks.retain(|check| check.kind == kind);
+    }
+    if let Some(verdict) = query.verdict {
+        checks.retain(|check| check.verdict == verdict);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        checks.retain(|check| check.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        checks.retain(|check| check.blocks_activation() == blocked);
+    }
+    if let Some(limit) = query.guardrail_limit {
+        checks.truncate(limit);
+    }
+
+    (checks, catalog_count)
+}
+
+fn integration_activation_assurance_for_query(
+    query: &IntegrationActivationAssuranceQuery,
+) -> (Vec<IntegrationActivationAssuranceAssessment>, usize) {
+    let (checks, catalog_count) =
+        integration_activation_guardrail_checks_for_query(&query.guardrail);
+    let mut assessments: Vec<_> = checks
+        .iter()
+        .enumerate()
+        .map(|(index, check)| {
+            IntegrationActivationAssuranceAssessment::from_guardrail_check(index + 1, check)
+        })
+        .collect();
+
+    if let Some(status) = query.status {
+        assessments.retain(|assessment| assessment.status == status);
+    }
+    if let Some(focus) = query.focus {
+        assessments.retain(|assessment| assessment.focus == focus);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        assessments.retain(|assessment| assessment.owner_lane == owner_lane);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        assessments.retain(|assessment| assessment.requires_attention == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        assessments.retain(|assessment| assessment.blocks_activation == blocked);
+    }
+    if let Some(limit) = query.assurance_limit {
+        assessments.truncate(limit);
+    }
+
+    (assessments, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -11658,6 +12193,147 @@ fn get_integration_activation_incident_summary_output_handler_output(
                 "briefs_incident_ready",
                 integer(summary.briefs_incident_ready as i64),
             ),
+        ]),
+    )
+}
+
+fn list_integration_activation_guardrails_output_handler_output(
+    query: IntegrationActivationGuardrailQuery,
+) -> ToolHandlerOutput {
+    let (checks, catalog_count) = integration_activation_guardrail_checks_for_query(&query);
+    let summary = IntegrationActivationGuardrailSummary::from_checks(checks.iter());
+    let count = checks.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_guardrails",
+            JsonValue::Array(checks.iter().map(activation_guardrail_check_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_guardrail_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_guardrails"),
+            ),
+            ("checks", integer(count as i64)),
+            ("blocked_checks", integer(summary.blocked_checks as i64)),
+            (
+                "checks_requiring_attention",
+                integer(summary.checks_requiring_attention as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_guardrail_summary_output_handler_output(
+    query: IntegrationActivationGuardrailQuery,
+) -> ToolHandlerOutput {
+    let (checks, _) = integration_activation_guardrail_checks_for_query(&query);
+    let summary = IntegrationActivationGuardrailSummary::from_checks(checks.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_guardrail_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_guardrail_summary"),
+            ),
+            ("total_checks", integer(summary.total_checks as i64)),
+            ("blocked_checks", integer(summary.blocked_checks as i64)),
+            (
+                "checks_requiring_attention",
+                integer(summary.checks_requiring_attention as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn list_integration_activation_assurance_output_handler_output(
+    query: IntegrationActivationAssuranceQuery,
+) -> ToolHandlerOutput {
+    let (assessments, catalog_count) = integration_activation_assurance_for_query(&query);
+    let summary = IntegrationActivationAssuranceSummary::from_assessments(assessments.iter());
+    let count = assessments.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_assurance",
+            JsonValue::Array(
+                assessments
+                    .iter()
+                    .map(activation_assurance_assessment_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_assurance_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_assurance")),
+            ("assessments", integer(count as i64)),
+            (
+                "blocked_assessments",
+                integer(summary.blocked_assessments as i64),
+            ),
+            (
+                "assessments_requiring_attention",
+                integer(summary.assessments_requiring_attention as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_assurance_summary_output_handler_output(
+    query: IntegrationActivationAssuranceQuery,
+) -> ToolHandlerOutput {
+    let (assessments, _) = integration_activation_assurance_for_query(&query);
+    let summary = IntegrationActivationAssuranceSummary::from_assessments(assessments.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_assurance_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_assurance_summary"),
+            ),
+            (
+                "total_assessments",
+                integer(summary.total_assessments as i64),
+            ),
+            (
+                "blocked_assessments",
+                integer(summary.blocked_assessments as i64),
+            ),
+            (
+                "assessments_requiring_attention",
+                integer(summary.assessments_requiring_attention as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
         ]),
     )
 }
@@ -23152,6 +23828,396 @@ fn integration_activation_incident_summary_json(
     ])
 }
 
+fn activation_guardrail_check_json(check: &IntegrationActivationGuardrailCheck) -> JsonValue {
+    object([
+        ("sequence", integer(check.sequence as i64)),
+        ("guardrail_id", string(&check.guardrail_id)),
+        ("kind", string(check.kind.as_str())),
+        ("verdict", string(check.verdict.as_str())),
+        ("title", string(&check.title)),
+        ("summary", string(&check.summary)),
+        ("priority", integer(check.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                check
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(check.integration_count() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(check.required_tier)),
+        ),
+        (
+            "policy_surface",
+            check
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "incident_severity",
+            check
+                .incident_severity
+                .map(|severity| string(severity.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "incident_action",
+            check
+                .incident_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "risk_kind",
+            check
+                .risk_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependency_integration_id",
+            check
+                .dependency_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependent_integration_id",
+            check
+                .dependent_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "readiness_gap_kind",
+            check
+                .readiness_gap_kind
+                .as_deref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "blocks_activation",
+            JsonValue::Bool(check.blocks_activation()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(check.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_guardrail_summary_json(
+    summary: &IntegrationActivationGuardrailSummary,
+) -> JsonValue {
+    object([
+        ("total_checks", integer(summary.total_checks as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "checks_requiring_attention",
+            integer(summary.checks_requiring_attention as i64),
+        ),
+        ("blocked_checks", integer(summary.blocked_checks as i64)),
+        (
+            "needs_review_checks",
+            integer(summary.needs_review_checks as i64),
+        ),
+        ("monitor_checks", integer(summary.monitor_checks as i64)),
+        ("pass_checks", integer(summary.pass_checks as i64)),
+        ("incident_checks", integer(summary.incident_checks as i64)),
+        (
+            "policy_risk_checks",
+            integer(summary.policy_risk_checks as i64),
+        ),
+        (
+            "dependency_checks",
+            integer(summary.dependency_checks as i64),
+        ),
+        (
+            "readiness_gap_checks",
+            integer(summary.readiness_gap_checks as i64),
+        ),
+        (
+            "checks_with_policy_surface",
+            integer(summary.checks_with_policy_surface as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
+fn activation_assurance_assessment_json(
+    assessment: &IntegrationActivationAssuranceAssessment,
+) -> JsonValue {
+    object([
+        ("sequence", integer(assessment.sequence as i64)),
+        ("assurance_id", string(&assessment.assurance_id)),
+        (
+            "source_guardrail_id",
+            string(&assessment.source_guardrail_id),
+        ),
+        ("status", string(assessment.status.as_str())),
+        ("focus", string(assessment.focus.as_str())),
+        ("owner_lane", string(assessment.owner_lane.as_str())),
+        (
+            "recommended_view",
+            string(assessment.recommended_view.as_str()),
+        ),
+        ("title", string(&assessment.title)),
+        ("summary", string(&assessment.summary)),
+        ("priority", integer(assessment.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                assessment
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(assessment.integration_ids.len() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(assessment.required_tier)),
+        ),
+        (
+            "policy_surface",
+            assessment
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "guardrail_verdict",
+            string(assessment.guardrail_verdict.as_str()),
+        ),
+        (
+            "incident_severity",
+            assessment
+                .incident_severity
+                .map(|severity| string(severity.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "incident_action",
+            assessment
+                .incident_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "risk_kind",
+            assessment
+                .risk_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependency_integration_id",
+            assessment
+                .dependency_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependent_integration_id",
+            assessment
+                .dependent_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "readiness_gap_kind",
+            assessment
+                .readiness_gap_kind
+                .as_deref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "assurance_ready",
+            JsonValue::Bool(matches!(
+                assessment.status,
+                IntegrationActivationAssuranceStatus::Clear
+                    | IntegrationActivationAssuranceStatus::Monitor
+            )),
+        ),
+        (
+            "blocks_activation",
+            JsonValue::Bool(assessment.blocks_activation),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(assessment.requires_attention),
+        ),
+    ])
+}
+
+fn integration_activation_assurance_summary_json(
+    summary: &IntegrationActivationAssuranceSummary,
+) -> JsonValue {
+    object([
+        (
+            "total_assessments",
+            integer(summary.total_assessments as i64),
+        ),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "assessments_requiring_attention",
+            integer(summary.assessments_requiring_attention as i64),
+        ),
+        (
+            "blocked_assessments",
+            integer(summary.blocked_assessments as i64),
+        ),
+        (
+            "needs_review_assessments",
+            integer(summary.needs_review_assessments as i64),
+        ),
+        (
+            "monitor_assessments",
+            integer(summary.monitor_assessments as i64),
+        ),
+        (
+            "clear_assessments",
+            integer(summary.clear_assessments as i64),
+        ),
+        (
+            "incident_assessments",
+            integer(summary.incident_assessments as i64),
+        ),
+        (
+            "policy_risk_assessments",
+            integer(summary.policy_risk_assessments as i64),
+        ),
+        (
+            "dependency_assessments",
+            integer(summary.dependency_assessments as i64),
+        ),
+        (
+            "readiness_gap_assessments",
+            integer(summary.readiness_gap_assessments as i64),
+        ),
+        (
+            "platform_owner_assessments",
+            integer(summary.platform_owner_assessments as i64),
+        ),
+        (
+            "integration_owner_assessments",
+            integer(summary.integration_owner_assessments as i64),
+        ),
+        (
+            "security_owner_assessments",
+            integer(summary.security_owner_assessments as i64),
+        ),
+        (
+            "reviewer_owner_assessments",
+            integer(summary.reviewer_owner_assessments as i64),
+        ),
+        (
+            "verification_owner_assessments",
+            integer(summary.verification_owner_assessments as i64),
+        ),
+        (
+            "audit_owner_assessments",
+            integer(summary.audit_owner_assessments as i64),
+        ),
+        (
+            "assessments_with_policy_surface",
+            integer(summary.assessments_with_policy_surface as i64),
+        ),
+        (
+            "assurance_ready_assessments",
+            integer(summary.assurance_ready_assessments as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -26376,6 +27442,56 @@ fn parse_activation_incident_action(
     }
 }
 
+fn parse_activation_guardrail_kind(
+    label: &str,
+) -> Result<IntegrationActivationGuardrailKind, ToolCallError> {
+    match label {
+        "incident" | "incidents" => Ok(IntegrationActivationGuardrailKind::Incident),
+        "policy_risk" | "risk" | "policy" => Ok(IntegrationActivationGuardrailKind::PolicyRisk),
+        "dependency" | "dependencies" => Ok(IntegrationActivationGuardrailKind::Dependency),
+        "readiness_gap" | "readiness_gaps" | "gap" | "gaps" => {
+            Ok(IntegrationActivationGuardrailKind::ReadinessGap)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation guardrail kind `{label}`"
+        ))),
+    }
+}
+
+fn parse_activation_guardrail_verdict(
+    label: &str,
+) -> Result<IntegrationActivationGuardrailVerdict, ToolCallError> {
+    match label {
+        "pass" | "passed" | "ok" => Ok(IntegrationActivationGuardrailVerdict::Pass),
+        "monitor" | "watch" | "observe" => Ok(IntegrationActivationGuardrailVerdict::Monitor),
+        "needs_review" | "review" | "attention" => {
+            Ok(IntegrationActivationGuardrailVerdict::NeedsReview)
+        }
+        "blocked" | "blocker" | "hold" => Ok(IntegrationActivationGuardrailVerdict::Blocked),
+        _ => Err(validation_error(format!(
+            "unknown activation guardrail verdict `{label}`"
+        ))),
+    }
+}
+
+fn parse_activation_assurance_status(
+    label: &str,
+) -> Result<IntegrationActivationAssuranceStatus, ToolCallError> {
+    match label {
+        "clear" | "pass" | "passed" | "ready" | "ok" => {
+            Ok(IntegrationActivationAssuranceStatus::Clear)
+        }
+        "monitor" | "watch" | "observe" => Ok(IntegrationActivationAssuranceStatus::Monitor),
+        "needs_review" | "review" | "attention" => {
+            Ok(IntegrationActivationAssuranceStatus::NeedsReview)
+        }
+        "blocked" | "blocker" | "hold" => Ok(IntegrationActivationAssuranceStatus::Blocked),
+        _ => Err(validation_error(format!(
+            "unknown activation assurance status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -28311,6 +29427,86 @@ fn integration_activation_incident_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_guardrail_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_incident_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new("guardrail_kind", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("kind", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("guardrail_verdict", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("verdict", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "guardrail_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "guardrail_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new("guardrail_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("check_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("risk_kind", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("required_tier", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("policy_surface", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("blocking_only", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new("node_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("edge_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("limit_per_kind", JsonSchema::Integer));
+    }
+    schema
+}
+
+fn integration_activation_assurance_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_guardrail_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new("assurance_status", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("status", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("assurance_focus", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("focus", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "assurance_owner_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("owner_lane", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "assurance_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "assurance_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new("assurance_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("assessment_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -28455,7 +29651,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 139);
+        assert_eq!(definitions.len(), 143);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -28844,9 +30040,21 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_ASSURANCE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_ASSURANCE_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            131
+            135
         );
         assert_eq!(
             export
@@ -29022,6 +30230,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_REVIEW_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(
@@ -29372,11 +30588,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(139))
+            Some(&integer(143))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(131))
+            Some(&integer(135))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -35010,6 +36226,287 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_guardrails_request = request(
+            "call-list-integration-activation-guardrails",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("guardrail_requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_065,
+        );
+        let list_activation_guardrails_trace =
+            tool_runtime.invoke_with_events(&list_activation_guardrails_request);
+        assert!(list_activation_guardrails_trace.result.ok);
+        assert_eq!(
+            list_activation_guardrails_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_guardrails_output = list_activation_guardrails_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_guardrail_count =
+            integer_value(field(list_activation_guardrails_output, "count").unwrap()).unwrap();
+        assert!(activation_guardrail_count >= 4);
+        let activation_guardrail_summary =
+            field(list_activation_guardrails_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_guardrail_summary, "total_checks"),
+            Some(&integer(activation_guardrail_count))
+        );
+        assert!(
+            integer_value(field(activation_guardrail_summary, "incident_checks").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_guardrail_summary, "policy_risk_checks").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_guardrail_summary, "dependency_checks").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_guardrail_summary, "readiness_gap_checks").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_guardrail_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_guardrail_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_guardrail = array_item(
+            field(list_activation_guardrails_output, "activation_guardrails").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_guardrail, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_guardrail_summary_request = request(
+            "call-integration-activation-guardrail-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("guardrail_blocked", JsonValue::Bool(true)),
+            ]),
+            5_066,
+        );
+        let activation_guardrail_summary_trace =
+            tool_runtime.invoke_with_events(&activation_guardrail_summary_request);
+        assert!(activation_guardrail_summary_trace.result.ok);
+        assert_eq!(
+            activation_guardrail_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_guardrail_summary_output = activation_guardrail_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_guardrail_rollup =
+            field(activation_guardrail_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_guardrail_rollup, "blocked_checks").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_guardrail_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let list_activation_assurance_request = request(
+            "call-list-integration-activation-assurance",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_ASSURANCE_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("status", string("blocked")),
+                ("owner_lane", string("verification")),
+                ("assurance_limit", integer(3)),
+            ]),
+            5_067,
+        );
+        let list_activation_assurance_trace =
+            tool_runtime.invoke_with_events(&list_activation_assurance_request);
+        assert!(list_activation_assurance_trace.result.ok);
+        assert_eq!(
+            list_activation_assurance_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_assurance_output = list_activation_assurance_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_assurance_count =
+            integer_value(field(list_activation_assurance_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_assurance_count));
+        let activation_assurance_summary =
+            field(list_activation_assurance_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_assurance_summary, "total_assessments"),
+            Some(&integer(activation_assurance_count))
+        );
+        assert!(
+            integer_value(
+                field(
+                    activation_assurance_summary,
+                    "verification_owner_assessments"
+                )
+                .unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_assurance_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_assurance_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_assurance = array_item(
+            field(list_activation_assurance_output, "activation_assurance").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_assurance, "status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_assurance, "owner_lane"),
+            Some(&string("verification"))
+        );
+        assert_eq!(
+            field(activation_assurance, "blocks_activation"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_assurance_summary_request = request(
+            "call-integration-activation-assurance-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_ASSURANCE_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("assurance_blocked", JsonValue::Bool(true)),
+            ]),
+            5_068,
+        );
+        let activation_assurance_summary_trace =
+            tool_runtime.invoke_with_events(&activation_assurance_summary_request);
+        assert!(activation_assurance_summary_trace.result.ok);
+        assert_eq!(
+            activation_assurance_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_assurance_summary_output = activation_assurance_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_assurance_rollup =
+            field(activation_assurance_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_assurance_rollup, "blocked_assessments").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_assurance_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -36938,6 +38435,22 @@ mod tests {
             activation_incident_summary_request,
             activation_incident_summary_trace,
         );
+        journal.record_trace(
+            list_activation_guardrails_request,
+            list_activation_guardrails_trace,
+        );
+        journal.record_trace(
+            activation_guardrail_summary_request,
+            activation_guardrail_summary_trace,
+        );
+        journal.record_trace(
+            list_activation_assurance_request,
+            list_activation_assurance_trace,
+        );
+        journal.record_trace(
+            activation_assurance_summary_request,
+            activation_assurance_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -37011,9 +38524,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 139);
-        assert_eq!(journal_summary.completed_count, 139);
-        assert_eq!(journal.audit_records().len(), 139);
+        assert_eq!(journal_summary.invocation_count, 143);
+        assert_eq!(journal_summary.completed_count, 143);
+        assert_eq!(journal.audit_records().len(), 143);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add `measureTransientDelayBetweenProbes` and parsed transient
+  `.measure ... TRIG ... TARG ...` routing so deck measurements can report
+  trigger-to-target delays with counted crossing controls, matching Python and
+  Rust.
+- Add `measureTransientWhenProbeCounted` and parsed transient
+  `.measure ... WHEN probe=target RISE|FALL|CROSS=n` routing so deck
+  measurements can report counted threshold occurrences over optional
+  `FROM=` / `TO=` windows, matching Python and Rust.
 - Add `measureTransientWhenProbe` and parsed transient
   `.measure ... WHEN probe=target` routing so deck measurements can report the
   first crossing time over optional `FROM=` / `TO=` windows, matching Python

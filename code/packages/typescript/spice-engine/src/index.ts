@@ -535,7 +535,15 @@ export interface DeckMeasurementCard {
   readonly toValue?: number;
   readonly atValue?: number;
   readonly targetValue?: number;
+  readonly crossingKind?: MeasurementCrossingKind;
+  readonly crossingCount?: number;
+  readonly triggerProbe?: string;
+  readonly triggerValue?: number;
+  readonly triggerCrossingKind?: MeasurementCrossingKind;
+  readonly triggerCrossingCount?: number;
 }
+
+export type MeasurementCrossingKind = "rise" | "fall" | "cross";
 
 export interface DeckMeasurementDiagnostic {
   readonly code: string;
@@ -3534,6 +3542,11 @@ function resolveMeasurementLine(
     return;
   }
 
+  if (tokens[3].trim().toLowerCase() === "trig") {
+    resolveMeasurementDelayLine(tokens, lineNumber, directive, state, analysisName, name);
+    return;
+  }
+
   const mode = normalizeMeasurementModeToken(tokens[3]);
   if (mode === undefined) {
     addMeasurementDiagnostic(state, {
@@ -3597,6 +3610,8 @@ function resolveMeasurementLine(
   let fromValue: number | undefined;
   let toValue: number | undefined;
   let atValue: number | undefined;
+  let crossingKind: MeasurementCrossingKind | undefined;
+  let crossingCount: number | undefined;
   const seenWindowTokens = new Set<string>();
   const diagnosticCount = state.diagnostics.length;
   for (const token of tokens.slice(5)) {
@@ -3613,7 +3628,8 @@ function resolveMeasurementLine(
     }
     const key = token.slice(0, equalsIndex).trim().toLowerCase();
     const expression = token.slice(equalsIndex + 1);
-    if (key !== "from" && key !== "to" && key !== "at") {
+    if (key !== "from" && key !== "to" && key !== "at" && key !== "rise" && key !== "fall" &&
+      key !== "cross") {
       addMeasurementDiagnostic(state, {
         code: "SPICE_DECK_MEASURE_ARGUMENT",
         directive,
@@ -3634,6 +3650,55 @@ function resolveMeasurementLine(
       continue;
     }
     seenWindowTokens.add(key);
+    if (key === "rise" || key === "fall" || key === "cross") {
+      if (mode !== "when") {
+        addMeasurementDiagnostic(state, {
+          code: "SPICE_DECK_MEASURE_ARGUMENT",
+          directive,
+          lineNumber,
+          message: "RISE, FALL, and CROSS options are only supported with WHEN mode",
+          token,
+        });
+        continue;
+      }
+      if (crossingKind !== undefined) {
+        addMeasurementDiagnostic(state, {
+          code: "SPICE_DECK_MEASURE_ARGUMENT",
+          directive,
+          lineNumber,
+          message: "only one of RISE, FALL, or CROSS may be specified",
+          token,
+        });
+        continue;
+      }
+      try {
+        const value = evaluateParameterExpression(
+          stripExpressionDelimiters(expression.trim()),
+          emptyParameterState,
+        );
+        if (!Number.isFinite(value) || value < 1 || !Number.isInteger(value)) {
+          addMeasurementDiagnostic(state, {
+            code: "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            lineNumber,
+            message: "RISE, FALL, and CROSS counts must be positive integers",
+            token,
+          });
+          continue;
+        }
+        crossingKind = key;
+        crossingCount = value;
+      } catch (error) {
+        addMeasurementDiagnostic(state, {
+          code: "SPICE_DECK_MEASURE_EXPRESSION",
+          directive,
+          lineNumber,
+          message: error instanceof Error ? error.message : String(error),
+          token,
+        });
+      }
+      continue;
+    }
     try {
       const value = evaluateParameterExpression(
         stripExpressionDelimiters(expression.trim()),
@@ -3714,7 +3779,314 @@ function resolveMeasurementLine(
     toValue,
     atValue,
     targetValue,
+    crossingKind,
+    crossingCount,
+    triggerProbe: undefined,
+    triggerValue: undefined,
+    triggerCrossingKind: undefined,
+    triggerCrossingCount: undefined,
   });
+}
+
+interface ParsedMeasurementEdge {
+  readonly probe: string;
+  readonly value: number;
+  readonly crossingKind?: MeasurementCrossingKind;
+  readonly crossingCount?: number;
+}
+
+function resolveMeasurementDelayLine(
+  tokens: readonly string[],
+  lineNumber: number,
+  directive: ".measure" | ".meas",
+  state: DeckMeasurementState,
+  analysis: "tran" | "transient" | "dc" | "ac",
+  name: string,
+): void {
+  if (analysis !== "tran" && analysis !== "transient") {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: "TRIG/TARG measurements are only supported for transient analysis",
+      token: tokens[3],
+    });
+    return;
+  }
+  const targetIndex = tokens.findIndex((token, index) =>
+    index >= 4 && token.trim().toLowerCase() === "targ"
+  );
+  if (targetIndex < 0) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: "TRIG measurements require a TARG section",
+    });
+    return;
+  }
+  const emptyParameterState = new DeckParameterState();
+  const trigger = parseMeasurementDelayEdge(
+    tokens.slice(4, targetIndex),
+    "TRIG",
+    directive,
+    lineNumber,
+    state,
+    emptyParameterState,
+  );
+  if (trigger === undefined) {
+    return;
+  }
+  const targetResult = parseMeasurementDelayTargetSection(
+    tokens.slice(targetIndex + 1),
+    directive,
+    lineNumber,
+    state,
+    emptyParameterState,
+  );
+  if (targetResult === undefined) {
+    return;
+  }
+  const [target, fromValue, toValue] = targetResult;
+  if (fromValue !== undefined && toValue !== undefined && fromValue > toValue) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_WINDOW",
+      directive,
+      lineNumber,
+      message: "measurement FROM value must be <= TO value",
+    });
+    return;
+  }
+  state.measurements.push({
+    directive,
+    analysis,
+    name,
+    mode: "delay",
+    probe: target.probe,
+    lineNumber,
+    fromValue,
+    toValue,
+    atValue: undefined,
+    targetValue: target.value,
+    crossingKind: target.crossingKind,
+    crossingCount: target.crossingCount,
+    triggerProbe: trigger.probe,
+    triggerValue: trigger.value,
+    triggerCrossingKind: trigger.crossingKind,
+    triggerCrossingCount: trigger.crossingCount,
+  });
+}
+
+function parseMeasurementDelayTargetSection(
+  tokens: readonly string[],
+  directive: ".measure" | ".meas",
+  lineNumber: number,
+  state: DeckMeasurementState,
+  parameterState: DeckParameterState,
+): readonly [ParsedMeasurementEdge, number | undefined, number | undefined] | undefined {
+  const edgeTokens: string[] = [];
+  let fromValue: number | undefined;
+  let toValue: number | undefined;
+  const seenWindowTokens = new Set<string>();
+  for (const token of tokens) {
+    const equalsIndex = token.indexOf("=");
+    if (equalsIndex < 0) {
+      edgeTokens.push(token);
+      continue;
+    }
+    const key = token.slice(0, equalsIndex).trim().toLowerCase();
+    if (key !== "from" && key !== "to") {
+      edgeTokens.push(token);
+      continue;
+    }
+    if (seenWindowTokens.has(key)) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `duplicate measurement option ${JSON.stringify(key)}`,
+        token,
+      });
+      return undefined;
+    }
+    seenWindowTokens.add(key);
+    try {
+      const value = evaluateParameterExpression(
+        stripExpressionDelimiters(token.slice(equalsIndex + 1).trim()),
+        parameterState,
+      );
+      if (key === "from") {
+        fromValue = value;
+      } else {
+        toValue = value;
+      }
+    } catch (error) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_EXPRESSION",
+        directive,
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        token,
+      });
+      return undefined;
+    }
+  }
+  const edge = parseMeasurementDelayEdge(
+    edgeTokens,
+    "TARG",
+    directive,
+    lineNumber,
+    state,
+    parameterState,
+  );
+  return edge === undefined ? undefined : [edge, fromValue, toValue];
+}
+
+function parseMeasurementDelayEdge(
+  tokens: readonly string[],
+  section: "TRIG" | "TARG",
+  directive: ".measure" | ".meas",
+  lineNumber: number,
+  state: DeckMeasurementState,
+  parameterState: DeckParameterState,
+): ParsedMeasurementEdge | undefined {
+  const first = tokens[0];
+  if (first === undefined) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${section} measurements require a probe target`,
+    });
+    return undefined;
+  }
+  let value: number | undefined;
+  const equalsIndex = first.indexOf("=");
+  let probeExpressionFailed = false;
+  const probe = equalsIndex >= 0
+    ? (() => {
+        try {
+          value = evaluateParameterExpression(
+            stripExpressionDelimiters(first.slice(equalsIndex + 1).trim()),
+            parameterState,
+          );
+        } catch (error) {
+          addMeasurementDiagnostic(state, {
+            code: "SPICE_DECK_MEASURE_EXPRESSION",
+            directive,
+            lineNumber,
+            message: error instanceof Error ? error.message : String(error),
+            token: first,
+          });
+          probeExpressionFailed = true;
+        }
+        return unquoteToken(first.slice(0, equalsIndex).trim());
+      })()
+    : unquoteToken(first.trim());
+  if (probeExpressionFailed) {
+    return undefined;
+  }
+  if (probe.length === 0) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_PROBE",
+      directive,
+      lineNumber,
+      message: `${section} measurement probe must not be empty`,
+      token: first,
+    });
+    return undefined;
+  }
+
+  let crossingKind: MeasurementCrossingKind | undefined;
+  let crossingCount: number | undefined;
+  const seenTokens = new Set<string>();
+  for (const token of tokens.slice(1)) {
+    const tokenEqualsIndex = token.indexOf("=");
+    if (tokenEqualsIndex < 0) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `${section} measurement option ${JSON.stringify(token)} must use name=value syntax`,
+        token,
+      });
+      return undefined;
+    }
+    const key = token.slice(0, tokenEqualsIndex).trim().toLowerCase();
+    if (key !== "val" && key !== "rise" && key !== "fall" && key !== "cross") {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `unsupported ${section} measurement option ${JSON.stringify(key)}`,
+        token,
+      });
+      return undefined;
+    }
+    if (seenTokens.has(key)) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `duplicate ${section} measurement option ${JSON.stringify(key)}`,
+        token,
+      });
+      return undefined;
+    }
+    seenTokens.add(key);
+    let parsed: number;
+    try {
+      parsed = evaluateParameterExpression(
+        stripExpressionDelimiters(token.slice(tokenEqualsIndex + 1).trim()),
+        parameterState,
+      );
+    } catch (error) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_EXPRESSION",
+        directive,
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        token,
+      });
+      return undefined;
+    }
+    if (key === "val") {
+      value = parsed;
+    } else {
+      if (crossingKind !== undefined) {
+        addMeasurementDiagnostic(state, {
+          code: "SPICE_DECK_MEASURE_ARGUMENT",
+          directive,
+          lineNumber,
+          message: `only one ${section} RISE, FALL, or CROSS option may be specified`,
+          token,
+        });
+        return undefined;
+      }
+      if (!Number.isFinite(parsed) || parsed < 1 || !Number.isInteger(parsed)) {
+        addMeasurementDiagnostic(state, {
+          code: "SPICE_DECK_MEASURE_ARGUMENT",
+          directive,
+          lineNumber,
+          message: `${section} RISE, FALL, and CROSS counts must be positive integers`,
+          token,
+        });
+        return undefined;
+      }
+      crossingKind = key;
+      crossingCount = parsed;
+    }
+  }
+  if (value === undefined) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${section} measurements require a VAL value or probe=value target`,
+    });
+    return undefined;
+  }
+  return { probe, value, crossingKind, crossingCount };
 }
 
 function resolveParamLine(line: string, lineNumber: number, state: DeckParameterState): void {
@@ -5014,6 +5386,8 @@ export function measureTransientWhenProbe(
       points,
       probe,
       targetValue,
+      "cross",
+      1,
       fromTime,
       toTime,
       "measureTransientWhenProbe",
@@ -5021,6 +5395,132 @@ export function measureTransientWhenProbe(
     fromValue: fromTime,
     toValue: toTime,
   };
+}
+
+export function measureTransientWhenProbeCounted(
+  points: readonly TransientPoint[],
+  name: string,
+  probe: string,
+  targetValue: number,
+  crossingKind: MeasurementCrossingKind,
+  crossingCount: number,
+  fromTime?: number,
+  toTime?: number,
+): ProbeMeasurement {
+  const context = "measureTransientWhenProbeCounted";
+  if (!Number.isFinite(targetValue)) {
+    throw invalidElement(context, "targetValue must be finite");
+  }
+  const normalizedCrossingKind = normalizeTransientCrossingKind(crossingKind, context);
+  if (!Number.isInteger(crossingCount) || crossingCount < 1) {
+    throw invalidElement(context, "crossingCount must be a positive integer");
+  }
+  if (fromTime !== undefined && !Number.isFinite(fromTime)) {
+    throw invalidElement(context, "fromTime must be finite");
+  }
+  if (toTime !== undefined && !Number.isFinite(toTime)) {
+    throw invalidElement(context, "toTime must be finite");
+  }
+  if (fromTime !== undefined && toTime !== undefined && fromTime > toTime) {
+    throw invalidElement(context, "fromTime must be <= toTime");
+  }
+  return {
+    name,
+    analysis: "tran",
+    probe,
+    mode: "when",
+    value: transientProbeCrossingTime(
+      points,
+      probe,
+      targetValue,
+      normalizedCrossingKind,
+      crossingCount,
+      fromTime,
+      toTime,
+      context,
+    ),
+    fromValue: fromTime,
+    toValue: toTime,
+  };
+}
+
+export function measureTransientDelayBetweenProbes(
+  points: readonly TransientPoint[],
+  name: string,
+  triggerProbe: string,
+  triggerValue: number,
+  triggerCrossingKind: MeasurementCrossingKind,
+  triggerCrossingCount: number,
+  targetProbe: string,
+  targetValue: number,
+  targetCrossingKind: MeasurementCrossingKind,
+  targetCrossingCount: number,
+  fromTime?: number,
+  toTime?: number,
+): ProbeMeasurement {
+  const context = "measureTransientDelayBetweenProbes";
+  if (!Number.isFinite(triggerValue)) {
+    throw invalidElement(context, "triggerValue must be finite");
+  }
+  if (!Number.isFinite(targetValue)) {
+    throw invalidElement(context, "targetValue must be finite");
+  }
+  const normalizedTriggerKind = normalizeTransientCrossingKind(triggerCrossingKind, context);
+  const normalizedTargetKind = normalizeTransientCrossingKind(targetCrossingKind, context);
+  if (!Number.isInteger(triggerCrossingCount) || !Number.isInteger(targetCrossingCount) ||
+    triggerCrossingCount < 1 || targetCrossingCount < 1) {
+    throw invalidElement(context, "crossing counts must be positive integers");
+  }
+  if (fromTime !== undefined && !Number.isFinite(fromTime)) {
+    throw invalidElement(context, "fromTime must be finite");
+  }
+  if (toTime !== undefined && !Number.isFinite(toTime)) {
+    throw invalidElement(context, "toTime must be finite");
+  }
+  if (fromTime !== undefined && toTime !== undefined && fromTime > toTime) {
+    throw invalidElement(context, "fromTime must be <= toTime");
+  }
+  const triggerTime = transientProbeCrossingTime(
+    points,
+    triggerProbe,
+    triggerValue,
+    normalizedTriggerKind,
+    triggerCrossingCount,
+    fromTime,
+    toTime,
+    context,
+  );
+  const targetFromTime = Math.max(fromTime ?? triggerTime, triggerTime);
+  const targetTime = transientProbeCrossingTime(
+    points,
+    targetProbe,
+    targetValue,
+    normalizedTargetKind,
+    targetCrossingCount,
+    targetFromTime,
+    toTime,
+    context,
+  );
+  return {
+    name,
+    analysis: "tran",
+    probe: `${triggerProbe}->${targetProbe}`,
+    mode: "delay",
+    value: targetTime - triggerTime,
+    fromValue: fromTime,
+    toValue: toTime,
+  };
+}
+
+function normalizeTransientCrossingKind(
+  crossingKind: string,
+  context: string,
+): MeasurementCrossingKind {
+  const normalized = crossingKind.trim().toLowerCase();
+  if (normalized !== "rise" && normalized !== "fall" && normalized !== "cross") {
+    throw invalidElement(context, "crossingKind must be rise, fall, or cross");
+  }
+  return normalized;
 }
 
 function transientProbeValueAt(
@@ -5055,12 +5555,15 @@ function transientProbeCrossingTime(
   points: readonly TransientPoint[],
   probe: string,
   targetValue: number,
+  crossingKind: MeasurementCrossingKind,
+  crossingCount: number,
   fromTime: number | undefined,
   toTime: number | undefined,
   context: string,
 ): number {
   let previous: readonly [number, number, number] | undefined;
   let selectedCount = 0;
+  let matchedCount = 0;
   for (const point of points) {
     if ((fromTime !== undefined && point.time < fromTime) ||
       (toTime !== undefined && point.time > toTime)) {
@@ -5069,17 +5572,32 @@ function transientProbeCrossingTime(
     selectedCount += 1;
     const value = tableProbeValue(point.nodeVoltages, point.branchCurrents, probe, context);
     const delta = value - targetValue;
-    if (delta === 0.0) {
-      return point.time;
-    }
+    let crossingTime: number | undefined;
     if (previous !== undefined) {
       const [previousTime, previousValue, previousDelta] = previous;
-      if ((previousDelta < 0.0 && delta > 0.0) || (previousDelta > 0.0 && delta < 0.0)) {
+      if (delta === 0.0) {
+        if (crossingKind === "cross") {
+          crossingTime = point.time;
+        } else if (crossingKind === "rise" && previousDelta < 0.0) {
+          crossingTime = point.time;
+        } else if (crossingKind === "fall" && previousDelta > 0.0) {
+          crossingTime = point.time;
+        }
+      } else if ((previousDelta < 0.0 && delta > 0.0 && crossingKind !== "fall") ||
+        (previousDelta > 0.0 && delta < 0.0 && crossingKind !== "rise")) {
         if (point.time === previousTime) {
           throw invalidElement(context, "duplicate transient sample times around WHEN crossing");
         }
         const fraction = (targetValue - previousValue) / (value - previousValue);
-        return previousTime + (point.time - previousTime) * fraction;
+        crossingTime = previousTime + (point.time - previousTime) * fraction;
+      }
+    } else if (delta === 0.0 && crossingKind === "cross") {
+      crossingTime = point.time;
+    }
+    if (crossingTime !== undefined) {
+      matchedCount += 1;
+      if (matchedCount === crossingCount) {
+        return crossingTime;
       }
     }
     previous = [point.time, value, delta];
@@ -5113,11 +5631,38 @@ export function measureTransientCards(
       if (measurement.targetValue === undefined) {
         throw invalidElement("measureTransientCards", "WHEN measurement cards require a target value");
       }
-      return measureTransientWhenProbe(
+      return measureTransientWhenProbeCounted(
         points,
         measurement.name,
         measurement.probe,
         measurement.targetValue,
+        measurement.crossingKind ?? "cross",
+        measurement.crossingCount ?? 1,
+        measurement.fromValue,
+        measurement.toValue,
+      );
+    }
+    if (measurement.mode === "delay") {
+      if (measurement.triggerProbe === undefined) {
+        throw invalidElement("measureTransientCards", "delay measurement cards require a trigger probe");
+      }
+      if (measurement.triggerValue === undefined) {
+        throw invalidElement("measureTransientCards", "delay measurement cards require a trigger value");
+      }
+      if (measurement.targetValue === undefined) {
+        throw invalidElement("measureTransientCards", "delay measurement cards require a target value");
+      }
+      return measureTransientDelayBetweenProbes(
+        points,
+        measurement.name,
+        measurement.triggerProbe,
+        measurement.triggerValue,
+        measurement.triggerCrossingKind ?? "cross",
+        measurement.triggerCrossingCount ?? 1,
+        measurement.probe,
+        measurement.targetValue,
+        measurement.crossingKind ?? "cross",
+        measurement.crossingCount ?? 1,
         measurement.fromValue,
         measurement.toValue,
       );

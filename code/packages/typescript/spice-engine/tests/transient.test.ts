@@ -73,9 +73,11 @@ import {
   sampleTransientProbeAsDigitalEvents,
   sampleTransientProbesAsDigitalEventStreams,
   measureTransientDeck,
+  measureTransientDelayBetweenProbes,
   measureTransientFindAtProbe,
   measureTransientProbe,
   measureTransientWhenProbe,
+  measureTransientWhenProbeCounted,
   transient,
   transientAdaptive,
   transientAdaptiveWithDigitalEventStreams,
@@ -1383,10 +1385,10 @@ describe("transient", () => {
 
   it("formats stable transient probe measurements", () => {
     const points = [
-      transientPoint(0.0, { out: 0.0 }),
-      transientPoint(1.0e-3, { out: 1.25 }),
-      transientPoint(2.0e-3, { out: -0.25 }),
-      transientPoint(3.0e-3, { out: 0.75 }),
+      transientPoint(0.0, { in: 0.0, out: 0.0 }),
+      transientPoint(1.0e-3, { in: 1.0, out: 1.25 }),
+      transientPoint(2.0e-3, { in: 1.0, out: -0.25 }),
+      transientPoint(3.0e-3, { in: 1.0, out: 0.75 }),
     ];
 
     const peakToPeak = measureTransientProbe(
@@ -1407,6 +1409,30 @@ describe("transient", () => {
       1.0e-3,
       3.0e-3,
     );
+    const secondCrossing = measureTransientWhenProbeCounted(
+      points,
+      "second_crossing",
+      "V(out)",
+      0.5,
+      "cross",
+      2,
+      1.0e-3,
+      3.0e-3,
+    );
+    const propagationDelay = measureTransientDelayBetweenProbes(
+      points,
+      "prop_delay",
+      "V(in)",
+      0.5,
+      "rise",
+      1,
+      "V(out)",
+      0.5,
+      "fall",
+      1,
+      0.0,
+      3.0e-3,
+    );
 
     expect(peakToPeak.value).toBeCloseTo(1.5, 9);
     expect(peakToPeak.mode).toBe("pp");
@@ -1416,21 +1442,35 @@ describe("transient", () => {
     expect(midpoint.mode).toBe("find");
     expect(crossing.value).toBeCloseTo(1.5e-3, 9);
     expect(crossing.mode).toBe("when");
-    expect(formatMeasurementTable([peakToPeak, finalValue, midpoint, crossing])).toBe(
+    expect(secondCrossing.value).toBeCloseTo(2.75e-3, 9);
+    expect(secondCrossing.mode).toBe("when");
+    expect(propagationDelay.value).toBeCloseTo(1.0e-3, 9);
+    expect(propagationDelay.probe).toBe("V(in)->V(out)");
+    expect(propagationDelay.mode).toBe("delay");
+    expect(formatMeasurementTable([
+      peakToPeak,
+      finalValue,
+      midpoint,
+      crossing,
+      secondCrossing,
+      propagationDelay,
+    ])).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n" +
         "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n" +
-        "crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n",
+        "crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n" +
+        "second_crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n" +
+        "prop_delay\ttran\tV(in)->V(out)\tdelay\t0.000000e+00\t3.000000e-03\t1.000000e-03\n",
     );
   });
 
   it("executes parsed transient .measure cards", () => {
     const points = [
-      transientPoint(0.0, { out: 0.0 }),
-      transientPoint(1.0e-3, { out: 1.25 }),
-      transientPoint(2.0e-3, { out: -0.25 }),
-      transientPoint(3.0e-3, { out: 0.75 }),
+      transientPoint(0.0, { in: 0.0, out: 0.0 }),
+      transientPoint(1.0e-3, { in: 1.0, out: 1.25 }),
+      transientPoint(2.0e-3, { in: 1.0, out: -0.25 }),
+      transientPoint(3.0e-3, { in: 1.0, out: 0.75 }),
     ];
 
     const measurements = measureTransientDeck(
@@ -1439,6 +1479,10 @@ describe("transient", () => {
 .measure tran swing pp V(out) FROM=1m TO=3m
 .measure tran midpoint FIND V(out) AT=1.5m
 .measure tran crossing WHEN V(out)=0.5 FROM=1m TO=3m
+.measure tran second_cross WHEN V(out)=0.5 FROM=1m TO=3m CROSS=2
+.measure tran falling WHEN V(out)=0.5 FROM=1m TO=3m FALL=1
+.measure tran rising WHEN V(out)=0.5 FROM=1m TO=3m RISE=1
+.measure tran prop_delay TRIG V(in) VAL=0.5 RISE=1 TARG V(out) VAL=0.5 FALL=1 FROM=0 TO=3m
 .meas transient mean avg V(out)
 .end
 `,
@@ -1454,6 +1498,10 @@ describe("transient", () => {
       ["swing", "pp", 1.5, 0.001, 0.003],
       ["midpoint", "find", 0.5, 0.0015, 0.0015],
       ["crossing", "when", 0.0015, 0.001, 0.003],
+      ["second_cross", "when", 0.00275, 0.001, 0.003],
+      ["falling", "when", 0.0015, 0.001, 0.003],
+      ["rising", "when", 0.00275, 0.001, 0.003],
+      ["prop_delay", "delay", 0.001, 0, 0.003],
       ["mean", "avg", 0.4375, undefined, undefined],
     ]);
     expect(formatMeasurementTable(measurements)).toBe(
@@ -1461,6 +1509,10 @@ describe("transient", () => {
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
         "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n" +
         "crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n" +
+        "second_cross\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n" +
+        "falling\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n" +
+        "rising\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n" +
+        "prop_delay\ttran\tV(in)->V(out)\tdelay\t0.000000e+00\t3.000000e-03\t1.000000e-03\n" +
         "mean\ttran\tV(out)\tavg\t\t\t4.375000e-01\n",
     );
   });

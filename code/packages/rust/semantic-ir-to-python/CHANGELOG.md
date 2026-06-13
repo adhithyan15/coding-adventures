@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.1.6 — SIR16 mutation & loops (native)
+
+Accepts and emits the SIR16 mutation and loop statements as **native** Python
+(per `code/specs/sir-runtime.md`):
+
+- `Stmt::Assign` → `name = value` (Local/Param/Capture); a `Global` target
+  writes the module-level `_globals` dict (`_globals["n"] = value`), matching
+  how `_init`/`global_set` and `VarRef::Global` reads are rendered.
+- `Stmt::SeqSet` → `s[i] = v`; `Stmt::MapSet` → `m[k] = v`.
+- `Stmt::While` → `while _sir_truthy(cond):` — the test routes through SIR
+  truthiness (only `False`/`None` falsy), never Python's.
+- `Stmt::ForRange` → `for v in range(start, stop, step):` — Python's `range` is
+  already half-open and direction-aware, so it matches SIR `ForRange` exactly.
+- `Stmt::ForEach` → `for v in iter:`. Empty loop bodies emit `pass`.
+
+**Expression-position loops.** Python has no multi-statement expression, so the
+existing walrus-tuple strategy for statement-bearing blocks-in-expression-
+position cannot express a loop. Such a block is now lifted to a nested
+`def __block_N(): …` (queued in a hoist buffer, flushed before the enclosing
+statement); the call site emits `__block_N()`. The lifted def declares
+`nonlocal` for every `Assign`-target local that is bound in an enclosing scope
+(computed by walking the block and its inline loop bodies, minus names
+introduced locally), so mutations reach the outer binding. Blocks *without* a
+loop keep the walrus form, now extended to handle `Assign`/`SeqSet`/`MapSet`
+(`(x := v)`, `s.__setitem__(i, v)`, `m.__setitem__(k, v)`).
+
+`Assign` to an instance var / class var / constant still rejects at the
+capability check (those features are not yet accepted). `ACCEPTED_FEATURES +=
+MutableBindings, Loops`. New direct-SIR and Ruby→Python tests; emitted output
+verified to execute on CPython against the real
+`coding-adventures-sir-runtime-core` (while counter, `range`+index-set,
+`for`-each, map-set, and a lifted expression-position loop with `nonlocal`).
+
 ## 0.1.5 — SIR16 expression features (native)
 
 Accepts and emits the SIR16 expression features, all translated to **native**

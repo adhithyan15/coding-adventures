@@ -4,6 +4,17 @@
 
 ### Added
 
+- **Transient TRIG/TARG delay measurement routing** —
+  `measure_transient_delay_between_probes()` and parsed transient
+  `.measure ... TRIG ... TARG ...` cards now report trigger-to-target delays
+  with counted crossing controls, matching Rust and TypeScript.
+
+- **Transient WHEN crossing counters** —
+  `measure_transient_when_probe_counted()` and parsed transient
+  `.measure ... WHEN probe=target RISE|FALL|CROSS=n` cards now report counted
+  threshold occurrences over optional `FROM=` / `TO=` windows, matching Rust
+  and TypeScript.
+
 - **Transient WHEN measurement routing** —
   `measure_transient_when_probe()` and parsed transient
   `.measure ... WHEN probe=target` cards now report the first crossing time

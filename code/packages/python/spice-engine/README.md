@@ -84,10 +84,14 @@ surface for MAX, MIN, AVG, RMS, peak-to-peak, and final-value probe
 measurements. The AC helper measures complex probe magnitudes over optional
 frequency windows. `measure_transient_find_at_probe()` and parsed transient
 `FIND ... AT=` cards sample or linearly interpolate one probe value at a scalar
-time, while `measure_transient_when_probe()` and parsed transient
-`WHEN probe=target` cards report the first crossing time over optional
-`FROM=` / `TO=` windows. The deck helpers route parsed transient, DC sweep, and
-AC sweep `.measure` / `.meas` cards into those stable measurement rows.
+time, while `measure_transient_when_probe()`,
+`measure_transient_when_probe_counted()`, and parsed transient
+`WHEN probe=target` cards report first or counted `RISE`, `FALL`, and `CROSS`
+crossing times over optional `FROM=` / `TO=` windows.
+`measure_transient_delay_between_probes()` and parsed transient `TRIG ...
+TARG ...` cards report trigger-to-target crossing delays. The deck helpers
+route parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into
+those stable measurement rows.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
 size, selected real solver path, tolerance, convergence aid, and final Newton
@@ -147,9 +151,9 @@ signatures, arguments, or empty expressions.
 `resolve_deck_measurements()` extracts transient, DC sweep, and AC sweep `.measure` /
 `.meas` cards before `.end`, keeps non-measure active lines, evaluates optional
 `FROM=` / `TO=` scalar time, source-value, or frequency windows plus transient
-`FIND ... AT=` sample points and `WHEN probe=target` crossings, and reports stable
-diagnostics for unsupported analyses, modes, options, expressions, and invalid
-windows.
+`FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
+`RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
+unsupported analyses, modes, options, expressions, and invalid windows.
 
 ## Controlled source examples
 

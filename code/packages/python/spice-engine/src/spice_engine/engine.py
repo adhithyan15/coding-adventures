@@ -2883,6 +2883,8 @@ def measure_transient_when_probe(
         points,
         probe,
         target_value,
+        "cross",
+        1,
         from_time,
         to_time,
         "measure_transient_when_probe",
@@ -2896,6 +2898,144 @@ def measure_transient_when_probe(
         from_value=from_time,
         to_value=to_time,
     )
+
+
+def measure_transient_when_probe_counted(
+    transient_result: TransientResult | list[TransientPoint],
+    name: str,
+    probe: str,
+    target_value: float,
+    crossing_kind: str,
+    crossing_count: int,
+    *,
+    from_time: float | None = None,
+    to_time: float | None = None,
+) -> ProbeMeasurement:
+    """Measure a counted transient RISE, FALL, or CROSS threshold occurrence."""
+
+    context = "measure_transient_when_probe_counted"
+    if not math.isfinite(target_value):
+        raise ValueError(f"{context}: target_value must be finite")
+    crossing_kind = _normalize_transient_crossing_kind(crossing_kind, context)
+    if not isinstance(crossing_count, int) or crossing_count < 1:
+        raise ValueError(f"{context}: crossing_count must be a positive integer")
+    if from_time is not None and not math.isfinite(from_time):
+        raise ValueError(f"{context}: from_time must be finite")
+    if to_time is not None and not math.isfinite(to_time):
+        raise ValueError(f"{context}: to_time must be finite")
+    if from_time is not None and to_time is not None and from_time > to_time:
+        raise ValueError(f"{context}: from_time must be <= to_time")
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    value = _transient_probe_crossing_time(
+        points,
+        probe,
+        target_value,
+        crossing_kind,
+        crossing_count,
+        from_time,
+        to_time,
+        context,
+    )
+    return ProbeMeasurement(
+        name=name,
+        analysis="tran",
+        probe=probe,
+        mode="when",
+        value=value,
+        from_value=from_time,
+        to_value=to_time,
+    )
+
+
+def measure_transient_delay_between_probes(
+    transient_result: TransientResult | list[TransientPoint],
+    name: str,
+    trigger_probe: str,
+    trigger_value: float,
+    trigger_crossing_kind: str,
+    trigger_crossing_count: int,
+    target_probe: str,
+    target_value: float,
+    target_crossing_kind: str,
+    target_crossing_count: int,
+    *,
+    from_time: float | None = None,
+    to_time: float | None = None,
+) -> ProbeMeasurement:
+    """Measure target crossing delay relative to a counted trigger crossing."""
+
+    context = "measure_transient_delay_between_probes"
+    if not math.isfinite(trigger_value):
+        raise ValueError(f"{context}: trigger_value must be finite")
+    if not math.isfinite(target_value):
+        raise ValueError(f"{context}: target_value must be finite")
+    trigger_crossing_kind = _normalize_transient_crossing_kind(
+        trigger_crossing_kind,
+        context,
+    )
+    target_crossing_kind = _normalize_transient_crossing_kind(
+        target_crossing_kind,
+        context,
+    )
+    if (
+        not isinstance(trigger_crossing_count, int)
+        or not isinstance(target_crossing_count, int)
+        or trigger_crossing_count < 1
+        or target_crossing_count < 1
+    ):
+        raise ValueError(f"{context}: crossing counts must be positive integers")
+    if from_time is not None and not math.isfinite(from_time):
+        raise ValueError(f"{context}: from_time must be finite")
+    if to_time is not None and not math.isfinite(to_time):
+        raise ValueError(f"{context}: to_time must be finite")
+    if from_time is not None and to_time is not None and from_time > to_time:
+        raise ValueError(f"{context}: from_time must be <= to_time")
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    trigger_time = _transient_probe_crossing_time(
+        points,
+        trigger_probe,
+        trigger_value,
+        trigger_crossing_kind,
+        trigger_crossing_count,
+        from_time,
+        to_time,
+        context,
+    )
+    target_from_time = max(from_time, trigger_time) if from_time is not None else trigger_time
+    target_time = _transient_probe_crossing_time(
+        points,
+        target_probe,
+        target_value,
+        target_crossing_kind,
+        target_crossing_count,
+        target_from_time,
+        to_time,
+        context,
+    )
+    return ProbeMeasurement(
+        name=name,
+        analysis="tran",
+        probe=f"{trigger_probe}->{target_probe}",
+        mode="delay",
+        value=target_time - trigger_time,
+        from_value=from_time,
+        to_value=to_time,
+    )
+
+
+def _normalize_transient_crossing_kind(crossing_kind: str, context: str) -> str:
+    normalized = crossing_kind.strip().lower()
+    if normalized not in {"rise", "fall", "cross"}:
+        raise ValueError(f"{context}: crossing_kind must be rise, fall, or cross")
+    return normalized
 
 
 def _transient_probe_value_at(
@@ -2932,12 +3072,15 @@ def _transient_probe_crossing_time(
     points: list[TransientPoint],
     probe: str,
     target_value: float,
+    crossing_kind: str,
+    crossing_count: int,
     from_time: float | None,
     to_time: float | None,
     context: str,
 ) -> float:
     previous: tuple[float, float, float] | None = None
     selected_count = 0
+    matched_count = 0
     for point in points:
         if (from_time is not None and point.time < from_time) or (
             to_time is not None and point.time > to_time
@@ -2951,19 +3094,37 @@ def _transient_probe_crossing_time(
             context,
         )
         delta = value - target_value
-        if delta == 0.0:
-            return point.time
+        crossing_time: float | None = None
         if previous is not None:
             previous_time, previous_value, previous_delta = previous
-            if (previous_delta < 0.0 and delta > 0.0) or (
-                previous_delta > 0.0 and delta < 0.0
+            if delta == 0.0:
+                if (
+                    crossing_kind == "cross"
+                    or (crossing_kind == "rise" and previous_delta < 0.0)
+                    or (crossing_kind == "fall" and previous_delta > 0.0)
+                ):
+                    crossing_time = point.time
+            elif (
+                previous_delta < 0.0
+                and delta > 0.0
+                and crossing_kind != "fall"
+            ) or (
+                previous_delta > 0.0
+                and delta < 0.0
+                and crossing_kind != "rise"
             ):
                 if point.time == previous_time:
                     raise ValueError(
                         f"{context}: duplicate transient sample times around WHEN crossing"
                     )
                 fraction = (target_value - previous_value) / (value - previous_value)
-                return previous_time + (point.time - previous_time) * fraction
+                crossing_time = previous_time + (point.time - previous_time) * fraction
+        elif delta == 0.0 and crossing_kind == "cross":
+            crossing_time = point.time
+        if crossing_time is not None:
+            matched_count += 1
+            if matched_count == crossing_count:
+                return crossing_time
         previous = (point.time, value, delta)
     if selected_count == 0:
         raise ValueError(f"{context}: no transient samples in window")
@@ -3001,11 +3162,54 @@ def measure_transient_cards(
                     "measure_transient_cards: WHEN measurement cards require a target value"
                 )
             results.append(
-                measure_transient_when_probe(
+                measure_transient_when_probe_counted(
                     transient_result,
                     measurement.name,
                     measurement.probe,
                     measurement.target_value,
+                    measurement.crossing_kind
+                    if measurement.crossing_kind is not None
+                    else "cross",
+                    measurement.crossing_count
+                    if measurement.crossing_count is not None
+                    else 1,
+                    from_time=measurement.from_value,
+                    to_time=measurement.to_value,
+                )
+            )
+        elif measurement.mode == "delay":
+            if measurement.trigger_probe is None:
+                raise ValueError(
+                    "measure_transient_cards: delay measurement cards require a trigger probe"
+                )
+            if measurement.trigger_value is None:
+                raise ValueError(
+                    "measure_transient_cards: delay measurement cards require a trigger value"
+                )
+            if measurement.target_value is None:
+                raise ValueError(
+                    "measure_transient_cards: delay measurement cards require a target value"
+                )
+            results.append(
+                measure_transient_delay_between_probes(
+                    transient_result,
+                    measurement.name,
+                    measurement.trigger_probe,
+                    measurement.trigger_value,
+                    measurement.trigger_crossing_kind
+                    if measurement.trigger_crossing_kind is not None
+                    else "cross",
+                    measurement.trigger_crossing_count
+                    if measurement.trigger_crossing_count is not None
+                    else 1,
+                    measurement.probe,
+                    measurement.target_value,
+                    measurement.crossing_kind
+                    if measurement.crossing_kind is not None
+                    else "cross",
+                    measurement.crossing_count
+                    if measurement.crossing_count is not None
+                    else 1,
                     from_time=measurement.from_value,
                     to_time=measurement.to_value,
                 )

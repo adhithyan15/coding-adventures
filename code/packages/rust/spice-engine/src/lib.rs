@@ -3268,6 +3268,12 @@ pub struct DeckMeasurementCard {
     pub to_value: Option<f64>,
     pub at_value: Option<f64>,
     pub target_value: Option<f64>,
+    pub crossing_kind: Option<String>,
+    pub crossing_count: Option<usize>,
+    pub trigger_probe: Option<String>,
+    pub trigger_value: Option<f64>,
+    pub trigger_crossing_kind: Option<String>,
+    pub trigger_crossing_count: Option<usize>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4560,6 +4566,18 @@ fn resolve_measurement_line(
         return;
     }
 
+    if tokens[3].trim().eq_ignore_ascii_case("trig") {
+        resolve_measurement_delay_line(
+            tokens.as_slice(),
+            line_number,
+            directive,
+            state,
+            &analysis,
+            name,
+        );
+        return;
+    }
+
     let Some(mode) = normalize_measurement_mode_token(tokens[3]) else {
         add_measurement_diagnostic(
             state,
@@ -4622,6 +4640,8 @@ fn resolve_measurement_line(
     let mut from_value = None;
     let mut to_value = None;
     let mut at_value = None;
+    let mut crossing_kind = None;
+    let mut crossing_count = None;
     let mut seen_window_tokens = Vec::new();
     let diagnostic_count = state.diagnostics.len();
     for token in tokens.iter().skip(5) {
@@ -4637,7 +4657,13 @@ fn resolve_measurement_line(
             continue;
         };
         let key = key.trim().to_ascii_lowercase();
-        if key != "from" && key != "to" && key != "at" {
+        if key != "from"
+            && key != "to"
+            && key != "at"
+            && key != "rise"
+            && key != "fall"
+            && key != "cross"
+        {
             add_measurement_diagnostic(
                 state,
                 "SPICE_DECK_MEASURE_ARGUMENT",
@@ -4664,6 +4690,47 @@ fn resolve_measurement_line(
             &strip_expression_delimiters(expression.trim()),
             &empty_parameter_state,
         ) {
+            Ok(value) if key == "rise" || key == "fall" || key == "cross" => {
+                if mode != "when" {
+                    add_measurement_diagnostic(
+                        state,
+                        "SPICE_DECK_MEASURE_ARGUMENT",
+                        directive,
+                        line_number,
+                        "RISE, FALL, and CROSS options are only supported with WHEN mode",
+                        Some((*token).to_string()),
+                    );
+                    continue;
+                }
+                if crossing_kind.is_some() {
+                    add_measurement_diagnostic(
+                        state,
+                        "SPICE_DECK_MEASURE_ARGUMENT",
+                        directive,
+                        line_number,
+                        "only one of RISE, FALL, or CROSS may be specified",
+                        Some((*token).to_string()),
+                    );
+                    continue;
+                }
+                if !value.is_finite()
+                    || value < 1.0
+                    || value.fract() != 0.0
+                    || value > usize::MAX as f64
+                {
+                    add_measurement_diagnostic(
+                        state,
+                        "SPICE_DECK_MEASURE_ARGUMENT",
+                        directive,
+                        line_number,
+                        "RISE, FALL, and CROSS counts must be positive integers",
+                        Some((*token).to_string()),
+                    );
+                    continue;
+                }
+                crossing_kind = Some(key);
+                crossing_count = Some(value as usize);
+            }
             Ok(value) if key == "from" => from_value = Some(value),
             Ok(value) if key == "to" => to_value = Some(value),
             Ok(value) => at_value = Some(value),
@@ -4747,7 +4814,337 @@ fn resolve_measurement_line(
         to_value,
         at_value,
         target_value,
+        crossing_kind,
+        crossing_count,
+        trigger_probe: None,
+        trigger_value: None,
+        trigger_crossing_kind: None,
+        trigger_crossing_count: None,
     });
+}
+
+struct ParsedMeasurementEdge {
+    probe: String,
+    value: f64,
+    crossing_kind: Option<String>,
+    crossing_count: Option<usize>,
+}
+
+fn resolve_measurement_delay_line(
+    tokens: &[&str],
+    line_number: usize,
+    directive: &str,
+    state: &mut DeckMeasurementState,
+    analysis: &str,
+    name: &str,
+) {
+    if analysis != "tran" && analysis != "transient" {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            "TRIG/TARG measurements are only supported for transient analysis",
+            Some(tokens[3].to_string()),
+        );
+        return;
+    }
+    let Some(target_index) = tokens
+        .iter()
+        .enumerate()
+        .skip(4)
+        .find_map(|(index, token)| token.trim().eq_ignore_ascii_case("targ").then_some(index))
+    else {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            "TRIG measurements require a TARG section",
+            None,
+        );
+        return;
+    };
+
+    let empty_parameter_state = DeckParameterState::new();
+    let Some(trigger) = parse_measurement_delay_edge(
+        &tokens[4..target_index],
+        "TRIG",
+        directive,
+        line_number,
+        state,
+        &empty_parameter_state,
+    ) else {
+        return;
+    };
+    let Some((target, from_value, to_value)) = parse_measurement_delay_target_section(
+        &tokens[target_index + 1..],
+        directive,
+        line_number,
+        state,
+        &empty_parameter_state,
+    ) else {
+        return;
+    };
+
+    if let (Some(from), Some(to)) = (from_value, to_value) {
+        if from > to {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_WINDOW",
+                directive,
+                line_number,
+                "measurement FROM value must be <= TO value",
+                None,
+            );
+            return;
+        }
+    }
+
+    state.measurements.push(DeckMeasurementCard {
+        directive: directive.to_string(),
+        analysis: analysis.to_string(),
+        name: name.to_string(),
+        mode: "delay".to_string(),
+        probe: target.probe,
+        line_number,
+        from_value,
+        to_value,
+        at_value: None,
+        target_value: Some(target.value),
+        crossing_kind: target.crossing_kind,
+        crossing_count: target.crossing_count,
+        trigger_probe: Some(trigger.probe),
+        trigger_value: Some(trigger.value),
+        trigger_crossing_kind: trigger.crossing_kind,
+        trigger_crossing_count: trigger.crossing_count,
+    });
+}
+
+fn parse_measurement_delay_target_section(
+    tokens: &[&str],
+    directive: &str,
+    line_number: usize,
+    state: &mut DeckMeasurementState,
+    parameter_state: &DeckParameterState,
+) -> Option<(ParsedMeasurementEdge, Option<f64>, Option<f64>)> {
+    let mut edge_tokens = Vec::new();
+    let mut from_value = None;
+    let mut to_value = None;
+    let mut seen_window_tokens = Vec::new();
+    for token in tokens {
+        let Some((key, expression)) = token.split_once('=') else {
+            edge_tokens.push(*token);
+            continue;
+        };
+        let key = key.trim().to_ascii_lowercase();
+        if key != "from" && key != "to" {
+            edge_tokens.push(*token);
+            continue;
+        }
+        if seen_window_tokens.iter().any(|seen| seen == &key) {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("duplicate measurement option {key:?}"),
+                Some((*token).to_string()),
+            );
+            return None;
+        }
+        seen_window_tokens.push(key.clone());
+        match evaluate_parameter_expression(
+            &strip_expression_delimiters(expression.trim()),
+            parameter_state,
+        ) {
+            Ok(value) if key == "from" => from_value = Some(value),
+            Ok(value) => to_value = Some(value),
+            Err(message) => {
+                add_measurement_diagnostic(
+                    state,
+                    "SPICE_DECK_MEASURE_EXPRESSION",
+                    directive,
+                    line_number,
+                    &message,
+                    Some((*token).to_string()),
+                );
+                return None;
+            }
+        }
+    }
+    parse_measurement_delay_edge(
+        edge_tokens.as_slice(),
+        "TARG",
+        directive,
+        line_number,
+        state,
+        parameter_state,
+    )
+    .map(|edge| (edge, from_value, to_value))
+}
+
+fn parse_measurement_delay_edge(
+    tokens: &[&str],
+    section: &str,
+    directive: &str,
+    line_number: usize,
+    state: &mut DeckMeasurementState,
+    parameter_state: &DeckParameterState,
+) -> Option<ParsedMeasurementEdge> {
+    let Some(first) = tokens.first() else {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{section} measurements require a probe target"),
+            None,
+        );
+        return None;
+    };
+    let mut value = None;
+    let probe = if let Some((probe_token, expression)) = first.split_once('=') {
+        match evaluate_parameter_expression(
+            &strip_expression_delimiters(expression.trim()),
+            parameter_state,
+        ) {
+            Ok(parsed) => value = Some(parsed),
+            Err(message) => {
+                add_measurement_diagnostic(
+                    state,
+                    "SPICE_DECK_MEASURE_EXPRESSION",
+                    directive,
+                    line_number,
+                    &message,
+                    Some((*first).to_string()),
+                );
+                return None;
+            }
+        }
+        unquote_token(probe_token.trim())
+    } else {
+        unquote_token(first.trim())
+    };
+    if probe.is_empty() {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_PROBE",
+            directive,
+            line_number,
+            &format!("{section} measurement probe must not be empty"),
+            Some((*first).to_string()),
+        );
+        return None;
+    }
+
+    let mut crossing_kind = None;
+    let mut crossing_count = None;
+    let mut seen_tokens = Vec::new();
+    for token in tokens.iter().skip(1) {
+        let Some((key, expression)) = token.split_once('=') else {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("{section} measurement option {token:?} must use name=value syntax"),
+                Some((*token).to_string()),
+            );
+            return None;
+        };
+        let key = key.trim().to_ascii_lowercase();
+        if key != "val" && key != "rise" && key != "fall" && key != "cross" {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("unsupported {section} measurement option {key:?}"),
+                Some((*token).to_string()),
+            );
+            return None;
+        }
+        if seen_tokens.iter().any(|seen| seen == &key) {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("duplicate {section} measurement option {key:?}"),
+                Some((*token).to_string()),
+            );
+            return None;
+        }
+        seen_tokens.push(key.clone());
+        match evaluate_parameter_expression(
+            &strip_expression_delimiters(expression.trim()),
+            parameter_state,
+        ) {
+            Ok(parsed) if key == "val" => value = Some(parsed),
+            Ok(parsed) if key == "rise" || key == "fall" || key == "cross" => {
+                if crossing_kind.is_some() {
+                    add_measurement_diagnostic(
+                        state,
+                        "SPICE_DECK_MEASURE_ARGUMENT",
+                        directive,
+                        line_number,
+                        &format!("only one {section} RISE, FALL, or CROSS option may be specified"),
+                        Some((*token).to_string()),
+                    );
+                    return None;
+                }
+                if !parsed.is_finite()
+                    || parsed < 1.0
+                    || parsed.fract() != 0.0
+                    || parsed > usize::MAX as f64
+                {
+                    add_measurement_diagnostic(
+                        state,
+                        "SPICE_DECK_MEASURE_ARGUMENT",
+                        directive,
+                        line_number,
+                        &format!(
+                            "{section} RISE, FALL, and CROSS counts must be positive integers"
+                        ),
+                        Some((*token).to_string()),
+                    );
+                    return None;
+                }
+                crossing_kind = Some(key);
+                crossing_count = Some(parsed as usize);
+            }
+            Err(message) => {
+                add_measurement_diagnostic(
+                    state,
+                    "SPICE_DECK_MEASURE_EXPRESSION",
+                    directive,
+                    line_number,
+                    &message,
+                    Some((*token).to_string()),
+                );
+                return None;
+            }
+            Ok(_) => unreachable!(),
+        }
+    }
+    let Some(value) = value else {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{section} measurements require a VAL value or probe=value target"),
+            None,
+        );
+        return None;
+    };
+    Some(ParsedMeasurementEdge {
+        probe,
+        value,
+        crossing_kind,
+        crossing_count,
+    })
 }
 
 fn resolve_output_line(
@@ -8829,6 +9226,8 @@ pub fn measure_transient_when_probe(
         points,
         probe,
         target_value,
+        TransientCrossingKind::Cross,
+        1,
         from_time,
         to_time,
         "measure_transient_when_probe",
@@ -8842,6 +9241,164 @@ pub fn measure_transient_when_probe(
         from_value: from_time,
         to_value: to_time,
     })
+}
+
+pub fn measure_transient_when_probe_counted(
+    points: &[TransientPoint],
+    name: &str,
+    probe: &str,
+    target_value: f64,
+    crossing_kind: &str,
+    crossing_count: usize,
+    from_time: Option<f64>,
+    to_time: Option<f64>,
+) -> Result<ProbeMeasurement, SpiceError> {
+    let context = "measure_transient_when_probe_counted";
+    if !target_value.is_finite() {
+        return Err(table_error(context, "target_value must be finite"));
+    }
+    let crossing_kind = parse_transient_crossing_kind(crossing_kind, context)?;
+    if crossing_count == 0 {
+        return Err(table_error(
+            context,
+            "crossing_count must be a positive integer",
+        ));
+    }
+    if let Some(value) = from_time {
+        if !value.is_finite() {
+            return Err(table_error(context, "from_time must be finite"));
+        }
+    }
+    if let Some(value) = to_time {
+        if !value.is_finite() {
+            return Err(table_error(context, "to_time must be finite"));
+        }
+    }
+    if let (Some(from), Some(to)) = (from_time, to_time) {
+        if from > to {
+            return Err(table_error(context, "from_time must be <= to_time"));
+        }
+    }
+
+    let value = transient_probe_crossing_time(
+        points,
+        probe,
+        target_value,
+        crossing_kind,
+        crossing_count,
+        from_time,
+        to_time,
+        context,
+    )?;
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "tran".to_string(),
+        probe: probe.to_string(),
+        mode: "when".to_string(),
+        value,
+        from_value: from_time,
+        to_value: to_time,
+    })
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn measure_transient_delay_between_probes(
+    points: &[TransientPoint],
+    name: &str,
+    trigger_probe: &str,
+    trigger_value: f64,
+    trigger_crossing_kind: &str,
+    trigger_crossing_count: usize,
+    target_probe: &str,
+    target_value: f64,
+    target_crossing_kind: &str,
+    target_crossing_count: usize,
+    from_time: Option<f64>,
+    to_time: Option<f64>,
+) -> Result<ProbeMeasurement, SpiceError> {
+    let context = "measure_transient_delay_between_probes";
+    if !trigger_value.is_finite() {
+        return Err(table_error(context, "trigger_value must be finite"));
+    }
+    if !target_value.is_finite() {
+        return Err(table_error(context, "target_value must be finite"));
+    }
+    let trigger_crossing_kind = parse_transient_crossing_kind(trigger_crossing_kind, context)?;
+    let target_crossing_kind = parse_transient_crossing_kind(target_crossing_kind, context)?;
+    if trigger_crossing_count == 0 || target_crossing_count == 0 {
+        return Err(table_error(
+            context,
+            "crossing counts must be positive integers",
+        ));
+    }
+    if let Some(value) = from_time {
+        if !value.is_finite() {
+            return Err(table_error(context, "from_time must be finite"));
+        }
+    }
+    if let Some(value) = to_time {
+        if !value.is_finite() {
+            return Err(table_error(context, "to_time must be finite"));
+        }
+    }
+    if let (Some(from), Some(to)) = (from_time, to_time) {
+        if from > to {
+            return Err(table_error(context, "from_time must be <= to_time"));
+        }
+    }
+
+    let trigger_time = transient_probe_crossing_time(
+        points,
+        trigger_probe,
+        trigger_value,
+        trigger_crossing_kind,
+        trigger_crossing_count,
+        from_time,
+        to_time,
+        context,
+    )?;
+    let target_from_time = Some(from_time.map_or(trigger_time, |from| from.max(trigger_time)));
+    let target_time = transient_probe_crossing_time(
+        points,
+        target_probe,
+        target_value,
+        target_crossing_kind,
+        target_crossing_count,
+        target_from_time,
+        to_time,
+        context,
+    )?;
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "tran".to_string(),
+        probe: format!("{trigger_probe}->{target_probe}"),
+        mode: "delay".to_string(),
+        value: target_time - trigger_time,
+        from_value: from_time,
+        to_value: to_time,
+    })
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum TransientCrossingKind {
+    Rise,
+    Fall,
+    Cross,
+}
+
+fn parse_transient_crossing_kind(
+    crossing_kind: &str,
+    context: &str,
+) -> Result<TransientCrossingKind, SpiceError> {
+    match crossing_kind.trim().to_ascii_lowercase().as_str() {
+        "rise" => Ok(TransientCrossingKind::Rise),
+        "fall" => Ok(TransientCrossingKind::Fall),
+        "cross" => Ok(TransientCrossingKind::Cross),
+        _ => Err(table_error(
+            context,
+            "crossing_kind must be rise, fall, or cross",
+        )),
+    }
 }
 
 fn transient_probe_value_at(
@@ -8885,12 +9442,15 @@ fn transient_probe_crossing_time(
     points: &[TransientPoint],
     probe: &str,
     target_value: f64,
+    crossing_kind: TransientCrossingKind,
+    crossing_count: usize,
     from_time: Option<f64>,
     to_time: Option<f64>,
     context: &str,
 ) -> Result<f64, SpiceError> {
     let mut previous: Option<(f64, f64, f64)> = None;
     let mut selected_count = 0usize;
+    let mut matched_count = 0usize;
     for point in points {
         if from_time.map_or(false, |from| point.time < from)
             || to_time.map_or(false, |to| point.time > to)
@@ -8901,11 +9461,22 @@ fn transient_probe_crossing_time(
         let value =
             table_probe_value(&point.node_voltages, &point.branch_currents, probe, context)?;
         let delta = value - target_value;
-        if delta == 0.0 {
-            return Ok(point.time);
-        }
-        if let Some((previous_time, previous_value, previous_delta)) = previous {
-            if (previous_delta < 0.0 && delta > 0.0) || (previous_delta > 0.0 && delta < 0.0) {
+        let crossing_time = if let Some((previous_time, previous_value, previous_delta)) = previous
+        {
+            if delta == 0.0 {
+                match crossing_kind {
+                    TransientCrossingKind::Cross => Some(point.time),
+                    TransientCrossingKind::Rise if previous_delta < 0.0 => Some(point.time),
+                    TransientCrossingKind::Fall if previous_delta > 0.0 => Some(point.time),
+                    _ => None,
+                }
+            } else if (previous_delta < 0.0
+                && delta > 0.0
+                && crossing_kind != TransientCrossingKind::Fall)
+                || (previous_delta > 0.0
+                    && delta < 0.0
+                    && crossing_kind != TransientCrossingKind::Rise)
+            {
                 if point.time == previous_time {
                     return Err(table_error(
                         context,
@@ -8913,7 +9484,19 @@ fn transient_probe_crossing_time(
                     ));
                 }
                 let fraction = (target_value - previous_value) / (value - previous_value);
-                return Ok(previous_time + (point.time - previous_time) * fraction);
+                Some(previous_time + (point.time - previous_time) * fraction)
+            } else {
+                None
+            }
+        } else if delta == 0.0 && crossing_kind == TransientCrossingKind::Cross {
+            Some(point.time)
+        } else {
+            None
+        };
+        if let Some(crossing_time) = crossing_time {
+            matched_count += 1;
+            if matched_count == crossing_count {
+                return Ok(crossing_time);
             }
         }
         previous = Some((point.time, value, delta));
@@ -8956,11 +9539,49 @@ pub fn measure_transient_cards(
                     "WHEN measurement cards require a target value",
                 ));
             };
-            results.push(measure_transient_when_probe(
+            results.push(measure_transient_when_probe_counted(
                 points,
                 &measurement.name,
                 &measurement.probe,
                 target_value,
+                measurement.crossing_kind.as_deref().unwrap_or("cross"),
+                measurement.crossing_count.unwrap_or(1),
+                measurement.from_value,
+                measurement.to_value,
+            )?);
+        } else if measurement.mode == "delay" {
+            let Some(trigger_probe) = measurement.trigger_probe.as_deref() else {
+                return Err(table_error(
+                    "measure_transient_cards",
+                    "delay measurement cards require a trigger probe",
+                ));
+            };
+            let Some(trigger_value) = measurement.trigger_value else {
+                return Err(table_error(
+                    "measure_transient_cards",
+                    "delay measurement cards require a trigger value",
+                ));
+            };
+            let Some(target_value) = measurement.target_value else {
+                return Err(table_error(
+                    "measure_transient_cards",
+                    "delay measurement cards require a target value",
+                ));
+            };
+            results.push(measure_transient_delay_between_probes(
+                points,
+                &measurement.name,
+                trigger_probe,
+                trigger_value,
+                measurement
+                    .trigger_crossing_kind
+                    .as_deref()
+                    .unwrap_or("cross"),
+                measurement.trigger_crossing_count.unwrap_or(1),
+                &measurement.probe,
+                target_value,
+                measurement.crossing_kind.as_deref().unwrap_or("cross"),
+                measurement.crossing_count.unwrap_or(1),
                 measurement.from_value,
                 measurement.to_value,
             )?);

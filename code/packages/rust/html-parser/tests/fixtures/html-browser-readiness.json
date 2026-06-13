@@ -29,8 +29,14 @@
         "anchors": [
           { "id": "index", "name": null, "text": "Example Directory" }
         ],
+        "anchor_descriptors": [
+          { "anchor_index": 1, "id": "index", "name": null, "text": "Example Directory", "fragment_targets": ["index"], "anchor_kind": "id" }
+        ],
         "headings": [
           { "level": 1, "text": "Example Directory" }
+        ],
+        "heading_descriptors": [
+          { "heading_index": 1, "level": 1, "text": "Example Directory", "previous_level": null, "outline_kind": "top-level" }
         ],
         "navigation_groups": [
           { "element": "ul", "role": "list", "text": "One Two", "list_kind": "unordered", "item_count": 2 }

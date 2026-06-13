@@ -371,6 +371,147 @@ pub struct IntegrationCatalogEntry {
     pub notes: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationCatalogEntrySummary {
+    pub integration_id: IntegrationId,
+    pub display_name: String,
+    pub category: IntegrationCategory,
+    pub connectivity: ConnectivityClass,
+    pub runtime_kind: RuntimeKind,
+    pub implementation_status: ImplementationStatus,
+    pub priority: u8,
+    pub discovery_mechanism_count: usize,
+    pub auth_mode_count: usize,
+    pub required_capability_count: usize,
+    pub target_entity_kind_count: usize,
+    pub supported_protocol_count: usize,
+    pub dependency_count: usize,
+    pub virtual_iot_standard_count: usize,
+    pub required_primitive_count: usize,
+    pub source_ref_count: usize,
+    pub note_count: usize,
+    pub policy_surface_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+    pub virtual_alias: bool,
+    pub has_dependencies: bool,
+    pub requires_human_review: bool,
+}
+
+impl IntegrationCatalogEntrySummary {
+    pub fn from_entry(entry: &IntegrationCatalogEntry) -> Self {
+        let policy_surfaces = entry.policy_surfaces();
+        let highest_policy_tier = policy_surfaces
+            .iter()
+            .map(|surface| surface.required_tier())
+            .max()
+            .unwrap_or(PrivilegeTier::ReadOnly);
+        let local_only = entry.is_local() && !entry.requires_cloud();
+        let cloud_required = entry.requires_cloud()
+            || entry
+                .discovery_mechanisms
+                .contains(&DiscoveryMechanism::CloudAccount);
+        let has_dependencies = !entry.depends_on_integrations.is_empty();
+        let virtual_alias = entry.is_virtual() || entry.virtual_target.is_some();
+
+        Self {
+            integration_id: entry.integration_id.clone(),
+            display_name: entry.display_name.clone(),
+            category: entry.category,
+            connectivity: entry.connectivity,
+            runtime_kind: entry.runtime_kind,
+            implementation_status: entry.implementation_status,
+            priority: entry.priority,
+            discovery_mechanism_count: entry.discovery_mechanisms.len(),
+            auth_mode_count: entry.auth_modes.len(),
+            required_capability_count: entry.required_capabilities.len(),
+            target_entity_kind_count: entry.target_entity_kinds.len(),
+            supported_protocol_count: entry.supported_protocols.len(),
+            dependency_count: entry.depends_on_integrations.len(),
+            virtual_iot_standard_count: entry.virtual_iot_standards.len(),
+            required_primitive_count: entry.required_primitives.len(),
+            source_ref_count: entry.source_refs.len(),
+            note_count: entry.notes.len(),
+            policy_surface_count: policy_surfaces.len(),
+            highest_policy_tier,
+            local_only,
+            cloud_required,
+            virtual_alias,
+            has_dependencies,
+            requires_human_review: highest_policy_tier >= PrivilegeTier::HumanApproval,
+        }
+    }
+
+    pub fn has_catalog_metadata(&self) -> bool {
+        self.discovery_mechanism_count > 0
+            && self.auth_mode_count > 0
+            && self.required_capability_count > 0
+            && self.required_primitive_count > 0
+            && self.source_ref_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationPackageSummary {
+    pub catalog_entry: IntegrationCatalogEntrySummary,
+    pub activation_target: IntegrationActivationTarget,
+    pub direct_activation: bool,
+    pub delegated_activation: bool,
+    pub required_primitive_count: usize,
+    pub required_capability_count: usize,
+    pub auth_mode_count: usize,
+    pub discovery_mechanism_count: usize,
+    pub dependency_count: usize,
+    pub policy_surface_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+    pub requires_human_review: bool,
+}
+
+impl IntegrationActivationPackageSummary {
+    pub fn from_entry(entry: &IntegrationCatalogEntry) -> Self {
+        let plan = activation_plan_for_entry(entry);
+        Self::from_plan(entry.summary(), &plan)
+    }
+
+    pub fn from_plan(
+        catalog_entry: IntegrationCatalogEntrySummary,
+        plan: &IntegrationActivationPlan,
+    ) -> Self {
+        let direct_activation = plan.activation_target == IntegrationActivationTarget::Direct;
+        let delegated_activation = !direct_activation;
+
+        Self {
+            catalog_entry,
+            activation_target: plan.activation_target.clone(),
+            direct_activation,
+            delegated_activation,
+            required_primitive_count: plan.required_primitives.len(),
+            required_capability_count: plan.required_capabilities.len(),
+            auth_mode_count: plan.auth_modes.len(),
+            discovery_mechanism_count: plan.discovery_mechanisms.len(),
+            dependency_count: plan.depends_on_integrations.len(),
+            policy_surface_count: plan.policy_surfaces.len(),
+            highest_policy_tier: plan.highest_policy_tier,
+            local_only: plan.local_only,
+            cloud_required: plan.cloud_required,
+            requires_human_review: plan.requires_human_review(),
+        }
+    }
+
+    pub fn has_prerequisites(&self) -> bool {
+        self.required_primitive_count > 0
+            || self.required_capability_count > 0
+            || self.dependency_count > 0
+    }
+
+    pub fn has_policy_review(&self) -> bool {
+        self.requires_human_review || self.policy_surface_count > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IntegrationCatalogSort {
     PriorityThenName,
@@ -4196,6 +4337,52 @@ impl IntegrationActivationIncidentAction {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationGuardrailKind {
+    Incident,
+    PolicyRisk,
+    Dependency,
+    ReadinessGap,
+}
+
+impl IntegrationActivationGuardrailKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Incident => "incident",
+            Self::PolicyRisk => "policy_risk",
+            Self::Dependency => "dependency",
+            Self::ReadinessGap => "readiness_gap",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationGuardrailVerdict {
+    Pass,
+    Monitor,
+    NeedsReview,
+    Blocked,
+}
+
+impl IntegrationActivationGuardrailVerdict {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Pass => "pass",
+            Self::Monitor => "monitor",
+            Self::NeedsReview => "needs_review",
+            Self::Blocked => "blocked",
+        }
+    }
+
+    pub fn blocks_activation(self) -> bool {
+        matches!(self, Self::Blocked)
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(self, Self::NeedsReview | Self::Blocked)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationActivationIncidentBrief {
     pub sequence: usize,
@@ -4261,6 +4448,49 @@ pub struct IntegrationActivationIncidentSummary {
     pub next_brief_sequence: Option<usize>,
     pub next_brief_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationGuardrailCheck {
+    pub sequence: usize,
+    pub guardrail_id: String,
+    pub kind: IntegrationActivationGuardrailKind,
+    pub verdict: IntegrationActivationGuardrailVerdict,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub incident_severity: Option<IntegrationActivationIncidentSeverity>,
+    pub incident_action: Option<IntegrationActivationIncidentAction>,
+    pub risk_kind: Option<IntegrationActivationRiskKind>,
+    pub dependency_integration_id: Option<IntegrationId>,
+    pub dependent_integration_id: Option<IntegrationId>,
+    pub readiness_gap_kind: Option<String>,
+    pub blocks_activation: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationGuardrailSummary {
+    pub total_checks: usize,
+    pub unique_integrations: usize,
+    pub checks_requiring_attention: usize,
+    pub blocked_checks: usize,
+    pub needs_review_checks: usize,
+    pub monitor_checks: usize,
+    pub pass_checks: usize,
+    pub incident_checks: usize,
+    pub policy_risk_checks: usize,
+    pub dependency_checks: usize,
+    pub readiness_gap_checks: usize,
+    pub checks_with_policy_surface: usize,
+    pub first_attention_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
 }
@@ -12164,6 +12394,321 @@ impl IntegrationActivationIncidentSummary {
     }
 }
 
+impl IntegrationActivationGuardrailCheck {
+    fn from_incident(brief: &IntegrationActivationIncidentBrief) -> Self {
+        let verdict = if brief.blocks_activation() {
+            IntegrationActivationGuardrailVerdict::Blocked
+        } else if brief.requires_attention() {
+            IntegrationActivationGuardrailVerdict::NeedsReview
+        } else if brief.incident_ready() {
+            IntegrationActivationGuardrailVerdict::Monitor
+        } else {
+            IntegrationActivationGuardrailVerdict::Pass
+        };
+
+        Self {
+            sequence: 0,
+            guardrail_id: format!("incident:{}", brief.source_id.as_str()),
+            kind: IntegrationActivationGuardrailKind::Incident,
+            verdict,
+            title: brief.title.clone(),
+            summary: brief.summary.clone(),
+            priority: brief.priority,
+            integration_ids: brief.integration_ids.clone(),
+            required_tier: brief.required_tier,
+            policy_surface: brief.policy_surface,
+            incident_severity: Some(brief.severity),
+            incident_action: Some(brief.action),
+            risk_kind: None,
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: None,
+            blocks_activation: verdict.blocks_activation() || brief.blocks_activation(),
+            requires_attention: verdict.requires_attention() || brief.requires_attention(),
+        }
+    }
+
+    fn from_risk(risk: &IntegrationActivationRiskItem) -> Self {
+        let verdict = if risk.has_blockers() {
+            IntegrationActivationGuardrailVerdict::Blocked
+        } else if risk.requires_attention()
+            || matches!(
+                risk.required_tier,
+                PrivilegeTier::HumanApproval | PrivilegeTier::HighRisk
+            )
+        {
+            IntegrationActivationGuardrailVerdict::NeedsReview
+        } else if risk.has_ready_work() {
+            IntegrationActivationGuardrailVerdict::Monitor
+        } else {
+            IntegrationActivationGuardrailVerdict::Pass
+        };
+
+        Self {
+            sequence: 0,
+            guardrail_id: format!("risk:{}", risk.risk_id.as_str()),
+            kind: IntegrationActivationGuardrailKind::PolicyRisk,
+            verdict,
+            title: format!("Policy risk: {}", risk.display_name),
+            summary: format!(
+                "{} integration(s) share this activation policy risk",
+                risk.integration_count()
+            ),
+            priority: risk.highest_priority,
+            integration_ids: risk.integration_ids.clone(),
+            required_tier: risk.required_tier,
+            policy_surface: risk.policy_surface,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: Some(risk.kind),
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: None,
+            blocks_activation: verdict.blocks_activation(),
+            requires_attention: verdict.requires_attention() || risk.requires_attention(),
+        }
+    }
+
+    fn from_dependency_edge(edge: &IntegrationActivationDependencyEdge) -> Self {
+        let verdict = if edge.blocks_activation {
+            IntegrationActivationGuardrailVerdict::Blocked
+        } else {
+            IntegrationActivationGuardrailVerdict::Pass
+        };
+        let dependency_name = edge
+            .dependency_display_name
+            .as_deref()
+            .unwrap_or(edge.dependency_integration_id.as_str());
+        let integration_ids = if edge.dependency_integration_id == edge.dependent_integration_id {
+            vec![edge.dependent_integration_id.clone()]
+        } else {
+            vec![
+                edge.dependency_integration_id.clone(),
+                edge.dependent_integration_id.clone(),
+            ]
+        };
+
+        Self {
+            sequence: 0,
+            guardrail_id: format!(
+                "dependency:{}->{}",
+                edge.dependency_integration_id.as_str(),
+                edge.dependent_integration_id.as_str()
+            ),
+            kind: IntegrationActivationGuardrailKind::Dependency,
+            verdict,
+            title: format!(
+                "Dependency guardrail: {} requires {}",
+                edge.dependent_display_name, dependency_name
+            ),
+            summary: if edge.satisfied {
+                "Required integration dependency is enabled".to_string()
+            } else {
+                "Required integration dependency is not enabled".to_string()
+            },
+            priority: edge.dependent_priority,
+            integration_ids,
+            required_tier: PrivilegeTier::ReadOnly,
+            policy_surface: None,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: None,
+            dependency_integration_id: Some(edge.dependency_integration_id.clone()),
+            dependent_integration_id: Some(edge.dependent_integration_id.clone()),
+            readiness_gap_kind: None,
+            blocks_activation: edge.blocks_activation,
+            requires_attention: edge.blocks_activation,
+        }
+    }
+
+    fn from_primitive_gap(gap: &IntegrationReadinessPrimitiveGap) -> Self {
+        Self {
+            sequence: 0,
+            guardrail_id: format!("readiness_gap:primitive:{}", gap.primitive.as_str()),
+            kind: IntegrationActivationGuardrailKind::ReadinessGap,
+            verdict: IntegrationActivationGuardrailVerdict::Blocked,
+            title: format!("Readiness gap: missing {}", gap.primitive.as_str()),
+            summary: format!(
+                "{} integration report(s) are blocked by this primitive gap",
+                gap.blocked_report_count
+            ),
+            priority: gap.highest_priority,
+            integration_ids: gap.integration_ids.clone(),
+            required_tier: PrivilegeTier::ReadOnly,
+            policy_surface: None,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: None,
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: Some("primitive".to_string()),
+            blocks_activation: true,
+            requires_attention: true,
+        }
+    }
+
+    fn from_capability_gap(gap: &IntegrationReadinessCapabilityGap) -> Self {
+        Self {
+            sequence: 0,
+            guardrail_id: format!("readiness_gap:capability:{}", gap.capability_id.as_str()),
+            kind: IntegrationActivationGuardrailKind::ReadinessGap,
+            verdict: IntegrationActivationGuardrailVerdict::Blocked,
+            title: format!("Readiness gap: missing {}", gap.capability_id.as_str()),
+            summary: format!(
+                "{} integration report(s) are blocked by this capability gap",
+                gap.blocked_report_count
+            ),
+            priority: gap.highest_priority,
+            integration_ids: gap.integration_ids.clone(),
+            required_tier: PrivilegeTier::ReadOnly,
+            policy_surface: None,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: None,
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: Some("capability".to_string()),
+            blocks_activation: true,
+            requires_attention: true,
+        }
+    }
+
+    fn from_dependency_gap(gap: &IntegrationReadinessDependencyGap) -> Self {
+        let mut integration_ids = gap.requested_integration_ids.clone();
+        if !integration_ids
+            .iter()
+            .any(|integration_id| integration_id == &gap.integration_id)
+        {
+            integration_ids.push(gap.integration_id.clone());
+        }
+
+        Self {
+            sequence: 0,
+            guardrail_id: format!("readiness_gap:dependency:{}", gap.integration_id.as_str()),
+            kind: IntegrationActivationGuardrailKind::ReadinessGap,
+            verdict: IntegrationActivationGuardrailVerdict::Blocked,
+            title: format!("Readiness gap: missing {}", gap.integration_id.as_str()),
+            summary: format!(
+                "{} integration report(s) are blocked by this dependency gap",
+                gap.blocked_report_count
+            ),
+            priority: gap.highest_priority,
+            integration_ids,
+            required_tier: PrivilegeTier::ReadOnly,
+            policy_surface: None,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: None,
+            dependency_integration_id: Some(gap.integration_id.clone()),
+            dependent_integration_id: None,
+            readiness_gap_kind: Some("dependency".to_string()),
+            blocks_activation: true,
+            requires_attention: true,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn blocks_activation(&self) -> bool {
+        self.blocks_activation || self.verdict.blocks_activation()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention || self.verdict.requires_attention()
+    }
+}
+
+impl IntegrationActivationGuardrailSummary {
+    pub fn from_checks<'a>(
+        checks: impl IntoIterator<Item = &'a IntegrationActivationGuardrailCheck>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_checks: 0,
+            unique_integrations: 0,
+            checks_requiring_attention: 0,
+            blocked_checks: 0,
+            needs_review_checks: 0,
+            monitor_checks: 0,
+            pass_checks: 0,
+            incident_checks: 0,
+            policy_risk_checks: 0,
+            dependency_checks: 0,
+            readiness_gap_checks: 0,
+            checks_with_policy_surface: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_review_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for check in checks {
+            summary.total_checks += 1;
+            for integration_id in &check.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            match check.kind {
+                IntegrationActivationGuardrailKind::Incident => summary.incident_checks += 1,
+                IntegrationActivationGuardrailKind::PolicyRisk => summary.policy_risk_checks += 1,
+                IntegrationActivationGuardrailKind::Dependency => summary.dependency_checks += 1,
+                IntegrationActivationGuardrailKind::ReadinessGap => {
+                    summary.readiness_gap_checks += 1;
+                }
+            }
+            match check.verdict {
+                IntegrationActivationGuardrailVerdict::Pass => summary.pass_checks += 1,
+                IntegrationActivationGuardrailVerdict::Monitor => summary.monitor_checks += 1,
+                IntegrationActivationGuardrailVerdict::NeedsReview => {
+                    summary.needs_review_checks += 1;
+                    summary.first_review_priority =
+                        min_optional_priority(summary.first_review_priority, Some(check.priority));
+                }
+                IntegrationActivationGuardrailVerdict::Blocked => {
+                    summary.blocked_checks += 1;
+                    summary.first_blocked_priority =
+                        min_optional_priority(summary.first_blocked_priority, Some(check.priority));
+                }
+            }
+            if check.requires_attention() {
+                summary.checks_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(check.priority));
+            }
+            if check.policy_surface.is_some() {
+                summary.checks_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(check.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_checks > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.needs_review_checks > 0 || summary.checks_requiring_attention > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.monitor_checks > 0 || summary.pass_checks > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_checks == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_checks > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.checks_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -14066,6 +14611,10 @@ impl IntegrationActivationPlan {
 }
 
 impl IntegrationCatalogEntry {
+    pub fn summary(&self) -> IntegrationCatalogEntrySummary {
+        IntegrationCatalogEntrySummary::from_entry(self)
+    }
+
     pub fn is_virtual(&self) -> bool {
         self.category == IntegrationCategory::VirtualAlias
     }
@@ -14904,6 +15453,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "ultraloq",
         ),
     ]
+}
+
+pub fn hue_catalog_entry_summary() -> IntegrationCatalogEntrySummary {
+    hue_entry().summary()
+}
+
+pub fn hue_activation_package_summary() -> IntegrationActivationPackageSummary {
+    IntegrationActivationPackageSummary::from_entry(&hue_entry())
 }
 
 pub fn find_entry<'a>(
@@ -17529,6 +18086,85 @@ pub fn activation_incident_briefs_at_or_before_priority(
     activation_incident_briefs_from_observability_probes(&probes)
 }
 
+pub fn activation_guardrail_checks_from_rollups(
+    incidents: &[IntegrationActivationIncidentBrief],
+    risks: &[IntegrationActivationRiskItem],
+    graph: &IntegrationActivationDependencyGraph,
+    gap_inventory: &IntegrationReadinessGapInventory,
+) -> Vec<IntegrationActivationGuardrailCheck> {
+    let mut checks = Vec::new();
+    checks.extend(
+        incidents
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_incident),
+    );
+    checks.extend(
+        risks
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_risk),
+    );
+    checks.extend(
+        graph
+            .edges
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_dependency_edge),
+    );
+    checks.extend(
+        gap_inventory
+            .primitive_gaps
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_primitive_gap),
+    );
+    checks.extend(
+        gap_inventory
+            .capability_gaps
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_capability_gap),
+    );
+    checks.extend(
+        gap_inventory
+            .dependency_gaps
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_dependency_gap),
+    );
+
+    checks.sort_by(compare_activation_guardrail_checks);
+    for (index, check) in checks.iter_mut().enumerate() {
+        check.sequence = index + 1;
+    }
+    checks
+}
+
+pub fn activation_guardrail_checks_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationGuardrailCheck> {
+    let reports = readiness_reports_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let candidates = activation_candidates_from_reports(reports.iter());
+    let risks = activation_risk_from_candidates(catalog, candidates.iter());
+    let graph =
+        activation_dependency_graph_from_reports(catalog, reports.iter(), enabled_integrations);
+    let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+    let incidents = activation_incident_briefs_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+
+    activation_guardrail_checks_from_rollups(&incidents, &risks, &graph, &gap_inventory)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -19345,6 +19981,31 @@ fn compare_activation_incident_briefs(
         .then_with(|| left.owner_lane.cmp(&right.owner_lane))
         .then_with(|| left.source_id.cmp(&right.source_id))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_guardrail_checks(
+    left: &IntegrationActivationGuardrailCheck,
+    right: &IntegrationActivationGuardrailCheck,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.blocks_activation().cmp(&left.blocks_activation()))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| {
+            guardrail_verdict_rank(right.verdict).cmp(&guardrail_verdict_rank(left.verdict))
+        })
+        .then_with(|| left.kind.cmp(&right.kind))
+        .then_with(|| left.guardrail_id.cmp(&right.guardrail_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn guardrail_verdict_rank(verdict: IntegrationActivationGuardrailVerdict) -> u8 {
+    match verdict {
+        IntegrationActivationGuardrailVerdict::Pass => 0,
+        IntegrationActivationGuardrailVerdict::Monitor => 1,
+        IntegrationActivationGuardrailVerdict::NeedsReview => 2,
+        IntegrationActivationGuardrailVerdict::Blocked => 3,
+    }
 }
 
 fn push_activation_sentinel_alert(
@@ -23288,6 +23949,47 @@ mod tests {
         assert!(catalog_incident_briefs
             .iter()
             .any(IntegrationActivationIncidentBrief::blocks_activation));
+        let catalog_guardrail_checks = activation_guardrail_checks_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(|check| check.kind == IntegrationActivationGuardrailKind::Incident));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(|check| check.kind == IntegrationActivationGuardrailKind::PolicyRisk));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(|check| check.kind == IntegrationActivationGuardrailKind::Dependency));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(|check| check.kind == IntegrationActivationGuardrailKind::ReadinessGap));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(IntegrationActivationGuardrailCheck::requires_attention));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(IntegrationActivationGuardrailCheck::blocks_activation));
+        let catalog_guardrail_summary =
+            IntegrationActivationGuardrailSummary::from_checks(catalog_guardrail_checks.iter());
+        assert_eq!(
+            catalog_guardrail_summary.total_checks,
+            catalog_guardrail_checks.len()
+        );
+        assert!(catalog_guardrail_summary.has_blockers());
+        assert!(catalog_guardrail_summary.requires_attention());
+        assert!(catalog_guardrail_summary.incident_checks >= 1);
+        assert!(catalog_guardrail_summary.policy_risk_checks >= 1);
+        assert!(catalog_guardrail_summary.dependency_checks >= 1);
+        assert!(catalog_guardrail_summary.readiness_gap_checks >= 1);
+        assert_eq!(
+            catalog_guardrail_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
     }
 
     #[test]
@@ -23655,6 +24357,76 @@ mod tests {
         assert!(hue.requires_primitive(PrimitiveFamily::ServerSentEvents));
         assert!(hue.requires_primitive(PrimitiveFamily::LocalPairing));
         assert!(hue.requires_primitive(PrimitiveFamily::Supervision));
+    }
+
+    #[test]
+    fn catalog_entry_summary_compacts_hue_package_shape() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let summary = hue_catalog_entry_summary();
+
+        assert_eq!(summary, hue.summary());
+        assert_eq!(summary.integration_id, IntegrationId::trusted("hue"));
+        assert_eq!(summary.category, IntegrationCategory::LocalHub);
+        assert_eq!(summary.connectivity, ConnectivityClass::LocalPush);
+        assert_eq!(
+            summary.implementation_status,
+            ImplementationStatus::Scaffolded
+        );
+        assert_eq!(summary.discovery_mechanism_count, 2);
+        assert_eq!(summary.auth_mode_count, 2);
+        assert_eq!(summary.required_capability_count, 3);
+        assert_eq!(summary.supported_protocol_count, 2);
+        assert_eq!(summary.dependency_count, 0);
+        assert!(summary.local_only);
+        assert!(!summary.cloud_required);
+        assert!(!summary.virtual_alias);
+        assert!(!summary.has_dependencies);
+        assert!(summary.has_catalog_metadata());
+        assert!(summary.policy_surface_count >= 2);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
+        assert!(summary.requires_human_review);
+    }
+
+    #[test]
+    fn hue_activation_package_summary_joins_catalog_and_plan_shape() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let plan = activation_plan_for_entry(hue);
+        let summary = hue_activation_package_summary();
+
+        assert_eq!(
+            summary,
+            IntegrationActivationPackageSummary::from_plan(hue.summary(), &plan)
+        );
+        assert_eq!(
+            summary.catalog_entry.integration_id,
+            IntegrationId::trusted("hue")
+        );
+        assert_eq!(
+            summary.activation_target,
+            IntegrationActivationTarget::Direct
+        );
+        assert!(summary.direct_activation);
+        assert!(!summary.delegated_activation);
+        assert_eq!(
+            summary.required_primitive_count,
+            hue.required_primitives.len()
+        );
+        assert_eq!(
+            summary.required_capability_count,
+            hue.required_capabilities.len()
+        );
+        assert_eq!(summary.auth_mode_count, 2);
+        assert_eq!(summary.discovery_mechanism_count, 2);
+        assert_eq!(summary.dependency_count, 0);
+        assert!(summary.policy_surface_count >= 2);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
+        assert!(summary.local_only);
+        assert!(!summary.cloud_required);
+        assert!(summary.requires_human_review);
+        assert!(summary.has_prerequisites());
+        assert!(summary.has_policy_review());
     }
 
     #[test]

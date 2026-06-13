@@ -8,7 +8,7 @@
 //! nested `def __block_<n>():` functions invoked at the source site.
 
 use std::cell::RefCell;
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -21,6 +21,7 @@ use crate::runtime::RUNTIME;
 /// for prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
     BLOCK_COUNTER.with(|c| *c.borrow_mut() = 0);
+    HOIST.with(|h| h.borrow_mut().clear());
     FN_ARITY.with(|t| {
         let mut t = t.borrow_mut();
         t.clear();
@@ -40,9 +41,27 @@ pub fn emit_module(m: &Module) -> String {
     emit_main(&mut out, m);
 
     BLOCK_COUNTER.with(|c| *c.borrow_mut() = 0);
+    HOIST.with(|h| h.borrow_mut().clear());
     FN_ARITY.with(|t| t.borrow_mut().clear());
 
     out
+}
+
+/// Drain the pending nested-`def` hoist buffer into `out`.
+///
+/// Python has no multi-statement lambda, so a block that contains a
+/// loop and appears in *expression* position cannot be inlined.  Such a
+/// block is lifted to a nested `def __block_N(): …` (see
+/// [`emit_block_as_expr`]) whose source is queued here, and the call
+/// site emits `__block_N()`.  The queued defs must be written out
+/// *before* the statement whose value-expression referenced them — every
+/// statement-emitting path renders to a scratch buffer, calls this, then
+/// appends the scratch buffer, so the defs land in the right place.
+fn flush_hoist(out: &mut String) {
+    let pending: Vec<String> = HOIST.with(|h| std::mem::take(&mut *h.borrow_mut()));
+    for def in pending {
+        out.push_str(&def);
+    }
 }
 
 fn emit_banner(out: &mut String, m: &Module) {
@@ -128,16 +147,32 @@ fn emit_function_body(out: &mut String, b: &Block, indent: usize) {
     for s in &b.stmts {
         emit_stmt(out, s, indent);
     }
-    let _ = write!(out, "{}return ", pad);
-    emit_expr(out, &b.value, indent);
-    out.push('\n');
+    // Render the return expression into a scratch buffer first so any
+    // nested defs it hoists are flushed *before* the `return` line.
+    let mut tmp = String::new();
+    let _ = write!(tmp, "{}return ", pad);
+    emit_expr(&mut tmp, &b.value, indent);
+    tmp.push('\n');
+    flush_hoist(out);
+    out.push_str(&tmp);
 }
 
 // ---------------------------------------------------------------------------
 // Statements
 // ---------------------------------------------------------------------------
 
+/// Emit a single statement, flushing any nested-`def` hoists it
+/// generates *before* the statement itself.  The statement is rendered
+/// into a scratch buffer (so `emit_expr` can queue hoists), then the
+/// hoist buffer is drained into `out`, then the scratch buffer appended.
 fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
+    let mut tmp = String::new();
+    emit_stmt_inner(&mut tmp, s, indent);
+    flush_hoist(out);
+    out.push_str(&tmp);
+}
+
+fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
     let pad = indent_str(indent);
     match s {
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
@@ -160,17 +195,86 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push('\n');
             }
         }
-        // SIR16 statement kinds — Python backend's SIR-v1 extension
-        // (per SIR20) lands separately; until then the v0 emit code
-        // must remain exhaustive.  The capability declaration rejects
-        // modules using these features, so reaching this arm is a bug.
-        Stmt::Assign { span, .. }
-        | Stmt::While { span, .. }
-        | Stmt::ForRange { span, .. }
-        | Stmt::ForEach { span, .. }
-        | Stmt::SeqSet { span, .. }
-        | Stmt::MapSet { span, .. } => {
-            panic!("python backend reached SIR16 statement at {} — capability check should have rejected it", span);
+        // ── SIR16 mutation ──────────────────────────────────────────
+        // `Assign` re-binds an already-declared name.  Local/Param/
+        // Capture all resolve to a bare identifier; Global writes the
+        // module-level `_globals` dict (matching how `_init` and
+        // `VarRef::Global` reads are rendered).  Instance/ClassVar/Const
+        // belong to features this backend does not accept yet, so they
+        // fall through to the panic guard below.
+        Stmt::Assign {
+            name,
+            scope: Scope::Local | Scope::Param | Scope::Capture,
+            value,
+            ..
+        } => {
+            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            emit_expr(out, value, indent);
+            out.push('\n');
+        }
+        Stmt::Assign { name, scope: Scope::Global, value, .. } => {
+            let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(name));
+            emit_expr(out, value, indent);
+            out.push('\n');
+        }
+        // `seq[index] = value`
+        Stmt::SeqSet { seq, index, value, .. } => {
+            out.push_str(&pad);
+            emit_expr(out, seq, indent);
+            out.push('[');
+            emit_expr(out, index, indent);
+            out.push_str("] = ");
+            emit_expr(out, value, indent);
+            out.push('\n');
+        }
+        // `map[key] = value`
+        Stmt::MapSet { map, key, value, .. } => {
+            out.push_str(&pad);
+            emit_expr(out, map, indent);
+            out.push('[');
+            emit_expr(out, key, indent);
+            out.push_str("] = ");
+            emit_expr(out, value, indent);
+            out.push('\n');
+        }
+        // ── SIR16 loops ─────────────────────────────────────────────
+        // `while _sir_truthy(cond):` — the test routes through SIR
+        // truthiness (only `False`/`None` are falsy), never Python's.
+        Stmt::While { cond, body, .. } => {
+            out.push_str(&pad);
+            out.push_str("while _sir_truthy(");
+            emit_expr(out, cond, indent);
+            out.push_str("):\n");
+            emit_block_as_stmts(out, body, indent + 1);
+        }
+        // `for var in range(start, stop, step):` — Python's `range` is
+        // already half-open (`stop` exclusive) and direction-aware (a
+        // negative `step` counts down), matching SIR `ForRange`.
+        Stmt::ForRange { var, start, stop, step, body, .. } => {
+            let _ = write!(out, "{}for {} in range(", pad, sanitize_ident(var));
+            emit_expr(out, start, indent);
+            out.push_str(", ");
+            emit_expr(out, stop, indent);
+            out.push_str(", ");
+            emit_expr(out, step, indent);
+            out.push_str("):\n");
+            emit_block_as_stmts(out, body, indent + 1);
+        }
+        // `for var in iter:` — iterate a Seq.
+        Stmt::ForEach { var, iter, body, .. } => {
+            let _ = write!(out, "{}for {} in ", pad, sanitize_ident(var));
+            emit_expr(out, iter, indent);
+            out.push_str(":\n");
+            emit_block_as_stmts(out, body, indent + 1);
+        }
+        // `Assign` to an instance var / class var / constant — those
+        // scopes need `Feature::InstanceVars`/`ClassVars`/`Constants`,
+        // none accepted yet, so the capability check rejects them first.
+        Stmt::Assign { scope, span, .. } => {
+            panic!(
+                "python backend reached SIR17 assign to {:?}-scoped var at {} — capability check should have rejected it",
+                scope, span
+            );
         }
         // SIR17 (classes) — `Feature::Classes` is not in this
         // backend's ACCEPTED_FEATURES, so a class-using module is
@@ -416,74 +520,189 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
         emit_expr(out, &b.value, indent);
         return;
     }
-    // Non-trivial block — lift to a nested def and call it.
-    let block_name = fresh_block_name();
-    let pad = indent_str(indent);
-    // We can't insert a `def` in the middle of an expression
-    // legally.  Strategy: emit the value as a tuple-walrus chain
-    // using assignment expressions (Python 3.8+).  But not all
-    // statements can be expressed as walrus expressions.
+    // A block holding a loop in expression position cannot be expressed
+    // as a walrus tuple (Python has no multi-statement expression), so
+    // it is lifted to a nested `def` (queued in the hoist buffer) and
+    // the call site emits `__block_N()`.
+    if block_has_loop(b) {
+        emit_block_as_lifted_def(out, b, indent);
+        return;
+    }
+    // Otherwise: render the block as a left-to-right tuple of assignment
+    // expressions whose last element is the block's value (Python 3.8+
+    // walrus form).  `(...)[-1]` yields that last element.
     //
-    // Simpler: assemble a `(lambda: __body)()` IIFE.  Inside the
-    // lambda body, we can't have multi-statement form either.
-    //
-    // Real Python solution: use `exec()` with a result dict.  Too
-    // gnarly.
-    //
-    // Cleanest: render the block contents as a sequence of
-    // assignment expressions inside a tuple's last element, OR
-    // emit a helper `def` at module scope (we accumulate into a
-    // side buffer).  For v0 we use the assignment-expression
-    // approach which Python 3.8+ supports.
-    //
-    // Each LetBinding `x = expr` becomes a walrus `(x := expr)`.
-    // ExprStmt becomes a parenthesised expression (its value is
-    // discarded).  All are combined left-to-right in a tuple, and
-    // the last element is the block's value expression.
-    out.push_str("(");
+    // - LetBinding `x = e`        → `(x := e)`
+    // - Assign{Local} `x = e`     → `(x := e)` (re-bind; same form)
+    // - SeqSet `s[i] = v`         → `(s.__setitem__(i, v))` (returns None)
+    // - MapSet `m[k] = v`         → `(m.__setitem__(k, v))`
+    // - ExprStmt `e`              → `(e)` (value discarded)
+    out.push('(');
     for s in &b.stmts {
         match s {
-            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. }
+            | Stmt::LetStarBinding { name, value, .. }
+            | Stmt::Assign { name, scope: Scope::Local | Scope::Param | Scope::Capture, value, .. } => {
                 let _ = write!(out, "({} := ", sanitize_ident(name));
                 emit_expr(out, value, indent);
                 out.push_str("), ");
+            }
+            Stmt::Assign { name, scope: Scope::Global, value, .. } => {
+                let _ = write!(out, "(_globals.__setitem__({}, ", quote_py_string(name));
+                emit_expr(out, value, indent);
+                out.push_str(")), ");
             }
             Stmt::ExprStmt { expr, .. } => {
                 out.push('(');
                 emit_expr(out, expr, indent);
                 out.push_str("), ");
             }
-            // SIR16 statement kinds cannot be expressed in walrus form.
-            Stmt::Assign { span, .. }
-            | Stmt::While { span, .. }
+            Stmt::SeqSet { seq, index, value, .. } => {
+                out.push('(');
+                emit_expr(out, seq, indent);
+                out.push_str(".__setitem__(");
+                emit_expr(out, index, indent);
+                out.push_str(", ");
+                emit_expr(out, value, indent);
+                out.push_str(")), ");
+            }
+            Stmt::MapSet { map, key, value, .. } => {
+                out.push('(');
+                emit_expr(out, map, indent);
+                out.push_str(".__setitem__(");
+                emit_expr(out, key, indent);
+                out.push_str(", ");
+                emit_expr(out, value, indent);
+                out.push_str(")), ");
+            }
+            // Loops were diverted to the lifted-def path above.
+            Stmt::While { span, .. }
             | Stmt::ForRange { span, .. }
-            | Stmt::ForEach { span, .. }
-            | Stmt::SeqSet { span, .. }
-            | Stmt::MapSet { span, .. } => {
-                panic!("python backend (walrus path) reached SIR16 statement at {} — capability check should have rejected it", span);
+            | Stmt::ForEach { span, .. } => {
+                panic!("python backend (walrus path) reached a loop at {} — should have been lifted", span);
             }
-            // SIR17 (classes) — likewise unreachable: rejected by the
-            // capability check, and a class declaration has no
-            // walrus-expression form regardless.
-            Stmt::ClassDef { span, .. } => {
-                panic!("python backend (walrus path) reached SIR17 class-def statement at {} — capability check should have rejected it", span);
-            }
-            Stmt::ModuleDef { span, .. } => {
-                panic!("python backend (walrus path) reached SIR17 module-def statement at {} — capability check should have rejected it", span);
-            }
-            Stmt::SingletonClassDef { span, .. } => {
-                panic!("python backend (walrus path) reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
-            }
-            Stmt::TryCatch { span, .. } => {
-                panic!("python backend (walrus path) reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+            // `Assign` to instance/class-var/const + class/module/try
+            // are rejected at the capability check for this backend.
+            Stmt::Assign { span, .. }
+            | Stmt::ClassDef { span, .. }
+            | Stmt::ModuleDef { span, .. }
+            | Stmt::SingletonClassDef { span, .. }
+            | Stmt::TryCatch { span, .. } => {
+                panic!("python backend (walrus path) reached an unaccepted statement at {} — capability check should have rejected it", span);
             }
         }
     }
     emit_expr(out, &b.value, indent);
     out.push_str(")[-1]");
-    // The `block_name` and `pad` are unused for this strategy.
-    let _ = block_name;
-    let _ = pad;
+}
+
+/// Lift a statement-bearing block to a nested `def __block_N(): …` whose
+/// source is queued in the hoist buffer; emit `__block_N()` at the call
+/// site.  Used for expression-position blocks containing a loop, which
+/// cannot be inlined as a Python expression.
+fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize) {
+    let name = fresh_block_name();
+    let pad = indent_str(indent);
+    let mut def = String::new();
+    let _ = write!(def, "{}def {}():\n", pad, name);
+    // Names re-bound (Assign{Local}) but bound in an enclosing scope must
+    // be declared `nonlocal` so the assignment mutates the outer binding
+    // rather than shadowing it.  Names introduced by a let / loop var in
+    // this block are local and excluded.
+    let nonlocals = collect_nonlocals(b);
+    let inner = indent + 1;
+    let inner_pad = indent_str(inner);
+    for n in &nonlocals {
+        let _ = write!(def, "{}nonlocal {}\n", inner_pad, sanitize_ident(n));
+    }
+    // Body statements, then `return <value>` — emitted via the normal
+    // statement path so any further nested loops hoist correctly.
+    emit_block_as_stmts_with_return(&mut def, b, inner);
+    HOIST.with(|h| h.borrow_mut().push(def));
+    let _ = write!(out, "{}()", name);
+}
+
+/// Emit a block's statements followed by `return <value>` at `indent`
+/// (used for a lifted nested `def` body).
+fn emit_block_as_stmts_with_return(out: &mut String, b: &Block, indent: usize) {
+    for s in &b.stmts {
+        emit_stmt(out, s, indent);
+    }
+    let pad = indent_str(indent);
+    let mut tmp = String::new();
+    let _ = write!(tmp, "{}return ", pad);
+    emit_expr(&mut tmp, &b.value, indent);
+    tmp.push('\n');
+    flush_hoist(out);
+    out.push_str(&tmp);
+}
+
+/// Emit a block in **statement context** — used for loop bodies, whose
+/// trailing value is discarded.  Each statement is emitted in order; a
+/// non-nil trailing value becomes an expression statement so its side
+/// effect still fires.  An otherwise-empty body emits `pass`.
+fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
+    let pad = indent_str(indent);
+    let has_value = !matches!(b.value, Expr::NilLit { .. });
+    if b.stmts.is_empty() && !has_value {
+        let _ = write!(out, "{}pass\n", pad);
+        return;
+    }
+    for s in &b.stmts {
+        emit_stmt(out, s, indent);
+    }
+    if has_value {
+        let mut tmp = String::new();
+        tmp.push_str(&pad);
+        emit_expr(&mut tmp, &b.value, indent);
+        tmp.push('\n');
+        flush_hoist(out);
+        out.push_str(&tmp);
+    }
+}
+
+/// True if any top-level statement of `b` is a loop.  Loops cannot be
+/// expressed as walrus tuples, so such a block must be lifted to a
+/// nested `def` when it appears in expression position.  (Nested blocks
+/// handle their own loops recursively, so this check is shallow.)
+fn block_has_loop(b: &Block) -> bool {
+    b.stmts.iter().any(|s| {
+        matches!(
+            s,
+            Stmt::While { .. } | Stmt::ForRange { .. } | Stmt::ForEach { .. }
+        )
+    })
+}
+
+/// Collect the names a lifted nested `def` must declare `nonlocal`: every
+/// `Assign{Local}` target reachable through the block's own statements
+/// and its inline loop bodies, minus names introduced locally (by a
+/// let / let* binding or as a loop variable).  Expression-position
+/// sub-blocks are *not* traversed — they become their own nested defs.
+fn collect_nonlocals(b: &Block) -> BTreeSet<String> {
+    let mut assigned = BTreeSet::new();
+    let mut bound = BTreeSet::new();
+    collect_nonlocals_block(b, &mut assigned, &mut bound);
+    assigned.difference(&bound).cloned().collect()
+}
+
+fn collect_nonlocals_block(b: &Block, assigned: &mut BTreeSet<String>, bound: &mut BTreeSet<String>) {
+    for s in &b.stmts {
+        match s {
+            Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } => {
+                bound.insert(name.clone());
+            }
+            Stmt::Assign { name, scope: Scope::Local | Scope::Param | Scope::Capture, .. } => {
+                assigned.insert(name.clone());
+            }
+            Stmt::While { body, .. } => collect_nonlocals_block(body, assigned, bound),
+            Stmt::ForRange { var, body, .. } | Stmt::ForEach { var, body, .. } => {
+                bound.insert(var.clone());
+                collect_nonlocals_block(body, assigned, bound);
+            }
+            _ => {}
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -493,6 +712,9 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
 thread_local! {
     static BLOCK_COUNTER: RefCell<usize> = RefCell::new(0);
     static FN_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+    /// Pending nested-`def` sources, awaiting flush before the current
+    /// statement (see [`flush_hoist`]).
+    static HOIST: RefCell<Vec<String>> = RefCell::new(Vec::new());
 }
 
 fn fresh_block_name() -> String {

@@ -1537,6 +1537,10 @@ pub enum SmartHomeTool {
     GetIntegrationActivationObservabilitySummary,
     ListIntegrationActivationIncidents,
     GetIntegrationActivationIncidentSummary,
+    ListIntegrationActivationGuardrails,
+    GetIntegrationActivationGuardrailSummary,
+    ListIntegrationActivationAssurance,
+    GetIntegrationActivationAssuranceSummary,
     ListIntegrationActivationRisk,
     GetIntegrationActivationRiskSummary,
     ListIntegrationActivationDependencies,
@@ -1854,6 +1858,18 @@ impl SmartHomeTool {
             }
             Self::GetIntegrationActivationIncidentSummary => {
                 read_tool("smart_home.get_integration_activation_incident_summary")
+            }
+            Self::ListIntegrationActivationGuardrails => {
+                read_tool("smart_home.list_integration_activation_guardrails")
+            }
+            Self::GetIntegrationActivationGuardrailSummary => {
+                read_tool("smart_home.get_integration_activation_guardrail_summary")
+            }
+            Self::ListIntegrationActivationAssurance => {
+                read_tool("smart_home.list_integration_activation_assurance")
+            }
+            Self::GetIntegrationActivationAssuranceSummary => {
+                read_tool("smart_home.get_integration_activation_assurance_summary")
             }
             Self::ListIntegrationActivationRisk => {
                 read_tool("smart_home.list_integration_activation_risk")
@@ -2574,6 +2590,10 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetIntegrationActivationObservabilitySummary,
         SmartHomeTool::ListIntegrationActivationIncidents,
         SmartHomeTool::GetIntegrationActivationIncidentSummary,
+        SmartHomeTool::ListIntegrationActivationGuardrails,
+        SmartHomeTool::GetIntegrationActivationGuardrailSummary,
+        SmartHomeTool::ListIntegrationActivationAssurance,
+        SmartHomeTool::GetIntegrationActivationAssuranceSummary,
         SmartHomeTool::ListIntegrationActivationRisk,
         SmartHomeTool::GetIntegrationActivationRiskSummary,
         SmartHomeTool::ListIntegrationActivationDependencies,
@@ -3416,7 +3436,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 139);
+        assert_eq!(catalog.len(), 143);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_integrations"
@@ -3979,6 +3999,22 @@ mod tests {
             == "smart_home.get_integration_activation_incident_summary"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_guardrails"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_guardrail_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_assurance"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_assurance_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
     }
 
     #[test]
@@ -3986,15 +4022,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 139);
-        assert_eq!(summary.read_tools, 131);
+        assert_eq!(summary.total_tools, 143);
+        assert_eq!(summary.read_tools, 135);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 131);
+        assert_eq!(summary.read_only_tier_tools, 135);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 139);
+        assert_eq!(summary.total_required_capabilities, 143);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());

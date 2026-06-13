@@ -75,10 +75,13 @@ RMS, peak-to-peak, and final-value probe measurements. The AC helper measures
 complex probe magnitudes over optional frequency windows.
 `measureTransientFindAtProbe` and parsed transient `FIND ... AT=` cards sample
 or linearly interpolate one probe value at a scalar time, while
-`measureTransientWhenProbe` and parsed transient `WHEN probe=target` cards
-report the first crossing time over optional `FROM=` / `TO=` windows. The deck
-helpers route parsed transient, DC sweep, and AC sweep `.measure` / `.meas`
-cards into those stable measurement rows.
+`measureTransientWhenProbe`, `measureTransientWhenProbeCounted`, and parsed
+transient `WHEN probe=target` cards report first or counted `RISE`, `FALL`, and
+`CROSS` crossing times over optional `FROM=` / `TO=` windows.
+`measureTransientDelayBetweenProbes` and parsed transient `TRIG ... TARG ...`
+cards report trigger-to-target crossing delays. The deck helpers route parsed
+transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those stable
+measurement rows.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
@@ -126,6 +129,6 @@ signatures, arguments, or empty expressions.
 `resolveDeckMeasurements` extracts transient, DC sweep, and AC sweep `.measure` / `.meas`
 cards before `.end`, keeps non-measure active lines, evaluates optional
 `FROM=` / `TO=` scalar time, source-value, or frequency windows plus transient
-`FIND ... AT=` sample points and `WHEN probe=target` crossings, and reports stable
-diagnostics for unsupported analyses, modes, options, expressions, and invalid
-windows.
+`FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
+`RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
+unsupported analyses, modes, options, expressions, and invalid windows.
