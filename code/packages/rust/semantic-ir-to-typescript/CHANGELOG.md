@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.1.5 — SIR16 mutation & loops (native)
+
+Accepts and emits the SIR16 mutation and loop statements as **native**
+TypeScript (per `code/specs/sir-runtime.md`):
+
+- `Stmt::Assign` → bare reassignment `name = value;` (Local / Param / Capture
+  / Global all resolve to a plain identifier). A `LetBinding` whose name is
+  later reassigned now emits `let` instead of `const` (a per-function pre-pass
+  collects `Assign` targets), so the reassignment type-checks; immutable
+  bindings stay `const`.
+- `Stmt::SeqSet` → `((s) as __Sir.Val[])[(i) as number] = v;`;
+  `Stmt::MapSet` → `((m) as Map<__Sir.Val, __Sir.Val>).set(k, v);`.
+- `Stmt::While` → `while (__Sir.truthy(cond)) { … }` — the test routes through
+  SIR truthiness (only `false`/`nil` falsy), never JS truthiness.
+- `Stmt::ForRange` → a block-scoped, **direction-aware** loop: `start` binds to
+  the loop variable, `stop`/`step` are evaluated **once** into `number`
+  temporaries (matching Python's `range`), and the condition flips to `>` when
+  `step` is negative so a descending range still terminates.
+- `Stmt::ForEach` → `for (const v of ((iter) as __Sir.Val[])) { … }`.
+
+Loop bodies render in statement context (trailing block value dropped when it
+is `nil`, else emitted as an expression statement). Loops in *expression*
+position nest naturally inside the existing block IIFE. `Assign` to an
+instance var / class var / constant still rejects at the capability check
+(those features are not yet accepted). `ACCEPTED_FEATURES += MutableBindings,
+Loops`. New direct-SIR and Ruby→TS tests; emitted output verified to compile
+under `tsc --strict` and execute on Node against the real
+`@coding-adventures/sir-runtime-core`.
+
 ## 0.1.4 — SIR16 expression features (native)
 
 Accepts and emits the SIR16 expression features as **native** TypeScript (per
