@@ -273,9 +273,8 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // The fix extends the gap-109 property-start set to include `*` and
     // `async` (with the same method-body guard). `static"m"` already
     // works (gap-109 covered `static`).
-    ("gen_string_method",       "gap-110: generator string method key -> computed"),
-    ("async_string_method",     "gap-110: async string method key -> computed"),
-    ("async_gen_string_method", "gap-110: async-gen string method key -> computed"),
+    // gap-110 RESOLVED in CLOC12.113 — the three `*_string_method`
+    // fixtures below are now ENFORCED (un-ignored).
     // gap-111 (CLOC14.53): a reserved KEYWORD immediately before a
     // STRING LITERAL that the keyword grammatically takes needs a
     // separating SPACE that closurec omits:
