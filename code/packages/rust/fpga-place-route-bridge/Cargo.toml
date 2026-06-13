@@ -1,0 +1,10 @@
+[package]
+name = "fpga-place-route-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "HNL → FPGA JSON config (LUT packing, random placement, routing)"
+
+[dependencies]
+gate-netlist-format = { path = "../gate-netlist-format" }
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
