@@ -522,6 +522,18 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // regex token. Entangled with division disambiguation — deferred
     // until the regex/division lexing (gap-115) is settled.
     ("regex_after_return", "gap-119: spurious space between return keyword and regex literal"),
+    // gap-120 (CLOC14.58): a NON-INTEGER numeric property key is emitted
+    // by upstream as a QUOTED canonical-number string, not a bare numeric
+    // key: `{.5:1}` -> `{"0.5":1}`, `{1.5:1}` -> `{"1.5":1}`,
+    // `{1e-3:1}` -> `{"0.001":1}`. Float-key counterpart of gap-116
+    // (canonical INTEGER string key -> unquoted number); upstream
+    // canonicalises every property key to `String(Number(key))` and
+    // quotes it iff that string is not a valid bare numeric/identifier
+    // key. INTEGER numeric keys already round-trip (`{5:1}`, `{0xff:1}`
+    // -> `{255:1}`). The general value canonicalisation (`1e-3` ->
+    // `0.001`) overlaps the gap-113 (Ryu) number-printer work; simple
+    // decimals (`.5` -> `0.5`) are tractable.
+    ("float_key_quoted", "gap-120: non-integer numeric property key -> quoted canonical-number string"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
