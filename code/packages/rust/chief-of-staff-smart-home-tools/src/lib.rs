@@ -46,15 +46,15 @@ use smart_home_integration_catalog::{
     activation_execution_packets_from_handoff_packages,
     activation_forecasts_from_timeline_milestones,
     activation_handoff_packages_from_runbook_entries, activation_health_from_candidates,
-    activation_maintenance_from_candidates, activation_operator_tasks_from_playbook_steps,
-    activation_plan_for_entry, activation_plans_at_or_before_priority,
-    activation_playbook_steps_from_forecasts, activation_readouts_from_candidates,
-    activation_release_packets_from_closure_gates, activation_remediation_items_from_responses,
-    activation_response_items_from_escalation_cases, activation_reviews_from_candidates,
-    activation_risk_from_candidates, activation_rollback_plans_from_safety_gates,
-    activation_runbook_entries_from_playbook_steps, activation_runway_from_candidates,
-    activation_safety_gates_from_deployment_records, activation_sentinel_alerts_from_rollups,
-    activation_timeline_milestones_from_dashboard_cards,
+    activation_maintenance_from_candidates, activation_observability_probes_from_rollups,
+    activation_operator_tasks_from_playbook_steps, activation_plan_for_entry,
+    activation_plans_at_or_before_priority, activation_playbook_steps_from_forecasts,
+    activation_readouts_from_candidates, activation_release_packets_from_closure_gates,
+    activation_remediation_items_from_responses, activation_response_items_from_escalation_cases,
+    activation_reviews_from_candidates, activation_risk_from_candidates,
+    activation_rollback_plans_from_safety_gates, activation_runbook_entries_from_playbook_steps,
+    activation_runway_from_candidates, activation_safety_gates_from_deployment_records,
+    activation_sentinel_alerts_from_rollups, activation_timeline_milestones_from_dashboard_cards,
     activation_verification_checkpoints_from_execution_packets,
     activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
@@ -98,9 +98,11 @@ use smart_home_integration_catalog::{
     IntegrationActivationHandoffStatus, IntegrationActivationHandoffSummary,
     IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
     IntegrationActivationHealthSummary, IntegrationActivationMaintenanceSummary,
-    IntegrationActivationMaintenanceWindow, IntegrationActivationOperatorTask,
-    IntegrationActivationOperatorTaskKind, IntegrationActivationOperatorTaskSummary,
-    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
+    IntegrationActivationMaintenanceWindow, IntegrationActivationObservabilityProbe,
+    IntegrationActivationObservabilityStatus, IntegrationActivationObservabilitySummary,
+    IntegrationActivationOperatorTask, IntegrationActivationOperatorTaskKind,
+    IntegrationActivationOperatorTaskSummary, IntegrationActivationPlan,
+    IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
     IntegrationActivationPlaybookSummary, IntegrationActivationPlaybookView,
     IntegrationActivationReadoutStage, IntegrationActivationReadoutSummary,
     IntegrationActivationReleasePacket, IntegrationActivationReleaseStatus,
@@ -378,6 +380,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_ROLLBACK_TOOL_ID: &str =
     "smart_home.list_integration_activation_rollback";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_rollback_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_OBSERVABILITY_TOOL_ID: &str =
+    "smart_home.list_integration_activation_observability";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_observability_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -862,6 +868,18 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID => {
                     let query = integration_activation_rollback_query(&arguments)?;
                     Ok(get_integration_activation_rollback_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_OBSERVABILITY_TOOL_ID => {
+                    let query = integration_activation_observability_query(&arguments)?;
+                    Ok(list_integration_activation_observability_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_observability_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_observability_summary_output_handler_output(
+                            query,
+                        ),
+                    )
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2802,6 +2820,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation rollback summary",
             "Return compact D23A activation rollback-plan counts by rollback action, safety gate status, deployment ring, owner lane, blockers, readiness, policy, and dependency work.",
             integration_activation_rollback_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_OBSERVABILITY_TOOL_ID,
+            "List smart-home integration activation observability probes",
+            "List Chief-facing D23A activation observability probes derived from watchtower signals and rollback plans with telemetry, blocker, readiness, rollback, and deployment posture.",
+            integration_activation_observability_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_observability_probes", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_observability_probes",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation observability summary",
+            "Return compact D23A activation observability counts by observability status, rollback action, safety gate, watchtower signal coverage, blockers, verification, and readiness.",
+            integration_activation_observability_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5733,6 +5785,27 @@ struct IntegrationActivationRollbackQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationObservabilityQuery {
+    rollback: IntegrationActivationRollbackQuery,
+    watchtower: IntegrationActivationWatchtowerQuery,
+    observability_status: Option<IntegrationActivationObservabilityStatus>,
+    rollback_action: Option<IntegrationActivationRollbackAction>,
+    gate_status: Option<IntegrationActivationSafetyGateStatus>,
+    deployment_ring: Option<IntegrationActivationDeploymentRing>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    needs_verification: Option<bool>,
+    observability_ready: Option<bool>,
+    rollback_ready: Option<bool>,
+    deployment_ready: Option<bool>,
+    has_watchtower_signals: Option<bool>,
+    has_observation_signal: Option<bool>,
+    watchtower_requires_attention: Option<bool>,
+    observability_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -6600,6 +6673,56 @@ fn integration_activation_rollback_query(
         rollback_ready: optional_bool(arguments, "rollback_ready")?,
         rollback_limit: optional_u64(arguments, "rollback_limit")?
             .or(optional_u64(arguments, "plan_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_observability_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationObservabilityQuery, ToolCallError> {
+    let observability_status = optional_string(arguments, "observability_status")?
+        .or(optional_string(arguments, "observability_state")?)
+        .map(|label| parse_activation_observability_status(&label))
+        .transpose()?;
+    let rollback_action = optional_string(arguments, "observability_rollback_action")?
+        .or(optional_string(arguments, "rollback_action")?)
+        .map(|label| parse_activation_rollback_action(&label))
+        .transpose()?;
+    let gate_status = optional_string(arguments, "observability_gate_status")?
+        .or(optional_string(arguments, "gate_status")?)
+        .map(|label| parse_activation_safety_gate_status(&label))
+        .transpose()?;
+    let deployment_ring = optional_string(arguments, "observability_deployment_ring")?
+        .or(optional_string(arguments, "deployment_ring")?)
+        .map(|label| parse_activation_deployment_ring(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "observability_owner_lane")?
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationObservabilityQuery {
+        rollback: integration_activation_rollback_query(arguments)?,
+        watchtower: integration_activation_watchtower_query(arguments)?,
+        observability_status,
+        rollback_action,
+        gate_status,
+        deployment_ring,
+        owner_lane,
+        requires_attention: optional_bool(arguments, "observability_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "observability_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        needs_verification: optional_bool(arguments, "observability_needs_verification")?
+            .or(optional_bool(arguments, "needs_verification")?),
+        observability_ready: optional_bool(arguments, "observability_ready")?,
+        rollback_ready: optional_bool(arguments, "rollback_ready")?,
+        deployment_ready: optional_bool(arguments, "deployment_ready")?,
+        has_watchtower_signals: optional_bool(arguments, "has_watchtower_signals")?,
+        has_observation_signal: optional_bool(arguments, "has_observation_signal")?,
+        watchtower_requires_attention: optional_bool(arguments, "watchtower_requires_attention")?,
+        observability_limit: optional_u64(arguments, "observability_limit")?
+            .or(optional_u64(arguments, "probe_limit")?)
             .map(|value| value as usize),
     })
 }
@@ -7916,6 +8039,63 @@ fn integration_activation_rollback_plans_for_query(
     }
 
     (plans, catalog_count)
+}
+
+fn integration_activation_observability_probes_for_query(
+    query: &IntegrationActivationObservabilityQuery,
+) -> (Vec<IntegrationActivationObservabilityProbe>, usize) {
+    let (signals, catalog_count) =
+        integration_activation_watchtower_signals_for_query(&query.watchtower);
+    let (rollback_plans, _) = integration_activation_rollback_plans_for_query(&query.rollback);
+    let mut probes = activation_observability_probes_from_rollups(&signals, &rollback_plans);
+
+    if let Some(observability_status) = query.observability_status {
+        probes.retain(|probe| probe.observability_status == observability_status);
+    }
+    if let Some(rollback_action) = query.rollback_action {
+        probes.retain(|probe| probe.rollback_action == rollback_action);
+    }
+    if let Some(gate_status) = query.gate_status {
+        probes.retain(|probe| probe.gate_status == gate_status);
+    }
+    if let Some(deployment_ring) = query.deployment_ring {
+        probes.retain(|probe| probe.deployment_ring == deployment_ring);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        probes.retain(|probe| probe.owner_lane == owner_lane);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        probes.retain(|probe| probe.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        probes.retain(|probe| probe.blocks_activation() == blocked);
+    }
+    if let Some(needs_verification) = query.needs_verification {
+        probes.retain(|probe| probe.needs_verification() == needs_verification);
+    }
+    if let Some(observability_ready) = query.observability_ready {
+        probes.retain(|probe| probe.observability_ready() == observability_ready);
+    }
+    if let Some(rollback_ready) = query.rollback_ready {
+        probes.retain(|probe| probe.rollback_ready() == rollback_ready);
+    }
+    if let Some(deployment_ready) = query.deployment_ready {
+        probes.retain(|probe| probe.deployment_ready() == deployment_ready);
+    }
+    if let Some(has_watchtower_signals) = query.has_watchtower_signals {
+        probes.retain(|probe| probe.has_watchtower_signals() == has_watchtower_signals);
+    }
+    if let Some(has_observation_signal) = query.has_observation_signal {
+        probes.retain(|probe| probe.has_observation_signal == has_observation_signal);
+    }
+    if let Some(watchtower_requires_attention) = query.watchtower_requires_attention {
+        probes.retain(|probe| probe.watchtower_requires_attention == watchtower_requires_attention);
+    }
+    if let Some(limit) = query.observability_limit {
+        probes.truncate(limit);
+    }
+
+    (probes, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -11137,6 +11317,93 @@ fn get_integration_activation_rollback_summary_output_handler_output(
             (
                 "plans_ready_for_rollback",
                 integer(summary.plans_ready_for_rollback as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_observability_output_handler_output(
+    query: IntegrationActivationObservabilityQuery,
+) -> ToolHandlerOutput {
+    let (probes, catalog_count) = integration_activation_observability_probes_for_query(&query);
+    let summary = IntegrationActivationObservabilitySummary::from_probes(probes.iter());
+    let count = probes.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_observability_probes",
+            JsonValue::Array(
+                probes
+                    .iter()
+                    .map(activation_observability_probe_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_observability_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_observability"),
+            ),
+            ("probes", integer(count as i64)),
+            (
+                "probes_requiring_attention",
+                integer(summary.probes_requiring_attention as i64),
+            ),
+            ("blocked_probes", integer(summary.blocked_probes as i64)),
+            (
+                "probes_with_watchtower_signals",
+                integer(summary.probes_with_watchtower_signals as i64),
+            ),
+            (
+                "next_observability_status",
+                summary
+                    .next_observability_status
+                    .map(|status| string(status.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_observability_summary_output_handler_output(
+    query: IntegrationActivationObservabilityQuery,
+) -> ToolHandlerOutput {
+    let (probes, _) = integration_activation_observability_probes_for_query(&query);
+    let summary = IntegrationActivationObservabilitySummary::from_probes(probes.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_observability_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_observability_summary"),
+            ),
+            ("total_probes", integer(summary.total_probes as i64)),
+            (
+                "probes_requiring_attention",
+                integer(summary.probes_requiring_attention as i64),
+            ),
+            ("blocked_probes", integer(summary.blocked_probes as i64)),
+            (
+                "ready_to_observe_probes",
+                integer(summary.ready_to_observe_probes as i64),
+            ),
+            (
+                "monitoring_probes",
+                integer(summary.monitoring_probes as i64),
             ),
         ]),
     )
@@ -22131,6 +22398,252 @@ fn integration_activation_rollback_summary_json(
     ])
 }
 
+fn activation_observability_probe_json(
+    probe: &IntegrationActivationObservabilityProbe,
+) -> JsonValue {
+    object([
+        ("sequence", integer(probe.sequence as i64)),
+        (
+            "observability_status",
+            string(probe.observability_status.as_str()),
+        ),
+        ("rollback_action", string(probe.rollback_action.as_str())),
+        ("gate_status", string(probe.gate_status.as_str())),
+        ("deployment_ring", string(probe.deployment_ring.as_str())),
+        ("owner_lane", string(probe.owner_lane.as_str())),
+        (
+            "source_rollback_sequence",
+            integer(probe.source_rollback_sequence as i64),
+        ),
+        (
+            "source_safety_sequence",
+            integer(probe.source_safety_sequence as i64),
+        ),
+        (
+            "source_deployment_sequence",
+            integer(probe.source_deployment_sequence as i64),
+        ),
+        ("source_id", string(&probe.source_id)),
+        ("title", string(&probe.title)),
+        ("summary", string(&probe.summary)),
+        ("priority", integer(probe.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                probe
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(probe.integration_count() as i64),
+        ),
+        ("recommended_view", string(probe.recommended_view.as_str())),
+        (
+            "required_tier",
+            string(privilege_tier_label(probe.required_tier)),
+        ),
+        (
+            "policy_surface",
+            probe
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "watchtower_signal_count",
+            integer(probe.watchtower_signal_count as i64),
+        ),
+        (
+            "has_watchtower_signals",
+            JsonValue::Bool(probe.has_watchtower_signals()),
+        ),
+        (
+            "has_observation_signal",
+            JsonValue::Bool(probe.has_observation_signal),
+        ),
+        (
+            "watchtower_requires_attention",
+            JsonValue::Bool(probe.watchtower_requires_attention),
+        ),
+        (
+            "observability_ready",
+            JsonValue::Bool(probe.observability_ready()),
+        ),
+        ("rollback_ready", JsonValue::Bool(probe.rollback_ready())),
+        (
+            "deployment_ready",
+            JsonValue::Bool(probe.deployment_ready()),
+        ),
+        (
+            "blocks_activation",
+            JsonValue::Bool(probe.blocks_activation()),
+        ),
+        (
+            "needs_verification",
+            JsonValue::Bool(probe.needs_verification()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(probe.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_observability_summary_json(
+    summary: &IntegrationActivationObservabilitySummary,
+) -> JsonValue {
+    object([
+        ("total_probes", integer(summary.total_probes as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "probes_requiring_attention",
+            integer(summary.probes_requiring_attention as i64),
+        ),
+        ("blocked_probes", integer(summary.blocked_probes as i64)),
+        (
+            "telemetry_review_probes",
+            integer(summary.telemetry_review_probes as i64),
+        ),
+        (
+            "rollback_coverage_probes",
+            integer(summary.rollback_coverage_probes as i64),
+        ),
+        (
+            "ready_to_observe_probes",
+            integer(summary.ready_to_observe_probes as i64),
+        ),
+        (
+            "monitoring_probes",
+            integer(summary.monitoring_probes as i64),
+        ),
+        (
+            "probes_with_watchtower_signals",
+            integer(summary.probes_with_watchtower_signals as i64),
+        ),
+        (
+            "probes_with_observation_signals",
+            integer(summary.probes_with_observation_signals as i64),
+        ),
+        (
+            "probes_with_watchtower_attention",
+            integer(summary.probes_with_watchtower_attention as i64),
+        ),
+        (
+            "probes_ready_for_rollback",
+            integer(summary.probes_ready_for_rollback as i64),
+        ),
+        (
+            "probes_ready_for_deployment",
+            integer(summary.probes_ready_for_deployment as i64),
+        ),
+        (
+            "probes_blocking_activation",
+            integer(summary.probes_blocking_activation as i64),
+        ),
+        (
+            "probes_needing_verification",
+            integer(summary.probes_needing_verification as i64),
+        ),
+        (
+            "probes_with_policy_surface",
+            integer(summary.probes_with_policy_surface as i64),
+        ),
+        (
+            "next_observability_status",
+            summary
+                .next_observability_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_rollback_action",
+            summary
+                .next_rollback_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_gate_status",
+            summary
+                .next_gate_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_deployment_ring",
+            summary
+                .next_deployment_ring
+                .map(|ring| string(ring.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_owner_lane",
+            summary
+                .next_owner_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_probe_sequence",
+            summary
+                .next_probe_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_probe_priority",
+            summary
+                .next_probe_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_telemetry_review",
+            JsonValue::Bool(summary.has_telemetry_review()),
+        ),
+        (
+            "needs_rollback_coverage",
+            JsonValue::Bool(summary.needs_rollback_coverage()),
+        ),
+        (
+            "observability_ready",
+            JsonValue::Bool(summary.observability_ready()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -25291,6 +25804,31 @@ fn parse_activation_rollback_action(
     }
 }
 
+fn parse_activation_observability_status(
+    label: &str,
+) -> Result<IntegrationActivationObservabilityStatus, ToolCallError> {
+    match label {
+        "blocked" | "blocker" | "blocks_activation" => {
+            Ok(IntegrationActivationObservabilityStatus::Blocked)
+        }
+        "needs_telemetry_review" | "telemetry_review" | "review" | "attention" => {
+            Ok(IntegrationActivationObservabilityStatus::NeedsTelemetryReview)
+        }
+        "needs_rollback_coverage" | "rollback_coverage" | "coverage" => {
+            Ok(IntegrationActivationObservabilityStatus::NeedsRollbackCoverage)
+        }
+        "ready_to_observe" | "ready" | "observe" | "observability_ready" => {
+            Ok(IntegrationActivationObservabilityStatus::ReadyToObserve)
+        }
+        "monitoring" | "monitor" | "tracking" => {
+            Ok(IntegrationActivationObservabilityStatus::Monitoring)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation observability status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -27098,6 +27636,75 @@ fn integration_activation_rollback_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_observability_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_rollback_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new(
+            "observability_status",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_state",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_rollback_action",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_gate_status",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_deployment_ring",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_owner_lane",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_blocked",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_needs_verification",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_ready",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "has_watchtower_signals",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "has_observation_signal",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "watchtower_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "observability_limit",
+            JsonSchema::Integer,
+        ));
+        properties.push(SchemaProperty::new("probe_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -27242,7 +27849,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 135);
+        assert_eq!(definitions.len(), 137);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -27619,9 +28226,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPLOYMENT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_OBSERVABILITY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            127
+            129
         );
         assert_eq!(
             export
@@ -28147,11 +28760,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(135))
+            Some(&integer(137))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(127))
+            Some(&integer(129))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -33472,6 +34085,165 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_observability_request = request(
+            "call-list-integration-activation-observability",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_OBSERVABILITY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("observability_status", string("blocked")),
+                ("observability_requires_attention", JsonValue::Bool(true)),
+                ("observability_blocked", JsonValue::Bool(true)),
+                ("observability_limit", integer(3)),
+            ]),
+            5_061,
+        );
+        let list_activation_observability_trace =
+            tool_runtime.invoke_with_events(&list_activation_observability_request);
+        assert!(list_activation_observability_trace.result.ok);
+        assert_eq!(
+            list_activation_observability_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_observability_output = list_activation_observability_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_observability_count =
+            integer_value(field(list_activation_observability_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_observability_count));
+        let activation_observability_summary =
+            field(list_activation_observability_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_observability_summary, "total_probes"),
+            Some(&integer(activation_observability_count))
+        );
+        assert_eq!(
+            field(
+                activation_observability_summary,
+                "next_observability_status"
+            ),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_observability_summary, "next_rollback_action"),
+            Some(&string("hold_deployment"))
+        );
+        assert_eq!(
+            field(activation_observability_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_observability_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_observability_probe = array_item(
+            field(
+                list_activation_observability_output,
+                "activation_observability_probes",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_observability_probe, "observability_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_observability_probe, "rollback_action"),
+            Some(&string("hold_deployment"))
+        );
+        assert_eq!(
+            field(activation_observability_probe, "blocks_activation"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_observability_probe, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_observability_summary_request = request(
+            "call-integration-activation-observability-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("observability_requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_062,
+        );
+        let activation_observability_summary_trace =
+            tool_runtime.invoke_with_events(&activation_observability_summary_request);
+        assert!(activation_observability_summary_trace.result.ok);
+        assert_eq!(
+            activation_observability_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_observability_summary_output = activation_observability_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_observability_rollup =
+            field(activation_observability_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_observability_rollup, "total_probes").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_observability_rollup, "blocked_probes").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_observability_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_observability_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -35384,6 +36156,14 @@ mod tests {
             activation_rollback_summary_request,
             activation_rollback_summary_trace,
         );
+        journal.record_trace(
+            list_activation_observability_request,
+            list_activation_observability_trace,
+        );
+        journal.record_trace(
+            activation_observability_summary_request,
+            activation_observability_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -35457,9 +36237,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 135);
-        assert_eq!(journal_summary.completed_count, 135);
-        assert_eq!(journal.audit_records().len(), 135);
+        assert_eq!(journal_summary.invocation_count, 137);
+        assert_eq!(journal_summary.completed_count, 137);
+        assert_eq!(journal.audit_records().len(), 137);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
