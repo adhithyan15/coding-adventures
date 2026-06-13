@@ -1093,6 +1093,69 @@ impl NeighborTableSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadAttachReadinessSummary {
+    pub message_summary: MleMessageBatchSummary,
+    pub neighbor_summary: NeighborTableSummary,
+    pub attached: bool,
+    pub attach_ready: bool,
+    pub parent_selection_requested: bool,
+    pub attach_response_seen: bool,
+    pub parent_candidate_available: bool,
+    pub needs_parent_selection: bool,
+    pub waiting_for_attach_response: bool,
+    pub requires_neighbor_refresh: bool,
+}
+
+impl ThreadAttachReadinessSummary {
+    pub fn from_summaries(
+        message_summary: MleMessageBatchSummary,
+        neighbor_summary: NeighborTableSummary,
+    ) -> Self {
+        let attached = !neighbor_summary.needs_attach();
+        let parent_selection_requested = message_summary.has_parent_selection_requests();
+        let attach_response_seen = message_summary.has_attach_responses();
+        let parent_candidate_available = neighbor_summary.has_parent_candidate();
+        let attach_ready = attached
+            || (parent_selection_requested && attach_response_seen && parent_candidate_available);
+        let needs_parent_selection = neighbor_summary.needs_attach() && !parent_selection_requested;
+        let waiting_for_attach_response =
+            neighbor_summary.needs_attach() && parent_selection_requested && !attach_response_seen;
+
+        Self {
+            message_summary,
+            neighbor_summary,
+            attached,
+            attach_ready,
+            parent_selection_requested,
+            attach_response_seen,
+            parent_candidate_available,
+            needs_parent_selection,
+            waiting_for_attach_response,
+            requires_neighbor_refresh: neighbor_summary.has_stale_neighbors(),
+        }
+    }
+
+    pub fn has_diagnostics(self) -> bool {
+        self.message_summary.has_diagnostics()
+    }
+
+    pub fn has_statuses(self) -> bool {
+        self.message_summary.has_statuses()
+    }
+
+    pub fn has_unknown_commands(self) -> bool {
+        self.message_summary.has_unknown_commands()
+    }
+}
+
+pub fn summarize_thread_attach_readiness(
+    message_summary: MleMessageBatchSummary,
+    neighbor_summary: NeighborTableSummary,
+) -> ThreadAttachReadinessSummary {
+    ThreadAttachReadinessSummary::from_summaries(message_summary, neighbor_summary)
+}
+
 impl NeighborTable {
     pub fn new(local_role: DeviceRole) -> Self {
         Self {
@@ -2325,6 +2388,125 @@ mod tests {
         assert!(summary.has_parent_candidate());
         assert!(!summary.needs_attach());
         assert!(summary.has_routing_surface());
+    }
+
+    #[test]
+    fn attach_readiness_summary_combines_mle_and_neighbor_context() {
+        let parent_request = MleMessage {
+            command: MleCommand::ParentRequest,
+            tlvs: vec![
+                Tlv::new(
+                    TlvType::ScanMask,
+                    vec![ScanMask {
+                        routers: true,
+                        end_devices: false,
+                    }
+                    .encode()],
+                )
+                .unwrap(),
+                Tlv::new(TlvType::Version, vec![0x00, 0x04]).unwrap(),
+            ],
+        };
+        let parent_response = MleMessage {
+            command: MleCommand::ParentResponse,
+            tlvs: vec![Tlv::new(
+                TlvType::Mode,
+                vec![Mode {
+                    receiver_on_when_idle: true,
+                    secure_data_requests: true,
+                    full_thread_device: true,
+                    full_network_data: true,
+                }
+                .encode()],
+            )
+            .unwrap()],
+        };
+        let diagnostic = MleMessage {
+            command: MleCommand::Advertisement,
+            tlvs: vec![Tlv::new(TlvType::Connectivity, vec![1, 3, 2, 1, 5, 8, 12]).unwrap()],
+        };
+        let mut table = NeighborTable::new(DeviceRole::Detached);
+        table.upsert(
+            ThreadNeighbor::new(
+                ThreadNeighborId(0x3000),
+                DeviceRole::Router,
+                NeighborRelationship::RouterPeer,
+                1_200,
+                10_000,
+            )
+            .with_link_margin(60),
+        );
+
+        let message_summary =
+            MleMessageBatchSummary::from_messages([&parent_request, &parent_response, &diagnostic]);
+        let neighbor_summary = table.summary_at(1_250);
+        let readiness = summarize_thread_attach_readiness(message_summary, neighbor_summary);
+
+        assert_eq!(readiness.message_summary, message_summary);
+        assert_eq!(readiness.neighbor_summary, neighbor_summary);
+        assert!(!readiness.attached);
+        assert!(readiness.attach_ready);
+        assert!(readiness.parent_selection_requested);
+        assert!(readiness.attach_response_seen);
+        assert!(readiness.parent_candidate_available);
+        assert!(!readiness.needs_parent_selection);
+        assert!(!readiness.waiting_for_attach_response);
+        assert!(!readiness.requires_neighbor_refresh);
+        assert!(readiness.has_diagnostics());
+        assert!(!readiness.has_statuses());
+        assert!(!readiness.has_unknown_commands());
+    }
+
+    #[test]
+    fn attach_readiness_summary_reports_blocked_and_waiting_attach_states() {
+        let empty_messages = MleMessageBatchSummary::empty();
+        let child_without_parent = NeighborTable::new(DeviceRole::Child).summary_at(10_000);
+        let needs_selection =
+            summarize_thread_attach_readiness(empty_messages, child_without_parent);
+
+        assert!(!needs_selection.attached);
+        assert!(!needs_selection.attach_ready);
+        assert!(needs_selection.needs_parent_selection);
+        assert!(!needs_selection.waiting_for_attach_response);
+        assert!(!needs_selection.parent_candidate_available);
+
+        let parent_request = MleMessage {
+            command: MleCommand::ParentRequest,
+            tlvs: vec![
+                Tlv::new(
+                    TlvType::ScanMask,
+                    vec![ScanMask {
+                        routers: true,
+                        end_devices: false,
+                    }
+                    .encode()],
+                )
+                .unwrap(),
+                Tlv::new(TlvType::Version, vec![0x00, 0x04]).unwrap(),
+            ],
+        };
+        let waiting_messages = MleMessageBatchSummary::from_messages([&parent_request]);
+        let waiting = summarize_thread_attach_readiness(waiting_messages, child_without_parent);
+
+        assert!(!waiting.attach_ready);
+        assert!(!waiting.needs_parent_selection);
+        assert!(waiting.waiting_for_attach_response);
+
+        let mut stale_parent = NeighborTable::new(DeviceRole::Child);
+        stale_parent.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_000,
+            500,
+        ));
+        let stale_parent_summary = stale_parent.summary_at(1_500);
+        let attached_with_stale_parent =
+            summarize_thread_attach_readiness(empty_messages, stale_parent_summary);
+
+        assert!(attached_with_stale_parent.attached);
+        assert!(attached_with_stale_parent.attach_ready);
+        assert!(attached_with_stale_parent.requires_neighbor_refresh);
     }
 
     #[test]
