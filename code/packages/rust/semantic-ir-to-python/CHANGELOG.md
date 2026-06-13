@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.5 — SIR16 expression features (native)
+
+Accepts and emits the SIR16 expression features, all translated to **native**
+Python (per `code/specs/sir-runtime.md`):
+
+- `Feature::Floats` → float literal; `Feature::Sequences` → list literal /
+  `s[i]` / `len(s)`; `Feature::Maps` → dict literal / `m[k]`.
+- `Feature::ShortCircuit` (`LogicalAnd`/`LogicalOr`, emitted by case/in pattern
+  desugaring) → a **truthy-guarded lambda** `(lambda __l: (rhs) if
+  _sir_truthy(__l) else __l)(lhs)`: keeps the rhs lazy AND uses SIR truthiness
+  (only `False`/`nil` falsy), never a bare Python `and`/`or`.
+- `Feature::StringInterpolation` (`StrConcat`) → parts joined through
+  `_sir_to_display` (a string part renders to itself).
+
+`to_display` added to the runtime import header as `_sir_to_display`.
+New Ruby→Python E2E tests for array literal, hash literal, pattern short-circuit,
+and interpolation. (TS counterpart lands separately.)
+
 ## 0.1.4 — import runtime from `coding-adventures-sir-runtime-core`
 
 The Python runtime is no longer inlined into every artifact.  Emitted modules

@@ -49,6 +49,14 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,
     Feature::Globals,
+    // SIR16 expression features — emitted natively (sequences → list,
+    // maps → dict, short-circuit → truthy-guarded lambda, interpolation →
+    // display-joined), per code/specs/sir-runtime.md.
+    Feature::Floats,
+    Feature::Sequences,
+    Feature::Maps,
+    Feature::ShortCircuit,
+    Feature::StringInterpolation,
 ];
 
 impl Backend for PythonBackend {
@@ -314,5 +322,63 @@ mod tests {
         let a = compile(&module).expect("compile");
         let b = compile(&module).expect("compile again");
         assert_eq!(a.source, b.source);
+    }
+
+    // ── SIR16 expression features: Ruby → native Python ─────────────
+
+    #[test]
+    fn end_to_end_ruby_array_literal() {
+        // `[10, 20, 30]` → native Python list literal.  (Native `SeqIndex`
+        // emission `x[i]` is exercised by the case/in pattern test below.)
+        let module =
+            ruby_to_semantic_ir::compile_source("x = [10, 20, 30]\nputs(x)\n", "demo")
+                .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(a.source.contains("[10, 20, 30]"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn end_to_end_ruby_hash_literal() {
+        // `{a: 1}` → native dict keyed by an interned symbol.
+        let module =
+            ruby_to_semantic_ir::compile_source("puts({a: 1})\n", "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("{_sir_intern(\"a\"): 1}"),
+            "expected a dict keyed by an interned symbol; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_short_circuit_is_lazy_and_truthy() {
+        // A `case/in` array pattern desugars to `LogicalAnd`-chained
+        // checks (`len(x) == 2 && x[0] == 7`), which emit as a
+        // truthy-guarded lambda (lazy rhs, SIR truthiness) — never a
+        // bare Python `and`.
+        let module = ruby_to_semantic_ir::compile_source(
+            "x = [7, 8]\ncase x\nin [7, b]\n  puts(b)\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("lambda __l:") && a.source.contains("_sir_truthy(__l)"),
+            "expected truthy-guarded lambda for &&; got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_string_interpolation() {
+        // `"v=#{x}"` → display-joined parts.
+        let module = ruby_to_semantic_ir::compile_source("x = 5\nputs(\"v=#{x}\")\n", "demo")
+            .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("_sir_to_display("),
+            "expected interpolation via _sir_to_display; got:\n{}",
+            a.source
+        );
     }
 }

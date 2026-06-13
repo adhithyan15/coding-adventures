@@ -36,6 +36,7 @@ from coding_adventures_sir_runtime_core import (
     is_number as _sir_is_number,
     is_symbol as _sir_is_symbol,
     sir_print as _sir_print,
+    to_display as _sir_to_display,
 )
 "##;
 
@@ -84,6 +85,7 @@ mod tests {
             "is_number as _sir_is_number",
             "is_symbol as _sir_is_symbol",
             "sir_print as _sir_print",
+            "to_display as _sir_to_display",
         ] {
             assert!(RUNTIME.contains(alias), "runtime missing alias `{}`", alias);
         }
