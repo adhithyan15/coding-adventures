@@ -48,7 +48,8 @@ packages a typed surface for:
   interface-level scan failures without moving network I/O into Hue mapping code
 - discovery-record-to-pairing-plan handoff for local physical-presence Hue
   pairing flows
-- integration descriptor metadata for Chief of Staff discovery
+- integration descriptor metadata and payload-free summaries for Chief of Staff
+  discovery
 
 ## Dependencies
 
