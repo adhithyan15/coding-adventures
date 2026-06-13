@@ -4045,6 +4045,98 @@ pub struct IntegrationActivationRollbackSummary {
     pub overall_status: IntegrationActivationHealthStatus,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationObservabilityStatus {
+    Blocked,
+    NeedsTelemetryReview,
+    NeedsRollbackCoverage,
+    ReadyToObserve,
+    Monitoring,
+}
+
+impl IntegrationActivationObservabilityStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocked => "blocked",
+            Self::NeedsTelemetryReview => "needs_telemetry_review",
+            Self::NeedsRollbackCoverage => "needs_rollback_coverage",
+            Self::ReadyToObserve => "ready_to_observe",
+            Self::Monitoring => "monitoring",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(
+            self,
+            Self::Blocked | Self::NeedsTelemetryReview | Self::NeedsRollbackCoverage
+        )
+    }
+
+    pub fn observability_ready(self) -> bool {
+        matches!(self, Self::ReadyToObserve | Self::Monitoring)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationObservabilityProbe {
+    pub sequence: usize,
+    pub observability_status: IntegrationActivationObservabilityStatus,
+    pub rollback_action: IntegrationActivationRollbackAction,
+    pub gate_status: IntegrationActivationSafetyGateStatus,
+    pub deployment_ring: IntegrationActivationDeploymentRing,
+    pub owner_lane: IntegrationActivationResponseOwnerLane,
+    pub source_rollback_sequence: usize,
+    pub source_safety_sequence: usize,
+    pub source_deployment_sequence: usize,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub watchtower_signal_count: usize,
+    pub has_observation_signal: bool,
+    pub watchtower_requires_attention: bool,
+    pub rollback_ready: bool,
+    pub deployment_ready: bool,
+    pub blocks_activation: bool,
+    pub needs_verification: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationObservabilitySummary {
+    pub total_probes: usize,
+    pub unique_integrations: usize,
+    pub probes_requiring_attention: usize,
+    pub blocked_probes: usize,
+    pub telemetry_review_probes: usize,
+    pub rollback_coverage_probes: usize,
+    pub ready_to_observe_probes: usize,
+    pub monitoring_probes: usize,
+    pub probes_with_watchtower_signals: usize,
+    pub probes_with_observation_signals: usize,
+    pub probes_with_watchtower_attention: usize,
+    pub probes_ready_for_rollback: usize,
+    pub probes_ready_for_deployment: usize,
+    pub probes_blocking_activation: usize,
+    pub probes_needing_verification: usize,
+    pub probes_with_policy_surface: usize,
+    pub next_observability_status: Option<IntegrationActivationObservabilityStatus>,
+    pub next_rollback_action: Option<IntegrationActivationRollbackAction>,
+    pub next_gate_status: Option<IntegrationActivationSafetyGateStatus>,
+    pub next_deployment_ring: Option<IntegrationActivationDeploymentRing>,
+    pub next_owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_probe_sequence: Option<usize>,
+    pub next_probe_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
 impl IntegrationActivationPlanSummary {
     pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
         let mut summary = Self {
@@ -11430,6 +11522,249 @@ impl IntegrationActivationRollbackSummary {
     }
 }
 
+impl IntegrationActivationObservabilityProbe {
+    fn from_rollups(
+        plan: &IntegrationActivationRollbackPlan,
+        matching_signals: &[&IntegrationActivationWatchtowerSignal],
+    ) -> Self {
+        let has_observation_signal = matching_signals.iter().any(|signal| {
+            signal.signal_kind == IntegrationActivationWatchtowerSignalKind::Observation
+        });
+        let watchtower_requires_attention = matching_signals
+            .iter()
+            .any(|signal| signal.requires_attention());
+        let has_watchtower_blockers = matching_signals.iter().any(|signal| signal.has_blockers());
+        let watchtower_signal_count = matching_signals.len();
+
+        let observability_status = if plan.blocks_activation() || has_watchtower_blockers {
+            IntegrationActivationObservabilityStatus::Blocked
+        } else if watchtower_requires_attention {
+            IntegrationActivationObservabilityStatus::NeedsTelemetryReview
+        } else if !plan.rollback_ready() {
+            IntegrationActivationObservabilityStatus::NeedsRollbackCoverage
+        } else if has_observation_signal {
+            IntegrationActivationObservabilityStatus::Monitoring
+        } else {
+            IntegrationActivationObservabilityStatus::ReadyToObserve
+        };
+        let requires_attention =
+            observability_status.requires_attention() || plan.requires_attention();
+
+        Self {
+            sequence: 0,
+            observability_status,
+            rollback_action: plan.rollback_action,
+            gate_status: plan.gate_status,
+            deployment_ring: plan.deployment_ring,
+            owner_lane: plan.owner_lane,
+            source_rollback_sequence: plan.sequence,
+            source_safety_sequence: plan.source_safety_sequence,
+            source_deployment_sequence: plan.source_deployment_sequence,
+            source_id: plan.source_id.clone(),
+            title: format!(
+                "{} observability: {}",
+                observability_status.as_str(),
+                plan.title
+            ),
+            summary: plan.summary.clone(),
+            priority: plan.priority,
+            integration_ids: plan.integration_ids.clone(),
+            recommended_view: plan.recommended_view,
+            required_tier: plan.required_tier,
+            policy_surface: plan.policy_surface,
+            watchtower_signal_count,
+            has_observation_signal,
+            watchtower_requires_attention,
+            rollback_ready: plan.rollback_ready(),
+            deployment_ready: plan.deployment_ready(),
+            blocks_activation: plan.blocks_activation() || has_watchtower_blockers,
+            needs_verification: plan.needs_verification(),
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_watchtower_signals(&self) -> bool {
+        self.watchtower_signal_count > 0
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+
+    pub fn observability_ready(&self) -> bool {
+        self.observability_status.observability_ready()
+    }
+
+    pub fn rollback_ready(&self) -> bool {
+        self.rollback_ready
+    }
+
+    pub fn deployment_ready(&self) -> bool {
+        self.deployment_ready
+    }
+
+    pub fn blocks_activation(&self) -> bool {
+        self.blocks_activation
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.needs_verification
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationObservabilitySummary {
+    pub fn from_probes<'a>(
+        probes: impl IntoIterator<Item = &'a IntegrationActivationObservabilityProbe>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_probes: 0,
+            unique_integrations: 0,
+            probes_requiring_attention: 0,
+            blocked_probes: 0,
+            telemetry_review_probes: 0,
+            rollback_coverage_probes: 0,
+            ready_to_observe_probes: 0,
+            monitoring_probes: 0,
+            probes_with_watchtower_signals: 0,
+            probes_with_observation_signals: 0,
+            probes_with_watchtower_attention: 0,
+            probes_ready_for_rollback: 0,
+            probes_ready_for_deployment: 0,
+            probes_blocking_activation: 0,
+            probes_needing_verification: 0,
+            probes_with_policy_surface: 0,
+            next_observability_status: None,
+            next_rollback_action: None,
+            next_gate_status: None,
+            next_deployment_ring: None,
+            next_owner_lane: None,
+            next_recommended_view: None,
+            next_probe_sequence: None,
+            next_probe_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for probe in probes {
+            summary.total_probes += 1;
+            for integration_id in &probe.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_observability_status.is_none()
+                && (probe.requires_attention() || probe.observability_ready())
+            {
+                summary.next_observability_status = Some(probe.observability_status);
+                summary.next_rollback_action = Some(probe.rollback_action);
+                summary.next_gate_status = Some(probe.gate_status);
+                summary.next_deployment_ring = Some(probe.deployment_ring);
+                summary.next_owner_lane = Some(probe.owner_lane);
+                summary.next_recommended_view = Some(probe.recommended_view);
+                summary.next_probe_sequence = Some(probe.sequence);
+                summary.next_probe_priority = Some(probe.priority);
+            }
+
+            match probe.observability_status {
+                IntegrationActivationObservabilityStatus::Blocked => {
+                    summary.blocked_probes += 1;
+                }
+                IntegrationActivationObservabilityStatus::NeedsTelemetryReview => {
+                    summary.telemetry_review_probes += 1;
+                }
+                IntegrationActivationObservabilityStatus::NeedsRollbackCoverage => {
+                    summary.rollback_coverage_probes += 1;
+                }
+                IntegrationActivationObservabilityStatus::ReadyToObserve => {
+                    summary.ready_to_observe_probes += 1;
+                }
+                IntegrationActivationObservabilityStatus::Monitoring => {
+                    summary.monitoring_probes += 1;
+                }
+            }
+
+            if probe.requires_attention() {
+                summary.probes_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(probe.priority));
+            }
+            if probe.has_watchtower_signals() {
+                summary.probes_with_watchtower_signals += 1;
+            }
+            if probe.has_observation_signal {
+                summary.probes_with_observation_signals += 1;
+            }
+            if probe.watchtower_requires_attention {
+                summary.probes_with_watchtower_attention += 1;
+            }
+            if probe.rollback_ready() {
+                summary.probes_ready_for_rollback += 1;
+            }
+            if probe.deployment_ready() {
+                summary.probes_ready_for_deployment += 1;
+            }
+            if probe.blocks_activation() {
+                summary.probes_blocking_activation += 1;
+            }
+            if probe.needs_verification() {
+                summary.probes_needing_verification += 1;
+            }
+            if probe.has_policy_surface() {
+                summary.probes_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(probe.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_probes > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.probes_requiring_attention > 0
+            || summary.telemetry_review_probes > 0
+            || summary.rollback_coverage_probes > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.ready_to_observe_probes > 0 || summary.monitoring_probes > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_probes == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_probes > 0 || self.probes_blocking_activation > 0
+    }
+
+    pub fn has_telemetry_review(&self) -> bool {
+        self.telemetry_review_probes > 0 || self.probes_with_watchtower_attention > 0
+    }
+
+    pub fn needs_rollback_coverage(&self) -> bool {
+        self.rollback_coverage_probes > 0
+    }
+
+    pub fn observability_ready(&self) -> bool {
+        self.ready_to_observe_probes > 0 || self.monitoring_probes > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.probes_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -16715,6 +17050,54 @@ pub fn activation_rollback_plans_at_or_before_priority(
     activation_rollback_plans_from_safety_gates(&gates)
 }
 
+pub fn activation_observability_probes_from_rollups(
+    signals: &[IntegrationActivationWatchtowerSignal],
+    rollback_plans: &[IntegrationActivationRollbackPlan],
+) -> Vec<IntegrationActivationObservabilityProbe> {
+    let mut probes = rollback_plans
+        .iter()
+        .map(|plan| {
+            let matching_signals = signals
+                .iter()
+                .filter(|signal| {
+                    integration_ids_overlap(&signal.integration_ids, &plan.integration_ids)
+                })
+                .collect::<Vec<_>>();
+            IntegrationActivationObservabilityProbe::from_rollups(plan, &matching_signals)
+        })
+        .collect::<Vec<_>>();
+
+    probes.sort_by(compare_activation_observability_probes);
+    for (index, probe) in probes.iter_mut().enumerate() {
+        probe.sequence = index + 1;
+    }
+    probes
+}
+
+pub fn activation_observability_probes_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationObservabilityProbe> {
+    let signals = activation_watchtower_signals_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let rollback_plans = activation_rollback_plans_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_observability_probes_from_rollups(&signals, &rollback_plans)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -18485,6 +18868,27 @@ fn compare_activation_rollback_plans(
         .then_with(|| right.deployment_ready().cmp(&left.deployment_ready()))
         .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
         .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| left.deployment_ring.cmp(&right.deployment_ring))
+        .then_with(|| left.owner_lane.cmp(&right.owner_lane))
+        .then_with(|| left.source_id.cmp(&right.source_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_observability_probes(
+    left: &IntegrationActivationObservabilityProbe,
+    right: &IntegrationActivationObservabilityProbe,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.observability_status.cmp(&right.observability_status))
+        .then_with(|| left.rollback_action.cmp(&right.rollback_action))
+        .then_with(|| left.gate_status.cmp(&right.gate_status))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocks_activation().cmp(&left.blocks_activation()))
+        .then_with(|| right.needs_verification().cmp(&left.needs_verification()))
+        .then_with(|| right.observability_ready().cmp(&left.observability_ready()))
+        .then_with(|| right.rollback_ready().cmp(&left.rollback_ready()))
+        .then_with(|| right.deployment_ready().cmp(&left.deployment_ready()))
         .then_with(|| left.deployment_ring.cmp(&right.deployment_ring))
         .then_with(|| left.owner_lane.cmp(&right.owner_lane))
         .then_with(|| left.source_id.cmp(&right.source_id))
@@ -22253,6 +22657,44 @@ mod tests {
             IntegrationActivationHealthStatus::Blocked
         );
 
+        let observability_probes =
+            activation_observability_probes_from_rollups(&signals, &rollback_plans);
+        assert_eq!(observability_probes.len(), rollback_plans.len());
+        assert!(observability_probes.iter().any(|probe| {
+            probe.observability_status == IntegrationActivationObservabilityStatus::Blocked
+        }));
+        assert!(observability_probes
+            .iter()
+            .any(IntegrationActivationObservabilityProbe::requires_attention));
+        assert!(observability_probes
+            .iter()
+            .any(IntegrationActivationObservabilityProbe::blocks_activation));
+
+        let observability_summary =
+            IntegrationActivationObservabilitySummary::from_probes(observability_probes.iter());
+        assert_eq!(
+            observability_summary.total_probes,
+            observability_probes.len()
+        );
+        assert!(observability_summary.has_blockers());
+        assert!(observability_summary.requires_attention());
+        assert_eq!(
+            observability_summary.next_observability_status,
+            Some(IntegrationActivationObservabilityStatus::Blocked)
+        );
+        assert_eq!(
+            observability_summary.next_rollback_action,
+            Some(IntegrationActivationRollbackAction::HoldDeployment)
+        );
+        assert_eq!(
+            observability_summary.next_owner_lane,
+            Some(IntegrationActivationResponseOwnerLane::Platform)
+        );
+        assert_eq!(
+            observability_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
         let catalog = first_party_catalog();
         let available_primitives = vec![
             PrimitiveFamily::NormalizedModel,
@@ -22333,6 +22775,19 @@ mod tests {
         assert!(catalog_remediation_items
             .iter()
             .any(IntegrationActivationRemediationItem::requires_attention));
+        let catalog_observability_probes = activation_observability_probes_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_observability_probes
+            .iter()
+            .any(IntegrationActivationObservabilityProbe::requires_attention));
+        assert!(catalog_observability_probes
+            .iter()
+            .any(IntegrationActivationObservabilityProbe::blocks_activation));
     }
 
     #[test]
