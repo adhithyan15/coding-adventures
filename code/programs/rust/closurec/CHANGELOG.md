@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.119.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-112** — a `for await(...)` async-iteration loop header no
+  longer emits a spurious space between the `await` keyword and the `(`:
+
+      async function f(){for await(const x of y)z()}
+        ->  async function f(){for await(const x of y)z()};   (adjacent)
+
+  Previously `await_operator_needs_space` (gap-072) — which forces a
+  separating space before the `await` UNARY OPERATOR's operand
+  (`await (a+b)`) — wrongly fired for the `for await` header, whose `(`
+  is the loop HEAD, not an operand, producing `for await (const x of y)`.
+  The fix adds a one-line FOR-AWAIT guard to that helper: when the token
+  two before the `(` (i.e. the token before `await`) is the `for`
+  keyword, the space is suppressed. EXACT and SAFE — a genuine unary
+  `await(...)` is never preceded by `for`; the only `for await` form is
+  this loop header. The empty-block body `for await(x of y){}` (which
+  formerly passed only by coincidence via the method-name guard, since
+  its `)` is followed by `{`) is subsumed by the new guard. Five
+  `gap112_*` unit assertions cover the const/bare headers plus the
+  unary-await-keeps-space and empty-block non-regressions. The
+  `minify_for_await_bare_stmt` fixture (added CLOC14.54) is now ENFORCED.
+  Verified byte-identical to upstream Closure v20240317. (The separate
+  for-await loop-body single-statement block flatten — `for await(let x
+  of y){z()}` → `for await(let x of y)z()`, a sibling of gap-074 — is NOT
+  part of this gap and remains future work.)
+
 ## [0.118.0] - 2026-06-12
 
 ### Fixed
