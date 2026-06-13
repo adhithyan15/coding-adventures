@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `measure_ac_sweep_probe`, `measure_ac_sweep_cards`, and
+  `measure_ac_sweep_deck` so parsed `.measure ac` / `.meas ac` cards can route
+  AC sweep probe magnitudes into the shared scalar measurement table surface,
+  matching Python and TypeScript.
 - Add `measure_dc_sweep_probe`, `measure_dc_sweep_cards`, and
   `measure_dc_sweep_deck` so parsed `.measure dc` / `.meas dc` cards can route
   DC sweep probe samples into the shared scalar measurement table surface,

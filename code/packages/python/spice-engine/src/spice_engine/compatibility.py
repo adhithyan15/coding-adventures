@@ -1416,13 +1416,13 @@ def _resolve_measurement_line(
         return
 
     analysis = tokens[1].strip().lower()
-    if analysis not in {"tran", "transient", "dc"}:
+    if analysis not in {"tran", "transient", "dc", "ac"}:
         _add_measurement_diagnostic(
             state,
             code="SPICE_DECK_MEASURE_ANALYSIS",
             directive=directive,
             line_number=line_number,
-            message=f"only transient and dc .measure cards are supported, got {tokens[1]!r}",
+            message=f"only transient, dc, and ac .measure cards are supported, got {tokens[1]!r}",
             token=tokens[1],
         )
         return

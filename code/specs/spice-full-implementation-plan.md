@@ -31,8 +31,10 @@ downstream tools to compare.
      measurement helpers from deck text; parsed `.save` and `.probe` cards now
      drive stable Rust table output for operating-point, DC sweep, AC sweep, and
      transient results; parsed `.measure dc` / `.meas dc` cards now route DC
-     sweep probe samples into the shared scalar measurement table surface.
-   - Expand richer `.measure` event/trigger modes and remaining non-DC
+     sweep probe samples into the shared scalar measurement table surface;
+     parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
+     optional frequency windows into the same measurement table surface.
+   - Expand richer `.measure` event/trigger modes and remaining non-DC/non-AC
      measurement analyses toward full SPICE compatibility while keeping
      unsupported control-flow diagnostics explicit.
 
@@ -281,11 +283,23 @@ downstream tools to compare.
       event/trigger modes and remaining non-DC analysis-specific measurement
       semantics remain in backlog.
 
+25. Parsed AC sweep measurement routing.
+    - Status: completed in this AC sweep measurement routing slice.
+    - Python, Rust, and TypeScript now expose matching AC sweep measurement
+      helpers that compute MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+      probe measurements over complex probe magnitudes and optional frequency
+      windows.
+    - Parsed `.measure ac` and `.meas ac` cards route into the shared scalar
+      measurement table output, while mixed-analysis card lists still fail with
+      explicit helper-specific diagnostics.
+    - Richer event/trigger modes and remaining non-DC/non-AC analysis-specific
+      measurement semantics remain in backlog.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand richer `.measure` event/trigger modes and remaining non-DC
+   - Expand richer `.measure` event/trigger modes and remaining non-DC/non-AC
      measurement analyses toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.

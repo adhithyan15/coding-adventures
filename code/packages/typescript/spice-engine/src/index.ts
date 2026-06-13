@@ -526,7 +526,7 @@ export interface DeckFunctionSummary {
 
 export interface DeckMeasurementCard {
   readonly directive: ".measure" | ".meas";
-  readonly analysis: "tran" | "transient" | "dc";
+  readonly analysis: "tran" | "transient" | "dc" | "ac";
   readonly name: string;
   readonly mode: string;
   readonly probe: string;
@@ -3508,17 +3508,17 @@ function resolveMeasurementLine(
   }
 
   const analysis = tokens[1].trim().toLowerCase();
-  if (analysis !== "tran" && analysis !== "transient" && analysis !== "dc") {
+  if (analysis !== "tran" && analysis !== "transient" && analysis !== "dc" && analysis !== "ac") {
     addMeasurementDiagnostic(state, {
       code: "SPICE_DECK_MEASURE_ANALYSIS",
       directive,
       lineNumber,
-      message: `only transient and dc .measure cards are supported, got ${JSON.stringify(tokens[1])}`,
+      message: `only transient, dc, and ac .measure cards are supported, got ${JSON.stringify(tokens[1])}`,
       token: tokens[1],
     });
     return;
   }
-  const analysisName = analysis === "tran" || analysis === "dc" ? analysis : "transient";
+  const analysisName = analysis === "tran" || analysis === "dc" || analysis === "ac" ? analysis : "transient";
 
   const name = tokens[2].trim();
   if (!isParameterName(name)) {
@@ -4998,6 +4998,88 @@ export function measureDcSweepDeck(
     );
   }
   return measureDcSweepCards(points, summary.measurements);
+}
+
+export function measureAcSweepProbe(
+  points: readonly AcPoint[],
+  name: string,
+  probe: string,
+  mode: string,
+  fromFrequency?: number,
+  toFrequency?: number,
+): ProbeMeasurement {
+  const normalizedMode = normalizeMeasurementMode(mode, "measureAcSweepProbe");
+  if (fromFrequency !== undefined && !Number.isFinite(fromFrequency)) {
+    throw invalidElement("measureAcSweepProbe", "fromFrequency must be finite");
+  }
+  if (toFrequency !== undefined && !Number.isFinite(toFrequency)) {
+    throw invalidElement("measureAcSweepProbe", "toFrequency must be finite");
+  }
+  if (fromFrequency !== undefined && toFrequency !== undefined && fromFrequency > toFrequency) {
+    throw invalidElement("measureAcSweepProbe", "fromFrequency must be <= toFrequency");
+  }
+
+  const selected = points.filter((point) =>
+    (fromFrequency === undefined || point.frequencyHz >= fromFrequency) &&
+    (toFrequency === undefined || point.frequencyHz <= toFrequency)
+  );
+  if (selected.length === 0) {
+    throw invalidElement("measureAcSweepProbe", "no ac sweep samples in window");
+  }
+  const values = selected.map((point) =>
+    complexAbs(
+      tableComplexProbeValue(
+        point.nodeVoltages,
+        point.branchCurrents,
+        probe,
+        "measureAcSweepProbe",
+      ),
+    )
+  );
+
+  return {
+    name,
+    analysis: "ac",
+    probe,
+    mode: normalizedMode,
+    value: measureValues(values, normalizedMode, "measureAcSweepProbe"),
+    fromValue: fromFrequency,
+    toValue: toFrequency,
+  };
+}
+
+export function measureAcSweepCards(
+  points: readonly AcPoint[],
+  measurements: readonly DeckMeasurementCard[],
+): ProbeMeasurement[] {
+  return measurements.map((measurement) => {
+    if (measurement.analysis !== "ac") {
+      throw invalidElement("measureAcSweepCards", "only ac measurement cards are supported");
+    }
+    return measureAcSweepProbe(
+      points,
+      measurement.name,
+      measurement.probe,
+      measurement.mode,
+      measurement.fromValue,
+      measurement.toValue,
+    );
+  });
+}
+
+export function measureAcSweepDeck(
+  points: readonly AcPoint[],
+  netlist: string,
+): ProbeMeasurement[] {
+  const summary = resolveDeckMeasurements(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      "measureAcSweepDeck",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return measureAcSweepCards(points, summary.measurements);
 }
 
 export function formatMeasurementTable(measurements: readonly ProbeMeasurement[]): string {

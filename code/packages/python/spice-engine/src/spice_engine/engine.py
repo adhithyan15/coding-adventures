@@ -2964,6 +2964,111 @@ def measure_dc_sweep_deck(
     return measure_dc_sweep_cards(dc_sweep_result, summary.measurements)
 
 
+def measure_ac_sweep_probe(
+    ac_result: "AcResult | list[AcPoint]",
+    name: str,
+    probe: str,
+    mode: str,
+    *,
+    from_frequency: float | None = None,
+    to_frequency: float | None = None,
+) -> ProbeMeasurement:
+    """Measure one AC probe magnitude over an optional frequency window."""
+
+    points = ac_result.points if isinstance(ac_result, AcResult) else ac_result
+    normalized_mode = _normalize_measurement_mode(
+        mode,
+        context="measure_ac_sweep_probe",
+    )
+    if from_frequency is not None and not math.isfinite(from_frequency):
+        raise ValueError("measure_ac_sweep_probe: from_frequency must be finite")
+    if to_frequency is not None and not math.isfinite(to_frequency):
+        raise ValueError("measure_ac_sweep_probe: to_frequency must be finite")
+    if (
+        from_frequency is not None
+        and to_frequency is not None
+        and from_frequency > to_frequency
+    ):
+        raise ValueError(
+            "measure_ac_sweep_probe: from_frequency must be <= to_frequency"
+        )
+
+    selected = [
+        point
+        for point in points
+        if (from_frequency is None or point.freq >= from_frequency)
+        and (to_frequency is None or point.freq <= to_frequency)
+    ]
+    if not selected:
+        raise ValueError("measure_ac_sweep_probe: no ac sweep samples in window")
+
+    values = [
+        abs(
+            _table_complex_probe_value(
+                point.node_voltages,
+                point.branch_currents,
+                probe,
+                "measure_ac_sweep_probe",
+            )
+        )
+        for point in selected
+    ]
+    value = _measure_values(
+        values,
+        normalized_mode,
+        context="measure_ac_sweep_probe",
+    )
+    return ProbeMeasurement(
+        name=name,
+        analysis="ac",
+        probe=probe,
+        mode=normalized_mode,
+        value=value,
+        from_value=from_frequency,
+        to_value=to_frequency,
+    )
+
+
+def measure_ac_sweep_cards(
+    ac_result: "AcResult | list[AcPoint]",
+    measurements: Iterable[DeckMeasurementCard],
+) -> list[ProbeMeasurement]:
+    """Execute parsed AC sweep ``.measure`` / ``.meas`` cards."""
+
+    results: list[ProbeMeasurement] = []
+    for measurement in measurements:
+        if measurement.analysis != "ac":
+            raise ValueError(
+                "measure_ac_sweep_cards: only ac measurement cards are supported"
+            )
+        results.append(
+            measure_ac_sweep_probe(
+                ac_result,
+                measurement.name,
+                measurement.probe,
+                measurement.mode,
+                from_frequency=measurement.from_value,
+                to_frequency=measurement.to_value,
+            )
+        )
+    return results
+
+
+def measure_ac_sweep_deck(
+    ac_result: "AcResult | list[AcPoint]",
+    netlist: str,
+) -> list[ProbeMeasurement]:
+    """Parse and execute supported AC sweep measurements from a SPICE deck."""
+
+    summary = resolve_deck_measurements(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"measure_ac_sweep_deck: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return measure_ac_sweep_cards(ac_result, summary.measurements)
+
+
 def format_measurement_table(measurements: Iterable[ProbeMeasurement]) -> str:
     """Format scalar probe measurements as a stable tab-separated table."""
 

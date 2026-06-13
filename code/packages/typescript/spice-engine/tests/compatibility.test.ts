@@ -423,13 +423,14 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
 .measure tran swing pp V(out) FROM=1m TO={3m}
 .meas transient settled final 'V(out)'
 .measure dc dcmax max V(out) FROM=1 TO=3
+.measure ac acmax max V(out) FROM=1k TO=10k
 .tran 1m 4m
 .end
 .measure tran after max V(out)
 `);
 
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(7);
+    expect(summary.endLineNumber).toBe(8);
     expect(summary.activeLines).toStrictEqual([
       "V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)",
       ".tran 1m 4m",
@@ -447,13 +448,14 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
       [".measure", "tran", "swing", "pp", "V(out)", 3, 0.001, 0.003],
       [".meas", "transient", "settled", "last", "V(out)", 4, undefined, undefined],
       [".measure", "dc", "dcmax", "max", "V(out)", 5, 1, 3],
+      [".measure", "ac", "acmax", "max", "V(out)", 6, 1000, 10000],
     ]);
     expect(summary.diagnostics).toStrictEqual([]);
   });
 
   it("reports unsupported .measure subsets", () => {
     const summary = resolveDeckMeasurements(`
-.measure ac gain max V(out)
+.measure tf gain max V(out)
 .measure tran badmode deriv V(out)
 .measure tran badname max V(out) FROM=2m TO=1m
 .measure tran badopt max V(out) AT=1m

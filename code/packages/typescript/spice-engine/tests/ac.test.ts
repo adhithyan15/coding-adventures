@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  type AcPoint,
+  type Complex,
   Circuit,
   SpiceError,
   formatAcTable,
   formatCornerAcTable,
   formatCornerSParameterTable,
+  formatMeasurementTable,
   formatSParameterTable,
   acSweep,
   acSweepCorners,
@@ -22,6 +25,8 @@ import {
   mosfet,
   mutualInductor,
   resistor,
+  measureAcSweepDeck,
+  measureAcSweepProbe,
   sParameters,
   sParametersCorners,
   transmissionLine,
@@ -31,6 +36,24 @@ import {
 } from "../src/index.js";
 
 const TWO_PI_FOR_TEST = 2.0 * Math.PI;
+
+function acPoint(frequencyHz: number, value: Complex): AcPoint {
+  const nodeVoltages = new Map<string, Complex>([["out", value]]);
+  const branchCurrents = new Map<string, Complex>();
+  return {
+    frequencyHz,
+    nodeVoltages,
+    branchCurrents,
+    voltage(node: string): Complex | undefined {
+      const normalized = node.toLowerCase();
+      return normalized === "0" || normalized === "gnd" ? { real: 0.0, imag: 0.0 } : nodeVoltages.get(node);
+    },
+    branchCurrent(sourceName: string): Complex | undefined {
+      const key = sourceName.startsWith("I(") ? sourceName : `I(${sourceName})`;
+      return branchCurrents.get(key);
+    },
+  };
+}
 
 function expectClose(actual: number | undefined, expected: number): void {
   expect(actual).not.toBeUndefined();
@@ -84,6 +107,41 @@ describe("acSweep", () => {
       "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
         "0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n" +
         "0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n",
+    );
+  });
+
+  it("executes AC probe measurements and parsed cards", () => {
+    const points = [
+      acPoint(10.0, { real: 1.0, imag: 0.0 }),
+      acPoint(100.0, { real: 0.0, imag: 2.0 }),
+      acPoint(1_000.0, { real: 0.0, imag: 0.5 }),
+    ];
+
+    const peak = measureAcSweepProbe(points, "outPeak", "V(out)", "max", 10.0, 100.0);
+    const average = measureAcSweepProbe(points, "outAvg", "V(out)", "avg");
+
+    expectClose(peak.value, 2.0);
+    expect(peak.analysis).toBe("ac");
+    expectClose(average.value, 1.1666666666666667);
+    expect(formatMeasurementTable([peak, average])).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "outPeak\tac\tV(out)\tmax\t1.000000e+01\t1.000000e+02\t2.000000e+00\n" +
+        "outAvg\tac\tV(out)\tavg\t\t\t1.166667e+00\n",
+    );
+
+    const measurements = measureAcSweepDeck(
+      points,
+      `
+.measure ac outSwing PP V(out) FROM=10 TO=1000
+.meas ac outFinal FINAL V(out)
+.end
+`,
+    );
+
+    expect(formatMeasurementTable(measurements)).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "outSwing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\n" +
+        "outFinal\tac\tV(out)\tlast\t\t\t5.000000e-01\n",
     );
   });
 
