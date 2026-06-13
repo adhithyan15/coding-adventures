@@ -31,6 +31,12 @@ fn uses_oop(m: &Module) -> bool {
     .any(|f| m.manifest.contains(*f))
 }
 
+/// True if the module uses exception handling, in which case the emitted
+/// artifact imports `coding-adventures-sir-runtime-exceptions`.
+fn uses_exceptions(m: &Module) -> bool {
+    m.manifest.contains(Feature::Exceptions)
+}
+
 /// Emit a SIR module as Python 3 source.  Caller is responsible
 /// for prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
@@ -51,6 +57,10 @@ pub fn emit_module(m: &Module) -> String {
     // module gains no dependency on it.
     if uses_oop(m) {
         out.push_str(crate::runtime::RUNTIME_OOP);
+    }
+    // Only throwing/rescuing modules import the exception runtime.
+    if uses_exceptions(m) {
+        out.push_str(crate::runtime::RUNTIME_EXC);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -344,9 +354,91 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
                 emit_stmt(out, st, indent);
             }
         }
-        Stmt::TryCatch { span, .. } => {
-            panic!("python backend reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+        // `begin … rescue … ensure … end` → native `try: … except Exception
+        // as __exc: … finally: …`.  Python's `except` matches by Python class
+        // while Ruby has an ordered list of typed `rescue` clauses, so the
+        // handler catches broadly and the body is an `if`/`elif` chain asking
+        // the exception runtime `rescue_matches(__exc, [class names])` per
+        // clause in source order; a `rescue Foo => e` binds `e = __exc`; if no
+        // clause matches the original exception is re-`raise`d (Ruby's
+        // "propagate when unrescued").  `ensure_body` → a `finally:` block.
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            let _ = write!(out, "{}try:\n", pad);
+            emit_stmt_list(out, body, indent + 1);
+            if !rescues.is_empty() {
+                // Catch broadly (matching the TS backend's catch-all) so a
+                // native Python error can still be matched by `rescue
+                // StandardError`; the dispatch + re-raise is in the body.
+                let _ = write!(out, "{}except Exception as __exc:\n", pad);
+                let ipad = indent_str(indent + 1);
+                for (i, r) in rescues.iter().enumerate() {
+                    let mut types = String::from("[");
+                    for (j, t) in r.exception_types.iter().enumerate() {
+                        if j > 0 {
+                            types.push_str(", ");
+                        }
+                        types.push_str(&quote_py_string(t));
+                    }
+                    types.push(']');
+                    let kw = if i == 0 { "if" } else { "elif" };
+                    let _ = write!(
+                        out,
+                        "{}{} _sir_exc_rescue_matches(__exc, {}):\n",
+                        ipad, kw, types
+                    );
+                    // `rescue Foo => e` binds the caught value as a local.
+                    if let Some(bind) = &r.binding {
+                        let bpad = indent_str(indent + 2);
+                        let _ = write!(out, "{}{} = __exc\n", bpad, sanitize_ident(bind));
+                        emit_stmt_list_allow_only_value(out, &r.body, indent + 2, false);
+                    } else {
+                        emit_stmt_list(out, &r.body, indent + 2);
+                    }
+                }
+                // No clause matched → propagate the original exception.
+                let _ = write!(out, "{}else:\n", ipad);
+                let bpad = indent_str(indent + 2);
+                let _ = write!(out, "{}raise\n", bpad);
+            }
+            if let Some(ens) = ensure_body {
+                let _ = write!(out, "{}finally:\n", pad);
+                emit_stmt_list(out, ens, indent + 1);
+            }
         }
+    }
+}
+
+/// Emit a bare statement list (as carried by `TryCatch` bodies / rescue
+/// clauses / `ensure`) at `indent`, emitting `pass` when empty so the Python
+/// block is non-empty.
+fn emit_stmt_list(out: &mut String, stmts: &[Stmt], indent: usize) {
+    if stmts.is_empty() {
+        let _ = write!(out, "{}pass\n", indent_str(indent));
+        return;
+    }
+    for s in stmts {
+        emit_stmt(out, s, indent);
+    }
+}
+
+/// Like [`emit_stmt_list`] but the caller has already emitted at least one line
+/// at `indent` (e.g. a rescue binding), so an *empty* list must NOT add a
+/// `pass`.  `_emit_pass_if_empty` is honoured only when the caller passes
+/// `true`.
+fn emit_stmt_list_allow_only_value(
+    out: &mut String,
+    stmts: &[Stmt],
+    indent: usize,
+    emit_pass_if_empty: bool,
+) {
+    if stmts.is_empty() {
+        if emit_pass_if_empty {
+            let _ = write!(out, "{}pass\n", indent_str(indent));
+        }
+        return;
+    }
+    for s in stmts {
+        emit_stmt(out, s, indent);
     }
 }
 
@@ -566,6 +658,33 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             return;
         }
     }
+    // `raise` → raise a SIR exception via the exception runtime.  The first
+    // argument decides the shape:
+    //   • a `Const` class name (`raise Foo` / `raise Foo, "msg"`) → the class
+    //     name is passed as a *string* (no binding needed for a built-in
+    //     class), with the optional message second;
+    //   • any other first arg (`raise "msg"`) → an implicit `RuntimeError`
+    //     carrying that value as the message (matching Ruby);
+    //   • no args (bare `raise`) → a generic re-raise (`RuntimeError`).
+    if name == "raise" {
+        out.push_str("_sir_exc_raise_error(");
+        match args.first() {
+            None => {}
+            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+                out.push_str(&quote_py_string(cn));
+                if let Some(msg) = args.get(1) {
+                    out.push_str(", ");
+                    emit_expr(out, msg, indent);
+                }
+            }
+            Some(other) => {
+                out.push_str("\"RuntimeError\", ");
+                emit_expr(out, other, indent);
+            }
+        }
+        out.push(')');
+        return;
+    }
     let helper = match name {
         "+" => "_sir_plus",
         "-" => "_sir_minus",
@@ -771,7 +890,13 @@ fn block_has_loop(b: &Block) -> bool {
     b.stmts.iter().any(|s| {
         matches!(
             s,
-            Stmt::While { .. } | Stmt::ForRange { .. } | Stmt::ForEach { .. }
+            // A `try`/`except`/`finally` is a compound statement that, like a
+            // loop, cannot be expressed as a walrus tuple — so a block holding
+            // one must also be lifted to a nested `def` in expression position.
+            Stmt::While { .. }
+                | Stmt::ForRange { .. }
+                | Stmt::ForEach { .. }
+                | Stmt::TryCatch { .. }
         )
     })
 }
@@ -801,6 +926,37 @@ fn collect_nonlocals_block(b: &Block, assigned: &mut BTreeSet<String>, bound: &m
             Stmt::ForRange { var, body, .. } | Stmt::ForEach { var, body, .. } => {
                 bound.insert(var.clone());
                 collect_nonlocals_block(body, assigned, bound);
+            }
+            // A try/rescue/ensure carries bare statement lists; descend into
+            // each so an outer local reassigned inside the `begin` is declared
+            // `nonlocal` in the lifted def.  A rescue binding (`=> e`) is a
+            // freshly-introduced local, so it counts as `bound`.
+            Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+                let synthetic = Block {
+                    stmts: body.clone(),
+                    value: Expr::NilLit { span: s.span().clone() },
+                    span: s.span().clone(),
+                };
+                collect_nonlocals_block(&synthetic, assigned, bound);
+                for r in rescues {
+                    if let Some(bind) = &r.binding {
+                        bound.insert(bind.clone());
+                    }
+                    let rb = Block {
+                        stmts: r.body.clone(),
+                        value: Expr::NilLit { span: s.span().clone() },
+                        span: s.span().clone(),
+                    };
+                    collect_nonlocals_block(&rb, assigned, bound);
+                }
+                if let Some(ens) = ensure_body {
+                    let eb = Block {
+                        stmts: ens.clone(),
+                        value: Expr::NilLit { span: s.span().clone() },
+                        span: s.span().clone(),
+                    };
+                    collect_nonlocals_block(&eb, assigned, bound);
+                }
             }
             _ => {}
         }
