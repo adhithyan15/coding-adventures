@@ -1,5 +1,5 @@
 use coding_adventures_html_parser::{
-    parse_browser_document, BrowserActivationDescriptor, BrowserAnchor,
+    parse_browser_document, BrowserActivationDescriptor, BrowserAnchor, BrowserAnchorDescriptor,
     BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionItem,
     BrowserAriaDescriptionDescriptor, BrowserAriaLiveRegion, BrowserAriaNameDescriptor,
     BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCanvasDescriptor,
@@ -19,8 +19,8 @@ use coding_adventures_html_parser::{
     BrowserFormSelect, BrowserFormSubmissionDescriptor, BrowserFormSubmitter,
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
     BrowserFormValidationDescriptor, BrowserFullscreenInteractionDescriptor,
-    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea,
+    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHeadingDescriptor, BrowserHttpEquivHint,
+    BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea,
     BrowserImageMapDescriptor, BrowserImageSource, BrowserInputPlanningDescriptor,
     BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
     BrowserLifecycleEventDescriptor, BrowserLink, BrowserLinkResourceDescriptor,
@@ -129,7 +129,11 @@ struct ExpectedBrowserDocument {
     #[serde(default)]
     form_validation_descriptors: Option<Vec<ExpectedFormValidationDescriptor>>,
     anchors: Vec<ExpectedAnchor>,
+    #[serde(default)]
+    anchor_descriptors: Option<Vec<ExpectedAnchorDescriptor>>,
     headings: Vec<ExpectedHeading>,
+    #[serde(default)]
+    heading_descriptors: Option<Vec<ExpectedHeadingDescriptor>>,
     #[serde(default)]
     text_semantics: Vec<ExpectedTextSemantic>,
     #[serde(default)]
@@ -2011,9 +2015,46 @@ struct ExpectedAnchor {
 }
 
 #[derive(Debug, Deserialize)]
+struct ExpectedAnchorDescriptor {
+    anchor_index: usize,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    fragment_targets: Vec<String>,
+    anchor_kind: String,
+    #[serde(default)]
+    duplicate_target: bool,
+    #[serde(default)]
+    anchor_blocked: bool,
+    #[serde(default)]
+    anchor_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
 struct ExpectedHeading {
     level: u8,
     text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedHeadingDescriptor {
+    heading_index: usize,
+    level: u8,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    previous_level: Option<u8>,
+    outline_kind: String,
+    #[serde(default)]
+    skipped_level: bool,
+    #[serde(default)]
+    heading_blocked: bool,
+    #[serde(default)]
+    heading_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4534,6 +4575,8 @@ fn browser_readiness_cases_extract_browser_document_facts() {
             case.expected.table_structure_descriptors.is_some();
         let tracks_image_map_descriptors = case.expected.image_map_descriptors.is_some();
         let tracks_link_resource_descriptors = case.expected.link_resource_descriptors.is_some();
+        let tracks_anchor_descriptors = case.expected.anchor_descriptors.is_some();
+        let tracks_heading_descriptors = case.expected.heading_descriptors.is_some();
         let tracks_text_semantic_descriptors = case.expected.text_semantic_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
@@ -4569,6 +4612,12 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_link_resource_descriptors {
             expected.link_resource_descriptors = actual.link_resource_descriptors.clone();
+        }
+        if !tracks_anchor_descriptors {
+            expected.anchor_descriptors = actual.anchor_descriptors.clone();
+        }
+        if !tracks_heading_descriptors {
+            expected.heading_descriptors = actual.heading_descriptors.clone();
         }
         if !tracks_text_semantic_descriptors {
             expected.text_semantic_descriptors = actual.text_semantic_descriptors.clone();
@@ -5158,6 +5207,71 @@ fn browser_text_semantic_descriptors_track_missing_and_unresolved_annotations() 
     assert_eq!(
         actual.text_semantic_descriptors[4].semantic_block_reasons,
         vec!["bidi-missing-dir"],
+    );
+}
+
+#[test]
+fn browser_anchor_descriptors_track_fragment_targets_and_duplicates() {
+    let actual = parse_browser_document(
+        "<h1 id=top>Top</h1>\
+         <a name=legacy></a>\
+         <section id=dup>First</section>\
+         <p id=dup>Second</p>\
+         <a id=both name=both>Both</a>",
+    )
+    .expect("anchor descriptor fixture should parse");
+
+    assert_eq!(actual.anchor_descriptors.len(), 5);
+    assert_eq!(actual.anchor_descriptors[0].anchor_kind, "id");
+    assert_eq!(actual.anchor_descriptors[0].fragment_targets, vec!["top"]);
+    assert!(!actual.anchor_descriptors[0].anchor_blocked);
+
+    assert_eq!(actual.anchor_descriptors[1].anchor_kind, "named-anchor");
+    assert_eq!(
+        actual.anchor_descriptors[1].anchor_block_reasons,
+        vec!["empty-fragment-target-text"],
+    );
+
+    assert!(actual.anchor_descriptors[2].duplicate_target);
+    assert_eq!(
+        actual.anchor_descriptors[2].anchor_block_reasons,
+        vec!["duplicate-fragment-target"],
+    );
+    assert!(actual.anchor_descriptors[3].duplicate_target);
+
+    assert_eq!(actual.anchor_descriptors[4].anchor_kind, "id-and-name");
+    assert_eq!(actual.anchor_descriptors[4].fragment_targets, vec!["both"]);
+}
+
+#[test]
+fn browser_heading_descriptors_track_outline_levels_and_blockers() {
+    let actual = parse_browser_document("<h2>Start</h2><h4>Deep</h4><h3>Back</h3><h3></h3>")
+        .expect("heading descriptor fixture should parse");
+
+    assert_eq!(actual.heading_descriptors.len(), 4);
+    assert_eq!(
+        actual.heading_descriptors[0].outline_kind,
+        "initial-skipped-level",
+    );
+    assert_eq!(
+        actual.heading_descriptors[0].heading_block_reasons,
+        vec!["skipped-heading-level"],
+    );
+
+    assert_eq!(actual.heading_descriptors[1].previous_level, Some(2));
+    assert_eq!(actual.heading_descriptors[1].outline_kind, "skipped-level");
+    assert!(actual.heading_descriptors[1].skipped_level);
+
+    assert_eq!(
+        actual.heading_descriptors[2].outline_kind,
+        "ancestor-section",
+    );
+    assert!(!actual.heading_descriptors[2].heading_blocked);
+
+    assert_eq!(actual.heading_descriptors[3].outline_kind, "sibling");
+    assert_eq!(
+        actual.heading_descriptors[3].heading_block_reasons,
+        vec!["empty-heading-text"],
     );
 }
 
@@ -7697,6 +7811,28 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedResource::into_browser_resource)
             .collect();
+        let anchors: Vec<_> = self
+            .anchors
+            .into_iter()
+            .map(ExpectedAnchor::into_browser_anchor)
+            .collect();
+        let anchor_descriptors = self
+            .anchor_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedAnchorDescriptor::into_browser_anchor_descriptor)
+            .collect();
+        let headings: Vec<_> = self
+            .headings
+            .into_iter()
+            .map(ExpectedHeading::into_browser_heading)
+            .collect();
+        let heading_descriptors = self
+            .heading_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedHeadingDescriptor::into_browser_heading_descriptor)
+            .collect();
         let text_semantics: Vec<_> = self
             .text_semantics
             .into_iter()
@@ -8212,16 +8348,10 @@ impl ExpectedBrowserDocument {
             form_submission_descriptors,
             form_reset_descriptors,
             form_validation_descriptors,
-            anchors: self
-                .anchors
-                .into_iter()
-                .map(ExpectedAnchor::into_browser_anchor)
-                .collect(),
-            headings: self
-                .headings
-                .into_iter()
-                .map(ExpectedHeading::into_browser_heading)
-                .collect(),
+            anchors,
+            anchor_descriptors,
+            headings,
+            heading_descriptors,
             text_semantics,
             text_semantic_descriptors,
             navigation_target_descriptors: self
@@ -14851,11 +14981,42 @@ impl ExpectedAnchor {
     }
 }
 
+impl ExpectedAnchorDescriptor {
+    fn into_browser_anchor_descriptor(self) -> BrowserAnchorDescriptor {
+        BrowserAnchorDescriptor {
+            anchor_index: self.anchor_index,
+            id: self.id,
+            name: self.name,
+            text: self.text,
+            fragment_targets: self.fragment_targets,
+            anchor_kind: self.anchor_kind,
+            duplicate_target: self.duplicate_target,
+            anchor_blocked: self.anchor_blocked,
+            anchor_block_reasons: self.anchor_block_reasons,
+        }
+    }
+}
+
 impl ExpectedHeading {
     fn into_browser_heading(self) -> BrowserHeading {
         BrowserHeading {
             level: self.level,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedHeadingDescriptor {
+    fn into_browser_heading_descriptor(self) -> BrowserHeadingDescriptor {
+        BrowserHeadingDescriptor {
+            heading_index: self.heading_index,
+            level: self.level,
+            text: self.text,
+            previous_level: self.previous_level,
+            outline_kind: self.outline_kind,
+            skipped_level: self.skipped_level,
+            heading_blocked: self.heading_blocked,
+            heading_block_reasons: self.heading_block_reasons,
         }
     }
 }

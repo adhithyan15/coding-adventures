@@ -854,7 +854,9 @@ pub struct BrowserDocument {
     pub form_reset_descriptors: Vec<BrowserFormResetDescriptor>,
     pub form_validation_descriptors: Vec<BrowserFormValidationDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
+    pub anchor_descriptors: Vec<BrowserAnchorDescriptor>,
     pub headings: Vec<BrowserHeading>,
+    pub heading_descriptors: Vec<BrowserHeadingDescriptor>,
     pub text_semantics: Vec<BrowserTextSemantic>,
     pub text_semantic_descriptors: Vec<BrowserTextSemanticDescriptor>,
     pub navigation_target_descriptors: Vec<BrowserNavigationTargetDescriptor>,
@@ -1426,6 +1428,19 @@ pub struct BrowserAnchor {
     pub id: Option<String>,
     pub name: Option<String>,
     pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAnchorDescriptor {
+    pub anchor_index: usize,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub text: String,
+    pub fragment_targets: Vec<String>,
+    pub anchor_kind: String,
+    pub duplicate_target: bool,
+    pub anchor_blocked: bool,
+    pub anchor_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2291,6 +2306,18 @@ pub struct BrowserRenderNode {
 pub struct BrowserHeading {
     pub level: u8,
     pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserHeadingDescriptor {
+    pub heading_index: usize,
+    pub level: u8,
+    pub text: String,
+    pub previous_level: Option<u8>,
+    pub outline_kind: String,
+    pub skipped_level: bool,
+    pub heading_blocked: bool,
+    pub heading_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3892,6 +3919,8 @@ impl BrowserDocument {
         summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary.link_resource_descriptors = browser_link_resource_descriptors(&summary.resources);
+        summary.anchor_descriptors = browser_anchor_descriptors(&summary.anchors);
+        summary.heading_descriptors = browser_heading_descriptors(&summary.headings);
         summary.text_semantic_descriptors =
             browser_text_semantic_descriptors(&summary.text_semantics);
         summary.navigation_group_descriptors =
@@ -13096,6 +13125,158 @@ fn browser_text_semantic_block_reasons(semantic: &BrowserTextSemantic) -> Vec<St
         reasons.push("bidi-missing-dir".to_string());
     }
     reasons
+}
+
+fn browser_anchor_descriptors(anchors: &[BrowserAnchor]) -> Vec<BrowserAnchorDescriptor> {
+    anchors
+        .iter()
+        .enumerate()
+        .map(|(index, anchor)| browser_anchor_descriptor(index + 1, anchor, anchors))
+        .collect()
+}
+
+fn browser_anchor_descriptor(
+    anchor_index: usize,
+    anchor: &BrowserAnchor,
+    anchors: &[BrowserAnchor],
+) -> BrowserAnchorDescriptor {
+    let fragment_targets = browser_anchor_fragment_targets(anchor);
+    let anchor_block_reasons = browser_anchor_block_reasons(anchor, &fragment_targets, anchors);
+    let duplicate_target = fragment_targets
+        .iter()
+        .any(|target| browser_anchor_target_count(anchors, target) > 1);
+
+    BrowserAnchorDescriptor {
+        anchor_index,
+        id: anchor.id.clone(),
+        name: anchor.name.clone(),
+        text: anchor.text.clone(),
+        fragment_targets,
+        anchor_kind: browser_anchor_kind(anchor).to_string(),
+        duplicate_target,
+        anchor_blocked: !anchor_block_reasons.is_empty(),
+        anchor_block_reasons,
+    }
+}
+
+fn browser_anchor_kind(anchor: &BrowserAnchor) -> &'static str {
+    match (&anchor.id, &anchor.name) {
+        (Some(_), Some(_)) => "id-and-name",
+        (Some(_), None) => "id",
+        (None, Some(_)) => "named-anchor",
+        (None, None) => "missing-target",
+    }
+}
+
+fn browser_anchor_fragment_targets(anchor: &BrowserAnchor) -> Vec<String> {
+    let mut targets = Vec::new();
+    if let Some(id) = &anchor.id {
+        targets.push(id.clone());
+    }
+    if let Some(name) = &anchor.name {
+        if !targets.iter().any(|target| target == name) {
+            targets.push(name.clone());
+        }
+    }
+    targets
+}
+
+fn browser_anchor_block_reasons(
+    anchor: &BrowserAnchor,
+    fragment_targets: &[String],
+    anchors: &[BrowserAnchor],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if fragment_targets.is_empty() {
+        reasons.push("missing-fragment-target".to_string());
+    }
+    if anchor.text.trim().is_empty() {
+        reasons.push("empty-fragment-target-text".to_string());
+    }
+    if fragment_targets
+        .iter()
+        .any(|target| browser_anchor_target_count(anchors, target) > 1)
+    {
+        reasons.push("duplicate-fragment-target".to_string());
+    }
+    reasons
+}
+
+fn browser_anchor_target_count(anchors: &[BrowserAnchor], target: &str) -> usize {
+    anchors
+        .iter()
+        .filter(|anchor| {
+            browser_anchor_fragment_targets(anchor)
+                .iter()
+                .any(|value| value == target)
+        })
+        .count()
+}
+
+fn browser_heading_descriptors(headings: &[BrowserHeading]) -> Vec<BrowserHeadingDescriptor> {
+    headings
+        .iter()
+        .enumerate()
+        .map(|(index, heading)| {
+            let previous_level = index
+                .checked_sub(1)
+                .and_then(|previous_index| headings.get(previous_index))
+                .map(|previous| previous.level);
+            browser_heading_descriptor(index + 1, heading, previous_level)
+        })
+        .collect()
+}
+
+fn browser_heading_descriptor(
+    heading_index: usize,
+    heading: &BrowserHeading,
+    previous_level: Option<u8>,
+) -> BrowserHeadingDescriptor {
+    let heading_block_reasons = browser_heading_block_reasons(heading, previous_level);
+    let skipped_level = browser_heading_skipped_level(heading.level, previous_level);
+
+    BrowserHeadingDescriptor {
+        heading_index,
+        level: heading.level,
+        text: heading.text.clone(),
+        previous_level,
+        outline_kind: browser_heading_outline_kind(heading.level, previous_level).to_string(),
+        skipped_level,
+        heading_blocked: !heading_block_reasons.is_empty(),
+        heading_block_reasons,
+    }
+}
+
+fn browser_heading_outline_kind(level: u8, previous_level: Option<u8>) -> &'static str {
+    match previous_level {
+        None if level == 1 => "top-level",
+        None => "initial-skipped-level",
+        Some(previous) if level == previous => "sibling",
+        Some(previous) if level == previous + 1 => "subsection",
+        Some(previous) if level > previous + 1 => "skipped-level",
+        Some(_) => "ancestor-section",
+    }
+}
+
+fn browser_heading_block_reasons(
+    heading: &BrowserHeading,
+    previous_level: Option<u8>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if heading.text.trim().is_empty() {
+        reasons.push("empty-heading-text".to_string());
+    }
+    if browser_heading_skipped_level(heading.level, previous_level) {
+        reasons.push("skipped-heading-level".to_string());
+    }
+    reasons
+}
+
+fn browser_heading_skipped_level(level: u8, previous_level: Option<u8>) -> bool {
+    match previous_level {
+        None => level > 1,
+        Some(previous) => level > previous + 1,
+    }
 }
 
 fn is_browser_text_semantic_element(element: &Element) -> bool {
