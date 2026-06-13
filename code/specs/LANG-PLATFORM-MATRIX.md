@@ -101,12 +101,12 @@ achievable code-gen columns land first).
 
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
-| Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Twig            | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Nib             | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Brainfuck       | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Dartmouth BASIC | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Oct             | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
+| ALGOL 60        | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 
 **native-AOT is uniformly ✅ as of LM0** — all six languages compile to a host
 executable and run with the expected result (`lang-aot/tests/lang_matrix.rs`:
@@ -317,14 +317,42 @@ backends, so they are tackled deliberately rather than as a routine conformance 
   `iir-to-cil-bytecode` 0.18.0's textual `.il` emitter grew the byte-tape ops over an
   `unsigned int8[]` local (`newarr Byte`/`ldelem.u1`/`stelem.i1`) + `Console::Write(char)`
   putchar; CIL `brfalse` needed no i64 fix. **The entire code-gen wave is complete.**
-- ⏸ **Phase V — VM op-coverage.** `mccarthy_lisp_vm` is **McCarthy-specialized**, not a
-  general interpreter (the LM0 probe: it rejects `add`/`mul`/`cmp_*`/`mod` and the I/O
-  ops). Running the other languages on the VM means growing the interpreter with
-  integer-arithmetic / comparison / bitwise ops, plus `print_i64` (capturing) +
-  Brainfuck tape ops for the I/O languages — real interpreter work.
-- ⏸ **Phase I — JIT.** Two parts: replace the McCarthy-only `run_mccarthy_on_jit` with
-  a generic `run_on_jit(language, source)`, then give the JIT the same op-coverage the
-  VM needs (it shares `jit-core`'s McCarthy-shaped lowering today). Tackle after the VM.
+### Phase V — generic register VM
+
+**Directive: the VM must be _generic_** — a register-based interpreter that consumes the
+shared IIR so *any* future frontend (Ruby, JS, …) runs on it with zero VM-specific
+rework, exactly like the code-gen backends. The LM0 probe's "the VM rejects
+`add`/`mul`/`cmp_*`" was a **mischaracterisation**: it tested `mccarthy_lisp_vm`, which is
+a *deliberately separate* lisp interpreter (its value model is `lispy-runtime`'s tagged
+`LispyValue` — symbols/cons/nil — and McCarthy's frontend lowers `(+ 1 2)` to a
+`call_builtin`, so its IIR genuinely has no `add`). The **general** register VM,
+`vm_core::VMCore`, already exists and its dispatch already covers `const`/`mov`,
+`add`/`sub`/`mul`/`div`/`mod`/`neg`, `and`/`or`/`xor`/`not`/`shl`/`shr`, all `cmp_*`,
+`label`/`jmp`/`jmp_if_*`/`ret`, `load_mem`/`store_mem`/`load_reg`/`store_reg`,
+`call`/`call_builtin`, and `io_*` — over a scalar `Value` (Int/Float/Bool/Str/Null). The
+matrix's six languages are all scalar, so they share this one VM; Brainfuck already ran on
+it for years (`brainfuck-iir-compiler` uses `VMCore`). Phase V is therefore mostly
+**wiring**, not interpreter work.
+
+- ✅ **LM-V expression + BASIC (Twig / Nib / Oct / ALGOL / Dartmouth BASIC on the VM).**
+  Added a `Backend::Vm` runner to `lang_matrix.rs`: source → `compile_source_to_iir` (the
+  *same* shared pipeline every code-gen column uses) → `vm_core::VMCore::execute`. **No
+  per-language code** — the scalar languages' arithmetic/comparison/control-flow/memory
+  ops are exactly `VMCore`'s existing dispatch. The I/O languages print through a
+  registered builtin closure (`print_i64` appends to a capture buffer — the VM sibling of
+  the wasm `PrintHost` / LLVM `@__print_i64` / JVM `BasicRuntime` / CLR `Console.WriteLine`);
+  `putchar`/`getchar` are registered too, for the next slice. Verified by RUNNING in-process:
+  Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2, BASIC `10 PRINT 42`→stdout `42`. The VM column
+  is now green for **5 / 6** languages — only Brainfuck is left.
+- ⏸ **LM-V Brainfuck (on the VM).** The one genuine op-gap: after `lower_brainfuck_for_aot`,
+  Brainfuck's IIR uses `alloc_bytes`/`load_byte`/`store_byte` (the lowered tape form), which
+  `VMCore`'s dispatch doesn't yet handle (it has `load_mem`/`store_mem`, the *raw* BF form).
+  Add those three byte-tape ops to `vm-core` generically (the same ops every code-gen backend
+  grew for LM-L/W/J/C) → Brainfuck on the VM. One `vm-core` slice.
+- ⏸ **Phase I — JIT.** Two parts: replace the McCarthy-only `run_mccarthy_on_jit` with a
+  generic `run_on_jit(language, source)` over `jit-core` (whose `GenericCirJit` is already
+  language-agnostic — a frontend registers its builtins as callbacks), then ensure the JIT's
+  `specialise`→CIR→backend path covers the scalar ops. Tackle after the VM column is complete.
 
 ## End state
 
@@ -334,11 +362,13 @@ BEAM column for the imperative languages). The capstone is a single
 `lang_matrix.rs` suite asserting every `(language, backend)` cell agrees with the
 known result — the cross-language analog of McCarthy's W16.
 
-The campaign reached that end state in two waves: first the **code-generator columns**
+The campaign reaches that end state in two waves: first the **code-generator columns**
 (native ✅, **LLVM ✅**, **WASM ✅**, **JVM ✅**, **CLR ✅ — all six languages on all five**)
 — general over the shared IIR, so each cell was mostly a conformance test plus the
-occasional I/O/type fix; **the entire code-gen wave is now complete.** What remains is the
-**second wave** — the deliberately-deferred **VM** (`mccarthy_lisp_vm` is McCarthy-specialized
-and needs general op-coverage) and **JIT** (a generic `run_on_jit` + the same op-coverage)
-— each a real interpreter change, not a conformance slice. Those are the only two ☐ columns
-left in the matrix.
+occasional I/O/type fix; **the entire code-gen wave is complete.** The second wave is the
+**execution columns** — the generic register **VM** (`vm_core::VMCore`, which already
+consumes the shared IIR; now green for 5/6, only Brainfuck's byte-tape ops left) and the
+**JIT** (a generic `run_on_jit` over `jit-core`'s language-agnostic `GenericCirJit`). Both
+are deliberately **generic** so a future Ruby/JS frontend runs on them with zero rework —
+the same "shared primitive, no per-language hack" principle as the code-gen backends. The
+VM column is the only one in progress; the JIT column is the last ☐.

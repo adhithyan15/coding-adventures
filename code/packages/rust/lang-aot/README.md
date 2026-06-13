@@ -16,7 +16,15 @@ LANG VM chain.
 > `Console::Write(char)`). Verified by RUNNING `++++++++[>++++++++<-]>+.` → `A` on real
 > `clang`, the in-repo `wasm-runtime`, real `java`, and real `dotnet` (`tests/lang_matrix.rs`).
 > The frontend itself is unchanged, so the `vm-core`/`jit-core` Brainfuck paths (which key
-> CIR widths off `u8`/`u32`) keep working. Only the deferred VM/JIT columns remain.
+> CIR widths off `u8`/`u32`) keep working.
+
+> **LANG-MATRIX Phase V — generic register VM (v0.69.0):** the **VM** column runs the
+> *shared* IIR on `vm_core::VMCore` — the general register VM, no per-language code — so a
+> future Ruby/JS frontend would run on it unchanged. `tests/lang_matrix.rs`'s `run_vm` does
+> `compile_source_to_iir` → `VMCore::execute`; the I/O languages print via a registered
+> `print_i64` builtin closure. Verified by RUNNING in-process: Twig→42, Nib→42, Oct→0, ALGOL
+> `17 mod 5`→2, BASIC→`42`. 5/6 of the column; Brainfuck-on-VM (the `alloc_bytes`/`load_byte`/
+> `store_byte` tape ops on `vm-core`) and the generic JIT column are next.
 > (McCarthy Lisp is wired as of L3a — scalar programs run
 end-to-end natively; symbol/cons backend support is L3b.)  As of L3b-3a-3c,
 `compile_source_to_wasm` also compiles McCarthy **cons** programs to a runnable
