@@ -24,6 +24,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   intents for runtime supervisors
 - neighbor table summaries for cheap runtime/read-model projections of parent,
   child, router, stale-neighbor, and parent-candidate state
+- attach readiness summaries that combine MLE parent-selection traffic with
+  neighbor parent/candidate state
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection

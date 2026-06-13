@@ -26,5 +26,7 @@ All notable changes to this package will be documented in this file.
   stable repair intents for runtime supervisors.
 - Neighbor table summaries for cheap runtime/read-model projections of parent,
   child, router, stale-neighbor, and parent-candidate state.
+- Thread attach readiness summaries that combine MLE parent-selection traffic
+  with neighbor parent/candidate state.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
