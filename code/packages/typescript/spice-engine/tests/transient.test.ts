@@ -72,6 +72,7 @@ import {
   resistor,
   sampleTransientProbeAsDigitalEvents,
   sampleTransientProbesAsDigitalEventStreams,
+  measureTransientDeck,
   measureTransientProbe,
   transient,
   transientAdaptive,
@@ -1404,6 +1405,40 @@ describe("transient", () => {
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n",
+    );
+  });
+
+  it("executes parsed transient .measure cards", () => {
+    const points = [
+      transientPoint(0.0, { out: 0.0 }),
+      transientPoint(1.0e-3, { out: 1.25 }),
+      transientPoint(2.0e-3, { out: -0.25 }),
+      transientPoint(3.0e-3, { out: 0.75 }),
+    ];
+
+    const measurements = measureTransientDeck(
+      points,
+      `
+.measure tran swing pp V(out) FROM=1m TO=3m
+.meas transient mean avg V(out)
+.end
+`,
+    );
+
+    expect(measurements.map(({ name, mode, value, fromValue, toValue }) => [
+      name,
+      mode,
+      value,
+      fromValue,
+      toValue,
+    ])).toStrictEqual([
+      ["swing", "pp", 1.5, 0.001, 0.003],
+      ["mean", "avg", 0.4375, undefined, undefined],
+    ]);
+    expect(formatMeasurementTable(measurements)).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
+        "mean\ttran\tV(out)\tavg\t\t\t4.375000e-01\n",
     );
   });
 

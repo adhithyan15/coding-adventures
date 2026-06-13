@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `resolve_deck_measurements`, `measure_transient_cards`, and
+  `measure_transient_deck` for parsed transient `.measure` / `.meas` card
+  routing into stable scalar measurement rows, matching Python and TypeScript.
 - Add `measure_transient_probe` and `format_measurement_table` for a shared
   `.MEASURE`-style scalar transient output surface with MAX, MIN, AVG, RMS,
   peak-to-peak, and final-value probe measurements, matching Python and

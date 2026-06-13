@@ -187,6 +187,43 @@ class DeckFunctionSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class DeckMeasurementCard:
+    """A parsed scalar ``.measure`` / ``.meas`` transient probe card."""
+
+    directive: str
+    analysis: str
+    name: str
+    mode: str
+    probe: str
+    line_number: int
+    from_value: float | None = None
+    to_value: float | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckMeasurementDiagnostic:
+    """A stable diagnostic emitted while resolving deck measurements."""
+
+    code: str
+    directive: str
+    line_number: int
+    message: str
+    severity: str
+    token: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckMeasurementSummary:
+    """Resolved active deck lines plus parsed transient measurement cards."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    measurements: tuple[DeckMeasurementCard, ...]
+    diagnostics: tuple[DeckMeasurementDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReleaseReadinessIssue:
     """A release-readiness gate violation for a corpus deck."""
 
@@ -506,6 +543,35 @@ def resolve_deck_functions(netlist: str) -> DeckFunctionSummary:
     )
 
 
+def resolve_deck_measurements(netlist: str) -> DeckMeasurementSummary:
+    """Extract the supported transient ``.measure`` / ``.meas`` card subset."""
+
+    state = _DeckMeasurementState()
+    active_lines: list[str] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive in {".measure", ".meas"}:
+            _resolve_measurement_line(stripped, line_number, directive, state)
+            continue
+        active_lines.append(stripped)
+
+    return DeckMeasurementSummary(
+        active_lines=tuple(active_lines),
+        terminated=end_line_number is not None,
+        end_line_number=end_line_number,
+        measurements=tuple(state.measurements),
+        diagnostics=tuple(state.diagnostics),
+    )
+
+
 def compatibility_corpus() -> tuple[CompatibilityDeck, ...]:
     """Return the canonical first release-readiness compatibility corpus."""
 
@@ -736,6 +802,16 @@ class _DeckFunctionState:
     def __init__(self) -> None:
         self.diagnostics = []
         self.functions = []
+
+
+@dataclass(slots=True)
+class _DeckMeasurementState:
+    diagnostics: list[DeckMeasurementDiagnostic]
+    measurements: list[DeckMeasurementCard]
+
+    def __init__(self) -> None:
+        self.diagnostics = []
+        self.measurements = []
 
 
 def _resolve_node_condition_line(
@@ -1274,6 +1350,27 @@ def _add_function_diagnostic(
     )
 
 
+def _add_measurement_diagnostic(
+    state: _DeckMeasurementState,
+    *,
+    code: str,
+    directive: str,
+    line_number: int,
+    message: str,
+    token: str | None = None,
+) -> None:
+    state.diagnostics.append(
+        DeckMeasurementDiagnostic(
+            code=code,
+            directive=directive,
+            line_number=line_number,
+            message=message,
+            severity="error",
+            token=token,
+        )
+    )
+
+
 def _parse_node_condition_target(target: str) -> str | None:
     if len(target) < 4 or not target.lower().startswith("v(") or not target.endswith(")"):
         return None
@@ -1299,6 +1396,172 @@ def _is_parameter_name(name: str) -> bool:
     if not name or not (name[0].isalpha() or name[0] == "_"):
         return False
     return all(char.isalnum() or char == "_" for char in name)
+
+
+def _resolve_measurement_line(
+    line: str,
+    line_number: int,
+    directive: str,
+    state: _DeckMeasurementState,
+) -> None:
+    tokens = _directive_tokens(line)
+    if len(tokens) < 5:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message=f"{directive} requires analysis, name, mode, and probe tokens",
+        )
+        return
+
+    analysis = tokens[1].strip().lower()
+    if analysis not in {"tran", "transient"}:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ANALYSIS",
+            directive=directive,
+            line_number=line_number,
+            message=f"only transient .measure cards are supported, got {tokens[1]!r}",
+            token=tokens[1],
+        )
+        return
+
+    name = tokens[2].strip()
+    if not _is_parameter_name(name):
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_NAME",
+            directive=directive,
+            line_number=line_number,
+            message=f"measurement name {name!r} is not a valid identifier",
+            token=name,
+        )
+        return
+
+    mode = _normalize_measurement_mode_token(tokens[3])
+    if mode is None:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_MODE",
+            directive=directive,
+            line_number=line_number,
+            message=f"unsupported transient measurement mode {tokens[3]!r}",
+            token=tokens[3],
+        )
+        return
+
+    probe = _unquote_token(tokens[4].strip())
+    if not probe:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_PROBE",
+            directive=directive,
+            line_number=line_number,
+            message="measurement probe must not be empty",
+            token=tokens[4],
+        )
+        return
+
+    empty_parameter_state = _DeckParameterState()
+    from_value: float | None = None
+    to_value: float | None = None
+    seen_window_tokens: set[str] = set()
+    diagnostic_count = len(state.diagnostics)
+    for token in tokens[5:]:
+        if "=" not in token:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"measurement option {token!r} must use name=value syntax",
+                token=token,
+            )
+            continue
+        key, expression = token.split("=", 1)
+        key = key.strip().lower()
+        if key not in {"from", "to"}:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"unsupported measurement option {key!r}",
+                token=token,
+            )
+            continue
+        if key in seen_window_tokens:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"duplicate measurement option {key!r}",
+                token=token,
+            )
+            continue
+        seen_window_tokens.add(key)
+        try:
+            value = _evaluate_parameter_expression(
+                _strip_expression_delimiters(expression.strip()),
+                empty_parameter_state,
+            )
+        except ValueError as error:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_EXPRESSION",
+                directive=directive,
+                line_number=line_number,
+                message=str(error),
+                token=token,
+            )
+            continue
+        if key == "from":
+            from_value = value
+        else:
+            to_value = value
+
+    if from_value is not None and to_value is not None and from_value > to_value:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_WINDOW",
+            directive=directive,
+            line_number=line_number,
+            message="measurement FROM value must be <= TO value",
+        )
+
+    if len(state.diagnostics) != diagnostic_count:
+        return
+
+    state.measurements.append(
+        DeckMeasurementCard(
+            directive=directive,
+            analysis=analysis,
+            name=name,
+            mode=mode,
+            probe=probe,
+            line_number=line_number,
+            from_value=from_value,
+            to_value=to_value,
+        )
+    )
+
+
+def _normalize_measurement_mode_token(mode: str) -> str | None:
+    normalized = mode.strip().lower().replace("_", "-")
+    aliases = {
+        "average": "avg",
+        "mean": "avg",
+        "root-mean-square": "rms",
+        "p-p": "pp",
+        "p2p": "pp",
+        "peak-to-peak": "pp",
+        "peak2peak": "pp",
+        "final": "last",
+    }
+    normalized = aliases.get(normalized, normalized)
+    return normalized if normalized in {"max", "min", "avg", "rms", "pp", "last"} else None
 
 
 def _strip_expression_delimiters(expression: str) -> str:

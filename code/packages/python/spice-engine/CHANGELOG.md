@@ -4,6 +4,13 @@
 
 ### Added
 
+- **Parsed transient measurement card routing** —
+  `resolve_deck_measurements()`, `measure_transient_cards()`, and
+  `measure_transient_deck()` now extract transient `.measure` / `.meas` cards
+  before `.end` and route MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+  probe measurements into stable measurement rows, matching Rust and
+  TypeScript.
+
 - **Transient measurement output expansion** — `measure_transient_probe()` and
   `format_measurement_table()` provide a shared `.MEASURE`-style scalar
   transient output surface with MAX, MIN, AVG, RMS, peak-to-peak, and

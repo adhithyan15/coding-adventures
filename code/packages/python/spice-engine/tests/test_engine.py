@@ -225,6 +225,7 @@ from spice_engine import (
     jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
+    measure_transient_deck,
     measure_transient_probe,
     mosfet_from_model_card,
     noise_ac,
@@ -6627,6 +6628,31 @@ def test_transient_probe_measurements_are_stable() -> None:
     assert final_value.value == pytest.approx(0.75)
     assert final_value.mode == "last"
     assert format_measurement_table([peak_to_peak, final_value]) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+    )
+
+
+def test_transient_deck_measurements_execute_parsed_cards() -> None:
+    transient_points = [
+        TransientPoint(0.0, {"out": 0.0}, {}),
+        TransientPoint(1.0e-3, {"out": 1.25}, {}),
+        TransientPoint(2.0e-3, {"out": -0.25}, {}),
+        TransientPoint(3.0e-3, {"out": 0.75}, {}),
+    ]
+
+    measurements = measure_transient_deck(
+        transient_points,
+        """
+V1 in 0 DC 1
+.measure tran swing PP V(out) FROM=1m TO=3m
+.meas tran settled LAST V(out)
+.end
+""",
+    )
+
+    assert format_measurement_table(measurements) == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"

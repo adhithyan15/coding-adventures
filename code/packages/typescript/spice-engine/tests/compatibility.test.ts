@@ -8,6 +8,7 @@ import {
   releaseReadinessGates,
   resolveDeckFunctions,
   resolveDeckInitialConditions,
+  resolveDeckMeasurements,
   resolveDeckParameters,
   resolveDeckSources,
 } from "../src/index.js";
@@ -413,6 +414,60 @@ R1 in out {gain(vin)}
       "noexpr",
       "badarg",
       "dup",
+    ]);
+  });
+
+  it("extracts transient .measure cards", () => {
+    const summary = resolveDeckMeasurements(`
+V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
+.measure tran swing pp V(out) FROM=1m TO={3m}
+.meas transient settled final 'V(out)'
+.tran 1m 4m
+.end
+.measure tran after max V(out)
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.activeLines).toStrictEqual([
+      "V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)",
+      ".tran 1m 4m",
+    ]);
+    expect(summary.measurements.map(({ directive, analysis, name, mode, probe, lineNumber, fromValue, toValue }) => [
+      directive,
+      analysis,
+      name,
+      mode,
+      probe,
+      lineNumber,
+      fromValue,
+      toValue,
+    ])).toStrictEqual([
+      [".measure", "tran", "swing", "pp", "V(out)", 3, 0.001, 0.003],
+      [".meas", "transient", "settled", "last", "V(out)", 4, undefined, undefined],
+    ]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports unsupported .measure subsets", () => {
+    const summary = resolveDeckMeasurements(`
+.measure ac gain max V(out)
+.measure tran badmode deriv V(out)
+.measure tran badname max V(out) FROM=2m TO=1m
+.measure tran badopt max V(out) AT=1m
+.measure tran badexpr max V(out) FROM={1+}
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(7);
+    expect(summary.measurements).toStrictEqual([]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_MEASURE_ANALYSIS",
+      "SPICE_DECK_MEASURE_MODE",
+      "SPICE_DECK_MEASURE_WINDOW",
+      "SPICE_DECK_MEASURE_ARGUMENT",
+      "SPICE_DECK_MEASURE_EXPRESSION",
     ]);
   });
 });

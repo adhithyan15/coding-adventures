@@ -64,7 +64,12 @@ from typing import Literal
 
 from mosfet_models import MOSFET, Level1Model, Level1Params
 
-from spice_engine.compatibility import DeckInitialConditionSummary, DeckNodeCondition
+from spice_engine.compatibility import (
+    DeckInitialConditionSummary,
+    DeckMeasurementCard,
+    DeckNodeCondition,
+    resolve_deck_measurements,
+)
 from spice_engine.elements import (
     BJT,
     CCCS,
@@ -2816,6 +2821,46 @@ def measure_transient_probe(
         from_value=from_time,
         to_value=to_time,
     )
+
+
+def measure_transient_cards(
+    transient_result: TransientResult | list[TransientPoint],
+    measurements: Iterable[DeckMeasurementCard],
+) -> list[ProbeMeasurement]:
+    """Execute parsed transient ``.measure`` / ``.meas`` cards."""
+
+    results: list[ProbeMeasurement] = []
+    for measurement in measurements:
+        if measurement.analysis not in {"tran", "transient"}:
+            raise ValueError(
+                "measure_transient_cards: only transient measurement cards are supported"
+            )
+        results.append(
+            measure_transient_probe(
+                transient_result,
+                measurement.name,
+                measurement.probe,
+                measurement.mode,
+                from_time=measurement.from_value,
+                to_time=measurement.to_value,
+            )
+        )
+    return results
+
+
+def measure_transient_deck(
+    transient_result: TransientResult | list[TransientPoint],
+    netlist: str,
+) -> list[ProbeMeasurement]:
+    """Parse and execute supported transient measurements from a SPICE deck."""
+
+    summary = resolve_deck_measurements(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"measure_transient_deck: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return measure_transient_cards(transient_result, summary.measurements)
 
 
 def format_measurement_table(measurements: Iterable[ProbeMeasurement]) -> str:

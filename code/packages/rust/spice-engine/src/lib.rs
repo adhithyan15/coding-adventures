@@ -3256,6 +3256,37 @@ pub struct DeckFunctionSummary {
     pub diagnostics: Vec<DeckFunctionDiagnostic>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckMeasurementCard {
+    pub directive: String,
+    pub analysis: String,
+    pub name: String,
+    pub mode: String,
+    pub probe: String,
+    pub line_number: usize,
+    pub from_value: Option<f64>,
+    pub to_value: Option<f64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckMeasurementDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub token: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckMeasurementSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub measurements: Vec<DeckMeasurementCard>,
+    pub diagnostics: Vec<DeckMeasurementDiagnostic>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
@@ -3555,6 +3586,43 @@ pub fn resolve_deck_functions(netlist: &str) -> DeckFunctionSummary {
         terminated: end_line_number.is_some(),
         end_line_number,
         functions: state.functions,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn resolve_deck_measurements(netlist: &str) -> DeckMeasurementSummary {
+    let mut state = DeckMeasurementState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if matches!(directive.as_deref(), Some(".measure" | ".meas")) {
+            resolve_measurement_line(
+                stripped,
+                line_number,
+                directive.as_deref().unwrap(),
+                &mut state,
+            );
+            continue;
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckMeasurementSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        measurements: state.measurements,
         diagnostics: state.diagnostics,
     }
 }
@@ -3871,6 +3939,20 @@ impl DeckFunctionState {
         Self {
             diagnostics: Vec::new(),
             functions: Vec::new(),
+        }
+    }
+}
+
+struct DeckMeasurementState {
+    diagnostics: Vec<DeckMeasurementDiagnostic>,
+    measurements: Vec<DeckMeasurementCard>,
+}
+
+impl DeckMeasurementState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            measurements: Vec::new(),
         }
     }
 }
@@ -4321,6 +4403,166 @@ fn resolve_function_line(line: &str, line_number: usize, state: &mut DeckFunctio
         arguments,
         expression,
         line_number,
+    });
+}
+
+fn resolve_measurement_line(
+    line: &str,
+    line_number: usize,
+    directive: &str,
+    state: &mut DeckMeasurementState,
+) {
+    let tokens = directive_tokens(line);
+    if tokens.len() < 5 {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} requires analysis, name, mode, and probe tokens"),
+            None,
+        );
+        return;
+    }
+
+    let analysis = tokens[1].trim().to_ascii_lowercase();
+    if analysis != "tran" && analysis != "transient" {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ANALYSIS",
+            directive,
+            line_number,
+            &format!(
+                "only transient .measure cards are supported, got {:?}",
+                tokens[1]
+            ),
+            Some(tokens[1].to_string()),
+        );
+        return;
+    }
+
+    let name = tokens[2].trim();
+    if !is_parameter_name(name) {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_NAME",
+            directive,
+            line_number,
+            &format!("measurement name {name:?} is not a valid identifier"),
+            Some(name.to_string()),
+        );
+        return;
+    }
+
+    let Some(mode) = normalize_measurement_mode_token(tokens[3]) else {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_MODE",
+            directive,
+            line_number,
+            &format!("unsupported transient measurement mode {:?}", tokens[3]),
+            Some(tokens[3].to_string()),
+        );
+        return;
+    };
+
+    let probe = unquote_token(tokens[4].trim());
+    if probe.is_empty() {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_PROBE",
+            directive,
+            line_number,
+            "measurement probe must not be empty",
+            Some(tokens[4].to_string()),
+        );
+        return;
+    }
+
+    let empty_parameter_state = DeckParameterState::new();
+    let mut from_value = None;
+    let mut to_value = None;
+    let mut seen_window_tokens = Vec::new();
+    let diagnostic_count = state.diagnostics.len();
+    for token in tokens.iter().skip(5) {
+        let Some((key, expression)) = token.split_once('=') else {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("measurement option {token:?} must use name=value syntax"),
+                Some((*token).to_string()),
+            );
+            continue;
+        };
+        let key = key.trim().to_ascii_lowercase();
+        if key != "from" && key != "to" {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("unsupported measurement option {key:?}"),
+                Some((*token).to_string()),
+            );
+            continue;
+        }
+        if seen_window_tokens.iter().any(|seen| seen == &key) {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("duplicate measurement option {key:?}"),
+                Some((*token).to_string()),
+            );
+            continue;
+        }
+        seen_window_tokens.push(key.clone());
+        match evaluate_parameter_expression(
+            &strip_expression_delimiters(expression.trim()),
+            &empty_parameter_state,
+        ) {
+            Ok(value) if key == "from" => from_value = Some(value),
+            Ok(value) => to_value = Some(value),
+            Err(message) => add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_EXPRESSION",
+                directive,
+                line_number,
+                &message,
+                Some((*token).to_string()),
+            ),
+        }
+    }
+
+    if let (Some(from), Some(to)) = (from_value, to_value) {
+        if from > to {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_WINDOW",
+                directive,
+                line_number,
+                "measurement FROM value must be <= TO value",
+                None,
+            );
+        }
+    }
+
+    if state.diagnostics.len() != diagnostic_count {
+        return;
+    }
+
+    state.measurements.push(DeckMeasurementCard {
+        directive: directive.to_string(),
+        analysis,
+        name: name.to_string(),
+        mode: mode.to_string(),
+        probe,
+        line_number,
+        from_value,
+        to_value,
     });
 }
 
@@ -4837,6 +5079,24 @@ fn add_function_diagnostic(
     });
 }
 
+fn add_measurement_diagnostic(
+    state: &mut DeckMeasurementState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    token: Option<String>,
+) {
+    state.diagnostics.push(DeckMeasurementDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        token,
+    });
+}
+
 fn parse_node_condition_target(target: &str) -> Option<String> {
     if target.len() < 4 || !target.to_ascii_lowercase().starts_with("v(") || !target.ends_with(')')
     {
@@ -4881,6 +5141,19 @@ fn is_parameter_name(name: &str) -> bool {
         return false;
     }
     chars.all(|ch| ch.is_ascii_alphanumeric() || ch == '_')
+}
+
+fn normalize_measurement_mode_token(mode: &str) -> Option<&'static str> {
+    let normalized = mode.trim().to_ascii_lowercase().replace('_', "-");
+    match normalized.as_str() {
+        "max" => Some("max"),
+        "min" => Some("min"),
+        "avg" | "average" | "mean" => Some("avg"),
+        "rms" | "root-mean-square" => Some("rms"),
+        "pp" | "p-p" | "p2p" | "peak-to-peak" | "peak2peak" => Some("pp"),
+        "last" | "final" => Some("last"),
+        _ => None,
+    }
 }
 
 fn strip_expression_delimiters(expression: &str) -> String {
@@ -8138,6 +8411,44 @@ pub fn measure_transient_probe(
         from_value: from_time,
         to_value: to_time,
     })
+}
+
+pub fn measure_transient_cards(
+    points: &[TransientPoint],
+    measurements: &[DeckMeasurementCard],
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    let mut results = Vec::new();
+    for measurement in measurements {
+        if measurement.analysis != "tran" && measurement.analysis != "transient" {
+            return Err(table_error(
+                "measure_transient_cards",
+                "only transient measurement cards are supported",
+            ));
+        }
+        results.push(measure_transient_probe(
+            points,
+            &measurement.name,
+            &measurement.probe,
+            &measurement.mode,
+            measurement.from_value,
+            measurement.to_value,
+        )?);
+    }
+    Ok(results)
+}
+
+pub fn measure_transient_deck(
+    points: &[TransientPoint],
+    netlist: &str,
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    let summary = resolve_deck_measurements(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "measure_transient_deck",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    measure_transient_cards(points, &summary.measurements)
 }
 
 pub fn format_measurement_table(measurements: &[ProbeMeasurement]) -> String {
