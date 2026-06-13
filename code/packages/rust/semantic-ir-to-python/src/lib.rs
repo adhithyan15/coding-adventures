@@ -63,6 +63,16 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `for`-each → `for v in it:`), per code/specs/sir-runtime.md.
     Feature::MutableBindings,
     Feature::Loops,
+    // SIR17 OOP & scopes — class/module declarations register in the OOP
+    // runtime; instance/class vars route through its stores; consts are
+    // module-level bindings; `is_a?`-style dispatch goes through
+    // `_sir_oop_call_method`.  Per code/specs/sir-runtime.md, with the
+    // documented v0 limit (frontend hoists methods without receivers).
+    Feature::Classes,
+    Feature::Modules,
+    Feature::InstanceVars,
+    Feature::ClassVars,
+    Feature::Constants,
 ];
 
 impl Backend for PythonBackend {
@@ -686,5 +696,118 @@ mod tests {
         };
         let a = compile(&m).expect("compile");
         assert!(a.source.contains("_globals[\"counter\"] = 5"), "got:\n{}", a.source);
+    }
+
+    // ── SIR17 OOP & scopes: Ruby / direct SIR → native Python + oop ──
+
+    #[test]
+    fn end_to_end_ruby_class_inheritance_and_is_a_py() {
+        let module = ruby_to_semantic_ir::compile_source(
+            "class Dog < Animal\n  def speak\n    42\n  end\nend\nd = 5\nputs(d.is_a?(Integer))\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(
+            a.source.contains("from coding_adventures_sir_runtime_oop import"),
+            "expected the OOP import; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("_sir_oop_define_class(\"Dog\", \"Animal\")"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("_sir_oop_call_method(d, \"is_a?\", \"Integer\")"),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_const_in_class_body_py() {
+        let module =
+            ruby_to_semantic_ir::compile_source("class Foo\n  LEGS = 4\nend\n", "demo")
+                .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(a.source.contains("_sir_oop_define_class(\"Foo\", None)"), "got:\n{}", a.source);
+        assert!(a.source.contains("    LEGS = 4"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn end_to_end_ruby_class_var_py() {
+        let module = ruby_to_semantic_ir::compile_source(
+            "class Foo\n  @@count = 0\n  def inc\n    @@count = @@count + 1\n  end\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(a.source.contains("_sir_oop_cvar_set(\"@@count\", 0)"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("_sir_oop_cvar_set(\"@@count\", _sir_plus(_sir_oop_cvar_get(\"@@count\"), 1))"),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_module_py() {
+        let module =
+            ruby_to_semantic_ir::compile_source("module Greet\n  def hi\n    1\n  end\nend\n", "demo")
+                .expect("lower ruby");
+        let a = compile(&module).expect("compile to python");
+        assert!(a.source.contains("_sir_oop_define_class(\"Greet\", None)"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn instance_var_via_direct_sir_py() {
+        use semantic_ir::{Scope, Stmt};
+        // The frontend mis-parses multi-statement method bodies, so drive
+        // the Instance scope directly: a method that writes then reads `@x`.
+        let body = Block {
+            stmts: vec![Stmt::Assign {
+                name: "@x".into(),
+                scope: Scope::Instance,
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            }],
+            value: Expr::VarRef { name: "@x".into(), scope: Scope::Instance, span: s() },
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::InstanceVars,
+                Feature::MutableBindings,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "bar".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body,
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains("_sir_oop_ivar_set(\"@x\", 1)"), "got:\n{}", a.source);
+        assert!(a.source.contains("_sir_oop_ivar_get(\"@x\")"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn non_oop_module_omits_oop_import_py() {
+        let module = twig_to_semantic_ir::compile_source("(print (+ 1 2))", "demo").expect("lower");
+        let a = compile(&module).expect("compile");
+        assert!(!a.source.contains("sir_runtime_oop"), "got:\n{}", a.source);
     }
 }

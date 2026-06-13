@@ -12,10 +12,24 @@ use std::collections::{BTreeSet, HashMap};
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Function, Global, Module, Scope, Stmt,
+    Block, Expr, Feature, Function, Global, Module, Scope, Stmt,
 };
 
 use crate::runtime::RUNTIME;
+
+/// True if the module uses any object-orientation feature, in which case the
+/// emitted artifact imports `coding-adventures-sir-runtime-oop`.
+fn uses_oop(m: &Module) -> bool {
+    [
+        Feature::Classes,
+        Feature::Modules,
+        Feature::InstanceVars,
+        Feature::ClassVars,
+        Feature::Constants,
+    ]
+    .iter()
+    .any(|f| m.manifest.contains(*f))
+}
 
 /// Emit a SIR module as Python 3 source.  Caller is responsible
 /// for prior validation; this function assumes the module is valid.
@@ -33,6 +47,11 @@ pub fn emit_module(m: &Module) -> String {
     let mut out = String::new();
     emit_banner(&mut out, m);
     out.push_str(RUNTIME);
+    // Only OOP-using modules import the OOP runtime, so a pure arithmetic
+    // module gains no dependency on it.
+    if uses_oop(m) {
+        out.push_str(crate::runtime::RUNTIME_OOP);
+    }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -267,27 +286,63 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str(":\n");
             emit_block_as_stmts(out, body, indent + 1);
         }
-        // `Assign` to an instance var / class var / constant — those
-        // scopes need `Feature::InstanceVars`/`ClassVars`/`Constants`,
-        // none accepted yet, so the capability check rejects them first.
-        Stmt::Assign { scope, span, .. } => {
-            panic!(
-                "python backend reached SIR17 assign to {:?}-scoped var at {} — capability check should have rejected it",
-                scope, span
-            );
+        // ── SIR17 scopes (assignment) ───────────────────────────────
+        // `@x = v` → current-self instance-variable write via the OOP
+        // runtime (no native `self` — methods are receiver-less).
+        Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+            let _ = write!(out, "{}_sir_oop_ivar_set({}, ", pad, quote_py_string(name));
+            emit_expr(out, value, indent);
+            out.push_str(")\n");
         }
-        // SIR17 (classes) — `Feature::Classes` is not in this
-        // backend's ACCEPTED_FEATURES, so a class-using module is
-        // rejected by the capability check before emit.  Reaching
-        // this arm is therefore a bug.
-        Stmt::ClassDef { span, .. } => {
-            panic!("python backend reached SIR17 class-def statement at {} — capability check should have rejected it", span);
+        // `@@x = v` → class-variable store write.
+        Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+            let _ = write!(out, "{}_sir_oop_cvar_set({}, ", pad, quote_py_string(name));
+            emit_expr(out, value, indent);
+            out.push_str(")\n");
         }
-        Stmt::ModuleDef { span, .. } => {
-            panic!("python backend reached SIR17 module-def statement at {} — capability check should have rejected it", span);
+        // `CONST = v` → an ordinary module-level binding; reads elsewhere
+        // emit the bare identifier (see `emit_var_ref`).
+        Stmt::Assign { name, scope: Scope::Const, value, .. } => {
+            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            emit_expr(out, value, indent);
+            out.push('\n');
         }
-        Stmt::SingletonClassDef { span, .. } => {
-            panic!("python backend reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
+        // `Assign` to a builtin is never produced by any frontend (you
+        // cannot rebind `+`); a validated module never reaches here.
+        Stmt::Assign { scope: Scope::Builtin, span, .. } => {
+            panic!("python backend reached an assign to a Builtin-scoped name at {} — invalid SIR", span);
+        }
+        // ── SIR17 class / module / singleton declarations ───────────
+        // The Ruby→SIR frontend hoists method `def`s to top-level
+        // functions, so a `ClassDef` body carries only its non-`def`
+        // statements (constant / class-variable assigns).  We register
+        // the class in the OOP runtime (for ancestry-aware `is_a?`) and
+        // emit the body statements in source order.
+        Stmt::ClassDef { name, superclass, body, .. } => {
+            let _ = write!(out, "{}_sir_oop_define_class({}, ", pad, quote_py_string(name));
+            match superclass {
+                Some(sup) => out.push_str(&quote_py_string(sup)),
+                None => out.push_str("None"),
+            }
+            out.push_str(")\n");
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
+        }
+        // A module is a namespace with no superclass; register it so it
+        // can participate in `is_a?`/ancestry, then emit its body.
+        Stmt::ModuleDef { name, body, .. } => {
+            let _ = write!(out, "{}_sir_oop_define_class({}, None)\n", pad, quote_py_string(name));
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
+        }
+        // `class << receiver; …; end` — method `def`s are hoisted out by
+        // the frontend, so only the body's non-`def` statements remain.
+        Stmt::SingletonClassDef { body, .. } => {
+            for st in body {
+                emit_stmt(out, st, indent);
+            }
         }
         Stmt::TryCatch { span, .. } => {
             panic!("python backend reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
@@ -456,21 +511,21 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
         Scope::Builtin => {
             let _ = write!(out, "_sir_builtin_closure({})", quote_py_string(name));
         }
+        // SIR17 scopes — read via the OOP runtime, since the Ruby→SIR
+        // frontend hoists methods to receiver-less top-level functions
+        // (no native `self` to read attributes from).
         Scope::Instance => {
-            // SIR17 Phase 15a — `Feature::InstanceVars` is not accepted
-            // by this backend; instance-var-using modules are rejected
-            // at the capability check before emit.  Unreachable.
-            panic!("python backend reached SIR17 instance-var ref `{}` — capability check should have rejected it", name);
+            // `@x` → current-self instance-variable read.
+            let _ = write!(out, "_sir_oop_ivar_get({})", quote_py_string(name));
         }
         Scope::ClassVar => {
-            // SIR17 Phase 15b — `Feature::ClassVars` likewise unaccepted;
-            // class-var modules are rejected before emit.  Unreachable.
-            panic!("python backend reached SIR17 class-var ref `{}` — capability check should have rejected it", name);
+            // `@@x` → class-variable store read.
+            let _ = write!(out, "_sir_oop_cvar_get({})", quote_py_string(name));
         }
         Scope::Const => {
-            // SIR17 Phase 15c — `Feature::Constants` likewise unaccepted;
-            // constant-using modules are rejected before emit.  Unreachable.
-            panic!("python backend reached SIR17 const ref `{}` — capability check should have rejected it", name);
+            // Constants are ordinary module-level bindings — a bare,
+            // sanitised identifier (e.g. `LEGS`).
+            out.push_str(&sanitize_ident(name));
         }
     }
 }
@@ -485,6 +540,32 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // Reflective method dispatch: the Ruby→SIR frontend lowers
+    // `recv.meth(args…)` to `BuiltinCall("__method__", [recv, "meth",
+    // args…])`.  Route it through the OOP runtime's `call_method`.  For
+    // the class-predicate methods, a `Const`-scoped class operand (e.g.
+    // `Integer`) is passed as its *name string* so the predicate works
+    // without a binding for the built-in class name.
+    if name == "__method__" && args.len() >= 2 {
+        if let Expr::StrLit { value: meth, .. } = &args[1] {
+            out.push_str("_sir_oop_call_method(");
+            emit_expr(out, &args[0], indent);
+            let _ = write!(out, ", {}", quote_py_string(meth));
+            let is_class_pred =
+                matches!(meth.as_str(), "is_a?" | "kind_of?" | "instance_of?");
+            for (i, a) in args[2..].iter().enumerate() {
+                out.push_str(", ");
+                match a {
+                    Expr::VarRef { name: cn, scope: Scope::Const, .. } if is_class_pred && i == 0 => {
+                        out.push_str(&quote_py_string(cn));
+                    }
+                    _ => emit_expr(out, a, indent),
+                }
+            }
+            out.push(')');
+            return;
+        }
+    }
     let helper = match name {
         "+" => "_sir_plus",
         "-" => "_sir_minus",
@@ -575,20 +656,41 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
                 emit_expr(out, value, indent);
                 out.push_str(")), ");
             }
+            // `@x = v` / `@@x = v` → OOP-store writes (return the value,
+            // so they compose in the walrus tuple).
+            Stmt::Assign { name, scope: Scope::Instance, value, .. } => {
+                let _ = write!(out, "(_sir_oop_ivar_set({}, ", quote_py_string(name));
+                emit_expr(out, value, indent);
+                out.push_str(")), ");
+            }
+            Stmt::Assign { name, scope: Scope::ClassVar, value, .. } => {
+                let _ = write!(out, "(_sir_oop_cvar_set({}, ", quote_py_string(name));
+                emit_expr(out, value, indent);
+                out.push_str(")), ");
+            }
+            // `CONST = v` → walrus binding (the const name is a plain
+            // identifier, so `(NAME := v)` both binds and yields it).
+            Stmt::Assign { name, scope: Scope::Const, value, .. } => {
+                let _ = write!(out, "({} := ", sanitize_ident(name));
+                emit_expr(out, value, indent);
+                out.push_str("), ");
+            }
             // Loops were diverted to the lifted-def path above.
             Stmt::While { span, .. }
             | Stmt::ForRange { span, .. }
             | Stmt::ForEach { span, .. } => {
                 panic!("python backend (walrus path) reached a loop at {} — should have been lifted", span);
             }
-            // `Assign` to instance/class-var/const + class/module/try
-            // are rejected at the capability check for this backend.
+            // `Assign` to a builtin, and class/module/singleton/try
+            // declarations, have no walrus-expression form; the former is
+            // invalid SIR and the latter are emitted only in statement
+            // position (a block-as-expr never contains them).
             Stmt::Assign { span, .. }
             | Stmt::ClassDef { span, .. }
             | Stmt::ModuleDef { span, .. }
             | Stmt::SingletonClassDef { span, .. }
             | Stmt::TryCatch { span, .. } => {
-                panic!("python backend (walrus path) reached an unaccepted statement at {} — capability check should have rejected it", span);
+                panic!("python backend (walrus path) reached an unwalrusable statement at {}", span);
             }
         }
     }
