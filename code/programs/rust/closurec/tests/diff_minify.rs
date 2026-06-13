@@ -141,6 +141,7 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     ("str_codepoint_esc", "gap-090: \\u{...} code-point escape mangled"),
     ("str_unicode4_esc",  "gap-090: \\uNNNN 4-hex unicode escape mangled"),
     ("str_hex_esc",       "gap-090: \\xNN hex escape mangled"),
+    ("str_hex27_esc",     "gap-090: \\x27 hex escape mangled (-> apostrophe)"),
     ("str_null_esc",      "gap-090: \\0 null escape mangled"),
     // gap-091 RESOLVED in CLOC12.96 — a BigInt RADIX literal is now
     // canonicalised to decimal (`0xFFn` -> `255n`, `0o17n` -> `15n`,
@@ -160,11 +161,18 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
     // gap-072 (CLOC14.35): `await` OPERAND paren elision — strip
-    // redundant parens around a simple-reference operand.
-    // `typeof`/`void`/`delete` (gap-070, CLOC12.79) and
-    // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
-    // yet (async-context-only anchor — deferred).
+    // redundant parens around a simple-reference operand
+    // (`await(x)` → `await x`). `await` binds at UNARY precedence,
+    // exactly like `typeof`/`void`/`delete` (gap-101's
+    // `is_safe_unary_kw_operand`), so it is now tractable by adding
+    // `await` to that keyword block (NOT the gap-056 return/throw
+    // block — `await` binds TIGHTER than binary operators, so a binary
+    // operand keeps its parens). CLOC14.46 detail: a kept binary
+    // operand is emitted WITH a separating space — `await(a+b)` →
+    // `await (a+b)` — so the fix must add that space, not just keep the
+    // parens. `minify_await_binary_kept` pins that case.
     ("await_paren_elide",  "gap-072: await operand paren elision"),
+    ("await_binary_kept",  "gap-072: await binary operand keeps parens with a space"),
     // gap-102 RESOLVED in CLOC12.105 — a `yield` operand's grouping
     // parens (`yield(a)` → `yield a`, `yield(a+b)` → `yield a+b`,
     // `a=yield(b)` → `a=yield b`) now elide via the gap-055/056
@@ -203,6 +211,7 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // (`5e-3` → `.005`) is the negative-exponent fractional case of the
     // same deferred gap.
     ("num_neg_exp_frac", "gap-085: negative-exp scientific -> fractional shortest-form"),
+    ("num_small_frac",   "gap-085: small decimal fraction -> exponential (0.0001 -> 1E-4)"),
     // gap-083 (CLOC14.38): PRECEDENCE-aware operand paren elision —
     // `a==(b+c)` → `a==b+c` (the inner op binds tighter than the
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
