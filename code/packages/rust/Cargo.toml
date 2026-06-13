@@ -765,4 +765,5 @@ members = [
     "tape-out",
     "hardware-vm",
     "vcd-writer",
+    "hdl-elaboration",
 ]
