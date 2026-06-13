@@ -1,0 +1,19 @@
+# Changelog — mosfet-models
+
+## [0.1.0] — 2026-06-13
+
+### Added
+
+- `Level1Params` — 16-parameter SPICE Level-1 MOSFET parameter set with 130 nm NMOS defaults.
+- `Region` enum — `Cutoff`, `Subthreshold`, `Triode`, `Saturation` with `as_str()`.
+- `MosResult` — complete small-signal result: `Id`, `gm`, `gds`, `gmb`, 5 capacitances, `region`.
+- `evaluate_level1(params, V_GS, V_DS, V_BS, T)` — core Level-1 model:
+  - Body effect via γ coefficient (clamped at heavy forward bias).
+  - Subthreshold current via exp(V_OV / (n V_T)) when `subthreshold_enable = true`.
+  - Channel-length modulation via λ in triode and saturation regions.
+  - Meyer capacitance model: overlap (per-width CGSO/CGDO) + intrinsic (2/3 WL KP in saturation).
+  - Body transconductance gmb via ∂V_t/∂V_BS.
+- `MosfetType` enum — `Nmos` / `Pmos`.
+- `Mosfet` struct — high-level wrapper; PMOS sign-flips input voltages and negates Id.
+- `Level1Model` struct — compatibility wrapper for external model card parsers.
+- 18 integration tests covering all regions, PMOS conventions, body effect, capacitance scaling, and the saturation Id formula.
