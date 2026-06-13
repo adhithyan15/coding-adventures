@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.122.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-118** — an UPPERCASE hex literal that is RETAINED in hex
+  form (because hex is the shortest representation, so it is not
+  decimalised) is now emitted with LOWERCASE digits, matching upstream
+  Closure v20240317:
+
+      0xFFFFFFFFFFFFF  ->  0xfffffffffffff
+      0xFFFFFFFFFF     ->  0xffffffffff
+      0XA0000000000    ->  0xa0000000000
+
+  Inverse/sibling of gap-114 (decimal → lowercase hex when shorter). The
+  `cleaned` shortest-form candidate in `normalize_number_value` is the
+  separator-stripped SOURCE, so for a hex literal it kept the author's
+  case; when it tied the synthesised lowercase-`hex` candidate on length
+  (both 15 chars for `0xFFFFFFFFFFFFF`) the `decimal > cleaned >
+  scientific > hex` tie-break preferred the verbatim uppercase `cleaned`,
+  so the uppercase form survived. The fix lowercases the `cleaned` HEX
+  form (`cleaned.to_lowercase()` when it starts with `0x`/`0X`) so both
+  candidates are byte-identical and either wins the tie correctly. Scoped
+  to hex: decimal/octal/binary cleaned forms have no case-significant
+  letters (a scientific `e`/`E` goes through the gap-082 path, and small
+  octal/binary never stay in radix form).
+
+  Non-regression verified against the JAR: short hex still decimalises
+  regardless of case (`0xFF` → `255`, `0xAbC` → `2748`), already-
+  lowercase retained hex is unchanged (`0xffffffffffff`), and the
+  gap-114 large-non-round-integer decimal→hex emission stays lowercase
+  (`123456789012345678` → `0x1b69b4ba630f350`).
+
 ## [0.121.0] - 2026-06-12
 
 ### Fixed

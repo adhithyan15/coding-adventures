@@ -506,15 +506,14 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // is a statement-starting keyword, no synthetic `;` is
     // emitted (ASI covers the boundary). `minify_multi_line_func`
     // flipped IGNORED → PASS.
-    // gap-118 (CLOC14.57): an UPPERCASE hex literal that is RETAINED in
-    // hex form (because hex is the shortest representation) is not
-    // lowercased: `0xFFFFFFFFFFFFF` -> upstream `0xfffffffffffff` but
-    // closurec keeps `0xFFFFFFFFFFFFF`. Inverse/sibling of gap-114
-    // (decimal -> lowercase hex when shorter): the original uppercase
-    // literal ties the lowercase-hex candidate on length, and the
-    // `cleaned` (verbatim) candidate wins ties, so the uppercase form
-    // survives. Tractable number-printer fix in `normalize_number_value`.
-    ("hex_upper_retained", "gap-118: retained-hex literal not lowercased (0xFFF.. -> 0xfff..)"),
+    // gap-118 RESOLVED in CLOC12.118 — an UPPERCASE hex literal that is
+    // RETAINED in hex form (because hex is the shortest representation)
+    // is now lowercased: `0xFFFFFFFFFFFFF` -> `0xfffffffffffff`.
+    // Inverse/sibling of gap-114 (decimal -> lowercase hex when shorter):
+    // `normalize_number_value` now lowercases the `cleaned` candidate
+    // when it is a `0x`/`0X` literal, so it ties the lowercase-hex
+    // candidate byte-identically. `minify_hex_upper_retained` flipped
+    // IGNORED → PASS.
     // gap-119 (CLOC14.57): a regex literal immediately following the
     // `return` keyword gets a spurious separating space:
     // `return/a/g` -> closurec `return /a/g` but upstream `return/a/g`.
