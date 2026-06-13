@@ -2,8 +2,8 @@ use coding_adventures_html_parser::{
     parse_browser_document, BrowserActivationDescriptor, BrowserAnchor,
     BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionItem,
     BrowserAriaDescriptionDescriptor, BrowserAriaLiveRegion, BrowserAriaNameDescriptor,
-    BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserClipboardInteractionDescriptor,
-    BrowserCommandElement, BrowserComponentHydrationTarget,
+    BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCanvasDescriptor,
+    BrowserClipboardInteractionDescriptor, BrowserCommandElement, BrowserComponentHydrationTarget,
     BrowserCompositionInteractionDescriptor, BrowserContextMenuInteractionDescriptor,
     BrowserCustomElementDescriptor, BrowserDataAttribute, BrowserDataAttributeDescriptor,
     BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
@@ -194,6 +194,8 @@ struct ExpectedBrowserDocument {
     slot_descriptors: Option<Vec<ExpectedSlotDescriptor>>,
     #[serde(default)]
     custom_element_descriptors: Option<Vec<ExpectedCustomElementDescriptor>>,
+    #[serde(default)]
+    canvas_descriptors: Option<Vec<ExpectedCanvasDescriptor>>,
     #[serde(default)]
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
     #[serde(default)]
@@ -467,6 +469,42 @@ struct ExpectedCustomElementDescriptor {
     custom_element_blocked: bool,
     #[serde(default)]
     custom_element_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedCanvasDescriptor {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    has_width: bool,
+    #[serde(default)]
+    has_height: bool,
+    #[serde(default)]
+    fallback_text: String,
+    #[serde(default)]
+    fallback_word_count: usize,
+    #[serde(default)]
+    part: Vec<String>,
+    #[serde(default)]
+    data_attribute_names: Vec<String>,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    pointer_handlers: Vec<String>,
+    #[serde(default)]
+    keyboard_handlers: Vec<String>,
+    #[serde(default)]
+    lifecycle_handlers: Vec<String>,
+    #[serde(default)]
+    canvas_blocked: bool,
+    #[serde(default)]
+    canvas_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4190,6 +4228,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_template_descriptors = case.expected.template_descriptors.is_some();
         let tracks_slot_descriptors = case.expected.slot_descriptors.is_some();
         let tracks_custom_element_descriptors = case.expected.custom_element_descriptors.is_some();
+        let tracks_canvas_descriptors = case.expected.canvas_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4205,6 +4244,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_custom_element_descriptors {
             expected.custom_element_descriptors = actual.custom_element_descriptors.clone();
+        }
+        if !tracks_canvas_descriptors {
+            expected.canvas_descriptors = actual.canvas_descriptors.clone();
         }
 
         assert_eq!(
@@ -6648,6 +6690,78 @@ fn browser_custom_element_descriptors_track_invalid_definition_hints() {
 }
 
 #[test]
+fn browser_canvas_descriptors_track_dimensions_fallback_and_handlers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "component-template-page")
+        .expect("component template fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("component template fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.canvas_descriptors,
+        case.expected.into_browser_document().canvas_descriptors,
+        "canvas descriptors should preserve dimensions, fallback text, part/data context, and handlers",
+    );
+}
+
+#[test]
+fn browser_canvas_descriptors_track_missing_size_and_fallback_blockers() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <canvas id=paint class="surface primary" width=640 data-renderer=webgl part=viewport
+                onpointerdown=startPaint() onkeydown=hotkey() onload=ready()>Fallback drawing</canvas>
+            <canvas id=empty></canvas>
+        </body>"#,
+    )
+    .expect("canvas descriptor fixture should parse");
+
+    let paint = actual
+        .canvas_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("paint"))
+        .expect("paint canvas descriptor should be present");
+
+    assert_eq!(paint.classes, vec!["surface", "primary"]);
+    assert_eq!(paint.width.as_deref(), Some("640"));
+    assert_eq!(paint.height, None);
+    assert!(paint.has_width);
+    assert!(!paint.has_height);
+    assert_eq!(paint.fallback_text, "Fallback drawing");
+    assert_eq!(paint.fallback_word_count, 2);
+    assert_eq!(paint.part, vec!["viewport"]);
+    assert_eq!(paint.data_attribute_names, vec!["data-renderer"]);
+    assert_eq!(
+        paint.event_handlers,
+        vec!["onpointerdown", "onkeydown", "onload"]
+    );
+    assert_eq!(paint.pointer_handlers, vec!["onpointerdown"]);
+    assert_eq!(paint.keyboard_handlers, vec!["onkeydown"]);
+    assert_eq!(paint.lifecycle_handlers, vec!["onload"]);
+    assert!(paint.canvas_blocked);
+    assert_eq!(paint.canvas_block_reasons, vec!["missing-height"]);
+
+    let empty = actual
+        .canvas_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("empty"))
+        .expect("empty canvas descriptor should be present");
+
+    assert!(!empty.has_width);
+    assert!(!empty.has_height);
+    assert!(empty.fallback_text.is_empty());
+    assert!(empty.canvas_blocked);
+    assert_eq!(
+        empty.canvas_block_reasons,
+        vec!["missing-width", "missing-height", "missing-fallback-text"]
+    );
+}
+
+#[test]
 fn browser_data_attribute_descriptor_metadata_tracks_custom_and_standard_elements() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -7231,6 +7345,15 @@ impl ExpectedBrowserDocument {
                     &event_handler_descriptors,
                 )
             });
+        let canvas_descriptors = self
+            .canvas_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedCanvasDescriptor::into_browser_canvas_descriptor)
+                    .collect()
+            })
+            .unwrap_or_default();
 
         BrowserDocument {
             title: self.title,
@@ -7397,6 +7520,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedCustomElementDescriptor::into_browser_custom_element_descriptor)
                 .collect(),
+            canvas_descriptors,
             component_hydration_targets: self
                 .component_hydration_targets
                 .into_iter()
@@ -7654,6 +7778,29 @@ impl ExpectedCustomElementDescriptor {
             text: self.text,
             custom_element_blocked: self.custom_element_blocked,
             custom_element_block_reasons: self.custom_element_block_reasons,
+        }
+    }
+}
+
+impl ExpectedCanvasDescriptor {
+    fn into_browser_canvas_descriptor(self) -> BrowserCanvasDescriptor {
+        BrowserCanvasDescriptor {
+            id: self.id,
+            classes: self.classes,
+            width: self.width,
+            height: self.height,
+            has_width: self.has_width,
+            has_height: self.has_height,
+            fallback_text: self.fallback_text,
+            fallback_word_count: self.fallback_word_count,
+            part: self.part,
+            data_attribute_names: self.data_attribute_names,
+            event_handlers: self.event_handlers,
+            pointer_handlers: self.pointer_handlers,
+            keyboard_handlers: self.keyboard_handlers,
+            lifecycle_handlers: self.lifecycle_handlers,
+            canvas_blocked: self.canvas_blocked,
+            canvas_block_reasons: self.canvas_block_reasons,
         }
     }
 }
