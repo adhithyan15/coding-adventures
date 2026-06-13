@@ -1563,6 +1563,47 @@ impl IntegrationActivationClosureStatus {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationReleaseStatus {
+    Blocked,
+    OwnerActionRequired,
+    VerificationRequired,
+    ReadyForRelease,
+    Monitoring,
+}
+
+impl IntegrationActivationReleaseStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocked => "blocked",
+            Self::OwnerActionRequired => "owner_action_required",
+            Self::VerificationRequired => "verification_required",
+            Self::ReadyForRelease => "ready_for_release",
+            Self::Monitoring => "monitoring",
+        }
+    }
+
+    pub fn from_closure_gate(gate: &IntegrationActivationClosureGate) -> Self {
+        if gate.blocked() {
+            Self::Blocked
+        } else if gate.ready_to_verify()
+            || gate.closure_status == IntegrationActivationClosureStatus::ReadyForVerification
+        {
+            Self::VerificationRequired
+        } else if gate.closure_status == IntegrationActivationClosureStatus::OwnerActionRequired
+            || gate.requires_attention()
+        {
+            Self::OwnerActionRequired
+        } else if gate.closure_ready()
+            || gate.closure_status == IntegrationActivationClosureStatus::ReadyForClosure
+        {
+            Self::ReadyForRelease
+        } else {
+            Self::Monitoring
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationAuditRecordKind {
     Sentinel,
     Watchtower,
@@ -3449,6 +3490,63 @@ pub struct IntegrationActivationClosureSummary {
     pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
     pub next_gate_sequence: Option<usize>,
     pub next_gate_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationReleasePacket {
+    pub sequence: usize,
+    pub release_status: IntegrationActivationReleaseStatus,
+    pub owner_lane: IntegrationActivationResponseOwnerLane,
+    pub source_closure_sequence: usize,
+    pub source_closure_status: IntegrationActivationClosureStatus,
+    pub source_remediation_kind: IntegrationActivationRemediationKind,
+    pub source_remediation_status: IntegrationActivationRemediationStatus,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub dependency_work: bool,
+    pub policy_risk: bool,
+    pub verification_required: bool,
+    pub release_blocked: bool,
+    pub requires_attention: bool,
+    pub release_ready: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationReleaseSummary {
+    pub total_packets: usize,
+    pub unique_integrations: usize,
+    pub packets_requiring_attention: usize,
+    pub blocked_packets: usize,
+    pub owner_action_packets: usize,
+    pub verification_required_packets: usize,
+    pub ready_for_release_packets: usize,
+    pub monitoring_packets: usize,
+    pub platform_owner_packets: usize,
+    pub integration_owner_packets: usize,
+    pub security_owner_packets: usize,
+    pub reviewer_owner_packets: usize,
+    pub verification_owner_packets: usize,
+    pub audit_owner_packets: usize,
+    pub packets_with_dependency_work: usize,
+    pub packets_with_policy_risk: usize,
+    pub packets_requiring_verification: usize,
+    pub packets_ready_for_release: usize,
+    pub packets_with_policy_surface: usize,
+    pub next_release_status: Option<IntegrationActivationReleaseStatus>,
+    pub next_closure_status: Option<IntegrationActivationClosureStatus>,
+    pub next_owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_packet_sequence: Option<usize>,
+    pub next_packet_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
@@ -9607,6 +9705,240 @@ impl IntegrationActivationClosureSummary {
     }
 }
 
+impl IntegrationActivationReleasePacket {
+    fn from_closure_gate(gate: &IntegrationActivationClosureGate) -> Self {
+        let release_status = IntegrationActivationReleaseStatus::from_closure_gate(gate);
+        let verification_required =
+            release_status == IntegrationActivationReleaseStatus::VerificationRequired;
+        let release_ready = release_status == IntegrationActivationReleaseStatus::ReadyForRelease;
+        let release_blocked = matches!(
+            release_status,
+            IntegrationActivationReleaseStatus::Blocked
+                | IntegrationActivationReleaseStatus::OwnerActionRequired
+                | IntegrationActivationReleaseStatus::VerificationRequired
+        );
+
+        Self {
+            sequence: 0,
+            release_status,
+            owner_lane: gate.owner_lane,
+            source_closure_sequence: gate.sequence,
+            source_closure_status: gate.closure_status,
+            source_remediation_kind: gate.source_remediation_kind,
+            source_remediation_status: gate.source_remediation_status,
+            source_id: gate.source_id.clone(),
+            title: format!("{}: {}", release_status.as_str(), gate.title),
+            summary: gate.summary.clone(),
+            priority: gate.priority,
+            integration_ids: gate.integration_ids.clone(),
+            recommended_view: gate.recommended_view,
+            required_tier: gate.required_tier,
+            policy_surface: gate.policy_surface,
+            dependency_work: gate.has_dependency_work(),
+            policy_risk: gate.has_policy_risk(),
+            verification_required,
+            release_blocked,
+            requires_attention: gate.requires_attention() || release_status.requires_attention(),
+            release_ready,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_work
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.verification_required
+    }
+
+    pub fn release_blocked(&self) -> bool {
+        self.release_blocked
+    }
+
+    pub fn release_ready(&self) -> bool {
+        self.release_ready
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationReleaseStatus {
+    pub fn requires_attention(self) -> bool {
+        matches!(
+            self,
+            Self::Blocked | Self::OwnerActionRequired | Self::VerificationRequired
+        )
+    }
+}
+
+impl IntegrationActivationReleaseSummary {
+    pub fn from_packets<'a>(
+        packets: impl IntoIterator<Item = &'a IntegrationActivationReleasePacket>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_packets: 0,
+            unique_integrations: 0,
+            packets_requiring_attention: 0,
+            blocked_packets: 0,
+            owner_action_packets: 0,
+            verification_required_packets: 0,
+            ready_for_release_packets: 0,
+            monitoring_packets: 0,
+            platform_owner_packets: 0,
+            integration_owner_packets: 0,
+            security_owner_packets: 0,
+            reviewer_owner_packets: 0,
+            verification_owner_packets: 0,
+            audit_owner_packets: 0,
+            packets_with_dependency_work: 0,
+            packets_with_policy_risk: 0,
+            packets_requiring_verification: 0,
+            packets_ready_for_release: 0,
+            packets_with_policy_surface: 0,
+            next_release_status: None,
+            next_closure_status: None,
+            next_owner_lane: None,
+            next_recommended_view: None,
+            next_packet_sequence: None,
+            next_packet_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for packet in packets {
+            summary.total_packets += 1;
+            for integration_id in &packet.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_release_status.is_none()
+                && (packet.requires_attention()
+                    || packet.needs_verification()
+                    || packet.release_ready())
+            {
+                summary.next_release_status = Some(packet.release_status);
+                summary.next_closure_status = Some(packet.source_closure_status);
+                summary.next_owner_lane = Some(packet.owner_lane);
+                summary.next_recommended_view = Some(packet.recommended_view);
+                summary.next_packet_sequence = Some(packet.sequence);
+                summary.next_packet_priority = Some(packet.priority);
+            }
+
+            match packet.release_status {
+                IntegrationActivationReleaseStatus::Blocked => summary.blocked_packets += 1,
+                IntegrationActivationReleaseStatus::OwnerActionRequired => {
+                    summary.owner_action_packets += 1;
+                }
+                IntegrationActivationReleaseStatus::VerificationRequired => {
+                    summary.verification_required_packets += 1;
+                }
+                IntegrationActivationReleaseStatus::ReadyForRelease => {
+                    summary.ready_for_release_packets += 1;
+                }
+                IntegrationActivationReleaseStatus::Monitoring => summary.monitoring_packets += 1,
+            }
+
+            match packet.owner_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_owner_packets += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_owner_packets += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_owner_packets += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_owner_packets += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_owner_packets += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Audit => {
+                    summary.audit_owner_packets += 1;
+                }
+            }
+
+            if packet.requires_attention() {
+                summary.packets_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(packet.priority));
+            }
+            if packet.has_dependency_work() {
+                summary.packets_with_dependency_work += 1;
+            }
+            if packet.has_policy_risk() {
+                summary.packets_with_policy_risk += 1;
+            }
+            if packet.needs_verification() {
+                summary.packets_requiring_verification += 1;
+            }
+            if packet.release_ready() {
+                summary.packets_ready_for_release += 1;
+            }
+            if packet.has_policy_surface() {
+                summary.packets_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(packet.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_packets > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.packets_requiring_attention > 0
+            || summary.owner_action_packets > 0
+            || summary.verification_required_packets > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.ready_for_release_packets > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_packets == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_packets > 0
+    }
+
+    pub fn has_owner_action(&self) -> bool {
+        self.owner_action_packets > 0
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.verification_required_packets > 0 || self.packets_requiring_verification > 0
+    }
+
+    pub fn release_ready(&self) -> bool {
+        self.ready_for_release_packets > 0 || self.packets_ready_for_release > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.packets_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -14732,6 +15064,38 @@ pub fn activation_closure_gates_at_or_before_priority(
     activation_closure_gates_from_remediations(&remediations)
 }
 
+pub fn activation_release_packets_from_closure_gates(
+    gates: &[IntegrationActivationClosureGate],
+) -> Vec<IntegrationActivationReleasePacket> {
+    let mut packets: Vec<_> = gates
+        .iter()
+        .map(IntegrationActivationReleasePacket::from_closure_gate)
+        .collect();
+
+    packets.sort_by(compare_activation_release_packets);
+    for (index, packet) in packets.iter_mut().enumerate() {
+        packet.sequence = index + 1;
+    }
+    packets
+}
+
+pub fn activation_release_packets_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationReleasePacket> {
+    let gates = activation_closure_gates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_release_packets_from_closure_gates(&gates)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -16384,6 +16748,29 @@ fn compare_activation_closure_gates(
         .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
         .then_with(|| right.ready_to_verify().cmp(&left.ready_to_verify()))
         .then_with(|| right.closure_ready().cmp(&left.closure_ready()))
+        .then_with(|| {
+            left.source_remediation_kind
+                .cmp(&right.source_remediation_kind)
+        })
+        .then_with(|| left.owner_lane.cmp(&right.owner_lane))
+        .then_with(|| left.source_id.cmp(&right.source_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_release_packets(
+    left: &IntegrationActivationReleasePacket,
+    right: &IntegrationActivationReleasePacket,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.release_status.cmp(&right.release_status))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.release_blocked().cmp(&left.release_blocked()))
+        .then_with(|| right.needs_verification().cmp(&left.needs_verification()))
+        .then_with(|| right.release_ready().cmp(&left.release_ready()))
+        .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
+        .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| left.source_closure_status.cmp(&right.source_closure_status))
         .then_with(|| {
             left.source_remediation_kind
                 .cmp(&right.source_remediation_kind)
@@ -19979,6 +20366,39 @@ mod tests {
         );
         assert_eq!(
             closure_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
+        let release_packets = activation_release_packets_from_closure_gates(&closure_gates);
+        assert_eq!(release_packets.len(), closure_gates.len());
+        assert!(release_packets
+            .iter()
+            .any(|packet| packet.release_status == IntegrationActivationReleaseStatus::Blocked));
+        assert!(release_packets.iter().any(|packet| packet.release_status
+            == IntegrationActivationReleaseStatus::VerificationRequired));
+        assert!(release_packets
+            .iter()
+            .any(IntegrationActivationReleasePacket::requires_attention));
+        assert!(release_packets
+            .iter()
+            .any(IntegrationActivationReleasePacket::release_blocked));
+
+        let release_summary =
+            IntegrationActivationReleaseSummary::from_packets(release_packets.iter());
+        assert_eq!(release_summary.total_packets, release_packets.len());
+        assert!(release_summary.has_blockers());
+        assert!(release_summary.needs_verification());
+        assert!(release_summary.requires_attention());
+        assert_eq!(
+            release_summary.next_release_status,
+            Some(IntegrationActivationReleaseStatus::Blocked)
+        );
+        assert_eq!(
+            release_summary.next_owner_lane,
+            Some(IntegrationActivationResponseOwnerLane::Platform)
+        );
+        assert_eq!(
+            release_summary.overall_status,
             IntegrationActivationHealthStatus::Blocked
         );
 

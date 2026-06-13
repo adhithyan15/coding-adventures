@@ -109,6 +109,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A activation closure gates:
   `smart_home.list_integration_activation_closure` and
   `smart_home.get_integration_activation_closure_summary`.
+- Added D18D handlers for D23A activation release packets:
+  `smart_home.list_integration_activation_release` and
+  `smart_home.get_integration_activation_release_summary`.
 - Added D18D handlers for D23A activation risk planning:
   `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary`.

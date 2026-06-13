@@ -121,6 +121,8 @@ Current scope:
   orders derived from activation response items
 - D18D integration activation-closure descriptors for release-gate views that
   combine remediation status, owner lanes, blockers, and verification readiness
+- D18D integration activation-release descriptors for compact go/no-go packet
+  views derived from activation closure gates
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and

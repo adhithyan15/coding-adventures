@@ -104,6 +104,8 @@ runtime and Chief of Staff tools a typed catalog for:
   status
 - activation closure gates that turn remediation work orders into compact
   blocked, owner-action, verification-ready, ready-to-close, and tracking gates
+- activation release packets that turn closure gates into compact go/no-go
+  release views with blockers, verification requirements, and release readiness
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,
