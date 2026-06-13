@@ -1438,6 +1438,65 @@ pub fn hue_integration_descriptor_summary() -> HueIntegrationDescriptorSummary {
     HueIntegrationDescriptorSummary::from_descriptor(&hue_integration_descriptor())
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueIntegrationPackageSummary {
+    pub descriptor_summary: HueIntegrationDescriptorSummary,
+    pub pairing_plan_summary: HueBridgePairingPlanSummary,
+    pub worker_process_ready: bool,
+    pub command_flow_declared: bool,
+    pub local_pairing_declared: bool,
+    pub local_pairing_ready: bool,
+    pub package_ready: bool,
+    pub requires_physical_presence: bool,
+}
+
+impl HueIntegrationPackageSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_summaries(hue_integration_descriptor_summary(), plan.summary())
+    }
+
+    pub fn from_summaries(
+        descriptor_summary: HueIntegrationDescriptorSummary,
+        pairing_plan_summary: HueBridgePairingPlanSummary,
+    ) -> Self {
+        let worker_process_ready = descriptor_summary.runs_as_worker_process();
+        let command_flow_declared = descriptor_summary.supports_light_command_flow();
+        let local_pairing_declared = descriptor_summary.supports_local_pairing_flow();
+        let local_pairing_ready =
+            local_pairing_declared && pairing_plan_summary.ready_for_local_registration();
+        let package_ready = worker_process_ready && command_flow_declared && local_pairing_ready;
+
+        Self {
+            descriptor_summary,
+            pairing_plan_summary,
+            worker_process_ready,
+            command_flow_declared,
+            local_pairing_declared,
+            local_pairing_ready,
+            package_ready,
+            requires_physical_presence: pairing_plan_summary.requires_user_presence,
+        }
+    }
+
+    pub fn has_agent_facing_capabilities(&self) -> bool {
+        self.descriptor_summary.has_agent_facing_capabilities()
+    }
+
+    pub fn has_bridge_roles(&self) -> bool {
+        self.descriptor_summary.has_bridge_roles()
+    }
+
+    pub fn uses_local_event_stream(&self) -> bool {
+        self.pairing_plan_summary.uses_event_stream_path
+    }
+}
+
+pub fn hue_integration_package_summary(
+    plan: &HueBridgePairingPlan,
+) -> HueIntegrationPackageSummary {
+    HueIntegrationPackageSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -4470,5 +4529,64 @@ mod tests {
             hue_integration_descriptor_summary(),
             HueIntegrationDescriptorSummary::from_descriptor(&hue_integration_descriptor())
         );
+    }
+
+    #[test]
+    fn hue_integration_package_summary_joins_descriptor_and_pairing_readiness() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        let summary = hue_integration_package_summary(&plan);
+
+        assert_eq!(
+            summary.descriptor_summary,
+            hue_integration_descriptor_summary()
+        );
+        assert_eq!(summary.pairing_plan_summary, plan.summary());
+        assert!(summary.worker_process_ready);
+        assert!(summary.command_flow_declared);
+        assert!(summary.local_pairing_declared);
+        assert!(summary.local_pairing_ready);
+        assert!(summary.package_ready);
+        assert!(summary.requires_physical_presence);
+        assert!(summary.has_agent_facing_capabilities());
+        assert!(summary.has_bridge_roles());
+        assert!(summary.uses_local_event_stream());
+    }
+
+    #[test]
+    fn hue_integration_package_summary_flags_incomplete_pairing_package() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.body = None;
+        plan.requires_user_presence = false;
+
+        let summary = HueIntegrationPackageSummary::from_pairing_plan(&plan);
+
+        assert!(summary.worker_process_ready);
+        assert!(summary.command_flow_declared);
+        assert!(summary.local_pairing_declared);
+        assert!(!summary.local_pairing_ready);
+        assert!(!summary.package_ready);
+        assert!(!summary.requires_physical_presence);
+        assert!(!summary.pairing_plan_summary.ready_for_local_registration());
+        assert!(summary.has_agent_facing_capabilities());
+        assert!(summary.has_bridge_roles());
     }
 }
