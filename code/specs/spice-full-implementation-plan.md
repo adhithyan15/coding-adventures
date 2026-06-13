@@ -26,9 +26,12 @@ downstream tools to compare.
      extraction, scalar function-call evaluation, and initial-condition /
      nodeset extraction plus DC warm-start execution aids now have shared
      diagnostic and solver footholds; transient scalar `.measure`-style output
-     helpers now cover shared peak-to-peak and final-value measurement output.
-   - Expand `.measure`, `.save`, and `.probe` execution toward full SPICE
-     compatibility while keeping unsupported control-flow diagnostics explicit.
+     helpers now cover shared peak-to-peak and final-value measurement output,
+     and parsed transient `.measure` / `.meas` cards can now feed those
+     measurement helpers from deck text.
+   - Expand `.save` and `.probe` execution plus richer `.measure` modes toward
+     full SPICE compatibility while keeping unsupported control-flow
+     diagnostics explicit.
 
 ## Completed Slices
 
@@ -239,13 +242,25 @@ downstream tools to compare.
     - This closes a small `.MEASURE` output-format gap while leaving full
       parsed deck-card execution and richer control-flow semantics in backlog.
 
+22. Parsed transient measurement card routing.
+    - Status: completed in this parsed measurement routing slice.
+    - Python, Rust, and TypeScript now expose matching `resolve_deck_measurements`
+      / `resolveDeckMeasurements` helpers that extract transient `.measure` and
+      `.meas` cards before `.end` while preserving non-measure active lines.
+    - The parsed card subset supports MAX, MIN, AVG, RMS, peak-to-peak, and
+      final-value transient probe measurements with optional `FROM=` / `TO=`
+      scalar time windows, reusing the shared SPICE suffix/arithmetic parser.
+    - Matching deck execution helpers route parsed cards into stable transient
+      measurement rows, while diagnostics keep unsupported analyses, modes,
+      options, expressions, and invalid windows explicit.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand parsed `.measure`, `.save`, and `.probe` deck-card execution toward
-     full SPICE compatibility, including richer measure modes and output
-     routing beyond scalar transient helper calls.
+   - Expand parsed `.save` and `.probe` deck-card execution plus richer
+     `.measure` modes and non-transient measurement analyses toward full SPICE
+     compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

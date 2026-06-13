@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use spice_engine::{
     analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
     format_release_readiness_report, release_readiness_gates, resolve_deck_functions,
-    resolve_deck_initial_conditions, resolve_deck_parameters, resolve_deck_sources,
-    CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
+    resolve_deck_initial_conditions, resolve_deck_measurements, resolve_deck_parameters,
+    resolve_deck_sources, CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -589,6 +589,74 @@ fn resolve_deck_functions_reports_bad_definitions() {
             Some("noexpr"),
             Some("badarg"),
             Some("dup")
+        ]
+    );
+}
+
+#[test]
+fn resolve_deck_measurements_extracts_transient_cards() {
+    let summary = resolve_deck_measurements(
+        "
+V1 in 0 DC 1
+.measure tran swing peak-to-peak V(out) FROM=1m TO={3m}
+.meas transient settled FINAL V(out)
+.end
+.measure tran ignored MAX V(out)
+",
+    );
+
+    assert_eq!(summary.active_lines, vec!["V1 in 0 DC 1"]);
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(5));
+    assert!(summary.diagnostics.is_empty());
+    assert_eq!(
+        summary
+            .measurements
+            .iter()
+            .map(|card| (
+                card.name.as_str(),
+                card.analysis.as_str(),
+                card.mode.as_str(),
+                card.probe.as_str()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            ("swing", "tran", "pp", "V(out)"),
+            ("settled", "transient", "last", "V(out)")
+        ]
+    );
+    assert!((summary.measurements[0].from_value.unwrap() - 1.0e-3).abs() < 1.0e-12);
+    assert!((summary.measurements[0].to_value.unwrap() - 3.0e-3).abs() < 1.0e-12);
+}
+
+#[test]
+fn resolve_deck_measurements_reports_unsupported_subset() {
+    let summary = resolve_deck_measurements(
+        "
+.measure ac gain MAX V(out)
+.measure tran badmode MEDIAN V(out)
+.measure tran badwindow MAX V(out) FROM=3m TO=1m
+.measure tran badoption MAX V(out) RISE=1
+.measure tran badvalue MAX V(out) FROM={unknown}
+.end
+",
+    );
+
+    assert!(summary.measurements.is_empty());
+    let mut codes = summary
+        .diagnostics
+        .iter()
+        .map(|diagnostic| diagnostic.code.as_str())
+        .collect::<Vec<_>>();
+    codes.sort_unstable();
+    assert_eq!(
+        codes,
+        vec![
+            "SPICE_DECK_MEASURE_ANALYSIS",
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            "SPICE_DECK_MEASURE_EXPRESSION",
+            "SPICE_DECK_MEASURE_MODE",
+            "SPICE_DECK_MEASURE_WINDOW",
         ]
     );
 }

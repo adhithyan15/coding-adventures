@@ -524,6 +524,34 @@ export interface DeckFunctionSummary {
   readonly diagnostics: readonly DeckFunctionDiagnostic[];
 }
 
+export interface DeckMeasurementCard {
+  readonly directive: ".measure" | ".meas";
+  readonly analysis: "tran" | "transient";
+  readonly name: string;
+  readonly mode: string;
+  readonly probe: string;
+  readonly lineNumber: number;
+  readonly fromValue?: number;
+  readonly toValue?: number;
+}
+
+export interface DeckMeasurementDiagnostic {
+  readonly code: string;
+  readonly directive: ".measure" | ".meas";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly token?: string;
+}
+
+export interface DeckMeasurementSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly measurements: readonly DeckMeasurementCard[];
+  readonly diagnostics: readonly DeckMeasurementDiagnostic[];
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -2852,6 +2880,39 @@ export function resolveDeckFunctions(netlist: string): DeckFunctionSummary {
   };
 }
 
+export function resolveDeckMeasurements(netlist: string): DeckMeasurementSummary {
+  const state = new DeckMeasurementState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".measure" || directive === ".meas") {
+      resolveMeasurementLine(stripped, lineNumber, directive, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    measurements: state.measurements,
+    diagnostics: state.diagnostics,
+  };
+}
+
 export function releaseReadinessGates(
   corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
 ): ReleaseReadinessReport {
@@ -3283,6 +3344,11 @@ class DeckFunctionState {
   readonly functions: DeckFunctionDefinition[] = [];
 }
 
+class DeckMeasurementState {
+  readonly diagnostics: DeckMeasurementDiagnostic[] = [];
+  readonly measurements: DeckMeasurementCard[] = [];
+}
+
 function resolveNodeConditionLine(
   line: string,
   lineNumber: number,
@@ -3421,6 +3487,158 @@ function resolveFunctionLine(line: string, lineNumber: number, state: DeckFuncti
     arguments: argumentList,
     expression,
     lineNumber,
+  });
+}
+
+function resolveMeasurementLine(
+  line: string,
+  lineNumber: number,
+  directive: ".measure" | ".meas",
+  state: DeckMeasurementState,
+): void {
+  const tokens = directiveTokens(line);
+  if (tokens.length < 5) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${directive} requires analysis, name, mode, and probe tokens`,
+    });
+    return;
+  }
+
+  const analysis = tokens[1].trim().toLowerCase();
+  if (analysis !== "tran" && analysis !== "transient") {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ANALYSIS",
+      directive,
+      lineNumber,
+      message: `only transient .measure cards are supported, got ${JSON.stringify(tokens[1])}`,
+      token: tokens[1],
+    });
+    return;
+  }
+  const analysisName = analysis === "tran" ? "tran" : "transient";
+
+  const name = tokens[2].trim();
+  if (!isParameterName(name)) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_NAME",
+      directive,
+      lineNumber,
+      message: `measurement name ${JSON.stringify(name)} is not a valid identifier`,
+      token: name,
+    });
+    return;
+  }
+
+  const mode = normalizeMeasurementModeToken(tokens[3]);
+  if (mode === undefined) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_MODE",
+      directive,
+      lineNumber,
+      message: `unsupported transient measurement mode ${JSON.stringify(tokens[3])}`,
+      token: tokens[3],
+    });
+    return;
+  }
+
+  const probe = unquoteToken(tokens[4].trim());
+  if (probe.length === 0) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_PROBE",
+      directive,
+      lineNumber,
+      message: "measurement probe must not be empty",
+      token: tokens[4],
+    });
+    return;
+  }
+
+  const emptyParameterState = new DeckParameterState();
+  let fromValue: number | undefined;
+  let toValue: number | undefined;
+  const seenWindowTokens = new Set<string>();
+  const diagnosticCount = state.diagnostics.length;
+  for (const token of tokens.slice(5)) {
+    const equalsIndex = token.indexOf("=");
+    if (equalsIndex < 0) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `measurement option ${JSON.stringify(token)} must use name=value syntax`,
+        token,
+      });
+      continue;
+    }
+    const key = token.slice(0, equalsIndex).trim().toLowerCase();
+    const expression = token.slice(equalsIndex + 1);
+    if (key !== "from" && key !== "to") {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `unsupported measurement option ${JSON.stringify(key)}`,
+        token,
+      });
+      continue;
+    }
+    if (seenWindowTokens.has(key)) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `duplicate measurement option ${JSON.stringify(key)}`,
+        token,
+      });
+      continue;
+    }
+    seenWindowTokens.add(key);
+    try {
+      const value = evaluateParameterExpression(
+        stripExpressionDelimiters(expression.trim()),
+        emptyParameterState,
+      );
+      if (key === "from") {
+        fromValue = value;
+      } else {
+        toValue = value;
+      }
+    } catch (error) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_EXPRESSION",
+        directive,
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        token,
+      });
+    }
+  }
+
+  if (fromValue !== undefined && toValue !== undefined && fromValue > toValue) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_WINDOW",
+      directive,
+      lineNumber,
+      message: "measurement FROM value must be <= TO value",
+    });
+  }
+
+  if (state.diagnostics.length !== diagnosticCount) {
+    return;
+  }
+
+  state.measurements.push({
+    directive,
+    analysis: analysisName,
+    name,
+    mode,
+    probe,
+    lineNumber,
+    fromValue,
+    toValue,
   });
 }
 
@@ -3844,6 +4062,16 @@ function addFunctionDiagnostic(
   });
 }
 
+function addMeasurementDiagnostic(
+  state: DeckMeasurementState,
+  diagnostic: Omit<DeckMeasurementDiagnostic, "severity"> & { readonly severity?: "error" | "warning" },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
 function parseNodeConditionTarget(target: string): string | undefined {
   if (target.length < 4 || !target.toLowerCase().startsWith("v(") || !target.endsWith(")")) {
     return undefined;
@@ -3876,6 +4104,33 @@ function parseFunctionSignature(
 
 function isParameterName(name: string): boolean {
   return /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
+}
+
+function normalizeMeasurementModeToken(mode: string): string | undefined {
+  const normalized = mode.trim().toLowerCase().replace(/_/g, "-");
+  switch (normalized) {
+    case "max":
+    case "min":
+      return normalized;
+    case "avg":
+    case "average":
+    case "mean":
+      return "avg";
+    case "rms":
+    case "root-mean-square":
+      return "rms";
+    case "pp":
+    case "p-p":
+    case "p2p":
+    case "peak-to-peak":
+    case "peak2peak":
+      return "pp";
+    case "last":
+    case "final":
+      return "last";
+    default:
+      return undefined;
+  }
 }
 
 function stripExpressionDelimiters(expression: string): string {
@@ -4629,6 +4884,37 @@ export function measureTransientProbe(
     fromValue: fromTime,
     toValue: toTime,
   };
+}
+
+export function measureTransientCards(
+  points: readonly TransientPoint[],
+  measurements: readonly DeckMeasurementCard[],
+): ProbeMeasurement[] {
+  return measurements.map((measurement) =>
+    measureTransientProbe(
+      points,
+      measurement.name,
+      measurement.probe,
+      measurement.mode,
+      measurement.fromValue,
+      measurement.toValue,
+    ),
+  );
+}
+
+export function measureTransientDeck(
+  points: readonly TransientPoint[],
+  netlist: string,
+): ProbeMeasurement[] {
+  const summary = resolveDeckMeasurements(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      "measureTransientDeck",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return measureTransientCards(points, summary.measurements);
 }
 
 export function formatMeasurementTable(measurements: readonly ProbeMeasurement[]): string {
