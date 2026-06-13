@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.111.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-103** — a CLASS-BODY computed `get`/`set` accessor now
+  gets the same separating space gap-073 gives object-literal accessors:
+
+      class A{get[x](){}set[x](v){}}  -> class A{get [x](){}set [x](v){}}
+      class A{m(){}get[x](){}}        -> class A{m(){}get [x](){}}
+      class A{static get[x](){}}      -> class A{static get [x](){}}
+
+  gap-073's `get_set_computed_needs_space` only fired when the accessor
+  was preceded by `{` or `,` (object-literal property starts), so a
+  class member preceded by a previous member's `}` (consecutive
+  methods/accessors) or the `static` modifier lost the space. The fix
+  adds `}` and `static` to that before-context set. Because a bare `}`
+  is ambiguous (a statement-block close, e.g. `if(x){}get[k](x)` where
+  `get` is a variable index + call, would be a false positive), a new
+  **method-body guard** makes it safe: a real accessor's parameter list
+  `)` is followed by a `{` body, whereas a variable-index-call's `)` is
+  followed by `;`/an operator. The guard is applied uniformly (an
+  accessor always has a body), so it also strengthens the existing
+  `{`/`,` cases. JAR-verified across class accessor pairs, after-method,
+  and `static` forms, plus the `if/for/while`-block-then-`get[k](x)`
+  false-positive cases; +2 `gap103_*` unit tests; the three
+  `minify_class_accessor_*` fixtures are un-ignored and enforced.
+
 ## [0.110.0] - 2026-06-12
 
 ### Fixed
