@@ -56,10 +56,12 @@
 
 pub mod limit;
 pub mod limit_advanced;
+pub mod series_limit;
 pub mod taylor;
 
 pub use limit::limit_direct;
 pub use limit_advanced::{limit_advanced, LimitAdvancedOptions, LimitDirection};
+pub use series_limit::{try_series_limit, try_series_limit_default, MAX_ORDER_LIMIT};
 pub use taylor::{taylor_polynomial, PolynomialError};
 
 // ---------------------------------------------------------------------------
