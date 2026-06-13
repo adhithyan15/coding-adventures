@@ -262,18 +262,81 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 name, span
             );
         }
-        // SIR16 expression kinds — Python backend's SIR-v1 extension
-        // (per SIR20) lands separately.
-        Expr::FloatLit { span, .. }
-        | Expr::SeqLit { span, .. }
-        | Expr::SeqIndex { span, .. }
-        | Expr::SeqLen { span, .. }
-        | Expr::MapLit { span, .. }
-        | Expr::MapGet { span, .. }
-        | Expr::LogicalAnd { span, .. }
-        | Expr::LogicalOr { span, .. }
-        | Expr::StrConcat { span, .. } => {
-            panic!("python backend reached SIR16+ expression at {} — capability check should have rejected it", span);
+        // ── SIR16 expression kinds — native Python ──────────────────
+        Expr::FloatLit { value, .. } => {
+            // `{:?}` keeps a decimal point (e.g. `3.0`, `3.14`) so the
+            // literal stays a float, not an int.
+            let _ = write!(out, "{:?}", value);
+        }
+        Expr::SeqLit { items, .. } => {
+            out.push('[');
+            emit_args(out, items, indent);
+            out.push(']');
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            emit_expr(out, seq, indent);
+            out.push('[');
+            emit_expr(out, index, indent);
+            out.push(']');
+        }
+        Expr::SeqLen { seq, .. } => {
+            out.push_str("len(");
+            emit_expr(out, seq, indent);
+            out.push(')');
+        }
+        Expr::MapLit { entries, .. } => {
+            out.push('{');
+            for (i, entry) in entries.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_expr(out, &entry.key, indent);
+                out.push_str(": ");
+                emit_expr(out, &entry.value, indent);
+            }
+            out.push('}');
+        }
+        Expr::MapGet { map, key, .. } => {
+            emit_expr(out, map, indent);
+            out.push('[');
+            emit_expr(out, key, indent);
+            out.push(']');
+        }
+        // Short-circuit: a lambda keeps the rhs unevaluated until the
+        // lhs decides, and routes the test through SIR truthiness (only
+        // `False`/`nil` are falsy — not `0`/`""`/`[]`).  The lambda
+        // param `__l` gives each occurrence its own scope, so nested
+        // `&&`/`||` never collide.
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            out.push_str("(lambda __l: (");
+            emit_expr(out, rhs, indent);
+            out.push_str(") if _sir_truthy(__l) else __l)(");
+            emit_expr(out, lhs, indent);
+            out.push(')');
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            out.push_str("(lambda __l: __l if _sir_truthy(__l) else (");
+            emit_expr(out, rhs, indent);
+            out.push_str("))(");
+            emit_expr(out, lhs, indent);
+            out.push(')');
+        }
+        // String interpolation: every part rendered through the SIR
+        // display helper (a string part renders to itself) and joined.
+        Expr::StrConcat { parts, .. } => {
+            out.push('(');
+            if parts.is_empty() {
+                out.push_str("\"\"");
+            }
+            for (i, p) in parts.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(" + ");
+                }
+                out.push_str("_sir_to_display(");
+                emit_expr(out, p, indent);
+                out.push(')');
+            }
+            out.push(')');
         }
     }
 }
