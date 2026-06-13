@@ -151,6 +151,110 @@ impl ZWaveCommandSummary {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZWaveCommandBatchSummary {
+    pub total_commands: usize,
+    pub get_commands: usize,
+    pub set_commands: usize,
+    pub report_commands: usize,
+    pub other_commands: usize,
+    pub payload_free_commands: usize,
+    pub commands_with_payload: usize,
+    pub extended_command_classes: usize,
+    pub encodable_commands: usize,
+    pub unencodable_commands: usize,
+    pub total_payload_bytes: usize,
+    pub total_encoded_bytes: Option<usize>,
+    pub unique_command_classes: usize,
+}
+
+impl ZWaveCommandBatchSummary {
+    pub fn from_commands<'a>(commands: impl IntoIterator<Item = &'a ZWaveCommand>) -> Self {
+        Self::from_summaries(commands.into_iter().map(ZWaveCommand::summary))
+    }
+
+    pub fn from_summaries(summaries: impl IntoIterator<Item = ZWaveCommandSummary>) -> Self {
+        let mut batch = Self {
+            total_commands: 0,
+            get_commands: 0,
+            set_commands: 0,
+            report_commands: 0,
+            other_commands: 0,
+            payload_free_commands: 0,
+            commands_with_payload: 0,
+            extended_command_classes: 0,
+            encodable_commands: 0,
+            unencodable_commands: 0,
+            total_payload_bytes: 0,
+            total_encoded_bytes: Some(0),
+            unique_command_classes: 0,
+        };
+        let mut command_classes = BTreeSet::new();
+
+        for summary in summaries {
+            batch.record_summary(summary);
+            command_classes.insert(summary.command_class);
+        }
+
+        batch.unique_command_classes = command_classes.len();
+        batch
+    }
+
+    pub fn record_summary(&mut self, summary: ZWaveCommandSummary) {
+        self.total_commands += 1;
+        match summary.command_kind {
+            ZWaveCommandKind::Get => self.get_commands += 1,
+            ZWaveCommandKind::Set => self.set_commands += 1,
+            ZWaveCommandKind::Report => self.report_commands += 1,
+            ZWaveCommandKind::Other => self.other_commands += 1,
+        }
+        if summary.has_payload() {
+            self.commands_with_payload += 1;
+        } else {
+            self.payload_free_commands += 1;
+        }
+        if summary.uses_extended_command_class {
+            self.extended_command_classes += 1;
+        }
+        if summary.can_encode {
+            self.encodable_commands += 1;
+        } else {
+            self.unencodable_commands += 1;
+        }
+        self.total_payload_bytes += summary.payload_len;
+        self.total_encoded_bytes = match (self.total_encoded_bytes, summary.encoded_len) {
+            (Some(total), Some(encoded_len)) => Some(total + encoded_len),
+            _ => None,
+        };
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_commands == 0
+    }
+
+    pub fn has_requests(self) -> bool {
+        self.get_commands + self.set_commands > 0
+    }
+
+    pub fn has_reports(self) -> bool {
+        self.report_commands > 0
+    }
+
+    pub fn has_payloads(self) -> bool {
+        self.commands_with_payload > 0
+    }
+
+    pub fn has_unencodable_commands(self) -> bool {
+        self.unencodable_commands > 0
+    }
+}
+
+pub fn summarize_zwave_commands<'a>(
+    commands: impl IntoIterator<Item = &'a ZWaveCommand>,
+) -> ZWaveCommandBatchSummary {
+    ZWaveCommandBatchSummary::from_commands(commands)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ZWaveCommandKind {
     Get,
     Set,
@@ -1226,6 +1330,63 @@ mod tests {
         assert!(!summary.is_set());
         assert!(summary.is_report());
         assert!(!summary.is_request());
+    }
+
+    #[test]
+    fn command_batch_summary_rolls_up_command_shapes() {
+        let get = binary_switch_get();
+        let set = binary_switch_set(true);
+        let report = ZWaveCommand::new(CommandClassId::BATTERY, BATTERY_REPORT, vec![87]);
+        let extended = ZWaveCommand::new(CommandClassId(0xf102), 0x09, vec![0xaa, 0xbb]);
+
+        let summary = summarize_zwave_commands([&get, &set, &report, &extended]);
+
+        assert_eq!(
+            summary,
+            ZWaveCommandBatchSummary {
+                total_commands: 4,
+                get_commands: 1,
+                set_commands: 1,
+                report_commands: 1,
+                other_commands: 1,
+                payload_free_commands: 1,
+                commands_with_payload: 3,
+                extended_command_classes: 1,
+                encodable_commands: 4,
+                unencodable_commands: 0,
+                total_payload_bytes: 4,
+                total_encoded_bytes: Some(13),
+                unique_command_classes: 3,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_requests());
+        assert!(summary.has_reports());
+        assert!(summary.has_payloads());
+        assert!(!summary.has_unencodable_commands());
+    }
+
+    #[test]
+    fn command_batch_summary_tracks_unencodable_commands() {
+        let invalid = ZWaveCommand::new(CommandClassId(0x0101), 0x01, Vec::new());
+
+        let summary = ZWaveCommandBatchSummary::from_summaries([invalid.summary()]);
+
+        assert_eq!(summary.total_commands, 1);
+        assert_eq!(summary.other_commands, 1);
+        assert_eq!(summary.payload_free_commands, 1);
+        assert_eq!(summary.extended_command_classes, 1);
+        assert_eq!(summary.encodable_commands, 0);
+        assert_eq!(summary.unencodable_commands, 1);
+        assert_eq!(summary.total_encoded_bytes, None);
+        assert_eq!(summary.unique_command_classes, 1);
+        assert!(!summary.has_requests());
+        assert!(!summary.has_reports());
+        assert!(summary.has_unencodable_commands());
+
+        let empty = ZWaveCommandBatchSummary::from_summaries([]);
+        assert!(empty.is_empty());
+        assert_eq!(empty.total_encoded_bytes, Some(0));
     }
 
     #[test]

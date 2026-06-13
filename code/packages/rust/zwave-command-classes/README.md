@@ -11,6 +11,8 @@ Included surfaces:
 - command-class command parse/encode helpers
 - body-free command summaries for logs and interview diagnostics, including
   payload-free and Get/Set/Report helper predicates
+- command batch summaries for payload, request/report, extended class,
+  encodability, and unique command-class rollups
 - binary switch, multilevel switch, and door lock get/set builders, plus
   battery and meter get builders
 - command-class interview descriptors for state-query commands and D23
