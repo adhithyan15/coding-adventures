@@ -1461,6 +1461,73 @@ impl IntegrationActivationResponseOwnerLane {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationRemediationKind {
+    UnblockPlatform,
+    EnableDependency,
+    ReviewPolicy,
+    CompleteReview,
+    RunVerification,
+    RecordAudit,
+}
+
+impl IntegrationActivationRemediationKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::UnblockPlatform => "unblock_platform",
+            Self::EnableDependency => "enable_dependency",
+            Self::ReviewPolicy => "review_policy",
+            Self::CompleteReview => "complete_review",
+            Self::RunVerification => "run_verification",
+            Self::RecordAudit => "record_audit",
+        }
+    }
+
+    pub fn from_response_kind(response_kind: IntegrationActivationResponseKind) -> Self {
+        match response_kind {
+            IntegrationActivationResponseKind::ResolveBlocker => Self::UnblockPlatform,
+            IntegrationActivationResponseKind::EnableDependency => Self::EnableDependency,
+            IntegrationActivationResponseKind::ReviewPolicy => Self::ReviewPolicy,
+            IntegrationActivationResponseKind::QueueReview => Self::CompleteReview,
+            IntegrationActivationResponseKind::VerifyActivation => Self::RunVerification,
+            IntegrationActivationResponseKind::AuditFollowUp => Self::RecordAudit,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationRemediationStatus {
+    Blocked,
+    NeedsOwnerAction,
+    ReadyToExecute,
+    Tracking,
+}
+
+impl IntegrationActivationRemediationStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocked => "blocked",
+            Self::NeedsOwnerAction => "needs_owner_action",
+            Self::ReadyToExecute => "ready_to_execute",
+            Self::Tracking => "tracking",
+        }
+    }
+
+    pub fn from_response(response: &IntegrationActivationResponseItem) -> Self {
+        if response.blocked() {
+            Self::Blocked
+        } else if response.ready_to_verify()
+            || response.response_kind == IntegrationActivationResponseKind::VerifyActivation
+        {
+            Self::ReadyToExecute
+        } else if response.requires_attention() {
+            Self::NeedsOwnerAction
+        } else {
+            Self::Tracking
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationAuditRecordKind {
     Sentinel,
     Watchtower,
@@ -3233,6 +3300,65 @@ pub struct IntegrationActivationResponseSummary {
     pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
     pub next_response_sequence: Option<usize>,
     pub next_response_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRemediationItem {
+    pub sequence: usize,
+    pub remediation_kind: IntegrationActivationRemediationKind,
+    pub status: IntegrationActivationRemediationStatus,
+    pub owner_lane: IntegrationActivationResponseOwnerLane,
+    pub source_response_sequence: usize,
+    pub source_response_kind: IntegrationActivationResponseKind,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub dependency_work: bool,
+    pub policy_risk: bool,
+    pub verification_ready: bool,
+    pub blocked: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRemediationSummary {
+    pub total_remediations: usize,
+    pub unique_integrations: usize,
+    pub remediations_requiring_attention: usize,
+    pub unblock_platform_remediations: usize,
+    pub enable_dependency_remediations: usize,
+    pub review_policy_remediations: usize,
+    pub complete_review_remediations: usize,
+    pub run_verification_remediations: usize,
+    pub record_audit_remediations: usize,
+    pub platform_owner_remediations: usize,
+    pub integration_owner_remediations: usize,
+    pub security_owner_remediations: usize,
+    pub reviewer_owner_remediations: usize,
+    pub verification_owner_remediations: usize,
+    pub audit_owner_remediations: usize,
+    pub blocked_remediations: usize,
+    pub owner_action_remediations: usize,
+    pub ready_to_execute_remediations: usize,
+    pub tracking_remediations: usize,
+    pub remediations_with_dependency_work: usize,
+    pub remediations_with_policy_risk: usize,
+    pub remediations_ready_to_verify: usize,
+    pub remediations_with_policy_surface: usize,
+    pub next_remediation_kind: Option<IntegrationActivationRemediationKind>,
+    pub next_remediation_status: Option<IntegrationActivationRemediationStatus>,
+    pub next_owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_remediation_sequence: Option<usize>,
+    pub next_remediation_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
@@ -8927,6 +9053,256 @@ impl IntegrationActivationResponseSummary {
     }
 }
 
+impl IntegrationActivationRemediationItem {
+    fn from_response(response: &IntegrationActivationResponseItem) -> Self {
+        let remediation_kind =
+            IntegrationActivationRemediationKind::from_response_kind(response.response_kind);
+        let status = IntegrationActivationRemediationStatus::from_response(response);
+
+        Self {
+            sequence: 0,
+            remediation_kind,
+            status,
+            owner_lane: response.owner_lane,
+            source_response_sequence: response.sequence,
+            source_response_kind: response.response_kind,
+            source_id: response.source_id.clone(),
+            title: format!("{}: {}", remediation_kind.as_str(), response.title),
+            summary: response.summary.clone(),
+            priority: response.priority,
+            integration_ids: response.integration_ids.clone(),
+            recommended_view: response.recommended_view,
+            required_tier: response.required_tier,
+            policy_surface: response.policy_surface,
+            dependency_work: response.has_dependency_work(),
+            policy_risk: response.has_policy_risk(),
+            verification_ready: response.ready_to_verify(),
+            blocked: response.blocked(),
+            requires_attention: response.requires_attention()
+                || status != IntegrationActivationRemediationStatus::Tracking,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_work
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk
+    }
+
+    pub fn ready_to_verify(&self) -> bool {
+        self.verification_ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked || self.status == IntegrationActivationRemediationStatus::Blocked
+    }
+
+    pub fn ready_to_execute(&self) -> bool {
+        self.status == IntegrationActivationRemediationStatus::ReadyToExecute
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationRemediationSummary {
+    pub fn from_remediations<'a>(
+        remediations: impl IntoIterator<Item = &'a IntegrationActivationRemediationItem>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_remediations: 0,
+            unique_integrations: 0,
+            remediations_requiring_attention: 0,
+            unblock_platform_remediations: 0,
+            enable_dependency_remediations: 0,
+            review_policy_remediations: 0,
+            complete_review_remediations: 0,
+            run_verification_remediations: 0,
+            record_audit_remediations: 0,
+            platform_owner_remediations: 0,
+            integration_owner_remediations: 0,
+            security_owner_remediations: 0,
+            reviewer_owner_remediations: 0,
+            verification_owner_remediations: 0,
+            audit_owner_remediations: 0,
+            blocked_remediations: 0,
+            owner_action_remediations: 0,
+            ready_to_execute_remediations: 0,
+            tracking_remediations: 0,
+            remediations_with_dependency_work: 0,
+            remediations_with_policy_risk: 0,
+            remediations_ready_to_verify: 0,
+            remediations_with_policy_surface: 0,
+            next_remediation_kind: None,
+            next_remediation_status: None,
+            next_owner_lane: None,
+            next_recommended_view: None,
+            next_remediation_sequence: None,
+            next_remediation_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for remediation in remediations {
+            summary.total_remediations += 1;
+            for integration_id in &remediation.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_remediation_kind.is_none()
+                && (remediation.requires_attention() || remediation.ready_to_execute())
+            {
+                summary.next_remediation_kind = Some(remediation.remediation_kind);
+                summary.next_remediation_status = Some(remediation.status);
+                summary.next_owner_lane = Some(remediation.owner_lane);
+                summary.next_recommended_view = Some(remediation.recommended_view);
+                summary.next_remediation_sequence = Some(remediation.sequence);
+                summary.next_remediation_priority = Some(remediation.priority);
+            }
+
+            match remediation.remediation_kind {
+                IntegrationActivationRemediationKind::UnblockPlatform => {
+                    summary.unblock_platform_remediations += 1;
+                }
+                IntegrationActivationRemediationKind::EnableDependency => {
+                    summary.enable_dependency_remediations += 1;
+                }
+                IntegrationActivationRemediationKind::ReviewPolicy => {
+                    summary.review_policy_remediations += 1;
+                }
+                IntegrationActivationRemediationKind::CompleteReview => {
+                    summary.complete_review_remediations += 1;
+                }
+                IntegrationActivationRemediationKind::RunVerification => {
+                    summary.run_verification_remediations += 1;
+                }
+                IntegrationActivationRemediationKind::RecordAudit => {
+                    summary.record_audit_remediations += 1;
+                }
+            }
+
+            match remediation.owner_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_owner_remediations += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_owner_remediations += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_owner_remediations += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_owner_remediations += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_owner_remediations += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Audit => {
+                    summary.audit_owner_remediations += 1;
+                }
+            }
+
+            match remediation.status {
+                IntegrationActivationRemediationStatus::Blocked => {
+                    summary.blocked_remediations += 1;
+                }
+                IntegrationActivationRemediationStatus::NeedsOwnerAction => {
+                    summary.owner_action_remediations += 1;
+                }
+                IntegrationActivationRemediationStatus::ReadyToExecute => {
+                    summary.ready_to_execute_remediations += 1;
+                }
+                IntegrationActivationRemediationStatus::Tracking => {
+                    summary.tracking_remediations += 1;
+                }
+            }
+
+            if remediation.requires_attention() {
+                summary.remediations_requiring_attention += 1;
+                summary.first_attention_priority = min_optional_priority(
+                    summary.first_attention_priority,
+                    Some(remediation.priority),
+                );
+            }
+            if remediation.has_dependency_work() {
+                summary.remediations_with_dependency_work += 1;
+            }
+            if remediation.has_policy_risk() {
+                summary.remediations_with_policy_risk += 1;
+            }
+            if remediation.ready_to_verify() {
+                summary.remediations_ready_to_verify += 1;
+            }
+            if remediation.has_policy_surface() {
+                summary.remediations_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier =
+                summary.highest_policy_tier.max(remediation.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_remediations > 0
+            || summary.unblock_platform_remediations > 0
+            || summary.enable_dependency_remediations > 0
+        {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.remediations_requiring_attention > 0
+            || summary.review_policy_remediations > 0
+            || summary.complete_review_remediations > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.ready_to_execute_remediations > 0
+            || summary.run_verification_remediations > 0
+        {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_remediations == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.unblock_platform_remediations > 0 || self.blocked_remediations > 0
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.enable_dependency_remediations > 0 || self.remediations_with_dependency_work > 0
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.review_policy_remediations > 0 || self.remediations_with_policy_risk > 0
+    }
+
+    pub fn has_owner_action(&self) -> bool {
+        self.owner_action_remediations > 0
+    }
+
+    pub fn ready_to_execute(&self) -> bool {
+        self.ready_to_execute_remediations > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.remediations_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -13988,6 +14364,38 @@ pub fn activation_response_items_at_or_before_priority(
     activation_response_items_from_escalation_cases(&cases)
 }
 
+pub fn activation_remediation_items_from_responses(
+    responses: &[IntegrationActivationResponseItem],
+) -> Vec<IntegrationActivationRemediationItem> {
+    let mut remediations: Vec<_> = responses
+        .iter()
+        .map(IntegrationActivationRemediationItem::from_response)
+        .collect();
+
+    remediations.sort_by(compare_activation_remediation_items);
+    for (index, remediation) in remediations.iter_mut().enumerate() {
+        remediation.sequence = index + 1;
+    }
+    remediations
+}
+
+pub fn activation_remediation_items_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationRemediationItem> {
+    let responses = activation_response_items_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_remediation_items_from_responses(&responses)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -15604,6 +16012,24 @@ fn compare_activation_response_items(
         .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
         .then_with(|| right.ready_to_verify().cmp(&left.ready_to_verify()))
         .then_with(|| left.response_kind.cmp(&right.response_kind))
+        .then_with(|| left.owner_lane.cmp(&right.owner_lane))
+        .then_with(|| left.source_id.cmp(&right.source_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_remediation_items(
+    left: &IntegrationActivationRemediationItem,
+    right: &IntegrationActivationRemediationItem,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.status.cmp(&right.status))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocked().cmp(&left.blocked()))
+        .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
+        .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| right.ready_to_execute().cmp(&left.ready_to_execute()))
+        .then_with(|| left.remediation_kind.cmp(&right.remediation_kind))
         .then_with(|| left.owner_lane.cmp(&right.owner_lane))
         .then_with(|| left.source_id.cmp(&right.source_id))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
@@ -19117,6 +19543,53 @@ mod tests {
             IntegrationActivationHealthStatus::Blocked
         );
 
+        let remediation_items = activation_remediation_items_from_responses(&response_items);
+        assert!(!remediation_items.is_empty());
+        assert!(remediation_items
+            .iter()
+            .any(|remediation| remediation.remediation_kind
+                == IntegrationActivationRemediationKind::UnblockPlatform));
+        assert!(remediation_items
+            .iter()
+            .any(|remediation| remediation.remediation_kind
+                == IntegrationActivationRemediationKind::EnableDependency));
+        assert!(remediation_items
+            .iter()
+            .any(|remediation| remediation.remediation_kind
+                == IntegrationActivationRemediationKind::RunVerification));
+        assert!(remediation_items
+            .iter()
+            .any(IntegrationActivationRemediationItem::requires_attention));
+        assert!(remediation_items
+            .iter()
+            .any(IntegrationActivationRemediationItem::blocked));
+
+        let remediation_summary =
+            IntegrationActivationRemediationSummary::from_remediations(remediation_items.iter());
+        assert_eq!(
+            remediation_summary.total_remediations,
+            remediation_items.len()
+        );
+        assert!(remediation_summary.has_blockers());
+        assert!(remediation_summary.has_dependency_work());
+        assert!(remediation_summary.requires_attention());
+        assert_eq!(
+            remediation_summary.next_remediation_kind,
+            Some(IntegrationActivationRemediationKind::UnblockPlatform)
+        );
+        assert_eq!(
+            remediation_summary.next_remediation_status,
+            Some(IntegrationActivationRemediationStatus::Blocked)
+        );
+        assert_eq!(
+            remediation_summary.next_owner_lane,
+            Some(IntegrationActivationResponseOwnerLane::Platform)
+        );
+        assert_eq!(
+            remediation_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
         let catalog = first_party_catalog();
         let available_primitives = vec![
             PrimitiveFamily::NormalizedModel,
@@ -19187,6 +19660,16 @@ mod tests {
         assert!(catalog_response_items
             .iter()
             .any(IntegrationActivationResponseItem::requires_attention));
+        let catalog_remediation_items = activation_remediation_items_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_remediation_items
+            .iter()
+            .any(IntegrationActivationRemediationItem::requires_attention));
     }
 
     #[test]
