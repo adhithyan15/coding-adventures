@@ -841,6 +841,100 @@ impl MleMessageSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MleMessageBatchSummary {
+    pub total_messages: usize,
+    pub total_tlvs: usize,
+    pub empty_messages: usize,
+    pub parent_selection_request_messages: usize,
+    pub attach_response_messages: usize,
+    pub diagnostic_messages: usize,
+    pub thread_data_version_messages: usize,
+    pub status_messages: usize,
+    pub network_data_messages: usize,
+    pub connectivity_messages: usize,
+    pub unknown_command_messages: usize,
+}
+
+impl MleMessageBatchSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_messages<'a>(messages: impl IntoIterator<Item = &'a MleMessage>) -> Self {
+        let mut summary = Self::empty();
+        for message in messages {
+            summary.record_summary(&message.summary());
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a>(summaries: impl IntoIterator<Item = &'a MleMessageSummary>) -> Self {
+        let mut summary = Self::empty();
+        for message_summary in summaries {
+            summary.record_summary(message_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: &MleMessageSummary) {
+        self.total_messages += 1;
+        self.total_tlvs += summary.tlv_count;
+
+        if summary.is_empty() {
+            self.empty_messages += 1;
+        }
+        if summary.has_parent_selection_request_context() {
+            self.parent_selection_request_messages += 1;
+        }
+        if summary.has_attach_response_context() {
+            self.attach_response_messages += 1;
+        }
+        if summary.has_diagnostic_context() {
+            self.diagnostic_messages += 1;
+        }
+        if summary.has_thread_data_versions() {
+            self.thread_data_version_messages += 1;
+        }
+        if summary.has_status {
+            self.status_messages += 1;
+        }
+        if summary.has_network_data {
+            self.network_data_messages += 1;
+        }
+        if summary.has_connectivity {
+            self.connectivity_messages += 1;
+        }
+        if matches!(summary.command, MleCommand::Unknown(_)) {
+            self.unknown_command_messages += 1;
+        }
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_messages == 0
+    }
+
+    pub fn has_parent_selection_requests(self) -> bool {
+        self.parent_selection_request_messages > 0
+    }
+
+    pub fn has_attach_responses(self) -> bool {
+        self.attach_response_messages > 0
+    }
+
+    pub fn has_diagnostics(self) -> bool {
+        self.diagnostic_messages > 0
+    }
+
+    pub fn has_statuses(self) -> bool {
+        self.status_messages > 0
+    }
+
+    pub fn has_unknown_commands(self) -> bool {
+        self.unknown_command_messages > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ScanMask {
     pub routers: bool,
@@ -1660,6 +1754,132 @@ mod tests {
         }
         .summary();
         assert!(empty.is_empty());
+    }
+
+    #[test]
+    fn mle_message_batch_summary_rolls_up_attach_and_diagnostic_context() {
+        let parent_request = MleMessage {
+            command: MleCommand::ParentRequest,
+            tlvs: vec![
+                Tlv::new(
+                    TlvType::ScanMask,
+                    vec![ScanMask {
+                        routers: true,
+                        end_devices: false,
+                    }
+                    .encode()],
+                )
+                .unwrap(),
+                Tlv::new(TlvType::Version, vec![0x00, 0x04]).unwrap(),
+            ],
+        };
+        let attach_response = MleMessage {
+            command: MleCommand::ChildIdResponse,
+            tlvs: vec![Tlv::new(
+                TlvType::Mode,
+                vec![Mode {
+                    receiver_on_when_idle: true,
+                    secure_data_requests: true,
+                    full_thread_device: true,
+                    full_network_data: true,
+                }
+                .encode()],
+            )
+            .unwrap()],
+        };
+        let diagnostic = MleMessage {
+            command: MleCommand::Advertisement,
+            tlvs: vec![
+                LeaderData {
+                    partition_id: 0x0102_0304,
+                    weighting: 64,
+                    data_version: 2,
+                    stable_data_version: 1,
+                    leader_router_id: 7,
+                }
+                .to_tlv(),
+                ThreadNetworkData::new(vec![NetworkDataTlvType::Prefix.as_byte(), 0])
+                    .unwrap()
+                    .to_tlv(),
+                Tlv::new(TlvType::Connectivity, vec![1, 3, 2, 1, 5, 8, 12]).unwrap(),
+            ],
+        };
+        let status = MleMessage {
+            command: MleCommand::ChildUpdateResponse,
+            tlvs: vec![MleStatus { code: 1 }.to_tlv()],
+        };
+        let unknown = MleMessage {
+            command: MleCommand::Unknown(0xfe),
+            tlvs: Vec::new(),
+        };
+
+        let summary = MleMessageBatchSummary::from_messages([
+            &parent_request,
+            &attach_response,
+            &diagnostic,
+            &status,
+            &unknown,
+        ]);
+
+        assert_eq!(summary.total_messages, 5);
+        assert_eq!(summary.total_tlvs, 7);
+        assert_eq!(summary.empty_messages, 1);
+        assert_eq!(summary.parent_selection_request_messages, 1);
+        assert_eq!(summary.attach_response_messages, 1);
+        assert_eq!(summary.diagnostic_messages, 1);
+        assert_eq!(summary.thread_data_version_messages, 1);
+        assert_eq!(summary.status_messages, 1);
+        assert_eq!(summary.network_data_messages, 1);
+        assert_eq!(summary.connectivity_messages, 1);
+        assert_eq!(summary.unknown_command_messages, 1);
+        assert!(summary.has_parent_selection_requests());
+        assert!(summary.has_attach_responses());
+        assert!(summary.has_diagnostics());
+        assert!(summary.has_statuses());
+        assert!(summary.has_unknown_commands());
+    }
+
+    #[test]
+    fn mle_message_batch_summary_handles_precomputed_and_empty_summaries() {
+        let empty = MleMessageBatchSummary::empty();
+        assert!(empty.is_empty());
+        assert!(!empty.has_diagnostics());
+
+        let summaries = [
+            MleMessageSummary {
+                command: MleCommand::DataResponse,
+                tlv_count: 1,
+                has_scan_mask: false,
+                has_mode: false,
+                has_timeout: false,
+                has_leader_data: false,
+                has_network_data: true,
+                has_connectivity: false,
+                has_status: false,
+                has_version: false,
+            },
+            MleMessageSummary {
+                command: MleCommand::LinkReject,
+                tlv_count: 1,
+                has_scan_mask: false,
+                has_mode: false,
+                has_timeout: false,
+                has_leader_data: false,
+                has_network_data: false,
+                has_connectivity: false,
+                has_status: true,
+                has_version: false,
+            },
+        ];
+        let summary = MleMessageBatchSummary::from_summaries(&summaries);
+
+        assert_eq!(summary.total_messages, 2);
+        assert_eq!(summary.total_tlvs, 2);
+        assert_eq!(summary.network_data_messages, 1);
+        assert_eq!(summary.status_messages, 1);
+        assert!(!summary.is_empty());
+        assert!(summary.has_statuses());
+        assert!(!summary.has_parent_selection_requests());
     }
 
     #[test]
