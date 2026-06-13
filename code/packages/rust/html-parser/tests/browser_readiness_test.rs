@@ -35,7 +35,8 @@ use coding_adventures_html_parser::{
     BrowserSlotDescriptor, BrowserStructuredDataDescriptor, BrowserStructuredItem,
     BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
     BrowserTable, BrowserTableCell, BrowserTableStructureDescriptor, BrowserTemplate,
-    BrowserTemplateDescriptor, BrowserTextSemantic, BrowserThemeColor,
+    BrowserTemplateDescriptor, BrowserTextSemantic, BrowserTextSemanticDescriptor,
+    BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -131,6 +132,8 @@ struct ExpectedBrowserDocument {
     headings: Vec<ExpectedHeading>,
     #[serde(default)]
     text_semantics: Vec<ExpectedTextSemantic>,
+    #[serde(default)]
+    text_semantic_descriptors: Option<Vec<ExpectedTextSemanticDescriptor>>,
     #[serde(default)]
     navigation_target_descriptors: Vec<ExpectedNavigationTargetDescriptor>,
     #[serde(default)]
@@ -2042,6 +2045,47 @@ struct ExpectedTextSemantic {
     bidi_kind: Option<String>,
     #[serde(default)]
     phrase_kind: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedTextSemanticDescriptor {
+    semantic_index: usize,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    semantic_kind: String,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    lang: Option<String>,
+    #[serde(default)]
+    dir: Option<String>,
+    #[serde(default)]
+    quote_cite: Option<String>,
+    #[serde(default)]
+    resolved_quote_cite: Option<String>,
+    #[serde(default)]
+    data_value: Option<String>,
+    #[serde(default)]
+    datetime: Option<String>,
+    #[serde(default)]
+    edit_cite: Option<String>,
+    #[serde(default)]
+    resolved_edit_cite: Option<String>,
+    #[serde(default)]
+    edit_datetime: Option<String>,
+    #[serde(default)]
+    ruby_kind: Option<String>,
+    #[serde(default)]
+    bidi_kind: Option<String>,
+    #[serde(default)]
+    phrase_kind: Option<String>,
+    #[serde(default)]
+    semantic_blocked: bool,
+    #[serde(default)]
+    semantic_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4423,6 +4467,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
             case.expected.table_structure_descriptors.is_some();
         let tracks_image_map_descriptors = case.expected.image_map_descriptors.is_some();
         let tracks_link_resource_descriptors = case.expected.link_resource_descriptors.is_some();
+        let tracks_text_semantic_descriptors = case.expected.text_semantic_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4457,6 +4502,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_link_resource_descriptors {
             expected.link_resource_descriptors = actual.link_resource_descriptors.clone();
+        }
+        if !tracks_text_semantic_descriptors {
+            expected.text_semantic_descriptors = actual.text_semantic_descriptors.clone();
         }
 
         assert_eq!(
@@ -4989,6 +5037,60 @@ fn browser_text_semantic_descriptor_metadata_tracks_inline_annotations() {
     assert_eq!(
         actual.text_semantics, expected.text_semantics,
         "text semantics should preserve machine-readable values, edits, quotes, phrase semantics, ruby annotations, and bidi metadata",
+    );
+}
+
+#[test]
+fn browser_text_semantic_descriptors_track_kinds_values_and_cites() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "inline-semantic-metadata-page")
+        .expect("inline semantic fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("inline semantic fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.text_semantic_descriptors,
+        case.expected.into_browser_document().text_semantic_descriptors,
+        "text semantic descriptors should preserve annotation kinds, machine-readable values, citations, ruby, bidi, and phrase metadata",
+    );
+}
+
+#[test]
+fn browser_text_semantic_descriptors_track_missing_and_unresolved_annotations() {
+    let actual = parse_browser_document(
+        r#"<data id=version>Version</data>
+           <time id=date>soon</time>
+           <q id=quote cite=notes/ref.html>quoted</q>
+           <ins id=add cite=changes.html>Added</ins>
+           <bdo id=rtl>abc</bdo>"#,
+    )
+    .expect("blocked text semantic descriptor fixture should parse");
+
+    assert_eq!(actual.text_semantic_descriptors.len(), 5);
+    assert_eq!(
+        actual.text_semantic_descriptors[0].semantic_block_reasons,
+        vec!["missing-data-value"],
+    );
+    assert_eq!(
+        actual.text_semantic_descriptors[1].semantic_block_reasons,
+        vec!["missing-datetime"],
+    );
+    assert_eq!(
+        actual.text_semantic_descriptors[2].semantic_block_reasons,
+        vec!["unresolved-quote-cite"],
+    );
+    assert_eq!(
+        actual.text_semantic_descriptors[3].semantic_block_reasons,
+        vec!["unresolved-edit-cite", "edit-missing-datetime"],
+    );
+    assert_eq!(
+        actual.text_semantic_descriptors[4].semantic_block_reasons,
+        vec!["bidi-missing-dir"],
     );
 }
 
@@ -7447,6 +7549,17 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedResource::into_browser_resource)
             .collect();
+        let text_semantics: Vec<_> = self
+            .text_semantics
+            .into_iter()
+            .map(ExpectedTextSemantic::into_browser_text_semantic)
+            .collect();
+        let text_semantic_descriptors = self
+            .text_semantic_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedTextSemanticDescriptor::into_browser_text_semantic_descriptor)
+            .collect();
         let scripts: Vec<_> = self
             .scripts
             .into_iter()
@@ -7949,11 +8062,8 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedHeading::into_browser_heading)
                 .collect(),
-            text_semantics: self
-                .text_semantics
-                .into_iter()
-                .map(ExpectedTextSemantic::into_browser_text_semantic)
-                .collect(),
+            text_semantics,
+            text_semantic_descriptors,
             navigation_target_descriptors: self
                 .navigation_target_descriptors
                 .into_iter()
@@ -14608,6 +14718,34 @@ impl ExpectedTextSemantic {
             ruby_kind: self.ruby_kind,
             bidi_kind: self.bidi_kind,
             phrase_kind: self.phrase_kind,
+        }
+    }
+}
+
+impl ExpectedTextSemanticDescriptor {
+    fn into_browser_text_semantic_descriptor(self) -> BrowserTextSemanticDescriptor {
+        BrowserTextSemanticDescriptor {
+            semantic_index: self.semantic_index,
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            semantic_kind: self.semantic_kind,
+            title: self.title,
+            lang: self.lang,
+            dir: self.dir,
+            quote_cite: self.quote_cite,
+            resolved_quote_cite: self.resolved_quote_cite,
+            data_value: self.data_value,
+            datetime: self.datetime,
+            edit_cite: self.edit_cite,
+            resolved_edit_cite: self.resolved_edit_cite,
+            edit_datetime: self.edit_datetime,
+            ruby_kind: self.ruby_kind,
+            bidi_kind: self.bidi_kind,
+            phrase_kind: self.phrase_kind,
+            semantic_blocked: self.semantic_blocked,
+            semantic_block_reasons: self.semantic_block_reasons,
         }
     }
 }
