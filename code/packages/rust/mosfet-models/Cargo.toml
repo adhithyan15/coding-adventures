@@ -1,0 +1,8 @@
+[package]
+name = "mosfet-models"
+version = "0.1.0"
+edition = "2021"
+description = "SPICE Level-1 (Shockley) MOSFET I-V model with subthreshold, triode, and saturation regions"
+
+[dependencies]
+device-physics = { path = "../device-physics" }
