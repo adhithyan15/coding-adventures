@@ -36,6 +36,8 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationPackageSummary` and `hue_activation_package_summary`
   for joining Hue catalog metadata with activation-plan target, prerequisite,
   and policy-review shape.
+- `IntegrationReadinessPackageSummary` and `hue_readiness_package_summary` for
+  joining Hue activation-package shape with host-specific readiness blockers.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
