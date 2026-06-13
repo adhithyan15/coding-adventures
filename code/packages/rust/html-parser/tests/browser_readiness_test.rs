@@ -23,19 +23,19 @@ use coding_adventures_html_parser::{
     BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea,
     BrowserImageMapDescriptor, BrowserImageSource, BrowserInputPlanningDescriptor,
     BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
-    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
-    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
-    BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor, BrowserStructuredDataDescriptor,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTableStructureDescriptor, BrowserTemplate, BrowserTemplateDescriptor,
-    BrowserTextSemantic, BrowserThemeColor,
+    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLinkResourceDescriptor,
+    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
+    BrowserScriptModuleGraphDescriptor, BrowserScriptStorageAccessDescriptor,
+    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
+    BrowserSectionLandmark, BrowserSelectOption, BrowserSelectionInteractionDescriptor,
+    BrowserSlotDescriptor, BrowserStructuredDataDescriptor, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
+    BrowserTable, BrowserTableCell, BrowserTableStructureDescriptor, BrowserTemplate,
+    BrowserTemplateDescriptor, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -113,6 +113,8 @@ struct ExpectedBrowserDocument {
     fetch_policy_descriptors: Vec<ExpectedFetchPolicyDescriptor>,
     #[serde(default)]
     resource_endpoint_descriptors: Option<Vec<ExpectedResourceEndpointDescriptor>>,
+    #[serde(default)]
+    link_resource_descriptors: Option<Vec<ExpectedLinkResourceDescriptor>>,
     #[serde(default)]
     form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
     #[serde(default)]
@@ -1581,6 +1583,47 @@ struct ExpectedResource {
     default_track: bool,
     async_script: bool,
     defer_script: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedLinkResourceDescriptor {
+    resource_index: usize,
+    resource_kind: String,
+    url: String,
+    #[serde(default)]
+    resolved_url: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    as_hint: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    sizes: Option<String>,
+    #[serde(default)]
+    hreflang: Option<String>,
+    #[serde(default)]
+    color: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
+    #[serde(default)]
+    responsive_image_preload: bool,
+    #[serde(default)]
+    icon_candidate: bool,
+    #[serde(default)]
+    alternate_candidate: bool,
+    #[serde(default)]
+    policy_hint_count: usize,
+    #[serde(default)]
+    resource_blocked: bool,
+    #[serde(default)]
+    resource_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4379,6 +4422,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_table_structure_descriptors =
             case.expected.table_structure_descriptors.is_some();
         let tracks_image_map_descriptors = case.expected.image_map_descriptors.is_some();
+        let tracks_link_resource_descriptors = case.expected.link_resource_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4410,6 +4454,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_image_map_descriptors {
             expected.image_map_descriptors = actual.image_map_descriptors.clone();
+        }
+        if !tracks_link_resource_descriptors {
+            expected.link_resource_descriptors = actual.link_resource_descriptors.clone();
         }
 
         assert_eq!(
@@ -4698,6 +4745,60 @@ fn browser_link_descriptor_metadata_tracks_icon_and_alternate_fields() {
     assert_eq!(
         actual.resources, expected.resources,
         "link resources should preserve icon sizes, mask colors, and alternate language descriptors",
+    );
+}
+
+#[test]
+fn browser_link_resource_descriptors_track_rel_hints_policy_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "link-resource-metadata-page")
+        .expect("link resource fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("link resource fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.link_resource_descriptors,
+        case.expected.into_browser_document().link_resource_descriptors,
+        "link resource descriptors should preserve relation kinds, scheduling hints, icon/alternate metadata, and blocker state",
+    );
+}
+
+#[test]
+fn browser_link_resource_descriptors_track_missing_and_unresolved_hints() {
+    let actual = parse_browser_document(
+        r#"<link rel=preload href=font.woff2>
+           <link rel=preload href=hero.jpg as=image imagesrcset="hero.jpg 1x">
+           <link rel=icon href=favicon.ico>
+           <link rel=mask-icon href=mask.svg>
+           <link rel=alternate href=feed.xml>"#,
+    )
+    .expect("blocked link resource descriptor fixture should parse");
+
+    assert_eq!(actual.link_resource_descriptors.len(), 5);
+    assert_eq!(
+        actual.link_resource_descriptors[0].resource_block_reasons,
+        vec!["unresolved-url", "preload-missing-as"],
+    );
+    assert_eq!(
+        actual.link_resource_descriptors[1].resource_block_reasons,
+        vec!["unresolved-url", "responsive-image-preload-missing-sizes",],
+    );
+    assert_eq!(
+        actual.link_resource_descriptors[2].resource_block_reasons,
+        vec!["unresolved-url", "icon-missing-size-or-type"],
+    );
+    assert_eq!(
+        actual.link_resource_descriptors[3].resource_block_reasons,
+        vec!["unresolved-url", "mask-icon-missing-color"],
+    );
+    assert_eq!(
+        actual.link_resource_descriptors[4].resource_block_reasons,
+        vec!["unresolved-url", "alternate-missing-descriptor"],
     );
 }
 
@@ -7414,6 +7515,12 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_resource_endpoint_descriptors(&metadata, &resources));
+        let link_resource_descriptors = self
+            .link_resource_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedLinkResourceDescriptor::into_browser_link_resource_descriptor)
+            .collect();
         let media_playback_descriptors = self
             .media_playback_descriptors
             .map(|descriptors| {
@@ -7821,6 +7928,7 @@ impl ExpectedBrowserDocument {
                 .map(ExpectedFetchPolicyDescriptor::into_browser_fetch_policy_descriptor)
                 .collect(),
             resource_endpoint_descriptors,
+            link_resource_descriptors,
             form_policy_descriptors: self
                 .form_policy_descriptors
                 .into_iter()
@@ -8563,6 +8671,33 @@ impl ExpectedResource {
             default_track: self.default_track,
             async_script: self.async_script,
             defer_script: self.defer_script,
+        }
+    }
+}
+
+impl ExpectedLinkResourceDescriptor {
+    fn into_browser_link_resource_descriptor(self) -> BrowserLinkResourceDescriptor {
+        BrowserLinkResourceDescriptor {
+            resource_index: self.resource_index,
+            resource_kind: self.resource_kind,
+            url: self.url,
+            resolved_url: self.resolved_url,
+            rel_tokens: self.rel_tokens,
+            as_hint: self.as_hint,
+            type_hint: self.type_hint,
+            media: self.media,
+            title: self.title,
+            sizes: self.sizes,
+            hreflang: self.hreflang,
+            color: self.color,
+            fetchpriority: self.fetchpriority,
+            blocking_tokens: self.blocking_tokens,
+            responsive_image_preload: self.responsive_image_preload,
+            icon_candidate: self.icon_candidate,
+            alternate_candidate: self.alternate_candidate,
+            policy_hint_count: self.policy_hint_count,
+            resource_blocked: self.resource_blocked,
+            resource_block_reasons: self.resource_block_reasons,
         }
     }
 }
