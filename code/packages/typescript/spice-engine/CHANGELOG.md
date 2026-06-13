@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `measureAcSweepProbe`, `measureAcSweepCards`, and
+  `measureAcSweepDeck` so parsed `.measure ac` / `.meas ac` cards can route
+  AC sweep probe magnitudes into the shared scalar measurement table surface,
+  matching Python and Rust.
 - Add `measureDcSweepProbe`, `measureDcSweepCards`, and
   `measureDcSweepDeck` so parsed `.measure dc` / `.meas dc` cards can route
   DC sweep probe samples into the shared scalar measurement table surface,

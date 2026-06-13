@@ -1,10 +1,13 @@
+use std::collections::BTreeMap;
+
 use spice_engine::{
     ac_sweep, ac_sweep_corners, ac_sweep_corners_parallel, format_ac_table, format_corner_ac_table,
-    format_corner_s_parameter_table, format_s_parameter_table, s_parameters, s_parameters_corners,
-    s_parameters_corners_parallel, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet, JfetPolarity,
-    Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError, TransmissionLine,
-    Vcvs, VoltageSource,
+    format_corner_s_parameter_table, format_measurement_table, format_s_parameter_table,
+    measure_ac_sweep_deck, measure_ac_sweep_probe, s_parameters, s_parameters_corners,
+    s_parameters_corners_parallel, AcPoint, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit,
+    Complex, CornerOverride, CornerSpec, CurrentSource, Diode, Element, Inductor, Jfet,
+    JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, Resistor, SpiceError,
+    TransmissionLine, Vcvs, VoltageSource,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -85,6 +88,61 @@ fn ac_text_output_table_is_stable() {
     assert_eq!(
         format_ac_table(&points, &["V(out)", "I(V1)"]).unwrap(),
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n"
+    );
+}
+
+#[test]
+fn ac_sweep_measurements_execute_probe_and_parsed_cards() {
+    let points = vec![
+        AcPoint {
+            frequency_hz: 10.0,
+            node_voltages: BTreeMap::from([("out".to_string(), Complex::new(1.0, 0.0))]),
+            branch_currents: BTreeMap::new(),
+        },
+        AcPoint {
+            frequency_hz: 100.0,
+            node_voltages: BTreeMap::from([("out".to_string(), Complex::new(0.0, 2.0))]),
+            branch_currents: BTreeMap::new(),
+        },
+        AcPoint {
+            frequency_hz: 1_000.0,
+            node_voltages: BTreeMap::from([("out".to_string(), Complex::new(0.0, 0.5))]),
+            branch_currents: BTreeMap::new(),
+        },
+    ];
+
+    let peak = measure_ac_sweep_probe(
+        &points,
+        "out_peak",
+        "V(out)",
+        "max",
+        Some(10.0),
+        Some(100.0),
+    )
+    .unwrap();
+    let average = measure_ac_sweep_probe(&points, "out_avg", "V(out)", "avg", None, None).unwrap();
+
+    assert_close(peak.value, 2.0);
+    assert_eq!(peak.analysis, "ac");
+    assert_close(average.value, 1.1666666666666667);
+    assert_eq!(
+        format_measurement_table(&[peak, average]),
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nout_peak\tac\tV(out)\tmax\t1.000000e+01\t1.000000e+02\t2.000000e+00\nout_avg\tac\tV(out)\tavg\t\t\t1.166667e+00\n"
+    );
+
+    let measurements = measure_ac_sweep_deck(
+        &points,
+        "
+.measure ac out_swing PP V(out) FROM=10 TO=1000
+.meas ac out_final FINAL V(out)
+.end
+",
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_measurement_table(&measurements),
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nout_swing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\nout_final\tac\tV(out)\tlast\t\t\t5.000000e-01\n"
     );
 }
 

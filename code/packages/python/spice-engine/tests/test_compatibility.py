@@ -414,6 +414,7 @@ V1 in 0 DC 1
 .measure tran swing peak-to-peak V(out) FROM=1m TO={3m}
 .meas transient settled FINAL V(out)
 .measure dc dcmax MAX V(out) FROM=1 TO=3
+.measure ac acmax MAX V(out) FROM=1k TO=10k
 .end
 .measure tran ignored MAX V(out)
 """
@@ -421,23 +422,26 @@ V1 in 0 DC 1
 
     assert summary.active_lines == ("V1 in 0 DC 1",)
     assert summary.terminated is True
-    assert summary.end_line_number == 6
+    assert summary.end_line_number == 7
     assert summary.diagnostics == ()
     assert [(card.name, card.analysis, card.mode, card.probe) for card in summary.measurements] == [
         ("swing", "tran", "pp", "V(out)"),
         ("settled", "transient", "last", "V(out)"),
         ("dcmax", "dc", "max", "V(out)"),
+        ("acmax", "ac", "max", "V(out)"),
     ]
     assert summary.measurements[0].from_value == 1.0e-3
     assert summary.measurements[0].to_value == 3.0e-3
     assert summary.measurements[2].from_value == 1.0
     assert summary.measurements[2].to_value == 3.0
+    assert summary.measurements[3].from_value == 1.0e3
+    assert summary.measurements[3].to_value == 1.0e4
 
 
 def test_resolve_deck_measurements_reports_unsupported_subset() -> None:
     summary = resolve_deck_measurements(
         """
-.measure ac gain MAX V(out)
+.measure tf gain MAX V(out)
 .measure tran badmode MEDIAN V(out)
 .measure tran badwindow MAX V(out) FROM=3m TO=1m
 .measure tran badoption MAX V(out) RISE=1

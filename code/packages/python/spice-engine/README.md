@@ -63,7 +63,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
-| `measure_transient_probe`, `measure_dc_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient and DC sweep probe measurements |
+| `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
 and `circuit_at_temperature()` provide operating-temperature footholds for
@@ -77,11 +77,13 @@ DC operating-point snapshots with the Rust-matching `Corner` / `Index` columns.
 `format_corner_ac_table()`, and `format_corner_tf_table()` provide the matching
 stable `.DC`, `.AC`, and `.TF` sweep/corner text surfaces.
 `measure_transient_probe()`, `measure_transient_deck()`,
-`measure_dc_sweep_probe()`, `measure_dc_sweep_deck()`, and
+`measure_dc_sweep_probe()`, `measure_dc_sweep_deck()`,
+`measure_ac_sweep_probe()`, `measure_ac_sweep_deck()`, and
 `format_measurement_table()` provide the shared `.MEASURE`-style scalar output
 surface for MAX, MIN, AVG, RMS, peak-to-peak, and final-value probe
-measurements. The deck helpers route parsed transient and DC sweep `.measure`
-/ `.meas` cards into those stable measurement rows.
+measurements. The AC helper measures complex probe magnitudes over optional
+frequency windows. The deck helpers route parsed transient, DC sweep, and AC
+sweep `.measure` / `.meas` cards into those stable measurement rows.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
 size, selected real solver path, tolerance, convergence aid, and final Newton
@@ -138,9 +140,9 @@ solve with `.ic` values taking precedence over `.nodeset` values.
 definitions before `.end`, preserves non-function active lines, strips braced
 or quoted expression delimiters, and reports stable diagnostics for malformed
 signatures, arguments, or empty expressions.
-`resolve_deck_measurements()` extracts transient and DC sweep `.measure` /
+`resolve_deck_measurements()` extracts transient, DC sweep, and AC sweep `.measure` /
 `.meas` cards before `.end`, keeps non-measure active lines, evaluates optional
-`FROM=` / `TO=` scalar time or source-value windows, and reports stable
+`FROM=` / `TO=` scalar time, source-value, or frequency windows, and reports stable
 diagnostics for unsupported analyses, modes, options, expressions, and invalid
 windows.
 

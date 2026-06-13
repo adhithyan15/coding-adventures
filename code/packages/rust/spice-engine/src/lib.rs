@@ -4530,14 +4530,14 @@ fn resolve_measurement_line(
     }
 
     let analysis = tokens[1].trim().to_ascii_lowercase();
-    if analysis != "tran" && analysis != "transient" && analysis != "dc" {
+    if analysis != "tran" && analysis != "transient" && analysis != "dc" && analysis != "ac" {
         add_measurement_diagnostic(
             state,
             "SPICE_DECK_MEASURE_ANALYSIS",
             directive,
             line_number,
             &format!(
-                "only transient and dc .measure cards are supported, got {:?}",
+                "only transient, dc, and ac .measure cards are supported, got {:?}",
                 tokens[1]
             ),
             Some(tokens[1].to_string()),
@@ -8819,6 +8819,113 @@ pub fn measure_dc_sweep_deck(
         ));
     }
     measure_dc_sweep_cards(points, &summary.measurements)
+}
+
+pub fn measure_ac_sweep_probe(
+    points: &[AcPoint],
+    name: &str,
+    probe: &str,
+    mode: &str,
+    from_frequency: Option<f64>,
+    to_frequency: Option<f64>,
+) -> Result<ProbeMeasurement, SpiceError> {
+    let normalized_mode = normalize_measurement_mode_with_context(mode, "measure_ac_sweep_probe")?;
+    if let Some(value) = from_frequency {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_ac_sweep_probe",
+                "from_frequency must be finite",
+            ));
+        }
+    }
+    if let Some(value) = to_frequency {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_ac_sweep_probe",
+                "to_frequency must be finite",
+            ));
+        }
+    }
+    if let (Some(from), Some(to)) = (from_frequency, to_frequency) {
+        if from > to {
+            return Err(table_error(
+                "measure_ac_sweep_probe",
+                "from_frequency must be <= to_frequency",
+            ));
+        }
+    }
+
+    let mut values = Vec::new();
+    for point in points {
+        if from_frequency.map_or(false, |from| point.frequency_hz < from)
+            || to_frequency.map_or(false, |to| point.frequency_hz > to)
+        {
+            continue;
+        }
+        values.push(
+            table_complex_probe_value(
+                &point.node_voltages,
+                &point.branch_currents,
+                probe,
+                "measure_ac_sweep_probe",
+            )?
+            .abs(),
+        );
+    }
+    if values.is_empty() {
+        return Err(table_error(
+            "measure_ac_sweep_probe",
+            "no ac sweep samples in window",
+        ));
+    }
+
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "ac".to_string(),
+        probe: probe.to_string(),
+        mode: normalized_mode.to_string(),
+        value: measure_values_with_context(&values, normalized_mode, "measure_ac_sweep_probe")?,
+        from_value: from_frequency,
+        to_value: to_frequency,
+    })
+}
+
+pub fn measure_ac_sweep_cards(
+    points: &[AcPoint],
+    measurements: &[DeckMeasurementCard],
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    let mut results = Vec::new();
+    for measurement in measurements {
+        if measurement.analysis != "ac" {
+            return Err(table_error(
+                "measure_ac_sweep_cards",
+                "only ac measurement cards are supported",
+            ));
+        }
+        results.push(measure_ac_sweep_probe(
+            points,
+            &measurement.name,
+            &measurement.probe,
+            &measurement.mode,
+            measurement.from_value,
+            measurement.to_value,
+        )?);
+    }
+    Ok(results)
+}
+
+pub fn measure_ac_sweep_deck(
+    points: &[AcPoint],
+    netlist: &str,
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    let summary = resolve_deck_measurements(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "measure_ac_sweep_deck",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    measure_ac_sweep_cards(points, &summary.measurements)
 }
 
 pub fn format_measurement_table(measurements: &[ProbeMeasurement]) -> String {
