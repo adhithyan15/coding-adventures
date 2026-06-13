@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.108.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-101** — a prefix unary operator (`typeof`/`void`/
+  `delete`/`!`/`-`/`+`/`~`) — and the binary `instanceof` — with a
+  PARENTHESISED higher-arity operand now drops the grouping parens:
+
+      a=typeof(void 0)       -> a=typeof void 0
+      a=typeof(typeof b)     -> a=typeof typeof b
+      a=typeof(-b)           -> a=typeof-b
+      a=typeof(!b)           -> a=typeof!b
+      a=typeof(b())          -> a=typeof b()
+      a=typeof(a.b())        -> a=typeof a.b()
+      a=void(void 0)         -> a=void void 0
+      a=b instanceof(C())    -> a=b instanceof C()
+
+  Every prefix unary operator (and `instanceof`) binds LOOSER than
+  member access, call, and any prefix unary, so a parenthesised
+  operand that is itself a UnaryExpression or a CallExpression
+  re-associates identically with or without the grouping parens.
+  Before this, gap-054's safe-operand set (CLOC12.63) only covered a
+  single identifier/literal token or a member-reference chain, so
+  these higher-arity operands kept their parens. The gap-054 keyword
+  block's operand predicate was widened from `is_safe_unary_operand`
+  to the new `is_safe_unary_kw_operand`, which additionally accepts a
+  leading symbol/keyword unary chain (`is_safe_unary_paren_operand` +
+  a `typeof`/`void`/`delete` recursion) and a call/member chain
+  (`is_call_ref_chain`). A parenthesised BINARY / comma / assignment /
+  ternary operand (`typeof(b+c)`, `typeof(a,b)`, `typeof(a=b)`,
+  `typeof(b?c:d)`) is still REJECTED and keeps its parens; the
+  property guard (`o.delete(a)` stays a method call) is unchanged.
+  Separator nuance preserved: a word-like inner operator keeps the
+  space (`typeof void 0`), a symbol inner operator collapses it
+  (`typeof-b`). Verified byte-identical against the upstream Closure
+  JAR (v20240317) across 26 operand shapes. +3 `gap101_*` unit tests;
+  the three `minify_unary_*` fixtures from CLOC14.44 are now enforced.
+
 ## [0.107.0] - 2026-06-12
 
 ### Fixed

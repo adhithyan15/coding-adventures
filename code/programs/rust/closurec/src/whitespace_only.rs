@@ -737,7 +737,15 @@ pub fn whitespace_only_minify(
                 }
                 if let Some(close) = close {
                     let span = &kept[open + 1..close];
-                    if is_safe_unary_operand(span) {
+                    // gap-054/070 + gap-101: the operand is "safe" if it
+                    // is a single token, a member-reference chain
+                    // (gap-054/070), a leading SYMBOL/KEYWORD unary chain,
+                    // or a call/member chain (gap-101). All bind tighter
+                    // than (or, for `instanceof`, are re-associated the
+                    // same by) the operator, so the grouping parens are
+                    // redundant. A parenthesised binary operand is still
+                    // rejected and keeps its parens.
+                    if is_safe_unary_kw_operand(span) {
                         drops.push(open);
                         drops.push(close);
                         i = close + 1;
@@ -4279,6 +4287,129 @@ fn is_safe_unary_paren_operand(span: &[&lexer::token::Token]) -> bool {
     false
 }
 
+/// gap-101: True iff `span` (the tokens BETWEEN a unary OPERATOR's
+/// grouping parens) is a "safe" operand for that operator — i.e.
+/// `OP(span)` ≡ `OP span`. A strict SUPERSET of
+/// `is_safe_unary_paren_operand` that additionally accepts the two
+/// higher-arity operand shapes upstream also unwraps:
+///
+///   (a) a leading KEYWORD unary operator (`typeof`/`void`/`delete`)
+///       applied recursively to a safe operand:
+///         typeof(void 0)     -> typeof void 0
+///         typeof(typeof b)   -> typeof typeof b
+///         void(void 0)       -> void void 0
+///
+///   (b) a CALL / member chain — an identifier base followed by any
+///       run of `.name` / `?.name` / `[…]` / `(…)` accessors:
+///         typeof(b())        -> typeof b()
+///         typeof(a.b())      -> typeof a.b()
+///
+/// Every prefix unary operator (and the binary `instanceof`) binds
+/// LOOSER than member access, call, and any prefix unary, so a
+/// parenthesised operand that is itself a UnaryExpression or a
+/// CallExpression re-associates identically with or without the
+/// grouping parens. A parenthesised BINARY operand (`typeof(b+c)`,
+/// `void(a,b)`, `typeof(a=b)`) binds looser than the would-be
+/// adjacency and is still REJECTED — `is_safe_unary_paren_operand`
+/// handles the single-token / member-chain / leading-symbol-unary
+/// shapes, the keyword-unary branch below adds (a), and
+/// `is_call_ref_chain` adds (b).
+fn is_safe_unary_kw_operand(span: &[&lexer::token::Token]) -> bool {
+    // Single token, member-reference chain, or a leading SYMBOL
+    // prefix-unary chain (`-b`, `!b`, `~a.b`).
+    if is_safe_unary_paren_operand(span) {
+        return true;
+    }
+    // (a) A leading KEYWORD unary operator applied to a safe operand.
+    // The keyword must be a genuine word-like token (never a string
+    // literal `"typeof"` whose `.value` matches) and must be FOLLOWED
+    // by more tokens (a bare `typeof` is not an operand).
+    if let Some((first, rest)) = span.split_first() {
+        if !rest.is_empty()
+            && is_word_like(first)
+            && matches!(first.value.as_str(), "typeof" | "void" | "delete")
+        {
+            return is_safe_unary_kw_operand(rest);
+        }
+    }
+    // (b) A call / member reference chain (identifier base + accessors,
+    // where the accessors may include a call `(…)`).
+    is_call_ref_chain(span)
+}
+
+/// gap-101 helper. True iff `span` is an identifier base followed by
+/// a (possibly empty) run of member / call accessors — `.name`,
+/// `?.name`, `[…]`, `(…)` — and NOTHING else at the top level. This
+/// is the `is_safe_unary_operand` shape-2 reference-chain walk
+/// EXTENDED to also accept call accessors `(…)`, so `b()` / `a.b()` /
+/// `a().b` / `a[0]()` qualify as self-delimiting operands of a unary
+/// operator. A top-level binary operator, comma, or assignment makes
+/// it return false (the grouping parens are then meaningful).
+fn is_call_ref_chain(span: &[&lexer::token::Token]) -> bool {
+    if span.is_empty() {
+        return false;
+    }
+    let base = span[0];
+    if is_string_literal(base) || !is_word_like(base) {
+        return false;
+    }
+    if !base
+        .value
+        .starts_with(|c: char| c.is_ascii_alphabetic() || c == '_' || c == '$')
+    {
+        return false;
+    }
+    let mut k = 1;
+    while k < span.len() {
+        let t = span[k];
+        if is_structural_punct(t, ".") || is_structural_punct(t, "?.") {
+            let Some(name) = span.get(k + 1) else {
+                return false;
+            };
+            if is_string_literal(name) || !is_word_like(name) {
+                return false;
+            }
+            k += 2;
+        } else if is_structural_punct(t, "[") || is_structural_punct(t, "(") {
+            // Balanced `[ … ]` / `( … )` accessor. A depth scan over
+            // ALL bracket kinds keeps a nested mismatched pair from
+            // ending the accessor early; well-formed JS guarantees the
+            // matching close has the right kind. An empty `()` call is
+            // valid (unlike an empty `[]` subscript), so no emptiness
+            // check is applied here.
+            let mut depth: i32 = 1;
+            let mut j = k + 1;
+            while j < span.len() {
+                let u = span[j];
+                if is_structural_punct(u, "(")
+                    || is_structural_punct(u, "[")
+                    || is_structural_punct(u, "{")
+                {
+                    depth += 1;
+                } else if is_structural_punct(u, ")")
+                    || is_structural_punct(u, "]")
+                    || is_structural_punct(u, "}")
+                {
+                    depth -= 1;
+                    if depth == 0 {
+                        break;
+                    }
+                }
+                j += 1;
+            }
+            if depth != 0 {
+                return false; // unbalanced
+            }
+            k = j + 1;
+        } else {
+            // Top-level operator / comma / assignment → not a pure
+            // call-reference chain; the parens carry meaning.
+            return false;
+        }
+    }
+    true
+}
+
 fn is_safe_unary_operand(span: &[&lexer::token::Token]) -> bool {
     if span.is_empty() {
         return false;
@@ -6188,6 +6319,54 @@ mod tests {
         assert_eq!(minify("var x=-(a+b);"), "var x=-(a+b);");
         assert_eq!(minify("var x=a-(b);"), "var x=a-b;");
         assert_eq!(minify("var x=a-(b+c);"), "var x=a-(b+c);");
+    }
+
+    // ---- gap-101: unary operator + higher-arity operand elision ---
+
+    /// gap-101: a unary KEYWORD operator with a parenthesised
+    /// UNARY-expression operand drops the grouping parens. The
+    /// separator follows the usual word-like rule — a word-like
+    /// inner operator keeps the space (`typeof void 0`), a symbol
+    /// inner operator collapses it (`typeof-b`, `typeof!b`).
+    #[test]
+    fn gap101_unary_keyword_operand_elided() {
+        assert_eq!(minify("a=typeof(void 0);"), "a=typeof void 0;");
+        assert_eq!(minify("a=typeof(typeof b);"), "a=typeof typeof b;");
+        assert_eq!(minify("a=void(void 0);"), "a=void void 0;");
+        assert_eq!(minify("a=typeof(-b);"), "a=typeof-b;");
+        assert_eq!(minify("a=typeof(!b);"), "a=typeof!b;");
+        assert_eq!(minify("a=typeof(~b);"), "a=typeof~b;");
+    }
+
+    /// gap-101: a unary operator with a parenthesised CALL / member
+    /// operand drops the parens (calls bind tighter than every prefix
+    /// unary and than `instanceof`).
+    #[test]
+    fn gap101_unary_call_operand_elided() {
+        assert_eq!(minify("a=typeof(b());"), "a=typeof b();");
+        assert_eq!(minify("a=typeof(a.b());"), "a=typeof a.b();");
+        assert_eq!(minify("a=void(b());"), "a=void b();");
+        assert_eq!(
+            minify("var x=a instanceof(C());"),
+            "var x=a instanceof C();"
+        );
+        assert_eq!(
+            minify("var x=a instanceof(typeof c);"),
+            "var x=a instanceof typeof c;"
+        );
+    }
+
+    /// gap-101 boundary: a parenthesised BINARY / comma / assignment /
+    /// ternary operand binds looser than the would-be adjacency and
+    /// MUST keep its parens.
+    #[test]
+    fn gap101_binary_operand_kept() {
+        assert_eq!(minify("a=typeof(b+c);"), "a=typeof(b+c);");
+        assert_eq!(minify("a=typeof(b||c);"), "a=typeof(b||c);");
+        assert_eq!(minify("a=typeof(b,c);"), "a=typeof(b,c);");
+        assert_eq!(minify("a=typeof(a=b);"), "a=typeof(a=b);");
+        assert_eq!(minify("a=typeof(b?c:d);"), "a=typeof(b?c:d);");
+        assert_eq!(minify("a=void(b=c);"), "a=void(b=c);");
     }
 
     // ---- gap-078: binary symbol-operator right-operand elision --
