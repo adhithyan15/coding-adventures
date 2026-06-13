@@ -82,8 +82,10 @@ stable `.DC`, `.AC`, and `.TF` sweep/corner text surfaces.
 `format_measurement_table()` provide the shared `.MEASURE`-style scalar output
 surface for MAX, MIN, AVG, RMS, peak-to-peak, and final-value probe
 measurements. The AC helper measures complex probe magnitudes over optional
-frequency windows. The deck helpers route parsed transient, DC sweep, and AC
-sweep `.measure` / `.meas` cards into those stable measurement rows.
+frequency windows. `measure_transient_find_at_probe()` and parsed transient
+`FIND ... AT=` cards sample or linearly interpolate one probe value at a scalar
+time. The deck helpers route parsed transient, DC sweep, and AC sweep
+`.measure` / `.meas` cards into those stable measurement rows.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
 size, selected real solver path, tolerance, convergence aid, and final Newton
@@ -142,7 +144,8 @@ or quoted expression delimiters, and reports stable diagnostics for malformed
 signatures, arguments, or empty expressions.
 `resolve_deck_measurements()` extracts transient, DC sweep, and AC sweep `.measure` /
 `.meas` cards before `.end`, keeps non-measure active lines, evaluates optional
-`FROM=` / `TO=` scalar time, source-value, or frequency windows, and reports stable
+`FROM=` / `TO=` scalar time, source-value, or frequency windows plus transient
+`FIND ... AT=` sample points, and reports stable
 diagnostics for unsupported analyses, modes, options, expressions, and invalid
 windows.
 

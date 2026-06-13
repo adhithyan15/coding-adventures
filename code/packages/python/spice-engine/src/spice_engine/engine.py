@@ -2823,6 +2823,68 @@ def measure_transient_probe(
     )
 
 
+def measure_transient_find_at_probe(
+    transient_result: TransientResult | list[TransientPoint],
+    name: str,
+    probe: str,
+    at_time: float,
+) -> ProbeMeasurement:
+    """Measure one transient probe at an exact or interpolated time."""
+
+    if not math.isfinite(at_time):
+        raise ValueError("measure_transient_find_at_probe: at_time must be finite")
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    value = _transient_probe_value_at(
+        points,
+        probe,
+        at_time,
+        "measure_transient_find_at_probe",
+    )
+    return ProbeMeasurement(
+        name=name,
+        analysis="tran",
+        probe=probe,
+        mode="find",
+        value=value,
+        from_value=at_time,
+        to_value=at_time,
+    )
+
+
+def _transient_probe_value_at(
+    points: list[TransientPoint],
+    probe: str,
+    at_time: float,
+    context: str,
+) -> float:
+    previous: tuple[float, float] | None = None
+    for point in points:
+        value = _table_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            context,
+        )
+        if point.time == at_time:
+            return value
+        if point.time > at_time:
+            if previous is None:
+                raise ValueError(f"{context}: at_time is outside transient sample range")
+            previous_time, previous_value = previous
+            if point.time == previous_time:
+                raise ValueError(
+                    f"{context}: duplicate transient sample times around AT value"
+                )
+            fraction = (at_time - previous_time) / (point.time - previous_time)
+            return previous_value + (value - previous_value) * fraction
+        previous = (point.time, value)
+    raise ValueError(f"{context}: at_time is outside transient sample range")
+
+
 def measure_transient_cards(
     transient_result: TransientResult | list[TransientPoint],
     measurements: Iterable[DeckMeasurementCard],
@@ -2835,16 +2897,30 @@ def measure_transient_cards(
             raise ValueError(
                 "measure_transient_cards: only transient measurement cards are supported"
             )
-        results.append(
-            measure_transient_probe(
-                transient_result,
-                measurement.name,
-                measurement.probe,
-                measurement.mode,
-                from_time=measurement.from_value,
-                to_time=measurement.to_value,
+        if measurement.mode == "find":
+            if measurement.at_value is None:
+                raise ValueError(
+                    "measure_transient_cards: FIND measurement cards require an AT value"
+                )
+            results.append(
+                measure_transient_find_at_probe(
+                    transient_result,
+                    measurement.name,
+                    measurement.probe,
+                    measurement.at_value,
+                )
             )
-        )
+        else:
+            results.append(
+                measure_transient_probe(
+                    transient_result,
+                    measurement.name,
+                    measurement.probe,
+                    measurement.mode,
+                    from_time=measurement.from_value,
+                    to_time=measurement.to_value,
+                )
+            )
     return results
 
 

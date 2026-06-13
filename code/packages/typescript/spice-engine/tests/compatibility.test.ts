@@ -422,6 +422,7 @@ R1 in out {gain(vin)}
 V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
 .measure tran swing pp V(out) FROM=1m TO={3m}
 .meas transient settled final 'V(out)'
+.measure tran sample find V(out) AT={1.5m}
 .measure dc dcmax max V(out) FROM=1 TO=3
 .measure ac acmax max V(out) FROM=1k TO=10k
 .tran 1m 4m
@@ -430,12 +431,12 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
 `);
 
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(8);
+    expect(summary.endLineNumber).toBe(9);
     expect(summary.activeLines).toStrictEqual([
       "V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)",
       ".tran 1m 4m",
     ]);
-    expect(summary.measurements.map(({ directive, analysis, name, mode, probe, lineNumber, fromValue, toValue }) => [
+    expect(summary.measurements.map(({ directive, analysis, name, mode, probe, lineNumber, fromValue, toValue, atValue }) => [
       directive,
       analysis,
       name,
@@ -444,11 +445,13 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
       lineNumber,
       fromValue,
       toValue,
+      atValue,
     ])).toStrictEqual([
-      [".measure", "tran", "swing", "pp", "V(out)", 3, 0.001, 0.003],
-      [".meas", "transient", "settled", "last", "V(out)", 4, undefined, undefined],
-      [".measure", "dc", "dcmax", "max", "V(out)", 5, 1, 3],
-      [".measure", "ac", "acmax", "max", "V(out)", 6, 1000, 10000],
+      [".measure", "tran", "swing", "pp", "V(out)", 3, 0.001, 0.003, undefined],
+      [".meas", "transient", "settled", "last", "V(out)", 4, undefined, undefined, undefined],
+      [".measure", "tran", "sample", "find", "V(out)", 5, undefined, undefined, 0.0015],
+      [".measure", "dc", "dcmax", "max", "V(out)", 6, 1, 3, undefined],
+      [".measure", "ac", "acmax", "max", "V(out)", 7, 1000, 10000, undefined],
     ]);
     expect(summary.diagnostics).toStrictEqual([]);
   });

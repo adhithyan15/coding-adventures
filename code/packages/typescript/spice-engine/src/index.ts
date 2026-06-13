@@ -533,6 +533,7 @@ export interface DeckMeasurementCard {
   readonly lineNumber: number;
   readonly fromValue?: number;
   readonly toValue?: number;
+  readonly atValue?: number;
 }
 
 export interface DeckMeasurementDiagnostic {
@@ -3559,6 +3560,7 @@ function resolveMeasurementLine(
   const emptyParameterState = new DeckParameterState();
   let fromValue: number | undefined;
   let toValue: number | undefined;
+  let atValue: number | undefined;
   const seenWindowTokens = new Set<string>();
   const diagnosticCount = state.diagnostics.length;
   for (const token of tokens.slice(5)) {
@@ -3575,7 +3577,7 @@ function resolveMeasurementLine(
     }
     const key = token.slice(0, equalsIndex).trim().toLowerCase();
     const expression = token.slice(equalsIndex + 1);
-    if (key !== "from" && key !== "to") {
+    if (key !== "from" && key !== "to" && key !== "at") {
       addMeasurementDiagnostic(state, {
         code: "SPICE_DECK_MEASURE_ARGUMENT",
         directive,
@@ -3603,8 +3605,10 @@ function resolveMeasurementLine(
       );
       if (key === "from") {
         fromValue = value;
-      } else {
+      } else if (key === "to") {
         toValue = value;
+      } else {
+        atValue = value;
       }
     } catch (error) {
       addMeasurementDiagnostic(state, {
@@ -3615,6 +3619,31 @@ function resolveMeasurementLine(
         token,
       });
     }
+  }
+
+  if (mode === "find" && atValue === undefined) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: "FIND measurements require an AT value",
+    });
+  }
+  if (mode !== "find" && atValue !== undefined) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: "measurement AT value is only supported with FIND mode",
+    });
+  }
+  if (atValue !== undefined && (fromValue !== undefined || toValue !== undefined)) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: "measurement AT value cannot be combined with FROM or TO",
+    });
   }
 
   if (fromValue !== undefined && toValue !== undefined && fromValue > toValue) {
@@ -3639,6 +3668,7 @@ function resolveMeasurementLine(
     lineNumber,
     fromValue,
     toValue,
+    atValue,
   });
 }
 
@@ -4128,6 +4158,8 @@ function normalizeMeasurementModeToken(mode: string): string | undefined {
     case "last":
     case "final":
       return "last";
+    case "find":
+      return "find";
     default:
       return undefined;
   }
@@ -4886,6 +4918,54 @@ export function measureTransientProbe(
   };
 }
 
+export function measureTransientFindAtProbe(
+  points: readonly TransientPoint[],
+  name: string,
+  probe: string,
+  atTime: number,
+): ProbeMeasurement {
+  if (!Number.isFinite(atTime)) {
+    throw invalidElement("measureTransientFindAtProbe", "atTime must be finite");
+  }
+  return {
+    name,
+    analysis: "tran",
+    probe,
+    mode: "find",
+    value: transientProbeValueAt(points, probe, atTime, "measureTransientFindAtProbe"),
+    fromValue: atTime,
+    toValue: atTime,
+  };
+}
+
+function transientProbeValueAt(
+  points: readonly TransientPoint[],
+  probe: string,
+  atTime: number,
+  context: string,
+): number {
+  let previous: readonly [number, number] | undefined;
+  for (const point of points) {
+    const value = tableProbeValue(point.nodeVoltages, point.branchCurrents, probe, context);
+    if (point.time === atTime) {
+      return value;
+    }
+    if (point.time > atTime) {
+      if (previous === undefined) {
+        throw invalidElement(context, "atTime is outside transient sample range");
+      }
+      const [previousTime, previousValue] = previous;
+      if (point.time === previousTime) {
+        throw invalidElement(context, "duplicate transient sample times around AT value");
+      }
+      const fraction = (atTime - previousTime) / (point.time - previousTime);
+      return previousValue + (value - previousValue) * fraction;
+    }
+    previous = [point.time, value];
+  }
+  throw invalidElement(context, "atTime is outside transient sample range");
+}
+
 export function measureTransientCards(
   points: readonly TransientPoint[],
   measurements: readonly DeckMeasurementCard[],
@@ -4893,6 +4973,17 @@ export function measureTransientCards(
   return measurements.map((measurement) => {
     if (measurement.analysis !== "tran" && measurement.analysis !== "transient") {
       throw invalidElement("measureTransientCards", "only transient measurement cards are supported");
+    }
+    if (measurement.mode === "find") {
+      if (measurement.atValue === undefined) {
+        throw invalidElement("measureTransientCards", "FIND measurement cards require an AT value");
+      }
+      return measureTransientFindAtProbe(
+        points,
+        measurement.name,
+        measurement.probe,
+        measurement.atValue,
+      );
     }
     return measureTransientProbe(
       points,
