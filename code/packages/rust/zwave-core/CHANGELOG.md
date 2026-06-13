@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Serial API per-frame summaries for request/response, function id, and payload
+  shape diagnostics.
 - Command-class and Serial API frame batch summaries for supervisor coverage
   views.
 
