@@ -753,11 +753,14 @@ class TestFallthrough:
     """Limits that fall through to unevaluated Limit(…)."""
 
     def test_no_diff_fn_indeterminate(self):
-        """Without diff_fn, 0/0 form cannot be resolved → unevaluated."""
+        """Without diff_fn, 0/0 form falls through to the Taylor-series
+        fallback (Track J1).  ``sin(x)/x`` at 0 closes to ``1`` via the
+        series expansion path even when L'Hôpital is unavailable."""
         x = _sym("x")
         expr = IRApply(DIV, (IRApply(SIN, (x,)), x))
         out = limit_advanced(expr, x, _i(0))  # no diff_fn
-        assert _is_unevaluated(out)
+        # Pre-J1: would return unevaluated. Post-J1: Taylor closes to 1.
+        assert isinstance(out, IRInteger) and out.value == 1
 
     def test_oscillating_sin_at_infinity(self):
         """lim_{x→∞} sin(x) is undefined (oscillates) → unevaluated."""
