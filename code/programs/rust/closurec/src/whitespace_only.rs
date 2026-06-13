@@ -3362,7 +3362,15 @@ pub fn whitespace_only_minify(
             }
         }
         if is_string_literal(tok) {
-            emit_quoted_string(&mut out, &tok.value);
+            // gap-116: a string property key that is a canonical
+            // non-negative integer (< 2^53) is unquoted to a numeric key
+            // and printed in shortest numeric form (`{"1000":1}` ->
+            // `{1E3:1}`); otherwise the string is emitted verbatim.
+            if let Some(digits) = numeric_string_key_unquoted(&kept, idx) {
+                out.push_str(&normalize_number_value(digits));
+            } else {
+                emit_quoted_string(&mut out, &tok.value);
+            }
         } else if is_number_literal(tok) {
             // gap-038: rewrite hex/oct/bin literals to
             // decimal when decimal is no longer than source.
@@ -4640,6 +4648,67 @@ fn keyword_string_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool
     let prev = kept[idx - 1];
     is_word_like(prev)
         && matches!(prev.value.as_str(), "case" | "get" | "set" | "new")
+}
+
+/// gap-116: a STRING property KEY whose value is a CANONICAL non-negative
+/// integer is UNQUOTED to a numeric key by upstream Closure v20240317:
+///
+///   {"123":1}  ->  {123:1}        {"0":1}  ->  {0:1}
+///   {"1000":1} ->  {1E3:1}        {"123456789012345":1} -> {0x7048860ddf79:1}
+///
+/// The unquoted digits then flow through the ordinary number printer
+/// (`normalize_number_value`), so the emitted key is the shortest numeric
+/// form — exactly what a bare numeric key (`{1000:1}` -> `{1E3:1}`) would
+/// produce. Returns the canonical digit string (the string's inner value)
+/// when `kept[idx]` qualifies, else `None`.
+///
+/// DISCRIMINATOR (verified against the JAR):
+///   - property-key POSITION: the previous emitted token is `{` or `,`
+///     and the next token is `:`. This excludes the ternary case
+///     (`a?"1":"2"` — the string is preceded by `?`, not `{`/`,`), string
+///     VALUES, `case "1":` (preceded by `case`), and computed/method keys.
+///   - CANONICAL non-negative integer: non-empty, all ASCII digits, and
+///     either `"0"` or no leading zero (`"00"`, `"01"` stay quoted).
+///   - value `< 2^53` (MAX_SAFE_INTEGER): `9007199254740991` unquotes but
+///     `9007199254740992` (= 2^53) stays quoted, because `String(Number(s))`
+///     no longer round-trips once the integer is not exactly representable
+///     as an IEEE-754 double. Non-integer (`"1.5"`), signed (`"-1"`), and
+///     non-numeric (`"123abc"`) keys are all left quoted.
+fn numeric_string_key_unquoted<'a>(
+    kept: &[&'a lexer::token::Token],
+    idx: usize,
+) -> Option<&'a str> {
+    if idx == 0 {
+        return None;
+    }
+    let tok = kept[idx];
+    if !is_string_literal(tok) {
+        return None;
+    }
+    // Property-key position: `{`/`,` before, `:` after.
+    let prev = kept[idx - 1];
+    if !(is_structural_punct(prev, "{") || is_structural_punct(prev, ",")) {
+        return None;
+    }
+    let next = kept.get(idx + 1)?;
+    if !is_structural_punct(next, ":") {
+        return None;
+    }
+    // Canonical non-negative integer below 2^53.
+    let s = tok.value.as_str();
+    if s.is_empty() || !s.bytes().all(|b| b.is_ascii_digit()) {
+        return None;
+    }
+    if s.len() > 1 && s.starts_with('0') {
+        return None;
+    }
+    // `parse::<u64>()` rejects 20+ digit overflows (all far above 2^53);
+    // 2^53 == 9007199254740992, so `< 2^53` keeps MAX_SAFE_INTEGER.
+    let n: u64 = s.parse().ok()?;
+    if n >= 9_007_199_254_740_992 {
+        return None;
+    }
+    Some(s)
 }
 
 /// gap-117: a `case` clause whose operand begins with a prefix UNARY
@@ -6275,6 +6344,58 @@ mod tests {
             minify("var x=123456789012345678;"),
             "var x=0x1b69b4ba630f350;"
         );
+    }
+
+    /// gap-116: a string property key that is a canonical non-negative
+    /// integer (< 2^53) is unquoted to a numeric key and printed in
+    /// shortest numeric form (so it composes with gap-114/gap-040/gap-082).
+    #[test]
+    fn gap116_canonical_integer_string_key_unquoted() {
+        assert_eq!(minify("x={\"123\":1};"), "x={123:1};");
+        assert_eq!(minify("x={\"0\":1};"), "x={0:1};");
+        assert_eq!(minify("x={\"5\":1};"), "x={5:1};");
+        // Multiple keys both unquote.
+        assert_eq!(minify("x={\"123\":1,\"45\":2};"), "x={123:1,45:2};");
+        // MAX_SAFE_INTEGER unquotes; 2^53 itself stays quoted.
+        assert_eq!(
+            minify("x={\"9007199254740991\":1};"),
+            "x={9007199254740991:1};"
+        );
+        // The unquoted key flows through the number printer:
+        // `1000` -> `1E3` (scientific) and a 15-digit value -> hex.
+        assert_eq!(minify("x={\"1000\":1};"), "x={1E3:1};");
+        assert_eq!(
+            minify("x={\"123456789012345\":1};"),
+            "x={0x7048860ddf79:1};"
+        );
+        // Destructuring pattern key is unquoted too.
+        assert_eq!(minify("const{\"1\":b}=x;"), "const {1:b}=x;");
+    }
+
+    /// **Non-regression** for gap-116: only canonical-integer property
+    /// KEYS are unquoted. Leading-zero / non-integer / signed / non-numeric
+    /// keys stay quoted, 2^53+ stays quoted, and — critically — string
+    /// VALUES are never unquoted (the ternary `a?"1":"2"` confound).
+    #[test]
+    fn gap116_scoped_to_canonical_integer_keys() {
+        // Not canonical integers → kept quoted.
+        assert_eq!(minify("x={\"00\":1};"), "x={\"00\":1};");
+        assert_eq!(minify("x={\"01\":1};"), "x={\"01\":1};");
+        assert_eq!(minify("x={\"1.5\":1};"), "x={\"1.5\":1};");
+        assert_eq!(minify("x={\"-1\":1};"), "x={\"-1\":1};");
+        assert_eq!(minify("x={\"123abc\":1};"), "x={\"123abc\":1};");
+        assert_eq!(minify("x={\"\":1};"), "x={\"\":1};");
+        // 2^53 is not exactly round-trippable → stays quoted.
+        assert_eq!(
+            minify("x={\"9007199254740992\":1};"),
+            "x={\"9007199254740992\":1};"
+        );
+        // String VALUES / ternary arms / array / args are untouched.
+        assert_eq!(minify("x=a?\"1\":\"2\";"), "x=a?\"1\":\"2\";");
+        assert_eq!(minify("x=[\"1\",\"2\"];"), "x=[\"1\",\"2\"];");
+        assert_eq!(minify("f(\"1\",\"2\");"), "f(\"1\",\"2\");");
+        // A string VALUE for a numeric key stays a string.
+        assert_eq!(minify("x={1:\"2\"};"), "x={1:\"2\"};");
     }
 
     /// Octal literal: `0o777` → `511` (5 chars → 3).

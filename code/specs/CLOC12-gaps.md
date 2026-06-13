@@ -852,9 +852,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-116 — canonical numeric string property key not unquoted (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.56). `minify_num_str_key` ignored.
+- **Status:** RESOLVED in CLOC12.116 (v0.123.0). `minify_num_str_key` un-ignored and round-trips byte-identically.
 - **Input:** `x={"123":1};` → **Upstream:** `x={123:1};` but **closurec:** `x={"123":1};`. A string property KEY that is a CANONICAL non-negative integer (array-index form) is unquoted to a numeric key by upstream: `{"123":1}` → `{123:1}`, `{"0":1}` → `{0:1}`. NOT every numeric-looking string qualifies — `{"01":1}` (leading zero), `{"1.5":1}` (non-integer), `{"123abc":1}` are all kept QUOTED. The discriminator is the canonical round-trip `String(Number(s)) === s` (and the value is a valid array index / safe integer).
 - **What it needs:** an emitter/token-level rule: a STRING literal that is a property KEY (followed by `:` in an object-literal property-start position) whose value `s` satisfies `s.chars().all(ascii_digit) && (s == "0" || !s.starts_with('0'))` and parses to a safe integer → emit the bare digits without quotes. Guard against computed keys, method keys, and string VALUES. Sibling of gap-109/gap-110 (string method-key handling).
+- **Resolution:** `numeric_string_key_unquoted(kept, idx)` in `whitespace_only.rs`, wired into the string-emit branch — when a string token is in property-key position (prev `{`/`,`, next `:`) and its value is a canonical non-negative integer `< 2^53`, the key is emitted as `normalize_number_value(digits)` instead of a quoted string, so it composes with the scientific/hex shortest-forms (`{"1000":1}` → `{1E3:1}`, `{"123456789012345":1}` → `{0x7048860ddf79:1}`). The cutoff is strictly `< 2^53` (verified against the JAR: `9007199254740991` unquotes, `9007199254740992` = 2^53 stays quoted because `String(Number(s))` no longer round-trips). The position guard excludes the ternary `a?"1":"2"` confound (string preceded by `?`), string VALUES, and `case "1":`. Unit tests `gap116_canonical_integer_string_key_unquoted` + `gap116_scoped_to_canonical_integer_keys`. Float-key counterpart gap-120 (non-integer key → quoted canonical string) remains OPEN.
 
 ### gap-117 — `case` + unary-operator operand missing separating space (WHITESPACE_ONLY)
 
