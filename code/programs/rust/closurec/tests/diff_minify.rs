@@ -225,6 +225,24 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // from being a false positive. `minify_class_accessor_pair` /
     // `minify_class_accessor_after_method` / `minify_class_static_accessor`
     // enforced.
+    // gap-104 (CLOC14.48) — CORRECTNESS: a `}` (or object-default `}`)
+    // inside a function's PARAMETER LIST makes the trailing-`;`-after-`}`
+    // rule (gap-030/041 family) mis-fire, injecting a stray `;` that
+    // produces INVALID JS:
+    //   function f({a=1}={}){}  ->  function f({a=1};={}){}  (corrupt)
+    //   function f({a=1}){}     ->  function f({a=1};){}     (corrupt)
+    //   function f(a={}){}      ->  function f(a={};){}      (corrupt)
+    // The `}` here closes a destructuring-object pattern or an object
+    // default VALUE, not a statement block/function body, so no `;` is
+    // due. The fix should suppress the trailing-`;` when the `}` sits
+    // between a function's parameter `(` and its matching `)` (or, more
+    // locally, when the `}`'s follower is `=`/`,`/`)` — a param-list
+    // continuation, not a statement boundary). Array-pattern params
+    // (`function f([a]=[]){}`) and arrow functions are unaffected.
+    // HIGH PRIORITY — corrupts output, not just byte-identity.
+    ("param_destructure_default",   "gap-104: stray ; in destructuring-default param"),
+    ("param_destructure_nodefault", "gap-104: stray ; after destructuring-pattern param"),
+    ("param_object_default",        "gap-104: stray ; after object-default param"),
     // gap-086 RESOLVED in CLOC12.93 — redundant parens around a whole
     // CALL ARGUMENT (`f((a))` → `f(a)`, `f((a+b))` → `f(a+b)`,
     // `f((a),(b))` → `f(a,b)`) now elide via a call-open-anchored
