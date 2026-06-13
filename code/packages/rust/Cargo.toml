@@ -750,4 +750,10 @@ members = [
     "semantic-ir-to-rust",
     "semantic-ir-to-python",
     "semantic-ir-to-go",
+    "hdl-ir",
+    "gate-netlist-format",
+    "synthesis",
+    "tech-mapping",
+    "sky130-pdk",
+    "standard-cell-library",
 ]
