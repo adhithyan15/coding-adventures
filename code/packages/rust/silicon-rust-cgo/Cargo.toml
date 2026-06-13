@@ -1,0 +1,14 @@
+[package]
+name = "silicon-rust-cgo"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "silicon_rust_cgo"
+crate-type = ["cdylib"]
+
+[dependencies]
+device-physics         = { path = "../device-physics" }
+mosfet-models          = { path = "../mosfet-models" }
+fab-process-simulation = { path = "../fab-process-simulation" }

@@ -262,6 +262,7 @@ members = [
     "fab-process-simulation",
     "silicon-rust-python",
     "silicon-rust-napi",
+    "silicon-rust-cgo",
     "system-board",
     "block-ram",
     "device-driver-framework",
