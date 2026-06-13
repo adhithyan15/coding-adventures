@@ -319,6 +319,117 @@ impl ZclFrameSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ZclFrameBatchSummary {
+    pub frame_count: usize,
+    pub foundation_frames: usize,
+    pub cluster_specific_frames: usize,
+    pub reserved_frames: usize,
+    pub client_to_server_frames: usize,
+    pub server_to_client_frames: usize,
+    pub manufacturer_context_frames: usize,
+    pub default_response_expected_frames: usize,
+    pub read_attributes_frames: usize,
+    pub report_attributes_frames: usize,
+    pub default_response_frames: usize,
+    pub payload_frames: usize,
+    pub total_payload_bytes: usize,
+    pub max_payload_bytes: usize,
+}
+
+impl ZclFrameBatchSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_frames<'a>(frames: impl IntoIterator<Item = &'a ZclFrame>) -> Self {
+        let mut summary = Self::empty();
+        for frame in frames {
+            summary.record_summary(&frame.summary());
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a>(summaries: impl IntoIterator<Item = &'a ZclFrameSummary>) -> Self {
+        let mut summary = Self::empty();
+        for frame_summary in summaries {
+            summary.record_summary(frame_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: &ZclFrameSummary) {
+        self.frame_count += 1;
+
+        match summary.frame_type {
+            ZclFrameType::Foundation => self.foundation_frames += 1,
+            ZclFrameType::ClusterSpecific => self.cluster_specific_frames += 1,
+            ZclFrameType::Reserved(_) => self.reserved_frames += 1,
+        }
+
+        match summary.direction {
+            ZclDirection::ClientToServer => self.client_to_server_frames += 1,
+            ZclDirection::ServerToClient => self.server_to_client_frames += 1,
+        }
+
+        if summary.has_manufacturer_context() {
+            self.manufacturer_context_frames += 1;
+        }
+        if summary.expects_default_response() {
+            self.default_response_expected_frames += 1;
+        }
+        if summary.is_read_attributes() {
+            self.read_attributes_frames += 1;
+        }
+        if summary.is_report_attributes() {
+            self.report_attributes_frames += 1;
+        }
+        if summary.is_default_response() {
+            self.default_response_frames += 1;
+        }
+        if summary.has_payload() {
+            self.payload_frames += 1;
+        }
+
+        self.total_payload_bytes += summary.payload_len;
+        self.max_payload_bytes = self.max_payload_bytes.max(summary.payload_len);
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.frame_count == 0
+    }
+
+    pub fn has_foundation_frames(self) -> bool {
+        self.foundation_frames > 0
+    }
+
+    pub fn has_cluster_specific_frames(self) -> bool {
+        self.cluster_specific_frames > 0
+    }
+
+    pub fn has_server_to_client_frames(self) -> bool {
+        self.server_to_client_frames > 0
+    }
+
+    pub fn has_manufacturer_context(self) -> bool {
+        self.manufacturer_context_frames > 0
+    }
+
+    pub fn expects_default_responses(self) -> bool {
+        self.default_response_expected_frames > 0
+    }
+
+    pub fn has_payloads(self) -> bool {
+        self.payload_frames > 0
+    }
+}
+
+pub fn summarize_zcl_frames<'a>(
+    frames: impl IntoIterator<Item = &'a ZclFrame>,
+) -> ZclFrameBatchSummary {
+    ZclFrameBatchSummary::from_frames(frames)
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OnOffCommand {
     Off,
@@ -992,6 +1103,81 @@ mod tests {
         assert!(summary.has_manufacturer_context());
         assert!(summary.expects_default_response());
         assert!(summary.has_payload());
+    }
+
+    #[test]
+    fn frame_batch_summary_rolls_up_shape_and_payload_context() {
+        let read = read_attributes_frame(
+            0x22,
+            &[
+                ZclAttributeId::MANUFACTURER_NAME,
+                ZclAttributeId::MODEL_IDENTIFIER,
+            ],
+        );
+        let report = report_attributes_frame(
+            0x23,
+            &[ZclAttributeReport {
+                cluster_id: ZclClusterId::ON_OFF,
+                attribute_id: ZclAttributeId::ON_OFF,
+                data_type: ZclDataType::Bool,
+                value: ZclValue::Bool(true),
+            }],
+        )
+        .unwrap();
+        let on = on_off_command_frame(0x24, OnOffCommand::On);
+        let manufacturer = ZclFrame::parse(&[0x04, 0x34, 0x12, 0x25, 0x02, 0xaa]).unwrap();
+        let default_response =
+            default_response_frame(0x26, ZCL_READ_ATTRIBUTES_COMMAND_ID, ZclStatusCode::Success);
+
+        let summary = summarize_zcl_frames([&read, &report, &on, &manufacturer, &default_response]);
+
+        assert_eq!(
+            summary,
+            ZclFrameBatchSummary {
+                frame_count: 5,
+                foundation_frames: 4,
+                cluster_specific_frames: 1,
+                reserved_frames: 0,
+                client_to_server_frames: 4,
+                server_to_client_frames: 1,
+                manufacturer_context_frames: 1,
+                default_response_expected_frames: 1,
+                read_attributes_frames: 1,
+                report_attributes_frames: 1,
+                default_response_frames: 1,
+                payload_frames: 4,
+                total_payload_bytes: 11,
+                max_payload_bytes: 4,
+            }
+        );
+        assert!(summary.has_foundation_frames());
+        assert!(summary.has_cluster_specific_frames());
+        assert!(summary.has_server_to_client_frames());
+        assert!(summary.has_manufacturer_context());
+        assert!(summary.expects_default_responses());
+        assert!(summary.has_payloads());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn frame_batch_summary_can_record_precomputed_summaries() {
+        let summaries = [
+            read_attributes_frame(0x01, &[ZclAttributeId::MODEL_IDENTIFIER]).summary(),
+            on_off_command_frame(0x02, OnOffCommand::Toggle).summary(),
+        ];
+        let summary = ZclFrameBatchSummary::from_summaries(&summaries);
+
+        assert_eq!(summary.frame_count, 2);
+        assert_eq!(summary.foundation_frames, 1);
+        assert_eq!(summary.cluster_specific_frames, 1);
+        assert_eq!(summary.total_payload_bytes, 2);
+        assert_eq!(summary.max_payload_bytes, 2);
+        assert_eq!(summary.payload_frames, 1);
+        assert_eq!(
+            ZclFrameBatchSummary::empty(),
+            ZclFrameBatchSummary::default()
+        );
+        assert!(ZclFrameBatchSummary::empty().is_empty());
     }
 
     #[test]
