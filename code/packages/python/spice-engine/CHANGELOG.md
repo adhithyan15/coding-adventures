@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck function definition resolution** — `resolve_deck_functions()` now
+  extracts scalar `.func name(args) expression` definitions before `.end`,
+  strips braced or quoted expression delimiters, and reports stable diagnostics
+  for malformed signatures, arguments, duplicate arguments, and empty
+  expressions, matching Rust and TypeScript.
+
 - **Deck initial-condition resolution** — `resolve_deck_initial_conditions()`
   now extracts scalar `.ic` and `.nodeset` `V(node)=value` hints before `.end`,
   evaluates numeric SPICE suffix/arithmetic expressions, and reports stable

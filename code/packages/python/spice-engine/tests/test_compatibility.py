@@ -7,6 +7,7 @@ from spice_engine import (
     format_compatibility_corpus_table,
     format_release_readiness_report,
     release_readiness_gates,
+    resolve_deck_functions,
     resolve_deck_initial_conditions,
     resolve_deck_parameters,
     resolve_deck_sources,
@@ -310,4 +311,61 @@ def test_resolve_deck_initial_conditions_reports_bad_assignments() -> None:
         ".ic",
         ".nodeset",
         ".nodeset",
+    ]
+
+
+def test_resolve_deck_functions_extracts_function_definitions() -> None:
+    summary = resolve_deck_functions(
+        """
+R1 in out {gain(vin)}
+.func gain(x) {x*2}
+.func blend(a,b,weight) 'a*(1-weight)+b*weight'
+.op
+.end
+.func after(x) {x}
+"""
+    )
+
+    assert summary.terminated is True
+    assert summary.end_line_number == 6
+    assert summary.active_lines == ("R1 in out {gain(vin)}", ".op")
+    assert [
+        (function.name, function.arguments, function.expression, function.line_number)
+        for function in summary.functions
+    ] == [
+        ("gain", ("x",), "x*2", 3),
+        ("blend", ("a", "b", "weight"), "a*(1-weight)+b*weight", 4),
+    ]
+    assert summary.diagnostics == ()
+
+
+def test_resolve_deck_functions_reports_bad_definitions() -> None:
+    summary = resolve_deck_functions(
+        """
+.func
+.func 1bad(x) {x}
+.func noexpr(x)
+.func badarg(1x,x) {x}
+.func dup(x,x) {x}
+.end
+"""
+    )
+
+    assert summary.terminated is True
+    assert summary.end_line_number == 7
+    assert summary.active_lines == ()
+    assert summary.functions == ()
+    assert [diagnostic.code for diagnostic in summary.diagnostics] == [
+        "SPICE_DECK_FUNC_ARGUMENT",
+        "SPICE_DECK_FUNC_SIGNATURE",
+        "SPICE_DECK_FUNC_EXPRESSION",
+        "SPICE_DECK_FUNC_ARGUMENT",
+        "SPICE_DECK_FUNC_ARGUMENT",
+    ]
+    assert [diagnostic.function_name for diagnostic in summary.diagnostics] == [
+        None,
+        "1bad",
+        "noexpr",
+        "badarg",
+        "dup",
     ]

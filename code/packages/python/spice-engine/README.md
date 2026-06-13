@@ -123,6 +123,10 @@ still-unsupported `.func` cards.
 `V(node)=value` hints before `.end`, keeps non-condition active lines, evaluates
 numeric SPICE suffix/arithmetic expressions, and reports stable diagnostics for
 malformed targets or unresolved values.
+`resolve_deck_functions()` extracts scalar `.func name(args) expression`
+definitions before `.end`, preserves non-function active lines, strips braced
+or quoted expression delimiters, and reports stable diagnostics for malformed
+signatures, arguments, or empty expressions.
 
 ## Controlled source examples
 
