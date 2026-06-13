@@ -63,6 +63,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
+| `measure_transient_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
 and `circuit_at_temperature()` provide operating-temperature footholds for
@@ -75,6 +76,9 @@ DC operating-point snapshots with the Rust-matching `Corner` / `Index` columns.
 `format_dc_sweep_table()`, `format_corner_dc_sweep_table()`,
 `format_corner_ac_table()`, and `format_corner_tf_table()` provide the matching
 stable `.DC`, `.AC`, and `.TF` sweep/corner text surfaces.
+`measure_transient_probe()` and `format_measurement_table()` provide the shared
+`.MEASURE`-style scalar transient output surface for MAX, MIN, AVG, RMS,
+peak-to-peak, and final-value probe measurements.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
 size, selected real solver path, tolerance, convergence aid, and final Newton

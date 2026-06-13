@@ -939,6 +939,16 @@ export interface TransientPoint {
   branchCurrent(sourceName: string): number | undefined;
 }
 
+export interface ProbeMeasurement {
+  readonly name: string;
+  readonly analysis: string;
+  readonly probe: string;
+  readonly mode: string;
+  readonly value: number;
+  readonly fromValue?: number;
+  readonly toValue?: number;
+}
+
 export interface CornerTransientPoint {
   readonly cornerName: string;
   readonly points: readonly TransientPoint[];
@@ -4573,6 +4583,122 @@ export function formatDcTable(
     ["0", ...values].join("\t"),
     "",
   ].join("\n");
+}
+
+export function measureTransientProbe(
+  points: readonly TransientPoint[],
+  name: string,
+  probe: string,
+  mode: string,
+  fromTime?: number,
+  toTime?: number,
+): ProbeMeasurement {
+  const normalizedMode = normalizeMeasurementMode(mode);
+  if (fromTime !== undefined && !Number.isFinite(fromTime)) {
+    throw invalidElement("measureTransientProbe", "fromTime must be finite");
+  }
+  if (toTime !== undefined && !Number.isFinite(toTime)) {
+    throw invalidElement("measureTransientProbe", "toTime must be finite");
+  }
+  if (fromTime !== undefined && toTime !== undefined && fromTime > toTime) {
+    throw invalidElement("measureTransientProbe", "fromTime must be <= toTime");
+  }
+
+  const selected = points.filter((point) =>
+    (fromTime === undefined || point.time >= fromTime) &&
+    (toTime === undefined || point.time <= toTime)
+  );
+  if (selected.length === 0) {
+    throw invalidElement("measureTransientProbe", "no transient samples in window");
+  }
+  const values = selected.map((point) =>
+    tableProbeValue(
+      point.nodeVoltages,
+      point.branchCurrents,
+      probe,
+      "measureTransientProbe",
+    )
+  );
+
+  return {
+    name,
+    analysis: "tran",
+    probe,
+    mode: normalizedMode,
+    value: measureValues(values, normalizedMode),
+    fromValue: fromTime,
+    toValue: toTime,
+  };
+}
+
+export function formatMeasurementTable(measurements: readonly ProbeMeasurement[]): string {
+  const rows = [["Name", "Analysis", "Probe", "Mode", "From", "To", "Value"].join("\t")];
+  measurements.forEach((measurement) => {
+    rows.push([
+      measurement.name,
+      measurement.analysis,
+      measurement.probe,
+      measurement.mode,
+      formatOptionalTableNumber(measurement.fromValue),
+      formatOptionalTableNumber(measurement.toValue),
+      formatTableNumber(measurement.value),
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+function normalizeMeasurementMode(mode: string): string {
+  const normalized = mode.trim().toLowerCase().replace(/_/g, "-");
+  switch (normalized) {
+    case "max":
+    case "min":
+      return normalized;
+    case "avg":
+    case "average":
+    case "mean":
+      return "avg";
+    case "rms":
+    case "root-mean-square":
+      return "rms";
+    case "pp":
+    case "p-p":
+    case "p2p":
+    case "peak-to-peak":
+    case "peak2peak":
+      return "pp";
+    case "last":
+    case "final":
+      return "last";
+    default:
+      throw invalidElement("measureTransientProbe", `unsupported mode ${JSON.stringify(mode)}`);
+  }
+}
+
+function measureValues(values: readonly number[], mode: string): number {
+  switch (mode) {
+    case "max":
+      return values.reduce((max, value) => Math.max(max, value), Number.NEGATIVE_INFINITY);
+    case "min":
+      return values.reduce((min, value) => Math.min(min, value), Number.POSITIVE_INFINITY);
+    case "avg":
+      return values.reduce((sum, value) => sum + value, 0.0) / values.length;
+    case "rms":
+      return Math.sqrt(
+        values.reduce((sum, value) => sum + value * value, 0.0) / values.length,
+      );
+    case "pp":
+      return values.reduce((max, value) => Math.max(max, value), Number.NEGATIVE_INFINITY) -
+        values.reduce((min, value) => Math.min(min, value), Number.POSITIVE_INFINITY);
+    case "last":
+      return values[values.length - 1]!;
+    default:
+      throw invalidElement("measureTransientProbe", `unsupported mode ${JSON.stringify(mode)}`);
+  }
+}
+
+function formatOptionalTableNumber(value: number | undefined): string {
+  return value === undefined ? "" : formatTableNumber(value);
 }
 
 export function formatCornerDcTable(

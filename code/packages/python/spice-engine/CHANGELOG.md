@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Transient measurement output expansion** — `measure_transient_probe()` and
+  `format_measurement_table()` provide a shared `.MEASURE`-style scalar
+  transient output surface with MAX, MIN, AVG, RMS, peak-to-peak, and
+  final-value probe measurements, matching Rust and TypeScript.
+
 - **Initial-condition execution aids** — `dc_initial_vector_from_conditions()`
   maps parsed `.ic` / `.nodeset` node-voltage hints into the DC solver's MNA
   warm-start vector, and `dc_op_with_initial_conditions()` applies those hints

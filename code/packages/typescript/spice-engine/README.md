@@ -68,6 +68,9 @@ with the Rust-matching `Corner` / `Index` columns.
 `formatDcSweepTable`, `formatCornerDcSweepTable`, `formatCornerAcTable`, and
 `formatCornerTfTable` provide the matching stable `.DC`, `.AC`, and `.TF`
 sweep/corner text surfaces.
+`measureTransientProbe` and `formatMeasurementTable` provide the shared
+`.MEASURE`-style scalar transient output surface for MAX, MIN, AVG, RMS,
+peak-to-peak, and final-value probe measurements.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `measure_transient_probe` and `format_measurement_table` for a shared
+  `.MEASURE`-style scalar transient output surface with MAX, MIN, AVG, RMS,
+  peak-to-peak, and final-value probe measurements, matching Python and
+  TypeScript.
 - Add `dc_initial_vector_from_conditions`,
   `dc_op_with_initial_conditions`, and `dc_op_with_initial_vector` so parsed
   `.ic` / `.nodeset` node-voltage hints can seed DC operating-point Newton

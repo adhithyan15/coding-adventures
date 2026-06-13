@@ -211,6 +211,7 @@ from spice_engine import (
     format_distortion_table,
     format_fourier_table,
     format_mc_table,
+    format_measurement_table,
     format_noise_table,
     format_pole_zero_table,
     format_pss_table,
@@ -224,6 +225,7 @@ from spice_engine import (
     jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
+    measure_transient_probe,
     mosfet_from_model_card,
     noise_ac,
     noise_ac_corners,
@@ -6594,6 +6596,40 @@ def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
         "Index\tTime\tV(in)\tV(out)\tI(V1)\n"
         "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
         "1\t1.000000e-03\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+
+
+def test_transient_probe_measurements_are_stable() -> None:
+    transient_points = [
+        TransientPoint(0.0, {"out": 0.0}, {}),
+        TransientPoint(1.0e-3, {"out": 1.25}, {}),
+        TransientPoint(2.0e-3, {"out": -0.25}, {}),
+        TransientPoint(3.0e-3, {"out": 0.75}, {}),
+    ]
+
+    peak_to_peak = measure_transient_probe(
+        transient_points,
+        "swing",
+        "V(out)",
+        "peak-to-peak",
+        from_time=1.0e-3,
+        to_time=3.0e-3,
+    )
+    final_value = measure_transient_probe(
+        transient_points,
+        "settled",
+        "V(out)",
+        "final",
+    )
+
+    assert peak_to_peak.value == pytest.approx(1.5)
+    assert peak_to_peak.mode == "pp"
+    assert final_value.value == pytest.approx(0.75)
+    assert final_value.mode == "last"
+    assert format_measurement_table([peak_to_peak, final_value]) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
     )
 
 
