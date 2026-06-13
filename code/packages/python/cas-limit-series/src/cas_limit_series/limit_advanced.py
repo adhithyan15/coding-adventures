@@ -554,9 +554,29 @@ def _handle_form(
         ):
             return IRInteger(0)
         if (is_zero_zero or is_inf_inf) and diff_fn is not None:
-            return _lhopital_step(
+            lh_result = _lhopital_step(
                 numer, denom, var, point, direction, diff_fn, eval_fn, depth
             )
+            # Track J1: if L'Hôpital came back unevaluated (recursion depth,
+            # simplifier-too-weak, etc.), try the Taylor-series fallback before
+            # giving up. Only applies to 0/0 forms at finite points.
+            if (
+                isinstance(lh_result, IRApply)
+                and lh_result.head == LIMIT
+                and is_zero_zero
+                and not (math.isinf(exact_pt) or math.isnan(exact_pt))
+            ):
+                from cas_limit_series.series_limit import try_series_limit
+                series_result = try_series_limit(expr, var, point)
+                if series_result is not None:
+                    return series_result
+            return lh_result
+        # 0/0 at a finite point but no diff_fn — try Taylor directly.
+        if is_zero_zero and not (math.isinf(exact_pt) or math.isnan(exact_pt)):
+            from cas_limit_series.series_limit import try_series_limit
+            series_result = try_series_limit(expr, var, point)
+            if series_result is not None:
+                return series_result
 
     # --- MUL(a, b): 0·∞ form ---
     if isinstance(expr, IRApply) and expr.head == MUL and len(expr.args) == 2:

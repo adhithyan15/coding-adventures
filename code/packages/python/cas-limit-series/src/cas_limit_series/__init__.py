@@ -30,6 +30,7 @@ Quick start::
 from cas_limit_series.heads import BIG_O, INF, LIMIT, MINF, SERIES, TAYLOR
 from cas_limit_series.limit import limit_direct
 from cas_limit_series.limit_advanced import limit_advanced
+from cas_limit_series.series_limit import try_series_limit
 from cas_limit_series.taylor import PolynomialError, taylor_polynomial
 
 __all__ = [
@@ -43,4 +44,5 @@ __all__ = [
     "limit_advanced",
     "limit_direct",
     "taylor_polynomial",
+    "try_series_limit",
 ]
