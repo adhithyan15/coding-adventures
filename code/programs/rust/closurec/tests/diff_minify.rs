@@ -215,6 +215,30 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
     // needs an operator-precedence table.
     ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
+    // gap-105 (CLOC14.49) — CORRECTNESS: LEGACY OCTAL literals. A number
+    // token of the form `0` followed by octal digits (0-7), e.g. `010`,
+    // `017`, `0123`, is a sloppy-mode legacy octal literal and denotes
+    // its OCTAL value (`010` == 8, `0123` == 83). closurec currently
+    // treats the leading zero as insignificant and emits the digits as
+    // DECIMAL (`010` -> `10`), which CHANGES THE VALUE — a real
+    // corruption, not just a byte difference. Upstream Closure decodes
+    // the octal and emits the decimal value (`010` -> `8`,
+    // `[010,020]` -> `[8,16]`). `08`/`09` are NOT legacy octal (they
+    // contain a non-octal digit) and upstream rejects them, so they are
+    // not byte-identity inputs. The fix belongs in the number-literal
+    // canonicaliser: detect `0[0-7]+` and decode as base-8 before
+    // shortest-form re-emit. HIGH PRIORITY — value-changing.
+    ("num_legacy_octal",       "gap-105: legacy octal 010 -> 8 (emitted as decimal 10)"),
+    ("num_legacy_octal_multi", "gap-105: legacy octal 0123 -> 83"),
+    ("num_legacy_octal_array", "gap-105: legacy octal in array -> [8,16]"),
+    // gap-106 (CLOC14.49): a NUMERIC FLOAT property key is normalised to
+    // a STRING key by upstream — `{.5:1}` -> `{"0.5":1}`. The float key
+    // `.5` is canonicalised to its string form `"0.5"` (the ToString of
+    // the numeric property name) and quoted. closurec keeps the raw
+    // numeric token `.5`. Integer numeric keys (`{1:2}`) are already
+    // byte-identical (both keep `1`); only non-integer numeric keys
+    // diverge. Needs object-key-specific number→string canonicalisation.
+    ("obj_numkey_float", "gap-106: numeric float property key .5 -> \"0.5\""),
     // gap-103 RESOLVED in CLOC12.107 — a CLASS-BODY computed `get`/`set`
     // accessor preceded by a previous member's `}` (consecutive members)
     // or the `static` modifier now gets the same separating space
