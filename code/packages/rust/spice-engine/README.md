@@ -157,3 +157,10 @@ signatures, arguments, or empty expressions.
 before `.end`, keeps non-measure active lines, evaluates optional `FROM=` /
 `TO=` scalar time windows, and reports stable diagnostics for unsupported
 analyses, modes, options, expressions, and invalid windows.
+`resolve_deck_outputs` extracts `.save` and scoped or global `.probe` cards
+before `.end`, keeps non-output active lines, and reports stable diagnostics for
+malformed output probes. `select_deck_output_probes` deduplicates the selected
+probes for a requested analysis, while `format_deck_op_table`,
+`format_deck_dc_sweep_table`, `format_deck_ac_table`, and
+`format_deck_transient_table` feed those deck-card selections into the stable
+text table formatters.

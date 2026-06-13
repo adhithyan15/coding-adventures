@@ -3,8 +3,9 @@ use std::collections::HashMap;
 use spice_engine::{
     analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
     format_release_readiness_report, release_readiness_gates, resolve_deck_functions,
-    resolve_deck_initial_conditions, resolve_deck_measurements, resolve_deck_parameters,
-    resolve_deck_sources, CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
+    resolve_deck_initial_conditions, resolve_deck_measurements, resolve_deck_outputs,
+    resolve_deck_parameters, resolve_deck_sources, select_deck_output_probes, CompatibilityDeck,
+    CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -659,4 +660,87 @@ fn resolve_deck_measurements_reports_unsupported_subset() {
             "SPICE_DECK_MEASURE_WINDOW",
         ]
     );
+}
+
+#[test]
+fn resolve_deck_outputs_extracts_save_and_probe_cards() {
+    let summary = resolve_deck_outputs(
+        "
+V1 in 0 DC 1
+.save V(out) i(V1)
+.probe tran V(clk)
+.probe AC V(out)
+.end
+.save V(ignored)
+",
+    );
+
+    assert_eq!(summary.active_lines, vec!["V1 in 0 DC 1"]);
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(6));
+    assert!(summary.diagnostics.is_empty());
+    assert_eq!(
+        summary
+            .selections
+            .iter()
+            .map(|selection| (
+                selection.directive.as_str(),
+                selection.analysis.as_deref(),
+                selection.probes.as_slice()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (
+                ".save",
+                None,
+                &["V(out)".to_string(), "I(V1)".to_string()][..]
+            ),
+            (".probe", Some("tran"), &["V(clk)".to_string()][..]),
+            (".probe", Some("ac"), &["V(out)".to_string()][..]),
+        ]
+    );
+
+    assert_eq!(
+        select_deck_output_probes(
+            "
+.save V(out) I(V1)
+.probe tran V(out) V(clk)
+.probe ac V(freq)
+.end
+",
+            "transient",
+        )
+        .unwrap(),
+        vec!["V(out)", "I(V1)", "V(clk)"]
+    );
+}
+
+#[test]
+fn resolve_deck_outputs_reports_invalid_cards() {
+    let summary = resolve_deck_outputs(
+        "
+.save
+.probe tran
+.save P(out)
+.probe dc V(out) bad-token
+.end
+",
+    );
+
+    let mut codes = summary
+        .diagnostics
+        .iter()
+        .map(|diagnostic| diagnostic.code.as_str())
+        .collect::<Vec<_>>();
+    codes.sort_unstable();
+    assert_eq!(
+        codes,
+        vec![
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            "SPICE_DECK_OUTPUT_PROBE",
+            "SPICE_DECK_OUTPUT_PROBE",
+        ]
+    );
+    assert_eq!(summary.selections[0].probes, vec!["V(out)".to_string()]);
 }

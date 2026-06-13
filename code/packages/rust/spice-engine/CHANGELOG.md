@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `resolve_deck_outputs`, `select_deck_output_probes`, and
+  `format_deck_*_table` helpers so parsed `.save` and `.probe` deck cards can
+  drive stable operating-point, DC sweep, AC sweep, and transient table output
+  in the live Rust package.
 - Add `resolve_deck_measurements`, `measure_transient_cards`, and
   `measure_transient_deck` for parsed transient `.measure` / `.meas` card
   routing into stable scalar measurement rows, matching Python and TypeScript.

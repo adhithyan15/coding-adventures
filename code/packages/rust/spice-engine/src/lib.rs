@@ -3288,6 +3288,33 @@ pub struct DeckMeasurementSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckOutputSelection {
+    pub directive: String,
+    pub analysis: Option<String>,
+    pub probes: Vec<String>,
+    pub line_number: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckOutputDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub token: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckOutputSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub selections: Vec<DeckOutputSelection>,
+    pub diagnostics: Vec<DeckOutputDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
     pub field: String,
@@ -3627,6 +3654,69 @@ pub fn resolve_deck_measurements(netlist: &str) -> DeckMeasurementSummary {
     }
 }
 
+pub fn resolve_deck_outputs(netlist: &str) -> DeckOutputSummary {
+    let mut state = DeckOutputState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if matches!(directive.as_deref(), Some(".save" | ".probe")) {
+            resolve_output_line(
+                stripped,
+                line_number,
+                directive.as_deref().unwrap(),
+                &mut state,
+            );
+            continue;
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckOutputSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        selections: state.selections,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn select_deck_output_probes(netlist: &str, analysis: &str) -> Result<Vec<String>, SpiceError> {
+    let summary = resolve_deck_outputs(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "select_deck_output_probes",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    let mut selected = Vec::new();
+    let mut seen = HashSet::new();
+    for selection in summary.selections {
+        if !selection.analysis.as_deref().map_or(true, |requested| {
+            deck_output_analysis_matches(requested, analysis)
+        }) {
+            continue;
+        }
+        for probe in selection.probes {
+            let key = deck_output_probe_key(&probe);
+            if seen.insert(key) {
+                selected.push(probe);
+            }
+        }
+    }
+    Ok(selected)
+}
+
 pub fn release_readiness_gates(corpus: &[CompatibilityDeck]) -> ReleaseReadinessReport {
     let mut issues = Vec::new();
     let mut seen_ids = HashSet::new();
@@ -3953,6 +4043,20 @@ impl DeckMeasurementState {
         Self {
             diagnostics: Vec::new(),
             measurements: Vec::new(),
+        }
+    }
+}
+
+struct DeckOutputState {
+    diagnostics: Vec<DeckOutputDiagnostic>,
+    selections: Vec<DeckOutputSelection>,
+}
+
+impl DeckOutputState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            selections: Vec::new(),
         }
     }
 }
@@ -4566,6 +4670,76 @@ fn resolve_measurement_line(
     });
 }
 
+fn resolve_output_line(
+    line: &str,
+    line_number: usize,
+    directive: &str,
+    state: &mut DeckOutputState,
+) {
+    let tokens = directive_tokens(line);
+    if tokens.len() < 2 {
+        add_output_diagnostic(
+            state,
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} requires at least one probe token"),
+            None,
+        );
+        return;
+    }
+
+    let (analysis, probe_tokens) = if directive == ".probe"
+        && tokens
+            .get(1)
+            .and_then(|token| normalize_deck_output_analysis(token))
+            .is_some()
+    {
+        (
+            normalize_deck_output_analysis(tokens[1]).map(str::to_string),
+            &tokens[2..],
+        )
+    } else {
+        (None, &tokens[1..])
+    };
+    if probe_tokens.is_empty() {
+        add_output_diagnostic(
+            state,
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} requires at least one probe token"),
+            None,
+        );
+        return;
+    }
+
+    let mut probes = Vec::new();
+    for token in probe_tokens {
+        let token = unquote_token(token);
+        match normalize_deck_output_probe(&token) {
+            Some(probe) => probes.push(probe),
+            None => add_output_diagnostic(
+                state,
+                "SPICE_DECK_OUTPUT_PROBE",
+                directive,
+                line_number,
+                &format!("{directive} probe must be V(node) or I(source), got {token:?}"),
+                Some(token),
+            ),
+        }
+    }
+    if probes.is_empty() {
+        return;
+    }
+    state.selections.push(DeckOutputSelection {
+        directive: directive.to_string(),
+        analysis,
+        probes,
+        line_number,
+    });
+}
+
 fn resolve_param_line(line: &str, line_number: usize, state: &mut DeckParameterState) {
     let tokens = directive_tokens(line);
     if tokens.len() == 1 {
@@ -5097,6 +5271,24 @@ fn add_measurement_diagnostic(
     });
 }
 
+fn add_output_diagnostic(
+    state: &mut DeckOutputState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    token: Option<String>,
+) {
+    state.diagnostics.push(DeckOutputDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        token,
+    });
+}
+
 fn parse_node_condition_target(target: &str) -> Option<String> {
     if target.len() < 4 || !target.to_ascii_lowercase().starts_with("v(") || !target.ends_with(')')
     {
@@ -5154,6 +5346,49 @@ fn normalize_measurement_mode_token(mode: &str) -> Option<&'static str> {
         "last" | "final" => Some("last"),
         _ => None,
     }
+}
+
+fn normalize_deck_output_analysis(analysis: &str) -> Option<&'static str> {
+    match analysis.trim().to_ascii_lowercase().as_str() {
+        "op" | "dcop" => Some("op"),
+        "dc" => Some("dc"),
+        "ac" => Some("ac"),
+        "tran" | "transient" => Some("tran"),
+        _ => None,
+    }
+}
+
+fn deck_output_analysis_matches(requested: &str, analysis: &str) -> bool {
+    normalize_deck_output_analysis(requested) == normalize_deck_output_analysis(analysis)
+}
+
+fn normalize_deck_output_probe(token: &str) -> Option<String> {
+    let text = token.trim();
+    if !text.ends_with(')') {
+        return None;
+    }
+    let lower = text.to_ascii_lowercase();
+    let prefix = if lower.starts_with("v(") {
+        "V"
+    } else if lower.starts_with("i(") {
+        "I"
+    } else {
+        return None;
+    };
+    let target = text[2..text.len() - 1].trim();
+    if target.is_empty()
+        || target.contains('(')
+        || target.contains(')')
+        || target.contains(',')
+        || target.chars().any(char::is_whitespace)
+    {
+        return None;
+    }
+    Some(format!("{prefix}({target})"))
+}
+
+fn deck_output_probe_key(probe: &str) -> String {
+    probe.to_ascii_lowercase()
 }
 
 fn strip_expression_delimiters(expression: &str) -> String {
@@ -7824,6 +8059,37 @@ pub fn format_ac_table(points: &[AcPoint], probes: &[&str]) -> Result<String, Sp
     }
     rows.push(String::new());
     Ok(rows.join("\n"))
+}
+
+pub fn format_deck_op_table(result: &DcResult, netlist: &str) -> Result<String, SpiceError> {
+    let probes = select_deck_output_probes(netlist, "op")?;
+    let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
+    format_dc_table(result, &probe_refs)
+}
+
+pub fn format_deck_dc_sweep_table(
+    source_name: &str,
+    points: &[DcSweepPoint],
+    netlist: &str,
+) -> Result<String, SpiceError> {
+    let probes = select_deck_output_probes(netlist, "dc")?;
+    let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
+    format_dc_sweep_table(source_name, points, &probe_refs)
+}
+
+pub fn format_deck_ac_table(points: &[AcPoint], netlist: &str) -> Result<String, SpiceError> {
+    let probes = select_deck_output_probes(netlist, "ac")?;
+    let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
+    format_ac_table(points, &probe_refs)
+}
+
+pub fn format_deck_transient_table(
+    points: &[TransientPoint],
+    netlist: &str,
+) -> Result<String, SpiceError> {
+    let probes = select_deck_output_probes(netlist, "tran")?;
+    let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
+    format_transient_table(points, &probe_refs)
 }
 
 pub fn format_corner_ac_table(
