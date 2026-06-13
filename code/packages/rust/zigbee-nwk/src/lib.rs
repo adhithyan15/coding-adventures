@@ -507,6 +507,71 @@ impl NwkTopologySummary {
     pub fn needs_supervision(self) -> bool {
         self.neighbors.has_stale_neighbors() || self.routes.has_discovery_failures()
     }
+
+    pub fn routing_readiness(self) -> NwkRoutingReadinessSummary {
+        NwkRoutingReadinessSummary::from_topology(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NwkRoutingReadinessSummary {
+    pub generated_at_ms: u64,
+    pub total_neighbors: usize,
+    pub fresh_neighbors: usize,
+    pub stale_neighbors: usize,
+    pub route_capable_neighbors: usize,
+    pub usable_routes: usize,
+    pub discovery_underway_routes: usize,
+    pub discovery_failed_routes: usize,
+    pub best_router_candidate: Option<NetworkAddress>,
+    pub can_forward_now: bool,
+    pub needs_neighbor_refresh: bool,
+    pub needs_route_discovery: bool,
+    pub needs_supervision: bool,
+}
+
+impl NwkRoutingReadinessSummary {
+    pub fn from_topology(topology: NwkTopologySummary) -> Self {
+        let has_fresh_route_capable_neighbor = topology.neighbors.fresh_neighbors > 0
+            && topology.neighbors.route_capable_neighbors > 0;
+        let can_forward_now =
+            has_fresh_route_capable_neighbor && topology.routes.has_usable_routes();
+        let needs_neighbor_refresh =
+            topology.neighbors.is_empty() || topology.neighbors.has_stale_neighbors();
+        let needs_route_discovery =
+            has_fresh_route_capable_neighbor && !topology.routes.has_usable_routes();
+        let needs_supervision = needs_neighbor_refresh
+            || needs_route_discovery
+            || topology.routes.has_discovery_failures();
+
+        Self {
+            generated_at_ms: topology.generated_at_ms,
+            total_neighbors: topology.neighbors.total_neighbors,
+            fresh_neighbors: topology.neighbors.fresh_neighbors,
+            stale_neighbors: topology.neighbors.stale_neighbors,
+            route_capable_neighbors: topology.neighbors.route_capable_neighbors,
+            usable_routes: topology.routes.usable_routes,
+            discovery_underway_routes: topology.routes.discovery_underway_routes,
+            discovery_failed_routes: topology.routes.discovery_failed_routes,
+            best_router_candidate: topology.neighbors.best_router_candidate,
+            can_forward_now,
+            needs_neighbor_refresh,
+            needs_route_discovery,
+            needs_supervision,
+        }
+    }
+
+    pub fn is_ready(self) -> bool {
+        self.can_forward_now && !self.needs_supervision
+    }
+}
+
+pub fn nwk_routing_readiness_summary(
+    generated_at_ms: u64,
+    neighbors: &NeighborTable,
+    routes: &RouteTable,
+) -> NwkRoutingReadinessSummary {
+    NwkTopologySummary::new(generated_at_ms, neighbors, routes).routing_readiness()
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1919,6 +1984,107 @@ mod tests {
         assert_eq!(summary.neighbors.stale_neighbors, 1);
         assert_eq!(summary.routes.discovery_failed_routes, 1);
         assert!(summary.needs_supervision());
+    }
+
+    #[test]
+    fn routing_readiness_summary_marks_ready_active_mesh_path() {
+        let mut neighbors = NeighborTable::new();
+        neighbors.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1001),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Parent,
+                1_250,
+                1_000,
+            )
+            .with_ieee_address(IeeeAddress(0x0012_4b00_0000_1001))
+            .with_link_metrics(210, 1),
+        );
+
+        let mut routes = RouteTable::new();
+        routes.upsert(RouteEntry::active(
+            NetworkAddress(0x2001),
+            NetworkAddress(0x1001),
+            1_300,
+        ));
+
+        let summary = nwk_routing_readiness_summary(1_500, &neighbors, &routes);
+
+        assert_eq!(
+            summary,
+            NwkRoutingReadinessSummary {
+                generated_at_ms: 1_500,
+                total_neighbors: 1,
+                fresh_neighbors: 1,
+                stale_neighbors: 0,
+                route_capable_neighbors: 1,
+                usable_routes: 1,
+                discovery_underway_routes: 0,
+                discovery_failed_routes: 0,
+                best_router_candidate: Some(NetworkAddress(0x1001)),
+                can_forward_now: true,
+                needs_neighbor_refresh: false,
+                needs_route_discovery: false,
+                needs_supervision: false,
+            }
+        );
+        assert!(summary.is_ready());
+    }
+
+    #[test]
+    fn routing_readiness_summary_flags_refresh_and_discovery_work() {
+        let mut neighbors = NeighborTable::new();
+        neighbors.upsert(NeighborEntry::new(
+            NetworkAddress(0x1001),
+            NwkDeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_000,
+            500,
+        ));
+        neighbors.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1002),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Sibling,
+                1_300,
+                1_000,
+            )
+            .with_link_metrics(190, 2),
+        );
+
+        let mut routes = RouteTable::new();
+        routes.upsert(RouteEntry {
+            destination: NetworkAddress(0x2001),
+            next_hop: NetworkAddress(0x1002),
+            status: RouteStatus::DiscoveryFailed,
+            route_record_required: false,
+            many_to_one: false,
+            last_updated_at_ms: 1_350,
+        });
+        routes.upsert(RouteEntry {
+            destination: NetworkAddress(0x2002),
+            next_hop: NetworkAddress(0x1002),
+            status: RouteStatus::DiscoveryUnderway,
+            route_record_required: false,
+            many_to_one: false,
+            last_updated_at_ms: 1_375,
+        });
+
+        let summary = NwkTopologySummary::new(1_500, &neighbors, &routes).routing_readiness();
+
+        assert_eq!(summary.total_neighbors, 2);
+        assert_eq!(summary.fresh_neighbors, 1);
+        assert_eq!(summary.stale_neighbors, 1);
+        assert_eq!(summary.route_capable_neighbors, 2);
+        assert_eq!(summary.usable_routes, 0);
+        assert_eq!(summary.discovery_underway_routes, 1);
+        assert_eq!(summary.discovery_failed_routes, 1);
+        assert_eq!(summary.best_router_candidate, Some(NetworkAddress(0x1002)));
+        assert!(!summary.can_forward_now);
+        assert!(summary.needs_neighbor_refresh);
+        assert!(summary.needs_route_discovery);
+        assert!(summary.needs_supervision);
+        assert!(!summary.is_ready());
     }
 
     #[test]
