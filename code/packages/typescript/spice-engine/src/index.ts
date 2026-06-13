@@ -562,6 +562,32 @@ export interface DeckMeasurementSummary {
   readonly diagnostics: readonly DeckMeasurementDiagnostic[];
 }
 
+export interface DeckFourierCard {
+  readonly directive: ".four";
+  readonly fundamentalFrequencyHz: number;
+  readonly probes: readonly string[];
+  readonly lineNumber: number;
+  readonly harmonics?: number;
+  readonly fromValue?: number;
+}
+
+export interface DeckFourierDiagnostic {
+  readonly code: string;
+  readonly directive: ".four";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly token?: string;
+}
+
+export interface DeckFourierSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly fourier: readonly DeckFourierCard[];
+  readonly diagnostics: readonly DeckFourierDiagnostic[];
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -2923,6 +2949,39 @@ export function resolveDeckMeasurements(netlist: string): DeckMeasurementSummary
   };
 }
 
+export function resolveDeckFourier(netlist: string): DeckFourierSummary {
+  const state = new DeckFourierState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".four") {
+      resolveFourierLine(stripped, lineNumber, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    fourier: state.fourier,
+    diagnostics: state.diagnostics,
+  };
+}
+
 export function releaseReadinessGates(
   corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
 ): ReleaseReadinessReport {
@@ -3359,6 +3418,11 @@ class DeckMeasurementState {
   readonly measurements: DeckMeasurementCard[] = [];
 }
 
+class DeckFourierState {
+  readonly diagnostics: DeckFourierDiagnostic[] = [];
+  readonly fourier: DeckFourierCard[] = [];
+}
+
 function resolveNodeConditionLine(
   line: string,
   lineNumber: number,
@@ -3785,6 +3849,147 @@ function resolveMeasurementLine(
     triggerValue: undefined,
     triggerCrossingKind: undefined,
     triggerCrossingCount: undefined,
+  });
+}
+
+function resolveFourierLine(
+  line: string,
+  lineNumber: number,
+  state: DeckFourierState,
+): void {
+  const tokens = directiveTokens(line);
+  if (tokens.length < 3) {
+    addFourierDiagnostic(state, {
+      code: "SPICE_DECK_FOURIER_ARGUMENT",
+      lineNumber,
+      message: ".four requires a fundamental frequency and at least one probe",
+    });
+    return;
+  }
+
+  const emptyParameterState = new DeckParameterState();
+  let fundamentalFrequencyHz: number;
+  try {
+    fundamentalFrequencyHz = evaluateParameterExpression(
+      stripExpressionDelimiters(tokens[1].trim()),
+      emptyParameterState,
+    );
+  } catch (error) {
+    addFourierDiagnostic(state, {
+      code: "SPICE_DECK_FOURIER_EXPRESSION",
+      lineNumber,
+      message: error instanceof Error ? error.message : String(error),
+      token: tokens[1],
+    });
+    return;
+  }
+  if (!Number.isFinite(fundamentalFrequencyHz) || fundamentalFrequencyHz <= 0.0) {
+    addFourierDiagnostic(state, {
+      code: "SPICE_DECK_FOURIER_FREQUENCY",
+      lineNumber,
+      message: ".four fundamental frequency must be finite and positive",
+      token: tokens[1],
+    });
+    return;
+  }
+
+  const probes: string[] = [];
+  let harmonics: number | undefined;
+  let fromValue: number | undefined;
+  const seenOptions = new Set<string>();
+  const diagnosticCount = state.diagnostics.length;
+  for (const token of tokens.slice(2)) {
+    const equalsIndex = token.indexOf("=");
+    if (equalsIndex >= 0) {
+      const key = token.slice(0, equalsIndex).trim().toLowerCase();
+      const expression = token.slice(equalsIndex + 1);
+      if (key !== "harmonics" && key !== "from") {
+        addFourierDiagnostic(state, {
+          code: "SPICE_DECK_FOURIER_ARGUMENT",
+          lineNumber,
+          message: `unsupported .four option ${JSON.stringify(key)}`,
+          token,
+        });
+        continue;
+      }
+      if (seenOptions.has(key)) {
+        addFourierDiagnostic(state, {
+          code: "SPICE_DECK_FOURIER_ARGUMENT",
+          lineNumber,
+          message: `duplicate .four option ${JSON.stringify(key)}`,
+          token,
+        });
+        continue;
+      }
+      seenOptions.add(key);
+      try {
+        const value = evaluateParameterExpression(
+          stripExpressionDelimiters(expression.trim()),
+          emptyParameterState,
+        );
+        if (key === "harmonics") {
+          if (!Number.isFinite(value) || value < 1 || !Number.isInteger(value)) {
+            addFourierDiagnostic(state, {
+              code: "SPICE_DECK_FOURIER_ARGUMENT",
+              lineNumber,
+              message: ".four HARMONICS value must be a positive integer",
+              token,
+            });
+            continue;
+          }
+          harmonics = value;
+        } else {
+          fromValue = value;
+        }
+      } catch (error) {
+        addFourierDiagnostic(state, {
+          code: "SPICE_DECK_FOURIER_EXPRESSION",
+          lineNumber,
+          message: error instanceof Error ? error.message : String(error),
+          token,
+        });
+      }
+      continue;
+    }
+    const probe = unquoteToken(token.trim());
+    if (probe.length === 0) {
+      addFourierDiagnostic(state, {
+        code: "SPICE_DECK_FOURIER_PROBE",
+        lineNumber,
+        message: ".four probe must not be empty",
+        token,
+      });
+      continue;
+    }
+    probes.push(probe);
+  }
+
+  if (probes.length === 0 && state.diagnostics.length === diagnosticCount) {
+    addFourierDiagnostic(state, {
+      code: "SPICE_DECK_FOURIER_PROBE",
+      lineNumber,
+      message: ".four requires at least one probe",
+    });
+  }
+  if (fromValue !== undefined && !Number.isFinite(fromValue)) {
+    addFourierDiagnostic(state, {
+      code: "SPICE_DECK_FOURIER_WINDOW",
+      lineNumber,
+      message: ".four FROM value must be finite",
+    });
+  }
+
+  if (state.diagnostics.length !== diagnosticCount) {
+    return;
+  }
+
+  state.fourier.push({
+    directive: ".four",
+    fundamentalFrequencyHz,
+    probes,
+    lineNumber,
+    harmonics,
+    fromValue,
   });
 }
 
@@ -4515,6 +4720,19 @@ function addMeasurementDiagnostic(
 ): void {
   state.diagnostics.push({
     ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+function addFourierDiagnostic(
+  state: DeckFourierState,
+  diagnostic: Omit<DeckFourierDiagnostic, "directive" | "severity"> & {
+    readonly severity?: "error" | "warning";
+  },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    directive: ".four",
     severity: diagnostic.severity ?? "error",
   });
 }
@@ -7769,6 +7987,36 @@ export function fourier(
       fourierProbe(sortedPoints, probe, fundamentalFrequencyHz, harmonics, windowStart, endTime),
     ),
   };
+}
+
+export function fourierTransientCards(
+  points: readonly TransientPoint[],
+  fourierCards: readonly DeckFourierCard[],
+): FourierResult[] {
+  return fourierCards.map((card) =>
+    fourier(
+      points,
+      card.fundamentalFrequencyHz,
+      card.probes,
+      card.harmonics ?? 9,
+      card.fromValue,
+    )
+  );
+}
+
+export function fourierTransientDeck(
+  points: readonly TransientPoint[],
+  netlist: string,
+): FourierResult[] {
+  const summary = resolveDeckFourier(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0];
+    throw invalidElement(
+      "fourierTransientDeck",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return fourierTransientCards(points, summary.fourier);
 }
 
 export function fourierCorners(

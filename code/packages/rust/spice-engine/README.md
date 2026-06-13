@@ -148,6 +148,10 @@ crossing times over optional `FROM=` / `TO=` windows.
 ...` cards report trigger-to-target crossing delays. The deck helpers route
 parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those
 stable measurement rows.
+`resolve_deck_fourier`, `fourier_transient_cards`, and
+`fourier_transient_deck` extract parsed `.four` / `.FOUR` cards before `.end`
+and route transient samples into the existing SPICE-style Fourier result shape
+with optional `HARMONICS=` and `FROM=` controls.
 `resolve_deck_parameters` evaluates scalar whitespace-tokenized `.param`
 assignments, collects scalar `.func` definitions before `.end`, preserves
 parameter order, rewrites braced and quoted active-line expressions, and emits

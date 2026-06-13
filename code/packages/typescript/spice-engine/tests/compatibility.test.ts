@@ -6,6 +6,7 @@ import {
   formatCompatibilityCorpusTable,
   formatReleaseReadinessReport,
   releaseReadinessGates,
+  resolveDeckFourier,
   resolveDeckFunctions,
   resolveDeckInitialConditions,
   resolveDeckMeasurements,
@@ -503,6 +504,49 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
       "SPICE_DECK_MEASURE_WINDOW",
       "SPICE_DECK_MEASURE_ARGUMENT",
       "SPICE_DECK_MEASURE_EXPRESSION",
+    ]);
+  });
+
+  it("extracts transient .four cards", () => {
+    const summary = resolveDeckFourier(`
+V1 in 0 SIN(0 1 1k)
+.tran 1u 2m
+.four {1k} V(in) V(out) HARMONICS=5 FROM=1m
+.four 2k "I(V1)"
+.end
+.four 3k V(ignored)
+`);
+
+    expect(summary.activeLines).toStrictEqual(["V1 in 0 SIN(0 1 1k)", ".tran 1u 2m"]);
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.diagnostics).toStrictEqual([]);
+    expect(summary.fourier).toHaveLength(2);
+    expect(summary.fourier[0].fundamentalFrequencyHz).toBeCloseTo(1000.0, 12);
+    expect(summary.fourier[0].probes).toStrictEqual(["V(in)", "V(out)"]);
+    expect(summary.fourier[0].harmonics).toBe(5);
+    expect(summary.fourier[0].fromValue).toBeCloseTo(1.0e-3, 12);
+    expect(summary.fourier[1].probes).toStrictEqual(["I(V1)"]);
+    expect(summary.fourier[1].harmonics).toBeUndefined();
+  });
+
+  it("reports unsupported .four subsets", () => {
+    const summary = resolveDeckFourier(`
+.four 0 V(out)
+.four 1k
+.four 1k V(out) HARMONICS=1.5
+.four 1k V(out) TO=2m
+.four 1k ""
+.end
+`);
+
+    expect(summary.fourier).toStrictEqual([]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code).sort()).toStrictEqual([
+      "SPICE_DECK_FOURIER_ARGUMENT",
+      "SPICE_DECK_FOURIER_ARGUMENT",
+      "SPICE_DECK_FOURIER_ARGUMENT",
+      "SPICE_DECK_FOURIER_FREQUENCY",
+      "SPICE_DECK_FOURIER_PROBE",
     ]);
   });
 });

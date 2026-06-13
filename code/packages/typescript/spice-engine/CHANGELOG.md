@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `resolveDeckFourier`, `fourierTransientCards`, and
+  `fourierTransientDeck` so parsed `.four` / `.FOUR` deck cards can route
+  transient samples into SPICE-style Fourier harmonic results with optional
+  `HARMONICS=` and `FROM=` controls, matching Python and Rust.
 - Add `measureTransientDelayBetweenProbes` and parsed transient
   `.measure ... TRIG ... TARG ...` routing so deck measurements can report
   trigger-to-target delays with counted crossing controls, matching Python and

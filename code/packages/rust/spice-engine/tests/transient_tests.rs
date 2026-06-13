@@ -11,14 +11,15 @@ use spice_engine::{
     format_digital_bridge_schedule_table, format_digital_event_stream_table,
     format_digital_event_table, format_distortion_table, format_fourier_table,
     format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
-    fourier, fourier_corners, measure_transient_deck, measure_transient_delay_between_probes,
-    measure_transient_find_at_probe, measure_transient_probe, measure_transient_when_probe,
-    measure_transient_when_probe_counted, pole_zero_rc_highpass, pole_zero_rc_lowpass,
-    pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch,
-    pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
-    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
-    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
-    pss_residual_with_tolerance, pss_with_tolerance, sample_transient_probe_as_digital_events,
+    fourier, fourier_corners, fourier_transient_deck, measure_transient_deck,
+    measure_transient_delay_between_probes, measure_transient_find_at_probe,
+    measure_transient_probe, measure_transient_when_probe, measure_transient_when_probe_counted,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
+    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
+    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
+    pss_with_tolerance, sample_transient_probe_as_digital_events,
     sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
     transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
@@ -1086,6 +1087,45 @@ fn fourier_extracts_transient_sinusoid_components() {
     assert!((fundamental.sine - amp).abs() < 2.0e-3);
     assert!(fundamental.cosine.abs() < 2.0e-3);
     assert!(probe.total_harmonic_distortion < 2.0e-3);
+}
+
+#[test]
+fn fourier_transient_deck_routes_parsed_four_cards() {
+    let freq = 1_000.0;
+    let amp = 2.0;
+    let offset = 0.25;
+    let period = 1.0 / freq;
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        Waveform::Sin(SinWaveform::new(offset, amp, freq)),
+    )));
+
+    let points = transient(&circuit, period / 64.0, 2.0 * period).unwrap();
+    let analyses = fourier_transient_deck(
+        &points,
+        "
+.tran 15.625u 2m
+.four 1k V(in) HARMONICS=5 FROM=1m
+.end
+",
+    )
+    .unwrap();
+
+    assert_eq!(analyses.len(), 1);
+    let analysis = &analyses[0];
+    let probe = &analysis.probes[0];
+    let fundamental = &probe.harmonics[0];
+
+    assert_eq!(probe.probe, "V(in)");
+    assert_eq!(probe.harmonics.len(), 5);
+    assert!((analysis.start_time - period).abs() < 1.0e-12);
+    assert!((probe.dc - offset).abs() < 2.0e-3);
+    assert_close(fundamental.frequency_hz, freq);
+    assert!((fundamental.magnitude - amp).abs() < 2.0e-3);
 }
 
 #[test]
