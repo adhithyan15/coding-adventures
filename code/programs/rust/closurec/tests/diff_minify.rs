@@ -139,6 +139,7 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `\0` -> `\x00`). Lexer/emitter string-escape handling. HIGH
     // PRIORITY — corrupts output, not just byte-identity.
     ("str_codepoint_esc", "gap-090: \\u{...} code-point escape mangled"),
+    ("str_unicode4_esc",  "gap-090: \\uNNNN 4-hex unicode escape mangled"),
     ("str_hex_esc",       "gap-090: \\xNN hex escape mangled"),
     ("str_null_esc",      "gap-090: \\0 null escape mangled"),
     // gap-091 RESOLVED in CLOC12.96 — a BigInt RADIX literal is now
@@ -164,6 +165,19 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
+    // gap-102 (CLOC14.45): a `yield` operand's grouping parens are
+    // redundant and dropped upstream — `yield(a)` → `yield a`,
+    // `yield(a.b)` → `yield a.b`, `yield(a+b)` → `yield a+b`,
+    // `a=yield(b)` → `a=yield b`. `yield` (like `return`/`throw`,
+    // gap-056) takes an AssignmentExpression, which binds looser than
+    // every binary operator, so the parens never carry meaning EXCEPT
+    // around a comma-operator operand (`yield(a,b)` keeps its parens —
+    // `yield a,b` would parse as `(yield a),b`). Analogous to gap-056
+    // but anchored on the `yield` keyword; the `*` of `yield*` is a
+    // separate delegate form and is untouched.
+    ("yield_paren_ident",  "gap-102: yield operand paren elision (ident)"),
+    ("yield_paren_binary", "gap-102: yield operand paren elision (binary)"),
+    ("yield_paren_assign", "gap-102: yield operand paren elision (assignment RHS)"),
     // gap-101 RESOLVED in CLOC12.104 — a prefix unary operator
     // (`typeof`/`void`/`delete`/`!`/`-`/…) with a PARENTHESISED
     // higher-arity operand (a unary-expression or a call) now drops the
@@ -187,7 +201,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // Residual (still deferred): the V8 fractional shortest-form
     // (`0.5` → `.5`, `1e-5` → `1E-5`, `0.0001` → `1E-4`) and
     // out-of-u128 magnitudes (`1e100` → `1E100`) need a Grisu/Ryu
-    // float formatter — tracked as gap-085.
+    // float formatter — tracked as gap-085. `minify_num_neg_exp_frac`
+    // (`5e-3` → `.005`) is the negative-exponent fractional case of the
+    // same deferred gap.
+    ("num_neg_exp_frac", "gap-085: negative-exp scientific -> fractional shortest-form"),
     // gap-083 (CLOC14.38): PRECEDENCE-aware operand paren elision —
     // `a==(b+c)` → `a==b+c` (the inner op binds tighter than the
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
