@@ -2333,6 +2333,22 @@
             "content_text": "Untitled Body"
           }
         ],
+        "template_descriptors": [
+          {
+            "id": "card-template",
+            "template_kind": "declarative-shadow-root",
+            "shadowrootmode": "open",
+            "shadowroot_attribute_names": ["shadowrootmode", "shadowrootdelegatesfocus", "shadowrootclonable", "shadowrootserializable"],
+            "shadowroot_attribute_count": 4,
+            "declarative_shadow_root": true,
+            "shadowroot_mode_valid": true,
+            "shadowrootdelegatesfocus": true,
+            "shadowrootclonable": true,
+            "shadowrootserializable": true,
+            "content_text": "Untitled Body",
+            "content_word_count": 2
+          }
+        ],
         "component_hydration_targets": [
           { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "text": "Untitled Body" },
           { "element": "article", "part": ["frame"], "text": "Untitled Body" },

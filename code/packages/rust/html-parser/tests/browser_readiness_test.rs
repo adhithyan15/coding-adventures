@@ -31,7 +31,7 @@ use coding_adventures_html_parser::{
     BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
     BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
     BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserTemplate, BrowserTemplateDescriptor, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -187,6 +187,8 @@ struct ExpectedBrowserDocument {
     disclosures: Vec<ExpectedDisclosure>,
     #[serde(default)]
     disclosure_state_descriptors: Option<Vec<ExpectedDisclosureStateDescriptor>>,
+    #[serde(default)]
+    template_descriptors: Option<Vec<ExpectedTemplateDescriptor>>,
     #[serde(default)]
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
     #[serde(default)]
@@ -358,6 +360,38 @@ struct ExpectedTemplate {
     #[serde(default)]
     shadowrootserializable: bool,
     content_text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedTemplateDescriptor {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    template_kind: String,
+    #[serde(default)]
+    shadowrootmode: Option<String>,
+    #[serde(default)]
+    shadowroot_attribute_names: Vec<String>,
+    #[serde(default)]
+    shadowroot_attribute_count: usize,
+    #[serde(default)]
+    declarative_shadow_root: bool,
+    #[serde(default)]
+    shadowroot_mode_valid: bool,
+    #[serde(default)]
+    shadowrootdelegatesfocus: bool,
+    #[serde(default)]
+    shadowrootclonable: bool,
+    #[serde(default)]
+    shadowrootserializable: bool,
+    #[serde(default)]
+    content_text: String,
+    #[serde(default)]
+    content_word_count: usize,
+    #[serde(default)]
+    template_blocked: bool,
+    #[serde(default)]
+    template_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4078,12 +4112,16 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_aria_name_descriptors = case.expected.aria_name_descriptors.is_some();
         let tracks_aria_description_descriptors =
             case.expected.aria_description_descriptors.is_some();
+        let tracks_template_descriptors = case.expected.template_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
         }
         if !tracks_aria_description_descriptors {
             expected.aria_description_descriptors = actual.aria_description_descriptors.clone();
+        }
+        if !tracks_template_descriptors {
+            expected.template_descriptors = actual.template_descriptors.clone();
         }
 
         assert_eq!(
@@ -6297,6 +6335,74 @@ fn browser_component_hydration_metadata_tracks_custom_elements_slots_parts_and_d
 }
 
 #[test]
+fn browser_template_descriptors_track_shadowroot_mode_and_flags() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "component-template-page")
+        .expect("component template fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("component template fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.template_descriptors,
+        case.expected.into_browser_document().template_descriptors,
+        "template descriptors should preserve declarative shadow root mode, flags, and content summary",
+    );
+}
+
+#[test]
+fn browser_template_descriptors_track_invalid_shadowroot_modes_and_orphan_flags() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <template id=bad shadowrootmode=sideways shadowrootdelegatesfocus>Bad mode</template>
+            <template id=flags shadowrootserializable>Plain template</template>
+        </body>"#,
+    )
+    .expect("template blocker fixture should parse");
+
+    let bad = actual
+        .template_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("bad"))
+        .expect("bad template descriptor should be present");
+
+    assert_eq!(bad.template_kind, "declarative-shadow-root");
+    assert_eq!(bad.shadowrootmode.as_deref(), Some("sideways"));
+    assert_eq!(
+        bad.shadowroot_attribute_names,
+        vec!["shadowrootmode", "shadowrootdelegatesfocus"]
+    );
+    assert_eq!(bad.shadowroot_attribute_count, 2);
+    assert!(bad.declarative_shadow_root);
+    assert!(!bad.shadowroot_mode_valid);
+    assert!(bad.template_blocked);
+    assert_eq!(bad.template_block_reasons, vec!["invalid-shadowrootmode"]);
+
+    let flags = actual
+        .template_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("flags"))
+        .expect("flags template descriptor should be present");
+
+    assert_eq!(flags.template_kind, "inert-template");
+    assert_eq!(
+        flags.shadowroot_attribute_names,
+        vec!["shadowrootserializable"]
+    );
+    assert!(!flags.declarative_shadow_root);
+    assert!(!flags.shadowroot_mode_valid);
+    assert!(flags.template_blocked);
+    assert_eq!(
+        flags.template_block_reasons,
+        vec!["shadowroot-flags-without-mode"]
+    );
+}
+
+#[test]
 fn browser_data_attribute_descriptor_metadata_tracks_custom_and_standard_elements() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -7028,6 +7134,12 @@ impl ExpectedBrowserDocument {
             scroll_interaction_descriptors,
             disclosures,
             disclosure_state_descriptors,
+            template_descriptors: self
+                .template_descriptors
+                .unwrap_or_default()
+                .into_iter()
+                .map(ExpectedTemplateDescriptor::into_browser_template_descriptor)
+                .collect(),
             component_hydration_targets: self
                 .component_hydration_targets
                 .into_iter()
@@ -7218,6 +7330,27 @@ impl ExpectedTemplate {
             shadowrootclonable: self.shadowrootclonable,
             shadowrootserializable: self.shadowrootserializable,
             content_text: self.content_text,
+        }
+    }
+}
+
+impl ExpectedTemplateDescriptor {
+    fn into_browser_template_descriptor(self) -> BrowserTemplateDescriptor {
+        BrowserTemplateDescriptor {
+            id: self.id,
+            template_kind: self.template_kind,
+            shadowrootmode: self.shadowrootmode,
+            shadowroot_attribute_names: self.shadowroot_attribute_names,
+            shadowroot_attribute_count: self.shadowroot_attribute_count,
+            declarative_shadow_root: self.declarative_shadow_root,
+            shadowroot_mode_valid: self.shadowroot_mode_valid,
+            shadowrootdelegatesfocus: self.shadowrootdelegatesfocus,
+            shadowrootclonable: self.shadowrootclonable,
+            shadowrootserializable: self.shadowrootserializable,
+            content_text: self.content_text,
+            content_word_count: self.content_word_count,
+            template_blocked: self.template_blocked,
+            template_block_reasons: self.template_block_reasons,
         }
     }
 }

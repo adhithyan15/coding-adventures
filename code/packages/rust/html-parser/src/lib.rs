@@ -887,6 +887,7 @@ pub struct BrowserDocument {
     pub scroll_interaction_descriptors: Vec<BrowserScrollInteractionDescriptor>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
+    pub template_descriptors: Vec<BrowserTemplateDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
@@ -1418,6 +1419,24 @@ pub struct BrowserTemplate {
     pub shadowrootclonable: bool,
     pub shadowrootserializable: bool,
     pub content_text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTemplateDescriptor {
+    pub id: Option<String>,
+    pub template_kind: String,
+    pub shadowrootmode: Option<String>,
+    pub shadowroot_attribute_names: Vec<String>,
+    pub shadowroot_attribute_count: usize,
+    pub declarative_shadow_root: bool,
+    pub shadowroot_mode_valid: bool,
+    pub shadowrootdelegatesfocus: bool,
+    pub shadowrootclonable: bool,
+    pub shadowrootserializable: bool,
+    pub content_text: String,
+    pub content_word_count: usize,
+    pub template_blocked: bool,
+    pub template_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10859,6 +10878,9 @@ fn collect_browser_facts(
             summary.global_state_descriptors.push(descriptor);
         }
         if element.name == "template" {
+            summary
+                .template_descriptors
+                .push(browser_template_descriptor(element));
             summary.templates.push(browser_template(element));
         }
         if browser_item_scope(element) {
@@ -11061,7 +11083,12 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             "style" => summary
                 .stylesheets
                 .push(browser_style_element(element, summary.base_href.as_deref())),
-            "template" => summary.templates.push(browser_template(element)),
+            "template" => {
+                summary
+                    .template_descriptors
+                    .push(browser_template_descriptor(element));
+                summary.templates.push(browser_template(element));
+            }
             _ => {}
         }
 
@@ -17501,6 +17528,66 @@ fn browser_template(element: &Element) -> BrowserTemplate {
         shadowrootserializable: element.attribute("shadowrootserializable").is_some(),
         content_text: visible_text_for_nodes(&element.children),
     }
+}
+
+fn browser_template_descriptor(element: &Element) -> BrowserTemplateDescriptor {
+    let shadowrootmode = element.attribute("shadowrootmode").map(ToOwned::to_owned);
+    let shadowroot_attribute_names = browser_template_shadowroot_attribute_names(element);
+    let template_block_reasons =
+        browser_template_block_reasons(shadowrootmode.as_deref(), &shadowroot_attribute_names);
+    let content_text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+
+    BrowserTemplateDescriptor {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        template_kind: if shadowrootmode.is_some() {
+            "declarative-shadow-root".to_string()
+        } else {
+            "inert-template".to_string()
+        },
+        shadowrootmode,
+        shadowroot_attribute_count: shadowroot_attribute_names.len(),
+        shadowroot_attribute_names,
+        declarative_shadow_root: element.attribute("shadowrootmode").is_some(),
+        shadowroot_mode_valid: element
+            .attribute("shadowrootmode")
+            .is_some_and(|mode| matches!(mode, "open" | "closed")),
+        shadowrootdelegatesfocus: element.attribute("shadowrootdelegatesfocus").is_some(),
+        shadowrootclonable: element.attribute("shadowrootclonable").is_some(),
+        shadowrootserializable: element.attribute("shadowrootserializable").is_some(),
+        content_word_count: content_text.split_whitespace().count(),
+        content_text,
+        template_blocked: !template_block_reasons.is_empty(),
+        template_block_reasons,
+    }
+}
+
+fn browser_template_shadowroot_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in [
+        "shadowrootmode",
+        "shadowrootdelegatesfocus",
+        "shadowrootclonable",
+        "shadowrootserializable",
+    ] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_template_block_reasons(
+    shadowrootmode: Option<&str>,
+    shadowroot_attribute_names: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if shadowrootmode.is_some_and(|mode| !matches!(mode, "open" | "closed")) {
+        reasons.push("invalid-shadowrootmode".to_string());
+    }
+    if shadowrootmode.is_none() && !shadowroot_attribute_names.is_empty() {
+        reasons.push("shadowroot-flags-without-mode".to_string());
+    }
+    reasons
 }
 
 fn browser_component_hydration_target(
