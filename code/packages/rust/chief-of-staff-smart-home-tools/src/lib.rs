@@ -51,9 +51,10 @@ use smart_home_integration_catalog::{
     activation_playbook_steps_from_forecasts, activation_readouts_from_candidates,
     activation_release_packets_from_closure_gates, activation_remediation_items_from_responses,
     activation_response_items_from_escalation_cases, activation_reviews_from_candidates,
-    activation_risk_from_candidates, activation_runbook_entries_from_playbook_steps,
-    activation_runway_from_candidates, activation_safety_gates_from_deployment_records,
-    activation_sentinel_alerts_from_rollups, activation_timeline_milestones_from_dashboard_cards,
+    activation_risk_from_candidates, activation_rollback_plans_from_safety_gates,
+    activation_runbook_entries_from_playbook_steps, activation_runway_from_candidates,
+    activation_safety_gates_from_deployment_records, activation_sentinel_alerts_from_rollups,
+    activation_timeline_milestones_from_dashboard_cards,
     activation_verification_checkpoints_from_execution_packets,
     activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
@@ -110,23 +111,24 @@ use smart_home_integration_catalog::{
     IntegrationActivationResponseSummary, IntegrationActivationReviewItem,
     IntegrationActivationReviewSummary, IntegrationActivationRiskItem,
     IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
-    IntegrationActivationRunbookEntry, IntegrationActivationRunbookPhase,
-    IntegrationActivationRunbookSummary, IntegrationActivationRunwayStage,
-    IntegrationActivationRunwaySummary, IntegrationActivationSafetyGate,
-    IntegrationActivationSafetyGateStatus, IntegrationActivationSafetySummary,
-    IntegrationActivationSentinelAlert, IntegrationActivationSentinelAlertKind,
-    IntegrationActivationSentinelSummary, IntegrationActivationTarget,
-    IntegrationActivationTimelineMilestone, IntegrationActivationTimelineSummary,
-    IntegrationActivationVerificationCheckpoint, IntegrationActivationVerificationStatus,
-    IntegrationActivationVerificationSummary, IntegrationActivationWatchtowerSignal,
-    IntegrationActivationWatchtowerSignalKind, IntegrationActivationWatchtowerSummary,
-    IntegrationCatalogEntry, IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory,
-    IntegrationPolicySurface, IntegrationPolicySurfaceInventoryItem,
-    IntegrationPolicySurfaceSummary, IntegrationReadinessCapabilityGap,
-    IntegrationReadinessDependencyGap, IntegrationReadinessGapInventory,
-    IntegrationReadinessPrimitiveGap, IntegrationReadinessReport, IntegrationReadinessSummary,
-    PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary, PrimitiveBacklogItem,
-    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    IntegrationActivationRollbackAction, IntegrationActivationRollbackPlan,
+    IntegrationActivationRollbackSummary, IntegrationActivationRunbookEntry,
+    IntegrationActivationRunbookPhase, IntegrationActivationRunbookSummary,
+    IntegrationActivationRunwayStage, IntegrationActivationRunwaySummary,
+    IntegrationActivationSafetyGate, IntegrationActivationSafetyGateStatus,
+    IntegrationActivationSafetySummary, IntegrationActivationSentinelAlert,
+    IntegrationActivationSentinelAlertKind, IntegrationActivationSentinelSummary,
+    IntegrationActivationTarget, IntegrationActivationTimelineMilestone,
+    IntegrationActivationTimelineSummary, IntegrationActivationVerificationCheckpoint,
+    IntegrationActivationVerificationStatus, IntegrationActivationVerificationSummary,
+    IntegrationActivationWatchtowerSignal, IntegrationActivationWatchtowerSignalKind,
+    IntegrationActivationWatchtowerSummary, IntegrationCatalogEntry, IntegrationCatalogQuery,
+    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
+    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
+    IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
+    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary,
+    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -372,6 +374,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_SAFETY_GATES_TOOL_ID: &str =
     "smart_home.list_integration_activation_safety_gates";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_SAFETY_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_safety_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_ROLLBACK_TOOL_ID: &str =
+    "smart_home.list_integration_activation_rollback";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_rollback_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -846,6 +852,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_SAFETY_SUMMARY_TOOL_ID => {
                     let query = integration_activation_safety_query(&arguments)?;
                     Ok(get_integration_activation_safety_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_ROLLBACK_TOOL_ID => {
+                    let query = integration_activation_rollback_query(&arguments)?;
+                    Ok(list_integration_activation_rollback_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_rollback_query(&arguments)?;
+                    Ok(get_integration_activation_rollback_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2752,6 +2768,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation safety summary",
             "Return compact D23A activation safety-gate counts by gate status, deployment ring, owner lane, blockers, verification requirements, deployment readiness, policy, and dependency work.",
             integration_activation_safety_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_ROLLBACK_TOOL_ID,
+            "List smart-home integration activation rollback plans",
+            "List Chief-facing D23A activation rollback and contingency plans derived from safety gates with hold, verification, owner approval, staged rollback, and monitoring actions.",
+            integration_activation_rollback_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_rollback_plans", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_rollback_plans",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation rollback summary",
+            "Return compact D23A activation rollback-plan counts by rollback action, safety gate status, deployment ring, owner lane, blockers, readiness, policy, and dependency work.",
+            integration_activation_rollback_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5668,6 +5718,21 @@ struct IntegrationActivationSafetyQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationRollbackQuery {
+    safety: IntegrationActivationSafetyQuery,
+    rollback_action: Option<IntegrationActivationRollbackAction>,
+    gate_status: Option<IntegrationActivationSafetyGateStatus>,
+    deployment_ring: Option<IntegrationActivationDeploymentRing>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    needs_verification: Option<bool>,
+    deployment_ready: Option<bool>,
+    rollback_ready: Option<bool>,
+    rollback_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -6492,6 +6557,49 @@ fn integration_activation_safety_query(
             .or(optional_bool(arguments, "deployment_ready")?),
         safety_gate_limit: optional_u64(arguments, "safety_gate_limit")?
             .or(optional_u64(arguments, "gate_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_rollback_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationRollbackQuery, ToolCallError> {
+    let rollback_action = optional_string(arguments, "rollback_action")?
+        .or(optional_string(arguments, "action")?)
+        .or(optional_string(arguments, "rollback_state")?)
+        .map(|label| parse_activation_rollback_action(&label))
+        .transpose()?;
+    let gate_status = optional_string(arguments, "rollback_gate_status")?
+        .or(optional_string(arguments, "gate_status")?)
+        .map(|label| parse_activation_safety_gate_status(&label))
+        .transpose()?;
+    let deployment_ring = optional_string(arguments, "rollback_deployment_ring")?
+        .or(optional_string(arguments, "deployment_ring")?)
+        .or(optional_string(arguments, "rollback_ring")?)
+        .map(|label| parse_activation_deployment_ring(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "rollback_owner_lane")?
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationRollbackQuery {
+        safety: integration_activation_safety_query(arguments)?,
+        rollback_action,
+        gate_status,
+        deployment_ring,
+        owner_lane,
+        requires_attention: optional_bool(arguments, "rollback_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "rollback_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        needs_verification: optional_bool(arguments, "rollback_needs_verification")?
+            .or(optional_bool(arguments, "needs_verification")?),
+        deployment_ready: optional_bool(arguments, "rollback_deployment_ready")?
+            .or(optional_bool(arguments, "deployment_ready")?),
+        rollback_ready: optional_bool(arguments, "rollback_ready")?,
+        rollback_limit: optional_u64(arguments, "rollback_limit")?
+            .or(optional_u64(arguments, "plan_limit")?)
             .map(|value| value as usize),
     })
 }
@@ -7768,6 +7876,46 @@ fn integration_activation_safety_gates_for_query(
     }
 
     (gates, catalog_count)
+}
+
+fn integration_activation_rollback_plans_for_query(
+    query: &IntegrationActivationRollbackQuery,
+) -> (Vec<IntegrationActivationRollbackPlan>, usize) {
+    let (gates, catalog_count) = integration_activation_safety_gates_for_query(&query.safety);
+    let mut plans = activation_rollback_plans_from_safety_gates(&gates);
+
+    if let Some(rollback_action) = query.rollback_action {
+        plans.retain(|plan| plan.rollback_action == rollback_action);
+    }
+    if let Some(gate_status) = query.gate_status {
+        plans.retain(|plan| plan.gate_status == gate_status);
+    }
+    if let Some(deployment_ring) = query.deployment_ring {
+        plans.retain(|plan| plan.deployment_ring == deployment_ring);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        plans.retain(|plan| plan.owner_lane == owner_lane);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        plans.retain(|plan| plan.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        plans.retain(|plan| plan.blocks_activation() == blocked);
+    }
+    if let Some(needs_verification) = query.needs_verification {
+        plans.retain(|plan| plan.needs_verification() == needs_verification);
+    }
+    if let Some(deployment_ready) = query.deployment_ready {
+        plans.retain(|plan| plan.deployment_ready() == deployment_ready);
+    }
+    if let Some(rollback_ready) = query.rollback_ready {
+        plans.retain(|plan| plan.rollback_ready() == rollback_ready);
+    }
+    if let Some(limit) = query.rollback_limit {
+        plans.truncate(limit);
+    }
+
+    (plans, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -10908,6 +11056,87 @@ fn get_integration_activation_safety_summary_output_handler_output(
             (
                 "ready_to_deploy_gates",
                 integer(summary.ready_to_deploy_gates as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_rollback_output_handler_output(
+    query: IntegrationActivationRollbackQuery,
+) -> ToolHandlerOutput {
+    let (plans, catalog_count) = integration_activation_rollback_plans_for_query(&query);
+    let summary = IntegrationActivationRollbackSummary::from_plans(plans.iter());
+    let count = plans.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_rollback_plans",
+            JsonValue::Array(plans.iter().map(activation_rollback_plan_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_rollback_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_rollback")),
+            ("plans", integer(count as i64)),
+            (
+                "plans_requiring_attention",
+                integer(summary.plans_requiring_attention as i64),
+            ),
+            (
+                "hold_deployment_plans",
+                integer(summary.hold_deployment_plans as i64),
+            ),
+            (
+                "plans_ready_for_rollback",
+                integer(summary.plans_ready_for_rollback as i64),
+            ),
+            (
+                "next_rollback_action",
+                summary
+                    .next_rollback_action
+                    .map(|action| string(action.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_rollback_summary_output_handler_output(
+    query: IntegrationActivationRollbackQuery,
+) -> ToolHandlerOutput {
+    let (plans, _) = integration_activation_rollback_plans_for_query(&query);
+    let summary = IntegrationActivationRollbackSummary::from_plans(plans.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_rollback_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_rollback_summary"),
+            ),
+            ("total_plans", integer(summary.total_plans as i64)),
+            (
+                "plans_requiring_attention",
+                integer(summary.plans_requiring_attention as i64),
+            ),
+            (
+                "hold_deployment_plans",
+                integer(summary.hold_deployment_plans as i64),
+            ),
+            (
+                "plans_ready_for_rollback",
+                integer(summary.plans_ready_for_rollback as i64),
             ),
         ]),
     )
@@ -21673,6 +21902,235 @@ fn integration_activation_safety_summary_json(
     ])
 }
 
+fn activation_rollback_plan_json(plan: &IntegrationActivationRollbackPlan) -> JsonValue {
+    object([
+        ("sequence", integer(plan.sequence as i64)),
+        ("rollback_action", string(plan.rollback_action.as_str())),
+        ("gate_status", string(plan.gate_status.as_str())),
+        ("deployment_status", string(plan.deployment_status.as_str())),
+        ("deployment_ring", string(plan.deployment_ring.as_str())),
+        ("delivery_channel", string(plan.delivery_channel.as_str())),
+        ("owner_lane", string(plan.owner_lane.as_str())),
+        (
+            "source_safety_sequence",
+            integer(plan.source_safety_sequence as i64),
+        ),
+        (
+            "source_deployment_sequence",
+            integer(plan.source_deployment_sequence as i64),
+        ),
+        (
+            "source_delivery_sequence",
+            integer(plan.source_delivery_sequence as i64),
+        ),
+        ("source_id", string(&plan.source_id)),
+        ("title", string(&plan.title)),
+        ("summary", string(&plan.summary)),
+        ("priority", integer(plan.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                plan.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(plan.integration_count() as i64),
+        ),
+        ("recommended_view", string(plan.recommended_view.as_str())),
+        (
+            "required_tier",
+            string(privilege_tier_label(plan.required_tier)),
+        ),
+        (
+            "policy_surface",
+            plan.policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_dependency_work",
+            JsonValue::Bool(plan.has_dependency_work()),
+        ),
+        ("has_policy_risk", JsonValue::Bool(plan.has_policy_risk())),
+        (
+            "needs_verification",
+            JsonValue::Bool(plan.needs_verification()),
+        ),
+        ("deployment_ready", JsonValue::Bool(plan.deployment_ready())),
+        ("rollback_ready", JsonValue::Bool(plan.rollback_ready())),
+        (
+            "blocks_activation",
+            JsonValue::Bool(plan.blocks_activation()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(plan.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_rollback_summary_json(
+    summary: &IntegrationActivationRollbackSummary,
+) -> JsonValue {
+    object([
+        ("total_plans", integer(summary.total_plans as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "plans_requiring_attention",
+            integer(summary.plans_requiring_attention as i64),
+        ),
+        (
+            "hold_deployment_plans",
+            integer(summary.hold_deployment_plans as i64),
+        ),
+        (
+            "verification_plans",
+            integer(summary.verification_plans as i64),
+        ),
+        (
+            "owner_approval_plans",
+            integer(summary.owner_approval_plans as i64),
+        ),
+        (
+            "staged_rollback_plans",
+            integer(summary.staged_rollback_plans as i64),
+        ),
+        ("monitoring_plans", integer(summary.monitoring_plans as i64)),
+        (
+            "platform_ring_plans",
+            integer(summary.platform_ring_plans as i64),
+        ),
+        (
+            "integration_ring_plans",
+            integer(summary.integration_ring_plans as i64),
+        ),
+        (
+            "security_ring_plans",
+            integer(summary.security_ring_plans as i64),
+        ),
+        (
+            "verification_ring_plans",
+            integer(summary.verification_ring_plans as i64),
+        ),
+        ("audit_ring_plans", integer(summary.audit_ring_plans as i64)),
+        (
+            "monitoring_ring_plans",
+            integer(summary.monitoring_ring_plans as i64),
+        ),
+        (
+            "plans_with_dependency_work",
+            integer(summary.plans_with_dependency_work as i64),
+        ),
+        (
+            "plans_with_policy_risk",
+            integer(summary.plans_with_policy_risk as i64),
+        ),
+        (
+            "plans_requiring_verification",
+            integer(summary.plans_requiring_verification as i64),
+        ),
+        (
+            "plans_ready_for_deployment",
+            integer(summary.plans_ready_for_deployment as i64),
+        ),
+        (
+            "plans_ready_for_rollback",
+            integer(summary.plans_ready_for_rollback as i64),
+        ),
+        (
+            "plans_blocking_activation",
+            integer(summary.plans_blocking_activation as i64),
+        ),
+        (
+            "plans_with_policy_surface",
+            integer(summary.plans_with_policy_surface as i64),
+        ),
+        (
+            "next_rollback_action",
+            summary
+                .next_rollback_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_gate_status",
+            summary
+                .next_gate_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_deployment_ring",
+            summary
+                .next_deployment_ring
+                .map(|ring| string(ring.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_owner_lane",
+            summary
+                .next_owner_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_plan_sequence",
+            summary
+                .next_plan_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_plan_priority",
+            summary
+                .next_plan_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_owner_action",
+            JsonValue::Bool(summary.has_owner_action()),
+        ),
+        (
+            "needs_verification",
+            JsonValue::Bool(summary.needs_verification()),
+        ),
+        ("rollback_ready", JsonValue::Bool(summary.rollback_ready())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -24807,6 +25265,32 @@ fn parse_activation_safety_gate_status(
     }
 }
 
+fn parse_activation_rollback_action(
+    label: &str,
+) -> Result<IntegrationActivationRollbackAction, ToolCallError> {
+    match label {
+        "hold_deployment" | "hold" | "blocked" | "stop_deployment" => {
+            Ok(IntegrationActivationRollbackAction::HoldDeployment)
+        }
+        "verify_before_rollback"
+        | "verification"
+        | "needs_verification"
+        | "awaiting_verification" => Ok(IntegrationActivationRollbackAction::VerifyBeforeRollback),
+        "request_owner_approval" | "owner_approval" | "needs_owner_approval" | "awaiting_owner" => {
+            Ok(IntegrationActivationRollbackAction::RequestOwnerApproval)
+        }
+        "stage_rollback_plan" | "staged" | "ready" | "ready_for_rollback" => {
+            Ok(IntegrationActivationRollbackAction::StageRollbackPlan)
+        }
+        "monitor_rollback_window" | "monitoring" | "monitor" | "tracking" => {
+            Ok(IntegrationActivationRollbackAction::MonitorRollbackWindow)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation rollback action `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -26570,6 +27054,50 @@ fn integration_activation_safety_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_rollback_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_safety_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("rollback_action", JsonSchema::String));
+        properties.push(SchemaProperty::new("action", JsonSchema::String));
+        properties.push(SchemaProperty::new("rollback_state", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "rollback_gate_status",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "rollback_deployment_ring",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new("rollback_ring", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "rollback_owner_lane",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "rollback_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("rollback_blocked", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "rollback_needs_verification",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "rollback_deployment_ready",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("rollback_ready", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new("rollback_limit", JsonSchema::Integer));
+        properties.push(SchemaProperty::new("plan_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -26714,7 +27242,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 133);
+        assert_eq!(definitions.len(), 135);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -26822,6 +27350,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_SAFETY_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_ROLLBACK_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID));
@@ -27087,7 +27621,7 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPLOYMENT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            125
+            127
         );
         assert_eq!(
             export
@@ -27613,11 +28147,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(133))
+            Some(&integer(135))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(125))
+            Some(&integer(127))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -32783,6 +33317,161 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_rollback_request = request(
+            "call-list-integration-activation-rollback",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_ROLLBACK_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("rollback_action", string("hold_deployment")),
+                ("rollback_requires_attention", JsonValue::Bool(true)),
+                ("rollback_blocked", JsonValue::Bool(true)),
+                ("rollback_limit", integer(3)),
+            ]),
+            5_059,
+        );
+        let list_activation_rollback_trace =
+            tool_runtime.invoke_with_events(&list_activation_rollback_request);
+        assert!(list_activation_rollback_trace.result.ok);
+        assert_eq!(
+            list_activation_rollback_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_rollback_output = list_activation_rollback_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_rollback_count =
+            integer_value(field(list_activation_rollback_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_rollback_count));
+        let activation_rollback_summary =
+            field(list_activation_rollback_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_rollback_summary, "total_plans"),
+            Some(&integer(activation_rollback_count))
+        );
+        assert_eq!(
+            field(activation_rollback_summary, "next_rollback_action"),
+            Some(&string("hold_deployment"))
+        );
+        assert_eq!(
+            field(activation_rollback_summary, "next_gate_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_rollback_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_rollback_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_rollback = array_item(
+            field(list_activation_rollback_output, "activation_rollback_plans").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_rollback, "rollback_action"),
+            Some(&string("hold_deployment"))
+        );
+        assert_eq!(
+            field(activation_rollback, "gate_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_rollback, "rollback_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(activation_rollback, "blocks_activation"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_rollback, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_rollback_summary_request = request(
+            "call-integration-activation-rollback-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_ROLLBACK_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("rollback_requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_060,
+        );
+        let activation_rollback_summary_trace =
+            tool_runtime.invoke_with_events(&activation_rollback_summary_request);
+        assert!(activation_rollback_summary_trace.result.ok);
+        assert_eq!(
+            activation_rollback_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_rollback_summary_output = activation_rollback_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_rollback_rollup =
+            field(activation_rollback_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_rollback_rollup, "total_plans").unwrap()).unwrap() >= 1
+        );
+        assert!(
+            integer_value(field(activation_rollback_rollup, "hold_deployment_plans").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_rollback_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_rollback_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -34687,6 +35376,14 @@ mod tests {
             activation_safety_summary_request,
             activation_safety_summary_trace,
         );
+        journal.record_trace(
+            list_activation_rollback_request,
+            list_activation_rollback_trace,
+        );
+        journal.record_trace(
+            activation_rollback_summary_request,
+            activation_rollback_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -34760,9 +35457,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 133);
-        assert_eq!(journal_summary.completed_count, 133);
-        assert_eq!(journal.audit_records().len(), 133);
+        assert_eq!(journal_summary.invocation_count, 135);
+        assert_eq!(journal_summary.completed_count, 135);
+        assert_eq!(journal.audit_records().len(), 135);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
