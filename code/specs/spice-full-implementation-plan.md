@@ -16,7 +16,7 @@ downstream tools to compare.
 ## Current PR Slice
 
 1. Deck execution layer.
-   - Status: next.
+   - Status: current.
    - Convert parsed netlists into runnable analysis plans beyond the initial
      `.op`, `.dc`, `.ac`, and `.tran` subset.
    - Support richer expression/function surfaces and execution wiring for
@@ -36,8 +36,10 @@ downstream tools to compare.
      optional frequency windows into the same measurement table surface; parsed
      transient `.measure ... FIND ... AT=` cards now route single-time probe
      samples through the shared measurement table with interpolation between
-     neighboring transient samples.
-   - Expand richer `.measure` trigger/crossing modes and remaining
+     neighboring transient samples; parsed transient
+     `.measure ... WHEN probe=target` cards now route first-crossing times over
+     optional transient windows into the shared measurement table.
+   - Expand richer `.measure` trigger counters and remaining
      non-DC/non-AC measurement analyses toward full SPICE compatibility while
      keeping unsupported control-flow diagnostics explicit.
 
@@ -306,14 +308,25 @@ downstream tools to compare.
     - Parsed `.measure tran ... FIND ... AT=` and `.meas transient ... FIND
       ... AT=` cards route into the shared scalar measurement table output with
       the AT time recorded as the point window.
-    - Richer trigger/crossing forms such as WHEN, RISE, FALL, CROSS, and
-      target-delay measurements remain in backlog.
+    - Richer trigger/counter forms such as WHEN counters, RISE, FALL, CROSS,
+      and target-delay measurements remain in backlog.
+
+27. Transient WHEN crossing measurement routing.
+    - Status: completed in this transient WHEN crossing measurement slice.
+    - Python, Rust, and TypeScript now expose matching transient WHEN helpers
+      that return the first linearly interpolated crossing time where a probe
+      equals a target value.
+    - Parsed `.measure tran ... WHEN probe=target` and `.meas transient ...
+      WHEN probe=target` cards route into the shared scalar measurement table
+      output with optional `FROM=` / `TO=` windows.
+    - RISE, FALL, CROSS occurrence counters and target-delay measurements
+      remain in backlog.
 
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand richer `.measure` trigger/crossing modes and remaining
+   - Expand richer `.measure` trigger/crossing counters and remaining
      non-DC/non-AC measurement analyses toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.

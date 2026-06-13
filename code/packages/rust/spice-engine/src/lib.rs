@@ -3267,6 +3267,7 @@ pub struct DeckMeasurementCard {
     pub from_value: Option<f64>,
     pub to_value: Option<f64>,
     pub at_value: Option<f64>,
+    pub target_value: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4571,7 +4572,41 @@ fn resolve_measurement_line(
         return;
     };
 
-    let probe = unquote_token(tokens[4].trim());
+    let empty_parameter_state = DeckParameterState::new();
+    let mut target_value = None;
+    let probe = if mode == "when" {
+        let Some((probe_token, target_expression)) = tokens[4].split_once('=') else {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                "WHEN measurements require probe=target syntax",
+                Some(tokens[4].to_string()),
+            );
+            return;
+        };
+        match evaluate_parameter_expression(
+            &strip_expression_delimiters(target_expression.trim()),
+            &empty_parameter_state,
+        ) {
+            Ok(value) => target_value = Some(value),
+            Err(message) => {
+                add_measurement_diagnostic(
+                    state,
+                    "SPICE_DECK_MEASURE_EXPRESSION",
+                    directive,
+                    line_number,
+                    &message,
+                    Some(tokens[4].to_string()),
+                );
+                return;
+            }
+        }
+        unquote_token(probe_token.trim())
+    } else {
+        unquote_token(tokens[4].trim())
+    };
     if probe.is_empty() {
         add_measurement_diagnostic(
             state,
@@ -4584,7 +4619,6 @@ fn resolve_measurement_line(
         return;
     }
 
-    let empty_parameter_state = DeckParameterState::new();
     let mut from_value = None;
     let mut to_value = None;
     let mut at_value = None;
@@ -4654,6 +4688,16 @@ fn resolve_measurement_line(
             None,
         );
     }
+    if mode == "when" && target_value.is_none() {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            "WHEN measurements require a target value",
+            None,
+        );
+    }
     if mode != "find" && at_value.is_some() {
         add_measurement_diagnostic(
             state,
@@ -4702,6 +4746,7 @@ fn resolve_measurement_line(
         from_value,
         to_value,
         at_value,
+        target_value,
     });
 }
 
@@ -5380,6 +5425,7 @@ fn normalize_measurement_mode_token(mode: &str) -> Option<&'static str> {
         "pp" | "p-p" | "p2p" | "peak-to-peak" | "peak2peak" => Some("pp"),
         "last" | "final" => Some("last"),
         "find" => Some("find"),
+        "when" => Some("when"),
         _ => None,
     }
 }
@@ -8740,6 +8786,64 @@ pub fn measure_transient_find_at_probe(
     })
 }
 
+pub fn measure_transient_when_probe(
+    points: &[TransientPoint],
+    name: &str,
+    probe: &str,
+    target_value: f64,
+    from_time: Option<f64>,
+    to_time: Option<f64>,
+) -> Result<ProbeMeasurement, SpiceError> {
+    if !target_value.is_finite() {
+        return Err(table_error(
+            "measure_transient_when_probe",
+            "target_value must be finite",
+        ));
+    }
+    if let Some(value) = from_time {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_transient_when_probe",
+                "from_time must be finite",
+            ));
+        }
+    }
+    if let Some(value) = to_time {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_transient_when_probe",
+                "to_time must be finite",
+            ));
+        }
+    }
+    if let (Some(from), Some(to)) = (from_time, to_time) {
+        if from > to {
+            return Err(table_error(
+                "measure_transient_when_probe",
+                "from_time must be <= to_time",
+            ));
+        }
+    }
+
+    let value = transient_probe_crossing_time(
+        points,
+        probe,
+        target_value,
+        from_time,
+        to_time,
+        "measure_transient_when_probe",
+    )?;
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "tran".to_string(),
+        probe: probe.to_string(),
+        mode: "when".to_string(),
+        value,
+        from_value: from_time,
+        to_value: to_time,
+    })
+}
+
 fn transient_probe_value_at(
     points: &[TransientPoint],
     probe: &str,
@@ -8777,6 +8881,49 @@ fn transient_probe_value_at(
     ))
 }
 
+fn transient_probe_crossing_time(
+    points: &[TransientPoint],
+    probe: &str,
+    target_value: f64,
+    from_time: Option<f64>,
+    to_time: Option<f64>,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    let mut previous: Option<(f64, f64, f64)> = None;
+    let mut selected_count = 0usize;
+    for point in points {
+        if from_time.map_or(false, |from| point.time < from)
+            || to_time.map_or(false, |to| point.time > to)
+        {
+            continue;
+        }
+        selected_count += 1;
+        let value =
+            table_probe_value(&point.node_voltages, &point.branch_currents, probe, context)?;
+        let delta = value - target_value;
+        if delta == 0.0 {
+            return Ok(point.time);
+        }
+        if let Some((previous_time, previous_value, previous_delta)) = previous {
+            if (previous_delta < 0.0 && delta > 0.0) || (previous_delta > 0.0 && delta < 0.0) {
+                if point.time == previous_time {
+                    return Err(table_error(
+                        context,
+                        "duplicate transient sample times around WHEN crossing",
+                    ));
+                }
+                let fraction = (target_value - previous_value) / (value - previous_value);
+                return Ok(previous_time + (point.time - previous_time) * fraction);
+            }
+        }
+        previous = Some((point.time, value, delta));
+    }
+    if selected_count == 0 {
+        return Err(table_error(context, "no transient samples in window"));
+    }
+    Err(table_error(context, "no transient crossing in window"))
+}
+
 pub fn measure_transient_cards(
     points: &[TransientPoint],
     measurements: &[DeckMeasurementCard],
@@ -8801,6 +8948,21 @@ pub fn measure_transient_cards(
                 &measurement.name,
                 &measurement.probe,
                 at_time,
+            )?);
+        } else if measurement.mode == "when" {
+            let Some(target_value) = measurement.target_value else {
+                return Err(table_error(
+                    "measure_transient_cards",
+                    "WHEN measurement cards require a target value",
+                ));
+            };
+            results.push(measure_transient_when_probe(
+                points,
+                &measurement.name,
+                &measurement.probe,
+                target_value,
+                measurement.from_value,
+                measurement.to_value,
             )?);
         } else {
             results.push(measure_transient_probe(
