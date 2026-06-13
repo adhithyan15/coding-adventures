@@ -149,6 +149,9 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_activation_delivery` and
   `smart_home.get_integration_activation_delivery_summary` tool descriptors for
   read-only activation delivery manifests derived from release packets.
+- `smart_home.list_integration_activation_deployment` and
+  `smart_home.get_integration_activation_deployment_summary` tool descriptors
+  for read-only activation deployment records derived from delivery manifests.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.
