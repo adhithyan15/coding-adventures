@@ -881,6 +881,7 @@ pub struct BrowserDocument {
     pub image_map_descriptors: Vec<BrowserImageMapDescriptor>,
     pub media: Vec<BrowserMedia>,
     pub media_playback_descriptors: Vec<BrowserMediaPlaybackDescriptor>,
+    pub media_resource_descriptors: Vec<BrowserMediaResourceDescriptor>,
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
     pub embedded_policy_descriptors: Vec<BrowserEmbeddedPolicyDescriptor>,
     pub interactive_elements: Vec<BrowserInteractiveElement>,
@@ -2888,6 +2889,25 @@ pub struct BrowserMediaPlaybackDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMediaResourceDescriptor {
+    pub media_index: usize,
+    pub media_kind: String,
+    pub element: String,
+    pub resource_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub label: Option<String>,
+    pub default_track: bool,
+    pub candidate_kind: String,
+    pub media_resource_blocked: bool,
+    pub media_resource_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserEmbeddedContext {
     pub element: String,
     pub url: Option<String>,
@@ -3921,6 +3941,7 @@ impl BrowserDocument {
         summary.image_map_descriptors =
             browser_image_map_descriptors(&summary.image_maps, &summary.images);
         summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
+        summary.media_resource_descriptors = browser_media_resource_descriptors(&summary.media);
         summary.embedded_policy_descriptors =
             browser_embedded_policy_descriptors(&summary.embedded_contexts);
         summary.disclosure_state_descriptors =
@@ -11970,6 +11991,106 @@ fn browser_media_playback_descriptor(media: &BrowserMedia) -> BrowserMediaPlayba
             .count(),
         tracks: media.tracks.clone(),
     }
+}
+
+fn browser_media_resource_descriptors(
+    media: &[BrowserMedia],
+) -> Vec<BrowserMediaResourceDescriptor> {
+    media
+        .iter()
+        .enumerate()
+        .flat_map(|(media_index, media)| {
+            let source_descriptors = media.sources.iter().map(move |source| {
+                browser_media_source_resource_descriptor(media_index + 1, media, source)
+            });
+            let track_descriptors = media.tracks.iter().map(move |track| {
+                browser_media_track_resource_descriptor(media_index + 1, media, track)
+            });
+            source_descriptors.chain(track_descriptors)
+        })
+        .collect()
+}
+
+fn browser_media_source_resource_descriptor(
+    media_index: usize,
+    media: &BrowserMedia,
+    source: &BrowserMediaSource,
+) -> BrowserMediaResourceDescriptor {
+    let block_reasons = browser_media_source_block_reasons(source);
+    BrowserMediaResourceDescriptor {
+        media_index,
+        media_kind: media.kind.clone(),
+        element: "source".to_string(),
+        resource_kind: "source".to_string(),
+        src: source.src.clone(),
+        resolved_src: source.resolved_src.clone(),
+        type_hint: source.type_hint.clone(),
+        media: source.media.clone(),
+        track_kind: None,
+        srclang: None,
+        label: None,
+        default_track: false,
+        candidate_kind: if block_reasons.is_empty() {
+            "source-candidate".to_string()
+        } else {
+            "blocked-source".to_string()
+        },
+        media_resource_blocked: !block_reasons.is_empty(),
+        media_resource_block_reasons: block_reasons,
+    }
+}
+
+fn browser_media_track_resource_descriptor(
+    media_index: usize,
+    media: &BrowserMedia,
+    track: &BrowserMediaTrack,
+) -> BrowserMediaResourceDescriptor {
+    let block_reasons = browser_media_track_block_reasons(track);
+    BrowserMediaResourceDescriptor {
+        media_index,
+        media_kind: media.kind.clone(),
+        element: "track".to_string(),
+        resource_kind: "track".to_string(),
+        src: track.src.clone(),
+        resolved_src: track.resolved_src.clone(),
+        type_hint: None,
+        media: None,
+        track_kind: Some(track.kind.clone()),
+        srclang: track.srclang.clone(),
+        label: track.label.clone(),
+        default_track: track.default_track,
+        candidate_kind: if !block_reasons.is_empty() {
+            "blocked-track".to_string()
+        } else if track.default_track {
+            "default-text-track".to_string()
+        } else {
+            "text-track".to_string()
+        },
+        media_resource_blocked: !block_reasons.is_empty(),
+        media_resource_block_reasons: block_reasons,
+    }
+}
+
+fn browser_media_source_block_reasons(source: &BrowserMediaSource) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if source.src.is_none() {
+        reasons.push("missing-src".to_string());
+    }
+    reasons
+}
+
+fn browser_media_track_block_reasons(track: &BrowserMediaTrack) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if track.src.is_none() {
+        reasons.push("missing-src".to_string());
+    }
+    if track.label.is_none() {
+        reasons.push("missing-label".to_string());
+    }
+    if matches!(track.kind.as_str(), "subtitles" | "captions") && track.srclang.is_none() {
+        reasons.push("missing-srclang".to_string());
+    }
+    reasons
 }
 
 fn browser_embedded_policy_descriptors(

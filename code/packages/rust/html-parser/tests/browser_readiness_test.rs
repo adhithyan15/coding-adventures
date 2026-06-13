@@ -25,17 +25,17 @@ use coding_adventures_html_parser::{
     BrowserInputPlanningDescriptor, BrowserInteractiveElement,
     BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
     BrowserLinkResourceDescriptor, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationGroupDescriptor,
-    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
-    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
-    BrowserScriptModuleGraphDescriptor, BrowserScriptStorageAccessDescriptor,
-    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
-    BrowserSectionLandmark, BrowserSectionLandmarkDescriptor, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor, BrowserStructuredDataDescriptor,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserMediaPlaybackDescriptor, BrowserMediaResourceDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationGroupDescriptor, BrowserNavigationTargetDescriptor,
+    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
+    BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
+    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSectionLandmarkDescriptor,
+    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor,
+    BrowserStructuredDataDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
     BrowserTableStructureDescriptor, BrowserTemplate, BrowserTemplateDescriptor,
     BrowserTextSemantic, BrowserTextSemanticDescriptor, BrowserThemeColor,
 };
@@ -181,6 +181,8 @@ struct ExpectedBrowserDocument {
     media: Vec<ExpectedMedia>,
     #[serde(default)]
     media_playback_descriptors: Option<Vec<ExpectedMediaPlaybackDescriptor>>,
+    #[serde(default)]
+    media_resource_descriptors: Option<Vec<ExpectedMediaResourceDescriptor>>,
     #[serde(default)]
     embedded_contexts: Vec<ExpectedEmbeddedContext>,
     #[serde(default)]
@@ -3023,6 +3025,35 @@ struct ExpectedMediaPlaybackDescriptor {
 }
 
 #[derive(Debug, Deserialize)]
+struct ExpectedMediaResourceDescriptor {
+    media_index: usize,
+    media_kind: String,
+    element: String,
+    resource_kind: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+    #[serde(default)]
+    track_kind: Option<String>,
+    #[serde(default)]
+    srclang: Option<String>,
+    #[serde(default)]
+    label: Option<String>,
+    #[serde(default)]
+    default_track: bool,
+    candidate_kind: String,
+    #[serde(default)]
+    media_resource_blocked: bool,
+    #[serde(default)]
+    media_resource_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
 struct ExpectedEmbeddedContext {
     element: String,
     #[serde(default)]
@@ -4650,6 +4681,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_image_map_descriptors = case.expected.image_map_descriptors.is_some();
         let tracks_link_resource_descriptors = case.expected.link_resource_descriptors.is_some();
         let tracks_form_control_descriptors = case.expected.form_control_descriptors.is_some();
+        let tracks_media_resource_descriptors = case.expected.media_resource_descriptors.is_some();
         let tracks_anchor_descriptors = case.expected.anchor_descriptors.is_some();
         let tracks_heading_descriptors = case.expected.heading_descriptors.is_some();
         let tracks_text_semantic_descriptors = case.expected.text_semantic_descriptors.is_some();
@@ -4690,6 +4722,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_form_control_descriptors {
             expected.form_control_descriptors = actual.form_control_descriptors.clone();
+        }
+        if !tracks_media_resource_descriptors {
+            expected.media_resource_descriptors = actual.media_resource_descriptors.clone();
         }
         if !tracks_anchor_descriptors {
             expected.anchor_descriptors = actual.anchor_descriptors.clone();
@@ -6875,6 +6910,93 @@ fn browser_media_descriptor_metadata_tracks_sources_and_tracks() {
 }
 
 #[test]
+fn browser_media_resource_descriptors_track_source_and_text_track_candidates() {
+    let summary = parse_browser_document(
+        "<base href=\"https://example.test/watch/\">\
+         <body><video controls>\
+           <source src=movie.webm type=video/webm media=\"(min-width: 700px)\">\
+           <source src=movie.mp4 type=video/mp4>\
+           <track kind=captions src=captions.vtt srclang=en label=English default>\
+           <track kind=metadata src=chapters.vtt label=Chapters>\
+         </video>\
+         <audio controls><source src=theme.ogg type=audio/ogg></audio>",
+    )
+    .expect("media resource descriptors fixture should parse");
+
+    assert_eq!(summary.media_resource_descriptors.len(), 5);
+
+    let webm = &summary.media_resource_descriptors[0];
+    assert_eq!(webm.media_index, 1);
+    assert_eq!(webm.media_kind, "video");
+    assert_eq!(webm.element, "source");
+    assert_eq!(webm.resource_kind, "source");
+    assert_eq!(webm.src.as_deref(), Some("movie.webm"));
+    assert_eq!(
+        webm.resolved_src.as_deref(),
+        Some("https://example.test/watch/movie.webm")
+    );
+    assert_eq!(webm.type_hint.as_deref(), Some("video/webm"));
+    assert_eq!(webm.media.as_deref(), Some("(min-width: 700px)"));
+    assert_eq!(webm.candidate_kind, "source-candidate");
+    assert!(!webm.media_resource_blocked);
+
+    let captions = &summary.media_resource_descriptors[2];
+    assert_eq!(captions.element, "track");
+    assert_eq!(captions.resource_kind, "track");
+    assert_eq!(captions.track_kind.as_deref(), Some("captions"));
+    assert_eq!(captions.srclang.as_deref(), Some("en"));
+    assert_eq!(captions.label.as_deref(), Some("English"));
+    assert!(captions.default_track);
+    assert_eq!(captions.candidate_kind, "default-text-track");
+    assert!(!captions.media_resource_blocked);
+
+    let metadata = &summary.media_resource_descriptors[3];
+    assert_eq!(metadata.track_kind.as_deref(), Some("metadata"));
+    assert_eq!(metadata.label.as_deref(), Some("Chapters"));
+    assert_eq!(metadata.candidate_kind, "text-track");
+
+    let audio_source = &summary.media_resource_descriptors[4];
+    assert_eq!(audio_source.media_index, 2);
+    assert_eq!(audio_source.media_kind, "audio");
+    assert_eq!(audio_source.src.as_deref(), Some("theme.ogg"));
+}
+
+#[test]
+fn browser_media_resource_descriptors_track_missing_sources_and_labels() {
+    let summary = parse_browser_document(
+        "<video controls>\
+           <source type=video/mp4>\
+           <track kind=captions src=captions.vtt>\
+           <track label=Descriptions>\
+         </video>",
+    )
+    .expect("blocked media resource descriptors fixture should parse");
+
+    assert_eq!(summary.media_resource_descriptors.len(), 3);
+
+    let source = &summary.media_resource_descriptors[0];
+    assert_eq!(source.element, "source");
+    assert_eq!(source.candidate_kind, "blocked-source");
+    assert!(source.media_resource_blocked);
+    assert_eq!(source.media_resource_block_reasons, vec!["missing-src"]);
+
+    let captions = &summary.media_resource_descriptors[1];
+    assert_eq!(captions.element, "track");
+    assert_eq!(captions.track_kind.as_deref(), Some("captions"));
+    assert_eq!(
+        captions.media_resource_block_reasons,
+        vec!["missing-label", "missing-srclang"]
+    );
+
+    let descriptions = &summary.media_resource_descriptors[2];
+    assert_eq!(descriptions.track_kind.as_deref(), Some("subtitles"));
+    assert_eq!(
+        descriptions.media_resource_block_reasons,
+        vec!["missing-src", "missing-srclang"]
+    );
+}
+
+#[test]
 fn browser_interactive_element_metadata_tracks_focus_editing_and_commands() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -8125,6 +8247,15 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_media_playback_descriptors(&media));
+        let media_resource_descriptors = self
+            .media_resource_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedMediaResourceDescriptor::into_browser_media_resource_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_media_resource_descriptors(&media));
         let embedded_policy_descriptors = self
             .embedded_policy_descriptors
             .map(|descriptors| {
@@ -8618,6 +8749,7 @@ impl ExpectedBrowserDocument {
                 .collect(),
             media,
             media_playback_descriptors,
+            media_resource_descriptors,
             embedded_contexts,
             embedded_policy_descriptors,
             interactive_elements,
@@ -9453,6 +9585,106 @@ fn expected_media_playback_descriptor(media: &BrowserMedia) -> BrowserMediaPlayb
             .count(),
         tracks: media.tracks.clone(),
     }
+}
+
+fn expected_media_resource_descriptors(
+    media: &[BrowserMedia],
+) -> Vec<BrowserMediaResourceDescriptor> {
+    media
+        .iter()
+        .enumerate()
+        .flat_map(|(media_index, media)| {
+            let source_descriptors = media.sources.iter().map(move |source| {
+                expected_media_source_resource_descriptor(media_index + 1, media, source)
+            });
+            let track_descriptors = media.tracks.iter().map(move |track| {
+                expected_media_track_resource_descriptor(media_index + 1, media, track)
+            });
+            source_descriptors.chain(track_descriptors)
+        })
+        .collect()
+}
+
+fn expected_media_source_resource_descriptor(
+    media_index: usize,
+    media: &BrowserMedia,
+    source: &BrowserMediaSource,
+) -> BrowserMediaResourceDescriptor {
+    let block_reasons = expected_media_source_block_reasons(source);
+    BrowserMediaResourceDescriptor {
+        media_index,
+        media_kind: media.kind.clone(),
+        element: "source".to_string(),
+        resource_kind: "source".to_string(),
+        src: source.src.clone(),
+        resolved_src: source.resolved_src.clone(),
+        type_hint: source.type_hint.clone(),
+        media: source.media.clone(),
+        track_kind: None,
+        srclang: None,
+        label: None,
+        default_track: false,
+        candidate_kind: if block_reasons.is_empty() {
+            "source-candidate".to_string()
+        } else {
+            "blocked-source".to_string()
+        },
+        media_resource_blocked: !block_reasons.is_empty(),
+        media_resource_block_reasons: block_reasons,
+    }
+}
+
+fn expected_media_track_resource_descriptor(
+    media_index: usize,
+    media: &BrowserMedia,
+    track: &BrowserMediaTrack,
+) -> BrowserMediaResourceDescriptor {
+    let block_reasons = expected_media_track_block_reasons(track);
+    BrowserMediaResourceDescriptor {
+        media_index,
+        media_kind: media.kind.clone(),
+        element: "track".to_string(),
+        resource_kind: "track".to_string(),
+        src: track.src.clone(),
+        resolved_src: track.resolved_src.clone(),
+        type_hint: None,
+        media: None,
+        track_kind: Some(track.kind.clone()),
+        srclang: track.srclang.clone(),
+        label: track.label.clone(),
+        default_track: track.default_track,
+        candidate_kind: if !block_reasons.is_empty() {
+            "blocked-track".to_string()
+        } else if track.default_track {
+            "default-text-track".to_string()
+        } else {
+            "text-track".to_string()
+        },
+        media_resource_blocked: !block_reasons.is_empty(),
+        media_resource_block_reasons: block_reasons,
+    }
+}
+
+fn expected_media_source_block_reasons(source: &BrowserMediaSource) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if source.src.is_none() {
+        reasons.push("missing-src".to_string());
+    }
+    reasons
+}
+
+fn expected_media_track_block_reasons(track: &BrowserMediaTrack) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if track.src.is_none() {
+        reasons.push("missing-src".to_string());
+    }
+    if track.label.is_none() {
+        reasons.push("missing-label".to_string());
+    }
+    if matches!(track.kind.as_str(), "subtitles" | "captions") && track.srclang.is_none() {
+        reasons.push("missing-srclang".to_string());
+    }
+    reasons
 }
 
 fn expected_image_candidate_descriptors(
@@ -16089,6 +16321,28 @@ impl ExpectedMediaPlaybackDescriptor {
                 .into_iter()
                 .map(ExpectedMediaTrack::into_browser_media_track)
                 .collect(),
+        }
+    }
+}
+
+impl ExpectedMediaResourceDescriptor {
+    fn into_browser_media_resource_descriptor(self) -> BrowserMediaResourceDescriptor {
+        BrowserMediaResourceDescriptor {
+            media_index: self.media_index,
+            media_kind: self.media_kind,
+            element: self.element,
+            resource_kind: self.resource_kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            type_hint: self.type_hint,
+            media: self.media,
+            track_kind: self.track_kind,
+            srclang: self.srclang,
+            label: self.label,
+            default_track: self.default_track,
+            candidate_kind: self.candidate_kind,
+            media_resource_blocked: self.media_resource_blocked,
+            media_resource_block_reasons: self.media_resource_block_reasons,
         }
     }
 }
