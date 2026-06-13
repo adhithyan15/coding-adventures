@@ -106,6 +106,8 @@ runtime and Chief of Staff tools a typed catalog for:
   blocked, owner-action, verification-ready, ready-to-close, and tracking gates
 - activation release packets that turn closure gates into compact go/no-go
   release views with blockers, verification requirements, and release readiness
+- activation delivery manifests that turn release packets into compact delivery
+  views with channel, blocker, verification, and delivery-readiness rollups
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

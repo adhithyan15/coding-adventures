@@ -40,9 +40,9 @@ use smart_home_integration_catalog::{
     activation_command_center_sections_from_control_room_panels,
     activation_constraints_from_candidates, activation_control_room_panels_from_operator_tasks,
     activation_dashboard_cards_from_readouts, activation_decisions_from_candidates,
-    activation_dependency_graph_from_reports, activation_dossiers_from_candidates,
-    activation_escalation_cases_from_rollups, activation_evidence_from_candidates,
-    activation_execution_packets_from_handoff_packages,
+    activation_delivery_manifests_from_release_packets, activation_dependency_graph_from_reports,
+    activation_dossiers_from_candidates, activation_escalation_cases_from_rollups,
+    activation_evidence_from_candidates, activation_execution_packets_from_handoff_packages,
     activation_forecasts_from_timeline_milestones,
     activation_handoff_packages_from_runbook_entries, activation_health_from_candidates,
     activation_maintenance_from_candidates, activation_operator_tasks_from_playbook_steps,
@@ -79,6 +79,8 @@ use smart_home_integration_catalog::{
     IntegrationActivationControlRoomSummary, IntegrationActivationDashboardCard,
     IntegrationActivationDashboardSummary, IntegrationActivationDecisionItem,
     IntegrationActivationDecisionStatus, IntegrationActivationDecisionSummary,
+    IntegrationActivationDeliveryChannel, IntegrationActivationDeliveryManifest,
+    IntegrationActivationDeliveryStatus, IntegrationActivationDeliverySummary,
     IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
     IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
     IntegrationActivationDossierItem, IntegrationActivationDossierSummary,
@@ -353,6 +355,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RELEASE_TOOL_ID: &str =
     "smart_home.list_integration_activation_release";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RELEASE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_release_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DELIVERY_TOOL_ID: &str =
+    "smart_home.list_integration_activation_delivery";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DELIVERY_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_delivery_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -801,6 +807,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_RELEASE_SUMMARY_TOOL_ID => {
                     let query = integration_activation_release_query(&arguments)?;
                     Ok(get_integration_activation_release_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_DELIVERY_TOOL_ID => {
+                    let query = integration_activation_delivery_query(&arguments)?;
+                    Ok(list_integration_activation_delivery_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_DELIVERY_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_delivery_query(&arguments)?;
+                    Ok(get_integration_activation_delivery_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2605,6 +2621,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation release summary",
             "Return compact D23A activation release-packet counts by release status, owner lane, blockers, verification requirements, release readiness, policy, and dependency work.",
             integration_activation_release_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DELIVERY_TOOL_ID,
+            "List smart-home integration activation delivery",
+            "List Chief-facing D23A activation delivery manifests derived from release packets with delivery status, delivery channel, owner lanes, blockers, verification requirements, and delivery readiness.",
+            integration_activation_delivery_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_delivery", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_delivery",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DELIVERY_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation delivery summary",
+            "Return compact D23A activation delivery-manifest counts by delivery status, delivery channel, owner lane, blockers, verification requirements, delivery readiness, policy, and dependency work.",
+            integration_activation_delivery_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5482,6 +5532,19 @@ struct IntegrationActivationReleaseQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationDeliveryQuery {
+    release: IntegrationActivationReleaseQuery,
+    delivery_status: Option<IntegrationActivationDeliveryStatus>,
+    delivery_channel: Option<IntegrationActivationDeliveryChannel>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    needs_verification: Option<bool>,
+    delivery_ready: Option<bool>,
+    delivery_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -6210,6 +6273,36 @@ fn integration_activation_release_query(
             .or(optional_bool(arguments, "release_needs_verification")?),
         release_ready: optional_bool(arguments, "release_ready")?,
         release_limit: optional_u64(arguments, "release_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_delivery_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationDeliveryQuery, ToolCallError> {
+    let delivery_status = optional_string(arguments, "delivery_status")?
+        .or(optional_string(arguments, "delivery_state")?)
+        .map(|label| parse_activation_delivery_status(&label))
+        .transpose()?;
+    let delivery_channel = optional_string(arguments, "delivery_channel")?
+        .or(optional_string(arguments, "delivery_lane")?)
+        .map(|label| parse_activation_delivery_channel(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "delivery_owner_lane")?
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationDeliveryQuery {
+        release: integration_activation_release_query(arguments)?,
+        delivery_status,
+        delivery_channel,
+        owner_lane,
+        requires_attention: optional_bool(arguments, "delivery_requires_attention")?,
+        blocked: optional_bool(arguments, "delivery_blocked")?,
+        needs_verification: optional_bool(arguments, "delivery_needs_verification")?
+            .or(optional_bool(arguments, "needs_verification")?),
+        delivery_ready: optional_bool(arguments, "delivery_ready")?,
+        delivery_limit: optional_u64(arguments, "delivery_limit")?.map(|value| value as usize),
     })
 }
 
@@ -7381,6 +7474,40 @@ fn integration_activation_release_packets_for_query(
     }
 
     (packets, catalog_count)
+}
+
+fn integration_activation_delivery_manifests_for_query(
+    query: &IntegrationActivationDeliveryQuery,
+) -> (Vec<IntegrationActivationDeliveryManifest>, usize) {
+    let (packets, catalog_count) = integration_activation_release_packets_for_query(&query.release);
+    let mut manifests = activation_delivery_manifests_from_release_packets(&packets);
+
+    if let Some(delivery_status) = query.delivery_status {
+        manifests.retain(|manifest| manifest.delivery_status == delivery_status);
+    }
+    if let Some(delivery_channel) = query.delivery_channel {
+        manifests.retain(|manifest| manifest.delivery_channel == delivery_channel);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        manifests.retain(|manifest| manifest.owner_lane == owner_lane);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        manifests.retain(|manifest| manifest.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        manifests.retain(|manifest| manifest.delivery_blocked() == blocked);
+    }
+    if let Some(needs_verification) = query.needs_verification {
+        manifests.retain(|manifest| manifest.needs_verification() == needs_verification);
+    }
+    if let Some(delivery_ready) = query.delivery_ready {
+        manifests.retain(|manifest| manifest.delivery_ready() == delivery_ready);
+    }
+    if let Some(limit) = query.delivery_limit {
+        manifests.truncate(limit);
+    }
+
+    (manifests, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -10250,6 +10377,100 @@ fn get_integration_activation_release_summary_output_handler_output(
             (
                 "ready_for_release_packets",
                 integer(summary.ready_for_release_packets as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_delivery_output_handler_output(
+    query: IntegrationActivationDeliveryQuery,
+) -> ToolHandlerOutput {
+    let (manifests, catalog_count) = integration_activation_delivery_manifests_for_query(&query);
+    let summary = IntegrationActivationDeliverySummary::from_manifests(manifests.iter());
+    let count = manifests.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_delivery",
+            JsonValue::Array(
+                manifests
+                    .iter()
+                    .map(activation_delivery_manifest_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_delivery_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_delivery")),
+            ("manifests", integer(count as i64)),
+            (
+                "manifests_requiring_attention",
+                integer(summary.manifests_requiring_attention as i64),
+            ),
+            (
+                "blocked_manifests",
+                integer(summary.blocked_manifests as i64),
+            ),
+            (
+                "awaiting_verification_manifests",
+                integer(summary.awaiting_verification_manifests as i64),
+            ),
+            (
+                "ready_to_deliver_manifests",
+                integer(summary.ready_to_deliver_manifests as i64),
+            ),
+            (
+                "next_delivery_status",
+                summary
+                    .next_delivery_status
+                    .map(|status| string(status.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_delivery_summary_output_handler_output(
+    query: IntegrationActivationDeliveryQuery,
+) -> ToolHandlerOutput {
+    let (manifests, _) = integration_activation_delivery_manifests_for_query(&query);
+    let summary = IntegrationActivationDeliverySummary::from_manifests(manifests.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_delivery_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_delivery_summary"),
+            ),
+            ("total_manifests", integer(summary.total_manifests as i64)),
+            (
+                "manifests_requiring_attention",
+                integer(summary.manifests_requiring_attention as i64),
+            ),
+            (
+                "blocked_manifests",
+                integer(summary.blocked_manifests as i64),
+            ),
+            (
+                "awaiting_verification_manifests",
+                integer(summary.awaiting_verification_manifests as i64),
+            ),
+            (
+                "ready_to_deliver_manifests",
+                integer(summary.ready_to_deliver_manifests as i64),
             ),
         ]),
     )
@@ -20269,6 +20490,275 @@ fn integration_activation_release_summary_json(
     ])
 }
 
+fn activation_delivery_manifest_json(
+    manifest: &IntegrationActivationDeliveryManifest,
+) -> JsonValue {
+    object([
+        ("sequence", integer(manifest.sequence as i64)),
+        ("delivery_status", string(manifest.delivery_status.as_str())),
+        (
+            "delivery_channel",
+            string(manifest.delivery_channel.as_str()),
+        ),
+        ("owner_lane", string(manifest.owner_lane.as_str())),
+        (
+            "source_release_sequence",
+            integer(manifest.source_release_sequence as i64),
+        ),
+        (
+            "source_release_status",
+            string(manifest.source_release_status.as_str()),
+        ),
+        (
+            "source_closure_status",
+            string(manifest.source_closure_status.as_str()),
+        ),
+        (
+            "source_remediation_kind",
+            string(manifest.source_remediation_kind.as_str()),
+        ),
+        (
+            "source_remediation_status",
+            string(manifest.source_remediation_status.as_str()),
+        ),
+        ("source_id", string(&manifest.source_id)),
+        ("title", string(&manifest.title)),
+        ("summary", string(&manifest.summary)),
+        ("priority", integer(manifest.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                manifest
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(manifest.integration_count() as i64),
+        ),
+        (
+            "recommended_view",
+            string(manifest.recommended_view.as_str()),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(manifest.required_tier)),
+        ),
+        (
+            "policy_surface",
+            manifest
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_dependency_work",
+            JsonValue::Bool(manifest.has_dependency_work()),
+        ),
+        (
+            "has_policy_risk",
+            JsonValue::Bool(manifest.has_policy_risk()),
+        ),
+        (
+            "needs_verification",
+            JsonValue::Bool(manifest.needs_verification()),
+        ),
+        ("release_ready", JsonValue::Bool(manifest.release_ready())),
+        (
+            "delivery_blocked",
+            JsonValue::Bool(manifest.delivery_blocked()),
+        ),
+        ("delivery_ready", JsonValue::Bool(manifest.delivery_ready())),
+        (
+            "requires_attention",
+            JsonValue::Bool(manifest.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_delivery_summary_json(
+    summary: &IntegrationActivationDeliverySummary,
+) -> JsonValue {
+    object([
+        ("total_manifests", integer(summary.total_manifests as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "manifests_requiring_attention",
+            integer(summary.manifests_requiring_attention as i64),
+        ),
+        (
+            "blocked_manifests",
+            integer(summary.blocked_manifests as i64),
+        ),
+        (
+            "awaiting_verification_manifests",
+            integer(summary.awaiting_verification_manifests as i64),
+        ),
+        (
+            "awaiting_owner_manifests",
+            integer(summary.awaiting_owner_manifests as i64),
+        ),
+        (
+            "ready_to_deliver_manifests",
+            integer(summary.ready_to_deliver_manifests as i64),
+        ),
+        (
+            "monitoring_manifests",
+            integer(summary.monitoring_manifests as i64),
+        ),
+        (
+            "platform_channel_manifests",
+            integer(summary.platform_channel_manifests as i64),
+        ),
+        (
+            "integration_channel_manifests",
+            integer(summary.integration_channel_manifests as i64),
+        ),
+        (
+            "security_channel_manifests",
+            integer(summary.security_channel_manifests as i64),
+        ),
+        (
+            "verification_channel_manifests",
+            integer(summary.verification_channel_manifests as i64),
+        ),
+        (
+            "audit_channel_manifests",
+            integer(summary.audit_channel_manifests as i64),
+        ),
+        (
+            "monitoring_channel_manifests",
+            integer(summary.monitoring_channel_manifests as i64),
+        ),
+        (
+            "platform_owner_manifests",
+            integer(summary.platform_owner_manifests as i64),
+        ),
+        (
+            "integration_owner_manifests",
+            integer(summary.integration_owner_manifests as i64),
+        ),
+        (
+            "security_owner_manifests",
+            integer(summary.security_owner_manifests as i64),
+        ),
+        (
+            "reviewer_owner_manifests",
+            integer(summary.reviewer_owner_manifests as i64),
+        ),
+        (
+            "verification_owner_manifests",
+            integer(summary.verification_owner_manifests as i64),
+        ),
+        (
+            "audit_owner_manifests",
+            integer(summary.audit_owner_manifests as i64),
+        ),
+        (
+            "manifests_with_dependency_work",
+            integer(summary.manifests_with_dependency_work as i64),
+        ),
+        (
+            "manifests_with_policy_risk",
+            integer(summary.manifests_with_policy_risk as i64),
+        ),
+        (
+            "manifests_requiring_verification",
+            integer(summary.manifests_requiring_verification as i64),
+        ),
+        (
+            "manifests_ready_to_deliver",
+            integer(summary.manifests_ready_to_deliver as i64),
+        ),
+        (
+            "manifests_with_policy_surface",
+            integer(summary.manifests_with_policy_surface as i64),
+        ),
+        (
+            "next_delivery_status",
+            summary
+                .next_delivery_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_delivery_channel",
+            summary
+                .next_delivery_channel
+                .map(|channel| string(channel.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_release_status",
+            summary
+                .next_release_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_owner_lane",
+            summary
+                .next_owner_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_manifest_sequence",
+            summary
+                .next_manifest_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_manifest_priority",
+            summary
+                .next_manifest_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_owner_action",
+            JsonValue::Bool(summary.has_owner_action()),
+        ),
+        (
+            "needs_verification",
+            JsonValue::Bool(summary.needs_verification()),
+        ),
+        ("delivery_ready", JsonValue::Bool(summary.delivery_ready())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -23287,6 +23777,51 @@ fn parse_activation_release_status(
     }
 }
 
+fn parse_activation_delivery_status(
+    label: &str,
+) -> Result<IntegrationActivationDeliveryStatus, ToolCallError> {
+    match label {
+        "blocked" | "blocker" => Ok(IntegrationActivationDeliveryStatus::Blocked),
+        "awaiting_verification" | "needs_verification" | "verify" | "verification" => {
+            Ok(IntegrationActivationDeliveryStatus::AwaitingVerification)
+        }
+        "awaiting_owner" | "owner_action" | "needs_owner_action" | "action_required" => {
+            Ok(IntegrationActivationDeliveryStatus::AwaitingOwner)
+        }
+        "ready_to_deliver" | "delivery_ready" | "ready_for_delivery" | "deliver" => {
+            Ok(IntegrationActivationDeliveryStatus::ReadyToDeliver)
+        }
+        "monitoring" | "monitor" | "tracking" => {
+            Ok(IntegrationActivationDeliveryStatus::Monitoring)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation delivery status `{label}`"
+        ))),
+    }
+}
+
+fn parse_activation_delivery_channel(
+    label: &str,
+) -> Result<IntegrationActivationDeliveryChannel, ToolCallError> {
+    match label {
+        "platform" | "platform_release" => Ok(IntegrationActivationDeliveryChannel::Platform),
+        "integration" | "integration_owner" => {
+            Ok(IntegrationActivationDeliveryChannel::Integration)
+        }
+        "security" | "security_review" => Ok(IntegrationActivationDeliveryChannel::Security),
+        "verification" | "review" | "reviewer" => {
+            Ok(IntegrationActivationDeliveryChannel::Verification)
+        }
+        "audit" | "audit_trail" => Ok(IntegrationActivationDeliveryChannel::Audit),
+        "monitoring" | "monitor" | "tracking" => {
+            Ok(IntegrationActivationDeliveryChannel::Monitoring)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation delivery channel `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -24945,6 +25480,37 @@ fn integration_activation_release_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_delivery_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_release_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("delivery_status", JsonSchema::String));
+        properties.push(SchemaProperty::new("delivery_state", JsonSchema::String));
+        properties.push(SchemaProperty::new("delivery_channel", JsonSchema::String));
+        properties.push(SchemaProperty::new("delivery_lane", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "delivery_owner_lane",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "delivery_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("delivery_blocked", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "delivery_needs_verification",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("delivery_ready", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new("delivery_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -25089,7 +25655,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 127);
+        assert_eq!(definitions.len(), 129);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -25442,9 +26008,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_RELEASE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_DELIVERY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_DELIVERY_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            119
+            121
         );
         assert_eq!(
             export
@@ -25501,6 +26073,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_RELEASE_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DELIVERY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DELIVERY_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
@@ -25954,11 +26534,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(127))
+            Some(&integer(129))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(119))
+            Some(&integer(121))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -30658,6 +31238,161 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_delivery_request = request(
+            "call-list-integration-activation-delivery",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DELIVERY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("delivery_status", string("blocked")),
+                ("delivery_requires_attention", JsonValue::Bool(true)),
+                ("delivery_blocked", JsonValue::Bool(true)),
+                ("delivery_limit", integer(3)),
+            ]),
+            5_053,
+        );
+        let list_activation_delivery_trace =
+            tool_runtime.invoke_with_events(&list_activation_delivery_request);
+        assert!(list_activation_delivery_trace.result.ok);
+        assert_eq!(
+            list_activation_delivery_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_delivery_output = list_activation_delivery_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_delivery_count =
+            integer_value(field(list_activation_delivery_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_delivery_count));
+        let activation_delivery_summary =
+            field(list_activation_delivery_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_delivery_summary, "total_manifests"),
+            Some(&integer(activation_delivery_count))
+        );
+        assert_eq!(
+            field(activation_delivery_summary, "next_delivery_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_delivery_summary, "next_delivery_channel"),
+            Some(&string("verification"))
+        );
+        assert_eq!(
+            field(activation_delivery_summary, "next_owner_lane"),
+            Some(&string("verification"))
+        );
+        assert_eq!(
+            field(activation_delivery_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_delivery_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_delivery = array_item(
+            field(list_activation_delivery_output, "activation_delivery").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_delivery, "delivery_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_delivery, "delivery_channel"),
+            Some(&string("verification"))
+        );
+        assert_eq!(
+            field(activation_delivery, "delivery_blocked"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_delivery, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_delivery_summary_request = request(
+            "call-integration-activation-delivery-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DELIVERY_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("delivery_requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_054,
+        );
+        let activation_delivery_summary_trace =
+            tool_runtime.invoke_with_events(&activation_delivery_summary_request);
+        assert!(activation_delivery_summary_trace.result.ok);
+        assert_eq!(
+            activation_delivery_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_delivery_summary_output = activation_delivery_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_delivery_rollup =
+            field(activation_delivery_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_delivery_rollup, "total_manifests").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_delivery_rollup, "blocked_manifests").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_delivery_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_delivery_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -32538,6 +33273,14 @@ mod tests {
             activation_release_summary_request,
             activation_release_summary_trace,
         );
+        journal.record_trace(
+            list_activation_delivery_request,
+            list_activation_delivery_trace,
+        );
+        journal.record_trace(
+            activation_delivery_summary_request,
+            activation_delivery_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -32611,9 +33354,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 127);
-        assert_eq!(journal_summary.completed_count, 127);
-        assert_eq!(journal.audit_records().len(), 127);
+        assert_eq!(journal_summary.invocation_count, 129);
+        assert_eq!(journal_summary.completed_count, 129);
+        assert_eq!(journal.audit_records().len(), 129);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
