@@ -889,6 +889,7 @@ pub struct BrowserDocument {
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub template_descriptors: Vec<BrowserTemplateDescriptor>,
     pub slot_descriptors: Vec<BrowserSlotDescriptor>,
+    pub custom_element_descriptors: Vec<BrowserCustomElementDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
@@ -1457,6 +1458,27 @@ pub struct BrowserSlotDescriptor {
     pub custom_element_is: Option<String>,
     pub slot_blocked: bool,
     pub slot_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCustomElementDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub custom_element_kind: String,
+    pub definition_name: Option<String>,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub autonomous_custom_element: bool,
+    pub customized_builtin: bool,
+    pub extends_element: Option<String>,
+    pub custom_element_name_valid: bool,
+    pub slot: Option<String>,
+    pub part: Vec<String>,
+    pub exportparts: Option<String>,
+    pub data_attribute_names: Vec<String>,
+    pub text: String,
+    pub custom_element_blocked: bool,
+    pub custom_element_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10894,6 +10916,9 @@ fn collect_browser_facts(
         if let Some(descriptor) = browser_slot_descriptor(element) {
             summary.slot_descriptors.push(descriptor);
         }
+        if let Some(descriptor) = browser_custom_element_descriptor(element) {
+            summary.custom_element_descriptors.push(descriptor);
+        }
         if let Some(descriptor) = browser_data_attribute_descriptor(element) {
             summary.data_attribute_descriptors.push(descriptor);
         }
@@ -11034,6 +11059,9 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
         }
         if let Some(descriptor) = browser_slot_descriptor(element) {
             summary.slot_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_custom_element_descriptor(element) {
+            summary.custom_element_descriptors.push(descriptor);
         }
 
         match element.name.as_str() {
@@ -17676,6 +17704,72 @@ fn browser_slot_block_reasons(slot: Option<&str>, slot_name: Option<&str>) -> Ve
     }
     if slot_name.is_some_and(|slot_name| !slot_name.is_empty() && slot_name.trim().is_empty()) {
         reasons.push("blank-slot-name".to_string());
+    }
+    reasons
+}
+
+fn browser_custom_element_descriptor(element: &Element) -> Option<BrowserCustomElementDescriptor> {
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    if custom_element_name.is_none() && custom_element_is.is_none() {
+        return None;
+    }
+
+    let autonomous_custom_element = custom_element_name.is_some();
+    let customized_builtin = custom_element_name.is_none() && custom_element_is.is_some();
+    let definition_name = custom_element_is
+        .clone()
+        .or_else(|| custom_element_name.clone());
+    let custom_element_name_valid = definition_name
+        .as_deref()
+        .is_some_and(is_browser_custom_element_name);
+    let custom_element_block_reasons = browser_custom_element_block_reasons(
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        custom_element_name_valid,
+    );
+    let data_attributes = browser_data_attributes(element);
+
+    Some(BrowserCustomElementDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        custom_element_kind: if custom_element_name.is_some() && custom_element_is.is_some() {
+            "autonomous-with-is".to_string()
+        } else if autonomous_custom_element {
+            "autonomous-custom-element".to_string()
+        } else {
+            "customized-built-in".to_string()
+        },
+        definition_name,
+        custom_element_name,
+        custom_element_is,
+        autonomous_custom_element,
+        customized_builtin,
+        extends_element: customized_builtin.then(|| element.name.clone()),
+        custom_element_name_valid,
+        slot: browser_slot_assignment(element),
+        part: browser_part_tokens(element),
+        exportparts: browser_exportparts(element),
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        text: visible_text_for_nodes(&element.children),
+        custom_element_blocked: !custom_element_block_reasons.is_empty(),
+        custom_element_block_reasons,
+    })
+}
+
+fn browser_custom_element_block_reasons(
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    custom_element_name_valid: bool,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if custom_element_is == Some("") {
+        reasons.push("empty-is-value".to_string());
+    } else if custom_element_is.is_some() && !custom_element_name_valid {
+        reasons.push("invalid-custom-element-name".to_string());
+    }
+    if custom_element_name.is_some() && custom_element_is.is_some() {
+        reasons.push("is-on-autonomous-custom-element".to_string());
     }
     reasons
 }
