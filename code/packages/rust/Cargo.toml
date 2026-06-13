@@ -766,4 +766,6 @@ members = [
     "hardware-vm",
     "vcd-writer",
     "hdl-elaboration",
+    "testbench-framework",
+    "coverage-hdl",
 ]
