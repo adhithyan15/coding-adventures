@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.123.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-116** — a STRING property key that is a CANONICAL
+  non-negative integer (`< 2^53`) is now UNQUOTED to a numeric key and
+  printed in shortest numeric form, matching upstream Closure v20240317:
+
+      {"123":1}              ->  {123:1}
+      {"0":1}                ->  {0:1}
+      {"1000":1}             ->  {1E3:1}
+      {"123456789012345":1}  ->  {0x7048860ddf79:1}
+      {"9007199254740991":1} ->  {9007199254740991:1}   (MAX_SAFE_INTEGER)
+
+  The unquoted digits flow through the ordinary number printer
+  (`normalize_number_value`), so the emitted key composes with the
+  scientific (gap-040/gap-082) and hex (gap-114) shortest-forms — exactly
+  what a bare numeric key (`{1000:1}` -> `{1E3:1}`) produces.
+
+  New `numeric_string_key_unquoted(kept, idx)` helper in
+  `whitespace_only.rs`, wired into the string-emit branch. Discriminator
+  verified against the JAR:
+  - **position**: previous emitted token is `{` or `,` and next is `:`.
+    This excludes the ternary confound (`a?"1":"2"` — the string is
+    preceded by `?`, not `{`/`,`), string VALUES, `case "1":`, and
+    computed/method keys.
+  - **canonical integer**: non-empty, all ASCII digits, `"0"` or no
+    leading zero (`"00"`/`"01"` stay quoted).
+  - **`< 2^53`**: `9007199254740991` unquotes but `9007199254740992`
+    (= 2^53) stays quoted, because `String(Number(s))` no longer
+    round-trips once the value is not exactly representable as an
+    IEEE-754 double. Non-integer (`"1.5"`), signed (`"-1"`), and
+    non-numeric (`"123abc"`) keys stay quoted.
+
+  Float-key counterpart gap-120 (non-integer key -> quoted canonical
+  string) remains OPEN. Two `gap116_*` unit tests + diff_minify
+  (`minify_num_str_key` un-ignored) stay green.
+
 ## [0.122.0] - 2026-06-13
 
 ### Fixed

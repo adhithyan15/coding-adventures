@@ -318,13 +318,14 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // (`a/b`) already lexes correctly. Lexer-level (sibling of gap-044).
     // HIGH PRIORITY — corrupts output to non-parseable JS.
     ("div_chain", "gap-115: a/b/c mis-lexed as regex -> invalid `a /b/ c` (CORRECTNESS)"),
-    // gap-116 (CLOC14.56): a STRING property key that is a CANONICAL
-    // non-negative integer is unquoted to a numeric key by upstream:
-    //   {"123":1} -> {123:1}   {"0":1} -> {0:1}
-    // NOT every numeric-looking string: `"01"` (leading zero), `"1.5"`
-    // (non-integer), `"123abc"` are kept quoted — only the canonical
-    // array-index form (matches the round-trip `String(Number(s)) === s`).
-    ("num_str_key", "gap-116: canonical numeric string key -> unquoted number"),
+    // gap-116 RESOLVED in CLOC12.116 — a STRING property key that is a
+    // CANONICAL non-negative integer (< 2^53) is now unquoted to a numeric
+    // key and printed in shortest numeric form: `{"123":1}` -> `{123:1}`,
+    // `{"1000":1}` -> `{1E3:1}`. Leading-zero (`"01"`), non-integer
+    // (`"1.5"`), and 2^53+ keys stay quoted, and string VALUES (the
+    // ternary `a?"1":"2"` confound) are untouched. `numeric_string_key_
+    // unquoted` in whitespace_only.rs; `minify_num_str_key` flipped
+    // IGNORED → PASS.
     // gap-117 RESOLVED in CLOC12.117 — a `case` clause whose operand begins
     // with a UNARY operator (`-`/`+`/`!`/`~`) needs a separating space that
     // closurec used to omit: `case-1:` -> `case -1:`, `case!a:` -> `case !a:`.
