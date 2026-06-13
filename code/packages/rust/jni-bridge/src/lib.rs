@@ -204,6 +204,10 @@ const EXCEPTION_CHECK_OFFSET:         usize = 228; // jboolean ExceptionCheck(en
 /// - `F` must exactly match the actual function type at that slot
 #[inline(always)]
 unsafe fn table_fn<F: Copy>(env: *mut JNIEnv, offset: usize) -> F {
+    // Guard against null env or null function table (defensive; JVM guarantees
+    // these are valid, but instrumented environments may violate that).
+    debug_assert!(!env.is_null(), "JNIEnv pointer must not be null");
+    debug_assert!(!(*env).is_null(), "JNI function table must not be null");
     // *env  → *const *const c_void  (the function table)
     // .add(offset) → pointer to the slot
     // *…  → *const c_void  (the function pointer, as an opaque void*)
@@ -246,6 +250,10 @@ pub unsafe fn jni_find_class(env: *mut JNIEnv, name: &str) -> jclass {
 /// # Safety
 /// `env` must be a valid JNIEnv.
 pub unsafe fn jni_throw_new(env: *mut JNIEnv, class_name: &str, msg: &str) {
+    // JNI spec §2.6: most JNI calls are illegal while an exception is pending.
+    // FindClass is not in the safe set, so clear any pre-existing exception
+    // before looking up the exception class we want to throw.
+    jni_exception_clear(env);
     let cls = jni_find_class(env, class_name);
     if cls.is_null() {
         // ClassNotFoundException is already pending; can't throw our exception.

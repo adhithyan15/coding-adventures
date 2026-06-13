@@ -150,6 +150,12 @@ unsafe fn make_mos_result(env: *mut JNIEnv, r: &mm::MosResult) -> jobject {
         return null_mut();
     }
     let region_jstr = jni_new_string_utf(env, r.region.as_str());
+    if region_jstr.is_null() {
+        // OOM: NewStringUTF returned null; an OutOfMemoryError is pending.
+        // Return null so the JVM propagates the OOM rather than crashing on
+        // a null jobject in the NewObjectA argument array.
+        return null_mut();
+    }
     // jvalue array: 9 doubles then the region jstring.
     let args = [
         jvalue { d: r.id  },
