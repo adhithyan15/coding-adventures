@@ -1,5 +1,48 @@
 # Changelog — cas-ode (Rust)
 
+## [0.4.0] — 2026-05-29
+
+### Added
+
+- **Track L2 — Lie point-symmetry handler for first-order ODEs**
+  (`try_lie_symmetry` in new `src/lie_symmetry.rs`).  Port of the Python
+  `cas_ode.lie_symmetry` module (Track L1, commit `d138e00f6`).
+  - One generic detect-and-reduce pipeline for first-order ODEs that
+    fall through every existing handler (Bernoulli, linear, separable,
+    exact, homogeneous-type).  Three textbook point-symmetry groups
+    are recognised numerically and reduced to a quadrature:
+    1. **Translation in y**  `(x, y) → (x, y + c)` — `y' = f(x)` →
+       direct integration `y = ∫ f dx + C`.
+    2. **Translation in x**  `(x, y) → (x + c, y)` — autonomous
+       `y' = g(y)` → inverse quadrature `x = ∫ 1/g(y) dy + C`.
+       Catches the canonical logistic `y' = y(1 - y)` that separable
+       cannot invert.
+    3. **Scaling**  `(x, y) → (λx, λ^k y)` for integer
+       `k ∈ [-3, 3] \ {0}` — similarity reduction `v = y / x^k`
+       giving a separable ODE in `(v, x)`.  Numerical certificate
+       confirms `f_subst / x^(k-1)` agrees with the extracted `G(v)`
+       at three sample `(x, v)` pairs before integration is attempted.
+  - Detection is *numerical*: substitute the candidate transformation
+    into `f` and compare to the predicted transform at 3 fixed sample
+    points × 3 sample `λ` (for scaling) × 7 candidate exponents ≤ 63
+    numerical evaluations per ODE.  No symbolic linearised determining
+    equation is computed.
+  - All iteration is bounded.  `k` search space is hard-bounded to
+    `[-3, 3]` with no escape hatch.  Test points and tolerances are
+    fixed constants.
+  - Dispatcher hook: inserted in `solve_ode` *after* every existing
+    first-order family (Bernoulli, linear, separable, exact,
+    homogeneous-type) and *before* the final fall-through.  Matches
+    the Python ordering in `cas_ode.ode.solve_ode`.
+  - Per Rust-cas-ode convention, the produced form keeps
+    `Integrate(expr, var)` as structural IR — the package's downstream
+    consumer evaluates these via the symbolic-vm.
+- `pub(crate)` visibility added to internal helpers
+  (`flatten_add`, `is_const_wrt`, `binary_args`, `unary_arg`,
+  `unwrap_neg`, `sub`, `integrate`, `c`, `y_prime`) so the new module
+  can reuse the dispatcher's local primitives without duplicating
+  them.
+
 ## [0.3.0] — 2026-05-28
 
 ### Added

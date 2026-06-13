@@ -18,6 +18,9 @@ use symbolic_ir::{
 pub const ODE2: &str = "ODE2";
 pub type Handler = fn(&IRNode) -> IRNode;
 
+mod lie_symmetry;
+use lie_symmetry::try_lie_symmetry;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 struct Frac {
     n: i64,
@@ -112,7 +115,7 @@ fn gcd(mut a: u64, mut b: u64) -> u64 {
     a
 }
 
-fn c() -> IRNode {
+pub(crate) fn c() -> IRNode {
     sym("%c")
 }
 
@@ -152,7 +155,7 @@ fn args_of<'a>(node: &'a IRNode, head: &str) -> Option<&'a [IRNode]> {
     }
 }
 
-fn binary_args<'a>(node: &'a IRNode, head: &str) -> Option<(&'a IRNode, &'a IRNode)> {
+pub(crate) fn binary_args<'a>(node: &'a IRNode, head: &str) -> Option<(&'a IRNode, &'a IRNode)> {
     let args = args_of(node, head)?;
     if args.len() == 2 {
         Some((&args[0], &args[1]))
@@ -161,7 +164,7 @@ fn binary_args<'a>(node: &'a IRNode, head: &str) -> Option<(&'a IRNode, &'a IRNo
     }
 }
 
-fn unary_arg<'a>(node: &'a IRNode, head: &str) -> Option<&'a IRNode> {
+pub(crate) fn unary_arg<'a>(node: &'a IRNode, head: &str) -> Option<&'a IRNode> {
     let args = args_of(node, head)?;
     if args.len() == 1 {
         Some(&args[0])
@@ -180,7 +183,7 @@ fn add(a: IRNode, b: IRNode) -> IRNode {
     }
 }
 
-fn sub(a: IRNode, b: IRNode) -> IRNode {
+pub(crate) fn sub(a: IRNode, b: IRNode) -> IRNode {
     if is_int(&b, 0) {
         a
     } else {
@@ -256,7 +259,7 @@ fn deriv(expr: IRNode, var: IRNode) -> IRNode {
     apply(sym(D), vec![expr, var])
 }
 
-fn integrate(expr: IRNode, var: IRNode) -> IRNode {
+pub(crate) fn integrate(expr: IRNode, var: IRNode) -> IRNode {
     apply(sym(INTEGRATE), vec![expr, var])
 }
 
@@ -299,7 +302,7 @@ fn signed_frac_to_ir(f: Frac) -> IRNode {
     f.to_ir()
 }
 
-fn flatten_add(node: &IRNode) -> Vec<IRNode> {
+pub(crate) fn flatten_add(node: &IRNode) -> Vec<IRNode> {
     if let Some((a, b)) = binary_args(node, ADD) {
         let mut out = flatten_add(a);
         out.extend(flatten_add(b));
@@ -341,7 +344,7 @@ fn rational_value(node: &IRNode) -> Option<Frac> {
     }
 }
 
-fn is_const_wrt(node: &IRNode, var: &IRNode) -> bool {
+pub(crate) fn is_const_wrt(node: &IRNode, var: &IRNode) -> bool {
     match node {
         IRNode::Symbol(_) => node != var,
         IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_) | IRNode::Str(_) => true,
@@ -349,7 +352,7 @@ fn is_const_wrt(node: &IRNode, var: &IRNode) -> bool {
     }
 }
 
-fn unwrap_neg(node: &IRNode) -> (bool, IRNode) {
+pub(crate) fn unwrap_neg(node: &IRNode) -> (bool, IRNode) {
     if let Some(inner) = unary_arg(node, NEG) {
         (true, inner.clone())
     } else if let IRNode::Integer(n) = node {
@@ -386,7 +389,7 @@ fn sum_terms(terms: Vec<(IRNode, bool)>) -> IRNode {
     })
 }
 
-fn y_prime(y: &IRNode, x: &IRNode) -> IRNode {
+pub(crate) fn y_prime(y: &IRNode, x: &IRNode) -> IRNode {
     deriv(y.clone(), x.clone())
 }
 
@@ -2092,7 +2095,14 @@ pub fn solve_ode(expr: IRNode, y: IRNode, x: IRNode) -> Option<IRNode> {
     if let Some(result) = try_homogeneous_type(&expr, &y, &x) {
         return Some(result);
     }
-    try_exact(&expr, &y, &x)
+    if let Some(result) = try_exact(&expr, &y, &x) {
+        return Some(result);
+    }
+    // Track L2: Lie point-symmetry (autonomous & scaling).  Runs AFTER
+    // every existing first-order family.  Catches autonomous nonlinear
+    // y' = g(y) (e.g. logistic y' = y(1-y)) that separable cannot
+    // invert, and any future symmetry-reducible case not covered above.
+    try_lie_symmetry(&expr, &y, &x)
 }
 
 /// Evaluate an `ODE2(eqn, y, x)` IR node, or return it unchanged on fallthrough.
