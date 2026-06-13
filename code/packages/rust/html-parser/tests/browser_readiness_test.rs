@@ -29,9 +29,10 @@ use coding_adventures_html_parser::{
     BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
     BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
     BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTemplateDescriptor, BrowserTextSemantic, BrowserThemeColor,
+    BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTemplateDescriptor,
+    BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -189,6 +190,8 @@ struct ExpectedBrowserDocument {
     disclosure_state_descriptors: Option<Vec<ExpectedDisclosureStateDescriptor>>,
     #[serde(default)]
     template_descriptors: Option<Vec<ExpectedTemplateDescriptor>>,
+    #[serde(default)]
+    slot_descriptors: Option<Vec<ExpectedSlotDescriptor>>,
     #[serde(default)]
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
     #[serde(default)]
@@ -392,6 +395,39 @@ struct ExpectedTemplateDescriptor {
     template_blocked: bool,
     #[serde(default)]
     template_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedSlotDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    slot_kind: String,
+    #[serde(default)]
+    slot: Option<String>,
+    #[serde(default)]
+    slot_name: Option<String>,
+    #[serde(default)]
+    default_slot: bool,
+    #[serde(default)]
+    named_slot: bool,
+    #[serde(default)]
+    fallback_text: String,
+    #[serde(default)]
+    fallback_word_count: usize,
+    #[serde(default)]
+    part: Vec<String>,
+    #[serde(default)]
+    custom_element: bool,
+    #[serde(default)]
+    custom_element_name: Option<String>,
+    #[serde(default)]
+    custom_element_is: Option<String>,
+    #[serde(default)]
+    slot_blocked: bool,
+    #[serde(default)]
+    slot_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4113,6 +4149,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_aria_description_descriptors =
             case.expected.aria_description_descriptors.is_some();
         let tracks_template_descriptors = case.expected.template_descriptors.is_some();
+        let tracks_slot_descriptors = case.expected.slot_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4122,6 +4159,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_template_descriptors {
             expected.template_descriptors = actual.template_descriptors.clone();
+        }
+        if !tracks_slot_descriptors {
+            expected.slot_descriptors = actual.slot_descriptors.clone();
         }
 
         assert_eq!(
@@ -6403,6 +6443,79 @@ fn browser_template_descriptors_track_invalid_shadowroot_modes_and_orphan_flags(
 }
 
 #[test]
+fn browser_slot_descriptors_track_slot_outlets_assignments_and_fallbacks() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "component-template-page")
+        .expect("component template fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("component template fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.slot_descriptors,
+        case.expected.into_browser_document().slot_descriptors,
+        "slot descriptors should distinguish slot outlets, slotted elements, named/default slots, parts, and fallback text",
+    );
+}
+
+#[test]
+fn browser_slot_descriptors_track_blank_slot_blockers() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <template shadowrootmode=open>
+                <slot name="   ">Blank fallback</slot>
+            </template>
+            <x-card><span slot="   ">Blank assignment</span><span slot="">Default assignment</span></x-card>
+        </body>"#,
+    )
+    .expect("slot blocker fixture should parse");
+
+    let blank_slot = actual
+        .slot_descriptors
+        .iter()
+        .find(|descriptor| descriptor.slot_name.as_deref() == Some("   "))
+        .expect("blank named slot descriptor should be present");
+
+    assert_eq!(blank_slot.slot_kind, "slot-element");
+    assert!(blank_slot.named_slot);
+    assert!(!blank_slot.default_slot);
+    assert_eq!(blank_slot.fallback_text, "Blank fallback");
+    assert_eq!(blank_slot.fallback_word_count, 2);
+    assert!(blank_slot.slot_blocked);
+    assert_eq!(blank_slot.slot_block_reasons, vec!["blank-slot-name"]);
+
+    let blank_assignment = actual
+        .slot_descriptors
+        .iter()
+        .find(|descriptor| descriptor.slot.as_deref() == Some("   "))
+        .expect("blank slot assignment descriptor should be present");
+
+    assert_eq!(blank_assignment.slot_kind, "slotted-element");
+    assert!(blank_assignment.named_slot);
+    assert!(!blank_assignment.default_slot);
+    assert!(blank_assignment.slot_blocked);
+    assert_eq!(
+        blank_assignment.slot_block_reasons,
+        vec!["blank-slot-assignment"]
+    );
+
+    let default_assignment = actual
+        .slot_descriptors
+        .iter()
+        .find(|descriptor| descriptor.slot.as_deref() == Some(""))
+        .expect("default slot assignment descriptor should be present");
+
+    assert_eq!(default_assignment.slot_kind, "slotted-element");
+    assert!(default_assignment.default_slot);
+    assert!(!default_assignment.named_slot);
+    assert!(!default_assignment.slot_blocked);
+}
+
+#[test]
 fn browser_data_attribute_descriptor_metadata_tracks_custom_and_standard_elements() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -7140,6 +7253,12 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedTemplateDescriptor::into_browser_template_descriptor)
                 .collect(),
+            slot_descriptors: self
+                .slot_descriptors
+                .unwrap_or_default()
+                .into_iter()
+                .map(ExpectedSlotDescriptor::into_browser_slot_descriptor)
+                .collect(),
             component_hydration_targets: self
                 .component_hydration_targets
                 .into_iter()
@@ -7351,6 +7470,28 @@ impl ExpectedTemplateDescriptor {
             content_word_count: self.content_word_count,
             template_blocked: self.template_blocked,
             template_block_reasons: self.template_block_reasons,
+        }
+    }
+}
+
+impl ExpectedSlotDescriptor {
+    fn into_browser_slot_descriptor(self) -> BrowserSlotDescriptor {
+        BrowserSlotDescriptor {
+            element: self.element,
+            id: self.id,
+            slot_kind: self.slot_kind,
+            slot: self.slot,
+            slot_name: self.slot_name,
+            default_slot: self.default_slot,
+            named_slot: self.named_slot,
+            fallback_text: self.fallback_text,
+            fallback_word_count: self.fallback_word_count,
+            part: self.part,
+            custom_element: self.custom_element,
+            custom_element_name: self.custom_element_name,
+            custom_element_is: self.custom_element_is,
+            slot_blocked: self.slot_blocked,
+            slot_block_reasons: self.slot_block_reasons,
         }
     }
 }

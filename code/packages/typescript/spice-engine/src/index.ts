@@ -2664,7 +2664,7 @@ const SUPPORTED_COMPATIBILITY_ANALYSES = new Set(["op", "dc", "ac", "tran", "tf"
 const REQUIRED_COMPATIBILITY_ANALYSES = ["op", "dc", "ac", "tran"];
 const UNSUPPORTED_DECK_CONTROL_DIRECTIVES = new Set([".include", ".lib", ".control"]);
 const UNSUPPORTED_RESOLVED_DIRECTIVES = new Set([".control"]);
-const UNSUPPORTED_PARAMETER_DIRECTIVES = new Set([".func"]);
+const UNSUPPORTED_PARAMETER_DIRECTIVES = new Set<string>();
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2730,6 +2730,7 @@ export function resolveDeckSources(
 
 export function resolveDeckParameters(netlist: string): DeckParameterSummary {
   const state = new DeckParameterState();
+  collectParameterFunctions(netlist, state);
   const activeLines: string[] = [];
   let endLineNumber: number | undefined;
 
@@ -2747,6 +2748,9 @@ export function resolveDeckParameters(netlist: string): DeckParameterSummary {
     }
     if (directive === ".param") {
       resolveParamLine(stripped, lineNumber, state);
+      continue;
+    }
+    if (directive === ".func") {
       continue;
     }
     if (directive !== undefined && UNSUPPORTED_PARAMETER_DIRECTIVES.has(directive)) {
@@ -3230,6 +3234,7 @@ function addResolutionDiagnostic(
 class DeckParameterState {
   readonly diagnostics: DeckParameterDiagnostic[] = [];
   private readonly parametersByName = new Map<string, DeckParameterValue>();
+  private readonly functionsByName = new Map<string, DeckFunctionDefinition>();
   private readonly order: string[] = [];
 
   setParameter(name: string, value: number): void {
@@ -3242,6 +3247,14 @@ class DeckParameterState {
 
   getParameter(name: string): DeckParameterValue | undefined {
     return this.parametersByName.get(name.toLowerCase());
+  }
+
+  setFunction(definition: DeckFunctionDefinition): void {
+    this.functionsByName.set(definition.name.toLowerCase(), definition);
+  }
+
+  getFunction(name: string): DeckFunctionDefinition | undefined {
+    return this.functionsByName.get(name.toLowerCase());
   }
 
   parameterValues(): DeckParameterValue[] {
@@ -3454,6 +3467,39 @@ function resolveParamLine(line: string, lineNumber: number, state: DeckParameter
   }
 }
 
+function collectParameterFunctions(netlist: string, state: DeckParameterState): void {
+  const functionState = new DeckFunctionState();
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      break;
+    }
+    if (directive === ".func") {
+      resolveFunctionLine(stripped, lineNumber, functionState);
+    }
+  }
+
+  for (const definition of functionState.functions) {
+    state.setFunction(definition);
+  }
+  for (const diagnostic of functionState.diagnostics) {
+    addParameterDiagnostic(state, {
+      code: diagnostic.code,
+      directive: diagnostic.directive,
+      lineNumber: diagnostic.lineNumber,
+      message: diagnostic.message,
+      parameter: diagnostic.functionName,
+      expression: diagnostic.expression,
+    });
+  }
+}
+
 function rewriteParameterExpressions(
   line: string,
   lineNumber: number,
@@ -3521,6 +3567,8 @@ class ParameterExpressionParser {
   constructor(
     private readonly expression: string,
     private readonly state: DeckParameterState,
+    private readonly localValues: ReadonlyMap<string, number> = new Map<string, number>(),
+    private readonly callStack: readonly string[] = [],
   ) {}
 
   parse(): number {
@@ -3676,7 +3724,11 @@ class ParameterExpressionParser {
     const name = this.expression.slice(start, this.index);
     this.skipWhitespace();
     if (this.index < this.expression.length && this.expression[this.index] === "(") {
-      throw new Error(`function calls are not supported in parameter expression ${JSON.stringify(name)}`);
+      return this.evaluateFunctionCall(name, this.parseCallArguments());
+    }
+    const local = this.localValues.get(name.toLowerCase());
+    if (local !== undefined) {
+      return local;
     }
     if (name.toLowerCase() === "pi") {
       return Math.PI;
@@ -3686,6 +3738,52 @@ class ParameterExpressionParser {
       throw new Error(`unknown parameter ${JSON.stringify(name)}`);
     }
     return parameter.value;
+  }
+
+  private parseCallArguments(): number[] {
+    if (!this.match("(")) {
+      throw new Error("expected '(' in function call");
+    }
+    this.skipWhitespace();
+    if (this.match(")")) {
+      return [];
+    }
+    const values: number[] = [];
+    while (true) {
+      values.push(this.parseExpression());
+      this.skipWhitespace();
+      if (this.match(",")) {
+        continue;
+      }
+      if (this.match(")")) {
+        return values;
+      }
+      throw new Error("missing ')' in function call");
+    }
+  }
+
+  private evaluateFunctionCall(name: string, values: readonly number[]): number {
+    const definition = this.state.getFunction(name);
+    if (definition === undefined) {
+      throw new Error(`unknown function ${JSON.stringify(name)}`);
+    }
+    if (values.length !== definition.arguments.length) {
+      throw new Error(
+        `function ${JSON.stringify(name)} expected ${definition.arguments.length} arguments but got ${values.length}`,
+      );
+    }
+    const key = definition.name.toLowerCase();
+    if (this.callStack.includes(key)) {
+      throw new Error(`recursive function call ${JSON.stringify(name)}`);
+    }
+    const localValues = new Map(this.localValues);
+    definition.arguments.forEach((argument, index) => {
+      localValues.set(argument.toLowerCase(), values[index]);
+    });
+    return new ParameterExpressionParser(definition.expression, this.state, localValues, [
+      ...this.callStack,
+      key,
+    ]).parse();
   }
 
   private skipWhitespace(): void {

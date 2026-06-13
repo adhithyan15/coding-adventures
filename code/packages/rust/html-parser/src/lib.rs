@@ -888,6 +888,7 @@ pub struct BrowserDocument {
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub template_descriptors: Vec<BrowserTemplateDescriptor>,
+    pub slot_descriptors: Vec<BrowserSlotDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
@@ -1437,6 +1438,25 @@ pub struct BrowserTemplateDescriptor {
     pub content_word_count: usize,
     pub template_blocked: bool,
     pub template_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSlotDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub slot_kind: String,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub default_slot: bool,
+    pub named_slot: bool,
+    pub fallback_text: String,
+    pub fallback_word_count: usize,
+    pub part: Vec<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub slot_blocked: bool,
+    pub slot_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10871,6 +10891,9 @@ fn collect_browser_facts(
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
+        if let Some(descriptor) = browser_slot_descriptor(element) {
+            summary.slot_descriptors.push(descriptor);
+        }
         if let Some(descriptor) = browser_data_attribute_descriptor(element) {
             summary.data_attribute_descriptors.push(descriptor);
         }
@@ -11008,6 +11031,9 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             browser_fetch_policy_descriptor(element, summary.base_href.as_deref())
         {
             summary.fetch_policy_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_slot_descriptor(element) {
+            summary.slot_descriptors.push(descriptor);
         }
 
         match element.name.as_str() {
@@ -17586,6 +17612,70 @@ fn browser_template_block_reasons(
     }
     if shadowrootmode.is_none() && !shadowroot_attribute_names.is_empty() {
         reasons.push("shadowroot-flags-without-mode".to_string());
+    }
+    reasons
+}
+
+fn browser_slot_descriptor(element: &Element) -> Option<BrowserSlotDescriptor> {
+    let slot = browser_slot_assignment(element);
+    let slot_name = browser_slot_name(element);
+    if element.name != "slot" && slot.is_none() {
+        return None;
+    }
+
+    let fallback_text = if element.name == "slot" {
+        visible_text_for_nodes(&element.children)
+    } else {
+        String::new()
+    };
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+    let slot_block_reasons = browser_slot_block_reasons(slot.as_deref(), slot_name.as_deref());
+    let default_slot = if element.name == "slot" {
+        slot_name.as_deref().is_none_or(str::is_empty)
+    } else {
+        slot.as_deref().is_some_and(str::is_empty)
+    };
+    let named_slot = if element.name == "slot" {
+        slot_name
+            .as_deref()
+            .is_some_and(|slot_name| !slot_name.is_empty())
+    } else {
+        slot.as_deref()
+            .is_some_and(|slot_name| !slot_name.is_empty())
+    };
+
+    Some(BrowserSlotDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        slot_kind: if element.name == "slot" {
+            "slot-element".to_string()
+        } else {
+            "slotted-element".to_string()
+        },
+        slot,
+        slot_name,
+        default_slot,
+        named_slot,
+        fallback_word_count: fallback_text.split_whitespace().count(),
+        fallback_text,
+        part: browser_part_tokens(element),
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        slot_blocked: !slot_block_reasons.is_empty(),
+        slot_block_reasons,
+    })
+}
+
+fn browser_slot_block_reasons(slot: Option<&str>, slot_name: Option<&str>) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if slot.is_some_and(|slot| !slot.is_empty() && slot.trim().is_empty()) {
+        reasons.push("blank-slot-assignment".to_string());
+    }
+    if slot_name.is_some_and(|slot_name| !slot_name.is_empty() && slot_name.trim().is_empty()) {
+        reasons.push("blank-slot-name".to_string());
     }
     reasons
 }

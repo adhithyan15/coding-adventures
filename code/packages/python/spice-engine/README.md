@@ -116,9 +116,10 @@ provide a source-content map, `.include` directives are expanded in place, and
 diagnostics for missing files, missing sections, unterminated sections, cycles,
 and still-unsupported `.control` blocks.
 `resolve_deck_parameters()` evaluates scalar whitespace-tokenized `.param`
-assignments, preserves parameter order, rewrites braced and quoted active-line
-expressions, and emits stable diagnostics for unresolved expressions and
-still-unsupported `.func` cards.
+assignments, collects scalar `.func` definitions before `.end`, preserves
+parameter order, rewrites braced and quoted active-line expressions, and emits
+stable diagnostics for unresolved expressions, bad function arity, unknown
+functions, and recursive function calls.
 `resolve_deck_initial_conditions()` extracts scalar `.ic` and `.nodeset`
 `V(node)=value` hints before `.end`, keeps non-condition active lines, evaluates
 numeric SPICE suffix/arithmetic expressions, and reports stable diagnostics for

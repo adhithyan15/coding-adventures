@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck function-call expression resolution** — `resolve_deck_parameters()`
+  now collects scalar `.func` definitions before `.end` and evaluates scalar
+  function calls in `.param` assignments plus braced or quoted active-line
+  expressions, with stable diagnostics for unknown functions, bad arity, and
+  recursive calls, matching Rust and TypeScript.
+
 - **Deck function definition resolution** — `resolve_deck_functions()` now
   extracts scalar `.func name(args) expression` definitions before `.end`,
   strips braced or quoted expression delimiters, and reports stable diagnostics
@@ -19,8 +25,7 @@
 - **Deck parameter resolution** — `resolve_deck_parameters()` now evaluates
   scalar whitespace-tokenized `.param` assignments, rewrites braced and quoted
   active-line expressions, and reports stable diagnostics for unresolved
-  expressions and still-unsupported `.func` cards, matching Rust and
-  TypeScript.
+  expressions, matching Rust and TypeScript.
 
 - **Deck source resolution** — `resolve_deck_sources()` now expands
   map-provided `.include` files and selected `.lib path section` library

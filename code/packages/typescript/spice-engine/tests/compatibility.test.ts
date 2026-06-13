@@ -232,30 +232,67 @@ Rafter out 0 {total}
     expect(summary.diagnostics).toStrictEqual([]);
   });
 
-  it("reports unresolved parameters and unsupported functions", () => {
+  it("evaluates scalar .func calls in parameter expressions", () => {
     const summary = resolveDeckParameters(`
-.param GOOD=1k BAD=missing+1
 .func gain(x) {x*2}
+.param BASE=2 SCALE=3 SHIFT=1 TOTAL=blend(base,scale,shift)
+.func blend(a,b,c) 'gain(a)+b+c'
+R1 in out {gain(total)}
+B1 out 0 V='blend(1,2,3)'
+.op
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(8);
+    expect(summary.activeLines).toStrictEqual([
+      "R1 in out 16",
+      "B1 out 0 V=7",
+      ".op",
+    ]);
+    expect(summary.parameters.map((parameter) => [parameter.name, parameter.value])).toStrictEqual([
+      ["BASE", 2],
+      ["SCALE", 3],
+      ["SHIFT", 1],
+      ["TOTAL", 8],
+    ]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports bad scalar .func calls in parameter expressions", () => {
+    const summary = resolveDeckParameters(`
+.func one(x) {x+1}
+.func loop(x) {loop(x)}
+.param GOOD=one(1) BAD=unknown(1) ARITY=one(1,2) RECUR=loop(1)
 R1 in out {bad}
 R2 out 0 {good}
 .end
 `);
 
     expect(summary.activeLines).toStrictEqual([
-      ".func gain(x) {x*2}",
       "R1 in out {bad}",
-      "R2 out 0 1000",
+      "R2 out 0 2",
     ]);
     expect(summary.parameters.map((parameter) => [parameter.name, parameter.value])).toStrictEqual([
-      ["GOOD", 1000],
+      ["GOOD", 2],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_PARAM_EXPRESSION",
-      "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+      "SPICE_DECK_PARAM_EXPRESSION",
+      "SPICE_DECK_PARAM_EXPRESSION",
       "SPICE_DECK_PARAM_UNRESOLVED",
     ]);
-    expect(summary.diagnostics[0].parameter).toBe("BAD");
-    expect(summary.diagnostics[2].expression).toBe("bad");
+    expect(summary.diagnostics.slice(0, 3).map((diagnostic) => diagnostic.parameter)).toStrictEqual([
+      "BAD",
+      "ARITY",
+      "RECUR",
+    ]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.expression)).toStrictEqual([
+      "unknown(1)",
+      "one(1,2)",
+      "loop(1)",
+      "bad",
+    ]);
   });
 
   it("extracts .ic and .nodeset node-voltage hints", () => {

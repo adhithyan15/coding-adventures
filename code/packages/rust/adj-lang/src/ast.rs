@@ -166,6 +166,25 @@ pub enum Statement {
     /// `dictionary <name> { define … }` — a named controlled vocabulary, a
     /// first-class language construct a rulebook `use`s (M2).
     Dictionary { name: String, defines: Vec<Define> },
+    /// `rulebook <name> { … }` — a named, reusable block of clauses (MYCIN-2026
+    /// M2). The clauses lower into the KB exactly as if written at top level;
+    /// the name lets a rulebook be written once and `import`ed (M3). An inner
+    /// `use` binds the dictionary its clauses are vocabulary-checked against.
+    Rulebook {
+        name: String,
+        statements: Vec<Statement>,
+    },
+    /// `use <dictionary>` — bind a `dictionary` (by name) as the controlled
+    /// vocabulary the enclosing scope's clauses are checked against (MYCIN-2026
+    /// M2). Legal at top level or inside a `rulebook`.
+    Use(String),
+    /// `import "<relative path>"` — splice another `.adj` file's declarations
+    /// into this program (MYCIN-2026 M3). The literal string is carried verbatim;
+    /// resolution (relative path, idempotency, cycle + bound checks) happens in
+    /// [`crate::resolve`] before lowering. A program that still contains an
+    /// `Import` at lowering time was compiled without the resolver — a
+    /// [`crate::LowerError::UnresolvedImport`].
+    Import(String),
 }
 
 /// A single dictionary entry (MYCIN-2026).

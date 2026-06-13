@@ -2349,6 +2349,12 @@
             "content_word_count": 2
           }
         ],
+        "slot_descriptors": [
+          { "element": "slot", "slot_kind": "slot-element", "slot_name": "title", "named_slot": true, "fallback_text": "Untitled", "fallback_word_count": 1 },
+          { "element": "slot", "slot_kind": "slot-element", "default_slot": true, "fallback_text": "Body", "fallback_word_count": 1 },
+          { "element": "span", "slot_kind": "slotted-element", "slot": "title", "named_slot": true, "part": ["title"] },
+          { "element": "slot", "slot_kind": "slot-element", "slot_name": "footer", "named_slot": true, "fallback_text": "Fallback footer", "fallback_word_count": 2, "part": ["footer"] }
+        ],
         "component_hydration_targets": [
           { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "text": "Untitled Body" },
           { "element": "article", "part": ["frame"], "text": "Untitled Body" },
