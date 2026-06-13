@@ -319,21 +319,62 @@ Rafter out 0 {total}
 }
 
 #[test]
-fn resolve_deck_parameters_reports_unresolved_and_unsupported_func() {
+fn resolve_deck_parameters_evaluates_func_calls() {
     let summary = resolve_deck_parameters(
         "
-.param GOOD=1k BAD=missing+1
 .func gain(x) {x*2}
+.param BASE=2 SCALE=3 SHIFT=1 TOTAL=blend(base,scale,shift)
+.func blend(a,b,c) 'gain(a)+b+c'
+R1 in out {gain(total)}
+B1 out 0 V='blend(1,2,3)'
+.op
+.end
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(8));
+    assert_eq!(
+        summary.active_lines,
+        vec!["R1 in out 16", "B1 out 0 V=7", ".op"]
+    );
+    assert_eq!(
+        summary
+            .parameters
+            .iter()
+            .map(|parameter| (parameter.name.as_str(), parameter.value))
+            .collect::<Vec<_>>(),
+        vec![
+            ("BASE", 2.0),
+            ("SCALE", 3.0),
+            ("SHIFT", 1.0),
+            ("TOTAL", 8.0)
+        ]
+    );
+    assert!(summary.diagnostics.is_empty());
+}
+
+#[test]
+fn resolve_deck_parameters_reports_bad_func_calls() {
+    let summary = resolve_deck_parameters(
+        "
+.func one(x) {x+1}
+.func loop(x) {loop(x)}
+.param GOOD=one(1) BAD=unknown(1) ARITY=one(1,2) RECUR=loop(1)
 R1 in out {bad}
 R2 out 0 {good}
 .end
 ",
     );
 
-    assert!(summary.terminated);
+    assert_eq!(summary.active_lines, vec!["R1 in out {bad}", "R2 out 0 2"]);
     assert_eq!(
-        summary.active_lines,
-        vec![".func gain(x) {x*2}", "R1 in out {bad}", "R2 out 0 1000"]
+        summary
+            .parameters
+            .iter()
+            .map(|parameter| (parameter.name.as_str(), parameter.value))
+            .collect::<Vec<_>>(),
+        vec![("GOOD", 2.0)]
     );
     assert_eq!(
         summary
@@ -343,8 +384,31 @@ R2 out 0 {good}
             .collect::<Vec<_>>(),
         vec![
             "SPICE_DECK_PARAM_EXPRESSION",
-            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_PARAM_EXPRESSION",
+            "SPICE_DECK_PARAM_EXPRESSION",
             "SPICE_DECK_PARAM_UNRESOLVED"
+        ]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .take(3)
+            .map(|diagnostic| diagnostic.parameter.as_deref())
+            .collect::<Vec<_>>(),
+        vec![Some("BAD"), Some("ARITY"), Some("RECUR")]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.expression.as_deref())
+            .collect::<Vec<_>>(),
+        vec![
+            Some("unknown(1)"),
+            Some("one(1,2)"),
+            Some("loop(1)"),
+            Some("bad")
         ]
     );
 }

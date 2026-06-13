@@ -328,7 +328,7 @@ _SUPPORTED_ANALYSES = frozenset({"op", "dc", "ac", "tran", "tf"})
 _REQUIRED_ANALYSES = frozenset({"op", "dc", "ac", "tran"})
 _UNSUPPORTED_DECK_CONTROL_DIRECTIVES = frozenset({".include", ".lib", ".control"})
 _UNSUPPORTED_RESOLVED_DIRECTIVES = frozenset({".control"})
-_UNSUPPORTED_PARAMETER_DIRECTIVES = frozenset({".func"})
+_UNSUPPORTED_PARAMETER_DIRECTIVES = frozenset()
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,
@@ -406,9 +406,10 @@ def resolve_deck_sources(
 
 
 def resolve_deck_parameters(netlist: str) -> DeckParameterSummary:
-    """Evaluate scalar ``.param`` cards and rewrite braced deck expressions."""
+    """Evaluate scalar ``.param`` / ``.func`` cards and rewrite deck expressions."""
 
     state = _DeckParameterState()
+    _collect_parameter_functions(netlist, state)
     active_lines: list[str] = []
     end_line_number: int | None = None
 
@@ -422,6 +423,8 @@ def resolve_deck_parameters(netlist: str) -> DeckParameterSummary:
             break
         if directive == ".param":
             _resolve_param_line(stripped, line_number, state)
+            continue
+        if directive == ".func":
             continue
         if directive in _UNSUPPORTED_PARAMETER_DIRECTIVES:
             _add_parameter_diagnostic(
@@ -688,11 +691,13 @@ class _DeckResolutionState:
 class _DeckParameterState:
     diagnostics: list[DeckParameterDiagnostic]
     parameters: dict[str, DeckParameterValue]
+    functions: dict[str, DeckFunctionDefinition]
     order: list[str]
 
     def __init__(self) -> None:
         self.diagnostics = []
         self.parameters = {}
+        self.functions = {}
         self.order = []
 
     def set_parameter(self, name: str, value: float) -> None:
@@ -703,6 +708,12 @@ class _DeckParameterState:
 
     def parameter_values(self) -> list[DeckParameterValue]:
         return [self.parameters[key] for key in self.order]
+
+    def set_function(self, definition: DeckFunctionDefinition) -> None:
+        self.functions[definition.name.lower()] = definition
+
+    def get_function(self, name: str) -> DeckFunctionDefinition | None:
+        return self.functions.get(name.lower())
 
 
 @dataclass(slots=True)
@@ -919,6 +930,32 @@ def _resolve_param_line(
         state.set_parameter(name, value)
 
 
+def _collect_parameter_functions(netlist: str, state: _DeckParameterState) -> None:
+    function_state = _DeckFunctionState()
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            break
+        if directive == ".func":
+            _resolve_function_line(stripped, line_number, function_state)
+
+    for definition in function_state.functions:
+        state.set_function(definition)
+    for diagnostic in function_state.diagnostics:
+        _add_parameter_diagnostic(
+            state,
+            code=diagnostic.code,
+            directive=diagnostic.directive,
+            line_number=diagnostic.line_number,
+            message=diagnostic.message,
+            parameter=diagnostic.function_name,
+            expression=diagnostic.expression,
+        )
+
+
 def _rewrite_parameter_expressions(
     line: str,
     line_number: int,
@@ -976,7 +1013,7 @@ def _evaluate_parameter_expression(
     expression: str,
     state: _DeckParameterState,
 ) -> float:
-    parser = _ParameterExpressionParser(expression, state.parameters)
+    parser = _ParameterExpressionParser(expression, state.parameters, state.functions)
     value = parser.parse()
     if not isfinite(value):
         raise ValueError(f"parameter expression {expression!r} did not evaluate to a finite value")
@@ -988,9 +1025,15 @@ class _ParameterExpressionParser:
         self,
         expression: str,
         parameters: Mapping[str, DeckParameterValue],
+        functions: Mapping[str, DeckFunctionDefinition],
+        local_values: Mapping[str, float] | None = None,
+        call_stack: tuple[str, ...] = (),
     ) -> None:
         self.expression = expression
         self.parameters = parameters
+        self.functions = functions
+        self.local_values = local_values or {}
+        self.call_stack = call_stack
         self.index = 0
 
     def parse(self) -> float:
@@ -1104,13 +1147,55 @@ class _ParameterExpressionParser:
         name = self.expression[start : self.index]
         self._skip_whitespace()
         if self.index < len(self.expression) and self.expression[self.index] == "(":
-            raise ValueError(f"function calls are not supported in parameter expression {name!r}")
+            return self._evaluate_function_call(name, self._parse_call_arguments())
+        local = self.local_values.get(name.lower())
+        if local is not None:
+            return local
         if name.lower() == "pi":
             return pi
         parameter = self.parameters.get(name.lower())
         if parameter is None:
             raise ValueError(f"unknown parameter {name!r}")
         return parameter.value
+
+    def _parse_call_arguments(self) -> list[float]:
+        if not self._match("("):
+            raise ValueError("expected '(' in function call")
+        self._skip_whitespace()
+        if self._match(")"):
+            return []
+        arguments: list[float] = []
+        while True:
+            arguments.append(self._parse_expression())
+            self._skip_whitespace()
+            if self._match(","):
+                continue
+            if self._match(")"):
+                return arguments
+            raise ValueError("missing ')' in function call")
+
+    def _evaluate_function_call(self, name: str, values: Sequence[float]) -> float:
+        definition = self.functions.get(name.lower())
+        if definition is None:
+            raise ValueError(f"unknown function {name!r}")
+        if len(values) != len(definition.arguments):
+            raise ValueError(
+                f"function {name!r} expected {len(definition.arguments)} arguments but got {len(values)}"
+            )
+        key = definition.name.lower()
+        if key in self.call_stack:
+            raise ValueError(f"recursive function call {name!r}")
+        local_values = dict(self.local_values)
+        for argument, value in zip(definition.arguments, values, strict=True):
+            local_values[argument.lower()] = value
+        parser = _ParameterExpressionParser(
+            definition.expression,
+            self.parameters,
+            self.functions,
+            local_values,
+            (*self.call_stack, key),
+        )
+        return parser.parse()
 
     def _skip_whitespace(self) -> None:
         while self.index < len(self.expression) and self.expression[self.index].isspace():

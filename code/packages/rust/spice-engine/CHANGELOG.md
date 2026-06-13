@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add scalar `.func` call evaluation to `resolve_deck_parameters`: definitions
+  are collected before `.end`, calls can appear in `.param` assignments and
+  braced or quoted active-line expressions, and unknown functions, bad arity,
+  and recursive calls produce stable diagnostics, matching Python and
+  TypeScript.
 - Add `resolve_deck_functions` for scalar `.func name(args) expression`
   definition extraction before `.end`, braced or quoted expression delimiter
   stripping, and stable diagnostics for malformed signatures, arguments,
@@ -12,8 +17,8 @@
   targets and unresolved values, matching Python and TypeScript.
 - Add `resolve_deck_parameters` for scalar whitespace-tokenized `.param`
   assignment evaluation, braced and quoted active-line expression rewriting,
-  and stable diagnostics for unresolved expressions and still-unsupported
-  `.func` cards, matching Python and TypeScript.
+  and stable diagnostics for unresolved expressions, matching Python and
+  TypeScript.
 - Add `resolve_deck_sources` for map-backed `.include` and selected
   `.lib path section` expansion with stable diagnostics for missing sources,
   missing or unterminated library sections, cycles, and still-unsupported

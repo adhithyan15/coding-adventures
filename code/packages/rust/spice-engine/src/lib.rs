@@ -3439,6 +3439,7 @@ pub fn resolve_deck_sources(
 
 pub fn resolve_deck_parameters(netlist: &str) -> DeckParameterSummary {
     let mut state = DeckParameterState::new();
+    collect_parameter_functions(netlist, &mut state);
     let mut active_lines = Vec::new();
     let mut end_line_number = None;
 
@@ -3455,6 +3456,9 @@ pub fn resolve_deck_parameters(netlist: &str) -> DeckParameterSummary {
         }
         if directive.as_deref() == Some(".param") {
             resolve_param_line(stripped, line_number, &mut state);
+            continue;
+        }
+        if directive.as_deref() == Some(".func") {
             continue;
         }
         if let Some(directive) = directive {
@@ -3792,6 +3796,7 @@ impl DeckResolutionState {
 struct DeckParameterState {
     diagnostics: Vec<DeckParameterDiagnostic>,
     parameters: HashMap<String, DeckParameterValue>,
+    functions: HashMap<String, DeckFunctionDefinition>,
     order: Vec<String>,
 }
 
@@ -3800,6 +3805,7 @@ impl DeckParameterState {
         Self {
             diagnostics: Vec::new(),
             parameters: HashMap::new(),
+            functions: HashMap::new(),
             order: Vec::new(),
         }
     }
@@ -3820,6 +3826,15 @@ impl DeckParameterState {
 
     fn get_parameter(&self, name: &str) -> Option<&DeckParameterValue> {
         self.parameters.get(&name.to_ascii_lowercase())
+    }
+
+    fn set_function(&mut self, definition: DeckFunctionDefinition) {
+        self.functions
+            .insert(definition.name.to_ascii_lowercase(), definition);
+    }
+
+    fn get_function(&self, name: &str) -> Option<&DeckFunctionDefinition> {
+        self.functions.get(&name.to_ascii_lowercase())
     }
 
     fn parameter_values(&self) -> Vec<DeckParameterValue> {
@@ -4366,6 +4381,39 @@ fn resolve_param_line(line: &str, line_number: usize, state: &mut DeckParameterS
     }
 }
 
+fn collect_parameter_functions(netlist: &str, state: &mut DeckParameterState) {
+    let mut function_state = DeckFunctionState::new();
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            break;
+        }
+        if directive.as_deref() == Some(".func") {
+            resolve_function_line(stripped, line_number, &mut function_state);
+        }
+    }
+
+    for definition in function_state.functions {
+        state.set_function(definition);
+    }
+    for diagnostic in function_state.diagnostics {
+        add_parameter_diagnostic(
+            state,
+            &diagnostic.code,
+            &diagnostic.directive,
+            diagnostic.line_number,
+            &diagnostic.message,
+            diagnostic.function_name,
+            diagnostic.expression,
+        );
+    }
+}
+
 fn rewrite_parameter_expressions(
     line: &str,
     line_number: usize,
@@ -4450,6 +4498,8 @@ fn evaluate_parameter_expression(
 struct ParameterExpressionParser<'a> {
     expression: &'a str,
     state: &'a DeckParameterState,
+    local_values: HashMap<String, f64>,
+    call_stack: Vec<String>,
     index: usize,
 }
 
@@ -4458,6 +4508,23 @@ impl<'a> ParameterExpressionParser<'a> {
         Self {
             expression,
             state,
+            local_values: HashMap::new(),
+            call_stack: Vec::new(),
+            index: 0,
+        }
+    }
+
+    fn new_with_context(
+        expression: &'a str,
+        state: &'a DeckParameterState,
+        local_values: HashMap<String, f64>,
+        call_stack: Vec<String>,
+    ) -> Self {
+        Self {
+            expression,
+            state,
+            local_values,
+            call_stack,
             index: 0,
         }
     }
@@ -4617,20 +4684,74 @@ impl<'a> ParameterExpressionParser<'a> {
         {
             self.advance_char();
         }
-        let name = &self.expression[start..self.index];
+        let name = self.expression[start..self.index].to_string();
         self.skip_whitespace();
         if self.current_char() == Some('(') {
-            return Err(format!(
-                "function calls are not supported in parameter expression {name:?}"
-            ));
+            let values = self.parse_call_arguments()?;
+            return self.evaluate_function_call(&name, &values);
+        }
+        if let Some(value) = self.local_values.get(&name.to_ascii_lowercase()) {
+            return Ok(*value);
         }
         if name.eq_ignore_ascii_case("pi") {
             return Ok(std::f64::consts::PI);
         }
-        let Some(parameter) = self.state.get_parameter(name) else {
+        let Some(parameter) = self.state.get_parameter(&name) else {
             return Err(format!("unknown parameter {name:?}"));
         };
         Ok(parameter.value)
+    }
+
+    fn parse_call_arguments(&mut self) -> Result<Vec<f64>, String> {
+        if !self.match_token("(") {
+            return Err("expected '(' in function call".to_string());
+        }
+        self.skip_whitespace();
+        if self.match_token(")") {
+            return Ok(Vec::new());
+        }
+        let mut values = Vec::new();
+        loop {
+            values.push(self.parse_expression()?);
+            self.skip_whitespace();
+            if self.match_token(",") {
+                continue;
+            }
+            if self.match_token(")") {
+                return Ok(values);
+            }
+            return Err("missing ')' in function call".to_string());
+        }
+    }
+
+    fn evaluate_function_call(&self, name: &str, values: &[f64]) -> Result<f64, String> {
+        let Some(definition) = self.state.get_function(name) else {
+            return Err(format!("unknown function {name:?}"));
+        };
+        if values.len() != definition.arguments.len() {
+            return Err(format!(
+                "function {name:?} expected {} arguments but got {}",
+                definition.arguments.len(),
+                values.len()
+            ));
+        }
+        let key = definition.name.to_ascii_lowercase();
+        if self.call_stack.contains(&key) {
+            return Err(format!("recursive function call {name:?}"));
+        }
+        let mut local_values = self.local_values.clone();
+        for (argument, value) in definition.arguments.iter().zip(values.iter()) {
+            local_values.insert(argument.to_ascii_lowercase(), *value);
+        }
+        let mut call_stack = self.call_stack.clone();
+        call_stack.push(key);
+        ParameterExpressionParser::new_with_context(
+            &definition.expression,
+            self.state,
+            local_values,
+            call_stack,
+        )
+        .parse()
     }
 
     fn skip_whitespace(&mut self) {
@@ -4747,7 +4868,8 @@ fn parse_function_signature(rest: &str) -> Option<(String, Vec<String>, String)>
 }
 
 fn is_unsupported_parameter_directive(directive: &str) -> bool {
-    matches!(directive, ".func")
+    let _ = directive;
+    false
 }
 
 fn is_parameter_name(name: &str) -> bool {
