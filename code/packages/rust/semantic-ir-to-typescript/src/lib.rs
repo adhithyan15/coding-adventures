@@ -92,6 +92,16 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `for`-each → `for…of`), per code/specs/sir-runtime.md.
     Feature::MutableBindings,
     Feature::Loops,
+    // SIR17 OOP & scopes — class/module declarations register in the
+    // OOP runtime; instance/class vars route through its stores; consts
+    // are module-level bindings; `is_a?`-style dispatch goes through
+    // `__SirOop.callMethod`.  Per code/specs/sir-runtime.md, with the
+    // documented v0 limit (frontend hoists methods without receivers).
+    Feature::Classes,
+    Feature::Modules,
+    Feature::InstanceVars,
+    Feature::ClassVars,
+    Feature::Constants,
 ];
 
 impl Backend for TypeScriptBackend {
@@ -531,6 +541,127 @@ mod tests {
             "got:\n{}",
             a.source
         );
+    }
+
+    // ── SIR17 OOP & scopes: Ruby → native TS + sir-runtime-oop ──────
+
+    #[test]
+    fn end_to_end_ruby_class_inheritance_and_is_a_ts() {
+        // `class Dog < Animal` registers ancestry; `is_a?(Integer)`
+        // dispatches through the OOP runtime with the class operand
+        // passed as a name string.
+        let module = ruby_to_semantic_ir::compile_source(
+            "class Dog < Animal\n  def speak\n    42\n  end\nend\nd = 5\nputs(d.is_a?(Integer))\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains(r#"import * as __SirOop from "@coding-adventures/sir-runtime-oop";"#),
+            "expected the OOP import; got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains(r#"__SirOop.defineClass("Dog", "Animal");"#),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains(r#"__SirOop.callMethod(d, "is_a?", "Integer")"#),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_const_in_class_body_ts() {
+        let module =
+            ruby_to_semantic_ir::compile_source("class Foo\n  LEGS = 4\nend\n", "demo")
+                .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(a.source.contains(r#"__SirOop.defineClass("Foo", null);"#), "got:\n{}", a.source);
+        assert!(a.source.contains("const LEGS: __Sir.Val = 4;"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn end_to_end_ruby_class_var_ts() {
+        // `@@count` reads/writes route through the class-variable store
+        // (no class context survives method hoisting).
+        let module = ruby_to_semantic_ir::compile_source(
+            "class Foo\n  @@count = 0\n  def inc\n    @@count = @@count + 1\n  end\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(a.source.contains(r#"__SirOop.cvarSet("@@count", 0);"#), "got:\n{}", a.source);
+        assert!(
+            a.source.contains(r#"__SirOop.cvarSet("@@count", __Sir.add(__SirOop.cvarGet("@@count"), 1));"#),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn end_to_end_ruby_instance_var_ts() {
+        use semantic_ir::{Scope, Stmt};
+        // The frontend mis-parses multi-statement method bodies, so
+        // exercise the Instance scope directly: a method that writes and
+        // reads `@x` → ivarSet/ivarGet against the current self.
+        let body = Block {
+            stmts: vec![Stmt::Assign {
+                name: "@x".into(),
+                scope: Scope::Instance,
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            }],
+            value: Expr::VarRef { name: "@x".into(), scope: Scope::Instance, span: s() },
+            span: s(),
+        };
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::InstanceVars,
+                Feature::MutableBindings,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "bar".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body,
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains(r#"__SirOop.ivarSet("@x", 1);"#), "got:\n{}", a.source);
+        assert!(a.source.contains(r#"__SirOop.ivarGet("@x")"#), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn end_to_end_ruby_module_ts() {
+        let module =
+            ruby_to_semantic_ir::compile_source("module Greet\n  def hi\n    1\n  end\nend\n", "demo")
+                .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(a.source.contains(r#"__SirOop.defineClass("Greet", null);"#), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn non_oop_module_omits_oop_import() {
+        // A pure arithmetic module must not gain a dependency on the OOP
+        // runtime package.
+        let module = twig_to_semantic_ir::compile_source("(print (+ 1 2))", "demo").expect("lower");
+        let a = compile(&module).expect("compile");
+        assert!(!a.source.contains("sir-runtime-oop"), "got:\n{}", a.source);
     }
 
     #[test]

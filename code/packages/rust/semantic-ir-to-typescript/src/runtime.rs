@@ -15,6 +15,15 @@
 pub const RUNTIME: &str = r##"import * as __Sir from "@coding-adventures/sir-runtime-core";
 "##;
 
+/// The OOP-runtime import, emitted **only** when a module uses an
+/// object-orientation feature (classes/modules/instance vars/class
+/// vars/constants or reflective `is_a?`-style dispatch).  Pure
+/// non-OOP modules never gain a dependency on this package.  Bound as
+/// `__SirOop` so the emitter's `__SirOop.*` call sites resolve; see
+/// `code/specs/sir-runtime.md`.
+pub const RUNTIME_OOP: &str = r##"import * as __SirOop from "@coding-adventures/sir-runtime-oop";
+"##;
+
 #[cfg(test)]
 mod tests {
     use super::*;
