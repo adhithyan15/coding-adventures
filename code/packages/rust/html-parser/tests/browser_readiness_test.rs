@@ -12,29 +12,30 @@ use coding_adventures_html_parser::{
     BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor,
     BrowserFetchPolicyDescriptor, BrowserFocusNavigationDescriptor, BrowserForm,
     BrowserFormAssociationDescriptor, BrowserFormAutofillDescriptor, BrowserFormButton,
-    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
-    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
-    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
-    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormResetDescriptor,
-    BrowserFormSelect, BrowserFormSubmissionDescriptor, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserFormValidationDescriptor, BrowserFullscreenInteractionDescriptor,
-    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHeadingDescriptor, BrowserHttpEquivHint,
-    BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea,
-    BrowserImageMapDescriptor, BrowserImageSource, BrowserInputPlanningDescriptor,
-    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
-    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLinkResourceDescriptor,
-    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationGroupDescriptor, BrowserNavigationTargetDescriptor,
-    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
-    BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSectionLandmarkDescriptor,
-    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor,
-    BrowserStructuredDataDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserFormChoiceControl, BrowserFormControl, BrowserFormControlDescriptor,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
+    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
+    BrowserFormPolicySubmitterDescriptor, BrowserFormResetDescriptor, BrowserFormSelect,
+    BrowserFormSubmissionDescriptor, BrowserFormSubmitter, BrowserFormSuccessfulControl,
+    BrowserFormTextEntry, BrowserFormValidationControl, BrowserFormValidationDescriptor,
+    BrowserFullscreenInteractionDescriptor, BrowserGlobalStateDescriptor, BrowserHeading,
+    BrowserHeadingDescriptor, BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor,
+    BrowserImageMap, BrowserImageMapArea, BrowserImageMapDescriptor, BrowserImageSource,
+    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
+    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
+    BrowserLinkResourceDescriptor, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationGroupDescriptor,
+    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
+    BrowserScriptModuleGraphDescriptor, BrowserScriptStorageAccessDescriptor,
+    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
+    BrowserSectionLandmark, BrowserSectionLandmarkDescriptor, BrowserSelectOption,
+    BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor, BrowserStructuredDataDescriptor,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
     BrowserTableStructureDescriptor, BrowserTemplate, BrowserTemplateDescriptor,
     BrowserTextSemantic, BrowserTextSemanticDescriptor, BrowserThemeColor,
 };
@@ -118,6 +119,8 @@ struct ExpectedBrowserDocument {
     link_resource_descriptors: Option<Vec<ExpectedLinkResourceDescriptor>>,
     #[serde(default)]
     form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
+    #[serde(default)]
+    form_control_descriptors: Option<Vec<ExpectedFormControlDescriptor>>,
     #[serde(default)]
     form_association_descriptors: Option<Vec<ExpectedFormAssociationDescriptor>>,
     #[serde(default)]
@@ -1251,6 +1254,77 @@ struct ExpectedFormPolicySubmitterDescriptor {
     novalidate: bool,
     #[serde(default)]
     value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormControlDescriptor {
+    #[serde(default)]
+    form_id: Option<String>,
+    #[serde(default)]
+    form_name: Option<String>,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    control_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    label_count: usize,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
+    submission_value_count: usize,
+    #[serde(default)]
+    placeholder: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    #[serde(default)]
+    datalist_options: Vec<String>,
+    #[serde(default)]
+    option_count: usize,
+    #[serde(default)]
+    selected_options: Vec<String>,
+    #[serde(default)]
+    checked: bool,
+    #[serde(default)]
+    multiple: bool,
+    #[serde(default)]
+    autofocus: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+    #[serde(default)]
+    fieldset_ids: Vec<String>,
+    #[serde(default)]
+    fieldset_legends: Vec<String>,
+    #[serde(default)]
+    control_blocked: bool,
+    #[serde(default)]
+    control_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4575,6 +4649,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
             case.expected.table_structure_descriptors.is_some();
         let tracks_image_map_descriptors = case.expected.image_map_descriptors.is_some();
         let tracks_link_resource_descriptors = case.expected.link_resource_descriptors.is_some();
+        let tracks_form_control_descriptors = case.expected.form_control_descriptors.is_some();
         let tracks_anchor_descriptors = case.expected.anchor_descriptors.is_some();
         let tracks_heading_descriptors = case.expected.heading_descriptors.is_some();
         let tracks_text_semantic_descriptors = case.expected.text_semantic_descriptors.is_some();
@@ -4612,6 +4687,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_link_resource_descriptors {
             expected.link_resource_descriptors = actual.link_resource_descriptors.clone();
+        }
+        if !tracks_form_control_descriptors {
+            expected.form_control_descriptors = actual.form_control_descriptors.clone();
         }
         if !tracks_anchor_descriptors {
             expected.anchor_descriptors = actual.anchor_descriptors.clone();
@@ -5771,6 +5849,114 @@ fn browser_form_validation_descriptors_track_flat_candidates_and_bypass_hints() 
         actual.form_validation_descriptors, expected.form_validation_descriptors,
         "form validation descriptors should flatten validation candidates, barred controls, and submitter bypass hints",
     );
+}
+
+#[test]
+fn browser_form_control_descriptors_track_flat_control_inventory() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual =
+        parse_browser_document(&case.input).expect("form control descriptor fixture should parse");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.form_control_descriptors, expected.form_control_descriptors,
+        "form control descriptors should flatten control state, labels, values, fieldsets, and blocker metadata",
+    );
+}
+
+#[test]
+fn browser_form_control_descriptors_track_state_values_and_labels() {
+    let actual = parse_browser_document(
+        "<form id=profile name=profile>\
+         <label for=q>Query</label><input id=q name=q value=rust required list=suggestions>\
+         <datalist id=suggestions><option value=Rust><option>HTML</datalist>\
+         <select id=mode name=mode multiple><option value=web selected>Web<option value=cli>CLI</select>\
+         <button id=go name=go>Go</button></form>\
+         <input id=outside form=profile name=outside disabled>",
+    )
+    .expect("form control descriptor fixture should parse");
+
+    assert_eq!(actual.form_control_descriptors.len(), 4);
+
+    let query = &actual.form_control_descriptors[0];
+    assert_eq!(query.element, "input");
+    assert_eq!(query.id.as_deref(), Some("q"));
+    assert_eq!(query.control_kind, "successful-control");
+    assert_eq!(query.labels, vec!["Query"]);
+    assert_eq!(query.label_count, 1);
+    assert_eq!(query.value.as_deref(), Some("rust"));
+    assert_eq!(query.submission_values, vec!["rust"]);
+    assert_eq!(query.datalist_options, vec!["Rust", "HTML"]);
+    assert!(query.required);
+    assert!(query.successful);
+    assert!(query.will_validate);
+    assert!(!query.control_blocked);
+
+    let mode = &actual.form_control_descriptors[1];
+    assert_eq!(mode.element, "select");
+    assert_eq!(mode.control_kind, "selection-control");
+    assert!(mode.multiple);
+    assert_eq!(mode.option_count, 2);
+    assert_eq!(mode.selected_options, vec!["web"]);
+    assert_eq!(mode.submission_values, vec!["web"]);
+
+    let go = &actual.form_control_descriptors[2];
+    assert_eq!(go.id.as_deref(), Some("go"));
+    assert_eq!(go.control_kind, "submitter-control");
+    assert_eq!(go.accessible_name.as_deref(), Some("Go"));
+
+    let outside = &actual.form_control_descriptors[3];
+    assert_eq!(outside.form_owner.as_deref(), Some("profile"));
+    assert_eq!(outside.control_kind, "blocked-control");
+    assert!(outside.disabled);
+    assert_eq!(
+        outside.control_block_reasons,
+        vec!["disabled", "validation-barred:disabled"]
+    );
+}
+
+#[test]
+fn browser_form_control_descriptors_track_missing_names_and_blockers() {
+    let actual = parse_browser_document(
+        "<form id=survey>\
+         <fieldset id=choices disabled><legend>Choices</legend>\
+         <input id=maybe type=checkbox name=maybe></fieldset>\
+         <textarea id=notes readonly>Read only</textarea>\
+         <input id=orphan value=no-name>\
+         </form>",
+    )
+    .expect("blocked form control descriptor fixture should parse");
+
+    assert_eq!(actual.form_control_descriptors.len(), 3);
+
+    let maybe = &actual.form_control_descriptors[0];
+    assert_eq!(maybe.id.as_deref(), Some("maybe"));
+    assert_eq!(maybe.control_kind, "blocked-control");
+    assert_eq!(maybe.fieldset_ids, vec!["choices"]);
+    assert_eq!(maybe.fieldset_legends, vec!["Choices"]);
+    assert_eq!(
+        maybe.control_block_reasons,
+        vec!["disabled", "unchecked-choice", "validation-barred:disabled"]
+    );
+
+    let notes = &actual.form_control_descriptors[1];
+    assert_eq!(notes.element, "textarea");
+    assert_eq!(
+        notes.control_block_reasons,
+        vec!["missing-name", "readonly", "validation-barred:readonly"]
+    );
+
+    let orphan = &actual.form_control_descriptors[2];
+    assert_eq!(orphan.id.as_deref(), Some("orphan"));
+    assert_eq!(orphan.control_kind, "blocked-control");
+    assert_eq!(orphan.control_block_reasons, vec!["missing-name"]);
 }
 
 #[test]
@@ -8058,6 +8244,15 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedForm::into_browser_form)
             .collect();
+        let form_control_descriptors = self
+            .form_control_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedFormControlDescriptor::into_browser_form_control_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_form_control_descriptors(&forms));
         let form_association_descriptors = self
             .form_association_descriptors
             .map(|descriptors| {
@@ -8343,6 +8538,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedFormPolicyDescriptor::into_browser_form_policy_descriptor)
                 .collect(),
+            form_control_descriptors,
             form_association_descriptors,
             form_autofill_descriptors,
             form_submission_descriptors,
@@ -13932,6 +14128,161 @@ impl ExpectedFormPolicySubmitterDescriptor {
             value: self.value,
         }
     }
+}
+
+impl ExpectedFormControlDescriptor {
+    fn into_browser_form_control_descriptor(self) -> BrowserFormControlDescriptor {
+        BrowserFormControlDescriptor {
+            form_id: self.form_id,
+            form_name: self.form_name,
+            element: self.element,
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            control_kind: self.control_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            labels: self.labels,
+            label_count: self.label_count,
+            value: self.value,
+            submission_values: self.submission_values,
+            submission_value_count: self.submission_value_count,
+            placeholder: self.placeholder,
+            autocomplete_tokens: self.autocomplete_tokens,
+            datalist_options: self.datalist_options,
+            option_count: self.option_count,
+            selected_options: self.selected_options,
+            checked: self.checked,
+            multiple: self.multiple,
+            autofocus: self.autofocus,
+            disabled: self.disabled,
+            required: self.required,
+            readonly: self.readonly,
+            successful: self.successful,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
+            fieldset_ids: self.fieldset_ids,
+            fieldset_legends: self.fieldset_legends,
+            control_blocked: self.control_blocked,
+            control_block_reasons: self.control_block_reasons,
+        }
+    }
+}
+
+fn expected_form_control_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormControlDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .map(|control| expected_form_control_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn expected_form_control_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> BrowserFormControlDescriptor {
+    let fieldset_ids = expected_form_association_fieldset_ids(form, control);
+    let fieldset_legends = expected_form_association_fieldset_legends(form, control);
+    let control_block_reasons = expected_form_control_block_reasons(control);
+
+    BrowserFormControlDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        element: expected_form_association_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        control_kind: expected_form_control_kind(control, &control_block_reasons),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        accessible_description: control.accessible_description.clone(),
+        label_count: control.labels.len(),
+        labels: control.labels.clone(),
+        value: control.value.clone(),
+        submission_value_count: control.submission_values.len(),
+        submission_values: control.submission_values.clone(),
+        placeholder: control.placeholder.clone(),
+        autocomplete_tokens: control.autocomplete_tokens.clone(),
+        datalist_options: control.datalist_options.clone(),
+        option_count: control.option_items.len(),
+        selected_options: control.selected_options.clone(),
+        checked: control.checked,
+        multiple: control.multiple,
+        autofocus: control.autofocus,
+        disabled: control.disabled,
+        required: control.required,
+        readonly: control.readonly,
+        successful: control.successful,
+        will_validate: control.will_validate,
+        validation_attributes: control.validation_attributes.clone(),
+        validation_barred_reason: control.validation_barred_reason.clone(),
+        fieldset_ids,
+        fieldset_legends,
+        control_blocked: !control_block_reasons.is_empty(),
+        control_block_reasons,
+    }
+}
+
+fn expected_form_control_kind(
+    control: &BrowserFormControl,
+    control_block_reasons: &[String],
+) -> String {
+    if !control_block_reasons.is_empty() {
+        "blocked-control".to_string()
+    } else if expected_form_submitter(control) {
+        "submitter-control".to_string()
+    } else if control.control_type == "select" {
+        "selection-control".to_string()
+    } else if matches!(control.control_type.as_str(), "checkbox" | "radio") {
+        "choice-control".to_string()
+    } else if control.control_type == "file" {
+        "file-control".to_string()
+    } else if control.control_type == "hidden" {
+        "hidden-control".to_string()
+    } else if control.control_type == "output" {
+        "output-control".to_string()
+    } else if control.successful {
+        "successful-control".to_string()
+    } else {
+        "form-control".to_string()
+    }
+}
+
+fn expected_form_control_block_reasons(control: &BrowserFormControl) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if control.name.is_none() && expected_form_control_needs_name(control) {
+        reasons.push("missing-name".to_string());
+    }
+    if matches!(control.control_type.as_str(), "checkbox" | "radio") && !control.checked {
+        reasons.push("unchecked-choice".to_string());
+    }
+    if control.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(reason) = &control.validation_barred_reason {
+        let reason = format!("validation-barred:{reason}");
+        if !reasons.iter().any(|existing| existing == &reason) {
+            reasons.push(reason);
+        }
+    }
+    reasons
+}
+
+fn expected_form_control_needs_name(control: &BrowserFormControl) -> bool {
+    !matches!(control.control_type.as_str(), "button" | "output" | "reset")
 }
 
 impl ExpectedFormAssociationDescriptor {
