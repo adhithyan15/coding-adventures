@@ -371,6 +371,87 @@ pub struct IntegrationCatalogEntry {
     pub notes: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationCatalogEntrySummary {
+    pub integration_id: IntegrationId,
+    pub display_name: String,
+    pub category: IntegrationCategory,
+    pub connectivity: ConnectivityClass,
+    pub runtime_kind: RuntimeKind,
+    pub implementation_status: ImplementationStatus,
+    pub priority: u8,
+    pub discovery_mechanism_count: usize,
+    pub auth_mode_count: usize,
+    pub required_capability_count: usize,
+    pub target_entity_kind_count: usize,
+    pub supported_protocol_count: usize,
+    pub dependency_count: usize,
+    pub virtual_iot_standard_count: usize,
+    pub required_primitive_count: usize,
+    pub source_ref_count: usize,
+    pub note_count: usize,
+    pub policy_surface_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+    pub virtual_alias: bool,
+    pub has_dependencies: bool,
+    pub requires_human_review: bool,
+}
+
+impl IntegrationCatalogEntrySummary {
+    pub fn from_entry(entry: &IntegrationCatalogEntry) -> Self {
+        let policy_surfaces = entry.policy_surfaces();
+        let highest_policy_tier = policy_surfaces
+            .iter()
+            .map(|surface| surface.required_tier())
+            .max()
+            .unwrap_or(PrivilegeTier::ReadOnly);
+        let local_only = entry.is_local() && !entry.requires_cloud();
+        let cloud_required = entry.requires_cloud()
+            || entry
+                .discovery_mechanisms
+                .contains(&DiscoveryMechanism::CloudAccount);
+        let has_dependencies = !entry.depends_on_integrations.is_empty();
+        let virtual_alias = entry.is_virtual() || entry.virtual_target.is_some();
+
+        Self {
+            integration_id: entry.integration_id.clone(),
+            display_name: entry.display_name.clone(),
+            category: entry.category,
+            connectivity: entry.connectivity,
+            runtime_kind: entry.runtime_kind,
+            implementation_status: entry.implementation_status,
+            priority: entry.priority,
+            discovery_mechanism_count: entry.discovery_mechanisms.len(),
+            auth_mode_count: entry.auth_modes.len(),
+            required_capability_count: entry.required_capabilities.len(),
+            target_entity_kind_count: entry.target_entity_kinds.len(),
+            supported_protocol_count: entry.supported_protocols.len(),
+            dependency_count: entry.depends_on_integrations.len(),
+            virtual_iot_standard_count: entry.virtual_iot_standards.len(),
+            required_primitive_count: entry.required_primitives.len(),
+            source_ref_count: entry.source_refs.len(),
+            note_count: entry.notes.len(),
+            policy_surface_count: policy_surfaces.len(),
+            highest_policy_tier,
+            local_only,
+            cloud_required,
+            virtual_alias,
+            has_dependencies,
+            requires_human_review: highest_policy_tier >= PrivilegeTier::HumanApproval,
+        }
+    }
+
+    pub fn has_catalog_metadata(&self) -> bool {
+        self.discovery_mechanism_count > 0
+            && self.auth_mode_count > 0
+            && self.required_capability_count > 0
+            && self.required_primitive_count > 0
+            && self.source_ref_count > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IntegrationCatalogSort {
     PriorityThenName,
@@ -14066,6 +14147,10 @@ impl IntegrationActivationPlan {
 }
 
 impl IntegrationCatalogEntry {
+    pub fn summary(&self) -> IntegrationCatalogEntrySummary {
+        IntegrationCatalogEntrySummary::from_entry(self)
+    }
+
     pub fn is_virtual(&self) -> bool {
         self.category == IntegrationCategory::VirtualAlias
     }
@@ -14904,6 +14989,10 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "ultraloq",
         ),
     ]
+}
+
+pub fn hue_catalog_entry_summary() -> IntegrationCatalogEntrySummary {
+    hue_entry().summary()
 }
 
 pub fn find_entry<'a>(
@@ -23655,6 +23744,35 @@ mod tests {
         assert!(hue.requires_primitive(PrimitiveFamily::ServerSentEvents));
         assert!(hue.requires_primitive(PrimitiveFamily::LocalPairing));
         assert!(hue.requires_primitive(PrimitiveFamily::Supervision));
+    }
+
+    #[test]
+    fn catalog_entry_summary_compacts_hue_package_shape() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let summary = hue_catalog_entry_summary();
+
+        assert_eq!(summary, hue.summary());
+        assert_eq!(summary.integration_id, IntegrationId::trusted("hue"));
+        assert_eq!(summary.category, IntegrationCategory::LocalHub);
+        assert_eq!(summary.connectivity, ConnectivityClass::LocalPush);
+        assert_eq!(
+            summary.implementation_status,
+            ImplementationStatus::Scaffolded
+        );
+        assert_eq!(summary.discovery_mechanism_count, 2);
+        assert_eq!(summary.auth_mode_count, 2);
+        assert_eq!(summary.required_capability_count, 3);
+        assert_eq!(summary.supported_protocol_count, 2);
+        assert_eq!(summary.dependency_count, 0);
+        assert!(summary.local_only);
+        assert!(!summary.cloud_required);
+        assert!(!summary.virtual_alias);
+        assert!(!summary.has_dependencies);
+        assert!(summary.has_catalog_metadata());
+        assert!(summary.policy_surface_count >= 2);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
+        assert!(summary.requires_human_review);
     }
 
     #[test]

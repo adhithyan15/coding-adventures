@@ -30,6 +30,9 @@ All notable changes to this package will be documented in this file.
   platform lessons overlap a priority-bounded reusable primitive backlog.
 - Query helpers for integration id, category, connectivity, capability,
   primitive family, implementation status, and rollout priority.
+- `IntegrationCatalogEntrySummary` and `hue_catalog_entry_summary` for compact
+  Hue package/spec metadata, local/cloud, policy-tier, and catalog shape
+  inspection.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
