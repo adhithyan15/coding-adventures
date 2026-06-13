@@ -117,6 +117,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationReleasePacket` and
   `IntegrationActivationReleaseSummary` for turning closure gates into compact
   activation release go/no-go packets.
+- `IntegrationActivationDeliveryManifest` and
+  `IntegrationActivationDeliverySummary` for turning release packets into
+  delivery-channel manifests and readiness rollups.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.

@@ -1604,6 +1604,82 @@ impl IntegrationActivationReleaseStatus {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationDeliveryStatus {
+    Blocked,
+    AwaitingVerification,
+    AwaitingOwner,
+    ReadyToDeliver,
+    Monitoring,
+}
+
+impl IntegrationActivationDeliveryStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocked => "blocked",
+            Self::AwaitingVerification => "awaiting_verification",
+            Self::AwaitingOwner => "awaiting_owner",
+            Self::ReadyToDeliver => "ready_to_deliver",
+            Self::Monitoring => "monitoring",
+        }
+    }
+
+    pub fn from_release_packet(packet: &IntegrationActivationReleasePacket) -> Self {
+        if packet.release_blocked() {
+            if packet.needs_verification() {
+                Self::AwaitingVerification
+            } else if packet.release_status
+                == IntegrationActivationReleaseStatus::OwnerActionRequired
+            {
+                Self::AwaitingOwner
+            } else {
+                Self::Blocked
+            }
+        } else if packet.release_ready() {
+            Self::ReadyToDeliver
+        } else {
+            Self::Monitoring
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationDeliveryChannel {
+    Platform,
+    Integration,
+    Security,
+    Verification,
+    Audit,
+    Monitoring,
+}
+
+impl IntegrationActivationDeliveryChannel {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Platform => "platform",
+            Self::Integration => "integration",
+            Self::Security => "security",
+            Self::Verification => "verification",
+            Self::Audit => "audit",
+            Self::Monitoring => "monitoring",
+        }
+    }
+
+    pub fn from_release_packet(packet: &IntegrationActivationReleasePacket) -> Self {
+        if packet.release_status == IntegrationActivationReleaseStatus::Monitoring {
+            return Self::Monitoring;
+        }
+        match packet.owner_lane {
+            IntegrationActivationResponseOwnerLane::Platform => Self::Platform,
+            IntegrationActivationResponseOwnerLane::Integration => Self::Integration,
+            IntegrationActivationResponseOwnerLane::Security => Self::Security,
+            IntegrationActivationResponseOwnerLane::Reviewer
+            | IntegrationActivationResponseOwnerLane::Verification => Self::Verification,
+            IntegrationActivationResponseOwnerLane::Audit => Self::Audit,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationAuditRecordKind {
     Sentinel,
     Watchtower,
@@ -3547,6 +3623,73 @@ pub struct IntegrationActivationReleaseSummary {
     pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
     pub next_packet_sequence: Option<usize>,
     pub next_packet_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationDeliveryManifest {
+    pub sequence: usize,
+    pub delivery_status: IntegrationActivationDeliveryStatus,
+    pub delivery_channel: IntegrationActivationDeliveryChannel,
+    pub owner_lane: IntegrationActivationResponseOwnerLane,
+    pub source_release_sequence: usize,
+    pub source_release_status: IntegrationActivationReleaseStatus,
+    pub source_closure_status: IntegrationActivationClosureStatus,
+    pub source_remediation_kind: IntegrationActivationRemediationKind,
+    pub source_remediation_status: IntegrationActivationRemediationStatus,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub dependency_work: bool,
+    pub policy_risk: bool,
+    pub verification_required: bool,
+    pub release_ready: bool,
+    pub delivery_blocked: bool,
+    pub delivery_ready: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationDeliverySummary {
+    pub total_manifests: usize,
+    pub unique_integrations: usize,
+    pub manifests_requiring_attention: usize,
+    pub blocked_manifests: usize,
+    pub awaiting_verification_manifests: usize,
+    pub awaiting_owner_manifests: usize,
+    pub ready_to_deliver_manifests: usize,
+    pub monitoring_manifests: usize,
+    pub platform_channel_manifests: usize,
+    pub integration_channel_manifests: usize,
+    pub security_channel_manifests: usize,
+    pub verification_channel_manifests: usize,
+    pub audit_channel_manifests: usize,
+    pub monitoring_channel_manifests: usize,
+    pub platform_owner_manifests: usize,
+    pub integration_owner_manifests: usize,
+    pub security_owner_manifests: usize,
+    pub reviewer_owner_manifests: usize,
+    pub verification_owner_manifests: usize,
+    pub audit_owner_manifests: usize,
+    pub manifests_with_dependency_work: usize,
+    pub manifests_with_policy_risk: usize,
+    pub manifests_requiring_verification: usize,
+    pub manifests_ready_to_deliver: usize,
+    pub manifests_with_policy_surface: usize,
+    pub next_delivery_status: Option<IntegrationActivationDeliveryStatus>,
+    pub next_delivery_channel: Option<IntegrationActivationDeliveryChannel>,
+    pub next_release_status: Option<IntegrationActivationReleaseStatus>,
+    pub next_owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_manifest_sequence: Option<usize>,
+    pub next_manifest_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
@@ -9939,6 +10082,279 @@ impl IntegrationActivationReleaseSummary {
     }
 }
 
+impl IntegrationActivationDeliveryManifest {
+    fn from_release_packet(packet: &IntegrationActivationReleasePacket) -> Self {
+        let delivery_status = IntegrationActivationDeliveryStatus::from_release_packet(packet);
+        let delivery_channel = IntegrationActivationDeliveryChannel::from_release_packet(packet);
+        let delivery_ready = delivery_status == IntegrationActivationDeliveryStatus::ReadyToDeliver;
+        let delivery_blocked = matches!(
+            delivery_status,
+            IntegrationActivationDeliveryStatus::Blocked
+                | IntegrationActivationDeliveryStatus::AwaitingVerification
+                | IntegrationActivationDeliveryStatus::AwaitingOwner
+        );
+
+        Self {
+            sequence: 0,
+            delivery_status,
+            delivery_channel,
+            owner_lane: packet.owner_lane,
+            source_release_sequence: packet.sequence,
+            source_release_status: packet.release_status,
+            source_closure_status: packet.source_closure_status,
+            source_remediation_kind: packet.source_remediation_kind,
+            source_remediation_status: packet.source_remediation_status,
+            source_id: packet.source_id.clone(),
+            title: format!("{}: {}", delivery_status.as_str(), packet.title),
+            summary: packet.summary.clone(),
+            priority: packet.priority,
+            integration_ids: packet.integration_ids.clone(),
+            recommended_view: packet.recommended_view,
+            required_tier: packet.required_tier,
+            policy_surface: packet.policy_surface,
+            dependency_work: packet.has_dependency_work(),
+            policy_risk: packet.has_policy_risk(),
+            verification_required: packet.needs_verification(),
+            release_ready: packet.release_ready(),
+            delivery_blocked,
+            delivery_ready,
+            requires_attention: packet.requires_attention() || delivery_status.requires_attention(),
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_work
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.verification_required
+    }
+
+    pub fn delivery_blocked(&self) -> bool {
+        self.delivery_blocked
+    }
+
+    pub fn delivery_ready(&self) -> bool {
+        self.delivery_ready
+    }
+
+    pub fn release_ready(&self) -> bool {
+        self.release_ready
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationDeliveryStatus {
+    pub fn requires_attention(self) -> bool {
+        matches!(
+            self,
+            Self::Blocked | Self::AwaitingVerification | Self::AwaitingOwner
+        )
+    }
+}
+
+impl IntegrationActivationDeliverySummary {
+    pub fn from_manifests<'a>(
+        manifests: impl IntoIterator<Item = &'a IntegrationActivationDeliveryManifest>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_manifests: 0,
+            unique_integrations: 0,
+            manifests_requiring_attention: 0,
+            blocked_manifests: 0,
+            awaiting_verification_manifests: 0,
+            awaiting_owner_manifests: 0,
+            ready_to_deliver_manifests: 0,
+            monitoring_manifests: 0,
+            platform_channel_manifests: 0,
+            integration_channel_manifests: 0,
+            security_channel_manifests: 0,
+            verification_channel_manifests: 0,
+            audit_channel_manifests: 0,
+            monitoring_channel_manifests: 0,
+            platform_owner_manifests: 0,
+            integration_owner_manifests: 0,
+            security_owner_manifests: 0,
+            reviewer_owner_manifests: 0,
+            verification_owner_manifests: 0,
+            audit_owner_manifests: 0,
+            manifests_with_dependency_work: 0,
+            manifests_with_policy_risk: 0,
+            manifests_requiring_verification: 0,
+            manifests_ready_to_deliver: 0,
+            manifests_with_policy_surface: 0,
+            next_delivery_status: None,
+            next_delivery_channel: None,
+            next_release_status: None,
+            next_owner_lane: None,
+            next_recommended_view: None,
+            next_manifest_sequence: None,
+            next_manifest_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for manifest in manifests {
+            summary.total_manifests += 1;
+            for integration_id in &manifest.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_delivery_status.is_none()
+                && (manifest.requires_attention()
+                    || manifest.needs_verification()
+                    || manifest.delivery_ready())
+            {
+                summary.next_delivery_status = Some(manifest.delivery_status);
+                summary.next_delivery_channel = Some(manifest.delivery_channel);
+                summary.next_release_status = Some(manifest.source_release_status);
+                summary.next_owner_lane = Some(manifest.owner_lane);
+                summary.next_recommended_view = Some(manifest.recommended_view);
+                summary.next_manifest_sequence = Some(manifest.sequence);
+                summary.next_manifest_priority = Some(manifest.priority);
+            }
+
+            match manifest.delivery_status {
+                IntegrationActivationDeliveryStatus::Blocked => summary.blocked_manifests += 1,
+                IntegrationActivationDeliveryStatus::AwaitingVerification => {
+                    summary.awaiting_verification_manifests += 1;
+                }
+                IntegrationActivationDeliveryStatus::AwaitingOwner => {
+                    summary.awaiting_owner_manifests += 1;
+                }
+                IntegrationActivationDeliveryStatus::ReadyToDeliver => {
+                    summary.ready_to_deliver_manifests += 1;
+                }
+                IntegrationActivationDeliveryStatus::Monitoring => {
+                    summary.monitoring_manifests += 1;
+                }
+            }
+
+            match manifest.delivery_channel {
+                IntegrationActivationDeliveryChannel::Platform => {
+                    summary.platform_channel_manifests += 1;
+                }
+                IntegrationActivationDeliveryChannel::Integration => {
+                    summary.integration_channel_manifests += 1;
+                }
+                IntegrationActivationDeliveryChannel::Security => {
+                    summary.security_channel_manifests += 1;
+                }
+                IntegrationActivationDeliveryChannel::Verification => {
+                    summary.verification_channel_manifests += 1;
+                }
+                IntegrationActivationDeliveryChannel::Audit => {
+                    summary.audit_channel_manifests += 1;
+                }
+                IntegrationActivationDeliveryChannel::Monitoring => {
+                    summary.monitoring_channel_manifests += 1;
+                }
+            }
+
+            match manifest.owner_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_owner_manifests += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_owner_manifests += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_owner_manifests += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_owner_manifests += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_owner_manifests += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Audit => {
+                    summary.audit_owner_manifests += 1;
+                }
+            }
+
+            if manifest.requires_attention() {
+                summary.manifests_requiring_attention += 1;
+                summary.first_attention_priority = min_optional_priority(
+                    summary.first_attention_priority,
+                    Some(manifest.priority),
+                );
+            }
+            if manifest.has_dependency_work() {
+                summary.manifests_with_dependency_work += 1;
+            }
+            if manifest.has_policy_risk() {
+                summary.manifests_with_policy_risk += 1;
+            }
+            if manifest.needs_verification() {
+                summary.manifests_requiring_verification += 1;
+            }
+            if manifest.delivery_ready() {
+                summary.manifests_ready_to_deliver += 1;
+            }
+            if manifest.has_policy_surface() {
+                summary.manifests_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(manifest.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_manifests > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.manifests_requiring_attention > 0
+            || summary.awaiting_verification_manifests > 0
+            || summary.awaiting_owner_manifests > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.ready_to_deliver_manifests > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_manifests == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_manifests > 0
+    }
+
+    pub fn has_owner_action(&self) -> bool {
+        self.awaiting_owner_manifests > 0
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.awaiting_verification_manifests > 0 || self.manifests_requiring_verification > 0
+    }
+
+    pub fn delivery_ready(&self) -> bool {
+        self.ready_to_deliver_manifests > 0 || self.manifests_ready_to_deliver > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.manifests_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -15096,6 +15512,38 @@ pub fn activation_release_packets_at_or_before_priority(
     activation_release_packets_from_closure_gates(&gates)
 }
 
+pub fn activation_delivery_manifests_from_release_packets(
+    packets: &[IntegrationActivationReleasePacket],
+) -> Vec<IntegrationActivationDeliveryManifest> {
+    let mut manifests: Vec<_> = packets
+        .iter()
+        .map(IntegrationActivationDeliveryManifest::from_release_packet)
+        .collect();
+
+    manifests.sort_by(compare_activation_delivery_manifests);
+    for (index, manifest) in manifests.iter_mut().enumerate() {
+        manifest.sequence = index + 1;
+    }
+    manifests
+}
+
+pub fn activation_delivery_manifests_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationDeliveryManifest> {
+    let packets = activation_release_packets_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_delivery_manifests_from_release_packets(&packets)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -16771,6 +17219,30 @@ fn compare_activation_release_packets(
         .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
         .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
         .then_with(|| left.source_closure_status.cmp(&right.source_closure_status))
+        .then_with(|| {
+            left.source_remediation_kind
+                .cmp(&right.source_remediation_kind)
+        })
+        .then_with(|| left.owner_lane.cmp(&right.owner_lane))
+        .then_with(|| left.source_id.cmp(&right.source_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_delivery_manifests(
+    left: &IntegrationActivationDeliveryManifest,
+    right: &IntegrationActivationDeliveryManifest,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.delivery_status.cmp(&right.delivery_status))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.delivery_blocked().cmp(&left.delivery_blocked()))
+        .then_with(|| right.needs_verification().cmp(&left.needs_verification()))
+        .then_with(|| right.delivery_ready().cmp(&left.delivery_ready()))
+        .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
+        .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| left.delivery_channel.cmp(&right.delivery_channel))
+        .then_with(|| left.source_release_status.cmp(&right.source_release_status))
         .then_with(|| {
             left.source_remediation_kind
                 .cmp(&right.source_remediation_kind)
@@ -20399,6 +20871,42 @@ mod tests {
         );
         assert_eq!(
             release_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
+        let delivery_manifests =
+            activation_delivery_manifests_from_release_packets(&release_packets);
+        assert_eq!(delivery_manifests.len(), release_packets.len());
+        assert!(delivery_manifests.iter().any(
+            |manifest| manifest.delivery_status == IntegrationActivationDeliveryStatus::Blocked
+        ));
+        assert!(delivery_manifests
+            .iter()
+            .any(|manifest| manifest.delivery_status
+                == IntegrationActivationDeliveryStatus::AwaitingVerification));
+        assert!(delivery_manifests
+            .iter()
+            .any(IntegrationActivationDeliveryManifest::requires_attention));
+        assert!(delivery_manifests
+            .iter()
+            .any(IntegrationActivationDeliveryManifest::delivery_blocked));
+
+        let delivery_summary =
+            IntegrationActivationDeliverySummary::from_manifests(delivery_manifests.iter());
+        assert_eq!(delivery_summary.total_manifests, delivery_manifests.len());
+        assert!(delivery_summary.has_blockers());
+        assert!(delivery_summary.needs_verification());
+        assert!(delivery_summary.requires_attention());
+        assert_eq!(
+            delivery_summary.next_delivery_status,
+            Some(IntegrationActivationDeliveryStatus::Blocked)
+        );
+        assert_eq!(
+            delivery_summary.next_owner_lane,
+            Some(IntegrationActivationResponseOwnerLane::Platform)
+        );
+        assert_eq!(
+            delivery_summary.overall_status,
             IntegrationActivationHealthStatus::Blocked
         );
 
