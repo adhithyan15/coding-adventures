@@ -215,21 +215,16 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
     // needs an operator-precedence table.
     ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
-    // gap-103 (CLOC14.47): a CLASS-BODY computed `get`/`set` accessor
-    // needs the same separating space as gap-073's object-literal case
-    // (`get [x](){}`), but gap-073 only fires when the accessor is
-    // preceded by `{` or `,` (object-literal context). In a class body
-    // the accessor can also follow a previous method's `}` (consecutive
-    // members) or the `static` modifier — `class A{get[x](){}set[x](v){}}`
-    // → `get [x](){}set [x](v){}` (the SECOND `set` loses its space),
-    // `class A{m(){}get[x](){}}`, and `class A{static get[x](){}}`. The
-    // fix extends gap-073's `before_kw` context set to include `}` and
-    // `static` (and the method-shape guards already prevent false
-    // positives). The FIRST accessor in a class (preceded by `{`) and
-    // all object-literal accessors already work.
-    ("class_accessor_pair",         "gap-103: 2nd class computed accessor misses space"),
-    ("class_accessor_after_method", "gap-103: class computed accessor after a method } misses space"),
-    ("class_static_accessor",       "gap-103: static computed accessor misses space"),
+    // gap-103 RESOLVED in CLOC12.107 — a CLASS-BODY computed `get`/`set`
+    // accessor preceded by a previous member's `}` (consecutive members)
+    // or the `static` modifier now gets the same separating space
+    // gap-073 gives object-literal accessors (`get [x](){}`). gap-073's
+    // `before_kw` context set gained `}` and `static`; a new method-body
+    // guard (the accessor's `)` must be followed by `{`) keeps a
+    // statement-block `}` + variable-index-call (`if(x){}get[k](x)`)
+    // from being a false positive. `minify_class_accessor_pair` /
+    // `minify_class_accessor_after_method` / `minify_class_static_accessor`
+    // enforced.
     // gap-086 RESOLVED in CLOC12.93 — redundant parens around a whole
     // CALL ARGUMENT (`f((a))` → `f(a)`, `f((a+b))` → `f(a+b)`,
     // `f((a),(b))` → `f(a,b)`) now elide via a call-open-anchored

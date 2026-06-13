@@ -4093,9 +4093,19 @@ fn get_set_computed_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bo
     if !(is_word_like(kw) && (kw.value == "get" || kw.value == "set")) {
         return false;
     }
-    // Property-start context: an object-literal `{` or `,`.
+    // Property-start context. An object-literal property starts after
+    // `{` or `,`. gap-103 adds the two CLASS-BODY accessor positions:
+    // after a previous member's `}` (consecutive members, no comma
+    // separator) and after the `static` modifier. `static` before a
+    // `get`/`set` is unambiguous — two adjacent identifiers never form
+    // an expression, so it is always the class modifier.
     let before_kw = kept[idx - 2];
-    if !(is_structural_punct(before_kw, "{") || is_structural_punct(before_kw, ",")) {
+    let static_ctx = is_word_like(before_kw) && before_kw.value == "static";
+    if !(is_structural_punct(before_kw, "{")
+        || is_structural_punct(before_kw, ",")
+        || is_structural_punct(before_kw, "}")
+        || static_ctx)
+    {
         return false;
     }
     // Find the matching `]` (structural depth scan).
@@ -4115,13 +4125,47 @@ fn get_set_computed_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bo
         }
         j += 1;
     }
-    // The accessor's parameter list `(` must immediately follow.
-    match close {
-        Some(c) => kept
-            .get(c + 1)
-            .is_some_and(|t| is_structural_punct(t, "(")),
-        None => false,
+    // The accessor's parameter list `(` must immediately follow `]`.
+    let Some(c) = close else { return false };
+    let param_open = c + 1;
+    if !kept
+        .get(param_open)
+        .is_some_and(|t| is_structural_punct(t, "("))
+    {
+        return false;
     }
+    // gap-103 METHOD-BODY guard: a real accessor's parameter list is
+    // followed by a `{` body — `get[x](){…}`. A bare variable index +
+    // call (`get[k](x);`) is followed by `;`/an operator/EOF instead.
+    // This is the decisive disambiguator that makes the `}` before-
+    // context safe: `if(x){}get[k](x);` (where `get` is a variable, the
+    // `}` a statement-block close) has its `)` followed by `;`, so it is
+    // correctly rejected, while `class A{…}get[x](){}` (the `}` a class
+    // member close) has its `)` followed by `{`. (The `{`/`,`/`static`
+    // contexts already imply an accessor, but applying the guard
+    // uniformly only strengthens them — an accessor always has a body.)
+    let mut depth: i32 = 1;
+    let mut k = param_open + 1;
+    while k < kept.len() {
+        let t = kept[k];
+        if is_structural_punct(t, "(")
+            || is_structural_punct(t, "[")
+            || is_structural_punct(t, "{")
+        {
+            depth += 1;
+        } else if is_structural_punct(t, ")") {
+            depth -= 1;
+            if depth == 0 {
+                break;
+            }
+        } else if is_structural_punct(t, "]") || is_structural_punct(t, "}") {
+            depth -= 1;
+        }
+        k += 1;
+    }
+    kept
+        .get(k + 1)
+        .is_some_and(|t| is_structural_punct(t, "{"))
 }
 
 /// gap-097: True iff the token at `idx` is the `*` of an ASYNC GENERATOR
@@ -6588,6 +6632,43 @@ mod tests {
         assert_eq!(minify("x={await(x){}};"), "x={await(x){}};");
         assert_eq!(minify("a.await(x);"), "a.await(x);");
         assert_eq!(minify("o.await(a+b);"), "o.await(a+b);");
+    }
+
+    // ---- gap-103: class-body computed accessor separating space ---
+
+    /// gap-103: a class-body `get`/`set` computed accessor preceded by
+    /// a previous member's `}` or the `static` modifier needs the same
+    /// separating space gap-073 gives object-literal accessors.
+    #[test]
+    fn gap103_class_computed_accessor_spaced() {
+        assert_eq!(
+            minify("class A{get[x](){}set[x](v){}}"),
+            "class A{get [x](){}set [x](v){}};"
+        );
+        assert_eq!(
+            minify("class A{m(){}get[x](){}}"),
+            "class A{m(){}get [x](){}};"
+        );
+        assert_eq!(
+            minify("class A{static get[x](){}}"),
+            "class A{static get [x](){}};"
+        );
+        assert_eq!(
+            minify("class A{static set[x](v){}}"),
+            "class A{static set [x](v){}};"
+        );
+    }
+
+    /// gap-103 SAFETY: the `}`-before-context is disambiguated by the
+    /// method-body guard (the accessor's `)` must be followed by `{`).
+    /// A statement-block `}` followed by a variable index + call
+    /// (`if(x){}get[k](x)`, where `get` is a variable, `)` followed by
+    /// `;`) must NOT gain a space.
+    #[test]
+    fn gap103_statement_block_get_index_not_spaced() {
+        assert_eq!(minify("if(x){}get[k](x);"), "if(x);get[k](x);");
+        assert_eq!(minify("for(;;){}get[k](x);"), "for(;;);get[k](x);");
+        assert_eq!(minify("while(x){}set[k](x);"), "while(x);set[k](x);");
     }
 
     // ---- gap-078: binary symbol-operator right-operand elision --
