@@ -5,34 +5,34 @@ use coding_adventures_html_parser::{
     BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserClipboardInteractionDescriptor,
     BrowserCommandElement, BrowserComponentHydrationTarget,
     BrowserCompositionInteractionDescriptor, BrowserContextMenuInteractionDescriptor,
-    BrowserDataAttribute, BrowserDataAttributeDescriptor, BrowserDatalistOption, BrowserDisclosure,
-    BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
-    BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor, BrowserEmbeddedContext,
-    BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
-    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormAssociationDescriptor,
-    BrowserFormAutofillDescriptor, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
-    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
-    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
-    BrowserFormPolicySubmitterDescriptor, BrowserFormResetDescriptor, BrowserFormSelect,
-    BrowserFormSubmissionDescriptor, BrowserFormSubmitter, BrowserFormSuccessfulControl,
-    BrowserFormTextEntry, BrowserFormValidationControl, BrowserFormValidationDescriptor,
-    BrowserFullscreenInteractionDescriptor, BrowserGlobalStateDescriptor, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
-    BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
-    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
-    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
-    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
-    BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTemplateDescriptor,
-    BrowserTextSemantic, BrowserThemeColor,
+    BrowserCustomElementDescriptor, BrowserDataAttribute, BrowserDataAttributeDescriptor,
+    BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
+    BrowserDocumentMetadata, BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor,
+    BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor,
+    BrowserFetchPolicyDescriptor, BrowserFocusNavigationDescriptor, BrowserForm,
+    BrowserFormAssociationDescriptor, BrowserFormAutofillDescriptor, BrowserFormButton,
+    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
+    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
+    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
+    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormResetDescriptor,
+    BrowserFormSelect, BrowserFormSubmissionDescriptor, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserFormValidationDescriptor, BrowserFullscreenInteractionDescriptor,
+    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
+    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
+    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
+    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
+    BrowserScriptModuleGraphDescriptor, BrowserScriptStorageAccessDescriptor,
+    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
+    BrowserSectionLandmark, BrowserSelectOption, BrowserSelectionInteractionDescriptor,
+    BrowserSlotDescriptor, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
+    BrowserTemplateDescriptor, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -192,6 +192,8 @@ struct ExpectedBrowserDocument {
     template_descriptors: Option<Vec<ExpectedTemplateDescriptor>>,
     #[serde(default)]
     slot_descriptors: Option<Vec<ExpectedSlotDescriptor>>,
+    #[serde(default)]
+    custom_element_descriptors: Option<Vec<ExpectedCustomElementDescriptor>>,
     #[serde(default)]
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
     #[serde(default)]
@@ -428,6 +430,43 @@ struct ExpectedSlotDescriptor {
     slot_blocked: bool,
     #[serde(default)]
     slot_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedCustomElementDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    custom_element_kind: String,
+    #[serde(default)]
+    definition_name: Option<String>,
+    #[serde(default)]
+    custom_element_name: Option<String>,
+    #[serde(default)]
+    custom_element_is: Option<String>,
+    #[serde(default)]
+    autonomous_custom_element: bool,
+    #[serde(default)]
+    customized_builtin: bool,
+    #[serde(default)]
+    extends_element: Option<String>,
+    #[serde(default)]
+    custom_element_name_valid: bool,
+    #[serde(default)]
+    slot: Option<String>,
+    #[serde(default)]
+    part: Vec<String>,
+    #[serde(default)]
+    exportparts: Option<String>,
+    #[serde(default)]
+    data_attribute_names: Vec<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    custom_element_blocked: bool,
+    #[serde(default)]
+    custom_element_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4150,6 +4189,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
             case.expected.aria_description_descriptors.is_some();
         let tracks_template_descriptors = case.expected.template_descriptors.is_some();
         let tracks_slot_descriptors = case.expected.slot_descriptors.is_some();
+        let tracks_custom_element_descriptors = case.expected.custom_element_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4162,6 +4202,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_slot_descriptors {
             expected.slot_descriptors = actual.slot_descriptors.clone();
+        }
+        if !tracks_custom_element_descriptors {
+            expected.custom_element_descriptors = actual.custom_element_descriptors.clone();
         }
 
         assert_eq!(
@@ -6516,6 +6559,95 @@ fn browser_slot_descriptors_track_blank_slot_blockers() {
 }
 
 #[test]
+fn browser_custom_element_descriptors_track_autonomous_and_customized_builtins() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "component-template-page")
+        .expect("component template fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("component template fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.custom_element_descriptors,
+        case
+            .expected
+            .into_browser_document()
+            .custom_element_descriptors,
+        "custom element descriptors should preserve autonomous and customized built-in upgrade hints",
+    );
+}
+
+#[test]
+fn browser_custom_element_descriptors_track_invalid_definition_hints() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <button is=plain-button>Valid built-in</button>
+            <button is=plain>Invalid built-in</button>
+            <button is="">Empty built-in</button>
+            <x-card is=fancy-button>Autonomous with is</x-card>
+        </body>"#,
+    )
+    .expect("custom element blocker fixture should parse");
+
+    let valid = actual
+        .custom_element_descriptors
+        .iter()
+        .find(|descriptor| descriptor.custom_element_is.as_deref() == Some("plain-button"))
+        .expect("valid customized built-in descriptor should be present");
+
+    assert_eq!(valid.custom_element_kind, "customized-built-in");
+    assert_eq!(valid.definition_name.as_deref(), Some("plain-button"));
+    assert!(valid.custom_element_name_valid);
+    assert!(valid.customized_builtin);
+    assert_eq!(valid.extends_element.as_deref(), Some("button"));
+    assert!(!valid.custom_element_blocked);
+
+    let invalid = actual
+        .custom_element_descriptors
+        .iter()
+        .find(|descriptor| descriptor.custom_element_is.as_deref() == Some("plain"))
+        .expect("invalid customized built-in descriptor should be present");
+
+    assert_eq!(invalid.custom_element_kind, "customized-built-in");
+    assert!(!invalid.custom_element_name_valid);
+    assert!(invalid.custom_element_blocked);
+    assert_eq!(
+        invalid.custom_element_block_reasons,
+        vec!["invalid-custom-element-name"]
+    );
+
+    let empty = actual
+        .custom_element_descriptors
+        .iter()
+        .find(|descriptor| descriptor.custom_element_is.as_deref() == Some(""))
+        .expect("empty customized built-in descriptor should be present");
+
+    assert_eq!(empty.custom_element_kind, "customized-built-in");
+    assert!(!empty.custom_element_name_valid);
+    assert!(empty.custom_element_blocked);
+    assert_eq!(empty.custom_element_block_reasons, vec!["empty-is-value"]);
+
+    let autonomous_with_is = actual
+        .custom_element_descriptors
+        .iter()
+        .find(|descriptor| descriptor.element == "x-card")
+        .expect("autonomous-with-is descriptor should be present");
+
+    assert_eq!(autonomous_with_is.custom_element_kind, "autonomous-with-is");
+    assert!(autonomous_with_is.autonomous_custom_element);
+    assert!(!autonomous_with_is.customized_builtin);
+    assert!(autonomous_with_is.custom_element_blocked);
+    assert_eq!(
+        autonomous_with_is.custom_element_block_reasons,
+        vec!["is-on-autonomous-custom-element"]
+    );
+}
+
+#[test]
 fn browser_data_attribute_descriptor_metadata_tracks_custom_and_standard_elements() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -7259,6 +7391,12 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedSlotDescriptor::into_browser_slot_descriptor)
                 .collect(),
+            custom_element_descriptors: self
+                .custom_element_descriptors
+                .unwrap_or_default()
+                .into_iter()
+                .map(ExpectedCustomElementDescriptor::into_browser_custom_element_descriptor)
+                .collect(),
             component_hydration_targets: self
                 .component_hydration_targets
                 .into_iter()
@@ -7492,6 +7630,30 @@ impl ExpectedSlotDescriptor {
             custom_element_is: self.custom_element_is,
             slot_blocked: self.slot_blocked,
             slot_block_reasons: self.slot_block_reasons,
+        }
+    }
+}
+
+impl ExpectedCustomElementDescriptor {
+    fn into_browser_custom_element_descriptor(self) -> BrowserCustomElementDescriptor {
+        BrowserCustomElementDescriptor {
+            element: self.element,
+            id: self.id,
+            custom_element_kind: self.custom_element_kind,
+            definition_name: self.definition_name,
+            custom_element_name: self.custom_element_name,
+            custom_element_is: self.custom_element_is,
+            autonomous_custom_element: self.autonomous_custom_element,
+            customized_builtin: self.customized_builtin,
+            extends_element: self.extends_element,
+            custom_element_name_valid: self.custom_element_name_valid,
+            slot: self.slot,
+            part: self.part,
+            exportparts: self.exportparts,
+            data_attribute_names: self.data_attribute_names,
+            text: self.text,
+            custom_element_blocked: self.custom_element_blocked,
+            custom_element_block_reasons: self.custom_element_block_reasons,
         }
     }
 }
