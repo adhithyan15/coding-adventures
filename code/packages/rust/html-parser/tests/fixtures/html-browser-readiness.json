@@ -300,6 +300,9 @@
             ]
           }
         ],
+        "image_map_descriptors": [
+          { "map_index": 1, "name": "hero-map", "referenced_image_sources": ["hero.jpg"], "area_count": 1, "navigable_area_count": 1, "area_shapes": ["rect"], "default_shape_area_count": 1, "ping_area_count": 1, "attribution_area_count": 1 }
+        ],
         "forms": [],
         "tables": []
       }
