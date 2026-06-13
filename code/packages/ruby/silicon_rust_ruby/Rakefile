@@ -1,0 +1,61 @@
+# frozen_string_literal: true
+
+# Rakefile — dev-mode build + test tasks for the silicon_rust_ruby gem.
+#
+#   rake compile  — runs `cargo build -p silicon-rust-ruby-native --release`
+#                   against the workspace Cargo.toml, then copies the shared
+#                   library into lib/coding_adventures/silicon_rust_ruby/.
+#
+#   rake test     — depends on :compile, then runs the minitest suite.
+
+require "rake/testtask"
+require "rbconfig"
+require_relative "ext/silicon_rust_ruby_native/build_config"
+
+DLEXT   = RbConfig::CONFIG["DLEXT"]
+EXT_DIR = File.expand_path("ext/silicon_rust_ruby_native", __dir__)
+LIB_DIR = File.expand_path("lib/coding_adventures/silicon_rust_ruby", __dir__)
+
+CARGO_LIB = case RbConfig::CONFIG["host_os"]
+            when /darwin/
+              "libsilicon_rust_ruby_native.dylib"
+            when /mingw|mswin|cygwin/
+              "silicon_rust_ruby_native.dll"
+            else
+              "libsilicon_rust_ruby_native.so"
+            end
+
+TARGET = "silicon_rust_ruby_native.#{DLEXT}"
+
+desc "Compile the Rust native extension via cargo"
+task :compile do
+  workspace_rust = File.expand_path("../../rust", __dir__)
+  cd workspace_rust do
+    sh(*SiliconRustRubyNativeBuildConfig.cargo_build_command)
+  end
+
+  src = File.join(SiliconRustRubyNativeBuildConfig.target_release_dir(EXT_DIR), CARGO_LIB)
+  dst = File.join(LIB_DIR, TARGET)
+  mkdir_p LIB_DIR
+  cp src, dst
+  puts "Installed #{TARGET} to lib/coding_adventures/silicon_rust_ruby/"
+end
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
+end
+
+task test: :compile
+
+desc "Remove build artifacts"
+task :clean do
+  workspace_rust = File.expand_path("../../rust", __dir__)
+  cd workspace_rust do
+    sh(*SiliconRustRubyNativeBuildConfig.cargo_clean_command)
+  end
+  rm_f Dir[File.join(LIB_DIR, "silicon_rust_ruby_native.*")]
+end
+
+task default: :test
