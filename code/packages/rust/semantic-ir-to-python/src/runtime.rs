@@ -26,6 +26,18 @@ from coding_adventures_sir_runtime_oop import (
 )
 "##;
 
+/// The exception-runtime import header, appended **only** when a module uses
+/// the `Exceptions` feature (a `try`/`rescue` or a `raise`).  Pure
+/// non-throwing modules never gain a dependency on this package.  Each helper
+/// is aliased to a `_sir_exc_*` name the emitter uses; see
+/// `code/specs/sir-runtime.md`.
+pub const RUNTIME_EXC: &str = r##"# ── SIR exception runtime (imported from coding-adventures-sir-runtime-exceptions) ──
+from coding_adventures_sir_runtime_exceptions import (
+    raise_error as _sir_exc_raise_error,
+    rescue_matches as _sir_exc_rescue_matches,
+)
+"##;
+
 pub const RUNTIME: &str = r##"# ── SIR runtime (imported from coding-adventures-sir-runtime-core) ──
 from coding_adventures_sir_runtime_core import (
     truthy as _sir_truthy,
@@ -105,5 +117,15 @@ mod tests {
         ] {
             assert!(RUNTIME.contains(alias), "runtime missing alias `{}`", alias);
         }
+    }
+
+    #[test]
+    fn oop_and_exc_runtime_import_their_packages() {
+        assert!(RUNTIME_OOP.contains("from coding_adventures_sir_runtime_oop import"));
+        assert!(RUNTIME_EXC.contains("from coding_adventures_sir_runtime_exceptions import"));
+        assert!(RUNTIME_EXC.contains("raise_error as _sir_exc_raise_error"));
+        assert!(RUNTIME_EXC.contains("rescue_matches as _sir_exc_rescue_matches"));
+        assert!(RUNTIME_OOP.ends_with('\n'));
+        assert!(RUNTIME_EXC.ends_with('\n'));
     }
 }
