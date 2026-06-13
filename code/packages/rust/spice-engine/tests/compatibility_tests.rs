@@ -5,7 +5,8 @@ use spice_engine::{
     format_release_readiness_report, release_readiness_gates, resolve_deck_analyses,
     resolve_deck_fourier, resolve_deck_functions, resolve_deck_initial_conditions,
     resolve_deck_measurements, resolve_deck_outputs, resolve_deck_parameters, resolve_deck_sources,
-    select_deck_output_probes, CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
+    select_deck_analysis_plan, select_deck_output_probes, CompatibilityDeck,
+    CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -905,6 +906,80 @@ fn resolve_deck_analyses_reports_invalid_cards() {
             "SPICE_DECK_ANALYSIS_SWEEP",
         ]
     );
+}
+
+#[test]
+fn select_deck_analysis_plan_defaults_and_selects() {
+    let implicit = select_deck_analysis_plan(
+        "
+V1 in 0 DC 1
+R1 in 0 1k
+.end
+",
+        None,
+    )
+    .unwrap();
+    assert_eq!(implicit.directive, ".op");
+    assert_eq!(implicit.analysis, "op");
+    assert_eq!(implicit.line_number, 0);
+
+    let selected = select_deck_analysis_plan(
+        "
+V1 in 0 DC 0
+.dc V1 0 5 1
+.tran 1u 2m
+.end
+",
+        Some("transient"),
+    )
+    .unwrap();
+    assert_eq!(selected.directive, ".tran");
+    assert_eq!(selected.analysis, "tran");
+    assert_eq!(selected.line_number, 4);
+    assert!((selected.stop_time.unwrap() - 2.0e-3).abs() < 1.0e-12);
+}
+
+#[test]
+fn select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() {
+    let error = select_deck_analysis_plan(
+        "
+.dc V1 0 5 1
+.tran 1u 2m
+.end
+",
+        None,
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("multiple analysis cards"));
+
+    let error = select_deck_analysis_plan(
+        "
+.tran 1u 2m
+.tran 2u 4m
+.end
+",
+        Some(".tran"),
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("multiple .tran analysis cards"));
+
+    let error = select_deck_analysis_plan(".op\n.end\n", Some("noise"))
+        .unwrap_err()
+        .to_string();
+    assert!(error.contains("unsupported analysis"));
+
+    let error = select_deck_analysis_plan(
+        "
+.dc V1 0 1 0
+.end
+",
+        None,
+    )
+    .unwrap_err()
+    .to_string();
+    assert!(error.contains("line 2: .dc step value must be non-zero"));
 }
 
 #[test]

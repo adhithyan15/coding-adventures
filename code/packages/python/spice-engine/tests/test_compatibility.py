@@ -17,6 +17,7 @@ from spice_engine import (
     resolve_deck_outputs,
     resolve_deck_parameters,
     resolve_deck_sources,
+    select_deck_analysis_plan,
     select_deck_output_probes,
 )
 
@@ -640,6 +641,65 @@ def test_resolve_deck_analyses_reports_invalid_cards() -> None:
         "SPICE_DECK_ANALYSIS_SWEEP",
         "SPICE_DECK_ANALYSIS_SWEEP",
     ]
+
+
+def test_select_deck_analysis_plan_defaults_and_selects() -> None:
+    implicit = select_deck_analysis_plan(
+        """
+V1 in 0 DC 1
+R1 in 0 1k
+.end
+"""
+    )
+    assert implicit.directive == ".op"
+    assert implicit.analysis == "op"
+    assert implicit.line_number == 0
+
+    selected = select_deck_analysis_plan(
+        """
+V1 in 0 DC 0
+.dc V1 0 5 1
+.tran 1u 2m
+.end
+""",
+        "transient",
+    )
+    assert selected.directive == ".tran"
+    assert selected.analysis == "tran"
+    assert selected.line_number == 4
+    assert selected.stop_time == pytest.approx(2.0e-3)
+
+
+def test_select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() -> None:
+    with pytest.raises(ValueError, match="multiple analysis cards"):
+        select_deck_analysis_plan(
+            """
+.dc V1 0 5 1
+.tran 1u 2m
+.end
+"""
+        )
+
+    with pytest.raises(ValueError, match=r"multiple \.tran analysis cards"):
+        select_deck_analysis_plan(
+            """
+.tran 1u 2m
+.tran 2u 4m
+.end
+""",
+            ".tran",
+        )
+
+    with pytest.raises(ValueError, match="unsupported analysis"):
+        select_deck_analysis_plan(".op\n.end\n", "noise")
+
+    with pytest.raises(ValueError, match=r"line 2: \.dc step value must be non-zero"):
+        select_deck_analysis_plan(
+            """
+.dc V1 0 1 0
+.end
+"""
+        )
 
 
 def test_resolve_deck_outputs_reports_invalid_cards() -> None:

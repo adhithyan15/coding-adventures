@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `selectDeckAnalysisPlan` so callers can choose one explicit or implicit
+  deck analysis plan with stable ambiguity and invalid-card errors, matching
+  Python and Rust.
 - Add `resolveDeckAnalyses` so `.op`, `.dc`, `.ac`, and `.tran` analysis
   cards are extracted before `.end` into stable metadata with shared
   diagnostics, matching Python and Rust.

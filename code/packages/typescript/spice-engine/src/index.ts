@@ -3135,6 +3135,53 @@ export function resolveDeckAnalyses(netlist: string): DeckAnalysisSummary {
   };
 }
 
+export function selectDeckAnalysisPlan(netlist: string, analysis?: string): DeckAnalysisPlan {
+  const summary = resolveDeckAnalyses(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0];
+    throw invalidElement(
+      "selectDeckAnalysisPlan",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+
+  const requestedAnalysis = analysis === undefined
+    ? undefined
+    : normalizeDeckAnalysisName(analysis);
+  if (analysis !== undefined && requestedAnalysis === undefined) {
+    throw invalidElement("selectDeckAnalysisPlan", `unsupported analysis ${JSON.stringify(analysis)}`);
+  }
+
+  let plans = [...summary.analyses];
+  if (requestedAnalysis !== undefined) {
+    plans = plans.filter((plan) => plan.analysis === requestedAnalysis);
+    if (plans.length === 0) {
+      throw invalidElement(
+        "selectDeckAnalysisPlan",
+        `no .${requestedAnalysis} analysis card found`,
+      );
+    }
+    if (plans.length > 1) {
+      throw invalidElement(
+        "selectDeckAnalysisPlan",
+        `multiple .${requestedAnalysis} analysis cards found`,
+      );
+    }
+    return plans[0];
+  }
+
+  if (plans.length === 0) {
+    return { directive: ".op", analysis: "op", lineNumber: 0, useInitialConditions: false };
+  }
+  if (plans.length > 1) {
+    throw invalidElement(
+      "selectDeckAnalysisPlan",
+      "multiple analysis cards found; pass analysis to select one",
+    );
+  }
+  return plans[0];
+}
+
 export function releaseReadinessGates(
   corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
 ): ReleaseReadinessReport {
@@ -5313,6 +5360,29 @@ function normalizeDeckOutputAnalysis(analysis: string): DeckOutputSelection["ana
     case "dc":
       return "dc";
     case "ac":
+      return "ac";
+    case "tran":
+    case "transient":
+      return "tran";
+    default:
+      return undefined;
+  }
+}
+
+function normalizeDeckAnalysisName(analysis: string): DeckAnalysisPlan["analysis"] | undefined {
+  switch (analysis.trim().toLowerCase().replace(/^\./, "").replace(/_/g, "-")) {
+    case "op":
+    case "dcop":
+    case "operating-point":
+    case "operatingpoint":
+      return "op";
+    case "dc":
+    case "dc-sweep":
+    case "dcsweep":
+      return "dc";
+    case "ac":
+    case "ac-sweep":
+    case "acsweep":
       return "ac";
     case "tran":
     case "transient":

@@ -14,6 +14,7 @@ import {
   resolveDeckOutputs,
   resolveDeckParameters,
   resolveDeckSources,
+  selectDeckAnalysisPlan,
   selectDeckOutputProbes,
 } from "../src/index.js";
 
@@ -679,5 +680,62 @@ R1 in out 1k
       "SPICE_DECK_ANALYSIS_SWEEP",
       "SPICE_DECK_ANALYSIS_SWEEP",
     ]);
+  });
+
+  it("defaults and selects deck analysis plans", () => {
+    const implicit = selectDeckAnalysisPlan(`
+V1 in 0 DC 1
+R1 in 0 1k
+.end
+`);
+    expect(implicit.directive).toBe(".op");
+    expect(implicit.analysis).toBe("op");
+    expect(implicit.lineNumber).toBe(0);
+
+    const selected = selectDeckAnalysisPlan(
+      `
+V1 in 0 DC 0
+.dc V1 0 5 1
+.tran 1u 2m
+.end
+`,
+      "transient",
+    );
+    expect(selected.directive).toBe(".tran");
+    expect(selected.analysis).toBe("tran");
+    expect(selected.lineNumber).toBe(4);
+    expect(selected.stopTime).toBeCloseTo(2.0e-3);
+  });
+
+  it("reports ambiguous or invalid deck analysis plan selection", () => {
+    expect(() =>
+      selectDeckAnalysisPlan(`
+.dc V1 0 5 1
+.tran 1u 2m
+.end
+`),
+    ).toThrow(/multiple analysis cards/);
+
+    expect(() =>
+      selectDeckAnalysisPlan(
+        `
+.tran 1u 2m
+.tran 2u 4m
+.end
+`,
+        ".tran",
+      ),
+    ).toThrow(/multiple \.tran analysis cards/);
+
+    expect(() => selectDeckAnalysisPlan(".op\n.end\n", "noise")).toThrow(
+      /unsupported analysis/,
+    );
+
+    expect(() =>
+      selectDeckAnalysisPlan(`
+.dc V1 0 1 0
+.end
+`),
+    ).toThrow(/line 2: \.dc step value must be non-zero/);
   });
 });

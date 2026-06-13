@@ -44,6 +44,7 @@ from spice_engine.compatibility import (
     resolve_deck_outputs,
     resolve_deck_parameters,
     resolve_deck_sources,
+    select_deck_analysis_plan,
     select_deck_output_probes,
 )
 from spice_engine.elements import (
@@ -560,6 +561,7 @@ __all__ = [
     "resolve_deck_outputs",
     "resolve_deck_sources",
     "resolve_deck_parameters",
+    "select_deck_analysis_plan",
     "select_deck_output_probes",
     "sens_dc",
     "s_parameters",
