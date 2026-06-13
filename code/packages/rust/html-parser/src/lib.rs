@@ -892,6 +892,7 @@ pub struct BrowserDocument {
     pub custom_element_descriptors: Vec<BrowserCustomElementDescriptor>,
     pub canvas_descriptors: Vec<BrowserCanvasDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
+    pub component_hydration_descriptors: Vec<BrowserComponentHydrationDescriptor>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
     pub structured_data_descriptors: Vec<BrowserStructuredDataDescriptor>,
@@ -1535,6 +1536,28 @@ pub struct BrowserComponentHydrationTarget {
     pub data_attributes: Vec<BrowserDataAttribute>,
     pub canvas_fallback_text: Option<String>,
     pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserComponentHydrationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub hydration_kind: String,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub shadowrootmode: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub part: Vec<String>,
+    pub exportparts: Option<String>,
+    pub data_attribute_names: Vec<String>,
+    pub data_attribute_count: usize,
+    pub canvas_fallback_text: Option<String>,
+    pub text: String,
+    pub hydration_blocked: bool,
+    pub hydration_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10952,6 +10975,9 @@ fn collect_browser_facts(
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
+        if let Some(descriptor) = browser_component_hydration_descriptor(element) {
+            summary.component_hydration_descriptors.push(descriptor);
+        }
         if let Some(descriptor) = browser_slot_descriptor(element) {
             summary.slot_descriptors.push(descriptor);
         }
@@ -17931,6 +17957,134 @@ fn browser_component_hydration_target(
         canvas_fallback_text: is_canvas.then(|| visible_text_for_nodes(&element.children)),
         text: visible_text_for_nodes(&element.children),
     })
+}
+
+fn browser_component_hydration_descriptor(
+    element: &Element,
+) -> Option<BrowserComponentHydrationDescriptor> {
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+    let shadowrootmode = (element.name == "template")
+        .then(|| element.attribute("shadowrootmode").map(ToOwned::to_owned))
+        .flatten();
+    let slot = browser_slot_assignment(element);
+    let slot_name = browser_slot_name(element);
+    let part = browser_part_tokens(element);
+    let exportparts = browser_exportparts(element);
+    let data_attributes = browser_data_attributes(element);
+    let canvas_fallback_text = (element.name == "canvas")
+        .then(|| collapse_html_whitespace(&visible_text_for_nodes(&element.children)));
+    let hydration_kind = browser_component_hydration_kind(
+        element,
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        shadowrootmode.as_deref(),
+        slot.as_deref(),
+        slot_name.as_deref(),
+        &part,
+        exportparts.as_deref(),
+        &data_attributes,
+    )?;
+    let hydration_block_reasons = browser_component_hydration_block_reasons(
+        element,
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        shadowrootmode.as_deref(),
+        slot.as_deref(),
+        slot_name.as_deref(),
+        canvas_fallback_text.as_deref(),
+    );
+
+    Some(BrowserComponentHydrationDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        hydration_kind,
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        shadowrootmode,
+        slot,
+        slot_name,
+        part,
+        exportparts,
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        data_attribute_count: data_attributes.len(),
+        canvas_fallback_text,
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        hydration_blocked: !hydration_block_reasons.is_empty(),
+        hydration_block_reasons,
+    })
+}
+
+fn browser_component_hydration_kind(
+    element: &Element,
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    shadowrootmode: Option<&str>,
+    slot: Option<&str>,
+    slot_name: Option<&str>,
+    part: &[String],
+    exportparts: Option<&str>,
+    data_attributes: &[BrowserDataAttribute],
+) -> Option<String> {
+    if custom_element_name.is_some() {
+        Some("autonomous-custom-element".to_string())
+    } else if custom_element_is.is_some() {
+        Some("customized-built-in".to_string())
+    } else if shadowrootmode.is_some() {
+        Some("declarative-shadow-template".to_string())
+    } else if element.name == "slot" || slot_name.is_some() {
+        Some("slot-outlet".to_string())
+    } else if slot.is_some() {
+        Some("slotted-element".to_string())
+    } else if element.name == "canvas" {
+        Some("canvas-fallback".to_string())
+    } else if exportparts.is_some() {
+        Some("exported-parts".to_string())
+    } else if !part.is_empty() {
+        Some("part-target".to_string())
+    } else if !data_attributes.is_empty() {
+        Some("data-hydration-marker".to_string())
+    } else {
+        None
+    }
+}
+
+fn browser_component_hydration_block_reasons(
+    element: &Element,
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    shadowrootmode: Option<&str>,
+    slot: Option<&str>,
+    slot_name: Option<&str>,
+    canvas_fallback_text: Option<&str>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    let definition_name = custom_element_is.or(custom_element_name);
+    if definition_name.is_some_and(|name| !is_browser_custom_element_name(name)) {
+        reasons.push("invalid-custom-element-name".to_string());
+    }
+    if custom_element_name.is_some() && custom_element_is.is_some() {
+        reasons.push("is-on-autonomous-custom-element".to_string());
+    }
+    if shadowrootmode.is_some_and(|mode| !matches!(mode, "open" | "closed")) {
+        reasons.push("invalid-shadowrootmode".to_string());
+    }
+    if slot.is_some_and(|slot| !slot.is_empty() && slot.trim().is_empty()) {
+        reasons.push("blank-slot-assignment".to_string());
+    }
+    if slot_name.is_some_and(|slot_name| !slot_name.is_empty() && slot_name.trim().is_empty()) {
+        reasons.push("blank-slot-name".to_string());
+    }
+    if element.name == "canvas" && canvas_fallback_text.is_some_and(str::is_empty) {
+        reasons.push("missing-canvas-fallback-text".to_string());
+    }
+    reasons
 }
 
 fn browser_data_attribute_descriptor(element: &Element) -> Option<BrowserDataAttributeDescriptor> {

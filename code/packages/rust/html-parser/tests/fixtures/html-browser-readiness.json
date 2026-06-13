@@ -2377,6 +2377,17 @@
           { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "text": "Save" },
           { "element": "slot", "slot_name": "footer", "part": ["footer"], "text": "Fallback footer" }
         ],
+        "component_hydration_descriptors": [
+          { "element": "template", "id": "card-template", "hydration_kind": "declarative-shadow-template", "shadowrootmode": "open", "data_attribute_names": ["data-template"], "data_attribute_count": 1, "text": "Untitled Body" },
+          { "element": "article", "hydration_kind": "part-target", "part": ["frame"], "text": "Untitled Body" },
+          { "element": "slot", "hydration_kind": "slot-outlet", "slot_name": "title", "text": "Untitled" },
+          { "element": "slot", "hydration_kind": "slot-outlet", "text": "Body" },
+          { "element": "product-card", "id": "card", "hydration_kind": "autonomous-custom-element", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "exportparts": "header:title, chart", "data_attribute_names": ["data-controller", "data-state"], "data_attribute_count": 2, "text": "Widget Chart fallback Save Fallback footer" },
+          { "element": "span", "hydration_kind": "slotted-element", "slot": "title", "part": ["title"], "data_attribute_names": ["data-field"], "data_attribute_count": 1, "text": "Widget" },
+          { "element": "canvas", "id": "chart", "hydration_kind": "canvas-fallback", "part": ["chart"], "data_attribute_names": ["data-renderer"], "data_attribute_count": 1, "canvas_fallback_text": "Chart fallback", "text": "Chart fallback" },
+          { "element": "button", "hydration_kind": "customized-built-in", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attribute_names": ["data-action"], "data_attribute_count": 1, "text": "Save" },
+          { "element": "slot", "hydration_kind": "slot-outlet", "slot_name": "footer", "part": ["footer"], "text": "Fallback footer" }
+        ],
         "data_attribute_descriptors": [
           { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "data_attribute_names": ["data-template"], "data_attribute_count": 1, "text": "Untitled Body" },
           { "element": "product-card", "id": "card", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "data_attributes": [{ "name": "data-controller", "value": "product" }, { "name": "data-state", "value": "ready" }], "data_attribute_names": ["data-controller", "data-state"], "data_attribute_count": 2, "text": "Widget Chart fallback Save Fallback footer" },

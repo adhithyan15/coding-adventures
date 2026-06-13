@@ -3,7 +3,8 @@ use coding_adventures_html_parser::{
     BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionItem,
     BrowserAriaDescriptionDescriptor, BrowserAriaLiveRegion, BrowserAriaNameDescriptor,
     BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCanvasDescriptor,
-    BrowserClipboardInteractionDescriptor, BrowserCommandElement, BrowserComponentHydrationTarget,
+    BrowserClipboardInteractionDescriptor, BrowserCommandElement,
+    BrowserComponentHydrationDescriptor, BrowserComponentHydrationTarget,
     BrowserCompositionInteractionDescriptor, BrowserContextMenuInteractionDescriptor,
     BrowserCustomElementDescriptor, BrowserDataAttribute, BrowserDataAttributeDescriptor,
     BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
@@ -199,6 +200,8 @@ struct ExpectedBrowserDocument {
     canvas_descriptors: Option<Vec<ExpectedCanvasDescriptor>>,
     #[serde(default)]
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
+    #[serde(default)]
+    component_hydration_descriptors: Option<Vec<ExpectedComponentHydrationDescriptor>>,
     #[serde(default)]
     data_attribute_descriptors: Vec<ExpectedDataAttributeDescriptor>,
     #[serde(default)]
@@ -567,6 +570,45 @@ struct ExpectedComponentHydrationTarget {
     canvas_fallback_text: Option<String>,
     #[serde(default)]
     text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedComponentHydrationDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    hydration_kind: String,
+    #[serde(default)]
+    custom_element: bool,
+    #[serde(default)]
+    custom_element_name: Option<String>,
+    #[serde(default)]
+    custom_element_is: Option<String>,
+    #[serde(default)]
+    shadowrootmode: Option<String>,
+    #[serde(default)]
+    slot: Option<String>,
+    #[serde(default)]
+    slot_name: Option<String>,
+    #[serde(default)]
+    part: Vec<String>,
+    #[serde(default)]
+    exportparts: Option<String>,
+    #[serde(default)]
+    data_attribute_names: Vec<String>,
+    #[serde(default)]
+    data_attribute_count: usize,
+    #[serde(default)]
+    canvas_fallback_text: Option<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    hydration_blocked: bool,
+    #[serde(default)]
+    hydration_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4262,6 +4304,8 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_slot_descriptors = case.expected.slot_descriptors.is_some();
         let tracks_custom_element_descriptors = case.expected.custom_element_descriptors.is_some();
         let tracks_canvas_descriptors = case.expected.canvas_descriptors.is_some();
+        let tracks_component_hydration_descriptors =
+            case.expected.component_hydration_descriptors.is_some();
         let tracks_structured_data_descriptors =
             case.expected.structured_data_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
@@ -4282,6 +4326,10 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_canvas_descriptors {
             expected.canvas_descriptors = actual.canvas_descriptors.clone();
+        }
+        if !tracks_component_hydration_descriptors {
+            expected.component_hydration_descriptors =
+                actual.component_hydration_descriptors.clone();
         }
         if !tracks_structured_data_descriptors {
             expected.structured_data_descriptors = actual.structured_data_descriptors.clone();
@@ -6571,6 +6619,63 @@ fn browser_component_hydration_metadata_tracks_custom_elements_slots_parts_and_d
 }
 
 #[test]
+fn browser_component_hydration_descriptors_track_kinds_signals_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "component-template-page")
+        .expect("component template fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("component template fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.component_hydration_descriptors,
+        case.expected
+            .into_browser_document()
+            .component_hydration_descriptors,
+        "component hydration descriptors should preserve target kind, component, slot, part, data, canvas, and blocker metadata",
+    );
+}
+
+#[test]
+fn browser_component_hydration_descriptors_track_invalid_targets() {
+    let actual = parse_browser_document(
+        "<body><template shadowrootmode=light><span>Bad mode</span></template>\
+         <slot name=\"   \">Fallback</slot><span slot=\"   \">Item</span>\
+         <canvas id=empty></canvas><button is=bad>Bad</button>",
+    )
+    .expect("invalid component hydration fixture should parse into browser document facts");
+
+    let blocked: Vec<_> = actual
+        .component_hydration_descriptors
+        .iter()
+        .filter(|descriptor| descriptor.hydration_blocked)
+        .collect();
+
+    assert_eq!(blocked.len(), 5);
+    assert_eq!(
+        blocked[0].hydration_block_reasons,
+        vec!["invalid-shadowrootmode"]
+    );
+    assert_eq!(blocked[1].hydration_block_reasons, vec!["blank-slot-name"]);
+    assert_eq!(
+        blocked[2].hydration_block_reasons,
+        vec!["blank-slot-assignment"]
+    );
+    assert_eq!(
+        blocked[3].hydration_block_reasons,
+        vec!["missing-canvas-fallback-text"]
+    );
+    assert_eq!(
+        blocked[4].hydration_block_reasons,
+        vec!["invalid-custom-element-name"]
+    );
+}
+
+#[test]
 fn browser_template_descriptors_track_shadowroot_mode_and_flags() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -7465,6 +7570,12 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_default();
+        let component_hydration_descriptors = self
+            .component_hydration_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedComponentHydrationDescriptor::into_browser_component_hydration_descriptor)
+            .collect();
 
         BrowserDocument {
             title: self.title,
@@ -7637,6 +7748,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedComponentHydrationTarget::into_browser_component_hydration_target)
                 .collect(),
+            component_hydration_descriptors,
             data_attribute_descriptors: self
                 .data_attribute_descriptors
                 .into_iter()
@@ -7962,6 +8074,31 @@ impl ExpectedComponentHydrationTarget {
                 .collect(),
             canvas_fallback_text: self.canvas_fallback_text,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedComponentHydrationDescriptor {
+    fn into_browser_component_hydration_descriptor(self) -> BrowserComponentHydrationDescriptor {
+        BrowserComponentHydrationDescriptor {
+            element: self.element,
+            id: self.id,
+            classes: self.classes,
+            hydration_kind: self.hydration_kind,
+            custom_element: self.custom_element,
+            custom_element_name: self.custom_element_name,
+            custom_element_is: self.custom_element_is,
+            shadowrootmode: self.shadowrootmode,
+            slot: self.slot,
+            slot_name: self.slot_name,
+            part: self.part,
+            exportparts: self.exportparts,
+            data_attribute_names: self.data_attribute_names,
+            data_attribute_count: self.data_attribute_count,
+            canvas_fallback_text: self.canvas_fallback_text,
+            text: self.text,
+            hydration_blocked: self.hydration_blocked,
+            hydration_block_reasons: self.hydration_block_reasons,
         }
     }
 }
