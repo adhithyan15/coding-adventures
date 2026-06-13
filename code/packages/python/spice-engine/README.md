@@ -58,6 +58,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `ac_sweep` | `.AC` | Small-signal AC frequency sweep |
 | `tf` | `.TF` | DC transfer function, input/output impedance |
 | `dc_sweep` | `.DC` | DC parameter sweep |
+| `resolve_deck_analyses` | `.OP` / `.DC` / `.AC` / `.TRAN` | Parsed deck analysis metadata |
 | `sens_dc` | `.SENS` | DC sensitivity analysis |
 | `mc_dc` | `.MC` | Monte Carlo DC analysis |
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
@@ -93,6 +94,10 @@ crossing times over optional `FROM=` / `TO=` windows.
 TARG ...` cards report trigger-to-target crossing delays. The deck helpers
 route parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into
 those stable measurement rows.
+`resolve_deck_analyses()` extracts `.op`, `.dc`, `.ac`, and `.tran` cards
+before `.end`, keeps non-analysis active lines, and reports stable diagnostics
+for malformed arguments, unsupported AC sweep modes, invalid sweep intervals,
+and unresolved scalar expressions.
 `resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save` and
 scoped or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `format_deck_op_table()`,
@@ -167,6 +172,9 @@ unsupported analyses, modes, options, expressions, and invalid windows.
 `resolve_deck_outputs()` extracts `.save` and `.probe` cards before `.end`,
 preserves non-output active lines, and reports stable diagnostics for missing
 probe lists or malformed `V(node)` / `I(source)` probes.
+`resolve_deck_analyses()` extracts `.op`, `.dc`, `.ac`, and `.tran` cards
+before `.end`, preserves non-analysis active lines, and reports stable
+diagnostics for malformed deck-level analysis controls.
 
 ## Controlled source examples
 

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `resolveDeckAnalyses` so `.op`, `.dc`, `.ac`, and `.tran` analysis
+  cards are extracted before `.end` into stable metadata with shared
+  diagnostics, matching Python and Rust.
 - Add `resolveDeckOutputs`, `selectDeckOutputProbes`, and the
   `formatDeck*Table` helpers so parsed `.save` / `.probe` cards route into
   stable operating-point, DC sweep, AC sweep, and transient tables, matching

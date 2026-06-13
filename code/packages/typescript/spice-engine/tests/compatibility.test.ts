@@ -6,6 +6,7 @@ import {
   formatCompatibilityCorpusTable,
   formatReleaseReadinessReport,
   releaseReadinessGates,
+  resolveDeckAnalyses,
   resolveDeckFourier,
   resolveDeckFunctions,
   resolveDeckInitialConditions,
@@ -608,5 +609,75 @@ V1 in 0 DC 1
     ]);
     expect(summary.selections[0].probes).toStrictEqual(["V(out)"]);
     expect(() => selectDeckOutputProbes("\n.save\n.end\n", "dc")).toThrow(/line 2/);
+  });
+
+  it("extracts supported deck analysis cards", () => {
+    const summary = resolveDeckAnalyses(`
+V1 in 0 DC 0
+R1 in out 1k
+.op
+.dc V1 0 5 1
+.ac dec 10 1k 1Meg
+.tran 1u 2m 0 10u uic
+.end
+.tran 1u 1m
+`);
+
+    expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 0", "R1 in out 1k"]);
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(8);
+    expect(summary.diagnostics).toStrictEqual([]);
+    expect(summary.analyses.map((analysis) => analysis.analysis)).toStrictEqual([
+      "op",
+      "dc",
+      "ac",
+      "tran",
+    ]);
+
+    const dc = summary.analyses[1];
+    expect(dc.directive).toBe(".dc");
+    expect(dc.sourceName).toBe("V1");
+    expect(dc.startValue).toBeCloseTo(0.0);
+    expect(dc.stopValue).toBeCloseTo(5.0);
+    expect(dc.stepValue).toBeCloseTo(1.0);
+
+    const ac = summary.analyses[2];
+    expect(ac.directive).toBe(".ac");
+    expect(ac.sweepKind).toBe("dec");
+    expect(ac.pointCount).toBe(10);
+    expect(ac.startFrequencyHz).toBeCloseTo(1.0e3);
+    expect(ac.stopFrequencyHz).toBeCloseTo(1.0e6);
+
+    const tran = summary.analyses[3];
+    expect(tran.directive).toBe(".tran");
+    expect(tran.stepTime).toBeCloseTo(1.0e-6);
+    expect(tran.stopTime).toBeCloseTo(2.0e-3);
+    expect(tran.startTime).toBeCloseTo(0.0);
+    expect(tran.maxStep).toBeCloseTo(1.0e-5);
+    expect(tran.useInitialConditions).toBe(true);
+  });
+
+  it("reports invalid deck analysis cards", () => {
+    const summary = resolveDeckAnalyses(`
+.op extra
+.dc V1 0 1 0
+.dc V1 1 0 1
+.ac decade 10 1 10
+.ac lin 0 1 10
+.tran 0 1m
+.tran 1u 2m 0 1u extra
+.end
+`);
+
+    expect(summary.analyses).toStrictEqual([]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code).sort()).toStrictEqual([
+      "SPICE_DECK_ANALYSIS_ARGUMENT",
+      "SPICE_DECK_ANALYSIS_ARGUMENT",
+      "SPICE_DECK_ANALYSIS_INTERVAL",
+      "SPICE_DECK_ANALYSIS_MODE",
+      "SPICE_DECK_ANALYSIS_SWEEP",
+      "SPICE_DECK_ANALYSIS_SWEEP",
+      "SPICE_DECK_ANALYSIS_SWEEP",
+    ]);
   });
 });

@@ -2,10 +2,10 @@ use std::collections::HashMap;
 
 use spice_engine::{
     analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
-    format_release_readiness_report, release_readiness_gates, resolve_deck_fourier,
-    resolve_deck_functions, resolve_deck_initial_conditions, resolve_deck_measurements,
-    resolve_deck_outputs, resolve_deck_parameters, resolve_deck_sources, select_deck_output_probes,
-    CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
+    format_release_readiness_report, release_readiness_gates, resolve_deck_analyses,
+    resolve_deck_fourier, resolve_deck_functions, resolve_deck_initial_conditions,
+    resolve_deck_measurements, resolve_deck_outputs, resolve_deck_parameters, resolve_deck_sources,
+    select_deck_output_probes, CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -814,6 +814,96 @@ V1 in 0 DC 1
         )
         .unwrap(),
         vec!["V(out)", "I(V1)", "V(clk)"]
+    );
+}
+
+#[test]
+fn resolve_deck_analyses_extracts_supported_cards() {
+    let summary = resolve_deck_analyses(
+        "
+V1 in 0 DC 0
+R1 in out 1k
+.op
+.dc V1 0 5 1
+.ac dec 10 1k 1Meg
+.tran 1u 2m 0 10u uic
+.end
+.tran 1u 1m
+",
+    );
+
+    assert_eq!(
+        summary.active_lines,
+        vec!["V1 in 0 DC 0".to_string(), "R1 in out 1k".to_string()]
+    );
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(8));
+    assert!(summary.diagnostics.is_empty());
+    assert_eq!(
+        summary
+            .analyses
+            .iter()
+            .map(|analysis| analysis.analysis.as_str())
+            .collect::<Vec<_>>(),
+        vec!["op", "dc", "ac", "tran"]
+    );
+
+    let dc = &summary.analyses[1];
+    assert_eq!(dc.directive, ".dc");
+    assert_eq!(dc.source_name.as_deref(), Some("V1"));
+    assert!((dc.start_value.unwrap() - 0.0).abs() < 1.0e-12);
+    assert!((dc.stop_value.unwrap() - 5.0).abs() < 1.0e-12);
+    assert!((dc.step_value.unwrap() - 1.0).abs() < 1.0e-12);
+
+    let ac = &summary.analyses[2];
+    assert_eq!(ac.directive, ".ac");
+    assert_eq!(ac.sweep_kind.as_deref(), Some("dec"));
+    assert_eq!(ac.point_count, Some(10));
+    assert!((ac.start_frequency_hz.unwrap() - 1.0e3).abs() < 1.0e-9);
+    assert!((ac.stop_frequency_hz.unwrap() - 1.0e6).abs() < 1.0e-6);
+
+    let tran = &summary.analyses[3];
+    assert_eq!(tran.directive, ".tran");
+    assert!((tran.step_time.unwrap() - 1.0e-6).abs() < 1.0e-12);
+    assert!((tran.stop_time.unwrap() - 2.0e-3).abs() < 1.0e-12);
+    assert!((tran.start_time.unwrap() - 0.0).abs() < 1.0e-12);
+    assert!((tran.max_step.unwrap() - 1.0e-5).abs() < 1.0e-12);
+    assert!(tran.use_initial_conditions);
+}
+
+#[test]
+fn resolve_deck_analyses_reports_invalid_cards() {
+    let summary = resolve_deck_analyses(
+        "
+.op extra
+.dc V1 0 1 0
+.dc V1 1 0 1
+.ac decade 10 1 10
+.ac lin 0 1 10
+.tran 0 1m
+.tran 1u 2m 0 1u extra
+.end
+",
+    );
+
+    assert!(summary.analyses.is_empty());
+    let mut codes = summary
+        .diagnostics
+        .iter()
+        .map(|diagnostic| diagnostic.code.as_str())
+        .collect::<Vec<_>>();
+    codes.sort_unstable();
+    assert_eq!(
+        codes,
+        vec![
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            "SPICE_DECK_ANALYSIS_INTERVAL",
+            "SPICE_DECK_ANALYSIS_MODE",
+            "SPICE_DECK_ANALYSIS_SWEEP",
+            "SPICE_DECK_ANALYSIS_SWEEP",
+            "SPICE_DECK_ANALYSIS_SWEEP",
+        ]
     );
 }
 
