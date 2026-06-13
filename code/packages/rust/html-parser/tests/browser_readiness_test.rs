@@ -33,8 +33,8 @@ use coding_adventures_html_parser::{
     BrowserSectionLandmark, BrowserSelectOption, BrowserSelectionInteractionDescriptor,
     BrowserSlotDescriptor, BrowserStructuredDataDescriptor, BrowserStructuredItem,
     BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTemplateDescriptor,
-    BrowserTextSemantic, BrowserThemeColor,
+    BrowserTable, BrowserTableCell, BrowserTableStructureDescriptor, BrowserTemplate,
+    BrowserTemplateDescriptor, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -216,6 +216,8 @@ struct ExpectedBrowserDocument {
     tables: Vec<ExpectedTable>,
     #[serde(default)]
     table_cells: Vec<ExpectedTableCell>,
+    #[serde(default)]
+    table_structure_descriptors: Option<Vec<ExpectedTableStructureDescriptor>>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -4285,6 +4287,36 @@ struct ExpectedTableCell {
     colspan: Option<String>,
 }
 
+#[derive(Debug, Deserialize)]
+struct ExpectedTableStructureDescriptor {
+    table_index: usize,
+    #[serde(default)]
+    table_id: Option<String>,
+    #[serde(default)]
+    caption: Option<String>,
+    row_count: usize,
+    #[serde(default)]
+    column_count: usize,
+    #[serde(default)]
+    column_hint_count: usize,
+    cell_count: usize,
+    header_cell_count: usize,
+    #[serde(default)]
+    section_kinds: Vec<String>,
+    #[serde(default)]
+    header_scopes: Vec<String>,
+    #[serde(default)]
+    header_ids: Vec<String>,
+    #[serde(default)]
+    cells_with_headers_count: usize,
+    #[serde(default)]
+    spanning_cell_count: usize,
+    #[serde(default)]
+    table_blocked: bool,
+    #[serde(default)]
+    table_block_reasons: Vec<String>,
+}
+
 #[test]
 fn browser_readiness_cases_extract_browser_document_facts() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
@@ -4308,6 +4340,8 @@ fn browser_readiness_cases_extract_browser_document_facts() {
             case.expected.component_hydration_descriptors.is_some();
         let tracks_structured_data_descriptors =
             case.expected.structured_data_descriptors.is_some();
+        let tracks_table_structure_descriptors =
+            case.expected.table_structure_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4333,6 +4367,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_structured_data_descriptors {
             expected.structured_data_descriptors = actual.structured_data_descriptors.clone();
+        }
+        if !tracks_table_structure_descriptors {
+            expected.table_structure_descriptors = actual.table_structure_descriptors.clone();
         }
 
         assert_eq!(
@@ -4360,6 +4397,48 @@ fn browser_table_cell_descriptor_metadata_tracks_headers_spans_and_sections() {
     assert_eq!(
         actual.table_cells, expected.table_cells,
         "table cell descriptors should preserve table context, sections, spans, headers, and grid positions",
+    );
+}
+
+#[test]
+fn browser_table_structure_descriptors_track_sections_headers_spans_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "table-cell-descriptor-page")
+        .expect("table cell descriptor fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("table structure descriptor fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.table_structure_descriptors,
+        case.expected
+            .into_browser_document()
+            .table_structure_descriptors,
+        "table structure descriptors should preserve sections, header scopes, ids, spans, header references, and blocker metadata",
+    );
+}
+
+#[test]
+fn browser_table_structure_descriptors_track_layout_blockers() {
+    let actual =
+        parse_browser_document("<body><table><colgroup><col span=3><tr><td>Loose<td>Cells</table>")
+            .expect("blocked table fixture should parse into browser document facts");
+
+    assert_eq!(actual.table_structure_descriptors.len(), 1);
+    let descriptor = &actual.table_structure_descriptors[0];
+
+    assert!(descriptor.table_blocked);
+    assert_eq!(
+        descriptor.table_block_reasons,
+        vec![
+            "missing-caption",
+            "missing-header-cells",
+            "column-hint-count-mismatch"
+        ],
     );
 }
 
@@ -7781,6 +7860,12 @@ impl ExpectedBrowserDocument {
                 .table_cells
                 .into_iter()
                 .map(ExpectedTableCell::into_browser_table_cell)
+                .collect(),
+            table_structure_descriptors: self
+                .table_structure_descriptors
+                .unwrap_or_default()
+                .into_iter()
+                .map(ExpectedTableStructureDescriptor::into_browser_table_structure_descriptor)
                 .collect(),
         }
     }
@@ -15963,6 +16048,28 @@ impl ExpectedTableCell {
             abbr: self.abbr,
             rowspan: self.rowspan,
             colspan: self.colspan,
+        }
+    }
+}
+
+impl ExpectedTableStructureDescriptor {
+    fn into_browser_table_structure_descriptor(self) -> BrowserTableStructureDescriptor {
+        BrowserTableStructureDescriptor {
+            table_index: self.table_index,
+            table_id: self.table_id,
+            caption: self.caption,
+            row_count: self.row_count,
+            column_count: self.column_count,
+            column_hint_count: self.column_hint_count,
+            cell_count: self.cell_count,
+            header_cell_count: self.header_cell_count,
+            section_kinds: self.section_kinds,
+            header_scopes: self.header_scopes,
+            header_ids: self.header_ids,
+            cells_with_headers_count: self.cells_with_headers_count,
+            spanning_cell_count: self.spanning_cell_count,
+            table_blocked: self.table_blocked,
+            table_block_reasons: self.table_block_reasons,
         }
     }
 }

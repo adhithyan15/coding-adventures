@@ -1268,6 +1268,9 @@
           { "table_index": 1, "table_id": "matrix", "table_caption": "Schedule", "section_kind": "tfoot", "row_index": 4, "column_index": 1, "element": "th", "text": "Totals", "header": true, "scope": "row" },
           { "table_index": 1, "table_id": "matrix", "table_caption": "Schedule", "section_kind": "tfoot", "row_index": 4, "column_index": 2, "element": "td", "text": "3", "headers": ["morning"] },
           { "table_index": 1, "table_id": "matrix", "table_caption": "Schedule", "section_kind": "tfoot", "row_index": 4, "column_index": 3, "element": "td", "text": "2", "headers": ["evening"] }
+        ],
+        "table_structure_descriptors": [
+          { "table_index": 1, "table_id": "matrix", "caption": "Schedule", "row_count": 4, "column_count": 4, "column_hint_count": 0, "cell_count": 11, "header_cell_count": 5, "section_kinds": ["thead", "tbody", "tfoot"], "header_scopes": ["col", "row"], "header_ids": ["day", "morning", "evening", "mon"], "cells_with_headers_count": 7, "spanning_cell_count": 2 }
         ]
       }
     },

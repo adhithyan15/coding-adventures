@@ -901,6 +901,7 @@ pub struct BrowserDocument {
     pub forms: Vec<BrowserForm>,
     pub tables: Vec<BrowserTable>,
     pub table_cells: Vec<BrowserTableCell>,
+    pub table_structure_descriptors: Vec<BrowserTableStructureDescriptor>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -3631,6 +3632,25 @@ pub struct BrowserTableCell {
     pub abbr: Option<String>,
     pub rowspan: Option<String>,
     pub colspan: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTableStructureDescriptor {
+    pub table_index: usize,
+    pub table_id: Option<String>,
+    pub caption: Option<String>,
+    pub row_count: usize,
+    pub column_count: usize,
+    pub column_hint_count: usize,
+    pub cell_count: usize,
+    pub header_cell_count: usize,
+    pub section_kinds: Vec<String>,
+    pub header_scopes: Vec<String>,
+    pub header_ids: Vec<String>,
+    pub cells_with_headers_count: usize,
+    pub spanning_cell_count: usize,
+    pub table_blocked: bool,
+    pub table_block_reasons: Vec<String>,
 }
 
 impl BrowserDocument {
@@ -11079,7 +11099,7 @@ fn collect_browser_facts(
             }
             "table" => {
                 let table_index = summary.tables.len() + 1;
-                summary.tables.push(BrowserTable {
+                let table = BrowserTable {
                     caption: find_first_element_in_nodes(&element.children, "caption")
                         .map(element_text),
                     row_count: browser_table_rows(element).len(),
@@ -11087,10 +11107,25 @@ fn collect_browser_facts(
                     column_hint_count: browser_table_column_hint_count(element),
                     cell_count: browser_table_cell_count(element),
                     header_cell_count: browser_table_header_cell_count(element),
-                });
+                };
+                let table_cells = browser_table_cells(element, table_index, id_texts);
                 summary
-                    .table_cells
-                    .extend(browser_table_cells(element, table_index, id_texts));
+                    .table_structure_descriptors
+                    .push(browser_table_structure_descriptor(
+                        element,
+                        table_index,
+                        &table,
+                        &table_cells,
+                    ));
+                summary.table_cells.extend(table_cells);
+                summary.tables.push(BrowserTable {
+                    caption: table.caption,
+                    row_count: table.row_count,
+                    column_count: table.column_count,
+                    column_hint_count: table.column_hint_count,
+                    cell_count: table.cell_count,
+                    header_cell_count: table.header_cell_count,
+                });
             }
             name if heading_level(name).is_some() => summary.headings.push(BrowserHeading {
                 level: heading_level(name).expect("heading level was checked above"),
@@ -23736,6 +23771,94 @@ fn browser_table_cells(
     }
 
     cells
+}
+
+fn browser_table_structure_descriptor(
+    table_element: &Element,
+    table_index: usize,
+    table: &BrowserTable,
+    cells: &[BrowserTableCell],
+) -> BrowserTableStructureDescriptor {
+    let table_block_reasons = browser_table_block_reasons(table, cells);
+
+    BrowserTableStructureDescriptor {
+        table_index,
+        table_id: table_element.attribute("id").map(ToOwned::to_owned),
+        caption: table.caption.clone(),
+        row_count: table.row_count,
+        column_count: table.column_count,
+        column_hint_count: table.column_hint_count,
+        cell_count: table.cell_count,
+        header_cell_count: table.header_cell_count,
+        section_kinds: browser_table_section_kinds(cells),
+        header_scopes: browser_table_header_scopes(cells),
+        header_ids: browser_table_header_ids(cells),
+        cells_with_headers_count: cells.iter().filter(|cell| !cell.headers.is_empty()).count(),
+        spanning_cell_count: cells
+            .iter()
+            .filter(|cell| cell.rowspan.is_some() || cell.colspan.is_some())
+            .count(),
+        table_blocked: !table_block_reasons.is_empty(),
+        table_block_reasons,
+    }
+}
+
+fn browser_table_section_kinds(cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut section_kinds = Vec::new();
+    for cell in cells {
+        let Some(section_kind) = &cell.section_kind else {
+            continue;
+        };
+        if !section_kinds.contains(section_kind) {
+            section_kinds.push(section_kind.clone());
+        }
+    }
+    section_kinds
+}
+
+fn browser_table_header_scopes(cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut scopes = Vec::new();
+    for cell in cells.iter().filter(|cell| cell.header) {
+        let Some(scope) = &cell.scope else {
+            continue;
+        };
+        if !scopes.contains(scope) {
+            scopes.push(scope.clone());
+        }
+    }
+    scopes
+}
+
+fn browser_table_header_ids(cells: &[BrowserTableCell]) -> Vec<String> {
+    cells
+        .iter()
+        .filter(|cell| cell.header)
+        .filter_map(|cell| cell.id.clone())
+        .collect()
+}
+
+fn browser_table_block_reasons(table: &BrowserTable, cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if table.row_count == 0 {
+        reasons.push("missing-rows".to_string());
+    }
+    if table.caption.as_deref().map_or(true, str::is_empty) {
+        reasons.push("missing-caption".to_string());
+    }
+    if table.header_cell_count == 0 {
+        reasons.push("missing-header-cells".to_string());
+    }
+    if table.column_hint_count > 0 && table.column_hint_count != table.column_count {
+        reasons.push("column-hint-count-mismatch".to_string());
+    }
+    if table.header_cell_count > 0
+        && cells
+            .iter()
+            .any(|cell| !cell.header && cell.headers.is_empty())
+    {
+        reasons.push("data-cells-without-header-references".to_string());
+    }
+    reasons
 }
 
 fn collect_browser_table_rows<'a>(nodes: &'a [Node], rows: &mut Vec<&'a Element>) {
