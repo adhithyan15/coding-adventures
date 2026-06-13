@@ -8188,8 +8188,55 @@ pub fn dc_op(circuit: &Circuit) -> Result<DcResult, SpiceError> {
 }
 
 pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcResult, SpiceError> {
+    dc_op_with_optional_initial_vector(circuit, options, None)
+}
+
+pub fn dc_op_with_initial_vector(
+    circuit: &Circuit,
+    options: DcOpOptions,
+    initial_vector: &[f64],
+) -> Result<DcResult, SpiceError> {
+    dc_op_with_optional_initial_vector(circuit, options, Some(initial_vector))
+}
+
+pub fn dc_op_with_initial_conditions(
+    circuit: &Circuit,
+    summary: &DeckInitialConditionSummary,
+    options: DcOpOptions,
+) -> Result<DcResult, SpiceError> {
+    let initial_vector =
+        dc_initial_vector_from_conditions(circuit, &summary.initial_conditions, &summary.nodesets)?;
+    dc_op_with_initial_vector(circuit, options, &initial_vector)
+}
+
+pub fn dc_initial_vector_from_conditions(
+    circuit: &Circuit,
+    initial_conditions: &[DeckNodeCondition],
+    nodesets: &[DeckNodeCondition],
+) -> Result<Vec<f64>, SpiceError> {
+    let node_indices = collect_node_indices(circuit);
+    let voltage_sources = collect_voltage_sources(circuit, &[])?;
+    let mut vector = vec![0.0; node_indices.len() + voltage_sources.len()];
+
+    for condition in nodesets {
+        apply_node_condition_to_initial_vector(condition, &node_indices, &mut vector)?;
+    }
+    for condition in initial_conditions {
+        apply_node_condition_to_initial_vector(condition, &node_indices, &mut vector)?;
+    }
+    Ok(vector)
+}
+
+fn dc_op_with_optional_initial_vector(
+    circuit: &Circuit,
+    options: DcOpOptions,
+    initial_vector: Option<&[f64]>,
+) -> Result<DcResult, SpiceError> {
     validate_dc_op_options(options)?;
-    let solution = solve_dc_newton(circuit, options, None)?;
+    if let Some(vector) = initial_vector {
+        validate_dc_initial_vector(circuit, vector)?;
+    }
+    let solution = solve_dc_newton(circuit, options, initial_vector)?;
     if solution.converged {
         return Ok(dc_result_from_linear_solution(
             solution,
@@ -8487,6 +8534,58 @@ fn validate_dc_op_options(options: DcOpOptions) -> Result<(), SpiceError> {
             reason: "pseudo_transient_max_iterations must be positive".to_string(),
         });
     }
+    Ok(())
+}
+
+fn validate_dc_initial_vector(circuit: &Circuit, initial_vector: &[f64]) -> Result<(), SpiceError> {
+    let node_indices = collect_node_indices(circuit);
+    let voltage_sources = collect_voltage_sources(circuit, &[])?;
+    let expected_len = node_indices.len() + voltage_sources.len();
+    if initial_vector.len() != expected_len {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_initial_vector".to_string(),
+            reason: format!(
+                "expected {expected_len} entries for circuit MNA ordering, got {}",
+                initial_vector.len()
+            ),
+        });
+    }
+    if initial_vector.iter().any(|value| !value.is_finite()) {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_initial_vector".to_string(),
+            reason: "all entries must be finite".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn apply_node_condition_to_initial_vector(
+    condition: &DeckNodeCondition,
+    node_indices: &HashMap<String, usize>,
+    vector: &mut [f64],
+) -> Result<(), SpiceError> {
+    if !condition.value.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: condition.directive.clone(),
+            reason: format!("V({}) must be finite", condition.node),
+        });
+    }
+    if is_ground(&condition.node) {
+        if condition.value != 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: condition.directive.clone(),
+                reason: format!("V({}) conflicts with ground", condition.node),
+            });
+        }
+        return Ok(());
+    }
+    let Some(index) = node_indices.get(&condition.node) else {
+        return Err(SpiceError::InvalidElement {
+            name: condition.directive.clone(),
+            reason: format!("references unknown node {:?}", condition.node),
+        });
+    };
+    vector[*index] = condition.value;
     Ok(())
 }
 

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add `dc_initial_vector_from_conditions`,
+  `dc_op_with_initial_conditions`, and `dc_op_with_initial_vector` so parsed
+  `.ic` / `.nodeset` node-voltage hints can seed DC operating-point Newton
+  solves as MNA warm-start vectors, with `.ic` values taking precedence over
+  `.nodeset`, matching Python and TypeScript.
 - Add scalar `.func` call evaluation to `resolve_deck_parameters`: definitions
   are collected before `.end`, calls can appear in `.param` assignments and
   braced or quoted active-line expressions, and unknown functions, bad arity,

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `dcInitialVectorFromConditions`, `dcOpWithInitialConditions`, and
+  `dcOpWithInitialVector` so parsed `.ic` / `.nodeset` node-voltage hints can
+  seed DC operating-point Newton solves as MNA warm-start vectors, with `.ic`
+  values taking precedence over `.nodeset`, matching Python and Rust.
 - Add scalar `.func` call evaluation to `resolveDeckParameters`: definitions
   are collected before `.end`, calls can appear in `.param` assignments and
   braced or quoted active-line expressions, and unknown functions, bad arity,

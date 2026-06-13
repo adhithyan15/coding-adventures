@@ -166,7 +166,9 @@ from spice_engine import (
     circuit_at_temperature,
     custom_linear_conductance_model,
     dc_corners,
+    dc_initial_vector_from_conditions,
     dc_op,
+    dc_op_with_initial_conditions,
     dc_sweep,
     dc_sweep_corners,
     dc_temperature_sweep,
@@ -242,6 +244,7 @@ from spice_engine import (
     pss_newton_update,
     pss_residual,
     pss_residual_jacobian,
+    resolve_deck_initial_conditions,
     s_parameters,
     s_parameters_corners,
     sample_transient_probe_as_digital_events,
@@ -870,6 +873,33 @@ def test_resistor_voltage_divider():
     c.add(Resistor("R1", "vin", "vmid", 1000.0))
     c.add(Resistor("R2", "vmid", "0", 1000.0))
     r = dc_op(c)
+    assert r.converged
+    assert isclose(r.node_voltages["vin"], 10.0, abs_tol=1e-6)
+    assert isclose(r.node_voltages["vmid"], 5.0, abs_tol=1e-6)
+
+
+def test_dc_initial_conditions_seed_operating_point_vector():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vin", "0", voltage=10.0))
+    c.add(Resistor("R1", "vin", "vmid", 1000.0))
+    c.add(Resistor("R2", "vmid", "0", 1000.0))
+    summary = resolve_deck_initial_conditions(
+        """
+.nodeset V(vin)=10 V(vmid)=1
+.ic V(vmid)=4
+.end
+"""
+    )
+
+    vector = dc_initial_vector_from_conditions(
+        c,
+        summary.initial_conditions,
+        summary.nodesets,
+    )
+    assert vector == pytest.approx([10.0, 4.0, 0.0])
+
+    r = dc_op_with_initial_conditions(c, summary, convergence_aids=False)
+
     assert r.converged
     assert isclose(r.node_voltages["vin"], 10.0, abs_tol=1e-6)
     assert isclose(r.node_voltages["vmid"], 5.0, abs_tol=1e-6)

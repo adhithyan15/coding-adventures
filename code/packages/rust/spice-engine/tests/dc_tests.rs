@@ -1,12 +1,13 @@
 use spice_engine::{
     analyze_custom_model_source, bjt_from_model_card, circuit_at_temperature, dc_corners,
-    dc_corners_parallel, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners,
-    dc_sweep_corners_parallel, dc_temperature_sweep, dc_temperature_sweep_corners,
-    device_model_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
-    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
-    format_temperature_dc_table, jfet_from_model_card, mosfet_from_model_card,
-    normalize_model_card, normalize_model_card_type, BSource, Bjt, BjtPolarity, Cccs, Ccvs,
-    Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource, CustomModel,
+    dc_corners_parallel, dc_initial_vector_from_conditions, dc_op, dc_op_with_initial_conditions,
+    dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
+    dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
+    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
+    format_corner_temperature_dc_table, format_dc_sweep_table, format_temperature_dc_table,
+    jfet_from_model_card, mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
+    resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource, CustomModel,
     DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, ModelCardKind,
     Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
     SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
@@ -192,6 +193,36 @@ fn dc_voltage_divider_solves_midpoint_voltage() {
     assert!(result.converged);
     assert_eq!(result.convergence_aid, DcConvergenceAid::Newton);
     assert_eq!(result.iterations, 1);
+}
+
+#[test]
+fn dc_initial_conditions_seed_operating_point_vector() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+    let summary = resolve_deck_initial_conditions(
+        "
+.nodeset V(vin)=10 V(mid)=1
+.ic V(mid)=4
+.end
+",
+    );
+
+    let vector =
+        dc_initial_vector_from_conditions(&circuit, &summary.initial_conditions, &summary.nodesets)
+            .unwrap();
+    assert_eq!(vector, vec![4.0, 10.0, 0.0]);
+
+    let result = dc_op_with_initial_conditions(&circuit, &summary, DcOpOptions::default()).unwrap();
+
+    assert!(result.converged);
+    assert_close(result.voltage("vin").unwrap(), 10.0);
+    assert_close(result.voltage("mid").unwrap(), 5.0);
 }
 
 #[test]

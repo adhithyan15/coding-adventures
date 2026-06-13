@@ -104,7 +104,10 @@ functions, and recursive function calls.
 `resolveDeckInitialConditions` extracts scalar `.ic` and `.nodeset`
 `V(node)=value` hints before `.end`, keeps non-condition active lines, evaluates
 numeric SPICE suffix/arithmetic expressions, and reports stable diagnostics for
-malformed targets or unresolved values.
+malformed targets or unresolved values. `dcInitialVectorFromConditions` maps
+those parsed node-voltage hints into the DC solver's MNA warm-start vector, and
+`dcOpWithInitialConditions` applies that vector to the operating-point solve
+with `.ic` values taking precedence over `.nodeset` values.
 `resolveDeckFunctions` extracts scalar `.func name(args) expression`
 definitions before `.end`, preserves non-function active lines, strips braced
 or quoted expression delimiters, and reports stable diagnostics for malformed

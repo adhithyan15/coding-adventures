@@ -14,7 +14,9 @@ import {
   customLinearConductanceModel,
   currentSource,
   dcCorners,
+  dcInitialVectorFromConditions,
   dcOp,
+  dcOpWithInitialConditions,
   dcSweep,
   dcSweepCorners,
   dcTemperatureSweep,
@@ -35,6 +37,7 @@ import {
   normalizeModelCard,
   normalizeModelCardType,
   resistor,
+  resolveDeckInitialConditions,
   subcircuitDefinition,
   vccs,
   vcvs,
@@ -186,6 +189,31 @@ describe("dcOp", () => {
     expect(result.converged).toBe(true);
     expect(result.convergenceAid).toBe("newton");
     expect(result.iterations).toBe(1);
+  });
+
+  it("seeds a DC operating point vector from parsed initial conditions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 10.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+    const summary = resolveDeckInitialConditions(`
+.nodeset V(vin)=10 V(mid)=1
+.ic V(mid)=4
+.end
+`);
+
+    const vector = dcInitialVectorFromConditions(
+      circuit,
+      summary.initialConditions,
+      summary.nodesets,
+    );
+    expect(vector).toStrictEqual([4.0, 10.0, 0.0]);
+
+    const result = dcOpWithInitialConditions(circuit, summary, { convergenceAids: false });
+
+    expect(result.converged).toBe(true);
+    expectClose(result.voltage("vin"), 10.0);
+    expectClose(result.voltage("mid"), 5.0);
   });
 
   it("solves a large resistor ladder through the sparse real solver path", () => {

@@ -58,12 +58,13 @@ import math
 import random
 import re
 import statistics
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field, replace
 from typing import Literal
 
 from mosfet_models import MOSFET, Level1Model, Level1Params
 
+from spice_engine.compatibility import DeckInitialConditionSummary, DeckNodeCondition
 from spice_engine.elements import (
     BJT,
     CCCS,
@@ -3963,6 +3964,60 @@ def _dc_pseudo_transient(
     return final if final.converged else None
 
 
+def dc_initial_vector_from_conditions(
+    circuit: Circuit,
+    initial_conditions: Iterable[DeckNodeCondition],
+    nodesets: Iterable[DeckNodeCondition] = (),
+) -> list[float]:
+    """Build a DC Newton warm-start vector from parsed ``.ic``/``.nodeset`` hints.
+
+    The vector follows the engine's internal MNA ordering: non-ground node
+    voltages first, then branch currents initialised to zero.  ``.nodeset``
+    values are applied first, and ``.ic`` values override them when both
+    mention the same node.
+    """
+
+    node_to_idx, nodes = _node_index(circuit)
+    branch_srcs = _branch_sources(circuit)
+    vector = [0.0] * (len(nodes) + len(branch_srcs))
+
+    def apply(condition: DeckNodeCondition) -> None:
+        if not math.isfinite(condition.value):
+            msg = f"{condition.directive} V({condition.node}) must be finite"
+            raise ValueError(msg)
+        if _is_ground(condition.node):
+            if condition.value != 0.0:
+                msg = f"{condition.directive} V({condition.node}) conflicts with ground"
+                raise ValueError(msg)
+            return
+        index = node_to_idx.get(condition.node)
+        if index is None:
+            msg = f"{condition.directive} references unknown node {condition.node!r}"
+            raise ValueError(msg)
+        vector[index] = condition.value
+
+    for condition in nodesets:
+        apply(condition)
+    for condition in initial_conditions:
+        apply(condition)
+    return vector
+
+
+def _validate_dc_initial_vector(circuit: Circuit, initial_vector: list[float]) -> None:
+    _, nodes = _node_index(circuit)
+    branch_srcs = _branch_sources(circuit)
+    expected_len = len(nodes) + len(branch_srcs)
+    if len(initial_vector) != expected_len:
+        msg = (
+            "dc_initial_vector: expected "
+            f"{expected_len} entries for circuit MNA ordering, got {len(initial_vector)}"
+        )
+        raise ValueError(msg)
+    if any(not math.isfinite(value) for value in initial_vector):
+        msg = "dc_initial_vector: all entries must be finite"
+        raise ValueError(msg)
+
+
 def dc_op(
     circuit: Circuit,
     *,
@@ -3972,6 +4027,7 @@ def dc_op(
     pseudo_transient_steps: int = 20,
     pseudo_transient_shunt_conductance: float = 1e-3,
     pseudo_transient_max_iterations: int | None = None,
+    initial_vector: list[float] | None = None,
 ) -> DcResult:
     """Solve DC operating point via Newton-Raphson on a linearized MNA.
 
@@ -4014,9 +4070,20 @@ def dc_op(
     pseudo_transient_max_iterations:
         Optional Newton iteration cap for each pseudo-transient step and final
         polish solve.  Defaults to ``max_iterations``.
+    initial_vector:
+        Optional MNA warm-start vector.  Prefer
+        :func:`dc_op_with_initial_conditions` for parsed deck hints.
     """
+    if initial_vector is not None:
+        _validate_dc_initial_vector(circuit, initial_vector)
+
     # Attempt 1: plain Newton-Raphson.
-    result = _dc_newton(circuit, max_iterations=max_iterations, tol=tol)
+    result = _dc_newton(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        x_init=initial_vector,
+    )
     if result.converged:
         return replace(
             result,
@@ -4075,6 +4142,36 @@ def dc_op(
         result,
         convergence_aid="none",
         diagnostics=replace(result.diagnostics, convergence_aid="none"),
+    )
+
+
+def dc_op_with_initial_conditions(
+    circuit: Circuit,
+    summary: DeckInitialConditionSummary,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    convergence_aids: bool = True,
+    pseudo_transient_steps: int = 20,
+    pseudo_transient_shunt_conductance: float = 1e-3,
+    pseudo_transient_max_iterations: int | None = None,
+) -> DcResult:
+    """Solve DC operating point using parsed ``.ic``/``.nodeset`` node hints."""
+
+    initial_vector = dc_initial_vector_from_conditions(
+        circuit,
+        summary.initial_conditions,
+        summary.nodesets,
+    )
+    return dc_op(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        convergence_aids=convergence_aids,
+        pseudo_transient_steps=pseudo_transient_steps,
+        pseudo_transient_shunt_conductance=pseudo_transient_shunt_conductance,
+        pseudo_transient_max_iterations=pseudo_transient_max_iterations,
+        initial_vector=initial_vector,
     )
 
 
