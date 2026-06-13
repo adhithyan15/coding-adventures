@@ -1,5 +1,33 @@
 # MACSYMA Truly-Finish Plan
 
+> **🎉 Closed** — 2026-05-29 with an omnibus PR landing Tracks F–N.  All
+> eight tracks shipped across Python, TypeScript, and Rust; every
+> CHANGELOG `Unreleased` section in the MACSYMA pipeline is empty.
+> MACSYMA is considered feature-complete for mainstream Maxima 5.x
+> parity.  No items deferred.
+>
+> | Track | Description | Landed |
+> |---|---|---|
+> | F | TS + Rust `macsyma-runtime` 0.4.0 — assumption-aware abs/sqrt/log | #5354 |
+> | G1 | Python symbolic-coefficient Weierstrass + `AssumptionContext` compound-relation store | #5361 |
+> | G2 | TS + Rust port of G1 | #5363 |
+> | H1 | Python Gosper's algorithm for hypergeometric summation | #5366 |
+> | H2 | TS + Rust port of H1 | #5369 |
+> | I1 | Python closed-form transcendental infinite sums (zeta/eta/Taylor) | #5382 |
+> | I2 | TS + Rust port of I1 | #5387 |
+> | J1 | Python series-expansion limit fallback (Taylor-after-L'Hôpital) | #5574 |
+> | J2 | TS + Rust port of J1 | #5583 |
+> | K1 | Python n-variate Hensel factoring + symbolic-vm bridge | #5590 |
+> | K2 | TS + Rust port of K1 | #5599 |
+> | L1 | Python Lie point-symmetry first-order ODE | omnibus |
+> | L2 | TS + Rust port of L1 | omnibus |
+> | M1 | Python MACSYMA `load("name")` directive + `orthopoly` package | omnibus |
+> | M2 | TS + Rust port of M1 | omnibus |
+> | N | Closure (this banner + spec sweep + cas-simplify Unreleased flush) | omnibus |
+>
+> Spec history below is preserved as the planning context.  New work is
+> feature-driven; no further phases against this plan.
+
 > **Status**: Planning document, drafted 2026-05-29 after a deep audit of
 > the previous `macsyma-finish-plan.md` (closed 2026-05-28). That plan
 > shipped its 11 sub-tracks but explicitly carved out four large items

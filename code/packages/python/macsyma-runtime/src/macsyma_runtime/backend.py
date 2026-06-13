@@ -35,6 +35,7 @@ from macsyma_runtime.handlers import (
     display_handler,
     make_ev_handler,
     make_kill_handler,
+    make_load_handler,
     properties_handler,
     propvars_handler,
     suppress_handler,
@@ -44,6 +45,7 @@ from macsyma_runtime.heads import (
     DISPLAY,
     EV,
     KILL,
+    LOAD,
     PROP_VARS,
     PROPERTIES,
     SUPPRESS,
@@ -71,12 +73,20 @@ class MacsymaBackend(SymbolicBackend):
     #: the backend so VM lookups can resolve `%`, `%iN`, `%oN`.
     history: History
 
+    #: Names of loadable packages already installed on this session via
+    #: ``load("name")``.  See :func:`macsyma_runtime.handlers.make_load_handler`.
+    #: Per-instance — a fresh :class:`MacsymaBackend` always starts empty.
+    _loaded_packages: set[str]
+
     def __init__(self, *, history: History | None = None) -> None:
         super().__init__()
         self.history = history if history is not None else History()
         self.numer = False
         self.simp = True
         self.showtime = False
+        # Track M1 — per-session loaded-package state.  Must be created
+        # before any handler that touches it (the load handler does).
+        self._loaded_packages = set()
 
         # Patch the inherited handler table with the runtime's heads.
         # ``SymbolicBackend.__init__`` filled ``self._handlers`` already
@@ -89,6 +99,10 @@ class MacsymaBackend(SymbolicBackend):
             DECLARE.name: declare_handler,
             PROPERTIES.name: properties_handler,
             PROP_VARS.name: propvars_handler,
+            # Track M1 — runtime package loader.  Kept here (rather than in
+            # cas_handlers.py) because it mutates session state, just like
+            # Kill and Ev.
+            LOAD.name: make_load_handler(self),
         }
         # Merge in all CAS substrate handlers (simplify, factor, solve,
         # list ops, matrix, limit, taylor, numeric helpers, …).
@@ -130,6 +144,11 @@ class MacsymaBackend(SymbolicBackend):
             DECLARE.name,
             PROPERTIES.name,
             PROP_VARS.name,
+            # Track M1 — ``load(orthopoly)`` (bare symbol form) would
+            # otherwise resolve to an unbound symbol; hold the arg so the
+            # handler can pull the name verbatim.  ``load("orthopoly")``
+            # works either way since IRString is self-evaluating.
+            LOAD.name,
         })
 
     def hold_heads(self) -> frozenset[str]:

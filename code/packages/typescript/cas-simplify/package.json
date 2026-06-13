@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/cas-simplify",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Canonicalization and simplification for symbolic IR",
   "type": "module",
   "main": "src/index.ts",

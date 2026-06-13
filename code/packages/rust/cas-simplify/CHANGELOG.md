@@ -37,13 +37,14 @@ Weierstrass integrator that consumes this store ships in
 - Commutativity is honoured: `is(b^2 < a^2)` ≡ `is(a^2 > b^2)`,
   `is(b^2 = a^2)` ≡ `is(a^2 = b^2)`, and similarly for `<=` / `>=` and `!=`.
 
-## Unreleased
+## [0.3.0] — 2026-05-29
 
 ### Added
 
-- Added deterministic `AssumptionContext::facts_for(...)` and
-  `AssumptionContext::symbols_with_facts()` metadata queries for MACSYMA
-  property inspection.
+- Released the previously-Unreleased deterministic
+  `AssumptionContext::facts_for(...)` and
+  `AssumptionContext::symbols_with_facts()` metadata queries as part
+  of the `macsyma-truly-finish-plan` closure sweep (Track N).
 
 ## [0.1.0] — 2026-04-27
 

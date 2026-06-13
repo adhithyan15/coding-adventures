@@ -20,7 +20,11 @@ from __future__ import annotations
 from symbolic_ir import (
     APPLY1,
     APPLY2,
+    BESSEL_J,
+    BESSEL_Y,
     BETA_FUNC,
+    CHEBYSHEV_T,
+    CHEBYSHEV_U,
     CHI,
     CI,
     DEFRULE,
@@ -32,10 +36,13 @@ from symbolic_ir import (
     FRESNEL_C,
     FRESNEL_S,
     GAMMA_FUNC,
+    HERMITE_H,
     IFOURIER,
     ILT,
     LAMBERT_W,
     LAPLACE,
+    LEGENDRE_P,
+    LEGENDRE_Q,
     LI2,
     MATCHDECLARE,
     SHI,
@@ -192,6 +199,7 @@ from macsyma_runtime.heads import (  # noqa: E402
     FORGET,
     IS,
     KILL,
+    LOAD,
     PROP_VARS,
     PROPERTIES,
 )
@@ -371,6 +379,23 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     # lambert_w(x) = W₀(x), the principal branch of W satisfying W·exp(W)=x.
     # Arises in solutions of f(x)·exp(f(x)) = c where f is linear.
     "lambert_w": LAMBERT_W,
+    # ---------------------------------------------------------------
+    # Track M1 — runtime package loader and orthogonal polynomials.
+    # ---------------------------------------------------------------
+    #
+    # ``load("orthopoly")`` is a session-level directive that
+    # registers the orthogonal polynomial evaluators (see
+    # :mod:`macsyma_runtime.packages.orthopoly`).  Until that call
+    # the names below parse to their canonical IR head but the
+    # backend has no handler, so they round-trip unevaluated.
+    "load": LOAD,
+    "legendre_p": LEGENDRE_P,
+    "legendre_q": LEGENDRE_Q,
+    "chebyshev_t": CHEBYSHEV_T,
+    "chebyshev_u": CHEBYSHEV_U,
+    "hermite": HERMITE_H,
+    "bessel_j": BESSEL_J,
+    "bessel_y": BESSEL_Y,
 }
 
 

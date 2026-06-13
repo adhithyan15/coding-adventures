@@ -39,12 +39,12 @@ in the same PR but lives in that package's changelog.
     - `is(b^2 = a^2)` ≡ `is(a^2 = b^2)`,
     - and the same for `<=`/`>=`, `!=`.
 
-## Unreleased
+## [0.5.0] — 2026-05-29
 
-- Added deterministic assumption metadata query helpers:
-  `AssumptionContext.facts_for(...)` and
-  `AssumptionContext.symbols_with_facts()`, for MACSYMA `properties` /
-  `propvars` runtime support.
+- Released the previously-Unreleased deterministic assumption metadata
+  query helpers (`AssumptionContext.facts_for(...)` and
+  `AssumptionContext.symbols_with_facts()`) as part of the
+  `macsyma-truly-finish-plan` closure sweep (Track N).
 
 ## 0.3.0 — 2026-05-04
 
