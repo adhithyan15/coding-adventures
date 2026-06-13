@@ -51,6 +51,8 @@ packages a typed surface for:
   pairing flows
 - integration descriptor metadata and payload-free summaries for Chief of Staff
   discovery
+- integration package summaries that join descriptor, command-flow, and local
+  pairing readiness
 
 ## Dependencies
 

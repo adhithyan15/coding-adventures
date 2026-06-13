@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
 - Hue pairing Vault handoff summaries for no-secret pairing completion checks.
 - Hue integration descriptor summaries for capability, bridge-role, and runtime
   surface checks.
+- Hue integration package summaries that join descriptor, command-flow, and
+  local pairing readiness.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
