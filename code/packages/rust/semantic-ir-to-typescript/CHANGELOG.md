@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.3 — import runtime from `@coding-adventures/sir-runtime-core`
+
+The TypeScript runtime is no longer inlined into every artifact.  Emitted modules
+now `import * as __Sir from "@coding-adventures/sir-runtime-core";` (per
+`code/specs/sir-runtime.md`), so nothing language-specific is pasted into the file.
+
+- `runtime.rs` `RUNTIME` is now a one-line import header instead of the inlined
+  `namespace __Sir { … }` block.
+- `emit.rs` updated to the core package's API names: `__Sir.add/sub/mul/div`
+  (was `plus/minus/times/divide`), `__Sir.apply` (was `applyClosure`),
+  `__Sir.builtinClosure(name)` / `__Sir.callBuiltin(name, [...])` (was
+  `__Sir.builtins[name]`), and `null` (was `__Sir.NIL`).  `__Sir.Val` / `__Sir.Sym`
+  / `__Sir.Pair` / `__Sir.Closure` are unchanged (re-exported by the package).
+- Emitted user-code shapes are otherwise unchanged; tests updated accordingly.
+
 ## 0.1.2 — SIR18 exhaustiveness (no behaviour change)
 
 semantic-ir 0.10.0 adds `Expr::StrConcat` (the SIR18 string-concat

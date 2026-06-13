@@ -241,7 +241,7 @@ mod tests {
         .expect("lower");
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("function add(a: __Sir.Val, b: __Sir.Val)"));
-        assert!(a.source.contains("__Sir.plus(a, b)"));
+        assert!(a.source.contains("__Sir.add(a, b)"));
         assert!(a.source.contains("__Sir.print(add(1, 2))"));
     }
 
@@ -258,7 +258,7 @@ mod tests {
         // MakeClosure should appear inside `adder`.
         assert!(a.source.contains("new __Sir.Closure"));
         // add5 is a global, set via globalSet in _init.
-        assert!(a.source.contains("let add5: __Sir.Val = __Sir.NIL;"));
+        assert!(a.source.contains("let add5: __Sir.Val = null;"));
         // _init should be invoked.
         assert!(a.source.contains("_init();"));
     }
