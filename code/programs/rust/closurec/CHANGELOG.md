@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.121.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-117** — a `case` clause whose operand begins with a UNARY
+  operator (`-`, `+`, `!`, `~`) now gets the separating space upstream
+  Closure v20240317 emits, which closurec used to omit:
+
+      case-1:   ->  case -1:
+      case+1:   ->  case +1:
+      case!a:   ->  case !a:
+      case~a:   ->  case ~a:
+      case-a.b: ->  case -a.b:
+
+  Like the `case`/`get`/`set`/`new` keyword + string-literal rule
+  (gap-111), `case` followed by a word-like keyword needs whitespace to
+  stay a distinct token from its operand. A plain-number operand
+  (`case 1:`) already round-trips because the number is not adjacent to
+  the keyword in a way that would glue; the unary PUNCTUATOR is what
+  closurec's separator OR-chain previously skipped over.
+
+  New `case_unary_needs_space(kept, idx)` helper in `whitespace_only.rs`
+  returns true exactly when `kept[idx]` is a structural `-`/`+`/`!`/`~`
+  punctuator and `kept[idx-1]` is the word-like keyword `case`; wired
+  into the emit-loop separator OR-chain. Scoped strictly to `case`:
+  `return-1`, `throw-1`, `typeof-1` stay glued (they match the JAR), and
+  binary `x=a-1;` is untouched.
+
 ## [0.120.0] - 2026-06-12
 
 ### Fixed
