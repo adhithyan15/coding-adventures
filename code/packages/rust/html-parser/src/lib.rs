@@ -846,6 +846,7 @@ pub struct BrowserDocument {
     pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
+    pub link_resource_descriptors: Vec<BrowserLinkResourceDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
     pub form_association_descriptors: Vec<BrowserFormAssociationDescriptor>,
     pub form_autofill_descriptors: Vec<BrowserFormAutofillDescriptor>,
@@ -1022,6 +1023,30 @@ pub struct BrowserResource {
     pub default_track: bool,
     pub async_script: bool,
     pub defer_script: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLinkResourceDescriptor {
+    pub resource_index: usize,
+    pub resource_kind: String,
+    pub url: String,
+    pub resolved_url: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub as_hint: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub sizes: Option<String>,
+    pub hreflang: Option<String>,
+    pub color: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub responsive_image_preload: bool,
+    pub icon_candidate: bool,
+    pub alternate_candidate: bool,
+    pub policy_hint_count: usize,
+    pub resource_blocked: bool,
+    pub resource_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3797,6 +3822,7 @@ impl BrowserDocument {
         summary.form_reset_descriptors = browser_form_reset_descriptors(&summary.forms);
         summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
+        summary.link_resource_descriptors = browser_link_resource_descriptors(&summary.resources);
         summary
     }
 }
@@ -11422,6 +11448,111 @@ fn browser_resource_endpoint_descriptors(
             .map(browser_resource_endpoint_descriptor),
     );
     descriptors
+}
+
+fn browser_link_resource_descriptors(
+    resources: &[BrowserResource],
+) -> Vec<BrowserLinkResourceDescriptor> {
+    resources
+        .iter()
+        .enumerate()
+        .filter(|(_, resource)| resource.rel.is_some())
+        .map(|(index, resource)| browser_link_resource_descriptor(index + 1, resource))
+        .collect()
+}
+
+fn browser_link_resource_descriptor(
+    resource_index: usize,
+    resource: &BrowserResource,
+) -> BrowserLinkResourceDescriptor {
+    let resource_block_reasons = browser_link_resource_block_reasons(resource);
+
+    BrowserLinkResourceDescriptor {
+        resource_index,
+        resource_kind: resource.kind.clone(),
+        url: resource.url.clone(),
+        resolved_url: resource.resolved_url.clone(),
+        rel_tokens: resource.rel_tokens.clone(),
+        as_hint: resource.as_hint.clone(),
+        type_hint: resource.type_hint.clone(),
+        media: resource.media.clone(),
+        title: resource.title.clone(),
+        sizes: resource.sizes.clone(),
+        hreflang: resource.hreflang.clone(),
+        color: resource.color.clone(),
+        fetchpriority: resource.fetchpriority.clone(),
+        blocking_tokens: resource.blocking_tokens.clone(),
+        responsive_image_preload: resource.kind == "preload"
+            && resource.as_hint.as_deref() == Some("image")
+            && (resource.imagesrcset.is_some() || resource.imagesizes.is_some()),
+        icon_candidate: resource.kind == "icon",
+        alternate_candidate: resource.kind == "alternate",
+        policy_hint_count: browser_link_resource_policy_hint_count(resource),
+        resource_blocked: !resource_block_reasons.is_empty(),
+        resource_block_reasons,
+    }
+}
+
+fn browser_link_resource_policy_hint_count(resource: &BrowserResource) -> usize {
+    [
+        resource.integrity.as_ref(),
+        resource.crossorigin.as_ref(),
+        resource.nonce.as_ref(),
+        resource.referrerpolicy.as_ref(),
+        resource.fetchpriority.as_ref(),
+        resource.blocking.as_ref(),
+    ]
+    .into_iter()
+    .filter(Option::is_some)
+    .count()
+}
+
+fn browser_link_resource_block_reasons(resource: &BrowserResource) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if resource.rel_tokens.is_empty() {
+        reasons.push("missing-rel".to_string());
+    }
+    if resource.resolved_url.is_none() {
+        reasons.push("unresolved-url".to_string());
+    }
+    if resource.kind == "preload" && resource.as_hint.is_none() {
+        reasons.push("preload-missing-as".to_string());
+    }
+    if resource.kind == "preload"
+        && resource.as_hint.as_deref() == Some("image")
+        && resource.imagesrcset.is_some()
+        && resource.imagesizes.is_none()
+    {
+        reasons.push("responsive-image-preload-missing-sizes".to_string());
+    }
+    if resource.kind == "preload"
+        && resource.as_hint.as_deref() == Some("image")
+        && resource.imagesizes.is_some()
+        && resource.imagesrcset.is_none()
+    {
+        reasons.push("responsive-image-preload-missing-srcset".to_string());
+    }
+    if resource.kind == "icon"
+        && browser_rel_tokens_contain(&resource.rel_tokens, "mask-icon")
+        && resource.color.is_none()
+    {
+        reasons.push("mask-icon-missing-color".to_string());
+    }
+    if resource.kind == "icon"
+        && !browser_rel_tokens_contain(&resource.rel_tokens, "mask-icon")
+        && resource.sizes.is_none()
+        && resource.type_hint.is_none()
+    {
+        reasons.push("icon-missing-size-or-type".to_string());
+    }
+    if resource.kind == "alternate"
+        && resource.title.is_none()
+        && resource.hreflang.is_none()
+        && resource.type_hint.is_none()
+    {
+        reasons.push("alternate-missing-descriptor".to_string());
+    }
+    reasons
 }
 
 fn browser_image_candidate_descriptors(
