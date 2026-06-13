@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Hue command-plan projection summaries for generated-command and ignored-delta
   reconciliation telemetry.
+- Hue integration descriptor summaries for capability, bridge-role, and runtime
+  surface checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`

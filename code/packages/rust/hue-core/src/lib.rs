@@ -25,6 +25,10 @@ use smart_home_local_http::{
 use std::fmt;
 
 pub const HUE_INTEGRATION_ID: &str = "hue";
+pub const HUE_READ_CAPABILITY_ID: &str = "smart_home.read";
+pub const HUE_LIGHT_COMMAND_CAPABILITY_ID: &str = "smart_home.command.light";
+pub const HUE_PAIRING_CAPABILITY_ID: &str = "smart_home.pair";
+pub const HUE_BRIDGE_ROLE: &str = "hue-bridge";
 pub const CLIP_V2_RESOURCE_ROOT: &str = "/clip/v2/resource";
 pub const CLIP_V2_EVENT_STREAM_PATH: &str = "/eventstream/clip/v2";
 pub const HUE_APPLICATION_KEY_HEADER: &str = "hue-application-key";
@@ -1246,13 +1250,86 @@ pub fn hue_integration_descriptor() -> IntegrationDescriptor {
         version: env!("CARGO_PKG_VERSION").to_string(),
         runtime_kind: RuntimeKind::RustWorkerProcess,
         capabilities: vec![
-            smart_home_core::CapabilityId::trusted("smart_home.read"),
-            smart_home_core::CapabilityId::trusted("smart_home.command.light"),
-            smart_home_core::CapabilityId::trusted("smart_home.pair"),
+            smart_home_core::CapabilityId::trusted(HUE_READ_CAPABILITY_ID),
+            smart_home_core::CapabilityId::trusted(HUE_LIGHT_COMMAND_CAPABILITY_ID),
+            smart_home_core::CapabilityId::trusted(HUE_PAIRING_CAPABILITY_ID),
         ],
-        discovery_roles: vec!["hue-bridge".to_string()],
-        pairing_roles: vec!["hue-bridge".to_string()],
+        discovery_roles: vec![HUE_BRIDGE_ROLE.to_string()],
+        pairing_roles: vec![HUE_BRIDGE_ROLE.to_string()],
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueIntegrationDescriptorSummary {
+    pub runtime_kind: RuntimeKind,
+    pub capability_count: usize,
+    pub discovery_role_count: usize,
+    pub pairing_role_count: usize,
+    pub declares_read: bool,
+    pub declares_light_command: bool,
+    pub declares_pairing: bool,
+    pub declares_bridge_discovery: bool,
+    pub declares_bridge_pairing: bool,
+}
+
+impl HueIntegrationDescriptorSummary {
+    pub fn from_descriptor(descriptor: &IntegrationDescriptor) -> Self {
+        Self {
+            runtime_kind: descriptor.runtime_kind,
+            capability_count: descriptor.capabilities.len(),
+            discovery_role_count: descriptor.discovery_roles.len(),
+            pairing_role_count: descriptor.pairing_roles.len(),
+            declares_read: descriptor_declares_capability(descriptor, HUE_READ_CAPABILITY_ID),
+            declares_light_command: descriptor_declares_capability(
+                descriptor,
+                HUE_LIGHT_COMMAND_CAPABILITY_ID,
+            ),
+            declares_pairing: descriptor_declares_capability(descriptor, HUE_PAIRING_CAPABILITY_ID),
+            declares_bridge_discovery: descriptor_declares_role(
+                &descriptor.discovery_roles,
+                HUE_BRIDGE_ROLE,
+            ),
+            declares_bridge_pairing: descriptor_declares_role(
+                &descriptor.pairing_roles,
+                HUE_BRIDGE_ROLE,
+            ),
+        }
+    }
+
+    pub fn runs_as_worker_process(&self) -> bool {
+        self.runtime_kind == RuntimeKind::RustWorkerProcess
+    }
+
+    pub fn has_agent_facing_capabilities(&self) -> bool {
+        self.declares_read || self.declares_light_command || self.declares_pairing
+    }
+
+    pub fn has_bridge_roles(&self) -> bool {
+        self.declares_bridge_discovery || self.declares_bridge_pairing
+    }
+
+    pub fn supports_local_pairing_flow(&self) -> bool {
+        self.declares_pairing && self.declares_bridge_pairing
+    }
+
+    pub fn supports_light_command_flow(&self) -> bool {
+        self.declares_read && self.declares_light_command && self.declares_bridge_discovery
+    }
+}
+
+pub fn hue_integration_descriptor_summary() -> HueIntegrationDescriptorSummary {
+    HueIntegrationDescriptorSummary::from_descriptor(&hue_integration_descriptor())
+}
+
+fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
+    descriptor
+        .capabilities
+        .iter()
+        .any(|capability| capability.as_str() == capability_id)
+}
+
+fn descriptor_declares_role(roles: &[String], role: &str) -> bool {
+    roles.iter().any(|candidate| candidate == role)
 }
 
 pub fn hue_registration_request(
@@ -4173,5 +4250,34 @@ mod tests {
             .iter()
             .any(|capability| capability.as_str() == "smart_home.command.light"));
         assert_eq!(descriptor.discovery_roles, vec!["hue-bridge"]);
+    }
+
+    #[test]
+    fn hue_integration_descriptor_summary_reports_runtime_surface() {
+        let descriptor = hue_integration_descriptor();
+        let summary = HueIntegrationDescriptorSummary::from_descriptor(&descriptor);
+
+        assert_eq!(summary.runtime_kind, RuntimeKind::RustWorkerProcess);
+        assert_eq!(summary.capability_count, 3);
+        assert_eq!(summary.discovery_role_count, 1);
+        assert_eq!(summary.pairing_role_count, 1);
+        assert!(summary.declares_read);
+        assert!(summary.declares_light_command);
+        assert!(summary.declares_pairing);
+        assert!(summary.declares_bridge_discovery);
+        assert!(summary.declares_bridge_pairing);
+        assert!(summary.runs_as_worker_process());
+        assert!(summary.has_agent_facing_capabilities());
+        assert!(summary.has_bridge_roles());
+        assert!(summary.supports_local_pairing_flow());
+        assert!(summary.supports_light_command_flow());
+    }
+
+    #[test]
+    fn hue_integration_descriptor_summary_helper_uses_default_descriptor() {
+        assert_eq!(
+            hue_integration_descriptor_summary(),
+            HueIntegrationDescriptorSummary::from_descriptor(&hue_integration_descriptor())
+        );
     }
 }
