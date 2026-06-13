@@ -547,6 +547,10 @@ impl HueCommandPlan {
         HueCommandPlanSummary::from_commands(&self.commands)
     }
 
+    pub fn projection_summary(&self) -> HueCommandPlanProjectionSummary {
+        HueCommandPlanProjectionSummary::from_plan(self)
+    }
+
     pub fn requests(&self) -> Vec<HueRequest> {
         self.commands.iter().map(HueCommand::to_request).collect()
     }
@@ -561,6 +565,59 @@ impl HueCommandPlan {
 
     pub fn ignored_delta_count(&self) -> usize {
         self.ignored_capability_ids.len()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueCommandPlanProjectionSummary {
+    pub target_resource_type: HueResourceType,
+    pub requested_delta_count: usize,
+    pub generated_command_count: usize,
+    pub ignored_delta_count: usize,
+    pub command_summary: HueCommandPlanSummary,
+}
+
+impl HueCommandPlanProjectionSummary {
+    pub fn from_plan(plan: &HueCommandPlan) -> Self {
+        let command_summary = plan.summary();
+        Self {
+            target_resource_type: plan.target.resource_type.clone(),
+            requested_delta_count: command_summary.total_commands + plan.ignored_delta_count(),
+            generated_command_count: command_summary.total_commands,
+            ignored_delta_count: plan.ignored_delta_count(),
+            command_summary,
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.requested_delta_count == 0
+    }
+
+    pub fn has_generated_commands(&self) -> bool {
+        self.generated_command_count > 0
+    }
+
+    pub fn has_ignored_deltas(&self) -> bool {
+        self.ignored_delta_count > 0
+    }
+
+    pub fn projected_all_requested_deltas(&self) -> bool {
+        self.requested_delta_count > 0 && self.ignored_delta_count == 0
+    }
+
+    pub fn has_partial_projection(&self) -> bool {
+        self.generated_command_count > 0 && self.ignored_delta_count > 0
+    }
+
+    pub fn target_is_light_surface(&self) -> bool {
+        matches!(
+            self.target_resource_type,
+            HueResourceType::Light | HueResourceType::GroupedLight
+        )
+    }
+
+    pub fn target_is_scene_surface(&self) -> bool {
+        self.target_resource_type == HueResourceType::Scene
     }
 }
 
@@ -2814,6 +2871,24 @@ mod tests {
                 scene_recall_commands: 0,
             }
         );
+        let projection_summary = plan.projection_summary();
+        assert_eq!(
+            projection_summary,
+            HueCommandPlanProjectionSummary {
+                target_resource_type: HueResourceType::Light,
+                requested_delta_count: 3,
+                generated_command_count: 2,
+                ignored_delta_count: 1,
+                command_summary: plan.summary(),
+            }
+        );
+        assert!(!projection_summary.is_empty());
+        assert!(projection_summary.has_generated_commands());
+        assert!(projection_summary.has_ignored_deltas());
+        assert!(projection_summary.has_partial_projection());
+        assert!(!projection_summary.projected_all_requested_deltas());
+        assert!(projection_summary.target_is_light_surface());
+        assert!(!projection_summary.target_is_scene_surface());
         assert_eq!(
             plan.requests(),
             vec![
@@ -2829,6 +2904,32 @@ mod tests {
                 },
             ]
         );
+
+        let grouped_light = HueResourceRef::new(
+            HueResourceType::GroupedLight,
+            HueResourceId::trusted("grouped-light-1"),
+        );
+        let projected = HueCommandPlan::from_state_deltas(
+            &grouped_light,
+            &[StateDelta {
+                capability_id: CapabilityId::trusted("light.brightness"),
+                value: Value::Percentage(55),
+            }],
+        )
+        .unwrap()
+        .projection_summary();
+        assert_eq!(projected.requested_delta_count, 1);
+        assert_eq!(projected.generated_command_count, 1);
+        assert_eq!(projected.ignored_delta_count, 0);
+        assert!(projected.projected_all_requested_deltas());
+        assert!(projected.target_is_light_surface());
+
+        let empty_projection = HueCommandPlan::empty(light.clone()).projection_summary();
+        assert!(empty_projection.is_empty());
+        assert!(!empty_projection.has_generated_commands());
+        assert!(!empty_projection.has_ignored_deltas());
+        assert!(!empty_projection.has_partial_projection());
+        assert!(!empty_projection.projected_all_requested_deltas());
     }
 
     #[test]
