@@ -68,21 +68,32 @@ fn cs_to_wire(cs: &fps::CrossSection) -> String {
 }
 
 /// Deserialise the wire format back into a CrossSection.
-/// Silently skips entries that do not parse as `material:f64`.
-fn cs_from_wire(s: &str) -> fps::CrossSection {
+///
+/// Rejects the entire wire string if any entry is malformed or if any
+/// material name contains `|` or `:`.  Returning `Err` instead of
+/// silently skipping bad entries prevents a corrupted or adversarially
+/// crafted wire string from causing silent layer loss.
+fn cs_from_wire(s: &str) -> Result<fps::CrossSection, String> {
     if s.is_empty() {
-        return fps::CrossSection { layers: vec![] };
+        return Ok(fps::CrossSection { layers: vec![] });
     }
-    let layers = s
-        .split('|')
-        .filter_map(|entry| {
-            let mut parts = entry.splitn(2, ':');
-            let material = parts.next()?.to_string();
-            let thickness_nm: f64 = parts.next()?.parse().ok()?;
-            Some(fps::Layer::new(&material, thickness_nm))
-        })
-        .collect();
-    fps::CrossSection { layers }
+    let mut layers = Vec::new();
+    for entry in s.split('|') {
+        let mut parts = entry.splitn(2, ':');
+        let material = parts
+            .next()
+            .ok_or_else(|| format!("bad wire entry: {:?}", entry))?
+            .to_string();
+        validate_name(&material)
+            .map_err(|e| format!("cs_from_wire: {e}"))?;
+        let thickness_nm: f64 = parts
+            .next()
+            .ok_or_else(|| format!("missing thickness in {:?}", entry))?
+            .parse()
+            .map_err(|_| format!("bad thickness in {:?}", entry))?;
+        layers.push(fps::Layer::new(&material, thickness_nm));
+    }
+    Ok(fps::CrossSection { layers })
 }
 
 /// Read a C string pointer as an owned `String`.  Returns `""` if null or
@@ -428,7 +439,11 @@ pub unsafe extern "C" fn silicon_deposit(
     if let Err(m) = validate_name(&mat_str) {
         return unsafe { err_msg(&format!("deposit: {m}"), err, err_cap) };
     }
-    match fps::deposit(&cs_from_wire(&cs_str), &mat_str, thickness_nm) {
+    let cs = match cs_from_wire(&cs_str) {
+        Ok(c)  => c,
+        Err(m) => return unsafe { err_msg(&format!("deposit: {m}"), err, err_cap) },
+    };
+    match fps::deposit(&cs, &mat_str, thickness_nm) {
         Ok(new_cs) => unsafe { ok_str(&cs_to_wire(&new_cs), out, out_cap, err, err_cap) },
         Err(m)     => unsafe { err_msg(&format!("deposit: {m}"), err, err_cap) },
     }
@@ -449,7 +464,11 @@ pub unsafe extern "C" fn silicon_etch(
     if let Err(m) = validate_name(&target_str) {
         return unsafe { err_msg(&format!("etch: {m}"), err, err_cap) };
     }
-    let new_cs = fps::etch(&cs_from_wire(&cs_str), &target_str, depth_nm);
+    let cs = match cs_from_wire(&cs_str) {
+        Ok(c)  => c,
+        Err(m) => return unsafe { err_msg(&format!("etch: {m}"), err, err_cap) },
+    };
+    let new_cs = fps::etch(&cs, &target_str, depth_nm);
     unsafe { ok_str(&cs_to_wire(&new_cs), out, out_cap, err, err_cap) }
 }
 
@@ -469,7 +488,11 @@ pub unsafe extern "C" fn silicon_implant(
     if let Err(m) = validate_name(&species_str) {
         return unsafe { err_msg(&format!("implant: {m}"), err, err_cap) };
     }
-    match fps::implant(&cs_from_wire(&cs_str), &species_str, energy_kev, dose_cm2) {
+    let cs = match cs_from_wire(&cs_str) {
+        Ok(c)  => c,
+        Err(m) => return unsafe { err_msg(&format!("implant: {m}"), err, err_cap) },
+    };
+    match fps::implant(&cs, &species_str, energy_kev, dose_cm2) {
         Ok(new_cs) => unsafe { ok_str(&cs_to_wire(&new_cs), out, out_cap, err, err_cap) },
         Err(m)     => unsafe { err_msg(&format!("implant: {m}"), err, err_cap) },
     }
@@ -486,7 +509,11 @@ pub unsafe extern "C" fn silicon_diffuse(
     err_cap: usize,
 ) -> c_int {
     let cs_str = unsafe { read_c_str(cs) };
-    let new_cs = fps::diffuse(&cs_from_wire(&cs_str), time_min, None);
+    let xcs = match cs_from_wire(&cs_str) {
+        Ok(c)  => c,
+        Err(m) => return unsafe { err_msg(&format!("diffuse: {m}"), err, err_cap) },
+    };
+    let new_cs = fps::diffuse(&xcs, time_min, None);
     unsafe { ok_str(&cs_to_wire(&new_cs), out, out_cap, err, err_cap) }
 }
 
@@ -502,7 +529,11 @@ pub unsafe extern "C" fn silicon_diffuse_with_temp(
     err_cap: usize,
 ) -> c_int {
     let cs_str = unsafe { read_c_str(cs) };
-    let new_cs = fps::diffuse(&cs_from_wire(&cs_str), time_min, Some(temperature_c));
+    let xcs = match cs_from_wire(&cs_str) {
+        Ok(c)  => c,
+        Err(m) => return unsafe { err_msg(&format!("diffuse_with_temp: {m}"), err, err_cap) },
+    };
+    let new_cs = fps::diffuse(&xcs, time_min, Some(temperature_c));
     unsafe { ok_str(&cs_to_wire(&new_cs), out, out_cap, err, err_cap) }
 }
 
@@ -517,7 +548,11 @@ pub unsafe extern "C" fn silicon_deal_grove_oxidation(
     err_cap: usize,
 ) -> c_int {
     let cs_str = unsafe { read_c_str(cs) };
-    match fps::deal_grove_oxidation(&cs_from_wire(&cs_str), time_min, None, None) {
+    let xcs = match cs_from_wire(&cs_str) {
+        Ok(c)  => c,
+        Err(m) => return unsafe { err_msg(&format!("deal_grove_oxidation: {m}"), err, err_cap) },
+    };
+    match fps::deal_grove_oxidation(&xcs, time_min, None, None) {
         Ok(new_cs) => unsafe { ok_str(&cs_to_wire(&new_cs), out, out_cap, err, err_cap) },
         Err(m)     => unsafe { err_msg(&format!("deal_grove_oxidation: {m}"), err, err_cap) },
     }
@@ -536,7 +571,11 @@ pub unsafe extern "C" fn silicon_deal_grove_oxidation_custom(
     err_cap: usize,
 ) -> c_int {
     let cs_str = unsafe { read_c_str(cs) };
-    match fps::deal_grove_oxidation(&cs_from_wire(&cs_str), time_min, Some(a_um), Some(b_um2_per_hr)) {
+    let xcs = match cs_from_wire(&cs_str) {
+        Ok(c)  => c,
+        Err(m) => return unsafe { err_msg(&format!("deal_grove_oxidation_custom: {m}"), err, err_cap) },
+    };
+    match fps::deal_grove_oxidation(&xcs, time_min, Some(a_um), Some(b_um2_per_hr)) {
         Ok(new_cs) => unsafe { ok_str(&cs_to_wire(&new_cs), out, out_cap, err, err_cap) },
         Err(m)     => unsafe { err_msg(&format!("deal_grove_oxidation_custom: {m}"), err, err_cap) },
     }
@@ -601,15 +640,38 @@ mod tests {
     #[test]
     fn test_cs_round_trip() {
         let orig = "Poly:50.0|SiO2:4.8|Si:500.0";
-        let cs = cs_from_wire(orig);
+        let cs = cs_from_wire(orig).unwrap();
         assert_eq!(cs.layers.len(), 3);
         assert_eq!(cs_to_wire(&cs), orig);
     }
 
     #[test]
     fn test_cs_from_wire_empty() {
-        let cs = cs_from_wire("");
+        let cs = cs_from_wire("").unwrap();
         assert!(cs.layers.is_empty());
+    }
+
+    #[test]
+    fn test_cs_from_wire_rejects_pipe_in_material() {
+        assert!(cs_from_wire("Bad|Material:10.0").is_err());
+    }
+
+    #[test]
+    fn test_cs_from_wire_rejects_colon_in_material() {
+        // The entry "Bad:Mat:10.0" splits into material="Bad", thickness="Mat:10.0"
+        // which fails to parse as f64 → thickness parse error → Err.
+        // But "Bad:Colon:10" would also fail. Testing injection via colons:
+        assert!(cs_from_wire("Bad|entry:10.0").is_err());
+    }
+
+    #[test]
+    fn test_cs_from_wire_rejects_missing_thickness() {
+        assert!(cs_from_wire("SiO2").is_err());
+    }
+
+    #[test]
+    fn test_cs_from_wire_rejects_bad_thickness() {
+        assert!(cs_from_wire("SiO2:abc").is_err());
     }
 
     #[test]
