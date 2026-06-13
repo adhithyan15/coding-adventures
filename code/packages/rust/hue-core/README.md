@@ -16,7 +16,8 @@ packages a typed surface for:
 - Hue command summaries for payload-free command planning and read-model
   telemetry, including light-surface, surface-breadth, and capability-breadth
   helper predicates
-- Hue application registration requests and discovered-bridge pairing plans
+- Hue application registration requests and discovered-bridge pairing plans,
+  including payload-free pairing-plan readiness summaries
 - Hue application registration local-HTTP request plans, response parsing, and
   no-secret Vault handoff metadata and summaries for physical-presence pairing
 - typed Hue bridge resources for paired bridge identity/health refresh

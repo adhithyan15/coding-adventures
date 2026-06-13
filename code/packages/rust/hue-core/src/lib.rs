@@ -1156,6 +1156,61 @@ impl HueBridgePairingPlan {
     pub fn bridge_id(&self) -> &BridgeId {
         &self.bridge.bridge_id
     }
+
+    pub fn summary(&self) -> HueBridgePairingPlanSummary {
+        HueBridgePairingPlanSummary::from_plan(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueBridgePairingPlanSummary {
+    pub registration_method: HueMethod,
+    pub has_bridge_address: bool,
+    pub bridge_is_unpaired: bool,
+    pub registration_path_is_api: bool,
+    pub registration_body_is_application: bool,
+    pub uses_hue_application_key_header: bool,
+    pub uses_event_stream_path: bool,
+    pub requires_user_presence: bool,
+}
+
+impl HueBridgePairingPlanSummary {
+    pub fn from_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self {
+            registration_method: plan.registration_request.method,
+            has_bridge_address: plan.bridge.address.is_some(),
+            bridge_is_unpaired: plan.bridge.health == Health::Unpaired,
+            registration_path_is_api: plan.registration_request.path
+                == HUE_APPLICATION_REGISTRATION_PATH,
+            registration_body_is_application: matches!(
+                &plan.registration_request.body,
+                Some(HueRequestBody::RegisterApplication { .. })
+            ),
+            uses_hue_application_key_header: plan.application_key_header
+                == HUE_APPLICATION_KEY_HEADER,
+            uses_event_stream_path: plan.event_stream_path == CLIP_V2_EVENT_STREAM_PATH,
+            requires_user_presence: plan.requires_user_presence,
+        }
+    }
+
+    pub fn uses_physical_presence(self) -> bool {
+        self.requires_user_presence
+    }
+
+    pub fn posts_registration_request(self) -> bool {
+        self.registration_method == HueMethod::Post
+            && self.registration_path_is_api
+            && self.registration_body_is_application
+    }
+
+    pub fn ready_for_local_registration(self) -> bool {
+        self.has_bridge_address
+            && self.bridge_is_unpaired
+            && self.posts_registration_request()
+            && self.uses_hue_application_key_header
+            && self.uses_event_stream_path
+            && self.uses_physical_presence()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3521,6 +3576,32 @@ mod tests {
                 }),
             }
         );
+
+        let summary = plan.summary();
+        assert_eq!(summary.registration_method, HueMethod::Post);
+        assert!(summary.has_bridge_address);
+        assert!(summary.bridge_is_unpaired);
+        assert!(summary.registration_path_is_api);
+        assert!(summary.registration_body_is_application);
+        assert!(summary.uses_hue_application_key_header);
+        assert!(summary.uses_event_stream_path);
+        assert!(summary.requires_user_presence);
+        assert!(summary.uses_physical_presence());
+        assert!(summary.posts_registration_request());
+        assert!(summary.ready_for_local_registration());
+
+        let mut incomplete = plan.clone();
+        incomplete.bridge.address = None;
+        incomplete.registration_request.body = None;
+        incomplete.application_key_header = "wrong-header".to_string();
+        incomplete.requires_user_presence = false;
+        let incomplete_summary = HueBridgePairingPlanSummary::from_plan(&incomplete);
+        assert!(!incomplete_summary.has_bridge_address);
+        assert!(!incomplete_summary.registration_body_is_application);
+        assert!(!incomplete_summary.uses_hue_application_key_header);
+        assert!(!incomplete_summary.uses_physical_presence());
+        assert!(!incomplete_summary.posts_registration_request());
+        assert!(!incomplete_summary.ready_for_local_registration());
     }
 
     #[test]
