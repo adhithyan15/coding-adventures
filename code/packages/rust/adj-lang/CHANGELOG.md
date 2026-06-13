@@ -1,5 +1,63 @@
 # Changelog
 
+## [0.11.0] - 2026-06-12 — `import "path"` (MYCIN-2026 M3)
+
+### Added
+
+- **`import "<relative path>"`** — compose a program across files: a dictionary,
+  a rulebook that imports + `use`s it, and a case that imports the rulebook can
+  each be their own checked-in `.adj`. New `Statement::Import(String)`; grammar
+  `import_decl`.
+- **`resolve` module** — the import-graph policy, with **no filesystem I/O** (it
+  drives an injected `ImportProvider`, so the graph logic is unit-testable
+  without a disk and the FS trust boundary lives in the caller):
+  - **relative** — `provider.resolve(importer, literal)` → canonical id.
+  - **idempotent** — a `visited` set keyed by canonical id; a file merges once
+    (diamond imports don't duplicate clauses).
+  - **acyclic** — a DFS stack; re-entering a stacked id is `ImportError::Cycle`
+    (cycle check precedes the idempotency check, so a cycle never masquerades as
+    a harmless repeat). Self-import included.
+  - **bounded** — `ImportLimits { max_depth, max_files }` (default 32 / 256);
+    past either, `DepthExceeded` / `TooManyFiles`. Depth is checked on every
+    descent, so the graph walk can't exceed `max_depth` frames on hostile input.
+  - Merge order is depth-first **post-order** — an imported file's declarations
+    precede the importer's, so a dictionary is in scope by the time the rulebook
+    that `use`s it is merged.
+- **`compile_with_imports(root_id, provider, limits)`** — resolve then lower, with
+  a combined `CompileWithImportsError`. `lower` now rejects a stray unresolved
+  `import` as `LowerError::UnresolvedImport` (never silently dropped).
+- 8 resolver tests (3-file chain, diamond, direct + self cycle, depth + fan-out
+  bounds, unresolvable path, importer-relative). Grammar regenerated. **M3
+  completes the MYCIN-2026 language foundation (M0–M3).**
+
+## [0.10.0] - 2026-06-12 — `rulebook` + `use` (MYCIN-2026 M2)
+
+### Added
+
+- **`rulebook <name> { … }`** — a named, reusable block of clauses
+  (`prior`/`contributes`/`interacts`/`uncertain`), so a body of adjudicatable
+  knowledge can be written once, checked in as code, and (M3) imported. A
+  rulebook is a *container*, not a namespace: its clauses lower into the
+  `KnowledgeBase` exactly as if written at top level (`flatten_clauses`). New
+  AST `Statement::Rulebook { name, statements }`.
+- **`use <dictionary>`** — binds a declared `dictionary` (by name) as the
+  controlled vocabulary the enclosing scope's clauses are checked against. Legal
+  at top level or inside a `rulebook`. New AST `Statement::Use(String)`.
+- **Scoped vocabulary enforcement (M2).** When any `use` appears, enforcement
+  becomes *per-scope*: a top-level `use D` checks the top-level clauses against
+  `D`; a rulebook's own `use D'` checks that rulebook against `D'` (falling back
+  to a top-level `use`). A scope with no `use` is unchecked — a rulebook opts in
+  to checking by `use`-ing a dictionary. A `use` of a dictionary the program
+  never declared is `LowerError::UndefinedDictionary`. When **no** `use` appears
+  anywhere, M1 whole-program enforcement is unchanged (fully backward-compatible).
+- **Rulebooks are flat.** A `rulebook` nested directly in another is a clean
+  `LowerError::NestedRulebook` (nesting has no defined scoping semantics; the
+  refusal also keeps clause-flattening non-recursive, so deeply-nested untrusted
+  source cannot drive unbounded recursion in the lowerer).
+- 8 tests (rulebook lowers like top-level; `use` checks/rejects terms; undefined
+  dictionary; no-`use` rulebook unchecked; top-level `use` scoping; nested
+  rulebook rejected). Grammar regenerated. Next (MYCIN-2026): M3 `import "path"`.
+
 ## [0.9.0] - 2026-06-12 — `dictionary` + `define` (MYCIN-2026 M1)
 
 ### Added

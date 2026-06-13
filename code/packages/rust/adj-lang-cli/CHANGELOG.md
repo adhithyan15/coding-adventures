@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0] - 2026-06-12 — `import`-aware compile + the filesystem trust boundary (MYCIN-2026 M3)
+
+### Added
+
+- **The CLI now resolves `import`s before compiling.** A program may `import`
+  sibling `.adj` files (dictionary ← rulebook ← case); the CLI walks the graph
+  via `adj_lang::compile_with_imports` and emits the decision over the composed
+  program. Import errors (cycle, bound, missing/unparseable/escaping file)
+  surface as a single `{"error": …}` line.
+- **`FsProvider` — the import trust boundary.** The `adj-lang` library does no
+  I/O; this filesystem-backed `ImportProvider` is the only thing that reads
+  disk, so all path safety lives here: canonical ids are absolute,
+  symlink-resolved real paths (so spellings dedupe and a symlink can't forge a
+  second identity); import literals must be **relative** (absolute refused); the
+  resolved real path must stay within the **sandbox root** (the program file's
+  directory) — `../…` escapes and symlinks pointing outside the root are refused,
+  so `import` cannot read arbitrary host files.
+- 5 e2e tests (3-file decide; diamond no-duplicate; traversal / absolute / cycle
+  all refused without hang).
+
 ## [0.4.1] - 2026-06-12 — `FromSolve` proof: the solver certificate renders under the verdict step (ADJ constraints E3)
 
 ### Added
