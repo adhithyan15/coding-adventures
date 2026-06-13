@@ -3939,6 +3939,112 @@ pub struct IntegrationActivationSafetySummary {
     pub overall_status: IntegrationActivationHealthStatus,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationRollbackAction {
+    HoldDeployment,
+    VerifyBeforeRollback,
+    RequestOwnerApproval,
+    StageRollbackPlan,
+    MonitorRollbackWindow,
+}
+
+impl IntegrationActivationRollbackAction {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::HoldDeployment => "hold_deployment",
+            Self::VerifyBeforeRollback => "verify_before_rollback",
+            Self::RequestOwnerApproval => "request_owner_approval",
+            Self::StageRollbackPlan => "stage_rollback_plan",
+            Self::MonitorRollbackWindow => "monitor_rollback_window",
+        }
+    }
+
+    pub fn from_gate_status(status: IntegrationActivationSafetyGateStatus) -> Self {
+        match status {
+            IntegrationActivationSafetyGateStatus::Blocked => Self::HoldDeployment,
+            IntegrationActivationSafetyGateStatus::NeedsVerification => Self::VerifyBeforeRollback,
+            IntegrationActivationSafetyGateStatus::NeedsOwnerApproval => Self::RequestOwnerApproval,
+            IntegrationActivationSafetyGateStatus::ReadyToDeploy => Self::StageRollbackPlan,
+            IntegrationActivationSafetyGateStatus::Monitoring => Self::MonitorRollbackWindow,
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(
+            self,
+            Self::HoldDeployment | Self::VerifyBeforeRollback | Self::RequestOwnerApproval
+        )
+    }
+
+    pub fn rollback_ready(self) -> bool {
+        matches!(self, Self::StageRollbackPlan | Self::MonitorRollbackWindow)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRollbackPlan {
+    pub sequence: usize,
+    pub rollback_action: IntegrationActivationRollbackAction,
+    pub gate_status: IntegrationActivationSafetyGateStatus,
+    pub deployment_status: IntegrationActivationDeploymentStatus,
+    pub deployment_ring: IntegrationActivationDeploymentRing,
+    pub delivery_channel: IntegrationActivationDeliveryChannel,
+    pub owner_lane: IntegrationActivationResponseOwnerLane,
+    pub source_safety_sequence: usize,
+    pub source_deployment_sequence: usize,
+    pub source_delivery_sequence: usize,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub dependency_work: bool,
+    pub policy_risk: bool,
+    pub verification_required: bool,
+    pub deployment_ready: bool,
+    pub rollback_ready: bool,
+    pub blocks_activation: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRollbackSummary {
+    pub total_plans: usize,
+    pub unique_integrations: usize,
+    pub plans_requiring_attention: usize,
+    pub hold_deployment_plans: usize,
+    pub verification_plans: usize,
+    pub owner_approval_plans: usize,
+    pub staged_rollback_plans: usize,
+    pub monitoring_plans: usize,
+    pub platform_ring_plans: usize,
+    pub integration_ring_plans: usize,
+    pub security_ring_plans: usize,
+    pub verification_ring_plans: usize,
+    pub audit_ring_plans: usize,
+    pub monitoring_ring_plans: usize,
+    pub plans_with_dependency_work: usize,
+    pub plans_with_policy_risk: usize,
+    pub plans_requiring_verification: usize,
+    pub plans_ready_for_deployment: usize,
+    pub plans_ready_for_rollback: usize,
+    pub plans_blocking_activation: usize,
+    pub plans_with_policy_surface: usize,
+    pub next_rollback_action: Option<IntegrationActivationRollbackAction>,
+    pub next_gate_status: Option<IntegrationActivationSafetyGateStatus>,
+    pub next_deployment_ring: Option<IntegrationActivationDeploymentRing>,
+    pub next_owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_plan_sequence: Option<usize>,
+    pub next_plan_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
 impl IntegrationActivationPlanSummary {
     pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
         let mut summary = Self {
@@ -11089,6 +11195,241 @@ impl IntegrationActivationSafetySummary {
     }
 }
 
+impl IntegrationActivationRollbackPlan {
+    fn from_safety_gate(gate: &IntegrationActivationSafetyGate) -> Self {
+        let rollback_action =
+            IntegrationActivationRollbackAction::from_gate_status(gate.gate_status);
+        let blocks_activation = gate.blocks_activation();
+        let requires_attention = gate.requires_attention() || rollback_action.requires_attention();
+        let rollback_ready = rollback_action.rollback_ready() && !requires_attention;
+
+        Self {
+            sequence: 0,
+            rollback_action,
+            gate_status: gate.gate_status,
+            deployment_status: gate.deployment_status,
+            deployment_ring: gate.deployment_ring,
+            delivery_channel: gate.delivery_channel,
+            owner_lane: gate.owner_lane,
+            source_safety_sequence: gate.sequence,
+            source_deployment_sequence: gate.source_deployment_sequence,
+            source_delivery_sequence: gate.source_delivery_sequence,
+            source_id: gate.source_id.clone(),
+            title: format!("{} rollback: {}", rollback_action.as_str(), gate.title),
+            summary: gate.summary.clone(),
+            priority: gate.priority,
+            integration_ids: gate.integration_ids.clone(),
+            recommended_view: gate.recommended_view,
+            required_tier: gate.required_tier,
+            policy_surface: gate.policy_surface,
+            dependency_work: gate.dependency_work,
+            policy_risk: gate.policy_risk,
+            verification_required: gate.verification_required
+                || rollback_action == IntegrationActivationRollbackAction::VerifyBeforeRollback,
+            deployment_ready: gate.deployment_ready(),
+            rollback_ready,
+            blocks_activation,
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_work
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.verification_required
+    }
+
+    pub fn deployment_ready(&self) -> bool {
+        self.deployment_ready
+    }
+
+    pub fn rollback_ready(&self) -> bool {
+        self.rollback_ready
+    }
+
+    pub fn blocks_activation(&self) -> bool {
+        self.blocks_activation
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+}
+
+impl IntegrationActivationRollbackSummary {
+    pub fn from_plans<'a>(
+        plans: impl IntoIterator<Item = &'a IntegrationActivationRollbackPlan>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_plans: 0,
+            unique_integrations: 0,
+            plans_requiring_attention: 0,
+            hold_deployment_plans: 0,
+            verification_plans: 0,
+            owner_approval_plans: 0,
+            staged_rollback_plans: 0,
+            monitoring_plans: 0,
+            platform_ring_plans: 0,
+            integration_ring_plans: 0,
+            security_ring_plans: 0,
+            verification_ring_plans: 0,
+            audit_ring_plans: 0,
+            monitoring_ring_plans: 0,
+            plans_with_dependency_work: 0,
+            plans_with_policy_risk: 0,
+            plans_requiring_verification: 0,
+            plans_ready_for_deployment: 0,
+            plans_ready_for_rollback: 0,
+            plans_blocking_activation: 0,
+            plans_with_policy_surface: 0,
+            next_rollback_action: None,
+            next_gate_status: None,
+            next_deployment_ring: None,
+            next_owner_lane: None,
+            next_recommended_view: None,
+            next_plan_sequence: None,
+            next_plan_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for plan in plans {
+            summary.total_plans += 1;
+            for integration_id in &plan.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_rollback_action.is_none()
+                && (plan.requires_attention() || plan.rollback_ready())
+            {
+                summary.next_rollback_action = Some(plan.rollback_action);
+                summary.next_gate_status = Some(plan.gate_status);
+                summary.next_deployment_ring = Some(plan.deployment_ring);
+                summary.next_owner_lane = Some(plan.owner_lane);
+                summary.next_recommended_view = Some(plan.recommended_view);
+                summary.next_plan_sequence = Some(plan.sequence);
+                summary.next_plan_priority = Some(plan.priority);
+            }
+
+            match plan.rollback_action {
+                IntegrationActivationRollbackAction::HoldDeployment => {
+                    summary.hold_deployment_plans += 1;
+                }
+                IntegrationActivationRollbackAction::VerifyBeforeRollback => {
+                    summary.verification_plans += 1;
+                }
+                IntegrationActivationRollbackAction::RequestOwnerApproval => {
+                    summary.owner_approval_plans += 1;
+                }
+                IntegrationActivationRollbackAction::StageRollbackPlan => {
+                    summary.staged_rollback_plans += 1;
+                }
+                IntegrationActivationRollbackAction::MonitorRollbackWindow => {
+                    summary.monitoring_plans += 1;
+                }
+            }
+
+            match plan.deployment_ring {
+                IntegrationActivationDeploymentRing::Platform => summary.platform_ring_plans += 1,
+                IntegrationActivationDeploymentRing::Integration => {
+                    summary.integration_ring_plans += 1;
+                }
+                IntegrationActivationDeploymentRing::Security => summary.security_ring_plans += 1,
+                IntegrationActivationDeploymentRing::Verification => {
+                    summary.verification_ring_plans += 1;
+                }
+                IntegrationActivationDeploymentRing::Audit => summary.audit_ring_plans += 1,
+                IntegrationActivationDeploymentRing::Monitoring => {
+                    summary.monitoring_ring_plans += 1;
+                }
+            }
+
+            if plan.requires_attention() {
+                summary.plans_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(plan.priority));
+            }
+            if plan.has_dependency_work() {
+                summary.plans_with_dependency_work += 1;
+            }
+            if plan.has_policy_risk() {
+                summary.plans_with_policy_risk += 1;
+            }
+            if plan.needs_verification() {
+                summary.plans_requiring_verification += 1;
+            }
+            if plan.deployment_ready() {
+                summary.plans_ready_for_deployment += 1;
+            }
+            if plan.rollback_ready() {
+                summary.plans_ready_for_rollback += 1;
+            }
+            if plan.blocks_activation() {
+                summary.plans_blocking_activation += 1;
+            }
+            if plan.has_policy_surface() {
+                summary.plans_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(plan.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.plans_blocking_activation > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.plans_requiring_attention > 0
+            || summary.verification_plans > 0
+            || summary.owner_approval_plans > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.plans_ready_for_rollback > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_plans == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.plans_blocking_activation > 0 || self.hold_deployment_plans > 0
+    }
+
+    pub fn has_owner_action(&self) -> bool {
+        self.owner_approval_plans > 0
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.verification_plans > 0 || self.plans_requiring_verification > 0
+    }
+
+    pub fn rollback_ready(&self) -> bool {
+        self.plans_ready_for_rollback > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.plans_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -16342,6 +16683,38 @@ pub fn activation_safety_gates_at_or_before_priority(
     activation_safety_gates_from_deployment_records(&records)
 }
 
+pub fn activation_rollback_plans_from_safety_gates(
+    gates: &[IntegrationActivationSafetyGate],
+) -> Vec<IntegrationActivationRollbackPlan> {
+    let mut plans: Vec<_> = gates
+        .iter()
+        .map(IntegrationActivationRollbackPlan::from_safety_gate)
+        .collect();
+
+    plans.sort_by(compare_activation_rollback_plans);
+    for (index, plan) in plans.iter_mut().enumerate() {
+        plan.sequence = index + 1;
+    }
+    plans
+}
+
+pub fn activation_rollback_plans_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationRollbackPlan> {
+    let gates = activation_safety_gates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_rollback_plans_from_safety_gates(&gates)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -18088,6 +18461,27 @@ fn compare_activation_safety_gates(
         .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
         .then_with(|| right.blocks_activation().cmp(&left.blocks_activation()))
         .then_with(|| right.needs_verification().cmp(&left.needs_verification()))
+        .then_with(|| right.deployment_ready().cmp(&left.deployment_ready()))
+        .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
+        .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| left.deployment_ring.cmp(&right.deployment_ring))
+        .then_with(|| left.owner_lane.cmp(&right.owner_lane))
+        .then_with(|| left.source_id.cmp(&right.source_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_rollback_plans(
+    left: &IntegrationActivationRollbackPlan,
+    right: &IntegrationActivationRollbackPlan,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.rollback_action.cmp(&right.rollback_action))
+        .then_with(|| left.gate_status.cmp(&right.gate_status))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocks_activation().cmp(&left.blocks_activation()))
+        .then_with(|| right.needs_verification().cmp(&left.needs_verification()))
+        .then_with(|| right.rollback_ready().cmp(&left.rollback_ready()))
         .then_with(|| right.deployment_ready().cmp(&left.deployment_ready()))
         .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
         .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
@@ -21821,6 +22215,41 @@ mod tests {
         );
         assert_eq!(
             safety_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
+        let rollback_plans = activation_rollback_plans_from_safety_gates(&safety_gates);
+        assert_eq!(rollback_plans.len(), safety_gates.len());
+        assert!(rollback_plans.iter().any(|plan| {
+            plan.rollback_action == IntegrationActivationRollbackAction::HoldDeployment
+        }));
+        assert!(rollback_plans
+            .iter()
+            .any(IntegrationActivationRollbackPlan::requires_attention));
+        assert!(rollback_plans
+            .iter()
+            .any(IntegrationActivationRollbackPlan::blocks_activation));
+
+        let rollback_summary =
+            IntegrationActivationRollbackSummary::from_plans(rollback_plans.iter());
+        assert_eq!(rollback_summary.total_plans, rollback_plans.len());
+        assert!(rollback_summary.has_blockers());
+        assert!(rollback_summary.needs_verification());
+        assert!(rollback_summary.requires_attention());
+        assert_eq!(
+            rollback_summary.next_rollback_action,
+            Some(IntegrationActivationRollbackAction::HoldDeployment)
+        );
+        assert_eq!(
+            rollback_summary.next_gate_status,
+            Some(IntegrationActivationSafetyGateStatus::Blocked)
+        );
+        assert_eq!(
+            rollback_summary.next_owner_lane,
+            Some(IntegrationActivationResponseOwnerLane::Platform)
+        );
+        assert_eq!(
+            rollback_summary.overall_status,
             IntegrationActivationHealthStatus::Blocked
         );
 
