@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.120.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-114** — a large integer literal whose lowercase
+  hexadecimal form is STRICTLY shorter than its decimal form is now
+  emitted as `0x…`, matching upstream Closure v20240317:
+
+      123456789012345678  ->  0x1b69b4ba630f350   (18 digits -> 17)
+
+  `normalize_number_value` gains a `hex` candidate (`format!("0x{n:x}")`)
+  in the integer shortest-form comparison, slotted at the LOWEST
+  tie-break priority (decimal > cleaned > scientific > hex) so it is
+  chosen only when strictly shortest — verified against the JAR:
+  `4294967295` (decimal 10 == hex 10) stays decimal, round powers of ten
+  still prefer scientific (`1000000000` -> `1E9`).
+
+  f64 ROUNDING (hex candidate only): JS numbers are IEEE-754 f64, so an
+  integer above 2^53 prints its NEAREST-f64 hex bits, not the exact
+  source digits (`123456789012345678` denotes the double
+  `123456789012345680` -> `…350`, not the exact `…34e`). The hex
+  candidate is therefore computed over `(n as f64) as u128`. The
+  decimal/scientific forms are deliberately left over the EXACT integer:
+  upstream uses shortest-round-trip (Ryu) decimal there, which for a
+  clean power of ten reproduces `1×10^e` (`100000000000000000000000` ->
+  `1E23`) — rounding `n` globally would corrupt `scientific_form_of` (the
+  rounded 10^23 is no longer a clean power). The exact-vs-double decimal
+  mismatch for >2^53 integers that PRINT as decimal is the separate
+  deferred Grisu/Ryu gap, unchanged here. For n ≤ 2^53 the rounding is
+  the identity. Full unit suite (625) + diff_minify walk-test + all
+  gap-038/040/082/091 number tests stay green.
+
+  Six `gap114_*` unit assertions cover the hex wins, the tie/shorter-form
+  non-regressions, and the f64-rounded hex value. The
+  `minify_num_bigint_hex` fixture (added CLOC14.55) is now ENFORCED. The
+  fractional/negative-exponent scientific cases (gap-113) remain OPEN.
+
 ## [0.119.0] - 2026-06-12
 
 ### Fixed

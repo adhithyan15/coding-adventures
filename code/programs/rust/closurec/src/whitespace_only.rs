@@ -4067,21 +4067,47 @@ fn normalize_number_value(value: &str) -> String {
 
     let decimal = n.to_string();
     let scientific = scientific_form_of(n);
+    // gap-114: a large INTEGER whose lowercase-hex form (`0x…`) is
+    // STRICTLY shorter than its decimal form is emitted in hex by
+    // upstream Closure (`123456789012345678` -> `0x1b69b4ba630f350`,
+    // 18 digits -> 17 chars). Round powers of ten still prefer the even
+    // shorter scientific form (`1000000000` -> `1E9`), and hex LOSES
+    // ties to decimal — verified against the JAR: `4294967295`
+    // (decimal 10 == hex `0xffffffff` 10) stays decimal, while
+    // `123456789012345` (decimal 15 > hex 14) switches to hex. So hex is
+    // the LOWEST tie-break priority: it is chosen only when strictly
+    // shorter than decimal, cleaned, AND scientific.
+    //
+    // f64 ROUNDING — for the HEX form only: JS numbers are IEEE-754 f64,
+    // so an integer above 2^53 prints its NEAREST-f64 hex bits, not the
+    // exact source digits (`123456789012345678` -> `…680`, the double).
+    // We round `n` through f64 just for the hex candidate. The decimal /
+    // scientific forms are deliberately left over the EXACT integer:
+    // upstream uses shortest-ROUND-TRIP (Ryu) decimal there, which for a
+    // clean power of ten reproduces the exact `m×10^e` (`1E23`) — so
+    // rounding `n` globally would corrupt `scientific_form_of` (the
+    // rounded 10^23 is no longer `1×10^23`). The residual exact-vs-double
+    // decimal mismatch for >2^53 integers that PRINT as decimal is a
+    // separate latent gap (the deferred Grisu/Ryu work), unchanged here.
+    let hex = format!("0x{:x}", (n as f64) as u128);
 
     // Pick shortest. Tie-break order: decimal > cleaned >
-    // scientific (verified via JAR probes for the boundary
+    // scientific > hex (verified via JAR probes for the boundary
     // cases — see function-level doc).
     let cleaned_len = cleaned.len();
     let decimal_len = decimal.len();
     let sci_len = scientific.as_ref().map(|s| s.len()).unwrap_or(usize::MAX);
+    let hex_len = hex.len();
 
-    let min_len = cleaned_len.min(decimal_len).min(sci_len);
+    let min_len = cleaned_len.min(decimal_len).min(sci_len).min(hex_len);
     if decimal_len == min_len {
         decimal
     } else if cleaned_len == min_len {
         cleaned
-    } else {
+    } else if sci_len == min_len {
         scientific.unwrap()
+    } else {
+        hex
     }
 }
 
@@ -6645,6 +6671,54 @@ mod tests {
         assert_eq!(decimal_float_as_u128("1e99999999999"), None);
         assert_eq!(minify("var x=1e-2147483648;"), "var x=1e-2147483648;");
         assert_eq!(minify("var x=1e99999999999;"), "var x=1e99999999999;");
+    }
+
+    /// gap-114 — a large integer whose lowercase-hex form is STRICTLY
+    /// shorter than its decimal form is emitted as `0x…` (over the
+    /// f64-rounded value, since values > 2^53 are not exact JS Numbers).
+    #[test]
+    fn gap114_large_int_to_hex() {
+        // 18 decimal digits -> 17 hex chars; f64-rounds ...678 -> ...680.
+        assert_eq!(
+            minify("var x=123456789012345678;"),
+            "var x=0x1b69b4ba630f350;"
+        );
+        // 15 decimal -> 14 hex (in-range, exact).
+        assert_eq!(minify("var x=123456789012345;"), "var x=0x7048860ddf79;");
+    }
+
+    /// **Non-regression**: hex LOSES ties to decimal, and shorter
+    /// decimal / scientific forms still win.
+    #[test]
+    fn gap114_hex_tie_and_shorter_forms() {
+        // decimal 10 == hex `0xffffffff` 10 → decimal wins the tie.
+        assert_eq!(minify("var x=4294967295;"), "var x=4294967295;");
+        // round power of ten → scientific (3) beats hex (10).
+        assert_eq!(minify("var x=1000000000;"), "var x=1E9;");
+        // small ints: decimal shortest.
+        assert_eq!(minify("var x=255;"), "var x=255;");
+        assert_eq!(minify("var x=42;"), "var x=42;");
+    }
+
+    /// gap-114 corollary — when the HEX form is the one emitted for an
+    /// integer above 2^53, it is the hex of the NEAREST f64, not of the
+    /// exact source digits: `123456789012345678` denotes the double
+    /// `123456789012345680` = `0x1b69b4ba630f350` (low digit `0`, not the
+    /// exact integer's `…34e`). (The decimal/scientific forms keep the
+    /// exact integer — upstream's shortest-round-trip decimal there is a
+    /// separate deferred Grisu/Ryu gap.)
+    #[test]
+    fn gap114_hex_uses_f64_rounded_value() {
+        // Exact u128 hex of …678 would be …34e; the f64 double rounds to
+        // …680 -> …350, which is what we must emit.
+        assert_eq!(
+            minify("var x=123456789012345678;"),
+            "var x=0x1b69b4ba630f350;"
+        );
+        assert_eq!(
+            minify("var x=12345678901234567;"),
+            "var x=0x2bdc545d6b4b88;"
+        );
     }
 
     /// **Non-regression**: decimal source without trailing
