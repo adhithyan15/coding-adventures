@@ -102,6 +102,8 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation remediation work orders that assign response items to executable
   owner-lane queues with blocked, owner-action, ready-to-execute, and tracking
   status
+- activation closure gates that turn remediation work orders into compact
+  blocked, owner-action, verification-ready, ready-to-close, and tracking gates
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,
