@@ -322,15 +322,24 @@ class TestPhase18_Bernoulli:
         result = eval_ode(expr)
         _was_evaluated(result)
 
-    def test_bernoulli_two_different_powers_unevaluated(self) -> None:
-        """y^2 + y^3 both present — ambiguous Bernoulli, unevaluated."""
+    def test_bernoulli_two_different_powers_routes_to_lie(self) -> None:
+        """y^2 + y^3 both present — Bernoulli rejects; Lie picks it up.
+
+        ``y' + y² - y³ = 0`` is ``y' = y³ - y²``, *autonomous* in x.
+        Bernoulli correctly bails (two different y-powers); the new
+        Track L1 Lie point-symmetry handler then catches the
+        translation-in-x symmetry and produces an implicit closed form
+        ``x = ∫ 1/(y³ - y²) dy + C``.
+        """
         # y' + y^2 - y^3 = 0  has two different y-powers → not Bernoulli
         expr = _add(
             _add(Y_PRIME, _pow(Y, _I(2))),
             _neg(_pow(Y, _I(3))),
         )
         result = eval_ode(expr)
-        _is_unevaluated(result)
+        assert isinstance(result, IRApply) and result.head == EQUAL
+        # Implicit form: x = ... .
+        assert result.args[0] == IRSymbol("x")
 
     def test_bernoulli_n2_structure_is_explicit_y(self) -> None:
         """Bernoulli solution is Equal(y, f(x)) not Equal(f(x,y), c)."""
