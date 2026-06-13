@@ -890,6 +890,7 @@ pub struct BrowserDocument {
     pub template_descriptors: Vec<BrowserTemplateDescriptor>,
     pub slot_descriptors: Vec<BrowserSlotDescriptor>,
     pub custom_element_descriptors: Vec<BrowserCustomElementDescriptor>,
+    pub canvas_descriptors: Vec<BrowserCanvasDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
@@ -1479,6 +1480,26 @@ pub struct BrowserCustomElementDescriptor {
     pub text: String,
     pub custom_element_blocked: bool,
     pub custom_element_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCanvasDescriptor {
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub has_width: bool,
+    pub has_height: bool,
+    pub fallback_text: String,
+    pub fallback_word_count: usize,
+    pub part: Vec<String>,
+    pub data_attribute_names: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub lifecycle_handlers: Vec<String>,
+    pub canvas_blocked: bool,
+    pub canvas_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10919,6 +10940,9 @@ fn collect_browser_facts(
         if let Some(descriptor) = browser_custom_element_descriptor(element) {
             summary.custom_element_descriptors.push(descriptor);
         }
+        if let Some(descriptor) = browser_canvas_descriptor(element) {
+            summary.canvas_descriptors.push(descriptor);
+        }
         if let Some(descriptor) = browser_data_attribute_descriptor(element) {
             summary.data_attribute_descriptors.push(descriptor);
         }
@@ -11062,6 +11086,9 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
         }
         if let Some(descriptor) = browser_custom_element_descriptor(element) {
             summary.custom_element_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_canvas_descriptor(element) {
+            summary.canvas_descriptors.push(descriptor);
         }
 
         match element.name.as_str() {
@@ -17770,6 +17797,67 @@ fn browser_custom_element_block_reasons(
     }
     if custom_element_name.is_some() && custom_element_is.is_some() {
         reasons.push("is-on-autonomous-custom-element".to_string());
+    }
+    reasons
+}
+
+fn browser_canvas_descriptor(element: &Element) -> Option<BrowserCanvasDescriptor> {
+    if element.name != "canvas" {
+        return None;
+    }
+
+    let fallback_text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let data_attributes = browser_data_attributes(element);
+    let event_handlers = browser_event_handlers(element);
+    let canvas_block_reasons = browser_canvas_block_reasons(
+        element.attribute("width"),
+        element.attribute("height"),
+        &fallback_text,
+    );
+
+    Some(BrowserCanvasDescriptor {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        has_width: element.attribute("width").is_some(),
+        has_height: element.attribute("height").is_some(),
+        fallback_word_count: fallback_text.split_whitespace().count(),
+        fallback_text,
+        part: browser_part_tokens(element),
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        pointer_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_pointer_interaction_event,
+        ),
+        keyboard_handlers: browser_event_handlers_by_kind(&event_handlers, browser_keyboard_event),
+        lifecycle_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_load_lifecycle_event,
+        ),
+        event_handlers,
+        canvas_blocked: !canvas_block_reasons.is_empty(),
+        canvas_block_reasons,
+    })
+}
+
+fn browser_canvas_block_reasons(
+    width: Option<&str>,
+    height: Option<&str>,
+    fallback_text: &str,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if width.is_none() {
+        reasons.push("missing-width".to_string());
+    }
+    if height.is_none() {
+        reasons.push("missing-height".to_string());
+    }
+    if fallback_text.is_empty() {
+        reasons.push("missing-fallback-text".to_string());
     }
     reasons
 }

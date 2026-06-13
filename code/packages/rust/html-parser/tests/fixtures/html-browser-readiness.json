@@ -2359,6 +2359,9 @@
           { "element": "product-card", "id": "card", "custom_element_kind": "autonomous-custom-element", "definition_name": "product-card", "custom_element_name": "product-card", "autonomous_custom_element": true, "custom_element_name_valid": true, "part": ["host"], "exportparts": "header:title, chart", "data_attribute_names": ["data-controller", "data-state"], "text": "Widget Chart fallback Save Fallback footer" },
           { "element": "button", "custom_element_kind": "customized-built-in", "definition_name": "fancy-button", "custom_element_is": "fancy-button", "customized_builtin": true, "extends_element": "button", "custom_element_name_valid": true, "part": ["action"], "data_attribute_names": ["data-action"], "text": "Save" }
         ],
+        "canvas_descriptors": [
+          { "id": "chart", "width": "300", "height": "150", "has_width": true, "has_height": true, "fallback_text": "Chart fallback", "fallback_word_count": 2, "part": ["chart"], "data_attribute_names": ["data-renderer"] }
+        ],
         "component_hydration_targets": [
           { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "text": "Untitled Body" },
           { "element": "article", "part": ["frame"], "text": "Untitled Body" },
