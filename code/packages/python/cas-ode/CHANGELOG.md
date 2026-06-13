@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] — 2026-05-29
+
+### Added
+
+- **Track L1 — Lie point-symmetry handler for first-order ODEs**
+  - New module `cas_ode.lie_symmetry` with public entry
+    `try_lie_symmetry(expr, y, x, vm)`.  Detects three textbook
+    point-symmetry groups by numerical invariance testing and reduces
+    via quadrature when possible:
+    1. **Translation in y** — `y' = f(x)`.  Reduce by direct integration
+       `y = ∫ f(x) dx + C`.
+    2. **Translation in x** — autonomous `y' = g(y)`.  Reduce via the
+       inverse quadrature `x = ∫ 1/g(y) dy + C`.  This catches the
+       logistic ODE `y' = y(1-y)` (and other nonlinear autonomous
+       cases) that the separable handler cannot invert.
+    3. **Scaling** `(x, y) → (λx, λ^k y)` for integer `k ∈ [-3, 3]`.
+       Detected by testing `f(λx, λ^k y) = λ^(k-1) f(x, y)` at three
+       sample λ ∈ {2, 3, 1/2} × three sample (x, y) — 63 evaluations
+       maximum.  Reduction is delegated to the existing
+       homogeneous-type solver which catches `k = ±1` upstream; the
+       Lie scaling branch is detection-only in Python and will gain a
+       full IR substitution path in Track L2.
+  - **Dispatcher integration**: hooked into `solve_ode` in `ode.py`
+    *after* every existing first-order family (linear, separable,
+    Bernoulli, homogeneous-type, exact).  Regression tests verify that
+    `y' + y = x`, `y' = x·y`, and Bernoulli forms still route to their
+    dedicated handlers.
+  - **Bounds**: scaling-exponent search is hard-bounded to seven
+    candidates (`k ∈ {-3, -2, -1, 1, 2, 3}`).  No recursion.  No user
+    string evaluation.
+  - Test coverage: 4 acceptance cases (scaling closes, translation-in-y
+    closes, logistic closes via Lie, `sin(xy)` falls through unevaluated)
+    plus autonomy unit tests, scaling-detection unit tests, and a
+    regression battery confirming the linear/separable paths still win.
+  - Version bump: 0.7.0 → 0.8.0.
+
 ## [0.7.0] — 2026-05-28
 
 ### Added

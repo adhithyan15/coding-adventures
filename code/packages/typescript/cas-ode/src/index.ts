@@ -28,6 +28,7 @@ import {
   sym,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
+import { tryLieSymmetry, type LieOps } from "./lieSymmetry";
 
 export const ODE2 = sym("ODE2");
 export const C = sym("%c");
@@ -182,7 +183,31 @@ export function solveOde(equation: IRNode, y: IRNode, x: IRNode, options: SolveO
   const homogeneous = tryHomogeneousType(expr, y, x, ops);
   if (homogeneous !== null) return homogeneous;
 
+  // Track L2: Lie point-symmetry (autonomous & scaling).  Runs AFTER
+  // every existing first-order family.  Catches autonomous nonlinear
+  // y' = g(y) (e.g. logistic y' = y(1-y)) that separable cannot invert,
+  // and any future symmetry-reducible case not covered above.
+  const lie = tryLieSymmetry(expr, y, x, lieOpsFor(ops));
+  if (lie !== null) return lie;
+
   return null;
+}
+
+function lieOpsFor(ops: Ops): LieOps {
+  return {
+    simp: ops.simp,
+    integrate: ops.integrate,
+    isConstWrt,
+    substIr,
+    flattenAdd,
+    sub,
+    add,
+    mul,
+    div,
+    neg,
+    pow,
+    C,
+  };
 }
 
 export function ode2(equation: IRNode, y: IRNode, x: IRNode, options: SolveOdeOptions = {}): IRNode {

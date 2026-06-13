@@ -652,3 +652,576 @@ pub fn try_bivariate_hensel(f_in: &BiPoly) -> Option<Vec<BiPoly>> {
     }
     None
 }
+
+// ===========================================================================
+// n-variate Hensel lifting — Track K2 (Rust port of Python Track K1, PR #5590).
+// ===========================================================================
+//
+// Strategy (one generic algorithm — NOT per-variable-count helpers):
+//
+//   1. Pick a "main" variable v_0 (always index 0 in the sparse-tuple
+//      representation).
+//   2. Substitute v_1..v_{n-1} with small integer values to reduce f to a
+//      univariate polynomial in v_0.
+//   3. Factor the univariate image via the existing factor-uni-q chain.
+//   4. Lift the univariate factors back to the full n-variate ring one
+//      variable at a time.
+//   5. Each lift step solves a coefficient-ring diophantine equation
+//      recursively.  Base case hits u_diophantine directly.
+//   6. Verify the final product equals the input; if not, return None.
+//
+// Representation:
+//   `NPoly = BTreeMap<Vec<usize>, Rat>` where the key is the exponent
+//   tuple as a Vec<usize> of length n.
+//
+// Bounded resource discipline:
+//   - At most MAX_N_SPECIALISATION lucky-point tuples are tried (10).
+//   - Recursion depth bounded by n (number of variables).
+//   - Each lift loop bounded by deg_{v_k}(f) + 1 iterations.
+
+/// Sparse n-variate polynomial — exponent tuple ↦ coefficient.
+pub type NPoly = BTreeMap<Vec<usize>, Rat>;
+
+const MAX_N_SPECIALISATION: usize = 10;
+
+fn n_normalize(p: &NPoly) -> NPoly {
+    p.iter().filter(|(_, v)| !v.is_zero()).map(|(k, v)| (k.clone(), *v)).collect()
+}
+
+fn n_one(num_vars: usize) -> NPoly {
+    let mut m = BTreeMap::new();
+    m.insert(vec![0; num_vars], Rat::ONE);
+    m
+}
+
+fn n_const(num_vars: usize, c: Rat) -> NPoly {
+    if c.is_zero() {
+        return BTreeMap::new();
+    }
+    let mut m = BTreeMap::new();
+    m.insert(vec![0; num_vars], c);
+    m
+}
+
+fn n_degree_in(p: &NPoly, var_idx: usize) -> i64 {
+    let mut best: i64 = -1;
+    for (k, v) in p {
+        if v.is_zero() {
+            continue;
+        }
+        if (k[var_idx] as i64) > best {
+            best = k[var_idx] as i64;
+        }
+    }
+    best
+}
+
+fn n_total_degree(p: &NPoly) -> i64 {
+    let mut best: i64 = -1;
+    for (k, v) in p {
+        if v.is_zero() {
+            continue;
+        }
+        let s: usize = k.iter().sum();
+        if s as i64 > best {
+            best = s as i64;
+        }
+    }
+    best
+}
+
+fn n_add(a: &NPoly, b: &NPoly) -> NPoly {
+    let mut out = a.clone();
+    for (k, v) in b {
+        let cur = out.get(k).copied().unwrap_or(Rat::ZERO);
+        out.insert(k.clone(), cur.add(v));
+    }
+    n_normalize(&out)
+}
+
+fn n_sub(a: &NPoly, b: &NPoly) -> NPoly {
+    let mut out = a.clone();
+    for (k, v) in b {
+        let cur = out.get(k).copied().unwrap_or(Rat::ZERO);
+        out.insert(k.clone(), cur.sub(v));
+    }
+    n_normalize(&out)
+}
+
+/// Multiply two n-variate polynomials.  Exposed for tests.
+pub fn n_mul(a: &NPoly, b: &NPoly, num_vars: usize) -> NPoly {
+    let mut out: NPoly = BTreeMap::new();
+    for (k1, c1) in a {
+        if c1.is_zero() {
+            continue;
+        }
+        for (k2, c2) in b {
+            if c2.is_zero() {
+                continue;
+            }
+            let key: Vec<usize> = (0..num_vars).map(|i| k1[i] + k2[i]).collect();
+            let cur = out.get(&key).copied().unwrap_or(Rat::ZERO);
+            out.insert(key, cur.add(&c1.mul(c2)));
+        }
+    }
+    n_normalize(&out)
+}
+
+fn n_equals(a: &NPoly, b: &NPoly) -> bool {
+    n_normalize(a) == n_normalize(b)
+}
+
+/// Substitute v_{var_idx} = value, keep the tuple shape (slot stays at 0).
+fn n_substitute_var_keep(p: &NPoly, var_idx: usize, value: Rat) -> NPoly {
+    let mut out: NPoly = BTreeMap::new();
+    for (k, c) in p {
+        let e = k[var_idx];
+        let mut new_key = k.clone();
+        new_key[var_idx] = 0;
+        let contrib = c.mul(&value.pow(e));
+        if contrib.is_zero() {
+            continue;
+        }
+        let cur = out.get(&new_key).copied().unwrap_or(Rat::ZERO);
+        out.insert(new_key, cur.add(&contrib));
+    }
+    n_normalize(&out)
+}
+
+/// Extract the (n−1)-variate-feeling coefficient at var_idx^k_pow,
+/// kept in the n-variate ring with var_idx slot = 0.
+fn n_coeff_at_power(p: &NPoly, var_idx: usize, k_pow: usize) -> NPoly {
+    let mut out: NPoly = BTreeMap::new();
+    for (k, c) in p {
+        if k[var_idx] != k_pow {
+            continue;
+        }
+        let mut new_key = k.clone();
+        new_key[var_idx] = 0;
+        let cur = out.get(&new_key).copied().unwrap_or(Rat::ZERO);
+        out.insert(new_key, cur.add(c));
+    }
+    n_normalize(&out)
+}
+
+fn u_to_n(p: &[Rat], var_idx: usize, num_vars: usize) -> NPoly {
+    let mut out: NPoly = BTreeMap::new();
+    for (e, c) in p.iter().enumerate() {
+        if c.is_zero() {
+            continue;
+        }
+        let mut key = vec![0usize; num_vars];
+        key[var_idx] = e;
+        out.insert(key, *c);
+    }
+    out
+}
+
+fn n_to_univariate(p: &NPoly, var_idx: usize) -> UniQPoly {
+    if p.is_empty() {
+        return vec![];
+    }
+    let max_e = p.keys().map(|k| k[var_idx]).max().unwrap_or(0);
+    let mut out = vec![Rat::ZERO; max_e + 1];
+    for (k, c) in p {
+        out[k[var_idx]] = out[k[var_idx]].add(c);
+    }
+    u_normalize(&out)
+}
+
+fn n_only_uses_var(p: &NPoly, var_idx: usize) -> bool {
+    for k in p.keys() {
+        for (i, e) in k.iter().enumerate() {
+            if i != var_idx && *e != 0 {
+                return false;
+            }
+        }
+    }
+    true
+}
+
+/// Rewrite p as polynomial in (v_{var_idx} − value) via binomial expansion.
+fn n_shift_var(p: &NPoly, var_idx: usize, value: Rat) -> NPoly {
+    if value.is_zero() {
+        return p.clone();
+    }
+    let mut out: NPoly = BTreeMap::new();
+    for (k, c) in p {
+        if c.is_zero() {
+            continue;
+        }
+        let e = k[var_idx];
+        for m in 0..=e {
+            let coeff = c.mul(&Rat::from_int(binomial(e, m))).mul(&value.pow(e - m));
+            let mut new_key = k.clone();
+            new_key[var_idx] = m;
+            let cur = out.get(&new_key).copied().unwrap_or(Rat::ZERO);
+            out.insert(new_key, cur.add(&coeff));
+        }
+    }
+    n_normalize(&out)
+}
+
+// ---------------------------------------------------------------------------
+// Recursive coefficient-ring diophantine.
+// ---------------------------------------------------------------------------
+
+fn n_diophantine(
+    g0: &NPoly,
+    h0: &NPoly,
+    c: &NPoly,
+    num_vars: usize,
+    main_var: usize,
+    active_vars: &[usize],
+) -> Option<(NPoly, NPoly)> {
+    // Base case: univariate.
+    if active_vars.len() == 1 {
+        let only = active_vars[0];
+        if !(n_only_uses_var(g0, only) && n_only_uses_var(h0, only) && n_only_uses_var(c, only)) {
+            return None;
+        }
+        let g0u = n_to_univariate(g0, only);
+        let h0u = n_to_univariate(h0, only);
+        let cu = n_to_univariate(c, only);
+        let (uu, vu) = u_diophantine(&g0u, &h0u, &cu)?;
+        return Some((u_to_n(&uu, only, num_vars), u_to_n(&vu, only, num_vars)));
+    }
+
+    let w = *active_vars.last().unwrap();
+    let rest: Vec<usize> = active_vars[..active_vars.len() - 1].to_vec();
+
+    let max_w_deg = n_degree_in(g0, w).max(n_degree_in(h0, w)).max(n_degree_in(c, w)).max(0);
+
+    let candidates = y0_candidates();
+    for &w0_int in candidates.iter().take(MAX_N_SPECIALISATION) {
+        let w0 = Rat::from_int(w0_int);
+        let g0_shift = n_shift_var(g0, w, w0);
+        let h0_shift = n_shift_var(h0, w, w0);
+        let c_shift = n_shift_var(c, w, w0);
+        let g0_base = n_coeff_at_power(&g0_shift, w, 0);
+        let h0_base = n_coeff_at_power(&h0_shift, w, 0);
+        let c_base = n_coeff_at_power(&c_shift, w, 0);
+
+        let (mut u, mut v) = match n_diophantine(
+            &g0_base, &h0_base, &c_base, num_vars, main_var, &rest,
+        ) {
+            Some(p) => p,
+            None => continue,
+        };
+
+        let mut success = true;
+        for k in 1..=(max_w_deg as usize) {
+            let prod = n_add(&n_mul(&u, &g0_shift, num_vars), &n_mul(&v, &h0_shift, num_vars));
+            let err = n_sub(&c_shift, &prod);
+            if err.is_empty() {
+                break;
+            }
+            let e_k = n_coeff_at_power(&err, w, k);
+            if e_k.is_empty() {
+                continue;
+            }
+            let sub = n_diophantine(&g0_base, &h0_base, &e_k, num_vars, main_var, &rest);
+            let (du, dv) = match sub {
+                Some(p) => p,
+                None => {
+                    success = false;
+                    break;
+                }
+            };
+            for (key_du, coef) in &du {
+                let mut new_key = key_du.clone();
+                new_key[w] = k;
+                let cur = u.get(&new_key).copied().unwrap_or(Rat::ZERO);
+                u.insert(new_key, cur.add(coef));
+            }
+            for (key_dv, coef) in &dv {
+                let mut new_key = key_dv.clone();
+                new_key[w] = k;
+                let cur = v.get(&new_key).copied().unwrap_or(Rat::ZERO);
+                v.insert(new_key, cur.add(coef));
+            }
+            u = n_normalize(&u);
+            v = n_normalize(&v);
+        }
+        if !success {
+            continue;
+        }
+
+        let check = n_add(&n_mul(&u, &g0_shift, num_vars), &n_mul(&v, &h0_shift, num_vars));
+        if !n_equals(&check, &c_shift) {
+            continue;
+        }
+
+        if !w0.is_zero() {
+            u = n_shift_var(&u, w, w0.neg());
+            v = n_shift_var(&v, w, w0.neg());
+        }
+        return Some((u, v));
+    }
+    None
+}
+
+fn n_two_factor_lift(
+    f: &NPoly,
+    g0: &NPoly,
+    h0: &NPoly,
+    num_vars: usize,
+    main_var: usize,
+    lift_var: usize,
+    coeff_vars: &[usize],
+) -> Option<(NPoly, NPoly)> {
+    let mut g = g0.clone();
+    let mut h = h0.clone();
+
+    let deg_lift = n_degree_in(f, lift_var);
+    let mut active: Vec<usize> = vec![main_var];
+    active.extend_from_slice(coeff_vars);
+
+    for k in 1..=(deg_lift as usize) {
+        let error = n_sub(f, &n_mul(&g, &h, num_vars));
+        if error.is_empty() {
+            break;
+        }
+        let e_k = n_coeff_at_power(&error, lift_var, k);
+        if e_k.is_empty() {
+            continue;
+        }
+        let (du, dv) = n_diophantine(g0, h0, &e_k, num_vars, main_var, &active)?;
+        // du is the correction to h (mirrors bivariate convention).
+        for (key_du, coef) in &du {
+            let mut new_key = key_du.clone();
+            new_key[lift_var] = k;
+            let cur = h.get(&new_key).copied().unwrap_or(Rat::ZERO);
+            h.insert(new_key, cur.add(coef));
+        }
+        for (key_dv, coef) in &dv {
+            let mut new_key = key_dv.clone();
+            new_key[lift_var] = k;
+            let cur = g.get(&new_key).copied().unwrap_or(Rat::ZERO);
+            g.insert(new_key, cur.add(coef));
+        }
+        g = n_normalize(&g);
+        h = n_normalize(&h);
+    }
+
+    if !n_equals(&n_mul(&g, &h, num_vars), f) {
+        return None;
+    }
+    Some((g, h))
+}
+
+fn n_specialisation_candidates(num_aux: usize) -> Vec<Vec<i128>> {
+    if num_aux == 0 {
+        return vec![vec![]];
+    }
+    let primitives: [i128; 5] = [1, 2, -1, 3, -2];
+    let mut tuples: Vec<Vec<i128>> = Vec::new();
+    for &v in &primitives {
+        tuples.push(vec![v; num_aux]);
+        if tuples.len() >= MAX_N_SPECIALISATION {
+            return tuples;
+        }
+    }
+    let base: Vec<i128> = vec![1; num_aux];
+    for i in 0..num_aux {
+        for &v in &primitives[1..] {
+            let mut cand = base.clone();
+            cand[i] = v;
+            tuples.push(cand);
+            if tuples.len() >= MAX_N_SPECIALISATION {
+                return tuples;
+            }
+        }
+    }
+    tuples.truncate(MAX_N_SPECIALISATION);
+    tuples
+}
+
+fn y0_candidates_n() -> Vec<i128> {
+    // Shared with the diophantine: small integers around 0.
+    y0_candidates()
+}
+
+fn is_lucky_uni(p_n: &NPoly, image: &[Rat], main_var: usize) -> bool {
+    if u_degree(image) != n_degree_in(p_n, main_var) {
+        return false;
+    }
+    if u_degree(image) < 1 {
+        return false;
+    }
+    let mut deriv: Vec<Rat> = Vec::new();
+    for i in 1..image.len() {
+        deriv.push(Rat::from_int(i as i128).mul(&image[i]));
+    }
+    let dn = u_normalize(&deriv);
+    if dn.is_empty() {
+        return false;
+    }
+    let (g, _, _) = u_gcd_ext(image, &dn);
+    u_degree(&g) == 0
+}
+
+/// Attempt to factor an n-variate (n ≥ 2) polynomial via iterated bivariate
+/// Hensel lifting.
+///
+/// Returns a list of factors whose product equals `f_in`, or `None` when no
+/// factorisation was found.  Falls through to `None` when `num_vars < 2`,
+/// the polynomial doesn't genuinely depend on at least two variables, no
+/// lucky specialisation tuple gives a squarefree univariate image of full
+/// v_0-degree (bounded search of 10 tuples), the univariate image is
+/// irreducible, or any lift/verification step fails.
+pub fn try_n_variate_hensel(f_in: &NPoly, num_vars: usize) -> Option<Vec<NPoly>> {
+    let f = n_normalize(f_in);
+    if f.is_empty() {
+        return None;
+    }
+    if num_vars < 2 {
+        return None;
+    }
+    if n_degree_in(&f, 0) < 1 {
+        return None;
+    }
+    let mut any_aux = false;
+    for i in 1..num_vars {
+        if n_degree_in(&f, i) >= 1 {
+            any_aux = true;
+            break;
+        }
+    }
+    if !any_aux {
+        return None;
+    }
+
+    let main_var: usize = 0;
+    let aux_vars: Vec<usize> = (1..num_vars).collect();
+
+    for spec_tuple in n_specialisation_candidates(aux_vars.len()) {
+        let spec: Vec<(usize, Rat)> = aux_vars
+            .iter()
+            .enumerate()
+            .map(|(i, &v)| (v, Rat::from_int(spec_tuple[i])))
+            .collect();
+
+        let mut f_shift = f.clone();
+        for &(v_i, w_i) in &spec {
+            f_shift = n_shift_var(&f_shift, v_i, w_i);
+        }
+        f_shift = n_normalize(&f_shift);
+
+        let mut f_uni = f_shift.clone();
+        for &v_i in &aux_vars {
+            f_uni = n_substitute_var_keep(&f_uni, v_i, Rat::ZERO);
+        }
+        if !n_only_uses_var(&f_uni, main_var) {
+            continue;
+        }
+        let image = n_to_univariate(&f_uni, main_var);
+        if !is_lucky_uni(&f_shift, &image, main_var) {
+            continue;
+        }
+
+        let uni_factors = match factor_uni_q(&image) {
+            Some(v) if v.len() >= 2 => v,
+            _ => continue,
+        };
+
+        let mut n_factors_current: Vec<NPoly> = uni_factors
+            .iter()
+            .map(|u| u_to_n(u, main_var, num_vars))
+            .collect();
+
+        let mut success = true;
+        for lift_idx in 0..aux_vars.len() {
+            let lift_var = aux_vars[lift_idx];
+
+            let mut f_stage = f_shift.clone();
+            for later_idx in (lift_idx + 1)..aux_vars.len() {
+                f_stage = n_substitute_var_keep(&f_stage, aux_vars[later_idx], Rat::ZERO);
+            }
+            f_stage = n_normalize(&f_stage);
+
+            let coeff_vars: Vec<usize> = aux_vars[..lift_idx].to_vec();
+
+            let mut remaining = f_stage;
+            let mut new_factors: Vec<NPoly> = Vec::new();
+            let mut remaining_factors = n_factors_current.clone();
+            while remaining_factors.len() >= 2 {
+                let g0 = remaining_factors[0].clone();
+                let mut h0 = n_one(num_vars);
+                for q in &remaining_factors[1..] {
+                    h0 = n_mul(&h0, q, num_vars);
+                }
+                match n_two_factor_lift(
+                    &remaining,
+                    &g0,
+                    &h0,
+                    num_vars,
+                    main_var,
+                    lift_var,
+                    &coeff_vars,
+                ) {
+                    Some((g_lift, h_lift)) => {
+                        new_factors.push(g_lift);
+                        remaining = h_lift;
+                        remaining_factors = remaining_factors[1..].to_vec();
+                    }
+                    None => {
+                        success = false;
+                        break;
+                    }
+                }
+            }
+            if !success {
+                break;
+            }
+            new_factors.push(remaining);
+            n_factors_current = new_factors;
+        }
+        if !success {
+            continue;
+        }
+
+        let mut result = n_factors_current;
+        for (v_i, w_i) in &spec {
+            let neg_w = w_i.neg();
+            result = result.into_iter().map(|fac| n_shift_var(&fac, *v_i, neg_w)).collect();
+        }
+        let result: Vec<NPoly> = result.into_iter().map(|fac| n_normalize(&fac)).collect();
+
+        // Verify product reconstructs f.
+        let mut prod = n_one(num_vars);
+        for fac in &result {
+            prod = n_mul(&prod, fac, num_vars);
+        }
+        if !n_equals(&prod, &f) {
+            continue;
+        }
+
+        // Drop pure constants, fold scalar into factor 0.
+        let mut non_trivial: Vec<NPoly> = Vec::new();
+        let mut scalar = Rat::ONE;
+        for fac in result {
+            if n_total_degree(&fac) <= 0 {
+                if let Some((_, v)) = fac.iter().next() {
+                    scalar = scalar.mul(v);
+                }
+            } else {
+                non_trivial.push(fac);
+            }
+        }
+        if non_trivial.len() < 2 {
+            continue;
+        }
+        if !scalar.is_one() {
+            non_trivial[0] = n_mul(&non_trivial[0], &n_const(num_vars, scalar), num_vars);
+        }
+        return Some(non_trivial);
+    }
+    None
+}
+
+// Suppress dead-code warning if y0_candidates_n is unused in some configs.
+#[allow(dead_code)]
+fn _dead_y0_n() {
+    let _ = y0_candidates_n();
+}

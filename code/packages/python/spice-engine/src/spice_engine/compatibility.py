@@ -199,6 +199,7 @@ class DeckMeasurementCard:
     from_value: float | None = None
     to_value: float | None = None
     at_value: float | None = None
+    target_value: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -1452,7 +1453,38 @@ def _resolve_measurement_line(
         )
         return
 
-    probe = _unquote_token(tokens[4].strip())
+    empty_parameter_state = _DeckParameterState()
+    target_value: float | None = None
+    if mode == "when":
+        if "=" not in tokens[4]:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message="WHEN measurements require probe=target syntax",
+                token=tokens[4],
+            )
+            return
+        probe_token, target_expression = tokens[4].split("=", 1)
+        try:
+            target_value = _evaluate_parameter_expression(
+                _strip_expression_delimiters(target_expression.strip()),
+                empty_parameter_state,
+            )
+        except ValueError as error:
+            _add_measurement_diagnostic(
+                state,
+                code="SPICE_DECK_MEASURE_EXPRESSION",
+                directive=directive,
+                line_number=line_number,
+                message=str(error),
+                token=tokens[4],
+            )
+            return
+        probe = _unquote_token(probe_token.strip())
+    else:
+        probe = _unquote_token(tokens[4].strip())
     if not probe:
         _add_measurement_diagnostic(
             state,
@@ -1464,7 +1496,6 @@ def _resolve_measurement_line(
         )
         return
 
-    empty_parameter_state = _DeckParameterState()
     from_value: float | None = None
     to_value: float | None = None
     at_value: float | None = None
@@ -1534,6 +1565,14 @@ def _resolve_measurement_line(
             line_number=line_number,
             message="FIND measurements require an AT value",
         )
+    if mode == "when" and target_value is None:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message="WHEN measurements require a target value",
+        )
     if mode != "find" and at_value is not None:
         _add_measurement_diagnostic(
             state,
@@ -1574,6 +1613,7 @@ def _resolve_measurement_line(
             from_value=from_value,
             to_value=to_value,
             at_value=at_value,
+            target_value=target_value,
         )
     )
 
@@ -1590,11 +1630,12 @@ def _normalize_measurement_mode_token(mode: str) -> str | None:
         "peak2peak": "pp",
         "final": "last",
         "find": "find",
+        "when": "when",
     }
     normalized = aliases.get(normalized, normalized)
     return (
         normalized
-        if normalized in {"max", "min", "avg", "rms", "pp", "last", "find"}
+        if normalized in {"max", "min", "avg", "rms", "pp", "last", "find", "when"}
         else None
     )
 

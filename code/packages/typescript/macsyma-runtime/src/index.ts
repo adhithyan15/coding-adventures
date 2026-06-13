@@ -31,17 +31,25 @@ import {
   ASINH,
   ATAN,
   ATANH,
+  BESSEL_J,
+  BESSEL_Y,
+  CHEBYSHEV_T,
+  CHEBYSHEV_U,
   COS,
   COSH,
   D,
+  DIV,
   EXP,
   FACTOR,
   FALSE,
   FORGET,
   GREATER,
   GREATER_EQUAL,
+  HERMITE_H,
   INTEGRATE,
   IS,
+  LEGENDRE_P,
+  LEGENDRE_Q,
   LESS,
   LESS_EQUAL,
   LIST,
@@ -75,6 +83,14 @@ import {
   type IRSymbol,
 } from "@coding-adventures/symbolic-ir";
 import { SymbolicBackend, VM, type Handler } from "@coding-adventures/symbolic-vm";
+import {
+  chebyshevT,
+  chebyshevU,
+  hermiteH,
+  legendreP,
+  makeOrthopolyPassthroughHandler,
+  makeOrthopolyRecurrenceHandler,
+} from "./orthopoly.js";
 
 export const DISPLAY = sym("Display");
 export const SUPPRESS = sym("Suppress");
@@ -84,6 +100,38 @@ export const ALL_SYMBOL = sym("all");
 export const DECLARE = sym("Declare");
 export const PROPERTIES = sym("Properties");
 export const PROP_VARS = sym("PropVars");
+// Track M2 — runtime package loader.
+//
+// ``load("orthopoly")`` is a session-level directive that flips a
+// per-backend flag the orthopoly evaluators consult before firing.  The
+// list of packages that may be loaded is the compile-time-constant
+// allowlist :data:`LOAD_ALLOWLIST` below; the load handler has exactly
+// one dispatch arm per allowed name and never turns a user-supplied
+// string into a module reference or import path.
+export const LOAD = sym("Load");
+
+/**
+ * MACSYMA-surface error meant to be shown to the user verbatim.
+ *
+ * Distinguished from generic {@link Error} so REPL frontends can
+ * format it without leaking a host stack trace.
+ */
+export class MacsymaUserError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "MacsymaUserError";
+  }
+}
+
+/**
+ * Compile-time-constant allowlist consulted by {@link makeLoadHandler}.
+ *
+ * Adding a new entry is a deliberate two-line change: list the name
+ * here AND add a dispatch arm in {@link makeLoadHandler}.  The two are
+ * kept side-by-side on purpose so it is impossible to allowlist a
+ * name without also wiring its registration.
+ */
+const LOAD_ALLOWLIST: ReadonlySet<string> = new Set<string>(["orthopoly"]);
 
 export const SIMPLIFY = sym("Simplify");
 export const EXPAND = sym("Expand");
@@ -254,6 +302,24 @@ export const MACSYMA_NAME_TABLE: ReadonlyMap<string, IRSymbol> = new Map<string,
   ["fresnel_s", sym("FresnelS")],
   ["fresnel_c", sym("FresnelC")],
   ["lambert_w", sym("LambertW")],
+  // ---------------------------------------------------------------
+  // Track M2 — runtime package loader and orthogonal polynomials.
+  // ---------------------------------------------------------------
+  //
+  // `load("orthopoly")` is the session-level directive that turns
+  // on the orthogonal polynomial closed-form evaluators (see the
+  // `orthopoly` module).  Until that call the names below parse to
+  // their canonical IR head but the gated handler treats them as
+  // unknown, so they round-trip unevaluated.  This matches the
+  // Python runtime's surface contract (Track M1).
+  ["load", LOAD],
+  ["legendre_p", LEGENDRE_P],
+  ["legendre_q", LEGENDRE_Q],
+  ["chebyshev_t", CHEBYSHEV_T],
+  ["chebyshev_u", CHEBYSHEV_U],
+  ["hermite", HERMITE_H],
+  ["bessel_j", BESSEL_J],
+  ["bessel_y", BESSEL_Y],
 ]);
 
 const MACSYMA_HELP_TOPICS: Readonly<Record<string, string>> = Object.freeze({
@@ -391,6 +457,16 @@ export class MacsymaBackend extends SymbolicBackend {
   numer = false;
   showtime = false;
   readonly assumptions = new AssumptionContext();
+  /**
+   * Track M2 — names that have been loaded via `load("name")`.
+   *
+   * Per-session: each backend owns its own set, so two parallel
+   * sessions stay independent.  The orthopoly evaluator handlers
+   * consult this set on every dispatch; if `"orthopoly"` is missing
+   * they return the expression unevaluated, mirroring the
+   * pre-`load` round-trip behaviour seen on the Python runtime.
+   */
+  readonly loadedPackages: Set<string> = new Set<string>();
   private readonly runtimeTable: ReadonlyMap<string, Handler>;
   private readonly runtimeHeld: ReadonlySet<string>;
 
@@ -433,6 +509,22 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(SORT.name, listHandler(1, ([value]) => sortList(value)));
     table.set(PART.name, listHandler(2, ([value, index]) => part(value, integerArgument(index))));
     table.set(FLATTEN.name, listHandler(null, flattenHandler));
+    // Track M2 — runtime package loader + orthopoly evaluator stubs.
+    //
+    // The orthopoly handlers are *always* in the table, but each one
+    // checks `loadedPackages` before doing work; until `load("orthopoly")`
+    // fires they return the expression unevaluated.  Wiring them at
+    // construction means we never have to mutate `runtimeTable` after
+    // the fact (it can stay a `ReadonlyMap`), keeping the backend's
+    // public interface honest.
+    table.set(LOAD.name, makeLoadHandler(this));
+    table.set(LEGENDRE_P.name, makeOrthopolyRecurrenceHandler(this, legendreP));
+    table.set(CHEBYSHEV_T.name, makeOrthopolyRecurrenceHandler(this, chebyshevT));
+    table.set(CHEBYSHEV_U.name, makeOrthopolyRecurrenceHandler(this, chebyshevU));
+    table.set(HERMITE_H.name, makeOrthopolyRecurrenceHandler(this, hermiteH));
+    table.set(LEGENDRE_Q.name, makeOrthopolyPassthroughHandler(this));
+    table.set(BESSEL_J.name, makeOrthopolyPassthroughHandler(this));
+    table.set(BESSEL_Y.name, makeOrthopolyPassthroughHandler(this));
     this.runtimeTable = table;
     this.runtimeHeld = new Set([
       ...super.holdHeads(),
@@ -855,6 +947,77 @@ function displayHandler(_vm: VM, expr: IRApply): IRNode {
 function suppressHandler(_vm: VM, expr: IRApply): IRNode {
   if (expr.args.length !== 1) throw new Error(`Suppress takes 1 arg, got ${expr.args.length}`);
   return expr.args[0];
+}
+
+/**
+ * Build a `Load("name")` handler bound to a particular backend.
+ *
+ * Mirrors the Python `make_load_handler`:
+ *
+ *   1. Validates arity (exactly one string-or-symbol argument).
+ *   2. Checks the name against the compile-time `LOAD_ALLOWLIST`.
+ *      Unknown names raise `MacsymaUserError` with a clear message
+ *      that advertises what *is* available so users self-correct.
+ *   3. Returns early (idempotent) if the package is already loaded.
+ *   4. Otherwise flips the per-package gate on `backend.loadedPackages`
+ *      via a *static* `switch` arm — there is no dynamic module
+ *      lookup, so a hostile name string can never be turned into an
+ *      executable code path.
+ *
+ * The return value is the same string the user passed (wrapped as an
+ * `IRString`) so `load("orthopoly")` prints cleanly in the REPL,
+ * matching Maxima's "return the path" convention.
+ */
+function makeLoadHandler(backend: MacsymaBackend): Handler {
+  return (_vm, expr) => {
+    if (expr.args.length !== 1) {
+      throw new MacsymaUserError(
+        `load takes 1 argument, got ${expr.args.length}`,
+      );
+    }
+    const nameNode = expr.args[0];
+    let name: string;
+    if (nameNode.kind === "string") {
+      name = nameNode.value;
+    } else if (nameNode.kind === "symbol") {
+      // Maxima's short form `load(orthopoly)` (bare symbol).  Accept
+      // either spelling.  The symbol is *not* looked up in the
+      // environment — only its name is consulted, so a hostile
+      // user can't shadow `orthopoly` with a binding.
+      name = nameNode.name;
+    } else {
+      throw new MacsymaUserError(
+        "load: argument must be a string or symbol",
+      );
+    }
+    if (!LOAD_ALLOWLIST.has(name)) {
+      const allowed = [...LOAD_ALLOWLIST].sort().join(", ");
+      throw new MacsymaUserError(
+        `load: unknown package '${name}'; available: ${allowed}`,
+      );
+    }
+    if (backend.loadedPackages.has(name)) {
+      // Idempotent: already loaded, nothing to do.
+      return stringNode(name);
+    }
+    // Static dispatch — exactly one arm per allowlist entry.  No
+    // dynamic `import()` lookup, so the name string can never escape
+    // the switch.
+    switch (name) {
+      case "orthopoly":
+        backend.loadedPackages.add("orthopoly");
+        break;
+      default:
+        // Defence in depth — this branch is unreachable because of
+        // the allowlist check above, but if a future contributor
+        // adds to `LOAD_ALLOWLIST` without adding a switch arm we
+        // want a loud failure rather than a silent no-op.
+        throw new MacsymaUserError(
+          `load: internal error — '${name}' in allowlist but not dispatched`,
+        );
+    }
+    return stringNode(name);
+  };
 }
 
 function makeKillHandler(backend: MacsymaBackend): Handler {

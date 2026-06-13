@@ -27,6 +27,7 @@ from symbolic_ir import (
     IRInteger,
     IRNode,
     IRRational,
+    IRString,
     IRSymbol,
 )
 from symbolic_vm.backend import Handler
@@ -258,3 +259,110 @@ def make_ev_handler() -> Handler:
         return result
 
     return ev_handler
+
+
+# ---------------------------------------------------------------------------
+# Load — runtime package directive (Track M1)
+# ---------------------------------------------------------------------------
+#
+# ``load("name")`` registers the handlers from a loadable package onto the
+# current session.  The user-facing contract:
+#
+#   load("orthopoly");          → installs LegendreP, ChebyshevT, … handlers
+#   legendre_p(3, x);           → (5*x^3 - 3*x) / 2
+#   load("orthopoly");          → idempotent; no error, no double install
+#   load("nonexistent");        → MacsymaUserError, name is not in allowlist
+#
+# Why an allowlist?  The handler must NEVER turn an arbitrary user-supplied
+# string into a Python import path.  A naïve ``importlib.import_module(name)``
+# would let a hostile MACSYMA program reach into ``os``, ``subprocess``, or
+# any other module on ``sys.path``.  The allowlist below is therefore the
+# *only* place that maps a load name to executable code; new packages
+# require an explicit code change here.
+
+# Sentinel for "load succeeded" — Maxima's load returns the path of the
+# loaded file; we don't have files, so we return the name as a string.
+# Keeps :func:`load(...)`` substitutable into expressions without crashing
+# the REPL printer.
+
+
+class MacsymaUserError(ValueError):
+    """A MACSYMA-surface error meant to be shown to the user verbatim.
+
+    Distinguished from generic ``ValueError`` so REPL frontends can format
+    it without leaking a Python traceback.  Inherits ``ValueError`` for
+    backwards compatibility with callers that catch the broader type.
+    """
+
+
+def make_load_handler(backend: MacsymaBackend) -> Handler:
+    """Build a ``Load("name")`` handler bound to a particular backend.
+
+    The handler:
+
+    1. Validates arity (exactly one string argument).
+    2. Checks the name against the hardcoded :data:`_LOAD_ALLOWLIST`.
+       Unknown names raise :class:`MacsymaUserError` with a clear message.
+    3. Returns early (idempotent) if the package is already loaded.
+    4. Otherwise imports the package's registration module *by direct
+       reference, not by user-supplied path*, calls
+       ``register_handlers(backend)``, and records the package in
+       ``backend._loaded_packages``.
+
+    The return value is the same string the user passed (wrapped as
+    :class:`~symbolic_ir.IRString`) so ``load("orthopoly")`` prints
+    cleanly in the REPL.
+    """
+
+    def load_handler(_vm: VM, expr: IRApply) -> IRNode:
+        if len(expr.args) != 1:
+            raise MacsymaUserError(
+                f"load takes 1 argument, got {len(expr.args)}"
+            )
+        name_node = expr.args[0]
+        if not isinstance(name_node, IRString):
+            # Be lenient: a bare symbol like ``load(orthopoly)`` is the
+            # Maxima short form.  Accept either spelling.
+            if isinstance(name_node, IRSymbol):
+                name = name_node.name
+            else:
+                raise MacsymaUserError(
+                    "load: argument must be a string or symbol"
+                )
+        else:
+            name = name_node.value
+
+        if name not in _LOAD_ALLOWLIST:
+            allowed = ", ".join(sorted(_LOAD_ALLOWLIST))
+            raise MacsymaUserError(
+                f"load: unknown package {name!r}; available: {allowed}"
+            )
+
+        if name in backend._loaded_packages:
+            # Idempotent: already loaded, nothing to do.
+            return IRString(name)
+
+        # Static dispatch — exactly one arm per allowlist entry.  No
+        # dynamic ``importlib`` lookup, so the name string can't escape
+        # the switch.
+        if name == "orthopoly":
+            from macsyma_runtime.packages.orthopoly import (
+                register_handlers as _orthopoly_register,
+            )
+            _orthopoly_register(backend)
+        else:  # pragma: no cover — guarded by allowlist check above
+            raise MacsymaUserError(
+                f"load: internal error — {name!r} in allowlist but not dispatched"
+            )
+
+        backend._loaded_packages.add(name)
+        return IRString(name)
+
+    return load_handler
+
+
+# The set of package names ``load()`` will accept.  Adding a new entry is
+# a deliberate two-line change: append to this set *and* add a dispatch
+# arm in :func:`make_load_handler` above.  Keeping the two together makes
+# it impossible to allowlist a name without also wiring its registration.
+_LOAD_ALLOWLIST: frozenset[str] = frozenset({"orthopoly"})

@@ -149,6 +149,7 @@ from symbolic_ir import (
 from symbolic_ir.nodes import C1, C2, C_CONST, ODE2, D
 
 from cas_ode.frobenius import try_frobenius_series
+from cas_ode.lie_symmetry import try_lie_symmetry
 
 if TYPE_CHECKING:
     from symbolic_vm.vm import VM
@@ -3513,5 +3514,13 @@ def solve_ode(
     exact = _try_exact(expr, y, x, vm)
     if exact is not None:
         return exact
+
+    # ---- Track L1: Lie point-symmetry (autonomous & scaling) ---------------
+    # Runs AFTER every existing first-order family.  Catches autonomous
+    # nonlinear y' = g(y) (e.g. logistic y' = y(1-y)) that separable cannot
+    # invert, and any future symmetry-reducible case not covered above.
+    lie = try_lie_symmetry(expr, y, x, vm)
+    if lie is not None:
+        return lie
 
     return None

@@ -35,11 +35,12 @@ compound-relation store ships in `symbolic-vm` 0.19.0.
     - `is(b^2 = a^2)` ≡ `is(a^2 = b^2)`,
     - and the same for `<=`/`>=`, `!=`.
 
-## Unreleased
+## [0.3.0] — 2026-05-29
 
-- Add deterministic `AssumptionContext.factsFor(...)` and
-  `AssumptionContext.symbolsWithFacts()` metadata queries for MACSYMA property
-  inspection.
+- Released the previously-Unreleased deterministic
+  `AssumptionContext.factsFor(...)` and
+  `AssumptionContext.symbolsWithFacts()` metadata queries as part of
+  the `macsyma-truly-finish-plan` closure sweep (Track N).
 
 ## 0.1.0
 

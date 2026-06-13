@@ -414,6 +414,7 @@ V1 in 0 DC 1
 .measure tran swing peak-to-peak V(out) FROM=1m TO={3m}
 .meas transient settled FINAL V(out)
 .measure tran sample FIND V(out) AT={1.5m}
+.measure tran crossing WHEN V(out)=0.5 FROM=1m TO=3m
 .measure dc dcmax MAX V(out) FROM=1 TO=3
 .measure ac acmax MAX V(out) FROM=1k TO=10k
 .end
@@ -423,22 +424,26 @@ V1 in 0 DC 1
 
     assert summary.active_lines == ("V1 in 0 DC 1",)
     assert summary.terminated is True
-    assert summary.end_line_number == 8
+    assert summary.end_line_number == 9
     assert summary.diagnostics == ()
     assert [(card.name, card.analysis, card.mode, card.probe) for card in summary.measurements] == [
         ("swing", "tran", "pp", "V(out)"),
         ("settled", "transient", "last", "V(out)"),
         ("sample", "tran", "find", "V(out)"),
+        ("crossing", "tran", "when", "V(out)"),
         ("dcmax", "dc", "max", "V(out)"),
         ("acmax", "ac", "max", "V(out)"),
     ]
     assert summary.measurements[0].from_value == 1.0e-3
     assert summary.measurements[0].to_value == 3.0e-3
     assert summary.measurements[2].at_value == 1.5e-3
-    assert summary.measurements[3].from_value == 1.0
-    assert summary.measurements[3].to_value == 3.0
-    assert summary.measurements[4].from_value == 1.0e3
-    assert summary.measurements[4].to_value == 1.0e4
+    assert summary.measurements[3].target_value == 0.5
+    assert summary.measurements[3].from_value == 1.0e-3
+    assert summary.measurements[3].to_value == 3.0e-3
+    assert summary.measurements[4].from_value == 1.0
+    assert summary.measurements[4].to_value == 3.0
+    assert summary.measurements[5].from_value == 1.0e3
+    assert summary.measurements[5].to_value == 1.0e4
 
 
 def test_resolve_deck_measurements_reports_unsupported_subset() -> None:

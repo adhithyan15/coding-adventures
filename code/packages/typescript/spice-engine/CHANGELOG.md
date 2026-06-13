@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `measureTransientWhenProbe` and parsed transient
+  `.measure ... WHEN probe=target` routing so deck measurements can report the
+  first crossing time over optional `FROM=` / `TO=` windows, matching Python
+  and Rust.
 - Add `measureTransientFindAtProbe` and parsed transient
   `.measure ... FIND ... AT=` routing so deck measurements can sample or
   linearly interpolate a probe value at one scalar time, matching Python and

@@ -9,3 +9,4 @@ semantic-ir = { path = "../semantic-ir" }
 
 [dev-dependencies]
 twig-to-semantic-ir = { path = "../twig-to-semantic-ir" }
+ruby-to-semantic-ir = { path = "../ruby-to-semantic-ir" }

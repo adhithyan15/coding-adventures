@@ -8,6 +8,7 @@ All notable changes to this package will be documented in this file.
 
 - Hue command-plan projection summaries for generated-command and ignored-delta
   reconciliation telemetry.
+- Hue pairing-plan summaries for local registration readiness checks.
 - Hue pairing Vault handoff summaries for no-secret pairing completion checks.
 - Hue integration descriptor summaries for capability, bridge-role, and runtime
   surface checks.

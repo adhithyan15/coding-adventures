@@ -2855,6 +2855,49 @@ def measure_transient_find_at_probe(
     )
 
 
+def measure_transient_when_probe(
+    transient_result: TransientResult | list[TransientPoint],
+    name: str,
+    probe: str,
+    target_value: float,
+    *,
+    from_time: float | None = None,
+    to_time: float | None = None,
+) -> ProbeMeasurement:
+    """Measure the first transient crossing time for ``probe == target_value``."""
+
+    if not math.isfinite(target_value):
+        raise ValueError("measure_transient_when_probe: target_value must be finite")
+    if from_time is not None and not math.isfinite(from_time):
+        raise ValueError("measure_transient_when_probe: from_time must be finite")
+    if to_time is not None and not math.isfinite(to_time):
+        raise ValueError("measure_transient_when_probe: to_time must be finite")
+    if from_time is not None and to_time is not None and from_time > to_time:
+        raise ValueError("measure_transient_when_probe: from_time must be <= to_time")
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    value = _transient_probe_crossing_time(
+        points,
+        probe,
+        target_value,
+        from_time,
+        to_time,
+        "measure_transient_when_probe",
+    )
+    return ProbeMeasurement(
+        name=name,
+        analysis="tran",
+        probe=probe,
+        mode="when",
+        value=value,
+        from_value=from_time,
+        to_value=to_time,
+    )
+
+
 def _transient_probe_value_at(
     points: list[TransientPoint],
     probe: str,
@@ -2885,6 +2928,48 @@ def _transient_probe_value_at(
     raise ValueError(f"{context}: at_time is outside transient sample range")
 
 
+def _transient_probe_crossing_time(
+    points: list[TransientPoint],
+    probe: str,
+    target_value: float,
+    from_time: float | None,
+    to_time: float | None,
+    context: str,
+) -> float:
+    previous: tuple[float, float, float] | None = None
+    selected_count = 0
+    for point in points:
+        if (from_time is not None and point.time < from_time) or (
+            to_time is not None and point.time > to_time
+        ):
+            continue
+        selected_count += 1
+        value = _table_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            context,
+        )
+        delta = value - target_value
+        if delta == 0.0:
+            return point.time
+        if previous is not None:
+            previous_time, previous_value, previous_delta = previous
+            if (previous_delta < 0.0 and delta > 0.0) or (
+                previous_delta > 0.0 and delta < 0.0
+            ):
+                if point.time == previous_time:
+                    raise ValueError(
+                        f"{context}: duplicate transient sample times around WHEN crossing"
+                    )
+                fraction = (target_value - previous_value) / (value - previous_value)
+                return previous_time + (point.time - previous_time) * fraction
+        previous = (point.time, value, delta)
+    if selected_count == 0:
+        raise ValueError(f"{context}: no transient samples in window")
+    raise ValueError(f"{context}: no transient crossing in window")
+
+
 def measure_transient_cards(
     transient_result: TransientResult | list[TransientPoint],
     measurements: Iterable[DeckMeasurementCard],
@@ -2908,6 +2993,21 @@ def measure_transient_cards(
                     measurement.name,
                     measurement.probe,
                     measurement.at_value,
+                )
+            )
+        elif measurement.mode == "when":
+            if measurement.target_value is None:
+                raise ValueError(
+                    "measure_transient_cards: WHEN measurement cards require a target value"
+                )
+            results.append(
+                measure_transient_when_probe(
+                    transient_result,
+                    measurement.name,
+                    measurement.probe,
+                    measurement.target_value,
+                    from_time=measurement.from_value,
+                    to_time=measurement.to_value,
                 )
             )
         else:

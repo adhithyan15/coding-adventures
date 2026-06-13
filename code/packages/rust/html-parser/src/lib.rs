@@ -856,6 +856,7 @@ pub struct BrowserDocument {
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
+    pub text_semantic_descriptors: Vec<BrowserTextSemanticDescriptor>,
     pub navigation_target_descriptors: Vec<BrowserNavigationTargetDescriptor>,
     pub navigation_groups: Vec<BrowserNavigationGroup>,
     pub section_landmarks: Vec<BrowserSectionLandmark>,
@@ -2309,6 +2310,31 @@ pub struct BrowserTextSemantic {
     pub ruby_kind: Option<String>,
     pub bidi_kind: Option<String>,
     pub phrase_kind: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTextSemanticDescriptor {
+    pub semantic_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub semantic_kind: String,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub data_value: Option<String>,
+    pub datetime: Option<String>,
+    pub edit_cite: Option<String>,
+    pub resolved_edit_cite: Option<String>,
+    pub edit_datetime: Option<String>,
+    pub ruby_kind: Option<String>,
+    pub bidi_kind: Option<String>,
+    pub phrase_kind: Option<String>,
+    pub semantic_blocked: bool,
+    pub semantic_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3823,6 +3849,8 @@ impl BrowserDocument {
         summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary.link_resource_descriptors = browser_link_resource_descriptors(&summary.resources);
+        summary.text_semantic_descriptors =
+            browser_text_semantic_descriptors(&summary.text_semantics);
         summary
     }
 }
@@ -12932,6 +12960,95 @@ fn browser_text_semantic_element(
         bidi_kind: browser_bidi_kind(element),
         phrase_kind: browser_phrase_kind(element),
     })
+}
+
+fn browser_text_semantic_descriptors(
+    semantics: &[BrowserTextSemantic],
+) -> Vec<BrowserTextSemanticDescriptor> {
+    semantics
+        .iter()
+        .enumerate()
+        .map(|(index, semantic)| browser_text_semantic_descriptor(index + 1, semantic))
+        .collect()
+}
+
+fn browser_text_semantic_descriptor(
+    semantic_index: usize,
+    semantic: &BrowserTextSemantic,
+) -> BrowserTextSemanticDescriptor {
+    let semantic_block_reasons = browser_text_semantic_block_reasons(semantic);
+
+    BrowserTextSemanticDescriptor {
+        semantic_index,
+        element: semantic.element.clone(),
+        id: semantic.id.clone(),
+        role: semantic.role.clone(),
+        text: semantic.text.clone(),
+        semantic_kind: browser_text_semantic_descriptor_kind(semantic).to_string(),
+        title: semantic.title.clone(),
+        lang: semantic.lang.clone(),
+        dir: semantic.dir.clone(),
+        quote_cite: semantic.quote_cite.clone(),
+        resolved_quote_cite: semantic.resolved_quote_cite.clone(),
+        data_value: semantic.data_value.clone(),
+        datetime: semantic.datetime.clone(),
+        edit_cite: semantic.edit_cite.clone(),
+        resolved_edit_cite: semantic.resolved_edit_cite.clone(),
+        edit_datetime: semantic.edit_datetime.clone(),
+        ruby_kind: semantic.ruby_kind.clone(),
+        bidi_kind: semantic.bidi_kind.clone(),
+        phrase_kind: semantic.phrase_kind.clone(),
+        semantic_blocked: !semantic_block_reasons.is_empty(),
+        semantic_block_reasons,
+    }
+}
+
+fn browser_text_semantic_descriptor_kind(semantic: &BrowserTextSemantic) -> &'static str {
+    if semantic.data_value.is_some() || semantic.role == "data" {
+        "machine-readable"
+    } else if semantic.datetime.is_some() || semantic.role == "time" {
+        "temporal"
+    } else if semantic.edit_cite.is_some()
+        || semantic.edit_datetime.is_some()
+        || matches!(semantic.role.as_str(), "inserted" | "deleted")
+    {
+        "edit"
+    } else if semantic.quote_cite.is_some()
+        || matches!(semantic.role.as_str(), "quote" | "quote_block")
+    {
+        "quote"
+    } else if semantic.ruby_kind.is_some() {
+        "ruby"
+    } else if semantic.bidi_kind.is_some() {
+        "bidi"
+    } else if semantic.phrase_kind.is_some() {
+        "phrase"
+    } else {
+        "inline"
+    }
+}
+
+fn browser_text_semantic_block_reasons(semantic: &BrowserTextSemantic) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if semantic.element == "data" && semantic.data_value.is_none() {
+        reasons.push("missing-data-value".to_string());
+    }
+    if semantic.element == "time" && semantic.datetime.is_none() {
+        reasons.push("missing-datetime".to_string());
+    }
+    if semantic.quote_cite.is_some() && semantic.resolved_quote_cite.is_none() {
+        reasons.push("unresolved-quote-cite".to_string());
+    }
+    if semantic.edit_cite.is_some() && semantic.resolved_edit_cite.is_none() {
+        reasons.push("unresolved-edit-cite".to_string());
+    }
+    if matches!(semantic.element.as_str(), "ins" | "del") && semantic.edit_datetime.is_none() {
+        reasons.push("edit-missing-datetime".to_string());
+    }
+    if semantic.bidi_kind.as_deref() == Some("override") && semantic.dir.is_none() {
+        reasons.push("bidi-missing-dir".to_string());
+    }
+    reasons
 }
 
 fn is_browser_text_semantic_element(element: &Element) -> bool {

@@ -534,6 +534,7 @@ export interface DeckMeasurementCard {
   readonly fromValue?: number;
   readonly toValue?: number;
   readonly atValue?: number;
+  readonly targetValue?: number;
 }
 
 export interface DeckMeasurementDiagnostic {
@@ -3545,7 +3546,43 @@ function resolveMeasurementLine(
     return;
   }
 
-  const probe = unquoteToken(tokens[4].trim());
+  const emptyParameterState = new DeckParameterState();
+  let targetValue: number | undefined;
+  const lineDiagnosticCount = state.diagnostics.length;
+  const probe = mode === "when"
+    ? (() => {
+        const equalsIndex = tokens[4].indexOf("=");
+        if (equalsIndex < 0) {
+          addMeasurementDiagnostic(state, {
+            code: "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            lineNumber,
+            message: "WHEN measurements require probe=target syntax",
+            token: tokens[4],
+          });
+          return "";
+        }
+        try {
+          targetValue = evaluateParameterExpression(
+            stripExpressionDelimiters(tokens[4].slice(equalsIndex + 1).trim()),
+            emptyParameterState,
+          );
+        } catch (error) {
+          addMeasurementDiagnostic(state, {
+            code: "SPICE_DECK_MEASURE_EXPRESSION",
+            directive,
+            lineNumber,
+            message: error instanceof Error ? error.message : String(error),
+            token: tokens[4],
+          });
+          return "";
+        }
+        return unquoteToken(tokens[4].slice(0, equalsIndex).trim());
+      })()
+    : unquoteToken(tokens[4].trim());
+  if (state.diagnostics.length !== lineDiagnosticCount) {
+    return;
+  }
   if (probe.length === 0) {
     addMeasurementDiagnostic(state, {
       code: "SPICE_DECK_MEASURE_PROBE",
@@ -3557,7 +3594,6 @@ function resolveMeasurementLine(
     return;
   }
 
-  const emptyParameterState = new DeckParameterState();
   let fromValue: number | undefined;
   let toValue: number | undefined;
   let atValue: number | undefined;
@@ -3629,6 +3665,14 @@ function resolveMeasurementLine(
       message: "FIND measurements require an AT value",
     });
   }
+  if (mode === "when" && targetValue === undefined) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: "WHEN measurements require a target value",
+    });
+  }
   if (mode !== "find" && atValue !== undefined) {
     addMeasurementDiagnostic(state, {
       code: "SPICE_DECK_MEASURE_ARGUMENT",
@@ -3669,6 +3713,7 @@ function resolveMeasurementLine(
     fromValue,
     toValue,
     atValue,
+    targetValue,
   });
 }
 
@@ -4160,6 +4205,8 @@ function normalizeMeasurementModeToken(mode: string): string | undefined {
       return "last";
     case "find":
       return "find";
+    case "when":
+      return "when";
     default:
       return undefined;
   }
@@ -4938,6 +4985,44 @@ export function measureTransientFindAtProbe(
   };
 }
 
+export function measureTransientWhenProbe(
+  points: readonly TransientPoint[],
+  name: string,
+  probe: string,
+  targetValue: number,
+  fromTime?: number,
+  toTime?: number,
+): ProbeMeasurement {
+  if (!Number.isFinite(targetValue)) {
+    throw invalidElement("measureTransientWhenProbe", "targetValue must be finite");
+  }
+  if (fromTime !== undefined && !Number.isFinite(fromTime)) {
+    throw invalidElement("measureTransientWhenProbe", "fromTime must be finite");
+  }
+  if (toTime !== undefined && !Number.isFinite(toTime)) {
+    throw invalidElement("measureTransientWhenProbe", "toTime must be finite");
+  }
+  if (fromTime !== undefined && toTime !== undefined && fromTime > toTime) {
+    throw invalidElement("measureTransientWhenProbe", "fromTime must be <= toTime");
+  }
+  return {
+    name,
+    analysis: "tran",
+    probe,
+    mode: "when",
+    value: transientProbeCrossingTime(
+      points,
+      probe,
+      targetValue,
+      fromTime,
+      toTime,
+      "measureTransientWhenProbe",
+    ),
+    fromValue: fromTime,
+    toValue: toTime,
+  };
+}
+
 function transientProbeValueAt(
   points: readonly TransientPoint[],
   probe: string,
@@ -4966,6 +5051,45 @@ function transientProbeValueAt(
   throw invalidElement(context, "atTime is outside transient sample range");
 }
 
+function transientProbeCrossingTime(
+  points: readonly TransientPoint[],
+  probe: string,
+  targetValue: number,
+  fromTime: number | undefined,
+  toTime: number | undefined,
+  context: string,
+): number {
+  let previous: readonly [number, number, number] | undefined;
+  let selectedCount = 0;
+  for (const point of points) {
+    if ((fromTime !== undefined && point.time < fromTime) ||
+      (toTime !== undefined && point.time > toTime)) {
+      continue;
+    }
+    selectedCount += 1;
+    const value = tableProbeValue(point.nodeVoltages, point.branchCurrents, probe, context);
+    const delta = value - targetValue;
+    if (delta === 0.0) {
+      return point.time;
+    }
+    if (previous !== undefined) {
+      const [previousTime, previousValue, previousDelta] = previous;
+      if ((previousDelta < 0.0 && delta > 0.0) || (previousDelta > 0.0 && delta < 0.0)) {
+        if (point.time === previousTime) {
+          throw invalidElement(context, "duplicate transient sample times around WHEN crossing");
+        }
+        const fraction = (targetValue - previousValue) / (value - previousValue);
+        return previousTime + (point.time - previousTime) * fraction;
+      }
+    }
+    previous = [point.time, value, delta];
+  }
+  if (selectedCount === 0) {
+    throw invalidElement(context, "no transient samples in window");
+  }
+  throw invalidElement(context, "no transient crossing in window");
+}
+
 export function measureTransientCards(
   points: readonly TransientPoint[],
   measurements: readonly DeckMeasurementCard[],
@@ -4983,6 +5107,19 @@ export function measureTransientCards(
         measurement.name,
         measurement.probe,
         measurement.atValue,
+      );
+    }
+    if (measurement.mode === "when") {
+      if (measurement.targetValue === undefined) {
+        throw invalidElement("measureTransientCards", "WHEN measurement cards require a target value");
+      }
+      return measureTransientWhenProbe(
+        points,
+        measurement.name,
+        measurement.probe,
+        measurement.targetValue,
+        measurement.fromValue,
+        measurement.toValue,
       );
     }
     return measureTransientProbe(

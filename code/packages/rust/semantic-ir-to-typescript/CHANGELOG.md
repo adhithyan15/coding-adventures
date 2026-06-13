@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.1.4 — SIR16 expression features (native)
+
+Accepts and emits the SIR16 expression features as **native** TypeScript (per
+`code/specs/sir-runtime.md`):
+
+- `Feature::Floats` → number literal; `Feature::Sequences` → array literal /
+  `((s) as __Sir.Val[])[i]` / `.length`; `Feature::Maps` → `new Map<…>([[k,v]…])`
+  / `.get(k) ?? null`.
+- `Feature::ShortCircuit` (`LogicalAnd`/`LogicalOr`, from case/in pattern
+  desugaring) → a **truthy-guarded arrow** `((__l: __Sir.Val) => __Sir.truthy(__l)
+  ? (rhs) : __l)(lhs)`: rhs stays lazy AND the test uses SIR truthiness (only
+  `false`/`nil` falsy), never a bare `&&`/`||`.
+- `Feature::StringInterpolation` (`StrConcat`) → parts joined through
+  `__Sir.toDisplay`.
+
+Requires `@coding-adventures/sir-runtime-core` ≥ 0.1.1 (its `Val` union now
+includes `Val[]` / `Map<Val,Val>` so emitted native arrays/maps typecheck).
+New Ruby→TS E2E tests for array literal, hash literal, pattern short-circuit,
+and interpolation.
+
 ## 0.1.3 — import runtime from `@coding-adventures/sir-runtime-core`
 
 The TypeScript runtime is no longer inlined into every artifact.  Emitted modules

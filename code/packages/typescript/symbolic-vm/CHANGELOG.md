@@ -1,5 +1,51 @@
 # Changelog
 
+## [0.20.0] — 2026-05-29
+
+**Track K2 — n-variate Hensel factor bridge (TypeScript port).**
+
+Wires the new `tryNVariateHensel` from cas-factor 0.3.0 into the
+`Factor(...)` IR handler.  Mirrors the Python Track K1 bridge in
+`symbolic-vm/cas_handlers.py` (PR #5590).
+
+Algorithm (n ≥ 3, generic — not per-arity):
+
+1. Identify all free variables in the input (`findNVariables`, bounded
+   at 8 distinct symbols so a pathological input can't allocate
+   gigantic sparse-dict keys).
+2. Convert to an `NPoly` via `irToNpoly`.  Returns undefined for
+   floats, foreign symbols, transcendentals (Sin/Log/…), or non-integer
+   exponents.
+3. Call `tryNVariateHensel`.  On success, convert each factor back to
+   IR via `npolyToIr` using **left-nested binary Add/Mul** (the
+   primitive Add/Mul handlers are strictly binary, so n-ary Apply
+   nodes with three or more children would crash).
+4. Hook into `factor_handler` AFTER the bivariate Hensel path, BEFORE
+   the unevaluated-wrapper fallback.
+
+Catches `x³ + y³ + z³ − 3xyz = (x+y+z)(x²+y²+z²−xy−yz−zx)`,
+`(x+y+z)(x+2y+3z) = x²+3xy+4xz+2y²+5yz+3z²`, and similar trivariate
+cases.  Falls through cleanly on `x² + y² + z² + 1` (irreducible),
+`sin(x) + y + z` (transcendental), and so on.
+
+### Added
+
+- `tryNVariateHenselIr` — top-level IR glue mirroring Python
+  `_try_n_variate_hensel_ir`.
+- `findNVariables`, `irToNpoly`, `npolyToIr`, `foldBinary` — helpers
+  mirroring `_find_n_variables`, `_ir_to_npoly`, `_npoly_to_ir`, and
+  the left-nested-binary-fold convention.
+- `tests/n_variate_factor.test.ts` — 6 end-to-end pipeline tests
+  exercising `Factor(...)` over the VM: sum-of-cubes identity, linear
+  product round-trip, irreducible fall-through, transcendental safety,
+  bivariate regression, univariate regression.
+
+### Changed
+
+- `cas-factor` minimum bumped to 0.3.0 (n-variate Hensel landed there).
+- `factor_handler` dispatch order: univariate → bivariate Hensel →
+  n-variate Hensel → unevaluated wrapper.
+
 ## [0.19.0] — 2026-05-29
 
 **Track G2 — symbolic-coefficient Weierstrass lift (TypeScript port).**

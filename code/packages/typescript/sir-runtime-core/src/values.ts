@@ -20,8 +20,22 @@ export interface ClosureLike {
   readonly __sirClosure: true;
 }
 
-/** A SIR value in the v0 surface. */
-export type Val = number | boolean | null | string | Sym | Pair | ClosureLike;
+/**
+ * A SIR value.  Includes the SIR16 collection types — sequences
+ * (`Val[]`) and maps (`Map<Val, Val>`) — so backends can emit native
+ * arrays/maps that still type as `Val`.  Both are truthy under SIR
+ * truthiness and display via `String(v)` in {@link toDisplay}.
+ */
+export type Val =
+  | number
+  | boolean
+  | null
+  | string
+  | Sym
+  | Pair
+  | ClosureLike
+  | Val[]
+  | Map<Val, Val>;
 
 /** SIR truthiness: everything is true except `false` and `nil`. */
 export function truthy(v: Val): boolean {

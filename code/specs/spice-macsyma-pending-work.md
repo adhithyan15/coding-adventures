@@ -1,12 +1,11 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
-> **MACSYMA truly-finish plan open (2026-05-29).** A follow-up audit
-> after the 2026-05-28 finish-plan closure surfaced eight remaining
-> mainstream-Maxima parity gaps that the previous plan had either marked
-> as non-goals or simply not addressed.  See
-> `code/specs/macsyma-truly-finish-plan.md` for the new tracks
-> (F through N).  The 2026-05-28 closure banner below is preserved as a
-> historical marker for the previous plan.
+> **🎉 MACSYMA truly-finish plan closed (2026-05-29).** All eight
+> tracks of `code/specs/macsyma-truly-finish-plan.md` (F through N)
+> have landed across Python, TypeScript, and Rust.  Every CHANGELOG
+> `Unreleased` section in the MACSYMA pipeline is empty.  MACSYMA is
+> considered feature-complete for mainstream Maxima 5.x parity; new
+> work is feature-driven (e.g. Maple frontend) rather than gap-driven.
 
 > **🎉 MACSYMA finish-plan closed (2026-05-28).** All five tracks of
 > `code/specs/macsyma-finish-plan.md` (ten sub-tracks total) have
