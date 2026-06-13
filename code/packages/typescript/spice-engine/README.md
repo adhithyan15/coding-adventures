@@ -85,7 +85,9 @@ measurement rows.
 `resolveDeckAnalyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
 `.end`, keeps non-analysis active lines, and reports stable diagnostics for
 malformed arguments, unsupported AC sweep modes, invalid sweep intervals, and
-unresolved scalar expressions.
+unresolved scalar expressions. `selectDeckAnalysisPlan` picks one explicit card
+by analysis alias, defaults decks without analysis cards to an implicit `.op`,
+and reports ambiguity before solver dispatch.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save` and scoped
 or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `formatDeckOpTable`,
@@ -151,3 +153,5 @@ probe lists or malformed `V(node)` / `I(source)` probes.
 `resolveDeckAnalyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
 `.end`, preserves non-analysis active lines, and reports stable diagnostics for
 malformed deck-level analysis controls.
+`selectDeckAnalysisPlan` returns one selected or implicit plan for downstream
+deck execution helpers.

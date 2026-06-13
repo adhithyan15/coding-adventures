@@ -151,7 +151,9 @@ stable measurement rows.
 `resolve_deck_analyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
 `.end`, keeps non-analysis active lines, and reports stable diagnostics for
 malformed arguments, unsupported AC sweep modes, invalid sweep intervals, and
-unresolved scalar expressions.
+unresolved scalar expressions. `select_deck_analysis_plan` picks one explicit
+card by analysis alias, defaults decks without analysis cards to an implicit
+`.op`, and reports ambiguity before solver dispatch.
 `resolve_deck_fourier`, `fourier_transient_cards`, and
 `fourier_transient_deck` extract parsed `.four` / `.FOUR` cards before `.end`
 and route transient samples into the existing SPICE-style Fourier result shape
@@ -188,3 +190,5 @@ text table formatters.
 `resolve_deck_analyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
 `.end`, preserves non-analysis active lines, and reports stable diagnostics for
 malformed deck-level analysis controls.
+`select_deck_analysis_plan` returns one selected or implicit plan for
+downstream deck execution helpers.

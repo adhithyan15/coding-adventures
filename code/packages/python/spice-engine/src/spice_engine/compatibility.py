@@ -806,6 +806,48 @@ def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
     )
 
 
+def select_deck_analysis_plan(
+    netlist: str,
+    analysis: str | None = None,
+) -> DeckAnalysisPlan:
+    """Return one explicit or implicit deck analysis plan for execution."""
+
+    summary = resolve_deck_analyses(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"select_deck_analysis_plan: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+
+    requested_analysis = None
+    if analysis is not None:
+        requested_analysis = _normalize_deck_analysis_name(analysis)
+        if requested_analysis is None:
+            raise ValueError(f"select_deck_analysis_plan: unsupported analysis {analysis!r}")
+
+    plans = list(summary.analyses)
+    if requested_analysis is not None:
+        plans = [plan for plan in plans if plan.analysis == requested_analysis]
+        if not plans:
+            raise ValueError(
+                f"select_deck_analysis_plan: no .{requested_analysis} analysis card found"
+            )
+        if len(plans) > 1:
+            raise ValueError(
+                f"select_deck_analysis_plan: multiple .{requested_analysis} analysis cards found"
+            )
+        return plans[0]
+
+    if not plans:
+        return DeckAnalysisPlan(".op", "op", 0)
+    if len(plans) > 1:
+        raise ValueError(
+            "select_deck_analysis_plan: multiple analysis cards found; "
+            "pass analysis to select one"
+        )
+    return plans[0]
+
+
 def compatibility_corpus() -> tuple[CompatibilityDeck, ...]:
     """Return the canonical first release-readiness compatibility corpus."""
 
@@ -2813,6 +2855,19 @@ def _normalize_deck_output_analysis(analysis: str) -> str | None:
     if normalized == "dc":
         return "dc"
     if normalized == "ac":
+        return "ac"
+    if normalized in {"tran", "transient"}:
+        return "tran"
+    return None
+
+
+def _normalize_deck_analysis_name(analysis: str) -> str | None:
+    normalized = analysis.strip().lower().removeprefix(".").replace("_", "-")
+    if normalized in {"op", "dcop", "operating-point", "operatingpoint"}:
+        return "op"
+    if normalized in {"dc", "dc-sweep", "dcsweep"}:
+        return "dc"
+    if normalized in {"ac", "ac-sweep", "acsweep"}:
         return "ac"
     if normalized in {"tran", "transient"}:
         return "tran"

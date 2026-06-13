@@ -3862,6 +3862,58 @@ pub fn resolve_deck_analyses(netlist: &str) -> DeckAnalysisSummary {
     }
 }
 
+pub fn select_deck_analysis_plan(
+    netlist: &str,
+    analysis: Option<&str>,
+) -> Result<DeckAnalysisPlan, SpiceError> {
+    let summary = resolve_deck_analyses(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "select_deck_analysis_plan",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+
+    let requested_analysis = match analysis {
+        Some(value) => Some(normalize_deck_analysis_name(value).ok_or_else(|| {
+            table_error(
+                "select_deck_analysis_plan",
+                &format!("unsupported analysis {value:?}"),
+            )
+        })?),
+        None => None,
+    };
+
+    let mut plans = summary.analyses;
+    if let Some(requested_analysis) = requested_analysis {
+        plans.retain(|plan| plan.analysis == requested_analysis);
+        if plans.is_empty() {
+            return Err(table_error(
+                "select_deck_analysis_plan",
+                &format!("no .{requested_analysis} analysis card found"),
+            ));
+        }
+        if plans.len() > 1 {
+            return Err(table_error(
+                "select_deck_analysis_plan",
+                &format!("multiple .{requested_analysis} analysis cards found"),
+            ));
+        }
+        return Ok(plans.remove(0));
+    }
+
+    if plans.is_empty() {
+        return Ok(implicit_deck_op_analysis_plan());
+    }
+    if plans.len() > 1 {
+        return Err(table_error(
+            "select_deck_analysis_plan",
+            "multiple analysis cards found; pass analysis to select one",
+        ));
+    }
+    Ok(plans.remove(0))
+}
+
 pub fn release_readiness_gates(corpus: &[CompatibilityDeck]) -> ReleaseReadinessReport {
     let mut issues = Vec::new();
     let mut seen_ids = HashSet::new();
@@ -6483,6 +6535,43 @@ fn normalize_deck_output_analysis(analysis: &str) -> Option<&'static str> {
         "ac" => Some("ac"),
         "tran" | "transient" => Some("tran"),
         _ => None,
+    }
+}
+
+fn normalize_deck_analysis_name(analysis: &str) -> Option<&'static str> {
+    match analysis
+        .trim()
+        .trim_start_matches('.')
+        .replace('_', "-")
+        .to_ascii_lowercase()
+        .as_str()
+    {
+        "op" | "dcop" | "operating-point" | "operatingpoint" => Some("op"),
+        "dc" | "dc-sweep" | "dcsweep" => Some("dc"),
+        "ac" | "ac-sweep" | "acsweep" => Some("ac"),
+        "tran" | "transient" => Some("tran"),
+        _ => None,
+    }
+}
+
+fn implicit_deck_op_analysis_plan() -> DeckAnalysisPlan {
+    DeckAnalysisPlan {
+        directive: ".op".to_string(),
+        analysis: "op".to_string(),
+        line_number: 0,
+        source_name: None,
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind: None,
+        point_count: None,
+        start_frequency_hz: None,
+        stop_frequency_hz: None,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
     }
 }
 

@@ -97,7 +97,9 @@ those stable measurement rows.
 `resolve_deck_analyses()` extracts `.op`, `.dc`, `.ac`, and `.tran` cards
 before `.end`, keeps non-analysis active lines, and reports stable diagnostics
 for malformed arguments, unsupported AC sweep modes, invalid sweep intervals,
-and unresolved scalar expressions.
+and unresolved scalar expressions. `select_deck_analysis_plan()` picks one
+explicit card by analysis alias, defaults decks without analysis cards to an
+implicit `.op`, and reports ambiguity before solver dispatch.
 `resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save` and
 scoped or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `format_deck_op_table()`,
@@ -175,6 +177,8 @@ probe lists or malformed `V(node)` / `I(source)` probes.
 `resolve_deck_analyses()` extracts `.op`, `.dc`, `.ac`, and `.tran` cards
 before `.end`, preserves non-analysis active lines, and reports stable
 diagnostics for malformed deck-level analysis controls.
+`select_deck_analysis_plan()` returns one selected or implicit plan for
+downstream deck execution helpers.
 
 ## Controlled source examples
 
