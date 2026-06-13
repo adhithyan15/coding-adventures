@@ -130,6 +130,9 @@ provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
 diagnostics for missing files, missing sections, unterminated sections, cycles,
 and still-unsupported `.control` blocks.
+`measure_transient_probe` and `format_measurement_table` provide the shared
+`.MEASURE`-style scalar transient output surface for MAX, MIN, AVG, RMS,
+peak-to-peak, and final-value probe measurements.
 `resolve_deck_parameters` evaluates scalar whitespace-tokenized `.param`
 assignments, collects scalar `.func` definitions before `.end`, preserves
 parameter order, rewrites braced and quoted active-line expressions, and emits

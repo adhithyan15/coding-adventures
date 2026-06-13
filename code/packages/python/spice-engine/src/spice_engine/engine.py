@@ -695,6 +695,19 @@ class TransientResult:
 
 
 @dataclass(frozen=True)
+class ProbeMeasurement:
+    """Stable scalar result for a SPICE-style probe measurement."""
+
+    name: str
+    analysis: str
+    probe: str
+    mode: str
+    value: float
+    from_value: float | None = None
+    to_value: float | None = None
+
+
+@dataclass(frozen=True)
 class CornerTransientPoint:
     """Transient waveform result for one named analysis corner."""
 
@@ -2745,6 +2758,124 @@ def _default_ac_output_probes(points: list[AcPoint]) -> list[str]:
 
 def _format_table_number(value: float) -> str:
     return f"{value:.6e}"
+
+
+def measure_transient_probe(
+    transient_result: TransientResult | list[TransientPoint],
+    name: str,
+    probe: str,
+    mode: str,
+    *,
+    from_time: float | None = None,
+    to_time: float | None = None,
+) -> ProbeMeasurement:
+    """Measure one transient probe over an optional time window.
+
+    Supported modes are ``max``, ``min``, ``avg``, ``rms``, ``pp``/``p2p`` /
+    ``peak-to-peak``, and ``last``/``final``.
+    """
+
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    normalized_mode = _normalize_measurement_mode(mode)
+    if from_time is not None and not math.isfinite(from_time):
+        raise ValueError("measure_transient_probe: from_time must be finite")
+    if to_time is not None and not math.isfinite(to_time):
+        raise ValueError("measure_transient_probe: to_time must be finite")
+    if from_time is not None and to_time is not None and from_time > to_time:
+        raise ValueError("measure_transient_probe: from_time must be <= to_time")
+
+    selected = [
+        point
+        for point in points
+        if (from_time is None or point.time >= from_time)
+        and (to_time is None or point.time <= to_time)
+    ]
+    if not selected:
+        raise ValueError("measure_transient_probe: no transient samples in window")
+
+    values = [
+        _table_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            "measure_transient_probe",
+        )
+        for point in selected
+    ]
+    value = _measure_values(values, normalized_mode)
+    return ProbeMeasurement(
+        name=name,
+        analysis="tran",
+        probe=probe,
+        mode=normalized_mode,
+        value=value,
+        from_value=from_time,
+        to_value=to_time,
+    )
+
+
+def format_measurement_table(measurements: Iterable[ProbeMeasurement]) -> str:
+    """Format scalar probe measurements as a stable tab-separated table."""
+
+    rows = ["Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue"]
+    for measurement in measurements:
+        rows.append(
+            "\t".join(
+                [
+                    measurement.name,
+                    measurement.analysis,
+                    measurement.probe,
+                    measurement.mode,
+                    _format_optional_table_number(measurement.from_value),
+                    _format_optional_table_number(measurement.to_value),
+                    _format_table_number(measurement.value),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def _normalize_measurement_mode(mode: str) -> str:
+    normalized = mode.strip().lower().replace("_", "-")
+    aliases = {
+        "average": "avg",
+        "mean": "avg",
+        "root-mean-square": "rms",
+        "p-p": "pp",
+        "p2p": "pp",
+        "peak-to-peak": "pp",
+        "peak2peak": "pp",
+        "final": "last",
+    }
+    normalized = aliases.get(normalized, normalized)
+    if normalized not in {"max", "min", "avg", "rms", "pp", "last"}:
+        raise ValueError(f"measure_transient_probe: unsupported mode {mode!r}")
+    return normalized
+
+
+def _measure_values(values: list[float], mode: str) -> float:
+    if mode == "max":
+        return max(values)
+    if mode == "min":
+        return min(values)
+    if mode == "avg":
+        return sum(values) / len(values)
+    if mode == "rms":
+        return math.sqrt(sum(value * value for value in values) / len(values))
+    if mode == "pp":
+        return max(values) - min(values)
+    if mode == "last":
+        return values[-1]
+    raise ValueError(f"measure_transient_probe: unsupported mode {mode!r}")
+
+
+def _format_optional_table_number(value: float | None) -> str:
+    return "" if value is None else _format_table_number(value)
 
 
 def _table_probe_value(

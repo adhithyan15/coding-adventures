@@ -5554,6 +5554,17 @@ pub struct TransientPoint {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct ProbeMeasurement {
+    pub name: String,
+    pub analysis: String,
+    pub probe: String,
+    pub mode: String,
+    pub value: f64,
+    pub from_value: Option<f64>,
+    pub to_value: Option<f64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct CornerTransientPoint {
     pub corner_name: String,
     pub points: Vec<TransientPoint>,
@@ -8061,6 +8072,131 @@ fn format_table_number(value: f64) -> String {
         return format!("{mantissa}e{exponent:+03}");
     }
     raw
+}
+
+pub fn measure_transient_probe(
+    points: &[TransientPoint],
+    name: &str,
+    probe: &str,
+    mode: &str,
+    from_time: Option<f64>,
+    to_time: Option<f64>,
+) -> Result<ProbeMeasurement, SpiceError> {
+    let normalized_mode = normalize_measurement_mode(mode)?;
+    if let Some(value) = from_time {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_transient_probe",
+                "from_time must be finite",
+            ));
+        }
+    }
+    if let Some(value) = to_time {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_transient_probe",
+                "to_time must be finite",
+            ));
+        }
+    }
+    if let (Some(from), Some(to)) = (from_time, to_time) {
+        if from > to {
+            return Err(table_error(
+                "measure_transient_probe",
+                "from_time must be <= to_time",
+            ));
+        }
+    }
+
+    let mut values = Vec::new();
+    for point in points {
+        if from_time.map_or(false, |from| point.time < from)
+            || to_time.map_or(false, |to| point.time > to)
+        {
+            continue;
+        }
+        values.push(table_probe_value(
+            &point.node_voltages,
+            &point.branch_currents,
+            probe,
+            "measure_transient_probe",
+        )?);
+    }
+    if values.is_empty() {
+        return Err(table_error(
+            "measure_transient_probe",
+            "no transient samples in window",
+        ));
+    }
+
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "tran".to_string(),
+        probe: probe.to_string(),
+        mode: normalized_mode.to_string(),
+        value: measure_values(&values, normalized_mode)?,
+        from_value: from_time,
+        to_value: to_time,
+    })
+}
+
+pub fn format_measurement_table(measurements: &[ProbeMeasurement]) -> String {
+    let mut rows = vec!["Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue".to_string()];
+    for measurement in measurements {
+        rows.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            measurement.name,
+            measurement.analysis,
+            measurement.probe,
+            measurement.mode,
+            format_optional_table_number(measurement.from_value),
+            format_optional_table_number(measurement.to_value),
+            format_table_number(measurement.value),
+        ));
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
+fn normalize_measurement_mode(mode: &str) -> Result<&'static str, SpiceError> {
+    let normalized = mode.trim().to_ascii_lowercase().replace('_', "-");
+    match normalized.as_str() {
+        "max" => Ok("max"),
+        "min" => Ok("min"),
+        "avg" | "average" | "mean" => Ok("avg"),
+        "rms" | "root-mean-square" => Ok("rms"),
+        "pp" | "p-p" | "p2p" | "peak-to-peak" | "peak2peak" => Ok("pp"),
+        "last" | "final" => Ok("last"),
+        _ => Err(table_error(
+            "measure_transient_probe",
+            &format!("unsupported mode {mode:?}"),
+        )),
+    }
+}
+
+fn measure_values(values: &[f64], mode: &str) -> Result<f64, SpiceError> {
+    match mode {
+        "max" => Ok(values.iter().copied().fold(f64::NEG_INFINITY, f64::max)),
+        "min" => Ok(values.iter().copied().fold(f64::INFINITY, f64::min)),
+        "avg" => Ok(values.iter().sum::<f64>() / values.len() as f64),
+        "rms" => Ok(
+            (values.iter().map(|value| value * value).sum::<f64>() / values.len() as f64).sqrt(),
+        ),
+        "pp" => {
+            let min = values.iter().copied().fold(f64::INFINITY, f64::min);
+            let max = values.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+            Ok(max - min)
+        }
+        "last" => Ok(*values.last().unwrap()),
+        _ => Err(table_error(
+            "measure_transient_probe",
+            &format!("unsupported mode {mode:?}"),
+        )),
+    }
+}
+
+fn format_optional_table_number(value: Option<f64>) -> String {
+    value.map(format_table_number).unwrap_or_default()
 }
 
 fn table_probe_value(

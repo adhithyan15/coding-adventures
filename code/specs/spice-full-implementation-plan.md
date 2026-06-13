@@ -25,7 +25,8 @@ downstream tools to compare.
      evaluation, active-line expression rewriting, function-definition
      extraction, scalar function-call evaluation, and initial-condition /
      nodeset extraction plus DC warm-start execution aids now have shared
-     diagnostic and solver footholds.
+     diagnostic and solver footholds; transient scalar `.measure`-style output
+     helpers now cover shared peak-to-peak and final-value measurement output.
    - Expand `.measure`, `.save`, and `.probe` execution toward full SPICE
      compatibility while keeping unsupported control-flow diagnostics explicit.
 
@@ -229,13 +230,22 @@ downstream tools to compare.
     - Stable errors reject non-finite hint values, non-zero ground hints,
       unknown nodes, and malformed low-level initial-vector lengths.
 
+21. Transient measurement output expansion.
+    - Status: completed in this transient measurement output slice.
+    - Python, Rust, and TypeScript now expose matching scalar transient probe
+      measurement helpers and stable measurement table formatters.
+    - The helpers normalize MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+      measurement modes over optional transient time windows.
+    - This closes a small `.MEASURE` output-format gap while leaving full
+      parsed deck-card execution and richer control-flow semantics in backlog.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand the initial `.measure`, `.save`, and `.probe` support toward full
-     SPICE compatibility, including additional measure modes and richer output
-     formats.
+   - Expand parsed `.measure`, `.save`, and `.probe` deck-card execution toward
+     full SPICE compatibility, including richer measure modes and output
+     routing beyond scalar transient helper calls.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

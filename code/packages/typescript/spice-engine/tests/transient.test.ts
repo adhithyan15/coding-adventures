@@ -8,6 +8,7 @@ import {
   ExpWaveform,
   type FourierResult,
   type PoleZeroResult,
+  type TransientPoint,
   PulseWaveform,
   PwlWaveform,
   SinWaveform,
@@ -43,6 +44,7 @@ import {
   formatDigitalEventTable,
   formatDistortionTable,
   formatFourierTable,
+  formatMeasurementTable,
   formatPoleZeroTable,
   formatPssTable,
   formatTransientTable,
@@ -70,6 +72,7 @@ import {
   resistor,
   sampleTransientProbeAsDigitalEvents,
   sampleTransientProbesAsDigitalEventStreams,
+  measureTransientProbe,
   transient,
   transientAdaptive,
   transientAdaptiveWithDigitalEventStreams,
@@ -87,6 +90,23 @@ import {
 function expectClose(actual: number | undefined, expected: number): void {
   expect(actual).not.toBeUndefined();
   expect(actual!).toBeCloseTo(expected, 9);
+}
+
+function transientPoint(time: number, nodeVoltages: Record<string, number>): TransientPoint {
+  const voltages = new Map(Object.entries(nodeVoltages));
+  const currents = new Map<string, number>();
+  return {
+    time,
+    nodeVoltages: voltages,
+    branchCurrents: currents,
+    voltage(node: string): number | undefined {
+      return node === "0" || node.toLowerCase() === "gnd" ? 0.0 : voltages.get(node);
+    },
+    branchCurrent(sourceName: string): number | undefined {
+      const key = sourceName.startsWith("I(") ? sourceName : `I(${sourceName})`;
+      return currents.get(key);
+    },
+  };
 }
 
 describe("transient", () => {
@@ -1355,6 +1375,35 @@ describe("transient", () => {
       "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
         "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
         "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
+    );
+  });
+
+  it("formats stable transient probe measurements", () => {
+    const points = [
+      transientPoint(0.0, { out: 0.0 }),
+      transientPoint(1.0e-3, { out: 1.25 }),
+      transientPoint(2.0e-3, { out: -0.25 }),
+      transientPoint(3.0e-3, { out: 0.75 }),
+    ];
+
+    const peakToPeak = measureTransientProbe(
+      points,
+      "swing",
+      "V(out)",
+      "peak-to-peak",
+      1.0e-3,
+      3.0e-3,
+    );
+    const finalValue = measureTransientProbe(points, "settled", "V(out)", "final");
+
+    expect(peakToPeak.value).toBeCloseTo(1.5, 9);
+    expect(peakToPeak.mode).toBe("pp");
+    expect(finalValue.value).toBeCloseTo(0.75, 9);
+    expect(finalValue.mode).toBe("last");
+    expect(formatMeasurementTable([peakToPeak, finalValue])).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n",
     );
   });
 
