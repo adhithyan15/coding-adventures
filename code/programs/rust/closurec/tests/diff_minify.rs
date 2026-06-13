@@ -248,14 +248,19 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `while(cond)` is untouched. A MULTI-statement do-body
     // (`do{x();y()}while(a)`) is correctly left braced.
     // `minify_do_body_flatten` now ENFORCED.
-    // gap-109 (CLOC14.51): a STRING-literal method KEY is normalised to
-    // a COMPUTED key by upstream — `{"m"(){}}` -> `{["m"](){}}` — in
-    // both class and object bodies (and after `static`:
-    // `static"m"(){}` -> `static ["m"](){}`). closurec keeps the raw
-    // string-literal key. Identifier keys (`{m(){}}`) and
-    // already-computed keys (`{["m"](){}}`) are unaffected.
-    ("class_string_method", "gap-109: string class-method key -> computed [\"m\"]"),
-    ("obj_string_method",   "gap-109: string object-method key -> computed [\"m\"]"),
+    // gap-109 RESOLVED in CLOC12.112 — a STRING-literal method KEY is
+    // normalised to a COMPUTED key — `{"m"(){}}` -> `{["m"](){}}` — in
+    // both class and object bodies. Fixed by a gap-109 pre-pass in
+    // `whitespace_only.rs` that wraps the string in a synthetic `[`…`]`
+    // pair when it is a method key: a string literal at a property-start
+    // position (`{`/`,`/`}`/`static`), immediately followed by `(`, whose
+    // matching `)` is followed by `{` (the method body — the decisive
+    // guard distinguishing a method from a string CALL). Identifier keys
+    // (`{m(){}}`), already-computed keys (`{["m"](){}}`), string property
+    // VALUES (`{"a":1}`), and string calls (`f("m")`, `"m"(x)`) are all
+    // unaffected. `minify_class_string_method` / `minify_obj_string_method`
+    // now ENFORCED. (A string-keyed ACCESSOR `get"a"(){}` -> `get "a"(){}`
+    // is a SEPARATE space-insertion gap, not this computed-wrap.)
     // gap-105 RESOLVED in CLOC12.109 — CORRECTNESS: LEGACY OCTAL
     // literals (`0` followed by octal digits, e.g. `010`, `017`,
     // `0123`) are sloppy-mode legacy octals denoting their OCTAL value

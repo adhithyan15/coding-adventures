@@ -203,6 +203,26 @@ pub fn whitespace_only_minify(
         s
     });
 
+    // gap-109 needs a synthetic `[`/`]` pair to WRAP a string-literal
+    // METHOD KEY into a computed key — `{"m"(){}}` -> `{["m"](){}}`.
+    // Same clone-and-retype trick as `synth_num_open`/`synth_num_close`
+    // (the source may have no brackets at all); only `.value`/`.type_`
+    // matter for re-stitching.
+    let synth_lbracket: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = "[".to_string();
+        s.type_ = lexer::token::TokenType::LBracket;
+        s.type_name = None;
+        s
+    });
+    let synth_rbracket: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = "]".to_string();
+        s.type_ = lexer::token::TokenType::RBracket;
+        s.type_name = None;
+        s
+    });
+
     let mut kept: Vec<_> = tokens
         .iter()
         .filter(|t| !is_trivia(t))
@@ -2123,6 +2143,104 @@ pub fn whitespace_only_minify(
                 }
             }
             i += 1;
+        }
+    }
+
+    // ---- gap-109: string method KEY -> computed key -----------
+    // A method whose KEY is a STRING LITERAL is normalised by upstream
+    // to a COMPUTED key:
+    //   {"m"(){}}        ->  {["m"](){}}          (object method)
+    //   class A{"m"(){}} ->  class A{["m"](){}}   (class method)
+    //   {static"m"(){}}  ->  static ["m"](){}     (after `static`)
+    // closurec keeps the raw string-literal key. We wrap the string in
+    // a synthetic `[` … `]` pair.
+    //
+    // SAFE DETECTION (mirrors `get_set_computed_needs_space`'s
+    // property-start + method-body guards): the string `S` at index `i`
+    // is a method key iff
+    //   - `S` is a string literal AND `kept[i-1]` is a property-start
+    //     token — `{` / `,` (object or class member start), `}` (gap-103
+    //     consecutive class members), or the `static` modifier — and
+    //     NOT a `.`/`?.` member access;
+    //   - `kept[i+1]` is `(` (the parameter list); AND
+    //   - the `)` matching that `(` is immediately followed by `{` (the
+    //     method body). This is the decisive disambiguator: a string
+    //     CALLED as a function (`"m"(x);` — nonsensical but legal) has
+    //     its `)` followed by `;`/operator/EOF, never `{`, so it is
+    //     correctly rejected, and a string property VALUE (`{"m":1}` —
+    //     `S` followed by `:`, not `(`) never reaches the `(` test.
+    // A string property KEY with a `:` value (`{"a":1}`) is untouched;
+    // an identifier method (`{m(){}}`) and an already-computed key
+    // (`{["m"](){}}`) never match (`S` is not a string literal).
+    if let (Some(lb), Some(rb)) = (synth_lbracket.as_ref(), synth_rbracket.as_ref())
+    {
+        // Collect the string-method-key indices first (a forward scan),
+        // then wrap from the back so earlier indices stay valid.
+        let mut wraps: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i < kept.len() {
+            if !is_string_literal(kept[i]) || i == 0 {
+                i += 1;
+                continue;
+            }
+            // Property-start context.
+            let before = kept[i - 1];
+            let static_ctx = is_word_like(before) && before.value == "static";
+            let prop_start = is_structural_punct(before, "{")
+                || is_structural_punct(before, ",")
+                || is_structural_punct(before, "}")
+                || static_ctx;
+            // Never a member access (`.`/`?.` before the string is
+            // impossible for a string but keep the guard for symmetry).
+            let is_member = is_structural_punct(before, ".")
+                || is_structural_punct(before, "?.");
+            if !prop_start || is_member {
+                i += 1;
+                continue;
+            }
+            // The param list `(` must immediately follow the key.
+            let param_open = i + 1;
+            if !kept
+                .get(param_open)
+                .is_some_and(|t| is_structural_punct(t, "("))
+            {
+                i += 1;
+                continue;
+            }
+            // METHOD-BODY guard: scan `(` … `)` and require `{` after.
+            let mut depth: i32 = 1;
+            let mut k = param_open + 1;
+            while k < kept.len() {
+                let t = kept[k];
+                if is_structural_punct(t, "(")
+                    || is_structural_punct(t, "[")
+                    || is_structural_punct(t, "{")
+                {
+                    depth += 1;
+                } else if is_structural_punct(t, ")") {
+                    depth -= 1;
+                    if depth == 0 {
+                        break;
+                    }
+                } else if is_structural_punct(t, "]")
+                    || is_structural_punct(t, "}")
+                {
+                    depth -= 1;
+                }
+                k += 1;
+            }
+            let body_is_method = kept
+                .get(k + 1)
+                .is_some_and(|t| is_structural_punct(t, "{"));
+            if body_is_method {
+                wraps.push(i);
+            }
+            i += 1;
+        }
+        // Apply from the back: insert `]` after, then `[` before.
+        for &w in wraps.iter().rev() {
+            kept.insert(w + 1, rb);
+            kept.insert(w, lb);
         }
     }
 
@@ -7655,6 +7773,67 @@ mod tests {
     fn gap108_sibling_flattens_unaffected() {
         assert_eq!(minify("while(x){g()}"), "while(x)g();");
         assert_eq!(minify("if(x){y()}else{z()}"), "if(x)y();else z();");
+    }
+
+    // ---- gap-109: string method key -> computed key ----
+    //
+    // A method whose KEY is a string literal is wrapped in `[…]`.
+
+    /// Object method: `{"m"(){}}` -> `{["m"](){}}`.
+    #[test]
+    fn gap109_object_string_method() {
+        assert_eq!(minify("x={\"m\"(){}};"), "x={[\"m\"](){}};");
+    }
+
+    /// Class method: `class A{"m"(){}}` -> `class A{["m"](){}}`.
+    #[test]
+    fn gap109_class_string_method() {
+        assert_eq!(
+            minify("class A{\"m\"(){}}"),
+            "class A{[\"m\"](){}};"
+        );
+    }
+
+    /// Consecutive class members each wrap independently.
+    #[test]
+    fn gap109_consecutive_class_string_methods() {
+        assert_eq!(
+            minify("class A{\"a\"(){}\"b\"(){}}"),
+            "class A{[\"a\"](){}[\"b\"](){}};"
+        );
+    }
+
+    /// Mixed object: an ordinary property then a string method.
+    #[test]
+    fn gap109_mixed_object_property_and_method() {
+        assert_eq!(
+            minify("x={a:1,\"b\"(){}};"),
+            "x={a:1,[\"b\"](){}};"
+        );
+    }
+
+    /// **Non-regression**: a string property VALUE (`{"a":1}` — the
+    /// string is followed by `:`, not `(`) is NOT wrapped.
+    #[test]
+    fn gap109_string_value_property_untouched() {
+        assert_eq!(minify("x={\"a\":1};"), "x={\"a\":1};");
+    }
+
+    /// **Non-regression**: an IDENTIFIER method (`{m(){}}`) and an
+    /// ALREADY-computed key (`{["m"](){}}`) are unaffected.
+    #[test]
+    fn gap109_identifier_and_computed_methods_untouched() {
+        assert_eq!(minify("x={m(){}};"), "x={m(){}};");
+        assert_eq!(minify("x={[\"m\"](){}};"), "x={[\"m\"](){}};");
+    }
+
+    /// **Non-regression**: a string used as a CALL argument
+    /// (`f("m")`) or called as a function (`"m"(x);` — its `)` is not
+    /// followed by `{`) is NOT wrapped.
+    #[test]
+    fn gap109_string_call_untouched() {
+        assert_eq!(minify("f(\"m\");"), "f(\"m\");");
+        assert_eq!(minify("\"m\"(x);"), "\"m\"(x);");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —

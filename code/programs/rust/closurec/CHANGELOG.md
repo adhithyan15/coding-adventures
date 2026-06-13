@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.116.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-109** — a method whose KEY is a STRING LITERAL is now
+  normalised to a COMPUTED key, matching upstream:
+
+      x={"m"(){}};        ->  x={["m"](){}};
+      class A{"m"(){}}    ->  class A{["m"](){}};
+
+  The fix adds a gap-109 pre-pass in `whitespace_only.rs` that wraps the
+  string key in a synthetic `[`…`]` pair. Detection mirrors
+  `get_set_computed_needs_space`'s property-start + method-body guards:
+  the string sits at a property-start position (preceded by
+  `{`/`,`/`}`/`static`, not a `.`/`?.` member access), is immediately
+  followed by `(` (the parameter list), AND the `)` matching that `(` is
+  immediately followed by `{` (the method body). The method-body guard
+  is the decisive disambiguator — a string CALLED as a function
+  (`"m"(x);`) has its `)` followed by `;`/operator/EOF, never `{`, so it
+  is rejected; a string property VALUE (`{"a":1}`) has `:` after the
+  string, not `(`. Identifier methods (`{m(){}}`), already-computed keys
+  (`{["m"](){}}`), and call arguments (`f("m")`) are all untouched. Eight
+  `gap109_*` unit tests cover the wrap cases and every non-regression
+  guard. Verified byte-identical to upstream Closure v20240317. NOTE: a
+  string-keyed ACCESSOR (`get"a"(){}` → `get "a"(){}`) is a SEPARATE
+  space-insertion gap (upstream inserts a space, does not wrap), left
+  for follow-up.
+
 ## [0.115.0] - 2026-06-12
 
 ### Fixed
