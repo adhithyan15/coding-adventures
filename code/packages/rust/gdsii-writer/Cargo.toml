@@ -1,0 +1,8 @@
+[package]
+name = "gdsii-writer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sky130-pdk = { path = "../sky130-pdk" }
+lef-def = { path = "../lef-def" }

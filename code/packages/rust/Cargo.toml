@@ -756,4 +756,11 @@ members = [
     "tech-mapping",
     "sky130-pdk",
     "standard-cell-library",
+    "lef-def",
+    "asic-floorplan",
+    "asic-placement",
+    "asic-routing",
+    "gdsii-writer",
+    "drc-lvs",
+    "tape-out",
 ]
