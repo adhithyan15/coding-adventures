@@ -452,6 +452,66 @@ impl IntegrationCatalogEntrySummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationPackageSummary {
+    pub catalog_entry: IntegrationCatalogEntrySummary,
+    pub activation_target: IntegrationActivationTarget,
+    pub direct_activation: bool,
+    pub delegated_activation: bool,
+    pub required_primitive_count: usize,
+    pub required_capability_count: usize,
+    pub auth_mode_count: usize,
+    pub discovery_mechanism_count: usize,
+    pub dependency_count: usize,
+    pub policy_surface_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+    pub requires_human_review: bool,
+}
+
+impl IntegrationActivationPackageSummary {
+    pub fn from_entry(entry: &IntegrationCatalogEntry) -> Self {
+        let plan = activation_plan_for_entry(entry);
+        Self::from_plan(entry.summary(), &plan)
+    }
+
+    pub fn from_plan(
+        catalog_entry: IntegrationCatalogEntrySummary,
+        plan: &IntegrationActivationPlan,
+    ) -> Self {
+        let direct_activation = plan.activation_target == IntegrationActivationTarget::Direct;
+        let delegated_activation = !direct_activation;
+
+        Self {
+            catalog_entry,
+            activation_target: plan.activation_target.clone(),
+            direct_activation,
+            delegated_activation,
+            required_primitive_count: plan.required_primitives.len(),
+            required_capability_count: plan.required_capabilities.len(),
+            auth_mode_count: plan.auth_modes.len(),
+            discovery_mechanism_count: plan.discovery_mechanisms.len(),
+            dependency_count: plan.depends_on_integrations.len(),
+            policy_surface_count: plan.policy_surfaces.len(),
+            highest_policy_tier: plan.highest_policy_tier,
+            local_only: plan.local_only,
+            cloud_required: plan.cloud_required,
+            requires_human_review: plan.requires_human_review(),
+        }
+    }
+
+    pub fn has_prerequisites(&self) -> bool {
+        self.required_primitive_count > 0
+            || self.required_capability_count > 0
+            || self.dependency_count > 0
+    }
+
+    pub fn has_policy_review(&self) -> bool {
+        self.requires_human_review || self.policy_surface_count > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IntegrationCatalogSort {
     PriorityThenName,
@@ -15399,6 +15459,10 @@ pub fn hue_catalog_entry_summary() -> IntegrationCatalogEntrySummary {
     hue_entry().summary()
 }
 
+pub fn hue_activation_package_summary() -> IntegrationActivationPackageSummary {
+    IntegrationActivationPackageSummary::from_entry(&hue_entry())
+}
+
 pub fn find_entry<'a>(
     catalog: &'a [IntegrationCatalogEntry],
     integration_id: &IntegrationId,
@@ -24322,6 +24386,47 @@ mod tests {
         assert!(summary.policy_surface_count >= 2);
         assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
         assert!(summary.requires_human_review);
+    }
+
+    #[test]
+    fn hue_activation_package_summary_joins_catalog_and_plan_shape() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let plan = activation_plan_for_entry(hue);
+        let summary = hue_activation_package_summary();
+
+        assert_eq!(
+            summary,
+            IntegrationActivationPackageSummary::from_plan(hue.summary(), &plan)
+        );
+        assert_eq!(
+            summary.catalog_entry.integration_id,
+            IntegrationId::trusted("hue")
+        );
+        assert_eq!(
+            summary.activation_target,
+            IntegrationActivationTarget::Direct
+        );
+        assert!(summary.direct_activation);
+        assert!(!summary.delegated_activation);
+        assert_eq!(
+            summary.required_primitive_count,
+            hue.required_primitives.len()
+        );
+        assert_eq!(
+            summary.required_capability_count,
+            hue.required_capabilities.len()
+        );
+        assert_eq!(summary.auth_mode_count, 2);
+        assert_eq!(summary.discovery_mechanism_count, 2);
+        assert_eq!(summary.dependency_count, 0);
+        assert!(summary.policy_surface_count >= 2);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
+        assert!(summary.local_only);
+        assert!(!summary.cloud_required);
+        assert!(summary.requires_human_review);
+        assert!(summary.has_prerequisites());
+        assert!(summary.has_policy_review());
     }
 
     #[test]

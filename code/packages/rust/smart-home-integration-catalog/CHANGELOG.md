@@ -33,6 +33,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationCatalogEntrySummary` and `hue_catalog_entry_summary` for compact
   Hue package/spec metadata, local/cloud, policy-tier, and catalog shape
   inspection.
+- `IntegrationActivationPackageSummary` and `hue_activation_package_summary`
+  for joining Hue catalog metadata with activation-plan target, prerequisite,
+  and policy-review shape.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
 - Integration activation planning helpers for resolving virtual aliases,
