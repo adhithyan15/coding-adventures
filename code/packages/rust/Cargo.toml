@@ -260,6 +260,7 @@ members = [
     "device-physics",
     "mosfet-models",
     "fab-process-simulation",
+    "silicon-rust-python",
     "system-board",
     "block-ram",
     "device-driver-framework",
