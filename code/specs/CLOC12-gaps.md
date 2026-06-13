@@ -804,9 +804,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-108 — do-body single-statement block flatten (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.51). `minify_do_body_flatten` ignored.
-- **Input:** `do{x()}while(a);` → **Upstream:** `do x();while(a);` but **closurec:** `do{x()}while(a);`. A do-while loop whose body is a single-statement block has the braces removed, the same flattening upstream already applies to other single-statement bodies. A MULTI-statement body (`do{x();y()}while(a)`) is left braced (correct).
-- **What it needs:** extend the single-statement-block-flatten machinery (gap-074 loop-body, gap-079 if-body, gap-080 else-body, gap-076 with-body) to recognise the `do` keyword's body slot. When `do` is immediately followed by `{ STMT }` and STMT is a single statement, drop the braces and emit `do STMT;while(...)`. Related: the empty `do{}while(a)` case currently emits `do; while(a);` (stray space) vs upstream `do;while(a);` — a `do;`+`while` adjacency-spacing nit in the same family.
+- **Status:** RESOLVED in CLOC12.111 (discovered CLOC14.51). `minify_do_body_flatten` now ENFORCED.
+- **Input:** `do{x()}while(a);` → **Upstream:** `do x();while(a);` (was **closurec:** `do{x()}while(a);`). A do-while loop whose body is a single-statement block has the braces removed, the same flattening upstream already applies to other single-statement bodies. A MULTI-statement body (`do{x();y()}while(a)`) is left braced (correct).
+- **Fix:** added a gap-108 token-re-stitcher block in `whitespace_only.rs`, a direct sibling of the gap-080 else-body flatten. Anchor on a `do` keyword (reserved — so `do{…}` is unambiguously the loop body, never an object literal or labelled block), scan the body `{…}` to its matching `}`, and if it holds exactly one statement (no nested `{`, no control-flow keyword at depth 1, zero top-level `;`), drop the braces and replace the `}` with a synthetic `;`. The trailing `while(cond)` is untouched. Multi-statement and empty bodies keep their braces; a body containing a nested control-flow keyword keeps braces (valid output, more-aggressive flatten deferred). Six `gap108_*` unit tests + two updated property-key-safety tests (`gap033`/`gap034`, whose do-bodies now correctly flatten). Verified byte-identical to upstream Closure v20240317. The empty `do{}while(a)` → `do;while(a)` case (closurec emits a stray space `do; while`) is a separate spacing nit left for follow-up.
 
 ### gap-109 — string method key normalised to computed key (WHITESPACE_ONLY)
 
