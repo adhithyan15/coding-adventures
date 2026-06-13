@@ -125,6 +125,8 @@ Current scope:
   views derived from activation closure gates
 - D18D integration activation-delivery descriptors for delivery-channel
   manifests derived from activation release packets
+- D18D integration activation-deployment descriptors for deployment-ring
+  records derived from activation delivery manifests
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and

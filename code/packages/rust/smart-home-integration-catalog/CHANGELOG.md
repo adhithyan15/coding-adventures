@@ -120,6 +120,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationDeliveryManifest` and
   `IntegrationActivationDeliverySummary` for turning release packets into
   delivery-channel manifests and readiness rollups.
+- `IntegrationActivationDeploymentRecord` and
+  `IntegrationActivationDeploymentSummary` for turning delivery manifests into
+  deployment-ring records and deploy-readiness rollups.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.

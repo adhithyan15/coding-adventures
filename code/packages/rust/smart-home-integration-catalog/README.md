@@ -108,6 +108,9 @@ runtime and Chief of Staff tools a typed catalog for:
   release views with blockers, verification requirements, and release readiness
 - activation delivery manifests that turn release packets into compact delivery
   views with channel, blocker, verification, and delivery-readiness rollups
+- activation deployment records that turn delivery manifests into compact
+  deployment views with ring, blocker, verification, and deploy-readiness
+  rollups
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,
