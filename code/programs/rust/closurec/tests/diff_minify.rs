@@ -291,6 +291,28 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     ("case_string_space",   "gap-111: case + string needs separating space"),
     ("accessor_string_key", "gap-111: get/set + string accessor key needs space"),
     ("new_string_callee",   "gap-111: new + string callee needs separating space"),
+    // gap-112 (CLOC14.54): a `for await(...)` header with a BARE-STATEMENT
+    // body — closurec emits a SPURIOUS SPACE between the `await` keyword
+    // and the `(`:
+    //   async function f(){for await(const x of y)z()}
+    //     -> upstream `for await(const x of y)z()` (adjacent)
+    //     -> closurec `for await (const x of y)z()` (extra space)
+    // The `for`/`await` pair is correct, but `await`-before-`(` must NOT
+    // take a separator. Sibling of gap-069 (`new(` adjacency). NOTE the
+    // existing `minify_for_await_of` fixture (an EMPTY-block body,
+    // `for await(x of y){}`) already PASSES — the space only appears for
+    // a bare-statement / declaration loop body.
+    ("for_await_bare_stmt",  "gap-112: for-await bare-body header emits spurious await-before-paren space"),
+    // gap-112 (CLOC14.54): a `for await(...)` loop header — closurec
+    // emits a SPURIOUS SPACE between the `await` keyword and the `(`:
+    //   async function f(){for await(const x of y)z()}
+    //     -> upstream `for await(const x of y)` (adjacent)
+    //     -> closurec `for await (const x of y)` (extra space)
+    // The `for`/`await` pair is correct, but the `await`-before-`(`
+    // adjacency must NOT take a separator. Sibling of gap-069 (`new(`
+    // adjacency). Needs a `needs_separator` exception for `await`
+    // immediately followed by `(` inside a `for await` header.
+    ("for_await_of",        "gap-112: for-await header emits spurious await-before-paren space"),
     // gap-105 RESOLVED in CLOC12.109 — CORRECTNESS: LEGACY OCTAL
     // literals (`0` followed by octal digits, e.g. `010`, `017`,
     // `0123`) are sloppy-mode legacy octals denoting their OCTAL value
