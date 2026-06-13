@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.1.6 — SIR17 OOP & scopes (native + sir-runtime-oop)
+
+Accepts and emits the SIR17 object-orientation statements and scopes, per
+`code/specs/sir-runtime.md`. Because the Ruby→SIR frontend **hoists methods to
+detached, receiver-less top-level functions**, there is no native `this`/`self`
+to hang members on; the object model is supplied by the new
+`@coding-adventures/sir-runtime-oop` package, imported (as `__SirOop`) **only**
+when a module uses an OOP feature.
+
+- `Stmt::ClassDef{name, superclass, body}` → `__SirOop.defineClass(name, super)`
+  (registers ancestry) followed by the body statements (constant / class-var
+  assigns) in source order. `Stmt::ModuleDef` → `defineClass(name, null)`.
+  `Stmt::SingletonClassDef` → its (non-`def`) body statements.
+- `Scope::Instance` (`@x`) → `__SirOop.ivarGet/ivarSet` against the current-self
+  stack; `Scope::ClassVar` (`@@x`) → `__SirOop.cvarGet/cvarSet`; `Scope::Const`
+  → an ordinary module-level `const NAME` (reads emit the bare identifier).
+- `BuiltinCall("__method__", [recv, "meth", args…])` (reflective dispatch, e.g.
+  `is_a?`) → `__SirOop.callMethod(recv, "meth", …)`; for the class predicates
+  (`is_a?`/`kind_of?`/`instance_of?`) a `Const`-scoped class operand is passed
+  as its **name string** so the predicate works without a binding for the
+  built-in class name.
+- `ACCEPTED_FEATURES += Classes, Modules, InstanceVars, ClassVars, Constants`.
+
+**v0 limitation (documented):** since the frontend does not thread receivers,
+the current-self is a process-global stack and class variables share one
+namespace — single-instance / single-class programs are faithful and never
+crash; full multi-object semantics await frontend receiver threading. New
+Ruby→TS and direct-SIR tests; a non-OOP module is asserted to omit the OOP
+import; emitted output verified to compile under `tsc --strict` and to execute
+on Node against the real `@coding-adventures/sir-runtime-oop`
+(`is_a?` ancestry/exact/primitive, ivar round-trip, cvar, `class`).
+
 ## 0.1.5 — SIR16 mutation & loops (native)
 
 Accepts and emits the SIR16 mutation and loop statements as **native**
