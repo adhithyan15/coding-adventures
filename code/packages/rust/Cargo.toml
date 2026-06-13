@@ -261,6 +261,7 @@ members = [
     "mosfet-models",
     "fab-process-simulation",
     "silicon-rust-python",
+    "silicon-rust-napi",
     "system-board",
     "block-ram",
     "device-driver-framework",
