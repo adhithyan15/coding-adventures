@@ -4092,6 +4092,25 @@ fn normalize_number_value(value: &str) -> String {
     // separate latent gap (the deferred Grisu/Ryu work), unchanged here.
     let hex = format!("0x{:x}", (n as f64) as u128);
 
+    // gap-118: a RETAINED hex literal must be emitted with LOWERCASE
+    // digits (and prefix) to match upstream Closure. The `cleaned`
+    // candidate is the separator-stripped SOURCE, so for a hex literal
+    // it keeps the author's case (`0xFFFFFFFFFFFFF`). When that ties
+    // the synthesised lowercase-`hex` candidate on length (both 15
+    // chars here) the tie-break below prefers `cleaned`, so the
+    // uppercase form would survive (`0xFFFFFFFFFFFFF` instead of
+    // `0xfffffffffffff`). Canonicalising the cleaned HEX form to
+    // lowercase makes both candidates byte-identical, so whichever
+    // wins the tie emits the upstream bytes. Scoped to `0x`/`0X`
+    // literals: decimal/octal/binary cleaned forms have no
+    // case-significant letters (a scientific `e`/`E` is handled by the
+    // gap-082 path, and small octal/binary never stay in radix form).
+    let cleaned = if cleaned.starts_with("0x") || cleaned.starts_with("0X") {
+        cleaned.to_lowercase()
+    } else {
+        cleaned
+    };
+
     // Pick shortest. Tie-break order: decimal > cleaned >
     // scientific > hex (verified via JAR probes for the boundary
     // cases — see function-level doc).
@@ -6211,6 +6230,50 @@ mod tests {
         assert_eq!(
             minify("var x=0xffffffffffff;"),
             "var x=0xffffffffffff;"
+        );
+    }
+
+    /// gap-118: a RETAINED UPPERCASE hex literal (hex form is shortest,
+    /// so it isn't decimalised) is lowercased to match upstream.
+    /// `0xFFFFFFFFFFFFF` (15 chars) ties its decimal (16) → kept as hex,
+    /// and must come out lowercase `0xfffffffffffff`.
+    #[test]
+    fn gap118_retained_uppercase_hex_lowercased() {
+        assert_eq!(
+            minify("var n=0xFFFFFFFFFFFFF;"),
+            "var n=0xfffffffffffff;"
+        );
+        // 10-char hex (`0xFFFFFFFFFF`) also stays hex (decimal is 13).
+        assert_eq!(
+            minify("var n=0xFFFFFFFFFF;"),
+            "var n=0xffffffffff;"
+        );
+        // Mixed case + uppercase `0X` prefix both normalise.
+        assert_eq!(
+            minify("var n=0XA0000000000;"),
+            "var n=0xa0000000000;"
+        );
+    }
+
+    /// **Non-regression** for gap-118: hex literals that DECIMALISE
+    /// (gap-038) are unaffected — the lowercase canonicalisation only
+    /// matters when hex is retained. Small uppercase hex still becomes
+    /// decimal, and the gap-114 large-non-round-integer hex emission
+    /// stays lowercase.
+    #[test]
+    fn gap118_decimalising_hex_unaffected() {
+        // Short hex → decimal regardless of case.
+        assert_eq!(minify("var n=0xFF;"), "var n=255;");
+        assert_eq!(minify("var n=0xAbC;"), "var n=2748;");
+        // Already-lowercase retained hex is unchanged.
+        assert_eq!(
+            minify("var x=0xffffffffffff;"),
+            "var x=0xffffffffffff;"
+        );
+        // gap-114 decimal→hex emission is lowercase (unchanged).
+        assert_eq!(
+            minify("var x=123456789012345678;"),
+            "var x=0x1b69b4ba630f350;"
         );
     }
 
