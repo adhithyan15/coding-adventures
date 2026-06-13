@@ -200,6 +200,8 @@ class DeckMeasurementCard:
     to_value: float | None = None
     at_value: float | None = None
     target_value: float | None = None
+    crossing_kind: str | None = None
+    crossing_count: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -1499,6 +1501,8 @@ def _resolve_measurement_line(
     from_value: float | None = None
     to_value: float | None = None
     at_value: float | None = None
+    crossing_kind: str | None = None
+    crossing_count: int | None = None
     seen_window_tokens: set[str] = set()
     diagnostic_count = len(state.diagnostics)
     for token in tokens[5:]:
@@ -1514,7 +1518,7 @@ def _resolve_measurement_line(
             continue
         key, expression = token.split("=", 1)
         key = key.strip().lower()
-        if key not in {"from", "to", "at"}:
+        if key not in {"from", "to", "at", "rise", "fall", "cross"}:
             _add_measurement_diagnostic(
                 state,
                 code="SPICE_DECK_MEASURE_ARGUMENT",
@@ -1549,6 +1553,40 @@ def _resolve_measurement_line(
                 message=str(error),
                 token=token,
             )
+            continue
+        if key in {"rise", "fall", "cross"}:
+            if mode != "when":
+                _add_measurement_diagnostic(
+                    state,
+                    code="SPICE_DECK_MEASURE_ARGUMENT",
+                    directive=directive,
+                    line_number=line_number,
+                    message="RISE, FALL, and CROSS options are only supported with WHEN mode",
+                    token=token,
+                )
+                continue
+            if crossing_kind is not None:
+                _add_measurement_diagnostic(
+                    state,
+                    code="SPICE_DECK_MEASURE_ARGUMENT",
+                    directive=directive,
+                    line_number=line_number,
+                    message="only one of RISE, FALL, or CROSS may be specified",
+                    token=token,
+                )
+                continue
+            if not isfinite(value) or value < 1.0 or not value.is_integer():
+                _add_measurement_diagnostic(
+                    state,
+                    code="SPICE_DECK_MEASURE_ARGUMENT",
+                    directive=directive,
+                    line_number=line_number,
+                    message="RISE, FALL, and CROSS counts must be positive integers",
+                    token=token,
+                )
+                continue
+            crossing_kind = key
+            crossing_count = int(value)
             continue
         if key == "from":
             from_value = value
@@ -1614,6 +1652,8 @@ def _resolve_measurement_line(
             to_value=to_value,
             at_value=at_value,
             target_value=target_value,
+            crossing_kind=crossing_kind,
+            crossing_count=crossing_count,
         )
     )
 

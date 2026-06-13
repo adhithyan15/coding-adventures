@@ -231,8 +231,9 @@ from spice_engine import (
     measure_dc_sweep_probe,
     measure_transient_deck,
     measure_transient_find_at_probe,
-    measure_transient_when_probe,
     measure_transient_probe,
+    measure_transient_when_probe,
+    measure_transient_when_probe_counted,
     mosfet_from_model_card,
     noise_ac,
     noise_ac_corners,
@@ -6684,6 +6685,16 @@ def test_transient_probe_measurements_are_stable() -> None:
         from_time=1.0e-3,
         to_time=3.0e-3,
     )
+    second_crossing = measure_transient_when_probe_counted(
+        transient_points,
+        "second_crossing",
+        "V(out)",
+        0.5,
+        "cross",
+        2,
+        from_time=1.0e-3,
+        to_time=3.0e-3,
+    )
 
     assert peak_to_peak.value == pytest.approx(1.5)
     assert peak_to_peak.mode == "pp"
@@ -6693,12 +6704,17 @@ def test_transient_probe_measurements_are_stable() -> None:
     assert midpoint.mode == "find"
     assert crossing.value == pytest.approx(1.5e-3)
     assert crossing.mode == "when"
-    assert format_measurement_table([peak_to_peak, final_value, midpoint, crossing]) == (
+    assert second_crossing.value == pytest.approx(2.75e-3)
+    assert second_crossing.mode == "when"
+    assert format_measurement_table(
+        [peak_to_peak, final_value, midpoint, crossing, second_crossing]
+    ) == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
         "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
         "crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
+        "second_crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
     )
 
 
@@ -6717,6 +6733,9 @@ V1 in 0 DC 1
 .measure tran swing PP V(out) FROM=1m TO=3m
 .measure tran midpoint FIND V(out) AT=1.5m
 .measure tran crossing WHEN V(out)=0.5 FROM=1m TO=3m
+.measure tran second_cross WHEN V(out)=0.5 FROM=1m TO=3m CROSS=2
+.measure tran falling WHEN V(out)=0.5 FROM=1m TO=3m FALL=1
+.measure tran rising WHEN V(out)=0.5 FROM=1m TO=3m RISE=1
 .meas tran settled LAST V(out)
 .end
 """,
@@ -6727,6 +6746,9 @@ V1 in 0 DC 1
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
         "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
         "crossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
+        "second_cross\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
+        "falling\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
+        "rising\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t2.750000e-03\n"
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
     )
 

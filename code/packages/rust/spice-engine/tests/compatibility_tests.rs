@@ -602,7 +602,7 @@ V1 in 0 DC 1
 .measure tran swing peak-to-peak V(out) FROM=1m TO={3m}
 .meas transient settled FINAL V(out)
 .measure tran sample FIND V(out) AT={1.5m}
-.measure tran crossing WHEN V(out)=0.5 FROM=1m TO=3m
+.measure tran crossing WHEN V(out)=0.5 FROM=1m TO=3m RISE=1
 .measure dc dcmax MAX V(out) FROM=1 TO=3
 .measure ac acmax MAX V(out) FROM=1k TO=10k
 .end
@@ -640,6 +640,11 @@ V1 in 0 DC 1
     assert!((summary.measurements[3].target_value.unwrap() - 0.5).abs() < 1.0e-12);
     assert!((summary.measurements[3].from_value.unwrap() - 1.0e-3).abs() < 1.0e-12);
     assert!((summary.measurements[3].to_value.unwrap() - 3.0e-3).abs() < 1.0e-12);
+    assert_eq!(
+        summary.measurements[3].crossing_kind.as_deref(),
+        Some("rise")
+    );
+    assert_eq!(summary.measurements[3].crossing_count, Some(1));
     assert!((summary.measurements[4].from_value.unwrap() - 1.0).abs() < 1.0e-12);
     assert!((summary.measurements[4].to_value.unwrap() - 3.0).abs() < 1.0e-12);
     assert!((summary.measurements[5].from_value.unwrap() - 1.0e3).abs() < 1.0e-9);

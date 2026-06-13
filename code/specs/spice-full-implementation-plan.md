@@ -38,8 +38,11 @@ downstream tools to compare.
      samples through the shared measurement table with interpolation between
      neighboring transient samples; parsed transient
      `.measure ... WHEN probe=target` cards now route first-crossing times over
-     optional transient windows into the shared measurement table.
-   - Expand richer `.measure` trigger counters and remaining
+     optional transient windows into the shared measurement table; parsed
+     transient `.measure ... WHEN probe=target RISE|FALL|CROSS=n` cards now
+     route counted threshold occurrences into the same stable measurement
+     table.
+   - Expand remaining `.measure` trigger-delay forms and
      non-DC/non-AC measurement analyses toward full SPICE compatibility while
      keeping unsupported control-flow diagnostics explicit.
 
@@ -308,8 +311,8 @@ downstream tools to compare.
     - Parsed `.measure tran ... FIND ... AT=` and `.meas transient ... FIND
       ... AT=` cards route into the shared scalar measurement table output with
       the AT time recorded as the point window.
-    - Richer trigger/counter forms such as WHEN counters, RISE, FALL, CROSS,
-      and target-delay measurements remain in backlog.
+    - Follow-up slices route WHEN crossings and RISE, FALL, CROSS counters;
+      target-delay measurements remain in backlog.
 
 27. Transient WHEN crossing measurement routing.
     - Status: completed in this transient WHEN crossing measurement slice.
@@ -319,15 +322,25 @@ downstream tools to compare.
     - Parsed `.measure tran ... WHEN probe=target` and `.meas transient ...
       WHEN probe=target` cards route into the shared scalar measurement table
       output with optional `FROM=` / `TO=` windows.
-    - RISE, FALL, CROSS occurrence counters and target-delay measurements
-      remain in backlog.
+    - This first-crossing slice left RISE, FALL, CROSS occurrence counters and
+      target-delay measurements for follow-up work.
+
+28. Transient WHEN crossing counter routing.
+    - Status: completed in this transient WHEN crossing counter slice.
+    - Python, Rust, and TypeScript now expose matching counted transient WHEN
+      helpers that return the selected `RISE`, `FALL`, or `CROSS` occurrence
+      for a probe/target threshold crossing.
+    - Parsed `.measure tran ... WHEN probe=target RISE=n`, `FALL=n`, or
+      `CROSS=n` cards route through the shared scalar measurement table over
+      optional `FROM=` / `TO=` windows.
+    - Target-delay measurement forms remain in backlog.
 
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand richer `.measure` trigger/crossing counters and remaining
-     non-DC/non-AC measurement analyses toward full SPICE compatibility.
+   - Expand `.measure` trigger-delay forms and remaining non-DC/non-AC
+     measurement analyses toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 
