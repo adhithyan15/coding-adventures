@@ -79,6 +79,8 @@ packages a typed surface for:
   final release/manual-review handoff checks
 - Hue package release queue summaries that turn release handoff readiness into
   final queue entry checks for publish/release coordination
+- Hue package release coordination summaries that combine release queue,
+  handoff, acceptance, review, and publish gates for final coordination checks
 
 ## Dependencies
 
