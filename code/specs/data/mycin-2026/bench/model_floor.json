@@ -1,0 +1,209 @@
+{
+  "_doc": "How low can the decomposer go. Each model decomposes the vignettes; the SAME 0-call CPU engine over the SAME grounded rulebook diagnoses. 'floor' = smallest model that still gets every case right. 'hallucinations_gated' = bad terms the closed-vocabulary gate dropped before they reached the engine (the safety net that lets small models work).",
+  "ladder": [
+    "llama3.1:8b",
+    "qwen2.5:3b",
+    "qwen2.5:1.5b",
+    "qwen2.5:0.5b"
+  ],
+  "results": [
+    {
+      "model": "llama3.1:8b",
+      "cases": [
+        {
+          "case": "case_bacterial_culture",
+          "parse_ok": true,
+          "n_findings": 6,
+          "n_dropped": 2,
+          "leader": "bacterial_meningitis",
+          "gold": "bacterial_meningitis",
+          "score": "correct"
+        },
+        {
+          "case": "case_viral_entero",
+          "parse_ok": true,
+          "n_findings": 5,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "viral_meningitis",
+          "score": "correct"
+        },
+        {
+          "case": "case_preculture_ambiguous",
+          "parse_ok": true,
+          "n_findings": 3,
+          "n_dropped": 0,
+          "leader": "bacterial_meningitis",
+          "gold": "bacterial_meningitis",
+          "score": "correct"
+        },
+        {
+          "case": "case_viral_chemistry",
+          "parse_ok": true,
+          "n_findings": 4,
+          "n_dropped": 1,
+          "leader": "viral_meningitis",
+          "gold": "viral_meningitis",
+          "score": "correct"
+        }
+      ],
+      "parse_ok": 4,
+      "correct": 4,
+      "abstained": 0,
+      "wrong": 0,
+      "failed": 0,
+      "hallucinations_gated": 3,
+      "n": 4,
+      "size": "4.9 GB"
+    },
+    {
+      "model": "qwen2.5:3b",
+      "cases": [
+        {
+          "case": "case_bacterial_culture",
+          "parse_ok": true,
+          "n_findings": 8,
+          "n_dropped": 0,
+          "leader": "bacterial_meningitis",
+          "gold": "bacterial_meningitis",
+          "score": "correct"
+        },
+        {
+          "case": "case_viral_entero",
+          "parse_ok": true,
+          "n_findings": 5,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "viral_meningitis",
+          "score": "correct"
+        },
+        {
+          "case": "case_preculture_ambiguous",
+          "parse_ok": true,
+          "n_findings": 5,
+          "n_dropped": 0,
+          "leader": "bacterial_meningitis",
+          "gold": "bacterial_meningitis",
+          "score": "correct"
+        },
+        {
+          "case": "case_viral_chemistry",
+          "parse_ok": true,
+          "n_findings": 8,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "viral_meningitis",
+          "score": "correct"
+        }
+      ],
+      "parse_ok": 4,
+      "correct": 4,
+      "abstained": 0,
+      "wrong": 0,
+      "failed": 0,
+      "hallucinations_gated": 0,
+      "n": 4,
+      "size": "1.9 GB"
+    },
+    {
+      "model": "qwen2.5:1.5b",
+      "cases": [
+        {
+          "case": "case_bacterial_culture",
+          "parse_ok": true,
+          "n_findings": 9,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "bacterial_meningitis",
+          "score": "wrong"
+        },
+        {
+          "case": "case_viral_entero",
+          "parse_ok": true,
+          "n_findings": 4,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "viral_meningitis",
+          "score": "correct"
+        },
+        {
+          "case": "case_preculture_ambiguous",
+          "parse_ok": true,
+          "n_findings": 6,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "bacterial_meningitis",
+          "score": "abstained"
+        },
+        {
+          "case": "case_viral_chemistry",
+          "parse_ok": true,
+          "n_findings": 3,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "viral_meningitis",
+          "score": "correct"
+        }
+      ],
+      "parse_ok": 4,
+      "correct": 2,
+      "abstained": 1,
+      "wrong": 1,
+      "failed": 0,
+      "hallucinations_gated": 0,
+      "n": 4,
+      "size": "986 MB"
+    },
+    {
+      "model": "qwen2.5:0.5b",
+      "cases": [
+        {
+          "case": "case_bacterial_culture",
+          "parse_ok": true,
+          "n_findings": 3,
+          "n_dropped": 0,
+          "leader": "bacterial_meningitis",
+          "gold": "bacterial_meningitis",
+          "score": "correct"
+        },
+        {
+          "case": "case_viral_entero",
+          "parse_ok": true,
+          "n_findings": 11,
+          "n_dropped": 0,
+          "leader": "bacterial_meningitis",
+          "gold": "viral_meningitis",
+          "score": "wrong"
+        },
+        {
+          "case": "case_preculture_ambiguous",
+          "parse_ok": true,
+          "n_findings": 2,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "bacterial_meningitis",
+          "score": "abstained"
+        },
+        {
+          "case": "case_viral_chemistry",
+          "parse_ok": true,
+          "n_findings": 3,
+          "n_dropped": 0,
+          "leader": "viral_meningitis",
+          "gold": "viral_meningitis",
+          "score": "correct"
+        }
+      ],
+      "parse_ok": 4,
+      "correct": 2,
+      "abstained": 1,
+      "wrong": 1,
+      "failed": 0,
+      "hallucinations_gated": 0,
+      "n": 4,
+      "size": "397 MB"
+    }
+  ],
+  "floor_model": "qwen2.5:3b",
+  "floor_size": "1.9 GB"
+}
