@@ -41,10 +41,12 @@ pub mod dispatch;
 pub mod errors;
 pub mod parser;
 pub mod recalc;
+pub mod viewport;
 pub mod workbook;
 
-pub use address::{CellAddress, CellRange, SheetId};
+pub use address::{column_index_to_letters, column_letters_to_index, CellAddress, CellRange, SheetId};
 pub use ast::{BinaryOp, FormulaAst, UnaryOp};
 pub use cell::{Cell, CellContent, CellValue};
 pub use errors::SpreadsheetError;
+pub use viewport::{ChangeSet, UsedRange, Window, CHANGELOG_RETAIN, MAX_WINDOW_CELLS};
 pub use workbook::Workbook;
