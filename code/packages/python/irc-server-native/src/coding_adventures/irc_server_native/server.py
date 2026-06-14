@@ -31,7 +31,11 @@ def _load_native() -> Any:
         from . import irc_server_native  # type: ignore[import]
 
         return irc_server_native
-    except ImportError:
+    except ImportError:  # pragma: no cover - env-specific fallback
+        # Defensive: load the cdylib directly by path when the normal package
+        # import misses it (its filename carries a platform/ABI tag).  Only one
+        # of these two branches runs in any given environment, so this one is
+        # excluded from coverage rather than chased with an unportable test.
         import importlib.util
         import os
 
