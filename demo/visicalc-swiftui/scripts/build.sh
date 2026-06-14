@@ -63,20 +63,31 @@ echo "Compiling Grid (SwiftUI)..."
   -o "$OUT_DIR/Grid.swift"
 
 echo "Building the spreadsheet engine (Rust → static lib) and vendoring it..."
-# The C ABI static library the SwiftUI app links (see Package.swift). Built
-# from the spreadsheet-capi crate and copied into Vendor/ (git-ignored).
-(cd "$REPO_ROOT/code/packages/rust" && cargo build -p spreadsheet-capi --release)
-mkdir -p "$DEMO_DIR/Vendor"
-cp "$REPO_ROOT/code/packages/rust/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/"
+# The C ABI static library the app links (see Package.swift), built from the
+# spreadsheet-capi crate per platform and copied into Vendor/ (git-ignored):
+#   Vendor/macos   — the host target, for `swift run` / `swift test`.
+#   Vendor/ios-sim — aarch64-apple-ios-sim, for the iOS Simulator build.
+RUST="$REPO_ROOT/code/packages/rust"
+mkdir -p "$DEMO_DIR/Vendor/macos" "$DEMO_DIR/Vendor/ios-sim"
+
+(cd "$RUST" && cargo build -p spreadsheet-capi --release)
+cp "$RUST/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/macos/"
+
+# iOS Simulator slice (skipped if the target isn't installed — macOS still works).
+if rustup target list --installed 2>/dev/null | grep -q aarch64-apple-ios-sim; then
+  (cd "$RUST" && cargo build -p spreadsheet-capi --release --target aarch64-apple-ios-sim)
+  cp "$RUST/target/aarch64-apple-ios-sim/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/ios-sim/"
+else
+  echo "  (iOS slice skipped — run 'rustup target add aarch64-apple-ios-sim' for iOS)"
+fi
+
 # Refresh the C header the CSpreadsheetEngine module exposes.
-cp "$REPO_ROOT/code/packages/rust/spreadsheet-capi/include/spreadsheet.h" \
+cp "$RUST/spreadsheet-capi/include/spreadsheet.h" \
    "$DEMO_DIR/Sources/CSpreadsheetEngine/include/spreadsheet.h"
 
-echo "Done. Generated views + vendored engine:"
-ls -la "$OUT_DIR"
-ls -la "$DEMO_DIR/Vendor"
+echo "Done. Generated views + vendored engine."
 echo
-echo "To run the demo (Swift 5.9+ / Xcode 15+ required):"
-echo "  cd $DEMO_DIR"
-echo "  swift test    # headless: proves the grid is engine-computed + recomputes"
-echo "  swift run     # launches the SwiftUI app"
+echo "Run (Swift 5.9+ / Xcode 15+ required):"
+echo "  swift test                 # headless: grid is engine-computed + recomputes"
+echo "  swift run                  # launch the macOS SwiftUI app"
+echo "  bash scripts/run-ios.sh    # build + launch on the iOS Simulator"

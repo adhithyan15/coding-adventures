@@ -38,9 +38,10 @@ the static library.
 ## Build, test, run
 
 ```bash
-bash scripts/build.sh   # regenerate views + build & vendor the engine
+bash scripts/build.sh   # regenerate views + build & vendor the engine (macOS + iOS slices)
 swift test              # HEADLESS: proves the grid is engine-computed + recomputes
 swift run               # launch the SwiftUI app (macOS)
+bash scripts/run-ios.sh # build + launch on the iOS Simulator (same code + engine)
 ```
 
 `swift test` (`Tests/VisiCalcTests`) asserts the grid values come from the
@@ -48,6 +49,15 @@ engine (E1 = 38, A5 = 39, E5 = 169), that editing A1 15 → 115 recomputes the
 totals (E5 → 269), and that a formula entry computes with binary-op error
 propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it → `#DIV/0!`). Requires
 Swift 5.9+ / Xcode 15+.
+
+**iOS**: the same SwiftUI code and the same Rust engine run on iPhone — the
+engine is cross-compiled for `aarch64-apple-ios-sim` (so the iOS slice links
+its own `libspreadsheet_capi.a`) and `Package.swift` links the right slice per
+platform. `scripts/run-ios.sh` builds it, wraps the executable in a `.app`, and
+installs + launches it on a booted iOS Simulator. Verified: the grid computes
+on iOS and edits recompute (the desktop window is sized 720pt, so on a narrow
+iPhone the right-hand total column scrolls off — a cosmetic layout note, not an
+engine one).
 
 ## Notes
 
