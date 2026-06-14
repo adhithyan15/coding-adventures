@@ -45,17 +45,22 @@ identical output.
 
 ```bash
 bash build-capi.sh      # builds the .dylib/.so and runs test/smoke.c against it
-bash verify-native.sh   # also runs the Swift + Dart/FFI smokes (real native langs)
+bash verify-native.sh   # runs the smoke from EVERY native language (see below)
 ```
 
 - `cargo test -p spreadsheet-capi` — host tests driving the C ABI from Rust.
-- `test/smoke.c` — a real **C** program linked against the built library.
-- `test/smoke.swift` — the same checks from **Swift** (the SwiftUI path), via
-  the C header (clang importer).
-- `test/smoke.dart` — the same checks from **Dart** through `dart:ffi` (the
-  Flutter path), opening the shared library at runtime.
+- `verify-native.sh` compiles + runs the same checks from every native language
+  the cross-backend demos use, against the built library — proving the engine
+  computes identically (SUM = 46, AVERAGE = 9.2, `#DIV/0!`, recalc = 146) from
+  each runtime:
 
-All three assert SUM = 46, AVERAGE = 9.2, `#DIV/0!`, and incremental recalc
-(146) — proving the engine computes identically when driven from C, Swift, and
-Dart. The remaining native frontends (Kotlin/JNI, .NET/P-Invoke, C++/Qt) bind
-the very same C ABI.
+  | Language | path it represents | how it binds |
+  |---|---|---|
+  | C (`test/smoke.c`) | Qt / C++ | the header directly |
+  | Swift (`test/smoke.swift`) | SwiftUI | C header via the clang importer |
+  | Dart (`test/smoke.dart`) | Flutter | `dart:ffi`, opens the shared lib |
+  | .NET (`test/dotnet/`) | XAML / WinUI | P/Invoke (`DllImport`) |
+  | Kotlin (`test/smoke.kt`) | Compose / Android | Java FFM (no hand-written JNI) |
+
+  Each is skipped (with a note) if its toolchain isn't installed; all five pass
+  on macOS with the standard toolchains.
