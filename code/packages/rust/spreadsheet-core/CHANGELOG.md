@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.2.0
+
+**Viewport primitive for the virtualized infinite sheet** (`viewport.rs`,
+`workbook.rs`). The sheet was already unbounded (u32 addresses, sparse storage);
+these reads let a host render only the visible window of it.
+
+- `Workbook::get_window(sheet, row0, col0, row1, col1) -> Window`: a dense,
+  row-major rectangle of computed values (empty cells included as
+  `CellValue::Empty`), `O(window)` not `O(sheet)`. Rejects inverted rectangles
+  and windows over `MAX_WINDOW_CELLS` (65 536 — a screen-scale safety cap), with
+  overflow-safe size checking.
+- `Workbook::used_range(sheet) -> Option<UsedRange>`: bounding box of
+  materialised non-empty cells, for scrollbar sizing.
+- `Workbook::current_revision()` + `Workbook::changed_since(sheet, since) ->
+  ChangeSet`: a per-edit revision clock (advances on every `set_value` /
+  `set_formula` / `clear_cell`, unlike `epoch` which only advances on
+  `recalc_all`) plus a bounded change log, so a host re-fetches only the cells
+  dirtied since its last render. Returns `ChangeSet::Stale` (re-read everything)
+  when a query reaches back before the retained log window (`CHANGELOG_RETAIN`).
+  v1 stamps on write (a no-op recompute may over-report a cell — safe; exact
+  old/new diffing is a future optimisation).
+- Re-exported `column_index_to_letters` / `column_letters_to_index` for hosts to
+  render identical A…Z, AA… headers without re-implementing the math.
+
 ## 0.1.0
 
 Initial release — Phase 1 headless spreadsheet engine.

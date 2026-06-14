@@ -5,7 +5,7 @@
 //! cells, dependency tracking, automatic-recalc-on-edit (the user
 //! can also call `recalc_all` for a full sweep).
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet, VecDeque};
 
 use crate::address::{CellAddress, SheetId};
 use crate::cell::{Cell, CellContent, CellValue};
@@ -13,6 +13,7 @@ use crate::dag::DependencyGraph;
 use crate::errors::SpreadsheetError;
 use crate::parser::{parse, ParseError};
 use crate::recalc::{collect_refs, evaluate};
+use crate::viewport::{ChangeSet, UsedRange, Window, CHANGELOG_RETAIN, MAX_WINDOW_CELLS};
 
 /// Top-level container — one or more sheets plus the dependency
 /// graph that spans them.
@@ -25,6 +26,18 @@ pub struct Workbook {
     graph: DependencyGraph,
     /// Recalc epoch; bumped after every successful `recalc_all`.
     epoch: u64,
+    /// Per-edit revision clock for viewport diffing. Unlike `epoch` (which only
+    /// advances on a full `recalc_all` sweep), `revision` advances once per
+    /// mutation (`set_value` / `set_formula` / `clear_cell`), so a virtualized
+    /// host can ask "what changed since the revision I last rendered?".
+    revision: u64,
+    /// Bounded change log: `(revision, sheet, addr)` for every cell whose value
+    /// was (re)written, newest at the back. Pruned to `CHANGELOG_RETAIN`.
+    changes: VecDeque<(u64, SheetId, CellAddress)>,
+    /// Highest revision whose entries have been dropped from `changes`. A
+    /// `changed_since(r)` with `r < dropped_revision` can't prove completeness
+    /// and must answer `Stale`.
+    dropped_revision: u64,
 }
 
 struct Sheet {
@@ -40,6 +53,9 @@ impl Workbook {
             sheet_by_name: HashMap::new(),
             graph: DependencyGraph::new(),
             epoch: 0,
+            revision: 0,
+            changes: VecDeque::new(),
+            dropped_revision: 0,
         }
     }
 
@@ -79,14 +95,141 @@ impl Workbook {
         self.epoch
     }
 
+    /// The per-edit revision clock, advanced once per mutation. A virtualized
+    /// host snapshots this, then later calls [`changed_since`](Self::changed_since)
+    /// with it to learn which cells changed in between.
+    pub fn current_revision(&self) -> u64 {
+        self.revision
+    }
+
+    /// Read a **dense** rectangle of computed values for the inclusive,
+    /// 1-based window `(row0..=row1, col0..=col1)`, row-major. Empty cells are
+    /// returned as [`CellValue::Empty`] so a host can index the result directly
+    /// and render a solid grid. This is `O(window)` — it looks each address up
+    /// in the sparse store — never `O(sheet)`.
+    ///
+    /// Errors with [`SpreadsheetError::Ref`] if the rectangle is inverted, the
+    /// sheet id is unknown, or the window exceeds
+    /// [`MAX_WINDOW_CELLS`](crate::viewport::MAX_WINDOW_CELLS) (the screen-scale
+    /// safety cap — a host clamps to the visible window well below it).
+    pub fn get_window(
+        &self,
+        sheet: SheetId,
+        row0: u32,
+        col0: u32,
+        row1: u32,
+        col1: u32,
+    ) -> Result<Window, SpreadsheetError> {
+        // Coordinates are 1-based (A1 = row 1, col 1), so a 0 is out of contract
+        // — and rejecting it also rules out the `row0 = 0` case that would let
+        // the span computation below span the full u32 range.
+        if row0 == 0 || col0 == 0 || row1 < row0 || col1 < col0 {
+            return Err(SpreadsheetError::Ref);
+        }
+        // Compute the span in u64. The operands MUST be widened to u64 *before*
+        // the `+ 1`: doing `(row1 - row0 + 1)` in u32 first overflows when
+        // `row1 - row0 == u32::MAX` (e.g. row0=1, row1=u32::MAX), wrapping to a
+        // bogus small count that would slip past the MAX_WINDOW_CELLS cap and
+        // send the loop over the entire u32 range — an OOM DoS. Widening first
+        // keeps the true count, so checked_mul + the cap reject it.
+        let rows = (row1 as u64 - row0 as u64) + 1;
+        let cols = (col1 as u64 - col0 as u64) + 1;
+        // `rows * cols` can still overflow u64 for a full-sheet request, so use
+        // checked_mul: an overflow is by definition past the cap.
+        match rows.checked_mul(cols) {
+            Some(n) if n <= MAX_WINDOW_CELLS => {}
+            _ => return Err(SpreadsheetError::Ref),
+        }
+        let s = self.sheets.get(sheet.0 as usize).ok_or(SpreadsheetError::Ref)?;
+        let mut values = Vec::with_capacity((rows * cols) as usize);
+        for r in row0..=row1 {
+            for c in col0..=col1 {
+                let v = s
+                    .cells
+                    .get(&CellAddress::new(r, c))
+                    .map(|cell| cell.current_value())
+                    .unwrap_or(CellValue::Empty);
+                values.push(v);
+            }
+        }
+        Ok(Window {
+            row0,
+            col0,
+            rows: rows as u32,
+            cols: cols as u32,
+            values,
+        })
+    }
+
+    /// The bounding box of all materialised, non-empty cells on `sheet`, or
+    /// `None` if the sheet is empty. 1-based inclusive. A host uses this to size
+    /// its scrollable area to the data. `O(materialised cells)`.
+    pub fn used_range(&self, sheet: SheetId) -> Option<UsedRange> {
+        let s = self.sheets.get(sheet.0 as usize)?;
+        let mut range: Option<UsedRange> = None;
+        for (addr, cell) in &s.cells {
+            if cell.current_value().is_empty() {
+                continue; // a present-but-empty cell doesn't extend the extent
+            }
+            match &mut range {
+                None => {
+                    range = Some(UsedRange {
+                        min_row: addr.row,
+                        min_col: addr.col,
+                        max_row: addr.row,
+                        max_col: addr.col,
+                    })
+                }
+                Some(r) => {
+                    r.min_row = r.min_row.min(addr.row);
+                    r.min_col = r.min_col.min(addr.col);
+                    r.max_row = r.max_row.max(addr.row);
+                    r.max_col = r.max_col.max(addr.col);
+                }
+            }
+        }
+        range
+    }
+
+    /// Which cells on `sheet` changed strictly after `since_revision`.
+    ///
+    /// Returns [`ChangeSet::Delta`] with a deduped address list when the log
+    /// still covers `since_revision`, or [`ChangeSet::Stale`] when the query
+    /// reaches back before the retained window — in which case the host must
+    /// re-read its whole visible window rather than risk missing a change.
+    pub fn changed_since(&self, sheet: SheetId, since_revision: u64) -> ChangeSet {
+        let current = self.revision;
+        // If anything at or before `since_revision` was pruned, a change in
+        // (since_revision, dropped_revision] may be gone — answer Stale. (When
+        // since >= dropped_revision, every change after it is still retained.)
+        if since_revision < self.dropped_revision {
+            return ChangeSet::Stale {
+                current_revision: current,
+            };
+        }
+        let mut seen = HashSet::new();
+        let mut changed = Vec::new();
+        for (rev, sid, addr) in &self.changes {
+            if *rev > since_revision && *sid == sheet && seen.insert(*addr) {
+                changed.push(*addr);
+            }
+        }
+        ChangeSet::Delta {
+            current_revision: current,
+            changed,
+        }
+    }
+
     /// Set a literal value (no formula). Updates the dependency
     /// graph (removes any prior edges from this cell) and triggers
     /// recalc of downstream cells.
     pub fn set_value(&mut self, sheet: SheetId, addr: CellAddress, value: CellValue) {
+        self.revision = self.revision.wrapping_add(1);
         let s = &mut self.sheets[sheet.0 as usize];
         s.cells.insert(addr, Cell::value(value));
         self.graph.remove((sheet, addr));
-        self.recalc_dependents_of(sheet, addr);
+        self.log_change(sheet, addr); // the literal itself changed
+        self.recalc_dependents_of(sheet, addr); // dependents log via set_cached
     }
 
     /// Set a formula. Parses the text; on a parse error, stores the
@@ -98,6 +241,7 @@ impl Workbook {
         text: &str,
     ) -> Result<(), ParseError> {
         let ast = parse(text)?;
+        self.revision = self.revision.wrapping_add(1);
         let s = &mut self.sheets[sheet.0 as usize];
         s.cells.insert(
             addr,
@@ -121,9 +265,11 @@ impl Workbook {
 
     /// Mark a cell empty.
     pub fn clear_cell(&mut self, sheet: SheetId, addr: CellAddress) {
+        self.revision = self.revision.wrapping_add(1);
         let s = &mut self.sheets[sheet.0 as usize];
         s.cells.remove(&addr);
         self.graph.remove((sheet, addr));
+        self.log_change(sheet, addr); // the cell became empty
         self.recalc_dependents_of(sheet, addr);
     }
 
@@ -144,6 +290,9 @@ impl Workbook {
 
     /// Recalculate every formula cell. Bumps the epoch on success.
     pub fn recalc_all(&mut self) {
+        // A full sweep is one revision-transaction too, so the cells it rewrites
+        // land in the change log under a single new revision.
+        self.revision = self.revision.wrapping_add(1);
         // Build a set of all formula cells.
         let mut all: std::collections::HashSet<(SheetId, CellAddress)> =
             std::collections::HashSet::new();
@@ -221,10 +370,29 @@ impl Workbook {
     }
 
     fn set_cached(&mut self, sheet: SheetId, addr: CellAddress, value: CellValue) {
-        let s = &mut self.sheets[sheet.0 as usize];
-        if let Some(cell) = s.cells.get_mut(&addr) {
-            if let CellContent::Formula { cached, .. } = &mut cell.content {
-                *cached = Some(value);
+        {
+            let s = &mut self.sheets[sheet.0 as usize];
+            if let Some(cell) = s.cells.get_mut(&addr) {
+                if let CellContent::Formula { cached, .. } = &mut cell.content {
+                    *cached = Some(value);
+                }
+            }
+        }
+        // Every recompute is a (potential) value change for viewport diffing.
+        // v1 stamps on write rather than diffing old vs new: a no-op recompute
+        // logs the cell even if its value is unchanged. That over-reports at
+        // worst — a host re-fetches a handful of identical cells, which is safe;
+        // exact old/new diffing is a future optimisation.
+        self.log_change(sheet, addr);
+    }
+
+    /// Append a change-log entry under the current revision, pruning the log to
+    /// `CHANGELOG_RETAIN` and tracking the highest dropped revision.
+    fn log_change(&mut self, sheet: SheetId, addr: CellAddress) {
+        self.changes.push_back((self.revision, sheet, addr));
+        while self.changes.len() > CHANGELOG_RETAIN {
+            if let Some((dropped, _, _)) = self.changes.pop_front() {
+                self.dropped_revision = self.dropped_revision.max(dropped);
             }
         }
     }
@@ -423,5 +591,166 @@ mod tests {
             wb.set_formula(s, cell(r, 1), &format!("=A{}+1", r - 1)).unwrap();
         }
         assert_eq!(wb.get_value(s, cell(N, 1)), Some(CellValue::Number(N as f64)));
+    }
+
+    // ── Viewport primitive (infinite virtualized sheet) ──────────────
+
+    #[test]
+    fn get_window_is_dense_with_blanks() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        wb.set_value(s, cell(1, 3), CellValue::Number(3.0)); // B1 (col 2) left empty
+        let w = wb.get_window(s, 1, 1, 1, 3).unwrap();
+        assert_eq!((w.rows, w.cols), (1, 3));
+        assert_eq!(w.values, vec![
+            CellValue::Number(1.0), // A1
+            CellValue::Empty,       // B1 — blank, not omitted
+            CellValue::Number(3.0), // C1
+        ]);
+        assert_eq!(w.get(1, 2), Some(&CellValue::Empty));
+        assert_eq!(w.get(1, 3), Some(&CellValue::Number(3.0)));
+    }
+
+    #[test]
+    fn get_window_returns_computed_formula_values() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(15.0));
+        wb.set_value(s, cell(1, 2), CellValue::Number(3.0));
+        wb.set_formula(s, cell(1, 3), "=SUM(A1:B1)").unwrap();
+        let w = wb.get_window(s, 1, 3, 1, 3).unwrap();
+        assert_eq!(w.values, vec![CellValue::Number(18.0)]);
+    }
+
+    #[test]
+    fn get_window_far_flung_cell_is_cheap() {
+        // A cell at row 1,000,000, col 1000 is reachable without materialising
+        // the rectangle between it and the origin — the read is O(window).
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1_000_000, 1_000), CellValue::Number(42.0));
+        let w = wb.get_window(s, 1_000_000, 1_000, 1_000_000, 1_000).unwrap();
+        assert_eq!(w.values, vec![CellValue::Number(42.0)]);
+    }
+
+    #[test]
+    fn get_window_rejects_inverted_and_oversized() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        assert!(wb.get_window(s, 2, 1, 1, 1).is_err()); // row1 < row0
+        assert!(wb.get_window(s, 1, 2, 1, 1).is_err()); // col1 < col0
+        // 400×400 = 160 000 > MAX_WINDOW_CELLS (65 536).
+        assert!(wb.get_window(s, 1, 1, 400, 400).is_err());
+        // Full-sheet request: rows*cols overflows u64 → still rejected, no panic.
+        assert!(wb.get_window(s, 1, 1, u32::MAX, u32::MAX).is_err());
+    }
+
+    #[test]
+    fn get_window_full_u32_span_is_rejected_not_a_dos() {
+        // Regression: the span must be computed in u64. A full-u32-span request
+        // (row1 - row0 == u32::MAX) would overflow the u32 `+ 1`, wrap to a bogus
+        // small count, slip past the cap, and loop over the entire u32 range
+        // (OOM in release, panic in debug). row0 = 0 is also out of the 1-based
+        // contract. All of these must return Err WITHOUT panicking or hanging.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        assert!(wb.get_window(s, 0, 0, u32::MAX, u32::MAX).is_err()); // row0=0 + full span
+        assert!(wb.get_window(s, 0, 1, 10, 10).is_err()); // 0 violates 1-based
+        assert!(wb.get_window(s, 1, 0, 10, 10).is_err());
+        assert!(wb.get_window(s, 1, 1, u32::MAX, 1).is_err()); // tall full-span column
+        assert!(wb.get_window(s, 1, 1, 1, u32::MAX).is_err()); // wide full-span row
+    }
+
+    #[test]
+    fn used_range_none_when_empty_some_when_scattered() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        assert_eq!(wb.used_range(s), None);
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0)); // A1
+        wb.set_value(s, cell(100, 26), CellValue::Number(2.0)); // Z100
+        assert_eq!(wb.used_range(s), Some(UsedRange {
+            min_row: 1, min_col: 1, max_row: 100, max_col: 26,
+        }));
+    }
+
+    #[test]
+    fn used_range_skips_present_but_empty_cells() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        wb.set_value(s, cell(9, 9), CellValue::Empty); // present but empty
+        // The Empty cell must not extend the extent.
+        assert_eq!(wb.used_range(s), Some(UsedRange {
+            min_row: 1, min_col: 1, max_row: 1, max_col: 1,
+        }));
+    }
+
+    #[test]
+    fn current_revision_advances_per_edit() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        let r0 = wb.current_revision();
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        let r1 = wb.current_revision();
+        wb.set_value(s, cell(1, 2), CellValue::Number(2.0));
+        let r2 = wb.current_revision();
+        assert!(r1 > r0 && r2 > r1);
+    }
+
+    #[test]
+    fn changed_since_reports_edited_cell_and_its_dependents() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        wb.set_formula(s, cell(1, 2), "=A1*10").unwrap();
+        let snap = wb.current_revision();
+        wb.set_value(s, cell(1, 1), CellValue::Number(9.0)); // A1 + dependent B1
+        match wb.changed_since(s, snap) {
+            ChangeSet::Delta { changed, .. } => {
+                assert!(changed.contains(&cell(1, 1)), "A1 changed");
+                assert!(changed.contains(&cell(1, 2)), "B1 (dependent) changed");
+                assert_eq!(changed.len(), 2, "deduped");
+            }
+            ChangeSet::Stale { .. } => panic!("should be a Delta"),
+        }
+    }
+
+    #[test]
+    fn changed_since_filters_by_sheet() {
+        let mut wb = Workbook::new();
+        let s1 = wb.add_sheet("S1");
+        let s2 = wb.add_sheet("S2");
+        let snap = wb.current_revision();
+        wb.set_value(s1, cell(1, 1), CellValue::Number(1.0));
+        // The edit on S1 must not appear when querying S2.
+        match wb.changed_since(s2, snap) {
+            ChangeSet::Delta { changed, .. } => assert!(changed.is_empty()),
+            ChangeSet::Stale { .. } => panic!("should be a Delta"),
+        }
+    }
+
+    #[test]
+    fn changed_since_goes_stale_past_the_retained_window() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        let snap = wb.current_revision(); // 0
+        // Edit far more distinct cells than the log retains, forcing it to drop
+        // the oldest entries — a query reaching back to `snap` can't be proven
+        // complete, so it must answer Stale (re-read everything).
+        for i in 1..=(CHANGELOG_RETAIN as u32 + 100) {
+            wb.set_value(s, cell(i, 1), CellValue::Number(i as f64));
+        }
+        assert!(matches!(
+            wb.changed_since(s, snap),
+            ChangeSet::Stale { .. }
+        ));
+        // But a recent snapshot still returns a Delta.
+        let recent = wb.current_revision();
+        wb.set_value(s, cell(1, 1), CellValue::Number(0.0));
+        assert!(matches!(
+            wb.changed_since(s, recent),
+            ChangeSet::Delta { .. }
+        ));
     }
 }
