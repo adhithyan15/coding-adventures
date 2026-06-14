@@ -74,8 +74,13 @@ multiple languages; close an enabler before the features that depend on it.
   - ✅ **jit-core** (2/6) — compiled tier emits a `MASK_WIDTH <reg> <bits>` opcode after a
     narrow `_u8`/`_u16`/`_u32` add/sub/mul/div/neg (`u4`/signed handled by the interpreter
     fallback); unit-tested. Matches vm-core's interpreter-tier mask.
-  - ☐ **iir-to-wasm**, ☐ **iir-to-jvm-class-file**, ☐ **iir-to-cil-bytecode**
-    (mirror the per-backend byte-tape mask onto register arithmetic).
+  - ☐ **iir-to-wasm** (3/6, in flight #5812 — `i32.and` width mask).
+  - ✅ **iir-to-jvm-class-file** (4/6) — `emit_jvm_width_mask` appends `iconst/sipush/ldc
+    <mask>; iand` after a narrow `u4`/`u8`/`u16` arith/bitwise/neg/not/shl `int` op (positive
+    mask + `iand`, not `i2b`, to keep unsigned widths unsigned; `0xFFFF` via the constant
+    pool). u32/i32 already wrap via the int op. Structural tests; executed JVM proof in the
+    integration PR via the matrix's real-`java` run_jvm.
+  - ☐ **iir-to-cil-bytecode** (mirror the per-backend byte-tape mask onto register arithmetic).
   - ☐ **Integration** — wire Nib (then Oct) to emit narrow `type_hint`s for narrow-declared
     values + an executed matrix proof (`200u8+100u8=44`, Nib unary `~`) across all backends;
     flip N3-`~`, Nib N6/N7, Oct.

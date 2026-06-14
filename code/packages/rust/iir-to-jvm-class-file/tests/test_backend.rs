@@ -2557,3 +2557,70 @@ fn i64_loop_guard_branches_via_lcmp() {
     let code = code_bytes(&class);
     assert!(code.contains(&0x94), "expected LCMP (0x94) reducing the i64 guard to an int before ifeq");
 }
+
+// ---------------------------------------------------------------------------
+// E2 (LANG-FULL): narrow-width arithmetic emits a width mask
+//
+// JVM `int` arithmetic (iadd/imul/…) wraps mod-2³², so u32/i32 are already
+// correct.  The smaller widths (u4/u8/u16) get an explicit
+// `iconst/sipush/ldc <mask>; iand` after the op.  These tests assert the
+// lowering injects that mask (the executed cross-backend proof lands in the
+// integration PR via lang-aot's real-`java` run_jvm).
+// ---------------------------------------------------------------------------
+
+/// `main` = `const 200; const 100; <op> [ty]; ret [ty]`.
+fn e2_binop_fn(op: &str, ty: &str) -> IIRFunction {
+    IIRFunction::new(
+        "main",
+        vec![],
+        ty,
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], ty),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], ty),
+            IIRInstr::new(op, Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], ty),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], ty),
+        ],
+    )
+}
+
+// The u8 mask is `sipush 0x00FF; iand` → bytes [0x11, 0x00, 0xFF, 0x7E].
+const U8_MASK_SEQ: [u8; 4] = [0x11, 0x00, 0xFF, 0x7E];
+
+fn has_seq(code: &[u8], seq: &[u8]) -> bool {
+    code.windows(seq.len()).any(|w| w == seq)
+}
+
+#[test]
+fn e2_u8_add_emits_iand_width_mask() {
+    let class = lower(&module_with(e2_binop_fn("add", "u8")));
+    let code = code_bytes(&class);
+    assert!(has_seq(&code, &U8_MASK_SEQ),
+        "u8 `add` must emit `sipush 255; iand` to wrap mod-256");
+}
+
+#[test]
+fn e2_u8_not_and_shl_emit_width_mask() {
+    // `not` (synthesised as XOR -1) and a left shift both need the byte mask.
+    let not_fn = IIRFunction::new("main", vec![], "u8", vec![
+        IIRInstr::new("const", Some("a".into()), vec![Operand::Int(0)], "u8"),
+        IIRInstr::new("not", Some("c".into()), vec![Operand::Var("a".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "u8"),
+    ]);
+    let class = lower(&module_with(not_fn));
+    assert!(has_seq(&code_bytes(&class), &U8_MASK_SEQ), "u8 `not` must mask to a byte");
+
+    let shl_class = lower(&module_with(e2_binop_fn("shl", "u8")));
+    assert!(has_seq(&code_bytes(&shl_class), &U8_MASK_SEQ), "u8 `shl` must mask to a byte");
+}
+
+#[test]
+fn e2_i64_and_u32_add_have_no_byte_mask() {
+    // i64 uses the long opcodes; u32 wraps natively via the 32-bit i32 op — so
+    // neither emits the `sipush 255; iand` byte mask.
+    for ty in ["i64", "u32"] {
+        let class = lower(&module_with(e2_binop_fn("add", ty)));
+        assert!(!has_seq(&code_bytes(&class), &U8_MASK_SEQ),
+            "{ty} `add` must not emit a byte-width mask");
+    }
+}

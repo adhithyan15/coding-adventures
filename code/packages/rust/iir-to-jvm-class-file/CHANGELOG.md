@@ -3,6 +3,28 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 4 of 6)
+
+### Added — narrow-width arithmetic wraps mod-2ⁿ on the JVM
+
+JVM `int` arithmetic (`iadd`/`imul`/…) wraps mod-2³², so `u32`/`i32` were
+already correct.  But `u8`/`u16` left a full 32-bit result, so a lowered
+`200u8 + 100u8` gave `300`, not `44`.
+
+`emit_jvm_width_mask` now appends `iconst/sipush/ldc <mask>; iand` after a
+narrow-width (`u4`→0xF, `u8`→0xFF, `u16`→0xFFFF) `add`/`sub`/`mul`/`div`/`mod` /
+`neg` / `and`/`or`/`xor` / `not` / `shl`/`shr` result — mirroring vm-core's
+`mask_result`, jit-core's `MASK_WIDTH`, the wasm `i32.and`, and the byte-tape
+`baload`+mask precedent.  The mask uses a **positive constant + `iand`**, not
+`i2b`/`i2s` (those sign-extend, giving a signed byte — wrong for the unsigned
+narrow types the LANG-FULL frontends use).  `0xFFFF` exceeds `sipush` range, so
+it loads from the constant pool via `emit_iconst_cp`.  `u32`/`i32` need no mask;
+`i64`/`u64`/floats are unchanged.
+
+Tests assert the lowering emits the `sipush 255; iand` byte mask for a `u8`
+add / not / shl and omits it for `i64`/`u32`.  (The executed cross-backend JVM
+proof lands in the E2 integration PR via lang-aot's real-`java` `run_jvm`.)
+
 ## [0.11.0] — 2026-06-12 (LANG-MATRIX LM-J Brainfuck — byte-tape ops on the JVM)
 
 Adds the lowering Brainfuck needs to run on the JVM backend — the last code-gen
