@@ -1,5 +1,34 @@
 # Changelog — vm-core
 
+## [0.5.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 1 of 6)
+
+### Added — narrow-width integer arithmetic wraps mod-2ⁿ by `type_hint`
+
+Until now integer arithmetic ran at full `i64` width regardless of the
+instruction's `type_hint`, so `200u8 + 100u8` produced `300` instead of `44`
+and `~x` on a `u8` flipped 64 bits.  Narrow types existed only at the byte-tape
+boundary (`store_byte` masks `& 0xFF`).
+
+This is the first backend in the **E2 (integer width & wrap)** enabler: a new
+`mask_result(v, type_hint, u8_wrap)` masks every integer arithmetic / bitwise /
+shift result to the width its `type_hint` names —
+
+| hint | mask | example |
+|------|------|---------|
+| `u4` | `& 0xF` | `10 + 10` → `4` |
+| `u8` | `& 0xFF` | `200 + 100` → `44`; `~0` → `255`; `1 << 8` → `0` |
+| `u16` | `& 0xFFFF` | `60000 + 10000` → `4464` |
+| `u32` | `& 0xFFFF_FFFF` | `2³²` → `0` |
+| other (`i64`/`u64`/`any`) | — | full machine width, unchanged |
+
+— the register-arithmetic analogue of the byte-tape `store_byte` mask.  Applied
+in `add`/`sub`/`mul`/`div`/`mod`/`neg`/`and`/`or`/`xor`/`not`/`shl`/`shr`.  The
+legacy whole-module `u8_wrap` flag (Brainfuck's cell wrap, whose frontend widens
+its hint to `i64`) is preserved and applied last, so Brainfuck is unaffected.
+Signed narrow types (`i8`/`i16`/`i32`) are intentionally not masked here —
+correct two's-complement wrap needs sign-extension via the `cast` op; the
+LANG-FULL frontends use the unsigned widths.
+
 ## [0.4.0] — 2026-06-13 (LANG-MATRIX Phase V — byte-tape ops; Brainfuck on the VM)
 
 Adds the lowered byte-tape ops to the dispatch table so the **generic** register VM runs
