@@ -93,11 +93,22 @@ code/packages/kotlin/conduit/
 ├── settings.gradle.kts   # includeBuild("../../java/conduit")
 ├── required_capabilities.json   # ["rust","kotlin","java","cargo"]
 └── src/
-    ├── main/kotlin/com/codingadventures/conduitkt/Conduit.kt
-    └── test/kotlin/com/codingadventures/conduitkt/ConduitKtTest.kt
-
-code/programs/kotlin/conduit-hello/   # 8-route demo + integration tests
+    ├── main/kotlin/com/codingadventures/conduitkt/Conduit.kt        # DSL + helpers
+    ├── main/kotlin/com/codingadventures/conduitkt/ConduitHello.kt   # bundled 8-route demo (gradle run)
+    └── test/kotlin/com/codingadventures/conduitkt/
+        ├── ConduitKtTest.kt        # DSL + E2E
+        └── ConduitHelloTest.kt     # demo integration tests
 ```
+
+### Deviation: the demo is bundled, not a separate program
+
+The other ports ship a standalone `conduit-hello` program. Kotlin can't: the
+Kotlin package is itself a Gradle **composite build** over the Java `conduit`
+package, and a separate `conduit-hello` build would transitively include both
+`java/conduit` and `kotlin/conduit` — two directories named `conduit`, which
+collide on Gradle's directory-derived build path (`:conduit`). So the canonical
+8-route demo (`ConduitHello.kt`, `gradle run`) and its integration tests live
+inside the package instead. Functionally identical; one fewer Gradle build.
 
 The native library path (`-Djava.library.path=<rust/target/release>`) is set
 in `build.gradle.kts` exactly as in the Java package, so
