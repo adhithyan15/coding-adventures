@@ -50,6 +50,25 @@ VIRAL = [("csf_lymphocytic_pleocytosis", "high"), ("csf_glucose", "normal"),
          ("csf_lactate", "normal"), ("enteroviral_pcr", "positive"), ("csf_gram_stain", "negative")]
 NONSPECIFIC = [("fever", "present"), ("meningismus", "present"), ("fever", "absent"),
                ("meningismus", "absent")]
+# ORGANISM-IDENTIFICATION findings (gram morphology + host factors) that the grounded
+# organism-id rulebook (G1/G2) reasons over — teaching the decomposer these lets it feed
+# the WHICH-organism differential, not just bacterial-vs-viral. Multi-value findings carry
+# a VALUE-MATCHED phrasing hint (a random surface could contradict the value, e.g. say
+# "elderly" for value=neonate), so the teacher writes prose consistent with the gold label.
+ORGANISM_ID = [
+    ("csf_gram_morphology", "gram_positive_diplococci", "lancet-shaped gram-positive diplococci on CSF Gram stain"),
+    ("csf_gram_morphology", "gram_negative_diplococci", "gram-negative diplococci on CSF Gram stain"),
+    ("csf_gram_morphology", "gram_positive_bacilli", "gram-positive bacilli/rods on CSF Gram stain"),
+    ("csf_gram_morphology", "gram_negative_coccobacilli", "pleomorphic gram-negative coccobacilli on Gram stain"),
+    ("age_band", "neonate", "a neonate / newborn"),
+    ("age_band", "older_adult", "an older adult over 50"),
+    ("age_band", "infant_child", "a young child"),
+    ("immunocompromised", "present", "immunocompromised (on chemotherapy / transplant / HIV)"),
+    ("listeria_exposure", "present", "ate unpasteurized soft cheese / deli meats"),
+    ("recent_neurosurgery_or_shunt", "present", "recent neurosurgery or a CSF shunt"),
+    ("crowding_exposure", "present", "lives in a college dormitory / military barracks"),
+    ("petechial_rash", "present", "a petechial / purpuric rash"),
+]
 
 
 def teacher_vignette(teacher: str, findings: list[dict], surfaces: dict) -> str:
@@ -61,7 +80,9 @@ def teacher_vignette(teacher: str, findings: list[dict], surfaces: dict) -> str:
         lines = []
         for f in findings:
             sf = surfaces.get(f["functor"], [f["functor"]])
-            hint = random.choice(sf) if sf else f["functor"]
+            # A value-matched hint (multi-value findings) takes priority over a random
+            # surface, so the teacher's prose can't contradict the gold value.
+            hint = f.get("hint") or (random.choice(sf) if sf else f["functor"])
             neg = " (state this as ABSENT/negative)" if f.get("polarity") == "denied" else ""
             lines.append(f'- {f["functor"]} = {f["value"]}  (phrase like: "{hint}"){neg}')
         ask = ("Write a realistic 2-4 sentence clinical vignette for a meningitis workup "
@@ -83,20 +104,33 @@ def teacher_vignette(teacher: str, findings: list[dict], surfaces: dict) -> str:
 
 
 def sample_findings(rng: random.Random) -> list[dict]:
-    profile = rng.choices(["bacterial", "viral", "mixed", "abstain"], weights=[35, 35, 15, 15])[0]
+    profile = rng.choices(["bacterial", "viral", "mixed", "organism_id", "abstain"],
+                          weights=[28, 25, 15, 17, 15])[0]
     if profile == "abstain":
         return []
+    if profile == "organism_id":
+        # A which-organism vignette: gram morphology + host factors (+ maybe a CSF lab).
+        k = rng.randint(1, 3)
+        chosen3 = rng.sample(ORGANISM_ID, k)
+        findings = [{"functor": f, "value": v, "hint": h, "polarity": "stated"} for f, v, h in chosen3]
+        if rng.random() < 0.5:
+            f, v = rng.choice(BACTERIAL + VIRAL)
+            findings.append({"functor": f, "value": v, "polarity": "stated"})
+        return findings
     pool = (BACTERIAL if profile == "bacterial" else VIRAL if profile == "viral"
             else BACTERIAL + VIRAL)
     k = rng.randint(2, min(5, len(pool)))
     chosen = rng.sample(pool, k)
-    # occasionally add a non-specific finding and/or a negation.
+    # occasionally add a non-specific finding and/or an organism-id host factor.
     if rng.random() < 0.4:
         chosen.append(rng.choice(NONSPECIFIC))
     findings = []
     for functor, value in chosen:
         pol = "denied" if (rng.random() < 0.12 and value in ("positive", "present")) else "stated"
         findings.append({"functor": functor, "value": value, "polarity": pol})
+    if rng.random() < 0.3:  # mix a host factor / morphology into a CSF-lab vignette
+        f, v, h = rng.choice(ORGANISM_ID)
+        findings.append({"functor": f, "value": v, "hint": h, "polarity": "stated"})
     return findings
 
 
@@ -122,7 +156,11 @@ def main() -> int:
         if not vignette or len(vignette) < 20:
             continue
         user = decompose_mod.prompt_for(vignette, d)
-        gold = {"findings": findings, "discard": [], "inference_justifications": []}
+        # The gold IR carries only the typed fields — the generation-time `hint` (used to
+        # steer the teacher's phrasing) must NOT leak into the label the model learns.
+        gold_findings = [{"functor": f["functor"], "value": f["value"], "polarity": f["polarity"]}
+                         for f in findings]
+        gold = {"findings": gold_findings, "discard": [], "inference_justifications": []}
         records.append({"messages": [{"role": "user", "content": user},
                                      {"role": "assistant", "content": json.dumps(gold)}]})
         if (i + 1) % 25 == 0:
