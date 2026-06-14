@@ -68,6 +68,8 @@ packages a typed surface for:
   release, and runtime/pairing review gates
 - Hue package publish-gate summaries that route blocked handoffs to catalog,
   release, or runtime/pairing review queues
+- Hue package lifecycle summaries that count release, spec, catalog, handoff,
+  and publish stages as one ordered package readiness view
 
 ## Dependencies
 

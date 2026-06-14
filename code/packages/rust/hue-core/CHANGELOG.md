@@ -28,6 +28,8 @@ All notable changes to this package will be documented in this file.
   release, and runtime/pairing review gates.
 - Hue package publish-gate summaries that route blocked handoffs to catalog,
   release, or runtime/pairing review queues.
+- Hue package lifecycle summaries that count release, spec, catalog, handoff,
+  and publish stages as one ordered package readiness view.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
