@@ -1476,10 +1476,94 @@ fn sinz_at_most(literals: &[String], k: i128) -> (Vec<Predicate>, Vec<String>) {
     (cl, aux)
 }
 
-/// View the (substituted) constraints as a pure-boolean SET-COVER: each must be an
-/// at-least-one covering clause (`Σ cᵢxᵢ ≥ 1`, all `cᵢ ≥ 1`) or a trivially-true
-/// boolean bound (`x ≥ 0`, `x ≤ 1`). Returns the covering clauses, or `None` if any
-/// constraint isn't of that shape (so the caller falls back to the LIA path).
+/// How a boolean linear constraint relates to a single CNF clause.
+enum ClauseKind {
+    /// Equivalent to this disjunction of literals.
+    Clause(Predicate),
+    /// Trivially satisfied (e.g. a `{0,1}` bound) — contributes nothing.
+    AlwaysTrue,
+    /// Unsatisfiable on its own (e.g. `0 ≥ 1`, an uncoverable requirement).
+    AlwaysFalse,
+    /// A genuine cardinality/general constraint — not a single clause.
+    NotAClause,
+}
+
+/// Negate every coefficient of a linear form.
+fn negate_map(
+    c: &std::collections::BTreeMap<String, i128>,
+) -> Option<std::collections::BTreeMap<String, i128>> {
+    // checked: an i128::MIN coefficient declines (→ NotAClause) rather than panic/wrap.
+    c.iter()
+        .map(|(k, v)| v.checked_neg().map(|n| (k.clone(), n)))
+        .collect()
+}
+
+/// Recognize `Σ cᵢxᵢ (op) b` over booleans as a single clause. After normalizing to
+/// `Σ aᵢxᵢ ≥ B`, a `{−1,+1}`-coefficient constraint is a clause **iff** its threshold
+/// excludes exactly one assignment — `B == 1 − |negatives|` (the clause is false only
+/// when every positive literal is 0 and every negative literal is 1). This recognizes:
+/// at-least-one covering (`Σx ≥ 1`), the two implications of an AND-linearization used
+/// for n-ary combinations (`¬y ∨ dᵢ` and `y ∨ ¬d₁ … ∨ ¬dₖ`), and `{0,1}` bounds. A
+/// true cardinality constraint (`≥ 2 of …`) is `NotAClause`, so the caller defers to LIA.
+fn classify_clause(c: &std::collections::BTreeMap<String, i128>, op: RelOp, b: i128) -> ClauseKind {
+    // Normalize to `Σ aᵢxᵢ ≥ bound`.
+    let (coeffs, bound) = match op {
+        RelOp::Ge => (c.clone(), b),
+        RelOp::Gt => match b.checked_add(1) {
+            Some(x) => (c.clone(), x),
+            None => return ClauseKind::NotAClause,
+        },
+        RelOp::Le => match (negate_map(c), b.checked_neg()) {
+            (Some(m), Some(x)) => (m, x),
+            _ => return ClauseKind::NotAClause,
+        },
+        RelOp::Lt => match (
+            negate_map(c),
+            b.checked_sub(1).and_then(|x| x.checked_neg()),
+        ) {
+            (Some(m), Some(x)) => (m, x),
+            _ => return ClauseKind::NotAClause,
+        },
+        RelOp::Eq | RelOp::Ne => return ClauseKind::NotAClause,
+    };
+    if coeffs.is_empty() {
+        return if bound <= 0 {
+            ClauseKind::AlwaysTrue
+        } else {
+            ClauseKind::AlwaysFalse
+        };
+    }
+    if !coeffs.values().all(|v| matches!(v, 1 | -1)) {
+        return ClauseKind::NotAClause; // not a ±1 clause (total over i128; no abs() panic)
+    }
+    let n_neg = coeffs.values().filter(|v| **v < 0).count() as i128;
+    let p_pos = coeffs.values().filter(|v| **v > 0).count() as i128;
+    if bound <= -n_neg {
+        return ClauseKind::AlwaysTrue; // min possible LHS already meets it
+    }
+    if bound > p_pos {
+        return ClauseKind::AlwaysFalse; // max possible LHS can't meet it
+    }
+    if bound == 1 - n_neg {
+        let lits = coeffs
+            .iter()
+            .map(|(v, co)| {
+                if *co > 0 {
+                    Predicate::Var(v.clone())
+                } else {
+                    Predicate::Not(Box::new(Predicate::Var(v.clone())))
+                }
+            })
+            .collect();
+        return ClauseKind::Clause(Predicate::Or(lits));
+    }
+    ClauseKind::NotAClause // a true cardinality constraint
+}
+
+/// View the (substituted) constraints as a pure-boolean clausal system (a set-cover,
+/// possibly with n-ary combination AND-linearizations and defeasance). Each constraint
+/// must reduce to a single CNF clause or a trivial bound. Returns the clauses, or
+/// `None` if any constraint isn't clausal (so the caller falls back to the LIA path).
 fn as_clausal_cover(
     subbed: &[(ComputeExpr, RelOp, ComputeExpr)],
     bool_set: &HashSet<&str>,
@@ -1494,24 +1578,15 @@ fn as_clausal_cover(
             *c.entry(v).or_insert(0) -= w;
         }
         c.retain(|_, w| *w != 0);
-        let b = rk - lk;
+        let b = rk.checked_sub(lk)?;
         if !c.keys().all(|v| bool_set.contains(v.as_str())) {
             return None;
         }
-        let pos_sum: i128 = c.values().filter(|w| **w > 0).sum();
-        match op {
-            // Σ cᵢxᵢ ≥ 1 with every cᵢ ≥ 1  ⇔  at least one xᵢ true  → an Or clause.
-            RelOp::Ge if b == 1 && !c.is_empty() && c.values().all(|w| *w >= 1) => {
-                clauses.push(Predicate::Or(
-                    c.keys().map(|v| Predicate::Var(v.clone())).collect(),
-                ));
-            }
-            // An empty LHS with b ≥ 1 (e.g. `0 ≥ 1`) is an uncoverable organism.
-            RelOp::Ge if c.is_empty() && b >= 1 => clauses.push(Predicate::Bool(false)),
-            // Trivially-true boolean bounds.
-            RelOp::Ge if b <= 0 && c.values().all(|w| *w >= 0) => {}
-            RelOp::Le if b >= pos_sum && c.values().all(|w| *w >= 0) => {}
-            _ => return None,
+        match classify_clause(&c, *op, b) {
+            ClauseKind::Clause(p) => clauses.push(p),
+            ClauseKind::AlwaysTrue => {}
+            ClauseKind::AlwaysFalse => clauses.push(Predicate::Bool(false)),
+            ClauseKind::NotAClause => return None,
         }
     }
     Some(clauses)
@@ -3004,6 +3079,53 @@ mod tests {
             .join(" + ");
         let (value, _) = expect_int_optimum(&optimize_src(&src));
         assert_eq!(value, n as i128 / 2, "cycle cover min = n/2");
+    }
+
+    #[test]
+    fn nary_combination_cover_routes_through_sat() {
+        // A requirement coverable ONLY by the 3-element combination {a,b,c} (an AND
+        // linearized with aux `y`), plus a single-drug requirement `e`. The optimum
+        // must select a,b,c (for the combination) + e. The combination's implication
+        // clauses (`¬y ∨ a`, `y ∨ ¬a ∨ ¬b ∨ ¬c`) are ±1 clauses the generalized
+        // recognizer accepts, so this scalable boolean cover goes through the SAT path.
+        let out = optimize_src(
+            "symbol a : bool\nsymbol b : bool\nsymbol c : bool\nsymbol e : bool\nsymbol y : bool\n\
+             constrain y <= a\nconstrain y <= b\nconstrain y <= c\n\
+             constrain y - (a + b + c) >= -2\n\
+             constrain y >= 1\nconstrain e >= 1\n\
+             minimize a + b + c + e",
+        );
+        let (value, selected) = expect_int_optimum(&out);
+        assert_eq!(
+            value, 4,
+            "a+b+c+e all chosen for the combination + single cover"
+        );
+        for v in ["a", "b", "c", "e"] {
+            assert!(
+                selected.contains(&v.to_string()),
+                "{v} must be selected: {selected:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn combination_is_only_taken_when_a_requirement_needs_it() {
+        // If the requirement `e` is coverable directly AND the combination is not
+        // forced, the optimizer must NOT pay for the combination. Here nothing forces
+        // `y`, so the optimum is just `e` (cost 1), leaving a,b,c unselected.
+        let out = optimize_src(
+            "symbol a : bool\nsymbol b : bool\nsymbol c : bool\nsymbol e : bool\nsymbol y : bool\n\
+             constrain y <= a\nconstrain y <= b\nconstrain y <= c\n\
+             constrain y - (a + b + c) >= -2\n\
+             constrain e + y >= 1\n\
+             minimize a + b + c + e",
+        );
+        let (value, selected) = expect_int_optimum(&out);
+        assert_eq!(
+            value, 1,
+            "cover via the single agent, not the 3-drug combination"
+        );
+        assert_eq!(selected, vec!["e".to_string()]);
     }
 
     #[test]

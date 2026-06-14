@@ -129,17 +129,25 @@ N ≲ 21). The integer path is **opt-in via the declared sort** — `: scalar` /
 
 ### Scaling set-cover — the SAT oracle
 
-For a **pure-boolean** minimum-cost set-cover (every constraint an at-least-one
-covering clause `Σ xᵢ ≥ 1`, all selectors `: bool`), `optimize` routes the
-binary-search feasibility probes to the DPLL `SatTactic` instead of LIA's bounded
-enumeration. The cost bound `Σ wᵢ·xᵢ ≤ K` at each probe is a **Sinz sequential
-at-most-k** encoding (verified exact vs brute force). Same optimum as the LIA
-path; the difference is reach: LIA tops out around **24 selectors**, the SAT
-oracle handles a **full hospital formulary (100+ candidate drugs)** — 123 drugs
-in ~15 s, where LIA could not run at all. (Plain DPLL, so an adversarial cycle
-cover still slows past ~30–50; a real per-patient candidate set of ~10–30 drugs is
-sub-second. A CDCL/PB-native solver would lift the worst case — the oracle
-interface is already in place for that swap.)
+For a **pure-boolean** minimum-cost set-cover (all selectors `: bool`, every
+constraint reducible to a single CNF clause), `optimize` routes the binary-search
+feasibility probes to the DPLL `SatTactic` instead of LIA's bounded enumeration.
+The cost bound `Σ wᵢ·xᵢ ≤ K` at each probe is a **Sinz sequential at-most-k**
+encoding (verified exact vs brute force). Same optimum as the LIA path; the
+difference is reach: LIA tops out around **24 selectors**, the SAT oracle handles
+a **full hospital formulary (100+ candidate drugs)** — 123 drugs in ~15 s, where
+LIA could not run at all. (Plain DPLL, so an adversarial cycle cover still slows
+past ~30–50; a real per-patient candidate set of ~10–30 drugs is sub-second. A
+CDCL/PB-native solver would lift the worst case — the oracle interface is already
+in place for that swap.)
+
+The clause recognizer (`classify_clause`) accepts **any** `{−1,+1}`-coefficient
+constraint that is a single clause — at-least-one covering (`Σ xᵢ ≥ 1`), `{0,1}`
+bounds, and the two implications of an **AND-linearization** (`¬y ∨ dᵢ`,
+`y ∨ ¬d₁ … ∨ ¬dₖ`). That last one is what makes an **n-ary combination** — a
+requirement satisfied only by a *subset* of selected elements (`y = AND(d₁…dₖ)`) —
+stay on the scalable SAT path; each k-element combination is just k+1 clauses,
+linear in k. A genuine cardinality constraint (`≥ 2 of …`) is still deferred to LIA.
 
 ## Where it fits
 

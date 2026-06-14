@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.10.0] - 2026-06-14 — general boolean-clause recognizer (n-ary combinations scale)
+
+### Added / Changed
+
+- **The SAT set-cover path now accepts ANY single-clause boolean constraint**, not
+  just at-least-one covering (`Σ xᵢ ≥ 1`). A new `classify_clause` recognizes a
+  `{−1,+1}`-coefficient constraint as a clause iff, after normalizing to `≥`, the
+  bound equals `1 − |negatives|` (it excludes exactly one assignment). This covers:
+  at-least-one covering, **the two implications of an AND-linearization**
+  (`¬y ∨ dᵢ` and `y ∨ ¬d₁ … ∨ ¬dₖ`), and `{0,1}` bounds; a true cardinality
+  constraint (`≥ 2 of …`) is still deferred to LIA.
+- **Why it matters:** an **n-ary combination** (a requirement covered only by a
+  *subset* of selected elements — e.g. vancomycin + ceftriaxone covering resistant
+  pneumococcus, which neither covers alone) is modeled by an aux boolean `y = AND(…)`,
+  whose two defining constraints are exactly those implication clauses. Before, a
+  combination-laden cover hit one of those constraints, failed the narrow `Σx ≥ 1`
+  match, and fell back to the LIA enumeration (the ~24-selector ceiling). Now the
+  whole combination cover stays on the **scalable SAT path**, so combinations scale
+  to a full formulary — and each k-element combination is just k+1 clauses, linear
+  in k. Defeasance (a covering edge voided by an observed fact) is an emit-time
+  concern (the defeated element is dropped from the clause) and needs no engine change.
+- +2 tests: a 3-element combination cover (all three selected) routes through SAT;
+  a combination is **not** paid for when a single agent already covers the
+  requirement.
+
+### Unchanged
+
+- Behavior-preserving for every prior case (all 54 earlier tests pass; the existing
+  covering, fractional-relaxation, scale, uncoverable, and scalar tests are
+  unchanged). `b = rk − lk` now uses `checked_sub` (defers to LIA on overflow rather
+  than wrapping). General-integer / `maximize` / `: scalar` paths untouched.
+
 ## [0.9.0] - 2026-06-14 — SAT-scaled set-cover (a full-formulary feasibility oracle)
 
 ### Added
