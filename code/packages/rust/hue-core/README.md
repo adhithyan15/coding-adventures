@@ -81,6 +81,8 @@ packages a typed surface for:
   final queue entry checks for publish/release coordination
 - Hue package release coordination summaries that combine release queue,
   handoff, acceptance, review, and publish gates for final coordination checks
+- Hue package release dispatch summaries that turn coordinated release state
+  into final dispatch readiness checks
 
 ## Dependencies
 
