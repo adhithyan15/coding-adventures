@@ -35,6 +35,8 @@ All notable changes to this package will be documented in this file.
 - Hue package acceptance summaries that combine lifecycle completion,
   review-queue clearance, and publish-gate readiness into one package
   acceptance gate.
+- Hue package release handoff summaries that turn accepted package state into
+  final release/manual-review handoff checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
