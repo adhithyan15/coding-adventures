@@ -53,7 +53,12 @@ echo "==> Using compiler: $COMPILER"
 mkdir -p _build
 FLAGS="-std=c++17 -Wall -Wextra -Wpedantic -Werror -pthread \
     -I include -I tests -I $CAPI_DIR/include"
-LINK="-L $TARGET_REL -lconduit_capi $NATIVE_LIBS -pthread"
+# Link the STATIC archive by full path (not -lconduit_capi): on Linux, ld prefers
+# the sibling libconduit_capi.so (cdylib) over the .a when both sit in the search
+# path, producing binaries that fail to load the .so at runtime. Naming the .a
+# directly forces static linking portably (clang + g++). It must come after the
+# source so left-to-right symbol resolution finds it.
+LINK="$TARGET_REL/libconduit_capi.a $NATIVE_LIBS -pthread"
 
 FAILED=0
 TOTAL=0

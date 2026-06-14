@@ -25,7 +25,9 @@ else echo "no C++ compiler found" >&2; exit 1; fi
 mkdir -p _build
 FLAGS="-std=c++17 -Wall -Wextra -Wpedantic -Werror -pthread \
     -I src -I $PKG/include -I $CAPI_DIR/include"
-LINK="-L $TARGET_REL -lconduit_capi $NATIVE_LIBS -pthread"
+# Link the static archive by full path so Linux's ld doesn't prefer the sibling
+# .so (which then fails to load at runtime). Portable across clang + g++.
+LINK="$TARGET_REL/libconduit_capi.a $NATIVE_LIBS -pthread"
 
 echo "==> Compiling demo binary"
 # shellcheck disable=SC2086
