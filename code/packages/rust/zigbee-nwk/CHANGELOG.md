@@ -13,6 +13,9 @@ All notable changes to this package will be documented in this file.
   maximum depth, best LQI, and worst outgoing cost.
 - `NwkRoutingReadinessSummary` for projecting neighbor freshness, active route
   coverage, route-discovery needs, and supervision state from topology reads.
+- `NwkRouteDiscoveryCommandSummary` for counting route request/reply/status/
+  record command traffic, IEEE-address coverage, multicast/many-to-one flags,
+  route records, and repair-needed status signals.
 
 ## [0.1.0] - 2026-05-06
 
