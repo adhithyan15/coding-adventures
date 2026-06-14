@@ -688,4 +688,166 @@ defmodule CodingAdventures.GrammarTools.TokenGrammarTest do
       assert msg =~ "Incomplete definition"
     end
   end
+
+  # ===========================================================================
+  # F10: declarative lexer mode transitions
+  # ===========================================================================
+
+  describe "parse/1 — F10 backward compatibility" do
+    test "grammar without F10 directives has nil start_mode and empty transitions" do
+      {:ok, grammar} = TokenGrammar.parse("NAME = /[a-z]+/\n")
+      assert grammar.start_mode == nil
+      assert grammar.transitions == []
+    end
+  end
+
+  describe "parse/1 — F10 start_mode directive" do
+    test "parses start_mode with a named group" do
+      source = "group div:\n  SLASH = /\\//\n\nstart_mode: div\n"
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert grammar.start_mode == "div"
+    end
+
+    test "parses start_mode 'default'" do
+      {:ok, grammar} = TokenGrammar.parse("start_mode: default\n")
+      assert grammar.start_mode == "default"
+    end
+
+    test "error: start_mode with missing value" do
+      {:error, msg} = TokenGrammar.parse("start_mode:\n")
+      assert msg =~ "Missing mode name after 'start_mode:'"
+    end
+  end
+
+  describe "parse/1 — F10 transitions section" do
+    test "parses single-token transition with set-mode action" do
+      source = """
+      group div:
+        SLASH = /\\//
+
+      transitions:
+        on SLASH -> set-mode div
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert length(grammar.transitions) == 1
+      [rule] = grammar.transitions
+      assert rule.on_tokens == ["SLASH"]
+      assert rule.on_value == nil
+      assert rule.in_mode == nil
+      assert rule.actions == [{:set_mode, "div"}]
+    end
+
+    test "parses alternation and keyword-value guard" do
+      source = """
+      group div:
+        SLASH = /\\//
+
+      transitions:
+        on (SLASH | KEYWORD="return") -> set-mode div
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      [rule] = grammar.transitions
+      assert rule.on_tokens == ["SLASH", "KEYWORD"]
+      assert rule.on_value == "return"
+    end
+
+    test "parses in-guard" do
+      source = """
+      group div:
+        SLASH = /\\//
+
+      transitions:
+        on SLASH in div -> set-mode default
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      [rule] = grammar.transitions
+      assert rule.in_mode == "div"
+    end
+
+    test "parses all five action kinds" do
+      source = """
+      group g:
+        TOK = /x/
+
+      transitions:
+        on TOK -> set-mode g
+        on TOK -> push g
+        on TOK -> pop
+        on TOK -> enable-skip
+        on TOK -> disable-skip
+      """
+
+      {:ok, grammar} = TokenGrammar.parse(source)
+      assert length(grammar.transitions) == 5
+      [a, b, c, d, e] = Enum.map(grammar.transitions, & &1.actions)
+      assert a == [{:set_mode, "g"}]
+      assert b == [{:push, "g"}]
+      assert c == [:pop]
+      assert d == [:enable_skip]
+      assert e == [:disable_skip]
+    end
+
+    test "error: transition missing ->" do
+      source = "transitions:\n  on SLASH set-mode div\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "missing '->'"
+    end
+
+    test "error: unknown action" do
+      source = "transitions:\n  on SLASH -> fly\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "Unknown transition action"
+    end
+
+    test "error: missing 'on' prefix" do
+      source = "transitions:\n  SLASH -> set-mode div\n"
+      {:error, msg} = TokenGrammar.parse(source)
+      assert msg =~ "must start with 'on '"
+    end
+  end
+
+  describe "validate_token_grammar/1 — F10 validation" do
+    test "accepts declared group as start_mode target" do
+      {:ok, grammar} = TokenGrammar.parse("group g:\n  T = /x/\n\nstart_mode: g\n")
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      refute Enum.any?(issues, &String.contains?(&1, "start_mode"))
+    end
+
+    test "accepts 'default' as start_mode" do
+      {:ok, grammar} = TokenGrammar.parse("start_mode: default\n")
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      refute Enum.any?(issues, &String.contains?(&1, "start_mode"))
+    end
+
+    test "rejects undefined start_mode" do
+      {:ok, grammar} = TokenGrammar.parse("start_mode: nosuchgroup\n")
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &String.contains?(&1, "start_mode"))
+    end
+
+    test "rejects undefined target mode in set-mode action" do
+      source = "transitions:\n  on SLASH -> set-mode nosuch\n"
+      {:ok, grammar} = TokenGrammar.parse(source)
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &String.contains?(&1, "nosuch"))
+    end
+
+    test "rejects undefined in-guard mode" do
+      source = "transitions:\n  on SLASH in nosuch -> pop\n"
+      {:ok, grammar} = TokenGrammar.parse(source)
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &String.contains?(&1, "nosuch"))
+    end
+
+    test "rejects too many transition rules" do
+      rules = Enum.map_join(1..4097, "\n", fn _ -> "  on SLASH -> pop" end)
+      source = "transitions:\n" <> rules
+      {:ok, grammar} = TokenGrammar.parse(source)
+      issues = TokenGrammar.validate_token_grammar(grammar)
+      assert Enum.any?(issues, &String.contains?(&1, "Too many transition rules"))
+    end
+  end
 end

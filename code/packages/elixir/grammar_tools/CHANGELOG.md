@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.6.0] - 2026-06-14
+
+### Added (F10 — declarative lexer mode transitions)
+- **`start_mode` field** on `%TokenGrammar{}` — the lexer mode (active group)
+  the tokenizer starts in. `nil` means `"default"`. Set by the new
+  `start_mode: NAME` directive in `.tokens` files.
+- **`transitions` field** on `%TokenGrammar{}` — a list of `mode_transition`
+  maps representing declarative mode transition rules. Empty means no
+  transitions (pre-F10 behaviour). Set by the new `transitions:` section.
+- **`transition_action` type** — tagged tuples `{:set_mode, name}`,
+  `{:push, name}`, `:pop`, `:enable_skip`, `:disable_skip`.
+- **`mode_transition` type** — map with `on_tokens`, `on_value`, `in_mode`,
+  `actions`, and `line_number`.
+- **`@max_transitions 4096`** — safety cap on transition rule count; enforced
+  in `validate_token_grammar/1`.
+- **Parsing** for `start_mode:` directive and `transitions:` section with
+  indented `on TOKENS [in MODE] -> ACTION [, ACTION ...]` entries. Supports:
+  - Single token: `on SLASH -> set-mode div`
+  - Alternation: `on (SLASH | STAR) -> set-mode default`
+  - Keyword-value guard: `on KEYWORD="return" -> set-mode default`
+  - In-guard: `on SLASH in default -> set-mode div`
+  - Multiple actions (comma-separated): `on TOK -> set-mode g, enable-skip`
+- **Validation** in `validate_token_grammar/1`:
+  - `start_mode` must be `"default"` or a declared group.
+  - `in MODE` guards must name a declared group (or `"default"`).
+  - `set-mode M` / `push G` targets must name a declared group (or `"default"`).
+  - Enforces `MAX_TRANSITIONS` cap.
+- **Compiler** (`compile_token_grammar/2`) now emits `start_mode:` and
+  `transitions:` fields in the generated Elixir code, including all
+  `transition_action` tagged tuples.
+- **17 new tests** in `token_grammar_test.exs` covering backward compatibility,
+  directive and section parsing, all 5 action kinds, error cases, and all
+  F10 validation rules.
+
 ## [0.5.0] - 2026-04-04
 
 ### Added
