@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.125.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-120** — a NON-INTEGER NUMBER property key is now emitted as
+  a QUOTED string of its canonical JS number form (`String(Number(key))`),
+  matching upstream Closure v20240317:
+
+      {.5:1}    ->  {"0.5":1}      {1.5:1}    ->  {"1.5":1}
+      {1.50:1}  ->  {"1.5":1}      {1e-3:1}   ->  {"0.001":1}
+      {1e-7:1}  ->  {"1e-7":1}     {2.5e-8:1} ->  {"2.5e-8":1}
+
+  Float-key counterpart of gap-116 (canonical INTEGER string key →
+  unquoted number); INTEGER numeric keys stay BARE (`{5:1}`, `{1e3:1}` →
+  `{1E3:1}`). The canonical key string is JS `String(Number(key))`, which
+  DIFFERS from closurec's value number printer (gap-040/082/113): it KEEPS
+  the leading `0` before the point (`0.5`, not `.5`), strips trailing
+  fractional zeros, and uses LOWERCASE-`e` exponential only for magnitudes
+  below `1e-6` (`1e-7`, `2.5e-8`) — verified against the JAR (`1e-6` →
+  `0.000001` stays decimal, `1e-7` goes exponential).
+
+  New `noninteger_numeric_key_string` helper in `whitespace_only.rs`,
+  wired into the number-emit branch. The coefficient and base-10 exponent
+  are computed EXACTLY from the source digits (no Grisu/Ryu); after
+  trailing-zero stripping, `E < 0` is exactly the non-integer case. The
+  property-key position guard (prev `{`/`,`, next `:`) reuses gap-116's —
+  it excludes the ternary `a?1.5:2` confound (the number is preceded by
+  `?`), array/call elements, bare values, and the value half of a
+  `{key:value}` pair (`{1.5:.5}` → `{"1.5":.5}` quotes only the key). An
+  f64-range magnitude guard (`-324..=308`) bounds the leading-zero run
+  (no DoS).
+
+  `minify_float_key_quoted` un-ignored; two `gap120_*` unit tests added.
+
 ## [0.124.0] - 2026-06-13
 
 ### Fixed
