@@ -14,7 +14,8 @@ def comps(cli, prof):
 def main():
     cli = decide_mod.find_cli()
     if cli is None:
-        print("test_abx: SKIPPED (no cli)"); return 0
+        print("test_abx: SKIPPED (no cli)")
+        return 0
     young, elderly, allergic = comps(cli, "young"), comps(cli, "elderly"), comps(cli, "allergic")
     assert young == {"give_vancomycin", "give_ceftriaxone", "give_dexamethasone"}, young
     assert "give_ampicillin" in elderly, elderly            # Listeria cover for age>50
