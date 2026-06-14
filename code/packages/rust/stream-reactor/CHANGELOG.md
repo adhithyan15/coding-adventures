@@ -44,3 +44,22 @@ All notable changes to this package will be documented in this file.
   already-read byte chunk after reads are resumed.
 - Added a regression test proving deferred bytes are not lost across pause and
   resume.
+
+## [0.1.4] - 2026-06-14
+
+### Changed
+
+- **Shard-aware `ConnectionId` allocation.** Each reactor now stamps its shard
+  index into the low `shard_bits` of every `ConnectionId` it allocates
+  (`id = (sequence << shard_bits) | shard_index`), so a multi-reactor mailbox can
+  route a write to the one reactor that owns a connection with pure arithmetic and
+  no shared registry. A lone reactor uses `shard_bits == 0`, leaving ids
+  byte-identical to the previous sequence-counter scheme.
+- Replaced the `StreamReactorOptions::connection_id_seed` shared `AtomicU64` with
+  `shard_index` / `shard_bits` fields. Uniqueness across shards no longer needs a
+  cross-shard atomic on the accept hot path — the shard bits plus each reactor's
+  private sequence are unique by construction.
+
+### Added
+
+- Regression test `connection_ids_encode_the_shard_index_in_their_low_bits`.

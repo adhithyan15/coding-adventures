@@ -8,7 +8,6 @@
 //! convenience constructors.
 
 use std::net::{SocketAddr, ToSocketAddrs};
-use std::sync::atomic::AtomicU64;
 use std::sync::{Arc, OnceLock};
 use std::thread;
 use std::time::Duration;
@@ -80,8 +79,12 @@ impl TcpHandlerResult {
 pub struct TcpRuntimeOptions {
     pub listener: ListenerOptions,
     pub stream: StreamOptions,
-    /// Optional shared seed used by sharded runtimes for unique connection IDs.
-    pub connection_id_seed: Option<Arc<AtomicU64>>,
+    /// Shard index / shard-bit width baked into each `ConnectionId` so a
+    /// `TcpMailbox` can route a write to the owning reactor.  Set automatically per
+    /// worker by the sharded builders; both default to `0` for a single runtime
+    /// (which leaves `ConnectionId`s identical to the unsharded scheme).
+    pub shard_index: u64,
+    pub shard_bits: u32,
     pub read_buffer_size: usize,
     pub max_connections: usize,
     pub max_pending_write_bytes: usize,
@@ -94,7 +97,8 @@ impl Default for TcpRuntimeOptions {
         Self {
             listener: defaults.listener,
             stream: defaults.stream,
-            connection_id_seed: None,
+            shard_index: 0,
+            shard_bits: 0,
             read_buffer_size: defaults.read_buffer_size,
             max_connections: defaults.max_connections,
             max_pending_write_bytes: defaults.max_pending_write_bytes,
@@ -107,7 +111,8 @@ impl PartialEq for TcpRuntimeOptions {
     fn eq(&self, other: &Self) -> bool {
         self.listener == other.listener
             && self.stream == other.stream
-            && self.connection_id_seed.is_some() == other.connection_id_seed.is_some()
+            && self.shard_index == other.shard_index
+            && self.shard_bits == other.shard_bits
             && self.read_buffer_size == other.read_buffer_size
             && self.max_connections == other.max_connections
             && self.max_pending_write_bytes == other.max_pending_write_bytes
@@ -122,7 +127,8 @@ impl From<TcpRuntimeOptions> for StreamReactorOptions {
         Self {
             listener: value.listener,
             stream: value.stream,
-            connection_id_seed: value.connection_id_seed,
+            shard_index: value.shard_index,
+            shard_bits: value.shard_bits,
             read_buffer_size: value.read_buffer_size,
             max_connections: value.max_connections,
             max_pending_write_bytes: value.max_pending_write_bytes,
@@ -225,41 +231,58 @@ impl<P, S> Drop for ShardedTcpRuntime<P, S> {
 #[derive(Clone)]
 pub struct TcpMailbox {
     inners: Arc<[StreamMailbox]>,
+    /// Number of low `ConnectionId` bits that name the owning shard — exactly the
+    /// `shard_bits` the reactors were built with (`ceil(log2(worker_count))`).
+    shard_bits: u32,
 }
 
 impl TcpMailbox {
+    /// Map a `ConnectionId` to the index of the reactor that owns it.
+    ///
+    /// The shard index lives in the low `shard_bits` of the id (stamped there at
+    /// accept time), so this is a single mask — no shared lookup table.  A single
+    /// reactor has `shard_bits == 0`, so the mask is `0` and every id routes to
+    /// `inners[0]`.  An out-of-range index (only possible from a stale/foreign id
+    /// that never belonged to this runtime) yields `None` and the command is
+    /// dropped, which is the same safe outcome as routing it to a reactor that
+    /// doesn't know the connection.
+    fn owner_of(&self, connection_id: ConnectionId) -> Option<&StreamMailbox> {
+        let index = (connection_id.0 & ((1u64 << self.shard_bits) - 1)) as usize;
+        self.inners.get(index)
+    }
+
     pub fn send(&self, connection_id: ConnectionId, bytes: impl Into<Vec<u8>>) {
-        let bytes = bytes.into();
-        for inner in self.inners.iter() {
-            inner.send(connection_id, bytes.clone());
+        if let Some(inner) = self.owner_of(connection_id) {
+            inner.send(connection_id, bytes);
         }
     }
 
     pub fn send_and_close(&self, connection_id: ConnectionId, bytes: impl Into<Vec<u8>>) {
-        let bytes = bytes.into();
-        for inner in self.inners.iter() {
-            inner.send_and_close(connection_id, bytes.clone());
+        if let Some(inner) = self.owner_of(connection_id) {
+            inner.send_and_close(connection_id, bytes);
         }
     }
 
     pub fn close(&self, connection_id: ConnectionId) {
-        for inner in self.inners.iter() {
+        if let Some(inner) = self.owner_of(connection_id) {
             inner.close(connection_id);
         }
     }
 
     pub fn pause_reads(&self, connection_id: ConnectionId) {
-        for inner in self.inners.iter() {
+        if let Some(inner) = self.owner_of(connection_id) {
             inner.pause_reads(connection_id);
         }
     }
 
     pub fn resume_reads(&self, connection_id: ConnectionId) {
-        for inner in self.inners.iter() {
+        if let Some(inner) = self.owner_of(connection_id) {
             inner.resume_reads(connection_id);
         }
     }
 
+    /// `resume_all_reads` carries no `ConnectionId`, so it genuinely fans out to
+    /// every reactor — each resumes the connections it owns.
     pub fn resume_all_reads(&self) {
         for inner in self.inners.iter() {
             inner.resume_all_reads();
@@ -267,9 +290,25 @@ impl TcpMailbox {
     }
 
     fn from_mailboxes(mailboxes: Vec<StreamMailbox>) -> Self {
+        let shard_bits = shard_bits_for(mailboxes.len());
         Self {
             inners: Arc::from(mailboxes.into_boxed_slice()),
+            shard_bits,
         }
+    }
+}
+
+/// Low bits needed to name `worker_count` shards: `ceil(log2(worker_count))`.
+///
+/// `worker_count <= 1` → `0` (no bits — the single reactor owns everything and
+/// `ConnectionId`s stay identical to the unsharded scheme).  `2 → 1`, `3 → 2`,
+/// `4 → 2`, `5 → 3`, … (next-power-of-two rounding, so up to `2^bits` shards fit).
+fn shard_bits_for(worker_count: usize) -> u32 {
+    if worker_count <= 1 {
+        0
+    } else {
+        // Bits required to represent the largest shard index, `worker_count - 1`.
+        u64::BITS - (worker_count as u64 - 1).leading_zeros()
     }
 }
 
@@ -427,11 +466,11 @@ where
         options.listener.reuse_port = true;
     }
 
-    let shared_connection_id = if worker_count > 1 {
-        Some(Arc::new(AtomicU64::new(1)))
-    } else {
-        None
-    };
+    // Each reactor stamps its own shard index into the low `shard_bits` of every
+    // ConnectionId it allocates, so the shared mailbox routes a write straight to
+    // the owning reactor.  No cross-shard atomic seed is needed for uniqueness any
+    // more — the shard bits plus each reactor's private sequence are unique.
+    let shard_bits = shard_bits_for(worker_count);
 
     let init: Arc<dyn Fn(TcpConnectionInfo) -> S + Send + Sync> = Arc::new(init);
     let handler: Arc<dyn Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync> =
@@ -440,11 +479,10 @@ where
 
     let mut bind_address = address;
     let mut runtimes = Vec::with_capacity(worker_count);
-    for _ in 0..worker_count {
+    for shard_index in 0..worker_count {
         let mut worker_options = options.clone();
-        if let Some(seed) = &shared_connection_id {
-            worker_options.connection_id_seed = Some(Arc::clone(seed));
-        }
+        worker_options.shard_index = shard_index as u64;
+        worker_options.shard_bits = shard_bits;
 
         let init = Arc::clone(&init);
         let handler = Arc::clone(&handler);
@@ -969,7 +1007,7 @@ mod tests {
     use super::*;
     use std::io::{self, Read, Write};
     use std::net::{Shutdown, TcpStream};
-    use std::sync::{Arc, Barrier, Mutex};
+    use std::sync::{Arc, Barrier, Mutex, OnceLock};
     use std::thread;
 
     #[test]
@@ -1211,6 +1249,84 @@ mod tests {
             .read_exact(&mut response)
             .expect("read delayed response");
         assert_eq!(&response, b"delayed");
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn shard_bits_for_is_ceil_log2() {
+        // 1 reactor needs no shard bits; otherwise we need enough bits to hold the
+        // largest shard index (worker_count - 1), rounding up to a power of two.
+        assert_eq!(shard_bits_for(0), 0);
+        assert_eq!(shard_bits_for(1), 0);
+        assert_eq!(shard_bits_for(2), 1);
+        assert_eq!(shard_bits_for(3), 2);
+        assert_eq!(shard_bits_for(4), 2);
+        assert_eq!(shard_bits_for(5), 3);
+        assert_eq!(shard_bits_for(8), 3);
+        assert_eq!(shard_bits_for(9), 4);
+        // Every shard index in `0..worker_count` must fit in `shard_bits` bits, so
+        // the low-bit encoding never collides two distinct shards.
+        for worker_count in 1..=64usize {
+            let bits = shard_bits_for(worker_count);
+            assert!((worker_count as u64 - 1) < (1u64 << bits.max(1)) || worker_count == 1);
+            assert!((worker_count as u64) <= (1u64 << bits) || bits == 0);
+        }
+    }
+
+    #[test]
+    fn sharded_mailbox_routes_replies_through_the_owning_shard() {
+        // Replies are sent back ONLY through the routed `TcpMailbox` (not through
+        // `TcpHandlerResult`), so every reply must be routed to the shard that
+        // accepted the connection.  A wrong shard mask would enqueue the reply on a
+        // reactor that never saw the connection — its owner would never write it
+        // and the client read would time out.  So a green run is end-to-end proof
+        // that `ConnectionId` shard-encoding + `TcpMailbox` routing agree.
+        let mailbox_slot: Arc<OnceLock<TcpMailbox>> = Arc::new(OnceLock::new());
+        let mailbox_for_handler = Arc::clone(&mailbox_slot);
+        let mut runtime = TcpRuntime::bind_kqueue_sharded(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            4,
+            move |info, bytes| {
+                if let Some(mailbox) = mailbox_for_handler.get() {
+                    mailbox.send(info.id, bytes.to_vec());
+                }
+                TcpHandlerResult::default()
+            },
+        )
+        .expect("bind sharded runtime");
+        let addr = runtime.local_addr();
+        // Publish the mailbox the handlers route through (set before serve starts).
+        mailbox_slot.set(runtime.mailbox()).ok();
+        let stop = runtime.stop_handle();
+        let server = thread::spawn(move || runtime.serve());
+
+        let client_count = 24usize;
+        let barrier = Arc::new(Barrier::new(client_count));
+        let mut clients = Vec::new();
+        for i in 0..client_count {
+            let barrier = Arc::clone(&barrier);
+            clients.push(thread::spawn(move || -> Result<Vec<u8>, String> {
+                barrier.wait();
+                let mut stream = TcpStream::connect(addr).map_err(|e| e.to_string())?;
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .map_err(|e| e.to_string())?;
+                let payload = format!("shard-reply-{i}").into_bytes();
+                stream.write_all(&payload).map_err(|e| e.to_string())?;
+                let mut echoed = vec![0u8; payload.len()];
+                stream.read_exact(&mut echoed).map_err(|e| e.to_string())?;
+                Ok(echoed)
+            }));
+        }
+
+        for (i, client) in clients.into_iter().enumerate() {
+            let echoed = client.join().expect("client thread").expect("client io");
+            assert_eq!(echoed, format!("shard-reply-{i}").into_bytes());
+        }
 
         stop.stop();
         let result = server.join().expect("server thread");
