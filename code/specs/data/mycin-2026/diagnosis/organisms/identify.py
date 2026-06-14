@@ -28,8 +28,11 @@ Usage:  python3 identify.py        (runs the demo scenarios)
 from __future__ import annotations
 
 import json
+import os
+import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -44,6 +47,12 @@ import derive_regimen as reg  # noqa: E402  (formulary set-cover + dose windows)
 # Threshold (normalized share across the differential) above which an organism is
 # kept "in play" and must be covered empirically. The leader is always included.
 IN_PLAY_SHARE = 0.12
+
+# A finding term/value is a single lowercase identifier (matches the closed
+# vocabulary). We validate before composing the .adj program so an externally-
+# sourced finding can never inject extra rulebook directives — the same boundary
+# discipline decide.py applies to case_id (CASE_ID_RE).
+TOKEN_RE = re.compile(r"\A[a-z][a-z0-9_]*\Z")
 
 # Map an organism hypothesis (organism-vocab) → the formulary's organism token
 # (treatment/antibiotics/formulary.json). Empiric pneumococcus is treated as
@@ -65,10 +74,18 @@ def run_differential(cli: Path, findings: dict[str, str]) -> list[dict]:
     return the ranked organisms. The case file is written INTO the rulebook's
     directory so the relative `import "organism-id.adj"` resolves, then removed."""
     lines = ['import "organism-id.adj"']
-    lines += [f"observe {f}({v})" for f, v in findings.items()]
-    case = HERE / "_tmp_identify.adj"
-    case.write_text("\n".join(lines) + "\n")
+    for f, v in findings.items():
+        if not (TOKEN_RE.match(f) and TOKEN_RE.match(v)):
+            raise ValueError(f"unsafe finding token {f!r}={v!r} (must match {TOKEN_RE.pattern})")
+        lines.append(f"observe {f}({v})")
+    # The case file must sit next to organism-id.adj for the relative import to
+    # resolve. Create it with mkstemp (O_EXCL, mode 0600, unpredictable name) so a
+    # predictable-name symlink/clobber/race can't redirect the write.
+    fd, name = tempfile.mkstemp(suffix=".adj", prefix="_tmp_identify_", dir=HERE)
+    case = Path(name)
     try:
+        with os.fdopen(fd, "w") as fh:
+            fh.write("\n".join(lines) + "\n")
         r = subprocess.run([str(cli), str(case)], capture_output=True, text=True)
         if r.returncode != 0:
             raise RuntimeError(f"adj-lang-cli exited {r.returncode}: {r.stderr}")
