@@ -355,6 +355,29 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("A"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Brainfuck — a NESTED-loop, multi-output program (LANG-FULL B1). The classic
+    // multiply-by-repeated-addition idiom `[>[->+>+<<]>>[-<<+>>]<<<-]` is a loop *inside*
+    // a loop that moves data across four cells: it computes 8 × 9 = 72 (`H`), printed by
+    // the first `.`; then `-------` brings the cell to 65 (`A`), printed by the second.
+    // The matrix's other BF cell is a single loop printing one char — this proves the
+    // backends lower **nested loops + multi-cell pointer movement + multiple `putchar`s**,
+    // not just one loop. Output: "HA".
+    Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: "++++++++>+++++++++<[>[->+>+<<]>>[-<<+>>]<<<-]>>.-------.",
+        expect: Expect::Stdout("HA"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Brainfuck — two sequential loops + two outputs (LANG-FULL B1). Builds 80 in a loop,
+    // `-` → 79 (`O`), prints; `----` → 75 (`K`), prints. Distinct loop labels + multi-output.
+    Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: "++++++++[>++++++++++<-]>-.----.",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
     // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to

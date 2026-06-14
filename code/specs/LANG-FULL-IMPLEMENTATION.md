@@ -141,10 +141,12 @@ backend immediately) come before the enabler-dependent items.
   defined semantics. **Decision point — surface to the user before implementing.**
 
 ### Brainfuck  (semantics complete; gap is cross-backend *execution* of real programs)
-- ☐ **B1** — Wire `,`/stdin input on each code-gen backend and **execute real programs
-  cross-backend**: cat (`,[.,]`), nested-loop multiply, and "Hello World!" — output checked
-  on native/LLVM/WASM/JVM/CLR, not just the VM. (Highest-signal: converts the biggest
-  smoke-test gap into real coverage with no new language features.)
+- ◑ **B1** — **execute real (non-input) programs cross-backend**, output-checked. ✅ A
+  nested-loop multiply program → stdout `"HA"` and a two-sequential-loop program → `"OK"`
+  now run on native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`), proving nested loops +
+  multi-cell pointer movement + multiple `putchar`s lower everywhere — not just the trivial
+  1-loop "A". ☐ Remaining: `,`/stdin programs (cat `,[.,]`) need per-backend stdin wiring —
+  a separate follow-up (B1-stdin); the no-input gap is the higher-signal one and is closed.
 
 ### Dartmouth BASIC
 - ✅ **BA0** — BASIC control flow on the code-gen backends. The real bug wasn't wasm
