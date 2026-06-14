@@ -303,9 +303,39 @@ group template:
 # next `/` is division; after an operator/opener/statement-keyword it is a
 # regex. `++`/`--` deliberately have no rule (Acorn leaves the flag unchanged).
 #
-# NOTE: template-literal substitutions (gap-044) are NOT handled here — the
-# closing `}` needs brace-depth tracking that conflicts with the div toggle;
-# that is a separate follow-up.
+# Template-literal substitutions (gap-044, first slice)
+# ======================================================
+#
+# A template literal with a substitution like `hello ${name}` emits:
+#
+#   TEMPLATE_HEAD  (`hello ${)   — opens the expression
+#   <expression tokens>          — e.g. NAME for `name`
+#   TEMPLATE_TAIL  (}`)          — closes the expression
+#
+# The closing `}` is ambiguous because the default/div flat modes inherit
+# RBRACE (which also starts with `}`), and RBRACE would win.  The fix is a
+# pair of flat modes:
+#
+#   `template`      — active right after TEMPLATE_HEAD/TEMPLATE_MIDDLE; a
+#                     flat mode so it inherits default's patterns (NAME,
+#                     NUMBER, …) while placing TEMPLATE_TAIL/MIDDLE own
+#                     patterns first so they win when `}` starts the next
+#                     token (empty-body case: `${}`).
+#
+#   `template_div`  — active after a value-producing token inside `${...}`
+#                     (mirrors the role of `div` outside templates); owns
+#                     SLASH_EQUALS/SLASH overrides AND TEMPLATE_TAIL/MIDDLE
+#                     so the closing `}` of e.g. `${name}` is recognised.
+#
+# Both modes are `set-mode` targets, so they are FLAT (inherit default
+# patterns) — no duplication of the full pattern set.
+#
+# First-slice limitation: works for `${singleExpr}` where the expression
+# body contains no nested `{ }` (object literals, blocks).  Operators like
+# `+`, `.`, `(` reset the mode back to `default`/`div`, losing the
+# template context.  Full brace-depth support is a follow-up (the F10
+# transition table can later add a depth guard when the lexer exposes it).
+# Closes closurec gap-044 for the common case.
 
 start_mode: default
 
@@ -313,7 +343,30 @@ group div:
   SLASH_EQUALS = "/="
   SLASH        = "/"
 
+group template_div:
+  SLASH_EQUALS    = "/="
+  SLASH           = "/"
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
 transitions:
+  # ── Template substitution entry/exit (gap-044, first slice) ──────────────
+  # After a template opener, enter flat `template` mode so TEMPLATE_TAIL/
+  # MIDDLE patterns are tried before the inherited RBRACE.
+  on TEMPLATE_HEAD   -> set-mode template
+  on TEMPLATE_MIDDLE -> set-mode template
+
+  # Inside `${...}`, after a value-producing NAME, switch to `template_div`
+  # (like `div` but still carries TEMPLATE_TAIL/MIDDLE as own patterns).
+  # The in_mode guard must come BEFORE the general NAME rule below, because
+  # first-match-wins would otherwise fire the general rule in template mode.
+  on NAME in template      -> set-mode template_div
+  on NAME in template_div  -> set-mode template_div
+
+  # Closing the substitution: TEMPLATE_TAIL is value-producing → div.
+  on TEMPLATE_TAIL -> set-mode div
+
+  # ── Regex-vs-division (gap-115, gap-119) ─────────────────────────────────
   # Value-producing tokens -> the next `/` is DIVISION. (One rule per line:
   # the transition parser reads each indented line as a complete rule.)
   on (NAME | NUMBER | STRING | REGEX | TEMPLATE_NO_SUB | PRIVATE_NAME | RPAREN | RBRACKET) -> set-mode div

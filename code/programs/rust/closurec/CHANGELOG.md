@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.127.0] - 2026-06-14
+
+### Fixed
+- **CLOSES gap-044 (first slice)** — template literal substitutions `${expr}`
+  are now lexed correctly for the common single-identifier case.  The
+  `es2025.tokens` grammar adds two new flat modes (`template` and
+  `template_div`) with `TEMPLATE_TAIL`/`TEMPLATE_MIDDLE` patterns at higher
+  priority than the inherited `RBRACE`, so the closing `}` after a simple
+  expression is recognised as a template closer, not a block-close.
+
+  A companion fix in `whitespace_only.rs`'s `needs_separator` function
+  prevents spurious whitespace from being inserted around the template
+  boundary: `TEMPLATE_HEAD`/`TEMPLATE_MIDDLE` end with `${` and
+  `TEMPLATE_MIDDLE`/`TEMPLATE_TAIL` start with `}` — both are
+  punctuator boundaries that never need a separator.
+
+  End-to-end fixtures `minify_template_subst` and `minify_tagged_subst` are
+  now **enforced** (un-ignored).  Harness: 451/451 non-skipped fixtures pass
+  (was 449/449 before these fixtures were added to the enforced set).
+
+  Documented limitation: template expressions containing operators (`.`, `+`,
+  `(`, `[`, …) or nested `{ }` reset the mode to `default`/`div`, losing the
+  template context.  Full brace-depth support is a follow-up.
+
 ## [0.126.0] - 2026-06-13
 
 ### Fixed
