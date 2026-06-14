@@ -35,5 +35,7 @@ All notable changes to this package will be documented in this file.
   unknown-command queues.
 - Thread attach completion summaries that combine attach action clearance with
   supervision-plan clearance for runtime handoff checks.
+- Thread attach route-handoff summaries that combine attach completion with
+  Network Data readiness, routing surface, and parent/router anchor checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.

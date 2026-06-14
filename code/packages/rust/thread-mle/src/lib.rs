@@ -1620,6 +1620,98 @@ pub fn summarize_thread_attach_completion(
     ThreadAttachCompletionSummary::from_action_and_supervision(action_summary, supervision_plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadAttachRouteHandoffSummary {
+    pub completion_summary: ThreadAttachCompletionSummary,
+    pub network_data_readiness: ThreadNetworkDataReadinessSummary,
+    pub required_handoff_check_count: usize,
+    pub passed_handoff_check_count: usize,
+    pub missing_handoff_check_count: usize,
+    pub attach_complete: bool,
+    pub network_data_ready: bool,
+    pub routing_surface_ready: bool,
+    pub parent_or_route_anchor_ready: bool,
+    pub route_handoff_ready: bool,
+}
+
+impl ThreadAttachRouteHandoffSummary {
+    pub fn from_completion_and_network_data(
+        completion_summary: ThreadAttachCompletionSummary,
+        network_data_readiness: ThreadNetworkDataReadinessSummary,
+    ) -> Self {
+        let neighbor_summary = completion_summary
+            .action_summary
+            .readiness_summary
+            .neighbor_summary;
+        let attach_complete = completion_summary.is_attach_complete();
+        let network_data_ready = network_data_readiness.is_network_data_ready();
+        let routing_surface_ready = neighbor_summary.has_routing_surface()
+            && network_data_readiness
+                .network_data_summary
+                .has_routing_data();
+        let parent_or_route_anchor_ready = neighbor_summary.has_parent()
+            || neighbor_summary.has_parent_candidate()
+            || neighbor_summary.local_role.can_route();
+        let checks = [
+            attach_complete,
+            network_data_ready,
+            routing_surface_ready,
+            parent_or_route_anchor_ready,
+        ];
+        let passed_handoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_handoff_check_count = checks.len();
+        let missing_handoff_check_count = required_handoff_check_count - passed_handoff_check_count;
+        let route_handoff_ready = missing_handoff_check_count == 0;
+
+        Self {
+            completion_summary,
+            network_data_readiness,
+            required_handoff_check_count,
+            passed_handoff_check_count,
+            missing_handoff_check_count,
+            attach_complete,
+            network_data_ready,
+            routing_surface_ready,
+            parent_or_route_anchor_ready,
+            route_handoff_ready,
+        }
+    }
+
+    pub fn is_route_handoff_ready(self) -> bool {
+        self.route_handoff_ready
+    }
+
+    pub fn has_handoff_gaps(self) -> bool {
+        self.missing_handoff_check_count > 0
+    }
+
+    pub fn needs_attach_completion(self) -> bool {
+        !self.attach_complete
+    }
+
+    pub fn needs_network_data(self) -> bool {
+        !self.network_data_ready
+    }
+
+    pub fn needs_routing_surface(self) -> bool {
+        !self.routing_surface_ready
+    }
+
+    pub fn needs_parent_or_route_anchor(self) -> bool {
+        !self.parent_or_route_anchor_ready
+    }
+}
+
+pub fn summarize_thread_attach_route_handoff(
+    completion_summary: ThreadAttachCompletionSummary,
+    network_data_readiness: ThreadNetworkDataReadinessSummary,
+) -> ThreadAttachRouteHandoffSummary {
+    ThreadAttachRouteHandoffSummary::from_completion_and_network_data(
+        completion_summary,
+        network_data_readiness,
+    )
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ThreadDiagnosticSnapshot {
     pub captured_at_ms: u64,
@@ -3054,6 +3146,102 @@ mod tests {
         assert!(summary.needs_supervision_clearance());
         assert!(summary.needs_attach_readiness());
         assert!(summary.needs_review_queue_clearance());
+    }
+
+    #[test]
+    fn attach_route_handoff_summary_marks_ready_child_route_surface() {
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_200,
+            10_000,
+        ));
+        let action_summary = ThreadAttachActionSummary::from_summaries(
+            MleMessageBatchSummary::empty(),
+            table.summary_at(1_250),
+        );
+        let completion_summary = summarize_thread_attach_completion(
+            action_summary,
+            table
+                .diagnostic_snapshot(None, 1_250)
+                .unwrap()
+                .supervision_plan(),
+        );
+        let border_router =
+            NetworkDataTlv::new(NetworkDataTlvType::BorderRouter, true, vec![0xaa]).unwrap();
+        let context = NetworkDataTlv::new(NetworkDataTlvType::Context, true, vec![0x01]).unwrap();
+        let prefix = ThreadPrefixData::new(
+            true,
+            3,
+            64,
+            vec![0xfd, 0x00, 0xab, 0xcd, 0, 0, 0, 0],
+            vec![border_router, context],
+        )
+        .unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap()]).unwrap();
+        let network_data_readiness =
+            summarize_thread_network_data_readiness(&network_data).unwrap();
+
+        let summary =
+            summarize_thread_attach_route_handoff(completion_summary, network_data_readiness);
+
+        assert_eq!(summary.completion_summary, completion_summary);
+        assert_eq!(summary.network_data_readiness, network_data_readiness);
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 4);
+        assert_eq!(summary.missing_handoff_check_count, 0);
+        assert!(summary.attach_complete);
+        assert!(summary.network_data_ready);
+        assert!(summary.routing_surface_ready);
+        assert!(summary.parent_or_route_anchor_ready);
+        assert!(summary.route_handoff_ready);
+        assert!(summary.is_route_handoff_ready());
+        assert!(!summary.has_handoff_gaps());
+        assert!(!summary.needs_attach_completion());
+        assert!(!summary.needs_network_data());
+        assert!(!summary.needs_routing_surface());
+        assert!(!summary.needs_parent_or_route_anchor());
+    }
+
+    #[test]
+    fn attach_route_handoff_summary_routes_blocked_network_and_anchor_work() {
+        let table = NeighborTable::new(DeviceRole::Child);
+        let action_summary = ThreadAttachActionSummary::from_summaries(
+            MleMessageBatchSummary::empty(),
+            table.summary_at(1_250),
+        );
+        let completion_summary = summarize_thread_attach_completion(
+            action_summary,
+            table
+                .diagnostic_snapshot(None, 1_250)
+                .unwrap()
+                .supervision_plan(),
+        );
+        let unknown = NetworkDataTlv::new(NetworkDataTlvType::Unknown(42), false, vec![3]).unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![unknown]).unwrap();
+        let network_data_readiness = network_data.summary().unwrap().readiness();
+
+        let summary = ThreadAttachRouteHandoffSummary::from_completion_and_network_data(
+            completion_summary,
+            network_data_readiness,
+        );
+
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 0);
+        assert_eq!(summary.missing_handoff_check_count, 4);
+        assert!(!summary.attach_complete);
+        assert!(!summary.network_data_ready);
+        assert!(!summary.routing_surface_ready);
+        assert!(!summary.parent_or_route_anchor_ready);
+        assert!(!summary.route_handoff_ready);
+        assert!(!summary.is_route_handoff_ready());
+        assert!(summary.has_handoff_gaps());
+        assert!(summary.needs_attach_completion());
+        assert!(summary.needs_network_data());
+        assert!(summary.needs_routing_surface());
+        assert!(summary.needs_parent_or_route_anchor());
     }
 
     #[test]
