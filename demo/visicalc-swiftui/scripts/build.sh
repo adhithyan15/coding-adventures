@@ -62,9 +62,21 @@ echo "Compiling Grid (SwiftUI)..."
   --package-search-path "$REPO_ROOT/code/packages" \
   -o "$OUT_DIR/Grid.swift"
 
-echo "Done. Generated:"
+echo "Building the spreadsheet engine (Rust → static lib) and vendoring it..."
+# The C ABI static library the SwiftUI app links (see Package.swift). Built
+# from the spreadsheet-capi crate and copied into Vendor/ (git-ignored).
+(cd "$REPO_ROOT/code/packages/rust" && cargo build -p spreadsheet-capi --release)
+mkdir -p "$DEMO_DIR/Vendor"
+cp "$REPO_ROOT/code/packages/rust/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/"
+# Refresh the C header the CSpreadsheetEngine module exposes.
+cp "$REPO_ROOT/code/packages/rust/spreadsheet-capi/include/spreadsheet.h" \
+   "$DEMO_DIR/Sources/CSpreadsheetEngine/include/spreadsheet.h"
+
+echo "Done. Generated views + vendored engine:"
 ls -la "$OUT_DIR"
+ls -la "$DEMO_DIR/Vendor"
 echo
 echo "To run the demo (Swift 5.9+ / Xcode 15+ required):"
 echo "  cd $DEMO_DIR"
-echo "  swift run"
+echo "  swift test    # headless: proves the grid is engine-computed + recomputes"
+echo "  swift run     # launches the SwiftUI app"

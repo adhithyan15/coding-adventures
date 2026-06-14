@@ -1,24 +1,27 @@
 // swift-tools-version: 5.9
 //
-// Package.swift — VisiCalc SwiftUI demo (VC2-swiftui).
+// Package.swift — VisiCalc SwiftUI demo (VC2-swiftui), now computing on the
+// shared Rust spreadsheet engine through its C ABI.
 //
-// Executable target. Run with:
+// Run with:
+//   bash scripts/build.sh    # generates the views + builds & vendors the engine
 //   swift run
-// or open in Xcode:
-//   open Package.swift
+//
+// The engine is the `spreadsheet-capi` Rust crate built to a static library
+// (libspreadsheet_capi.a) and vendored into Vendor/ by scripts/build.sh. The
+// `CSpreadsheetEngine` target exposes its C header (spreadsheet.h) as a
+// Swift-importable module; the executable links the static library.
 
 import PackageDescription
+import Foundation
+
+// Absolute path to this package, derived from the manifest's own location, so
+// the `-L` search path is correct regardless of the build's working directory.
+let packageDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent().path
 
 let package = Package(
     name: "VisiCalc",
     platforms: [
-        // SwiftUI's TextField + onSubmit + onExitCommand all need
-        // macOS 11+ / iOS 15+. mosaic-emit-swiftui emits the
-        // `.onChange(of: x) { handler }` form which Apple revised
-        // in macOS 14 / iOS 17 (the old single-closure signature
-        // is now deprecated, and the new two-or-three-arg form is
-        // required). Pick macOS 14 / iOS 17 to match the emitter's
-        // current output without an `if #available` workaround.
         .macOS(.v14),
         .iOS(.v17),
     ],
@@ -26,9 +29,24 @@ let package = Package(
         .executable(name: "visicalc", targets: ["VisiCalc"]),
     ],
     targets: [
+        // C module exposing the engine's C ABI header to Swift.
+        .target(name: "CSpreadsheetEngine"),
         .executableTarget(
             name: "VisiCalc",
-            path: "Sources/VisiCalc"
+            dependencies: ["CSpreadsheetEngine"],
+            path: "Sources/VisiCalc",
+            linkerSettings: [
+                // Link the Rust static library vendored by scripts/build.sh.
+                .unsafeFlags(["-L\(packageDir)/Vendor", "-lspreadsheet_capi"]),
+            ]
+        ),
+        .testTarget(
+            name: "VisiCalcTests",
+            dependencies: ["VisiCalc"],
+            path: "Tests/VisiCalcTests",
+            linkerSettings: [
+                .unsafeFlags(["-L\(packageDir)/Vendor", "-lspreadsheet_capi"]),
+            ]
         ),
     ]
 )

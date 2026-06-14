@@ -1,96 +1,61 @@
-# VisiCalc — SwiftUI demo
+# VisiCalc — SwiftUI demo (live, on the Rust engine)
 
-Fifth cross-backend visual demo (Phase 2 / VC2-swiftui), running on
-the SwiftUI framework (macOS / iOS).
+The SwiftUI VisiCalc demo (macOS / iOS), now **computing on the shared Rust
+`spreadsheet-core` engine** through its C ABI — the same engine the HTML and
+WebComponent demos run as WebAssembly. This is the first *native* backend wired
+to the engine: it proves the one-engine-everywhere architecture reaches Swift.
 
 ## What it shows
 
-A SwiftUI `WindowGroup` containing:
+- An auto-generated `FormulaBarView` and `GridView`
+  (`Sources/VisiCalc/Generated/`, produced by `mosaic-compile --backend
+  swiftui` from the shared `demo/visicalc/mosaic/*` sources).
+- The grid renders **engine-computed** values: a cross-footing budget where
+  column E totals each row, row 5 totals each column, and E5 is the grand total
+  (169) — all formulas evaluated by the Rust engine, not hard-coded.
+- A host control row (arrow keys to move the selection + an editable field)
+  drives `SpreadsheetModel.setSelected`, which writes to the engine and
+  recomputes. (The generated views are currently *display-only* — the SwiftUI
+  emitter lowers their inputs to constant bindings and emits no tap handlers —
+  so interactivity lives in the host layer.)
 
-- An auto-generated `FormulaBarView` (from
-  `Sources/VisiCalc/Generated/FormulaBar.swift`, produced by
-  `mosaic-compile --backend swiftui`).
-- A hand-written `GridView` (`Sources/VisiCalc/Generated/Grid.swift`),
-  visually matching what the eventual SwiftUI Grid emitter should
-  produce.
+## How it's wired to the engine
 
-Tap a cell — the formula bar updates with its value, the selected
-cell gets the excel-blue highlight. Type in the formula bar — it
-updates the local `@State`.
-
-Same hard-coded 5×5 sample data as the other VC2-* demos.
-
-## How to build the generated FormulaBar
-
-```bash
-bash scripts/build.sh
+```
+SwiftUI views (generated)  ──  SpreadsheetModel / SpreadsheetSession (Engine.swift)
+                                       │  sc_set_cell / sc_get_value … (C strings)
+                                       ▼
+   CSpreadsheetEngine (module map over spreadsheet.h)
+                                       │  links
+   libspreadsheet_capi.a  ←  spreadsheet-capi (Rust C ABI)  ←  spreadsheet-core
 ```
 
-Runs `mosaic-compile --backend swiftui` against the Mosaic sources
-and writes `Sources/VisiCalc/Generated/FormulaBar.swift`.
+`scripts/build.sh` regenerates the views, then builds the `spreadsheet-capi`
+crate to a static library and vendors it into `Vendor/` (git-ignored). The
+`CSpreadsheetEngine` target exposes the C header to Swift; `Package.swift` links
+the static library.
 
-## How to run the app
-
-### macOS
-
-```bash
-swift run                 # macOS terminal target
-```
-
-### iOS Simulator
+## Build, test, run
 
 ```bash
-xcodebuild -scheme VisiCalc \
-  -destination 'generic/platform=iOS Simulator' \
-  build
+bash scripts/build.sh   # regenerate views + build & vendor the engine
+swift test              # HEADLESS: proves the grid is engine-computed + recomputes
+swift run               # launch the SwiftUI app (macOS)
 ```
 
-Or open `Package.swift` in Xcode and pick an iOS simulator from
-the run-destination menu.  Both `VisiCalcApp.swift` and the
-generated `FormulaBar.swift` are cross-platform — `AppKit` /
-`.onExitCommand` are guarded by `#if os(macOS)` so the same
-source ships to macOS, iOS, iPadOS, tvOS, and watchOS.
+`swift test` (`Tests/VisiCalcTests`) asserts the grid values come from the
+engine (E1 = 38, A5 = 39, E5 = 169), that editing A1 15 → 115 recomputes the
+totals (E5 → 269), and that a formula entry computes with binary-op error
+propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it → `#DIV/0!`). Requires
+Swift 5.9+ / Xcode 15+.
 
-Requires Swift 5.9+ / Xcode 15+.  iOS Simulator runtime is
-optional but recommended.  Install via App Store on macOS.
+## Notes
 
-## Known emitter glitch
-
-The current `mosaic-emit-swiftui` pipeline emits a slightly broken
-`onSubmit` handler for the FormulaBar: `dispatch(.commit(value:
-formula))` references `commit(value:)`, but the `FormulaBarEvent`
-enum's `commit` case carries no associated value. The Swift
-compiler will reject this.
-
-Tracked as **UI31-swiftui-commit-arity** for the emitter team.
-Workarounds until the emitter ships a fix:
-
-1. Hand-patch the generated `FormulaBar.swift` after each run of
-   `build.sh`: change `dispatch(.commit(value: formula))` to
-   `dispatch(.commit)`.
-2. Or wait for the emitter fix and re-run `build.sh`.
-
-The fix belongs in
-`code/packages/rust/mosaic-emit-swiftui/src/pipeline.rs` — likely a
-one-line tweak to the `onSubmit` branch of `emit_host_input` to
-match the `commit` event's parameter list.
-
-## The Grid gap
-
-The `mosaic-emit-swiftui` pipeline doesn't yet support the `Grid`
-built-in primitive — only the React emitter does. Until the
-SwiftUI Grid emitter lands, `Sources/VisiCalc/Generated/Grid.swift`
-is hand-written.
-
-## Where this fits in the cross-backend demo plan
-
-| Phase | Demo | Status |
-|---|---|---|
-| 2 | VC2-html | ✅ |
-| 2 | VC2-webcomp | ✅ |
-| 2 | VC2-flutter | ✅ |
-| 2 | VC2-qt | ✅ |
-| 2 | VC2-swiftui (this one) | ✅ |
-| 2 | VC2-xaml | TODO |
-| 3 | multi-component artifact-builder shells | TODO |
-| 4 | demo/visicalc-all/ | TODO |
+- The grid and formula bar are now both pipeline-generated (the SwiftUI Grid
+  emitter and the FormulaBar `commit` arity, both noted as gaps in earlier
+  versions of this README, have since landed).
+- Known engine gap (tracked separately): `SUM` over a range containing an error
+  cell does not propagate the error (Excel does); binary operators do.
+- Known emitter gap: the SwiftUI views are display-only (constant bindings, no
+  tap handlers), so this demo supplies interactivity in the host layer rather
+  than through the generated views.
