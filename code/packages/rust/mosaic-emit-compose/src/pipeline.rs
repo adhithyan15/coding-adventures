@@ -1,12 +1,13 @@
 //! Jetpack Compose backend pipeline emitter.
 
+use std::collections::HashMap;
 use std::fmt::Write;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
-use mosstyle_compiler::StyleDef;
+use mosstyle_compiler::{StyleDef, StyleProp};
 
 /// Errors the Compose pipeline emitter can return.
 #[derive(Debug)]
@@ -40,14 +41,19 @@ pub struct PipelineEmitResult {
 
 /// Emit one Composable function for the three-file triple.
 ///
-/// `_style` is accepted but not yet consumed — Compose styling lands
-/// on `Modifier` chains, which v0.1.0 does not yet emit.  Future
-/// versions will lower mosstyle blocks to `Modifier.background(...)`
-/// / `Modifier.padding(...)` / etc.
+/// The `style` argument's `part` blocks are inlined as Jetpack Compose
+/// `Modifier` chains attached to layout nodes whose `part_name`
+/// matches.  See [`compose_box_style`] for the property→Modifier
+/// table.  State blocks (`state X { ... }`) are folded into the chain
+/// as nested `if/else` expressions when the matching node carries a
+/// `state-when-X: ( expr )` prop — see [`collect_state_layers`] for the
+/// predicate-extraction rules.  HostTable column-widths thread into
+/// each cell's `.width(columnWidths[_kotlinIdx<idx>].dp)` via
+/// [`TableContext`].
 pub fn from_pipeline(
     component: &MosmodelComponent,
     layout: &LayoutDef,
-    _style: &StyleDef,
+    style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
     let name = component.component.clone();
     // Defence in depth: validate the component name before we
@@ -68,16 +74,32 @@ pub fn from_pipeline(
     // to add its own package declaration.  In practice the host's
     // build script can prepend `package com.example.foo` before
     // wiring the file into the source set.
+    // Build the part-style map ONCE per emission and thread it through
+    // the layout walker.  Empty when the `.msl` declares no parts — the
+    // no-op path, where every Modifier-chain lookup returns nothing and
+    // emission proceeds identically to a styleless pipeline.
+    let part_styles = build_part_style_map(style);
+
+    writeln!(out, "import androidx.compose.foundation.background").unwrap();
+    writeln!(out, "import androidx.compose.foundation.border").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Box").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Spacer").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.fillMaxWidth").unwrap();
+    writeln!(out, "import androidx.compose.foundation.layout.height").unwrap();
+    writeln!(out, "import androidx.compose.foundation.layout.padding").unwrap();
+    writeln!(out, "import androidx.compose.foundation.layout.width").unwrap();
     writeln!(out, "import androidx.compose.foundation.text.BasicTextField").unwrap();
     writeln!(out, "import androidx.compose.material.Button").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
+    writeln!(out, "import androidx.compose.ui.Alignment").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
+    writeln!(out, "import androidx.compose.ui.graphics.Color").unwrap();
+    writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
+    writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
+    writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
     writeln!(out).unwrap();
 
     out.push_str(&emit_event_sealed_class(&name, &component.emits)?);
@@ -87,6 +109,7 @@ pub fn from_pipeline(
         &component.slots,
         &layout.root,
         &component.emits,
+        &part_styles,
     )?);
 
     Ok(PipelineEmitResult {
@@ -148,6 +171,7 @@ fn emit_composable_function(
     slots: &[SlotDecl],
     layout_root: &LayoutNode,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     writeln!(out, "@Composable").unwrap();
@@ -166,97 +190,843 @@ fn emit_composable_function(
     )
     .unwrap();
     writeln!(out, ") {{").unwrap();
-    out.push_str(&emit_compose_tree(layout_root, 1, component_name, emits)?);
+    out.push_str(&emit_compose_tree(
+        layout_root,
+        1,
+        component_name,
+        emits,
+        part_styles,
+        None,
+        None,
+        None,
+    )?);
     writeln!(out, "}}").unwrap();
     Ok(out)
+}
+
+// =====================================================================
+// Part-style lowering — `.msl` `part` blocks → Compose `Modifier`.
+//
+// Covers BASE styles AND state-block lowering (`state selected {...}`,
+// `state editing {...}`).  When a layout node carries one or more
+// `state-when-<name>: ( expr )` props (UI28-1 / Task #35), each state
+// block's overriding properties fold into the Modifier chain as nested
+// `if (cond) ... else ...` expressions.  Author surface mirrors the
+// React + SwiftUI emitters' `state-when-X` mechanism.
+//
+// The map shape is identical to the SwiftUI emitter's
+// `build_part_style_map` (`HashMap<String, Vec<StyleProp>>` keyed by
+// part name OR a composite `{part}:{state}` key) so the backends can
+// share downstream tooling that walks "which parts have author-declared
+// styles?".
+// =====================================================================
+
+/// Map from `part` name (or composite `{part}:{state}` key) to its
+/// style props.  Built once in [`from_pipeline`] and threaded through
+/// the walker.  Base-state entries are keyed by the part name verbatim
+/// (`cell`, `header-cell`, `sheet`).  State-block entries are keyed
+/// under a composite `{part}:{state}` key (`cell:selected`,
+/// `cell:editing`).  Empty when the `.msl` declares no parts — every
+/// lookup returns `None` and emission proceeds unchanged.
+type PartStyleMap = HashMap<String, Vec<StyleProp>>;
+
+/// Build a `part_name → props` map from a [`StyleDef`].  Mirrors the
+/// SwiftUI emitter's `build_part_style_map` — keeps props as
+/// `Vec<StyleProp>` (not a pre-rendered string) so we can re-lower per
+/// node with the right indentation.
+fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
+    let mut out = PartStyleMap::with_capacity(style.parts.len());
+    for part in &style.parts {
+        if !part.base.is_empty() {
+            out.insert(part.name.clone(), part.base.clone());
+        }
+        // State blocks surface under a composite `{part}:{state}` key so
+        // [`collect_state_layers`] can look up the matching state-when
+        // prop without re-walking `style.parts`.
+        for state in &part.states {
+            if !state.props.is_empty() {
+                let key = format!("{}:{}", part.name, state.state);
+                out.insert(key, state.props.clone());
+            }
+        }
+    }
+    out
+}
+
+// =====================================================================
+// HostTable column-widths threading — TableContext
+// =====================================================================
+
+/// Per-`HostTable` discovered context for column-width threading.
+///
+/// Compose has no direct analog of HTML's `<colgroup><col width>` — the
+/// kernel's `HostTableColGroup` block carries per-column widths via a
+/// slot which the .mll's
+/// `For ( each: slot: column-widths, as: w, index: cw ) { Col [col] ( width: ( w ) ) }`
+/// shape lifts to a list.  To render those widths in Compose we attach
+/// `.width(columnWidths[_kotlinIdx<idx>].dp)` to each cell `Box`, where
+/// `_kotlinIdx<idx>` is the `Int` shadow of the column index from the
+/// enclosing cell-emitting `For` (the `index:` binding is re-bound to a
+/// `Double` named `<idx>`, which cannot index a Kotlin `List`; the
+/// `_kotlinIdx<idx>` `Int` shadow can).
+///
+/// `column_widths_slot` is `None` when the HostTable has no
+/// `HostTableColGroup`, when the ColGroup does not contain a `For` whose
+/// body is a `Col`, or when the For's `each:` is not a `SlotRef`.  In
+/// any of those cases the emitter falls back to auto-sized cells.
+struct TableContext {
+    /// Kotlin identifier (e.g. `columnWidths`) referring to the
+    /// column-widths `List<Double>`.  `None` when no addressable
+    /// column-widths slot was discovered; cells render unchanged.
+    column_widths_slot: Option<String>,
+}
+
+/// Scan a `HostTable` node's immediate children for a
+/// `HostTableColGroup > For (each: slot: <name>) { Col ... }` shape and
+/// extract the column-widths slot name (camel-cased).  Mirrors the
+/// SwiftUI emitter's `extract_table_context`.
+fn extract_table_context(host_table: &LayoutNode) -> TableContext {
+    for child in &host_table.children {
+        if child.tag != "HostTableColGroup" {
+            continue;
+        }
+        for cg_child in &child.children {
+            if cg_child.tag != "For" {
+                continue;
+            }
+            let has_col = cg_child.children.iter().any(|n| n.tag == "Col");
+            if !has_col {
+                continue;
+            }
+            if let Some(slot) = find_slot_ref_prop(cg_child, "each") {
+                let camel = to_camel_case_first_lower(slot);
+                if validate_safe_identifier(&camel).is_ok() {
+                    return TableContext {
+                        column_widths_slot: Some(camel),
+                    };
+                }
+            }
+        }
+    }
+    TableContext {
+        column_widths_slot: None,
+    }
+}
+
+/// One state layer collected from a node's `state-when-<X>: ( expr )`
+/// props.  `cond_expr` is the Kotlin predicate text; `props` is the
+/// matching `state X { ... }` block's overriding props.  Order is
+/// declaration order on the node — the LAST layer becomes the
+/// OUTERMOST `if` condition (highest precedence), matching React +
+/// SwiftUI.
+struct StateLayer<'a> {
+    /// The Kotlin conditional expression text, e.g.
+    /// `( r == editRow && c == editCol )`.
+    cond_expr: String,
+    /// The state block's overriding properties.
+    props: &'a [StyleProp],
+}
+
+/// Walk a layout node's props for `state-when-<X>: ( expr )` entries and
+/// produce a list of [`StateLayer`] values the Modifier-chain builder
+/// can fold into nested `if/else` expressions.  Mirrors the SwiftUI
+/// emitter's `collect_state_layers`.
+///
+/// **Trust model.** The `cond_expr` text comes from the developer-
+/// supplied `.msl` / `.mll` source and is interpolated verbatim into
+/// the generated Kotlin inside a parenthesised position.  The moslayout
+/// parser already wraps `Expr` values in `( ... )`, so balanced parens
+/// keep the expression contained — the same posture React + SwiftUI
+/// take.
+fn collect_state_layers<'a>(
+    node: &LayoutNode,
+    part_name: &str,
+    part_styles: &'a PartStyleMap,
+) -> Vec<StateLayer<'a>> {
+    let mut layers = Vec::new();
+    for prop in &node.props {
+        let Some(state_name) = prop.name.strip_prefix("state-when-") else {
+            continue;
+        };
+        let state_key = format!("{part_name}:{state_name}");
+        let Some(state_props) = part_styles.get(&state_key) else {
+            // `state-when-X` declared without a matching `state X { }`
+            // block — silently skip (matches React/SwiftUI posture).
+            continue;
+        };
+        if state_props.is_empty() {
+            continue;
+        }
+        let cond_expr = match &prop.value {
+            LayoutPropValue::Expr(t) => t.clone(),
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Keyword(k) => k.clone(),
+            // EmitRef / Number / String don't make sense as boolean
+            // predicates — drop the whole layer.
+            _ => continue,
+        };
+        layers.push(StateLayer {
+            cond_expr,
+            props: state_props.as_slice(),
+        });
+    }
+    layers
+}
+
+/// Strip a trailing `px` suffix from a CSS length value.
+/// `strip_css_px("12px")` → `"12"`; `strip_css_px("auto")` → `"auto"`.
+fn strip_css_px(v: &str) -> &str {
+    v.strip_suffix("px").unwrap_or(v)
+}
+
+/// Convert a CSS color value to a Jetpack Compose `Color(...)`
+/// expression.
+///
+/// | input            | output                                |
+/// |------------------|---------------------------------------|
+/// | `#rrggbb`        | `Color(0xFFrrggbb)` (opaque)          |
+/// | `#rgb`           | nibble-expanded then `Color(0xFF..)`  |
+/// | `white`/`black`  | `Color.White` / `Color.Black`         |
+/// | `transparent`    | `Color.Transparent`                   |
+/// | anything else    | `Color.Transparent` (safe fallback)   |
+///
+/// Compose's `Color(0xAARRGGBB)` packs alpha in the high byte; CSS hex
+/// colors are opaque, so we force `FF` alpha.  Letters are upper-cased
+/// so the emitted literal is stable for the unit tests.
+fn compose_color_value(v: &str) -> String {
+    let trimmed = v.trim();
+
+    let expanded: String;
+    let hex_body: Option<&str> = if let Some(body) = trimmed.strip_prefix('#') {
+        if body.len() == 3 && body.chars().all(|c| c.is_ascii_hexdigit()) {
+            expanded = body.chars().flat_map(|c| [c, c]).collect::<String>();
+            Some(expanded.as_str())
+        } else if body.len() == 6 && body.chars().all(|c| c.is_ascii_hexdigit()) {
+            Some(body)
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
+    if let Some(hex) = hex_body {
+        return format!("Color(0xFF{})", hex.to_uppercase());
+    }
+
+    match trimmed {
+        "white" => "Color.White".to_string(),
+        "black" => "Color.Black".to_string(),
+        "transparent" | "clear" => "Color.Transparent".to_string(),
+        "red" => "Color.Red".to_string(),
+        "green" => "Color.Green".to_string(),
+        "blue" => "Color.Blue".to_string(),
+        "gray" | "grey" => "Color.Gray".to_string(),
+        _ => "Color.Transparent".to_string(),
+    }
+}
+
+/// Per-property "bucket" — collects the base value and per-state
+/// overrides for one logical mosstyle property.  `state_values[i]`
+/// holds the lowered Kotlin value (or `None`) for `state_layers[i]`.
+struct PropBucket {
+    base: Option<String>,
+    state_values: Vec<Option<String>>,
+    any_state_set: bool,
+}
+
+impl PropBucket {
+    fn new(layer_count: usize) -> Self {
+        Self {
+            base: None,
+            state_values: vec![None; layer_count],
+            any_state_set: false,
+        }
+    }
+    fn set_state(&mut self, idx: usize, v: String) {
+        self.state_values[idx] = Some(v);
+        self.any_state_set = true;
+    }
+    /// True if no base AND no state has this property — caller should
+    /// emit nothing.
+    fn empty(&self) -> bool {
+        self.base.is_none() && !self.any_state_set
+    }
+}
+
+/// Fold a [`PropBucket`] into a Kotlin expression string.
+///
+/// * Base-only → the raw base value.
+/// * State-only or state+base → a nested `if/else`, with the LAST state
+///   layer as the OUTERMOST condition.  Shape:
+///   `if (condN) valN else if (condN-1) valN-1 else ... base_or_default`.
+///
+/// When a layer doesn't override this property, its branch collapses
+/// into the next layer down (or the base) — no `if (c) base else base`.
+fn layer_value(bucket: &PropBucket, state_layers: &[StateLayer], default_when_unset: &str) -> String {
+    let mut inner = bucket
+        .base
+        .clone()
+        .unwrap_or_else(|| default_when_unset.to_string());
+    // First→last so the last layer wraps all earlier ones (outermost,
+    // highest precedence).  Kotlin `if/else` is an expression, so this
+    // composes right-associatively into the `else` arm.
+    for (i, layer) in state_layers.iter().enumerate() {
+        let v = bucket.state_values[i]
+            .clone()
+            .unwrap_or_else(|| inner.clone());
+        if v == inner {
+            continue;
+        }
+        inner = format!("if {} {} else {}", layer.cond_expr, v, inner);
+    }
+    inner
+}
+
+/// The Compose styling derived from a part's base props + state layers,
+/// split into the two places it lands:
+///   * `modifier` — the `.background/.border/.width/.height/.padding`
+///     chain spliced into the container's `Modifier`.
+///   * `content_alignment` — the `Box`'s `contentAlignment` argument
+///     (from `text-align`), or `None`.
+///   * `text_color` / `font` — pushed onto child `Text(...)` calls so
+///     the cell's monospace/size/color render (Compose has no inherited
+///     text style on a `Box`).
+struct ComposeStyle {
+    modifier: String,
+    content_alignment: Option<String>,
+    text_color: Option<String>,
+    font_family_mono: bool,
+    font_size: Option<String>,
+}
+
+/// Build the [`ComposeStyle`] for a part from its base props + state
+/// layers, with an optional injected column-width expression.
+///
+/// ## Property → Modifier table
+///
+/// | Mosstyle property              | Compose                                              |
+/// |--------------------------------|------------------------------------------------------|
+/// | `width: Npx` / injected        | `.width(N.dp)` / `.width(columnWidths[_kotlinIdxc].dp)` |
+/// | `height: Npx`                  | `.height(N.dp)`                                       |
+/// | `background: <color>` (+state) | `.background(if (..) C else ..)`                     |
+/// | `border-width` (+ `border-color`)| `.border(N.dp, <color>)`                           |
+/// | `padding: Npx`                 | `.padding(N.dp)` (emitted LAST)                      |
+/// | `text-align: left/center/right`| Box `contentAlignment = Alignment.CenterStart/Center/CenterEnd` |
+/// | `color: <color>` (+state)      | child `Text(color = ..)`                            |
+/// | `font-family: monospace`       | child `Text(fontFamily = FontFamily.Monospace)`     |
+/// | `font-size: Npx`               | child `Text(fontSize = N.sp)`                       |
+/// | anything else                  | silently skipped (matches React/SwiftUI v1)         |
+///
+/// ## Modifier ORDER (load-bearing)
+///
+/// `.width` → `.height` → `.background` → `.border` → `.padding`.  Size
+/// first so the background fills and the border strokes the full cell;
+/// padding LAST so the content insets inside the bordered box.
+///
+/// ## `injected_width`
+///
+/// When `Some(expr)` (a Kotlin expression such as
+/// `columnWidths[_kotlinIdxc]`), `.width(<expr>.dp)` is emitted and
+/// takes precedence over any `width` from the part's own props.
+fn compose_box_style(
+    base_props: &[StyleProp],
+    state_layers: &[StateLayer],
+    injected_width: Option<&str>,
+    chain_indent: usize,
+    // The inherited (sheet) text color this part sits under, used as the
+    // fall-back arm of the foreground `if/else` so a cell whose part only
+    // declares a `state selected { color: ... }` (no base color) keeps
+    // the sheet's color in the non-selected case rather than
+    // `Color.Unspecified`.
+    inherited_text_color: Option<&str>,
+) -> ComposeStyle {
+    let cpad = " ".repeat(chain_indent);
+    fn px_or_none(v: &str) -> Option<String> {
+        let stripped = strip_css_px(v);
+        if !stripped.is_empty()
+            && stripped
+                .chars()
+                .all(|c| c.is_ascii_digit() || c == '.' || c == '-')
+        {
+            Some(stripped.to_string())
+        } else {
+            None
+        }
+    }
+
+    fn content_alignment(v: &str) -> Option<&'static str> {
+        match v.trim() {
+            "left" | "start" => Some("Alignment.CenterStart"),
+            "center" => Some("Alignment.Center"),
+            "right" | "end" => Some("Alignment.CenterEnd"),
+            _ => None,
+        }
+    }
+
+    let layer_count = state_layers.len();
+    let mut width = PropBucket::new(layer_count);
+    let mut height = PropBucket::new(layer_count);
+    let mut padding = PropBucket::new(layer_count);
+    let mut background = PropBucket::new(layer_count);
+    let mut foreground = PropBucket::new(layer_count);
+    let mut font_size = PropBucket::new(layer_count);
+    let mut font_family_mono = PropBucket::new(layer_count);
+    let mut border_width = PropBucket::new(layer_count);
+    let mut border_color = PropBucket::new(layer_count);
+
+    // `text-align` is a static layout concern — base-only (a per-state
+    // alignment flip is never needed for the table/spreadsheet cases
+    // this v1 targets).
+    let mut text_align: Option<&'static str> = None;
+
+    let mut absorb = |p: &StyleProp, layer_idx: Option<usize>| {
+        let set = |bucket: &mut PropBucket, v: String| match layer_idx {
+            None => bucket.base = Some(v),
+            Some(i) => bucket.set_state(i, v),
+        };
+        match p.name.as_str() {
+            "width" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut width, v);
+                }
+            }
+            "height" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut height, v);
+                }
+            }
+            "padding" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut padding, v);
+                }
+            }
+            "background" | "background-color" => {
+                set(&mut background, compose_color_value(&p.value));
+            }
+            "color" => set(&mut foreground, compose_color_value(&p.value)),
+            "font-size" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut font_size, v);
+                }
+            }
+            "font-family" => {
+                if p.value.trim() == "monospace" {
+                    set(&mut font_family_mono, "true".to_string());
+                }
+            }
+            "border-width" => {
+                if let Some(v) = px_or_none(&p.value) {
+                    set(&mut border_width, v);
+                }
+            }
+            "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            "text-align" => {
+                if layer_idx.is_none() {
+                    if let Some(a) = content_alignment(&p.value) {
+                        text_align = Some(a);
+                    }
+                }
+            }
+            // border-style, border-collapse, outline, width:100% — skipped.
+            _ => {}
+        }
+    };
+
+    for p in base_props {
+        absorb(p, None);
+    }
+    for (i, layer) in state_layers.iter().enumerate() {
+        for p in layer.props {
+            absorb(p, Some(i));
+        }
+    }
+
+    // ----- Modifier chain (order is load-bearing — see doc comment) ---
+    let mut modifier = String::new();
+
+    // .width — injected column width wins over the part's own `width`.
+    if let Some(iw) = injected_width {
+        modifier.push_str(&format!("\n{cpad}.width({iw}.dp)"));
+    } else if !width.empty() {
+        let expr = layer_value(&width, state_layers, "0");
+        modifier.push_str(&format!("\n{cpad}.width({expr}.dp)"));
+    }
+
+    // .height
+    if !height.empty() {
+        let expr = layer_value(&height, state_layers, "0");
+        modifier.push_str(&format!("\n{cpad}.height({expr}.dp)"));
+    }
+
+    // .background — fills the sized box.  State that overrides
+    // background where there is no base value gets `Color.Transparent`
+    // in the "no value" branch (the Compose default for an unstyled box).
+    if !background.empty() {
+        let expr = layer_value(&background, state_layers, "Color.Transparent");
+        modifier.push_str(&format!("\n{cpad}.background({expr})"));
+    }
+
+    // .border — needs at least the width.  Default color `Color.Gray`
+    // when only the width is set.
+    if !border_width.empty() {
+        let w_expr = layer_value(&border_width, state_layers, "0");
+        let c_expr = if border_color.empty() {
+            "Color.Gray".to_string()
+        } else {
+            layer_value(&border_color, state_layers, "Color.Gray")
+        };
+        modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr})"));
+    }
+
+    // .padding — LAST so content insets inside the bordered box.
+    if !padding.empty() {
+        let expr = layer_value(&padding, state_layers, "0");
+        modifier.push_str(&format!("\n{cpad}.padding({expr}.dp)"));
+    }
+
+    // The foreground fall-back is the inherited sheet color when one is
+    // in scope; otherwise `Color.Unspecified` (Compose's "use the
+    // ambient default" sentinel).
+    let fg_default = inherited_text_color.unwrap_or("Color.Unspecified");
+    let text_color = if foreground.empty() {
+        None
+    } else {
+        Some(layer_value(&foreground, state_layers, fg_default))
+    };
+    let font_size_out = if font_size.empty() {
+        None
+    } else {
+        Some(layer_value(&font_size, state_layers, "0"))
+    };
+
+    ComposeStyle {
+        modifier,
+        content_alignment: text_align.map(str::to_string),
+        text_color,
+        font_family_mono: !font_family_mono.empty(),
+        font_size: font_size_out,
+    }
 }
 
 // =====================================================================
 // Layout tree walker
 // =====================================================================
 
+/// Inherited text styling threaded from a HostTable's `sheet` part (and
+/// overridden by a cell's own part) down to the `Text` / `BasicTextField`
+/// it wraps.  Compose has NO inherited text style on a `Box` the way CSS
+/// cascades `color` / `font` from a `<table>` to its `<td>`s — so the
+/// emitter threads the resolved style explicitly onto each leaf text
+/// call.  `color` may be a layered `if/else` expression (the cell's
+/// `state selected { color: ... }` override).
+#[derive(Clone, Default)]
+struct TextStyleCtx {
+    /// Kotlin `Color(...)` expression (possibly a layered `if/else`).
+    color: Option<String>,
+    /// `true` when `font-family: monospace` is in effect.
+    mono: bool,
+    /// Font size in CSS px (unit-stripped), threaded as `N.sp`.
+    size: Option<String>,
+}
+
+impl TextStyleCtx {
+    /// Render the `Text(...)` argument suffix, e.g.
+    /// `, color = Color(0xFF..), fontFamily = FontFamily.Monospace, fontSize = 12.sp`.
+    /// Empty when no text styling is in effect.
+    fn text_args(&self) -> String {
+        let mut s = String::new();
+        if let Some(c) = &self.color {
+            s.push_str(&format!(", color = {c}"));
+        }
+        if self.mono {
+            s.push_str(", fontFamily = FontFamily.Monospace");
+        }
+        if let Some(sz) = &self.size {
+            s.push_str(&format!(", fontSize = {sz}.sp"));
+        }
+        s
+    }
+}
+
+/// Extract the inherited text style a HostTable's `sheet` part defines —
+/// `color` / `font-family: monospace` / `font-size` — so descendant cells
+/// can thread it onto their `Text`.  Returns the default (no styling)
+/// when the part is absent.
+fn sheet_text_style(part_styles: &PartStyleMap, part_name: &str) -> TextStyleCtx {
+    let mut ctx = TextStyleCtx::default();
+    if let Some(props) = part_styles.get(part_name) {
+        for p in props {
+            match p.name.as_str() {
+                "color" => ctx.color = Some(compose_color_value(&p.value)),
+                "font-family" if p.value.trim() == "monospace" => ctx.mono = true,
+                "font-size" => ctx.size = Some(strip_css_px(&p.value).to_string()),
+                _ => {}
+            }
+        }
+    }
+    ctx
+}
+
+/// Compute the text style a cell's children should wear: start from the
+/// inherited sheet style, then override `color` from the cell's own part
+/// (base + any `state-when-*` color layers).  Font family / size keep the
+/// inherited values unless the part redefines them (the VisiCalc cell
+/// part doesn't, so the sheet's monospace/12sp flow through).
+fn cell_text_style(
+    inherited: &TextStyleCtx,
+    style: &ComposeStyle,
+) -> TextStyleCtx {
+    let mut ctx = inherited.clone();
+    if let Some(c) = &style.text_color {
+        ctx.color = Some(c.clone());
+    }
+    if style.font_family_mono {
+        ctx.mono = true;
+    }
+    if let Some(sz) = &style.font_size {
+        ctx.size = Some(sz.clone());
+    }
+    ctx
+}
+
 fn emit_compose_tree(
     node: &LayoutNode,
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    // Inherited text styling for any `Text` this subtree emits; consumed
+    // by `emit_text` / the inline-edit `BasicTextField`.
+    text_ctx: Option<&TextStyleCtx>,
+    // Threaded column-width Kotlin expression (e.g.
+    // `columnWidths[_kotlinIdxc]`) for THIS node only — `Some` exactly
+    // when this is a direct body child of a width-threading HostTable
+    // cell `For`.  Consumed by the container emitter (merged into the
+    // node's own Modifier chain).  NOT propagated to children.
+    injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     match node.tag.as_str() {
-        "Box" => emit_container(node, "Box", depth, component_name, emits),
-        "Row" => emit_container(node, "Row", depth, component_name, emits),
-        "Column" => emit_container(node, "Column", depth, component_name, emits),
-        // UI29 §2.1 — `HostTable` and its four structural sub-tags.
-        // Compose UI has no native `<table>` primitive, so we lower
-        // every variant to a vertical `Column`: the row order of the
-        // sub-tags (`HostTableHead` then `HostTableBody`, etc.) maps
-        // straight onto Compose's child-order vertical layout.  The
-        // moslayout-author's `Row` / `Box` children then place
-        // header/data cells inside each.  `HostTableColGroup` is a
-        // semantic hint with no visual analog in Compose; we emit it
-        // as a `Column` so its children still iterate, but the
-        // generated comment documents the no-op nature.
-        "HostTable" | "HostTableHead" | "HostTableBody" | "HostTableFoot" => {
-            emit_container(node, "Column", depth, component_name, emits)
+        "Box" => emit_container(node, "Box", depth, component_name, emits, part_styles, table_ctx, text_ctx, injected_width),
+        "Row" => emit_container(node, "Row", depth, component_name, emits, part_styles, table_ctx, text_ctx, injected_width),
+        "Column" => emit_container(node, "Column", depth, component_name, emits, part_styles, table_ctx, text_ctx, injected_width),
+        // UI29 §2.1 — `HostTable` lowers to a vertical `Column`.  Before
+        // walking its sections we discover the column-widths slot from a
+        // nested `HostTableColGroup` (TableContext) AND the inherited
+        // text style from the table's own `sheet` part, then thread both
+        // down so cells get explicit widths + monospace text.
+        "HostTable" => {
+            let ctx = extract_table_context(node);
+            let sheet_text = node
+                .part_name
+                .as_deref()
+                .map(|p| sheet_text_style(part_styles, p))
+                .unwrap_or_default();
+            emit_container(
+                node,
+                "Column",
+                depth,
+                component_name,
+                emits,
+                part_styles,
+                Some(&ctx),
+                Some(&sheet_text),
+                injected_width,
+            )
+        }
+        // The structural sub-tags lower to `Column` too, preserving the
+        // discovered table context + inherited text style so deeply
+        // nested Rows still see them.
+        "HostTableHead" | "HostTableBody" | "HostTableFoot" => {
+            emit_container(node, "Column", depth, component_name, emits, part_styles, table_ctx, text_ctx, injected_width)
         }
         "HostTableColGroup" => {
-            writeln!(
-                String::new(),
-                "{pad}// HostTableColGroup — no visual analog in Compose"
-            )
-            .unwrap();
-            // Fall through to a Column so any `Col` children iterate
-            // (they too are colgroup-only; emit as zero-size markers).
-            emit_container(node, "Column", depth, component_name, emits)
+            // The col-group itself produces no visible Compose output —
+            // column widths reach the cells via TableContext threading.
+            // We still emit a `Column` so any `Col` children iterate,
+            // documented as a no-op.
+            emit_container(node, "Column", depth, component_name, emits, part_styles, table_ctx, text_ctx, injected_width)
         }
         "Col" => {
             // `Col` is a column-width hint inside `HostTableColGroup`.
             // It has no Compose analog and never renders visually.
-            // Emit an empty `Spacer(Modifier.width(0.dp))` placeholder
-            // so the generated file still type-checks; downstream
-            // Compose Grid lowerings can refine this once a real
-            // width-binding flows.
             Ok(format!(
                 "{pad}// Col (column-width hint — no Compose analog)\n"
             ))
         }
-        "Text" => emit_text(node, depth),
+        "Text" => emit_text(node, depth, text_ctx),
         "Spacer" => Ok(format!(
             "{pad}Spacer(modifier = Modifier.weight(1f))\n"
         )),
         "HostInput" => emit_host_input(node, depth, component_name, emits),
         "HostButton" => emit_host_button(node, depth, component_name, emits),
         // UI29 §3.1 / §3.2 — meta-primitives.
-        "For" => emit_for_compose(node, depth, component_name, emits),
-        "If" => emit_if_compose(node, None, depth, component_name, emits),
-        // An orphan `Else` (one that did not immediately follow an
-        // `If`) renders as a documenting Kotlin comment so the file
-        // still compiles.  Paired `If`/`Else` is handled by the
-        // sibling walker (`emit_children`); this match arm only
-        // fires when an `Else` is reached through `emit_compose_tree`
-        // directly (e.g. a hand-built test fixture).
+        "For" => emit_for_compose(node, depth, component_name, emits, part_styles, table_ctx, text_ctx, /*width_thread=*/ false),
+        "If" => emit_if_compose(node, None, depth, component_name, emits, part_styles, table_ctx, text_ctx),
+        // An orphan `Else` renders as a documenting Kotlin comment.
         "Else" => Ok(format!("{pad}// orphan Else — ignored\n")),
         other => Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     }
 }
 
+/// Emit a `Box` / `Row` / `Column` container.
+///
+/// When the node carries a `part_name` whose `.msl` part declares
+/// styles (or a column width is injected), the container's `Modifier`
+/// is built from [`compose_box_style`] — `.width/.height/.background/`
+/// `.border/.padding` — and, for a `Box`, the `contentAlignment`
+/// argument is set from `text-align`.  Otherwise the container falls
+/// back to the styleless `Modifier.fillMaxWidth()` shape.
+///
+/// A `Row` inside a HostTable dispatches each child through
+/// [`emit_table_cell`] so a child `For` in cell-position picks up the
+/// threaded column width.
+#[allow(clippy::too_many_arguments)]
 fn emit_container(
     node: &LayoutNode,
     composable: &str,
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    text_ctx: Option<&TextStyleCtx>,
+    injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let mut out = String::new();
-    if node.children.is_empty() {
-        writeln!(out, "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{ }}").unwrap();
-        return Ok(out);
+
+    // Build the part-style chain for this node (if any).  The chain
+    // lines are indented one level deeper than the `Box(` opener so the
+    // multi-line `modifier = Modifier\n    .width(...)` reads cleanly.
+    let chain_indent = (depth + 2) * 4;
+    // The inherited sheet text color (if any) becomes the foreground
+    // fall-back arm of a cell's `color` `if/else`, so a `state selected`
+    // override doesn't blow away the sheet's base color in the
+    // not-selected case.
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style: Option<ComposeStyle> = if let Some(part) = &node.part_name {
+        let base_props = part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
+        let state_layers = collect_state_layers(node, part, part_styles);
+        if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
+            Some(compose_box_style(base_props, &state_layers, injected_width, chain_indent, inherited_color))
+        } else {
+            None
+        }
+    } else if injected_width.is_some() {
+        // Width injected onto a part-less node — still emit the frame.
+        Some(compose_box_style(&[], &[], injected_width, chain_indent, inherited_color))
+    } else {
+        None
+    };
+
+    let has_chain = style.as_ref().map(|s| !s.modifier.is_empty()).unwrap_or(false);
+    let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
+
+    // The text style children inherit: a styled Box may override the
+    // inherited (sheet) color / font for its own cell text.
+    let child_text: Option<TextStyleCtx> = match &style {
+        Some(s) => {
+            let inherited = text_ctx.cloned().unwrap_or_default();
+            Some(cell_text_style(&inherited, s))
+        }
+        None => text_ctx.cloned(),
+    };
+
+    // ---- opener -----------------------------------------------------
+    if has_chain || content_alignment.is_some() {
+        // Multi-line styled opener.
+        let modifier_pad = "    ".repeat(depth + 1);
+        writeln!(out, "{pad}{composable}(").unwrap();
+        if has_chain {
+            let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
+            writeln!(out, "{modifier_pad}modifier = Modifier{chain},").unwrap();
+        } else {
+            writeln!(out, "{modifier_pad}modifier = Modifier.fillMaxWidth(),").unwrap();
+        }
+        if let Some(a) = &content_alignment {
+            writeln!(out, "{modifier_pad}contentAlignment = {a},").unwrap();
+        }
+        if node.children.is_empty() {
+            writeln!(out, "{pad}) {{ }}").unwrap();
+            return Ok(out);
+        }
+        writeln!(out, "{pad}) {{").unwrap();
+    } else {
+        // Styleless fall-back — unchanged from v0.1.0.
+        if node.children.is_empty() {
+            writeln!(out, "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{ }}").unwrap();
+            return Ok(out);
+        }
+        writeln!(out, "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{").unwrap();
     }
-    writeln!(out, "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{").unwrap();
-    out.push_str(&emit_children_compose(&node.children, depth + 1, component_name, emits)?);
+
+    // ---- body -------------------------------------------------------
+    // A `Row` inside a HostTable routes each child through
+    // `emit_table_cell` so cell-position `For`s get width threading.
+    if composable == "Row" && table_ctx.is_some() {
+        for cell in &node.children {
+            out.push_str(&emit_table_cell(
+                cell,
+                depth + 1,
+                component_name,
+                emits,
+                part_styles,
+                table_ctx,
+                child_text.as_ref(),
+            )?);
+        }
+    } else {
+        out.push_str(&emit_children_compose(
+            &node.children,
+            depth + 1,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            child_text.as_ref(),
+            None,
+        )?);
+    }
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+/// Emit a single cell of a `Row` inside a `HostTable`.  When the cell is
+/// a `For` with both an `index:` binding AND a live `column_widths_slot`,
+/// route through [`emit_for_compose`]'s width-threading mode so each
+/// iteration's `Box` picks up `.width(columnWidths[_kotlinIdx<idx>].dp)`.
+/// Anything else falls through to the normal walker.
+#[allow(clippy::too_many_arguments)]
+fn emit_table_cell(
+    cell: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    text_ctx: Option<&TextStyleCtx>,
+) -> Result<String, PipelineEmitError> {
+    if let Some(ctx) = table_ctx {
+        if ctx.column_widths_slot.is_some()
+            && cell.tag == "For"
+            && find_keyword_prop(cell, "index").is_some()
+        {
+            return emit_for_compose(
+                cell,
+                depth,
+                component_name,
+                emits,
+                part_styles,
+                table_ctx,
+                text_ctx,
+                /*width_thread=*/ true,
+            );
+        }
+    }
+    emit_compose_tree(cell, depth, component_name, emits, part_styles, table_ctx, text_ctx, None)
 }
 
 /// Walk a list of sibling children with explicit If/Else pairing
@@ -265,11 +1035,19 @@ fn emit_container(
 /// the next sibling; if it's `Else`, both branches are handed to
 /// [`emit_if_compose`] together and the walker advances past both.
 /// All other nodes flow through [`emit_compose_tree`] unchanged.
+#[allow(clippy::too_many_arguments)]
 fn emit_children_compose(
     children: &[LayoutNode],
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    text_ctx: Option<&TextStyleCtx>,
+    // Threaded column-width expression to inject into each DIRECT plain
+    // child's Modifier chain.  `Some` only on the body-children dispatch
+    // of a width-threading HostTable cell `For`.
+    injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -283,11 +1061,23 @@ fn emit_children_compose(
                 depth,
                 component_name,
                 emits,
+                part_styles,
+                table_ctx,
+                text_ctx,
             )?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
-        out.push_str(&emit_compose_tree(child, depth, component_name, emits)?);
+        out.push_str(&emit_compose_tree(
+            child,
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            injected_width,
+        )?);
         i += 1;
     }
     Ok(out)
@@ -306,11 +1096,19 @@ fn emit_children_compose(
 /// accepts `Int == Double` via its `Number` coercion in `==` calls,
 /// so verbatim Expr text like `( r == editRow && c == editCol )`
 /// compiles without further widening.
+#[allow(clippy::too_many_arguments)]
 fn emit_for_compose(
     node: &LayoutNode,
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    text_ctx: Option<&TextStyleCtx>,
+    // When true AND a `column_widths_slot` is live AND this For has an
+    // `index:` binding, each iteration's body Box gets a threaded
+    // `.width(<slot>[_kotlinIdx<idx>].dp)`.  See [`emit_table_cell`].
+    width_thread: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_depth = depth + 1;
@@ -371,6 +1169,24 @@ fn emit_for_compose(
         ),
     };
 
+    // HostTable column-width threading.  When this For sits in
+    // cell-position inside a HostTable Row AND the TableContext carries a
+    // `column_widths_slot` AND we have an `index:` binding, each
+    // iteration's cell Box takes an explicit width
+    // `columnWidths[_kotlinIdx<idx>].dp` rather than auto-sizing.  We
+    // index with the `_kotlinIdx<idx>` Int SHADOW (not `<idx>`, which is
+    // re-bound to a `Double` for the predicates and cannot index a
+    // Kotlin `List`).  The width threads into the body child's Modifier
+    // chain (via `injected_width`) so it lands BEFORE background/border.
+    let width_expr: Option<String> = if width_thread {
+        match (&index_name, table_ctx.and_then(|c| c.column_widths_slot.as_deref())) {
+            (Some(idx), Some(slot)) => Some(format!("{slot}[_kotlinIdx{idx}]")),
+            _ => None,
+        }
+    } else {
+        None
+    };
+
     let mut out = header;
     if node.children.is_empty() {
         // Compose's content lambda is fine with no children — the
@@ -386,6 +1202,10 @@ fn emit_for_compose(
             inner_depth,
             component_name,
             emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            width_expr.as_deref(),
         )?);
     }
     writeln!(out, "{pad}}}").unwrap();
@@ -405,12 +1225,16 @@ fn emit_for_compose(
 /// no sibling `Else` after the `If`.  In that case we emit just the
 /// then-branch — Compose accepts a bare `if (cond) { … }` inside a
 /// layout block because the trailing-else type is `Unit?`.
+#[allow(clippy::too_many_arguments)]
 fn emit_if_compose(
     node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     depth: usize,
     component_name: &str,
     emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    text_ctx: Option<&TextStyleCtx>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_depth = depth + 1;
@@ -426,6 +1250,10 @@ fn emit_if_compose(
                     depth,
                     component_name,
                     emits,
+                    part_styles,
+                    table_ctx,
+                    text_ctx,
+                    None,
                 );
             }
             "false" => {
@@ -435,6 +1263,10 @@ fn emit_if_compose(
                         depth,
                         component_name,
                         emits,
+                        part_styles,
+                        table_ctx,
+                        text_ctx,
+                        None,
                     );
                 }
                 return Ok(String::new());
@@ -460,6 +1292,10 @@ fn emit_if_compose(
         inner_depth,
         component_name,
         emits,
+        part_styles,
+        table_ctx,
+        text_ctx,
+        None,
     )?);
     if let Some(e) = else_node {
         writeln!(out, "{pad}}} else {{").unwrap();
@@ -468,6 +1304,10 @@ fn emit_if_compose(
             inner_depth,
             component_name,
             emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            None,
         )?);
     }
     writeln!(out, "{pad}}}").unwrap();
@@ -487,7 +1327,11 @@ fn find_keyword_prop(node: &LayoutNode, prop_name: &str) -> Option<String> {
     })
 }
 
-fn emit_text(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitError> {
+fn emit_text(
+    node: &LayoutNode,
+    depth: usize,
+    text_ctx: Option<&TextStyleCtx>,
+) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let value_expr = match find_prop_value(node, "content") {
         Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_kotlin_string(s)),
@@ -495,7 +1339,17 @@ fn emit_text(node: &LayoutNode, depth: usize) -> Result<String, PipelineEmitErro
         Some(LayoutPropValue::Expr(text)) => text.clone(),
         _ => "\"\"".to_string(),
     };
-    Ok(format!("{pad}Text(text = {value_expr})\n"))
+    // When an inherited/cell text style is in effect, emit the value
+    // POSITIONALLY with the `color` / `fontFamily` / `fontSize` named
+    // args appended (`Text(( v ), color = ..., fontFamily = ...)`).
+    // With no styling, keep the labelled `Text(text = ...)` shape so the
+    // styleless passthrough (e.g. FormulaBar) is byte-identical to before.
+    let args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
+    if args.is_empty() {
+        Ok(format!("{pad}Text(text = {value_expr})\n"))
+    } else {
+        Ok(format!("{pad}Text({value_expr}{args})\n"))
+    }
 }
 
 fn emit_host_input(
@@ -806,13 +1660,255 @@ fn escape_kotlin_string(s: &str) -> String {
 mod tests {
     use super::*;
     use mosmodel_compiler::EmitParam;
-    use mosstyle_compiler::StyleDef;
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp};
 
     fn empty_style(name: &str) -> StyleDef {
         StyleDef {
             component_name: name.to_string(),
             parts: Vec::new(),
         }
+    }
+
+    // ── Style-fixture builders (UI34 Compose part-style inlining) ──────
+    fn sprop(name: &str, value: &str) -> StyleProp {
+        StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    fn part(name: &str, base: Vec<StyleProp>, states: Vec<StateStyle>) -> PartStyle {
+        PartStyle {
+            name: name.to_string(),
+            base,
+            states,
+        }
+    }
+
+    fn state(name: &str, props: Vec<StyleProp>) -> StateStyle {
+        StateStyle {
+            state: name.to_string(),
+            props,
+        }
+    }
+
+    fn style_def(name: &str, parts: Vec<PartStyle>) -> StyleDef {
+        StyleDef {
+            component_name: name.to_string(),
+            parts,
+        }
+    }
+
+    /// A `LayoutNode` carrying a `part_name` and props.
+    fn styled_node(
+        tag: &str,
+        part: &str,
+        props: Vec<LayoutProp>,
+        children: Vec<LayoutNode>,
+    ) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children,
+        }
+    }
+
+    /// Prop helpers for the state-when predicate + content bindings.
+    fn expr_prop(name: &str, text: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::Expr(text.to_string()),
+        }
+    }
+    fn slot_prop(name: &str, slot: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::SlotRef(slot.to_string()),
+        }
+    }
+
+    /// Build the canonical VisiCalc-shaped Grid fixture: a HostTable
+    /// `[sheet]` → HostTableColGroup (For/Col over `column-widths`) →
+    /// HostTableHead (Row → For → Box `[header-cell]` → Text) →
+    /// HostTableBody (For rows → Row → For cells → Box `[cell]` with
+    /// `state-when-selected` / `state-when-editing` predicates → If/Else).
+    /// Returns the `(component, layout, style)` triple the tests run
+    /// through `from_pipeline`.
+    fn visicalc_grid_triple() -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let m = component(
+            "Grid",
+            vec![
+                slot("column-headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "viewport-rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+                slot("column-widths", SlotType::List(Box::new(ListInnerType::Number)), true),
+                slot("selected-row", SlotType::Number, true),
+                slot("selected-col", SlotType::Number, true),
+                slot("edit-row", SlotType::Number, true),
+                slot("edit-col", SlotType::Number, true),
+                slot("edit-content", SlotType::Text, true),
+            ],
+            vec![
+                emit_decl("onFormulaChange", vec![param("value", EmitPayloadType::Text)]),
+                emit_decl("onEditCommit", vec![]),
+                emit_decl("onEditCancel", vec![]),
+            ],
+        );
+
+        // HostTableColGroup → For (each: column-widths, index: cw) { Col }
+        let colgroup = node(
+            "HostTableColGroup",
+            vec![],
+            vec![node(
+                "For",
+                vec![
+                    slot_prop("each", "column-widths"),
+                    LayoutProp { name: "as".into(), value: LayoutPropValue::Keyword("w".into()) },
+                    LayoutProp { name: "index".into(), value: LayoutPropValue::Keyword("cw".into()) },
+                ],
+                vec![LayoutNode {
+                    tag: "Col".into(),
+                    part_name: Some("col".into()),
+                    props: vec![],
+                    children: vec![],
+                }],
+            )],
+        );
+
+        // HostTableHead → Row[header-row] → For(headers, index: ch) → Box[header-cell] → Text
+        let head = node(
+            "HostTableHead",
+            vec![],
+            vec![styled_node(
+                "Row",
+                "header-row",
+                vec![],
+                vec![node(
+                    "For",
+                    vec![
+                        slot_prop("each", "column-headers"),
+                        LayoutProp { name: "as".into(), value: LayoutPropValue::Keyword("h".into()) },
+                        LayoutProp { name: "index".into(), value: LayoutPropValue::Keyword("ch".into()) },
+                    ],
+                    vec![styled_node(
+                        "Box",
+                        "header-cell",
+                        vec![],
+                        vec![node("Text", vec![expr_prop("content", "( h )")], vec![])],
+                    )],
+                )],
+            )],
+        );
+
+        // HostTableBody → For(rows, index: r) → Row[data-row] → For(cells, index: c)
+        //   → Box[cell] (state-when-selected/editing) → If(editing) HostInput Else Text
+        let cell = styled_node(
+            "Box",
+            "cell",
+            vec![
+                expr_prop("state-when-selected", "( r == selectedRow && c == selectedCol )"),
+                expr_prop("state-when-editing", "( r == editRow && c == editCol )"),
+            ],
+            vec![
+                node(
+                    "If",
+                    vec![expr_prop("when", "( r == editRow && c == editCol )")],
+                    vec![node(
+                        "HostInput",
+                        vec![
+                            slot_prop("value", "edit-content"),
+                            LayoutProp {
+                                name: "onChange".into(),
+                                value: LayoutPropValue::EmitRef("onFormulaChange".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                ),
+                node(
+                    "Else",
+                    vec![],
+                    vec![node("Text", vec![expr_prop("content", "( v )")], vec![])],
+                ),
+            ],
+        );
+        let body = node(
+            "HostTableBody",
+            vec![],
+            vec![node(
+                "For",
+                vec![
+                    slot_prop("each", "viewport-rows"),
+                    LayoutProp { name: "as".into(), value: LayoutPropValue::Keyword("row".into()) },
+                    LayoutProp { name: "index".into(), value: LayoutPropValue::Keyword("r".into()) },
+                ],
+                vec![styled_node(
+                    "Row",
+                    "data-row",
+                    vec![],
+                    vec![node(
+                        "For",
+                        vec![
+                            LayoutProp { name: "each".into(), value: LayoutPropValue::Keyword("row".into()) },
+                            LayoutProp { name: "as".into(), value: LayoutPropValue::Keyword("v".into()) },
+                            LayoutProp { name: "index".into(), value: LayoutPropValue::Keyword("c".into()) },
+                        ],
+                        vec![cell],
+                    )],
+                )],
+            )],
+        );
+
+        let table = styled_node("HostTable", "sheet", vec![], vec![colgroup, head, body]);
+        let l = layout("Grid", table);
+
+        let s = style_def(
+            "Grid",
+            vec![
+                part(
+                    "sheet",
+                    vec![
+                        sprop("font-family", "monospace"),
+                        sprop("font-size", "12px"),
+                        sprop("color", "#cccccc"),
+                        sprop("background", "#1e1e1e"),
+                    ],
+                    vec![],
+                ),
+                part(
+                    "cell",
+                    vec![
+                        sprop("border-width", "1px"),
+                        sprop("border-style", "solid"),
+                        sprop("border-color", "#3f3f46"),
+                        sprop("padding", "2px"),
+                        sprop("height", "22px"),
+                        sprop("text-align", "right"),
+                    ],
+                    vec![
+                        state("selected", vec![sprop("background", "#264f78"), sprop("color", "#ffffff")]),
+                        state("editing", vec![sprop("background", "#1f4f3f")]),
+                    ],
+                ),
+                part(
+                    "header-cell",
+                    vec![
+                        sprop("background", "#2d2d30"),
+                        sprop("color", "#9d9d9d"),
+                        sprop("text-align", "center"),
+                        sprop("border-width", "1px"),
+                        sprop("border-color", "#3f3f46"),
+                    ],
+                    vec![],
+                ),
+            ],
+        );
+
+        (m, l, s)
     }
 
     fn component(name: &str, slots: Vec<SlotDecl>, emits: Vec<EmitDecl>) -> MosmodelComponent {
@@ -1271,6 +2367,132 @@ mod tests {
         assert!(
             out.matches("Column(modifier = Modifier.fillMaxWidth())").count() >= 3,
             "expected at least 3 Column blocks (table + head + body), got:\n{out}"
+        );
+    }
+
+    // ── UI34 Compose part-style inlining (the spreadsheet fix) ─────────
+
+    /// Body cell `Box [cell]` threads the column width from the
+    /// enclosing cell `For`'s Int index shadow (`_kotlinIdxc`), NOT the
+    /// `Double`-rebound `c` (which can't index a Kotlin `List`).
+    #[test]
+    fn body_cell_threads_column_width_via_int_index_shadow() {
+        let (m, l, s) = visicalc_grid_triple();
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains(".width(columnWidths[_kotlinIdxc].dp)"),
+            "expected Int-shadow width index, got:\n{out}"
+        );
+        // Header cells thread the header For's index shadow.
+        assert!(
+            out.contains(".width(columnWidths[_kotlinIdxch].dp)"),
+            "expected header width index, got:\n{out}"
+        );
+    }
+
+    /// Body cell emits the full Modifier chain: border, padding, height.
+    #[test]
+    fn body_cell_emits_border_padding_height() {
+        let (m, l, s) = visicalc_grid_triple();
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains(".border(1.dp, Color(0xFF3F3F46))"), "border:\n{out}");
+        assert!(out.contains(".padding(2.dp)"), "padding:\n{out}");
+        assert!(out.contains(".height(22.dp)"), "height:\n{out}");
+    }
+
+    /// The two `state-when-*` predicates fold into ONE nested `if/else`
+    /// background expression — editing (last layer) is the OUTERMOST
+    /// condition, then selected, then the Transparent base.
+    #[test]
+    fn body_cell_state_when_folds_into_if_else_background() {
+        let (m, l, s) = visicalc_grid_triple();
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains(
+                ".background(if ( r == editRow && c == editCol ) Color(0xFF1F4F3F) \
+                 else if ( r == selectedRow && c == selectedCol ) Color(0xFF264F78) \
+                 else Color.Transparent)"
+            ),
+            "expected folded state background, got:\n{out}"
+        );
+    }
+
+    /// Body cell is a `Box` with `contentAlignment = Alignment.CenterEnd`
+    /// (from `text-align: right`).
+    #[test]
+    fn body_cell_uses_content_alignment_center_end() {
+        let (m, l, s) = visicalc_grid_triple();
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains("contentAlignment = Alignment.CenterEnd,"),
+            "expected CenterEnd alignment, got:\n{out}"
+        );
+    }
+
+    /// Header cell carries the `#2d2d30` background + `Alignment.Center`,
+    /// and its Text wears the `header-cell` color `#9d9d9d`.
+    #[test]
+    fn header_cell_background_alignment_and_text_color() {
+        let (m, l, s) = visicalc_grid_triple();
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains(".background(Color(0xFF2D2D30))"), "header bg:\n{out}");
+        assert!(out.contains("contentAlignment = Alignment.Center,"), "header align:\n{out}");
+        assert!(
+            out.contains("color = Color(0xFF9D9D9D)"),
+            "expected header text color, got:\n{out}"
+        );
+    }
+
+    /// The `cell` part declares NO base color — only `state selected {
+    /// color: #ffffff }`.  The not-selected arm must fall back to the
+    /// `sheet`-inherited `#cccccc`, NOT `Color.Unspecified`, and the
+    /// inherited monospace / 12sp font flows down too.
+    #[test]
+    fn body_cell_text_inherits_sheet_color_and_font() {
+        let (m, l, s) = visicalc_grid_triple();
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains(
+                "color = if ( r == selectedRow && c == selectedCol ) \
+                 Color(0xFFFFFFFF) else Color(0xFFCCCCCC)"
+            ),
+            "expected selected→white / base→inherited-#cccccc, got:\n{out}"
+        );
+        assert!(
+            out.contains("fontFamily = FontFamily.Monospace, fontSize = 12.sp"),
+            "expected inherited monospace/size on cell text, got:\n{out}"
+        );
+    }
+
+    /// Regression: a styled cell `Box` must NEVER fall back to the
+    /// styleless `Box(modifier = Modifier.fillMaxWidth())` shape, and a
+    /// styleless component must NEVER gain a spurious styled chain.
+    #[test]
+    fn styled_grid_never_emits_fillmaxwidth_box_but_styleless_passes_through() {
+        let (m, l, s) = visicalc_grid_triple();
+        let styled = from_pipeline(&m, &l, &s).unwrap().output;
+        // Every Box in the styled Grid is a styled multi-line opener, so
+        // no `Box(modifier = Modifier.fillMaxWidth())` one-liners remain.
+        assert!(
+            !styled.contains("Box(modifier = Modifier.fillMaxWidth())"),
+            "styled grid leaked an unstyled Box, got:\n{styled}"
+        );
+
+        // A styleless pipeline (empty .msl) is byte-identical to the
+        // v0.1.0 passthrough — labelled Text, fillMaxWidth Box, no Color.
+        let plain_m = component("X", vec![], vec![]);
+        let plain_l = layout(
+            "X",
+            node("Box", vec![], vec![node("Text", vec![expr_prop("content", "( v )")], vec![])]),
+        );
+        let plain = from_pipeline(&plain_m, &plain_l, &empty_style("X")).unwrap().output;
+        assert!(
+            plain.contains("Box(modifier = Modifier.fillMaxWidth()) {"),
+            "styleless Box should keep fillMaxWidth, got:\n{plain}"
+        );
+        assert!(
+            plain.contains("Text(text = ( v ))") && !plain.contains("color ="),
+            "styleless Text should stay labelled with no color, got:\n{plain}"
         );
     }
 }
