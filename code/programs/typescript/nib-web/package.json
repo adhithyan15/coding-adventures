@@ -36,7 +36,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@coding-adventures/vite-plugin-lattice": "file:../../../packages/typescript/vite-plugin-lattice",
-    "@vitejs/plugin-react": "^4.3.0",
+    "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.0",
     "jsdom": "^25.0.0",
     "typescript": "~5.7.0",
