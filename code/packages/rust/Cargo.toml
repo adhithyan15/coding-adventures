@@ -733,6 +733,7 @@ members = [
     "conduit",
     "conduit-jni",
     "conduit-capi",
+    "conduit-dart-bridge",
     "irc-server-native-jni",
     "irc-server-capi",
     "smart-home-core",

@@ -1,0 +1,16 @@
+name: coding_adventures_conduit
+description: >
+  Sinatra/Express-style web framework for Dart 3 built over the conduit-capi
+  Rust cdylib (WEB12). Uses dart:ffi for zero-overhead native bindings.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+
+environment:
+  sdk: ^3.1.0
+
+dependencies:
+  ffi: ^2.1.0
+
+dev_dependencies:
+  test: ^1.25.0
+  coverage: ^1.9.0
