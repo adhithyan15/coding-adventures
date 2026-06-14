@@ -19,6 +19,8 @@ All notable changes to this package will be documented in this file.
 - `ZclReportOperatorSummary` plus `zcl_report_operator_summary()` for combining
   ZCL frame telemetry with attribute report readiness into operator-facing
   capture/backlog/review routing.
+- `ZclReportSignoffSummary` plus `zcl_report_signoff_summary()` for turning
+  operator readiness into final report capture signoff checks.
 - `encode_attribute_reports()` and `report_attributes_frame()` for generating
   typed ZCL Report Attributes payloads and foundation frames.
 
