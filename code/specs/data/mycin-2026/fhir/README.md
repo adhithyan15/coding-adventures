@@ -64,3 +64,39 @@ The penicillin allergy is carried out of the chart for therapy (a severe
   differential is driven by the clinical findings, not age math.
 - An `Observation` with only a free-text value (no interpretation flag) is treated
   as narrative for the decomposer rather than guessed into a value.
+
+## CH — de-identification + the chart→constraint on-ramp
+
+D1 maps coded resources to *diagnostic* findings. **CH** adds the two pieces the
+chart-as-constraints vision needs (`../CHART-AS-CONSTRAINTS.md`, CC-7):
+
+- **`deidentify.py`** — strips PHI from a FHIR Bundle up front (HIPAA **Safe Harbor**:
+  removes the 18 identifier classes — name/telecom/address/identifier/narrative — and
+  generalizes every date to the year). It is **de-identification only**: one-way, no
+  re-identification key, fully local, no network call. Crucially it strips *identity*, not
+  *medicine* — a CodeableConcept's `text`/`display` ("Penicillin", "End-stage renal
+  disease") and all codes/values/interpretation flags are preserved; only the Narrative
+  `text.div` and a `Reference.display` (which can echo a person's name) are dropped.
+- **`fhir_to_chartfacts.py`** — maps the de-identified chart into the **treatment**
+  constraint IR (`treatment/antibiotics/chart_to_cop.ChartFact`): allergy → drug-class
+  exclusion, ESRD / low eGFR → renal dose risk, a nephrotoxin med → interaction risk,
+  immunosuppression → organism-set shift, age, weight. Every recognized resource becomes a
+  provenance-bearing ChartFact; an unrecognized clinically-relevant one is a **discard with
+  a reason** (no silent drops).
+
+Worked end-to-end (`samples/chart_with_phi_bundle.json`, 0 model calls): a PHI-laden chart
+of a complex patient (penicillin allergy + ESRD + tacrolimus) → **de-identify** (no name /
+MRN / SSN / phone / address / exact date survives) → **ChartFacts** → the **constraint
+optimizer**, which **abstains** (β-lactams excluded by the allergy *and* vancomycin
+undosable under renal failure + nephrotoxin) with the conflict named — escalate to a
+specialist, never a fabricated or unsafe regimen. Privacy-first, decision-support only.
+
+**De-identification scope (audited):** dates are generalized to the year *by value shape*
+(Period / `value[x]` / extension / timing dates can't slip a key allow-list); the
+extension PHI value-types, `note`/Annotation free text, `valueString`/`valueMarkdown`,
+`meta.source`, Patient `link`, deceased flags and Reference `display` are dropped; ages
+over 89 are aggregated (`as_of_year`). **Known limitation (documented, not silent):** the
+clinical labels `CodeableConcept.text` / `Coding.display` are preserved for the engine and
+are *not* NER-scrubbed, so a locally-authored label like "Maria's UTI" would survive —
+`report['free_text_kept']` counts that residual surface so it's auditable. Real-PHI
+deployment should pair this with a free-text redaction pass.
