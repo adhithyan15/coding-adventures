@@ -128,9 +128,32 @@ fn resolve_src(frame: &VMFrame, srcs: &[Operand], idx: usize) -> Result<Value, V
 // Arithmetic helpers
 // ---------------------------------------------------------------------------
 
+/// Mask an integer result to the width named by an instruction's `type_hint`,
+/// then apply the legacy whole-module `u8_wrap` flag.
+///
+/// This is the register-arithmetic analogue of the byte-tape wrap (`store_byte`
+/// masks `& 0xFF`): a `u8`-typed `add` of `200 + 100` yields `44`, a `u4` op
+/// wraps mod-16, and `~x` on a `u8` flips only its 8 low bits.  Widths follow
+/// the same table as [`handle_cast`] (`u4`→`0xF`, `u8`→`0xFF`, `u16`→`0xFFFF`,
+/// `u32`→`0xFFFF_FFFF`); any other hint (`i64`, `u64`, `any`, …) is left at full
+/// machine width.  Signed narrow types (`i8`/`i16`/`i32`) are intentionally NOT
+/// masked here — correct two's-complement wrap needs sign-extension, which the
+/// `cast` op provides; the LANG-FULL frontends use the unsigned widths.
+///
+/// `u8_wrap` is the existing Brainfuck cell flag (the BF frontend widens its
+/// cell hint to `i64`, so its wrap comes from the flag, not the hint); applying
+/// it last keeps that behaviour intact while the hint mask handles typed
+/// register arithmetic.
 #[inline]
-fn wrap_int(v: i64, u8_wrap: bool) -> Value {
-    if u8_wrap { Value::Int(v & 0xFF) } else { Value::Int(v) }
+fn mask_result(v: i64, type_hint: &str, u8_wrap: bool) -> Value {
+    let v = match type_hint {
+        "u4" => v & 0xF,
+        "u8" => v & 0xFF,
+        "u16" => v & 0xFFFF,
+        "u32" => v & 0xFFFF_FFFF,
+        _ => v,
+    };
+    Value::Int(if u8_wrap { v & 0xFF } else { v })
 }
 
 fn int_srcs(
@@ -174,7 +197,7 @@ macro_rules! binary_arith_handler {
                 let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
                 int_srcs(frame, &instr.srcs)?
             };
-            let result = wrap_int(a $op b, ctx.u8_wrap);
+            let result = mask_result(a $op b, &instr.type_hint, ctx.u8_wrap);
             if let Some(dest) = &instr.dest {
                 ctx.frames.last_mut().unwrap().assign(dest, result.clone());
             }
@@ -193,7 +216,7 @@ fn handle_div(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         int_srcs(frame, &instr.srcs)?
     };
     if b == 0 { return Err(VMError::DivisionByZero); }
-    let result = wrap_int(a / b, ctx.u8_wrap);
+    let result = mask_result(a / b, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -206,7 +229,7 @@ fn handle_mod(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         int_srcs(frame, &instr.srcs)?
     };
     if b == 0 { return Err(VMError::DivisionByZero); }
-    let result = wrap_int(a % b, ctx.u8_wrap);
+    let result = mask_result(a % b, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -220,7 +243,7 @@ fn handle_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
             .as_i64()
             .ok_or_else(|| VMError::Custom("neg on non-integer".into()))?
     };
-    let result = wrap_int(-a, ctx.u8_wrap);
+    let result = mask_result(-a, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -236,7 +259,10 @@ macro_rules! binary_bitwise_handler {
                 let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
                 int_srcs(frame, &instr.srcs)?
             };
-            let result = Value::Int(a $op b);
+            // Mask to the result width so a narrow-typed bitwise op stays in
+            // range (`&`/`|`/`^` of in-range operands can't grow, but a typed
+            // result is kept canonical for downstream width-sensitive ops).
+            let result = mask_result(a $op b, &instr.type_hint, ctx.u8_wrap);
             if let Some(dest) = &instr.dest {
                 ctx.frames.last_mut().unwrap().assign(dest, result.clone());
             }
@@ -256,7 +282,9 @@ fn handle_not(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
             .as_i64()
             .ok_or_else(|| VMError::Custom("not on non-integer".into()))?
     };
-    let result = Value::Int(!a);
+    // Bitwise NOT is the op that most needs the width mask: `~x` on a `u8`
+    // must flip exactly 8 bits (`~0 == 255`, not `-1`).
+    let result = mask_result(!a, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -272,7 +300,9 @@ fn handle_shl(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // Clamp to 0..63 to prevent a panic in debug mode.  Rust panics on
     // `i64 << n` when n >= 64, and `n as u32` wraps negative n to a huge value.
     let shift = n.clamp(0, 63) as u32;
-    let result = Value::Int(a << shift);
+    // A left shift can push bits past the result width — mask them off so
+    // `1u8 << 7` stays `128` and `1u8 << 8` wraps to `0`.
+    let result = mask_result(a << shift, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -287,7 +317,9 @@ fn handle_shr(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     };
     // Same clamp as shl — prevents panic for out-of-range shift amounts.
     let shift = n.clamp(0, 63) as u32;
-    let result = Value::Int(a >> shift);
+    // A right shift never grows the value, but mask for consistency so the
+    // result stays canonical for its width.
+    let result = mask_result(a >> shift, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }

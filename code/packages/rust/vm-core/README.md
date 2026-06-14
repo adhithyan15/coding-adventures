@@ -68,6 +68,13 @@ masks to a byte; this is how Brainfuck runs on the VM, v0.4.0), `call`/`call_bui
 here unchanged — the matrix's six scalar languages all share this one interpreter
 (LANG-MATRIX Phase V).
 
+Integer arithmetic, bitwise, and shift results are **masked to the width named by
+the instruction's `type_hint`** (`u4`→`& 0xF`, `u8`→`& 0xFF`, `u16`, `u32`), so a
+`u8`-typed `add` of `200 + 100` wraps to `44` and `~x` on a `u8` flips 8 bits
+(LANG-FULL E2). Hints of `i64`/`u64`/`any` keep full machine width. This is the
+register-arithmetic analogue of the byte-tape `store_byte` mask, on top of the
+whole-module `with_u8_wrap()` flag below.
+
 ### `VMFrame` — per-call state
 
 One frame per active function call.  Holds a flat `registers: Vec<Value>` and a

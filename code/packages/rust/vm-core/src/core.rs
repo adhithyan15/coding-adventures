@@ -955,4 +955,79 @@ mod tests {
         let mut vm = VMCore::new();
         assert_eq!(vm.execute(&mut module, "main", &[]).unwrap(), Some(Value::Int(0)));
     }
+
+    // ---- E2: register-arithmetic width & wrap (mod-2ⁿ) ----
+
+    /// Run `op a b` with the given result `type_hint` and return the i64 value.
+    fn run_binop(op: &str, a: i64, b: i64, ty: &str) -> i64 {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(a)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(b)], "i64"),
+                IIRInstr::new(op, Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap().as_i64().unwrap()
+    }
+
+    /// Run `op a` (unary) with the given result `type_hint`.
+    fn run_unop(op: &str, a: i64, ty: &str) -> i64 {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(a)], "i64"),
+                IIRInstr::new(op, Some("r".into()), vec![Operand::Var("a".into())], ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).unwrap().unwrap().as_i64().unwrap()
+    }
+
+    #[test]
+    fn u8_arithmetic_wraps_mod_256() {
+        assert_eq!(run_binop("add", 200, 100, "u8"), 44);   // 300 & 0xFF
+        assert_eq!(run_binop("mul", 16, 16, "u8"), 0);      // 256 & 0xFF
+        assert_eq!(run_binop("sub", 0, 1, "u8"), 255);      // -1 & 0xFF
+        assert_eq!(run_binop("add", 255, 1, "u8"), 0);      // classic cell wrap
+    }
+
+    #[test]
+    fn u8_bitwise_not_flips_eight_bits() {
+        assert_eq!(run_unop("not", 0, "u8"), 255);          // ~0 over a byte
+        assert_eq!(run_unop("not", 0xF0, "u8"), 0x0F);
+    }
+
+    #[test]
+    fn u8_left_shift_masks_off_high_bits() {
+        assert_eq!(run_binop("shl", 1, 7, "u8"), 128);
+        assert_eq!(run_binop("shl", 1, 8, "u8"), 0);        // shifted past the byte
+        assert_eq!(run_binop("shl", 3, 6, "u8"), 192);      // 0b11000000
+    }
+
+    #[test]
+    fn u4_arithmetic_wraps_mod_16() {
+        assert_eq!(run_binop("add", 10, 10, "u4"), 4);      // 20 & 0xF
+        assert_eq!(run_unop("not", 0, "u4"), 15);
+    }
+
+    #[test]
+    fn u16_and_u32_widths_wrap() {
+        assert_eq!(run_binop("add", 60000, 10000, "u16"), 70000 & 0xFFFF); // 4464
+        assert_eq!(run_binop("mul", 0x1_0000, 0x1_0000, "u32"), 0);        // 2^32 & 0xFFFF_FFFF
+    }
+
+    #[test]
+    fn i64_hint_does_not_mask() {
+        // The width mask only fires for narrow hints; plain i64 keeps full width.
+        assert_eq!(run_binop("add", 200, 100, "i64"), 300);
+        assert_eq!(run_binop("mul", 16, 16, "i64"), 256);
+        assert_eq!(run_unop("not", 0, "i64"), -1);
+    }
 }

@@ -63,10 +63,19 @@ multiple languages; close an enabler before the features that depend on it.
   source→real-backend→execute for one `Prog` per language; this campaign adds many. No
   separate harness PR — every feature PR adds its executed `Prog`(s). *(Mechanism exists;
   enforced by the definition of done.)*
-- **E2 — Integer width & wrap semantics.** Model `u4`/`u8`/`u16`/`u32` wraparound
-  (mod-2ⁿ) consistently across all backends, so Nib/Oct arithmetic and bitwise-NOT are
-  *correct*, not "collapse to i64." (Brainfuck already proves the u8-tape pattern; this
-  generalises it to register values.)
+- **E2 — Integer width & wrap semantics.** ◑ *In progress (approach B — each backend
+  masks narrow-typed arithmetic by `type_hint`, mirroring the byte-tape precedent).* Model
+  `u4`/`u8`/`u16`/`u32` wraparound (mod-2ⁿ) consistently across all backends, so Nib/Oct
+  arithmetic and bitwise-NOT are *correct*, not "collapse to i64." (Brainfuck already proves
+  the u8-tape pattern; this generalises it to register values.)
+  - ✅ **vm-core** (1/6) — `mask_result(v, type_hint, u8_wrap)` masks every arithmetic /
+    bitwise / shift result to the hint width; unit-tested (`200u8+100u8=44`, `~0u8=255`,
+    `1u8<<8=0`, u4/u16/u32). LLVM already wraps natively (`u8`→`i8`).
+  - ☐ **jit-core**, ☐ **iir-to-wasm**, ☐ **iir-to-jvm-class-file**, ☐ **iir-to-cil-bytecode**
+    (mirror the per-backend byte-tape mask onto register arithmetic).
+  - ☐ **Integration** — wire Nib (then Oct) to emit narrow `type_hint`s for narrow-declared
+    values + an executed matrix proof (`200u8+100u8=44`, Nib unary `~`) across all backends;
+    flip N3-`~`, Nib N6/N7, Oct.
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
   literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
   already emit f64 ops; extend the rest.)*
