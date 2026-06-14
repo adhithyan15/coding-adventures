@@ -29,7 +29,7 @@ $server->serve;   # blocks until stopped
 ```
 Perl DSL (CodingAdventures::Conduit, ::Request, ::Response)
     handlers are subs; html/json/text/respond/halt/redirect helpers
-    │  Perl coderef ⇄ Rust (perl-bridge: call_coderef + interpreter lock)
+    │  Perl coderef ⇄ Rust (perl-bridge: call_coderef; dispatch inline on serve()'s thread)
     ▼
 Conduit (Rust XS cdylib, src/lib.rs)  ← boot_CodingAdventures__Conduit
     new_app / add_route / new_server / serve / serve_background / stop ...
@@ -39,25 +39,47 @@ conduit (WEB08 facade) → web-core → embeddable-http-server → tcp-runtime �
 
 ### The threading crux
 
-`web-core` dispatches HTTP requests on background Rust I/O threads. The Perl
-interpreter is **not** thread-safe — a `PerlInterpreter`'s data structures may
-only be touched by one OS thread at a time. Two concerns:
+> **Corrected after implementation.** The original draft of this section assumed
+> web-core dispatches requests on background I/O threads, requiring a per-call
+> interpreter lock + `PERL_SET_CONTEXT`. That is **not** how the engine actually
+> runs, and the first crash was a memory bug, not a threading one. The accurate
+> model is below.
 
-1. **Serialization.** Every dispatch acquires an `Arc<Mutex<()>>` (the "Perl
-   interpreter lock", the exact analog of the Lua port's lock) before calling
-   any Perl API. Perl code runs one-at-a-time even though requests arrive
-   concurrently.
+The embeddable HTTP engine runs its reactor **inline on the calling thread**.
+`HttpServer::bind` builds a single `TcpRuntime` (not the multi-worker
+`ShardedTcpRuntime`); `TcpRuntime::serve()` → `StreamReactor::serve()` runs the
+event loop and dispatches handlers on whatever thread called `serve()`. So when
+Perl calls `$server->serve()`, requests are handled **on the Perl interpreter's
+own thread** — exactly what a single-interpreter (non-`MULTIPLICITY`) Perl needs,
+since such an interpreter is bound to the thread that created it.
 
-2. **Interpreter context.** Perl finds its interpreter via the `dTHX` macro,
-   which on a `MULTIPLICITY`/`ithreads` build reads thread-local storage. A
-   web-core I/O thread (not created by Perl) has no TLS context, so we capture
-   the interpreter at `new_server` time (on the main Perl thread) and
-   `PERL_SET_CONTEXT` it on each dispatch thread under the lock. On a
-   non-`MULTIPLICITY` build the interpreter is a single global and the
-   set-context is a harmless no-op; the lock alone suffices.
+Consequences for this port:
 
-`serve()` blocks the calling (Perl) thread; `serve_background()` spawns a Rust
-thread for tests. Same lifecycle as every other port.
+1. **No per-request lock is needed for the foreground path.** Handlers never run
+   concurrently — the reactor processes them serially on the calling thread.
+   (A `Mutex<()>` still guards the dispatch routine defensively, but it is
+   uncontended on the foreground path.)
+
+2. **No context juggling is needed for the foreground path.** Because dispatch
+   happens on the original thread, `dTHX`/`PERL_SET_CONTEXT` resolve to the right
+   interpreter for free. The captured-context machinery (`get_context`/
+   `set_context`) is retained for the threaded path but is a no-op on a
+   single-interpreter build.
+
+3. **`serve_background()` is the only thread-spawning path** and is therefore the
+   only one that can corrupt a single-interpreter Perl (it calls Perl from a
+   freshly spawned OS thread). It is **gated to MULTIPLICITY/ithreads builds** in
+   the Perl `Server` class and croaks with guidance on a stock Perl.
+
+The original crash (SIGSEGV on the first dispatch) reproduced **single-threaded**,
+which is what unmasked the misdiagnosis. Root cause: `newSVpv(ptr, 0)` treats
+`len == 0` as "call `strlen(ptr)`", reading past a non-NUL-terminated empty Rust
+`&str` (the first empty field — `QUERY_STRING`). Fix: cross every Rust→Perl
+string with explicit length via `newSVpvn`.
+
+For concurrent E2E testing on a stock Perl, run `serve()` in the foreground and
+drive it from a **separate client process** — `t/04_server.t` runs the app as its
+own OS process and hits it with a raw HTTP/1.0 client.
 
 ## Required additions to `perl-bridge`
 
@@ -131,9 +153,11 @@ code/packages/perl/conduit/
 ├── required_capabilities.json   # ["rust","perl","cargo"]
 ├── src/lib.rs             # XS boot + native subs (new_app/add_route/new_server/serve/…)
 └── lib/CodingAdventures/
-    ├── Conduit.pm         # Application + DSL + response helpers + Server
-    ├── Conduit/Request.pm # Request object over the env hash
-    └── Conduit/Native.pm  # DynaLoader bootstrap of the cdylib
+    ├── Conduit.pm         # Application + DSL + response helpers + Server + DynaLoader bootstrap
+    └── Conduit/Request.pm # Request object over the env hash
+
+# The native XSUBs register directly into the CodingAdventures::Conduit::Native::
+# package from the Rust boot function — there is no separate Native.pm.
 └── t/
     ├── 01_response.t      # html/json/text/respond/halt/redirect shapes
     ├── 02_request.t       # env → Request, percent decoding, param/query/header
@@ -146,11 +170,18 @@ code/programs/perl/conduit-hello/   # 8-route demo + tests
 ## Tests (target: 30+)
 
 - Response/Request/Application unit tests (no server).
-- `04_server.t` E2E: bind on port 0, `serve_background`, fire HTTP via a tiny
-  socket client (no non-core deps), assert `/`, `/hello/:name`, POST `/echo`,
-  before-filter halt(503), redirect(302), not_found(404), on_error(500), query
-  params, server metadata. A wall-clock guard (`alarm`) bounds any hang.
-- `conduit-hello`: 8-route demo + integration tests.
+- `04_server.t` E2E: run the app as a **separate OS process** that binds on
+  port 0 and serves in the **foreground** (the reactor dispatches on its own
+  main thread — the model a stock single-interpreter Perl needs), publish the
+  chosen port, then fire HTTP from the test process via a core `IO::Socket::INET`
+  HTTP/1.0 client (no non-core deps). Asserts `/`, `/hello/:name`, POST `/echo`,
+  query params, before-filter halt(503), dying-handler→on_error(500),
+  not_found(404), redirect(302). A wall-clock guard (`alarm`) bounds any hang and
+  the server child is always reaped.
+- `conduit-hello`: full demo + `t/smoke.t` integration test (same launch-as-
+  process pattern).
+
+**Realized:** 79 assertions across `t/01`–`t/04` (exceeds the 30+ target).
 
 ## Out of scope
 

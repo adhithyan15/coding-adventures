@@ -436,3 +436,19 @@ Porting Conduit to Java over `web-core` via `jni-bridge` surfaced a cluster of J
 5. **A Rust panic must never unwind across `extern "C"`.** A poisoned `Mutex` makes `.lock().unwrap()` panic; if that happens inside a JNI entrypoint called from a JVM thread, the unwind crosses the FFI boundary = UB (usually a JVM abort). Use `.lock().unwrap_or_else(|e| e.into_inner())` (poison-tolerant), and null-check every peer `jlong` before `Box::from_raw`/deref so a use-after-close lifecycle bug degrades to a safe no-op instead of dereferencing a dangling pointer. Route handler *errors* as data (an `Outcome` enum), never as panics.
 
 Also: the security sub-agent flagged a `pct_decode` "off-by-one" (`i + 2 < len`) as HIGH — it was a false positive (`i+2 < len` ⟺ `i+2` is a valid index; a trailing `%XX` decodes fine). Always settle a claimed boundary bug with a targeted unit test before "fixing" it; here the fix would have introduced the bug.
+
+---
+
+## WEB11 Perl Conduit — the crash was `newSVpv(ptr, 0)`, NOT a threading wall
+
+**Date:** 2026-06-14
+
+**What happened:** The Perl Conduit cdylib SIGSEGV'd on the first request dispatch. I initially (wrongly) blamed non-threaded Perl + web-core worker threads. The real cause was a one-line memory bug, and the threading model is actually fine.
+
+**Two corrected findings:**
+
+1. **`newSVpv(ptr, len)` treats `len == 0` as "call `strlen(ptr)`".** Perl's `newSVpv` uses the C string length when you pass 0. An empty Rust `&str` (`""`) has a non-NUL-terminated pointer, so `strlen` reads out of bounds → segfault. The very first empty field (an empty `QUERY_STRING`) crashed it. **Fix: use `newSVpvn` (explicit length, never strlens) for ALL Rust→Perl string conversions** where the value can be empty. The crash reproduced single-threaded, which is what unmasked the misdiagnosis.
+
+2. **The embeddable-http-server serve path is single-threaded inline — it does NOT spawn.** `HttpServer::bind` builds a single `TcpRuntime` (not the `ShardedTcpRuntime`); `TcpRuntime::serve()` → `StreamReactor::serve()` runs the event loop on the *calling* thread and dispatches handlers inline. So foreground `serve()` runs handlers on the calling thread — perfect for a single-interpreter language. (The `ShardedTcpRuntime` that DOES `thread::spawn` per worker is a separate, unused-by-this-path API.) The only spawn was in my own cdylib's `serve_background`; that one path is unsafe for non-threaded Perl, so the Perl port serves in the foreground and tests fork a client process.
+
+**Rule:** When a foreign-language port over web-core crashes on dispatch, reproduce it **single-threaded** (foreground serve in a standalone process + curl) before blaming threads. And from Rust always cross the boundary with the explicit-length string constructor (`newSVpvn`, not `newSVpv`); the strlen-on-zero footgun is silent until an empty value hits it. For a single-interpreter language, prefer foreground `serve()` (the inline reactor runs handlers on the calling thread) and fork a client for concurrent E2E tests.
