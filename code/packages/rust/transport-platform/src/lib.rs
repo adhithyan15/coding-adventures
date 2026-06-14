@@ -326,6 +326,11 @@ pub trait TransportPlatform {
     /// The default returns [`PlatformError::Unsupported`]; the kqueue and epoll
     /// backends override it.  Taking the handle by value transfers ownership, so
     /// the sender must relinquish it (e.g. `into`/`IntoRawFd`) and never close it.
+    ///
+    /// Like [`accept`](Self::accept), this is a low-level primitive that performs
+    /// **no admission control** — it registers the socket unconditionally.  The
+    /// connection cap is enforced one layer up (the reactor's accept/adopt path),
+    /// so callers are responsible for not adopting more streams than they intend.
     fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
         // Drop the handle (closing it) so an unsupported platform doesn't leak the
         // socket, then report that adoption isn't available here.
