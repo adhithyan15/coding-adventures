@@ -32,6 +32,9 @@ All notable changes to this package will be documented in this file.
   and publish stages as one ordered package readiness view.
 - Hue package review-queue summaries that turn lifecycle stage blockers into
   release, spec, catalog, handoff, and publish acceptance queues.
+- Hue package acceptance summaries that combine lifecycle completion,
+  review-queue clearance, and publish-gate readiness into one package
+  acceptance gate.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
