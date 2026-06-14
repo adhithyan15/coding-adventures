@@ -80,8 +80,8 @@ use irc_framing::Framer;
 use irc_proto::{parse, serialize, ParseError};
 use irc_server::{ConnId, IRCServer, Response};
 use tcp_runtime::{
-    ConnectionId, PlatformError, StopHandle, TcpConnectionInfo, TcpHandlerResult, TcpMailbox,
-    TcpRuntime, TcpRuntimeOptions,
+    ConnectionId, PlatformError, ShardedStopHandle, ShardedTcpRuntime, TcpConnectionInfo,
+    TcpHandlerResult, TcpMailbox, TcpRuntime, TcpRuntimeOptions,
 };
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -90,6 +90,15 @@ use tcp_runtime::{
 // `tcp-runtime` is generic over the OS event backend.  We pick the right one per
 // target so the rest of the crate is platform-agnostic.  The per-connection
 // state parameter is `Framer` — each socket gets its own line reassembler.
+//
+// The runtime is a [`ShardedTcpRuntime`]: it runs *N* independent reactors on
+// *N* OS threads (one kqueue/epoll/IOCP instance each), with the kernel
+// load-balancing accepted connections across them via `SO_REUSEPORT`.  TCP
+// accept, reads, CRLF framing, and parsing all run in parallel across cores; only
+// the `IRCServer` state transition itself is serialized (by the shared mutex),
+// and that critical section is small relative to the per-message I/O.  A response
+// destined for a client on *another* shard is routed there by the shard-aware
+// `TcpMailbox` (each `ConnectionId` encodes its owning reactor).
 // ──────────────────────────────────────────────────────────────────────────────
 
 #[cfg(any(
@@ -99,13 +108,13 @@ use tcp_runtime::{
     target_os = "netbsd",
     target_os = "dragonfly"
 ))]
-type IrcRuntime = TcpRuntime<transport_platform::bsd::KqueueTransportPlatform, Framer>;
+type IrcRuntime = ShardedTcpRuntime<transport_platform::bsd::KqueueTransportPlatform, Framer>;
 
 #[cfg(target_os = "linux")]
-type IrcRuntime = TcpRuntime<transport_platform::linux::EpollTransportPlatform, Framer>;
+type IrcRuntime = ShardedTcpRuntime<transport_platform::linux::EpollTransportPlatform, Framer>;
 
 #[cfg(target_os = "windows")]
-type IrcRuntime = TcpRuntime<transport_platform::windows::WindowsTransportPlatform, Framer>;
+type IrcRuntime = ShardedTcpRuntime<transport_platform::windows::WindowsTransportPlatform, Framer>;
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Configuration
@@ -159,16 +168,43 @@ impl Default for IrcConfig {
 pub struct IrcReactorServer {
     runtime: Arc<Mutex<Option<IrcRuntime>>>,
     local_addr: SocketAddr,
-    stop_handle: StopHandle,
+    stop_handle: ShardedStopHandle,
     serving: Arc<AtomicBool>,
+    worker_count: usize,
+}
+
+/// The default number of reactor shards: one per available CPU (falling back to
+/// 1 if the platform can't report it).  This is what [`IrcReactorServer::bind`]
+/// uses; call [`IrcReactorServer::bind_with_worker_count`] to choose explicitly.
+fn default_worker_count() -> usize {
+    std::thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(1)
 }
 
 impl IrcReactorServer {
     /// Build the engine, bind the listener, and wire the IRC state machine onto
     /// the reactor.  The listener is bound here, so [`local_addr`](Self::local_addr)
     /// is valid as soon as this returns — before [`serve`](Self::serve) is called.
+    ///
+    /// Uses one reactor shard per CPU.  For a fixed shard count (e.g. in tests, or
+    /// to pin to a single thread) use [`bind_with_worker_count`](Self::bind_with_worker_count).
     pub fn bind(config: IrcConfig) -> io::Result<Self> {
-        // The IRC brain.  Shared (behind a Mutex) by all three reactor callbacks.
+        Self::bind_with_worker_count(config, default_worker_count())
+    }
+
+    /// Like [`bind`](Self::bind), but with an explicit number of reactor shards.
+    ///
+    /// `worker_count` is clamped to at least 1.  With `1`, the server runs a
+    /// single reactor (no `SO_REUSEPORT`), behaving like the original
+    /// single-threaded engine; with `N > 1`, the kernel load-balances connections
+    /// across `N` reactor threads.
+    pub fn bind_with_worker_count(config: IrcConfig, worker_count: usize) -> io::Result<Self> {
+        let worker_count = worker_count.max(1);
+
+        // The IRC brain.  A single shared state machine (behind a Mutex) serves
+        // *all* shards, so nick/channel namespaces stay server-global; the reactor
+        // threads contend on it only for the brief state transition per message.
         let server = Arc::new(Mutex::new(IRCServer::new(
             &config.server_name,
             config.motd.clone(),
@@ -183,14 +219,22 @@ impl IrcReactorServer {
         // connection, so the cell is always populated when a callback fires.
         let mailbox_cell: Arc<OnceLock<TcpMailbox>> = Arc::new(OnceLock::new());
 
-        let runtime = build_runtime(&config, Arc::clone(&server), Arc::clone(&mailbox_cell))
-            .map_err(into_io_error)?;
+        let runtime = build_runtime(
+            &config,
+            Arc::clone(&server),
+            Arc::clone(&mailbox_cell),
+            worker_count,
+        )
+        .map_err(into_io_error)?;
 
         let local_addr = runtime.local_addr();
         let stop_handle = runtime.stop_handle();
+        // Read back the actual shard count the runtime settled on.
+        let worker_count = runtime.worker_count();
 
         // Publish the mailbox.  `set` only fails if already set, which cannot
-        // happen here — we own the sole writer.
+        // happen here — we own the sole writer.  The mailbox is shard-aware, so a
+        // send to any connection is routed to the reactor that owns it.
         let _ = mailbox_cell.set(runtime.mailbox());
 
         Ok(Self {
@@ -198,6 +242,7 @@ impl IrcReactorServer {
             local_addr,
             stop_handle,
             serving: Arc::new(AtomicBool::new(false)),
+            worker_count,
         })
     }
 
@@ -243,6 +288,11 @@ impl IrcReactorServer {
     /// Whether the event loop is currently running.
     pub fn is_running(&self) -> bool {
         self.serving.load(Ordering::SeqCst)
+    }
+
+    /// The number of reactor shards (one OS thread each) this server runs.
+    pub fn worker_count(&self) -> usize {
+        self.worker_count
     }
 }
 
@@ -358,9 +408,11 @@ fn runtime_options(config: &IrcConfig) -> TcpRuntimeOptions {
 }
 
 /// Build the three reactor callbacks, each carrying its own clones of the shared
-/// `IRCServer` and mailbox cell, and bind the runtime.
+/// `IRCServer` and mailbox cell, and bind the sharded runtime.  The same callbacks
+/// run on every shard (they capture `Arc`s, so all shards share one brain and one
+/// mailbox cell), so no IRC logic is duplicated per reactor.
 macro_rules! bind_with {
-    ($bind:path, $config:expr, $server:expr, $mailbox:expr) => {{
+    ($bind:path, $config:expr, $worker_count:expr, $server:expr, $mailbox:expr) => {{
         let host = $config.host.clone();
 
         let connect_server = Arc::clone(&$server);
@@ -379,6 +431,7 @@ macro_rules! bind_with {
         $bind(
             (host.as_str(), $config.port),
             runtime_options($config),
+            $worker_count,
             move |info| {
                 catch_unwind(AssertUnwindSafe(|| {
                     handle_connect(&connect_server, &connect_mailbox, info)
@@ -415,8 +468,15 @@ fn build_runtime(
     config: &IrcConfig,
     server: Arc<Mutex<IRCServer>>,
     mailbox: Arc<OnceLock<TcpMailbox>>,
+    worker_count: usize,
 ) -> Result<IrcRuntime, PlatformError> {
-    bind_with!(TcpRuntime::bind_kqueue_with_state, config, server, mailbox)
+    bind_with!(
+        TcpRuntime::bind_kqueue_sharded_with_state,
+        config,
+        worker_count,
+        server,
+        mailbox
+    )
 }
 
 #[cfg(target_os = "linux")]
@@ -424,8 +484,15 @@ fn build_runtime(
     config: &IrcConfig,
     server: Arc<Mutex<IRCServer>>,
     mailbox: Arc<OnceLock<TcpMailbox>>,
+    worker_count: usize,
 ) -> Result<IrcRuntime, PlatformError> {
-    bind_with!(TcpRuntime::bind_epoll_with_state, config, server, mailbox)
+    bind_with!(
+        TcpRuntime::bind_epoll_sharded_with_state,
+        config,
+        worker_count,
+        server,
+        mailbox
+    )
 }
 
 #[cfg(target_os = "windows")]
@@ -433,8 +500,15 @@ fn build_runtime(
     config: &IrcConfig,
     server: Arc<Mutex<IRCServer>>,
     mailbox: Arc<OnceLock<TcpMailbox>>,
+    worker_count: usize,
 ) -> Result<IrcRuntime, PlatformError> {
-    bind_with!(TcpRuntime::bind_windows_with_state, config, server, mailbox)
+    bind_with!(
+        TcpRuntime::bind_windows_sharded_with_state,
+        config,
+        worker_count,
+        server,
+        mailbox
+    )
 }
 
 /// Translate a transport-layer [`PlatformError`] into a standard [`io::Error`]
@@ -478,6 +552,30 @@ mod tests {
             port: 0,
             ..IrcConfig::default()
         })
+        .expect("server binds");
+        let addr = server.local_addr();
+        let background = server.clone();
+        let handle = thread::spawn(move || background.serve());
+        (server, handle, addr)
+    }
+
+    /// Like `start_server`, but with an explicit number of reactor shards so a
+    /// test can deterministically exercise the multi-shard path regardless of how
+    /// many CPUs the runner has.
+    fn start_server_with_workers(
+        worker_count: usize,
+    ) -> (
+        IrcReactorServer,
+        thread::JoinHandle<io::Result<()>>,
+        SocketAddr,
+    ) {
+        let server = IrcReactorServer::bind_with_worker_count(
+            IrcConfig {
+                port: 0,
+                ..IrcConfig::default()
+            },
+            worker_count,
+        )
         .expect("server binds");
         let addr = server.local_addr();
         let background = server.clone();
@@ -593,6 +691,65 @@ mod tests {
 
         server.stop();
         handle.join().expect("server thread").expect("server exit");
+    }
+
+    #[test]
+    fn broadcast_works_across_multiple_shards() {
+        // Force 4 reactor shards so this exercises cross-shard fan-out even on a
+        // single-core CI runner: alice and bob may be accepted by DIFFERENT
+        // reactors, yet alice's PRIVMSG must still reach bob.  This is the
+        // end-to-end proof that the shard-routed mailbox delivers a response to
+        // the reactor that owns the target connection while one shared IRCServer
+        // brain keeps the channel membership consistent across shards.
+        let (server, handle, addr) = start_server_with_workers(4);
+        assert_eq!(server.worker_count(), 4);
+
+        let mut alice = connect(addr);
+        let mut bob = connect(addr);
+        register(&mut alice, "alice");
+        register(&mut bob, "bob");
+
+        alice.write_all(b"JOIN #shards\r\n").expect("alice joins");
+        bob.write_all(b"JOIN #shards\r\n").expect("bob joins");
+        let _ = read_until(&mut alice, "JOIN");
+        let _ = read_until(&mut bob, "JOIN");
+
+        alice
+            .write_all(b"PRIVMSG #shards :hello across shards\r\n")
+            .expect("alice privmsg");
+        let received = read_until(&mut bob, "hello across shards");
+        assert!(
+            received.contains("PRIVMSG") && received.contains("hello across shards"),
+            "bob should receive alice's broadcast across shards, got: {received:?}"
+        );
+
+        server.stop();
+        handle.join().expect("server thread").expect("server exit");
+    }
+
+    #[test]
+    fn worker_count_is_configured_and_clamped() {
+        let bind = |workers| {
+            IrcReactorServer::bind_with_worker_count(
+                IrcConfig {
+                    port: 0,
+                    ..IrcConfig::default()
+                },
+                workers,
+            )
+            .expect("server binds")
+        };
+        // 0 clamps to a single reactor; an explicit count is honoured verbatim.
+        assert_eq!(bind(0).worker_count(), 1);
+        assert_eq!(bind(1).worker_count(), 1);
+        assert_eq!(bind(3).worker_count(), 3);
+        // The default constructor picks at least one shard (one per CPU).
+        let default = IrcReactorServer::bind(IrcConfig {
+            port: 0,
+            ..IrcConfig::default()
+        })
+        .expect("server binds");
+        assert!(default.worker_count() >= 1);
     }
 
     #[test]

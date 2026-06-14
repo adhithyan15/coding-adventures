@@ -133,12 +133,25 @@ later PRs.
 
 ## Concurrency & ordering
 
-- `event_loop_threads` defaults to 1 (single reactor thread): connection
-  callbacks are serialized, so the `IRCServer` mutex is never contended and
-  per-connection frame ordering is trivially preserved.
-- `TcpMailbox` sends are themselves thread-safe, so a future sharded variant
-  remains correct (the mutex still serializes state mutation; the mailbox
-  serializes writes per connection).
+- **Sharded by default.** The engine runs on a `ShardedTcpRuntime` with one
+  reactor shard per CPU (`bind`); `bind_with_worker_count(config, n)` pins the
+  count, and `n = 1` reproduces the original single-reactor engine. Each shard is
+  an independent reactor on its own thread with its own kqueue/epoll/IOCP
+  instance; the kernel load-balances accepted connections across them via
+  `SO_REUSEPORT`.
+- **One shared brain.** All shards share a single `Arc<Mutex<IRCServer>>`, so the
+  nick/channel namespaces stay server-global. The mutex is held only for the
+  per-message state transition (`on_connect` / `on_message` / `on_disconnect`);
+  message serialization and mailbox dispatch happen *after* the guard is dropped,
+  so the serialized critical section is small relative to the parallel work
+  (accept, read, CRLF framing, parse, socket writes).
+- **Cross-shard delivery is automatic.** Every `ConnectionId` encodes its owning
+  shard in its low bits, so `TcpMailbox` routes a response to the reactor that
+  owns the target connection — a client on shard A can broadcast to a client on
+  shard B with no shared connection registry.
+- Per-connection frame ordering is preserved because each connection is owned by
+  exactly one reactor and its `Framer` lives in that reactor's per-connection
+  state; connections never migrate between shards.
 
 ---
 
