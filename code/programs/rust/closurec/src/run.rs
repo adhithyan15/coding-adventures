@@ -191,6 +191,12 @@ pub fn transform_source_with_cv(
     cv: Option<(
         &mut coding_adventures_correlation_vector::CVLog,
         &str,
+        // CLOC12.132: per-token CV IDs parallel to the full token
+        // array from `tokenize_javascript_typed`. Passed through to
+        // `whitespace_only_minify` so gap-rule drops get tombstones.
+        // Empty slice is safe: out-of-bounds accesses are silently
+        // skipped inside `whitespace_only_minify`.
+        &[String],
     )>,
 ) -> Result<String, CompilerError> {
     let es_version = map_language_in_to_es_version(config);
@@ -203,7 +209,17 @@ pub fn transform_source_with_cv(
     // Step 1 — compilation-level transform.
     let after_level = match config.compilation.level {
         CompilationLevel::WhitespaceOnly => {
-            whitespace_only::whitespace_only_minify(source, es_version)
+            // CLOC12.132: thread token_cv_ids into whitespace_only_minify
+            // as a re-borrow so the log and file CV ID remain available
+            // for the per-stage contribution block below.
+            let wo_cv = cv_pair.as_mut().map(|(log, id, ids)| {
+                (
+                    *log as &mut coding_adventures_correlation_vector::CVLog,
+                    *id,
+                    *ids,
+                )
+            });
+            whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
                 .map_err(CompilerError::Minify)?
         }
         // CLOC11.07+ will replace each of these with real passes.
@@ -213,7 +229,7 @@ pub fn transform_source_with_cv(
         | CompilationLevel::TranspileOnly => source.to_string(),
     };
 
-    if let Some((log, cv_id)) = cv_pair.as_mut() {
+    if let Some((log, cv_id, _token_ids)) = cv_pair.as_mut() {
         let mut meta = std::collections::HashMap::new();
         let (tag, extras): (&str, Vec<(&str, serde_json::Value)>) =
             match config.compilation.level {
@@ -274,7 +290,7 @@ pub fn transform_source_with_cv(
     )
     .map_err(CompilerError::Define)?;
 
-    if let Some((log, cv_id)) = cv_pair.as_mut() {
+    if let Some((log, cv_id, _token_ids)) = cv_pair.as_mut() {
         let mut meta = std::collections::HashMap::new();
         meta.insert(
             "input_byte_len".to_string(),
@@ -578,6 +594,14 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         // CV and skip token-CV creation. Later slices that need
         // tokens may treat absence as "lex didn't reach this
         // file" — a recoverable state.
+        //
+        // CLOC12.132: declare token_cv_ids outside the lex block so
+        // it can be passed to transform_source_with_cv (which threads
+        // it into whitespace_only_minify for gap-drop tombstones).
+        // Stays empty on lex failure or when CV is off — both callers
+        // guard on cv_id / token_cv_ids being populated before using
+        // the indices.
+        let mut token_cv_ids: Vec<String> = Vec::new();
         if let Some(id) = &cv_id {
             let es = map_language_in_to_es_version(config);
             match tokenize_javascript_typed(&contents, es) {
@@ -590,8 +614,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     // substituted) onto the precise child CV
                     // rather than smearing them on the per-file
                     // root.
-                    let mut token_cv_ids: Vec<String> =
-                        Vec::with_capacity(token_count);
+                    token_cv_ids = Vec::with_capacity(token_count);
                     for (idx, tok) in tokens.iter().enumerate() {
                         let mut tmeta = std::collections::HashMap::new();
                         tmeta.insert(
@@ -808,11 +831,16 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         // so the transform records one record per stage
         // (compilation_level + defines) rather than the single
         // summary contribution from CLOC11.60.
+        //
+        // CLOC12.132: also pass token_cv_ids so whitespace_only_minify
+        // can tombstone gap-rule-dropped tokens (hoisted above the lex
+        // block; empty if lex failed, which is safe — whitespace_only
+        // skips out-of-bounds indices).
         let transformed = match &cv_id {
             Some(id) => transform_source_with_cv(
                 &contents,
                 config,
-                Some((&mut cv_log, id.as_str())),
+                Some((&mut cv_log, id.as_str(), &token_cv_ids)),
             )?,
             None => transform_source(&contents, config)?,
         };
@@ -3528,6 +3556,100 @@ mod tests {
         assert!(
             !body.contains("\"reason\":\"whitespace_only_dropped\""),
             "expected NO whitespace_only_dropped tombstones under SIMPLE, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC12.132 — whitespace_only gap-drop tombstones
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_tombstones_gap_dropped_tokens_under_whitespace_only() {
+        // With --correlation_vector + WHITESPACE_ONLY, the gap
+        // pre-passes that remove non-trivia tokens should appear
+        // in the sidecar as deleted CV entries with
+        //   source="whitespace_only", reason="gap_drop".
+        //
+        // Input: `var x=(1);` — gap-053 (paren elision around
+        // var-init RHS) drops the redundant `(` and `)` in its
+        // pre-pass, producing `var x=1;`. Both paren tokens are
+        // non-trivia and should be tombstoned.
+        let dir = std::env::temp_dir().join("closurec_cloc12_132_gap_drop");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x=(1);").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        // gap-drop tombstone from whitespace_only_minify.
+        assert!(
+            body.contains("\"reason\":\"gap_drop\""),
+            "expected gap_drop tombstone for new Foo() → new Foo, got: {body}"
+        );
+        assert!(
+            body.contains("\"source\":\"whitespace_only\""),
+            "expected source=whitespace_only on gap_drop tombstone, got: {body}"
+        );
+        // The lexeme of the dropped paren should appear in the meta.
+        assert!(
+            body.contains("\"lexeme\":\"(\"") || body.contains("\"lexeme\":\")\""),
+            "expected dropped paren lexeme in tombstone meta, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_no_gap_drop_tombstones_when_no_gaps_fire() {
+        // A source with no gap-rule targets should produce NO
+        // gap_drop tombstones. `var x=1;` has no redundant
+        // parens, empty new-args, etc. — zero gap pre-pass drops.
+        let dir = std::env::temp_dir().join("closurec_cloc12_132_no_drops");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x=1;").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            !body.contains("\"reason\":\"gap_drop\""),
+            "expected NO gap_drop tombstones for var x=1;, got: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
     }

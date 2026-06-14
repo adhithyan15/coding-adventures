@@ -2,6 +2,55 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.132.0] - 2026-06-14
+
+### Added
+
+- **CLOC12.132 — correlation-vector gap-drop tombstones in
+  `whitespace_only_minify`.**
+
+  Before this release, the CV sidecar recorded tombstones for
+  *trivia* tokens (whitespace, comments) and EOF via the
+  `whitespace_only_dropped` path in `run.rs`, but was silent about
+  *non-trivia* tokens removed by the gap pre-passes (e.g. gap-053
+  strips redundant parentheses from `var x=(1)` → `var x=1`).
+
+  This release threads per-token CV IDs into `whitespace_only_minify`
+  and adds a post-pass-pass tombstone sweep: after all pre-passes
+  settle (`let kept = kept`), any non-trivia, non-EOF token from the
+  original stream that is no longer referenced in `kept` receives a
+  `DeletionRecord` with
+  - `source = "whitespace_only"`
+  - `reason = "gap_drop"`
+  - `meta.token_index`, `meta.lexeme` for traceability.
+
+  **API change:** `whitespace_only_minify` gains a third argument:
+  ```rust
+  cv: Option<(&mut CVLog, &str, &[String])>
+  // (log, file_cv_id, token_cv_ids)
+  ```
+  Callers that don't need CV pass `None` — identical byte behaviour.
+
+  **`transform_source_with_cv` signature update** (CLOC12.132): the
+  `cv` tuple gains a `&[String]` (per-token CV ID slice, parallel to
+  `tokenize_javascript_typed`'s output). `run_compiler` hoists
+  `token_cv_ids` to outer scope so it's available at the
+  `transform_source_with_cv` call site; empty when lex fails (safe —
+  out-of-bounds indices are skipped).
+
+  **Two new tests** pin the behaviour:
+  - `correlation_vector_tombstones_gap_dropped_tokens_under_whitespace_only`:
+    `var x=(1);` — gap-053 drops the parens → `gap_drop` tombstone
+    with `source="whitespace_only"`.
+  - `correlation_vector_no_gap_drop_tombstones_when_no_gaps_fire`:
+    `var x=1;` — no pre-pass drops → no `gap_drop` tombstone.
+
+  **Scope / known limitation:** this slice covers pre-pass drops
+  (gap rules that remove tokens from `kept` before the emit loop).
+  Emit-loop drops (e.g. gap-050's `new Foo()` → `new Foo` empty-paren
+  elision) are NOT yet tombstoned here — that requires threading CV
+  into the emit loop and is tracked as follow-up work.
+
 ## [0.131.0] - 2026-06-14
 
 ### Fixed
