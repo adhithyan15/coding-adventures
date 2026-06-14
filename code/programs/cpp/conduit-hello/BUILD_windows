@@ -1,0 +1,1 @@
+echo C++ conduit-hello uses POSIX sockets — skipping on Windows

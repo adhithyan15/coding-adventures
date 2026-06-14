@@ -273,6 +273,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(0),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Oct — the `out` intrinsic prints to stdout (LANG-FULL O-OUT). The 8008 writes a
+    // value to an I/O port; on the general backends all ports collapse to stdout via
+    // `call_builtin "print_i64"`. This is Oct's FIRST observable output — until now an
+    // Oct program could only exit 0, so no Oct result could be checked by running.
+    // `out(1, 200)` prints 200.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { out(1, 200); }",
+        expect: Expect::Stdout("200"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Oct — `out` of a computed value: `100 + 100` = 200 printed. Proves Oct arithmetic
+    // produces the right result *observably* (not just "ran and exited 0").
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { out(1, 100 + 100); }",
+        expect: Expect::Stdout("200"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
         lang: Language::Algol60,

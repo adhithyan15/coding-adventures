@@ -1,16 +1,26 @@
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
-import { readFileSync } from "fs";
-
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 import type { ASTNode } from "@coding-adventures/parser";
 import type { Token } from "@coding-adventures/lexer";
 import { tokenizeExcelFormula } from "@coding-adventures/excel-lexer";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const EXCEL_GRAMMAR_PATH = join(GRAMMARS_DIR, "excel.grammar");
+// The grammar is consumed from its pre-compiled, embedded form
+// (`_grammar.ts`, auto-generated from `code/grammars/excel.grammar`)
+// rather than read from disk at runtime.  This is what that generated file
+// was made for — its own header says "Import it directly instead of reading
+// and parsing the .grammar file at runtime."  Two payoffs:
+//
+//   1. No `fs`/`path`/`url` imports, so the parser bundles and runs in a
+//      browser (this package advertises itself as "pure TypeScript" — it
+//      now actually is).  The VisiCalc HTML demo bundles the spreadsheet
+//      engine, which depends on this parser, straight to the browser.
+//   2. One fewer parse step per call: the embedded value is already a
+//      `ParserGrammar` object, so we skip re-parsing the `.grammar` text.
+//
+// The embedded grammar is verified structurally identical (order-insensitive)
+// to `parseParserGrammar(readFileSync("excel.grammar"))`, so this swap is
+// behaviour-preserving.  If `excel.grammar` ever changes, regenerate
+// `_grammar.ts` with `grammar-tools compile-grammar excel.grammar`.
+import { PARSER_GRAMMAR } from "./_grammar.js";
 
 function previousSignificantToken(tokens: Token[], index: number): Token | null {
   for (let i = index - 1; i >= 0; i -= 1) {
@@ -54,9 +64,7 @@ function normalizeExcelReferenceTokens(tokens: Token[]): Token[] {
 
 export function parseExcelFormula(source: string): ASTNode {
   const tokens = tokenizeExcelFormula(source);
-  const grammarText = readFileSync(EXCEL_GRAMMAR_PATH, "utf-8");
-  const grammar = parseParserGrammar(grammarText);
-  const parser = new GrammarParser(tokens, grammar);
+  const parser = new GrammarParser(tokens, PARSER_GRAMMAR);
   parser.addPreParse(normalizeExcelReferenceTokens);
   return parser.parse();
 }

@@ -728,12 +728,9 @@ impl Compiler {
         Ok(dest)
     }
 
-    fn compile_intrinsic(&mut self, node: &GrammarASTNode, _out: &mut Vec<IIRInstr>)
+    fn compile_intrinsic(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
         -> Result<String, OctError>
     {
-        // V1: every Intel-8008 intrinsic is rejected with a clean error.
-        // We don't bother walking arg expressions because the type
-        // checker has already done that.
         let name = node.children.iter().find_map(|c| match c {
             ASTNodeOrToken::Token(t) => {
                 let v = &t.value;
@@ -744,6 +741,35 @@ impl Compiler {
             }
             _ => None,
         }).unwrap_or_else(|| "?".to_string());
+
+        // `out(port, value)` — the 8008 writes `value` to I/O `port` (LANG-FULL
+        // O-OUT).  Real hardware has 24 output ports; on the general LANG backends
+        // they all collapse to **stdout**, lowered as `call_builtin "print_i64"` —
+        // the same print builtin Dartmouth BASIC's `PRINT` uses, already wired on
+        // every backend (VM/JIT register it; LLVM `@__print_i64`, JVM `System.out`,
+        // CLR `Console.WriteLine`, WASM `env.__print_i64`).  This gives Oct its first
+        // *observable* output, so its behaviour can be verified by running — Oct's
+        // `main` is void (always exits 0), so the exit code can never witness a
+        // computed result.  The `port` argument is a compile-time-constant hardware
+        // port selector; with all ports mapped to stdout it has no effect, so we
+        // don't evaluate it.
+        if name == "out" {
+            let arg_nodes = child_nodes(node); // [port_expr, value_expr]
+            let value_node = arg_nodes.get(1).ok_or_else(|| {
+                OctError::Malformed("out() expects (port, value)".into())
+            })?;
+            let value = self.compile_expr(value_node, out)?;
+            self.emit(out, "call_builtin", None,
+                vec![Operand::Var("print_i64".to_string()), Operand::Var(value)], "void");
+            // `out` is statement-shaped with no value; return a fresh `0` for the
+            // (discarded) expression slot so callers get a valid name.
+            let dummy = self.fresh_tmp();
+            self.emit(out, "const", Some(&dummy), vec![Operand::Int(0)], "i64");
+            return Ok(dummy);
+        }
+
+        // The remaining 8008 intrinsics (`in`, `adc`, `sbb`, the rotations,
+        // `carry`, `parity`) have no general-backend model yet and stay rejected.
         Err(OctError::Unsupported8008Intrinsic(name))
     }
 }
@@ -981,5 +1007,46 @@ mod tests {
             "expected line 2 (first let stmt) to appear in source_map; got: {lines_seen:?}");
         assert!(lines_seen.contains(&3),
             "expected line 3 (second let stmt) to appear in source_map; got: {lines_seen:?}");
+    }
+
+    #[test]
+    fn out_intrinsic_lowers_to_print_i64() {
+        // LANG-FULL O-OUT: `out(port, value)` prints `value` to stdout via
+        // `call_builtin "print_i64"` (the value, not the port).
+        let m = compile_source("fn main() { out(1, 200); }", "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        let has_print = body.iter().any(|i| i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "print_i64"));
+        assert!(has_print, "out() must emit call_builtin print_i64; got {body:?}");
+        // The printed value 200 is materialised.
+        assert!(body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(200)))),
+            "the printed value 200 must be a const; got {body:?}");
+    }
+
+    #[test]
+    fn out_of_computed_value() {
+        // `out(1, 100 + 100)` computes the value first (an `add`), then prints it.
+        let m = compile_source("fn main() { out(1, 100 + 100); }", "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "add"), "out() arg must compute via add; got {body:?}");
+        assert!(body.iter().any(|i| i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "print_i64")),
+            "out() must print the computed value; got {body:?}");
+    }
+
+    #[test]
+    fn other_intrinsics_still_rejected() {
+        // Only `out` is wired (it's the output port). `in` and the arithmetic/rotation
+        // intrinsics have no general-backend model yet and stay cleanly rejected.
+        for src in [
+            "fn main() { let x: u8 = in(1); }",
+            "fn main() { let x: u8 = adc(1, 2); }",
+            "fn main() { let x: u8 = rlc(1); }",
+        ] {
+            let err = compile_source(src, "test").unwrap_err();
+            assert!(matches!(err, OctError::Unsupported8008Intrinsic(_)),
+                "expected Unsupported8008Intrinsic for {src:?}; got {err:?}");
+        }
     }
 }

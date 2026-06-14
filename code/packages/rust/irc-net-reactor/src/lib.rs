@@ -627,6 +627,27 @@ mod tests {
     }
 
     #[test]
+    fn stop_called_before_serve_starts_is_not_lost() {
+        // A caller may request stop() before the background serve thread has
+        // actually entered the event loop (common via FFI bindings that flip a
+        // "running" flag before spawning the serve thread).  The stop must not be
+        // swallowed — otherwise serve() runs forever and join() hangs.  We loop
+        // to exercise the race repeatedly; a regression would hang this test.
+        for _ in 0..25 {
+            let server = IrcReactorServer::bind(IrcConfig {
+                port: 0,
+                ..IrcConfig::default()
+            })
+            .expect("bind");
+            let background = server.clone();
+            let handle = thread::spawn(move || background.serve());
+            // Stop immediately, without waiting for the loop to start.
+            server.stop();
+            handle.join().expect("server thread").expect("server exit");
+        }
+    }
+
+    #[test]
     fn quit_command_broadcasts_to_channel() {
         let (server, handle, addr) = start_server();
 

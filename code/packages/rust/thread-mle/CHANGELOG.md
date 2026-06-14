@@ -33,5 +33,7 @@ All notable changes to this package will be documented in this file.
 - Thread attach action summaries that turn attach readiness into
   parent-selection, response-wait, neighbor-refresh, status-review, and
   unknown-command queues.
+- Thread attach completion summaries that combine attach action clearance with
+  supervision-plan clearance for runtime handoff checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.

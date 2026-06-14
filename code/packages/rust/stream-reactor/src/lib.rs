@@ -325,7 +325,13 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
     }
 
     pub fn serve(&mut self) -> Result<(), PlatformError> {
-        self.stop_flag.store(false, Ordering::SeqCst);
+        // NOTE: we deliberately do NOT reset `stop_flag` here.  The flag starts
+        // `false` at construction, so a reset would be redundant on first serve —
+        // but it would also create a race: a `stop()` that arrives after the
+        // serve thread is spawned but before this loop begins would be silently
+        // erased, leaving the loop running forever (observed via JNI, where the
+        // caller can request stop before the background serve thread starts).
+        // A `stop()` must never be lost, so the flag is honoured as-is.
         let mut events = Vec::new();
         while !self.stop_flag.load(Ordering::SeqCst) {
             self.drain_mailbox()?;

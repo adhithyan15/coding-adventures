@@ -36,12 +36,17 @@ native executable
 
 | Compiles                         | Doesn't                                   |
 |----------------------------------|-------------------------------------------|
-| Arithmetic, bitwise, comparison  | 8008 intrinsics (`in`/`out`/`carry`/…)    |
+| Arithmetic, bitwise, comparison  | `in` + arithmetic/rotation intrinsics     |
 | `if` / `while` / `loop` / `break`| Strings (no STRING token in Oct grammar)  |
 | User fns, recursion              | Static globals (silently ignored for V1)  |
 | Local variables                  | Floating-point (8008 doesn't have FP)     |
+| `out(port, value)` → stdout      |                                           |
 
-Every 8008 intrinsic fails with a clean `OctError::Unsupported8008Intrinsic`
-pointing at the dedicated Intel-8008 simulator backend.
+`out(port, value)` (LANG-FULL O-OUT) lowers to `call_builtin "print_i64"` — all 24
+8008 output ports collapse to stdout — giving Oct its first observable output (its
+`main` is void, so the exit code is always 0).  The remaining intrinsics (`in`,
+`adc`, `sbb`, the rotations, `carry`, `parity`) still fail with a clean
+`OctError::Unsupported8008Intrinsic` pointing at the dedicated Intel-8008 simulator
+backend.
 
 See [code/specs/OCT02-oct-rust-frontend.md](../../../specs/OCT02-oct-rust-frontend.md).
