@@ -71,11 +71,13 @@
 
 use std::fmt::Write as _;
 
+use std::collections::HashMap;
+
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
-use mosstyle_compiler::StyleDef;
+use mosstyle_compiler::{StyleDef, StyleProp};
 
 // =====================================================================
 // Public API
@@ -310,16 +312,444 @@ fn build_qt_readme(name: &str, module_name: &str) -> String {
     )
 }
 
+// =====================================================================
+// mosstyle inlining (UI28 §4.5 — the deferred work, now landed)
+//
+// The Qt emitter previously DROPPED the `StyleDef`: every `Box [part]`
+// lowered to a bare, zero-size `Item { }`, so a VisiCalc-style grid
+// collapsed to a black smudge (no width, no borders, no background, no
+// alignment). The infrastructure below inlines the part styles so a
+// styled `Box [cell]` becomes a fixed-size, bordered, background-filled
+// `Rectangle` with its text aligned and coloured per the `.msl`.
+//
+// The shape mirrors the SwiftUI backend's `build_part_style_map` +
+// per-property lowering (`mosaic_emit_swiftui::pipeline`), adapted to
+// QML property names:
+//
+//   | mosstyle property      | QML property                              |
+//   |------------------------|-------------------------------------------|
+//   | background: #RRGGBB    | color: "#RRGGBB"  (on the Rectangle)      |
+//   | border-width: Npx      | border.width: N                           |
+//   | border-color: #RRGGBB  | border.color: "#RRGGBB"                   |
+//   | height: Npx            | implicitHeight: N + Layout.preferredHeight|
+//   | width: Npx             | implicitWidth: N                          |
+//   | padding: Npx           | anchors.margins: N (on the inner Text)    |
+//   | text-align: right      | horizontalAlignment: Text.AlignRight      |
+//   | color: #RRGGBB         | color: "#RRGGBB"  (on the inner Text)     |
+//   | font-family: monospace | font.family: "monospace"                  |
+//   | font-size: Npx         | font.pixelSize: N                         |
+//
+// State blocks (`state selected { ... }` / `state editing { ... }`)
+// drive the Rectangle's conditional `color:` and the inner Text's
+// conditional `color:` via the `state-when-selected` /
+// `state-when-editing` predicate Exprs already present on the
+// `Box [cell]` node (e.g. `( r == selectedRow && c == selectedCol )`).
+// =====================================================================
+
+/// Map from a `part` name (or composite `{part}:{state}` key) to its
+/// style props. Mirrors the SwiftUI/React backends' `build_part_style_map`
+/// shape so downstream tooling can share the data structure.
+type PartStyleMap = HashMap<String, Vec<StyleProp>>;
+
+/// Build a `part_name → props` map from a [`StyleDef`].
+///
+/// Two key shapes populate the map:
+///   * Bare part name (`cell`) → that part's `base` props.
+///   * Composite `{part}:{state}` (`cell:selected`) → that state
+///     block's overriding props.
+///
+/// Empty `base` / `state` blocks are skipped so callers can rely on
+/// `map.get(key).is_some()` as "the author wrote SOMETHING here".
+fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
+    let mut out = PartStyleMap::with_capacity(style.parts.len());
+    for part in &style.parts {
+        if !part.base.is_empty() {
+            out.insert(part.name.clone(), part.base.clone());
+        }
+        for state in &part.states {
+            if !state.props.is_empty() {
+                let key = format!("{}:{}", part.name, state.state);
+                out.insert(key, state.props.clone());
+            }
+        }
+    }
+    out
+}
+
+/// Shared, read-only context threaded through the whole layout walker.
+///
+/// Bundling these into one struct keeps the per-emitter signatures
+/// stable (a single `&EmitCtx` argument) instead of growing a fresh
+/// parameter for every cross-cutting concern.
+#[derive(Clone)]
+struct EmitCtx<'a> {
+    /// The component's declared emits — used to pick signal arities.
+    emits: &'a [EmitDecl],
+    /// The inlined part-style map (empty when the `.msl` declares no parts).
+    part_styles: &'a PartStyleMap,
+    /// camelCased identifier of the host's column-widths slot (e.g.
+    /// `columnWidths`), discovered from a `HostTableColGroup`. `None`
+    /// disables per-cell width threading.
+    col_widths_slot: Option<String>,
+    /// Index identifier of the nearest enclosing `For` (e.g. `c`, `ch`).
+    /// Combined with `col_widths_slot` to produce
+    /// `Layout.preferredWidth: columnWidths[<idx>]` on table cells.
+    enclosing_index: Option<String>,
+    /// Text styling (colour / alignment / font / padding) inherited from
+    /// the nearest enclosing styled cell `Box`. Applied to descendant
+    /// `Text` / `TextInput` so the cell's value renders aligned and
+    /// coloured even though it lives several levels deep (inside an
+    /// `If`/`Else` `Loader`). `None` outside a styled cell.
+    text_style: Option<CellTextStyle>,
+    /// Table-level inherited defaults (from the enclosing `HostTable`'s
+    /// `sheet` part). CSS cascades `background` / `color` / `font-*` from
+    /// the table down to each cell; a `Box [cell]` whose own part omits
+    /// these falls back to the sheet's value so an unselected cell gets
+    /// the sheet background and the cell text gets the sheet colour /
+    /// font rather than QML's bare defaults (white box, black text).
+    inherited: InheritedStyle,
+    /// True when the next-emitted children are the DIRECT body of a styled
+    /// cell `Rectangle`. Such children (an `If`/`Else` pair lowering to
+    /// `Loader`s, or a plain `Text`) must `anchors.fill: parent` so they
+    /// occupy the whole fixed-size cell rather than collapsing to their
+    /// own content size (which also avoids a `Text.fill` anchor loop
+    /// against a content-sized `Loader`). Cleared one level down.
+    cell_fill_children: bool,
+}
+
+/// Table-level style defaults that cascade down to cells (the `sheet`
+/// part's `background` / `color` / `font-family` / `font-size`).
+#[derive(Clone, Default)]
+struct InheritedStyle {
+    background: Option<String>,
+    color: Option<String>,
+    font_family_mono: bool,
+    font_pixel_size: Option<String>,
+}
+
+impl<'a> EmitCtx<'a> {
+    /// A child context that descends into a `For` carrying `index`.
+    fn with_index(&self, index: Option<String>) -> Self {
+        EmitCtx {
+            enclosing_index: index.or_else(|| self.enclosing_index.clone()),
+            ..self.clone()
+        }
+    }
+
+    /// A child context carrying a cell's resolved text style (and
+    /// clearing the enclosing index so a nested table doesn't inherit a
+    /// stale width binding).
+    fn with_text_style(&self, ts: Option<CellTextStyle>) -> Self {
+        EmitCtx {
+            text_style: ts,
+            ..self.clone()
+        }
+    }
+}
+
+/// Resolved text styling pulled from a cell part's props (+ its
+/// `selected` state). Applied to the inner `Text` / `TextInput` of a
+/// styled cell so the value aligns and colours correctly.
+#[derive(Clone, Default)]
+struct CellTextStyle {
+    /// QML expression for the text `color:` — a literal `"#RRGGBB"` or a
+    /// conditional `(<selected-pred>) ? "#fff" : "#ccc"`.
+    color: Option<String>,
+    /// `Text.AlignLeft` / `Text.AlignHCenter` / `Text.AlignRight`.
+    horizontal_alignment: Option<&'static str>,
+    /// True when `font-family: monospace`.
+    font_family_mono: bool,
+    /// `font.pixelSize` value (digits only).
+    font_pixel_size: Option<String>,
+    /// Inner content inset, from `padding: Npx`.
+    padding: Option<String>,
+}
+
+impl CellTextStyle {
+    fn is_empty(&self) -> bool {
+        self.color.is_none()
+            && self.horizontal_alignment.is_none()
+            && !self.font_family_mono
+            && self.font_pixel_size.is_none()
+            && self.padding.is_none()
+    }
+}
+
+/// Strip a trailing `px` and validate the remainder is a clean numeric
+/// length (`digits`, optional `.`, optional leading `-`). Returns `None`
+/// for `100%`, `auto`, `calc(...)`, etc. — values with no clean QML
+/// numeric analog. This is also the security gate: only well-formed
+/// numbers ever reach a QML attribute position.
+fn qml_px_or_none(v: &str) -> Option<String> {
+    let stripped = v.trim().strip_suffix("px").unwrap_or(v.trim());
+    if !stripped.is_empty()
+        && stripped
+            .chars()
+            .all(|c| c.is_ascii_digit() || c == '.' || c == '-')
+    {
+        Some(stripped.to_string())
+    } else {
+        None
+    }
+}
+
+/// Validate a CSS-ish colour value as a `#RGB` / `#RRGGBB` hex literal
+/// and return it normalised to `#RRGGBB`. Returns `None` for anything
+/// else (named colours, `rgba(...)`, etc.) — those have no guaranteed-
+/// safe inline QML form here, so we skip them rather than risk emitting
+/// an attacker-controlled token into a QML string. Hex-only is the
+/// security gate: the output is always `#` + 6 hex digits.
+fn qml_hex_color_or_none(v: &str) -> Option<String> {
+    let body = v.trim().strip_prefix('#')?;
+    let expanded: String = if body.len() == 3 && body.chars().all(|c| c.is_ascii_hexdigit()) {
+        body.chars().flat_map(|c| [c, c]).collect()
+    } else if body.len() == 6 && body.chars().all(|c| c.is_ascii_hexdigit()) {
+        body.to_string()
+    } else {
+        return None;
+    };
+    Some(format!("#{}", expanded.to_ascii_lowercase()))
+}
+
+/// Map a CSS `text-align` keyword to its QML `Text.Align*` enum.
+fn qml_text_align(v: &str) -> Option<&'static str> {
+    match v.trim() {
+        "left" | "start" => Some("Text.AlignLeft"),
+        "center" => Some("Text.AlignHCenter"),
+        "right" | "end" => Some("Text.AlignRight"),
+        _ => None,
+    }
+}
+
+/// Find the first prop named `name` in a base/state prop list.
+fn style_prop<'p>(props: &'p [StyleProp], name: &str) -> Option<&'p str> {
+    props.iter().find(|p| p.name == name).map(|p| p.value.as_str())
+}
+
+/// Collect the `state-when-<X>: ( expr )` predicate for one state on a
+/// `Box` node, returning the QML condition expression. Mirrors the
+/// SwiftUI backend's `collect_state_layers`, scoped to a single state.
+///
+/// The predicate text (e.g. `( r == selectedRow && c == selectedCol )`)
+/// comes from the developer-authored `.mll` / package source and is
+/// interpolated verbatim into a parenthesised QML conditional position,
+/// exactly as the React/SwiftUI backends do. The moslayout parser wraps
+/// `Expr` values in balanced `( ... )`, keeping the expression contained.
+fn state_when_predicate(node: &LayoutNode, state: &str) -> Option<String> {
+    let prop_name = format!("state-when-{state}");
+    let prop = node.props.iter().find(|p| p.name == prop_name)?;
+    match &prop.value {
+        LayoutPropValue::Expr(t) => Some(t.clone()),
+        LayoutPropValue::SlotRef(s) => {
+            let camel = to_camel_case_first_lower(s);
+            is_safe_identifier(&camel).then_some(camel)
+        }
+        LayoutPropValue::Keyword(k) => {
+            is_safe_identifier(k).then(|| k.clone())
+        }
+        _ => None,
+    }
+}
+
+/// The lowered QML for a styled cell `Box`: the Rectangle's own property
+/// lines plus the [`CellTextStyle`] to push down to the inner text.
+struct StyledBox {
+    /// Property lines to place inside the `Rectangle { ... }` (geometry,
+    /// border, conditional background colour). Each already indented by
+    /// the caller-supplied pad.
+    rect_lines: Vec<String>,
+    /// Text styling for the cell's value, threaded to descendant `Text` /
+    /// `TextInput`.
+    text_style: CellTextStyle,
+}
+
+/// Lower a styled cell `Box`'s part (base props + selected/editing state
+/// blocks) into [`StyledBox`].
+///
+/// `ctx` supplies the part-style map and the optional column-width
+/// threading (`columnWidths[<enclosing-index>]`). The state predicates
+/// are read from `node`'s `state-when-selected` / `state-when-editing`
+/// props.
+fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
+    let base: &[StyleProp] = ctx.part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
+    let selected: &[StyleProp] = ctx
+        .part_styles
+        .get(&format!("{part}:selected"))
+        .map(|v| v.as_slice())
+        .unwrap_or(&[]);
+    let editing: &[StyleProp] = ctx
+        .part_styles
+        .get(&format!("{part}:editing"))
+        .map(|v| v.as_slice())
+        .unwrap_or(&[]);
+
+    let sel_pred = state_when_predicate(node, "selected");
+    let edit_pred = state_when_predicate(node, "editing");
+
+    let mut rect_lines: Vec<String> = Vec::new();
+
+    // --- Geometry -----------------------------------------------------
+    // height → implicitHeight (+ Layout.preferredHeight for layout
+    // children). width → implicitWidth. Column-width threading, when
+    // available, overrides any part `width` via Layout.preferredWidth.
+    if let Some(h) = style_prop(base, "height").and_then(qml_px_or_none) {
+        rect_lines.push(format!("implicitHeight: {h}"));
+        rect_lines.push(format!("Layout.preferredHeight: {h}"));
+    }
+    let threaded_width = match (&ctx.col_widths_slot, &ctx.enclosing_index) {
+        (Some(slot), Some(idx)) => Some(format!("{slot}[{idx}]")),
+        _ => None,
+    };
+    if let Some(w) = &threaded_width {
+        rect_lines.push(format!("Layout.preferredWidth: {w}"));
+        rect_lines.push(format!("implicitWidth: {w}"));
+    } else if let Some(w) = style_prop(base, "width").and_then(qml_px_or_none) {
+        rect_lines.push(format!("implicitWidth: {w}"));
+        rect_lines.push(format!("Layout.preferredWidth: {w}"));
+    }
+
+    // --- Border -------------------------------------------------------
+    if let Some(bw) = style_prop(base, "border-width").and_then(qml_px_or_none) {
+        rect_lines.push(format!("border.width: {bw}"));
+    }
+    if let Some(bc) = style_prop(base, "border-color").and_then(qml_hex_color_or_none) {
+        rect_lines.push(format!("border.color: \"{bc}\""));
+    }
+
+    // --- Background (conditional on state) ----------------------------
+    // Build a nested ternary: editing wins over selected wins over base.
+    // (Matches the React/SwiftUI precedence: later/state layers override
+    // the base.) Only states whose `.msl` block sets `background` AND
+    // whose `state-when-*` predicate is present participate.
+    let base_bg = style_prop(base, "background")
+        .or_else(|| style_prop(base, "background-color"))
+        .and_then(qml_hex_color_or_none)
+        // Cascade: a cell with no own background reads against the
+        // table's `sheet` surface.
+        .or_else(|| ctx.inherited.background.clone());
+    let sel_bg = style_prop(selected, "background")
+        .or_else(|| style_prop(selected, "background-color"))
+        .and_then(qml_hex_color_or_none);
+    let edit_bg = style_prop(editing, "background")
+        .or_else(|| style_prop(editing, "background-color"))
+        .and_then(qml_hex_color_or_none);
+    if let Some(expr) = build_conditional_color(
+        base_bg.as_deref(),
+        sel_bg.as_deref().zip(sel_pred.as_deref()),
+        edit_bg.as_deref().zip(edit_pred.as_deref()),
+    ) {
+        rect_lines.push(format!("color: {expr}"));
+    }
+
+    // --- Inner text styling -------------------------------------------
+    // Font cascades from the table's `sheet` part when the cell omits it.
+    let mut ts = CellTextStyle {
+        horizontal_alignment: style_prop(base, "text-align").and_then(qml_text_align),
+        font_family_mono: style_prop(base, "font-family")
+            .map(|v| v.trim() == "monospace")
+            .unwrap_or(ctx.inherited.font_family_mono),
+        font_pixel_size: style_prop(base, "font-size")
+            .and_then(qml_px_or_none)
+            .or_else(|| ctx.inherited.font_pixel_size.clone()),
+        padding: style_prop(base, "padding").and_then(qml_px_or_none),
+        color: None,
+    };
+    // Base text colour cascades from `sheet` when the cell omits it.
+    let base_fg = style_prop(base, "color")
+        .and_then(qml_hex_color_or_none)
+        .or_else(|| ctx.inherited.color.clone());
+    let sel_fg = style_prop(selected, "color").and_then(qml_hex_color_or_none);
+    let edit_fg = style_prop(editing, "color").and_then(qml_hex_color_or_none);
+    ts.color = build_conditional_color(
+        base_fg.as_deref(),
+        sel_fg.as_deref().zip(sel_pred.as_deref()),
+        edit_fg.as_deref().zip(edit_pred.as_deref()),
+    );
+
+    StyledBox {
+        rect_lines,
+        text_style: ts,
+    }
+}
+
+/// Build a QML colour expression from a base colour and optional
+/// per-state overrides. Produces, in precedence order (editing > selected
+/// > base):
+///
+///   `( <edit-pred> ) ? "#edit" : ( <sel-pred> ) ? "#sel" : "#base"`
+///
+/// Returns `None` when no colour information exists at all (so the caller
+/// omits the property and the element keeps its QML default).
+fn build_conditional_color(
+    base: Option<&str>,
+    selected: Option<(&str, &str)>, // (color, predicate)
+    editing: Option<(&str, &str)>,  // (color, predicate)
+) -> Option<String> {
+    // Fallback when a state matches but there's no base colour: QML's
+    // `Rectangle.color` default is white and `Text.color` default is
+    // black, but for a conditional we need a concrete else-branch. Use
+    // "transparent" for the background-less case so an unstyled cell
+    // stays see-through; the inner-text path always has a base colour in
+    // practice (the `sheet`/`cell` parts set one).
+    let base_literal = base.map(|c| format!("\"{c}\""));
+
+    match (selected, editing) {
+        (None, None) => base_literal,
+        _ => {
+            let else_branch = base_literal.unwrap_or_else(|| "\"transparent\"".to_string());
+            let mut expr = else_branch;
+            // selected layer (lower precedence — applied first so editing
+            // can wrap it).
+            if let Some((c, pred)) = selected {
+                expr = format!("( {pred} ) ? \"{c}\" : {expr}");
+            }
+            if let Some((c, pred)) = editing {
+                expr = format!("( {pred} ) ? \"{c}\" : {expr}");
+            }
+            Some(expr)
+        }
+    }
+}
+
+/// Discover the camelCased column-widths slot from a `HostTable`'s
+/// `HostTableColGroup > For (each: slot: <name>) { Col ... }` shape.
+///
+/// Mirrors the SwiftUI backend's `extract_table_context`. Returns `None`
+/// when the structural match fails — cells then render without explicit
+/// width threading (auto-sized), which is the pre-styling behaviour.
+fn discover_col_widths_slot(host_table: &LayoutNode) -> Option<String> {
+    for child in &host_table.children {
+        if child.tag != "HostTableColGroup" {
+            continue;
+        }
+        for cg_child in &child.children {
+            if cg_child.tag != "For" {
+                continue;
+            }
+            if !cg_child.children.iter().any(|n| n.tag == "Col") {
+                continue;
+            }
+            if let Some(slot) = find_slot_ref_prop(cg_child, "each") {
+                let camel = to_camel_case_first_lower(slot);
+                if is_safe_identifier(&camel) {
+                    return Some(camel);
+                }
+            }
+        }
+    }
+    None
+}
+
 /// Compile a three-file Mosaic pipeline triple to a QML source file.
 ///
-/// The `style` argument is accepted now (rather than added later) so that
-/// downstream callers — chiefly `mosaic-compile` — can build against the
-/// stable signature. The style IR is not yet inlined into the QML; see the
-/// module-level doc.
+/// The `style` argument is inlined: styled `Box [part]` containers lower
+/// to `Rectangle`s carrying the part's geometry, border, background, and
+/// inner-text alignment/colour/font (see the mosstyle-inlining section
+/// above). Unstyled boxes keep the bare `Item` shape.
 pub fn from_pipeline(
     interface: &MosmodelComponent,
     layout: &LayoutDef,
-    _style: &StyleDef,
+    style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
     // 1. The three IRs must agree on the component name. The style IR's
     // `component_name` is allowed to differ when the style targets a
@@ -374,9 +804,21 @@ pub fn from_pipeline(
         out.push_str(&emit_signal_declaration(e)?);
     }
 
-    // 6. The layout tree.
+    // 6. The layout tree. Build the part-style map up front and seed the
+    // walker's context so styled `Box [part]` containers can inline their
+    // mosstyle properties (geometry, border, background, text styling).
+    let part_styles = build_part_style_map(style);
+    let ctx = EmitCtx {
+        emits: &interface.emits,
+        part_styles: &part_styles,
+        col_widths_slot: None,
+        enclosing_index: None,
+        text_style: None,
+        inherited: InheritedStyle::default(),
+        cell_fill_children: false,
+    };
     writeln!(out).unwrap();
-    out.push_str(&emit_qml_tree(&layout.root, 1, &interface.emits)?);
+    out.push_str(&emit_qml_tree(&layout.root, 1, &ctx)?);
 
     // 7. Close the root `Item`.
     writeln!(out, "}}").unwrap();
@@ -452,7 +894,7 @@ fn emit_signal_declaration(emit: &EmitDecl) -> Result<String, PipelineEmitError>
 /// The `depth` argument is the *block depth from the root Item* — so the
 /// outermost layout element starts at depth 1 (one level inside the root
 /// wrapper).
-fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_qml_tree(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     // The UI29 *host* primitives (`HostInput`, `HostButton`) need
     // attribute lowering that depends on the moslayout props — slot refs
     // for `value`, emit refs for `onCommit`, etc. — none of which the
@@ -460,9 +902,9 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<
     // own emitter functions, mirroring the React backend's
     // `emit_input_jsx` carve-out for `Input`.
     match node.tag.as_str() {
-        "HostInput" => return emit_host_input_qml(node, depth, emits),
-        "HostButton" => return emit_host_button_qml(node, depth, emits),
-        "HostDialog" => return emit_host_dialog_qml(node, depth, emits),
+        "HostInput" => return emit_host_input_qml(node, depth, ctx),
+        "HostButton" => return emit_host_button_qml(node, depth, ctx),
+        "HostDialog" => return emit_host_dialog_qml(node, depth, ctx),
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` lower to
         // QtQuick.Controls 2 `CheckBox` and `RadioButton`. Both
@@ -470,8 +912,8 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<
         // keyboard semantics (Space toggles, arrow keys navigate radio
         // groups when wrapped in ButtonGroup) that composing from
         // QtQuick basics couldn't replicate.
-        "HostCheckbox" => return emit_host_checkbox_qml(node, depth, emits),
-        "HostRadio" => return emit_host_radio_qml(node, depth, emits),
+        "HostCheckbox" => return emit_host_checkbox_qml(node, depth, ctx),
+        "HostRadio" => return emit_host_radio_qml(node, depth, ctx),
 
         // UI29-4 kernel — `HostLink` lowers to a rich-text `Text`
         // with `onLinkActivated` (Qt has no first-class hyperlink
@@ -480,21 +922,21 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<
         // `HostTooltip` lowers to the `ToolTip.text` attached
         // property on any child. `HostNumberInput` lowers to
         // QtQuick.Controls 2 `SpinBox` (built-in ± stepper).
-        "HostLink" => return emit_host_link_qml(node, depth, emits),
-        "HostTooltip" => return emit_host_tooltip_qml(node, depth, emits),
-        "HostNumberInput" => return emit_host_number_input_qml(node, depth, emits),
+        "HostLink" => return emit_host_link_qml(node, depth, ctx),
+        "HostTooltip" => return emit_host_tooltip_qml(node, depth, ctx),
+        "HostNumberInput" => return emit_host_number_input_qml(node, depth, ctx),
 
-        "HostTable" => return emit_host_table_qml(node, depth, emits),
+        "HostTable" => return emit_host_table_qml(node, depth, ctx),
         // UI29 §3.1 — `For` meta-primitive: lower to a `Repeater` with an
         // `Item` delegate that re-exports `modelData` / `index` under the
         // author's chosen names.
-        "For" => return emit_for_qml(node, depth, emits),
+        "For" => return emit_for_qml(node, depth, ctx),
         // UI29 §3.2 — `If` meta-primitive. When `If` appears as a *root*
         // node (no preceding sibling to pair with `Else`), it is emitted
         // as a single-Loader conditional with no else branch. The
         // `If`+`Else` sibling pairing happens in `emit_qml_children`
         // when walking a parent's children list.
-        "If" => return emit_if_qml(node, None, depth, emits),
+        "If" => return emit_if_qml(node, None, depth, ctx),
         // UI29 §3.2 — a top-level `Else` (no preceding `If`) has no
         // semantic home. Emit a self-documenting QML comment rather
         // than erroring. Defensive: the grammar should prevent this,
@@ -515,6 +957,58 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<
     }
 
     let pad = "    ".repeat(depth);
+
+    // ------------------------------------------------------------------
+    // Styled cell `Box` path (mosstyle inlining).
+    //
+    // A `Box` carrying a `part_name` that the `.msl` styles lowers to a
+    // `Rectangle` (not a bare `Item`) so the cell has a real size, a
+    // border, a fill, and aligned text. The resolved [`CellTextStyle`] is
+    // threaded into the children context so the cell's value — which
+    // lives several levels deep inside an `If`/`Else` `Loader` — picks up
+    // the alignment / colour / font when it renders.
+    if node.tag == "Box" {
+        if let Some(part) = &node.part_name {
+            let has_base = ctx.part_styles.contains_key(part);
+            let has_state = ctx.part_styles.contains_key(&format!("{part}:selected"))
+                || ctx.part_styles.contains_key(&format!("{part}:editing"));
+            // A width thread (column-widths slot + enclosing index) forces
+            // the Rectangle even when the part itself carries no props, so
+            // the fixed column width still lands.
+            let has_width_thread =
+                ctx.col_widths_slot.is_some() && ctx.enclosing_index.is_some();
+            if has_base || has_state || has_width_thread {
+                let styled = lower_styled_box(node, part, ctx);
+                let mut out = String::new();
+                writeln!(out, "{pad}Rectangle {{").unwrap();
+                for line in &styled.rect_lines {
+                    writeln!(out, "{pad}    {line}").unwrap();
+                }
+                // Descend with the cell's text style in scope; the
+                // enclosing index is cleared so a nested table doesn't
+                // inherit this cell's width binding. `cell_fill_children`
+                // makes the cell's direct body (If/Else Loaders or a plain
+                // Text) fill the fixed-size Rectangle.
+                let child_ctx = EmitCtx {
+                    enclosing_index: None,
+                    cell_fill_children: true,
+                    ..ctx.with_text_style(if styled.text_style.is_empty() {
+                        None
+                    } else {
+                        Some(styled.text_style)
+                    })
+                };
+                out.push_str(&emit_qml_children(
+                    &node.children,
+                    depth + 1,
+                    /* is_stack = */ false,
+                    &child_ctx,
+                )?);
+                writeln!(out, "{pad}}}").unwrap();
+                return Ok(out);
+            }
+        }
+    }
 
     // Decompose the primitive into its QML element name and any built-in
     // properties (the small chunks of QML that always go on this element
@@ -555,6 +1049,15 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<
     //    identifier to the matching `property` declaration on the root
     //    `Item`, which is in scope at every depth inside the file).
     if is_text {
+        // A `Text` rendered inside a styled cell fills the cell rectangle
+        // and adopts the cell's alignment / colour / font / padding (see
+        // [`CellTextStyle`]). Outside a styled cell, `ctx.text_style` is
+        // `None` and the Text emits exactly as before.
+        if let Some(ts) = &ctx.text_style {
+            for line in cell_text_style_lines(ts) {
+                writeln!(out, "{pad}    {line}").unwrap();
+            }
+        }
         if let Some(line) = build_text_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
@@ -582,10 +1085,39 @@ fn emit_qml_tree(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<
     // Children are walked through `emit_qml_children` rather than a
     // bare `for` so that `If`+`Else` sibling pairs are recognised
     // (UI29 §3.2).
-    out.push_str(&emit_qml_children(&node.children, depth + 1, is_stack, emits)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 1, is_stack, ctx)?);
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+/// Build the QML property lines for a cell's inner `Text` (or
+/// `TextInput`) from a [`CellTextStyle`]. The Text fills the cell
+/// rectangle (`anchors.fill: parent`) and vertically centres so the
+/// value sits in the middle of the row; horizontal alignment, colour,
+/// font, and padding come from the part's `.msl` props.
+fn cell_text_style_lines(ts: &CellTextStyle) -> Vec<String> {
+    let mut lines = Vec::new();
+    lines.push("anchors.fill: parent".to_string());
+    if let Some(p) = &ts.padding {
+        // Inset the content on all sides (padding), then let the
+        // horizontal alignment push the text to the requested edge.
+        lines.push(format!("anchors.margins: {p}"));
+    }
+    lines.push("verticalAlignment: Text.AlignVCenter".to_string());
+    if let Some(a) = ts.horizontal_alignment {
+        lines.push(format!("horizontalAlignment: {a}"));
+    }
+    if let Some(c) = &ts.color {
+        lines.push(format!("color: {c}"));
+    }
+    if ts.font_family_mono {
+        lines.push("font.family: \"monospace\"".to_string());
+    }
+    if let Some(sz) = &ts.font_pixel_size {
+        lines.push(format!("font.pixelSize: {sz}"));
+    }
+    lines
 }
 
 /// Walk an ordered list of sibling layout nodes, emitting each one's
@@ -606,7 +1138,7 @@ fn emit_qml_children(
     children: &[LayoutNode],
     depth: usize,
     is_stack: bool,
-    emits: &[EmitDecl],
+    ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -622,9 +1154,9 @@ fn emit_qml_children(
             if else_sibling.is_some() {
                 i += 1; // consume the Else along with the If
             }
-            emit_if_qml(child, else_sibling, depth, emits)?
+            emit_if_qml(child, else_sibling, depth, ctx)?
         } else {
-            emit_qml_tree(child, depth, emits)?
+            emit_qml_tree(child, depth, ctx)?
         };
 
         if is_stack {
@@ -936,11 +1468,22 @@ fn pick_signal_arg_with(
 /// The Enter / Escape mapping mirrors UI25 §10 (the React backend
 /// merges both into a single `onKeyDown` handler; QML has dedicated
 /// signal handlers for both, so we use them directly).
-fn emit_host_input_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_host_input_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
     writeln!(out, "{pad}TextInput {{").unwrap();
+
+    // When the input is a styled cell's editor (it sits inside a styled
+    // `Box [cell]` whose text style is in scope), fill the cell and adopt
+    // its alignment / colour / font so the in-place editor matches the
+    // surrounding cells. `TextInput` honours the same `Text.Align*`
+    // enums and `font.*` / `color` properties as `Text`.
+    if let Some(ts) = &ctx.text_style {
+        for line in cell_text_style_lines(ts) {
+            writeln!(out, "{inner_pad}{line}").unwrap();
+        }
+    }
 
     // text: <slot or literal>
     if let Some(line) = build_value_attribute(node) {
@@ -966,7 +1509,7 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arg = pick_signal_arg(emit_name, emits);
+        let arg = pick_signal_arg(emit_name, ctx.emits);
         writeln!(out, "{inner_pad}onTextChanged: {camel}({arg})").unwrap();
     }
 
@@ -974,7 +1517,7 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arg = pick_signal_arg(emit_name, emits);
+        let arg = pick_signal_arg(emit_name, ctx.emits);
         writeln!(out, "{inner_pad}onAccepted: {camel}({arg})").unwrap();
     }
 
@@ -982,7 +1525,7 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
     if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arg = pick_signal_arg(emit_name, emits);
+        let arg = pick_signal_arg(emit_name, ctx.emits);
         writeln!(
             out,
             "{inner_pad}Keys.onEscapePressed: {{ {camel}({arg}); event.accepted = true }}"
@@ -1009,7 +1552,7 @@ fn emit_host_input_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
 /// | `disabled: slot: x`     | `enabled: !x`                             |
 /// | `disabled: true/false`  | `enabled: !true` / `enabled: !false`      |
 /// | `onTap: emit: onE`      | `onClicked: e()`                          |
-fn emit_host_button_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_host_button_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1037,7 +1580,7 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> 
     if let Some(emit_name) = find_emit_ref_prop(node, "onTap") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arity = emits.iter().find(|e| e.name == *emit_name)
+        let arity = ctx.emits.iter().find(|e| e.name == *emit_name)
             .map(|e| e.params.len()).unwrap_or(0);
         if arity > 0 {
             writeln!(
@@ -1091,7 +1634,7 @@ fn emit_host_button_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> 
 /// machinery we don't want for a primitive). When a `title:` prop is
 /// bound, we synthesise a bold `Text` element as the first child of
 /// `contentItem`, before the author's children.
-fn emit_host_dialog_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_host_dialog_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let content_pad = "    ".repeat(depth + 2);
@@ -1164,7 +1707,7 @@ fn emit_host_dialog_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> 
     // nested meta-primitives (If/Else/For) get the same treatment they
     // get anywhere else in the tree. `is_stack: false` — a dialog
     // body is a normal column, not a Z-stack.
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false, emits)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false, ctx)?);
 
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -1196,7 +1739,7 @@ fn emit_host_dialog_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> 
 /// `toggled(bool checked)` signal. We forward the `checked` parameter
 /// into the Mosaic emit call so the host sees the new state, matching
 /// the kernel-canonical `onToggle(checked: bool)` payload.
-fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1246,7 +1789,7 @@ fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -
     if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arg = pick_signal_arg_with(emit_name, emits, "checked");
+        let arg = pick_signal_arg_with(emit_name, ctx.emits, "checked");
         writeln!(out, "{inner_pad}onToggled: {camel}({arg})").unwrap();
     }
 
@@ -1285,7 +1828,7 @@ fn emit_host_checkbox_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -
 /// reserved for UI29-2.1's `RadioGroup` userland component; v1
 /// preserves the `group:` prop as a `// group: ...` comment, identical
 /// to the SwiftUI backend's choice, so the metadata stays visible.
-fn emit_host_radio_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_host_radio_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1354,7 +1897,7 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
     if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arity = emits.iter().find(|e| e.name == *emit_name)
+        let arity = ctx.emits.iter().find(|e| e.name == *emit_name)
             .map(|e| e.params.len()).unwrap_or(0);
         let call_args = if arity == 0 {
             String::new()
@@ -1396,7 +1939,7 @@ fn emit_host_radio_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
 /// | `target: new-tab`   | `onLinkActivated: Qt.openUrlExternally(link)` (always external — Qt has no in-window tab concept; new-tab and same map to the same external-browser call) |
 /// | `external: false`   | `onLinkActivated: x()` — dispatches the emit instead of opening, letting the host route in-app |
 /// | `onActivate: emit`  | dispatched on link activation                             |
-fn emit_host_link_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_host_link_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1450,14 +1993,14 @@ fn emit_host_link_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Re
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_safe_identifier(&camel)
                 .map_err(PipelineEmitError::UnsafeEmitName)?;
-            let arg = pick_signal_arg_with(emit, emits, "link");
+            let arg = pick_signal_arg_with(emit, ctx.emits, "link");
             format!("{camel}({arg})")
         }
         (false, Some(emit)) => {
             let camel = to_camel_case_first_lower(&strip_on_prefix(emit));
             validate_safe_identifier(&camel)
                 .map_err(PipelineEmitError::UnsafeEmitName)?;
-            let arg = pick_signal_arg_with(emit, emits, "link");
+            let arg = pick_signal_arg_with(emit, ctx.emits, "link");
             // Dispatch AND open externally.
             format!("{{ {camel}({arg}); Qt.openUrlExternally(link); }}")
         }
@@ -1486,7 +2029,7 @@ fn emit_host_link_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Re
 ///
 /// `HoverHandler` (QtQuick 2.12+) gives the hover state without
 /// needing a `MouseArea` (which would intercept clicks on the child).
-fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
     let mut out = String::new();
@@ -1501,7 +2044,7 @@ fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) ->
 
     // Walk children (the wrapped element) through the standard children
     // walker so nested kernel primitives lower normally.
-    out.push_str(&emit_qml_children(&node.children, depth + 1, false, emits)?);
+    out.push_str(&emit_qml_children(&node.children, depth + 1, false, ctx)?);
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -1530,7 +2073,7 @@ fn emit_host_tooltip_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) ->
 fn emit_host_number_input_qml(
     node: &LayoutNode,
     depth: usize,
-    emits: &[EmitDecl],
+    ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
@@ -1569,7 +2112,7 @@ fn emit_host_number_input_qml(
     if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
         let camel = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeEmitName)?;
-        let arg = pick_signal_arg_with(emit_name, emits, "value");
+        let arg = pick_signal_arg_with(emit_name, ctx.emits, "value");
         writeln!(out, "{inner}onValueModified: {camel}({arg})").unwrap();
     }
 
@@ -1713,10 +2256,45 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
 /// `part_name` on the `HostTable` itself is *currently* not consumed —
 /// styling integration for table parts is a follow-up. Tests assert
 /// that its presence does not break emission.
-fn emit_host_table_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_host_table_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
+
+    // Discover the host's column-widths slot from a nested
+    // `HostTableColGroup` (UI31 §3.2 shape). When present, every styled
+    // cell inside this table threads `columnWidths[<index>]` into its
+    // `Layout.preferredWidth` so columns are fixed-width rather than
+    // auto-sizing to content. `None` preserves the prior auto-sized
+    // behaviour. The discovered slot lives on a child context so the
+    // whole table sub-tree sees it.
+    // Cascade the table's own part (`sheet`) styling down to cells: a
+    // cell whose own `.msl` part omits background / color / font falls
+    // back to these so it reads against the sheet's surface, matching
+    // CSS inheritance on the other backends.
+    let inherited = match &node.part_name {
+        Some(part) => {
+            let sheet: &[StyleProp] =
+                ctx.part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
+            InheritedStyle {
+                background: style_prop(sheet, "background")
+                    .or_else(|| style_prop(sheet, "background-color"))
+                    .and_then(qml_hex_color_or_none),
+                color: style_prop(sheet, "color").and_then(qml_hex_color_or_none),
+                font_family_mono: style_prop(sheet, "font-family")
+                    .map(|v| v.trim() == "monospace")
+                    .unwrap_or(false),
+                font_pixel_size: style_prop(sheet, "font-size").and_then(qml_px_or_none),
+            }
+        }
+        None => ctx.inherited.clone(),
+    };
+    let table_ctx = EmitCtx {
+        col_widths_slot: discover_col_widths_slot(node),
+        inherited,
+        ..ctx.clone()
+    };
+    let ctx = &table_ctx;
 
     writeln!(out, "{pad}ColumnLayout {{").unwrap();
     writeln!(out, "{inner_pad}spacing: 0").unwrap();
@@ -1777,7 +2355,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
     for child in &node.children {
         match child.tag.as_str() {
             "HostTableHead" => {
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ true, emits)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ true, ctx)?;
                 // Divider after the head: a 1px Rectangle.
                 writeln!(out, "{inner_pad}Rectangle {{").unwrap();
                 writeln!(out, "{inner_pad}    Layout.fillWidth: true").unwrap();
@@ -1786,7 +2364,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
                 writeln!(out, "{inner_pad}}}").unwrap();
             }
             "HostTableBody" => {
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false, emits)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false, ctx)?;
             }
             "HostTableFoot" => {
                 // Foot is preceded by a divider so it visually separates
@@ -1796,7 +2374,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
                 writeln!(out, "{inner_pad}    height: 1").unwrap();
                 writeln!(out, "{inner_pad}    color: \"#888\"").unwrap();
                 writeln!(out, "{inner_pad}}}").unwrap();
-                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false, emits)?;
+                emit_table_section_rows(&mut out, child, depth + 1, /* bold = */ false, ctx)?;
             }
             "HostTableColGroup" => {
                 // No QML analog. Emit a self-documenting comment so the
@@ -1807,7 +2385,7 @@ fn emit_host_table_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> R
                 // Anything else inside `HostTable` is walked as a normal
                 // layout child. This preserves the door for future
                 // additions (a `For` row, a stray `Text` caption, etc.).
-                out.push_str(&emit_qml_tree(child, depth + 1, emits)?);
+                out.push_str(&emit_qml_tree(child, depth + 1, ctx)?);
             }
         }
     }
@@ -1833,7 +2411,7 @@ fn emit_table_section_rows(
     section: &LayoutNode,
     depth: usize,
     bold: bool,
-    emits: &[EmitDecl],
+    ctx: &EmitCtx,
 ) -> Result<(), PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let cell_pad = "    ".repeat(depth + 1);
@@ -1843,7 +2421,7 @@ fn emit_table_section_rows(
             // Non-Row child inside a section — walk it normally and let
             // the general emitter handle it. The grammar should prevent
             // this in real input, but be permissive on the output side.
-            out.push_str(&emit_qml_tree(row, depth, emits)?);
+            out.push_str(&emit_qml_tree(row, depth, ctx)?);
             continue;
         }
 
@@ -1862,7 +2440,7 @@ fn emit_table_section_rows(
                 // Non-Text cell: recurse through the general walker. Bold
                 // doesn't propagate here — only `Text` cells get the
                 // header treatment in this first cut.
-                out.push_str(&emit_qml_tree(cell, depth + 1, emits)?);
+                out.push_str(&emit_qml_tree(cell, depth + 1, ctx)?);
             }
         }
         writeln!(out, "{pad}}}").unwrap();
@@ -1921,7 +2499,7 @@ fn emit_table_section_rows(
 /// declarations lower `list<T>` to QML `var`, which is exactly that.
 /// We therefore make no attempt to specialise the delegate's
 /// `property var <as>` to a typed property — `var` is the right shape.
-fn emit_for_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<String, PipelineEmitError> {
+fn emit_for_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let delegate_pad = "    ".repeat(depth + 1);
     let prop_pad = "    ".repeat(depth + 2);
@@ -1943,11 +2521,29 @@ fn emit_for_qml(node: &LayoutNode, depth: usize, emits: &[EmitDecl]) -> Result<S
     if let Some(idx) = &index_name {
         writeln!(out, "{prop_pad}property int {idx}: index").unwrap();
     }
+    // The delegate `Item` carries no intrinsic size, but it IS a layout
+    // child of the enclosing `RowLayout` / `ColumnLayout`. Without a size
+    // the whole row collapses to nothing (the original "black smudge"
+    // bug). Size the delegate to its children so a fixed-size styled cell
+    // `Rectangle` (which sets `implicitWidth` / `implicitHeight`) drives
+    // the delegate's size, which the enclosing layout then honours.
+    // `childrenRect` is loop-safe here because our children size via
+    // `implicitWidth/Height`, not by anchoring back to this parent.
+    writeln!(out, "{prop_pad}implicitWidth: childrenRect.width").unwrap();
+    writeln!(out, "{prop_pad}implicitHeight: childrenRect.height").unwrap();
 
     // Children of the `For` go inside the delegate Item. We use the
     // shared children walker so nested `If`/`Else` and `For` inside the
     // loop body work without special-casing.
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false, emits)?);
+    //
+    // The loop's `index:` binding (e.g. `c` for the inner body loop, `ch`
+    // for the header loop) becomes the nearest-enclosing index for any
+    // styled cell `Box` beneath it — that index drives the cell's
+    // `Layout.preferredWidth: columnWidths[<index>]` column-width thread.
+    // `with_index` keeps the existing index when this For has none, so a
+    // styled cell still sees the closest indexed ancestor.
+    let child_ctx = ctx.with_index(index_name.clone());
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false, &child_ctx)?);
 
     writeln!(out, "{delegate_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -1997,7 +2593,7 @@ fn emit_if_qml(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     depth: usize,
-    emits: &[EmitDecl],
+    ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
@@ -2005,22 +2601,40 @@ fn emit_if_qml(
     let cond_expr = find_when_expression(if_node).unwrap_or_else(|| "false".to_string());
     let neg_cond = negate_qml_condition(&cond_expr);
 
+    // When the If/Else sits as the direct body of a styled cell
+    // `Rectangle`, each `Loader` must fill the cell so the loaded view
+    // (TextInput / Text) gets the cell's full fixed size. The flag is
+    // consumed here and NOT propagated into the branch bodies (those
+    // children fill their own Loader, which `cell_text_style_lines`
+    // already handles via `anchors.fill: parent`).
+    let fill = ctx.cell_fill_children;
+    let body_ctx = EmitCtx {
+        cell_fill_children: false,
+        ..ctx.clone()
+    };
+
     let mut out = String::new();
 
     // The `If` branch — always emitted.
     writeln!(out, "{pad}Loader {{").unwrap();
+    if fill {
+        writeln!(out, "{inner_pad}anchors.fill: parent").unwrap();
+    }
     writeln!(out, "{inner_pad}active: {cond_expr}").unwrap();
     writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
-    out.push_str(&emit_branch_body(&if_node.children, depth + 2, emits)?);
+    out.push_str(&emit_branch_body(&if_node.children, depth + 2, &body_ctx)?);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
 
     // The `Else` branch — only emitted when an `Else` sibling was paired.
     if let Some(else_n) = else_node {
         writeln!(out, "{pad}Loader {{").unwrap();
+        if fill {
+            writeln!(out, "{inner_pad}anchors.fill: parent").unwrap();
+        }
         writeln!(out, "{inner_pad}active: {neg_cond}").unwrap();
         writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
-        out.push_str(&emit_branch_body(&else_n.children, depth + 2, emits)?);
+        out.push_str(&emit_branch_body(&else_n.children, depth + 2, &body_ctx)?);
         writeln!(out, "{inner_pad}}}").unwrap();
         writeln!(out, "{pad}}}").unwrap();
     }
@@ -2044,16 +2658,16 @@ fn emit_if_qml(
 fn emit_branch_body(
     children: &[LayoutNode],
     depth: usize,
-    emits: &[EmitDecl],
+    ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     match children.len() {
         0 => Ok(format!("{pad}Item {{ }}\n")),
-        1 => emit_qml_tree(&children[0], depth, emits),
+        1 => emit_qml_tree(&children[0], depth, ctx),
         _ => {
             let mut out = String::new();
             writeln!(out, "{pad}Item {{").unwrap();
-            out.push_str(&emit_qml_children(children, depth + 1, false, emits)?);
+            out.push_str(&emit_qml_children(children, depth + 1, false, ctx)?);
             writeln!(out, "{pad}}}").unwrap();
             Ok(out)
         }
@@ -5754,5 +6368,348 @@ mod tests {
             proj.main_cpp.contains("QQmlApplicationEngine"),
             "main.cpp must use QQmlApplicationEngine"
         );
+    }
+
+    // =================================================================
+    // mosstyle inlining — styled `Box [cell]` → `Rectangle`
+    //
+    // These cover the UI28 §4.5 work that landed the cell-styling that
+    // turns the VisiCalc-qt grid from a collapsed black smudge into a
+    // real spreadsheet (borders, fixed widths, alignment, state colours).
+    // =================================================================
+
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleProp};
+
+    fn sp(name: &str, value: &str) -> StyleProp {
+        StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    /// A `cell` part mirroring `Grid.dark.msl`: border, padding, height,
+    /// right text-align, plus `selected` / `editing` state blocks.
+    fn cell_style(component: &str) -> StyleDef {
+        StyleDef {
+            component_name: component.to_string(),
+            parts: vec![
+                PartStyle {
+                    name: "sheet".to_string(),
+                    base: vec![
+                        sp("background", "#1e1e1e"),
+                        sp("color", "#cccccc"),
+                        sp("font-family", "monospace"),
+                        sp("font-size", "12px"),
+                    ],
+                    states: vec![],
+                },
+                PartStyle {
+                    name: "cell".to_string(),
+                    base: vec![
+                        sp("border-width", "1px"),
+                        sp("border-color", "#3f3f46"),
+                        sp("padding", "2px"),
+                        sp("height", "22px"),
+                        sp("text-align", "right"),
+                    ],
+                    states: vec![
+                        StateStyle {
+                            state: "selected".to_string(),
+                            props: vec![sp("background", "#264f78"), sp("color", "#ffffff")],
+                        },
+                        StateStyle {
+                            state: "editing".to_string(),
+                            props: vec![sp("background", "#1f4f3f")],
+                        },
+                    ],
+                },
+            ],
+        }
+    }
+
+    fn lp(name: &str, value: LayoutPropValue) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value,
+        }
+    }
+
+    /// A `For ( index: c )` whose body is a styled `Box [cell]` containing
+    /// a `Text ( content: ( v ) )` — the spreadsheet body-cell shape after
+    /// package resolution, wrapped in a `HostTable [sheet]` with a
+    /// `HostTableColGroup` so column-width threading discovers
+    /// `columnWidths`.
+    fn styled_cell_table_layout(component: &str) -> LayoutDef {
+        let cell_box = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some("cell".to_string()),
+            props: vec![
+                lp(
+                    "state-when-selected",
+                    LayoutPropValue::Expr("( r == selectedRow && c == selectedCol )".to_string()),
+                ),
+                lp(
+                    "state-when-editing",
+                    LayoutPropValue::Expr("( r == editRow && c == editCol )".to_string()),
+                ),
+            ],
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![lp("content", LayoutPropValue::Expr("( v )".to_string()))],
+                children: vec![],
+            }],
+        };
+        let inner_for = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                lp("each", LayoutPropValue::Keyword("row".to_string())),
+                lp("as", LayoutPropValue::Keyword("v".to_string())),
+                lp("index", LayoutPropValue::Keyword("c".to_string())),
+            ],
+            children: vec![cell_box],
+        };
+        let data_row = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: Some("data-row".to_string()),
+            props: vec![],
+            children: vec![inner_for],
+        };
+        let outer_for = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                lp("each", LayoutPropValue::SlotRef("viewport-rows".to_string())),
+                lp("as", LayoutPropValue::Keyword("row".to_string())),
+                lp("index", LayoutPropValue::Keyword("r".to_string())),
+            ],
+            children: vec![data_row],
+        };
+        let body = LayoutNode {
+            tag: "HostTableBody".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![outer_for],
+        };
+        // ColGroup whose For-Col carries the column-widths slot.
+        let colgroup = LayoutNode {
+            tag: "HostTableColGroup".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    lp("each", LayoutPropValue::SlotRef("column-widths".to_string())),
+                    lp("as", LayoutPropValue::Keyword("w".to_string())),
+                    lp("index", LayoutPropValue::Keyword("cw".to_string())),
+                ],
+                children: vec![LayoutNode {
+                    tag: "Col".to_string(),
+                    part_name: Some("col".to_string()),
+                    props: vec![lp("width", LayoutPropValue::Expr("( w )".to_string()))],
+                    children: vec![],
+                }],
+            }],
+        };
+        LayoutDef {
+            component_name: component.to_string(),
+            root: LayoutNode {
+                tag: "HostTable".to_string(),
+                part_name: Some("sheet".to_string()),
+                props: vec![],
+                children: vec![colgroup, body],
+            },
+        }
+    }
+
+    fn styled_cell_component(name: &str) -> MosmodelComponent {
+        component(
+            name,
+            vec![
+                slot("viewport-rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("column-widths", SlotType::List(Box::new(ListInnerType::Number)), true),
+                slot("selected-row", SlotType::Number, true),
+                slot("selected-col", SlotType::Number, true),
+                slot("edit-row", SlotType::Number, true),
+                slot("edit-col", SlotType::Number, true),
+            ],
+            vec![],
+        )
+    }
+
+    /// A styled `Box [cell]` lowers to a `Rectangle` carrying border,
+    /// background and a `Layout.preferredWidth` driven by the discovered
+    /// column-widths slot — not the old bare, sizeless `Item`.
+    #[test]
+    fn styled_box_cell_lowers_to_rectangle_with_border_and_width() {
+        let m = styled_cell_component("Grid");
+        let l = styled_cell_table_layout("Grid");
+        let s = cell_style("Grid");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+
+        assert!(out.contains("Rectangle {"), "cell must be a Rectangle:\n{out}");
+        assert!(out.contains("border.width: 1"), "missing border.width:\n{out}");
+        assert!(
+            out.contains("border.color: \"#3f3f46\""),
+            "missing border.color:\n{out}"
+        );
+        // Column width threaded from the discovered `columnWidths` slot
+        // via the inner For's `c` index.
+        assert!(
+            out.contains("Layout.preferredWidth: columnWidths[c]"),
+            "missing column-width thread:\n{out}"
+        );
+        // Fixed cell height from the part's `height: 22px`.
+        assert!(out.contains("implicitHeight: 22"), "missing height:\n{out}");
+    }
+
+    /// The cell `Rectangle`'s `color:` is a nested conditional driven by
+    /// the `state-when-*` predicates — editing wins over selected wins
+    /// over the inherited sheet background.
+    #[test]
+    fn styled_box_cell_background_is_state_conditional() {
+        let m = styled_cell_component("Grid");
+        let l = styled_cell_table_layout("Grid");
+        let s = cell_style("Grid");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+
+        // editing (#1f4f3f) outermost, then selected (#264f78), then the
+        // inherited sheet background (#1e1e1e) as the else branch.
+        assert!(
+            out.contains("color: ( ( r == editRow && c == editCol ) ) ? \"#1f4f3f\""),
+            "editing branch missing:\n{out}"
+        );
+        assert!(out.contains("\"#264f78\""), "selected colour missing:\n{out}");
+        assert!(
+            out.contains("\"#1e1e1e\""),
+            "inherited sheet background fallback missing:\n{out}"
+        );
+    }
+
+    /// The inner `Text` fills the cell, right-aligns (the part's
+    /// `text-align: right`), and takes a selected-conditional colour plus
+    /// the inherited monospace font.
+    #[test]
+    fn styled_box_cell_inner_text_aligns_and_colours() {
+        let m = styled_cell_component("Grid");
+        let l = styled_cell_table_layout("Grid");
+        let s = cell_style("Grid");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+
+        assert!(
+            out.contains("horizontalAlignment: Text.AlignRight"),
+            "inner Text must right-align:\n{out}"
+        );
+        assert!(
+            out.contains("anchors.fill: parent"),
+            "inner Text must fill the cell:\n{out}"
+        );
+        // selected → white, else the inherited sheet text colour.
+        assert!(
+            out.contains(
+                "color: ( ( r == selectedRow && c == selectedCol ) ) ? \"#ffffff\" : \"#cccccc\""
+            ),
+            "inner Text colour conditional missing:\n{out}"
+        );
+        assert!(
+            out.contains("font.family: \"monospace\""),
+            "inherited monospace font missing:\n{out}"
+        );
+    }
+
+    /// The `For` delegate `Item` sizes to its children so the styled cell
+    /// `Rectangle` actually drives the row layout (the fix for the
+    /// collapsed-grid bug).
+    #[test]
+    fn for_delegate_sizes_to_children() {
+        let m = styled_cell_component("Grid");
+        let l = styled_cell_table_layout("Grid");
+        let s = cell_style("Grid");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains("implicitWidth: childrenRect.width"),
+            "delegate must size to children:\n{out}"
+        );
+        assert!(
+            out.contains("implicitHeight: childrenRect.height"),
+            "delegate must size to children:\n{out}"
+        );
+    }
+
+    /// A header `Box [header-cell]` (centered, gray, no own height) still
+    /// becomes a styled `Rectangle` with a centered inner Text.
+    #[test]
+    fn styled_header_cell_centers_and_greys() {
+        let style = StyleDef {
+            component_name: "Grid".to_string(),
+            parts: vec![PartStyle {
+                name: "header-cell".to_string(),
+                base: vec![
+                    sp("background", "#2d2d30"),
+                    sp("color", "#9d9d9d"),
+                    sp("text-align", "center"),
+                    sp("border-width", "1px"),
+                    sp("border-color", "#3f3f46"),
+                ],
+                states: vec![],
+            }],
+        };
+        let header_box = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some("header-cell".to_string()),
+            props: vec![],
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![lp("content", LayoutPropValue::Expr("( h )".to_string()))],
+                children: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "Grid".to_string(),
+            root: header_box,
+        };
+        let m = component("Grid", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("Rectangle {"), "header must be a Rectangle:\n{out}");
+        assert!(out.contains("color: \"#2d2d30\""), "header bg missing:\n{out}");
+        assert!(
+            out.contains("horizontalAlignment: Text.AlignHCenter"),
+            "header must center text:\n{out}"
+        );
+        assert!(out.contains("color: \"#9d9d9d\""), "header text colour missing:\n{out}");
+    }
+
+    /// An unstyled `Box` (no matching part) keeps the bare `Item` shape —
+    /// the styled path must not perturb styleless emission.
+    #[test]
+    fn unstyled_box_still_lowers_to_item() {
+        let m = component("Plain", vec![], vec![]);
+        let l = single_box_layout("Plain");
+        // Style declares a `cell` part, but the Box has no part_name, so
+        // the styled path must not trigger.
+        let s = cell_style("Plain");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        // The root wrapper Item plus the Box's own Item — no Rectangle.
+        assert!(
+            !out.contains("Rectangle {"),
+            "unstyled Box must not become a Rectangle:\n{out}"
+        );
+        assert!(out.matches("Item {").count() >= 2, "Box must stay an Item:\n{out}");
+    }
+
+    /// `qml_hex_color_or_none` only accepts `#RGB` / `#RRGGBB` (the
+    /// security gate against attacker-controlled colour tokens reaching a
+    /// QML string position).
+    #[test]
+    fn hex_color_gate_rejects_non_hex() {
+        assert_eq!(qml_hex_color_or_none("#abc").as_deref(), Some("#aabbcc"));
+        assert_eq!(qml_hex_color_or_none("#1E1E1E").as_deref(), Some("#1e1e1e"));
+        assert!(qml_hex_color_or_none("red").is_none());
+        assert!(qml_hex_color_or_none("rgba(0,0,0,1)").is_none());
+        assert!(qml_hex_color_or_none("#12").is_none());
+        assert!(qml_hex_color_or_none("#ggg").is_none());
     }
 }
