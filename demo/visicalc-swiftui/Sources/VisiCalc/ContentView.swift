@@ -58,7 +58,14 @@ struct ContentView: View {
 
             Spacer()
         }
+        // Desktop is a fixed-width window; on a phone we fill the full width so
+        // the (vertically-stacked, touch-layout) formula bar and grid use the
+        // whole screen instead of being pinned to a 720pt column.
+        #if os(iOS)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        #else
         .frame(maxWidth: 720, maxHeight: .infinity, alignment: .topLeading)
+        #endif
         .background(Color(hex: 0x1E1E1E))
         .preferredColorScheme(.dark)
         .onAppear { formulaText = model.selectedRaw }

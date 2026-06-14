@@ -55,9 +55,18 @@ engine is cross-compiled for `aarch64-apple-ios-sim` (so the iOS slice links
 its own `libspreadsheet_capi.a`) and `Package.swift` links the right slice per
 platform. `scripts/run-ios.sh` builds it, wraps the executable in a `.app`, and
 installs + launches it on a booted iOS Simulator. Verified: the grid computes
-on iOS and edits recompute (the desktop window is sized 720pt, so on a narrow
-iPhone the right-hand total column scrolls off — a cosmetic layout note, not an
-engine one).
+on iOS and edits recompute.
+
+**Per-platform layout.** The formula bar uses a *different Mosaic layout* per
+platform — the whole point of the `.mll` layer. `scripts/build.sh` generates
+`FormulaBar.swift` from `FormulaBar.desktop.mll` (an `HStack`: address label and
+field side-by-side) guarded `#if os(macOS)`, and `FormulaBar.touch.swift` from
+`FormulaBar.touch.mll` (a `VStack`: field stacked under the label for full width
+on a phone) guarded `#if os(iOS)`. Both declare `FormulaBarView`, so the guards
+pick the right one and `ContentView` is unchanged. `ContentView` also fills the
+full width on iOS (vs the 720pt desktop window) so nothing scrolls off the
+narrow screen. (Grid.touch is identical to Grid.desktop, so the grid needs no
+variant.)
 
 ## Notes
 

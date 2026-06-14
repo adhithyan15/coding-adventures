@@ -47,12 +47,39 @@ SRC="$REPO_ROOT/demo/visicalc/mosaic"
 OUT_DIR="$DEMO_DIR/Sources/VisiCalc/Generated"
 mkdir -p "$OUT_DIR"
 
-echo "Compiling FormulaBar (SwiftUI)..."
+# wrap_guard FILE OS — fence a generated Swift file in `#if os(OS) … #endif`
+# so only the right platform's variant compiles. Both FormulaBar variants
+# declare the same `FormulaBarView` type (they come from the same .mil), so the
+# guards are what keep them from colliding when both files are in the target.
+wrap_guard() {
+  local f="$1" os="$2" tmp
+  tmp="$(mktemp)"
+  { printf '#if os(%s)\n' "$os"; cat "$f"; printf '#endif\n'; } > "$tmp"
+  mv "$tmp" "$f"
+}
+
+# FormulaBar has a real per-platform LAYOUT: the desktop layout lays the address
+# label + field out horizontally (HStack); the touch layout stacks them
+# vertically (VStack) so the field gets full width on a phone. We generate BOTH
+# from the shared FormulaBar.mil — desktop from FormulaBar.desktop.mll, touch
+# from FormulaBar.touch.mll — and platform-guard each. ContentView just uses
+# `FormulaBarView`; the active platform picks the matching layout. (Grid.touch
+# is identical to Grid.desktop, so the Grid below needs no touch variant.)
+echo "Compiling FormulaBar (SwiftUI, desktop → macOS)..."
 "$MOSAIC_COMPILE" --backend swiftui \
   --interface "$SRC/FormulaBar.mil" \
   --layout    "$SRC/FormulaBar.desktop.mll" \
   --style     "$SRC/FormulaBar.dark.msl" \
   -o "$OUT_DIR/FormulaBar.swift"
+wrap_guard "$OUT_DIR/FormulaBar.swift" macOS
+
+echo "Compiling FormulaBar (SwiftUI, touch → iOS)..."
+"$MOSAIC_COMPILE" --backend swiftui \
+  --interface "$SRC/FormulaBar.mil" \
+  --layout    "$SRC/FormulaBar.touch.mll" \
+  --style     "$SRC/FormulaBar.dark.msl" \
+  -o "$OUT_DIR/FormulaBar.touch.swift"
+wrap_guard "$OUT_DIR/FormulaBar.touch.swift" iOS
 
 echo "Compiling Grid (SwiftUI)..."
 "$MOSAIC_COMPILE" --backend swiftui \
