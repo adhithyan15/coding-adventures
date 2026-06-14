@@ -460,6 +460,85 @@ impl ApsFrameBatchReadinessSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ApsDeliveryHandoffSummary {
+    pub readiness_summary: ApsFrameBatchReadinessSummary,
+    pub required_handoff_check_count: usize,
+    pub passed_handoff_check_count: usize,
+    pub blocked_handoff_check_count: usize,
+    pub frame_batch_ready: bool,
+    pub application_delivery_ready: bool,
+    pub payload_context_ready: bool,
+    pub security_or_ack_context_present: bool,
+    pub delivery_handoff_ready: bool,
+}
+
+impl ApsDeliveryHandoffSummary {
+    pub fn from_readiness(readiness_summary: ApsFrameBatchReadinessSummary) -> Self {
+        let frame_batch_ready = readiness_summary.is_frame_batch_ready();
+        let application_delivery_ready = !readiness_summary.needs_application_delivery();
+        let payload_context_ready = !readiness_summary.needs_payload_context();
+        let security_or_ack_context_present = readiness_summary.batch_summary.has_secured_frames()
+            || readiness_summary.batch_summary.has_ack_requests();
+        let checks = [
+            frame_batch_ready,
+            application_delivery_ready,
+            payload_context_ready,
+            security_or_ack_context_present,
+        ];
+        let passed_handoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_handoff_check_count = checks.len();
+        let blocked_handoff_check_count = required_handoff_check_count - passed_handoff_check_count;
+        let delivery_handoff_ready = blocked_handoff_check_count == 0;
+
+        Self {
+            readiness_summary,
+            required_handoff_check_count,
+            passed_handoff_check_count,
+            blocked_handoff_check_count,
+            frame_batch_ready,
+            application_delivery_ready,
+            payload_context_ready,
+            security_or_ack_context_present,
+            delivery_handoff_ready,
+        }
+    }
+
+    pub fn from_batch_summary(batch_summary: ApsFrameBatchSummary) -> Self {
+        Self::from_readiness(batch_summary.readiness())
+    }
+
+    pub fn is_delivery_handoff_ready(self) -> bool {
+        self.delivery_handoff_ready
+    }
+
+    pub fn has_blocked_handoff_checks(self) -> bool {
+        self.blocked_handoff_check_count > 0
+    }
+
+    pub fn needs_frame_batch(self) -> bool {
+        !self.frame_batch_ready
+    }
+
+    pub fn needs_application_delivery(self) -> bool {
+        !self.application_delivery_ready
+    }
+
+    pub fn needs_payload_context(self) -> bool {
+        !self.payload_context_ready
+    }
+
+    pub fn needs_security_or_ack_context(self) -> bool {
+        !self.security_or_ack_context_present
+    }
+}
+
+pub fn summarize_aps_delivery_handoff(
+    readiness_summary: ApsFrameBatchReadinessSummary,
+) -> ApsDeliveryHandoffSummary {
+    ApsDeliveryHandoffSummary::from_readiness(readiness_summary)
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ApsCommandId(pub u8);
 
@@ -1622,6 +1701,79 @@ mod tests {
         let empty = ApsFrameBatchSummary::empty().readiness();
         assert_eq!(empty.passed_check_count, 0);
         assert!(empty.needs_frames());
+    }
+
+    #[test]
+    fn aps_delivery_handoff_summary_marks_ready_delivery() {
+        let frame = ApsFrame {
+            frame_control: ApsFrameControl {
+                ack_request: true,
+                ..ApsFrameControl::data_unicast()
+            },
+            addressing: ApsAddressing::Unicast {
+                destination_endpoint: Endpoint(1),
+                source_endpoint: Endpoint(2),
+            },
+            cluster_id: ClusterId::ON_OFF,
+            profile_id: ProfileId::HOME_AUTOMATION,
+            counter: 9,
+            payload: vec![0x01, 0x00],
+        };
+        let batch_summary = ApsFrameBatchSummary::from_frames([&frame]);
+        let readiness = batch_summary.readiness();
+
+        let summary = summarize_aps_delivery_handoff(readiness);
+
+        assert_eq!(summary.readiness_summary, readiness);
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 4);
+        assert_eq!(summary.blocked_handoff_check_count, 0);
+        assert!(summary.frame_batch_ready);
+        assert!(summary.application_delivery_ready);
+        assert!(summary.payload_context_ready);
+        assert!(summary.security_or_ack_context_present);
+        assert!(summary.delivery_handoff_ready);
+        assert!(summary.is_delivery_handoff_ready());
+        assert!(!summary.has_blocked_handoff_checks());
+        assert!(!summary.needs_frame_batch());
+        assert!(!summary.needs_application_delivery());
+        assert!(!summary.needs_payload_context());
+        assert!(!summary.needs_security_or_ack_context());
+    }
+
+    #[test]
+    fn aps_delivery_handoff_summary_routes_blocked_delivery() {
+        let command_only = ApsFrameSummary {
+            frame_type: ApsFrameType::Command,
+            delivery_mode: DeliveryMode::Broadcast,
+            profile_kind: ProfileKind::ZigbeeDeviceProfile,
+            cluster_kind: ClusterKind::ManufacturerSpecific,
+            source_endpoint: Endpoint::ZDO,
+            destination_endpoint: Some(Endpoint(255)),
+            group: None,
+            counter: 1,
+            payload_len: 0,
+            ack_request: false,
+            security: false,
+        };
+        let batch_summary = ApsFrameBatchSummary::from_summaries([command_only]);
+
+        let summary = ApsDeliveryHandoffSummary::from_batch_summary(batch_summary);
+
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 0);
+        assert_eq!(summary.blocked_handoff_check_count, 4);
+        assert!(!summary.frame_batch_ready);
+        assert!(!summary.application_delivery_ready);
+        assert!(!summary.payload_context_ready);
+        assert!(!summary.security_or_ack_context_present);
+        assert!(!summary.delivery_handoff_ready);
+        assert!(!summary.is_delivery_handoff_ready());
+        assert!(summary.has_blocked_handoff_checks());
+        assert!(summary.needs_frame_batch());
+        assert!(summary.needs_application_delivery());
+        assert!(summary.needs_payload_context());
+        assert!(summary.needs_security_or_ack_context());
     }
 
     #[test]
