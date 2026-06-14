@@ -1,0 +1,176 @@
+# Chart-as-Constraints — the whole patient chart becomes a constraint program
+
+**Directive (2026-06-14):** *"Everything in the patient chart should become a constraint
+in one way or the other"* — comorbidities, dosing, cost, the wait-for-results-vs-treat-now
+decision, side effects, and insurance/formulary rules (e.g. step therapy: a payer won't
+approve drug Y until regimen X has been tried). Solve it with the **constraint solver we
+already built** (`adj-constraint-solver`). This document specs that architecture.
+
+It does **not** replace the diagnostic side (organism-id LRs, the differential). It
+replaces the *treatment-selection* side: today a min-cost **set-cover** picks drugs to
+cover the likely organisms. That is a special case. The general form is a **constrained
+optimization problem (COP)** whose feasible region and objective are *read off the chart*.
+
+> Invariant, unchanged: decision **support**, never replacement. The optimizer proposes a
+> regimen with a full audit trail (every constraint cites the chart fact and the
+> byte-provenanced clinical rule that produced it); the physician decides and can edit any
+> constraint. The optimizer must **abstain** (return INDETERMINATE / INFEASIBLE with the
+> conflicting constraints named) rather than fabricate a regimen.
+
+---
+
+## 1. The shape: chart → constraints → COP → solver
+
+```
+patient chart (FHIR / prose / voice)
+   │  decompose (local model)  +  PHI de-identification   [CH task]
+   ▼
+typed IR: a set of CHART FACTS (conditions, labs, meds, allergies, vitals, coverage)
+   │  constraint-compiler (deterministic): each chart fact × grounded clinical rule
+   ▼
+a CONSTRAINT PROGRAM over decision variables:
+     variables : x_d ∈ {0,1}  (give drug d),  dose_d ∈ ℤ (mg/kg),  t ∈ {treat_now, await_culture}
+     hard      : coverage, exclusions, dose-feasibility, step-therapy precedence, renal/hepatic caps
+     objective : minimize  w_cost·cost + w_tox·side_effect_risk + w_delay·delay_risk + w_mon·monitoring
+   │  adj-constraint-solver  (B1 int-opt · B1b SAT/PB · B2c LIA feasibility · C2 simplex min/max)
+   ▼
+DifferentialRegimen: chosen drugs + doses + timing, OR INFEASIBLE(conflict set)
+   + proof: every constraint → the chart fact + the byte-provenanced rule that justifies it
+```
+
+Everything below already exists in the substrate and is **reused, not rebuilt**:
+`adj-constraint-solver` (integer optimization, Sinz at-most-k SAT/PB, Cooper LIA
+feasibility/`check`, simplex `minimize`/`maximize`, observed-value substitution),
+`native_setcover` (coverage + exclusions + defeasance), the dose-window solve in
+`derive_regimen.py`, the logic engine, and adj-lang `constrain`/`solve`/`check`/`minimize`.
+
+---
+
+## 2. The constraint taxonomy (each chart fact → a constraint family)
+
+| Chart fact | Constraint family | Form | Example |
+|---|---|---|---|
+| **Likely organisms** (from the differential) | coverage | hard set-cover: ⋁ drugs covering each organism | every organism in the differential must be covered |
+| **Allergy** (penicillin) | exclusion | hard: `x_d = 0` | β-lactams excluded |
+| **Pregnancy** | exclusion | hard: `x_d = 0` | moxifloxacin, TMP-SMX excluded |
+| **Renal impairment** (eGFR/CrCl lab) | dose cap | `dose_d ≤ ceiling_d(renal)` | vancomycin ceiling shrinks; renally-cleared drugs capped |
+| **Hepatic impairment** | dose cap / exclusion | `dose_d ≤ ceiling_d(hepatic)` | |
+| **Concurrent meds** | drug–drug interaction | exclusion or dose cap | other nephrotoxin → vancomycin ceiling ↓ (additive toxicity) |
+| **Comorbidity** (QT, G6PD, seizure hx, myasthenia) | exclusion / penalty | hard or soft | avoid QT-prolonging agents; avoid seizure-threshold-lowering |
+| **Dose-window** (efficacy ↔ toxicity) | feasibility band | `floor_d ≤ dose_d ≤ ceiling_d` | UNSAT when no safe-and-effective dose exists |
+| **Severity / time-criticality** | timing | hard or soft on `t` | septic/comatose ⇒ `t = treat_now` (empiric) |
+| **Culture pending** | timing tradeoff | soft: narrow after result | await vs treat-now is a modeled decision (§4) |
+| **Insurance / formulary** | step-therapy precedence + cost | hard precedence + objective | payer requires X tried before Y; tier → cost weight |
+| **Side-effect profile** | objective penalty | soft | each drug carries a toxicity weight scaled by patient factors |
+| **Cost** (drug + monitoring + LOS) | objective | minimize | the primary objective term |
+
+**Hard** constraints define feasibility (a regimen that violates one is not offered).
+**Soft** constraints become weighted terms in the objective (tradeoffs the solver
+optimizes). The split is itself a grounded, editable choice in the CAS.
+
+---
+
+## 3. Nothing authored — the constraint *rules* are spider-grounded too
+
+The governing project rule applies recursively: the clinical rules that turn a chart fact
+into a constraint must themselves enter the CAS via the cold path (spider → byte-quote →
+adversarial gate → citation verified), exactly like the organism-id LRs and the doses.
+Examples that must be grounded, not authored:
+
+- "moxifloxacin / fluoroquinolones contraindicated in pregnancy" → byte-quote from the
+  FDA label / ACOG.
+- "vancomycin nephrotoxicity is additive with other nephrotoxins" → primary source.
+- "ceftriaxone contraindicated in neonates receiving IV calcium" → FDA label (already
+  surfaced verbatim in the G3 source decomposition).
+- step-therapy / prior-authorization rules → the payer's published policy document.
+
+So Chart-as-Constraints reuses the **same grounding harness** (`grounding/harness.py`,
+`ground_sources.py`): a new grounding file per constraint family
+(`interaction-grounding.json`, `contraindication-grounding.json`,
+`step-therapy-grounding.json`), a gate that emits the constraint rules into the CAS, and a
+new ledger artifact ("treatment constraints") with its own grounded/flagged/debt counts.
+
+---
+
+## 4. The wait-vs-treat-now decision, modeled
+
+Empiric-now vs await-culture is a real tradeoff the directive calls out. Model it as a
+binary `t` with two costed branches:
+
+- **treat_now (empiric):** broad coverage (more drugs) → higher cost + higher cumulative
+  side-effect risk, but `delay_risk = 0`.
+- **await_culture (targeted):** narrower (cheaper, fewer side effects) but
+  `delay_risk = severity × P(progression in the culture window)`.
+
+A hard guard forces `t = treat_now` when severity/time-criticality crosses a grounded
+threshold (e.g. suspected bacterial meningitis — every hour of delay raises mortality, a
+byte-provenanced fact). Otherwise the objective decides. The output names the tradeoff
+explicitly ("empiric now costs $X and N side-effect-units; awaiting culture saves that but
+risks Y") — decision support, not a hidden choice.
+
+---
+
+## 5. Insurance / step-therapy as constraints
+
+- **Step therapy** ("won't approve Y until X tried/failed"): a precedence constraint
+  `x_Y ≤ tried_X` where `tried_X` is a chart fact (prior failed regimen). If `X` hasn't
+  been tried, `Y` is infeasible *for reimbursement* — surfaced distinctly from clinical
+  infeasibility, because the physician may override on medical necessity.
+- **Formulary tier / prior-auth**: tier → the `cost` weight; prior-auth-required → a soft
+  penalty (delay/admin burden) or a hard gate the physician can override.
+- The optimizer returns **two** regimens when they differ: the *clinically optimal* and
+  the *insurance-feasible* — so the tradeoff (and any appeal) is explicit.
+
+---
+
+## 6. Output: a faithful, conflict-aware regimen
+
+- **Feasible:** the chosen `{drug, dose, timing}` + the objective breakdown (cost / tox /
+  delay / monitoring) + per-constraint provenance (chart fact → grounded rule → byte-quote).
+- **Infeasible:** the **minimal conflict set** (reuse the IIS / conflicting-constraint core
+  from B2c) — e.g. "covering Pseudomonas requires cefepime, but cefepime is excluded by the
+  documented allergy" — so the physician sees exactly which two facts collide.
+- Every number is editable in the CAS; editing a constraint re-derives at **0 model calls**
+  (warm path), and the change propagates with a new audit trail.
+
+---
+
+## 7. Build plan (incremental PRs, specs-first, each grounded + babysat)
+
+- **CC-1 — constraint IR + compiler skeleton.** Define the chart-fact → constraint mapping
+  as data (`constraints/` schema) and a deterministic compiler `chart_to_cop.py` that emits
+  an adj-lang constraint program from a chart IR + the grounded rule tables. Reuse
+  `native_setcover` for coverage; emit `constrain`/`exclude`/dose-band clauses. Tests on the
+  existing meningitis profiles (young/elderly/allergic) reproducing today's set-cover output
+  as a special case — proving generalization didn't regress.
+- **CC-2 — dose feasibility + renal/interaction caps as constraints.** Fold the dose-window
+  solve into the COP (`floor ≤ dose ≤ ceiling(renal, interactions)`); UNSAT path returns the
+  conflict. Ground the renal-adjustment + additive-nephrotoxicity rules (spider).
+- **CC-3 — contraindication / interaction grounding.** `contraindication-grounding.json` +
+  `interaction-grounding.json` via the harness (pregnancy, QT, G6PD, allergy classes,
+  drug–drug); gate → CAS; new "treatment constraints" ledger artifact.
+- **CC-4 — cost + side-effect objective.** Add the weighted objective (simplex `minimize`);
+  ground drug costs (CMS ASP / GoodRx-class public data) + side-effect weights. Output the
+  objective breakdown.
+- **CC-5 — wait-vs-treat-now decision (§4)** with the grounded time-criticality threshold.
+- **CC-6 — insurance / step-therapy (§5):** precedence constraints + the dual
+  clinical-vs-reimbursement regimen output; ground a sample payer step-therapy policy.
+- **CC-7 — full chart drive-through:** wire CH (chart→IR + de-identification) into the COP so
+  a whole de-identified FHIR chart produces a regimen with the full audit trail.
+
+Each CC-n: spec note → grounded rules (no authoring) → deterministic compiler/solver wiring
+→ tests (incl. an infeasibility/abstention test) → security review → PR → babysit.
+
+---
+
+## 8. Why this is the right shape
+
+- It is the **generic engine** position (no domain-specific point solution): treatment is
+  constrained optimization; the solver already exists; the chart supplies the constraints.
+- It makes the chart **fully accounted for** — the same "no unaccounted bytes" discipline as
+  diagnosis: every chart fact must land as a constraint or be explicitly discarded with a
+  reason, so nothing in the chart is silently ignored.
+- It keeps inference **CPU-bound and correctable**: the model only decomposes the chart; the
+  solver reasons; editing a grounded rule re-derives deterministically.
+- It preserves **abstention**: INFEASIBLE with a named conflict set is a first-class,
+  honest answer — the optimizer never invents a regimen to avoid saying "these facts collide."
