@@ -596,6 +596,37 @@ mod tests {
     }
 
     #[test]
+    fn server_survives_a_client_connection_reset() {
+        // A client that vanishes with unread data in its socket buffer triggers
+        // a TCP RST.  The reactor must close only that connection and keep
+        // serving everyone else — a single hostile/crashed client must never
+        // take the whole server down.  (Regression: the read path used to
+        // propagate ECONNRESET out of serve(), killing the event loop.)
+        let (server, handle, addr) = start_server();
+
+        let mut alice = connect(addr);
+        let mut bob = connect(addr);
+        register(&mut alice, "alice");
+        register(&mut bob, "bob");
+
+        // Make the server send Alice data she never reads, then drop her socket
+        // with that data still buffered → the OS sends an RST on close.
+        alice.write_all(b"JOIN #test\r\n").expect("alice joins");
+        drop(alice);
+
+        // Bob must still be served: the event loop survived Alice's reset.
+        bob.write_all(b"PING :still-alive\r\n").expect("bob pings");
+        let pong = read_until(&mut bob, "PONG");
+        assert!(
+            pong.contains("PONG"),
+            "server should keep serving bob after alice's RST, got: {pong:?}"
+        );
+
+        server.stop();
+        handle.join().expect("server thread").expect("server exit");
+    }
+
+    #[test]
     fn quit_command_broadcasts_to_channel() {
         let (server, handle, addr) = start_server();
 
