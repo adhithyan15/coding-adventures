@@ -1,0 +1,17 @@
+[package]
+name = "irc-server-native-jni"
+version = "0.1.0"
+edition = "2021"
+description = "JNI native library bridging Java/Kotlin to the all-Rust irc-net-reactor IRC engine"
+publish = false
+
+[lib]
+# cdylib → libirc_server_native_jni.{so,dylib,dll}, loaded via
+# System.loadLibrary("irc_server_native_jni"). The `lib` crate type lets pure-Rust
+# helpers be unit-tested without a JVM.
+crate-type = ["cdylib", "lib"]
+name = "irc_server_native_jni"
+
+[dependencies]
+jni-bridge      = { path = "../jni-bridge" }
+irc-net-reactor = { path = "../irc-net-reactor" }
