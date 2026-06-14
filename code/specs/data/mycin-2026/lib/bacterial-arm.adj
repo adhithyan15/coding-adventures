@@ -1,0 +1,82 @@
+% ============================================================================
+% bacterial-arm — the bacterial-meningitis evidence, as an IMPORTABLE LIBRARY.
+% ============================================================================
+% MYCIN-2026 M4. A CAS library: `import`s the controlled vocabulary, then a
+% named `rulebook` block carries the prior + likelihood-ratio contributions that
+% favor BACTERIAL meningitis over aseptic/viral. Every LR is byte-grounded in the
+% adj52 corpus; the byte-quote + study live in grounding/grounding-results.json
+% (keyed by the same clause id), and each clause here carries its source + trust.
+%
+% Other libraries use this by:  import "bacterial-arm.adj"   (which transitively
+% imports the vocab). The composed rulebook meningitis.adj imports this arm.
+%
+% DELIBERATE NAIVETY (for the M8 cost-to-correct proof): the four CSF-chemistry
+% findings (neutrophilic pleocytosis, low glucose, high protein, high lactate)
+% are encoded as INDEPENDENT `contributes`. They are not independent — they are
+% joint effects of one inflammatory process — so multiplying their LRs
+% over-saturates the posterior (the ADJ56 P=0.9999 failure). M8 localizes this
+% from the proof DAG and adds ONE explaining-away `interacts` clause; nothing in
+% the grounding changes, only the dependency structure. The over-count stays in
+% here on purpose.
+
+import "meningitis-vocab.adj"
+
+rulebook bacterial_arm {
+    use meningitis_vocab
+
+    % Pre-test probability of bacterial (vs aseptic) meningitis in an undifferentiated
+    % CSF-pleocytosis presentation. Nigrovic 2007 JAMA, n=3295: 3.7% bacterial.
+    prior 0.037 for bacterial_meningitis
+        source "Nigrovic LE et al., JAMA 2007;297(1):52-60 (BMS cohort, n=3295)"
+        trust authoritative
+
+    % --- Reference-standard microbiology (the strong, near-decisive signals) ---
+    contributes 85 from csf_gram_stain(positive) to bacterial_meningitis
+        source "WHO meningitis Dx 2025 / NBK614844 (sens 85%, spec 99% → LR+ 85)"
+        trust authoritative
+
+    % NOTE (spider direction_only): a positive CSF culture is near-definitional
+    % (it IS the bacterial-meningitis reference standard), so the magnitude is a
+    % definitional near-certainty rather than a meta-analytic LR+ — the spider
+    % could not byte-anchor "271" to a study (it surfaced a clinical-exam LR ~21
+    % for a different quantity). Kept high + trust consensus; the M5 gate flags
+    % that the magnitude is definitional, not study-derived.
+    contributes 271 from csf_culture(positive) to bacterial_meningitis
+        source "CSF culture = bacterial-meningitis reference standard (definitional)"
+        trust consensus
+
+    % --- CSF chemistry / cytology (encoded INDEPENDENT on purpose; see header) ---
+    % spider direction_only: Spanos 1989 (PMID 2810603) anchors CSF PMN >1180/uL
+    % at 99% certainty for bacterial — i.e. the source supports an even STRONGER
+    % LR at extreme thresholds; 15 is kept as a conservative cross-population value.
+    contributes 15 from csf_neutrophilic_pleocytosis(high) to bacterial_meningitis
+        source "Straus SE et al., JAMA 2006;296(16):2012-22 (cf. Spanos 1989 PMID 2810603, PMN>1180 → 99%)"
+        trust empirical
+
+    % spider-grounded: PMC4886299 Table 2 (Lindquist) ratio <0.4 sens 70% spec 96%
+    % → LR+ = 0.70/(1-0.96) = 17.5 (recalibrated from the authored 18).
+    contributes 17.5 from csf_glucose(low) to bacterial_meningitis
+        source "PMC4886299 (Lindquist, CSF:serum glucose ratio <0.4: sens 70% spec 96%)"
+        trust empirical
+
+    contributes 9.33 from csf_protein(high) to bacterial_meningitis
+        source "Viallon A et al., via PMC4886299"
+        trust empirical
+
+    % spider-grounded: PMID 21382412 sens 0.93 spec 0.96 → LR+ 22.9 (95% CI 12.6-41.9).
+    contributes 22.9 from csf_lactate(high) to bacterial_meningitis
+        source "Sakushima K et al., J Infect 2011 PMID 21382412 (LR+ 22.9, CI 12.6-41.9)"
+        trust empirical
+
+    % --- Serum / clinical adjuncts ---
+    % spider-grounded: PMID 26188130 pooled sens 0.90 spec 0.98 → LR+ 27.3 (CI 8.2-91.1).
+    contributes 27.3 from serum_procalcitonin(high) to bacterial_meningitis
+        source "Vikse J et al., 2015 PMID 26188130 (serum PCT meta-analysis, LR+ 27.3)"
+        trust empirical
+
+    % spider-grounded: PMID 20974781 reports seizure LR+ 4.40 (95% CI 3.0-6.4),
+    % a byte-anchored value (recalibrated from the authored 5.84).
+    contributes 4.40 from seizure(present) to bacterial_meningitis
+        source "PMID 20974781 (seizure LR+ 4.40, 95% CI 3.0-6.4)"
+        trust empirical
+}
