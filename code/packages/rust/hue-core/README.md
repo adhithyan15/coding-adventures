@@ -53,6 +53,8 @@ packages a typed surface for:
   discovery
 - integration package summaries that join descriptor, command-flow, and local
   pairing readiness
+- Hue package release-readiness summaries for catalog publish checks across
+  worker, command-flow, local-pairing, event-stream, and physical-presence gates
 
 ## Dependencies
 
