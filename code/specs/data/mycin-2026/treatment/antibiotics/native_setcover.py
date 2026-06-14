@@ -53,10 +53,18 @@ def _sym(prefix: str, *parts: str) -> str:
     return name
 
 
-def emit_program(organisms: list[str], exclusions: set[str]) -> tuple[str, dict, bool]:
+def emit_program(organisms: list[str], exclusions: set[str],
+                 defeated: set[tuple[str, str]] = frozenset()) -> tuple[str, dict, bool]:
     """Emit the adj-lang integer program for this cover. Returns (program text,
     {x_var → drug}, feasible?) — feasible is False if some organism has no coverer
-    (the program is then trivially infeasible and the engine will say so)."""
+    (the program is then trivially infeasible and the engine will say so).
+
+    `defeated` is the set of (drug, organism) coverage edges VOIDED by an observed
+    culture sensitivity — an in-vitro result that the isolate is resistant to that
+    drug. A defeated edge is dropped before the cover is built, so the regimen
+    re-derives around it (MYCIN's "culture-directed" refinement of empiric therapy).
+    A combination is defeated for an organism if any of its members is resistant to
+    that organism (the synergy rationale is undercut)."""
     cands = reg.candidates(exclusions)  # CSF-penetrant, not contraindicated
     lines: list[str] = []
     xvar = {d: _sym("x", d) for d in cands}
@@ -70,6 +78,8 @@ def emit_program(organisms: list[str], exclusions: set[str]) -> tuple[str, dict,
         ds = rule["drugs"]
         if not all(d in xvar for d in ds):
             continue  # a member is excluded → the combination is unavailable
+        if any((d, rule["covers"]) in defeated for d in ds):
+            continue  # a resistant member breaks the combination's coverage
         y = _sym("y", *ds)
         lines.append(f"symbol {y} : bool")
         for d in ds:  # y ≤ x_d  for each member
@@ -86,7 +96,9 @@ def emit_program(organisms: list[str], exclusions: set[str]) -> tuple[str, dict,
         # field from the formulary unvalidated, even across the CAS trust boundary.
         if not TOKEN_RE.match(org):
             raise ValueError(f"unsafe organism token {org!r} (must match {TOKEN_RE.pattern})")
-        terms = [xvar[d] for d in cands if org in reg.DRUGS[d]["covers"]]
+        # A drug covers `org` unless a culture sensitivity defeated that edge.
+        terms = [xvar[d] for d in cands
+                 if org in reg.DRUGS[d]["covers"] and (d, org) not in defeated]
         terms += combo_cover.get(org, [])
         if terms:
             lines.append(f"constrain {' + '.join(terms)} >= 1   % cover {org}")
@@ -104,9 +116,11 @@ def emit_program(organisms: list[str], exclusions: set[str]) -> tuple[str, dict,
     return "\n".join(lines) + "\n", var_to_drug, feasible
 
 
-def solve(cli: Path, organisms: list[str], exclusions: set[str]) -> dict:
-    """Run the emitted program through the engine; return the engine's regimen."""
-    program, var_to_drug, _ = emit_program(organisms, exclusions)
+def solve(cli: Path, organisms: list[str], exclusions: set[str],
+          defeated: set[tuple[str, str]] = frozenset()) -> dict:
+    """Run the emitted program through the engine; return the engine's regimen.
+    `defeated` carries culture-sensitivity results (resistant drug→organism edges)."""
+    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated)
     fd, name = tempfile.mkstemp(suffix=".adj", prefix="_tmp_native_", dir=HERE)
     p = Path(name)
     try:
