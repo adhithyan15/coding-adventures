@@ -1,0 +1,49 @@
+{
+  "hash": "2da03f27a4a51a55",
+  "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK562176/",
+  "title": "Haemophilus Influenzae Infection — StatPearls (NCBI Bookshelf, NBK562176)",
+  "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK562176/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "H. influenzae type b (Hib) accounts for 95% of invasive disease in children and >50% of invasive disease in adults.",
+      "byte_quote": "H. influenzae type b (Hib) is noteworthy because of its polyribosyl ribitol phosphate (PRP) capsule, which accounts for 95% of invasive disease in children and >50% of invasive disease in adults."
+    },
+    {
+      "id": "c2",
+      "text": "Invasive Hib infection occurs commonly in children under 5 years of age and includes pneumonia and meningitis.",
+      "byte_quote": "The invasive Hib infection occurs commonly in children under 5 years of age and mainly includes pneumonia and meningitis."
+    },
+    {
+      "id": "c3",
+      "text": "After Hib conjugate vaccine introduction, the majority of invasive H. influenzae disease is now caused by non-typeable strains (NTHi), which also cause meningitis.",
+      "byte_quote": "NTHi is responsible for invasive infections like bacteremia without identifiable focus, bacteremic pneumonia, and meningitis."
+    },
+    {
+      "id": "c4",
+      "text": "In 2017, incidence per 100,000 children under 5 was 0.18 for Hib, 1.7 for non-b H. influenzae, and 1.7 for non-typeable H. influenzae.",
+      "byte_quote": "In 2017, the incidence rate was 0.18 for Hib, 1.7 for non-b H. influenzae , and 1.7 for non-typeable H. influenzae per 100,000 population of children younger than 5 years of age."
+    },
+    {
+      "id": "c5",
+      "text": "H. influenzae is a small, facultatively anaerobic, pleomorphic, capnophilic gram-negative coccobacillus of the family Pasteurellaceae.",
+      "byte_quote": "Haemophilus influenzae is characterized as a small (0.3 micrometer to 1 micrometer), facultatively anaerobic, pleomorphic, and capnophilic gram-negative coccobacillus of the family Pasteurellaceae"
+    },
+    {
+      "id": "c6",
+      "text": "Gram staining of body-fluid samples reveals pleomorphic gram-negative coccobacilli.",
+      "byte_quote": "The initial test is Gram staining, which reveals pleomorphic gram-negative coccobacilli."
+    },
+    {
+      "id": "c7",
+      "text": "In Hib meningitis, the capsular antigen is detected in 90% of patients and 80% demonstrate a positive CSF Gram stain.",
+      "byte_quote": "The capsular antigen is detected in 90% of patients, and 80% demonstrate a positive CSF gram stain."
+    },
+    {
+      "id": "c8",
+      "text": "Hib meningitis often shows marked pleocytosis with neutrophil predominance, decreased CSF glucose, and elevated protein.",
+      "byte_quote": "Hib meningitis often shows a marked pleocytosis with neutrophil predominance. The glucose levels in the CSF are decreased, and protein levels are elevated."
+    }
+  ],
+  "cites": []
+}

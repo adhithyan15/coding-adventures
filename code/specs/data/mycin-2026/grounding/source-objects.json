@@ -1,0 +1,474 @@
+[
+  {
+    "source_id": "https://pubmed.ncbi.nlm.nih.gov/15509818/",
+    "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15509818/",
+    "title": "Clinical features and prognostic factors in adults with bacterial meningitis (van de Beek et al., N Engl J Med 2004)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Streptococcus pneumoniae was the most common pathogen, accounting for 51% of episodes of community-acquired bacterial meningitis in adults.",
+        "byte_quote": "The most common pathogens were Streptococcus pneumoniae (51 percent of episodes) and Neisseria meningitidis (37 percent)."
+      },
+      {
+        "id": "c2",
+        "text": "Neisseria meningitidis was the second most common pathogen, accounting for 37% of episodes.",
+        "byte_quote": "The most common pathogens were Streptococcus pneumoniae (51 percent of episodes) and Neisseria meningitidis (37 percent)."
+      },
+      {
+        "id": "c3",
+        "text": "Mortality was higher with pneumococcal meningitis than meningococcal meningitis (30% vs 7%).",
+        "byte_quote": "The mortality rate was higher among patients with pneumococcal meningitis than among those with meningococcal meningitis (30 percent vs. 7 percent, P<0.001)."
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK470351/",
+    "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470351/",
+    "title": "Bacterial Meningitis (StatPearls, NCBI Bookshelf NBK470351)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Group B Streptococcus is the common cause in infants under 2 months of age.",
+        "byte_quote": "Group B _Streptococcus_ is common in infants less than 2 months of age while _Streptococcus pneumoniae_ is the most common in all other age groups, with the exception of 11 - 17 year old, where _Neisseria meningitidis is_ still the most common cause."
+      },
+      {
+        "id": "c2",
+        "text": "Streptococcus pneumoniae is the most common cause in all age groups except 11-17 year olds, where Neisseria meningitidis is most common.",
+        "byte_quote": "Group B _Streptococcus_ is common in infants less than 2 months of age while _Streptococcus pneumoniae_ is the most common in all other age groups, with the exception of 11 - 17 year old, where _Neisseria meningitidis is_ still the most common cause."
+      },
+      {
+        "id": "c3",
+        "text": "In 1670 US cases during 2003-2007, S. pneumoniae was predominant at 58.0%, followed by GBS 18.1%, N. meningitidis 13.9%, H. influenzae 6.7%, and L. monocytogenes 3.4%.",
+        "byte_quote": "As per Thigpen etal. out of the 1670 cases reported in the U.S. during 2003–2007, _S. pneumoniae_ was the predominant infective species (58.0%), followed by GBS (18.1%), _N. meningitidis_ (13.9%), _H. influenzae_ (6.7%), and _L. monocytogenes_ (3.4%)."
+      },
+      {
+        "id": "c4",
+        "text": "Listeria monocytogenes and gram-negative bacteria such as E. coli, Klebsiella, Enterobacter, and Pseudomonas aeruginosa are less common causes.",
+        "byte_quote": "_Listeria monocytogenes_ and gram-negative bacteria such as _Escherichia coli_, _Klebsiella_, _Enterobacter_, _Pseudomonas aeruginosa_ are other less common causes."
+      },
+      {
+        "id": "c5",
+        "text": "Nosocomial meningitis infections are caused by S. pneumoniae, Staphylococcus aureus, Staphylococcus albus, and gram-negative bacilli.",
+        "byte_quote": "Nosocomial infections are caused by _S. pneumonia_, _Staphylococcus aureus_, _Staphylococcus albus_, and gram-negative bacilli."
+      }
+    ],
+    "cites": [
+      "Thigpen MC, Whitney CG, Messonnier NE, Zell ER, Lynfield R, Hadler JL, Harrison LH, Farley MM, Reingold A, Bennett NM, Craig AS, Schaffner W, Thomas A, Lewis MM, Scallan E, Schuchat A., Emerging Infections Programs Network. Bacterial meningitis in the United States, 1998-2007. N Engl J Med. 2011 May 26;364(21):2016-25."
+    ]
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12662076/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12662076/",
+    "title": "Functional outcomes in adults with community-acquired bacterial meningitis (MeninGene, Netherlands 2006–2024)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Streptococcus pneumoniae was the most common cause of community-acquired bacterial meningitis, 2029/2974 (68%).",
+        "byte_quote": "Streptococcus pneumoniae was the most common pathogen (2029/2974; 68%)"
+      },
+      {
+        "id": "c2",
+        "text": "Neisseria meningitidis caused 329/2974 (11%) of cases.",
+        "byte_quote": "Neisseria meningitidis (329/2974; 11%)"
+      },
+      {
+        "id": "c3",
+        "text": "Listeria monocytogenes caused 182/2974 (6%) of cases.",
+        "byte_quote": "Listeria monocytogenes (182/2974; 6%)"
+      },
+      {
+        "id": "c4",
+        "text": "Haemophilus influenzae caused 119/2974 (4%) of cases.",
+        "byte_quote": "Haemophilus influenzae (119/2974; 4%)"
+      },
+      {
+        "id": "c5",
+        "text": "Streptococcus pyogenes caused 83/2974 (3%) of cases.",
+        "byte_quote": "Streptococcus pyogenes (83/2974; 3%)"
+      },
+      {
+        "id": "c6",
+        "text": "Population/cohort: adults aged 16 years or older with community-acquired bacterial meningitis in the Netherlands (MeninGene), Jan 2006–Jan 2024, n=2974.",
+        "byte_quote": "We conducted a nationwide prospective cohort study in the Netherlands (MeninGene) from January 2006 to January 2024, including patients aged 16 years or older diagnosed with community-acquired bacterial meningitis."
+      },
+      {
+        "id": "c7",
+        "text": "Patients with meningococcal (N. meningitidis) meningitis were younger (median 26 vs 62 years).",
+        "byte_quote": "meningococcal meningitis were younger (26 [IQR 18–54] vs"
+      },
+      {
+        "id": "c8",
+        "text": "Patients with listeria (L. monocytogenes) meningitis were more likely to be immunocompromised (121/182, 66%).",
+        "byte_quote": "listeria meningitis were more likely to be immunocompromised (121/182 [66%]"
+      },
+      {
+        "id": "c9",
+        "text": "Patients with S. pyogenes meningitis were more likely to have an extra-meningeal focus of infection (74/83, 89%).",
+        "byte_quote": "extra-meningeal focus of infection (74/83 [89%]"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5995389/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5995389/",
+    "title": "Global etiology of bacterial meningitis: A systematic review and meta-analysis",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Across all age groups, S. pneumoniae and N. meningitidis are the predominant pathogens in all regions, accounting for 25.1-41.2% and 9.1-36.2% of bacterial meningitis cases respectively.",
+        "byte_quote": "In all age groups, *S*. *pneumoniae* and *N*. *meningitidis* were the predominant pathogens in all regions, accounting for 25.1–41.2% and 9.1–36.2% of bacterial meningitis cases, respectively."
+      },
+      {
+        "id": "c2",
+        "text": "S. pneumoniae is the most common cause of bacterial meningitis in the 'all children' group, ranging from 22.5% (Europe) to 41.1% (Africa).",
+        "byte_quote": "*S*. *pneumoniae* infection was the most common cause of bacterial meningitis in the 'all children' group, ranging from 22.5% (Europe) to 41.1% (Africa)"
+      },
+      {
+        "id": "c3",
+        "text": "In all adults, S. pneumoniae frequency ranges from 9.6% (Western Pacific) to 75.2% (Africa).",
+        "byte_quote": "in all adults ranging from 9.6% (Western Pacific) to 75.2% (Africa)"
+      },
+      {
+        "id": "c4",
+        "text": "In neonates in Africa, E. coli and S. pneumoniae were the most common pathogens (17.7% and 20.4% respectively).",
+        "byte_quote": "*E*. *coli* and *S*. *pneumoniae* were the most common pathogens that caused bacterial meningitis in neonates in Africa (17.7% and 20.4%, respectively)."
+      },
+      {
+        "id": "c5",
+        "text": "N. meningitidis was the most common pathogen in children aged ~1-5 years in Europe (47.0%).",
+        "byte_quote": "*N*. *meningitidis* was the most common in children aged ±1–5 years in Europe (47.0%)."
+      },
+      {
+        "id": "c6",
+        "text": "Most neonatal bacterial meningitis is due to group B Streptococcus agalactiae, Escherichia coli, and Listeria monocytogenes, while most cases in children and adults are caused by Streptococcus pneumoniae and Neisseria meningitidis.",
+        "byte_quote": "Among neonates, most cases of bacterial meningitis are due to group B *Streptococcus agalactiae*, *Escherichia coli*, and *Listeria monocytogenes*, while most cases in children and adults are caused by *Streptococcus pneumoniae* and *Neisseria meningitidis*."
+      },
+      {
+        "id": "c7",
+        "text": "Haemophilus influenzae is implicated in bacterial meningitis across all age groups but is preponderant in children under 5 years of age.",
+        "byte_quote": "Although *Haemophilus influenzae* is implicated in bacterial meningitis in all age groups, it is preponderant in children <5 years of age."
+      },
+      {
+        "id": "c8",
+        "text": "Weighted-mean frequency across regions/age groups ranged 3.2-47.0% for N. meningitidis and 9.6-75.2% for S. pneumoniae; H. influenzae ranged 0.2-15.5%.",
+        "byte_quote": "*N*. *meningitidis*, and *S*. *pneumoniae*; with weighted means for frequency across geographical regions and age groups ranging from 3.2–47.0%, and 9.6–75.2%, respectively. The range of weighted means for frequency of *H*. *influenzae* was 0.2–15.5%"
+      }
+    ],
+    "cites": [
+      "Thigpen et al. (USA bacterial meningitis incidence, 2003-2007: estimated 4100 cases and 500 deaths annually)",
+      "WHO (African Meningitis Belt, 2009: estimated 80,000 suspected meningitis cases and more than 4000 deaths)"
+    ]
+  },
+  {
+    "source_id": "https://academic.oup.com/ofid/article/3/4/ofw206/2593338",
+    "resolved_url": "https://academic.oup.com/ofid/article/3/4/ofw206/2593338",
+    "title": "Open Forum Infectious Diseases — bacterial meningitis case (S. pneumoniae serotype 35B); CSF Gram stain and organism epidemiology",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "S. pneumoniae cells are elongated ('lancet-shaped') cocci with a polysaccharide capsule, predominantly arranged in pairs (diplococci).",
+        "byte_quote": "Cells of _S pneumoniae_ are elongated (\"lancet-shaped\") cocci that are surrounded by a polysaccharide capsule and predominantly organized in pairs (diplococci)."
+      },
+      {
+        "id": "c2",
+        "text": "Other Gram-positive organisms causing meningitis in neonates and infants include Streptococcus agalactiae (Group B Streptococcus), a coccus in pairs and chains, and Listeria monocytogenes, a short rod.",
+        "byte_quote": "Other Gram-positive organisms that cause meningitis in neonates and infants include _Streptococcus agalactiae_ (Group B _Streptococcus_), a coccus ordered in pairs and chains, and _Listeria monocytogenes_, a short rod."
+      },
+      {
+        "id": "c3",
+        "text": "Serotype 35B was the fourth most common invasive pneumococcal isolate (8%) among US children under 5 years of age in 2012–2013.",
+        "byte_quote": "serotype 35B was the fourth most common invasive isolate (8%) among United States children under 5 years of age in 2012–2013"
+      },
+      {
+        "id": "c4",
+        "text": "Serotype 35B became the most common penicillin-nonsusceptible serotype (24.8%).",
+        "byte_quote": "serotype 35B had become the most common penicillin-nonsusceptible serotype (24.8%)"
+      },
+      {
+        "id": "c5",
+        "text": "The patient's cytospin-prepared CSF Gram stain showed Gram-positive cocci in pairs, some within leukocytes, with a clear 'halo' around the intraleukocytic organisms (suggesting an encapsulated species).",
+        "byte_quote": "Gram-positive cocci arranged in pairs, some of which were within leukocytes"
+      },
+      {
+        "id": "c6",
+        "text": "A clear area ('halo') around the intraleukocytic organisms suggested an encapsulated bacterial species.",
+        "byte_quote": "A clear area (\"halo\") was apparent around the intraleukocytic organisms"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK562176/",
+    "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK562176/",
+    "title": "Haemophilus Influenzae Infection — StatPearls (NCBI Bookshelf, NBK562176)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "H. influenzae type b (Hib) accounts for 95% of invasive disease in children and >50% of invasive disease in adults.",
+        "byte_quote": "H. influenzae type b (Hib) is noteworthy because of its polyribosyl ribitol phosphate (PRP) capsule, which accounts for 95% of invasive disease in children and >50% of invasive disease in adults."
+      },
+      {
+        "id": "c2",
+        "text": "Invasive Hib infection occurs commonly in children under 5 years of age and includes pneumonia and meningitis.",
+        "byte_quote": "The invasive Hib infection occurs commonly in children under 5 years of age and mainly includes pneumonia and meningitis."
+      },
+      {
+        "id": "c3",
+        "text": "After Hib conjugate vaccine introduction, the majority of invasive H. influenzae disease is now caused by non-typeable strains (NTHi), which also cause meningitis.",
+        "byte_quote": "NTHi is responsible for invasive infections like bacteremia without identifiable focus, bacteremic pneumonia, and meningitis."
+      },
+      {
+        "id": "c4",
+        "text": "In 2017, incidence per 100,000 children under 5 was 0.18 for Hib, 1.7 for non-b H. influenzae, and 1.7 for non-typeable H. influenzae.",
+        "byte_quote": "In 2017, the incidence rate was 0.18 for Hib, 1.7 for non-b H. influenzae , and 1.7 for non-typeable H. influenzae per 100,000 population of children younger than 5 years of age."
+      },
+      {
+        "id": "c5",
+        "text": "H. influenzae is a small, facultatively anaerobic, pleomorphic, capnophilic gram-negative coccobacillus of the family Pasteurellaceae.",
+        "byte_quote": "Haemophilus influenzae is characterized as a small (0.3 micrometer to 1 micrometer), facultatively anaerobic, pleomorphic, and capnophilic gram-negative coccobacillus of the family Pasteurellaceae"
+      },
+      {
+        "id": "c6",
+        "text": "Gram staining of body-fluid samples reveals pleomorphic gram-negative coccobacilli.",
+        "byte_quote": "The initial test is Gram staining, which reveals pleomorphic gram-negative coccobacilli."
+      },
+      {
+        "id": "c7",
+        "text": "In Hib meningitis, the capsular antigen is detected in 90% of patients and 80% demonstrate a positive CSF Gram stain.",
+        "byte_quote": "The capsular antigen is detected in 90% of patients, and 80% demonstrate a positive CSF gram stain."
+      },
+      {
+        "id": "c8",
+        "text": "Hib meningitis often shows marked pleocytosis with neutrophil predominance, decreased CSF glucose, and elevated protein.",
+        "byte_quote": "Hib meningitis often shows a marked pleocytosis with neutrophil predominance. The glucose levels in the CSF are decreased, and protein levels are elevated."
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html",
+    "resolved_url": "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html",
+    "title": "Haemophilus influenzae — CDC Epidemiology and Prevention of Vaccine-Preventable Diseases (Pink Book), Chapter 8",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Before vaccines, H. influenzae type b (Hib) was the leading cause of bacterial meningitis and other invasive bacterial disease, primarily in children under age 5.",
+        "byte_quote": "Before the introduction of effective vaccines, H. influenzae type b (Hib) was the leading cause of bacterial meningitis and other invasive bacterial disease, primarily among children younger than age 5 years; approximately one in 200 children in this age group developed invasive Hib disease."
+      },
+      {
+        "id": "c2",
+        "text": "Approximately two-thirds of all Hib cases occurred in children younger than 18 months.",
+        "byte_quote": "Approximately two-thirds of all cases occurred among children younger than age 18 months."
+      },
+      {
+        "id": "c3",
+        "text": "Six capsular polysaccharide serotypes (a through f) of H. influenzae have been described.",
+        "byte_quote": "Six antigenically and biochemically distinct capsular polysaccharide types have been described; these are designated serotypes a through f."
+      },
+      {
+        "id": "c4",
+        "text": "In the pre-Hib-vaccine era, type b organisms accounted for 95% of all H. influenzae strains causing invasive disease.",
+        "byte_quote": "In the pre-Hib-vaccine era, type b organisms accounted for 95% of all H. influenzae strains that caused invasive disease."
+      },
+      {
+        "id": "c5",
+        "text": "In the prevaccine era, up to 60% of invasive disease occurred before age 12 months, with peak occurrence at age 6 to 11 months.",
+        "byte_quote": "In the prevaccine era, up to 60% of invasive disease occurred before age 12 months, although some infants received passive protection from maternal IgG antibodies passed through the placenta and breastfeeding during the first 6 months of life. Peak occurrence was among children age 6 to 11 months."
+      },
+      {
+        "id": "c6",
+        "text": "Meningitis was the most common manifestation of invasive Hib disease, accounting for 50% to 65% of cases in the prevaccine era.",
+        "byte_quote": "Meningitis, an infection of the membranes covering the brain and spinal cord, is the most common clinical manifestation of invasive Hib disease, accounting for 50% to 65% of cases in the prevaccine era."
+      },
+      {
+        "id": "c7",
+        "text": "Non-type b encapsulated strains can cause invasive disease similar to type b; nontypeable strains are generally less virulent but may cause invasive disease, especially in neonates and adults over 65.",
+        "byte_quote": "Non-type b encapsulated strains can cause invasive disease similar to type b infections. Nontypeable strains are generally less virulent than encapsulated strains among previously healthy individuals, but may cause invasive disease, particularly among neonates and those older than age 65 years."
+      },
+      {
+        "id": "c8",
+        "text": "From 2009-2018, of 36 Hib cases reported in patients under age 5 to ABCs, 33.3% were unvaccinated and 38.9% were undervaccinated.",
+        "byte_quote": "From 2009–2018, 36 Hib cases in patients younger than age 5 years were reported to ABCs. Two (5.6%) were too young to have received Hib vaccine, 12 (33.3%) were unvaccinated, and 14 (38.9%) were undervaccinated"
+      },
+      {
+        "id": "c9",
+        "text": "A Gram stain of infected body fluid may show small, gram-negative coccobacilli suggestive of H. influenzae.",
+        "byte_quote": "A Gram stain of an infected body fluid may demonstrate small, gram-negative coccobacilli suggestive of H. influenzae disease."
+      },
+      {
+        "id": "c10",
+        "text": "H. influenzae is a fastidious, pleomorphic, gram-negative coccobacillus requiring hemin (X factor) and NAD (V factor) for in vitro growth.",
+        "byte_quote": "H. influenzae , a fastidious, pleomorphic, gram-negative coccobacillus, requires hemin (X factor) and nicotinamide-adenine-dinucleotide (NAD, also known as V factor) for in vitro growth."
+      }
+    ],
+    "cites": [
+      "Active Bacterial Core surveillance (ABCs)",
+      "MacNeil J, Cohn A, Farley M, et al. Current epidemiology and trends in invasive Haemophilus influenzae disease–United States, 1989–2008. Clin Infect Dis 2011;53(12):1230–6.",
+      "Soeters H, Blain A, Pondo T, et al. Current epidemiology and trends in invasive Haemophilus influenzae disease — United States, 2009–2015. Clin Infect Dis 2018;67(6):881–9.",
+      "Livorsi D, MacNeil J, Cohn A, et al. Invasive Haemophilus influenzae in the United States, 1999–2008: epidemiology and outcomes. J Infect 2012;65(6):496–504.",
+      "Bisgard K, Kao A, Leake J, et al. Haemophilus influenzae invasive disease in the United States, 1994–1995: near disappearance of a vaccine-preventable childhood disease. Emerg Infect Dis 1998;4(2):229–37.",
+      "CDC. Prevention and Control of Haemophilus influenzae Type b Disease: recommendations of the Advisory Committee on Immunization Practices (ACIP). MMWR 2014;63(No. RR-1):1–14."
+    ]
+  },
+  {
+    "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK470553/",
+    "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470553/",
+    "title": "Gram-Positive Bacteria — StatPearls (Sizar, Leslie, Unakal)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Streptococcus pneumoniae is a gram-positive, encapsulated, lancet-shaped diplococcus, and is among the organisms that cause meningitis.",
+        "byte_quote": "Streptococcus pneumoniae is a gram-positive, encapsulated, lancet-shaped diplococci, most commonly causing otitis media, pneumonia, sinusitis, and meningitis."
+      }
+    ],
+    "cites": [
+      "SCOPE project (Surveillance and Control of Pathogens of Epidemiologic Importance)"
+    ]
+  },
+  {
+    "source_id": "https://cdr.lib.unc.edu/concern/articles/p2677168g",
+    "resolved_url": "https://cdr.lib.unc.edu/concern/articles/p2677168g",
+    "title": "Acute Bacterial Meningitis in Adults – A Review of 493 Episodes",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "In community-acquired adult bacterial meningitis, the most common organisms were Streptococcus pneumoniae (37%), Neisseria meningitidis (13%), and Listeria monocytogenes (10%).",
+        "byte_quote": "Streptococcus pneumoniae (37 percent), Neisseria meningitidis (13 percent), and Listeria monocytogenes (10 percent)"
+      },
+      {
+        "id": "c2",
+        "text": "Gram-negative bacilli (other than Haemophilus influenzae) caused 33% of nosocomial episodes but only 3% of community-acquired episodes.",
+        "byte_quote": "Gram-negative bacilli (other than Haemophilus influenzae) caused 33 percent of the nosocomial episodes but only 3 percent of the community-acquired episodes"
+      },
+      {
+        "id": "c3",
+        "text": "Only 19 of the 493 meningitis episodes (4%) were due to H. influenzae.",
+        "byte_quote": "Only 19 of the 493 episodes of meningitis (4 percent) were due to H. influenzae"
+      },
+      {
+        "id": "c4",
+        "text": "Of the 493 episodes, 197 (40%) were nosocomial.",
+        "byte_quote": "197 (40 percent) were nosocomial"
+      },
+      {
+        "id": "c5",
+        "text": "S. pneumoniae, N. meningitidis, and L. monocytogenes together accounted for only 8% of the nosocomial episodes.",
+        "byte_quote": "accounted for only 8 percent of the nosocomial episodes"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10883623/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10883623/",
+    "title": "Clinical characteristics and outcomes of acute bacterial meningitis in adults at a tertiary university hospital in Thailand (Medicine (Baltimore), 2024)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "In community-acquired bacterial meningitis (CBM), the most common organisms were Streptococcus agalactiae (29.0%), S. pneumoniae (12.2%), and S. suis (11.5%).",
+        "byte_quote": "Streptococcus agalactiae (29.0%; 100% penicillin-susceptible strains), S. pneumoniae (12.2%; 11.1% penicillin-intermediate strains and no penicillin-resistant strain), and S. suis (11.5%; 6.7% penicillin-intermediate strains and no penicillin-resistant strain) were the most common organisms in CBM."
+      },
+      {
+        "id": "c2",
+        "text": "In nosocomial bacterial meningitis (NBM), the most frequent organisms were Acinetobacter baumannii (18.7%), Klebsiella pneumoniae (16.0%), and Staphylococcus aureus (10.7%).",
+        "byte_quote": "The most frequently found organisms in NBM were A. baumannii (18.7%; 100% carbapenem-resistant strains and 100% colistin-susceptible strains), K. pneumoniae (16.0%; 50% ceftriaxone-resistant strains and 100% carbapenem-susceptible strains), and S. aureus (10.7%; 25% methicillin-resistant strains and 100% vancomycin-susceptible strains)."
+      },
+      {
+        "id": "c3",
+        "text": "Gram-positive cocci were more prevalent in CBM than NBM (78.6% vs 37.3%), whereas gram-negative bacilli were more common in NBM than CBM (57.3% vs 19.1%).",
+        "byte_quote": "Gram-positive cocci were more prevalent in CBM than in NBM (78.6% vs 37.3%, P < .001), whereas gram-negative bacilli were more common in NBM than in CBM (57.3% vs 19.1%, P < .001)."
+      },
+      {
+        "id": "c4",
+        "text": "A positive CSF Gram stain was found nonsignificantly more often in CBM than NBM (24.5% vs 11.8%).",
+        "byte_quote": "Positive Gram stain in CSF was nonsignificantly more frequently found in CBM than in NBM (24.5% vs 11.8%, P = .08)."
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349422/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349422/",
+    "title": "Neisseria meningitidis: Biology, Microbiology, and Epidemiology (Rouphael & Stephens)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Neisseria meningitidis (the meningococcus) remains a leading cause worldwide of bacterial meningitis.",
+        "byte_quote": "the meningococcus remains a leading cause worldwide of bacterial meningitis"
+      },
+      {
+        "id": "c2",
+        "text": "Overall mortality in invasive meningococcal disease today is 10-15% (was 70-85% fatal in the pre-antibiotic era).",
+        "byte_quote": "In the pre-serum therapy and pre-antibiotic eras, 70–85% of meningococcal disease cases were fatal; today, the overall mortality rate in invasive meningococcal disease still remains high, at between 10 and 15%"
+      },
+      {
+        "id": "c3",
+        "text": "There are an estimated 1.2 million cases of meningococcal infection per year worldwide, with ~135,000 deaths.",
+        "byte_quote": "There are an estimated 1.2 million cases of meningococcal infection per year, with a death toll of ~135,000 worldwide"
+      },
+      {
+        "id": "c4",
+        "text": "In the USA the meningococcal attack rate is now less than one case per 100,000 per year.",
+        "byte_quote": "In the USA, the attack rate is now less than one case per 100,000 per year"
+      },
+      {
+        "id": "c5",
+        "text": "Infants under 1 year have the highest incidence of meningococcal disease, 5.38 cases per 100,000.",
+        "byte_quote": "Infants aged <1 year have the highest incidence of meningococcal disease (5.38 cases per 100,000)"
+      },
+      {
+        "id": "c6",
+        "text": "The meningococcus is a common cause of bacterial meningitis in children and young adults in the USA, now mostly affecting children less than 2 years of age.",
+        "byte_quote": "a common cause of bacterial meningitis in children and young adults in the USA ( 132 ), now mostly affecting children less than 2 years of age"
+      },
+      {
+        "id": "c7",
+        "text": "Two-thirds of US meningococcal disease in the first year of life occurs in infants under 6 months of age.",
+        "byte_quote": "Two-thirds of meningococcal disease in the first year of life in the US occurs in infants less than 6 months of age"
+      },
+      {
+        "id": "c8",
+        "text": "N. meningitidis is a fastidious, encapsulated, aerobic gram-negative diplococcus.",
+        "byte_quote": "N. meningitidis is a fastidious, encapsulated, aerobic gram-negative diplococcus"
+      },
+      {
+        "id": "c9",
+        "text": "N. meningitidis is an encapsulated or unencapsulated aerobic diplococcus with a 'kidney' or 'coffee-bean' shape.",
+        "byte_quote": "is either an encapsulated or unencapsulated, aerobic diplococcus with a “kidney” or “coffee-bean” shape"
+      },
+      {
+        "id": "c10",
+        "text": "On CSF Gram stain, meningococcal meningitis shows intracellular gram-negative diplococci and leukocytes.",
+        "byte_quote": "Intracellular gram-negative diplococci and leukocytes in the CSF from a patient with meningococcal meningitis"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5986172/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5986172/",
+    "title": "Listeria monocytogenes meningitis (Clinical Case Reports, 2018; 6(6): 1195)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "On CSF culture, Listeria monocytogenes appeared as gram-positive bacilli (rods) with tumbling motility.",
+        "byte_quote": "CSF cultures revealed blue–gray colonies that comprised gram‐positive bacilli with tumbling motility (Video S1 ), which was turned out to be Listeria monocytogenes"
+      },
+      {
+        "id": "c2",
+        "text": "Listeria is an aerobic, beta-hemolytic, gram-positive bacillus that exhibits tumbling motility on light microscopy.",
+        "byte_quote": "Listeria is an aerobic, beta‐hemolytic, gram‐positive bacillus, which exhibits tumbling motility on light microscopy 1"
+      },
+      {
+        "id": "c3",
+        "text": "Listeria monocytogenes is described as a food-borne pathogen.",
+        "byte_quote": "Listeria monocytogenes , a food‐borne pathogen"
+      }
+    ],
+    "cites": [
+      "Farber, J. M., and Peterkin P. I. 1991. Listeria monocytogenes, a food-borne pathogen. Microbiol. Rev. 55:476-511."
+    ]
+  }
+]

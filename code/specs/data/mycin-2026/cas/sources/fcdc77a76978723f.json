@@ -1,0 +1,39 @@
+{
+  "hash": "fcdc77a76978723f",
+  "source_id": "https://academic.oup.com/ofid/article/3/4/ofw206/2593338",
+  "title": "Open Forum Infectious Diseases — bacterial meningitis case (S. pneumoniae serotype 35B); CSF Gram stain and organism epidemiology",
+  "resolved_url": "https://academic.oup.com/ofid/article/3/4/ofw206/2593338",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "S. pneumoniae cells are elongated ('lancet-shaped') cocci with a polysaccharide capsule, predominantly arranged in pairs (diplococci).",
+      "byte_quote": "Cells of _S pneumoniae_ are elongated (\"lancet-shaped\") cocci that are surrounded by a polysaccharide capsule and predominantly organized in pairs (diplococci)."
+    },
+    {
+      "id": "c2",
+      "text": "Other Gram-positive organisms causing meningitis in neonates and infants include Streptococcus agalactiae (Group B Streptococcus), a coccus in pairs and chains, and Listeria monocytogenes, a short rod.",
+      "byte_quote": "Other Gram-positive organisms that cause meningitis in neonates and infants include _Streptococcus agalactiae_ (Group B _Streptococcus_), a coccus ordered in pairs and chains, and _Listeria monocytogenes_, a short rod."
+    },
+    {
+      "id": "c3",
+      "text": "Serotype 35B was the fourth most common invasive pneumococcal isolate (8%) among US children under 5 years of age in 2012–2013.",
+      "byte_quote": "serotype 35B was the fourth most common invasive isolate (8%) among United States children under 5 years of age in 2012–2013"
+    },
+    {
+      "id": "c4",
+      "text": "Serotype 35B became the most common penicillin-nonsusceptible serotype (24.8%).",
+      "byte_quote": "serotype 35B had become the most common penicillin-nonsusceptible serotype (24.8%)"
+    },
+    {
+      "id": "c5",
+      "text": "The patient's cytospin-prepared CSF Gram stain showed Gram-positive cocci in pairs, some within leukocytes, with a clear 'halo' around the intraleukocytic organisms (suggesting an encapsulated species).",
+      "byte_quote": "Gram-positive cocci arranged in pairs, some of which were within leukocytes"
+    },
+    {
+      "id": "c6",
+      "text": "A clear area ('halo') around the intraleukocytic organisms suggested an encapsulated bacterial species.",
+      "byte_quote": "A clear area (\"halo\") was apparent around the intraleukocytic organisms"
+    }
+  ],
+  "cites": []
+}

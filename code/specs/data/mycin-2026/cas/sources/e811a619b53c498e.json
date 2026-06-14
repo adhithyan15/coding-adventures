@@ -1,0 +1,29 @@
+{
+  "hash": "e811a619b53c498e",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10883623/",
+  "title": "Clinical characteristics and outcomes of acute bacterial meningitis in adults at a tertiary university hospital in Thailand (Medicine (Baltimore), 2024)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10883623/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "In community-acquired bacterial meningitis (CBM), the most common organisms were Streptococcus agalactiae (29.0%), S. pneumoniae (12.2%), and S. suis (11.5%).",
+      "byte_quote": "Streptococcus agalactiae (29.0%; 100% penicillin-susceptible strains), S. pneumoniae (12.2%; 11.1% penicillin-intermediate strains and no penicillin-resistant strain), and S. suis (11.5%; 6.7% penicillin-intermediate strains and no penicillin-resistant strain) were the most common organisms in CBM."
+    },
+    {
+      "id": "c2",
+      "text": "In nosocomial bacterial meningitis (NBM), the most frequent organisms were Acinetobacter baumannii (18.7%), Klebsiella pneumoniae (16.0%), and Staphylococcus aureus (10.7%).",
+      "byte_quote": "The most frequently found organisms in NBM were A. baumannii (18.7%; 100% carbapenem-resistant strains and 100% colistin-susceptible strains), K. pneumoniae (16.0%; 50% ceftriaxone-resistant strains and 100% carbapenem-susceptible strains), and S. aureus (10.7%; 25% methicillin-resistant strains and 100% vancomycin-susceptible strains)."
+    },
+    {
+      "id": "c3",
+      "text": "Gram-positive cocci were more prevalent in CBM than NBM (78.6% vs 37.3%), whereas gram-negative bacilli were more common in NBM than CBM (57.3% vs 19.1%).",
+      "byte_quote": "Gram-positive cocci were more prevalent in CBM than in NBM (78.6% vs 37.3%, P < .001), whereas gram-negative bacilli were more common in NBM than in CBM (57.3% vs 19.1%, P < .001)."
+    },
+    {
+      "id": "c4",
+      "text": "A positive CSF Gram stain was found nonsignificantly more often in CBM than NBM (24.5% vs 11.8%).",
+      "byte_quote": "Positive Gram stain in CSF was nonsignificantly more frequently found in CBM than in NBM (24.5% vs 11.8%, P = .08)."
+    }
+  ],
+  "cites": []
+}
