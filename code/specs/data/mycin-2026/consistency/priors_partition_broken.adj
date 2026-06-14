@@ -1,0 +1,10 @@
+% The SAME invariant, but a mis-authored viral prior (0.5 instead of 0.963). The
+% priors no longer partition (0.037 + 0.5 = 0.537 != 1.0). `check` returns UNSAT
+% and the IIS `core` localizes the exact conflicting clauses — machine-checked
+% "these rules contradict", the basis of cost-to-correct error localization.
+symbol total : scalar
+observe pb(0.037)
+observe pv(0.5)
+constrain total = pb + pv
+constrain total = 1.0
+check
