@@ -384,6 +384,7 @@ members = [
     "qr-code",
     "data-matrix",
     "pdf417",
+    "image-raw-pipeline",
     "image-codec-gif",
     "image-codec-bmp",
     "image-codec-ico",
