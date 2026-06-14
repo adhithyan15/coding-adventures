@@ -360,6 +360,10 @@ impl ZigbeeInterviewSummary {
         }
     }
 
+    pub fn descriptor_inventory_readiness(&self) -> ZigbeeDescriptorInventoryReadinessSummary {
+        ZigbeeDescriptorInventoryReadinessSummary::from_interview(self)
+    }
+
     pub fn read_summary(&self) -> ZigbeeInterviewReadSummary {
         let mut unique_input_clusters = BTreeSet::new();
         let mut unique_output_clusters = BTreeSet::new();
@@ -468,6 +472,87 @@ impl ZigbeeDescriptorInventorySummary {
             .iter()
             .any(SimpleDescriptorSummary::has_lighting_cluster_coverage)
     }
+
+    pub fn readiness(self) -> ZigbeeDescriptorInventoryReadinessSummary {
+        ZigbeeDescriptorInventoryReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ZigbeeDescriptorInventoryReadinessSummary {
+    pub inventory_summary: ZigbeeDescriptorInventorySummary,
+    pub missing_check_count: usize,
+    pub ieee_address_ready: bool,
+    pub node_descriptor_ready: bool,
+    pub endpoints_ready: bool,
+    pub home_automation_profile_ready: bool,
+    pub cluster_coverage_ready: bool,
+    pub lighting_cluster_ready: bool,
+    pub inventory_ready: bool,
+}
+
+impl ZigbeeDescriptorInventoryReadinessSummary {
+    pub fn from_interview(summary: &ZigbeeInterviewSummary) -> Self {
+        Self::from_summary(summary.descriptor_inventory_summary())
+    }
+
+    pub fn from_summary(inventory_summary: ZigbeeDescriptorInventorySummary) -> Self {
+        let ieee_address_ready = inventory_summary.has_ieee_address;
+        let node_descriptor_ready = inventory_summary.has_node_descriptor();
+        let endpoints_ready = inventory_summary.has_endpoints();
+        let home_automation_profile_ready = inventory_summary.has_home_automation_profile();
+        let cluster_coverage_ready = inventory_summary.has_cluster_coverage();
+        let lighting_cluster_ready = inventory_summary.has_lighting_cluster_coverage();
+        let missing_check_count = [
+            ieee_address_ready,
+            node_descriptor_ready,
+            endpoints_ready,
+            home_automation_profile_ready,
+            cluster_coverage_ready,
+            lighting_cluster_ready,
+        ]
+        .into_iter()
+        .filter(|ready| !ready)
+        .count();
+        let inventory_ready = missing_check_count == 0;
+        Self {
+            inventory_summary,
+            missing_check_count,
+            ieee_address_ready,
+            node_descriptor_ready,
+            endpoints_ready,
+            home_automation_profile_ready,
+            cluster_coverage_ready,
+            lighting_cluster_ready,
+            inventory_ready,
+        }
+    }
+
+    pub fn is_inventory_ready(&self) -> bool {
+        self.inventory_ready
+    }
+
+    pub fn has_gaps(&self) -> bool {
+        !self.inventory_ready
+    }
+
+    pub fn needs_identity_read(&self) -> bool {
+        !self.ieee_address_ready || !self.node_descriptor_ready
+    }
+
+    pub fn needs_endpoint_read(&self) -> bool {
+        !self.endpoints_ready || !self.home_automation_profile_ready
+    }
+
+    pub fn needs_cluster_read(&self) -> bool {
+        !self.cluster_coverage_ready || !self.lighting_cluster_ready
+    }
+}
+
+pub fn zigbee_descriptor_inventory_readiness_summary(
+    summary: &ZigbeeInterviewSummary,
+) -> ZigbeeDescriptorInventoryReadinessSummary {
+    ZigbeeDescriptorInventoryReadinessSummary::from_interview(summary)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1166,6 +1251,66 @@ mod tests {
         assert!(!summary.has_device_type_diversity());
         assert!(!summary.has_duplicate_cluster_refs());
         assert!(!summary.has_lighting_cluster_coverage());
+    }
+
+    #[test]
+    fn descriptor_inventory_readiness_marks_complete_lighting_inventory() {
+        let node_descriptor = NodeDescriptor::parse(&node_descriptor_bytes()).unwrap();
+        let simple_descriptor = SimpleDescriptor::parse(&simple_descriptor_bytes()).unwrap();
+        let interview = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0x1234),
+            ieee_address: Some(IeeeAddress(0x0012_4b00_24c8_abcd)),
+            node_descriptor: Some(node_descriptor),
+            simple_descriptors: vec![simple_descriptor],
+        };
+        let inventory = interview.descriptor_inventory_summary();
+
+        let readiness = interview.descriptor_inventory_readiness();
+
+        assert_eq!(readiness.inventory_summary, inventory);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.ieee_address_ready);
+        assert!(readiness.node_descriptor_ready);
+        assert!(readiness.endpoints_ready);
+        assert!(readiness.home_automation_profile_ready);
+        assert!(readiness.cluster_coverage_ready);
+        assert!(readiness.lighting_cluster_ready);
+        assert!(readiness.inventory_ready);
+        assert!(readiness.is_inventory_ready());
+        assert!(!readiness.has_gaps());
+        assert!(!readiness.needs_identity_read());
+        assert!(!readiness.needs_endpoint_read());
+        assert!(!readiness.needs_cluster_read());
+    }
+
+    #[test]
+    fn descriptor_inventory_readiness_routes_sparse_inventory_gaps() {
+        let interview = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0xabcd),
+            ieee_address: None,
+            node_descriptor: None,
+            simple_descriptors: Vec::new(),
+        };
+
+        let readiness = zigbee_descriptor_inventory_readiness_summary(&interview);
+
+        assert_eq!(
+            readiness.inventory_summary.network_address,
+            NetworkAddress(0xabcd)
+        );
+        assert_eq!(readiness.missing_check_count, 6);
+        assert!(!readiness.ieee_address_ready);
+        assert!(!readiness.node_descriptor_ready);
+        assert!(!readiness.endpoints_ready);
+        assert!(!readiness.home_automation_profile_ready);
+        assert!(!readiness.cluster_coverage_ready);
+        assert!(!readiness.lighting_cluster_ready);
+        assert!(!readiness.inventory_ready);
+        assert!(!readiness.is_inventory_ready());
+        assert!(readiness.has_gaps());
+        assert!(readiness.needs_identity_read());
+        assert!(readiness.needs_endpoint_read());
+        assert!(readiness.needs_cluster_read());
     }
 
     #[test]
