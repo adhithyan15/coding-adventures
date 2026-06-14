@@ -987,6 +987,30 @@ impl NetworkStatusCode {
             Self::Unknown(value) => value,
         }
     }
+
+    pub fn is_route_failure(self) -> bool {
+        matches!(
+            self,
+            Self::NoRouteAvailable
+                | Self::TreeLinkFailure
+                | Self::NonTreeLinkFailure
+                | Self::NoRoutingCapacity
+                | Self::TargetDeviceUnavailable
+                | Self::ParentLinkFailure
+                | Self::SourceRouteFailure
+                | Self::ManyToOneRouteFailure
+        )
+    }
+
+    pub fn is_address_update(self) -> bool {
+        matches!(
+            self,
+            Self::AddressConflict
+                | Self::VerifyAddresses
+                | Self::NetworkAddressUpdate
+                | Self::PanIdentifierUpdate
+        )
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1118,6 +1142,110 @@ impl NwkCommand {
         }
         Ok(out)
     }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct NwkRouteDiscoveryCommandSummary {
+    pub total_commands: usize,
+    pub route_requests: usize,
+    pub route_replies: usize,
+    pub network_statuses: usize,
+    pub route_records: usize,
+    pub unknown_commands: usize,
+    pub destination_ieee_addresses: usize,
+    pub originator_ieee_addresses: usize,
+    pub responder_ieee_addresses: usize,
+    pub multicast_commands: usize,
+    pub many_to_one_requests: usize,
+    pub total_route_record_relays: usize,
+    pub route_failure_statuses: usize,
+    pub address_update_statuses: usize,
+}
+
+impl NwkRouteDiscoveryCommandSummary {
+    pub fn from_commands<'a>(commands: impl IntoIterator<Item = &'a NwkCommand>) -> Self {
+        let mut summary = Self::default();
+        for command in commands {
+            summary.record(command);
+        }
+        summary
+    }
+
+    pub fn record(&mut self, command: &NwkCommand) {
+        self.total_commands += 1;
+        match command {
+            NwkCommand::RouteRequest(request) => {
+                self.route_requests += 1;
+                if request.destination_ieee.is_some() {
+                    self.destination_ieee_addresses += 1;
+                }
+                if request.options.route_request_multicast() {
+                    self.multicast_commands += 1;
+                }
+                if request.options.route_request_many_to_one() > 0 {
+                    self.many_to_one_requests += 1;
+                }
+            }
+            NwkCommand::RouteReply(reply) => {
+                self.route_replies += 1;
+                if reply.originator_ieee.is_some() {
+                    self.originator_ieee_addresses += 1;
+                }
+                if reply.responder_ieee.is_some() {
+                    self.responder_ieee_addresses += 1;
+                }
+                if reply.options.route_reply_multicast() {
+                    self.multicast_commands += 1;
+                }
+            }
+            NwkCommand::NetworkStatus(status) => {
+                self.network_statuses += 1;
+                if status.status.is_route_failure() {
+                    self.route_failure_statuses += 1;
+                }
+                if status.status.is_address_update() {
+                    self.address_update_statuses += 1;
+                }
+            }
+            NwkCommand::RouteRecord(record) => {
+                self.route_records += 1;
+                self.total_route_record_relays += record.relay_count();
+            }
+            NwkCommand::Unknown { .. } => {
+                self.unknown_commands += 1;
+            }
+        }
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_commands == 0
+    }
+
+    pub fn has_route_discovery(self) -> bool {
+        self.route_requests + self.route_replies > 0
+    }
+
+    pub fn has_route_failures(self) -> bool {
+        self.route_failure_statuses > 0
+    }
+
+    pub fn has_unknown_commands(self) -> bool {
+        self.unknown_commands > 0
+    }
+
+    pub fn needs_route_repair(self) -> bool {
+        self.has_route_failures() || self.unknown_commands > 0
+    }
+
+    pub fn has_source_route_records(self) -> bool {
+        self.route_records > 0 && self.total_route_record_relays > 0
+    }
+}
+
+pub fn summarize_nwk_route_discovery_commands<'a>(
+    commands: impl IntoIterator<Item = &'a NwkCommand>,
+) -> NwkRouteDiscoveryCommandSummary {
+    NwkRouteDiscoveryCommandSummary::from_commands(commands)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -2188,6 +2316,81 @@ mod tests {
         } else {
             panic!("expected route record command");
         }
+    }
+
+    #[test]
+    fn route_discovery_command_summary_counts_command_shape() {
+        let commands = vec![
+            NwkCommand::RouteRequest(
+                RouteRequest::new(7, NetworkAddress(0x3344), 12)
+                    .with_options(RouteCommandOptions::new(
+                        ROUTE_REQUEST_MULTICAST_FLAG | (1 << ROUTE_REQUEST_MANY_TO_ONE_SHIFT),
+                    ))
+                    .with_destination_ieee(IeeeAddress(0x0012_4b00_0000_abcd)),
+            ),
+            NwkCommand::RouteReply(
+                RouteReply::new(7, NetworkAddress(0x0000), NetworkAddress(0x3344), 9)
+                    .with_options(RouteCommandOptions::new(ROUTE_REPLY_MULTICAST_FLAG))
+                    .with_originator_ieee(IeeeAddress(0x0012_4b00_0000_0001))
+                    .with_responder_ieee(IeeeAddress(0x0012_4b00_0000_0002)),
+            ),
+            NwkCommand::NetworkStatus(NetworkStatus::new(
+                NetworkStatusCode::SourceRouteFailure,
+                NetworkAddress(0x3344),
+            )),
+            NwkCommand::NetworkStatus(NetworkStatus::new(
+                NetworkStatusCode::NetworkAddressUpdate,
+                NetworkAddress(0x4455),
+            )),
+            NwkCommand::RouteRecord(
+                RouteRecord::new(vec![NetworkAddress(0x1001), NetworkAddress(0x1002)]).unwrap(),
+            ),
+        ];
+
+        let summary = summarize_nwk_route_discovery_commands(&commands);
+
+        assert_eq!(
+            summary,
+            NwkRouteDiscoveryCommandSummary {
+                total_commands: 5,
+                route_requests: 1,
+                route_replies: 1,
+                network_statuses: 2,
+                route_records: 1,
+                unknown_commands: 0,
+                destination_ieee_addresses: 1,
+                originator_ieee_addresses: 1,
+                responder_ieee_addresses: 1,
+                multicast_commands: 2,
+                many_to_one_requests: 1,
+                total_route_record_relays: 2,
+                route_failure_statuses: 1,
+                address_update_statuses: 1,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_route_discovery());
+        assert!(summary.has_route_failures());
+        assert!(summary.needs_route_repair());
+        assert!(summary.has_source_route_records());
+        assert!(!summary.has_unknown_commands());
+    }
+
+    #[test]
+    fn route_discovery_command_summary_flags_unknown_commands() {
+        let commands = vec![NwkCommand::Unknown {
+            command_id: 0xee,
+            payload: vec![0x01, 0x02],
+        }];
+
+        let summary = NwkRouteDiscoveryCommandSummary::from_commands(&commands);
+
+        assert_eq!(summary.total_commands, 1);
+        assert_eq!(summary.unknown_commands, 1);
+        assert!(summary.has_unknown_commands());
+        assert!(summary.needs_route_repair());
+        assert!(!summary.has_route_discovery());
+        assert!(!summary.has_source_route_records());
     }
 
     #[test]

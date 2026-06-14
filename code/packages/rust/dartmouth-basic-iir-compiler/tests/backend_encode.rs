@@ -69,10 +69,6 @@ fn basic_arith_lowers_to_wasm_bytes() {
 }
 
 #[test]
-#[ignore = "iir-to-wasm's lower step doesn't yet handle cmp_gt / cmp_le \
-            (validator accepts them, lowering bails with UnsupportedOp).  \
-            Re-enable when the wasm lowering grows i64.gt_s / i64.le_s \
-            opcode coverage."]
 fn basic_control_flow_lowers_to_wasm_bytes() {
     let m = compile_source(BASIC_CONTROL_FLOW, "basic_if")
         .expect("BASIC compiles to IIR");
@@ -85,9 +81,6 @@ fn basic_control_flow_lowers_to_wasm_bytes() {
 }
 
 #[test]
-#[ignore = "Same UnsupportedOp gap as basic_control_flow_lowers_to_wasm_bytes \
-            — FOR/NEXT lowers to cmp_le which wasm lowering doesn't \
-            implement yet."]
 fn basic_for_loop_lowers_to_wasm_bytes() {
     let m = compile_source(BASIC_FOR_LOOP, "basic_for")
         .expect("BASIC compiles to IIR");

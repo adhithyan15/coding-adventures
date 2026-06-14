@@ -1,5 +1,64 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.13.0 — 2026-06-13 — module-scoped `const` declarations (LANG-FULL N5)
+
+Adds Nib's top-level `const NAME: type = literal;`. Previously `const_decl` (and
+`static_decl`) were silently dropped by `function_nodes`, so referencing a const
+produced a dangling variable.
+
+- New `collect_consts` gathers module-scoped consts (they are `top_decl`, like
+  `fn`) into a `name → i64` map before any function is compiled, folding each
+  value expression to an `i64`. `compile_program` populates `Compiler.consts`.
+- `compile_primary` resolves a const reference to a fresh `const` instruction
+  with the const's value — a compile-time fold, so consts need **no runtime
+  storage** and run on every backend with no per-backend work. A `let`/parameter
+  of the same name **shadows** the const (the fold only fires when the name isn't
+  a local in scope).
+- V1 folds **integer-literal** consts (`INT_LIT`/`HEX_LIT`); a non-literal value
+  (`const N = 6 * 7;`) is a clear error (`const-expression folding is deferred`)
+  rather than a silent miscompile.
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains
+`const N: u8 = 42; … return N;` → 42 and `const A = 30; const B = 12; … A + B`
+→ 42, across native/LLVM/WASM/JVM/CLR/VM/JIT. New unit tests
+`const_reference_folds_to_its_literal`, `multiple_consts_in_arithmetic`,
+`non_literal_const_is_rejected`.
+
+`static` declarations remain deferred (mutable module state is a larger,
+backend-touching item).
+
+## 0.12.0 — 2026-06-13 — short-circuit `&&` / `||` (LANG-FULL N4)
+
+Adds Nib's logical `&&` / `||`. Unlike the other operators these cannot go through
+`compile_binary_chain` (which evaluates both sides eagerly and has no `cir_op_for`
+mapping for `LAND`/`LOR`) — they must **short-circuit**: the right operand is
+evaluated only when the left does not already decide the result.
+
+New `compile_short_circuit` lowers an `and_expr`/`or_expr` to a result slot guarded
+by branches, using only `jmp_if_false` / `jmp` / `label` (the portable subset every
+backend lowers — the CLR textual `.il` path has no `jmp_if_true`):
+
+```text
+// a && b              // a || b
+mov r = a              mov r = a
+jmp_if_false r, end    jmp_if_false r, eval_b
+mov r = b              jmp end
+label end              label eval_b ; mov r = b ; label end
+```
+
+Chains fold left-to-right; `r` is the `dest` of 2+ `mov`s so every backend promotes
+it to a stack slot automatically.
+
+Verified by RUNNING on every backend — `lang-aot/tests/lang_matrix.rs` gains, across
+native/LLVM/WASM/JVM/CLR/VM/JIT:
+- a `&&` short-circuit **proof**: `1 == 2 && 84 / 0 == 0` returns 7 (not 9, not a
+  crash) — the divide-by-zero RHS is positive proof it was never evaluated;
+- a `||` short-circuit proof: `1 == 1 || 84 / 0 == 0` returns 7;
+- a `&&` true-path program → 1.
+
+New unit tests `logical_and_short_circuits`, `logical_or_short_circuits` (assert the
+right operand's compare is emitted *after* the short-circuit guard).
+
 ## 0.11.0 — 2026-06-13 — bitwise `&` `|` `^` (LANG-FULL N3)
 
 Adds Nib's binary bitwise operators. The grammar's `bitwise_expr` level already
