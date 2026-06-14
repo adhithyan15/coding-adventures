@@ -5,6 +5,45 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.4.0] — 2026-06-13 (LANG-MATRIX Phase I — compiled functions bind their parameters)
+
+### Fixed — JIT-compiled functions with parameters now read their arguments
+
+A function compiled by `GenericCirJit` ignored the arguments it was called
+with: `Backend::run(&self, binary, _args)` discarded `_args` and started every
+call with a zero-initialised register file, so a parameter read as `0`.  A
+function like Nib's `double(x) -> x + x`, compiled and invoked as `double(21)`,
+returned `0` instead of `42`.  Parameterless functions (e.g. BASIC's `main`)
+were unaffected, which is why this lay hidden until the LANG-MATRIX **JIT
+column** exercised a parameterised function end-to-end.
+
+The fix threads parameter context through the **existing** `compile_function` /
+`FunctionContext` infrastructure (no new trait surface, no bytecode-format
+change):
+
+- `JITCore::compile_fn` now calls `Backend::compile_function(&ctx, ir)` instead
+  of the bare `compile(ir)`, where `ctx` carries the function's name,
+  parameters (in declaration order), and return type.  IR-only backends are
+  unaffected — the trait's default `compile_function` forwards to `compile`.
+- `GenericCirJit::compile_function` pre-binds the parameter names to registers
+  `0, 1, 2, …` in declaration order *before* walking the body, so the
+  parameters deterministically occupy the first registers.  A duplicate
+  parameter name (malformed IR) makes the function uncompilable rather than
+  silently aliasing two params to one register.
+- `GenericCirJit::run` seeds registers `0..args.len()` from the incoming call
+  arguments (bounded by the 256-register file).  Because `compile_fn` passes
+  the arguments in declaration order, argument `i` lands in the register that
+  parameter `i` was bound to.
+
+Native backends (which already override `compile_function` for their ABI
+prologue) now receive the context from `jit-core`'s compile path too.
+
+New unit tests: `compiled_function_reads_its_argument` (the 21→42 regression,
+with the bare-`compile` contrast still returning 0),
+`two_params_map_to_args_in_declaration_order` (argument `i` → register `i` even
+when the body references the second param first), and
+`duplicate_parameter_name_is_uncompilable`.
+
 ## [0.3.0] — 2026-05-28 (GenericCirJit — universal bytecode JIT)
 
 ### Added — `jit_core::generic_jit::GenericCirJit`
