@@ -30,5 +30,8 @@ All notable changes to this package will be documented in this file.
   child, router, stale-neighbor, and parent-candidate state.
 - Thread attach readiness summaries that combine MLE parent-selection traffic
   with neighbor parent/candidate state.
+- Thread attach action summaries that turn attach readiness into
+  parent-selection, response-wait, neighbor-refresh, status-review, and
+  unknown-command queues.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
