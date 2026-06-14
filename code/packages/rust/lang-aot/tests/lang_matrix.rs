@@ -294,6 +294,30 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("200"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Oct — `&&` SHORT-CIRCUIT, PROVEN observably (LANG-FULL O1). `side()` prints 5 and
+    // returns 1; it sits in the right operand of `&&`. The left `1 == 2` is false, so a
+    // correct short-circuit must NOT call `side()` — output is just `9` (the else branch).
+    // The OLD eager-bitwise lowering called `side()` unconditionally → it would print `5`
+    // first (`5`,`9`). So stdout == "9" is positive proof the RHS was skipped. (JVM
+    // excluded — branch + `print_i64`, the BA-JVM-1 StackMapTable follow-up.)
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn side() -> u8 { out(1, 5); return 1; } \
+               fn main() { if 1 == 2 && side() == 1 { out(1, 1); } else { out(1, 9); } }",
+        expect: Expect::Stdout("9"),
+        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+    },
+    // Oct — `||` SHORT-CIRCUIT, PROVEN observably. `1 == 1` is true, so `side()` (in the
+    // right operand) must be skipped → output `7`. Eager would print `5` then `7`.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn side() -> u8 { out(1, 5); return 1; } \
+               fn main() { if 1 == 1 || side() == 1 { out(1, 7); } else { out(1, 9); } }",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
         lang: Language::Algol60,
