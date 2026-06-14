@@ -55,6 +55,8 @@ All notable changes to this package will be documented in this file.
   package release archive checks.
 - Hue package release archive signoff summaries that turn archive readiness
   into final package release archive signoff checks.
+- Hue package release archive closure summaries that turn archive signoff
+  readiness into final package release archive closure checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
