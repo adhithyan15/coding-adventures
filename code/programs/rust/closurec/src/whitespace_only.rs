@@ -133,9 +133,32 @@ enum BlockKind {
 ///
 /// Returns the comment-stripped, whitespace-collapsed equivalent.
 /// `version` selects the JS spec the tokenizer should use.
+///
+/// # Correlation-vector tracing (CLOC12.132)
+///
+/// When `cv` is `Some((log, file_cv_id, token_cv_ids))`, this
+/// function tombstones every non-trivia token that the gap pre-passes
+/// remove from the token stream. Trivia (comments, whitespace) and
+/// EOF tombstones are handled upstream in `run.rs` via the
+/// `whitespace_only_dropped` path; this function only handles the
+/// *semantic* tokens that gap rules drop (e.g. gap-050 empty-paren
+/// drop, gap-054 redundant-grouping-paren drop).
+///
+/// `token_cv_ids` must be parallel to the full token array returned
+/// by `tokenize_javascript_typed(source, version)` — same order,
+/// same length. Passing a shorter slice is safe (out-of-bounds
+/// indices are silently skipped).
+///
+/// When `cv` is `None`, the function is byte-identical in behaviour
+/// to before CLOC12.132 — same `Result`, same output, zero overhead.
 pub fn whitespace_only_minify(
     source: &str,
     version: EsVersion,
+    cv: Option<(
+        &mut coding_adventures_correlation_vector::CVLog,
+        &str,
+        &[String],
+    )>,
 ) -> Result<String, MinifyError> {
     let tokens = tokenize_javascript_typed(source, version)
         .map_err(MinifyError::LexError)?;
@@ -2901,6 +2924,53 @@ pub fn whitespace_only_minify(
     }
 
     let kept = kept;
+
+    // CLOC12.132 — correlation-vector tombstones for gap-rule drops.
+    //
+    // After all pre-passes have settled, compare the set of pointers
+    // still in `kept` against the full token array. Any non-trivia,
+    // non-EOF token that is no longer reachable was dropped by one
+    // of the gap rules above. Issue a DeletionRecord on its CV entry
+    // so the sidecar shows precisely which bytes the pass killed and
+    // what rule killed them.
+    //
+    // Trivia/EOF tombstones are handled upstream in `run.rs` (the
+    // `whitespace_only_dropped` path); this block covers the semantic
+    // tokens removed by gap pre-passes.
+    //
+    // Implementation note: we compare raw pointer addresses to check
+    // membership. Synthetic tokens (synth_open, synth_close, etc.)
+    // are allocated as local variables distinct from the `tokens` Vec;
+    // their addresses never appear in the `tokens` iteration below, so
+    // they're naturally excluded. Safe Rust guarantees that the
+    // addresses of slice elements do not alias with unrelated locals.
+    if let Some((cv_log, _file_cv_id, token_cv_ids)) = cv {
+        use std::collections::HashSet;
+        let kept_ptrs: HashSet<*const lexer::token::Token> =
+            kept.iter().map(|t| *t as *const _).collect();
+        for (orig_idx, orig_tok) in tokens.iter().enumerate() {
+            if is_trivia(orig_tok) || is_eof(orig_tok) {
+                continue;
+            }
+            let ptr = orig_tok as *const lexer::token::Token;
+            if kept_ptrs.contains(&ptr) {
+                continue;
+            }
+            let Some(cv_id) = token_cv_ids.get(orig_idx) else {
+                continue;
+            };
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "token_index".to_string(),
+                serde_json::Value::Number((orig_idx as u64).into()),
+            );
+            meta.insert(
+                "lexeme".to_string(),
+                serde_json::Value::String(orig_tok.value.clone()),
+            );
+            cv_log.delete(cv_id, "whitespace_only", "gap_drop", meta);
+        }
+    }
 
     // Re-stitch: insert a single space between two adjacent
     // word-like tokens; otherwise concatenate directly. String
@@ -5964,7 +6034,7 @@ mod tests {
     use super::*;
 
     fn minify(src: &str) -> String {
-        whitespace_only_minify(src, EsVersion::Es2025).expect("ok")
+        whitespace_only_minify(src, EsVersion::Es2025, None).expect("ok")
     }
 
     #[test]

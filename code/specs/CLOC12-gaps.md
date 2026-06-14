@@ -902,3 +902,28 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `x={.5:1};` → **Upstream:** `x={"0.5":1};` but **closurec:** `x={.5:1};`. A NON-INTEGER numeric property key is emitted by upstream as a QUOTED canonical-number string: `{.5:1}` → `{"0.5":1}`, `{1.5:1}` → `{"1.5":1}`, `{1.50:1}` → `{"1.5":1}`, `{1e-3:1}` → `{"0.001":1}`. Float-key counterpart of gap-116 (canonical INTEGER string key → unquoted number). Upstream canonicalises every property key to `String(Number(key))` and then emits it bare iff that string is a valid numeric/identifier key, else quoted. INTEGER numeric keys already round-trip in closurec (`{5:1}` stays, `{0xff:1}` → `{255:1}`, `{1e3:1}` → `{1E3:1}` since 1000 is a safe integer); only the non-integer (fractional / negative-exponent) keys diverge.
 - **What it needs:** an emitter/token-level rule recognising a NUMBER token in property-key position (`{` or `,` then NUMBER then `:`) whose value is NON-INTEGER; replace it with a double-quoted string of its canonical decimal (`String(Number(v))`). Simple fixed-point decimals (`.5` → `0.5`, `1.5` → `1.5`, trailing-zero strip `1.50` → `1.5`) are tractable with the existing `normalize_number_value` decimal canonicalisation; the negative-exponent/tiny-fraction canonical form (`1e-3` → `0.001`) overlaps the deferred gap-113 (Ryu) number-printer work, so a first slice can scope to plain decimals and leave `1e-N` keys for the gap-113 follow-up. Guard against integer keys (already correct), computed keys (`[expr]`), string keys, and method/accessor keys.
 - **Resolution:** `noninteger_numeric_key_string` helper in `whitespace_only.rs`, wired into the number-emit branch. Builds JS `String(Number(key))` EXACTLY from the source digits (coefficient `M`, base-10 exponent `E`) — leading `0` KEPT before the point, trailing fractional zeros stripped, lowercase-`e` exponential only for magnitudes below `1e-6` (`sci_exp <= -7`). This is a DISTINCT algorithm from closurec's value number printer (which drops the leading `0` and uses uppercase-`E`), so the full `1e-N` range was handled directly (no gap-113-Ryu dependency in the end — both are exact string transforms). Verified against the JAR: `{1e-6:1}` → `{"0.000001":1}` stays decimal, `{1e-7:1}` → `{"1e-7":1}` exponential. Integer keys (`E >= 0` after trailing-zero stripping) stay bare. The position guard (prev `{`/`,`, next `:`) reuses gap-116's and excludes the ternary `a?1.5:2` confound, array/call elements, bare values, and the value half of a `{key:value}` pair (`{1.5:.5}` → `{"1.5":.5}`). f64-range magnitude guard (`-324..=308`) bounds the zero-run (no DoS). Two `gap120_*` unit tests.
+
+---
+
+## CLOC12.132 — correlation-vector gap-drop tombstones in `whitespace_only_minify`
+
+- **Status:** RESOLVED in CLOC12.132 (v0.132.0).
+- **What it was missing:** The CV sidecar recorded tombstones for trivia/EOF
+  tokens (via `whitespace_only_dropped` in `run.rs`) but was silent about
+  non-trivia tokens removed by gap pre-passes. For example, gap-053 drops the
+  redundant parentheses from `var x=(1);` → `var x=1;`; before this slice,
+  the `(` and `)` token CVs had no deletion record.
+- **Resolution:**
+  - `whitespace_only_minify` gains a third parameter:
+    `cv: Option<(&mut CVLog, &str, &[String])>` — (log, file_cv_id,
+    token_cv_ids). When `None`, behaviour is byte-identical to before.
+  - After all pre-passes complete (`let kept = kept`), a pointer-comparison
+    sweep finds non-trivia, non-EOF tokens from the original stream absent
+    from `kept` and issues `CVLog::delete(cv_id, "whitespace_only", "gap_drop",
+    {token_index, lexeme})` for each.
+  - `transform_source_with_cv` signature updated: `cv` tuple gains
+    `&[String]` (per-token CV ID slice); callers passing `Some(...)` now
+    include `token_cv_ids` (hoisted in `run_compiler` from the lex block).
+  - Two new tests in `run.rs` pin the contract.
+- **Scope:** covers pre-pass drops only. Emit-loop drops (e.g. gap-050
+  `new Foo()` → `new Foo`) are not yet tombstoned — tracked as follow-up.
