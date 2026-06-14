@@ -18,6 +18,8 @@ All notable changes to this package will be documented in this file.
   worker, command-flow, local-pairing, event-stream, and physical-presence gates.
 - Hue package spec summaries for catalog/spec handoff checks across canonical
   identity, CLIP v2 endpoints, registration headers, and runtime model surface.
+- Hue package spec gap summaries that route blocked package specs to release,
+  identity, CLIP v2 transport, or runtime model review.
 - Hue catalog package readiness summaries that combine package/spec, release,
   identity, CLIP v2 transport, runtime model, and pairing-handoff gates.
 - Hue catalog package gap summaries that route blocked catalog handoffs to spec,
