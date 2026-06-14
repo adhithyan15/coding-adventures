@@ -1,30 +1,35 @@
 #!/usr/bin/env bash
 #
-# build.sh — regenerate FormulaBar.qml from the Mosaic pipeline
-# and drop it into the demo's build/ directory.
+# build.sh — regenerate the FormulaBar/Grid QML from the Mosaic pipeline AND
+# build+vendor the Rust spreadsheet engine the demo computes on.
 #
-# Per the VisiCalc cross-backend demo plan (Phase 2 / VC2-qt):
-# this is the Qt cross-backend demo. The output is a QML file
-# defining `FormulaBar.qml` as a top-level Item with property/signal
-# declarations; main.qml imports it via the local QML module
-# (declared in qmldir).
+# Per the VisiCalc cross-backend demo plan (Phase 2 / VC2-qt): this is the Qt
+# cross-backend demo, now wired to the shared Rust `spreadsheet-core` engine
+# through its C ABI (spreadsheet-capi) — the same engine the SwiftUI demo links
+# natively and the web demos run as WebAssembly. The generated QML renders the
+# values the engine computes; editing the formula bar writes through to the
+# engine and recomputes.
 #
-# Both FormulaBar and Grid are now compiled through the pipeline
-# (see the two `mosaic-compile --backend qt` invocations below). The
-# Qt emitter inlines the shared Grid.dark.msl part styles, so the
-# generated Grid.qml renders as a real spreadsheet — bordered,
-# fixed-width, right-aligned cells with a selected-cell highlight —
-# rather than the hand-written QtQuick.Controls widgets the demo
-# used before the mosstyle-inlining work landed.
+# This script does two things:
+#   1. Regenerates build/{FormulaBar,Grid}.qml via `mosaic-compile --backend qt`.
+#   2. Builds the spreadsheet-capi crate to a static library and vendors it
+#      (plus its C header) into Vendor/ — git-ignored, exactly like the SwiftUI
+#      demo's Vendor/.
 #
 # Usage:
 #   cd demo/visicalc-qt
 #   bash scripts/build.sh
 #
-# Then to actually run the app (Qt 6 SDK required):
-#   qml main.qml
-#   # or via CMake:
-#   cmake -B build && cmake --build build && ./build/visicalc-qt
+# Then build & run. The engine-backed binary is the real demo:
+#   qmake && make && ./visicalc_qt_app            # qmake (no CMake needed)
+#   # or, if you have CMake:
+#   cmake -B build-cmake && cmake --build build-cmake && ./build-cmake/visicalc_qt_app
+#
+# And the headless proof (the Qt equivalent of `swift test`):
+#   cd test && qmake && make && ./tst_model
+#
+# (`qml main.qml` still opens the layout for QML iteration, but it can't expose
+# the C++ model or link the engine, so its grid is empty — use the binary.)
 
 set -euo pipefail
 
@@ -67,9 +72,20 @@ echo "Compiling Grid (Qt / QML)..."
   --package-search-path "$REPO_ROOT/code/packages" \
   -o "$OUT_DIR/Grid.qml"
 
-echo "Done. Generated:"
+echo "Building the spreadsheet engine (Rust → static lib) and vendoring it..."
+# The C ABI static library the Qt app + headless test link (see visicalc-qt.pro
+# / CMakeLists.txt). Built from the spreadsheet-capi crate and copied into
+# Vendor/ (git-ignored), along with the C header the C++ model includes.
+(cd "$REPO_ROOT/code/packages/rust" && cargo build -p spreadsheet-capi --release)
+mkdir -p "$DEMO_DIR/Vendor"
+cp "$REPO_ROOT/code/packages/rust/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/"
+cp "$REPO_ROOT/code/packages/rust/spreadsheet-capi/include/spreadsheet.h" "$DEMO_DIR/Vendor/spreadsheet.h"
+
+echo "Done. Generated QML + vendored engine:"
 ls -la "$OUT_DIR"
+ls -la "$DEMO_DIR/Vendor"
 echo
-echo "To run the demo (Qt 6 SDK required):"
+echo "To build & run the demo (Qt 6 SDK required):"
 echo "  cd $DEMO_DIR"
-echo "  qml main.qml"
+echo "  qmake && make && ./visicalc_qt_app           # the engine-backed GUI"
+echo "  (cd test && qmake && make && ./tst_model)    # headless engine proof"
