@@ -1,0 +1,1 @@
+echo C++ Conduit tests use POSIX sockets for the E2E — skipping on Windows
