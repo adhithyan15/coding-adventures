@@ -1,0 +1,106 @@
+{
+  "kind": "bsi-source-lr",
+  "clauses": {
+    "src_urinary_enteric": {
+      "evidence": "infection_source(urinary)",
+      "organism": "enteric_gnb",
+      "lr": 14,
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "Most common source of infection was the urinary tract (47.9%). ... E coli (n = 2471, 51.0%) was the most common Gram-negative organism recovered.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10350481/"
+    },
+    "src_line_cons": {
+      "evidence": "infection_source(intravascular_line)",
+      "organism": "coag_neg_staph",
+      "lr": 12,
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "byte_quote": "Gram-positive organisms (coagulase-negative staphylococci, 34.1%; enterococci, 16%; and Staphylococcus aureus, 9.9%) are the most common, followed by gram-negatives...",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK430891/"
+    },
+    "src_line_saureus": {
+      "evidence": "infection_source(intravascular_line)",
+      "organism": "s_aureus",
+      "lr": 8,
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "In order of prevalence, the 4 groups of microbes that most commonly cause CRBSI associated with percutaneously inserted, noncuffed catheters are as follows: coagulase-negative staphylococci, S. aureus, Candida species, and enteric gram-negative bacilli. One study found that 1 in 4 patients with S. aureus colonization of an intravascular catheter subsequently developed S. aureus bacteremia if they did not receive immediate anti-staphylococcal antibiotics.",
+      "url": "https://academic.oup.com/cid/article/49/1/1/369414"
+    },
+    "src_intraabd_enteric": {
+      "evidence": "infection_source(intraabdominal)",
+      "organism": "enteric_gnb",
+      "lr": 9,
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "Of the diverse other sources, the most common were biliary infection (range, 11–27%) and other intra-abdominal infections (range, 4–48%). ... Other common sources of E. coli bacteremia are biliary tract infection caused by bacteria ascending from the gastrointestinal tract and other intra-abdominal infections.",
+      "url": "https://academic.oup.com/cid/article/72/7/1211/5836974"
+    },
+    "src_intraabd_anaerobes": {
+      "evidence": "infection_source(intraabdominal)",
+      "organism": "anaerobes",
+      "lr": 9,
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "These studies also emphasize that intra-abdominal sources are the most common origin of infection and that timely, adequate source control—through surgical drainage—is a critical determinant of survival. The percentage of bacteremia originating from the gastrointestinal tract was 29.4% and 54.1% in B. fragilis and non-B. fragilis groups (P = .002), respectively.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12902366/"
+    },
+    "src_skin_saureus": {
+      "evidence": "infection_source(skin_soft_tissue)",
+      "organism": "s_aureus",
+      "lr": 12,
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "byte_quote": "It is the most common pathogen isolated from surgical site infections (SSIs), cutaneous abscesses, and purulent cellulitis. According to 2009-2010 U.S. National Healthcare Safety Network data, S. aureus was the most common cause of SSIs overall, accounting for 30% of infections.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451395/"
+    },
+    "src_skin_pyogenes": {
+      "evidence": "infection_source(skin_soft_tissue)",
+      "organism": "strep_pyogenes",
+      "lr": 6,
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "The commonest focus of infection was skin and soft tissue (56.45%), followed by respiratory tract (18.8%).",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12258469/"
+    },
+    "src_resp_pneumo": {
+      "evidence": "infection_source(respiratory)",
+      "organism": "s_pneumoniae",
+      "lr": 9,
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "byte_quote": "Like in other studies, the main source of bacteremia in our patients was the low respiratory tract in 46 (68.6%).",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3892635/"
+    },
+    "host_neutropenia_pseudomonas": {
+      "evidence": "neutropenia(present)",
+      "organism": "pseudomonas",
+      "lr": 6,
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "byte_quote": "Factors associated with P. aeruginosa bacteremia in the multivariate analysis included presentation with neutropenia, presentation with septic shock, indwelling central venous catheter, and health-care-associated infection (all P <.05).",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18691485/"
+    },
+    "host_idu_saureus": {
+      "evidence": "injection_drug_use(present)",
+      "organism": "s_aureus",
+      "lr": 8,
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "consensus",
+      "byte_quote": "Endocarditis was more common in SAB among drug abusers (46%) than in nonaddicts (14%) (odds ratio [OR], 5.12; 95% confidence interval [CI], 2.65–9.91; P < 0.001). [...] Right-sided endocarditis was observed in 60% of IDUs whereas 93% of nonaddicts had left-sided involvement (P < 0.001).",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1584240/fullTextXML"
+    }
+  },
+  "hash": "1bdb690480be50f5"
+}

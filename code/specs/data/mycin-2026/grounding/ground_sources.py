@@ -46,10 +46,12 @@ TC_GROUNDING = HERE / "treatment-constraints-grounding.json"         # CC-3 — 
 TC_MANIFEST = MYCIN / "treatment" / "constraints" / "treatment-constraints.json"
 BSI_GROUNDING = HERE / "bsi-prior-grounding.json"                    # G5 — bacteremia priors
 BSI_MANIFEST = MYCIN / "diagnosis" / "bacteremia" / "bsi-prior-manifest.json"
+BSI_SRCLR_GROUNDING = HERE / "bsi-source-lr-grounding.json"          # G5b — portal-of-entry LRs
+BSI_SRCLR_MANIFEST = MYCIN / "diagnosis" / "bacteremia" / "bsi-source-lr-manifest.json"
 
 # Every grounding file whose records cite sources we decompose + verify against.
 GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING, DOSE_GROUNDING, UTI_GROUNDING,
-                   TC_GROUNDING, BSI_GROUNDING]
+                   TC_GROUNDING, BSI_GROUNDING, BSI_SRCLR_GROUNDING]
 
 
 def _records(*files: Path) -> list[dict]:
@@ -217,6 +219,19 @@ def commit_and_verify() -> int:
             "flagged": sum(1 for x in bman.values() if x["verdict"] == "FLAG"),
             "authored_debt": sum(1 for x in bman.values() if x["verdict"] == "PENDING"),
             "rows": bsi_rows})
+
+    # 2f. Bacteremia source→organism LRs (G5b — the portal-of-entry signal). Sources pending decompose.
+    if BSI_SRCLR_GROUNDING.exists():
+        slr_rows, c = _verify_rows(_records(BSI_SRCLR_GROUNDING), by_url)
+        for k in tot:
+            tot[k] += c[k]
+        sman = json.loads(BSI_SRCLR_MANIFEST.read_text()).get("clauses", {}) if BSI_SRCLR_MANIFEST.exists() else {}
+        artifacts.append({
+            "name": "bacteremia source→organism LRs", "path": "diagnosis/bacteremia/source-id.adj",
+            "grounded": sum(1 for x in sman.values() if x["verdict"] == "ACCEPT"),
+            "flagged": sum(1 for x in sman.values() if x["verdict"] == "FLAG"),
+            "authored_debt": sum(1 for x in sman.values() if x["verdict"] == "PENDING"),
+            "rows": slr_rows})
 
     # 3. Rebuild the system-wide provenance ledger.
     LEDGER.write_text(harness.build_ledger(artifacts) +
