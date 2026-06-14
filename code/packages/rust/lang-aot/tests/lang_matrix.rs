@@ -219,6 +219,34 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(3),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — `&&` SHORT-CIRCUIT (LANG-FULL N4). The left `1 == 2` is false, so the right
+    // operand `84 / 0 == 0` must NOT be evaluated — if it were, the division by zero would
+    // trap. The program returning 7 (not crashing, not 9) on every backend is positive
+    // proof the RHS was skipped. (`&&`/`||` lower to a result slot + jmp_if_false branches.)
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { if 1 == 2 && 84 / 0 == 0 { return 9; } return 7; }",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `||` SHORT-CIRCUIT (LANG-FULL N4). The left `1 == 1` is true, so `84 / 0 == 0`
+    // must NOT be evaluated. Returns 7 on every backend ⇒ the RHS was skipped.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { if 1 == 1 || 84 / 0 == 0 { return 7; } return 9; }",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `&&` true path: both sides true ⇒ the `if` is taken ⇒ 1.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { if 1 == 1 && 2 == 2 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,

@@ -108,7 +108,10 @@ backend immediately) come before the enabler-dependent items.
   `12 & 10`→8, `12 | 3`→15, `6 ^ 5`→3 across native/LLVM/WASM/JVM/CLR/VM/JIT — also fixed a CLR
   textual-`.il` gap in `iir-to-cil-bytecode` 0.19.0). Unary `~` ☐ — still deferred; a correct
   width-mask needs enabler **E2** (`~x` on a u8 flips 8 bits, not 64).
-- ☐ **N4** — `&&` / `||` short-circuit (desugar to branches).
+- ✅ **N4** — `&&` / `||` short-circuit. `compile_short_circuit` lowers to a result slot
+  guarded by `jmp_if_false`/`jmp`/`label` (portable subset — CLR textual path has no
+  `jmp_if_true`); verified by RUNNING divide-by-zero short-circuit proofs (`1==2 && 84/0==0`
+  →7, `1==1 || 84/0==0`→7, RHS never evaluated) + a true-path program, across all backends.
 - ☐ **N5** — `const` declarations (constant folding / global).
 - ☐ **N6** — u4/u8 wrap semantics (needs **E2**).
 - ☐ **N7** — `+%` (wrap add) / `+?` (saturating add) (needs **E2**).

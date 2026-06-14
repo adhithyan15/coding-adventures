@@ -1,5 +1,37 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.12.0 — 2026-06-13 — short-circuit `&&` / `||` (LANG-FULL N4)
+
+Adds Nib's logical `&&` / `||`. Unlike the other operators these cannot go through
+`compile_binary_chain` (which evaluates both sides eagerly and has no `cir_op_for`
+mapping for `LAND`/`LOR`) — they must **short-circuit**: the right operand is
+evaluated only when the left does not already decide the result.
+
+New `compile_short_circuit` lowers an `and_expr`/`or_expr` to a result slot guarded
+by branches, using only `jmp_if_false` / `jmp` / `label` (the portable subset every
+backend lowers — the CLR textual `.il` path has no `jmp_if_true`):
+
+```text
+// a && b              // a || b
+mov r = a              mov r = a
+jmp_if_false r, end    jmp_if_false r, eval_b
+mov r = b              jmp end
+label end              label eval_b ; mov r = b ; label end
+```
+
+Chains fold left-to-right; `r` is the `dest` of 2+ `mov`s so every backend promotes
+it to a stack slot automatically.
+
+Verified by RUNNING on every backend — `lang-aot/tests/lang_matrix.rs` gains, across
+native/LLVM/WASM/JVM/CLR/VM/JIT:
+- a `&&` short-circuit **proof**: `1 == 2 && 84 / 0 == 0` returns 7 (not 9, not a
+  crash) — the divide-by-zero RHS is positive proof it was never evaluated;
+- a `||` short-circuit proof: `1 == 1 || 84 / 0 == 0` returns 7;
+- a `&&` true-path program → 1.
+
+New unit tests `logical_and_short_circuits`, `logical_or_short_circuits` (assert the
+right operand's compare is emitted *after* the short-circuit guard).
+
 ## 0.11.0 — 2026-06-13 — bitwise `&` `|` `^` (LANG-FULL N3)
 
 Adds Nib's binary bitwise operators. The grammar's `bitwise_expr` level already
