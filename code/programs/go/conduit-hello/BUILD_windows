@@ -1,0 +1,1 @@
+echo conduit-hello uses CGO + the Rust static lib — skipping on Windows
