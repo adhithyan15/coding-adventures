@@ -567,6 +567,95 @@ pub fn summarize_thread_network_data_readiness(
     ThreadNetworkDataReadinessSummary::from_network_data(network_data)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadNetworkDataTlvHandoffSummary {
+    pub network_data_readiness: ThreadNetworkDataReadinessSummary,
+    pub required_handoff_check_count: usize,
+    pub passed_handoff_check_count: usize,
+    pub missing_handoff_check_count: usize,
+    pub network_data_ready: bool,
+    pub stable_tlvs_ready: bool,
+    pub routing_tlvs_ready: bool,
+    pub service_or_context_tlvs_ready: bool,
+    pub unknown_tlvs_absent: bool,
+    pub tlv_handoff_ready: bool,
+}
+
+impl ThreadNetworkDataTlvHandoffSummary {
+    pub fn from_network_data(network_data: &ThreadNetworkData) -> Result<Self, MleError> {
+        Ok(Self::from_readiness(
+            ThreadNetworkDataReadinessSummary::from_network_data(network_data)?,
+        ))
+    }
+
+    pub fn from_readiness(network_data_readiness: ThreadNetworkDataReadinessSummary) -> Self {
+        let network_data_summary = network_data_readiness.network_data_summary;
+        let network_data_ready = network_data_readiness.is_network_data_ready();
+        let stable_tlvs_ready = network_data_summary.has_stable_data();
+        let routing_tlvs_ready = network_data_summary.has_routing_data();
+        let service_or_context_tlvs_ready = network_data_summary.has_service_or_context_data();
+        let unknown_tlvs_absent = !network_data_summary.has_unknown_tlvs();
+        let checks = [
+            network_data_ready,
+            stable_tlvs_ready,
+            routing_tlvs_ready,
+            service_or_context_tlvs_ready,
+            unknown_tlvs_absent,
+        ];
+        let passed_handoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_handoff_check_count = checks.len();
+        let missing_handoff_check_count = required_handoff_check_count - passed_handoff_check_count;
+        let tlv_handoff_ready = missing_handoff_check_count == 0;
+
+        Self {
+            network_data_readiness,
+            required_handoff_check_count,
+            passed_handoff_check_count,
+            missing_handoff_check_count,
+            network_data_ready,
+            stable_tlvs_ready,
+            routing_tlvs_ready,
+            service_or_context_tlvs_ready,
+            unknown_tlvs_absent,
+            tlv_handoff_ready,
+        }
+    }
+
+    pub fn is_tlv_handoff_ready(self) -> bool {
+        self.tlv_handoff_ready
+    }
+
+    pub fn has_handoff_gaps(self) -> bool {
+        self.missing_handoff_check_count > 0
+    }
+
+    pub fn needs_network_data(self) -> bool {
+        !self.network_data_ready
+    }
+
+    pub fn needs_stable_tlvs(self) -> bool {
+        !self.stable_tlvs_ready
+    }
+
+    pub fn needs_routing_tlvs(self) -> bool {
+        !self.routing_tlvs_ready
+    }
+
+    pub fn needs_service_or_context_tlvs(self) -> bool {
+        !self.service_or_context_tlvs_ready
+    }
+
+    pub fn needs_unknown_tlv_review(self) -> bool {
+        !self.unknown_tlvs_absent
+    }
+}
+
+pub fn summarize_thread_network_data_tlv_handoff(
+    network_data: &ThreadNetworkData,
+) -> Result<ThreadNetworkDataTlvHandoffSummary, MleError> {
+    ThreadNetworkDataTlvHandoffSummary::from_network_data(network_data)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NetworkDataTlv {
     pub tlv_type: NetworkDataTlvType,
@@ -2582,6 +2671,69 @@ mod tests {
         assert!(empty.needs_network_data());
         assert_eq!(empty.passed_check_count, 1);
         assert_eq!(empty.missing_check_count, 5);
+    }
+
+    #[test]
+    fn network_data_tlv_handoff_summary_marks_ready_dataset_tlvs() {
+        let border_router =
+            NetworkDataTlv::new(NetworkDataTlvType::BorderRouter, true, vec![0xaa]).unwrap();
+        let context = NetworkDataTlv::new(NetworkDataTlvType::Context, true, vec![0x01]).unwrap();
+        let prefix = ThreadPrefixData::new(
+            true,
+            3,
+            64,
+            vec![0xfd, 0x00, 0xab, 0xcd, 0, 0, 0, 0],
+            vec![border_router, context],
+        )
+        .unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap()]).unwrap();
+        let readiness = summarize_thread_network_data_readiness(&network_data).unwrap();
+
+        let summary = summarize_thread_network_data_tlv_handoff(&network_data).unwrap();
+
+        assert_eq!(summary.network_data_readiness, readiness);
+        assert_eq!(summary.required_handoff_check_count, 5);
+        assert_eq!(summary.passed_handoff_check_count, 5);
+        assert_eq!(summary.missing_handoff_check_count, 0);
+        assert!(summary.network_data_ready);
+        assert!(summary.stable_tlvs_ready);
+        assert!(summary.routing_tlvs_ready);
+        assert!(summary.service_or_context_tlvs_ready);
+        assert!(summary.unknown_tlvs_absent);
+        assert!(summary.tlv_handoff_ready);
+        assert!(summary.is_tlv_handoff_ready());
+        assert!(!summary.has_handoff_gaps());
+        assert!(!summary.needs_network_data());
+        assert!(!summary.needs_stable_tlvs());
+        assert!(!summary.needs_routing_tlvs());
+        assert!(!summary.needs_service_or_context_tlvs());
+        assert!(!summary.needs_unknown_tlv_review());
+    }
+
+    #[test]
+    fn network_data_tlv_handoff_summary_routes_blocked_tlv_work() {
+        let unknown = NetworkDataTlv::new(NetworkDataTlvType::Unknown(42), false, vec![3]).unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![unknown]).unwrap();
+        let readiness = network_data.summary().unwrap().readiness();
+
+        let summary = ThreadNetworkDataTlvHandoffSummary::from_readiness(readiness);
+
+        assert_eq!(summary.required_handoff_check_count, 5);
+        assert_eq!(summary.passed_handoff_check_count, 0);
+        assert_eq!(summary.missing_handoff_check_count, 5);
+        assert!(!summary.network_data_ready);
+        assert!(!summary.stable_tlvs_ready);
+        assert!(!summary.routing_tlvs_ready);
+        assert!(!summary.service_or_context_tlvs_ready);
+        assert!(!summary.unknown_tlvs_absent);
+        assert!(!summary.tlv_handoff_ready);
+        assert!(!summary.is_tlv_handoff_ready());
+        assert!(summary.has_handoff_gaps());
+        assert!(summary.needs_network_data());
+        assert!(summary.needs_stable_tlvs());
+        assert!(summary.needs_routing_tlvs());
+        assert!(summary.needs_service_or_context_tlvs());
+        assert!(summary.needs_unknown_tlv_review());
     }
 
     #[test]

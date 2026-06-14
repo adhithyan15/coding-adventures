@@ -20,6 +20,8 @@ All notable changes to this package will be documented in this file.
   routing, service, and unknown-TLV coverage.
 - Thread Network Data readiness summaries for prefix, routing, stable-data,
   service/context, and unknown-TLV coverage checks.
+- Thread Network Data TLV handoff summaries for stable TLV, routing TLV,
+  service/context TLV, and unknown-TLV review gates.
 - Typed Connectivity TLV helpers for route-cost, link-quality, active-router,
   and sleepy-end-device diagnostic fields.
 - Thread diagnostic snapshots that combine neighbor, leader, connectivity,
