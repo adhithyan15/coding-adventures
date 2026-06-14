@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-14
+
+### Added
+- **Template-substitution lexer modes (gap-044, first slice)** — `es2025.tokens`
+  now wires up template literal `${...}` substitutions via two new flat modes:
+  - `template` — active immediately after `TEMPLATE_HEAD` or `TEMPLATE_MIDDLE`
+    (both of which end with `${`).  It is a *flat* (set-mode) target so it
+    inherits the default group's patterns (NAME, NUMBER, …) while placing its
+    own `TEMPLATE_TAIL` / `TEMPLATE_MIDDLE` patterns first.  An empty body
+    (`` `${}` ``) is handled by the own patterns matching the opening `}`.
+  - `template_div` — active after a NAME is emitted inside `${...}` (mirrors
+    the role of `div` in the outer expression: `SLASH`/`SLASH_EQUALS` override
+    plus `TEMPLATE_TAIL`/`TEMPLATE_MIDDLE` at own priority so the closing `}`
+    is recognised before the inherited `RBRACE`).
+
+  New transitions added (in first-match-wins order before the general
+  value-producing rule):
+  ```
+  on TEMPLATE_HEAD              -> set-mode template
+  on TEMPLATE_MIDDLE            -> set-mode template
+  on NAME in template           -> set-mode template_div
+  on NAME in template_div       -> set-mode template_div
+  on TEMPLATE_TAIL              -> set-mode div
+  ```
+
+  Closes closurec gap-044 for the common `${singleIdentifier}` case.
+  Documented limitation: expressions containing operators (`.`, `+`, `(`, …)
+  or nested `{ }` reset the mode back to `default`/`div`, losing the template
+  context.  Full brace-depth support is a follow-up.
+
+- The compiled `_grammar.rs` was regenerated from `es2025.tokens`.
+
 ## [0.6.0] - 2026-06-13
 
 ### Added

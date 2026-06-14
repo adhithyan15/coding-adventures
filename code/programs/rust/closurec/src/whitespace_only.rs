@@ -4526,6 +4526,22 @@ fn needs_separator(a: &lexer::token::Token, b: &lexer::token::Token) -> bool {
     if b.value.starts_with('`') {
         return false;
     }
+    // gap-044 (first slice): template substitution boundaries. A
+    // TEMPLATE_HEAD or TEMPLATE_MIDDLE ends with `${` — its last
+    // character is `{`, a punctuator — so the expression token
+    // immediately following it never needs a leading separator (even
+    // though TEMPLATE_HEAD/MIDDLE are classified as word-like for other
+    // purposes).  Symmetrically, TEMPLATE_MIDDLE and TEMPLATE_TAIL start
+    // with `}` — also a punctuator — so the expression token immediately
+    // preceding them never needs a trailing separator.  Without these
+    // short-circuits the word-like rule below would insert spaces that
+    // produce `${ name }` instead of `${name}`.
+    if a.value.ends_with("${") {
+        return false;
+    }
+    if b.value.starts_with('}') {
+        return false;
+    }
     // gap-119: a REGEX literal as the RIGHT token never needs a leading
     // separator from a word-like token, because a regex's first emitted
     // character is `/` (a punctuator): `return/a/g`, `typeof/x/`,

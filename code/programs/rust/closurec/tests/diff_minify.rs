@@ -158,11 +158,16 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // es2025 grammar now declares a `div` mode entered after value-producing
     // tokens, so `/` after an identifier/number/`)`/`]` lexes as SLASH, not
     // REGEX. `regex_div` is now ENFORCED (un-ignored below).
-    // gap-044: JavaScript lexer does not yet support
-    // template literal SUBSTITUTIONS (`${expr}` inside
-    // a backtick-delimited string). Lexer-level gap.
-    ("template_subst", "gap-044: lexer does not support `${...}`"),
-    ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-044 RESOLVED (first slice) — template literal substitutions
+    // `${expr}` are now handled by a pair of flat lexer modes: `template`
+    // (active right after TEMPLATE_HEAD/TEMPLATE_MIDDLE) and `template_div`
+    // (active after a value-producing NAME inside `${...}`).  Both modes own
+    // TEMPLATE_TAIL/TEMPLATE_MIDDLE patterns at higher priority than the
+    // inherited RBRACE, so `}` after a simple expression closes the
+    // substitution correctly.  `template_subst` and `tagged_subst` are now
+    // ENFORCED.  Limitation: expressions with operators (`.`, `+`, `(`, …)
+    // or nested `{ }` reset the mode to default/div, losing the template
+    // context — full brace-depth support is a follow-up.
     // gap-072 RESOLVED in CLOC12.106 — `await` OPERAND paren elision
     // (`await(x)` → `await x`) plus the always-separating-space rule
     // (`await(a+b)` → `await (a+b)`). `await` binds at UNARY precedence,
