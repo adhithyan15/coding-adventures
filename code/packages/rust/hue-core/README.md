@@ -70,6 +70,8 @@ packages a typed surface for:
   release, or runtime/pairing review queues
 - Hue package lifecycle summaries that count release, spec, catalog, handoff,
   and publish stages as one ordered package readiness view
+- Hue package review-queue summaries that turn lifecycle stage blockers into
+  release, spec, catalog, handoff, and publish acceptance queues
 
 ## Dependencies
 
