@@ -283,6 +283,15 @@ impl fmt::Debug for WakeHandle {
     }
 }
 
+/// An owned OS socket handle that can be adopted into a platform as a stream via
+/// [`TransportPlatform::adopt_stream`].  Unix: a file descriptor (`OwnedFd`);
+/// Windows: a socket handle (`OwnedSocket`).  The alias keeps the trait
+/// cross-platform while the meaningful implementations are the Unix backends.
+#[cfg(unix)]
+pub type AdoptableFd = std::os::fd::OwnedFd;
+#[cfg(windows)]
+pub type AdoptableFd = std::os::windows::io::OwnedSocket;
+
 pub trait TransportPlatform {
     fn native_event_provider(&self) -> NativeEventProvider {
         NativeEventProvider::ReadinessProbe
@@ -305,6 +314,26 @@ pub trait TransportPlatform {
     ) -> Result<(), PlatformError>;
 
     fn accept(&mut self, listener: ListenerId) -> Result<Option<AcceptedStream>, PlatformError>;
+
+    /// Adopt an already-connected socket as a managed stream, returning its
+    /// `StreamId`.  This is the receiving half of an **accept fan-out**: a single
+    /// acceptor accepts connections on one listener (e.g. where `SO_REUSEPORT`
+    /// doesn't load-balance, as on macOS/BSD) and hands the raw socket to a worker
+    /// platform on another thread, which adopts it here and then drives it like
+    /// any other stream — `configure_stream` + `set_stream_interest` exactly as it
+    /// would after `accept`.
+    ///
+    /// The default returns [`PlatformError::Unsupported`]; the kqueue and epoll
+    /// backends override it.  Taking the handle by value transfers ownership, so
+    /// the sender must relinquish it (e.g. `into`/`IntoRawFd`) and never close it.
+    fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
+        // Drop the handle (closing it) so an unsupported platform doesn't leak the
+        // socket, then report that adoption isn't available here.
+        drop(fd);
+        Err(PlatformError::Unsupported(
+            "adopt_stream not supported by this platform",
+        ))
+    }
 
     fn configure_stream(
         &mut self,
@@ -677,6 +706,28 @@ pub mod bsd {
                 Err(error) if error.kind() == io::ErrorKind::WouldBlock => Ok(None),
                 Err(error) => Err(PlatformError::from(error)),
             }
+        }
+
+        fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
+            // The fan-out acceptor handed us a freshly-`accept`ed socket from
+            // another thread.  Register it exactly like the tail of `accept`: wrap
+            // the owned fd as a `TcpStream`, make it non-blocking (an `accept`ed
+            // socket does not inherit O_NONBLOCK), allocate a local `StreamId`, and
+            // record it.  Interest starts at `none()`; the caller then
+            // `configure_stream` + `set_stream_interest`, exactly as `accept_ready`
+            // does after a normal accept.
+            let stream = TcpStream::from(fd);
+            stream.set_nonblocking(true)?;
+            let id = StreamId(self.alloc_token());
+            self.register_resource(id.0, ResourceId::Stream(id));
+            self.streams.insert(
+                id,
+                StreamState {
+                    socket: stream,
+                    interest: StreamInterest::none(),
+                },
+            );
+            Ok(id)
         }
 
         fn configure_stream(
@@ -1364,6 +1415,28 @@ pub mod linux {
                 Err(error) if error.kind() == io::ErrorKind::WouldBlock => Ok(None),
                 Err(error) => Err(PlatformError::from(error)),
             }
+        }
+
+        fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
+            // The fan-out acceptor handed us a freshly-`accept`ed socket from
+            // another thread.  Register it exactly like the tail of `accept`: wrap
+            // the owned fd as a `TcpStream`, make it non-blocking (an `accept`ed
+            // socket does not inherit O_NONBLOCK), allocate a local `StreamId`, and
+            // record it.  Interest starts at `none()`; the caller then
+            // `configure_stream` + `set_stream_interest`, exactly as `accept_ready`
+            // does after a normal accept.
+            let stream = TcpStream::from(fd);
+            stream.set_nonblocking(true)?;
+            let id = StreamId(self.alloc_token());
+            self.register_resource(id.0, ResourceId::Stream(id));
+            self.streams.insert(
+                id,
+                StreamState {
+                    socket: stream,
+                    interest: StreamInterest::none(),
+                },
+            );
+            Ok(id)
         }
 
         fn configure_stream(
@@ -2982,6 +3055,63 @@ mod tests {
         assert_eq!(&reply[..5], b"+OK\r\n");
     }
 
+    /// An externally-accepted connection, handed in via `adopt_stream`, reads and
+    /// writes exactly like one the platform `accept`ed itself.  This is the
+    /// foundation of the macOS/BSD accept fan-out: the acceptor thread does the
+    /// `accept`, the worker platform `adopt`s the socket.
+    #[cfg(unix)]
+    fn assert_adopts_external_stream<P: TransportPlatform>(platform: &mut P) {
+        use std::os::fd::OwnedFd;
+
+        // A separate std listener stands in for the fan-out acceptor: it accepts a
+        // real loopback connection, and we hand the accepted socket to `platform`.
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").expect("bind std listener");
+        let addr = listener.local_addr().expect("listener addr");
+        let mut client = TcpStream::connect(addr).expect("connect client");
+        client
+            .set_read_timeout(Some(Duration::from_millis(200)))
+            .expect("read timeout");
+        let (server, _peer) = listener.accept().expect("accept on std listener");
+
+        // Transfer ownership of the accepted socket into the platform.
+        let owned: OwnedFd = server.into();
+        let stream = platform.adopt_stream(owned).expect("adopt external stream");
+        platform
+            .configure_stream(stream, StreamOptions::default())
+            .expect("configure adopted stream");
+        platform
+            .set_stream_interest(stream, StreamInterest::readable())
+            .expect("interest on adopted stream");
+
+        client.write_all(b"PING").expect("client write");
+        let events = poll_until(platform, Duration::from_secs(1), |events| {
+            events.iter().any(
+                |event| matches!(event, PlatformEvent::StreamReadable { stream: id } if *id == stream),
+            )
+        });
+        assert!(
+            events.iter().any(
+                |event| matches!(event, PlatformEvent::StreamReadable { stream: id } if *id == stream),
+            ),
+            "adopted stream never became readable",
+        );
+
+        let mut buffer = [0u8; 16];
+        assert_eq!(
+            platform.read(stream, &mut buffer).expect("read adopted stream"),
+            ReadOutcome::Read(4)
+        );
+        assert_eq!(&buffer[..4], b"PING");
+
+        assert_eq!(
+            write_until_progress(platform, stream, b"+OK\r\n"),
+            WriteOutcome::Wrote(5)
+        );
+        let mut reply = [0u8; 5];
+        client.read_exact(&mut reply).expect("client read reply");
+        assert_eq!(&reply, b"+OK\r\n");
+    }
+
     fn write_until_progress<P: TransportPlatform>(
         platform: &mut P,
         stream: StreamId,
@@ -3135,6 +3265,12 @@ mod tests {
         }
 
         #[test]
+        fn adopts_externally_accepted_stream() {
+            let mut platform = KqueueTransportPlatform::new().expect("create platform");
+            assert_adopts_external_stream(&mut platform);
+        }
+
+        #[test]
         fn close_event_is_reported_after_peer_shutdown() {
             let mut platform = KqueueTransportPlatform::new().expect("create platform");
             let listener = platform
@@ -3190,6 +3326,12 @@ mod tests {
         fn timer_and_wakeup_generate_events() {
             let mut platform = EpollTransportPlatform::new().expect("create platform");
             assert_timer_and_wakeup_generate_events(&mut platform);
+        }
+
+        #[test]
+        fn adopts_externally_accepted_stream() {
+            let mut platform = EpollTransportPlatform::new().expect("create platform");
+            assert_adopts_external_stream(&mut platform);
         }
 
         #[test]

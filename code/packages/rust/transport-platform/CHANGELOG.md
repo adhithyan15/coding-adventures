@@ -41,3 +41,20 @@ All notable changes to this package will be documented in this file.
   - epoll: duplicates the wakeup `eventfd` and `write`s the counter.
   - Default impl returns `Unsupported`; Windows/IOCP uses it for now (callers fall
     back to the poll timeout), so no platform is broken — they just wake later.
+
+## [0.1.2] - 2026-06-14
+
+### Added
+
+- `TransportPlatform::adopt_stream(fd)` — adopt an already-connected socket
+  (owned `AdoptableFd`: `OwnedFd` on Unix, `OwnedSocket` on Windows) as a managed
+  stream, returning its `StreamId`. This is the receiving half of an **accept
+  fan-out**: a single acceptor accepts on one listener (needed where
+  `SO_REUSEPORT` doesn't load-balance, e.g. macOS/BSD) and hands each accepted
+  socket to a worker platform on another thread, which adopts it and then drives
+  it like any other stream (`configure_stream` + `set_stream_interest`, exactly as
+  after `accept`). Implemented for the kqueue and epoll backends; the default
+  returns `Unsupported` (Windows/IOCP), so the trait stays cross-platform.
+- Test `adopts_externally_accepted_stream` (kqueue + epoll): a separate std
+  listener accepts a real loopback connection, its socket is adopted into the
+  platform, and the adopted stream reads/writes correctly.
