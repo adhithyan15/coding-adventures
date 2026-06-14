@@ -362,6 +362,7 @@ impl Compiler {
             }
             "if_stmt" => self.compile_if(stmt, types, env, out),
             "while_stmt" => self.compile_while(stmt, types, env, out),
+            "for_stmt" => self.compile_for(stmt, types, env, out),
             other => Err(CompileError::Unsupported(format!("stmt: {other}"))),
         }
     }
@@ -417,6 +418,100 @@ impl Compiler {
         self.compile_block(body, types, env, out)?;
 
         // jmp while_<n>_top; label while_<n>_end
+        self.emit_to(out, IIRInstr::new("jmp", None,
+            vec![Operand::Var(top_lbl)], "void"));
+        self.emit_to(out, IIRInstr::new("label", None,
+            vec![Operand::Var(end_lbl)], "void"));
+        Ok(())
+    }
+
+    /// LANG-FULL N2 — compile `for NAME: type in lo .. hi block` by desugaring
+    /// to the same canonical loop shape `compile_while` uses.  The range is
+    /// **exclusive** of the upper bound (`for i in 1 .. 6` runs `i = 1,2,3,4,5`),
+    /// matching the Rust-style `..` the grammar borrows; the bounds are evaluated
+    /// **once** at loop entry.
+    ///
+    /// ```text
+    /// <eval lo → i>            ; mov  i = lo
+    /// <eval hi → h>           ; (evaluated once)
+    /// label for_<n>_top
+    /// cmp_lt c = i, h         ; loop while i < hi  (exclusive)
+    /// jmp_if_false c, for_<n>_end
+    /// <body>
+    /// add  t = i, 1 ; mov i = t   ; i += 1
+    /// jmp for_<n>_top
+    /// label for_<n>_end
+    /// ```
+    ///
+    /// At the IIR level every value flows through `i64` slots, exactly like
+    /// `compile_binary_chain` — so the loop counter's reassignment is the same
+    /// shape every backend already lowers for Brainfuck's pointer increment.
+    /// (The 4004's "bounds must be const" rule is a *backend* concern; the shared
+    /// IIR loop is fully general and runs on the VM/JIT/native/LLVM/WASM/JVM/CLR.)
+    fn compile_for(
+        &mut self,
+        stmt: &GrammarASTNode,
+        types: &HashMap<usize, NibType>,
+        env: &mut HashMap<String, String>,
+        out: &mut Vec<IIRInstr>,
+    ) -> Result<(), CompileError> {
+        let name = first_name(stmt)
+            .ok_or_else(|| CompileError::Unsupported("for_stmt missing loop variable".into()))?;
+        // Children (tokens filtered out): [type, lo_expr, hi_expr, block].
+        let kids = child_nodes(stmt);
+        let bounds: Vec<&GrammarASTNode> = kids
+            .iter()
+            .filter(|n| is_expr_rule(&n.rule_name))
+            .copied()
+            .collect();
+        let lo_node = bounds
+            .first()
+            .ok_or_else(|| CompileError::Unsupported("for_stmt missing lower bound".into()))?;
+        let hi_node = bounds
+            .get(1)
+            .ok_or_else(|| CompileError::Unsupported("for_stmt missing upper bound".into()))?;
+        let body = kids
+            .iter()
+            .find(|n| n.rule_name == "block")
+            .copied()
+            .ok_or_else(|| CompileError::Unsupported("for_stmt missing body block".into()))?;
+
+        // The loop variable is in scope for the body. Like every other Nib slot it
+        // materialises as an `i64` register (the narrow declared type stays on the
+        // source; the IIR is machine-word-uniform).
+        env.insert(name.clone(), "i64".to_string());
+
+        // i = lo
+        let lo_v = self.compile_expr(lo_node, types, env, out)?;
+        self.emit_to(out, IIRInstr::new("mov", Some(name.clone()),
+            vec![Operand::Var(lo_v)], "i64"));
+        // hi evaluated once into its own slot.
+        let hi_v = self.compile_expr(hi_node, types, env, out)?;
+
+        let top_lbl = self.fresh_label();
+        let end_lbl = self.fresh_label();
+
+        // label for_<n>_top
+        self.emit_to(out, IIRInstr::new("label", None,
+            vec![Operand::Var(top_lbl.clone())], "void"));
+        // c = i < hi ; jmp_if_false c, for_<n>_end
+        let cond = self.fresh_var();
+        self.emit_to(out, IIRInstr::new("cmp_lt", Some(cond.clone()),
+            vec![Operand::Var(name.clone()), Operand::Var(hi_v)], "i64"));
+        self.emit_to(out, IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var(cond), Operand::Var(end_lbl.clone())], "void"));
+        // body
+        self.compile_block(body, types, env, out)?;
+        // i = i + 1
+        let one = self.fresh_var();
+        self.emit_to(out, IIRInstr::new("const", Some(one.clone()),
+            vec![Operand::Int(1)], "i64"));
+        let next = self.fresh_var();
+        self.emit_to(out, IIRInstr::new("add", Some(next.clone()),
+            vec![Operand::Var(name.clone()), Operand::Var(one)], "i64"));
+        self.emit_to(out, IIRInstr::new("mov", Some(name),
+            vec![Operand::Var(next)], "i64"));
+        // jmp for_<n>_top ; label for_<n>_end
         self.emit_to(out, IIRInstr::new("jmp", None,
             vec![Operand::Var(top_lbl)], "void"));
         self.emit_to(out, IIRInstr::new("label", None,
@@ -1207,6 +1302,45 @@ mod tests {
             .map(|i| i.op.as_str()).collect();
         assert!(ops.contains(&"call"), "missing `call` to `one`; got {ops:?}");
         assert!(ops.contains(&"jmp_if_false"), "missing jmp_if_false; got {ops:?}");
+    }
+
+    #[test]
+    fn compiles_for_loop() {
+        // LANG-FULL N2: `for i in lo .. hi` desugars to the canonical counter loop.
+        let src = "fn main() -> u4 { \
+                     let s: u4 = 0; \
+                     for i: u4 in 1 .. 6 { s = s + i; } \
+                     return s; \
+                   }";
+        let m = compile_source(src, "test").expect("for_stmt must compile (was Unsupported)");
+        let ops: Vec<&str> = m.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        // The loop: init mov, top label, cmp_lt guard, jmp_if_false exit, body,
+        // increment (const 1 + add), back-edge jmp, exit label.
+        assert!(ops.contains(&"cmp_lt"), "for loop must emit cmp_lt guard; got {ops:?}");
+        assert!(ops.contains(&"jmp_if_false"), "for loop must emit jmp_if_false; got {ops:?}");
+        assert!(ops.contains(&"jmp"), "for loop must emit a back-edge jmp; got {ops:?}");
+        assert!(ops.contains(&"add"), "for loop must emit the +1 increment; got {ops:?}");
+        assert!(ops.iter().filter(|o| **o == "label").count() >= 2,
+            "for loop must emit top + end labels; got {ops:?}");
+        assert!(!ops.contains(&"call_builtin"),
+            "for loop must not leak a call_builtin; got {ops:?}");
+    }
+
+    #[test]
+    fn nested_for_loops_get_distinct_labels() {
+        // Two nested for-loops must not collide on label names, else the inner
+        // back-edge would jump to the outer loop.
+        let src = "fn main() -> u4 { let s: u4 = 0; \
+                   for i: u4 in 0 .. 3 { for j: u4 in 0 .. 2 { s = s + 1; } } return s; }";
+        let m = compile_source(src, "test").expect("ok");
+        let labels: Vec<String> = m.functions[0].instructions.iter()
+            .filter(|i| i.op == "label")
+            .filter_map(|i| match i.srcs.first() { Some(Operand::Var(n)) => Some(n.clone()), _ => None })
+            .collect();
+        let unique: std::collections::HashSet<&String> = labels.iter().collect();
+        assert_eq!(labels.len(), unique.len(), "duplicate loop labels: {labels:?}");
+        // Two loops × (top + end) = 4 labels.
+        assert!(labels.len() >= 4, "expected >= 4 loop labels for nested fors; got {labels:?}");
     }
 
     // ── Source-map invariants (NIB05 — debugger prerequisite) ──────────

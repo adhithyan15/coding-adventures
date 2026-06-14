@@ -1,5 +1,40 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.10.0 — 2026-06-13 — for loops (LANG-FULL N2)
+
+`compile_stmt` no longer returns `Unsupported("stmt: for_stmt")` — Nib's
+`for NAME: type in lo .. hi block` now compiles. The grammar and parser already
+produced `for_stmt` nodes; this adds the lowering.
+
+`compile_for` desugars to the same canonical loop shape `compile_while` uses,
+reusing the existing `mul_expr`/`add`/`cmp_lt`/label machinery:
+
+```text
+mov  i = lo            ; bounds evaluated once at loop entry
+<eval hi → h>
+label for_<n>_top
+cmp_lt c = i, h        ; range is EXCLUSIVE of hi (`1 .. 6` ⇒ i = 1,2,3,4,5)
+jmp_if_false c, for_<n>_end
+<body>
+add  t = i, 1 ; mov i = t
+jmp for_<n>_top
+label for_<n>_end
+```
+
+Everything flows through `i64` slots, so the loop-counter reassignment is the
+same shape every backend already lowers for Brainfuck's pointer increment.
+Nested loops get distinct labels via `fresh_label`.
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains a
+sum-loop (`for i in 1..6 { s += i }` → 15, using the loop variable) and a nested
+loop (3 × 2 → 6), executed across native/LLVM/WASM/JVM/CLR/VM/JIT. New unit
+tests: `compiles_for_loop`, `nested_for_loops_get_distinct_labels`.
+
+Known limitation (out of scope, a backend concern not a frontend one):
+reassigning a **function parameter** inside a loop produces invalid LLVM IR
+(the IIR-to-LLVM backend allocas locals but keeps params in SSA). The for-loop
+idiom uses a `let` local accumulator, which works everywhere.
+
 ## 0.9.0 — 2026-06-13 — multiplication and division (LANG-FULL N1)
 
 Adds `*` and `/` to Nib. The Intel-4004 has no multiply/divide instruction, so

@@ -95,7 +95,11 @@ backend immediately) come before the enabler-dependent items.
 - ✅ **N1** — `*` and `/` (`STAR`→`mul`, `SLASH`→`div`). New `mul_expr` grammar level
   (binds tighter than additive); lowers to existing IIR `mul`/`div`; verified by RUNNING
   `6 * 7`→42 and `84 / 2`→42 across native/LLVM/WASM/JVM/CLR/VM/JIT.
-- ☐ **N2** — `for` loop (desugar to the existing `while` lowering).
+- ✅ **N2** — `for` loop. `for NAME: type in lo .. hi block` (exclusive range) desugars to
+  the canonical counter loop; verified by RUNNING a sum-loop (`1..6`→15) and nested loops
+  (3×2→6) across native/LLVM/WASM/JVM/CLR/VM/JIT. (Note: reassigning a *parameter* in a
+  loop is invalid on the IIR-to-LLVM backend — a separate backend limitation; the for-loop
+  idiom uses a `let` local.)
 - ☐ **N3** — bitwise `&` `|` `^` (existing IIR `and`/`or`/`xor`) + proper unary `~` (needs E2 for the width mask).
 - ☐ **N4** — `&&` / `||` short-circuit (desugar to branches).
 - ☐ **N5** — `const` declarations (constant folding / global).
