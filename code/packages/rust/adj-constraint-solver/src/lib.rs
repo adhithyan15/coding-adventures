@@ -26,7 +26,7 @@ use adj_lang::{ConstraintSystem, LoweredConstraint, OptDir, RelOp};
 use cas_solve::frac::Frac;
 use cas_solve::{solve_cubic, solve_quadratic, solve_quartic, SolveResult};
 use constraint_core::Predicate;
-use constraint_engine::{lia::LiaTactic, Model, SolverResult, Value};
+use constraint_engine::{lia::LiaTactic, sat::SatTactic, Model, SolverResult, Value};
 use logic_engine::{ComputeExpr, ComputeOp, KnowledgeBase};
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, EQUAL, MUL, SUB};
 
@@ -1131,6 +1131,27 @@ fn optimize_integer(cs: &ConstraintSystem, kb: &KnowledgeBase) -> Option<Optimiz
     }
     let obj_pred = expr_to_pred(&substitute_observed(obj_expr, &var_set, kb))?;
 
+    // SCALING FAST PATH: a pure-boolean minimize whose constraints are at-least-one
+    // covering clauses (`Σ xᵢ ≥ 1`) is a minimum-cost SET-COVER. The LIA enumeration
+    // below is ~2^N; a SAT solver exploits the clause structure, so route the
+    // feasibility oracle to it (Sinz-encoded cost bound). Same answer, far larger N.
+    // Falls through to LIA if the system isn't this exact clausal shape.
+    if matches!(dir, OptDir::Minimize) && int_vars.is_empty() && !bool_vars.is_empty() {
+        let bool_set: HashSet<&str> = bool_vars.iter().map(String::as_str).collect();
+        if let (Some(clauses), Some((weights, konst))) = (
+            as_clausal_cover(&subbed, &bool_set),
+            linear_coeffs(&obj_pred),
+        ) {
+            if weights.values().all(|w| *w >= 0) {
+                if let Some(out) =
+                    solve_setcover_sat(&clauses, &weights, konst, &syms, &var_set, cs, kb, &subbed)
+                {
+                    return Some(out);
+                }
+            }
+        }
+    }
+
     // An initial feasible integer point bounds one end of the search.
     let witness0 = match LiaTactic::solve(&assertions, &int_vars, &bool_vars) {
         SolverResult::Sat(m) => m,
@@ -1376,6 +1397,253 @@ fn eval_lin_int(p: &Predicate, model: &Model) -> Option<i128> {
         Predicate::Mul { coef, term } => coef.checked_mul(eval_lin_int(term, model)?),
         _ => None,
     }
+}
+
+// ===================== SAT / pseudo-boolean set-cover scaling =====================
+// A pure-boolean minimum-cost set-cover — at-least-one covering clauses + a
+// `minimize Σ wᵢ·xᵢ` objective — is solved by routing the binary-search-on-cost
+// feasibility oracle to the DPLL `SatTactic` instead of LIA's bounded enumeration.
+// The cost bound `Σ wᵢ·xᵢ ≤ K` is encoded with a Sinz (2005) sequential at-most-k
+// counter (each weight wᵢ modeled by repeating xᵢ wᵢ times in the literal list).
+// The optimum is identical to the LIA path; only the oracle is more scalable.
+
+/// One CNF clause: a disjunction of `(var, positive)` literals.
+fn clause(lits: Vec<(String, bool)>) -> Predicate {
+    Predicate::Or(
+        lits.into_iter()
+            .map(|(v, pos)| {
+                if pos {
+                    Predicate::Var(v)
+                } else {
+                    Predicate::Not(Box::new(Predicate::Var(v)))
+                }
+            })
+            .collect(),
+    )
+}
+
+/// Sinz (2005) sequential-counter encoding of `Σ literals ≤ k` (each literal a
+/// positive boolean; a variable repeated `w` times models weight `w`). Returns the
+/// flat CNF clauses + the fresh auxiliary variables. Aux names start with `__pb`,
+/// which no user symbol can (those match `[a-z][a-z0-9_]*`).
+fn sinz_at_most(literals: &[String], k: i128) -> (Vec<Predicate>, Vec<String>) {
+    let m = literals.len();
+    if k < 0 {
+        return (vec![Predicate::Bool(false)], Vec::new()); // unsatisfiable
+    }
+    if k == 0 {
+        // every literal must be false
+        return (
+            literals
+                .iter()
+                .map(|l| clause(vec![(l.clone(), false)]))
+                .collect(),
+            Vec::new(),
+        );
+    }
+    if (m as i128) <= k {
+        return (Vec::new(), Vec::new()); // no constraint is binding
+    }
+    let k = k as usize;
+    let s = |i: usize, j: usize| format!("__pb_{i}_{j}");
+    let l = |i: usize| literals[i - 1].clone(); // 1-indexed literals
+    let mut aux = Vec::new();
+    for i in 1..=m - 1 {
+        for j in 1..=k {
+            aux.push(s(i, j));
+        }
+    }
+    let mut cl = Vec::new();
+    cl.push(clause(vec![(l(1), false), (s(1, 1), true)])); // ¬x₁ ∨ s₁,₁
+    for j in 2..=k {
+        cl.push(clause(vec![(s(1, j), false)])); // ¬s₁,ⱼ
+    }
+    for i in 2..=m - 1 {
+        cl.push(clause(vec![(l(i), false), (s(i, 1), true)])); // ¬xᵢ ∨ sᵢ,₁
+        cl.push(clause(vec![(s(i - 1, 1), false), (s(i, 1), true)])); // ¬sᵢ₋₁,₁ ∨ sᵢ,₁
+        for j in 2..=k {
+            // ¬xᵢ ∨ ¬sᵢ₋₁,ⱼ₋₁ ∨ sᵢ,ⱼ
+            cl.push(clause(vec![
+                (l(i), false),
+                (s(i - 1, j - 1), false),
+                (s(i, j), true),
+            ]));
+            cl.push(clause(vec![(s(i - 1, j), false), (s(i, j), true)])); // ¬sᵢ₋₁,ⱼ ∨ sᵢ,ⱼ
+        }
+        cl.push(clause(vec![(l(i), false), (s(i - 1, k), false)])); // ¬xᵢ ∨ ¬sᵢ₋₁,ₖ (overflow)
+    }
+    cl.push(clause(vec![(l(m), false), (s(m - 1, k), false)])); // ¬xₘ ∨ ¬sₘ₋₁,ₖ
+    (cl, aux)
+}
+
+/// View the (substituted) constraints as a pure-boolean SET-COVER: each must be an
+/// at-least-one covering clause (`Σ cᵢxᵢ ≥ 1`, all `cᵢ ≥ 1`) or a trivially-true
+/// boolean bound (`x ≥ 0`, `x ≤ 1`). Returns the covering clauses, or `None` if any
+/// constraint isn't of that shape (so the caller falls back to the LIA path).
+fn as_clausal_cover(
+    subbed: &[(ComputeExpr, RelOp, ComputeExpr)],
+    bool_set: &HashSet<&str>,
+) -> Option<Vec<Predicate>> {
+    let mut clauses = Vec::new();
+    for (lhs, op, rhs) in subbed {
+        let (lc, lk) = linear_coeffs(&expr_to_pred(lhs)?)?;
+        let (rc, rk) = linear_coeffs(&expr_to_pred(rhs)?)?;
+        // Move to one side: `Σ cᵢxᵢ  <op>  b`, where b = rk − lk.
+        let mut c = lc;
+        for (v, w) in rc {
+            *c.entry(v).or_insert(0) -= w;
+        }
+        c.retain(|_, w| *w != 0);
+        let b = rk - lk;
+        if !c.keys().all(|v| bool_set.contains(v.as_str())) {
+            return None;
+        }
+        let pos_sum: i128 = c.values().filter(|w| **w > 0).sum();
+        match op {
+            // Σ cᵢxᵢ ≥ 1 with every cᵢ ≥ 1  ⇔  at least one xᵢ true  → an Or clause.
+            RelOp::Ge if b == 1 && !c.is_empty() && c.values().all(|w| *w >= 1) => {
+                clauses.push(Predicate::Or(
+                    c.keys().map(|v| Predicate::Var(v.clone())).collect(),
+                ));
+            }
+            // An empty LHS with b ≥ 1 (e.g. `0 ≥ 1`) is an uncoverable organism.
+            RelOp::Ge if c.is_empty() && b >= 1 => clauses.push(Predicate::Bool(false)),
+            // Trivially-true boolean bounds.
+            RelOp::Ge if b <= 0 && c.values().all(|w| *w >= 0) => {}
+            RelOp::Le if b >= pos_sum && c.values().all(|w| *w >= 0) => {}
+            _ => return None,
+        }
+    }
+    Some(clauses)
+}
+
+/// The encoded formula's literal budget. The Sinz encoding is O(m·k) where `m` is
+/// the unary-expanded weight total — so a crafted objective with huge weights could
+/// otherwise blow memory up before the SAT tactic's own node budget ever applies
+/// (the LIA/Fourier–Motzkin paths cap themselves the same way, see MAX_INEQUALITIES).
+/// Past this, the SAT oracle declines (the caller falls back to LIA).
+const MAX_PB_LITERALS: i128 = 200_000;
+
+/// Is the covering satisfiable with `Σ wᵢxᵢ ≤ k`? Builds the covering clauses + the
+/// Sinz cost bound and runs the SAT tactic. Returns the full [`SolverResult`] so the
+/// caller can distinguish UNSAT (truly infeasible) from `Unknown` (budget/too-large)
+/// — the latter must NOT be reported as "no regimen", only deferred.
+fn cover_sat(
+    clauses: &[Predicate],
+    weights: &std::collections::BTreeMap<String, i128>,
+    vars: &[String],
+    k: i128,
+) -> SolverResult {
+    // Bound the unary expansion BEFORE materializing it (DoS guard).
+    let total_lits: i128 = weights.values().filter(|w| **w > 0).copied().sum();
+    if total_lits > MAX_PB_LITERALS {
+        return SolverResult::Unknown("pseudo-boolean encoding exceeds the literal cap".into());
+    }
+    let mut lits = Vec::new();
+    for (v, w) in weights {
+        for _ in 0..(*w).max(0) {
+            lits.push(v.clone());
+        }
+    }
+    let (pb, aux) = sinz_at_most(&lits, k);
+    let mut assertions: Vec<Predicate> = clauses.to_vec();
+    assertions.extend(pb);
+    let mut bool_vars: Vec<String> = vars.to_vec();
+    bool_vars.extend(aux);
+    SatTactic::solve(&assertions, &bool_vars)
+}
+
+/// Solve the minimum-cost set-cover via SAT. The objective value is `konst + Σ wᵢxᵢ`;
+/// the binary search finds the smallest `K` with `(cover ∧ Σ wᵢxᵢ ≤ K)` satisfiable.
+#[allow(clippy::too_many_arguments)]
+fn solve_setcover_sat(
+    clauses: &[Predicate],
+    weights: &std::collections::BTreeMap<String, i128>,
+    konst: i128,
+    syms: &[String],
+    var_set: &HashSet<&str>,
+    cs: &ConstraintSystem,
+    kb: &KnowledgeBase,
+    subbed: &[(ComputeExpr, RelOp, ComputeExpr)],
+) -> Option<OptimizeOutcome> {
+    // Checked sum: a crafted objective whose weights overflow i128 declines the SAT
+    // path (falls back to LIA) rather than panicking/wrapping.
+    let total: i128 = weights.values().try_fold(0i128, |a, w| a.checked_add(*w))?;
+    // Select-everything (cost `total`) is the most permissive cover. UNSAT there
+    // means the covering is genuinely unsatisfiable; `Unknown` means the SAT tactic
+    // couldn't decide — defer to LIA (None), NEVER report a false "infeasible".
+    let m0 = match cover_sat(clauses, weights, syms, total) {
+        SolverResult::Sat(m) => m,
+        SolverResult::Unsat => {
+            return Some(OptimizeOutcome::Infeasible {
+                core: minimal_unsat_core(subbed, syms),
+            })
+        }
+        SolverResult::Unknown(_) => return None,
+    };
+    let value_at = |m: &Model| -> i128 {
+        weights
+            .iter()
+            .map(|(v, w)| {
+                if matches!(m.get(v), Some(Value::Bool(true))) {
+                    *w
+                } else {
+                    0
+                }
+            })
+            .sum::<i128>()
+    };
+    let feasible_obj = value_at(&m0); // an attained Σwx (upper bound)
+    let oracle = |k: i128| cover_sat(clauses, weights, syms, k);
+    // smallest K in [0, feasible_obj] with Σwx ≤ K feasible
+    let (raw, witness) = sat_min_feasible(&oracle, 0, feasible_obj)?;
+    let assignments: Vec<(String, f64)> = syms
+        .iter()
+        .filter_map(|v| match witness.get(v) {
+            Some(Value::Bool(b)) => Some((v.clone(), if *b { 1.0 } else { 0.0 })),
+            Some(Value::Int(n)) => Some((v.clone(), *n as f64)),
+            _ => None,
+        })
+        .collect();
+    let binding = binding_constraints(cs, kb, var_set, &assignments);
+    Some(OptimizeOutcome::Optimal {
+        value: (konst + raw) as f64,
+        assignments,
+        binding,
+    })
+}
+
+/// Binary-search the smallest `Σwx` bound in `[lo, hi]` that keeps the cover
+/// feasible, where `hi` is known feasible. Each probe is an exact SAT solve. Any
+/// `Unknown` probe (the tactic couldn't decide) aborts the whole search to `None`
+/// so the caller defers to LIA — we never treat an undecided probe as infeasible.
+fn sat_min_feasible(
+    oracle: &dyn Fn(i128) -> SolverResult,
+    lo: i128,
+    hi: i128,
+) -> Option<(i128, Model)> {
+    match oracle(lo) {
+        SolverResult::Sat(m) => return Some((lo, m)), // optimum already at the floor
+        SolverResult::Unknown(_) => return None,      // can't decide → defer to LIA
+        SolverResult::Unsat => {}
+    }
+    let (mut loi, mut hii) = (lo, hi);
+    let mut best = match oracle(hi) {
+        SolverResult::Sat(m) => m,
+        _ => return None, // hi was claimed feasible by the caller; if not, defer
+    };
+    while hii - loi > 1 {
+        let mid = loi + (hii - loi) / 2;
+        match oracle(mid) {
+            SolverResult::Sat(m) => {
+                hii = mid;
+                best = m;
+            }
+            SolverResult::Unsat => loi = mid,
+            SolverResult::Unknown(_) => return None, // undecided → defer to LIA
+        }
+    }
+    Some((hii, best))
 }
 
 /// Solve the LP declared by a [`ConstraintSystem`]'s `objective` against its
@@ -2654,6 +2922,88 @@ mod tests {
         let out = optimize_src("symbol x : scalar\nconstrain x + x >= 3\nminimize x");
         let (value, _, _) = expect_optimal(&out);
         assert!((value - 1.5).abs() < 1e-9, "scalar stays real: {value}");
+    }
+
+    // ---- SAT / pseudo-boolean set-cover scaling (B1b) ----------------------
+
+    /// Brute-force whether `Σ weights·x ≤ k` is satisfiable for SOME assignment
+    /// that also lights at least `min_true` literals — used to check the encoder.
+    fn sinz_matches_bruteforce(weights: &[i128], k: i128) {
+        // Expand to a unit literal list, encode, and check the encoding accepts
+        // EXACTLY the assignments whose weighted sum ≤ k, over the original vars.
+        let names: Vec<String> = (0..weights.len()).map(|i| format!("v{i}")).collect();
+        let mut lits = Vec::new();
+        for (i, w) in weights.iter().enumerate() {
+            for _ in 0..*w {
+                lits.push(names[i].clone());
+            }
+        }
+        let (clauses, aux) = sinz_at_most(&lits, k);
+        let mut bool_vars = names.clone();
+        bool_vars.extend(aux);
+        // For every assignment of the original vars, the encoding must be SAT iff
+        // the weighted sum ≤ k. (We let the SAT solver fill the aux vars.)
+        for mask in 0..(1u32 << weights.len()) {
+            let mut asserts = clauses.clone();
+            let mut sum = 0i128;
+            for (i, w) in weights.iter().enumerate() {
+                let on = (mask >> i) & 1 == 1;
+                if on {
+                    sum += *w;
+                }
+                asserts.push(clause(vec![(names[i].clone(), on)]));
+            }
+            let sat = matches!(SatTactic::solve(&asserts, &bool_vars), SolverResult::Sat(_));
+            assert_eq!(
+                sat,
+                sum <= k,
+                "weights={weights:?} k={k} mask={mask:b} sum={sum}: encoder said {sat}"
+            );
+        }
+    }
+
+    #[test]
+    fn sinz_encoder_is_exact_on_small_instances() {
+        sinz_matches_bruteforce(&[1, 1, 1], 0);
+        sinz_matches_bruteforce(&[1, 1, 1], 1);
+        sinz_matches_bruteforce(&[1, 1, 1], 2);
+        sinz_matches_bruteforce(&[1, 1, 1, 1], 2);
+        sinz_matches_bruteforce(&[2, 1, 3], 3); // weighted
+        sinz_matches_bruteforce(&[2, 2, 1, 1], 3);
+        sinz_matches_bruteforce(&[1, 1], 1);
+    }
+
+    #[test]
+    fn sat_set_cover_agrees_with_lia_on_the_fractional_case() {
+        // Same instance as the LIA test: integer optimum 2, not the fractional 1.5.
+        let out = optimize_src(
+            "symbol d1 : bool\nsymbol d2 : bool\nsymbol d3 : bool\n\
+             constrain d1 + d2 >= 1\nconstrain d2 + d3 >= 1\nconstrain d1 + d3 >= 1\n\
+             minimize d1 + d2 + d3",
+        );
+        let (value, _) = expect_int_optimum(&out);
+        assert_eq!(value, 2);
+    }
+
+    #[test]
+    fn sat_set_cover_scales_to_many_selectors() {
+        // 30 drugs in a cycle cover (min cost = 15) — well past the LIA cap. The
+        // SAT oracle solves it; this would time out the LIA enumeration.
+        let n = 30;
+        let mut src = String::new();
+        for i in 0..n {
+            src += &format!("symbol d{i} : bool\n");
+        }
+        for i in 0..n {
+            src += &format!("constrain d{i} + d{} >= 1\n", (i + 1) % n);
+        }
+        src += "minimize ";
+        src += &(0..n)
+            .map(|i| format!("d{i}"))
+            .collect::<Vec<_>>()
+            .join(" + ");
+        let (value, _) = expect_int_optimum(&optimize_src(&src));
+        assert_eq!(value, n as i128 / 2, "cycle cover min = n/2");
     }
 
     #[test]
