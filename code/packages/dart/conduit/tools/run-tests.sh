@@ -26,9 +26,9 @@ case "$OS" in
 esac
 
 echo "==> Fetching Dart dependencies"
-mise exec dart -- dart pub get
+dart pub get
 
 echo "==> Running dart test"
-CONDUIT_CAPI_PATH="$LIB_FILE" CONDUIT_DART_BRIDGE_PATH="$BRIDGE_FILE" mise exec dart -- dart test \
+CONDUIT_CAPI_PATH="$LIB_FILE" CONDUIT_DART_BRIDGE_PATH="$BRIDGE_FILE" dart test \
   --reporter=expanded \
   test/conduit_test.dart
