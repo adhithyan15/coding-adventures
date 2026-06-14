@@ -1,8 +1,8 @@
 [package]
 name = "jit-core"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "JIT compilation engine for InterpreterIR — specialises hot IIRFunctions into typed CIR and compiles them via a pluggable Backend.  v0.2.0: ships GenericCirJit — a universal bytecode JIT that any language with typed IIR can plug into by registering builtin callbacks (no per-language Backend impl needed)."
+description = "JIT compilation engine for InterpreterIR — specialises hot IIRFunctions into typed CIR and compiles them via a pluggable Backend.  v0.4.0 (LANG-MATRIX Phase I): compiled functions now bind their parameters — `compile_fn` calls `Backend::compile_function` with the FunctionContext, `GenericCirJit` pre-binds params to registers 0..n in declaration order, and `run` seeds them from the call args (previously `run` ignored its args, so a compiled function with parameters read them as zero).  This is what lets any frontend's parameterised functions JIT correctly — the generic register-VM/JIT design.  v0.2.0: ships GenericCirJit — a universal bytecode JIT that any language with typed IIR can plug into by registering builtin callbacks (no per-language Backend impl needed)."
 license = "MIT"
 
 [dependencies]

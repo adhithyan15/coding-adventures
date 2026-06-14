@@ -108,11 +108,30 @@ impl Backend for MyBackend {
     }
 
     fn run(&self, binary: &[u8], args: &[Value]) -> Value {
-        // Execute the binary with the given arguments.
+        // Execute the binary with the given arguments.  `args` are the call
+        // arguments in parameter-declaration order — bind them to wherever
+        // your `compile_function` placed the parameters.
         Value::Null  // stub
     }
 }
 ```
+
+### Compiling functions with parameters
+
+`Backend::compile` receives only the CIR instruction stream — no parameter
+list — so a backend that compiles a function taking arguments can't know which
+registers carry them.  Override `compile_function` instead: `jit-core` calls it
+from its compile path with a `FunctionContext` (name, parameters in declaration
+order, return type), and the trait's default forwards to `compile` for IR-only
+backends that don't care.
+
+`GenericCirJit` uses this to make parameter passing work generically: it
+pre-binds the parameters to registers `0..n` in declaration order, and its
+`run` seeds those registers from the incoming `args` (argument `i` → register
+`i`).  That's why a function like `double(x) -> x + x`, compiled and called as
+`double(21)`, correctly returns `42` — the same register-VM/JIT contract any
+future frontend reuses with zero per-language code. (Before v0.4.0 `run`
+ignored its `args`, so such a function read its parameter as `0`.)
 
 ## CIRInstr mnemonic conventions
 

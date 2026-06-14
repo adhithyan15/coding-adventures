@@ -5,7 +5,7 @@
 //! `jvm_emit.rs` uses `jvm-simulator`). W6a scope: **scalar** McCarthy programs;
 //! the cons/symbol/lambda uniform-`object` value model is W6b+.
 
-use clr_simulator::CLRSimulator;
+use clr_simulator::{CLRSimulator, Value};
 use lang_aot::{compile_source_to_cil_artifact, Language};
 
 /// Compile a scalar program to CIL, run its `main` method on the in-repo
@@ -22,11 +22,16 @@ fn compile_and_run(language: Language, source: &str) -> i32 {
     let mut sim = CLRSimulator::new();
     sim.load(&main.body, main.local_types.len());
     sim.run(10_000);
-    // CIL `ret` leaves the return value on top of the evaluation stack.
-    sim.stack
-        .last()
-        .and_then(|v| *v)
-        .unwrap_or_else(|| panic!("`{source}` left no value on the stack"))
+    // CIL `ret` leaves the return value on top of the evaluation stack.  Since
+    // W6b (#5296) the stack holds `Value` (an `Int` or an object `Ref`) rather
+    // than a bare `i32`; a scalar program leaves an `Int`, so unwrap that.
+    match sim.stack.last().and_then(|v| *v) {
+        Some(Value::Int(n)) => n,
+        Some(Value::Ref(_)) => {
+            panic!("`{source}` left an object reference, not an int, on the stack")
+        }
+        None => panic!("`{source}` left no value on the stack"),
+    }
 }
 
 #[test]
