@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.130.0] - 2026-06-14
+
+### Fixed
+
+- **CLOSES gap-083 (WHITESPACE_ONLY)** — precedence-aware operand paren elision.
+  When a binary operator's right operand is parenthesised and every top-level
+  binary operator inside has **strictly greater** precedence than the outer
+  operator, the grouping parens are redundant and are now dropped.
+
+  **Example:** `a==(b+c)` → `a==b+c`
+  - Outer `==` has precedence 9; inner `+` has precedence 12.
+  - `12 > 9` → parens dropped.
+
+  **Kept correctly:** `a*(b+c)` stays `a*(b+c)`
+  - Outer `*` has precedence 13; inner `+` has precedence 12.
+  - `12 < 13` → parens kept (inner is weaker; removing changes grouping).
+
+  **Implementation:** two new `pub(crate)`-adjacent helpers added to
+  `whitespace_only.rs`:
+  - `binary_op_prec(tok)` — returns the JS binary operator precedence (3–14)
+    for recognised symbol operators; `None` for unrecognised tokens, assignment
+    operators, and comma.
+  - `min_toplevel_binary_prec(span)` — scans the span for top-level binary
+    operators (depth-0 w.r.t. nested `()`/`[]`/`{}`), returns the minimum
+    precedence found.
+
+  The existing gap-078 drop block is extended: after the atomic-operand check
+  fails, `is_binary_sym` guards a second attempt that calls both helpers.  Only
+  BINARY outer operators participate (prefix-unary operators like `-(b+c)` are
+  excluded).
+
+  `minify_precedence_operand` fixture is now **enforced** in CI.
+  Updated existing `gap078_operator_operand_kept` test (now
+  `gap083_precedence_aware_paren_elision`) to reflect the resolved behaviour
+  and add boundary cases.
+
 ## [0.129.0] - 2026-06-14
 
 ### Fixed
