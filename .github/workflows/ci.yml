@@ -366,7 +366,11 @@ jobs:
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
-        if: needs.detect.outputs.needs_elixir == 'true'
+        # Elixir NIF packages skip Windows (BEAM import-library linkage isn't
+        # wired up — see each Elixir package's BUILD_windows), and
+        # erlef/setup-beam can't map newer Windows runner images (e.g.
+        # win25-vs2026), so don't install Elixir on Windows at all.
+        if: needs.detect.outputs.needs_elixir == 'true' && runner.os != 'Windows'
         uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.18.4'
@@ -588,7 +592,7 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
             echo "Swift: $(swift --version | head -1)"
           fi
-          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi
