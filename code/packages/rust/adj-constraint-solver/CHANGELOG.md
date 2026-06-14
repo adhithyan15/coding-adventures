@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.8.0] - 2026-06-13 — integer linear optimization (native minimum-cost set-cover)
+
+### Added
+
+- **`optimize` now solves integer programs exactly** when every declared symbol is
+  integer- or boolean-sorted (`: int` / `: integer` / `: bool` / `: boolean`) and
+  the objective + constraints are integer-linear. This makes a minimum-cost
+  **set-cover** — pick the fewest/cheapest items (drugs) whose union covers every
+  requirement (organism), with `x ∈ {0,1}` — a native, proof-carrying engine
+  result. The real LP relaxation returns *fractional* selections (`0.5·vancomycin`),
+  which is meaningless for a yes/no choice; the integer optimum is the real answer.
+- Method (no new tactic — reuses the exact pieces already here): an initial
+  feasible integer point from the exact `LiaTactic`; a **structural bound** for
+  boolean objectives (each `x ∈ {0,1}` contributes within `[min(0,c), max(0,c)]`,
+  so the objective is bracketed for *any* number of variables); then a **binary
+  search** on the objective threshold `K`, each probe an exact LIA solve, so the
+  returned optimum and witness are exact. Booleans are pinned to `{0,1}` as
+  explicit assertions so the LIA search stays bounded (a formulary of N drugs is a
+  `2^N` search the budget handles to N ≲ 21).
+- The structural boolean bound is what lets set-cover **scale past the
+  Fourier–Motzkin variable cap** (which tops out at a handful of variables) — an
+  8-drug cover is solved instantly. General-integer objectives still use the FM
+  relaxation for the bound (small systems).
+- +6 tests: cheapest single agent beats three narrow ones; the integer optimum
+  beats the fractional relaxation (1.5 → 2); 8-variable scale; an uncoverable
+  requirement is `Infeasible`; boolean maximize; and `: scalar` optimization is
+  unchanged (the integer path is gated on the declared sort, so prior behavior is
+  byte-for-byte preserved).
+
+### Unchanged
+
+- All real-valued (`: scalar`, `: money(...)`) optimization takes the existing
+  Fourier–Motzkin path exactly as before — the integer path is opt-in via sort.
+
 ## [0.7.0] - 2026-06-12 — minimal infeasibility certificate (IIS) (ADJ constraints track E1)
 
 ### Changed

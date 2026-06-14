@@ -99,6 +99,34 @@ optimum.
 - `Unknown { reason }` — a non-linear/`!=` constraint or objective, or an **open
   supremum** (a strict inequality prevents the optimum being attained).
 
+## Integer optimization (native minimum-cost set-cover)
+
+When **every** declared symbol is integer- or boolean-sorted (`: int` /
+`: integer` / `: bool` / `: boolean`) and the objective + constraints are
+integer-linear, `optimize` solves the **integer program** exactly instead of the
+real LP. This is what makes a minimum-cost **set-cover** — pick the
+fewest/cheapest items (drugs) whose union covers every requirement (organism),
+each selector `x ∈ {0,1}` — a native, proof-carrying engine result. The real LP
+relaxation returns *fractional* selectors (`0.5·vancomycin`), meaningless for a
+yes/no choice; the integer optimum is the real answer.
+
+```
+symbol vancomycin  : bool        % choose this drug, or not
+symbol ceftriaxone : bool
+constrain vancomycin + ceftriaxone >= 1   % cover the organism (here, jointly)
+minimize 1 * vancomycin + 1 * ceftriaxone % fewest / lowest preference-cost
+```
+
+Method (reusing the exact pieces already here, no new tactic): the exact
+`LiaTactic` gives an initial feasible integer point; a **structural bound** for
+boolean objectives (each `x ∈ {0,1}` contributes within `[min(0,c), max(0,c)]`,
+so the objective is bracketed for *any* number of variables — this is what lets
+it scale past the Fourier–Motzkin variable cap); then a **binary search** on the
+objective threshold, each probe an exact LIA solve, so the optimum and witness are
+exact. Booleans are pinned to `{0,1}` so the search stays bounded (`2^N`, fine to
+N ≲ 21). The integer path is **opt-in via the declared sort** — `: scalar` /
+`: money(...)` programs take the real Fourier–Motzkin path exactly as before.
+
 ## Where it fits
 
 Part of the ADJ constraint-solving arc
