@@ -36,5 +36,8 @@
     "vitest": "^4.1.0"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "esbuild": "^0.28.1"
+  }
 }

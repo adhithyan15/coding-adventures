@@ -30,5 +30,8 @@
   },
   "peerDependencies": {
     "vite": ">=5.0.0"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
   }
 }

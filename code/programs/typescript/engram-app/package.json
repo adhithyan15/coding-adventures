@@ -36,5 +36,8 @@
     "directory": "code/programs/typescript/engram-app"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "esbuild": "^0.28.1"
+  }
 }

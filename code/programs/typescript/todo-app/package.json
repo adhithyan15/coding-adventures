@@ -49,5 +49,8 @@
     "directory": "code/programs/typescript/todo-app"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "esbuild": "^0.28.1"
+  }
 }

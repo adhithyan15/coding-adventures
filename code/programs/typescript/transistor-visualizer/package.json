@@ -30,5 +30,8 @@
     "jsdom": "^25.0.0"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "esbuild": "^0.28.1"
+  }
 }

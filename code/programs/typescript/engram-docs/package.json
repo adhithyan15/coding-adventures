@@ -26,5 +26,8 @@
     "directory": "code/programs/typescript/engram-docs"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "esbuild": "^0.28.1"
+  }
 }

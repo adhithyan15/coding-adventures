@@ -47,5 +47,8 @@
     "directory": "code/programs/typescript/journal-app"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "esbuild": "^0.28.1"
+  }
 }
