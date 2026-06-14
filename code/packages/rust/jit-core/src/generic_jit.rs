@@ -99,6 +99,11 @@ pub(crate) mod opcode {
     pub const MUL_I64:      u8 = 0x12;
     pub const DIV_I64:      u8 = 0x13;
     pub const NEG_I64:      u8 = 0x14;
+    /// `MASK_WIDTH <reg> <bits>` — mask `regs[reg]` to its low `bits` bits
+    /// (`& ((1<<bits)-1)`).  Emitted right after a narrow-width arithmetic op
+    /// (`add_u8`, `mul_u4`, …) so the compiled tier wraps mod-2ⁿ the same way
+    /// vm-core's `mask_result` does for the interpreter tier (LANG-FULL E2).
+    pub const MASK_WIDTH:   u8 = 0x15;
     pub const CMP_EQ_I64:   u8 = 0x20;
     pub const CMP_NE_I64:   u8 = 0x21;
     pub const CMP_LT_I64:   u8 = 0x22;
@@ -425,6 +430,26 @@ impl Backend for GenericCirJit {
                     regs[code[pc] as usize] = regs[code[pc + 1] as usize].wrapping_neg();
                     pc += 2;
                 }
+                opcode::MASK_WIDTH => {
+                    if pc + 2 > code.len() {
+                        self.set_error("malformed bytecode: truncated MASK_WIDTH");
+                        return Value::Null;
+                    }
+                    let reg = code[pc] as usize;
+                    let bits = code[pc + 1] as u32;
+                    pc += 2;
+                    // `compile_to_bytecode` only ever emits a width in 1..=63
+                    // (8/16/32), but `run` is a public entry on an opaque byte
+                    // blob — validate before shifting so a hostile `bits >= 64`
+                    // fails gracefully (like every other arm) instead of
+                    // panicking on `1 << bits`.
+                    if !(1..=63).contains(&bits) {
+                        self.set_error("malformed bytecode: MASK_WIDTH bits out of range");
+                        return Value::Null;
+                    }
+                    let mask = (1i64 << bits) - 1;
+                    regs[reg] &= mask;
+                }
                 opcode::CMP_EQ_I64 | opcode::CMP_NE_I64
                 | opcode::CMP_LT_I64 | opcode::CMP_LE_I64
                 | opcode::CMP_GT_I64 | opcode::CMP_GE_I64 => {
@@ -642,6 +667,36 @@ fn resolve_operand(
 /// is walked, so the parameters deterministically occupy registers
 /// `0..params.len()`.  `run` relies on this: it seeds those registers from the
 /// incoming call arguments.  Pass `&[]` for a function that takes no arguments.
+/// If a CIR op's width suffix is a narrow unsigned width the compiled tier can
+/// represent (`_u8`/`_u16`/`_u32`), return the bit-width its result must be
+/// masked to.  `_i64`/`_u64`/`_i32`/bool/… and anything else return `None` (full
+/// machine width).  `u4` is not in the CIR allowlist, so a `u4`-typed op never
+/// reaches the JIT — it specialises to the generic path and runs on the
+/// interpreter tier (vm-core), which masks it; the observable wrap is identical.
+/// Signed narrow types are intentionally not masked (two's-complement wrap needs
+/// sign-extension; the LANG-FULL frontends use the unsigned widths).
+fn narrow_width_bits(op: &str) -> Option<u8> {
+    if op.ends_with("_u8") {
+        Some(8)
+    } else if op.ends_with("_u16") {
+        Some(16)
+    } else if op.ends_with("_u32") {
+        Some(32)
+    } else {
+        None
+    }
+}
+
+/// Emit a `MASK_WIDTH <reg> <bits>` after a narrow-width arithmetic op so the
+/// compiled tier wraps mod-2ⁿ, mirroring vm-core's `mask_result`.
+fn emit_width_mask(code: &mut Vec<u8>, reg: u8, op: &str) {
+    if let Some(bits) = narrow_width_bits(op) {
+        code.push(opcode::MASK_WIDTH);
+        code.push(reg);
+        code.push(bits);
+    }
+}
+
 fn compile_to_bytecode(
     ir: &[CIRInstr],
     builtin_snapshot: &[(String, BuiltinFn)],
@@ -727,6 +782,7 @@ fn compile_to_bytecode(
             code.push(didx);
             code.push(a);
             code.push(b);
+            emit_width_mask(&mut code, didx, op);
             continue;
         }
 
@@ -740,6 +796,7 @@ fn compile_to_bytecode(
             code.push(opcode::NEG_I64);
             code.push(didx);
             code.push(s);
+            emit_width_mask(&mut code, didx, op);
             continue;
         }
 
@@ -969,6 +1026,56 @@ mod tests {
         let j = jit_no_builtins();
         let bin = j.compile(&cir).unwrap();
         assert_eq!(j.run(&bin, &[]).as_i64(), Some(42));
+    }
+
+    // ---- E2: narrow-width register arithmetic wraps in the compiled tier ----
+
+    /// Compile `op a b` (binary) at the given CIR width and run it.
+    fn run_binop(op: &str, a: i64, b: i64) -> i64 {
+        let cir = vec![
+            CIRInstr::new("const_i64", Some("a"), vec![CIROperand::Int(a)], "i64"),
+            CIRInstr::new("const_i64", Some("b"), vec![CIROperand::Int(b)], "i64"),
+            CIRInstr::new(op, Some("c"),
+                vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())], "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vec![CIROperand::Var("c".into())], "i64"),
+        ];
+        let j = jit_no_builtins();
+        let bin = j.compile(&cir).expect("compiles");
+        j.run(&bin, &[]).as_i64().expect("i64 result")
+    }
+
+    #[test]
+    fn u8_arithmetic_wraps_in_compiled_jit() {
+        assert_eq!(run_binop("add_u8", 200, 100), 44);   // 300 & 0xFF
+        assert_eq!(run_binop("mul_u8", 16, 16), 0);      // 256 & 0xFF
+        assert_eq!(run_binop("sub_u8", 0, 1), 255);      // -1 & 0xFF
+        assert_eq!(run_binop("add_u8", 255, 1), 0);      // cell wrap
+    }
+
+    #[test]
+    fn u16_and_u32_wrap_in_compiled_jit() {
+        assert_eq!(run_binop("add_u16", 60000, 10000), 70000 & 0xFFFF); // 4464
+        assert_eq!(run_binop("mul_u32", 0x1_0000, 0x1_0000), 0);        // 2^32 & 0xFFFF_FFFF
+    }
+
+    #[test]
+    fn neg_u8_wraps_in_compiled_jit() {
+        // neg is unary: -a masked to a byte.  -5 & 0xFF == 251.
+        let cir = vec![
+            CIRInstr::new("const_i64", Some("a"), vec![CIROperand::Int(5)], "i64"),
+            CIRInstr::new("neg_u8", Some("c"), vec![CIROperand::Var("a".into())], "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vec![CIROperand::Var("c".into())], "i64"),
+        ];
+        let j = jit_no_builtins();
+        let bin = j.compile(&cir).expect("compiles");
+        assert_eq!(j.run(&bin, &[]).as_i64(), Some(251));
+    }
+
+    #[test]
+    fn i64_width_does_not_mask_in_compiled_jit() {
+        // The mask only fires for narrow unsigned suffixes; i64 keeps full width.
+        assert_eq!(run_binop("add_i64", 200, 100), 300);
+        assert_eq!(run_binop("mul_i64", 16, 16), 256);
     }
 
     /// `double(x) -> x + x`, compiled via `compile_function` so its single
