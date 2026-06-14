@@ -36,3 +36,8 @@ ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
 # with that script; not checked in (matches the React demo pattern
 # in `demo/visicalc/src/components/`).
 lib/generated/formula_bar.dart
+
+# Vendored engine — the C ABI dynamic library dart:ffi loads at runtime, built
+# by scripts/build.sh from the spreadsheet-capi crate (cdylib). Like the
+# SwiftUI/Qt demos' Vendor/, it's a build artifact, not source.
+native/

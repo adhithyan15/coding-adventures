@@ -61,10 +61,25 @@ echo "Compiling Grid (Flutter)..."
   --package-search-path "$REPO_ROOT/code/packages" \
   -o "$OUT_DIR/grid.dart"
 
-echo "Done. Generated:"
+echo "Building the spreadsheet engine (Rust → dynamic lib) and vendoring it..."
+# The C ABI dynamic library that dart:ffi loads at runtime (see lib/engine.dart),
+# built from the spreadsheet-capi crate (cdylib) and copied into native/
+# (git-ignored). dart:ffi's DynamicLibrary.open needs a .dylib/.so/.dll, not the
+# static .a the SwiftUI/Qt demos link — same engine, dynamic packaging.
+RUST="$REPO_ROOT/code/packages/rust"
+(cd "$RUST" && cargo build -p spreadsheet-capi --release)
+mkdir -p "$DEMO_DIR/native"
+case "$(uname -s)" in
+  Darwin) LIB="libspreadsheet_capi.dylib" ;;
+  *)      LIB="libspreadsheet_capi.so" ;;
+esac
+cp "$RUST/target/release/$LIB" "$DEMO_DIR/native/$LIB"
+
+echo "Done. Generated widgets + vendored engine:"
 ls -la "$OUT_DIR"
+ls -la "$DEMO_DIR/native"
 echo
 echo "To run the demo (Flutter SDK required):"
 echo "  cd $DEMO_DIR"
-echo "  flutter pub get"
-echo "  flutter run"
+echo "  flutter test               # headless: grid is engine-computed + recomputes"
+echo "  flutter pub get && flutter run -d macos   # launch the desktop app"
