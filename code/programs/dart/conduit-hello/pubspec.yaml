@@ -1,0 +1,14 @@
+name: conduit_hello
+description: Demo Dart program using coding_adventures_conduit (WEB17).
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_conduit:
+    path: ../../../packages/dart/conduit
+
+dev_dependencies:
+  test: ^1.25.0

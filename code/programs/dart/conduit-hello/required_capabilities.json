@@ -1,0 +1,7 @@
+{
+  "$schema": "https://coding-adventures.example/schemas/required_capabilities/v1.json",
+  "version": 1,
+  "package": "programs/dart/conduit-hello",
+  "capabilities": ["ffi:call", "network:listen", "env:read"],
+  "justification": "ffi:call — delegates to coding_adventures_conduit (dart:ffi + conduit-capi). network:listen — binds a TCP port to accept HTTP connections. env:read — reads HOST, PORT, APP_ENV, and CONDUIT_CAPI_PATH from the process environment."
+}
