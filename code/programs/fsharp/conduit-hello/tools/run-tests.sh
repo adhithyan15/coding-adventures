@@ -5,7 +5,10 @@ set -e
 SELF_DIR=$(cd "$(dirname "$0")/.." && pwd)
 cd "$SELF_DIR"
 
-CAPI_DIR=$(cd ../../rust/conduit-capi && pwd)
+# Use git to find the repo root — works both in the main tree and in isolated
+# worktrees (git traverses up past the worktree directory to the real .git).
+REPO_ROOT=$(git rev-parse --show-toplevel)
+CAPI_DIR="$REPO_ROOT/code/packages/rust/conduit-capi"
 
 echo "==> Building conduit-capi (release cdylib)"
 (cd "$CAPI_DIR" && cargo build --release -q)
