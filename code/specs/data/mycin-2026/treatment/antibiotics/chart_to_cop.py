@@ -69,6 +69,7 @@ class Cop:
     defeated: set[tuple[str, str]] = field(default_factory=set)
     risks: set[str] = field(default_factory=set)             # CC-2 dose-ceiling risks
     weight: float = 70.0                                      # kg; for the mg dose window
+    contraindicated: set[str] = field(default_factory=set)   # CC-3 drugs excluded by a contraindication
     constraints: list[dict] = field(default_factory=list)   # provenance per constraint
     discards: list[dict] = field(default_factory=list)       # facts not mapped + reason
 
@@ -80,6 +81,11 @@ _ALLERGY_EXCLUSION = {
     "betalactam": "betalactam_allergy_severe",
     "cephalosporin": "betalactam_allergy_severe",
 }
+
+# Drugs a chart contraindication removes by name (CC-3 — grounded in
+# grounding/treatment-constraints-grounding.json). Fluoroquinolones (moxifloxacin) and
+# TMP-SMX are contraindicated in pregnancy; the grounded byte-quotes justify each exclusion.
+_PREGNANCY_CONTRAINDICATED = {"moxifloxacin", "tmp_smx"}
 
 
 def compile_cop(facts: list[ChartFact]) -> Cop:
@@ -152,6 +158,18 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
             else:
                 cop.discards.append({"fact": f"culture_resistance={f.value}",
                                      "reason": "malformed culture_resistance value (want drug:organism)"})
+        elif f.kind == "pregnancy":
+            # CC-3: pregnancy contraindicates specific drugs (grounded rules) — exclude them
+            # by name from the cover, each with its own provenance constraint.
+            if f.value in ("present", "pregnant", "true"):
+                cop.contraindicated |= _PREGNANCY_CONTRAINDICATED
+                for d in sorted(_PREGNANCY_CONTRAINDICATED):
+                    cop.constraints.append({"type": "contraindication", "from": "pregnancy=present",
+                                            "rule": f"{d} is contraindicated in pregnancy (grounded)",
+                                            "detail": d, "span": f.span})
+            else:
+                cop.discards.append({"fact": f"pregnancy={f.value}",
+                                     "reason": "pregnancy value not 'present' → no contraindication applied"})
         else:
             cop.discards.append({"fact": f"{f.kind}={f.value}",
                                  "reason": f"no constraint rule for chart-fact kind '{f.kind}' yet"})
@@ -196,13 +214,16 @@ def derive(cli: Path, facts: list[ChartFact]) -> dict:
             "type": "dose_infeasible", "from": f"risks={sorted(cop.risks)}", "detail": d,
             "rule": f"no safe+effective dose: floor {w['floor_per_kg']} > ceiling "
                     f"{w['ceiling_per_kg']} mg/kg"})
-    res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, set(undosable))
+    # A drug leaves the cover if it has no safe dose (CC-2) OR is contraindicated (CC-3).
+    excluded_drugs = set(undosable) | cop.contraindicated
+    res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, excluded_drugs)
     return {
         "regimen": res["regimen"], "outcome": res["outcome"],
         "cost": res.get("cost"), "conflict": res.get("iis"),
         "organisms": cop.organisms, "exclusions": sorted(cop.exclusions),
         "defeated": sorted(map(list, cop.defeated)),
         "risks": sorted(cop.risks), "dose_infeasible": sorted(undosable),
+        "contraindicated": sorted(cop.contraindicated),
         "constraints": cop.constraints, "discards": cop.discards,
     }
 

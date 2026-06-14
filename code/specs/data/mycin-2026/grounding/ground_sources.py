@@ -42,9 +42,11 @@ DOSE_GROUNDING = HERE / "dose-window-grounding.json"
 FORMULARY_REGISTRY = MYCIN / "treatment" / "antibiotics" / "cas" / "registry.json"
 UTI_GROUNDING = HERE / "uti-id-grounding.json"                       # G4 — new specialty
 UTI_MANIFEST = MYCIN / "diagnosis" / "uti" / "uti-id-manifest.json"
+TC_GROUNDING = HERE / "treatment-constraints-grounding.json"         # CC-3 — contraindication rules
+TC_MANIFEST = MYCIN / "treatment" / "constraints" / "treatment-constraints.json"
 
 # Every grounding file whose records cite sources we decompose + verify against.
-GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING, DOSE_GROUNDING, UTI_GROUNDING]
+GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING, DOSE_GROUNDING, UTI_GROUNDING, TC_GROUNDING]
 
 
 def _records(*files: Path) -> list[dict]:
@@ -185,6 +187,20 @@ def commit_and_verify() -> int:
             "flagged": sum(1 for x in uman["clauses"].values() if x["verdict"] == "FLAG"),
             "authored_debt": sum(1 for x in uman["clauses"].values() if x["verdict"] == "PENDING"),
             "rows": uti_rows})
+
+    # 2d. Treatment constraints (CC-3 — the contraindication/interaction rules behind the
+    #     optimizer's exclusions). Manifest keys rules (not clauses); sources pending decompose.
+    if TC_GROUNDING.exists():
+        tc_rows, c = _verify_rows(_records(TC_GROUNDING), by_url)
+        for k in tot:
+            tot[k] += c[k]
+        tman = json.loads(TC_MANIFEST.read_text()).get("rules", {}) if TC_MANIFEST.exists() else {}
+        artifacts.append({
+            "name": "treatment constraints", "path": "treatment/constraints/treatment-constraints.json",
+            "grounded": sum(1 for x in tman.values() if x["verdict"] == "ACCEPT"),
+            "flagged": sum(1 for x in tman.values() if x["verdict"] == "FLAG"),
+            "authored_debt": sum(1 for x in tman.values() if x["verdict"] == "PENDING"),
+            "rows": tc_rows})
 
     # 3. Rebuild the system-wide provenance ledger.
     LEDGER.write_text(harness.build_ledger(artifacts) +
