@@ -3372,9 +3372,17 @@ pub fn whitespace_only_minify(
                 emit_quoted_string(&mut out, &tok.value);
             }
         } else if is_number_literal(tok) {
-            // gap-038: rewrite hex/oct/bin literals to
-            // decimal when decimal is no longer than source.
-            out.push_str(&normalize_number_value(&tok.value));
+            // gap-120: a NON-INTEGER numeric property key is emitted as a
+            // quoted `String(Number(key))` (`{.5:1}` -> `{"0.5":1}`);
+            // integer numeric keys and all non-key numbers fall through
+            // to the ordinary shortest-form number printer.
+            if let Some(key) = noninteger_numeric_key_string(&kept, idx) {
+                emit_quoted_string(&mut out, &key);
+            } else {
+                // gap-038: rewrite hex/oct/bin literals to
+                // decimal when decimal is no longer than source.
+                out.push_str(&normalize_number_value(&tok.value));
+            }
         } else {
             out.push_str(&tok.value);
         }
@@ -4835,6 +4843,137 @@ fn numeric_string_key_unquoted<'a>(
         return None;
     }
     Some(s)
+}
+
+/// gap-120: a NON-INTEGER NUMBER property key is emitted by upstream
+/// Closure as a QUOTED string of its canonical JS number form
+/// (`String(Number(key))`), not as a bare numeric key:
+///
+///   {.5:1}    ->  {"0.5":1}      {1.5:1}   ->  {"1.5":1}
+///   {1e-3:1}  ->  {"0.001":1}    {1e-7:1}  ->  {"1e-7":1}
+///   {1.50:1}  ->  {"1.5":1}      {2.5e-8:1} -> {"2.5e-8":1}
+///
+/// This is the float counterpart of gap-116 (canonical INTEGER STRING key
+/// -> bare number). An INTEGER numeric key stays BARE (`{5:1}`, `{1e3:1}`
+/// -> `{1E3:1}` via the ordinary number printer), so this returns `None`
+/// for them. Returns the canonical key STRING (without quotes) when
+/// `kept[idx]` is a non-integer NUMBER in property-key position.
+///
+/// The canonical key string is JS `String(Number(key))`, which DIFFERS
+/// from closurec's value number printer (gap-040/082/113): it KEEPS the
+/// leading `0` before the point (`0.5`, not `.5`), strips trailing
+/// fractional zeros, and uses LOWERCASE-`e` exponential only for
+/// magnitudes below `1e-6` (`1e-7`, `2.5e-8`) — verified against the JAR
+/// (`1e-6` -> `0.000001` stays decimal, `1e-7` -> `1e-7` goes exponential).
+/// Computed exactly from the source digit string (coefficient `M`,
+/// base-10 exponent `E`), no Grisu/Ryu.
+fn noninteger_numeric_key_string(
+    kept: &[&lexer::token::Token],
+    idx: usize,
+) -> Option<String> {
+    if idx == 0 {
+        return None;
+    }
+    let tok = kept[idx];
+    if !is_number_literal(tok) {
+        return None;
+    }
+    let raw = tok.value.as_str();
+    // BigInt keys (`5n`) are integers; never our concern.
+    if raw.ends_with('n') {
+        return None;
+    }
+    // Property-key position: `{`/`,` before, `:` after (same guard as the
+    // gap-116 string-key rule — excludes the ternary `a?1.5:2` confound,
+    // string values, and `case 1.5:`).
+    let prev = kept[idx - 1];
+    if !(is_structural_punct(prev, "{") || is_structural_punct(prev, ",")) {
+        return None;
+    }
+    let next = kept.get(idx + 1)?;
+    if !is_structural_punct(next, ":") {
+        return None;
+    }
+    // Decompose the decimal literal into a coefficient `M` (no leading or
+    // trailing zeros) and base-10 exponent `E`, with `value == M × 10^E`.
+    let cleaned = if raw.contains('_') {
+        raw.replace('_', "")
+    } else {
+        raw.to_string()
+    };
+    let b = cleaned.as_bytes();
+    if b.len() >= 2 && b[0] == b'0' && matches!(b[1], b'x' | b'X' | b'o' | b'O' | b'b' | b'B') {
+        return None; // radix literal -> integer
+    }
+    let (mantissa, exp): (&str, i64) = match cleaned.split_once(['e', 'E']) {
+        Some((m, e)) => (m, e.parse::<i64>().ok()?),
+        None => (cleaned.as_str(), 0),
+    };
+    let (int_part, frac_part) = match mantissa.split_once('.') {
+        Some((i, f)) => (i, f),
+        None => (mantissa, ""),
+    };
+    if (int_part.is_empty() && frac_part.is_empty())
+        || !int_part.bytes().all(|c| c.is_ascii_digit())
+        || !frac_part.bytes().all(|c| c.is_ascii_digit())
+    {
+        return None;
+    }
+    let mut digits = String::with_capacity(int_part.len() + frac_part.len());
+    digits.push_str(int_part);
+    digits.push_str(frac_part);
+    let mut e = exp - frac_part.len() as i64;
+    let lead = digits.trim_start_matches('0');
+    if lead.is_empty() {
+        return None; // zero -> integer path
+    }
+    let trailing = lead.len() - lead.trim_end_matches('0').len();
+    let m = &lead[..lead.len() - trailing];
+    e += trailing as i64;
+    let d = m.len() as i64;
+    // INTEGER value (`E >= 0`) -> a bare numeric key; leave to the integer
+    // shortest-form printer. After trailing-zero stripping, `E < 0` is
+    // exactly the non-integer case.
+    if e >= 0 {
+        return None;
+    }
+    // f64 finite-range guard (also bounds the zero-run below — no DoS).
+    let sci_exp = e + d - 1;
+    if !(-324..=308).contains(&sci_exp) {
+        return None;
+    }
+    // Build `String(Number(key))`.
+    let key = if sci_exp <= -7 {
+        // Below 1e-6: JS uses LOWERCASE-`e` exponential.
+        let mut o = String::new();
+        o.push_str(&m[..1]);
+        if m.len() > 1 {
+            o.push('.');
+            o.push_str(&m[1..]);
+        }
+        o.push('e');
+        o.push_str(&sci_exp.to_string());
+        o
+    } else if e + d <= 0 {
+        // value < 1: "0." + (-E-d) zeros + M (leading `0` KEPT).
+        let zeros = (-e - d) as usize;
+        let mut o = String::with_capacity(2 + zeros + m.len());
+        o.push_str("0.");
+        for _ in 0..zeros {
+            o.push('0');
+        }
+        o.push_str(m);
+        o
+    } else {
+        // value >= 1 with a fraction: split M's digits at the point.
+        let split = (d + e) as usize; // count of integer-part digits
+        let mut o = String::with_capacity(m.len() + 1);
+        o.push_str(&m[..split]);
+        o.push('.');
+        o.push_str(&m[split..]);
+        o
+    };
+    Some(key)
 }
 
 /// gap-117: a `case` clause whose operand begins with a prefix UNARY
@@ -6831,6 +6970,47 @@ mod tests {
         assert_eq!(small_fraction_shortest_form("1e-2147483648"), None);
         // i64-overflowing exponent parse also bails safely.
         assert_eq!(small_fraction_shortest_form("1e-99999999999999999999"), None);
+    }
+
+    /// gap-120: a NON-INTEGER numeric property key is emitted as a quoted
+    /// `String(Number(key))` — leading `0` KEPT, trailing zeros stripped,
+    /// lowercase-`e` exponential only below 1e-6.
+    #[test]
+    fn gap120_noninteger_numeric_key_quoted() {
+        assert_eq!(minify("x={.5:1};"), "x={\"0.5\":1};");
+        assert_eq!(minify("x={1.5:1};"), "x={\"1.5\":1};");
+        assert_eq!(minify("x={1.50:1};"), "x={\"1.5\":1};");
+        assert_eq!(minify("x={.25:1};"), "x={\"0.25\":1};");
+        assert_eq!(minify("x={123.456:1};"), "x={\"123.456\":1};");
+        // Scientific source -> canonical decimal key.
+        assert_eq!(minify("x={1e-3:1};"), "x={\"0.001\":1};");
+        assert_eq!(minify("x={1.5e-3:1};"), "x={\"0.0015\":1};");
+        // 1e-6 stays decimal; below it goes lowercase-e exponential.
+        assert_eq!(minify("x={1e-6:1};"), "x={\"0.000001\":1};");
+        assert_eq!(minify("x={1e-7:1};"), "x={\"1e-7\":1};");
+        assert_eq!(minify("x={2.5e-8:1};"), "x={\"2.5e-8\":1};");
+        // Multiple keys both quote.
+        assert_eq!(minify("x={.5:1,1.5:2};"), "x={\"0.5\":1,\"1.5\":2};");
+    }
+
+    /// **Non-regression** for gap-120: INTEGER numeric keys stay bare;
+    /// non-key numbers (ternary arms, array/call elements, values, the
+    /// value half of a `{key:value}` pair) are NEVER quoted.
+    #[test]
+    fn gap120_scoped_to_noninteger_keys() {
+        // Integer keys stay bare (gap-116 territory, not gap-120).
+        assert_eq!(minify("x={5:1};"), "x={5:1};");
+        assert_eq!(minify("x={1e3:1};"), "x={1E3:1};");
+        assert_eq!(minify("x={0:1};"), "x={0:1};");
+        // The ternary `a?1.5:2` confound: `1.5` is preceded by `?`.
+        assert_eq!(minify("x=a?1.5:2;"), "x=a?1.5:2;");
+        // Array / call / bare value: not keys.
+        assert_eq!(minify("x=[1.5,2.5];"), "x=[1.5,2.5];");
+        assert_eq!(minify("f(1.5,2.5);"), "f(1.5,2.5);");
+        assert_eq!(minify("x=1.5;"), "x=1.5;");
+        // In `{key:value}` only the KEY is quoted; the value keeps the
+        // value number printer (gap-113) form.
+        assert_eq!(minify("x={1.5:.5};"), "x={\"1.5\":.5};");
     }
 
     /// `12000` → `12E3`. Mantissa not 1; verifies general
