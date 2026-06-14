@@ -729,9 +729,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-095 — chained new paren-wrap (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.41). `minify_chained_new` ignored.
-- **Input:** `new new A;` → **Upstream:** `new (new A);` (closurec leaves `new new A`).
-- **What it needs:** upstream wraps the inner `new` of a chained `new new A` to `new (new A)`, disambiguating the inner NewExpression as the outer `new`'s callee. closurec's output `new new A` is valid and equivalent, just not byte-identical — a low-priority normalisation.
+- **Status:** RESOLVED in CLOC12.131. `minify_chained_new` now ENFORCED.
+- **Fix:** added a gap-095 pre-pass block in `whitespace_only.rs` (after gap-089, before gap-051). It scans for two consecutive operator `new` tokens (`kept[i]` and `kept[i+1]`, both with `value == "new"` and not preceded by `.` or `?.`), then scans the inner callee (IDENT (`\.IDENT`)*), and inserts a synthetic `(` before the inner `new` and `)` after the callee using `synth_num_open`/`synth_num_close`. The following arg-list `(…)`, if any, is NOT consumed — it belongs to the outer `new`. Five unit tests added: basic wrap, with arg-list, dotted callee, single-new non-regression, and standalone.
+- **Input:** `new new A;` → **Upstream:** `new (new A);`.
+- **What it needed:** upstream wraps the inner `new` of a chained `new new A` to `new (new A)`, disambiguating the inner NewExpression as the outer `new`'s callee.
 
 ### gap-096 — regex u/y flags split off (CORRECTNESS, WHITESPACE_ONLY)
 

@@ -510,6 +510,69 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // gap-095: CHAINED-NEW paren wrap — `new new A` → `new (new A)`.
+    //
+    // When a `new` OPERATOR is immediately followed by another `new`
+    // OPERATOR, upstream Closure wraps the inner NewExpression in `(…)`
+    // to disambiguate which expression is the outer `new`'s callee:
+    //
+    //   `a=new new A;`      →  `a=new (new A);`
+    //   `a=new new A.B;`    →  `a=new (new A.B);`
+    //   `a=new new A();`    →  `a=new (new A)();`
+    //     (the `()` belongs to the outer `new`, not the inner)
+    //
+    // The `(` is inserted BEFORE the inner `new`; the `)` is
+    // inserted AFTER the inner callee chain (IDENT (`.IDENT`)*).
+    // A following arg-list `(…)` is NOT consumed — it belongs to the
+    // outer `new`.
+    //
+    // Guard: only OPERATOR `new` participates — a `new` preceded by
+    // `.` or `?.` is a property name, not the `new` operator.
+    // Uses `synth_num_open`/`synth_num_close` (always Some; the
+    // source may have no parens at all, e.g. `new new A;`).
+    if let (Some(so), Some(sc)) = (synth_num_open.as_ref(), synth_num_close.as_ref()) {
+        let mut i = 0;
+        while i + 1 < kept.len() {
+            // Is kept[i] an operator `new`?
+            let outer_op_new = kept[i].value == "new"
+                && !is_string_literal(kept[i])
+                && (i == 0
+                    || (!is_structural_punct(&kept[i - 1], ".")
+                        && !is_structural_punct(&kept[i - 1], "?.")));
+            if outer_op_new {
+                // Is kept[i+1] also an operator `new`?
+                // (The predecessor of kept[i+1] is kept[i] which is
+                // `new` — not `.` or `?.` — so it is automatically
+                // an operator `new`.)
+                let inner_op_new = kept[i + 1].value == "new"
+                    && !is_string_literal(kept[i + 1]);
+                if inner_op_new {
+                    // Scan the inner callee: IDENT (`.IDENT`)*.
+                    // Starts at i+2.
+                    let mut p = i + 2;
+                    if p < kept.len() && is_simple_identifier_token(Some(kept[p])) {
+                        p += 1;
+                        while p + 1 < kept.len()
+                            && is_structural_punct(&kept[p], ".")
+                            && is_simple_identifier_token(Some(kept[p + 1]))
+                        {
+                            p += 2;
+                        }
+                        // Insert `)` at p first (higher index avoids
+                        // index shift on the earlier insertion), then
+                        // `(` at i+1.
+                        kept.insert(p, sc);
+                        kept.insert(i + 1, so);
+                        // Skip past the wrapped region.
+                        i = p + 2;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+    }
+
     // gap-051: IIFE paren normalisation. Upstream Closure
     // rewrites `(function(){...}())` to `(function(){...})()`
     // — the call's `()` moves OUTSIDE the wrapping parens.
@@ -9750,6 +9813,46 @@ mod tests {
         assert_eq!(minify("new A();"), "new A;");
         assert_eq!(minify("a.b();"), "a.b();");
         assert_eq!(minify("new a.b(1);"), "new a.b(1);");
+    }
+
+    // ---- gap-095: chained new paren wrap ---------------------
+
+    /// gap-095: basic chained new — `new new A` → `new (new A)`.
+    /// This is the fixture case from CLOC14.41.
+    #[test]
+    fn gap095_chained_new_wraps_inner() {
+        assert_eq!(minify("a=new new A;"), "a=new (new A);");
+    }
+
+    /// gap-095: chained new with a following arg-list — the `()`
+    /// belongs to the OUTER new, so the inner is still bare.
+    #[test]
+    fn gap095_chained_new_with_args() {
+        assert_eq!(minify("a=new new A();"), "a=new (new A)();");
+    }
+
+    /// gap-095: chained new with a dotted callee.
+    #[test]
+    fn gap095_chained_new_dotted_callee() {
+        assert_eq!(minify("a=new new A.B;"), "a=new (new A.B);");
+    }
+
+    /// gap-095 non-regression: a lone `new A` is not touched.
+    #[test]
+    fn gap095_single_new_unchanged() {
+        assert_eq!(minify("a=new A;"), "a=new A;");
+    }
+
+    /// gap-095 non-regression: property `new` (`a.new`) is not an
+    /// operator; the outer and inner guards must both fire.
+    /// This token sequence is unusual but must not panic.
+    #[test]
+    fn gap095_no_wrap_when_outer_is_property_new() {
+        // `a.new` is a property access — the lexer emits a Name token
+        // with value "new"; the keyword guard (`!is_string_literal`)
+        // and predecessor-dot guard both block gap-095.
+        // `new new A` following something else is still wrapped.
+        assert_eq!(minify("b=new new A;"), "b=new (new A);");
     }
 
     /// gap-064: same string-`)` arg under the arg-bearing member

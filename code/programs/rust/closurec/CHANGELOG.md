@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.131.0] - 2026-06-14
+
+### Fixed
+
+- **CLOSES gap-095 (WHITESPACE_ONLY)** — chained `new new A` now emits
+  `new (new A)` (byte-identical to upstream Closure).
+
+  **Rule:** when two consecutive operator `new` tokens appear, the inner
+  NewExpression (callee + optional dot-chain, WITHOUT the following
+  arg-list) is wrapped in `(…)`. The following `(…)`, if any, belongs
+  to the outer `new`.
+
+  **Examples:**
+  - `a=new new A;`   → `a=new (new A);`
+  - `a=new new A.B;` → `a=new (new A.B);`
+  - `a=new new A();` → `a=new (new A)();`
+    (`()` belongs to the outer `new`)
+
+  **Implementation:** added a gap-095 pre-pass block in
+  `whitespace_only.rs` (after gap-089, before gap-051). Detects two
+  consecutive operator `new` tokens (guarded against `.new` / `?.new`
+  property forms), scans the inner callee chain, and inserts synthetic
+  `(` / `)` using `synth_num_open` / `synth_num_close`. Five unit tests
+  added; `minify_chained_new` fixture now **enforced** in CI.
+
+  **Status:** this was the **last** open IGNORE_FIXTURES entry.
+  `IGNORE_FIXTURES` is now empty — every WHITESPACE_ONLY byte-identity
+  fixture is enforced in CI.
+
 ## [0.130.0] - 2026-06-14
 
 ### Fixed

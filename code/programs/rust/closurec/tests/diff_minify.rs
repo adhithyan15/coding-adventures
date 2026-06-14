@@ -120,10 +120,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // REAL element (not a hole: a preceding `,` or `[`). `[1,,]`
     // (length 2) is preserved; `[1,2,]` -> `[1,2]` still drops.
     // `minify_array_hole_trail` enforced.
-    // gap-095 (CLOC14.41): a chained `new new A` is wrapped by upstream
-    // to `new (new A)` (disambiguates the inner NewExpression as the
-    // callee). closurec leaves `new new A` (valid, but not byte-id).
-    ("chained_new", "gap-095: chained new -> new (new A)"),
+    // gap-095 RESOLVED in CLOC12.131 — `new new A` → `new (new A)`.
+    // A pre-pass in `whitespace_only.rs` detects two consecutive operator
+    // `new` tokens and wraps the inner NewExpression (callee + optional
+    // dot-chain, WITHOUT the following arg-list) in `(…)`.
+    // `minify_chained_new` now ENFORCED.
     // gap-096 RESOLVED in CLOC12.99 — the es2024/es2025 REGEX token's
     // flag character class was `[dgimsvy]`, accidentally omitting the
     // ES2015 `u` (unicode) flag (a typo when `v` was added for ES2024).
