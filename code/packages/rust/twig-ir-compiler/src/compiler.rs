@@ -1375,6 +1375,51 @@ impl Compiler {
                     }
                 }
 
+                // ── Twig path-A increment 3 (TW1): typed *variadic* arithmetic ─
+                //
+                // Scheme arithmetic is variadic: `(+ a b c d)` means
+                // `a + b + c + d`.  When every argument is statically `i64`
+                // and the builtin is one of the four *arithmetic* operators,
+                // we fold the call into a **left-associated chain of typed
+                // binary CIR mnemonics** — the exact shape the `(+ a b)` case
+                // above emits, repeated:
+                //
+                //     (+ a b c)   →   r1 = add a, b   [i64]
+                //                     r2 = add r1, c  [i64]   ⇒ result r2
+                //
+                // Each step is a typed `add`/`sub`/`mul`/`div` the IIR-to-*
+                // backends accept directly, so a variadic arithmetic call now
+                // clears every backend validator instead of falling back to the
+                // `call_builtin "<op>"` path (`type_hint = "any"`), which they
+                // reject.  Comparisons are deliberately excluded: variadic
+                // `(< a b c)` is a chained predicate (`a<b ∧ b<c`), not a fold,
+                // so it stays on the dynamic path until a dedicated increment.
+                // Unary / nullary forms (`(+)`, `(- a)`) likewise stay on the
+                // fallback; this increment targets the `n ≥ 2` fold (the
+                // `n == 2` arithmetic case is already handled above, so this
+                // block effectively lights up `n ≥ 3`).
+                if arg_regs.len() >= 2 {
+                    if let Some(typed_mnemonic) = typed_arith_op_for(&v.name) {
+                        if !typed_mnemonic.starts_with("cmp_")
+                            && arg_regs.iter().all(|r| ctx.type_of(r) == "i64")
+                        {
+                            let mut acc = arg_regs[0].clone();
+                            for rhs in &arg_regs[1..] {
+                                let dest = ctx.fresh_var("r");
+                                ctx.emit(IIRInstr::new(
+                                    typed_mnemonic,
+                                    Some(dest.clone()),
+                                    vec![Operand::Var(acc), Operand::Var(rhs.clone())],
+                                    "i64",
+                                ), loc);
+                                ctx.record_type(&dest, "i64");
+                                acc = dest;
+                            }
+                            return Ok(acc);
+                        }
+                    }
+                }
+
                 // Fallback: legacy dynamic `call_builtin` path.
                 let mut srcs: Vec<Operand> =
                     vec![Operand::Var(v.name.clone())];

@@ -127,6 +127,21 @@ mod clr_support;
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
     Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
+    // Twig — *variadic* arithmetic (`(+ 10 20 12)` = 42).  Scheme's `+`/`-`/`*`/`/`
+    // are n-ary; `twig-ir-compiler` folds an all-`i64` arithmetic call into a
+    // left-associated chain of typed binary CIR ops (`r1 = add 10,20; r2 = add
+    // r1,12`).  Before this (TW1), only the binary `(+ a b)` form lowered to a
+    // typed `add`; three-or-more-argument calls fell back to `call_builtin "+"`
+    // (`type_hint = "any"`), which every code-gen backend validator rejects — so
+    // this is the first variadic Twig arithmetic to run anywhere but the dynamic
+    // path.  Runs across native / LLVM / WASM / JVM / CLR / VM / JIT.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(+ 10 20 12)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
     // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument
