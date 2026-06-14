@@ -160,12 +160,16 @@ const PROGRAMS: &[Prog] = &[
     // `stelem.i1`) and `.` to `Console::Write(char)` (so `.` of 65 writes `A`); the
     // `Run()` launcher discards the entry result (the `putchar` side effect is the
     // output). `run_clr` assembles with real `ilasm` and runs on real `dotnet`.
+    // On the VM (Phase V), `vm-core`'s dispatch grew the byte-tape ops `alloc_bytes`/
+    // `load_byte`/`store_byte` over its flat `memory` (a cell is `memory[base+idx]`,
+    // `store_byte` masks to a byte for the 8-bit wrap); `.` is the registered
+    // `putchar` builtin capturing bytes (→ `A`). No per-language VM code.
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++[>++++++++<-]>+.",
         expect: Expect::Stdout("A"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime

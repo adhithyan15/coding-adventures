@@ -882,4 +882,77 @@ mod tests {
         assert!(vm.branch_profile("main", 0).is_none());
         assert!(vm.branch_profile("nonexistent", 42).is_none());
     }
+
+    /// The byte-tape ops (LANG-MATRIX Phase V — Brainfuck on the VM). `alloc_bytes`
+    /// binds a tape base, `store_byte` writes a cell's low byte (so a value > 255
+    /// wraps — Brainfuck's 8-bit cell), and `load_byte` reads it back *unsigned*
+    /// (so a high byte like 200 reads as 200, never a sign-extended negative).
+    #[test]
+    fn byte_tape_round_trips_unsigned_and_wraps() {
+        // 200 stored, read back unsigned as 200.
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("size".into()), vec![Operand::Int(8)], "i64"),
+                IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i64"),
+                IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(200)], "i64"),
+                IIRInstr::new("store_byte", None, vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("v".into()),
+                ], "i64"),
+                IIRInstr::new("load_byte", Some("got".into()), vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+            ],
+        );
+        let mut module = IIRModule::new("test", "test");
+        module.add_or_replace(fn_);
+        let mut vm = VMCore::new();
+        assert_eq!(vm.execute(&mut module, "main", &[]).unwrap(), Some(Value::Int(200)));
+
+        // 257 stored wraps to 1 (257 & 0xFF) — the 8-bit cell.
+        let wrap = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("size".into()), vec![Operand::Int(8)], "i64"),
+                IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i64"),
+                IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(3)], "i64"),
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(257)], "i64"),
+                IIRInstr::new("store_byte", None, vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("v".into()),
+                ], "i64"),
+                IIRInstr::new("load_byte", Some("got".into()), vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+            ],
+        );
+        let mut wm = IIRModule::new("test", "test");
+        wm.add_or_replace(wrap);
+        let mut vm2 = VMCore::new();
+        assert_eq!(vm2.execute(&mut wm, "main", &[]).unwrap(), Some(Value::Int(1)));
+    }
+
+    /// An untouched tape cell reads `0` (Brainfuck's zero-cell convention): the
+    /// sparse `memory` map has no entry, so `load_byte` returns the default.
+    #[test]
+    fn untouched_byte_tape_cell_reads_zero() {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("size".into()), vec![Operand::Int(8)], "i64"),
+                IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i64"),
+                IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(5)], "i64"),
+                IIRInstr::new("load_byte", Some("got".into()), vec![
+                    Operand::Var("tape".into()), Operand::Var("idx".into()),
+                ], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+            ],
+        );
+        let mut module = IIRModule::new("test", "test");
+        module.add_or_replace(fn_);
+        let mut vm = VMCore::new();
+        assert_eq!(vm.execute(&mut module, "main", &[]).unwrap(), Some(Value::Int(0)));
+    }
 }
