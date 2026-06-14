@@ -490,6 +490,8 @@ mod v_es1 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -967,6 +969,8 @@ mod v_es3 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1444,6 +1448,8 @@ mod v_es5 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1990,6 +1996,8 @@ mod v_es2015 {
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -2550,6 +2558,8 @@ mod v_es2016 {
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3110,6 +3120,8 @@ mod v_es2017 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3670,6 +3682,8 @@ mod v_es2018 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -4230,6 +4244,8 @@ mod v_es2019 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -4832,6 +4848,8 @@ mod v_es2020 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -5455,6 +5473,8 @@ mod v_es2021 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -6085,6 +6105,8 @@ mod v_es2022 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -6722,6 +6744,8 @@ mod v_es2023 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -7359,6 +7383,8 @@ mod v_es2024 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -8003,6 +8029,8 @@ mod v_es2025 {
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string(), r#"using"#.to_string()],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }

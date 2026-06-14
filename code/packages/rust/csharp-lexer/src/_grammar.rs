@@ -632,6 +632,8 @@ mod v_1_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1242,6 +1244,8 @@ mod v_2_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1859,6 +1863,8 @@ mod v_3_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -2476,6 +2482,8 @@ mod v_4_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3093,6 +3101,8 @@ mod v_5_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3745,6 +3755,8 @@ mod v_6_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -4425,6 +4437,8 @@ mod v_7_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -5126,6 +5140,8 @@ mod v_8_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -5827,6 +5843,8 @@ mod v_9_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -6528,6 +6546,8 @@ mod v_10_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -7264,6 +7284,8 @@ mod v_11_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -8000,6 +8022,8 @@ mod v_12_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }

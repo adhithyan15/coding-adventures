@@ -502,6 +502,8 @@ mod v_1_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -972,6 +974,8 @@ mod v_1_1 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1442,6 +1446,8 @@ mod v_1_4 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1926,6 +1932,8 @@ mod v_5 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -2417,6 +2425,8 @@ mod v_7 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -2922,6 +2932,8 @@ mod v_8 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3441,6 +3453,8 @@ mod v_10 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3974,6 +3988,8 @@ mod v_14 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -4507,6 +4523,8 @@ mod v_17 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -5033,6 +5051,8 @@ mod v_21 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
