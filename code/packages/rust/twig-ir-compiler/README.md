@@ -18,7 +18,9 @@ For each Twig source program, this crate emits an [`IIRModule`](../interpreter-i
 | One per `(lambda ...)`         | gensym'd `__lambda_0`, `__lambda_1`, … |
 | `main` (always present)         | top-level value defines + bare exprs  |
 
-Anonymous lambdas have their captured free variables prepended to the parameter list (in stable insertion order); the `make_closure` call site passes them in matching order. Top-level value defines lower to `call_builtin "global_set" name value`; bare top-level expressions accumulate into `main`, with the *last* expression's value becoming `main`'s return.
+Anonymous lambdas have their captured free variables prepended to the parameter list (in stable insertion order); the `make_closure` call site passes them in matching order. Bare top-level expressions accumulate into `main`, with the *last* expression's value becoming `main`'s return.
+
+Top-level value defines lower one of two ways (TW2). A value define that is **not captured by any lambda** is read only from `main`, so its statically-typed (`i64`/`bool`) value is kept in a `main` register and reads return it directly — fully typed, accepted by every code-gen backend. A value define **captured by a closure** (read inside a lambda body, which compiles to a separate function) stays on the host global table via `call_builtin "global_set" name value` / `global_get`, as does a top-level forward reference.
 
 All emitted instructions carry `type_hint = "any"` because Twig is dynamically typed. Functions therefore have `type_status = Untyped`. The vm-core profiler observes runtime types; the JIT specialises later.
 

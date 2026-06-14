@@ -203,7 +203,14 @@ backend immediately) come before the enabler-dependent items.
   **Verified by running** `(+ 10 20 12)` ⇒ exit 42 across native/LLVM/WASM/JVM/CLR/VM/JIT
   (`lang_matrix.rs`). Chained comparisons (`(< a b c)`, a predicate not a fold) and
   unary/nullary forms stay on the dynamic path.
-- ☐ **TW2** — top-level value `define` on the code-gen backends.
+- ✅ **TW2** — top-level value `define` on the code-gen backends. A value `define`
+  not captured by a lambda (read only from `main`) keeps its statically-typed value
+  in a `main` register instead of the `call_builtin "global_set"`/`global_get` pair
+  the backends reject; reads return the register directly. **Verified by running**
+  `(define x 40) (define y 2) (+ x y)` ⇒ exit 42 across native/LLVM/WASM/JVM/CLR/VM/JIT
+  (`lang_matrix.rs`). Added a reusable escape analysis (`free_vars::lambda_captured_globals`).
+  **Limits:** a value captured by a closure, or a top-level forward reference, stays on
+  the host global table (unchanged) — full mutable globals on code-gen backends need **E6**.
 - ☐ **TW3** — list / cons ops on code-gen backends (needs **E5**/**E6**).
 - ☐ **TW4** — strings on code-gen backends (needs **E4**).
 - ☐ **TW5** — closures / lambdas / general `call_builtin` on code-gen backends (needs **E6**).

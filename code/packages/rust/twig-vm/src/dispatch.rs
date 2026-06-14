@@ -3843,13 +3843,18 @@ mod tests {
 
     #[test]
     fn defines_then_run_with_seeded_globals_writes_more() {
-        // (define x 5) (+ x 10) → 15.  Verifies that global_set
-        // works when the dispatcher receives a non-empty initial
-        // globals table, and that the new entry coexists with
-        // pre-seeded ones.
+        // `(define x 5) (define (f) x) (+ (f) 10)` → 15.  Verifies that
+        // global_set works when the dispatcher receives a non-empty initial
+        // globals table, and that the new entry coexists with pre-seeded ones.
+        //
+        // `x` is *captured* by `f`, so it stays on the host global table.
+        // (twig-ir-compiler 0.24.0 / LANG-FULL TW2 lowers only main-only value
+        // defines to typed locals; a captured one keeps its `global_set` — which
+        // is exactly the dispatch path this test exercises.  Before TW2 a bare
+        // `(define x 5)` also emitted `global_set`, but that is now a local.)
         let mut g = Globals::new();
         g.set(lispy_runtime::intern("seed"), LispyValue::int(99));
-        let module = compile_source("(define x 5) (+ x 10)", "test").unwrap();
+        let module = compile_source("(define x 5) (define (f) x) (+ (f) 10)", "test").unwrap();
         let v = run_with_globals(&module, &mut g).unwrap();
         assert_eq!(v.as_int(), Some(15));
         // Both the seed and the program-defined x are present.

@@ -365,6 +365,19 @@ pub struct Compiler {
     /// Names of top-level defines whose RHS is *not* a lambda — looked
     /// up through `global_get` at use sites.
     value_globals: HashSet<String>,
+    /// TW2: value-globals that are captured by a lambda somewhere and so MUST
+    /// stay on the host global table (`global_set` / `global_get`).  Computed
+    /// once in the pre-pass by [`free_vars::lambda_captured_globals`].
+    escaping_value_globals: HashSet<String>,
+    /// TW2: a *non-escaping*, statically-typed value-global's main-`fn` register.
+    /// Reads of these names return the register directly (a typed value the
+    /// code-gen backends accept) instead of emitting a dynamic `global_get`.
+    value_global_locals: HashMap<String, String>,
+    /// TW2: value-globals read *before* their `define` (a top-level forward
+    /// reference).  Such a name already emitted a `global_get`, so its later
+    /// `define` must emit the matching `global_set` rather than the typed-local
+    /// form — keeping behaviour byte-identical to the pre-TW2 dynamic path.
+    forced_global_set: HashSet<String>,
     /// Cumulative function table.  Top-level fns are appended in
     /// source order; anonymous lambdas append as the compiler
     /// encounters them, with `main` appended last.
@@ -386,6 +399,9 @@ impl Compiler {
         Compiler {
             fn_globals: HashSet::new(),
             value_globals: HashSet::new(),
+            escaping_value_globals: HashSet::new(),
+            value_global_locals: HashMap::new(),
+            forced_global_set: HashSet::new(),
             functions: Vec::new(),
             lambda_counter: 0,
             variant_tags: HashMap::new(),
@@ -469,6 +485,13 @@ impl Compiler {
             }
         }
 
+        // TW2: decide which value-globals may be lowered to typed `main`
+        // locals.  A value-global captured by any lambda must stay on the host
+        // global table (the closure compiles to a separate function); the rest
+        // are read only from `main` and can live in a register.
+        self.escaping_value_globals =
+            crate::free_vars::lambda_captured_globals(&program.forms, &self.value_globals);
+
         // ── Main pass: lower every form ──────────────────────────────
         let mut main_ctx = FnCtx::new();
         let mut last_main_value: Option<String> = None;
@@ -484,21 +507,38 @@ impl Compiler {
                     self.compile_top_level_lambda(&def.name, lam)?;
                 }
                 Form::Define(def) => {
-                    // (define x value-expr) — evaluate at top level,
-                    // store in globals.
+                    // (define x value-expr) — evaluate at top level.
                     let loc = SourceLoc::new(def.line, def.column);
                     let v = self.compile_expr(&def.expr, &mut main_ctx)?;
-                    let name_reg = self.string_arg(&mut main_ctx, &def.name, loc);
-                    main_ctx.emit(IIRInstr::new(
-                        "call_builtin",
-                        None,
-                        vec![
-                            Operand::Var("global_set".into()),
-                            Operand::Var(name_reg),
-                            Operand::Var(v),
-                        ],
-                        "void",
-                    ), loc);
+
+                    // TW2: when the value is statically typed (`i64` / `bool`)
+                    // and the name is neither captured by a lambda nor already
+                    // forward-referenced, keep it in the register `v` and skip
+                    // the dynamic `global_set` entirely.  Reads in `main` then
+                    // return that register (see `compile_var_ref`), so the whole
+                    // of `main` stays typed and clears every backend validator.
+                    let ty = main_ctx.type_of(&v);
+                    let typed = ty == "i64" || ty == "bool";
+                    if typed
+                        && !self.escaping_value_globals.contains(&def.name)
+                        && !self.forced_global_set.contains(&def.name)
+                    {
+                        self.value_global_locals.insert(def.name.clone(), v);
+                    } else {
+                        // Captured / dynamically-typed / forward-referenced:
+                        // store on the host global table as before.
+                        let name_reg = self.string_arg(&mut main_ctx, &def.name, loc);
+                        main_ctx.emit(IIRInstr::new(
+                            "call_builtin",
+                            None,
+                            vec![
+                                Operand::Var("global_set".into()),
+                                Operand::Var(name_reg),
+                                Operand::Var(v),
+                            ],
+                            "void",
+                        ), loc);
+                    }
                     last_main_value = None;
                 }
                 Form::Expr(e) => {
@@ -953,8 +993,21 @@ impl Compiler {
             return Ok(dest);
         }
 
+        // TW2: a non-escaping, statically-typed value-global lives in a `main`
+        // register — return it directly (the value, with its inferred type, is
+        // already live in `main_ctx`).  This is only ever reached from `main`,
+        // because escaping names never land in `value_global_locals`.
+        if let Some(reg) = self.value_global_locals.get(&v.name) {
+            return Ok(reg.clone());
+        }
+
         // Top-level value — look up via the host global table.
         if self.value_globals.contains(&v.name) {
+            // A read that reaches here for a value-global that is *not* in
+            // `value_global_locals` is either captured (kept on the table by
+            // design) or a forward reference whose `define` has not run yet.
+            // Flag it so that `define` emits the matching `global_set`.
+            self.forced_global_set.insert(v.name.clone());
             let name_reg = self.string_arg(ctx, &v.name, loc);
             let dest = ctx.fresh_var("g");
             ctx.emit(IIRInstr::new(
