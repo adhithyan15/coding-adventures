@@ -1,0 +1,55 @@
+% ADJ52 case-13 program (this patient's observations + queries only; no rules).
+% 53yo man, ~2 months progressive bilateral leg swelling (worse left), heaviness +
+% easy leg tiring; marked pitting lower-limb oedema. Vigorous LV (EF ~70%, FS ~40%,
+% SV ~85 mL, CO ~11 L/min). Modest pericardial fluid. Diuretic gave minimal relief.
+% Intermittent mild chest tightness NOT clearly exertional. CT coronary angiography:
+% tight diagonal-LAD stenosis (+ small effusion + pericardial thickening, not
+% emphasized). Full anti-ischaemic therapy (antiplatelet + statin + beta-blocker) =
+% no meaningful benefit. Then cough/sputum/worsening breathlessness + recurrent
+% bilateral pleural effusions; thoracentesis of several litres relieved symptoms
+% transiently but fluid promptly re-accumulated. Pleural fluid non-specific, LOW LDH
+% (~105-110 U/L) and LOW ADA (~4 U/L). Mild anaemia, mildly low albumin, modest
+% proteinuria. Dilated IVC (~24 mm), enlarged right chambers. Mitral inflow E
+% respiratory variation >25%. No clear septal bounce; no Kussmaul sign. Re-review of
+% earlier high-resolution CT: thickened pericardium >4.5 mm, previously obscured by
+% effusion. Net: refractory reaccumulating right-sided fluid overload, normal EF,
+% incidental coronary lesion, thickened pericardium with effusion.
+
+% --- the unifying right-sided venous-congestion gestalt (counted once per dx) ---
+observe symptom(marked_pitting_oedema_lower_limbs)
+observe symptom(recurrent_bilateral_pleural_effusions)
+observe ivc_dilated(over_twenty_mm)
+observe right_chambers_enlarged
+
+% --- the constriction-vs-restriction discriminators ---
+observe ejection_fraction(preserved_hyperdynamic)
+observe pericardium_thickness(over_four_mm)
+observe mitral_e_respiratory_variation(over_twenty_five_percent)
+observe septal_bounce(not_clearly_seen)
+observe kussmaul_sign(absent)
+
+% --- effusion biochemistry (transudate; argues against TB) ---
+observe pleural_fluid_ldh(low)
+observe pleural_fluid_adenosine_deaminase(low)
+
+% --- the high-output features ---
+observe cardiac_output(markedly_elevated)
+observe lab(mild_anaemia)
+
+% --- the coronary red herring ---
+observe cta_finding(tight_stenosis_diagonal_lad)
+observe chest_tightness_exertion_relation(not_related)
+observe coronary_treatment_response(no_benefit)
+
+% NOT observed (open, decision-relevant): cath_interdependence(...) and
+% post_drainage_filling(...) — the two confirmatory discriminators.
+
+% --- queries: each candidate diagnosis + the recommended next steps ---
+? diagnosis(constrictive_pericarditis)
+? diagnosis(effusive_constrictive_pericarditis)
+? diagnosis(restrictive_cardiomyopathy)
+? diagnosis(tuberculous_pericarditis)
+? diagnosis(high_output_heart_failure)
+? diagnosis(coronary_artery_disease)
+? next_step(invasive_haemodynamic_catheterisation)
+? next_step(cardiac_mri_with_late_gadolinium)

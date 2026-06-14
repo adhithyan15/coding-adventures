@@ -1,0 +1,67 @@
+# Token definitions for mosmodel — Component Interface Language
+# @version 1
+#
+# mosmodel declares the external interface of a UI component: named typed
+# slot inputs and named typed emit outputs. Nothing else is allowed.
+# Compiles to interface descriptor JSON and target-language bindings.
+
+escapes: standard
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+
+skip:
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*[\s\S]*?\*\//
+  WHITESPACE    = /[ \t\r\n]+/
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+STRING   = /"([^"\\\n]|\\.)*"/
+NUMBER   = /[0-9]+(\.[0-9]*)?/
+
+# ============================================================================
+# Keywords
+# ============================================================================
+# Listed before NAME so the lexer matches them as keywords, not identifiers.
+
+keywords:
+  component
+  slot
+  emit
+  list
+  text
+  number
+  bool
+  image
+  color
+  node
+  true
+  false
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+# NAME covers both PascalCase component names (Button, CellAddress) and
+# kebab-case slot/emit names (total-rows, on-navigate).  The parser and
+# compiler enforce the correct casing at the semantic level.
+
+NAME = /[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z][a-zA-Z0-9]*)*/
+
+# ============================================================================
+# Punctuation
+# ============================================================================
+
+LBRACE    = "{"
+RBRACE    = "}"
+LPAREN    = "("
+RPAREN    = ")"
+LANGLE    = "<"
+RANGLE    = ">"
+COLON     = ":"
+SEMICOLON = ";"
+COMMA     = ","
+EQUALS    = "="

@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from jit_core.cir import CIRInstr
+from codegen_core import CIRInstr
 
 from intel4004_backend.codegen import codegen, run_on_4004
 from intel4004_backend.ir import IRInstr

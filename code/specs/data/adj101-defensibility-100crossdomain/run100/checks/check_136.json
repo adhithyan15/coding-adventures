@@ -1,0 +1,8 @@
+{
+ "check_id": 136,
+ "idx": 55,
+ "slot": "surface_height_above_floor",
+ "claimed_value": 44,
+ "scenario": "A raised interior walkway sits 44 inches above the floor below. Its open side is protected by a guard that measures 38 inches in height, constructed of horizontal rails.",
+ "cited_span": "A raised interior walkway sits 44 inches above the floor below."
+}

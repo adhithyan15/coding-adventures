@@ -1,0 +1,7 @@
+{
+ "idx": 94,
+ "id": "ACA-5",
+ "scenario": "A PI nearing the project end date submits a first-time request for a 6-month no-cost extension to finish data analysis, citing delays caused by an equipment failure earlier in the year.",
+ "policy": "A no-cost extension of up to 12 months may be granted once, but only if at least some unobligated funds remain on the award at the time of the request. If no unobligated funds remain, no extension may be granted.",
+ "question": "May the no-cost extension be granted?"
+}

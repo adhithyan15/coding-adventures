@@ -108,10 +108,10 @@ The learning side of the repo is a first-class part of the structure, not an aft
 Start here:
 
 - [Learning Index](./code/learning/README.md)
-- [Algorithms](./code/learning/algorithms/README.md)
-- [Computer Architecture](./code/learning/computer-architecture/README.md)
+- [Algorithms](./code/learning/algorithms/README.md) — graph algorithms, hashing, Kahn's algorithm
+- [Computer Architecture](./code/learning/computer-architecture/README.md) — logic gates, arithmetic circuits, CPU architecture, floating-point, ISA simulators, bytecode compilation, parsing, lexical analysis, virtual machines, and the computing-stack overview
 - [Language Tooling](./code/learning/language-tooling/README.md)
-- [Python Ecosystem](./code/learning/python/ecosystem.md)
+- [Programming Languages](./code/learning/programming-languages/) — language-by-language pattern guides for Go, Python, Ruby, Rust, TypeScript, plus the Python ecosystem deep-dive
 
 The intended relationship is:
 
@@ -154,10 +154,35 @@ If you want to explore the repo by theme, start here:
 
 - [00-architecture.md](./code/specs/00-architecture.md) for the big picture
 - [D00-deep-cpu-architecture.md](./code/specs/D00-deep-cpu-architecture.md) for the architecture track
+- [LANG00-generic-language-pipeline.md](./code/specs/LANG00-generic-language-pipeline.md) for the language pipeline that all of Tetrad, Nib, MACSYMA, Lattice, and others share
+- [VLT00-vault-master.md](./code/specs/VLT00-vault-master.md) for the password-manager-class vault stack
+- [ST00-r-stats-roadmap.md](./code/specs/ST00-r-stats-roadmap.md) for the R-style statistics + language roadmap
 - [DT25-mini-redis.md](./code/specs/DT25-mini-redis.md) for the single-node data-store baseline
 - [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) for the build-planning story
 - [computing-stack.md](./code/learning/computer-architecture/computing-stack.md) for the hardware-to-language story
 - [code/programs/typescript](./code/programs/typescript/) for the current app and visualizer-heavy program surface
+
+## Live Pages
+
+A subset of the repo is deployed to GitHub Pages so you can run things in
+the browser without cloning. The root landing page is at
+[adhithyan15.github.io/coding-adventures](https://adhithyan15.github.io/coding-adventures/);
+individual apps and visualizers live at sibling paths:
+
+- `arithmetic/` — adders, ALU, two's-complement, multiply, CPU step-through
+- `arm1-web/` — ARM1 processor across registers, pipeline, barrel shifter, memory views
+- `busicom/` — Intel 4004-powered Busicom 141-PF calculator with live ALU and gate-level activity
+- `code39/` — full barcode pipeline from text to SVG via draw instructions
+- `commonmark/` — live Markdown-to-HTML renderer built from scratch in TypeScript
+- `electronics-visualizers/` — circuit-level visualizers backing the architecture track
+- `engram/` and `engram-docs/` — product experiment plus its browser-based docs
+- `eniac/` — decimal vacuum-tube computing alongside binary equivalents
+- `journal/` — journaling app
+- `lattice/` — Lattice CSS-superset docs and live transpiler playground
+- `logic-gates/` — NOT/AND/OR/XOR with truth tables and CMOS layouts
+- `ml-learning/` — browser ML demos (predictors, classifiers)
+- `nib-web/` — Nib source → Intel 4004 assembly/binary/HEX, then run in the simulator
+- `transistors/` — vacuum tube → BJT → MOSFET → CMOS device models
 
 ## Copyright
 

@@ -1,5 +1,11 @@
 # LANG15 — vm-runtime: Linkable Runtime Library
 
+> **Forward reference:** LANG20 extends the C ABI specified here with
+> per-language entries (`rt_ic_*`, `rt_deopt`, `rt_call_indirect`,
+> `rt_send_message`) and the per-language `<lang>_*` symbol surface
+> consumed by AOT/JIT-emitted code.  See
+> [LANG20 §"C ABI extensions for multi-language"](LANG20-multilang-runtime.md).
+
 ## Overview
 
 `vm-runtime` is the **linkable, embeddable form of `vm-core`** (LANG02).  It

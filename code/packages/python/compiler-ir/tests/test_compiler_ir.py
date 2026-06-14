@@ -97,10 +97,45 @@ class TestIrOp:
         assert IrOp.F64_CMP_GE == 44
         assert IrOp.F64_FROM_I32 == 45
         assert IrOp.I32_TRUNC_FROM_F64 == 46
+        assert IrOp.MAKE_CLOSURE == 47
+        assert IrOp.APPLY_CLOSURE == 48
+        assert IrOp.F64_SQRT == 49
+        assert IrOp.F64_SIN == 50
+        assert IrOp.F64_COS == 51
+        assert IrOp.F64_ATAN == 52
+        assert IrOp.F64_LN == 53
+        assert IrOp.F64_EXP == 54
+        assert IrOp.MAKE_CONS == 55
+        assert IrOp.CAR == 56
+        assert IrOp.CDR == 57
+        assert IrOp.IS_NULL == 58
+        assert IrOp.IS_PAIR == 59
+        assert IrOp.MAKE_SYMBOL == 60
+        assert IrOp.IS_SYMBOL == 61
+        assert IrOp.LOAD_NIL == 62
+        assert IrOp.F64_POW == 63
+        assert IrOp.SYSCALL_CHECKED == 64
+        assert IrOp.BRANCH_ERR == 65
+        assert IrOp.THROW == 66
+        # VMCOND00 Phase 3 — Layer 3 dynamic handler opcodes
+        assert IrOp.PUSH_HANDLER == 67
+        assert IrOp.POP_HANDLER == 68
+        assert IrOp.SIGNAL == 69
+        assert IrOp.ERROR == 70
+        assert IrOp.WARN == 71
+        # VMCOND00 Phase 4 — Layer 4 restart chain opcodes
+        assert IrOp.PUSH_RESTART == 72
+        assert IrOp.POP_RESTART == 73
+        assert IrOp.FIND_RESTART == 74
+        assert IrOp.INVOKE_RESTART == 75
+        assert IrOp.COMPUTE_RESTARTS == 76
+        # VMCOND00 Phase 4 — Layer 5 exit-point opcodes
+        assert IrOp.ESTABLISH_EXIT == 77
+        assert IrOp.EXIT_TO == 78
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 47 opcodes after adding f64-to-i32 truncation."""
-        assert len(IrOp) == 47
+        """There are exactly 79 opcodes after VMCOND00 Phase 4."""
+        assert len(IrOp) == 79
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1006,6 +1041,81 @@ class TestAllOpcodesPrintParse:
             IrOp.F64_CMP_GE:   [IrRegister(4), IrRegister(1), IrRegister(2)],
             IrOp.F64_FROM_I32: [IrRegister(2), IrRegister(1)],
             IrOp.I32_TRUNC_FROM_F64: [IrRegister(2), IrRegister(1)],
+            IrOp.F64_SQRT:     [IrRegister(2), IrRegister(1)],
+            IrOp.F64_SIN:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_COS:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_ATAN:     [IrRegister(2), IrRegister(1)],
+            IrOp.F64_LN:       [IrRegister(2), IrRegister(1)],
+            IrOp.F64_EXP:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_POW:      [IrRegister(3), IrRegister(1), IrRegister(2)],
+            # MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1
+            IrOp.MAKE_CLOSURE: [
+                IrRegister(0),
+                IrLabel("_lambda_0"),
+                IrImmediate(2),
+                IrRegister(1),
+                IrRegister(2),
+            ],
+            # APPLY_CLOSURE dst, closure_reg, num_args, arg0
+            IrOp.APPLY_CLOSURE: [
+                IrRegister(0),
+                IrRegister(3),
+                IrImmediate(1),
+                IrRegister(4),
+            ],
+            # MAKE_CONS dst, head_reg, tail_reg
+            IrOp.MAKE_CONS:    [IrRegister(5), IrRegister(1), IrRegister(2)],
+            # CAR dst, src
+            IrOp.CAR:          [IrRegister(2), IrRegister(5)],
+            # CDR dst, src
+            IrOp.CDR:          [IrRegister(2), IrRegister(5)],
+            # IS_NULL dst, src
+            IrOp.IS_NULL:      [IrRegister(2), IrRegister(5)],
+            # IS_PAIR dst, src
+            IrOp.IS_PAIR:      [IrRegister(2), IrRegister(5)],
+            # MAKE_SYMBOL dst, name_label
+            IrOp.MAKE_SYMBOL:  [IrRegister(2), IrLabel("foo")],
+            # IS_SYMBOL dst, src
+            IrOp.IS_SYMBOL:    [IrRegister(2), IrRegister(5)],
+            # LOAD_NIL dst
+            IrOp.LOAD_NIL:     [IrRegister(2)],
+            # SYSCALL_CHECKED n, arg_reg, val_dst, err_dst
+            IrOp.SYSCALL_CHECKED: [
+                IrImmediate(2),    # n = read-byte
+                IrRegister(0),     # arg (ignored for read-byte)
+                IrRegister(1),     # val_dst — byte read
+                IrRegister(2),     # err_dst — error code
+            ],
+            # BRANCH_ERR err_reg, label
+            IrOp.BRANCH_ERR:   [IrRegister(2), IrLabel("eof_handler")],
+            # THROW condition_reg
+            IrOp.THROW:        [IrRegister(0)],
+            # VMCOND00 Phase 3 — PUSH_HANDLER type_id:label fn:reg
+            IrOp.PUSH_HANDLER: [IrLabel("*"), IrRegister(1)],
+            # POP_HANDLER (no operands)
+            IrOp.POP_HANDLER:  [],
+            # SIGNAL condition:reg
+            IrOp.SIGNAL:       [IrRegister(0)],
+            # ERROR condition:reg
+            IrOp.ERROR:        [IrRegister(0)],
+            # WARN condition:reg
+            IrOp.WARN:         [IrRegister(0)],
+            # VMCOND00 Phase 4 — Layer 4 restart chain opcodes
+            # PUSH_RESTART name_sym:label fn:reg
+            IrOp.PUSH_RESTART:    [IrLabel("use-value"), IrRegister(2)],
+            # POP_RESTART (no operands)
+            IrOp.POP_RESTART:     [],
+            # FIND_RESTART name_sym:label → out:reg
+            IrOp.FIND_RESTART:    [IrLabel("use-value"), IrRegister(3)],
+            # INVOKE_RESTART handle:reg arg:reg
+            IrOp.INVOKE_RESTART:  [IrRegister(3), IrRegister(4)],
+            # COMPUTE_RESTARTS → out:reg
+            IrOp.COMPUTE_RESTARTS: [IrRegister(5)],
+            # VMCOND00 Phase 4 — Layer 5 exit-point opcodes
+            # ESTABLISH_EXIT tag_sym:label result_out:reg after:label
+            IrOp.ESTABLISH_EXIT: [IrLabel("done"), IrRegister(6), IrLabel("after_block")],
+            # EXIT_TO tag_sym:label val:reg
+            IrOp.EXIT_TO:        [IrLabel("done"), IrRegister(7)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

@@ -14,11 +14,15 @@ from graph import Graph, GraphRepr, bfs, shortest_path, minimum_spanning_tree
 
 # Build a city graph
 g: Graph[str] = Graph()
-g.add_edge("London", "Paris", weight=300)
+g.add_node("London", {"kind": "city"})
+g.add_edge("London", "Paris", weight=300, properties={"route": "train"})
 g.add_edge("London", "Amsterdam", weight=520)
 g.add_edge("Paris", "Berlin", weight=878)
 g.add_edge("Amsterdam", "Berlin", weight=655)
 g.add_edge("Amsterdam", "Brussels", weight=180)
+
+print(g.edge_properties("Paris", "London"))
+# → {"route": "train", "weight": 300}
 
 # Breadth-first traversal from London
 print(bfs(g, "London"))
@@ -45,6 +49,21 @@ g_matrix = Graph(repr=GraphRepr.ADJACENCY_MATRIX)  # O(V²) space; O(1) edge loo
 ```
 
 Both expose exactly the same public API — every algorithm works on either.
+
+## Properties
+
+Graphs, nodes, and edges can carry portable property bags:
+
+```python
+g.set_graph_property("name", "city-map")
+g.add_node("Amsterdam", {"kind": "city"})
+g.add_edge("Amsterdam", "Berlin", weight=655, properties={"route": "rail"})
+
+assert g.edge_properties("Berlin", "Amsterdam")["weight"] == 655
+```
+
+Property bags are copied on read. Edge weights are also exposed through the
+canonical `weight` edge property.
 
 ## Where it fits
 

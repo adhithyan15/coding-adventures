@@ -1,0 +1,451 @@
+# Changelog — iir-to-jvm-class-file
+
+All notable changes to this crate are documented here.
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [0.11.0] — 2026-06-12 (LANG-MATRIX LM-J Brainfuck — byte-tape ops on the JVM)
+
+Adds the lowering Brainfuck needs to run on the JVM backend — the last code-gen
+gap in Brainfuck's row after LLVM (LM-L) and WASM (LM-W). Verified by RUNNING
+`++++++++[>++++++++<-]>+.` on real `java` in `lang-aot/tests/lang_matrix.rs`: it
+prints `A`.
+
+The backend already had the *raw* BF-frontend tape ops (`load_mem`/`store_mem` →
+`baload`/`bastore` over a static `env/BFRuntime.__tape : [B`) and the
+`putchar`/`getchar` host calls, but `lower_brainfuck_for_aot` rewrites the tape
+into the *lowered* `alloc_bytes`/`load_byte`/`store_byte` form (the same ops the
+LLVM/WASM/native backends consume) and widens the value model — which the JVM
+backend didn't yet handle.
+
+### Added
+
+- **`alloc_bytes dest <- size`** → no bytecode. The JVM tape is the host class's
+  pre-allocated static `byte[] __tape`, so there is nothing to allocate at
+  runtime; `dest` (the BF tape base) is never materialised because the byte ops
+  `getstatic` the tape directly.
+- **`load_byte dest <- base, idx`** → `getstatic __tape`, load the index
+  (`l2i`-narrowed if it is an `i64`), `baload`, `& 0xFF` (mask the sign-extended
+  byte back to an unsigned cell), then `i2l`-widen if `dest` is `i64`. The base
+  operand is the static tape, so it is ignored.
+- **`store_byte base, idx, val`** → `getstatic __tape`, load index + value
+  (`l2i`-narrowed if `i64`), `bastore` (stores `val & 0xFF`, giving BF's 8-bit
+  cell wrap-around for free). Rejected if it carries a `dest`.
+
+### Fixed (i64-widening ripple)
+
+- **i64 branch conditions**: `jmp_if_true`/`jmp_if_false` hardcoded `iload` +
+  `ifne`/`ifeq`, which assume a 32-bit condition. An `i64` guard (the widened
+  Brainfuck loop guard — when the value model is *not* concretised back to i32)
+  now reduces to an int with `lload; lconst_0; lcmp` before the branch; `iload`ing
+  a long would read only one of its two local slots — a verify error. The width is
+  taken from the condition register's declared `JvmType`.
+
+Four new tests in `tests/test_backend.rs` cover the i32 + i64 tape lowerings, the
+`store_byte`-with-dest rejection, and the i64-guard `lcmp` path.
+
+## [0.10.0] — 2026-06-09 — large-`int` constants via the constant pool (McCarthy W5a / F6)
+
+### Fixed
+
+- **`int` literals beyond ±32767 now lower correctly.** `emit_iconst`'s
+  out-of-`sipush`-range path emitted `ldc 0` — a reference to the *reserved*
+  constant-pool slot 0 — which crashed real JVMs at class load
+  (`constantTag.cpp ShouldNotReachHere`). Added `emit_iconst_cp`, which appends a
+  `CONSTANT_Integer` entry (`ConstantPoolBuilder::add_integer`) and emits
+  `ldc`/`ldc_w` (the `LDC_W` 0x13 opcode for a CP index > 255). Every
+  *user-constant* call site (a `const`, a `mov`/`ret` immediate, a `call`
+  argument) now routes through it; the old invalid path is `debug_assert`-guarded.
+  Structural indices (field numbers, slot/arg counts) stay on `emit_iconst` — they
+  are always small.
+
+### Enabled
+
+- **McCarthy symbols (F6) on the JVM.** A symbol interns to an id in a high
+  reserved range (`SYMBOL_ID_BASE = 2²⁹`), exactly the large-`int` const this
+  fixes — so `(EQ 'X 'X)` → T, `(EQ 'X 'Y)` → nil, `(QUOTE X)` → its id now run on
+  a real JVM.
+
+## [0.9.0] — 2026-06-09 — lisp predicates `pair?`/`not`/`equal?` (McCarthy W4)
+
+### Added
+
+- **`call_builtin` lowering for the McCarthy predicates** (F3–F5), the JVM
+  counterparts of the wasm `ref.test`/`i32.eqz`/`i31.get_s`+`i32.eq`:
+  - `pair?`  → `aload ; instanceof [Ljava/lang/Object; ; istore` — a cons is an
+    `Object[]`, an atom an `Integer`, nil `null` (so `instanceof` is 0/1).
+  - `not`    → `iload ; iconst_1 ; ixor ; istore` (logical not of a 0/1 bool).
+  - `equal?` → unbox both `Integer`s (`checkcast` + `intValue`) then
+    `if_icmpne`-synthesised 0/1 — `EQ` on atoms is integer equality.
+  Added `pair?`/`not`/`equal?` to `CALL_BUILTIN_SUPPORTED_NAMES`, the `INSTANCEOF`
+  (0xC1) opcode, and `builtin_dest`/`builtin_arg` operand helpers. With the
+  already-lowered `jmp_if_false`/`is_null`, McCarthy `ATOM`/`EQ`/`COND` now run on
+  a real JVM: `(ATOM 5)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 5 5)`→1, `(COND …)`.
+
+## [0.8.0] — 2026-06-09 — `box`/`unbox` + `ref<any>` (McCarthy W3b)
+
+### Added
+
+- **`box` / `unbox` lowering** — the managed uniform-reference value model's
+  atom boxing, the JVM counterpart of the wasm backend's `i31ref`:
+  - `box`  → `iload ; invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer; ; astore`
+  - `unbox`→ `aload ; checkcast java/lang/Integer ; invokevirtual Integer.intValue()I ; istore`
+  These are the *same* backend-agnostic IIR ops the wasm path consumes — the
+  structural representation pass emits them, each backend lowers them — so a
+  McCarthy cons program (`(CAR (CONS 7 9))` → 7) now runs on a real JVM. Removed
+  `box`/`unbox` from `UNSUPPORTED_OPS`.
+- **`ref<any>` type** — maps to `JvmType::Ref` (descriptor `Ljava/lang/Object;`):
+  a boxed lisp value is an `Integer` (atom) or `Object[]` (cons cell).
+
+(cons cells were already `Object[]` allocations via `alloc`/`field_*` for
+`ref<LispyPair>`; this release adds the atom boxing that lets integers live in
+those cells and be read back out.)
+
+## [0.7.0] — 2026-06-01 (G3 — `print_i64` host import → `env/BasicRuntime.println(J)V`)
+
+### Added — `call_builtin "print_i64"` whitelisted and lowered
+
+Companion to `iir-to-wasm` v0.8.0 (gap G2 of the
+[multi-language backend plan][plan]).  The wasm backend lets BASIC's
+`PRINT` reach real wasm bytecode by routing `call_builtin "print_i64"`
+to the `env.__print_i64` host import.  This release does the same for
+the JVM backend: routes it to `invokestatic env/BasicRuntime.println(J)V`,
+so a BASIC program lowered through IIR-to-JVM produces a valid `.class`
+that runs against a launcher providing one extra host class.
+
+#### Validator changes (`src/validate.rs`)
+
+* `CALL_BUILTIN_SUPPORTED_NAMES` widened from `["putchar", "getchar"]`
+  to `["putchar", "getchar", "print_i64"]`.  Everything outside the
+  whitelist still fails with `UnsupportedOp` — defence in depth unchanged.
+
+#### Lowering changes (`src/lower.rs`)
+
+* Added `const BASIC_RUNTIME_CLASS: &str = "env/BasicRuntime"`.  We
+  deliberately pick a separate host class from `env/BFRuntime` because
+  BASIC's I/O model (line/value, mostly numeric) differs from
+  Brainfuck's (byte-stream), and the JVM launcher should be able to
+  stub or provide them independently.
+* New `"print_i64"` arm in the `call_builtin` match:
+  ```
+  srcs = [Var("print_i64"), Var(val: i64)]   dest = None
+  →
+  lload val_slot
+  invokestatic env/BasicRuntime.println(J)V
+  ```
+  Uses `emit_lload` rather than `emit_iload` because i64 occupies a
+  long slot; descriptor `(J)V` matches one long arg, void return.
+
+#### Tests added (`tests/test_backend.rs`)
+
+* `g3_validator_accepts_print_i64`
+* `g3_validator_still_rejects_unknown_builtin`
+* `g3_lowers_print_i64_to_invokestatic`
+* `g3_constant_pool_has_basicruntime_println_methodref`
+* `g3_print_i64_class_serializes_with_cafebabe_magic`
+
+All five exercise the validator + lowerer + serializer path and assert
+on the 0xCAFEBABE byte prefix to confirm a structurally valid `.class`.
+
+[plan]: ../../../specs/MULTILANG-BACKEND-PLAN.md
+
+## [0.6.0] — 2026-05-26 (Validator accepts `ref<any>` for `field_load`)
+
+### Changed — `ref<any>` widens the supported reference types
+
+Companion to Twig path-A increment 6c.  The Phase 2 heap-lowering
+convention is `field_load dest, pair, idx [ref<any>]`.  JVM lowers
+this to `aaload`, which returns `Object` — the same type cons-cell
+fields are declared as in the `Object[2]` Phase 2 representation.
+
+This release widens the JVM validator's UnsupportedType check: in
+addition to `ref<LispyPair>` (the `Object[2]` cons cell), `ref<any>`
+is now accepted (mapping to `Object`).  All other `ref<X>` continue
+to be rejected.
+
+No lowering changes — `aaload` already returns the right type for
+both `ref<LispyPair>` (Object[]) and `ref<any>` (Object).
+
+## [0.5.0] — 2026-05-22 (Brainfuck — `byte[]` tape + I/O via env/BFRuntime)
+
+### Added — Brainfuck `load_mem` / `store_mem` / `call_builtin` lowering
+
+Stage 2 of 4 for the BF→{wasm,jvm,clr,beam} story.  Mirrors the WASM PR
+(iir-to-wasm 0.4.0) for the JVM target.  Lets BF's IIR — including
+`load_mem`, `store_mem`, and `call_builtin "putchar"`/`"getchar"` —
+flow through the same universal `iir-to-jvm-class-file` backend that
+Twig, BASIC, Oct, and Nib already use.
+
+#### Validator changes
+
+- `load_mem` and `store_mem` removed from `UNSUPPORTED_OPS` (previously
+  hard-rejected).  Both lower to JVM `baload` / `bastore` over a
+  host-provided byte array — see `BF_RUNTIME_CLASS` below.
+- `call_builtin` is now **conditionally** accepted: the builtin name
+  carried in `srcs[0]` as `Operand::Var` must be in the new
+  `CALL_BUILTIN_SUPPORTED_NAMES` whitelist.  Today's whitelist covers
+  Brainfuck's two I/O builtins (`putchar`, `getchar`); extending it
+  takes three steps documented in the constant's doc comment.
+- Unknown builtin names still produce a clear `UnsupportedOp` error
+  with the rejected name and the whitelist included.
+
+#### Lowering changes
+
+- New `BALOAD` / `BASTORE` opcode constants (0x33 / 0x54) for JVM byte
+  array access.
+- New `BF_RUNTIME_CLASS` constant `"env/BFRuntime"` — the host helper
+  class providing the tape and I/O methods.  Picking a fixed host
+  class keeps BF-compiled `.class` files self-contained: no `<clinit>`
+  required on the BF side, no per-program tape size baked into the
+  bytecode, and the host can dial the tape size without recompiling.
+- New `emit_instr` arms:
+  - `load_mem v ptr` → `getstatic env/BFRuntime.__tape : [B; iload ptr;
+    baload; sipush 0x00FF; iand; istore v`.  The `sipush 0x00FF; iand`
+    masks the sign-extension that `baload` performs, so the int result
+    is properly `0..=255` (matching BF's unsigned u8 cell semantics).
+  - `store_mem ptr v` → `getstatic env/BFRuntime.__tape : [B; iload ptr;
+    iload v; bastore`.  `bastore` truncates the int value to a byte
+    automatically, matching BF's u8 wraparound.
+  - `call_builtin "putchar" v` → `iload v; invokestatic
+    env/BFRuntime.putchar(I)V`.
+  - `call_builtin "getchar" -> v` → `invokestatic
+    env/BFRuntime.getchar()I; istore v`.
+
+#### Host class contract
+
+The host (Java runtime / launcher) must provide a class with binary name
+`env/BFRuntime` containing:
+
+| Symbol                  | JVM descriptor | Purpose                           |
+|-------------------------|----------------|-----------------------------------|
+| `public static byte[] __tape` | `[B`     | The BF tape (typically 30,000 B). |
+| `public static void putchar(int)` | `(I)V` | Write one byte to stdout.         |
+| `public static int getchar()`     | `()I`  | Read one byte from stdin; convention is 0 / -1 on EOF. |
+
+This is the JVM analog of the WASM backend's `env` import namespace —
+same pattern, different ABI.
+
+### Tests
+
+- 5 new validator unit tests covering the new acceptance:
+  `load_mem_accepted_for_bf`, `store_mem_accepted_for_bf`,
+  `call_builtin_putchar_accepted`, `call_builtin_getchar_accepted`,
+  `call_builtin_unknown_name_rejected`.
+- The existing `unsupported_ops_rejected` test updated: `load_mem`,
+  `store_mem`, `call_builtin` removed from the unconditional-reject
+  list with a comment pointing to the new tests.
+- 43 lib + 86 integration tests pass.
+- 4 new BF→JVM e2e tests in `brainfuck-iir-compiler/tests/jvm_e2e.rs`
+  exercise the full chain from source to `.class` bytes.
+
+### Compatibility
+
+- Non-BF frontends (Twig, BASIC, Oct, Nib) are unchanged — they don't
+  emit `load_mem` / `store_mem` or `call_builtin`, so the new code
+  paths are only reached for BF.
+- Modules without BF features get no `env/BFRuntime` constant-pool
+  entries, preserving binary equivalence with pre-0.5.0 output for
+  every non-BF caller.
+
+## [0.4.1] — 2026-05-13
+
+### Fixed (Multi-backend demo — fib(10)=55)
+
+- **`"mov"` opcode support** — added handling for the `mov` IIR instruction
+  (pre-lowered form of `call_builtin "_move"`).  The lowerer now emits the
+  appropriate load + store sequence for Long / Int slots.
+- **Long arithmetic for integer parameters** — parameters typed as `"i64"`
+  (after the `fixup_control_flow_types` Pass 0 normalization) now use
+  `lload`/`lstore` instead of `iload`/`istore`, preventing JVM verifier
+  errors (`Bad local variable type`).
+- **Long comparison** — `cmp_lt`/`cmp_gt`/`cmp_le`/`cmp_ge` now emit
+  `lcmp` + conditional branch (not `if_icmp*`) when operands are `Long`.
+  The `emit_long_compare` helper sequences `lcmp; ifXX 7; iconst_1; goto 4;
+  iconst_0` to produce a boolean result.
+- **`emit_lconst` fixed** — values 2–127 are now synthesised with
+  `iconst_N; i2l` (or `bipush; i2l` / `sipush; i2l`) instead of an
+  invalid `ldc2_w #0` placeholder that caused `VerifyError`.
+- **Class file version 49** — downgraded from Java 8 (52) to Java 5 (49)
+  to use the old type-inferencing verifier, removing the requirement for
+  `StackMapTable` attributes in branching methods.
+
+## [0.4.0] — 2026-05-12
+
+### Added (LANG36 — JVM Closure Lowering)
+
+This release promotes the JVM backend from "reject closures with ClosureOpcode"
+to a full `long[]`-based dispatch-table implementation of first-class closures.
+
+#### Closure representation
+
+A JVM closure is a **`long[]` array** where `closure[0]` holds the function
+dispatch index and `closure[1..]` holds the captured values (as `long`).
+Integer captures (`i32`, `u32`, `bool`) are sign-extended to `long` via `i2l`;
+`i64`/`u64` captures are stored directly.  Float captures (`f32`, `f64`) are
+deferred to LANG38 and still produce a `ClosureOpcode` error.
+
+#### `__callClosure` dispatch method
+
+When a module contains any `alloc_closure` instruction, the lowering pass
+generates a synthetic `static long __callClosure(long[] closure, long[] args)`
+method.  It reads `closure[0]` as a dispatch index and uses a chain of
+`lcmp` / `ifeq` branches — one branch per closure-eligible function — to
+reconstruct the correct static call.  Dispatch indices are assigned
+alphabetically (deterministic byte-identical output).
+
+#### New JVM opcodes emitted
+
+| Opcode     | Byte   | Description                                         |
+|------------|--------|-----------------------------------------------------|
+| `NEWARRAY` | `0xBC` | Allocate primitive array; operand `0x0B` = `T_LONG` |
+| `LALOAD`   | `0x2F` | Load `long` from `long[]`                           |
+| `LASTORE`  | `0x50` | Store `long` into `long[]`                          |
+| `LCMP`     | `0x94` | Compare two longs (`-1`, `0`, or `1`)               |
+| `L2I`      | `0x88` | Long → int narrowing conversion                     |
+| `I2L`      | `0x85` | Int → long sign-extending conversion                |
+
+#### `alloc_closure` lowering
+
+```text
+dest = alloc_closure(Str("fn_name"), Var(cap0)) : "closure"
+→  iconst_2; newarray T_LONG
+   dup; iconst_0; ldc2_w fn_idx; lastore   (closure[0] = dispatch_idx)
+   dup; iconst_1; iload cap0_slot; i2l; lastore  (closure[1] = cap0)
+   astore dest_slot
+```
+
+#### `call_closure` lowering
+
+```text
+dest = call_closure(Var(handle), Var(arg0)) : "any"
+→  aload handle_slot
+   iconst_1; newarray T_LONG
+   dup; iconst_0; lload arg0_slot; lastore  (args[0] = arg0)
+   invokestatic ClassName.__callClosure([J[J)J
+   lstore dest_slot
+```
+
+#### Validator changes
+
+- `alloc_closure` with non-float captures → accepted (no longer `ClosureOpcode`).
+- `call_closure` → accepted.
+- `alloc_closure` with `f32`/`f64` capture type hints → still emits `ClosureOpcode`
+  (deferred to LANG38).
+
+#### `serialize_jvm_class_file`
+
+New public function `serialize_jvm_class_file(class_file: &JvmClassFile) -> Vec<u8>`
+serializes a `JvmClassFile` to a valid `.class` byte stream (JVMS §4).
+Used by the real-JVM round-trip test.
+
+#### Tests
+
+- `lang36_alloc_closure_accepted_by_jvm_validator`
+- `lang36_call_closure_accepted_by_jvm_validator`
+- `lang36_float_closure_still_rejected`
+- `lang36_alloc_closure_emits_newarray`
+- `lang36_alloc_closure_emits_lastore`
+- `lang36_call_closure_emits_invokestatic_dispatch`
+- `lang36_dispatch_method_generated`
+- `lang36_dispatch_method_contains_lcmp`
+- `lang36_real_jvm_closure_adder` — compiles a two-function module, serializes
+  to a `.class` file, runs with `java -Xverify:none`, asserts output is `7`.
+  Gated by `java_available()`.
+
+---
+
+## [0.3.0] — 2026-05-12
+
+### Added (LANG35 — Closure Backend Integration)
+
+#### Improved `ClosureOpcode` validator error
+
+- `validate_for_jvm` now emits a dedicated `ClosureOpcode` error message
+  (format: `"[fn_name] ClosureOpcode: alloc_closure/call_closure require the
+  BEAM backend — JVM does not support heap-allocated closures"`) when it
+  encounters `alloc_closure` or `call_closure`.
+- Previously these fell through to the generic `UntypedInstruction` path;
+  the closure check now runs first to give a more actionable error message.
+
+#### Tests
+
+- `lang35_alloc_closure_closure_opcode_error`: asserts `validate_for_jvm`
+  returns an error containing "ClosureOpcode" for a module with `alloc_closure`.
+- `lang35_call_closure_closure_opcode_error`: same for `call_closure`.
+- `lang35_closure_opcode_error_not_untyped`: asserts the error does NOT
+  contain "UntypedInstruction".
+
+---
+
+## [0.2.0] — 2026-05-11
+
+### Added (LANG32 — Global Variables and I/O)
+
+#### I/O support
+
+- `io_out %v` → `getstatic java/lang/System.out` (Ljava/io/PrintStream;) +
+  `lload <slot>` + `invokevirtual java/io/PrintStream.println(J)V`.
+- Added `INVOKEVIRTUAL: u8 = 0xB6` and `GETSTATIC: u8 = 0xB2` bytecode
+  constants.
+- Added `add_fieldref` to `ConstantPoolBuilder`.
+
+#### Global variables (LANG32b — deferred)
+
+- `global_load` and `global_store` return `UnsupportedOp` with a clear
+  LANG32b tracking note.  Full JVM static-field globals require extending
+  `JvmClassFile` with a `fields: Vec<JvmFieldInfo>` table and adding
+  `getstatic`/`putstatic` sequences; tracked in a follow-up PR.
+
+#### Exhaustiveness fixes
+
+- `Operand::Str` arms added to all `match` blocks in `lower.rs` (const,
+  ret, call argument loops).
+
+---
+
+## [0.1.0] — 2026-05-11
+
+### Added
+
+- `validate::validate_for_jvm(module: &IIRModule) -> Vec<String>` — pre-flight
+  validation pass that rejects modules containing JVM-incompatible instructions
+  or types before any lowering starts. Catches:
+  - Empty module (no functions)
+  - Empty function (function with no instructions)
+  - Untyped instructions (`type_hint == "any"` or `"polymorphic"`)
+  - Unsupported types (`"str"`, `ref<…>`)
+  - Unsupported opcodes (`call_builtin`, `io_in`, `io_out`, `cast`, memory ops,
+    GC ops, `safepoint`)
+  - Float type hints and float constants are **supported** (unlike the BEAM
+    backend), since the JVM has native `fload`/`dload`/`fadd`/`dadd` opcodes.
+
+- `lower::IIRJvmConfig` — lowering configuration: `class_name` String.
+  Implements `Default` (uses `"IIRModule"`) and `new(class_name)`.
+
+- `lower::IIRJvmError` — typed error variants:
+  `ValidationFailed`, `UnsupportedOp`, `UnsupportedType`, `UndefinedLabel`,
+  `UndefinedVariable`, `InvalidOperand`. Implements `Display` and `std::error::Error`.
+
+- `lower::lower_iir_to_jvm(module: &IIRModule, config: &IIRJvmConfig) -> Result<JvmClassFile, IIRJvmError>` —
+  two-pass lowering algorithm:
+  - Pass 1 per function: assign JVM local variable slots to params (0..N-1)
+    then walk dests and src Var operands in order for locals (N..).
+  - Pass 2: emit raw JVM bytecode (Vec<u8>) per method using emit_* helpers.
+  - Build `JvmClassFile` directly (Java 8, version 52.0).
+  - Two-pass backpatching for forward label/jump references.
+
+- Supported IIR opcodes:
+  `const` (Int, Float, Bool), `add`, `sub`, `mul`, `div`, `mod`, `neg`,
+  `and`, `or`, `xor`, `not`, `shl`, `shr`,
+  `cmp_eq`, `cmp_ne`, `cmp_lt`, `cmp_le`, `cmp_gt`, `cmp_ge`,
+  `label`, `jmp`, `jmp_if_true`, `jmp_if_false`,
+  `ret`, `ret_void`, `call`, `load_reg`, `store_reg`, `type_assert`.
+
+- Type mapping: `i8/i16/i32/u8/u16/u32/bool → int (I)`, `i64/u64 → long (J)`,
+  `f32 → float (F)`, `f64 → double (D)`, `void → void (V)`.
+
+- `codegen::IIRJvmCodeGenerator` — thin adapter that wires `validate_for_jvm`
+  and `lower_iir_to_jvm` behind the `name()` / `validate()` / `generate()` API.
+
+- 40+ integration tests in `tests/test_backend.rs` covering validation, lowering,
+  instruction emission, register allocation, multi-function modules, float support,
+  comparison synthesis, and bytecode non-emptiness checks.

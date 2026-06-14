@@ -1,0 +1,66 @@
+// Radio.mil — interface for the toolkit's Radio (v0.3 rewrite).
+//
+// **v0.3 rewrite.** Pre-v0.3 the toolkit's Radio mirrored Checkbox
+// exactly — a `HostButton` faking a bullet glyph through `If/Else`.
+// That lost native a11y role (`role="radio"` /
+// `AccessibilityRole.radioButton` / `AutomationPeer.RadioButton`),
+// the platform focus ring, the group-mutex visual, and arrow-key
+// navigation between radios in a group.
+//
+// v0.3 makes `Radio` a thin wrapper around the UI29-2 kernel
+// primitive `HostRadio`. Every backend lowers it to its platform's
+// real radio widget (DOM `<input type="radio">` with shared `name`,
+// SwiftUI `Toggle`, Qt `RadioButton` with `ButtonGroup`-ready
+// metadata, WinUI `RadioButton` with `GroupName`, etc.).
+//
+// **Breaking changes from v0.2.**
+//
+// 1. `selected` slot renamed to `checked` for consistency with
+//    Checkbox and with the kernel-canonical `HostRadio.checked`.
+// 2. `onSelect` now carries a `value: text` payload (the radio's
+//    value, see new `value:` slot below). Pre-v0.3 the signature
+//    was payloadless and required the host to derive the new
+//    selection from external knowledge.
+// 3. The internal part names `radio-box-selected` and
+//    `radio-box-unselected` are gone — the native widget renders
+//    its own indicator. Only the `radio` root part survives.
+//
+// New slots:
+//
+// - `value: text` — the value this radio represents. Carried as the
+//   payload of `onSelect` so the host can update group state in a
+//   single dispatch.
+// - `group: text` — the radio-group name. Backends that have
+//   native group semantics (HTML `name=`, WinUI `GroupName=`) wire
+//   this to the platform's mutex; backends without
+//   (SwiftUI/Qt v1) preserve it as metadata for the host to act on.
+
+component Radio {
+  // Display label rendered next to the radio bullet. The native
+  // widget wires `<label>` so clicking the text selects the radio.
+  slot label : text ;
+
+  // Current selected state. Host owns it; the host typically
+  // tracks one "selected-value" per group and computes each
+  // radio's `checked:` as `selected-value == this-radio-value`.
+  slot checked : bool ;
+
+  // The value this radio represents. Backends that lower to a
+  // native `value` attribute (HTML / WebComponent) put this on the
+  // input; the others surface it through the `onSelect` dispatch
+  // payload.
+  slot value : text ;
+
+  // The radio group this radio belongs to. Required by HTML and
+  // WinUI for browser/platform-enforced mutex; informational on
+  // SwiftUI and Qt.
+  slot group : text ;
+
+  // Disabled flag.
+  slot disabled : bool ;
+
+  // Fired when the user selects this radio (and *only* when
+  // selected — sibling-caused deselects don't fire). Payload is
+  // the radio's `value:`.
+  emit onSelect ( value : text ) ;
+}

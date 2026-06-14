@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-stdlib"
-version = "0.4.0"
+version = "0.8.0"
 description = "Relational standard library helpers, combinators, and sequence relations built on top of logic-engine"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
-dependencies = ["coding-adventures-logic-engine>=0.3.0"]
+dependencies = ["coding-adventures-logic-engine>=0.10.0"]
 keywords = ["logic-programming", "prolog", "kanren", "relations", "education"]
 classifiers = [
     "Development Status :: 3 - Alpha",

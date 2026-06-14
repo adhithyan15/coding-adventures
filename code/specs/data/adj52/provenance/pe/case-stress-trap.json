@@ -1,0 +1,12 @@
+{
+  "name": "PE-stress-trap (https://pmc.ncbi.nlm.nih.gov/articles/PMC6946195/)",
+  "ground_truth": "The patient had a confirmed acute pulmonary embolism. CTPA demonstrated multiple emboli in the bilateral pulmonary artery trunk and second/third-order branches, with bilateral multiple pulmonary infar",
+  "pe_confirmed": "pe_present",
+  "observations": [
+    "d_dimer(elevated)",
+    "ctpa(filling_defect_positive)"
+  ],
+  "observations_pretest": [
+    "d_dimer(elevated)"
+  ]
+}

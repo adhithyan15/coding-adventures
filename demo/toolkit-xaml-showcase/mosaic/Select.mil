@@ -1,0 +1,42 @@
+// Select.mil — interface for the toolkit's Select (v0.11).
+//
+// A dropdown selector — a button showing the current value that,
+// when clicked, reveals a vertical list of options. Bootstrap's
+// `<select class="form-select">` distilled (or really, the JS-
+// driven Select2 equivalent, since the kernel doesn't yet have a
+// host-native HTML <select> primitive).
+//
+// Why no native HostSelect primitive yet?
+// ---------------------------------------
+// A real <select>/SwiftUI Picker/Qt QComboBox would be ideal but
+// the v1 kernel hasn't shipped a HostSelect. Until it does, this
+// toolkit Select is built from the same toggle-button + revealed
+// menu pattern as DropdownMenu — close enough visually for v0.11.
+// When HostSelect lands, this component can re-implement on top
+// of it without changing its public .mil interface.
+
+component Select {
+  // The currently-selected option text. Shown on the toggle button.
+  slot value : text ;
+
+  // The list of selectable option strings.
+  slot options : list<text> ;
+
+  // Placeholder text shown on the toggle when value is empty
+  // (e.g. "Choose…"). In v0.11 the host passes the placeholder
+  // text via `value` when nothing is selected — see Select.mll
+  // for the rationale.
+  slot placeholder : text ;
+
+  // Whether the option list is currently open. Host-owned.
+  slot open : bool ;
+
+  // Whether the select is disabled.
+  slot disabled : bool ;
+
+  // Fired when the toggle is clicked.
+  emit onToggle ;
+  // Fired when an option is selected. Payload is the chosen text.
+  // (Host typically updates `value` to match + sets `open` to false.)
+  emit onChange ( value : text ) ;
+}

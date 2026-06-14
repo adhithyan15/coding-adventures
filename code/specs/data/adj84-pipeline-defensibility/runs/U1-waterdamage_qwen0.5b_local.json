@@ -1,0 +1,93 @@
+{
+  "raw": "```json\n{\n  \"slots\": {\n    \"cause_type\": {\n      \"value\": \"sudden_accidental\",\n      \"span\": null,\n      \"type\": \"unspecified\"\n    },\n    \"flood_rider_purchased\": {\n      \"value\": true,\n      \"span\": null,\n      \"type\": \"unspecified\"\n    }\n  }\n}\n```",
+  "parsed_ir": {
+    "slots": {
+      "cause_type": {
+        "value": "sudden_accidental",
+        "span": null,
+        "type": "unspecified"
+      },
+      "flood_rider_purchased": {
+        "value": true,
+        "span": null,
+        "type": "unspecified"
+      }
+    }
+  },
+  "result": {
+    "verdict": "UNSAFE(unverified-extraction)",
+    "answer": null,
+    "fired_rules": [
+      "sudden"
+    ],
+    "missing_slots_that_block": [],
+    "span_report": {
+      "cause_type": "HALLUCINATED-SPAN (value present, span not in input)",
+      "flood_rider_purchased": "HALLUCINATED-SPAN (value present, span not in input)"
+    },
+    "hallucinated_slots": [
+      "cause_type",
+      "flood_rider_purchased"
+    ],
+    "byte_accounting_ok": false,
+    "surfaced_uncertainties": [],
+    "proof": {
+      "slots": {
+        "cause_type": {
+          "value": "sudden_accidental",
+          "span": null,
+          "type": "unspecified"
+        },
+        "flood_rider_purchased": {
+          "value": true,
+          "span": null,
+          "type": "unspecified"
+        }
+      },
+      "rules": [
+        {
+          "id": "sudden",
+          "when": {
+            "cause_type": "sudden_accidental"
+          },
+          "then": "covered",
+          "source_span": "Brightline Insurance covers water damage caused by sudden and accidental events",
+          "provenance": "passage"
+        },
+        {
+          "id": "gradual",
+          "when": {
+            "cause_type": "gradual_seepage"
+          },
+          "then": "excluded",
+          "source_span": "Damage resulting from gradual seepage or long-term maintenance neglect is excluded.",
+          "provenance": "passage"
+        },
+        {
+          "id": "neglect",
+          "when": {
+            "cause_type": "maintenance_neglect"
+          },
+          "then": "excluded",
+          "source_span": "Damage resulting from gradual seepage or long-term maintenance neglect is excluded.",
+          "provenance": "passage"
+        },
+        {
+          "id": "flood_no",
+          "when": {
+            "cause_type": "flood",
+            "flood_rider_purchased": "false"
+          },
+          "then": "not_covered",
+          "source_span": "Flood damage is covered only under a separate rider, which this policyholder has not purchased.",
+          "provenance": "passage"
+        }
+      ],
+      "default": {
+        "then": "not_covered",
+        "source_span": "",
+        "provenance": "passage"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/operation-primitives",
+  "capabilities": [],
+  "justification": "Pure operation envelope types. This crate performs no filesystem, network, process, environment, or stdio access."
+}

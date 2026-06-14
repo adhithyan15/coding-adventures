@@ -1,9 +1,47 @@
 # Changelog
 
+## [0.6.0] — 2026-04-27
+
+### Added — LANG20: `WASMCodeGenerator` — `CodeGenerator[IrProgram, WasmModule]` adapter
+
+**New module: `ir_to_wasm_compiler.generator`**
+
+- `WASMCodeGenerator` — thin adapter satisfying the
+  `CodeGenerator[IrProgram, WasmModule]` structural protocol (LANG20).
+
+  ```
+  [Optimizer] → [WASMCodeGenerator] → WasmModule
+                                        ├─→ encode() → bytes → .wasm file  (AOT)
+                                        └─→ [WASM runtime / Wasmer]        (JIT/sim)
+  ```
+
+  - `name = "wasm"` — unique backend identifier.
+  - `validate(ir) -> list[str]` — delegates to `validate_for_wasm()`.  Never
+    raises; returns `[]` for valid programs.
+  - `generate(ir) -> WasmModule` — delegates to `IrToWasmCompiler().compile(ir)`.
+    Returns a structured WASM 1.0 module; call `.encode()` for raw bytes.
+
+- `WASMCodeGenerator` exported from `ir_to_wasm_compiler.__init__`.
+
+**New tests: `tests/test_codegen_generator.py`** — 11 tests covering: `name`,
+`isinstance(gen, CodeGenerator)` structural check, `validate()` on valid /
+bad-opcode / unsupported-SYSCALL IR, `generate()` returns `WasmModule`,
+encoded bytes start with WASM magic `\x00asm`, non-empty encoded output,
+round-trip, export check.
+
+---
+
 ## [Unreleased]
 
 ### Added
 
+- Lowered `IrOp.F64_SQRT` to the native WASM `f64.sqrt` instruction and
+  inferred its destination register as `f64`.
+- Lowered `IrOp.F64_SIN`, `IrOp.F64_COS`, `IrOp.F64_ATAN`, `IrOp.F64_LN`,
+  and `IrOp.F64_EXP` through typed `compiler_math` host imports and inferred
+  their destination registers as `f64`.
+- Lowered `IrOp.F64_POW` through the typed binary `compiler_math.f64_pow`
+  host import and inferred its destination register as `f64`.
 - **Oct 8-bit arithmetic e2e tests** (`tests/test_oct_8bit_e2e.py`):
   7 end-to-end tests confirming the WASM backend correctly compiles and
   executes 8-bit integer arithmetic IR — the same IR that the Oct compiler
@@ -39,6 +77,8 @@
   convention.
 - Function signatures can require explicit call operands for generated callers
   that must not fall back to the legacy v2, v3, ... convention.
+- F64-returning functions now return through the dedicated f64 scratch register
+  so real results no longer conflict with integer call results in `v1`.
 
 ## [0.5.0] — 2026-04-20
 

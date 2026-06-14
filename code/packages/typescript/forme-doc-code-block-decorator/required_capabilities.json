@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-doc-code-block-decorator",
+  "capabilities": [],
+  "justification": "Pure transform: DocumentNode → DocumentNode with annotated CodeBlockNodes.  Walks the AST, decorates every code_block node with copy-button hook, language label, filename badge (extracted via regex from first-line comment), and optional line-numbers flag.  Recurses into blockquotes/lists/task-items to reach nested code blocks.  No eval, no Function, no JSON.parse-with-reviver, no fs/network/env/shell.  Depends only on @coding-adventures/document-ast (type-only IR package, also []-capability)."
+}

@@ -1,0 +1,6 @@
+# matrix-cuda compiles cleanly on every platform — its underlying
+# `cuda-compute` wrapper loads libcuda / nvcuda at runtime via
+# dlopen / LoadLibrary, so there is no link-time NVIDIA dependency.
+# `cargo test` runs the Phase 1 unit tests (which gracefully no-op
+# when CUDA is not available at runtime).
+cargo test -p matrix-cuda

@@ -1,0 +1,58 @@
+{
+  "summary": "Byte provenance applied to the ADVERSARIAL READER itself. The support-auditor has been allowed to assert \"fact X is unsupported because Y\" with Y ungrounded — which is how it destabilized (e.g. a hallucinated \"the system is underdetermined / six unknowns\" objection). Fix: every objection must cite a verbatim grounding_quote from the PROBLEM or the FACTS, and a deterministic provenance filter DISCARDS any objection whose quote is not actually present in the bytes. Same standard for the critic as for the solver. Two arms on Al(OH)3 (N samples each): convergence-gated with an UNGROUNDED auditor (ADJ90 baseline) vs a GROUNDED auditor. Logs which objections are filtered as ungrounded. All-Opus; no hints; answer never shown to the solver.",
+  "agentCount": 32,
+  "logs": [],
+  "result": {
+    "n": 3,
+    "ungrounded_correct": 2,
+    "grounded_correct": 2,
+    "ungrounded_objections_filtered_total": 0,
+    "results": [
+      {
+        "sample": 1,
+        "ungrounded": {
+          "answer": "S ≈ 5.8 × 10⁻³ mol L⁻¹ (≈ 5.84 × 10⁻³ mol L⁻¹)",
+          "stop": "supported",
+          "grade": "correct"
+        },
+        "grounded": {
+          "answer": "S ≈ 1.8 × 10⁻³ mol L⁻¹ (more precisely 1.78 × 10⁻³ mol L⁻¹)",
+          "stop": "supported",
+          "filtered_total": 0,
+          "filtered_examples": [],
+          "grade": "correct"
+        }
+      },
+      {
+        "sample": 2,
+        "ungrounded": {
+          "answer": "The solubility of Al(OH)_3 in pure water is approximately 5.8 × 10^-3 mol L^-1.\n\nWork:\n- Combined reaction Al(OH)_3(s) + OH^- ⇌ Al(OH)_4^- has K = K_sp·K_f = (5.3×10^-27)(1.1×10^31) = 5.83×10^4.\n- In pure water [OH^-] = 1.0×10^-7 mol/L (from K_w = 1.0×10^-14).\n- Complex term: [Al(OH)_4^-] = K·[OH^-] = (5.83×10^4)(1.0×10^-7) = 5.83×10^-3 mol/L.\n- Free-ion term: [Al^3+] = K_sp/[OH^-]^3 = 5.3×10^-27/(1.0×10^-7)^3 = 5.3×10^-6 mol/L.\n- Total S = [Al^3+] + [Al(OH)_4^-] = 5.3×10^-6 + 5.83×10^-3 = 5.835×10^-3 mol/L.\n\nThe hydroxo-complex Al(OH)_4^- dominates, so S ≈ 5.8 × 10^-3 mol L^-1.",
+          "stop": "supported",
+          "grade": "incorrect"
+        },
+        "grounded": {
+          "answer": "S ≈ 1.8 × 10⁻³ mol L⁻¹ (rigorous, charge-balance closure)\n\nIf instead the standard textbook approximation [OH⁻] = 1.0×10⁻⁷ is imposed (the value the problem likely intends), then S ≈ 5.8 × 10⁻³ mol L⁻¹. NOTE: [OH⁻]=10⁻⁷ is NOT self-consistent here, so 1.8×10⁻³ mol L⁻¹ is the defensible answer.</answer>\n<parameter name=\"work\">GIVEN (only these): K_sp[Al(OH)₃] = 5.3×10⁻²⁷ ; K_f[Al(OH)₄⁻] = 1.1×10³¹.\nIMPORTED STANDARD CONSTANT (flagged, not in problem): K_w = 1.0×10⁻¹⁴ — needed for Equation C; any numeric answer is conditional on this import.\n\nSpecies (Al³⁺, Al(OH)₄⁻ only; intermediate hydroxo-complexes neglected, K_f not given). Solubility S = [Al³⁺] + [Al(OH)₄⁻].\n\nCombined constant: K_c = K_sp·K_f = (5.3×10⁻²⁷)(1.1×10³¹) = 5.83×10⁴, for Al(OH)₃(s) + OH⁻ ⇌ Al(OH)₄⁻, so [Al(OH)₄⁻] = K_c·[OH⁻].\n\nGOVERNING SYSTEM (4 unknowns: [Al³⁺], [Al(OH)₄⁻], [H⁺], [OH⁻]):\n  A (K_sp):    [Al³⁺][OH⁻]³ = 5.3×10⁻²⁷\n  B (K_c):     [Al(OH)₄⁻] = 5.83×10⁴·[OH⁻]\n  C (K_w, imported): [H⁺][OH⁻] = 1.0×10⁻¹⁴\n  D (charge balance): 3[Al³⁺] + [H⁺] = [OH⁻] + [Al(OH)₄⁻]\n\nSubstituting A, B, C into D gives one equation in [OH⁻]:\n  3(5.3×10⁻²⁷)/[OH⁻]³ + (1.0×10⁻¹⁴)/[OH⁻] = [OH⁻] + 5.83×10⁴·[OH⁻].\n\nWHY THE [OH⁻]=10⁻⁷ PIN FAILS: the dominant pathway is the amphoteric dissolution Al(OH)₃ + OH⁻ → Al(OH)₄⁻, which CONSUMES net OH⁻, pulling the solution mildly acidic. Solving D does not return 10⁻⁷.\n\nNUMERIC ROOT (verified by bisection; charge-balance residual ~2×10⁻¹⁹):\n  [OH⁻] = 2.29×10⁻⁸ M  (pH = 6.36, [H⁺] = 4.38×10⁻⁷ M)\n  [Al³⁺]    = K_sp/[OH⁻]³ = 4.44×10⁻⁴ M\n  [Al(OH)₄⁻] = K_c·[OH⁻]  = 1.33×10⁻³ M\n  S = [Al³⁺] + [Al(OH)₄⁻] = 1.78×10⁻³ ≈ 1.8×10⁻³ mol L⁻¹.\n\nIn this regime the H⁺ and free-OH⁻ terms (~10⁻⁷) are negligible against the ~10⁻³ Al terms, so D collapses to the clean dominant balance 3[Al³⁺] = [Al(OH)₄⁻], i.e. 3K_sp/[OH⁻]³ = K_c[OH⁻] → [OH⁻]⁴ = 3K_sp/K_c = 2.73×10⁻³¹ → [OH⁻] = 2.29×10⁻⁸ M, reproducing S = 1.78×10⁻³ mol L⁻¹ analytically.\n\nCONTRAST — textbook approximation: forcing [OH⁻]=10⁻⁷ gives [Al(OH)₄⁻]=K_c·10⁻⁷=5.83×10⁻³ and [Al³⁺]=5.3×10⁻⁶, so S ≈ 5.8×10⁻³ mol L⁻¹. This is the value the problem most likely expects, but it rests on an unjustified, self-inconsistent [OH⁻] pin.\n\nDELIVERABLE: coupled system {A, B, C, D}; flag that K_w = 1.0×10⁻¹⁴ is an imported standard constant absent from the problem; and that [OH⁻] must be solved (= 2.29×10⁻⁸ M), not fixed at 10⁻⁷.</work>\n</invoke>\n",
+          "stop": "supported",
+          "filtered_total": 0,
+          "filtered_examples": [],
+          "grade": "correct"
+        }
+      },
+      {
+        "sample": 3,
+        "ungrounded": {
+          "answer": "S ≈ 1.8 × 10⁻³ mol L⁻¹ (more precisely 1.78 × 10⁻³ mol L⁻¹)",
+          "stop": "supported",
+          "grade": "correct"
+        },
+        "grounded": {
+          "answer": "S ≈ 5.8 × 10⁻³ mol L⁻¹",
+          "stop": "supported",
+          "filtered_total": 0,
+          "filtered_examples": [],
+          "grade": "incorrect"
+        }
+      }
+    ]
+  }
+}

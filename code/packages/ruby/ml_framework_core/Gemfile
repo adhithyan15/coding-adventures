@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Pull deps from the gemspec — including the production runtime dep on
+# coding_adventures_matrix_rust_ruby.  Until that gem is published to
+# RubyGems, satisfy the dep from the workspace via a path override below.
+gemspec
+
+# Workspace-local override: use the matrix_rust_ruby gem sitting one
+# directory up.  Necessary because RubyGems doesn't yet have v0.1
+# published, but the gemspec needs to declare the runtime dep correctly
+# for when it eventually is.
+gem "coding_adventures_matrix_rust_ruby", path: "../matrix_rust_ruby"

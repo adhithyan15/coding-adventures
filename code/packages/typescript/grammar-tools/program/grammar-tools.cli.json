@@ -1,0 +1,94 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "grammar-tools",
+  "display_name": "grammar-tools",
+  "description": "Compile .tokens and .grammar files into static TypeScript modules.",
+  "version": "0.1.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "commands": [
+    {
+      "id": "compile",
+      "name": "compile",
+      "description": "Compile a .tokens or .grammar file into a TypeScript module.",
+      "flags": [
+        {
+          "id": "output",
+          "short": "o",
+          "long": "out",
+          "description": "Output TypeScript module path. Defaults to stdout.",
+          "type": "path",
+          "value_name": "TS"
+        },
+        {
+          "id": "kind",
+          "long": "kind",
+          "description": "Grammar kind when the input extension is not .tokens or .grammar.",
+          "type": "enum",
+          "enum_values": ["tokens", "grammar"],
+          "value_name": "KIND"
+        }
+      ],
+      "arguments": [
+        {
+          "id": "source",
+          "display_name": "SOURCE",
+          "description": ".tokens or .grammar file to compile.",
+          "type": "file",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "compile-tokens",
+      "name": "compile-tokens",
+      "description": "Compile a .tokens file into a TypeScript TOKEN_GRAMMAR module.",
+      "flags": [
+        {
+          "id": "output",
+          "short": "o",
+          "long": "out",
+          "description": "Output TypeScript module path. Defaults to stdout.",
+          "type": "path",
+          "value_name": "TS"
+        }
+      ],
+      "arguments": [
+        {
+          "id": "source",
+          "display_name": "SOURCE",
+          "description": ".tokens file to compile.",
+          "type": "file",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "compile-grammar",
+      "name": "compile-grammar",
+      "description": "Compile a .grammar file into a TypeScript PARSER_GRAMMAR module.",
+      "flags": [
+        {
+          "id": "output",
+          "short": "o",
+          "long": "out",
+          "description": "Output TypeScript module path. Defaults to stdout.",
+          "type": "path",
+          "value_name": "TS"
+        }
+      ],
+      "arguments": [
+        {
+          "id": "source",
+          "display_name": "SOURCE",
+          "description": ".grammar file to compile.",
+          "type": "file",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

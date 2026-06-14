@@ -1,0 +1,262 @@
+# Changelog — ir-to-beam
+
+## 0.6.0 — 2026-05-12 — TW04 Phase 4f host-call bridge (IrOp.SYSCALL support)
+
+Adds `IrOp.SYSCALL` lowering to the BEAM backend, completing the host-call
+bridge that was left open in Phase 4f (multi-module lowering).  Previously,
+any `host/write-byte` / `host/read-byte` / `host/exit` reference in a
+multi-module Twig program was emitted as `call_ext` to a non-existent
+`host` BEAM module, causing a runtime `undef` error.
+
+### Added — `_emit_syscall` handler + `IrOp.SYSCALL` in `_HANDLERS`
+
+`IrOp.SYSCALL num arg_reg` now lowers to real Erlang BIF / stdlib calls:
+
+| Syscall | Erlang target | BEAM emission |
+|---------|---------------|---------------|
+| `1` (write-byte) | `io:put_chars/1` | `test_heap 2,0` + `put_list y{arg}, nil, x0` + `call_ext 1 io:put_chars/1`; stores integer 0 into `y{1}` |
+| `2` (read-byte)  | `io:get_chars/2` | `call_ext 2 io:get_chars/2` with `''` and `1`; branches on atom (eof→255) vs list (extracts `hd`); result in `y{1}` |
+| `10` (exit)      | `erlang:halt/1`  | `move y{arg}, x0` + `call_ext 1 erlang:halt/1` |
+
+All other syscall numbers raise `BEAMBackendError`.
+
+### Tests — `TestSyscallLowering` (14 new tests in `test_lower_basic.py`)
+
+- Structural lowering tests for SYSCALL 1, 2, and 10 (encode + decode roundtrip)
+- Opcode presence assertions (`put_list` for write-byte, `test_heap` for cons allocation)
+- Error path tests (unknown syscall number, wrong operand count)
+- Updated `test_unsupported_opcode_rejected_with_clear_message` to use
+  `IrOp.SYSCALL_CHECKED` (which is still unsupported) instead of the now-supported
+  `IrOp.SYSCALL`
+
+Total tests: **54** (was 40). Coverage: **87%** (was 87%).
+
+---
+
+## 0.5.0 — 2026-05-04 — TW04 Phase 4f (multi-module BEAM lowering)
+
+Extends the BEAM backend to support cross-module calls and correct
+GC-safe y-register initialisation.
+
+### Added — multi-module support (`BEAMBackendConfig` extensions)
+
+Three new fields on `BEAMBackendConfig`:
+
+| Field | Purpose |
+|---|---|
+| `extra_callable_labels: tuple[str, ...]` | Force-include exported functions as callable regions even when no local `CALL` targets them (dep-module exports called only from other modules). |
+| `call_register_count: int \| None` | API symmetry with CLR/JVM backends; ignored for BEAM (functions have per-declaration arities, not a fixed-width frame). |
+| `external_function_arities: dict[str, int]` | Maps cross-module call labels (e.g. `"a/math/add"`) to the actual remote arity (e.g. `2`). Required because BEAM's `call_ext N Mfa` encodes the arity in the MFA triple; a mismatch causes a loader or runtime crash. |
+
+### Added — cross-module CALL lowering (`_emit_call`)
+
+`IrOp.CALL IrLabel("a/math/add")` labels containing `/` are now
+lowered to `call_ext N import_idx` where `N` is the exact remote
+arity from `external_function_arities` and `import_idx` is the 0-based
+index into the module's `ImpT` table for the remote MFA
+`{a_math, add, N}`.
+
+`_discover_callable_names` now skips cross-module labels (they have
+no local `LABEL` instruction) and accepts `extra_callable_labels` to
+force-include dep-module exports.
+
+### Fixed — GC-safe y-register initialisation
+
+BEAM's garbage collector traces ALL allocated y-register slots as
+potential heap pointers.  Our compiler allocates a single flat frame
+of `max_reg_index + 1` y-slots per function but only writes a fraction
+of them (param slots and holding registers) before body code runs.
+Unwritten slots contain stack-word garbage; if any garbage value
+resembles a valid BEAM tagged heap pointer the GC follows it and
+corrupts the heap, causing non-deterministic SIGSEGV at recursion
+depth ≥ 4 when the first GC cycle fires inside a nested call stack.
+
+The fix: emit `move {atom,0}, y(i)` for every y-register slot
+immediately after `allocate`, before copying args and executing body
+code.  Atom 0 is nil (`[]`), a tagged immediate that is NOT a heap
+pointer — the GC can safely trace it.
+
+`erlc` (OTP 24+) uses `init_yregs` (opcode 172, Z-tagged list
+operand) for selective initialisation; we use the simpler `move`
+opcode which is available in all supported OTP versions and already
+handled by our encoder.
+
+Note: the abstract `allocate_zero` opcode (14 in `.S` format, 14 in
+`beam_opcodes:opname/1`) is NOT a valid binary BEAM opcode — the
+loader rejects it.  The old `init y_reg` opcode (17) with a Y-register
+operand is also rejected by the OTP 28 loader ("please re-compile with
+OTP 28 compiler").  Both were tested and discarded in favour of the
+`move` approach.
+
+### Added — new BEAM opcode constants
+
+`_OP_ALLOCATE_ZERO` (kept as documentation), `_OP_INIT` (17, kept as
+documentation), and the `BEAMTag` import already present in the
+encoder.
+
+## 0.4.0 — 2026-04-30 — TW03 Phase 3d (BEAM heap primitives)
+
+Implements the BEAM-side lowering for the eight TW03 Phase 3a heap
+opcodes.  An IR program using any heap opcode now compiles to a
+real BEAM module that runs on stock `erl` and produces correct
+list-walking output.
+
+BEAM's the easiest of the three native backends here because cons
+cells and atoms are first-class BEAM terms with native opcodes.
+No "runtime classes" needed — we just emit the right opcode for
+each IR op.
+
+### Added — eight opcode lowerings
+
+| IR op | BEAM emission |
+|---|---|
+| `MAKE_CONS dst, head, tail` | `test_heap 2 0; put_list y{head}, y{tail}, y{dst}` |
+| `CAR dst, src` | `get_hd y{src}, y{dst}` |
+| `CDR dst, src` | `get_tl y{src}, y{dst}` |
+| `IS_NULL dst, src` | `is_nil F y{src}; move {integer,1}, y{dst}; jump END; F: move {integer,0}, y{dst}; END:` |
+| `IS_PAIR dst, src` | `is_nonempty_list F y{src}; …` (same true/false dance) |
+| `IS_SYMBOL dst, src` | `is_atom F y{src}; …` |
+| `MAKE_SYMBOL dst, name_label` | `move {atom, idx}, y{dst}` (atom interned via `builder.atoms.add`) |
+| `LOAD_NIL dst` | `move {atom, 0}, y{dst}` (atom 0 = nil) |
+
+### Added — three new BEAM opcode constants
+
+`_OP_IS_ATOM` (48), `_OP_IS_NIL` (52), `_OP_IS_NONEMPTY_LIST` (56).
+Names line up with `beam_opcode_metadata.catalog`.
+
+### Test additions
+
+- 8 new structural unit tests covering each opcode's lowering
+  shape (asserts on emitted opcode bytes + atom-table contents).
+- 2 new arity-validation tests (MAKE_CONS / LOAD_NIL with wrong
+  operand counts get a clear diagnostic).
+- 2 new real-`erl` end-to-end tests:
+  - `test_heap_list_of_ints_length_returns_3` — builds
+    `[1, 2, 3]` via MAKE_CONS / LOAD_NIL, walks via CDR /
+    IS_NULL, returns the integer 3.
+  - `test_heap_make_symbol_returns_atom` — `MAKE_SYMBOL` with
+    name `foo` returns the atom `foo` from real `erl`.
+- All 41 BEAM tests pass; coverage 88%.
+
+### Limitations
+
+None — BEAM atoms are global per VM (so symbol interning is
+free), nil is a first-class BEAM term, and cons cells get
+reclaimed by BEAM's own GC.  Phase 4 (GC) is automatic on BEAM.
+
+## 0.3.0 — 2026-04-29 — TW03 Phase 2 (BEAM closures)
+
+### Added — ``MAKE_CLOSURE`` and ``APPLY_CLOSURE`` lowering
+
+- ``MAKE_CLOSURE dst, fn_label, num_captured, capt0, ..., captN-1``
+  lowers to a chain of ``put_list`` opcodes that build the closure
+  value as the cons cell ``[FnAtom | [capt0, capt1, ..., captN-1]]``
+  on the heap (preceded by a ``test_heap`` reservation).
+- ``APPLY_CLOSURE dst, closure, num_args, arg0, ..., argM-1``
+  lowers to: build args list, ``get_tl`` for captures,
+  ``erlang:'++'/2`` to glue them, ``get_hd`` for the function
+  atom, then ``erlang:apply/3`` for the dynamic dispatch.
+- ``BEAMBackendConfig.closure_free_var_counts`` — declares which
+  callable regions are lifted lambda bodies and how many captured
+  free variables each takes.  The backend widens
+  ``arity_overrides[name]`` to ``num_free + explicit`` so apply/3
+  can find the lifted lambda by its full arity.
+- Lifted lambdas are now exported (apply/3 needs to look them up
+  by atom name in the export table).
+
+### Why we don't use ``make_fun2`` / ``make_fun3``
+
+Real ``erlc`` emits ``make_fun3`` (opcode 171), which uses the
+z-tagged extended-list compact-term encoding our encoder doesn't
+yet support.  The older ``make_fun2`` (opcode 103) is rejected by
+Erlang/OTP 28 with "please re-compile with an OTP 28 compiler".
+Encoding closures as plain cons-cell lists + ``erlang:apply/3``
+side-steps both problems and uses only standard, well-supported
+opcodes.  The runtime cost is one ``apply`` indirection per
+invocation; the engineering benefit is a closure pipeline that
+loads cleanly under modern OTP.
+
+### Added tests
+
+- ``test_closure_make_adder_returns_42`` —
+  ``((make-adder 7) 35) → 42`` end-to-end on real ``erl``,
+  exercising MAKE_CLOSURE + APPLY_CLOSURE in the same module.
+
+## 0.2.0 — 2026-04-29 — TW03 Phase 1 (BEAM)
+
+### Added — branching, comparison, and recursion
+
+- ``BRANCH_Z`` / ``BRANCH_NZ`` lowering via BEAM's ``is_ne_exact`` /
+  ``is_eq_exact`` (whose "fall through if condition holds, jump
+  otherwise" semantics flip to direct BRANCH semantics with
+  appropriate operand choice).
+- ``JUMP`` lowering to BEAM's ``jump`` opcode.
+- ``CMP_EQ`` / ``CMP_LT`` / ``CMP_GT`` lowering — each becomes a
+  5-instruction if-then-else pattern (``is_X`` + move 1 + jump +
+  label + move 0 + label).  ``CMP_GT`` uses ``is_lt`` with swapped
+  operands since BEAM has no ``is_gt``.
+- ``ADD_IMM`` lowering — single ``move`` for ``imm == 0`` (the
+  Twig MOV idiom), ``gc_bif2`` otherwise.
+- Internal LABEL handling: ``_split_callable_regions`` now
+  distinguishes callable regions (CALL targets + entry) from
+  internal labels (``_else_*``, ``_endif_*``); internal labels
+  stay in the body and emit ``label N`` opcodes.
+
+### Changed — y-register frame for recursion support
+
+- Function bodies now use BEAM **y-registers** (callee-saves stack)
+  for all IR registers, with **x-registers** used only at CALL
+  boundaries.  This is necessary for recursive functions because
+  BEAM x-registers are caller-saves (clobbered across calls).
+- Each function emits ``allocate K, arity`` at entry (K = max IR
+  register index used) and ``deallocate K`` before ``return``.
+- At function entry, args are copied from BEAM ``x0..x{arity-1}``
+  into the IR's param-slot registers ``y2..y{arity+1}``.
+- At each CALL site, args are copied from ``y{2+i}`` to ``x{i}``,
+  then ``call N, label``, then the result is copied from ``x0``
+  back into the IR's HALT-result register ``y1``.
+
+### Added tests
+
+- ``test_recursive_factorial_returns_120`` — hand-built IR
+  exercising ``allocate`` + ``call`` + ``deallocate`` +
+  ``BRANCH_Z`` + ``CMP_EQ`` + arithmetic across recursive call
+  boundaries.  Confirms ``fact(5) → 120`` on real ``erl``.
+- Tests for each new IR-op lowering.
+
+### Migration notes for existing callers
+
+The IR convention is now **r1 holds the function's return value**
+(matches twig-jvm-compiler / twig-clr-compiler).  Programs that
+used ``r0`` as the result must update.
+
+## 0.1.0 — 2026-04-29
+
+### Added — BEAM01 Phase 3: compiler-ir → BEAMModule lowering
+
+- ``BEAMBackendConfig`` — configures module name + which IR
+  callable region is the entry function.
+- ``BEAMBackendError`` — raised on unsupported IR ops or
+  structurally invalid programs.
+- ``lower_ir_to_beam(ir, config) -> BEAMModule`` — the entry
+  point.
+- IR-op → BEAM-op coverage (v1):
+  - ``LABEL``, ``LOAD_IMM``, ``ADD``, ``SUB``, ``MUL``, ``DIV``,
+    ``CALL``, ``RET``.
+- Auto-injected ``module_info/0`` and ``module_info/1`` exports
+  delegating to ``erlang:get_module_info/{1,2}``.
+- Tests:
+  - Round-trip parity via ``beam-bytes-decoder`` — every emitted
+    module decodes cleanly with matching atom / export / import
+    tables.
+  - Real-``erl`` smoke tests (skipped without ``erl`` on PATH):
+    a synthesised ``add(17, 25)`` returns 42, a synthesised
+    ``identity(99)`` returns 99.
+
+### Out of scope (future iterations)
+
+- ``BRANCH_Z`` / ``BRANCH_NZ`` / ``JUMP`` — control flow needs
+  live-register tracking.
+- ``SYSCALL`` — output / I/O.
+- Memory ops (``LOAD_BYTE`` / ``STORE_BYTE``) — Twig doesn't use
+  them.

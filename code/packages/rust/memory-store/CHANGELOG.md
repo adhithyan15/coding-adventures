@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `MemoryLifecycleStatus` plus shared lifecycle helpers for `MemoryRecord` and
+  `MemoryRecordSummary` read-side classification.
+- `MemoryCatalogSummary` plus `catalog_summary()` for class, lifecycle, and
+  review coverage over selected memory records.
+- `MemorySourceSummary` plus `source_summary()` for compact source, tag, and
+  supersession coverage over selected memory records.
+- `MemoryTagSummary` plus `tag_summary()` for compact tag distribution and
+  lifecycle coverage over selected memory records.
+- `MemoryInventorySummary` plus `inventory_summary()` for composed lifecycle,
+  source, and tag coverage over selected memory records.
+- `MemoryReviewQueueSummary` plus `review_queue_summary()` for compact reason
+  and lifecycle counts over deterministic review candidates.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
@@ -11,4 +28,11 @@ All notable changes to this package will be documented in this file.
 - `MemoryStore` persistence, confidence updates, superseding, expiry, and
   tombstoning operations
 - portable lexical search implemented at the store layer
+- active-at and limit options for portable lexical memory searches
+- bounded `MemoryListOptions` selectors for class, tag, source reference,
+  active-at, minimum confidence, tombstone inclusion, sorting, and limits
+- `MemoryRecordSummary` plus `list_memory_summaries()` for metadata-only read
+  surfaces that should not return memory bodies
+- deterministic memory review candidates for low-confidence, stale, expiring,
+  and expired records
 - Unit tests using `storage-core::InMemoryStorageBackend`

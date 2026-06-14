@@ -1,0 +1,22 @@
+{
+  "hash": "35259a3a4c06268cdb6c960098d4d79b0754f71a29bfae3488e3b443637d30f3",
+  "url": "https://en.wikipedia.org/wiki/Survey_of_English_Dialects",
+  "title": "Survey of English Dialects \u2014 Wikipedia",
+  "interned_at": "",
+  "content": "The Survey of English Dialects was a survey of the dialects of English in England... fieldwork conducted between 1950 and 1961 under the direction of Harold Orton... 313 localities were selected, spread out across England.",
+  "citations": [
+    {
+      "start": 166,
+      "end": 222,
+      "quote": "313 localities were selected, spread out across England.",
+      "used_for": "prior:wearside_sunderland_castletown"
+    },
+    {
+      "start": 166,
+      "end": 222,
+      "quote": "313 localities were selected, spread out across England.",
+      "used_for": "PRIOR \u2014 base rate of 'wearside_sunderland_castletown' as the speaker-origin localization within the universe of UK regional-English accent origins resolvable against the Survey of English Dialects (SED) reference corpus. NO published probability exists. The SED reference space comprises ~313 sampled localities across England (Orton fieldwork 1950\u20131961); Castletown/Southwick on Wearside is a single micro-locality within the Sunderland conurbation. A diffuse, uninformed prior over that locality space is on the order of 1/313 \u2248 0.0032. This figure is a reasoned uniform allocation over the SED locality count, NOT a measured base rate of any accent-origin sampling frame \u2014 so it is direction_only, not root-grounded primary data. Real audio-corpus base rates would be skewed by sampling, and no source publishes them.->wearside_sunderland_castletown"
+    }
+  ],
+  "onward_citations": []
+}

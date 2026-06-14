@@ -17,6 +17,159 @@ documented in this file.
   the crate links static source instead of loading TOML at runtime.
 - Fixture-backed tests proving the generated lexer definition and emitted
   runtime tokens stay aligned.
+- Shared JSON fixture IO helpers keep generated WHATWG fixture writers on the
+  same stable `--check` path.
+- The html5lib tokenizer normalizer shares the same checked fixture IO path,
+  including `--check` stale detection for `html5lib-smoke.json`.
+- A generated HTML fixture manifest check runs the self-contained lexer and
+  parser fixture stale checks from one command, with optional inputs for
+  upstream-only html5lib and WHATWG entity sources.
+- A fixture manifest unit test keeps every self-contained WHATWG fixture
+  generator covered by that umbrella stale check.
+- The generated fixture manifest now includes the parser frameset audit
+  generator alongside the tree-insertion audit.
+- The generated fixture manifest now includes the parser table audit generator
+  alongside the tree-insertion and frameset audits.
+- The generated fixture manifest now includes the parser form/interactive audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser text-control audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser foreign-content audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser formatting audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser ruby audit generator
+  alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser noscript audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser head/body audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser void-element audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser list-item audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser paragraph audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser block-boundary audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser fragment-context audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser character-reference
+  audit generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser legacy/edge element
+  audit generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser document-shell audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser template audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser select/list audit
+  generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser miscellaneous
+  recovery audit generator alongside the other parser audit fixture generators.
+- The generated fixture manifest now includes the parser focused-audit coverage
+  check alongside the stale generator checks.
+- The generated fixture manifest now includes a local html5lib tokenizer
+  coverage check that proves every raw smoke case maps to the expected
+  normalized fixture ID or skipped-case marker.
+- Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
+  including end-tag-name, whitespace, attributes, and self-closing substates
+  with current-end-tag and temporary-buffer seeding.
+- html5lib-style smoke fixture coverage for the seeded continuation states,
+  including matching end tags, mismatched literal recovery, EOF recovery, and
+  whitespace/attribute/trailing-solidus diagnostics.
+- Parser/importer-facing seeded comment continuation contexts, including
+  comment body, start-dash, less-than, end-dash, end-bang, and bogus-comment
+  substates with current-comment seeding.
+- html5lib-style smoke fixture coverage for seeded comment continuations,
+  including pending dash/bang preservation, abrupt close diagnostics, and
+  bogus-comment recovery.
+- Parser/importer-facing seeded DOCTYPE continuation contexts, including
+  keyword/name, public/system identifier, after-identifier, and bogus-doctype
+  substates with partial doctype-token seeding.
+- html5lib-style smoke fixture coverage for seeded DOCTYPE continuations,
+  including missing-whitespace diagnostics, identifier accumulation, and
+  force-quirks preservation.
+- Parser/importer-facing seeded text/RCDATA character-reference continuation
+  contexts, including named, numeric, decimal, and hexadecimal substates with
+  temporary-buffer plus return-state seeding.
+- html5lib-style smoke fixture coverage for seeded character-reference
+  continuations returning to both data and RCDATA, including missing-semicolon
+  and absence-of-digits diagnostics.
+- A generated WHATWG `entities.json` fixture and Rust conformance test that
+  exercises every named character reference in data, attribute, and RCDATA
+  contexts, including semicolonless legacy and ambiguous-ampersand behavior.
+- A generated WHATWG numeric character reference edge fixture and Rust
+  conformance test that exercises decimal, hexadecimal, semicolon, and
+  missing-semicolon forms across data, attribute, and RCDATA contexts.
+- A generated WHATWG tokenizer character-reference boundary fixture and Rust
+  conformance test that pins text, attribute, RCDATA, and seeded named/numeric
+  continuation recovery around ambiguous ampersands and numeric boundaries.
+- A generated WHATWG input-stream preprocessing fixture and Rust conformance
+  test that exercises CRLF and bare-CR normalization across tokenizer contexts,
+  every chunk split point, and diagnostic line/column positions.
+- A generated WHATWG tokenizer chunk-boundary fixture and Rust conformance test
+  that proves tokens, diagnostics, and diagnostic positions are stable across
+  every character split point for representative tokenizer contexts and seeded
+  continuation states.
+- A generated WHATWG tokenizer EOF recovery fixture and Rust conformance test
+  that pins recovery for partial tags, attributes, comments, doctypes,
+  character references, text modes, and seeded continuation states.
+- A generated WHATWG tokenizer text-mode delimiter fixture and Rust conformance
+  test that pins RCDATA, RAWTEXT, script-data, escaped-script, and seeded
+  end-tag continuation recovery.
+- A generated WHATWG tokenizer text-mode boundary fixture and Rust conformance
+  test that pins parser-seeded RCDATA, RAWTEXT, and PLAINTEXT less-than,
+  end-tag-open/name, NULL, EOF, and literal markup recovery.
+- A generated WHATWG tokenizer attribute boundary fixture and Rust conformance
+  test that pins seeded start-tag and current-attribute continuation recovery.
+- Parser/importer-facing seeded start-tag continuation contexts, including
+  tag-name, before/after attribute name, before attribute value,
+  quoted/unquoted attribute value, and self-closing substates with
+  `StartTagSeed` current-token seeding through `HtmlLexContext`.
+- html5lib-style smoke metadata for generic tag-open, tag-name, and seeded
+  start-tag/attribute continuation states, keeping the normalizer's supported
+  state set aligned with `HTML_TOKENIZER_STATES`.
+- Parser/importer-facing seeded text-mode end-tag continuation contexts through
+  `HtmlLexContext::end_tag_continuation`, plus exported text-mode and end-tag
+  tokenizer state families used by wrapper-level fixture tests.
+- Exported comment and character-reference tokenizer state families, plus the
+  valid character-reference return states, so generated conformance runners and
+  parser/importer adapters use the same public continuation predicates as
+  `HtmlLexContext`.
+- A generated WHATWG tokenizer script escape boundary fixture and Rust
+  conformance test that pins escaped and double-escaped script data, escape
+  start/end delimiters, EOF diagnostics, NULL replacement, and seeded
+  continuation recovery.
+- A generated WHATWG tokenizer CDATA boundary fixture and Rust conformance test
+  that pins foreign-content CDATA delimiter recovery, NULL replacement, EOF,
+  HTML-content fallback, and seeded bracket/end states.
+- A generated WHATWG tokenizer markup declaration fixture and Rust conformance
+  test that pins comment, bogus-comment, CDATA-looking declaration, DOCTYPE,
+  and seeded declaration continuation recovery.
+- A generated WHATWG tokenizer comment boundary fixture and Rust conformance
+  test that pins nested-comment recovery, pending dash and end-bang handling,
+  bogus comments, EOF, NULL replacement, and seeded comment continuations.
+- A generated WHATWG tokenizer attribute-edge fixture and Rust conformance test
+  that pins quoted/unquoted values, duplicate attributes, missing-whitespace
+  recovery, NULL replacement, self-closing delimiters, unexpected solidus
+  recovery, and end-tag attribute diagnostics.
+- A generated WHATWG tokenizer tag-open recovery fixture and Rust conformance
+  test that pins ordinary tags, ASCII casing, tag whitespace, invalid openers,
+  NULL replacement in tag names, and EOF partial-token drops.
+- A generated WHATWG tokenizer DOCTYPE boundary fixture and Rust conformance
+  test that pins name whitespace, PUBLIC/SYSTEM identifier recovery,
+  force-quirks transitions, EOF, NULL replacement, and seeded continuation
+  contexts.
+- The generic html5lib smoke importer now builds default-wrapper seeded lexer
+  cases through the same typed `HtmlLexContext` constructors used by generated
+  WHATWG boundary runners.
+- Generated WHATWG lexer fixture runners now share test-only assertion helpers
+  for token, attribute, DOCTYPE, adjacent-text, and diagnostic-code
+  normalization.
+- Generated WHATWG boundary and recovery fixture runners now share case
+  description and push/finish boilerplate through the same helper module.
+- Generated WHATWG boundary and recovery fixture runners now share suite
+  metadata assertions for format, description, case-count, and sentinel IDs.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the
@@ -43,3 +196,231 @@ documented in this file.
 - RAWTEXT support in the authored `html1` machine, the html5lib importer, and
   the Rust conformance harness, so seeded style-like tokenizer cases now
   execute through the generated static wrapper instead of being skipped.
+- Named character reference support for the current generated Rust lexer in
+  data, RCDATA, and attribute values, covering `amp`, `lt`, `gt`, `quot`, and
+  `apos` as the first shared entity set.
+- Decimal and hexadecimal numeric character references in data, RCDATA, and
+  attribute values, including replacement-character fallback for null or
+  invalid scalar values.
+- Missing-semicolon recovery for decimal and hexadecimal numeric character
+  references in data, RCDATA, and attribute values.
+- Legacy named character references `nbsp`, `copy`, and `reg` in data, RCDATA,
+  and attribute values.
+- Missing-semicolon recovery for legacy named character references `nbsp`,
+  `copy`, and `reg` before delimiters and EOF.
+- Generic named character reference scanning with literal fallback for unknown
+  names, reducing the need to hand-author one state path per entity.
+- Classic Latin-1 named character references in data, RCDATA, and attribute
+  values, with case-preserving entity-name scanning for names such as
+  `Agrave` and `agrave`.
+- Seeded `PLAINTEXT` tokenizer-state support, including shared Venture and
+  html5lib-style fixture coverage proving markup and character references stay
+  literal in that submode.
+- Seeded `script_data` tokenizer-state support with matching end-tag recovery
+  and fixture coverage that keeps character references literal in script text.
+- First script-data escaped tokenizer states, covering `<!-- ... -->` style
+  script text and matching `</script>` end-tag emission from escaped script
+  text.
+- Script-data double-escaped tokenizer states, so nested-looking
+  `<script>...</script>` text inside escaped script comments does not
+  prematurely emit the outer script end tag.
+- html5lib-style normalization and conformance coverage for seeded script
+  escaped/double-escaped dash, dash-dash, and less-than-sign substates.
+- Seeded CDATA section tokenizer-state support for future parser-controlled
+  foreign-content tokenization, keeping markup and character references literal
+  until the `]]>` delimiter returns the lexer to data state.
+- Markup declaration `<![CDATA[` opener support that reaches the CDATA section
+  state from data-state lexing while preserving malformed partial openers as
+  bogus comments.
+- HTML comment start-dash handling, including `<!-->` abrupt empty-comment
+  recovery and `<!--->` empty-comment closure.
+- HTML comment less-than-sign handling for nested-looking `<!--` sequences
+  inside open comments, preserving the text while reporting `nested-comment`.
+- HTML comment end-bang handling for `--!>` recovery and non-closing `--!`
+  text preservation.
+- Processing-instruction-looking `<?...?>` markup now recovers as a bogus
+  comment with `unexpected-question-mark-instead-of-tag-name`.
+- EOF in bogus-comment recovery now emits the recovered comment without adding
+  an unrelated `eof-in-comment` diagnostic.
+- Malformed markup declarations such as `<!foo>` now report
+  `incorrectly-opened-comment` while recovering as bogus comments.
+- Malformed markup declaration fallback now reconsumes the first non-matching
+  byte in bogus-comment state, so `<!>` emits an empty comment and returns to
+  data state.
+- EOF after a malformed markup declaration opener such as `<!` now emits an
+  empty bogus comment with `incorrectly-opened-comment` instead of preserving
+  the opener as text.
+- Duplicate attributes now follow HTML recovery by keeping the first attribute,
+  dropping later attributes with the same interpreted name, and reporting
+  `duplicate-attribute`.
+- Unquoted attribute values now preserve unexpected characters such as `"`,
+  `'`, `<`, `=`, and `` ` `` while reporting
+  `unexpected-character-in-unquoted-attribute-value`.
+- Unexpected `<`, `=`, and `` ` `` characters immediately after an attribute
+  `=` now use the same unquoted attribute-value diagnostic recovery.
+- NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data and
+  attribute values now recover with `unexpected-null-character` and append
+  U+FFFD.
+- NULL characters in tag names and attribute names now recover with
+  `unexpected-null-character` and append U+FFFD.
+- Quote and less-than characters in attribute names now report
+  `unexpected-character-in-attribute-name` while preserving the character in
+  the recovered emitted attribute name.
+- NULL characters in comments and bogus comments now recover with
+  `unexpected-null-character` and append U+FFFD while preserving pending comment
+  dashes.
+- NULL characters encountered while recovering malformed `<![CDATA` openers now
+  report `unexpected-null-character` and append U+FFFD before continuing as
+  bogus comments.
+- NULL characters in DOCTYPE names and quoted public/system identifiers now
+  recover with `unexpected-null-character` and append U+FFFD.
+- NULL characters in script escaped and double-escaped substates now recover
+  with `unexpected-null-character` and append U+FFFD while preserving their
+  dash-sensitive state transitions.
+- Numeric character references now report invalid-code-point diagnostics and
+  recover with replacement/remapping behavior for null, surrogate,
+  out-of-range, noncharacter, and Windows-1252 control references.
+- Digitless numeric character references such as `&#;` and `&#x;` now report
+  `absence-of-digits-in-numeric-character-reference` while staying literal.
+- One-dash markup declarations such as `<!->` and `<!-x>` now use
+  incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
+- Invalid tag-open characters now follow HTML recovery: stray `<` text is
+  preserved and malformed end-tag openers recover as bogus comments.
+- NULL after `<` now reconsumes through data-state recovery, preserving both
+  `invalid-first-character-of-tag-name` and `unexpected-null-character`
+  diagnostics while emitting `<` followed by U+FFFD.
+- Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`
+  and whitespace-only DOCTYPE names.
+- DOCTYPE declarations cut off by EOF after a name now emit the current name
+  with force-quirks mode enabled.
+- DOCTYPE `PUBLIC` and `SYSTEM` identifier states now preserve quoted public
+  and system identifiers on emitted tokens, including force-quirks recovery for
+  missing identifiers.
+- Standalone `SYSTEM` doctypes and trailing junk after system identifiers are
+  now covered, with unexpected trailing junk reporting a diagnostic without
+  forcing quirks mode.
+- DOCTYPE recovery coverage now includes single-quoted public/system
+  identifiers, EOF at public/system identifier boundaries, and NULL recovery
+  while discarding bogus DOCTYPE text.
+- DOCTYPE public/system recovery conformance now covers missing whitespace
+  around identifiers, missing identifier quotes, and abrupt identifier
+  termination.
+- DOCTYPE declarations cut off while matching the `DOCTYPE` keyword now emit a
+  force-quirks token instead of a clean partial declaration.
+- Malformed `DOCTYPE` keyword text now marks force-quirks mode while preserving
+  the recovered keyword text as the best-effort DOCTYPE name.
+- Named character reference recovery now uses the longest matching known
+  entity prefix in text and RCDATA, while preserving ambiguous ampersands
+  literally in attribute values when the missing-semicolon reference would be
+  followed by an ASCII alphanumeric character or `=`.
+- Missing-semicolon named-character-reference recovery is now limited to
+  WHATWG legacy no-semicolon aliases, avoiding over-acceptance of newer names
+  such as `trade` without `;`.
+- Completed the HTML4-era math named reference table with `alefsym` and
+  `oline`, including data, RCDATA, attribute, and normalized html5lib smoke
+  coverage.
+- Added a WHATWG named-reference batch for spacing, invisible operators,
+  punctuation aliases, and math constants, including multi-codepoint
+  replacements such as `ThickSpace`.
+- Added a WHATWG relation/operator named-reference batch for equality, tilde,
+  greater-than, less-than, and negated aliases, including combining-overlay
+  replacements such as `NotNestedGreaterGreater`.
+- Added a WHATWG greater/less comparison named-reference batch covering `gl*`,
+  `gn*`, `gtr*`, `less*`, `ln*`, and negated nested comparison aliases.
+- Added a WHATWG equality/congruence/parallel named-reference batch covering
+  `Bumpeq`, `Congruent`, `eq*`, `sim*`, `mid*`, and `par*` aliases.
+- Added a WHATWG precedence/successor relation named-reference batch covering
+  `Precedes`, `Succeeds`, `pr*`, `prec*`, `sc*`, and `succ*` aliases.
+- Added a WHATWG arrow/vector named-reference batch covering basic, double,
+  long, bar, tee, map, vector, and vector-bar arrow aliases.
+- Added a WHATWG Greek variant named-reference batch covering epsilon, kappa,
+  phi, pi, rho, sigma, theta, upsilon, digamma, and letter-like aliases.
+- Added a WHATWG set/logic named-reference batch covering set operations,
+  membership, subset/superset, square-set, and n-ary logic aliases.
+- Added a WHATWG mathematical alphabet named-reference batch covering
+  open-face (`*opf`), script (`*scr`), and fraktur (`*fr`) aliases.
+- Added a WHATWG Cyrillic named-reference batch covering core and extended
+  uppercase/lowercase `*cy` aliases.
+- Added a remaining WHATWG arrow/vector/harpoon named-reference batch covering
+  vector-tee, fish-tail, curved, negated, and long arrow aliases.
+- Added a remaining WHATWG set-algebra named-reference batch covering cap/cup,
+  square-set, subset/superset, and negated set aliases.
+- Added a remaining WHATWG operator/integral named-reference batch covering
+  contour integrals, circled operators, dot relations, plus/times variants,
+  and multi-integral aliases.
+- Completed semicolon-terminated WHATWG named-character-reference coverage with
+  a final generated batch for the remaining aliases.
+- Treated form feed as an HTML ASCII-whitespace delimiter for script
+  double-escape boundaries and semicolonless legacy character references.
+- Enabled HTML input-stream newline preprocessing in the Rust wrapper, so CRLF
+  pairs and bare carriage returns tokenize as LF.
+- EOF inside ordinary start/end tag construction now drops the partial token
+  after reporting EOF-in-tag diagnostics.
+- EOF inside attribute character-reference substates now also drops the partial
+  start tag after preserving the relevant reference diagnostics.
+- Unexpected solidus recovery in start tags now reconsumes in
+  `before_attribute_name`, preserving attributes after malformed slash-space or
+  slash-NULL sequences.
+- Missing-whitespace recovery after quoted attribute values now reconsumes in
+  `before_attribute_name`, preserving jammed attributes while still reporting
+  secondary `=` or NULL attribute-name diagnostics.
+- Added a WHATWG operator/shape named-reference batch covering circled
+  operators, integrals, products, squares, lozenges, stars, suits, and symbols.
+- Added a WHATWG box-drawing named-reference batch covering double-line,
+  mixed-line, light-line, crossing, and corner box aliases.
+- Added a WHATWG angle/fence named-reference batch covering angle, bracket,
+  floor/ceiling, triangle, corner, and over/under fence aliases.
+- Added a WHATWG Latin Extended named-reference batch covering macron, breve,
+  ogonek, caron, cedilla, circumflex, dot, ring, and tilde letter aliases.
+- Added a second WHATWG arrow named-reference batch covering short/capital,
+  lowercase long, hook, tail, loop, harpoon, negated, squiggle, diagonal, and
+  mapsto aliases.
+- Added parser-facing `HtmlTokenizerState` and `HtmlLexContext` APIs, including
+  typed fragment lexing and element-to-tokenizer-mode mapping for RCDATA,
+  RAWTEXT, script data, and PLAINTEXT parser handoff.
+- Added `apply_html_lex_context` so parser code can reconfigure an existing
+  lexer with typed HTML context and clear stale text-mode tag context when
+  returning to data-state lexing.
+- Added scripting-aware parser-facing text-mode context selection so `noscript`
+  can enter RAWTEXT when scripting is enabled and remain ordinary markup when
+  scripting is disabled.
+- Added a typed parser-facing CDATA section context for future SVG/MathML
+  foreign-content tree construction without exposing raw machine-state strings.
+- Added typed parser-facing script substate contexts for script escaped and
+  double-escaped tokenizer fixtures and future parser handoff.
+- Added `HTML_SCRIPT_TOKENIZER_STATES` and `HtmlTokenizerState::is_script_substate()`
+  so parser/conformance adapters can enumerate and validate every supported
+  script entry state without duplicating lexer internals.
+- Expanded typed parser-facing tokenizer states to include intermediate
+  text-like html5lib/WPT entry points: RCDATA/RAWTEXT less-than, CDATA
+  bracket/end, script less-than, script escape-start, and script double-escape
+  start/end states.
+- Added html5lib fixture-label round-tripping through
+  `HtmlTokenizerState::as_html5lib_state` and
+  `HtmlTokenizerState::from_html5lib_state`, plus centralized
+  `requires_last_start_tag` validation for conformance importers.
+- Expanded the html5lib smoke importer to support multi-state raw cases by
+  generating stable per-state Venture fixture IDs instead of skipping the whole
+  upstream entry.
+- Added normalized html5lib-style coverage for intermediate CDATA, RCDATA,
+  RAWTEXT, script escape, and script double-escape seeded states.
+- Added `HTML_TOKENIZER_STATES`, `HTML_FRAGMENT_TOKENIZER_STATES`, and
+  `HtmlTokenizerState::is_fragment_state()` so parser and fixture importers can
+  enumerate the full typed tokenizer-context surface without copying state
+  lists out of the lexer crate.
+- Added `HtmlTokenizerState::from_machine_state()` and
+  `HtmlTokenizerState::from_fragment_machine_state()` so parser/conformance code
+  can map generated machine-state identifiers back into typed tokenizer states.
+- Unquoted attribute values now keep solidus characters as value text, avoiding
+  false self-closing-tag recovery for URL-like values and trailing path slashes.
+- Expanded the typed tokenizer-context surface and html5lib smoke importer to
+  include resumable RCDATA/RAWTEXT/script end-tag-open states, giving parser and
+  conformance callers standard labels for end-tag handoff points that do not
+  require pre-seeded current-token internals.
+- Expanded end-tag-open convergence coverage across RCDATA, RAWTEXT, script
+  data, and escaped script data, including EOF literalization, mismatched end
+  tag text recovery, and matching whitespace/attribute/trailing-solidus
+  diagnostics in both direct lexer tests and html5lib-style fixtures.
+- Added typed character-reference continuation contexts and importer
+  `returnState` metadata so normalized html5lib-style fixtures can resume
+  text/RCDATA named and numeric reference substates.

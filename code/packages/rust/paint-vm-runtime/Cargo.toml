@@ -1,0 +1,8 @@
+[package]
+name = "paint-vm-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Pluggable runtime contract and backend selector for Paint VM renderers"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }

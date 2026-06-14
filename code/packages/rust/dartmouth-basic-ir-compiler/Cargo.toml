@@ -1,0 +1,11 @@
+[package]
+name = "dartmouth-basic-ir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Dartmouth BASIC IR compiler — lowers a BASIC AST to target-independent IR"
+
+[dependencies]
+coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }
+compiler-ir = { path = "../compiler-ir" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

@@ -109,7 +109,7 @@ TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
 
 # --- Regular expressions (with ES2024 `v` flag) ---
 
-REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsvy]*/
+REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsuvy]*/
 
 # ============================================================================
 # Multi-character operators (unchanged from ES2024)

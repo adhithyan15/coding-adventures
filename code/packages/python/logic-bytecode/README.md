@@ -13,6 +13,7 @@ VM execution.
 - index-based operands and pools
 - compile and decode helpers
 - readable disassembly for debugging and tests
+- dynamic relation declarations via `EMIT_DYNAMIC_RELATION`
 
 ## Dependencies
 
@@ -23,16 +24,16 @@ VM execution.
 
 ```python
 from logic_engine import relation, var
-from logic_instructions import defrel, fact, instruction_program, query
+from logic_instructions import defdynamic, fact, instruction_program, query
 from logic_bytecode import compile_program, decode_program, disassemble_text
 
-parent = relation("parent", 2)
-who = var("Who")
+memo = relation("memo", 1)
+value = var("Value")
 
 program_value = instruction_program(
-    defrel(parent),
-    fact(parent("homer", "bart")),
-    query(parent("homer", who)),
+    defdynamic(memo),
+    fact(memo("cached")),
+    query(memo(value), outputs=(value,)),
 )
 
 bytecode = compile_program(program_value)

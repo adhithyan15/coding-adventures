@@ -1,0 +1,13 @@
+[package]
+name        = "grammar-type-checker"
+version     = "0.1.0"
+edition     = "2021"
+description = "Generic type checker operating on GrammarASTNode + TypeDeclarations.  Returns a fully-annotated AnnotatedNode tree that feeds AOT/JIT compilation via IIR type_hint fields."
+
+[dependencies]
+parser                = { path = "../parser" }
+type-declarations     = { path = "../type-declarations" }
+type-checker-protocol = { path = "../type-checker-protocol" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }

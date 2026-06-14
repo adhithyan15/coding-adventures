@@ -13,9 +13,10 @@ dependency on the runtime).
 
 from __future__ import annotations
 
-from macsyma_compiler import compile_macsyma
 from macsyma_parser import parse_macsyma
 from symbolic_ir import IRApply, IRInteger, IRSymbol
+
+from macsyma_compiler import compile_macsyma
 
 
 def _compile_all(source: str) -> list:

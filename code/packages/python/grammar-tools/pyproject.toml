@@ -25,8 +25,20 @@ classifiers = [
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
 
+[project.scripts]
+grammar-tools = "grammar_tools.cli:main"
+
 [project.optional-dependencies]
+cli = [
+    "coding-adventures-graph",
+    "coding-adventures-directed-graph",
+    "coding-adventures-state-machine",
+    "coding-adventures-cli-builder",
+]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.uv.sources]
+coding-adventures-cli-builder = { path = "../cli-builder", editable = true }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/grammar_tools"]

@@ -1,0 +1,44 @@
+{
+  "name": "@coding-adventures/ml-framework-core",
+  "version": "1.7.0",
+  "description": "Complete PyTorch-shaped TypeScript ML framework on the Rust matrix-cpu engine.  Tensor + autograd + 15 differentiable ops (Add/Sub/Mul/Div/Neg/Abs/Pow/MatMul/ReLU/Sigmoid/Tanh/GELU/Softmax/Sum/Mean) with full forward and backward.  Small tensors use a pure-TypeScript fast path; tensors of 10k+ cells auto-dispatch through @coding-adventures/matrix-rust-napi to the Rust matrix-cpu executor for SIMD-accelerated f32 math.  End-to-end MLP training verified by the test suite.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "benchmark": "tsx scripts/benchmark.ts"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "homepage": "https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/typescript/ml-framework-core",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adhithyan15/coding-adventures.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adhithyan15/coding-adventures/issues"
+  },
+  "keywords": [
+    "tensor",
+    "autograd",
+    "ml",
+    "neural-network",
+    "pytorch",
+    "matrix-cpu"
+  ],
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0"
+  }
+}

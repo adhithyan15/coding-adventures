@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<!--
+  Bootstrap-shape Mosaic toolkit — visual preview
+
+  Every section below shows what one toolkit component looks like
+  when rendered. The CSS here is a hand-written approximation of
+  the per-component .light.msl style sheets that ship under
+  code/packages/mosaic-pkg-toolkit/src/. The structural markup
+  matches what mosaic-emit-xaml / mosaic-emit-html / etc. produce
+  from the corresponding .mll layout files.
+
+  Open this file in any browser — no build step required.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mosaic toolkit — Bootstrap component preview</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 32px;
+    background: #f5f6f8;
+    color: #212529;
+  }
+  h1 { font-size: 24px; margin: 0 0 4px 0; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #6c757d; margin: 32px 0 12px 0; }
+  .lead { color: #6c757d; margin: 0 0 24px 0; font-size: 14px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 8px 0; }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+  section { background: #fff; padding: 24px; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+
+  /* Button */
+  .btn { padding: 8px 16px; border-radius: 4px; font-weight: 500; font-size: 14px; border: 1px solid transparent; cursor: pointer; }
+  .btn-primary   { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+  .btn-secondary { background: #6c757d; color: #fff; border-color: #6c757d; }
+  .btn-success   { background: #198754; color: #fff; border-color: #198754; }
+  .btn-danger    { background: #dc3545; color: #fff; border-color: #dc3545; }
+  .btn-outline   { background: #fff; color: #0d6efd; border-color: #0d6efd; }
+
+  /* Alert */
+  .alert { padding: 12px; border-radius: 4px; border: 1px solid; display: flex; align-items: center; justify-content: space-between; }
+  .alert-info    { background: #cff4fc; color: #055160; border-color: #b6effb; }
+  .alert-success { background: #d1e7dd; color: #0f5132; border-color: #badbcc; }
+  .alert-warn    { background: #fff3cd; color: #664d03; border-color: #ffecb5; }
+  .alert-danger  { background: #f8d7da; color: #842029; border-color: #f5c2c7; }
+  .alert .close { background: transparent; border: 0; color: inherit; font-size: 14px; cursor: pointer; padding: 4px 8px; }
+
+  /* Badge */
+  .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+  .badge-primary { background: #0d6efd; color: #fff; }
+  .badge-success { background: #198754; color: #fff; }
+  .badge-danger  { background: #dc3545; color: #fff; }
+
+  /* Spinner */
+  .spinner { width: 24px; height: 24px; border: 3px solid #e9ecef; border-top-color: #0d6efd; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Toast */
+  .toast { background: #fff; border: 1px solid #dee2e6; border-radius: 4px; padding: 0; width: 320px; box-shadow: 0 4px 8px rgba(0,0,0,.1); }
+  .toast-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #dee2e6; font-size: 14px; font-weight: 500; }
+  .toast-body { padding: 12px; font-size: 14px; color: #495057; }
+
+  /* Input */
+  .input { padding: 8px; border: 1px solid #ced4da; border-radius: 4px; background: #fff; color: #212529; font-size: 14px; width: 240px; box-sizing: border-box; }
+
+  /* Field */
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field-label { font-size: 14px; color: #212529; }
+  .field-help  { font-size: 12px; color: #6c757d; }
+  .field-error { font-size: 12px; color: #dc3545; }
+
+  /* Checkbox + Radio */
+  .check, .radio { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .check-box { width: 18px; height: 18px; border: 2px solid #0d6efd; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: #fff; background: #fff; font-size: 12px; }
+  .check-box.checked { background: #0d6efd; }
+  .radio-box { width: 18px; height: 18px; border: 2px solid #0d6efd; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: #fff; }
+  .radio-box.selected::after { content: ""; width: 8px; height: 8px; border-radius: 4px; background: #0d6efd; }
+
+  /* ListGroup */
+  .list-group { border: 1px solid #dee2e6; border-radius: 4px; width: 240px; overflow: hidden; }
+  .list-group-item { padding: 12px; background: #fff; color: #212529; border-bottom: 1px solid #dee2e6; cursor: pointer; font-size: 14px; }
+  .list-group-item:last-child { border-bottom: 0; }
+  .list-group-item:hover { background: #f8f9fa; }
+
+  /* Pagination */
+  .pagination { display: flex; gap: 0; }
+  .pagination .chip { padding: 8px 12px; background: #fff; color: #0d6efd; border: 1px solid #dee2e6; font-size: 14px; cursor: pointer; }
+  .pagination .chip:hover { background: #e9ecef; }
+  .pagination .chip.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+
+  /* Breadcrumb */
+  .breadcrumb { display: flex; gap: 8px; padding: 8px; font-size: 14px; }
+  .breadcrumb a { color: #0d6efd; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb .sep { color: #6c757d; }
+
+  /* Nav */
+  .nav { display: flex; gap: 4px; }
+  .nav a { padding: 8px 12px; color: #0d6efd; text-decoration: none; font-size: 14px; border-radius: 4px; }
+  .nav a:hover { background: #e7f1ff; }
+  .nav a.active { background: #0d6efd; color: #fff; }
+
+  /* ButtonGroup */
+  .button-group { display: flex; }
+  .button-group .btn { border-radius: 0; }
+  .button-group .btn:first-child { border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+  .button-group .btn:last-child  { border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+
+  /* Tabs */
+  .tabs-bar { display: flex; gap: 0; border-bottom: 1px solid #dee2e6; }
+  .tabs-tab { padding: 8px 16px; background: #fff; color: #0d6efd; border: 1px solid transparent; border-bottom: 0; cursor: pointer; font-size: 14px; }
+  .tabs-tab.active { background: #fff; color: #212529; border-color: #dee2e6 #dee2e6 #fff; border-bottom: 1px solid #fff; margin-bottom: -1px; }
+  .tabs-panel { padding: 16px; background: #fff; border: 1px solid #dee2e6; border-top: 0; font-size: 14px; }
+
+  /* Accordion */
+  .accordion-item { border: 1px solid #dee2e6; }
+  .accordion-item + .accordion-item { border-top: 0; }
+  .accordion-header { padding: 12px; background: #f8f9fa; cursor: pointer; font-weight: 500; font-size: 14px; }
+  .accordion-body { padding: 12px; background: #fff; font-size: 14px; }
+  .accordion-body.closed { display: none; }
+
+  /* DropdownMenu */
+  .dropdown { position: relative; display: inline-block; }
+  .dropdown-toggle { padding: 8px 12px; background: #fff; color: #212529; border: 1px solid #ced4da; border-radius: 4px; cursor: pointer; font-size: 14px; }
+  .dropdown-menu { position: absolute; top: 100%; left: 0; margin-top: 4px; min-width: 160px; background: #fff; border: 1px solid #dee2e6; border-radius: 4px; padding: 4px; box-shadow: 0 4px 8px rgba(0,0,0,.06); }
+  .dropdown-item { padding: 8px 12px; background: #fff; color: #212529; border: 0; cursor: pointer; font-size: 14px; display: block; width: 100%; text-align: left; }
+  .dropdown-item:hover { background: #f8f9fa; }
+
+  /* Navbar */
+  .navbar { padding: 12px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; display: flex; align-items: center; gap: 16px; }
+  .navbar-brand { font-size: 18px; color: #212529; }
+  .navbar a { padding: 8px 12px; color: #0d6efd; text-decoration: none; font-size: 14px; }
+
+  /* Select */
+  .select-toggle { padding: 8px 12px; background: #fff; color: #212529; border: 1px solid #ced4da; border-radius: 4px; cursor: pointer; font-size: 14px; min-width: 160px; text-align: left; }
+
+  /* InputGroup */
+  .input-group { display: flex; }
+  .input-group .prefix, .input-group .suffix { padding: 8px 12px; background: #e9ecef; color: #495057; border: 1px solid #ced4da; font-size: 14px; }
+  .input-group .field { padding: 8px; background: #fff; color: #212529; border: 1px solid #ced4da; font-size: 14px; }
+  .input-group .prefix { border-right: 0; border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+  .input-group .field  { border-radius: 0; flex: 1; }
+  .input-group .suffix { border-left: 0; border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+
+  code { background: #f1f3f5; padding: 1px 4px; border-radius: 2px; font-size: 12px; }
+  .note { font-size: 12px; color: #6c757d; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<h1>mosaic-pkg-toolkit — Bootstrap component preview</h1>
+<p class="lead">
+  Every section below mirrors a component shipped from
+  <code>code/packages/mosaic-pkg-toolkit/src/</code>.
+  The styling here is a hand-tuned CSS approximation of each component's
+  <code>.light.msl</code> stylesheet; the markup structure matches what
+  the .mll layout produces. This is the visual story that
+  <code>mosaic-emit-xaml</code>, <code>mosaic-emit-react</code>,
+  <code>mosaic-emit-swiftui</code>, etc. all render — same source,
+  every backend.
+</p>
+
+<section>
+  <h2>Button — variants</h2>
+  <div class="row">
+    <button class="btn btn-primary">Primary</button>
+    <button class="btn btn-secondary">Secondary</button>
+    <button class="btn btn-success">Success</button>
+    <button class="btn btn-danger">Danger</button>
+    <button class="btn btn-outline">Outline</button>
+    <button class="btn btn-primary" disabled style="opacity:.5;">Disabled</button>
+  </div>
+</section>
+
+<section>
+  <h2>Alert — variants + dismissible</h2>
+  <div class="col">
+    <div class="alert alert-info"><span>This is an informational alert.</span></div>
+    <div class="alert alert-success"><span>Saved successfully.</span></div>
+    <div class="alert alert-warn"><span>Heads up — disk space is low.</span></div>
+    <div class="alert alert-danger"><span>Something went wrong.</span><button class="close">x</button></div>
+  </div>
+</section>
+
+<section>
+  <h2>Badge</h2>
+  <div class="row">
+    <span class="badge badge-primary">New</span>
+    <span class="badge badge-success">12</span>
+    <span class="badge badge-danger">Sold out</span>
+  </div>
+</section>
+
+<section>
+  <h2>Spinner</h2>
+  <div class="row">
+    <div class="spinner"></div>
+    <span>Loading…</span>
+  </div>
+</section>
+
+<section>
+  <h2>Toast</h2>
+  <div class="toast">
+    <div class="toast-header"><span>Notifications</span><span style="color:#6c757d;font-size:12px;">just now</span></div>
+    <div class="toast-body">Your message has been queued for delivery.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Input</h2>
+  <input class="input" placeholder="Enter your name">
+</section>
+
+<section>
+  <h2>InputGroup — prefix/suffix addons</h2>
+  <div class="col">
+    <div class="input-group" style="width:280px;">
+      <span class="prefix">$</span>
+      <input class="field" placeholder="0.00">
+      <span class="suffix">USD</span>
+    </div>
+    <div class="input-group" style="width:280px;">
+      <span class="prefix">@</span>
+      <input class="field" placeholder="username">
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Field — label + help / error</h2>
+  <div class="col" style="gap:16px;">
+    <div class="field">
+      <label class="field-label">Email address</label>
+      <input class="input" placeholder="you@example.com">
+      <span class="field-help">We'll never share your email.</span>
+    </div>
+    <div class="field">
+      <label class="field-label">Password</label>
+      <input class="input" placeholder="••••••••" type="password">
+      <span class="field-error">Password must be at least 8 characters.</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Checkbox + Radio</h2>
+  <div class="col">
+    <div class="check"><div class="check-box checked">&#10003;</div><span>Send me product updates</span></div>
+    <div class="check"><div class="check-box"></div><span>Subscribe to the newsletter</span></div>
+    <div class="radio"><div class="radio-box selected"></div><span>Annual billing (save 20%)</span></div>
+    <div class="radio"><div class="radio-box"></div><span>Monthly billing</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>ListGroup</h2>
+  <div class="list-group">
+    <div class="list-group-item">Inbox</div>
+    <div class="list-group-item">Drafts</div>
+    <div class="list-group-item">Sent</div>
+    <div class="list-group-item">Archive</div>
+  </div>
+</section>
+
+<section>
+  <h2>Pagination</h2>
+  <div class="pagination">
+    <span class="chip">«</span>
+    <span class="chip">1</span>
+    <span class="chip active">2</span>
+    <span class="chip">3</span>
+    <span class="chip">4</span>
+    <span class="chip">»</span>
+  </div>
+</section>
+
+<section>
+  <h2>Breadcrumb</h2>
+  <nav class="breadcrumb">
+    <a href="#">Home</a><span class="sep">/</span>
+    <a href="#">Settings</a><span class="sep">/</span>
+    <a href="#">Account</a>
+  </nav>
+</section>
+
+<section>
+  <h2>Nav</h2>
+  <nav class="nav">
+    <a href="#" class="active">Overview</a>
+    <a href="#">Projects</a>
+    <a href="#">Reports</a>
+    <a href="#">Settings</a>
+  </nav>
+</section>
+
+<section>
+  <h2>ButtonGroup</h2>
+  <div class="button-group">
+    <button class="btn btn-outline">Day</button>
+    <button class="btn btn-outline">Week</button>
+    <button class="btn btn-outline">Month</button>
+    <button class="btn btn-outline">Year</button>
+  </div>
+</section>
+
+<section>
+  <h2>Tabs</h2>
+  <div>
+    <div class="tabs-bar">
+      <div class="tabs-tab active">Overview</div>
+      <div class="tabs-tab">Activity</div>
+      <div class="tabs-tab">Settings</div>
+    </div>
+    <div class="tabs-panel">Project overview content goes here.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Accordion</h2>
+  <div>
+    <div class="accordion-item">
+      <div class="accordion-header">What is Mosaic?</div>
+      <div class="accordion-body">Mosaic is a kernel-only UI component language that lowers to React, SwiftUI, Qt, XAML, HTML, and Flutter.</div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header">How does the toolkit fit in?</div>
+      <div class="accordion-body closed">…</div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header">Where can I learn more?</div>
+      <div class="accordion-body closed">…</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>DropdownMenu</h2>
+  <div class="dropdown">
+    <button class="dropdown-toggle">Actions &#9662;</button>
+    <div class="dropdown-menu">
+      <button class="dropdown-item">Edit</button>
+      <button class="dropdown-item">Duplicate</button>
+      <button class="dropdown-item">Archive</button>
+      <button class="dropdown-item">Delete</button>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Navbar</h2>
+  <nav class="navbar">
+    <span class="navbar-brand">Mosaic</span>
+    <a href="#">Docs</a>
+    <a href="#">Components</a>
+    <a href="#">Backends</a>
+    <a href="#">Repo</a>
+  </nav>
+</section>
+
+<section>
+  <h2>Select</h2>
+  <button class="select-toggle">Choose a country &#9662;</button>
+</section>
+
+<p class="note">
+  Each component above corresponds to a triple under
+  <code>code/packages/mosaic-pkg-toolkit/src/</code>:
+  <code>Component.mil</code> (interface),
+  <code>Component.mll</code> (layout), and
+  <code>Component.{light,dark}.msl</code> (style). Run
+  <code>mosaic-compile --backend xaml --interface ... --layout ... --style ...</code>
+  to lower any of them to the WinUI 3 XAML you see in
+  <code>winui/</code> beside this preview.
+</p>
+
+</body>
+</html>

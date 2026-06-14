@@ -1,0 +1,7 @@
+{
+ "idx": 54,
+ "id": "BUI-5",
+ "scenario": "A two-story dwelling has three bedrooms, all on the second floor clustered around a single hallway. There is a working smoke alarm inside each of the three bedrooms, one in the second-floor hallway outside the bedrooms, and one on the first floor.",
+ "policy": "Smoke alarms must be installed inside each sleeping room, outside each separate sleeping area in the immediate vicinity of the bedrooms, and on each additional story of the dwelling. Where more than one smoke alarm is required, the alarms must be interconnected so that activation of one alarm activates all of them.",
+ "question": "Does the dwelling's smoke alarm installation comply with the policy?"
+}

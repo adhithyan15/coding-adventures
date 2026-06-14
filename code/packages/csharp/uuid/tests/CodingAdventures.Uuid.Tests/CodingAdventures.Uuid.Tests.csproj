@@ -18,4 +18,8 @@
     <Using Include="Xunit" />
     <ProjectReference Include="../../CodingAdventures.Uuid.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <Exclude>[CodingAdventures.Csprng]*,[CodingAdventures.Md5]*,[CodingAdventures.Sha1]*</Exclude>
+  </PropertyGroup>
 </Project>

@@ -1,0 +1,158 @@
+[
+  {
+    "id": "PS01",
+    "accept": [
+      "12"
+    ],
+    "bare": "12",
+    "bare_cls": "correct",
+    "v2": "12",
+    "v2_cls": "correct",
+    "focus": "Part-time employee hired after January 2020"
+  },
+  {
+    "id": "PS02",
+    "accept": [
+      "40"
+    ],
+    "bare": "$40",
+    "bare_cls": "correct",
+    "v2": "$40 handling charge",
+    "v2_cls": "correct",
+    "focus": "Large furniture piece"
+  },
+  {
+    "id": "PS03",
+    "accept": [
+      "0",
+      "none",
+      "no fine",
+      "exempt"
+    ],
+    "bare": "NONE",
+    "bare_cls": "correct",
+    "v2": "0",
+    "v2_cls": "correct",
+    "focus": "Borrower younger than 18 years old and book returned late"
+  },
+  {
+    "id": "PS04",
+    "accept": [
+      "90"
+    ],
+    "bare": "90 days",
+    "bare_cls": "correct",
+    "v2": "90 days",
+    "v2_cls": "correct",
+    "focus": "Refurbished unit purchased last week"
+  },
+  {
+    "id": "PS05",
+    "accept": [
+      "0",
+      "none",
+      "no discount"
+    ],
+    "bare": "0%",
+    "bare_cls": "correct",
+    "v2": "No discount is applied to the loyalty member's clearance item.",
+    "v2_cls": "correct",
+    "focus": "Loyalty member purchasing a clearance item."
+  },
+  {
+    "id": "PS06",
+    "accept": [
+      "0",
+      "free",
+      "none"
+    ],
+    "bare": "$2",
+    "bare_cls": "other",
+    "v2": "$0",
+    "v2_cls": "correct",
+    "focus": "Electric vehicle parked for 2 hours under green initiative."
+  },
+  {
+    "id": "PS07",
+    "accept": [
+      "0",
+      "none",
+      "waived",
+      "no fee"
+    ],
+    "bare": "$30",
+    "bare_cls": "skim",
+    "v2": "$0",
+    "v2_cls": "correct",
+    "focus": "First late payment subject"
+  },
+  {
+    "id": "PS08",
+    "accept": [
+      "180"
+    ],
+    "bare": "180",
+    "bare_cls": "correct",
+    "v2": "180",
+    "v2_cls": "correct",
+    "focus": "Andorian citizen"
+  },
+  {
+    "id": "PS09",
+    "accept": [
+      "0",
+      "exempt",
+      "none",
+      "no tax"
+    ],
+    "bare": "NONE",
+    "bare_cls": "correct",
+    "v2": "No sales tax applies to this purchase because unprepared groceries are exempt from the 8% sales tax.",
+    "v2_cls": "correct",
+    "focus": "Unprepared groceries"
+  },
+  {
+    "id": "PS10",
+    "accept": [
+      "55"
+    ],
+    "bare": "55 mph",
+    "bare_cls": "correct",
+    "v2": "55 mph",
+    "v2_cls": "correct",
+    "focus": "Commercial truck"
+  },
+  {
+    "id": "PS11",
+    "accept": [
+      "cannot",
+      "not eligible",
+      "no return",
+      "not",
+      "final",
+      "none"
+    ],
+    "bare": "0",
+    "bare_cls": "correct",
+    "v2": "The item is not eligible for return or refund as it was purchased as a final sale item.",
+    "v2_cls": "correct",
+    "focus": "Final sale item"
+  },
+  {
+    "id": "PS12",
+    "accept": [
+      "cannot",
+      "does not circulate",
+      "not",
+      "no",
+      "in the library",
+      "in-library",
+      "zero"
+    ],
+    "bare": "The patron may not borrow the requested item as it is part of the reference collection and cannot be circulated.",
+    "bare_cls": "correct",
+    "v2": "The requested item cannot be borrowed; it must be used within the library.",
+    "v2_cls": "correct",
+    "focus": "Requested item: Circulating material"
+  }
+]

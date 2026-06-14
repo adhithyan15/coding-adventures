@@ -1,0 +1,808 @@
+{
+  "case_count": 132,
+  "cases": [
+    {
+      "axis": "select-shell",
+      "id": "domjs-unsafe-dat-153",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "domjs-unsafe.dat:153"
+    },
+    {
+      "axis": "select-shell",
+      "id": "domjs-unsafe-dat-158",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "domjs-unsafe.dat:158"
+    },
+    {
+      "axis": "select-shell",
+      "id": "domjs-unsafe-dat-159",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "domjs-unsafe.dat:159"
+    },
+    {
+      "axis": "select-shell",
+      "id": "menuitem-element-dat-319",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "menuitem-element.dat:319"
+    },
+    {
+      "axis": "select-shell",
+      "id": "menuitem-element-dat-320",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "menuitem-element.dat:320"
+    },
+    {
+      "axis": "select-shell",
+      "id": "menuitem-element-dat-321",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "menuitem-element.dat:321"
+    },
+    {
+      "axis": "select-shell",
+      "id": "plain-text-unsafe-dat-355",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "plain-text-unsafe.dat:355"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-442",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:442"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-443",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:443"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-444",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:444"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-445",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:445"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tables01-dat-453",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tables01.dat:453"
+    },
+    {
+      "axis": "select-shell",
+      "id": "template-dat-473",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "template.dat:473"
+    },
+    {
+      "axis": "select-shell",
+      "id": "template-dat-474",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "template.dat:474"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "template-dat-475",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "template.dat:475"
+    },
+    {
+      "axis": "select-shell",
+      "id": "template-dat-476",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "template.dat:476"
+    },
+    {
+      "axis": "select-shell",
+      "id": "template-dat-477",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "template.dat:477"
+    },
+    {
+      "axis": "select-shell",
+      "id": "template-dat-478",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "template.dat:478"
+    },
+    {
+      "axis": "select-shell",
+      "id": "template-dat-479",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "template.dat:479"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "template-dat-480",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "template.dat:480"
+    },
+    {
+      "axis": "select-shell",
+      "id": "template-dat-545",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "template.dat:545"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "template-dat-556",
+      "reason": "select handling while table insertion modes are active",
+      "source": "template.dat:556"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests1-dat-595",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests1.dat:595"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests1-dat-600",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests1.dat:600"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests1-dat-665",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests1.dat:665"
+    },
+    {
+      "axis": "stray-select-end-tags",
+      "id": "tests1-dat-675",
+      "reason": "stray select, option, and optgroup end-tag recovery",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "stray-select-end-tags",
+      "id": "tests1-dat-676",
+      "reason": "stray select, option, and optgroup end-tag recovery",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests10-dat-681",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests10.dat:681"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests10-dat-682",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests10.dat:682"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests10-dat-694",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests10.dat:694"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests10-dat-695",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests10.dat:695"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-965",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:965"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-966",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:966"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-967",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:967"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-968",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:968"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-969",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:969"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-970",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:970"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-971",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:971"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-972",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:972"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-973",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:973"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-974",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:974"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-975",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:975"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-976",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:976"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests18-dat-991",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests18.dat:991"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-992",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:992"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests18-dat-1005",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests18.dat:1005"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-1006",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:1006"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-1007",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:1007"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests19-dat-1041",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests19.dat:1041"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests19-dat-1042",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests19.dat:1042"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests19-dat-1043",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests19.dat:1043"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests19-dat-1085",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests19.dat:1085"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests20-dat-1167",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests20.dat:1167"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests20-dat-1168",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests20.dat:1168"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests2-dat-37",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests2.dat:37"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests2-dat-38",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests2.dat:38"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests2-dat-39",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests2.dat:39"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests2-dat-40",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests2.dat:40"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests2-dat-49",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests2.dat:49"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests9-dat-5",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests9.dat:5"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests9-dat-6",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests9.dat:6"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests9-dat-18",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests9.dat:18"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests9-dat-19",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests9.dat:19"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests7-dat-17",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests7.dat:17"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests7-dat-18",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests7.dat:18"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests7-dat-24",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests7.dat:24"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests7-dat-25",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests7.dat:25"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests7-dat-34",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests7.dat:34"
+    },
+    {
+      "axis": "select-fragment-context",
+      "id": "tests-innerhtml-1-dat-75",
+      "reason": "fragment parsing in select, option, and optgroup contexts",
+      "source": "tests_innerHTML_1.dat:75"
+    },
+    {
+      "axis": "select-fragment-context",
+      "id": "tests-innerhtml-1-dat-77",
+      "reason": "fragment parsing in select, option, and optgroup contexts",
+      "source": "tests_innerHTML_1.dat:77"
+    },
+    {
+      "axis": "select-fragment-context",
+      "id": "tests-innerhtml-1-dat-78",
+      "reason": "fragment parsing in select, option, and optgroup contexts",
+      "source": "tests_innerHTML_1.dat:78"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests1-dat-30",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests1.dat:30"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests1-dat-35",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests1.dat:35"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests1-dat-100",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests1.dat:100"
+    },
+    {
+      "axis": "stray-select-end-tags",
+      "id": "tests1-dat-110",
+      "reason": "stray select, option, and optgroup end-tag recovery",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "stray-select-end-tags",
+      "id": "tests1-dat-111",
+      "reason": "stray select, option, and optgroup end-tag recovery",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests10-dat-4",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests10.dat:4"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests10-dat-5",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests10.dat:5"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests10-dat-17",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests10.dat:17"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests10-dat-18",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests10.dat:18"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-1",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:1"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-2",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:2"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-3",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:3"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-4",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:4"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests17-dat-5",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests17.dat:5"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-6",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:6"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-7",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:7"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-8",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:8"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-9",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:9"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-10",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:10"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-11",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:11"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests17-dat-12",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests17.dat:12"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests18-dat-14",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests18.dat:14"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-15",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:15"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests18-dat-28",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests18.dat:28"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-29",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:29"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "tests18-dat-30",
+      "reason": "select handling while table insertion modes are active",
+      "source": "tests18.dat:30"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests19-dat-28",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests19.dat:28"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests19-dat-29",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests19.dat:29"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "tests19-dat-30",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "tests19.dat:30"
+    },
+    {
+      "axis": "select-shell",
+      "id": "tests19-dat-72",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "tests19.dat:72"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests20-dat-51",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests20.dat:51"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "tests20-dat-52",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "tests20.dat:52"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "webkit01-dat-32",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "webkit01.dat:32"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit01-dat-37",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit01.dat:37"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit01-dat-38",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit01.dat:38"
+    },
+    {
+      "axis": "select-fragment-context",
+      "id": "webkit02-dat-19",
+      "reason": "fragment parsing in select, option, and optgroup contexts",
+      "source": "webkit02.dat:19"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-26",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:26"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-27",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:27"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "webkit02-dat-28",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "webkit02.dat:28"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "webkit02-dat-29",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "webkit02.dat:29"
+    },
+    {
+      "axis": "optgroup-boundary",
+      "id": "webkit02-dat-30",
+      "reason": "optgroup starts, ends, and option boundaries inside groups",
+      "source": "webkit02.dat:30"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-31",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:31"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-32",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:32"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-33",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:33"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-34",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:34"
+    },
+    {
+      "axis": "select-in-table",
+      "id": "webkit02-dat-35",
+      "reason": "select handling while table insertion modes are active",
+      "source": "webkit02.dat:35"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-36",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:36"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-37",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:37"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-38",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:38"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-39",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:39"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-40",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:40"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-41",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:41"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-42",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:42"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-43",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:43"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-44",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:44"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-45",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:45"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-46",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:46"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "webkit02-dat-47",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "webkit02.dat:47"
+    },
+    {
+      "axis": "option-implied-end",
+      "id": "webkit02-dat-48",
+      "reason": "adjacent option starts and omitted option end-tag recovery",
+      "source": "webkit02.dat:48"
+    },
+    {
+      "axis": "select-shell",
+      "id": "webkit02-dat-49",
+      "reason": "select start/end tags and ordinary select insertion recovery",
+      "source": "webkit02.dat:49"
+    },
+    {
+      "axis": "select-fragment-context",
+      "id": "tests-innerhtml-1-dat-76",
+      "reason": "fragment parsing in select, option, and optgroup contexts",
+      "source": "tests_innerHTML_1.dat:76"
+    }
+  ],
+  "counts_by_axis": {
+    "optgroup-boundary": 13,
+    "option-implied-end": 15,
+    "select-fragment-context": 5,
+    "select-in-table": 36,
+    "select-shell": 59,
+    "stray-select-end-tags": 4
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress select, option, and optgroup list recovery.",
+  "format": "whatwg-html-select-list-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

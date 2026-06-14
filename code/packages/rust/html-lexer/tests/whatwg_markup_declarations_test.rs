@@ -1,0 +1,151 @@
+use coding_adventures_html_lexer::{
+    create_html_lexer_with_context, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlTokenizerState,
+};
+use serde::Deserialize;
+
+mod common;
+
+const WHATWG_MARKUP_DECLARATIONS: &str = include_str!("fixtures/whatwg-markup-declarations.json");
+
+#[derive(Debug, Deserialize)]
+struct MarkupDeclarationSuite {
+    format: String,
+    description: String,
+    cases: Vec<MarkupDeclarationCase>,
+}
+
+#[derive(Debug, Deserialize)]
+struct MarkupDeclarationCase {
+    id: String,
+    description: String,
+    input: String,
+    tokens: Vec<String>,
+    #[serde(default)]
+    diagnostics: Vec<String>,
+    #[serde(default)]
+    initial_state: Option<String>,
+    #[serde(default)]
+    last_start_tag: Option<String>,
+    #[serde(default)]
+    current_end_tag: Option<String>,
+    #[serde(default)]
+    current_comment: Option<String>,
+    #[serde(default)]
+    current_doctype: Option<FixtureDoctypeSeed>,
+    #[serde(default)]
+    temporary_buffer: Option<String>,
+    #[serde(default)]
+    return_state: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct FixtureDoctypeSeed {
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    public_identifier: Option<String>,
+    #[serde(default)]
+    system_identifier: Option<String>,
+    #[serde(default)]
+    force_quirks: bool,
+}
+
+#[test]
+fn whatwg_markup_declaration_fixture_parses() {
+    let suite = load_suite();
+
+    common::assert_suite_metadata(
+        &suite.format,
+        &suite.description,
+        suite.cases.iter().map(|case| case.id.as_str()),
+        "whatwg-html-tokenizer-markup-declarations/v1",
+        40,
+        &[
+            "comment-nested-looking-opener",
+            "doctype-public-and-system-identifiers",
+            "seeded-bogus-doctype-close",
+        ],
+    );
+}
+
+#[test]
+fn whatwg_markup_declaration_cases_match_default_lexer() {
+    let suite = load_suite();
+
+    for case in &suite.cases {
+        common::assert_case_description(&case.id, &case.description, "markup declaration edge");
+        let mut lexer = configured_lexer(case);
+        common::assert_lexer_case(
+            &case.id,
+            &mut lexer,
+            &case.input,
+            &case.tokens,
+            &case.diagnostics,
+        );
+    }
+}
+
+fn load_suite() -> MarkupDeclarationSuite {
+    serde_json::from_str(WHATWG_MARKUP_DECLARATIONS)
+        .expect("WHATWG markup-declaration fixture should parse")
+}
+
+fn configured_lexer(case: &MarkupDeclarationCase) -> HtmlLexer {
+    let state = case
+        .initial_state
+        .as_deref()
+        .and_then(HtmlTokenizerState::from_html5lib_state)
+        .unwrap_or(HtmlTokenizerState::Data);
+    let mut context = if let Some(current_doctype) = case.current_doctype.as_ref() {
+        HtmlLexContext::doctype_continuation(state, doctype_seed(current_doctype))
+            .unwrap_or_else(|| panic!("case `{}` cannot seed DOCTYPE state", case.id))
+    } else if let Some(current_comment) = case.current_comment.as_deref() {
+        HtmlLexContext::comment_continuation(state, current_comment)
+            .unwrap_or_else(|| panic!("case `{}` cannot seed comment state", case.id))
+    } else if let Some(current_end_tag) = case.current_end_tag.as_deref() {
+        HtmlLexContext::end_tag_continuation(
+            state,
+            case.last_start_tag.as_deref().unwrap_or(""),
+            current_end_tag,
+            case.temporary_buffer.as_deref().unwrap_or(""),
+        )
+        .unwrap_or_else(|| panic!("case `{}` cannot seed end-tag state", case.id))
+    } else if let Some(return_state) = case
+        .return_state
+        .as_deref()
+        .and_then(HtmlTokenizerState::from_html5lib_state)
+    {
+        HtmlLexContext::character_reference_continuation(
+            state,
+            return_state,
+            case.temporary_buffer.as_deref().unwrap_or(""),
+        )
+        .unwrap_or_else(|| panic!("case `{}` cannot seed character reference state", case.id))
+    } else if state.is_script_substate() {
+        HtmlLexContext::script_substate(state)
+            .unwrap_or_else(|| panic!("case `{}` cannot seed script substate", case.id))
+    } else {
+        HtmlLexContext::new(state)
+    };
+    if let Some(last_start_tag) = case.last_start_tag.as_deref() {
+        if context.last_start_tag.is_none() {
+            context = context.with_last_start_tag(last_start_tag);
+        }
+    }
+    if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
+        if context.temporary_buffer.is_none() {
+            context = context.with_temporary_buffer(temporary_buffer);
+        }
+    }
+
+    create_html_lexer_with_context(&context).expect("HTML lexer context should apply")
+}
+
+fn doctype_seed(seed: &FixtureDoctypeSeed) -> DoctypeSeed {
+    DoctypeSeed {
+        name: seed.name.clone(),
+        public_identifier: seed.public_identifier.clone(),
+        system_identifier: seed.system_identifier.clone(),
+        force_quirks: seed.force_quirks,
+    }
+}

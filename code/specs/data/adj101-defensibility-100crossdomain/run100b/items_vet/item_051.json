@@ -1,0 +1,8 @@
+{
+ "idx": 51,
+ "policy": "A month-to-month tenant must give the landlord at least 30 days' written notice before vacating. If the tenant gives fewer than 30 days' notice, the tenant owes rent for the remainder of the 30-day notice period.",
+ "scenario": "Priya is a month-to-month tenant paying $1,500 per month. On June 20 she handed her landlord a written notice stating she would move out on June 30. Rent is due on the first of each month and she had paid June in full.",
+ "question": "Does Priya owe any additional rent beyond June?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "owes rent"
+}

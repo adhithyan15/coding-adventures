@@ -1,0 +1,7 @@
+{
+ "idx": 68,
+ "id": "PRO-9",
+ "scenario": "A contractor is licensed solely under the handyman classification and carries no general-liability insurance.",
+ "policy": "A licensed contractor must carry general-liability insurance of at least $500,000 at all times while licensed, except for contractors whose work is limited to the handyman classification, who are not required to carry such insurance.",
+ "question": "Is the contractor in violation of the insurance requirement?"
+}

@@ -1,0 +1,16 @@
+{
+  "tokenizer": {
+    "local_raw_cases": 7015,
+    "missing": 0,
+    "missing_sources": [],
+    "normalized_cases": 7242,
+    "normalized_skipped": 0,
+    "upstream_cases": 6806
+  },
+  "tree_construction": {
+    "local_cases": 2485,
+    "missing": 0,
+    "missing_sources": [],
+    "upstream_cases": 1778
+  }
+}

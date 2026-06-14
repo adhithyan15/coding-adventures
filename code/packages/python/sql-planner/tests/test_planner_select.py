@@ -7,6 +7,7 @@ from sql_planner import (
     BinaryOp,
     Column,
     Distinct,
+    ExistsSubquery,
     Filter,
     FuncArg,
     FunctionCall,
@@ -202,6 +203,44 @@ class TestAliasDerivation:
         p = plan(ast, schema())
         assert isinstance(p, Project)
         assert p.items[0].alias is None
+
+
+class TestExistsSubquery:
+    def test_exists_in_where_resolves_inner_plan(self) -> None:
+        """EXISTS (subquery) in WHERE: the inner SELECT is planned into a LogicalPlan."""
+        sp = InMemorySchemaProvider({"t": ["x"], "s": ["y"]})
+        inner = SelectStmt(
+            from_=TableRef(table="s"),
+            items=(SelectItem(expr=Literal(value=1)),),
+        )
+        outer = SelectStmt(
+            from_=TableRef(table="t"),
+            items=(SelectItem(expr=Wildcard()),),
+            where=ExistsSubquery(query=inner),
+        )
+        p = plan(outer, sp)
+        assert isinstance(p, Project)
+        assert isinstance(p.input, Filter)
+        pred = p.input.predicate
+        assert isinstance(pred, ExistsSubquery)
+        assert isinstance(pred.query, Project)  # inner was planned into a LogicalPlan
+
+    def test_exists_in_select_list_resolves_inner_plan(self) -> None:
+        """EXISTS used as a SELECT-list expression: inner plan is resolved."""
+        sp = InMemorySchemaProvider({"t": ["x"], "s": ["y"]})
+        inner = SelectStmt(
+            from_=TableRef(table="s"),
+            items=(SelectItem(expr=Wildcard()),),
+        )
+        outer = SelectStmt(
+            from_=TableRef(table="t"),
+            items=(SelectItem(expr=ExistsSubquery(query=inner)),),
+        )
+        p = plan(outer, sp)
+        assert isinstance(p, Project)
+        (item,) = p.items
+        assert isinstance(item.expr, ExistsSubquery)
+        assert isinstance(item.expr.query, Project)
 
 
 class TestPlanAll:

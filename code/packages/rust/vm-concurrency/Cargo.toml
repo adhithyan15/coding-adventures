@@ -1,0 +1,19 @@
+[package]
+name = "vm-concurrency"
+version = "0.1.0"
+edition = "2021"
+description = "LANG28B — single-thread cooperative scheduler for the LANG VM (tasks, channels, groups, select)"
+
+[lib]
+name = "vm_concurrency"
+path = "src/lib.rs"
+
+[dependencies]
+# interpreter-ir 0.3.0 provides the 27 concurrency opcode names (LANG28A)
+interpreter-ir = { path = "../interpreter-ir" }
+# vm-core provides the Value type used across task/channel boundaries
+vm-core        = { path = "../vm-core" }
+
+[dev-dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+vm-core        = { path = "../vm-core" }

@@ -1,0 +1,9 @@
+[package]
+name = "jit-profiling-insights"
+version = "0.1.0"
+edition = "2021"
+description = "Developer feedback from the JIT compiler: visibility into guards, generic dispatch, and deoptimisations with actionable type annotation suggestions (LANG11)."
+license = "MIT"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }

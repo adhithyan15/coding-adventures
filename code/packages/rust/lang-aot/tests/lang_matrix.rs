@@ -1,0 +1,992 @@
+//! # Cross-language platform matrix — LANG-PLATFORM-MATRIX (LM0 foundation).
+//!
+//! The generalization of the McCarthy W16 capstone (`conformance.rs`) from one
+//! reference language to **every language frontend in the repo**. Each language has
+//! a small battery of programs with a known result; each backend is a runner gated
+//! on its toolchain; every `(program, backend)` cell is asserted **by running**.
+//!
+//! The harness is a `Backend`-keyed grid: each `Prog` lists the backends a slice has
+//! **proven** run it, and `matrix_every_proven_cell_agrees` runs every such cell on
+//! its real toolchain and asserts the known result (skipping a cell whose tool is
+//! absent, failing loudly when present-but-wrong). Columns so far:
+//!
+//! * **native-AOT** (LM0) — source → shared IIR → host object → system linker → run.
+//!   Uniformly green: all six languages.
+//! * **LLVM** (Phase L) — source → textual `.ll` (`iir-to-llvm`) → real `clang` → run.
+//!   Green for Twig / Nib / Oct / ALGOL 60 (exit code) and Dartmouth BASIC (stdout —
+//!   the `.ll`'s `@__print_i64` is satisfied by a generic print runtime). Brainfuck
+//!   deferred (the i64-slot-model mismatch — see the spec's Deferred section).
+//! * **WASM** (Phase W) — source → wasm bytes (`iir-to-wasm`) → the in-process
+//!   `wasm-runtime`. Green for the expression languages Twig / Nib / Oct / ALGOL 60
+//!   (exit code from `main`'s wasm result) and Dartmouth BASIC (stdout — a `PrintHost`
+//!   resolves the `env.__print_i64` import and captures the printed value). Brainfuck
+//!   pends the tape ops — its own follow-up.
+//! * **JVM** (Phase J) — source → `JvmClassFile` (`iir-to-jvm-class-file`) → real
+//!   `java`. The W16 wrapper-launcher pattern: a `main([Ljava/lang/String;)V` launcher
+//!   invokes the entry method and either `System.out.println`s its result (the
+//!   expression languages Twig / Nib / Oct / ALGOL 60, parsed back) or discards it
+//!   while `env.BasicRuntime` — compiled with `javac` onto the classpath — handles the
+//!   output (Dartmouth BASIC, whose `print_i64` lowers to `env/BasicRuntime.println`).
+//!   Green for all five non-Brainfuck languages; Brainfuck pends the tape ops.
+//! * **CLR** (Phase C) — source → textual `.il` (`iir-to-cil-bytecode`) → real `ilasm`
+//!   → real `dotnet`, the CLR-real path. An expression program's entry
+//!   `Console.WriteLine`s its `int` result (parsed); Dartmouth BASIC's `PRINT` lowers
+//!   to `Console.WriteLine(int32)` and the launcher discards (not re-prints) the entry
+//!   result, so the harness captures `Console`. Green for Twig / Nib / Oct / ALGOL 60
+//!   (this needed the CIL backend to grow integer arithmetic + the comparison opcodes)
+//!   and Dartmouth BASIC; Brainfuck pends the tape ops.
+//!
+//! The remaining work is the Deferred items — Brainfuck-on-LLVM/WASM/JVM/CLR, and the
+//! McCarthy-specialized VM and JIT (op-coverage work). See
+//! `code/specs/LANG-PLATFORM-MATRIX.md`.
+//!
+//! ## Two result kinds
+//!
+//! * **Expression languages** (Twig, Nib, Oct, ALGOL 60) return an integer — the
+//!   process **exit code** (`& 0xFF` via the C runtime's `exit()`). Oct's `main` is
+//!   void, so it exits `0`; the program still proves the whole chain runs.
+//! * **I/O languages** (Brainfuck, Dartmouth BASIC) produce their result on
+//!   **stdout** (`putchar` / `PRINT`), so the harness captures and compares stdout.
+
+use lang_aot::Language;
+use std::process::Command;
+
+/// A non-BEAM backend the matrix proves languages on. Each new column the campaign
+/// lands adds a variant here and a `run` arm; each `Prog` lists the backends it is
+/// **proven** to run on (so a cell is only asserted once a slice has verified it).
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Backend {
+    /// Source → IIR → host object → system linker → run (LM0). General code gen.
+    NativeAot,
+    /// Source → textual `.ll` (`iir-to-llvm`) → real `clang` → run (Phase L).
+    Llvm,
+    /// Source → wasm bytes (`iir-to-wasm`) → in-process `wasm-runtime` (Phase W).
+    Wasm,
+    /// Source → `JvmClassFile` (`iir-to-jvm-class-file`) → real `java` (Phase J).
+    /// The W16 wrapper-launcher pattern: a `main([Ljava/lang/String;)V` launcher is
+    /// injected to invoke the entry method and `System.out.println` its `int` result.
+    Jvm,
+    /// Source → textual `.il` (`iir-to-cil-bytecode`) → real `ilasm` → real `dotnet`
+    /// (Phase C, the CLR-real path). The emitted entry `Console.WriteLine`s its `int`
+    /// result, which the harness parses (mirrors the McCarthy CLR-real chapter).
+    Clr,
+    /// Source → IIR (`compile_source_to_iir`) → the **generic register VM**
+    /// (`vm_core::VMCore`) interpreting the shared IIR directly (Phase V). This is the
+    /// execution-time analog of the code-gen backends: `VMCore` consumes the same
+    /// `IIRModule` every other backend does — its instruction dispatch already covers
+    /// arithmetic / comparison / bitwise / control-flow / memory / `call_builtin`, so a
+    /// scalar language runs with **zero** VM-specific code, exactly the way a future
+    /// Ruby/JS frontend would. (McCarthy lisp keeps its own `LispyValue` VM — the
+    /// matrix's six languages are all scalar, so they share this one.) In-process, so
+    /// no host gate; the I/O languages' `print_i64`/`putchar` are registered builtins.
+    Vm,
+}
+
+/// The known, backend-independent observable result of a conformance program.
+enum Expect {
+    /// The process exit code (an expression language's returned value, `& 0xFF`).
+    Exit(i32),
+    /// A trimmed stdout string (an I/O language's printed output).
+    Stdout(&'static str),
+}
+
+/// One conformance program: a language, a source-file extension, the source, the
+/// result it must produce, and the backends a slice has **proven** run it.
+struct Prog {
+    lang: Language,
+    ext: &'static str,
+    src: &'static str,
+    expect: Expect,
+    backends: &'static [Backend],
+}
+
+use Backend::{Clr, Jvm, Llvm, NativeAot, Vm, Wasm};
+
+/// The real-CoreCLR helpers (`find_ilasm`, the NuGet-cache assembler search) are
+/// shared with the McCarthy CLR-real chapter; `#[path]`-include the module so we
+/// reuse `find_ilasm` rather than duplicating the cache walk. Only `find_ilasm` is
+/// called from here (the module's own runner is McCarthy-specific dead code).
+#[path = "clr_support/mod.rs"]
+mod clr_support;
+
+/// The cross-language battery. Each program is deliberately tiny but exercises real
+/// computation (arithmetic, calls, comparisons, loops, I/O) — not just constants —
+/// so a backend that merely emits a literal would not pass.
+const PROGRAMS: &[Prog] = &[
+    // Twig — the original AOT language; a bare expression is the whole program.
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm] },
+    // Nib — typed functions: define `double`, call it, return the result. Greened on
+    // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
+    // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument
+    // `21` matches the `i64` parameter the strict WASM backend expects.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
+    },
+    // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
+    Prog {
+        lang: Language::Oct,
+        ext: "oct",
+        src: "fn main() { let x: u8 = 1; if x == 1 { let y: u8 = 2; } else { let z: u8 = 3; } }",
+        expect: Expect::Exit(0),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
+    },
+    // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := 17 mod 5 end",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
+    },
+    // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
+    // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
+    // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)
+    // `iir-to-llvm` (v0.9.0) lowers the tape ops to `@calloc`/`getelementptr i8`+`zext`/
+    // `trunc`+`store` + libc `putchar`/`getchar`. On WASM (LM-W) `iir-to-wasm` (v0.13.0)
+    // lowers them over linear memory: `alloc_bytes`→base offset 0, `load_byte`→
+    // `i32.load8_u`+`i64.extend_i32_u`, `store_byte`→`i32.wrap_i64`+`i32.store8`, and
+    // `putchar`/`getchar`→ the `env.putchar`/`env.getchar` host imports `run_wasm`'s
+    // `PutcharFunc` resolves (capturing raw bytes → stdout `A`, not the decimal `65`).
+    // On JVM (LM-J) `iir-to-jvm-class-file` lowers the tape to a static `byte[] __tape`
+    // (`getstatic … __tape : [B` + `baload`/`bastore`) and `.`/`,` to `invokestatic
+    // env/BFRuntime.putchar(I)V`/`getchar()I`; `run_jvm` compiles the `env.BFRuntime`
+    // host class with `javac` and captures its `System.out.write` bytes (→ `A`).
+    // On CLR (LM-C) `iir-to-cil-bytecode`'s textual `.il` lowers the tape to an
+    // `unsigned int8[]` local (`newarr [System.Runtime]System.Byte`, `ldelem.u1`/
+    // `stelem.i1`) and `.` to `Console::Write(char)` (so `.` of 65 writes `A`); the
+    // `Run()` launcher discards the entry result (the `putchar` side effect is the
+    // output). `run_clr` assembles with real `ilasm` and runs on real `dotnet`.
+    Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: "++++++++[>++++++++<-]>+.",
+        expect: Expect::Stdout("A"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
+    // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
+    // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to
+    // `call $__print_i64`, imported as `env.__print_i64 : (i64) -> ()`; `run_wasm`'s
+    // `PrintHost` resolves that import and captures the printed value (LM-W BASIC). On
+    // JVM `print_i64` lowers to `invokestatic env/BasicRuntime.println(J)V`; `run_jvm`
+    // compiles that host class with `javac`, discards the entry result, and captures
+    // `System.out` (LM-J BASIC). On CLR `print_i64` lowers to `Console.WriteLine(int32)`
+    // and the launcher discards (rather than re-prints) the entry result; `run_clr`
+    // captures `Console` (LM-C BASIC). On the VM, `run_vm` registers a `print_i64`
+    // builtin closure that captures the printed integer into a buffer (Phase V).
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT 42\n20 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
+    },
+];
+
+/// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
+/// the always-present system linker; on Windows it needs a real MSVC/LLD/gcc linker.
+fn native_linker_ok() -> bool {
+    if cfg!(target_os = "windows") {
+        // Mirror twig-aot's probe: confirm a genuine linker, not git-bash's `link`.
+        let probes: &[(&str, &str, &[&str])] = &[
+            ("link.exe", "", &["Microsoft", "Linker"]),
+            ("lld-link.exe", "", &["LLD"]),
+            ("gcc.exe", "--version", &["gcc"]),
+        ];
+        probes.iter().any(|(name, arg, markers)| {
+            let mut cmd = Command::new(name);
+            if !arg.is_empty() {
+                cmd.arg(arg);
+            }
+            cmd.output()
+                .map(|o| {
+                    let banner = format!(
+                        "{}{}",
+                        String::from_utf8_lossy(&o.stdout),
+                        String::from_utf8_lossy(&o.stderr)
+                    );
+                    markers.iter().all(|m| banner.contains(m))
+                })
+                .unwrap_or(false)
+        })
+    } else {
+        cfg!(any(target_os = "linux", target_os = "macos"))
+    }
+}
+
+/// Compile `p` to a native executable for the host OS. `None` when the host can't
+/// produce a native exe (skip), so the suite degrades gracefully off Linux/macOS.
+fn compile_native(src_path: &std::path::Path, exe: &std::path::Path, lang: Language) -> Option<()> {
+    #[cfg(target_os = "linux")]
+    {
+        lang_aot::compile_file_to_linux_executable(src_path, exe, lang).ok()
+    }
+    #[cfg(target_os = "macos")]
+    {
+        lang_aot::compile_file_to_macos_executable(src_path, exe, lang).ok()
+    }
+    #[cfg(target_os = "windows")]
+    {
+        lang_aot::compile_file_to_windows_executable(src_path, exe, lang).ok()
+    }
+    #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
+    {
+        let _ = (src_path, exe, lang);
+        None
+    }
+}
+
+/// Native-AOT runner: write the source, compile to a host executable, run it, and
+/// return `(exit_code, trimmed_stdout)`. `None` when native AOT is unavailable here.
+///
+/// The programs are fixed literals (no untrusted input), and each terminates by
+/// construction — there is no unbounded loop or recursion in the harness itself.
+/// The work happens in a fresh `tempfile::tempdir()` (a random, `0700`, auto-removed
+/// directory) rather than a predictable `temp_dir()/<pid>` path, so a local attacker
+/// cannot pre-create the directory or plant a symlink at `prog` and have the harness
+/// execute substituted code in the compile→run window (CWE-377/367). The `_dir`
+/// guard is held until after the executable runs so it is not removed early.
+fn run_native(p: &Prog) -> Option<(Option<i32>, String)> {
+    if !native_linker_ok() {
+        return None;
+    }
+    let dir = tempfile::tempdir().ok()?;
+    let src_path = dir.path().join(format!("prog.{}", p.ext));
+    std::fs::write(&src_path, p.src).ok()?;
+    let exe = dir.path().join("prog");
+    compile_native(&src_path, &exe, p.lang)?;
+    let out = Command::new(&exe).output().ok()?;
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    Some((out.status.code(), stdout))
+}
+
+/// Is a usable `clang` present? Gates the LLVM column (skip when absent).
+fn clang_ok() -> bool {
+    Command::new("clang")
+        .arg("--version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// A minimal C runtime providing the generic `__print_i64` primitive that
+/// `iir-to-llvm` emits for a `print_i64` builtin (Dartmouth BASIC's `PRINT` is the
+/// first user — the same convention as wasm's `env.__print_i64` / JVM's
+/// `BasicRuntime.println(J)V` / CLR's `Console.WriteLine(int64)`). It is *not*
+/// language-specific: any IIR that calls `print_i64` links it. Linked only when the
+/// emitted `.ll` actually references `@__print_i64`, so the bare expression-language
+/// programs still link a standalone `.ll`.
+const PRINT_RUNTIME_C: &str =
+    "#include <stdio.h>\n#include <stdint.h>\nvoid __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n";
+
+/// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
+/// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
+/// `None` when `clang` is absent or the build fails (skip).
+///
+/// Handles both result kinds: the expression languages return an exit code from a
+/// bare `.ll`; an I/O language (Dartmouth BASIC) emits `call void @__print_i64(...)`,
+/// so when the `.ll` references that symbol the generic `PRINT_RUNTIME_C` is compiled
+/// in and the harness compares the program's **stdout**.
+///
+/// Same temp-file hardening as `run_native`: a fresh `tempfile::tempdir()` whose
+/// guard outlives the run, so the executed `prog` cannot be substituted (CWE-377/367).
+fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
+    if !clang_ok() {
+        return None;
+    }
+    let triple = String::from_utf8(
+        Command::new("clang").arg("-dumpmachine").output().ok()?.stdout,
+    )
+    .ok()?
+    .trim()
+    .to_string();
+    let ll = lang_aot::compile_source_to_llvm_with_target(p.lang, p.src, "lm", &triple).ok()?;
+    let dir = tempfile::tempdir().ok()?;
+    let ll_path = dir.path().join("prog.ll");
+    std::fs::write(&ll_path, &ll).ok()?;
+    let exe = dir.path().join("prog");
+    let mut cmd = Command::new("clang");
+    cmd.arg("-x").arg("ir").arg(&ll_path);
+    // Link the generic print runtime iff the program actually prints.
+    if ll.contains("@__print_i64") {
+        let rt_path = dir.path().join("rt.c");
+        std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
+        cmd.arg("-x").arg("c").arg(&rt_path);
+    }
+    let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().ok()?;
+    if !built.status.success() {
+        return None;
+    }
+    let out = Command::new(&exe).output().ok()?;
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    Some((out.status.code(), stdout))
+}
+
+/// The generic stdout primitive an I/O language's wasm emits. Dartmouth BASIC's
+/// `PRINT` lowers to `call $__print_i64`, imported as `env.__print_i64 : (i64) -> ()`
+/// — the wasm sibling of the LLVM column's `@__print_i64` C runtime, the JVM's
+/// `BasicRuntime.println(J)V`, and the CLR's `Console.WriteLine(int64)`. It is *not*
+/// language-specific: any IIR that prints an integer routes through this import.
+///
+/// `PrintFunc` is the host implementation of that import. Each call appends its single
+/// `i64` argument to a shared capture buffer (`Arc<Mutex<Vec<i64>>>`) so the test can
+/// read back exactly what the program printed. The function does no work proportional
+/// to untrusted input — it pushes one integer and returns — so there is no DoS vector.
+struct PrintFunc {
+    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+}
+
+impl wasm_execution::HostFunction for PrintFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        // `(i64) -> ()`: one i64 in, nothing out. A `LazyLock` static gives the
+        // `&FuncType` the trait must hand back a stable lifetime.
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I64],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let value = args
+            .first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_i64: missing argument"))?
+            .as_i64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        self.captured
+            .lock()
+            .expect("lang-matrix print buffer poisoned")
+            .push(value);
+        Ok(vec![])
+    }
+}
+
+/// Brainfuck's `.` lowers to `call $putchar`, imported as `env.putchar : (i32) -> ()`
+/// (the wasm sibling of the LLVM column's libc `@putchar`). `PutcharFunc` is the host
+/// implementation: each call appends the low byte of its i32 argument to a shared byte
+/// buffer, so the test reads back the exact bytes the program wrote — Brainfuck's `.`
+/// of cell value 65 produces the byte `A`, giving stdout `"A"` (NOT the decimal `"65"`
+/// that `__print_i64` would). One byte pushed per call — no DoS vector.
+struct PutcharFunc {
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostFunction for PutcharFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let value = args
+            .first()
+            .ok_or_else(|| wasm_execution::TrapError::new("putchar: missing argument"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        self.bytes
+            .lock()
+            .expect("lang-matrix putchar buffer poisoned")
+            .push((value & 0xFF) as u8);
+        Ok(vec![])
+    }
+}
+
+/// Brainfuck's `,` lowers to `call $getchar`, imported as `env.getchar : () -> i32`
+/// (the wasm sibling of libc `@getchar`). This matrix has no stdin, so the host returns
+/// `-1` (EOF) — the conventional Brainfuck "leave 255 on EOF" after the cell store
+/// truncates it. Resolving it keeps the host complete for any BF program that reads
+/// input; the proven cell (`++++++++[>++++++++<-]>+.`) emits no `,`, so it is unused there.
+struct GetcharFunc;
+
+impl wasm_execution::HostFunction for GetcharFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![],
+                results: vec![wasm_types::ValueType::I32],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        _args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        Ok(vec![wasm_execution::WasmValue::I32(-1)])
+    }
+}
+
+/// The host interface the matrix runs wasm under: it resolves the generic
+/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC), and the
+/// Brainfuck I/O imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture)
+/// / `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
+/// import no host functions, so the host is never consulted for them and behaviour is
+/// identical to `WasmRuntime::new`).
+struct PrintHost {
+    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostInterface for PrintHost {
+    fn resolve_function(
+        &self,
+        module_name: &str,
+        name: &str,
+    ) -> Option<Box<dyn wasm_execution::HostFunction>> {
+        match (module_name, name) {
+            ("env", "__print_i64") => Some(Box::new(PrintFunc {
+                captured: std::sync::Arc::clone(&self.captured),
+            })),
+            ("env", "putchar") => Some(Box::new(PutcharFunc {
+                bytes: std::sync::Arc::clone(&self.bytes),
+            })),
+            ("env", "getchar") => Some(Box::new(GetcharFunc)),
+            _ => None,
+        }
+    }
+
+    fn resolve_global(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<(wasm_types::GlobalType, wasm_execution::WasmValue)> {
+        None
+    }
+
+    fn resolve_memory(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<wasm_execution::LinearMemory> {
+        None
+    }
+
+    fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<wasm_execution::Table> {
+        None
+    }
+}
+
+/// WASM runner: source → wasm bytes (`iir-to-wasm`) → the in-process `wasm-runtime`,
+/// run under a `PrintHost` so an I/O language's `env.__print_i64` import resolves.
+/// No external tool — the runtime is in-repo, so this always runs (returns `None`
+/// only when the program fails to emit or the runtime can't load it). Handles both
+/// result kinds: an expression language returns its value as `main`'s wasm result
+/// (the `code`); an I/O language (Dartmouth BASIC) prints through `env.__print_i64`,
+/// whose arguments the host captured into the buffer, joined as the program's stdout.
+fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
+    let wasm = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
+    let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    let host = PrintHost {
+        captured: std::sync::Arc::clone(&captured),
+        bytes: std::sync::Arc::clone(&byte_buf),
+    };
+    let rt = wasm_runtime::WasmRuntime::with_host(Box::new(host));
+    let result = rt.load_and_run(&wasm, "main", &[]).ok()?;
+    // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
+    // convention the native/LLVM columns use for the same programs).
+    let code = result.first().copied().map(|v| (v as i32) & 0xFF);
+    // stdout has two shapes: Brainfuck writes raw bytes via `env.putchar` (so `.` of 65
+    // is the byte `A`); BASIC writes integers via `env.__print_i64` (one per call, joined
+    // by newlines). A program uses one or the other, so prefer the byte stream when the
+    // program wrote any. Expression languages print nothing → empty stdout.
+    let printed_bytes = byte_buf.lock().expect("lang-matrix putchar buffer poisoned");
+    let stdout = if printed_bytes.is_empty() {
+        captured
+            .lock()
+            .expect("lang-matrix print buffer poisoned")
+            .iter()
+            .map(|v| v.to_string())
+            .collect::<Vec<_>>()
+            .join("\n")
+    } else {
+        String::from_utf8_lossy(&printed_bytes).to_string()
+    };
+    Some((code, stdout))
+}
+
+/// Is a usable `java` present? Gates the JVM column (skip when absent), exactly as
+/// `clang_ok` gates LLVM and the W16 suite gates its external backends.
+fn java_ok() -> bool {
+    Command::new("java")
+        .arg("-version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// A minimal `env.BasicRuntime` host class providing the `println(long)` primitive
+/// that `iir-to-jvm-class-file` emits for Dartmouth BASIC's `PRINT` (`print_i64` →
+/// `invokestatic env/BasicRuntime.println(J)V`). It is the JVM sibling of the wasm
+/// column's `env.__print_i64` host import / the LLVM column's `@__print_i64` C
+/// runtime, and is *not* language-specific: any IIR that prints an integer links it.
+/// `run_jvm` compiles it with `javac` onto the classpath only when running an I/O
+/// program, so the expression languages still run a standalone `Main.class`.
+const BASIC_RUNTIME_JAVA: &str =
+    "package env; public final class BasicRuntime { public static void println(long x){ System.out.println(x); } }";
+
+/// The `env.BFRuntime` host class for Brainfuck (LANG-MATRIX LM-J). `iir-to-jvm-class-file`
+/// lowers Brainfuck's tape to a static `byte[] __tape` field (`getstatic … __tape : [B` +
+/// `baload`/`bastore`) and its `.`/`,` to `invokestatic env/BFRuntime.putchar(I)V` /
+/// `getchar()I` — the JVM sibling of the LLVM column's libc `putchar`/`getchar` and the
+/// wasm column's `env.putchar`/`env.getchar` host imports. `putchar` writes a raw byte to
+/// stdout (so `.` of cell value 65 yields the byte `A`, not the decimal `65`); `getchar`
+/// returns `0` at EOF (the matrix supplies no stdin). The 30 000-cell tape is zero-filled
+/// by `new byte[30000]`, matching the `alloc_bytes` tape size.
+const BF_RUNTIME_JAVA: &str = "package env; public final class BFRuntime { \
+public static byte[] __tape = new byte[30000]; \
+public static void putchar(int c){ System.out.write(c & 0xFF); System.out.flush(); } \
+public static int getchar(){ try { int b = System.in.read(); return b < 0 ? 0 : b; } catch (java.io.IOException e) { return 0; } } }";
+
+/// JVM runner: source → `JvmClassFile` (`iir-to-jvm-class-file`) → real `java`, the
+/// W16 wrapper-launcher strategy generalized from McCarthy to **any** language.
+///
+/// `compile_source_to_jvm_class` emits a class `Main` whose entry method is `main`
+/// with descriptor `()I` (an expression language's `int` result) or `()J` (an I/O
+/// program left at its native `long` width — see `concretize_scalar_any_for_jvm`),
+/// but a class run by `java` needs a `main([Ljava/lang/String;)V` entry point. So we
+/// read the entry's real return descriptor and inject one of two launcher methods,
+/// keyed on the program's result kind:
+///
+/// * **Expression language** (`Expect::Exit`) — print the entry method's result so
+///   the harness can read it back:
+///   ```text
+///     getstatic  System.out         // : PrintStream
+///     invokestatic Main.main()<R>   // : the program's result
+///     invokevirtual println(<R>)V   // print it  (<R> = I or J)
+///     return
+///   ```
+/// * **I/O language** (`Expect::Stdout`, Dartmouth BASIC) — the program writes its
+///   own output through `env.BasicRuntime.println` as a side effect, so the launcher
+///   merely runs `main` and **discards** its result (`pop` / `pop2`), and the host
+///   class is compiled onto the classpath:
+///   ```text
+///     invokestatic Main.main()<R>   // runs the program (prints as a side effect)
+///     pop / pop2                    // discard the (unused) return value
+///     return
+///   ```
+///
+/// (Two methods named `main` with different descriptors is legal — the JVM keys
+/// methods on name **and** descriptor.) `None` when `java` (or, for I/O, `javac`) is
+/// absent or any step fails (skip). We deliberately do **not** pass `-Xverify:none`:
+/// the emitted bytecode is well-formed, so full verification is a *stronger* check
+/// and rejects any malformed bytecode cleanly (a `VerifyError` → non-zero exit)
+/// instead of executing it and SIGSEGV-crashing with an `hs_err_pid*.log` dump.
+///
+/// Security/termination: the program is a fixed literal (no untrusted input); the
+/// emitted class + host source are written into a fresh `tempfile::tempdir()`
+/// (random, `0700`, auto-removed) whose guard outlives the run, so neither the
+/// executed `Main.class` nor the `javac`-compiled host can be substituted in the
+/// write→run window (CWE-377/367); the class name is the constant `"Main"`, never
+/// interpolated from input; and each program terminates by construction.
+fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
+    use iir_to_jvm_class_file::serialize_jvm_class_file;
+    use jvm_class_file::{
+        JvmCodeAttribute, JvmConstantPoolEntry, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC,
+        ACC_STATIC,
+    };
+    if !java_ok() {
+        return None;
+    }
+    fn cp_append(cp: &mut Vec<Option<JvmConstantPoolEntry>>, e: JvmConstantPoolEntry) -> u16 {
+        cp.push(Some(e));
+        (cp.len() - 1) as u16
+    }
+    let prints = matches!(p.expect, Expect::Stdout(_));
+    let mut class = lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main").ok()?;
+    // The entry method's real return type — `I` (int) for the expression languages,
+    // `J` (long) for a printing program. The launcher must match it exactly.
+    let entry_desc = class.methods.iter().find(|m| m.name == "main")?.descriptor.clone();
+    let ret = entry_desc.rsplit(')').next()?.to_string();
+
+    // Build the constant-pool entries the launcher references. Always a self-ref to
+    // `Main.main<entry_desc>`; for the print path also `System.out` and the matching
+    // `println(<R>)V`.
+    let (entry_ref, print_refs) = {
+        let cp = &mut class.constant_pool;
+        let print_refs = if prints {
+            None
+        } else {
+            let sys_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/lang/System".into()));
+            let sys_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: sys_utf8 });
+            let out_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("out".into()));
+            let ps_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("Ljava/io/PrintStream;".into()));
+            let out_nat = cp_append(
+                cp,
+                JvmConstantPoolEntry::NameAndType { name_index: out_utf8, descriptor_index: ps_desc },
+            );
+            let out_fieldref = cp_append(
+                cp,
+                JvmConstantPoolEntry::Fieldref { class_index: sys_class, name_and_type_index: out_nat },
+            );
+            let ps_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/io/PrintStream".into()));
+            let ps_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: ps_utf8 });
+            let pln_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("println".into()));
+            let pln_desc = cp_append(cp, JvmConstantPoolEntry::Utf8(format!("({ret})V")));
+            let pln_nat = cp_append(
+                cp,
+                JvmConstantPoolEntry::NameAndType { name_index: pln_utf8, descriptor_index: pln_desc },
+            );
+            let println_ref = cp_append(
+                cp,
+                JvmConstantPoolEntry::Methodref { class_index: ps_class, name_and_type_index: pln_nat },
+            );
+            Some((out_fieldref, println_ref))
+        };
+        let main_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("Main".into()));
+        let main_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: main_utf8 });
+        let ent_name = cp_append(cp, JvmConstantPoolEntry::Utf8("main".into()));
+        let ent_desc = cp_append(cp, JvmConstantPoolEntry::Utf8(entry_desc.clone()));
+        let ent_nat = cp_append(
+            cp,
+            JvmConstantPoolEntry::NameAndType { name_index: ent_name, descriptor_index: ent_desc },
+        );
+        let entry_ref = cp_append(
+            cp,
+            JvmConstantPoolEntry::Methodref { class_index: main_class, name_and_type_index: ent_nat },
+        );
+        let _ = cp_append(cp, JvmConstantPoolEntry::Utf8("([Ljava/lang/String;)V".into()));
+        (entry_ref, print_refs)
+    };
+    let [ent_hi, ent_lo] = entry_ref.to_be_bytes();
+    let main_code = match print_refs {
+        Some((out_fieldref, println_ref)) => {
+            let [out_hi, out_lo] = out_fieldref.to_be_bytes();
+            let [pln_hi, pln_lo] = println_ref.to_be_bytes();
+            vec![
+                0xB2, out_hi, out_lo, // getstatic System.out
+                0xB8, ent_hi, ent_lo, // invokestatic Main.main()<R>
+                0xB6, pln_hi, pln_lo, // invokevirtual println(<R>)V
+                0xB1, // return
+            ]
+        }
+        None => {
+            // Discard the entry result: `pop2` for a wide (long/double) value, `pop`
+            // for a single-slot value, nothing for a `void` entry.
+            let discard: &[u8] = match ret.as_str() {
+                "J" | "D" => &[0x58], // pop2
+                "V" => &[],
+                _ => &[0x57], // pop
+            };
+            let mut code = vec![0xB8, ent_hi, ent_lo]; // invokestatic Main.main()<R>
+            code.extend_from_slice(discard);
+            code.push(0xB1); // return
+            code
+        }
+    };
+    class.methods.push(JvmMethodInfo {
+        access_flags: ACC_PUBLIC | ACC_STATIC,
+        name: "main".into(),
+        descriptor: "([Ljava/lang/String;)V".into(),
+        attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
+            name: "Code".into(),
+            max_stack: 2,
+            max_locals: 1,
+            code: main_code,
+            nested_attributes: vec![],
+        })],
+    });
+    let bytes = serialize_jvm_class_file(&class);
+    let dir = tempfile::tempdir().ok()?;
+    std::fs::write(dir.path().join("Main.class"), &bytes).ok()?;
+    // For an I/O program, compile the `env.BasicRuntime` host class onto the
+    // classpath so its `println(J)V` resolves. `javac` ships with the JDK; if it is
+    // somehow absent the cell skips gracefully (`None`).
+    if prints {
+        // Pick the host class the program's I/O lowers to: Brainfuck's `.`/`,` +
+        // tape use `env.BFRuntime`; Dartmouth BASIC's `PRINT` uses
+        // `env.BasicRuntime`. Compile it onto the classpath with `javac`.
+        let (file, source) = if p.lang == Language::Brainfuck {
+            ("BFRuntime.java", BF_RUNTIME_JAVA)
+        } else {
+            ("BasicRuntime.java", BASIC_RUNTIME_JAVA)
+        };
+        let src = dir.path().join(file);
+        std::fs::write(&src, source).ok()?;
+        let built = Command::new("javac").arg("-d").arg(dir.path()).arg(&src).output().ok()?;
+        if !built.status.success() {
+            return None;
+        }
+    }
+    let out = Command::new("java").arg("-cp").arg(dir.path()).arg("Main").output().ok()?;
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if prints {
+        // The program wrote its result to stdout via `env.BasicRuntime.println`.
+        Some((out.status.code(), stdout))
+    } else {
+        // The launcher printed the entry method's result; parse it as the program's
+        // value (matching the exit-code convention of the other columns).
+        Some((stdout.parse::<i32>().ok(), String::new()))
+    }
+}
+
+/// Is `dotnet` present? Together with `find_ilasm` this gates the CLR column.
+fn dotnet_ok() -> bool {
+    Command::new("dotnet")
+        .arg("--version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// CLR runner: source → textual `.il` (`iir-to-cil-bytecode`) → real `ilasm` → real
+/// `dotnet` — the CLR-real path of the McCarthy CLR chapter, generalized to any
+/// language. `compile_source_to_cil_text` emits a `Main` whose entry computes the
+/// program's value and `Console.WriteLine`s it, so (like the McCarthy runner) we
+/// assemble the `.il` to a real PE with `ilasm -exe`, run it on `dotnet`, and parse
+/// the printed integer. Gated on `dotnet` **and** a locatable `ilasm` (the assembler
+/// ships only in a NuGet runtime pack — `clr_support::find_ilasm` walks the cache);
+/// skips gracefully when either is absent.
+///
+/// Security/termination: the program is a fixed literal (no untrusted input); the
+/// `.il`, the assembled `Main.dll` and its `runtimeconfig.json` are written into a
+/// fresh `tempfile::tempdir()` (random, `0700`, auto-removed) whose guard outlives
+/// the run, so the executed assembly cannot be substituted in the assemble→run
+/// window (CWE-377/367); the class name is the constant `"Main"`, never from input;
+/// and each program terminates by construction.
+fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
+    if !dotnet_ok() {
+        return None;
+    }
+    let ilasm = clr_support::find_ilasm()?;
+    let il = lang_aot::compile_source_to_cil_text(p.lang, p.src, "Main").ok()?;
+    let dir = tempfile::tempdir().ok()?;
+    let il_path = dir.path().join("Main.il");
+    std::fs::write(&il_path, &il).ok()?;
+    let dll = dir.path().join("Main.dll");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false")
+        .arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path)
+        .output()
+        .ok()?;
+    if !asm.status.success() || !dll.exists() {
+        return None;
+    }
+    // A `.runtimeconfig.json` is required to launch a framework-dependent assembly
+    // on `dotnet`; pin it to the same net9.0 runtime the McCarthy CLR-real tests use.
+    std::fs::write(
+        dir.path().join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#,
+    )
+    .ok()?;
+    let out = Command::new("dotnet").arg(&dll).output().ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    // Whatever the program wrote to `Console`: for an expression language that's the
+    // launcher's `Console.WriteLine` of the entry's `int` result (parsed as the value,
+    // matching the exit-code convention); for an I/O language (Dartmouth BASIC) it's
+    // the `PRINT` output captured directly. Return both — `assert_cell` picks the one
+    // the program's `Expect` cares about.
+    let printed = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    Some((printed.parse::<i32>().ok(), printed))
+}
+
+/// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**
+/// (`vm_core::VMCore`) interpreting the shared IIR directly (Phase V). This is the
+/// in-process, run-anywhere analog of the code-gen columns: the *same* `IIRModule` the
+/// LLVM/WASM/JVM/CLR backends compile is instead **interpreted** by `VMCore`, whose
+/// instruction dispatch already covers the arithmetic / comparison / bitwise /
+/// control-flow / memory / `call_builtin` ops every scalar language emits. There is no
+/// per-language code here — a future Ruby/JS frontend that lowers to IIR would run the
+/// same way. (McCarthy lisp uses its own `LispyValue` VM; the matrix's six languages are
+/// all scalar, so they share this one.)
+///
+/// The I/O languages print through `call_builtin`, which `VMCore` dispatches to a
+/// **registered builtin closure**: `print_i64` (Dartmouth BASIC's `PRINT`) appends its
+/// integer argument to a capture buffer — the VM sibling of the wasm `PrintHost` import /
+/// the LLVM `@__print_i64` C runtime / the JVM `BasicRuntime` / the CLR `Console.WriteLine`.
+/// (`putchar`/`getchar`, for Brainfuck, are registered too but unused until the byte-tape
+/// ops land on `VMCore` — Brainfuck-on-VM is the next slice.)
+///
+/// An expression language's `main` returns an `Int`, used as the exit code (`& 0xFF`, the
+/// other columns' convention); an I/O language's stdout is the captured buffer. `None`
+/// only if the program fails to compile or the VM errors — the VM is in-process, so a
+/// tagged cell always runs (no host gate).
+fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
+    use std::sync::{Arc, Mutex};
+    use vm_core::core::VMCore;
+    use vm_core::value::Value;
+
+    let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
+
+    let mut vm = VMCore::new();
+
+    // Capture buffer for the I/O languages. `print_i64` (BASIC) appends one integer per
+    // call, joined by newlines; `putchar` (Brainfuck) appends one byte. A program uses at
+    // most one, so a single buffer + a byte buffer suffice; expression languages print
+    // nothing. The closures push a bounded amount per call — no DoS vector.
+    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
+
+    let ints = Arc::clone(&printed_ints);
+    vm.builtins_mut().register("print_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        ints.lock().expect("lang-matrix VM print buffer poisoned").push(n);
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("putchar", move |args: &[Value]| {
+        let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
+        bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
+        Ok(Value::Null)
+    });
+    vm.builtins_mut().register("getchar", move |_args: &[Value]| {
+        // No stdin in the matrix; EOF → 0 (BF convention).
+        Ok(Value::Int(0))
+    });
+
+    let result = vm.execute(&mut module, &entry, &[]).ok()?;
+
+    // The exit code: an expression language's `main` returns an `Int`.
+    let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
+    // stdout: prefer the byte stream (Brainfuck `putchar`) when present, else the integer
+    // stream (BASIC `print_i64`) joined by newlines; empty for the expression languages.
+    let byte_buf = printed_bytes.lock().expect("lang-matrix VM putchar buffer poisoned");
+    let stdout = if byte_buf.is_empty() {
+        printed_ints
+            .lock()
+            .expect("lang-matrix VM print buffer poisoned")
+            .iter()
+            .map(|v| v.to_string())
+            .collect::<Vec<_>>()
+            .join("\n")
+    } else {
+        String::from_utf8_lossy(&byte_buf).to_string()
+    };
+    Some((code, stdout))
+}
+
+/// Dispatch a program to a backend runner. `None` = the backend's toolchain is
+/// unavailable on this host (skip, like the W16 external-tool backends).
+fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
+    match backend {
+        Backend::NativeAot => run_native(p),
+        Backend::Llvm => run_llvm(p),
+        Backend::Wasm => run_wasm(p),
+        Backend::Jvm => run_jvm(p),
+        Backend::Clr => run_clr(p),
+        Backend::Vm => run_vm(p),
+    }
+}
+
+/// Assert a single matrix cell agrees with the program's known result.
+fn assert_cell(backend: Backend, p: &Prog, code: Option<i32>, stdout: &str) {
+    match &p.expect {
+        Expect::Exit(n) => assert_eq!(
+            code,
+            Some(*n),
+            "{backend:?} {:?}: expected exit {n}, got {code:?} (stdout {stdout:?})",
+            p.lang
+        ),
+        Expect::Stdout(s) => assert_eq!(
+            stdout, *s,
+            "{backend:?} {:?}: expected stdout {s:?}, got {stdout:?}",
+            p.lang
+        ),
+    }
+}
+
+/// The capstone: every `(program, backend)` cell the campaign has **proven** runs
+/// and agrees with the known result. A cell whose toolchain is absent skips
+/// gracefully; a cell whose toolchain is present but disagrees fails loudly.
+#[test]
+fn matrix_every_proven_cell_agrees() {
+    let mut ran = 0usize;
+    for p in PROGRAMS {
+        for &backend in p.backends {
+            let Some((code, stdout)) = run(backend, p) else {
+                continue;
+            };
+            assert_cell(backend, p, code, &stdout);
+            ran += 1;
+        }
+    }
+    eprintln!("lang-matrix: {ran} proven cells exercised");
+}
+
+/// Per-column floor: when a backend's toolchain IS present, every program tagged
+/// for that backend MUST actually run — a proven cell silently skipping is a
+/// regression, not a graceful absence.
+#[test]
+fn proven_columns_do_not_silently_skip() {
+    // native-AOT: on a Linux/macOS host every native-tagged program must run.
+    if cfg!(any(target_os = "linux", target_os = "macos")) {
+        for p in PROGRAMS.iter().filter(|p| p.backends.contains(&NativeAot)) {
+            assert!(
+                run_native(p).is_some(),
+                "native-AOT present but failed to run {:?}",
+                p.lang
+            );
+        }
+    }
+    // LLVM: when clang is present every LLVM-tagged program must run.
+    if clang_ok() {
+        for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Llvm)) {
+            assert!(
+                run_llvm(p).is_some(),
+                "clang present but LLVM failed to run {:?}",
+                p.lang
+            );
+        }
+    }
+    // WASM: the runtime is in-process (always present), so every WASM-tagged program
+    // must run — no host gate.
+    for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Wasm)) {
+        assert!(
+            run_wasm(p).is_some(),
+            "in-process wasm-runtime failed to run {:?}",
+            p.lang
+        );
+    }
+    // VM: the generic `vm_core::VMCore` is in-process (always present), so every
+    // VM-tagged program must run — no host gate.
+    for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Vm)) {
+        assert!(
+            run_vm(p).is_some(),
+            "in-process vm-core failed to run {:?}",
+            p.lang
+        );
+    }
+    // JVM: when `java` is present every JVM-tagged program must run.
+    if java_ok() {
+        for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Jvm)) {
+            assert!(
+                run_jvm(p).is_some(),
+                "java present but JVM failed to run {:?}",
+                p.lang
+            );
+        }
+    }
+    // CLR: when `dotnet` + `ilasm` are present every CLR-tagged program must run.
+    if dotnet_ok() && clr_support::find_ilasm().is_some() {
+        for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Clr)) {
+            assert!(
+                run_clr(p).is_some(),
+                "dotnet+ilasm present but CLR failed to run {:?}",
+                p.lang
+            );
+        }
+    }
+}

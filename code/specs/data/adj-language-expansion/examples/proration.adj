@@ -1,0 +1,20 @@
+% Worked example — prorated bonus by months of service (arithmetic → predicate).
+%
+% The model extracted the annual bonus and the months worked; the engine
+% prorates on the CPU. A prorated bonus at or above $8,000 unlocks the senior
+% tier. The model wrote only the formula `annual_bonus * months_worked / 12`;
+% it never computed the 9000.
+%
+% Expected: prorated = 12000 * 9 / 12 = 9000 >= 8000 → senior_tier ≈ 1.0.
+
+prior 0.10 for senior_tier
+
+observe annual_bonus(money(12000, usd))
+observe months_worked(9)
+
+let prorated = annual_bonus * months_worked / 12
+
+contributes 1000000 from prorated >= 8000 to senior_tier
+  source "Plan §4.2 — senior-tier proration floor" trust authoritative
+
+? senior_tier

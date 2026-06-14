@@ -8,3 +8,9 @@ cli-builder = { path = "../../../packages/rust/cli-builder" }
 serde_json = "1.0"
 regex = "1.10"
 atty = "0.2"
+layout-ir = { path = "../../../packages/rust/layout-ir" }
+layout-text-measure-native = { path = "../../../packages/rust/layout-text-measure-native" }
+layout-to-paint = { path = "../../../packages/rust/layout-to-paint" }
+paint-codec-png = { path = "../../../packages/rust/paint-codec-png" }
+paint-metal = { path = "../../../packages/rust/paint-metal" }
+text-native = { path = "../../../packages/rust/text-native" }

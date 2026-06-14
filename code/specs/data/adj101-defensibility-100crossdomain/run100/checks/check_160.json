@@ -1,0 +1,8 @@
+{
+ "check_id": 160,
+ "idx": 64,
+ "slot": "approved_medical_leave",
+ "claimed_value": true,
+ "scenario": "Lin took approved medical leave beginning January 6. She notified HR of her intended return and submitted a fitness-for-duty certificate. Her manager has asked whether her old position must be held for her.",
+ "cited_span": "Lin took approved medical leave beginning January 6."
+}

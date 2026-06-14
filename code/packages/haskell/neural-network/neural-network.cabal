@@ -1,0 +1,27 @@
+cabal-version:      2.4
+name:               neural-network
+version:            0.1.0.0
+synopsis:           Graph-native neural network primitives.
+description:        Educational neural graph package for NN02.
+category:           Machine Learning
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+
+library
+    exposed-modules:  NeuralNetwork
+    build-depends:    base >= 4.7 && < 5
+                    , containers >= 0.6
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite neural-network-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    NeuralNetworkSpec
+    build-depends:    base >= 4.7 && < 5
+                    , containers >= 0.6
+                    , hspec == 2.*
+                    , neural-network

@@ -1,0 +1,7 @@
+{
+ "idx": 96,
+ "id": "ACA-7",
+ "scenario": "A budgeted research-technician position became vacant when the original technician resigned. The PI hired a replacement into the same role at the same budgeted salary line and charged the new hire's salary to the grant. The replacement's name does not appear in the originally approved budget.",
+ "policy": "Salary may be charged to a grant only for personnel listed in the approved budget. Override: a replacement hired into a vacated, already-budgeted position may be charged to the grant without a budget amendment, provided the position's role and salary line are unchanged.",
+ "question": "May the replacement technician's salary be charged to the grant?"
+}

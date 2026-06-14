@@ -1,0 +1,9 @@
+% All four correlated manifestations observed, plus the independent finding.
+% Flat encoding would give P ~= 0.98 (prior + 4x ln(LR) + family history).
+% With the mechanism, the four count ONCE: P should be much lower / sensible.
+observe creatine_kinase(markedly_elevated)
+observe ck_rise(post_exertion)
+observe symptom(exertional_cramps)
+observe symptom(second_wind)
+observe family_history(positive)
+? diagnosis(mcardle)

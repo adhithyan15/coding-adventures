@@ -1,0 +1,191 @@
+[
+  {
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "rows": [
+      {
+        "override": "reduced rate of 12 days",
+        "COPY": {
+          "override_attn_share": 0.1539,
+          "response": "Part-time staff hired after January 2020 accrue at a reduced"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.0705,
+          "response": "Based on the information provided in the passage:\n\n1. The st"
+        }
+      },
+      {
+        "override": "lower limit of 55 mph",
+        "COPY": {
+          "override_attn_share": 0.1514,
+          "response": "The posted speed limit on this highway is 65 mph for general"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.0747,
+          "response": "Based on the information provided in the passage, the vehicl"
+        }
+      },
+      {
+        "override": "younger than eighteen are exempt from all overdue fines",
+        "COPY": {
+          "override_attn_share": 0.3032,
+          "response": "Borrowers under eighteen are exempt from all overdue fines."
+        },
+        "ANSWER": {
+          "override_attn_share": 0.1466,
+          "response": "Based on the passage provided, if a twelve-year-old borrower"
+        }
+      },
+      {
+        "override": "refurbished instead carry a reduced warranty term of 90 days",
+        "COPY": {
+          "override_attn_share": 0.3769,
+          "response": "Products carry a one-year warranty covering defects. Refurbi"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.3188,
+          "response": "Based on the information provided in the passage, the warran"
+        }
+      },
+      {
+        "override": "clearance are excluded from all discounts",
+        "COPY": {
+          "override_attn_share": 0.1728,
+          "response": "Loyalty members receive a 10% discount on most purchases. It"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.1739,
+          "response": "Based on the passage provided, if an item is marked as \"clea"
+        }
+      }
+    ],
+    "mean_COPY": 0.2316,
+    "mean_ANSWER": 0.1569,
+    "ratio": 1.48
+  },
+  {
+    "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+    "rows": [
+      {
+        "override": "reduced rate of 12 days",
+        "COPY": {
+          "override_attn_share": 0.1979,
+          "response": "Part-time staff accrue at a reduced rate of 12 days per year"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.0778,
+          "response": "Jordan accrues 12 days of annual paid leave per year. Since "
+        }
+      },
+      {
+        "override": "lower limit of 55 mph",
+        "COPY": {
+          "override_attn_share": 0.1324,
+          "response": "The exact words that describe the limit for commercial truck"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.0739,
+          "response": "Based on the information provided, the speed limit that appl"
+        }
+      },
+      {
+        "override": "younger than eighteen are exempt from all overdue fines",
+        "COPY": {
+          "override_attn_share": 0.3543,
+          "response": "Borrowers younger than eighteen are exempt from all overdue "
+        },
+        "ANSWER": {
+          "override_attn_share": 0.2658,
+          "response": "The borrower is charged an overdue fine of $0.25 per day. Si"
+        }
+      },
+      {
+        "override": "refurbished instead carry a reduced warranty term of 90 days",
+        "COPY": {
+          "override_attn_share": 0.4051,
+          "response": "The warranty for refurbished units is described as a reduced"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.3068,
+          "response": "The warranty period for this customer's purchase is 90 days."
+        }
+      },
+      {
+        "override": "clearance are excluded from all discounts",
+        "COPY": {
+          "override_attn_share": 0.1542,
+          "response": "\"A loyalty member is buying an item marked clearance.\""
+        },
+        "ANSWER": {
+          "override_attn_share": 0.1652,
+          "response": "Since the item is marked clearance, the 10% discount on most"
+        }
+      }
+    ],
+    "mean_COPY": 0.2488,
+    "mean_ANSWER": 0.1779,
+    "ratio": 1.4
+  },
+  {
+    "model": "microsoft/Phi-3.5-mini-instruct",
+    "rows": [
+      {
+        "override": "reduced rate of 12 days",
+        "COPY": {
+          "override_attn_share": 0.2694,
+          "response": "Part-time staff hired after January 2020 accrue at a reduced"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.2189,
+          "response": "Jordan, as a part-time employee hired after January 2020 at "
+        }
+      },
+      {
+        "override": "lower limit of 55 mph",
+        "COPY": {
+          "override_attn_share": 0.1485,
+          "response": "The limit for commercial trucks is 55 mph on the same stretc"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.0757,
+          "response": "Based on the information provided in the passage, the vehicl"
+        }
+      },
+      {
+        "override": "younger than eighteen are exempt from all overdue fines",
+        "COPY": {
+          "override_attn_share": 0.4121,
+          "response": "Borrowers younger than eighteen are exempt from all overdue "
+        },
+        "ANSWER": {
+          "override_attn_share": 0.2831,
+          "response": "Based on the information provided in the passage, borrowers "
+        }
+      },
+      {
+        "override": "refurbished instead carry a reduced warranty term of 90 days",
+        "COPY": {
+          "override_attn_share": 0.4744,
+          "response": "Units sold as refurbished carry a reduced warranty term of 9"
+        },
+        "ANSWER": {
+          "override_attn_share": 0.2932,
+          "response": "The warranty period for the customer's purchase of a refurbi"
+        }
+      },
+      {
+        "override": "clearance are excluded from all discounts",
+        "COPY": {
+          "override_attn_share": 0.3244,
+          "response": "Items marked clearance are excluded from all discounts."
+        },
+        "ANSWER": {
+          "override_attn_share": 0.1635,
+          "response": "Based on the information provided in the passage, a loyalty "
+        }
+      }
+    ],
+    "mean_COPY": 0.3258,
+    "mean_ANSWER": 0.2069,
+    "ratio": 1.57
+  }
+]

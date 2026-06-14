@@ -7,6 +7,10 @@ It adds:
   references to ``%``, ``%i3``, ``%o3`` resolve transparently.
 - Handlers for the runtime-owned heads (`Display`, `Suppress`, `Kill`,
   `Ev`).
+- Handlers for all CAS substrate heads: `Simplify`, `Expand`, `Subst`,
+  `Factor`, `Solve`, list operations, matrix operations, `Limit`, `Taylor`,
+  and numeric helpers like `Abs`, `Floor`, `Ceiling`, etc.
+- Pre-bound constants: ``%pi`` and ``%e`` resolve to their float values.
 - Option-flag attributes (`numer`, `simp`, ...) plus a context-manager
   helper :meth:`with_numer` for short-lived flag overrides used by `Ev`.
 
@@ -16,20 +20,36 @@ passthrough — comes from :class:`SymbolicBackend` unchanged.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 
-from symbolic_ir import IRNode, IRSymbol
+from symbolic_ir import IRFloat, IRNode, IRSymbol
 from symbolic_vm import SymbolicBackend
 from symbolic_vm.backend import Handler
+from symbolic_vm.handlers import FALSE, TRUE
 
+from macsyma_runtime.cas_handlers import build_cas_handler_table
 from macsyma_runtime.handlers import (
+    declare_handler,
     display_handler,
     make_ev_handler,
     make_kill_handler,
+    make_load_handler,
+    properties_handler,
+    propvars_handler,
     suppress_handler,
 )
-from macsyma_runtime.heads import DISPLAY, EV, KILL, SUPPRESS
+from macsyma_runtime.heads import (
+    DECLARE,
+    DISPLAY,
+    EV,
+    KILL,
+    LOAD,
+    PROP_VARS,
+    PROPERTIES,
+    SUPPRESS,
+)
 from macsyma_runtime.history import History
 
 
@@ -46,25 +66,71 @@ class MacsymaBackend(SymbolicBackend):
     #: flag. Phase A defaults true; not consulted yet.
     simp: bool
 
+    #: Whether the REPL should report per-statement wall-clock timing.
+    showtime: bool
+
     #: The session's I/O history, owned by the REPL but referenced by
     #: the backend so VM lookups can resolve `%`, `%iN`, `%oN`.
     history: History
+
+    #: Names of loadable packages already installed on this session via
+    #: ``load("name")``.  See :func:`macsyma_runtime.handlers.make_load_handler`.
+    #: Per-instance — a fresh :class:`MacsymaBackend` always starts empty.
+    _loaded_packages: set[str]
 
     def __init__(self, *, history: History | None = None) -> None:
         super().__init__()
         self.history = history if history is not None else History()
         self.numer = False
         self.simp = True
+        self.showtime = False
+        # Track M1 — per-session loaded-package state.  Must be created
+        # before any handler that touches it (the load handler does).
+        self._loaded_packages = set()
 
         # Patch the inherited handler table with the runtime's heads.
-        # ``SymbolicBackend.__init__`` filled ``self._handlers`` already.
+        # ``SymbolicBackend.__init__`` filled ``self._handlers`` already
+        # (including all CAS substrate handlers: Factor, Solve, Simplify, …).
         runtime_handlers: dict[str, Handler] = {
             DISPLAY.name: display_handler,
             SUPPRESS.name: suppress_handler,
             KILL.name: make_kill_handler(self),
             EV.name: make_ev_handler(),
+            DECLARE.name: declare_handler,
+            PROPERTIES.name: properties_handler,
+            PROP_VARS.name: propvars_handler,
+            # Track M1 — runtime package loader.  Kept here (rather than in
+            # cas_handlers.py) because it mutates session state, just like
+            # Kill and Ev.
+            LOAD.name: make_load_handler(self),
         }
-        self._handlers = {**self._handlers, **runtime_handlers}
+        # Merge in all CAS substrate handlers (simplify, factor, solve,
+        # list ops, matrix, limit, taylor, numeric helpers, …).
+        cas_handlers = build_cas_handler_table()
+        self._handlers = {**self._handlers, **cas_handlers, **runtime_handlers}
+
+        # Pre-bind the standard MACSYMA numeric constants so ``%pi`` and
+        # ``%e`` resolve to their float values rather than remaining as
+        # free symbols. Runtime handlers round-trip through the VM, so
+        # these bindings are picked up automatically when an expression
+        # containing ``%pi`` or ``%e`` is evaluated.
+        self._env["%pi"] = IRFloat(math.pi)
+        self._env["%e"] = IRFloat(math.e)
+        self._env["showtime"] = FALSE
+
+        # Pre-bind the standard MACSYMA constants so users can write
+        # ``%pi`` and ``%e`` without defining them first.  These are
+        # float-valued because MACSYMA treats them as numeric by default;
+        # a later ``simp`` flag can return exact symbolic forms.
+        self._env["%pi"] = IRFloat(math.pi)
+        self._env["%e"] = IRFloat(math.e)
+        # ``%i`` is the imaginary unit constant.  It is pre-bound to the
+        # ``ImaginaryUnit`` symbol (an inert IR symbol handled by the
+        # complex-number substrate) so that expressions like ``3 + 2*%i``
+        # compile and normalise correctly.  SymbolicBackend already
+        # pre-binds ``ImaginaryUnit``; we add the MACSYMA surface alias.
+        from symbolic_ir import IRSymbol as _IRSymbol
+        self._env["%i"] = _IRSymbol("ImaginaryUnit")
 
         # ``Kill`` and ``Ev`` need their arguments raw — not pre-evaluated:
         # ``kill(x)`` should clear the symbol ``x``, not evaluate ``x``
@@ -72,7 +138,18 @@ class MacsymaBackend(SymbolicBackend):
         # flag *names*, which would resolve to themselves under the
         # symbolic backend but holding them costs nothing and keeps the
         # contract obvious.
-        self._held_heads = super().hold_heads() | frozenset({KILL.name, EV.name})
+        self._held_heads = super().hold_heads() | frozenset({
+            KILL.name,
+            EV.name,
+            DECLARE.name,
+            PROPERTIES.name,
+            PROP_VARS.name,
+            # Track M1 — ``load(orthopoly)`` (bare symbol form) would
+            # otherwise resolve to an unbound symbol; hold the arg so the
+            # handler can pull the name verbatim.  ``load("orthopoly")``
+            # works either way since IRString is self-evaluating.
+            LOAD.name,
+        })
 
     def hold_heads(self) -> frozenset[str]:
         return self._held_heads
@@ -85,6 +162,15 @@ class MacsymaBackend(SymbolicBackend):
         No-op if the name was never bound. Used by the ``Kill`` handler.
         """
         self._env.pop(name, None)
+        if name == "showtime":
+            self.showtime = False
+            self._env["showtime"] = FALSE
+
+    def bind(self, name: str, value: IRNode) -> None:
+        """Bind ``name`` and keep MACSYMA option flags in sync."""
+        super().bind(name, value)
+        if name == "showtime":
+            self.showtime = value == TRUE
 
     def reset_environment(self) -> None:
         """Clear every user-introduced binding.
@@ -96,11 +182,11 @@ class MacsymaBackend(SymbolicBackend):
         # Cheapest correct approach: re-run the parent ``__init__``
         # state setup. We don't want to re-install handlers (that would
         # drop our runtime overrides), so we touch only ``_env``.
-        from symbolic_vm.handlers import FALSE, TRUE
-
         self._env.clear()
         self._env["True"] = TRUE
         self._env["False"] = FALSE
+        self._env["showtime"] = FALSE
+        self.showtime = False
         self.history.reset()
 
     # ---- name lookup with history fallback ----------------------------

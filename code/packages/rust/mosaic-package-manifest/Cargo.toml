@@ -1,0 +1,10 @@
+[package]
+name = "mosaic-package-manifest"
+version = "0.1.0"
+edition = "2021"
+description = "Parser and validator for mosaic-package.toml manifests (UI29 §4.1 / §4.2)"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+toml  = "0.8"
+regex = "1"

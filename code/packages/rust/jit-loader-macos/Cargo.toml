@@ -1,0 +1,17 @@
+[package]
+name = "jit-loader-macos"
+version = "0.1.0"
+edition = "2021"
+description = "Install runtime-generated machine code into executable memory on Apple Silicon (mmap MAP_JIT + W^X via pthread_jit_write_protect_np)."
+
+[dependencies]
+
+[dev-dependencies]
+aarch64-backend  = { path = "../aarch64-backend" }
+aarch64-encoder  = { path = "../aarch64-encoder" }
+jit-core         = { path = "../jit-core" }
+aot-core         = { path = "../aot-core" }
+interpreter-ir   = { path = "../interpreter-ir" }
+nib-iir-compiler = { path = "../nib-iir-compiler" }
+twig-ir-compiler = { path = "../twig-ir-compiler" }
+twig-vm          = { path = "../twig-vm" }

@@ -1,0 +1,11 @@
+[package]
+name = "board-vm-uart"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable UART byte-stream adapter for Board VM device transports"
+
+[dependencies]
+board-vm-device = { path = "../board-vm-device" }
+
+[lib]
+path = "src/lib.rs"

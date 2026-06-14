@@ -1,0 +1,922 @@
+{
+  "case_count": 151,
+  "cases": [
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-170",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:170"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-171",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:171"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-172",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:172"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-173",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:173"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-174",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:174"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-175",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:175"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-176",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:176"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-177",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:177"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "entities01-dat-178",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "entities01.dat:178"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "entities01-dat-179",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "entities01.dat:179"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities01-dat-180",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities01.dat:180"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-181",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:181"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-182",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:182"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "entities01-dat-183",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "entities01.dat:183"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-184",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:184"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "entities01-dat-185",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "entities01.dat:185"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-186",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:186"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "entities01-dat-187",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "entities01.dat:187"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "entities01-dat-188",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "entities01.dat:188"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-189",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:189"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-190",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:190"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-191",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:191"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-192",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:192"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-193",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:193"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-194",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:194"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-195",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:195"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-196",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:196"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-197",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:197"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-198",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:198"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-199",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:199"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-200",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:200"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-201",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:201"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-202",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:202"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-203",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:203"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-204",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:204"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-205",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:205"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-206",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:206"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-207",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:207"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-208",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:208"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-209",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:209"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-210",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:210"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-211",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:211"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-212",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:212"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-213",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:213"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-214",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:214"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-215",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:215"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-216",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:216"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-217",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:217"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-218",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:218"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-219",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:219"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-220",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:220"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-221",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:221"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-222",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:222"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-223",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:223"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-224",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:224"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-225",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:225"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-226",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:226"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-227",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:227"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-228",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:228"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-229",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:229"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-230",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:230"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-231",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:231"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-232",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:232"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-233",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:233"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-234",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:234"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-235",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:235"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-236",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:236"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-237",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:237"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-238",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:238"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-239",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:239"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-240",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:240"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-241",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:241"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-242",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:242"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-243",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:243"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "entities01-dat-244",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "entities01.dat:244"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-245",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:245"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-246",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:246"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-247",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:247"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-248",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:248"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-249",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:249"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-250",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:250"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-251",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:251"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-252",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:252"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-253",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:253"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-254",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:254"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-255",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:255"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-256",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:256"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-257",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:257"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-258",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:258"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-259",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:259"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-260",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:260"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-261",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:261"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-262",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:262"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "entities02-dat-263",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "entities02.dat:263"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities02-dat-264",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities02.dat:264"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities02-dat-265",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities02.dat:265"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities02-dat-266",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities02.dat:266"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities02-dat-267",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities02.dat:267"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities02-dat-268",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities02.dat:268"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities02-dat-269",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities02.dat:269"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "entities02-dat-270",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "entities02.dat:270"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "html5test-com-dat-277",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "html5test-com.dat:277"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "html5test-com-dat-278",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "html5test-com.dat:278"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "html5test-com-dat-279",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "html5test-com.dat:279"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "html5test-com-dat-280",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "html5test-com.dat:280"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "html5test-com-dat-281",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "html5test-com.dat:281"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "plain-text-unsafe-dat-349",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "plain-text-unsafe.dat:349"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-849",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:849"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-860",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:860"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-861",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:861"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-862",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:862"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-946",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:946"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-957",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:957"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1214",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1214"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1215",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1215"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1216",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1216"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1217",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1217"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1218",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1218"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1219",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1219"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1220",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1220"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1221",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1221"
+    },
+    {
+      "axis": "character-reference-attribute-boundary",
+      "id": "tests2-dat-18",
+      "reason": "character references and ambiguous ampersands inside parser DOM attributes",
+      "source": "tests2.dat:18"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "tests2-dat-20",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "tests2.dat:20"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "tests2-dat-21",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "tests2.dat:21"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "tests2-dat-22",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "tests2.dat:22"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "tests2-dat-23",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "tests2.dat:23"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "tests2-dat-24",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "tests2.dat:24"
+    },
+    {
+      "axis": "character-reference-ambiguous-ampersand",
+      "id": "tests2-dat-25",
+      "reason": "ambiguous ampersands and malformed references preserved through parser DOM text",
+      "source": "tests2.dat:25"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests2-dat-31",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests2.dat:31"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests2-dat-32",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests2.dat:32"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests5-dat-13",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests5.dat:13"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests5-dat-14",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests5.dat:14"
+    },
+    {
+      "axis": "character-reference-numeric-boundary",
+      "id": "tests3-dat-12",
+      "reason": "numeric character reference decoding and recovery in parser DOM text",
+      "source": "tests3.dat:12"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests6-dat-3",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests6.dat:3"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests6-dat-4",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests6.dat:4"
+    },
+    {
+      "axis": "character-reference-fragment-context",
+      "id": "tests4-dat-4",
+      "reason": "character reference handling inside html5lib fragment contexts",
+      "source": "tests4.dat:4"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-82",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:82"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-93",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:93"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-94",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:94"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-95",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:95"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-179",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:179"
+    },
+    {
+      "axis": "character-reference-rcdata-boundary",
+      "id": "tests16-dat-190",
+      "reason": "character references in parser-driven RCDATA title and textarea content",
+      "source": "tests16.dat:190"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-1",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:1"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-2",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:2"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-3",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:3"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-4",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:4"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-5",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:5"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-6",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:6"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-7",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:7"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "tests24-dat-8",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "tests24.dat:8"
+    },
+    {
+      "axis": "character-reference-named-boundary",
+      "id": "webkit01-dat-16",
+      "reason": "named character reference decoding and semicolon boundary recovery in parser DOM text",
+      "source": "webkit01.dat:16"
+    }
+  ],
+  "counts_by_axis": {
+    "character-reference-ambiguous-ampersand": 11,
+    "character-reference-attribute-boundary": 20,
+    "character-reference-fragment-context": 1,
+    "character-reference-named-boundary": 40,
+    "character-reference-numeric-boundary": 63,
+    "character-reference-rcdata-boundary": 16
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress named and numeric character references, ambiguous ampersands, attribute references, parser-driven RCDATA, and fragment-context character-reference handling.",
+  "format": "whatwg-html-character-reference-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

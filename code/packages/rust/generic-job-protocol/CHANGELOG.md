@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added portable job metadata builders, envelope validation, deadline helpers,
+  and attempt increment helpers for cross-language workers.
+- Added portable retry policy primitives for retryable errors, capped
+  exponential backoff, and exhausted-attempt decisions.
+- Added terminal job response status helpers and `JobResponseSummary` for
+  compact runtime read models.
+- Added request and metadata summaries for payload-free queue/routing read
+  models.
+- Added `JobMetadataBatchSummary` plus request/response metadata summarizers for
+  deadline, priority, affinity, sequence, retry, trace, and tag rollups.
+- Added terminal status and response-summary predicates for shared read-side
+  success, failure, retry, cancel, and timeout classification.
+- Added `JobBatchSummary` for compact request/response rollups across
+  queue/runtime status views.
+
 ## [0.1.0] - 2026-04-20
 
 ### Added

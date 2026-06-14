@@ -16,7 +16,7 @@
 //! ```text
 //! Constants:    LOAD_IMM, LOAD_ADDR
 //! Memory:       LOAD_BYTE, STORE_BYTE, LOAD_WORD, STORE_WORD
-//! Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM
+//! Arithmetic:   ADD, ADD_IMM, SUB, MUL, DIV, AND, AND_IMM
 //! Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
 //! Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
 //! System:       SYSCALL, HALT
@@ -61,10 +61,40 @@ pub enum IrOp {
     AddImm,
     /// Register-register subtraction. `SUB v3, v1, v2  →  v3 = v1 - v2`
     Sub,
+    /// Register-register signed multiplication. `MUL v3, v1, v2  →  v3 = v1 * v2`
+    ///
+    /// Signed integer multiplication; overflow behaviour matches the
+    /// target machine (wrap-around in two's complement is the norm).
+    Mul,
+    /// Register-register signed integer division. `DIV v3, v1, v2  →  v3 = v1 / v2`
+    ///
+    /// Truncates toward zero (C-style), consistent with Python's `//`
+    /// for non-negative operands.
+    ///
+    /// **Division by zero**: backends MUST raise a hardware trap or software
+    /// fault on a zero divisor.  Silently returning 0 is explicitly forbidden
+    /// — doing so would produce wrong program results with no indication of
+    /// error, which can be exploited to bypass security-critical checks
+    /// (e.g. a guard that divides by a sentinel value to detect initialisation).
+    Div,
     /// Register-register bitwise AND. `AND v3, v1, v2  →  v3 = v1 & v2`
     And,
     /// Register-immediate bitwise AND. `AND_IMM v2, v2, 255  →  v2 = v2 & 0xFF`
     AndImm,
+    /// Register-register bitwise OR. `OR v3, v1, v2  →  v3 = v1 | v2`
+    Or,
+    /// Register-immediate bitwise OR. `OR_IMM v2, v2, 1  →  v2 = v2 | 1`
+    OrImm,
+    /// Register-register bitwise XOR. `XOR v3, v1, v2  →  v3 = v1 ^ v2`
+    Xor,
+    /// Register-immediate bitwise XOR. `XOR_IMM v2, v2, 1  →  v2 = v2 ^ 1`
+    XorImm,
+    /// Bitwise NOT (one's complement). `NOT v1, v2  →  v1 = ~v2`
+    ///
+    /// Equivalent to `XOR v1, v2, -1` on a 32-bit machine (XOR with
+    /// all-ones mask).  Backends MUST produce a bitwise complement, not a
+    /// logical negation — `NOT 0x0000_0001 = 0xFFFF_FFFE`, not 0.
+    Not,
     // ── Comparison ────────────────────────────────────────────────────────
     /// Set dst = 1 if lhs == rhs, else 0.
     CmpEq,
@@ -115,8 +145,15 @@ impl fmt::Display for IrOp {
             IrOp::Add       => "ADD",
             IrOp::AddImm    => "ADD_IMM",
             IrOp::Sub       => "SUB",
+            IrOp::Mul       => "MUL",
+            IrOp::Div       => "DIV",
             IrOp::And       => "AND",
             IrOp::AndImm    => "AND_IMM",
+            IrOp::Or        => "OR",
+            IrOp::OrImm     => "OR_IMM",
+            IrOp::Xor       => "XOR",
+            IrOp::XorImm    => "XOR_IMM",
+            IrOp::Not       => "NOT",
             IrOp::CmpEq     => "CMP_EQ",
             IrOp::CmpNe     => "CMP_NE",
             IrOp::CmpLt     => "CMP_LT",
@@ -155,8 +192,15 @@ pub fn parse_op(name: &str) -> Option<IrOp> {
         "ADD"        => Some(IrOp::Add),
         "ADD_IMM"    => Some(IrOp::AddImm),
         "SUB"        => Some(IrOp::Sub),
+        "MUL"        => Some(IrOp::Mul),
+        "DIV"        => Some(IrOp::Div),
         "AND"        => Some(IrOp::And),
         "AND_IMM"    => Some(IrOp::AndImm),
+        "OR"         => Some(IrOp::Or),
+        "OR_IMM"     => Some(IrOp::OrImm),
+        "XOR"        => Some(IrOp::Xor),
+        "XOR_IMM"    => Some(IrOp::XorImm),
+        "NOT"        => Some(IrOp::Not),
         "CMP_EQ"     => Some(IrOp::CmpEq),
         "CMP_NE"     => Some(IrOp::CmpNe),
         "CMP_LT"     => Some(IrOp::CmpLt),
@@ -198,7 +242,9 @@ mod tests {
         let ops = [
             IrOp::LoadImm, IrOp::LoadAddr, IrOp::LoadByte, IrOp::StoreByte,
             IrOp::LoadWord, IrOp::StoreWord, IrOp::Add, IrOp::AddImm,
-            IrOp::Sub, IrOp::And, IrOp::AndImm, IrOp::CmpEq, IrOp::CmpNe,
+            IrOp::Sub, IrOp::Mul, IrOp::Div, IrOp::And, IrOp::AndImm,
+            IrOp::Or, IrOp::OrImm, IrOp::Xor, IrOp::XorImm, IrOp::Not,
+            IrOp::CmpEq, IrOp::CmpNe,
             IrOp::CmpLt, IrOp::CmpGt, IrOp::Label, IrOp::Jump, IrOp::BranchZ,
             IrOp::BranchNz, IrOp::Call, IrOp::Ret, IrOp::Syscall, IrOp::Halt,
             IrOp::Nop, IrOp::Comment,
@@ -231,7 +277,9 @@ mod tests {
         let ops = [
             IrOp::LoadImm, IrOp::LoadAddr, IrOp::LoadByte, IrOp::StoreByte,
             IrOp::LoadWord, IrOp::StoreWord, IrOp::Add, IrOp::AddImm,
-            IrOp::Sub, IrOp::And, IrOp::AndImm, IrOp::CmpEq, IrOp::CmpNe,
+            IrOp::Sub, IrOp::Mul, IrOp::Div, IrOp::And, IrOp::AndImm,
+            IrOp::Or, IrOp::OrImm, IrOp::Xor, IrOp::XorImm, IrOp::Not,
+            IrOp::CmpEq, IrOp::CmpNe,
             IrOp::CmpLt, IrOp::CmpGt, IrOp::Label, IrOp::Jump, IrOp::BranchZ,
             IrOp::BranchNz, IrOp::Call, IrOp::Ret, IrOp::Syscall, IrOp::Halt,
             IrOp::Nop, IrOp::Comment,
@@ -245,17 +293,37 @@ mod tests {
     }
 
     #[test]
-    fn test_opcode_count_is_25() {
-        // Regression guard — we must have exactly 25 opcodes.
+    fn test_opcode_count_is_32() {
+        // Regression guard — we must have exactly 32 opcodes.
+        // 0.1.0: 25 opcodes (original set)
+        // 0.1.1: +Mul, +Div = 27
+        // 0.2.0: +Or, +OrImm, +Xor, +XorImm, +Not = 32
         let ops = [
             IrOp::LoadImm, IrOp::LoadAddr, IrOp::LoadByte, IrOp::StoreByte,
             IrOp::LoadWord, IrOp::StoreWord, IrOp::Add, IrOp::AddImm,
-            IrOp::Sub, IrOp::And, IrOp::AndImm, IrOp::CmpEq, IrOp::CmpNe,
-            IrOp::CmpLt, IrOp::CmpGt, IrOp::Label, IrOp::Jump, IrOp::BranchZ,
-            IrOp::BranchNz, IrOp::Call, IrOp::Ret, IrOp::Syscall, IrOp::Halt,
+            IrOp::Sub, IrOp::Mul, IrOp::Div, IrOp::And, IrOp::AndImm,
+            IrOp::Or, IrOp::OrImm, IrOp::Xor, IrOp::XorImm, IrOp::Not,
+            IrOp::CmpEq, IrOp::CmpNe, IrOp::CmpLt, IrOp::CmpGt,
+            IrOp::Label, IrOp::Jump, IrOp::BranchZ, IrOp::BranchNz,
+            IrOp::Call, IrOp::Ret, IrOp::Syscall, IrOp::Halt,
             IrOp::Nop, IrOp::Comment,
         ];
-        assert_eq!(ops.len(), 25);
+        assert_eq!(ops.len(), 32);
+    }
+
+    #[test]
+    fn test_or_xor_not_display_and_parse() {
+        // Verify the new bitwise ops round-trip correctly.
+        for (op, name) in [
+            (IrOp::Or,    "OR"),
+            (IrOp::OrImm, "OR_IMM"),
+            (IrOp::Xor,   "XOR"),
+            (IrOp::XorImm,"XOR_IMM"),
+            (IrOp::Not,   "NOT"),
+        ] {
+            assert_eq!(op.to_string(), name, "Display mismatch for {name}");
+            assert_eq!(parse_op(name), Some(op), "parse_op mismatch for {name}");
+        }
     }
 
     #[test]

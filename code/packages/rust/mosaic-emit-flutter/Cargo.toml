@@ -1,0 +1,10 @@
+[package]
+name = "mosaic-emit-flutter"
+version = "0.2.0"
+edition = "2021"
+description = "Flutter (Dart) backend: emits StatelessWidget classes from MosaicIR"
+
+[dependencies]
+mosmodel-compiler = { path = "../mosmodel-compiler" }
+moslayout-compiler = { path = "../moslayout-compiler" }
+mosstyle-compiler = { path = "../mosstyle-compiler" }

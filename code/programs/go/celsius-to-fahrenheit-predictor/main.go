@@ -6,6 +6,8 @@ import (
 
 	opt "github.com/adhithyan15/coding-adventures/code/packages/go/gradient-descent"
 	loss "github.com/adhithyan15/coding-adventures/code/packages/go/loss-functions"
+	vm "github.com/adhithyan15/coding-adventures/code/packages/go/neural-graph-vm"
+	neuralnetwork "github.com/adhithyan15/coding-adventures/code/packages/go/neural-network"
 )
 
 func train(lossName string, lossFn func([]float64, []float64) (float64, error), lossDerivFn func([]float64, []float64) ([]float64, error), learningRate float64, maxEpochs int) {
@@ -50,7 +52,7 @@ func train(lossName string, lossFn func([]float64, []float64) (float64, error), 
 		if err != nil {
 			log.Fatal(err)
 		}
-		
+
 		w = newParams[0]
 		b = newParams[1]
 
@@ -62,6 +64,29 @@ func train(lossName string, lossFn func([]float64, []float64) (float64, error), 
 	testC := 100.0
 	predF := w*testC + b
 	fmt.Printf("Prediction for 100.0 C -> %.2f F (Expected ~212.00 F)\n", predF)
+	runGraphVMInference(lossName, w, b, testC)
+}
+
+func runGraphVMInference(lossName string, weight float64, bias float64, celsiusValue float64) {
+	network := neuralnetwork.CreateNeuralNetwork("celsius-to-fahrenheit-"+lossName).
+		Input("celsius").
+		Constant("bias", 1.0, neuralnetwork.PropertyBag{"nn.role": "bias"}).
+		WeightedSum("fahrenheit_sum", []neuralnetwork.WeightedInput{
+			{From: "celsius", Weight: weight, EdgeID: "celsius_weight"},
+			{From: "bias", Weight: bias, EdgeID: "fahrenheit_bias"},
+		}, neuralnetwork.PropertyBag{"nn.layer": "output", "nn.role": "weighted_sum"}).
+		Activation("fahrenheit_linear", "fahrenheit_sum", neuralnetwork.None, neuralnetwork.PropertyBag{"nn.layer": "output", "nn.role": "identity_activation"}, "sum_to_identity").
+		Output("fahrenheit", "fahrenheit_linear", "fahrenheit", neuralnetwork.PropertyBag{"nn.layer": "output"}, "identity_to_output")
+
+	bytecode, err := vm.CompileNeuralNetworkToBytecode(network)
+	if err != nil {
+		log.Fatal(err)
+	}
+	outputs, err := vm.RunNeuralBytecodeForward(bytecode, map[string]float64{"celsius": celsiusValue})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Graph VM path -> %.1f C = %.2f F (%d bytecode ops)\n", celsiusValue, outputs["fahrenheit"], len(bytecode.Functions[0].Instructions))
 }
 
 func main() {

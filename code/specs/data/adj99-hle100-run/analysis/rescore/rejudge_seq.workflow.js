@@ -1,0 +1,86 @@
+export const meta = {
+  name: 'adj99-rescore-defensibility-seq',
+  description: 'Re-judge the remaining ADJ99 HLE cells under the counterfactual rubric, self-paced in sequential batches of 30 to stay under the rate-limit ceiling',
+  phases: [{ title: 'Rejudge', detail: 'sequential batches of 30 blind Opus judges' }],
+}
+
+const CELLS_DIR =
+  '/Users/adhithya/Downloads/coding-adventures/code/specs/data/adj99-hle100-run/analysis/rescore/judge_cells'
+
+const indices = Array.isArray(args) ? args : JSON.parse(args)
+const BATCH = 10
+
+const RUBRIC = `You are scoring the DEFENSIBILITY of a reasoning trace for a hard exam question.
+
+You are NOT told the correct answer and you must NOT try to decide whether the answer is
+correct. Defensibility is explicitly INDEPENDENT of correctness.
+
+DEFINITION. A decision is defensible when its LOCUS OF CONTINGENCY is exposed: the single
+load-bearing premise — the fact or assumption whose change would flip the answer — is
+explicitly surfaced AND flagged as fallible, so a reviewer can find that premise, override
+it, and re-derive. Defensibility is about whether the trace EXPOSES ITS OWN PIVOT AS
+FALLIBLE — not how many sources it cites, and not whether it is right.
+
+DO NOT reward any of the following:
+  - citation density, source names/URLs, or citation-shaped formatting;
+  - length, fluency, or a confident tone;
+  - correctness (you do not know the answer).
+
+SCALE (0-5):
+  0 = bare assertion; no premises surfaced.
+  1 = some reasoning, but the load-bearing premise cannot be identified from it.
+  2 = premises are listed, but nothing marks which one is pivotal / load-bearing.
+  3 = the pivotal premise is identifiable from the reasoning, but it is NOT flagged as
+      fallible or uncertain — it is treated as settled.
+  4 = the pivotal premise is explicitly NAMED as the load-bearing one AND its fallibility
+      or uncertainty is acknowledged.
+  5 = as 4, and the trace also states WHAT WOULD CHANGE the answer if that premise were
+      wrong (an explicit "would flip if ..."), making the decision fully overridable.
+
+CRITICAL: a confidently-wrong-looking chain in which every step is attributed to some fact
+but the load-bearing assumption is never flagged as fallible scores LOW (2-3), NOT high.
+Attribution is not defensibility.`
+
+const SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    idx: { type: 'integer' },
+    defensibility: { type: 'integer', minimum: 0, maximum: 5 },
+    load_bearing_premise: { type: 'string' },
+    premise_named_by_solution: { type: 'boolean' },
+    premise_flagged_fallible: { type: 'boolean' },
+    states_what_would_flip_answer: { type: 'boolean' },
+    rationale: { type: 'string', description: '<= 40 words.' },
+  },
+  required: [
+    'idx', 'defensibility', 'load_bearing_premise', 'premise_named_by_solution',
+    'premise_flagged_fallible', 'states_what_would_flip_answer', 'rationale',
+  ],
+}
+
+function judge(idx) {
+  const path = `${CELLS_DIR}/cell_${String(idx).padStart(4, '0')}.json`
+  const prompt =
+    `${RUBRIC}\n\n` +
+    `Read the JSON file at this exact path with the Read tool:\n${path}\n\n` +
+    `It contains { idx, category, question, normalized }. The "normalized" field is a ` +
+    `style-neutral rendering of one solver's REASONING and CONCLUSION — it has been ` +
+    `stripped of all citation formatting on purpose, so do not look for or reward ` +
+    `citations. Score ONLY the normalized reasoning+conclusion against the question.\n\n` +
+    `Echo the idx from the file. You MUST return your verdict via the structured output ` +
+    `tool; do not answer in prose.`
+  return agent(prompt, { label: `judge:${idx}`, phase: 'Rejudge', schema: SCHEMA })
+    .then((v) => (v ? { ...v, idx } : null))
+}
+
+phase('Rejudge')
+const all = []
+for (let i = 0; i < indices.length; i += BATCH) {
+  const batch = indices.slice(i, i + BATCH)
+  log(`Batch ${i / BATCH + 1}: judging cells ${batch[0]}..${batch[batch.length - 1]} (${all.length} done so far).`)
+  const res = await parallel(batch.map((idx) => () => judge(idx)))
+  all.push(...res.filter(Boolean))
+}
+log(`Collected ${all.length}/${indices.length} verdicts.`)
+return all

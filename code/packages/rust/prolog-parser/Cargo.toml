@@ -1,0 +1,12 @@
+[package]
+name = "prolog-parser"
+version = "0.3.0"
+edition = "2021"
+description = "ISO/Core Prolog parser — grammar-driven via parser::GrammarParser + iso.grammar; lowers AST to logic-core terms. v0.2 adds the `naf_goal` production (`\\+ G` → `\\+(G)`). v0.3 adds ProbLog probabilistic-clause productions (`p :: head.` and `p :: head :- body.`)."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+prolog-lexer = { path = "../prolog-lexer" }
+logic-core = { path = "../logic-core" }

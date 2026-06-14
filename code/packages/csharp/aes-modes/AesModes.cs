@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+using System.Buffers.Binary;
 using CodingAdventures.Aes;
 
 namespace CodingAdventures.AesModes;
@@ -193,9 +193,9 @@ public static class AesModes
         ValidateLength(iv, GcmNonceSizeBytes, nameof(iv), "GCM IV");
 
         var ciphertext = new byte[plaintext.Length];
-        var tag = new byte[GcmTagSizeBytes];
-        using var gcm = new AesGcm(key, GcmTagSizeBytes);
-        gcm.Encrypt(iv, plaintext, ciphertext, tag, aad ?? Array.Empty<byte>());
+        var keystreamed = Gctr(key, iv, 2, plaintext);
+        Buffer.BlockCopy(keystreamed, 0, ciphertext, 0, ciphertext.Length);
+        var tag = ComputeGcmTag(key, iv, aad ?? Array.Empty<byte>(), ciphertext);
         return (ciphertext, tag);
     }
 
@@ -212,10 +212,13 @@ public static class AesModes
         ValidateLength(iv, GcmNonceSizeBytes, nameof(iv), "GCM IV");
         ValidateLength(tag, GcmTagSizeBytes, nameof(tag), "GCM tag");
 
-        var plaintext = new byte[ciphertext.Length];
-        using var gcm = new AesGcm(key, GcmTagSizeBytes);
-        gcm.Decrypt(iv, ciphertext, tag, plaintext, aad ?? Array.Empty<byte>());
-        return plaintext;
+        var expectedTag = ComputeGcmTag(key, iv, aad ?? Array.Empty<byte>(), ciphertext);
+        if (!FixedTimeEquals(tag, expectedTag))
+        {
+            throw new InvalidOperationException("AES-GCM authentication tag mismatch.");
+        }
+
+        return Gctr(key, iv, 2, ciphertext);
     }
 
     private static byte[] ReadBlock(byte[] data, int offset)
@@ -234,6 +237,122 @@ public static class AesModes
         block[14] = (byte)(counter >> 8);
         block[15] = (byte)counter;
         return block;
+    }
+
+    private static byte[] Gctr(byte[] key, byte[] nonce, uint initialCounter, byte[] input)
+    {
+        var result = new byte[input.Length];
+        var counter = initialCounter;
+
+        for (var offset = 0; offset < input.Length; offset += BlockSizeBytes)
+        {
+            var keystream = AesBlock.EncryptBlock(BuildCounterBlock(nonce, counter), key);
+            var count = Math.Min(BlockSizeBytes, input.Length - offset);
+            for (var index = 0; index < count; index++)
+            {
+                result[offset + index] = (byte)(input[offset + index] ^ keystream[index]);
+            }
+
+            counter++;
+        }
+
+        return result;
+    }
+
+    private static byte[] ComputeGcmTag(byte[] key, byte[] iv, byte[] aad, byte[] ciphertext)
+    {
+        var hashSubkey = AesBlock.EncryptBlock(new byte[BlockSizeBytes], key);
+        var ghash = GHash(hashSubkey, aad, ciphertext);
+        var encryptedCounter = AesBlock.EncryptBlock(BuildCounterBlock(iv, 1), key);
+        XorInPlace(encryptedCounter, ghash);
+        return encryptedCounter;
+    }
+
+    private static byte[] GHash(byte[] hashSubkey, byte[] aad, byte[] ciphertext)
+    {
+        var value = new byte[BlockSizeBytes];
+        GHashBlocks(value, hashSubkey, aad);
+        GHashBlocks(value, hashSubkey, ciphertext);
+
+        var lengthBlock = new byte[BlockSizeBytes];
+        BinaryPrimitives.WriteUInt64BigEndian(lengthBlock.AsSpan(0, 8), (ulong)aad.Length * 8);
+        BinaryPrimitives.WriteUInt64BigEndian(lengthBlock.AsSpan(8, 8), (ulong)ciphertext.Length * 8);
+        XorInPlace(value, lengthBlock);
+        return MultiplyGf128(value, hashSubkey);
+    }
+
+    private static void GHashBlocks(byte[] value, byte[] hashSubkey, byte[] data)
+    {
+        for (var offset = 0; offset < data.Length; offset += BlockSizeBytes)
+        {
+            var block = new byte[BlockSizeBytes];
+            var count = Math.Min(BlockSizeBytes, data.Length - offset);
+            Buffer.BlockCopy(data, offset, block, 0, count);
+            XorInPlace(value, block);
+            var multiplied = MultiplyGf128(value, hashSubkey);
+            Buffer.BlockCopy(multiplied, 0, value, 0, BlockSizeBytes);
+        }
+    }
+
+    private static byte[] MultiplyGf128(byte[] left, byte[] right)
+    {
+        var result = new byte[BlockSizeBytes];
+        var value = left.ToArray();
+
+        for (var bit = 0; bit < 128; bit++)
+        {
+            if (GetBit(right, bit))
+            {
+                XorInPlace(result, value);
+            }
+
+            var lsbSet = (value[^1] & 1) != 0;
+            ShiftRightOne(value);
+            if (lsbSet)
+            {
+                value[0] ^= 0xe1;
+            }
+        }
+
+        return result;
+    }
+
+    private static bool GetBit(byte[] value, int bitIndex) =>
+        (value[bitIndex / 8] & (1 << (7 - bitIndex % 8))) != 0;
+
+    private static void ShiftRightOne(byte[] value)
+    {
+        var carry = 0;
+        for (var index = 0; index < value.Length; index++)
+        {
+            var nextCarry = value[index] & 1;
+            value[index] = (byte)((value[index] >> 1) | (carry << 7));
+            carry = nextCarry;
+        }
+    }
+
+    private static void XorInPlace(byte[] left, byte[] right)
+    {
+        for (var index = 0; index < left.Length; index++)
+        {
+            left[index] ^= right[index];
+        }
+    }
+
+    private static bool FixedTimeEquals(byte[] expected, byte[] actual)
+    {
+        if (expected.Length != actual.Length)
+        {
+            return false;
+        }
+
+        var diff = 0;
+        for (var index = 0; index < expected.Length; index++)
+        {
+            diff |= expected[index] ^ actual[index];
+        }
+
+        return diff == 0;
     }
 
     private static void ValidateCiphertext(byte[] ciphertext, string paramName, string label)

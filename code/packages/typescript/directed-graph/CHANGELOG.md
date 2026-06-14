@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added graph, node, and directed edge property bags using JSON-like scalar values.
+- Added weighted directed edge storage with `edgeWeight`, `edgesWeighted`, and `successorsWeighted`.
+- Synchronized the canonical `weight` edge property with directed edge weights.
+
+### Changed
+
+- Re-adding an existing directed edge now updates its weight and merges edge metadata.
+- TypeScript build now limits compilation to `src/**/*.ts` and emits to `dist`.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

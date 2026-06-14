@@ -23,11 +23,20 @@ All notable changes to this package will be documented in this file.
 - **`WasiConfig` dataclass** — collects all `WasiHost` options in one place: `args`, `env`, `stdout`, `stderr`, `clock`, `random`
 - All new classes exported from `wasm_runtime.__init__`
 - 32 new tests in `tests/test_wasi_tier3.py` covering happy paths, edge cases, no-memory guards, and the `clock_time_get` EINVAL path
+- **`compiler_math` host imports** — `WasiHost` now resolves `f64_sin`,
+  `f64_cos`, `f64_atan`, `f64_ln`, `f64_exp`, and `f64_pow` for generic compiler
+  pipeline modules that need non-core WASM real math.
+- `WasmRuntime` now accepts `WasmExecutionLimits`, including a
+  `max_instructions` budget that traps nonterminating module execution
+  predictably.
 
 ### Changed
 
 - `WasiHost.__init__` now accepts an optional `WasiConfig` as its first argument. Keyword-only `stdout`/`stderr` usage remains supported.
 - `WasiConfig` now accepts `stdin`, a byte-reader callable used by `fd_read`.
+- `WasiConfig` now exposes `max_fd_write_bytes_per_call` and
+  `max_fd_write_bytes_total`; `fd_write` validates guest iovec ranges before
+  forwarding output and returns `EINVAL` for invalid or over-budget writes.
 - Added `EINVAL = 28` constant for the invalid-argument errno code.
 
 ## [0.1.0] - 2026-04-05

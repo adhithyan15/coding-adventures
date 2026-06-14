@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-aot-robots-emitter",
+  "version": "0.1.0",
+  "description": "Emit robots.txt from a structured RobotsConfig per https://www.robotstxt.org/orig.html + Google extensions.  Pure transform: validates URLs on sitemap/host, sanitises user-agent/path fields against header-injection (newlines / CRs rejected), validates crawlDelay range; returns plain-text string.  FM00 v0 emitter.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

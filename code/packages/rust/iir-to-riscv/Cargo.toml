@@ -1,0 +1,17 @@
+[package]
+name = "iir-to-riscv"
+version = "0.3.3"
+edition = "2021"
+description = "IIR → RV32I machine code backend — lowers IIRModule to a Vec<u32> of encoded 32-bit RISC-V instructions.  v0.3.3 (A1++.5.5.5): generalises cross-function `call` to support up to 8 args via two-phase move-through-temp (avoids swap-clobbering) and non-void returns (allocate dest temp, addi dest, a0, 0 after jal).  Stack-spilling allocator + i64 register pairs land in A1++.6."
+
+[lib]
+name = "iir_to_riscv"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir   = { path = "../interpreter-ir" }
+riscv-simulator  = { path = "../riscv-simulator" }
+
+[[test]]
+name = "test_backend"
+path = "tests/test_backend.rs"

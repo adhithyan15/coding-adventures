@@ -2,10 +2,15 @@
 
 ## Overview
 
-This spec covers three Rust crates that render PaintScene (P2D00) instructions
-through native platform rendering APIs on Windows and Linux. Each crate plugs
-into the PaintVM dispatch-table architecture (P2D01) — it registers handlers for
-the 10 instruction kinds and translates them into the platform's drawing calls.
+This spec covers the first native Rust crates that render PaintScene (P2D00)
+instructions through platform rendering APIs on Windows and Linux. The broader
+backend convergence/runtime contract is tracked in P2D09. Each crate plugs into
+the PaintVM dispatch-table architecture (P2D01) - it registers handlers for the
+instruction kinds and translates them into the platform's drawing calls.
+
+For the larger backend convergence roadmap, including Cairo, Skia, Vulkan,
+OpenGL, WGPU, CoreGraphics, capability reporting, and automatic backend
+selection, see `P2D09-paint-vm-backend-convergence.md`.
 
 Think of it like hiring three different sign painters. You hand each of them the
 same blueprint (a PaintScene). One works in oil paint (Direct2D — rich, modern,
@@ -36,6 +41,7 @@ macOS/iOS. These three crates complete the picture for Windows and Linux:
 | paint-vm-direct2d  | Windows       | Direct2D      | This spec       |
 | paint-vm-gdi       | Windows       | GDI (Win32)   | This spec       |
 | paint-vm-cairo     | Linux / GTK   | Cairo + Pango | Design only     |
+| paint-vm-runtime   | Cross-platform| Selector      | See P2D09       |
 
 ---
 
@@ -86,6 +92,7 @@ fn dispatch(instruction: &PaintInstruction, ctx: &mut PlatformContext) {
         PaintInstruction::Rect(r)      => handle_rect(r, ctx),
         PaintInstruction::Ellipse(e)   => handle_ellipse(e, ctx),
         PaintInstruction::Path(p)      => handle_path(p, ctx),
+        PaintInstruction::Text(t)      => handle_text(t, ctx),
         PaintInstruction::GlyphRun(g)  => handle_glyph_run(g, ctx),
         PaintInstruction::Group(g)     => handle_group(g, ctx),   // recurses
         PaintInstruction::Layer(l)     => handle_layer(l, ctx),   // recurses
@@ -258,6 +265,7 @@ for the codec pipeline (render → PixelContainer → PNG via paint-codec-png).
 | rect        | `FillRectangle` / `DrawRectangle` with `ID2D1SolidColorBrush`; use `ID2D1RoundedRectangleGeometry` when `corner_radius > 0` |
 | ellipse     | `FillEllipse` / `DrawEllipse`                                                       |
 | path        | `ID2D1PathGeometry` with `ID2D1GeometrySink`: `BeginFigure`, `AddLine`, `AddBezier`, `EndFigure` map directly to PaintPath segments (MoveTo, LineTo, BezierTo, Close) |
+| text        | `IDWriteFactory::CreateTextLayout` + `ID2D1RenderTarget::DrawTextLayout`; map PaintText baseline and alignment before drawing |
 | glyph_run   | `DrawGlyphRun` using `IDWriteFactory` + `IDWriteTextFormat` for font selection      |
 | group       | `GetTransform` / `SetTransform` (save current, multiply by `PaintGroup.transform`, restore after children) |
 | layer       | `PushLayer` / `PopLayer` with `ID2D1Layer` for offscreen compositing with opacity   |
@@ -359,14 +367,25 @@ significant limitations:
 | Layer opacity        | Native          | Manual (offscreen blit)   |
 | Rounded rectangles   | Native geometry | Manual (RoundRect or arcs)|
 
-### P2D08 — paint-vm-cairo (Design Only)
+### P2D08 — paint-vm-cairo
 
 **Crate:** `paint-vm-cairo`
-**Platform:** Linux (GTK), BSDs, macOS (via Homebrew)
-**Dependencies:** `cairo-rs` crate, `pango` crate (for text)
-**Status:** Design only. Implementation deferred until Linux platform support begins.
+**Native platform:** Linux (GTK/headless), BSDs.
+
+**Portable fallback:** deterministic software smoke path on Windows/macOS.
+**Current dependencies:** `cairo-rs` crate on Linux/BSD.
+
+**Planned text dependencies:** `pango` / `pangocairo` once full native shaping
+is connected.
+**Status:** Tier 1 native image-surface renderer implemented for Linux/BSD.
 
 **Context type:** `cairo::Context` (wraps `*mut cairo_t`)
+
+The Rust crate now has a Tier 1 native Cairo image-surface renderer for
+Linux/BSD. It supports the core vector smoke path plus `ImageSrc::Pixels`,
+clips, group transforms, and layer opacity. `PaintText` and `PaintGlyphRun`
+are intentionally marked degraded because they use Cairo toy/glyph APIs rather
+than the final Pango/HarfBuzz shaping path.
 
 #### Handler Mapping
 

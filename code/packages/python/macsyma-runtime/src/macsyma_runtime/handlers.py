@@ -20,13 +20,84 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from symbolic_ir import IRApply, IRNode, IRSymbol
+from symbolic_ir import (
+    LIST,
+    IRApply,
+    IRFloat,
+    IRInteger,
+    IRNode,
+    IRRational,
+    IRString,
+    IRSymbol,
+)
 from symbolic_vm.backend import Handler
 
 if TYPE_CHECKING:
     from symbolic_vm import VM
 
     from macsyma_runtime.backend import MacsymaBackend
+
+
+# ---------------------------------------------------------------------------
+# Numer fold — recursive exact-to-float conversion
+# ---------------------------------------------------------------------------
+
+
+def _numer_fold(node: IRNode) -> IRNode:
+    """Recursively convert exact numerics to :class:`~symbolic_ir.IRFloat`.
+
+    In MACSYMA, ``ev(expr, numer)`` forces every exact rational or integer
+    sub-expression to a floating-point value.  Constants such as ``%pi`` and
+    ``%e`` are pre-bound as ``IRFloat`` by the backend, so they are already
+    handled.  The only cases that need explicit conversion are:
+
+    - ``IRInteger`` — exact integer (e.g. ``3``)   → ``IRFloat(3.0)``
+    - ``IRRational`` — exact fraction (e.g. ``1/2``) → ``IRFloat(0.5)``
+    - ``IRApply`` — recurse into args; special-case ``Pow`` to preserve
+      integer exponents so that ``x^2`` is not changed to ``x^2.0``
+      (the underlying numeric routines expect integer exponents in Pow).
+    - Everything else (``IRSymbol``, ``IRFloat``) — returned unchanged.
+
+    This function is *pure* — it never mutates nodes.  If nothing changes
+    the original node is returned by identity so callers can do a fast
+    ``is``-check.
+    """
+    # --- leaf: exact integer → float ----------------------------------------
+    if isinstance(node, IRInteger):
+        return IRFloat(float(node.value))
+
+    # --- leaf: exact rational → float ----------------------------------------
+    if isinstance(node, IRRational):
+        return IRFloat(node.numer / node.denom)
+
+    # --- leaf: already float or symbol → no-op --------------------------------
+    if isinstance(node, (IRFloat, IRSymbol)):
+        return node
+
+    # --- compound: recurse with Pow-exponent guard ----------------------------
+    if isinstance(node, IRApply):
+        head = node.head
+        # For Pow(base, exp) keep the exponent exact so that ``x^2`` stays
+        # ``x^2`` (not ``x^2.0``).  Only fold the base.
+        if (
+            isinstance(head, IRSymbol)
+            and head.name == "Pow"
+            and len(node.args) == 2
+        ):
+            new_base = _numer_fold(node.args[0])
+            exp = node.args[1]          # keep exponent as-is
+            if new_base is node.args[0]:
+                return node             # nothing changed — return original
+            return IRApply(head, (new_base, exp))
+
+        # General case — fold every argument.
+        new_args = tuple(_numer_fold(a) for a in node.args)
+        if new_args == node.args:
+            return node
+        return IRApply(head, new_args)
+
+    # --- fallback (e.g. future IR node types) ---------------------------------
+    return node
 
 
 def display_handler(_vm: VM, expr: IRApply) -> IRNode:
@@ -82,32 +153,216 @@ def make_kill_handler(backend: MacsymaBackend) -> Handler:
 _DONE = IRSymbol("done")
 
 
+def declare_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Declare(sym, property, ...)`` records MACSYMA symbol properties.
+
+    Properties are stored in the VM's existing assumption context so they feed
+    the same simplification and ``is(...)`` machinery as ``assume(x, prop)``.
+    Arguments are consumed as symbol/property pairs:
+    ``declare(n, integer, x, positive)``.
+    """
+    if len(expr.args) % 2 != 0:
+        return expr
+    for i in range(0, len(expr.args), 2):
+        sym, prop = expr.args[i], expr.args[i + 1]
+        vm.assumptions.assume_property(sym, prop)
+    return _DONE
+
+
+def properties_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Properties(sym)`` returns a list of properties declared for ``sym``."""
+    if len(expr.args) != 1:
+        return expr
+    target = expr.args[0]
+    if not isinstance(target, IRSymbol):
+        return IRApply(LIST, ())
+    return IRApply(
+        LIST,
+        tuple(IRSymbol(fact) for fact in vm.assumptions.facts_for(target.name)),
+    )
+
+
+def propvars_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``PropVars()`` returns symbols that currently have declared properties."""
+    if expr.args:
+        return expr
+    return IRApply(
+        LIST,
+        tuple(IRSymbol(name) for name in vm.assumptions.symbols_with_facts()),
+    )
+
+
 def make_ev_handler() -> Handler:
     """Build the ``Ev(expr, *flags)`` handler.
 
-    Phase A only honours the ``numer`` flag (force-collapse to floats).
-    Future phases will add ``simp``, ``expand``, ``factor``, ``ratsimp``,
-    etc. For now, an unknown flag is silently ignored.
+    Supported flags
+    ---------------
+    ``numer`` / ``float``
+        Force numeric (floating-point) evaluation.  Folds all exact
+        rationals and constants to ``IRFloat``.
+    ``expand``
+        Apply ``Expand`` to the result before returning.
+    ``factor``
+        Apply ``Factor`` to the result before returning.
+    ``ratsimp``
+        Apply ``RatSimplify`` (cancel GCD of numerator/denominator) to
+        the result before returning.  Implemented via A3 substrate.
+    ``trigsimp``
+        Apply ``TrigSimplify`` (Pythagorean identities etc.) to the
+        result before returning.  Implemented via B1 substrate.
+
+    Unknown flags are silently ignored so that future flags don't break
+    existing sessions.
     """
 
     def ev_handler(vm: VM, expr: IRApply) -> IRNode:
-        # We need the un-evaluated expression form here. The simplest
-        # contract for Phase A: every flag is an IRSymbol that arrives
-        # as itself (because they are all unbound). Loop through flags,
-        # gather them into a set, then re-evaluate the first arg.
+        # Every flag is an IRSymbol that arrives as itself (unbound).
+        # Collect them, then evaluate the first arg with the appropriate
+        # post-processing applied.
         if not expr.args:
             return expr
-        first = expr.args[0]
+        inner = expr.args[0]
         flags: set[str] = set()
         for arg in expr.args[1:]:
             if isinstance(arg, IRSymbol):
                 flags.add(arg.name)
-        if "numer" in flags:
-            # Re-evaluate `first` with the numer flag set on the backend.
+
+        # ---- numer / float ------------------------------------------------
+        # Evaluate the expression, then fold every exact rational/integer
+        # leaf to IRFloat.  ``with_numer`` is used when available so that
+        # any *downstream* ev() calls also stay in float mode; the fold
+        # at the end guarantees the returned value is fully numeric.
+        if "numer" in flags or "float" in flags:
             backend = vm.backend
             if hasattr(backend, "with_numer"):
                 with backend.with_numer():
-                    return vm.eval(first)
-        return first
+                    result: IRNode = vm.eval(inner)
+            else:
+                result = vm.eval(inner)
+            return _numer_fold(result)
+
+        # ---- plain evaluation first, then post-process --------------------
+        result = vm.eval(inner)
+
+        if "expand" in flags:
+            result = vm.eval(IRApply(IRSymbol("Expand"), (result,)))
+
+        if "factor" in flags:
+            result = vm.eval(IRApply(IRSymbol("Factor"), (result,)))
+
+        if "ratsimp" in flags:
+            result = vm.eval(IRApply(IRSymbol("RatSimplify"), (result,)))
+
+        if "trigsimp" in flags:
+            result = vm.eval(IRApply(IRSymbol("TrigSimplify"), (result,)))
+
+        return result
 
     return ev_handler
+
+
+# ---------------------------------------------------------------------------
+# Load — runtime package directive (Track M1)
+# ---------------------------------------------------------------------------
+#
+# ``load("name")`` registers the handlers from a loadable package onto the
+# current session.  The user-facing contract:
+#
+#   load("orthopoly");          → installs LegendreP, ChebyshevT, … handlers
+#   legendre_p(3, x);           → (5*x^3 - 3*x) / 2
+#   load("orthopoly");          → idempotent; no error, no double install
+#   load("nonexistent");        → MacsymaUserError, name is not in allowlist
+#
+# Why an allowlist?  The handler must NEVER turn an arbitrary user-supplied
+# string into a Python import path.  A naïve ``importlib.import_module(name)``
+# would let a hostile MACSYMA program reach into ``os``, ``subprocess``, or
+# any other module on ``sys.path``.  The allowlist below is therefore the
+# *only* place that maps a load name to executable code; new packages
+# require an explicit code change here.
+
+# Sentinel for "load succeeded" — Maxima's load returns the path of the
+# loaded file; we don't have files, so we return the name as a string.
+# Keeps :func:`load(...)`` substitutable into expressions without crashing
+# the REPL printer.
+
+
+class MacsymaUserError(ValueError):
+    """A MACSYMA-surface error meant to be shown to the user verbatim.
+
+    Distinguished from generic ``ValueError`` so REPL frontends can format
+    it without leaking a Python traceback.  Inherits ``ValueError`` for
+    backwards compatibility with callers that catch the broader type.
+    """
+
+
+def make_load_handler(backend: MacsymaBackend) -> Handler:
+    """Build a ``Load("name")`` handler bound to a particular backend.
+
+    The handler:
+
+    1. Validates arity (exactly one string argument).
+    2. Checks the name against the hardcoded :data:`_LOAD_ALLOWLIST`.
+       Unknown names raise :class:`MacsymaUserError` with a clear message.
+    3. Returns early (idempotent) if the package is already loaded.
+    4. Otherwise imports the package's registration module *by direct
+       reference, not by user-supplied path*, calls
+       ``register_handlers(backend)``, and records the package in
+       ``backend._loaded_packages``.
+
+    The return value is the same string the user passed (wrapped as
+    :class:`~symbolic_ir.IRString`) so ``load("orthopoly")`` prints
+    cleanly in the REPL.
+    """
+
+    def load_handler(_vm: VM, expr: IRApply) -> IRNode:
+        if len(expr.args) != 1:
+            raise MacsymaUserError(
+                f"load takes 1 argument, got {len(expr.args)}"
+            )
+        name_node = expr.args[0]
+        if not isinstance(name_node, IRString):
+            # Be lenient: a bare symbol like ``load(orthopoly)`` is the
+            # Maxima short form.  Accept either spelling.
+            if isinstance(name_node, IRSymbol):
+                name = name_node.name
+            else:
+                raise MacsymaUserError(
+                    "load: argument must be a string or symbol"
+                )
+        else:
+            name = name_node.value
+
+        if name not in _LOAD_ALLOWLIST:
+            allowed = ", ".join(sorted(_LOAD_ALLOWLIST))
+            raise MacsymaUserError(
+                f"load: unknown package {name!r}; available: {allowed}"
+            )
+
+        if name in backend._loaded_packages:
+            # Idempotent: already loaded, nothing to do.
+            return IRString(name)
+
+        # Static dispatch — exactly one arm per allowlist entry.  No
+        # dynamic ``importlib`` lookup, so the name string can't escape
+        # the switch.
+        if name == "orthopoly":
+            from macsyma_runtime.packages.orthopoly import (
+                register_handlers as _orthopoly_register,
+            )
+            _orthopoly_register(backend)
+        else:  # pragma: no cover — guarded by allowlist check above
+            raise MacsymaUserError(
+                f"load: internal error — {name!r} in allowlist but not dispatched"
+            )
+
+        backend._loaded_packages.add(name)
+        return IRString(name)
+
+    return load_handler
+
+
+# The set of package names ``load()`` will accept.  Adding a new entry is
+# a deliberate two-line change: append to this set *and* add a dispatch
+# arm in :func:`make_load_handler` above.  Keeping the two together makes
+# it impossible to allowlist a name without also wiring its registration.
+_LOAD_ALLOWLIST: frozenset[str] = frozenset({"orthopoly"})

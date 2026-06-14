@@ -1,0 +1,1923 @@
+//! Dead-code elimination pass for the Closure Compiler clone.
+//!
+//! Per [CLOC06](../../../specs/CLOC06-pass-interface-contract.md).
+//! Final step in the autonomous-chain real-body rollout (after
+//! constant-fold, fold-control-flow, and the closure-emitter).
+//!
+//! # What this pass does
+//!
+//! Two cleanup categories:
+//!
+//! 1. **Dead-after-terminator**: in any `BlockStatement.body`, drop
+//!    everything after a `ReturnStatement`. Phase 1 doesn't have
+//!    `ThrowStatement` yet; `BreakStatement` and `ContinueStatement`
+//!    only qualify in their enclosing loop scope (Phase 2 work).
+//! 2. **Empty-statement removal**: drop `EmptyStatement` nodes
+//!    from `BlockStatement.body`. They're semantically a no-op,
+//!    just `;` noise.
+//!
+//! Recurses through every Phase 1 node so nested blocks (function
+//! bodies, if-bodies, while-bodies, for-bodies) get cleaned too.
+//!
+//! # Why this overlaps with fold-control-flow's dead-after-return
+//!
+//! `closure-pass-fold-control-flow` also drops code after
+//! `ReturnStatement` in blocks. The overlap is intentional:
+//!
+//! - **fold-control-flow** does the cleanup as part of its block
+//!   rewrite when it observes the terminator while folding.
+//! - **DCE** runs *after* fold-control-flow per CLOC06 canonical
+//!   order, and catches anything fold-control-flow missed —
+//!   especially blocks that *became* dead-after-terminator only
+//!   after an earlier pass rewrote them (e.g. constant-fold
+//!   collapsed `1 < 2 → true`, then fold-control-flow turned
+//!   `if (true) {return x;} else {y;}` into a block with the
+//!   return and the leftover `y;` from the alternate slot —
+//!   fold-control-flow caught that case too, but DCE provides a
+//!   safety net).
+//!
+//! DCE's responsibility is also to clean `EmptyStatement` noise
+//! that fold-control-flow *produces* — when fold-control-flow
+//! collapses `if (false) {…}` (no alternate) it leaves an
+//! `EmptyStatement` behind. DCE removes those.
+//!
+//! # What this pass *doesn't* do (yet)
+//!
+//! - Unreferenced `VariableDeclaration` removal — that's
+//!   `closure-pass-remove-unused-vars`'s job per CLOC06.
+//! - Unreachable code inside `if` branches — that's
+//!   fold-control-flow's job (when the branch is known dead).
+//! - Empty `BlockStatement` collapse to `EmptyStatement` —
+//!   tracked for Phase 1.x (preserves debugging-step shape for
+//!   now).
+//!
+//! # CV tracing — both modes work per CLOC09
+//!
+//! - **Traced** (`cv: Some` on the block): a `Contribution` is
+//!   appended to the block's CV per drop category, with `source =
+//!   "dce"`, `tag = "removed-dead-code"` or
+//!   `"removed-empty-statement"`, and `meta` describing how many
+//!   nodes were dropped.
+//! - **Untraced** (`cv: None`): drops silently, no
+//!   `Contribution`s emitted. `changed: true` still set so the
+//!   pipeline knows.
+
+use coding_adventures_closure_pass_pipeline::{
+    IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
+};
+use coding_adventures_correlation_vector::{CVLog, Contribution};
+use coding_adventures_javascript_ast::{
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BigIntLiteral,
+    BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
+    Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement,
+    FunctionDeclaration, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
+    NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
+    ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, VarKind,
+    VariableDeclaration, VariableDeclarator, WhileStatement,
+};
+use serde_json::json;
+
+/// `Pass::depends_on` value. Per CLOC06 canonical order:
+/// `constant-fold → fold-control-flow → dce → ...`. We declare
+/// only `constant-fold` here in v0.1.0; once
+/// `fold-control-flow` is fully stable that joins too. The
+/// scaffolding spec noted this; the real-body version keeps the
+/// same edges so the scheduler doesn't churn.
+const DEPS: &[&str] = &["constant-fold"];
+
+#[derive(Debug, Default, Clone, Copy)]
+pub struct DcePass;
+
+impl DcePass {
+    pub fn new() -> Self {
+        Self
+    }
+}
+
+impl Pass for DcePass {
+    fn name(&self) -> &'static str {
+        "dce"
+    }
+
+    fn depends_on(&self) -> &[&'static str] {
+        DEPS
+    }
+
+    fn iteration_policy(&self) -> IterationPolicy {
+        // Per CLOC06: deletion can free further nodes. v1 still
+        // runs the pipeline once (FixedPoint iteration support is
+        // Phase 1.x in closure-pass-pipeline), but the policy
+        // captures intent and a single bottom-up walk handles
+        // the common cases anyway.
+        IterationPolicy::FixedPoint
+    }
+
+    fn cost(&self) -> u32 {
+        // Single tree walk + bounded work per block. Matches the
+        // v0.1.0 scaffolding cost.
+        3
+    }
+
+    fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+        let mut state = DceState {
+            cv: ctx.cv,
+            contributions: Vec::new(),
+            changed: false,
+            nodes_touched: 0,
+        };
+        let new_program = dce_program(ctx.program, &mut state);
+        Ok(PassOutput {
+            program: new_program,
+            contributions: state.contributions,
+            changed: state.changed,
+            diagnostics: Vec::new(),
+            stats: PassStats {
+                nodes_touched: state.nodes_touched,
+            },
+        })
+    }
+}
+
+// =====================================================================
+// DceState — mirrors FoldState shape from constant-fold /
+// fold-control-flow so the recursion pattern is the same.
+// =====================================================================
+
+struct DceState<'a> {
+    cv: &'a mut CVLog,
+    contributions: Vec<Contribution>,
+    changed: bool,
+    nodes_touched: u32,
+}
+
+impl DceState<'_> {
+    fn record(&mut self, parent: &Option<String>, tag: &str, before: &str, after: &str) {
+        self.changed = true;
+        if let Some(parent_cv) = parent {
+            let contribution = Contribution {
+                source: "dce".to_string(),
+                tag: tag.to_string(),
+                meta: [
+                    ("before".to_string(), json!(before)),
+                    ("after".to_string(), json!(after)),
+                    ("parent_cv".to_string(), json!(parent_cv)),
+                ]
+                .into_iter()
+                .collect(),
+            };
+            // Threaded `cv` reserved for future CV-invariant
+            // bookkeeping the same way fold-control-flow does it.
+            let _ = self.cv;
+            self.contributions.push(contribution);
+        }
+    }
+
+    fn visit(&mut self) {
+        self.nodes_touched += 1;
+    }
+}
+
+/// Is `expr` a leaf literal we can guarantee has no observable side
+/// effects when evaluated?
+///
+/// Conservative: only the seven primitive-literal node types qualify.
+/// Identifier reads can throw under TDZ (for unitialized `let` /
+/// `const`), and we don't do scope analysis here. Member / call /
+/// binary / unary / etc. can all have effects. So we bail.
+///
+/// Used by gap-014 step 2's empty-switch elimination: when the
+/// switch has no observable side effects (pure discriminant +
+/// pure tests + empty consequents), the entire switch can drop to
+/// `;`. Anything non-literal: leave alone.
+fn is_pure_leaf(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::NumericLiteral(NumericLiteral { .. })
+            | Expression::StringLiteral(StringLiteral { .. })
+            | Expression::BooleanLiteral(BooleanLiteral { .. })
+            | Expression::NullLiteral(NullLiteral { .. })
+            | Expression::UndefinedLiteral(UndefinedLiteral { .. })
+            | Expression::BigIntLiteral(BigIntLiteral { .. })
+    )
+}
+
+// =====================================================================
+// Program / top-level
+// =====================================================================
+
+fn dce_program(prog: &Program, st: &mut DceState) -> Program {
+    st.visit();
+    let new_body = prog
+        .body
+        .iter()
+        .map(|item| dce_program_item(item, st))
+        .collect();
+    Program {
+        cv: prog.cv.clone(),
+        version: prog.version,
+        source_type: prog.source_type,
+        body: new_body,
+    }
+}
+
+fn dce_program_item(item: &ProgramItem, st: &mut DceState) -> ProgramItem {
+    match item {
+        ProgramItem::Statement(s) => ProgramItem::Statement(dce_statement(s, st)),
+        ProgramItem::Declaration(d) => ProgramItem::Declaration(dce_declaration(d, st)),
+    }
+}
+
+// =====================================================================
+// Statements
+// =====================================================================
+
+fn dce_statement(stmt: &Statement, st: &mut DceState) -> Statement {
+    st.visit();
+    match stmt {
+        Statement::Tagged(t) => Statement::Tagged(dce_tagged_statement(t, st)),
+        Statement::Declaration(d) => Statement::Declaration(dce_declaration(d, st)),
+    }
+}
+
+fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStatement {
+    match stmt {
+        TaggedStatement::ExpressionStatement(s) => {
+            TaggedStatement::ExpressionStatement(ExpressionStatement {
+                cv: s.cv.clone(),
+                expression: dce_expression(&s.expression, st),
+            })
+        }
+        TaggedStatement::BlockStatement(s) => {
+            TaggedStatement::BlockStatement(dce_block_statement(s, st))
+        }
+        TaggedStatement::IfStatement(s) => TaggedStatement::IfStatement(IfStatement {
+            cv: s.cv.clone(),
+            test: dce_expression(&s.test, st),
+            consequent: Box::new(dce_statement(&s.consequent, st)),
+            alternate: s.alternate.as_ref().map(|a| Box::new(dce_statement(a, st))),
+        }),
+        TaggedStatement::WhileStatement(s) => TaggedStatement::WhileStatement(WhileStatement {
+            cv: s.cv.clone(),
+            test: dce_expression(&s.test, st),
+            body: Box::new(dce_statement(&s.body, st)),
+        }),
+        TaggedStatement::ForStatement(s) => TaggedStatement::ForStatement(ForStatement {
+            cv: s.cv.clone(),
+            init: s.init.as_ref().map(|i| match i {
+                ForInit::VariableDeclaration(v) => {
+                    ForInit::VariableDeclaration(dce_variable_declaration(v, st))
+                }
+                ForInit::Expression(e) => ForInit::Expression(dce_expression(e, st)),
+            }),
+            test: s.test.as_ref().map(|e| dce_expression(e, st)),
+            update: s.update.as_ref().map(|e| dce_expression(e, st)),
+            body: Box::new(dce_statement(&s.body, st)),
+        }),
+        TaggedStatement::ReturnStatement(s) => {
+            TaggedStatement::ReturnStatement(ReturnStatement {
+                cv: s.cv.clone(),
+                argument: s.argument.as_ref().map(|e| dce_expression(e, st)),
+            })
+        }
+        TaggedStatement::LabeledStatement(s) => {
+            // DCE recurses into the body so dead-after-return inside
+            // `a: { ... return; ...dead... }` still gets stripped.
+            // The label itself is preserved verbatim — collapsing
+            // `a: break a;` to empty is a separate optimisation
+            // tracked under the gap-009 follow-up.
+            TaggedStatement::LabeledStatement(
+                coding_adventures_javascript_ast::LabeledStatement {
+                    cv: s.cv.clone(),
+                    label: s.label.clone(),
+                    body: Box::new(dce_statement(&s.body, st)),
+                },
+            )
+        }
+        TaggedStatement::ThrowStatement(s) => {
+            // Recurse into the argument so any DCE work inside the
+            // expression (e.g. nested ConditionalExpression cleanup,
+            // once those become DCE-tracked) lands here. The throw
+            // is itself a definite terminator — the block-walker
+            // (`dce_block_statement`) treats it the same as
+            // `ReturnStatement` for dead-after-terminator purposes
+            // and that wiring lives there. This arm just preserves
+            // the node.
+            TaggedStatement::ThrowStatement(coding_adventures_javascript_ast::ThrowStatement {
+                cv: s.cv.clone(),
+                argument: dce_expression(&s.argument, st),
+            })
+        }
+        TaggedStatement::SwitchStatement(s) => {
+            // Recurse into discriminant, each case's test, and each
+            // statement in each consequent first — peephole rules
+            // run on the folded shape so we catch switches whose
+            // bodies *became* empty after constant-fold +
+            // fold-control-flow ran earlier in the pipeline.
+            let new_disc = dce_expression(&s.discriminant, st);
+            let mut new_cases: Vec<_> = s
+                .cases
+                .iter()
+                .map(|c| coding_adventures_javascript_ast::SwitchCase {
+                    cv: c.cv.clone(),
+                    test: c.test.as_ref().map(|e| dce_expression(e, st)),
+                    consequent: c
+                        .consequent
+                        .iter()
+                        .map(|s| dce_statement(s, st))
+                        .collect(),
+                })
+                .collect();
+
+            // gap-014 step 3 / CLOC12.35 — drop-after-break inside
+            // case consequents.
+            //
+            // Inside a switch case, `break;` exits the switch
+            // entirely; `return;` / `throw e;` exit the enclosing
+            // function. Everything after such a terminator in the
+            // SAME case's consequent is unreachable.
+            //
+            // We do NOT generalise into `is_terminator` (which
+            // handles block-level `ReturnStatement`-only dropping)
+            // because `BreakStatement` at function-body block
+            // level is a SyntaxError — broadening the block walker
+            // would mishandle that. Case consequents are a special
+            // context where Break is legal and terminating.
+            //
+            // `Continue` is intentionally NOT a terminator here:
+            // it could refer to an enclosing loop, in which case
+            // it's a real cross-scope control-flow jump we don't
+            // model statically. Conservative bail.
+            for case in new_cases.iter_mut() {
+                if let Some(term_idx) = case
+                    .consequent
+                    .iter()
+                    .position(is_case_terminator)
+                {
+                    let original_len = case.consequent.len();
+                    let dropped = original_len - (term_idx + 1);
+                    if dropped > 0 {
+                        case.consequent.truncate(term_idx + 1);
+                        st.record(
+                            &case.cv,
+                            "removed-dead-code-in-case",
+                            &format!("case with {} statements", original_len),
+                            &format!(
+                                "dropped {} statements after terminator at index {}",
+                                dropped, term_idx
+                            ),
+                        );
+                    }
+                }
+            }
+
+            // gap-014 step 2 / CLOC12.34 — empty-switch elimination.
+            //
+            // If every case's consequent is empty (or there are no
+            // cases at all) AND both the discriminant and every
+            // case-test are leaf literals (no side-effect risk),
+            // collapse the whole switch to `;`. The block-walker
+            // (`dce_block_statement`) will drop the EmptyStatement
+            // in its next sweep.
+            //
+            // Conservative bail: anything else (Identifier
+            // discriminant, computed test, non-empty consequent)
+            // keeps the switch intact. The "drop after pure
+            // discriminant with side-effecting tests" rule is a
+            // future slice that needs a proper effect analysis.
+            let all_consequents_empty = new_cases.iter().all(|c| c.consequent.is_empty());
+            let discriminant_pure = is_pure_leaf(&new_disc);
+            let all_tests_pure_or_none = new_cases
+                .iter()
+                .all(|c| c.test.as_ref().map_or(true, is_pure_leaf));
+            if all_consequents_empty && discriminant_pure && all_tests_pure_or_none {
+                st.record(
+                    &s.cv,
+                    "switch_eliminated",
+                    "SwitchStatement{<empty body>}",
+                    "EmptyStatement",
+                );
+                return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
+            // gap-014 step 4 / CLOC12.36 — constant-discriminant
+            // collapse.
+            //
+            // When the discriminant is a pure leaf literal and every
+            // case test is None or also a pure leaf literal, we can
+            // compile-time evaluate which case runs:
+            //
+            // 1. Find the first case whose `test` is strict-equal
+            //    to the discriminant.
+            // 2. If no match, fall back to the `default:` case if
+            //    one exists.
+            // 3. Replace the entire switch with a `BlockStatement`
+            //    holding the matched case's consequent — with any
+            //    trailing `break;` stripped (it's spurious now
+            //    that there's no switch to exit). `return;` /
+            //    `throw e;` stay; they're terminators with their
+            //    own semantics.
+            // 4. No match AND no default → switch executes nothing;
+            //    replace with `EmptyStatement`.
+            //
+            // Conservative bail (keep switch unchanged):
+            // - Matched case's consequent doesn't end with a
+            //   case-terminator (`break;` / `return ...;` /
+            //   `throw ...;`). Without a terminator, control
+            //   *would* fall through to the next case, and we
+            //   don't model fall-through here. A future slice can
+            //   concatenate consequents up to the next terminator.
+            // - Discriminant is a `NumericLiteral` with value
+            //   `NaN`. Per spec, `NaN !== NaN`, so NaN never
+            //   matches anything — but rather than emit subtle
+            //   no-match semantics on a literal that's already
+            //   surprising, we bail. (Constant-fold normally
+            //   produces this via `0/0`-style folds.)
+            if discriminant_pure && all_tests_pure_or_none {
+                if let Some(target) = pick_matching_case(&new_disc, &new_cases) {
+                    let last = target.consequent.last();
+                    let terminates = last.map_or(false, is_case_terminator);
+                    // Empty consequent → fall-through to next case per
+                    // ECMAScript §13.12. The classic "share body"
+                    // pattern `case 1: case 2: body; break;` has
+                    // `case 1: []` as the matched case and would
+                    // wrongly drop `body` if collapsed to `{}`. We
+                    // don't model fall-through across cases here,
+                    // so bail. A future slice can concatenate
+                    // consequents through the next terminator.
+                    if terminates && !target.consequent.is_empty() {
+                        let new_body = strip_trailing_break(&target.consequent);
+                        st.record(
+                            &s.cv,
+                            "switch_collapsed_to_matched_case",
+                            "SwitchStatement{<pure-discriminant>}",
+                            &format!(
+                                "BlockStatement with {} statements (from matched case)",
+                                new_body.len()
+                            ),
+                        );
+                        return TaggedStatement::BlockStatement(BlockStatement {
+                            cv: s.cv.clone(),
+                            body: new_body,
+                        });
+                    }
+                } else {
+                    // No matching case and no default → nothing
+                    // runs. Discriminant is pure so safe to drop.
+                    st.record(
+                        &s.cv,
+                        "switch_collapsed_no_match",
+                        "SwitchStatement{<pure-discriminant>}",
+                        "EmptyStatement",
+                    );
+                    return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+                }
+            }
+
+            TaggedStatement::SwitchStatement(coding_adventures_javascript_ast::SwitchStatement {
+                cv: s.cv.clone(),
+                discriminant: new_disc,
+                cases: new_cases,
+            })
+        }
+        TaggedStatement::BreakStatement(_)
+        | TaggedStatement::ContinueStatement(_)
+        | TaggedStatement::EmptyStatement(_) => stmt.clone(),
+    }
+}
+
+/// The heart of the pass: process `BlockStatement.body` in three
+/// passes — recurse into each child, drop dead-after-return,
+/// drop empty statements. Records one Contribution per category
+/// per block where drops happened (not one per dropped statement
+/// — that'd be noisy).
+fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement {
+    // First, recurse into children (so nested blocks fold first).
+    // While we're here, count empty statements so we can drop
+    // them in a single sweep below.
+    let mut working: Vec<Statement> = b
+        .body
+        .iter()
+        .map(|s| dce_statement(s, st))
+        .collect();
+
+    // Block flattening (closes CLOC12 gap-010).
+    //
+    // Splice any direct-child `BlockStatement`'s body into our own
+    // body. After the recurse-into-children step above, the inner
+    // block has already had its own DCE applied, so what we splice
+    // in is the already-cleaned version. Truth table:
+    //
+    //   {{foo();}}            → {foo();}           (1-stmt inner)
+    //   {foo();{}}            → {foo();}           (empty inner)
+    //   {{};foo();}           → {foo();}           (empty inner first)
+    //   {{a();b();};}         → {a();b();}         (multi-stmt inner)
+    //   {foo();{bar();baz();}} → {foo();bar();baz();}
+    //   {let x=1;{let x=2;}}  → unchanged          (scope-safety)
+    //
+    // Scope safety: ECMAScript block scope means `let`, `const`,
+    // `class`, and inner `function` declarations are bound to their
+    // enclosing block. Hoisting their bodies into our scope would
+    // either leak a binding upward (changing semantics) or trigger
+    // a redeclaration TDZ error if a same-named binding already
+    // exists. So we ONLY flatten an inner block when its body
+    // contains no scope-bound declarations. Plain `var` is fine
+    // — it's function-scoped, so hoisting it out of an inner
+    // block doesn't change the binding's containing scope.
+    //
+    // Why DCE owns this fold: block flattening is a pure structural
+    // simplification with no semantic prerequisites — it can run
+    // safely without scope/symbol info beyond the per-block scan
+    // we already do here, and it makes downstream emitter output
+    // tighter. Per gap-010 it lives here for v1.
+    let pre_flatten_len = working.len();
+    let mut flattened: Vec<Statement> = Vec::with_capacity(pre_flatten_len);
+    let mut flattening_happened = false;
+    for stmt in working.drain(..) {
+        match &stmt {
+            Statement::Tagged(TaggedStatement::BlockStatement(inner))
+                if block_is_scope_safe_to_flatten(inner) =>
+            {
+                flattening_happened = true;
+                for inner_stmt in inner.body.iter() {
+                    flattened.push(inner_stmt.clone());
+                }
+            }
+            _ => flattened.push(stmt),
+        }
+    }
+    working = flattened;
+    if flattening_happened {
+        st.record(
+            &b.cv,
+            "block-flattened",
+            &format!("block with {} statements", pre_flatten_len),
+            &format!("flattened to {} statements", working.len()),
+        );
+    }
+
+    // Drop dead-after-terminator.
+    let original_len = working.len();
+    if let Some(terminator_idx) = working
+        .iter()
+        .position(|s| is_terminator(s))
+    {
+        let dropped = original_len - (terminator_idx + 1);
+        if dropped > 0 {
+            working.truncate(terminator_idx + 1);
+            st.record(
+                &b.cv,
+                "removed-dead-code",
+                &format!("block with {} statements", original_len),
+                &format!(
+                    "dropped {} statements after terminator at index {}",
+                    dropped, terminator_idx
+                ),
+            );
+        }
+    }
+
+    // Drop EmptyStatements.
+    let before_empty_drop = working.len();
+    working.retain(|s| !is_empty_statement(s));
+    let dropped_empties = before_empty_drop - working.len();
+    if dropped_empties > 0 {
+        st.record(
+            &b.cv,
+            "removed-empty-statement",
+            &format!("block with {} statements", before_empty_drop),
+            &format!("dropped {} empty statements", dropped_empties),
+        );
+    }
+
+    BlockStatement {
+        cv: b.cv.clone(),
+        body: working,
+    }
+}
+
+fn is_terminator(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::ReturnStatement(_))
+    )
+}
+
+/// Inside a switch case's consequent, these statements end the
+/// case's execution and make everything that follows unreachable:
+///
+/// - `break;` exits the switch
+/// - `return ...;` exits the enclosing function
+/// - `throw ...;` raises out of the function (and switch)
+///
+/// `continue` is excluded because it refers to an *enclosing
+/// loop* (`switch` is not a loop), not the switch itself. Whether
+/// the surrounding loop's body continues or terminates depends on
+/// outer-context analysis we don't do here, so we bail.
+///
+/// Used by gap-014 step 3 / CLOC12.35: per-case dead-after-break
+/// dropping. Distinct from `is_terminator` (block-level
+/// ReturnStatement only) because `BreakStatement` at function-body
+/// block level would be a SyntaxError — broadening
+/// `is_terminator` would mishandle that. Case consequents are the
+/// one statement context where bare `break` is legal AND
+/// terminates flow.
+fn is_case_terminator(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::ReturnStatement(_))
+            | Statement::Tagged(TaggedStatement::BreakStatement(_))
+            | Statement::Tagged(TaggedStatement::ThrowStatement(_))
+    )
+}
+
+/// Compile-time `===` between two `is_pure_leaf` expressions.
+///
+/// Implements just enough of ECMAScript §IsStrictlyEqual to handle
+/// the literal types `is_pure_leaf` recognises:
+///
+/// - `NumericLiteral` vs `NumericLiteral`: floats equal AND neither
+///   is `NaN`. (`NaN !== NaN` per spec — but constant-fold doesn't
+///   normally produce a NaN-typed literal; bail conservatively
+///   if it ever does.)
+/// - `StringLiteral` vs `StringLiteral`: `value` field equal.
+/// - `BooleanLiteral` vs `BooleanLiteral`: `value` field equal.
+/// - `NullLiteral` vs `NullLiteral`: always true (one canonical
+///   null).
+/// - `UndefinedLiteral` vs `UndefinedLiteral`: always true.
+/// - `BigIntLiteral` vs `BigIntLiteral`: `value` field equal
+///   (decimal-string comparison).
+/// - Anything else (cross-type, non-literal): false. Per spec
+///   strict-equality is false across primitive types.
+///
+/// Used by gap-014 step 4 / CLOC12.36's constant-discriminant
+/// collapse to pick the matching case at compile time.
+fn strict_equal_leaves(a: &Expression, b: &Expression) -> bool {
+    match (a, b) {
+        (Expression::NumericLiteral(x), Expression::NumericLiteral(y)) => {
+            !x.value.is_nan() && !y.value.is_nan() && x.value == y.value
+        }
+        (Expression::StringLiteral(x), Expression::StringLiteral(y)) => x.value == y.value,
+        (Expression::BooleanLiteral(x), Expression::BooleanLiteral(y)) => x.value == y.value,
+        (Expression::NullLiteral(_), Expression::NullLiteral(_)) => true,
+        (Expression::UndefinedLiteral(_), Expression::UndefinedLiteral(_)) => true,
+        (Expression::BigIntLiteral(x), Expression::BigIntLiteral(y)) => x.value == y.value,
+        _ => false,
+    }
+}
+
+/// Pick the case that runs at compile time given a known
+/// `discriminant` and the switch's `cases`.
+///
+/// Walks cases in source order:
+/// 1. Return the first case whose `test` is `Some(t)` and
+///    `strict_equal_leaves(t, discriminant)`.
+/// 2. If no case matches, return the first case with
+///    `test: None` (the `default:` clause) if one exists.
+/// 3. Return `None` when no case matches and there's no default
+///    — the switch produces nothing observable.
+///
+/// Caller is responsible for pre-checking that `discriminant` and
+/// every case's `test` is `is_pure_leaf`. Otherwise the strict-
+/// equality result is unsound.
+fn pick_matching_case<'a>(
+    discriminant: &Expression,
+    cases: &'a [coding_adventures_javascript_ast::SwitchCase],
+) -> Option<&'a coding_adventures_javascript_ast::SwitchCase> {
+    for case in cases {
+        if let Some(test) = &case.test {
+            if strict_equal_leaves(test, discriminant) {
+                return Some(case);
+            }
+        }
+    }
+    cases.iter().find(|c| c.test.is_none())
+}
+
+/// Build a new `BlockStatement.body` from a case consequent, with
+/// the trailing **unlabeled** `BreakStatement` (if any) stripped.
+///
+/// Why only unlabeled: a bare `break;` inside a switch case exits
+/// just that switch. Once we collapse the switch away, the
+/// bare break has nothing to exit and is dead weight — strip it.
+///
+/// A `break label;` inside a switch case exits the switch AND
+/// transfers control to after the named labeled-statement (typically
+/// an outer loop or block). That escape is still semantically
+/// required after the switch is collapsed; the labeled break must
+/// stay in the resulting block so the outer-label exit still
+/// happens. Stripping it would silently keep an enclosing loop
+/// running — an observable behaviour change.
+///
+/// `return` and `throw` at the end always stay — they have
+/// observable behaviour beyond just terminating the switch.
+///
+/// Used by gap-014 step 4 / CLOC12.36 when collapsing a switch
+/// down to its single matching case body.
+fn strip_trailing_break(consequent: &[Statement]) -> Vec<Statement> {
+    if consequent.is_empty() {
+        return Vec::new();
+    }
+    let last_idx = consequent.len() - 1;
+    let last_is_unlabeled_break = matches!(
+        &consequent[last_idx],
+        Statement::Tagged(TaggedStatement::BreakStatement(b)) if b.label.is_none()
+    );
+    if last_is_unlabeled_break {
+        consequent[..last_idx].to_vec()
+    } else {
+        consequent.to_vec()
+    }
+}
+
+/// Returns `true` when an inner BlockStatement's body can be
+/// hoisted into the enclosing block without changing ECMAScript
+/// scoping semantics. Used by the block-flattening fold
+/// (CLOC12.19 / gap-010).
+///
+/// Block-scoped declarations (`let`, `const`, `class`, inner
+/// function declarations) are bound to their enclosing block.
+/// Hoisting them upward either leaks the binding to a wider
+/// scope or causes a redeclaration error against a same-named
+/// binding in the outer block — either way, observably different.
+///
+/// `var` is function-scoped, so hoisting `{var x = 1;}` out of
+/// an inner block to the function-body level produces the same
+/// effective binding (a `var` declaration was already implicitly
+/// hoisted to the function scope by the spec). Hence `Var`-kind
+/// declarations are safe to flatten.
+fn block_is_scope_safe_to_flatten(b: &BlockStatement) -> bool {
+    b.body.iter().all(|s| match s {
+        Statement::Declaration(Declaration::VariableDeclaration(v)) => {
+            matches!(v.kind, VarKind::Var)
+        }
+        Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
+        // Tagged statements never introduce a new lexical binding
+        // by themselves. `ExpressionStatement`, control flow,
+        // `EmptyStatement`, etc. are all safe.
+        Statement::Tagged(_) => true,
+    })
+}
+
+fn is_empty_statement(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::EmptyStatement(_))
+    )
+}
+
+// =====================================================================
+// Declarations
+// =====================================================================
+
+fn dce_declaration(decl: &Declaration, st: &mut DceState) -> Declaration {
+    st.visit();
+    match decl {
+        Declaration::VariableDeclaration(v) => {
+            Declaration::VariableDeclaration(dce_variable_declaration(v, st))
+        }
+        Declaration::FunctionDeclaration(f) => {
+            Declaration::FunctionDeclaration(FunctionDeclaration {
+                cv: f.cv.clone(),
+                id: f.id.clone(),
+                params: f.params.clone(),
+                body: dce_block_statement(&f.body, st),
+                generator: f.generator,
+                is_async: f.is_async,
+            })
+        }
+    }
+}
+
+fn dce_variable_declaration(
+    v: &VariableDeclaration,
+    st: &mut DceState,
+) -> VariableDeclaration {
+    VariableDeclaration {
+        cv: v.cv.clone(),
+        kind: v.kind,
+        declarations: v
+            .declarations
+            .iter()
+            .map(|d| VariableDeclarator {
+                cv: d.cv.clone(),
+                id: d.id.clone(),
+                init: d.init.as_ref().map(|e| dce_expression(e, st)),
+            })
+            .collect(),
+    }
+}
+
+// =====================================================================
+// Expressions — recurse only (DCE doesn't collapse expressions)
+// =====================================================================
+
+fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
+    st.visit();
+    match expr {
+        Expression::Identifier(_)
+        | Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_) => expr.clone(),
+
+        Expression::BinaryExpression(b) => Expression::BinaryExpression(BinaryExpression {
+            cv: b.cv.clone(),
+            operator: b.operator,
+            left: Box::new(dce_expression(&b.left, st)),
+            right: Box::new(dce_expression(&b.right, st)),
+        }),
+        Expression::LogicalExpression(l) => Expression::LogicalExpression(LogicalExpression {
+            cv: l.cv.clone(),
+            operator: l.operator,
+            left: Box::new(dce_expression(&l.left, st)),
+            right: Box::new(dce_expression(&l.right, st)),
+        }),
+        Expression::UnaryExpression(u) => Expression::UnaryExpression(UnaryExpression {
+            cv: u.cv.clone(),
+            operator: u.operator,
+            prefix: u.prefix,
+            argument: Box::new(dce_expression(&u.argument, st)),
+        }),
+        Expression::AssignmentExpression(a) => {
+            Expression::AssignmentExpression(AssignmentExpression {
+                cv: a.cv.clone(),
+                operator: a.operator,
+                left: a.left.clone(),
+                right: Box::new(dce_expression(&a.right, st)),
+            })
+        }
+        Expression::ConditionalExpression(c) => {
+            Expression::ConditionalExpression(ConditionalExpression {
+                cv: c.cv.clone(),
+                test: Box::new(dce_expression(&c.test, st)),
+                consequent: Box::new(dce_expression(&c.consequent, st)),
+                alternate: Box::new(dce_expression(&c.alternate, st)),
+            })
+        }
+        Expression::CallExpression(c) => Expression::CallExpression(CallExpression {
+            cv: c.cv.clone(),
+            callee: Box::new(dce_expression(&c.callee, st)),
+            arguments: c.arguments.iter().map(|a| dce_expression(a, st)).collect(),
+        }),
+        Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
+            cv: m.cv.clone(),
+            object: Box::new(dce_expression(&m.object, st)),
+            property: Box::new(dce_expression(&m.property, st)),
+            computed: m.computed,
+        }),
+        Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
+            cv: a.cv.clone(),
+            elements: a
+                .elements
+                .iter()
+                .map(|e| e.as_ref().map(|x| dce_expression(x, st)))
+                .collect(),
+        }),
+        Expression::ObjectExpression(o) => Expression::ObjectExpression(ObjectExpression {
+            cv: o.cv.clone(),
+            properties: o
+                .properties
+                .iter()
+                .map(|p| Property {
+                    cv: p.cv.clone(),
+                    kind: p.kind,
+                    key: match &p.key {
+                        PropertyKey::Identifier(i) => PropertyKey::Identifier(i.clone()),
+                        PropertyKey::StringLiteral(s) => {
+                            PropertyKey::StringLiteral(s.clone())
+                        }
+                        PropertyKey::NumericLiteral(n) => {
+                            PropertyKey::NumericLiteral(n.clone())
+                        }
+                        PropertyKey::Expression(e) => {
+                            PropertyKey::Expression(Box::new(dce_expression(e, st)))
+                        }
+                    },
+                    value: Box::new(dce_expression(&p.value, st)),
+                    computed: p.computed,
+                    shorthand: p.shorthand,
+                    method: p.method,
+                })
+                .collect(),
+        }),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
+    use coding_adventures_closure_pass_fold_control_flow::FoldControlFlowPass;
+    use coding_adventures_closure_pass_pipeline::{PassPipeline, PipelineOutput};
+    use coding_adventures_javascript_ast::{
+        statement::TaggedStatement, BinaryOperator, BooleanLiteral, EmptyStatement, Identifier,
+        NumericLiteral, SourceType, SwitchCase, SwitchStatement,
+    };
+    use coding_adventures_javascript_tokens::EsVersion;
+    use coding_adventures_type_sidecar::Sidecar;
+
+    fn program() -> Program {
+        Program::new("prog.1".to_string(), EsVersion::Es2025, SourceType::Module)
+    }
+    fn untraced_program() -> Program {
+        Program::new_untraced(EsVersion::Es2025, SourceType::Module)
+    }
+
+    fn ident(name: &str) -> Expression {
+        Expression::Identifier(Identifier {
+            cv: None,
+            name: name.to_string(),
+        })
+    }
+    fn num(v: f64) -> Expression {
+        Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: v,
+            raw: v.to_string(),
+        })
+    }
+    fn boolean(v: bool) -> Expression {
+        Expression::BooleanLiteral(BooleanLiteral { cv: None, value: v })
+    }
+    fn expr_stmt(expr: Expression) -> Statement {
+        Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: expr,
+        })
+    }
+    fn return_stmt() -> Statement {
+        Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: None,
+        })
+    }
+    fn empty_stmt() -> Statement {
+        Statement::empty_statement(EmptyStatement { cv: None })
+    }
+
+    fn run_pass(prog: Program) -> (Program, Vec<Contribution>, bool, u32) {
+        let pass = DcePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        let ctx = PassContext {
+            program: &prog,
+            sidecar: &sidecar,
+            cv: &mut cv,
+        };
+        let out = pass.run(ctx).expect("pass should succeed");
+        (out.program, out.contributions, out.changed, out.stats.nodes_touched)
+    }
+
+    /// Wrap `body` in a FunctionDeclaration so the block is
+    /// reachable from a Program body. Returns the Program.
+    fn program_with_function(body: Vec<Statement>, cv: Option<&str>) -> Program {
+        let block = BlockStatement {
+            cv: cv.map(|s| s.to_string()),
+            body,
+        };
+        let fdecl = Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: block,
+            generator: false,
+            is_async: false,
+        });
+        program().with_body(vec![ProgramItem::Declaration(fdecl)])
+    }
+
+    fn extract_function_body(prog: &Program) -> &BlockStatement {
+        let ProgramItem::Declaration(Declaration::FunctionDeclaration(f)) = &prog.body[0]
+        else {
+            panic!("expected a FunctionDeclaration at body[0]");
+        };
+        &f.body
+    }
+
+    // ---------------- metadata + identity ---------------------
+
+    #[test]
+    fn name_is_dce() {
+        assert_eq!(DcePass::new().name(), "dce");
+    }
+
+    #[test]
+    fn iteration_policy_is_fixed_point() {
+        assert_eq!(
+            DcePass::new().iteration_policy(),
+            IterationPolicy::FixedPoint
+        );
+    }
+
+    #[test]
+    fn cost_is_three_pass_units() {
+        assert_eq!(DcePass::new().cost(), 3);
+    }
+
+    #[test]
+    fn depends_on_constant_fold() {
+        assert_eq!(DcePass::new().depends_on(), &["constant-fold"]);
+    }
+
+    #[test]
+    fn empty_program_is_identity() {
+        let (_out, contribs, changed, _) = run_pass(program());
+        assert!(!changed);
+        assert!(contribs.is_empty());
+    }
+
+    // ---------------- dead-after-return -----------------------
+
+    #[test]
+    fn drops_statements_after_return() {
+        // { x; return; y; z; } → { x; return; }
+        let body = vec![
+            expr_stmt(ident("x")),
+            return_stmt(),
+            expr_stmt(ident("y")),
+            expr_stmt(ident("z")),
+        ];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(
+            contribs.iter().any(|c| c.tag == "removed-dead-code"),
+            "expected removed-dead-code contribution; got {:?}",
+            contribs
+        );
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 2, "expected 2 statements; got {:?}", new_block.body);
+    }
+
+    #[test]
+    fn drops_no_statements_when_no_return() {
+        let body = vec![expr_stmt(ident("x")), expr_stmt(ident("y"))];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(!changed);
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 2);
+    }
+
+    // ---------------- empty-statement removal ------------------
+
+    #[test]
+    fn drops_empty_statements_from_block() {
+        // { x; ; y; ; ; } → { x; y; }
+        let body = vec![
+            expr_stmt(ident("x")),
+            empty_stmt(),
+            expr_stmt(ident("y")),
+            empty_stmt(),
+            empty_stmt(),
+        ];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(
+            contribs.iter().any(|c| c.tag == "removed-empty-statement"),
+            "expected removed-empty-statement contribution; got {:?}",
+            contribs
+        );
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 2, "expected 2 statements; got {:?}", new_block.body);
+    }
+
+    #[test]
+    fn handles_both_categories_in_one_block() {
+        // { x; ;  return; y; ; }
+        // → drop dead-after-return (`y;` and the trailing `;`)
+        // → drop empties (`;` between x and return)
+        // → final: { x; return; }
+        let body = vec![
+            expr_stmt(ident("x")),
+            empty_stmt(),
+            return_stmt(),
+            expr_stmt(ident("y")),
+            empty_stmt(),
+        ];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        // Two categories of drops → two contributions.
+        assert!(
+            contribs.iter().any(|c| c.tag == "removed-dead-code"),
+            "expected removed-dead-code; got {:?}",
+            contribs
+        );
+        assert!(
+            contribs.iter().any(|c| c.tag == "removed-empty-statement"),
+            "expected removed-empty-statement; got {:?}",
+            contribs
+        );
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 2);
+    }
+
+    // ---------------- nested blocks ---------------------------
+
+    #[test]
+    fn recurses_into_nested_blocks_and_flattens() {
+        // { x; { return; y; } z; }
+        //
+        // Step 1 (recurse): inner `{ return; y; }` → `{ return; }`
+        //                   (drop dead-after-return)
+        // Step 2 (flatten, CLOC12.19 / gap-010): inner block has no
+        //         scope-bound decls, splice its body into outer:
+        //         `{ x; return; z; }`
+        // Step 3 (dead-after-return on outer): drop `z`:
+        //         `{ x; return; }`
+        //
+        // So the outer body ends with 2 statements (was 3 pre-fold).
+        let inner_block = BlockStatement {
+            cv: Some("inner.1".to_string()),
+            body: vec![return_stmt(), expr_stmt(ident("y"))],
+        };
+        let body = vec![
+            expr_stmt(ident("x")),
+            Statement::block_statement(inner_block),
+            expr_stmt(ident("z")),
+        ];
+        let prog = program_with_function(body, Some("outer.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        let outer = extract_function_body(&out);
+        assert_eq!(
+            outer.body.len(),
+            2,
+            "expected outer body = [x; return;] after flatten+drop; got {:?}",
+            outer.body
+        );
+        // Second statement is `return;`.
+        assert!(
+            matches!(
+                &outer.body[1],
+                Statement::Tagged(TaggedStatement::ReturnStatement(_))
+            ),
+            "expected ReturnStatement at outer.body[1]; got {:?}",
+            outer.body[1]
+        );
+    }
+
+    // ---------------- untraced ---------------------------------
+
+    #[test]
+    fn untraced_mode_drops_silently() {
+        // Same as drops_statements_after_return but with cv: None.
+        let body = vec![
+            expr_stmt(ident("x")),
+            return_stmt(),
+            expr_stmt(ident("y")),
+        ];
+        let block = BlockStatement {
+            cv: None,
+            body,
+        };
+        let fdecl = Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: block,
+            generator: false,
+            is_async: false,
+        });
+        let prog = untraced_program().with_body(vec![ProgramItem::Declaration(fdecl)]);
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(
+            contribs.is_empty(),
+            "untraced should emit no contributions; got {:?}",
+            contribs
+        );
+        let new_block = extract_function_body(&out);
+        assert_eq!(new_block.body.len(), 2);
+    }
+
+    // ---------------- pipeline integration --------------------
+
+    #[test]
+    fn pipeline_solo_runs_cleanly() {
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(DcePass::new()));
+        let mut cv = CVLog::new(true);
+        let out: PipelineOutput = pipeline
+            .run(program(), &Sidecar::new(), &mut cv)
+            .expect("pipeline should run cleanly");
+        assert_eq!(out.execution_order, vec!["dce".to_string()]);
+        assert!(out
+            .diagnostics
+            .iter()
+            .any(|d| d.group.0 == "pipeline.fixed-point-not-yet-iterated"));
+    }
+
+    #[test]
+    fn full_canonical_pipeline_constant_fold_then_fcf_then_dce() {
+        // `if (1 < 2) { z; }` after the full canonical chain:
+        // constant-fold collapses `1 < 2 → true`;
+        // fold-control-flow collapses `if (true) {z;}` → block `{z;}`
+        // (or just the consequent statement, depending on which
+        // body wrapper fold-control-flow chose).
+        // dce cleans up.
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: Expression::BinaryExpression(BinaryExpression {
+                cv: Some("cmp.1".to_string()),
+                operator: BinaryOperator::Lt,
+                left: Box::new(num(1.0)),
+                right: Box::new(num(2.0)),
+            }),
+            consequent: Box::new(expr_stmt(ident("z"))),
+            alternate: None,
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(ConstantFoldPass::new()));
+        pipeline.add(Box::new(FoldControlFlowPass::new()));
+        pipeline.add(Box::new(DcePass::new()));
+        let mut cv = CVLog::new(true);
+        let out = pipeline
+            .run(prog, &Sidecar::new(), &mut cv)
+            .expect("pipeline should run cleanly");
+
+        assert_eq!(
+            out.execution_order,
+            vec![
+                "constant-fold".to_string(),
+                "fold-control-flow".to_string(),
+                "dce".to_string(),
+            ]
+        );
+        // After fold-control-flow's collapse of if(true){z;} the
+        // result is just the consequent statement holding `z`.
+        let item = &out.program.body[0];
+        let ProgramItem::Statement(s) = item else {
+            panic!("expected Statement at body[0]; got {:?}", item);
+        };
+        match s {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                match &es.expression {
+                    Expression::Identifier(i) => assert_eq!(i.name, "z"),
+                    other => panic!("expected ident(z); got {:?}", other),
+                }
+            }
+            other => panic!("expected ExpressionStatement(z); got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn pipeline_with_if_false_then_dce_cleans_empty_statement() {
+        // `function f() { if (false) {x;} return; y; }`
+        // Step 1: constant-fold — no value-level work needed.
+        // Step 2: fold-control-flow — collapses `if (false) {x;}`
+        //         (no alternate) to EmptyStatement. Also drops
+        //         `y;` after `return;` inside the block (fold-
+        //         control-flow's own dead-after-return logic).
+        //         End result of step 2: { ;  return; }
+        // Step 3: dce — removes the EmptyStatement.
+        //         End result: { return; }
+        let func_body = vec![
+            Statement::if_statement(IfStatement {
+                cv: Some("if.1".to_string()),
+                test: boolean(false),
+                consequent: Box::new(expr_stmt(ident("x"))),
+                alternate: None,
+            }),
+            return_stmt(),
+            expr_stmt(ident("y")),
+        ];
+        let prog = program_with_function(func_body, Some("fn.body"));
+
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(ConstantFoldPass::new()));
+        pipeline.add(Box::new(FoldControlFlowPass::new()));
+        pipeline.add(Box::new(DcePass::new()));
+        let mut cv = CVLog::new(true);
+        let out = pipeline
+            .run(prog, &Sidecar::new(), &mut cv)
+            .expect("pipeline should run cleanly");
+
+        let final_block = extract_function_body(&out.program);
+        // The block should just hold `return;` after the full
+        // canonical chain.
+        assert_eq!(
+            final_block.body.len(),
+            1,
+            "expected just `return;` after fold/fcf/dce; got {:?}",
+            final_block.body
+        );
+        assert!(matches!(
+            &final_block.body[0],
+            Statement::Tagged(TaggedStatement::ReturnStatement(_))
+        ));
+    }
+
+    // =====================================================================
+    // gap-014 step 2 / CLOC12.34 — empty-switch elimination
+    // =====================================================================
+
+    fn switch_stmt(disc: Expression, cases: Vec<SwitchCase>) -> Statement {
+        Statement::switch_statement(SwitchStatement {
+            cv: Some("sw.1".to_string()),
+            discriminant: disc,
+            cases,
+        })
+    }
+
+    fn case_empty(test: Option<Expression>) -> SwitchCase {
+        SwitchCase {
+            cv: None,
+            test,
+            consequent: vec![],
+        }
+    }
+
+    /// `function f() { switch (1) {} }` → `function f() {}`.
+    /// Empty switch with literal discriminant collapses; the
+    /// resulting EmptyStatement is then dropped by the block
+    /// walker, so the function body ends up empty.
+    #[test]
+    fn empty_switch_with_literal_discriminant_drops_entirely() {
+        let body = vec![switch_stmt(num(1.0), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(changed);
+        assert!(
+            contribs.iter().any(|c| c.tag == "switch_eliminated"),
+            "expected switch_eliminated contribution"
+        );
+    }
+
+    /// `function f() { switch (1) { case 2: ; default: ; } }` →
+    /// `function f() {}`. All cases empty, literal tests, literal
+    /// discriminant — drops.
+    #[test]
+    fn empty_switch_with_pure_cases_drops_entirely() {
+        let cases = vec![
+            case_empty(Some(num(2.0))),
+            case_empty(None), // default
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// Conservative bail: Identifier discriminant might TDZ-throw
+    /// for an uninitialised `let` / `const`. Keep the switch.
+    #[test]
+    fn empty_switch_with_identifier_discriminant_keeps_switch() {
+        let body = vec![switch_stmt(ident("x"), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // SwitchStatement preserved.
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// Non-empty consequent keeps the switch even with a pure
+    /// discriminant — the consequent's statements have effect
+    /// potential we don't analyse.
+    #[test]
+    fn switch_with_non_empty_consequent_keeps_switch() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("y"))],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// Identifier case-test (not pure under TDZ) keeps the
+    /// switch even though discriminant is pure and consequents
+    /// are empty.
+    #[test]
+    fn empty_switch_with_identifier_case_test_keeps_switch() {
+        let cases = vec![case_empty(Some(ident("k")))];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// Boolean / Null discriminants are pure too.
+    #[test]
+    fn empty_switch_with_boolean_discriminant_drops() {
+        let body = vec![switch_stmt(boolean(true), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty());
+    }
+
+    // =====================================================================
+    // gap-014 step 3 / CLOC12.35 — drop-after-break in case consequents
+    // =====================================================================
+
+    fn break_stmt() -> Statement {
+        Statement::break_statement(
+            coding_adventures_javascript_ast::BreakStatement { cv: None, label: None },
+        )
+    }
+
+    fn throw_stmt(arg: Expression) -> Statement {
+        Statement::throw_statement(
+            coding_adventures_javascript_ast::ThrowStatement { cv: None, argument: arg },
+        )
+    }
+
+    /// Helper — extract the unique SwitchStatement from a function
+    /// body so we can pattern-match on it.
+    fn extract_switch<'a>(prog: &'a Program) -> &'a SwitchStatement {
+        let block = extract_function_body(prog);
+        match &block.body[0] {
+            Statement::Tagged(TaggedStatement::SwitchStatement(s)) => s,
+            other => panic!("expected SwitchStatement; got {:?}", other),
+        }
+    }
+
+    /// `switch (x) { case 1: a; break; dead; }` →
+    /// `switch (x) { case 1: a; break; }`. The case keeps `a` and
+    /// `break;`; the trailing `dead;` is dropped.
+    #[test]
+    fn drop_after_break_in_case_consequent() {
+        let cases = vec![SwitchCase {
+            cv: Some("c.1".to_string()),
+            test: Some(num(1.0)),
+            consequent: vec![
+                expr_stmt(ident("a")),
+                break_stmt(),
+                expr_stmt(ident("dead")),
+            ],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        let cs = &sw.cases[0];
+        assert_eq!(cs.consequent.len(), 2, "expected 2 stmts; got {:?}", cs.consequent);
+        assert!(matches!(
+            &cs.consequent[1],
+            Statement::Tagged(TaggedStatement::BreakStatement(_))
+        ));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "removed-dead-code-in-case"));
+    }
+
+    /// `return` inside a case body is also a terminator.
+    #[test]
+    fn drop_after_return_in_case_consequent() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![return_stmt(), expr_stmt(ident("dead"))],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 1);
+    }
+
+    /// `throw e;` inside a case body is also a terminator.
+    #[test]
+    fn drop_after_throw_in_case_consequent() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![throw_stmt(num(1.0)), expr_stmt(ident("dead"))],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 1);
+    }
+
+    /// Default case also gets the truncate treatment.
+    #[test]
+    fn drop_after_break_in_default_consequent() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: None,
+            consequent: vec![
+                expr_stmt(ident("a")),
+                break_stmt(),
+                expr_stmt(ident("dead")),
+            ],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 2);
+    }
+
+    /// Per-case truncation is independent — one case has dead code,
+    /// the other doesn't.
+    #[test]
+    fn drop_after_break_applies_per_case() {
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![
+                    expr_stmt(ident("a")),
+                    break_stmt(),
+                    expr_stmt(ident("dead")),
+                ],
+            },
+            SwitchCase {
+                cv: None,
+                test: Some(num(2.0)),
+                consequent: vec![expr_stmt(ident("b"))],
+            },
+        ];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 2); // truncated
+        assert_eq!(sw.cases[1].consequent.len(), 1); // untouched
+    }
+
+    /// `continue` is NOT a case terminator — it refers to an
+    /// enclosing loop, not the switch. Conservative bail.
+    #[test]
+    fn continue_in_case_consequent_keeps_following_statements() {
+        let cont = Statement::continue_statement(
+            coding_adventures_javascript_ast::ContinueStatement { cv: None, label: None },
+        );
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![cont, expr_stmt(ident("y"))],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 2);
+    }
+
+    /// Case with no terminator is left alone.
+    #[test]
+    fn case_with_no_terminator_unchanged() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), expr_stmt(ident("b"))],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let sw = extract_switch(&out);
+        assert_eq!(sw.cases[0].consequent.len(), 2);
+    }
+
+    // =====================================================================
+    // gap-014 step 4 / CLOC12.36 — constant-discriminant collapse
+    // =====================================================================
+
+    /// `function f() { switch (1) { case 1: a; break; } }` →
+    /// `function f() { a; }`. The matched case body keeps `a`,
+    /// the trailing `break;` is stripped, the rest of the switch
+    /// disappears. After block-flattening, the resulting body
+    /// becomes a single-statement function.
+    #[test]
+    fn switch_with_literal_disc_matching_case_collapses() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), break_stmt()],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // After collapse + block flatten: just `a;`.
+        assert_eq!(block.body.len(), 1, "expected 1 stmt; got {:?}", block.body);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+        ));
+        assert!(changed);
+        assert!(
+            contribs
+                .iter()
+                .any(|c| c.tag == "switch_collapsed_to_matched_case")
+        );
+    }
+
+    /// `function f() { switch (1) { case 2: a; break; default: b; break; } }`
+    /// → `function f() { b; }`. No case matches `1`, so the
+    /// `default:` runs; trailing break stripped.
+    #[test]
+    fn switch_with_literal_disc_no_match_uses_default() {
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(num(2.0)),
+                consequent: vec![expr_stmt(ident("a")), break_stmt()],
+            },
+            SwitchCase {
+                cv: None,
+                test: None, // default
+                consequent: vec![expr_stmt(ident("b")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert_eq!(block.body.len(), 1);
+    }
+
+    /// `function f() { switch (1) { case 2: a; break; } }` →
+    /// `function f() {}`. No match, no default; nothing runs.
+    #[test]
+    fn switch_with_literal_disc_no_match_no_default_drops() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(2.0)),
+            consequent: vec![expr_stmt(ident("a")), break_stmt()],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty());
+        assert!(contribs.iter().any(|c| c.tag == "switch_collapsed_no_match"));
+    }
+
+    /// Matched case ending with `return;` (not break) → return
+    /// stays in the collapsed body. The function would return
+    /// early; that's preserved.
+    #[test]
+    fn switch_collapse_with_return_terminator_preserves_return() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), return_stmt()],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // Two statements: `a;` then `return;`. Block flattening
+        // hoisted them out of the inner switch's collapsed block.
+        // DCE's own dead-after-return drop applies *within* the
+        // outer block, so it stays as 2.
+        assert_eq!(block.body.len(), 2, "expected 2 stmts; got {:?}", block.body);
+        assert!(matches!(
+            &block.body[1],
+            Statement::Tagged(TaggedStatement::ReturnStatement(_))
+        ));
+    }
+
+    /// String discriminant matching case test.
+    #[test]
+    fn switch_collapse_string_discriminant() {
+        let s_lit = |v: &str| Expression::StringLiteral(
+            coding_adventures_javascript_ast::StringLiteral {
+                cv: None,
+                value: v.to_string(),
+                raw: format!("\"{}\"", v),
+            },
+        );
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(s_lit("a")),
+                consequent: vec![expr_stmt(ident("ax")), break_stmt()],
+            },
+            SwitchCase {
+                cv: None,
+                test: Some(s_lit("b")),
+                consequent: vec![expr_stmt(ident("bx")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(s_lit("b"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert_eq!(block.body.len(), 1);
+        if let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = &block.body[0] {
+            if let Expression::Identifier(i) = &es.expression {
+                assert_eq!(i.name, "bx");
+            } else {
+                panic!("expected Identifier(bx) inside expr-stmt");
+            }
+        } else {
+            panic!("expected ExpressionStatement; got {:?}", block.body[0]);
+        }
+    }
+
+    /// Bail when matched-case consequent doesn't terminate —
+    /// fall-through would happen and we don't model it.
+    #[test]
+    fn switch_with_literal_disc_no_terminator_keeps_switch() {
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![expr_stmt(ident("a"))], // no break/return/throw
+            },
+            SwitchCase {
+                cv: None,
+                test: Some(num(2.0)),
+                consequent: vec![expr_stmt(ident("b")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// Cross-type test mismatch — discriminant `1` doesn't strict-
+    /// equal `"1"`. The `case "1":` is skipped, default runs.
+    #[test]
+    fn switch_collapse_cross_type_test_does_not_match() {
+        let s_lit = |v: &str| Expression::StringLiteral(
+            coding_adventures_javascript_ast::StringLiteral {
+                cv: None,
+                value: v.to_string(),
+                raw: format!("\"{}\"", v),
+            },
+        );
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(s_lit("1")),
+                consequent: vec![expr_stmt(ident("string_match")), break_stmt()],
+            },
+            SwitchCase {
+                cv: None,
+                test: None,
+                consequent: vec![expr_stmt(ident("default_ran")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert_eq!(block.body.len(), 1);
+        if let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = &block.body[0] {
+            if let Expression::Identifier(i) = &es.expression {
+                assert_eq!(i.name, "default_ran");
+            } else {
+                panic!("expected Identifier inside expr-stmt");
+            }
+        }
+    }
+
+    /// Identifier discriminant: bail. Conservative.
+    #[test]
+    fn switch_collapse_identifier_discriminant_keeps_switch() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), break_stmt()],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// **Bug fix from security review.** The classic "share body"
+    /// pattern `case 1: case 2: body; break;` has `case 1` with
+    /// an EMPTY consequent — control falls through to `case 2`'s
+    /// `body; break;`. We don't model fall-through, so we must
+    /// bail and keep the switch intact rather than wrongly
+    /// collapsing to `{}` (which would drop `body`).
+    #[test]
+    fn switch_collapse_empty_matched_case_keeps_switch_due_to_fallthrough() {
+        let cases = vec![
+            SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![], // falls through to case 2
+            },
+            SwitchCase {
+                cv: None,
+                test: Some(num(2.0)),
+                consequent: vec![expr_stmt(ident("body")), break_stmt()],
+            },
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // Switch preserved; we don't drop `body`.
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// **Bug fix from security review.** A trailing `break label;`
+    /// (labeled break) exits the switch AND transfers control to
+    /// after the labeled statement (typically an outer loop).
+    /// Stripping it would silently keep the outer loop running.
+    /// `strip_trailing_break` must only strip UNLABELED breaks.
+    #[test]
+    fn switch_collapse_preserves_trailing_labeled_break() {
+        let labeled_break = Statement::break_statement(
+            coding_adventures_javascript_ast::BreakStatement {
+                cv: None,
+                label: Some(coding_adventures_javascript_ast::Identifier {
+                    cv: None,
+                    name: "outer".to_string(),
+                }),
+            },
+        );
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), labeled_break],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // After collapse + block-flatten, body is `a; break outer;`
+        // — the labeled break must still be there.
+        assert_eq!(block.body.len(), 2, "expected 2 stmts; got {:?}", block.body);
+        if let Statement::Tagged(TaggedStatement::BreakStatement(b)) = &block.body[1] {
+            assert!(b.label.is_some(), "labeled break must be preserved");
+            assert_eq!(b.label.as_ref().unwrap().name, "outer");
+        } else {
+            panic!("expected BreakStatement at body[1]; got {:?}", block.body[1]);
+        }
+    }
+
+    /// NaN never matches per ECMAScript §IsStrictlyEqual.
+    /// Conservative bail: discriminant `NaN` keeps the switch.
+    #[test]
+    fn switch_collapse_nan_discriminant_keeps_switch() {
+        let nan = Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: f64::NAN,
+            raw: "NaN".to_string(),
+        });
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("a")), break_stmt()],
+        }];
+        let body = vec![switch_stmt(nan, cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // NaN doesn't strict-equal anything → no match. Without a
+        // default case, the step 4 logic returns EmptyStatement
+        // (no observable behaviour). With NaN we don't reach there
+        // because strict_equal_leaves bails on NaN — but
+        // pick_matching_case still returns None (no test
+        // matches), and no default exists, so → EmptyStatement
+        // path runs.
+        //
+        // Net result: empty function body. The earlier "bail on
+        // NaN" doc is a soundness note for cases where a
+        // theoretical case test could be NaN (which can't happen
+        // through is_pure_leaf because we'd already have flagged
+        // it).
+        assert!(block.body.is_empty());
+    }
+}

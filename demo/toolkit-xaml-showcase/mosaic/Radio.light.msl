@@ -1,0 +1,13 @@
+// Radio.light.msl — default light-theme styling (v0.3 trim).
+//
+// Pre-v0.3 styled two fake `radio-box-selected` / `radio-box-unselected`
+// parts on synthesised HostButton bullets. v0.3's `Radio.mll` is a
+// thin wrapper around the native `HostRadio` widget — those parts no
+// longer exist, and the native widget renders its own indicator dot.
+// Only the `radio` root part survives.
+
+style Radio {
+  part radio {
+    padding : 4 ;
+  }
+}

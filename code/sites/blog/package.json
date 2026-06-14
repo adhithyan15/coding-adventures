@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/blog-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Coding Adventures blog — assembled from five Forme stages and deployed to /coding-adventures/blog/ on GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "build": "tsx build.ts",
+    "clean": "rm -rf dist"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types":                "file:../../packages/typescript/forme-types",
+    "@coding-adventures/forme-stage":                "file:../../packages/typescript/forme-stage",
+    "@coding-adventures/forme-pipeline-config":      "file:../../packages/typescript/forme-pipeline-config",
+    "@coding-adventures/forme-orchestrator":         "file:../../packages/typescript/forme-orchestrator",
+    "@coding-adventures/forme-source-fs":            "file:../../packages/typescript/forme-source-fs",
+    "@coding-adventures/forme-parse-markdown":       "file:../../packages/typescript/forme-parse-markdown",
+    "@coding-adventures/forme-collect-chronological":"file:../../packages/typescript/forme-collect-chronological",
+    "@coding-adventures/forme-render-static":        "file:../../packages/typescript/forme-render-static",
+    "@coding-adventures/forme-emit-fs":              "file:../../packages/typescript/forme-emit-fs"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0"
+  }
+}

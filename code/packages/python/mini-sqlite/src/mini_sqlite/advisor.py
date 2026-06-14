@@ -228,49 +228,53 @@ class IndexAdvisor:
 
         # Check whether the policy wants to drop any cold auto-indexes.
         should_drop_fn = getattr(self._policy, "should_drop", None)
-        if not callable(should_drop_fn):
-            return
+        if callable(should_drop_fn):
+            # Collect all auto-indexes we know about: those we created plus any
+            # that were already tracked in _last_use from previous events.
+            candidates = set(self._created_at) | set(self._last_use)
+            for idx_name in list(candidates):
+                last = self._last_use.get(idx_name, self._created_at.get(idx_name, 0))
+                queries_since = self._query_count - last
 
-        # Collect all auto-indexes we know about: those we created plus any
-        # that were already tracked in _last_use from previous events.
-        candidates = set(self._created_at) | set(self._last_use)
-        for idx_name in list(candidates):
-            last = self._last_use.get(idx_name, self._created_at.get(idx_name, 0))
-            queries_since = self._query_count - last
+                # Resolve table + columns from stored metadata when available.
+                # Fall back to name-parsing for indexes whose metadata was not
+                # captured (e.g. single-column indexes created before IX-8).
+                meta = self._auto_index_meta.get(idx_name)
+                if meta is not None:
+                    table, columns = meta
+                    # Pass the first column to should_drop for the column arg
+                    # (the spec argument is informational; HitCountPolicy ignores it).
+                    column = columns[0] if columns else ""
+                else:
+                    # Legacy path: parse auto_{table}_{column} by splitting on "_".
+                    parts = idx_name.split("_", 2)  # ["auto", table, column]
+                    if len(parts) != 3:
+                        continue
+                    _, table, column = parts
+                    columns = (column,)
 
-            # Resolve table + columns from stored metadata when available.
-            # Fall back to name-parsing for indexes whose metadata was not
-            # captured (e.g. single-column indexes created before IX-8).
-            meta = self._auto_index_meta.get(idx_name)
-            if meta is not None:
-                table, columns = meta
-                # Pass the first column to should_drop for the column arg
-                # (the spec argument is informational; HitCountPolicy ignores it).
-                column = columns[0] if columns else ""
-            else:
-                # Legacy path: parse auto_{table}_{column} by splitting on "_".
-                parts = idx_name.split("_", 2)  # ["auto", table, column]
-                if len(parts) != 3:
-                    continue
-                _, table, column = parts
-                columns = (column,)
+                if should_drop_fn(idx_name, table, column, queries_since):
+                    try:
+                        self._backend.drop_index(idx_name, if_exists=True)
+                    except Exception:  # noqa: BLE001 — drop failures are non-fatal
+                        continue
+                    # Remove from tracking so the advisor doesn't re-check it.
+                    self._created_at.pop(idx_name, None)
+                    self._last_use.pop(idx_name, None)
+                    self._auto_index_meta.pop(idx_name, None)
+                    # Reset single-column hit counts so the index can be
+                    # re-created if the workload pattern returns.
+                    for col in columns:
+                        self._hits.pop((table, col), None)
+                    # Reset pair hit counts for composite indexes (2-column).
+                    if len(columns) == 2:
+                        self._pair_hits.pop((table, columns[0], columns[1]), None)
 
-            if should_drop_fn(idx_name, table, column, queries_since):
-                try:
-                    self._backend.drop_index(idx_name, if_exists=True)
-                except Exception:  # noqa: BLE001 — drop failures are non-fatal
-                    continue
-                # Remove from tracking so the advisor doesn't re-check it.
-                self._created_at.pop(idx_name, None)
-                self._last_use.pop(idx_name, None)
-                self._auto_index_meta.pop(idx_name, None)
-                # Reset single-column hit counts so the index can be
-                # re-created if the workload pattern returns.
-                for col in columns:
-                    self._hits.pop((table, col), None)
-                # Reset pair hit counts for composite indexes (2-column).
-                if len(columns) == 2:
-                    self._pair_hits.pop((table, columns[0], columns[1]), None)
+        # Forward to the policy's observer hook so ML-based or adaptive
+        # policies can update their own feature history from every raw event.
+        notify_fn = getattr(self._policy, "on_query_event", None)
+        if callable(notify_fn):
+            notify_fn(event)
 
     # ------------------------------------------------------------------
     # Internal callbacks.

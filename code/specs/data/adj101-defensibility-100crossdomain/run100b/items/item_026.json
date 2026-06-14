@@ -1,0 +1,7 @@
+{
+ "idx": 26,
+ "id": "CON-7",
+ "scenario": "Nina's fitness watch is labeled and certified IP67 waterproof. It stopped working after she wore it while swimming in a pool at a depth of about 0.5 meters during normal use. The failure was caused by water ingress.",
+ "policy": "General rule: water damage to electronic products is not covered by the standard warranty. Override: for products explicitly certified as 'IP67 waterproof', water damage occurring during normal submersion up to 1 meter IS covered, notwithstanding the general exclusion.",
+ "question": "Is the water-damage failure covered under the warranty?"
+}

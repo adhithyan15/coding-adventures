@@ -1,0 +1,59 @@
+% ADJ52 case-7 — patient observations + queries (deriver output).
+% Same vocabulary as cases/case-7/rulebook.adj. Numeric/unit IR term-args were
+% normalized to qualitative atoms (no uppercase, no leading digit):
+%   patient_age(45)->patient_age(over_40);
+%   spleen 22cm / 16cm below costal margin -> splenomegaly_magnitude(massive);
+%   hemoglobin 8.1 / wbc 2.4 / neutrophils 1.0 / platelets 61 -> lab(pancytopenia);
+%   albumin 3.9 / bilirubin 0.8 / INR 1.0 -> the respective *_normal atoms.
+%
+% NOT observed (left to the uncertain{} markers, by design): the differential
+% monocyte count (HCL discriminator), teardrop-cell / leukoerythroblastic smear
+% and JAK2/CALR/MPL status (PMF discriminators). Resolving these moves the
+% posterior — that is the value-of-information the panel surfaces.
+
+observe patient_age(over_40)
+observe patient_sex(male)
+observe history(chronic_hepatitis_b)
+observe lab(hbsag_positive)
+observe lab(hbv_dna_detectable_low_level)
+observe lab(hepatitis_c_serology_negative)
+
+% massive splenomegaly (22 cm long axis; tip 16 cm below costal margin)
+observe splenomegaly_magnitude(massive)
+observe discordant_feature(splenomegaly_disproportionate_to_portal_hypertension)
+
+% pancytopenia (Hb 8.1, WBC 2.4, neutrophils 1.0, platelets 61); no overt blasts
+observe lab(pancytopenia)
+observe peripheral_smear(no_overt_blasts)
+
+% preserved synthetic function + normal liver imaging (discordant with cirrhosis)
+observe finding(synthetic_liver_function_preserved)
+observe lab(serum_albumin_normal)
+observe lab(total_bilirubin_normal)
+observe lab(inr_normal)
+observe imaging(liver_normal_size_and_contour)
+
+% no portal-hypertensive stigmata; patent normal-caliber portal vein; no varices
+observe exam_negative(spider_naevi)
+observe exam_negative(palmar_erythema)
+observe exam_negative(asterixis)
+observe imaging(no_large_varices)
+observe imaging(portal_vein_patent_normal_caliber)
+
+% small-volume ascites + bilateral ankle edema
+observe imaging(small_volume_ascites)
+
+% scant / non-diagnostic marrow aspirate (forme-fruste dry tap)
+observe bone_marrow_result(scant_nondiagnostic_aspirate)
+
+% ----- q1: unifying diagnosis -----
+? diagnosis(splenic_marginal_zone_lymphoma)
+? diagnosis(hairy_cell_leukemia)
+? diagnosis(primary_myelofibrosis)
+? diagnosis(decompensated_hbv_cirrhosis_with_hypersplenism)
+? diagnosis(chronic_visceral_infection)
+
+% ----- q4: recommended next step after a non-diagnostic aspirate -----
+? next_step(bone_marrow_trephine_biopsy_with_immunophenotyping)
+? next_step(peripheral_blood_flow_cytometry)
+? next_step(diagnostic_splenectomy)

@@ -1,0 +1,11 @@
+[package]
+name = "board-vm-uno-r4-uart"
+version = "0.1.0"
+edition = "2021"
+description = "Uno R4 WiFi SCI UART backend for Board VM firmware transports"
+
+[dependencies]
+board-vm-uart = { path = "../board-vm-uart" }
+
+[lib]
+path = "src/lib.rs"

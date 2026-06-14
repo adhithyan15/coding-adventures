@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/forme-doc-toc-extractor",
+  "version": "0.1.0",
+  "description": "Walk a DocumentNode AST and produce a nested table-of-contents tree from its headings.  Output is a plain JSON-able tree of { text, id, level, children } entries that a sidebar widget, in-page TOC, or PDF outline can render directly.  Pure transform; capabilities []; depends on @coding-adventures/forme-doc-heading-anchors (which itself depends only on document-ast).  DOC00 v0 content-pipeline package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast",
+    "@coding-adventures/forme-doc-heading-anchors": "file:../forme-doc-heading-anchors"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

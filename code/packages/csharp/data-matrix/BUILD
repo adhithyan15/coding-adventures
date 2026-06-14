@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.DataMatrix.Tests/CodingAdventures.DataMatrix.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=90 /p:ThresholdType=line "/p:Include=[CodingAdventures.DataMatrix]*"

@@ -1,0 +1,16 @@
+{
+  "hash": "f191011cf3418e7d5114b1c0047a06d8aa5bde436439026fc57d0ad7506029fe",
+  "url": "https://wp.lancs.ac.uk/enclair/2019/06/30/case-notes-s01e09-the-yorkshire-ripper-part-3-of-5/",
+  "title": "Case Notes: The Yorkshire Ripper, part 3 of 5 \u2014 en clair (Lancaster University Forensic Linguistics)",
+  "interned_at": "",
+  "content": "Later, Ellis pores over his own work on the Survey of English Dialects, and compares this with the recordings he's just collected, plus the Wearside Jack tape. We moved further inland to the small village of Castletown and in a pub there we met a retired man whose segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker. By contrast, the further north of Castletown they went, the fewer similarities they found.",
+  "citations": [
+    {
+      "start": 160,
+      "end": 379,
+      "quote": "We moved further inland to the small village of Castletown and in a pub there we met a retired man whose segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker.",
+      "used_for": "LIKELIHOOD RATIO 1 \u2014 best_match(wearside_survey_recordings_washington): P(questioned sample best-matches the Wearside/Washington SED comparison recording | speaker truly from Wearside/Sunderland) vs P(same | speaker from elsewhere). DIRECTION strongly positive and root-validated as a DIRECTIONAL fact: Stanley Ellis localized the speaker by comparing the tape against his own SED fieldwork, specifically a recording of the Washington dialect, and the Castletown/Southwick comparison speaker's 'segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker', while similarities FELL OFF moving north \u2014 a positive co-localization gradient. GROUND TRUTH confirms direction: John Humble (DNA-identified 2005/2006) had 'spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton' \u2014 the exact region Ellis named. BUT no source publishes a numeric P(match|hypothesis) or a quantified false-match rate; the judgment was auditory/comparative, not a measured likelihood ratio. Hence direction_only for the NUMBER even though the direction traces to root primary observation.->wearside_sunderland_castletown"
+    }
+  ],
+  "onward_citations": []
+}

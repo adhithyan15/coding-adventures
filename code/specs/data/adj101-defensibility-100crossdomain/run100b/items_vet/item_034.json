@@ -1,0 +1,8 @@
+{
+ "idx": 34,
+ "policy": "An issuer relying on the Rule 701 exemption for compensatory equity awards to employees is exempt from registration only if the aggregate sales price of securities sold in any consecutive 12-month period does not exceed the greatest of $1,000,000, 15% of total assets, or 15% of the outstanding securities of that class. If the cap is exceeded, the exemption is unavailable.",
+ "scenario": "Nimbus Software, a private company, granted compensatory stock options to its employees during the year with an aggregate sales price of $4,200,000. Nimbus reports total assets of $20,000,000.",
+ "question": "Does Nimbus's grant stay within the Rule 701 cap and remain exempt?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "15% of outstanding securities of the class not stated"
+}

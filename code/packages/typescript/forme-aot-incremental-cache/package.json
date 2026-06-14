@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/forme-aot-incremental-cache",
+  "version": "0.1.0",
+  "description": "Content-addressed incremental rebuild cache wrapping forme-aot-css-slicer (FM06 §4).  Computes a stable cache key from the canonical document + sorted usedRuleIds + sorted activeContexts; consults a caller-supplied storage backend before recomputing.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-style-ir": "file:../forme-style-ir",
+    "@coding-adventures/forme-style-to-css": "file:../forme-style-to-css",
+    "@coding-adventures/forme-aot-css-slicer": "file:../forme-aot-css-slicer",
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "@types/node": "^20.0.0"
+  }
+}

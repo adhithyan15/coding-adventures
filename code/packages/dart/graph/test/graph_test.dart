@@ -114,6 +114,54 @@ void main() {
     }
   });
 
+  group('property bags', () {
+    for (final repr in representations) {
+      test('stores graph, node, and edge properties for $repr', () {
+        final graph = Graph<String>(repr);
+
+        graph.setGraphProperty('name', 'city-map');
+        graph.setGraphProperty('version', 1);
+        expect(graph.graphProperties(), {'name': 'city-map', 'version': 1});
+        graph.removeGraphProperty('version');
+        expect(graph.graphProperties(), {'name': 'city-map'});
+
+        graph.addNode('A', {'kind': 'input'});
+        graph.addNode('A', {'trainable': false});
+        graph.setNodeProperty('A', 'slot', 0);
+        expect(graph.nodeProperties('A'), {
+          'kind': 'input',
+          'trainable': false,
+          'slot': 0,
+        });
+        graph.removeNodeProperty('A', 'slot');
+        expect(graph.nodeProperties('A'), {
+          'kind': 'input',
+          'trainable': false,
+        });
+
+        graph.addEdge('A', 'B', 2.5, {'role': 'distance'});
+        expect(graph.edgeProperties('B', 'A'), {
+          'role': 'distance',
+          'weight': 2.5,
+        });
+        graph.setEdgeProperty('B', 'A', 'weight', 7);
+        expect(graph.edgeWeight('A', 'B'), 7);
+        graph.setEdgeProperty('A', 'B', 'trainable', true);
+        graph.removeEdgeProperty('A', 'B', 'role');
+        expect(graph.edgeProperties('A', 'B'), {
+          'weight': 7,
+          'trainable': true,
+        });
+
+        graph.removeEdge('A', 'B');
+        expect(
+          () => graph.edgeProperties('A', 'B'),
+          throwsA(isA<EdgeNotFoundError<String>>()),
+        );
+      });
+    }
+  });
+
   group('neighborhood queries', () {
     for (final repr in representations) {
       test('returns neighbors, weights, and degree for $repr', () {
@@ -170,8 +218,8 @@ void main() {
         expect(components, hasLength(3));
         expect(
           components.any(
-            (component) => component.length == 3 &&
-                component.containsAll({'A', 'B', 'C'}),
+            (component) =>
+                component.length == 3 && component.containsAll({'A', 'B', 'C'}),
           ),
           isTrue,
         );
@@ -228,10 +276,11 @@ void main() {
       });
 
       test('handles the city example for $repr', () {
-        expect(
-          shortestPath(makeGraph(repr), 'London', 'Berlin'),
-          ['London', 'Amsterdam', 'Berlin'],
-        );
+        expect(shortestPath(makeGraph(repr), 'London', 'Berlin'), [
+          'London',
+          'Amsterdam',
+          'Berlin',
+        ]);
       });
     }
   });
@@ -248,8 +297,9 @@ void main() {
         graph.addEdge('A', 'B', 1);
         graph.addEdge('B', 'C', 2);
         graph.addEdge('C', 'A', 4);
-        final total = minimumSpanningTree(graph)
-            .fold<double>(0, (sum, edge) => sum + edge.weight);
+        final total = minimumSpanningTree(
+          graph,
+        ).fold<double>(0, (sum, edge) => sum + edge.weight);
         expect(total, 3);
       });
 

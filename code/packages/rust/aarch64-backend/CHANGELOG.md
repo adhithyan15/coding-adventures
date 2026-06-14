@@ -1,0 +1,360 @@
+# Changelog — `aarch64-backend`
+
+## 0.9.0 — 2026-06-10 — McCarthy lambda (F7): `lispy_to_exit_code` builtin (LANG77 / W14b)
+
+Adds `lispy_to_exit_code` to `V1_BUILTINS` (→ `BL __twig_lispy_to_exit_code`), the
+universal program-exit coercion for a polymorphic lambda result (W13b). This was the
+*only* gap for native `LAMBDA` on the tagged-word backend — cross-function `call`
+(Twig `fib`), the `any`/`ref<Lispy…>` value model (cons), and the shared arg-boxing +
+result-coercion passes were already in place. Native lambda now runs (verified
+end-to-end on macOS arm64). New unit test `lispy_to_exit_code_lowers`.
+
+## 0.8.0 — 2026-06-04 — ATOM/EQ predicate + truthy helpers (LANG77 / McCarthy L3b-2c-2)
+
+Adds four `V1_BUILTINS` rows — `lispy_pair_p` (1), `lispy_not` (1),
+`lispy_equal` (2), `lispy_truthy` (1), all returning a value → `BL
+__twig_lispy_*`. These back `ATOM` (`not(pair?)`), `EQ` (`equal?`) and the
+`COND` truthiness normaliser the `lower_lisp_repr` pass inserts before
+`jmp_if_false`. No new opcodes — the generic `call_builtin` dispatch handles
+them. New host-independent test: the ATOM/EQ predicate + truthy sequence
+lowers and emits the four external relocs.
+
+## 0.7.0 — 2026-06-04 — lisp int unbox helper (LANG77 / McCarthy L3b-2c-1)
+
+Adds one `V1_BUILTINS` row — `lispy_unbox_int` (1 arg, returns) → `BL
+__twig_lispy_unbox_int` — the helper the new `lower_lisp_repr` pass inserts
+at the program-exit boundary to turn a tagged integer back into a raw
+machine word for the process exit code. No new opcodes; the generic
+`call_builtin` dispatch handles it.
+
+New host-independent test: the full boxed `(CAR (CONS 7 9))` sequence (boxed
+atoms → `lispy_cons` → `lispy_car` → `lispy_unbox_int` → ret) lowers and
+emits external relocs to all three runtime symbols.
+
+## 0.6.0 — 2026-06-04 — lisp runtime calls (LANG77 / McCarthy L3b-2b)
+
+Adds three rows to the `V1_BUILTINS` helper table — `lispy_cons` (2 args),
+`lispy_car` (1), `lispy_cdr` (1), all returning a value — so `call_builtin
+"lispy_cons"` etc. dispatch to `BL __twig_lispy_cons` in the linked C lisp
+runtime (`twig-aot/runtime/lispy_runtime.c`). These are the runtime-call
+form of cons/car/cdr (produced by
+`iir_builtin_lowering::lower_heap_builtins_runtime`), keeping lisp values
+NaN-box tagged rather than raw words.
+
+**No new opcodes or emitter logic** — the existing generic `call_builtin`
+dispatch marshals the args into x0/x1 per AAPCS64 and emits the BL with an
+external relocation; the table rows are the entire change. The L3b-1
+`alloc`/`field_*` emitters remain as general-purpose heap ops (no longer on
+the McCarthy cons path).
+
+Two new host-independent tests: `(CAR (CONS 7 9))` via the runtime path
+emits external relocations to `__twig_lispy_cons`/`__twig_lispy_car`, and a
+wrong-arity `lispy_cons` call is softly refused.
+
+## 0.5.0 — 2026-06-04 — heap cons cells (McCarthy Lisp L3b)
+
+Lower the four word-granular heap ops that
+`iir_builtin_lowering::lower_heap_builtins` produces from a Lisp frontend's
+`cons`/`car`/`cdr`/`null?`, so a cons-of-integers program compiles to native:
+
+* **`alloc -> dest`** — a fresh 2-word (16-byte) `LispyPair` cell, via the
+  same `__twig_alloc_bytes` runtime helper `alloc_bytes` uses (V1 leaks; no
+  GC).
+* **`field_store ptr, idx, val`** / **`field_load ptr, idx -> dest`** —
+  word load/store at byte offset `idx*8` (field 0 = car, field 1 = cdr).
+  The index is a compile-time `Int` immediate; a non-literal index or a
+  `field_store` with a dest is a `MalformedInstr`.
+* **`is_null x -> dest`** — `dest = (x == 0)` (nil is the 0 word), via
+  `cmp` + `cset eq`.
+* Values are **raw 64-bit words** — no NaN-boxing — so `(CAR (CONS 7 9))`
+  round-trips to a raw `7`.  3 new unit tests (cons/car lowers; is_null
+  lowers; field_store-with-dest and non-literal-index rejected).
+
+## 0.4.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
+
+Three new CIR opcodes mirroring the LANG76 work in `x86_64-backend`
+0.6.0:
+
+- `alloc_bytes <n> -> <dest>` — sugar for `call_builtin "alloc_bytes",
+  n`.  Loads n into X0, emits `BL __twig_alloc_bytes`, stores X0 into
+  the dest slot.
+- `load_byte <ptr>, <offset> -> <dest>` — `ldr x0,[sp,ptr]; ldr
+  x1,[sp,off]; add x0,x0,x1; ldrb w0,[x0]; str x0,[sp,dest]`.  The
+  LDRB instruction zero-extends to 32 bits and AArch64 zeroes the
+  upper 32 bits of X0 automatically — exactly the 64-bit
+  zero-extension semantics LANG76 specifies.
+- `store_byte <ptr>, <offset>, <value>` — `ldr x0,[sp,ptr]; ldr
+  x1,[sp,off]; add x0,x0,x1; ldr x2,[sp,val]; strb w2,[x0]`.
+
+**Tests added (5):** alloc_bytes records `__twig_alloc_bytes` BL
+placeholder; load_byte/store_byte emit the expected ldrb/strb words
+(`0x39400000` / `0x39000002`); load_byte missing operand refusal;
+store_byte with dest refusal.
+
+## 0.3.0 — 2026-05-20 (LANG75 — generic `call_builtin` dispatch)
+
+Adds a single CIR opcode `call_builtin "<name>", <args>` that
+dispatches to runtime helpers via the V1 helper table.  Mirrors the
+LANG75 work in `x86_64-backend` 0.5.0 — both backends now share the
+same six-entry helper table, so a frontend that emits `call_builtin
+"putchar", c` produces a working `BL __twig_putchar` on aarch64 and a
+working `CALL __twig_putchar` on x86_64 with no per-target divergence.
+
+**New CIR opcode:**
+
+- `call_builtin "<name>", <arg0>, <arg1>, …` — looks `name` up in the
+  V1 helper table, loads each arg into `x0..x7` per AAPCS64, emits
+  `BL __twig_<name>` (placeholder; AOT linker patches), and (if the
+  helper returns) stores `x0` into the dest slot.
+
+**V1 helper table (same as `x86_64-backend`):**
+
+| Name           | Args     | Returns |
+|----------------|----------|---------|
+| `print_i64`    | `[i64]`  | no      |
+| `putchar`      | `[i32]`  | no      |
+| `getchar`      | `[]`     | yes     |
+| `print_string` | `[ptr,i64]` | no   |
+| `input_i64`    | `[]`     | yes     |
+| `exit`         | `[i32]`  | no      |
+
+**Error handling.**  Unknown helper names, wrong arity, and dest/void
+mismatches all return `BackendError::MalformedInstr` (the spec's
+"BackendRefused" — a soft refusal, not a panic).
+
+**Behaviour preserved.**  `io_out` is unchanged and still emits the
+same single `BL __twig_print_i64`; `call_builtin "print_i64", v`
+produces the same bytes via the new generic path.
+
+**Tests added (6):** putchar emits BL reloc, getchar stores x0 to
+dest, print_string records two arg loads, unknown name refuses, wrong
+arity refuses, print_i64-via-builtin matches io_out.
+
+## 0.2.3 — 2026-05-13 (LANG41)
+
+**Remove self-contained `emit_print_helper`; resolve `__twig_print_i64` from
+portable C runtime archive instead.**
+
+LANG40 injected a 208-byte ARM64 function that used macOS raw `write(2)`
+syscall numbers (`x16=4`, `SVC #0x80`) baked in as ARM64 instruction words.
+LANG41 removes this macOS-specific helper entirely.
+
+### Removed
+
+- `emit_print_helper() → Vec<u8>` — public API function deleted.
+  Callers previously used this to inject a self-contained integer-print
+  subroutine alongside user code; the symbol `__twig_print_i64` is now
+  left unresolved in the object file for the system linker (`ld`) to
+  resolve from `libtwig_aot_runtime.a` (built by `twig-aot`'s `build.rs`).
+
+### Retained
+
+- `io_out` CIR handler still emits `LDR X0, [X19, #offset]` + `BL __twig_print_i64`.
+  The BL produces a `Reloc { symbol: "__twig_print_i64", … }` placeholder
+  exactly as before — the only change is that twig-aot no longer injects the
+  helper into the link; instead it writes the runtime archive to a temp file
+  and passes it to `ld`.
+
+### Tests removed
+
+- `emit_print_helper_has_prologue`
+- `emit_print_helper_ends_with_ret`
+- `emit_print_helper_size_is_52_words`
+
+Remaining tests `io_out_emits_bl_reloc` and `io_out_missing_src_errors` are
+unchanged and still pass.
+
+---
+
+## 0.2.2 — 2026-05-13 (LANG40)
+
+**`io_out` CIR handler + self-contained `__twig_print_i64` helper.**
+
+### New CIR opcode handled
+
+| CIR opcode | ARM64 sequence | Notes |
+|------------|----------------|-------|
+| `io_out Var(val)` | `LDR X0 + BL __twig_print_i64` | Loads value into X0; helper injected by twig-aot |
+
+### New public API
+
+- `emit_print_helper() → Vec<u8>` — emits a self-contained 52-instruction
+  (208-byte) ARM64 function that converts a signed 64-bit integer (in `x0`)
+  to decimal ASCII and writes it to stdout followed by `'\n'`, using the
+  macOS `write(2)` syscall (`x16 = 4`, `SVC #0x80`).
+
+### Implementation notes
+
+- **No external symbols** — the helper lives in `__TEXT/__text` alongside user
+  functions and is resolved by the existing cross-function BL linker in
+  `twig-aot::compile_module_to_text_raw`, avoiding the need for `_printf`
+  stubs or dyld machinery.
+- **Algorithm**: UDIV+MSUB digit-extraction loop writing bytes backwards into
+  a 32-byte stack buffer; `STRB Wt,[Xn,#-1]!` (from `aarch64-encoder` 0.2.2)
+  decrements the write pointer and stores each ASCII digit in one instruction.
+  Special-cases `x0 == 0`.  Prepends `'-'` for negatives.
+- **Frame**: 48 bytes (16-byte aligned).  `'\n'` written to `[sp+48]` which
+  lies in macOS's 128-byte red zone (safe for SVC helper functions).
+- **Verified encodings**: all 52 instruction words verified against ARM ARM
+  (DDI 0487).  `emit_print_helper_size_is_52_words` enforces the count.
+
+### Tests (5 new)
+
+| Test | Asserts |
+|------|---------|
+| `io_out_emits_bl_reloc` | exactly one `ExternalReloc { symbol: "__twig_print_i64" }` |
+| `io_out_missing_src_errors` | error on zero srcs |
+| `emit_print_helper_has_prologue` | first word = `0xA9BD7BFD` (STP x29,x30,[sp,#-48]!) |
+| `emit_print_helper_ends_with_ret` | last word = `0xD65F03C0` (RET) |
+| `emit_print_helper_size_is_52_words` | exactly 208 bytes |
+
+## 0.2.1 — 2026-05-13 (LANG39)
+
+**Global variable load / store lowering.**
+
+Wires the `global_load` and `global_store` CIR opcodes into the dispatch table.
+
+### New CIR opcodes handled
+
+| CIR opcode | ARM64 sequence | Notes |
+|------------|----------------|-------|
+| `global_load Var(name)` | `ADRP X1 + ADD X1 + LDR X0 + STR X0` | 4 instructions; reads from `_twig_globals[slot*8]` |
+| `global_store Var(name), val` | `LDR X0 + ADRP X1 + ADD X1 + STR X0` | 4 instructions; writes to `_twig_globals[slot*8]` |
+
+### New public API
+
+- `compile_with_globals(ctx, ir, global_slots) → (bytes, ExternalRelocs, GlobalWordRelocs)` —
+  like `compile_with_relocs` but also accepts a `HashMap<String, usize>` mapping global names
+  to slot indices and returns `Vec<GlobalWordReloc>` for Mach-O ARM64 relocation emission.
+
+- `GlobalWordReloc { adrp_word: usize, add_word: usize }` — word-index pair for one
+  `ARM64_RELOC_PAGE21` + `ARM64_RELOC_PAGEOFF12` relocation site.
+
+### Implementation notes
+
+- The ADRP and ADD are placeholder instructions (`ADRP Xd, #0` / `ADD X1, X1, #0`);
+  the system linker patches the immediates when producing the final executable.
+- The LDR/STR slot offset (`slot * 8`) is baked in at compile time.
+- 5 new unit tests cover the opcode handlers, slot offset encoding, error handling,
+  and multi-global reloc counting.
+
+## 0.2.0 — 2026-05-13 (LANG38)
+
+**Division, modulo, bitwise logic, shifts, negate, and bitwise-NOT lowering.**
+
+Wires the 11 new `aarch64-encoder` instructions (0.2.0) into the CIR opcode
+dispatch table.  These are the ops that blocked any Twig program using
+integer division (e.g. number parsers) or bitwise manipulation.
+
+### New CIR opcodes handled
+
+| CIR mnemonic family | Lowering | Notes |
+|---------------------|----------|-------|
+| `div_<ty>` | `SDIV` (signed) / `UDIV` (unsigned) | 1 instruction |
+| `mod_<ty>` | `SDIV`/`UDIV` then `MSUB` | 2 instructions; uses X2 as scratch |
+| `and_<ty>` | `AND` | — |
+| `or_<ty>` | `ORR` | — |
+| `xor_<ty>` | `EOR` | — |
+| `shl_<ty>` | `LSLV` | shift amount mod 64 (ARM architectural) |
+| `shr_<ty>` | `ASRV` for `i*`; `LSRV` for `u*` | signed/unsigned based on type suffix |
+| `neg_<ty>` | `NEG` | two's-complement negate |
+| `not_<ty>` | `MVN` | bitwise NOT |
+
+### Implementation notes
+
+- Signed vs unsigned is determined by `ty.starts_with('i')`, matching the
+  same convention used by comparisons.
+- `mod_<ty>` uses X2 as an additional scratch register for the intermediate
+  quotient.  The stack-spill allocator keeps every live value in a fixed
+  stack slot, so X2 is free between instructions — no aliasing hazard.
+- New helpers: `emit_div`, `emit_bitwise` (+ `BitwiseKind`), `emit_shift`
+  (+ `ShiftKind`).
+
+14 new backend tests exercise each opcode family.
+
+## 0.1.2 — 2026-05-13
+
+### Added
+
+- **Cross-function `BL` relocations** — new `compile_with_relocs` public
+  entry point returns `(Vec<u8>, Vec<Reloc>)`.  Each `Reloc` records the
+  word index of a placeholder `BL #0` instruction that targets a function
+  outside the current binary.  The two-pass AOT linker in `twig-aot` uses
+  these to patch the final linked image with correct PC-relative offsets.
+- `Reloc` is a re-export of `aarch64_encoder::ExternalReloc`.
+
+### Changed
+
+- Cross-function `call` instructions now emit a `BL #0` placeholder via
+  `Assembler::bl_external` instead of returning `Err(UnsupportedOp)`.
+  Self-recursive calls continue to emit a direct `BL` to the body-entry
+  label.
+
+## 0.1.0 — 2026-05-05
+
+Initial release.  ARM64 native-code backend for jit-core / aot-core,
+implementing the shared `Backend` trait via `Backend::compile_function`.
+
+### Implemented CIR coverage
+
+- Constants: `const_u8` … `const_u64`, `const_i8` … `const_i64`, `const_bool`
+- Integer arithmetic (typed): `add_<ty>`, `sub_<ty>`, `mul_<ty>`
+- Comparisons: `cmp_eq_<ty>` … `cmp_ge_<ty>` (signed and unsigned)
+- Control flow: `label`, `jmp`, `jmp_if_true`, `jmp_if_false`
+- Returns: `ret_<ty>`, `ret_void`
+- Type guards: `type_assert` lowered to `udf` trap
+
+### Register allocation
+
+Stack-spill: every CIR virtual register lives at a fixed 8-byte stack slot.
+Each instruction loads sources into scratch `x0..x2`, performs the op, and
+stores the destination back.  Trivially correct; suboptimal performance.
+A real allocator can replace it without changing the public API.
+
+### AAPCS64 prologue / epilogue
+
+```
+stp  fp, lr, [sp, #-frame]!
+mov  fp, sp
+str  x0..x7, [sp, #(slot)]    ; spill incoming args
+<body>
+ldp  fp, lr, [sp], #frame
+ret
+```
+
+Up to 8 parameters are supported.  Frame must fit a 12-bit unsigned offset
+(≈ 4088 bytes / ~512 virtual registers).
+
+### Out of scope (deferred)
+
+- Float operations
+- `call_runtime`, `send`, `load_property`, `store_property`
+- Width-truncation for u8/u16/u32 results
+- Real register allocation
+
+## 0.1.1 — 2026-05-05
+
+### Added
+- `mov_<ty>` lowering — typed register-to-register move (load + store
+  via the stack-spill regalloc).  Used by aot-core when lowering
+  `call_builtin "_move"`.
+
+### Fixed
+- **Stack frame layout bug**: virtual register slot 0 was at `[sp + 0]`,
+  but the prologue's `stp fp, lr, [sp, #-frame]!` saves `fp` at the
+  same offset.  The first `str x0, [sp]` clobbered the saved `fp`,
+  so the function's `ldp fp, lr, [sp], #frame` epilogue restored a
+  garbage `fp` and `ret` returned to a garbage address — instant
+  SIGSEGV.
+
+  Fix: virtual slot offsets now start at +16 to leave room for the
+  saved `fp/lr`.  The frame-size cap drops from 4080 to 504 bytes —
+  reflecting the actual `stp_pre`/`ldp_post` 7-bit signed immediate
+  range (the prior 4080 was wishful thinking).
+
+### Note
+
+The fix is what made real Twig programs (`(+ 30 12)`, `(if ...)`)
+actually run end-to-end on Apple Silicon.  Pre-fix, the encoder + IR
++ Mach-O writer were all correct, but the program SIGSEGV'd on return
+because of the saved-fp clobber.

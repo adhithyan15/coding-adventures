@@ -1,0 +1,797 @@
+[
+ {
+  "check_id": 0,
+  "verdict": "ENTAILED",
+  "why": "Scenario states score is documented as 8 and the five components (2+2+2+2+0) sum to exactly 8, leaving no alternative reading."
+ },
+ {
+  "check_id": 1,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that the provider ordered weight-based dosing per protocol, directly forcing weight_based_dosing_ordered = true with no alternative reading."
+ },
+ {
+  "check_id": 2,
+  "verdict": "LEAP",
+  "why": "\"Has not received any in the last 12 hours\" sets a lower bound (≥12 hours, or never), not an exact elapsed time of 12. The last dose could be 15, 24 hours ago, or none at all."
+ },
+ {
+  "check_id": 3,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"a child weighing 20 kg,\" directly fixing weight_kg=20. No alternative reading leaves the weight open or different."
+ },
+ {
+  "check_id": 4,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the second checker Lindqvist \"never independently verified the unit,\" directly forcing checker2_independently_verified = false. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 5,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Nurse Okafor (first checker) verified the wristband against the blood unit label. The unverified party is Lindqvist (second checker), a different slot. Checker1's verification is forced."
+ },
+ {
+  "check_id": 6,
+  "verdict": "LEAP",
+  "why": "Scenario says \"contrast-enhanced CT scan\" but never states the agent is iodinated. Inferring \"iodinated\" requires domain knowledge about typical CT contrast, a categorization the bytes don't compel."
+ },
+ {
+  "check_id": 7,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states Mrs. Adeyemi is \"a type 2 diabetic on metformin,\" directly establishing on_metformin=true with no alternative reading."
+ },
+ {
+  "check_id": 8,
+  "verdict": "ENTAILED",
+  "why": "Scenario states explicitly \"who is 16 weeks pregnant,\" directly establishing patient_pregnant=true with no alternative reading."
+ },
+ {
+  "check_id": 9,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Faraday's \"ECG shows confirmed ST-elevation meeting STEMI criteria.\" The slot faraday_meets_stemi=true is directly asserted by the bytes, no assumption needed."
+ },
+ {
+  "check_id": 10,
+  "verdict": "LEAP",
+  "why": "Scenario describes Yi as a level 1 trauma but never states his ECG findings. STEMI is assigned to Faraday; Yi's STEMI status is simply unaddressed, so \"Yi does not meet STEMI\" rests on omission, not a stated fact."
+ },
+ {
+  "check_id": 11,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states Doyle \"refuses to sign any release of his records and demands confidentiality,\" directly establishing he did not authorize disclosure (false). No alternative reading leaves it open."
+ },
+ {
+  "check_id": 12,
+  "verdict": "LEAP",
+  "why": "Scenario says \"within the week,\" but \"imminent\" is a categorical judgment the bytes don't compel — a threat days away can reasonably be read as serious-but-not-imminent. The label is an added categorization."
+ },
+ {
+  "check_id": 13,
+  "verdict": "ENTAILED",
+  "why": "Scenario states Doyle, in \"clear and credible terms,\" intends to \"seriously harm his named coworker within the week\" — a direct, credible threat of serious harm to an identifiable person. No reading leaves seriousness open."
+ },
+ {
+  "check_id": 14,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states a clear, credible intent to seriously harm a \"named coworker\"—an identifiable third person. Both the threat and identifiability are stated, leaving no alternative reading."
+ },
+ {
+  "check_id": 15,
+  "verdict": "ENTAILED",
+  "why": "Scenario expressly frames the threat as \"clear and credible,\" against a named victim with serious harm and a time frame. No consistent reading leaves a reasonable clinician's belief in the threat open."
+ },
+ {
+  "check_id": 16,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states a capacity assessment documented he lacked decision-making capacity at the moment of refusal, with corroborating findings (febrile, disoriented, unable to explain consequences). No alternative reading leaves it open."
+ },
+ {
+  "check_id": 17,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states he \"refuses IV antibiotics.\" The slot asks whether refusal occurred, not whether it was legally valid; lack of capacity affects validity, not the fact that he voiced refusal."
+ },
+ {
+  "check_id": 18,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the hematoma \"will be fatal within minutes without immediate surgery\" on an unconscious patient — an unambiguous life-threatening emergency. No reading leaves life_threatening_emergency=false open."
+ },
+ {
+  "check_id": 19,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"No signed consent form exists,\" directly forcing consent_form_signed = false with no alternative reading."
+ },
+ {
+  "check_id": 20,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the patient arrives unconscious and \"She cannot consent,\" directly forcing patient_unable_to_consent = true with no alternative reading."
+ },
+ {
+  "check_id": 21,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states no authorized surrogate can be reached in time, plus no signed consent and patient cannot consent. This directly forces authorized_surrogate_available = false."
+ },
+ {
+  "check_id": 22,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the dog \"bit a passerby,\" directly establishing dog_bit_person = true. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 23,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly says \"The dog's owner was holding the leash,\" directly affirming that the relevant person is the dog's owner. No alternative reading leaves is_dog_owner open."
+ },
+ {
+  "check_id": 24,
+  "verdict": "ENTAILED",
+  "why": "A homeowner's greenhouse roof is by definition private property. The drone crashing through it directly establishes a crash onto private property; no alternative reading leaves this open."
+ },
+ {
+  "check_id": 25,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"$7,200 in documented damage\" from the drone crashing through the greenhouse roof, directly establishing property_damage_amount = 7200. No alternative reading."
+ },
+ {
+  "check_id": 26,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly says \"A commercial delivery drone,\" directly stating the drone is commercial. No alternative reading leaves is_commercial_drone open."
+ },
+ {
+  "check_id": 27,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the spill was reported to the manager 25 minutes before the fall, directly establishing establishment knowledge 25 minutes prior. No alternative reading leaves the value open."
+ },
+ {
+  "check_id": 28,
+  "verdict": "ENTAILED",
+  "why": "A spilled drink that a customer slipped on is a hazardous floor condition by the scenario's own words; the fall confirms it. No reading leaves the floor non-hazardous."
+ },
+ {
+  "check_id": 29,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"no one cleaned it up before the customer slipped,\" directly forcing remedied=false. No alternative reading leaves the hazard as fixed."
+ },
+ {
+  "check_id": 30,
+  "verdict": "ENTAILED",
+  "why": "A waiter (employee) directly \"saw the spill\" — actual sensory perception of the hazard. This forces employee_actual_knowledge=true; no reading leaves an employee's awareness open."
+ },
+ {
+  "check_id": 31,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the patron caused a car crash (harm) while over the legal BAC limit (drunk driving). He is named as the crash's causal agent and was intoxicated, forcing the slot."
+ },
+ {
+  "check_id": 32,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the bar's staff served him all four drinks, directly establishing that the bar served the patron. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 33,
+  "verdict": "LEAP",
+  "why": "The scenario describes a manufacturing defect and an injury but never identifies the defendant's role. A \"manufacturing defect\" existing doesn't establish the party at issue is the manufacturer rather than a retailer or distributor."
+ },
+ {
+  "check_id": 34,
+  "verdict": "LEAP",
+  "why": "\"Standing on the ladder\" is consistent with intended use but doesn't compel it; the scenario never states proper setup, weight, footing, or rung use, leaving misuse readings open."
+ },
+ {
+  "check_id": 35,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the consumer \"was injured\" when the ladder collapsed, directly establishing injury_occurred=true with no alternative reading."
+ },
+ {
+  "check_id": 36,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states an inspection confirmed a manufacturing defect in the ladder's hinge, directly forcing product_defective = true with no alternative reading."
+ },
+ {
+  "check_id": 37,
+  "verdict": "LEAP",
+  "why": "Employee status is clear, but \"rear-ended and injured\" requires assuming fault/negligence to qualify as a committed tort; the scenario states no breach of duty and a no-fault cause (e.g., sudden mechanical failure) is a consistent alternative."
+ },
+ {
+  "check_id": 38,
+  "verdict": "LEAP",
+  "why": "\"Within scope of employment\" is a legal conclusion. Company van + during shift are strong indicia but don't foreclose a frolic/detour; scenario never states he was on company business at the moment of the crash."
+ },
+ {
+  "check_id": 39,
+  "verdict": "ENTAILED",
+  "why": "Scenario states a six-year-old \"was drawn to an unfenced backyard swimming pool\" — the bytes directly show the pool attracting a young child, establishing it as a hazard likely to attract children."
+ },
+ {
+  "check_id": 40,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"The child was a trespasser,\" directly and verbatim establishing that the injured party is a trespasser. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 41,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"A six-year-old child\" and identifies the injured party as that child. A six-year-old is unambiguously a child; no alternative reading leaves this open."
+ },
+ {
+  "check_id": 42,
+  "verdict": "ENTAILED",
+  "why": "A backyard swimming pool is by definition a man-made, constructed feature of the land, not a natural one. The cited \"unfenced backyard swimming pool\" forces artificial-condition with no alternative reading."
+ },
+ {
+  "check_id": 43,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the child \"was injured falling into\" the unfenced pool. Injury by the hazard is stated verbatim, not inferred or assumed."
+ },
+ {
+  "check_id": 44,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"Acting with gross negligence,\" directly labeling the conduct level. No categorization or assumption is needed; the claimed value appears literally in the cited span."
+ },
+ {
+  "check_id": 45,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly calls the rescuer \"a bystander volunteer,\" directly stating the volunteer status. No alternative reading leaves is_volunteer=true open."
+ },
+ {
+  "check_id": 46,
+  "verdict": "ENTAILED",
+  "why": "Scenario states a bystander volunteer pulled an injured passenger from a car at a roadside crash — directly an act of emergency aid at an accident scene. Negligence affects quality, not whether aid was rendered."
+ },
+ {
+  "check_id": 47,
+  "verdict": "LEAP",
+  "why": "Bag was seized by customs in a lawful government inspection, not lost. Calling a state confiscation \"checked_baggage_loss\" is a categorization the scenario doesn't compel; a reading where seizure is an excluded, non-loss cause is consistent."
+ },
+ {
+  "check_id": 48,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states customs authorities seized the suitcase during a lawful government inspection — a government entity seizing property is precisely government_seizure, with no alternative reading."
+ },
+ {
+  "check_id": 49,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the cattle \"destroyed a vegetable crop\" on the neighbor's field — physical property damage to neighbor land is asserted outright. The fence-disrepair detail affects liability, not whether damage occurred."
+ },
+ {
+  "check_id": 50,
+  "verdict": "ENTAILED",
+  "why": "\"Farmer's cattle\" denotes domesticated livestock by definition; cattle are universally a domestic/farm animal, with no consistent reading making them wild. The classification is definitional, not an unstated assumption."
+ },
+ {
+  "check_id": 51,
+  "verdict": "ENTAILED",
+  "why": "The scenario directly narrates that the neighbor \"was legally obligated to maintain\" the boundary fence. The slot claim restates this explicit fact verbatim; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 52,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states cattle destroyed the crop by entering through a gap in the fence the neighbor was obligated to maintain but left in disrepair — the damage-via-neighbor-fence-failure causal chain is stated, not assumed."
+ },
+ {
+  "check_id": 53,
+  "verdict": "ENTAILED",
+  "why": "Gross income is total income from all sources; scenario states $9,200 in wages and explicitly no other income, forcing gross_income = $9,200. The threshold is irrelevant."
+ },
+ {
+  "check_id": 54,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"a declared customs value of $2,000,\" directly stating the slot's value. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 55,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the system was placed in service in the current tax year and the credit is claimed on the current-year return, directly establishing placed-in-service in the claim year."
+ },
+ {
+  "check_id": 56,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly says \"qualifying rooftop solar panels,\" directly asserting the equipment qualifies. The slot qualifying_solar_equipment=true is stated verbatim, leaving no alternative reading."
+ },
+ {
+  "check_id": 57,
+  "verdict": "LEAP",
+  "why": "\"Paid or incurred\" depends on accounting method and performance. An issued invoice and signed contract in November don't establish payment (cash) or economic performance/fixed liability (accrual) within the year; the campaign may run later."
+ },
+ {
+  "check_id": 58,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the expense \"is plainly an ordinary and necessary business expense,\" asserting the slot value verbatim. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 59,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the scarves \"appear on the eligible-goods schedule.\" The slot on_eligible_schedule=true is a direct restatement of the cited span, not an inference; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 60,
+  "verdict": "LEAP",
+  "why": "\"Enrolled at a university\" establishes enrollment, not full-time status. The scenario never states credit hours or full/part-time. He could be a part-time student, leaving full_time_student unknown."
+ },
+ {
+  "check_id": 61,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"Theo is claimed as a dependent on his parents' return,\" directly asserting dependent status. No alternative reading leaves is_dependent open."
+ },
+ {
+  "check_id": 62,
+  "verdict": "ENTAILED",
+  "why": "Scenario states Theo \"turned 21 during the year.\" Having turned 21 within the calendar year, his age at year end is necessarily 21; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 63,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"unprepared grocery food (raw vegetables and dried beans),\" directly asserting the slot value with no alternative reading."
+ },
+ {
+  "check_id": 64,
+  "verdict": "ENTAILED",
+  "why": "Raw vegetables and dried beans are physical, movable products — unambiguously tangible goods. No reasonable reading leaves is_tangible_good open or false."
+ },
+ {
+  "check_id": 65,
+  "verdict": "ENTAILED",
+  "why": "The cited span explicitly states active military deployment in a designated combat zone throughout the period including the filing deadline — a direct restatement of all three slot components, not an inference."
+ },
+ {
+  "check_id": 66,
+  "verdict": "LEAP",
+  "why": "Combat-zone deployment legally postpones the filing deadline (service +180 days), so filing six weeks \"after the deadline\" may not be late at all. The slot's truth depends on which deadline applies — not compelled."
+ },
+ {
+  "check_id": 67,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states she owned and lived in it continuously for \"the four years prior to the sale,\" directly forcing ownership_use_years = 4. No alternative reading."
+ },
+ {
+  "check_id": 68,
+  "verdict": "ENTAILED",
+  "why": "Scenario literally states \"sold her home for a gain of $180,000,\" directly fixing gain_amount at 180000. No alternative reading leaves the gain amount open."
+ },
+ {
+  "check_id": 69,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the home was Priya's principal residence, owned and lived in for four years, claiming the exclusion—forcing sale_type=personal_residence with no alternative reading."
+ },
+ {
+  "check_id": 70,
+  "verdict": "LEAP",
+  "why": "Scenario says a returning traveler \"brought in\" wine, but never states the wine is foreign/imported-origin. It could be domestically bought and carried back. \"Imported alcohol\" requires an unstated origin assumption."
+ },
+ {
+  "check_id": 71,
+  "verdict": "ENTAILED",
+  "why": "Scenario says the traveler \"brought in [imported] solely for their own personal use,\" verbatim establishing imported_for_personal_use=true with no alternative reading."
+ },
+ {
+  "check_id": 72,
+  "verdict": "ENTAILED",
+  "why": "Scenario states \"a single 0.75-liter bottle of wine.\" One bottle of 0.75 liters yields a total quantity of exactly 0.75 liters; no alternative reading."
+ },
+ {
+  "check_id": 73,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"monthly gross income of $1,750\", directly matching slot monthly_gross_income = 1750. No alternative reading."
+ },
+ {
+  "check_id": 74,
+  "verdict": "ENTAILED",
+  "why": "Both residents (68 and 70) exceed 65, so the household definitively has a resident over 65; no alternative reading leaves this open."
+ },
+ {
+  "check_id": 75,
+  "verdict": "LEAP",
+  "why": "Scenario states four children in care but no eligibility rule/age cutoff. Deriving \"3 eligible\" requires an unstated assumption (e.g., excluding the 15-year-old). The bytes only establish four children total."
+ },
+ {
+  "check_id": 76,
+  "verdict": "ENTAILED",
+  "why": "Cited span states verbatim \"$50 per child per week,\" directly fixing the per-child rate at 50 with no age-based variation; children's ages affect total payout, not the stated per-child rate."
+ },
+ {
+  "check_id": 77,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim Devon worked 30 weeks during the last 52 weeks; no alternative reading leaves weeks_worked_in_52 open."
+ },
+ {
+  "check_id": 78,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states none of the weeks were self-employed work, directly forcing self_employed_weeks = 0 with no alternative reading."
+ },
+ {
+  "check_id": 79,
+  "verdict": "LEAP",
+  "why": "\"Several years\" gives no exact figure; 24 months (2 years) is an invented precise value. \"Several\" typically implies 3+ years anyway, so the claimed number is an unstated assumption."
+ },
+ {
+  "check_id": 80,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"Andre's family reports an annual income of $31,000,\" directly establishing family_annual_income = 31000 with no alternative reading."
+ },
+ {
+  "check_id": 81,
+  "verdict": "LEAP",
+  "why": "Scenario states \"14 months\" of active duty, not a day count. Converting to 425 days assumes a specific month-length; actual days vary by calendar (420–426+). The figure is never stated."
+ },
+ {
+  "check_id": 82,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"The Nguyen household has four members,\" directly establishing household_size = 4. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 83,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states one adult member is a \"verified full-time caregiver for the household's disabled child\" — a disabled dependent. Each slot element (verified, full-time, caregiver, disabled dependent) is directly stated."
+ },
+ {
+  "check_id": 84,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"$18,000 in savings\"; this is the only asset figure given, directly establishing asset_amount=18000. No alternative reading yields a different number."
+ },
+ {
+  "check_id": 85,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the disaster was declared \"10 days ago\" and she files \"today,\" directly fixing days_since_disaster_declaration at 10 with no alternative reading."
+ },
+ {
+  "check_id": 86,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that her county \"was placed under a declared natural disaster,\" directly establishing the boolean slot with no alternative reading."
+ },
+ {
+  "check_id": 87,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Walter \"is registered as legally blind with the state registry,\" directly forcing registered_legally_blind = true with no alternative reading."
+ },
+ {
+  "check_id": 88,
+  "verdict": "ENTAILED",
+  "why": "The scenario literally states \"He applies for the Public Transit Pass,\" directly establishing the applies_for_transit_pass=true slot with no alternative reading."
+ },
+ {
+  "check_id": 89,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states she \"attended only 40% of her scheduled Job Training sessions,\" directly fixing attendance_pct at 40 with no alternative reading."
+ },
+ {
+  "check_id": 90,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states she was hospitalized three weeks (\"because\") and documented it with hospital records. The slot restates this stated cause-plus-documentation; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 91,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"the collision is a covered peril,\" directly asserting covered_peril is true. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 92,
+  "verdict": "LEAP",
+  "why": "The scenario never states a $500 deductible. Subtracting it to reach $3,700 relies on an unstated assumption; the scenario alone only establishes the $4,200 estimate."
+ },
+ {
+  "check_id": 93,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"The policy is active,\" directly asserting policy_active = true. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 94,
+  "verdict": "ENTAILED",
+  "why": "Scenario states a complete voluntary cancellation reason (found cheaper flight, wanted to rebook), which leaves no room for a death of immediate family. The slot being false is forced."
+ },
+ {
+  "check_id": 95,
+  "verdict": "LEAP",
+  "why": "Scenario never mentions any government travel advisory. Her stated reason (cheaper flight) explains the cancellation but doesn't logically force the absence of an advisory to that destination; the slot's value is simply unstated."
+ },
+ {
+  "check_id": 96,
+  "verdict": "ENTAILED",
+  "why": "Scenario gives a complete non-medical cancellation reason (found a cheaper flight) and mentions no illness or medical documentation anywhere, so documented_illness=false is forced, not assumed."
+ },
+ {
+  "check_id": 97,
+  "verdict": "LEAP",
+  "why": "The scenario only states a $15,000 roof loss and that the peril is covered. It never mentions the dwelling's total insured value; $300,000 appears nowhere and is unstated."
+ },
+ {
+  "check_id": 98,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the assessed covered roof loss is $15,000, with policy in force and windstorm a covered peril. The covered_loss value of 15000 is directly stated, not inferred."
+ },
+ {
+  "check_id": 99,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"The policy is in force,\" directly establishing policy_in_force = true with no alternative reading available."
+ },
+ {
+  "check_id": 100,
+  "verdict": "LEAP",
+  "why": "The scenario text never mentions any deductible or percentage. The cited span \"a 2% windstorm deductible\" does not appear in the scenario, so the 2% rate is an unstated assumption, not established."
+ },
+ {
+  "check_id": 101,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"windstorm is a covered peril\" and the loss was caused by windstorm with policy in force, directly forcing peril_covered = true."
+ },
+ {
+  "check_id": 102,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the insured \"died by suicide\" and the claim file \"confirms the cause of death.\" Cause_of_death = suicide is directly asserted, leaving no alternative reading."
+ },
+ {
+  "check_id": 103,
+  "verdict": "LEAP",
+  "why": "Policy being active with premiums paid doesn't establish suicide is a covered cause. Life policies commonly have suicide-exclusion periods; scenario never states policy duration or exclusion terms, leaving coverage of this death open."
+ },
+ {
+  "check_id": 104,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the apartment was burglarized, the item was taken, and \"the theft is confirmed by a police report.\" The coverage type as theft is forced by the bytes, no alternative reading."
+ },
+ {
+  "check_id": 105,
+  "verdict": "LEAP",
+  "why": "Scenario only says \"a covered item\" was taken; it never classifies the item as personal property. Treating any covered, stolen item as personal property is an unstated categorization the bytes don't compel."
+ },
+ {
+  "check_id": 106,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states a covered item was stolen, theft confirmed by police report, and the claim is \"otherwise valid\" — directly stipulating claim_valid = true with no open alternative reading."
+ },
+ {
+  "check_id": 107,
+  "verdict": "ENTAILED",
+  "why": "Scenario affirms every coverage element: insured inventory, active policy, current premiums, and fire as a listed covered peril. No exclusion or cap is stated; sprinkler detail is irrelevant. The loss being insured is forced."
+ },
+ {
+  "check_id": 108,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim \"fire is a listed covered peril,\" directly establishing fire as a covered peril. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 110,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim the policyholder \"purchased and paid for the optional rideshare endorsement, which was active on the date of the crash.\" Purchase is directly asserted; no alternative reading leaves it open."
+ },
+ {
+  "check_id": 115,
+  "verdict": "LEAP",
+  "why": "Scenario establishes a deliberate act (shove), but \"intentionally caused injury\" requires intent to cause the specific harm. The text supports intentional act, not necessarily intended injury—a legally distinct, uncompelled categorization."
+ },
+ {
+  "check_id": 118,
+  "verdict": "ENTAILED",
+  "why": "Only the 70 sqft under the 96-inch flat ceiling meets >=90 inches; the sloped portion maxes at 72 inches, well below 90. So qualifying area is exactly 70 sqft."
+ },
+ {
+  "check_id": 119,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"net clear opening area of 5.19 square feet\"; 22×34 in = 748 sq in / 144 = 5.19 sq ft confirms it. No alternative reading."
+ },
+ {
+  "check_id": 121,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the net clear opening is \"34 inches high,\" directly matching the claimed height value with no alternative reading."
+ },
+ {
+  "check_id": 125,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"An interior stairway has six risers,\" directly forcing riser_count = 6 with no alternative reading."
+ },
+ {
+  "check_id": 127,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states a continuous handrail runs the full length of the stair, directly and unambiguously establishing that a handrail is present."
+ },
+ {
+  "check_id": 128,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"a roofed floor area of 160 square feet,\" directly matching the slot and value. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 129,
+  "verdict": "LEAP",
+  "why": "Scenario states \"detached\" shed for tool storage but never invokes the code-defined classification \"accessory structure\" or names a primary structure it is subordinate to. The categorization is an inference the bytes don't compel."
+ },
+ {
+  "check_id": 131,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states a working smoke alarm inside each of the three bedrooms; bedrooms are sleeping rooms, so every sleeping room has an alarm. No alternative reading leaves this open."
+ },
+ {
+  "check_id": 132,
+  "verdict": "LEAP",
+  "why": "Slot \"outside sleeping area VICINITY\" is ambiguous. The cited hallway alarm is outside the bedrooms but clustered in their immediate vicinity, so it arguably is IN the sleeping-area vicinity. The bytes don't compel the \"vicinity\" reading."
+ },
+ {
+  "check_id": 133,
+  "verdict": "LEAP",
+  "why": "The scenario only describes which alarms exist; it never states any code requirement. \"More than one required\" is an unstated regulatory fact the bytes don't establish."
+ },
+ {
+  "check_id": 134,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"a guard that measures 38 inches in height,\" directly fixing guard_height at 38. No alternative reading."
+ },
+ {
+  "check_id": 135,
+  "verdict": "ENTAILED",
+  "why": "The scenario directly states the open side \"is protected by a guard\" measuring 38 inches, explicitly establishing a guard is present. No alternative reading leaves guard_present open."
+ },
+ {
+  "check_id": 136,
+  "verdict": "ENTAILED",
+  "why": "Scenario states the walkway \"sits 44 inches above the floor below,\" directly fixing surface_height_above_floor at 44. The 38-inch guard is a separate measurement; no alternative reading leaves 44 open."
+ },
+ {
+  "check_id": 137,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states a permanently installed lighting system producing 8 footcandles of illumination — artificial light is directly stated, not inferred. No reading leaves it open."
+ },
+ {
+  "check_id": 138,
+  "verdict": "ENTAILED",
+  "why": "The scenario verbatim calls it \"a 150-square-foot habitable den,\" directly asserting it is a habitable room. No alternative reading leaves this open; the word \"habitable\" is explicit in the bytes."
+ },
+ {
+  "check_id": 139,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim the permanently installed lighting \"produces an average illumination of 8 footcandles,\" directly matching the artificial-illumination slot with no inference required."
+ },
+ {
+  "check_id": 140,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"6 square feet of window glazing (4% of floor area)\" for a 150 sq ft den; 6/150 = 4%, so the value is stated and arithmetically forced."
+ },
+ {
+  "check_id": 141,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim that \"The lot lies entirely within a mapped Hillside Overlay District,\" directly forcing the slot value true with no alternative reading."
+ },
+ {
+  "check_id": 142,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the home \"measures 32 feet in height,\" directly forcing structure_height_feet = 32 with no alternative reading."
+ },
+ {
+  "check_id": 143,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"14 inches from exposed earth\"; the slot asks the literal distance, which the text fixes at 14. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 183,
+  "verdict": "ENTAILED",
+  "why": "Scenario states \"petitioning to sponsor his spouse\" verbatim. The slot value \"spouse\" is directly named; no alternative reading leaves the petitioning beneficiary open."
+ },
+ {
+  "check_id": 192,
+  "verdict": "ENTAILED",
+  "why": "Cited rule excludes under-18 presence; 150 days at age 17 are non-countable, leaving the 50 days after turning 18. No alternative reading leaves countable days at anything but 50."
+ },
+ {
+  "check_id": 193,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim that Rosa is 58 years old at the time she files for naturalization, directly establishing age_at_filing = 58."
+ },
+ {
+  "check_id": 194,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim she \"has been a lawful permanent resident for 22 years,\" directly forcing years_as_lpr = 22 with no alternative reading."
+ },
+ {
+  "check_id": 195,
+  "verdict": "ENTAILED",
+  "why": "Scenario states verbatim \"his marriage was legally terminated by divorce,\" directly matching the slot. No alternative reading leaves the divorce open; no assumption or categorization is needed."
+ },
+ {
+  "check_id": 196,
+  "verdict": "ENTAILED",
+  "why": "The scenario states verbatim that Omar \"received conditional permanent residence through marriage,\" directly establishing that status was obtained through marriage. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 197,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states \"the provider's measured uptime was 99.5%,\" directly matching the slot and claimed_value with no alternative reading."
+ },
+ {
+  "check_id": 198,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the request was \"18 days after the end of March,\" directly asserting the claimed value 18. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 199,
+  "verdict": "ENTAILED",
+  "why": "Scenario verbatim states \"A complete production outage began at 09:00,\" directly asserting a complete production outage. No alternative reading leaves the slot value open."
+ },
+ {
+  "check_id": 200,
+  "verdict": "LEAP",
+  "why": "23 = 09:25 minus ticket-open 09:02, but \"acknowledgment_minutes\" could equally measure from outage start 09:00, yielding 25. Scenario never fixes the baseline, so the value isn't forced."
+ },
+ {
+  "check_id": 201,
+  "verdict": "ENTAILED",
+  "why": "Both times are Eastern, same Wednesday: 11:00 to 14:30 is exactly 3.5 hours. No timezone or date ambiguity; arithmetic is forced."
+ },
+ {
+  "check_id": 202,
+  "verdict": "LEAP",
+  "why": "Scenario never defines the provider's business hours. Concluding 11:00 Eastern Wednesday falls \"within business hours\" assumes a standard 9-5 weekday window the bytes never state."
+ },
+ {
+  "check_id": 203,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly states the customer is \"entitled to a 15% credit,\" directly establishing credit_percentage = 15. No alternative reading leaves it open."
+ },
+ {
+  "check_id": 204,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states uptime fell below the guaranteed threshold, \"entitling the customer to a 15% credit.\" A triggered credit is directly stated, leaving no alternative reading."
+ },
+ {
+  "check_id": 218,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the provider \"never published the required August uptime report,\" directly forcing uptime_report_published = false with no alternative reading."
+ },
+ {
+  "check_id": 224,
+  "verdict": "LEAP",
+  "why": "The scenario states only the period-end (Dec 31) and submission date (Oct 15). The \"90 days before\" deadline rule is never stated; the deadline is fabricated. Under a plain reading, Oct 15 precedes Dec 31, so lateness is not established."
+ },
+ {
+  "check_id": 228,
+  "verdict": "ENTAILED",
+  "why": "\"Useful life of several years\" necessarily exceeds one year; no reading leaves the over-one-year claim open."
+ },
+ {
+  "check_id": 229,
+  "verdict": "LEAP",
+  "why": "Scenario says the budgeted position/salary line was approved and the hire filled it; only the individual's name is absent. Whether \"personnel_listed\" means named individuals or budgeted roles is undetermined, so false isn't compelled."
+ },
+ {
+  "check_id": 230,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the replacement was hired \"at the same budgeted salary line,\" directly establishing the salary line is unchanged. The new hire's absence from the budget concerns the name, not the salary line."
+ },
+ {
+  "check_id": 231,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states a budgeted position became vacant (technician resigned) and the PI hired a replacement into the same role at the same budgeted salary line. The name-not-in-budget detail is irrelevant since budgets fund positions, not individuals."
+ },
+ {
+  "check_id": 232,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the replacement was hired \"into the same role at the same budgeted salary line,\" directly forcing role_unchanged=true. The name-not-in-budget detail concerns identity, not the role."
+ },
+ {
+  "check_id": 233,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the PI moved funds \"to establish a new subaward with a collaborating laboratory located in another country\" — new, foreign, and subaward are all stated verbatim, leaving no alternative reading."
+ },
+ {
+  "check_id": 234,
+  "verdict": "ENTAILED",
+  "why": "Scenario states \"$20,000 (4% of the award)\" on a $500,000 award; 20,000/500,000 = 4%. The fraction is explicitly stated and arithmetically verified, leaving no alternate reading."
+ },
+ {
+  "check_id": 235,
+  "verdict": "LEAP",
+  "why": "Under PHS FCOI rules (42 CFR 50.603), lecture honoraria from an accredited institution of higher education are explicitly EXCLUDED from significant financial interest. The scenario flags that exact exclusion, so \"financial interest = true\" is unestablished."
+ },
+ {
+  "check_id": 236,
+  "verdict": "ENTAILED",
+  "why": "The scenario explicitly parenthetically labels the state university as \"a U.S. accredited institution of higher education,\" directly matching the claimed income_source_type with no alternative reading."
+ },
+ {
+  "check_id": 237,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states May 5 was \"27 days before the start date,\" matching the claimed value verbatim; the arithmetic (May 5 to June 1) also confirms 27 days."
+ },
+ {
+  "check_id": 238,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states the $3,000 was \"incurred on May 5... 27 days before the start date\" of June 1, forcing incurred_before_start_date = true."
+ },
+ {
+  "check_id": 239,
+  "verdict": "ENTAILED",
+  "why": "The scenario verbatim labels the costs \"necessary project supply costs.\" The cited span literally states necessity to the project; timing only affects allowability, not necessity."
+ }
+]

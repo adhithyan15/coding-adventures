@@ -1,0 +1,9 @@
+[package]
+name = "cas-pattern-matching"
+version = "0.1.0"
+edition = "2021"
+description = "Structural pattern matching and rewriting over symbolic-ir trees"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

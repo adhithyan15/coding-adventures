@@ -1,0 +1,2 @@
+cd ../multi-directed-graph && python -m pytest tests
+set PYTHONPATH=src;../multi-directed-graph/src&& python -m pytest tests

@@ -23,9 +23,12 @@ module CodingAdventures
         @node_list = []
         @node_index = {}
         @matrix = []
+        @graph_properties = {}
+        @node_properties = {}
+        @edge_properties = {}
       end
 
-      def add_node(node)
+      def add_node(node, properties = {})
         if @repr == GraphRepr::ADJACENCY_LIST
           @adj[node] ||= {}
         elsif !@node_index.key?(node)
@@ -35,6 +38,8 @@ module CodingAdventures
           @matrix.each { |row| row << nil }
           @matrix << Array.new(index + 1)
         end
+        @node_properties[node] ||= {}
+        @node_properties[node].merge!(properties)
         self
       end
 
@@ -44,15 +49,18 @@ module CodingAdventures
         if @repr == GraphRepr::ADJACENCY_LIST
           @adj[node].keys.each do |neighbor|
             @adj[neighbor]&.delete(node)
+            @edge_properties.delete(edge_key(node, neighbor))
           end
           @adj.delete(node)
         else
+          @node_list.each { |other| @edge_properties.delete(edge_key(node, other)) }
           index = @node_index.delete(node)
           @node_list.delete_at(index)
           @matrix.delete_at(index)
           @matrix.each { |row| row.delete_at(index) }
           @node_list.each_with_index { |name, offset| @node_index[name] = offset }
         end
+        @node_properties.delete(node)
 
         self
       end
@@ -69,7 +77,7 @@ module CodingAdventures
         sort_nodes(@repr == GraphRepr::ADJACENCY_LIST ? @adj.keys : @node_list)
       end
 
-      def add_edge(left, right, weight = 1.0)
+      def add_edge(left, right, weight = 1.0, properties = {})
         add_node(left)
         add_node(right)
 
@@ -82,6 +90,9 @@ module CodingAdventures
           @matrix[left_index][right_index] = weight
           @matrix[right_index][left_index] = weight
         end
+        @edge_properties[edge_key(left, right)] ||= {}
+        @edge_properties[edge_key(left, right)].merge!(properties)
+        @edge_properties[edge_key(left, right)]["weight"] = weight
 
         self
       end
@@ -98,6 +109,7 @@ module CodingAdventures
           @matrix[left_index][right_index] = nil
           @matrix[right_index][left_index] = nil
         end
+        @edge_properties.delete(edge_key(left, right))
 
         self
       end
@@ -155,6 +167,73 @@ module CodingAdventures
         end
 
         raise EdgeNotFoundError, "Edge not found: #{left.inspect} -- #{right.inspect}"
+      end
+
+      def graph_properties
+        @graph_properties.dup
+      end
+
+      def set_graph_property(key, value)
+        @graph_properties[key] = value
+        self
+      end
+
+      def remove_graph_property(key)
+        @graph_properties.delete(key)
+        self
+      end
+
+      def node_properties(node)
+        raise NodeNotFoundError, "Node not found: #{node.inspect}" unless has_node?(node)
+
+        @node_properties.fetch(node, {}).dup
+      end
+
+      def set_node_property(node, key, value)
+        raise NodeNotFoundError, "Node not found: #{node.inspect}" unless has_node?(node)
+
+        @node_properties[node] ||= {}
+        @node_properties[node][key] = value
+        self
+      end
+
+      def remove_node_property(node, key)
+        raise NodeNotFoundError, "Node not found: #{node.inspect}" unless has_node?(node)
+
+        @node_properties.fetch(node, {}).delete(key)
+        self
+      end
+
+      def edge_properties(left, right)
+        raise EdgeNotFoundError, "Edge not found: #{left.inspect} -- #{right.inspect}" unless has_edge?(left, right)
+
+        @edge_properties.fetch(edge_key(left, right), {}).merge("weight" => edge_weight(left, right))
+      end
+
+      def set_edge_property(left, right, key, value)
+        raise EdgeNotFoundError, "Edge not found: #{left.inspect} -- #{right.inspect}" unless has_edge?(left, right)
+
+        if key == "weight"
+          raise ArgumentError, "edge property 'weight' must be numeric" unless value.is_a?(Numeric)
+
+          set_edge_weight(left, right, value)
+        end
+        @edge_properties[edge_key(left, right)] ||= {}
+        @edge_properties[edge_key(left, right)][key] = value
+        self
+      end
+
+      def remove_edge_property(left, right, key)
+        raise EdgeNotFoundError, "Edge not found: #{left.inspect} -- #{right.inspect}" unless has_edge?(left, right)
+
+        if key == "weight"
+          set_edge_weight(left, right, 1.0)
+          @edge_properties[edge_key(left, right)] ||= {}
+          @edge_properties[edge_key(left, right)]["weight"] = 1.0
+        else
+          @edge_properties.fetch(edge_key(left, right), {}).delete(key)
+        end
+        self
       end
 
       def neighbors(node)
@@ -215,6 +294,22 @@ module CodingAdventures
 
       def canonical_endpoints(left, right)
         node_key(left) <= node_key(right) ? [left, right] : [right, left]
+      end
+
+      def edge_key(left, right)
+        canonical_endpoints(left, right)
+      end
+
+      def set_edge_weight(left, right, weight)
+        if @repr == GraphRepr::ADJACENCY_LIST
+          @adj[left][right] = weight
+          @adj[right][left] = weight
+        else
+          left_index = @node_index.fetch(left)
+          right_index = @node_index.fetch(right)
+          @matrix[left_index][right_index] = weight
+          @matrix[right_index][left_index] = weight
+        end
       end
     end
 

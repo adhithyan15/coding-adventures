@@ -1,8 +1,19 @@
-"""IR to Intel 4004 compiler package."""
+"""IR to Intel 4004 compiler package.
+
+LANG20: ``Intel4004CodeGenerator`` implements ``CodeGenerator[IrProgram, str]``
+from ``codegen-core``, providing a shared ``validate() / generate()`` interface.
+
+Note on naming: the existing ``CodeGenerator`` class (from ``codegen.py``) is
+the *internal* assembly-text generator only (no validation).
+``Intel4004CodeGenerator`` (from ``generator.py``) is the *public* LANG20 adapter
+that exposes both ``validate()`` and ``generate()`` under the shared protocol.
+"""
 
 from intel_4004_ir_validator import IrValidationError, IrValidator
+
 from ir_to_intel_4004_compiler.backend import IrToIntel4004Compiler
 from ir_to_intel_4004_compiler.codegen import CodeGenerator
+from ir_to_intel_4004_compiler.generator import Intel4004CodeGenerator
 
 Intel4004Backend = IrToIntel4004Compiler
 
@@ -23,6 +34,7 @@ __all__ = [
     "IrValidationError",
     "IrValidator",
     "CodeGenerator",
+    "Intel4004CodeGenerator",
     "IrToIntel4004Compiler",
     "Intel4004Backend",
     "validate",

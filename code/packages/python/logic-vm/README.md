@@ -13,6 +13,8 @@ stored queries with the current `logic-engine` backend.
 - single-step execution with trace entries
 - dispatch handlers keyed by `InstructionOpcode`
 - query execution after program loading completes
+- query execution from an existing `logic-engine.State`, which allows callers
+  to carry dynamic database changes from initialization into later queries
 
 ## Dependencies
 

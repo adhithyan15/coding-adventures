@@ -244,6 +244,11 @@ impl StorageRecord {
             content_hash: self.content_hash,
         }
     }
+
+    /// Return a body-free summary of the record for read-side indexes.
+    pub fn summary(&self) -> StorageRecordSummary {
+        self.stat().summary()
+    }
 }
 
 /// Lightweight metadata returned by `stat`.
@@ -258,6 +263,40 @@ pub struct StorageStat {
     pub created_at: TimestampMs,
     pub updated_at: TimestampMs,
     pub content_hash: [u8; 32],
+}
+
+impl StorageStat {
+    /// Return a compact, body-free summary suitable for read listings.
+    pub fn summary(&self) -> StorageRecordSummary {
+        StorageRecordSummary {
+            namespace: self.namespace.clone(),
+            key: self.key.clone(),
+            revision: self.revision.clone(),
+            content_type: self.content_type.clone(),
+            body_len: self.body_len,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+            content_hash: self.content_hash,
+            metadata_key_count: metadata_object_len(&self.metadata),
+        }
+    }
+}
+
+/// Compact read-side view of one storage record.
+///
+/// Summaries intentionally omit the opaque body bytes while preserving the
+/// fields needed to build indexes, detect drift, and surface list results.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StorageRecordSummary {
+    pub namespace: String,
+    pub key: String,
+    pub revision: Revision,
+    pub content_type: String,
+    pub body_len: usize,
+    pub created_at: TimestampMs,
+    pub updated_at: TimestampMs,
+    pub content_hash: [u8; 32],
+    pub metadata_key_count: usize,
 }
 
 /// Options used for prefix listing.
@@ -306,6 +345,227 @@ impl StoragePage {
             next_cursor: None,
         }
     }
+
+    /// Return whether this page contains no records.
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+
+    /// Return the number of records in this page.
+    pub fn len(&self) -> usize {
+        self.records.len()
+    }
+
+    /// Return compact summaries for the records in this page.
+    pub fn summaries(&self) -> Vec<StorageRecordSummary> {
+        self.records.iter().map(StorageRecord::summary).collect()
+    }
+
+    /// Return this page as a body-free summary page.
+    pub fn summary_page(&self) -> StorageSummaryPage {
+        StorageSummaryPage {
+            records: self.summaries(),
+            next_cursor: self.next_cursor.clone(),
+        }
+    }
+
+    /// Return aggregate inventory facts for the records in this page.
+    pub fn inventory_summary(&self) -> StorageRecordInventorySummary {
+        StorageRecordInventorySummary::from_records(&self.records)
+    }
+}
+
+/// One page of compact storage record summaries.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StorageSummaryPage {
+    pub records: Vec<StorageRecordSummary>,
+    pub next_cursor: Option<String>,
+}
+
+impl StorageSummaryPage {
+    /// Construct an empty summary page.
+    pub fn empty() -> Self {
+        Self {
+            records: Vec::new(),
+            next_cursor: None,
+        }
+    }
+
+    /// Return whether this page contains no summaries.
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+
+    /// Return the number of summaries in this page.
+    pub fn len(&self) -> usize {
+        self.records.len()
+    }
+
+    /// Return aggregate read-side facts for this summary page.
+    pub fn overview(&self) -> StorageSummaryPageOverview {
+        StorageSummaryPageOverview {
+            record_count: self.records.len(),
+            total_body_len: self.records.iter().map(|record| record.body_len).sum(),
+            total_metadata_keys: self
+                .records
+                .iter()
+                .map(|record| record.metadata_key_count)
+                .sum(),
+            first_key: self.records.first().map(|record| record.key.clone()),
+            last_key: self.records.last().map(|record| record.key.clone()),
+            next_cursor: self.next_cursor.clone(),
+        }
+    }
+
+    /// Return aggregate inventory facts for this summary page.
+    pub fn inventory_summary(&self) -> StorageRecordInventorySummary {
+        StorageRecordInventorySummary::from_summary_page(self)
+    }
+}
+
+/// Aggregate read-side facts for one compact summary page.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StorageSummaryPageOverview {
+    pub record_count: usize,
+    pub total_body_len: usize,
+    pub total_metadata_keys: usize,
+    pub first_key: Option<String>,
+    pub last_key: Option<String>,
+    pub next_cursor: Option<String>,
+}
+
+impl StorageSummaryPageOverview {
+    pub fn is_empty(&self) -> bool {
+        self.record_count == 0
+    }
+
+    pub fn has_more(&self) -> bool {
+        self.next_cursor.is_some()
+    }
+
+    pub fn spans_multiple_records(&self) -> bool {
+        self.record_count > 1
+    }
+
+    pub fn has_metadata(&self) -> bool {
+        self.total_metadata_keys > 0
+    }
+}
+
+/// Aggregate read-side inventory facts over observed storage records.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct StorageRecordInventorySummary {
+    pub total_records: usize,
+    pub total_body_len: usize,
+    pub total_metadata_keys: usize,
+    pub records_with_metadata: usize,
+    pub empty_body_records: usize,
+    pub json_records: usize,
+    pub text_records: usize,
+    pub opaque_content_type_records: usize,
+    pub earliest_created_at: Option<TimestampMs>,
+    pub latest_updated_at: Option<TimestampMs>,
+    pub lowest_key: Option<String>,
+    pub highest_key: Option<String>,
+    pub namespace_counts: BTreeMap<String, usize>,
+}
+
+impl StorageRecordInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_records<'a, I>(records: I) -> Self
+    where
+        I: IntoIterator<Item = &'a StorageRecord>,
+    {
+        let mut summary = Self::empty();
+        for record in records {
+            summary.record_summary(&record.summary());
+        }
+        summary
+    }
+
+    pub fn from_summary_page(page: &StorageSummaryPage) -> Self {
+        Self::from_summaries(&page.records)
+    }
+
+    pub fn from_summaries<'a, I>(summaries: I) -> Self
+    where
+        I: IntoIterator<Item = &'a StorageRecordSummary>,
+    {
+        let mut summary = Self::empty();
+        for record_summary in summaries {
+            summary.record_summary(record_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, record_summary: &StorageRecordSummary) {
+        self.total_records += 1;
+        self.total_body_len += record_summary.body_len;
+        self.total_metadata_keys += record_summary.metadata_key_count;
+
+        if record_summary.metadata_key_count > 0 {
+            self.records_with_metadata += 1;
+        }
+        if record_summary.body_len == 0 {
+            self.empty_body_records += 1;
+        }
+
+        if is_json_content_type(&record_summary.content_type) {
+            self.json_records += 1;
+        } else if is_text_content_type(&record_summary.content_type) {
+            self.text_records += 1;
+        } else {
+            self.opaque_content_type_records += 1;
+        }
+
+        self.earliest_created_at = Some(
+            self.earliest_created_at
+                .map_or(record_summary.created_at, |current| {
+                    current.min(record_summary.created_at)
+                }),
+        );
+        self.latest_updated_at = Some(
+            self.latest_updated_at
+                .map_or(record_summary.updated_at, |current| {
+                    current.max(record_summary.updated_at)
+                }),
+        );
+        self.lowest_key = Some(self.lowest_key.as_ref().map_or_else(
+            || record_summary.key.clone(),
+            |current| current.min(&record_summary.key).clone(),
+        ));
+        self.highest_key = Some(self.highest_key.as_ref().map_or_else(
+            || record_summary.key.clone(),
+            |current| current.max(&record_summary.key).clone(),
+        ));
+        *self
+            .namespace_counts
+            .entry(record_summary.namespace.clone())
+            .or_insert(0) += 1;
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_records == 0
+    }
+
+    pub fn has_metadata(&self) -> bool {
+        self.records_with_metadata > 0
+    }
+
+    pub fn has_empty_bodies(&self) -> bool {
+        self.empty_body_records > 0
+    }
+
+    pub fn namespace_count(&self) -> usize {
+        self.namespace_counts.len()
+    }
+
+    pub fn spans_multiple_namespaces(&self) -> bool {
+        self.namespace_count() > 1
+    }
 }
 
 /// An advisory lease for background operations such as index rebuilds or
@@ -345,6 +605,132 @@ impl StorageLease {
     /// Return whether the lease is still active at the supplied timestamp.
     pub fn is_active_at(&self, now_ms: TimestampMs) -> bool {
         now_ms < self.expires_at
+    }
+
+    /// Return a compact read-side view of the lease at the supplied timestamp.
+    pub fn summary_at(&self, now_ms: TimestampMs) -> StorageLeaseSummary {
+        StorageLeaseSummary::from_lease_at(self, now_ms)
+    }
+}
+
+/// Compact read-side view of one advisory lease.
+///
+/// The summary intentionally omits the lease token so status views can report
+/// active/expired lease windows without exposing the token used by a holder.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StorageLeaseSummary {
+    pub name: String,
+    pub issued_at: TimestampMs,
+    pub expires_at: TimestampMs,
+    pub duration_ms: u64,
+    pub remaining_ms: u64,
+    pub active: bool,
+}
+
+impl StorageLeaseSummary {
+    pub fn from_lease_at(lease: &StorageLease, now_ms: TimestampMs) -> Self {
+        let duration_ms = lease.expires_at - lease.issued_at;
+        let remaining_ms = if now_ms <= lease.issued_at {
+            duration_ms
+        } else {
+            lease.expires_at.saturating_sub(now_ms)
+        };
+        Self {
+            name: lease.name.clone(),
+            issued_at: lease.issued_at,
+            expires_at: lease.expires_at,
+            duration_ms,
+            remaining_ms,
+            active: lease.is_active_at(now_ms),
+        }
+    }
+
+    pub fn is_active(&self) -> bool {
+        self.active
+    }
+
+    pub fn is_expired(&self) -> bool {
+        !self.active
+    }
+}
+
+/// Aggregate read-side facts over observed advisory leases.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct StorageLeaseInventorySummary {
+    pub total_leases: usize,
+    pub active_leases: usize,
+    pub expired_leases: usize,
+    pub total_duration_ms: u64,
+    pub total_remaining_ms: u64,
+    pub earliest_active_expiry: Option<TimestampMs>,
+    pub latest_active_expiry: Option<TimestampMs>,
+}
+
+impl StorageLeaseInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_leases_at<'a, I>(leases: I, now_ms: TimestampMs) -> Self
+    where
+        I: IntoIterator<Item = &'a StorageLease>,
+    {
+        let mut summary = Self::empty();
+        for lease in leases {
+            summary.record_summary(&lease.summary_at(now_ms));
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a, I>(summaries: I) -> Self
+    where
+        I: IntoIterator<Item = &'a StorageLeaseSummary>,
+    {
+        let mut summary = Self::empty();
+        for lease_summary in summaries {
+            summary.record_summary(lease_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, lease_summary: &StorageLeaseSummary) {
+        self.total_leases += 1;
+        self.total_duration_ms += lease_summary.duration_ms;
+        self.total_remaining_ms += lease_summary.remaining_ms;
+
+        if lease_summary.active {
+            self.active_leases += 1;
+            self.earliest_active_expiry = Some(
+                self.earliest_active_expiry
+                    .map_or(lease_summary.expires_at, |current| {
+                        current.min(lease_summary.expires_at)
+                    }),
+            );
+            self.latest_active_expiry = Some(
+                self.latest_active_expiry
+                    .map_or(lease_summary.expires_at, |current| {
+                        current.max(lease_summary.expires_at)
+                    }),
+            );
+        } else {
+            self.expired_leases += 1;
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_leases == 0
+    }
+
+    pub fn has_active_leases(&self) -> bool {
+        self.active_leases > 0
+    }
+
+    pub fn has_expired_leases(&self) -> bool {
+        self.expired_leases > 0
+    }
+
+    pub fn next_active_expiry(&self) -> Option<TimestampMs> {
+        self.earliest_active_expiry
     }
 }
 
@@ -446,6 +832,27 @@ pub trait StorageBackend: Send + Sync {
 
     /// Fetch metadata for `(namespace, key)` without loading the full body.
     fn stat(&self, namespace: &str, key: &str) -> Result<Option<StorageStat>, StorageError>;
+
+    /// Fetch a compact read-side summary for `(namespace, key)`.
+    fn get_summary(
+        &self,
+        namespace: &str,
+        key: &str,
+    ) -> Result<Option<StorageRecordSummary>, StorageError> {
+        Ok(self.stat(namespace, key)?.map(|stat| stat.summary()))
+    }
+
+    /// List compact read-side summaries in stable key order.
+    ///
+    /// Backends can override this to avoid loading bodies. The default keeps
+    /// older backend implementations correct by projecting `list()`.
+    fn list_summaries(
+        &self,
+        namespace: &str,
+        options: StorageListOptions,
+    ) -> Result<StorageSummaryPage, StorageError> {
+        Ok(self.list(namespace, options)?.summary_page())
+    }
 
     /// Attempt to acquire an advisory lease. Returns `Ok(None)` when a still-
     /// active lease already exists.
@@ -801,6 +1208,66 @@ pub mod conformance {
         Ok(())
     }
 
+    /// Summary reads must preserve list order and omit body loading concerns.
+    pub fn summary_listing_matches_stats<B: StorageBackend>(
+        backend: &B,
+    ) -> Result<(), StorageError> {
+        backend.initialize()?;
+        let first_metadata = JsonValue::Object(vec![
+            ("kind".to_string(), JsonValue::String("context".to_string())),
+            (
+                "priority".to_string(),
+                JsonValue::Number(JsonNumber::Integer(3)),
+            ),
+        ]);
+        let first = backend.put(StoragePutInput::new(
+            "context",
+            "entries/alpha.json",
+            "application/json",
+            first_metadata,
+            br#"{"title":"alpha"}"#.to_vec(),
+        )?)?;
+        backend.put(StoragePutInput::new(
+            "context",
+            "entries/beta.json",
+            "application/json",
+            JsonValue::Object(vec![]),
+            br#"{"title":"beta"}"#.to_vec(),
+        )?)?;
+
+        let summary = backend
+            .get_summary("context", "entries/alpha.json")?
+            .expect("summary should exist");
+        assert_eq!(summary.revision, first.revision);
+        assert_eq!(summary.body_len, first.body.len());
+        assert_eq!(summary.content_hash, first.content_hash);
+        assert_eq!(summary.metadata_key_count, 2);
+
+        let page = backend.list_summaries(
+            "context",
+            StorageListOptions {
+                prefix: Some("entries/".to_string()),
+                recursive: true,
+                page_size: None,
+                cursor: None,
+            },
+        )?;
+        let keys: Vec<String> = page
+            .records
+            .iter()
+            .map(|summary| summary.key.clone())
+            .collect();
+        assert_eq!(
+            keys,
+            vec![
+                "entries/alpha.json".to_string(),
+                "entries/beta.json".to_string(),
+            ]
+        );
+        assert_eq!(page.next_cursor, None);
+        Ok(())
+    }
+
     /// Advisory leases should eventually expire.
     pub fn advisory_lease_expires<B: StorageBackend>(backend: &B) -> Result<(), StorageError> {
         backend.initialize()?;
@@ -917,6 +1384,27 @@ fn validate_metadata_object(metadata: &StorageMetadata) -> Result<(), StorageErr
     Ok(())
 }
 
+fn metadata_object_len(metadata: &StorageMetadata) -> usize {
+    match metadata {
+        JsonValue::Object(entries) => entries.len(),
+        _ => 0,
+    }
+}
+
+fn is_json_content_type(value: &str) -> bool {
+    let media_type = media_type(value);
+    media_type.eq_ignore_ascii_case("application/json")
+        || media_type.to_ascii_lowercase().ends_with("+json")
+}
+
+fn is_text_content_type(value: &str) -> bool {
+    media_type(value).to_ascii_lowercase().starts_with("text/")
+}
+
+fn media_type(value: &str) -> &str {
+    value.split(';').next().unwrap_or(value).trim()
+}
+
 fn validate_lease_name(value: &str) -> Result<(), StorageError> {
     validate_path_like("lease_name", value)
 }
@@ -1003,6 +1491,157 @@ mod tests {
     }
 
     #[test]
+    fn storage_record_summary_counts_metadata_keys_without_body() {
+        let record = StorageRecord::new(
+            "skills",
+            "manifests/demo.json",
+            Revision::new("r1").unwrap(),
+            "application/json",
+            JsonValue::Object(vec![
+                ("source".to_string(), JsonValue::String("test".to_string())),
+                ("version".to_string(), JsonValue::String("1".to_string())),
+            ]),
+            b"{}".to_vec(),
+            10,
+            12,
+        )
+        .expect("record should be valid");
+
+        let summary = record.summary();
+        assert_eq!(summary.namespace, "skills");
+        assert_eq!(summary.key, "manifests/demo.json");
+        assert_eq!(summary.revision, Revision::new("r1").unwrap());
+        assert_eq!(summary.body_len, 2);
+        assert_eq!(summary.content_hash, sha256(b"{}"));
+        assert_eq!(summary.metadata_key_count, 2);
+        assert_eq!(summary, record.stat().summary());
+    }
+
+    #[test]
+    fn storage_page_projects_summary_page() {
+        let page = StoragePage {
+            records: vec![
+                StorageRecord::new(
+                    "context",
+                    "entries/alpha.json",
+                    Revision::new("r1").unwrap(),
+                    "application/json",
+                    metadata(),
+                    b"alpha".to_vec(),
+                    20,
+                    30,
+                )
+                .unwrap(),
+                StorageRecord::new(
+                    "context",
+                    "entries/beta.json",
+                    Revision::new("r2").unwrap(),
+                    "application/json",
+                    metadata(),
+                    b"beta".to_vec(),
+                    21,
+                    31,
+                )
+                .unwrap(),
+            ],
+            next_cursor: Some("entries/demo.json".to_string()),
+        };
+
+        let summary_page = page.summary_page();
+        assert_eq!(page.len(), 2);
+        assert!(!page.is_empty());
+        assert_eq!(summary_page.len(), 2);
+        assert!(!summary_page.is_empty());
+        assert_eq!(
+            summary_page.next_cursor.as_deref(),
+            Some("entries/demo.json")
+        );
+        assert_eq!(summary_page.records[0].body_len, 5);
+
+        let overview = summary_page.overview();
+        assert_eq!(
+            overview,
+            StorageSummaryPageOverview {
+                record_count: 2,
+                total_body_len: 9,
+                total_metadata_keys: 2,
+                first_key: Some("entries/alpha.json".to_string()),
+                last_key: Some("entries/beta.json".to_string()),
+                next_cursor: Some("entries/demo.json".to_string()),
+            }
+        );
+        assert!(!overview.is_empty());
+        assert!(overview.has_more());
+        assert!(overview.spans_multiple_records());
+        assert!(overview.has_metadata());
+        assert!(StorageSummaryPage::empty().overview().is_empty());
+    }
+
+    #[test]
+    fn storage_record_inventory_summary_rolls_up_body_free_records() {
+        let page = StoragePage {
+            records: vec![
+                StorageRecord::new(
+                    "context",
+                    "entries/beta.json",
+                    Revision::new("r1").unwrap(),
+                    "application/vnd.demo+json",
+                    metadata(),
+                    b"beta".to_vec(),
+                    20,
+                    30,
+                )
+                .unwrap(),
+                StorageRecord::new(
+                    "context",
+                    "entries/alpha.txt",
+                    Revision::new("r2").unwrap(),
+                    "text/plain; charset=utf-8",
+                    JsonValue::Object(vec![]),
+                    Vec::new(),
+                    10,
+                    40,
+                )
+                .unwrap(),
+                StorageRecord::new(
+                    "artifacts",
+                    "blobs/data.bin",
+                    Revision::new("r3").unwrap(),
+                    "application/octet-stream",
+                    JsonValue::Object(vec![]),
+                    vec![0, 1],
+                    15,
+                    25,
+                )
+                .unwrap(),
+            ],
+            next_cursor: None,
+        };
+
+        let inventory = page.inventory_summary();
+        assert_eq!(inventory, page.summary_page().inventory_summary());
+        assert_eq!(inventory.total_records, 3);
+        assert_eq!(inventory.total_body_len, 6);
+        assert_eq!(inventory.total_metadata_keys, 1);
+        assert_eq!(inventory.records_with_metadata, 1);
+        assert_eq!(inventory.empty_body_records, 1);
+        assert_eq!(inventory.json_records, 1);
+        assert_eq!(inventory.text_records, 1);
+        assert_eq!(inventory.opaque_content_type_records, 1);
+        assert_eq!(inventory.earliest_created_at, Some(10));
+        assert_eq!(inventory.latest_updated_at, Some(40));
+        assert_eq!(inventory.lowest_key.as_deref(), Some("blobs/data.bin"));
+        assert_eq!(inventory.highest_key.as_deref(), Some("entries/beta.json"));
+        assert_eq!(inventory.namespace_counts.get("context"), Some(&2));
+        assert_eq!(inventory.namespace_counts.get("artifacts"), Some(&1));
+        assert_eq!(inventory.namespace_count(), 2);
+        assert!(inventory.spans_multiple_namespaces());
+        assert!(inventory.has_metadata());
+        assert!(inventory.has_empty_bodies());
+        assert!(StorageRecordInventorySummary::empty().is_empty());
+    }
+
+    #[test]
     fn invalid_path_segments_are_rejected() {
         let error = StoragePutInput::new(
             "context",
@@ -1029,6 +1668,75 @@ mod tests {
         assert!(lease.is_active_at(100));
         assert!(lease.is_active_at(149));
         assert!(!lease.is_active_at(150));
+
+        let active_summary = lease.summary_at(125);
+        assert_eq!(active_summary.name, "memory-rebuild");
+        assert_eq!(active_summary.issued_at, 100);
+        assert_eq!(active_summary.expires_at, 150);
+        assert_eq!(active_summary.duration_ms, 50);
+        assert_eq!(active_summary.remaining_ms, 25);
+        assert!(active_summary.is_active());
+        assert!(!active_summary.is_expired());
+
+        let expired_summary = StorageLeaseSummary::from_lease_at(&lease, 150);
+        assert_eq!(expired_summary.remaining_ms, 0);
+        assert!(!expired_summary.is_active());
+        assert!(expired_summary.is_expired());
+    }
+
+    #[test]
+    fn lease_inventory_summary_counts_active_and_expired_windows() {
+        let active = StorageLease::new(
+            "context-compaction",
+            LeaseToken::new("lease-1").unwrap(),
+            100,
+            200,
+        )
+        .expect("active lease should be valid");
+        let longer_active = StorageLease::new(
+            "artifact-index",
+            LeaseToken::new("lease-2").unwrap(),
+            120,
+            240,
+        )
+        .expect("active lease should be valid");
+        let expired = StorageLease::new(
+            "memory-rebuild",
+            LeaseToken::new("lease-3").unwrap(),
+            10,
+            20,
+        )
+        .expect("expired lease should be valid");
+        let leases = vec![active, longer_active, expired];
+
+        let summary = StorageLeaseInventorySummary::from_leases_at(&leases, 150);
+
+        assert_eq!(
+            summary,
+            StorageLeaseInventorySummary {
+                total_leases: 3,
+                active_leases: 2,
+                expired_leases: 1,
+                total_duration_ms: 230,
+                total_remaining_ms: 140,
+                earliest_active_expiry: Some(200),
+                latest_active_expiry: Some(240),
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_active_leases());
+        assert!(summary.has_expired_leases());
+        assert_eq!(summary.next_active_expiry(), Some(200));
+
+        let projected = leases
+            .iter()
+            .map(|lease| lease.summary_at(150))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            StorageLeaseInventorySummary::from_summaries(&projected),
+            summary
+        );
+        assert!(StorageLeaseInventorySummary::empty().is_empty());
     }
 
     #[test]
@@ -1059,6 +1767,12 @@ mod tests {
     fn conformance_prefix_listing_is_stable() {
         let backend = InMemoryStorageBackend::default();
         conformance::prefix_listing_is_stable(&backend).unwrap();
+    }
+
+    #[test]
+    fn conformance_summary_listing_matches_stats() {
+        let backend = InMemoryStorageBackend::default();
+        conformance::summary_listing_matches_stats(&backend).unwrap();
     }
 
     #[test]

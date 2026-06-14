@@ -1,0 +1,10 @@
+[package]
+name = "cas-mnewton"
+version = "0.1.0"
+edition = "2021"
+description = "Newton-Raphson numeric root finder over symbolic IR"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
+cas-substitution = { path = "../cas-substitution" }

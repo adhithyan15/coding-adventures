@@ -1,0 +1,34 @@
+{
+  "_doc": "Gate-checkable provenance for each rulebook clause. Keyed by '<hypothesis>::<evidence>' (or '<hypothesis>::prior'). The CAS-write gate's N adversarial readers verify, per clause: does the verbatim byte_quote ENTAIL the asserted lr (magnitude + direction)? `computed` records the LR derivation. Clauses with byte_quote=null are ungrounded — the gate must KICK THEM BACK or admit them only at trust 'inferred' (and never 'authoritative'). byte_quotes copied verbatim from ../../adj52/corpus/bacterial_meningitis/corpus.json.",
+  "clauses": [
+    {"key": "bacterial_meningitis::prior", "lr": 0.037, "computed": "prevalence = n_bacterial/n_pleocytosis = 121/3295 = 0.037",
+     "byte_quote": "Among 3295 patients with CSF pleocytosis, 121 (3.7%; 95% confidence interval [CI], 3.1%-4.4%) had bacterial meningitis and 3174 (96.3%; 95% CI, 95.5%-96.9%) had aseptic meningitis."},
+    {"key": "bacterial_meningitis::csf_gram_stain(positive)", "lr": 85, "computed": "LR+ = sens/(1-spec) = 0.85/(1-0.99) = 85",
+     "byte_quote": "CSF Gram stain likely has moderate to high sensitivity (85%, 95% confidence interval [CI] 55-96%; 6 studies; high-certainty evidence) and very high specificity (99%; 1 study; moderate-certainty evidence) for the diagnosis of acute bacterial meningitis."},
+    {"key": "bacterial_meningitis::csf_neutrophilic_pleocytosis(high)", "lr": 15, "computed": "pooled LR+ reported directly = 15",
+     "byte_quote": "CSF white blood cell count of 500/muL or higher (LR, 15; 95% CI, 10-22)"},
+    {"key": "bacterial_meningitis::csf_glucose(low)", "lr": 18, "computed": "pooled LR+ reported directly = 18",
+     "byte_quote": "A CSF-blood glucose ratio of 0.4 or less (likelihood ratio [LR], 18; 95% CI, 12-27]) accurately diagnosed bacterial meningitis."},
+    {"key": "bacterial_meningitis::csf_protein(elevated)", "lr": 9.33, "computed": "LR+ = sens/(1-spec) = 0.84/(1-0.91) = 9.33",
+     "byte_quote": "Viallon et al. ... Using '>=1.88 g/L', they found 84.0 sensitivity and 91.0 specificity for distinguishing bacterial from viral meningitis."},
+    {"key": "bacterial_meningitis::csf_lactate(elevated)", "lr": 22.9, "computed": "pooled LR+ reported directly = 22.9",
+     "byte_quote": "likelihood ratio positive 22.9 (95% CI: 12.6-41.9), likelihood ratio negative 0.07 (95% CI: 0.05-0.12), and diagnostic odds ratio 313 (95% CI: 141-698)."},
+    {"key": "bacterial_meningitis::serum_procalcitonin(elevated)", "lr": 27.3, "computed": "pooled LR+ reported directly = 27.3",
+     "byte_quote": "The pooled sensitivity, specificity, positive likelihood ratio, negative likelihood ratio, and diagnostic odds ratio (DOR) for PCT were 0.90 (95% confidence interval (CI) 0.84-0.94), 0.98 (95% CI 0.97-0.99), 27.3 (95% CI 8.2-91.1)"},
+    {"key": "bacterial_meningitis::seizure(present)", "lr": 5.84, "computed": "LR+ = sens/(1-spec) = (19/86)/(14/370) = 0.2209/0.0378 = 5.84",
+     "byte_quote": "Seizure at or before presentation, n (%): Bacterial Meningitis N=86 = 19 (22%); Aseptic Meningitis N=370 = 14 (4%)"},
+    {"key": "bacterial_meningitis::csf_culture(positive)", "lr": 271, "computed": "LR+ = sens/(1-spec) = 0.813/(1-0.997) = 271",
+     "byte_quote": "culture, 81.3% and 99.7%; Gram stain, 98.2% and 98.7%; and real-time PCR, 95.7% and 94.3%, respectively."},
+
+    {"key": "viral_meningitis::prior", "lr": 0.963, "computed": "complement of bacterial prevalence among pleocytosis = 3174/3295 = 0.963",
+     "byte_quote": "Among 3295 patients with CSF pleocytosis, 121 (3.7%) ... had bacterial meningitis and 3174 (96.3%; 95% CI, 95.5%-96.9%) had aseptic meningitis."},
+    {"key": "viral_meningitis::csf_glucose(normal)", "lr": 4.9, "computed": "normal-glucose LR for aseptic = spec/(1-sens) of the bacterial low-glucose test = 0.98/(1-0.80) = 4.9",
+     "byte_quote": "A CSF-blood glucose ratio of 0.4 or less (likelihood ratio [LR], 18; 95% CI, 12-27]) ... CSF:serum glucose ratio <0.4 = 80% sensitive, 98% specific."},
+    {"key": "viral_meningitis::csf_lactate(normal)", "lr": 13.7, "computed": "normal-lactate LR for aseptic = spec/(1-sens) of the bacterial elevated-lactate test = 0.96/(1-0.93) = 13.7",
+     "byte_quote": "sensitivity 0.93 (95% CI: 0.89-0.96), specificity 0.96 (95% CI: 0.93-0.98), likelihood ratio positive 22.9"},
+    {"key": "viral_meningitis::csf_lymphocytic_pleocytosis(high)", "lr": 5.0, "computed": "not byte-grounded — clinical-knowledge estimate",
+     "byte_quote": null},
+    {"key": "viral_meningitis::enteroviral_pcr(positive)", "lr": 50, "computed": "not byte-grounded — clinical-knowledge estimate",
+     "byte_quote": null}
+  ]
+}

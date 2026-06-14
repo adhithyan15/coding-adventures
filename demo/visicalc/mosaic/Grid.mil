@@ -1,0 +1,106 @@
+// Grid.mil — interface for the VisiCalc spreadsheet grid.
+//
+// Per UI26 §2.1 + UI28-1 §3.3 (v0.2.0 cell-and-column composition).
+//
+// All state slots are mirror-of-host: the host decides what is
+// selected, what is being edited, and where the viewport sits.  The
+// Grid renders what it is told.
+//
+// UI28-1 / U29-D1 update
+// ----------------------
+//
+// The L10 migration to HostTable* was deliberately degraded — it
+// dropped per-cell click, selection highlight, inline editing, and
+// per-column widths.  Grid.{desktop,touch}.mll now uses the v0.2.0
+// composition shape (the same shape mosaic-pkg-grid v0.2.0 ships:
+// HostTable + HostTableColGroup + HostTableHead + HostTableBody +
+// nested For + inline Cell-style {Box [cell] {If/Else {HostInput
+// /Text}}}).  All five dropped features are back:
+//
+//   1. Per-cell click via HostInput / Text inside Box [cell] whose
+//      parent Row dispatches onNavigate.
+//   2. Selection highlight via sub-part styling (cell:selected)
+//      driven by the predicate `r == selectedRow && c == selectedCol`.
+//   3. Inline editing via HostInput inside an If(when: predicate)
+//      branch, with onCommit / onCancel emits.
+//   4. Per-column widths via HostTableColGroup + For (each:
+//      column-widths) producing one <col width> per column.
+//   5. Per-cell, stable React keys for O(1) reconciliation.
+//
+// Sticky-header is still NOT in the v0.2.0 shape (UI28-1 §2
+// constraint 5 deferred it).  The `total-height` slot remains in the
+// interface for forward compatibility but Grid.mll doesn't consume
+// it.  Re-acquiring sticky-header is a UI28-2 follow-up.
+//
+// Edit emits added in v0.2.0 wiring
+// ---------------------------------
+//
+// onEditCommit / onEditCancel are forwarded by the inline cell's
+// HostInput so the host's reducer can react to the user pressing
+// Enter or Escape inside the cell editor.  The App's reducer in
+// src/app/state.ts has matching action types — they were dispatched
+// only from FormulaBar before; now they're also dispatched from
+// per-cell editing.
+//
+// v0.2.0 FOLLOW-UP (this fix) — the inline cell HostInput is also
+// wired to onFormulaChange so each keystroke updates the host's
+// `edit-content` slot.  Without this, the React/HostInput emitter
+// generates a controlled <input value={v} /> with NO onChange, and
+// the cell input silently rejects every keystroke.  onEditCommit
+// then reads from `edit-content` (NOT from a dispatch payload),
+// which matches the FormulaBar's commit semantics — UI28-1 §6.4.
+//
+// onEditCommit carries no payload now: HostInput's `onCommit:` emit
+// is intentionally void (see mosaic-emit-react::emit_host_input_jsx),
+// so the host's reducer reads the buffered `state.editContent`
+// instead of `action.value`.
+
+component Grid {
+  // Display data (host computes from cells + viewport offset).
+  slot column-headers : list<text> ;
+  slot viewport-rows  : list<list<text>> ;
+
+  // Per-column pixel widths.  HostTableColGroup writes one <col
+  // width=N> per entry, so each column has a stable width regardless
+  // of its content.
+  slot column-widths  : list<number> ;
+
+  // Total pixel height of the grid's scroll viewport.  Unused by the
+  // current Grid.mll (sticky-header is deferred per UI28-1 §2
+  // constraint 5), but kept on the interface so the App's prop is
+  // a future no-op rather than a compile error.
+  slot total-height   : number ;
+
+  // Selection (host owns, pushes in).
+  slot selected-row : number ;
+  slot selected-col : number ;
+
+  // Edit state (host owns, pushes in).  edit-row = -1 means not editing.
+  slot edit-row     : number ;
+  slot edit-col     : number ;
+
+  // Live edit buffer (host owns) — threaded into the inline HostInput
+  // so the displayed editor text reflects whatever the host's reducer
+  // has accumulated.  v0.2.0 addition.
+  slot edit-content : text ;
+
+  // Events fired up to the host reducer.
+  //
+  //   onNavigate       — host selects (row, col).  Currently unreached
+  //                      from the layout because per-cell click needs
+  //                      parameterized emit-dispatch (grammar follow-up,
+  //                      UI28-2 §X).  Keyboard navigation handled in
+  //                      App.tsx covers it for now.
+  //   onFormulaChange  — each keystroke inside the inline cell editor;
+  //                      payload is the new buffer text.  Matches
+  //                      FormulaBar.mil's emit of the same name.
+  //   onEditCommit     — Enter pressed inside the inline cell editor.
+  //                      VOID payload — the reducer reads the buffered
+  //                      `edit-content` it has been accumulating from
+  //                      onFormulaChange.
+  //   onEditCancel     — Escape pressed inside the inline cell editor.
+  emit onNavigate       ( row : number , col : number ) ;
+  emit onFormulaChange  ( value : text ) ;
+  emit onEditCommit ;
+  emit onEditCancel ;
+}

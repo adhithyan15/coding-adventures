@@ -1,0 +1,10 @@
+# Build output renamed by `npm run build` from
+# ../target/release/libmatrix_rust_napi.{dylib,so,dll}.  Regenerated
+# on every build; never committed.
+matrix_rust_napi.node
+
+# Per-platform prebuilt binaries used by the Phase 4 TS wrapper's
+# optionalDependencies pattern would live in node_modules/, which
+# npm already excludes by convention — but list it here so anyone
+# poking at this directory sees the intent.
+node_modules/

@@ -1,0 +1,8 @@
+[package]
+name = "board-vm-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Portable bytecode IR for the Board VM interactive hardware runtime"
+
+[lib]
+path = "src/lib.rs"

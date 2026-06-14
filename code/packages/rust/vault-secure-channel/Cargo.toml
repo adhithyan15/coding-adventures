@@ -1,0 +1,11 @@
+[package]
+name = "coding_adventures_vault_secure_channel"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-CH — Signal-protocol-style continuous-rotation channel for the Vault stack. Composes coding_adventures_x3dh (initial key agreement, X3DH) and coding_adventures_double_ratchet (per-message DH ratchet + KDF chain) into a vault-specific channel. Forward-secret AND post-compromise-secure: a snapshot of channel state at time T cannot decrypt messages sent before T, and after one ratchet step it cannot decrypt messages sent after T either."
+
+[dependencies]
+coding_adventures_x3dh = { path = "../x3dh" }
+coding_adventures_double_ratchet = { path = "../double-ratchet" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_zeroize = { path = "../zeroize" }

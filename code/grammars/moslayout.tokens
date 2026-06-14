@@ -1,0 +1,119 @@
+# Token definitions for moslayout — Component Layout Language
+# @version 1
+#
+# moslayout declares the structural arrangement of a UI component.
+# A .mll file answers: how are primitives arranged, and how do they wire to
+# the mosmodel interface?
+#
+# Four keywords: `layout`, `slot`, `emit`, `pkg`.
+# Everything else — primitive names (Column, Row, Grid, …), property names
+# (direction, align, grow, …), and value keywords (row, true, false, …) —
+# is a NAME token validated semantically by the compiler.
+
+escapes: standard
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+
+skip:
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*[\s\S]*?\*\//
+  WHITESPACE    = /[ \t\r\n]+/
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+# Double-quoted string with `\`-escaped characters. Used for prop values
+# that need an exact string literal — most commonly `placeholder: "..."` on
+# Input and `aria-label: "..."` on accessible primitives. The escape rules
+# follow the `escapes: standard` directive at the top of this file.
+#
+# Listed BEFORE NAME so the lexer prefers STRING when the input starts with
+# a double quote (NAME would never match `"` anyway, but the explicit order
+# documents the intent).
+STRING = /"([^"\\\n]|\\.)*"/
+
+NUMBER = /[0-9]+(\.[0-9]+)?/
+
+# ============================================================================
+# Keywords
+# ============================================================================
+# Only four structural keywords.  Primitive names (Column, Grid, …) and
+# property value keywords (row, true, false, …) are not listed here because
+# they would conflict with user-chosen component/slot names at the token level.
+# The compiler validates them semantically instead.
+
+keywords:
+  layout
+  slot
+  emit
+  # UI34 §3.1 — `pkg` is the marker keyword for cross-package component
+  # references: `pkg::package-name::ComponentName`.  Promoted to keyword
+  # so the parser can pick the `qualified_name` branch with one-token
+  # look-ahead.  The in-repo `.mll`/`.mil`/`.msl` corpus audit confirms
+  # `pkg` is unused as a slot/part/prop name today.
+  pkg
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+# Covers PascalCase primitive names (Column, Grid, Box, Text, Image, Spacer),
+# kebab-case part names (cell-grid, header-row), property names (direction,
+# align-items), slot names (column-headers, viewport-rows), and keyword-valued
+# names (row, column, true, false, start, center, end, stretch).
+#
+# The regex allows an initial letter followed by alphanumerics, with optional
+# hyphen-separated segments.  Component names are PascalCase; slot/part names
+# are kebab-case; both match this single pattern.
+
+NAME = /[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z][a-zA-Z0-9]*)*/
+
+# ============================================================================
+# Punctuation
+# ============================================================================
+
+LBRACE   = "{"
+RBRACE   = "}"
+LPAREN   = "("
+RPAREN   = ")"
+LBRACKET = "["
+RBRACKET = "]"
+# DOUBLE_COLON listed BEFORE COLON so the maximal-munch lexer matches `::`
+# as one token, not two `:` (UI34 §3.1).  The same maximal-munch discipline
+# is used for `==`/`<=`/`>=`/`&&`/`||` further down this file.
+DOUBLE_COLON = "::"
+COLON    = ":"
+COMMA    = ","
+
+# ============================================================================
+# Expression operators (UI29 §3.3 — U29-G3)
+# ============================================================================
+# These tokens carry the expression non-terminal used by For `each:`, If
+# `when:`, and any future expression-valued prop. The grammar deliberately
+# stops at comparison + logical + member/index access — no arithmetic, no
+# string concatenation, no ternary, no function calls.
+#
+# Two-character operators (EQ, NEQ, LE, GE, AND, OR) must be listed BEFORE
+# any single-character prefix they share so the maximal-munch lexer prefers
+# the longer match. Specifically:
+#
+#   • EQ  (==) before any future `=` token
+#   • NEQ (!=) before NOT (!)
+#   • LE  (<=) before LT  (<)
+#   • GE  (>=) before GT  (>)
+#
+# AND (&&) and OR (||) have no single-character variants in the language so
+# their relative order doesn't matter.
+
+EQ       = "=="
+NEQ      = "!="
+LE       = "<="
+GE       = ">="
+LT       = "<"
+GT       = ">"
+AND      = "&&"
+OR       = "||"
+NOT      = "!"
+DOT      = "."

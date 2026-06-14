@@ -5,6 +5,7 @@ cd ../paint-instructions && npm ci --quiet
 cd ../layout-flexbox && npm ci --quiet
 cd ../layout-to-paint && npm ci --quiet
 cd ../directed-graph && npm ci --quiet
+cd ../cli-builder && npm ci --quiet
 cd ../grammar-tools && npm ci --quiet
 cd ../lexer && npm ci --quiet
 cd ../state-machine && npm ci --quiet

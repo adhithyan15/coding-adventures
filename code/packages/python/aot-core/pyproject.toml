@@ -12,8 +12,8 @@ authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["aot", "compiler", "ahead-of-time", "register-machine", "education"]
 dependencies = [
+    "coding-adventures-codegen-core",
     "coding-adventures-interpreter-ir",
-    "coding-adventures-jit-core",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

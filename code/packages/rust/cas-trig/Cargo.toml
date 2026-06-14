@@ -1,0 +1,8 @@
+[package]
+name = "cas-trig"
+version = "0.1.0"
+edition = "2021"
+description = "Symbolic trigonometry operations over the shared CAS IR"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

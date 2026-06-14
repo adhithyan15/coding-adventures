@@ -1,0 +1,9 @@
+[package]
+name = "cas-solve"
+version = "0.1.0"
+edition = "2021"
+description = "Closed-form and numeric polynomial equation solving over symbolic IR"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

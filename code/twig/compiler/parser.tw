@@ -1,0 +1,423 @@
+; # parser.tw — CST-to-AST Extraction Layer (LANG63 / TW05-E rewrite)
+;
+; This module is the *semantic* half of the parser pipeline.  The mechanical
+; half — converting a flat token list into a Concrete Syntax Tree (CST) — is
+; handled by the generated `compiler/cst-parser` module.  This module walks
+; that CST and produces typed AST nodes from `compiler/ast`.
+;
+; ## Pipeline
+;
+;   tokens                           ; flat list of Token records from lexer
+;     → cst-parse-program / expr     ; CST: ("rule-name" child …) or Token
+;     → extract-expr                 ; Expr union variant (IntLit, DefExpr, …)
+;
+; ## CST node format (from compiler/cst-parser)
+;
+;   Non-terminal:   (cons "rule-name" (list child …))
+;   Terminal/atom:  Token record (a raw token from compiler/token)
+;   Empty optional: nil
+;   Parse result:   (cons rest-tokens cst-node)
+;
+; ## CST rule → AST node mapping
+;
+;   atom (Token)                     → IntLit | BoolLit | StrLit | SymLit
+;                                    | NilLit | VarRef  (by token kind/lexeme)
+;   "quoted"        ('foo)           → SymLit
+;   "if-form"       (if c t e)       → IfExpr
+;   "let-form"      (let ((x e)…) b) → LetExpr
+;   "let-star-form" (let* (…) b)     → LetExpr   (same representation)
+;   "begin-form"    (begin e…)       → BeginExpr
+;   "lambda-form"   (lambda (p…) b)  → LambdaExpr
+;   "quote-form"    (quote sym)      → SymLit
+;   "define"        (define …)       → DefExpr + optional LambdaExpr
+;   "apply"         (f a…)           → CallExpr
+;   "match-form"    (match s arm…)   → CallExpr "match"  (best-effort)
+;   "module-form"   (module …)       → CallExpr "module" (skipped by emitter)
+;   "record-def"    (record …)       → CallExpr "record" (skipped by emitter)
+;   "union-def"     (union …)        → CallExpr "union"  (skipped by emitter)
+;   "type-alias"    (type …)         → CallExpr "type"   (skipped by emitter)
+;
+; ## Public interface (unchanged from the hand-written LANG58 parser)
+;
+;   (parse-expr    tokens) → (cons rest-tokens ast-node) | nil
+;   (parse-program tokens) → list of Expr nodes
+
+(module compiler/parser
+  (typed strict)
+  (export parse-program parse-expr)
+  (import compiler/cst-parser
+          compiler/token
+          compiler/ast
+          compiler/span))
+
+; ─── Span placeholder ────────────────────────────────────────────────────────
+;
+; Full span tracking through the CST requires threading the opening/closing
+; token positions; that refinement is deferred to a later milestone.
+; For TW05-E/I the emitter does not use span values, so zero-spans suffice.
+
+(define (zero-span) (make-span 0 0 0))
+
+; ─── CST child accessors ─────────────────────────────────────────────────────
+;
+; A named CST node is (cons "rule-name" children-list).
+; The children-list is exactly the list passed to the (list …) constructor in
+; the generated cst-parser.  `list-ref` gives O(N) access to individual kids.
+;
+; Index summary for rules handled below:
+;
+;   "if-form"         [0]=lparen [1]=if-kw [2]=cond [3]=then [4]=else [5]=rparen
+;   "let-form"        [0]=lp [1]=kw [2]=inner-lp [3]=bindings [4]=inner-rp
+;                     [5]=first-body [6]=rest-bodies [7]=rparen
+;   "let-star-form"   same layout as "let-form"
+;   "lambda-form"     [0]=lp [1]=kw [2]=inner-lp [3]=params [4]=inner-rp
+;                     [5]=first-body [6]=rest-bodies [7]=rparen
+;   "begin-form"      [0]=lp [1]=kw [2]=first-expr [3]=rest-exprs [4]=rparen
+;   "define"          [0]=lp [1]=kw [2]=name-or-sig [3]=first-expr
+;                     [4]=rest-exprs [5]=rparen
+;   "apply"           [0]=lp [1]=fn-cst [2]=args-list [3]=rparen
+;   "quoted"          [0]=quote-tok [1]=name-tok
+;   "quote-form"      [0]=lp [1]=kw [2]=name-tok [3]=rparen
+;   "binding"         [0]=lp [1]=name-tok [2]=value-cst [3]=rparen
+;   "match-form"      [0]=lp [1]=kw [2]=scrutinee [3]=arms-list [4]=rparen
+;   "match-arm"       [0]=lp [1]=pat-cst [2]=first-body [3]=rest-bodies [4]=rparen
+;   "match-pat-alt"   [0]=lp [1]=ctor-tok [2]=bindings-list [3]=rparen
+;   "name-or-signature-alt" (simple)   [0]=name-tok [1]=opt-colon-type
+;   "name-or-signature-alt" (fun-sig)  [0]=lp [1]=name-tok [2]=params
+;                                      [3]=opt-arrow [4]=rparen
+;   "typed-param-alt" [0]=lp [1]=name-tok [2]=colon [3]=type [4]=rparen
+
+(define (cst-kids node)        (cdr node))
+(define (cst-kid0 node) (list-ref (cdr node) 0))
+(define (cst-kid1 node) (list-ref (cdr node) 1))
+(define (cst-kid2 node) (list-ref (cdr node) 2))
+(define (cst-kid3 node) (list-ref (cdr node) 3))
+(define (cst-kid4 node) (list-ref (cdr node) 4))
+(define (cst-kid5 node) (list-ref (cdr node) 5))
+(define (cst-kid6 node) (list-ref (cdr node) 6))
+(define (cst-kid7 node) (list-ref (cdr node) 7))
+
+; ─── Multi-body forms: wrap multiple body exprs in BeginExpr ─────────────────
+;
+; (let  (…) e1)        → body = e1
+; (let  (…) e1 e2 …)   → body = (BeginExpr (e1 e2 …) sp)
+;
+; This applies to let/let*/lambda/define-fn bodies.
+
+(define (make-body first rest sp)
+  (if (null? rest)
+      first
+      (BeginExpr (cons first rest) sp)))
+
+; ─── Core CST → AST dispatcher ───────────────────────────────────────────────
+;
+; Dispatches on node type:
+;   nil        → NilLit (empty optional / parse failure)
+;   Token      → extract-atom  (leaf token)
+;   named node → rule-specific extractor by (car cst) rule name
+
+(define (extract-expr cst)
+  (if (null? cst) (NilLit (zero-span))
+  ; Distinguish Token records from named CST non-terminal nodes.
+  ;
+  ; `token?` is generated as `(pair? v)` which matches ANY cons pair — it
+  ; cannot tell Tokens from CST non-terminals (which are also pairs).
+  ;
+  ; The reliable discriminant: `(car cst)`.
+  ;   Token record:        (cons kind lexeme span)   ← car is a TokenKind pair
+  ;   Named CST non-term:  (cons "rule-name" kids)   ← car is a string (not a pair)
+  ;
+  ; So `(pair? (car cst))` is true for Tokens and false for named nodes.
+  (if (pair? (car cst)) (extract-atom cst)
+  (let* ((rule (car cst)))
+    (if (string=? rule "quoted")          (extract-quoted cst)
+    (if (string=? rule "if-form")         (extract-if cst)
+    (if (string=? rule "let-form")        (extract-let cst)
+    (if (string=? rule "let-star-form")   (extract-let cst)
+    (if (string=? rule "begin-form")      (extract-begin cst)
+    (if (string=? rule "lambda-form")     (extract-lambda cst)
+    (if (string=? rule "quote-form")      (extract-quote-form cst)
+    (if (string=? rule "define")          (extract-define cst)
+    (if (string=? rule "apply")           (extract-apply cst)
+    (if (string=? rule "match-form")      (extract-match cst)
+    ; Meta-forms: the emitter only processes DefExpr nodes; all other top-level
+    ; forms are skipped.  We produce named CallExpr(VarRef kw, []) so that any
+    ; future consumer can still identify the form by its keyword.
+    (if (string=? rule "module-form")     (extract-meta-call "module")
+    (if (string=? rule "record-def")      (extract-meta-call "record")
+    (if (string=? rule "union-def")       (extract-meta-call "union")
+    (if (string=? rule "type-alias")      (extract-meta-call "type")
+    ; Unknown rule name — best-effort fallback
+    (extract-meta-call rule)))))))))))))))))))
+
+; ─── Meta-form helper ────────────────────────────────────────────────────────
+;
+; Produces CallExpr(VarRef kw, [], sp).  The emitter skips non-DefExpr nodes,
+; so the args list can be empty.
+
+(define (extract-meta-call kw)
+  (let* ((sp (zero-span)))
+    (CallExpr (VarRef kw sp) (list) sp)))
+
+; ─── Atom extraction ─────────────────────────────────────────────────────────
+;
+; Token kinds and their AST mappings:
+;   TkInteger              → IntLit  (string->number converts the lexeme string)
+;   TkBoolean "#t"         → BoolLit #t
+;   TkBoolean "#f"         → BoolLit #f
+;   TkString               → StrLit  (lexeme is the raw content between quotes)
+;   TkIdentifier "nil"     → NilLit
+;   TkIdentifier otherwise → VarRef
+
+(define (extract-atom tok)
+  (let* ((kind (token-kind tok))
+         (lex  (token-lexeme tok))
+         (sp   (token-span tok)))
+    (if (TkInteger? kind)
+        (IntLit (string->number lex) sp)
+    (if (TkBoolean? kind)
+        (BoolLit (string=? lex "#t") sp)
+    (if (TkString? kind)
+        (StrLit lex sp)
+    (if (TkIdentifier? kind)
+        (if (string=? lex "nil")
+            (NilLit sp)
+            (VarRef lex sp))
+    ; Unexpected token kind → NilLit as safe fallback
+    (NilLit sp)))))))
+
+; ─── 'foo → SymLit ───────────────────────────────────────────────────────────
+;
+; CST: ("quoted" quote-tok name-tok)
+;   kid[0] = TkQuote  (the ' character — unused in the AST)
+;   kid[1] = TkIdentifier (the symbol name string)
+
+(define (extract-quoted cst)
+  (let* ((name-tok (cst-kid1 cst))
+         (sp       (token-span name-tok)))
+    (SymLit (token-lexeme name-tok) sp)))
+
+; ─── (if cond then else) → IfExpr ────────────────────────────────────────────
+;
+; CST: ("if-form" lparen if-kw cond then else rparen)
+;                   0      1     2    3    4     5
+
+(define (extract-if cst)
+  (let* ((kids    (cst-kids cst))
+         (cond-e  (extract-expr (list-ref kids 2)))
+         (then-e  (extract-expr (list-ref kids 3)))
+         (else-e  (extract-expr (list-ref kids 4)))
+         (sp      (zero-span)))
+    (IfExpr cond-e then-e else-e sp)))
+
+; ─── (let/let* ((x e)…) body…) → LetExpr ────────────────────────────────────
+;
+; CST layout (both let-form and let-star-form):
+;   [0]=lp [1]=kw [2]=inner-lp [3]=bindings-list [4]=inner-rp
+;   [5]=first-body [6]=rest-bodies [7]=rparen
+;
+; Each binding CST: ("binding" lp name-tok value-cst rp)
+;   [0]=lp [1]=name-tok [2]=value-cst [3]=rparen
+;
+; LetExpr.bindings is a list of (cons name-string value-Expr) pairs.
+
+(define (extract-binding bcst)
+  (let* ((kids    (cst-kids bcst))
+         (name-tk (list-ref kids 1))
+         (val-cst (list-ref kids 2)))
+    (cons (token-lexeme name-tk) (extract-expr val-cst))))
+
+(define (extract-let cst)
+  (let* ((kids     (cst-kids cst))
+         (bindings (map extract-binding (list-ref kids 3)))
+         (first-b  (extract-expr (list-ref kids 5)))
+         (rest-b   (map extract-expr (list-ref kids 6)))
+         (sp       (zero-span))
+         (body     (make-body first-b rest-b sp)))
+    (LetExpr bindings body sp)))
+
+; ─── (begin e1 e2…) → BeginExpr ─────────────────────────────────────────────
+;
+; CST: ("begin-form" lp kw first-expr rest-exprs rp)
+;                    0  1      2           3       4
+
+(define (extract-begin cst)
+  (let* ((kids   (cst-kids cst))
+         (first  (extract-expr (list-ref kids 2)))
+         (rest   (map extract-expr (list-ref kids 3)))
+         (sp     (zero-span)))
+    (BeginExpr (cons first rest) sp)))
+
+; ─── (lambda (p…) body…) → LambdaExpr ───────────────────────────────────────
+;
+; CST: ("lambda-form" lp kw inner-lp params inner-rp first-body rest-bodies rp)
+;                     0  1     2         3       4        5           6       7
+;
+; The params-list (index 3) is a Twig list of raw TkIdentifier Token records
+; because the grammar uses {IDENTIFIER}* directly (no typed-param wrapper).
+
+(define (extract-lambda cst)
+  (let* ((kids    (cst-kids cst))
+         (params  (map token-lexeme (list-ref kids 3)))
+         (first-b (extract-expr (list-ref kids 5)))
+         (rest-b  (map extract-expr (list-ref kids 6)))
+         (sp      (zero-span))
+         (body    (make-body first-b rest-b sp)))
+    (LambdaExpr params body sp)))
+
+; ─── (quote foo) → SymLit ────────────────────────────────────────────────────
+;
+; CST: ("quote-form" lp quote-kw name-tok rp)
+;                    0     1         2     3
+
+(define (extract-quote-form cst)
+  (let* ((kids    (cst-kids cst))
+         (nam-tok (list-ref kids 2))
+         (sp      (token-span nam-tok)))
+    (SymLit (token-lexeme nam-tok) sp)))
+
+; ─── (define …) → DefExpr ────────────────────────────────────────────────────
+;
+; Two forms distinguished by the "name-or-signature-alt" CST at index 2:
+;
+;   Simple value define:
+;     (define name expr)
+;     name-or-sig = ("name-or-signature-alt" name-tok opt-colon)   ; 2 children
+;     → DefExpr(name, expr)
+;
+;   Function shorthand define:
+;     (define (name params…) body…)
+;     name-or-sig = ("name-or-signature-alt" lp name-tok params opt-arrow rp)
+;                                                                   ; 5 children
+;     → DefExpr(name, LambdaExpr(params, body))
+;
+; CST: ("define" lp kw name-or-sig first-expr rest-exprs rp)
+;                0  1       2           3           4     5
+
+(define (extract-typed-param-name tpcst)
+  ; A typed-param in a function signature is either:
+  ;   plain TkIdentifier token      → untyped param, name = lexeme
+  ;   "typed-param-alt" CST node    → (lp name-tok colon type rp), name at [1]
+  (if (token? tpcst)
+      (token-lexeme tpcst)
+      (token-lexeme (cst-kid1 tpcst))))
+
+(define (extract-define cst)
+  (let* ((kids (cst-kids cst))
+         (nos  (list-ref kids 2))   ; the "name-or-signature-alt" CST
+         (sp   (zero-span)))
+    ; Distinguish by child count of name-or-sig:
+    ;   2 children → simple name  (name-tok, opt-colon)
+    ;   5 children → function sig (lp, name-tok, params-list, opt-arrow, rp)
+    (if (= (length (cdr nos)) 2)
+        ; Simple: (define name expr)
+        (let* ((name-tok (cst-kid0 nos))
+               (name     (token-lexeme name-tok))
+               (rhs      (extract-expr (list-ref kids 3))))
+          (DefExpr name rhs sp))
+        ; Function shorthand: (define (name params…) body…)
+        (let* ((name-tok (cst-kid1 nos))
+               (name     (token-lexeme name-tok))
+               (params-l (cst-kid2 nos))
+               (params   (map extract-typed-param-name params-l))
+               (first-b  (extract-expr (list-ref kids 3)))
+               (rest-b   (map extract-expr (list-ref kids 4)))
+               (body     (make-body first-b rest-b sp)))
+          (DefExpr name (LambdaExpr params body sp) sp)))))
+
+; ─── (f arg…) → CallExpr ─────────────────────────────────────────────────────
+;
+; CST: ("apply" lp fn-cst args-list rp)
+;               0    1       2       3
+;
+; fn-cst is itself a full expr CST (the function position).
+; args-list is a Twig list of expr CSTs.
+
+(define (extract-apply cst)
+  (let* ((kids   (cst-kids cst))
+         (fn-ast (extract-expr (list-ref kids 1)))
+         (args   (map extract-expr (list-ref kids 2)))
+         (sp     (zero-span)))
+    (CallExpr fn-ast args sp)))
+
+; ─── (match scrutinee arm…) → CallExpr "match" ────────────────────────────────
+;
+; The AST union has no MatchExpr variant, so we encode match as a CallExpr
+; with the scrutinee as the first argument and arm-level CallExprs for the
+; remaining args.  The emitter (emit.tw) handles the "match" keyword specially.
+;
+; CST: ("match-form" lp match-kw scrutinee arms-list rp)
+;                    0     1          2         3      4
+;
+; Each arm CST: ("match-arm" lp pat-cst first-body rest-bodies rp)
+;                             0    1         2           3       4
+;
+; Pattern variants:
+;   raw TkIdentifier token  → wildcard / binding name → VarRef
+;   "match-pat-alt" node    → constructor pattern (lp ctor bindings rp)
+;                             → CallExpr(VarRef ctor, [VarRef binding…])
+
+(define (extract-match-pat pat sp)
+  (if (token? pat)
+      (VarRef (token-lexeme pat) sp)
+      ; "match-pat-alt": [0]=lp [1]=ctor-tok [2]=bindings-list [3]=rp
+      (let* ((pk    (cst-kids pat))
+             (ctor  (list-ref pk 1))
+             (blist (list-ref pk 2)))
+        (CallExpr (VarRef (token-lexeme ctor) sp)
+                  (map (lambda (bt) (VarRef (token-lexeme bt) sp))
+                       blist)
+                  sp))))
+
+(define (extract-match-arm acst)
+  ; Encode arm as CallExpr(VarRef "match-arm", [pat-ast, body-ast]).
+  (let* ((kids    (cst-kids acst))
+         (pat     (list-ref kids 1))
+         (first-b (extract-expr (list-ref kids 2)))
+         (rest-b  (map extract-expr (list-ref kids 3)))
+         (sp      (zero-span))
+         (body    (make-body first-b rest-b sp))
+         (pat-ast (extract-match-pat pat sp)))
+    (CallExpr (VarRef "match-arm" sp) (list pat-ast body) sp)))
+
+(define (extract-match cst)
+  (let* ((kids      (cst-kids cst))
+         (scrutinee (extract-expr (list-ref kids 2)))
+         (arms      (map extract-match-arm (list-ref kids 3)))
+         (sp        (zero-span)))
+    (CallExpr (VarRef "match" sp) (cons scrutinee arms) sp)))
+
+; ─── Public API ──────────────────────────────────────────────────────────────
+;
+; Same signatures as the hand-written LANG58 parser — all callers (including
+; main.tw) remain unchanged.
+
+(define (parse-expr tokens)
+  ; Parse one expression from the token stream.
+  ; Returns (cons rest-tokens ast-node) on success, nil on failure.
+  ;
+  ; Delegates to the generated CST parser for structural recognition,
+  ; then runs extract-expr on the resulting CST node.
+  (let* ((result (cst-parse-expr tokens)))
+    (if (null? result) nil
+      (cons (car result) (extract-expr (cdr result))))))
+
+(define (parse-program tokens)
+  ; Parse all top-level forms and return a flat list of Expr AST nodes.
+  ;
+  ; The CST "program" node layout:
+  ;   [0] optional module-form (nil when absent, or the module-form CST)
+  ;   [1] list of form CSTs (define | record-def | union-def | type-alias | expr)
+  ;
+  ; We extract the module-form first (producing a CallExpr "module" that the
+  ; emitter will skip) then map extract-expr over the forms list.
+  (let* ((result (cst-parse-program tokens)))
+    (if (null? result) (list)
+      (let* ((prog-cst   (cdr result))
+             (mod-opt    (cst-kid0 prog-cst))
+             (forms-list (cst-kid1 prog-cst)))
+        (let* ((mod-exprs  (if (null? mod-opt)
+                               (list)
+                               (list (extract-expr mod-opt))))
+               (form-exprs (map extract-expr forms-list)))
+          (append mod-exprs form-exprs))))))

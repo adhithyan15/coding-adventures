@@ -1,0 +1,8 @@
+{
+ "check_id": 203,
+ "idx": 83,
+ "slot": "credit_percentage",
+ "claimed_value": 15,
+ "scenario": "The customer's invoice for the affected month totaled $9,000. Uptime fell below the guaranteed threshold, entitling the customer to a 15% credit. The invoice bundled charges into a single line item labeled 'Services - April'.",
+ "cited_span": "entitling the customer to a 15% credit"
+}

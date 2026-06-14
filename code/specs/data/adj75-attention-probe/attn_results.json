@@ -1,0 +1,154 @@
+[
+  {
+    "id": "A1",
+    "bare": {
+      "p_correct": 0.5172173380851746,
+      "p_trap": 0.47019487619400024,
+      "ratio": 1.1000063256150265,
+      "attn_span_per_token": 0.005818105413709418,
+      "attn_span_vs_uniform": 0.8552614958152844,
+      "span_found": true
+    },
+    "discard": {
+      "p_correct": 0.5892683267593384,
+      "p_trap": 0.38946324586868286,
+      "ratio": 1.5130267952371166,
+      "attn_span_per_token": 0.005357156528286093,
+      "attn_span_vs_uniform": 0.9589310185632106,
+      "span_found": true
+    }
+  },
+  {
+    "id": "A2",
+    "bare": {
+      "p_correct": 0.5343433618545532,
+      "p_trap": 0.462661474943161,
+      "ratio": 1.1549337707882388,
+      "attn_span_per_token": 0.005906459643180521,
+      "attn_span_vs_uniform": 0.7087751571816625,
+      "span_found": true
+    },
+    "discard": {
+      "p_correct": 0.5756915807723999,
+      "p_trap": 0.4205259084701538,
+      "ratio": 1.3689800537301704,
+      "attn_span_per_token": 0.005696231699706307,
+      "attn_span_vs_uniform": 0.8658272183553587,
+      "span_found": true
+    }
+  },
+  {
+    "id": "A3",
+    "bare": {
+      "p_correct": 0.34300246834754944,
+      "p_trap": 0.6550942063331604,
+      "ratio": 0.5235925841375998,
+      "attn_span_per_token": 0.007311581951701858,
+      "attn_span_vs_uniform": 0.8335203424940119,
+      "span_found": true
+    },
+    "discard": {
+      "p_correct": 0.2895347774028778,
+      "p_trap": 0.7086905837059021,
+      "ratio": 0.40854892679515437,
+      "attn_span_per_token": 0.006202029797350406,
+      "attn_span_vs_uniform": 0.9054963504131592,
+      "span_found": true
+    }
+  },
+  {
+    "id": "A4",
+    "bare": {
+      "p_correct": 0.9378969073295593,
+      "p_trap": 0.05201881006360054,
+      "ratio": 18.02995697484899,
+      "attn_span_per_token": 0.010462331795376182,
+      "attn_span_vs_uniform": 1.0880825067191229,
+      "span_found": true
+    },
+    "discard": {
+      "p_correct": 0.8934767842292786,
+      "p_trap": 0.09512365609407425,
+      "ratio": 9.392792717572362,
+      "attn_span_per_token": 0.00969259386814277,
+      "attn_span_vs_uniform": 1.3181927660674169,
+      "span_found": true
+    }
+  },
+  {
+    "id": "A5",
+    "bare": {
+      "p_correct": 0.6981247663497925,
+      "p_trap": 0.30000266432762146,
+      "ratio": 2.3270618876484277,
+      "attn_span_per_token": 0.006878852395554229,
+      "attn_span_vs_uniform": 0.7360372063243025,
+      "span_found": true
+    },
+    "discard": {
+      "p_correct": 0.7383279800415039,
+      "p_trap": 0.25600266456604004,
+      "ratio": 2.884063653372796,
+      "attn_span_per_token": 0.0068969706123122405,
+      "attn_span_vs_uniform": 0.9586789151114014,
+      "span_found": true
+    }
+  },
+  {
+    "id": "A6",
+    "bare": {
+      "p_correct": 0.9935638308525085,
+      "p_trap": 0.0028596490155905485,
+      "ratio": 347.44257964375635,
+      "attn_span_per_token": 0.012105483759417742,
+      "attn_span_vs_uniform": 1.2831812784982808,
+      "span_found": true
+    },
+    "discard": {
+      "p_correct": 0.9875091910362244,
+      "p_trap": 0.007824447937309742,
+      "ratio": 126.20816177042094,
+      "attn_span_per_token": 0.01148445960219154,
+      "attn_span_vs_uniform": 1.5848554251024325,
+      "span_found": true
+    }
+  },
+  {
+    "id": "A7",
+    "bare": {
+      "p_correct": 0.019563879817724228,
+      "p_trap": 0.968884289264679,
+      "ratio": 0.020192173652203566,
+      "attn_span_per_token": 0.0047311618818639545,
+      "attn_span_vs_uniform": 0.5630082639418106,
+      "span_found": true
+    },
+    "discard": {
+      "p_correct": 0.058006830513477325,
+      "p_trap": 0.9227399826049805,
+      "ratio": 0.06286367948391991,
+      "attn_span_per_token": 0.004730179880425567,
+      "attn_span_vs_uniform": 0.7142571619442606,
+      "span_found": true
+    }
+  },
+  {
+    "id": "A8",
+    "bare": {
+      "p_correct": 0.003889289451763034,
+      "p_trap": 0.9931451082229614,
+      "ratio": 0.003916134127390664,
+      "attn_span_per_token": 0.002564215595460458,
+      "attn_span_vs_uniform": 0.2769352843097295,
+      "span_found": true
+    },
+    "discard": {
+      "p_correct": 0.001836929703131318,
+      "p_trap": 0.994709849357605,
+      "ratio": 0.0018466990191336986,
+      "attn_span_per_token": 0.0021152368317416403,
+      "attn_span_vs_uniform": 0.29613315644382965,
+      "span_found": true
+    }
+  }
+]

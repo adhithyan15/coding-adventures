@@ -79,14 +79,16 @@ func TestComputeLanguagesNeededIncludesSafeCIWorkflowToolchains(t *testing.T) {
 		map[string]bool{"dotnet": true},
 	)
 
-	for _, toolchain := range []string{"go", "python", "dotnet"} {
+	for _, toolchain := range []string{"python", "dotnet"} {
 		if !needed[toolchain] {
 			t.Fatalf("expected %s to be enabled, got %v", toolchain, needed)
 		}
 	}
 
-	if needed["rust"] {
-		t.Fatalf("did not expect unrelated rust toolchain: %v", needed)
+	for _, toolchain := range []string{"go", "rust"} {
+		if needed[toolchain] {
+			t.Fatalf("did not expect unrelated %s toolchain: %v", toolchain, needed)
+		}
 	}
 }
 
@@ -114,17 +116,17 @@ func TestCollectAffectedLanguages(t *testing.T) {
 		{
 			name:        "only python affected",
 			affectedSet: map[string]bool{"python/logic-gates": true, "python/starlark-vm": true},
-			wantLangs:   map[string]bool{"python": true, "go": true}, // go always needed
+			wantLangs:   map[string]bool{"python": true},
 		},
 		{
 			name:        "multiple languages affected",
 			affectedSet: map[string]bool{"python/logic-gates": true, "rust/starlark-vm": true, "dart/hello-world": true},
-			wantLangs:   map[string]bool{"python": true, "rust": true, "dart": true, "go": true},
+			wantLangs:   map[string]bool{"python": true, "rust": true, "dart": true},
 		},
 		{
 			name:        "empty affected set",
 			affectedSet: map[string]bool{},
-			wantLangs:   map[string]bool{"go": true}, // go always needed
+			wantLangs:   map[string]bool{},
 		},
 		{
 			name:        "all affected",
@@ -135,13 +137,7 @@ func TestCollectAffectedLanguages(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Simulate the language collection logic from detectNeededLanguages.
-			needed := map[string]bool{"go": true} // go always needed
-			for _, pkg := range packages {
-				if tt.affectedSet[pkg.Name] {
-					needed[toolchainForPackageLanguage(pkg.Language)] = true
-				}
-			}
+			needed := computeLanguagesNeeded(packages, tt.affectedSet, false, nil)
 
 			for _, lang := range allToolchains {
 				want := tt.wantLangs[lang]
@@ -156,16 +152,7 @@ func TestCollectAffectedLanguages(t *testing.T) {
 
 // TestForceModeSetsAllLanguages verifies that --force marks all languages needed.
 func TestForceModeSetsAllLanguages(t *testing.T) {
-	needed := make(map[string]bool)
-	needed["go"] = true
-
-	// Simulate force mode.
-	force := true
-	if force {
-		for _, lang := range allToolchains {
-			needed[lang] = true
-		}
-	}
+	needed := computeLanguagesNeeded(nil, nil, true, nil)
 
 	for _, lang := range allToolchains {
 		if !needed[lang] {
@@ -177,16 +164,7 @@ func TestForceModeSetsAllLanguages(t *testing.T) {
 // TestNilAffectedSetMeansAllLanguages verifies that nil affectedSet
 // (git diff unavailable) marks all languages needed.
 func TestNilAffectedSetMeansAllLanguages(t *testing.T) {
-	needed := make(map[string]bool)
-	needed["go"] = true
-
-	// Simulate nil affected set (git diff unavailable).
-	var affectedSet map[string]bool
-	if affectedSet == nil {
-		for _, lang := range allToolchains {
-			needed[lang] = true
-		}
-	}
+	needed := computeLanguagesNeeded(nil, nil, false, nil)
 
 	for _, lang := range allToolchains {
 		if !needed[lang] {
@@ -195,23 +173,22 @@ func TestNilAffectedSetMeansAllLanguages(t *testing.T) {
 	}
 }
 
-// TestGoAlwaysNeeded verifies Go is always in the needed set regardless
-// of what packages are affected.
-func TestGoAlwaysNeeded(t *testing.T) {
+// TestGoOnlyNeededForGoPackages verifies the Go language flag means Go package
+// code is affected, not merely that CI must compile the build tool.
+func TestGoOnlyNeededForGoPackages(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/logic-gates", Language: "python"},
-	}
-	affectedSet := map[string]bool{"python/logic-gates": true}
-
-	needed := map[string]bool{"go": true}
-	for _, pkg := range packages {
-		if affectedSet[pkg.Name] {
-			needed[toolchainForPackageLanguage(pkg.Language)] = true
-		}
+		{Name: "go/directed-graph", Language: "go"},
 	}
 
+	needed := computeLanguagesNeeded(packages, map[string]bool{"python/logic-gates": true}, false, nil)
+	if needed["go"] {
+		t.Error("Go should not be marked needed for a Python-only package change")
+	}
+
+	needed = computeLanguagesNeeded(packages, map[string]bool{"go/directed-graph": true}, false, nil)
 	if !needed["go"] {
-		t.Error("Go should always be needed (build tool is Go)")
+		t.Error("Go should be marked needed when a Go package changes")
 	}
 }
 

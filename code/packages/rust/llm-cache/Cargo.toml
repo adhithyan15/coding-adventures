@@ -1,0 +1,10 @@
+[package]
+name = "llm-cache"
+version = "0.3.0"
+edition = "2021"
+description = "LM00c — content-addressed prompt cache. v0.3 adds CacheStatsHandle, a cloneable handle on a CachingClient's stats so callers can read hit/miss rates after the typed client has been wrapped in Box<dyn LlmClient>."
+
+[dependencies]
+llm-gateway = { path = "../llm-gateway" }
+llm-primitives = { path = "../llm-primitives" }
+serde_json = "1"

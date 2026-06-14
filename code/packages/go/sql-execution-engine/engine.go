@@ -128,41 +128,43 @@ func ExecuteAll(sql string, source DataSource) ([]*QueryResult, error) {
 // findSelectNode navigates from a "program" root to the first "select_stmt"
 // node. Returns UnsupportedStatementError if the first statement is not SELECT.
 func findSelectNode(program *parser.ASTNode) (*parser.ASTNode, error) {
-	// program → statement → select_stmt
-	for _, child := range program.Children {
-		stmtNode, ok := child.(*parser.ASTNode)
-		if !ok {
-			continue
-		}
-		if stmtNode.RuleName == "statement" {
-			return findSelectInStatement(stmtNode)
-		}
-	}
-	return nil, fmt.Errorf("no statements found in program")
+	return findSelectInStatement(program)
 }
 
 // findSelectInStatement extracts the select_stmt from a statement node.
 // Returns UnsupportedStatementError for any non-SELECT statement type.
 func findSelectInStatement(stmt *parser.ASTNode) (*parser.ASTNode, error) {
-	for _, child := range stmt.Children {
-		node, ok := child.(*parser.ASTNode)
+	kind, node := findFirstConcreteStatement(stmt)
+	switch kind {
+	case "select_stmt":
+		return node, nil
+	case "insert_stmt":
+		return nil, &UnsupportedStatementError{StatementType: "INSERT"}
+	case "update_stmt":
+		return nil, &UnsupportedStatementError{StatementType: "UPDATE"}
+	case "delete_stmt":
+		return nil, &UnsupportedStatementError{StatementType: "DELETE"}
+	case "create_table_stmt":
+		return nil, &UnsupportedStatementError{StatementType: "CREATE TABLE"}
+	case "drop_table_stmt":
+		return nil, &UnsupportedStatementError{StatementType: "DROP TABLE"}
+	}
+	return nil, fmt.Errorf("could not find statement type in AST node %q", stmt.RuleName)
+}
+
+func findFirstConcreteStatement(node *parser.ASTNode) (string, *parser.ASTNode) {
+	switch node.RuleName {
+	case "select_stmt", "insert_stmt", "update_stmt", "delete_stmt", "create_table_stmt", "drop_table_stmt":
+		return node.RuleName, node
+	}
+	for _, child := range node.Children {
+		childNode, ok := child.(*parser.ASTNode)
 		if !ok {
 			continue
 		}
-		switch node.RuleName {
-		case "select_stmt":
-			return node, nil
-		case "insert_stmt":
-			return nil, &UnsupportedStatementError{StatementType: "INSERT"}
-		case "update_stmt":
-			return nil, &UnsupportedStatementError{StatementType: "UPDATE"}
-		case "delete_stmt":
-			return nil, &UnsupportedStatementError{StatementType: "DELETE"}
-		case "create_table_stmt":
-			return nil, &UnsupportedStatementError{StatementType: "CREATE TABLE"}
-		case "drop_table_stmt":
-			return nil, &UnsupportedStatementError{StatementType: "DROP TABLE"}
+		if kind, found := findFirstConcreteStatement(childNode); found != nil {
+			return kind, found
 		}
 	}
-	return nil, fmt.Errorf("could not find statement type in AST node %q", stmt.RuleName)
+	return "", nil
 }

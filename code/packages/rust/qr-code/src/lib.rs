@@ -23,7 +23,7 @@
 //!   → ModuleGrid
 //! ```
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 use barcode_2d::{layout, Barcode2DLayoutConfig, ModuleGrid, ModuleShape};
 use gf256::{multiply as gf_mul, power as gf_power};
@@ -846,6 +846,50 @@ pub fn encode_and_layout(
     ))
 }
 
+/// One-shot convenience: encode → layout → PNG bytes.
+///
+/// Combines [`encode_and_layout`] with `barcode_2d::render_scene_png`,
+/// dispatching to the platform-default rendering backend
+/// (Metal on macOS, Direct2D on Windows, Cairo on Linux, Skia as fallback).
+///
+/// Pass `None` for `config` to use [`Barcode2DLayoutConfig::default()`] (10 px
+/// modules, 4-module quiet zone, black-on-white).
+///
+/// # Errors
+/// Returns a `String` describing the first failure encountered:
+/// - [`QRCodeError::InputTooLong`] if the input exceeds version-40 capacity.
+/// - [`QRCodeError::LayoutError`] if `barcode-2d` layout rejects the config.
+/// - A render-backend error string if PNG encoding fails.
+///
+/// # Example
+/// ```
+/// use qr_code::{render_png, EccLevel};
+/// let png = render_png("HELLO WORLD", EccLevel::M, None).unwrap();
+/// assert_eq!(&png[..8], b"\x89PNG\r\n\x1a\n");
+/// ```
+pub fn render_png(
+    data: &str,
+    ecc: EccLevel,
+    config: Option<&Barcode2DLayoutConfig>,
+) -> Result<Vec<u8>, String> {
+    // Use the caller-supplied layout config, or fall back to the crate default
+    // (10 px modules, 4-module quiet zone).
+    let default_config;
+    let cfg = match config {
+        Some(c) => c,
+        None => {
+            default_config = Barcode2DLayoutConfig::default();
+            &default_config
+        }
+    };
+
+    // Step 1: QR Code encoding + barcode-2d pixel layout → PaintScene.
+    let scene = encode_and_layout(data, ecc, cfg).map_err(|e| e.to_string())?;
+
+    // Step 2: PaintScene → PNG bytes via the platform-default rendering hub.
+    barcode_2d::render_scene_png(&scene)
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Tests
 // ─────────────────────────────────────────────────────────────────────────────
@@ -894,7 +938,7 @@ mod tests {
 
     #[test]
     fn version_constant() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     #[test]
@@ -1059,6 +1103,28 @@ mod tests {
         let scene = encode_and_layout("HELLO", EccLevel::M, &config).unwrap();
         assert!(scene.width > 0.0);
         assert!(scene.height > 0.0);
+    }
+
+    /// Verify that `render_png` produces a well-formed PNG file.
+    ///
+    /// The PNG format mandates an 8-byte magic signature at byte offset 0:
+    ///   0x89 'P' 'N' 'G' CR LF 0x1A LF
+    /// Any valid PNG file — regardless of dimensions or colour depth — MUST
+    /// start with these exact bytes (ISO 15948 / PNG spec §5.2).
+    #[test]
+    fn qr_code_render_png_produces_valid_png() {
+        let png = render_png("HELLO", EccLevel::M, None).unwrap();
+        // PNG magic bytes: [0x89, 0x50('P'), 0x4E('N'), 0x47('G'), 0x0D, 0x0A, 0x1A, 0x0A]
+        let expected_magic: [u8; 8] = [0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A];
+        assert!(
+            png.len() >= 8,
+            "PNG output too short ({} bytes); expected at least 8 for magic signature",
+            png.len()
+        );
+        assert_eq!(
+            &png[..8], &expected_magic,
+            "PNG magic bytes mismatch — output is not a valid PNG file"
+        );
     }
 
     #[test]

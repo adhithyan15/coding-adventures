@@ -15,6 +15,7 @@ that make relational programs feel like programs:
   and `abolish(...)`
 - dynamic predicate declarations and branch-local runtime database overlays
 - finite-domain store preservation for CLP(FD)-style builtins
+- Prolog runtime flag overlay preservation for dialect/runtime builtins
 - scoped search control via `cut()` as the library form of Prolog `!/0`
 - recursive solving with depth-first backtracking
 - deferred recursive goal builders via `defer(...)`

@@ -1,0 +1,7 @@
+{
+ "idx": 14,
+ "id": "ENV-5",
+ "scenario": "Apex Finishing reported generating 1,240 kg of spent solvent in March. The facility manager notes that a large portion of that solvent was sent off-site for reclamation and recycling rather than disposal.",
+ "policy": "A generator of hazardous waste is a Large Quantity Generator (LQG), subject to full RCRA permitting-related storage limits, if it generates 1,000 kg or more of hazardous waste in a calendar month. A generator below that threshold is a Small Quantity Generator with less stringent requirements.",
+ "question": "Is Apex Finishing a Large Quantity Generator for March?"
+}

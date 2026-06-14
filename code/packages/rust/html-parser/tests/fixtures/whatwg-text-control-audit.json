@@ -1,0 +1,4206 @@
+{
+  "case_count": 698,
+  "cases": [
+    {
+      "axis": "rawtext-elements",
+      "id": "adoption02-dat-19",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "adoption02.dat:19"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "blocks-dat-52",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "blocks.dat:52"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "blocks-dat-53",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "blocks.dat:53"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "blocks-dat-60",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "blocks.dat:60"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "blocks-dat-61",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "blocks.dat:61"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "comments01-dat-83",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "comments01.dat:83"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-124",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:124"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-125",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:125"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-126",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:126"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-127",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:127"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-128",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:128"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-129",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:129"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-130",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:130"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-131",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:131"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-132",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:132"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-133",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:133"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-134",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:134"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-135",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:135"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-136",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:136"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-137",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:137"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-138",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:138"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-139",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:139"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-140",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:140"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-141",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:141"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-142",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:142"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-143",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:143"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-144",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:144"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-145",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:145"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "domjs-unsafe-dat-146",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "domjs-unsafe.dat:146"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "html5test-com-dat-285",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "html5test-com.dat:285"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "html5test-com-dat-286",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "html5test-com.dat:286"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "html5test-com-dat-287",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "html5test-com.dat:287"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "html5test-com-dat-288",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "html5test-com.dat:288"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-327",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:327"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-328",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:328"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-329",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:329"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-330",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:330"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-331",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:331"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-332",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:332"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-333",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:333"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-334",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:334"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-335",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:335"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-336",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:336"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-337",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:337"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-338",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:338"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-339",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:339"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-340",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:340"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-341",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:341"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-342",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:342"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-343",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:343"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "noscript01-dat-344",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "noscript01.dat:344"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "plain-text-unsafe-dat-358",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "plain-text-unsafe.dat:358"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "plain-text-unsafe-dat-372",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "plain-text-unsafe.dat:372"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "plain-text-unsafe-dat-373",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "plain-text-unsafe.dat:373"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "plain-text-unsafe-dat-374",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "plain-text-unsafe.dat:374"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-407",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:407"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-408",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:408"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-409",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:409"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-410",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:410"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-411",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:411"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-412",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:412"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-413",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:413"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-414",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:414"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-415",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:415"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-416",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:416"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-417",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:417"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-418",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:418"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-419",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:419"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-420",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:420"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-421",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:421"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-422",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:422"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-423",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:423"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-424",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:424"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-425",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:425"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-426",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:426"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-427",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:427"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-428",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:428"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-429",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:429"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-430",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:430"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-431",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:431"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scriptdata01-dat-432",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scriptdata01.dat:432"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "template-dat-498",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "template.dat:498"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "template-dat-514",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "template.dat:514"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "template-dat-548",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "template.dat:548"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "template-dat-549",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "template.dat:549"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "template-dat-561",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "template.dat:561"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-592",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:592"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests1-dat-615",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests1.dat:615"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests1-dat-616",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests1.dat:616"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-620",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:620"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-649",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:649"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests1-dat-650",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests1.dat:650"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-653",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:653"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-654",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:654"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-664",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:664"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-666",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:666"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests1-dat-670",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests1.dat:670"
+    },
+    {
+      "axis": "stray-text-control-end-tags",
+      "id": "tests1-dat-675",
+      "reason": "stray text-mode end-tag recovery around body and table content",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "stray-text-control-end-tags",
+      "id": "tests1-dat-676",
+      "reason": "stray text-mode end-tag recovery around body and table content",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests10-dat-713",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests10.dat:713"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests10-dat-717",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests10.dat:717"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests15-dat-759",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests15.dat:759"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests15-dat-764",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests15.dat:764"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests15-dat-766",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests15.dat:766"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-768",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:768"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-769",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:769"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-770",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:770"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-771",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:771"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-772",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:772"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-773",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:773"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-774",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:774"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-775",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:775"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-776",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:776"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-777",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:777"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-778",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:778"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-779",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:779"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-780",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:780"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-781",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:781"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-782",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:782"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-783",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:783"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-784",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:784"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-785",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:785"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-786",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:786"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-787",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:787"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-788",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:788"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-789",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:789"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-790",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:790"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-791",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:791"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-792",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:792"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-793",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:793"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-794",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:794"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-795",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:795"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-796",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:796"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-797",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:797"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-798",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:798"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-799",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:799"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-800",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:800"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-801",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:801"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-802",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:802"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-803",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:803"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-804",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:804"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-805",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:805"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-806",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:806"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-807",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:807"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-808",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:808"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-809",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:809"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-810",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:810"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-811",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:811"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-812",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:812"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-813",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:813"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-814",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:814"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-815",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:815"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-816",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:816"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-817",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:817"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-818",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:818"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-819",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:819"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-820",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:820"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-821",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:821"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-822",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:822"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-823",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:823"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-824",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:824"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-825",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:825"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-826",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:826"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-827",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:827"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-828",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:828"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-829",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:829"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-830",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:830"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-831",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:831"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-832",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:832"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-833",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:833"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-834",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:834"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-835",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:835"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-836",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:836"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-837",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:837"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-838",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:838"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-839",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:839"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-840",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:840"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-841",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:841"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-842",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:842"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-843",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:843"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-844",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:844"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-845",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:845"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-846",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:846"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-847",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:847"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-848",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:848"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-849",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:849"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-850",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:850"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-851",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:851"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-852",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:852"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-853",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:853"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-854",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:854"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-855",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:855"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-856",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:856"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-857",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:857"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-858",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:858"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-859",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:859"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-860",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:860"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-861",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:861"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-862",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:862"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-863",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:863"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-864",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:864"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-865",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:865"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-866",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:866"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-867",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:867"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-868",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:868"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-869",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:869"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-870",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:870"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-871",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:871"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-872",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:872"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-873",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:873"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-874",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:874"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-875",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:875"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-876",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:876"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-877",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:877"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-878",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:878"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-879",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:879"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-880",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:880"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-881",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:881"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-882",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:882"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-883",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:883"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-884",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:884"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-885",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:885"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-886",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:886"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-887",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:887"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-888",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:888"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-889",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:889"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-890",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:890"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-891",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:891"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-892",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:892"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-893",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:893"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-894",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:894"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-895",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:895"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-896",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:896"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-897",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:897"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-898",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:898"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-899",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:899"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-900",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:900"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-901",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:901"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-902",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:902"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-903",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:903"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-904",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:904"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-905",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:905"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-906",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:906"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-907",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:907"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-908",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:908"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-909",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:909"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-910",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:910"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-911",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:911"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-912",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:912"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-913",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:913"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-914",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:914"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-915",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:915"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-916",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:916"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-917",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:917"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-918",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:918"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-919",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:919"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-920",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:920"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-921",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:921"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-922",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:922"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-923",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:923"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-924",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:924"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-925",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:925"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-926",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:926"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-927",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:927"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-928",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:928"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-929",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:929"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-930",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:930"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-931",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:931"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-932",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:932"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-933",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:933"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-934",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:934"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-935",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:935"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-936",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:936"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-937",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:937"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-938",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:938"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-939",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:939"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-940",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:940"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-941",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:941"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-942",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:942"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-943",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:943"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-944",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:944"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-945",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:945"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-946",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:946"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-947",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:947"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-948",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:948"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-949",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:949"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-950",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:950"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-951",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:951"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-952",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:952"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-953",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:953"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-954",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:954"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-955",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:955"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-956",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:956"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-957",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:957"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-958",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:958"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-959",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:959"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-960",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:960"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-961",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:961"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-978",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:978"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-979",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:979"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-980",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:980"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-981",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:981"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests18-dat-982",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests18.dat:982"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-983",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:983"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-984",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:984"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-985",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:985"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-986",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:986"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-987",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:987"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-988",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:988"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-989",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:989"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-990",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:990"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-991",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:991"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-992",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:992"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-993",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:993"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-994",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:994"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-995",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:995"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-996",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:996"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-997",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:997"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-998",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:998"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-999",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:999"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-1000",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:1000"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-1001",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:1001"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests18-dat-1002",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests18.dat:1002"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-1003",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:1003"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-1004",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:1004"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests18-dat-1005",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests18.dat:1005"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests18-dat-1006",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests18.dat:1006"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests18-dat-1007",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests18.dat:1007"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-1008",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:1008"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-1009",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:1009"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-1010",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:1010"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-1011",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:1011"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests19-dat-1017",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests19.dat:1017"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests19-dat-1018",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests19.dat:1018"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests19-dat-1019",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests19.dat:1019"
+    },
+    {
+      "axis": "stray-text-control-end-tags",
+      "id": "tests19-dat-1049",
+      "reason": "stray text-mode end-tag recovery around body and table content",
+      "source": "tests19.dat:1049"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests19-dat-1062",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests19.dat:1062"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests19-dat-1063",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests19.dat:1063"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests19-dat-1082",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests19.dat:1082"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests19-dat-1083",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests19.dat:1083"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests19-dat-1084",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests19.dat:1084"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests19-dat-1115",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests19.dat:1115"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests20-dat-1145",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests20.dat:1145"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests20-dat-1146",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests20.dat:1146"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests20-dat-1151",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests20.dat:1151"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests20-dat-1154",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests20.dat:1154"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests20-dat-1166",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests20.dat:1166"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests2-dat-2",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests2.dat:2"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests2-dat-12",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests2.dat:12"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests2-dat-13",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests2.dat:13"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests2-dat-14",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests2.dat:14"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests2-dat-19",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests2.dat:19"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests2-dat-47",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests2.dat:47"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests2-dat-48",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests2.dat:48"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests2-dat-52",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests2.dat:52"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests3-dat-1",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests3.dat:1"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests3-dat-2",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests3.dat:2"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-1",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:1"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-2",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:2"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-3",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:3"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-4",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:4"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-5",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:5"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-6",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:6"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests5-dat-7",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests5.dat:7"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests5-dat-8",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests5.dat:8"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests5-dat-9",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests5.dat:9"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-10",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:10"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-11",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:11"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests5-dat-12",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests5.dat:12"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests5-dat-13",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests5.dat:13"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests5-dat-14",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests5.dat:14"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests5-dat-15",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests5.dat:15"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests5-dat-16",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests5.dat:16"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests5-dat-17",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests5.dat:17"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests7-dat-1",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests7.dat:1"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests3-dat-3",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests3.dat:3"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests3-dat-4",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests3.dat:4"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests3-dat-5",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests3.dat:5"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests3-dat-6",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests3.dat:6"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests3-dat-7",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests3.dat:7"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests3-dat-8",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests3.dat:8"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests3-dat-9",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests3.dat:9"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests3-dat-10",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests3.dat:10"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests3-dat-11",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests3.dat:11"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests3-dat-12",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests3.dat:12"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests3-dat-15",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests3.dat:15"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests3-dat-16",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests3.dat:16"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests3-dat-17",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests3.dat:17"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests3-dat-18",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests3.dat:18"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests3-dat-19",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests3.dat:19"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests6-dat-3",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests6.dat:3"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests6-dat-4",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests6.dat:4"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests6-dat-9",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests6.dat:9"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests7-dat-2",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests7.dat:2"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests7-dat-3",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests7.dat:3"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests7-dat-4",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests7.dat:4"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests7-dat-12",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests7.dat:12"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests7-dat-13",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests7.dat:13"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests7-dat-16",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests7.dat:16"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests4-dat-2",
+      "reason": "fragment parsing under RCDATA, RAWTEXT, and PLAINTEXT contexts",
+      "source": "tests4.dat:2"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests4-dat-3",
+      "reason": "fragment parsing under RCDATA, RAWTEXT, and PLAINTEXT contexts",
+      "source": "tests4.dat:3"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests4-dat-4",
+      "reason": "fragment parsing under RCDATA, RAWTEXT, and PLAINTEXT contexts",
+      "source": "tests4.dat:4"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests4-dat-5",
+      "reason": "fragment parsing under RCDATA, RAWTEXT, and PLAINTEXT contexts",
+      "source": "tests4.dat:5"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests4-dat-7",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests4.dat:7"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests4-dat-8",
+      "reason": "fragment parsing under RCDATA, RAWTEXT, and PLAINTEXT contexts",
+      "source": "tests4.dat:8"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests-innerhtml-1-dat-78",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests_innerHTML_1.dat:78"
+    },
+    {
+      "axis": "fragment-context",
+      "id": "tests4-dat-9",
+      "reason": "fragment parsing under RCDATA, RAWTEXT, and PLAINTEXT contexts",
+      "source": "tests4.dat:9"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-27",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:27"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests1-dat-50",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests1.dat:50"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests1-dat-51",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests1.dat:51"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-55",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:55"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-84",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:84"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests1-dat-85",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests1.dat:85"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-88",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:88"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-89",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:89"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-99",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:99"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests1-dat-101",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests1.dat:101"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests1-dat-105",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests1.dat:105"
+    },
+    {
+      "axis": "stray-text-control-end-tags",
+      "id": "tests1-dat-110",
+      "reason": "stray text-mode end-tag recovery around body and table content",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "stray-text-control-end-tags",
+      "id": "tests1-dat-111",
+      "reason": "stray text-mode end-tag recovery around body and table content",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests10-dat-36",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests10.dat:36"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests10-dat-40",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests10.dat:40"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests15-dat-6",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests15.dat:6"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests15-dat-11",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests15.dat:11"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests15-dat-13",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests15.dat:13"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-1",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:1"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-2",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:2"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-3",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:3"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-4",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:4"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-5",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:5"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-6",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:6"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-7",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:7"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-8",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:8"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-9",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:9"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-10",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:10"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-11",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:11"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-12",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:12"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-13",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:13"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-14",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:14"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-15",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:15"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-16",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:16"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-17",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:17"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-18",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:18"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-19",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:19"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-20",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:20"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-21",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:21"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-22",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:22"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-23",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:23"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-24",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:24"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-25",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:25"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-26",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:26"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-27",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:27"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-28",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:28"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-29",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:29"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-30",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:30"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-31",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:31"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-32",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:32"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-33",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:33"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-34",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:34"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-35",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:35"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-36",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:36"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-37",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:37"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-38",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:38"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-39",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:39"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-40",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:40"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-41",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:41"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-42",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:42"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-43",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:43"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-44",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:44"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-45",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:45"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-46",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:46"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-47",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:47"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-48",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:48"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-49",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:49"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-50",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:50"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-51",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:51"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-52",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:52"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-53",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:53"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-54",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:54"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-55",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:55"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-56",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:56"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-57",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:57"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-58",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:58"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-59",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:59"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-60",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:60"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-61",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:61"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-62",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:62"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-63",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:63"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-64",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:64"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-65",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:65"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-66",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:66"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-67",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:67"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-68",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:68"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-69",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:69"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-70",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:70"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-71",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:71"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-72",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:72"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-73",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:73"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-74",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:74"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-75",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:75"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-76",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:76"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-77",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:77"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-78",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:78"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-79",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:79"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-80",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:80"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-81",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:81"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-82",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:82"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-83",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:83"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-84",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:84"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-85",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:85"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-86",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:86"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-87",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:87"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-88",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:88"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-89",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:89"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-90",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:90"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-91",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:91"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-92",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:92"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-93",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:93"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-94",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:94"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-95",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:95"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-96",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:96"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-97",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:97"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-98",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:98"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-99",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:99"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-100",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:100"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-101",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:101"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-102",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:102"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-103",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:103"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-104",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:104"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-105",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:105"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-106",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:106"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-107",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:107"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-108",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:108"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-109",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:109"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-110",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:110"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-111",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:111"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-112",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:112"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-113",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:113"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-114",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:114"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-115",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:115"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-116",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:116"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-117",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:117"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-118",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:118"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-119",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:119"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-120",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:120"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-121",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:121"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-122",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:122"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-123",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:123"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-124",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:124"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-125",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:125"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-126",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:126"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-127",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:127"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-128",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:128"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-129",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:129"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-130",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:130"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-131",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:131"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-132",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:132"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-133",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:133"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-134",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:134"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-135",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:135"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-136",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:136"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-137",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:137"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-138",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:138"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-139",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:139"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-140",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:140"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-141",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:141"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-142",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:142"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-143",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:143"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-144",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:144"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-145",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:145"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-146",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:146"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-147",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:147"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-148",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:148"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-149",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:149"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-150",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:150"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-151",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:151"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-152",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:152"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-153",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:153"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-154",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:154"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-155",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:155"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-156",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:156"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-157",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:157"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-158",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:158"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-159",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:159"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-160",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:160"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-161",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:161"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-162",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:162"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-163",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:163"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-164",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:164"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-165",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:165"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-166",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:166"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-167",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:167"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-168",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:168"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-169",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:169"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-170",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:170"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-171",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:171"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-172",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:172"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-173",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:173"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-174",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:174"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-175",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:175"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-176",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:176"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-177",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:177"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-178",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:178"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-179",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:179"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-180",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:180"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-181",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:181"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-182",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:182"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-183",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:183"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-184",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:184"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-185",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:185"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests16-dat-186",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests16.dat:186"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-187",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:187"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests16-dat-188",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests16.dat:188"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-189",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:189"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests16-dat-190",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests16.dat:190"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-191",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:191"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-192",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:192"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-193",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:193"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests16-dat-194",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests16.dat:194"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-1",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:1"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-2",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:2"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-3",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:3"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-4",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:4"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "tests18-dat-5",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "tests18.dat:5"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-6",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:6"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-7",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:7"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-8",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:8"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-9",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:9"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-10",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:10"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-11",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:11"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-12",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:12"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-13",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:13"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-14",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:14"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-15",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:15"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-16",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:16"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-17",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:17"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-18",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:18"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-19",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:19"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-20",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:20"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-21",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:21"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-22",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:22"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests18-dat-23",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests18.dat:23"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-24",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:24"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests18-dat-25",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests18.dat:25"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-26",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:26"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-27",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:27"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests18-dat-28",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests18.dat:28"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests18-dat-29",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests18.dat:29"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "tests18-dat-30",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "tests18.dat:30"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-31",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:31"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-32",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:32"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-33",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:33"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests18-dat-34",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests18.dat:34"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests19-dat-4",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests19.dat:4"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests19-dat-5",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests19.dat:5"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests19-dat-6",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests19.dat:6"
+    },
+    {
+      "axis": "stray-text-control-end-tags",
+      "id": "tests19-dat-36",
+      "reason": "stray text-mode end-tag recovery around body and table content",
+      "source": "tests19.dat:36"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests19-dat-49",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests19.dat:49"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests19-dat-50",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests19.dat:50"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests19-dat-69",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests19.dat:69"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests19-dat-70",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests19.dat:70"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests19-dat-71",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests19.dat:71"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests19-dat-102",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests19.dat:102"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests20-dat-29",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests20.dat:29"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tests20-dat-30",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tests20.dat:30"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "tests20-dat-35",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "tests20.dat:35"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "tests20-dat-38",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "tests20.dat:38"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "tests20-dat-50",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "tests20.dat:50"
+    },
+    {
+      "axis": "stray-text-control-end-tags",
+      "id": "foreign-fragment-dat-8",
+      "reason": "stray text-mode end-tag recovery around body and table content",
+      "source": "foreign-fragment.dat:8"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "foreign-fragment-dat-51",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "foreign-fragment.dat:51"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scripted-adoption01-dat-1",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scripted/adoption01.dat:1"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scripted-ark-dat-1",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scripted/ark.dat:1"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scripted-webkit01-dat-1",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scripted/webkit01.dat:1"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scripted-webkit01-dat-2",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scripted/webkit01.dat:2"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "svg-dat-1",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "svg.dat:1"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "svg-dat-2",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "svg.dat:2"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "svg-dat-3",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "svg.dat:3"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "svg-dat-4",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "svg.dat:4"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "svg-dat-5",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "svg.dat:5"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "svg-dat-6",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "svg.dat:6"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "svg-dat-7",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "svg.dat:7"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "svg-dat-8",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "svg.dat:8"
+    },
+    {
+      "axis": "pre-listing-newline",
+      "id": "tricky01-dat-9",
+      "reason": "pre/listing insertion and initial line-feed stripping",
+      "source": "tricky01.dat:9"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "webkit01-dat-5",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "webkit01.dat:5"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "webkit01-dat-7",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "webkit01.dat:7"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "webkit01-dat-31",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "webkit01.dat:31"
+    },
+    {
+      "axis": "rawtext-elements",
+      "id": "webkit01-dat-36",
+      "reason": "style, xmp, iframe, noembed, and noframes RAWTEXT recovery",
+      "source": "webkit01.dat:36"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "webkit01-dat-39",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "webkit01.dat:39"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "webkit01-dat-40",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "webkit01.dat:40"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "webkit01-dat-41",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "webkit01.dat:41"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "webkit01-dat-42",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "webkit01.dat:42"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "webkit01-dat-43",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "webkit01.dat:43"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "webkit01-dat-44",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "webkit01.dat:44"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "webkit02-dat-2",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "webkit02.dat:2"
+    },
+    {
+      "axis": "noscript-scripting",
+      "id": "webkit02-dat-3",
+      "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
+      "source": "webkit02.dat:3"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "webkit02-dat-20",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "webkit02.dat:20"
+    },
+    {
+      "axis": "rcdata-controls",
+      "id": "webkit02-dat-21",
+      "reason": "title and textarea RCDATA handoff and character-reference recovery",
+      "source": "webkit02.dat:21"
+    },
+    {
+      "axis": "plaintext-recovery",
+      "id": "webkit02-dat-22",
+      "reason": "plaintext insertion and consume-through-EOF recovery",
+      "source": "webkit02.dat:22"
+    }
+  ],
+  "counts_by_axis": {
+    "fragment-context": 6,
+    "noscript-scripting": 48,
+    "plaintext-recovery": 56,
+    "pre-listing-newline": 29,
+    "rawtext-elements": 99,
+    "rcdata-controls": 86,
+    "script-rawtext": 367,
+    "stray-text-control-end-tags": 7
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress RCDATA, RAWTEXT, PLAINTEXT, and pre/listing recovery.",
+  "format": "whatwg-html-text-control-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

@@ -1,8 +1,13 @@
-"""Lower compiler IR programs into composable CIL bytecode artifacts."""
+"""Lower compiler IR programs into composable CIL bytecode artifacts.
+
+LANG20: ``CILCodeGenerator`` implements ``CodeGenerator[IrProgram, CILProgramArtifact]``
+from ``codegen-core``, providing a shared ``validate() / generate()`` interface.
+"""
 
 from ir_to_cil_bytecode.backend import (
     CILBackendConfig,
     CILBackendError,
+    CILFieldArtifact,
     CILHelper,
     CILHelperSpec,
     CILLoweringPipeline,
@@ -10,14 +15,18 @@ from ir_to_cil_bytecode.backend import (
     CILMethodArtifact,
     CILProgramArtifact,
     CILTokenProvider,
+    CILTypeArtifact,
     SequentialCILTokenProvider,
     lower_ir_to_cil_bytecode,
     validate_for_clr,
 )
+from ir_to_cil_bytecode.generator import CILCodeGenerator
 
 __all__ = [
     "CILBackendConfig",
     "CILBackendError",
+    "CILCodeGenerator",
+    "CILFieldArtifact",
     "CILHelper",
     "CILHelperSpec",
     "CILLoweringPipeline",
@@ -25,6 +34,7 @@ __all__ = [
     "CILMethodArtifact",
     "CILProgramArtifact",
     "CILTokenProvider",
+    "CILTypeArtifact",
     "SequentialCILTokenProvider",
     "lower_ir_to_cil_bytecode",
     "validate_for_clr",

@@ -1,6 +1,6 @@
 # CodingAdventures.AesModes.CSharp
 
-AES modes of operation helpers for .NET.
+AES modes of operation helpers for .NET, implemented with the package-local AES block primitive and GHASH.
 
 This package mirrors the repository's AES modes API with PKCS#7 padding, XOR helpers, ECB, CBC, CTR, and GCM. ECB is included for educational parity only; prefer GCM for authenticated encryption.
 

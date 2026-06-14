@@ -1,0 +1,461 @@
+{
+  "case_count": 74,
+  "cases": [
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "comments01-dat-79",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "comments01.dat:79"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "comments01-dat-80",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "comments01.dat:80"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "comments01-dat-81",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "comments01.dat:81"
+    },
+    {
+      "axis": "duplicate-doctype-recovery",
+      "id": "domjs-unsafe-dat-147",
+      "reason": "duplicate doctype and doctype-looking declaration recovery",
+      "source": "domjs-unsafe.dat:147"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "html5test-com-dat-276",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "html5test-com.dat:276"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "html5test-com-dat-282",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "html5test-com.dat:282"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "html5test-com-dat-283",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "html5test-com.dat:283"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "html5test-com-dat-284",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "html5test-com.dat:284"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "plain-text-unsafe-dat-356",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "plain-text-unsafe.dat:356"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "tests1-dat-566",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "tests1.dat:566"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-601",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:601"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-602",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:602"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-603",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:603"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-604",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:604"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "tests1-dat-605",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "tests1.dat:605"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "tests1-dat-606",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "tests1.dat:606"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-607",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:607"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-608",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:608"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "tests1-dat-609",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "tests1.dat:609"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-610",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:610"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-611",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:611"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "tests1-dat-612",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "tests1.dat:612"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-613",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:613"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-614",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:614"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "tests1-dat-627",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "tests1.dat:627"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-642",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:642"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests1-dat-648",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests1.dat:648"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests19-dat-1021",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests19.dat:1021"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests19-dat-1102",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests19.dat:1102"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests25-dat-1236",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests25.dat:1236"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests25-dat-1237",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests25.dat:1237"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests25-dat-1238",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests25.dat:1238"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "tests2-dat-1",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "tests2.dat:1"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests2-dat-35",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests2.dat:35"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests2-dat-42",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests2.dat:42"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests2-dat-43",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests2.dat:43"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests2-dat-44",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests2.dat:44"
+    },
+    {
+      "axis": "duplicate-doctype-recovery",
+      "id": "tests2-dat-45",
+      "reason": "duplicate doctype and doctype-looking declaration recovery",
+      "source": "tests2.dat:45"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "tests2-dat-46",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "tests2.dat:46"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "tests2-dat-50",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "tests2.dat:50"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests2-dat-60",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests2.dat:60"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests2-dat-62",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests2.dat:62"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "tests1-dat-1",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "tests1.dat:1"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-36",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:36"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-37",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:37"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-38",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:38"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-39",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:39"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "tests1-dat-40",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "tests1.dat:40"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "tests1-dat-41",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "tests1.dat:41"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-42",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:42"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-43",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:43"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "tests1-dat-44",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "tests1.dat:44"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-45",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:45"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-46",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:46"
+    },
+    {
+      "axis": "xml-pi-looking-markup",
+      "id": "tests1-dat-47",
+      "reason": "XML declaration and processing-instruction-looking input recovery",
+      "source": "tests1.dat:47"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-48",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:48"
+    },
+    {
+      "axis": "bogus-comment-and-cdata",
+      "id": "tests1-dat-49",
+      "reason": "bogus comment, malformed declaration, and CDATA-as-text recovery",
+      "source": "tests1.dat:49"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "tests1-dat-62",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "tests1.dat:62"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "tests1-dat-77",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "tests1.dat:77"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests1-dat-83",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests1.dat:83"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests19-dat-8",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests19.dat:8"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests19-dat-89",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests19.dat:89"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests25-dat-15",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests25.dat:15"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests25-dat-16",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests25.dat:16"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "tests25-dat-17",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "tests25.dat:17"
+    },
+    {
+      "axis": "text-whitespace-shell",
+      "id": "webkit01-dat-1",
+      "reason": "plain text, whitespace, NUL, and minimal document-shell recovery",
+      "source": "webkit01.dat:1"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "webkit01-dat-4",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "webkit01.dat:4"
+    },
+    {
+      "axis": "custom-element-recovery",
+      "id": "webkit01-dat-8",
+      "reason": "unknown/custom element nesting, attributes, and stray end-tag recovery",
+      "source": "webkit01.dat:8"
+    },
+    {
+      "axis": "custom-element-recovery",
+      "id": "webkit01-dat-9",
+      "reason": "unknown/custom element nesting, attributes, and stray end-tag recovery",
+      "source": "webkit01.dat:9"
+    },
+    {
+      "axis": "custom-element-recovery",
+      "id": "webkit01-dat-10",
+      "reason": "unknown/custom element nesting, attributes, and stray end-tag recovery",
+      "source": "webkit01.dat:10"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "webkit01-dat-11",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "webkit01.dat:11"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "webkit01-dat-14",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "webkit01.dat:14"
+    },
+    {
+      "axis": "malformed-tag-open",
+      "id": "webkit02-dat-1",
+      "reason": "incomplete tag-open, bogus end-tag, long attribute, and slash recovery",
+      "source": "webkit02.dat:1"
+    },
+    {
+      "axis": "legacy-compat-elements",
+      "id": "webkit02-dat-10",
+      "reason": "obsolete and compatibility element recovery outside larger families",
+      "source": "webkit02.dat:10"
+    }
+  ],
+  "counts_by_axis": {
+    "bogus-comment-and-cdata": 20,
+    "custom-element-recovery": 3,
+    "duplicate-doctype-recovery": 2,
+    "legacy-compat-elements": 13,
+    "malformed-tag-open": 14,
+    "text-whitespace-shell": 10,
+    "xml-pi-looking-markup": 12
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress miscellaneous recovery around XML/PI-looking markup, bogus comments, CDATA-as-text, malformed tag opens, plain text, duplicate doctypes, unknown/custom elements, and legacy compatibility elements.",
+  "format": "whatwg-html-misc-recovery-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

@@ -1,0 +1,12 @@
+[package]
+name = "adjudication-rulebook"
+version = "0.2.0"
+edition = "2021"
+description = "ADJ14 implementation: bootstrap a typed Rulebook from the LLM's own weights. v0.2 adds adversarial multi-model elicitation — acquire_rulebook_adversarial orchestrates elicitation across N independent models, returns per-model outcomes plus a provenance-tagged merged source text suitable for direct prompt injection. Rules cited at answer time can now be traced back to which model produced them, and rules appearing in only one model's training surface as lower-trust than rules multiple models agree on. The recursive use of the framework, made adversarial."
+
+[dependencies]
+adjudication-ir = { path = "../adjudication-ir" }
+llm-gateway = { path = "../llm-gateway" }
+llm-primitives = { path = "../llm-primitives" }
+logic-core = { path = "../logic-core" }
+serde_json = "1"

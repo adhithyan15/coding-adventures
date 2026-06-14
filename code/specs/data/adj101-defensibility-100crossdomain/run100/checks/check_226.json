@@ -1,0 +1,8 @@
+{
+ "check_id": 226,
+ "idx": 94,
+ "slot": "extension_duration_months",
+ "claimed_value": 6,
+ "scenario": "A PI nearing the project end date submits a first-time request for a 6-month no-cost extension to finish data analysis, citing delays caused by an equipment failure earlier in the year.",
+ "cited_span": "a first-time request for a 6-month no-cost extension"
+}

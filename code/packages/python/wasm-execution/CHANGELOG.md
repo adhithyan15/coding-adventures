@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Added `WasmExecutionLimits(max_instructions=...)` so embedders can bound
+  interpreted WASM instruction fuel and receive a `TrapError` when execution
+  exhausts the configured budget.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

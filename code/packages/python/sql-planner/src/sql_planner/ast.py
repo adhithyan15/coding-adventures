@@ -69,23 +69,43 @@ class JoinKind:
     RIGHT = "RIGHT"
     FULL = "FULL"
     CROSS = "CROSS"
+    NATURAL = "NATURAL"  # resolved to INNER by planner using schema column intersection
 
 
 @dataclass(frozen=True, slots=True)
 class TableRef:
-    """A reference to a base table in FROM, optionally aliased."""
+    """A reference to a base table in FROM, optionally aliased.
+
+    SQLite supports two query hints on a base-table reference:
+
+    * ``INDEXED BY <name>`` forces the named index for the scan.  The
+      planner errors at plan time if the index doesn't exist on the
+      table.  Field: ``index_hint``.
+    * ``NOT INDEXED`` instructs the planner to use a full table scan,
+      ignoring any matching indexes.  Field: ``not_indexed``.
+
+    Exactly one of ``index_hint`` and ``not_indexed`` may be set; the
+    adapter is responsible for the mutual exclusion at parse time.
+    """
 
     table: str
     alias: str | None = None
+    index_hint: str | None = None
+    not_indexed: bool = False
 
 
 @dataclass(frozen=True, slots=True)
 class DerivedTableRef:
-    """A subquery used as a table source — ``(SELECT ...) AS alias``.
+    """A subquery used as a table source — ``(query) AS alias``.
 
-    The ``select`` is the inner query statement (already a typed SelectStmt,
-    not a raw parse node).  The ``alias`` is mandatory — SQL requires an
-    alias for every derived table.
+    The ``select`` is the inner query statement (already a typed statement
+    node, not a raw parse node).  It may be a plain ``SelectStmt`` or any
+    of the set-operation wrappers — SQLite allows derived tables to wrap a
+    compound query such as ``(SELECT … UNION SELECT …)`` and exposes its
+    output columns to the outer scope just like a plain SELECT would.
+
+    The ``alias`` is mandatory in our implementation (SQLite makes it
+    optional; that relaxation is a separate change).
 
     Example::
 
@@ -96,10 +116,44 @@ class DerivedTableRef:
                               from_=TableRef('orders')),
             alias='dt',
         )
+
+    UNION example::
+
+        SELECT * FROM (SELECT 1 UNION SELECT 2) AS u
+        ↓
+        DerivedTableRef(
+            select=UnionStmt(left=SelectStmt(...), right=SelectStmt(...)),
+            alias='u',
+        )
     """
 
-    select: SelectStmt
-    alias: str
+    select: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
+    alias: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class RecursiveCTERef:
+    """A reference to a WITH RECURSIVE CTE in FROM / JOIN position.
+
+    Created by the adapter when it encounters a table name that matches a
+    recursive CTE in the enclosing WITH RECURSIVE clause.  The planner
+    converts it to a :class:`~sql_planner.plan.RecursiveCTE` node.
+
+    ``anchor`` is the non-recursive base query; ``recursive`` is the
+    recursive step which references the CTE by name as a plain
+    :class:`TableRef` (not yet substituted — the planner will replace it
+    with a :class:`~sql_planner.plan.WorkingSetScan`).
+
+    ``union_all`` is True for ``UNION ALL`` (the common case — accumulate
+    all rows) and False for ``UNION`` (deduplicate after each iteration,
+    needed for cycle-safe queries).
+    """
+
+    name: str
+    anchor: SelectStmt
+    recursive: SelectStmt
+    union_all: bool = True
+    alias: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -109,20 +163,43 @@ class JoinClause:
     The FROM clause is represented as a base :class:`TableRef` plus a list
     of join clauses, each describing how a new table attaches. This mirrors
     how most SQL grammars structure multi-table FROMs.
+
+    ``using`` carries the column names from a ``JOIN … USING (col1, col2)``
+    clause.  The planner expands it into a proper ``ON left.col = right.col
+    AND …`` expression during ``_build_from_tree``, where both the accumulated
+    scope and the backend schema are available to resolve which left-side table
+    owns each column.  When ``using`` is non-empty ``on`` must be ``None`` —
+    the two are mutually exclusive.
+
+    This deferred resolution is necessary for chained multi-table USING joins:
+    in ``a JOIN b USING (x) JOIN c USING (y)``, when the second USING is
+    parsed the adapter does not yet know whether ``y`` lives in ``a`` or ``b``.
+    The planner does, because it has already built the scope for both tables.
     """
 
     kind: str  # one of JoinKind.*
-    right: TableRef | DerivedTableRef
-    on: Expr | None = None  # None for CROSS JOIN
+    right: TableRef | DerivedTableRef | RecursiveCTERef
+    on: Expr | None = None  # None for CROSS JOIN / NATURAL / USING (see using field)
+    using: tuple[str, ...] = ()  # column names from USING (...); planner resolves to ON
 
 
 @dataclass(frozen=True, slots=True)
 class SortKey:
-    """One key in ORDER BY."""
+    """One key in ORDER BY.
+
+    ``collation`` carries the optional ``COLLATE name`` clause from
+    SQL: ``ORDER BY name COLLATE NOCASE``.  Mini-sqlite recognises
+    SQLite's three built-in collations (``BINARY`` — the default,
+    which is also what ``None`` means; ``NOCASE`` — case-insensitive
+    ASCII comparison; ``RTRIM`` — strips trailing spaces before
+    comparing).  Unknown collation names are accepted at the planner
+    level and validated by the VM.
+    """
 
     expr: Expr
     descending: bool = False
     nulls_first: bool | None = None  # None = backend default (nulls last for ASC)
+    collation: str | None = None     # None = BINARY (default)
 
 
 @dataclass(frozen=True, slots=True)
@@ -135,10 +212,22 @@ class Limit:
 
 @dataclass(frozen=True, slots=True)
 class SelectStmt:
-    """A structured SELECT statement — the usual shape from a compiler textbook."""
+    """A structured SELECT statement — the usual shape from a compiler textbook.
 
-    from_: TableRef | DerivedTableRef
+    ``from_`` is ``None`` when the SELECT has no FROM clause — e.g.
+    ``SELECT 1 + 1``, ``SELECT UPPER('hello')``, ``SELECT CAST(3 AS TEXT)``.
+    The planner maps a ``None`` from_ to a :class:`~sql_planner.plan.SingleRow`
+    leaf that yields exactly one empty row, so the SELECT list is evaluated
+    exactly once.
+
+    Fields are ordered with ``items`` first (required) and ``from_`` second
+    (optional, default ``None``) so Python's dataclass machinery accepts the
+    common ``SelectStmt(items=..., from_=...)`` keyword-argument style while
+    also allowing ``SelectStmt(items=...)`` for from-less queries.
+    """
+
     items: tuple[SelectItem, ...]
+    from_: TableRef | DerivedTableRef | RecursiveCTERef | None = None
     joins: tuple[JoinClause, ...] = field(default_factory=tuple)
     where: Expr | None = None
     group_by: tuple[Expr, ...] = field(default_factory=tuple)
@@ -152,12 +241,100 @@ class SelectStmt:
 
 
 @dataclass(frozen=True, slots=True)
+class UpsertAssignment:
+    """One ``col = expr`` in an ``ON CONFLICT DO UPDATE SET`` clause."""
+
+    column: str
+    value: Expr
+
+
+@dataclass(frozen=True, slots=True)
+class UpsertClause:
+    """``ON CONFLICT [(conflict_target)] DO NOTHING | DO UPDATE SET assignments``.
+
+    SQL UPSERT (insert-or-update) semantics
+    ----------------------------------------
+    When an INSERT would violate a unique constraint:
+
+    - ``do_nothing=True``   → silently skip the row (like ``INSERT OR IGNORE``
+                              but scoped to a specific constraint via the target)
+    - ``do_nothing=False``  → run the ``assignments`` in-place on the existing
+                              row, using ``EXCLUDED.*`` to access the values from
+                              the rejected would-be-inserted row.
+
+    The difference from ``INSERT OR REPLACE`` is important:
+
+    - ``REPLACE`` (= delete + re-insert): loses the existing row's primary key
+      value and fires DELETE triggers; not an in-place update.
+    - ``DO UPDATE SET``: in-place mutation; the row keeps its rowid and
+      triggers are not fired for DELETE.
+
+    conflict_target
+    ---------------
+    An optional list of column names identifying *which* unique constraint must
+    be violated for the upsert action to fire.  When empty, any constraint
+    violation triggers the action (same behaviour as SQLite when no target is
+    given).  Most real-world inserts specify a single column target (the primary
+    key or a UNIQUE column).
+
+    assignments
+    -----------
+    Used only when ``do_nothing=False``.  Each assignment uses the resolved
+    ``Expr`` tree; ``EXCLUDED.col`` is represented as ``ExcludedColumn(col=c)``
+    after the adapter rewrites ``Column(table="EXCLUDED", col=c)``.
+
+    where
+    -----
+    The optional conditional-upsert WHERE clause::
+
+        ON CONFLICT(id) DO UPDATE SET val = excluded.val WHERE excluded.val > val
+
+    When present, the update is applied only if the predicate evaluates true
+    against the (excluded-row, existing-row) pair.  When the predicate is false
+    (or NULL), the upsert is silently skipped — the existing row is left as-is
+    (semantically equivalent to DO NOTHING for that row only).  The predicate
+    may freely reference ``EXCLUDED.col`` and bare column names (which resolve
+    to the existing row's column).  ``None`` means no WHERE filter.
+    """
+
+    conflict_target: tuple[str, ...] = ()  # column names; empty = any constraint
+    do_nothing: bool = False
+    assignments: tuple[UpsertAssignment, ...] = ()  # non-empty when do_nothing=False
+    where: Expr | None = None  # optional conditional-upsert predicate
+
+
+@dataclass(frozen=True, slots=True)
 class InsertValuesStmt:
-    """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...)."""
+    """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...) [RETURNING ...].
+
+    ``on_conflict`` carries the conflict resolution action from an optional
+    ``INSERT OR <action>`` clause or the ``REPLACE INTO`` shorthand:
+
+    - ``None``        — default behaviour: raise an ``IntegrityError``
+    - ``"REPLACE"``   — delete every conflicting row, then insert (also the
+                        semantics of the ``REPLACE INTO`` shorthand)
+    - ``"IGNORE"``    — silently discard the new row on any constraint
+                        violation; subsequent rows in the same statement are
+                        unaffected
+    - ``"ABORT"``     — raise an error and roll back any rows inserted earlier
+                        in this statement (same observable effect as ``None``
+                        for a single-row insert; kept for round-trip fidelity)
+    - ``"FAIL"``      — raise an error but keep rows inserted earlier in this
+                        statement (not fully emulated — treated as ``ABORT``)
+    - ``"ROLLBACK"``  — raise an error and roll back the entire transaction
+                        (not fully emulated — treated as ``ABORT``)
+
+    ``upsert_clause`` holds the optional ``ON CONFLICT … DO …`` clause.
+    When present it takes precedence over ``on_conflict`` for constraint
+    handling; both can coexist but the combination is unusual.
+    """
 
     table: str
     columns: tuple[str, ...] | None  # None = implicit column list (all columns in order)
     rows: tuple[tuple[Expr, ...], ...]
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert_clause: UpsertClause | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -170,19 +347,21 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class UpdateStmt:
-    """UPDATE t SET col = expr, ... WHERE predicate."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
 
     table: str
     assignments: tuple[Assignment, ...]
     where: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
 class DeleteStmt:
-    """DELETE FROM t WHERE predicate."""
+    """DELETE FROM t WHERE predicate [RETURNING ...]."""
 
     table: str
     where: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 # ---- Set-operation statements -----------------------------------------------
@@ -243,16 +422,22 @@ class ExceptStmt:
 
 @dataclass(frozen=True, slots=True)
 class InsertSelectStmt:
-    """INSERT INTO t (cols) SELECT …
+    """INSERT INTO t (cols) SELECT … [RETURNING …]
 
     The ``select`` field is the sub-query whose result rows are inserted.
     ``columns`` is the explicit target column list; ``None`` means the
     table's natural column order is used (same semantics as VALUES INSERT).
+
+    ``on_conflict`` has the same semantics as :class:`InsertValuesStmt`.
+    ``upsert_clause`` holds the optional ``ON CONFLICT … DO …`` clause.
     """
 
     table: str
     columns: tuple[str, ...] | None
     select: SelectStmt
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert_clause: UpsertClause | None = None  # ON CONFLICT … DO …
 
 
 # ---- Transaction-control statements ----------------------------------------
@@ -283,11 +468,16 @@ class CreateTableStmt:
     This reuse is why the planner depends on sql-backend: the schema shape
     is defined once, in the leaf package. Backend-level constraint
     enforcement and planner-level statement planning agree by construction.
+
+    ``strict`` mirrors the SQLite ``STRICT`` trailing table-option.  When
+    True the engine enforces strict per-column typing — see
+    :meth:`sql_backend.Backend.create_table` for the full rules.
     """
 
     table: str
     columns: tuple[ColumnDef, ...]
     if_not_exists: bool = False
+    strict: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -296,6 +486,27 @@ class DropTableStmt:
 
     table: str
     if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class AlterTableStmt:
+    """ALTER TABLE — supports four operations:
+
+    * ``ADD [COLUMN] col_def``     → ``column`` set, others None
+    * ``RENAME TO new_name``       → ``rename_to`` set, others None
+    * ``RENAME [COLUMN] old TO new`` → ``rename_column`` set to (old, new)
+    * ``DROP [COLUMN] name``       → ``drop_column`` set to the name
+
+    Exactly one of ``column`` / ``rename_to`` / ``rename_column`` /
+    ``drop_column`` is non-None per instance; the others are None.
+    The VM dispatches on whichever one is set.
+    """
+
+    table: str
+    column: ColumnDef | None = None
+    rename_to: str | None = None
+    rename_column: tuple[str, str] | None = None  # (old, new)
+    drop_column: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -321,6 +532,93 @@ class DropIndexStmt:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class CreateViewStmt:
+    """CREATE VIEW [IF NOT EXISTS] name AS query.
+
+    Views are stored in the Connection's view registry and expanded to
+    DerivedTableRef at parse time when referenced in subsequent queries.
+    The planner never sees this statement directly — the engine intercepts
+    it before calling plan().
+    """
+
+    name: str
+    query: SelectStmt
+    if_not_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DropViewStmt:
+    """DROP VIEW [IF EXISTS] name.
+
+    Removes the named view from the Connection's view registry.
+    Like CreateViewStmt, this is intercepted by the engine before the planner.
+    """
+
+    name: str
+    if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class SavepointStmt:
+    """SAVEPOINT name.
+
+    Creates a named savepoint within the active transaction.  Intercepted by
+    the engine before the planner — the VM never sees this statement.
+    """
+
+    name: str
+
+
+@dataclass(frozen=True, slots=True)
+class ReleaseSavepointStmt:
+    """RELEASE [SAVEPOINT] name.
+
+    Destroys the named savepoint (and all savepoints created after it),
+    making changes since that savepoint permanent within the outer transaction.
+    Intercepted by the engine.
+    """
+
+    name: str
+
+
+@dataclass(frozen=True, slots=True)
+class RollbackToStmt:
+    """ROLLBACK TO [SAVEPOINT] name.
+
+    Rolls back all changes made after the named savepoint was created, but
+    keeps the savepoint alive so it can be rolled back to again.
+    Intercepted by the engine.
+    """
+
+    name: str
+
+
+@dataclass(frozen=True, slots=True)
+class CreateTriggerStmt:
+    """CREATE TRIGGER statement.
+
+    ``body_sql`` is the raw SQL text of the body statements (without the
+    surrounding BEGIN…END), with individual statements joined by semicolons.
+    The VM re-parses and re-compiles the body at fire time, injecting
+    single-row ``NEW`` and ``OLD`` pseudo-tables into the backend.
+    """
+
+    name: str
+    timing: str  # "BEFORE" | "AFTER"
+    event: str   # "INSERT" | "UPDATE" | "DELETE"
+    table: str
+    body_sql: str
+
+
+@dataclass(frozen=True, slots=True)
+class DropTriggerStmt:
+    """DROP TRIGGER [IF EXISTS] name."""
+
+    name: str
+    if_exists: bool = False
+
+
 # The type union every Statement consumer matches on.
 Statement = (
     SelectStmt
@@ -333,9 +631,17 @@ Statement = (
     | DeleteStmt
     | CreateTableStmt
     | DropTableStmt
+    | AlterTableStmt
     | CreateIndexStmt
     | DropIndexStmt
     | BeginStmt
     | CommitStmt
     | RollbackStmt
+    | CreateViewStmt
+    | DropViewStmt
+    | SavepointStmt
+    | ReleaseSavepointStmt
+    | RollbackToStmt
+    | CreateTriggerStmt
+    | DropTriggerStmt
 )

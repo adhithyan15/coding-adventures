@@ -64,6 +64,35 @@ type BuildPlan struct {
 	// LanguagesNeeded maps language names to booleans indicating whether
 	// that language's toolchain is needed for this build.
 	LanguagesNeeded map[string]bool `json:"languages_needed"`
+
+	// Shards describes optional prerequisite-closed package slices that
+	// can be executed independently by parallel CI runners.
+	Shards []ShardEntry `json:"shards,omitempty"`
+}
+
+// ShardEntry describes one independently executable slice of a build plan.
+//
+// AssignedPackages are the packages whose work was directly assigned to this
+// shard. PackageNames includes AssignedPackages plus their transitive
+// prerequisites, so a runner can execute the shard without artifacts from
+// another runner.
+type ShardEntry struct {
+	Index            int             `json:"index"`
+	Name             string          `json:"name"`
+	AssignedPackages []string        `json:"assigned_packages"`
+	PackageNames     []string        `json:"package_names"`
+	LanguagesNeeded  map[string]bool `json:"languages_needed"`
+	EstimatedCost    int             `json:"estimated_cost"`
+}
+
+// ShardMatrixEntry is the compact representation emitted for GitHub Actions
+// dynamic matrix expansion.
+type ShardMatrixEntry struct {
+	ShardIndex   int      `json:"shard_index"`
+	ShardCount   int      `json:"shard_count"`
+	Label        string   `json:"label"`
+	PackageCount int      `json:"package_count"`
+	Languages    []string `json:"languages"`
 }
 
 // PackageEntry represents a single package in the build plan.

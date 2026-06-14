@@ -16,4 +16,8 @@
     <ProjectReference Include="../../CodingAdventures.Hmac.fsproj" />
     <Compile Include="HmacTests.fs" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <Exclude>[CodingAdventures.Md5]*,[CodingAdventures.Sha1]*,[CodingAdventures.Sha256]*,[CodingAdventures.Sha512]*</Exclude>
+  </PropertyGroup>
 </Project>

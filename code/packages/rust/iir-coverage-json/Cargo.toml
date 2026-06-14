@@ -1,0 +1,11 @@
+[package]
+name = "iir-coverage-json"
+version = "0.1.0"
+edition = "2021"
+description = "JSON exporter for iir-coverage::LineCoverageReport.  Stable schema for tooling that prefers structured input over lcov text."
+
+[dependencies]
+iir-coverage = { path = "../iir-coverage" }
+
+[dev-dependencies]
+interpreter-ir = { path = "../interpreter-ir" }

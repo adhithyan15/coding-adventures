@@ -16,3 +16,4 @@
 - COM initialization (CoInitializeEx) with automatic cleanup
 - Barcode-pattern rendering test (alternating black/white bars)
 - QR-like checkerboard rendering test
+- Linear and radial `PaintGradient` rendering via native Direct2D gradient brushes

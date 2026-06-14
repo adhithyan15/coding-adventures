@@ -1,0 +1,161 @@
+{
+  "domain": "bacterial_meningitis",
+  "target": "diagnosis(bacterial_meningitis)",
+  "built": "case-blind, provenance-first (forward grounding)",
+  "invariant": "every LR carries a byte-anchored provenance chain to primary data; ungroundable links are explicit data-gaps, never invented numbers",
+  "prior": {
+    "id": "f0",
+    "finding": "prior",
+    "state": "base_rate",
+    "lr": 0.037,
+    "verdict": "grounded",
+    "grounded": true,
+    "provenance": {
+      "study": "Nigrovic LE, Kuppermann N, Macias CG, et al. Clinical prediction rule for identifying children with cerebrospinal fluid pleocytosis at very low risk of bacterial meningitis. JAMA. 2007;297(1):52-60. (PMID 17200475) \u2014 multicenter retrospective cohort, US",
+      "values": "bacterial meningitis 121/3295 = 3.7% (95% CI 3.1%-4.4%); aseptic (viral) meningitis 3174/3295 = 96.3% (95% CI 95.5%-96.9%)",
+      "byte_quote": "Among 3295 patients with CSF pleocytosis, 121 (3.7%; 95% confidence interval [CI], 3.1%-4.4%) had bacterial meningitis and 3174 (96.3%; 95% CI, 95.5%-96.9%) had aseptic meningitis.",
+      "formula": "prior(base_rate) = pretest prevalence of bacterial meningitis = n_bacterial / n_pleocytosis = 121 / 3295 = 0.0367 ~= 0.037 (3.7%); complement (aseptic/viral) = 3174/3295 = 0.963 (96.3%); pretest odds bacterial:viral = 121:3174 = 1:26.2. (No LR is computed for a prior; prevalence is reported as a probability per the procedure.)",
+      "n": "3295",
+      "population": "Children with CSF pleocytosis (CSF WBC >= 7-10/uL depending on age) undergoing lumbar puncture for suspected meningitis"
+    },
+    "note": "f0 is the PRIOR (base rate), so the reported value is a prevalence/probability, not a test LR. Primary byte-anchored figure: Nigrovic 2007 JAMA (PMID 17200475), the largest population (n=3295) with the most directly matching population \u2014 patients with CSF pleocytosis undergoing LP \u2014 giving bacterial meningitis prevalence 3.7% (95% CI 3.1-4.4%). This is a pediatric cohort; the adult-relevant corroboration from the JAMA Rational Clinical Examination (single US ED, all-comers with clinical suspicion of meningitis) gives a lower bacterial prevalence (~1% culture-positive among all LP'd, ~27% any meningitis), because its denominator is broader (anyone LP'd, not just those with confirmed pleocytosis). Choice of prior depends on the gating population: ~3.7% if conditioning on CSF pleocytosis; ~1% if conditioning on undifferentiated suspected-meningitis presenting for LP. Reported computed_lr=0.037 uses the pleocytosis-conditioned anchor that best matches the f0 specification ('CSF pleocytosis undergoing LP'). Verdict grounded: figure is byte-anchored and confirmed verbatim from the primary source twice."
+  },
+  "findings": [
+    {
+      "id": "f1",
+      "finding": "csf_gram_stain",
+      "state": "positive",
+      "lr": 85,
+      "verdict": "grounded",
+      "grounded": true,
+      "provenance": {
+        "study": "WHO guidelines on meningitis diagnosis, treatment and care (2025, NCBI Bookshelf NBK614844), section A.2.2; pooled CSF Gram stain accuracy from the Straus 2006 JAMA / CSF-parameter diagnostic-accuracy review lineage",
+        "values": "sensitivity = 85% (95% CI 55-96%); specificity = 99%",
+        "byte_quote": "CSF Gram stain likely has moderate to high sensitivity (85%, 95% confidence interval [CI] 55-96%; 6 studies; high-certainty evidence) and very high specificity (99%; 1 study; moderate-certainty evidence) for the diagnosis of acute bacterial meningitis.",
+        "formula": "LR+ = sensitivity / (1 - specificity) = 0.85 / (1 - 0.99) = 0.85 / 0.01 = 85",
+        "n": "6 studies (sensitivity estimate); 1 study (specificity estimate)",
+        "population": "Patients with suspected acute meningitis undergoing lumbar puncture; reference standard = bacterial meningitis (culture/clinical) vs non-bacterial"
+      },
+      "note": "Finding f1 = positive CSF Gram stain for bacterial vs viral/aseptic meningitis. Primary byte-anchored numbers (sens 85%, spec 99%) come from the WHO meningitis guideline (NBK614844, section A.2.2 Initial laboratory investigations), which pools the Straus 2006 JAMA 'How do I perform a lumbar puncture...' / Rational Clinical Examination CSF-parameter accuracy lineage. Computed LR+ = 0.85/(1-0.99) = 85 \u2014 a very strong positive likelihood ratio, meaning a positive Gram stain is near-diagnostic for bacterial meningitis (rule-in). CAVEATS: (1) LR+ is sensitive to the specificity estimate, which rests on a single study at 99%; if specificity were 98% (also cited in the literature) LR+ would be ~42.5, and at 97% (a commonly cited figure) LR+ ~28.3 \u2014 so the point estimate of 85 should be read as 'order ~10^1.5, strongly rule-in' rather than a precise constant. (2) Sensitivity CI is wide (55-96%) because it varies with pathogen, prior antibiotics, and bacterial concentration; this affects LR- (rule-out) but not LR+. (3) The Straus 2006 review itself reports Gram stain as sens/spec only and gives directly-pooled LRs for biochemical parameters instead (CSF lactate >=31.5 mg/dL LR+ 21 [95% CI 14-32]; CSF:blood glucose ratio <=0.4 LR 18 [12-27]; CSF WBC >=500/uL LR 15 [10-22]) \u2014 these are captured in the chain as corroborating CSF-parameter anchors. No prior/prevalence is reported in these sources; clinical pre-test probability in a suspected-meningitis-undergoing-LP population is the implied prior but is not byte-anchored here. computed_lr derived solely from byte-anchored real numbers; no value invented. Sources: WHO guideline https://www.ncbi.nlm.nih.gov/books/NBK614844/ ; Straus 2006 JAMA https://pubmed.ncbi.nlm.nih.gov/17062865/ and DARE https://www.ncbi.nlm.nih.gov/books/NBK73225/"
+    },
+    {
+      "id": "f2",
+      "finding": "csf_neutrophilic_pleocytosis",
+      "state": "high",
+      "lr": 15,
+      "verdict": "grounded",
+      "grounded": true,
+      "provenance": {
+        "study": "Straus SE, Thorpe KE, Holroyd-Leduc J. The Rational Clinical Examination / 'How do I perform a lumbar puncture and analyze the results to diagnose bacterial meningitis?' JAMA. 2006;296(16):2012-2022 (PMID 17062865); corroborated by Spanos A, Harrell FE, Durack DT. JAMA. 1989;262(19):2700-2707 (PMID 2810603)",
+        "values": "CSF WBC >=500/microL: LR+ 15 (95% CI 10-22). Companions: CSF:blood glucose ratio <=0.4: LR+ 18 (95% CI 12-27); CSF lactate >=31.53 mg/dL: LR+ 21 (95% CI 14-32). Spanos high thresholds: >2000x10^6/L WBC or >1180x10^6/L PMN => bacterial with >=99% certainty",
+        "byte_quote": "CSF white blood cell count of 500/muL or higher (LR, 15; 95% CI, 10-22)",
+        "formula": "Published pooled LR+ used directly. Straus JAMA 2006 reports, for CSF total WBC count >=500/microL, a positive LR of 15 (95% CI 10-22). This is already a pooled LR+ = sens/(1-spec) collapsed by the review, so computed_lr = 15 directly; no recomputation from sens/spec needed. (Companion CSF parameters: CSF-blood glucose ratio <=0.4 LR+ 18; CSF lactate >=31.53 mg/dL LR+ 21.) Spanos 1989 corroborates the high end: >1180x10^6/L PMN or >2000x10^6/L WBC ruled IN bacterial meningitis with >=99% certainty (post-test prob >=0.99), consistent with a large positive LR at higher thresholds.",
+        "n": "Systematic review of diagnostic-accuracy studies (Straus 2006); Spanos 1989 derivation/validation cohort of 422 patients with bacterial or viral meningitis",
+        "population": "Adults with suspected acute meningitis undergoing lumbar puncture; CSF parameters compared between bacterial and aseptic/viral meningitis"
+      },
+      "note": "Finding f2 (high CSF neutrophilic pleocytosis) maps most cleanly to the Straus JAMA 2006 pooled CSF total WBC-count parameter, whose published positive LR is 15 (95% CI 10-22) at the >=500/microL threshold. The framework's expected 'high (>1000 cells / high % PMN)' threshold sits ABOVE 500/microL, so 15 is a conservative lower bound for the LR+ of true high-grade neutrophilic pleocytosis; Spanos 1989 confirms the upper end where >1180x10^6/L PMN or >2000x10^6/L WBC rule in bacterial meningitis with >=99% certainty (i.e. a much larger effective LR at those higher cutoffs). Note Straus reports CSF total WBC, not a separate PMN-specific pooled LR; PMN-specific evidence (Spanos) is reported as certainty/cutoffs rather than a clean pooled LR, so the WBC-count LR is used as the byte-anchored primary value. computed_lr=15 is taken directly from the byte-quoted real number, not recomputed and not invented. Reported prior/prevalence not fixed by the source; LR is prevalence-independent and applied to whatever pre-test probability the clinical context implies."
+    },
+    {
+      "id": "f3",
+      "finding": "csf_glucose",
+      "state": "low",
+      "lr": 18,
+      "verdict": "grounded",
+      "grounded": true,
+      "provenance": {
+        "study": "Straus SE, Thorpe KE, Holroyd-Leduc J. How do I perform a lumbar puncture and analyze the results to diagnose bacterial meningitis? JAMA. 2006 Oct 25;296(16):2012-2022. (Rational Clinical Examination; pooled systematic review). PMID 17062865. Corroborated by Spanos A et al. JAMA 1989;262(19):2700-2707 (PMID 2810603) and AAFP CSF Analysis review 2021.",
+        "values": "Straus 2006: CSF:blood glucose ratio <=0.4 -> LR 18 (95% CI 12-27), reported directly. AAFP/Spanos cross-check: CSF:serum glucose ratio <0.4 = 80% sensitive, 98% specific. Spanos 1989 threshold: CSF-blood glucose ratio <0.23 predicts bacterial infection with >=99% certainty.",
+        "byte_quote": "A CSF-blood glucose ratio of 0.4 or less (likelihood ratio [LR], 18; 95% CI, 12-27]) accurately diagnosed bacterial meningitis.",
+        "formula": "Primary (Straus 2006, pooled, reported directly): LR+ = 18 (95% CI 12-27) for CSF:blood glucose ratio <=0.4. Independent cross-check from sens/spec (AAFP/Spanos, CSF:serum glucose ratio <0.4: sens=0.80, spec=0.98): LR+ = sens/(1-spec) = 0.80/(1-0.98) = 0.80/0.02 = 40. The single-study point estimate (40) is higher than the pooled estimate (18) because pooling across heterogeneous cohorts shrinks the LR; the directly-reported pooled LR=18 is the canonical citable value and is reported as computed_lr.",
+        "n": "Straus pooling spans multiple cohorts; Spanos 1989 underlying derivation/validation = 422 patients with acute bacterial or viral meningitis.",
+        "population": "Adults with suspected acute meningitis undergoing lumbar puncture; pooled across CSF diagnostic-accuracy studies distinguishing bacterial from viral/aseptic meningitis."
+      },
+      "note": "Finding f3 (low CSF glucose / low CSF:serum glucose ratio) bearing on bacterial vs viral meningitis. computed_lr=18 is a byte-anchored, directly-reported pooled LR+ from Straus 2006 JAMA Rational Clinical Examination (PMID 17062865), quote: 'A CSF-blood glucose ratio of 0.4 or less (likelihood ratio [LR], 18; 95% CI, 12-27]) accurately diagnosed bacterial meningitis.' Cross-checked against single-study sens/spec (CSF:serum glucose ratio <0.4 = 80% sens, 98% spec; AAFP 2021 review citing Spanos), which yields LR+=0.80/0.02=40 \u2014 same direction, larger magnitude (expected: single-cohort estimate > pooled). Spanos 1989 (PMID 2810603, n=422) is the underlying primary dataset, reporting CSF-blood glucose ratio <0.23 predicts bacterial infection with >=99% certainty. A high LR+ (18-40) for a low glucose ratio strongly raises post-test probability of bacterial (vs viral) meningitis. Note: no separate sens/spec given in Straus pooled abstract; only the LR is reported directly there. ScienceDirect (Tamune 2014) and JAMAevidence full chapter returned HTTP 403 (paywalled) so not byte-captured; the PubMed abstract and AAFP review fully ground the number."
+    },
+    {
+      "id": "f4",
+      "finding": "csf_protein",
+      "state": "elevated",
+      "lr": 9.33,
+      "verdict": "grounded",
+      "grounded": true,
+      "provenance": {
+        "study": "Viallon et al. CSF protein threshold for bacterial vs viral meningitis, as tabulated in the Open Access Emerg Med review 'Clinical decision rules for acute bacterial meningitis: current insights' (PMC4886299); corroborated by Genton & Berger and anchored upstream by Spanos JAMA 1989 (>2.2 g/L rule-in) and Straus JAMA 2006 Rational Clinical Examination.",
+        "values": "Viallon (>=1.88 g/L): sensitivity 84%, specificity 91%. Corroborating: Genton & Berger (>=2 g/L): sens 86%, spec 100% (LR+ undefined). Spanos 1989: CSF protein >2.2 g/L rules in bacterial meningitis with >=99% certainty.",
+        "byte_quote": "Viallon et al. ... Using '>=1.88 g/L', they found 84.0 sensitivity and 91.0 specificity for distinguishing bacterial from viral meningitis.",
+        "formula": "LR+ = sensitivity / (1 - specificity) = 0.84 / (1 - 0.91) = 0.84 / 0.09 = 9.33. (Genton corroborating point >=2 g/L: 0.86/(1-1.00) = undefined/infinite due to spec=100%, hence Viallon used as the stable computable anchor. Direction: elevated CSF protein raises probability of bacterial meningitis; LR+ ~9.3 is moderate-to-strong rule-in but weaker than glucose ratio LR 18 / lactate LR 21 from Straus 2006.)",
+        "n": "Not individually reported in the compiled review table (multi-study tabulation); Spanos derivation cohort = 422 patients with acute bacterial or viral meningitis.",
+        "population": "Adults with suspected acute meningitis undergoing lumbar puncture; bacterial meningitis vs viral/aseptic meningitis comparison."
+      },
+      "note": "Grounded on byte-anchored sens/spec. The landmark Rational Clinical Examination paper (Straus JAMA 2006) and the classic derivation cohort (Spanos JAMA 1989) both treat elevated CSF protein as a bacterial-meningitis indicator but neither publishes a directly usable LR+ for protein alone: Straus reports LRs only for glucose ratio (18), WBC (15), and lactate (21); Spanos reports a >2.2 g/L rule-in threshold at >=99% certainty rather than a sens/spec pair. The computable LR+ therefore derives from a tabulated diagnostic-accuracy pair (Viallon, >=1.88 g/L: sens 84%, spec 91%) compiled in the Open Access Emerg Med review (PMC4886299), yielding LR+ = 9.33. Caveats: (1) thresholds differ across the source studies (1.88 vs 2.0 vs 2.2 g/L), so the LR is threshold-specific; (2) protein is explicitly described as 'one of the least relevant markers' \u2014 5-25% of viral cases exceed 1 g/L and 1-10% of bacterial cases have normal protein \u2014 so this LR+ is less reliable than CSF glucose ratio or lactate; (3) the Genton corroborating point (spec 100%) would give an infinite LR+ and is statistically unstable, so it was not used for the computation. For prior/prevalence: not fixed by this finding; in adults presenting with suspected acute meningitis, bacterial meningitis is the minority etiology (most acute community meningitis is viral/aseptic), so a pre-test probability on the order of ~0.1-0.3 is reasonable context, but no single byte-anchored prevalence value is asserted here."
+    },
+    {
+      "id": "f5",
+      "finding": "csf_lactate",
+      "state": "elevated",
+      "lr": 22.9,
+      "verdict": "grounded",
+      "grounded": true,
+      "provenance": {
+        "study": "Sakushima K, et al. Diagnostic accuracy of cerebrospinal fluid lactate for differentiating bacterial meningitis from aseptic meningitis: a meta-analysis. J Infect. 2011;62(4):255-262 (PMID 21382412). Corroborated by Huy NT, et al. Crit Care. 2010;14(6):R240 (PMC3220013).",
+        "values": "Sakushima: sens 0.93 (0.89-0.96), spec 0.96 (0.93-0.98), LR+ 22.9 (12.6-41.9), LR- 0.07 (0.05-0.12). Huy (>=3.5 mmol/L): sens 0.96, spec 0.94, LR+ 14.53 (8.07-26.19).",
+        "byte_quote": "The pooled test characteristics of CSF lactate were sensitivity 0.93 (95% CI: 0.89-0.96), specificity 0.96 (95% CI: 0.93-0.98), likelihood ratio positive 22.9 (95% CI: 12.6-41.9), likelihood ratio negative 0.07 (95% CI: 0.05-0.12), and diagnostic odds ratio 313 (95% CI: 141-698).",
+        "formula": "Published pooled LR+ used directly = 22.9 (Sakushima 2011). Cross-check from point estimates: LR+ = sens/(1-spec) = 0.93/(1-0.96) = 0.93/0.04 = 23.25, consistent with bivariate-pooled 22.9. Huy 2010 corroborates with LR+ = 14.53 at the >=3.5 mmol/L cutoff. Caveat: antibiotic pretreatment drops sensitivity to 0.49 (95% CI 0.23-0.75), degrading LR+.",
+        "n": "33 studies (Sakushima 2011); 25 studies (Huy 2010)",
+        "population": "Patients with suspected acute meningitis undergoing lumbar puncture; bacterial vs aseptic/viral meningitis distinction."
+      },
+      "note": "Finding f5 (elevated CSF lactate, >=3.5 mmol/L) for bacterial vs viral/aseptic meningitis is strongly grounded. Two independent meta-analyses give a pooled LR+ in the ~15-23 range; Sakushima 2011 (33 studies) reports LR+ 22.9 directly, and the point-estimate cross-check (sens/(1-spec)=23.25) confirms it. Huy 2010 (25 studies), which uses the exact >=3.5 mmol/L cutoff named in the finding, gives a more conservative LR+ 14.53. Both indicate elevated CSF lactate is a strong rule-in test, and (via LR- ~0.07) also a strong rule-out test when antibiotic-naive. Key limitation: prior antibiotic treatment markedly lowers sensitivity (0.49), eroding diagnostic value. No prevalence/prior was reported in these diagnostic-accuracy reviews. computed_lr=22.9 reported as the primary byte-anchored value; conservative alternative 14.53 (Huy, matched cutoff) also fully grounded."
+    },
+    {
+      "id": "f6",
+      "finding": "serum_procalcitonin",
+      "state": "elevated",
+      "lr": 27.3,
+      "verdict": "grounded",
+      "grounded": true,
+      "provenance": {
+        "study": "Vikse J, Henry BM, Roy J, Ramakrishnan PK, Tomaszewski KA, Walocha JA. The role of serum procalcitonin in the diagnosis of bacterial meningitis in adults: a systematic review and meta-analysis. International Journal of Infectious Diseases, 2015 (PMID 26188130).",
+        "values": "sensitivity 0.90 (95% CI 0.84-0.94); specificity 0.98 (95% CI 0.97-0.99); positive likelihood ratio 27.3 (95% CI 8.2-91.1); negative likelihood ratio 0.13 (95% CI 0.07-0.26); diagnostic odds ratio 287.0 (95% CI 58.5-1409.0)",
+        "byte_quote": "The pooled sensitivity, specificity, positive likelihood ratio, negative likelihood ratio, and diagnostic odds ratio (DOR) for PCT were 0.90 (95% confidence interval (CI) 0.84-0.94), 0.98 (95% CI 0.97-0.99), 27.3 (95% CI 8.2-91.1), 0.13 (95% CI 0.07-0.26), and 287.0 (95% CI 58.5-1409.0), respectively.",
+        "formula": "Published pooled LR+ used directly = 27.3 (95% CI 8.2-91.1). Cross-check via naive LR+ = sens/(1-spec) = 0.90/(1-0.98) = 0.90/0.02 = 45.0; the meta-analytic pooled LR+ (27.3) is derived from the bivariate/random-effects model rather than naive division of the pooled point estimates, so the published 27.3 is the byte-anchored value reported. LR- = (1-sens)/spec = (1-0.90)/0.98 = 0.10/0.98 = 0.102 (published pooled 0.13).",
+        "n": "9 studies, 725 patients",
+        "population": "Adults with suspected/confirmed meningitis; bacterial meningitis vs non-bacterial (viral/aseptic) meningitis comparison"
+      },
+      "note": "Landmark anchor: Vikse 2015 (Int J Infect Dis), the principal meta-analysis of serum procalcitonin for adult bacterial meningitis (9 studies, n=725). The meta-analysis reports LR+ directly (27.3, 95% CI 8.2-91.1), so it is used per the procedure rather than recomputing. The comparator population is non-bacterial meningitis (predominantly viral/aseptic), matching the f6 target of bacterial vs viral. Naive recomputation from pooled sens/spec gives LR+ = 45.0; the discrepancy is expected because pooled LR+ from a bivariate model is not the naive ratio of pooled sens/(1-spec). Elevated serum PCT is a strongly rule-in finding (LR+ approximately 27-45). Prior/prevalence not extracted from this abstract; among adults presenting with suspected acute meningitis undergoing LP, bacterial meningitis prevalence is low (commonly cited on the order of single-digit to ~20% depending on setting) \u2014 not byte-anchored here, so not asserted as a number. Verdict grounded: computed_lr=27.3 is taken from a byte-anchored published pooled LR+. Sources: https://pubmed.ncbi.nlm.nih.gov/26188130/ ; https://www.sciencedirect.com/science/article/pii/S1201971215001782"
+    },
+    {
+      "id": "f7",
+      "finding": "seizure",
+      "state": "present",
+      "lr": 5.84,
+      "verdict": "grounded",
+      "grounded": true,
+      "provenance": {
+        "study": "Nigrovic LE, Kuppermann N, Malley R. Development and Validation of a Multivariable Predictive Model to Distinguish Bacterial From Aseptic Meningitis in Children in the Post-Haemophilus influenzae Era. Pediatrics 2002;110(4):712-719 (Bacterial Meningitis Score derivation set)",
+        "values": "Seizure present: bacterial 19/86 = 22.1%; aseptic 14/370 = 3.78%. Difference 18% (95% CI 9-27), p<.001. Multivariate adjusted OR (Table 3) = 1.8 (P=.03).",
+        "byte_quote": "Seizure at or before presentation, n (%): Bacterial Meningitis N=86 = 19 (22%); Aseptic Meningitis N=370 = 14 (4%); Difference Between Proportions (95% CI) 18% (9-27); P Value <.001.",
+        "formula": "Single-finding LR+ from Table 2 univariate 2x2. sensitivity = P(seizure | bacterial) = 19/86 = 0.2209. P(seizure | aseptic) = 14/370 = 0.0378, so specificity = 1 - 0.0378 = 0.9622. LR+ = sens / (1 - spec) = 0.2209 / 0.0378 = 5.84. LR- = (1 - sens)/spec = 0.7791/0.9622 = 0.81. Pre-test (derivation-set) prevalence of bacterial = 86/456 = 0.189 (18.9%). Cross-check unadjusted OR = (19/67)/(14/356) = 7.21; multivariate-adjusted OR (controlling for the 4 lab criteria) = 1.8.",
+        "n": "456 (86 bacterial, 370 aseptic) in derivation set; seizure data: 19/86 bacterial, 14/370 aseptic",
+        "population": "Previously healthy children aged 29 days to 19 years with CSF pleocytosis; derivation set N=456 (bacterial meningitis N=86, aseptic meningitis N=370). Note: seizure-AT-OR-BEFORE-PRESENTATION is BMS criterion; viral comparator = aseptic meningitis (overwhelmingly enteroviral)."
+      },
+      "note": "Primary data is byte-anchored from the landmark Bacterial Meningitis Score derivation paper (Nigrovic, Pediatrics 2002), Table 2, obtained by downloading the full-text PDF and extracting text (WebFetch was 403-blocked; used curl + pdfminer). Seizure at/before presentation was present in 22% of bacterial vs 4% of aseptic meningitis, giving a computed univariate LR+ of 5.84 for bacterial over viral/aseptic meningitis (LR- 0.81 \u2014 poor rule-out, consistent with seizure being a moderate rule-in but common-in-neither finding). CAVEATS: (1) Pediatric population (29 d-19 y); adult LRs for isolated seizure are not separately well-quantified in the CSF-parameter reviews (Straus JAMA 2006 / Spanos JAMA 1989 report CSF lab parameters, not seizure-alone). (2) The multivariate-ADJUSTED OR for seizure drops to 1.8 because seizure correlates with the lab criteria; the standalone LR+ of 5.84 is the correct bedside single-finding metric and the one requested. (3) Comparator is aseptic (predominantly enteroviral) meningitis, an accepted proxy for 'viral'. (4) BMS meta-analysis (Nigrovic 2012) pooled-score LR+ 2.6 / LR- 0.01 refers to the whole 5-item score, NOT seizure alone \u2014 not used for this finding. Full PDF cached at /tmp/nigrovic2002.pdf; extracted text at /tmp/nig.txt."
+    },
+    {
+      "id": "f8",
+      "finding": "csf_culture",
+      "state": "positive",
+      "lr": 271,
+      "verdict": "grounded",
+      "grounded": true,
+      "provenance": {
+        "study": "Wu HM, Cordeiro SM, Harcourt BH, et al. Accuracy of real-time PCR, Gram stain and culture for Streptococcus pneumoniae, Neisseria meningitidis and Haemophilus influenzae meningitis diagnosis. BMC Infect Dis. 2013;13:26 (PMC3558362)",
+        "values": "CSF culture sensitivity = 81.3% (95% CI 73.2-89.3); specificity = 99.7% (95% CI 99.1-100.0)",
+        "byte_quote": "culture, 81.3% and 99.7%; Gram stain, 98.2% and 98.7%; and real-time PCR, 95.7% and 94.3%, respectively.",
+        "formula": "LR+ = sensitivity / (1 - specificity) = 0.813 / (1 - 0.997) = 0.813 / 0.003 = 271 (point estimate). CSF culture is the reference standard; the near-perfect specificity (99.7%) makes a positive bacterial culture essentially determinative for bacterial (vs viral/aseptic) meningitis. LR- = (1 - 0.813)/0.997 = 0.187/0.997 = 0.19, i.e., a negative culture only modestly lowers probability \u2014 culture sensitivity is imperfect (falls to ~56-67% with prior antibiotics), which is why a negative culture does not rule out bacterial meningitis.",
+        "n": "451 CSF specimens (Apr 10, 2006 - Dec 31, 2008)",
+        "population": "CSF specimens from patients with suspected bacterial meningitis, Couto Maia Hospital, Salvador, Brazil; latent class analysis (LCA) used to estimate test accuracy against an imperfect reference standard (S. pneumoniae, N. meningitidis, H. influenzae)"
+      },
+      "note": "CSF culture is the clinical GOLD/REFERENCE STANDARD for bacterial meningitis, so its test characteristics can only be estimated against an imperfect-reference framework. The cited primary data come from a Bayesian/latent class analysis (LCA) of 451 CSF specimens (Wu et al., BMC Infect Dis 2013;13:26, PMC3558362), which sidesteps the circularity of evaluating the reference standard against itself: LCA-estimated sensitivity 81.3% and specificity 99.7%. From these, LR+ = 0.813/0.003 ~= 271 (extremely strong evidence FOR bacterial meningitis; a positive bacterial CSF culture is effectively diagnostic), and LR- ~= 0.19 (only a modest argument against it). The high computed LR+ is driven by the very small false-positive rate (0.3%, essentially contamination). Caveat on precision: the point estimate is sensitive to the exact specificity \u2014 with spec 99.7% the denominator (0.003) is small, so the LR+ has wide uncertainty (using the CI bound spec=99.1% gives LR+ ~= 90; spec=100.0% gives an undefined/infinite LR+). The clinically robust message is grounded: LR+ is very large (hundreds-fold), and culture's main limitation is imperfect sensitivity (drops to ~56-67% after prior oral/parenteral antibiotics per the same literature), not specificity. Verdict grounded: both sensitivity and specificity are byte-anchored to the verbatim primary-source sentence; the LR is computed, not invented."
+    }
+  ]
+}

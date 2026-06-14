@@ -1,0 +1,10 @@
+[package]
+name = "basic-formatter"
+version = "0.1.0"
+edition = "2021"
+description = "BASIC-FMT01 — canonical Dartmouth BASIC pretty-printer.  Tokens → format-doc Doc → canonical source.  Sibling of twig-formatter."
+
+[dependencies]
+format-doc                              = { path = "../format-doc" }
+coding-adventures-dartmouth-basic-lexer = { path = "../dartmouth-basic-lexer" }
+lexer                                   = { path = "../lexer" }

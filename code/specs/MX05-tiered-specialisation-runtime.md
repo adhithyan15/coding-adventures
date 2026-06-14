@@ -1,0 +1,821 @@
+# MX05 — Tiered Specialisation Runtime
+
+## Status
+
+Draft.  V1 spec.  Sits above MX01–MX04 — does not require any changes
+to the IR, planner, protocol, or executor surface.  Read those first
+([MX00](MX00-matrix-execution-overview.md) → MX04) for context.
+
+## Why this layer exists
+
+MX01–MX04 ship a tensor IR, a cost-model planner, a wire protocol, and
+the first executors (`matrix-cpu`, `matrix-metal`).  Every dispatch
+pays the cost of a *generic* kernel — one that handles the declared
+dtype/shape but doesn't know anything about the actual data flowing
+through.
+
+Real workloads have structure.  An image-processing pipeline that
+runs gamma correction on every frame sees the same dtype, the same
+shape, often the same input range.  An LLM inference loop runs the
+same matmul a thousand times before the user even reads the first
+token.  A scientific simulation sweeps a parameter through hundreds
+of fixed-shape iterations.
+
+In every case, **after the first hundred or so dispatches the runtime
+knows enough about what's flowing through to compile a much tighter
+kernel**.  That's exactly how production JIT compilers work — V8,
+HotSpot JVM, LuaJIT, Julia's tracing JIT, JAX's compile-then-cache.
+The pattern is:
+
+```
+First call    →   Tier 0:  generic kernel for declared dtype
+Calls 2..N    →   Tier 0 + sample inputs (1% rate, tiny overhead)
+After N hits  →   Spawn specialisation job in a background worker
+Spec ready    →   Tier 1:  specialised kernel, faster
+```
+
+What MX05 spec'd here adds to the matrix execution layer is the same
+pattern:  a profile-guided specialisation runtime that observes
+dispatches, identifies hot subgraphs, generates tighter kernels
+asynchronously, and routes future dispatches through the cache.
+
+The user never opts in.  They just observe their workload getting
+faster after warm-up.
+
+## Why this is cleaner here than in scalar JITs
+
+Two design choices made in MX01–MX04 pay off here:
+
+1. **The IR is data, not code.**  A subgraph hash uniquely identifies
+   "what computation, structurally."  V8 and HotSpot have to work
+   harder — they hash program counters, instruction sequences,
+   polymorphic call sites.  We just hash a `compute_ir::ComputeGraph`
+   slice (we already have a deterministic wire format from MX02).
+
+2. **Each backend specialises independently.**  `matrix-metal` and
+   `matrix-cuda` (future) each have their own kernel-generation
+   conventions and their own caches.  They don't have to agree on
+   what "specialised" means; the runtime hands each backend its own
+   subgraphs.
+
+## Reading order
+
+To understand MX05 in full, read:
+
+1. **MX00** — narrow-waist architecture
+2. **MX01–MX04** — IR, planner, protocol, runtime (the V1 layer)
+3. **This document** — the specialisation runtime that sits above
+
+This spec assumes the reader is comfortable with the MatrixIR /
+ComputeIR distinction and the planner / executor split.
+
+## Architecture
+
+Five new components, none of which require IR or protocol changes:
+
+```
+┌───────────────────────────────────────────────────────────────────┐
+│ matrix-runtime                                                     │
+│  ┌──────────────┐   ┌──────────────────┐   ┌──────────────────┐  │
+│  │  Planner     │ → │  Profile sampler │ → │  Specialisation  │  │
+│  │  (existing)  │   │  (NEW)           │   │  trigger (NEW)   │  │
+│  └──────────────┘   └──────────────────┘   └──────────────────┘  │
+└───────────────────────────────────────────────────────────────────┘
+                                  ↓
+┌───────────────────────────────────────────────────────────────────┐
+│ matrix-metal (or any executor)                                     │
+│  ┌──────────────────┐  ┌────────────────────────────────────────┐ │
+│  │ Generic kernels  │  │ Specialised kernel cache (NEW)         │ │
+│  │ pipelines        │  │  HashMap<SpecKey, Pipeline>            │ │
+│  │ (compile once    │  │  populated by background compile job   │ │
+│  │  at startup)     │  │  evicted via LRU                       │ │
+│  └──────────────────┘  └────────────────────────────────────────┘ │
+└───────────────────────────────────────────────────────────────────┘
+```
+
+### 1. Profile sampler (matrix-profile crate)
+
+> **Implementation status (Phase 1 + Phase 2a landed)**: shipped as
+> the `matrix_runtime::profile` module rather than a separate
+> `matrix-profile` crate.  Phase 1 added per-op invocation counters
+> and the `Profiler` / `ProfileObservation` / `TensorObservation`
+> data types.  Phase 2a (this update) adds `Profiler::sample_tensor`,
+> `Profiler::tensor_observation`, `Profiler::should_sample`, and
+> `Profiler::set_sample_rate` — the data plumbing for range
+> observation.  No specialisation policy yet; that lands in Phase 2b
+> (auto-narrow Cast insertion) and Phase 3 (SpecKey + Specialiser
+> trait + cache).  Sampling is deterministic via a modulo counter
+> rather than a PRNG so tests stay reproducible.
+
+A new crate, `matrix-profile`, that owns the observation logic:
+
+- Per-dispatch counters keyed by `(graph_subhash, op_index)`.
+- With probability `p` (default 1%), sample input min/max/distribution
+  into a small running statistic (count, sum, sum-of-squares, min,
+  max — bounded to ~64 bytes per tensor regardless of size).
+- Tiny overhead.  Bounded memory.  Counters can be reset.
+
+The sampler produces a snapshot per `(graph_subhash, op_index)` of
+the form:
+
+```rust
+pub struct ProfileObservation {
+    pub graph_subhash: u64,
+    pub op_index: u32,
+    pub invocation_count: u64,
+    pub input_observations: Vec<TensorObservation>,
+    pub output_observations: Vec<TensorObservation>,
+    pub mean_dispatch_ns: u64,
+}
+
+pub struct TensorObservation {
+    pub declared_dtype: DType,
+    pub shape: Shape,
+    pub observed_min: f64,        // narrowing toward integer/narrow-float
+    pub observed_max: f64,
+    pub observed_zeros: u64,      // sparsity hint
+    pub samples: u64,
+}
+```
+
+> **Implementation status (Phase 3 V2 landed)**: `SpecialisationPolicy`
+> trait + `DefaultPolicy` ship in `matrix_runtime::policy`.  Policy
+> is **passive** in V2 — nothing in the dispatch loop calls it yet;
+> Phase 3 V3 will wire it into a hot-path that invokes the policy
+> after `record_dispatch`, consults `SpecCache`, and asks the
+> backend's `Specialiser` to emit a kernel on cache miss.  Default
+> thresholds match the spec (1000 invocations, 0.95 stability).
+> Shape stability isn't tracked explicitly because `Profiler::subhash`
+> already partitions distinct shapes into distinct observations;
+> cross-shape specialisation is Phase 4 work.
+
+### 2. Specialisation trigger
+
+A small policy module that consumes profile observations and decides
+when to specialise:
+
+```rust
+pub trait SpecialisationPolicy {
+    fn should_specialise(&self, obs: &ProfileObservation) -> Option<SpecKey>;
+}
+```
+
+V1 default policy:
+
+- Trigger when `invocation_count >= 1_000` AND
+- One of:
+  - **Dtype narrowing**: declared dtype is wider than smallest dtype
+    that contains observed range (e.g. F32 declared, range fits
+    in F16 or even I8)
+  - **Shape stability**: same shape seen for ≥ 95% of invocations
+  - **Constant input**: an input's `observed_min == observed_max` for
+    ≥ 95% of invocations (fold into kernel)
+
+Policy is pluggable.  Frameworks targeting specific workloads (LLM
+inference, image processing, scientific simulation) can supply their
+own policies that bias toward their workload's specialisation
+opportunities.
+
+> **Implementation status (Phase 3 V1 landed)**: `SpecKey`,
+> `ShapeClass`, `RangeClass`, `Specialiser` trait, `SpecialisedKernel`,
+> and `SpecCache` (bounded LRU, default 64 entries) all live in
+> `matrix_runtime::spec`.  No specialisation policy yet — Phase 3 V2
+> will turn `ProfileObservation`s into `SpecKey`s and gate the cache
+> insertion; Phase 3 V3 will route dispatch through the cache on the
+> hot path.  `RangeClass::Float` is encoded as IEEE-754 bit pairs so
+> the enum can derive `Hash`; the `RangeClass::float(min, max)`
+> constructor handles the encoding and collapses NaN ends to
+> `Unknown`.
+
+### 3. SpecKey
+
+The unique identifier for a specialised kernel:
+
+```rust
+pub struct SpecKey {
+    pub op_kind: u8,              // matrix_ir::Op wire tag
+    pub dtype: DType,             // narrowed from declared if applicable
+    pub shape_class: ShapeClass,  // see below
+    pub range_class: RangeClass,  // see below
+    pub backend_id: u32,          // executor-specific (e.g. metal vs cuda)
+}
+
+pub enum ShapeClass {
+    Static(Shape),                // exact shape known
+    Bucketed(ShapeBucket),        // small/medium/large
+    Dynamic,                      // no specialisation on shape
+}
+
+pub enum RangeClass {
+    InRange { min: f64, max: f64 },
+    Constant(f64),                // single observed value
+    NonNegative,
+    Sparse(f32),                  // % zeros
+    Unknown,
+}
+```
+
+`SpecKey` is `Hash + Eq`, suitable for `HashMap` lookup.  Backends
+construct keys per their own specialisation conventions; the runtime
+is agnostic to the key's semantic meaning.
+
+### 4. Specialised kernel generator (per-backend)
+
+Each executor implements:
+
+```rust
+pub trait Specialiser {
+    fn can_specialise(&self, key: &SpecKey) -> bool;
+    fn compile_specialised(&self, key: &SpecKey, source_hint: &Op)
+        -> Result<SpecialisedPipeline, SpecError>;
+}
+```
+
+For `matrix-metal`, this means generating MSL with the observed
+parameters baked in:
+
+- Narrower dtype (`#define DTYPE half` instead of `float`)
+- Exact shape unrolled (`uint M = 1024;`)
+- Constant inputs folded directly into kernel source
+
+The compile happens in a background worker thread so live dispatches
+aren't blocked.  Once ready, the specialised pipeline is inserted
+into the cache.
+
+> **Implementation status (Phase 5 landed — deoptimisation when observed assumptions fail)**:
+> The feedback loop that the whole MX05 spec built up toward is
+> now closed.  When a previously-folded constant changes at
+> runtime — e.g. the policy saw K=42.0 for 1000 invocations but
+> the 1001st invocation sees K=99.0 — the runtime reactively
+> evicts the stale kernel and falls back to generic dispatch.
+>
+> **matrix-profile v0.3.0** ships `SpecCache::invalidate(handle)`
+> and `SpecRouter::cache_invalidate(handle)` — drop a single
+> cache entry by backend handle.
+>
+> **matrix-cpu v0.7.0** ships `SpecialisedTable::evict(handle)` and
+> `CpuExecutor::evict_specialised(handle)`.  Dropping the boxed
+> closure releases it.
+>
+> **matrix-metal v0.11.0** ships the matching `evict` /
+> `evict_specialised` on Apple targets (no-op stub elsewhere).
+> Dropping the closure releases the compiled
+> `MetalComputePipeline` back to the Metal driver.
+>
+> **image-gpu-core v0.14.0** ties it together:
+>   1. `try_auto_install_specialised_with_origin(spec, (subhash,
+>      op_idx))` records every Constant-folded install in
+>      `INSTALLED_DEOPT_TRACKING` with its originating observation.
+>   2. `scan_and_deoptimise()` runs at the end of every
+>      `drive_specialisation` call.  For each tracked handle, it
+>      re-reads the origin observation's tensor for the folded
+>      slot.  If `observed_min != observed_max`, the constant has
+>      destabilised: invalidate the cache, evict on both backends,
+>      remove from all side-tables.
+>   3. New public `deoptimisation_count()` counter for
+>      observability.
+>
+> End-to-end test `deoptimises_when_observed_constant_changes`:
+> drives 1100 invocations with K=42.0 (install fires), then ONE
+> invocation with K=99.0 (same shape, different bytes).  The
+> sample_tensor on the second variant updates observed_max from
+> 42 to 99; the deopt scan detects the divergence, evicts the
+> K=42 kernel, and `deoptimisation_count` rises.
+>
+> Test counts: matrix-profile 57 (unchanged; existing tests
+> cover the new methods), matrix-cpu 33 (unchanged), matrix-metal
+> 45 emitter (unchanged), image-gpu-core 35 → 36.
+>
+> **MX05 is feature-complete.**  The full tier — sampler → policy
+> → router → cache → emitter → install → dispatch → deopt — is
+> alive end-to-end on both CPU and metal backends, with the loop
+> closing back to generic dispatch when observations contradict
+> earlier assumptions.
+
+> **Implementation status (Phase 4.10 landed — MatMul emitter with folded matrix)**:
+> The emitter now supports its first **non-elementwise** op:
+> `Op::MatMul(0x15)` f32 with the RHS matrix folded as a stable
+> constant.  matrix-metal v0.10.0 emits MSL that bakes the
+> constant matrix's elements as float literals and computes
+> `C[r, c] = sum_k A[r, k] * B[k, c]` via a branch-per-column
+> dispatch.  matrix-cpu v0.6.0 mirrors this with a closure that
+> captures the matrix and iterates per output element.  V1 caps
+> at 2×2 and 4×4 constant matrices (16 or 64 bytes); larger
+> matrices need a different representation than baked literals
+> and land in a later phase.  Constraint: `folded_slot = Some(1)`
+> only (RHS folded).  LHS-folded MatMul returns `None` because
+> the runtime variable dimension sits on a different axis and
+> needs a separate kernel shape.  End-to-end test
+> `cpu_matmul_folded_rhs_2x2_produces_correct_output` runs on
+> every platform: installs a 2×2 specialised kernel with
+> `B = [[5, 6], [7, 8]]` folded, dispatches with
+> `A = [[1, 2], [3, 4]]` as the variable input, and asserts the
+> output is `[[19, 22], [43, 50]]`.  Test counts: matrix-metal
+> 40 → 45 emitter, image-gpu-core 34 → 35.  **MatMul is the first
+> emitter shape heavy enough that the planner could plausibly
+> pick metal** end-to-end through `run_graph_with_constant_inputs`
+> — its flop count (2·m·k·n) overcomes the per-element transfer
+> cost.  The planner-driven test is deferred to a later phase
+> because building a runnable matmul graph through `GraphBuilder`
+> would require fleshing out more of the builder API.
+
+> **Implementation status (Phase 4.9 landed — matrix-cpu auto-install + dispatch routing)**:
+> Closes the gap that's been open since Phase 4.3 — the
+> auto-installer now installs on the **CPU executor** too, not just
+> metal.  matrix-cpu v0.5.0 ships `build_specialised_kernel(key,
+> handle) -> Option<Box<SpecialisedKernelFn>>` mirroring matrix-metal's
+> `emit_specialised_kernel`: f32 commutative binary (Add/Mul/Max/Min),
+> non-commutative binary (Sub/Div/Pow) with `folded_slot`, and
+> unary-with-folded-input (Neg/Abs/Sqrt/Exp/Log/Tanh/Recip) all
+> produce Rust closures that operate on `BufferStore` directly.
+> image-gpu-core v0.12.0 promotes the CPU executor to a
+> **thread-local singleton** (`with_cpu_backend(|b| ...)`)
+> so installed kernels persist within a thread but tests don't
+> cross-contaminate.  `try_auto_install_specialised` now branches
+> on `key.backend_id`: 0 → CPU, 1 → metal.  Public
+> `specialised_install_count()` sums both backends' counts.
+> Side-table state (`installed_handles`, `installed_kernel_metadata`,
+> `handle_is_installed`) is now always-on rather than metal-only.
+> End-to-end test
+> `cpu_auto_installer_registers_kernel_after_threshold` runs on
+> every platform (no Apple gate) — drives 1100 invocations of an
+> Add-with-constant graph and asserts `specialised_install_count`
+> rises.  Bonus matrix-cpu fix: `dispatch::run`'s constant-buffer
+> alloc is no longer guarded by `if !buffers.contains(...)` —
+> always reallocates to avoid stale-buffer size mismatches under
+> the long-lived executor.  Test counts: matrix-cpu 33, image-gpu-core
+> 33 → 34.
+
+> **Implementation status (Phase 4.8 landed — multi-op specialised dispatch)**:
+> image-gpu-core v0.11.0 lifts the Phase 4.4 restriction that
+> capped specialised dispatch routing at one non-Const Compute op
+> per graph.  When every Compute op in `placed.ops` has an
+> installed specialised kernel, the dispatcher routes through
+> `dispatch_specialised_via_multi`: one prep `Dispatch` for all
+> setup ops, then a sequence of `DispatchSpecialised` requests
+> (one per Compute op in placement order), then one
+> `DownloadBuffer`.  New helpers
+> `all_non_const_computes_with_handles` (gate) and
+> `build_specialised_inputs_outputs` (shared trimming + folded-slot
+> logic refactored out of the single-op path).  Routing precedence
+> in `dispatch_via`: multi-op → single-op → generic, with silent
+> fall-through on any specialised-path error.  End-to-end test
+> `dispatch_multi_op_specialised_chain_produces_correct_output`
+> drives `Add(x, 3) → Mul(_, 2)` with both ops specialised and
+> asserts the final output is `[8, 10, 12, 14]` (i.e.
+> `(x + 3) * 2`) and `specialised_dispatch_count` rose by at
+> least 2.  Test count: image-gpu-core 32 → 33.
+
+> **Implementation status (Phase 4.7 landed — unary ops with folded input collapse to memset)**:
+> matrix-metal v0.9.0 extends `msl_emitter` to support **unary
+> f32 ops** (Neg, Abs, Sqrt, Exp, Log, Tanh, Recip) when their
+> single input is itself observed as a stable constant `K`.  In
+> that case every output element is `f(K)`, so the kernel collapses
+> to a memset of the precomputed value — `input_buffer_count = 0`,
+> only the output buffer is bound.  Entry-point names embed
+> `_input_const_` to distinguish from the binary `_const_` /
+> `_lhs_const_` / `_rhs_const_` namespace.
+> `MetalExecutor::install_specialised_from_emitted` branches its
+> install closure on `n_in`: 0-input kernels bind `(out, n)` at
+> slots `(0, 1)`; 1-input kernels keep the existing
+> `(a, out, n)` at `(0, 1, 2)` layout.  image-gpu-core v0.10.0
+> needed no dispatcher changes — Phase 4.6's
+> `ir_inputs.iter().take(n_in)` naturally yields an empty Vec when
+> `n_in == 0`.  End-to-end test
+> `dispatch_specialised_via_routes_unary_folded_input` runs
+> `Op::Sqrt(input=[16,16,16,16])` through the full chain and
+> asserts the output is `[4, 4, 4, 4]` — the memset kernel wrote
+> `√16 = 4` to every element.  Test counts:
+> matrix-metal 40 emitter (+9), image-gpu-core 32 (+1).
+
+> **Implementation status (Phase 4.6 landed — `folded_slot` unlocks non-commutative ops)**:
+> `SpecKey` gains a `folded_slot: Option<u8>` field
+> (matrix-profile v0.2.0) recording which input slot the policy
+> folded into a `RangeClass::Constant`.  `DefaultPolicy` sets it
+> when picking a constant input; the field is `None` otherwise.
+> matrix-metal v0.8.0 lights up `Op::Sub`, `Op::Div`, and `Op::Pow`
+> with **two variants per op** — LHS-folded (`K op a[gid]`) and
+> RHS-folded (`a[gid] op K`) — selected by `folded_slot`.  Entry
+> point names embed the variant (`specialised_sub_lhs_const_f32_…`
+> vs `specialised_sub_rhs_const_f32_…`) so they coexist in the
+> executor's `SpecialisedTable`.  matrix-cpu's `CpuSpecialiser`
+> handle hash also feeds on `folded_slot` so two SpecKeys
+> differing only in slot produce distinct handles.
+> image-gpu-core v0.9.0's `dispatch_specialised_via` now consults
+> `folded_slot` to pick which IR input to pass through
+> `DispatchSpecialised`: for `folded_slot = Some(s)` on a 2-input
+> binary op, the unfolded slot `1 - s` is the one passed to the
+> kernel.  End-to-end test
+> `dispatch_specialised_via_routes_lhs_folded_correctly` builds
+> `Op::Sub([10,10,10,10] - [1,2,3,4])` with LHS folded as `K=10`,
+> and asserts the output is `[9, 8, 7, 6]` — proving the
+> dispatcher passes the variable RHS, not the constant LHS.
+> Test counts: matrix-profile 57, matrix-cpu 33, matrix-metal 31
+> emitter + 25 integration, image-gpu-core 31.
+
+> **Implementation status (Phase 4.5 landed — MSL emitter supports more binary ops)**:
+> `matrix-metal` v0.7.0 extends `msl_emitter` to cover three more
+> commutative f32 binary ops: `Op::Mul` (0x09), `Op::Max` (0x0B),
+> `Op::Min` (0x0C).  Each follows the same `specialised_<op>_const_f32_0xH…H`
+> entry-point convention as Phase 4.2's Add.  The dedicated
+> `emit_add_f32_with_rhs_constant` is replaced by a generic
+> `emit_binary_f32_with_rhs_const` helper that takes an MSL
+> `{a} OP {k}` template, so adding a new commutative binary op
+> is now a one-line match-arm change.  Non-commutative ops (Sub,
+> Div, Pow) still return `None` — they require a `folded_slot`
+> extension on `SpecKey` so the emitter knows which side of the
+> binary operator carries the literal, which is Phase 4.6 work.
+> Test count: 14 → 19 emitter tests, including
+> `sub_div_pow_return_none_until_folded_slot_lands` which pins
+> the deferral.
+
+> **Implementation status (Phase 4.4 landed — dispatch-routing half of the loop)**:
+> `image-gpu-core` v0.8.0 closes the dispatch side of the routing
+> loop.  When a placed graph has exactly one non-Const Compute op and
+> that op's specialised kernel is installed on the metal executor,
+> image-gpu-core routes the dispatch through
+> `ExecutorRequest::DispatchSpecialised` instead of the generic
+> `Dispatch { graph }` request.  Strategy: strip the single Compute
+> op from `placed.ops`, fire a prep `Dispatch` so matrix-metal's
+> existing handler allocates buffers and uploads constants under
+> planner-assigned BufferIds (sidestepping the
+> protocol-`AllocBuffer`-uses-server-IDs mismatch), then fire one
+> `DispatchSpecialised { handle, inputs, outputs }` where `inputs` is
+> `ir_op.inputs()` trimmed to the installed kernel's
+> `input_buffer_count` (so an Add-with-folded-RHS kernel only sees
+> the LHS buffer).  New public `specialised_dispatch_count()` counter
+> tracks how many invocations went through `DispatchSpecialised`.
+> Test `dispatch_specialised_via_produces_correct_output` builds an
+> `Op::Add(A=[1,2,3,4], B=[7,7,7,7])` graph manually pinned to metal,
+> installs the Add+7.0 specialised kernel directly, and verifies the
+> downloaded output is `[8, 9, 10, 11]` — the specialised kernel
+> matches the generic Add bit-for-bit.  Limited to single-Compute-op
+> graphs in V0.8.0; multi-op routing is later phase work.
+
+> **Implementation status (Phase 4.3 landed — runtime auto-installer, install half of the loop)**:
+> `image-gpu-core` v0.7.0 closes the install side of the specialised-
+> kernel loop.  `drive_specialisation` now consumes the
+> `SpecRouter::route` return value (previously discarded) and feeds
+> each `SpecialisedKernel` to a new `try_auto_install_specialised`
+> helper.  On metal targets the helper emits MSL via the Phase 4.2
+> `msl_emitter`, compiles it through `MetalExecutor::install_specialised_from_emitted`,
+> and records the handle in a process-wide `INSTALLED_HANDLES` set
+> for idempotency.  New public `image_gpu_core::specialised_install_count()`
+> counter exposes the result distinct from `spec_cache_len()` — the
+> first counts kernels actually compiled and registered, the second
+> counts emitted handles in the cache.  End-to-end test
+> `auto_installer_registers_kernel_after_threshold` drives a hot
+> Add-with-constant graph 1100 times and asserts the install counter
+> rises above zero — the first test in the workspace where a kernel
+> traverses the *entire* sampler → policy → router → cache → emitter
+> → compile → install pipeline.  Phase 4.4 will close the **dispatch**
+> half (replacing generic `Dispatch { graph }` with per-op
+> `DispatchSpecialised` requests that actually invoke the installed
+> kernels).  matrix-cpu auto-install is also Phase 4.4+ work —
+> `CpuSpecialiser` emits opaque handles today, not closure sources,
+> so there's nothing to translate yet.
+
+> **Implementation status (Phase 4.2 landed — matrix-metal MSL emitter + specialised dispatch)**:
+> `matrix-metal` v0.6.0 grows the GPU side of what matrix-cpu got in
+> Phase 4.1.  Three pieces land together:
+>
+> 1. **`matrix_metal::msl_emitter`** (cross-platform, runs on every
+>    CI runner) — pure code generator that takes a `SpecKey` + handle
+>    and returns an `EmittedKernel { source, entry_point,
+>    input_buffer_count, output_buffer_count }`.  v0.6.0 minimum-viable
+>    scope: F32 binary Add with a 4-byte RHS constant baked in as a
+>    Ryu-shortest float literal in the kernel source.  The entry-point
+>    name `specialised_add_const_f32_0xH...H` embeds the handle so
+>    distinct specialisations of the same op coexist.  Returns `None`
+>    for unsupported `SpecKey` shapes so the runtime falls back to
+>    generic dispatch.  Phase 4.3 extends to Sub/Mul/Div and beyond.
+>
+> 2. **`matrix_metal::SpecialisedTable`** (Apple-only) — the metal
+>    analog of the matrix-cpu table.  Closure signature takes
+>    `&mut DispatchCtx` (not `&mut BufferStore`) so closures can
+>    encode through the same command queue / pipelines as the
+>    generic dispatcher.  Send-only (not `Send + Sync`) because
+>    `MetalComputePipeline` wraps a raw Obj-C pointer; safe because
+>    the outer `Mutex<State>` already provides `Sync`.
+>
+> 3. **`MetalExecutor::install_specialised_from_emitted(handle,
+>    EmittedKernel)`** — convenience layer that compiles the emitted
+>    MSL to a `MetalComputePipeline`, wraps it in a dispatching
+>    closure with buffer-count validation, and installs the closure
+>    under `handle`.  Plus the lower-level
+>    `install_specialised(handle, Box<MetalSpecialisedKernelFn>)` for
+>    pre-built closures.
+>
+> `ExecutorRequest::DispatchSpecialised` on Apple now returns
+> `DispatchDone` for installed handles, `NOT_IMPLEMENTED` for
+> unknown ones, and `RUNTIME_ERROR` for kernel errors or
+> `catch_unwind`-caught panics (same security shape as Phase 4.1).
+>
+> Tests: 14 emitter unit tests run on every platform; 5
+> `SpecialisedTable` unit tests + 8 integration tests run on
+> Apple — including a real end-to-end test that emits MSL for
+> "add 7.5", compiles, installs, dispatches `[1,2,3,4]`, downloads,
+> and asserts `[8.5, 9.5, 10.5, 11.5]`.  Total: 19 unit + 25
+> integration on macOS CI.
+>
+> Phase 4.3 will land the runtime-side auto-installer: matrix-runtime
+> observes a `SpecRouter` cache hit and calls
+> `install_specialised_from_emitted` on the target executor
+> automatically.
+
+> **Implementation status (Phase 4.2 historical — tensor-byte sampling, DefaultPolicy fires)**:
+> This block predates the matrix-metal MSL emitter work and is kept
+> for historical context.  `image_gpu_core::pipeline::drive_specialisation`
+> samples bytes from every constant input the graph carries via
+> `Profiler::sample_tensor`, walking `placed.ops` once to build a
+> `TensorId → &PlacedConstant` map, then attributing each consuming
+> op's input slot.  This populates `ProfileObservation::tensor_observations`
+> (which was always empty in earlier phases) and lets the production
+> `DefaultPolicy` fire on real constant-input observations.  The
+> temporary `HotPolicy` workaround from Phase 4 visibility is gone;
+> the threshold returns to the spec's 1000-invocation default and
+> `spec_cache_len()` still rises after enough invocations.
+
+> **Implementation status (Phase 4 visibility landed — image-gpu-core wired)**:
+> `image-gpu-core::pipeline` now installs `matrix_cpu::specialiser()`
+> in front of its process-wide `SpecRouter`, plus a small custom
+> `HotPolicy` that fires on invocation count alone (threshold 100,
+> down from the spec's 1000 default).  Calling
+> `image_gpu_core::spec_cache_len()` after a few hundred filter
+> invocations is now the first place a domain library can observe
+> the cache rising above zero in production code.  The dispatch
+> path doesn't yet consume the specialised kernel handle (still
+> needs an executor-protocol extension), so routing and output
+> bytes are unchanged from V0.4.0; only the cache-size signal is
+> new.
+
+> **Implementation status (Phase 4.1 landed — specialised dispatch executes on CPU)**:
+> `matrix-cpu` v0.4.0 installs a per-handle closure table
+> (`SpecialisedTable`) on `CpuExecutor`.  New API
+> `CpuExecutor::install_specialised(handle, Box<dyn Fn>)` registers a
+> closure with signature
+> `fn(&mut BufferStore, &[BufferId], &[BufferId]) -> Result<Vec<OpTiming>, String>`
+> under the opaque `u64` handle emitted by `CpuSpecialiser`.
+> `ExecutorRequest::DispatchSpecialised { handle, inputs, outputs, .. }`
+> now does a real lookup: hit → invoke the closure, return
+> `DispatchDone { job_id, timings }`; miss → return
+> `Error { code: NOT_IMPLEMENTED, .. }` so the runtime falls back
+> to the generic `Dispatch` path.  This is the moment the spec MX05
+> promise that "the dispatch path actually invokes specialised
+> kernels" is realised — 12 new tests (7 unit + 5 integration) cover
+> install/lookup/overwrite/error/round-trip including a real f32
+> add closure that fires through DispatchSpecialised and produces
+> correct output bytes.  What's still pending: the runtime-side
+> piece that observes a `SpecRouter` cache hit and *automatically*
+> calls `install_specialised` on the target executor — a
+> matrix-runtime concern landing in the next phase.  Phase 4.2 will
+> mirror this plumbing in matrix-metal with an MSL emitter cached
+> by handle.
+
+> **Implementation status (Phase 4 minimum-viable landed — first real backend Specialiser)**:
+> `matrix_cpu::CpuSpecialiser` ships as the workspace's first real
+> `Specialiser` impl (previously every test and demo used
+> `NoopSpecialiser` which always returned `None`).  Emits a
+> deterministic 64-bit handle per `SpecKey`; the handle is opaque to
+> the runtime and the dispatch path does not yet consume it (that
+> needs an `executor-protocol` extension — V2 work).  But under a
+> `SpecRouter` configured with `CpuSpecialiser` and a low policy
+> threshold, hot graphs now visibly populate the `SpecCache` — the
+> spec's promise that "Phase 4 will see spec_cache_len rise" cashed
+> in.  Integration test
+> `matrix_cpu::specialiser::tests::router_with_cpu_specialiser_populates_cache_when_policy_fires`
+> is the first place in the codebase where `cache.len() > 0`.
+
+> **Implementation status (Phase 3 V5 landed — matrix-profile crate)**:
+> The full specialisation pipeline (Profiler / sampler / SpecKey /
+> Specialiser / SpecCache / Policy / SpecRouter) lives in its own
+> standalone crate at `code/packages/rust/matrix-profile/`.  Depends
+> only on `matrix-ir` and `compute-ir` — no `executor-protocol`, no
+> `matrix-runtime` — keeping the dependency graph acyclic and the
+> pipeline reusable from any domain library.  `matrix-runtime`
+> re-exports every public item for back-compat so existing
+> `use matrix_runtime::Profiler;` style imports continue to work.
+> 57 tests live in the new crate; matrix-runtime's own test count
+> drops to 17 unit + 8 integration covering planner / registry /
+> cost / runtime.
+
+> **Implementation status (Phase 3 V4 landed — image-gpu-core wired)**:
+> `image-gpu-core::pipeline::run_graph_with_constant_inputs` now
+> drives the full pipeline on every dispatch — `Profiler::record_dispatch`
+> updates invocation counters and `SpecRouter::route` is consulted
+> per Compute op.  Per-process singletons (`OnceLock`-backed Profiler
+> and SpecRouter with `NoopSpecialiser` installed) amortise setup
+> cost across calls.  Public hooks `image_gpu_core::profiler_observations()`
+> and `image_gpu_core::spec_cache_len()` make the wiring observable
+> from CLI demos and tests.  Phase 4 will install a backend-specific
+> `Specialiser` (matrix-cpu or matrix-metal emitting kernels with
+> constants folded in) and the route() return will start being
+> consumed by an extended executor-protocol.
+
+> **Implementation status (Phase 3 V3 landed)**: `SpecRouter` ships
+> in `matrix_runtime::router` and ties together the four pieces:
+> Profiler observations → policy → cache → specialiser, end-to-end.
+> Cache lookup happens before the specialiser is invoked; cache miss
+> consults the specialiser; if the specialiser returns `Some`, the
+> kernel is cached for future calls; if it returns `None`, the cache
+> is **not** poisoned (so a backend that can't yet specialise but
+> might later gets retried).  Phase 3 V4 will wire `SpecRouter::route`
+> into the dispatch path inside `image-gpu-core::pipeline` (and any
+> other domain library that does dispatch), with the call site placed
+> right after `record_dispatch`.
+
+### 5. Specialised cache + dispatch routing
+
+Each executor extends its existing pipeline cache:
+
+```rust
+pub struct ExecutorState {
+    // existing
+    generic_pipelines: HashMap<String, Pipeline>,
+
+    // NEW
+    spec_pipelines: LruCache<SpecKey, SpecialisedPipeline>,
+    spec_inflight: HashSet<SpecKey>,  // jobs currently being compiled
+}
+```
+
+On each dispatch:
+
+1. Compute `SpecKey` for the op.
+2. Cache hit → use specialised pipeline.
+3. Cache miss + `spec_inflight.contains(&key)` → use generic, the
+   spec is being compiled, will hit on a future call.
+4. Cache miss + not in flight → use generic; if the trigger says
+   "specialise this", enqueue a compile job and add to `spec_inflight`.
+
+LRU eviction caps memory.  Default cap: 256 specialised pipelines per
+executor (~10–100 MiB).
+
+## Specialisation dimensions worth tracking
+
+Not just dtype-narrowing.  V8 and HotSpot demonstrate that specialising
+on **anything observable** is fair game if the hit rate justifies it:
+
+| Dimension | Win | Threshold |
+|---|---|---|
+| **Dtype range**: declared F32, observed values fit in F16/I8 | Memory bandwidth + compute | 95% range coverage |
+| **Static shape**: same shape seen repeatedly | Compiler unrolls, register pressure improves | 95% shape coverage |
+| **Stride pattern**: contiguous vs strided | Drops stride math | 100% over hot ops |
+| **Constant input**: input that's always the same | Fold into kernel; potentially fold subsequent ops | 95% value coverage |
+| **Sparsity**: input mostly zero | Sparse kernel | >70% zeros |
+| **Aliased outputs**: same buffer reused | In-place fused kernel | Repeated pattern |
+
+V1 implementation can start with dtype + shape + constant.  Sparsity
+and aliasing are V2 polish.
+
+## Configuration
+
+Default config exposed via the runtime API:
+
+```rust
+pub struct SpecConfig {
+    pub specialise_threshold: u64,        // default: 1_000 invocations
+    pub sample_rate: f32,                 // default: 0.01 (1%)
+    pub max_spec_cache_per_executor: usize, // default: 256
+    pub background_compile_threads: usize,  // default: 1
+    pub deopt_on_distribution_shift: bool, // default: false (V1 = stable)
+}
+```
+
+Can be set per-runtime; defaults work for most workloads.  Programs
+running short workloads (e.g. CLI tools that dispatch a few times and
+exit) can `disable_specialisation()` to avoid the profiling overhead
+entirely.
+
+## Threshold rationale
+
+Production JITs all use thresholds in the 1k–10k invocation range.
+The reason is the cost-benefit calculation:
+
+- Compilation cost: 5–50 ms for an MSL kernel; similar for PTX
+- Per-dispatch savings from specialisation: typically 5–30%
+- Per-dispatch baseline: 10 µs–10 ms depending on workload
+
+For a 100 µs op with 10% specialisation savings (10 µs/call), break-even
+is **5,000 invocations** just on compilation.  For a 1 ms op with 30%
+savings (300 µs/call), break-even is **17 invocations** — but you also
+need to be sure the workload is stable, which is where the count
+threshold protects us from speculatively specialising one-shot
+workloads.
+
+V1 default `1_000` invocations is conservative enough to skip CLI
+tools and short scripts, aggressive enough to catch the second epoch
+of an LLM inference run.
+
+## Phased delivery
+
+| Phase | Work | Win | Effort |
+|---|---|---|---|
+| **1** | Counters + cache infrastructure.  Single-tier:  `(op, dtype)` cache. No range observation yet. | Per-backend dtype variants compile lazily. | Small |
+| **2** | Range observation + auto-narrow Cast insertion. | First real "JIT-like" specialisation: F32 → F16 / I8 if values fit. | Medium |
+| **3** | Shape specialisation.  Compile fixed-size variants for hot shapes. | Compiler can unroll loops, reduce register pressure. | Medium |
+| **4** | Constant folding into kernels. | Biggest LLM/CV win — attention masks, conv weights, image mid-grey. | Medium |
+| **5** | Full deopt + stale-spec cleanup. | Workloads with shifting distributions stay correct. | Medium |
+
+Each phase is independently deliverable.  Phase 1 alone gives the
+runtime a meaningful win (lazy compilation of dtype variants without
+requiring all variants at startup).
+
+## What about CPU?
+
+`matrix-cpu` benefits from MX05 too, just less dramatically:
+
+- Dtype specialisation: SIMD width lines up with narrower types
+  (8× I8 in a 256-bit register vs 8× F32)
+- Shape specialisation: enables bounded-loop optimisations
+- Constant folding: same as GPU
+
+V1 of MX05 should support `matrix-cpu` even though the headline win
+is on GPU executors.  The interface is the same.
+
+## What about cross-process / cross-host caching?
+
+Out of scope for V1.  V2 could:
+
+- Persist specialised kernels to disk (`~/.cache/matrix-runtime/spec/<hash>.metallib`)
+- Share via remote cache (S3-style) for fleet-wide warm-up
+- Authenticated kernel cache so a malicious shared cache can't inject
+  poisoned kernels
+
+The wire format defined in MX03 already allows shipping pre-compiled
+kernels (`KernelSource::Native`); persistence is "just" cache layering
+on top.
+
+## Test methodology
+
+Specialisation is hard to unit-test in isolation because the value
+emerges from observed workloads.  Per-component tests:
+
+1. **Profile sampler** — feed synthetic dispatches, assert observation
+   stats are correct.  Test sampling rate honoured.
+2. **Trigger policy** — feed observations, assert the right `SpecKey`s
+   are produced.
+3. **Per-backend specialiser** — feed `(SpecKey, Op)` pairs, assert
+   compiled pipelines exist and produce numerically-correct output.
+4. **Cache eviction** — fill cache past LRU cap, assert oldest is evicted.
+5. **End-to-end** — run a synthetic 10k-iteration loop, assert that
+   specialised pipelines are warm and faster than generic after some
+   number of iterations.  Cross-backend test: same workload should
+   converge to the same specialisation choices on CPU and Metal.
+6. **Deopt safety** — change input distribution mid-run, assert the
+   runtime doesn't produce wrong results from a stale spec.
+
+## Constraints
+
+- **Zero external dependencies** — all crates remain `core`/`alloc`/`std`
+  only, plus the existing path deps to `matrix-ir`, `compute-ir`,
+  `executor-protocol`, `matrix-runtime`, and per-backend executors.
+- **No IR changes** — MX01's vocabulary stays exactly as it is.
+- **No protocol changes** — MX03's message types stay exactly as
+  they are.  Specialisation is purely an executor-internal concern.
+- **No planner changes** — MX04's algorithm stays exactly as it is.
+  The profiler hooks into the runtime's dispatch loop, not the
+  planner.
+
+## Out of scope (V1 of MX05)
+
+- **Cross-process / fleet-wide cache** — single-process for V1.
+- **Auto-tuning of threadgroup sizes** — V1 uses fixed sizes.
+  V2 can microbenchmark per-shape.
+- **Speculative parallel execution on multiple specialisations** —
+  V1 picks one, runs it.
+- **Kernel fusion across ops** — adjacent ops on the same executor
+  could be fused into one kernel; V2 work.
+
+## Open questions
+
+1. **How frequent should distribution-shift detection be?**  V1
+   default: never.  V2: check every Nth invocation, deopt if shift
+   exceeds threshold.  Cost vs correctness trade-off.
+
+2. **Should specialisation be visible to the user?**  Yes via
+   inspection APIs (`Runtime::spec_stats() → Vec<SpecStats>`), but
+   not as a user-facing config knob.  Default behaviour stays
+   automatic.
+
+3. **What's the right default for `sample_rate`?**  1% is V8's
+   conservative default; 10% costs more but reaches the threshold
+   faster.  V1 ships 1% with `set_sample_rate()` for tuning.
+
+4. **Does specialisation invalidate when the planner re-routes ops?**
+   E.g., a graph that ran on Metal yesterday now lands on CPU because
+   Metal is unhealthy.  V1: each backend has its own cache; cross-
+   backend invalidation is N/A.
+
+## Cross-references
+
+- **MX00** — architecture overview (cost-model planner)
+- **MX01** — `matrix-ir::Op` wire tags used in `SpecKey.op_kind`
+- **MX02** — `compute-ir::ComputeGraph` is what the profiler hashes
+- **MX03** — `KernelSource` is what the specialiser produces (in
+  generated form per backend)
+- **MX04** — runtime is where the profiler + trigger live
+- **[MX06](MX06-cuda-executor.md)** — `matrix-cuda` executor uses
+  the same specialisation interface; nothing in MX05 is Metal-specific
+- **Future MX07** — kernel fusion across adjacent ops could build on
+  MX05's specialised cache infrastructure

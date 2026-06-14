@@ -1,0 +1,32 @@
+# mosaic-package.toml — manifest for mosaic-pkg-card.
+#
+# Conforms to the UI29 §4.2 package-manifest shape: a [package] table for
+# identity, [components] listing the publicly exported components, an empty
+# [dependencies] table (this package is built only from UI29 kernel
+# primitives — no other userland packages), and a [kernel] table declaring
+# the UI29 kernel revision the package targets.
+#
+# Why this package exists
+# -----------------------
+# mosaic-pkg-card is the *minimum-viable* userland package: a single Card
+# component composed entirely from Box + Column + Text — three kernel
+# primitives that have been stable in every Mosaic backend since UI29
+# landed.  It is intentionally simpler than its sibling mosaic-pkg-grid
+# (which exercises For / If / HostTable) so the package-architecture
+# plumbing (manifest, .mil compile, .mll compile, .msl compile) can be
+# audited in isolation.
+
+[package]
+name = "mosaic-pkg-card"
+version = "0.1.0"
+description = "A simple Card component built on UI29 kernel primitives — proves the architecture with the smallest possible package"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Card"]
+
+[dependencies]
+# no other packages — built only from UI29 kernel primitives
+
+[kernel]
+version = "1"

@@ -237,6 +237,7 @@ Runtime core (implement first):
   LANG03 jit-core         → consumes vm-core feedback; emits compiler-ir
   LANG04 aot-core         → headless vm-core path (no interpreter overhead)
   LANG05 backend-protocol → codifies what intel4004-backend etc. must implement
+  LANG19 codegen-core     → unified optimize+compile pipeline for ALL backends
 
 Tooling layer (implement after LANG01–LANG05):
   LANG06 debug-integration  → vm-core debug hooks; DAP bridge via 05d/05e
@@ -244,6 +245,13 @@ Tooling layer (implement after LANG01–LANG05):
   LANG08 repl-integration   → PL00 LanguagePlugin; incremental IIRModule state
   LANG09 notebook-kernel    → JMP over ZeroMQ; cell execution; rich output
 ```
+
+`codegen-core` (LANG19) sits between the specialisation passes (JIT/AOT)
+and the hardware backends.  It provides a generic `CodegenPipeline[IR]`
+that works for both the interpreted-language path (`list[CIRInstr]`) and
+the compiled-language path (`IrProgram`), eliminating the duplicate
+optimize-then-compile code that previously lived separately in `jit-core`,
+`aot-core`, and each compiled-language compiler.
 
 After LANG01–LANG09 are implemented, each new language is:
 - **4 packages** for the runtime (lexer, parser, type-checker, compiler)

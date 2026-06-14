@@ -1,0 +1,82 @@
+/**
+ * escape.ts — XML escaping + invalid-character stripping.
+ *
+ * Two concerns:
+ *
+ * 1. **XML character escaping.**  The five entities defined by XML
+ *    1.0 §4.6:
+ *        &  → &amp;
+ *        <  → &lt;
+ *        >  → &gt;
+ *        "  → &quot;
+ *        '  → &apos;
+ *    We escape ALL FIVE in both element text content and attribute
+ *    values (some XML serialisers skip `>` and `'` in text since
+ *    they're not strictly required there, but escaping all five
+ *    keeps the output uniform and prevents subtle bugs when text
+ *    is later relocated into an attribute).
+ *
+ * 2. **Invalid XML 1.0 character stripping.**  XML 1.0 §2.2 forbids
+ *    every C0 control character except `\t` (0x09), `\n` (0x0A),
+ *    `\r` (0x0D).  Also forbids the surrogates (U+D800–U+DFFF) and
+ *    U+FFFE / U+FFFF.  Many real-world inputs (database exports,
+ *    user-pasted text) contain stray NUL or vertical-tab bytes
+ *    that crash XML parsers downstream — we strip them silently.
+ *
+ * @module escape
+ */
+
+const XML_ESCAPE_MAP: Readonly<Record<string, string>> = Object.freeze({
+  "&":  "&amp;",
+  "<":  "&lt;",
+  ">":  "&gt;",
+  "\"": "&quot;",
+  "'":  "&apos;",
+});
+
+// All five XML predefined entities — single-pass replacement (CodeQL
+// incomplete-string-escape rule accepts this form).
+const XML_SPECIAL_RE = /[&<>"']/g;
+
+// XML 1.0 §2.2 forbidden character ranges, EXCEPT the three
+// allowed C0 controls (\t, \n, \r):
+//   U+0000-U+0008, U+000B, U+000C, U+000E-U+001F, U+FFFE, U+FFFF
+// (Surrogates U+D800-U+DFFF are also forbidden but JS strings can't
+//  contain unpaired surrogates safely; serialiser layers handle that.)
+// eslint-disable-next-line no-control-regex
+const INVALID_XML_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g;
+
+/**
+ * Strip XML 1.0-illegal characters from a string.  Returns a
+ * copy with `\t`, `\n`, `\r` preserved and everything in the
+ * forbidden ranges removed.
+ */
+export function stripInvalidXml(s: string): string {
+  return s.replace(INVALID_XML_RE, "");
+}
+
+/**
+ * Escape XML special characters for use in element text content
+ * OR attribute values.  Applies `stripInvalidXml` first so the
+ * output is always a well-formed XML 1.0 character sequence.
+ */
+export function escapeXml(s: string): string {
+  return stripInvalidXml(s).replace(XML_SPECIAL_RE, (ch) => XML_ESCAPE_MAP[ch]!);
+}
+
+/**
+ * Wrap content in a CDATA section.  Used for `contentHtml` where
+ * the caller has supplied pre-escaped HTML and we want to ship it
+ * verbatim.  We split on the only sequence that can terminate a
+ * CDATA section (`]]>`) and emit it as two adjacent CDATA blocks
+ * with the `>` outside — a standard workaround.
+ *
+ * Inputs are still stripped of invalid XML chars first.
+ */
+export function wrapCdata(html: string): string {
+  const safe = stripInvalidXml(html);
+  // Break any "]]>" into "]]" + "]]><![CDATA[>" so the CDATA section
+  // never closes early.
+  const broken = safe.split("]]>").join("]]]]><![CDATA[>");
+  return `<![CDATA[${broken}]]>`;
+}

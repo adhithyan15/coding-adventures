@@ -1,0 +1,8 @@
+[package]
+name = "cas-number-theory"
+version = "0.1.0"
+edition = "2021"
+description = "Number theory operations: GCD, primality, factorization, Chinese Remainder Theorem, Euler totient"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

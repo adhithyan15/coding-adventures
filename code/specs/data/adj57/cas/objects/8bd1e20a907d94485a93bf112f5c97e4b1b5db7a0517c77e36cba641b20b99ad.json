@@ -1,0 +1,29 @@
+{
+  "hash": "8bd1e20a907d94485a93bf112f5c97e4b1b5db7a0517c77e36cba641b20b99ad",
+  "url": "https://www.sentinelone.com/labs/acidrain-a-modem-wiper-rains-down-on-europe/",
+  "title": "AcidRain | A Modem Wiper Rains Down on Europe | SentinelOne (SentinelLabs)",
+  "interned_at": "",
+  "content": "We assess with medium-confidence that there are developmental similarities between AcidRain and a VPNFilter stage 3 destructive plugin. In 2018, the FBI and Department of Justice attributed the VPNFilter campaign to the Russian government.",
+  "citations": [
+    {
+      "start": 0,
+      "end": 135,
+      "quote": "We assess with medium-confidence that there are developmental similarities between AcidRain and a VPNFilter stage 3 destructive plugin.",
+      "used_for": "prior:acidrain_sandworm_gru"
+    }
+  ],
+  "onward_citations": [
+    {
+      "citation": "FBI/DOJ 2018 VPNFilter attribution; EU + Five Eyes May 10 2022 attribution",
+      "interned_hash": ""
+    },
+    {
+      "citation": "(root: SentinelLabs primary TLSH measurement on VT corpus \u2014 no onward citation needed)",
+      "interned_hash": ""
+    },
+    {
+      "citation": "(root: SentinelLabs primary VirusTotal sample metadata \u2014 no onward citation needed)",
+      "interned_hash": ""
+    }
+  ]
+}

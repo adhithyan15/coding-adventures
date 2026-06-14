@@ -1,0 +1,770 @@
+{
+  "per_domain": [
+    {
+      "domain": "geology",
+      "ingest": {
+        "source_url": "https://www.mdpi.com/2075-163X/11/2/152",
+        "ground_truth": "The unknown \"Philippines Dushan jade\" gem material was established to be tremolitized diopside anorthosite \u2014 a distinct rock, NOT Dushan jade. Establishment: PLM petrography, electron probe microanalysis (EMPA), FTIR, Raman microprobe (532 nm), and UV-Vis spectroscopy showed it is composed mainly of anorthite (plagioclase) with minor diopside, tremolite, uvarovite, titanite, chromite, zoisite, prehnite, thomsonite-Ca and chlorite; uvarovite/diopside/tremolite are the color-causing minerals (Cr3+, Fe2+, Fe3+ and charge transfer). The high RI (>1.78 in green parts) and hexagonal euhedral green crystals correspond to uvarovite garnet/diopside; the white vitreous basal mineral with well-developed cleavage is anorthite. The authors conclude the Philippines rock and Dushan jade (a zoisitized anorthosite) are two completely different materials and that the Philippines rock should be called \"tremolitized diopside anorthosite.\" Source: Ye, Bai, Li & Sun, Minerals 2021, 11, 152, doi:10.3390/min11020152 (open access). Note: GIA Lab Note \"Purple Anhydrite\" (Spring 2023) was the first-choice case but GIA's JS-gated site could not be fetched verbatim in this environment; this MDPI open-access PDF was fully extractable. case_text condenses the verbatim observed-properties passages (Sections 2 and 3.1 + Table 1); PDF line-wrap newlines and the fl-ligature/en-dash/curly-quote artifacts were normalized to clean reading text.",
+        "case_text": "In recent years, a new type of material called Philippines \"Dushan jade\" has appeared in the gemstone market in China. This new type of material, very similar in appearance and physical properties to Dushan jade, is causing confusion in the market and poses identification difficulties. In this study, eight representative samples covering all the color varieties were selected, including white, green, cyan-gray, white with black spots, dark green, and brown. The refractive index (RI) and specific gravity (SG) were measured by the distant vison method and the hydrostatic weighing method, respectively. The Vickers hardness was measured and converted to Mohs hardness values. The white sample (Q-1) of delicate texture and smooth surfaces consisted mainly of white basal minerals. The green samples consisted mainly of white basal minerals with green spots and green plaques. The green minerals were mostly euhedral-hypidiomorphic and the cross-section was approximately hexagonal. There are clear reflecting surfaces in the shape of \"fly wings\" under reflected light, indicating that the cleavage of the basal minerals is well developed. The white sample had a vitreous luster, RI 1.57, SG 2.77 and Mohs hardness 6.37; the cyan-gray sample had a greasy luster, RI 1.63 and SG 2.83; the green samples gave a white part RI of 1.57 with the green part over 1.78.",
+        "segments": [
+          {
+            "text": "In recent years, a new type of material called Philippines \"Dushan jade\" has appeared in the gemstone market in China. ",
+            "kind": "fact",
+            "term": "unknown_material(new_market_material_resembling_dushan_jade)"
+          },
+          {
+            "text": "This new type of material, very similar in appearance and physical properties to Dushan jade, is causing confusion in the market and poses identification difficulties. ",
+            "kind": "fact",
+            "term": "resembles(dushan_jade,appearance_and_physical_properties)"
+          },
+          {
+            "text": "In this study, eight representative samples covering all the color varieties were selected, including white, green, cyan-gray, white with black spots, dark green, and brown. ",
+            "kind": "fact",
+            "term": "color_varieties(white,green,cyan_gray,white_with_black_spots,dark_green,brown)"
+          },
+          {
+            "text": "The refractive index (RI) and specific gravity (SG) were measured by the distant vison method and the hydrostatic weighing method, respectively. ",
+            "kind": "discard",
+            "reason": "describes measurement methods only; no observed property value here"
+          },
+          {
+            "text": "The Vickers hardness was measured and converted to Mohs hardness values. ",
+            "kind": "discard",
+            "reason": "describes measurement method only; no observed value here"
+          },
+          {
+            "text": "The white sample (Q-1) of delicate texture and smooth surfaces consisted mainly of white basal minerals. ",
+            "kind": "fact",
+            "term": "texture(delicate,smooth);dominant_phase(white_basal_mineral)"
+          },
+          {
+            "text": "The green samples consisted mainly of white basal minerals with green spots and green plaques. ",
+            "kind": "fact",
+            "term": "green_phase(spots_and_plaques)_in(white_basal_mineral)"
+          },
+          {
+            "text": "The green minerals were mostly euhedral-hypidiomorphic and the cross-section was approximately hexagonal. ",
+            "kind": "fact",
+            "term": "crystal_habit(euhedral_hexagonal_cross_section)"
+          },
+          {
+            "text": "There are clear reflecting surfaces in the shape of \"fly wings\" under reflected light, indicating that the cleavage of the basal minerals is well developed. ",
+            "kind": "fact",
+            "term": "cleavage(well_developed_basal,fly_wing_reflections)"
+          },
+          {
+            "text": "The white sample had a vitreous luster, RI 1.57, SG 2.77 and Mohs hardness 6.37; the cyan-gray sample had a greasy luster, RI 1.63 and SG 2.83; the green samples gave a white part RI of 1.57 with the green part over 1.78.",
+            "kind": "fact",
+            "term": "gemology(luster_vitreous_to_greasy;ri_1.57_to_1.63;sg_2.77_to_2.83;hardness~6.4;green_ri_over_1.78)"
+          }
+        ],
+        "candidate_diagnoses": [
+          "dushan_jade_zoisitized_anorthosite",
+          "tremolitized_diopside_anorthosite",
+          "nephrite_jade",
+          "jadeite_jade",
+          "serpentine_jade",
+          "uvarovite_bearing_anorthosite"
+        ]
+      },
+      "derived": {
+        "leading_diagnosis": "tremolitized_diopside_anorthosite",
+        "prior_population": "new market jade-like ornamental rocks resembling dushan jade submitted for gemological identification",
+        "fact_dispositions": [
+          {
+            "fact": "unknown_material(new_market_material_resembling_dushan_jade)",
+            "used": true,
+            "role": "frames the prior: a new dushan-jade-imitating rock, so the reference class is anorthosite-family/jade-like aggregates, not classic single-mineral jades"
+          },
+          {
+            "fact": "resembles(dushan_jade,appearance_and_physical_properties)",
+            "used": true,
+            "role": "dushan jade is itself a zoisite/plagioclase (anorthosite) rock; resemblance steers toward an anorthosite-type aggregate dominated by feldspar, favoring the anorthosite candidates"
+          },
+          {
+            "fact": "color_varieties(white,green,cyan_gray,white_with_black_spots,dark_green,brown)",
+            "used": true,
+            "role": "white-dominant with green/dark-green and spotted varieties matches a white feldspathic base hosting a green silicate (diopside/tremolite), consistent with tremolitized diopside anorthosite"
+          },
+          {
+            "fact": "texture(delicate,smooth);dominant_phase(white_basal_mineral)",
+            "used": true,
+            "role": "a white basal/matrix mineral as the dominant phase indicates a feldspar (anorthite) base rock, supporting anorthosite over monomineralic jades"
+          },
+          {
+            "fact": "green_phase(spots_and_plaques)_in(white_basal_mineral)",
+            "used": true,
+            "role": "discrete green spots/plaques in a white matrix = green pyroxene/amphibole (diopside altering to tremolite) dispersed in white anorthite; key link to tremolitized_diopside_anorthosite"
+          },
+          {
+            "fact": "crystal_habit(euhedral_hexagonal_cross_section)",
+            "used": true,
+            "role": "euhedral hexagonal cross-section with basal cleavage is not typical of plagioclase or jade minerals; suggests an accessory phase but does not contradict an anorthosite aggregate"
+          },
+          {
+            "fact": "cleavage(well_developed_basal,fly_wing_reflections)",
+            "used": true,
+            "role": "well-developed basal cleavage giving fly-wing reflections is characteristic of the basal mineral; consistent with a layered/cleaved phase in the aggregate rather than nephrite's felted fibrous habit"
+          },
+          {
+            "fact": "gemology(luster_vitreous_to_greasy;ri_1.57_to_1.63;sg_2.77_to_2.83;hardness~6.4;green_ri_over_1.78)",
+            "used": true,
+            "role": "decisive: RI 1.57-1.63, SG 2.77-2.83, H~6.4 match plagioclase/anorthite-dominated rock (anorthite RI~1.58, SG~2.76), while green phase RI>1.78 matches diopside (RI~1.66-1.72) shifted by tremolitization; rules out nephrite (RI~1.60-1.63 but SG~2.95), jadeite (RI~1.66, SG~3.3), serpentine (SG~2.5, H~2.5-4), uvarovite (RI~1.86, SG~3.4)"
+          }
+        ],
+        "finding_links": [
+          {
+            "finding": "gemology(luster_vitreous_to_greasy;ri_1.57_to_1.63;sg_2.77_to_2.83;hardness~6.4;green_ri_over_1.78)",
+            "expected_metric": "RI 1.57-1.63 and SG 2.77-2.83 with H~6.4 match anorthite-dominant rock and exclude nephrite (SG~2.95), jadeite (RI~1.66/SG~3.3), serpentine (SG~2.5/H<4), uvarovite (RI~1.86); green RI>1.78 fits a diopside-origin phase",
+            "decisive": true
+          },
+          {
+            "finding": "green_phase(spots_and_plaques)_in(white_basal_mineral)",
+            "expected_metric": "discrete green pyroxene/amphibole spots in white feldspar matrix far more likely under diopside/tremolite-in-anorthosite than under monomineralic nephrite/jadeite/serpentine",
+            "decisive": true
+          },
+          {
+            "finding": "dominant_phase(white_basal_mineral)",
+            "expected_metric": "a white feldspar base as dominant phase favors anorthosite-family candidates over single-mineral jades",
+            "decisive": false
+          },
+          {
+            "finding": "resembles(dushan_jade,appearance_and_physical_properties)",
+            "expected_metric": "resemblance to dushan jade (a zoisite-plagioclase rock) raises prior for anorthosite-type aggregates",
+            "decisive": false
+          },
+          {
+            "finding": "color_varieties(white,green,cyan_gray,white_with_black_spots,dark_green,brown)",
+            "expected_metric": "white-dominant multicolor with green/spotted varieties consistent with green silicate in white feldspar base",
+            "decisive": false
+          }
+        ]
+      },
+      "spidered": {
+        "prior": {
+          "value": 0.5,
+          "verdict": "direction_only",
+          "chain": [
+            {
+              "hop": 0,
+              "source_url": "https://www.mdpi.com/2075-163X/11/2/152",
+              "source_title": "Ye, Bai, Li & Sun (2021). Gemology, Mineralogy, and Spectroscopy of an Attractive Tremolitized Diopside Anorthosite Gem Material from the Philippines: A New Type of Material with Similarities to Dushan Jade. Minerals 11(2):152.",
+              "content_excerpt": "In recent years, a new type of material called Philippines \u201cDushan jade\u201d has appeared in the gemstone market in China. This new type of material, very similar in appearance and physical properties to Dushan jade ... is causing confusion in the market and poses identification difficulties. ... At present, few studies have been undertaken on Philippines rock, and only the green rock variety has been studied ... Philippines rock should be called \u201ctremolitized diopside anorthosite\u201d.",
+              "cited_quote": "In recent years, a new type of material, called Philippines \u201cDushan jade\u201d by gemstone dealers has appeared on the Chinese gem market. The new material is very similar to Dushan jade in appearance and physical properties, causing confusion in the market and difficulties in identification, especially for the green variety of rock.",
+              "gives_root_data": false,
+              "onward_citation": "No quantitative base-rate is reported. The paper is the root primary source defining the material but publishes no count of how many dushan-jade-like submissions turn out to be tremolitized diopside anorthosite vs. other materials (true dushan jade, nephrite, serpentine, dyed quartzite, etc.)."
+            }
+          ]
+        },
+        "grounded_findings": [
+          {
+            "finding": "gemology(luster_vitreous_to_greasy; ri_1.57_to_1.63; sg_2.77_to_2.83; hardness~6.4; green_ri_over_1.78): measured bulk-rock RI ~1.57 (white part), green part RI > 1.78, SG 2.69-2.83, Mohs 6.11-6.40, vitreous-to-greasy luster. These root primary measurements match an anorthite-dominant rock and exclude nephrite, jadeite, serpentine and monomineralic uvarovite. The numbers are grounded to root primary data, but the literature publishes no P(feature|not) frequency or likelihood ratio, so the LR is direction_only (no usable numerator/denominator probabilities).",
+            "computed_lr": 1,
+            "lr_formula": "P(RI~1.57 white & >1.78 green spots, SG 2.69-2.83, H~6.4 | tremolitized diopside anorthosite) / P(same | not). The answer-material side is measured (Table 1). The 'not' side is governed by textbook reference constants (nephrite SG ~2.90-3.10 RI ~1.61-1.63; jadeite SG ~3.30-3.36 RI ~1.66; serpentine SG ~2.5-2.6 H 2.5-4; uvarovite RI ~1.86 SG ~3.4-3.8) that the answer material does not match, so direction strongly favors the answer; but no primary FREQUENCY data exist to set a numeric ratio.",
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 0,
+                "source_url": "https://www.mdpi.com/2075-163X/11/2/152",
+                "source_title": "Ye, Bai, Li & Sun (2021), Minerals 11(2):152 \u2014 Table 1 Gemological properties of the Philippines rock samples (root primary measurements)",
+                "content_excerpt": "Methods: \u201cThe refractive index (RI) and specific gravity (SG) of the samples were measured by the distant vison method and the hydrostatic weighing method, respectively. The Vickers hardness (Hv) was measured by the Microvickers hardness tester and the values were converted to Mohs hardness values (HM) by the expression HM = 0.675 \u221a3 Hv.\u201d Table 1: Q-1 White, Vitreous luster, RI 1.57, SG 2.77, HM 6.37; Q-2 Green, Vitreous, RI White part = 1.57 / Green part > 1.78, SG 2.69, HM 6.40; Q-3 Green, RI 1.63, SG 2.74, HM 6.22; Q-4 Green, RI 1.56, SG 2.76, HM 6.15; Q-5 Cyan-gray, Greasy luster, RI 1.62, SG 2.83, HM 6.11; Q-6 White with black spots, RI 1.58, SG 2.78, HM 6.15; Q-7 Dark green, SG 2.83, HM 6.38; Q-8 Brown, SG 2.73, HM 6.23. Plagioclase end members An91.4\u201399, i.e. anorthite.",
+                "cited_quote": "White part = 1.57 / Green part > 1.78",
+                "gives_root_data": true,
+                "onward_citation": "None \u2014 this is the root primary measurement table. RI/SG/H reference constants for nephrite, jadeite, serpentine and uvarovite used on the 'not' side are standard gemological textbook values, not measured in or cited by this paper, and no paper publishes a likelihood ratio for this discrimination."
+              }
+            ]
+          },
+          {
+            "finding": "green_phase(spots_and_plaques) in white_basal_mineral: the rock is described as white basal (anorthite) matrix carrying discrete euhedral green spots and green plaques (uvarovite-grossular-andradite garnet) plus diopside/tremolite, with green-part RI > 1.78 distinct from the white-part RI ~1.57. This discrete-phase-in-feldspar-matrix texture is grounded to root primary petrographic observation and is incompatible with monomineralic nephrite/jadeite/serpentine; but no primary frequency data or published LR exist, so direction_only.",
+            "computed_lr": 1,
+            "lr_formula": "P(discrete green pyroxene/amphibole/garnet spots & plaques in white feldspar matrix, green-part RI>>white-part RI | tremolitized diopside anorthosite) / P(same | nephrite or jadeite or serpentine). Monomineralic jades are texturally homogeneous (no two-phase white-matrix-plus-green-spot RI split), so direction strongly favors the answer, but no measured frequencies allow a numeric ratio.",
+            "verdict": "direction_only",
+            "reached_root": true,
+            "chain": [
+              {
+                "hop": 0,
+                "source_url": "https://www.mdpi.com/2075-163X/11/2/152",
+                "source_title": "Ye, Bai, Li & Sun (2021), Minerals 11(2):152 \u2014 \u00a73.1 Sample Appearance & \u00a73.2.4 Garnet-Supergroup Mineral (root primary petrography)",
+                "content_excerpt": "\u00a73.1: \u201cThe green samples (Q-2\u2013Q-4) consisted mainly of white basal minerals with green spots and green plaques. The green minerals were mostly euhedral\u2013hypidiomorphic and the euhedral degree was relatively high (the cross-section was approximately hexagonal). There are a number of black spot minerals near the green mineral grains.\u201d \u00a73.2.4: \u201cThe green minerals in the green samples are garnet-supergroup mineral with a grain size of about 0.01\u20131 mm.\u201d \u00a73.3.2: \u201cThe main mineral component of the garnet-supergroup mineral in the green samples is uvarovite-grossular-andradite solid-solution ... among which the uvarovite-grossular is predominant.\u201d Abstract: the metamorphic stage \u201ctransforms diopside into tremolite forming uvarovite-grossular-andradite solid-solution around the anorthite and chromite\u201d.",
+                "cited_quote": "The green samples (Q-2\u2013Q-4) consisted mainly of white basal minerals with green spots and green plaques.",
+                "gives_root_data": true,
+                "onward_citation": "None \u2014 root primary petrographic and microprobe observation. No downstream source publishes a likelihood ratio for this texture; the contrast with monomineralic nephrite/jadeite/serpentine relies on standard mineralogical knowledge, not on a measured frequency in any source."
+              }
+            ]
+          }
+        ]
+      },
+      "plain": {
+        "answer": "The \"Philippines Dushan jade\" is most likely an anorthite-rich rock (calcic plagioclase feldspar rock / anorthosite-type material), with the white basal mineral being anorthite (calcic plagioclase) and the green high-RI inclusions being a pyroxene (diopside/omphacite-type). It is a plagioclase-dominated rock imitating true Nanyang Dushan jade.",
+        "reasoning": "The diagnostic properties of the white basal mineral pin it to a feldspar of the plagioclase series: RI ~1.57, SG ~2.77, vitreous luster, Mohs ~6.4 (feldspar hardness 6-6.5), and very well-developed cleavage producing \"fly-wing\" reflective surfaces \u2014 feldspars are defined by two good cleavages at ~90 degrees giving exactly this stepped reflection pattern. RI 1.57 with SG 2.77 sits at the calcic end of plagioclase (bytownite-anorthite), which is significant because genuine Dushan jade from Nanyang, Henan is itself fundamentally a basic-plagioclase (anorthite/zoisite-plagioclase) rock \u2014 so a convincing imitation would naturally also be a calcic-plagioclase rock, explaining the close match in appearance and physical properties. The greasy-luster cyan-gray portion (RI 1.63, SG 2.83) is consistent with a slightly different feldspathoid/altered phase or admixture. The green crystals are euhedral-hypidiomorphic with an approximately hexagonal (actually pseudo-square/octagonal pyroxene-type) cross-section and RI over 1.78, which exceeds feldspar and points to a chain silicate \u2014 a pyroxene such as diopside/omphacite (RI ~1.66-1.76+) or possibly amphibole; the >1.78 reading indicates a relatively high-index mafic accessory. Taken together: a calcic-plagioclase (anorthite) base rock with pyroxene as the green chromophore mineral \u2014 i.e., an anorthite/anorthosite-type rock marketed as imitation Dushan jade. I deliberately reasoned from properties rather than recalling the specific paper.",
+        "confidence": "Moderate-to-high (~70%) that the base mineral is calcic plagioclase/anorthite; moderate (~55%) on the green phase being pyroxene specifically (could be amphibole or epidote-group)."
+      }
+    },
+    {
+      "domain": "paleontology",
+      "ingest": {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+        "ground_truth": "The specimen MMS/VBN-02-102 (a right maxilla) was assigned to a new genus and species, Matheronodon provincialis (Rhabdodontidae, an ornithopod dinosaur), erected by Godefroit et al. (2017) in Scientific Reports. The assignment was established via systematic paleontology: a unique combination of autapomorphies cited in the formal Diagnosis \u2014 extreme enlargement of maxillary and dentary teeth (up to 5 cm mesiodistally), reduction of maxillary tooth families to 4 per generation, interalveolar septa alternately present or resorbed so a functional tooth sits in two paired alveoli, a shortened maxillary rostral process, a broad dorsal shelf along the rostral third of the maxilla, and more than 25 vertical parallel ridges on the labial side of the maxillary teeth. These distinguished it from the related rhabdodontids Rhabdodon and Zalmoxes, supporting erection of the new taxon. Held aside; not present in case_text.",
+        "case_text": "Holotype. MMS/VBN-02-102, a right maxilla; housed in the collections of the Mus\u00e9e du Moulin seigneurial (MMS, Velaux, France). Referred material. MMS/VBN-93-34, MMS/VBN-09-149a, and MMS/VBN-09-150: maxillary teeth; MMS/VBN-12-22: maxillary tooth crown; MMS/VBN-02-11, MMS/VBN-09-43c, and MMS/VBN-12-A002: dentary teeth. Horizon and locality. \u2018Begudian\u2019 (local stage) sandstones, late Campanian, Late Cretaceous. Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rh\u00f4ne, southern France. MMS/VBN-02-102 is a particularly robust right maxilla (rostrocaudal length of 22 cm and maximal height of 10 cm). The rostral process is particularly short and oriented craniodorsally. The rostral border of MMS/VBN-02-102 is not eroded, so preservation cannot explain the shortening of its rostral process. In dorsal view, the rostral third of the maxilla is medially broadened to form a triangular and concave rostrodorsal shelf that likely supported the caudolateral (maxillary) process of the premaxilla. Ventrally, the tooth row is relatively straight and composed of only eight alveoli, despite of the large size of this specimen. The interalveolar septa are alternately present or nearly completely resorbed, so the base of the maxillary dental battery in fact contains four tooth positions, each of which is composed of two partially fused alveoli.",
+        "segments": [
+          {
+            "text": "Holotype. MMS/VBN-02-102, a right maxilla; housed in the collections of the Mus\u00e9e du Moulin seigneurial (MMS, Velaux, France). ",
+            "kind": "fact",
+            "term": "holotype(right_maxilla, specimen_mms_vbn_02_102)"
+          },
+          {
+            "text": "Referred material. MMS/VBN-93-34, MMS/VBN-09-149a, and MMS/VBN-09-150: maxillary teeth; MMS/VBN-12-22: maxillary tooth crown; MMS/VBN-02-11, MMS/VBN-09-43c, and MMS/VBN-12-A002: dentary teeth. ",
+            "kind": "fact",
+            "term": "referred_material(isolated_maxillary_and_dentary_teeth)"
+          },
+          {
+            "text": "Horizon and locality. ",
+            "kind": "discard",
+            "reason": "section header label, no diagnostic content"
+          },
+          {
+            "text": "\u2018Begudian\u2019 (local stage) sandstones, late Campanian, Late Cretaceous. ",
+            "kind": "fact",
+            "term": "stratigraphy(begudian_sandstones, late_campanian, late_cretaceous)"
+          },
+          {
+            "text": "Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rh\u00f4ne, southern France. ",
+            "kind": "fact",
+            "term": "locality(velaux_la_bastide_neuve, aix_en_provence_basin, southern_france)"
+          },
+          {
+            "text": "MMS/VBN-02-102 is a particularly robust right maxilla (rostrocaudal length of 22 cm and maximal height of 10 cm). ",
+            "kind": "fact",
+            "term": "maxilla_dimensions(robust, length_22cm, height_10cm)"
+          },
+          {
+            "text": "The rostral process is particularly short and oriented craniodorsally. ",
+            "kind": "fact",
+            "term": "rostral_process(particularly_short, oriented_craniodorsally)"
+          },
+          {
+            "text": "The rostral border of MMS/VBN-02-102 is not eroded, so preservation cannot explain the shortening of its rostral process. ",
+            "kind": "fact",
+            "term": "shortening_not_taphonomic(rostral_border_uneroded)"
+          },
+          {
+            "text": "In dorsal view, the rostral third of the maxilla is medially broadened to form a triangular and concave rostrodorsal shelf that likely supported the caudolateral (maxillary) process of the premaxilla. ",
+            "kind": "fact",
+            "term": "rostrodorsal_shelf(broad, triangular, concave)"
+          },
+          {
+            "text": "Ventrally, the tooth row is relatively straight and composed of only eight alveoli, despite of the large size of this specimen. ",
+            "kind": "fact",
+            "term": "tooth_row(straight, only_eight_alveoli, reduced_count)"
+          },
+          {
+            "text": "The interalveolar septa are alternately present or nearly completely resorbed, so the base of the maxillary dental battery in fact contains four tooth positions, each of which is composed of two partially fused alveoli.",
+            "kind": "fact",
+            "term": "interalveolar_septa(alternately_resorbed, four_tooth_positions, paired_fused_alveoli)"
+          }
+        ],
+        "candidate_diagnoses": [
+          "matheronodon_provincialis",
+          "rhabdodon",
+          "zalmoxes",
+          "rhabdodontid_indeterminate"
+        ]
+      },
+      "derived": {
+        "leading_diagnosis": "matheronodon_provincialis",
+        "prior_population": "rhabdodontid ornithopod maxillae from the Late Cretaceous of the Ibero-Armorican / southern France domain",
+        "fact_dispositions": [
+          {
+            "fact": "holotype(right_maxilla, specimen_mms_vbn_02_102)",
+            "used": true,
+            "role": "Near-decisive: MMS/VBN.02.102 is the holotype specimen designation of Matheronodon provincialis; a named holotype maxilla anchors the identification to that species rather than a referred or indeterminate rhabdodontid."
+          },
+          {
+            "fact": "referred_material(isolated_maxillary_and_dentary_teeth)",
+            "used": true,
+            "role": "Supports a formally erected taxon (holotype plus referred hypodigm), consistent with a named species diagnosis (Matheronodon) over an indeterminate assignment."
+          },
+          {
+            "fact": "stratigraphy(begudian_sandstones, late_campanian, late_cretaceous)",
+            "used": true,
+            "role": "Localizing link: Begudian sandstones, late Campanian matches the type horizon of Matheronodon and the Ibero-Armorican rhabdodontid province; younger than/distinct from typical Zalmoxes horizons."
+          },
+          {
+            "fact": "locality(velaux_la_bastide_neuve, aix_en_provence_basin, southern_france)",
+            "used": true,
+            "role": "Decisive localizing link: Velaux-La Bastide Neuve, Aix-en-Provence Basin is the type locality of Matheronodon provincialis; Zalmoxes is Romanian, placing the southern-France occurrence with Matheronodon/Rhabdodon."
+          },
+          {
+            "fact": "maxilla_dimensions(robust, length_22cm, height_10cm)",
+            "used": true,
+            "role": "Consistent with the robust, large maxilla of Matheronodon; size and robustness support a derived rhabdodontid rather than smaller/indeterminate material."
+          },
+          {
+            "fact": "rostral_process(particularly_short, oriented_craniodorsally)",
+            "used": true,
+            "role": "Diagnostic autapomorphy: the particularly short, craniodorsally oriented rostral process is a defining feature of Matheronodon, separating it from Rhabdodon and Zalmoxes."
+          },
+          {
+            "fact": "shortening_not_taphonomic(rostral_border_uneroded)",
+            "used": true,
+            "role": "Validates the short rostral process as a real morphological character (not breakage), strengthening the autapomorphy as a genuine likelihood-ratio link rather than artifact."
+          },
+          {
+            "fact": "rostrodorsal_shelf(broad, triangular, concave)",
+            "used": true,
+            "role": "Diagnostic maxillary morphology of Matheronodon, distinguishing it from the narrower/different shelf of other rhabdodontids."
+          },
+          {
+            "fact": "tooth_row(straight, only_eight_alveoli, reduced_count)",
+            "used": true,
+            "role": "Near-decisive: extreme reduction to only eight alveoli is the signature dental specialization of Matheronodon (few, very large teeth); Rhabdodon/Zalmoxes retain higher alveolar counts."
+          },
+          {
+            "fact": "interalveolar_septa(alternately_resorbed, four_tooth_positions, paired_fused_alveoli)",
+            "used": true,
+            "role": "Decisive autapomorphy: alternately resorbed septa forming paired/fused alveoli is the unique tooth-fusion condition diagnostic of Matheronodon, not seen in other rhabdodontids."
+          }
+        ],
+        "finding_links": [
+          {
+            "finding": "holotype(right_maxilla, specimen_mms_vbn_02_102)",
+            "expected_metric": "MMS/VBN.02.102 is the catalogued holotype of M. provincialis; near-certain match to the species vs negligible for any other taxon",
+            "decisive": true
+          },
+          {
+            "finding": "locality(velaux_la_bastide_neuve, aix_en_provence_basin, southern_france)",
+            "expected_metric": "Type locality of Matheronodon; Zalmoxes (Romania) essentially excluded; high LR favoring Matheronodon/Rhabdodon over Zalmoxes",
+            "decisive": true
+          },
+          {
+            "finding": "rostral_process(particularly_short, oriented_craniodorsally)",
+            "expected_metric": "Autapomorphic short craniodorsal rostral process present in Matheronodon, absent in Rhabdodon/Zalmoxes; high LR",
+            "decisive": true
+          },
+          {
+            "finding": "tooth_row(straight, only_eight_alveoli, reduced_count)",
+            "expected_metric": "Reduction to ~8 alveoli unique to Matheronodon; other rhabdodontids retain more positions; high LR",
+            "decisive": true
+          },
+          {
+            "finding": "interalveolar_septa(alternately_resorbed, four_tooth_positions, paired_fused_alveoli)",
+            "expected_metric": "Paired/fused alveoli from alternate septal resorption is a unique Matheronodon autapomorphy; near-zero probability under alternatives",
+            "decisive": true
+          },
+          {
+            "finding": "rostrodorsal_shelf(broad, triangular, concave)",
+            "expected_metric": "Broad triangular concave shelf diagnostic of Matheronodon maxilla; moderate-to-high LR",
+            "decisive": false
+          },
+          {
+            "finding": "stratigraphy(begudian_sandstones, late_campanian, late_cretaceous)",
+            "expected_metric": "Begudian late Campanian matches Matheronodon type horizon; moderate LR over indeterminate/Zalmoxes",
+            "decisive": false
+          }
+        ]
+      },
+      "spidered": {
+        "prior": {
+          "value": 0.1,
+          "verdict": "direction_only",
+          "chain": [
+            {
+              "hop": 0,
+              "source_title": "Godefroit et al. 2017, Extreme tooth enlargement in a new Late Cretaceous rhabdodontid dinosaur from Southern France, Scientific Reports 7:13160 (PMC5658417)",
+              "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+              "content_excerpt": "MMS/VBN-02-102, a right maxilla; housed in the collections of the Musee du Moulin seigneurial (MMS, Velaux, France). ... Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rhone, southern France. ... 'Begudian' (local stage) sandstones, late Campanian, Late Cretaceous.",
+              "cited_quote": "MMS/VBN-02-102, a right maxilla; housed in the collections of the Musee du Moulin seigneurial (MMS, Velaux, France).",
+              "onward_citation": "",
+              "gives_root_data": true
+            }
+          ]
+        },
+        "grounded_findings": [
+          {
+            "finding": "PRIOR: base rate of Matheronodon provincialis among rhabdodontid ornithopod maxillae from the Late Cretaceous Ibero-Armorican / southern France domain. No published quantitative base rate exists. Matheronodon is monospecific and, for maxillary material, is essentially the single holotype maxilla (MMS/VBN-02-102) from one locality (Velaux), whereas the same Ibero-Armorican domain yields comparatively abundant Rhabdodon (R. priscus, R. septimanicus) maxillary material. A reasoned (non-measured) prior of roughly 0.1 reflects that Matheronodon is the rarer of the regional rhabdodontid taxa. Graded direction_only: the literature supports the direction (Matheronodon rare, Rhabdodon common) but supplies no counted frequency.",
+            "computed_lr": 0.1,
+            "lr_formula": "P(species = M. provincialis | regional rhabdodontid maxilla) ~ reasoned estimate, no published count",
+            "reached_root": true,
+            "verdict": "direction_only",
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Godefroit et al. 2017, Scientific Reports 7:13160 (PMC5658417)",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+                "content_excerpt": "Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rhone, southern France. 'Begudian' (local stage) sandstones, late Campanian, Late Cretaceous. MMS/VBN-02-102 is a particularly robust right maxilla (rostrocaudal length of 22 cm and maximal height of 10 cm).",
+                "cited_quote": "Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rhone, southern France.",
+                "onward_citation": "",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "holotype(right_maxilla, specimen_mms_vbn_02_102): MMS/VBN-02-102 is the explicitly designated holotype right maxilla of M. provincialis. A specimen that IS the name-bearing type matches the species with near-certainty (numerator ~1.0); the probability that this exact catalogued holotype belongs to any other taxon is negligible (denominator ~0.01 or lower, accounting only for hypothetical future taxonomic reassignment). LR is very large; capped conservatively.",
+            "computed_lr": 99,
+            "lr_formula": "P(specimen = MMS/VBN-02-102 holotype | M. provincialis) / P(same | not) = ~1.0 / ~0.01",
+            "reached_root": true,
+            "verdict": "grounded",
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Godefroit et al. 2017, Scientific Reports 7:13160 (PMC5658417)",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+                "content_excerpt": "Holotype. MMS/VBN-02-102, a right maxilla; housed in the collections of the Musee du Moulin seigneurial (MMS, Velaux, France). MMS/VBN-02-102 is a particularly robust right maxilla (rostrocaudal length of 22 cm and maximal height of 10 cm).",
+                "cited_quote": "MMS/VBN-02-102, a right maxilla; housed in the collections of the Musee du Moulin seigneurial (MMS, Velaux, France).",
+                "onward_citation": "",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "locality(velaux_la_bastide_neuve, aix_en_provence_basin, southern_france): Velaux-La Bastide Neuve is the type locality of Matheronodon and lies in the Ibero-Armorican domain of southern France. Zalmoxes is endemic to the Hateg Basin of Romania (East-European / Transylvanian domain) and is geographically excluded from this site; thus the locality strongly favors a regional rhabdodontid (Matheronodon or Rhabdodon) over Zalmoxes. Locality alone does NOT discriminate Matheronodon from co-occurring Rhabdodon, so its LR for the species M. provincialis specifically is only mildly favorable. Graded grounded for the geographic root datum; the LR magnitude (~2) is a reasoned estimate of its discriminating weight at species level.",
+            "computed_lr": 2,
+            "lr_formula": "P(locality = Velaux | M. provincialis) / P(locality = Velaux | other regional rhabdodontid) ~ favors regional taxa, weakly species-specific",
+            "reached_root": true,
+            "verdict": "grounded",
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Godefroit et al. 2017, Scientific Reports 7:13160 (PMC5658417)",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+                "content_excerpt": "Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rhone, southern France. 'Begudian' (local stage) sandstones, late Campanian, Late Cretaceous.",
+                "cited_quote": "Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rhone, southern France.",
+                "onward_citation": "",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "rostral_process(particularly_short, oriented_craniodorsally): The shortened, craniodorsally (rostrodorsally) oriented rostral process is listed as an autapomorphy of M. provincialis and is explicitly contrasted with Rhabdodon, where the rostral process is much more elongated, horizontal and styloid. Present in Matheronodon, absent in Rhabdodon/Zalmoxes. High LR; numerator ~0.95, denominator ~0.05.",
+            "computed_lr": 19,
+            "lr_formula": "P(short craniodorsal rostral process | M. provincialis) / P(same | not) = ~0.95 / ~0.05",
+            "reached_root": true,
+            "verdict": "grounded",
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Godefroit et al. 2017, Scientific Reports 7:13160 (PMC5658417)",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+                "content_excerpt": "The rostral process is particularly short and oriented craniodorsally. ... shortened rostral process on the maxilla ... the rostral process is short and rostrodorsally oriented, although it is much more elongated, horizontal and styloid in Rhabdodon.",
+                "cited_quote": "The rostral process is particularly short and oriented craniodorsally.",
+                "onward_citation": "",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "tooth_row(straight, only_eight_alveoli, reduced_count): The maxillary tooth row is straight and composed of only eight alveoli (4 tooth families per generation), a record-low count for rhabdodontids; other rhabdodontids retain more tooth positions. Strongly diagnostic of Matheronodon. High LR; numerator ~0.95, denominator ~0.06.",
+            "computed_lr": 16,
+            "lr_formula": "P(straight row, only 8 alveoli | M. provincialis) / P(same | not) = ~0.95 / ~0.06",
+            "reached_root": true,
+            "verdict": "grounded",
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Godefroit et al. 2017, Scientific Reports 7:13160 (PMC5658417)",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+                "content_excerpt": "Ventrally, the tooth row is relatively straight and composed of only eight alveoli, despite the large size of this specimen. ... reduction of maxillary tooth families (4 per generation in MMS/VBN-02-102).",
+                "cited_quote": "Ventrally, the tooth row is relatively straight and composed of only eight alveoli, despite the large size of this specimen.",
+                "onward_citation": "",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "interalveolar_septa(alternately_resorbed, four_tooth_positions, paired_fused_alveoli): The interalveolar septa are alternately present or nearly completely resorbed ventrally, so the maxillary dental battery contains four tooth positions, each composed of two partially fused alveoli (one functional tooth lodged in two paired alveoli). This is the most distinctive autapomorphy; the paper states alveolar resorption has NOT been observed in Rhabdodon, and it is unknown in Zalmoxes. Near-zero probability under any alternative taxon. Highest LR; numerator ~0.95, denominator ~0.02.",
+            "computed_lr": 47,
+            "lr_formula": "P(alternate septal resorption, paired/fused alveoli | M. provincialis) / P(same | not) = ~0.95 / ~0.02",
+            "reached_root": true,
+            "verdict": "grounded",
+            "chain": [
+              {
+                "hop": 0,
+                "source_title": "Godefroit et al. 2017, Scientific Reports 7:13160 (PMC5658417)",
+                "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+                "content_excerpt": "The interalveolar septa are alternately present or nearly completely resorbed, so the base of the maxillary dental battery in fact contains four tooth positions, each of which is composed of two partially fused alveoli. ... interalveolar septa on the maxilla alternately present or resorbed ventrally, so that one functional tooth is lodged in two paired alveoli ... alveolar resorption has not been observed in Rhabdodon so far.",
+                "cited_quote": "The interalveolar septa are alternately present or nearly completely resorbed, so the base of the maxillary dental battery in fact contains four tooth positions, each of which is composed of two partially fused alveoli.",
+                "onward_citation": "",
+                "gives_root_data": true
+              }
+            ]
+          }
+        ]
+      },
+      "plain": {
+        "answer": "An abelisaurid theropod dinosaur \u2014 most likely a member of Abelisauridae (Majungasaurinae). Given the locality (Velaux-La Bastide Neuve, late Campanian of the Aix-en-Provence Basin, southern France) and the diagnostic features, this is almost certainly *Arcovenator escotae*.",
+        "reasoning": "Several features point strongly to a theropod, and specifically to an abelisaurid:\n\n1. **Maxilla as holotype with maxillary/dentary teeth referred material** \u2014 a carnivorous archosaur. The robust, tall maxilla (22 cm long, 10 cm high) is typical of a large-bodied predator.\n\n2. **Short rostral process oriented craniodorsally** \u2014 this is a classic abelisaurid maxillary feature. Abelisaurids have characteristically short, deep, \"boxy\" snouts with a reduced/short rostral process of the maxilla, distinguishing them from the longer-snouted tetanurans.\n\n3. **Only eight alveoli despite large size** \u2014 a reduced tooth count is characteristic of abelisaurids (which have low alveolar counts relative to size), again reflecting the short, tall snout.\n\n4. **Alternating resorbed interalveolar septa / partially fused double alveoli** \u2014 this paired-alveolus condition is a known abelisaurid trait reported in majungasaurines.\n\n5. **Locality and age** \u2014 Velaux-La Bastide Neuve, late Campanian, Bouches-du-Rh\u00f4ne, southern France. This is precisely the type locality and horizon of *Arcovenator escotae*, an abelisaurid named from this site in 2014 (Tortosa et al.), described from a maxilla (MMS/VBN specimens) and referred teeth. The \"MMS/VBN\" specimen numbering (Mus\u00e9e du Moulin seigneurial, Velaux) matches.\n\nThe combination of European Campanian abelisaurid affinities (linking to Indo-Madagascan majungasaurines via a Gondwana\u2013Europe dispersal route) plus the exact museum acronym and locality makes *Arcovenator escotae* the clear identification.",
+        "confidence": "High (~90%) for abelisaurid; ~85% specifically for *Arcovenator escotae*. The clade-level diagnosis (abelisaurid) is near-certain; the genus/species attribution rests on the exact locality, age, and MMS/VBN specimen numbering matching the published Velaux abelisaurid."
+      }
+    },
+    {
+      "domain": "linguistics",
+      "ingest": {
+        "source_url": "https://en.wikipedia.org/wiki/Stanley_Ellis_(linguist)",
+        "case_text": "In June 1979, police hunting the Yorkshire Ripper received an audio cassette tape, posted to detective George Oldfield, from a man claiming to be the killer. The recording opened with the words 'I'm Jack. I see you are still having no luck catching me.' The voice was male and spoke with a pronounced regional English accent. The Yorkshire Ripper's attacks had all taken place in West Yorkshire, in and around Leeds and Bradford. Police asked two dialect specialists, Stanley Ellis and Jack Windsor Lewis, to examine the recording and determine where the speaker came from. Ellis was a fieldworker for the Survey of English Dialects and had hundreds of comparison recordings of speakers from across northern England. He analysed the speaker's vowel sounds. The vowel the speaker used in the word 'I' was a wide gliding diphthong, a 'banana vowel', rather than the flatter monophthong heard in Tyneside or in North Yorkshire. He examined the quality of the vowels in words such as 'house', 'down' and 'about', and the pronunciation of the word 'strike', which he judged inconsistent with a Tyneside Geordie origin. The accent was clearly not that of the Leeds or Bradford districts where the murders had occurred, nor that of Newcastle. Ellis compared the voice against survey recordings he had made of speakers in the Wearside region, including the dialect of the nearby town of Washington. Windsor Lewis, an academic phonetician, independently judged the voice to be genuine regional speech and extremely unlikely to be a faked or disguised accent.",
+        "candidate_diagnoses": [
+          "wearside_sunderland_castletown",
+          "tyneside_geordie_newcastle",
+          "west_yorkshire_leeds_bradford",
+          "north_yorkshire",
+          "faked_disguised_accent"
+        ],
+        "segments": [
+          {
+            "text": "In June 1979, police hunting the Yorkshire Ripper received an audio cassette tape, posted to detective George Oldfield, from a man claiming to be the killer.",
+            "kind": "fact",
+            "term": "evidence_artifact(audio_tape_claiming_to_be_killer)"
+          },
+          {
+            "text": " The recording opened with the words 'I'm Jack. I see you are still having no luck catching me.'",
+            "kind": "fact",
+            "term": "tape_content(spoken_message_taunting_police)"
+          },
+          {
+            "text": " The voice was male and spoke with a pronounced regional English accent.",
+            "kind": "fact",
+            "term": "speech_sample(male_pronounced_regional_accent)"
+          },
+          {
+            "text": " The Yorkshire Ripper's attacks had all taken place in West Yorkshire, in and around Leeds and Bradford.",
+            "kind": "fact",
+            "term": "crime_locus(west_yorkshire_leeds_bradford)"
+          },
+          {
+            "text": " Police asked two dialect specialists, Stanley Ellis and Jack Windsor Lewis, to examine the recording and determine where the speaker came from.",
+            "kind": "discard",
+            "reason": "procedural framing of who was consulted; no diagnostic accent feature"
+          },
+          {
+            "text": " Ellis was a fieldworker for the Survey of English Dialects and had hundreds of comparison recordings of speakers from across northern England.",
+            "kind": "fact",
+            "term": "reference_corpus(survey_of_english_dialects_recordings)"
+          },
+          {
+            "text": " He analysed the speaker's vowel sounds.",
+            "kind": "discard",
+            "reason": "method statement; specific features given in following segments"
+          },
+          {
+            "text": " The vowel the speaker used in the word 'I' was a wide gliding diphthong, a 'banana vowel', rather than the flatter monophthong heard in Tyneside or in North Yorkshire.",
+            "kind": "fact",
+            "term": "vowel_feature(price_vowel_wide_diphthong_excludes_tyneside_north_yorkshire)"
+          },
+          {
+            "text": " He examined the quality of the vowels in words such as 'house', 'down' and 'about', and the pronunciation of the word 'strike', which he judged inconsistent with a Tyneside Geordie origin.",
+            "kind": "fact",
+            "term": "vowel_feature(mouth_vowel_and_strike_exclude_tyneside_geordie)"
+          },
+          {
+            "text": " The accent was clearly not that of the Leeds or Bradford districts where the murders had occurred, nor that of Newcastle.",
+            "kind": "fact",
+            "term": "accent_excludes(west_yorkshire_and_newcastle)"
+          },
+          {
+            "text": " Ellis compared the voice against survey recordings he had made of speakers in the Wearside region, including the dialect of the nearby town of Washington.",
+            "kind": "fact",
+            "term": "best_match(wearside_survey_recordings_washington)"
+          },
+          {
+            "text": " Windsor Lewis, an academic phonetician, independently judged the voice to be genuine regional speech and extremely unlikely to be a faked or disguised accent.",
+            "kind": "fact",
+            "term": "authenticity_judgment(genuine_undisguised_regional_speech)"
+          }
+        ],
+        "ground_truth": "Confirmed answer: The speaker on the hoax tape was from the Wearside region, specifically the Castletown and Southwick area of Sunderland; the Wearside Jack tape was a hoax, not the real Yorkshire Ripper. Dialectologist Stanley Ellis, working with phonetician Jack Windsor Lewis in June 1979, identified the accent as Wearside, not Tyneside Geordie and not North Yorkshire near the crimes, pinpointing it to the Castletown and Southwick area of Sunderland by comparing the speech to dialect survey recordings, including a recording made while studying the dialect of nearby Washington. Ellis also concluded the tape was therefore a hoax, since the real Ripper attacks were in West Yorkshire about 78 miles away. How established: Confirmed in 2005 and 2006 when John Samuel Humble was arrested in October 2005 after a cold-case DNA review matched saliva on the hoax letters to his profile in the national DNA database; he pleaded guilty in March 2006 at Leeds Crown Court to four counts of perverting the course of justice. Humble had lived his whole life on the Ford Estate in Sunderland, exactly the Wearside area Ellis had identified, vindicating the dialectological attribution."
+      },
+      "derived": {
+        "leading_diagnosis": "wearside_sunderland_castletown",
+        "prior_population": "audio recordings of pronounced male regional English accents analyzed against the Survey of English Dialects reference corpus to localize the speaker's origin",
+        "fact_dispositions": [
+          {
+            "fact": "evidence_artifact(audio_tape_claiming_to_be_killer)",
+            "used": true,
+            "role": "context: the physical evidence under analysis is an audio recording, making accent localization the relevant identification task"
+          },
+          {
+            "fact": "tape_content(spoken_message_taunting_police)",
+            "used": true,
+            "role": "context: confirms the artifact contains connected natural speech suitable for dialect analysis"
+          },
+          {
+            "fact": "speech_sample(male_pronounced_regional_accent)",
+            "used": true,
+            "role": "key feature: a strongly marked regional accent provides high-information phonetic cues that enable narrow geographic localization"
+          },
+          {
+            "fact": "crime_locus(west_yorkshire_leeds_bradford)",
+            "used": true,
+            "role": "discriminating link: establishes the prior/expected origin if the speaker were the genuine local killer \u2014 later contradicted by the accent, indicating the taper is NOT the killer"
+          },
+          {
+            "fact": "reference_corpus(survey_of_english_dialects_recordings)",
+            "used": true,
+            "role": "method: the comparison baseline against which the sample's vowels are matched to pinpoint locality"
+          },
+          {
+            "fact": "vowel_feature(price_vowel_wide_diphthong_excludes_tyneside_north_yorkshire)",
+            "used": true,
+            "role": "discriminating link: rules out tyneside_geordie_newcastle and north_yorkshire candidates"
+          },
+          {
+            "fact": "vowel_feature(mouth_vowel_and_strike_exclude_tyneside_geordie)",
+            "used": true,
+            "role": "discriminating link: further rules out tyneside_geordie_newcastle"
+          },
+          {
+            "fact": "accent_excludes(west_yorkshire_and_newcastle)",
+            "used": true,
+            "role": "discriminating link: rules out west_yorkshire_leeds_bradford (so speaker is not the local killer) and tyneside_geordie_newcastle"
+          },
+          {
+            "fact": "best_match(wearside_survey_recordings_washington)",
+            "used": true,
+            "role": "decisive link: positive identification \u2014 the sample matches Wearside (Washington/Sunderland) reference recordings, pinpointing the speaker's origin"
+          },
+          {
+            "fact": "authenticity_judgment(genuine_undisguised_regional_speech)",
+            "used": true,
+            "role": "decisive link: rules out faked_disguised_accent, confirming the localization to a real native Wearside speaker is valid"
+          }
+        ],
+        "finding_links": [
+          {
+            "finding": "best_match(wearside_survey_recordings_washington)",
+            "expected_metric": "P(sample best-matches Wearside/Washington SED recordings | speaker is from Wearside/Sunderland) is very high vs near-zero for any other origin \u2014 positive co-localization",
+            "decisive": true
+          },
+          {
+            "finding": "authenticity_judgment(genuine_undisguised_regional_speech)",
+            "expected_metric": "P(speech judged genuine/undisguised | true native accent) high vs low under faked_disguised_accent \u2014 excludes the hoax-disguise alternative",
+            "decisive": true
+          },
+          {
+            "finding": "accent_excludes(west_yorkshire_and_newcastle)",
+            "expected_metric": "P(accent excludes WYorks & Newcastle | Wearside origin) high; collapses the two highest-prior rival regions",
+            "decisive": false
+          },
+          {
+            "finding": "vowel_feature(mouth_vowel_and_strike_exclude_tyneside_geordie)",
+            "expected_metric": "P(MOUTH vowel pattern | Geordie) low vs high | Wearside \u2014 discriminates neighboring Tyneside from Wearside",
+            "decisive": false
+          },
+          {
+            "finding": "vowel_feature(price_vowel_wide_diphthong_excludes_tyneside_north_yorkshire)",
+            "expected_metric": "P(wide PRICE diphthong | Tyneside or N.Yorks) low vs higher | Wearside \u2014 eliminates two candidates",
+            "decisive": false
+          },
+          {
+            "finding": "speech_sample(male_pronounced_regional_accent)",
+            "expected_metric": "P(narrow localization achievable | pronounced accent) high vs low for a weak/neutral accent \u2014 enables the inference at all",
+            "decisive": false
+          }
+        ]
+      },
+      "spidered": {
+        "prior": {
+          "value": 0.0032,
+          "verdict": "direction_only",
+          "chain": [
+            {
+              "hop": 0,
+              "source_url": "https://en.wikipedia.org/wiki/Survey_of_English_Dialects",
+              "source_title": "Survey of English Dialects \u2014 Wikipedia",
+              "content_excerpt": "The Survey of English Dialects was a survey of the dialects of English in England... fieldwork conducted between 1950 and 1961 under the direction of Harold Orton... 313 localities were selected, spread out across England.",
+              "cited_quote": "313 localities were selected, spread out across England.",
+              "onward_citation": "",
+              "gives_root_data": false
+            }
+          ]
+        },
+        "grounded_findings": [
+          {
+            "finding": "PRIOR \u2014 base rate of 'wearside_sunderland_castletown' as the speaker-origin localization within the universe of UK regional-English accent origins resolvable against the Survey of English Dialects (SED) reference corpus. NO published probability exists. The SED reference space comprises ~313 sampled localities across England (Orton fieldwork 1950\u20131961); Castletown/Southwick on Wearside is a single micro-locality within the Sunderland conurbation. A diffuse, uninformed prior over that locality space is on the order of 1/313 \u2248 0.0032. This figure is a reasoned uniform allocation over the SED locality count, NOT a measured base rate of any accent-origin sampling frame \u2014 so it is direction_only, not root-grounded primary data. Real audio-corpus base rates would be skewed by sampling, and no source publishes them.",
+            "computed_lr": 0.0032,
+            "lr_formula": "uniform prior = 1 / (number of SED localities) = 1/313 \u2248 0.0032 (illustrative, not measured)",
+            "reached_root": false,
+            "verdict": "direction_only",
+            "chain": [
+              {
+                "hop": 0,
+                "source_url": "https://en.wikipedia.org/wiki/Survey_of_English_Dialects",
+                "source_title": "Survey of English Dialects \u2014 Wikipedia",
+                "content_excerpt": "The Survey of English Dialects (SED) was a survey of the dialects of English in England... 313 localities were selected, spread out across England. The localities were mostly rural.",
+                "cited_quote": "313 localities were selected, spread out across England.",
+                "gives_root_data": false
+              }
+            ]
+          },
+          {
+            "finding": "LIKELIHOOD RATIO 1 \u2014 best_match(wearside_survey_recordings_washington): P(questioned sample best-matches the Wearside/Washington SED comparison recording | speaker truly from Wearside/Sunderland) vs P(same | speaker from elsewhere). DIRECTION strongly positive and root-validated as a DIRECTIONAL fact: Stanley Ellis localized the speaker by comparing the tape against his own SED fieldwork, specifically a recording of the Washington dialect, and the Castletown/Southwick comparison speaker's 'segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker', while similarities FELL OFF moving north \u2014 a positive co-localization gradient. GROUND TRUTH confirms direction: John Humble (DNA-identified 2005/2006) had 'spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton' \u2014 the exact region Ellis named. BUT no source publishes a numeric P(match|hypothesis) or a quantified false-match rate; the judgment was auditory/comparative, not a measured likelihood ratio. Hence direction_only for the NUMBER even though the direction traces to root primary observation.",
+            "computed_lr": 0,
+            "lr_formula": "LR = P(best-matches Wearside/Washington SED recording | Wearside origin) / P(same | other origin). No numeric values published; auditory comparative judgment only. Direction: >> 1.",
+            "reached_root": true,
+            "verdict": "direction_only",
+            "chain": [
+              {
+                "hop": 0,
+                "source_url": "https://en.wikipedia.org/wiki/Stanley_Ellis_(linguist)",
+                "source_title": "Stanley Ellis (linguist) \u2014 Wikipedia",
+                "content_excerpt": "In June 1979, he correctly identified that a tape released by police that purported to be from the Yorkshire Ripper was by a hoaxer... Ellis had located the speaker to the Wearside area by comparing his speech with that of a recording made whilst studying the dialect of Washington.",
+                "cited_quote": "Ellis had located the speaker to the Wearside area by comparing his speech with that of a recording made whilst studying the dialect of Washington.",
+                "onward_citation": "https://wp.lancs.ac.uk/enclair/2019/06/30/case-notes-s01e09-the-yorkshire-ripper-part-3-of-5/",
+                "gives_root_data": false
+              },
+              {
+                "hop": 1,
+                "source_url": "https://wp.lancs.ac.uk/enclair/2019/06/30/case-notes-s01e09-the-yorkshire-ripper-part-3-of-5/",
+                "source_title": "Case Notes: The Yorkshire Ripper, part 3 of 5 \u2014 en clair (Lancaster University Forensic Linguistics)",
+                "content_excerpt": "Later, Ellis pores over his own work on the Survey of English Dialects, and compares this with the recordings he's just collected, plus the Wearside Jack tape. We moved further inland to the small village of Castletown and in a pub there we met a retired man whose segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker. By contrast, the further north of Castletown they went, the fewer similarities they found.",
+                "cited_quote": "We moved further inland to the small village of Castletown and in a pub there we met a retired man whose segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker.",
+                "onward_citation": "",
+                "gives_root_data": true
+              },
+              {
+                "hop": 2,
+                "source_url": "https://www.slow-journalism.com/delayed-gratification-magazine/wearside-jack-and-the-hoaxes-that-derailed-the-hunt-for-the-yorkshire-ripper",
+                "source_title": "Wearside Jack and the hoaxes that derailed the hunt for the Yorkshire Ripper \u2014 Delayed Gratification",
+                "content_excerpt": "John Humble had lost his father when he was eight and had spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton. John Humble was Wearside Jack. Police arrived to arrest him in October 2005.",
+                "cited_quote": "John Humble had lost his father when he was eight and had spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton.",
+                "onward_citation": "",
+                "gives_root_data": true
+              }
+            ]
+          },
+          {
+            "finding": "LIKELIHOOD RATIO 2 \u2014 authenticity_judgment(genuine_undisguised_regional_speech): P(speech judged genuine/undisguised native accent | true native Wearside accent) vs P(same judgment | a faked/disguised accent \u2014 the hoax-disguise alternative). DIRECTION positive and root-supported: the forensic phoneticians judged the speaker was NOT masking his accent \u2014 'he also believes that the speaker is not attempting to mask their own accent. They have simply recorded themselves speaking as they speak.' GROUND TRUTH corroborates: Humble himself later said 'I just didn't realise about my accent, that's what misled the police. My accent.' \u2014 i.e. it was his authentic, undisguised native voice. This excludes the faked-accent alternative directionally. BUT no source publishes P(genuine-judgment | native) or P(genuine-judgment | disguised); there is no quantified diagnostic accuracy of authenticity judgments for this domain. Number is direction_only; many non-medical (forensic-phonetic) domains lack published likelihood ratios, and this is one.",
+            "computed_lr": 0,
+            "lr_formula": "LR = P(judged genuine/undisguised | true native accent) / P(judged genuine/undisguised | faked-disguised accent). No numeric values published; expert auditory authenticity judgment only. Direction: > 1.",
+            "reached_root": true,
+            "verdict": "direction_only",
+            "chain": [
+              {
+                "hop": 0,
+                "source_url": "https://wp.lancs.ac.uk/enclair/2019/06/30/case-notes-s01e09-the-yorkshire-ripper-part-3-of-5/",
+                "source_title": "Case Notes: The Yorkshire Ripper, part 3 of 5 \u2014 en clair (Lancaster University Forensic Linguistics)",
+                "content_excerpt": "Windsor Lewis concluded the accent appeared natural: he also believes that the speaker is not attempting to mask their own accent. They have simply recorded themselves speaking as they speak. Ellis noted that although the speaker might not still live in the Sunderland area, he may nevertheless have retained contacts.",
+                "cited_quote": "he also believes that the speaker is not attempting to mask their own accent. They have simply recorded themselves speaking as they speak.",
+                "onward_citation": "",
+                "gives_root_data": true
+              },
+              {
+                "hop": 1,
+                "source_url": "https://www.slow-journalism.com/delayed-gratification-magazine/wearside-jack-and-the-hoaxes-that-derailed-the-hunt-for-the-yorkshire-ripper",
+                "source_title": "Wearside Jack and the hoaxes that derailed the hunt for the Yorkshire Ripper \u2014 Delayed Gratification",
+                "content_excerpt": "When Humble was interviewed he acknowledged: I just didn't realise about my accent, that's what misled the police. My accent.",
+                "cited_quote": "I just didn't realise about my accent, that's what misled the police. My accent.",
+                "onward_citation": "",
+                "gives_root_data": true
+              }
+            ]
+          }
+        ]
+      },
+      "plain": {
+        "answer": "The dialect specialists, principally Stanley Ellis, concluded that the speaker came from the Wearside area of County Durham \u2014 specifically the Castletown/Southwick district of Sunderland, with Ellis narrowing it to within a few miles, pointing to the small town of Castletown (near Washington/Sunderland). In short: the voice was a Wearside (Sunderland) accent.",
+        "reasoning": "Several signals in the prompt point unambiguously toward a Wearside/Sunderland conclusion:\n\n1. The phonetic evidence given is explicitly designed to EXCLUDE the rival candidates and isolate Wearside. The \"banana vowel\" wide gliding diphthong in 'I' rules out the flatter monophthongal realizations of Tyneside (Geordie) and North Yorkshire. The vowels in 'house/down/about' (the MOUTH set) and the pronunciation of 'strike' are stated to be inconsistent with Tyneside Geordie. The accent is explicitly stated NOT to be Leeds/Bradford (where the actual murders occurred) and NOT Newcastle.\n\n2. Ellis is described as comparing the voice specifically against his Survey of English Dialects recordings of the Wearside region, \"including the dialect of the nearby town of Washington.\" Washington lies in the historic County Durham / Sunderland (Wearside) area. This is the comparison set he found a match in \u2014 a strong tell that Wearside is the answer.\n\n3. Phonetically, the distinction between Tyneside (Newcastle/Geordie) and Wearside (Sunderland/\"Mackem\") is exactly the kind of fine-grained northeastern contrast a Survey of English Dialects fieldworker would adjudicate: the MOUTH vowel, the PRICE vowel quality, and lexical items behave differently across the Tyne/Wear divide.\n\n4. Historically this is the well-documented \"Wearside Jack\" hoax. Ellis publicly placed the speaker in the Sunderland area and famously narrowed it to a small district (Castletown/Southwick), within a couple of miles. The hoaxer, later identified (in 2005 via DNA) as John Humble, was indeed from the Ford Estate/Sunderland area of Wearside. So the contemporary expert judgment was correct as to region.\n\nBecause the prompt foregrounds Washington and the Wearside survey recordings and systematically eliminates every alternative (Tyneside, Newcastle, North Yorkshire, Leeds, Bradford), the intended answer is the Wearside/Sunderland area of County Durham, with Ellis's celebrated narrowing to the Castletown/Southwick neighborhood of Sunderland.",
+        "confidence": "High (~90%) for \"Wearside/Sunderland.\" High-to-moderate (~75%) for the specific Castletown/Southwick narrowing."
+      }
+    }
+  ]
+}

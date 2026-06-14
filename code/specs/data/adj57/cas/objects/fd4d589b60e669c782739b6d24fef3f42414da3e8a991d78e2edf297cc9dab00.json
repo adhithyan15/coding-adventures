@@ -1,0 +1,16 @@
+{
+  "hash": "fd4d589b60e669c782739b6d24fef3f42414da3e8a991d78e2edf297cc9dab00",
+  "url": "https://arxiv.org/pdf/0709.4488",
+  "title": "Blondin & Tonry 2007, ApJ 666, 1024 \u2014 Determining the Type, Redshift, and Age of a Supernova Spectrum (SNID)",
+  "interned_at": "",
+  "content": "The SN type (subtype) is simply determined as the type (subtype) of the best-match template(s) for rlap greater than some cutoff value rlap_min. We usually discard correlations with rlap < 5. Last, the age of an input spectrum is determined with a typical accuracy sigma_t <= 3 days.",
+  "citations": [
+    {
+      "start": 145,
+      "end": 190,
+      "quote": "We usually discard correlations with rlap < 5",
+      "used_for": "snid_best_type(type_iib, few_days_past_max): SNID best-fit type = IIb at appropriate epoch. SNID determines the SN type as the type of the best-match template(s) above a reliability cutoff (rlap > 5), and determines spectral age to within ~3 days. This is the expected signature for a IIb and not for a IIP/Ib best fit. ROOT METHODOLOGY is grounded (Blondin & Tonry 2007), but no published numeric likelihood ratio P(SNID best=IIb | IIb)/P(SNID best=IIb | not) exists. Direction strongly favors IIb. LR set to placeholder; honest verdict is direction_only.->type_iib_supernova"
+    }
+  ],
+  "onward_citations": []
+}

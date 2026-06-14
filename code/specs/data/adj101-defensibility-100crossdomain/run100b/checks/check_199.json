@@ -1,0 +1,8 @@
+{
+ "check_id": 199,
+ "idx": 77,
+ "slot": "declared_value",
+ "claimed_value": 400,
+ "scenario": "Vireo Health imports a small parcel of a controlled pharmaceutical substance with a declared value of $400. The company attempts to clear it as an informal entry without using a licensed customs broker.",
+ "cited_span": "a declared value of $400"
+}

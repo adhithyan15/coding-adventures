@@ -1,0 +1,38 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "twig-aot",
+  "description": "Compile a Twig source file to a native executable on Linux x86-64, Windows x86-64, or macOS ARM64.",
+  "version": "0.4.0",
+  "flags": [
+    {
+      "id": "output",
+      "short": "o",
+      "long": "output",
+      "description": "Output path for the executable (default: input file with no extension).",
+      "type": "string"
+    },
+    {
+      "id": "target",
+      "short": "t",
+      "long": "target",
+      "description": "Target platform: auto (default, picks the host), macos-arm64, linux-x86_64, or windows-x86_64.",
+      "type": "string"
+    },
+    {
+      "id": "emit_object",
+      "short": "c",
+      "long": "emit-object",
+      "description": "Emit the object file (.o on Linux/macOS, .obj on Windows) and runtime archive instead of producing a runnable executable. Works from any host regardless of --target — the object format is fully portable; only the link step is host/target-bound. Use this for cross-OS workflows: produce the .o on any host, copy it to the target machine, and link there with `cc -o exe foo.o runtime.a -lc` (Linux) or `link.exe /OUT:exe.exe foo.obj runtime.lib libcmt.lib legacy_stdio_definitions.lib` (Windows).",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "input",
+      "name": "FILE",
+      "description": "Twig source file to compile.",
+      "type": "string",
+      "required": true
+    }
+  ]
+}

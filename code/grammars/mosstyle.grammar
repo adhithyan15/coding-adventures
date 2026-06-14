@@ -1,0 +1,121 @@
+# Parser grammar for mosstyle — Component Style Language
+# @version 1
+#
+# A .msl file assigns visual properties to the named parts of a component.
+# Each `part` block targets one exported part from the companion .mll file.
+# Inside a part block, `state` blocks override base properties per interaction
+# state (hover, pressed, focused, disabled, selected, editing, error).
+#
+# Grammar notation:
+#   |      alternation
+#   { }    repetition (zero or more)
+#   [ ]    optional (zero or one)
+#   ( )    grouping
+# UPPERCASE = token reference, lowercase = rule reference
+#
+# ============================================================================
+# Design decisions
+# ============================================================================
+#
+# 1. style_value covers all literal value types: token references ($color-surface),
+#    hash colors (#1e1e1e), dimensions (4px), numbers (0.4), strings ("Inter"),
+#    and bare identifiers for keyword values (bold, underline, center, none).
+#
+# 2. The grammar does not validate property names or token resolution — that
+#    is the semantic compiler's responsibility.  The grammar is purely structural.
+#
+# 3. LL(1): property_decl starts with NAME COLON, state_block starts with
+#    KEYWORD NAME LBRACE.  Both KEYWORD and NAME are different token types
+#    (KEYWORD = "state" keyword, NAME = everything else), so the parser can
+#    always choose the correct branch by looking at the first token.
+
+# ============================================================================
+# Top-level structure
+# ============================================================================
+
+file = style_def ;
+
+# ============================================================================
+# Style definition
+# ============================================================================
+# style ComponentName { part* }
+#
+# Example:
+#   style Grid {
+#     part root { background: #ffffff ; }
+#     part cell-grid { border-width: 1px ; border-color: #e0e0e0 ; }
+#   }
+
+style_def = KEYWORD NAME LBRACE { part_def } RBRACE ;
+
+# ============================================================================
+# Part block
+# ============================================================================
+# part <part-path> { part_item* }
+#
+# `part-path` is one or more kebab-case NAMEs joined by `/`. Single-segment
+# paths address top-level parts the .mll file declares (`part sheet { ... }`);
+# multi-segment paths address sub-parts the primitive emits internally
+# (`part sheet/cell { ... }`, `part sheet/header-cell { ... }`). The .msl
+# compiler stores the entire path string as the part name; the emitter
+# matches sub-parts at the synthesised-element level when rendering.
+# See UI27 §3 for the full motivation and §5 for the Grid sub-part
+# vocabulary (cell, header-cell, header-row, data-row, etc.).
+
+part_def = KEYWORD part_path LBRACE { part_item } RBRACE ;
+part_path = NAME { SLASH NAME } ;
+
+# ============================================================================
+# Part items
+# ============================================================================
+# Each item is either a property declaration or a state block.
+# LL(1) disambiguation:
+#   - First token KEYWORD ("state") → state_block
+#   - First token NAME               → property_decl
+
+part_item = state_block
+          | property_decl ;
+
+# ============================================================================
+# State blocks
+# ============================================================================
+# state state-name { property_decl* }
+# State names (hover, pressed, focused, …) are NAME tokens in the token
+# grammar (not reserved keywords), validated semantically.
+
+state_block = KEYWORD NAME LBRACE { property_decl } RBRACE ;
+
+# ============================================================================
+# Property declarations
+# ============================================================================
+# property-name : value+ ;
+#
+# A property can carry one OR MORE space-separated style_values, matching
+# CSS shorthand syntax. Examples:
+#   color : #ffffff ;                                — one value
+#   border : 1px solid #3f3f46 ;                     — three values
+#   margin : 4px 8px ;                               — two values (top/bottom, l/r)
+#   font  : 12px monospace ;                         — two values
+# The analyzer joins multi-value sequences with a single space to produce
+# the final value string. Backends (CSS / React inline style) accept the
+# space-separated form verbatim.
+
+property_decl = NAME COLON style_value { style_value } SEMICOLON ;
+
+# ============================================================================
+# Style values
+# ============================================================================
+# A style value is one of:
+#   TOKEN_REF  — Lattice design-token reference ($color-surface)
+#   HASH_COLOR — hex color literal (#1e1e1e)
+#   DIMENSION  — number with a unit (4px, 1.5rem, 80ms)
+#   NUMBER     — unitless number (0.4, 400, 1)
+#   STRING     — quoted string ("Inter", "system-ui")
+#   NAME       — keyword value (bold, underline, center, none, start, end)
+
+style_value = TOKEN_REF
+            | HASH_COLOR
+            | DIMENSION
+            | NUMBER
+            | STRING
+            | NAME ;

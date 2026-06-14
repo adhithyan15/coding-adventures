@@ -1,0 +1,36 @@
+# matrix-rust-napi — Node.js N-API addon exposing the Rust matrix
+# execution layer to JavaScript / TypeScript.
+#
+# Phase 1 (MX07 §"Phases"): crate skeleton + Graph JSON round-trip
+# only.  Runtime + Graph execution land in Phase 2.
+#
+# Build produces a .node file that Node.js loads via `require()`.
+# crate-type = ["cdylib"]: emit a C-compatible shared library.
+#
+# Follows the workspace convention established by font-parser-node:
+# zero-dependency on napi-rs / napi-sys.  All N-API access goes
+# through node-bridge, which declares the extern "C" functions
+# itself.  N-API is ABI-stable by design.
+
+[package]
+name = "matrix-rust-napi"
+version = "0.1.0"
+edition = "2021"
+description = "MX07 Phase 1 — Node.js N-API addon exposing the Rust matrix execution layer (matrix-ir / matrix-ir-json / matrix-runtime / matrix-cpu / matrix-metal / matrix-cuda) to JavaScript.  v0.1 exposes only graphRoundTripJson(jsonString) -> jsonString — a smoke function that proves the matrix-ir-json wire format survives a trip through the napi boundary.  v0.2+ adds Graph + Runtime classes with actual execution per MX07.  Zero external Rust dependencies beyond the workspace; no napi-rs."
+license = "MIT"
+
+[lib]
+# cdylib: produce a .so / .dylib / .dll that Node.js renames to .node.
+crate-type = ["cdylib"]
+name = "matrix_rust_napi"
+
+[dependencies]
+matrix-ir                          = { path = "../matrix-ir" }
+matrix-ir-json                     = { path = "../matrix-ir-json" }
+matrix-runtime                     = { path = "../matrix-runtime" }
+matrix-cpu                         = { path = "../matrix-cpu" }
+compute-ir                         = { path = "../compute-ir" }
+executor-protocol                  = { path = "../executor-protocol" }
+coding-adventures-json-value       = { path = "../json-value" }
+coding-adventures-json-serializer  = { path = "../json-serializer" }
+node-bridge                        = { path = "../node-bridge" }

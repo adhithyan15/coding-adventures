@@ -6,17 +6,87 @@ parsers.
 It keeps parsing side-effect free, then exposes helpers to:
 
 - normalize dialect-specific parsed sources into one shared loaded shape
+- route source strings, files, and file graphs through dialect profiles with
+  generic `load_prolog_*` helpers while keeping `load_swi_prolog_*` wrappers
+  as compatibility conveniences
 - retain structured module/import metadata such as `module/2` and
   `use_module/1,2`
 - collect `initialization/1` directives in source order
 - run those initialization goals explicitly against the loaded `Program`
-- adapt parsed Prolog builtin calls like `call/1`, `dynamic/1`, `assertz/1`,
+- adapt parsed Prolog builtin calls like `call/1..8`, `dynamic/1`, `assertz/1`,
   and `predicate_property/2` into runtime goals before execution
+- adapt finite integer builtins such as `integer/1`, `between/3`, and `succ/2`
+- adapt atom composition builtins such as `atom_concat/3`,
+  `atomic_list_concat/2,3`, and `number_string/2`
+- adapt text inspection builtins such as `atom_length/2`, `string_length/2`,
+  `sub_atom/5`, and `sub_string/5`
+- adapt term text I/O builtins such as `term_to_atom/2` and `atom_to_term/3`
+  through the parser boundary
+- adapt parser-backed term read/write helpers such as `read_term_from_atom/3`
+  and `write_term_to_atom/3`
+- adapt `numbervars/3` and `write_term_to_atom/3` `numbervars(true)`
+  rendering for source-level variable-numbered debug output
+- adapt `compound_name_arguments/3` and `compound_name_arity/3` for
+  compound-only term reflection and construction
+- adapt `acyclic_term/1` and `cyclic_term/1` for source-level term-shape
+  checks
+- adapt `unifiable/3` and `unify_with_occurs_check/2` for explicit finite
+  unification and non-binding unifier inspection
+- adapt `term_hash/2` and `term_hash/4` for stable source-level term hashes
+- adapt callable CLP(FD) forms such as `in/2`, `ins/2`, `#=/2`,
+  `all_different/1`, and `labeling/2`
+- flatten nested additive CLP(FD) equality expressions such as
+  `Z #= X + Y + 1`
+- preserve supported `labeling/2` options such as `down` and `leftmost`
 - adapt `phrase/2` and `phrase/3` into executable DCG runtime calls
+- adapt Prolog term equality predicates `=/2`, `\\=/2`, `==/2`, and `\\==/2`
+  into engine/builtin goals
+- adapt Prolog `dif/2` into delayed disequality constraints
 - link multiple loaded sources into one namespace-aware runnable project with
   module-local predicates and weak imports
 - rewrite explicit `module:goal` qualification during linking, including common
-  meta-goal forms like `call/1`, `once/1`, `not/1`, `\\+/1`, and `phrase/2,3`
+  meta-goal forms like `call/1..8`, apply-family closures, `once/1`, `not/1`,
+  `\\+/1`, and `phrase/2,3`
+- preserve raw `bagof/3` and `setof/3` goal scopes so the runtime can group by
+  free variables and honor `^/2` existential quantifiers
+- adapt Prolog control constructs such as `->/2` and
+  `(If -> Then ; Else)` into executable builtin goals
+- adapt common list predicates such as `member/2`, `append/3`, `select/3`,
+  `permutation/2`, `reverse/2`, `last/2`, `length/2`, `sort/2`, `msort/2`,
+  `nth0/3`, `nth1/3`, `nth0/4`, `nth1/4`, and `is_list/1` into relational
+  standard-library goals
+- adapt higher-order list predicates such as `maplist/2..5`, `convlist/3`,
+  `include/3`, `exclude/3`, `partition/4`, `foldl/4..7`, and `scanl/4..7`
+  into callable-term-backed builtin goals
+- adapt bounded file metadata, UTF-8 file text, and stream predicates such as
+  `exists_file/1`, `exists_directory/1`, `absolute_file_name/2`,
+  `access_file/2`, `file_directory_name/2`, `file_base_name/2`,
+  `directory_file_path/3`, `file_name_extension/3`, `same_file/2`,
+  `size_file/2`, `time_file/2`, `directory_files/2`, `make_directory/1`,
+  `delete_file/1`, `delete_directory/1`, `rename_file/2`,
+  `working_directory/2`, `expand_file_name/2`, `make_directory_path/1`,
+  `delete_directory_and_contents/1`, `copy_file/2`,
+  `read_file_to_string/2`, `read_file_to_codes/2`, `open/3`, `close/1`,
+  `read_string/3`, `read_line_to_string/2`, `get_char/2`,
+  `at_end_of_stream/1`, `write/2`, `nl/1`, `open/4`, `current_stream/3`,
+  `stream_property/2`, `flush_output/1`, `set_stream_position/2`, and
+  `seek/4`, including standard `user_input`, `user_output`, and `user_error`
+  streams plus accepted `reposition`, `eof_action`, `buffer`, and
+  `close_on_abort` options
+- adapt selected current-stream predicates including `set_input/1`,
+  `set_output/1`, `current_input/1`, `current_output/1`, `get_char/1`,
+  `read_string/2`, `read_line_to_string/1`, `at_end_of_stream/0`,
+  `write/1`, `nl/0`, and `flush_output/0`
+- adapt bounded character/code stream predicates including `get_code/1,2`,
+  `peek_char/1,2`, `peek_code/1,2`, `put_char/1,2`, and `put_code/1,2`
+- adapt bounded binary byte stream predicates including `open/4`
+  `type(binary)`, `get_byte/1,2`, `peek_byte/1,2`, and `put_byte/1,2`
+- adapt parser-backed stream term I/O predicates including `read/1`,
+  `read/2`, `read_term/2`, `read_term/3`, `write_term/2`, and
+  `write_term/3`
+- adapt term I/O conveniences including `read_term` `singletons/1`,
+  `writeq/1,2`, `write_canonical/1,2`, `writeln/1,2`, and
+  `portray_clause/1,2`
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`
 - splice `include/1` targets into the including source before project linking
@@ -24,6 +94,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   source references like `library(...)` without hard-coding one search policy
 - apply explicit `term_expansion/2` and `goal_expansion/2` passes during load
   without making parsing itself stateful or magical
+- rewrite ad-hoc parsed queries through a linked project's module/import
+  context
 - expose a convenience runner for executing initialization goals with the shared
   Prolog builtin adapter enabled
 

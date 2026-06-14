@@ -200,6 +200,34 @@ class TestOct8BitArithmetic:
 
         assert _compile_and_run(program, "OctAnd") == bytes([0x0F])
 
+    def test_call_preserves_caller_registers(self) -> None:
+        """JVM01 regression: ``IrOp.CALL`` snapshots all caller registers
+        to JVM locals and restores them after the callee returns
+        (skipping ``r1``, the return-value slot).
+
+        Without the fix, the callee's writes to ``r2`` leak back to the
+        caller — ``r2`` reads as 7 instead of 99.  With the fix, the
+        caller observes its original value.
+
+        Output byte 99 (= ``b'c'``) confirms r2 round-tripped intact.
+        """
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+
+        # ── helper region: clobber r2, return immediately ─────────────
+        program.add_instruction(IrInstruction(IrOp.LABEL,    [IrLabel("helper")],   id=-1))
+        program.add_instruction(IrInstruction(IrOp.LOAD_IMM, [_reg(2), _imm(7)],    id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.RET,      [],                    id=gen.next()))
+
+        # ── _start: load r2 = 99, call helper, write r2 ───────────────
+        program.add_instruction(IrInstruction(IrOp.LABEL,    [IrLabel("_start")],   id=-1))
+        program.add_instruction(IrInstruction(IrOp.LOAD_IMM, [_reg(2), _imm(99)],   id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.CALL,     [IrLabel("helper")],   id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.SYSCALL,  [_imm(1), _reg(2)],    id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.HALT,     [],                    id=gen.next()))
+
+        assert _compile_and_run(program, "JvmCallSaves") == bytes([99])
+
     def test_multiple_outputs(self) -> None:
         """Compute two values and write both; verifies multi-instruction programs."""
         gen = IDGenerator()

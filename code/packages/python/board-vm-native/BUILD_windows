@@ -1,0 +1,6 @@
+uv venv --quiet --clear
+uv pip install pytest --quiet
+cargo build --release
+if exist target\release\board_vm_native.dll copy target\release\board_vm_native.dll src\board_vm_native\board_vm_native.pyd
+set PYTHONPATH=src
+.venv\Scripts\python -m pytest tests/ -v

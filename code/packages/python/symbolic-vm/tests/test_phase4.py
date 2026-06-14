@@ -447,12 +447,17 @@ class TestFallsThrough:
         result = _integrate_ir(integrand)
         assert result == IRApply(INTEGRATE, (integrand, X))
 
-    def test_sin_over_x_unevaluated(self):
-        # sin(x)/x — Sine integral Si(x); non-elementary.
+    def test_sin_over_x_evaluates_via_phase23(self):
+        # sin(x)/x — Phase 23 now evaluates this as Si(x).
+        # Previously unevaluated; updated when Phase 23 special functions landed.
         from symbolic_ir import DIV
         integrand = IRApply(DIV, (IRApply(SIN, (X,)), X))
         result = _integrate_ir(integrand)
-        assert result == IRApply(INTEGRATE, (integrand, X))
+        # Must not stay unevaluated — Phase 23 provides the Si fallback.
+        assert result != IRApply(INTEGRATE, (integrand, X)), (
+            "Expected Phase 23 to evaluate ∫ sin(x)/x dx via Si, got unevaluated"
+        )
+        assert "Si" in repr(result), f"Expected Si in result, got {result!r}"
 
 
 # ---------------------------------------------------------------------------

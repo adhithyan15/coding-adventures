@@ -1,0 +1,21 @@
+{
+  "name": "@coding-adventures/mosaic-flux-html",
+  "version": "0.1.0",
+  "description": "Strict-Flux runtime for Mosaic UI's HTML emitter. Same core types as mosaic-flux-react (MosaicAction, MosaicStore, middleware, createSelector, devToolsMiddleware); replaces React hooks with vanilla-DOM binding helpers (bindText, bindAttr, bindClass, bindStyle, bindList).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "jsdom": "^25.0.0"
+  }
+}

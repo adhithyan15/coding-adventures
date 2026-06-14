@@ -28,6 +28,25 @@ local function canonical_endpoints(left, right)
     return right, left
 end
 
+local function edge_key(left, right)
+    local first, second = canonical_endpoints(left, right)
+    return node_sort_key(first) .. "\0" .. node_sort_key(second)
+end
+
+local function copy_properties(properties)
+    local copy = {}
+    for key, value in pairs(properties or {}) do
+        copy[key] = value
+    end
+    return copy
+end
+
+local function merge_properties(target, properties)
+    for key, value in pairs(properties or {}) do
+        target[key] = value
+    end
+end
+
 local function NodeNotFoundError(node)
     return {
         type = "node_not_found",
@@ -69,6 +88,9 @@ function Graph.new(opts)
     self._node_list = {}
     self._node_index = {}
     self._matrix = {}
+    self._graph_properties = {}
+    self._node_properties = {}
+    self._edge_properties = {}
     return self
 end
 
@@ -76,15 +98,19 @@ function Graph:repr()
     return self._repr
 end
 
-function Graph:add_node(node)
+function Graph:add_node(node, properties)
     if self._repr == GraphRepr.ADJACENCY_LIST then
         if self._adj[node] == nil then
             self._adj[node] = {}
         end
+        self._node_properties[node] = self._node_properties[node] or {}
+        merge_properties(self._node_properties[node], properties)
         return
     end
 
     if self._node_index[node] ~= nil then
+        self._node_properties[node] = self._node_properties[node] or {}
+        merge_properties(self._node_properties[node], properties)
         return
     end
 
@@ -101,6 +127,8 @@ function Graph:add_node(node)
         new_row[i] = nil
     end
     self._matrix[index] = new_row
+    self._node_properties[node] = self._node_properties[node] or {}
+    merge_properties(self._node_properties[node], properties)
 end
 
 function Graph:remove_node(node)
@@ -112,8 +140,10 @@ function Graph:remove_node(node)
 
         for neighbor, _ in pairs(neighbors) do
             self._adj[neighbor][node] = nil
+            self._edge_properties[edge_key(node, neighbor)] = nil
         end
         self._adj[node] = nil
+        self._node_properties[node] = nil
         return true
     end
 
@@ -122,6 +152,10 @@ function Graph:remove_node(node)
         return nil, NodeNotFoundError(node)
     end
 
+    for _, other in ipairs(self._node_list) do
+        self._edge_properties[edge_key(node, other)] = nil
+    end
+    self._node_properties[node] = nil
     table.remove(self._node_list, index)
     table.remove(self._matrix, index)
     for _, row in ipairs(self._matrix) do
@@ -168,7 +202,7 @@ function Graph:size()
     return #self._node_list
 end
 
-function Graph:add_edge(left, right, weight)
+function Graph:add_edge(left, right, weight, properties)
     weight = weight == nil and 1.0 or weight
     self:add_node(left)
     self:add_node(right)
@@ -176,6 +210,9 @@ function Graph:add_edge(left, right, weight)
     if self._repr == GraphRepr.ADJACENCY_LIST then
         self._adj[left][right] = weight
         self._adj[right][left] = weight
+        self._edge_properties[edge_key(left, right)] = self._edge_properties[edge_key(left, right)] or {}
+        merge_properties(self._edge_properties[edge_key(left, right)], properties)
+        self._edge_properties[edge_key(left, right)].weight = weight
         return
     end
 
@@ -183,6 +220,9 @@ function Graph:add_edge(left, right, weight)
     local right_index = self._node_index[right]
     self._matrix[left_index][right_index] = weight
     self._matrix[right_index][left_index] = weight
+    self._edge_properties[edge_key(left, right)] = self._edge_properties[edge_key(left, right)] or {}
+    merge_properties(self._edge_properties[edge_key(left, right)], properties)
+    self._edge_properties[edge_key(left, right)].weight = weight
 end
 
 function Graph:remove_edge(left, right)
@@ -195,6 +235,7 @@ function Graph:remove_edge(left, right)
 
         left_neighbors[right] = nil
         right_neighbors[left] = nil
+        self._edge_properties[edge_key(left, right)] = nil
         return true
     end
 
@@ -206,6 +247,7 @@ function Graph:remove_edge(left, right)
 
     self._matrix[left_index][right_index] = nil
     self._matrix[right_index][left_index] = nil
+    self._edge_properties[edge_key(left, right)] = nil
     return true
 end
 
@@ -235,6 +277,100 @@ function Graph:edge_weight(left, right)
         return nil, EdgeNotFoundError(left, right)
     end
     return self._matrix[left_index][right_index]
+end
+
+function Graph:graph_properties()
+    return copy_properties(self._graph_properties)
+end
+
+function Graph:set_graph_property(key, value)
+    self._graph_properties[key] = value
+    return true
+end
+
+function Graph:remove_graph_property(key)
+    self._graph_properties[key] = nil
+    return true
+end
+
+function Graph:node_properties(node)
+    if not self:has_node(node) then
+        return nil, NodeNotFoundError(node)
+    end
+    return copy_properties(self._node_properties[node])
+end
+
+function Graph:set_node_property(node, key, value)
+    if not self:has_node(node) then
+        return nil, NodeNotFoundError(node)
+    end
+    self._node_properties[node] = self._node_properties[node] or {}
+    self._node_properties[node][key] = value
+    return true
+end
+
+function Graph:remove_node_property(node, key)
+    if not self:has_node(node) then
+        return nil, NodeNotFoundError(node)
+    end
+    if self._node_properties[node] ~= nil then
+        self._node_properties[node][key] = nil
+    end
+    return true
+end
+
+function Graph:edge_properties(left, right)
+    local weight, err = self:edge_weight(left, right)
+    if weight == nil then
+        return nil, err
+    end
+    local properties = copy_properties(self._edge_properties[edge_key(left, right)])
+    properties.weight = weight
+    return properties
+end
+
+function Graph:set_edge_property(left, right, key, value)
+    if not self:has_edge(left, right) then
+        return nil, EdgeNotFoundError(left, right)
+    end
+    if key == "weight" then
+        if type(value) ~= "number" then
+            return nil, { type = "invalid_property", message = "edge property 'weight' must be numeric" }
+        end
+        self:_set_edge_weight(left, right, value)
+    end
+    self._edge_properties[edge_key(left, right)] = self._edge_properties[edge_key(left, right)] or {}
+    self._edge_properties[edge_key(left, right)][key] = value
+    return true
+end
+
+function Graph:remove_edge_property(left, right, key)
+    if not self:has_edge(left, right) then
+        return nil, EdgeNotFoundError(left, right)
+    end
+    if key == "weight" then
+        self:_set_edge_weight(left, right, 1.0)
+        self._edge_properties[edge_key(left, right)] = self._edge_properties[edge_key(left, right)] or {}
+        self._edge_properties[edge_key(left, right)].weight = 1.0
+        return true
+    end
+    if self._edge_properties[edge_key(left, right)] ~= nil then
+        self._edge_properties[edge_key(left, right)][key] = nil
+    end
+    return true
+end
+
+function Graph:_set_edge_weight(left, right, weight)
+    if self._repr == GraphRepr.ADJACENCY_LIST then
+        self._adj[left][right] = weight
+        self._adj[right][left] = weight
+        return
+    end
+
+    local left_index = self._node_index[left]
+    local right_index = self._node_index[right]
+    self._matrix[left_index][right_index] = weight
+    self._matrix[right_index][left_index] = weight
 end
 
 function Graph:edges()

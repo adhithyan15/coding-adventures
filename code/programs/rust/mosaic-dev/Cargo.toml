@@ -1,0 +1,32 @@
+[package]
+name = "mosaic-dev"
+version = "0.1.0"
+edition = "2021"
+description = "Storybook-like multi-backend dev environment for Mosaic components"
+authors = ["Adhithya Rajasekaran"]
+license = "MIT"
+
+# [workspace] is required so Cargo does not try to pull this binary into the
+# root workspace (there is no root Cargo.toml in this monorepo).
+[workspace]
+
+[lib]
+name = "mosaic_dev"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mosaic-dev"
+path = "src/main.rs"
+
+[dependencies]
+mosaic-package-artifact-builder = { path = "../../../packages/rust/mosaic-package-artifact-builder" }
+mosaic-package-manifest         = { path = "../../../packages/rust/mosaic-package-manifest" }
+mosmodel-compiler               = { path = "../../../packages/rust/mosmodel-compiler" }
+clap        = { version = "4", features = ["derive"] }
+notify      = "6"
+tiny_http   = "0.12"
+tempfile    = "3"
+serde_json  = "1"
+
+[dev-dependencies]
+tempfile = "3"

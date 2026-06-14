@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-doc-syntax-highlighter",
+  "version": "0.1.0",
+  "description": "v0 interface-first stub: walk a DocumentNode AST and attach a `highlighted: HighlightSpan[]` field to every code block.  The v0 implementation emits a single `plain` token spanning the block's full value — the type system, AST shape, and renderer contract are settled; the actual TextMate-grammar engine ships in v1.  Pure transform, capability [], depends only on document-ast.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

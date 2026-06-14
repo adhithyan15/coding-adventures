@@ -1,5 +1,6 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
-# Source: sql.grammar
+# ruff: noqa: E501, F401
+# Source: code/grammars/sql.grammar
 # Regenerate with: grammar-tools compile-grammar <source.grammar>
 #
 # This file embeds a ParserGrammar as native Python data structures.
@@ -50,28 +51,139 @@ PARSER_GRAMMAR = ParserGrammar(
             Alternation(choices=[
                 RuleReference(name='query_stmt', is_token=False),
                 RuleReference(name='insert_stmt', is_token=False),
+                RuleReference(name='replace_stmt', is_token=False),
                 RuleReference(name='update_stmt', is_token=False),
                 RuleReference(name='delete_stmt', is_token=False),
                 RuleReference(name='create_table_stmt', is_token=False),
                 RuleReference(name='drop_table_stmt', is_token=False),
+                RuleReference(name='alter_table_stmt', is_token=False),
                 RuleReference(name='create_index_stmt', is_token=False),
                 RuleReference(name='drop_index_stmt', is_token=False),
+                RuleReference(name='create_view_stmt', is_token=False),
+                RuleReference(name='drop_view_stmt', is_token=False),
+                RuleReference(name='create_trigger_stmt', is_token=False),
+                RuleReference(name='drop_trigger_stmt', is_token=False),
                 RuleReference(name='begin_stmt', is_token=False),
                 RuleReference(name='commit_stmt', is_token=False),
+                RuleReference(name='rollback_to_stmt', is_token=False),
                 RuleReference(name='rollback_stmt', is_token=False),
+                RuleReference(name='savepoint_stmt', is_token=False),
+                RuleReference(name='release_stmt', is_token=False),
+                RuleReference(name='attach_stmt', is_token=False),
+                RuleReference(name='detach_stmt', is_token=False),
             ]),
             line_number=12,
+        ),
+        GrammarRule(
+            name='attach_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='ATTACH'),
+                Optional(element=
+                    Literal(value='DATABASE'),
+                ),
+                RuleReference(name='expr', is_token=False),
+                Literal(value='AS'),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=25,
+        ),
+        GrammarRule(
+            name='detach_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='DETACH'),
+                Optional(element=
+                    Literal(value='DATABASE'),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=26,
         ),
         GrammarRule(
             name='query_stmt',
             body=
             Sequence(elements=[
-                RuleReference(name='select_stmt', is_token=False),
+                Optional(element=
+                    RuleReference(name='with_clause', is_token=False),
+                ),
+                Group(element=
+                    Alternation(choices=[
+                        RuleReference(name='values_stmt', is_token=False),
+                        RuleReference(name='select_stmt', is_token=False),
+                    ]),
+                ),
                 Repetition(element=
                     RuleReference(name='set_op_clause', is_token=False),
                 ),
             ]),
-            line_number=27,
+            line_number=48,
+        ),
+        GrammarRule(
+            name='values_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='VALUES'),
+                RuleReference(name='row_value', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='row_value', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=55,
+        ),
+        GrammarRule(
+            name='with_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='WITH'),
+                Optional(element=
+                    Literal(value='RECURSIVE'),
+                ),
+                RuleReference(name='cte_def', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='cte_def', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=56,
+        ),
+        GrammarRule(
+            name='cte_def',
+            body=
+            Sequence(elements=[
+                RuleReference(name='NAME', is_token=True),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='('),
+                        RuleReference(name='NAME', is_token=True),
+                        Repetition(element=
+                            Sequence(elements=[
+                                Literal(value=','),
+                                RuleReference(name='NAME', is_token=True),
+                            ]),
+                        ),
+                        Literal(value=')'),
+                    ]),
+                ),
+                Literal(value='AS'),
+                Optional(element=
+                    Sequence(elements=[
+                        Optional(element=
+                            Literal(value='NOT'),
+                        ),
+                        Literal(value='MATERIALIZED'),
+                    ]),
+                ),
+                Literal(value='('),
+                RuleReference(name='query_stmt', is_token=False),
+                Literal(value=')'),
+            ]),
+            line_number=61,
         ),
         GrammarRule(
             name='set_op_clause',
@@ -87,9 +199,14 @@ PARSER_GRAMMAR = ParserGrammar(
                 Optional(element=
                     Literal(value='ALL'),
                 ),
-                RuleReference(name='select_stmt', is_token=False),
+                Group(element=
+                    Alternation(choices=[
+                        RuleReference(name='values_stmt', is_token=False),
+                        RuleReference(name='select_stmt', is_token=False),
+                    ]),
+                ),
             ]),
-            line_number=28,
+            line_number=64,
         ),
         GrammarRule(
             name='select_stmt',
@@ -103,10 +220,14 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
                 RuleReference(name='select_list', is_token=False),
-                Literal(value='FROM'),
-                RuleReference(name='table_ref', is_token=False),
-                Repetition(element=
-                    RuleReference(name='join_clause', is_token=False),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='FROM'),
+                        RuleReference(name='table_ref', is_token=False),
+                        Repetition(element=
+                            RuleReference(name='join_clause', is_token=False),
+                        ),
+                    ]),
                 ),
                 Optional(element=
                     RuleReference(name='where_clause', is_token=False),
@@ -124,7 +245,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='limit_clause', is_token=False),
                 ),
             ]),
-            line_number=32,
+            line_number=69,
         ),
         GrammarRule(
             name='select_list',
@@ -141,7 +262,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ),
                 ]),
             ]),
-            line_number=37,
+            line_number=74,
         ),
         GrammarRule(
             name='select_item',
@@ -155,7 +276,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=38,
+            line_number=75,
         ),
         GrammarRule(
             name='table_ref',
@@ -165,20 +286,32 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='('),
                     RuleReference(name='query_stmt', is_token=False),
                     Literal(value=')'),
-                    Literal(value='AS'),
-                    RuleReference(name='NAME', is_token=True),
-                ]),
-                Sequence(elements=[
-                    RuleReference(name='table_name', is_token=False),
                     Optional(element=
                         Sequence(elements=[
-                            Literal(value='AS'),
+                            Optional(element=
+                                Literal(value='AS'),
+                            ),
                             RuleReference(name='NAME', is_token=True),
                         ]),
                     ),
                 ]),
+                Sequence(elements=[
+                    RuleReference(name='table_name', is_token=False),
+                    Optional(element=
+                        Alternation(choices=[
+                            Sequence(elements=[
+                                Literal(value='AS'),
+                                RuleReference(name='NAME', is_token=True),
+                            ]),
+                            RuleReference(name='NAME', is_token=True),
+                        ]),
+                    ),
+                    Optional(element=
+                        RuleReference(name='index_hint', is_token=False),
+                    ),
+                ]),
             ]),
-            line_number=43,
+            line_number=96,
         ),
         GrammarRule(
             name='table_name',
@@ -192,23 +325,65 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=44,
+            line_number=98,
+        ),
+        GrammarRule(
+            name='index_hint',
+            body=
+            Alternation(choices=[
+                Sequence(elements=[
+                    Literal(value='INDEXED'),
+                    Literal(value='BY'),
+                    RuleReference(name='NAME', is_token=True),
+                ]),
+                Sequence(elements=[
+                    Literal(value='NOT'),
+                    Literal(value='INDEXED'),
+                ]),
+            ]),
+            line_number=99,
         ),
         GrammarRule(
             name='join_clause',
             body=
-            Sequence(elements=[
-                RuleReference(name='join_type', is_token=False),
-                Literal(value='JOIN'),
-                RuleReference(name='table_ref', is_token=False),
-                Optional(element=
+            Alternation(choices=[
+                Group(element=
                     Sequence(elements=[
-                        Literal(value='ON'),
-                        RuleReference(name='expr', is_token=False),
+                        Optional(element=
+                            RuleReference(name='join_type', is_token=False),
+                        ),
+                        Literal(value='JOIN'),
+                        RuleReference(name='table_ref', is_token=False),
+                        Optional(element=
+                            Alternation(choices=[
+                                Sequence(elements=[
+                                    Literal(value='ON'),
+                                    RuleReference(name='expr', is_token=False),
+                                ]),
+                                Sequence(elements=[
+                                    Literal(value='USING'),
+                                    Literal(value='('),
+                                    RuleReference(name='NAME', is_token=True),
+                                    Repetition(element=
+                                        Sequence(elements=[
+                                            Literal(value=','),
+                                            RuleReference(name='NAME', is_token=True),
+                                        ]),
+                                    ),
+                                    Literal(value=')'),
+                                ]),
+                            ]),
+                        ),
+                    ]),
+                ),
+                Group(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='table_ref', is_token=False),
                     ]),
                 ),
             ]),
-            line_number=46,
+            line_number=107,
         ),
         GrammarRule(
             name='join_type',
@@ -216,6 +391,7 @@ PARSER_GRAMMAR = ParserGrammar(
             Alternation(choices=[
                 Literal(value='CROSS'),
                 Literal(value='INNER'),
+                Literal(value='NATURAL'),
                 Group(element=
                     Sequence(elements=[
                         Literal(value='LEFT'),
@@ -241,7 +417,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=47,
+            line_number=109,
         ),
         GrammarRule(
             name='where_clause',
@@ -250,7 +426,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='WHERE'),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=50,
+            line_number=113,
         ),
         GrammarRule(
             name='group_clause',
@@ -266,7 +442,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=51,
+            line_number=114,
         ),
         GrammarRule(
             name='having_clause',
@@ -275,7 +451,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='HAVING'),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=52,
+            line_number=115,
         ),
         GrammarRule(
             name='order_clause',
@@ -291,7 +467,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=53,
+            line_number=116,
         ),
         GrammarRule(
             name='order_item',
@@ -299,34 +475,83 @@ PARSER_GRAMMAR = ParserGrammar(
             Sequence(elements=[
                 RuleReference(name='expr', is_token=False),
                 Optional(element=
+                    Sequence(elements=[
+                        Literal(value='COLLATE'),
+                        RuleReference(name='NAME', is_token=True),
+                    ]),
+                ),
+                Optional(element=
                     Alternation(choices=[
                         Literal(value='ASC'),
                         Literal(value='DESC'),
                     ]),
                 ),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='NULLS'),
+                        RuleReference(name='NAME', is_token=True),
+                    ]),
+                ),
             ]),
-            line_number=54,
+            line_number=137,
         ),
         GrammarRule(
             name='limit_clause',
             body=
             Sequence(elements=[
                 Literal(value='LIMIT'),
-                RuleReference(name='NUMBER', is_token=True),
+                RuleReference(name='signed_number', is_token=False),
                 Optional(element=
-                    Sequence(elements=[
-                        Literal(value='OFFSET'),
-                        RuleReference(name='NUMBER', is_token=True),
+                    Alternation(choices=[
+                        Sequence(elements=[
+                            Literal(value='OFFSET'),
+                            RuleReference(name='signed_number', is_token=False),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value=','),
+                            RuleReference(name='signed_number', is_token=False),
+                        ]),
                     ]),
                 ),
             ]),
-            line_number=55,
+            line_number=139,
+        ),
+        GrammarRule(
+            name='signed_number',
+            body=
+            Sequence(elements=[
+                Optional(element=
+                    Literal(value='-'),
+                ),
+                RuleReference(name='NUMBER', is_token=True),
+            ]),
+            line_number=154,
+        ),
+        GrammarRule(
+            name='conflict_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='OR'),
+                Group(element=
+                    Alternation(choices=[
+                        Literal(value='REPLACE'),
+                        Literal(value='IGNORE'),
+                        Literal(value='ABORT'),
+                        Literal(value='FAIL'),
+                        Literal(value='ROLLBACK'),
+                    ]),
+                ),
+            ]),
+            line_number=176,
         ),
         GrammarRule(
             name='insert_stmt',
             body=
             Sequence(elements=[
                 Literal(value='INSERT'),
+                Optional(element=
+                    RuleReference(name='conflict_clause', is_token=False),
+                ),
                 Literal(value='INTO'),
                 RuleReference(name='NAME', is_token=True),
                 Optional(element=
@@ -343,8 +568,96 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
                 RuleReference(name='insert_body', is_token=False),
+                Optional(element=
+                    RuleReference(name='upsert_clause', is_token=False),
+                ),
+                Optional(element=
+                    RuleReference(name='returning_clause', is_token=False),
+                ),
             ]),
-            line_number=63,
+            line_number=178,
+        ),
+        GrammarRule(
+            name='upsert_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='ON'),
+                Literal(value='CONFLICT'),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='('),
+                        RuleReference(name='NAME', is_token=True),
+                        Repetition(element=
+                            Sequence(elements=[
+                                Literal(value=','),
+                                RuleReference(name='NAME', is_token=True),
+                            ]),
+                        ),
+                        Literal(value=')'),
+                    ]),
+                ),
+                Group(element=
+                    Alternation(choices=[
+                        Sequence(elements=[
+                            Literal(value='DO'),
+                            Literal(value='NOTHING'),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='DO'),
+                            Literal(value='UPDATE'),
+                            Literal(value='SET'),
+                            RuleReference(name='upsert_assignment', is_token=False),
+                            Repetition(element=
+                                Sequence(elements=[
+                                    Literal(value=','),
+                                    RuleReference(name='upsert_assignment', is_token=False),
+                                ]),
+                            ),
+                            Optional(element=
+                                RuleReference(name='where_clause', is_token=False),
+                            ),
+                        ]),
+                    ]),
+                ),
+            ]),
+            line_number=195,
+        ),
+        GrammarRule(
+            name='upsert_assignment',
+            body=
+            Sequence(elements=[
+                RuleReference(name='NAME', is_token=True),
+                Literal(value='='),
+                RuleReference(name='expr', is_token=False),
+            ]),
+            line_number=201,
+        ),
+        GrammarRule(
+            name='replace_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='REPLACE'),
+                Literal(value='INTO'),
+                RuleReference(name='NAME', is_token=True),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='('),
+                        RuleReference(name='NAME', is_token=True),
+                        Repetition(element=
+                            Sequence(elements=[
+                                Literal(value=','),
+                                RuleReference(name='NAME', is_token=True),
+                            ]),
+                        ),
+                        Literal(value=')'),
+                    ]),
+                ),
+                RuleReference(name='insert_body', is_token=False),
+                Optional(element=
+                    RuleReference(name='returning_clause', is_token=False),
+                ),
+            ]),
+            line_number=202,
         ),
         GrammarRule(
             name='insert_body',
@@ -360,9 +673,13 @@ PARSER_GRAMMAR = ParserGrammar(
                         ]),
                     ),
                 ]),
+                Sequence(elements=[
+                    Literal(value='DEFAULT'),
+                    Literal(value='VALUES'),
+                ]),
                 RuleReference(name='query_stmt', is_token=False),
             ]),
-            line_number=66,
+            line_number=206,
         ),
         GrammarRule(
             name='row_value',
@@ -378,7 +695,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 Literal(value=')'),
             ]),
-            line_number=67,
+            line_number=213,
         ),
         GrammarRule(
             name='update_stmt',
@@ -397,8 +714,11 @@ PARSER_GRAMMAR = ParserGrammar(
                 Optional(element=
                     RuleReference(name='where_clause', is_token=False),
                 ),
+                Optional(element=
+                    RuleReference(name='returning_clause', is_token=False),
+                ),
             ]),
-            line_number=69,
+            line_number=215,
         ),
         GrammarRule(
             name='assignment',
@@ -408,7 +728,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='='),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=71,
+            line_number=217,
         ),
         GrammarRule(
             name='delete_stmt',
@@ -420,8 +740,35 @@ PARSER_GRAMMAR = ParserGrammar(
                 Optional(element=
                     RuleReference(name='where_clause', is_token=False),
                 ),
+                Optional(element=
+                    RuleReference(name='returning_clause', is_token=False),
+                ),
             ]),
-            line_number=73,
+            line_number=219,
+        ),
+        GrammarRule(
+            name='returning_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='RETURNING'),
+                RuleReference(name='returning_item', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='returning_item', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=221,
+        ),
+        GrammarRule(
+            name='returning_item',
+            body=
+            Alternation(choices=[
+                Literal(value='*'),
+                RuleReference(name='expr', is_token=False),
+            ]),
+            line_number=225,
         ),
         GrammarRule(
             name='create_table_stmt',
@@ -446,20 +793,70 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
                 Literal(value=')'),
+                Optional(element=
+                    RuleReference(name='table_options', is_token=False),
+                ),
             ]),
-            line_number=77,
+            line_number=229,
+        ),
+        GrammarRule(
+            name='table_options',
+            body=
+            Sequence(elements=[
+                RuleReference(name='table_option', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='table_option', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=238,
+        ),
+        GrammarRule(
+            name='table_option',
+            body=
+            Alternation(choices=[
+                Literal(value='STRICT'),
+                Sequence(elements=[
+                    Literal(value='WITHOUT'),
+                    RuleReference(name='NAME', is_token=True),
+                ]),
+            ]),
+            line_number=239,
         ),
         GrammarRule(
             name='col_def',
             body=
             Sequence(elements=[
                 RuleReference(name='NAME', is_token=True),
-                RuleReference(name='NAME', is_token=True),
+                RuleReference(name='col_type', is_token=False),
                 Repetition(element=
                     RuleReference(name='col_constraint', is_token=False),
                 ),
             ]),
-            line_number=79,
+            line_number=244,
+        ),
+        GrammarRule(
+            name='col_type',
+            body=
+            Sequence(elements=[
+                RuleReference(name='NAME', is_token=True),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='('),
+                        RuleReference(name='NUMBER', is_token=True),
+                        Repetition(element=
+                            Sequence(elements=[
+                                Literal(value=','),
+                                RuleReference(name='NUMBER', is_token=True),
+                            ]),
+                        ),
+                        Literal(value=')'),
+                    ]),
+                ),
+            ]),
+            line_number=248,
         ),
         GrammarRule(
             name='col_constraint',
@@ -476,6 +873,9 @@ PARSER_GRAMMAR = ParserGrammar(
                     Sequence(elements=[
                         Literal(value='PRIMARY'),
                         Literal(value='KEY'),
+                        Optional(element=
+                            Literal(value='AUTOINCREMENT'),
+                        ),
                     ]),
                 ),
                 Literal(value='UNIQUE'),
@@ -485,8 +885,35 @@ PARSER_GRAMMAR = ParserGrammar(
                         RuleReference(name='primary', is_token=False),
                     ]),
                 ),
+                Group(element=
+                    Sequence(elements=[
+                        Literal(value='CHECK'),
+                        Literal(value='('),
+                        RuleReference(name='expr', is_token=False),
+                        Literal(value=')'),
+                    ]),
+                ),
+                Group(element=
+                    Sequence(elements=[
+                        Literal(value='COLLATE'),
+                        RuleReference(name='NAME', is_token=True),
+                    ]),
+                ),
+                Group(element=
+                    Sequence(elements=[
+                        Literal(value='REFERENCES'),
+                        RuleReference(name='NAME', is_token=True),
+                        Optional(element=
+                            Sequence(elements=[
+                                Literal(value='('),
+                                RuleReference(name='NAME', is_token=True),
+                                Literal(value=')'),
+                            ]),
+                        ),
+                    ]),
+                ),
             ]),
-            line_number=80,
+            line_number=249,
         ),
         GrammarRule(
             name='drop_table_stmt',
@@ -502,7 +929,49 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=83,
+            line_number=260,
+        ),
+        GrammarRule(
+            name='alter_table_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='ALTER'),
+                Literal(value='TABLE'),
+                RuleReference(name='NAME', is_token=True),
+                Group(element=
+                    Alternation(choices=[
+                        Sequence(elements=[
+                            Literal(value='ADD'),
+                            Optional(element=
+                                Literal(value='COLUMN'),
+                            ),
+                            RuleReference(name='col_def', is_token=False),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='RENAME'),
+                            Literal(value='TO'),
+                            RuleReference(name='NAME', is_token=True),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='RENAME'),
+                            Optional(element=
+                                Literal(value='COLUMN'),
+                            ),
+                            RuleReference(name='NAME', is_token=True),
+                            Literal(value='TO'),
+                            RuleReference(name='NAME', is_token=True),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='DROP'),
+                            Optional(element=
+                                Literal(value='COLUMN'),
+                            ),
+                            RuleReference(name='NAME', is_token=True),
+                        ]),
+                    ]),
+                ),
+            ]),
+            line_number=269,
         ),
         GrammarRule(
             name='create_index_stmt',
@@ -524,16 +993,39 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='ON'),
                 RuleReference(name='NAME', is_token=True),
                 Literal(value='('),
-                RuleReference(name='NAME', is_token=True),
+                RuleReference(name='index_col', is_token=False),
                 Repetition(element=
                     Sequence(elements=[
                         Literal(value=','),
-                        RuleReference(name='NAME', is_token=True),
+                        RuleReference(name='index_col', is_token=False),
                     ]),
                 ),
                 Literal(value=')'),
+                Optional(element=
+                    RuleReference(name='where_clause', is_token=False),
+                ),
             ]),
-            line_number=92,
+            line_number=283,
+        ),
+        GrammarRule(
+            name='index_col',
+            body=
+            Sequence(elements=[
+                RuleReference(name='expr', is_token=False),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='COLLATE'),
+                        RuleReference(name='NAME', is_token=True),
+                    ]),
+                ),
+                Optional(element=
+                    Alternation(choices=[
+                        Literal(value='ASC'),
+                        Literal(value='DESC'),
+                    ]),
+                ),
+            ]),
+            line_number=300,
         ),
         GrammarRule(
             name='drop_index_stmt',
@@ -549,7 +1041,42 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=95,
+            line_number=302,
+        ),
+        GrammarRule(
+            name='create_view_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='CREATE'),
+                Literal(value='VIEW'),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='IF'),
+                        Literal(value='NOT'),
+                        Literal(value='EXISTS'),
+                    ]),
+                ),
+                RuleReference(name='NAME', is_token=True),
+                Literal(value='AS'),
+                RuleReference(name='query_stmt', is_token=False),
+            ]),
+            line_number=310,
+        ),
+        GrammarRule(
+            name='drop_view_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='DROP'),
+                Literal(value='VIEW'),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='IF'),
+                        Literal(value='EXISTS'),
+                    ]),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=312,
         ),
         GrammarRule(
             name='begin_stmt',
@@ -560,7 +1087,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='TRANSACTION'),
                 ),
             ]),
-            line_number=101,
+            line_number=318,
         ),
         GrammarRule(
             name='commit_stmt',
@@ -571,7 +1098,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='TRANSACTION'),
                 ),
             ]),
-            line_number=102,
+            line_number=319,
         ),
         GrammarRule(
             name='rollback_stmt',
@@ -582,13 +1109,47 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value='TRANSACTION'),
                 ),
             ]),
-            line_number=103,
+            line_number=320,
+        ),
+        GrammarRule(
+            name='savepoint_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='SAVEPOINT'),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=336,
+        ),
+        GrammarRule(
+            name='release_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='RELEASE'),
+                Optional(element=
+                    Literal(value='SAVEPOINT'),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=337,
+        ),
+        GrammarRule(
+            name='rollback_to_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='ROLLBACK'),
+                Literal(value='TO'),
+                Optional(element=
+                    Literal(value='SAVEPOINT'),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=338,
         ),
         GrammarRule(
             name='expr',
             body=
             RuleReference(name='or_expr', is_token=False),
-            line_number=107,
+            line_number=342,
         ),
         GrammarRule(
             name='or_expr',
@@ -602,7 +1163,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=108,
+            line_number=343,
         ),
         GrammarRule(
             name='and_expr',
@@ -616,7 +1177,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=109,
+            line_number=344,
         ),
         GrammarRule(
             name='not_expr',
@@ -628,53 +1189,92 @@ PARSER_GRAMMAR = ParserGrammar(
                 ]),
                 RuleReference(name='comparison', is_token=False),
             ]),
-            line_number=110,
+            line_number=345,
+        ),
+        GrammarRule(
+            name='collated',
+            body=
+            Sequence(elements=[
+                RuleReference(name='bitwise', is_token=False),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='COLLATE'),
+                        RuleReference(name='NAME', is_token=True),
+                    ]),
+                ),
+            ]),
+            line_number=358,
         ),
         GrammarRule(
             name='comparison',
             body=
             Sequence(elements=[
-                RuleReference(name='additive', is_token=False),
+                RuleReference(name='collated', is_token=False),
                 Optional(element=
                     Alternation(choices=[
                         Sequence(elements=[
                             RuleReference(name='cmp_op', is_token=False),
-                            RuleReference(name='additive', is_token=False),
+                            RuleReference(name='collated', is_token=False),
                         ]),
                         Sequence(elements=[
                             Literal(value='BETWEEN'),
-                            RuleReference(name='additive', is_token=False),
+                            RuleReference(name='collated', is_token=False),
                             Literal(value='AND'),
-                            RuleReference(name='additive', is_token=False),
+                            RuleReference(name='collated', is_token=False),
                         ]),
                         Sequence(elements=[
                             Literal(value='NOT'),
                             Literal(value='BETWEEN'),
-                            RuleReference(name='additive', is_token=False),
+                            RuleReference(name='collated', is_token=False),
                             Literal(value='AND'),
-                            RuleReference(name='additive', is_token=False),
+                            RuleReference(name='collated', is_token=False),
                         ]),
                         Sequence(elements=[
                             Literal(value='IN'),
                             Literal(value='('),
-                            RuleReference(name='in_expr', is_token=False),
+                            Optional(element=
+                                RuleReference(name='in_expr', is_token=False),
+                            ),
                             Literal(value=')'),
                         ]),
                         Sequence(elements=[
                             Literal(value='NOT'),
                             Literal(value='IN'),
                             Literal(value='('),
-                            RuleReference(name='in_expr', is_token=False),
+                            Optional(element=
+                                RuleReference(name='in_expr', is_token=False),
+                            ),
                             Literal(value=')'),
                         ]),
                         Sequence(elements=[
                             Literal(value='LIKE'),
-                            RuleReference(name='additive', is_token=False),
+                            RuleReference(name='collated', is_token=False),
+                            Optional(element=
+                                Sequence(elements=[
+                                    Literal(value='ESCAPE'),
+                                    RuleReference(name='collated', is_token=False),
+                                ]),
+                            ),
                         ]),
                         Sequence(elements=[
                             Literal(value='NOT'),
                             Literal(value='LIKE'),
-                            RuleReference(name='additive', is_token=False),
+                            RuleReference(name='collated', is_token=False),
+                            Optional(element=
+                                Sequence(elements=[
+                                    Literal(value='ESCAPE'),
+                                    RuleReference(name='collated', is_token=False),
+                                ]),
+                            ),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='GLOB'),
+                            RuleReference(name='collated', is_token=False),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='NOT'),
+                            Literal(value='GLOB'),
+                            RuleReference(name='collated', is_token=False),
                         ]),
                         Sequence(elements=[
                             Literal(value='IS'),
@@ -684,11 +1284,33 @@ PARSER_GRAMMAR = ParserGrammar(
                             Literal(value='IS'),
                             Literal(value='NOT'),
                             Literal(value='NULL'),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='IS'),
+                            Literal(value='DISTINCT'),
+                            Literal(value='FROM'),
+                            RuleReference(name='collated', is_token=False),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='IS'),
+                            Literal(value='NOT'),
+                            Literal(value='DISTINCT'),
+                            Literal(value='FROM'),
+                            RuleReference(name='collated', is_token=False),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='IS'),
+                            Literal(value='NOT'),
+                            RuleReference(name='collated', is_token=False),
+                        ]),
+                        Sequence(elements=[
+                            Literal(value='IS'),
+                            RuleReference(name='collated', is_token=False),
                         ]),
                     ]),
                 ),
             ]),
-            line_number=111,
+            line_number=359,
         ),
         GrammarRule(
             name='in_expr',
@@ -697,7 +1319,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='query_stmt', is_token=False),
                 RuleReference(name='value_list', is_token=False),
             ]),
-            line_number=123,
+            line_number=384,
         ),
         GrammarRule(
             name='cmp_op',
@@ -710,7 +1332,28 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='<='),
                 Literal(value='>='),
             ]),
-            line_number=125,
+            line_number=386,
+        ),
+        GrammarRule(
+            name='bitwise',
+            body=
+            Sequence(elements=[
+                RuleReference(name='additive', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Group(element=
+                            Alternation(choices=[
+                                Literal(value='&'),
+                                Literal(value='|'),
+                                Literal(value='<<'),
+                                Literal(value='>>'),
+                            ]),
+                        ),
+                        RuleReference(name='additive', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=400,
         ),
         GrammarRule(
             name='additive',
@@ -723,13 +1366,16 @@ PARSER_GRAMMAR = ParserGrammar(
                             Alternation(choices=[
                                 Literal(value='+'),
                                 Literal(value='-'),
+                                Literal(value='||'),
+                                RuleReference(name='JSON_ARROW', is_token=True),
+                                RuleReference(name='JSON_ARROW_TEXT', is_token=True),
                             ]),
                         ),
                         RuleReference(name='multiplicative', is_token=False),
                     ]),
                 ),
             ]),
-            line_number=126,
+            line_number=401,
         ),
         GrammarRule(
             name='multiplicative',
@@ -749,19 +1395,25 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=127,
+            line_number=402,
         ),
         GrammarRule(
             name='unary',
             body=
             Alternation(choices=[
                 Sequence(elements=[
-                    Literal(value='-'),
+                    Group(element=
+                        Alternation(choices=[
+                            Literal(value='-'),
+                            Literal(value='~'),
+                            Literal(value='+'),
+                        ]),
+                    ),
                     RuleReference(name='unary', is_token=False),
                 ]),
                 RuleReference(name='primary', is_token=False),
             ]),
-            line_number=128,
+            line_number=408,
         ),
         GrammarRule(
             name='primary',
@@ -769,11 +1421,20 @@ PARSER_GRAMMAR = ParserGrammar(
             Alternation(choices=[
                 RuleReference(name='NUMBER', is_token=True),
                 RuleReference(name='STRING', is_token=True),
+                RuleReference(name='BLOB', is_token=True),
                 Literal(value='NULL'),
                 Literal(value='TRUE'),
                 Literal(value='FALSE'),
                 RuleReference(name='case_expr', is_token=False),
+                RuleReference(name='cast_expr', is_token=False),
+                RuleReference(name='window_func_call', is_token=False),
                 RuleReference(name='function_call', is_token=False),
+                Sequence(elements=[
+                    Literal(value='EXISTS'),
+                    Literal(value='('),
+                    RuleReference(name='query_stmt', is_token=False),
+                    Literal(value=')'),
+                ]),
                 Sequence(elements=[
                     Literal(value='('),
                     RuleReference(name='query_stmt', is_token=False),
@@ -786,7 +1447,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     Literal(value=')'),
                 ]),
             ]),
-            line_number=140,
+            line_number=428,
         ),
         GrammarRule(
             name='column_ref',
@@ -800,10 +1461,65 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=147,
+            line_number=438,
         ),
         GrammarRule(
             name='function_call',
+            body=
+            Sequence(elements=[
+                Group(element=
+                    Alternation(choices=[
+                        RuleReference(name='NAME', is_token=True),
+                        Literal(value='REPLACE'),
+                    ]),
+                ),
+                Literal(value='('),
+                Group(element=
+                    Alternation(choices=[
+                        RuleReference(name='STAR', is_token=True),
+                        Sequence(elements=[
+                            Literal(value='DISTINCT'),
+                            RuleReference(name='value_list', is_token=False),
+                        ]),
+                        Optional(element=
+                            RuleReference(name='value_list', is_token=False),
+                        ),
+                    ]),
+                ),
+                Literal(value=')'),
+                Optional(element=
+                    RuleReference(name='filter_clause', is_token=False),
+                ),
+            ]),
+            line_number=452,
+        ),
+        GrammarRule(
+            name='filter_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='FILTER'),
+                Literal(value='('),
+                Literal(value='WHERE'),
+                RuleReference(name='expr', is_token=False),
+                Literal(value=')'),
+            ]),
+            line_number=456,
+        ),
+        GrammarRule(
+            name='cast_expr',
+            body=
+            Sequence(elements=[
+                Literal(value='CAST'),
+                Literal(value='('),
+                RuleReference(name='expr', is_token=False),
+                Literal(value='AS'),
+                RuleReference(name='NAME', is_token=True),
+                Literal(value=')'),
+            ]),
+            line_number=462,
+        ),
+        GrammarRule(
+            name='window_func_call',
             body=
             Sequence(elements=[
                 RuleReference(name='NAME', is_token=True),
@@ -817,8 +1533,44 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
                 Literal(value=')'),
+                Literal(value='OVER'),
+                Literal(value='('),
+                RuleReference(name='window_spec', is_token=False),
+                Literal(value=')'),
             ]),
-            line_number=148,
+            line_number=491,
+        ),
+        GrammarRule(
+            name='window_spec',
+            body=
+            Sequence(elements=[
+                Optional(element=
+                    RuleReference(name='partition_clause', is_token=False),
+                ),
+                Optional(element=
+                    RuleReference(name='order_clause', is_token=False),
+                ),
+                Optional(element=
+                    RuleReference(name='frame_clause', is_token=False),
+                ),
+            ]),
+            line_number=492,
+        ),
+        GrammarRule(
+            name='partition_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='PARTITION'),
+                Literal(value='BY'),
+                RuleReference(name='expr', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='expr', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=493,
         ),
         GrammarRule(
             name='value_list',
@@ -832,7 +1584,128 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=149,
+            line_number=494,
+        ),
+        GrammarRule(
+            name='frame_clause',
+            body=
+            Alternation(choices=[
+                Sequence(elements=[
+                    RuleReference(name='frame_unit', is_token=False),
+                    Literal(value='BETWEEN'),
+                    RuleReference(name='frame_bound', is_token=False),
+                    Literal(value='AND'),
+                    RuleReference(name='frame_bound', is_token=False),
+                ]),
+                Sequence(elements=[
+                    RuleReference(name='frame_unit', is_token=False),
+                    RuleReference(name='frame_bound', is_token=False),
+                ]),
+            ]),
+            line_number=516,
+        ),
+        GrammarRule(
+            name='frame_unit',
+            body=
+            Alternation(choices=[
+                Literal(value='ROWS'),
+                Literal(value='RANGE'),
+                Literal(value='GROUPS'),
+            ]),
+            line_number=518,
+        ),
+        GrammarRule(
+            name='frame_bound',
+            body=
+            Alternation(choices=[
+                Sequence(elements=[
+                    Literal(value='UNBOUNDED'),
+                    Literal(value='PRECEDING'),
+                ]),
+                Sequence(elements=[
+                    Literal(value='UNBOUNDED'),
+                    Literal(value='FOLLOWING'),
+                ]),
+                Sequence(elements=[
+                    Literal(value='CURRENT'),
+                    Literal(value='ROW'),
+                ]),
+                Sequence(elements=[
+                    RuleReference(name='expr', is_token=False),
+                    Literal(value='PRECEDING'),
+                ]),
+                Sequence(elements=[
+                    RuleReference(name='expr', is_token=False),
+                    Literal(value='FOLLOWING'),
+                ]),
+            ]),
+            line_number=519,
+        ),
+        GrammarRule(
+            name='create_trigger_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='CREATE'),
+                Literal(value='TRIGGER'),
+                RuleReference(name='NAME', is_token=True),
+                Group(element=
+                    Alternation(choices=[
+                        Literal(value='BEFORE'),
+                        Literal(value='AFTER'),
+                    ]),
+                ),
+                Group(element=
+                    Alternation(choices=[
+                        Literal(value='INSERT'),
+                        Literal(value='UPDATE'),
+                        Literal(value='DELETE'),
+                    ]),
+                ),
+                Literal(value='ON'),
+                RuleReference(name='NAME', is_token=True),
+                Literal(value='FOR'),
+                Literal(value='EACH'),
+                Literal(value='ROW'),
+                Literal(value='BEGIN'),
+                RuleReference(name='trigger_body_stmt', is_token=False),
+                Literal(value=';'),
+                Repetition(element=
+                    Sequence(elements=[
+                        RuleReference(name='trigger_body_stmt', is_token=False),
+                        Literal(value=';'),
+                    ]),
+                ),
+                Literal(value='END'),
+            ]),
+            line_number=545,
+        ),
+        GrammarRule(
+            name='trigger_body_stmt',
+            body=
+            Alternation(choices=[
+                RuleReference(name='insert_stmt', is_token=False),
+                RuleReference(name='replace_stmt', is_token=False),
+                RuleReference(name='update_stmt', is_token=False),
+                RuleReference(name='delete_stmt', is_token=False),
+                RuleReference(name='query_stmt', is_token=False),
+            ]),
+            line_number=550,
+        ),
+        GrammarRule(
+            name='drop_trigger_stmt',
+            body=
+            Sequence(elements=[
+                Literal(value='DROP'),
+                Literal(value='TRIGGER'),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='IF'),
+                        Literal(value='EXISTS'),
+                    ]),
+                ),
+                RuleReference(name='NAME', is_token=True),
+            ]),
+            line_number=552,
         ),
         GrammarRule(
             name='case_expr',
@@ -854,13 +1727,13 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 Literal(value='END'),
             ]),
-            line_number=164,
+            line_number=567,
         ),
         GrammarRule(
             name='case_operand',
             body=
             RuleReference(name='expr', is_token=False),
-            line_number=165,
+            line_number=568,
         ),
         GrammarRule(
             name='case_when',
@@ -871,7 +1744,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 Literal(value='THEN'),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=166,
+            line_number=569,
         ),
     ],
 )

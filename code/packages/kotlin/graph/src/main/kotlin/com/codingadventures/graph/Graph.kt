@@ -85,35 +85,51 @@ data class WeightedEdge(val leftNode: String, val rightNode: String, val weight:
 
 class Graph : TraversalGraph {
     private val adjacency = linkedMapOf<String, LinkedHashMap<String, Double>>()
+    private val graphProperties = linkedMapOf<String, Any?>()
+    private val nodeProperties = linkedMapOf<String, LinkedHashMap<String, Any?>>()
+    private val edgeProperties = linkedMapOf<String, LinkedHashMap<String, Any?>>()
 
     override val size: Int get() = adjacency.size
 
-    fun addNode(node: String) {
+    fun addNode(node: String, properties: Map<String, Any?> = emptyMap()) {
         adjacency.getOrPut(node) { linkedMapOf() }
+        nodeProperties.getOrPut(node) { linkedMapOf() }.putAll(properties)
     }
 
     fun removeNode(node: String) {
         val neighbors = adjacency[node] ?: throw NodeNotFoundError(node)
         neighbors.keys.toList().forEach { neighbor ->
             adjacency.getValue(neighbor).remove(node)
+            edgeProperties.remove(canonicalEdgeKey(node, neighbor))
         }
         adjacency.remove(node)
+        nodeProperties.remove(node)
     }
 
     override fun hasNode(node: String): Boolean = adjacency.containsKey(node)
     override fun nodes(): List<String> = adjacency.keys.toList()
 
-    fun addEdge(leftNode: String, rightNode: String, weight: Double = 1.0) {
+    fun addEdge(
+        leftNode: String,
+        rightNode: String,
+        weight: Double = 1.0,
+        properties: Map<String, Any?> = emptyMap(),
+    ) {
         addNode(leftNode)
         addNode(rightNode)
         adjacency.getValue(leftNode)[rightNode] = weight
         adjacency.getValue(rightNode)[leftNode] = weight
+        edgeProperties.getOrPut(canonicalEdgeKey(leftNode, rightNode)) { linkedMapOf() }.apply {
+            putAll(properties)
+            put("weight", weight)
+        }
     }
 
     fun removeEdge(leftNode: String, rightNode: String) {
         if (!hasEdge(leftNode, rightNode)) throw EdgeNotFoundError(leftNode, rightNode)
         adjacency.getValue(leftNode).remove(rightNode)
         adjacency.getValue(rightNode).remove(leftNode)
+        edgeProperties.remove(canonicalEdgeKey(leftNode, rightNode))
     }
 
     fun hasEdge(leftNode: String, rightNode: String): Boolean =
@@ -121,6 +137,57 @@ class Graph : TraversalGraph {
 
     fun edgeWeight(leftNode: String, rightNode: String): Double =
         adjacency[leftNode]?.get(rightNode) ?: throw EdgeNotFoundError(leftNode, rightNode)
+
+    fun graphProperties(): Map<String, Any?> = graphProperties.toMap()
+
+    fun setGraphProperty(key: String, value: Any?) {
+        graphProperties[key] = value
+    }
+
+    fun removeGraphProperty(key: String) {
+        graphProperties.remove(key)
+    }
+
+    fun nodeProperties(node: String): Map<String, Any?> {
+        if (!hasNode(node)) throw NodeNotFoundError(node)
+        return nodeProperties[node]?.toMap() ?: emptyMap()
+    }
+
+    fun setNodeProperty(node: String, key: String, value: Any?) {
+        if (!hasNode(node)) throw NodeNotFoundError(node)
+        nodeProperties.getOrPut(node) { linkedMapOf() }[key] = value
+    }
+
+    fun removeNodeProperty(node: String, key: String) {
+        if (!hasNode(node)) throw NodeNotFoundError(node)
+        nodeProperties[node]?.remove(key)
+    }
+
+    fun edgeProperties(leftNode: String, rightNode: String): Map<String, Any?> {
+        if (!hasEdge(leftNode, rightNode)) throw EdgeNotFoundError(leftNode, rightNode)
+        val properties = edgeProperties[canonicalEdgeKey(leftNode, rightNode)]?.toMutableMap() ?: linkedMapOf()
+        properties["weight"] = edgeWeight(leftNode, rightNode)
+        return properties.toMap()
+    }
+
+    fun setEdgeProperty(leftNode: String, rightNode: String, key: String, value: Any?) {
+        if (!hasEdge(leftNode, rightNode)) throw EdgeNotFoundError(leftNode, rightNode)
+        if (key == "weight") {
+            require(value is Number) { "Edge property 'weight' must be numeric." }
+            setEdgeWeight(leftNode, rightNode, value.toDouble())
+        }
+        edgeProperties.getOrPut(canonicalEdgeKey(leftNode, rightNode)) { linkedMapOf() }[key] = value
+    }
+
+    fun removeEdgeProperty(leftNode: String, rightNode: String, key: String) {
+        if (!hasEdge(leftNode, rightNode)) throw EdgeNotFoundError(leftNode, rightNode)
+        if (key == "weight") {
+            setEdgeWeight(leftNode, rightNode, 1.0)
+            edgeProperties.getOrPut(canonicalEdgeKey(leftNode, rightNode)) { linkedMapOf() }["weight"] = 1.0
+            return
+        }
+        edgeProperties[canonicalEdgeKey(leftNode, rightNode)]?.remove(key)
+    }
 
     fun edges(): List<WeightedEdge> {
         val seen = linkedSetOf<String>()
@@ -150,4 +217,9 @@ class Graph : TraversalGraph {
 
     private fun canonicalEdgeKey(leftNode: String, rightNode: String): String =
         if (leftNode <= rightNode) "$leftNode\u0000$rightNode" else "$rightNode\u0000$leftNode"
+
+    private fun setEdgeWeight(leftNode: String, rightNode: String, weight: Double) {
+        adjacency.getValue(leftNode)[rightNode] = weight
+        adjacency.getValue(rightNode)[leftNode] = weight
+    }
 }

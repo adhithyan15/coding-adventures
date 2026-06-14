@@ -55,23 +55,24 @@ from __future__ import annotations
 
 from . import plan as P
 from .ast import (
-    Assignment as AstAssignment,
-)
-from .ast import (
+    AlterTableStmt,
     BeginStmt,
     CommitStmt,
     CreateIndexStmt,
     CreateTableStmt,
+    CreateTriggerStmt,
     DeleteStmt,
     DerivedTableRef,
     DropIndexStmt,
     DropTableStmt,
+    DropTriggerStmt,
     ExceptStmt,
     InsertSelectStmt,
     InsertValuesStmt,
     IntersectStmt,
     JoinClause,
     JoinKind,
+    RecursiveCTERef,
     RollbackStmt,
     SelectItem,
     SelectStmt,
@@ -81,10 +82,17 @@ from .ast import (
     UpdateStmt,
 )
 from .ast import (
+    Assignment as AstAssignment,
+)
+from .ast import (
     SortKey as AstSortKey,
+)
+from .ast import (
+    UpsertClause as AstUpsertClause,
 )
 from .errors import (
     AmbiguousColumn,
+    InternalError,
     InvalidAggregate,
     UnknownColumn,
     UnsupportedStatement,
@@ -96,17 +104,26 @@ from .expr import (
     BinaryOp,
     CaseExpr,
     Column,
+    CorrelatedRef,
+    ExcludedColumn,
+    ExistsSubquery,
     Expr,
+    FuncArg,
     FunctionCall,
     In,
+    InSubquery,
     IsNotNull,
     IsNull,
     Like,
     Literal,
     NotIn,
+    NotInSubquery,
     NotLike,
+    RowIdRef,  # noqa: I001 — alphabetical after NotLike; ruff wants this here
+    ScalarSubquery,
     UnaryExpr,
     Wildcard,
+    WindowFuncExpr,
     contains_aggregate,
 )
 from .schema_provider import SchemaProvider
@@ -144,10 +161,16 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
             return _plan_create_table(ast)
         case DropTableStmt():
             return _plan_drop_table(ast)
+        case AlterTableStmt():
+            return _plan_alter_table(ast)
         case CreateIndexStmt():
             return _plan_create_index(ast)
         case DropIndexStmt():
             return _plan_drop_index(ast)
+        case CreateTriggerStmt():
+            return _plan_create_trigger(ast)
+        case DropTriggerStmt():
+            return _plan_drop_trigger(ast)
         case BeginStmt():
             return P.Begin()
         case CommitStmt():
@@ -168,16 +191,45 @@ def plan_all(asts: list[Statement], schema: SchemaProvider) -> list[P.LogicalPla
 # --------------------------------------------------------------------------
 
 
-def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
+def _plan_select(
+    stmt: SelectStmt,
+    schema: SchemaProvider,
+    *,
+    working_set: tuple[str, tuple[str, ...]] | None = None,
+    outer_scope: Scope | None = None,
+) -> P.LogicalPlan:
+    """Plan a SELECT statement into a LogicalPlan tree.
+
+    ``outer_scope`` is the scope of the *enclosing* query when this SELECT
+    is compiled as a correlated subquery.  Any column reference not found in
+    this query's own scope is resolved against ``outer_scope`` and becomes a
+    :class:`~sql_planner.expr.CorrelatedRef` node — signalling to codegen
+    that the value must be fetched from the outer cursor at runtime.
+
+    Most SELECT statements are top-level (``outer_scope=None``); in those
+    cases the function behaves exactly as before.
+    """
     # 1. Build the scan / join tree from FROM + JOINs, and the column scope
     #    it exposes. Column resolution later qualifies bare references
     #    against this scope.
-    tree, scope = _build_from_tree(stmt.from_, stmt.joins, schema)
+    #
+    #    When from_ is None (SELECT without FROM, e.g. "SELECT 1 + 1"), we
+    #    use a SingleRow leaf — a conceptual one-row, zero-column source that
+    #    causes the SELECT list to be evaluated exactly once.  The scope is
+    #    empty because there are no table columns to reference.
+    if stmt.from_ is None:
+        tree: P.LogicalPlan = P.SingleRow()
+        scope: Scope = {}
+    else:
+        tree, scope = _build_from_tree(stmt.from_, stmt.joins, schema, working_set=working_set)
 
     # 2. WHERE — single Filter above the scan tree. Aggregates are forbidden
     #    inside WHERE (SQL forbids this — WHERE runs per-row before grouping).
     if stmt.where is not None:
-        where = _resolve(stmt.where, scope)
+        where = _resolve(stmt.where, scope, schema, outer_scope)
+        # Propagate column-declared collations into any comparisons the
+        # column participates in (SQLite implicit COLLATE behaviour).
+        where = _propagate_column_collation(where, schema)
         if contains_aggregate(where):
             raise InvalidAggregate(message="aggregate function not allowed in WHERE clause")
         # IX-6: If the WHERE predicate can be served by a B-tree index on the
@@ -186,10 +238,7 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
         # DerivedTable) — composite sources can't be accelerated this way.
         if isinstance(tree, P.Scan):
             idx_node = _try_index_scan(where, tree, schema)
-            if idx_node is not None:
-                tree = idx_node
-            else:
-                tree = P.Filter(input=tree, predicate=where)
+            tree = idx_node if idx_node is not None else P.Filter(input=tree, predicate=where)
         else:
             tree = P.Filter(input=tree, predicate=where)
 
@@ -197,24 +246,171 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     #    (a) GROUP BY is non-empty, or
     #    (b) any SELECT item or HAVING predicate uses an aggregate.
     resolved_items = tuple(
-        P.ProjectionItem(expr=_resolve(it.expr, scope), alias=_derive_alias(it))
+        P.ProjectionItem(
+            expr=_resolve(it.expr, scope, schema, outer_scope),
+            alias=_derive_alias(it),
+        )
         for it in stmt.items
     )
-    having = _resolve(stmt.having, scope) if stmt.having is not None else None
-    order_by = tuple(
-        P.SortKey(
-            expr=_resolve(k.expr, scope),
+    # Build an alias map from resolved SELECT items so that HAVING and ORDER BY
+    # can reference aliases defined in the SELECT list.  For example:
+    #
+    #   SELECT LENGTH(name) AS n FROM t HAVING n > 3
+    #
+    # The HAVING clause refers to alias ``n``, but the column resolver only
+    # knows about table columns, not expression aliases.  We substitute the
+    # alias with the underlying expression *before* resolution so the resolver
+    # sees ``LENGTH(name)`` rather than the bare name ``n``.
+    #
+    # Only unqualified column references (table=None) that exactly match an
+    # alias name are substituted; all others pass through unchanged.
+    select_aliases: dict[str, Expr] = {
+        it.alias: it.expr
+        for it in resolved_items
+        if it.alias is not None
+    }
+    having_raw = stmt.having
+    if having_raw is not None and select_aliases:
+        having_raw = _substitute_aliases(having_raw, select_aliases)
+    having = _resolve(having_raw, scope, schema, outer_scope) if having_raw is not None else None
+    if having is not None:
+        having = _propagate_column_collation(having, schema)
+
+    def _resolve_order_key(k: AstSortKey) -> P.SortKey:
+        """Resolve an ORDER BY sort key to a planner ``SortKey``.
+
+        SQL (and SQLite) allow ORDER BY to reference output columns in two
+        special ways beyond the ordinary expression path:
+
+        1. **Positional** — ``ORDER BY 1`` means "sort by the first SELECT
+           item". When the expression is an integer ``Literal``, we substitute
+           the actual expression from the corresponding position in the SELECT
+           list AND record the 0-based positional index so the codegen / VM
+           can use index-based column lookup instead of name-based lookup.
+           This is critical when multiple computed SELECT items share the
+           fallback display name ``"?"`` — name-based lookup would always
+           resolve to the first ``"?"`` column, giving wrong ORDER BY results.
+
+        2. **Alias** — ``ORDER BY alias_name`` where ``alias_name`` matches a
+           SELECT-list alias.  Rather than substituting the underlying
+           expression (which loses the alias and produces a ``"?"`` sort
+           column for computed expressions), we record the 0-based position of
+           the aliased SELECT item and use index-based lookup — identical to
+           the positional-ordinal path above.  This correctly handles:
+
+           - ``SELECT a+b AS v4 … ORDER BY v4``  (computed expression alias)
+           - ``SELECT a AS myname … ORDER BY myname``  (column alias)
+           - ``SELECT b AS a, a AS b … ORDER BY a``  (alias shadowing column)
+
+           SQLite (and the SQL standard) prescribe that ORDER BY first tries
+           output-column aliases before table columns, so a bare name that
+           matches a SELECT alias must resolve to the aliased SELECT item even
+           if a same-named table column exists.
+
+        If the ordinal is out of range we fall through and let the normal
+        resolver handle it (it will likely raise a more helpful error).
+        """
+        k_expr = k.expr
+        positional_index: int | None = None
+
+        if isinstance(k_expr, Literal) and isinstance(k_expr.value, int):
+            ordinal = k_expr.value
+            if 1 <= ordinal <= len(resolved_items):
+                # Substitute the Nth SELECT-list expression (1-based) and
+                # record the 0-based column index for the codegen.
+                k_expr = resolved_items[ordinal - 1].expr
+                positional_index = ordinal - 1
+            elif ordinal >= 1 and any(
+                isinstance(it.expr, Wildcard) for it in resolved_items
+            ):
+                # ``SELECT * ORDER BY N`` with N > the unexpanded item count:
+                # the wildcard expands at runtime to one column per source
+                # column, so the "real" select-list length is only known
+                # later.  Trust the user's positional index — the codegen
+                # emits ``column_idx=N-1`` directly and the VM does a
+                # positional ``row[N-1]`` lookup without consulting the
+                # column-name schema.  Out-of-range indices error out at
+                # runtime (matching SQLite's behaviour for invalid ORDER BY
+                # positions in this corner case).
+                positional_index = ordinal - 1
+        elif (
+            isinstance(k_expr, Column)
+            and k_expr.table is None
+            and select_aliases
+            and k_expr.col in select_aliases
+        ):
+            # ORDER BY bare_name where bare_name matches a SELECT-list alias.
+            #
+            # Find the 0-based position of the matching SELECT item so the VM
+            # uses index-based lookup (row[idx]) rather than name-based lookup
+            # (columns.index(name)).  The name-based path fails when the alias
+            # refers to a computed expression whose display name is ``"?"``
+            # because ``"?"`` is not present in the output column tuple.
+            #
+            # Using positional_index is safe: the output column at that
+            # position carries the alias-named value whether it was computed
+            # (BinaryExpr, FunctionCall, …) or a plain column reference.
+            alias_name = k_expr.col
+            alias_idx = next(
+                (i for i, it in enumerate(resolved_items) if it.alias == alias_name),
+                None,
+            )
+            if alias_idx is not None:
+                k_expr = resolved_items[alias_idx].expr
+                positional_index = alias_idx
+            else:
+                # select_aliases has the name but resolved_items doesn't —
+                # shouldn't happen if _derive_alias() is consistent.  Fall
+                # back to the ordinary substitution + resolution path.
+                k_expr = _substitute_aliases(k_expr, select_aliases)
+                k_expr = _resolve(k_expr, scope, schema, outer_scope)
+        else:
+            # Ordinary column reference (table-qualified or not in aliases) or
+            # a complex expression — apply alias substitution first so that
+            # ORDER BY can reference SELECT-list aliases that appear *inside*
+            # a larger expression (e.g. ``ORDER BY v4 + 1``), then resolve.
+            if select_aliases:
+                k_expr = _substitute_aliases(k_expr, select_aliases)
+            k_expr = _resolve(k_expr, scope, schema, outer_scope)
+
+        # If no explicit COLLATE on the ORDER BY clause itself, fall back
+        # to the column's declared collation (from CREATE TABLE's
+        # ``COLLATE name`` column constraint).  SQLite applies the
+        # column's collation in that situation; this keeps
+        # ``CREATE TABLE t(name TEXT COLLATE NOCASE); SELECT * FROM t
+        # ORDER BY name`` sorting case-insensitively without the user
+        # having to repeat the COLLATE clause.  Only the simple case
+        # ``ORDER BY column`` is handled here — when the sort expression
+        # is more complex (e.g. ``ORDER BY length(name)``), SQLite uses
+        # BINARY regardless.
+        effective_collation = k.collation
+        if effective_collation is None and isinstance(k_expr, Column):
+            table_name = k_expr.table
+            col_name = k_expr.col
+            # ``column_collation`` is an optional method on SchemaProvider —
+            # full backend-backed providers expose it; minimal test
+            # providers (e.g. InMemorySchemaProvider) don't.  Use
+            # ``getattr(...)`` so the missing case is silently treated
+            # as "no declared collation" rather than crashing.
+            lookup = getattr(schema, "column_collation", None)
+            if lookup is not None and table_name is not None:
+                effective_collation = lookup(table_name, col_name)
+
+        return P.SortKey(
+            expr=k_expr,
             descending=k.descending,
             nulls_first=k.nulls_first,
+            positional_index=positional_index,
+            collation=effective_collation,
         )
-        for k in stmt.order_by
-    )
+
+    order_by = tuple(_resolve_order_key(k) for k in stmt.order_by)
 
     has_agg_in_select = any(contains_aggregate(i.expr) for i in resolved_items)
     has_agg_in_having = having is not None and contains_aggregate(having)
     has_agg_in_order = any(contains_aggregate(k.expr) for k in order_by)
     if stmt.group_by or has_agg_in_select or has_agg_in_having or has_agg_in_order:
-        group_by = tuple(_resolve(g, scope) for g in stmt.group_by)
+        group_by = tuple(_resolve(g, scope, schema, outer_scope) for g in stmt.group_by)
         aggregates = _collect_aggregates(resolved_items, having, order_by)
         tree = P.Aggregate(input=tree, group_by=group_by, aggregates=aggregates)
 
@@ -223,8 +419,67 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     if having is not None:
         tree = P.Having(input=tree, predicate=having)
 
-    # 5. Projection — always present. A SELECT always has at least one item.
-    tree = P.Project(input=tree, items=resolved_items)
+    # 5. Window functions — if any SELECT item is a WindowFuncExpr, emit a
+    #    WindowAgg node instead of a plain Project.
+    #
+    #    Design: the inner Project materialises all columns needed by the
+    #    window expressions (non-window SELECT items + any extra dependency
+    #    columns).  WindowAgg post-processes the materialised result buffer to
+    #    append the window function output columns.
+    win_items = [it for it in resolved_items if isinstance(it.expr, WindowFuncExpr)]
+    if win_items:
+        specs: list[P.WindowFuncSpec] = []
+        for i, it in enumerate(win_items):
+            wf: WindowFuncExpr = it.expr  # type: ignore[assignment]
+            alias = it.alias or f"window_{i + 1}"
+            specs.append(
+                P.WindowFuncSpec(
+                    func=wf.func,
+                    arg_expr=wf.arg,
+                    partition_by=wf.partition_by,
+                    order_by=wf.order_by,
+                    alias=alias,
+                    extra_args=wf.extra_args,
+                    frame=wf.frame,
+                )
+            )
+
+        non_win_items = [it for it in resolved_items if not isinstance(it.expr, WindowFuncExpr)]
+
+        # Track which (table, col) pairs are already covered by the non-window
+        # projection so we don't add redundant extra columns.
+        covered: set[tuple[str | None, str]] = {
+            (it.expr.table, it.expr.col)
+            for it in non_win_items
+            if isinstance(it.expr, Column)
+        }
+        extra: list[P.ProjectionItem] = []
+        for spec in specs:
+            for dep in _win_spec_columns(spec):
+                key = (dep.table, dep.col)
+                if key not in covered:
+                    covered.add(key)
+                    extra.append(P.ProjectionItem(expr=dep, alias=dep.col))
+
+        inner_items = tuple(non_win_items) + tuple(extra)
+        inner_projection = P.Project(input=tree, items=inner_items)
+
+        # Final output: non-window item names first, then window alias names.
+        non_win_out = tuple(
+            it.alias if it.alias is not None
+            else (it.expr.col if isinstance(it.expr, Column) else f"column_{i + 1}")
+            for i, it in enumerate(non_win_items)
+        )
+        output_cols = non_win_out + tuple(s.alias for s in specs)
+
+        tree = P.WindowAgg(
+            input=inner_projection,
+            specs=tuple(specs),
+            output_cols=output_cols,
+        )
+    else:
+        # 5 (normal path). Projection — always present.
+        tree = P.Project(input=tree, items=resolved_items)
 
     # 6. DISTINCT — simple wrapper.
     if stmt.distinct:
@@ -242,59 +497,285 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     return tree
 
 
+def _win_spec_columns(spec: P.WindowFuncSpec) -> list[Column]:
+    """Collect all Column references from a WindowFuncSpec's expressions."""
+    from .expr import collect_columns as _cc
+    cols: list[Column] = []
+    if spec.arg_expr is not None:
+        cols.extend(_cc(spec.arg_expr))
+    for e in spec.partition_by:
+        cols.extend(_cc(e))
+    for e, _ in spec.order_by:
+        cols.extend(_cc(e))
+    return cols
+
+
+def _plan_derived_inner(
+    stmt: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt,
+    schema: SchemaProvider,
+) -> P.LogicalPlan:
+    """Plan the inner query of a derived table.
+
+    SQLite allows derived tables to wrap any compound query, not just a
+    plain SELECT — ``(SELECT 1 UNION SELECT 2) AS u`` is legal and the
+    outer scope sees the unioned column.  Dispatch on the statement
+    type the same way the top-level :func:`plan` does.
+
+    Centralising this dispatch avoids duplicating the four-way ``match``
+    at both the FROM-root site and the join-right site in
+    :func:`_build_from_tree`.
+    """
+    if isinstance(stmt, SelectStmt):
+        return _plan_select(stmt, schema)
+    if isinstance(stmt, UnionStmt):
+        return _plan_union(stmt, schema)
+    if isinstance(stmt, IntersectStmt):
+        return _plan_intersect(stmt, schema)
+    if isinstance(stmt, ExceptStmt):
+        return _plan_except(stmt, schema)
+    raise TypeError(
+        f"unexpected derived-table inner statement type: {type(stmt).__name__}"
+    )
+
+
 def _build_from_tree(
-    root: TableRef | DerivedTableRef,
+    root: TableRef | DerivedTableRef | RecursiveCTERef,
     joins: tuple[JoinClause, ...],
     schema: SchemaProvider,
+    *,
+    working_set: tuple[str, tuple[str, ...]] | None = None,
 ) -> tuple[P.LogicalPlan, Scope]:
     """Build a nested Join tree out of FROM + JOIN clauses. Return tree + scope.
 
-    The root may be either a plain :class:`TableRef` (common case — a named
-    backend table) or a :class:`DerivedTableRef` (a subquery used as a table
-    source, ``(SELECT …) AS alias``).  For derived tables we plan the inner
-    query recursively, compute its output column list via
-    :func:`_output_columns`, and wrap it in a :class:`P.DerivedTable` leaf.
+    ``working_set`` is ``(cte_name, columns)`` when planning the recursive body
+    of a WITH RECURSIVE CTE — any ``TableRef(cte_name)`` becomes a
+    :class:`P.WorkingSetScan` rather than a backend :class:`P.Scan`.
     """
     scope: Scope = {}
-    if isinstance(root, DerivedTableRef):
-        inner_plan = _plan_select(root.select, schema)
-        cols = _output_columns(inner_plan)
-        _add_to_scope(scope, root.alias, list(cols))
-        tree: P.LogicalPlan = P.DerivedTable(
-            query=inner_plan, alias=root.alias, columns=cols
+    if isinstance(root, RecursiveCTERef):
+        # Plan anchor normally; derive its output schema.
+        anchor_plan = _plan_select(root.anchor, schema)
+        anchor_cols = _output_columns(anchor_plan, schema)
+        # Plan recursive with working_set so the self-reference becomes WorkingSetScan.
+        ws_alias = root.alias or root.name
+        recursive_plan = _plan_select(
+            root.recursive, schema, working_set=(root.name, anchor_cols)
+        )
+        _add_to_scope(scope, ws_alias, list(anchor_cols))
+        tree: P.LogicalPlan = P.RecursiveCTE(
+            anchor=anchor_plan,
+            recursive=recursive_plan,
+            alias=ws_alias,
+            columns=anchor_cols,
+            union_all=root.union_all,
+        )
+    elif isinstance(root, DerivedTableRef):
+        inner_plan = _plan_derived_inner(root.select, schema)
+        cols = _output_columns(inner_plan, schema)
+        # SQLite accepts an unaliased derived table — ``SELECT * FROM
+        # (SELECT 1 AS x)`` is legal, with the outer scope seeing ``x``
+        # as an unqualified column.  Our scope/cursor layers want a
+        # string key/name everywhere, so synthesise a unique sentinel
+        # name when the user omitted the alias.  The sentinel is not
+        # syntactically reachable from SQL (it starts with ``<``), so
+        # ``t.col`` style qualified references can never collide with
+        # it; only bare ``col`` lookups will resolve through it.
+        effective_alias = root.alias if root.alias is not None else f"<derived #{id(root):x}>"
+        _add_to_scope(scope, effective_alias, list(cols))
+        tree = P.DerivedTable(
+            query=inner_plan, alias=effective_alias, columns=cols
         )
     else:
-        # Plain TableRef — ensure the table exists.
-        root_cols = schema.columns(root.table)
-        _add_to_scope(scope, root.alias or root.table, root_cols)
-        tree = P.Scan(table=root.table, alias=root.alias)
+        # Plain TableRef — check if it's a working-set self-reference first.
+        if working_set is not None and root.table == working_set[0]:
+            ws_alias = root.alias or root.table
+            _add_to_scope(scope, ws_alias, list(working_set[1]))
+            tree = P.WorkingSetScan(alias=ws_alias, columns=working_set[1])
+        else:
+            root_cols = schema.columns(root.table)
+            _add_to_scope(scope, root.alias or root.table, root_cols)
+            tree = P.Scan(
+                table=root.table,
+                alias=root.alias,
+                index_hint=root.index_hint,
+                not_indexed=root.not_indexed,
+            )
 
     for j in joins:
         if isinstance(j.right, DerivedTableRef):
-            inner_plan = _plan_select(j.right.select, schema)
-            cols = _output_columns(inner_plan)
-            _add_to_scope(scope, j.right.alias, list(cols))
-            right_node: P.LogicalPlan = P.DerivedTable(
-                query=inner_plan, alias=j.right.alias, columns=cols
+            inner_plan = _plan_derived_inner(j.right.select, schema)
+            cols = _output_columns(inner_plan, schema)
+            # See the FROM-root case above for the synthetic-alias rationale
+            # when ``j.right.alias`` is None (SQLite allows unaliased
+            # derived tables in JOIN positions too).
+            effective_alias = (
+                j.right.alias if j.right.alias is not None
+                else f"<derived #{id(j.right):x}>"
             )
+            _add_to_scope(scope, effective_alias, list(cols))
+            right_node: P.LogicalPlan = P.DerivedTable(
+                query=inner_plan, alias=effective_alias, columns=cols
+            )
+            right_cols_list: list[str] = list(cols)
+        elif isinstance(j.right, TableRef) and (
+            working_set is not None and j.right.table == working_set[0]
+        ):
+            # Working-set self-reference in a JOIN (e.g. INNER JOIN cte ON ...)
+            ws_alias = j.right.alias or j.right.table
+            _add_to_scope(scope, ws_alias, list(working_set[1]))
+            right_node = P.WorkingSetScan(alias=ws_alias, columns=working_set[1])
+            right_cols_list = list(working_set[1])
         else:
-            right_cols = schema.columns(j.right.table)
-            _add_to_scope(scope, j.right.alias or j.right.table, right_cols)
-            right_node = P.Scan(table=j.right.table, alias=j.right.alias)
-        # ON clause is resolved against the merged scope so it can reference
-        # columns from both sides.
-        condition = _resolve(j.on, scope) if j.on is not None else None
-        _validate_join(j, condition)
+            right_cols = schema.columns(j.right.table)  # type: ignore[union-attr]
+            _add_to_scope(scope, j.right.alias or j.right.table, right_cols)  # type: ignore[union-attr]
+            right_node = P.Scan(
+                table=j.right.table,  # type: ignore[union-attr]
+                alias=j.right.alias,  # type: ignore[union-attr]
+                index_hint=j.right.index_hint,  # type: ignore[union-attr]
+                not_indexed=j.right.not_indexed,  # type: ignore[union-attr]
+            )
+            right_cols_list = list(right_cols)
+
+        # NATURAL JOIN resolution:
+        #
+        # NATURAL JOIN is syntactic sugar for INNER JOIN with an ON condition
+        # that equates every shared column between the left and right sides.
+        # The planner resolves it here because schema access is available.
+        #
+        # Algorithm:
+        #   1. Collect ALL column names visible on the left (may span multiple tables
+        #      when chaining e.g. a NATURAL JOIN b NATURAL JOIN c).
+        #   2. Find the intersection with the right table's column names.
+        #   3. Build AND(lhs.col = rhs.col, ...) for each shared column.
+        #   4. If no shared columns, fall back to CROSS JOIN (Cartesian product),
+        #      which matches SQLite's behaviour.
+        #
+        # Note: NATURAL JOIN's semantic of *deduplicating* shared columns in SELECT *
+        # output is NOT enforced here — it is left to the projection layer.  For
+        # explicit column references in the SELECT list this distinction never matters.
+        if j.kind == JoinKind.NATURAL:
+            # Collect left-side columns (all aliases registered so far).
+            left_col_names: set[str] = set()
+            for alias_cols in scope.values():
+                if alias_cols is not right_cols_list:  # exclude right side, just registered
+                    left_col_names.update(alias_cols)
+            # Exclude the right alias we just added — scope now contains it.
+            right_alias_key = (
+                j.right.alias if isinstance(j.right, (TableRef, DerivedTableRef)) else None
+            )
+            if right_alias_key is None and isinstance(j.right, TableRef):
+                right_alias_key = j.right.table
+            # Rebuild left columns excluding right's alias.
+            left_col_names = set()
+            for alias, alias_cols in scope.items():
+                if alias != right_alias_key:
+                    left_col_names.update(alias_cols)
+
+            # Find the shared columns (preserve right table's column order).
+            shared_cols = [c for c in right_cols_list if c in left_col_names]
+
+            if not shared_cols:
+                # No shared columns → Cartesian product (CROSS JOIN semantics).
+                actual_kind = JoinKind.CROSS
+                condition = None
+            else:
+                # Build ON: left.c1 = right.c1 AND left.c2 = right.c2 AND ...
+                actual_kind = JoinKind.INNER
+                right_ref = right_alias_key or (
+                    j.right.table  # type: ignore[union-attr]
+                    if isinstance(j.right, TableRef)
+                    else j.right.alias  # type: ignore[union-attr]
+                )
+                cond: Expr | None = None
+                for col in shared_cols:
+                    # Find which left alias owns this column.
+                    left_ref: str | None = None
+                    for alias, alias_cols in scope.items():
+                        if alias != right_ref and col in alias_cols:
+                            left_ref = alias
+                            break
+                    if left_ref is None:
+                        continue
+                    eq: Expr = BinaryExpr(
+                        op=BinaryOp.EQ,
+                        left=Column(table=left_ref, col=col),
+                        right=Column(table=right_ref, col=col),
+                    )
+                    cond = (
+                        BinaryExpr(op=BinaryOp.AND, left=cond, right=eq)
+                        if cond is not None
+                        else eq
+                    )
+                condition = cond
+        elif j.using:
+            # JOIN … USING (col1, col2, …) resolution:
+            #
+            # USING is syntactic sugar for an ON expression that equates each
+            # named column between the left and right sides.  The adapter emits
+            # ``JoinClause(using=('col1', ...))`` rather than an ON expression
+            # because at parse time it cannot determine which left-side table
+            # owns each column in a chained join.
+            #
+            # Here in the planner we have the accumulated scope — all tables
+            # that have been joined so far — and we can find the right owner.
+            #
+            # Algorithm for each USING column:
+            #   1. Determine the right-side alias (same as NATURAL JOIN).
+            #   2. Scan the left portion of the scope (all aliases except right)
+            #      to find which table has the column.
+            #   3. Build left_alias.col = right_alias.col.
+            #   4. AND all per-column equalities together.
+            right_alias_key = (
+                j.right.alias if isinstance(j.right, (TableRef, DerivedTableRef)) else None
+            )
+            if right_alias_key is None and isinstance(j.right, TableRef):
+                right_alias_key = j.right.table
+            right_ref_using = right_alias_key or (
+                j.right.table if isinstance(j.right, TableRef) else j.right.alias  # type: ignore[union-attr]
+            )
+            using_cond: Expr | None = None
+            for col in j.using:
+                # Find which left-side table has this column.
+                left_ref_using: str | None = None
+                for alias, alias_cols in scope.items():
+                    if alias != right_ref_using and col in alias_cols:
+                        left_ref_using = alias
+                        break
+                if left_ref_using is None:
+                    from sql_planner.errors import UnknownColumn
+                    raise UnknownColumn(table=None, column=col)
+                eq_using: Expr = BinaryExpr(
+                    op=BinaryOp.EQ,
+                    left=Column(table=left_ref_using, col=col),
+                    right=Column(table=right_ref_using, col=col),
+                )
+                using_cond = (
+                    BinaryExpr(op=BinaryOp.AND, left=using_cond, right=eq_using)
+                    if using_cond is not None
+                    else eq_using
+                )
+            actual_kind = j.kind  # INNER / LEFT / etc. as specified
+            condition = using_cond
+        else:
+            # ON clause is resolved against the merged scope so it can reference
+            # columns from both sides.
+            actual_kind = j.kind
+            condition = _resolve(j.on, scope, schema) if j.on is not None else None
+            _validate_join(j, condition)
+
         tree = P.Join(
             left=tree,
             right=right_node,
-            kind=j.kind,
+            kind=actual_kind,
             condition=condition,
         )
     return tree, scope
 
 
-def _output_columns(plan: P.LogicalPlan) -> tuple[str, ...]:
+def _output_columns(
+    plan: P.LogicalPlan,
+    schema: SchemaProvider | None = None,
+) -> tuple[str, ...]:
     """Return the ordered output column names of a finished plan tree.
 
     Used to compute the schema of a derived table (subquery in FROM) at
@@ -303,31 +784,118 @@ def _output_columns(plan: P.LogicalPlan) -> tuple[str, ...]:
     Distinct, Having) until it reaches a Project node whose items carry
     explicit aliases or column names.
 
-    Raises :class:`UnsupportedStatement` for ``SELECT *`` inside a derived
-    table — we can't know the column list without executing the query.
+    ``schema`` is required when the project contains ``SELECT *`` (a
+    :class:`~sql_planner.expr.Wildcard` item) — the wildcard is expanded
+    to the actual column list of the plan's input by delegating to
+    :func:`_source_columns`.  When ``schema`` is ``None`` and a wildcard
+    is encountered, the positional name ``column_N`` is used as a fallback
+    (preserving backward-compatibility for callers that don't need exact
+    names).
+
+    Raises :class:`UnsupportedStatement` when a wildcard spans a plan
+    node whose schema cannot be determined even with schema access (e.g. a
+    bare aggregate without a GROUP BY at the top level).
     """
     # Walk through purely decorative wrapper nodes that don't change columns.
     node = plan
     while isinstance(node, (P.Sort, P.Limit, P.Distinct, P.Having)):
         node = node.input  # type: ignore[union-attr]
 
+    # Set-operation nodes (Union / Intersect / Except) inherit the column
+    # names of their *left* side — this matches SQLite's documented rule
+    # and is required for derived tables that wrap a compound query
+    # (``(SELECT a UNION SELECT b) AS t``).  Without this branch, the
+    # ``_output_columns`` walker would hit the final ``raise`` and emit a
+    # confusing "SELECT * in derived table" error.
+    if isinstance(node, (P.Union, P.Intersect, P.Except)):
+        return _output_columns(node.left, schema)
+
     if isinstance(node, P.Project):
         cols: list[str] = []
         for i, item in enumerate(node.items, start=1):
-            if item.alias is not None:
+            if isinstance(item.expr, Wildcard):
+                # SELECT * — expand by tracing through the input plan.
+                # When schema is available, delegate to _source_columns.
+                if schema is not None:
+                    cols.extend(_source_columns(node.input, schema))
+                else:
+                    cols.append(f"column_{i}")
+            elif item.alias is not None:
                 cols.append(item.alias)
-            elif isinstance(item.expr, P.ProjectionItem):
-                # Shouldn't happen, but guard anyway.
-                cols.append(f"column_{i}")
             else:
-                # No alias — we use the expr-level alias from _derive_alias.
-                # _derive_alias already ran and stored the result in item.alias,
-                # so reaching here means the item has no natural name.
+                # No alias — positional fallback (should be rare: _derive_alias
+                # already assigns an alias for Column and FunctionCall nodes).
                 cols.append(f"column_{i}")
         return tuple(cols)
 
     raise UnsupportedStatement(
         kind="SELECT * in derived table (cannot infer column names without schema)"
+    )
+
+
+def _source_columns(
+    node: P.LogicalPlan,
+    schema: SchemaProvider,
+) -> list[str]:
+    """Recursively determine the output column names produced by *node*.
+
+    Used by :func:`_output_columns` to expand ``SELECT *`` at planning
+    time.  Returns a flat list of column names in output order.
+
+    Handles the plan nodes that can appear as the direct input to a
+    Project:
+
+    - :class:`P.Scan` — asks the schema provider for the table's columns.
+    - :class:`P.DerivedTable` — the columns are already stored in the node.
+    - :class:`P.WorkingSetScan` — the columns are stored in the node.
+    - :class:`P.RecursiveCTE` — uses the anchor's output schema.
+    - :class:`P.Filter` — transparent; delegates to its input.
+    - :class:`P.Join` — concatenates left and right column lists.
+    - :class:`P.Project` — recursive call to :func:`_output_columns`.
+    - Decorative wrappers (Sort, Limit, Distinct, Having) — transparent.
+    """
+    if isinstance(node, P.SingleRow):
+        # No columns — the "dual" row has no fields.
+        return []
+
+    if isinstance(node, P.Scan):
+        return schema.columns(node.table)
+
+    if isinstance(node, P.DerivedTable):
+        return list(node.columns)
+
+    if isinstance(node, P.WorkingSetScan):
+        return list(node.columns)
+
+    if isinstance(node, P.RecursiveCTE):
+        # Anchor and recursive steps have the same schema.
+        return list(_output_columns(node.anchor, schema))
+
+    if isinstance(node, P.Filter):
+        return _source_columns(node.input, schema)
+
+    if isinstance(node, (P.Sort, P.Limit, P.Distinct, P.Having)):
+        return _source_columns(node.input, schema)  # type: ignore[union-attr]
+
+    if isinstance(node, P.Join):
+        left_cols = _source_columns(node.left, schema)
+        right_cols = _source_columns(node.right, schema)
+        return left_cols + right_cols
+
+    if isinstance(node, P.Project):
+        return list(_output_columns(node, schema))
+
+    if isinstance(node, (P.Union, P.Intersect, P.Except)):
+        # Set-operation output schema follows the left side — same rule as
+        # :func:`_output_columns`.  Needed when a derived table wraps a
+        # compound query and the outer SELECT then says ``SELECT * FROM …``.
+        return list(_output_columns(node, schema))
+
+    # Aggregate, IndexScan, etc. — fall through.  These should not normally
+    # be the direct input of another Project without an intervening explicit
+    # column list.
+    raise UnsupportedStatement(
+        kind=f"SELECT * over {type(node).__name__} in derived table"
     )
 
 
@@ -354,87 +922,447 @@ def _add_to_scope(scope: Scope, alias: str, columns: list[str]) -> None:
 
 
 # --------------------------------------------------------------------------
+# Alias substitution
+# --------------------------------------------------------------------------
+
+
+def _substitute_aliases(expr: Expr, alias_map: dict[str, Expr]) -> Expr:
+    """Replace ``Column(None, alias)`` references with their aliased expression.
+
+    SQLite allows HAVING and ORDER BY to reference SELECT-list aliases (e.g.
+    ``HAVING total > 200`` when the SELECT list contains
+    ``SUM(amount) AS total``).  The planner calls this function before
+    resolving the HAVING / ORDER BY expressions so that the alias is expanded
+    to the real aggregate or column expression before column qualification
+    takes place.
+
+    Only bare column references with no table qualifier are substituted —
+    ``t.total`` is never an alias reference, so it is left unchanged.
+
+    Structural note: only the expression types that actually appear in HAVING
+    and ORDER BY need to be handled here.  Unknown node types are returned
+    unchanged (they either don't contain Column references or will be caught
+    later by ``_resolve``).
+    """
+    match expr:
+        case Column(table=None, col=name) if name in alias_map:
+            return alias_map[name]
+        case BinaryExpr(op=op, left=left, right=right):
+            return BinaryExpr(
+                op=op,
+                left=_substitute_aliases(left, alias_map),
+                right=_substitute_aliases(right, alias_map),
+            )
+        case UnaryExpr(op=op, operand=operand):
+            return UnaryExpr(op=op, operand=_substitute_aliases(operand, alias_map))
+        case _:
+            return expr
+
+
+# --------------------------------------------------------------------------
+# Column-collation propagation into comparison operators
+#
+# When a user declares ``CREATE TABLE t(name TEXT COLLATE NOCASE)`` and
+# then writes ``WHERE name = 'X'``, SQLite implicitly applies NOCASE to
+# the comparison — the column's *declared* collation flows into any
+# comparison the column participates in.  PR #4002 already handles the
+# explicit-postfix form (``WHERE name = 'X' COLLATE NOCASE``) at the
+# adapter level by wrapping both operands in ``lower()`` / ``rtrim()``;
+# this pass extends the same machinery to the implicit form.
+#
+# We run it as a post-resolution AST rewrite on the WHERE / HAVING /
+# JOIN-ON predicates (anywhere a comparison can appear).  Walking the
+# expression tree post-resolution is the right place because:
+#
+# * After ``_resolve``, every bare ``Column`` reference carries its
+#   resolved table name (we need this to look up the column's declared
+#   collation via the schema provider).
+# * The rewrite is purely AST → AST; the planner / codegen / VM never
+#   need to know about collation on the comparison itself.
+# --------------------------------------------------------------------------
+
+
+def _column_collation(col: Column, schema: SchemaProvider) -> str | None:
+    """Look up the declared collation for a resolved Column, if any.
+
+    Returns ``None`` when:
+
+    * The column reference has no table name (e.g. ``SELECT 'A' = 'a'``
+      with no FROM clause).
+    * The schema provider doesn't implement ``column_collation`` (some
+      minimal test providers).
+    * The column is declared without a COLLATE clause.
+
+    Stored upper-cased on the column definition, so values returned here
+    are also upper-cased.
+    """
+    if col.table is None:
+        return None
+    lookup = getattr(schema, "column_collation", None)
+    if lookup is None:
+        return None
+    return lookup(col.table, col.col)
+
+
+def _collation_transform(expr: Expr, collation: str) -> Expr:
+    """Wrap *expr* in the scalar-function call that applies *collation*.
+
+    Mirrors the adapter's identically-named helper (see
+    ``mini_sqlite.adapter._collation_transform``) — keep the two in
+    sync.  ``BINARY`` and unknown names fall through to identity,
+    matching SQLite's "validate lazily" behaviour.
+    """
+    coll = collation.upper()
+    if coll == "NOCASE":
+        return FunctionCall(name="lower", args=(FuncArg(value=expr),))
+    if coll == "RTRIM":
+        return FunctionCall(name="rtrim", args=(FuncArg(value=expr),))
+    return expr
+
+
+_COMPARISON_OPS = frozenset({
+    BinaryOp.EQ,
+    BinaryOp.NOT_EQ,
+    BinaryOp.LT,
+    BinaryOp.LTE,
+    BinaryOp.GT,
+    BinaryOp.GTE,
+    BinaryOp.IS_DISTINCT_FROM,
+    BinaryOp.IS_NOT_DISTINCT_FROM,
+})
+
+
+def _is_already_wrapped(expr: Expr) -> bool:
+    """Return True if *expr* is already wrapped by a collation-transform
+    call (``lower(x)`` or ``rtrim(x)``).
+
+    Used to avoid double-wrapping when both PR #4002's explicit-postfix
+    path and this pass would otherwise both fire — the adapter wraps
+    first, so by the time we get here the operand is already wrapped
+    and we should leave it alone.
+    """
+    if not isinstance(expr, FunctionCall):
+        return False
+    return expr.name in ("lower", "rtrim")
+
+
+def _propagate_column_collation(expr: Expr, schema: SchemaProvider) -> Expr:
+    """Walk *expr* and rewrite comparisons that mention a collated column.
+
+    For each ``BinaryExpr`` with a comparison op (``=``, ``<>``, ``<``,
+    ``<=``, ``>``, ``>=``, ``IS [NOT] DISTINCT FROM``) we look at both
+    operands.  If either side is a ``Column`` whose declared collation
+    is non-None and neither side is already wrapped by a transform, we
+    wrap **both** operands.  SQLite's rule: if both operands carry
+    collations, the LEFT one wins.
+
+    Also handles ``Between`` (collation propagates to both bounds when
+    the test operand is collated) and ``Like`` / ``NotLike`` (collation
+    on the LHS — the value being matched — applies to the LHS only,
+    since the pattern is already an opaque string template).
+
+    Recurses into nested subexpressions (AND / OR / NOT / arithmetic)
+    so that ``WHERE a = 'x' OR b = 'y'`` is rewritten in both halves.
+    """
+
+    def rec(e: Expr) -> Expr:
+        # Recurse into compound expressions first; the rewriter only
+        # transforms terminal comparison shapes.
+        if isinstance(e, UnaryExpr):
+            return UnaryExpr(op=e.op, operand=rec(e.operand))
+        if isinstance(e, BinaryExpr):
+            new_left = rec(e.left)
+            new_right = rec(e.right)
+            if e.op in _COMPARISON_OPS:
+                # Don't re-wrap if the adapter (PR #4002) already did so.
+                if not _is_already_wrapped(new_left) and not _is_already_wrapped(new_right):
+                    left_coll = (
+                        _column_collation(new_left, schema)
+                        if isinstance(new_left, Column)
+                        else None
+                    )
+                    right_coll = (
+                        _column_collation(new_right, schema)
+                        if isinstance(new_right, Column)
+                        else None
+                    )
+                    coll = left_coll if left_coll is not None else right_coll
+                    if coll is not None:
+                        new_left = _collation_transform(new_left, coll)
+                        new_right = _collation_transform(new_right, coll)
+            return BinaryExpr(op=e.op, left=new_left, right=new_right)
+        if isinstance(e, Between):
+            new_operand = rec(e.operand)
+            new_low = rec(e.low)
+            new_high = rec(e.high)
+            if not _is_already_wrapped(new_operand):
+                op_coll = (
+                    _column_collation(new_operand, schema)
+                    if isinstance(new_operand, Column)
+                    else None
+                )
+                if op_coll is not None:
+                    new_operand = _collation_transform(new_operand, op_coll)
+                    new_low = _collation_transform(new_low, op_coll)
+                    new_high = _collation_transform(new_high, op_coll)
+            return Between(operand=new_operand, low=new_low, high=new_high)
+        # Other node shapes (Like, In, IsNull, function calls, etc.) —
+        # leave alone for now.  Implicit-collation propagation through
+        # those forms is a separate, narrower question that we can
+        # tackle in a follow-up if needed.  The common
+        # equality / ordering case is handled above.
+        return e
+
+    return rec(expr)
+
+
+# --------------------------------------------------------------------------
 # Expression resolution
 # --------------------------------------------------------------------------
 
 
-def _resolve(expr: Expr, scope: Scope) -> Expr:
+def _resolve(
+    expr: Expr,
+    scope: Scope,
+    schema: SchemaProvider | None = None,
+    outer_scope: Scope | None = None,
+) -> Expr:
     """Qualify bare :class:`Column` references against ``scope``.
 
     Returns a new expression tree (because expressions are frozen). For
     expressions that contain no columns, this is equivalent to returning
     the input unchanged.
+
+    ``schema`` is only required when the expression tree may contain
+    :class:`~sql_planner.expr.ExistsSubquery` nodes — the planner needs it
+    to plan the inner SELECT independently.  All other expression types ignore
+    this parameter.
+
+    ``outer_scope`` is the scope of the immediately enclosing query.  When a
+    column cannot be resolved in ``scope``, the planner falls back to
+    ``outer_scope``.  If found there, it returns a
+    :class:`~sql_planner.expr.CorrelatedRef` — a marker that codegen
+    translates into a ``LoadOuterColumn`` instruction at runtime.
+
+    Only one level of outer scope is supported.  Deeply nested correlated
+    references (grandparent queries) require extending this API to a scope
+    stack, which is reserved for a future increment.
     """
     match expr:
         case Literal() | Wildcard():
             return expr
+        case CorrelatedRef():
+            # Already resolved by a prior _resolve pass — pass through.
+            return expr
+        case RowIdRef():
+            # Already resolved by a prior _resolve pass — pass through.
+            return expr
         case Column(table, col):
-            return _resolve_column(table, col, scope)
+            return _resolve_column(table, col, scope, outer_scope)
         case BinaryExpr(op, left, right):
-            return BinaryExpr(op=op, left=_resolve(left, scope), right=_resolve(right, scope))
+            return BinaryExpr(
+                op=op,
+                left=_resolve(left, scope, schema, outer_scope),
+                right=_resolve(right, scope, schema, outer_scope),
+            )
         case UnaryExpr(op, operand):
-            return UnaryExpr(op=op, operand=_resolve(operand, scope))
+            return UnaryExpr(op=op, operand=_resolve(operand, scope, schema, outer_scope))
         case FunctionCall(name, args):
             new_args = tuple(
                 a if a.star or a.value is None
-                else type(a)(star=False, value=_resolve(a.value, scope))
+                else type(a)(star=False, value=_resolve(a.value, scope, schema, outer_scope))
                 for a in args
             )
             return FunctionCall(name=name, args=new_args)
         case IsNull(operand):
-            return IsNull(operand=_resolve(operand, scope))
+            return IsNull(operand=_resolve(operand, scope, schema, outer_scope))
         case IsNotNull(operand):
-            return IsNotNull(operand=_resolve(operand, scope))
+            return IsNotNull(operand=_resolve(operand, scope, schema, outer_scope))
         case Between(operand, low, high):
             return Between(
-                operand=_resolve(operand, scope),
-                low=_resolve(low, scope),
-                high=_resolve(high, scope),
+                operand=_resolve(operand, scope, schema, outer_scope),
+                low=_resolve(low, scope, schema, outer_scope),
+                high=_resolve(high, scope, schema, outer_scope),
             )
         case In(operand, values):
             return In(
-                operand=_resolve(operand, scope),
-                values=tuple(_resolve(v, scope) for v in values),
+                operand=_resolve(operand, scope, schema, outer_scope),
+                values=tuple(_resolve(v, scope, schema, outer_scope) for v in values),
             )
         case NotIn(operand, values):
             return NotIn(
-                operand=_resolve(operand, scope),
-                values=tuple(_resolve(v, scope) for v in values),
+                operand=_resolve(operand, scope, schema, outer_scope),
+                values=tuple(_resolve(v, scope, schema, outer_scope) for v in values),
             )
-        case Like(operand, pattern):
-            return Like(operand=_resolve(operand, scope), pattern=pattern)
-        case NotLike(operand, pattern):
-            return NotLike(operand=_resolve(operand, scope), pattern=pattern)
-        case AggregateExpr(func, arg, distinct):
+        case Like(operand, pattern, escape):
+            return Like(
+                operand=_resolve(operand, scope, schema, outer_scope),
+                pattern=pattern,
+                escape=escape,
+            )
+        case NotLike(operand, pattern, escape):
+            return NotLike(
+                operand=_resolve(operand, scope, schema, outer_scope),
+                pattern=pattern,
+                escape=escape,
+            )
+        case AggregateExpr(func, arg, distinct, separator, key_arg, filter_expr):
             if arg.star or arg.value is None:
                 return expr
-            new_arg = type(arg)(star=False, value=_resolve(arg.value, scope))
-            return AggregateExpr(func=func, arg=new_arg, distinct=distinct)
+            new_arg = type(arg)(star=False, value=_resolve(arg.value, scope, schema, outer_scope))
+            new_key = (
+                type(key_arg)(star=False, value=_resolve(key_arg.value, scope, schema, outer_scope))
+                if key_arg is not None and key_arg.value is not None
+                else key_arg
+            )
+            new_filter = (
+                _resolve(filter_expr, scope, schema, outer_scope)
+                if filter_expr is not None
+                else None
+            )
+            return AggregateExpr(
+                func=func, arg=new_arg, distinct=distinct,
+                separator=separator, key_arg=new_key, filter_expr=new_filter,
+            )
         case CaseExpr(whens, else_):
             return CaseExpr(
                 whens=tuple(
-                    (_resolve(cond, scope), _resolve(result, scope))
+                    (
+                        _resolve(cond, scope, schema, outer_scope),
+                        _resolve(result, scope, schema, outer_scope),
+                    )
                     for cond, result in whens
                 ),
-                else_=_resolve(else_, scope) if else_ is not None else None,
+                else_=_resolve(else_, scope, schema, outer_scope) if else_ is not None else None,
+            )
+        case ExistsSubquery(query=stmt):
+            # Plan the inner SELECT with the current scope as its outer scope
+            # so that correlated references to the enclosing query are resolved
+            # as CorrelatedRef nodes rather than raising UnknownColumn.
+            if schema is None:
+                raise InternalError(message="schema required to plan EXISTS subquery")
+            inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
+            return ExistsSubquery(query=inner_plan)
+        case ScalarSubquery(query=stmt):
+            if schema is None:
+                raise InternalError(message="schema required to plan scalar subquery")
+            inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
+            return ScalarSubquery(query=inner_plan)
+        case InSubquery(operand=op, query=stmt):
+            if schema is None:
+                raise InternalError(message="schema required to plan IN subquery")
+            resolved_op = _resolve(op, scope, schema, outer_scope)  # type: ignore[arg-type]
+            inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
+            return InSubquery(operand=resolved_op, query=inner_plan)
+        case NotInSubquery(operand=op, query=stmt):
+            if schema is None:
+                raise InternalError(message="schema required to plan NOT IN subquery")
+            resolved_op = _resolve(op, scope, schema, outer_scope)  # type: ignore[arg-type]
+            inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
+            return NotInSubquery(operand=resolved_op, query=inner_plan)
+        case WindowFuncExpr(func, arg, partition_by, order_by, extra_args, frame):
+            new_arg = _resolve(arg, scope, schema, outer_scope) if arg is not None else None
+            new_partition_by = tuple(
+                _resolve(e, scope, schema, outer_scope) for e in partition_by
+            )
+            new_order_by = tuple(
+                (_resolve(e, scope, schema, outer_scope), desc) for e, desc in order_by
+            )
+            new_extra_args = tuple(
+                _resolve(e, scope, schema, outer_scope) for e in extra_args
+            )
+            return WindowFuncExpr(
+                func=func,
+                arg=new_arg,
+                partition_by=new_partition_by,
+                order_by=new_order_by,
+                extra_args=new_extra_args,
+                frame=frame,
             )
     raise AmbiguousColumn(column="<internal>", tables=[])  # unreachable
 
 
-def _resolve_column(table: str | None, col: str, scope: Scope) -> Column:
+# Rowid pseudo-column aliases supported by SQLite.  Any column reference
+# whose name (case-insensitive) matches one of these strings and which does
+# NOT match a real schema column is resolved to a :class:`RowIdRef` node.
+# Real columns named "rowid" (rare but valid in SQLite) take precedence
+# because the scope lookup happens before this fallback.
+_ROWID_ALIASES: frozenset[str] = frozenset(("rowid", "_rowid_", "oid"))
+
+
+def _resolve_column(
+    table: str | None,
+    col: str,
+    scope: Scope,
+    outer_scope: Scope | None = None,
+) -> Column | CorrelatedRef | RowIdRef:
+    """Resolve a column reference against the inner scope, falling back to
+    the outer scope for correlated subquery references, and finally to
+    rowid pseudo-column handling.
+
+    Return types
+    ------------
+    - :class:`Column` — resolved to a real schema column in the inner scope.
+    - :class:`CorrelatedRef` — resolved to a real column in the outer scope.
+    - :class:`RowIdRef` — the name is ``rowid``, ``_rowid_``, or ``oid``
+      and no real column with that spelling exists in the inner scope.
+
+    Resolution order:
+    1. Try the inner scope first (``scope``).
+    2. If not found AND ``outer_scope`` is provided, try ``outer_scope``.
+    3. If the column name is a rowid alias, emit a ``RowIdRef`` for the
+       table that owns the scan (or raise ``AmbiguousColumn`` if multiple
+       tables are in scope and no qualifier was given).
+    4. Raise :class:`UnknownColumn` if none of the above match.
+
+    Qualified references (``table.col``) check the named alias in order; bare
+    references walk all aliases in the active scope looking for a unique owner.
+    """
+    # ---- Qualified reference (table.col) ------------------------------------
     if table is not None:
-        if table not in scope:
-            raise UnknownColumn(table=table, column=col)
-        if col not in scope[table]:
-            raise UnknownColumn(table=table, column=col)
-        return Column(table=table, col=col)
-    # Bare column reference — find which tables have it.
+        if table in scope and col in scope[table]:
+            # Found in inner scope — a regular column reference.
+            return Column(table=table, col=col)
+        # Rowid pseudo-column: e.g. t.rowid when "rowid" is not a real column.
+        # We require the table alias to be in scope so we don't silently accept
+        # typos like "nonexistent_table.rowid".
+        if col.lower() in _ROWID_ALIASES and table in scope:
+            return RowIdRef(table=table)
+        # Not in inner scope. Try the outer scope before raising.
+        if outer_scope is not None and table in outer_scope and col in outer_scope[table]:
+            # Found in the enclosing query's scope — correlated reference.
+            return CorrelatedRef(outer_alias=table, col=col)
+        raise UnknownColumn(table=table, column=col)
+
+    # ---- Bare reference (col, no table qualifier) ---------------------------
+    # Find which inner-scope aliases own this column.
     owners = [t for t, cols in scope.items() if col in cols]
-    if not owners:
-        raise UnknownColumn(table=None, column=col)
-    if len(owners) > 1:
-        raise AmbiguousColumn(column=col, tables=owners)
-    return Column(table=owners[0], col=col)
+    if owners:
+        if len(owners) > 1:
+            raise AmbiguousColumn(column=col, tables=owners)
+        return Column(table=owners[0], col=col)
+
+    # Not found in inner scope. Try outer scope.
+    if outer_scope is not None:
+        outer_owners = [t for t, cols in outer_scope.items() if col in cols]
+        if len(outer_owners) == 1:
+            return CorrelatedRef(outer_alias=outer_owners[0], col=col)
+        if len(outer_owners) > 1:
+            raise AmbiguousColumn(column=col, tables=outer_owners)
+
+    # Rowid pseudo-column (bare, no table qualifier).
+    # Resolve against the current inner scope: exactly one table → qualify it;
+    # multiple tables → ambiguous (user should write t.rowid explicitly).
+    if col.lower() in _ROWID_ALIASES:
+        all_aliases = list(scope.keys())
+        if len(all_aliases) == 1:
+            return RowIdRef(table=all_aliases[0])
+        if len(all_aliases) > 1:
+            raise AmbiguousColumn(column=col, tables=all_aliases)
+        # Zero tables in scope (e.g. SELECT rowid with no FROM) — fall through
+        # to UnknownColumn below.
+
+    raise UnknownColumn(table=None, column=col)
 
 
 # --------------------------------------------------------------------------
@@ -451,59 +1379,96 @@ def _collect_aggregates(
 
     We don't rewrite the source expressions to reference the aggregated
     result by alias — codegen can navigate the tree and emit the right
-    opcodes. This keeps the planner simple; the optimizer can de-duplicate
-    later.
+    opcodes.  This keeps the planner simple; the optimizer handles further
+    simplification.
+
+    De-duplication: the same aggregate expression (same func + arg + distinct +
+    separator) appearing in multiple clauses (e.g. ``SUM(val)`` in both the
+    SELECT list and the HAVING predicate) must map to a **single** slot.
+    Without de-dup, two identical AggregateItems would be created, causing the
+    emit loop in ``_compile_aggregate`` to write the aggregate value twice —
+    producing an extra, spurious output column.
+
+    We use an insertion-order dict keyed by ``(func, arg, distinct, separator)``
+    so each unique aggregate receives exactly one slot regardless of how many
+    clauses reference it.
+
+    ``output`` flag: aggregates first seen in the SELECT list are marked
+    ``output=True`` (they appear as result columns).  Aggregates first seen
+    *only* in HAVING or ORDER BY are marked ``output=False`` — they are
+    computed during the aggregate pass so the predicate / sort can reference
+    them, but they are not emitted as visible output columns.  If an aggregate
+    later appears in the SELECT list as well (i.e. an ``output=False`` entry is
+    revisited with ``is_output=True``), it is upgraded to ``output=True``.
     """
-    seen: list[tuple[P.AggregateItem, str]] = []  # (item, alias) for de-dup
+    # Keyed by (func, arg, distinct, separator) so identical calls share a slot.
+    seen: dict[tuple, P.AggregateItem] = {}
     counter = 0
 
-    def collect_in(expr: Expr) -> None:
+    def collect_in(expr: Expr, is_output: bool) -> None:
         nonlocal counter
         match expr:
-            case AggregateExpr(func, arg, distinct):
-                alias = f"_agg_{counter}"
-                counter += 1
-                seen.append((
-                    P.AggregateItem(func=func, arg=arg, alias=alias, distinct=distinct),
-                    alias,
-                ))
+            case AggregateExpr(func, arg, distinct, separator, key_arg, filter_expr):
+                key = (func, arg, distinct, separator, key_arg, filter_expr)
+                if key not in seen:
+                    alias = f"_agg_{counter}"
+                    counter += 1
+                    seen[key] = P.AggregateItem(
+                        func=func, arg=arg, alias=alias,
+                        distinct=distinct, separator=separator,
+                        key_arg=key_arg, filter_expr=filter_expr,
+                        output=is_output,
+                    )
+                elif is_output and not seen[key].output:
+                    # Upgrade: this aggregate also appears in the SELECT list,
+                    # so promote it from hidden (False) to visible (True).
+                    old = seen[key]
+                    seen[key] = P.AggregateItem(
+                        func=old.func, arg=old.arg, alias=old.alias,
+                        distinct=old.distinct, separator=old.separator,
+                        key_arg=old.key_arg, filter_expr=old.filter_expr,
+                        output=True,
+                    )
             case BinaryExpr(_, left, right):
-                collect_in(left)
-                collect_in(right)
+                collect_in(left, is_output)
+                collect_in(right, is_output)
             case UnaryExpr(_, operand):
-                collect_in(operand)
+                collect_in(operand, is_output)
             case FunctionCall(_, args):
                 for a in args:
                     if a.value is not None:
-                        collect_in(a.value)
+                        collect_in(a.value, is_output)
             case IsNull(operand) | IsNotNull(operand):
-                collect_in(operand)
+                collect_in(operand, is_output)
             case Between(operand, low, high):
-                collect_in(operand)
-                collect_in(low)
-                collect_in(high)
+                collect_in(operand, is_output)
+                collect_in(low, is_output)
+                collect_in(high, is_output)
             case In(operand, values) | NotIn(operand, values):
-                collect_in(operand)
+                collect_in(operand, is_output)
                 for v in values:
-                    collect_in(v)
+                    collect_in(v, is_output)
             case Like(operand, _) | NotLike(operand, _):
-                collect_in(operand)
+                collect_in(operand, is_output)
             case CaseExpr(whens, else_):
                 for cond, result in whens:
-                    collect_in(cond)
-                    collect_in(result)
+                    collect_in(cond, is_output)
+                    collect_in(result, is_output)
                 if else_ is not None:
-                    collect_in(else_)
+                    collect_in(else_, is_output)
             case _:
                 pass
 
+    # SELECT items first: these are visible output columns (output=True).
     for it in items:
-        collect_in(it.expr)
+        collect_in(it.expr, is_output=True)
+    # HAVING and ORDER BY: aggregates here are hidden unless already seen
+    # from SELECT (output=True already set above).
     if having is not None:
-        collect_in(having)
+        collect_in(having, is_output=False)
     for k in order_by:
-        collect_in(k.expr)
-    return tuple(item for item, _ in seen)
+        collect_in(k.expr, is_output=False)
+    return tuple(seen.values())
 
 
 # --------------------------------------------------------------------------
@@ -533,6 +1498,126 @@ def _derive_alias(item: SelectItem) -> str | None:
 # --------------------------------------------------------------------------
 
 
+def _resolve_upsert(
+    clause: AstUpsertClause | None, table_cols: list[str], schema: SchemaProvider
+) -> P.UpsertAction | None:
+    """Convert a raw ``AstUpsertClause`` into a resolved ``P.UpsertAction``.
+
+    The assignment RHS expressions may reference:
+    - ``ExcludedColumn(col=c)`` — the would-be-inserted value (already rewritten
+      by the adapter; passed through unchanged here, no scope needed).
+    - Regular ``Column`` / ``Literal`` / ``BinaryExpr`` etc. — resolved against
+      the target table's scope so bare names like ``price`` become
+      ``Column(table=t, col="price")``.
+
+    When ``clause`` is ``None`` (no ON CONFLICT clause), returns ``None``.
+    """
+    if clause is None:
+        return None
+
+    # Validate conflict target columns exist in the table.
+    for col in clause.conflict_target:
+        if col not in table_cols:
+            raise UnknownColumn(table="(upsert target)", column=col)
+
+    if clause.do_nothing:
+        return P.UpsertAction(conflict_target=clause.conflict_target, do_nothing=True)
+
+    # Resolve assignment values.  ExcludedColumn nodes pass through the
+    # resolver unchanged because _resolve doesn't know about them and will
+    # propagate them as-is (they are not Column nodes to qualify).
+    # We build a scope that includes just the target table so that plain
+    # column refs like ``price`` resolve to ``Column(table=t, col="price")``.
+    # The scope deliberately does NOT include "EXCLUDED" because the adapter
+    # has already rewritten ``Column(table="EXCLUDED", col=c)`` to
+    # ``ExcludedColumn(col=c)`` — there is nothing left to resolve.
+    # No table scope needed — ExcludedColumn is a leaf node that the resolver
+    # passes through unchanged without consulting any scope.
+
+    resolved_assignments = tuple(
+        P.UpsertAssignment(
+            column=a.column,
+            value=_resolve_upsert_expr(a.value, table_cols, schema),
+        )
+        for a in clause.assignments
+    )
+
+    # Resolve the optional conditional-upsert WHERE predicate using the same
+    # rules as assignment RHS expressions: bare column refs resolve against
+    # the target table (= the existing-row scope at conflict time) while
+    # ExcludedColumn leaves pass through.
+    resolved_where = (
+        _resolve_upsert_expr(clause.where, table_cols, schema)
+        if clause.where is not None
+        else None
+    )
+
+    return P.UpsertAction(
+        conflict_target=clause.conflict_target,
+        do_nothing=False,
+        assignments=resolved_assignments,
+        where=resolved_where,
+    )
+
+
+def _resolve_upsert_expr(expr: Expr, table_cols: list[str], schema: SchemaProvider) -> Expr:
+    """Resolve an expression inside an upsert assignment RHS.
+
+    ``ExcludedColumn`` nodes are leaves — they have no table scope and pass
+    through unchanged.  Everything else is resolved normally.
+
+    We do a targeted structural walk instead of calling the general ``_resolve``
+    so that ``ExcludedColumn`` does not trip the "unknown column" error path.
+    """
+    match expr:
+        case ExcludedColumn():
+            # The pseudo-table value reference — keep as-is.
+            return expr
+        case BinaryExpr(op=op, left=left, right=right):
+            return BinaryExpr(
+                op=op,
+                left=_resolve_upsert_expr(left, table_cols, schema),
+                right=_resolve_upsert_expr(right, table_cols, schema),
+            )
+        case Column(table=None, col=col) if col in table_cols:
+            # Bare column name — qualify it against the insert target table.
+            # We do not have the table name here so we return the column as-is;
+            # the codegen resolves bare Column(table=None) against the insert
+            # table's existing row during the upsert update phase.
+            return expr
+        case _:
+            # Literals and other exprs that need no resolution.
+            return expr
+
+
+def _expand_returning_wildcards(
+    returning: tuple[Expr, ...],
+    table: str,
+    cols: list[str],
+) -> tuple[Expr, ...]:
+    """Expand any ``RETURNING *`` Wildcards into one column ref per table column.
+
+    SQLite's ``RETURNING *`` short-hand emits every column of the
+    target table in declaration order.  The adapter encodes ``*`` as
+    a :class:`Wildcard` sentinel; the codegen can't handle Wildcards
+    in expression position, so we expand them here at planning time
+    — same approach SELECT * uses.  Non-Wildcard items pass through
+    unchanged so a mixed list like ``RETURNING id, *`` is also
+    supported (matches SQLite, though uncommon in practice).
+    """
+    out: list[Expr] = []
+    for item in returning:
+        if isinstance(item, Wildcard):
+            # ``Column`` is the unresolved (qualified-but-not-yet-typed)
+            # column reference; ``_resolve`` will turn it into the
+            # backend-bound form moments after this expansion runs.
+            for col_name in cols:
+                out.append(Column(table=table, col=col_name))
+        else:
+            out.append(item)
+    return tuple(out)
+
+
 def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPlan:
     # Validate the target table and, if a column list is given, each column.
     table_cols = schema.columns(stmt.table)
@@ -540,10 +1625,23 @@ def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPla
         for c in stmt.columns:
             if c not in table_cols:
                 raise UnknownColumn(table=stmt.table, column=c)
+    # Resolve RETURNING exprs against the table's column scope so that bare
+    # column references like ``id`` become ``Column(table=stmt.table, col='id')``.
+    returning_scope: Scope = {stmt.table: table_cols}
+    expanded_returning = _expand_returning_wildcards(
+        stmt.returning, stmt.table, table_cols
+    )
+    resolved_returning = tuple(
+        _resolve(r, returning_scope, schema) for r in expanded_returning
+    )
+    upsert = _resolve_upsert(stmt.upsert_clause, table_cols, schema)
     return P.Insert(
         table=stmt.table,
         columns=stmt.columns,
         source=P.InsertSource(values=stmt.rows),
+        on_conflict=stmt.on_conflict,
+        returning=resolved_returning,
+        upsert=upsert,
     )
 
 
@@ -554,26 +1652,35 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
         if a.column not in cols:
             raise UnknownColumn(table=stmt.table, column=a.column)
     resolved_assignments = tuple(
-        P.Assignment(column=a.column, value=_resolve(a.value, scope))
+        P.Assignment(column=a.column, value=_resolve(a.value, scope, schema))
         for a in stmt.assignments
     )
-    predicate = _resolve(stmt.where, scope) if stmt.where is not None else None
+    predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
+    if predicate is not None:
+        predicate = _propagate_column_collation(predicate, schema)
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in UPDATE WHERE clause")
+    expanded_returning = _expand_returning_wildcards(stmt.returning, stmt.table, cols)
+    resolved_returning = tuple(_resolve(r, scope, schema) for r in expanded_returning)
     return P.Update(
         table=stmt.table,
         assignments=resolved_assignments,
         predicate=predicate,
+        returning=resolved_returning,
     )
 
 
 def _plan_delete(stmt: DeleteStmt, schema: SchemaProvider) -> P.LogicalPlan:
     cols = schema.columns(stmt.table)
     scope: Scope = {stmt.table: cols}
-    predicate = _resolve(stmt.where, scope) if stmt.where is not None else None
+    predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
+    if predicate is not None:
+        predicate = _propagate_column_collation(predicate, schema)
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in DELETE WHERE clause")
-    return P.Delete(table=stmt.table, predicate=predicate)
+    expanded_returning = _expand_returning_wildcards(stmt.returning, stmt.table, cols)
+    resolved_returning = tuple(_resolve(r, scope, schema) for r in expanded_returning)
+    return P.Delete(table=stmt.table, predicate=predicate, returning=resolved_returning)
 
 
 def _plan_create_table(stmt: CreateTableStmt) -> P.LogicalPlan:
@@ -582,11 +1689,22 @@ def _plan_create_table(stmt: CreateTableStmt) -> P.LogicalPlan:
         table=stmt.table,
         columns=stmt.columns,
         if_not_exists=stmt.if_not_exists,
+        strict=stmt.strict,
     )
 
 
 def _plan_drop_table(stmt: DropTableStmt) -> P.LogicalPlan:
     return P.DropTable(table=stmt.table, if_exists=stmt.if_exists)
+
+
+def _plan_alter_table(stmt: AlterTableStmt) -> P.LogicalPlan:
+    return P.AlterTable(
+        table=stmt.table,
+        column=stmt.column,
+        rename_to=stmt.rename_to,
+        rename_column=stmt.rename_column,
+        drop_column=stmt.drop_column,
+    )
 
 
 def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:
@@ -603,6 +1721,22 @@ def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:
 def _plan_drop_index(stmt: DropIndexStmt) -> P.LogicalPlan:
     """DROP INDEX — no schema lookup needed (backend validates at execution)."""
     return P.DropIndex(name=stmt.name, if_exists=stmt.if_exists)
+
+
+def _plan_create_trigger(stmt: CreateTriggerStmt) -> P.LogicalPlan:
+    """CREATE TRIGGER — body SQL is passed through; body planning is deferred."""
+    return P.CreateTrigger(
+        name=stmt.name,
+        timing=stmt.timing,
+        event=stmt.event,
+        table=stmt.table,
+        body_sql=stmt.body_sql,
+    )
+
+
+def _plan_drop_trigger(stmt: DropTriggerStmt) -> P.LogicalPlan:
+    """DROP TRIGGER — no schema lookup needed."""
+    return P.DropTrigger(name=stmt.name, if_exists=stmt.if_exists)
 
 
 # --------------------------------------------------------------------------
@@ -663,10 +1797,18 @@ def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.Log
             if c not in table_cols:
                 raise UnknownColumn(table=stmt.table, column=c)
     sub_plan = _plan_select(stmt.select, schema)
+    returning_scope: Scope = {stmt.table: table_cols}
+    resolved_returning = tuple(
+        _resolve(r, returning_scope, schema) for r in stmt.returning
+    )
+    upsert = _resolve_upsert(stmt.upsert_clause, table_cols, schema)
     return P.Insert(
         table=stmt.table,
         columns=stmt.columns,
         source=P.InsertSource(query=sub_plan),
+        on_conflict=stmt.on_conflict,
+        returning=resolved_returning,
+        upsert=upsert,
     )
 
 
@@ -753,12 +1895,33 @@ def _try_index_scan(
     ``b`` is preferred over a single-column index on ``a`` alone when the
     predicate has constraints on both ``a`` and ``b``.
     """
+    # Honour SQLite query hints carried on the Scan.
+    #
+    # ``NOT INDEXED``: short-circuit — the user explicitly opted out of
+    # index substitution for this scan.  The planner will leave the
+    # ``Filter(Scan)`` shape in place and the VM will do a full scan.
+    if scan.not_indexed:
+        return None
+
     list_indexes_fn = getattr(schema, "list_indexes", None)
     if list_indexes_fn is None:
         return None
 
     alias = scan.alias or scan.table
     indexes = list_indexes_fn(scan.table)
+
+    # ``INDEXED BY <name>``: filter the candidate indexes to just the
+    # named one.  An empty filtered list means the index doesn't exist
+    # on this table — a plan-time error in SQLite, which we surface
+    # via ``IndexNotFound`` from the planner.errors module.
+    if scan.index_hint is not None:
+        wanted = scan.index_hint
+        indexes = [i for i in indexes if i.name == wanted]
+        if not indexes:
+            from .errors import IndexNotFound
+            raise IndexNotFound(
+                f"no such index on table {scan.table}: {wanted}"
+            )
 
     best_n: int = 0
     best_node: P.IndexScan | None = None
@@ -796,7 +1959,7 @@ def _extract_multi_column_bounds(
     predicate: Expr,
     alias: str,
     index_cols: list[str],
-) -> "_MultiColBounds | None":
+) -> _MultiColBounds | None:
     """Extract multi-column range bounds for a composite index prefix.
 
     Walks ``index_cols`` in order, trying to bind each leading column to a
@@ -940,13 +2103,11 @@ def _extract_index_bounds(
         """True when *expr* is a Column reference to ``alias.col``."""
         return isinstance(expr, Column) and expr.table == alias and expr.col == col
 
-    if isinstance(predicate, Between):
-        # col BETWEEN lo_lit AND hi_lit  →  closed range
-        if (
-            is_our_col(predicate.operand)
-            and isinstance(predicate.low, Literal)
-            and isinstance(predicate.high, Literal)
-        ):
+    if isinstance(predicate, Between) and (
+        is_our_col(predicate.operand)
+        and isinstance(predicate.low, Literal)
+        and isinstance(predicate.high, Literal)
+    ):
             return (predicate.low.value, True, predicate.high.value, True, None)
 
     if isinstance(predicate, BinaryExpr):

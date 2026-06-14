@@ -1,0 +1,8 @@
+[package]
+name = "constraint-instructions"
+version = "0.1.0"
+edition = "2021"
+description = "LANG24 PR 24-B — ConstraintInstr IR + Program + text serialiser/parser for the generic Constraint-VM (consumed by constraint-vm, smt-lib serialiser, z3-bridge, debug-sidecar)"
+
+[dependencies]
+constraint-core = { path = "../constraint-core" }

@@ -1,0 +1,10 @@
+[package]
+name = "zwave-command-classes"
+version = "0.1.0"
+edition = "2021"
+description = "Z-Wave command class value and D23 mapping primitives"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
+zwave-core = { path = "../zwave-core" }

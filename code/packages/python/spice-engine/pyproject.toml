@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-spice-engine"
-version = "0.1.0"
-description = "SPICE-compatible analog circuit simulator with MNA + Newton-Raphson DC + transient."
+version = "0.14.0"
+description = "SPICE-compatible analog circuit simulator with MNA, nonlinear DC convergence aids, transient/AC/TF/DC/SENS/MC/NOISE/PSS analyses, Fourier/distortion/pole-zero/S-parameter helpers, controlled sources, waveforms, subcircuits, temperature scaling, and text output tables."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

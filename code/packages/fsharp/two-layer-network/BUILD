@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.TwoLayerNetwork.Tests/CodingAdventures.TwoLayerNetwork.Tests.fsproj

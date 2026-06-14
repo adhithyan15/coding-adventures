@@ -1,0 +1,9 @@
+[package]
+name = "statistics-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust statistical core for VisiCalc, spreadsheet, R, and S frontends"
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }

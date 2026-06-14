@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass, field
+from itertools import islice
 from typing import Protocol
 
 from logic_bytecode import (
@@ -38,9 +39,10 @@ from logic_engine import (
     Program,
     Relation,
     RelationCall,
+    State,
     Term,
-    solve_all,
-    solve_n,
+    reify,
+    solve_from,
 )
 from logic_engine import (
     fact as engine_fact,
@@ -88,6 +90,7 @@ class LogicBytecodeVMState:
     instruction_pointer: int = 0
     halted: bool = True
     relations: dict[RelationKey, Relation] = field(default_factory=dict)
+    dynamic_relations: dict[RelationKey, Relation] = field(default_factory=dict)
     clauses: list[Clause] = field(default_factory=list)
     queries: list[QueryInstruction] = field(default_factory=list)
 
@@ -253,6 +256,25 @@ def _handle_emit_relation(
     vm.state.relations[key] = relation_value
 
 
+def _handle_emit_dynamic_relation(
+    vm: LogicBytecodeVM,
+    instruction: LogicBytecodeInstruction,
+) -> None:
+    """Register one dynamic relation in the runtime registry."""
+
+    program_value = vm._require_loaded_program()
+    operand = _require_operand(instruction, vm.state.instruction_pointer)
+    relation_value = _pool_get(program_value.relation_pool, "relation pool", operand)
+
+    key = _relation_key(relation_value)
+    if key in vm.state.relations:
+        msg = f"relation {relation_value} was declared more than once"
+        raise LogicBytecodeVMValidationError(msg)
+
+    vm.state.relations[key] = relation_value
+    vm.state.dynamic_relations[key] = relation_value
+
+
 def _handle_emit_fact(
     vm: LogicBytecodeVM,
     instruction: LogicBytecodeInstruction,
@@ -402,7 +424,10 @@ class LogicBytecodeVM:
     def assembled_program(self) -> Program:
         """Return the currently loaded clauses as an immutable engine program."""
 
-        return engine_program(*self.state.clauses)
+        return engine_program(
+            *self.state.clauses,
+            dynamic_relations=tuple(self.state.dynamic_relations.values()),
+        )
 
     def _require_finished_loading(self) -> None:
         """Require that the loaded program has finished executing."""
@@ -419,6 +444,32 @@ class LogicBytecodeVM:
     ) -> list[Term | tuple[Term, ...]]:
         """Execute one stored query against the loaded runtime state."""
 
+        return self.run_query_from(State(), query_index=query_index, limit=limit)
+
+    def solve_query_from(
+        self,
+        state: State,
+        query_index: int = 0,
+    ) -> Iterator[State]:
+        """Yield proof states for one stored query from an existing state."""
+
+        self._require_finished_loading()
+        try:
+            selected = self.state.queries[query_index]
+        except IndexError as exc:
+            msg = f"query index {query_index} is out of range"
+            raise LogicBytecodeVMError(msg) from exc
+
+        yield from solve_from(self.assembled_program(), selected.goal, state)
+
+    def run_query_from(
+        self,
+        state: State,
+        query_index: int = 0,
+        limit: int | None = None,
+    ) -> list[Term | tuple[Term, ...]]:
+        """Execute one stored query from an existing logic state."""
+
         self._require_finished_loading()
         try:
             selected = self.state.queries[query_index]
@@ -433,9 +484,25 @@ class LogicBytecodeVM:
         query_value: QueryValue
         query_value = outputs[0] if len(outputs) == 1 else outputs
 
-        if limit is None:
-            return solve_all(self.assembled_program(), query_value, selected.goal)
-        return solve_n(self.assembled_program(), limit, query_value, selected.goal)
+        proof_states = self.solve_query_from(state, query_index=query_index)
+        if limit is not None:
+            if limit < 0:
+                msg = "run_query_from() requires a non-negative limit"
+                raise ValueError(msg)
+            proof_states = islice(proof_states, limit)
+
+        results: list[Term | tuple[Term, ...]] = []
+        for proof_state in proof_states:
+            if isinstance(query_value, tuple):
+                results.append(
+                    tuple(
+                        reify(item, proof_state.substitution)
+                        for item in query_value
+                    ),
+                )
+            else:
+                results.append(reify(query_value, proof_state.substitution))
+        return results
 
     def run_all_queries(
         self,
@@ -449,12 +516,26 @@ class LogicBytecodeVM:
             for index, _query in enumerate(self.state.queries)
         ]
 
+    def run_all_queries_from(
+        self,
+        state: State,
+        limit: int | None = None,
+    ) -> list[list[Term | tuple[Term, ...]]]:
+        """Execute every stored query from an existing logic state."""
+
+        self._require_finished_loading()
+        return [
+            self.run_query_from(state, query_index=index, limit=limit)
+            for index, _query in enumerate(self.state.queries)
+        ]
+
 
 def create_logic_bytecode_vm() -> LogicBytecodeVM:
     """Create a `LogicBytecodeVM` with handlers for the current bytecode set."""
 
     vm = LogicBytecodeVM()
     vm.register(LogicBytecodeOp.EMIT_RELATION, _handle_emit_relation)
+    vm.register(LogicBytecodeOp.EMIT_DYNAMIC_RELATION, _handle_emit_dynamic_relation)
     vm.register(LogicBytecodeOp.EMIT_FACT, _handle_emit_fact)
     vm.register(LogicBytecodeOp.EMIT_RULE, _handle_emit_rule)
     vm.register(LogicBytecodeOp.EMIT_QUERY, _handle_emit_query)

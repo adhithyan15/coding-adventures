@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/iir-coverage-json",
+  "capabilities": [],
+  "justification": "Pure data → text: emits LineCoverageReport as a JSON document.  No I/O, no FFI, no filesystem/network/process/env access — callers write the returned String to disk themselves.  Inherits no capabilities from iir-coverage (also empty)."
+}

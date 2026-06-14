@@ -10,10 +10,28 @@ than a backend-specific index.
 ## What it owns
 
 - `MemoryRecord`
+- `MemoryRecordSummary`
+- `MemoryCatalogSummary` for read-side class, lifecycle, and review coverage
+- `MemorySourceSummary` for source, tag, and supersession coverage
+- `MemoryTagSummary` for tag distribution and lifecycle coverage
+- `MemoryInventorySummary` for composed lifecycle, source, and tag coverage
+- `MemoryReviewQueueSummary` for compact review queue reason/lifecycle counts
 - `MemoryClass`
+- `MemoryLifecycleStatus` plus shared record/summary lifecycle helpers
 - confidence/review updates
 - supersede, expiry, and tombstone transitions
-- lexical search across subject/body/tags
+- lexical search across subject/body/tags, including active-at filtering and
+  bounded result sets for tool calls
+- bounded read selectors for class, tag, source, active-at, confidence,
+  tombstone inclusion, sorting, and limits
+- metadata-only memory summaries for read tools that should not return memory
+  body text
+- compact catalog summaries over selected memory records
+- compact inventory summaries that compose lifecycle, provenance, and tag
+  coverage for host and scheduled-job status surfaces
+- deterministic review candidates for low-confidence, stale, expiring, and
+  expired memories
+- compact review queue summaries for scheduled jobs and host status surfaces
 
 ## Key layout
 
@@ -25,9 +43,19 @@ than a backend-specific index.
 - `fetch_memory()`
 - `update_confidence()`
 - `supersede_old_memory()`
+- `list_memories_with_options()`
+- `list_memory_summaries()`
+- `catalog_summary()`
+- `source_summary()`
+- `tag_summary()`
+- `inventory_summary()`
 - `list_by_class()`
 - `list_by_tag()`
 - `search_lexical()`
+- `search_lexical_with_options()`
+- `search_active_lexical_at()`
+- `review_candidates()`
+- `review_queue_summary()`
 - `mark_expired()`
 - `forget_tombstone()`
 

@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-pdp11-simulator"
+version = "0.1.0"
+description = "DEC PDP-11 (1970) behavioral simulator — Layer 07o"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "coding-adventures-simulator-protocol",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pdp11_simulator"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=pdp11_simulator --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "SIM"]
+# E501: long lines appear in literate-programming comments that explain opcode
+#   bit layouts (e.g. "0001 000 000 000 001 = 0x1001").  Truncating them would
+#   destroy the educational value — accept the overrun.
+# E701/E702: intentional single-line statements used in literate-programming
+#   style (constant tables, `if cond: return val` forms).
+ignore = ["E501", "E701", "E702"]

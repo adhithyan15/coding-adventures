@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-aot-manifest-emitter",
+  "version": "0.1.0",
+  "description": "Emit web app manifest.json from a structured WebAppManifest config per https://www.w3.org/TR/appmanifest/.  Pure transform: validates URL fields (start_url, scope, icons[].src), validates display allowlist, validates colour hex format; returns JSON.stringify-ed string with deterministic key ordering.  FM00 v0 emitter.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "summary": "THE thesis test: with the web STRIPPED (closed-book), does the framework still lift Opus on its own HLE failure set? Every prompt is prefixed CLOSED-BOOK (no tools/web, answer from internal knowledge + reasoning only). Two arms over the 5 ADJ88 Opus-failure items (N samples each): plain-Opus-closedbook vs framework-Opus-closedbook (convergence-controlled + grounded adversarial-read support gate). Prediction: derivation items (Al(OH)3, Spin bordism) lift from latent knowledge with no retrieval; pure-recall items (BAR) collapse to 0 in BOTH arms (no web). This isolates reasoning-discipline lift from retrieval lift. Also flags any answer that leaked a URL (closed-book verification). All-Opus; no hints; answer never shown to the solver.",
+  "agentCount": 81,
+  "logs": [],
+  "result": {
+    "samples": 2,
+    "closed_book_url_leaks": 0,
+    "scorecard": [
+      {
+        "id": "66e93b7099",
+        "gold": "hereth",
+        "plain_correct": 0,
+        "framework_correct": 0,
+        "n": 2
+      },
+      {
+        "id": "66e884515a",
+        "gold": "Shuriken",
+        "plain_correct": 0,
+        "framework_correct": 0,
+        "n": 2
+      },
+      {
+        "id": "66eaa5ddc7",
+        "gold": "10",
+        "plain_correct": 0,
+        "framework_correct": 0,
+        "n": 2
+      },
+      {
+        "id": "669402b41d",
+        "gold": "Z+Z+Z+Z+Z",
+        "plain_correct": 1,
+        "framework_correct": 0,
+        "n": 2
+      },
+      {
+        "id": "66ea814c55",
+        "gold": "1.776 * 10^-3 ",
+        "plain_correct": 0,
+        "framework_correct": 0,
+        "n": 2
+      }
+    ],
+    "detail": [
+      {
+        "id": "66e93b7099",
+        "s": 1,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "**Middle English 3sg present: *whereth* (≈ /ˈʍɛːrɛθ/), \"he shows.\"**\n\nDerivation chain:\n\n- **PIE causative:** *kʷeys- → o-grade causative *kʷoys-éye-ti \"makes (one) see / shows\"\n- **Proto-Germanic:** *kʷ → *hw (Grimm), *oy → *ai, causative *-éye- → weak class-I *-ija-, and post-tonic *s → *z (Verner) ⟹ **\\*hwaizijaną**, 3sg *hwaiziþi\n- **Proto-West-Germanic:** intervocalic *z → *r (rhotacism) ⟹ **\\*hwairijan**, 3sg *hwairiþ\n- **Old English:** West-Gmc *ai → ā, then i-umlaut from the weak-I suffix → ǣ ⟹ **\\*hwǣran**, 3sg *hwǣreþ\n- **Middle English:** OE ǣ → ē /ɛː/, hw- → wh-, ending -eþ → -eth ⟹ **\\*whēreth / whereth**\n\nIt conjugates exactly like the real weak class-I verb *lǣran → ME *leren, lereth* (\"teach\"), confirming the pattern.",
+          "grade": "partial"
+        },
+        "framework": {
+          "answer": "whereth (regular outcome); variants: wheseth, and open-ē spellings whereth/wheseth ~ whareth/wheareth. Best single answer: **whereth**.",
+          "grade": "partial"
+        }
+      },
+      {
+        "id": "66e93b7099",
+        "s": 2,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "**wheseth** (≈ \"he sheweth / he shows\")\n\nDerivation chain:\n- PIE o-grade causative: *kʷoys-éye-ti \"makes (one) see\" = \"shows\"\n- Grimm's Law + vowel shifts (*kʷ → hw, *o → a, *oy → ai, causative *-éye- → weak class-1 *-jan-): Proto-Germanic ***hwaisijaną** (3sg *hwaisīþi)\n- Old English (*ai → ā, then i-umlaut from the *-ij- suffix → ǣ; hw- retained): weak verb ***hwǣsan**, 3sg *hwǣseþ\n- Middle English (OE hw- → wh-, OE ǣ → long ē, ending -eþ → -eth): **wheseth**\n\nSo the third person singular present would be **wheseth** \"he shows.\" (If one routes the medial *s through Verner's Law and rhotacism instead of keeping it voiceless, the parallel outcome is **whereth**.)",
+          "grade": "incorrect"
+        },
+        "framework": {
+          "answer": "**whereth** (approximately \"whereth\", meaning \"he shows\").",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66e884515a",
+        "s": 1,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "The **Cortex \"Vanguard\"** — wait, let me give the correct unit: the **Cortex T1 EMP gunship \"Hornet\"** is not it either.\n\nThe correct answer is the **Cortex \"Shockwave\"** EMP gunship — known in BAR as the **Cortex \"Crawler\"**... \n\nFinal answer: **The Cortex Aircraft Plant (T1) \"Shocker\" / in-game named \"Cortex Crw\"** — specifically, the flying unit that can shoot and stun (EMP/paralyzer damage) from a Tier 1 aircraft plant in BAR is the **Cortex EMP Gunship, \"Hornet\" (coraca-class)**.\n\nMost reliably: **The Cortex \"Shockwave\" T1 paralyzer gunship.** Among BAR's two factions, Cortex's T1 Aircraft Plant produces a gunship armed with an EMP (paralyzer/stun) weapon, while Armada's T1 air does not have a stun gunship. So the answer is the **Cortex T1 EMP gunship**.",
+          "grade": "incorrect"
+        },
+        "framework": {
+          "answer": "In Beyond All Reason, the T1 aircraft plant for each faction builds a scout (unarmed), a fighter (armed, air-to-air), a gunship (armed, ground attack), and a transport (unarmed). The flyer that can both shoot and stun enemy targets is the EMP/paralyzer gunship.\n\nThat unit is the **Armada \"Vector\"** (the Armada T1 EMP gunship, legacy name \"Banshee\"/armkam lineage) — its weapon delivers paralyzer (EMP/stun) damage to ground targets rather than normal damage.\n\nNote: I'm answering closed-book and cannot verify the exact current in-game name with full confidence. The intended answer is the **T1 aircraft-plant EMP gunship** — the armed flyer whose weapon is a paralyzer that stuns enemies.",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66e884515a",
+        "s": 2,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "The Armada \"Blink\" (codename: armkam) — no. The correct answer is the **Cortex \"Vector\" / Armada T1 EMP gunship**.\n\nIn Beyond All Reason, the flying unit built from a Tier 1 building that can shoot AND stun (paralyze/EMP) enemy targets is the **Armada \"Crow\"-class EMP gunship — specifically the Armada Paralyzer gunship \"Banshee.\"**\n\nMost accurate single answer: the **Banshee** (Armada T1 Aircraft Plant gunship), which fires EMP/paralyzer weapons that stun enemy units rather than dealing pure damage.",
+          "grade": "incorrect"
+        },
+        "framework": {
+          "answer": "Armada Crawler? No — the answer is the **Armada \"Banger\"** is a missile bot, not air. The correct unit is the **Cortex \"Hawk\"**? No.\n\nFINAL ANSWER: **Cortex \"Vector\"** is the stun gunship.\n\nMost defensible answer: In Beyond All Reason, the tier-1 aircraft factory (Air Lab / T1 Air) for the **Armada** faction builds a light gunship that fires a weapon dealing an EMP/stun (paralyzer) effect. That unit is the **Armada \"Blade\"**.\n\nGiven closed-book uncertainty across faction naming, the single best-supported answer is the **Armada Blade** (T1 Armada gunship that shoots and stuns/paralyzes enemy targets).",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66eaa5ddc7",
+        "s": 1,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "0",
+          "grade": "incorrect"
+        },
+        "framework": {
+          "answer": "100",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66eaa5ddc7",
+        "s": 2,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "40",
+          "grade": "incorrect"
+        },
+        "framework": {
+          "answer": "80",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "669402b41d",
+        "s": 1,
+        "fw_stop": "iter-cap",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "**Reduced 12th Spin bordism of BG₂:**\n\n$$\\widetilde{\\Omega}^{Spin}_{12}(BG_2)\\ \\cong\\ \\mathbb{Z}^{5}\\ \\ (\\oplus\\ \\text{possible 2-torsion}).$$\n\nThe **free rank is 5**. The free part is detected by five independent characteristic numbers obtained by pairing monomials in the integral generators $\\lambda_4\\in H^4(BG_2;\\mathbb Z)$ and $\\lambda_{12}\\in H^{12}(BG_2;\\mathbb Z)$ with the Spin-bordism invariants living in $\\Omega^{Spin}_0=\\mathbb Z$, $\\Omega^{Spin}_4=\\mathbb Z$, $\\Omega^{Spin}_8=\\mathbb Z^2$:\n\n- from $H^{12}$ ($q=0$): $\\langle \\lambda_4^3,[M]\\rangle$ and $\\langle \\lambda_{12},[M]\\rangle$  →  2 classes;\n- from $H^{8}$ ($q=4$): $\\langle \\lambda_4^2 \\cdot (\\text{deg-4 }\\widehat A\\text{-class}),[M]\\rangle$  →  1 class;\n- from $H^{4}$ ($q=8$): $\\langle \\lambda_4 \\cdot (\\text{two deg-8 Spin classes}),[M]\\rangle$  →  2 classes.\n\nTotal: $2+1+2 = 5$ free generators, so $\\widetilde{\\Omega}^{Spin}_{12}(BG_2)\\otimes\\mathbb Q\\cong\\mathbb Q^5$.",
+          "grade": "correct"
+        },
+        "framework": {
+          "answer": "**Final answer: The reduced 12-th Spin bordism group of BG₂ is**\n\n  $$\\widetilde{\\Omega}^{\\mathrm{Spin}}_{12}(BG_2) \\;\\cong\\; \\mathbb{Z}.$$\n\n(One infinite cyclic summand, no torsion. This is the standard known value, generated by the class detected by the degree-12 characteristic number built from the G₂ bundle — concretely the Pontryagin-type / Chern–Simons class associated with the generator of H⁴(BG₂;ℤ).)",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "669402b41d",
+        "s": 2,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "**Answer: $\\widetilde{\\Omega}^{Spin}_{12}(BG_2) \\cong \\mathbb{Z}$.**\n\nThe reduced 12th Spin bordism of $BG_2$ is infinite cyclic, $\\mathbb{Z}$.",
+          "grade": "incorrect"
+        },
+        "framework": {
+          "answer": "$\\widetilde{\\Omega}^{Spin}_{12}(BG_2) \\cong \\mathbb{Z}^2 \\oplus \\mathbb{Z}/2$\n\n(free rank 2, plus a single $\\mathbb{Z}/2$.)",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66ea814c55",
+        "s": 1,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "**Solubility of Al(OH)₃ in pure water ≈ 5.8 × 10⁻³ mol L⁻¹**\n\nTotal dissolved Al has two forms: Al³⁺ and the complex Al(OH)₄⁻. Taking [OH⁻] ≈ 1.0×10⁻⁷ M (pure water):\n\n- Al³⁺ pathway: [Al³⁺] = Ksp/[OH⁻]³ = 5.3×10⁻²⁷/(10⁻⁷)³ = 5.3×10⁻⁶ M\n- Complex pathway: Al(OH)₃(s) + OH⁻ ⇌ Al(OH)₄⁻ has K = Ksp·Kf = (5.3×10⁻²⁷)(1.1×10³¹) = 5.83×10⁴, so [Al(OH)₄⁻] = K·[OH⁻] = 5.83×10⁴ × 10⁻⁷ = 5.83×10⁻³ M\n\nS = [Al³⁺] + [Al(OH)₄⁻] = 5.3×10⁻⁶ + 5.83×10⁻³ ≈ **5.8 × 10⁻³ mol L⁻¹**\n\nThe complex Al(OH)₄⁻ dominates the solubility (~1000× larger than the free Al³⁺ contribution).",
+          "grade": "incorrect"
+        },
+        "framework": {
+          "answer": "S ≈ 5.8 × 10⁻³ mol L⁻¹ (approximately 0.0058 M)",
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66ea814c55",
+        "s": 2,
+        "fw_stop": "supported",
+        "url_leak": {
+          "plain": false,
+          "framework": false
+        },
+        "plain": {
+          "answer": "Solubility ≈ 1.1 × 10⁻⁵ mol L⁻¹\n\nWork:\nThe solid dissolves two ways, both governed by [OH⁻] ≈ 10⁻⁷ M (set by water autoionization in pure water):\n\n(1) Al(OH)₃(s) ⇌ Al³⁺ + 3OH⁻, Ksp = 5.3×10⁻²⁷\n[Al³⁺] = Ksp/[OH⁻]³ = 5.3×10⁻²⁷ / (10⁻⁷)³ = 5.3×10⁻²⁷ / 10⁻²¹ = 5.3×10⁻⁶ M\n\n(2) Al(OH)₃(s) + OH⁻ ⇌ Al(OH)₄⁻, K = Ksp·Kf = (5.3×10⁻²⁷)(1.1×10³¹) = 58.3\n[Al(OH)₄⁻] = K·[OH⁻] = 58.3 × 10⁻⁷ = 5.83×10⁻⁶ M\n\nTotal solubility S = [Al³⁺] + [Al(OH)₄⁻] = 5.3×10⁻⁶ + 5.83×10⁻⁶ = 1.11×10⁻⁵ ≈ 1.1×10⁻⁵ mol L⁻¹.",
+          "grade": "incorrect"
+        },
+        "framework": {
+          "answer": "S ≈ 0.058 mol L⁻¹ (approximately 5.8 × 10⁻² mol L⁻¹)",
+          "grade": "incorrect"
+        }
+      }
+    ]
+  }
+}

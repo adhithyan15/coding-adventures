@@ -1,0 +1,34 @@
+% Vignette 3 — cross-border acquisition triggering CFIUS review.
+%
+% $1.8B acquisition of a US semiconductor design company by a foreign
+% strategic acquirer based in a US-allied jurisdiction. CFIUS
+% mandatory filing applies (critical technology). Low HHI overlap
+% in addressable market — no HSR Second Request expected. All-cash
+% deal with committed financing. Broad MAC carveouts. RTF of 5%.
+% No activist position.
+%
+% Expected behaviour: posterior between Jane Doe friendly (vignette
+% 1) and healthcare merger (vignette 2). CFIUS suppresses but other
+% factors support. The user's question: "do I admit a deal to my
+% pipeline at these odds?" — kickback at 50% threshold likely fires
+% because CFIUS outcome is the load-bearing uncertainty.
+
+observe regulatory(cfius_jurisdiction)
+observe regulatory(no_antitrust_concern)
+observe deal_structure(all_cash)
+observe financing(committed_debt_no_market_out)
+observe mac_clause(broad_industry_carveouts)
+observe rtf_present_above_3pct
+
+% CFIUS outcome is the load-bearing uncertainty. Three plausible
+% paths: clear at notice (most favorable), 45-day investigation
+% with mitigation (moderate delay), or blocked/withdrawn (worst).
+% Encoded as an uncertainty over the three regulatory-status atoms
+% that fire on this conclusion.
+uncertain { regulatory(no_antitrust_concern),
+            regulatory(regulated_industry_target),
+            regulatory(hsr_second_request_likely) } for deal_completes_by_drop_dead
+  source "CFIUS mitigation negotiations ongoing; outcome will resolve which regulatory atom describes the path"
+  trust authoritative
+
+? deal_completes_by_drop_dead

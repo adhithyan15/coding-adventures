@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
 - Added lexer-profile validation for duplicate token/register/input/guard
   identifiers, matcher references, done-state rules, and portable action/token
   references.
+- Recognized the temporary-buffer conditional state-switch action in
+  lexer-profile validation.
 
 ## [0.1.0] - 2026-04-20
 

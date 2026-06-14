@@ -1,0 +1,7 @@
+[package]
+name = "two-layer-network"
+version = "0.1.0"
+edition = "2021"
+description = "Two-layer neural network primitives for hidden-layer examples"
+
+[dependencies]

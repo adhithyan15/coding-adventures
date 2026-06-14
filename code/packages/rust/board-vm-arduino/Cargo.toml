@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-arduino"
+version = "0.1.0"
+edition = "2021"
+description = "Shared Board VM backend descriptors for Arduino board families beyond Uno R4"
+
+[dependencies]
+board-vm-device = { path = "../board-vm-device" }
+board-vm-ir = { path = "../board-vm-ir" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+
+[dev-dependencies]
+board-vm-host = { path = "../board-vm-host" }
+
+[lib]
+path = "src/lib.rs"

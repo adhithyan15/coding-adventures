@@ -80,6 +80,7 @@
 local M = {}
 
 M.VERSION = "0.1.0"
+M.lang_vm = require("coding_adventures.brainfuck.lang_vm")
 
 -- ============================================================================
 -- Opcode Constants

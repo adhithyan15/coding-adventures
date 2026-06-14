@@ -833,3 +833,106 @@ class TestErrorPaths:
         tree.free_all(fl2)  # free_all injects freelist temporarily
         pager.close()
         del root
+
+
+# ── Section: UNIQUE index enforcement ────────────────────────────────────────
+
+
+class TestUniqueIndex:
+    """``is_unique=True`` rejects duplicate keys but allows multiple NULLs."""
+
+    def test_default_is_not_unique(self, tmp_path: Path) -> None:
+        pager = _make_pager(tmp_path)
+        tree = IndexTree.create(pager)
+        assert tree.is_unique is False
+        # Two entries with the same key but distinct rowids are allowed.
+        tree.insert([42], 1)
+        tree.insert([42], 2)
+        rowids = [rid for _, rid in tree.range_scan([42], [42])]
+        assert rowids == [1, 2]
+        pager.close()
+
+    def test_unique_allows_distinct_keys(self, tmp_path: Path) -> None:
+        pager = _make_pager(tmp_path)
+        tree = IndexTree.create(pager, is_unique=True)
+        assert tree.is_unique is True
+        tree.insert([1], 1)
+        tree.insert([2], 2)
+        tree.insert([3], 3)
+        rowids = [rid for _, rid in tree.range_scan(None, None)]
+        assert rowids == [1, 2, 3]
+        pager.close()
+
+    def test_unique_rejects_duplicate_key(self, tmp_path: Path) -> None:
+        pager = _make_pager(tmp_path)
+        tree = IndexTree.create(pager, is_unique=True)
+        tree.insert([42], 1)
+        with pytest.raises(DuplicateIndexKeyError, match="UNIQUE"):
+            tree.insert([42], 2)  # same key, different rowid
+        # The failed insert leaves the tree unchanged.
+        rowids = [rid for _, rid in tree.range_scan([42], [42])]
+        assert rowids == [1]
+        pager.close()
+
+    def test_unique_allows_multiple_nulls(self, tmp_path: Path) -> None:
+        """SQLite UNIQUE indexes treat NULLs as distinct from each other."""
+        pager = _make_pager(tmp_path)
+        tree = IndexTree.create(pager, is_unique=True)
+        tree.insert([None], 1)
+        tree.insert([None], 2)  # second NULL is allowed
+        tree.insert([None], 3)
+        rowids = [rid for _, rid in tree.range_scan([None], [None])]
+        assert rowids == [1, 2, 3]
+        pager.close()
+
+    def test_unique_partial_null_in_composite_allows_duplicates(
+        self, tmp_path: Path
+    ) -> None:
+        """Composite UNIQUE: any NULL column makes the row 'distinct'."""
+        pager = _make_pager(tmp_path)
+        tree = IndexTree.create(pager, is_unique=True)
+        tree.insert([1, None], 1)
+        # Same first column, both have NULL in second column — distinct per SQLite.
+        tree.insert([1, None], 2)
+        # But (1, "x") inserted twice must be rejected.
+        tree.insert([1, "x"], 3)
+        with pytest.raises(DuplicateIndexKeyError):
+            tree.insert([1, "x"], 4)
+        pager.close()
+
+    def test_unique_rejects_after_split(self, tmp_path: Path) -> None:
+        """Unique enforcement still works when the tree has multiple leaves."""
+        pager = _make_pager(tmp_path)
+        tree = IndexTree.create(pager, is_unique=True)
+        # Insert enough entries to force several splits (PAGE_SIZE / cell_size).
+        for i in range(200):
+            tree.insert([i], i + 1)
+        # Now try to re-insert an existing key with a different rowid.
+        with pytest.raises(DuplicateIndexKeyError):
+            tree.insert([100], 9999)
+        # And an existing key with a smaller rowid.
+        with pytest.raises(DuplicateIndexKeyError):
+            tree.insert([0], 0)
+        pager.close()
+
+    def test_unique_flag_round_trip_via_open(self, tmp_path: Path) -> None:
+        """Reopening with is_unique=True restores enforcement."""
+        db = str(tmp_path / "uniq.db")
+        pager = Pager.create(db)
+        pgno = pager.allocate()
+        page1 = bytearray(PAGE_SIZE)
+        page1[:100] = Header.new_database(page_size=PAGE_SIZE).to_bytes()
+        pager.write(1, bytes(page1))
+        del pgno
+        tree = IndexTree.create(pager, is_unique=True)
+        tree.insert([1], 1)
+        root = tree.root_page
+        pager.commit()
+        pager.close()
+
+        pager2 = Pager.open(db)
+        tree2 = IndexTree.open(pager2, root, is_unique=True)
+        assert tree2.is_unique is True
+        with pytest.raises(DuplicateIndexKeyError):
+            tree2.insert([1], 99)
+        pager2.close()

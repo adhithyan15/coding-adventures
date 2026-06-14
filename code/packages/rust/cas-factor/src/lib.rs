@@ -1,0 +1,66 @@
+//! # cas-factor
+//!
+//! Univariate integer polynomial factoring over ℤ (linear factors, Kronecker
+//! residual splitting, and bounded BZH fallback).
+//!
+//! ## Quick start
+//!
+//! ```rust
+//! use cas_factor::factor_integer_polynomial;
+//!
+//! // x^2 - 1 = (x - 1)(x + 1)
+//! let (content, factors) = factor_integer_polynomial(&[-1, 0, 1]);
+//! assert_eq!(content, 1);
+//! assert_eq!(factors.len(), 2);  // two linear factors
+//!
+//! // 2*(x+1)^2
+//! let (c, f) = factor_integer_polynomial(&[2, 4, 2]);
+//! assert_eq!(c, 2);
+//! assert_eq!(f, vec![(vec![1, 1], 2)]);
+//! ```
+//!
+//! ## Polynomial representation
+//!
+//! Polynomials are `Vec<i64>` coefficient lists with the constant term first:
+//! `[a_0, a_1, ..., a_n]` represents `a_0 + a_1·x + … + a_n·x^n`.
+//!
+//! ## What the current Rust port covers
+//!
+//! Phase 1 uses the Rational Root Theorem to find all **integer** roots.
+//! Phase 2 uses Kronecker's method to split primitive residuals such as
+//! `x^4 + 4` and `x^4 + x^2 + 1`. Phase 3 adds a bounded
+//! Berlekamp-Zassenhaus-Hensel fallback for monic higher-degree residuals.
+//!
+//! ## IR head names
+//!
+//! The `symbolic-ir` integration layer uses these names as Apply heads:
+//!
+//! | Constant | Value |
+//! |----------|-------|
+//! | [`FACTOR`] | `"Factor"` |
+//! | [`IRREDUCIBLE`] | `"Irreducible"` |
+
+pub mod bzh;
+pub mod factor;
+pub mod hensel;
+pub mod kronecker;
+pub mod polynomial;
+pub mod rational_roots;
+
+pub use bzh::bzh_factor;
+pub use factor::{factor_integer_polynomial, FactorList};
+pub use hensel::{
+    bi_mul, bi_degree_x, bi_degree_y, n_mul, try_bivariate_hensel, try_n_variate_hensel, BiPoly,
+    NPoly, Rat,
+};
+pub use kronecker::kronecker_factor;
+pub use polynomial::{
+    content, degree, divide_linear, divisors, evaluate, normalize, primitive_part, Poly,
+};
+pub use rational_roots::{extract_linear_factors, find_integer_roots};
+
+/// Head symbol for the Factor form: `Factor(expr)`.
+pub const FACTOR: &str = "Factor";
+
+/// Head symbol for residuals that could not be factored further in Phase 1.
+pub const IRREDUCIBLE: &str = "Irreducible";

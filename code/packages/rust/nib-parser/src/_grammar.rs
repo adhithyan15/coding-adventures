@@ -102,10 +102,11 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"assign_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"return_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"for_stmt"#.to_string() },
+                GrammarElement::RuleReference { name: r#"while_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"if_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"expr_stmt"#.to_string() },
             ] },
-            line_number: 109,
+            line_number: 112,
         },
         GrammarRule {
             name: r#"let_stmt"#.to_string(),
@@ -155,6 +156,15 @@ pub fn parser_grammar() -> ParserGrammar {
             line_number: 154,
         },
         GrammarRule {
+            name: r#"while_stmt"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::Literal { value: r#"while"#.to_string() },
+                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                GrammarElement::RuleReference { name: r#"block"#.to_string() },
+            ] },
+            line_number: 170,
+        },
+        GrammarRule {
             name: r#"if_stmt"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::Literal { value: r#"if"#.to_string() },
@@ -165,7 +175,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"block"#.to_string() },
                     ] }) },
             ] },
-            line_number: 160,
+            line_number: 173,
         },
         GrammarRule {
             name: r#"expr_stmt"#.to_string(),

@@ -1,0 +1,242 @@
+% ============================================================================
+% ADJ52 case-24 derived rulebook.
+% Clinical area: acquired micronutrient cytopenia with myeloneuropathy
+%   (the workup of progressive pancytopenia + peripheral neuropathy in a
+%   post-bariatric, daily-zinc-supplementing adult), NOT a single diagnosis.
+%
+% The central diagnostic puzzle the IR poses (q1-q5): a 54-year-old man with
+% progressive PANCYTOPENIA (anemia + neutropenia, platelets relatively
+% preserved early), MACROCYTOSIS, bilateral foot paresthesias (a myelo-
+% neuropathy), marrow showing dyserythropoiesis, ring sideroblasts, and
+% PROMINENT CYTOPLASMIC VACUOLIZATION of erythroid AND myeloid precursors,
+% with NO clonal cytogenetic abnormality -- in the setting of a sleeve
+% bariatric operation, past heavy alcohol use, prior low zinc, and
+% UNINTERRUPTED daily over-the-counter zinc supplementation. A presumptive
+% myelodysplastic-syndrome (MDS) label was applied and transplant pursued.
+%
+% That conjunction -- vacuolated marrow precursors + ring sideroblasts +
+% neutropenia-with-preserved-platelets + a copper-lowering exposure (zinc) and
+% a malabsorptive anatomy (bariatric) + B12-like myeloneuropathy -- is the
+% textbook picture of ZINC-INDUCED COPPER DEFICIENCY masquerading as MDS.
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (no leading digit,
+% no uppercase identifiers). E.g. marrow_vacuolization(prominent),
+% platelets(relatively_preserved), neutrophils(severely_reduced).
+%
+% Anti-overfit note: every clause is added because a cited source supports the
+% DIRECTION of the likelihood ratio for that finding in that disease, NOT to
+% make this case land on a chosen answer. Discriminators that argue AGAINST the
+% tempting wrong answer (MDS) carry LR<1 wherever a source supports them.
+% Correlated findings that are ONE mechanism (the copper-deficiency
+% marrow/blood gestalt) are grouped under a single mechanism directive so the
+% combined likelihood ratio fires ONCE and does not double-count.
+% ============================================================================
+
+% ===== PRIORS (base rates among unexplained-cytopenia / suspected-MDS workups) =====
+
+% rationale: among adults referred for progressive cytopenias with dysplastic
+% marrow, MDS is the common, "default" working diagnosis -- which is exactly why
+% it was the presumptive label here; high prior so the engine must EARN the move
+% away from it on the copper-deficiency-specific data.
+prior 0.34 for diagnosis(myelodysplastic_syndrome)
+  source "CAP 2023 What's New in MDS (ICC vs WHO5): cytopenias + marrow dysplasia define MDS" trust authoritative
+
+% rationale: zinc-induced copper deficiency is an under-recognized but well-
+% described reversible MDS mimic; in a patient with BOTH a malabsorptive
+% bariatric anatomy AND uninterrupted daily zinc, its pretest probability is high.
+prior 0.30 for diagnosis(copper_deficiency_myeloneuropathy)
+  source "Karger Case Rep Oncol 2023;16:55 (Copper Deficiency Mimicking MDS, zinc supplementation)" trust authoritative
+
+% rationale: vitamin B12 deficiency causes macrocytic anemia + cytopenias + a
+% subacute-combined-degeneration myeloneuropathy and was the prior misattribution
+% (he had received B12 repletion); kept on the differential.
+prior 0.12 for diagnosis(vitamin_b12_deficiency)
+  source "ASH Blood 2017;129:2603 (B12 deficiency from the perspective of a hematologist)" trust authoritative
+
+% rationale: chronic heavy alcohol use suppresses marrow and causes macrocytosis
+% with cytopenias; a plausible contributor given his past heavy alcohol use.
+prior 0.08 for diagnosis(alcohol_related_marrow_suppression)
+  source "StatPearls NBK459295 Macrocytic Anemia (alcohol: direct marrow toxicity, macrocytosis)" trust authoritative
+
+% ===== SHARED COPPER-DEFICIENCY MARROW/BLOOD SIGNATURE (ONE mechanism) =====
+% rationale: the constellation -- cytoplasmic vacuolization of erythroid AND
+% myeloid precursors, ring sideroblasts, dyserythropoiesis, neutropenia with a
+% relatively preserved platelet count, and macrocytic anemia -- is ONE correlated
+% syndrome (the hematologic phenotype of hypocupremia), NOT several independent
+% facts. Counting each separately would double-count correlated evidence and
+% saturate the posterior, so it fires ONCE as a single combined likelihood ratio.
+% mechanism hypocupremic_marrow_phenotype for diagnosis(copper_deficiency_myeloneuropathy) lr 9.0 : marrow_vacuolization(prominent), marrow_ring_sideroblasts(present), neutrophils(severely_reduced), platelets(relatively_preserved), anemia(macrocytic)
+
+% rationale: the SAME marrow picture is precisely what fools observers into an MDS
+% diagnosis, so several of these features are weakly consistent with MDS too -- but
+% as ONE correlated cluster, at a much SMALLER combined LR than for copper
+% deficiency, and offset by the negative discriminators below.
+% mechanism dysplastic_overlap_phenotype for diagnosis(myelodysplastic_syndrome) lr 2.0 : marrow_vacuolization(prominent), marrow_ring_sideroblasts(present), neutrophils(severely_reduced), anemia(macrocytic)
+
+% ===== COPPER DEFICIENCY MYELONEUROPATHY (zinc-induced) =====
+
+% rationale: KEY DISCRIMINATOR -- cytoplasmic vacuolization of erythroid AND myeloid
+% precursors is regarded as characteristic of copper deficiency and, unlike MDS, is
+% the feature that distinguishes the two on the aspirate. Kept as an independent
+% edge ON TOP of the shared mechanism because sources single it out as the most
+% specific morphologic clue.
+contributes 4.0 from marrow_vacuolization(prominent) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "Wiley Clin Case Rep 2015 (Dalal): cytoplasmic vacuoles in erythroid+myeloid precursors characteristic of Cu deficiency" trust authoritative
+
+% rationale: daily uninterrupted over-the-counter zinc is the classic, sufficient
+% cause -- excess zinc induces enterocyte metallothionein that traps dietary copper,
+% producing acquired hypocupremia. This is the single most specific exposure clue.
+contributes 6.0 from exposure(daily_zinc_supplementation) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "CMAJ 2025;197:E456 (Copper deficiency: excess zinc, metallothionein, treat by stopping zinc)" trust consensus
+
+% rationale: a prior gastric/bariatric (sleeve) operation is a recognized
+% malabsorptive cause of acquired copper deficiency, independent of the zinc.
+contributes 2.5 from history(bariatric_surgery) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "ScienceDirect 2025 (severe copper-deficiency polyneuropathy after laparoscopic sleeve gastrectomy)" trust authoritative
+
+% rationale: a B12-like myeloneuropathy -- bilateral foot paresthesias / sensory
+% disturbance -- is the cardinal neurologic manifestation of acquired copper
+% deficiency and clusters with the cytopenias as a shared etiology.
+contributes 3.0 from symptom(peripheral_neuropathy) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "MedLink Neurology, Copper deficiency myeloneuropathy (foot/hand paresthesias, dorsal-column sensory ataxia)" trust authoritative
+
+% rationale: ABSENCE of clonal cytogenetic abnormality is expected in copper
+% deficiency (a non-clonal, reversible mimic) and supports it over true MDS.
+contributes 1.8 from cytogenetics(normal_no_clonal_abnormality) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "PMC4427377 (Copper deficiency mimicking MDS: no cytogenetic abnormality, unlike MDS)" trust authoritative
+
+% rationale: a falling marrow cellularity to HYPOcellular with persistent
+% dyserythropoiesis but NO progression to blasts, and worsening counts off any
+% disease-directed therapy, fits a continuing nutritional insult rather than clonal
+% evolution.
+contributes 1.5 from marrow_course(hypocellular_no_blast_excess) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "PMC5290493 (copper-deficiency marrow changes: dysplasia without blast excess, reversible)" trust authoritative
+
+% rationale: KEY SYNERGY -- the characteristic vacuolization together with the
+% copper-lowering zinc exposure is near-specific for hypocupremia; the morphology
+% plus the mechanism reinforce each other beyond their separate weights.
+interacts 3.0 when marrow_vacuolization(prominent) and exposure(daily_zinc_supplementation) for diagnosis(copper_deficiency_myeloneuropathy)
+  source "Karger Case Rep Oncol 2023;16:55 (zinc-induced copper deficiency: vacuolated precursors + zinc source)" trust authoritative
+
+% ===== MYELODYSPLASTIC SYNDROME (the presumptive label -- must be argued DOWN) =====
+
+% rationale: ring sideroblasts are a recognized morphologic feature of MDS-RS, the
+% reason the marrow was read as dysplastic. Real positive edge, but non-specific --
+% copper deficiency produces them too.
+contributes 1.6 from marrow_ring_sideroblasts(present) to diagnosis(myelodysplastic_syndrome)
+  source "ASH Blood 2015;126:233 (SF3B1 / ring sideroblasts define an MDS-RS subset)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- a contemporary MDS-RS diagnosis leans
+% on a clonal marker (SF3B1) or a clonal cytogenetic abnormality. A marrow with NO
+% clonal cytogenetic abnormality argues against clonal MDS and toward a reactive
+% mimic.
+contributes 0.45 from cytogenetics(normal_no_clonal_abnormality) to diagnosis(myelodysplastic_syndrome)
+  source "CAP 2023 (ICC/WHO5: MDS-RS rests on SF3B1 / a defining clonal lesion)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- a clearly REVERSIBLE exposure (daily
+% zinc) that itself explains the whole marrow picture lowers the probability that
+% the cytopenias are clonal MDS; copper deficiency must be excluded before an MDS
+% label.
+contributes 0.30 from exposure(daily_zinc_supplementation) to diagnosis(myelodysplastic_syndrome)
+  source "Haematologica 2018 (copper deficiency: important consideration in differential of MDS)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- prominent cytoplasmic vacuolization of
+% precursors is NOT typical of MDS and specifically points away from it.
+contributes 0.40 from marrow_vacuolization(prominent) to diagnosis(myelodysplastic_syndrome)
+  source "PMC4427377 (vacuolization within precursors distinguishes copper deficiency FROM MDS)" trust authoritative
+
+% rationale: DISCRIMINATOR -- copper deficiency characteristically SPARES platelets
+% (neutropenia with preserved platelets); preserved platelets early is therefore a
+% soft argument against the more typically tri-lineage clonal MDS.
+contributes 0.7 from platelets(relatively_preserved) to diagnosis(myelodysplastic_syndrome)
+  source "Wiley AJH 2020;95 (hematologic effects of copper deficiency: anemia+neutropenia, platelets preserved)" trust authoritative
+
+% ===== VITAMIN B12 DEFICIENCY (the prior misattribution) =====
+
+% rationale: macrocytic anemia with cytopenias and a peripheral neuropathy is the
+% classic B12-deficiency presentation, which is why B12 was repleted earlier.
+contributes 1.5 from anemia(macrocytic) to diagnosis(vitamin_b12_deficiency)
+  source "AAFP 2003 Vitamin B12 Deficiency (macrocytic anemia, neuropathy)" trust authoritative
+contributes 1.4 from symptom(peripheral_neuropathy) to diagnosis(vitamin_b12_deficiency)
+  source "MSD Manual, Vitamin B12 Deficiency (subacute combined degeneration, paresthesias)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- a serum B12 MARKEDLY ELEVATED above
+% the assay ceiling, on supplementation, makes an ACTIVE B12-deficient state the
+% cause of these ongoing cytopenias improbable. (An elevated level does not perfectly
+% exclude functional deficiency, so the LR is small but not zero.)
+contributes 0.20 from serum_b12(markedly_elevated) to diagnosis(vitamin_b12_deficiency)
+  source "ASH Blood 2017;129:2603 (elevated B12 does not confirm sufficiency, but high level argues against active deficiency)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- prior B12 repletion already given,
+% with continued deterioration, argues against unresolved B12 deficiency as the
+% driver of the worsening counts.
+contributes 0.5 from prior_treatment(b12_repletion_given) to diagnosis(vitamin_b12_deficiency)
+  source "AAFP 2003 (treating B12 deficiency corrects anemia; persistence despite repletion argues against)" trust authoritative
+
+% ===== ALCOHOL-RELATED MARROW SUPPRESSION =====
+
+% rationale: chronic alcohol causes macrocytosis and marrow suppression, so
+% macrocytic anemia fits a remote alcohol contribution.
+contributes 1.4 from anemia(macrocytic) to diagnosis(alcohol_related_marrow_suppression)
+  source "StatPearls NBK459295 Macrocytic Anemia (alcohol-related macrocytosis, marrow toxicity)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) -- alcohol-related marrow changes
+% improve with abstinence; heavy use is described as PAST, and ring sideroblasts +
+% precursor vacuolization point at a trace-metal etiology rather than active
+% ethanol toxicity.
+contributes 0.5 from marrow_vacuolization(prominent) to diagnosis(alcohol_related_marrow_suppression)
+  source "Wiley Clin Case Rep 2015 (vacuolated precursors are the copper-deficiency, not alcohol, signature)" trust inferred
+
+% ===== NEXT STEP (the conspicuously missing trace-metal labs) =====
+
+% rationale: the decisive next step is a serum COPPER + CERULOPLASMIN + ZINC panel:
+% low copper and ceruloplasmin with high zinc confirm zinc-induced copper deficiency
+% and separate it from MDS. These trace-metal labs are conspicuously absent from the
+% workup.
+prior 0.30 for next_step(serum_copper_ceruloplasmin_zinc_panel)
+  source "CMAJ 2025;197:E456 (low serum copper + low ceruloplasmin establish deficiency; check zinc for cause)" trust consensus
+contributes 5.0 from exposure(daily_zinc_supplementation) to next_step(serum_copper_ceruloplasmin_zinc_panel)
+  source "CMAJ 2025;197:E456 (serum zinc may be high if zinc excess is the cause -> order the panel)" trust consensus
+contributes 4.0 from marrow_vacuolization(prominent) to next_step(serum_copper_ceruloplasmin_zinc_panel)
+  source "Haematologica 2018 (vacuolated precursors should prompt copper studies before an MDS label)" trust authoritative
+contributes 2.5 from history(bariatric_surgery) to next_step(serum_copper_ceruloplasmin_zinc_panel)
+  source "ScienceDirect 2025 (post-sleeve copper deficiency -> measure copper/ceruloplasmin)" trust authoritative
+
+% rationale: the alternative confirmatory arm if a clonal process is still feared --
+% molecular / SF3B1 + repeat cytogenetics to settle MDS vs mimic. Lower prior because
+% the reversible-exposure data point at the metal panel first.
+prior 0.12 for next_step(marrow_molecular_sf3b1_cytogenetics)
+  source "CAP 2023 (SF3B1 sequencing + cytogenetics establish/exclude clonal MDS-RS)" trust authoritative
+contributes 2.0 from marrow_ring_sideroblasts(present) to next_step(marrow_molecular_sf3b1_cytogenetics)
+  source "ASH Blood 2015;126:233 (ring sideroblasts -> test SF3B1 to define MDS-RS)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved -- the missing labs) =====
+
+% u-copper: serum copper / ceruloplasmin has not been measured. A LOW result is
+% near-dispositive for copper deficiency; a NORMAL result argues strongly against and
+% back toward MDS. This is the highest-value-of-information item.
+contributes 12.0 from serum_copper(low) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "CMAJ 2025;197:E456 (low serum copper + ceruloplasmin establish copper deficiency)" trust consensus
+contributes 0.12 from serum_copper(normal) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "PMC4427377 (normal copper/ceruloplasmin argues against copper-deficiency mimic)" trust authoritative
+uncertain { serum_copper(low), serum_copper(normal) } for diagnosis(copper_deficiency_myeloneuropathy)
+  source "CMAJ 2025;197:E456 (serum copper/ceruloplasmin not yet measured; decisive discriminator)"
+
+% u-copper vs MDS: the same copper result swings MDS the other way -- a LOW copper
+% pulls the explanation away from clonal MDS; a NORMAL copper leaves MDS standing.
+contributes 0.15 from serum_copper(low) to diagnosis(myelodysplastic_syndrome)
+  source "Haematologica 2018 (a documented copper deficiency reclassifies the cytopenias as a reversible mimic)" trust authoritative
+contributes 1.5 from serum_copper(normal) to diagnosis(myelodysplastic_syndrome)
+  source "CAP 2023 (with reversible causes excluded, dysplastic cytopenias support MDS)" trust authoritative
+uncertain { serum_copper(low), serum_copper(normal) } for diagnosis(myelodysplastic_syndrome)
+  source "CMAJ 2025;197:E456 (copper studies pending; result reclassifies MDS vs mimic)"
+
+% u-trial: a copper-repletion / zinc-cessation trial has not been done; a
+% hematologic response within weeks confirms copper deficiency, non-response argues
+% against it.
+contributes 8.0 from copper_repletion_response(hematologic_recovery) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "CMAJ 2025;197:E456 (hematologic abnormalities normalize within ~1 month of copper repletion)" trust consensus
+contributes 0.2 from copper_repletion_response(no_recovery) to diagnosis(copper_deficiency_myeloneuropathy)
+  source "Wiley AJH 2020;95 (failure to recover with copper repletion argues against copper deficiency)" trust authoritative
+uncertain { copper_repletion_response(hematologic_recovery), copper_repletion_response(no_recovery) } for diagnosis(copper_deficiency_myeloneuropathy)
+  source "CMAJ 2025;197:E456 (empiric copper repletion + zinc cessation not yet trialed)"

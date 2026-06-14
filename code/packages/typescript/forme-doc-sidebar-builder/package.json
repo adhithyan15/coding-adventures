@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/forme-doc-sidebar-builder",
+  "version": "0.1.0",
+  "description": "Take a directory layout (file paths) + each file's frontmatter (sidebar position, title overrides, draft flag) and produce a hierarchical, JSON-able sidebar navigation tree the page-shell can render to HTML.  Groups by directory, orders by `sidebar_position` (alphabetical fallback), honours `title` overrides, skips drafts, and surfaces `index.md` pages as the group's own destination.  Pure transform, capability [].  DOC00 v0 site-structure package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

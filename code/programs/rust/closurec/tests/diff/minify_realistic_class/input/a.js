@@ -1,0 +1,11 @@
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+  distance(other) {
+    var dx = this.x - other.x;
+    var dy = this.y - other.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+}

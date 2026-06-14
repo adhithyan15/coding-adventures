@@ -1,0 +1,14 @@
+name: coding_adventures_neural_graph_vm
+version: 0.1.0
+description: Scalar bytecode compiler for neural graphs.
+repository: https://github.com/adhithyan15/coding-adventures
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_neural_network:
+    path: ../neural-network
+
+dev_dependencies:
+  test: ^1.25.0

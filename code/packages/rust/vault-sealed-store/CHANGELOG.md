@@ -5,6 +5,15 @@ All notable changes to this package are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- `SealedEnvelopeSummary` and `SealedStore::summarize` for redacted
+  per-record envelope metadata: revision, timestamps, algorithm/version,
+  KEK id, and byte counts without ciphertext, wrapped DEK, nonce, tag, or
+  AAD bytes.
+
 ## [0.1.0] — 2026-04-22
 
 ### Added
@@ -19,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Wrapped-DEK AEAD AAD also binds to the KEK id, so swaps across
     KEKs are detected.
 - `put` / `get` / `delete` / `list` data-plane operations.
+- Sealed-safe status summaries for initialization state, active/retired
+  KEK counts, and registered namespace count.
 - `rotate_kek` support: re-wraps DEKs under a new master KEK without
   re-encrypting bodies; restartable, crash-safe, and back-compat with
   the retired KEK's password (the retired entry keeps its own salt

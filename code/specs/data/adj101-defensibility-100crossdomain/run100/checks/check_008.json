@@ -1,0 +1,8 @@
+{
+ "check_id": 8,
+ "idx": 5,
+ "slot": "patient_pregnant",
+ "claimed_value": true,
+ "scenario": "Ms. Brevik, who is 16 weeks pregnant, presents to the clinic for a vaccination during flu season. The intake nurse confirms she has no egg allergy and no prior adverse vaccine reaction, and the order simply reads 'administer influenza vaccine today.'",
+ "cited_span": "who is 16 weeks pregnant"
+}

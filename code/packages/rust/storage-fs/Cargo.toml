@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_storage_fs"
+version = "0.1.0"
+edition = "2021"
+description = "STR-FILE — filesystem implementation of storage_core::StorageBackend. Persists records to a directory tree with atomic write + rename + fsync for crash safety. Backend only ever sees ciphertext (the Vault stack encrypts above it)."
+
+[dependencies]
+storage-core = { path = "../storage-core" }
+coding-adventures-json-value = { path = "../json-value" }
+coding-adventures-json-serializer = { path = "../json-serializer" }

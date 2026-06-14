@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-algol-type-checker"
 version = "0.1.0"
-description = "Type checker for the first ALGOL 60 compiler subset"
+description = "Type checker for the Python ALGOL 60 compiler lane"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

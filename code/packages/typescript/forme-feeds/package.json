@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-feeds",
+  "version": "0.1.0",
+  "description": "RSS 2.0 + Atom 1.0 feed XML generators for the Forme pipeline (FM00 v0 feeds stage).  Pure transform: ChannelMeta/FeedMeta + items → reproducible XML string.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/forme-doc-search-tokenizer",
+  "version": "0.1.0",
+  "description": "Text → tokens pipeline for the documentation-site search index.  Lowercase (locale-independent), strip non-alphanumeric Unicode, split on whitespace, optional stop-word filter (~30-word English list), optional Porter stemmer.  Used by `forme-doc-search-index-builder` at build time and shipped to the browser by `forme-doc-search-client-js` for query tokenisation.  Pure transform, capability [], zero runtime dependencies.  DOC00 v0 search-engine package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

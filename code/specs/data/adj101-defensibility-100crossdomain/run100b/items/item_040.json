@@ -1,0 +1,7 @@
+{
+ "idx": 40,
+ "id": "FOO-1",
+ "scenario": "A diner's steam table holds cooked rice. A health inspector measures the rice at 122 degrees F. The manager's logs and the unit's continuous time-stamp recorder confirm the rice has been below 135 degrees F for 5 hours and 10 minutes.",
+ "policy": "Time/Temperature Control for Safety (TCS) food held in a hot-holding unit must be maintained at 135 degrees F or above. Any TCS food found below 135 degrees F that has been out of temperature for more than 4 cumulative hours must be discarded.",
+ "question": "Must the rice be discarded?"
+}

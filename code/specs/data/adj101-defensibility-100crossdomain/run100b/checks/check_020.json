@@ -1,0 +1,8 @@
+{
+ "check_id": 20,
+ "idx": 9,
+ "slot": "days_since_statement",
+ "claimed_value": 84,
+ "scenario": "Devon received a statement dated January 5 for a $400 balance. He filed a formal appeal of the charge through the plan's appeals process on January 20, and the appeal is still pending. It is now March 30, more than 60 days after the statement date, and the balance remains unpaid.",
+ "cited_span": "a statement dated January 5 ... It is now March 30, more than 60 days after the statement date"
+}

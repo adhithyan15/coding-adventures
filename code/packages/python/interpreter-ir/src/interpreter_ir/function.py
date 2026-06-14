@@ -37,6 +37,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum, auto
 
+from interpreter_ir.exception_table import ExceptionTableEntry
 from interpreter_ir.instr import IIRInstr
 
 
@@ -130,6 +131,65 @@ class IIRFunction:
 
     The third field's meaning is frontend-defined; vm-core does not look
     at it.
+    """
+
+    # -----------------------------------------------------------------------
+    # VMCOND00 Phase 2 — static exception table (Layer 2: Unwind Exceptions)
+    # -----------------------------------------------------------------------
+    #
+    # The exception table is a flat list of ``ExceptionTableEntry`` objects.
+    # The THROW handler (in vm-core) walks this list linearly, checking each
+    # entry's guarded range ``[from_ip, to_ip)`` against the IP where the
+    # THROW occurred, then checking the condition type.  The first matching
+    # entry wins (innermost-first ordering is the frontend's responsibility).
+    #
+    # Design choices:
+    #
+    # - Per-function (not per-module): matches JVM and CPython.  The VM only
+    #   reads the table for the frame it is searching.
+    # - compare=False: two IIRFunction objects with the same instructions but
+    #   different exception tables are considered equal by value.  Exception
+    #   tables are attached at compile time; they do not affect the logical
+    #   program identity the equality check is used for (test deduplication,
+    #   JIT cache keying).
+    # - repr=False: keeps __repr__ concise; the table is rarely useful in
+    #   debugging print output.
+    # - Not serialised: the serialiser (serialise.py) does not write exception
+    #   tables.  They are repopulated each time a frontend compiles source.
+    #   This is the same policy as ``feedback_slots`` and ``source_map``.
+    # -----------------------------------------------------------------------
+
+    exception_table: list[ExceptionTableEntry] = field(
+        default_factory=list, repr=False, compare=False
+    )
+    """Static exception table for VMCOND00 Layer 2 (Unwind Exceptions).
+
+    A flat list of :class:`~interpreter_ir.exception_table.ExceptionTableEntry`
+    objects describing guarded code ranges and their catch handlers.  The THROW
+    handler in ``vm-core`` walks this list to find a matching entry when a
+    ``throw`` instruction executes.
+
+    Frontends populate this at compile time.  Each entry covers a half-open
+    instruction-index range ``[from_ip, to_ip)`` within this function's
+    instruction list.  Entries should be listed innermost-first (the THROW
+    handler uses first-match wins).
+
+    Functions that never throw leave this field empty — the THROW handler
+    pops the frame immediately and propagates to the caller.
+
+    Example — a try/catch that catches everything::
+
+        from interpreter_ir.exception_table import ExceptionTableEntry, CATCH_ALL
+
+        fn.exception_table = [
+            ExceptionTableEntry(
+                from_ip=1,    # instruction after the try-start label
+                to_ip=4,      # instruction of the catch label (exclusive)
+                handler_ip=4, # index of the catch-block entry-point label
+                type_id=CATCH_ALL,
+                val_reg="ex",
+            )
+        ]
     """
 
     # -----------------------------------------------------------------------

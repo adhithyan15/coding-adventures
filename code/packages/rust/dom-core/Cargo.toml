@@ -1,0 +1,5 @@
+[package]
+name = "dom-core"
+version = "0.1.0"
+edition = "2021"
+description = "Small DOM tree model for Venture browser packages"

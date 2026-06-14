@@ -25,7 +25,7 @@ from storage_sqlite.errors import (
     JournalError,
     StorageError,
 )
-from storage_sqlite.freelist import TRUNK_CAPACITY, Freelist
+from storage_sqlite.freelist import TRUNK_CAPACITY, Freelist, trunk_capacity
 from storage_sqlite.header import Header
 from storage_sqlite.index_tree import (
     PAGE_TYPE_INTERIOR_INDEX,
@@ -59,6 +59,7 @@ __all__ = [
     "SqliteFileBackend",
     "StorageError",
     "TRUNK_CAPACITY",
+    "trunk_capacity",
     "Value",
     "btree",
     "initialize_new_database",

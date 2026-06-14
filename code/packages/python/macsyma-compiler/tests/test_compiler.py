@@ -8,12 +8,10 @@ rules documented in ``compiler.py``.
 from __future__ import annotations
 
 import pytest
-from macsyma_compiler import CompileError, compile_macsyma
 from macsyma_parser import parse_macsyma
 from symbolic_ir import (
     ADD,
     ASSIGN,
-    D,
     DEFINE,
     DIV,
     EQUAL,
@@ -25,12 +23,15 @@ from symbolic_ir import (
     POW,
     SIN,
     SUB,
+    D,
     IRApply,
     IRFloat,
     IRInteger,
     IRSymbol,
 )
 from symbolic_ir.nodes import AND, OR
+
+from macsyma_compiler import CompileError, compile_macsyma
 
 
 def compile_one(source: str):

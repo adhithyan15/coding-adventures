@@ -1,0 +1,246 @@
+% ============================================================================
+% ADJ52 case-30 derived rulebook.
+% Clinical area: chronic malabsorptive enteropathy with mesenteric
+%   lymphadenopathy and an antecedent seronegative arthropathy.
+% Differential built from the IR alone (no answer given), recursing into the
+%   subcategories of "what causes malabsorption + steatorrhea + mesenteric
+%   lymphadenopathy + small-bowel wall thickening/hypermetabolism in a
+%   middle-aged man whose migratory arthralgia and sicca preceded the GI
+%   illness by years": infectious enteropathy (Whipple), small-bowel /
+%   enteropathy-associated lymphoma, gluten-sensitive enteropathy / coeliac,
+%   chronic inflammatory (Crohn) enteropathy, and intestinal tuberculosis.
+% Every clause carries a % rationale + source + trust.
+%
+% Magnitudes are encoded QUALITATIVELY to satisfy the adj-lang IDENT grammar
+% (identifiers are lowercase /[a-z_][a-z0-9_]*/, no uppercase, no leading
+% digit). e.g. weight_loss(severe), arthralgia(migratory_preceding_gi).
+%
+% CORRELATED EVIDENCE: findings that are joint manifestations of ONE mechanism
+% (e.g. the single malabsorption syndrome behind low Ca/Mg/PO4/vit-D/albumin)
+% are grouped under a single "% mechanism ... lr ..." directive so the combined
+% likelihood ratio fires ONCE rather than being double-counted per electrolyte.
+% ============================================================================
+
+% ===== PRIORS =====
+% Base rates for "chronic malabsorptive enteropathy + mesenteric lymphadenopathy
+% in a middle-aged man with a years-long antecedent seronegative arthropathy".
+% Whipple is rare in absolute terms but is THE unifying diagnosis taught for
+% this exact gestalt (arthralgia years before malabsorption), so within this
+% pre-selected differential it carries the largest prior.
+
+% rationale: Whipple disease (Tropheryma whipplei) classically links a years-long migratory seronegative arthropathy to later malabsorption with mesenteric lymphadenopathy; it is the unifying diagnosis taught for this gestalt.
+prior 0.40 for diagnosis(whipple_disease)
+  source "StatPearls Whipple Disease NBK441937; BMC Gastroenterol 2021 'great masquerader' s12876-021-01664-1" trust authoritative
+
+% rationale: small-bowel / enteropathy-associated lymphoma is the principal malignant mimic — half of Whipple patients have mesenteric nodes raising lymphoma, and B-symptoms/weight loss overlap.
+prior 0.22 for diagnosis(small_bowel_lymphoma)
+  source "JGO marginal-zone small-intestinal lymphoma review (67801); J Nucl Med 2006 47(10):1622 EATL FDG-PET" trust authoritative
+
+% rationale: coeliac / gluten-sensitive enteropathy is the commonest cause of chronic malabsorption with steatorrhea and micronutrient deficiency in adults.
+prior 0.18 for diagnosis(coeliac_disease)
+  source "Frontiers Oncol 2023 fonc.2023.1273305 refractory coeliac review" trust authoritative
+
+% rationale: chronic inflammatory (Crohn) enteropathy causes small-bowel wall thickening, malabsorption, sacroiliitis and arthralgia and is a standing differential here.
+prior 0.12 for diagnosis(crohn_enteropathy)
+  source "Intest Res review intestinal TB vs Crohn (irjournal 833)" trust authoritative
+
+% rationale: intestinal tuberculosis produces mesenteric lymphadenopathy, bowel wall thickening and malabsorption and is the classic infectious mimic to exclude.
+prior 0.08 for diagnosis(intestinal_tuberculosis)
+  source "PMC2721452 TB vs NHL small-bowel mesentery CT; Intest Res 833" trust authoritative
+
+% ===== WHIPPLE DISEASE =====
+
+% rationale: a migratory seronegative arthropathy that PRECEDES the gastrointestinal illness by several years is the single most characteristic clue to Whipple (arthropathy in 80-90%, precedes GI by years in ~1/3).
+contributes 4.0 from arthralgia(migratory_preceding_gi) to diagnosis(whipple_disease)
+  source "StatPearls NBK441937 (chronic migratory seronegative arthropathy precedes diagnosis by years); Merck Manual Whipple" trust authoritative
+
+% rationale: chronic steatorrhea (greasy floating stools) reflects the fat malabsorption of the classic Whipple triad (weight loss, diarrhea, arthralgia).
+contributes 1.6 from stool(steatorrhea) to diagnosis(whipple_disease)
+  source "Merck Manual Professional Whipple Disease (classic triad: weight loss, chronic diarrhea, arthralgia)" trust authoritative
+
+% rationale: severe weight loss / cachexia is part of the classic Whipple malabsorption triad.
+contributes 1.4 from weight_loss(severe) to diagnosis(whipple_disease)
+  source "StatPearls NBK441937 (weight loss in classic triad)" trust authoritative
+
+% rationale: mesenteric (and low-attenuation) lymphadenopathy is present in about half of Whipple patients and is a described presenting feature.
+contributes 2.2 from imaging(mesenteric_lymphadenopathy) to diagnosis(whipple_disease)
+  source "PMC5479967 mesenteric lymphadenitis as presenting feature of Whipple's; PMC8473535 CT/PET Whipple" trust authoritative
+
+% rationale: small-bowel wall thickening / distended loops on cross-sectional imaging is a recognized Whipple finding from infiltrated lamina propria.
+contributes 1.5 from imaging(small_bowel_wall_thickening) to diagnosis(whipple_disease)
+  source "PMC7035864 Whipple imaging contribution; Radiologica Whipple knowledge base" trust authoritative
+
+% rationale: increased FDG uptake throughout the small intestine reflects active T. whipplei infective/inflammatory load and has been used to assess and follow Whipple.
+contributes 1.6 from imaging(diffuse_small_intestine_hypermetabolism) to diagnosis(whipple_disease)
+  source "PMC8473535 (FDG-PET promising for T. whipplei infectious foci, assessment and follow-up)" trust empirical
+
+% rationale: PAS-positive foamy macrophages in the small-bowel (duodenal) biopsy are the cardinal confirmatory histology of Whipple disease.
+contributes 9.0 from biopsy(pas_positive_foamy_macrophages) to diagnosis(whipple_disease)
+  source "Pathology Outlines Whipple; Medicine 2015 94(15) GI diagnosis of classical Whipple; StatPearls NBK441937" trust consensus
+
+% rationale: a POSITIVE tissue PCR for Tropheryma whipplei confirms the organism and clinches Whipple.
+contributes 8.0 from biopsy(pcr_tropheryma_whipplei_positive) to diagnosis(whipple_disease)
+  source "StatPearls NBK441937 (16S rRNA PCR for T. whipplei confirms diagnosis)" trust authoritative
+
+% rationale: a NEGATIVE duodenal biopsy (no PAS-positive macrophages, no organism) argues strongly against Whipple.
+contributes 0.15 from biopsy(no_pas_macrophages_no_organism) to diagnosis(whipple_disease)
+  source "Pathology Outlines Whipple (PAS-positive macrophages required for the diagnosis)" trust authoritative
+
+% rationale: partial symptomatic response of arthralgia/sicca to hydroxychloroquine is weakly consistent — doxycycline+hydroxychloroquine is an actual Whipple regimen — but is non-specific, so a small upward nudge only.
+contributes 1.2 from treatment_response(arthralgia_settled_on_hydroxychloroquine) to diagnosis(whipple_disease)
+  source "StatPearls NBK441937 (hydroxychloroquine combined with doxycycline used in Whipple therapy)" trust empirical
+
+% ===== SMALL-BOWEL / ENTEROPATHY-ASSOCIATED LYMPHOMA =====
+
+% rationale: mesenteric lymphadenopathy with malabsorption and B-symptoms is a leading presentation of small-bowel lymphoma — it is the mimic Whipple nodes most often raise.
+contributes 2.6 from imaging(mesenteric_lymphadenopathy) to diagnosis(small_bowel_lymphoma)
+  source "JGO 67801 marginal-zone small-intestinal lymphoma; PMC2721452 mesenteric nodes NHL" trust authoritative
+
+% rationale: bowel wall thickening with malabsorption is consistent with infiltrative small-bowel lymphoma.
+contributes 1.6 from imaging(small_bowel_wall_thickening) to diagnosis(small_bowel_lymphoma)
+  source "PMC2721452 (contrast-enhanced CT of small-bowel mesentery lymphoma)" trust authoritative
+
+% rationale: severe weight loss / cachexia and profound systemic decline fit an aggressive enteropathy-associated lymphoma.
+contributes 1.5 from weight_loss(severe) to diagnosis(small_bowel_lymphoma)
+  source "Wikipedia EATL; Lancet refractory sprue/EATL (weight loss, B-symptoms)" trust authoritative
+
+% rationale: INTENSE diffuse FDG uptake of the small bowel is highly typical of enteropathy-associated T-cell lymphoma (FDG-PET positive in 100% of EATL in series) and is the key discriminator that would pull AWAY from Whipple toward lymphoma.
+contributes 2.6 from imaging(intense_focal_fdg_avid_mass) to diagnosis(small_bowel_lymphoma)
+  source "J Nucl Med 2006 47(10):1622 (18F-FDG PET identified abdominal uptake in 100% of EATL)" trust authoritative
+
+% rationale: histology showing a monoclonal/atypical lymphoid infiltrate is confirmatory for lymphoma.
+contributes 8.0 from biopsy(monoclonal_lymphoid_infiltrate) to diagnosis(small_bowel_lymphoma)
+  source "PubMed 27900603 EATL; Wikipedia EATL (clonal T-cell infiltrate on biopsy)" trust authoritative
+
+% rationale: PAS-positive foamy macrophages on biopsy point to Whipple, NOT lymphoma, so they argue against lymphoma.
+contributes 0.2 from biopsy(pas_positive_foamy_macrophages) to diagnosis(small_bowel_lymphoma)
+  source "Pathology Outlines Whipple (PAS-positive macrophages are the Whipple signature, not lymphoma)" trust authoritative
+
+% ===== COELIAC / GLUTEN-SENSITIVE ENTEROPATHY =====
+
+% rationale: chronic steatorrhea with micronutrient deficiency is the textbook malabsorption picture of coeliac disease.
+contributes 2.0 from stool(steatorrhea) to diagnosis(coeliac_disease)
+  source "Frontiers Oncol 2023 fonc.2023.1273305 (coeliac malabsorption, steatorrhea, deficiencies)" trust authoritative
+
+% rationale: severe weight loss accompanies malabsorptive coeliac disease.
+contributes 1.3 from weight_loss(severe) to diagnosis(coeliac_disease)
+  source "Frontiers Oncol 2023 fonc.2023.1273305 (weight loss in malabsorptive coeliac)" trust authoritative
+
+% rationale: positive coeliac serology (anti-tissue-transglutaminase) supports gluten-sensitive enteropathy.
+contributes 6.0 from serology(anti_ttg_positive) to diagnosis(coeliac_disease)
+  source "Frontiers Oncol 2023 fonc.2023.1273305 (tTG antibodies in untreated coeliac)" trust authoritative
+
+% rationale: NEGATIVE coeliac serology argues against coeliac disease as the cause.
+contributes 0.4 from serology(anti_ttg_negative) to diagnosis(coeliac_disease)
+  source "Frontiers Oncol 2023 fonc.2023.1273305 (serology part of coeliac work-up)" trust authoritative
+
+% rationale: prominent mesenteric lymphadenopathy is NOT a feature of uncomplicated coeliac disease (it would instead raise complicating lymphoma), so it argues against simple coeliac.
+contributes 0.5 from imaging(mesenteric_lymphadenopathy) to diagnosis(coeliac_disease)
+  source "Frontiers Oncol 2023 fonc.2023.1273305 (new lymphadenopathy in coeliac flags complication, not uncomplicated coeliac)" trust inferred
+
+% ===== CROHN / CHRONIC INFLAMMATORY ENTEROPATHY =====
+
+% rationale: small-bowel wall thickening with distended loops is a hallmark of Crohn enteropathy.
+contributes 2.0 from imaging(small_bowel_wall_thickening) to diagnosis(crohn_enteropathy)
+  source "Intest Res 833 (transmural bowel-wall thickening in Crohn vs intestinal TB)" trust authoritative
+
+% rationale: sacroiliitis and seronegative arthropathy are the classic extra-intestinal spondyloarthropathy of Crohn disease.
+contributes 2.0 from imaging(asymmetric_sacroiliitis) to diagnosis(crohn_enteropathy)
+  source "Intest Res 833; Medscape spondyloarthropathy (IBD-associated sacroiliitis)" trust authoritative
+
+% rationale: raised CRP/ESR fit active inflammatory bowel disease, though non-specific.
+contributes 1.2 from labs(elevated_inflammatory_markers) to diagnosis(crohn_enteropathy)
+  source "Intest Res 833 (inflammatory markers in active IBD)" trust empirical
+
+% rationale: prominent mesenteric lymphadenopathy is more a feature of TB/lymphoma/Whipple than of Crohn, so it argues mildly against Crohn.
+contributes 0.7 from imaging(mesenteric_lymphadenopathy) to diagnosis(crohn_enteropathy)
+  source "Intest Res 833 (large necrotic mesenteric nodes favour TB over Crohn)" trust inferred
+
+% ===== INTESTINAL TUBERCULOSIS =====
+
+% rationale: mesenteric lymphadenopathy (classically large/necrotic) plus malabsorption is a hallmark of intestinal tuberculosis.
+contributes 2.2 from imaging(mesenteric_lymphadenopathy) to diagnosis(intestinal_tuberculosis)
+  source "PMC2721452 (mesenteric nodes in intestinal TB); Intest Res 833 (necrotic nodes >1cm in ITB)" trust authoritative
+
+% rationale: bowel-wall thickening is seen in intestinal tuberculosis.
+contributes 1.5 from imaging(small_bowel_wall_thickening) to diagnosis(intestinal_tuberculosis)
+  source "Intest Res 833 (parietal thickening in intestinal TB)" trust authoritative
+
+% rationale: a POSITIVE acid-fast / mycobacterial PCR on intestinal tissue confirms intestinal tuberculosis.
+contributes 8.0 from biopsy(acid_fast_bacilli_positive) to diagnosis(intestinal_tuberculosis)
+  source "StatPearls NBK441937 / Intest Res 833 (Ziehl-Neelsen, mycobacterial PCR/culture confirm ITB)" trust authoritative
+
+% rationale: NEGATIVE acid-fast staining and mycobacterial PCR argue against intestinal tuberculosis.
+contributes 0.3 from biopsy(acid_fast_bacilli_negative) to diagnosis(intestinal_tuberculosis)
+  source "Intest Res 833 (negative ZN/PCR/culture argues against ITB)" trust authoritative
+
+% rationale: PAS-positive foamy macrophages (AFB-negative) point to Whipple and AWAY from TB.
+contributes 0.3 from biopsy(pas_positive_foamy_macrophages) to diagnosis(intestinal_tuberculosis)
+  source "Pathology Outlines Whipple (Whipple is PAS-positive AFB-negative, distinguishing it from MAI/TB)" trust authoritative
+
+% ===== CORRELATED EVIDENCE (count ONCE, not per finding) =====
+% The low calcium, magnesium, phosphate, vitamin D, low albumin, macrocytic
+% anaemia, cachexia and low BMI are NOT independent: they are downstream
+% manifestations of ONE underlying malabsorption syndrome. Writing a separate
+% contributes for each would Naive-Bayes double-count and saturate the
+% posterior. They confirm malabsorption is real but do not by themselves choose
+% among its causes, so the combined LR is modest and shared. We attach the
+% mechanism to each malabsorptive candidate so it lifts the malabsorptive
+% diagnoses together rather than discriminating between them.
+
+% mechanism malabsorption_micronutrient_syndrome for diagnosis(whipple_disease) lr 1.5 : labs(low_calcium), labs(low_magnesium), labs(low_phosphate), labs(low_vitamin_d), labs(low_albumin), labs(macrocytic_anaemia), exam(cachexia), labs(low_bmi)
+
+% mechanism malabsorption_micronutrient_syndrome_lymphoma for diagnosis(small_bowel_lymphoma) lr 1.3 : labs(low_calcium), labs(low_magnesium), labs(low_phosphate), labs(low_vitamin_d), labs(low_albumin), labs(macrocytic_anaemia), exam(cachexia), labs(low_bmi)
+
+% mechanism malabsorption_micronutrient_syndrome_coeliac for diagnosis(coeliac_disease) lr 1.4 : labs(low_calcium), labs(low_magnesium), labs(low_phosphate), labs(low_vitamin_d), labs(low_albumin), labs(macrocytic_anaemia), exam(cachexia), labs(low_bmi)
+
+% The migratory arthralgia + sicca + cold-induced fingertip colour change +
+% low-titre ANA were earlier read as an "undifferentiated connective-tissue
+% disorder". In Whipple they are correlated manifestations of the ONE systemic
+% T. whipplei process (the seronegative-arthropathy / sicca picture), not
+% independent autoimmune hits. Group them so the systemic-rheumatic gestalt
+% lifts Whipple ONCE (over and above the dominant arthralgia-precedes-GI clue).
+
+% mechanism systemic_seronegative_rheumatic_gestalt for diagnosis(whipple_disease) lr 1.6 : symptom(sicca), symptom(raynaud_like_colour_change), labs(low_titre_ana_ena_negative)
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: upper endoscopy with duodenal/small-bowel biopsy for PAS stain (and T. whipplei PCR) is the definitive diagnostic step for suspected Whipple and the malabsorptive enteropathy as a whole.
+prior 0.45 for next_step(small_bowel_biopsy_pas_and_pcr)
+  source "StatPearls NBK441937; Medicine 2015 94(15); BMC Gastroenterol 2021 s12876-021-01664-1 (small-bowel biopsy is the diagnostic procedure)" trust consensus
+contributes 3.5 from arthralgia(migratory_preceding_gi) to next_step(small_bowel_biopsy_pas_and_pcr)
+  source "StatPearls NBK441937 (arthralgia-precedes-GI gestalt should prompt duodenal biopsy for Whipple)" trust authoritative
+contributes 2.5 from imaging(mesenteric_lymphadenopathy) to next_step(small_bowel_biopsy_pas_and_pcr)
+  source "PMC5479967 (mesenteric lymphadenopathy in malabsorption -> small-bowel biopsy)" trust authoritative
+contributes 2.0 from stool(steatorrhea) to next_step(small_bowel_biopsy_pas_and_pcr)
+  source "Merck Manual Whipple (steatorrhea/malabsorption -> small-bowel biopsy)" trust authoritative
+
+% rationale: excisional mesenteric lymph-node biopsy is the alternative confirmatory step when lymphoma is the leading concern, since intestinal mucosal biopsy may miss deep nodal lymphoma.
+prior 0.22 for next_step(mesenteric_node_biopsy_for_lymphoma)
+  source "JGO 67801 (intestinal mucosal biopsies frequently negative in nodal/marginal-zone lymphoma)" trust authoritative
+contributes 2.5 from imaging(intense_focal_fdg_avid_mass) to next_step(mesenteric_node_biopsy_for_lymphoma)
+  source "J Nucl Med 2006 47(10):1622 (intensely FDG-avid abdominal mass -> tissue for lymphoma)" trust authoritative
+contributes 2.0 from imaging(mesenteric_lymphadenopathy) to next_step(mesenteric_node_biopsy_for_lymphoma)
+  source "JGO 67801 (enlarged nodes with negative mucosa -> node sampling)" trust authoritative
+
+% rationale: empirically continuing the connective-tissue-disorder treatment (hydroxychloroquine) WITHOUT obtaining tissue is the wrong path once malabsorption + lymphadenopathy appear; kept as a low-prior comparator.
+prior 0.06 for next_step(continue_immunomodulation_without_biopsy)
+  source "BMC Gastroenterol 2021 s12876-021-01664-1 (immunosuppression can worsen undiagnosed Whipple; tissue first)" trust authoritative
+contributes 0.3 from imaging(mesenteric_lymphadenopathy) to next_step(continue_immunomodulation_without_biopsy)
+  source "BMC Gastroenterol 2021 s12876-021-01664-1 (new lymphadenopathy/malabsorption mandates tissue, not more immunosuppression)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% Tissue histology (PAS / PCR / clonality / AFB) is the unresolved item that
+% adjudicates Whipple vs lymphoma vs TB. Each branch has a corresponding
+% contributes above, so resolving it moves the posterior either way.
+uncertain { biopsy(pas_positive_foamy_macrophages), biopsy(pcr_tropheryma_whipplei_positive), biopsy(no_pas_macrophages_no_organism), biopsy(monoclonal_lymphoid_infiltrate), biopsy(acid_fast_bacilli_positive) } for diagnosis(whipple_disease)
+  source "Medicine 2015 94(15); Pathology Outlines Whipple (small-bowel biopsy histology/PCR adjudicates the differential)"
+
+% The same tissue also adjudicates the lymphoma branch.
+uncertain { biopsy(monoclonal_lymphoid_infiltrate), biopsy(pas_positive_foamy_macrophages) } for diagnosis(small_bowel_lymphoma)
+  source "J Nucl Med 2006 47(10):1622; PubMed 27900603 EATL (clonal infiltrate vs PAS macrophages)"
+
+% Coeliac serology resolves the coeliac branch.
+uncertain { serology(anti_ttg_positive), serology(anti_ttg_negative) } for diagnosis(coeliac_disease)
+  source "Frontiers Oncol 2023 fonc.2023.1273305 (anti-tTG serology adjudicates coeliac)"

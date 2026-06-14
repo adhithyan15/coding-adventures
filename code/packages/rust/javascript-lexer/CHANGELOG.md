@@ -2,6 +2,71 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.5.1] - 2026-06-12
+
+### Fixed
+- **REGEX flag class (CORRECTNESS, ES2024/ES2025)** — the `REGEX` token
+  pattern in `es2024.tokens` and `es2025.tokens` had the flag character
+  class `[dgimsvy]`, which accidentally omitted the ES2015 `u` (unicode)
+  flag — a typo introduced when `v` (unicodeSets, ES2024) was added. As
+  a result a regex such as `/x/gimsuy` lexed as the truncated regex
+  `/x/gims` followed by a stray identifier `uy`. Corrected the class to
+  the full ES2024 set `[dgimsuvy]` (d, g, i, m, s, u, v, y) in both
+  source grammars and regenerated the compiled lexer pattern. New tests
+  `es2025_regex_accepts_all_modern_flags_as_one_token` and
+  `es2024_regex_accepts_u_flag`. Unblocks closurec gap-096.
+
+## [0.5.0] - 2026-05-21
+
+### Added
+- New dependency on `coding_adventures_correlation_vector` for `CVLog` and `Origin` types.
+- `pub struct TokenWithCv { pub token: Token, pub cv: String }` — token paired with its CV identifier.
+- `tokenize_javascript_with_cv(source, source_file, EsVersion, &mut CVLog) -> Result<Vec<TokenWithCv>, String>` — tokenize and assign a CV ID per token per CLOC03 §"Stage 1 — Lexer".
+- Per-token `Origin` records: `source = source_file`, `location = "line:col"` from `Token.line` and `Token.column`. No `Contribution` appended (lexing is creation, not modification — per CLOC03).
+- Module docs added a CV plumbing section linking to CLOC03.
+- 4 new tests:
+  - `tokenize_with_cv_assigns_an_id_per_token` — every token gets a non-empty CV.
+  - `tokenize_with_cv_ids_are_unique` — uniqueness across the full token stream.
+  - `tokenize_with_cv_entries_resolvable_in_log` — `cv.get(id)` returns an entry whose `Origin.source` matches the requested `source_file` and whose `location` is `"line:col"`.
+  - `tokenize_with_cv_disabled_log_still_returns_tokens` — `CVLog::new(false)` keeps the API shape but skips storage (per CLOC03's production fast path).
+
+### Notes
+- The string-based and typed APIs from prior versions remain untouched; this PR is purely additive.
+- The `cv` field on `TokenWithCv` is `String` because `correlation-vector` represents IDs as `String` today.
+- This is the first concrete CLOC03 plumbing — the parser will consume `TokenWithCv` and inherit CV IDs onto AST nodes in a follow-up PR.
+
+## [0.4.0] - 2026-05-21
+
+### Added
+- New dependency on `coding-adventures-javascript-tokens` for the shared `EsVersion` enum.
+- `create_javascript_lexer_typed(source, EsVersion) -> GrammarLexer` — infallible typed constructor; no unknown-version error path.
+- `tokenize_javascript_typed(source, EsVersion) -> Result<Vec<Token>, String>` — typed tokenizer; only error is tokenization itself.
+- `pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;` — typed default. New code should prefer this over the string `DEFAULT_VERSION`.
+- New tests covering the typed APIs: `tokenize_typed_es2015`, `default_es_version_constant_is_es2025`, `all_typed_versions_load`, `create_lexer_typed_returns_grammar_lexer`.
+
+### Notes
+- The existing `&str`-based APIs (`create_javascript_lexer`, `tokenize_javascript`, `DEFAULT_VERSION`) are kept for backwards compatibility. The typed APIs are the preferred surface going forward.
+- This PR is part of CLOC02 Phase 1 — see CLOC01/CLOC02 in `code/specs/` for the broader rollout.
+
+## [0.3.0] - 2026-05-20
+
+### Removed
+- Dropped support for the empty-string `""` "generic" version that pointed at the stub `code/grammars/javascript.tokens`. The stub was a 35-line proof-of-concept subset; the full ES1 through ES2025 grammars under `code/grammars/ecmascript/` supersede it.
+- Removed the embedded `mod generic` block (~228 lines) from `_grammar.rs`.
+
+### Changed
+- `DEFAULT_VERSION` is now `"es2025"` (was `""`). Callers passing the old empty-string version now get `Err` with the supported-versions list.
+- Crate docstring no longer mentions the "generic" grammar.
+
+### Added
+- `default_version_resolves_to_es2025` test verifies the new default.
+
+### Migration
+- Replace `tokenize_javascript(source, "")` with `tokenize_javascript(source, "es2025")` (or another explicit ES version).
+
+### Notes
+- This PR is the Rust-only first step of CLOC01 Phase 1 stub retirement. The stub `.tokens`/`.grammar` files remain on disk for now because the Go, Python, TypeScript, and Ruby ports still embed them. Those ports get equivalent follow-up PRs; once all are migrated, the stub source files will be deleted.
+
 ## [0.2.0] - 2026-04-05
 
 ### Changed

@@ -1,0 +1,14 @@
+[package]
+name = "board-vm-uno-r4-usb-cdc"
+version = "0.1.0"
+edition = "2021"
+description = "Uno R4 WiFi SerialUSB backend for Board VM USB CDC transports"
+
+[dependencies]
+board-vm-usb-cdc = { path = "../board-vm-usb-cdc" }
+
+[dev-dependencies]
+board-vm-device = { path = "../board-vm-device" }
+
+[lib]
+path = "src/lib.rs"

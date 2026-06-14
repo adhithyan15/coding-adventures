@@ -114,7 +114,7 @@ unsafe extern "C" fn server_alloc(klass: VALUE) -> VALUE {
         klass,
         RubyConduitServer {
             server: None,
-            owner: ruby_bridge::QNIL,
+            owner: ruby_bridge::nil_value(),
             running: Arc::new(AtomicBool::new(false)),
         },
     )
@@ -204,7 +204,7 @@ extern "C" fn server_initialize(
         let mid = intern("not_found_handler");
         ruby_bridge::rb_funcallv(app_val, mid, 0, ptr::null())
     };
-    if not_found_val != ruby_bridge::QNIL {
+    if not_found_val != ruby_bridge::nil_value() {
         let owner_cap = owner;
         web_app.on_not_found(move |req: &WebRequest| -> WebResponse {
             dispatch_not_found_to_ruby(owner_cap, req)
@@ -269,7 +269,7 @@ extern "C" fn server_serve(self_val: VALUE) -> VALUE {
     }
 
     if call.ok {
-        ruby_bridge::QNIL
+        ruby_bridge::nil_value()
     } else {
         let message = call.error.unwrap_or_else(|| "Conduit server failed".to_string());
         raise_server_error(&message)
@@ -282,7 +282,7 @@ extern "C" fn server_stop(self_val: VALUE) -> VALUE {
         Some(s) => s.stop_handle().stop(),
         None => raise_server_error("server is closed"),
     }
-    ruby_bridge::QNIL
+    ruby_bridge::nil_value()
 }
 
 extern "C" fn server_dispose(self_val: VALUE) -> VALUE {
@@ -291,8 +291,8 @@ extern "C" fn server_dispose(self_val: VALUE) -> VALUE {
         raise_server_error("cannot dispose a running server; stop and wait first");
     }
     slot.server.take();
-    slot.owner = ruby_bridge::QNIL;
-    ruby_bridge::QNIL
+    slot.owner = ruby_bridge::nil_value();
+    ruby_bridge::nil_value()
 }
 
 extern "C" fn server_running(self_val: VALUE) -> VALUE {
@@ -381,7 +381,7 @@ unsafe extern "C" fn dispatch_route_with_gvl(data: *mut c_void) -> *mut c_void {
         // clear the pending exception, then try the custom error handler while
         // still holding the GVL (avoids a second rb_thread_call_with_gvl).
         let error_obj = rb_errinfo();
-        rb_set_errinfo(ruby_bridge::QNIL);
+        rb_set_errinfo(ruby_bridge::nil_value());
         let error_msg = extract_exception_message(error_obj);
         call.response = Some(Ok(
             call_error_handler_in_gvl(call.owner, &call.request, &error_msg)
@@ -396,7 +396,7 @@ unsafe extern "C" fn dispatch_route_with_gvl(data: *mut c_void) -> *mut c_void {
 /// Extract the #message string from a Ruby exception VALUE.
 /// Falls back to a generic message if anything goes wrong.
 unsafe fn extract_exception_message(error_obj: VALUE) -> String {
-    if error_obj == ruby_bridge::QNIL {
+    if error_obj == ruby_bridge::nil_value() {
         return "route handler raised an exception".to_string();
     }
     let mid = intern("message");
@@ -424,11 +424,11 @@ unsafe fn call_error_handler_in_gvl(owner: VALUE, req: &WebRequest, error_msg: &
     );
 
     if state != 0 {
-        rb_set_errinfo(ruby_bridge::QNIL);
+        rb_set_errinfo(ruby_bridge::nil_value());
         return WebResponse::internal_error(error_msg);
     }
 
-    if result != ruby_bridge::QNIL {
+    if result != ruby_bridge::nil_value() {
         if let Ok(resp) = parse_web_response(result) {
             return resp;
         }
@@ -487,13 +487,13 @@ unsafe extern "C" fn before_filters_with_gvl(data: *mut c_void) -> *mut c_void {
 
     if state != 0 {
         // Exception in before filter — treat as internal error short-circuit.
-        rb_set_errinfo(ruby_bridge::QNIL);
+        rb_set_errinfo(ruby_bridge::nil_value());
         call.result = Some(Some(WebResponse::internal_error("before filter raised an exception")));
         return ptr::null_mut();
     }
 
     // nil → no short-circuit; [s,h,b] → short-circuit with that response.
-    if result == ruby_bridge::QNIL {
+    if result == ruby_bridge::nil_value() {
         call.result = Some(None);
     } else {
         call.result = Some(match parse_web_response(result) {
@@ -557,7 +557,7 @@ unsafe extern "C" fn after_filters_with_gvl(data: *mut c_void) -> *mut c_void {
 
     if state != 0 {
         // Exception in after filter — leave response unchanged.
-        rb_set_errinfo(ruby_bridge::QNIL);
+        rb_set_errinfo(ruby_bridge::nil_value());
         return ptr::null_mut();
     }
 
@@ -618,13 +618,13 @@ unsafe extern "C" fn not_found_with_gvl(data: *mut c_void) -> *mut c_void {
     );
 
     if state != 0 {
-        rb_set_errinfo(ruby_bridge::QNIL);
+        rb_set_errinfo(ruby_bridge::nil_value());
         call.result = Some(WebResponse::internal_error("not_found handler raised an exception"));
         return ptr::null_mut();
     }
 
     // nil means no custom handler was registered; use default 404.
-    if result != ruby_bridge::QNIL {
+    if result != ruby_bridge::nil_value() {
         if let Ok(resp) = parse_web_response(result) {
             call.result = Some(resp);
         }

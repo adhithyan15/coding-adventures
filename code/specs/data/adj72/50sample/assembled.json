@@ -1,0 +1,902 @@
+{
+  "Q01": {
+    "category": "A",
+    "passages": [
+      "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
+      "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
+      "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.99,
+      0.99,
+      0.99
+    ]
+  },
+  "Q02": {
+    "category": "A",
+    "passages": [
+      "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.",
+      "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.",
+      "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.98,
+      0.98,
+      0.98
+    ]
+  },
+  "Q03": {
+    "category": "A",
+    "passages": [
+      "Call me Ishmael.",
+      "Call me Ishmael.",
+      "Call me Ishmael."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.99,
+      0.99,
+      0.99
+    ]
+  },
+  "Q04": {
+    "category": "A",
+    "passages": [
+      "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way\u2014in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.",
+      "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way\u2014in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.",
+      "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way\u2014in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.97,
+      0.97,
+      0.95
+    ]
+  },
+  "Q05": {
+    "category": "A",
+    "passages": [
+      "It was a bright cold day in April, and the clocks were striking thirteen.",
+      "It was a bright cold day in April, and the clocks were striking thirteen.",
+      "It was a bright cold day in April, and the clocks were striking thirteen."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.99,
+      0.99,
+      0.99
+    ]
+  },
+  "Q06": {
+    "category": "A",
+    "passages": [
+      "In the beginning God created the heaven and the earth.",
+      "In the beginning God created the heaven and the earth.",
+      "In the beginning God created the heaven and the earth."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.99,
+      0.99,
+      0.99
+    ]
+  },
+  "Q07": {
+    "category": "A",
+    "passages": [
+      "In a hole in the ground there lived a hobbit.",
+      "In a hole in the ground there lived a hobbit.",
+      "In a hole in the ground there lived a hobbit."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.99,
+      0.99,
+      0.99
+    ]
+  },
+  "Q08": {
+    "category": "A",
+    "passages": [
+      "Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal.",
+      "Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal.",
+      "Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.95,
+      0.95,
+      0.95
+    ]
+  },
+  "Q09": {
+    "category": "A",
+    "passages": [
+      "To be, or not to be, that is the question:",
+      "To be, or not to be, that is the question:",
+      "To be, or not to be, that is the question:"
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.97,
+      0.97,
+      0.97
+    ]
+  },
+  "Q10": {
+    "category": "A",
+    "passages": [
+      "Lolita, light of my life, fire of my loins.",
+      "Lolita, light of my life, fire of my loins.",
+      "Lolita, light of my life, fire of my loins."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.98,
+      0.98,
+      0.97
+    ]
+  },
+  "Q11": {
+    "category": "A",
+    "passages": [
+      "We the People of the United States, in Order to form a more perfect Union, establish Justice, insure domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of America.",
+      "We the People of the United States, in Order to form a more perfect Union, establish Justice, insure domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of America.",
+      "We the People of the United States, in Order to form a more perfect Union, establish Justice, insure domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of America."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.97,
+      0.97,
+      0.96
+    ]
+  },
+  "Q12": {
+    "category": "A",
+    "passages": [
+      "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof;",
+      "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof;",
+      "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof;"
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.97,
+      0.97,
+      0.97
+    ]
+  },
+  "Q13": {
+    "category": "A",
+    "passages": [
+      "If you really want to hear about it, the first thing you'll probably want to know is where I was born, and what my lousy childhood was like, and how my parents were occupied and all before they had me, and all that David Copperfield kind of crap, but I don't feel like going into it, if you want to know the truth.",
+      "If you really want to hear about it, the first thing you'll probably want to know is where I was born, and what my lousy childhood was like, and how my parents were occupied and all before they had me, and all that David Copperfield kind of crap, but I don't feel like going into it, if you want to know the truth.",
+      "If you really want to hear about it, the first thing you'll probably want to know is where I was born, and what my lousy childhood was like, and how my parents were occupied and all before they had me, and all that David Copperfield kind of crap, but I don't feel like going into it, if you want to know the truth."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.97,
+      0.96,
+      0.96
+    ]
+  },
+  "Q14": {
+    "category": "A",
+    "passages": [
+      "Shall I compare thee to a summer's day?",
+      "Shall I compare thee to a summer's day?",
+      "Shall I compare thee to a summer's day?"
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.98,
+      0.97,
+      0.98
+    ]
+  },
+  "Q15": {
+    "category": "A",
+    "passages": [
+      "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness.",
+      "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness.",
+      "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.95,
+      0.9,
+      0.9
+    ]
+  },
+  "Q16": {
+    "category": "A",
+    "passages": [
+      "\"Where's Papa going with that ax?\" said Fern to her mother as they were setting the table for breakfast.",
+      "\"Where's Papa going with that ax?\" said Fern to her mother as they were setting the table for breakfast.",
+      "\"Where's Papa going with that ax?\" said Fern to her mother as they were setting the table for breakfast."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.95,
+      0.95,
+      0.95
+    ]
+  },
+  "Q17": {
+    "category": "A",
+    "passages": [
+      "Our Father which art in heaven, Hallowed be thy name.",
+      "Our Father which art in heaven, Hallowed be thy name.",
+      "Our Father which art in heaven, Hallowed be thy name."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.95,
+      0.95,
+      0.95
+    ]
+  },
+  "Q18": {
+    "category": "B",
+    "passages": [
+      "any ray of light moves in the \"stationary\" system of co-ordinates with the determined velocity c, whether the ray be emitted by a stationary or by a moving body.",
+      "light is always propagated in empty space with a definite velocity c which is independent of the state of motion of the emitting body.",
+      "light is always propagated in empty space with a definite velocity c which is independent of the state of motion of the emitting body."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.8,
+      0.8,
+      0.82
+    ]
+  },
+  "Q19": {
+    "category": "B",
+    "passages": [
+      null,
+      "\u039c\u1fc6\u03bd\u03b9\u03bd \u1f04\u03b5\u03b9\u03b4\u03b5 \u03b8\u03b5\u1f70 \u03a0\u03b7\u03bb\u03b7\u03ca\u03ac\u03b4\u03b5\u03c9 \u1f08\u03c7\u03b9\u03bb\u1fc6\u03bf\u03c2",
+      "\u03bc\u1fc6\u03bd\u03b9\u03bd \u1f04\u03b5\u03b9\u03b4\u03b5 \u03b8\u03b5\u1f70 \u03a0\u03b7\u03bb\u03b7\u03ca\u03ac\u03b4\u03b5\u03c9 \u1f08\u03c7\u03b9\u03bb\u1fc6\u03bf\u03c2"
+    ],
+    "exists": [
+      false,
+      true,
+      true
+    ],
+    "confs": [
+      0.5,
+      0.85,
+      0.92
+    ]
+  },
+  "Q20": {
+    "category": "B",
+    "passages": [
+      "Happy families are all alike; every unhappy family is unhappy in its own way.",
+      "All happy families are alike; each unhappy family is unhappy in its own way.",
+      "Happy families are all alike; every unhappy family is unhappy in its own way."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.85,
+      0.88,
+      0.9
+    ]
+  },
+  "Q21": {
+    "category": "B",
+    "passages": [
+      "Mother died today.",
+      "Mother died today.",
+      "Mother died today."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.8,
+      0.85,
+      0.8
+    ]
+  },
+  "Q22": {
+    "category": "B",
+    "passages": [
+      "Many years later, as he faced the firing squad, Colonel Aureliano Buend\u00eda was to remember that distant afternoon when his father took him to discover ice.",
+      "Many years later, as he faced the firing squad, Colonel Aureliano Buend\u00eda was to remember that distant afternoon when his father took him to discover ice.",
+      "Many years later, as he faced the firing squad, Colonel Aureliano Buend\u00eda was to remember that distant afternoon when his father took him to discover ice."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.9,
+      0.9,
+      0.92
+    ]
+  },
+  "Q23": {
+    "category": "B",
+    "passages": [
+      "je pense, donc je suis",
+      "je pense, donc je suis",
+      "je pense, donc je suis"
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.9,
+      0.9,
+      0.85
+    ]
+  },
+  "Q24": {
+    "category": "B",
+    "passages": [
+      "Every body perseveres in its state of rest, or of uniform motion in a right line, unless it is compelled to change that state by forces impressed thereon.",
+      "Corpus omne perseverare in statu suo quiescendi vel movendi uniformiter in directum, nisi quatenus a viribus impressis cogitur statum illum mutare.",
+      "Corpus omne perseverare in statu suo quiescendi vel movendi uniformiter in directum, nisi quatenus a viribus impressis cogitur statum illum mutare."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.85,
+      0.8,
+      0.85
+    ]
+  },
+  "Q25": {
+    "category": "B",
+    "passages": [
+      "As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect.",
+      "As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect.",
+      "As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.8,
+      0.85,
+      0.78
+    ]
+  },
+  "Q26": {
+    "category": "B",
+    "passages": [
+      "First they came for the Socialists, and I did not speak out\u2014because I was not a Socialist.\n\nThen they came for the Trade Unionists, and I did not speak out\u2014because I was not a Trade Unionist.\n\nThen they came for the Jews, and I did not speak out\u2014because I was not a Jew.\n\nThen they came for me\u2014and there was no one left to speak for me.",
+      "First they came for the Socialists, and I did not speak out\u2014Because I was not a Socialist.\n\nThen they came for the Trade Unionists, and I did not speak out\u2014Because I was not a Trade Unionist.\n\nThen they came for the Jews, and I did not speak out\u2014Because I was not a Jew.\n\nThen they came for me\u2014and there was no one left to speak for me.",
+      null
+    ],
+    "exists": [
+      true,
+      true,
+      false
+    ],
+    "confs": [
+      0.45,
+      0.6,
+      0.0
+    ]
+  },
+  "Q27": {
+    "category": "B",
+    "passages": [
+      "Nel mezzo del cammin di nostra vita\nmi ritrovai per una selva oscura,\nch\u00e9 la diritta via era smarrita.",
+      "Nel mezzo del cammin di nostra vita\nmi ritrovai per una selva oscura,\nch\u00e9 la diritta via era smarrita.",
+      "Nel mezzo del cammin di nostra vita\nmi ritrovai per una selva oscura,\nch\u00e9 la diritta via era smarrita."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.97,
+      0.97,
+      0.97
+    ]
+  },
+  "Q28": {
+    "category": "B",
+    "passages": [
+      "And so, my fellow Americans: ask not what your country can do for you\u2014ask what you can do for your country.",
+      "And so, my fellow Americans: ask not what your country can do for you\u2014ask what you can do for your country.",
+      "And so, my fellow Americans: ask not what your country can do for you\u2014ask what you can do for your country."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.95,
+      0.96,
+      0.96
+    ]
+  },
+  "Q29": {
+    "category": "B",
+    "passages": [
+      "\u5df1\u6240\u4e0d\u6b32\uff0c\u52ff\u65bd\u65bc\u4eba\u3002",
+      "\u5df1\u6240\u4e0d\u6b32\uff0c\u52ff\u65bd\u65bc\u4eba\u3002",
+      "\u5df1\u6240\u4e0d\u6b32\uff0c\u52ff\u65bd\u65bc\u4eba\u3002"
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.92,
+      0.93,
+      0.9
+    ]
+  },
+  "Q30": {
+    "category": "B",
+    "passages": [
+      "Nasce da questo una disputa: se elli \u00e8 meglio essere amato che temuto, o e converso. Rispondesi che si vorrebbe essere l'uno e l'altro; ma perch\u00e9 elli \u00e8 difficile accozzarli insieme, \u00e8 molto pi\u00f9 sicuro essere temuto che amato, quando si abbia a mancare dell'uno de' dua.",
+      "Nasce da questo una disputa: s'elli \u00e8 meglio essere amato che temuto, o e converso. Rispondesi che si vorrebbe essere l'uno e l'altro; ma perch\u00e9 elli \u00e8 difficile accozzarli insieme, \u00e8 molto pi\u00f9 sicuro essere temuto che amato, quando si abbia a mancare dell'uno de' dua.",
+      "Nasce da questo una disputa: s'elli \u00e8 meglio essere amato che temuto, o e converso. Rispondesi che si vorrebbe essere l'uno e l'altro; ma perch\u00e9 elli \u00e8 difficile accozzarli insieme, \u00e8 molto pi\u00f9 sicuro essere temuto che amato, quando si abbia a mancare dell'uno de' dua."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.82,
+      0.82,
+      0.85
+    ]
+  },
+  "Q31": {
+    "category": "B",
+    "passages": [
+      "Longtemps, je me suis couch\u00e9 de bonne heure.",
+      "Longtemps, je me suis couch\u00e9 de bonne heure.",
+      "Longtemps, je me suis couch\u00e9 de bonne heure."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.97,
+      0.97,
+      0.97
+    ]
+  },
+  "Q32": {
+    "category": "B",
+    "passages": [
+      "\u9053\u53ef\u9053\uff0c\u975e\u5e38\u9053\u3002\u540d\u53ef\u540d\uff0c\u975e\u5e38\u540d\u3002",
+      "\u9053\u53ef\u9053\uff0c\u975e\u5e38\u9053\u3002\u540d\u53ef\u540d\uff0c\u975e\u5e38\u540d\u3002",
+      "\u9053\u53ef\u9053\uff0c\u975e\u5e38\u9053\u3002\u540d\u53ef\u540d\uff0c\u975e\u5e38\u540d\u3002"
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.93,
+      0.92,
+      0.9
+    ]
+  },
+  "Q33": {
+    "category": "B",
+    "passages": [
+      "\u03b5\u1f55\u03c1\u03b7\u03ba\u03b1",
+      null,
+      "\u03b5\u1f55\u03c1\u03b7\u03ba\u03b1"
+    ],
+    "exists": [
+      false,
+      false,
+      true
+    ],
+    "confs": [
+      0.3,
+      0.0,
+      0.55
+    ]
+  },
+  "Q34": {
+    "category": "C",
+    "passages": [
+      "This preservation of favourable variations and the rejection of injurious variations, I call Natural Selection, or the Survival of the Fittest.",
+      "This preservation of favourable variations and the rejection of injurious variations, I call Natural Selection.",
+      "This preservation of favourable variations and the rejection of injurious variations, I call Natural Selection, or the Survival of the Fittest."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.72,
+      0.55,
+      0.75
+    ]
+  },
+  "Q35": {
+    "category": "C",
+    "passages": [
+      "That's one small step for man, one giant leap for mankind.",
+      "That's one small step for man, one giant leap for mankind.",
+      "That's one small step for man, one giant leap for mankind."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.85,
+      0.9,
+      0.85
+    ]
+  },
+  "Q36": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.9,
+      0.0,
+      0.0
+    ]
+  },
+  "Q37": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.9,
+      0.0,
+      0.0
+    ]
+  },
+  "Q38": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.88,
+      0.0,
+      0.0
+    ]
+  },
+  "Q39": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.9,
+      0.0,
+      0.0
+    ]
+  },
+  "Q40": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.9,
+      0.9,
+      0.9
+    ]
+  },
+  "Q41": {
+    "category": "C",
+    "passages": [
+      "It has not escaped our notice that the specific pairing we have postulated immediately suggests a possible copying mechanism for the genetic material.",
+      "It has not escaped our notice that the specific pairing we have postulated immediately suggests a possible copying mechanism for the genetic material.",
+      "It has not escaped our notice that the specific pairing we have postulated immediately suggests a possible copying mechanism for the genetic material."
+    ],
+    "exists": [
+      true,
+      true,
+      true
+    ],
+    "confs": [
+      0.85,
+      0.85,
+      0.97
+    ]
+  },
+  "Q42": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.9,
+      0.95,
+      0.93
+    ]
+  },
+  "Q43": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.9,
+      0.95,
+      0.9
+    ]
+  },
+  "Q44": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.88,
+      0.9,
+      0.88
+    ]
+  },
+  "Q45": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.85,
+      0.9,
+      0.85
+    ]
+  },
+  "Q46": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.85,
+      0.9,
+      0.9
+    ]
+  },
+  "Q47": {
+    "category": "C",
+    "passages": [
+      "The report of my death was an exaggeration.",
+      "The report of my death was an exaggeration.",
+      "The report of my death was an exaggeration."
+    ],
+    "exists": [
+      true,
+      true,
+      false
+    ],
+    "confs": [
+      0.8,
+      0.7,
+      0.8
+    ]
+  },
+  "Q48": {
+    "category": "C",
+    "passages": [
+      "No. I am your father.",
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.9,
+      0.95,
+      0.95
+    ]
+  },
+  "Q49": {
+    "category": "C",
+    "passages": [
+      null,
+      null,
+      null
+    ],
+    "exists": [
+      false,
+      false,
+      false
+    ],
+    "confs": [
+      0.85,
+      0.85,
+      0.85
+    ]
+  },
+  "Q50": {
+    "category": "C",
+    "passages": [
+      "It was on a dreary night of November that I beheld the accomplishment of my toils.",
+      null,
+      null
+    ],
+    "exists": [
+      true,
+      false,
+      false
+    ],
+    "confs": [
+      0.4,
+      0.2,
+      0.3
+    ]
+  }
+}

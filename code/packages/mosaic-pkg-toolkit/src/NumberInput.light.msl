@@ -1,0 +1,18 @@
+// NumberInput.light.msl — default light-theme styling for NumberInput.
+//
+// Mirrors Input.light.msl exactly — numeric inputs share text
+// inputs' visual chrome on every platform. The only material
+// difference is the keyboard surface (numeric keypad on mobile),
+// which the kernel emits without any per-backend styling.
+
+style NumberInput {
+  part number-input {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#ced4da" ;
+    font-size     : 14 ;
+  }
+}

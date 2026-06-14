@@ -1,0 +1,1622 @@
+[
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "20 days",
+    "class": "skim",
+    "raw": "The passage states that the standard annual allotment is 20 days, accrued monthly. Since the question asks for the number of days of annual paid leave that Jordan accrues, we can infer that he has been working as part-time staff since March 2022 and therefore has accumulated 20 days of annual paid leave.\n\nFinal Answer: 20 days"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "[DISCARD]",
+    "class": "other",
+    "raw": "[USE] The passage provides information about the standard annual allotment and unused days, but it does not mention any specific number of days for accrued leave. Therefore, we cannot determine how many days of annual paid leave Jordan accrues based on the given information.\n\nFinal Answer: [DISCARD]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "20 days",
+    "class": "skim",
+    "raw": "FINAL ANSWER: 20 days"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "The shipping or handling charge for this order is $40, which is waived under the free-standard shipping perk. The cart contains a single sofa priced at $600.",
+    "class": "correct",
+    "raw": "The shipping or handling charge for this order is $40, which is waived under the free-standard shipping perk. The cart contains a single sofa priced at $600."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "The reason why it does not apply is that the passage does not contain any details about the specific charges associated with free standard shipping or handling charges.",
+    "class": "skim",
+    "raw": "[USE]\nThe question asks for the shipping or handling charge that applies to this order at checkout. However, the passage does not provide any information about the specific charges associated with free standard shipping. It only mentions that orders are processed within one business day and most arrive within a week, with tracking provided.\nTherefore, the correct answer is [DISCARD].\nThe reason why it does not apply is that the passage does not contain any details about the specific charges associated with free standard shipping or handling charges."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "The shipping or handling charge applies to the order at checkout because it is listed as \"a flat $40 handling charge that the free-shipping threshold does not waive.\" This means that if the customer has already paid for shipping, they do not need to pay a separate handling fee.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: The shipping or handling charge applies to the order at checkout because it is listed as \"a flat $40 handling charge that the free-shipping threshold does not waive.\" This means that if the customer has already paid for shipping, they do not need to pay a separate handling fee."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "An overdue fine of $0.25 per day for each item that is late, up to a maximum of $10 per item.",
+    "class": "skim",
+    "raw": "The city library charges an overdue fine of $0.25 per day for each item that is late, up to a maximum of $10 per item. This fine may be settled online or at the front desk. The borrower younger than eighteen is exempt from all overdue fines. A twelve-year-old borrower returns a book ten days late.\n\nFINAL ANSWER: An overdue fine of $0.25 per day for each item that is late, up to a maximum of $10 per item."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "$2.50",
+    "class": "skim",
+    "raw": "[USE] The city library charges overdue fines.\n[USE] The city library does not charge any overdue fines for the borrower in question.\n[FIXED] The city library charges $0.25 per day an item is late and up to a maximum of $10 per item, so the fine for this borrower would be $0.25 x 10 = $2.50.\n[USE] The city library does not charge any overdue fines for the borrower in question.\n[FIXED] The city library charges no fines at all for this borrower.\n\nFINAL ANSWER: $2.50"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "The city library charges overdue fines to encourage timely returns and keep popular titles in circulation. The fine accrues at $0.25 for each day an item is late and is billed to the borrower's account, up to a maximum of $10 per item. Fines may be settled online or at the front desk. Borrowers younger than eighteen are exempt from all overdue fines. A twelve-year-old borrower returns a book ten days late.",
+    "class": "correct",
+    "raw": "The city library charges overdue fines to encourage timely returns and keep popular titles in circulation. The fine accrues at $0.25 for each day an item is late and is billed to the borrower's account, up to a maximum of $10 per item. Fines may be settled online or at the front desk. Borrowers younger than eighteen are exempt from all overdue fines. A twelve-year-old borrower returns a book ten days late."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "The warranty period for this customer's purchase is one full year from the date of purchase, covering defects in materials and workmanship under normal use.",
+    "class": "skim",
+    "raw": "The warranty period for this customer's purchase is one full year from the date of purchase, covering defects in materials and workmanship under normal use."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "One full year (12 months)]",
+    "class": "skim",
+    "raw": "[USE] Every product we sell is backed by our standard manufacturer warranty of one full year from the date of purchase, covering defects in materials and workmanship under normal use. Claims can be filed online with a receipt.\n[USE] Units sold as refurbished instead carry a reduced warranty term of 90 days.\n[FINAL ANSWER: One full year (12 months)]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "One full year from the date of purchase, covering defects in materials and workmanship under normal use. Claims can be filed online with a receipt. Units sold as refurbished instead carry a reduced warranty term of 90 days. The customer purchased a refurbished unit last week.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: One full year from the date of purchase, covering defects in materials and workmanship under normal use. Claims can be filed online with a receipt. Units sold as refurbished instead carry a reduced warranty term of 90 days. The customer purchased a refurbished unit last week."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "The 10% discount is applied to the clearance item.",
+    "class": "skim",
+    "raw": "The 10% discount is applied to the clearance item."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "10% discount]",
+    "class": "skim",
+    "raw": "[USE] The passage does not provide information about the specific discount that applies to the clearance item.\n[FINAL ANSWER: 10% discount]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "The 10% discount is applied automatically at checkout to eligible items.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The 10% discount is applied automatically at checkout to eligible items.\nThis member's clearance item is not eligible for the 10% discount because it is listed price and receives no further discount."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "The parking charge for this vehicle is $5 per hour, as stated in the passage.",
+    "class": "skim",
+    "raw": "The parking charge for this vehicle is $5 per hour, as stated in the passage."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "[FIXED]",
+    "class": "other",
+    "raw": "[USE]\nThe downtown garage charges $5 per hour for parking, so the parking charge for this vehicle is $5.\n[USE]\nPayment is by card or the city app, so the payment method is not applicable to this question.\n[FIXED]\nElectric vehicles receive the first two hours free under the city's green initiative, so the electric vehicle is parked for exactly 2 hours. The parking charge for this vehicle is $2.\n[FIXED]\nThe downtown garage charges $5 per hour for parking, with a generous daily maximum of $30 so commuters are never overcharged. The parking charge for this vehicle is not applicable to this question because it does not specify the hourly rate or the daily maximum.\n[USE]\nPayment is by card or the city app, and spaces are plentiful. The parking charge for this vehicle is not applicable to this question because it does not specify the payment method.\n[FIXED]\nElectric vehicles receive the first two hours free under the city's green initiative, so the electric vehicle is parked for exactly 2 hours. The parking charge for this vehicle is $2.\n[FIXED]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "The downtown garage charges $5 per hour for parking, spaces are plentiful, and electric vehicles receive the first two hours free under the city's green initiative. An electric vehicle is parked for exactly two hours.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: The downtown garage charges $5 per hour for parking, spaces are plentiful, and electric vehicles receive the first two hours free under the city's green initiative. An electric vehicle is parked for exactly two hours."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "The late fee that is assessed to this borrower is $30.",
+    "class": "skim",
+    "raw": "The late fee that is assessed to this borrower is $30."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "[DISCARD]",
+    "class": "other",
+    "raw": "[USE]\nThe question asks for the late fee that is assessed to this borrower, which is not present in the passage. The passage does not mention any late fees or late payments.\n\nFinal Answer: [DISCARD]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "The late fee is $30. This late fee is assessed to the borrower as part of their account's default payment policy.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The late fee is $30. This late fee is assessed to the borrower as part of their account's default payment policy."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "The maximum permitted stay for this applicant is 90 days per entry under the visitor program, which allows them to remain in the country up to 180 days.",
+    "class": "correct",
+    "raw": "The maximum permitted stay for this applicant is 90 days per entry under the visitor program, which allows them to remain in the country up to 180 days."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "The applicant holds Andorian citizenship, and the visitor program allows them up to 90 days per entry. Therefore, the maximum permitted stay for this applicant would be up to 90 days.]",
+    "class": "skim",
+    "raw": "[USE]\nThe passage does not provide any information about the maximum permitted stay for the applicant. Therefore, we cannot determine the answer to the question.\n[FINDING] The passage does not contain any relevant information that can be used to find the answer to the question.\n[DISCARD] The question asks for a specific reason why the answer is [FINAL ANSWER: <answer>].\n[FINAL ANSWER: The applicant holds Andorian citizenship, and the visitor program allows them up to 90 days per entry. Therefore, the maximum permitted stay for this applicant would be up to 90 days.]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "The maximum permitted stay for this applicant is 180 days. The visitor program allows travelers up to 90 days per entry, and extensions require separate applications. Therefore, the applicant's stay would be limited by these restrictions.",
+    "class": "correct",
+    "raw": "The maximum permitted stay for this applicant is 180 days. The visitor program allows travelers up to 90 days per entry, and extensions require separate applications. Therefore, the applicant's stay would be limited by these restrictions."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "The sales tax that applies to this purchase is 8%.",
+    "class": "skim",
+    "raw": "The sales tax that applies to this purchase is 8%."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "A sales tax of 8% is applied to the retail purchases at the register and remitted to the state each month. The rate has been stable for years, so it does not apply to unprepared grocery items.",
+    "class": "skim",
+    "raw": "[USE]\nFinal answer: A sales tax of 8% is applied to the retail purchases at the register and remitted to the state each month. The rate has been stable for years, so it does not apply to unprepared grocery items.\n\nReason: The passage explicitly states that a sales tax of 8% is applied to retail purchases at the register and remitted to the state each month. It also mentions that the purchase consists entirely of unprepared groceries, which means these are not eligible for this sales tax. Therefore, the correct answer is A sales tax of 8% applies to the retail purchases at the register and remitted to the state each month.\n[DISCARD]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "The sales tax applies to retail purchases at the register and remitted to the state each month, so it does not apply to this purchase. The purchase consists entirely of unprepared groceries, so it does not apply to this purchase either.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: The sales tax applies to retail purchases at the register and remitted to the state each month, so it does not apply to this purchase. The purchase consists entirely of unprepared groceries, so it does not apply to this purchase either."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "The vehicle in question is a commercial truck, and it is subject to a posted speed limit of 65 mph for general traffic.",
+    "class": "skim",
+    "raw": "The vehicle in question is a commercial truck, and it is subject to a posted speed limit of 65 mph for general traffic.\nFinal answer: The vehicle in question is a commercial truck, and it is subject to a posted speed limit of 65 mph for general traffic."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "The posted speed limit applies to all vehicles on this stretch of highway except for commercial trucks.",
+    "class": "other",
+    "raw": "[USE]\nThe posted speed limit on this stretch of highway is 65 mph for general traffic and is enforced by automated cameras with mailed citations. The road is well maintained and frequently patrolled.\n[DISCARD] It does not apply to the vehicle in question, which is a commercial truck.\n\nFINAL ANSWER: The posted speed limit applies to all vehicles on this stretch of highway except for commercial trucks."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "The posted speed limit on this stretch of highway is 65 mph for general traffic and is enforced by automated cameras with mailed citations.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The posted speed limit on this stretch of highway is 65 mph for general traffic and is enforced by automated cameras with mailed citations."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "FOLLOW UP QUESTION: If the customer returns an item within 30 days of purchase, what is the policy regarding refunds? The passage states that customers may return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached. This means that if the customer returns an item within this time frame, they will receive a full refund.",
+    "class": "skim",
+    "raw": "FOLLOW UP QUESTION: If the customer returns an item within 30 days of purchase, what is the policy regarding refunds? The passage states that customers may return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached. This means that if the customer returns an item within this time frame, they will receive a full refund."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "Within 30 days of purchase, if at all, this item may be returned.",
+    "class": "skim",
+    "raw": "[USE]\nThe question asks about the return period for items within 30 days of purchase. However, the passage does not provide any information about the specific return period or conditions under which an item can be returned. Therefore, we cannot determine a specific return period based on this passage alone.\n\n[DISCARD]\nThe policy is among the most flexible in the industry. Items sold as final sale are not eligible for return or refund. The item was purchased on final sale.\n\nFinal Answer: Within 30 days of purchase, if at all, this item may be returned."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "Within 30 days of purchase.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: Within 30 days of purchase."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold.",
+    "class": "correct",
+    "raw": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "Three weeks",
+    "class": "skim",
+    "raw": "[USE]\nThe question asks for the borrowing period of the requested item, which is not explicitly stated in the passage. The passage only mentions that the requested item can be borrowed for three weeks and that it may be renewed up to twice if no one else has placed a hold.\n\nFinal answer: Three weeks"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold. This is because the passage states that \"the collection is large and browsing is encouraged,\" which implies that patrons can borrow materials longer than three weeks without any restrictions.",
+    "class": "correct",
+    "raw": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold. This is because the passage states that \"the collection is large and browsing is encouraged,\" which implies that patrons can borrow materials longer than three weeks without any restrictions."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "Therefore, an independent contractor who is part-time and hires after January 2020 would accrue 12 days of annual paid leave annually.",
+    "class": "fabricate",
+    "raw": "The passage states that Acme Corp offers a generous paid-leave policy, and the standard annual allotment is 20 days. Since this is for part-time staff hired after January 2020, we can calculate the number of days of annual paid leave as follows:\n\n1. The standard annual allotment is 20 days.\n2. For part-time staff hired after January 2020, they accrue 12 days per year.\n\nTherefore, an independent contractor who is part-time and hires after January 2020 would accrue 12 days of annual paid leave annually."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "0 days",
+    "class": "abstain",
+    "raw": "[USE] The passage provides information about Acme Corp's paid-leave policy, but it does not mention anything about independent contractors or their annual paid leave. Therefore, the answer should be:\n\nFINAL ANSWER: 0 days\n\nThe passage only mentions that an independent contractor accrues 12 days per year of paid leave, which is not related to the question asked."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "The standard annual allotment is 20 days, accrued monthly, with up to five days carried over. Part-time staff hired after January 2020 accrue 12 days per year.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: The standard annual allotment is 20 days, accrued monthly, with up to five days carried over. Part-time staff hired after January 2020 accrue 12 days per year."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide information about the shipping charges for international orders. Therefore, I cannot answer the question \"What shipping charge applies to an international order? \". The given information is specific to domestic orders and does not apply to international orders.",
+    "class": "abstain",
+    "raw": "The passage does not provide information about the shipping charges for international orders. Therefore, I cannot answer the question \"What shipping charge applies to an international order? \". The given information is specific to domestic orders and does not apply to international orders."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "Shipping charges for international orders do not apply.",
+    "class": "other",
+    "raw": "[USE] [DISCARD]\nFINAL ANSWER: Shipping charges for international orders do not apply.\nThe passage states that domestic orders over $50 ship free, and large furniture pieces carry a flat $40 handling charge. Since the question asks about shipping charges for an international order, we can conclude that there is no applicable shipping charge mentioned in the given information. Therefore, the correct answer is: Shipping charges for international orders do not apply.\n[DISCARD]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "Domestic orders over $50 ship free; orders are processed within one business day. Large furniture pieces carry a flat $40 handling charge.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: Domestic orders over $50 ship free; orders are processed within one business day. Large furniture pieces carry a flat $40 handling charge."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "The passage only mentions one situation - a book being lost and never returned at all. It doesn't say anything about books that were borrowed but are now missing or damaged.",
+    "class": "other",
+    "raw": "The final answer is no fees apply for books that are lost and never returned at all.\nExplanation for an 8-year-old:\n\nImagine you have a toy car. One day, your parents decide to give it away as a gift. But instead of giving the car back, they say \"You can keep it forever! \" The next day, the car breaks into pieces and falls off the table. Your parents don't want to pay for the repair costs because they think you should have kept the toy car.\nIn this case, the library is like that parent who says \"You can keep the book forever\" but doesn't give any money or fines for books that are lost and never returned. So, when a book is lost and never found, it's up to the person borrowing the book (like your parents) to pay for the fine.\nThe passage only mentions one situation - a book being lost and never returned at all. It doesn't say anything about books that were borrowed but are now missing or damaged."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "The fee applies to a book that is lost and never returned at all.",
+    "class": "other",
+    "raw": "[USE] The library fines overdue books at $0.25 per day up to $10 per item.\n[USE] Borrowers under eighteen are exempt from overdue fines.\n\nFinal Answer: The fee applies to a book that is lost and never returned at all."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "The library fines overdue books at 0. 25 dollars per day up to 10 dollars per book. Borrowers under 18 years old are exempt from overdue fines.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: The library fines overdue books at 0. 25 dollars per day up to 10 dollars per book. Borrowers under 18 years old are exempt from overdue fines."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "The warranty period for accessories sold separately from any product is 90 days.",
+    "class": "fabricate",
+    "raw": "The warranty period for accessories sold separately from any product is 90 days."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "[FINAL ANSWER]: Accessories do not have a warranty period. They are separate products and should be purchased individually.",
+    "class": "other",
+    "raw": "[USE] Every clause in the passage does not apply to the question.\n[FINAL ANSWER]: Accessories do not have a warranty period. They are separate products and should be purchased individually."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "The warranty period for accessories sold separately from any product is typically 1 year, as stated in the passage. The warranty period for products is usually one year or more. Therefore, there is no need to consider the warranty periods of accessories separately from a product.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: The warranty period for accessories sold separately from any product is typically 1 year, as stated in the passage. The warranty period for products is usually one year or more. Therefore, there is no need to consider the warranty periods of accessories separately from a product."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "Loyalty members receive a 10% discount on eligible items and clearance items apply no further discount when purchasing a gift card.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: Loyalty members receive a 10% discount on eligible items and clearance items apply no further discount when purchasing a gift card."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "Gift cards do not have any specific discounts listed in the given passage. They are typically subject to regular store promotions and may offer different rates depending on the retailer.]",
+    "class": "other",
+    "raw": "[USE] The passage does not provide any information about gift cards or their discounts.\n[FINAL ANSWER: Gift cards do not have any specific discounts listed in the given passage. They are typically subject to regular store promotions and may offer different rates depending on the retailer.]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "Loyalty members receive a 10% discount on eligible items, applied at checkout. For every statement you marked [DISCARD], state a specific reason why it does not apply to this question.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: Loyalty members receive a 10% discount on eligible items, applied at checkout. For every statement you marked [DISCARD], state a specific reason why it does not apply to this question."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide any information about parking charges for motorcycles. Therefore, I cannot determine the correct answer based on the given text. The question asks for the parking charge for a motorcycle, but there is no relevant information in the provided passage to answer that specific query.",
+    "class": "abstain",
+    "raw": "The passage does not provide any information about parking charges for motorcycles. Therefore, I cannot determine the correct answer based on the given text. The question asks for the parking charge for a motorcycle, but there is no relevant information in the provided passage to answer that specific query."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "[END]",
+    "class": "other",
+    "raw": "[USE]\nThe passage does not provide any information about the parking charges for motorcycles.\n[FIND] The question asks for the parking charge for a motorcycle, but there is no mention of it in the given text. Therefore, we should use [DISCARD].\n[END]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "The downtown garage charges $5 per hour with a $30 daily maximum, electric vehicles park free for the first two hours. Therefore, the parking charge for a motorcycle is not applicable in this passage.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: The downtown garage charges $5 per hour with a $30 daily maximum, electric vehicles park free for the first two hours. Therefore, the parking charge for a motorcycle is not applicable in this passage."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "To find the correct answer, you would need to consult official government websites or contact the appropriate authorities in Andoria.",
+    "class": "other",
+    "raw": "The passage does not provide specific information about the validity period of a work permit for an applicant from Andoria. Therefore, I cannot give a definitive answer based on the given text alone.\n\nTo find the correct answer, you would need to consult official government websites or contact the appropriate authorities in Andoria."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "The passage does not contain any relevant information to answer the question.",
+    "class": "abstain",
+    "raw": "[USE]\n[DISCARD] [END OF PAST TEXT]\n\nThe passage does not provide any information about the validity period of a work permit. Therefore, we cannot determine how long it is valid for this applicant based on the given text.\n\nFinal Answer: The passage does not contain any relevant information to answer the question."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "The work permit is valid for 180 days.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: The work permit is valid for 180 days."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "The final answer is 8%. Sales tax applies to retail purchases, which includes groceries and other goods sold by businesses. Professional consulting services do not fall under the category of retail purchases, so they are exempt from sales tax.",
+    "class": "fabricate",
+    "raw": "The final answer is 8%. Sales tax applies to retail purchases, which includes groceries and other goods sold by businesses. Professional consulting services do not fall under the category of retail purchases, so they are exempt from sales tax."
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "monolithic",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "[DISCARD]",
+    "class": "other",
+    "raw": "[USE]\nThe passage provides information about the sales tax rate and the exemption for unprepared grocery items, but it does not mention anything related to professional consulting services. Therefore, we cannot determine what sales tax applies to a professional consulting service based on the given information.\n\nFINAL ANSWER: [DISCARD]"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "staged",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "Professional consulting services do not apply a sales tax.",
+    "class": "other",
+    "raw": "FINAL ANSWER: Professional consulting services do not apply a sales tax."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "Jordan accrues 12 days of annual paid leave, which is the reduced rate for part-time employees hired after January 2020.",
+    "class": "correct",
+    "raw": "Jordan accrues 12 days of annual paid leave, which is the reduced rate for part-time employees hired after January 2020."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "**FINAL ANSWER: Jordan accrues 12 days of annual paid leave.**",
+    "class": "correct",
+    "raw": "### Clauses and Analysis\n\n**[USE]**\n- **\"Acme Corp offers a generous and competitive paid-leave policy that staff consistently rate highly.\"**  \n  - This clause provides background information about Acme's paid leave policy, which is relevant to the question.\n\n**[DISCARD]**\n- **\"The standard annual allotment is 20 days, accrued monthly, and unused days may be carried over up to a limit of five into the next year.\"**  \n  - This clause specifies the amount of annual leave Jordan accrues but does not directly answer how many days Jordan actually earns.\n\n- **\"Employees are encouraged to take their full leave for wellbeing.\"**  \n  - This clause indicates that employees should use all available paid time off, which is relevant but does not provide a specific number.\n\n- **\"Part-time staff hired after January 2020 accrue at a reduced rate of 12 days per year.\"**  \n  - This clause specifies the accrual rate for part-time employees hired after January 2020, which is also relevant but does not directly answer how many days Jordan earns.\n\n- **\"Jordan joined Acme as a part-time employee in March 2022.\"**  \n  - This clause provides context about Jordan's employment status and the time frame of her hiring, which is necessary for understanding her accrual rate but does not provide a specific number.\n\n### FINAL ANSWER:\n**FINAL ANSWER: Jordan accrues 12 days of annual paid leave.**"
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "The statement \"Jordan joined Acme as a part-time employee in March 2022\" does not provide information about how many days of annual paid leave Jordan accrues, so it is marked [DISCARD]. There is no specific word from the passage that directly answers this question. Therefore, the answer to the question \"How many days of annual paid leave does Jordan accrue?\" cannot be determined based on the given information in the passage.",
+    "class": "other",
+    "raw": "The statement \"Jordan joined Acme as a part-time employee in March 2022\" does not provide information about how many days of annual paid leave Jordan accrues, so it is marked [DISCARD]. There is no specific word from the passage that directly answers this question. Therefore, the answer to the question \"How many days of annual paid leave does Jordan accrue?\" cannot be determined based on the given information in the passage."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "The shipping or handling charge applies to large furniture pieces, which in this case is the single sofa priced at $600. The flat $40 handling charge for large furniture pieces does not waive the free-shipping threshold of orders over $50. Therefore, there is no additional shipping cost applicable to this order at checkout.",
+    "class": "correct",
+    "raw": "The shipping or handling charge applies to large furniture pieces, which in this case is the single sofa priced at $600. The flat $40 handling charge for large furniture pieces does not waive the free-shipping threshold of orders over $50. Therefore, there is no additional shipping cost applicable to this order at checkout."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "The shipping or handling charge applicable to this order at checkout is **$40** for large furniture pieces, as it carries a flat $40 handling charge that the free-shipping threshold does not waive.",
+    "class": "correct",
+    "raw": "### Read the passage and list every clause:\n\n1. Our online store is proud to offer free standard shipping on every order over $50, a perk customers love.\n2. Orders are processed within one business day.\n3. Most arrive within a week, with tracking provided.\n4. Shipping costs, when they apply, are computed from the order subtotal at checkout.\n5. Large furniture pieces carry a flat $40 handling charge that the free-shipping threshold does not waive.\n6. A shopper's cart contains a single sofa priced at $600.\n\n### Mark each [USE] or [DISCARD]:\n\n- **[USE]**: The passage provides information about shipping and handling charges, including the one applicable to this order.\n- **[DISCARD]**: There is no specific mention of any additional fees beyond what is already provided in the passage. Therefore, there are no other charges that apply.\n\n### List every clause:\n\n1. Our online store is proud to offer free standard shipping on every order over $50, a perk customers love.\n2. Orders are processed within one business day.\n3. Most arrive within a week, with tracking provided.\n4. Shipping costs, when they apply, are computed from the order subtotal at checkout.\n5. Large furniture pieces carry a flat $40 handling charge that the free-shipping threshold does not waive.\n6. A shopper's cart contains a single sofa priced at $600.\n\n### Mark each [USE] or [DISCARD]:\n\n- **[USE]**: The passage provides information about shipping and handling charges, including the one applicable to this order.\n- **[DISCARD]**: There is no specific mention of any additional fees beyond what is already provided in the passage. Therefore, there are no other charges that apply.\n\n### List every clause:\n\n1. Our online store is proud to offer free standard shipping on every order over $50, a perk customers love.\n2. Orders are processed within one business day.\n3. Most arrive within a week, with tracking provided.\n4. Shipping costs, when they apply, are computed from the order subtotal at checkout.\n5. Large furniture pieces carry a flat $40 handling charge that the free-shipping threshold does not waive.\n6. A shopper's cart contains a single sofa priced at $600.\n\n### Final Answer: The shipping or handling charge applicable to this order at checkout is **$40** for large furniture pieces, as it carries a flat $40 handling charge that the free-shipping threshold does not waive."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "The shipping or handling charge applies to large furniture pieces priced at $600, which is above the free-shipping threshold of $50. Therefore, the flat $40 handling charge for large furniture pieces will apply.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: The shipping or handling charge applies to large furniture pieces priced at $600, which is above the free-shipping threshold of $50. Therefore, the flat $40 handling charge for large furniture pieces will apply."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "The overdue fine charged to this borrower is $2.50.",
+    "class": "skim",
+    "raw": "The overdue fine charged to this borrower is $2.50."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "** $0.25 per day",
+    "class": "skim",
+    "raw": "### Clauses in the Passage:\n\n1. **[USE] The city library charges overdue fines to encourage timely returns and keep popular titles in circulation.**\n2. **[DISCARD] The fine accrues at $0.25 for each day an item is late and is billed to the borrower's account, up to a maximum of $10 per item.**\n3. **[USE] Fines may be settled online or at the front desk.**\n4. **[DISCARD] Borrowers younger than eighteen are exempt from all overdue fines.**\n5. **[USE] A twelve-year-old borrower returns a book ten days late.**\n\n### Analysis of Clauses:\n- Clause 1: This is an introductory clause that sets up the context for the rest of the passage.\n- Clause 2: This is a [DISCARD] clause because it provides additional information about how fines accrue and are billed, which is not directly relevant to answering the specific question asked.\n- Clause 3: This is an [USE] clause that explains where borrowers can settle their fines.\n- Clause 4: This is a [DISCARD] clause as it mentions a rule for younger borrowers but does not pertain to this particular borrower's situation.\n- Clause 5: This is an [USE] clause that provides information about the age of the borrower and how late they returned the book.\n\n### Specific Reasoning:\n- The question asks specifically what overdue fine is charged to the twelve-year-old borrower. The passage clearly states, \"A twelve-year-old borrower returns a book ten days late,\" which directly answers this part of the question.\n  \n### FINAL ANSWER: \nThe overdue fine charged to the twelve-year-old borrower is $0.25 per day for each item that is returned ten days late.\n\n**FINAL ANSWER:** $0.25 per day"
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "The borrower's account will be charged $0.25 for each day an item is late, up to a maximum of $10 per item.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The borrower's account will be charged $0.25 for each day an item is late, up to a maximum of $10 per item."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "One full year from the date of purchase.",
+    "class": "skim",
+    "raw": "Final Answer: One full year from the date of purchase."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "**",
+    "class": "other",
+    "raw": "### Read the passage and list every clause:\n\n1. **Every product we sell is backed by our standard manufacturer warranty of one full year from the date of purchase, covering defects in materials and workmanship under normal use.**\n   - [USE] Clause 1\n\n2. **Claims can be filed online with a receipt.**\n   - [DISCARD] Clause 2: This clause does not directly answer the question about the warranty period.\n\n3. **Units sold as refurbished instead carry a reduced warranty term of 90 days.**\n   - [USE] Clause 3\n\n4. **The customer purchased a refurbished unit last week.**\n   - [DISCARD] Clause 4: This clause does not directly answer the question about the warranty period.\n\n### List every clause and mark each [USE] or [DISCARD]:\n\n- **Clause 1:** Every product we sell is backed by our standard manufacturer warranty of one full year from the date of purchase, covering defects in materials and workmanship under normal use.\n  - [USE]\n\n- **Clause 2:** Claims can be filed online with a receipt.\n  - [DISCARD]\n\n- **Clause 3:** Units sold as refurbished instead carry a reduced warranty term of 90 days.\n  - [USE]\n\n- **Clause 4:** The customer purchased a refurbished unit last week.\n  - [DISCARD]\n\n### Answer:\n\n**FINAL ANSWER:**\nThe warranty period for this customer's purchase is 90 days."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "One full year.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: One full year."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "The 10% discount is automatically applied to the eligible items for loyalty members, including the clearance items.",
+    "class": "skim",
+    "raw": "Final Answer: The 10% discount is automatically applied to the eligible items for loyalty members, including the clearance items."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "The 10% discount is applied to the clearance item.",
+    "class": "skim",
+    "raw": "### Read the passage.\n- **[USE] Loyalty members enjoy a 10% discount on most purchases as our thank-you for their continued business, applied automatically at checkout to eligible items.**\n- **[DISCARD] The program is free to join and points also accrue.**  \n- **[USE] Items marked clearance are sold at their listed price and receive no further discount.**\n\n### List every clause.\n1. Loyalty members enjoy a 10% discount on most purchases as our thank-you for their continued business, applied automatically at checkout to eligible items.\n2. The program is free to join and points also accrue.\n3. Items marked clearance are sold at their listed price and receive no further discount.\n\n### Mark each [USE] or [DISCARD].\n- **[USE]** Clause 1: This clause directly answers the question about the discount applied to the loyalty member's clearance item.\n- **[DISCARD]** Clauses 2 and 3: These clauses provide additional information but do not answer the specific question asked.\n\n### Answer with a line exactly:\nFINAL ANSWER: The 10% discount is applied to the clearance item."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "A loyalty member is buying an item marked clearance and receives no further discount.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: A loyalty member is buying an item marked clearance and receives no further discount."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "$5",
+    "class": "skim",
+    "raw": "FINAL ANSWER: $5"
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "$5",
+    "class": "skim",
+    "raw": "### Clauses in the Passage:\n\n1. **[USE] The downtown garage charges $5 per hour for parking, with a generous daily maximum of $30 so commuters are never overcharged.**\n   - This clause is used to provide information about the pricing structure.\n\n2. **[DISCARD] Payment is by card or the city app, and spaces are plentiful.**\n   - This clause is discarded because it does not directly answer the question about the parking charge for an electric vehicle parked for exactly two hours.\n\n3. **[USE] Electric vehicles receive the first two hours free under the city's green initiative.**\n   - This clause is used to provide information about a specific benefit of electric vehicles in the city.\n\n4. **[DISCARD] An electric vehicle is parked for exactly two hours.**\n   - This clause is discarded because it does not directly answer the question about the parking charge.\n\n### FINAL ANSWER: $5\n\nThe final answer is that the parking charge for this vehicle (an electric vehicle parked for exactly two hours) is **$5** per hour, with a daily maximum of $30."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "$5 per hour.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: $5 per hour."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "The late fee assessed to this borrower is $30.",
+    "class": "skim",
+    "raw": "The late fee assessed to this borrower is $30."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "The late fee assessed to this borrower is $30.",
+    "class": "skim",
+    "raw": "### Clauses in the Passage:\n\n1. **Accounts that fall past due are assessed a late fee of $30, which appears on the following statement and helps offset administrative costs.**\n   - [USE] This clause explains what happens to accounts that fall past due.\n\n2. **Customers can avoid it by enabling autopay.**\n   - [DISCARD] This clause suggests an alternative method for avoiding the late fee but does not directly answer the question about the specific late fee assessed.\n\n3. **A borrower's very first late payment is automatically waived as a courtesy. This is the borrower's first-ever late payment.**\n   - [USE] This clause explains why the first late payment is waived, which indirectly answers part of the question but does not directly state what the late fee is.\n\n### Analysis:\n- The passage mentions that accounts past due are assessed a $30 late fee.\n- It also states that the borrower's very first late payment is automatically waived as a courtesy.\n\n### Reasoning for Discard [DISCARD]:\nThe clause about autopay (customers can avoid it by enabling autopay) does not directly answer what the specific late fee is. While it suggests an alternative method to avoid the late fee, it does not provide the amount of the late fee itself.\n\n### FINAL ANSWER:\nThe late fee assessed to this borrower is $30."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "The late fee assessed to this borrower is $30.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The late fee assessed to this borrower is $30."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "The maximum permitted stay for this applicant is 180 days.",
+    "class": "correct",
+    "raw": "Final Answer: The maximum permitted stay for this applicant is 180 days."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "The maximum permitted stay for this applicant is 180 days.",
+    "class": "correct",
+    "raw": "### Read the passage and list every clause:\n\n- Under the visitor program, travelers may remain in the country for up to 90 days per entry.\n- A limit designed to cover typical tourism and short business trips.\n- Citizens of Andoria, by longstanding treaty, may instead remain for up to 180 days.\n- The applicant holds Andorian citizenship.\n\n### Mark each [USE] or [DISCARD]:\n\n- **[USE]**: Under the visitor program, travelers may remain in the country for up to 90 days per entry. (This is a clause that applies directly to the question.)\n- **[DISCARD]**: A limit designed to cover typical tourism and short business trips.\n- **[USE]**: Citizens of Andoria, by longstanding treaty, may instead remain for up to 180 days. (This is another relevant clause related to the applicant's citizenship.)\n- **[DISCARD]**: The applicant holds Andorian citizenship.\n\n### List every [DISCARD] and provide a specific reason:\n\n- A limit designed to cover typical tourism and short business trips.\n- The applicant holds Andorian citizenship.\n\n### FINAL ANSWER:\nThe maximum permitted stay for this applicant is 180 days."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "The maximum permitted stay is 90 days.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The maximum permitted stay is 90 days.\nExtensions require a separate application."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "No sales tax applies to the purchase, as it is entirely made up of unprepared groceries which are exempt from the 8% sales tax.",
+    "class": "correct",
+    "raw": "Final Answer: No sales tax applies to the purchase, as it is entirely made up of unprepared groceries which are exempt from the 8% sales tax."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "A sales tax of 8% applies to this purchase.",
+    "class": "skim",
+    "raw": "### Read the passage and list every clause:\n\n1. **[USE] A sales tax of 8% is applied to retail purchases at the register and remitted to the state each month;**\n2. **[DISCARD] receipts itemize the tax for the customer's records;**\n3. **[USE] The rate has been stable for years;**\n4. **[DISCARD] Unprepared grocery items are exempt from this sales tax;**\n5. **[USE] The purchase consists entirely of unprepared groceries.**\n\n### Mark each [USE] or [DISCARD]:\n\n- **[USE]**: A sales tax of 8% is applied to retail purchases at the register and remitted to the state each month.\n- **[DISCARD]**: receipts itemize the tax for the customer's records.\n- **[USE]**: The rate has been stable for years.\n- **[DISCARD]**: Unprepared grocery items are exempt from this sales tax.\n- **[USE]**: The purchase consists entirely of unprepared groceries.\n\n### List every clause:\n\n1. A sales tax of 8% is applied to retail purchases at the register and remitted to the state each month.\n2. receipts itemize the tax for the customer's records.\n3. The rate has been stable for years.\n4. Unprepared grocery items are exempt from this sales tax.\n5. The purchase consists entirely of unprepared groceries.\n\n### Mark every [DISCARD] clause:\n\n- **[DISCARD]**: receipts itemize the tax for the customer's records because it is not relevant to determining what sales tax applies to the purchase in this context.\n  \n### Answer:\n\nFINAL ANSWER: A sales tax of 8% applies to this purchase."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "The sales tax applies at a rate of 8% to unprepared groceries.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The sales tax applies at a rate of 8% to unprepared groceries."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "The posted speed limit for this vehicle, which is a commercial truck, is 55 mph on the same stretch of highway.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: The posted speed limit for this vehicle, which is a commercial truck, is 55 mph on the same stretch of highway."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "** The speed limit for this vehicle, a commercial truck, is 55 mph.",
+    "class": "correct",
+    "raw": "### Clauses Identified:\n1. **[USE]** \"The posted speed limit on this stretch of highway is 65 mph for general traffic and is enforced by automated cameras with mailed citations.\"\n2. **[DISCARD]** \"The road is well maintained and frequently patrolled.\"\n3. **[USE]** \"Commercial trucks are restricted to a lower limit of 55 mph on the same stretch.\"\n\n### Analysis:\n- The first clause provides information about the general traffic speed limit.\n- The second clause indicates that the road is well-maintained but does not affect the speed limit for commercial trucks.\n- The third clause specifies that commercial trucks have a restricted speed limit.\n\n### Reasoning:\n- **[DISCARD]** \"The road is well maintained and frequently patrolled\" does not apply because it provides information about the condition of the road, which is unrelated to determining the speed limit applicable to the vehicle in question (a commercial truck).\n\n### Answer:\n**FINAL ANSWER:** The speed limit for this vehicle, a commercial truck, is 55 mph."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "The posted speed limit is 65 mph for general traffic and is enforced by automated cameras with mailed citations.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The posted speed limit is 65 mph for general traffic and is enforced by automated cameras with mailed citations."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "Customers can return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached.",
+    "class": "skim",
+    "raw": "Final ANSWER: Customers can return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "The item may be returned within 30 days of purchase if the item is in original condition with tags attached and the payment method matches the original transaction.",
+    "class": "skim",
+    "raw": "### Read the passage and list every clause:\n\n1. **Customers may return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached; refunds go to the original payment method.**\n2. **The policy is among the most flexible in the industry.**\n3. **Items sold as final sale are not eligible for return or refund.**\n\n### Mark each [USE] or [DISCARD]:\n\n- **[USE]**: The passage provides specific information about when items can be returned.\n- **[DISCARD]**: There is no mention of a time limit beyond the 30-day period.\n\n### Specific reasons why some clauses are discarded:\n\n1. **The policy is among the most flexible in the industry**: This statement is not directly related to the return period and is therefore [DISCARD].\n2. **Items sold as final sale are not eligible for return or refund**: This information is about what cannot be returned, but it does not affect the time frame within which items can be returned.\n\n### FINAL ANSWER: The item may be returned within 30 days of purchase if the item is in original condition with tags attached and the payment method matches the original transaction."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "Most items can be returned within 30 days of purchase for a full refund, provided they are in original condition and have tags attached; refunds go to the original payment method.",
+    "class": "skim",
+    "raw": "Final Answer: Most items can be returned within 30 days of purchase for a full refund, provided they are in original condition and have tags attached; refunds go to the original payment method."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold.",
+    "class": "correct",
+    "raw": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold.",
+    "class": "correct",
+    "raw": "### Read the passage.\n- Library patrons may borrow most materials for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold. The collection is large and browsing is encouraged. Reference materials do not circulate and must be used within the library. The requested item is shelved in the reference collection.\n\n### List every clause.\n- Library patrons may borrow most materials for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold.\n- The collection is large and browsing is encouraged.\n- Reference materials do not circulate and must be used within the library.\n- The requested item is shelved in the reference collection.\n\n### Mark each [USE] or [DISCARD].\n- Library patrons may borrow most materials for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold. (USE)\n- The collection is large and browsing is encouraged. (USE)\n- Reference materials do not circulate and must be used within the library. (USE)\n- The requested item is shelved in the reference collection. (DISCARD) - This clause does not directly answer how long the patron may borrow the requested item.\n\n### Provide specific reasons for clauses that are [DISCARD].\n- \"The requested item is shelved in the reference collection.\" This clause indicates where the requested item is located but does not provide information about its loan period or renewal options, which are relevant to answering the question. Therefore, it is marked as [DISCARD].\n\n### Answer.\nFINAL ANSWER: The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "The standard loan period is three weeks.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The standard loan period is three weeks."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "An independent contractor hires after January 2020 accrues 12 days of annual paid leave.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: An independent contractor hires after January 2020 accrues 12 days of annual paid leave."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "An independent contractor does not accrue any annual paid leave under Acme Corp's policy.",
+    "class": "abstain",
+    "raw": "[USE] The passage states that part-time staff hired after January 2020 accrue 12 days per year.\n[DISCARD] This information pertains to the policy for employees, not independent contractors. Therefore, it does not apply to the question asked.\n\nFINAL ANSWER: An independent contractor does not accrue any annual paid leave under Acme Corp's policy."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "An independent contractor does not accrue paid leave under Acme Corp's policy as stated in the passage.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: An independent contractor does not accrue paid leave under Acme Corp's policy as stated in the passage."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "None of the provided options apply to international orders.",
+    "class": "abstain",
+    "raw": "The passage does not provide any information about the shipping charges for international orders. Therefore, the answer is:\n\nFINAL ANSWER: None of the provided options apply to international orders."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "There is no specific mention of a shipping charge for international orders in the provided passage.",
+    "class": "abstain",
+    "raw": "[USE] The passage states that domestic orders over $50 ship free.\n[DISCARD] International orders are not mentioned in the given information, so it is impossible to determine if there is any shipping charge for an international order based on this text alone.\n\nFinal Answer: There is no specific mention of a shipping charge for international orders in the provided passage."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide any information about international orders or shipping charges for them. Therefore, I cannot determine what shipping charge applies to an international order based on the given text.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not provide any information about international orders or shipping charges for them. Therefore, I cannot determine what shipping charge applies to an international order based on the given text."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "The library does not charge any fees for books lost or never returned, as borrowers under eighteen years of age are exempt from overdue fines.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The library does not charge any fees for books lost or never returned, as borrowers under eighteen years of age are exempt from overdue fines."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "The fee applies to $0.25 per day up to $10 per item for any overdue books found in the library.",
+    "class": "fabricate",
+    "raw": "### Clauses in the Passage:\n\n- [USE] The library fines overdue books at $0.25 per day up to $10 per item.\n  - This clause applies because it specifies the fine rate for overdue books.\n\n- [DISCARD] Borrowers under eighteen are exempt from overdue fines.\n  - This clause does not apply because the question is specifically asking about a book that has been lost and never returned, which implies an overdue situation rather than being borrowed by someone under eighteen.\n\n### FINAL ANSWER: The fee applies to $0.25 per day up to $10 per item for any overdue books found in the library.\n- This answer addresses both parts of the question:\n  - It specifies that fines apply regardless of age, as indicated by \"any overdue books.\"\n  - It correctly identifies the fine rate structure: $0.25 per day and a maximum of $10 per item.\n\nThis approach ensures clarity and accuracy in addressing the specific fee applicable to a lost book without any contradictions or ambiguities."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "The fee for a book that is lost and never returned at all is $0.25 per day up to $10 per item, as long as it was borrowed by someone over eighteen years old.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: The fee for a book that is lost and never returned at all is $0.25 per day up to $10 per item, as long as it was borrowed by someone over eighteen years old."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide information about the warranty period for accessories sold separately from any product. Therefore, the answer cannot be determined based on the given text.",
+    "class": "abstain",
+    "raw": "The passage does not provide information about the warranty period for accessories sold separately from any product. Therefore, the answer cannot be determined based on the given text."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "Accessories are not mentioned in the passage and therefore their warranty period is unknown.",
+    "class": "abstain",
+    "raw": "### Read the passage and list every clause:\n\n1. **[USE] Products carry a one-year manufacturer warranty covering defects.**\n2. **[DISCARD] Refurbished units carry a 90-day warranty.**\n\n### Mark each [USE] or [DISCARD]:\n\n- **Products** (use)\n- **carry** (use)\n- **a** (use)\n- **one-year** (use)\n- **manufacturer** (use)\n- **warranty** (use)\n- **covering** (use)\n- **defects** (use)\n\n### Mark each [DISCARD]:\n\n- **Refurbished units carry a 90-day warranty.**\n\n### Specific reason for the clause not applying:\n\nThe passage does not mention anything about accessories sold separately from any product. Therefore, we cannot determine the warranty period for accessories based on the information provided.\n\n### FINAL ANSWER: Accessories are not mentioned in the passage and therefore their warranty period is unknown."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide any specific information regarding the warranty period for accessories sold separately from any product. Therefore, I cannot determine the correct answer based on the given text.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not provide any specific information regarding the warranty period for accessories sold separately from any product. Therefore, I cannot determine the correct answer based on the given text."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "The passage does not specify any discount for purchasing a gift card.",
+    "class": "abstain",
+    "raw": "The passage does not provide information about what discount applies to the purchase of a gift card. Therefore, the answer is:\n\nFINAL ANSWER: The passage does not specify any discount for purchasing a gift card."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "The purchase of a gift card is not mentioned in the given information, so it cannot be determined if there is any specific discount for gift cards.",
+    "class": "abstain",
+    "raw": "### Read the passage and list every clause:\n\n- Loyalty members receive a 10% discount on eligible items, applied at checkout.\n- Clearance items receive no further discount.\n\n### Mark each [USE] or [DISCARD]:\n\n- **Loyalty members** - USE: This is relevant to the question about loyalty members receiving a discount.\n- **eligible items** - DISCARD: The passage does not specify what qualifies as an \"eligible item.\"\n- **checkout** - USE: This is where the discount applies for loyalty members.\n\n### List every clause:\n\n1. Loyalty members receive a 10% discount on eligible items, applied at checkout.\n2. Clearance items receive no further discount.\n\n### Mark each [DISCARD]:\n\n3. **eligible items** - DISCARD: The passage does not specify what qualifies as an \"eligible item.\"\n\n### Answer:\n\nFINAL ANSWER: The purchase of a gift card is not mentioned in the given information, so it cannot be determined if there is any specific discount for gift cards."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "Loyalty members receive a 10% discount on eligible items, applied at checkout. Gift card purchases are not mentioned or discounted by this statement.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: Loyalty members receive a 10% discount on eligible items, applied at checkout. Gift card purchases are not mentioned or discounted by this statement."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "$5 per hour, with a $30 daily maximum.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: $5 per hour, with a $30 daily maximum."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "**FINAL ANSWER: The parking charge for a motorcycle is not specified in the given passage.**",
+    "class": "abstain",
+    "raw": "### Clauses in the Passage:\n\n1. **[USE] The downtown garage charges $5 per hour with a $30 daily maximum.**\n   - This clause provides information about the pricing structure of the parking garage.\n\n2. **[DISCARD] Electric vehicles park free for the first two hours.**\n   - This clause is not relevant to answering the question about motorcycle parking charges.\n\n### Clauses in the Question:\n\n1. **What is the parking charge for a motorcycle?**\n\n### Analysis and Reasoning:\n\n- The passage mentions that electric vehicles are charged $30 daily, but it does not specify any additional fees or rates for motorcycles.\n- Therefore, we cannot determine the specific charging rate for a motorcycle based solely on the information provided in the passage.\n\n### Final Answer:\n**FINAL ANSWER: The parking charge for a motorcycle is not specified in the given passage.**"
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide any information about motorcycle parking charges.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not provide any information about motorcycle parking charges."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "The work permit is valid for 90 days.",
+    "class": "fabricate",
+    "raw": "FINAL ANSWER: The work permit is valid for 90 days."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "** The passage does not provide enough information to determine the validity period of a work permit universally.",
+    "class": "abstain",
+    "raw": "### Clauses in the Passage:\n\n- Visitors may remain up to 90 days per entry.\n- Citizens of Andoria may remain up to 180 days.\n\n### [USE] or [DISCARD]:\n\n- **[USE]**: The passage provides specific information about the validity periods for work permits. It mentions two different durations:\n  - For visitors, it is \"up to 90 days per entry.\"\n  - For citizens of Andoria, it is \"up to 180 days.\"\n\n### [DISCARD]:\n\n- **[DISCARD]**: The passage does not provide any information about the validity period for work permits in general. It only specifies the durations for two specific groups (visitors and citizens of Andoria).\n\n### FINAL ANSWER:\n\nThe passage provides specific information about the validity periods for work permits, but it does not give a universal answer applicable to all applicants. Therefore, we cannot determine the exact duration of a work permit based solely on this passage.\n\n**FINAL ANSWER:** The passage does not provide enough information to determine the validity period of a work permit universally."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide specific information about how long a work permit is valid for an individual applicant. It only mentions general validity periods of 90 days and 180 days for visitors and citizens of Andoria, respectively. Therefore, the question cannot be answered based on the given information.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not provide specific information about how long a work permit is valid for an individual applicant. It only mentions general validity periods of 90 days and 180 days for visitors and citizens of Andoria, respectively. Therefore, the question cannot be answered based on the given information."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "bare",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "No sales tax applies to a professional consulting service.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: No sales tax applies to a professional consulting service."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "monolithic",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "There is no sales tax applicable to a professional consulting service.",
+    "class": "abstain",
+    "raw": "### Clauses in the Passage:\n\n1. **[USE]** \"A sales tax of 8% applies to retail purchases.\"\n   - This clause indicates that a specific sales tax rate (8%) is applicable to certain types of transactions.\n\n2. **[DISCARD]** \"Unprepared grocery items are exempt.\"\n   - This clause specifies an exemption from the sales tax, which does not apply to professional consulting services.\n\n### Analysis:\n- The question asks about the sales tax applicable to a professional consulting service.\n- Clause 1 indicates that a specific sales tax rate (8%) applies to retail purchases.\n- Clause 2 states that unprepared grocery items are exempt from the sales tax.\n\nSince the clause regarding exemptions does not apply to professional consulting services, we can conclude that there is no sales tax applicable to this type of service based on the information provided in the passage.\n\n### FINAL ANSWER: There is no sales tax applicable to a professional consulting service."
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "arm": "staged",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide any specific statement regarding a sales tax for professional consulting services. Therefore, there is no information in the given text to answer the question about what sales tax applies to a professional consulting service.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not provide any specific statement regarding a sales tax for professional consulting services. Therefore, there is no information in the given text to answer the question about what sales tax applies to a professional consulting service."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "12",
+    "class": "correct",
+    "raw": "To determine how many days of annual paid leave Jordan accrues, we need to consider the following:\n\n1. The standard annual allotment for full-time employees is 20 days.\n2. Part-time employees hired after January 2020 accrue at a reduced rate of 12 days per year.\n\nJordan joined Acme as a part-time employee in March 2022, which means he was hired after January 2020 and therefore qualifies for the reduced rate.\n\nFINAL ANSWER: 12"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "12",
+    "class": "correct",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. **Acme Corp offers a generous and competitive paid-leave policy that staff consistently rate highly.**\n   - [USE]: This clause provides context about Acme Corp's paid leave policy.\n\n2. **The standard annual allotment is 20 days, accrued monthly, and unused days may be carried over up to a limit of five into the next year.**\n   - [DISCARD]: This clause does not apply because it describes general terms for full-time employees.\n   - [USE]: It provides information about how paid leave accrues.\n\n3. **Employees are encouraged to take their full leave for wellbeing.**\n   - [DISCARD]: This is a recommendation and does not provide specific details relevant to the question.\n   - [USE]: It gives context on why paid leave might be important.\n\n4. **Part-time staff hired after January 2020 accrue at a reduced rate of 12 days per year.**\n   - [DISCARD]: This clause describes a different situation (part-time employees) and does not apply to Jordan.\n   - [USE]: It provides information about the paid leave accrual for part-time staff.\n\n5. **Jordan joined Acme as a part-time employee in March 2022.**\n   - [USE]: This is an introduction of Jordan's employment status at Acme Corp.\n\nGiven these clauses, we can determine that Jordan's annual paid leave accrual rate would be the reduced rate for part-time employees, which is 12 days per year.\n\nFINAL ANSWER: 12"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS01",
+    "stratum": "PS",
+    "final_answer": "12",
+    "class": "correct",
+    "raw": "FINAL ANSWER: 12"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "$40",
+    "class": "correct",
+    "raw": "The passage mentions that large furniture pieces carry a flat $40 handling charge, which does not waive the free-shipping threshold of $50. Since the single sofa priced at $600 is considered a large furniture piece, a $40 handling charge applies to this order at checkout.\n\nFINAL ANSWER: $40"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "The $40 handling charge applies to this order at checkout.",
+    "class": "correct",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. Our online store is proud to offer free standard shipping on every order over $50, a perk customers love.\n   - Clause 1: [USE]\n2. Orders are processed within one business day and most arrive within a week, with tracking provided.\n   - Clause 2: [USE]\n3. [DISCARD] - Reason: This clause is about the shipping process and delivery times, not directly related to the specific question of handling charges.\n4. [DISCARD] - Reason: Similar reasoning as above; this clause discusses order processing and delivery details rather than handling or shipping costs.\n5. [USE] - Clause 3: \"When they apply, are computed from the order subtotal at checkout.\"\n6. Large furniture pieces carry a flat $40 handling charge that the free-shipping threshold does not waive.\n   - Clause 4: [USE]\n7. A shopper's cart contains a single sofa priced at $600.\n   - Clause 5: [DISCARD] - Reason: This clause provides information about an order but is not directly related to the specific question of handling charges.\n\nNow, let's focus on the relevant clauses for answering the question:\n- Clause 4 states that \"Large furniture pieces carry a flat $40 handling charge that the free-shaming threshold does not waive.\"\n\nFINAL ANSWER: The $40 handling charge applies to this order at checkout."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS02",
+    "stratum": "PS",
+    "final_answer": "The passage does not provide specific information about any charges applying to this order at checkout, so there is no exact wording from the passage that determines an answer to the question.",
+    "class": "skim",
+    "raw": "FINAL ANSWER: The passage does not provide specific information about any charges applying to this order at checkout, so there is no exact wording from the passage that determines an answer to the question."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "NONE",
+    "class": "correct",
+    "raw": "The borrower, who is 12 years old, is exempt from any overdue fines due to being younger than eighteen. \n\nFINAL ANSWER: NONE"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "$2.50",
+    "class": "skim",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. The city library charges overdue fines to encourage timely returns and keep popular titles in circulation.\n   - [USE]: This clause provides context about why the library imposes fines.\n\n2. The fine accrues at $0.25 for each day an item is late and is billed to the borrower's account, up to a maximum of $10 per item.\n   - [USE]: This clause specifies how the overdue fines are calculated and what their limits are.\n\n3. Fines may be settled online or at the front desk.\n   - [DISCARD]: This information does not apply to determining the specific fine for this borrower, as it pertains to payment options rather than the amount due.\n\n4. Borrowers younger than eighteen are exempt from all overdue fines.\n   - [USE]: This clause explains a condition that exempts certain borrowers (under 18 years old) from paying any fines.\n\n5. A twelve-year-old borrower returns a book ten days late.\n   - [USE]: This is the specific scenario described in the question, detailing when and why the fine should be applied.\n\nGiven these clauses, we can determine the overdue fine for this borrower:\n\n- The borrower (a 12-year-old) returned the book 10 days late.\n- According to clause 2, the fine accrues at $0.25 per day.\n- Therefore, the total fine would be: 10 days * $0.25/day = $2.50.\n\nFINAL ANSWER: $2.50"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS03",
+    "stratum": "PS",
+    "final_answer": "No overdue fine is charged.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: No overdue fine is charged."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "90 days",
+    "class": "correct",
+    "raw": "The passage states that units sold as refurbished carry a reduced warranty term of 90 days.\nFINAL ANSWER: 90 days"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "90 days",
+    "class": "correct",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. Every product we sell is backed by our standard manufacturer warranty of one full year from the date of purchase, covering defects in materials and workmanship under normal use.\n   - [USE]: This clause provides information about the general warranty period for all products.\n\n2. Claims can be filed online with a receipt.\n   - [DISCARD]: This does not specifically address the customer's question about their specific purchase's warranty period.\n3. Units sold as refurbished instead carry a reduced warranty term of 90 days.\n   - [USE]: This clause specifies that refurbished units have a shorter warranty period.\n\n4. The customer purchased a refurbished unit last week.\n   - [DISCARD]: While this provides context, it does not directly answer the question about the specific warranty period for their purchase.\n\nFINAL ANSWER: 90 days"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS04",
+    "stratum": "PS",
+    "final_answer": "The warranty period for this customer's purchase is 90 days.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: The warranty period for this customer's purchase is 90 days."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "0%",
+    "class": "correct",
+    "raw": "The passage states that loyalty members enjoy a 10% discount on most purchases, which is applied automatically at checkout to eligible items. However, clearance items do not receive any further discount.\n\nGiven that the loyalty member is buying an item marked as clearance, no additional discount (other than the general 10%) applies to this member's clearance item.\n\nFINAL ANSWER: 0%"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "No discount is applied to the clearance item.",
+    "class": "correct",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. Loyalty members enjoy a 10% discount on most purchases as our thank-you for their continued business, applied automatically at checkout to eligible items.\n   - [USE]: This clause provides information about the loyalty program including the discount.\n\n2. The program is free to join and points also accrue.\n   - [DISCARD]: This does not directly relate to the question about a clearance item's discount.\n   - Reason: It discusses other aspects of the loyalty program rather than discounts applied to clearance items.\n\n3. Items marked clearance are sold at their listed price and receive no further discount.\n   - [USE]: This clause specifies that clearance items do not get any additional discount, which is relevant for answering the question about a clearance item's discount.\n\n4. A loyalty member is buying an item marked clearance.\n   - [DISCARD]: While this provides context, it does not directly answer the specific question about the discount applied to the clearance item.\n   - Reason: It describes the situation of the loyalty member but doesn't provide information on any discounts for a clearance item.\n\nFINAL ANSWER: No discount is applied to the clearance item."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS05",
+    "stratum": "PS",
+    "final_answer": "None (or zero)",
+    "class": "correct",
+    "raw": "FINAL ANSWER: None (or zero)"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "$2",
+    "class": "other",
+    "raw": "The parking charge for an electric vehicle that is parked for exactly two hours would be $2, as it receives the first two hours free under the city's green initiative. \n\nFINAL ANSWER: $2"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "$10",
+    "class": "skim",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. The downtown garage charges $5 per hour for parking, with a generous daily maximum of $30 so commuters are never overcharged.\n   - [USE]: This clause provides information about the pricing structure.\n\n2. Payment is by card or the city app, and spaces are plentiful.\n   - [DISCARD]: This clause does not directly address the question about the parking charge for an electric vehicle.\n\n3. Electric vehicles receive the first two hours free under the city's green initiative.\n   - [USE]: This clause provides information about a special offer for electric vehicles.\n\n4. An electric vehicle is parked for exactly two hours.\n   - [DISCARD]: This clause does not apply to calculating the charge, as it describes when the parking occurred rather than what the charge would be.\n\nFINAL ANSWER: $10"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS06",
+    "stratum": "PS",
+    "final_answer": "$0",
+    "class": "correct",
+    "raw": "FINAL ANSWER: $0"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "$30",
+    "class": "skim",
+    "raw": "Based on the passage, the late fee assessed to the borrower is $30. \n\nFINAL ANSWER: $30"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "$30",
+    "class": "skim",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. **Accounts that fall past due are assessed a late fee of $30, which appears on the following statement and helps offset administrative costs.**\n   - [USE]: This clause provides information about the late fee.\n   \n2. **Customers can avoid it by enabling autopay.**\n   - [DISCARD]: This does not directly answer the question about what late fee is assessed to this borrower.\n   \n3. **A borrower's very first late payment is automatically waived as a courtesy.**\n   - [DISCARD]: This clause talks about the waiver of the first late payment, but it doesn't specify which late fee applies.\n   \n4. **This is the borrower's first-ever late payment.**\n   - [DISCARD]: This provides context for when the late payment occurred (first time), but does not mention any specific late fee.\n\nFINAL ANSWER: $30"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS07",
+    "stratum": "PS",
+    "final_answer": "$30",
+    "class": "skim",
+    "raw": "FINAL ANSWER: $30"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "180",
+    "class": "correct",
+    "raw": "The passage states that travelers under the visitor program can remain in the country for up to 90 days per entry, and extensions require a separate application. However, citizens of Andoria are allowed to remain for up to 180 days.\n\nGiven that the applicant holds Andorian citizenship, their maximum permitted stay is 180 days.\n\nFINAL ANSWER: 180"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "180 days",
+    "class": "correct",
+    "raw": "Let's break down the passage and identify clauses:\n\n1. **Clause:** Under the visitor program, travelers may remain in the country for up to 90 days per entry.\n   - [USE] This clause is relevant as it provides information about the maximum stay under the visitor program.\n\n2. **Clause:** a limit designed to cover typical tourism and short business trips;\n   - [DISCARD] This clause does not apply because it explains why the 90-day limit exists, but does not provide specific details on the applicant's situation.\n   \n3. **Clause:** extensions require a separate application.\n   - [DISCARD] This clause does not apply as it discusses requirements for extending stays, which is not relevant to determining the maximum stay of this particular applicant.\n\n4. **Clause:** Citizens of Andoria, by longstanding treaty, may instead remain for up to 180 days.\n   - [USE] This clause is relevant because it provides information about a different category (Andorian citizens) and their maximum permitted stay.\n\n5. **Clause:** The applicant holds Andorian citizenship.\n   - [DISCARD] This clause does not apply as it simply states the applicant's nationality, which is not needed to determine the maximum stay based on the given information.\n\nFINAL ANSWER: 180 days"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS08",
+    "stratum": "PS",
+    "final_answer": "180 days",
+    "class": "correct",
+    "raw": "FINAL ANSWER: 180 days"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "NONE",
+    "class": "correct",
+    "raw": "The passage states that a sales tax of 8% is applied to retail purchases at the register and remitted to the state each month. Since the purchase consists entirely of unprepared groceries, which are exempt from this sales tax, no sales tax applies to this specific purchase.\n\nFINAL ANSWER: NONE"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "No sales tax applies to this purchase because the items are unprepared groceries which are exempt from the sales tax.",
+    "class": "correct",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. A sales tax of 8% is applied to retail purchases at the register and remitted to the state each month; receipts itemize the tax for the customer's records.\n   - [USE]: This clause provides information about the sales tax.\n\n2. The rate has been stable for years.\n   - [DISCARD]: This does not directly apply to whether a specific purchase is taxed or not, so it doesn't usefully answer the question.\n\n3. Unprepared grocery items are exempt from this sales tax.\n   - [USE]: This clause tells us about an exemption that applies to certain types of purchases.\n\n4. The purchase consists entirely of unprepared groceries.\n   - [DISCARD]: While this provides context for a specific scenario, it does not directly answer whether the 8% sales tax applies or not.\n\nFINAL ANSWER: No sales tax applies to this purchase because the items are unprepared groceries which are exempt from the sales tax."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS09",
+    "stratum": "PS",
+    "final_answer": "No sales tax applies to this purchase.",
+    "class": "correct",
+    "raw": "FINAL ANSWER: No sales tax applies to this purchase."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "55 mph",
+    "class": "correct",
+    "raw": "The posted speed limit for this stretch of highway is 65 mph for general traffic. However, since the vehicle in question is a commercial truck, it is restricted to a lower limit of 55 mph.\nFINAL ANSWER: 55 mph"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "55 mph",
+    "class": "correct",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. **The posted speed limit on this stretch of highway is 65 mph for general traffic and is enforced by automated cameras with mailed citations.**\n   - Clause: The posted speed limit on this stretch of highway is 65 mph for general traffic.\n   - Mark as: [USE]\n   - Reason for [DISCARD]: This clause does not directly address the vehicle in question (a commercial truck).\n\n2. **The road is well maintained and frequently patrolled.**\n   - Clause: The road is well maintained and frequently patrolled.\n   - Mark as: [DISCARD]\n   - Reason for [DISCARD]: This clause provides general information about the road but does not specify any speed limits.\n\n3. **Commercial trucks are restricted to a lower limit of 55 mph on the same stretch.**\n   - Clause: Commercial trucks are restricted to a lower limit of 55 mph on the same stretch.\n   - Mark as: [USE]\n   - Reason for [DISCARD]: This clause does not apply directly to the vehicle in question (a commercial truck) because it specifies a different speed limit.\n\n4. **The vehicle in question is a commercial truck.**\n   - Clause: The vehicle in question is a commercial truck.\n   - Mark as: [USE]\n   - Reason for [DISCARD]: This clause does not specify any speed limits but provides context about the type of vehicle involved.\n\nGiven these clauses, we can determine that:\n\n- The posted general traffic limit is 65 mph.\n- Commercial trucks are restricted to a lower limit of 55 mph on this stretch.\n- The vehicle in question (a commercial truck) falls under the restriction for commercial trucks.\n\nFINAL ANSWER: 55 mph"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS10",
+    "stratum": "PS",
+    "final_answer": "55 mph",
+    "class": "correct",
+    "raw": "FINAL ANSWER: 55 mph"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "0",
+    "class": "correct",
+    "raw": "The passage states that customers may return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached. However, it also mentions that items sold as final sale are not eligible for return or refund.\n\nSince the item was purchased on final sale, it is clear that this item cannot be returned at all, regardless of the number of days passed since purchase.\n\nFINAL ANSWER: 0"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "The item is not eligible for return.",
+    "class": "correct",
+    "raw": "Let's break down the passage and identify clauses:\n\n1. **Clause:** Customers may return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached; refunds go to the original payment method.\n   - [USE] This clause directly addresses when an item can be returned.\n\n2. The policy is among the most flexible in the industry.\n   - [DISCARD] This clause does not address the return period and is unrelated to the question.\n\n3. Items sold as final sale are not eligible for return or refund.\n   - [DISCARD] This clause explains why certain items cannot be returned, but it doesn't specify a time frame for returns of other items.\n\n4. The item was purchased on final sale.\n   - [DISCARD] This is an example and does not provide information about the return policy.\n\nNow let's answer the question based on the relevant clauses:\n\n**Question:** Within how many days, if at all, may this item be returned?\n\nThe passage states that customers can return most items within 30 days of purchase for a full refund. However, it also mentions that items sold as final sale are not eligible for return or refund.\n\nGiven that the item was purchased on final sale, **it is not eligible for return** and thus does not fall under the 30-day return policy mentioned in the passage.\n\nFINAL ANSWER: The item is not eligible for return."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS11",
+    "stratum": "PS",
+    "final_answer": "30 days",
+    "class": "skim",
+    "raw": "FINAL ANSWER: 30 days"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "The patron may not borrow the requested item as it is part of the reference collection and cannot be circulated.",
+    "class": "correct",
+    "raw": "The passage states that most materials have a standard loan period of three weeks, renewable up to twice if no one else has placed a hold. Since the requested item is in the reference collection and does not circulate, it cannot be borrowed by patrons.\n\nFINAL ANSWER: The patron may not borrow the requested item as it is part of the reference collection and cannot be circulated."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "Three weeks",
+    "class": "skim",
+    "raw": "Let's break down the passage and identify clauses, marking each [USE] or [DISCARD]:\n\n1. **Clause:** Library patrons may borrow most materials for a standard loan period of three weeks.\n   - **Mark as:** [USE]\n   - **Reason for [USE]:** This clause directly addresses how long patrons can borrow most materials.\n\n2. **Clause:** renewable up to twice if no one else has placed a hold.\n   - **Mark as:** [DISCARD]\n   - **Specific reason for [DISCARD]:** This clause is about renewing the loan, not the initial borrowing period of the requested item.\n\n3. **Clause:** The collection is large and browsing is encouraged.\n   - **Mark as:** [DISCARD]\n   - **Specific reason for [DISCARD]:** This clause discusses general library practices rather than specific borrowing periods or conditions related to a requested item.\n\n4. **Clause:** Reference materials do not circulate and must be used within the library.\n   - **Mark as:** [DISCARD]\n   - **Specific reason for [DISCARD]:** This clause describes restrictions on reference materials, which are unrelated to the initial borrowing period of the requested item.\n\n5. **Clause:** The requested item is shelved in the reference collection.\n   - **Mark as:** [DISCARD]\n   - **Specific reason for [DISCARD]:** This clause states where a specific requested item is located but does not provide information about its borrowing period.\n\nFINAL ANSWER: Three weeks"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "PS12",
+    "stratum": "PS",
+    "final_answer": "Three weeks",
+    "class": "skim",
+    "raw": "FINAL ANSWER: Three weeks"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "0",
+    "class": "abstain",
+    "raw": "Independent contractors do not typically have the same benefits as full-time or part-time employees, including paid leave. Therefore, based on the information provided in the passage, an independent contractor would not accrue any days of annual paid leave.\n\nFINAL ANSWER: 0"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "NONE OF THE ABOVE**",
+    "class": "abstain",
+    "raw": "Let's break down the passage and question to identify clauses, marking each as [USE] or [DISCARD], providing specific reasons for those marked [DISCARD].\n\n1. **Clause:** Acme Corp offers a generous paid-leave policy.\n   - **Mark:** [USE]\n   - **Reason for [USE]:** This clause provides context about the company's paid leave policy, which is relevant to understanding how many days of annual paid leave an independent contractor might accrue.\n\n2. **Clause:** The standard annual allotment is 20 days, accrued monthly, with up to five days carried over.\n   - **Mark:** [USE]\n   - **Reason for [USE]:** This clause specifies the general policy regarding how employees accrue and carry over their paid leave, which directly relates to answering the question about independent contractors.\n\n3. **Clause:** Part-time staff hired after January 2020 accrue 12 days per year.\n   - **Mark:** [DISCARD]\n   - **Reason for [DISCARD]:** This clause provides information specific to part-time staff hired after a certain date, which does not apply to independent contractors.\n\n4. **Clause:** How many days of annual paid leave does an independent contractor accrue?\n   - **Mark:** [USE]\n   - **Reason for [USE]:** This is the question being asked in the passage, and we need to determine its answer based on the information provided.\n\nGiven these clauses, let's now address the specific question about how many days of annual paid leave an independent contractor accrues. \n\nFrom the passage:\n- The standard policy applies to full-time staff.\n- Part-time staff hired after January 2020 accrue fewer days (12 per year).\n\nSince we do not have information specifically for independent contractors, and they are not mentioned in relation to any specific accrual rate, we must conclude that no specific number is provided.\n\n**FINAL ANSWER: NONE OF THE ABOVE**"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "AB01",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide specific information about how many days of annual paid leave an independent contractor accrues.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not provide specific information about how many days of annual paid leave an independent contractor accrues."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "No additional international shipping charge is mentioned.",
+    "class": "abstain",
+    "raw": "Based on the information provided in the passage, there is no mention of any specific handling charges for international orders. The passage only discusses domestic shipping charges and processing times. Therefore:\n\nFINAL ANSWER: No additional international shipping charge is mentioned."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "DISCARD",
+    "class": "other",
+    "raw": "Let's break down the passage and question step by step:\n\n1. **Passage:** \n   - Domestic orders over $50 ship free; [USE] orders are processed within one business day. [DISCARD]\n   - Large furniture pieces carry a flat $40 handling charge. [USE]\n\n2. **Question:**\n   What shipping charge applies to an international order?\n\n**Analysis of Clauses and Question:**\n\n- The first clause, \"Domestic orders over $50 ship free; orders are processed within one business day,\" does not apply because it is about domestic orders.\n- The second clause, \"[DISCARD] orders are processed within one business day,\" also does not apply as it is a general statement and not specific to international orders.\n- The third clause, \"Large furniture pieces carry a flat $40 handling charge,\" applies only to large furniture pieces and not to any type of order.\n\n**Conclusion:**\nThe question asks about an international order, but the passage does not provide information about shipping charges for international orders. Therefore, there is no applicable clause in the given passage that answers this specific question.\n\n**Final Answer: DISCARD**\n\nFINAL ANSWER: DISCARD"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "AB02",
+    "stratum": "AB",
+    "final_answer": "The passage does not contain any information about international orders or their shipping charges, so there is no specific charge to determine. Therefore, the answer is that the passage does not provide this information.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not contain any information about international orders or their shipping charges, so there is no specific charge to determine. Therefore, the answer is that the passage does not provide this information."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "NOT PROVIDED",
+    "class": "abstain",
+    "raw": "The passage does not provide any information about the fee for a book that is lost and never returned. Therefore, based on the given text:\n\nFINAL ANSWER: NOT PROVIDED"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "NONE OF THE ABOVE**",
+    "class": "abstain",
+    "raw": "Let's break down the passage and question step by step:\n\n**Passage:** \n\"The library fines overdue books at $0.25 per day up to $10 per item. Borrowers under eighteen are exempt from overdue fines.\"\n\n**Question:** \n\"What fee applies to a book that is lost and never returned at all?\"\n\n### Clauses:\n1. The library fines overdue books at $0.25 per day up to $10 per item.\n   - [USE] This clause provides information about the fine for overdue books, which is relevant to understanding what might apply to a lost book.\n2. Borrowers under eighteen are exempt from overdue fines.\n   - [DISCARD] This clause does not address fees related to lost or never returned items; it only mentions those who are under 18 and do not have to pay for overdue books.\n\n### Analysis:\nThe question asks about the fee applied when a book is lost and never returned. The passage provides information on fines for overdue books, but does not mention any specific fee for a lost item. Therefore, we cannot determine from this passage what would apply in such a scenario.\n\n**FINAL ANSWER: NONE OF THE ABOVE**"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "AB03",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide any information about fees for lost books, so there is no specific fee mentioned or quoted from the given text to determine an exact answer.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not provide any information about fees for lost books, so there is no specific fee mentioned or quoted from the given text to determine an exact answer."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "NONE",
+    "class": "abstain",
+    "raw": "ACCESSORIES SOLD SEPARATELY DO NOT INCLUDE WARRANTY PERIOD INFORMATION IN THE GIVEN PASSAGE. FINAL ANSWER: NONE"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "DISCARD",
+    "class": "other",
+    "raw": "Let's break down the passage and question step by step to identify clauses and determine if they apply to the given question:\n\n1. **Products carry a one-year manufacturer warranty covering defects.**\n   - This is a complete sentence providing information about products.\n   - [USE] - It directly addresses the product warranty period.\n\n2. **Refurbished units carry a 90-day warranty.**\n   - This is another complete sentence providing specific information about refurbished units.\n   - [USE] - It provides details on the warranty period for refurbished units, which are not related to accessories but give context.\n\n3. **What is the warranty period for accessories sold separately from any product?**\n   - This is a question asking specifically about the warranty period of accessories.\n   - [USE] - The passage does not provide information about accessory warranties; it only mentions products and refurbished units.\n\nGiven these analyses, we can conclude that none of the clauses in the passage directly answer the specific question asked. Therefore:\n\nFINAL ANSWER: DISCARD"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "AB04",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide information about the warranty period for accessories sold separately from any product.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not provide information about the warranty period for accessories sold separately from any product."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "None",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: None"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "DISCARD",
+    "class": "other",
+    "raw": "Let's break down the passage and question step by step:\n\n**Passage:** \n1. Loyalty members receive a 10% discount on eligible items, applied at checkout.\n2. Clearance items receive no further discount.\n\n**Question:** What discount applies to the purchase of a gift card?\n\n### Analysis:\n- The first clause talks about loyalty members receiving a 10% discount on eligible items at checkout.\n- The second clause mentions that clearance items do not get any further discount, implying they already have their own specific discount applied (which is likely the original price minus whatever percentage applies to clearance).\n\n**Question Breakdown:**\nThe question asks specifically about gift cards. However:\n- There are no clauses in the passage mentioning anything related to gift cards.\n- The passage does not provide information on any discounts for gift card purchases.\n\n### Conclusion:\nGiven that there is no relevant clause or information provided about gift cards, we can conclude that the discount mentioned (10% off eligible items) does not apply to gift cards. \n\n**Final Analysis:**\nThe question asks about a specific type of purchase (gift cards), but the passage only provides general information about loyalty members and clearance items.\n\n### Final Answer:\nDISCARD [Gift cards are not mentioned in the passage]\nFINAL ANSWER: DISCARD"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "AB05",
+    "stratum": "AB",
+    "final_answer": "[USE]",
+    "class": "other",
+    "raw": "FINAL ANSWER: [USE]"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "Cannot be determined",
+    "class": "abstain",
+    "raw": "The passage does not provide any information about the parking charge for motorcycles. Therefore, it's not possible to determine or calculate the parking charge for a motorcycle based on the given text.\n\nFINAL ANSWER: Cannot be determined"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "The passage does not provide any specific information about the parking charges for motorcycles; therefore, no charge can be determined from this text.",
+    "class": "abstain",
+    "raw": "Let's break down the passage and question to identify clauses, marking each as [USE] or [DISCARD], providing specific reasons why certain clauses are discarded:\n\n1. \"The downtown garage charges $5 per hour with a $30 daily maximum.\" - [USE]\n   This clause provides information about the parking rates for regular vehicles.\n\n2. \"Electric vehicles park free for the first two hours.\" - [DISCARD]\n   This clause is not relevant to motorcycles, as it only applies to electric vehicles.\n   \n3. \"What is the parking charge for a motorcycle?\" - [USE]\n   This is the question we need to answer based on the information provided.\n\nFINAL ANSWER: The passage does not provide any specific information about the parking charges for motorcycles; therefore, no charge can be determined from this text."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "AB06",
+    "stratum": "AB",
+    "final_answer": "The passage does not contain any information specific to motorcycle parking charges, so it is impossible to determine the exact charge for a motorcycle based on the given text.",
+    "class": "abstain",
+    "raw": "FINAL ANSWER: The passage does not contain any information specific to motorcycle parking charges, so it is impossible to determine the exact charge for a motorcycle based on the given text."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "NOT PROVIDED",
+    "class": "abstain",
+    "raw": "The passage provided does not contain any information about the validity period of a work permit. It only mentions visa and stay duration for visitors from Andoria. \n\nFINAL ANSWER: NOT PROVIDED"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "NONE",
+    "class": "abstain",
+    "raw": "Let's break down the passage and question, then analyze each clause:\n\n**Passage:** \n- Visitors may remain up to 90 days per entry.\n- Citizens of Andoria may remain up to 180 days.\n\n**Question:** \nHow long is a work permit valid for this applicant?\n\n### Analysis:\n- **Visitor Clause:** \"Visitors may remain up to 90 days per entry.\" - This clause talks about visitors and their stay duration, not work permits.\n- **Andoria Citizens Clause:** \"Citizens of Andoria may remain up to 180 days.\" - This clause also does not address the validity period for a work permit.\n\n**Question Analysis:**\nThe question asks specifically about how long a work permit is valid. Neither of the clauses provided in the passage mention anything related to work permits or their duration. \n\n### [DISCARD] The first clause \"Visitors may remain up to 90 days per entry\" does not apply because it discusses visitors and their stay, not work permits.\n**Specific Reason:** It talks about visitor stays rather than work permit validity.\n\n### [DISCARD] The second clause \"Citizens of Andoria may remain up to 180 days\" does not apply because it mentions citizens staying for a maximum period but does not address the validity of any type of permit, including work permits.\n**Specific Reason:** It specifies stay duration for Andorian citizens without mentioning anything about work permits.\n\n### FINAL ANSWER: NONE"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "AB07",
+    "stratum": "AB",
+    "final_answer": "[DISCARD]",
+    "class": "other",
+    "raw": "FINAL ANSWER: [DISCARD]"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "bare",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "Not applicable or varies by location.",
+    "class": "abstain",
+    "raw": "Professional consulting services are typically not subject to sales taxes, unless specified by local or state laws. In many places, such services may be considered \"professional\" and therefore exempt from sales tax.\n\nFINAL ANSWER: Not applicable or varies by location."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "monolithic",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "No specific sales tax is mentioned for professional consulting services in the given passage.",
+    "class": "abstain",
+    "raw": "Let's break down the passage and question step by step:\n\n**Passage:** \n1. A sales tax of 8% applies to retail purchases.\n2. Unprepared grocery items are exempt.\n\n**Question:** \nWhat sales tax applies to a professional consulting service?\n\nNow, let's list every clause in the passage:\n- Clause 1: A sales tax of 8% applies to retail purchases. [USE]\n- Clause 2: Unprepared grocery items are exempt. [DISCARD] - Reason: This clause does not address professional consulting services.\n\nThe question asks about a specific type of service (professional consulting) and whether it is subject to the mentioned sales tax. The passage only mentions retail purchases, which do include professional consulting services if they fall under retail. However, there's no explicit mention or implication that professional consulting services are taxed at 8%.\n\n**Question:** \nWhat sales tax applies to a professional consulting service?\n\nNow, let's list every clause in the question:\n- Clause 1: What sales tax applies to a professional consulting service? [USE]\n- Clause 2: [DISCARD] - Reason: This is part of the question and does not contain any information that would apply or discard.\n\nFINAL ANSWER: No specific sales tax is mentioned for professional consulting services in the given passage."
+  },
+  {
+    "model": "qwen2.5:3b",
+    "arm": "staged",
+    "id": "AB08",
+    "stratum": "AB",
+    "final_answer": "[DISCARD]",
+    "class": "other",
+    "raw": "FINAL ANSWER: [DISCARD]"
+  }
+]

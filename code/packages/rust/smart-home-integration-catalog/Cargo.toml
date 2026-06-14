@@ -1,0 +1,9 @@
+[package]
+name = "smart-home-integration-catalog"
+version = "0.1.0"
+edition = "2021"
+description = "First-party smart-home integration catalog model and seed entries"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }

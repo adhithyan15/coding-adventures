@@ -1,0 +1,37 @@
+{
+  "_meta": "ADJ84 document-grounded items. The model runs two extraction stages (rulebook-IR, then input-IR); engine.py adjudicates deterministically. gold_* fields are for the author's check only and are NEVER shown to the model.",
+  "items": [
+    {
+      "id": "U6-overstay",
+      "input_text": "Visitors may remain in the country for up to 90 days. Overstaying that limit triggers a fine, unless the visitor obtained an extension before the 90th day. Priya entered the country on January 1 and departed on May 1 of the same year.",
+      "question": "Does Priya owe an overstay fine?",
+      "gold_verdict": "INDETERMINATE",
+      "gold_note": "stay (~120d) exceeds 90, but the fine is waived if an extension was obtained; the passage never states whether she got one. Defensible engine output = INDETERMINATE, blocked on extension_obtained.",
+      "trap": "baited toward 'yes, fine' by the 120-day overstay; Haiku's PROSE overclaimed this in ADJ83"
+    },
+    {
+      "id": "U1-waterdamage",
+      "input_text": "Brightline Insurance covers water damage caused by sudden and accidental events, such as a burst pipe. Damage resulting from gradual seepage or long-term maintenance neglect is excluded. Flood damage is covered only under a separate rider, which this policyholder has not purchased. A policyholder files a claim after discovering warped flooring and mold beneath a bathroom.",
+      "question": "Will Brightline cover this claim?",
+      "gold_verdict": "INDETERMINATE",
+      "gold_note": "coverage hinges on the CAUSE (sudden/accidental vs gradual vs flood), which is never stated. Defensible engine output = INDETERMINATE, blocked on damage_cause.",
+      "trap": "baited toward 'not covered' by 'mold'/'beneath a bathroom'; Haiku's PROSE overclaimed in ADJ83"
+    },
+    {
+      "id": "N1-reimburse",
+      "input_text": "The MediCare-Plus plan reimburses most in-network medical services at 80% after the annual deductible is met. Preventive screenings that receive a Grade A or Grade B recommendation from the National Preventive Services Panel are reimbursed at 100%, with the annual deductible waived. However, a preventive screening ordered outside the panel's recommended age range is treated as a standard service and reverts to the 80% in-network rate. The panel recommends colorectal cancer screening beginning at age 45. A 45-year-old in-network enrollee received a colorectal cancer screening that carries a Grade B recommendation.",
+      "question": "What percentage of the cost will the plan reimburse for this enrollee's colorectal screening?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "100",
+      "gold_note": "Grade B preventive AND age 45 is within the recommended range (begins at 45) -> 100%, deductible waived. Determinate; tests nested-override resolution + correct firing."
+    },
+    {
+      "id": "N3-importduty",
+      "input_text": "Orders valued under $800 are exempt from import duty. Orders valued at or above $800 incur a 5% import duty, except for books, which are always duty-free regardless of order value. A customer places an order for $950 worth of books.",
+      "question": "How much import duty applies to this order?",
+      "gold_verdict": "DETERMINATE",
+      "gold_answer_substring": "0",
+      "gold_note": "books exception overrides the $800 5% rule -> $0. Determinate; tests exception firing over a triggered general rule."
+    }
+  ]
+}

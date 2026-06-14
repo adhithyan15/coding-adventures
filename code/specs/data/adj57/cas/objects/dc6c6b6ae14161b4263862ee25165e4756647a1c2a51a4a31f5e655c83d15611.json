@@ -1,0 +1,21 @@
+{
+  "hash": "dc6c6b6ae14161b4263862ee25165e4756647a1c2a51a4a31f5e655c83d15611",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4797176/",
+  "title": "Does this patient have Pheochromocytoma? a systematic review of clinical signs and symptoms (Soltani et al., J Diabetes Metab Disord 2016)",
+  "interned_at": "",
+  "content": "diaphoresis (pooled sensitivity of 52.4 %). Diaphoresis in Table 5 shows: Number of studies: 2 with LR+ (95%CI): 2.184 (1.411-3.382) and LR- (95%CI): 0.451(0.310-0.657). Seven of these articles had control groups; five of which the control groups were the patients with suspected but excluded pheochromocytoma surgically or by follow-up, and in two others, the control group was hypertensive patients.",
+  "citations": [
+    {
+      "start": 44,
+      "end": 169,
+      "quote": "Diaphoresis in Table 5 shows: Number of studies: 2 with LR+ (95%CI): 2.184 (1.411-3.382) and LR- (95%CI): 0.451(0.310-0.657).",
+      "used_for": "night_sweats(present) [diaphoresis as diagnostic analog]->pheochromocytoma"
+    }
+  ],
+  "onward_citations": [
+    {
+      "citation": "Stein PP, Black HR. A simplified diagnostic approach to pheochromocytoma: a review of the literature and report of one institution's experience. Medicine (Baltimore) 1991;70(1):46-66. (PMID 1988766) \u2014 one of the control-group primary studies pooled for the diaphoresis LR.",
+      "interned_hash": ""
+    }
+  ]
+}

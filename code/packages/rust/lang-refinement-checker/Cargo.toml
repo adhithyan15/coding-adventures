@@ -1,0 +1,11 @@
+[package]
+name = "lang-refinement-checker"
+version = "0.4.0"
+edition = "2021"
+description = "LANG23 PRs 23-C + 23-D + 23-F + 23-G — refinement obligation checker (per-binding, function-scope, module-scope, and program-scope annotation-completeness)"
+
+[dependencies]
+constraint-core = { path = "../constraint-core" }
+constraint-engine = { path = "../constraint-engine" }
+constraint-vm = { path = "../constraint-vm" }
+lang-refined-types = { path = "../lang-refined-types" }

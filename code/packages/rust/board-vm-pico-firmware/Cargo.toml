@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-pico-firmware"
+version = "0.1.0"
+edition = "2021"
+description = "Raspberry Pi Pico Board VM firmware server scaffolding"
+
+[dependencies]
+board-vm-device = { path = "../board-vm-device" }
+board-vm-pico = { path = "../board-vm-pico" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+
+[dev-dependencies]
+board-vm-protocol = { path = "../board-vm-protocol" }
+
+[lib]
+path = "src/lib.rs"

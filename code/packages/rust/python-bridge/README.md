@@ -11,6 +11,7 @@ A ~400-line crate that wraps only the raw Python C API functions needed to build
 | Category | Functions |
 |----------|-----------|
 | Strings | `str_to_py`, `str_from_py` |
+| Bytes | `bytes_to_py`, `bytes_from_py` |
 | Lists | `vec_str_to_py`, `vec_str_from_py`, `vec_vec_str_to_py`, `vec_tuple2_str_to_py` |
 | Sets | `set_str_to_py`, `set_str_from_py` |
 | Booleans | `bool_to_py` |

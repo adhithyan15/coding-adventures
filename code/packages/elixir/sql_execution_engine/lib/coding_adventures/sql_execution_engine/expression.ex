@@ -222,14 +222,15 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   # Comparison expressions
   # ---------------------------------------------------------------------------
   #
-  # Grammar:
-  #   comparison = additive [ cmp_op additive
-  #              | "BETWEEN" additive "AND" additive
-  #              | "NOT" "BETWEEN" additive "AND" additive
+  # Grammar (the comparison operands are `collated`, which is transparent
+  # down through `bitwise`/`additive` to the underlying value):
+  #   comparison = collated [ cmp_op collated
+  #              | "BETWEEN" collated "AND" collated
+  #              | "NOT" "BETWEEN" collated "AND" collated
   #              | "IN" "(" value_list ")"
   #              | "NOT" "IN" "(" value_list ")"
-  #              | "LIKE" additive
-  #              | "NOT" "LIKE" additive
+  #              | "LIKE" collated
+  #              | "NOT" "LIKE" collated
   #              | "IS" "NULL"
   #              | "IS" "NOT" "NULL" ]
   #
@@ -260,20 +261,40 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
         eval_between(lhs, low, high)
 
       # NOT BETWEEN — children: [lhs, Token("NOT"), Token("BETWEEN"), low, Token("AND"), high]
-      [lhs_node, %Token{value: "NOT"}, %Token{value: "BETWEEN"}, low_node, %Token{value: "AND"}, high_node] ->
+      [
+        lhs_node,
+        %Token{value: "NOT"},
+        %Token{value: "BETWEEN"},
+        low_node,
+        %Token{value: "AND"},
+        high_node
+      ] ->
         lhs = eval_expr(lhs_node, row_ctx)
         low = eval_expr(low_node, row_ctx)
         high = eval_expr(high_node, row_ctx)
         sql_not(eval_between(lhs, low, high))
 
       # IN (...) — children: [lhs, Token("IN"), Token("("), value_list_node, Token(")")]
-      [lhs_node, %Token{value: "IN"}, %Token{type: "LPAREN"}, value_list_node, %Token{type: "RPAREN"}] ->
+      [
+        lhs_node,
+        %Token{value: "IN"},
+        %Token{type: "LPAREN"},
+        value_list_node,
+        %Token{type: "RPAREN"}
+      ] ->
         lhs = eval_expr(lhs_node, row_ctx)
         values = eval_value_list(value_list_node, row_ctx)
         eval_in(lhs, values)
 
       # NOT IN (...) — children: [lhs, Token("NOT"), Token("IN"), Token("("), value_list_node, Token(")")]
-      [lhs_node, %Token{value: "NOT"}, %Token{value: "IN"}, %Token{type: "LPAREN"}, value_list_node, %Token{type: "RPAREN"}] ->
+      [
+        lhs_node,
+        %Token{value: "NOT"},
+        %Token{value: "IN"},
+        %Token{type: "LPAREN"},
+        value_list_node,
+        %Token{type: "RPAREN"}
+      ] ->
         lhs = eval_expr(lhs_node, row_ctx)
         values = eval_value_list(value_list_node, row_ctx)
         sql_not(eval_in(lhs, values))
@@ -297,6 +318,31 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
         rhs = eval_expr(rhs_node, row_ctx)
         eval_cmp(op_token.value, lhs, rhs)
     end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Collation and bitwise layers
+  # ---------------------------------------------------------------------------
+  #
+  # SQLite's precedence ladder threads two extra rules between `comparison`
+  # and `additive`:
+  #
+  #   collated = bitwise [ "COLLATE" NAME ]
+  #   bitwise  = additive { ( "&" | "|" | "<<" | ">>" ) additive }
+  #
+  # `collated` only attaches a collation *sequence* (BINARY / NOCASE / …)
+  # used to order string comparisons.  This engine compares values
+  # directly and does not model collation ordering, so we evaluate the
+  # underlying value and ignore any trailing `COLLATE NAME`.
+  defp eval_rule("collated", %ASTNode{children: [value_node | _collate]}, row_ctx) do
+    eval_expr(value_node, row_ctx)
+  end
+
+  # `bitwise` is a left-associative operator chain, exactly like the
+  # arithmetic rules below — the integer bitwise operators are handled in
+  # `apply_arith/3`.
+  defp eval_rule("bitwise", %ASTNode{children: children}, row_ctx) do
+    eval_arithmetic_chain(children, row_ctx)
   end
 
   # ---------------------------------------------------------------------------
@@ -413,7 +459,9 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
       agg_key = build_agg_key(uname, rest)
 
       case Map.fetch(row_ctx, agg_key) do
-        {:ok, value} -> value
+        {:ok, value} ->
+          value
+
         :error ->
           # Aggregate not yet computed (this eval is used for the raw row,
           # not the aggregate result). Return nil as a sentinel — the Aggregate
@@ -479,6 +527,7 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   # We fold left: ((op1 OP op2) OP op3)
   defp eval_binary_op_chain([first | rest], op_value, row_ctx, combiner) do
     first_val = eval_expr(first, row_ctx)
+
     Enum.chunk_every(rest, 2)
     |> Enum.reduce(first_val, fn [%Token{value: ^op_value}, rhs_node], acc ->
       combiner.(acc, eval_expr(rhs_node, row_ctx))
@@ -488,6 +537,7 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   # Evaluate arithmetic chains: [operand, Token(op), operand, ...]
   defp eval_arithmetic_chain([first | rest], row_ctx) do
     first_val = eval_expr(first, row_ctx)
+
     Enum.chunk_every(rest, 2)
     |> Enum.reduce(first_val, fn [op_token, rhs_node], acc ->
       rhs = eval_expr(rhs_node, row_ctx)
@@ -538,7 +588,7 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
       |> Enum.map(fn
         "%" -> ".*"
         "_" -> "."
-        c   -> Regex.escape(c)
+        c -> Regex.escape(c)
       end)
       |> Enum.join()
 
@@ -557,6 +607,64 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
   defp apply_arith("/", _, 0), do: nil
   defp apply_arith("%", a, b) when b != 0, do: rem(a, b)
   defp apply_arith("%", _, 0), do: nil
+  # Integer bitwise operators (the `bitwise` grammar layer).
+  #
+  # SQLite does bitwise math on *signed 64-bit* integers, so we truncate the
+  # operands to integers, reduce mod 2**64, and reinterpret the result as
+  # signed.  Capping the shift count at 64 before shifting is also what keeps
+  # `<<` safe: `1 << 1000000000` collapses to 0 rather than allocating an
+  # enormous bignum.
+  defp apply_arith("&", a, b), do: to_i64(Bitwise.band(mask64(a), mask64(b)))
+  defp apply_arith("|", a, b), do: to_i64(Bitwise.bor(mask64(a), mask64(b)))
+  defp apply_arith("<<", a, b), do: sql_shift(trunc_int(a), trunc_int(b), :left)
+  defp apply_arith(">>", a, b), do: sql_shift(trunc_int(a), trunc_int(b), :right)
+
+  @mask64 0xFFFFFFFFFFFFFFFF
+  @sign64 0x8000000000000000
+
+  defp trunc_int(v) when is_integer(v), do: v
+  defp trunc_int(v) when is_float(v), do: trunc(v)
+
+  # Mask an integer to its unsigned 64-bit representation.
+  defp mask64(v), do: Bitwise.band(trunc_int(v), @mask64)
+
+  # Reinterpret an unsigned 64-bit value as signed (two's complement).
+  defp to_i64(v) do
+    v = Bitwise.band(v, @mask64)
+    if v >= @sign64, do: v - 0x10000000000000000, else: v
+  end
+
+  # SQLite shift semantics on signed 64-bit integers (VDBE OP_ShiftLeft/Right):
+  # a negative shift count reverses direction; a magnitude of 64 or more
+  # collapses to 0 (or -1 for an arithmetic right shift of a negative value);
+  # a right shift sign-extends.
+  defp sql_shift(value, 0, _dir), do: to_i64(value)
+
+  defp sql_shift(value, shift, dir) when shift < 0 do
+    flipped = if dir == :left, do: :right, else: :left
+    sql_shift(value, if(shift > -64, do: -shift, else: 64), flipped)
+  end
+
+  defp sql_shift(value, shift, dir) when shift >= 64 do
+    if value >= 0 or dir == :left, do: 0, else: -1
+  end
+
+  defp sql_shift(value, shift, :left) do
+    to_i64(Bitwise.bsl(mask64(value), shift))
+  end
+
+  defp sql_shift(value, shift, :right) do
+    bits = Bitwise.bsr(mask64(value), shift)
+
+    bits =
+      if value < 0 do
+        Bitwise.bor(bits, Bitwise.band(Bitwise.bsl(@mask64, 64 - shift), @mask64))
+      else
+        bits
+      end
+
+    to_i64(bits)
+  end
 
   # Lookup a column key in the row context, raising if not found.
   defp lookup_column(key, row_ctx) do
@@ -566,16 +674,21 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
     end
   end
 
-  # Evaluate a list of expressions from a value_list node.
-  defp eval_value_list(%ASTNode{rule_name: "value_list", children: children}, row_ctx) do
+  # Evaluate a list of expressions from a value_list-like node.
+  defp eval_value_list(%ASTNode{children: children}, row_ctx) do
     # children: [expr, Token(","), expr, Token(","), expr, ...]
     children
     |> Enum.reject(fn
       %Token{type: "COMMA"} -> true
       _ -> false
     end)
-    |> Enum.map(&eval_expr(&1, row_ctx))
+    |> Enum.flat_map(fn
+      %ASTNode{rule_name: "value_list"} = node -> eval_value_list(node, row_ctx)
+      node -> [eval_expr(node, row_ctx)]
+    end)
   end
+
+  defp eval_value_list(%Token{} = token, row_ctx), do: [eval_expr(token, row_ctx)]
 
   # Build the aggregate key string that the Aggregate module stores in row_ctx.
   #
@@ -601,13 +714,20 @@ defmodule CodingAdventures.SqlExecutionEngine.Expression do
 
     arg_str =
       case args do
-        [] -> ""
-        [%Token{type: "STAR"}] -> "*"
-        [%Token{value: v}] -> v
+        [] ->
+          ""
+
+        [%Token{type: "STAR"}] ->
+          "*"
+
+        [%Token{value: v}] ->
+          v
+
         [%ASTNode{} = node] ->
           # Single AST node argument (e.g., value_list wrapping an expression).
           # Collect all leaf tokens and join their values.
           collect_tokens_for_key(node)
+
         nodes ->
           # Multiple nodes — collect all leaf tokens.
           nodes

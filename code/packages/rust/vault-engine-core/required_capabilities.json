@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-engine-core",
+  "capabilities": [],
+  "justification": "Pure trait + vocabulary. No filesystem, network, process, environment, csprng, or wallclock access. Concrete engine crates that implement SecretEngine declare their own capabilities."
+}

@@ -28,6 +28,9 @@ dependencies = [
 [tool.uv.sources]
 coding-adventures-cil-bytecode-builder = { path = "../cil-bytecode-builder", editable = true }
 coding-adventures-compiler-ir = { path = "../compiler-ir", editable = true }
+coding-adventures-codegen-core = { path = "../codegen-core", editable = true }
+coding-adventures-interpreter-ir = { path = "../interpreter-ir", editable = true }
+coding-adventures-ir-optimizer = { path = "../ir-optimizer", editable = true }
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
@@ -40,6 +43,9 @@ dev = [
     "pytest-cov>=5.0",
     "ruff>=0.4",
     "mypy>=1.10",
+    "coding-adventures-interpreter-ir",
+    "coding-adventures-ir-optimizer",
+    "coding-adventures-codegen-core",
 ]
 
 [tool.hatch.build.targets.wheel]

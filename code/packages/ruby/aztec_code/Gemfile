@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+# Local path dependencies — required before own modules (Ruby require ordering).
+gem "coding_adventures_paint_instructions", path: "../paint_instructions"
+gem "coding_adventures_barcode_2d",         path: "../barcode_2d"

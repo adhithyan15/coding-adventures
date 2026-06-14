@@ -1,0 +1,81 @@
+# Token definitions for McCarthy's 1960 Lisp (Lisp 1.0)
+# @version 1
+#
+# This is the *original* Lisp dialect described in John McCarthy's 1960
+# paper "Recursive Functions of Symbolic Expressions and Their
+# Computation by Machine, Part I".  It is deliberately distinct from the
+# repo's other Lisp grammar (`lisp.tokens`), which targets a modern
+# Scheme-ish dialect (lowercase symbols, strings, operator symbols).
+#
+#   | Feature          | McCarthy 1.0 (this file) | Scheme (`lisp.tokens`) |
+#   |------------------|--------------------------|------------------------|
+#   | Symbol case      | ALL-UPPERCASE            | mixed case             |
+#   | Strings          | none                     | yes  ("foo")           |
+#   | Decimals         | integers only            | yes                    |
+#   | Operator symbols | none                     | yes (+, <=, ...)       |
+#
+# Encoding the dialect *here*, in the grammar, is what lets the
+# `mccarthy-lisp-lexer` crate be a thin wrapper over the shared
+# `GrammarLexer` rather than a hand-written tokenizer — the lexer and
+# parser come "for free" from these two files.
+#
+# Example source exercising every token kind:
+#
+#   (CAR '(A B C))        ; CAR of a literal list
+#   (CONS A (CONS B NIL)) ; build (A B)
+#   (A . -42)             ; dotted pair with a negative integer
+#
+# Escape sequences: there are no string literals in Lisp 1.0, so there
+# is nothing to escape.
+escapes: none
+
+# ---------------------------------------------------------------------------
+# Skip patterns — consumed silently, never reach the parser.
+#
+# WHITESPACE swallows spaces, tabs, CR, and newlines.  COMMENT is the
+# Lisp `;`-to-end-of-line comment.  Comments were not in McCarthy's
+# 1958-1960 paper (they arrived with Lisp 1.5 in 1962), but we accept
+# them so test sources can be annotated.  The newline that ends a
+# comment is consumed by WHITESPACE on the next pass.
+# ---------------------------------------------------------------------------
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  COMMENT    = /;[^\n]*/
+
+# ---------------------------------------------------------------------------
+# Numeric literals — signed decimal integers only.
+#
+# The leading `-?` makes negative literals (`-42`) a single token.
+# Because the lexer uses first-match / longest-match anchored regexes
+# and `/-?[0-9]+/` requires at least one digit, a bare `-` matches no
+# token at all and is therefore a lex error — exactly McCarthy 1.0's
+# rule that there are no operator symbols.
+#
+# INTEGER comes before SYMBOL so a leading digit commits to the numeric
+# rule (there is no overlap — SYMBOL must start with an uppercase
+# letter — but listing the unambiguous numeric shape first keeps intent
+# clear).
+# ---------------------------------------------------------------------------
+INTEGER = /-?[0-9]+/
+
+# ---------------------------------------------------------------------------
+# Symbols (atoms) — all-uppercase identifiers.
+#
+# A symbol starts with an uppercase letter and continues with uppercase
+# letters, digits, or hyphens: `CAR`, `CDR`, `X`, `FF`, `LIST-OF-3`.
+# Lowercase letters are intentionally excluded; lowercase source is a
+# lex error, signalling "this isn't McCarthy 1960 Lisp".
+# ---------------------------------------------------------------------------
+SYMBOL = /[A-Z][A-Z0-9-]*/
+
+# ---------------------------------------------------------------------------
+# Punctuation literals.
+#
+#   LPAREN / RPAREN  list & call delimiters
+#   QUOTE            `'X` reader sugar; the parser expands it to (QUOTE X)
+#   DOT              dotted-pair separator: `(A . B)`
+# ---------------------------------------------------------------------------
+LPAREN = "("
+RPAREN = ")"
+QUOTE  = "'"
+DOT    = "."

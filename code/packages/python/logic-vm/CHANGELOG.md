@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- query execution from an existing `logic-engine.State` for initialized and
+  stateful VM query flows
+
 ## [0.2.0] - 2026-04-21
 
 ### Added

@@ -34,12 +34,11 @@ Test organisation
 from __future__ import annotations
 
 import pytest
+from lang_parser import ASTNode, GrammarParseError, GrammarParser
+from lexer import Token
 
 import sql_parser.parser as _parser_module
-from lang_parser import ASTNode, GrammarParser, GrammarParseError
-from lexer import Token
 from sql_parser import create_sql_parser, parse_sql
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -700,9 +699,15 @@ class TestErrors:
     """Invalid SQL should raise GrammarParseError."""
 
     def test_missing_from(self) -> None:
-        """SELECT without FROM should fail (not a valid statement)."""
-        with pytest.raises((GrammarParseError, Exception)):
-            parse_sql("SELECT id")
+        """SELECT without FROM is now valid — the grammar makes FROM optional.
+
+        ``SELECT expr`` executes once and returns the expression value, just
+        like ``SELECT 1`` or ``SELECT UPPER('hello')`` in SQLite.  This test
+        verifies the parse *succeeds* and produces a ``select_stmt`` node.
+        """
+        tree = parse_sql("SELECT id")
+        # Root is program → statement → query_stmt → select_stmt
+        assert tree.rule_name == "program"
 
     def test_incomplete_select(self) -> None:
         """Just 'SELECT' with nothing else is invalid."""
@@ -809,4 +814,70 @@ class TestErrorPath:
         and parsing succeeds normally."""
         monkeypatch.setattr(_parser_module, "_sql_grammar_path", "")
         ast = parse_sql("SELECT id FROM users")
+        assert ast.rule_name == "program"
+
+
+# ---------------------------------------------------------------------------
+# CTE MATERIALIZED / NOT MATERIALIZED hint (SQLite 3.35+)
+# ---------------------------------------------------------------------------
+#
+# Mini-sqlite's planner ignores the hint, but the parser still has to accept
+# it so application SQL written for portability with real SQLite parses
+# without error.  These tests lock the grammar acceptance.
+
+
+class TestCteMaterializedHint:
+    def test_materialized_parses(self) -> None:
+        ast = parse_sql("WITH cte AS MATERIALIZED (SELECT 1) SELECT * FROM cte")
+        assert ast.rule_name == "program"
+
+    def test_not_materialized_parses(self) -> None:
+        ast = parse_sql("WITH cte AS NOT MATERIALIZED (SELECT 1) SELECT * FROM cte")
+        assert ast.rule_name == "program"
+
+    def test_without_hint_still_parses(self) -> None:
+        """Sanity: plain ``AS (`` still works (no regression)."""
+        ast = parse_sql("WITH cte AS (SELECT 1) SELECT * FROM cte")
+        assert ast.rule_name == "program"
+
+    def test_recursive_with_materialized(self) -> None:
+        ast = parse_sql(
+            "WITH RECURSIVE n(i) AS MATERIALIZED "
+            "(SELECT 1 UNION ALL SELECT i+1 FROM n WHERE i<3) "
+            "SELECT * FROM n"
+        )
+        assert ast.rule_name == "program"
+
+    def test_multiple_ctes_mixed_hints(self) -> None:
+        ast = parse_sql(
+            "WITH a AS MATERIALIZED (SELECT 1), "
+            "b AS NOT MATERIALIZED (SELECT 2), "
+            "c AS (SELECT 3) "
+            "SELECT a.x FROM a"
+        )
+        assert ast.rule_name == "program"
+
+
+# ---------------------------------------------------------------------------
+# Derived table — implicit AS
+# ---------------------------------------------------------------------------
+#
+# Standard SQL accepts both ``(query) AS alias`` and ``(query) alias`` in a
+# FROM clause.  Mini-sqlite previously required AS; these tests pin the
+# grammar acceptance after the fix.
+
+
+class TestDerivedTableImplicitAS:
+    def test_explicit_as(self) -> None:
+        ast = parse_sql("SELECT t.x FROM (SELECT 1 AS x) AS t")
+        assert ast.rule_name == "program"
+
+    def test_implicit_as(self) -> None:
+        ast = parse_sql("SELECT t.x FROM (SELECT 1 AS x) t")
+        assert ast.rule_name == "program"
+
+    def test_implicit_as_with_cross_join(self) -> None:
+        ast = parse_sql(
+            "SELECT t1.x, t2.y FROM (SELECT 1 AS x) t1, (SELECT 2 AS y) t2"
+        )
         assert ast.rule_name == "program"

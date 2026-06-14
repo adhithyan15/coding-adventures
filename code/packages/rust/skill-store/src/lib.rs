@@ -9,6 +9,7 @@
 use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_sha256::sha256;
+use std::collections::{BTreeMap, BTreeSet};
 use storage_core::{StorageBackend, StorageError, StorageListOptions, StoragePutInput};
 
 const NAMESPACE: &str = "skills";
@@ -28,6 +29,36 @@ pub struct SkillManifest {
     pub active: bool,
 }
 
+/// Metadata-only view for catalog and `skill.list` reads.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SkillManifestSummary {
+    pub skill_id: String,
+    pub version: String,
+    pub name: String,
+    pub description: String,
+    pub entrypoints: Vec<String>,
+    pub required_tools: Vec<String>,
+    pub required_capabilities: Vec<String>,
+    pub asset_count: usize,
+    pub active: bool,
+}
+
+impl SkillManifestSummary {
+    pub fn from_manifest(manifest: &SkillManifest) -> Self {
+        Self {
+            skill_id: manifest.skill_id.clone(),
+            version: manifest.version.clone(),
+            name: manifest.name.clone(),
+            description: manifest.description.clone(),
+            entrypoints: manifest.entrypoints.clone(),
+            required_tools: manifest.required_tools.clone(),
+            required_capabilities: manifest.required_capabilities.clone(),
+            asset_count: manifest.assets.len(),
+            active: manifest.active,
+        }
+    }
+}
+
 /// Descriptor and bytes for one stored asset.
 #[derive(Debug, Clone, PartialEq)]
 pub struct SkillAssetRecord {
@@ -37,6 +68,426 @@ pub struct SkillAssetRecord {
     pub content_type: String,
     pub checksum: [u8; 32],
     pub body: Vec<u8>,
+}
+
+/// Metadata-only view for asset catalog reads.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SkillAssetSummary {
+    pub skill_id: String,
+    pub version: String,
+    pub asset_path: String,
+    pub content_type: String,
+    pub checksum: [u8; 32],
+    pub body_len: usize,
+}
+
+/// Compact catalog view for read-side host and tool-catalog checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SkillCatalogSummary {
+    pub total_skill_versions: usize,
+    pub unique_skills: usize,
+    pub active_skill_versions: usize,
+    pub inactive_skill_versions: usize,
+    pub manifest_asset_refs: usize,
+    pub stored_assets: usize,
+    pub stored_asset_bytes: usize,
+}
+
+impl SkillCatalogSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_manifests_and_assets<'a, I, J>(manifests: I, assets: J) -> Self
+    where
+        I: IntoIterator<Item = &'a SkillManifest>,
+        J: IntoIterator<Item = &'a SkillAssetSummary>,
+    {
+        let mut summary = Self::empty();
+        let mut skill_ids = BTreeSet::new();
+        for manifest in manifests {
+            summary.total_skill_versions += 1;
+            skill_ids.insert(manifest.skill_id.as_str());
+            if manifest.active {
+                summary.active_skill_versions += 1;
+            } else {
+                summary.inactive_skill_versions += 1;
+            }
+            summary.manifest_asset_refs += manifest.assets.len();
+        }
+        summary.unique_skills = skill_ids.len();
+        for asset in assets {
+            summary.stored_assets += 1;
+            summary.stored_asset_bytes += asset.body_len;
+        }
+        summary
+    }
+
+    pub fn has_active_skills(&self) -> bool {
+        self.active_skill_versions > 0
+    }
+
+    pub fn has_stored_assets(&self) -> bool {
+        self.stored_assets > 0
+    }
+
+    pub fn has_missing_asset_material(&self) -> bool {
+        self.manifest_asset_refs > self.stored_assets
+    }
+}
+
+/// Compact requirement view for tool-catalog and capability-cage checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SkillRequirementSummary {
+    pub total_skill_versions: usize,
+    pub unique_entrypoints: usize,
+    pub unique_required_tools: usize,
+    pub unique_required_capabilities: usize,
+    pub entrypoint_refs: usize,
+    pub required_tool_refs: usize,
+    pub required_capability_refs: usize,
+    pub versions_without_required_tools: usize,
+    pub versions_without_required_capabilities: usize,
+}
+
+impl SkillRequirementSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_manifests<'a, I>(manifests: I) -> Self
+    where
+        I: IntoIterator<Item = &'a SkillManifest>,
+    {
+        let mut summary = Self::empty();
+        let mut entrypoints = BTreeSet::new();
+        let mut required_tools = BTreeSet::new();
+        let mut required_capabilities = BTreeSet::new();
+
+        for manifest in manifests {
+            summary.total_skill_versions += 1;
+            summary.entrypoint_refs += manifest.entrypoints.len();
+            summary.required_tool_refs += manifest.required_tools.len();
+            summary.required_capability_refs += manifest.required_capabilities.len();
+
+            if manifest.required_tools.is_empty() {
+                summary.versions_without_required_tools += 1;
+            }
+            if manifest.required_capabilities.is_empty() {
+                summary.versions_without_required_capabilities += 1;
+            }
+
+            entrypoints.extend(manifest.entrypoints.iter().map(String::as_str));
+            required_tools.extend(manifest.required_tools.iter().map(String::as_str));
+            required_capabilities.extend(manifest.required_capabilities.iter().map(String::as_str));
+        }
+
+        summary.unique_entrypoints = entrypoints.len();
+        summary.unique_required_tools = required_tools.len();
+        summary.unique_required_capabilities = required_capabilities.len();
+        summary
+    }
+
+    pub fn has_tool_requirements(&self) -> bool {
+        self.required_tool_refs > 0
+    }
+
+    pub fn has_capability_requirements(&self) -> bool {
+        self.required_capability_refs > 0
+    }
+
+    pub fn has_requirement_gaps(&self) -> bool {
+        self.versions_without_required_tools > 0 || self.versions_without_required_capabilities > 0
+    }
+}
+
+/// Compact asset inventory view for catalog and preload planning checks.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SkillAssetInventorySummary {
+    pub total_assets: usize,
+    pub unique_content_types: usize,
+    pub total_body_bytes: usize,
+    pub markdown_assets: usize,
+    pub json_assets: usize,
+    pub text_assets: usize,
+    pub binary_assets: usize,
+    pub root_path_assets: usize,
+    pub nested_path_assets: usize,
+}
+
+impl SkillAssetInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_assets<'a, I>(assets: I) -> Self
+    where
+        I: IntoIterator<Item = &'a SkillAssetSummary>,
+    {
+        let mut summary = Self::empty();
+        let mut content_types = BTreeSet::new();
+
+        for asset in assets {
+            summary.total_assets += 1;
+            summary.total_body_bytes += asset.body_len;
+            content_types.insert(asset.content_type.as_str());
+
+            if is_markdown_content_type(&asset.content_type) {
+                summary.markdown_assets += 1;
+            } else if is_json_content_type(&asset.content_type) {
+                summary.json_assets += 1;
+            } else if asset.content_type.starts_with("text/") {
+                summary.text_assets += 1;
+            } else {
+                summary.binary_assets += 1;
+            }
+
+            if asset.asset_path.contains('/') {
+                summary.nested_path_assets += 1;
+            } else {
+                summary.root_path_assets += 1;
+            }
+        }
+
+        summary.unique_content_types = content_types.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_assets == 0
+    }
+
+    pub fn has_nested_assets(&self) -> bool {
+        self.nested_path_assets > 0
+    }
+
+    pub fn has_binary_assets(&self) -> bool {
+        self.binary_assets > 0
+    }
+
+    pub fn has_multiple_content_types(&self) -> bool {
+        self.unique_content_types > 1
+    }
+}
+
+/// Count of installed skill versions for one manifest `source.kind`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SkillSourceKindSummary {
+    pub kind: String,
+    pub versions: usize,
+    pub active_versions: usize,
+    pub inactive_versions: usize,
+}
+
+/// Compact source-kind inventory for provenance and portability checks.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SkillSourceSummary {
+    pub total_skill_versions: usize,
+    pub active_skill_versions: usize,
+    pub inactive_skill_versions: usize,
+    pub specified_source_versions: usize,
+    pub unspecified_source_versions: usize,
+    pub unique_source_kinds: usize,
+    pub source_kinds: Vec<SkillSourceKindSummary>,
+}
+
+impl SkillSourceSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_manifests<'a, I>(manifests: I) -> Self
+    where
+        I: IntoIterator<Item = &'a SkillManifest>,
+    {
+        let mut summary = Self::empty();
+        let mut source_kinds: BTreeMap<String, SkillSourceKindSummary> = BTreeMap::new();
+
+        for manifest in manifests {
+            summary.total_skill_versions += 1;
+            if manifest.active {
+                summary.active_skill_versions += 1;
+            } else {
+                summary.inactive_skill_versions += 1;
+            }
+
+            let Some(kind) = manifest_source_kind(&manifest.source) else {
+                summary.unspecified_source_versions += 1;
+                continue;
+            };
+            summary.specified_source_versions += 1;
+            let source_kind =
+                source_kinds
+                    .entry(kind.to_string())
+                    .or_insert_with(|| SkillSourceKindSummary {
+                        kind: kind.to_string(),
+                        versions: 0,
+                        active_versions: 0,
+                        inactive_versions: 0,
+                    });
+            source_kind.versions += 1;
+            if manifest.active {
+                source_kind.active_versions += 1;
+            } else {
+                source_kind.inactive_versions += 1;
+            }
+        }
+
+        summary.unique_source_kinds = source_kinds.len();
+        summary.source_kinds = source_kinds
+            .into_iter()
+            .map(|(_, source_kind)| source_kind)
+            .collect();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_skill_versions == 0
+    }
+
+    pub fn has_specified_sources(&self) -> bool {
+        self.specified_source_versions > 0
+    }
+
+    pub fn has_unspecified_sources(&self) -> bool {
+        self.unspecified_source_versions > 0
+    }
+
+    pub fn has_multiple_source_kinds(&self) -> bool {
+        self.unique_source_kinds > 1
+    }
+}
+
+/// Composite skill inventory for host, catalog, preload, and cage planning.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SkillInventorySummary {
+    pub catalog: SkillCatalogSummary,
+    pub requirements: SkillRequirementSummary,
+    pub assets: SkillAssetInventorySummary,
+    pub source: SkillSourceSummary,
+}
+
+impl SkillInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_manifests_and_assets<'a, 'b, I, J>(manifests: I, assets: J) -> Self
+    where
+        I: IntoIterator<Item = &'a SkillManifest>,
+        J: IntoIterator<Item = &'b SkillAssetSummary>,
+    {
+        let manifests = manifests.into_iter().collect::<Vec<_>>();
+        let assets = assets.into_iter().collect::<Vec<_>>();
+        Self {
+            catalog: SkillCatalogSummary::from_manifests_and_assets(
+                manifests.iter().copied(),
+                assets.iter().copied(),
+            ),
+            requirements: SkillRequirementSummary::from_manifests(manifests.iter().copied()),
+            assets: SkillAssetInventorySummary::from_assets(assets),
+            source: SkillSourceSummary::from_manifests(manifests),
+        }
+    }
+
+    pub fn total_skill_versions(&self) -> usize {
+        self.catalog.total_skill_versions
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_skill_versions() == 0
+    }
+
+    pub fn has_asset_material_gaps(&self) -> bool {
+        self.catalog.has_missing_asset_material()
+    }
+
+    pub fn needs_inventory_attention(&self) -> bool {
+        self.has_asset_material_gaps()
+            || self.requirements.has_requirement_gaps()
+            || self.source.has_unspecified_sources()
+    }
+}
+
+/// Query options for listing installed skill manifests.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SkillListOptions {
+    pub skill_id: Option<String>,
+    pub active: Option<bool>,
+    pub entrypoints: Vec<String>,
+    pub required_tools: Vec<String>,
+    pub required_capabilities: Vec<String>,
+    pub limit: Option<usize>,
+}
+
+impl SkillListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_skill(mut self, skill_id: impl Into<String>) -> Self {
+        self.skill_id = Some(skill_id.into());
+        self
+    }
+
+    pub fn active_only(mut self) -> Self {
+        self.active = Some(true);
+        self
+    }
+
+    pub fn inactive_only(mut self) -> Self {
+        self.active = Some(false);
+        self
+    }
+
+    pub fn with_entrypoint(mut self, entrypoint: impl Into<String>) -> Self {
+        self.entrypoints.push(entrypoint.into());
+        self
+    }
+
+    pub fn requiring_tool(mut self, tool_id: impl Into<String>) -> Self {
+        self.required_tools.push(tool_id.into());
+        self
+    }
+
+    pub fn requiring_capability(mut self, capability_id: impl Into<String>) -> Self {
+        self.required_capabilities.push(capability_id.into());
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Query options for listing skill assets without returning asset bodies.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SkillAssetListOptions {
+    pub path_prefix: Option<String>,
+    pub content_type: Option<String>,
+    pub limit: Option<usize>,
+}
+
+impl SkillAssetListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_path_prefix(mut self, path_prefix: impl Into<String>) -> Self {
+        self.path_prefix = Some(path_prefix.into());
+        self
+    }
+
+    pub fn with_content_type(mut self, content_type: impl Into<String>) -> Self {
+        self.content_type = Some(content_type.into());
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
 }
 
 /// Input used when installing one asset.
@@ -111,6 +562,113 @@ impl<S: StorageBackend> SkillStore<S> {
     }
 
     pub fn list_installed_skills(&self) -> Result<Vec<SkillManifest>, StorageError> {
+        self.list_skills(SkillListOptions::new())
+    }
+
+    pub fn list_skills(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<Vec<SkillManifest>, StorageError> {
+        validate_skill_list_options(&options)?;
+        if options.limit == Some(0) {
+            return Ok(Vec::new());
+        }
+
+        let manifests = self.filtered_manifests(&options)?;
+        Ok(apply_skill_list_limit(manifests, options.limit))
+    }
+
+    pub fn list_skill_summaries(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<Vec<SkillManifestSummary>, StorageError> {
+        validate_skill_list_options(&options)?;
+        if options.limit == Some(0) {
+            return Ok(Vec::new());
+        }
+
+        let manifests = self.filtered_manifests(&options)?;
+        Ok(apply_skill_list_limit(manifests, options.limit)
+            .iter()
+            .map(SkillManifestSummary::from_manifest)
+            .collect())
+    }
+
+    pub fn load_manifest_summary(
+        &self,
+        skill_id: &str,
+        version: &str,
+    ) -> Result<Option<SkillManifestSummary>, StorageError> {
+        self.load_manifest(skill_id, version)
+            .map(|manifest| manifest.as_ref().map(SkillManifestSummary::from_manifest))
+    }
+
+    pub fn catalog_summary(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<SkillCatalogSummary, StorageError> {
+        let manifests = self.list_skills(options)?;
+        let mut assets = Vec::new();
+        for manifest in &manifests {
+            assets.extend(self.list_asset_summaries(
+                &manifest.skill_id,
+                &manifest.version,
+                SkillAssetListOptions::new(),
+            )?);
+        }
+        Ok(SkillCatalogSummary::from_manifests_and_assets(
+            &manifests, &assets,
+        ))
+    }
+
+    pub fn requirement_summary(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<SkillRequirementSummary, StorageError> {
+        let manifests = self.list_skills(options)?;
+        Ok(SkillRequirementSummary::from_manifests(&manifests))
+    }
+
+    pub fn asset_inventory_summary(
+        &self,
+        skill_id: &str,
+        version: &str,
+        options: SkillAssetListOptions,
+    ) -> Result<SkillAssetInventorySummary, StorageError> {
+        let assets = self.list_asset_summaries(skill_id, version, options)?;
+        Ok(SkillAssetInventorySummary::from_assets(&assets))
+    }
+
+    pub fn source_summary(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<SkillSourceSummary, StorageError> {
+        let manifests = self.list_skills(options)?;
+        Ok(SkillSourceSummary::from_manifests(&manifests))
+    }
+
+    pub fn inventory_summary(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<SkillInventorySummary, StorageError> {
+        let manifests = self.list_skills(options)?;
+        let mut assets = Vec::new();
+        for manifest in &manifests {
+            assets.extend(self.list_asset_summaries(
+                &manifest.skill_id,
+                &manifest.version,
+                SkillAssetListOptions::new(),
+            )?);
+        }
+        Ok(SkillInventorySummary::from_manifests_and_assets(
+            &manifests, &assets,
+        ))
+    }
+
+    fn filtered_manifests(
+        &self,
+        options: &SkillListOptions,
+    ) -> Result<Vec<SkillManifest>, StorageError> {
         self.backend.initialize()?;
         let page = self.backend.list(
             NAMESPACE,
@@ -122,10 +680,20 @@ impl<S: StorageBackend> SkillStore<S> {
             },
         )?;
 
-        page.records
-            .iter()
-            .map(|record| decode_manifest(&record.body))
-            .collect()
+        let mut manifests = Vec::new();
+        for record in &page.records {
+            let manifest = decode_manifest(&record.body)?;
+            if !skill_matches_list_options(&manifest, options) {
+                continue;
+            }
+            manifests.push(manifest);
+            if let Some(limit) = options.limit {
+                if manifests.len() >= limit {
+                    break;
+                }
+            }
+        }
+        Ok(manifests)
     }
 
     pub fn read_asset(
@@ -146,6 +714,45 @@ impl<S: StorageBackend> SkillStore<S> {
             return Ok(None);
         };
         decode_asset_record(&record.metadata, &record.body).map(Some)
+    }
+
+    pub fn list_asset_summaries(
+        &self,
+        skill_id: &str,
+        version: &str,
+        options: SkillAssetListOptions,
+    ) -> Result<Vec<SkillAssetSummary>, StorageError> {
+        validate_id("skill_id", skill_id)?;
+        validate_id("version", version)?;
+        validate_skill_asset_list_options(&options)?;
+        if options.limit == Some(0) {
+            return Ok(Vec::new());
+        }
+
+        self.backend.initialize()?;
+        let page = self.backend.list(
+            NAMESPACE,
+            StorageListOptions {
+                prefix: Some(format!("assets/{skill_id}/{version}/")),
+                recursive: true,
+                page_size: None,
+                cursor: None,
+            },
+        )?;
+
+        let mut summaries = Vec::new();
+        for record in &page.records {
+            let summary = decode_asset_summary(&record.metadata, record.body.len())?;
+            if !asset_matches_list_options(&summary, &options) {
+                continue;
+            }
+            summaries.push(summary);
+        }
+        summaries.sort_by(|left, right| left.asset_path.cmp(&right.asset_path));
+        if let Some(limit) = options.limit {
+            summaries.truncate(limit);
+        }
+        Ok(summaries)
     }
 
     pub fn activate_version(
@@ -260,6 +867,107 @@ fn asset_key(skill_id: &str, version: &str, asset_path: &str) -> String {
     format!("assets/{skill_id}/{version}/{asset_path}")
 }
 
+fn validate_skill_list_options(options: &SkillListOptions) -> Result<(), StorageError> {
+    if let Some(skill_id) = options.skill_id.as_deref() {
+        validate_id("skill_id", skill_id)?;
+    }
+    validate_id_list("entrypoints", &options.entrypoints)?;
+    validate_id_list("required_tools", &options.required_tools)?;
+    validate_id_list("required_capabilities", &options.required_capabilities)
+}
+
+fn validate_skill_asset_list_options(options: &SkillAssetListOptions) -> Result<(), StorageError> {
+    if let Some(path_prefix) = options.path_prefix.as_deref() {
+        validate_asset_path(path_prefix)?;
+    }
+    if let Some(content_type) = options.content_type.as_deref() {
+        validate_content_type(content_type)?;
+    }
+    Ok(())
+}
+
+fn apply_skill_list_limit(
+    mut manifests: Vec<SkillManifest>,
+    limit: Option<usize>,
+) -> Vec<SkillManifest> {
+    if let Some(limit) = limit {
+        manifests.truncate(limit);
+    }
+    manifests
+}
+
+fn skill_matches_list_options(manifest: &SkillManifest, options: &SkillListOptions) -> bool {
+    if let Some(skill_id) = options.skill_id.as_deref() {
+        if manifest.skill_id != skill_id {
+            return false;
+        }
+    }
+    if let Some(active) = options.active {
+        if manifest.active != active {
+            return false;
+        }
+    }
+    options
+        .entrypoints
+        .iter()
+        .all(|entrypoint| manifest.entrypoints.iter().any(|value| value == entrypoint))
+        && options
+            .required_tools
+            .iter()
+            .all(|tool_id| manifest.required_tools.iter().any(|value| value == tool_id))
+        && options.required_capabilities.iter().all(|capability_id| {
+            manifest
+                .required_capabilities
+                .iter()
+                .any(|value| value == capability_id)
+        })
+}
+
+fn asset_matches_list_options(
+    summary: &SkillAssetSummary,
+    options: &SkillAssetListOptions,
+) -> bool {
+    if let Some(path_prefix) = options.path_prefix.as_deref() {
+        if !asset_path_matches_prefix(&summary.asset_path, path_prefix) {
+            return false;
+        }
+    }
+    if let Some(content_type) = options.content_type.as_deref() {
+        if summary.content_type != content_type {
+            return false;
+        }
+    }
+    true
+}
+
+fn asset_path_matches_prefix(asset_path: &str, path_prefix: &str) -> bool {
+    asset_path == path_prefix
+        || asset_path
+            .strip_prefix(path_prefix)
+            .is_some_and(|rest| rest.starts_with('/'))
+}
+
+fn is_markdown_content_type(value: &str) -> bool {
+    matches!(value, "text/markdown" | "text/x-markdown")
+}
+
+fn is_json_content_type(value: &str) -> bool {
+    value == "application/json" || value.ends_with("+json")
+}
+
+fn manifest_source_kind(source: &JsonValue) -> Option<&str> {
+    let JsonValue::Object(object) = source else {
+        return None;
+    };
+    object
+        .iter()
+        .find(|(name, _)| name == "kind")
+        .and_then(|(_, value)| match value {
+            JsonValue::String(kind) if !kind.trim().is_empty() => Some(kind.as_str()),
+            _ => None,
+        })
+}
+
 fn manifest_record_metadata(manifest: &SkillManifest) -> JsonValue {
     JsonValue::Object(vec![
         (
@@ -359,15 +1067,30 @@ fn decode_asset_record(
     metadata: &JsonValue,
     body: &[u8],
 ) -> Result<SkillAssetRecord, StorageError> {
+    let summary = decode_asset_summary(metadata, body.len())?;
+    Ok(SkillAssetRecord {
+        skill_id: summary.skill_id,
+        version: summary.version,
+        asset_path: summary.asset_path,
+        content_type: summary.content_type,
+        checksum: summary.checksum,
+        body: body.to_vec(),
+    })
+}
+
+fn decode_asset_summary(
+    metadata: &JsonValue,
+    body_len: usize,
+) -> Result<SkillAssetSummary, StorageError> {
     let object = expect_object("asset_metadata", metadata)?;
     let checksum_hex = required_string(object, "checksum_hex")?;
-    Ok(SkillAssetRecord {
+    Ok(SkillAssetSummary {
         skill_id: required_string(object, "skill_id")?,
         version: required_string(object, "version")?,
         asset_path: required_string(object, "asset_path")?,
         content_type: required_string(object, "content_type")?,
         checksum: hex_decode_32(&checksum_hex)?,
-        body: body.to_vec(),
+        body_len,
     })
 }
 
@@ -579,6 +1302,161 @@ mod tests {
     }
 
     #[test]
+    fn list_asset_summaries_filters_without_returning_bodies() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let mut manifest = manifest(true);
+        manifest.assets = vec![
+            "SKILL.md".to_string(),
+            "examples/brief.md".to_string(),
+            "examples/run.md".to_string(),
+        ];
+        let _ = store
+            .install_skill(
+                manifest,
+                vec![
+                    InstallSkillAssetInput {
+                        asset_path: "SKILL.md".to_string(),
+                        content_type: "text/markdown".to_string(),
+                        body: b"# planner".to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "examples/brief.md".to_string(),
+                        content_type: "text/markdown".to_string(),
+                        body: b"brief".to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "examples/run.md".to_string(),
+                        content_type: "text/markdown".to_string(),
+                        body: b"run".to_vec(),
+                    },
+                ],
+            )
+            .unwrap();
+
+        let summaries = store
+            .list_asset_summaries(
+                "planner",
+                "v1",
+                SkillAssetListOptions::new()
+                    .with_path_prefix("examples")
+                    .with_content_type("text/markdown")
+                    .with_limit(1),
+            )
+            .unwrap();
+
+        assert_eq!(summaries.len(), 1);
+        assert_eq!(summaries[0].asset_path, "examples/brief.md");
+        assert_eq!(summaries[0].content_type, "text/markdown");
+        assert_eq!(summaries[0].body_len, 5);
+        assert_eq!(summaries[0].checksum, sha256(b"brief"));
+
+        assert!(store
+            .list_asset_summaries("planner", "v1", SkillAssetListOptions::new().with_limit(0),)
+            .unwrap()
+            .is_empty());
+
+        let invalid_prefix = store
+            .list_asset_summaries(
+                "planner",
+                "v1",
+                SkillAssetListOptions::new().with_path_prefix("/bad"),
+            )
+            .unwrap_err();
+        assert!(matches!(invalid_prefix, StorageError::Validation { .. }));
+    }
+
+    #[test]
+    fn asset_inventory_summary_counts_content_type_path_and_byte_coverage() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let mut manifest = manifest(true);
+        manifest.assets = vec![
+            "SKILL.md".to_string(),
+            "data/config.json".to_string(),
+            "examples/prompt.txt".to_string(),
+            "assets/model.bin".to_string(),
+        ];
+        let _ = store
+            .install_skill(
+                manifest,
+                vec![
+                    InstallSkillAssetInput {
+                        asset_path: "SKILL.md".to_string(),
+                        content_type: "text/markdown".to_string(),
+                        body: b"# planner".to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "data/config.json".to_string(),
+                        content_type: "application/json".to_string(),
+                        body: br#"{"enabled":true}"#.to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "examples/prompt.txt".to_string(),
+                        content_type: "text/plain".to_string(),
+                        body: b"prompt".to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "assets/model.bin".to_string(),
+                        content_type: "application/octet-stream".to_string(),
+                        body: vec![1, 2, 3, 4],
+                    },
+                ],
+            )
+            .unwrap();
+
+        let summary = store
+            .asset_inventory_summary("planner", "v1", SkillAssetListOptions::new())
+            .unwrap();
+
+        assert_eq!(
+            summary,
+            SkillAssetInventorySummary {
+                total_assets: 4,
+                unique_content_types: 4,
+                total_body_bytes: b"# planner".len()
+                    + br#"{"enabled":true}"#.len()
+                    + b"prompt".len()
+                    + 4,
+                markdown_assets: 1,
+                json_assets: 1,
+                text_assets: 1,
+                binary_assets: 1,
+                root_path_assets: 1,
+                nested_path_assets: 3,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_nested_assets());
+        assert!(summary.has_binary_assets());
+        assert!(summary.has_multiple_content_types());
+
+        let nested_text = store
+            .asset_inventory_summary(
+                "planner",
+                "v1",
+                SkillAssetListOptions::new()
+                    .with_path_prefix("examples")
+                    .with_content_type("text/plain"),
+            )
+            .unwrap();
+        assert_eq!(nested_text.total_assets, 1);
+        assert_eq!(nested_text.text_assets, 1);
+        assert_eq!(nested_text.nested_path_assets, 1);
+        assert!(!nested_text.has_binary_assets());
+        assert!(!nested_text.has_multiple_content_types());
+
+        let empty = store
+            .asset_inventory_summary(
+                "planner",
+                "v1",
+                SkillAssetListOptions::new().with_path_prefix("missing"),
+            )
+            .unwrap();
+        assert_eq!(empty, SkillAssetInventorySummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.has_nested_assets());
+    }
+
+    #[test]
     fn activating_new_version_deactivates_old_version() {
         let store = SkillStore::new(InMemoryStorageBackend::new());
         let _ = store
@@ -611,6 +1489,550 @@ mod tests {
                 .unwrap()
                 .active
         );
+    }
+
+    #[test]
+    fn list_skills_filters_by_active_entrypoints_tools_capabilities_and_limit() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        for manifest in [
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v1".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: vec!["shell".to_string()],
+                required_capabilities: vec!["write".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: true,
+            },
+            SkillManifest {
+                skill_id: "observer".to_string(),
+                version: "v1".to_string(),
+                name: "Observer".to_string(),
+                description: "Reads state".to_string(),
+                entrypoints: vec!["observe".to_string()],
+                required_tools: vec!["smart_home.get_state".to_string()],
+                required_capabilities: vec!["smart_home.read".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: false,
+            },
+            SkillManifest {
+                skill_id: "runner".to_string(),
+                version: "v1".to_string(),
+                name: "Runner".to_string(),
+                description: "Runs work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: vec!["shell".to_string()],
+                required_capabilities: vec!["execute".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: true,
+            },
+        ] {
+            let _ = store.install_skill(manifest, Vec::new()).unwrap();
+        }
+
+        let active_shell = store
+            .list_skills(
+                SkillListOptions::new()
+                    .active_only()
+                    .with_entrypoint("main")
+                    .requiring_tool("shell")
+                    .with_limit(1),
+            )
+            .unwrap();
+        assert_eq!(active_shell.len(), 1);
+        assert!(active_shell[0].active);
+        assert!(active_shell[0]
+            .required_tools
+            .iter()
+            .any(|tool| tool == "shell"));
+
+        let observer = store
+            .list_skills(
+                SkillListOptions::new()
+                    .for_skill("observer")
+                    .inactive_only()
+                    .requiring_capability("smart_home.read"),
+            )
+            .unwrap();
+        assert_eq!(
+            observer
+                .iter()
+                .map(|manifest| manifest.skill_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["observer"]
+        );
+
+        let missing = store
+            .list_skills(SkillListOptions::new().requiring_tool("calendar.write"))
+            .unwrap();
+        assert!(missing.is_empty());
+    }
+
+    #[test]
+    fn skill_summaries_project_catalog_metadata_without_manifest_source() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .install_skill(
+                SkillManifest {
+                    skill_id: "planner".to_string(),
+                    version: "v1".to_string(),
+                    name: "Planner".to_string(),
+                    description: "Plans work".to_string(),
+                    entrypoints: vec!["main".to_string(), "review".to_string()],
+                    required_tools: vec!["shell".to_string(), "artifact.read".to_string()],
+                    required_capabilities: vec!["artifact.read".to_string()],
+                    assets: vec!["SKILL.md".to_string(), "examples/brief.md".to_string()],
+                    source: JsonValue::Object(vec![(
+                        "raw".to_string(),
+                        JsonValue::String("kept out of summaries".to_string()),
+                    )]),
+                    active: true,
+                },
+                Vec::new(),
+            )
+            .unwrap();
+
+        let summaries = store
+            .list_skill_summaries(
+                SkillListOptions::new()
+                    .active_only()
+                    .requiring_tool("artifact.read"),
+            )
+            .unwrap();
+        let loaded = store
+            .load_manifest_summary("planner", "v1")
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(summaries, vec![loaded.clone()]);
+        assert_eq!(loaded.skill_id, "planner");
+        assert_eq!(loaded.version, "v1");
+        assert_eq!(
+            loaded.entrypoints,
+            vec!["main".to_string(), "review".to_string()]
+        );
+        assert_eq!(
+            loaded.required_tools,
+            vec!["shell".to_string(), "artifact.read".to_string()]
+        );
+        assert_eq!(loaded.asset_count, 2);
+        assert!(loaded.active);
+    }
+
+    #[test]
+    fn catalog_summary_counts_versions_active_state_and_asset_material() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .install_skill(
+                SkillManifest {
+                    skill_id: "planner".to_string(),
+                    version: "v1".to_string(),
+                    name: "Planner".to_string(),
+                    description: "Plans work".to_string(),
+                    entrypoints: vec!["main".to_string()],
+                    required_tools: vec!["shell".to_string()],
+                    required_capabilities: vec!["write".to_string()],
+                    assets: vec!["SKILL.md".to_string(), "examples/brief.md".to_string()],
+                    source: JsonValue::Object(vec![]),
+                    active: true,
+                },
+                vec![InstallSkillAssetInput {
+                    asset_path: "SKILL.md".to_string(),
+                    content_type: "text/markdown".to_string(),
+                    body: b"# planner".to_vec(),
+                }],
+            )
+            .unwrap();
+        let _ = store
+            .install_skill(
+                SkillManifest {
+                    skill_id: "planner".to_string(),
+                    version: "v2".to_string(),
+                    name: "Planner".to_string(),
+                    description: "Plans work".to_string(),
+                    entrypoints: vec!["main".to_string()],
+                    required_tools: vec!["shell".to_string()],
+                    required_capabilities: vec!["write".to_string()],
+                    assets: vec!["SKILL.md".to_string()],
+                    source: JsonValue::Object(vec![]),
+                    active: false,
+                },
+                vec![InstallSkillAssetInput {
+                    asset_path: "SKILL.md".to_string(),
+                    content_type: "text/markdown".to_string(),
+                    body: b"# planner v2".to_vec(),
+                }],
+            )
+            .unwrap();
+        let _ = store
+            .install_skill(
+                SkillManifest {
+                    skill_id: "observer".to_string(),
+                    version: "v1".to_string(),
+                    name: "Observer".to_string(),
+                    description: "Reads state".to_string(),
+                    entrypoints: vec!["observe".to_string()],
+                    required_tools: vec!["artifact.read".to_string()],
+                    required_capabilities: vec!["artifact.read".to_string()],
+                    assets: vec!["SKILL.md".to_string()],
+                    source: JsonValue::Object(vec![]),
+                    active: true,
+                },
+                vec![InstallSkillAssetInput {
+                    asset_path: "SKILL.md".to_string(),
+                    content_type: "text/markdown".to_string(),
+                    body: b"# observe".to_vec(),
+                }],
+            )
+            .unwrap();
+
+        let summary = store.catalog_summary(SkillListOptions::new()).unwrap();
+
+        assert_eq!(
+            summary,
+            SkillCatalogSummary {
+                total_skill_versions: 3,
+                unique_skills: 2,
+                active_skill_versions: 2,
+                inactive_skill_versions: 1,
+                manifest_asset_refs: 4,
+                stored_assets: 3,
+                stored_asset_bytes: b"# planner".len() + b"# planner v2".len() + b"# observe".len(),
+            }
+        );
+        assert!(summary.has_active_skills());
+        assert!(summary.has_stored_assets());
+        assert!(summary.has_missing_asset_material());
+
+        let active_summary = store
+            .catalog_summary(SkillListOptions::new().active_only())
+            .unwrap();
+        assert_eq!(active_summary.total_skill_versions, 2);
+        assert_eq!(active_summary.active_skill_versions, 2);
+        assert_eq!(active_summary.inactive_skill_versions, 0);
+    }
+
+    #[test]
+    fn requirement_summary_counts_entrypoint_tool_and_capability_rollups() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        for manifest in [
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v1".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string(), "review".to_string()],
+                required_tools: vec!["shell".to_string(), "artifact.read".to_string()],
+                required_capabilities: vec!["write".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: true,
+            },
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v2".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: vec!["shell".to_string()],
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: false,
+            },
+            SkillManifest {
+                skill_id: "observer".to_string(),
+                version: "v1".to_string(),
+                name: "Observer".to_string(),
+                description: "Reads state".to_string(),
+                entrypoints: vec!["observe".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: vec!["artifact.read".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: true,
+            },
+        ] {
+            let _ = store.install_skill(manifest, Vec::new()).unwrap();
+        }
+
+        let summary = store.requirement_summary(SkillListOptions::new()).unwrap();
+
+        assert_eq!(
+            summary,
+            SkillRequirementSummary {
+                total_skill_versions: 3,
+                unique_entrypoints: 3,
+                unique_required_tools: 2,
+                unique_required_capabilities: 2,
+                entrypoint_refs: 4,
+                required_tool_refs: 3,
+                required_capability_refs: 2,
+                versions_without_required_tools: 1,
+                versions_without_required_capabilities: 1,
+            }
+        );
+        assert!(summary.has_tool_requirements());
+        assert!(summary.has_capability_requirements());
+        assert!(summary.has_requirement_gaps());
+
+        let active_summary = store
+            .requirement_summary(SkillListOptions::new().active_only())
+            .unwrap();
+        assert_eq!(active_summary.total_skill_versions, 2);
+        assert_eq!(active_summary.required_tool_refs, 2);
+        assert_eq!(active_summary.required_capability_refs, 2);
+        assert_eq!(active_summary.versions_without_required_tools, 1);
+        assert_eq!(active_summary.versions_without_required_capabilities, 0);
+
+        assert_eq!(
+            store
+                .requirement_summary(SkillListOptions::new().with_limit(0))
+                .unwrap(),
+            SkillRequirementSummary::empty()
+        );
+    }
+
+    #[test]
+    fn source_summary_counts_manifest_source_kinds() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        for manifest in [
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v1".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![(
+                    "kind".to_string(),
+                    JsonValue::String("local".to_string()),
+                )]),
+                active: true,
+            },
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v2".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![(
+                    "kind".to_string(),
+                    JsonValue::String("local".to_string()),
+                )]),
+                active: false,
+            },
+            SkillManifest {
+                skill_id: "observer".to_string(),
+                version: "v1".to_string(),
+                name: "Observer".to_string(),
+                description: "Reads state".to_string(),
+                entrypoints: vec!["observe".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![(
+                    "kind".to_string(),
+                    JsonValue::String("registry".to_string()),
+                )]),
+                active: true,
+            },
+            SkillManifest {
+                skill_id: "scratch".to_string(),
+                version: "v1".to_string(),
+                name: "Scratch".to_string(),
+                description: "Has no source kind".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: Vec::new(),
+                required_capabilities: Vec::new(),
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: false,
+            },
+        ] {
+            let _ = store.install_skill(manifest, Vec::new()).unwrap();
+        }
+
+        let summary = store.source_summary(SkillListOptions::new()).unwrap();
+
+        assert_eq!(
+            summary,
+            SkillSourceSummary {
+                total_skill_versions: 4,
+                active_skill_versions: 2,
+                inactive_skill_versions: 2,
+                specified_source_versions: 3,
+                unspecified_source_versions: 1,
+                unique_source_kinds: 2,
+                source_kinds: vec![
+                    SkillSourceKindSummary {
+                        kind: "local".to_string(),
+                        versions: 2,
+                        active_versions: 1,
+                        inactive_versions: 1,
+                    },
+                    SkillSourceKindSummary {
+                        kind: "registry".to_string(),
+                        versions: 1,
+                        active_versions: 1,
+                        inactive_versions: 0,
+                    },
+                ],
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_specified_sources());
+        assert!(summary.has_unspecified_sources());
+        assert!(summary.has_multiple_source_kinds());
+
+        let active_summary = store
+            .source_summary(SkillListOptions::new().active_only())
+            .unwrap();
+        assert_eq!(active_summary.total_skill_versions, 2);
+        assert_eq!(active_summary.active_skill_versions, 2);
+        assert_eq!(active_summary.unspecified_source_versions, 0);
+
+        assert_eq!(
+            store
+                .source_summary(SkillListOptions::new().with_limit(0))
+                .unwrap(),
+            SkillSourceSummary::empty()
+        );
+    }
+
+    #[test]
+    fn inventory_summary_composes_catalog_requirements_assets_and_source() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .install_skill(
+                SkillManifest {
+                    skill_id: "planner".to_string(),
+                    version: "v1".to_string(),
+                    name: "Planner".to_string(),
+                    description: "Plans work".to_string(),
+                    entrypoints: vec!["main".to_string(), "review".to_string()],
+                    required_tools: vec!["shell".to_string()],
+                    required_capabilities: vec!["write".to_string()],
+                    assets: vec!["SKILL.md".to_string(), "examples/brief.md".to_string()],
+                    source: JsonValue::Object(vec![(
+                        "kind".to_string(),
+                        JsonValue::String("local".to_string()),
+                    )]),
+                    active: true,
+                },
+                vec![InstallSkillAssetInput {
+                    asset_path: "SKILL.md".to_string(),
+                    content_type: "text/markdown".to_string(),
+                    body: b"# planner".to_vec(),
+                }],
+            )
+            .unwrap();
+        let _ = store
+            .install_skill(
+                SkillManifest {
+                    skill_id: "planner".to_string(),
+                    version: "v2".to_string(),
+                    name: "Planner".to_string(),
+                    description: "Plans work".to_string(),
+                    entrypoints: vec!["main".to_string()],
+                    required_tools: vec!["shell".to_string()],
+                    required_capabilities: Vec::new(),
+                    assets: vec!["SKILL.md".to_string()],
+                    source: JsonValue::Object(vec![(
+                        "kind".to_string(),
+                        JsonValue::String("local".to_string()),
+                    )]),
+                    active: false,
+                },
+                vec![InstallSkillAssetInput {
+                    asset_path: "SKILL.md".to_string(),
+                    content_type: "text/markdown".to_string(),
+                    body: b"# planner v2".to_vec(),
+                }],
+            )
+            .unwrap();
+        let _ = store
+            .install_skill(
+                SkillManifest {
+                    skill_id: "observer".to_string(),
+                    version: "v1".to_string(),
+                    name: "Observer".to_string(),
+                    description: "Reads state".to_string(),
+                    entrypoints: vec!["observe".to_string()],
+                    required_tools: Vec::new(),
+                    required_capabilities: vec!["artifact.read".to_string()],
+                    assets: Vec::new(),
+                    source: JsonValue::Object(vec![]),
+                    active: true,
+                },
+                Vec::new(),
+            )
+            .unwrap();
+
+        let summary = store.inventory_summary(SkillListOptions::new()).unwrap();
+
+        assert_eq!(summary.total_skill_versions(), 3);
+        assert_eq!(summary.catalog.unique_skills, 2);
+        assert_eq!(summary.catalog.active_skill_versions, 2);
+        assert_eq!(summary.catalog.inactive_skill_versions, 1);
+        assert_eq!(summary.catalog.manifest_asset_refs, 3);
+        assert_eq!(summary.catalog.stored_assets, 2);
+        assert_eq!(
+            summary.catalog.stored_asset_bytes,
+            b"# planner".len() + b"# planner v2".len()
+        );
+        assert_eq!(summary.requirements.unique_entrypoints, 3);
+        assert_eq!(summary.requirements.required_tool_refs, 2);
+        assert_eq!(summary.requirements.required_capability_refs, 2);
+        assert_eq!(summary.requirements.versions_without_required_tools, 1);
+        assert_eq!(
+            summary.requirements.versions_without_required_capabilities,
+            1
+        );
+        assert_eq!(summary.assets.total_assets, 2);
+        assert_eq!(summary.assets.markdown_assets, 2);
+        assert_eq!(summary.source.specified_source_versions, 2);
+        assert_eq!(summary.source.unspecified_source_versions, 1);
+        assert!(summary.has_asset_material_gaps());
+        assert!(summary.needs_inventory_attention());
+        assert!(!summary.is_empty());
+
+        let active_summary = store
+            .inventory_summary(SkillListOptions::new().active_only())
+            .unwrap();
+
+        assert_eq!(active_summary.total_skill_versions(), 2);
+        assert_eq!(active_summary.catalog.active_skill_versions, 2);
+        assert_eq!(active_summary.catalog.stored_assets, 1);
+        assert_eq!(
+            active_summary.requirements.versions_without_required_tools,
+            1
+        );
+        assert_eq!(
+            active_summary
+                .requirements
+                .versions_without_required_capabilities,
+            0
+        );
+        assert_eq!(active_summary.source.unspecified_source_versions, 1);
+        assert!(active_summary.needs_inventory_attention());
+
+        let empty = store
+            .inventory_summary(SkillListOptions::new().with_limit(0))
+            .unwrap();
+        assert_eq!(empty, SkillInventorySummary::empty());
+        assert!(empty.is_empty());
+        assert!(!empty.needs_inventory_attention());
     }
 
     #[test]

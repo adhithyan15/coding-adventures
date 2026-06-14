@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-transforms",
+  "version": "0.1.0",
+  "description": "Filter / map / sort / limit / partition / compose helpers over IR sequences (Document arrays, IndexItem arrays, anything keyed) for the Forme pipeline (FM00 v0).  Pure transforms — no I/O.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

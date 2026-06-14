@@ -1,0 +1,10 @@
+[package]
+name = "cas-substitution"
+version = "0.1.0"
+edition = "2021"
+description = "Structural and pattern-aware substitution over symbolic IR trees"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
+cas-pattern-matching = { path = "../cas-pattern-matching" }

@@ -93,4 +93,38 @@ do
     assert_true(not g:has_node("A"))
 end
 
+do
+    local g = Graph.new()
+    assert_true(g:set_graph_property("name", "city-map"))
+    assert_true(g:set_graph_property("version", 1))
+    assert_equals("city-map", g:graph_properties().name)
+    assert_equals(1, g:graph_properties().version)
+    assert_true(g:remove_graph_property("version"))
+    assert_equals(nil, g:graph_properties().version)
+
+    g:add_node("A", { kind = "input" })
+    g:add_node("A", { trainable = false })
+    assert_true(g:set_node_property("A", "slot", 0))
+    assert_equals("input", g:node_properties("A").kind)
+    assert_equals(false, g:node_properties("A").trainable)
+    assert_equals(0, g:node_properties("A").slot)
+    assert_true(g:remove_node_property("A", "slot"))
+    assert_equals(nil, g:node_properties("A").slot)
+
+    g:add_edge("A", "B", 2.5, { role = "distance" })
+    assert_equals("distance", g:edge_properties("B", "A").role)
+    assert_equals(2.5, g:edge_properties("B", "A").weight)
+    assert_true(g:set_edge_property("B", "A", "weight", 7.0))
+    assert_equals(7.0, assert(g:edge_weight("A", "B")))
+    assert_true(g:set_edge_property("A", "B", "trainable", true))
+    assert_true(g:remove_edge_property("A", "B", "role"))
+    assert_equals(true, g:edge_properties("A", "B").trainable)
+    assert_equals(nil, g:edge_properties("A", "B").role)
+
+    assert_true(g:remove_edge("A", "B"))
+    local properties, err = g:edge_properties("A", "B")
+    assert_equals(nil, properties)
+    assert_equals("edge_not_found", err.type)
+end
+
 print("lua/graph tests passed")

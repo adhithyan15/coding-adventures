@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-loopback"
+version = "0.1.0"
+edition = "2021"
+description = "In-memory protocol loopback board for Board VM host/runtime integration"
+
+[dependencies]
+board-vm-ir = { path = "../board-vm-ir" }
+board-vm-protocol = { path = "../board-vm-protocol" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+
+[dev-dependencies]
+board-vm-host = { path = "../board-vm-host" }
+
+[lib]
+path = "src/lib.rs"

@@ -1,0 +1,1 @@
+cargo test -p prolog-loader -- --nocapture

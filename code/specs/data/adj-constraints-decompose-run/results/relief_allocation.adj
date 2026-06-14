@@ -1,0 +1,7 @@
+symbol hot_meals : scalar
+symbol emergency_shelter : scalar
+constrain 12 - hot_meals - emergency_shelter = 0
+constrain 4 * hot_meals + 3 * emergency_shelter >= 0
+constrain hot_meals <= 8
+maximize 4 * hot_meals + 3 * emergency_shelter
+solve for { hot_meals, emergency_shelter }

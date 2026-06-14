@@ -187,3 +187,501 @@ def test_insert_unknown_table_raises() -> None:
     )
     with pytest.raises(TableNotFound):
         execute(compile(plan), be)
+
+
+# --------------------------------------------------------------------------
+# CHECK constraint tests — VM-level enforcement via check_registry.
+# --------------------------------------------------------------------------
+
+
+def _make_check_table(be: InMemoryBackend, check: object) -> None:
+    """Create table t(id INTEGER, val INTEGER CHECK(<check>)) in be."""
+    plan = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER", check_expr=None),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check),
+        ),
+    )
+    registry: dict = {}
+    execute(compile(plan), be, check_registry=registry)
+    return registry
+
+
+def test_check_constraint_insert_valid() -> None:
+    """INSERT satisfying CHECK (val > 0) succeeds."""
+    be = InMemoryBackend()
+    # val > 0
+    check_expr = BinaryExpr(op=BinaryOp.GT, left=Column(None, "val"), right=Literal(0))
+    registry: dict = {}
+    plan_create = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check_expr),
+        ),
+    )
+    execute(compile(plan_create), be, check_registry=registry)
+
+    plan_insert = Insert(
+        table="t",
+        columns=("id", "val"),
+        source=InsertSource(values=((Literal(1), Literal(5)),)),
+    )
+    result = execute(compile(plan_insert), be, check_registry=registry)
+    assert result.rows_affected == 1
+    rows = _scan_rows(be, "t")
+    assert rows == [{"id": 1, "val": 5}]
+
+
+def test_check_constraint_insert_violates() -> None:
+    """INSERT violating CHECK (val > 0) raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    check_expr = BinaryExpr(op=BinaryOp.GT, left=Column(None, "val"), right=Literal(0))
+    registry: dict = {}
+    plan_create = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check_expr),
+        ),
+    )
+    execute(compile(plan_create), be, check_registry=registry)
+
+    plan_insert = Insert(
+        table="t",
+        columns=("id", "val"),
+        source=InsertSource(values=((Literal(1), Literal(-1)),)),
+    )
+    with pytest.raises(ConstraintViolation) as exc_info:
+        execute(compile(plan_insert), be, check_registry=registry)
+    assert "CHECK constraint failed" in str(exc_info.value)
+
+
+def test_check_constraint_update_violates() -> None:
+    """UPDATE violating CHECK (val > 0) raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    check_expr = BinaryExpr(op=BinaryOp.GT, left=Column(None, "val"), right=Literal(0))
+    registry: dict = {}
+    plan_create = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check_expr),
+        ),
+    )
+    execute(compile(plan_create), be, check_registry=registry)
+    be.insert("t", {"id": 1, "val": 10})
+
+    plan_update = Update(
+        table="t",
+        assignments=(Assignment(column="val", value=Literal(-99)),),
+    )
+    with pytest.raises(ConstraintViolation):
+        execute(compile(plan_update), be, check_registry=registry)
+    # Row should be unchanged.
+    assert _scan_rows(be, "t") == [{"id": 1, "val": 10}]
+
+
+def test_check_null_passes() -> None:
+    """NULL satisfies CHECK (val > 0) by SQL three-valued-logic convention."""
+    be = InMemoryBackend()
+    check_expr = BinaryExpr(op=BinaryOp.GT, left=Column(None, "val"), right=Literal(0))
+    registry: dict = {}
+    plan_create = CreateTable(
+        table="t",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(name="val", type_name="INTEGER", check_expr=check_expr),
+        ),
+    )
+    execute(compile(plan_create), be, check_registry=registry)
+
+    plan_insert = Insert(
+        table="t",
+        columns=("id", "val"),
+        source=InsertSource(values=((Literal(1), Literal(None)),)),
+    )
+    result = execute(compile(plan_insert), be, check_registry=registry)
+    assert result.rows_affected == 1
+
+
+# --------------------------------------------------------------------------
+# FOREIGN KEY constraint tests — VM-level enforcement via fk_child/fk_parent.
+# --------------------------------------------------------------------------
+
+
+def _make_fk_tables(
+    be: InMemoryBackend,
+) -> tuple[dict, dict]:
+    """Create parents(id PK) and children(id, parent_id → parents.id).
+
+    Returns (fk_child, fk_parent) registries populated by execute().
+    """
+    fk_c: dict = {}
+    fk_p: dict = {}
+
+    plan_parent = CreateTable(
+        table="parents",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER", primary_key=True),
+        ),
+    )
+    execute(compile(plan_parent), be, fk_child=fk_c, fk_parent=fk_p)
+
+    plan_child = CreateTable(
+        table="children",
+        columns=(
+            AstColumnDef(name="id", type_name="INTEGER"),
+            AstColumnDef(
+                name="parent_id",
+                type_name="INTEGER",
+                foreign_key=("parents", "id"),
+            ),
+        ),
+    )
+    execute(compile(plan_child), be, fk_child=fk_c, fk_parent=fk_p)
+    return fk_c, fk_p
+
+
+def test_fk_insert_valid() -> None:
+    """INSERT child with existing parent row passes."""
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+    be.insert("parents", {"id": 1})
+
+    plan = Insert(
+        table="children",
+        columns=("id", "parent_id"),
+        source=InsertSource(values=((Literal(10), Literal(1)),)),
+    )
+    result = execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert result.rows_affected == 1
+    assert _scan_rows(be, "children") == [{"id": 10, "parent_id": 1}]
+
+
+def test_fk_insert_violates() -> None:
+    """INSERT child with missing parent raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+
+    plan = Insert(
+        table="children",
+        columns=("id", "parent_id"),
+        source=InsertSource(values=((Literal(1), Literal(99)),)),
+    )
+    with pytest.raises(ConstraintViolation) as exc_info:
+        execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert "FOREIGN KEY" in str(exc_info.value)
+
+
+def test_fk_null_child_passes() -> None:
+    """NULL FK value is allowed (unknown reference)."""
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+
+    plan = Insert(
+        table="children",
+        columns=("id", "parent_id"),
+        source=InsertSource(values=((Literal(1), Literal(None)),)),
+    )
+    result = execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert result.rows_affected == 1
+
+
+def test_fk_update_child_violates() -> None:
+    """UPDATE child FK to non-existent parent raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+    be.insert("parents", {"id": 1})
+    be.insert("children", {"id": 10, "parent_id": 1})
+
+    plan = Update(
+        table="children",
+        assignments=(Assignment(column="parent_id", value=Literal(999)),),
+    )
+    with pytest.raises(ConstraintViolation):
+        execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert _scan_rows(be, "children") == [{"id": 10, "parent_id": 1}]
+
+
+def test_fk_delete_parent_restricted() -> None:
+    """DELETE parent row that has referencing children raises ConstraintViolation."""
+    from sql_vm import ConstraintViolation
+
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+    be.insert("parents", {"id": 1})
+    be.insert("children", {"id": 10, "parent_id": 1})
+
+    plan = Delete(
+        table="parents",
+        predicate=BinaryExpr(op=BinaryOp.EQ, left=Column("parents", "id"), right=Literal(1)),
+    )
+    with pytest.raises(ConstraintViolation) as exc_info:
+        execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert "FOREIGN KEY" in str(exc_info.value)
+    assert _scan_rows(be, "parents") == [{"id": 1}]
+
+
+def test_fk_delete_parent_no_children() -> None:
+    """DELETE parent row with no children succeeds."""
+    be = InMemoryBackend()
+    fk_c, fk_p = _make_fk_tables(be)
+    be.insert("parents", {"id": 1})
+    be.insert("parents", {"id": 2})
+
+    plan = Delete(
+        table="parents",
+        predicate=BinaryExpr(op=BinaryOp.EQ, left=Column("parents", "id"), right=Literal(1)),
+    )
+    result = execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
+    assert result.rows_affected == 1
+    assert _scan_rows(be, "parents") == [{"id": 2}]
+
+
+# ---- RETURNING clause execution --------------------------------------------
+
+
+def _make_employee_backend() -> InMemoryBackend:
+    """Return a backend with an 'employees' table containing id, name, salary."""
+    be = InMemoryBackend()
+    be.create_table(
+        "employees",
+        [
+            BackendColumnDef(name="id", type_name="INTEGER"),
+            BackendColumnDef(name="name", type_name="TEXT"),
+            BackendColumnDef(name="salary", type_name="INTEGER"),
+        ],
+        False,
+    )
+    return be
+
+
+def test_insert_returning_single_row() -> None:
+    """INSERT … RETURNING id, name returns the inserted row."""
+    be = _make_employee_backend()
+    plan = Insert(
+        table="employees",
+        columns=("id", "name", "salary"),
+        source=InsertSource(values=((Literal(1), Literal("Alice"), Literal(50000)),)),
+        returning=(Column("employees", "id"), Column("employees", "name")),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id", "name")
+    assert list(result.rows) == [(1, "Alice")]
+    # The row must be stored in the backend too.
+    assert _scan_rows(be, "employees") == [{"id": 1, "name": "Alice", "salary": 50000}]
+
+
+def test_insert_returning_multiple_rows() -> None:
+    """INSERT two rows with RETURNING — result contains both rows in order."""
+    be = _make_employee_backend()
+    plan = Insert(
+        table="employees",
+        columns=("id", "name", "salary"),
+        source=InsertSource(values=(
+            (Literal(1), Literal("Alice"), Literal(50000)),
+            (Literal(2), Literal("Bob"), Literal(60000)),
+        )),
+        returning=(Column("employees", "id"), Column("employees", "salary")),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id", "salary")
+    assert list(result.rows) == [(1, 50000), (2, 60000)]
+
+
+def test_insert_returning_salary_column() -> None:
+    """INSERT … RETURNING salary reads back the inserted salary value."""
+    be = _make_employee_backend()
+    plan = Insert(
+        table="employees",
+        columns=("id", "name", "salary"),
+        source=InsertSource(values=((Literal(99), Literal("Z"), Literal(99999)),)),
+        returning=(Column("employees", "salary"),),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("salary",)
+    assert list(result.rows) == [(99999,)]
+
+
+def test_update_returning_updated_values() -> None:
+    """UPDATE … RETURNING shows post-update row values."""
+    be = _make_employee_backend()
+    be.insert("employees", {"id": 1, "name": "Alice", "salary": 50000})
+    be.insert("employees", {"id": 2, "name": "Bob", "salary": 60000})
+    plan = Update(
+        table="employees",
+        assignments=(Assignment(column="salary", value=Literal(75000)),),
+        predicate=BinaryExpr(
+            op=BinaryOp.EQ, left=Column("employees", "id"), right=Literal(1)
+        ),
+        returning=(Column("employees", "id"), Column("employees", "salary")),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id", "salary")
+    assert list(result.rows) == [(1, 75000)]
+
+
+def test_update_returning_all_matched_rows() -> None:
+    """UPDATE without WHERE returns one RETURNING row per affected row."""
+    be = _make_employee_backend()
+    be.insert("employees", {"id": 1, "name": "Alice", "salary": 50000})
+    be.insert("employees", {"id": 2, "name": "Bob", "salary": 60000})
+    plan = Update(
+        table="employees",
+        assignments=(Assignment(column="salary", value=Literal(99999)),),
+        returning=(Column("employees", "id"),),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id",)
+    assert len(result.rows) == 2
+
+
+def test_delete_returning_deleted_row() -> None:
+    """DELETE … RETURNING returns the deleted row's values before deletion."""
+    be = _make_employee_backend()
+    be.insert("employees", {"id": 1, "name": "Alice", "salary": 50000})
+    be.insert("employees", {"id": 2, "name": "Bob", "salary": 60000})
+    plan = Delete(
+        table="employees",
+        predicate=BinaryExpr(
+            op=BinaryOp.EQ, left=Column("employees", "id"), right=Literal(2)
+        ),
+        returning=(Column("employees", "id"), Column("employees", "name")),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id", "name")
+    assert list(result.rows) == [(2, "Bob")]
+    # Verify the row was actually deleted.
+    remaining = _scan_rows(be, "employees")
+    assert len(remaining) == 1
+    assert remaining[0]["id"] == 1
+
+
+def test_delete_returning_multiple_rows() -> None:
+    """DELETE all rows with RETURNING — each deleted row appears in result."""
+    be = _make_employee_backend()
+    be.insert("employees", {"id": 1, "name": "Alice", "salary": 50000})
+    be.insert("employees", {"id": 2, "name": "Bob", "salary": 60000})
+    be.insert("employees", {"id": 3, "name": "Charlie", "salary": 70000})
+    plan = Delete(
+        table="employees",
+        returning=(Column("employees", "id"),),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id",)
+    assert len(result.rows) == 3
+    assert _scan_rows(be, "employees") == []
+
+
+# ---------------------------------------------------------------------------
+# ALTER TABLE — RENAME TO / RENAME COLUMN / DROP COLUMN
+# ---------------------------------------------------------------------------
+
+
+def test_alter_table_rename_to() -> None:
+    """ALTER TABLE old RENAME TO new — table appears under new key."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    be = InMemoryBackend()
+    be.create_table("t", [BackendColumnDef(name="x", type_name="INTEGER")], False)
+    be.insert("t", {"x": 42})
+
+    plan = PlanAlterTable(table="t", rename_to="u")
+    result = execute(compile(plan), be)
+    assert result.rows_affected == 0
+    assert "u" in be.tables()
+    assert "t" not in be.tables()
+    # Rows survive the rename.
+    assert _scan_rows(be, "u") == [{"x": 42}]
+
+
+def test_alter_table_rename_column() -> None:
+    """ALTER TABLE t RENAME COLUMN old TO new — column visible under new name."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    be = InMemoryBackend()
+    be.create_table(
+        "t",
+        [
+            BackendColumnDef(name="a", type_name="INTEGER"),
+            BackendColumnDef(name="b", type_name="TEXT"),
+        ],
+        False,
+    )
+    be.insert("t", {"a": 1, "b": "hello"})
+
+    plan = PlanAlterTable(table="t", rename_column=("a", "renamed"))
+    result = execute(compile(plan), be)
+    assert result.rows_affected == 0
+
+    # Schema shows the new name.
+    assert [c.name for c in be.columns("t")] == ["renamed", "b"]
+    # Existing rows retain the value under the new key.
+    rows = _scan_rows(be, "t")
+    assert rows == [{"renamed": 1, "b": "hello"}]
+
+
+def test_alter_table_drop_column() -> None:
+    """ALTER TABLE t DROP COLUMN c — column gone, other columns survive."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    be = InMemoryBackend()
+    be.create_table(
+        "t",
+        [
+            BackendColumnDef(name="a", type_name="INTEGER"),
+            BackendColumnDef(name="b", type_name="TEXT"),
+        ],
+        False,
+    )
+    be.insert("t", {"a": 1, "b": "keep"})
+    be.insert("t", {"a": 2, "b": "also"})
+
+    plan = PlanAlterTable(table="t", drop_column="b")
+    result = execute(compile(plan), be)
+    assert result.rows_affected == 0
+
+    assert [c.name for c in be.columns("t")] == ["a"]
+    rows = _scan_rows(be, "t")
+    assert rows == [{"a": 1}, {"a": 2}]
+
+
+def test_alter_table_drop_column_unknown_raises() -> None:
+    """DROP COLUMN on a non-existent column raises ColumnNotFound (translated)."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    from sql_vm.errors import ColumnNotFound
+
+    be = InMemoryBackend()
+    be.create_table(
+        "t",
+        [
+            BackendColumnDef(name="a", type_name="INTEGER"),
+            BackendColumnDef(name="b", type_name="TEXT"),
+        ],
+        False,
+    )
+
+    plan = PlanAlterTable(table="t", drop_column="ghost")
+    with pytest.raises(ColumnNotFound):
+        execute(compile(plan), be)
+
+
+def test_alter_table_rename_table_missing_raises() -> None:
+    """RENAME TO on a non-existent table raises TableNotFound."""
+    from sql_planner.plan import AlterTable as PlanAlterTable
+
+    be = InMemoryBackend()
+    plan = PlanAlterTable(table="ghost", rename_to="new_name")
+    with pytest.raises(TableNotFound):
+        execute(compile(plan), be)

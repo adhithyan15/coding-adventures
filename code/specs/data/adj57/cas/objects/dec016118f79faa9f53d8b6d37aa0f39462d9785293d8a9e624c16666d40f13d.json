@@ -1,0 +1,16 @@
+{
+  "hash": "dec016118f79faa9f53d8b6d37aa0f39462d9785293d8a9e624c16666d40f13d",
+  "url": "https://www.slow-journalism.com/delayed-gratification-magazine/wearside-jack-and-the-hoaxes-that-derailed-the-hunt-for-the-yorkshire-ripper",
+  "title": "Wearside Jack and the hoaxes that derailed the hunt for the Yorkshire Ripper \u2014 Delayed Gratification",
+  "interned_at": "",
+  "content": "John Humble had lost his father when he was eight and had spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton. John Humble was Wearside Jack. Police arrived to arrest him in October 2005.",
+  "citations": [
+    {
+      "start": 0,
+      "end": 149,
+      "quote": "John Humble had lost his father when he was eight and had spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton.",
+      "used_for": "LIKELIHOOD RATIO 1 \u2014 best_match(wearside_survey_recordings_washington): P(questioned sample best-matches the Wearside/Washington SED comparison recording | speaker truly from Wearside/Sunderland) vs P(same | speaker from elsewhere). DIRECTION strongly positive and root-validated as a DIRECTIONAL fact: Stanley Ellis localized the speaker by comparing the tape against his own SED fieldwork, specifically a recording of the Washington dialect, and the Castletown/Southwick comparison speaker's 'segmental pronunciations, intonation patterns, rhythm and tempo closely resembled those of the questioned speaker', while similarities FELL OFF moving north \u2014 a positive co-localization gradient. GROUND TRUTH confirms direction: John Humble (DNA-identified 2005/2006) had 'spent his life on the Ford Estate in Sunderland, just across the River Wear from Castleton' \u2014 the exact region Ellis named. BUT no source publishes a numeric P(match|hypothesis) or a quantified false-match rate; the judgment was auditory/comparative, not a measured likelihood ratio. Hence direction_only for the NUMBER even though the direction traces to root primary observation.->wearside_sunderland_castletown"
+    }
+  ],
+  "onward_citations": []
+}

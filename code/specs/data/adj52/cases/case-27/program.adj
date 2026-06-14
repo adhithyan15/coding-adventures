@@ -1,0 +1,47 @@
+% ADJ52 case-27 program (this patient's observations + queries only; no rules).
+% 52-year-old lifelong NON-SMOKING woman, ED with ~4 days of dry cough, exertional
+% dyspnoea, pleuritic right-sided chest pain, fevers. Febrile 39.1C, tachycardic,
+% SpO2 94% RA, neutrophil-predominant leucocytosis (WCC 21.4), CRP 264. CXR: dense
+% RIGHT-LOWER-ZONE consolidation + blunted right costophrenic angle. Working dx:
+% severe CAP with parapneumonic effusion; admitted on IV ampicillin-sulbactam.
+% Diagnostic tap: EXUDATE (pleural LDH 870, protein ratio 0.6), LOW glucose,
+% LYMPHOCYTE-RICH, pleural ADA 18.6 U/L (BELOW the 40 U/L TB cutoff). All cultures
+% (fluid, blood, sputum) and bronchial washings NEGATIVE. Despite a full IV
+% antibiotic course the opacity did NOT clear; empirical 6-month anti-TB started on
+% presumption of occult TB. Patient remained relatively well (intermittent low-grade
+% fever/cough). CT thorax at 2 and 6 months: SAME band of RLL consolidative opacity,
+% essentially UNCHANGED, NO cavitation, NO response to antibacterial OR anti-TB.
+% Transbronchial biopsy: ATYPICAL LYMPHOID CELLS. CT-guided core biopsy, upper-GI
+% endoscopy with gastric biopsies, and bone-marrow trephine arranged.
+
+% --- the indolent-lymphoid gestalt (one correlated syndrome) ---
+observe histology(atypical_lymphoid_cells_on_lung_tissue)
+observe pleural_fluid(lymphocyte_rich)
+observe clinical_course(indolent_relatively_well)
+observe staging_workup(other_mucosal_and_marrow_sites)
+
+% --- the non-resolution-despite-therapy gestalt (one correlated syndrome) ---
+observe consolidation_course(unchanged_over_months)
+observe treatment_response(no_response_to_antibiotics)
+observe treatment_response(no_response_to_anti_tb)
+
+% --- pleural fluid character and microbiology ---
+observe pleural_fluid(exudate_high_ldh)
+observe pleural_ada(below_tb_cutoff)
+observe microbiology(persistently_culture_negative)
+
+% --- imaging and presentation ---
+observe imaging(no_cavitation)
+observe presentation(acute_febrile_neutrophilic_lobar)
+
+% NOT observed (open, decision-relevant): immunophenotype(...) -- the
+% immunophenotyping / clonality result on adequate tissue is still pending.
+
+% --- queries: each candidate diagnosis + the recommended next step ---
+? diagnosis(pulmonary_malt_lymphoma)
+? diagnosis(pneumonic_type_adenocarcinoma)
+? diagnosis(tuberculous_pleuropulmonary_disease)
+? diagnosis(organizing_pneumonia)
+? diagnosis(community_acquired_pneumonia)
+? next_step(core_or_cryo_biopsy_with_lymphoma_immunophenotyping)
+? next_step(complete_lymphoma_staging)

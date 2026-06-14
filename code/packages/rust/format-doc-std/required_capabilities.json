@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/format-doc-std",
+  "capabilities": [],
+  "justification": "Pure data: builder helpers that compose format-doc's primitives into reusable Doc templates.  No I/O, no FFI, no filesystem/network/process/env access.  Single dep on format-doc (also empty)."
+}

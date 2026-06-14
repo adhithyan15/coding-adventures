@@ -1,0 +1,14 @@
+[package]
+name = "oct-lsp-bridge"
+version = "0.2.0"
+edition = "2021"
+description = "OCT-LSP01 + OCT-FMT01 — Oct instantiation of grammar-lsp-bridge; provides oct_language_spec() and the oct-lsp-server binary.  v0.2.0 wires oct-formatter so textDocument/formatting becomes a real LSP capability."
+
+[dependencies]
+grammar-lsp-bridge      = { path = "../grammar-lsp-bridge" }
+coding-adventures-ls00  = { path = "../ls00" }
+oct-formatter           = { path = "../oct-formatter" }
+
+[[bin]]
+name = "oct-lsp-server"
+path = "bin/oct_lsp_server.rs"

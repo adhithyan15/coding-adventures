@@ -13,6 +13,7 @@ local GraphRepr = graph.GraphRepr
 local g = Graph.new({ repr = GraphRepr.ADJACENCY_LIST })
 g:add_edge("London", "Paris", 300)
 g:add_edge("London", "Amsterdam", 520)
+g:set_node_property("London", "kind", "city")
 
 local path = graph.shortest_path(g, "London", "Paris")
 local mst = graph.minimum_spanning_tree(g)
@@ -22,6 +23,7 @@ local mst = graph.minimum_spanning_tree(g)
 
 - `Graph`
 - `GraphRepr`
+- graph, node, and edge property bag methods on `Graph`
 - `bfs(graph, start)`
 - `dfs(graph, start)`
 - `is_connected(graph)`

@@ -27,7 +27,15 @@
  *     import { CycleError, NodeNotFoundError, EdgeNotFoundError } from "@coding-adventures/directed-graph";
  */
 
-export { Graph, CycleError, NodeNotFoundError, EdgeNotFoundError } from "./graph.js";
+export {
+  Graph,
+  CycleError,
+  NodeNotFoundError,
+  EdgeNotFoundError,
+  type GraphPropertyBag,
+  type GraphPropertyValue,
+  type WeightedEdge,
+} from "./graph.js";
 export { LabeledDirectedGraph } from "./labeled-graph.js";
 export { toDot, toMermaid, toAsciiTable } from "./visualization.js";
 export type { DotOptions, MermaidOptions } from "./visualization.js";

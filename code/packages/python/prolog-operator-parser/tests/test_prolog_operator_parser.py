@@ -3,7 +3,15 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, goal_as_term, logic_list, relation, solve_all, term
+from logic_engine import (
+    Compound,
+    atom,
+    goal_as_term,
+    logic_list,
+    relation,
+    solve_all,
+    term,
+)
 from prolog_core import iso_operator_table
 from prolog_lexer import tokenize_prolog
 from prolog_parser import PrologParseError
@@ -11,6 +19,7 @@ from prolog_parser import PrologParseError
 from prolog_operator_parser import (
     __version__,
     parse_operator_goal_tokens,
+    parse_operator_named_term_tokens,
     parse_operator_program_tokens,
     parse_operator_query_tokens,
     parse_operator_source_tokens,
@@ -53,6 +62,22 @@ class TestOperatorParsing:
         )
 
         assert parsed == term("*", term("+", 1, 2), 3)
+
+    def test_parse_named_term_returns_variables(self) -> None:
+        parsed = parse_operator_named_term_tokens(
+            tokenize_prolog("pair(X, Y, X, _)"),
+            iso_operator_table(),
+        )
+
+        assert isinstance(parsed.term, Compound)
+        assert parsed.term == term(
+            "pair",
+            parsed.variables["X"],
+            parsed.variables["Y"],
+            parsed.variables["X"],
+            parsed.term.args[3],
+        )
+        assert list(parsed.variables) == ["X", "Y"]
 
     def test_parse_goal_lowers_control_and_relational_operators(self) -> None:
         parsed = parse_operator_goal_tokens(

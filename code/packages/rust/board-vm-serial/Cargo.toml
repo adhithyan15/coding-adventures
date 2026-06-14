@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-serial"
+version = "0.1.0"
+edition = "2021"
+description = "Serial port transport for Board VM host clients"
+
+[dependencies]
+board-vm-client = { path = "../board-vm-client" }
+board-vm-stream = { path = "../board-vm-stream" }
+serialport = { version = "4", default-features = false }
+
+[dev-dependencies]
+board-vm-protocol = { path = "../board-vm-protocol" }
+
+[lib]
+path = "src/lib.rs"

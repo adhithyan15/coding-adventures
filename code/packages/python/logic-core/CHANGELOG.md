@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `State.prolog_flags` extension slot for branch-local Prolog runtime flag
+  overlays.
+- preservation of the Prolog flag extension slot across equality,
+  disequality, and fresh-variable goals.
+
 ## [0.4.0] - 2026-04-22
 
 ### Added

@@ -1,0 +1,15 @@
+[package]
+name = "moslayout-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compiles .mll component layout files to a layout IR and part map"
+
+[dependencies]
+grammar-tools  = { path = "../grammar-tools" }
+lexer          = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }
+parser         = { path = "../parser" }
+state-machine  = { path = "../state-machine" }
+mosmodel-compiler = { path = "../mosmodel-compiler" }
+serde          = { version = "1", features = ["derive"] }
+serde_json     = "1"

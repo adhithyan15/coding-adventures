@@ -5,6 +5,40 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Changed — LANG19: CIRInstr, BackendProtocol, and optimizer extracted to codegen-core
+
+`codegen-core` (LANG19) introduced the universal `CodegenPipeline[IR]`
+abstraction.  `jit-core` now delegates the optimize-then-compile step to
+a `CodegenPipeline[list[CIRInstr]]` rather than calling `optimizer.run()`
+and `backend.compile()` manually.
+
+- `jit_core.cir` — re-exports `CIRInstr` from `codegen_core.cir`.
+  Existing callers of `from jit_core.cir import CIRInstr` are unaffected.
+
+- `jit_core.backend` — re-exports `Backend` and `BackendProtocol` from
+  `codegen_core.backend`.  The protocol is now generic (`Backend[IR]`);
+  the existing `BackendProtocol` name is kept as an alias.
+
+- `jit_core.optimizer` — re-exports `run` (and internal helpers) from
+  `codegen_core.optimizer.cir_optimizer`.  Callers using
+  `from jit_core import optimizer; optimizer.run(cir)` are unaffected.
+
+- `JITCore.__init__` now builds `self._pipeline: CodegenPipeline` with
+  `CIROptimizer()` attached.
+
+- `JITCore._compile_fn` calls `self._pipeline.compile_with_stats(cir)`
+  instead of separate `optimizer.run() + backend.compile()` calls.  The
+  `CodegenResult` provides the IR snapshot and timing metadata for the
+  JIT cache entry without extra bookkeeping.
+
+- `pyproject.toml`: added `coding-adventures-codegen-core` dependency.
+
+Zero test changes — all public APIs preserved via re-exports.
+
+---
+
 ## [0.1.0] — 2026-04-22
 
 ### Added

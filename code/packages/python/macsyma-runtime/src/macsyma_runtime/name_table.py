@@ -17,7 +17,43 @@ compiler change required.
 
 from __future__ import annotations
 
-from symbolic_ir import IRSymbol
+from symbolic_ir import (
+    APPLY1,
+    APPLY2,
+    BESSEL_J,
+    BESSEL_Y,
+    BETA_FUNC,
+    CHEBYSHEV_T,
+    CHEBYSHEV_U,
+    CHI,
+    CI,
+    DEFRULE,
+    DIRAC_DELTA,
+    ERF,
+    ERFC,
+    ERFI,
+    FOURIER,
+    FRESNEL_C,
+    FRESNEL_S,
+    GAMMA_FUNC,
+    HERMITE_H,
+    IFOURIER,
+    ILT,
+    LAMBERT_W,
+    LAPLACE,
+    LEGENDRE_P,
+    LEGENDRE_Q,
+    LI2,
+    MATCHDECLARE,
+    SHI,
+    SI,
+    TELLSIMP,
+    UNIT_STEP,
+    IRSymbol,
+)
+from symbolic_ir.nodes import (
+    ODE2,  # noqa: F401 — re-exported as part of MACSYMA_NAME_TABLE
+)
 
 # IR heads from substrate packages that may not exist yet — define
 # them here as :class:`IRSymbol` singletons so the table can reference
@@ -28,6 +64,7 @@ SIMPLIFY = IRSymbol("Simplify")
 EXPAND = IRSymbol("Expand")
 FACTOR = IRSymbol("Factor")
 SOLVE = IRSymbol("Solve")
+NSOLVE = IRSymbol("NSolve")
 TAYLOR = IRSymbol("Taylor")
 LIMIT = IRSymbol("Limit")
 
@@ -50,6 +87,23 @@ MATRIX = IRSymbol("Matrix")
 TRANSPOSE = IRSymbol("Transpose")
 DETERMINANT = IRSymbol("Determinant")
 INVERSE = IRSymbol("Inverse")
+DOT = IRSymbol("Dot")
+TRACE = IRSymbol("Trace")
+DIMENSIONS = IRSymbol("Dimensions")
+IDENTITY_MATRIX = IRSymbol("IdentityMatrix")
+ZERO_MATRIX = IRSymbol("ZeroMatrix")
+RANK = IRSymbol("Rank")
+ROW_REDUCE = IRSymbol("RowReduce")
+# Phase 32 — advanced matrix operations implemented in symbolic-vm ≥ 0.53.0
+# but missing from the MACSYMA name table until this release.
+EIGENVALUES = IRSymbol("Eigenvalues")
+EIGENVECTORS = IRSymbol("Eigenvectors")
+CHAR_POLY = IRSymbol("CharPoly")
+NULL_SPACE = IRSymbol("NullSpace")
+COLUMN_SPACE = IRSymbol("ColumnSpace")
+ROW_SPACE = IRSymbol("RowSpace")
+NORM = IRSymbol("Norm")
+LU = IRSymbol("LU")
 
 GCD = IRSymbol("Gcd")
 LCM = IRSymbol("Lcm")
@@ -57,15 +111,97 @@ MOD = IRSymbol("Mod")
 FLOOR = IRSymbol("Floor")
 CEILING = IRSymbol("Ceiling")
 ABS = IRSymbol("Abs")
+# Phase 28 — sign function (returns 1/-1/0 based on sign assumptions).
+SIGN = IRSymbol("Sign")
+# Phase 30 — float() coercion function (force exact → IRFloat).
+FLOAT_FUNC = IRSymbol("Float")
+
+# Equation-side selectors (C5)
+LHS = IRSymbol("Lhs")
+RHS = IRSymbol("Rhs")
+
+# Generative list construction (C2)
+MAKE_LIST = IRSymbol("MakeList")
+
+# Point evaluation (C4)
+AT = IRSymbol("At")
+
+# Number theory (B3)
+IS_PRIME = IRSymbol("IsPrime")
+NEXT_PRIME = IRSymbol("NextPrime")
+PREV_PRIME = IRSymbol("PrevPrime")
+FACTOR_INTEGER = IRSymbol("FactorInteger")
+DIVISORS = IRSymbol("Divisors")
+TOTIENT = IRSymbol("Totient")
+MOEBIUS_MU = IRSymbol("MoebiusMu")
+JACOBI_SYMBOL = IRSymbol("JacobiSymbol")
+CHINESE_REMAINDER = IRSymbol("ChineseRemainder")
+INTEGER_LENGTH = IRSymbol("IntegerLength")
+
+# Numeric root-finding (Newton's method)
+MNEWTON = IRSymbol("MNewton")
+
+# Laplace transforms (D-remaining)
+# LAPLACE, ILT, DIRAC_DELTA, UNIT_STEP imported from symbolic_ir above.
+
+# Fourier transforms (D — cas-fourier)
+# FOURIER, IFOURIER imported from symbolic_ir above.
+
+# ODE solving (D3 — cas-ode)
+# ODE2 is imported from symbolic_ir.nodes above.
+
+# Algebraic extension factoring (D5 — cas-algebraic)
+ALG_FACTOR = IRSymbol("AlgFactor")
+
+# Multivariate polynomial operations (D6 — cas-multivariate)
+GROEBNER = IRSymbol("Groebner")       # groebner(polys, vars) — Gröbner basis
+POLY_REDUCE = IRSymbol("PolyReduce")  # poly_reduce(f, polys, vars) — reduction
+IDEAL_SOLVE = IRSymbol("IdealSolve")  # ideal_solve(polys, vars) — solve system
+
+# Phase 32 — log/exp/trig transformation operations (A4)
+# These are implemented in symbolic-vm via cas_simplify.radcan,
+# cas_simplify.logcontract, etc. but were never added to the MACSYMA name table.
+RADCAN = IRSymbol("Radcan")
+LOG_CONTRACT = IRSymbol("LogContract")
+LOG_EXPAND = IRSymbol("LogExpand")
+EXPONENTIALIZE = IRSymbol("Exponentialize")
+DE_MOIVRE = IRSymbol("DeMoivre")
+
+# Phase 32 — cube root
+CBRT = IRSymbol("Cbrt")
+
+# Trig transformation heads (B1)
+TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
+TRIG_EXPAND = IRSymbol("TrigExpand")
+TRIG_REDUCE = IRSymbol("TrigReduce")
+
+# Rational function operations (A3)
+COLLECT = IRSymbol("Collect")
+TOGETHER = IRSymbol("Together")
+RAT_SIMPLIFY = IRSymbol("RatSimplify")
+APART = IRSymbol("Apart")
+
+# Complex number IR heads (B2)
+IMAGINARY_UNIT = IRSymbol("ImaginaryUnit")
+RE = IRSymbol("Re")
+IM = IRSymbol("Im")
+CONJUGATE = IRSymbol("Conjugate")
+ARG = IRSymbol("Arg")
+RECT_FORM = IRSymbol("RectForm")
+POLAR_FORM = IRSymbol("PolarForm")
 
 # Re-export the runtime-owned heads so callers have one import.
 from macsyma_runtime.heads import (  # noqa: E402
     ASSUME,
     BLOCK,
+    DECLARE,
     EV,
     FORGET,
     IS,
     KILL,
+    LOAD,
+    PROP_VARS,
+    PROPERTIES,
 )
 
 # The map MACSYMA users see → canonical IR head.
@@ -80,6 +216,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "expand": EXPAND,
     "factor": FACTOR,
     "solve": SOLVE,
+    "nsolve": NSOLVE,
+    "linsolve": SOLVE,  # MACSYMA's linsolve is linear-system solving
     "taylor": TAYLOR,
     "limit": LIMIT,
     # List operations
@@ -89,7 +227,7 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "last": LAST,
     "append": APPEND,
     "reverse": REVERSE,
-    "makelist": RANGE,
+    "makelist": MAKE_LIST,
     "map": MAP,
     "apply": APPLY,
     "sublist": SELECT,
@@ -97,11 +235,29 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "part": PART,
     "flatten": FLATTEN,
     "join": JOIN,
-    # Matrix
+    # Matrix (Group E — complete set)
     "matrix": MATRIX,
     "transpose": TRANSPOSE,
     "determinant": DETERMINANT,
     "invert": INVERSE,
+    "dot": DOT,           # matrix product: dot(A, B) or A . B
+    "mattrace": TRACE,    # sum of diagonal (MACSYMA: mattrace)
+    "matrix_size": DIMENSIONS,  # [rows, cols] shape
+    "ident": IDENTITY_MATRIX,   # n×n identity (MACSYMA: ident)
+    "zeromatrix": ZERO_MATRIX,  # m×n zero matrix
+    "rank": RANK,
+    "rowreduce": ROW_REDUCE,
+    # Advanced matrix operations (Phase 32)
+    "eigenvalues": EIGENVALUES,
+    "eigenvectors": EIGENVECTORS,
+    "charpoly": CHAR_POLY,
+    "nullspace": NULL_SPACE,
+    "columnspace": COLUMN_SPACE,
+    "rowspace": ROW_SPACE,
+    "norm": NORM,
+    "lu": LU,
+    # Newton's method numeric root finder
+    "mnewton": MNEWTON,
     # Number-theoretic
     "gcd": GCD,
     "lcm": LCM,
@@ -109,6 +265,77 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "floor": FLOOR,
     "ceiling": CEILING,
     "abs": ABS,
+    "sign": SIGN,      # Phase 28
+    # Float coercion (Phase 30) — ``float(expr)`` forces numeric evaluation.
+    "float": FLOAT_FUNC,
+    # Equation-side selectors (C5)
+    "lhs": LHS,
+    "rhs": RHS,
+    # Point evaluation — At(expr, Equal(var, val)) (C4)
+    "at": AT,
+    # Number theory (B3)
+    "primep": IS_PRIME,   # canonical MACSYMA name
+    "is_prime": IS_PRIME,  # common alias used in interactive sessions
+    "next_prime": NEXT_PRIME,
+    "prev_prime": PREV_PRIME,
+    "ifactor": FACTOR_INTEGER,
+    "divisors": DIVISORS,
+    "totient": TOTIENT,
+    "moebius": MOEBIUS_MU,
+    "jacobi": JACOBI_SYMBOL,
+    "chinese": CHINESE_REMAINDER,
+    "numdigits": INTEGER_LENGTH,
+    # Log/exp/trig transformation operations (A4, Phase 32)
+    # These call into cas_simplify.radcan, cas_simplify.logcontract, etc.
+    # which are already wired in SymbolicBackend but needed MACSYMA name bindings.
+    "radcan": RADCAN,
+    "logcontract": LOG_CONTRACT,
+    "logexpand": LOG_EXPAND,
+    "exponentialize": EXPONENTIALIZE,
+    "demoivre": DE_MOIVRE,
+    # Cube root (Phase 32)
+    "cbrt": CBRT,
+    # Trig transformation operations (B1)
+    "trigsimp": TRIG_SIMPLIFY,
+    "trigexpand": TRIG_EXPAND,
+    "trigreduce": TRIG_REDUCE,
+    # Rational function operations (A3)
+    "collect": COLLECT,
+    "together": TOGETHER,
+    "ratsimp": RAT_SIMPLIFY,
+    "partfrac": APART,
+    # Complex number operations (B2)
+    # %i is the imaginary unit constant; the compiler maps the token to
+    # IMAGINARY_UNIT so the VM finds the pre-bound symbol.
+    "%i": IMAGINARY_UNIT,
+    "realpart": RE,
+    "re": RE,         # short alias for realpart
+    "imagpart": IM,
+    "im": IM,         # short alias for imagpart
+    "conjugate": CONJUGATE,
+    # cabs(z) = complex modulus; Abs dispatches to complex handler when z
+    # contains ImaginaryUnit, so both names route to the same IR head.
+    "cabs": ABS,
+    "carg": ARG,
+    "rectform": RECT_FORM,
+    "polarform": POLAR_FORM,
+    # Laplace transforms
+    "laplace": LAPLACE,
+    "ilt": ILT,
+    "delta": DIRAC_DELTA,   # Dirac delta δ(t)
+    "hstep": UNIT_STEP,     # Heaviside step H(t)
+    "unit_step": UNIT_STEP,  # alias
+    # Fourier transforms
+    "fourier": FOURIER,     # Forward Fourier transform
+    "ifourier": IFOURIER,   # Inverse Fourier transform
+    # ODE solving (D3 — cas-ode)
+    "ode2": ODE2,           # ode2(eqn, y, x) — symbolic ODE solver
+    # Algebraic extension factoring (D5 — cas-algebraic)
+    "algfactor": ALG_FACTOR,  # algfactor(poly, sqrt(d)) — factor over Q[√d]
+    # Multivariate polynomial operations (D6 — cas-multivariate)
+    "groebner": GROEBNER,           # groebner(polys, vars) — Gröbner basis
+    "poly_reduce": POLY_REDUCE,     # poly_reduce(f, polys, vars) — reduction
+    "ideal_solve": IDEAL_SOLVE,     # ideal_solve(polys, vars) — solve system
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,
@@ -116,6 +343,59 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "assume": ASSUME,
     "forget": FORGET,
     "is": IS,
+    "declare": DECLARE,
+    "properties": PROPERTIES,
+    "propvars": PROP_VARS,
+    # Pattern-matching rule system (Phase 22)
+    # matchdeclare(x, pred)   — declare x as a pattern variable
+    # defrule(name, lhs, rhs) — compile + store a named rewrite rule
+    # apply1(name, expr)      — apply rule once at root
+    # apply2(name, expr)      — apply rule recursively (bottom-up fixed-point)
+    # tellsimp(lhs, rhs)      — add rule to the VM's automatic simplifier
+    "matchdeclare": MATCHDECLARE,
+    "defrule": DEFRULE,
+    "apply1": APPLY1,
+    "apply2": APPLY2,
+    "tellsimp": TELLSIMP,
+    # Special functions (Phase 23)
+    # Error functions: erf(x), erfc(x), erfi(x)
+    "erf": ERF,
+    "erfc": ERFC,
+    "erfi": ERFI,
+    # Trigonometric integrals: si(x), ci(x), shi(x), chi(x)
+    "si": SI,
+    "ci": CI,
+    "shi": SHI,
+    "chi": CHI,
+    # Dilogarithm: li2(x) (MACSYMA syntax; also li[2](x) but not parsed here)
+    "li2": LI2,
+    # Gamma and Beta functions: gamma(n), beta(a, b)
+    "gamma": GAMMA_FUNC,
+    "beta": BETA_FUNC,
+    # Fresnel integrals: fresnel_s(x), fresnel_c(x)
+    "fresnel_s": FRESNEL_S,
+    "fresnel_c": FRESNEL_C,
+    # Lambert W function (Phase 26 — transcendental equation solving)
+    # lambert_w(x) = W₀(x), the principal branch of W satisfying W·exp(W)=x.
+    # Arises in solutions of f(x)·exp(f(x)) = c where f is linear.
+    "lambert_w": LAMBERT_W,
+    # ---------------------------------------------------------------
+    # Track M1 — runtime package loader and orthogonal polynomials.
+    # ---------------------------------------------------------------
+    #
+    # ``load("orthopoly")`` is a session-level directive that
+    # registers the orthogonal polynomial evaluators (see
+    # :mod:`macsyma_runtime.packages.orthopoly`).  Until that call
+    # the names below parse to their canonical IR head but the
+    # backend has no handler, so they round-trip unevaluated.
+    "load": LOAD,
+    "legendre_p": LEGENDRE_P,
+    "legendre_q": LEGENDRE_Q,
+    "chebyshev_t": CHEBYSHEV_T,
+    "chebyshev_u": CHEBYSHEV_U,
+    "hermite": HERMITE_H,
+    "bessel_j": BESSEL_J,
+    "bessel_y": BESSEL_Y,
 }
 
 

@@ -1,0 +1,591 @@
+// Integration tests for cas-number-theory.
+
+use cas_number_theory::{
+    build_number_theory_handler_table, chinese_remainder_handler, crt, divisors, extended_gcd,
+    factor_integer, factor_integer_handler, factorize_ir, gcd, integer_length,
+    integer_length_handler, is_prime, is_prime_handler, jacobi_symbol, jacobi_symbol_handler, lcm,
+    mod_inverse, mod_pow, moebius_mu, next_prime, nth_prime, prev_prime, primes_up_to, totient,
+    totient_handler,
+};
+use symbolic_ir::{apply, int, sym, IRNode, MUL, POW};
+
+// ---------------------------------------------------------------------------
+// arithmetic — gcd
+// ---------------------------------------------------------------------------
+
+#[test]
+fn gcd_basic() {
+    assert_eq!(gcd(12, 8), 4);
+    assert_eq!(gcd(9, 6), 3);
+    assert_eq!(gcd(7, 3), 1);
+}
+
+#[test]
+fn gcd_with_zero() {
+    assert_eq!(gcd(0, 5), 5);
+    assert_eq!(gcd(5, 0), 5);
+    assert_eq!(gcd(0, 0), 0);
+}
+
+#[test]
+fn gcd_negative_inputs() {
+    assert_eq!(gcd(-12, 8), 4);
+    assert_eq!(gcd(12, -8), 4);
+    assert_eq!(gcd(-12, -8), 4);
+}
+
+#[test]
+fn gcd_one() {
+    assert_eq!(gcd(1, 100), 1);
+    assert_eq!(gcd(100, 1), 1);
+}
+
+#[test]
+fn gcd_equal_inputs() {
+    assert_eq!(gcd(7, 7), 7);
+    assert_eq!(gcd(100, 100), 100);
+}
+
+// ---------------------------------------------------------------------------
+// arithmetic — lcm
+// ---------------------------------------------------------------------------
+
+#[test]
+fn lcm_basic() {
+    assert_eq!(lcm(4, 6), 12);
+    assert_eq!(lcm(3, 4), 12);
+    assert_eq!(lcm(7, 5), 35);
+}
+
+#[test]
+fn lcm_with_zero() {
+    assert_eq!(lcm(0, 5), 0);
+    assert_eq!(lcm(5, 0), 0);
+}
+
+#[test]
+fn lcm_coprime() {
+    assert_eq!(lcm(7, 11), 77);
+}
+
+#[test]
+fn lcm_one_divides() {
+    // lcm(3, 6) = 6 since 3 | 6
+    assert_eq!(lcm(3, 6), 6);
+}
+
+// ---------------------------------------------------------------------------
+// arithmetic — extended_gcd
+// ---------------------------------------------------------------------------
+
+#[test]
+fn extended_gcd_bezout_identity() {
+    // Verify a*s + b*t = g for various inputs.
+    for (a, b) in &[(3i64, 5), (12, 8), (100, 37), (7, 13), (0, 5)] {
+        let (g, s, t) = extended_gcd(*a, *b);
+        assert_eq!(
+            a * s + b * t,
+            g,
+            "Bézout identity failed for ({}, {})",
+            a,
+            b
+        );
+        assert_eq!(g, gcd(*a, *b));
+    }
+}
+
+#[test]
+fn extended_gcd_coprime_gives_inverse() {
+    // extended_gcd(3, 7) → s is the modular inverse of 3 mod 7 = 5
+    let (g, s, _) = extended_gcd(3, 7);
+    assert_eq!(g, 1);
+    assert_eq!(s.rem_euclid(7), 5); // 3*5 = 15 ≡ 1 (mod 7)
+}
+
+// ---------------------------------------------------------------------------
+// arithmetic — totient
+// ---------------------------------------------------------------------------
+
+#[test]
+fn totient_one() {
+    assert_eq!(totient(1), 1);
+}
+
+#[test]
+fn totient_prime() {
+    assert_eq!(totient(7), 6);
+    assert_eq!(totient(13), 12);
+    assert_eq!(totient(97), 96);
+}
+
+#[test]
+fn totient_prime_power() {
+    // φ(p^k) = p^(k-1)·(p-1)
+    assert_eq!(totient(4), 2); // φ(2²) = 2
+    assert_eq!(totient(8), 4); // φ(2³) = 4
+    assert_eq!(totient(9), 6); // φ(3²) = 6
+}
+
+#[test]
+fn totient_composite() {
+    assert_eq!(totient(12), 4); // φ(4·3) = 2·2
+    assert_eq!(totient(36), 12); // φ(4·9) = 2·6
+    assert_eq!(totient(30), 8); // φ(2·3·5) = 1·2·4
+}
+
+#[test]
+fn totient_nonpositive() {
+    assert_eq!(totient(0), 0);
+    assert_eq!(totient(-5), 0);
+}
+
+// ---------------------------------------------------------------------------
+// arithmetic — divisors / moebius / jacobi / integer_length
+// ---------------------------------------------------------------------------
+
+#[test]
+fn divisors_python_examples() {
+    assert_eq!(divisors(1), vec![1]);
+    assert_eq!(divisors(12), vec![1, 2, 3, 4, 6, 12]);
+    assert_eq!(divisors(30), vec![1, 2, 3, 5, 6, 10, 15, 30]);
+}
+
+#[test]
+fn divisors_abs_and_zero() {
+    assert_eq!(divisors(-12), vec![1, 2, 3, 4, 6, 12]);
+    assert_eq!(divisors(0), Vec::<i64>::new());
+}
+
+#[test]
+fn moebius_python_examples() {
+    assert_eq!(moebius_mu(1), 1);
+    assert_eq!(moebius_mu(2), -1);
+    assert_eq!(moebius_mu(3), -1);
+    assert_eq!(moebius_mu(4), 0);
+    assert_eq!(moebius_mu(9), 0);
+    assert_eq!(moebius_mu(6), 1);
+}
+
+#[test]
+fn moebius_nonpositive_returns_zero() {
+    assert_eq!(moebius_mu(0), 0);
+    assert_eq!(moebius_mu(-6), 0);
+}
+
+#[test]
+fn jacobi_symbol_python_examples() {
+    assert_eq!(jacobi_symbol(2, 3), -1);
+    assert_eq!(jacobi_symbol(1, 5), 1);
+    assert_eq!(jacobi_symbol(0, 5), 0);
+    assert_eq!(jacobi_symbol(1001, 9907), -1);
+}
+
+#[test]
+#[should_panic(expected = "jacobi_symbol requires odd positive n")]
+fn jacobi_symbol_even_modulus_panics() {
+    jacobi_symbol(2, 4);
+}
+
+#[test]
+#[should_panic(expected = "jacobi_symbol requires odd positive n")]
+fn jacobi_symbol_nonpositive_modulus_panics() {
+    jacobi_symbol(2, -5);
+}
+
+#[test]
+fn integer_length_python_examples() {
+    assert_eq!(integer_length(0, 10), 1);
+    assert_eq!(integer_length(9, 10), 1);
+    assert_eq!(integer_length(10, 10), 2);
+    assert_eq!(integer_length(100, 10), 3);
+    assert_eq!(integer_length(8, 2), 4);
+    assert_eq!(integer_length(-100, 10), 3);
+}
+
+#[test]
+#[should_panic(expected = "integer_length requires base >= 2")]
+fn integer_length_invalid_base_panics() {
+    integer_length(10, 1);
+}
+
+// ---------------------------------------------------------------------------
+// arithmetic — mod_inverse
+// ---------------------------------------------------------------------------
+
+#[test]
+fn mod_inverse_basic() {
+    assert_eq!(mod_inverse(3, 7), Some(5)); // 3*5=15≡1 (mod 7)
+    assert_eq!(mod_inverse(1, 5), Some(1));
+}
+
+#[test]
+fn mod_inverse_no_inverse() {
+    assert_eq!(mod_inverse(2, 4), None); // gcd(2,4)=2≠1
+    assert_eq!(mod_inverse(6, 9), None);
+}
+
+// ---------------------------------------------------------------------------
+// arithmetic — mod_pow
+// ---------------------------------------------------------------------------
+
+#[test]
+fn mod_pow_basic() {
+    assert_eq!(mod_pow(2, 10, 1000), 24); // 2^10 = 1024 ≡ 24 (mod 1000)
+    assert_eq!(mod_pow(3, 4, 7), 4); // 81 ≡ 4 (mod 7)
+    assert_eq!(mod_pow(3, 0, 7), 1); // anything^0 = 1
+}
+
+#[test]
+fn mod_pow_modulus_one() {
+    assert_eq!(mod_pow(100, 100, 1), 0);
+}
+
+// ---------------------------------------------------------------------------
+// primality — is_prime
+// ---------------------------------------------------------------------------
+
+#[test]
+fn is_prime_small() {
+    assert!(!is_prime(0));
+    assert!(!is_prime(1));
+    assert!(is_prime(2));
+    assert!(is_prime(3));
+    assert!(!is_prime(4));
+    assert!(is_prime(5));
+}
+
+#[test]
+fn is_prime_composites() {
+    assert!(!is_prime(100));
+    assert!(!is_prime(561)); // Carmichael number — NOT prime
+    assert!(!is_prime(1000000));
+}
+
+#[test]
+fn is_prime_large() {
+    assert!(is_prime(97));
+    assert!(is_prime(9973));
+    assert!(is_prime(104729));
+}
+
+#[test]
+fn is_prime_negative() {
+    assert!(!is_prime(-7));
+}
+
+// ---------------------------------------------------------------------------
+// primality — primes_up_to
+// ---------------------------------------------------------------------------
+
+#[test]
+fn primes_up_to_small() {
+    assert_eq!(primes_up_to(10), vec![2, 3, 5, 7]);
+    assert_eq!(primes_up_to(20), vec![2, 3, 5, 7, 11, 13, 17, 19]);
+    assert_eq!(primes_up_to(2), vec![2]);
+    assert_eq!(primes_up_to(1), vec![]);
+    assert_eq!(primes_up_to(0), vec![]);
+}
+
+#[test]
+fn primes_up_to_count() {
+    // There are 25 primes ≤ 99 (2, 3, 5, …, 89, 97).
+    // 100 is not prime, so primes_up_to(100) is also 25.
+    assert_eq!(primes_up_to(99).len(), 25);
+    assert_eq!(primes_up_to(100).len(), 25);
+}
+
+// ---------------------------------------------------------------------------
+// primality — next_prime / nth_prime
+// ---------------------------------------------------------------------------
+
+#[test]
+fn next_prime_basic() {
+    assert_eq!(next_prime(0), 2);
+    assert_eq!(next_prime(1), 2);
+    assert_eq!(next_prime(2), 3);
+    assert_eq!(next_prime(10), 11);
+    assert_eq!(next_prime(13), 17);
+}
+
+#[test]
+fn prev_prime_basic() {
+    assert_eq!(prev_prime(10), Some(7));
+    assert_eq!(prev_prime(3), Some(2));
+    assert_eq!(prev_prime(2), None);
+    assert_eq!(prev_prime(1), None);
+    assert_eq!(prev_prime(0), None);
+    assert_eq!(prev_prime(-10), None);
+}
+
+#[test]
+fn nth_prime_basic() {
+    assert_eq!(nth_prime(1), 2);
+    assert_eq!(nth_prime(2), 3);
+    assert_eq!(nth_prime(4), 7);
+    assert_eq!(nth_prime(10), 29);
+    assert_eq!(nth_prime(25), 97);
+}
+
+// ---------------------------------------------------------------------------
+// factorize — factor_integer
+// ---------------------------------------------------------------------------
+
+#[test]
+fn factor_integer_prime() {
+    assert_eq!(factor_integer(7), vec![(7, 1)]);
+    assert_eq!(factor_integer(97), vec![(97, 1)]);
+}
+
+#[test]
+fn factor_integer_composite() {
+    assert_eq!(factor_integer(12), vec![(2, 2), (3, 1)]);
+    assert_eq!(factor_integer(360), vec![(2, 3), (3, 2), (5, 1)]);
+    assert_eq!(factor_integer(1024), vec![(2, 10)]);
+}
+
+#[test]
+fn factor_integer_trivial() {
+    assert_eq!(factor_integer(0), vec![]);
+    assert_eq!(factor_integer(1), vec![]);
+    assert_eq!(factor_integer(-1), vec![]);
+}
+
+#[test]
+fn factor_integer_negative() {
+    // Sign is stripped; only the absolute value is factored.
+    assert_eq!(factor_integer(-12), vec![(2, 2), (3, 1)]);
+}
+
+#[test]
+fn factor_integer_reconstruct() {
+    // Verify the factorization: ∏ p^e = |n|
+    for n in &[2i64, 6, 12, 100, 360, 1023, 9973] {
+        let factors = factor_integer(*n);
+        let product: i64 = factors.iter().map(|(p, e)| p.pow(*e)).product();
+        assert_eq!(product, *n, "reconstruction failed for {}", n);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// factorize — factorize_ir
+// ---------------------------------------------------------------------------
+
+#[test]
+fn factorize_ir_prime_unchanged() {
+    assert_eq!(factorize_ir(&int(7)), int(7));
+    assert_eq!(factorize_ir(&int(2)), int(2));
+}
+
+#[test]
+fn factorize_ir_one_zero_unchanged() {
+    assert_eq!(factorize_ir(&int(0)), int(0));
+    assert_eq!(factorize_ir(&int(1)), int(1));
+    assert_eq!(factorize_ir(&int(-1)), int(-1));
+}
+
+#[test]
+fn factorize_ir_composite() {
+    // 12 = 2² × 3  →  Mul(Pow(2, 2), 3)
+    let result = factorize_ir(&int(12));
+    if let IRNode::Apply(a) = &result {
+        assert_eq!(a.head, sym(MUL));
+        let has_pow_2_2 = a.args.contains(&apply(sym(POW), vec![int(2), int(2)]));
+        let has_3 = a.args.contains(&int(3));
+        assert!(has_pow_2_2, "expected Pow(2, 2) in {:?}", result);
+        assert!(has_3, "expected 3 in {:?}", result);
+    } else {
+        panic!("expected Mul node, got {:?}", result);
+    }
+}
+
+#[test]
+fn factorize_ir_negative() {
+    // -6 = (-1) × 2 × 3  →  Mul(-1, 2, 3)
+    let result = factorize_ir(&int(-6));
+    if let IRNode::Apply(a) = &result {
+        assert_eq!(a.head, sym(MUL));
+        assert!(a.args.contains(&int(-1)), "expected -1 in {:?}", result);
+        assert!(a.args.contains(&int(2)), "expected 2 in {:?}", result);
+        assert!(a.args.contains(&int(3)), "expected 3 in {:?}", result);
+    } else {
+        panic!("expected Mul node, got {:?}", result);
+    }
+}
+
+#[test]
+fn factorize_ir_non_integer_unchanged() {
+    let sym_x = sym("x");
+    assert_eq!(factorize_ir(&sym_x), sym_x);
+}
+
+// ---------------------------------------------------------------------------
+// crt
+// ---------------------------------------------------------------------------
+
+#[test]
+fn crt_classic_example() {
+    // x ≡ 2 (mod 3),  x ≡ 3 (mod 5),  x ≡ 2 (mod 7)  →  23
+    assert_eq!(crt(&[2, 3, 2], &[3, 5, 7]), Some(23));
+}
+
+#[test]
+fn crt_single_congruence() {
+    assert_eq!(crt(&[5], &[7]), Some(5));
+    assert_eq!(crt(&[0], &[3]), Some(0));
+}
+
+#[test]
+fn crt_two_congruences() {
+    // x ≡ 0 (mod 3), x ≡ 0 (mod 5)  →  0
+    assert_eq!(crt(&[0, 0], &[3, 5]), Some(0));
+    // x ≡ 1 (mod 2), x ≡ 0 (mod 3)  →  3
+    assert_eq!(crt(&[1, 0], &[2, 3]), Some(3));
+}
+
+#[test]
+fn crt_inconsistent() {
+    // x ≡ 0 (mod 4) and x ≡ 1 (mod 2) conflict (0 is even, 1 is odd).
+    assert_eq!(crt(&[0, 1], &[4, 2]), None);
+}
+
+#[test]
+fn crt_empty_returns_none() {
+    assert_eq!(crt(&[], &[]), None);
+}
+
+#[test]
+fn crt_invalid_modulus() {
+    assert_eq!(crt(&[1], &[0]), None);
+    assert_eq!(crt(&[1], &[-3]), None);
+}
+
+#[test]
+fn crt_solution_unique_mod_lcm() {
+    // Result should be in [0, lcm(moduli)).
+    let result = crt(&[2, 3, 2], &[3, 5, 7]).unwrap();
+    // lcm(3,5,7) = 105
+    assert!(
+        result >= 0 && result < 105,
+        "result {} not in [0, 105)",
+        result
+    );
+    // Verify each congruence.
+    assert_eq!(result % 3, 2);
+    assert_eq!(result % 5, 3);
+    assert_eq!(result % 7, 2);
+}
+
+#[test]
+fn crt_large_moduli() {
+    // x ≡ 1 (mod 101), x ≡ 2 (mod 103)
+    let result = crt(&[1, 2], &[101, 103]).unwrap();
+    assert_eq!(result % 101, 1);
+    assert_eq!(result % 103, 2);
+}
+
+// ---------------------------------------------------------------------------
+// handlers
+// ---------------------------------------------------------------------------
+
+fn call(head: &str, args: Vec<IRNode>) -> symbolic_ir::IRApply {
+    symbolic_ir::IRApply {
+        head: sym(head),
+        args,
+    }
+}
+
+#[test]
+fn number_theory_handler_table_exposes_python_heads() {
+    let table = build_number_theory_handler_table();
+    assert!(table.contains_key("IsPrime"));
+    assert!(table.contains_key("NextPrime"));
+    assert!(table.contains_key("PrevPrime"));
+    assert!(table.contains_key("FactorInteger"));
+    assert!(table.contains_key("Divisors"));
+    assert!(table.contains_key("Totient"));
+    assert!(table.contains_key("MoebiusMu"));
+    assert!(table.contains_key("JacobiSymbol"));
+    assert!(table.contains_key("ChineseRemainder"));
+    assert!(table.contains_key("IntegerLength"));
+}
+
+#[test]
+fn primality_and_totient_handlers_fold_integer_calls() {
+    assert_eq!(
+        is_prime_handler(&call("IsPrime", vec![int(97)])),
+        sym("True")
+    );
+    assert_eq!(
+        is_prime_handler(&call("IsPrime", vec![int(100)])),
+        sym("False")
+    );
+    assert_eq!(totient_handler(&call("Totient", vec![int(36)])), int(12));
+}
+
+#[test]
+fn factor_integer_handler_returns_list_of_prime_exponent_pairs() {
+    assert_eq!(
+        factor_integer_handler(&call("FactorInteger", vec![int(360)])),
+        apply(
+            sym("List"),
+            vec![
+                apply(sym("List"), vec![int(2), int(3)]),
+                apply(sym("List"), vec![int(3), int(2)]),
+                apply(sym("List"), vec![int(5), int(1)]),
+            ]
+        )
+    );
+}
+
+#[test]
+fn chinese_remainder_handler_accepts_integer_lists() {
+    let remainders = apply(sym("List"), vec![int(2), int(3), int(2)]);
+    let moduli = apply(sym("List"), vec![int(3), int(5), int(7)]);
+    assert_eq!(
+        chinese_remainder_handler(&call("ChineseRemainder", vec![remainders, moduli])),
+        int(23)
+    );
+}
+
+#[test]
+fn jacobi_and_integer_length_handlers_fold_valid_calls() {
+    assert_eq!(
+        jacobi_symbol_handler(&call("JacobiSymbol", vec![int(1001), int(9907)])),
+        int(-1)
+    );
+    assert_eq!(
+        integer_length_handler(&call("IntegerLength", vec![int(100)])),
+        int(3)
+    );
+    assert_eq!(
+        integer_length_handler(&call("IntegerLength", vec![int(8), int(2)])),
+        int(4)
+    );
+}
+
+#[test]
+fn handlers_leave_symbolic_or_invalid_calls_unevaluated() {
+    let symbolic = call("IsPrime", vec![sym("n")]);
+    assert_eq!(
+        is_prime_handler(&symbolic),
+        IRNode::Apply(Box::new(symbolic.clone()))
+    );
+
+    let invalid_factor = call("FactorInteger", vec![int(0)]);
+    assert_eq!(
+        factor_integer_handler(&invalid_factor),
+        IRNode::Apply(Box::new(invalid_factor))
+    );
+
+    let invalid_jacobi = call("JacobiSymbol", vec![int(2), int(4)]);
+    assert_eq!(
+        jacobi_symbol_handler(&invalid_jacobi),
+        IRNode::Apply(Box::new(invalid_jacobi))
+    );
+
+    let invalid_base = call("IntegerLength", vec![int(8), int(1)]);
+    assert_eq!(
+        integer_length_handler(&invalid_base),
+        IRNode::Apply(Box::new(invalid_base))
+    );
+}

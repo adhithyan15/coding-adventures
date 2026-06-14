@@ -1,4 +1,7 @@
 requires 'coding-adventures-virtual-machine', '0.01';
 requires 'coding-adventures-grammar-tools', '0.01';
 requires 'coding-adventures-lexer', '0.01';
+requires 'coding-adventures-interpreter-ir', '0.01';
+requires 'coding-adventures-vm-core', '0.01';
+requires 'coding-adventures-jit-core', '0.01';
 on 'test' => sub { requires 'Test2::V0'; };

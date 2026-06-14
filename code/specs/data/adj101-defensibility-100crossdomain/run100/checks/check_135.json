@@ -1,0 +1,8 @@
+{
+ "check_id": 135,
+ "idx": 55,
+ "slot": "guard_present",
+ "claimed_value": true,
+ "scenario": "A raised interior walkway sits 44 inches above the floor below. Its open side is protected by a guard that measures 38 inches in height, constructed of horizontal rails.",
+ "cited_span": "Its open side is protected by a guard"
+}

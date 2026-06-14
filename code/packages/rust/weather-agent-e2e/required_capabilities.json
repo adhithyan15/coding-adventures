@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "package": "rust/weather-agent-e2e",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "dns",
+      "target": "api.weather.gov",
+      "justification": "Resolve Weather.gov for the live umbrella-today weather fetch."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "api.weather.gov:443",
+      "justification": "Fetch Weather.gov points and forecast resources over TLS."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "$WEATHER_AGENT_OUTPUT_PATH",
+      "justification": "Runtime replaces this with the concrete umbrella-today decision text file path."
+    }
+  ],
+  "justification": "Weather Agent E2E fetches Seattle weather and writes the umbrella decision."
+}

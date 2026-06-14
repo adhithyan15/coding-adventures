@@ -1,0 +1,8 @@
+{
+ "check_id": 0,
+ "idx": 0,
+ "slot": "aldrete_score",
+ "claimed_value": 8,
+ "scenario": "Mr. Halloran is recovering in the PACU after a knee arthroscopy. His current Aldrete score is documented as 8: activity 2, respiration 2, circulation 2, consciousness 2, oxygen saturation 0.",
+ "cited_span": "His current Aldrete score is documented as 8"
+}

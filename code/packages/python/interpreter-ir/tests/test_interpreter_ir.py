@@ -455,6 +455,331 @@ class TestOpcodeSets:
     def test_polymorphic_constant(self):
         assert POLYMORPHIC_TYPE == "polymorphic"
 
+    # VMCOND00 Phase 1 opcode additions
+    def test_branch_err_in_branch_ops(self):
+        """branch_err is a conditional branch — it must be in BRANCH_OPS."""
+        assert "branch_err" in BRANCH_OPS
+
+    def test_branch_err_in_side_effect_ops(self):
+        """branch_err has a side effect (it can redirect control flow)."""
+        assert "branch_err" in SIDE_EFFECT_OPS
+
+    def test_branch_err_in_all_ops(self):
+        assert "branch_err" in ALL_OPS
+
+    def test_syscall_checked_in_side_effect_ops(self):
+        """syscall_checked performs I/O — it is a side-effecting op."""
+        assert "syscall_checked" in SIDE_EFFECT_OPS
+
+    def test_syscall_checked_in_all_ops(self):
+        assert "syscall_checked" in ALL_OPS
+
+    def test_syscall_checked_not_in_value_ops(self):
+        """syscall_checked has two output slots in srcs, not a single dest.
+        It is not a value-producing op in the VALUE_OPS sense."""
+        assert "syscall_checked" not in VALUE_OPS
+
+    def test_syscall_checked_not_in_branch_ops(self):
+        """syscall_checked is a syscall, not a branch."""
+        assert "syscall_checked" not in BRANCH_OPS
+
+    def test_syscall_checked_ops_frozenset_exported(self):
+        """SYSCALL_CHECKED_OPS is exported from interpreter_ir."""
+        from interpreter_ir import SYSCALL_CHECKED_OPS  # noqa: PLC0415
+        assert "syscall_checked" in SYSCALL_CHECKED_OPS
+        assert isinstance(SYSCALL_CHECKED_OPS, frozenset)
+
+    def test_syscall_checked_ops_subset_of_side_effect_ops(self):
+        from interpreter_ir import SYSCALL_CHECKED_OPS  # noqa: PLC0415
+        assert SYSCALL_CHECKED_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_all_ops_superset_includes_vmcond00(self):
+        """Extend the superset check to include the new VMCOND00 opcodes."""
+        from interpreter_ir import SYSCALL_CHECKED_OPS  # noqa: PLC0415
+        assert SYSCALL_CHECKED_OPS.issubset(ALL_OPS)
+
+    # VMCOND00 Phase 2 — THROW_OPS and throw opcode membership
+
+    def test_throw_in_side_effect_ops(self):
+        """throw has side effects (unwinds the stack — no value produced in dest)."""
+        from interpreter_ir import THROW_OPS  # noqa: PLC0415
+        assert "throw" in SIDE_EFFECT_OPS
+
+    def test_throw_in_all_ops(self):
+        """throw must appear in ALL_OPS."""
+        assert "throw" in ALL_OPS
+
+    def test_throw_not_in_value_ops(self):
+        """throw produces no dest register — not a value op."""
+        assert "throw" not in VALUE_OPS
+
+    def test_throw_not_in_branch_ops(self):
+        """throw is not a conditional branch — it's a stack-unwinding control transfer."""
+        assert "throw" not in BRANCH_OPS
+
+    def test_throw_not_in_control_ops(self):
+        """throw is not in CONTROL_OPS (ret/ret_void/label) — it's inter-frame."""
+        from interpreter_ir import CONTROL_OPS  # noqa: PLC0415
+        assert "throw" not in CONTROL_OPS
+
+    def test_throw_ops_frozenset_exported(self):
+        """THROW_OPS is importable from the package root."""
+        from interpreter_ir import THROW_OPS  # noqa: PLC0415
+        assert "throw" in THROW_OPS
+
+    def test_throw_ops_subset_of_side_effect_ops(self):
+        """THROW_OPS is a subset of SIDE_EFFECT_OPS."""
+        from interpreter_ir import THROW_OPS  # noqa: PLC0415
+        assert THROW_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_throw_ops_subset_of_all_ops(self):
+        """THROW_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import THROW_OPS  # noqa: PLC0415
+        assert THROW_OPS.issubset(ALL_OPS)
+
+    # VMCOND00 Phase 3 — HANDLER_OPS membership
+
+    def test_handler_ops_frozenset_exported(self) -> None:
+        """HANDLER_OPS is importable from the package root."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        expected = {"push_handler", "pop_handler", "signal", "error", "warn"}
+        assert expected == HANDLER_OPS
+
+    def test_handler_ops_subset_of_side_effect_ops(self) -> None:
+        """HANDLER_OPS is a subset of SIDE_EFFECT_OPS (all have side-effects)."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_handler_ops_subset_of_all_ops(self) -> None:
+        """HANDLER_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.issubset(ALL_OPS)
+
+    # VMCOND00 Phase 4 — RESTART_OPS membership
+
+    def test_restart_ops_frozenset_exported(self) -> None:
+        """RESTART_OPS is importable from the package root."""
+        from interpreter_ir import RESTART_OPS  # noqa: PLC0415
+        expected = {
+            "push_restart", "pop_restart", "find_restart",
+            "invoke_restart", "compute_restarts",
+        }
+        assert expected == RESTART_OPS
+
+    def test_restart_ops_subset_of_side_effect_ops(self) -> None:
+        """RESTART_OPS is a subset of SIDE_EFFECT_OPS."""
+        from interpreter_ir import RESTART_OPS  # noqa: PLC0415
+        assert RESTART_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_restart_ops_subset_of_all_ops(self) -> None:
+        """RESTART_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import RESTART_OPS  # noqa: PLC0415
+        assert RESTART_OPS.issubset(ALL_OPS)
+
+    def test_push_restart_in_all_ops(self) -> None:
+        assert "push_restart" in ALL_OPS
+
+    def test_pop_restart_in_all_ops(self) -> None:
+        assert "pop_restart" in ALL_OPS
+
+    def test_find_restart_in_all_ops(self) -> None:
+        assert "find_restart" in ALL_OPS
+
+    def test_invoke_restart_in_all_ops(self) -> None:
+        assert "invoke_restart" in ALL_OPS
+
+    def test_compute_restarts_in_all_ops(self) -> None:
+        assert "compute_restarts" in ALL_OPS
+
+    # VMCOND00 Phase 4 — EXIT_OPS membership
+
+    def test_exit_ops_frozenset_exported(self) -> None:
+        """EXIT_OPS is importable from the package root."""
+        from interpreter_ir import EXIT_OPS  # noqa: PLC0415
+        expected = {"establish_exit", "exit_to"}
+        assert expected == EXIT_OPS
+
+    def test_exit_ops_subset_of_side_effect_ops(self) -> None:
+        """EXIT_OPS is a subset of SIDE_EFFECT_OPS."""
+        from interpreter_ir import EXIT_OPS  # noqa: PLC0415
+        assert EXIT_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_exit_ops_subset_of_all_ops(self) -> None:
+        """EXIT_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import EXIT_OPS  # noqa: PLC0415
+        assert EXIT_OPS.issubset(ALL_OPS)
+
+    def test_establish_exit_in_all_ops(self) -> None:
+        assert "establish_exit" in ALL_OPS
+
+    def test_exit_to_in_all_ops(self) -> None:
+        assert "exit_to" in ALL_OPS
+
+    def test_exit_ops_not_in_branch_ops(self) -> None:
+        """Exit opcodes are non-local control transfers, not conditional branches."""
+        assert "establish_exit" not in BRANCH_OPS
+        assert "exit_to" not in BRANCH_OPS
+
+    def test_restart_ops_not_in_branch_ops(self) -> None:
+        """Restart opcodes are not conditional branches."""
+        assert "push_restart" not in BRANCH_OPS
+        assert "invoke_restart" not in BRANCH_OPS
+
+
+# ===========================================================================
+# TestExceptionTableEntry — VMCOND00 Phase 2 static exception table
+# ===========================================================================
+
+
+class TestExceptionTableEntry:
+    """Tests for ExceptionTableEntry and IIRFunction.exception_table."""
+
+    def test_import_exception_table_entry(self):
+        """ExceptionTableEntry is importable from the package root."""
+        from interpreter_ir import ExceptionTableEntry  # noqa: PLC0415
+        assert ExceptionTableEntry is not None
+
+    def test_import_catch_all(self):
+        """CATCH_ALL sentinel is importable from the package root."""
+        from interpreter_ir import CATCH_ALL  # noqa: PLC0415
+        assert CATCH_ALL == "*"
+
+    def test_exception_table_default_empty(self):
+        """IIRFunction.exception_table defaults to an empty list."""
+        fn = IIRFunction(
+            name="f", params=[], return_type="any",
+            instructions=[IIRInstr("ret_void", None, [], "void")],
+        )
+        assert fn.exception_table == []
+
+    def test_exception_table_not_in_equality(self):
+        """Functions with the same instructions but different exception tables are equal."""
+        from interpreter_ir import CATCH_ALL, ExceptionTableEntry  # noqa: PLC0415
+        fn_a = IIRFunction(
+            name="f", params=[], return_type="any",
+            instructions=[IIRInstr("ret_void", None, [], "void")],
+        )
+        fn_b = IIRFunction(
+            name="f", params=[], return_type="any",
+            instructions=[IIRInstr("ret_void", None, [], "void")],
+        )
+        fn_b.exception_table = [
+            ExceptionTableEntry(
+                from_ip=0, to_ip=1, handler_ip=1, type_id=CATCH_ALL, val_reg="ex",
+            )
+        ]
+        assert fn_a == fn_b  # compare=False for exception_table
+
+    def test_exception_table_entry_fields(self):
+        """ExceptionTableEntry stores all five fields correctly."""
+        from interpreter_ir import ExceptionTableEntry  # noqa: PLC0415
+        e = ExceptionTableEntry(
+            from_ip=2, to_ip=7, handler_ip=10, type_id="ValueError", val_reg="err",
+        )
+        assert e.from_ip == 2
+        assert e.to_ip == 7
+        assert e.handler_ip == 10
+        assert e.type_id == "ValueError"
+        assert e.val_reg == "err"
+
+    def test_exception_table_entry_frozen(self):
+        """ExceptionTableEntry is immutable (frozen dataclass)."""
+        from interpreter_ir import CATCH_ALL, ExceptionTableEntry  # noqa: PLC0415
+        e = ExceptionTableEntry(
+            from_ip=0, to_ip=5, handler_ip=5, type_id=CATCH_ALL, val_reg="ex",
+        )
+        with pytest.raises(Exception):
+            e.from_ip = 99  # type: ignore[misc]
+
+    def test_exception_table_serialise_not_included(self):
+        """exception_table is NOT serialised — it is runtime metadata only."""
+        from interpreter_ir import CATCH_ALL, ExceptionTableEntry  # noqa: PLC0415
+        fn = IIRFunction(
+            name="f", params=[], return_type="any",
+            instructions=[IIRInstr("ret_void", None, [], "void")],
+        )
+        fn.exception_table = [
+            ExceptionTableEntry(
+                from_ip=0, to_ip=1, handler_ip=1, type_id=CATCH_ALL, val_reg="ex",
+            )
+        ]
+        m = IIRModule(name="test", functions=[fn])
+        restored = deserialise(serialise(m))
+        # After a serialise/deserialise roundtrip, the exception table is gone.
+        assert restored.functions[0].exception_table == []
+
+
+# ===========================================================================
+# TestHandlerOps — VMCOND00 Phase 3 dynamic handler opcode set
+# ===========================================================================
+
+
+class TestHandlerOps:
+    """Tests for HANDLER_OPS and its membership in the opcode category sets."""
+
+    # VMCOND00 Phase 3 — HANDLER_OPS membership
+
+    def test_handler_ops_exported(self):
+        """HANDLER_OPS is importable from the package root."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert isinstance(HANDLER_OPS, frozenset)
+        assert len(HANDLER_OPS) == 5
+
+    def test_handler_ops_contains_push_handler(self):
+        """push_handler is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "push_handler" in HANDLER_OPS
+
+    def test_handler_ops_contains_pop_handler(self):
+        """pop_handler is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "pop_handler" in HANDLER_OPS
+
+    def test_handler_ops_contains_signal(self):
+        """signal is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "signal" in HANDLER_OPS
+
+    def test_handler_ops_contains_error(self):
+        """error is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "error" in HANDLER_OPS
+
+    def test_handler_ops_contains_warn(self):
+        """warn is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "warn" in HANDLER_OPS
+
+    def test_handler_ops_subset_of_side_effect_ops(self):
+        """HANDLER_OPS is a subset of SIDE_EFFECT_OPS (all have side effects)."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_handler_ops_subset_of_all_ops(self):
+        """HANDLER_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.issubset(ALL_OPS)
+
+    def test_handler_ops_not_in_value_ops(self):
+        """No HANDLER_OP produces a dest register — they are not value ops."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.isdisjoint(VALUE_OPS)
+
+    def test_handler_ops_not_in_branch_ops(self):
+        """HANDLER_OPS are not intra-function conditional branches."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.isdisjoint(BRANCH_OPS)
+
+    def test_handler_ops_not_in_control_ops(self):
+        """HANDLER_OPS don't return from the current function."""
+        from interpreter_ir import CONTROL_OPS, HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.isdisjoint(CONTROL_OPS)
+
+    def test_handler_ops_disjoint_from_throw_ops(self):
+        """HANDLER_OPS and THROW_OPS are disjoint (different protocol layers)."""
+        from interpreter_ir import HANDLER_OPS, THROW_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.isdisjoint(THROW_OPS)
+
 
 # ===========================================================================
 # Serialisation tests

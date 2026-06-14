@@ -1,0 +1,1917 @@
+# Ruby 1.8 lexer — Phase 1 paren-required baseline.
+#
+# This file is authored by hand and is the source of truth for the
+# Ruby-1.8 token-shape state machine.  See
+# code/specs/ruby-parser.md and code/specs/ruby-lexer-state-machine.md
+# for the design.
+#
+# Scope of Phase 1 (this file):
+# - identifiers (keywords distinguished by the lexer)
+# - integers (decimal only — no 0x / 0b / 0o yet)
+# - simple double-quoted and single-quoted strings (no interpolation)
+# - line comments (`# ...`)
+# - operators: + - * / % == != < > <= >= = ! && ||
+# - punctuation: ( ) [ ] { } , ; : :: . => newline
+# - whitespace skipped (newlines emit a NEWLINE token)
+#
+# Out of Phase 1 (added by later phases per ruby-parser.md):
+# - heredocs, %w[] / %q{} / %r{} percent literals
+# - string interpolation `#{}`
+# - regex `/.../` (needs lex-state feedback)
+# - parser-driven `f /x/` disambiguation
+# - hash shorthand, lambdas, etc. (later eras)
+
+format = "state-machine/v1"
+profile = "lexer/v1"
+name = "ruby-1.8-lexer"
+kind = "transducer"
+version = "0.1.0"
+runtime_min = "ruby-lexer-runtime/0.1"
+initial = "data"
+done = "done"
+includes = []
+
+# Alphabet: every character the machine matches as a literal must
+# appear here.  Range / one_of matchers are "broad" and don't need
+# alphabet entries (the engine permits any code point on a broad
+# transition).
+alphabet = [
+  # whitespace
+  "\n", " ", "\t", "\r",
+  # punctuation
+  "(", ")", "[", "]", "{", "}",
+  ",", ";", ":", ".", "?",
+  # operators
+  "+", "-", "*", "/", "%",
+  "=", "!", "<", ">", "&", "|", "^", "~",
+  # delimiters
+  "\"", "'", "#", "\\",
+  # Phase 4i — sigils for instance variables (`@x`), class variables
+  # (`@@x`), and (Phase 4j) global variables (`$x`).  These have been
+  # part of Ruby since 1.0, so they're not era-gated — they were
+  # simply missing from the baseline lexer until now.
+  "@", "$",
+  # Phase 4m — backtick (`` ` ``) opens a command-execution literal
+  # (`` `ls -la` `` runs the shell command).  Ruby has had this since
+  # 1.0, so no era gating — just a new dispatch from `data`.
+  "`",
+  # string-escape letters (n, t, r) — referenced as `literal` matchers
+  # inside string_d_escape.  range matchers don't need alphabet entries
+  # but literal matchers do.
+  "n", "t", "r",
+  # underscore — ident starter / digit separator (referenced as `literal`
+  # in `data` and `ident_body` / `int_body`)
+  "_",
+  # percent-literal type letters: `w` for `%w[...]`, `q` for `%q{...}`.
+  # `i` and `I` (2.0+ symbol arrays) are recognised by the lexer
+  # unconditionally; era < 2.0 downgrades them in the post-pass.
+  # Phase 4n adds `s` (symbol), `x` (command).  `r` (regex) reuses the
+  # existing `r` alphabet entry (added earlier for the `\r` escape).
+  "w", "q", "i", "I", "s", "x",
+]
+
+# ── Token vocabulary ──────────────────────────────────────────────
+# Each token carries a `value` field (the source lexeme).  The
+# action interpreter populates it from the active text buffer when
+# `emit(<name>)` fires.
+
+[[tokens]]
+name = "Name"          # identifier; parser distinguishes keywords + constants
+fields = ["value"]
+
+[[tokens]]
+name = "Int"
+fields = ["value"]
+
+[[tokens]]
+name = "String"        # quoted string literal (escapes resolved by runtime)
+fields = ["value", "quote"]
+
+[[tokens]]
+name = "Regex"         # /.../[imxoeunsIMXOEUNS]*  literal
+                       # Phase 2 introduced the body; Phase 3a adds
+                       # the trailing-flag-letter suffix.
+fields = ["value"]
+
+[[tokens]]
+name = "PercentW"      # %w[a b c]  — array-of-strings percent literal
+fields = ["value"]
+
+[[tokens]]
+name = "PercentQ"      # %q{single-quoted-style string}
+fields = ["value"]
+
+# Phase 4g — Ruby 2.0+ symbol-array percent literals.  The lexer
+# unconditionally recognises the `%i[…]` / `%I[…]` shape (Ruby 1.x
+# would reject them at parse time anyway); the post-pass downgrades
+# them back to a `%` + `i`/`I` token sequence under era < 2.0 so
+# pre-2.0 lexings stay faithful to what those eras actually did.
+[[tokens]]
+name = "PercentI"      # %i[a b c]   — interpolation-free symbol array (2.0+)
+fields = ["value"]
+
+[[tokens]]
+name = "PercentBigI"   # %I[a b c]   — interpolating symbol array (2.0+)
+fields = ["value"]
+
+# Phase 4m — `` `cmd` `` command-execution literal.  Lexically it
+# resembles a string: open backtick, body with escapes, close backtick.
+# Semantically it runs the body as a shell command — but that's the
+# runtime's concern.  The lexer just emits a `Backtick` token carrying
+# the raw body (without the surrounding backticks).
+[[tokens]]
+name = "Backtick"      # `` `ls -la` `` — command-execution literal
+fields = ["value"]
+
+# Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}` percent literals.
+# Emit handler maps these onto TokenType::String carrying the verbatim
+# source (`%r{pat}`, etc.) so the parser can distinguish them from
+# plain strings by lexeme prefix — same encoding as `%w[…]` / `%q{…}`.
+[[tokens]]
+name = "PercentR"      # %r{regex}   — interpolation-free regex literal
+fields = ["value"]
+[[tokens]]
+name = "PercentS"      # %s{symbol}  — symbol literal (no interpolation)
+fields = ["value"]
+[[tokens]]
+name = "PercentX"      # %x{cmd}     — command-execution literal
+fields = ["value"]
+
+[[tokens]]
+name = "Op"            # generic operator token, parser disambiguates further
+fields = ["value"]
+
+[[tokens]]
+name = "LParen"
+fields = []
+
+[[tokens]]
+name = "RParen"
+fields = []
+
+[[tokens]]
+name = "LBracket"
+fields = []
+
+[[tokens]]
+name = "RBracket"
+fields = []
+
+[[tokens]]
+name = "LBrace"
+fields = []
+
+[[tokens]]
+name = "RBrace"
+fields = []
+
+[[tokens]]
+name = "Comma"
+fields = []
+
+[[tokens]]
+name = "Semi"
+fields = []
+
+[[tokens]]
+name = "Colon"
+fields = []
+
+[[tokens]]
+name = "ColonColon"
+fields = []
+
+[[tokens]]
+name = "Dot"
+fields = []
+
+[[tokens]]
+name = "Newline"
+fields = []
+
+[[tokens]]
+name = "Eof"
+fields = []
+
+# ── Registers ────────────────────────────────────────────────────
+# Only the text buffer is needed for Phase 1.  Heredoc / interp
+# state arrives in Phase 3.
+
+[[registers]]
+id = "text_buffer"
+type = "string"
+
+# ── States ───────────────────────────────────────────────────────
+# `data` is the start state.  Identifier / integer / string / comment
+# states are sub-machines reached on a class match from `data` and
+# return to `data` on terminator.
+
+[[states]]
+id = "data"
+initial = true
+
+[[states]]
+id = "ident_body"
+
+[[states]]
+id = "int_body"
+
+[[states]]
+id = "string_d_body"     # inside "..."
+[[states]]
+id = "string_d_escape"   # inside "..." after a backslash
+[[states]]
+id = "string_d_hash"     # inside "..." after a `#` — peeking for `{` to
+                         # decide between literal `#` and interpolation
+                         # opener `#{`.
+[[states]]
+id = "string_d_interp"   # inside "...#{...}..." — capturing the
+                         # interpolation expression verbatim until the
+                         # matching `}` (interp_brace_depth tracked by
+                         # the action interpreter for nested braces).
+
+[[states]]
+id = "string_s_body"     # inside '...'
+[[states]]
+id = "string_s_escape"
+
+[[states]]
+id = "regex_body"        # inside /.../ — entered manually from `data`
+                         # by the action interpreter once it has
+                         # decided (based on lex-state + oracle) that
+                         # the `/` opens a regex literal rather than
+                         # a division operator.  See SIR-style
+                         # `set_current_state` call in src/lib.rs.
+[[states]]
+id = "regex_escape"      # inside /.../ after `\\`
+[[states]]
+id = "regex_flags"       # after the closing `/`, slurp trailing
+                         # flag letters (i/m/x/o/u/e/n/s, case-
+                         # insensitive).  Greedy — matches as many
+                         # flag chars as appear contiguously, then
+                         # emits the whole `/body/flags` literal.
+
+# Percent literals (Phase 3a) — `%w[a b c]` and `%q{string body}`.
+[[states]]
+id = "after_percent"     # saw `%`, peeking for type letter (w / q
+                         # / i / r / s / x / W / Q / I / R).  If the
+                         # follower isn't a known type letter, `%`
+                         # falls back to a modulo operator.
+[[states]]
+id = "percent_w_open"    # saw `%w`, peeking for opening delimiter
+                         # (`[` is the v0 canonical delimiter).
+[[states]]
+id = "percent_w_body"    # inside `%w[...]` — accumulating string-array body.
+[[states]]
+id = "percent_q_open"    # saw `%q`, peeking for `{` opening delim.
+[[states]]
+id = "percent_q_body"    # inside `%q{...}` — accumulating string body.
+[[states]]
+id = "percent_i_open"    # saw `%i`, peeking for `[` opening delim (2.0+).
+[[states]]
+id = "percent_i_body"    # inside `%i[...]` — accumulating symbol-array body.
+[[states]]
+id = "percent_big_i_open"# saw `%I`, peeking for `[` opening delim (2.0+).
+[[states]]
+id = "percent_big_i_body"# inside `%I[...]` — accumulating interpolating symbol-array body.
+# Phase 4n — `%r{regex}`, `%s{symbol}`, `%x{cmd}`.  Like `%q{…}`
+# these use `{` as the canonical v0 delimiter.  Open states peek
+# for the `{`; if absent, the `%` falls back to a modulo operator
+# (the action interpreter unwinds the buffer accordingly).  Body
+# states accumulate the literal up to the matching `}` and emit
+# the verbatim source (`%r{pat}` etc.) as a `TokenType::String`,
+# matching the existing percent-literal encoding.
+[[states]]
+id = "percent_r_open"    # saw `%r`, peeking for `{` opening delim.
+[[states]]
+id = "percent_r_body"    # inside `%r{...}` — accumulating regex body.
+[[states]]
+id = "percent_s_open"    # saw `%s`, peeking for `{` opening delim.
+[[states]]
+id = "percent_s_body"    # inside `%s{...}` — accumulating symbol body.
+[[states]]
+id = "percent_x_open"    # saw `%x`, peeking for `{` opening delim.
+[[states]]
+id = "percent_x_body"    # inside `%x{...}` — accumulating command body.
+
+[[states]]
+id = "comment_body"      # # to end-of-line
+
+[[states]]
+id = "after_eq"          # saw `=`, peeking for `==`, `=>`, `===`
+[[states]]
+id = "after_eq_eq"       # saw `==`, peeking for `===`
+[[states]]
+id = "after_bang"        # saw `!`, peeking for `!=`
+[[states]]
+id = "after_lt"          # saw `<`, peeking for `<=` (no `<<` yet — Phase 3 heredocs)
+# Phase 4o — `<<-EOF` and `<<~EOF` heredoc opener variants.
+# After `<<` we peek one more char: `-` → emit `<<-` (indent-tolerant
+# terminator), `~` → emit `<<~` (indent-stripping body); otherwise
+# emit plain `<<` and re-dispatch the follower as before.
+[[states]]
+id = "after_lt_lt"       # saw `<<`, peeking for `-` or `~` (heredoc opener modifiers)
+[[states]]
+id = "after_gt"          # saw `>`, peeking for `>=`
+[[states]]
+id = "after_amp"         # saw `&`, peeking for `&&`
+[[states]]
+id = "after_pipe"        # saw `|`, peeking for `||`
+[[states]]
+id = "after_colon"       # saw `:`, peeking for `::` or a symbol body
+[[states]]
+id = "after_star"        # saw `*`, peeking for `**`
+
+# Phase 4i — sigil-variable sub-machines.  Ruby instance variables
+# (`@x`), class variables (`@@x`), and (Phase 4j) global variables
+# (`$x`) all share an "identifier-body-after-sigil" shape, so each
+# gets its own tiny sub-machine.  All three flavors emit a Name
+# token whose value is the *full lexeme including the sigil*
+# (e.g. `@count`, `@@all`, `$LOAD_PATH`).  Downstream code (parser
+# / SIR lowerer) dispatches by inspecting the leading character —
+# same trick the lexer already uses for `::` (encoded as
+# TokenType::Colon with value `::`).
+[[states]]
+id = "after_at"          # saw `@`, peeking for `@@` (cvar) or ident-start (ivar)
+[[states]]
+id = "ivar_body"         # inside `@x` — slurp ident chars then emit Name
+[[states]]
+id = "cvar_body"         # inside `@@x` — slurp ident chars then emit Name
+# Phase 4j — global variable sub-machine.  Ruby allows special
+# globals like `$~`, `$&`, `$_`, `$0`..`$9` plus regular `$ident`
+# names.  v0 handles the regular `$<ident>` shape only; special
+# punctuation globals are out of scope for this chunk (followup).
+[[states]]
+id = "after_dollar"      # saw `$`, peeking for an ident-starter first char
+[[states]]
+id = "dollar_body"       # inside `$x` — slurp ident chars then emit Name
+
+# Phase 4m — backtick command literal `` `cmd args` ``.  Two states:
+# the body collects raw bytes (with minimal escape handling), and the
+# escape state processes a single escape sequence then returns.  The
+# shape mirrors `string_d_body` / `string_d_escape` — same idea, but:
+#   - the close terminator is a backtick, not a double quote, and
+#   - we don't peek for `#` interpolation in v0.  Real Ruby allows
+#     `#{}` interpolation inside backticks; the parser-side phase
+#     (7a) can promote `#` handling once the rest of backtick lexing
+#     is in place.  For now, `#` is a literal character.
+[[states]]
+id = "backtick_body"     # inside `` `…` `` — accumulating command body
+[[states]]
+id = "backtick_escape"   # inside `` `…` `` after a `\` — processing one escape char
+
+[[states]]
+id = "done"
+final = true
+
+# ─────────────────────────────────────────────────────────────────
+# Transitions from `data` (the dispatcher)
+# Order matters: first matching transition wins.
+# ─────────────────────────────────────────────────────────────────
+
+# EOF flushes any pending state and terminates.
+[[transitions]]
+from = "data"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Eof)"]
+
+# Whitespace (space, tab, \r) is skipped silently.  `\n` is emitted
+# as a Newline token — Ruby uses newlines as statement terminators.
+[[transitions]]
+from = "data"
+matcher = { literal = "\n" }
+to = "data"
+actions = ["emit(Newline)"]
+
+[[transitions]]
+from = "data"
+matcher = { one_of = " \t\r" }
+to = "data"
+
+# Comment: `#` runs to end-of-line.
+[[transitions]]
+from = "data"
+matcher = { literal = "#" }
+to = "comment_body"
+
+# Identifier starters: `_`, `a-z`, `A-Z`.  We accumulate into the
+# text buffer and let `emit(Name)` decide whether the lexeme
+# is a keyword (the action interpreter handles keyword recognition).
+[[transitions]]
+from = "data"
+matcher = { literal = "_" }
+to = "ident_body"
+actions = ["clear_text", "append_text(current)"]
+
+[[transitions]]
+from = "data"
+matcher = { range = ["a", "z"] }
+to = "ident_body"
+actions = ["clear_text", "append_text(current)"]
+
+[[transitions]]
+from = "data"
+matcher = { range = ["A", "Z"] }
+to = "ident_body"
+actions = ["clear_text", "append_text(current)"]
+
+# Integer.
+[[transitions]]
+from = "data"
+matcher = { range = ["0", "9"] }
+to = "int_body"
+actions = ["clear_text", "append_text(current)"]
+
+# Strings.
+[[transitions]]
+from = "data"
+matcher = { literal = "\"" }
+to = "string_d_body"
+actions = ["clear_text"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "'" }
+to = "string_s_body"
+actions = ["clear_text"]
+
+# Phase 4m — backtick opens a command-execution literal.  Clear the
+# text buffer (the value field carries the body *without* the
+# surrounding backticks, matching how `String` carries it).
+[[transitions]]
+from = "data"
+matcher = { literal = "`" }
+to = "backtick_body"
+actions = ["clear_text"]
+
+# Punctuation that emits immediately.
+[[transitions]]
+from = "data"
+matcher = { literal = "(" }
+to = "data"
+actions = ["emit(LParen)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = ")" }
+to = "data"
+actions = ["emit(RParen)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "[" }
+to = "data"
+actions = ["emit(LBracket)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "]" }
+to = "data"
+actions = ["emit(RBracket)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "{" }
+to = "data"
+actions = ["emit(LBrace)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "}" }
+to = "data"
+actions = ["emit(RBrace)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "," }
+to = "data"
+actions = ["emit(Comma)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = ";" }
+to = "data"
+actions = ["emit(Semi)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "." }
+to = "data"
+actions = ["emit(Dot)"]
+
+# Single-character operators that have no multi-character cousin
+# at this state.  Multi-character cousins drop into peek states.
+[[transitions]]
+from = "data"
+matcher = { literal = "+" }
+to = "data"
+actions = ["set_text(+)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "-" }
+to = "data"
+actions = ["set_text(-)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "/" }
+to = "data"
+actions = ["set_text(/)", "emit(Op)"]
+
+# `%` enters `after_percent` to disambiguate modulo operator vs
+# percent literal start.  See after_percent transitions below.
+[[transitions]]
+from = "data"
+matcher = { literal = "%" }
+to = "after_percent"
+actions = ["clear_text", "append_text(%)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "~" }
+to = "data"
+actions = ["set_text(~)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "^" }
+to = "data"
+actions = ["set_text(^)", "emit(Op)"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "?" }
+to = "data"
+actions = ["set_text(?)", "emit(Op)"]
+
+# Multi-character operator entry points.
+[[transitions]]
+from = "data"
+matcher = { literal = "=" }
+to = "after_eq"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "!" }
+to = "after_bang"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "<" }
+to = "after_lt"
+
+[[transitions]]
+from = "data"
+matcher = { literal = ">" }
+to = "after_gt"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "&" }
+to = "after_amp"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "|" }
+to = "after_pipe"
+
+[[transitions]]
+from = "data"
+matcher = { literal = ":" }
+to = "after_colon"
+
+[[transitions]]
+from = "data"
+matcher = { literal = "*" }
+to = "after_star"
+
+# Phase 4i — `@` opens an instance-var (`@x`) or class-var (`@@x`)
+# lexeme.  The dispatcher seeds the text buffer with the sigil and
+# defers to `after_at` to decide between the two flavors based on
+# whether the next char is a second `@`.
+[[transitions]]
+from = "data"
+matcher = { literal = "@" }
+to = "after_at"
+actions = ["clear_text", "append_text(@)"]
+
+# Phase 4j — `$` opens a global-var (`$x`) lexeme.  v0 only accepts
+# `$<ident>`; punctuation globals (`$~`, `$&`, `$0`..`$9`, etc.)
+# are out of scope for this chunk and will follow up.
+[[transitions]]
+from = "data"
+matcher = { literal = "$" }
+to = "after_dollar"
+actions = ["clear_text", "append_text($)"]
+
+# Catch-all for unknown characters: emit a diagnostic and stay in
+# `data`.  Avoids the engine "no transition" error blowing up the
+# tokenizer on stray bytes.
+[[transitions]]
+from = "data"
+matcher = { anything = true }
+to = "data"
+actions = ["parse_error(unexpected_character)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Identifier body
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "ident_body"
+matcher = { literal = "_" }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { range = ["a", "z"] }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { range = ["A", "Z"] }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { range = ["0", "9"] }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+# Trailing `?` and `!` are part of the method-name identifier
+# (`foo?`, `foo!`).
+[[transitions]]
+from = "ident_body"
+matcher = { literal = "?" }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { literal = "!" }
+to = "ident_body"
+actions = ["append_text(current)"]
+
+# Any other character ends the identifier.  Re-dispatch by going
+# back to `data` *without consuming* the terminator.
+[[transitions]]
+from = "ident_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Name)"]
+
+[[transitions]]
+from = "ident_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Name)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Integer body
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "int_body"
+matcher = { range = ["0", "9"] }
+to = "int_body"
+actions = ["append_text(current)"]
+
+# Ruby allows `_` as a digit separator: `1_000_000`.
+[[transitions]]
+from = "int_body"
+matcher = { literal = "_" }
+to = "int_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "int_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Int)"]
+
+[[transitions]]
+from = "int_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Int)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Double-quoted string body (Phase 3b: with `#{...}` interpolation)
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "string_d_body"
+matcher = { literal = "\\" }
+to = "string_d_escape"
+
+# `#` inside `"..."` may open an interpolation (`#{...}`).  We peek
+# the next char in `string_d_hash` to decide.
+[[transitions]]
+from = "string_d_body"
+matcher = { literal = "#" }
+to = "string_d_hash"
+
+[[transitions]]
+from = "string_d_body"
+matcher = { literal = "\"" }
+to = "data"
+actions = ["emit(String)"]
+
+[[transitions]]
+from = "string_d_body"
+matcher = { literal = "\n" }
+to = "string_d_body"
+actions = ["append_text(current)"]   # multi-line strings legal in 1.8
+
+[[transitions]]
+from = "string_d_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+[[transitions]]
+from = "string_d_body"
+matcher = { anything = true }
+to = "string_d_body"
+actions = ["append_text(current)"]
+
+# Escape handling — minimal: \n, \t, \r, \\, \", literal otherwise.
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "n" }
+to = "string_d_body"
+actions = ["append_text(\\n)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "t" }
+to = "string_d_body"
+actions = ["append_text(\\t)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "r" }
+to = "string_d_body"
+actions = ["append_text(\\r)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "\\" }
+to = "string_d_body"
+actions = ["append_text(\\\\)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { literal = "\"" }
+to = "string_d_body"
+actions = ["append_text(\")"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { anything = true }
+to = "string_d_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "string_d_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# String interpolation (Phase 3b) — inside `"..."`, `#{` opens an
+# embedded expression that runs until a matching `}`.  v0 captures
+# the expression text verbatim (recursive sub-lexing is a future
+# refinement); the parser can dispatch on the `#{...}` substring
+# when it needs to evaluate.
+# ─────────────────────────────────────────────────────────────────
+
+# Saw `#` inside `"..."`: peek for `{`.
+[[transitions]]
+from = "string_d_hash"
+matcher = { literal = "{" }
+to = "string_d_interp"
+actions = ["append_text(#)", "append_text(current)"]   # append "#{"
+
+# `#` not followed by `{`: re-dispatch the char as ordinary string
+# content.  Append the leading `#` first, then let `string_d_body`
+# handle the follower via consume=false.
+[[transitions]]
+from = "string_d_hash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(#)", "parse_error(unterminated_string)", "emit(Eof)"]
+
+[[transitions]]
+from = "string_d_hash"
+matcher = { anything = true }
+to = "string_d_body"
+consume = false
+actions = ["append_text(#)"]
+
+# Inside `#{...}`: accumulate verbatim.  The action interpreter
+# tracks `interp_brace_depth` and forces the engine back to
+# `string_d_body` when a `}` is seen at depth 0 (closing the
+# interpolation).  Until then, every char including `{` / `}` is
+# appended; the engine never observes the matching `}` because the
+# interpreter consumes it manually before feeding to the engine.
+[[transitions]]
+from = "string_d_interp"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_interpolation)", "emit(Eof)"]
+
+[[transitions]]
+from = "string_d_interp"
+matcher = { anything = true }
+to = "string_d_interp"
+actions = ["append_text(current)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Single-quoted string — fewer escapes (only \' and \\).
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "string_s_body"
+matcher = { literal = "\\" }
+to = "string_s_escape"
+
+[[transitions]]
+from = "string_s_body"
+matcher = { literal = "'" }
+to = "data"
+actions = ["emit(String)"]
+
+[[transitions]]
+from = "string_s_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+[[transitions]]
+from = "string_s_body"
+matcher = { anything = true }
+to = "string_s_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "string_s_escape"
+matcher = { literal = "'" }
+to = "string_s_body"
+actions = ["append_text(')"]
+
+[[transitions]]
+from = "string_s_escape"
+matcher = { literal = "\\" }
+to = "string_s_body"
+actions = ["append_text(\\\\)"]
+
+# Any other escaped char in '...' keeps the backslash literally.
+[[transitions]]
+from = "string_s_escape"
+matcher = { anything = true }
+to = "string_s_body"
+actions = ["append_text(\\\\)", "append_text(current)"]
+
+[[transitions]]
+from = "string_s_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_string)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Backtick command literal (Phase 4m) — `` `cmd args` ``.
+#
+# Shape mirrors `string_d_body`:
+#   - `\` opens an escape (one of `\\`, `` \` ``, `\n`, `\t`, `\r`,
+#     literal otherwise).
+#   - The matching `` ` `` closes the literal and we emit `Backtick`.
+#   - `\n` is permitted inside the body (multi-line shell commands).
+#   - EOF mid-body is an unterminated-literal error.
+#
+# Differences from `string_d_body`:
+#   - `#` is *not* treated as an interpolation opener in v0.  Real
+#     Ruby allows `#{}` inside backticks; the post-pass / parser
+#     phase 7a can layer interpolation on later when needed.
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "\\" }
+to = "backtick_escape"
+
+# Closing backtick — emit the buffered body as a Backtick token and
+# return to the dispatcher.
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "`" }
+to = "data"
+actions = ["emit(Backtick)"]
+
+# Multi-line backticks: a literal newline inside the body becomes
+# part of the buffered command — same behaviour as `string_d_body`.
+[[transitions]]
+from = "backtick_body"
+matcher = { literal = "\n" }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "backtick_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_backtick)", "emit(Eof)"]
+
+# Everything else is body content.
+[[transitions]]
+from = "backtick_body"
+matcher = { anything = true }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+# Escape handling: the same five escapes string_d_escape recognises
+# (`n`, `t`, `r`, `\\`, plus `` ` `` instead of `"` since that's
+# the close char here).  Anything else carries the escape through
+# verbatim — matching how Ruby handles unknown escapes in `` `…` ``.
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "n" }
+to = "backtick_body"
+actions = ["append_text(\\n)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "t" }
+to = "backtick_body"
+actions = ["append_text(\\t)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "r" }
+to = "backtick_body"
+actions = ["append_text(\\r)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "\\" }
+to = "backtick_body"
+actions = ["append_text(\\\\)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { literal = "`" }
+to = "backtick_body"
+actions = ["append_text(`)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { anything = true }
+to = "backtick_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "backtick_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_backtick)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Regex body  (Phase 2)
+#
+# The action interpreter (src/lib.rs) decides when `/` in `data`
+# state opens a regex literal vs binary division.  When it picks
+# "regex", it calls `set_current_state("regex_body")` on the
+# engine, clears the text buffer, and skips re-feeding the `/`.
+# This sub-machine then accumulates chars until the closing `/`.
+#
+# Phase 2 does NOT yet parse regex flags (`i`, `m`, `x`, `o`).
+# Those land in Phase 3 alongside heredoc / interpolation work.
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "regex_body"
+matcher = { literal = "\\" }
+to = "regex_escape"
+
+# Closing `/` of a regex body: append it to the text buffer (as a
+# separator between body and flags) and transition into the flag-
+# slurp state.  The emit(Regex) interpreter then wraps the buffer
+# with a single leading `/`, yielding `/body/` (no flags) or
+# `/body/flags` (with flags).
+[[transitions]]
+from = "regex_body"
+matcher = { literal = "/" }
+to = "regex_flags"
+actions = ["append_text(/)"]
+
+[[transitions]]
+from = "regex_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_regex)", "emit(Eof)"]
+
+[[transitions]]
+from = "regex_body"
+matcher = { anything = true }
+to = "regex_body"
+actions = ["append_text(current)"]
+
+# Regex escape: any `\X` keeps both the backslash and X verbatim,
+# matching how MRI tokenises regex bodies (interpretation happens
+# in the regex engine, not the lexer).
+[[transitions]]
+from = "regex_escape"
+matcher = { anything = true }
+to = "regex_body"
+actions = ["append_text(\\\\)", "append_text(current)"]
+
+[[transitions]]
+from = "regex_escape"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_regex)", "emit(Eof)"]
+
+# Regex flag slurp (Phase 3a).  After the closing `/`, accept any
+# of the standard MRI flag letters in either case.  Greedy — stays
+# in this state as long as flag-letter chars appear contiguously.
+# Any other character ends the literal and re-dispatches the char
+# to `data` (consume=false).
+[[transitions]]
+from = "regex_flags"
+matcher = { one_of = "imxoeunsIMXOEUNS" }
+to = "regex_flags"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "regex_flags"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Regex)", "emit(Eof)"]
+
+[[transitions]]
+from = "regex_flags"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Regex)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Percent literals (Phase 3a) — `%w[a b c]` and `%q{string body}`.
+#
+# `%` already entered `after_percent` (data → after_percent earlier
+# in this file).  The text buffer contains `%` at that point.
+# ─────────────────────────────────────────────────────────────────
+
+# `%w` — string-array literal.
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "w" }
+to = "percent_w_open"
+actions = ["append_text(current)"]
+
+# `%q` — single-quoted-style string.
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "q" }
+to = "percent_q_open"
+actions = ["append_text(current)"]
+
+# `%i` — Ruby 2.0+ non-interpolating symbol array.
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "i" }
+to = "percent_i_open"
+actions = ["append_text(current)"]
+
+# `%I` — Ruby 2.0+ interpolating symbol array.
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "I" }
+to = "percent_big_i_open"
+actions = ["append_text(current)"]
+
+# Phase 4n — `%r` (regex), `%s` (symbol), `%x` (command).  All three
+# dispatch to a `_open` peek state that requires `{` as the v0
+# canonical delimiter.  Any other follower falls through to the
+# catch-all below ("% is modulo, letter is identifier").
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "r" }
+to = "percent_r_open"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "s" }
+to = "percent_s_open"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_percent"
+matcher = { literal = "x" }
+to = "percent_x_open"
+actions = ["append_text(current)"]
+
+# Any other follower: `%` is a modulo operator.  Re-dispatch the
+# next char to `data` so it lexes normally.
+[[transitions]]
+from = "after_percent"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "after_percent"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(%)", "emit(Op)", "emit(Eof)"]
+
+# After `%w`, the next char must be the opening delimiter.  v0
+# supports `[` as the canonical delimiter; other delimiters fall
+# back to "% is modulo, w is a name" — emit the percent as Op and
+# re-dispatch the `w` to data.
+[[transitions]]
+from = "percent_w_open"
+matcher = { literal = "[" }
+to = "percent_w_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_w_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_w_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_w_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_w_no_delim)", "set_text(%)", "emit(Op)"]
+
+# Inside `%w[...]` — slurp characters until matching `]`.
+[[transitions]]
+from = "percent_w_body"
+matcher = { literal = "]" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentW)"]
+
+[[transitions]]
+from = "percent_w_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_w)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_w_body"
+matcher = { anything = true }
+to = "percent_w_body"
+actions = ["append_text(current)"]
+
+# After `%q`, the next char must be the opening `{` delimiter.
+[[transitions]]
+from = "percent_q_open"
+matcher = { literal = "{" }
+to = "percent_q_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_q_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_q_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_q_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_q_no_delim)", "set_text(%)", "emit(Op)"]
+
+# Inside `%q{...}` — slurp characters until matching `}`.
+[[transitions]]
+from = "percent_q_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentQ)"]
+
+[[transitions]]
+from = "percent_q_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_q)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_q_body"
+matcher = { anything = true }
+to = "percent_q_body"
+actions = ["append_text(current)"]
+
+# ─── %i[…] (Ruby 2.0+ symbol arrays) ────────────────────────────
+# After `%i`, the next char must be `[`.  Any other follower
+# bails to "% is modulo" + the `i` as an identifier.
+[[transitions]]
+from = "percent_i_open"
+matcher = { literal = "[" }
+to = "percent_i_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_i_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_i_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_i_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_i_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_i_body"
+matcher = { literal = "]" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentI)"]
+
+[[transitions]]
+from = "percent_i_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_i)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_i_body"
+matcher = { anything = true }
+to = "percent_i_body"
+actions = ["append_text(current)"]
+
+# ─── %I[…] (Ruby 2.0+ interpolating symbol arrays) ──────────────
+[[transitions]]
+from = "percent_big_i_open"
+matcher = { literal = "[" }
+to = "percent_big_i_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_big_i_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_big_i_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_big_i_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_big_i_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_big_i_body"
+matcher = { literal = "]" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentBigI)"]
+
+[[transitions]]
+from = "percent_big_i_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_big_i)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_big_i_body"
+matcher = { anything = true }
+to = "percent_big_i_body"
+actions = ["append_text(current)"]
+
+# ─── %r{…}, %s{…}, %x{…} (Phase 4n) ─────────────────────────────
+# All three share the same shape — open peek state requires `{`,
+# body slurps until matching `}`, emit verbatim source as the
+# corresponding PercentR/PercentS/PercentX token (which the emit
+# handler maps to TokenType::String with the verbatim lexeme).
+
+# %r{...} — regex literal
+[[transitions]]
+from = "percent_r_open"
+matcher = { literal = "{" }
+to = "percent_r_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_r_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_r_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_r_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_r_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentR)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_r)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_r_body"
+matcher = { anything = true }
+to = "percent_r_body"
+actions = ["append_text(current)"]
+
+# %s{...} — symbol literal (no interpolation)
+[[transitions]]
+from = "percent_s_open"
+matcher = { literal = "{" }
+to = "percent_s_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_s_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_s_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_s_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_s_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentS)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_s)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_s_body"
+matcher = { anything = true }
+to = "percent_s_body"
+actions = ["append_text(current)"]
+
+# %x{...} — command-execution literal
+[[transitions]]
+from = "percent_x_open"
+matcher = { literal = "{" }
+to = "percent_x_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "percent_x_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(percent_x_no_delim)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_x_open"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(percent_x_no_delim)", "set_text(%)", "emit(Op)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { literal = "}" }
+to = "data"
+actions = ["append_text(current)", "emit(PercentX)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(unterminated_percent_x)", "emit(Eof)"]
+
+[[transitions]]
+from = "percent_x_body"
+matcher = { anything = true }
+to = "percent_x_body"
+actions = ["append_text(current)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Line comment
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "comment_body"
+matcher = { literal = "\n" }
+to = "data"
+consume = false   # leave the newline for `data`'s Newline emit rule
+
+[[transitions]]
+from = "comment_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Eof)"]
+
+[[transitions]]
+from = "comment_body"
+matcher = { anything = true }
+to = "comment_body"
+
+# ─────────────────────────────────────────────────────────────────
+# Multi-character operator peek states
+# ─────────────────────────────────────────────────────────────────
+
+[[transitions]]
+from = "after_eq"
+matcher = { literal = "=" }
+to = "after_eq_eq"
+
+[[transitions]]
+from = "after_eq"
+matcher = { literal = ">" }
+to = "data"
+actions = ["set_text(=>)", "emit(Op)"]
+
+[[transitions]]
+from = "after_eq"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(=)", "emit(Op)"]
+
+[[transitions]]
+from = "after_eq"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(=)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_eq_eq"
+matcher = { literal = "=" }
+to = "data"
+actions = ["set_text(===)", "emit(Op)"]
+
+[[transitions]]
+from = "after_eq_eq"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(==)", "emit(Op)"]
+
+[[transitions]]
+from = "after_eq_eq"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(==)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_bang"
+matcher = { literal = "=" }
+to = "data"
+actions = ["set_text(!=)", "emit(Op)"]
+
+[[transitions]]
+from = "after_bang"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(!)", "emit(Op)"]
+
+[[transitions]]
+from = "after_bang"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(!)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_lt"
+matcher = { literal = "=" }
+to = "data"
+actions = ["set_text(<=)", "emit(Op)"]
+
+# Phase 3c: `<<` is the heredoc opener (and the left-shift operator).
+# The action interpreter inspects the resulting `<<` Op token in
+# combination with the prior lex_state to decide whether to start a
+# heredoc capture (expression-start positions) or treat it as plain
+# left-shift (anywhere else).
+#
+# Phase 4o — defer the emit by one peek: enter `after_lt_lt` so we
+# can fold `<<-` and `<<~` into single tokens.
+[[transitions]]
+from = "after_lt"
+matcher = { literal = "<" }
+to = "after_lt_lt"
+
+# Phase 4o — `<<-TAG` (indent-tolerant terminator).
+[[transitions]]
+from = "after_lt_lt"
+matcher = { literal = "-" }
+to = "data"
+actions = ["set_text(<<-)", "emit(Op)"]
+
+# Phase 4o — `<<~TAG` (indent-stripping body + indent-tolerant terminator).
+[[transitions]]
+from = "after_lt_lt"
+matcher = { literal = "~" }
+to = "data"
+actions = ["set_text(<<~)", "emit(Op)"]
+
+# Anything else: plain `<<` (heredoc opener OR left-shift, decided
+# downstream by lex-state and follower kind).  Re-dispatch the
+# follower so it lexes normally.
+[[transitions]]
+from = "after_lt_lt"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(<<)", "emit(Op)"]
+
+[[transitions]]
+from = "after_lt_lt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(<<)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_lt"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(<)", "emit(Op)"]
+
+[[transitions]]
+from = "after_lt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(<)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_gt"
+matcher = { literal = "=" }
+to = "data"
+actions = ["set_text(>=)", "emit(Op)"]
+
+[[transitions]]
+from = "after_gt"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(>)", "emit(Op)"]
+
+[[transitions]]
+from = "after_gt"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(>)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_amp"
+matcher = { literal = "&" }
+to = "data"
+actions = ["set_text(&&)", "emit(Op)"]
+
+[[transitions]]
+from = "after_amp"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(&)", "emit(Op)"]
+
+[[transitions]]
+from = "after_amp"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(&)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_pipe"
+matcher = { literal = "|" }
+to = "data"
+actions = ["set_text(||)", "emit(Op)"]
+
+[[transitions]]
+from = "after_pipe"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(|)", "emit(Op)"]
+
+[[transitions]]
+from = "after_pipe"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(|)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_colon"
+matcher = { literal = ":" }
+to = "data"
+actions = ["emit(ColonColon)"]
+
+[[transitions]]
+from = "after_colon"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Colon)"]
+
+[[transitions]]
+from = "after_colon"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Colon)", "emit(Eof)"]
+
+[[transitions]]
+from = "after_star"
+matcher = { literal = "*" }
+to = "data"
+actions = ["set_text(**)", "emit(Op)"]
+
+[[transitions]]
+from = "after_star"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["set_text(*)", "emit(Op)"]
+
+[[transitions]]
+from = "after_star"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["set_text(*)", "emit(Op)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Phase 4i — instance / class variables  (`@x`, `@@x`)
+# ─────────────────────────────────────────────────────────────────
+# When `@` is seen at `data`, the dispatcher transitions to
+# `after_at` with the text buffer pre-seeded as `@`.  This peek
+# state then disambiguates:
+#
+#   @@x   →  cvar_body   (second `@` appended, then ident body)
+#   @x    →  ivar_body   (ident-starter appended, then ident body)
+#   @<X>  →  parse_error (and `@` falls back to a bare Op so the
+#                          caller still gets a token stream)
+#
+# Both bodies emit `Name` with the full lexeme (e.g. `@count`,
+# `@@all`).  The parser / SIR lowerer dispatch on the sigil prefix.
+
+[[transitions]]
+from = "after_at"
+matcher = { literal = "@" }
+to = "cvar_body"
+actions = ["append_text(@)"]
+
+[[transitions]]
+from = "after_at"
+matcher = { literal = "_" }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_at"
+matcher = { range = ["a", "z"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_at"
+matcher = { range = ["A", "Z"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+# `@` followed by a digit (`@1`) or anything else: not a valid
+# ivar.  Record a diagnostic and emit `@` as a generic Op so the
+# parser still gets a clean stream.
+[[transitions]]
+from = "after_at"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(invalid_ivar)", "set_text(@)", "emit(Op)"]
+
+[[transitions]]
+from = "after_at"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(invalid_ivar)", "set_text(@)", "emit(Op)", "emit(Eof)"]
+
+# ivar / cvar body share the same ident-char acceptance pattern as
+# `ident_body`, minus the trailing `?` / `!` characters (those are
+# method-name decorations and don't apply to variable names).
+[[transitions]]
+from = "ivar_body"
+matcher = { literal = "_" }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { range = ["a", "z"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { range = ["A", "Z"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { range = ["0", "9"] }
+to = "ivar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Name)"]
+
+[[transitions]]
+from = "ivar_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Name)", "emit(Eof)"]
+
+# cvar_body — entered after the second `@` has been appended.
+# We still need at least one ident character to follow; if not,
+# the lexeme `@@` alone is invalid and gets reported.
+[[transitions]]
+from = "cvar_body"
+matcher = { literal = "_" }
+to = "cvar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { range = ["a", "z"] }
+to = "cvar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { range = ["A", "Z"] }
+to = "cvar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { range = ["0", "9"] }
+to = "cvar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Name)"]
+
+[[transitions]]
+from = "cvar_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Name)", "emit(Eof)"]
+
+# ─────────────────────────────────────────────────────────────────
+# Phase 4j — global variables  (`$x`)
+# ─────────────────────────────────────────────────────────────────
+# When `$` is seen at `data`, the dispatcher seeds the text buffer
+# with `$` and transitions to `after_dollar`, which requires at
+# least one ident-starter to follow.  Any other follower falls back
+# to emitting `$` as a bare Op token with a diagnostic, so the
+# parser still gets a clean stream.  Future phases can extend
+# `after_dollar` to handle Ruby's punctuation globals (`$~`, `$&`,
+# `$_`, `$0`..`$9`, `$LOAD_PATH`-style names, etc.).
+[[transitions]]
+from = "after_dollar"
+matcher = { literal = "_" }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_dollar"
+matcher = { range = ["a", "z"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_dollar"
+matcher = { range = ["A", "Z"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "after_dollar"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["parse_error(invalid_gvar)", "set_text($)", "emit(Op)"]
+
+[[transitions]]
+from = "after_dollar"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(invalid_gvar)", "set_text($)", "emit(Op)", "emit(Eof)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { literal = "_" }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { range = ["a", "z"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { range = ["A", "Z"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { range = ["0", "9"] }
+to = "dollar_body"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { anything = true }
+to = "data"
+consume = false
+actions = ["emit(Name)"]
+
+[[transitions]]
+from = "dollar_body"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit(Name)", "emit(Eof)"]

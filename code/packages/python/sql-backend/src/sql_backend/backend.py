@@ -62,7 +62,7 @@ from typing import NewType
 
 from .index import IndexDef
 from .row import Cursor, Row, RowIterator
-from .schema import ColumnDef
+from .schema import ColumnDef, TriggerDef
 from .values import SqlValue
 
 # Transactions are represented as opaque tokens — an integer handle. Backends
@@ -159,11 +159,28 @@ class Backend(ABC):
         table: str,
         columns: list[ColumnDef],
         if_not_exists: bool,
+        *,
+        strict: bool = False,
     ) -> None:
         """Create a new table.
 
         If ``if_not_exists`` is True and the table already exists, this is a
         no-op. Otherwise, raise :class:`TableAlreadyExists`.
+
+        When ``strict`` is True, the table is a SQLite STRICT table:
+
+        * Every column's declared type must be one of ``INT``, ``INTEGER``,
+          ``REAL``, ``TEXT``, ``BLOB``, or ``ANY`` (case-insensitive).
+          Any other declared type causes a :class:`ConstraintViolation`
+          at CREATE TABLE time.
+        * Values inserted or updated must match the column's declared type.
+          ``NULL`` is always allowed unless the column is ``NOT NULL``.
+          ``ANY`` columns opt back into lenient typing for that column.
+
+        The ``strict`` parameter is keyword-only so existing call sites stay
+        valid and only opt in explicitly.  Backends that don't implement
+        strict typing should ignore the flag (lenient affinity matches
+        legacy SQLite behaviour).
         """
 
     @abstractmethod
@@ -173,6 +190,57 @@ class Backend(ABC):
         If ``if_exists`` is True and the table does not exist, this is a
         no-op. Otherwise, raise :class:`TableNotFound`.
         """
+
+    @abstractmethod
+    def add_column(self, table: str, column: ColumnDef) -> None:
+        """Add a new column to an existing table (ALTER TABLE … ADD COLUMN).
+
+        Existing rows gain the column with the value ``column.default`` if a
+        DEFAULT was specified, or NULL otherwise.  Raises
+        :class:`TableNotFound` if the table does not exist and
+        :class:`ColumnAlreadyExists` if a column with that name already exists.
+        """
+
+    def rename_table(self, old_name: str, new_name: str) -> None:
+        """Rename an existing table (``ALTER TABLE old RENAME TO new``).
+
+        Optional method — backends that don't implement it get a default
+        ``NotImplementedError``.  Raises :class:`TableNotFound` if
+        ``old_name`` doesn't exist or :class:`TableAlreadyExists` if
+        ``new_name`` already does.  Indexes on the table follow
+        automatically (their ``table`` field is rewritten).
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE RENAME TO"
+        )
+
+    def rename_column(self, table: str, old_name: str, new_name: str) -> None:
+        """Rename a column (``ALTER TABLE t RENAME [COLUMN] old TO new``).
+
+        Optional method.  Raises :class:`TableNotFound` if the table
+        doesn't exist, :class:`UnknownColumn` if ``old_name`` is not a
+        column of the table, or :class:`ColumnAlreadyExists` if
+        ``new_name`` already is.  Indexes referencing the column have
+        their ``columns`` lists rewritten to use the new name.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE RENAME COLUMN"
+        )
+
+    def drop_column(self, table: str, column_name: str) -> None:
+        """Drop a column (``ALTER TABLE t DROP [COLUMN] c``).
+
+        Optional method.  Raises :class:`TableNotFound` if the table
+        doesn't exist or :class:`UnknownColumn` if ``column_name`` is
+        not a column of the table.  Per SQLite, the column cannot be a
+        PRIMARY KEY column, cannot be referenced by an existing index,
+        and cannot be the only column in the table; backends should
+        raise an appropriate error in those cases.  All existing rows
+        lose their values for that column.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support ALTER TABLE DROP COLUMN"
+        )
 
     # --- Indexes -----------------------------------------------------------
 
@@ -328,6 +396,85 @@ class Backend(ABC):
         """
         return None
 
+    # --- Savepoints --------------------------------------------------------
+    # Non-abstract: the default raises Unsupported so backends that don't
+    # support savepoints inherit a clear error instead of a silent no-op.
+
+    def create_savepoint(self, name: str) -> None:
+        """Create a named savepoint within the active transaction.
+
+        The default implementation raises :class:`Unsupported`. Override in
+        backends that support partial rollback.
+
+        Raises :class:`Unsupported` if savepoints are not supported.
+        """
+        from .errors import Unsupported  # local import avoids circular dep
+        raise Unsupported(operation="savepoints")
+
+    def release_savepoint(self, name: str) -> None:
+        """Release (destroy) the named savepoint.
+
+        Per SQL/SQLite semantics, releasing a savepoint also releases all
+        savepoints created after it.  Changes are kept — the outer transaction
+        still needs to be committed or rolled back.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="savepoints")
+
+    def rollback_to_savepoint(self, name: str) -> None:
+        """Roll back all changes made after the named savepoint.
+
+        Unlike a full rollback, the savepoint itself remains alive after this
+        call — the caller may roll back to it again, or release it later.
+        Savepoints created after the named one are destroyed.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="savepoints")
+
+    # --- Triggers ------------------------------------------------------------
+    # Non-abstract: default implementations raise Unsupported so backends that
+    # don't support triggers inherit a clear error rather than a silent no-op.
+
+    def create_trigger(self, defn: TriggerDef) -> None:
+        """Store a trigger definition.
+
+        The trigger fires on ``defn.event`` (INSERT / UPDATE / DELETE) at
+        ``defn.timing`` (BEFORE / AFTER) for ``defn.table``.
+
+        Raises :class:`~sql_backend.errors.TriggerAlreadyExists` if a trigger
+        with the same name already exists.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="triggers")
+
+    def drop_trigger(self, name: str, if_exists: bool = False) -> None:
+        """Remove a trigger definition by name.
+
+        When ``if_exists=True`` and the trigger does not exist, this is a
+        silent no-op.  Otherwise raises
+        :class:`~sql_backend.errors.TriggerNotFound`.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="triggers")
+
+    def list_triggers(self, table: str) -> list[TriggerDef]:
+        """Return all triggers for *table* in creation order.
+
+        Returns an empty list when no triggers exist (not an error).
+
+        The default implementation returns an empty list so backends that do
+        not support triggers simply never fire any.
+        """
+        return []
+
 
 class SchemaProvider(ABC):
     """Minimal schema interface consumed by the planner.
@@ -341,6 +488,18 @@ class SchemaProvider(ABC):
     @abstractmethod
     def columns(self, table: str) -> list[str]:
         """Return the column *names* of ``table`` (not full ColumnDefs)."""
+
+    def column_collation(self, table: str, column: str) -> str | None:
+        """Return the declared ``COLLATE name`` for a column, or ``None``.
+
+        Default implementation returns ``None`` for *every* column — minimal
+        :class:`SchemaProvider` implementations don't track collation.  Real
+        :class:`Backend`-backed providers override this to look up the
+        :class:`ColumnDef.collation` field on the underlying column metadata,
+        so that ``ORDER BY name`` against a column declared
+        ``name TEXT COLLATE NOCASE`` automatically sorts NOCASE.
+        """
+        return None
 
 
 class _BackendSchemaProvider(SchemaProvider):
@@ -357,6 +516,17 @@ class _BackendSchemaProvider(SchemaProvider):
 
     def columns(self, table: str) -> list[str]:
         return [col.name for col in self._backend.columns(table)]
+
+    def column_collation(self, table: str, column: str) -> str | None:
+        """Look up the declared collation for *table.column*, if any."""
+        try:
+            cols = self._backend.columns(table)
+        except Exception:  # noqa: BLE001 — unknown table → no collation info
+            return None
+        for col in cols:
+            if col.name == column:
+                return col.collation
+        return None
 
     def list_indexes(self, table: str) -> list[IndexDef]:
         """Proxy ``Backend.list_indexes`` filtered to *table*."""

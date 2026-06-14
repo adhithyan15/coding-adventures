@@ -14,6 +14,7 @@ from swi_prolog_parser import (
     parse_swi_program,
     parse_swi_query,
     parse_swi_source,
+    parse_swi_term,
 )
 
 
@@ -154,6 +155,30 @@ class TestSwiParser:
         query = parse_swi_query("?- X is 1 + 2 * 3.\n")
 
         assert str(goal_as_term(query.goal)) == "is(X, +(1, *(2, 3)))"
+
+    def test_parse_swi_term_returns_named_variables(self) -> None:
+        parsed = parse_swi_term("pair(X, Y, X)")
+
+        assert parsed.term == term(
+            "pair",
+            parsed.variables["X"],
+            parsed.variables["Y"],
+            parsed.variables["X"],
+        )
+        assert list(parsed.variables) == ["X", "Y"]
+
+    def test_parse_swi_query_understands_clpfd_infix_forms(self) -> None:
+        query = parse_swi_query("?- [X,Y] ins 1..4, Z #= X + Y, X #< Y.\n")
+
+        assert str(goal_as_term(query.goal)) == (
+            ",(ins(.(X, .(Y, [])), ..(1, 4)), ,(#=(Z, +(X, Y)), #<(X, Y)))"
+        )
+
+    def test_parse_swi_ast_accepts_clpfd_infix_forms(self) -> None:
+        ast = parse_swi_ast("?- X in 1..4, Y #= X + 1, Y #=< 4.\n")
+
+        assert ast.rule_name == "program"
+        assert len(ast.children) == 1
 
     def test_parse_swi_program_rejects_queries(self) -> None:
         with pytest.raises(PrologParseError, match="expected only clauses"):

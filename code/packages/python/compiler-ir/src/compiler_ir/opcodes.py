@@ -25,10 +25,19 @@ The opcodes are grouped by category:
   Bitwise:      OR, OR_IMM, XOR, XOR_IMM, NOT
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
   Floating:     LOAD_F64_IMM, LOAD_F64, STORE_F64, F64_ADD, ..., F64_FROM_I32,
-                I32_TRUNC_FROM_F64
+                I32_TRUNC_FROM_F64, F64_SQRT, F64_SIN, F64_COS, F64_ATAN,
+                F64_LN, F64_EXP, F64_POW
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
   Meta:         NOP, COMMENT
+  Closures:     MAKE_CLOSURE, APPLY_CLOSURE   (TW03 Phase 2)
+  Heap:         MAKE_CONS, CAR, CDR, IS_NULL, IS_PAIR,
+                MAKE_SYMBOL, IS_SYMBOL, LOAD_NIL   (TW03 Phase 3)
+  Error-aware:  SYSCALL_CHECKED, BRANCH_ERR   (VMCOND00 Phase 1)
+  Handlers:     PUSH_HANDLER, POP_HANDLER, SIGNAL, ERROR, WARN (VMCOND00 Phase 3)
+  Restarts:     PUSH_RESTART, POP_RESTART, FIND_RESTART, INVOKE_RESTART,
+                COMPUTE_RESTARTS   (VMCOND00 Phase 4 — Layer 4)
+  Exits:        ESTABLISH_EXIT, EXIT_TO   (VMCOND00 Phase 4 — Layer 5)
 
 Text Names
 ----------
@@ -257,6 +266,368 @@ class IrOp(IntEnum):
     # Useful for debugging IR output.
     #   COMMENT "load tape base address"
     COMMENT = 24
+
+    # ── Closures (TW03 Phase 2 — cross-backend Lisp closure support) ─────
+    # Construct a closure value that captures values from the enclosing
+    # lexical scope.  The closure can later be invoked via APPLY_CLOSURE.
+    #
+    # Operand layout:
+    #   MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1, ...
+    # where:
+    #   - ``dst``         — register receiving the resulting closure handle
+    #   - ``fn_label``    — IR label of the lifted lambda body (a top-level
+    #                       region just like a user-defined function)
+    #   - ``num_captured`` — IrImmediate count of captured values
+    #   - ``capt0..captN-1`` — registers holding the captured values
+    #
+    # Backend lowering strategies (see TW03 spec):
+    #   - JVM/CLR:  allocate a closure object whose fields hold the captures;
+    #               the resulting reference is the "closure handle".
+    #   - BEAM:     emit ``make_fun2`` referencing a FunT-table entry whose
+    #               free-variable list maps to the captured registers.
+    #   - vm-core:  delegate to the host-side ``make_closure`` builtin
+    #               (already implemented in TW00).
+    #
+    # Note: numbered 47 (NOT 25) because 25/26 collide with MUL/DIV.
+    MAKE_CLOSURE = 47
+
+    # Apply a closure value to zero or more arguments.
+    #
+    # Operand layout:
+    #   APPLY_CLOSURE dst, closure_reg, num_args, arg0, arg1, ...
+    # where:
+    #   - ``dst``         — register receiving the call's return value
+    #   - ``closure_reg`` — register holding the closure handle from
+    #                        a prior MAKE_CLOSURE
+    #   - ``num_args``    — IrImmediate count of arguments
+    #   - ``arg0..argN-1`` — registers holding the argument values
+    #
+    # Backend lowering strategies:
+    #   - JVM/CLR:  invoke the closure object's ``apply(int...)`` method.
+    #   - BEAM:     emit ``call_fun`` (or ``call_fun2``) on the closure
+    #               handle.
+    #   - vm-core:  delegate to the host-side ``apply_closure`` builtin.
+    APPLY_CLOSURE = 48
+
+    # Compute the square root of an f64 value.
+    # Appended after the closure opcodes to preserve stable opcode values.
+    #   F64_SQRT v1, v2  →  v1 = sqrt(v2)
+    F64_SQRT = 49
+
+    # Compute standard unary real functions for frontends that need a
+    # language-level math runtime. WASM core has no native sine/cosine/etc.,
+    # so WASM backends may lower these to typed host imports.
+    #   F64_SIN v1, v2    →  v1 = sin(v2)
+    F64_SIN = 50
+
+    #   F64_COS v1, v2    →  v1 = cos(v2)
+    F64_COS = 51
+
+    #   F64_ATAN v1, v2   →  v1 = arctan(v2)
+    F64_ATAN = 52
+
+    #   F64_LN v1, v2     →  v1 = ln(v2)
+    F64_LN = 53
+
+    #   F64_EXP v1, v2    →  v1 = exp(v2)
+    F64_EXP = 54
+
+    # ── Heap primitives (TW03 Phase 3 — Lisp cons / symbols / nil) ───────
+    # These ops introduce three new heap-allocated value kinds beyond the
+    # int and closure values we already have:
+    #
+    #   cons  — pair of (head, tail) heap references; produced by MAKE_CONS,
+    #           inspected by CAR / CDR / IS_PAIR.
+    #   symbol — interned identifier; produced by MAKE_SYMBOL, inspected by
+    #            IS_SYMBOL.  Two MAKE_SYMBOL with the same name yield refs
+    #            that compare equal under the host's equality semantics.
+    #   nil   — the empty-list sentinel; produced by LOAD_NIL, inspected by
+    #           IS_NULL.  Lispy code uses nil as both "false" and "end of
+    #           list", as is traditional in Scheme/Lisp.
+    #
+    # Backend lowering strategies (filled in by JVM03 / CLR03 / BEAM03
+    # sister specs):
+    #   - JVM/CLR: emit Cons / Symbol / Nil classes; allocations use ``new``;
+    #              the host GC reclaims unreachable heap nodes — no explicit
+    #              free / mark / sweep work for the compiler.
+    #   - BEAM:    cons cells map directly to Erlang lists (``put_list``);
+    #              symbols map to atoms; nil maps to ``[]``.  BEAM's own GC
+    #              handles reclamation.
+    #   - vm-core: delegates to the host-side ``twig.heap.Heap`` API
+    #              (already implemented in TW01).
+    #
+    # All seven ops follow the cross-backend "object-typed register"
+    # convention introduced for closures: backends with int-uniform
+    # registers must extend their typed pool to hold these new reference
+    # kinds (see CLR02 Phase 2c.5 / JVM02 Phase 2c.5 for the precedent).
+    #
+    # Numbered 55–62 so the existing 0–54 opcode IDs stay stable across
+    # serialized IR text files.
+    #
+    # MAKE_CONS dst, head_reg, tail_reg
+    #   Allocate a cons cell (head, tail) and store a reference to it
+    #   into ``dst``.  Both operands are register-valued; the cell holds
+    #   whatever those registers hold (int, cons, symbol, nil, closure).
+    MAKE_CONS = 55
+
+    # CAR dst, src
+    #   Read the head of the cons cell referenced by ``src`` into ``dst``.
+    #   Result type matches whatever was passed to MAKE_CONS as head.
+    #   Trapping behaviour on non-cons input is backend-defined; lowering
+    #   typically emits an unchecked field load (correctness obligation
+    #   on the frontend / type checker).
+    CAR = 56
+
+    # CDR dst, src
+    #   Read the tail of the cons cell referenced by ``src`` into ``dst``.
+    #   Counterpart to CAR.
+    CDR = 57
+
+    # IS_NULL dst, src
+    #   Set ``dst`` to 1 if ``src`` holds the nil value, else 0.  ``dst``
+    #   is an int-typed register so the result feeds straight into
+    #   BRANCH_Z / BRANCH_NZ.
+    IS_NULL = 58
+
+    # IS_PAIR dst, src
+    #   Set ``dst`` to 1 if ``src`` holds a cons cell, else 0.
+    IS_PAIR = 59
+
+    # MAKE_SYMBOL dst, name_label
+    #   Intern the symbol whose name is ``name_label`` (a label-encoded
+    #   identifier — chosen so the existing IR text format already
+    #   round-trips it) and store a reference to the interned symbol
+    #   into ``dst``.  Two MAKE_SYMBOL instructions with the same label
+    #   must yield references that compare equal.
+    MAKE_SYMBOL = 60
+
+    # IS_SYMBOL dst, src
+    #   Set ``dst`` to 1 if ``src`` holds a symbol, else 0.
+    IS_SYMBOL = 61
+
+    # LOAD_NIL dst
+    #   Store the nil value into ``dst``.  Used to terminate cons-cell
+    #   chains and as the canonical "false" / "empty-list" sentinel.
+    LOAD_NIL = 62
+
+    # Binary real power for frontends that need a language-level math runtime.
+    # Appended after TW03 heap opcodes to preserve stable opcode values.
+    #   F64_POW v1, v2, v3 → v1 = pow(v2, v3)
+    F64_POW = 63
+
+    # ── VMCOND00 Phase 1 — checked syscall + error branch ────────────────
+    #
+    # These two opcodes implement the VMCOND00 Layer 1 result-value protocol:
+    # a syscall that can fail without trapping, and a conditional branch that
+    # detects the failure.  Together they let a language emit code like:
+    #
+    #     SYSCALL_CHECKED 2, arg_reg, val_dst, err_dst   ; read-byte
+    #     BRANCH_ERR err_dst, eof_handler                ; branch if err != 0
+    #     ; happy path here — val_dst holds the byte
+    #     ...
+    #   eof_handler:
+    #     ; error path — err_dst holds negated errno or -1 for EOF
+    #
+    # The protocol: SYSCALL_CHECKED runs the numbered host syscall (n=1..33
+    # from the SYSCALL00 canonical table), stores the success value in
+    # ``val_dst``, and stores a "sticky" error code in ``err_dst``
+    # (0 = success, -1 = EOF, <-1 = negated errno).  BRANCH_ERR reads
+    # ``err_dst`` and branches when it is non-zero — it NEVER branches when
+    # the syscall succeeded.
+    #
+    # Why two separate opcodes rather than one combined branch?
+    #
+    #   - Separation of concerns: the syscall opcode is purely a value-
+    #     producer; the branch is purely a control-flow decision.  This
+    #     mirrors LOAD_IMM / BRANCH_Z decomposition.
+    #   - Allows multiple BRANCH_ERR tests on the same ``err_dst`` (e.g.
+    #     branch on EOF vs. branch on write-error) by reusing the same
+    #     register.
+    #   - Backends that compile SYSCALL_CHECKED to native code can inline
+    #     the error flag into a hardware status register and collapse
+    #     BRANCH_ERR into a conditional jump with zero extra load.
+    #
+    # VMCOND00 SYSCALL01 extends these into SYSCALL_CONDITIONED which
+    # additionally calls back into the condition system; that is Phase 3.
+
+    # SYSCALL_CHECKED — run a numbered host syscall, capturing errors.
+    #
+    # Operand layout:
+    #   SYSCALL_CHECKED  n:imm  arg:reg  val_dst:reg  err_dst:reg
+    #
+    # where:
+    #   - ``n``       — the SYSCALL00 canonical syscall number (immediate)
+    #   - ``arg``     — the single argument register (conventions per syscall)
+    #   - ``val_dst`` — register to receive the success value (byte read,
+    #                   bytes written, etc.)  Set to 0 on error.
+    #   - ``err_dst`` — register to receive the error code: 0 on success,
+    #                   -1 on EOF, <-1 for negated errno.
+    #
+    # SYSCALL_CHECKED never traps — it always stores into both output
+    # registers and returns control to the next instruction.  The caller
+    # decides what to do with the error code.
+    SYSCALL_CHECKED = 64
+
+    # BRANCH_ERR — branch to a label when an error register is non-zero.
+    #
+    # Operand layout:
+    #   BRANCH_ERR  err_reg:reg  label:label
+    #
+    # where:
+    #   - ``err_reg`` — a register previously written by SYSCALL_CHECKED
+    #   - ``label``   — IR label to jump to when ``err_reg != 0``
+    #
+    # BRANCH_ERR is the companion to SYSCALL_CHECKED.  It behaves like
+    # BRANCH_NZ but is semantically typed as "this register holds an error
+    # code, not a general Boolean" — backends can use this typing hint when
+    # lowering to error-code registers or exception paths.
+    #
+    # Execution: if err_reg == 0 (success), fall through; otherwise jump.
+    BRANCH_ERR = 65
+
+    # ── VMCOND00 Phase 2 — unwind exceptions ─────────────────────────────
+    #
+    # ``THROW`` implements the Layer 2 result-value escalation path: instead
+    # of returning an error code the caller must check, the front-end can
+    # raise a condition that unwinds the call stack looking for the innermost
+    # matching handler in the static exception table.
+    #
+    # This opcode corresponds directly to:
+    #   - Python's ``raise`` statement
+    #   - Java's ``throw`` statement
+    #   - CLR's IL ``throw`` instruction
+    #   - JVM's ``athrow`` opcode
+    #
+    # Operand layout:
+    #   THROW  condition:reg
+    #
+    # where:
+    #   - ``condition`` — a register holding the condition object to throw.
+    #     In Phase 2 the condition can be any Python/IIR value; the type_id
+    #     matching uses ``type(condition).__name__`` or the catch-all ``"*"``.
+    #     Phase 3 will replace this with the condition type hierarchy.
+    #
+    # Backend lowering:
+    #   - JVM: emit ``athrow`` after loading the object from the register.
+    #          The JVM's own exception-dispatch mechanism handles the rest.
+    #   - CLR: emit ``throw`` after loading the object from the register.
+    #   - BEAM: emit a ``{'EXIT', Condition}`` message or use try/catch.
+    #   - Interpreter (vm-core): walk the static exception table of each
+    #     frame from innermost to outermost; on match, jump to handler_ip
+    #     and assign the condition to val_reg.  If no match, pop frame and
+    #     continue.  If stack exhausted, raise UncaughtConditionError.
+    THROW = 66
+
+    # ── VMCOND00 Phase 3 — dynamic handlers (Layer 3) ────────────────────
+    #
+    # Five opcodes implementing the Layer 3 non-unwinding condition handler
+    # protocol.  When SIGNAL/ERROR/WARN finds a matching handler the VM pushes
+    # a handler invocation frame on top of the current call stack WITHOUT
+    # disturbing the frames below.  After the handler returns normally,
+    # execution resumes at the instruction after the signaling opcode.
+    #
+    # Operand layouts:
+    #
+    #   PUSH_HANDLER  type_id:imm  fn:reg
+    #     type_id — IrImmediate(string): "*" (catch-all) or type name.
+    #     fn      — IrRegister: the handler callable.
+    #
+    #   POP_HANDLER
+    #     (no operands)
+    #
+    #   SIGNAL  condition:reg
+    #   ERROR   condition:reg
+    #   WARN    condition:reg
+    #     condition — IrRegister: the condition object to signal/raise/warn.
+    #
+    # Behavioural differences between the three signaling opcodes:
+    #   SIGNAL — no-op when unhandled (always safe to signal).
+    #   ERROR  — aborts the thread (UncaughtConditionError) when unhandled.
+    #            Also checks the Layer 2 exception table first; if the
+    #            current IP is in a guarded range that covers this condition,
+    #            the error degrades to THROW so Layer 2 wins.
+    #   WARN   — emits the condition's repr to stderr when unhandled, then
+    #            continues execution.  Never aborts.
+    #
+    # Backend lowering strategy (Phase 3 scope: interpreter / vm-core only):
+    #   JVM / CLR / BEAM lowering is deferred to a later phase.  Backends that
+    #   do not yet support Layer 3 should reject programs via their pre-flight
+    #   validator: "VMCOND00 Layer 3: dynamic handlers not yet implemented for
+    #   this backend."
+    PUSH_HANDLER = 67
+    POP_HANDLER = 68
+    SIGNAL = 69
+    ERROR = 70
+    WARN = 71
+
+    # ── VMCOND00 Phase 4 — restart chain (Layer 4) ───────────────────────
+    #
+    # Five opcodes implementing the Layer 4 named-restart protocol.  Restarts
+    # are callable continuations that a handler (established via Layer 3) can
+    # find by name without holding a direct reference, and invoke with a
+    # substitute value.  The restart may return normally (non-unwinding) or
+    # call EXIT_TO (Layer 5) to perform a non-local transfer.
+    #
+    # Operand layouts:
+    #
+    #   PUSH_RESTART  name_sym:imm  fn:reg
+    #     name_sym — IrLabel: the restart's name (matched by FIND_RESTART).
+    #     fn       — IrRegister: the restart callable.
+    #
+    #   POP_RESTART
+    #     (no operands)
+    #
+    #   FIND_RESTART  name_sym:imm → out:reg
+    #     name_sym — IrLabel: name to search for (newest-first).
+    #     out      — IrRegister: receives RestartNode handle or NIL.
+    #
+    #   INVOKE_RESTART  handle:reg  arg:reg
+    #     handle   — IrRegister: a RestartNode handle from FIND_RESTART.
+    #     arg      — IrRegister: argument to pass to the restart function.
+    #     Result (if restart returns normally) written into the dest register.
+    #
+    #   COMPUTE_RESTARTS → out:reg
+    #     Collect all active restart handles into a list.
+    #     out      — IrRegister: receives the list.
+    #
+    # Backend lowering for Layer 4 is deferred to a later phase.  Backends that
+    # do not yet support Layer 4 should reject programs via their pre-flight
+    # validator: "VMCOND00 Layer 4: restarts not yet implemented for this backend."
+    PUSH_RESTART = 72
+    POP_RESTART = 73
+    FIND_RESTART = 74
+    INVOKE_RESTART = 75
+    COMPUTE_RESTARTS = 76
+
+    # ── VMCOND00 Phase 4 — exit-point chain (Layer 5) ────────────────────
+    #
+    # Two opcodes implementing the Layer 5 non-local exit (exit-point) protocol.
+    # An exit point is a dynamically scoped tag; any code in its dynamic extent
+    # can call EXIT_TO to transfer control non-locally, delivering a value and
+    # unwinding the call stack, handler chain, and restart chain to the depth
+    # recorded at ESTABLISH_EXIT time.
+    #
+    # Operand layouts:
+    #
+    #   ESTABLISH_EXIT  tag_sym:imm  result_out:reg  after:label
+    #     tag_sym    — IrLabel: the exit-point tag.
+    #     result_out — IrRegister: receives the value from EXIT_TO (or stays
+    #                  unchanged if no EXIT_TO fires).
+    #     after      — IrLabel: instruction to resume at when EXIT_TO fires.
+    #                  On normal fallthrough, execution reaches this label
+    #                  naturally.
+    #
+    #   EXIT_TO  tag_sym:imm  val:reg
+    #     tag_sym — IrLabel: exit-point tag to find (innermost-first).
+    #     val     — IrRegister: value to deliver to the exit point.
+    #     Unwinds call stack / handler chain / restart chain to frame_depth,
+    #     assigns val to result_out, jumps to after.
+    #     Raises UnboundExitTagError if no matching exit point exists.
+    #
+    # Backend lowering for Layer 5 is deferred.  Backends should reject with
+    # "VMCOND00 Layer 5: non-local exits not yet implemented for this backend."
+    ESTABLISH_EXIT = 77
+    EXIT_TO = 78
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

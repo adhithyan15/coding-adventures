@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `ArtifactCatalogSummary` and `catalog_summary()` for retention and revision
+  coverage over selected artifact manifests.
+- `ArtifactProvenanceSummary` and `provenance_summary()` for compact
+  session/tool/job/agent attribution coverage over selected artifact manifests.
+- `ArtifactManifestSummary` and `manifest_summary()` for compact collection,
+  content-type, and label coverage over selected artifact manifests.
+- `ArtifactInventorySummary` and `inventory_summary()` to compose catalog,
+  provenance, and manifest status into one bounded read-side inventory view.
+- `ArtifactRevisionHistorySummary` and `revision_history_summary()` for
+  bounded lineage, metadata, and body-size aggregates over revision history.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
@@ -10,4 +25,8 @@ All notable changes to this package will be documented in this file.
 - `Artifact`, `ArtifactRevision`, and `ArtifactProvenance` models
 - `ArtifactStore` manifest/revision workflow on top of `storage-core`
 - collection listing, label updates, and retention marking
+- bounded artifact listing with collection, label, and retention filters
+- provenance-aware artifact listing with session, tool, job, and agent filters
+- bounded revision-history listing with revision cursors, latest-first ordering,
+  body lengths, and content hashes without returning opaque bodies
 - Unit tests using `storage-core::InMemoryStorageBackend`

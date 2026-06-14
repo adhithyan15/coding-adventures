@@ -7,9 +7,10 @@ from logic_bytecode import (
     LogicBytecodeProgram,
     compile_program,
 )
-from logic_engine import atom, conj, defer, eq, fresh, relation, term, var
+from logic_engine import State, atom, conj, defer, eq, fresh, relation, term, var
 from logic_instructions import (
     InstructionProgram,
+    defdynamic,
     defrel,
     fact,
     instruction_program,
@@ -84,6 +85,46 @@ class TestLogicBytecodeVM:
         instructions, bytecode = _ancestor_program()
 
         assert compile_and_execute(instructions) == execute(bytecode)
+
+    def test_dynamic_relation_declarations_survive_bytecode_loading(self) -> None:
+        memo = relation("memo", 1)
+        value = var("Value")
+        bytecode = compile_program(
+            instruction_program(
+                defdynamic(memo),
+                fact(memo("cached")),
+                query(memo(value), outputs=(value,)),
+            ),
+        )
+
+        vm = create_logic_bytecode_vm()
+        vm.load(bytecode)
+        vm.run()
+
+        assert memo.key() in vm.state.dynamic_relations
+        assert memo.key() in vm.assembled_program().dynamic_relations
+        assert vm.run_query() == [atom("cached")]
+
+    def test_run_query_from_uses_existing_state_and_reifies_results(self) -> None:
+        parent = relation("parent", 2)
+        who = var("Who")
+        marker = var("Marker")
+        bytecode = compile_program(
+            instruction_program(
+                defrel(parent),
+                fact(parent("homer", "bart")),
+                query(conj(eq(marker, "seen"), parent("homer", who)), outputs=(who,)),
+            ),
+        )
+
+        vm = create_logic_bytecode_vm()
+        vm.load(bytecode)
+        vm.run()
+
+        state = next(vm.solve_query_from(State()), None)
+
+        assert state is not None
+        assert vm.run_query_from(State()) == [atom("bart")]
 
     def test_execute_all_and_compile_and_execute_all_run_multiple_queries(self) -> None:
         parent = relation("parent", 2)

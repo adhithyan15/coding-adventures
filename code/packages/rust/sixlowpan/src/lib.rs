@@ -1,0 +1,1758 @@
+//! 6LoWPAN adaptation primitives for Thread over IEEE 802.15.4.
+//!
+//! The first useful Thread foundation is not an MLE state machine. It is the
+//! small set of dispatch bytes, fragmentation headers, and IPHC header bits
+//! that let higher layers classify and replay captured packets deterministically.
+
+#![forbid(unsafe_code)]
+
+use std::collections::BTreeMap;
+use std::fmt;
+
+use ieee802154_core::Address;
+
+const MESH_DISPATCH_PREFIX: u8 = 0b1000_0000;
+const MESH_ORIGINATOR_EXTENDED: u8 = 1 << 5;
+const MESH_FINAL_EXTENDED: u8 = 1 << 4;
+const MESH_HOPS_LEFT_MASK: u8 = 0b0000_1111;
+const MESH_EXTENDED_HOPS_LEFT: u8 = 0b0000_1111;
+const UDP_NHC_PREFIX: u8 = 0b1111_0000;
+const UDP_NHC_MASK: u8 = 0b1111_1000;
+const UDP_NHC_CHECKSUM_ELIDED: u8 = 1 << 2;
+const UDP_NHC_PORTS_MASK: u8 = 0b0000_0011;
+const UDP_8BIT_PORT_BASE: u16 = 0xf000;
+const UDP_4BIT_PORT_BASE: u16 = 0xf0b0;
+const SHORT_ADDRESS_LEN: usize = 2;
+const EXTENDED_ADDRESS_LEN: usize = 8;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Dispatch {
+    Ipv6,
+    LowpanHc1,
+    Iphc,
+    FragmentFirst,
+    FragmentNext,
+    Mesh,
+    Broadcast,
+    Unknown(u8),
+}
+
+impl Dispatch {
+    pub fn parse(byte: u8) -> Self {
+        match byte {
+            0x41 => Self::Ipv6,
+            0x42 => Self::LowpanHc1,
+            value if value & 0b1110_0000 == 0b0110_0000 => Self::Iphc,
+            value if value & 0b1111_1000 == 0b1100_0000 => Self::FragmentFirst,
+            value if value & 0b1111_1000 == 0b1110_0000 => Self::FragmentNext,
+            value if value & 0b1100_0000 == 0b1000_0000 => Self::Mesh,
+            value if value & 0b1111_0000 == 0b0101_0000 => Self::Broadcast,
+            other => Self::Unknown(other),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MeshHeader {
+    pub hops_left: u8,
+    pub originator: Address,
+    pub final_destination: Address,
+}
+
+impl MeshHeader {
+    pub fn new(hops_left: u8, originator: Address, final_destination: Address) -> Self {
+        Self {
+            hops_left,
+            originator,
+            final_destination,
+        }
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        Self::parse_with_len(bytes).map(|(header, _)| header)
+    }
+
+    pub fn encode(self) -> Vec<u8> {
+        let mut out = Vec::with_capacity(self.encoded_len());
+        let mut first = MESH_DISPATCH_PREFIX;
+        if matches!(self.originator, Address::Extended(_)) {
+            first |= MESH_ORIGINATOR_EXTENDED;
+        }
+        if matches!(self.final_destination, Address::Extended(_)) {
+            first |= MESH_FINAL_EXTENDED;
+        }
+        if self.hops_left >= MESH_EXTENDED_HOPS_LEFT {
+            first |= MESH_EXTENDED_HOPS_LEFT;
+            out.push(first);
+            out.push(self.hops_left);
+        } else {
+            first |= self.hops_left & MESH_HOPS_LEFT_MASK;
+            out.push(first);
+        }
+        encode_mesh_address(self.originator, &mut out);
+        encode_mesh_address(self.final_destination, &mut out);
+        out
+    }
+
+    pub fn encoded_len(self) -> usize {
+        1 + usize::from(self.hops_left >= MESH_EXTENDED_HOPS_LEFT)
+            + mesh_address_len(self.originator)
+            + mesh_address_len(self.final_destination)
+    }
+
+    fn parse_with_len(bytes: &[u8]) -> Result<(Self, usize), SixlowpanError> {
+        let Some((&first, _)) = bytes.split_first() else {
+            return Err(SixlowpanError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        if Dispatch::parse(first) != Dispatch::Mesh {
+            return Err(SixlowpanError::NotMesh(first));
+        }
+
+        let mut pos = 1;
+        let compressed_hops_left = first & MESH_HOPS_LEFT_MASK;
+        let hops_left = if compressed_hops_left == MESH_EXTENDED_HOPS_LEFT {
+            read_u8(bytes, &mut pos)?
+        } else {
+            compressed_hops_left
+        };
+        let originator = read_mesh_address(bytes, &mut pos, first & MESH_ORIGINATOR_EXTENDED != 0)?;
+        let final_destination =
+            read_mesh_address(bytes, &mut pos, first & MESH_FINAL_EXTENDED != 0)?;
+
+        Ok((
+            Self {
+                hops_left,
+                originator,
+                final_destination,
+            },
+            pos,
+        ))
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MeshPacket {
+    pub header: MeshHeader,
+    pub payload: Vec<u8>,
+}
+
+impl MeshPacket {
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        let (header, header_len) = MeshHeader::parse_with_len(bytes)?;
+        Ok(Self {
+            header,
+            payload: bytes[header_len..].to_vec(),
+        })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IphcTrafficClassFlowLabel {
+    Inline,
+    FlowLabelInline,
+    TrafficClassInline,
+    Elided,
+}
+
+impl IphcTrafficClassFlowLabel {
+    fn from_bits(bits: u8) -> Self {
+        match bits & 0b11 {
+            0 => Self::Inline,
+            1 => Self::FlowLabelInline,
+            2 => Self::TrafficClassInline,
+            _ => Self::Elided,
+        }
+    }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Inline => 0,
+            Self::FlowLabelInline => 1,
+            Self::TrafficClassInline => 2,
+            Self::Elided => 3,
+        }
+    }
+
+    pub fn inline_len(self) -> usize {
+        match self {
+            Self::Inline => 4,
+            Self::FlowLabelInline => 3,
+            Self::TrafficClassInline => 1,
+            Self::Elided => 0,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IphcHopLimit {
+    Inline,
+    One,
+    SixtyFour,
+    TwoHundredFiftyFive,
+}
+
+impl IphcHopLimit {
+    fn from_bits(bits: u8) -> Self {
+        match bits & 0b11 {
+            0 => Self::Inline,
+            1 => Self::One,
+            2 => Self::SixtyFour,
+            _ => Self::TwoHundredFiftyFive,
+        }
+    }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Inline => 0,
+            Self::One => 1,
+            Self::SixtyFour => 2,
+            Self::TwoHundredFiftyFive => 3,
+        }
+    }
+
+    pub fn inline_len(self) -> usize {
+        usize::from(matches!(self, Self::Inline))
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IphcAddressMode {
+    Inline128,
+    Compressed64,
+    Compressed16,
+    Elided,
+}
+
+impl IphcAddressMode {
+    fn from_bits(bits: u8) -> Self {
+        match bits & 0b11 {
+            0 => Self::Inline128,
+            1 => Self::Compressed64,
+            2 => Self::Compressed16,
+            _ => Self::Elided,
+        }
+    }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Inline128 => 0,
+            Self::Compressed64 => 1,
+            Self::Compressed16 => 2,
+            Self::Elided => 3,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IphcEncoding {
+    pub traffic_class_flow_label: IphcTrafficClassFlowLabel,
+    pub next_header_compressed: bool,
+    pub hop_limit: IphcHopLimit,
+    pub context_identifier_extension: bool,
+    pub source_address_compression: bool,
+    pub source_address_mode: IphcAddressMode,
+    pub multicast_destination: bool,
+    pub destination_address_compression: bool,
+    pub destination_address_mode: IphcAddressMode,
+}
+
+impl IphcEncoding {
+    pub fn parse(first: u8, second: u8) -> Result<Self, SixlowpanError> {
+        if Dispatch::parse(first) != Dispatch::Iphc {
+            return Err(SixlowpanError::NotIphc(first));
+        }
+
+        Ok(Self {
+            traffic_class_flow_label: IphcTrafficClassFlowLabel::from_bits(first >> 3),
+            next_header_compressed: first & (1 << 2) != 0,
+            hop_limit: IphcHopLimit::from_bits(first),
+            context_identifier_extension: second & (1 << 7) != 0,
+            source_address_compression: second & (1 << 6) != 0,
+            source_address_mode: IphcAddressMode::from_bits(second >> 4),
+            multicast_destination: second & (1 << 3) != 0,
+            destination_address_compression: second & (1 << 2) != 0,
+            destination_address_mode: IphcAddressMode::from_bits(second),
+        })
+    }
+
+    pub fn encode(self) -> [u8; 2] {
+        [
+            0b0110_0000
+                | (self.traffic_class_flow_label.bits() << 3)
+                | ((self.next_header_compressed as u8) << 2)
+                | self.hop_limit.bits(),
+            ((self.context_identifier_extension as u8) << 7)
+                | ((self.source_address_compression as u8) << 6)
+                | (self.source_address_mode.bits() << 4)
+                | ((self.multicast_destination as u8) << 3)
+                | ((self.destination_address_compression as u8) << 2)
+                | self.destination_address_mode.bits(),
+        ]
+    }
+
+    pub fn fixed_inline_fields_len(self) -> usize {
+        self.traffic_class_flow_label.inline_len()
+            + usize::from(!self.next_header_compressed)
+            + self.hop_limit.inline_len()
+    }
+
+    pub fn source_address_inline_len(self) -> usize {
+        iphc_unicast_address_inline_len(
+            self.source_address_compression,
+            self.source_address_mode,
+            true,
+        )
+        .expect("all IPHC source address modes have a deterministic inline length")
+    }
+
+    pub fn destination_address_inline_len(self) -> Option<usize> {
+        if self.multicast_destination {
+            iphc_multicast_address_inline_len(
+                self.destination_address_compression,
+                self.destination_address_mode,
+            )
+        } else {
+            iphc_unicast_address_inline_len(
+                self.destination_address_compression,
+                self.destination_address_mode,
+                false,
+            )
+        }
+    }
+
+    pub fn inline_fields_len(self) -> Option<usize> {
+        Some(
+            self.fixed_inline_fields_len()
+                + self.source_address_inline_len()
+                + self.destination_address_inline_len()?,
+        )
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IphcContextIdentifier {
+    pub source_context: u8,
+    pub destination_context: u8,
+}
+
+impl IphcContextIdentifier {
+    pub fn new(source_context: u8, destination_context: u8) -> Result<Self, SixlowpanError> {
+        validate_context_identifier(source_context)?;
+        validate_context_identifier(destination_context)?;
+        Ok(Self {
+            source_context,
+            destination_context,
+        })
+    }
+
+    pub fn parse(byte: u8) -> Self {
+        Self {
+            source_context: byte >> 4,
+            destination_context: byte & 0x0f,
+        }
+    }
+
+    pub fn encode(self) -> Result<u8, SixlowpanError> {
+        validate_context_identifier(self.source_context)?;
+        validate_context_identifier(self.destination_context)?;
+        Ok((self.source_context << 4) | self.destination_context)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IphcHeader {
+    pub encoding: IphcEncoding,
+    pub context_identifier: Option<IphcContextIdentifier>,
+    pub payload: Vec<u8>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IphcPayloadSlices<'a> {
+    pub inline_fields: &'a [u8],
+    pub carried_payload: &'a [u8],
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IphcInlineFieldSlices<'a> {
+    pub traffic_class_flow_label: &'a [u8],
+    pub next_header: Option<u8>,
+    pub hop_limit: Option<u8>,
+    pub source_address: &'a [u8],
+    pub destination_address: &'a [u8],
+    pub carried_payload: &'a [u8],
+}
+
+impl IphcHeader {
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        if bytes.len() < 2 {
+            return Err(SixlowpanError::Truncated {
+                needed: 2,
+                remaining: bytes.len(),
+            });
+        }
+        let encoding = IphcEncoding::parse(bytes[0], bytes[1])?;
+        let mut pos = 2;
+        let context_identifier = if encoding.context_identifier_extension {
+            Some(IphcContextIdentifier::parse(read_u8(bytes, &mut pos)?))
+        } else {
+            None
+        };
+        Ok(Self {
+            encoding,
+            context_identifier,
+            payload: bytes[pos..].to_vec(),
+        })
+    }
+
+    pub fn encoded_header_len(&self) -> usize {
+        2 + usize::from(self.context_identifier.is_some())
+    }
+
+    pub fn inline_fields_len(&self) -> Option<usize> {
+        self.encoding.inline_fields_len()
+    }
+
+    pub fn split_payload(&self) -> Result<Option<IphcPayloadSlices<'_>>, SixlowpanError> {
+        let Some(inline_len) = self.inline_fields_len() else {
+            return Ok(None);
+        };
+        if self.payload.len() < inline_len {
+            return Err(SixlowpanError::Truncated {
+                needed: inline_len,
+                remaining: self.payload.len(),
+            });
+        }
+        Ok(Some(IphcPayloadSlices {
+            inline_fields: &self.payload[..inline_len],
+            carried_payload: &self.payload[inline_len..],
+        }))
+    }
+
+    pub fn split_inline_fields(&self) -> Result<Option<IphcInlineFieldSlices<'_>>, SixlowpanError> {
+        let Some(destination_address_len) = self.encoding.destination_address_inline_len() else {
+            return Ok(None);
+        };
+        let inline_len = self.encoding.fixed_inline_fields_len()
+            + self.encoding.source_address_inline_len()
+            + destination_address_len;
+        if self.payload.len() < inline_len {
+            return Err(SixlowpanError::Truncated {
+                needed: inline_len,
+                remaining: self.payload.len(),
+            });
+        }
+
+        let mut pos = 0;
+        let traffic_class_flow_label = take_slice(
+            &self.payload,
+            &mut pos,
+            self.encoding.traffic_class_flow_label.inline_len(),
+        )?;
+        let next_header = if self.encoding.next_header_compressed {
+            None
+        } else {
+            Some(read_u8(&self.payload, &mut pos)?)
+        };
+        let hop_limit = if self.encoding.hop_limit == IphcHopLimit::Inline {
+            Some(read_u8(&self.payload, &mut pos)?)
+        } else {
+            None
+        };
+        let source_address = take_slice(
+            &self.payload,
+            &mut pos,
+            self.encoding.source_address_inline_len(),
+        )?;
+        let destination_address = take_slice(&self.payload, &mut pos, destination_address_len)?;
+
+        Ok(Some(IphcInlineFieldSlices {
+            traffic_class_flow_label,
+            next_header,
+            hop_limit,
+            source_address,
+            destination_address,
+            carried_payload: &self.payload[pos..],
+        }))
+    }
+
+    pub fn encode_prefix(&self) -> Result<Vec<u8>, SixlowpanError> {
+        let mut out = Vec::with_capacity(self.encoded_header_len());
+        let mut encoding = self.encoding;
+        encoding.context_identifier_extension = self.context_identifier.is_some();
+        out.extend_from_slice(&encoding.encode());
+        if let Some(context_identifier) = self.context_identifier {
+            out.push(context_identifier.encode()?);
+        }
+        Ok(out)
+    }
+
+    pub fn encode(&self) -> Result<Vec<u8>, SixlowpanError> {
+        let mut out = self.encode_prefix()?;
+        out.extend_from_slice(&self.payload);
+        Ok(out)
+    }
+}
+
+fn iphc_unicast_address_inline_len(
+    stateful_context: bool,
+    mode: IphcAddressMode,
+    source: bool,
+) -> Option<usize> {
+    match (stateful_context, mode, source) {
+        (false, IphcAddressMode::Inline128, _) => Some(16),
+        (false, IphcAddressMode::Compressed64, _) => Some(8),
+        (false, IphcAddressMode::Compressed16, _) => Some(2),
+        (false, IphcAddressMode::Elided, _) => Some(0),
+        (true, IphcAddressMode::Inline128, true) => Some(0),
+        (true, IphcAddressMode::Inline128, false) => None,
+        (true, IphcAddressMode::Compressed64, _) => Some(8),
+        (true, IphcAddressMode::Compressed16, _) => Some(2),
+        (true, IphcAddressMode::Elided, _) => Some(0),
+    }
+}
+
+fn iphc_multicast_address_inline_len(
+    stateful_context: bool,
+    mode: IphcAddressMode,
+) -> Option<usize> {
+    match (stateful_context, mode) {
+        (false, IphcAddressMode::Inline128) => Some(16),
+        (false, IphcAddressMode::Compressed64) => Some(6),
+        (false, IphcAddressMode::Compressed16) => Some(4),
+        (false, IphcAddressMode::Elided) => Some(1),
+        (true, IphcAddressMode::Inline128) => Some(6),
+        (true, IphcAddressMode::Compressed64)
+        | (true, IphcAddressMode::Compressed16)
+        | (true, IphcAddressMode::Elided) => None,
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UdpPortCompression {
+    Inline,
+    SourceInlineDestinationCompressed,
+    SourceCompressedDestinationInline,
+    BothCompressed,
+}
+
+impl UdpPortCompression {
+    fn from_bits(bits: u8) -> Self {
+        match bits & UDP_NHC_PORTS_MASK {
+            0 => Self::Inline,
+            1 => Self::SourceInlineDestinationCompressed,
+            2 => Self::SourceCompressedDestinationInline,
+            _ => Self::BothCompressed,
+        }
+    }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Inline => 0,
+            Self::SourceInlineDestinationCompressed => 1,
+            Self::SourceCompressedDestinationInline => 2,
+            Self::BothCompressed => 3,
+        }
+    }
+
+    fn encoded_ports_len(self) -> usize {
+        match self {
+            Self::Inline => 4,
+            Self::SourceInlineDestinationCompressed | Self::SourceCompressedDestinationInline => 3,
+            Self::BothCompressed => 1,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UdpNhcHeader {
+    pub source_port: u16,
+    pub destination_port: u16,
+    pub checksum: Option<u16>,
+}
+
+impl UdpNhcHeader {
+    pub fn new(source_port: u16, destination_port: u16, checksum: Option<u16>) -> Self {
+        Self {
+            source_port,
+            destination_port,
+            checksum,
+        }
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        let Some((&first, _)) = bytes.split_first() else {
+            return Err(SixlowpanError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        if first & UDP_NHC_MASK != UDP_NHC_PREFIX {
+            return Err(SixlowpanError::NotUdpNhc(first));
+        }
+
+        let mut pos = 1;
+        let compression = UdpPortCompression::from_bits(first);
+        let (source_port, destination_port) = match compression {
+            UdpPortCompression::Inline => {
+                let source = u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?);
+                let destination = u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?);
+                (source, destination)
+            }
+            UdpPortCompression::SourceInlineDestinationCompressed => {
+                let source = u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?);
+                let destination = UDP_8BIT_PORT_BASE | u16::from(read_u8(bytes, &mut pos)?);
+                (source, destination)
+            }
+            UdpPortCompression::SourceCompressedDestinationInline => {
+                let source = UDP_8BIT_PORT_BASE | u16::from(read_u8(bytes, &mut pos)?);
+                let destination = u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?);
+                (source, destination)
+            }
+            UdpPortCompression::BothCompressed => {
+                let compressed = read_u8(bytes, &mut pos)?;
+                (
+                    UDP_4BIT_PORT_BASE | u16::from(compressed >> 4),
+                    UDP_4BIT_PORT_BASE | u16::from(compressed & 0x0f),
+                )
+            }
+        };
+        let checksum = if first & UDP_NHC_CHECKSUM_ELIDED == 0 {
+            Some(u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?))
+        } else {
+            None
+        };
+
+        Ok(Self {
+            source_port,
+            destination_port,
+            checksum,
+        })
+    }
+
+    pub fn encode(&self) -> Result<Vec<u8>, SixlowpanError> {
+        self.encode_with_compression(self.preferred_port_compression())
+    }
+
+    pub fn encode_with_compression(
+        &self,
+        compression: UdpPortCompression,
+    ) -> Result<Vec<u8>, SixlowpanError> {
+        validate_udp_ports_for_compression(self.source_port, self.destination_port, compression)?;
+
+        let mut out = Vec::with_capacity(self.encoded_len_with_compression(compression));
+        let mut first = UDP_NHC_PREFIX | compression.bits();
+        if self.checksum.is_none() {
+            first |= UDP_NHC_CHECKSUM_ELIDED;
+        }
+        out.push(first);
+
+        match compression {
+            UdpPortCompression::Inline => {
+                out.extend_from_slice(&self.source_port.to_be_bytes());
+                out.extend_from_slice(&self.destination_port.to_be_bytes());
+            }
+            UdpPortCompression::SourceInlineDestinationCompressed => {
+                out.extend_from_slice(&self.source_port.to_be_bytes());
+                out.push((self.destination_port - UDP_8BIT_PORT_BASE) as u8);
+            }
+            UdpPortCompression::SourceCompressedDestinationInline => {
+                out.push((self.source_port - UDP_8BIT_PORT_BASE) as u8);
+                out.extend_from_slice(&self.destination_port.to_be_bytes());
+            }
+            UdpPortCompression::BothCompressed => {
+                out.push(
+                    (((self.source_port - UDP_4BIT_PORT_BASE) as u8) << 4)
+                        | ((self.destination_port - UDP_4BIT_PORT_BASE) as u8),
+                );
+            }
+        }
+        if let Some(checksum) = self.checksum {
+            out.extend_from_slice(&checksum.to_be_bytes());
+        }
+        Ok(out)
+    }
+
+    pub fn preferred_port_compression(&self) -> UdpPortCompression {
+        if compressible_4bit_udp_port(self.source_port)
+            && compressible_4bit_udp_port(self.destination_port)
+        {
+            UdpPortCompression::BothCompressed
+        } else if compressible_8bit_udp_port(self.source_port) {
+            UdpPortCompression::SourceCompressedDestinationInline
+        } else if compressible_8bit_udp_port(self.destination_port) {
+            UdpPortCompression::SourceInlineDestinationCompressed
+        } else {
+            UdpPortCompression::Inline
+        }
+    }
+
+    pub fn encoded_len(&self) -> usize {
+        self.encoded_len_with_compression(self.preferred_port_compression())
+    }
+
+    pub fn encoded_len_with_compression(&self, compression: UdpPortCompression) -> usize {
+        1 + compression.encoded_ports_len() + usize::from(self.checksum.is_some()) * 2
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FragmentKind {
+    First,
+    Next,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FragmentHeader {
+    pub kind: FragmentKind,
+    pub datagram_size: u16,
+    pub datagram_tag: u16,
+    pub datagram_offset: Option<u8>,
+}
+
+impl FragmentHeader {
+    pub fn first(datagram_size: u16, datagram_tag: u16) -> Result<Self, SixlowpanError> {
+        validate_datagram_size(datagram_size)?;
+        Ok(Self {
+            kind: FragmentKind::First,
+            datagram_size,
+            datagram_tag,
+            datagram_offset: None,
+        })
+    }
+
+    pub fn next(
+        datagram_size: u16,
+        datagram_tag: u16,
+        datagram_offset: u8,
+    ) -> Result<Self, SixlowpanError> {
+        validate_datagram_size(datagram_size)?;
+        Ok(Self {
+            kind: FragmentKind::Next,
+            datagram_size,
+            datagram_tag,
+            datagram_offset: Some(datagram_offset),
+        })
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        if bytes.len() < 4 {
+            return Err(SixlowpanError::Truncated {
+                needed: 4,
+                remaining: bytes.len(),
+            });
+        }
+        let dispatch = Dispatch::parse(bytes[0]);
+        let datagram_size = (((bytes[0] & 0b0000_0111) as u16) << 8) | bytes[1] as u16;
+        let datagram_tag = u16::from_be_bytes([bytes[2], bytes[3]]);
+        match dispatch {
+            Dispatch::FragmentFirst => Self::first(datagram_size, datagram_tag),
+            Dispatch::FragmentNext => {
+                if bytes.len() < 5 {
+                    return Err(SixlowpanError::Truncated {
+                        needed: 5,
+                        remaining: bytes.len(),
+                    });
+                }
+                Self::next(datagram_size, datagram_tag, bytes[4])
+            }
+            _ => Err(SixlowpanError::NotFragment(bytes[0])),
+        }
+    }
+
+    pub fn encode(self) -> Vec<u8> {
+        let mut out = Vec::with_capacity(match self.kind {
+            FragmentKind::First => 4,
+            FragmentKind::Next => 5,
+        });
+        let prefix = match self.kind {
+            FragmentKind::First => 0b1100_0000,
+            FragmentKind::Next => 0b1110_0000,
+        };
+        out.push(prefix | ((self.datagram_size >> 8) as u8 & 0b0000_0111));
+        out.push(self.datagram_size as u8);
+        out.extend_from_slice(&self.datagram_tag.to_be_bytes());
+        if let Some(offset) = self.datagram_offset {
+            out.push(offset);
+        }
+        out
+    }
+
+    pub fn encoded_len(self) -> usize {
+        match self.kind {
+            FragmentKind::First => 4,
+            FragmentKind::Next => 5,
+        }
+    }
+
+    pub fn byte_offset(self) -> usize {
+        self.datagram_offset
+            .map(|offset| usize::from(offset) * 8)
+            .unwrap_or(0)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FragmentPacket {
+    pub header: FragmentHeader,
+    pub payload: Vec<u8>,
+}
+
+impl FragmentPacket {
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        let header = FragmentHeader::parse(bytes)?;
+        let header_len = header.encoded_len();
+        Ok(Self {
+            header,
+            payload: bytes[header_len..].to_vec(),
+        })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ReassemblyKey {
+    pub datagram_size: u16,
+    pub datagram_tag: u16,
+}
+
+impl From<FragmentHeader> for ReassemblyKey {
+    fn from(header: FragmentHeader) -> Self {
+        Self {
+            datagram_size: header.datagram_size,
+            datagram_tag: header.datagram_tag,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ReassemblyProgress {
+    InProgress { received_bytes: usize },
+    Complete(Vec<u8>),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FragmentReassemblyBufferSummary {
+    pub key: ReassemblyKey,
+    pub datagram_size: usize,
+    pub received_bytes: usize,
+    pub missing_bytes: usize,
+    pub range_count: usize,
+    pub is_complete: bool,
+}
+
+impl FragmentReassemblyBufferSummary {
+    pub fn has_missing_bytes(&self) -> bool {
+        self.missing_bytes > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FragmentReassemblyBuffer {
+    key: ReassemblyKey,
+    bytes: Vec<u8>,
+    ranges: Vec<(usize, usize)>,
+}
+
+impl FragmentReassemblyBuffer {
+    pub fn new(key: ReassemblyKey) -> Self {
+        Self {
+            key,
+            bytes: vec![0; usize::from(key.datagram_size)],
+            ranges: Vec::new(),
+        }
+    }
+
+    pub fn key(&self) -> ReassemblyKey {
+        self.key
+    }
+
+    pub fn received_bytes(&self) -> usize {
+        self.ranges.iter().map(|(start, end)| end - start).sum()
+    }
+
+    pub fn missing_bytes(&self) -> usize {
+        usize::from(self.key.datagram_size).saturating_sub(self.received_bytes())
+    }
+
+    pub fn is_complete(&self) -> bool {
+        self.ranges.len() == 1 && self.ranges[0] == (0, usize::from(self.key.datagram_size))
+    }
+
+    pub fn summary(&self) -> FragmentReassemblyBufferSummary {
+        FragmentReassemblyBufferSummary {
+            key: self.key,
+            datagram_size: usize::from(self.key.datagram_size),
+            received_bytes: self.received_bytes(),
+            missing_bytes: self.missing_bytes(),
+            range_count: self.ranges.len(),
+            is_complete: self.is_complete(),
+        }
+    }
+
+    pub fn reassembled(&self) -> Option<Vec<u8>> {
+        self.is_complete().then(|| self.bytes.clone())
+    }
+
+    pub fn insert_fragment(
+        &mut self,
+        header: FragmentHeader,
+        payload: &[u8],
+    ) -> Result<ReassemblyProgress, SixlowpanError> {
+        let incoming_key = ReassemblyKey::from(header);
+        if incoming_key != self.key {
+            return Err(SixlowpanError::FragmentKeyMismatch {
+                expected: self.key,
+                actual: incoming_key,
+            });
+        }
+
+        let start = header.byte_offset();
+        let end = start.saturating_add(payload.len());
+        let datagram_size = usize::from(self.key.datagram_size);
+        if end > datagram_size {
+            return Err(SixlowpanError::FragmentOutOfBounds {
+                offset: start,
+                len: payload.len(),
+                datagram_size,
+            });
+        }
+        if self
+            .ranges
+            .iter()
+            .any(|(existing_start, existing_end)| start < *existing_end && end > *existing_start)
+        {
+            return Err(SixlowpanError::FragmentOverlap {
+                offset: start,
+                len: payload.len(),
+            });
+        }
+
+        self.bytes[start..end].copy_from_slice(payload);
+        self.ranges.push((start, end));
+        self.ranges.sort_unstable();
+        merge_contiguous_ranges(&mut self.ranges);
+
+        if self.is_complete() {
+            Ok(ReassemblyProgress::Complete(self.bytes.clone()))
+        } else {
+            Ok(ReassemblyProgress::InProgress {
+                received_bytes: self.received_bytes(),
+            })
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ReassemblyTableSummary {
+    pub pending_datagrams: usize,
+    pub received_bytes: usize,
+    pub missing_bytes: usize,
+    pub total_datagram_bytes: usize,
+    pub largest_datagram_size: usize,
+    pub range_count: usize,
+}
+
+impl ReassemblyTableSummary {
+    pub fn is_empty(&self) -> bool {
+        self.pending_datagrams == 0
+    }
+
+    pub fn has_missing_bytes(&self) -> bool {
+        self.missing_bytes > 0
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct ReassemblyTable {
+    buffers: BTreeMap<ReassemblyKey, FragmentReassemblyBuffer>,
+}
+
+impl ReassemblyTable {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn pending_count(&self) -> usize {
+        self.buffers.len()
+    }
+
+    pub fn summary(&self) -> ReassemblyTableSummary {
+        let mut summary = ReassemblyTableSummary::default();
+        for buffer in self.buffers.values() {
+            let buffer_summary = buffer.summary();
+            summary.pending_datagrams += 1;
+            summary.received_bytes += buffer_summary.received_bytes;
+            summary.missing_bytes += buffer_summary.missing_bytes;
+            summary.total_datagram_bytes += buffer_summary.datagram_size;
+            summary.largest_datagram_size = summary
+                .largest_datagram_size
+                .max(buffer_summary.datagram_size);
+            summary.range_count += buffer_summary.range_count;
+        }
+        summary
+    }
+
+    pub fn push_fragment(
+        &mut self,
+        header: FragmentHeader,
+        payload: &[u8],
+    ) -> Result<ReassemblyProgress, SixlowpanError> {
+        let key = ReassemblyKey::from(header);
+        let buffer = self
+            .buffers
+            .entry(key)
+            .or_insert_with(|| FragmentReassemblyBuffer::new(key));
+        let progress = buffer.insert_fragment(header, payload)?;
+        if matches!(progress, ReassemblyProgress::Complete(_)) {
+            self.buffers.remove(&key);
+        }
+        Ok(progress)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LowpanFrame {
+    pub dispatch: Dispatch,
+    pub payload: Vec<u8>,
+}
+
+impl LowpanFrame {
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        let Some((&first, payload)) = bytes.split_first() else {
+            return Err(SixlowpanError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        Ok(Self {
+            dispatch: Dispatch::parse(first),
+            payload: payload.to_vec(),
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum SixlowpanError {
+    Truncated {
+        needed: usize,
+        remaining: usize,
+    },
+    NotIphc(u8),
+    NotUdpNhc(u8),
+    NotFragment(u8),
+    NotMesh(u8),
+    InvalidContextIdentifier(u8),
+    UdpPortNotCompressible {
+        port: u16,
+        compression: UdpPortCompression,
+    },
+    DatagramSizeTooLarge(u16),
+    FragmentKeyMismatch {
+        expected: ReassemblyKey,
+        actual: ReassemblyKey,
+    },
+    FragmentOutOfBounds {
+        offset: usize,
+        len: usize,
+        datagram_size: usize,
+    },
+    FragmentOverlap {
+        offset: usize,
+        len: usize,
+    },
+}
+
+impl fmt::Display for SixlowpanError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Truncated { needed, remaining } => write!(
+                f,
+                "truncated 6LoWPAN frame: needed {needed} bytes, had {remaining}"
+            ),
+            Self::NotIphc(value) => write!(f, "dispatch 0x{value:02x} is not LOWPAN_IPHC"),
+            Self::NotUdpNhc(value) => write!(f, "dispatch 0x{value:02x} is not LOWPAN_NHC UDP"),
+            Self::NotFragment(value) => {
+                write!(f, "dispatch 0x{value:02x} is not a 6LoWPAN fragment header")
+            }
+            Self::NotMesh(value) => {
+                write!(f, "dispatch 0x{value:02x} is not a 6LoWPAN mesh header")
+            }
+            Self::InvalidContextIdentifier(value) => {
+                write!(f, "6LoWPAN IPHC context identifier {value} exceeds 4 bits")
+            }
+            Self::UdpPortNotCompressible { port, compression } => write!(
+                f,
+                "UDP port {port} cannot use 6LoWPAN compression mode {compression:?}"
+            ),
+            Self::DatagramSizeTooLarge(value) => {
+                write!(f, "6LoWPAN datagram size {value} exceeds 11-bit field")
+            }
+            Self::FragmentKeyMismatch { expected, actual } => write!(
+                f,
+                "6LoWPAN fragment key mismatch: expected {expected:?}, got {actual:?}"
+            ),
+            Self::FragmentOutOfBounds {
+                offset,
+                len,
+                datagram_size,
+            } => write!(
+                f,
+                "6LoWPAN fragment at offset {offset} with length {len} exceeds datagram size {datagram_size}"
+            ),
+            Self::FragmentOverlap { offset, len } => {
+                write!(f, "6LoWPAN fragment at offset {offset} with length {len} overlaps existing bytes")
+            }
+        }
+    }
+}
+
+impl std::error::Error for SixlowpanError {}
+
+fn mesh_address_len(address: Address) -> usize {
+    match address {
+        Address::Short(_) => SHORT_ADDRESS_LEN,
+        Address::Extended(_) => EXTENDED_ADDRESS_LEN,
+    }
+}
+
+fn encode_mesh_address(address: Address, out: &mut Vec<u8>) {
+    match address {
+        Address::Short(value) => out.extend_from_slice(&value.to_le_bytes()),
+        Address::Extended(value) => out.extend_from_slice(&value.to_le_bytes()),
+    }
+}
+
+fn read_mesh_address(
+    bytes: &[u8],
+    pos: &mut usize,
+    extended: bool,
+) -> Result<Address, SixlowpanError> {
+    if extended {
+        Ok(Address::Extended(u64::from_le_bytes(read_array::<8>(
+            bytes, pos,
+        )?)))
+    } else {
+        Ok(Address::Short(u16::from_le_bytes(read_array::<2>(
+            bytes, pos,
+        )?)))
+    }
+}
+
+fn read_u8(bytes: &[u8], pos: &mut usize) -> Result<u8, SixlowpanError> {
+    Ok(read_array::<1>(bytes, pos)?[0])
+}
+
+fn take_slice<'a>(
+    bytes: &'a [u8],
+    pos: &mut usize,
+    len: usize,
+) -> Result<&'a [u8], SixlowpanError> {
+    let remaining = bytes.len().saturating_sub(*pos);
+    if remaining < len {
+        return Err(SixlowpanError::Truncated {
+            needed: len,
+            remaining,
+        });
+    }
+    let out = &bytes[*pos..*pos + len];
+    *pos += len;
+    Ok(out)
+}
+
+fn read_array<const N: usize>(bytes: &[u8], pos: &mut usize) -> Result<[u8; N], SixlowpanError> {
+    let remaining = bytes.len().saturating_sub(*pos);
+    if remaining < N {
+        return Err(SixlowpanError::Truncated {
+            needed: N,
+            remaining,
+        });
+    }
+    let mut out = [0u8; N];
+    out.copy_from_slice(&bytes[*pos..*pos + N]);
+    *pos += N;
+    Ok(out)
+}
+
+fn validate_datagram_size(datagram_size: u16) -> Result<(), SixlowpanError> {
+    if datagram_size > 0x07ff {
+        return Err(SixlowpanError::DatagramSizeTooLarge(datagram_size));
+    }
+    Ok(())
+}
+
+fn validate_context_identifier(context_identifier: u8) -> Result<(), SixlowpanError> {
+    if context_identifier > 0x0f {
+        return Err(SixlowpanError::InvalidContextIdentifier(context_identifier));
+    }
+    Ok(())
+}
+
+fn validate_udp_ports_for_compression(
+    source_port: u16,
+    destination_port: u16,
+    compression: UdpPortCompression,
+) -> Result<(), SixlowpanError> {
+    match compression {
+        UdpPortCompression::Inline => Ok(()),
+        UdpPortCompression::SourceInlineDestinationCompressed => {
+            if compressible_8bit_udp_port(destination_port) {
+                Ok(())
+            } else {
+                Err(SixlowpanError::UdpPortNotCompressible {
+                    port: destination_port,
+                    compression,
+                })
+            }
+        }
+        UdpPortCompression::SourceCompressedDestinationInline => {
+            if compressible_8bit_udp_port(source_port) {
+                Ok(())
+            } else {
+                Err(SixlowpanError::UdpPortNotCompressible {
+                    port: source_port,
+                    compression,
+                })
+            }
+        }
+        UdpPortCompression::BothCompressed => {
+            if !compressible_4bit_udp_port(source_port) {
+                Err(SixlowpanError::UdpPortNotCompressible {
+                    port: source_port,
+                    compression,
+                })
+            } else if !compressible_4bit_udp_port(destination_port) {
+                Err(SixlowpanError::UdpPortNotCompressible {
+                    port: destination_port,
+                    compression,
+                })
+            } else {
+                Ok(())
+            }
+        }
+    }
+}
+
+fn compressible_8bit_udp_port(port: u16) -> bool {
+    (UDP_8BIT_PORT_BASE..=UDP_8BIT_PORT_BASE + u16::from(u8::MAX)).contains(&port)
+}
+
+fn compressible_4bit_udp_port(port: u16) -> bool {
+    (UDP_4BIT_PORT_BASE..=UDP_4BIT_PORT_BASE + 0x0f).contains(&port)
+}
+
+fn merge_contiguous_ranges(ranges: &mut Vec<(usize, usize)>) {
+    let mut merged: Vec<(usize, usize)> = Vec::with_capacity(ranges.len());
+    for (start, end) in ranges.drain(..) {
+        if let Some((_, last_end)) = merged.last_mut() {
+            if *last_end == start {
+                *last_end = end;
+                continue;
+            }
+        }
+        merged.push((start, end));
+    }
+    *ranges = merged;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn dispatch_classifies_common_headers() {
+        assert_eq!(Dispatch::parse(0x41), Dispatch::Ipv6);
+        assert_eq!(Dispatch::parse(0x60), Dispatch::Iphc);
+        assert_eq!(Dispatch::parse(0xc2), Dispatch::FragmentFirst);
+        assert_eq!(Dispatch::parse(0xe2), Dispatch::FragmentNext);
+        assert_eq!(Dispatch::parse(0x80), Dispatch::Mesh);
+    }
+
+    #[test]
+    fn mesh_header_round_trips_short_addresses() {
+        let header = MeshHeader::new(7, Address::Short(0x1234), Address::Short(0xabcd));
+        let encoded = header.encode();
+
+        assert_eq!(encoded, vec![0x87, 0x34, 0x12, 0xcd, 0xab]);
+        assert_eq!(MeshHeader::parse(&encoded).unwrap(), header);
+    }
+
+    #[test]
+    fn mesh_header_round_trips_extended_hops_and_addresses() {
+        let header = MeshHeader::new(
+            42,
+            Address::Extended(0x0012_4b00_0000_0001),
+            Address::Short(0xabcd),
+        );
+        let encoded = header.encode();
+
+        assert_eq!(encoded[0], 0xaf);
+        assert_eq!(encoded[1], 42);
+        assert_eq!(MeshHeader::parse(&encoded).unwrap(), header);
+    }
+
+    #[test]
+    fn mesh_packet_parser_strips_mesh_header() {
+        let mut bytes = MeshHeader::new(3, Address::Short(0x1001), Address::Short(0x1002)).encode();
+        bytes.extend_from_slice(&[0x60, 0xaa, 0xbb]);
+
+        let packet = MeshPacket::parse(&bytes).unwrap();
+
+        assert_eq!(packet.header.hops_left, 3);
+        assert_eq!(packet.payload, vec![0x60, 0xaa, 0xbb]);
+    }
+
+    #[test]
+    fn mesh_header_rejects_non_mesh_dispatch_and_truncation() {
+        assert_eq!(
+            MeshHeader::parse(&[0x41]),
+            Err(SixlowpanError::NotMesh(0x41))
+        );
+        assert_eq!(
+            MeshHeader::parse(&[0x8f]),
+            Err(SixlowpanError::Truncated {
+                needed: 1,
+                remaining: 0
+            })
+        );
+    }
+
+    #[test]
+    fn iphc_encoding_parses_first_two_header_bytes() {
+        let encoding = IphcEncoding::parse(0b0111_1110, 0b1111_1111).unwrap();
+
+        assert_eq!(
+            encoding.traffic_class_flow_label,
+            IphcTrafficClassFlowLabel::Elided
+        );
+        assert!(encoding.next_header_compressed);
+        assert_eq!(encoding.hop_limit, IphcHopLimit::SixtyFour);
+        assert!(encoding.context_identifier_extension);
+        assert_eq!(encoding.source_address_mode, IphcAddressMode::Elided);
+        assert!(encoding.multicast_destination);
+        assert_eq!(encoding.destination_address_mode, IphcAddressMode::Elided);
+        assert_eq!(encoding.encode(), [0b0111_1110, 0b1111_1111]);
+    }
+
+    #[test]
+    fn iphc_header_parses_optional_context_identifier_extension() {
+        let header = IphcHeader::parse(&[0b0111_1110, 0b1111_1111, 0xab, 0xf3, 0x00]).unwrap();
+
+        assert!(header.encoding.context_identifier_extension);
+        assert_eq!(
+            header.context_identifier,
+            Some(IphcContextIdentifier {
+                source_context: 0x0a,
+                destination_context: 0x0b,
+            })
+        );
+        assert_eq!(header.encoded_header_len(), 3);
+        assert_eq!(header.payload, vec![0xf3, 0x00]);
+        assert_eq!(
+            header.encode().unwrap(),
+            vec![0b0111_1110, 0b1111_1111, 0xab, 0xf3, 0x00]
+        );
+    }
+
+    #[test]
+    fn iphc_header_omits_context_identifier_when_cid_flag_is_clear() {
+        let header = IphcHeader::parse(&[0b0110_0000, 0b0000_0000, 0xaa]).unwrap();
+
+        assert!(!header.encoding.context_identifier_extension);
+        assert_eq!(header.context_identifier, None);
+        assert_eq!(header.encoded_header_len(), 2);
+        assert_eq!(header.payload, vec![0xaa]);
+        assert_eq!(header.encode().unwrap(), vec![0b0110_0000, 0x00, 0xaa]);
+        assert_eq!(
+            IphcContextIdentifier::new(16, 0),
+            Err(SixlowpanError::InvalidContextIdentifier(16))
+        );
+    }
+
+    #[test]
+    fn iphc_encoding_reports_inline_field_lengths() {
+        let encoding = IphcEncoding {
+            traffic_class_flow_label: IphcTrafficClassFlowLabel::TrafficClassInline,
+            next_header_compressed: false,
+            hop_limit: IphcHopLimit::Inline,
+            context_identifier_extension: false,
+            source_address_compression: false,
+            source_address_mode: IphcAddressMode::Compressed16,
+            multicast_destination: true,
+            destination_address_compression: false,
+            destination_address_mode: IphcAddressMode::Elided,
+        };
+
+        assert_eq!(encoding.fixed_inline_fields_len(), 3);
+        assert_eq!(encoding.source_address_inline_len(), 2);
+        assert_eq!(encoding.destination_address_inline_len(), Some(1));
+        assert_eq!(encoding.inline_fields_len(), Some(6));
+    }
+
+    #[test]
+    fn iphc_header_splits_inline_fields_from_carried_payload() {
+        let header = IphcHeader {
+            encoding: IphcEncoding {
+                traffic_class_flow_label: IphcTrafficClassFlowLabel::TrafficClassInline,
+                next_header_compressed: false,
+                hop_limit: IphcHopLimit::Inline,
+                context_identifier_extension: false,
+                source_address_compression: false,
+                source_address_mode: IphcAddressMode::Compressed16,
+                multicast_destination: true,
+                destination_address_compression: false,
+                destination_address_mode: IphcAddressMode::Elided,
+            },
+            context_identifier: None,
+            payload: vec![0x00, 0x11, 0x40, 0xaa, 0xbb, 0x02, 0xf0, 0x12],
+        };
+
+        let split = header.split_payload().unwrap().unwrap();
+
+        assert_eq!(split.inline_fields, &[0x00, 0x11, 0x40, 0xaa, 0xbb, 0x02]);
+        assert_eq!(split.carried_payload, &[0xf0, 0x12]);
+    }
+
+    #[test]
+    fn iphc_header_splits_structured_inline_fields() {
+        let header = IphcHeader {
+            encoding: IphcEncoding {
+                traffic_class_flow_label: IphcTrafficClassFlowLabel::Inline,
+                next_header_compressed: false,
+                hop_limit: IphcHopLimit::Inline,
+                context_identifier_extension: false,
+                source_address_compression: false,
+                source_address_mode: IphcAddressMode::Compressed64,
+                multicast_destination: false,
+                destination_address_compression: false,
+                destination_address_mode: IphcAddressMode::Compressed16,
+            },
+            context_identifier: None,
+            payload: vec![
+                0xaa, 0xbb, 0xcc, 0xdd, 0x11, 0x40, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+                0xfe, 0xed, 0xf0, 0x12,
+            ],
+        };
+
+        let fields = header.split_inline_fields().unwrap().unwrap();
+
+        assert_eq!(fields.traffic_class_flow_label, &[0xaa, 0xbb, 0xcc, 0xdd]);
+        assert_eq!(fields.next_header, Some(0x11));
+        assert_eq!(fields.hop_limit, Some(0x40));
+        assert_eq!(
+            fields.source_address,
+            &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]
+        );
+        assert_eq!(fields.destination_address, &[0xfe, 0xed]);
+        assert_eq!(fields.carried_payload, &[0xf0, 0x12]);
+    }
+
+    #[test]
+    fn iphc_inline_lengths_flag_reserved_address_modes() {
+        let encoding = IphcEncoding {
+            traffic_class_flow_label: IphcTrafficClassFlowLabel::Elided,
+            next_header_compressed: true,
+            hop_limit: IphcHopLimit::SixtyFour,
+            context_identifier_extension: false,
+            source_address_compression: true,
+            source_address_mode: IphcAddressMode::Elided,
+            multicast_destination: false,
+            destination_address_compression: true,
+            destination_address_mode: IphcAddressMode::Inline128,
+        };
+        let truncated = IphcHeader {
+            encoding: IphcEncoding {
+                destination_address_compression: false,
+                destination_address_mode: IphcAddressMode::Inline128,
+                ..encoding
+            },
+            context_identifier: None,
+            payload: vec![0xaa],
+        };
+
+        assert_eq!(encoding.destination_address_inline_len(), None);
+        assert_eq!(encoding.inline_fields_len(), None);
+        assert_eq!(
+            IphcHeader {
+                encoding,
+                context_identifier: None,
+                payload: Vec::new()
+            }
+            .split_payload()
+            .unwrap(),
+            None
+        );
+        assert_eq!(
+            truncated.split_payload(),
+            Err(SixlowpanError::Truncated {
+                needed: 16,
+                remaining: 1
+            })
+        );
+        assert_eq!(
+            IphcHeader {
+                encoding,
+                context_identifier: None,
+                payload: Vec::new()
+            }
+            .split_inline_fields()
+            .unwrap(),
+            None
+        );
+    }
+
+    #[test]
+    fn udp_nhc_header_round_trips_inline_ports_and_checksum() {
+        let header = UdpNhcHeader::new(12_345, 54_321, Some(0xbeef));
+        let encoded = header.encode().unwrap();
+
+        assert_eq!(encoded, vec![0xf0, 0x30, 0x39, 0xd4, 0x31, 0xbe, 0xef]);
+        assert_eq!(UdpNhcHeader::parse(&encoded).unwrap(), header);
+        assert_eq!(
+            header.preferred_port_compression(),
+            UdpPortCompression::Inline
+        );
+    }
+
+    #[test]
+    fn udp_nhc_header_round_trips_compressed_ports() {
+        let source_inline = UdpNhcHeader::new(6_161, 0xf012, Some(0x4567));
+        let source_compressed = UdpNhcHeader::new(0xf034, 6_162, Some(0x89ab));
+        let both_compressed = UdpNhcHeader::new(0xf0b1, 0xf0bf, None);
+
+        assert_eq!(
+            source_inline
+                .encode_with_compression(UdpPortCompression::SourceInlineDestinationCompressed)
+                .unwrap(),
+            vec![0xf1, 0x18, 0x11, 0x12, 0x45, 0x67]
+        );
+        assert_eq!(
+            source_compressed
+                .encode_with_compression(UdpPortCompression::SourceCompressedDestinationInline)
+                .unwrap(),
+            vec![0xf2, 0x34, 0x18, 0x12, 0x89, 0xab]
+        );
+        assert_eq!(both_compressed.encode().unwrap(), vec![0xf7, 0x1f]);
+        assert_eq!(
+            UdpNhcHeader::parse(&both_compressed.encode().unwrap()).unwrap(),
+            both_compressed
+        );
+    }
+
+    #[test]
+    fn udp_nhc_rejects_invalid_dispatch_and_bad_compression() {
+        let header = UdpNhcHeader::new(12_345, 54_321, Some(0xbeef));
+
+        assert_eq!(
+            UdpNhcHeader::parse(&[0x41]),
+            Err(SixlowpanError::NotUdpNhc(0x41))
+        );
+        assert_eq!(
+            header.encode_with_compression(UdpPortCompression::BothCompressed),
+            Err(SixlowpanError::UdpPortNotCompressible {
+                port: 12_345,
+                compression: UdpPortCompression::BothCompressed,
+            })
+        );
+    }
+
+    #[test]
+    fn fragment_headers_round_trip() {
+        let first = FragmentHeader::first(1_280, 0x3344).unwrap();
+        let next = FragmentHeader::next(1_280, 0x3344, 16).unwrap();
+
+        assert_eq!(FragmentHeader::parse(&first.encode()).unwrap(), first);
+        assert_eq!(FragmentHeader::parse(&next.encode()).unwrap(), next);
+    }
+
+    #[test]
+    fn fragment_size_is_limited_to_eleven_bits() {
+        assert_eq!(
+            FragmentHeader::first(0x0800, 1),
+            Err(SixlowpanError::DatagramSizeTooLarge(0x0800))
+        );
+    }
+
+    #[test]
+    fn lowpan_frame_keeps_payload_bytes() {
+        let frame = LowpanFrame::parse(&[0x41, 0xaa, 0xbb]).unwrap();
+
+        assert_eq!(frame.dispatch, Dispatch::Ipv6);
+        assert_eq!(frame.payload, vec![0xaa, 0xbb]);
+    }
+
+    #[test]
+    fn fragment_packet_parser_strips_fragment_header() {
+        let mut bytes = FragmentHeader::next(20, 0x3344, 2).unwrap().encode();
+        bytes.extend_from_slice(&[1, 2, 3, 4]);
+
+        let packet = FragmentPacket::parse(&bytes).unwrap();
+
+        assert_eq!(packet.header.byte_offset(), 16);
+        assert_eq!(packet.payload, vec![1, 2, 3, 4]);
+    }
+
+    #[test]
+    fn reassembly_buffer_completes_in_order_fragments() {
+        let first = FragmentHeader::first(20, 0x3344).unwrap();
+        let next = FragmentHeader::next(20, 0x3344, 2).unwrap();
+        let mut buffer = FragmentReassemblyBuffer::new(ReassemblyKey::from(first));
+
+        assert_eq!(
+            buffer.insert_fragment(first, &[0; 16]).unwrap(),
+            ReassemblyProgress::InProgress { received_bytes: 16 }
+        );
+        assert_eq!(
+            buffer.insert_fragment(next, &[1, 2, 3, 4]).unwrap(),
+            ReassemblyProgress::Complete(vec![
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4
+            ])
+        );
+    }
+
+    #[test]
+    fn reassembly_buffer_summary_tracks_missing_ranges_without_payloads() {
+        let first = FragmentHeader::first(20, 0x3344).unwrap();
+        let next = FragmentHeader::next(20, 0x3344, 2).unwrap();
+        let key = ReassemblyKey::from(first);
+        let mut buffer = FragmentReassemblyBuffer::new(key);
+
+        assert_eq!(
+            buffer.summary(),
+            FragmentReassemblyBufferSummary {
+                key,
+                datagram_size: 20,
+                received_bytes: 0,
+                missing_bytes: 20,
+                range_count: 0,
+                is_complete: false,
+            }
+        );
+        assert!(buffer.summary().has_missing_bytes());
+
+        buffer.insert_fragment(first, &[0; 16]).unwrap();
+
+        assert_eq!(
+            buffer.summary(),
+            FragmentReassemblyBufferSummary {
+                key,
+                datagram_size: 20,
+                received_bytes: 16,
+                missing_bytes: 4,
+                range_count: 1,
+                is_complete: false,
+            }
+        );
+        assert_eq!(buffer.missing_bytes(), 4);
+
+        buffer.insert_fragment(next, &[1, 2, 3, 4]).unwrap();
+
+        assert_eq!(
+            buffer.summary(),
+            FragmentReassemblyBufferSummary {
+                key,
+                datagram_size: 20,
+                received_bytes: 20,
+                missing_bytes: 0,
+                range_count: 1,
+                is_complete: true,
+            }
+        );
+        assert!(!buffer.summary().has_missing_bytes());
+    }
+
+    #[test]
+    fn reassembly_table_accepts_out_of_order_fragments() {
+        let first = FragmentHeader::first(12, 0x7788).unwrap();
+        let next = FragmentHeader::next(12, 0x7788, 1).unwrap();
+        let mut table = ReassemblyTable::new();
+
+        assert_eq!(
+            table.push_fragment(next, &[8, 9, 10, 11]).unwrap(),
+            ReassemblyProgress::InProgress { received_bytes: 4 }
+        );
+        assert_eq!(table.pending_count(), 1);
+        assert_eq!(
+            table
+                .push_fragment(first, &[0, 1, 2, 3, 4, 5, 6, 7])
+                .unwrap(),
+            ReassemblyProgress::Complete(vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+        );
+        assert_eq!(table.pending_count(), 0);
+    }
+
+    #[test]
+    fn reassembly_table_summary_counts_pending_datagrams() {
+        let first = FragmentHeader::first(20, 0x3344).unwrap();
+        let next = FragmentHeader::next(20, 0x3344, 2).unwrap();
+        let other_next = FragmentHeader::next(12, 0x7788, 1).unwrap();
+        let mut table = ReassemblyTable::new();
+
+        assert_eq!(table.summary(), ReassemblyTableSummary::default());
+        assert!(table.summary().is_empty());
+        assert!(!table.summary().has_missing_bytes());
+
+        table.push_fragment(first, &[0; 16]).unwrap();
+
+        assert_eq!(
+            table.summary(),
+            ReassemblyTableSummary {
+                pending_datagrams: 1,
+                received_bytes: 16,
+                missing_bytes: 4,
+                total_datagram_bytes: 20,
+                largest_datagram_size: 20,
+                range_count: 1,
+            }
+        );
+
+        table.push_fragment(other_next, &[8, 9, 10, 11]).unwrap();
+
+        assert_eq!(
+            table.summary(),
+            ReassemblyTableSummary {
+                pending_datagrams: 2,
+                received_bytes: 20,
+                missing_bytes: 12,
+                total_datagram_bytes: 32,
+                largest_datagram_size: 20,
+                range_count: 2,
+            }
+        );
+        assert!(table.summary().has_missing_bytes());
+
+        table.push_fragment(next, &[1, 2, 3, 4]).unwrap();
+
+        assert_eq!(
+            table.summary(),
+            ReassemblyTableSummary {
+                pending_datagrams: 1,
+                received_bytes: 4,
+                missing_bytes: 8,
+                total_datagram_bytes: 12,
+                largest_datagram_size: 12,
+                range_count: 1,
+            }
+        );
+    }
+
+    #[test]
+    fn reassembly_rejects_overlaps_and_bounds_errors() {
+        let first = FragmentHeader::first(12, 0x7788).unwrap();
+        let overlap = FragmentHeader::next(12, 0x7788, 1).unwrap();
+        let out_of_bounds = FragmentHeader::next(12, 0x7788, 2).unwrap();
+        let mut buffer = FragmentReassemblyBuffer::new(ReassemblyKey::from(first));
+
+        buffer.insert_fragment(first, &[0; 10]).unwrap();
+
+        assert!(matches!(
+            buffer.insert_fragment(overlap, &[1, 2]),
+            Err(SixlowpanError::FragmentOverlap { .. })
+        ));
+        assert!(matches!(
+            buffer.insert_fragment(out_of_bounds, &[1]),
+            Err(SixlowpanError::FragmentOutOfBounds { .. })
+        ));
+    }
+}

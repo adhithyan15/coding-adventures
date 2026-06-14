@@ -1,0 +1,11 @@
+// Checkbox.dark.msl — dark-theme styling (v0.3 trim).
+//
+// See Checkbox.light.msl header for the rewrite rationale. Only the
+// `checkbox` root part survives in v0.3; native widget renders its
+// own check glyph and exposes no inner element to style.
+
+style Checkbox {
+  part checkbox {
+    padding : 4 ;
+  }
+}

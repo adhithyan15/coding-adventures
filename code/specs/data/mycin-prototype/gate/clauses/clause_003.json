@@ -1,0 +1,7 @@
+{
+ "idx": 3,
+ "key": "bacterial_meningitis::csf_glucose(low)",
+ "lr": 18,
+ "computed": "pooled LR+ reported directly = 18",
+ "byte_quote": "A CSF-blood glucose ratio of 0.4 or less (likelihood ratio [LR], 18; 95% CI, 12-27]) accurately diagnosed bacterial meningitis."
+}

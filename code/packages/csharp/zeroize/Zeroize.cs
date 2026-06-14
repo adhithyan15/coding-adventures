@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-
 namespace CodingAdventures.Zeroize;
 
 /// <summary>
@@ -11,7 +9,10 @@ public static class Zeroize
     public static void ZeroizeBytes(byte[] buffer)
     {
         ArgumentNullException.ThrowIfNull(buffer);
-        CryptographicOperations.ZeroMemory(buffer.AsSpan());
+        for (var index = 0; index < buffer.Length; index++)
+        {
+            buffer[index] = 0;
+        }
     }
 
     /// <summary>Clear a character buffer.</summary>

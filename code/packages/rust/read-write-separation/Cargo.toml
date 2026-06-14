@@ -1,0 +1,7 @@
+[package]
+name = "read-write-separation"
+version = "0.1.0"
+edition = "2021"
+description = "Manifest-level read/write separation classifier for Chief of Staff agents"
+
+[dependencies]

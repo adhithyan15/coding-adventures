@@ -1,6 +1,6 @@
 # CodingAdventures.Hmac.CSharp
 
-HMAC helpers for .NET.
+HMAC helpers for .NET, implemented directly with package-local hash primitives.
 
 The package provides named HMAC helpers for MD5, SHA-1, SHA-256, and SHA-512, plus a generic RFC 2104 `Compute` helper and constant-time tag verification.
 

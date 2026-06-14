@@ -1,0 +1,14 @@
+[package]
+name = "cas-matrix"
+version = "0.1.0"
+edition = "2021"
+description = "Matrix operations over symbolic IR (construction, arithmetic, determinant, inverse)"
+license = "MIT"
+
+[dependencies]
+cas-solve = { path = "../cas-solve" }
+compute-ir = { path = "../compute-ir" }
+executor-protocol = { path = "../executor-protocol" }
+matrix-cpu = { path = "../matrix-cpu" }
+matrix-ir = { path = "../matrix-ir" }
+symbolic-ir = { path = "../symbolic-ir" }

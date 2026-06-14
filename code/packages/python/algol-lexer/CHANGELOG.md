@@ -5,6 +5,28 @@ All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added a generated-grammar freshness test that recompiles
+  `code/grammars/algol/algol60.tokens` and verifies the committed Python token
+  grammar is current.
+
+### Changed
+
+- Accepted uppercase and mixed-case ALGOL keywords in the wrapper without
+  lowercasing identifiers or string literal contents.
+- Accepted `COMMENT`/mixed-case `comment` as comment starters while preserving
+  identifiers such as `commentary` through keyword-boundary matching.
+- Accepted `<>` as an alternate ASCII spelling for ALGOL not-equal.
+- Accepted ALGOL publication symbols `≤`, `≥`, `≠`, `↑`, `×`, `÷`, `∧`, `∨`,
+  `¬`, `⊃`, and `≡`, normalizing them to the existing ASCII or keyword token
+  values.
+- Accepted double-quoted string literals in addition to single-quoted strings.
+- Runtime tokenization now imports compiled `algol/algol60.tokens` Python data
+  instead of reading and parsing the grammar file at startup.
+
 ## [0.1.0] — 2026-04-06
 
 ### Added
@@ -13,13 +35,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   ALGOL 60 source text into a flat list of tokens.
 - `create_algol_lexer(source: str) -> GrammarLexer` — factory function for
   callers who want direct control over the lexer object.
-- Grammar-driven implementation using `algol.tokens` and the `GrammarLexer`
-  engine from `coding-adventures-lexer`.
+- Grammar-driven implementation using `algol/algol60.tokens` and the
+  `GrammarLexer` engine from `coding-adventures-lexer`.
 - Full support for all ALGOL 60 token types:
-  - Value tokens: `INTEGER_LIT`, `REAL_LIT` (with exponent), `STRING_LIT`
-    (single-quoted), `IDENT`
+  - Value tokens: `INTEGER_LIT`, `REAL_LIT` (with exponent), `STRING_LIT`,
+    `IDENT`
   - Multi-character operators: `ASSIGN` (`:=`), `POWER` (`**`), `LEQ` (`<=`),
-    `GEQ` (`>=`), `NEQ` (`!=`)
+    `GEQ` (`>=`), `NEQ` (`!=`, `<>`)
   - Single-character operators: `PLUS`, `MINUS`, `STAR`, `SLASH`, `CARET`,
     `EQ`, `LT`, `GT`
   - Delimiters: `LPAREN`, `RPAREN`, `LBRACKET`, `RBRACKET`, `SEMICOLON`,

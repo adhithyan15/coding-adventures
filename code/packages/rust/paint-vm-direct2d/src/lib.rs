@@ -18,12 +18,13 @@
 //! | `PaintLine`       | Fully implemented — DrawLine with stroke width      |
 //! | `PaintGroup`      | Fully implemented — recurses into children          |
 //! | `PaintClip`       | Fully implemented — PushAxisAlignedClip / Pop       |
-//! | `PaintGlyphRun`   | Planned — IDWriteFactory + DrawGlyphRun             |
-//! | `PaintEllipse`    | Planned — FillEllipse                               |
-//! | `PaintPath`       | Planned — ID2D1PathGeometry                         |
-//! | `PaintLayer`      | Planned — PushLayer / PopLayer                      |
-//! | `PaintGradient`   | Planned — CreateLinearGradientBrush                 |
-//! | `PaintImage`      | Planned — ID2D1Bitmap from PixelContainer           |
+//! | `PaintText`       | Implemented - DirectWrite text layout + DrawTextLayout |
+//! | `PaintGlyphRun`   | Implemented - IDWriteFactory + DrawGlyphRun         |
+//! | `PaintEllipse`    | Implemented - FillEllipse / DrawEllipse             |
+//! | `PaintPath`       | Implemented - ID2D1PathGeometry                     |
+//! | `PaintLayer`      | Implemented - PushLayer / PopLayer with opacity     |
+//! | `PaintGradient`   | Implemented - linear/radial gradient brushes        |
+//! | `PaintImage`      | Implemented - ID2D1Bitmap from PixelContainer       |
 //!
 //! ## Direct2D pipeline (offscreen, no HWND)
 //!
@@ -73,9 +74,14 @@
 pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
-    FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
-    PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PathCommand,
-    PixelContainer,
+    FillRule, GradientKind, GradientStop, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun,
+    PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine, PaintPath,
+    PaintRect, PaintScene, PaintText, PathCommand, PixelContainer, TextAlign,
+};
+#[cfg(target_os = "windows")]
+use paint_vm_runtime::{
+    PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
+    PaintBackendTier, PaintPlatformSupport, PaintRenderError, PaintRenderer, SupportLevel,
 };
 #[cfg(target_os = "windows")]
 use std::collections::HashMap;
@@ -110,29 +116,33 @@ use windows::Win32::Foundation::{BOOL, FALSE, HWND, RECT};
 use windows::Win32::Graphics::Direct2D::Common::{
     D2D1_ALPHA_MODE_PREMULTIPLIED, D2D1_ALPHA_MODE_UNKNOWN, D2D1_BEZIER_SEGMENT, D2D1_COLOR_F,
     D2D1_FIGURE_BEGIN_FILLED, D2D1_FIGURE_END_CLOSED, D2D1_FIGURE_END_OPEN,
-    D2D1_FILL_MODE_ALTERNATE, D2D1_FILL_MODE_WINDING, D2D1_PIXEL_FORMAT, D2D_POINT_2F, D2D_RECT_F,
-    D2D_SIZE_F, D2D_SIZE_U,
+    D2D1_FILL_MODE_ALTERNATE, D2D1_FILL_MODE_WINDING, D2D1_GRADIENT_STOP, D2D1_PIXEL_FORMAT,
+    D2D_POINT_2F, D2D_RECT_F, D2D_SIZE_F, D2D_SIZE_U,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Direct2D::{
-    D2D1CreateFactory, ID2D1Factory, ID2D1RenderTarget, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-    D2D1_ARC_SEGMENT, D2D1_ARC_SIZE_LARGE, D2D1_ARC_SIZE_SMALL,
-    D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, D2D1_BITMAP_PROPERTIES, D2D1_ELLIPSE,
-    D2D1_FACTORY_TYPE_SINGLE_THREADED, D2D1_HWND_RENDER_TARGET_PROPERTIES, D2D1_LAYER_OPTIONS_NONE,
-    D2D1_LAYER_PARAMETERS, D2D1_PRESENT_OPTIONS_NONE, D2D1_QUADRATIC_BEZIER_SEGMENT,
+    D2D1CreateFactory, ID2D1Brush, ID2D1Factory, ID2D1RenderTarget,
+    D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1_ARC_SEGMENT, D2D1_ARC_SIZE_LARGE, D2D1_ARC_SIZE_SMALL,
+    D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, D2D1_BITMAP_PROPERTIES, D2D1_DRAW_TEXT_OPTIONS_NONE,
+    D2D1_ELLIPSE, D2D1_EXTEND_MODE_CLAMP, D2D1_FACTORY_TYPE_SINGLE_THREADED, D2D1_GAMMA_2_2,
+    D2D1_HWND_RENDER_TARGET_PROPERTIES, D2D1_LAYER_OPTIONS_NONE, D2D1_LAYER_PARAMETERS,
+    D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES, D2D1_PRESENT_OPTIONS_NONE,
+    D2D1_QUADRATIC_BEZIER_SEGMENT, D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES,
     D2D1_RENDER_TARGET_PROPERTIES, D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1_RENDER_TARGET_USAGE_NONE,
     D2D1_ROUNDED_RECT, D2D1_SWEEP_DIRECTION_CLOCKWISE, D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::DirectWrite::{
     DWriteCreateFactory, IDWriteFactory, IDWriteFontCollection, IDWriteFontFace,
-    DWRITE_FACTORY_TYPE_SHARED, DWRITE_FONT_STRETCH, DWRITE_FONT_STRETCH_CONDENSED,
-    DWRITE_FONT_STRETCH_EXPANDED, DWRITE_FONT_STRETCH_EXTRA_CONDENSED,
-    DWRITE_FONT_STRETCH_EXTRA_EXPANDED, DWRITE_FONT_STRETCH_NORMAL,
-    DWRITE_FONT_STRETCH_SEMI_CONDENSED, DWRITE_FONT_STRETCH_SEMI_EXPANDED,
-    DWRITE_FONT_STRETCH_ULTRA_CONDENSED, DWRITE_FONT_STRETCH_ULTRA_EXPANDED, DWRITE_FONT_STYLE,
-    DWRITE_FONT_STYLE_ITALIC, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STYLE_OBLIQUE,
-    DWRITE_FONT_WEIGHT, DWRITE_GLYPH_OFFSET, DWRITE_GLYPH_RUN, DWRITE_MEASURING_MODE_NATURAL,
+    DWRITE_FACTORY_TYPE_SHARED, DWRITE_FONT_METRICS, DWRITE_FONT_STRETCH,
+    DWRITE_FONT_STRETCH_CONDENSED, DWRITE_FONT_STRETCH_EXPANDED,
+    DWRITE_FONT_STRETCH_EXTRA_CONDENSED, DWRITE_FONT_STRETCH_EXTRA_EXPANDED,
+    DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STRETCH_SEMI_CONDENSED,
+    DWRITE_FONT_STRETCH_SEMI_EXPANDED, DWRITE_FONT_STRETCH_ULTRA_CONDENSED,
+    DWRITE_FONT_STRETCH_ULTRA_EXPANDED, DWRITE_FONT_STYLE, DWRITE_FONT_STYLE_ITALIC,
+    DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STYLE_OBLIQUE, DWRITE_FONT_WEIGHT, DWRITE_GLYPH_OFFSET,
+    DWRITE_GLYPH_RUN, DWRITE_MEASURING_MODE_NATURAL, DWRITE_TEXT_METRICS,
+    DWRITE_WORD_WRAPPING_NO_WRAP,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Dxgi::Common::{DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_UNKNOWN};
@@ -239,6 +249,61 @@ fn to_d2d_color(r: f64, g: f64, b: f64, a: f64) -> D2D1_COLOR_F {
     }
 }
 
+#[cfg(target_os = "windows")]
+fn collect_gradients(instructions: &[PaintInstruction]) -> HashMap<String, PaintGradient> {
+    let mut gradients = HashMap::new();
+    collect_gradients_into(instructions, &mut gradients);
+    gradients
+}
+
+#[cfg(target_os = "windows")]
+fn collect_gradients_into(
+    instructions: &[PaintInstruction],
+    gradients: &mut HashMap<String, PaintGradient>,
+) {
+    for instruction in instructions {
+        match instruction {
+            PaintInstruction::Gradient(gradient) => {
+                if let Some(id) = gradient.base.id.as_ref() {
+                    gradients.insert(id.clone(), gradient.clone());
+                }
+            }
+            PaintInstruction::Group(group) => collect_gradients_into(&group.children, gradients),
+            PaintInstruction::Layer(layer) => collect_gradients_into(&layer.children, gradients),
+            PaintInstruction::Clip(clip) => collect_gradients_into(&clip.children, gradients),
+            _ => {}
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn gradient_ref(value: &str) -> Option<&str> {
+    value
+        .trim()
+        .strip_prefix("url(#")
+        .and_then(|value| value.strip_suffix(')'))
+}
+
+#[cfg(target_os = "windows")]
+fn d2d_gradient_stops(stops: &[GradientStop]) -> Vec<D2D1_GRADIENT_STOP> {
+    let mut stops: Vec<D2D1_GRADIENT_STOP> = stops
+        .iter()
+        .map(|stop| {
+            let (r, g, b, a) = parse_css_color(&stop.color);
+            D2D1_GRADIENT_STOP {
+                position: stop.offset.clamp(0.0, 1.0) as f32,
+                color: to_d2d_color(r, g, b, a),
+            }
+        })
+        .collect();
+    stops.sort_by(|a, b| {
+        a.position
+            .partial_cmp(&b.position)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    stops
+}
+
 // ---------------------------------------------------------------------------
 // Instruction dispatch — PaintInstruction → Direct2D calls
 // ---------------------------------------------------------------------------
@@ -246,6 +311,7 @@ fn to_d2d_color(r: f64, g: f64, b: f64, a: f64) -> D2D1_COLOR_F {
 #[cfg(target_os = "windows")]
 struct RenderContext {
     factory: ID2D1Factory,
+    dwrite_factory: IDWriteFactory,
     font_collection: IDWriteFontCollection,
     font_cache: HashMap<String, IDWriteFontFace>,
     scene_bounds: D2D_RECT_F,
@@ -262,6 +328,7 @@ impl RenderContext {
             .expect("Failed to get system font collection");
         Self {
             factory,
+            dwrite_factory,
             font_collection: font_collection.expect("system font collection"),
             font_cache: HashMap::new(),
             scene_bounds: D2D_RECT_F {
@@ -278,20 +345,12 @@ impl RenderContext {
             return Some(face.clone());
         }
 
-        let spec = parse_directwrite_font_ref(font_ref).unwrap_or_else(|| DWriteFontRef {
-            family: "Segoe UI".to_string(),
-            weight: 400,
-            style: DWRITE_FONT_STYLE_NORMAL,
-            stretch: DWRITE_FONT_STRETCH_NORMAL,
-        });
-        let face = self.resolve_font_face(&spec).or_else(|| {
-            self.resolve_font_face(&DWriteFontRef {
-                family: "Segoe UI".to_string(),
-                weight: 400,
-                style: DWRITE_FONT_STYLE_NORMAL,
-                stretch: DWRITE_FONT_STRETCH_NORMAL,
-            })
-        })?;
+        let spec = parse_directwrite_font_ref(font_ref)
+            .or_else(|| parse_canvas_font_ref(font_ref))
+            .unwrap_or_else(default_dwrite_font_ref);
+        let face = self
+            .resolve_font_face(&spec)
+            .or_else(|| self.resolve_font_face(&default_dwrite_font_ref()))?;
         self.font_cache.insert(font_ref.to_string(), face.clone());
         Some(face)
     }
@@ -316,6 +375,21 @@ impl RenderContext {
             .ok()?;
         font.CreateFontFace().ok()
     }
+
+    unsafe fn font_ascent(&self, spec: &DWriteFontRef, font_size: f64) -> f32 {
+        let face = self
+            .resolve_font_face(spec)
+            .or_else(|| self.resolve_font_face(&default_dwrite_font_ref()));
+        let Some(face) = face else {
+            return (font_size * 0.8) as f32;
+        };
+        let mut metrics = DWRITE_FONT_METRICS::default();
+        face.GetMetrics(&mut metrics);
+        if metrics.designUnitsPerEm == 0 {
+            return (font_size * 0.8) as f32;
+        }
+        metrics.ascent as f32 / metrics.designUnitsPerEm as f32 * font_size as f32
+    }
 }
 
 #[cfg(target_os = "windows")]
@@ -324,6 +398,25 @@ struct DWriteFontRef {
     weight: u16,
     style: DWRITE_FONT_STYLE,
     stretch: DWRITE_FONT_STRETCH,
+}
+
+#[cfg(target_os = "windows")]
+fn default_dwrite_font_ref() -> DWriteFontRef {
+    DWriteFontRef {
+        family: "Segoe UI".to_string(),
+        weight: 400,
+        style: DWRITE_FONT_STYLE_NORMAL,
+        stretch: DWRITE_FONT_STRETCH_NORMAL,
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn dwrite_font_ref_for_text(font_ref: Option<&str>) -> DWriteFontRef {
+    font_ref
+        .and_then(|font_ref| {
+            parse_directwrite_font_ref(font_ref).or_else(|| parse_canvas_font_ref(font_ref))
+        })
+        .unwrap_or_else(default_dwrite_font_ref)
 }
 
 /// Render a list of [`PaintInstruction`]s into a Direct2D render target.
@@ -335,24 +428,25 @@ unsafe fn render_instructions(
     ctx: &mut RenderContext,
     rt: &ID2D1RenderTarget,
     instructions: &[PaintInstruction],
+    gradients: &HashMap<String, PaintGradient>,
 ) {
     for instr in instructions {
         match instr {
-            PaintInstruction::Rect(rect) => render_rect(rt, rect),
-            PaintInstruction::Line(line) => render_line(rt, line),
+            PaintInstruction::Rect(rect) => render_rect(rt, rect, gradients),
+            PaintInstruction::Line(line) => render_line(rt, line, gradients),
             PaintInstruction::Group(group) => {
                 // PaintGroup: render children directly into the same target.
                 // Transform support (SetTransform) is deferred — for barcodes,
                 // groups are purely logical containers.
-                render_group(ctx, rt, group);
+                render_group(ctx, rt, group, gradients);
             }
-            PaintInstruction::Clip(clip) => render_clip(ctx, rt, clip),
+            PaintInstruction::Clip(clip) => render_clip(ctx, rt, clip, gradients),
             PaintInstruction::GlyphRun(run) => render_glyph_run(ctx, rt, run),
-            PaintInstruction::Ellipse(ellipse) => render_ellipse(rt, ellipse),
-            PaintInstruction::Path(path) => render_path(ctx, rt, path),
-            PaintInstruction::Layer(layer) => render_layer(ctx, rt, layer),
+            PaintInstruction::Ellipse(ellipse) => render_ellipse(rt, ellipse, gradients),
+            PaintInstruction::Path(path) => render_path(ctx, rt, path, gradients),
+            PaintInstruction::Layer(layer) => render_layer(ctx, rt, layer, gradients),
             PaintInstruction::Image(image) => render_image(rt, image),
-            PaintInstruction::Text(_) => {}
+            PaintInstruction::Text(text) => render_text(ctx, rt, text),
             PaintInstruction::Gradient(_) => {}
         }
     }
@@ -371,7 +465,11 @@ unsafe fn render_instructions(
 /// (left, bottom) ── (right, bottom)
 /// ```
 #[cfg(target_os = "windows")]
-unsafe fn render_rect(rt: &ID2D1RenderTarget, rect: &PaintRect) {
+unsafe fn render_rect(
+    rt: &ID2D1RenderTarget,
+    rect: &PaintRect,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     let d2d_rect = D2D_RECT_F {
         left: rect.x as f32,
         top: rect.y as f32,
@@ -381,7 +479,7 @@ unsafe fn render_rect(rt: &ID2D1RenderTarget, rect: &PaintRect) {
     let radius = rect.corner_radius.unwrap_or(0.0).max(0.0) as f32;
 
     if let Some(fill) = rect.fill.as_deref() {
-        if let Some(brush) = solid_brush(rt, fill) {
+        if let Some(brush) = paint_brush(rt, fill, gradients) {
             if radius > 0.0 {
                 let rounded = D2D1_ROUNDED_RECT {
                     rect: d2d_rect,
@@ -396,7 +494,7 @@ unsafe fn render_rect(rt: &ID2D1RenderTarget, rect: &PaintRect) {
     }
 
     if let Some(stroke) = rect.stroke.as_deref() {
-        if let Some(brush) = solid_brush(rt, stroke) {
+        if let Some(brush) = paint_brush(rt, stroke, gradients) {
             let stroke_width = rect.stroke_width.unwrap_or(1.0).max(0.0) as f32;
             if radius > 0.0 {
                 let rounded = D2D1_ROUNDED_RECT {
@@ -418,8 +516,12 @@ unsafe fn render_rect(rt: &ID2D1RenderTarget, rect: &PaintRect) {
 /// Direct2D handles the perpendicular expansion internally (unlike paint-metal
 /// which manually constructs a thin rectangle from triangle vertices).
 #[cfg(target_os = "windows")]
-unsafe fn render_line(rt: &ID2D1RenderTarget, line: &PaintLine) {
-    if let Some(brush) = solid_brush(rt, &line.stroke) {
+unsafe fn render_line(
+    rt: &ID2D1RenderTarget,
+    line: &PaintLine,
+    gradients: &HashMap<String, PaintGradient>,
+) {
+    if let Some(brush) = paint_brush(rt, &line.stroke, gradients) {
         let p0 = D2D_POINT_2F {
             x: line.x1 as f32,
             y: line.y1 as f32,
@@ -443,7 +545,12 @@ unsafe fn render_line(rt: &ID2D1RenderTarget, line: &PaintLine) {
 ///
 /// Nested clips are intersected automatically by Direct2D.
 #[cfg(target_os = "windows")]
-unsafe fn render_clip(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, clip: &PaintClip) {
+unsafe fn render_clip(
+    ctx: &mut RenderContext,
+    rt: &ID2D1RenderTarget,
+    clip: &PaintClip,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     let clip_rect = D2D_RECT_F {
         left: clip.x as f32,
         top: clip.y as f32,
@@ -452,36 +559,50 @@ unsafe fn render_clip(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, clip: &Pa
     };
 
     rt.PushAxisAlignedClip(&clip_rect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-    render_instructions(ctx, rt, &clip.children);
+    render_instructions(ctx, rt, &clip.children, gradients);
     rt.PopAxisAlignedClip();
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_group(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, group: &PaintGroup) {
+unsafe fn render_group(
+    ctx: &mut RenderContext,
+    rt: &ID2D1RenderTarget,
+    group: &PaintGroup,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     with_transform(rt, group.transform.as_ref(), || {
         let opacity = group.opacity.unwrap_or(1.0).clamp(0.0, 1.0) as f32;
         if opacity < 1.0 {
             with_layer(ctx, rt, opacity, |ctx, rt| {
-                render_instructions(ctx, rt, &group.children);
+                render_instructions(ctx, rt, &group.children, gradients);
             });
         } else {
-            render_instructions(ctx, rt, &group.children);
+            render_instructions(ctx, rt, &group.children, gradients);
         }
     });
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_layer(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, layer: &PaintLayer) {
+unsafe fn render_layer(
+    ctx: &mut RenderContext,
+    rt: &ID2D1RenderTarget,
+    layer: &PaintLayer,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     with_transform(rt, layer.transform.as_ref(), || {
         let opacity = layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0) as f32;
         with_layer(ctx, rt, opacity, |ctx, rt| {
-            render_instructions(ctx, rt, &layer.children);
+            render_instructions(ctx, rt, &layer.children, gradients);
         });
     });
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_ellipse(rt: &ID2D1RenderTarget, ellipse: &PaintEllipse) {
+unsafe fn render_ellipse(
+    rt: &ID2D1RenderTarget,
+    ellipse: &PaintEllipse,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     let d2d_ellipse = D2D1_ELLIPSE {
         point: D2D_POINT_2F {
             x: ellipse.cx as f32,
@@ -491,12 +612,12 @@ unsafe fn render_ellipse(rt: &ID2D1RenderTarget, ellipse: &PaintEllipse) {
         radiusY: ellipse.ry as f32,
     };
     if let Some(fill) = ellipse.fill.as_deref() {
-        if let Some(brush) = solid_brush(rt, fill) {
+        if let Some(brush) = paint_brush(rt, fill, gradients) {
             rt.FillEllipse(&d2d_ellipse, &brush);
         }
     }
     if let Some(stroke) = ellipse.stroke.as_deref() {
-        if let Some(brush) = solid_brush(rt, stroke) {
+        if let Some(brush) = paint_brush(rt, stroke, gradients) {
             rt.DrawEllipse(
                 &d2d_ellipse,
                 &brush,
@@ -508,7 +629,12 @@ unsafe fn render_ellipse(rt: &ID2D1RenderTarget, ellipse: &PaintEllipse) {
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_path(ctx: &RenderContext, rt: &ID2D1RenderTarget, path: &PaintPath) {
+unsafe fn render_path(
+    ctx: &RenderContext,
+    rt: &ID2D1RenderTarget,
+    path: &PaintPath,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     let fill_mode = match path.fill_rule.as_ref().unwrap_or(&FillRule::NonZero) {
         FillRule::NonZero => D2D1_FILL_MODE_WINDING,
         FillRule::EvenOdd => D2D1_FILL_MODE_ALTERNATE,
@@ -607,12 +733,12 @@ unsafe fn render_path(ctx: &RenderContext, rt: &ID2D1RenderTarget, path: &PaintP
     }
 
     if let Some(fill) = path.fill.as_deref() {
-        if let Some(brush) = solid_brush(rt, fill) {
+        if let Some(brush) = paint_brush(rt, fill, gradients) {
             rt.FillGeometry(&geometry, &brush, None);
         }
     }
     if let Some(stroke) = path.stroke.as_deref() {
-        if let Some(brush) = solid_brush(rt, stroke) {
+        if let Some(brush) = paint_brush(rt, stroke, gradients) {
             rt.DrawGeometry(
                 &geometry,
                 &brush,
@@ -660,6 +786,59 @@ unsafe fn render_glyph_run(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, run:
         };
         rt.DrawGlyphRun(baseline, &glyph_run, &brush, DWRITE_MEASURING_MODE_NATURAL);
     }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_text(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, text: &PaintText) {
+    if text.text.is_empty() || text.font_size <= 0.0 {
+        return;
+    }
+    let Some(brush) = solid_brush(rt, text.fill.as_deref().unwrap_or("#000000")) else {
+        return;
+    };
+
+    let spec = dwrite_font_ref_for_text(text.font_ref.as_deref());
+    let family_w = wide_null(&spec.family);
+    let locale_w = wide_null("en-us");
+    let Ok(format) = ctx.dwrite_factory.CreateTextFormat(
+        PCWSTR(family_w.as_ptr()),
+        Some(&ctx.font_collection),
+        DWRITE_FONT_WEIGHT(spec.weight as i32),
+        spec.style,
+        spec.stretch,
+        text.font_size as f32,
+        PCWSTR(locale_w.as_ptr()),
+    ) else {
+        return;
+    };
+    let _ = format.SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+
+    let utf16: Vec<u16> = text.text.encode_utf16().collect();
+    let Ok(layout) = ctx
+        .dwrite_factory
+        .CreateTextLayout(&utf16, &format, 1_000_000.0, 1_000_000.0)
+    else {
+        return;
+    };
+
+    let mut metrics = DWRITE_TEXT_METRICS::default();
+    if layout.GetMetrics(&mut metrics).is_err() {
+        return;
+    }
+    let width = metrics.widthIncludingTrailingWhitespace.max(metrics.width);
+    let x = match text.text_align.as_ref().unwrap_or(&TextAlign::Left) {
+        TextAlign::Left => text.x as f32,
+        TextAlign::Center => text.x as f32 - width / 2.0,
+        TextAlign::Right => text.x as f32 - width,
+    };
+    let y = text.y as f32 - ctx.font_ascent(&spec, text.font_size);
+
+    rt.DrawTextLayout(
+        D2D_POINT_2F { x, y },
+        &layout,
+        &brush,
+        D2D1_DRAW_TEXT_OPTIONS_NONE,
+    );
 }
 
 #[cfg(target_os = "windows")]
@@ -774,6 +953,62 @@ unsafe fn solid_brush(
 }
 
 #[cfg(target_os = "windows")]
+unsafe fn paint_brush(
+    rt: &ID2D1RenderTarget,
+    paint: &str,
+    gradients: &HashMap<String, PaintGradient>,
+) -> Option<ID2D1Brush> {
+    if let Some(id) = gradient_ref(paint) {
+        return gradients
+            .get(id)
+            .and_then(|gradient| gradient_brush(rt, gradient));
+    }
+    solid_brush(rt, paint)?.cast().ok()
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn gradient_brush(rt: &ID2D1RenderTarget, gradient: &PaintGradient) -> Option<ID2D1Brush> {
+    let stops = d2d_gradient_stops(&gradient.stops);
+    match stops.as_slice() {
+        [] => None,
+        [stop] => rt
+            .CreateSolidColorBrush(&stop.color, None)
+            .ok()?
+            .cast()
+            .ok(),
+        _ => {
+            let collection = rt
+                .CreateGradientStopCollection(&stops, D2D1_GAMMA_2_2, D2D1_EXTEND_MODE_CLAMP)
+                .ok()?;
+            match gradient.kind {
+                GradientKind::Linear { x1, y1, x2, y2 } => {
+                    let props = D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES {
+                        startPoint: point(x1, y1),
+                        endPoint: point(x2, y2),
+                    };
+                    rt.CreateLinearGradientBrush(&props, None, &collection)
+                        .ok()?
+                        .cast()
+                        .ok()
+                }
+                GradientKind::Radial { cx, cy, r } => {
+                    let props = D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES {
+                        center: point(cx, cy),
+                        gradientOriginOffset: D2D_POINT_2F { x: 0.0, y: 0.0 },
+                        radiusX: r.max(0.0) as f32,
+                        radiusY: r.max(0.0) as f32,
+                    };
+                    rt.CreateRadialGradientBrush(&props, None, &collection)
+                        .ok()?
+                        .cast()
+                        .ok()
+                }
+            }
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
 fn point(x: f64, y: f64) -> D2D_POINT_2F {
     D2D_POINT_2F {
         x: x as f32,
@@ -856,6 +1091,49 @@ fn parse_directwrite_font_ref(font_ref: &str) -> Option<DWriteFontRef> {
         style,
         stretch: stretch_from_rank(stretch_rank),
     })
+}
+
+#[cfg(target_os = "windows")]
+fn parse_canvas_font_ref(font_ref: &str) -> Option<DWriteFontRef> {
+    let body = font_ref.strip_prefix("canvas:")?;
+    let (family_part, rest) = body.split_once('@')?;
+    let mut weight = 400u16;
+    let mut style = DWRITE_FONT_STYLE_NORMAL;
+    let parts: Vec<&str> = rest.split(':').collect();
+    if let Some(value) = parts.get(1) {
+        weight = parse_font_weight(value, weight);
+    }
+    if let Some(value) = parts.get(2) {
+        style = match value.trim() {
+            "italic" => DWRITE_FONT_STYLE_ITALIC,
+            "oblique" => DWRITE_FONT_STYLE_OBLIQUE,
+            _ => DWRITE_FONT_STYLE_NORMAL,
+        };
+    }
+    Some(DWriteFontRef {
+        family: map_font_family(family_part),
+        weight,
+        style,
+        stretch: DWRITE_FONT_STRETCH_NORMAL,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn parse_font_weight(value: &str, fallback: u16) -> u16 {
+    match value.trim() {
+        "normal" => 400,
+        "bold" => 700,
+        other => other.parse().unwrap_or(fallback),
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn map_font_family(family: &str) -> String {
+    match family.trim().to_ascii_lowercase().as_str() {
+        "system-ui" | "ui-sans-serif" => "Segoe UI".to_string(),
+        other if other.is_empty() => "Segoe UI".to_string(),
+        _ => family.trim().to_string(),
+    }
 }
 
 #[cfg(target_os = "windows")]
@@ -962,6 +1240,61 @@ pub fn render(scene: &PaintScene) -> PixelContainer {
     unsafe { render_unsafe(scene, width, height) }
 }
 
+/// Runtime adapter for selecting Direct2D through `paint-vm-runtime`.
+#[cfg(target_os = "windows")]
+pub struct Direct2DPaintBackend;
+
+#[cfg(target_os = "windows")]
+pub fn descriptor() -> PaintBackendDescriptor {
+    PaintBackendDescriptor {
+        id: "paint-vm-direct2d",
+        display_name: "Paint VM Direct2D",
+        family: PaintBackendFamily::Direct2D,
+        acceleration: PaintAcceleration::Gpu,
+        tier: PaintBackendTier::Tier2NativeScenes,
+        platforms: PaintPlatformSupport::windows(),
+        capabilities: PaintBackendCapabilities {
+            rect: SupportLevel::Supported,
+            line: SupportLevel::Supported,
+            ellipse: SupportLevel::Supported,
+            path: SupportLevel::Supported,
+            path_arc_to: SupportLevel::Supported,
+            glyph_run: SupportLevel::Supported,
+            text: SupportLevel::Supported,
+            image: SupportLevel::Supported,
+            clip: SupportLevel::Supported,
+            group: SupportLevel::Supported,
+            group_transform: SupportLevel::Supported,
+            group_opacity: SupportLevel::Supported,
+            layer: SupportLevel::Supported,
+            layer_opacity: SupportLevel::Supported,
+            layer_filters: SupportLevel::Unsupported,
+            layer_blend_modes: SupportLevel::Unsupported,
+            linear_gradient: SupportLevel::Supported,
+            radial_gradient: SupportLevel::Supported,
+            antialiasing: SupportLevel::Supported,
+            offscreen_pixels: SupportLevel::Supported,
+        },
+        priority: 10,
+    }
+}
+
+#[cfg(target_os = "windows")]
+pub fn renderer() -> Direct2DPaintBackend {
+    Direct2DPaintBackend
+}
+
+#[cfg(target_os = "windows")]
+impl PaintRenderer for Direct2DPaintBackend {
+    fn descriptor(&self) -> PaintBackendDescriptor {
+        descriptor()
+    }
+
+    fn render(&self, scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
+        Ok(crate::render(scene))
+    }
+}
+
 /// Render a [`PaintScene`] directly into an existing Win32 HWND.
 #[cfg(target_os = "windows")]
 pub unsafe fn render_to_hwnd(hwnd: HWND, scene: &PaintScene) -> windows::core::Result<()> {
@@ -997,7 +1330,8 @@ pub unsafe fn render_to_hwnd(hwnd: HWND, scene: &PaintScene) -> windows::core::R
 
     render_target.BeginDraw();
     render_target.Clear(Some(&bg_color));
-    render_instructions(&mut ctx, &render_target, &scene.instructions);
+    let gradients = collect_gradients(&scene.instructions);
+    render_instructions(&mut ctx, &render_target, &scene.instructions, &gradients);
     render_target.EndDraw(None, None)?;
     Ok(())
 }
@@ -1121,10 +1455,11 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
     let (bg_r, bg_g, bg_b, bg_a) = parse_css_color(&scene.background);
     let bg_color = to_d2d_color(bg_r, bg_g, bg_b, bg_a);
     let mut ctx = RenderContext::new(d2d_factory.clone(), width as f32, height as f32);
+    let gradients = collect_gradients(&scene.instructions);
 
     render_target.BeginDraw();
     render_target.Clear(Some(&bg_color as *const _));
-    render_instructions(&mut ctx, &render_target, &scene.instructions);
+    render_instructions(&mut ctx, &render_target, &scene.instructions, &gradients);
     render_target.EndDraw(None, None).expect("EndDraw failed");
 
     // ── Step 6: Read back pixels ─────────────────────────────────────────
@@ -1206,16 +1541,242 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
 mod tests {
     use super::*;
     use paint_instructions::{
-        GlyphPosition, PaintBase, PaintGlyphRun, PaintGroup, PaintInstruction, PaintRect,
-        PaintScene,
+        GlyphPosition, GradientKind, GradientStop, PaintBase, PaintGlyphRun, PaintGradient,
+        PaintGroup, PaintInstruction, PaintRect, PaintScene, PaintText, TextAlign,
     };
+    #[cfg(target_os = "windows")]
+    use paint_vm_runtime::{
+        PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions, SupportLevel,
+    };
+
+    #[cfg(target_os = "windows")]
+    fn dark_pixel_bounds(pixels: &PixelContainer) -> Option<(u32, u32, u32, u32)> {
+        let mut min_x = u32::MAX;
+        let mut min_y = u32::MAX;
+        let mut max_x = 0;
+        let mut max_y = 0;
+        let mut found = false;
+        for y in 0..pixels.height {
+            for x in 0..pixels.width {
+                let (r, g, b, a) = pixels.pixel_at(x, y);
+                if a > 0 && (r < 245 || g < 245 || b < 245) {
+                    found = true;
+                    min_x = min_x.min(x);
+                    min_y = min_y.min(y);
+                    max_x = max_x.max(x);
+                    max_y = max_y.max(y);
+                }
+            }
+        }
+        found.then_some((min_x, min_y, max_x, max_y))
+    }
 
     #[test]
     fn version_exists() {
         assert_eq!(VERSION, "0.1.0");
     }
 
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn descriptor_reports_direct2d_runtime_capabilities() {
+        let descriptor = descriptor();
+        assert_eq!(descriptor.id, "paint-vm-direct2d");
+        assert_eq!(descriptor.capabilities.text, SupportLevel::Supported);
+        assert_eq!(descriptor.capabilities.glyph_run, SupportLevel::Supported);
+        assert_eq!(descriptor.capabilities.path_arc_to, SupportLevel::Supported);
+        assert_eq!(
+            descriptor.capabilities.antialiasing,
+            SupportLevel::Supported
+        );
+        assert_eq!(
+            descriptor.capabilities.linear_gradient,
+            SupportLevel::Supported
+        );
+        assert_eq!(
+            descriptor.capabilities.radial_gradient,
+            SupportLevel::Supported
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn runtime_registry_can_render_with_direct2d_backend() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+
+        let mut scene = PaintScene::new(32.0, 32.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                4.0, 4.0, 20.0, 20.0, "#000000",
+            )));
+
+        let pixels = registry
+            .render_auto(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-direct2d".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .expect("Direct2D should satisfy a rect-only scene");
+
+        let (r, g, b, a) = pixels.pixel_at(8, 8);
+        assert_eq!((r, g, b, a), (0, 0, 0, 255));
+    }
+
     // ─── Colour parser tests ────────────────────────────────────────────────
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_linear_gradient_fill() {
+        let mut scene = PaintScene::new(20.0, 4.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 20.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                20.0,
+                4.0,
+                "url(#fade)",
+            )));
+
+        let pixels = render(&scene);
+        let (left, _, _, _) = pixels.pixel_at(1, 2);
+        let (right, _, _, _) = pixels.pixel_at(18, 2);
+
+        assert!(left < 80, "expected dark left edge, got {left}");
+        assert!(right > 170, "expected bright right edge, got {right}");
+        assert!(left < right);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_radial_gradient_fill() {
+        let mut scene = PaintScene::new(16.0, 16.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("spot".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 8.0,
+                    cy: 8.0,
+                    r: 8.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                16.0,
+                16.0,
+                "url(#spot)",
+            )));
+
+        let pixels = render(&scene);
+        let (center, _, _, _) = pixels.pixel_at(8, 8);
+        let (corner, _, _, _) = pixels.pixel_at(0, 0);
+
+        assert!(center < 80, "expected dark center, got {center}");
+        assert!(corner > 170, "expected bright corner, got {corner}");
+        assert!(center < corner);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn runtime_registry_accepts_direct2d_gradient_scene() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+
+        let mut scene = PaintScene::new(8.0, 2.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 8.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                8.0,
+                2.0,
+                "url(#fade)",
+            )));
+
+        let pixels = registry
+            .render_auto(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-direct2d".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .expect("Direct2D should advertise exact gradient support");
+
+        let (left, _, _, _) = pixels.pixel_at(1, 1);
+        let (right, _, _, _) = pixels.pixel_at(6, 1);
+        assert!(left < right);
+    }
 
     #[test]
     fn parse_hex_color_6_digit() {
@@ -1471,6 +2032,76 @@ mod tests {
         assert_eq!(r, 0, "black module should have r=0");
         assert_eq!(g, 0, "black module should have g=0");
         assert_eq!(b, 0, "black module should have b=0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_text_draws_visible_pixels() {
+        let mut scene = PaintScene::new(180.0, 80.0);
+        scene.instructions.push(PaintInstruction::Text(PaintText {
+            base: PaintBase::default(),
+            x: 16.0,
+            y: 52.0,
+            text: "Paint VM".to_string(),
+            font_ref: Some("canvas:system-ui@28:400".to_string()),
+            font_size: 28.0,
+            fill: Some("#000000".to_string()),
+            text_align: Some(TextAlign::Left),
+        }));
+
+        let pixels = render(&scene);
+        let Some((min_x, min_y, max_x, max_y)) = dark_pixel_bounds(&pixels) else {
+            panic!("expected PaintText to produce visible pixels");
+        };
+        assert!(max_x > min_x, "text should occupy width");
+        assert!(max_y > min_y, "text should occupy height");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn text_alignment_changes_anchor_position() {
+        fn render_bounds(alignment: TextAlign) -> (u32, u32) {
+            let mut scene = PaintScene::new(220.0, 80.0);
+            scene.instructions.push(PaintInstruction::Text(PaintText {
+                base: PaintBase::default(),
+                x: 110.0,
+                y: 52.0,
+                text: "Align".to_string(),
+                font_ref: Some("directwrite:Segoe UI@windows;w=400;style=normal".to_string()),
+                font_size: 28.0,
+                fill: Some("#000000".to_string()),
+                text_align: Some(alignment),
+            }));
+            let pixels = render(&scene);
+            let (min_x, _, max_x, _) =
+                dark_pixel_bounds(&pixels).expect("alignment case should draw pixels");
+            (min_x, max_x)
+        }
+
+        let (left_min, left_max) = render_bounds(TextAlign::Left);
+        let (center_min, center_max) = render_bounds(TextAlign::Center);
+        let (right_min, right_max) = render_bounds(TextAlign::Right);
+
+        assert!(
+            left_min > center_min,
+            "center alignment should start left of left alignment"
+        );
+        assert!(
+            center_min > right_min,
+            "right alignment should start furthest left"
+        );
+        assert!(
+            left_max >= 110,
+            "left alignment should extend to the right of anchor"
+        );
+        assert!(
+            center_min < 110 && center_max > 110,
+            "center alignment should straddle anchor"
+        );
+        assert!(
+            right_max <= 110,
+            "right alignment should end at or before anchor"
+        );
     }
 
     #[cfg(target_os = "windows")]

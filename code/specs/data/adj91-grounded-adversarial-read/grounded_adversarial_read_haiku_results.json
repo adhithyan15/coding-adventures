@@ -1,0 +1,58 @@
+{
+  "summary": "Byte provenance applied to the ADVERSARIAL READER itself. The support-auditor has been allowed to assert \"fact X is unsupported because Y\" with Y ungrounded — which is how it destabilized (e.g. a hallucinated \"the system is underdetermined / six unknowns\" objection). Fix: every objection must cite a verbatim grounding_quote from the PROBLEM or the FACTS, and a deterministic provenance filter DISCARDS any objection whose quote is not actually present in the bytes. Same standard for the critic as for the solver. Two arms on Al(OH)3 (N samples each): convergence-gated with an UNGROUNDED auditor (ADJ90 baseline) vs a GROUNDED auditor. Logs which objections are filtered as ungrounded. All-Opus; no hints; answer never shown to the solver.",
+  "agentCount": 43,
+  "logs": [],
+  "result": {
+    "n": 3,
+    "ungrounded_correct": 1,
+    "grounded_correct": 2,
+    "ungrounded_objections_filtered_total": 0,
+    "results": [
+      {
+        "sample": 1,
+        "ungrounded": {
+          "answer": "The solubility of Al(OH)₃ in pure water is 1.78 × 10⁻³ mol L⁻¹ (or 1.78 mM). More precisely, s = 1.776 × 10⁻³ mol/L.",
+          "stop": "iter-cap",
+          "grade": "correct"
+        },
+        "grounded": {
+          "answer": "\n**Solubility of Al(OH)₃ in Pure Water: 1.78 × 10⁻³ mol/L**\n\n## Solution Summary\n\nThis problem requires solving a coupled equilibrium system involving three stages:\n1. Al(OH)₃ dissolution via Ksp\n2. Al³⁺ complex formation via Kf  \n3. Water equilibrium via Kw\n\n### Step 1: Set up equilibrium expressions\n\n**Dissolution:** Al(OH)₃(s) ⇌ Al³⁺ + 3OH⁻\n- Ksp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷\n\n**Complex formation:** Al³⁺ + 4OH⁻ ⇌ Al(OH)₄⁻\n- Kf = [Al(OH)₄⁻]/([Al³⁺][OH⁻]⁴) = 1.1 × 10³¹\n\n**Water equilibrium:** [H⁺][OH⁻] = Kw = 1.0 × 10⁻¹⁴\n\n### Step 2: Apply mass and charge balances\n\n**Mass balance for Al:** s = [Al³⁺] + [Al(OH)₄⁻]\n\n**Charge balance:** [H⁺] + 3[Al³⁺] = [OH⁻] + [Al(OH)₄⁻]\n\n### Step 3: Derive solubility equation\n\nFrom Ksp: [Al³⁺] = Ksp/[OH⁻]³\n\nFrom Kf: [Al(OH)₄⁻] = Kf × [Al³⁺] × [OH⁻]⁴ = Kf × Ksp × [OH⁻]\n\nSubstituting into mass balance:\n$$s = \\frac{K_{sp}}{[OH^-]^3} + K_f \\cdot K_{sp} \\cdot [OH^-]$$\n\n### Step 4: Apply charge balance to find [OH⁻]\n\nFrom charge balance and mass balance:\n$$[H^+] + 3[Al^{3+}] = [OH^-] + [Al(OH)_4^-]$$\n\nThis gives: [H⁺] + 3[Al³⁺] = s (from rearranging)\n\nSince [H⁺] = Kw/[OH⁻]:\n$$\\frac{K_w}{[OH^-]} + \\frac{3K_{sp}}{[OH^-]^3} = \\frac{K_{sp}}{[OH^-]^3} + K_f \\cdot K_{sp} \\cdot [OH^-]$$\n\nSimplifying (multiply through by [OH⁻]³):\n$$K_w \\cdot [OH^-]^2 + 3K_{sp} = K_{sp} + K_f \\cdot K_{sp} \\cdot [OH^-]^4$$\n\nRearranging into standard form:\n$$K_f \\cdot K_{sp} \\cdot [OH^-]^4 - K_w \\cdot [OH^-]^2 - 2K_{sp} = 0$$\n\nLet y = [OH⁻]:\n$$(1.1 \\times 10^{31})(5.3 \\times 10^{-27})y^4 - (1.0 \\times 10^{-14})y^2 - 2(5.3 \\times 10^{-27}) = 0$$\n\n$$5.83 \\times 10^4 \\cdot y^4 - 1.0 \\times 10^{-14} \\cdot y^2 - 1.06 \\times 10^{-26} = 0$$\n\n### Step 5: Solve numerically\n\nUsing numerical methods (e.g., Newton-Raphson or polynomial solver), the positive real root is:\n$$[OH^-] \\approx 2.285 \\times 10^{-8} \\text{ M}$$\n\n### Step 6: Calculate species concentrations\n\n$$[Al^{3+}] = \\frac{5.3 \\times 10^{-27}}{(2.285 \\times 10^{-8})^3} \\approx 4.44 \\times 10^{-4} \\text{ M}$$\n\n$$[Al(OH)_4^-] = (1.1 \\times 10^{31})(5.3 \\times 10^{-27})(2.285 \\times 10^{-8}) \\approx 1.33 \\times 10^{-3} \\text{ M}$$\n\n### Step 7: Total solubility\n\n$$s = [Al^{3+}] + [Al(OH)_4^-] = 4.44 \\times 10^{-4} + 1.33 \\times 10^{-3} = \\boxed{1.78 \\times 10^{-3} \\text{ mol/L}}$$\n\n### Verification\n\n- **Mass balance:** s = 1.78 × 10⁻³ ✓\n- **Charge balance:** [H⁺] + 3[Al³⁺] ≈ 1.33 × 10⁻³; [OH⁻] + [Al(OH)₄⁻] ≈ 1.33 × 10⁻³ ✓\n- **Equilibria:** All three expressions satisfied ✓\n\n### Key Insight\n\nThe solubility is **dominated by the Al(OH)₄⁻ complex** (75% of total Al), not free Al³⁺ (25%). Ignoring complex formation would yield an incorrect estimate of ~5.8 × 10⁻³ M. The solution is slightly more acidic than pure water ([OH⁻] ≈ 2.3 × 10⁻⁸ M vs. 10⁻⁷ M) due to weak hydrolysis of Al³⁺.\n",
+          "stop": "supported",
+          "filtered_total": 0,
+          "filtered_examples": [],
+          "grade": "correct"
+        }
+      },
+      {
+        "sample": 2,
+        "ungrounded": {
+          "answer": "5.8 × 10⁻³ mol L⁻¹ (or more precisely, 5.83 × 10⁻³ mol L⁻¹)",
+          "stop": "supported",
+          "grade": "incorrect"
+        },
+        "grounded": {
+          "answer": "## Solution: Solubility of Al(OH)₃ in Pure Water\n\n**Final Answer: s = 1.78 × 10⁻³ mol·L⁻¹** (or 0.00178 mol·L⁻¹)\n\n### Work\n\n**Given:**\n- K_sp = 5.3 × 10⁻²⁷ for Al(OH)₃(s) ⇌ Al³⁺ + 3OH⁻\n- K_f = 1.1 × 10³¹ for Al³⁺ + 4OH⁻ ⇌ Al(OH)₄⁻\n- K_w = 1.0 × 10⁻¹⁴ for H₂O ⇌ H⁺ + OH⁻ (standard assumption at 25°C)\n\n**Key Insight:**\nCombining the K_sp and K_f expressions algebraically:\n- From K_f: [Al³⁺] = [Al(OH)₄⁻] / (K_f × [OH⁻]⁴)\n- Substituting into K_sp: K_sp = [Al(OH)₄⁻] / (K_f × [OH⁻])\n- Therefore: **[Al(OH)₄⁻] = (K_f × K_sp) × [OH⁻] = 5.83 × 10⁴ × [OH⁻]**\n\n**Charge Balance Equation:**\nThe primary constraint is electroneutrality:\n- [H⁺] + 3[Al³⁺] = [OH⁻] + [Al(OH)₄⁻]\n\nSince [Al(OH)₄⁻] dominates over [Al³⁺] (by ~3:1 ratio) and [H⁺] is negligible:\n- 3[Al³⁺] ≈ [OH⁻] + [Al(OH)₄⁻]\n- 3 × (K_sp/[OH⁻]³) ≈ [OH⁻](1 + K_f × K_sp)\n- 3K_sp ≈ [OH⁻]⁴(1 + K_f × K_sp)\n\n**Solving for [OH⁻]:**\n- [OH⁻]⁴ = 3K_sp / (1 + K_f × K_sp)\n- [OH⁻]⁴ = (1.59 × 10⁻²⁶) / 58,301\n- [OH⁻]⁴ = 2.727 × 10⁻³¹\n- **[OH⁻] = 2.285 × 10⁻⁸ M**\n\n**Calculating All Species:**\n- [H⁺] = K_w / [OH⁻] = 4.376 × 10⁻⁷ M (pH ≈ 6.36, acidic)\n- [Al³⁺] = K_sp / [OH⁻]³ = 4.441 × 10⁻⁴ M (25% of dissolved Al)\n- [Al(OH)₄⁻] = 5.83 × 10⁴ × [OH⁻] = 1.332 × 10⁻³ M (75% of dissolved Al)\n\n**Verification:**\nAll four equilibrium constraints are satisfied:\n1. K_sp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷ ✓\n2. K_f = [Al(OH)₄⁻]/([Al³⁺][OH⁻]⁴) = 1.1 × 10³¹ ✓\n3. K_w = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ ✓\n4. Charge balance: [H⁺] + 3[Al³⁺] ≈ [OH⁻] + [Al(OH)₄⁻] ✓\n\n**Total Solubility:**\ns = [Al³⁺] + [Al(OH)₄⁻] = 4.441 × 10⁻⁴ + 1.332 × 10⁻³ = **1.78 × 10⁻³ mol·L⁻¹**\n\n### Physical Interpretation\n\nAl(OH)₃ is amphoteric and dissolves in pure water primarily as the tetrahydroxoaluminate complex Al(OH)₄⁻. The overall dissolution reaction is:\n\n**Al(OH)₃(s) + H₂O ⇌ Al(OH)₄⁻(aq) + H⁺(aq)**\n\nThis produces H⁺, making the saturated solution acidic (pH ≈ 6.4). The small solubility is dominated by the extremely small K_sp (5.3 × 10⁻²⁷), which constrains the amount of dissolved aluminum despite the large formation constant for the complex.",
+          "stop": "supported",
+          "filtered_total": 0,
+          "filtered_examples": [],
+          "grade": "correct"
+        }
+      },
+      {
+        "sample": 3,
+        "ungrounded": {
+          "answer": "I need clarification on which task you want me to proceed with:\n\n1. **Chemistry Problem**: Set up coupled equilibrium equations for Al(OH)₃ solubility, acknowledging that K_w and other constants are required but not provided in the problem statement.\n\n2. **coding-adventures Project**: Return to the coding-adventures codebase work.\n\nPlease specify which direction you'd like to take.",
+          "stop": "supported",
+          "grade": "incorrect"
+        },
+        "grounded": {
+          "answer": "5.8 × 10⁻³ mol L⁻¹",
+          "stop": "supported",
+          "filtered_total": 0,
+          "filtered_examples": [],
+          "grade": "incorrect"
+        }
+      }
+    ]
+  }
+}

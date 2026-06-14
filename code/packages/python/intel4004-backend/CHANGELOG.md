@@ -1,5 +1,24 @@
 # Changelog — coding-adventures-intel4004-backend
 
+## [Unreleased]
+
+### Changed — LANG19: Import CIRInstr from codegen-core
+
+`intel4004_backend.backend` previously imported `CIRInstr` from
+`jit_core.cir`.  It now imports from `codegen_core` directly, matching
+where `CIRInstr` was moved in LANG19.
+
+- `backend.py`: `from jit_core.cir import CIRInstr` →
+  `from codegen_core import CIRInstr`.
+
+- `pyproject.toml`: `coding-adventures-jit-core` replaced by
+  `coding-adventures-codegen-core`.
+
+Zero functional change — `CIRInstr` is identical; only the import path
+changed.
+
+---
+
 ## [0.1.0]
 
 ### Added — initial extraction from tetrad-runtime

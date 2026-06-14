@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] — 2026-05-14 — LANG51 string escape improvements
+
+### Changed
+
+- `process_escapes` in `grammar_lexer.rs` now handles `\r` (carriage return)
+  and `\'` (single-quote) escape sequences in addition to the existing
+  `\n`, `\t`, `\\`, `\"` set.  Unknown sequences still pass through unchanged
+  (the character after `\` is emitted as-is).
+
+  This is a non-breaking change: no existing grammar or token type was relying
+  on `\r` / `\'` being passed through literally; they were simply under-specified.
+
 ## [0.3.0] - 2026-04-04
 
 ### Added

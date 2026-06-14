@@ -1,8 +1,20 @@
 [package]
 name = "barcode-2d"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Shared 2D barcode abstraction: ModuleGrid type and layout() pipeline"
+description = "Shared 2D barcode abstraction: ModuleGrid type, layout() pipeline, and native rendering hub"
 
 [dependencies]
 paint-instructions = { path = "../paint-instructions" }
+paint-codec-png = { path = "../paint-codec-png" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
+paint-vm-skia = { path = "../paint-vm-skia" }
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+paint-metal = { path = "../paint-metal" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+paint-vm-direct2d = { path = "../paint-vm-direct2d" }
+
+[target.'cfg(any(target_os = "linux", target_os = "macos", target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"))'.dependencies]
+paint-vm-cairo = { path = "../paint-vm-cairo" }

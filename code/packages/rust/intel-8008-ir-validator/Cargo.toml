@@ -1,0 +1,7 @@
+[package]
+name = "intel-8008-ir-validator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+compiler-ir = { path = "../compiler-ir" }

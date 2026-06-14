@@ -1,0 +1,8 @@
+{
+ "check_id": 231,
+ "idx": 89,
+ "slot": "is_controller",
+ "claimed_value": true,
+ "scenario": "Dr. Okafor is a sole practitioner physician who maintains and processes detailed medical records solely to treat her own patients in her single-doctor clinic. She did not perform a data protection impact assessment before setting up this records processing.",
+ "cited_span": "Dr. Okafor is a sole practitioner physician who maintains and processes detailed medical records"
+}

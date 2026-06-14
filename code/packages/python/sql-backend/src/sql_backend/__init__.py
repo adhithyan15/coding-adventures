@@ -25,6 +25,7 @@ from .backend import (
 )
 from .errors import (
     BackendError,
+    ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
     IndexAlreadyExists,
@@ -32,18 +33,21 @@ from .errors import (
     Internal,
     TableAlreadyExists,
     TableNotFound,
+    TriggerAlreadyExists,
+    TriggerNotFound,
     Unsupported,
 )
 from .in_memory import InMemoryBackend
 from .index import IndexDef
 from .row import Cursor, ListCursor, ListRowIterator, Row, RowIterator
-from .schema import NO_DEFAULT, ColumnDef, ColumnDefault
+from .schema import NO_DEFAULT, ColumnDef, ColumnDefault, TriggerDef
 from .values import SqlValue, is_sql_value, sql_type_name
 
 __all__ = [
     "NO_DEFAULT",
     "Backend",
     "BackendError",
+    "ColumnAlreadyExists",
     "ColumnDef",
     "ColumnDefault",
     "ColumnNotFound",
@@ -63,6 +67,9 @@ __all__ = [
     "TableAlreadyExists",
     "TableNotFound",
     "TransactionHandle",
+    "TriggerAlreadyExists",
+    "TriggerDef",
+    "TriggerNotFound",
     "Unsupported",
     "backend_as_schema_provider",
     "is_sql_value",

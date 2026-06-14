@@ -1,0 +1,8 @@
+{
+ "idx": 42,
+ "policy": "Cold TCS food may be displayed without temperature control for a maximum of 6 hours, provided it began at 41 degrees F or below and never exceeds 70 degrees F during display. Food exceeding 70 degrees F at any point must be discarded immediately regardless of elapsed time.",
+ "scenario": "A deli displays tuna salad without refrigeration. It started at 40 degrees F. After 3 hours on display, a probe thermometer reads 74 degrees F.",
+ "question": "Must the tuna salad be discarded?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "must be discarded"
+}

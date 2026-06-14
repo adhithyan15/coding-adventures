@@ -42,7 +42,7 @@
 //! | Data placement | Two-column zigzag | **Utah diagonal zigzag** |
 //! | Masking | 8 patterns evaluated | **No masking** |
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 use barcode_2d::{layout, Barcode2DLayoutConfig, ModuleGrid, ModuleShape};
 use paint_instructions::PaintScene;
@@ -903,6 +903,46 @@ pub fn encode_str(
     encode(input.as_bytes(), options)
 }
 
+/// Encode a Data Matrix and render it directly to PNG bytes.
+///
+/// This is the single-call convenience path from raw data to a raster image.
+/// It composes the two lower-level steps:
+///   1. [`encode_and_layout()`] — encodes the data into ECC200 format, then
+///      converts the abstract module grid to a pixel-geometry [`PaintScene`]
+///      via `barcode-2d`'s `layout()`.
+///   2. [`barcode_2d::render_scene_png()`] — dispatches to the
+///      platform-default rendering backend (Metal on macOS, Cairo on Linux,
+///      Direct2D on Windows, Skia as a universal software fallback) and
+///      serialises the result as a PNG byte stream.
+///
+/// # Errors
+///
+/// Returns `Err(String)` if:
+///   - The input data is too long to encode in any Data Matrix symbol
+///     (wraps [`DataMatrixError::InputTooLong`] via `.to_string()`).
+///   - The rendering backend fails (e.g. no GPU, unsupported pixel format).
+///
+/// # Example
+///
+/// ```rust,no_run
+/// use data_matrix::{render_png, DataMatrixOptions};
+///
+/// let png_bytes = render_png(b"HELLO", DataMatrixOptions::default()).unwrap();
+/// // PNG magic bytes: \x89PNG\r\n\x1a\n
+/// assert_eq!(&png_bytes[..8], &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A]);
+/// ```
+pub fn render_png(data: &[u8], options: DataMatrixOptions) -> Result<Vec<u8>, String> {
+    // Step 1: Encode and compute pixel geometry.  Pass `None` for config so
+    // the default quiet zone (1 module, matching the Data Matrix L-finder
+    // convention) is used.
+    let scene = encode_and_layout(data, options, None).map_err(|e| e.to_string())?;
+
+    // Step 2: Hand the PaintScene off to barcode-2d's rendering hub.  It
+    // selects the platform-default backend automatically and returns raw PNG
+    // bytes ready for writing to disk or serving over HTTP.
+    barcode_2d::render_scene_png(&scene)
+}
+
 /// Encode and convert to a pixel-resolved [`PaintScene`].
 ///
 /// Delegates pixel geometry to `barcode-2d`'s `layout()`.
@@ -1289,6 +1329,29 @@ mod tests {
                 let _ = m;
             }
         }
+    }
+
+    // ── render_png ────────────────────────────────────────────────────────────
+
+    #[test]
+    fn data_matrix_render_png_produces_valid_png() {
+        // render_png() must return bytes whose first 8 bytes are the PNG magic
+        // signature defined in the PNG specification (ISO/IEC 15948):
+        //   \x89 P N G \r \n \x1a \n
+        // Any valid PNG encoder — regardless of backend — must emit exactly
+        // this header.  The test is intentionally backend-agnostic; we only
+        // verify the wire format, not pixel values.
+        let png = render_png(b"HELLO", DataMatrixOptions::default()).unwrap();
+        assert!(
+            png.len() >= 8,
+            "PNG output is too short ({} bytes) to contain a valid header",
+            png.len()
+        );
+        assert_eq!(
+            &png[..8],
+            &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A],
+            "First 8 bytes do not match the PNG magic signature"
+        );
     }
 
     // ── Utah algorithm ────────────────────────────────────────────────────────

@@ -1,0 +1,9 @@
+[package]
+name = "lookup-core"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Rust lookup/reference core — Excel/Lotus/R lookup functions for any spreadsheet frontend."
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }
+r-vector = { path = "../r-vector" }

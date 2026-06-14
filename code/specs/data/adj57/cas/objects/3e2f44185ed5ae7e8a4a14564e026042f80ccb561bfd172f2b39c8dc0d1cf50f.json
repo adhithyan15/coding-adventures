@@ -1,0 +1,16 @@
+{
+  "hash": "3e2f44185ed5ae7e8a4a14564e026042f80ccb561bfd172f2b39c8dc0d1cf50f",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/16538388/",
+  "title": "Kikuchi-Fujimoto Disease: analysis of 244 cases (Kucukardali et al., Clin Rheumatol 2006)",
+  "interned_at": "",
+  "content": "The disease was reported in 244 patients (33% males and 77% females). Mean age was 25 (1-64) and 70% was younger than 30. The most common clinical features were lymphadenomegaly (100%), fever (35%), and the most common laboratory features were leucopenia (43%), high erythrocyte sedimentation rate (40%) and anemia (23%).",
+  "citations": [
+    {
+      "start": 203,
+      "end": 260,
+      "quote": "the most common laboratory features were leucopenia (43%)",
+      "used_for": "wbc(1.35, leukopenia) LR+ for Kikuchi-Fujimoto disease->kikuchi_fujimoto_disease"
+    }
+  ],
+  "onward_citations": []
+}

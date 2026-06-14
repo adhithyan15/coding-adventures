@@ -1,0 +1,29 @@
+cabal-version:      2.4
+name:               neural-graph-vm
+version:            0.1.0.0
+synopsis:           Scalar bytecode compiler for neural graphs.
+description:        Educational neural graph VM package for NN02.
+category:           Machine Learning
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+
+library
+    exposed-modules:  NeuralGraphVM
+    build-depends:    base >= 4.7 && < 5
+                    , containers >= 0.6
+                    , neural-network
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite neural-graph-vm-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    NeuralGraphVMSpec
+    build-depends:    base >= 4.7 && < 5
+                    , containers >= 0.6
+                    , hspec == 2.*
+                    , neural-network
+                    , neural-graph-vm

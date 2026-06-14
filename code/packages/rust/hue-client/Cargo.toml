@@ -1,0 +1,12 @@
+[package]
+name = "hue-client"
+version = "0.1.0"
+edition = "2021"
+description = "Transport-neutral Philips Hue CLIP v2 client core with injectable HTTP transport"
+license = "MIT"
+
+[dependencies]
+hue-core = { path = "../hue-core" }
+http-core = { path = "../http-core" }
+coding-adventures-json-value = { path = "../json-value" }
+coding-adventures-json-serializer = { path = "../json-serializer" }

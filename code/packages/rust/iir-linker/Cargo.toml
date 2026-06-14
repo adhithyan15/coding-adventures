@@ -1,0 +1,12 @@
+[package]
+name = "iir-linker"
+version = "0.1.0"
+edition = "2021"
+description = "Static linker for IIRModules — resolves imports/exports and merges into one module (LANG33)"
+
+[lib]
+name = "iir_linker"
+path = "src/lib.rs"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }

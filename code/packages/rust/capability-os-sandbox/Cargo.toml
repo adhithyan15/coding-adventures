@@ -1,0 +1,10 @@
+[package]
+name = "capability-os-sandbox"
+version = "0.1.0"
+edition = "2021"
+description = "Lower required_capabilities.json manifests into OS-specific sandbox primitive plans"
+
+[dependencies]
+capability-cage = { path = "../capability-cage" }
+coding-adventures-json-value = { path = "../json-value" }
+operation-primitives = { path = "../operation-primitives" }

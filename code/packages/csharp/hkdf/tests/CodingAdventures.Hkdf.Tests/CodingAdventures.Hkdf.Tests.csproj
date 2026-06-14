@@ -18,4 +18,8 @@
     <Using Include="Xunit" />
     <ProjectReference Include="../../CodingAdventures.Hkdf.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <Exclude>[CodingAdventures.Hmac]*,[CodingAdventures.Md5]*,[CodingAdventures.Sha1]*,[CodingAdventures.Sha256]*,[CodingAdventures.Sha512]*</Exclude>
+  </PropertyGroup>
 </Project>

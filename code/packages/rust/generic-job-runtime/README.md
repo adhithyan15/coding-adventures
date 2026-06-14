@@ -24,6 +24,29 @@ targets.
 - Opt-in stdio worker restart policies that can revive a dead worker slot while
   preserving worker-index affinity.
 - Capability and limit metadata that adapters can inspect.
+- Fleet-level capability summaries for D18C placement and portability checks
+  over executor isolation, timeout, affinity, cancellation, and queue limits.
+- Compact response-summary draining for supervisor/read-side tools that only
+  need terminal status, retryability, trace, and attempt facts.
+- Aggregated response-summary drain batches for supervisor/read-side tools that
+  need terminal counts without retaining response payloads.
+- Drain outcome helpers for classifying empty, successful, failed, and
+  retryable-failed response batches.
+- Non-consuming executor snapshots for supervisor/read-side tools, including
+  live workers, in-flight jobs, queued jobs, running jobs, and saturation.
+- Queue-pressure bands and percent-threshold checks for D18C supervisors that
+  need stable read-side backpressure signals.
+- Executor admission-status helpers for distinguishing accepting, draining,
+  offline, and queue-full runtimes before submit.
+- Snapshot health classification for D18C supervisors to distinguish idle,
+  busy, saturated, draining, and offline executors.
+- Snapshot supervision recommendations for backpressure, worker restart, and
+  graceful draining decisions.
+- Fleet-level executor snapshot summaries for supervisor/read-side tools that
+  need aggregate capacity, queue pressure, and supervision decisions across
+  multiple executors.
+- Fleet status summaries for D18C host/read-side tools that need one compact
+  status, acceptance, queue-pressure, and supervision-readiness record.
 
 The crate does not know about TCP, RESP, Redis, IRC, or sockets. Those adapters
 submit typed job payloads and decide how to apply responses.

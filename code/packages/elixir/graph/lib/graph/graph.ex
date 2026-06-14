@@ -11,15 +11,29 @@ defmodule CodingAdventures.Graph.Graph do
   }
 
   @enforce_keys [:repr, :adj, :node_list, :node_index, :matrix]
-  defstruct [:repr, :adj, :node_list, :node_index, :matrix]
+  defstruct [
+    :repr,
+    :adj,
+    :node_list,
+    :node_index,
+    :matrix,
+    graph_properties: %{},
+    node_properties: %{},
+    edge_properties: %{}
+  ]
 
   @type repr_t :: :adjacency_list | :adjacency_matrix
+  @type property_value :: String.t() | number() | boolean() | nil
+  @type property_bag :: %{optional(String.t()) => property_value()}
   @type t :: %__MODULE__{
           repr: repr_t(),
           adj: %{optional(String.t()) => %{optional(String.t()) => float()}},
           node_list: [String.t()],
           node_index: %{optional(String.t()) => non_neg_integer()},
-          matrix: [[float() | nil]]
+          matrix: [[float() | nil]],
+          graph_properties: property_bag(),
+          node_properties: %{optional(String.t()) => property_bag()},
+          edge_properties: %{optional({String.t(), String.t()}) => property_bag()}
         }
 
   @type weighted_edge :: {String.t(), String.t(), float()}
@@ -40,14 +54,27 @@ defmodule CodingAdventures.Graph.Graph do
     }
   end
 
-  @spec add_node(t(), String.t()) :: {:ok, t()}
-  def add_node(%__MODULE__{repr: :adjacency_list, adj: adj} = graph, node) do
-    {:ok, %{graph | adj: Map.put_new(adj, node, %{})}}
+  @spec add_node(t(), String.t(), property_bag()) :: {:ok, t()}
+  def add_node(graph, node, properties \\ %{})
+
+  def add_node(%__MODULE__{repr: :adjacency_list, adj: adj} = graph, node, properties) do
+    graph = %{
+      graph
+      | adj: Map.put_new(adj, node, %{}),
+        node_properties: merge_property_bag(graph.node_properties, node, properties)
+    }
+
+    {:ok, graph}
   end
 
-  def add_node(%__MODULE__{repr: :adjacency_matrix, node_index: node_index} = graph, node) do
+  def add_node(
+        %__MODULE__{repr: :adjacency_matrix, node_index: node_index} = graph,
+        node,
+        properties
+      ) do
     if Map.has_key?(node_index, node) do
-      {:ok, graph}
+      {:ok,
+       %{graph | node_properties: merge_property_bag(graph.node_properties, node, properties)}}
     else
       index = length(graph.node_list)
       matrix = Enum.map(graph.matrix, &(&1 ++ [nil])) ++ [List.duplicate(nil, index + 1)]
@@ -57,7 +84,8 @@ defmodule CodingAdventures.Graph.Graph do
          graph
          | node_list: graph.node_list ++ [node],
            node_index: Map.put(node_index, node, index),
-           matrix: matrix
+           matrix: matrix,
+           node_properties: merge_property_bag(graph.node_properties, node, properties)
        }}
     end
   end
@@ -77,7 +105,20 @@ defmodule CodingAdventures.Graph.Graph do
           end)
           |> Map.delete(node)
 
-        {:ok, %{graph | adj: next_adj}}
+        edge_properties =
+          neighbors
+          |> Map.keys()
+          |> Enum.reduce(graph.edge_properties, fn neighbor, acc ->
+            Map.delete(acc, edge_key(node, neighbor))
+          end)
+
+        {:ok,
+         %{
+           graph
+           | adj: next_adj,
+             node_properties: Map.delete(graph.node_properties, node),
+             edge_properties: edge_properties
+         }}
     end
   end
 
@@ -90,13 +131,29 @@ defmodule CodingAdventures.Graph.Graph do
         node_list = List.delete_at(graph.node_list, index)
         matrix = graph.matrix |> List.delete_at(index) |> Enum.map(&List.delete_at(&1, index))
         node_index = rebuild_index(node_list)
-        {:ok, %{graph | node_list: node_list, node_index: node_index, matrix: matrix}}
+
+        edge_properties =
+          Enum.reduce(graph.node_list, graph.edge_properties, fn other, acc ->
+            Map.delete(acc, edge_key(node, other))
+          end)
+
+        {:ok,
+         %{
+           graph
+           | node_list: node_list,
+             node_index: node_index,
+             matrix: matrix,
+             node_properties: Map.delete(graph.node_properties, node),
+             edge_properties: edge_properties
+         }}
     end
   end
 
   @spec has_node?(t(), String.t()) :: boolean()
   def has_node?(%__MODULE__{repr: :adjacency_list, adj: adj}, node), do: Map.has_key?(adj, node)
-  def has_node?(%__MODULE__{repr: :adjacency_matrix, node_index: idx}, node), do: Map.has_key?(idx, node)
+
+  def has_node?(%__MODULE__{repr: :adjacency_matrix, node_index: idx}, node),
+    do: Map.has_key?(idx, node)
 
   @spec nodes(t()) :: [String.t()]
   def nodes(%__MODULE__{repr: :adjacency_list, adj: adj}), do: sort_nodes(Map.keys(adj))
@@ -106,10 +163,11 @@ defmodule CodingAdventures.Graph.Graph do
   def size(%__MODULE__{repr: :adjacency_list, adj: adj}), do: map_size(adj)
   def size(%__MODULE__{repr: :adjacency_matrix, node_list: node_list}), do: length(node_list)
 
-  @spec add_edge(t(), String.t(), String.t(), float()) :: {:ok, t()}
-  def add_edge(graph, left, right, weight \\ 1.0) do
+  @spec add_edge(t(), String.t(), String.t(), float(), property_bag()) :: {:ok, t()}
+  def add_edge(graph, left, right, weight \\ 1.0, properties \\ %{}) do
     {:ok, graph} = add_node(graph, left)
     {:ok, graph} = add_node(graph, right)
+    edge_properties = put_edge_properties(graph.edge_properties, left, right, weight, properties)
 
     case graph.repr do
       :adjacency_list ->
@@ -118,7 +176,7 @@ defmodule CodingAdventures.Graph.Graph do
           |> put_in([left, right], weight)
           |> put_in([right, left], weight)
 
-        {:ok, %{graph | adj: adj}}
+        {:ok, %{graph | adj: adj, edge_properties: edge_properties}}
 
       :adjacency_matrix ->
         left_index = Map.fetch!(graph.node_index, left)
@@ -129,7 +187,7 @@ defmodule CodingAdventures.Graph.Graph do
           |> replace_cell(left_index, right_index, weight)
           |> replace_cell(right_index, left_index, weight)
 
-        {:ok, %{graph | matrix: matrix}}
+        {:ok, %{graph | matrix: matrix, edge_properties: edge_properties}}
     end
   end
 
@@ -143,7 +201,12 @@ defmodule CodingAdventures.Graph.Graph do
             |> update_in([left], &Map.delete(&1, right))
             |> update_in([right], &Map.delete(&1, left))
 
-          {:ok, %{graph | adj: adj}}
+          {:ok,
+           %{
+             graph
+             | adj: adj,
+               edge_properties: Map.delete(graph.edge_properties, edge_key(left, right))
+           }}
 
         :adjacency_matrix ->
           left_index = Map.fetch!(graph.node_index, left)
@@ -154,7 +217,12 @@ defmodule CodingAdventures.Graph.Graph do
             |> replace_cell(left_index, right_index, nil)
             |> replace_cell(right_index, left_index, nil)
 
-          {:ok, %{graph | matrix: matrix}}
+          {:ok,
+           %{
+             graph
+             | matrix: matrix,
+               edge_properties: Map.delete(graph.edge_properties, edge_key(left, right))
+           }}
       end
     else
       {:error,
@@ -171,7 +239,11 @@ defmodule CodingAdventures.Graph.Graph do
     adj |> Map.get(left, %{}) |> Map.has_key?(right)
   end
 
-  def has_edge?(%__MODULE__{repr: :adjacency_matrix, node_index: idx, matrix: matrix}, left, right) do
+  def has_edge?(
+        %__MODULE__{repr: :adjacency_matrix, node_index: idx, matrix: matrix},
+        left,
+        right
+      ) do
     with {:ok, left_index} <- Map.fetch(idx, left),
          {:ok, right_index} <- Map.fetch(idx, right) do
       get_in(matrix, [Access.at(left_index), Access.at(right_index)]) != nil
@@ -203,21 +275,22 @@ defmodule CodingAdventures.Graph.Graph do
     if node_list == [] do
       []
     else
-    0..(length(node_list) - 1)
-    |> Enum.flat_map(fn row ->
-      row..(length(node_list) - 1)
-      |> Enum.reduce([], fn col, acc ->
-        case get_in(matrix, [Access.at(row), Access.at(col)]) do
-          nil -> acc
-          weight -> [{Enum.at(node_list, row), Enum.at(node_list, col), weight} | acc]
-        end
+      0..(length(node_list) - 1)
+      |> Enum.flat_map(fn row ->
+        row..(length(node_list) - 1)
+        |> Enum.reduce([], fn col, acc ->
+          case get_in(matrix, [Access.at(row), Access.at(col)]) do
+            nil -> acc
+            weight -> [{Enum.at(node_list, row), Enum.at(node_list, col), weight} | acc]
+          end
+        end)
       end)
-    end)
-    |> Enum.sort_by(fn {left, right, weight} -> {weight, sort_key(left), sort_key(right)} end)
+      |> Enum.sort_by(fn {left, right, weight} -> {weight, sort_key(left), sort_key(right)} end)
     end
   end
 
-  @spec edge_weight(t(), String.t(), String.t()) :: {:ok, float()} | {:error, EdgeNotFoundError.t()}
+  @spec edge_weight(t(), String.t(), String.t()) ::
+          {:ok, float()} | {:error, EdgeNotFoundError.t()}
   def edge_weight(%__MODULE__{repr: :adjacency_list, adj: adj}, left, right) do
     case adj |> Map.get(left, %{}) |> Map.fetch(right) do
       {:ok, weight} -> {:ok, weight}
@@ -225,13 +298,146 @@ defmodule CodingAdventures.Graph.Graph do
     end
   end
 
-  def edge_weight(%__MODULE__{repr: :adjacency_matrix, node_index: idx, matrix: matrix}, left, right) do
+  def edge_weight(
+        %__MODULE__{repr: :adjacency_matrix, node_index: idx, matrix: matrix},
+        left,
+        right
+      ) do
     with {:ok, left_index} <- Map.fetch(idx, left),
          {:ok, right_index} <- Map.fetch(idx, right),
-         weight when not is_nil(weight) <- get_in(matrix, [Access.at(left_index), Access.at(right_index)]) do
+         weight when not is_nil(weight) <-
+           get_in(matrix, [Access.at(left_index), Access.at(right_index)]) do
       {:ok, weight}
     else
       _ -> edge_not_found(left, right)
+    end
+  end
+
+  @spec graph_properties(t()) :: property_bag()
+  def graph_properties(%__MODULE__{graph_properties: properties}), do: Map.new(properties)
+
+  @spec set_graph_property(t(), String.t(), property_value()) :: {:ok, t()}
+  def set_graph_property(%__MODULE__{} = graph, key, value) do
+    {:ok, %{graph | graph_properties: Map.put(graph.graph_properties, key, value)}}
+  end
+
+  @spec remove_graph_property(t(), String.t()) :: {:ok, t()}
+  def remove_graph_property(%__MODULE__{} = graph, key) do
+    {:ok, %{graph | graph_properties: Map.delete(graph.graph_properties, key)}}
+  end
+
+  @spec node_properties(t(), String.t()) ::
+          {:ok, property_bag()} | {:error, NodeNotFoundError.t()}
+  def node_properties(graph, node) do
+    if has_node?(graph, node) do
+      {:ok, Map.new(Map.get(graph.node_properties, node, %{}))}
+    else
+      node_not_found(node)
+    end
+  end
+
+  @spec set_node_property(t(), String.t(), String.t(), property_value()) ::
+          {:ok, t()} | {:error, NodeNotFoundError.t()}
+  def set_node_property(graph, node, key, value) do
+    if has_node?(graph, node) do
+      {:ok,
+       %{
+         graph
+         | node_properties: merge_property_bag(graph.node_properties, node, %{key => value})
+       }}
+    else
+      node_not_found(node)
+    end
+  end
+
+  @spec remove_node_property(t(), String.t(), String.t()) ::
+          {:ok, t()} | {:error, NodeNotFoundError.t()}
+  def remove_node_property(graph, node, key) do
+    if has_node?(graph, node) do
+      node_properties =
+        Map.update(graph.node_properties, node, %{}, fn properties ->
+          Map.delete(properties, key)
+        end)
+
+      {:ok, %{graph | node_properties: node_properties}}
+    else
+      node_not_found(node)
+    end
+  end
+
+  @spec edge_properties(t(), String.t(), String.t()) ::
+          {:ok, property_bag()} | {:error, EdgeNotFoundError.t()}
+  def edge_properties(graph, left, right) do
+    case edge_weight(graph, left, right) do
+      {:ok, weight} ->
+        properties =
+          graph.edge_properties
+          |> Map.get(edge_key(left, right), %{})
+          |> Map.put("weight", weight)
+
+        {:ok, properties}
+
+      error ->
+        error
+    end
+  end
+
+  @spec set_edge_property(t(), String.t(), String.t(), String.t(), property_value()) ::
+          {:ok, t()} | {:error, EdgeNotFoundError.t()}
+  def set_edge_property(graph, left, right, "weight", value) when is_number(value) do
+    with {:ok, graph} <- set_edge_weight(graph, left, right, value) do
+      {:ok,
+       %{
+         graph
+         | edge_properties:
+             put_edge_properties(graph.edge_properties, left, right, value, %{"weight" => value})
+       }}
+    end
+  end
+
+  def set_edge_property(_graph, _left, _right, "weight", _value) do
+    raise ArgumentError, "edge property \"weight\" must be numeric"
+  end
+
+  def set_edge_property(graph, left, right, key, value) do
+    if has_edge?(graph, left, right) do
+      edge_properties =
+        Map.update(
+          graph.edge_properties,
+          edge_key(left, right),
+          %{key => value},
+          &Map.put(&1, key, value)
+        )
+
+      {:ok, %{graph | edge_properties: edge_properties}}
+    else
+      edge_not_found(left, right)
+    end
+  end
+
+  @spec remove_edge_property(t(), String.t(), String.t(), String.t()) ::
+          {:ok, t()} | {:error, EdgeNotFoundError.t()}
+  def remove_edge_property(graph, left, right, "weight") do
+    with {:ok, graph} <- set_edge_weight(graph, left, right, 1.0) do
+      {:ok,
+       %{
+         graph
+         | edge_properties:
+             put_edge_properties(graph.edge_properties, left, right, 1.0, %{"weight" => 1.0})
+       }}
+    end
+  end
+
+  def remove_edge_property(graph, left, right, key) do
+    if has_edge?(graph, left, right) do
+      edge_properties =
+        Map.update(graph.edge_properties, edge_key(left, right), %{}, fn properties ->
+          Map.delete(properties, key)
+        end)
+
+      {:ok, %{graph | edge_properties: edge_properties}}
+    else
+      edge_not_found(left, right)
     end
   end
 
@@ -243,7 +449,15 @@ defmodule CodingAdventures.Graph.Graph do
     end
   end
 
-  def neighbors(%__MODULE__{repr: :adjacency_matrix, node_index: idx, node_list: node_list, matrix: matrix}, node) do
+  def neighbors(
+        %__MODULE__{
+          repr: :adjacency_matrix,
+          node_index: idx,
+          node_list: node_list,
+          matrix: matrix
+        },
+        node
+      ) do
     case Map.fetch(idx, node) do
       {:ok, index} ->
         result =
@@ -271,7 +485,15 @@ defmodule CodingAdventures.Graph.Graph do
     end
   end
 
-  def neighbors_weighted(%__MODULE__{repr: :adjacency_matrix, node_index: idx, node_list: node_list, matrix: matrix}, node) do
+  def neighbors_weighted(
+        %__MODULE__{
+          repr: :adjacency_matrix,
+          node_index: idx,
+          node_list: node_list,
+          matrix: matrix
+        },
+        node
+      ) do
     case Map.fetch(idx, node) do
       {:ok, index} ->
         weights =
@@ -319,7 +541,9 @@ defmodule CodingAdventures.Graph.Graph do
   @spec is_connected?(t()) :: boolean()
   def is_connected?(graph) do
     case nodes(graph) do
-      [] -> true
+      [] ->
+        true
+
       [first | _] ->
         case bfs(graph, first) do
           {:ok, visited} -> length(visited) == size(graph)
@@ -355,10 +579,17 @@ defmodule CodingAdventures.Graph.Graph do
   @spec shortest_path(t(), String.t(), String.t()) :: [String.t()]
   def shortest_path(graph, start, finish) do
     cond do
-      not has_node?(graph, start) or not has_node?(graph, finish) -> []
-      start == finish -> [start]
-      Enum.all?(edges(graph), fn {_l, _r, weight} -> weight == 1.0 end) -> bfs_shortest_path(graph, start, finish)
-      true -> dijkstra_shortest_path(graph, start, finish)
+      not has_node?(graph, start) or not has_node?(graph, finish) ->
+        []
+
+      start == finish ->
+        [start]
+
+      Enum.all?(edges(graph), fn {_l, _r, weight} -> weight == 1.0 end) ->
+        bfs_shortest_path(graph, start, finish)
+
+      true ->
+        dijkstra_shortest_path(graph, start, finish)
     end
   end
 
@@ -373,7 +604,9 @@ defmodule CodingAdventures.Graph.Graph do
 
       true ->
         result =
-          Enum.reduce(edges(graph), {new_union_find(nodes(graph)), []}, fn {left, right, _weight} = edge, {uf, acc} ->
+          Enum.reduce(edges(graph), {new_union_find(nodes(graph)), []}, fn {left, right, _weight} =
+                                                                             edge,
+                                                                           {uf, acc} ->
             if find(uf, left) == find(uf, right) do
               {uf, acc}
             else
@@ -498,7 +731,8 @@ defmodule CodingAdventures.Graph.Graph do
 
         {next_queue, next_distances, next_parents} =
           Enum.reduce(weighted, {rest, distances, parents}, fn {neighbor, weight},
-                                                                {queue_acc, distances_acc, parents_acc} ->
+                                                               {queue_acc, distances_acc,
+                                                                parents_acc} ->
             new_distance = distance + weight
             current_distance = Map.get(distances_acc, neighbor, :infinity)
 
@@ -589,6 +823,50 @@ defmodule CodingAdventures.Graph.Graph do
     if sort_key(left) <= sort_key(right), do: {left, right}, else: {right, left}
   end
 
+  defp edge_key(left, right), do: canonical_endpoints(left, right)
+
+  defp merge_property_bag(property_map, owner, properties) do
+    Map.update(property_map, owner, Map.new(properties), &Map.merge(&1, properties))
+  end
+
+  defp put_edge_properties(edge_properties, left, right, weight, properties) do
+    key = edge_key(left, right)
+
+    Map.update(
+      edge_properties,
+      key,
+      Map.put(Map.new(properties), "weight", weight),
+      fn existing -> existing |> Map.merge(properties) |> Map.put("weight", weight) end
+    )
+  end
+
+  defp set_edge_weight(graph, left, right, weight) do
+    if has_edge?(graph, left, right) do
+      case graph.repr do
+        :adjacency_list ->
+          adj =
+            graph.adj
+            |> put_in([left, right], weight)
+            |> put_in([right, left], weight)
+
+          {:ok, %{graph | adj: adj}}
+
+        :adjacency_matrix ->
+          left_index = Map.fetch!(graph.node_index, left)
+          right_index = Map.fetch!(graph.node_index, right)
+
+          matrix =
+            graph.matrix
+            |> replace_cell(left_index, right_index, weight)
+            |> replace_cell(right_index, left_index, weight)
+
+          {:ok, %{graph | matrix: matrix}}
+      end
+    else
+      edge_not_found(left, right)
+    end
+  end
+
   defp sort_nodes(nodes), do: Enum.sort_by(nodes, &sort_key/1)
   defp sort_key(node), do: "#{node}"
 
@@ -598,7 +876,11 @@ defmodule CodingAdventures.Graph.Graph do
   defp normalize_repr!("adjacency_matrix"), do: :adjacency_matrix
 
   defp normalize_repr!(other),
-    do: raise(ArgumentError, "repr must be :adjacency_list or :adjacency_matrix, got: #{inspect(other)}")
+    do:
+      raise(
+        ArgumentError,
+        "repr must be :adjacency_list or :adjacency_matrix, got: #{inspect(other)}"
+      )
 
   defp node_not_found(node),
     do: {:error, %NodeNotFoundError{message: "Node not found: #{inspect(node)}", node: node}}

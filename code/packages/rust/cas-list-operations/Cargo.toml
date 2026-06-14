@@ -1,0 +1,9 @@
+[package]
+name = "cas-list-operations"
+version = "0.1.0"
+edition = "2021"
+description = "List operations over the symbolic IR (Length, First, Rest, Map, Select, ...)"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

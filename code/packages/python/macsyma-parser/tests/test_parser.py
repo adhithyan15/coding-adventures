@@ -10,7 +10,7 @@ name, number of statements, key nonterminal types appearing.
 from __future__ import annotations
 
 from lang_parser import ASTNode, find_nodes
-from macsyma_parser import parse_macsyma
+from macsyma_parser import format_macsyma_syntax_error, parse_macsyma
 
 
 def test_single_expression_statement() -> None:
@@ -129,3 +129,22 @@ def test_empty_program() -> None:
 def test_returns_ast_node() -> None:
     ast = parse_macsyma("1;")
     assert isinstance(ast, ASTNode)
+
+
+def test_formats_parser_error_with_line_column_and_caret() -> None:
+    source = "1 +;"
+    try:
+        parse_macsyma(source)
+    except Exception as exc:
+        message = format_macsyma_syntax_error(source, exc)
+    else:  # pragma: no cover - this input must stay invalid
+        raise AssertionError("expected parser failure")
+
+    assert message.startswith("Incorrect syntax at line 1, column ")
+    assert "1 +;" in message
+    assert "^" in message
+
+
+def test_formats_parser_error_without_token_metadata() -> None:
+    message = format_macsyma_syntax_error("1 +;", ValueError("plain failure"))
+    assert message == "Incorrect syntax: plain failure"

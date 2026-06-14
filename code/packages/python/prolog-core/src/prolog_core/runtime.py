@@ -30,6 +30,9 @@ from symbol_core import Symbol, sym
 __version__ = "0.1.0"
 
 type OperatorAssociativity = Literal["xfx", "xfy", "yfx", "fx", "fy", "xf", "yf"]
+type OperatorTableFamily = Literal["iso", "swi"]
+type DoubleQuotesPolicy = Literal["codes", "chars", "atom", "string"]
+type ModulePolicy = Literal["none", "quintus", "swi", "package", "tabled"]
 
 _VALID_ASSOCIATIVITIES = frozenset({"xfx", "xfy", "yfx", "fx", "fy", "xf", "yf"})
 _ASSOCIATIVITY_ARITY: dict[OperatorAssociativity, int] = {
@@ -199,6 +202,52 @@ def empty_operator_table() -> OperatorTable:
     """Return an empty immutable operator table."""
 
     return OperatorTable()
+
+
+@dataclass(frozen=True, slots=True)
+class DialectProfile:
+    """Declarative frontend/runtime policy for one Prolog dialect family."""
+
+    name: str
+    display_name: str
+    token_grammar: str
+    parser_grammar: str
+    operator_table_family: OperatorTableFamily = "iso"
+    double_quotes: DoubleQuotesPolicy = "codes"
+    module_policy: ModulePolicy = "none"
+    supports_loader: bool = False
+    enabled_extensions: frozenset[str] = frozenset()
+    aliases: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        normalized_name = self.name.strip().lower().replace("_", "-")
+        if not normalized_name:
+            msg = "dialect profile names cannot be empty"
+            raise ValueError(msg)
+        object.__setattr__(self, "name", normalized_name)
+        object.__setattr__(
+            self,
+            "enabled_extensions",
+            frozenset(self.enabled_extensions),
+        )
+        object.__setattr__(
+            self,
+            "aliases",
+            tuple(alias.strip().lower().replace("_", "-") for alias in self.aliases),
+        )
+
+    @property
+    def supports_modules(self) -> bool:
+        """Return whether this dialect profile has module-aware lookup."""
+
+        return self.module_policy != "none"
+
+    def operator_table(self) -> OperatorTable:
+        """Return a fresh default operator table for this dialect profile."""
+
+        if self.operator_table_family == "swi":
+            return swi_operator_table()
+        return iso_operator_table()
 
 
 @dataclass(frozen=True, slots=True)
@@ -969,7 +1018,29 @@ def iso_operator_table() -> OperatorTable:
         (1050, "xfy", ("->",)),
         (1000, "xfy", (",",)),
         (900, "fy", ("\\+",)),
-        (700, "xfx", ("=", "\\=", "is", "=:=", "=\\=", "<", "=<", ">", ">=")),
+        (
+            700,
+            "xfx",
+            (
+                "=",
+                "\\=",
+                "==",
+                "\\==",
+                "=@=",
+                "\\=@=",
+                "@<",
+                "@=<",
+                "@>",
+                "@>=",
+                "is",
+                "=:=",
+                "=\\=",
+                "<",
+                "=<",
+                ">",
+                ">=",
+            ),
+        ),
         (500, "yfx", ("+", "-")),
         (400, "yfx", ("*", "/", "//", "mod")),
         (200, "xfy", ("^",)),
@@ -985,4 +1056,165 @@ def iso_operator_table() -> OperatorTable:
 def swi_operator_table() -> OperatorTable:
     """Return the first shared SWI-Prolog operator defaults."""
 
-    return iso_operator_table().define(600, "xfy", ":")
+    return (
+        iso_operator_table()
+        .define(700, "xfx", "#=", "#\\=", "#<", "#=<", "#>", "#>=", "in", "ins")
+        .define(760, "xfy", "#==>", "#<==>")
+        .define(750, "yfx", "#\\/")
+        .define(740, "yfx", "#/\\")
+        .define(900, "fy", "#\\")
+        .define(600, "xfy", ":")
+        .define(450, "xfx", "..")
+    )
+
+
+@cache
+def known_dialect_profiles() -> tuple[DialectProfile, ...]:
+    """Return the dialect families tracked by the shared frontend model."""
+
+    return (
+        DialectProfile(
+            name="iso",
+            display_name="ISO/Core Prolog",
+            token_grammar="prolog/iso.tokens",
+            parser_grammar="prolog/iso.grammar",
+            operator_table_family="iso",
+            double_quotes="codes",
+            module_policy="none",
+            supports_loader=True,
+            enabled_extensions=frozenset(
+                {
+                    "directives",
+                    "dcg",
+                    "dynamic",
+                    "term-expansion",
+                    "goal-expansion",
+                },
+            ),
+            aliases=("core", "iso-core"),
+        ),
+        DialectProfile(
+            name="swi",
+            display_name="SWI-Prolog",
+            token_grammar="prolog/swi.tokens",
+            parser_grammar="prolog/swi.grammar",
+            operator_table_family="swi",
+            double_quotes="string",
+            module_policy="swi",
+            supports_loader=True,
+            enabled_extensions=frozenset(
+                {
+                    "modules",
+                    "file-loading",
+                    "include",
+                    "directives",
+                    "dcg",
+                    "dynamic",
+                    "term-expansion",
+                    "goal-expansion",
+                    "clpfd",
+                    "strings",
+                },
+            ),
+            aliases=("swipl", "swi-prolog"),
+        ),
+        DialectProfile(
+            name="gnu",
+            display_name="GNU Prolog",
+            token_grammar="prolog/iso.tokens",
+            parser_grammar="prolog/iso.grammar",
+            operator_table_family="iso",
+            double_quotes="codes",
+            module_policy="none",
+            enabled_extensions=frozenset({"clpfd", "native-compilation"}),
+            aliases=("gprolog", "gnu-prolog"),
+        ),
+        DialectProfile(
+            name="scryer",
+            display_name="Scryer Prolog",
+            token_grammar="prolog/iso.tokens",
+            parser_grammar="prolog/iso.grammar",
+            operator_table_family="iso",
+            double_quotes="chars",
+            module_policy="none",
+            enabled_extensions=frozenset({"clpz", "dcg", "iso"}),
+        ),
+        DialectProfile(
+            name="trealla",
+            display_name="Trealla Prolog",
+            token_grammar="prolog/iso.tokens",
+            parser_grammar="prolog/iso.grammar",
+            operator_table_family="iso",
+            double_quotes="chars",
+            module_policy="none",
+            enabled_extensions=frozenset({"clpz", "engines", "ffi", "utf8"}),
+        ),
+        DialectProfile(
+            name="xsb",
+            display_name="XSB Prolog",
+            token_grammar="prolog/iso.tokens",
+            parser_grammar="prolog/iso.grammar",
+            operator_table_family="iso",
+            double_quotes="codes",
+            module_policy="tabled",
+            enabled_extensions=frozenset({"tabling", "well-founded-negation"}),
+        ),
+        DialectProfile(
+            name="yap",
+            display_name="YAP Prolog",
+            token_grammar="prolog/iso.tokens",
+            parser_grammar="prolog/iso.grammar",
+            operator_table_family="iso",
+            double_quotes="codes",
+            module_policy="quintus",
+            enabled_extensions=frozenset({"tabling", "modules"}),
+        ),
+        DialectProfile(
+            name="ciao",
+            display_name="Ciao Prolog",
+            token_grammar="prolog/iso.tokens",
+            parser_grammar="prolog/iso.grammar",
+            operator_table_family="iso",
+            double_quotes="codes",
+            module_policy="package",
+            enabled_extensions=frozenset({"modules", "packages", "assertions"}),
+        ),
+    )
+
+
+def dialect_profile(name: str | Symbol | DialectProfile) -> DialectProfile:
+    """Resolve a dialect name or alias into a tracked dialect profile."""
+
+    if isinstance(name, DialectProfile):
+        return name
+
+    normalized = (
+        name.name if isinstance(name, Symbol) else name
+    ).strip().lower().replace("_", "-")
+    for profile in known_dialect_profiles():
+        if normalized == profile.name or normalized in profile.aliases:
+            return profile
+
+    known = ", ".join(profile.name for profile in known_dialect_profiles())
+    msg = f"unknown Prolog dialect {normalized!r}; known dialects: {known}"
+    raise ValueError(msg)
+
+
+def loader_dialect_profiles() -> tuple[DialectProfile, ...]:
+    """Return dialect profiles with an implemented parser/loader route."""
+
+    return tuple(
+        profile for profile in known_dialect_profiles() if profile.supports_loader
+    )
+
+
+def iso_dialect_profile() -> DialectProfile:
+    """Return the ISO/Core Prolog dialect profile."""
+
+    return dialect_profile("iso")
+
+
+def swi_dialect_profile() -> DialectProfile:
+    """Return the SWI-Prolog dialect profile."""
+
+    return dialect_profile("swi")

@@ -1,0 +1,9 @@
+[package]
+name = "data-frame"
+version = "0.1.0"
+edition = "2021"
+description = "R-style data frame: a list of equal-length named typed columns, the substrate for tabular operations in spreadsheet and statistical frontends"
+
+[dependencies]
+r-vector = { path = "../r-vector" }
+numeric-tower = { path = "../numeric-tower" }

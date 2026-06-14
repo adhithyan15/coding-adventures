@@ -23,16 +23,21 @@ from sql_planner.plan import (
 )
 
 from sql_codegen import (
-    CreateTable as IrCreateTable,
-)
-from sql_codegen import (
+    BeginRow,
     DeleteRows,
+    EmitColumn,
+    EmitRow,
     InsertRow,
     JumpIfFalse,
+    LoadColumn,
+    LoadLastInsertedColumn,
     OpenScan,
     SetResultSchema,
     UpdateRows,
     compile,
+)
+from sql_codegen import (
+    CreateTable as IrCreateTable,
 )
 from sql_codegen import (
     DropTable as IrDropTable,
@@ -159,3 +164,110 @@ def test_empty_result_sets_schema() -> None:
     schemas = [i for i in prog.instructions if isinstance(i, SetResultSchema)]
     assert schemas[0].columns == ("x", "y")
     assert prog.result_schema == ("x", "y")
+
+
+# ---- RETURNING clause compilation ------------------------------------------
+
+
+def test_insert_returning_emits_load_last_inserted_column() -> None:
+    """INSERT … RETURNING id, name emits LoadLastInsertedColumn for each col."""
+    plan = Insert(
+        table="t",
+        columns=("id", "name"),
+        source=InsertSource(values=((Literal(1), Literal("Alice")),)),
+        returning=(Column("t", "id"), Column("t", "name")),
+    )
+    prog = compile(plan)
+    # SetResultSchema must be emitted once at the top.
+    schemas = [i for i in prog.instructions if isinstance(i, SetResultSchema)]
+    assert len(schemas) == 1
+    assert schemas[0].columns == ("id", "name")
+    # LoadLastInsertedColumn for each returning col.
+    load_instr = [i for i in prog.instructions if isinstance(i, LoadLastInsertedColumn)]
+    assert len(load_instr) == 2
+    assert load_instr[0].col == "id"
+    assert load_instr[1].col == "name"
+    # BeginRow + EmitRow frame the RETURNING columns.
+    assert any(isinstance(i, BeginRow) for i in prog.instructions)
+    assert any(isinstance(i, EmitRow) for i in prog.instructions)
+    emit_cols = [i for i in prog.instructions if isinstance(i, EmitColumn)]
+    assert len(emit_cols) == 2
+    assert emit_cols[0].name == "id"
+    assert emit_cols[1].name == "name"
+
+
+def test_insert_returning_multiple_rows() -> None:
+    """INSERT two rows with RETURNING — each row emits a LoadLastInsertedColumn."""
+    plan = Insert(
+        table="t",
+        columns=("id",),
+        source=InsertSource(values=((Literal(1),), (Literal(2),))),
+        returning=(Column("t", "id"),),
+    )
+    prog = compile(plan)
+    # Two InsertRow, two LoadLastInsertedColumn (one per row).
+    inserts = [i for i in prog.instructions if isinstance(i, InsertRow)]
+    loads = [i for i in prog.instructions if isinstance(i, LoadLastInsertedColumn)]
+    assert len(inserts) == 2
+    assert len(loads) == 2
+
+
+def test_insert_without_returning_no_schema() -> None:
+    """INSERT without RETURNING emits no SetResultSchema."""
+    plan = Insert(
+        table="t",
+        columns=("id",),
+        source=InsertSource(values=((Literal(42),),)),
+    )
+    prog = compile(plan)
+    schemas = [i for i in prog.instructions if isinstance(i, SetResultSchema)]
+    assert len(schemas) == 0
+    loads = [i for i in prog.instructions if isinstance(i, LoadLastInsertedColumn)]
+    assert len(loads) == 0
+
+
+def test_update_returning_emits_load_column_after_update() -> None:
+    """UPDATE … RETURNING emits SetResultSchema + BeginRow + LoadColumn + EmitRow."""
+    plan = Update(
+        table="t",
+        assignments=(Assignment(column="x", value=Literal(99)),),
+        returning=(Column("t", "x"),),
+    )
+    prog = compile(plan)
+    # SetResultSchema at top.
+    schemas = [i for i in prog.instructions if isinstance(i, SetResultSchema)]
+    assert len(schemas) == 1
+    assert schemas[0].columns == ("x",)
+    # LoadColumn for RETURNING x — cursor 0 is the scan cursor.
+    load_cols = [i for i in prog.instructions if isinstance(i, LoadColumn)]
+    assert any(lc.column == "x" for lc in load_cols)
+    # BeginRow and EmitRow framing.
+    assert any(isinstance(i, BeginRow) for i in prog.instructions)
+    assert any(isinstance(i, EmitRow) for i in prog.instructions)
+    # UpdateRows must precede the RETURNING block (RETURNING reads post-update row).
+    instr_list = list(prog.instructions)
+    update_idx = next(i for i, ins in enumerate(instr_list) if isinstance(ins, UpdateRows))
+    begin_idx = next(
+        (i for i, ins in enumerate(instr_list) if isinstance(ins, BeginRow)), None
+    )
+    assert begin_idx is not None and begin_idx > update_idx
+
+
+def test_delete_returning_emits_load_column_before_delete() -> None:
+    """DELETE … RETURNING emits RETURNING instructions BEFORE DeleteRows."""
+    plan = Delete(
+        table="t",
+        returning=(Column("t", "id"),),
+    )
+    prog = compile(plan)
+    schemas = [i for i in prog.instructions if isinstance(i, SetResultSchema)]
+    assert len(schemas) == 1
+    assert schemas[0].columns == ("id",)
+    instr_list = list(prog.instructions)
+    delete_idx = next(i for i, ins in enumerate(instr_list) if isinstance(ins, DeleteRows))
+    # BeginRow must appear BEFORE DeleteRows (RETURNING reads pre-delete row).
+    begin_idx = next(
+        (i for i, ins in enumerate(instr_list) if isinstance(ins, BeginRow)), None
+    )
+    assert begin_idx is not None and begin_idx < delete_idx
+    assert any(isinstance(i, EmitRow) for i in prog.instructions)

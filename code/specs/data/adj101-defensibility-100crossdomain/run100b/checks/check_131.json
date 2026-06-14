@@ -1,0 +1,8 @@
+{
+ "check_id": 131,
+ "idx": 51,
+ "slot": "gave_written_notice",
+ "claimed_value": true,
+ "scenario": "Priya is a month-to-month tenant paying $1,500 per month. On June 20 she handed her landlord a written notice stating she would move out on June 30. Rent is due on the first of each month and she had paid June in full.",
+ "cited_span": "she handed her landlord a written notice"
+}

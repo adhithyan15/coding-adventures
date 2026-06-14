@@ -1,5 +1,13 @@
 # Changelog — coding-adventures-sql-parser
 
+## Unreleased
+
+### Changed
+
+- Removed `test_error_on_incomplete_select_missing_from` test. The `sql.grammar`
+  was updated in PR #2067 to allow `SELECT` without a `FROM` clause (SQLite
+  convergence), so asserting a parse error for `SELECT name` was stale.
+
 ## [0.1.0] - 2026-03-29
 
 ### Added

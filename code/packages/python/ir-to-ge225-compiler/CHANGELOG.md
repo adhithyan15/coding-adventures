@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.3.0 — 2026-04-27
+
+### Added — LANG20: `GE225CodeGenerator` — `CodeGenerator[IrProgram, CompileResult]` adapter
+
+**New module: `ir_to_ge225_compiler.generator`**
+
+- `GE225CodeGenerator` — thin adapter class satisfying the
+  `CodeGenerator[IrProgram, CompileResult]` structural protocol defined in
+  `codegen-core` (LANG20).  Separates the validate-and-generate concern from
+  assembly, packaging, and execution:
+
+  ```
+  [Optimizer] → [GE225CodeGenerator] → CompileResult
+                                         ├─→ .binary (bytes)  ← AOT: package → executable
+                                         └─→ [GE225Simulator]  ← simulator pipeline
+  ```
+
+  - `name = "ge225"` — unique backend identifier for use in
+    `CodeGeneratorRegistry`.
+  - `validate(ir) -> list[str]` — delegates to `validate_for_ge225()`.
+    Returns an empty list for valid programs; human-readable strings for any
+    violation (unsupported opcode, constant out of 20-bit range, bad SYSCALL
+    number, or illegal `AND_IMM` immediate).  Never raises.
+  - `generate(ir) -> CompileResult` — delegates to `compile_to_ge225()`.
+    Calls validate internally; raises `CodeGenError` on invalid IR.
+
+- `GE225CodeGenerator` exported from `ir_to_ge225_compiler.__init__`.
+
+**New tests: `tests/test_codegen_generator.py`** — 15 tests covering:
+`name`, `isinstance(gen, CodeGenerator)` structural check, `validate()` on
+valid / bad-opcode / overflow-constant IR, `generate()` return type
+(`CompileResult`), binary non-empty, length divisible by 3 (GE-225 word
+size), `halt_address` present, `data_base` present, `generate()` raises
+`CodeGenError` on invalid IR, round-trip validate-then-generate, and
+exported-from-package check.
+
+---
+
 ## 0.2.0 — 2026-04-20
 
 ### Added

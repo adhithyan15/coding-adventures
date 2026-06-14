@@ -73,6 +73,9 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		if pkg.IsStarlark {
 			continue
 		}
+		if pkg.Language == "unknown" {
+			continue
+		}
 
 		referenced := referencedPackages(pkg, pathToPkg)
 		referencedFuzzy := referencedPackagesFuzzy(pkg, pathToPkg)

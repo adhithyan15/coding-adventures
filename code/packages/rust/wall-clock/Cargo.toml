@@ -1,0 +1,14 @@
+[package]
+name = "wall-clock"
+version = "0.1.0"
+edition = "2021"
+description = "Injectable wall-clock for deterministic datetime/now/today across spreadsheet, R, and S frontends"
+
+[features]
+default = ["system"]
+# `system` enables the SystemClock implementation that reads
+# std::time::SystemTime. Disable on bare wasm32-unknown-unknown.
+system = []
+
+[dependencies]
+

@@ -1,0 +1,7 @@
+[package]
+name = "coding-adventures-javascript-tokens"
+version = "0.3.0"
+edition = "2021"
+description = "Shared JavaScript token kinds, byte span, and ES version enum — backend-agnostic types reused by javascript-lexer, javascript-parser, javascript-ast, and any future JS consumer (Closure Compiler, V8 clone)."
+
+[dependencies]

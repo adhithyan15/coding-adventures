@@ -1,0 +1,606 @@
+{
+  "cases": [
+    {
+      "description": "semicolon named reference in data",
+      "diagnostics": [],
+      "id": "data-named-semicolon",
+      "input": "a&amp;b",
+      "tokens": [
+        "Text(data=a&b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "legacy semicolonless name before whitespace in data",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "data-legacy-missing-semicolon-before-space",
+      "input": "a&copy b",
+      "tokens": [
+        "Text(data=a© b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "non-legacy semicolonless name stays literal",
+      "diagnostics": [],
+      "id": "data-nonlegacy-missing-semicolon-literal",
+      "input": "a&trade b",
+      "tokens": [
+        "Text(data=a&trade b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "longest semicolon named reference wins",
+      "diagnostics": [],
+      "id": "data-longest-prefix-semicolon",
+      "input": "a&notin;b",
+      "tokens": [
+        "Text(data=a∉b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "legacy prefix decodes inside longer data names",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "data-legacy-prefix-in-longer-name",
+      "input": "a&notin b",
+      "tokens": [
+        "Text(data=a¬in b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unknown name stays literal in data",
+      "diagnostics": [],
+      "id": "data-unknown-name",
+      "input": "a&nosuch;b",
+      "tokens": [
+        "Text(data=a&nosuch;b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "legacy text reference decodes before alphanumeric text",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "data-ambiguous-name-text",
+      "input": "a&copycat b",
+      "tokens": [
+        "Text(data=a©cat b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "semicolon named reference in attributes",
+      "diagnostics": [],
+      "id": "attribute-named-semicolon",
+      "input": "<p title=\"a&amp;b\">",
+      "tokens": [
+        "StartTag(name=p, attributes=[title=a&b], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "attribute ambiguous ampersand preserves alphanumeric suffix",
+      "diagnostics": [],
+      "id": "attribute-ambiguous-preserved",
+      "input": "<p title=\"a&copycat b\">",
+      "tokens": [
+        "StartTag(name=p, attributes=[title=a&copycat b], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "legacy semicolonless name before whitespace in attributes",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "attribute-legacy-before-space",
+      "input": "<p title=\"a&copy b\">",
+      "tokens": [
+        "StartTag(name=p, attributes=[title=a© b], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unknown name stays literal in attributes",
+      "diagnostics": [],
+      "id": "attribute-unknown-name",
+      "input": "<p title=\"a&nosuch;b\">",
+      "tokens": [
+        "StartTag(name=p, attributes=[title=a&nosuch;b], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "semicolon named reference in RCDATA",
+      "diagnostics": [],
+      "id": "rcdata-named-semicolon",
+      "initial_state": "RCDATA state",
+      "input": "a&amp;</title>",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=a&)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA follows text ambiguous ampersand recovery",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "rcdata-ambiguous-name-text",
+      "initial_state": "RCDATA state",
+      "input": "a&copycat</title>",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=a©cat)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "legacy prefix decodes inside longer RCDATA names",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "rcdata-legacy-prefix-in-longer-name",
+      "initial_state": "RCDATA state",
+      "input": "a&notin </title>",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=a¬in )",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "decimal numeric reference with semicolon",
+      "diagnostics": [],
+      "id": "data-numeric-decimal-semicolon",
+      "input": "a&#65;b",
+      "tokens": [
+        "Text(data=aAb)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "hex numeric reference with semicolon",
+      "diagnostics": [],
+      "id": "data-numeric-hex-semicolon",
+      "input": "a&#x41;b",
+      "tokens": [
+        "Text(data=aAb)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "decimal numeric reference missing semicolon",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "data-numeric-decimal-missing-semicolon",
+      "input": "a&#65 b",
+      "tokens": [
+        "Text(data=aA b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "hex numeric reference missing semicolon",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "data-numeric-hex-missing-semicolon",
+      "input": "a&#x41z",
+      "tokens": [
+        "Text(data=aAz)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "numeric null maps to replacement character",
+      "diagnostics": [
+        "null-character-reference"
+      ],
+      "id": "data-numeric-decimal-zero",
+      "input": "a&#0;b",
+      "tokens": [
+        "Text(data=a�b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "numeric surrogate maps to replacement character",
+      "diagnostics": [
+        "surrogate-character-reference"
+      ],
+      "id": "data-numeric-surrogate",
+      "input": "a&#xD800;b",
+      "tokens": [
+        "Text(data=a�b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "outside-Unicode numeric reference maps to replacement character",
+      "diagnostics": [
+        "character-reference-outside-unicode-range"
+      ],
+      "id": "data-numeric-outside-range",
+      "input": "a&#x110000;b",
+      "tokens": [
+        "Text(data=a�b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Windows-1252 control reference remaps",
+      "diagnostics": [
+        "control-character-reference"
+      ],
+      "id": "data-numeric-windows-1252",
+      "input": "a&#x80;b",
+      "tokens": [
+        "Text(data=a€b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "digitless decimal reference stays literal",
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference"
+      ],
+      "id": "data-numeric-digitless-decimal",
+      "input": "a&#;b",
+      "tokens": [
+        "Text(data=a&#;b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "digitless hex reference stays literal",
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference"
+      ],
+      "id": "data-numeric-digitless-hex",
+      "input": "a&#x;b",
+      "tokens": [
+        "Text(data=a&#x;b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "character-reference state dispatches to names",
+      "diagnostics": [],
+      "id": "seeded-character-reference-named-data",
+      "initial_state": "Character reference state",
+      "input": "amp;!",
+      "return_state": "Data state",
+      "temporary_buffer": "&",
+      "tokens": [
+        "Text(data=&!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "character-reference state flushes literal ampersand",
+      "diagnostics": [],
+      "id": "seeded-character-reference-fallback-data",
+      "initial_state": "Character reference state",
+      "input": " nope",
+      "return_state": "Data state",
+      "temporary_buffer": "&",
+      "tokens": [
+        "Text(data=& nope)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "character-reference state flushes temporary buffer at EOF",
+      "diagnostics": [],
+      "id": "seeded-character-reference-eof-data",
+      "initial_state": "Character reference state",
+      "input": "",
+      "return_state": "Data state",
+      "temporary_buffer": "&",
+      "tokens": [
+        "Text(data=&)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "character-reference state dispatches to numeric references",
+      "diagnostics": [],
+      "id": "seeded-character-reference-numeric-data",
+      "initial_state": "Character reference state",
+      "input": "#65;!",
+      "return_state": "Data state",
+      "temporary_buffer": "&",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "character-reference state returns to RCDATA",
+      "diagnostics": [],
+      "id": "seeded-character-reference-named-rcdata",
+      "initial_state": "Character reference state",
+      "input": "amp;</title>",
+      "last_start_tag": "title",
+      "return_state": "RCDATA state",
+      "temporary_buffer": "&",
+      "tokens": [
+        "Text(data=&)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "named-reference state completes an entity name",
+      "diagnostics": [],
+      "id": "seeded-named-reference-complete-data",
+      "initial_state": "Named character reference state",
+      "input": "py;!",
+      "return_state": "Data state",
+      "temporary_buffer": "&co",
+      "tokens": [
+        "Text(data=©!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "named-reference state handles legacy prefixes in data",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "seeded-named-reference-ambiguous-data",
+      "initial_state": "Named character reference state",
+      "input": "cat!",
+      "return_state": "Data state",
+      "temporary_buffer": "&copy",
+      "tokens": [
+        "Text(data=©cat!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "named-reference state preserves non-legacy semicolonless names",
+      "diagnostics": [],
+      "id": "seeded-named-reference-nonlegacy-literal",
+      "initial_state": "Named character reference state",
+      "input": "!",
+      "return_state": "Data state",
+      "temporary_buffer": "&trade",
+      "tokens": [
+        "Text(data=&trade!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "named-reference state flushes partial names at EOF",
+      "diagnostics": [],
+      "id": "seeded-named-reference-eof",
+      "initial_state": "Named character reference state",
+      "input": "",
+      "return_state": "Data state",
+      "temporary_buffer": "&co",
+      "tokens": [
+        "Text(data=&co)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "named-reference state returns to RCDATA before an end tag",
+      "diagnostics": [],
+      "id": "seeded-named-reference-rcdata-end-tag",
+      "initial_state": "Named character reference state",
+      "input": "mp;</title>",
+      "last_start_tag": "title",
+      "return_state": "RCDATA state",
+      "temporary_buffer": "&a",
+      "tokens": [
+        "Text(data=&)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "numeric-reference state continues decimal digits",
+      "diagnostics": [],
+      "id": "seeded-numeric-reference-decimal",
+      "initial_state": "Numeric character reference state",
+      "input": "65;!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "numeric-reference state dispatches to hex digits",
+      "diagnostics": [],
+      "id": "seeded-numeric-reference-hex",
+      "initial_state": "Numeric character reference state",
+      "input": "x41;!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "numeric-reference state reports missing digits before boundary",
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference"
+      ],
+      "id": "seeded-numeric-reference-absent-digits",
+      "initial_state": "Numeric character reference state",
+      "input": ";!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#",
+      "tokens": [
+        "Text(data=&#;!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "numeric-reference state reports missing digits at EOF",
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference"
+      ],
+      "id": "seeded-numeric-reference-eof",
+      "initial_state": "Numeric character reference state",
+      "input": "",
+      "return_state": "Data state",
+      "temporary_buffer": "&#",
+      "tokens": [
+        "Text(data=&#)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "hex-start state continues hex digits",
+      "diagnostics": [],
+      "id": "seeded-hex-start-reference-complete",
+      "initial_state": "Hexadecimal character reference start state",
+      "input": "41;!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#x",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "hex-start state reports missing digits before boundary",
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference"
+      ],
+      "id": "seeded-hex-start-reference-absent-digits",
+      "initial_state": "Hexadecimal character reference start state",
+      "input": ";!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#x",
+      "tokens": [
+        "Text(data=&#x;!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "hex-start state reports missing digits at EOF",
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference"
+      ],
+      "id": "seeded-hex-start-reference-eof",
+      "initial_state": "Hexadecimal character reference start state",
+      "input": "",
+      "return_state": "Data state",
+      "temporary_buffer": "&#x",
+      "tokens": [
+        "Text(data=&#x)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "hex state decodes and reports missing semicolon",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "seeded-hex-reference-missing-semicolon",
+      "initial_state": "Hexadecimal character reference state",
+      "input": "1!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#x4",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "hex state decodes null as replacement character",
+      "diagnostics": [
+        "null-character-reference"
+      ],
+      "id": "seeded-hex-reference-null",
+      "initial_state": "Hexadecimal character reference state",
+      "input": ";!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#x0",
+      "tokens": [
+        "Text(data=�!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "decimal state completes decimal digits",
+      "diagnostics": [],
+      "id": "seeded-decimal-reference-complete",
+      "initial_state": "Decimal character reference state",
+      "input": "5;!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#6",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "decimal state decodes and reports missing semicolon",
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "id": "seeded-decimal-reference-missing-semicolon",
+      "initial_state": "Decimal character reference state",
+      "input": "5!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#6",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "decimal state decodes outside-Unicode values as replacement",
+      "diagnostics": [
+        "character-reference-outside-unicode-range"
+      ],
+      "id": "seeded-decimal-reference-outside-range",
+      "initial_state": "Decimal character reference state",
+      "input": ";!",
+      "return_state": "Data state",
+      "temporary_buffer": "&#1114112",
+      "tokens": [
+        "Text(data=�!)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "decimal state returns to RCDATA before an end tag",
+      "diagnostics": [],
+      "id": "seeded-decimal-reference-rcdata",
+      "initial_state": "Decimal character reference state",
+      "input": "5;</title>",
+      "last_start_tag": "title",
+      "return_state": "RCDATA state",
+      "temporary_buffer": "&#6",
+      "tokens": [
+        "Text(data=A)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Character-reference boundary recovery for named, numeric, attribute, RCDATA, and seeded continuation tokenizer states.",
+  "format": "whatwg-html-tokenizer-character-reference-boundaries/v1"
+}

@@ -1,0 +1,339 @@
+{
+  "case": "case-5",
+  "ground_truth": "diagnosis(bladder_urothelial_carcinoma) \u2014 flat high-grade CIS, mislabeled ~2y as chronic prostatitis",
+  "observations": [
+    "bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)",
+    "bladder_histology(inflammatory_granulation_tissue)",
+    "bladder_histology(proliferating_fibrovascular_polypoid_change)",
+    "course(refractory_relapsing_despite_fluoroquinolone)",
+    "ct_finding(no_mass_no_wall_thickening_no_nodes)",
+    "cystoscopy_finding(diffuse_superficial_ulceration)",
+    "cystoscopy_finding(mucosal_congestion_and_edema)",
+    "cystoscopy_finding(no_discrete_tumor)",
+    "cytology(atypical_clusters_worrisome_for_malignancy)",
+    "eps_white_cells(below_prostatitis_threshold)",
+    "patient_age(over_50)",
+    "patient_sex(male)",
+    "prostate_finding(mildly_enlarged)",
+    "psep(marginally_elevated)",
+    "renal_finding(calcified_foci)",
+    "smoking_status(lifelong_non_smoker)",
+    "tb_igra(low_positive)",
+    "urine_leukocytes(mildly_elevated)"
+  ],
+  "differential": [
+    "diagnosis(genitourinary_tuberculosis)",
+    "diagnosis(chronic_bacterial_prostatitis)",
+    "diagnosis(bladder_urothelial_carcinoma)",
+    "diagnosis(chronic_nonbacterial_prostatitis_cpps)",
+    "diagnosis(bladder_inflammatory_pseudotumor)"
+  ],
+  "hypotheses": [
+    {
+      "dx": "diagnosis(genitourinary_tuberculosis)",
+      "prior": 0.18,
+      "prior_source": "StatPearls NBK557558 Genitourinary Tuberculosis; F1000Research 9:1345",
+      "evidence": [
+        {
+          "claim_id": "c1",
+          "type": "finding",
+          "finding": "tb_igra(low_positive)",
+          "lr": 3.0,
+          "observed": true,
+          "source": "StatPearls NBK557558 (IGRA helpful as initial screen; positive does not confirm active)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c2",
+          "type": "finding",
+          "finding": "course(refractory_relapsing_despite_fluoroquinolone)",
+          "lr": 4.0,
+          "observed": true,
+          "source": "StatPearls NBK557558 (chronic prostatitis not resolving with standard antibiotics should raise suspicion of GU-TB); PMC4549703 sterile pyuria",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c3",
+          "type": "finding",
+          "finding": "urine_leukocytes(mildly_elevated)",
+          "lr": 2.0,
+          "observed": true,
+          "source": "StatPearls NBK557558 (persistent sterile pyuria); NEJM Sterile Pyuria review",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c4",
+          "type": "finding",
+          "finding": "renal_finding(calcified_foci)",
+          "lr": 2.5,
+          "observed": true,
+          "source": "ScienceDirect Kidney Tuberculosis overview (calcification 40-70%); RadioGraphics 2021 GU-TB imaging",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c5",
+          "type": "mechanism",
+          "name": "tb_bladder_lesion",
+          "lr": 4.5,
+          "manifestations": [
+            "cystoscopy_finding(diffuse_superficial_ulceration)",
+            "cystoscopy_finding(mucosal_congestion_and_edema)",
+            "bladder_histology(inflammatory_granulation_tissue)",
+            "bladder_histology(proliferating_fibrovascular_polypoid_change)"
+          ],
+          "observed_manifestations": [
+            "cystoscopy_finding(diffuse_superficial_ulceration)",
+            "cystoscopy_finding(mucosal_congestion_and_edema)",
+            "bladder_histology(inflammatory_granulation_tissue)",
+            "bladder_histology(proliferating_fibrovascular_polypoid_change)"
+          ],
+          "fires": true,
+          "source": "StatPearls NBK557558 (urothelial erosions, ulcers, granulomas on cystoscopy); Pathology Outlines granulomatous cystitis (ulceration, granulation tissue)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c20",
+          "type": "mechanism",
+          "name": "reactive_inflammatory_atypia",
+          "lr": 2.2,
+          "manifestations": [
+            "cytology(atypical_clusters_worrisome_for_malignancy)",
+            "bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)"
+          ],
+          "observed_manifestations": [
+            "cytology(atypical_clusters_worrisome_for_malignancy)",
+            "bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)"
+          ],
+          "fires": true,
+          "source": "PMID 3856982 (urinary cytology of bladder TB: atypical urothelial cells correlate to benign reversible hyperplasia, reactive to inflammation)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c22",
+          "type": "finding",
+          "finding": "urine_tb(afb_or_culture_or_naat_positive)",
+          "lr": 9.0,
+          "observed": false,
+          "source": "StatPearls NBK557558 (urine culture/NAAT positive confirms GU-TB)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c23",
+          "type": "finding",
+          "finding": "urine_tb(afb_and_culture_and_naat_negative)",
+          "lr": 0.2,
+          "observed": false,
+          "source": "StatPearls NBK557558 (repeatedly negative urine TB testing lowers GU-TB; sensitivity imperfect)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c24",
+          "type": "finding",
+          "finding": "tissue_tb(granuloma_afb_or_pcr_positive)",
+          "lr": 8.0,
+          "observed": false,
+          "source": "PMID 40176973 (caseating granuloma + AFB/PCR on bladder tissue confirms TB cystitis)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c25",
+          "type": "finding",
+          "finding": "tissue_tb(carcinoma_confirmed)",
+          "lr": 0.15,
+          "observed": false,
+          "source": "PMID 11186722 (confirmed carcinoma reclassifies the lesion away from pure TB)",
+          "provenance_verdict": "fabricated"
+        }
+      ]
+    },
+    {
+      "dx": "diagnosis(chronic_bacterial_prostatitis)",
+      "prior": 0.22,
+      "prior_source": "AUA/EAU chronic prostatitis; StatPearls Chronic Prostatitis",
+      "evidence": [
+        {
+          "claim_id": "c6",
+          "type": "finding",
+          "finding": "eps_white_cells(below_prostatitis_threshold)",
+          "lr": 0.5,
+          "observed": true,
+          "source": "StatPearls Chronic Prostatitis (EPS leukocytosis >10/hpf supports inflammatory prostatitis)",
+          "provenance_verdict": "unknown"
+        },
+        {
+          "claim_id": "c7",
+          "type": "finding",
+          "finding": "psep(marginally_elevated)",
+          "lr": 1.4,
+          "observed": true,
+          "source": "PSEP prostatic exosomal protein as prostatitis inflammation marker (marginal elevation)",
+          "provenance_verdict": "unknown"
+        },
+        {
+          "claim_id": "c8",
+          "type": "finding",
+          "finding": "course(refractory_relapsing_despite_fluoroquinolone)",
+          "lr": 0.3,
+          "observed": true,
+          "source": "StatPearls Chronic Prostatitis (fluoroquinolone-refractory relapse argues against straightforward bacterial prostatitis)",
+          "provenance_verdict": "unknown"
+        },
+        {
+          "claim_id": "c9",
+          "type": "finding",
+          "finding": "prostate_finding(mildly_enlarged)",
+          "lr": 1.3,
+          "observed": true,
+          "source": "StatPearls Chronic Prostatitis (prostatic enlargement nonspecific)",
+          "provenance_verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "dx": "diagnosis(bladder_urothelial_carcinoma)",
+      "prior": 0.15,
+      "prior_source": "PMC9411696 Etiology/Epidemiology of Bladder Cancer; Cleveland Clinic Bladder Cancer",
+      "evidence": [
+        {
+          "claim_id": "c10",
+          "type": "finding",
+          "finding": "cytology(atypical_clusters_worrisome_for_malignancy)",
+          "lr": 3.0,
+          "observed": true,
+          "source": "NYU Urology CIS case (suspicious cytology); PMID 3856982 urinary cytology of bladder TB",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c11",
+          "type": "finding",
+          "finding": "cystoscopy_finding(no_discrete_tumor)",
+          "lr": 0.4,
+          "observed": true,
+          "source": "PMC8000909 Imaging of bladder cancer (papillary tumors are discrete masses); Pathology Outlines bladder CIS (CIS flat, not always visible)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c12",
+          "type": "finding",
+          "finding": "ct_finding(no_mass_no_wall_thickening_no_nodes)",
+          "lr": 0.4,
+          "observed": true,
+          "source": "PMC8000909 / MDPI Cancers 13:1396 (bladder cancer shows wall thickening / mass / nodal disease on CT)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c13",
+          "type": "finding",
+          "finding": "smoking_status(lifelong_non_smoker)",
+          "lr": 0.6,
+          "observed": true,
+          "source": "Cleveland Clinic Bladder Cancer (smoking >2x risk, ~50% of cases); PMC9411696 epidemiology",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c21",
+          "type": "mechanism",
+          "name": "reactive_inflammatory_atypia_against_ca",
+          "lr": 0.5,
+          "manifestations": [
+            "cytology(atypical_clusters_worrisome_for_malignancy)",
+            "bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)"
+          ],
+          "observed_manifestations": [
+            "cytology(atypical_clusters_worrisome_for_malignancy)",
+            "bladder_histology(focal_moderate_to_severe_atypical_hyperplasia)"
+          ],
+          "fires": true,
+          "source": "PMID 3856982 (type I/II atypia in TB are benign reversible hyperplasia / reactive potential of urothelium); PMID 11186722 (post-TB cystitis follow-up)",
+          "provenance_verdict": "fabricated"
+        },
+        {
+          "claim_id": "c26",
+          "type": "finding",
+          "finding": "tissue_tb(carcinoma_confirmed)",
+          "lr": 9.0,
+          "observed": false,
+          "source": "Pathology Outlines bladder CIS (tissue confirmation of carcinoma)",
+          "provenance_verdict": "direction_only"
+        },
+        {
+          "claim_id": "c27",
+          "type": "finding",
+          "finding": "tissue_tb(granuloma_afb_or_pcr_positive)",
+          "lr": 0.2,
+          "observed": false,
+          "source": "PMID 3856982 (granulomatous TB with reactive atypia is not carcinoma)",
+          "provenance_verdict": "direction_only"
+        }
+      ]
+    },
+    {
+      "dx": "diagnosis(chronic_nonbacterial_prostatitis_cpps)",
+      "prior": 0.12,
+      "prior_source": "NIH chronic prostatitis/CPPS classification; StatPearls Chronic Prostatitis",
+      "evidence": [
+        {
+          "claim_id": "c14",
+          "type": "finding",
+          "finding": "course(refractory_relapsing_despite_fluoroquinolone)",
+          "lr": 2.0,
+          "observed": true,
+          "source": "NIH CP/CPPS classification (antibiotic-refractory chronic pelvic pain)",
+          "provenance_verdict": "unknown"
+        },
+        {
+          "claim_id": "c15",
+          "type": "finding",
+          "finding": "eps_white_cells(below_prostatitis_threshold)",
+          "lr": 1.5,
+          "observed": true,
+          "source": "NIH CP/CPPS IIIb (noninflammatory: scant leukocytes)",
+          "provenance_verdict": "unknown"
+        },
+        {
+          "claim_id": "c16",
+          "type": "finding",
+          "finding": "cystoscopy_finding(diffuse_superficial_ulceration)",
+          "lr": 0.4,
+          "observed": true,
+          "source": "NIH CP/CPPS (functional pain syndrome without destructive mucosal lesion)",
+          "provenance_verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "dx": "diagnosis(bladder_inflammatory_pseudotumor)",
+      "prior": 0.06,
+      "prior_source": "Pathology Outlines Granulomatous/polypoid cystitis; PMC3782910 cystoscopic biopsy profile",
+      "evidence": [
+        {
+          "claim_id": "c17",
+          "type": "finding",
+          "finding": "bladder_histology(proliferating_fibrovascular_polypoid_change)",
+          "lr": 3.5,
+          "observed": true,
+          "source": "Pathology Outlines polypoid cystitis / inflammatory pseudotumor (polypoid fibrovascular change)",
+          "provenance_verdict": "unknown"
+        },
+        {
+          "claim_id": "c18",
+          "type": "finding",
+          "finding": "bladder_histology(inflammatory_granulation_tissue)",
+          "lr": 2.0,
+          "observed": true,
+          "source": "Pathology Outlines polypoid cystitis (granulation tissue)",
+          "provenance_verdict": "unknown"
+        },
+        {
+          "claim_id": "c19",
+          "type": "finding",
+          "finding": "tb_igra(low_positive)",
+          "lr": 0.7,
+          "observed": true,
+          "source": "Pathology Outlines (granulomatous cystitis etiologies include TB; identify cause)",
+          "provenance_verdict": "unknown"
+        }
+      ]
+    }
+  ]
+}

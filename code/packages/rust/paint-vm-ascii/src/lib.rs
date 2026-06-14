@@ -1,6 +1,6 @@
 //! Terminal backend for `paint-instructions`.
 
-use paint_instructions::{PaintInstruction, PaintRect, PaintScene};
+use paint_instructions::{PaintInstruction, PaintRect, PaintScene, PaintText, TextAlign};
 
 pub const VERSION: &str = "0.1.0";
 
@@ -73,7 +73,7 @@ fn to_row(y: f64, scale_y: u32) -> i32 {
 
 fn render_rect(rect: &PaintRect, buf: &mut CharBuffer, options: AsciiOptions) {
     let fill = rect.fill.as_deref().unwrap_or("#000000");
-    if fill.is_empty() || fill == "transparent" || fill == "none" {
+    if !is_visible_paint(fill) {
         return;
     }
 
@@ -85,6 +85,42 @@ fn render_rect(rect: &PaintRect, buf: &mut CharBuffer, options: AsciiOptions) {
     for row in r1..=r2 {
         for col in c1..=c2 {
             buf.write_char(row, col, '\u{2588}');
+        }
+    }
+}
+
+fn is_visible_paint(paint: &str) -> bool {
+    let paint = paint.trim();
+    !paint.is_empty() && paint != "transparent" && paint != "none"
+}
+
+fn render_text(text: &PaintText, buf: &mut CharBuffer, options: AsciiOptions) {
+    if let Some(fill) = text.fill.as_deref() {
+        if !is_visible_paint(fill) {
+            return;
+        }
+    }
+
+    let anchor_col = to_col(text.x, options.scale_x);
+    let first_row = to_row(text.y, options.scale_y);
+    let align = text.text_align.as_ref().unwrap_or(&TextAlign::Left);
+
+    for (line_index, line) in text.text.split('\n').enumerate() {
+        let width = line.chars().count() as i32;
+        let start_col = match align {
+            TextAlign::Left => anchor_col,
+            TextAlign::Center => anchor_col - width / 2,
+            TextAlign::Right => anchor_col - width,
+        };
+
+        for (col_offset, ch) in line.chars().enumerate() {
+            if ch != '\r' {
+                buf.write_char(
+                    first_row + line_index as i32,
+                    start_col + col_offset as i32,
+                    ch,
+                );
+            }
         }
     }
 }
@@ -125,9 +161,7 @@ pub fn render(scene: &PaintScene, options: AsciiOptions) -> Result<String, Paint
             PaintInstruction::Image(_) => {
                 return Err(PaintVmAsciiError::UnsupportedInstruction("image"))
             }
-            PaintInstruction::Text(_) => {
-                return Err(PaintVmAsciiError::UnsupportedInstruction("text"))
-            }
+            PaintInstruction::Text(text) => render_text(text, &mut buf, options),
         }
     }
 
@@ -137,7 +171,7 @@ pub fn render(scene: &PaintScene, options: AsciiOptions) -> Result<String, Paint
 #[cfg(test)]
 mod tests {
     use super::*;
-    use paint_instructions::{PaintInstruction, PaintLine};
+    use paint_instructions::{PaintBase, PaintInstruction, PaintLine};
 
     #[test]
     fn version_matches() {
@@ -167,6 +201,92 @@ mod tests {
         .expect("rect scene should render");
 
         assert!(output.contains('\u{2588}'));
+    }
+
+    #[test]
+    fn renders_paint_text() {
+        let scene = PaintScene {
+            width: 8.0,
+            height: 3.0,
+            background: "#ffffff".to_string(),
+            instructions: vec![
+                PaintInstruction::Text(PaintText {
+                    base: PaintBase::default(),
+                    x: 0.0,
+                    y: 0.0,
+                    text: "Hi".to_string(),
+                    font_ref: None,
+                    font_size: 12.0,
+                    fill: Some("#000000".to_string()),
+                    text_align: Some(TextAlign::Left),
+                }),
+                PaintInstruction::Text(PaintText {
+                    base: PaintBase::default(),
+                    x: 5.0,
+                    y: 1.0,
+                    text: "Hi".to_string(),
+                    font_ref: None,
+                    font_size: 12.0,
+                    fill: Some("#000000".to_string()),
+                    text_align: Some(TextAlign::Center),
+                }),
+                PaintInstruction::Text(PaintText {
+                    base: PaintBase::default(),
+                    x: 5.0,
+                    y: 2.0,
+                    text: "Hi".to_string(),
+                    font_ref: None,
+                    font_size: 12.0,
+                    fill: Some("#000000".to_string()),
+                    text_align: Some(TextAlign::Right),
+                }),
+            ],
+            id: None,
+            metadata: None,
+        };
+
+        let output = render(
+            &scene,
+            AsciiOptions {
+                scale_x: 1,
+                scale_y: 1,
+            },
+        )
+        .expect("PaintText scene should render");
+
+        assert_eq!(output, "Hi\n    Hi\n   Hi");
+    }
+
+    #[test]
+    fn transparent_paint_text_is_skipped() {
+        let scene = PaintScene {
+            width: 4.0,
+            height: 1.0,
+            background: "#ffffff".to_string(),
+            instructions: vec![PaintInstruction::Text(PaintText {
+                base: PaintBase::default(),
+                x: 0.0,
+                y: 0.0,
+                text: "Hi".to_string(),
+                font_ref: None,
+                font_size: 12.0,
+                fill: Some("transparent".to_string()),
+                text_align: None,
+            })],
+            id: None,
+            metadata: None,
+        };
+
+        let output = render(
+            &scene,
+            AsciiOptions {
+                scale_x: 1,
+                scale_y: 1,
+            },
+        )
+        .expect("transparent PaintText should render to an empty buffer");
+
+        assert_eq!(output, "");
     }
 
     #[test]

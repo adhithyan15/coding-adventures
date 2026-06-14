@@ -1,9 +1,18 @@
 """IR to Intel 8008 compiler package.
 
+LANG20: ``Intel8008CodeGenerator`` implements ``CodeGenerator[IrProgram, str]``
+from ``codegen-core``, providing a shared ``validate() / generate()`` interface.
+
+Note on naming: the existing ``CodeGenerator`` class (from ``codegen.py``) is
+the *internal* assembly-text generator only (no validation).
+``Intel8008CodeGenerator`` (from ``generator.py``) is the *public* LANG20 adapter
+that exposes both ``validate()`` and ``generate()`` under the shared protocol.
+
 Public API::
 
     from ir_to_intel_8008_compiler import (
         CodeGenerator,
+        Intel8008CodeGenerator,
         IrToIntel8008Compiler,
         Intel8008Backend,
         IrValidationError,
@@ -20,6 +29,7 @@ from ir_to_intel_8008_compiler.backend import (
     IrToIntel8008Compiler,
 )
 from ir_to_intel_8008_compiler.codegen import CodeGenerator
+from ir_to_intel_8008_compiler.generator import Intel8008CodeGenerator
 
 
 def validate(program: object) -> list[IrValidationError]:
@@ -53,6 +63,7 @@ __all__ = [
     "IrValidationError",
     "IrValidator",
     "CodeGenerator",
+    "Intel8008CodeGenerator",
     "IrToIntel8008Compiler",
     "Intel8008Backend",
     "validate",

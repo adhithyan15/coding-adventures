@@ -1,0 +1,11 @@
+[package]
+name = "iir-coverage-lcov"
+version = "0.1.0"
+edition = "2021"
+description = "lcov-format exporter for iir-coverage::LineCoverageReport.  Drop-in CI integration with genhtml, codecov, sonarqube, and every other lcov-aware tool."
+
+[dependencies]
+iir-coverage = { path = "../iir-coverage" }
+
+[dev-dependencies]
+interpreter-ir = { path = "../interpreter-ir" }

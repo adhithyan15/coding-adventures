@@ -69,4 +69,39 @@ final class GraphTests: XCTestCase {
             }
         }
     }
+
+    func testPropertyBags() throws {
+        for repr in GraphRepr.allCases {
+            var graph = Graph(repr: repr)
+
+            graph.setGraphProperty("name", value: .string("city-map"))
+            graph.setGraphProperty("version", value: .number(1.0))
+            XCTAssertEqual(graph.graphProperties(), ["name": .string("city-map"), "version": .number(1.0)])
+            graph.removeGraphProperty("version")
+            XCTAssertEqual(graph.graphProperties(), ["name": .string("city-map")])
+
+            graph.addNode("A", properties: ["kind": .string("input")])
+            graph.addNode("A", properties: ["trainable": .bool(false)])
+            try graph.setNodeProperty("A", "slot", value: .number(0.0))
+            XCTAssertEqual(
+                try graph.nodeProperties("A"),
+                ["kind": .string("input"), "trainable": .bool(false), "slot": .number(0.0)]
+            )
+            try graph.removeNodeProperty("A", "slot")
+            XCTAssertEqual(try graph.nodeProperties("A"), ["kind": .string("input"), "trainable": .bool(false)])
+
+            graph.addEdge("A", "B", weight: 2.5, properties: ["role": .string("distance")])
+            XCTAssertEqual(try graph.edgeProperties("B", "A"), ["role": .string("distance"), "weight": .number(2.5)])
+            try graph.setEdgeProperty("B", "A", "weight", value: .number(7.0))
+            XCTAssertEqual(try graph.edgeWeight("A", "B"), 7.0)
+            try graph.setEdgeProperty("A", "B", "trainable", value: .bool(true))
+            try graph.removeEdgeProperty("A", "B", "role")
+            XCTAssertEqual(try graph.edgeProperties("A", "B"), ["weight": .number(7.0), "trainable": .bool(true)])
+
+            try graph.removeEdge("A", "B")
+            XCTAssertThrowsError(try graph.edgeProperties("A", "B")) { error in
+                XCTAssertTrue(error is EdgeNotFoundError)
+            }
+        }
+    }
 }

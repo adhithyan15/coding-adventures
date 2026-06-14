@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-algol-lexer"
 version = "0.1.0"
-description = "Tokenizes ALGOL 60 source text using the grammar-driven lexer — a thin wrapper that loads algol.tokens"
+description = "Tokenizes ALGOL 60 source text using the grammar-driven lexer — a thin wrapper with compiled algol/algol60.tokens"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

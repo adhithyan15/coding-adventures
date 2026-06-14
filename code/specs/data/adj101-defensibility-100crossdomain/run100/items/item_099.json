@@ -1,0 +1,7 @@
+{
+ "idx": 99,
+ "id": "ACA-10",
+ "scenario": "A grant's official start date is June 1. The PI charged $3,000 in necessary project supply costs that were incurred on May 5 of the same year, 27 days before the start date.",
+ "policy": "Costs incurred before the grant's official start date are unallowable and may not be charged to the award, except for pre-award costs incurred within the 90 days immediately preceding the start date, which are allowable if they are necessary to the project.",
+ "question": "May the $3,000 in pre-start-date supply costs be charged to the award?"
+}

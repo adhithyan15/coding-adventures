@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-aot-deploy-manifest-emitter",
+  "version": "0.1.0",
+  "description": "Compose a single deploy-platform-agnostic manifest from page bundle + sitemap.xml + robots.txt + Web App Manifest JSON + extraFiles.  Pure transform; uses Node's node:crypto for SHA-256; canonical JSON output (sorted file paths, fixed key order per entry).  FM00 v0 emitter.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

@@ -321,12 +321,17 @@ class TestFallsThrough:
         result = _vm_integrate(integrand)
         assert isinstance(result, IRApply) and result.head == INTEGRATE
 
-    def test_exp_xsq_stays_unevaluated(self):
-        # ∫ exp(x²) dx — non-linear argument, non-elementary.
+    def test_exp_xsq_evaluates_via_phase23(self):
+        # ∫ exp(x²) dx — Phase 23 now evaluates this as (√π/2)·erfi(x).
+        # Previously unevaluated; updated when Phase 23 special functions landed.
         from symbolic_ir import POW
         integrand = _exp(IRApply(POW, (X, IRInteger(2))))
         result = _vm_integrate(integrand)
-        assert isinstance(result, IRApply) and result.head == INTEGRATE
+        # Must not stay unevaluated — Phase 23 provides the Erfi fallback.
+        assert not (isinstance(result, IRApply) and result.head == INTEGRATE), (
+            "Expected Phase 23 to evaluate ∫ exp(x²) dx via erfi, got unevaluated"
+        )
+        assert "Erfi" in repr(result), f"Expected Erfi in result, got {result!r}"
 
     def test_exp_times_log_stays_unevaluated(self):
         # ∫ exp(x)·log(x) dx — two transcendentals, no rule.

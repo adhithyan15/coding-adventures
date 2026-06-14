@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `ContextSessionCatalogSummary` and `session_catalog_summary()` for
+  body-free session lifecycle and checkpoint coverage over selected headers.
+- `ContextTranscriptSummary` and `transcript_summary()` for bounded body-free
+  transcript counts by entry kind, metadata coverage, and time span.
+- `ContextSnapshotSummary` and `snapshot_summary()` for bounded compaction
+  checkpoint counts, reference counts, and token estimate ranges.
+- `ContextSessionSummary` and `session_summary()` for one-session host status
+  views that combine header, transcript, checkpoint, and uncheckpointed-entry
+  state.
+- `ContextStoreInventorySummary` and `inventory_summary()` for store-level
+  lifecycle, transcript, checkpoint, and compaction-attention rollups over
+  selected sessions.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
@@ -10,5 +27,15 @@ All notable changes to this package will be documented in this file.
 - `ContextSession`, `ContextEntry`, and `ContextSnapshot` record models
 - `ContextStore` with session creation, transcript append/list, snapshot
   creation, compaction checkpoints, and archive support
+- Bounded transcript window reads with optional `after_entry_id` cursor and
+  positive limit validation for D18D `context.read_entries` callers
+- Entry kind and inclusive timestamp range filters for bounded transcript
+  reads used by read-side session replay and tool-result inspection
+- `ContextEntrySummary` plus `fetch_entry_summaries()` for body-free
+  transcript indexes that preserve cursor/kind/timestamp filters
+- Bounded session header listing by owner, lifecycle status, sort order, and
+  positive limit for D18D `context.list_sessions` callers
+- Bounded snapshot listing by basis entry, linked summary/memory/artifact refs,
+  sort order, and positive limit for D18A/D18D compaction inspection callers
 - JSON encoding/decoding on top of `storage-core`
 - Unit tests using `storage-core::InMemoryStorageBackend`

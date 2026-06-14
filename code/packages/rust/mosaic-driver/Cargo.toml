@@ -1,0 +1,15 @@
+[package]
+name = "mosaic-driver"
+version = "0.1.0"
+edition = "2021"
+description = "CLI driver that compiles .mil/.mll/.msl files to platform-specific UI code"
+
+[[bin]]
+name = "mosaic"
+path = "src/main.rs"
+
+[dependencies]
+mosmodel-compiler  = { path = "../mosmodel-compiler" }
+moslayout-compiler = { path = "../moslayout-compiler" }
+mosstyle-compiler  = { path = "../mosstyle-compiler" }
+serde_json         = "1"

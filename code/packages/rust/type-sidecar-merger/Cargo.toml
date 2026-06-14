@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-type-sidecar-merger"
+version = "0.1.0"
+edition = "2021"
+description = "Merges multiple type-sidecars from different producers (JSDoc, TypeScript, hand-written) into one canonical sidecar per CLOC04 §Merging policy."
+
+[dependencies]
+coding-adventures-type-sidecar = { path = "../type-sidecar" }
+serde_json = "1"

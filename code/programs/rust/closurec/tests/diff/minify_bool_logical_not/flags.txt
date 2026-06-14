@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_bool_logical_not/input/a.js
+--compilation_level
+WHITESPACE_ONLY

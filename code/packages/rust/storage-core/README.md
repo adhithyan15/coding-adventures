@@ -14,8 +14,11 @@ It is deliberately more structured than the existing CAS `BlobStore` trait:
 
 ## What this crate owns
 
-- `StorageRecord`, `StoragePutInput`, `StorageStat`, `StoragePage`, and
-  `StorageLease`
+- `StorageRecord`, `StorageRecordSummary`, `StoragePutInput`, `StorageStat`,
+  `StoragePage`, `StorageSummaryPage`, `StorageSummaryPageOverview`,
+  `StorageRecordInventorySummary`, and `StorageLease`
+- `StorageLeaseSummary` and `StorageLeaseInventorySummary` for read-side
+  advisory lease telemetry without exposing lease tokens
 - `StorageBackend`, the backend trait implemented by local-folder, SQLite, and
   future backends
 - `InMemoryStorageBackend`, a pure Rust backend for tests and examples
@@ -104,6 +107,18 @@ let input = StoragePutInput::new(
 
 assert_eq!(input.namespace, "context");
 ```
+
+`StorageBackend` also includes default `get_summary()` and `list_summaries()`
+helpers. Backends can override them to serve read models without loading record
+bodies, while simple implementations can rely on the default projection from
+`stat()` and `list()`.
+`StorageSummaryPage::overview()` provides aggregate counts and page-boundary
+keys for cheap runtime telemetry over those body-free listings.
+`StorageRecordInventorySummary` rolls record summaries into namespace, body,
+metadata, content-family, timestamp, and key-boundary facts for store health
+views that do not need bodies.
+`StorageLease::summary_at()` and `StorageLeaseInventorySummary` provide the same
+compact read-side shape for advisory lease status and expiry windows.
 
 ## Development
 

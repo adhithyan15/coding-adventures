@@ -1,0 +1,218 @@
+% ============================================================================
+% ADJ52 case-17 derived rulebook.
+% Clinical area: progressive gastrointestinal dysmotility with severe wasting
+%   and an unexplained metabolic disturbance in a young adult.
+% Differential built from the IR alone (no answer given), recursing into the
+% subcategories of "what makes a young adult have YEARS of refractory gut
+% dysmotility + cachexia + a metabolic (lactate) abnormality after a negative
+% structural / infectious / autoimmune / neoplastic work-up":
+%   - a primary mitochondrial gut/nerve disease (MNGIE)
+%   - a primary (idiopathic) gut motility disorder / chronic intestinal
+%     pseudo-obstruction managed as refractory gastroparesis
+%   - a connective-tissue (systemic sclerosis spectrum) gut disease
+%   - an eating disorder (the classic mimic given the depression history)
+%   - a paraneoplastic / autoimmune dysmotility
+% Every clause carries a % rationale + source + trust.
+%
+% Magnitudes are encoded QUALITATIVELY to satisfy the adj-lang IDENT grammar
+% (identifiers are lowercase /[a-z_][a-z0-9_]*/, no uppercase, no leading
+% digit): e.g. lactate(persistently_elevated), age(under_30),
+% alkaline_phosphatase(modestly_elevated).
+%
+% ANTI-OVERFIT NOTE: clauses are added ONLY where a citable source supports the
+% finding->diagnosis link, NOT to force MNGIE to win. The elevated-lactate and
+% refractoriness discriminators fire AGAINST the eating-disorder and the
+% simple-gastroparesis hypotheses precisely because the sources say so.
+%
+% CORRELATED EVIDENCE: the MNGIE features (dysmotility + cachexia + young onset
+% + neuropathy/contracture + the misdiagnosis history) are described in the
+% literature as ONE syndrome. The genuinely redundant constitutional cluster is
+% folded under a single "% mechanism ... lr ..." directive so the combined
+% likelihood ratio fires ONCE rather than being double-counted; the truly
+% independent discriminators (lactate, refractoriness) keep their own contributes.
+% ============================================================================
+
+% ===== PRIORS (base rates among the plausible unifying explanations) =====
+
+% rationale: a primary idiopathic gut-motility disorder / chronic intestinal pseudo-obstruction (the "refractory gastroparesis/dysmotility" label already applied) is the commonest single explanation for years of dysmotility after a negative work-up, so it carries the largest prior.
+prior 0.40 for unifying_diagnosis(primary_idiopathic_gut_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (chronic intestinal pseudo-obstruction in adults; idiopathic CIPO is the largest subgroup)" trust authoritative
+
+% rationale: an eating disorder is a common cause of severe wasting in a young adult with a prior depression diagnosis, and is the classic MNGIE mimic, so it deserves a substantial prior.
+prior 0.18 for unifying_diagnosis(eating_disorder)
+  source "PMID 27371119 (MNGIE mimicking atypical anorexia nervosa); Sci Adolesc Health 2016 (MNGIE presenting as anorexia nervosa)" trust authoritative
+
+% rationale: MNGIE is rare but is THE classic unifying diagnosis for young-onset refractory GI dysmotility + cachexia + a metabolic (lactate) abnormality after negative common-cause work-up; low but nontrivial prior.
+prior 0.16 for unifying_diagnosis(mngie)
+  source "Garone, Brain 2011 PMC3212717 (clinical/genetic spectrum of MNGIE); Pacitti, PMC6053673 2018 (MNGIE clinical diagnostic algorithm)" trust authoritative
+
+% rationale: systemic sclerosis (including sine-scleroderma) can present with severe GI dysmotility / pseudo-obstruction and malnutrition, and is a recognised cause of CIPO; modest prior.
+prior 0.14 for unifying_diagnosis(systemic_sclerosis_gut_disease)
+  source "McMahan, Nat Rev Rheumatol 2022 (SSc GI dysmotility); CJGIM 2021 (SSc sine scleroderma as CIPO)" trust authoritative
+
+% rationale: a paraneoplastic / autoimmune dysmotility is a recognised cause of acquired CIPO; low prior given the explicitly negative neoplastic/autoimmune work-up.
+prior 0.12 for unifying_diagnosis(paraneoplastic_autoimmune_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (paraneoplastic/autoimmune causes of chronic intestinal pseudo-obstruction)" trust authoritative
+
+% ===== MNGIE (mitochondrial neurogastrointestinal encephalomyopathy) =====
+
+% rationale: severe GI dysmotility (gastroparesis + small-bowel ileus / pseudo-obstruction) is a cardinal, near-defining feature of MNGIE.
+contributes 2.2 from finding(severe_gut_dysmotility) to unifying_diagnosis(mngie)
+  source "Pacitti PMC6053673 2018 (severe GI dysmotility is a major diagnostic feature of MNGIE)" trust authoritative
+
+% rationale: profound cachexia / severe weight loss from defective GI transit plus impaired mitochondrial energy metabolism is a cardinal MNGIE feature.
+contributes 1.8 from finding(profound_cachexia) to unifying_diagnosis(mngie)
+  source "Pacitti PMC6053673 2018 (severe cachexia from defective transit + impaired energy metabolism)" trust authoritative
+
+% rationale: onset before age 30 (most before 40) is characteristic of MNGIE; a 27-year-old with a 4-year course (onset ~23) fits the expected window.
+contributes 1.7 from age(under_30) to unifying_diagnosis(mngie)
+  source "Garone Brain 2011 PMC3212717 (onset typically before the third-fourth decade)" trust authoritative
+
+% rationale: a persistently elevated lactate (the unexplained metabolic disturbance) without shock is exactly the mitochondrial signature expected in MNGIE, and is a key discriminator the answer must explain.
+contributes 2.6 from lactate(persistently_elevated) to unifying_diagnosis(mngie)
+  source "MNGIE reviews (PMC10685842; Pacitti PMC6053673) — elevated plasma lactate from mitochondrial dysfunction" trust authoritative
+
+% rationale: peripheral-neuropathy stigmata (distal wasting, a fixed flexion contracture from chronic length-dependent sensorimotor neuropathy) are a cardinal MNGIE feature and contextualise the odd finger finding.
+contributes 1.9 from finding(peripheral_neuropathy_stigmata) to unifying_diagnosis(mngie)
+  source "Bedlack/Said, MNGIE neuropathy PMID 14981734; Frontiers Genet 2018 (length-dependent sensorimotor neuropathy, distal amyotrophy/deformity)" trust authoritative
+
+% rationale: refractoriness of the dysmotility to prokinetics, pyloric botulinum toxin and feeding-tube support is expected when gastroparesis is only a symptom of an underlying mitochondrial enteric myopathy/neuropathy, not a primary pyloric problem.
+contributes 1.8 from course(refractory_to_gastroparesis_treatment) to unifying_diagnosis(mngie)
+  source "Giordano, Gastroenterology 2008 PMC2543079 (MNGIE dysmotility from mtDNA depletion in the enteric smooth muscle/nerve — not a target of prokinetics/pyloric therapy)" trust authoritative
+
+% rationale: a negative structural/infectious/autoimmune/neoplastic work-up is expected in MNGIE, where mucosal biopsies are bland and the cause is metabolic/genetic rather than in the common categories.
+contributes 1.6 from workup(negative_structural_infectious_autoimmune_neoplastic) to unifying_diagnosis(mngie)
+  source "Pacitti PMC6053673 2018 (MNGIE diagnosis rests on biochemistry/genetics after common causes excluded)" trust authoritative
+
+% rationale: a prior depression / psychiatric label and the wasting being misattributed (anorexia-like) is a documented part of the MNGIE diagnostic-delay story.
+contributes 1.4 from history(prior_psychiatric_label) to unifying_diagnosis(mngie)
+  source "PMID 27371119 (MNGIE suspected behind atypical anorexia nervosa); Sci Adolesc Health 2016 (MNGIE presenting as anorexia nervosa)" trust authoritative
+
+% rationale: CONFIRMATORY — markedly elevated plasma thymidine/deoxyuridine (with deficient leukocyte thymidine phosphorylase activity) is the specific biochemical hallmark of MNGIE; resolving it strongly moves the posterior.
+contributes 12.0 from plasma_nucleosides(thymidine_deoxyuridine_markedly_elevated) to unifying_diagnosis(mngie)
+  source "Pacitti PMC6053673 2018 (plasma dThd>3 / dUrd>5 umol/L + leukocyte TP <10% confirms MNGIE)" trust authoritative
+% rationale: NORMAL plasma nucleosides / normal thymidine phosphorylase activity effectively excludes MNGIE and re-favours the other hypotheses.
+contributes 0.08 from plasma_nucleosides(normal) to unifying_diagnosis(mngie)
+  source "Pacitti PMC6053673 2018 (normal nucleosides/TP activity excludes MNGIE)" trust authoritative
+
+% rationale: leukoencephalopathy on brain MRI (often clinically silent) is a cardinal MNGIE feature; finding it supports MNGIE.
+contributes 4.0 from brain_mri(diffuse_leukoencephalopathy) to unifying_diagnosis(mngie)
+  source "Pacitti PMC6053673 2018 (asymptomatic diffuse leukoencephalopathy is a hallmark)" trust authoritative
+
+% ===== PRIMARY IDIOPATHIC GUT DYSMOTILITY / CHRONIC INTESTINAL PSEUDO-OBSTRUCTION =====
+
+% rationale: severe gut dysmotility IS the defining feature of a primary motility disorder / CIPO, so it supports this hypothesis too.
+contributes 1.8 from finding(severe_gut_dysmotility) to unifying_diagnosis(primary_idiopathic_gut_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (CIPO defined by severe dysmotility without obstructing lesion)" trust authoritative
+
+% rationale: progressive weight loss / malnutrition is common in severe primary CIPO requiring nutritional support.
+contributes 1.4 from finding(profound_cachexia) to unifying_diagnosis(primary_idiopathic_gut_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (CIPO leads to malnutrition / nutritional dependence)" trust authoritative
+
+% rationale: a negative common-cause work-up is consistent with IDIOPATHIC primary dysmotility (a diagnosis of exclusion).
+contributes 1.5 from workup(negative_structural_infectious_autoimmune_neoplastic) to unifying_diagnosis(primary_idiopathic_gut_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (idiopathic CIPO is a diagnosis of exclusion)" trust authoritative
+
+% rationale: a persistently elevated lactate is NOT explained by a purely primary/idiopathic enteric motility disorder, so this finding argues against this label being the WHOLE story (it points to a systemic metabolic process).
+contributes 0.5 from lactate(persistently_elevated) to unifying_diagnosis(primary_idiopathic_gut_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (an unexplained systemic metabolic abnormality should prompt search for a secondary/mitochondrial cause rather than idiopathic CIPO)" trust inferred
+
+% rationale: peripheral-neuropathy stigmata point to a NEUROMUSCULAR/systemic process beyond an isolated gut disorder, arguing modestly against purely-idiopathic gut dysmotility.
+contributes 0.6 from finding(peripheral_neuropathy_stigmata) to unifying_diagnosis(primary_idiopathic_gut_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (extra-intestinal neuromuscular signs suggest a secondary/syndromic CIPO)" trust inferred
+
+% ===== SYSTEMIC SCLEROSIS (incl. sine-scleroderma) GUT DISEASE =====
+
+% rationale: SSc commonly causes severe GI dysmotility and can progress to pseudo-obstruction, so dysmotility supports it.
+contributes 1.6 from finding(severe_gut_dysmotility) to unifying_diagnosis(systemic_sclerosis_gut_disease)
+  source "McMahan, Nat Rev Rheumatol 2022 (SSc GI dysmotility, up to 90% GI involvement, pseudo-obstruction)" trust authoritative
+
+% rationale: SSc pseudo-obstruction is associated with malnutrition requiring nutritional support.
+contributes 1.3 from finding(profound_cachexia) to unifying_diagnosis(systemic_sclerosis_gut_disease)
+  source "PMC12568857 (SSc-associated pseudo-obstruction; malnutrition, parenteral nutrition)" trust authoritative
+
+% rationale: a documented NEGATIVE autoimmune work-up argues against a connective-tissue disease such as systemic sclerosis (typically ANA/Scl-70/RNA-pol positive).
+contributes 0.45 from workup(negative_structural_infectious_autoimmune_neoplastic) to unifying_diagnosis(systemic_sclerosis_gut_disease)
+  source "McMahan, Nat Rev Rheumatol 2022 (SSc GI disease typically accompanied by autoantibody positivity / Raynaud / skin features)" trust authoritative
+
+% rationale: an elevated lactate is not a feature of SSc gut disease and is not explained by it.
+contributes 0.7 from lactate(persistently_elevated) to unifying_diagnosis(systemic_sclerosis_gut_disease)
+  source "McMahan, Nat Rev Rheumatol 2022 (SSc dysmotility is fibrotic/neurovascular, not a mitochondrial lactate-producing process)" trust inferred
+
+% ===== EATING DISORDER (the classic MNGIE mimic) =====
+
+% rationale: severe weight loss in a young adult with a prior depression diagnosis is the prototypical eating-disorder picture.
+contributes 1.6 from finding(profound_cachexia) to unifying_diagnosis(eating_disorder)
+  source "PMID 27371119 (severe wasting in a young adult is readily misattributed to anorexia nervosa)" trust authoritative
+% rationale: a prior psychiatric (depression) label raises the prior probability that wasting is being attributed to an eating disorder.
+contributes 1.5 from history(prior_psychiatric_label) to unifying_diagnosis(eating_disorder)
+  source "Sci Adolesc Health 2016 (MNGIE wasting misattributed to anorexia nervosa, esp. with psychiatric history)" trust authoritative
+
+% rationale: OBJECTIVE organic findings — markedly delayed gastric emptying + diffuse small-bowel ileus on imaging — are NOT features of an eating disorder and argue strongly against it as the unifying explanation.
+contributes 0.3 from finding(severe_gut_dysmotility) to unifying_diagnosis(eating_disorder)
+  source "PMID 30240477 (organic dysmotility / imaging findings distinguish MNGIE-type disease from a primary eating disorder)" trust authoritative
+
+% rationale: a persistently elevated venous lactate is an organic metabolic abnormality not produced by an eating disorder, arguing against it.
+contributes 0.4 from lactate(persistently_elevated) to unifying_diagnosis(eating_disorder)
+  source "PMID 27371119 (an unexplained metabolic abnormality should trigger search for an organic, e.g. mitochondrial, cause rather than anorexia nervosa)" trust authoritative
+
+% rationale: peripheral-neuropathy stigmata are organic neurologic signs not explained by an eating disorder.
+contributes 0.4 from finding(peripheral_neuropathy_stigmata) to unifying_diagnosis(eating_disorder)
+  source "PMID 14981734 (sensorimotor neuropathy is an organic sign pointing away from a primary eating disorder)" trust authoritative
+
+% ===== PARANEOPLASTIC / AUTOIMMUNE DYSMOTILITY =====
+
+% rationale: acquired severe dysmotility / CIPO can be paraneoplastic or autoimmune, so dysmotility supports this hypothesis.
+contributes 1.5 from finding(severe_gut_dysmotility) to unifying_diagnosis(paraneoplastic_autoimmune_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (paraneoplastic/autoimmune acquired CIPO)" trust authoritative
+% rationale: a documented NEGATIVE neoplastic + autoimmune work-up argues strongly against a paraneoplastic/autoimmune cause.
+contributes 0.4 from workup(negative_structural_infectious_autoimmune_neoplastic) to unifying_diagnosis(paraneoplastic_autoimmune_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (paraneoplastic/autoimmune dysmotility requires a malignancy or autoantibody; negative work-up argues against)" trust authoritative
+% rationale: an elevated lactate is not a feature of paraneoplastic/autoimmune dysmotility.
+contributes 0.8 from lactate(persistently_elevated) to unifying_diagnosis(paraneoplastic_autoimmune_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (no mitochondrial lactate signature in paraneoplastic/autoimmune CIPO)" trust inferred
+
+% ===== CORRELATED EVIDENCE: the MNGIE syndromic gestalt =====
+% The MNGIE cardinal features are NOT independent draws — the literature
+% describes them as ONE coherent multisystem syndrome (mitochondrial enteric
+% myopathy/neuropathy + cachexia + neuropathy + the anorexia-mimic story). The
+% discrete discriminators (lactate, dysmotility, age, refractoriness, neuropathy,
+% negative work-up) already carry their own contributes above; the genuinely
+% redundant constitutional/misattribution cluster is folded here so its combined
+% LR fires ONCE rather than saturating the posterior by double-counting.
+
+% mechanism mngie_multisystem_gestalt for unifying_diagnosis(mngie) lr 2.0 : finding(bitemporal_generalized_muscle_wasting), finding(poor_dentition), finding(generalized_weakness), exam(profoundly_cachectic_appearance)
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: plasma thymidine + deoxyuridine (with leukocyte thymidine phosphorylase activity) is the specific, first-line biochemical test for MNGIE and is the recommended next step before genetic testing once MNGIE is suspected.
+prior 0.34 for next_step(plasma_thymidine_deoxyuridine_and_tp_activity)
+  source "Pacitti PMC6053673 2018 (stepwise algorithm: plasma nucleosides + leukocyte TP activity are first-line); Garone Brain 2011 PMC3212717" trust authoritative
+contributes 4.5 from lactate(persistently_elevated) to next_step(plasma_thymidine_deoxyuridine_and_tp_activity)
+  source "Pacitti PMC6053673 2018 (a young adult with refractory dysmotility + metabolic disturbance should be tested for MNGIE biochemistry)" trust authoritative
+contributes 3.0 from course(refractory_to_gastroparesis_treatment) to next_step(plasma_thymidine_deoxyuridine_and_tp_activity)
+  source "Giordano PMC2543079 2008 (refractory dysmotility -> look for the mitochondrial enteric cause)" trust authoritative
+contributes 2.5 from finding(peripheral_neuropathy_stigmata) to next_step(plasma_thymidine_deoxyuridine_and_tp_activity)
+  source "Pacitti PMC6053673 2018 (coexisting GI + neuromuscular signs should trigger MNGIE biochemistry)" trust authoritative
+
+% rationale: brain MRI to look for the characteristic (often silent) leukoencephalopathy is a strong, low-risk supporting next step that also helps the differential.
+prior 0.18 for next_step(brain_mri_for_leukoencephalopathy)
+  source "Pacitti PMC6053673 2018 (brain MRI for diffuse leukoencephalopathy as part of the MNGIE algorithm)" trust authoritative
+contributes 2.5 from finding(peripheral_neuropathy_stigmata) to next_step(brain_mri_for_leukoencephalopathy)
+  source "Pacitti PMC6053673 2018 (neuromuscular signs -> image the brain for leukoencephalopathy)" trust authoritative
+
+% rationale: continuing more prokinetic / pyloric-directed gastroparesis therapy is the WRONG path once refractoriness is documented and a systemic cause is suspected; kept as a low-prior comparator.
+prior 0.08 for next_step(continue_gastroparesis_directed_therapy_only)
+  source "Giordano PMC2543079 2008 (gastroparesis-directed therapy fails in mitochondrial enteric disease)" trust authoritative
+contributes 0.3 from course(refractory_to_gastroparesis_treatment) to next_step(continue_gastroparesis_directed_therapy_only)
+  source "Giordano PMC2543079 2008 (refractoriness argues against more of the same prokinetic/pyloric therapy)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u_metabolic: the unexplained metabolic disturbance / unifying diagnosis hinges on MNGIE biochemistry (plasma nucleosides + TP activity) and the brain MRI; resolving them adjudicates MNGIE vs the rest.
+uncertain { plasma_nucleosides(thymidine_deoxyuridine_markedly_elevated), plasma_nucleosides(normal), brain_mri(diffuse_leukoencephalopathy) } for unifying_diagnosis(mngie)
+  source "Pacitti PMC6053673 2018 (plasma nucleosides / TP activity + brain MRI adjudicate MNGIE)"
+
+% the same MNGIE biochemistry, if NORMAL, re-favours a primary idiopathic gut dysmotility as the residual diagnosis of exclusion.
+uncertain { plasma_nucleosides(normal) } for unifying_diagnosis(primary_idiopathic_gut_dysmotility)
+  source "Basilisco, Neurogastroenterol Motil 2024 (idiopathic CIPO is what remains once MNGIE biochemistry is normal)"

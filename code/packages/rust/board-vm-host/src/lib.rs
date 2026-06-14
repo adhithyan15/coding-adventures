@@ -1,0 +1,5572 @@
+use board_vm_ir::{
+    parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_ADC_READ, CAP_CAN_OPEN,
+    CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ,
+    CAP_GPIO_WRITE, CAP_I2C_OPEN, CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE,
+    CAP_I2C_WRITE_U8, CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP,
+    CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK, CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY,
+    CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE, CAP_NETWORK_DNS_RESPONSE_IPV4,
+    CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE, CAP_NETWORK_TCP_CLOSE,
+    CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN, CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE,
+    CAP_NETWORK_UDP_AVAILABLE, CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
+    CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES,
+    CAP_NETWORK_WIFI_ASSOCIATE, CAP_NETWORK_WIFI_DISCONNECT, CAP_NETWORK_WIFI_STATUS,
+    CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_SPI_TRANSFER, CAP_STORAGE_READ,
+    CAP_STORAGE_SIZE, CAP_STORAGE_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS, CAP_UART_OPEN,
+    CAP_UART_READ, CAP_UART_WRITE, CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    FLAG_PROGRAM_MAY_RUN_FOREVER, FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES, MAX_BYTE_BUFFER_LEN,
+    MODULE_MAGIC, MODULE_VERSION,
+};
+use board_vm_protocol::{
+    encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
+    encode_run_request, encode_store_program, encode_stream_frame, encode_wire_frame, Frame, Hello,
+    MessageType, ProgramBegin, ProgramChunk, ProgramEnd, ProgramFormat, ProtocolError, RunRequest,
+    StoreProgram, BOOT_RUN_IF_NO_HOST, FLAG_RESPONSE_REQUIRED, RUN_FLAG_BACKGROUND_RUN,
+    RUN_FLAG_RESET_VM_BEFORE_RUN,
+};
+
+pub const DEFAULT_HOST_NAME: &str = "board-vm-host";
+pub const DEFAULT_PROGRAM_ID: u16 = 1;
+pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 1000;
+pub const DEFAULT_RUN_FLAGS: u8 = RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN;
+pub const BLINK_CODE_LEN: usize = 26;
+pub const BLINK_MODULE_LEN: usize = 36;
+pub const GPIO_WRITE_CODE_LEN: usize = 12;
+pub const GPIO_WRITE_MODULE_LEN: usize = 22;
+pub const GPIO_READ_CODE_LEN: usize = 13;
+pub const GPIO_READ_MODULE_LEN: usize = 23;
+pub const GPIO_OPEN_CODE_LEN: usize = 8;
+pub const GPIO_OPEN_MODULE_LEN: usize = 18;
+pub const GPIO_HANDLE_READ_CODE_LEN: usize = 4;
+pub const GPIO_HANDLE_READ_MODULE_LEN: usize = 14;
+pub const GPIO_HANDLE_WRITE_CODE_LEN: usize = 4;
+pub const GPIO_HANDLE_WRITE_MODULE_LEN: usize = 14;
+pub const GPIO_HANDLE_CLOSE_CODE_LEN: usize = 2;
+pub const GPIO_HANDLE_CLOSE_MODULE_LEN: usize = 12;
+pub const TIME_NOW_CODE_LEN: usize = 3;
+pub const TIME_NOW_MODULE_LEN: usize = 13;
+pub const TIME_SLEEP_MS_CODE_LEN: usize = 5;
+pub const TIME_SLEEP_MS_MODULE_LEN: usize = 15;
+pub const PWM_WRITE_CODE_LEN: usize = 8;
+pub const PWM_WRITE_MODULE_LEN: usize = 18;
+pub const ADC_READ_CODE_LEN: usize = 5;
+pub const ADC_READ_MODULE_LEN: usize = 15;
+pub const DAC_WRITE_U12_CODE_LEN: usize = 8;
+pub const DAC_WRITE_U12_MODULE_LEN: usize = 18;
+pub const I2C_OPEN_CODE_LEN: usize = 6;
+pub const I2C_OPEN_MODULE_LEN: usize = 16;
+pub const I2C_WRITE_U8_CODE_LEN: usize = 8;
+pub const I2C_WRITE_U8_MODULE_LEN: usize = 18;
+pub const I2C_READ_U8_CODE_LEN: usize = 7;
+pub const I2C_READ_U8_MODULE_LEN: usize = 17;
+pub const I2C_WRITE_CODE_LEN: usize = 10;
+pub const I2C_WRITE_MAX_MODULE_LEN: usize = 8 + 1 + I2C_WRITE_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const I2C_READ_CODE_LEN: usize = 9;
+pub const I2C_READ_MODULE_LEN: usize = 19;
+pub const I2C_TRANSFER_CODE_LEN: usize = 13;
+pub const I2C_TRANSFER_MAX_MODULE_LEN: usize =
+    8 + 1 + I2C_TRANSFER_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const SPI_OPEN_CODE_LEN: usize = 6;
+pub const SPI_OPEN_MODULE_LEN: usize = 16;
+pub const SPI_TRANSFER_CODE_LEN: usize = 13;
+pub const SPI_TRANSFER_MAX_MODULE_LEN: usize =
+    8 + 1 + SPI_TRANSFER_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const SPI_WRITE_MAX_MODULE_LEN: usize = SPI_TRANSFER_MAX_MODULE_LEN;
+pub const SPI_READ_MODULE_LEN: usize = 8 + 1 + SPI_TRANSFER_CODE_LEN + 1;
+pub const UART_OPEN_CODE_LEN: usize = 6;
+pub const UART_OPEN_MODULE_LEN: usize = 16;
+pub const UART_WRITE_CODE_LEN: usize = 5;
+pub const UART_WRITE_MODULE_LEN: usize = 15;
+pub const UART_READ_CODE_LEN: usize = 4;
+pub const UART_READ_MODULE_LEN: usize = 14;
+pub const CAN_OPEN_CODE_LEN: usize = 6;
+pub const CAN_OPEN_MODULE_LEN: usize = 16;
+pub const CAN_WRITE_CODE_LEN: usize = 5;
+pub const CAN_WRITE_MODULE_LEN: usize = 15;
+pub const CAN_READ_CODE_LEN: usize = 4;
+pub const CAN_READ_MODULE_LEN: usize = 14;
+pub const RTC_NOW_CODE_LEN: usize = 3;
+pub const RTC_NOW_MODULE_LEN: usize = 13;
+pub const RTC_SET_CODE_LEN: usize = 7;
+pub const RTC_SET_MODULE_LEN: usize = 17;
+pub const WATCHDOG_CONFIGURE_CODE_LEN: usize = 7;
+pub const WATCHDOG_CONFIGURE_MODULE_LEN: usize = 17;
+pub const WATCHDOG_KICK_CODE_LEN: usize = 2;
+pub const WATCHDOG_KICK_MODULE_LEN: usize = 12;
+pub const STORAGE_WRITE_CODE_LEN: usize = 11;
+pub const STORAGE_WRITE_MAX_MODULE_LEN: usize =
+    8 + 1 + STORAGE_WRITE_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const STORAGE_READ_CODE_LEN: usize = 10;
+pub const STORAGE_READ_MODULE_LEN: usize = 20;
+pub const STORAGE_SIZE_CODE_LEN: usize = 5;
+pub const STORAGE_SIZE_MODULE_LEN: usize = 15;
+pub const NETWORK_TCP_OPEN_CODE_LEN: usize = 14;
+pub const NETWORK_TCP_OPEN_MODULE_LEN: usize = 24;
+pub const NETWORK_TCP_WRITE_CODE_LEN: usize = 5;
+pub const NETWORK_TCP_WRITE_MODULE_LEN: usize = 15;
+pub const NETWORK_TCP_READ_CODE_LEN: usize = 4;
+pub const NETWORK_TCP_READ_MODULE_LEN: usize = 14;
+pub const NETWORK_TCP_CONNECTED_CODE_LEN: usize = 4;
+pub const NETWORK_TCP_CONNECTED_MODULE_LEN: usize = 14;
+pub const NETWORK_TCP_AVAILABLE_CODE_LEN: usize = 4;
+pub const NETWORK_TCP_AVAILABLE_MODULE_LEN: usize = 14;
+pub const NETWORK_TCP_CLOSE_CODE_LEN: usize = 2;
+pub const NETWORK_TCP_CLOSE_MODULE_LEN: usize = 12;
+pub const NETWORK_UDP_OPEN_CODE_LEN: usize = 14;
+pub const NETWORK_UDP_OPEN_MODULE_LEN: usize = 24;
+pub const NETWORK_UDP_WRITE_CODE_LEN: usize = 5;
+pub const NETWORK_UDP_WRITE_MODULE_LEN: usize = 15;
+pub const NETWORK_UDP_READ_CODE_LEN: usize = 4;
+pub const NETWORK_UDP_READ_MODULE_LEN: usize = 14;
+pub const NETWORK_UDP_WRITE_BYTES_CODE_LEN: usize = 7;
+pub const NETWORK_UDP_WRITE_BYTES_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_UDP_WRITE_BYTES_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_UDP_READ_BYTES_CODE_LEN: usize = 6;
+pub const NETWORK_UDP_READ_BYTES_MODULE_LEN: usize = 16;
+pub const NETWORK_UDP_AVAILABLE_CODE_LEN: usize = 4;
+pub const NETWORK_UDP_AVAILABLE_MODULE_LEN: usize = 14;
+pub const NETWORK_UDP_CLOSE_CODE_LEN: usize = 2;
+pub const NETWORK_UDP_CLOSE_MODULE_LEN: usize = 12;
+pub const NETWORK_WIFI_ASSOCIATE_CODE_LEN: usize = 13;
+pub const NETWORK_WIFI_ASSOCIATE_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_WIFI_ASSOCIATE_CODE_LEN + 1 + (MAX_BYTE_BUFFER_LEN * 2);
+pub const NETWORK_WIFI_DISCONNECT_CODE_LEN: usize = 4;
+pub const NETWORK_WIFI_DISCONNECT_MODULE_LEN: usize = 14;
+pub const NETWORK_WIFI_STATUS_CODE_LEN: usize = 5;
+pub const NETWORK_WIFI_STATUS_MODULE_LEN: usize = 15;
+pub const NETWORK_DNS_RESOLVE_CODE_LEN: usize = 9;
+pub const NETWORK_DNS_RESOLVE_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_RESOLVE_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_DNS_SET_SERVER_CODE_LEN: usize = 9;
+pub const NETWORK_DNS_SET_SERVER_MODULE_LEN: usize = 19;
+pub const NETWORK_DNS_QUERY_CODE_LEN: usize = 10;
+pub const NETWORK_DNS_QUERY_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_QUERY_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_DNS_RESPONSE_IPV4_CODE_LEN: usize = 10;
+pub const NETWORK_DNS_RESPONSE_IPV4_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_RESPONSE_IPV4_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_DNS_EXCHANGE_UDP_CODE_LEN: usize = 19;
+pub const NETWORK_DNS_EXCHANGE_UDP_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_EXCHANGE_UDP_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_DNS_EXCHANGE_UDP_RETRY_CODE_LEN: usize = 24;
+pub const NETWORK_DNS_EXCHANGE_UDP_RETRY_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_EXCHANGE_UDP_RETRY_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN: usize = 29;
+pub const NETWORK_DNS_EXCHANGE_UDP_FALLBACK_MAX_MODULE_LEN: usize =
+    8 + 1 + NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN + 1 + MAX_BYTE_BUFFER_LEN;
+pub const LED_MATRIX_FRAME_CODE_LEN: usize = 18;
+pub const LED_MATRIX_FRAME_MODULE_LEN: usize = 28;
+
+pub const GPIO_MODE_INPUT: u8 = 0;
+pub const GPIO_MODE_OUTPUT: u8 = 1;
+pub const GPIO_MODE_INPUT_PULLUP: u8 = 2;
+pub const GPIO_MODE_INPUT_PULLDOWN: u8 = 3;
+
+const OP_HALT: u8 = 0x00;
+const OP_PUSH_FALSE: u8 = 0x10;
+const OP_PUSH_TRUE: u8 = 0x11;
+const OP_PUSH_U8: u8 = 0x12;
+const OP_PUSH_U16: u8 = 0x13;
+const OP_PUSH_U32: u8 = 0x14;
+const OP_PUSH_BYTES: u8 = 0x16;
+const OP_DUP: u8 = 0x20;
+const OP_SWAP: u8 = 0x22;
+const OP_JUMP_S8: u8 = 0x30;
+const OP_CALL_U8: u8 = 0x40;
+const OP_RETURN_TOP: u8 = 0x50;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HostError {
+    OutputTooSmall,
+    Protocol(ProtocolError),
+    Module(ModuleError),
+    Validate(ValidateError),
+    ProgramTooLarge,
+    JumpOutOfRange,
+    InvalidGpioReadMode(u8),
+}
+
+impl From<ProtocolError> for HostError {
+    fn from(value: ProtocolError) -> Self {
+        Self::Protocol(value)
+    }
+}
+
+impl From<ModuleError> for HostError {
+    fn from(value: ModuleError) -> Self {
+        Self::Module(value)
+    }
+}
+
+impl From<ValidateError> for HostError {
+    fn from(value: ValidateError) -> Self {
+        Self::Validate(value)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BlinkProgram {
+    pub pin: u8,
+    pub high_ms: u16,
+    pub low_ms: u16,
+    pub max_stack: u8,
+}
+
+impl BlinkProgram {
+    pub const fn onboard_led() -> Self {
+        Self {
+            pin: 13,
+            high_ms: 250,
+            low_ms: 250,
+            max_stack: 4,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioReadProgram {
+    pub pin: u8,
+    pub mode: u8,
+    pub max_stack: u8,
+}
+
+impl GpioReadProgram {
+    pub const fn input(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input_pullup(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT_PULLUP,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input_pulldown(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT_PULLDOWN,
+            max_stack: 2,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioWriteProgram {
+    pub pin: u8,
+    pub value: bool,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioOpenProgram {
+    pub pin: u8,
+    pub mode: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PwmWriteProgram {
+    pub pin: u8,
+    pub duty: u16,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AdcReadProgram {
+    pub pin: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DacWriteU12Program {
+    pub pin: u8,
+    pub sample: u16,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct I2cOpenProgram {
+    pub bus: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiOpenProgram {
+    pub bus: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UartOpenProgram {
+    pub bus: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UartWriteProgram {
+    pub byte: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UartReadProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CanOpenProgram {
+    pub bus: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CanWriteProgram {
+    pub byte: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CanReadProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RtcNowProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RtcSetProgram {
+    pub epoch_seconds: u32,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WatchdogConfigureProgram {
+    pub timeout_ms: u32,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WatchdogKickProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StorageWriteProgram<'a> {
+    pub region: u8,
+    pub offset: u16,
+    pub bytes: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StorageReadProgram {
+    pub region: u8,
+    pub offset: u16,
+    pub len: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StorageSizeProgram {
+    pub region: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkTcpOpenProgram {
+    pub interface: u8,
+    pub remote_ipv4: u32,
+    pub remote_port: u16,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkTcpWriteProgram {
+    pub byte: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkTcpReadProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkTcpConnectedProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkTcpAvailableProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkTcpCloseProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpOpenProgram {
+    pub interface: u8,
+    pub remote_ipv4: u32,
+    pub remote_port: u16,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpWriteProgram {
+    pub byte: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpReadProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpWriteBytesProgram<'a> {
+    pub bytes: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpReadBytesProgram {
+    pub len: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpAvailableProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkUdpCloseProgram {
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkWifiAssociateProgram<'a> {
+    pub interface: u8,
+    pub ssid: &'a [u8],
+    pub passphrase: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkWifiDisconnectProgram {
+    pub interface: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkWifiStatusProgram {
+    pub interface: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsResolveProgram<'a> {
+    pub interface: u8,
+    pub hostname: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsSetServerProgram {
+    pub interface: u8,
+    pub server_ipv4: u32,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsQueryProgram<'a> {
+    pub transaction_id: u16,
+    pub hostname: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsResponseIpv4Program<'a> {
+    pub transaction_id: u16,
+    pub response: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsExchangeUdpProgram<'a> {
+    pub interface: u8,
+    pub resolver_ipv4: u32,
+    pub transaction_id: u16,
+    pub hostname: &'a [u8],
+    pub response_len: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsExchangeUdpRetryProgram<'a> {
+    pub interface: u8,
+    pub resolver_ipv4: u32,
+    pub transaction_id: u16,
+    pub hostname: &'a [u8],
+    pub response_len: u8,
+    pub attempts: u8,
+    pub backoff_ms: u16,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkDnsExchangeUdpFallbackProgram<'a> {
+    pub interface: u8,
+    pub primary_resolver_ipv4: u32,
+    pub fallback_resolver_ipv4: u32,
+    pub transaction_id: u16,
+    pub hostname: &'a [u8],
+    pub response_len: u8,
+    pub attempts_per_resolver: u8,
+    pub backoff_ms: u16,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct I2cWriteU8Program {
+    pub address: u16,
+    pub byte: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct I2cReadU8Program {
+    pub address: u16,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct I2cWriteProgram<'a> {
+    pub address: u16,
+    pub bytes: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct I2cReadProgram {
+    pub address: u16,
+    pub len: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct I2cTransferProgram<'a> {
+    pub address: u16,
+    pub write_bytes: &'a [u8],
+    pub read_len: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiTransferProgram<'a> {
+    pub cs_pin: u16,
+    pub write_bytes: &'a [u8],
+    pub read_len: u8,
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiWriteProgram<'a> {
+    pub cs_pin: u16,
+    pub bytes: &'a [u8],
+    pub max_stack: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiReadProgram {
+    pub cs_pin: u16,
+    pub len: u8,
+    pub max_stack: u8,
+}
+
+impl I2cOpenProgram {
+    pub const fn new(bus: u8) -> Self {
+        Self { bus, max_stack: 2 }
+    }
+}
+
+impl SpiOpenProgram {
+    pub const fn new(bus: u8) -> Self {
+        Self { bus, max_stack: 2 }
+    }
+}
+
+impl UartOpenProgram {
+    pub const fn new(bus: u8) -> Self {
+        Self { bus, max_stack: 2 }
+    }
+}
+
+impl UartWriteProgram {
+    pub const fn new(byte: u8) -> Self {
+        Self { byte, max_stack: 3 }
+    }
+}
+
+impl UartReadProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for UartReadProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl CanOpenProgram {
+    pub const fn new(bus: u8) -> Self {
+        Self { bus, max_stack: 2 }
+    }
+}
+
+impl CanWriteProgram {
+    pub const fn new(byte: u8) -> Self {
+        Self { byte, max_stack: 3 }
+    }
+}
+
+impl CanReadProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for CanReadProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl RtcNowProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for RtcNowProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl RtcSetProgram {
+    pub const fn new(epoch_seconds: u32) -> Self {
+        Self {
+            epoch_seconds,
+            max_stack: 1,
+        }
+    }
+}
+
+impl WatchdogConfigureProgram {
+    pub const fn new(timeout_ms: u32) -> Self {
+        Self {
+            timeout_ms,
+            max_stack: 1,
+        }
+    }
+}
+
+impl WatchdogKickProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for WatchdogKickProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<'a> StorageWriteProgram<'a> {
+    pub const fn new(region: u8, offset: u16, bytes: &'a [u8]) -> Self {
+        Self {
+            region,
+            offset,
+            bytes,
+            max_stack: 3,
+        }
+    }
+}
+
+impl StorageReadProgram {
+    pub const fn new(region: u8, offset: u16, len: u8) -> Self {
+        Self {
+            region,
+            offset,
+            len,
+            max_stack: 3,
+        }
+    }
+}
+
+impl StorageSizeProgram {
+    pub const fn new(region: u8) -> Self {
+        Self {
+            region,
+            max_stack: 1,
+        }
+    }
+}
+
+impl NetworkTcpOpenProgram {
+    pub const fn new(interface: u8, remote_ipv4: u32, remote_port: u16) -> Self {
+        Self {
+            interface,
+            remote_ipv4,
+            remote_port,
+            max_stack: 4,
+        }
+    }
+}
+
+impl NetworkTcpWriteProgram {
+    pub const fn new(byte: u8) -> Self {
+        Self { byte, max_stack: 3 }
+    }
+}
+
+impl NetworkTcpReadProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for NetworkTcpReadProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NetworkTcpConnectedProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for NetworkTcpConnectedProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NetworkTcpAvailableProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for NetworkTcpAvailableProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NetworkTcpCloseProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for NetworkTcpCloseProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NetworkUdpOpenProgram {
+    pub const fn new(interface: u8, remote_ipv4: u32, remote_port: u16) -> Self {
+        Self {
+            interface,
+            remote_ipv4,
+            remote_port,
+            max_stack: 4,
+        }
+    }
+}
+
+impl NetworkUdpWriteProgram {
+    pub const fn new(byte: u8) -> Self {
+        Self { byte, max_stack: 3 }
+    }
+}
+
+impl NetworkUdpReadProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for NetworkUdpReadProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<'a> NetworkUdpWriteBytesProgram<'a> {
+    pub const fn new(bytes: &'a [u8]) -> Self {
+        Self {
+            bytes,
+            max_stack: 3,
+        }
+    }
+}
+
+impl NetworkUdpReadBytesProgram {
+    pub const fn new(len: u8) -> Self {
+        Self { len, max_stack: 3 }
+    }
+}
+
+impl NetworkUdpAvailableProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for NetworkUdpAvailableProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl NetworkUdpCloseProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for NetworkUdpCloseProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<'a> NetworkWifiAssociateProgram<'a> {
+    pub const fn new(interface: u8, ssid: &'a [u8], passphrase: &'a [u8]) -> Self {
+        Self {
+            interface,
+            ssid,
+            passphrase,
+            max_stack: 3,
+        }
+    }
+}
+
+impl NetworkWifiDisconnectProgram {
+    pub const fn new(interface: u8) -> Self {
+        Self {
+            interface,
+            max_stack: 1,
+        }
+    }
+}
+
+impl NetworkWifiStatusProgram {
+    pub const fn new(interface: u8) -> Self {
+        Self {
+            interface,
+            max_stack: 1,
+        }
+    }
+}
+
+impl<'a> NetworkDnsResolveProgram<'a> {
+    pub const fn new(interface: u8, hostname: &'a [u8]) -> Self {
+        Self {
+            interface,
+            hostname,
+            max_stack: 2,
+        }
+    }
+}
+
+impl NetworkDnsSetServerProgram {
+    pub const fn new(interface: u8, server_ipv4: u32) -> Self {
+        Self {
+            interface,
+            server_ipv4,
+            max_stack: 2,
+        }
+    }
+}
+
+impl<'a> NetworkDnsQueryProgram<'a> {
+    pub const fn new(transaction_id: u16, hostname: &'a [u8]) -> Self {
+        Self {
+            transaction_id,
+            hostname,
+            max_stack: 2,
+        }
+    }
+}
+
+impl<'a> NetworkDnsResponseIpv4Program<'a> {
+    pub const fn new(transaction_id: u16, response: &'a [u8]) -> Self {
+        Self {
+            transaction_id,
+            response,
+            max_stack: 2,
+        }
+    }
+}
+
+impl<'a> NetworkDnsExchangeUdpProgram<'a> {
+    pub const fn new(
+        interface: u8,
+        resolver_ipv4: u32,
+        transaction_id: u16,
+        hostname: &'a [u8],
+        response_len: u8,
+    ) -> Self {
+        Self {
+            interface,
+            resolver_ipv4,
+            transaction_id,
+            hostname,
+            response_len,
+            max_stack: 5,
+        }
+    }
+}
+
+impl<'a> NetworkDnsExchangeUdpRetryProgram<'a> {
+    pub const fn new(
+        interface: u8,
+        resolver_ipv4: u32,
+        transaction_id: u16,
+        hostname: &'a [u8],
+        response_len: u8,
+        attempts: u8,
+        backoff_ms: u16,
+    ) -> Self {
+        Self {
+            interface,
+            resolver_ipv4,
+            transaction_id,
+            hostname,
+            response_len,
+            attempts,
+            backoff_ms,
+            max_stack: 7,
+        }
+    }
+}
+
+impl<'a> NetworkDnsExchangeUdpFallbackProgram<'a> {
+    pub const fn new(
+        interface: u8,
+        primary_resolver_ipv4: u32,
+        fallback_resolver_ipv4: u32,
+        transaction_id: u16,
+        hostname: &'a [u8],
+        response_len: u8,
+        attempts_per_resolver: u8,
+        backoff_ms: u16,
+    ) -> Self {
+        Self {
+            interface,
+            primary_resolver_ipv4,
+            fallback_resolver_ipv4,
+            transaction_id,
+            hostname,
+            response_len,
+            attempts_per_resolver,
+            backoff_ms,
+            max_stack: 8,
+        }
+    }
+}
+
+impl I2cWriteU8Program {
+    pub const fn new(address: u16, byte: u8) -> Self {
+        Self {
+            address,
+            byte,
+            max_stack: 4,
+        }
+    }
+}
+
+impl I2cReadU8Program {
+    pub const fn new(address: u16) -> Self {
+        Self {
+            address,
+            max_stack: 3,
+        }
+    }
+}
+
+impl<'a> I2cWriteProgram<'a> {
+    pub const fn new(address: u16, bytes: &'a [u8]) -> Self {
+        Self {
+            address,
+            bytes,
+            max_stack: 4,
+        }
+    }
+}
+
+impl I2cReadProgram {
+    pub const fn new(address: u16, len: u8) -> Self {
+        Self {
+            address,
+            len,
+            max_stack: 4,
+        }
+    }
+}
+
+impl<'a> I2cTransferProgram<'a> {
+    pub const fn new(address: u16, write_bytes: &'a [u8], read_len: u8) -> Self {
+        Self {
+            address,
+            write_bytes,
+            read_len,
+            max_stack: 5,
+        }
+    }
+}
+
+impl<'a> SpiTransferProgram<'a> {
+    pub const fn new(cs_pin: u16, write_bytes: &'a [u8], read_len: u8) -> Self {
+        Self {
+            cs_pin,
+            write_bytes,
+            read_len,
+            max_stack: 5,
+        }
+    }
+}
+
+impl<'a> SpiWriteProgram<'a> {
+    pub const fn new(cs_pin: u16, bytes: &'a [u8]) -> Self {
+        Self {
+            cs_pin,
+            bytes,
+            max_stack: 5,
+        }
+    }
+}
+
+impl SpiReadProgram {
+    pub const fn new(cs_pin: u16, len: u8) -> Self {
+        Self {
+            cs_pin,
+            len,
+            max_stack: 5,
+        }
+    }
+}
+
+impl GpioOpenProgram {
+    pub const fn output(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_OUTPUT,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input_pullup(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT_PULLUP,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input_pulldown(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT_PULLDOWN,
+            max_stack: 2,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioHandleReadProgram {
+    pub max_stack: u8,
+}
+
+impl GpioHandleReadProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 2 }
+    }
+}
+
+impl Default for GpioHandleReadProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioHandleWriteProgram {
+    pub value: bool,
+    pub max_stack: u8,
+}
+
+impl GpioHandleWriteProgram {
+    pub const fn high() -> Self {
+        Self {
+            value: true,
+            max_stack: 3,
+        }
+    }
+
+    pub const fn low() -> Self {
+        Self {
+            value: false,
+            max_stack: 3,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioHandleCloseProgram {
+    pub max_stack: u8,
+}
+
+impl GpioHandleCloseProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for GpioHandleCloseProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl PwmWriteProgram {
+    pub const fn new(pin: u8, duty: u16) -> Self {
+        Self {
+            pin,
+            duty,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn off(pin: u8) -> Self {
+        Self::new(pin, 0)
+    }
+
+    pub const fn full(pin: u8) -> Self {
+        Self::new(pin, u16::MAX)
+    }
+}
+
+impl AdcReadProgram {
+    pub const fn new(pin: u8) -> Self {
+        Self { pin, max_stack: 1 }
+    }
+}
+
+impl DacWriteU12Program {
+    pub const fn new(pin: u8, sample: u16) -> Self {
+        Self {
+            pin,
+            sample,
+            max_stack: 2,
+        }
+    }
+}
+
+impl GpioWriteProgram {
+    pub const fn high(pin: u8) -> Self {
+        Self {
+            pin,
+            value: true,
+            max_stack: 3,
+        }
+    }
+
+    pub const fn low(pin: u8) -> Self {
+        Self {
+            pin,
+            value: false,
+            max_stack: 3,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TimeNowProgram {
+    pub max_stack: u8,
+}
+
+impl TimeNowProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for TimeNowProgram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TimeSleepMsProgram {
+    pub duration_ms: u16,
+    pub max_stack: u8,
+}
+
+impl TimeSleepMsProgram {
+    pub const fn new(duration_ms: u16) -> Self {
+        Self {
+            duration_ms,
+            max_stack: 1,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LedMatrixFrameProgram {
+    pub words: [u32; 3],
+    pub max_stack: u8,
+}
+
+impl LedMatrixFrameProgram {
+    pub const fn new(words: [u32; 3]) -> Self {
+        Self {
+            words,
+            max_stack: 3,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ModuleSpec<'a> {
+    pub flags: u8,
+    pub max_stack: u8,
+    pub code: &'a [u8],
+    pub const_pool: &'a [u8],
+}
+
+impl<'a> ModuleSpec<'a> {
+    pub const fn new(flags: u8, max_stack: u8, code: &'a [u8]) -> Self {
+        Self {
+            flags,
+            max_stack,
+            code,
+            const_pool: &[],
+        }
+    }
+
+    pub const fn const_pool(mut self, const_pool: &'a [u8]) -> Self {
+        self.const_pool = const_pool;
+        self
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WrittenFrame {
+    pub request_id: u16,
+    pub len: usize,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HostSession {
+    next_request_id: u16,
+}
+
+impl HostSession {
+    pub const fn new() -> Self {
+        Self { next_request_id: 1 }
+    }
+
+    pub const fn with_next_request_id(next_request_id: u16) -> Self {
+        Self {
+            next_request_id: if next_request_id == 0 {
+                1
+            } else {
+                next_request_id
+            },
+        }
+    }
+
+    pub const fn next_request_id(&self) -> u16 {
+        self.next_request_id
+    }
+
+    pub fn hello_frame(
+        &mut self,
+        host_name: &str,
+        host_nonce: u32,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        let payload_len = encode_hello(
+            &Hello {
+                min_version: 1,
+                max_version: 1,
+                host_name,
+                host_nonce,
+            },
+            payload_out,
+        )?;
+        self.request_frame(MessageType::HELLO, &payload_out[..payload_len], frame_out)
+    }
+
+    pub fn caps_query_frame(&mut self, frame_out: &mut [u8]) -> Result<WrittenFrame, HostError> {
+        self.request_frame(MessageType::CAPS_QUERY, &[], frame_out)
+    }
+
+    pub fn program_begin_frame(
+        &mut self,
+        program_id: u16,
+        module: &[u8],
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        if module.len() > u32::MAX as usize {
+            return Err(HostError::ProgramTooLarge);
+        }
+        let payload_len = encode_program_begin(
+            &ProgramBegin {
+                program_id,
+                format: ProgramFormat::BvmModule,
+                total_len: module.len() as u32,
+                program_crc32: crc32_ieee(module),
+            },
+            payload_out,
+        )?;
+        self.request_frame(
+            MessageType::PROGRAM_BEGIN,
+            &payload_out[..payload_len],
+            frame_out,
+        )
+    }
+
+    pub fn program_chunk_frame(
+        &mut self,
+        program_id: u16,
+        offset: u32,
+        chunk: &[u8],
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        let payload_len = encode_program_chunk(
+            &ProgramChunk {
+                program_id,
+                offset,
+                bytes: chunk,
+            },
+            payload_out,
+        )?;
+        self.request_frame(
+            MessageType::PROGRAM_CHUNK,
+            &payload_out[..payload_len],
+            frame_out,
+        )
+    }
+
+    pub fn program_end_frame(
+        &mut self,
+        program_id: u16,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        let payload_len = encode_program_end(&ProgramEnd { program_id }, payload_out)?;
+        self.request_frame(
+            MessageType::PROGRAM_END,
+            &payload_out[..payload_len],
+            frame_out,
+        )
+    }
+
+    pub fn run_background_frame(
+        &mut self,
+        program_id: u16,
+        instruction_budget: u32,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        self.run_frame(
+            program_id,
+            DEFAULT_RUN_FLAGS,
+            instruction_budget,
+            0,
+            payload_out,
+            frame_out,
+        )
+    }
+
+    pub fn run_frame(
+        &mut self,
+        program_id: u16,
+        flags: u8,
+        instruction_budget: u32,
+        time_budget_ms: u32,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        let payload_len = encode_run_request(
+            &RunRequest {
+                program_id,
+                flags,
+                instruction_budget,
+                time_budget_ms,
+            },
+            payload_out,
+        )?;
+        self.request_frame(MessageType::RUN, &payload_out[..payload_len], frame_out)
+    }
+
+    pub fn store_program_frame(
+        &mut self,
+        program_id: u16,
+        slot: u8,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        self.store_program_with_boot_policy_frame(
+            program_id,
+            slot,
+            BOOT_RUN_IF_NO_HOST,
+            payload_out,
+            frame_out,
+        )
+    }
+
+    pub fn store_program_with_boot_policy_frame(
+        &mut self,
+        program_id: u16,
+        slot: u8,
+        boot_policy: u8,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        let payload_len = encode_store_program(
+            &StoreProgram {
+                program_id,
+                slot,
+                boot_policy,
+            },
+            payload_out,
+        )?;
+        self.request_frame(
+            MessageType::STORE_PROGRAM,
+            &payload_out[..payload_len],
+            frame_out,
+        )
+    }
+
+    pub fn stop_frame(&mut self, frame_out: &mut [u8]) -> Result<WrittenFrame, HostError> {
+        self.request_frame(MessageType::STOP, &[], frame_out)
+    }
+
+    pub fn ping_frame(&mut self, frame_out: &mut [u8]) -> Result<WrittenFrame, HostError> {
+        self.request_frame(MessageType::PING, &[], frame_out)
+    }
+
+    pub fn bootloader_reboot_frame(
+        &mut self,
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        self.request_frame(MessageType::BOOTLOADER_REBOOT, &[], frame_out)
+    }
+
+    pub fn request_stream_frame(
+        &mut self,
+        message_type: MessageType,
+        payload: &[u8],
+        raw_out: &mut [u8],
+        wire_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        let request_id = self.take_request_id();
+        let len = encode_stream_frame(
+            &Frame {
+                flags: FLAG_RESPONSE_REQUIRED,
+                message_type,
+                request_id,
+                payload,
+            },
+            raw_out,
+            wire_out,
+        )?;
+        Ok(WrittenFrame { request_id, len })
+    }
+
+    fn request_frame(
+        &mut self,
+        message_type: MessageType,
+        payload: &[u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
+        let request_id = self.take_request_id();
+        let len = encode_frame(
+            &Frame {
+                flags: FLAG_RESPONSE_REQUIRED,
+                message_type,
+                request_id,
+                payload,
+            },
+            frame_out,
+        )?;
+        Ok(WrittenFrame { request_id, len })
+    }
+
+    fn take_request_id(&mut self) -> u16 {
+        let request_id = self.next_request_id;
+        self.next_request_id = self.next_request_id.wrapping_add(1);
+        if self.next_request_id == 0 {
+            self.next_request_id = 1;
+        }
+        request_id
+    }
+}
+
+impl Default for HostSession {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+pub fn write_blink_code(program: BlinkProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < BLINK_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, 1)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_OPEN)?;
+
+    let loop_start = offset;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_TRUE)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_WRITE)?;
+    write_push_u16(out, &mut offset, program.high_ms)?;
+    write_call_u8(out, &mut offset, CAP_TIME_SLEEP_MS)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_FALSE)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_WRITE)?;
+    write_push_u16(out, &mut offset, program.low_ms)?;
+    write_call_u8(out, &mut offset, CAP_TIME_SLEEP_MS)?;
+
+    let jump_next = offset + 2;
+    let jump_offset = loop_start as isize - jump_next as isize;
+    if !(i8::MIN as isize..=i8::MAX as isize).contains(&jump_offset) {
+        return Err(HostError::JumpOutOfRange);
+    }
+    write_u8(out, &mut offset, OP_JUMP_S8)?;
+    write_u8(out, &mut offset, jump_offset as i8 as u8)?;
+    Ok(offset)
+}
+
+pub fn write_blink_module(program: BlinkProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < BLINK_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; BLINK_CODE_LEN];
+    let code_len = write_blink_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_MAY_RUN_FOREVER,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_read_code(program: GpioReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < GPIO_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+    validate_gpio_read_mode(program.mode)?;
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.mode)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_READ)?;
+    write_u8(out, &mut offset, OP_SWAP)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_CLOSE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_write_code(
+    program: GpioWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, GPIO_MODE_OUTPUT)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(
+        out,
+        &mut offset,
+        if program.value {
+            OP_PUSH_TRUE
+        } else {
+            OP_PUSH_FALSE
+        },
+    )?;
+    write_call_u8(out, &mut offset, CAP_GPIO_WRITE)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_CLOSE)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_write_module(
+    program: GpioWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_WRITE_CODE_LEN];
+    let code_len = write_gpio_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_open_code(program: GpioOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < GPIO_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+    validate_gpio_mode(program.mode)?;
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.mode)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_open_module(
+    program: GpioOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_OPEN_CODE_LEN];
+    let code_len = write_gpio_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_read_code(
+    _program: GpioHandleReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_read_module(
+    program: GpioHandleReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_HANDLE_READ_CODE_LEN];
+    let code_len = write_gpio_handle_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_write_code(
+    program: GpioHandleWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(
+        out,
+        &mut offset,
+        if program.value {
+            OP_PUSH_TRUE
+        } else {
+            OP_PUSH_FALSE
+        },
+    )?;
+    write_call_u8(out, &mut offset, CAP_GPIO_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_write_module(
+    program: GpioHandleWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_HANDLE_WRITE_CODE_LEN];
+    let code_len = write_gpio_handle_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_close_code(
+    _program: GpioHandleCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_CLOSE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_GPIO_CLOSE)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_handle_close_module(
+    program: GpioHandleCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_HANDLE_CLOSE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_HANDLE_CLOSE_CODE_LEN];
+    let code_len = write_gpio_handle_close_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+fn validate_gpio_read_mode(mode: u8) -> Result<(), HostError> {
+    match mode {
+        GPIO_MODE_INPUT | GPIO_MODE_INPUT_PULLUP | GPIO_MODE_INPUT_PULLDOWN => Ok(()),
+        other => Err(HostError::InvalidGpioReadMode(other)),
+    }
+}
+
+fn validate_gpio_mode(mode: u8) -> Result<(), HostError> {
+    match mode {
+        GPIO_MODE_INPUT | GPIO_MODE_OUTPUT | GPIO_MODE_INPUT_PULLUP | GPIO_MODE_INPUT_PULLDOWN => {
+            Ok(())
+        }
+        other => Err(HostError::InvalidGpioReadMode(other)),
+    }
+}
+
+pub fn write_gpio_read_module(
+    program: GpioReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_READ_CODE_LEN];
+    let code_len = write_gpio_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_time_now_code(_program: TimeNowProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < TIME_NOW_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_TIME_NOW_MS)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_time_now_module(program: TimeNowProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < TIME_NOW_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; TIME_NOW_CODE_LEN];
+    let code_len = write_time_now_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_time_sleep_ms_code(
+    program: TimeSleepMsProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < TIME_SLEEP_MS_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u16(out, &mut offset, program.duration_ms)?;
+    write_call_u8(out, &mut offset, CAP_TIME_SLEEP_MS)?;
+    Ok(offset)
+}
+
+pub fn write_time_sleep_ms_module(
+    program: TimeSleepMsProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < TIME_SLEEP_MS_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; TIME_SLEEP_MS_CODE_LEN];
+    let code_len = write_time_sleep_ms_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_pwm_write_code(program: PwmWriteProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < PWM_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_push_u16(out, &mut offset, program.duty)?;
+    write_call_u8(out, &mut offset, CAP_PWM_WRITE)?;
+    write_u8(out, &mut offset, OP_HALT)?;
+    Ok(offset)
+}
+
+pub fn write_pwm_write_module(
+    program: PwmWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < PWM_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; PWM_WRITE_CODE_LEN];
+    let code_len = write_pwm_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_pwm(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_adc_read_code(program: AdcReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < ADC_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_call_u8(out, &mut offset, CAP_ADC_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_adc_read_module(program: AdcReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < ADC_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; ADC_READ_CODE_LEN];
+    let code_len = write_adc_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_adc(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_dac_write_u12_code(
+    program: DacWriteU12Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < DAC_WRITE_U12_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_push_u16(out, &mut offset, program.sample)?;
+    write_call_u8(out, &mut offset, CAP_DAC_WRITE_U12)?;
+    write_u8(out, &mut offset, OP_HALT)?;
+    Ok(offset)
+}
+
+pub fn write_dac_write_u12_module(
+    program: DacWriteU12Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < DAC_WRITE_U12_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; DAC_WRITE_U12_CODE_LEN];
+    let code_len = write_dac_write_u12_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_dac(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_i2c_open_code(program: I2cOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < I2C_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.bus)?;
+    write_call_u8(out, &mut offset, CAP_I2C_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_i2c_open_module(program: I2cOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < I2C_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; I2C_OPEN_CODE_LEN];
+    let code_len = write_i2c_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_i2c(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_spi_open_code(program: SpiOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < SPI_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.bus)?;
+    write_call_u8(out, &mut offset, CAP_SPI_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_spi_open_module(program: SpiOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < SPI_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; SPI_OPEN_CODE_LEN];
+    let code_len = write_spi_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_spi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_uart_open_code(program: UartOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < UART_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.bus)?;
+    write_call_u8(out, &mut offset, CAP_UART_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_uart_open_module(
+    program: UartOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < UART_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; UART_OPEN_CODE_LEN];
+    let code_len = write_uart_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_uart(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_uart_write_code(
+    program: UartWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < UART_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.byte)?;
+    write_call_u8(out, &mut offset, CAP_UART_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_uart_write_module(
+    program: UartWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < UART_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; UART_WRITE_CODE_LEN];
+    let code_len = write_uart_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_uart(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_uart_read_code(_program: UartReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < UART_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_UART_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_uart_read_module(
+    program: UartReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < UART_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; UART_READ_CODE_LEN];
+    let code_len = write_uart_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_uart(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_can_open_code(program: CanOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < CAN_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.bus)?;
+    write_call_u8(out, &mut offset, CAP_CAN_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_can_open_module(program: CanOpenProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < CAN_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; CAN_OPEN_CODE_LEN];
+    let code_len = write_can_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_can(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_can_write_code(program: CanWriteProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < CAN_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.byte)?;
+    write_call_u8(out, &mut offset, CAP_CAN_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_can_write_module(
+    program: CanWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < CAN_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; CAN_WRITE_CODE_LEN];
+    let code_len = write_can_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_can(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_can_read_code(_program: CanReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < CAN_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_CAN_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_can_read_module(program: CanReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < CAN_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; CAN_READ_CODE_LEN];
+    let code_len = write_can_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_can(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_rtc_now_code(_program: RtcNowProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < RTC_NOW_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_RTC_NOW)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_rtc_now_module(program: RtcNowProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < RTC_NOW_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; RTC_NOW_CODE_LEN];
+    let code_len = write_rtc_now_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_rtc(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_rtc_set_code(program: RtcSetProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < RTC_SET_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u32(out, &mut offset, program.epoch_seconds)?;
+    write_call_u8(out, &mut offset, CAP_RTC_SET)?;
+    Ok(offset)
+}
+
+pub fn write_rtc_set_module(program: RtcSetProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < RTC_SET_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; RTC_SET_CODE_LEN];
+    let code_len = write_rtc_set_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_rtc(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_watchdog_configure_code(
+    program: WatchdogConfigureProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < WATCHDOG_CONFIGURE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u32(out, &mut offset, program.timeout_ms)?;
+    write_call_u8(out, &mut offset, CAP_WATCHDOG_CONFIGURE)?;
+    Ok(offset)
+}
+
+pub fn write_watchdog_configure_module(
+    program: WatchdogConfigureProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < WATCHDOG_CONFIGURE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; WATCHDOG_CONFIGURE_CODE_LEN];
+    let code_len = write_watchdog_configure_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_watchdog(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_watchdog_kick_code(
+    _program: WatchdogKickProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < WATCHDOG_KICK_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_WATCHDOG_KICK)?;
+    Ok(offset)
+}
+
+pub fn write_watchdog_kick_module(
+    program: WatchdogKickProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < WATCHDOG_KICK_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; WATCHDOG_KICK_CODE_LEN];
+    let code_len = write_watchdog_kick_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_watchdog(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn storage_write_module_len(write_len: usize) -> Result<usize, HostError> {
+    if write_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + STORAGE_WRITE_CODE_LEN + 1 + write_len)
+}
+
+pub fn write_storage_write_code(
+    program: StorageWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.bytes.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < STORAGE_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.region)?;
+    write_push_u16(out, &mut offset, program.offset)?;
+    write_push_bytes(out, &mut offset, 0, program.bytes.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_STORAGE_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_storage_write_module(
+    program: StorageWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = storage_write_module_len(program.bytes.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; STORAGE_WRITE_CODE_LEN];
+    let code_len = write_storage_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.bytes),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_storage(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_storage_read_code(
+    program: StorageReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < STORAGE_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.region)?;
+    write_push_u16(out, &mut offset, program.offset)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.len)?;
+    write_call_u8(out, &mut offset, CAP_STORAGE_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_storage_read_module(
+    program: StorageReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < STORAGE_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; STORAGE_READ_CODE_LEN];
+    let code_len = write_storage_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_storage(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_storage_size_code(
+    program: StorageSizeProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < STORAGE_SIZE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.region)?;
+    write_call_u8(out, &mut offset, CAP_STORAGE_SIZE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_storage_size_module(
+    program: StorageSizeProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < STORAGE_SIZE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; STORAGE_SIZE_CODE_LEN];
+    let code_len = write_storage_size_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_storage(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_open_code(
+    program: NetworkTcpOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_u32(out, &mut offset, program.remote_ipv4)?;
+    write_push_u16(out, &mut offset, program.remote_port)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_TCP_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_open_module(
+    program: NetworkTcpOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_TCP_OPEN_CODE_LEN];
+    let code_len = write_network_tcp_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_tcp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_write_code(
+    program: NetworkTcpWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.byte)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_TCP_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_write_module(
+    program: NetworkTcpWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_TCP_WRITE_CODE_LEN];
+    let code_len = write_network_tcp_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_tcp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_read_code(
+    _program: NetworkTcpReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_TCP_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_read_module(
+    program: NetworkTcpReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_TCP_READ_CODE_LEN];
+    let code_len = write_network_tcp_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_tcp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_connected_code(
+    _program: NetworkTcpConnectedProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_CONNECTED_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_TCP_CONNECTED)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_connected_module(
+    program: NetworkTcpConnectedProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_CONNECTED_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_TCP_CONNECTED_CODE_LEN];
+    let code_len = write_network_tcp_connected_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_tcp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_available_code(
+    _program: NetworkTcpAvailableProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_AVAILABLE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_TCP_AVAILABLE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_available_module(
+    program: NetworkTcpAvailableProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_AVAILABLE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_TCP_AVAILABLE_CODE_LEN];
+    let code_len = write_network_tcp_available_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_tcp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_close_code(
+    _program: NetworkTcpCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_CLOSE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_NETWORK_TCP_CLOSE)?;
+    Ok(offset)
+}
+
+pub fn write_network_tcp_close_module(
+    program: NetworkTcpCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_TCP_CLOSE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_TCP_CLOSE_CODE_LEN];
+    let code_len = write_network_tcp_close_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_tcp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_open_code(
+    program: NetworkUdpOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_OPEN_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_u32(out, &mut offset, program.remote_ipv4)?;
+    write_push_u16(out, &mut offset, program.remote_port)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_open_module(
+    program: NetworkUdpOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_OPEN_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_OPEN_CODE_LEN];
+    let code_len = write_network_udp_open_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_write_code(
+    program: NetworkUdpWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.byte)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_write_module(
+    program: NetworkUdpWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_WRITE_CODE_LEN];
+    let code_len = write_network_udp_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_read_code(
+    _program: NetworkUdpReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_read_module(
+    program: NetworkUdpReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_READ_CODE_LEN];
+    let code_len = write_network_udp_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn network_udp_write_bytes_module_len(byte_len: usize) -> Result<usize, HostError> {
+    if byte_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_UDP_WRITE_BYTES_CODE_LEN + 1 + byte_len)
+}
+
+pub fn write_network_udp_write_bytes_code(
+    program: NetworkUdpWriteBytesProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.bytes.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_UDP_WRITE_BYTES_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_bytes(out, &mut offset, 0, program.bytes.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_WRITE_BYTES)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_write_bytes_module(
+    program: NetworkUdpWriteBytesProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_udp_write_bytes_module_len(program.bytes.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_WRITE_BYTES_CODE_LEN];
+    let code_len = write_network_udp_write_bytes_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        )
+        .const_pool(program.bytes),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_read_bytes_code(
+    program: NetworkUdpReadBytesProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_UDP_READ_BYTES_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.len)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_READ_BYTES)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_read_bytes_module(
+    program: NetworkUdpReadBytesProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_READ_BYTES_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_READ_BYTES_CODE_LEN];
+    let code_len = write_network_udp_read_bytes_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_available_code(
+    _program: NetworkUdpAvailableProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_AVAILABLE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_AVAILABLE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_available_module(
+    program: NetworkUdpAvailableProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_AVAILABLE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_AVAILABLE_CODE_LEN];
+    let code_len = write_network_udp_available_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_close_code(
+    _program: NetworkUdpCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_CLOSE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_NETWORK_UDP_CLOSE)?;
+    Ok(offset)
+}
+
+pub fn write_network_udp_close_module(
+    program: NetworkUdpCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_UDP_CLOSE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_UDP_CLOSE_CODE_LEN];
+    let code_len = write_network_udp_close_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn network_wifi_associate_module_len(
+    ssid_len: usize,
+    passphrase_len: usize,
+) -> Result<usize, HostError> {
+    if ssid_len > MAX_BYTE_BUFFER_LEN || passphrase_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_WIFI_ASSOCIATE_CODE_LEN + 1 + ssid_len + passphrase_len)
+}
+
+pub fn write_network_wifi_associate_code(
+    program: NetworkWifiAssociateProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.ssid.len() > MAX_BYTE_BUFFER_LEN || program.passphrase.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_WIFI_ASSOCIATE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_bytes(out, &mut offset, 0, program.ssid.len() as u8)?;
+    write_push_bytes(
+        out,
+        &mut offset,
+        program.ssid.len() as u16,
+        program.passphrase.len() as u8,
+    )?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_WIFI_ASSOCIATE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_associate_module(
+    program: NetworkWifiAssociateProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len =
+        network_wifi_associate_module_len(program.ssid.len(), program.passphrase.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut const_pool = [0u8; MAX_BYTE_BUFFER_LEN * 2];
+    const_pool[..program.ssid.len()].copy_from_slice(program.ssid);
+    let passphrase_start = program.ssid.len();
+    const_pool[passphrase_start..passphrase_start + program.passphrase.len()]
+        .copy_from_slice(program.passphrase);
+    let const_pool_len = program.ssid.len() + program.passphrase.len();
+
+    let mut code = [0u8; NETWORK_WIFI_ASSOCIATE_CODE_LEN];
+    let code_len = write_network_wifi_associate_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len])
+            .const_pool(&const_pool[..const_pool_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_wifi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_disconnect_code(
+    program: NetworkWifiDisconnectProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_WIFI_DISCONNECT_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_WIFI_DISCONNECT)?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_disconnect_module(
+    program: NetworkWifiDisconnectProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_WIFI_DISCONNECT_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_WIFI_DISCONNECT_CODE_LEN];
+    let code_len = write_network_wifi_disconnect_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_wifi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_status_code(
+    program: NetworkWifiStatusProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_WIFI_STATUS_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_WIFI_STATUS)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_wifi_status_module(
+    program: NetworkWifiStatusProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_WIFI_STATUS_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_WIFI_STATUS_CODE_LEN];
+    let code_len = write_network_wifi_status_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_wifi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn network_dns_resolve_module_len(hostname_len: usize) -> Result<usize, HostError> {
+    if hostname_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_RESOLVE_CODE_LEN + 1 + hostname_len)
+}
+
+pub fn write_network_dns_resolve_code(
+    program: NetworkDnsResolveProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.hostname.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_RESOLVE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_bytes(out, &mut offset, 0, program.hostname.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_RESOLVE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_resolve_module(
+    program: NetworkDnsResolveProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_resolve_module_len(program.hostname.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_RESOLVE_CODE_LEN];
+    let code_len = write_network_dns_resolve_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.hostname),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_dns(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_set_server_code(
+    program: NetworkDnsSetServerProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_DNS_SET_SERVER_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_u32(out, &mut offset, program.server_ipv4)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_SET_SERVER)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_set_server_module(
+    program: NetworkDnsSetServerProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < NETWORK_DNS_SET_SERVER_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_SET_SERVER_CODE_LEN];
+    let code_len = write_network_dns_set_server_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_dns(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn spi_transfer_module_len(write_len: usize) -> Result<usize, HostError> {
+    if write_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + SPI_TRANSFER_CODE_LEN + 1 + write_len)
+}
+
+pub fn write_spi_transfer_code(
+    program: SpiTransferProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.write_bytes.len() > MAX_BYTE_BUFFER_LEN
+        || program.read_len as usize > MAX_BYTE_BUFFER_LEN
+    {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < SPI_TRANSFER_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_u16(out, &mut offset, program.cs_pin)?;
+    write_push_bytes(out, &mut offset, 0, program.write_bytes.len() as u8)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.read_len)?;
+    write_call_u8(out, &mut offset, CAP_SPI_TRANSFER)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_spi_transfer_module(
+    program: SpiTransferProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.read_len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    let required_len = spi_transfer_module_len(program.write_bytes.len())?;
+    if out.len() < required_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; SPI_TRANSFER_CODE_LEN];
+    let code_len = write_spi_transfer_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        )
+        .const_pool(program.write_bytes),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_spi(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn spi_write_module_len(byte_len: usize) -> Result<usize, HostError> {
+    spi_transfer_module_len(byte_len)
+}
+
+pub fn write_spi_write_code(
+    program: SpiWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    write_spi_transfer_code(
+        SpiTransferProgram {
+            cs_pin: program.cs_pin,
+            write_bytes: program.bytes,
+            read_len: 0,
+            max_stack: program.max_stack,
+        },
+        out,
+    )
+}
+
+pub fn write_spi_write_module(
+    program: SpiWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    write_spi_transfer_module(
+        SpiTransferProgram {
+            cs_pin: program.cs_pin,
+            write_bytes: program.bytes,
+            read_len: 0,
+            max_stack: program.max_stack,
+        },
+        out,
+    )
+}
+
+pub fn write_spi_read_code(program: SpiReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    write_spi_transfer_code(
+        SpiTransferProgram {
+            cs_pin: program.cs_pin,
+            write_bytes: &[],
+            read_len: program.len,
+            max_stack: program.max_stack,
+        },
+        out,
+    )
+}
+
+pub fn write_spi_read_module(program: SpiReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    write_spi_transfer_module(
+        SpiTransferProgram {
+            cs_pin: program.cs_pin,
+            write_bytes: &[],
+            read_len: program.len,
+            max_stack: program.max_stack,
+        },
+        out,
+    )
+}
+
+pub fn write_i2c_write_u8_code(
+    program: I2cWriteU8Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < I2C_WRITE_U8_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_u16(out, &mut offset, program.address)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.byte)?;
+    write_call_u8(out, &mut offset, CAP_I2C_WRITE_U8)?;
+    Ok(offset)
+}
+
+pub fn write_i2c_write_u8_module(
+    program: I2cWriteU8Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < I2C_WRITE_U8_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; I2C_WRITE_U8_CODE_LEN];
+    let code_len = write_i2c_write_u8_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_i2c(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_i2c_read_u8_code(
+    program: I2cReadU8Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < I2C_READ_U8_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_u16(out, &mut offset, program.address)?;
+    write_call_u8(out, &mut offset, CAP_I2C_READ_U8)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_i2c_read_u8_module(
+    program: I2cReadU8Program,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < I2C_READ_U8_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; I2C_READ_U8_CODE_LEN];
+    let code_len = write_i2c_read_u8_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_i2c(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn i2c_write_module_len(byte_len: usize) -> Result<usize, HostError> {
+    if byte_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + I2C_WRITE_CODE_LEN + 1 + byte_len)
+}
+
+pub fn write_i2c_write_code(
+    program: I2cWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.bytes.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < I2C_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_u16(out, &mut offset, program.address)?;
+    write_push_bytes(out, &mut offset, 0, program.bytes.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_I2C_WRITE)?;
+    Ok(offset)
+}
+
+pub fn write_i2c_write_module(
+    program: I2cWriteProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let required_len = i2c_write_module_len(program.bytes.len())?;
+    if out.len() < required_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; I2C_WRITE_CODE_LEN];
+    let code_len = write_i2c_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        )
+        .const_pool(program.bytes),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_i2c(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_i2c_read_code(program: I2cReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if program.len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < I2C_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_u16(out, &mut offset, program.address)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.len)?;
+    write_call_u8(out, &mut offset, CAP_I2C_READ)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_i2c_read_module(program: I2cReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if program.len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < I2C_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; I2C_READ_CODE_LEN];
+    let code_len = write_i2c_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_i2c(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn i2c_transfer_module_len(write_len: usize) -> Result<usize, HostError> {
+    if write_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + I2C_TRANSFER_CODE_LEN + 1 + write_len)
+}
+
+pub fn write_i2c_transfer_code(
+    program: I2cTransferProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.write_bytes.len() > MAX_BYTE_BUFFER_LEN
+        || program.read_len as usize > MAX_BYTE_BUFFER_LEN
+    {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < I2C_TRANSFER_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_push_u16(out, &mut offset, program.address)?;
+    write_push_bytes(out, &mut offset, 0, program.write_bytes.len() as u8)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.read_len)?;
+    write_call_u8(out, &mut offset, CAP_I2C_TRANSFER)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_i2c_transfer_module(
+    program: I2cTransferProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.read_len as usize > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    let required_len = i2c_transfer_module_len(program.write_bytes.len())?;
+    if out.len() < required_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; I2C_TRANSFER_CODE_LEN];
+    let code_len = write_i2c_transfer_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            program.max_stack,
+            &code[..code_len],
+        )
+        .const_pool(program.write_bytes),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_i2c(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn network_dns_query_module_len(hostname_len: usize) -> Result<usize, HostError> {
+    if hostname_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_QUERY_CODE_LEN + 1 + hostname_len)
+}
+
+pub fn write_network_dns_query_code(
+    program: NetworkDnsQueryProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.hostname.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_QUERY_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u16(out, &mut offset, program.transaction_id)?;
+    write_push_bytes(out, &mut offset, 0, program.hostname.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_QUERY)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_query_module(
+    program: NetworkDnsQueryProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_query_module_len(program.hostname.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_QUERY_CODE_LEN];
+    let code_len = write_network_dns_query_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.hostname),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_dns(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn network_dns_response_ipv4_module_len(response_len: usize) -> Result<usize, HostError> {
+    if response_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_RESPONSE_IPV4_CODE_LEN + 1 + response_len)
+}
+
+pub fn write_network_dns_response_ipv4_code(
+    program: NetworkDnsResponseIpv4Program<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.response.len() > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_RESPONSE_IPV4_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u16(out, &mut offset, program.transaction_id)?;
+    write_push_bytes(out, &mut offset, 0, program.response.len() as u8)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_RESPONSE_IPV4)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_response_ipv4_module(
+    program: NetworkDnsResponseIpv4Program<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_response_ipv4_module_len(program.response.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_RESPONSE_IPV4_CODE_LEN];
+    let code_len = write_network_dns_response_ipv4_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.response),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_network_dns(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn network_dns_exchange_udp_module_len(hostname_len: usize) -> Result<usize, HostError> {
+    if hostname_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_EXCHANGE_UDP_CODE_LEN + 1 + hostname_len)
+}
+
+pub fn write_network_dns_exchange_udp_code(
+    program: NetworkDnsExchangeUdpProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.hostname.len() > MAX_BYTE_BUFFER_LEN
+        || program.response_len == 0
+        || program.response_len as usize > MAX_BYTE_BUFFER_LEN
+    {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_EXCHANGE_UDP_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_u32(out, &mut offset, program.resolver_ipv4)?;
+    write_push_u16(out, &mut offset, program.transaction_id)?;
+    write_push_bytes(out, &mut offset, 0, program.hostname.len() as u8)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.response_len)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_EXCHANGE_UDP)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_exchange_udp_module(
+    program: NetworkDnsExchangeUdpProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_exchange_udp_module_len(program.hostname.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_EXCHANGE_UDP_CODE_LEN];
+    let code_len = write_network_dns_exchange_udp_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.hostname),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp()
+            .with_network_dns()
+            .with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn network_dns_exchange_udp_retry_module_len(hostname_len: usize) -> Result<usize, HostError> {
+    if hostname_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_EXCHANGE_UDP_RETRY_CODE_LEN + 1 + hostname_len)
+}
+
+pub fn write_network_dns_exchange_udp_retry_code(
+    program: NetworkDnsExchangeUdpRetryProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.hostname.len() > MAX_BYTE_BUFFER_LEN
+        || program.response_len == 0
+        || program.response_len as usize > MAX_BYTE_BUFFER_LEN
+        || program.attempts == 0
+    {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_EXCHANGE_UDP_RETRY_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_u32(out, &mut offset, program.resolver_ipv4)?;
+    write_push_u16(out, &mut offset, program.transaction_id)?;
+    write_push_bytes(out, &mut offset, 0, program.hostname.len() as u8)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.response_len)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.attempts)?;
+    write_push_u16(out, &mut offset, program.backoff_ms)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_exchange_udp_retry_module(
+    program: NetworkDnsExchangeUdpRetryProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_exchange_udp_retry_module_len(program.hostname.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_EXCHANGE_UDP_RETRY_CODE_LEN];
+    let code_len = write_network_dns_exchange_udp_retry_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.hostname),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp()
+            .with_network_dns()
+            .with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn network_dns_exchange_udp_fallback_module_len(
+    hostname_len: usize,
+) -> Result<usize, HostError> {
+    if hostname_len > MAX_BYTE_BUFFER_LEN {
+        return Err(HostError::ProgramTooLarge);
+    }
+    Ok(8 + 1 + NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN + 1 + hostname_len)
+}
+
+pub fn write_network_dns_exchange_udp_fallback_code(
+    program: NetworkDnsExchangeUdpFallbackProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if program.hostname.len() > MAX_BYTE_BUFFER_LEN
+        || program.response_len == 0
+        || program.response_len as usize > MAX_BYTE_BUFFER_LEN
+        || program.attempts_per_resolver == 0
+    {
+        return Err(HostError::ProgramTooLarge);
+    }
+    if out.len() < NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.interface)?;
+    write_push_u32(out, &mut offset, program.primary_resolver_ipv4)?;
+    write_push_u32(out, &mut offset, program.fallback_resolver_ipv4)?;
+    write_push_u16(out, &mut offset, program.transaction_id)?;
+    write_push_bytes(out, &mut offset, 0, program.hostname.len() as u8)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.response_len)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.attempts_per_resolver)?;
+    write_push_u16(out, &mut offset, program.backoff_ms)?;
+    write_call_u8(out, &mut offset, CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_network_dns_exchange_udp_fallback_module(
+    program: NetworkDnsExchangeUdpFallbackProgram<'_>,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    let module_len = network_dns_exchange_udp_fallback_module_len(program.hostname.len())?;
+    if out.len() < module_len {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; NETWORK_DNS_EXCHANGE_UDP_FALLBACK_CODE_LEN];
+    let code_len = write_network_dns_exchange_udp_fallback_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]).const_pool(program.hostname),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp()
+            .with_network_dns()
+            .with_network_udp(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_led_matrix_frame_code(
+    program: LedMatrixFrameProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < LED_MATRIX_FRAME_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u32(out, &mut offset, program.words[0])?;
+    write_push_u32(out, &mut offset, program.words[1])?;
+    write_push_u32(out, &mut offset, program.words[2])?;
+    write_call_u8(out, &mut offset, CAP_LED_MATRIX_FRAME)?;
+    write_u8(out, &mut offset, OP_HALT)?;
+    Ok(offset)
+}
+
+pub fn write_led_matrix_frame_module(
+    program: LedMatrixFrameProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < LED_MATRIX_FRAME_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; LED_MATRIX_FRAME_CODE_LEN];
+    let code_len = write_led_matrix_frame_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(
+        &module,
+        CapabilitySet::blink_mvp().with_led_matrix(),
+        program.max_stack,
+    )?;
+    Ok(offset)
+}
+
+pub fn write_module(spec: ModuleSpec<'_>, out: &mut [u8]) -> Result<usize, HostError> {
+    if spec.code.len() > u32::MAX as usize || spec.const_pool.len() > u32::MAX as usize {
+        return Err(HostError::ProgramTooLarge);
+    }
+
+    let mut offset = 0;
+    write_slice(out, &mut offset, &MODULE_MAGIC)?;
+    write_u8(out, &mut offset, MODULE_VERSION)?;
+    write_u8(out, &mut offset, spec.flags)?;
+    write_u8(out, &mut offset, spec.max_stack)?;
+    write_u8(out, &mut offset, 0)?;
+    write_uleb128(out, &mut offset, spec.code.len() as u32)?;
+    write_slice(out, &mut offset, spec.code)?;
+    write_uleb128(out, &mut offset, spec.const_pool.len() as u32)?;
+    write_slice(out, &mut offset, spec.const_pool)?;
+
+    parse_module(&out[..offset])?;
+    Ok(offset)
+}
+
+pub fn write_blink_upload_and_run_frames(
+    session: &mut HostSession,
+    program_id: u16,
+    module: &[u8],
+    payload_out: &mut [u8],
+    frames_out: &mut [&mut [u8]; 4],
+) -> Result<[WrittenFrame; 4], HostError> {
+    Ok([
+        session.program_begin_frame(program_id, module, payload_out, frames_out[0])?,
+        session.program_chunk_frame(program_id, 0, module, payload_out, frames_out[1])?,
+        session.program_end_frame(program_id, payload_out, frames_out[2])?,
+        session.run_background_frame(
+            program_id,
+            DEFAULT_INSTRUCTION_BUDGET,
+            payload_out,
+            frames_out[3],
+        )?,
+    ])
+}
+
+pub fn write_wire_frame(raw_frame: &[u8], wire_out: &mut [u8]) -> Result<usize, HostError> {
+    Ok(encode_wire_frame(raw_frame, wire_out)?)
+}
+
+pub fn crc32_ieee(bytes: &[u8]) -> u32 {
+    let mut crc = 0xFFFF_FFFFu32;
+    for byte in bytes {
+        crc ^= *byte as u32;
+        for _ in 0..8 {
+            if crc & 1 != 0 {
+                crc = (crc >> 1) ^ 0xEDB8_8320;
+            } else {
+                crc >>= 1;
+            }
+        }
+    }
+    !crc
+}
+
+fn write_call_u8(out: &mut [u8], offset: &mut usize, capability: u16) -> Result<(), HostError> {
+    write_u8(out, offset, OP_CALL_U8)?;
+    write_u8(out, offset, capability as u8)
+}
+
+fn write_push_u16(out: &mut [u8], offset: &mut usize, value: u16) -> Result<(), HostError> {
+    write_u8(out, offset, OP_PUSH_U16)?;
+    write_slice(out, offset, &value.to_le_bytes())
+}
+
+fn write_push_u32(out: &mut [u8], offset: &mut usize, value: u32) -> Result<(), HostError> {
+    write_u8(out, offset, OP_PUSH_U32)?;
+    write_slice(out, offset, &value.to_le_bytes())
+}
+
+fn write_push_bytes(
+    out: &mut [u8],
+    offset: &mut usize,
+    const_offset: u16,
+    len: u8,
+) -> Result<(), HostError> {
+    write_u8(out, offset, OP_PUSH_BYTES)?;
+    write_slice(out, offset, &const_offset.to_le_bytes())?;
+    write_u8(out, offset, len)
+}
+
+fn write_uleb128(out: &mut [u8], offset: &mut usize, mut value: u32) -> Result<(), HostError> {
+    loop {
+        let mut byte = (value & 0x7F) as u8;
+        value >>= 7;
+        if value != 0 {
+            byte |= 0x80;
+        }
+        write_u8(out, offset, byte)?;
+        if value == 0 {
+            return Ok(());
+        }
+    }
+}
+
+fn write_u8(out: &mut [u8], offset: &mut usize, value: u8) -> Result<(), HostError> {
+    write_slice(out, offset, &[value])
+}
+
+fn write_slice(out: &mut [u8], offset: &mut usize, value: &[u8]) -> Result<(), HostError> {
+    let end = offset
+        .checked_add(value.len())
+        .ok_or(HostError::OutputTooSmall)?;
+    if end > out.len() {
+        return Err(HostError::OutputTooSmall);
+    }
+    out[*offset..end].copy_from_slice(value);
+    *offset = end;
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use board_vm_ir::{
+        collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
+        CAP_ADC_READ, CAP_CAN_OPEN, CAP_CAN_READ, CAP_CAN_WRITE, CAP_DAC_WRITE_U12, CAP_I2C_OPEN,
+        CAP_I2C_READ, CAP_I2C_READ_U8, CAP_I2C_TRANSFER, CAP_I2C_WRITE, CAP_I2C_WRITE_U8,
+        CAP_LED_MATRIX_FRAME, CAP_NETWORK_DNS_EXCHANGE_UDP, CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK,
+        CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY, CAP_NETWORK_DNS_QUERY, CAP_NETWORK_DNS_RESOLVE,
+        CAP_NETWORK_DNS_RESPONSE_IPV4, CAP_NETWORK_DNS_SET_SERVER, CAP_NETWORK_TCP_AVAILABLE,
+        CAP_NETWORK_TCP_CLOSE, CAP_NETWORK_TCP_CONNECTED, CAP_NETWORK_TCP_OPEN,
+        CAP_NETWORK_TCP_READ, CAP_NETWORK_TCP_WRITE, CAP_NETWORK_UDP_AVAILABLE,
+        CAP_NETWORK_UDP_CLOSE, CAP_NETWORK_UDP_OPEN, CAP_NETWORK_UDP_READ,
+        CAP_NETWORK_UDP_READ_BYTES, CAP_NETWORK_UDP_WRITE, CAP_NETWORK_UDP_WRITE_BYTES,
+        CAP_PWM_WRITE, CAP_RTC_NOW, CAP_RTC_SET, CAP_SPI_OPEN, CAP_UART_READ, CAP_UART_WRITE,
+        CAP_WATCHDOG_CONFIGURE, CAP_WATCHDOG_KICK,
+    };
+    use board_vm_protocol::{
+        decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
+        decode_run_request, MessageType, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+        RUN_FLAG_RESET_VM_BEFORE_RUN,
+    };
+
+    const BLINK_MODULE_HEX: [u8; BLINK_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x01, 0x04, 0x00, 0x1A, 0x12, 0x0D, 0x12, 0x01, 0x40, 0x01,
+        0x20, 0x11, 0x40, 0x02, 0x13, 0xFA, 0x00, 0x40, 0x10, 0x20, 0x10, 0x40, 0x02, 0x13, 0xFA,
+        0x00, 0x40, 0x10, 0x30, 0xEC, 0x00,
+    ];
+    const GPIO_READ_PULLUP_MODULE_HEX: [u8; GPIO_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x0D, 0x12, 0x0D, 0x12, 0x02, 0x40, 0x01,
+        0x20, 0x40, 0x03, 0x22, 0x40, 0x04, 0x50, 0x00,
+    ];
+    const GPIO_WRITE_HIGH_MODULE_HEX: [u8; GPIO_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x0C, 0x12, 0x0D, 0x12, 0x01, 0x40, 0x01,
+        0x20, 0x11, 0x40, 0x02, 0x40, 0x04, 0x00,
+    ];
+    const GPIO_OPEN_OUTPUT_MODULE_HEX: [u8; GPIO_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x08, 0x12, 0x0D, 0x12, 0x01, 0x40, 0x01,
+        0x20, 0x50, 0x00,
+    ];
+    const GPIO_HANDLE_READ_MODULE_HEX: [u8; GPIO_HANDLE_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x03, 0x50, 0x00,
+    ];
+    const GPIO_HANDLE_WRITE_HIGH_MODULE_HEX: [u8; GPIO_HANDLE_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x04, 0x20, 0x11, 0x40, 0x02, 0x00,
+    ];
+    const GPIO_HANDLE_CLOSE_MODULE_HEX: [u8; GPIO_HANDLE_CLOSE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x01, 0x00, 0x02, 0x40, 0x04, 0x00,
+    ];
+    const TIME_NOW_MODULE_HEX: [u8; TIME_NOW_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x11, 0x50, 0x00,
+    ];
+    const TIME_SLEEP_MS_MODULE_HEX: [u8; TIME_SLEEP_MS_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x13, 0xFA, 0x00, 0x40, 0x10, 0x00,
+    ];
+    const PWM_WRITE_HALF_MODULE_HEX: [u8; PWM_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x08, 0x12, 0x03, 0x13, 0x00, 0x80, 0x40,
+        0x20, 0x00, 0x00,
+    ];
+    const ADC_READ_A0_MODULE_HEX: [u8; ADC_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x12, 0x0E, 0x40, 0x21, 0x50, 0x00,
+    ];
+    const DAC_WRITE_A0_MID_MODULE_HEX: [u8; DAC_WRITE_U12_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x08, 0x12, 0x0E, 0x13, 0x00, 0x08, 0x40,
+        0x22, 0x00, 0x00,
+    ];
+    const I2C_OPEN_BUS0_MODULE_HEX: [u8; I2C_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x06, 0x12, 0x00, 0x40, 0x23, 0x20, 0x50,
+        0x00,
+    ];
+    const SPI_OPEN_BUS0_MODULE_HEX: [u8; SPI_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x06, 0x12, 0x00, 0x40, 0x29, 0x20, 0x50,
+        0x00,
+    ];
+    const UART_OPEN_BUS0_MODULE_HEX: [u8; UART_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x06, 0x12, 0x00, 0x40, 0x2B, 0x20, 0x50,
+        0x00,
+    ];
+    const UART_WRITE_A5_MODULE_HEX: [u8; UART_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x05, 0x20, 0x12, 0xA5, 0x40, 0x2C, 0x00,
+    ];
+    const UART_READ_MODULE_HEX: [u8; UART_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x2D, 0x50, 0x00,
+    ];
+    const CAN_OPEN_BUS0_MODULE_HEX: [u8; CAN_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x06, 0x12, 0x00, 0x40, 0x31, 0x20, 0x50,
+        0x00,
+    ];
+    const CAN_WRITE_A5_MODULE_HEX: [u8; CAN_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x05, 0x20, 0x12, 0xA5, 0x40, 0x32, 0x00,
+    ];
+    const CAN_READ_MODULE_HEX: [u8; CAN_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x33, 0x50, 0x00,
+    ];
+    const NETWORK_TCP_OPEN_MODULE_HEX: [u8; NETWORK_TCP_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x04, 0x00, 0x0E, 0x12, 0x00, 0x14, 0x2A, 0x01, 0xA8,
+        0xC0, 0x13, 0x90, 0x1F, 0x40, 0x3A, 0x20, 0x50, 0x00,
+    ];
+    const NETWORK_TCP_WRITE_A5_MODULE_HEX: [u8; NETWORK_TCP_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x05, 0x20, 0x12, 0xA5, 0x40, 0x3B, 0x00,
+    ];
+    const NETWORK_TCP_READ_MODULE_HEX: [u8; NETWORK_TCP_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x3C, 0x50, 0x00,
+    ];
+    const NETWORK_TCP_CONNECTED_MODULE_HEX: [u8; NETWORK_TCP_CONNECTED_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x46, 0x50, 0x00,
+    ];
+    const NETWORK_TCP_AVAILABLE_MODULE_HEX: [u8; NETWORK_TCP_AVAILABLE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x49, 0x50, 0x00,
+    ];
+    const NETWORK_TCP_CLOSE_MODULE_HEX: [u8; NETWORK_TCP_CLOSE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x01, 0x00, 0x02, 0x40, 0x3D, 0x00,
+    ];
+    const NETWORK_UDP_OPEN_MODULE_HEX: [u8; NETWORK_UDP_OPEN_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x04, 0x00, 0x0E, 0x12, 0x00, 0x14, 0x2A, 0x01, 0xA8,
+        0xC0, 0x13, 0x35, 0x12, 0x40, 0x3E, 0x20, 0x50, 0x00,
+    ];
+    const NETWORK_UDP_WRITE_A5_MODULE_HEX: [u8; NETWORK_UDP_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x05, 0x20, 0x12, 0xA5, 0x40, 0x3F, 0x00,
+    ];
+    const NETWORK_UDP_READ_MODULE_HEX: [u8; NETWORK_UDP_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x40, 0x50, 0x00,
+    ];
+    const NETWORK_UDP_WRITE_BYTES_DNS_MODULE_HEX: [u8; 20] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x07, 0x20, 0x16, 0x00, 0x00, 0x03, 0x40,
+        0x4C, 0x03, 0x64, 0x6E, 0x73,
+    ];
+    const NETWORK_UDP_READ_BYTES_3_MODULE_HEX: [u8; NETWORK_UDP_READ_BYTES_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x06, 0x20, 0x12, 0x03, 0x40, 0x4D, 0x50,
+        0x00,
+    ];
+    const NETWORK_UDP_AVAILABLE_MODULE_HEX: [u8; NETWORK_UDP_AVAILABLE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x02, 0x00, 0x04, 0x20, 0x40, 0x47, 0x50, 0x00,
+    ];
+    const NETWORK_UDP_CLOSE_MODULE_HEX: [u8; NETWORK_UDP_CLOSE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x01, 0x00, 0x02, 0x40, 0x41, 0x00,
+    ];
+    const NETWORK_WIFI_ASSOCIATE_SSID_PASS_MODULE_HEX: [u8; 31] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x0D, 0x12, 0x00, 0x16, 0x00, 0x00, 0x04,
+        0x16, 0x04, 0x00, 0x04, 0x40, 0x42, 0x50, 0x08, 0x73, 0x73, 0x69, 0x64, 0x70, 0x61, 0x73,
+        0x73,
+    ];
+    const NETWORK_WIFI_DISCONNECT_MODULE_HEX: [u8; NETWORK_WIFI_DISCONNECT_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x04, 0x12, 0x00, 0x40, 0x43, 0x00,
+    ];
+    const NETWORK_WIFI_STATUS_MODULE_HEX: [u8; NETWORK_WIFI_STATUS_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x12, 0x00, 0x40, 0x44, 0x50, 0x00,
+    ];
+    const NETWORK_DNS_RESOLVE_EXAMPLE_MODULE_HEX: [u8; 26] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x09, 0x12, 0x00, 0x16, 0x00, 0x00, 0x07,
+        0x40, 0x45, 0x50, 0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
+    ];
+    const NETWORK_DNS_SET_SERVER_8_8_8_8_MODULE_HEX: [u8; NETWORK_DNS_SET_SERVER_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x09, 0x12, 0x00, 0x14, 0x08, 0x08, 0x08,
+        0x08, 0x40, 0x48, 0x00,
+    ];
+    const NETWORK_DNS_QUERY_EXAMPLE_MODULE_HEX: [u8; 27] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x0A, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00,
+        0x07, 0x40, 0x4A, 0x50, 0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
+    ];
+    const NETWORK_DNS_RESPONSE_IPV4_ROOT_MODULE_HEX: [u8; 52] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x0A, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00,
+        0x20, 0x40, 0x4B, 0x50, 0x20, 0x12, 0x34, 0x81, 0x80, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00,
+        0x3C, 0x00, 0x04, 0xC0, 0xA8, 0x01, 0x2A,
+    ];
+    const NETWORK_DNS_EXCHANGE_UDP_EXAMPLE_MODULE_HEX: [u8; 36] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x05, 0x00, 0x13, 0x12, 0x00, 0x14, 0x08, 0x08, 0x08,
+        0x08, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00, 0x07, 0x12, 0x20, 0x40, 0x4E, 0x50, 0x07, 0x65,
+        0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
+    ];
+    const NETWORK_DNS_EXCHANGE_UDP_RETRY_EXAMPLE_MODULE_HEX: [u8; 41] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x07, 0x00, 0x18, 0x12, 0x00, 0x14, 0x08, 0x08, 0x08,
+        0x08, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00, 0x07, 0x12, 0x20, 0x12, 0x03, 0x13, 0x19, 0x00,
+        0x40, 0x4F, 0x50, 0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
+    ];
+    const NETWORK_DNS_EXCHANGE_UDP_FALLBACK_EXAMPLE_MODULE_HEX: [u8; 46] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x08, 0x00, 0x1D, 0x12, 0x00, 0x14, 0x08, 0x08, 0x08,
+        0x08, 0x14, 0x01, 0x01, 0x01, 0x01, 0x13, 0x34, 0x12, 0x16, 0x00, 0x00, 0x07, 0x12, 0x20,
+        0x12, 0x01, 0x13, 0x19, 0x00, 0x40, 0x50, 0x50, 0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C,
+        0x65,
+    ];
+    const RTC_NOW_MODULE_HEX: [u8; RTC_NOW_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x34, 0x50, 0x00,
+    ];
+    const RTC_SET_1700000000_MODULE_HEX: [u8; RTC_SET_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x07, 0x14, 0x00, 0xF1, 0x53, 0x65, 0x40,
+        0x35, 0x00,
+    ];
+    const WATCHDOG_CONFIGURE_2000_MODULE_HEX: [u8; WATCHDOG_CONFIGURE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x07, 0x14, 0xD0, 0x07, 0x00, 0x00, 0x40,
+        0x36, 0x00,
+    ];
+    const WATCHDOG_KICK_MODULE_HEX: [u8; WATCHDOG_KICK_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x02, 0x40, 0x37, 0x00,
+    ];
+    const STORAGE_WRITE_REGION0_OFFSET16_AA55_MODULE_HEX: [u8; 23] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x0B, 0x12, 0x00, 0x13, 0x10, 0x00, 0x16,
+        0x00, 0x00, 0x02, 0x40, 0x38, 0x02, 0xAA, 0x55,
+    ];
+    const STORAGE_READ_REGION0_OFFSET16_LEN2_MODULE_HEX: [u8; STORAGE_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x0A, 0x12, 0x00, 0x13, 0x10, 0x00, 0x12,
+        0x02, 0x40, 0x39, 0x50, 0x00,
+    ];
+    const STORAGE_SIZE_REGION0_MODULE_HEX: [u8; STORAGE_SIZE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x12, 0x00, 0x40, 0x51, 0x50, 0x00,
+    ];
+    const SPI_TRANSFER_CS10_9F_READ_03_MODULE_HEX: [u8; 24] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x05, 0x00, 0x0D, 0x20, 0x13, 0x0A, 0x00, 0x16, 0x00,
+        0x00, 0x01, 0x12, 0x03, 0x40, 0x2A, 0x50, 0x01, 0x9F,
+    ];
+    const I2C_WRITE_U8_3C_A5_MODULE_HEX: [u8; I2C_WRITE_U8_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x04, 0x00, 0x08, 0x20, 0x13, 0x3C, 0x00, 0x12, 0xA5,
+        0x40, 0x24, 0x00,
+    ];
+    const I2C_READ_U8_3C_MODULE_HEX: [u8; I2C_READ_U8_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x03, 0x00, 0x07, 0x20, 0x13, 0x3C, 0x00, 0x40, 0x25,
+        0x50, 0x00,
+    ];
+    const I2C_WRITE_3C_DE_AD_BE_MODULE_HEX: [u8; 23] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x04, 0x00, 0x0A, 0x20, 0x13, 0x3C, 0x00, 0x16, 0x00,
+        0x00, 0x03, 0x40, 0x26, 0x03, 0xDE, 0xAD, 0xBE,
+    ];
+    const I2C_READ_3C_03_MODULE_HEX: [u8; I2C_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x04, 0x00, 0x09, 0x20, 0x13, 0x3C, 0x00, 0x12, 0x03,
+        0x40, 0x27, 0x50, 0x00,
+    ];
+    const I2C_TRANSFER_3C_00_10_READ_03_MODULE_HEX: [u8; 25] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x04, 0x05, 0x00, 0x0D, 0x20, 0x13, 0x3C, 0x00, 0x16, 0x00,
+        0x00, 0x02, 0x12, 0x03, 0x40, 0x28, 0x50, 0x02, 0x00, 0x10,
+    ];
+    const LED_MATRIX_HEART_MODULE_HEX: [u8; LED_MATRIX_FRAME_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x12, 0x14, 0x44, 0xA4, 0x84, 0x31, 0x14,
+        0x81, 0x20, 0x04, 0x44, 0x14, 0x40, 0x00, 0x0A, 0x10, 0x40, 0x30, 0x00, 0x00,
+    ];
+
+    #[test]
+    fn builds_blink_module_from_bvm05_fixture() {
+        let mut module = [0u8; BLINK_MODULE_LEN];
+        let len = write_blink_module(BlinkProgram::onboard_led(), &mut module).unwrap();
+        assert_eq!(len, BLINK_MODULE_LEN);
+        assert_eq!(module, BLINK_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 4).unwrap();
+    }
+
+    #[test]
+    fn builds_gpio_read_module_with_close_and_return() {
+        let mut module = [0u8; GPIO_READ_MODULE_LEN];
+        let len = write_gpio_read_module(GpioReadProgram::input_pullup(13), &mut module).unwrap();
+        assert_eq!(len, GPIO_READ_MODULE_LEN);
+        assert_eq!(module, GPIO_READ_PULLUP_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 2).unwrap();
+        let mut capabilities = [0u16; 4];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_CLOSE]
+        );
+    }
+
+    #[test]
+    fn rejects_output_mode_for_gpio_read_module() {
+        let mut module = [0u8; GPIO_READ_MODULE_LEN];
+        let program = GpioReadProgram {
+            pin: 13,
+            mode: GPIO_MODE_OUTPUT,
+            max_stack: 2,
+        };
+
+        assert_eq!(
+            write_gpio_read_module(program, &mut module),
+            Err(HostError::InvalidGpioReadMode(GPIO_MODE_OUTPUT))
+        );
+    }
+
+    #[test]
+    fn builds_gpio_write_module_with_close() {
+        let mut module = [0u8; GPIO_WRITE_MODULE_LEN];
+        let len = write_gpio_write_module(GpioWriteProgram::high(13), &mut module).unwrap();
+        assert_eq!(len, GPIO_WRITE_MODULE_LEN);
+        assert_eq!(module, GPIO_WRITE_HIGH_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 3).unwrap();
+        let mut capabilities = [0u16; 4];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_GPIO_CLOSE]
+        );
+    }
+
+    #[test]
+    fn builds_gpio_handle_modules_for_repl_sessions() {
+        let mut open = [0u8; GPIO_OPEN_MODULE_LEN];
+        let open_len = write_gpio_open_module(GpioOpenProgram::output(13), &mut open).unwrap();
+        assert_eq!(open_len, GPIO_OPEN_MODULE_LEN);
+        assert_eq!(open, GPIO_OPEN_OUTPUT_MODULE_HEX);
+        let parsed = parse_module(&open).unwrap();
+        assert_eq!(parsed.flags, 0);
+        validate(&parsed, CapabilitySet::blink_mvp(), 2).unwrap();
+
+        let mut read = [0u8; GPIO_HANDLE_READ_MODULE_LEN];
+        let read_len =
+            write_gpio_handle_read_module(GpioHandleReadProgram::new(), &mut read).unwrap();
+        assert_eq!(read_len, GPIO_HANDLE_READ_MODULE_LEN);
+        assert_eq!(read, GPIO_HANDLE_READ_MODULE_HEX);
+        let parsed = parse_module(&read).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 2).unwrap();
+
+        let mut write = [0u8; GPIO_HANDLE_WRITE_MODULE_LEN];
+        let write_len =
+            write_gpio_handle_write_module(GpioHandleWriteProgram::high(), &mut write).unwrap();
+        assert_eq!(write_len, GPIO_HANDLE_WRITE_MODULE_LEN);
+        assert_eq!(write, GPIO_HANDLE_WRITE_HIGH_MODULE_HEX);
+        let parsed = parse_module(&write).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 3).unwrap();
+
+        let mut close = [0u8; GPIO_HANDLE_CLOSE_MODULE_LEN];
+        let close_len =
+            write_gpio_handle_close_module(GpioHandleCloseProgram::new(), &mut close).unwrap();
+        assert_eq!(close_len, GPIO_HANDLE_CLOSE_MODULE_LEN);
+        assert_eq!(close, GPIO_HANDLE_CLOSE_MODULE_HEX);
+        let parsed = parse_module(&close).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 1).unwrap();
+    }
+
+    #[test]
+    fn builds_time_now_module_with_return() {
+        let mut module = [0u8; TIME_NOW_MODULE_LEN];
+        let len = write_time_now_module(TimeNowProgram::new(), &mut module).unwrap();
+        assert_eq!(len, TIME_NOW_MODULE_LEN);
+        assert_eq!(module, TIME_NOW_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_TIME_NOW_MS]);
+    }
+
+    #[test]
+    fn builds_time_sleep_ms_module_without_return() {
+        let mut module = [0u8; TIME_SLEEP_MS_MODULE_LEN];
+        let len = write_time_sleep_ms_module(TimeSleepMsProgram::new(250), &mut module).unwrap();
+        assert_eq!(len, TIME_SLEEP_MS_MODULE_LEN);
+        assert_eq!(module, TIME_SLEEP_MS_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_TIME_SLEEP_MS]);
+    }
+
+    #[test]
+    fn builds_led_matrix_frame_module() {
+        let mut module = [0u8; LED_MATRIX_FRAME_MODULE_LEN];
+        let len = write_led_matrix_frame_module(
+            LedMatrixFrameProgram::new([0x3184_A444, 0x4404_2081, 0x100A_0040]),
+            &mut module,
+        )
+        .unwrap();
+        assert_eq!(len, LED_MATRIX_FRAME_MODULE_LEN);
+        assert_eq!(module, LED_MATRIX_HEART_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_led_matrix(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_LED_MATRIX_FRAME]);
+    }
+
+    #[test]
+    fn builds_pwm_write_module() {
+        let mut module = [0u8; PWM_WRITE_MODULE_LEN];
+        let len = write_pwm_write_module(PwmWriteProgram::new(3, 0x8000), &mut module).unwrap();
+        assert_eq!(len, PWM_WRITE_MODULE_LEN);
+        assert_eq!(module, PWM_WRITE_HALF_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_pwm(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_PWM_WRITE]);
+    }
+
+    #[test]
+    fn builds_adc_read_module() {
+        let mut module = [0u8; ADC_READ_MODULE_LEN];
+        let len = write_adc_read_module(AdcReadProgram::new(14), &mut module).unwrap();
+        assert_eq!(len, ADC_READ_MODULE_LEN);
+        assert_eq!(module, ADC_READ_A0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_adc(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_ADC_READ]);
+    }
+
+    #[test]
+    fn builds_dac_write_u12_module() {
+        let mut module = [0u8; DAC_WRITE_U12_MODULE_LEN];
+        let len =
+            write_dac_write_u12_module(DacWriteU12Program::new(14, 0x0800), &mut module).unwrap();
+        assert_eq!(len, DAC_WRITE_U12_MODULE_LEN);
+        assert_eq!(module, DAC_WRITE_A0_MID_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_dac(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_DAC_WRITE_U12]);
+    }
+
+    #[test]
+    fn builds_i2c_open_module() {
+        let mut module = [0u8; I2C_OPEN_MODULE_LEN];
+        let len = write_i2c_open_module(I2cOpenProgram::new(0), &mut module).unwrap();
+        assert_eq!(len, I2C_OPEN_MODULE_LEN);
+        assert_eq!(module, I2C_OPEN_BUS0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_i2c(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_OPEN]);
+    }
+
+    #[test]
+    fn builds_spi_open_module() {
+        let mut module = [0u8; SPI_OPEN_MODULE_LEN];
+        let len = write_spi_open_module(SpiOpenProgram::new(0), &mut module).unwrap();
+        assert_eq!(len, SPI_OPEN_MODULE_LEN);
+        assert_eq!(module, SPI_OPEN_BUS0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_spi(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_OPEN]);
+    }
+
+    #[test]
+    fn builds_uart_open_module() {
+        let mut module = [0u8; UART_OPEN_MODULE_LEN];
+        let len = write_uart_open_module(UartOpenProgram::new(0), &mut module).unwrap();
+        assert_eq!(len, UART_OPEN_MODULE_LEN);
+        assert_eq!(module, UART_OPEN_BUS0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_uart(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_UART_OPEN]);
+    }
+
+    #[test]
+    fn builds_uart_byte_io_modules() {
+        let mut write = [0u8; UART_WRITE_MODULE_LEN];
+        let write_len = write_uart_write_module(UartWriteProgram::new(0xa5), &mut write).unwrap();
+        assert_eq!(write_len, UART_WRITE_MODULE_LEN);
+        assert_eq!(write, UART_WRITE_A5_MODULE_HEX);
+        let parsed = parse_module(&write).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_uart(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_UART_WRITE]);
+
+        let mut read = [0u8; UART_READ_MODULE_LEN];
+        let read_len = write_uart_read_module(UartReadProgram::new(), &mut read).unwrap();
+        assert_eq!(read_len, UART_READ_MODULE_LEN);
+        assert_eq!(read, UART_READ_MODULE_HEX);
+        let parsed = parse_module(&read).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_uart(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_UART_READ]);
+    }
+
+    #[test]
+    fn builds_can_open_module() {
+        let mut module = [0u8; CAN_OPEN_MODULE_LEN];
+        let len = write_can_open_module(CanOpenProgram::new(0), &mut module).unwrap();
+        assert_eq!(len, CAN_OPEN_MODULE_LEN);
+        assert_eq!(module, CAN_OPEN_BUS0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_can(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_CAN_OPEN]);
+    }
+
+    #[test]
+    fn builds_can_byte_io_modules() {
+        let mut write = [0u8; CAN_WRITE_MODULE_LEN];
+        let write_len = write_can_write_module(CanWriteProgram::new(0xa5), &mut write).unwrap();
+        assert_eq!(write_len, CAN_WRITE_MODULE_LEN);
+        assert_eq!(write, CAN_WRITE_A5_MODULE_HEX);
+        let parsed = parse_module(&write).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_can(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_CAN_WRITE]);
+
+        let mut read = [0u8; CAN_READ_MODULE_LEN];
+        let read_len = write_can_read_module(CanReadProgram::new(), &mut read).unwrap();
+        assert_eq!(read_len, CAN_READ_MODULE_LEN);
+        assert_eq!(read, CAN_READ_MODULE_HEX);
+        let parsed = parse_module(&read).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_can(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_CAN_READ]);
+    }
+
+    #[test]
+    fn builds_network_tcp_open_module() {
+        let mut module = [0u8; NETWORK_TCP_OPEN_MODULE_LEN];
+        let len = write_network_tcp_open_module(
+            NetworkTcpOpenProgram::new(0, 0xc0a8_012a, 8080),
+            &mut module,
+        )
+        .unwrap();
+        assert_eq!(len, NETWORK_TCP_OPEN_MODULE_LEN);
+        assert_eq!(module, NETWORK_TCP_OPEN_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_tcp(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_TCP_OPEN]);
+    }
+
+    #[test]
+    fn builds_network_tcp_byte_io_and_close_modules() {
+        let mut write = [0u8; NETWORK_TCP_WRITE_MODULE_LEN];
+        let write_len =
+            write_network_tcp_write_module(NetworkTcpWriteProgram::new(0xa5), &mut write).unwrap();
+        assert_eq!(write_len, NETWORK_TCP_WRITE_MODULE_LEN);
+        assert_eq!(write, NETWORK_TCP_WRITE_A5_MODULE_HEX);
+        let parsed = parse_module(&write).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_tcp(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_TCP_WRITE]);
+
+        let mut read = [0u8; NETWORK_TCP_READ_MODULE_LEN];
+        let read_len =
+            write_network_tcp_read_module(NetworkTcpReadProgram::new(), &mut read).unwrap();
+        assert_eq!(read_len, NETWORK_TCP_READ_MODULE_LEN);
+        assert_eq!(read, NETWORK_TCP_READ_MODULE_HEX);
+        let parsed = parse_module(&read).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_tcp(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_TCP_READ]);
+
+        let mut connected = [0u8; NETWORK_TCP_CONNECTED_MODULE_LEN];
+        let connected_len =
+            write_network_tcp_connected_module(NetworkTcpConnectedProgram::new(), &mut connected)
+                .unwrap();
+        assert_eq!(connected_len, NETWORK_TCP_CONNECTED_MODULE_LEN);
+        assert_eq!(connected, NETWORK_TCP_CONNECTED_MODULE_HEX);
+        let parsed = parse_module(&connected).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_tcp(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_TCP_CONNECTED]);
+
+        let mut available = [0u8; NETWORK_TCP_AVAILABLE_MODULE_LEN];
+        let available_len =
+            write_network_tcp_available_module(NetworkTcpAvailableProgram::new(), &mut available)
+                .unwrap();
+        assert_eq!(available_len, NETWORK_TCP_AVAILABLE_MODULE_LEN);
+        assert_eq!(available, NETWORK_TCP_AVAILABLE_MODULE_HEX);
+        let parsed = parse_module(&available).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_tcp(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_TCP_AVAILABLE]);
+
+        let mut close = [0u8; NETWORK_TCP_CLOSE_MODULE_LEN];
+        let close_len =
+            write_network_tcp_close_module(NetworkTcpCloseProgram::new(), &mut close).unwrap();
+        assert_eq!(close_len, NETWORK_TCP_CLOSE_MODULE_LEN);
+        assert_eq!(close, NETWORK_TCP_CLOSE_MODULE_HEX);
+        let parsed = parse_module(&close).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_tcp(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_TCP_CLOSE]);
+    }
+
+    #[test]
+    fn builds_network_udp_open_module() {
+        let mut module = [0u8; NETWORK_UDP_OPEN_MODULE_LEN];
+        let len = write_network_udp_open_module(
+            NetworkUdpOpenProgram::new(0, 0xc0a8_012a, 0x1235),
+            &mut module,
+        )
+        .unwrap();
+        assert_eq!(len, NETWORK_UDP_OPEN_MODULE_LEN);
+        assert_eq!(module, NETWORK_UDP_OPEN_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_OPEN]);
+    }
+
+    #[test]
+    fn builds_network_udp_byte_io_and_close_modules() {
+        let mut write = [0u8; NETWORK_UDP_WRITE_MODULE_LEN];
+        let write_len =
+            write_network_udp_write_module(NetworkUdpWriteProgram::new(0xa5), &mut write).unwrap();
+        assert_eq!(write_len, NETWORK_UDP_WRITE_MODULE_LEN);
+        assert_eq!(write, NETWORK_UDP_WRITE_A5_MODULE_HEX);
+        let parsed = parse_module(&write).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_WRITE]);
+
+        let mut read = [0u8; NETWORK_UDP_READ_MODULE_LEN];
+        let read_len =
+            write_network_udp_read_module(NetworkUdpReadProgram::new(), &mut read).unwrap();
+        assert_eq!(read_len, NETWORK_UDP_READ_MODULE_LEN);
+        assert_eq!(read, NETWORK_UDP_READ_MODULE_HEX);
+        let parsed = parse_module(&read).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_READ]);
+
+        let module_len = network_udp_write_bytes_module_len(3).unwrap();
+        let mut write_bytes = [0u8; 20];
+        let write_bytes_len = write_network_udp_write_bytes_module(
+            NetworkUdpWriteBytesProgram::new(b"dns"),
+            &mut write_bytes,
+        )
+        .unwrap();
+        assert_eq!(module_len, NETWORK_UDP_WRITE_BYTES_DNS_MODULE_HEX.len());
+        assert_eq!(write_bytes_len, module_len);
+        assert_eq!(write_bytes, NETWORK_UDP_WRITE_BYTES_DNS_MODULE_HEX);
+        let parsed = parse_module(&write_bytes).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_WRITE_BYTES]);
+
+        let mut read_bytes = [0u8; NETWORK_UDP_READ_BYTES_MODULE_LEN];
+        let read_bytes_len = write_network_udp_read_bytes_module(
+            NetworkUdpReadBytesProgram::new(3),
+            &mut read_bytes,
+        )
+        .unwrap();
+        assert_eq!(read_bytes_len, NETWORK_UDP_READ_BYTES_MODULE_LEN);
+        assert_eq!(read_bytes, NETWORK_UDP_READ_BYTES_3_MODULE_HEX);
+        let parsed = parse_module(&read_bytes).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_READ_BYTES]);
+
+        let mut available = [0u8; NETWORK_UDP_AVAILABLE_MODULE_LEN];
+        let available_len =
+            write_network_udp_available_module(NetworkUdpAvailableProgram::new(), &mut available)
+                .unwrap();
+        assert_eq!(available_len, NETWORK_UDP_AVAILABLE_MODULE_LEN);
+        assert_eq!(available, NETWORK_UDP_AVAILABLE_MODULE_HEX);
+        let parsed = parse_module(&available).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_AVAILABLE]);
+
+        let mut close = [0u8; NETWORK_UDP_CLOSE_MODULE_LEN];
+        let close_len =
+            write_network_udp_close_module(NetworkUdpCloseProgram::new(), &mut close).unwrap();
+        assert_eq!(close_len, NETWORK_UDP_CLOSE_MODULE_LEN);
+        assert_eq!(close, NETWORK_UDP_CLOSE_MODULE_HEX);
+        let parsed = parse_module(&close).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_udp(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_UDP_CLOSE]);
+    }
+
+    #[test]
+    fn builds_network_wifi_associate_module() {
+        let module_len = network_wifi_associate_module_len(4, 4).unwrap();
+        let mut module = [0u8; 31];
+        let len = write_network_wifi_associate_module(
+            NetworkWifiAssociateProgram::new(0, b"ssid", b"pass"),
+            &mut module,
+        )
+        .unwrap();
+        assert_eq!(
+            module_len,
+            NETWORK_WIFI_ASSOCIATE_SSID_PASS_MODULE_HEX.len()
+        );
+        assert_eq!(len, module_len);
+        assert_eq!(module, NETWORK_WIFI_ASSOCIATE_SSID_PASS_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_wifi(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_ASSOCIATE]);
+    }
+
+    #[test]
+    fn builds_network_wifi_status_and_disconnect_modules() {
+        let mut status = [0u8; NETWORK_WIFI_STATUS_MODULE_LEN];
+        let status_len =
+            write_network_wifi_status_module(NetworkWifiStatusProgram::new(0), &mut status)
+                .unwrap();
+        assert_eq!(status_len, NETWORK_WIFI_STATUS_MODULE_LEN);
+        assert_eq!(status, NETWORK_WIFI_STATUS_MODULE_HEX);
+        let parsed = parse_module(&status).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_wifi(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_STATUS]);
+
+        let mut disconnect = [0u8; NETWORK_WIFI_DISCONNECT_MODULE_LEN];
+        let disconnect_len = write_network_wifi_disconnect_module(
+            NetworkWifiDisconnectProgram::new(0),
+            &mut disconnect,
+        )
+        .unwrap();
+        assert_eq!(disconnect_len, NETWORK_WIFI_DISCONNECT_MODULE_LEN);
+        assert_eq!(disconnect, NETWORK_WIFI_DISCONNECT_MODULE_HEX);
+        let parsed = parse_module(&disconnect).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_wifi(), 1).unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_WIFI_DISCONNECT]);
+    }
+
+    #[test]
+    fn builds_network_dns_resolve_module() {
+        let module_len = network_dns_resolve_module_len(7).unwrap();
+        let mut module = [0u8; 26];
+        let len = write_network_dns_resolve_module(
+            NetworkDnsResolveProgram::new(0, b"example"),
+            &mut module,
+        )
+        .unwrap();
+        assert_eq!(module_len, NETWORK_DNS_RESOLVE_EXAMPLE_MODULE_HEX.len());
+        assert_eq!(len, module_len);
+        assert_eq!(module, NETWORK_DNS_RESOLVE_EXAMPLE_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_dns(), 2).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_RESOLVE]);
+
+        let mut set_server = [0u8; NETWORK_DNS_SET_SERVER_MODULE_LEN];
+        let set_server_len = write_network_dns_set_server_module(
+            NetworkDnsSetServerProgram::new(0, 0x0808_0808),
+            &mut set_server,
+        )
+        .unwrap();
+        assert_eq!(set_server_len, NETWORK_DNS_SET_SERVER_MODULE_LEN);
+        assert_eq!(set_server, NETWORK_DNS_SET_SERVER_8_8_8_8_MODULE_HEX);
+
+        let parsed = parse_module(&set_server).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_dns(), 2).unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_SET_SERVER]);
+
+        let module_len = network_dns_query_module_len(7).unwrap();
+        let mut query = [0u8; 27];
+        let query_len = write_network_dns_query_module(
+            NetworkDnsQueryProgram::new(0x1234, b"example"),
+            &mut query,
+        )
+        .unwrap();
+        assert_eq!(module_len, NETWORK_DNS_QUERY_EXAMPLE_MODULE_HEX.len());
+        assert_eq!(query_len, module_len);
+        assert_eq!(query, NETWORK_DNS_QUERY_EXAMPLE_MODULE_HEX);
+
+        let parsed = parse_module(&query).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_dns(), 2).unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_QUERY]);
+
+        let response = [
+            0x12, 0x34, 0x81, 0x80, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x01, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x3C, 0x00, 0x04,
+            0xC0, 0xA8, 0x01, 0x2A,
+        ];
+        let module_len = network_dns_response_ipv4_module_len(response.len()).unwrap();
+        let mut response_ipv4 = [0u8; 52];
+        let response_ipv4_len = write_network_dns_response_ipv4_module(
+            NetworkDnsResponseIpv4Program::new(0x1234, &response),
+            &mut response_ipv4,
+        )
+        .unwrap();
+        assert_eq!(module_len, NETWORK_DNS_RESPONSE_IPV4_ROOT_MODULE_HEX.len());
+        assert_eq!(response_ipv4_len, module_len);
+        assert_eq!(response_ipv4, NETWORK_DNS_RESPONSE_IPV4_ROOT_MODULE_HEX);
+
+        let parsed = parse_module(&response_ipv4).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_network_dns(), 2).unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_RESPONSE_IPV4]);
+
+        let module_len = network_dns_exchange_udp_module_len(7).unwrap();
+        let mut exchange = [0u8; 36];
+        let exchange_len = write_network_dns_exchange_udp_module(
+            NetworkDnsExchangeUdpProgram::new(0, 0x0808_0808, 0x1234, b"example", 32),
+            &mut exchange,
+        )
+        .unwrap();
+        assert_eq!(
+            module_len,
+            NETWORK_DNS_EXCHANGE_UDP_EXAMPLE_MODULE_HEX.len()
+        );
+        assert_eq!(exchange_len, module_len);
+        assert_eq!(exchange, NETWORK_DNS_EXCHANGE_UDP_EXAMPLE_MODULE_HEX);
+
+        let parsed = parse_module(&exchange).unwrap();
+        validate(
+            &parsed,
+            CapabilitySet::blink_mvp()
+                .with_network_dns()
+                .with_network_udp(),
+            5,
+        )
+        .unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_NETWORK_DNS_EXCHANGE_UDP]);
+
+        let module_len = network_dns_exchange_udp_retry_module_len(7).unwrap();
+        let mut retry = [0u8; 41];
+        let retry_len = write_network_dns_exchange_udp_retry_module(
+            NetworkDnsExchangeUdpRetryProgram::new(0, 0x0808_0808, 0x1234, b"example", 32, 3, 25),
+            &mut retry,
+        )
+        .unwrap();
+        assert_eq!(
+            module_len,
+            NETWORK_DNS_EXCHANGE_UDP_RETRY_EXAMPLE_MODULE_HEX.len()
+        );
+        assert_eq!(retry_len, module_len);
+        assert_eq!(retry, NETWORK_DNS_EXCHANGE_UDP_RETRY_EXAMPLE_MODULE_HEX);
+
+        let parsed = parse_module(&retry).unwrap();
+        validate(
+            &parsed,
+            CapabilitySet::blink_mvp()
+                .with_network_dns()
+                .with_network_udp(),
+            7,
+        )
+        .unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_NETWORK_DNS_EXCHANGE_UDP_RETRY]
+        );
+
+        let module_len = network_dns_exchange_udp_fallback_module_len(7).unwrap();
+        let mut fallback = [0u8; 46];
+        let fallback_len = write_network_dns_exchange_udp_fallback_module(
+            NetworkDnsExchangeUdpFallbackProgram::new(
+                0,
+                0x0808_0808,
+                0x0101_0101,
+                0x1234,
+                b"example",
+                32,
+                1,
+                25,
+            ),
+            &mut fallback,
+        )
+        .unwrap();
+        assert_eq!(
+            module_len,
+            NETWORK_DNS_EXCHANGE_UDP_FALLBACK_EXAMPLE_MODULE_HEX.len()
+        );
+        assert_eq!(fallback_len, module_len);
+        assert_eq!(
+            fallback,
+            NETWORK_DNS_EXCHANGE_UDP_FALLBACK_EXAMPLE_MODULE_HEX
+        );
+
+        let parsed = parse_module(&fallback).unwrap();
+        validate(
+            &parsed,
+            CapabilitySet::blink_mvp()
+                .with_network_dns()
+                .with_network_udp(),
+            8,
+        )
+        .unwrap();
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_NETWORK_DNS_EXCHANGE_UDP_FALLBACK]
+        );
+    }
+
+    #[test]
+    fn builds_rtc_now_module() {
+        let mut module = [0u8; RTC_NOW_MODULE_LEN];
+        let len = write_rtc_now_module(RtcNowProgram::new(), &mut module).unwrap();
+        assert_eq!(len, RTC_NOW_MODULE_LEN);
+        assert_eq!(module, RTC_NOW_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_rtc(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_RTC_NOW]);
+    }
+
+    #[test]
+    fn builds_rtc_set_module() {
+        let mut module = [0u8; RTC_SET_MODULE_LEN];
+        let len = write_rtc_set_module(RtcSetProgram::new(1_700_000_000), &mut module).unwrap();
+        assert_eq!(len, RTC_SET_MODULE_LEN);
+        assert_eq!(module, RTC_SET_1700000000_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_rtc(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_RTC_SET]);
+    }
+
+    #[test]
+    fn builds_watchdog_configure_module() {
+        let mut module = [0u8; WATCHDOG_CONFIGURE_MODULE_LEN];
+        let len =
+            write_watchdog_configure_module(WatchdogConfigureProgram::new(2_000), &mut module)
+                .unwrap();
+        assert_eq!(len, WATCHDOG_CONFIGURE_MODULE_LEN);
+        assert_eq!(module, WATCHDOG_CONFIGURE_2000_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_watchdog(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_WATCHDOG_CONFIGURE]);
+    }
+
+    #[test]
+    fn builds_watchdog_kick_module() {
+        let mut module = [0u8; WATCHDOG_KICK_MODULE_LEN];
+        let len = write_watchdog_kick_module(WatchdogKickProgram::new(), &mut module).unwrap();
+        assert_eq!(len, WATCHDOG_KICK_MODULE_LEN);
+        assert_eq!(module, WATCHDOG_KICK_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_watchdog(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_WATCHDOG_KICK]);
+    }
+
+    #[test]
+    fn builds_storage_write_module() {
+        let payload = [0xaa, 0x55];
+        let mut module = [0u8; STORAGE_WRITE_MAX_MODULE_LEN];
+        let len =
+            write_storage_write_module(StorageWriteProgram::new(0, 0x0010, &payload), &mut module)
+                .unwrap();
+        assert_eq!(len, STORAGE_WRITE_REGION0_OFFSET16_AA55_MODULE_HEX.len());
+        assert_eq!(
+            &module[..len],
+            STORAGE_WRITE_REGION0_OFFSET16_AA55_MODULE_HEX
+        );
+
+        let parsed = parse_module(&module[..len]).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_storage(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_STORAGE_WRITE]);
+    }
+
+    #[test]
+    fn builds_storage_read_module() {
+        let mut module = [0u8; STORAGE_READ_MODULE_LEN];
+        let len =
+            write_storage_read_module(StorageReadProgram::new(0, 0x0010, 2), &mut module).unwrap();
+        assert_eq!(len, STORAGE_READ_MODULE_LEN);
+        assert_eq!(module, STORAGE_READ_REGION0_OFFSET16_LEN2_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_storage(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_STORAGE_READ]);
+    }
+
+    #[test]
+    fn builds_storage_size_module() {
+        let mut module = [0u8; STORAGE_SIZE_MODULE_LEN];
+        let len = write_storage_size_module(StorageSizeProgram::new(0), &mut module).unwrap();
+        assert_eq!(len, STORAGE_SIZE_MODULE_LEN);
+        assert_eq!(module, STORAGE_SIZE_REGION0_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_storage(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_STORAGE_SIZE]);
+    }
+
+    #[test]
+    fn builds_spi_transfer_module() {
+        let payload = [0x9f];
+        let mut module = [0u8; SPI_TRANSFER_MAX_MODULE_LEN];
+        let len = write_spi_transfer_module(SpiTransferProgram::new(10, &payload, 3), &mut module)
+            .unwrap();
+        assert_eq!(len, SPI_TRANSFER_CS10_9F_READ_03_MODULE_HEX.len());
+        assert_eq!(&module[..len], SPI_TRANSFER_CS10_9F_READ_03_MODULE_HEX);
+
+        let parsed = parse_module(&module[..len]).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_spi(), 5).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_TRANSFER]);
+    }
+
+    #[test]
+    fn builds_spi_write_module_as_transfer_wrapper() {
+        let payload = [0xde, 0xad, 0xbe];
+        let mut write_module = [0u8; SPI_WRITE_MAX_MODULE_LEN];
+        let write_len =
+            write_spi_write_module(SpiWriteProgram::new(10, &payload), &mut write_module).unwrap();
+        assert_eq!(write_len, spi_write_module_len(payload.len()).unwrap());
+
+        let mut transfer_module = [0u8; SPI_TRANSFER_MAX_MODULE_LEN];
+        let transfer_len = write_spi_transfer_module(
+            SpiTransferProgram::new(10, &payload, 0),
+            &mut transfer_module,
+        )
+        .unwrap();
+        assert_eq!(write_len, transfer_len);
+        assert_eq!(&write_module[..write_len], &transfer_module[..transfer_len]);
+
+        let parsed = parse_module(&write_module[..write_len]).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_spi(), 5).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_TRANSFER]);
+    }
+
+    #[test]
+    fn builds_spi_read_module_as_transfer_wrapper() {
+        let mut read_module = [0u8; SPI_READ_MODULE_LEN];
+        let read_len = write_spi_read_module(SpiReadProgram::new(10, 3), &mut read_module).unwrap();
+        assert_eq!(read_len, SPI_READ_MODULE_LEN);
+
+        let mut transfer_module = [0u8; SPI_TRANSFER_MAX_MODULE_LEN];
+        let transfer_len =
+            write_spi_transfer_module(SpiTransferProgram::new(10, &[], 3), &mut transfer_module)
+                .unwrap();
+        assert_eq!(read_len, transfer_len);
+        assert_eq!(&read_module[..read_len], &transfer_module[..transfer_len]);
+
+        let parsed = parse_module(&read_module[..read_len]).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_spi(), 5).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_SPI_TRANSFER]);
+    }
+
+    #[test]
+    fn builds_i2c_write_u8_module() {
+        let mut module = [0u8; I2C_WRITE_U8_MODULE_LEN];
+        let len =
+            write_i2c_write_u8_module(I2cWriteU8Program::new(0x3c, 0xa5), &mut module).unwrap();
+        assert_eq!(len, I2C_WRITE_U8_MODULE_LEN);
+        assert_eq!(module, I2C_WRITE_U8_3C_A5_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_i2c(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_WRITE_U8]);
+    }
+
+    #[test]
+    fn builds_i2c_read_u8_module() {
+        let mut module = [0u8; I2C_READ_U8_MODULE_LEN];
+        let len = write_i2c_read_u8_module(I2cReadU8Program::new(0x3c), &mut module).unwrap();
+        assert_eq!(len, I2C_READ_U8_MODULE_LEN);
+        assert_eq!(module, I2C_READ_U8_3C_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_i2c(), 3).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_READ_U8]);
+    }
+
+    #[test]
+    fn builds_i2c_write_module() {
+        let payload = [0xde, 0xad, 0xbe];
+        let mut module = [0u8; I2C_WRITE_MAX_MODULE_LEN];
+        let len =
+            write_i2c_write_module(I2cWriteProgram::new(0x3c, &payload), &mut module).unwrap();
+        assert_eq!(len, I2C_WRITE_3C_DE_AD_BE_MODULE_HEX.len());
+        assert_eq!(&module[..len], I2C_WRITE_3C_DE_AD_BE_MODULE_HEX);
+
+        let parsed = parse_module(&module[..len]).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_i2c(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_WRITE]);
+    }
+
+    #[test]
+    fn builds_i2c_read_module() {
+        let mut module = [0u8; I2C_READ_MODULE_LEN];
+        let len = write_i2c_read_module(I2cReadProgram::new(0x3c, 3), &mut module).unwrap();
+        assert_eq!(len, I2C_READ_MODULE_LEN);
+        assert_eq!(module, I2C_READ_3C_03_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_i2c(), 4).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_READ]);
+    }
+
+    #[test]
+    fn builds_i2c_transfer_module() {
+        let payload = [0x00, 0x10];
+        let mut module = [0u8; I2C_TRANSFER_MAX_MODULE_LEN];
+        let len =
+            write_i2c_transfer_module(I2cTransferProgram::new(0x3c, &payload, 3), &mut module)
+                .unwrap();
+        assert_eq!(len, I2C_TRANSFER_3C_00_10_READ_03_MODULE_HEX.len());
+        assert_eq!(&module[..len], I2C_TRANSFER_3C_00_10_READ_03_MODULE_HEX);
+
+        let parsed = parse_module(&module[..len]).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp().with_i2c(), 5).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_I2C_TRANSFER]);
+    }
+
+    #[test]
+    fn writes_generic_module_from_code_and_const_pool() {
+        let code = [0x16, 0x00, 0x00, 0x02, 0x50];
+        let const_pool = [0xAA, 0x55];
+        let mut module = [0u8; 32];
+
+        let len = write_module(
+            ModuleSpec::new(0, 1, &code).const_pool(&const_pool),
+            &mut module,
+        )
+        .unwrap();
+
+        let parsed = parse_module(&module[..len]).unwrap();
+        assert_eq!(parsed.flags, 0);
+        assert_eq!(parsed.max_stack, 1);
+        assert_eq!(parsed.code, &code);
+        assert_eq!(parsed.const_pool, &const_pool);
+        validate(&parsed, CapabilitySet::empty(), 1).unwrap();
+    }
+
+    #[test]
+    fn rejects_invalid_generic_module_flags() {
+        let code = [0x00];
+        let mut module = [0u8; 16];
+
+        assert_eq!(
+            write_module(ModuleSpec::new(0x80, 1, &code), &mut module),
+            Err(HostError::Module(ModuleError::ReservedFlags(0x80)))
+        );
+    }
+
+    #[test]
+    fn crc32_matches_standard_check_vector() {
+        assert_eq!(crc32_ieee(b"123456789"), 0xCBF4_3926);
+        assert_eq!(crc32_ieee(&BLINK_MODULE_HEX), 0xBAD6_949E);
+    }
+
+    #[test]
+    fn writes_handshake_and_caps_frames() {
+        let mut session = HostSession::new();
+        let mut payload = [0u8; 64];
+        let mut frame = [0u8; 96];
+
+        let hello = session
+            .hello_frame(DEFAULT_HOST_NAME, 0xAABB_CCDD, &mut payload, &mut frame)
+            .unwrap();
+        assert_eq!(hello.request_id, 1);
+        let decoded = decode_frame(&frame[..hello.len]).unwrap();
+        assert_eq!(decoded.message_type, MessageType::HELLO);
+        assert_eq!(decoded.request_id, 1);
+        assert_eq!(decoded.flags, FLAG_RESPONSE_REQUIRED);
+
+        let caps = session.caps_query_frame(&mut frame).unwrap();
+        assert_eq!(caps.request_id, 2);
+        let decoded = decode_frame(&frame[..caps.len]).unwrap();
+        assert_eq!(decoded.message_type, MessageType::CAPS_QUERY);
+        assert_eq!(decoded.payload, &[]);
+    }
+
+    #[test]
+    fn writes_upload_and_run_sequence() {
+        let mut session = HostSession::with_next_request_id(10);
+        let mut module = [0u8; BLINK_MODULE_LEN];
+        let module_len = write_blink_module(BlinkProgram::onboard_led(), &mut module).unwrap();
+        let module = &module[..module_len];
+        let mut payload = [0u8; 96];
+        let mut begin_frame = [0u8; 128];
+        let mut chunk_frame = [0u8; 160];
+        let mut end_frame = [0u8; 64];
+        let mut run_frame = [0u8; 96];
+
+        let begin = session
+            .program_begin_frame(DEFAULT_PROGRAM_ID, module, &mut payload, &mut begin_frame)
+            .unwrap();
+        let decoded = decode_frame(&begin_frame[..begin.len]).unwrap();
+        assert_eq!(begin.request_id, 10);
+        assert_eq!(decoded.message_type, MessageType::PROGRAM_BEGIN);
+        let begin_payload = decode_program_begin(decoded.payload).unwrap();
+        assert_eq!(begin_payload.program_id, DEFAULT_PROGRAM_ID);
+        assert_eq!(begin_payload.total_len, BLINK_MODULE_LEN as u32);
+        assert_eq!(begin_payload.program_crc32, crc32_ieee(module));
+
+        let chunk = session
+            .program_chunk_frame(
+                DEFAULT_PROGRAM_ID,
+                0,
+                module,
+                &mut payload,
+                &mut chunk_frame,
+            )
+            .unwrap();
+        let decoded = decode_frame(&chunk_frame[..chunk.len]).unwrap();
+        assert_eq!(chunk.request_id, 11);
+        assert_eq!(decoded.message_type, MessageType::PROGRAM_CHUNK);
+        let chunk_payload = decode_program_chunk(decoded.payload).unwrap();
+        assert_eq!(chunk_payload.offset, 0);
+        assert_eq!(chunk_payload.bytes, module);
+
+        let end = session
+            .program_end_frame(DEFAULT_PROGRAM_ID, &mut payload, &mut end_frame)
+            .unwrap();
+        let decoded = decode_frame(&end_frame[..end.len]).unwrap();
+        assert_eq!(end.request_id, 12);
+        assert_eq!(decoded.message_type, MessageType::PROGRAM_END);
+        assert_eq!(
+            decode_program_end(decoded.payload).unwrap().program_id,
+            DEFAULT_PROGRAM_ID
+        );
+
+        let run = session
+            .run_background_frame(
+                DEFAULT_PROGRAM_ID,
+                DEFAULT_INSTRUCTION_BUDGET,
+                &mut payload,
+                &mut run_frame,
+            )
+            .unwrap();
+        let decoded = decode_frame(&run_frame[..run.len]).unwrap();
+        assert_eq!(run.request_id, 13);
+        assert_eq!(decoded.message_type, MessageType::RUN);
+        let run_payload = decode_run_request(decoded.payload).unwrap();
+        assert_eq!(run_payload.program_id, DEFAULT_PROGRAM_ID);
+        assert_eq!(
+            run_payload.flags,
+            RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
+        );
+        assert_eq!(run_payload.instruction_budget, DEFAULT_INSTRUCTION_BUDGET);
+    }
+
+    #[test]
+    fn writes_configurable_run_frame() {
+        let mut session = HostSession::new();
+        let mut payload = [0u8; 16];
+        let mut frame = [0u8; 48];
+
+        let written = session
+            .run_frame(
+                42,
+                RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+                777,
+                250,
+                &mut payload,
+                &mut frame,
+            )
+            .unwrap();
+        let decoded = decode_frame(&frame[..written.len]).unwrap();
+        assert_eq!(decoded.message_type, MessageType::RUN);
+        let run_payload = decode_run_request(decoded.payload).unwrap();
+        assert_eq!(run_payload.program_id, 42);
+        assert_eq!(run_payload.flags, RUN_FLAG_KEEP_HANDLES_AFTER_RUN);
+        assert_eq!(run_payload.instruction_budget, 777);
+        assert_eq!(run_payload.time_budget_ms, 250);
+    }
+
+    #[test]
+    fn writes_bootloader_reboot_frame() {
+        let mut session = HostSession::with_next_request_id(42);
+        let mut frame = [0u8; 32];
+
+        let written = session.bootloader_reboot_frame(&mut frame).unwrap();
+        let decoded = decode_frame(&frame[..written.len]).unwrap();
+
+        assert_eq!(written.request_id, 42);
+        assert_eq!(decoded.flags, FLAG_RESPONSE_REQUIRED);
+        assert_eq!(decoded.message_type, MessageType::BOOTLOADER_REBOOT);
+        assert!(decoded.payload.is_empty());
+    }
+
+    #[test]
+    fn writes_ping_frame() {
+        let mut session = HostSession::with_next_request_id(77);
+        let mut frame = [0u8; 32];
+
+        let written = session.ping_frame(&mut frame).unwrap();
+        let decoded = decode_frame(&frame[..written.len]).unwrap();
+
+        assert_eq!(written.request_id, 77);
+        assert_eq!(decoded.flags, FLAG_RESPONSE_REQUIRED);
+        assert_eq!(decoded.message_type, MessageType::PING);
+        assert!(decoded.payload.is_empty());
+    }
+
+    #[test]
+    fn request_ids_wrap_without_using_zero() {
+        let mut session = HostSession::with_next_request_id(u16::MAX);
+        let mut frame = [0u8; 32];
+
+        let first = session.stop_frame(&mut frame).unwrap();
+        let second = session.stop_frame(&mut frame).unwrap();
+
+        assert_eq!(first.request_id, u16::MAX);
+        assert_eq!(second.request_id, 1);
+        assert_eq!(session.next_request_id(), 2);
+    }
+}

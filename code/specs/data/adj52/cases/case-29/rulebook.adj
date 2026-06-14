@@ -1,0 +1,197 @@
+% ============================================================================
+% ADJ52 case-29 derived rulebook.
+% Clinical area: fat-containing interatrial septal cardiac mass with recurrent
+% positional syncope and an FDG-PET / cardiac-MRI discordance.
+% Differential built from the IR alone (no answer given), recursing into the
+% subcategories of "what is a fatty mass centred on the interatrial septum":
+%   - lipomatous hypertrophy of the interatrial septum (LHIS, benign, brown fat)
+%   - cardiac lipoma (benign, encapsulated mature fat)
+%   - cardiac liposarcoma / malignant fatty tumour (the PET team's worry)
+%   - other / metastatic fatty tumour (catch-all, low prior)
+% Every clause carries a % rationale + source + trust.
+%
+% Magnitudes are encoded QUALITATIVELY to satisfy the adj-lang IDENT grammar
+% (identifiers are lowercase /[a-z_][a-z0-9_]*/, no uppercase, no leading digit):
+% e.g. pet_suv(markedly_elevated), gadolinium_enhancement(mild) etc.
+%
+% CORRELATED EVIDENCE: the brown-adipose-tissue (BAT) signature of LHIS is ONE
+% mechanism that produces several correlated findings (intense FDG avidity that
+% then drops on a fasting/beta-blocker cardiac-prep protocol). Writing an
+% independent contributes for each manifestation would double-count one cause
+% and saturate the posterior, so those joint manifestations are grouped under a
+% single "% mechanism ... lr ..." directive that fires the combined likelihood
+% ratio ONCE. Genuinely independent findings (T2/fat-sat behaviour, morphology,
+% the arrhythmia/SVC syndrome, enhancement) stay as separate contributes.
+% ============================================================================
+
+% ===== PRIORS (base rates for a fat-containing interatrial septal mass) =====
+
+% rationale: among fat-density masses centred on the interatrial septum, lipomatous hypertrophy (a non-neoplastic fatty infiltration) is the single commonest entity, so it carries the largest prior.
+prior 0.45 for diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "Meridian Arch Pathol Lab Med 130(3):397 LHIS overview; PMC11954602 (LHIS commonest fatty IAS lesion, fossa ovalis spared)" trust authoritative
+
+% rationale: a true cardiac lipoma (encapsulated mature-fat tumour) is the benign neoplastic sibling and the next commonest well-circumscribed fatty cardiac mass.
+prior 0.25 for diagnosis(cardiac_lipoma)
+  source "PMC4544178 (cardiac lipoma vs LHIS: encapsulated mature adipocytes); BMC Cardiovasc Disord 2016 invasive cardiac lipoma" trust authoritative
+
+% rationale: cardiac liposarcoma / malignant fatty tumour is rare but is the explicit malignant mimic the PET team raised; prior low but nontrivial given the SUV-11 read.
+prior 0.18 for diagnosis(cardiac_liposarcoma)
+  source "PMC4544178 (liposarcoma in the differential of fatty cardiac masses); AJR 182(3):598 atypical lipomatous IAS" trust authoritative
+
+% rationale: a residual catch-all for other / metastatic fatty tumour deposits in the septum keeps the differential exhaustive at a low prior.
+prior 0.12 for diagnosis(other_or_metastatic_fatty_tumour)
+  source "PMC4544178 (differential of IAS mass includes metastatic / invasive tumour)" trust inferred
+
+% ===========================================================================
+% ===== LIPOMATOUS HYPERTROPHY OF THE INTERATRIAL SEPTUM (LHIS) =====
+% ===========================================================================
+
+% rationale: a predominantly fatty (fat-attenuation) lesion centred ON the interatrial septum is the defining substrate of LHIS.
+contributes 1.8 from mass_location(interatrial_septum) to diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "PMC11954602 (LHIS = fat deposition within the interatrial septum)" trust authoritative
+contributes 1.6 from mass_attenuation(fatty_composition) to diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "Meridian Arch Pathol Lab Med 130(3):397 (LHIS is a mass of adipose tissue)" trust authoritative
+
+% rationale: T2-hyperintense signal that SUPPRESSES on fat-saturated sequences confirms the lesion is true adipose tissue, the benign-fat signature shared by LHIS.
+contributes 1.7 from mri_signal(t2_bright_suppresses_on_fat_sat) to diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "PubMed 15538164 (cardiac MRI: fatty masses suppress on fat-saturated images); PMC11954602" trust authoritative
+
+% rationale: only MILD gadolinium enhancement (no solid enhancing soft-tissue nodule) is consistent with benign fatty tissue rather than a fleshy malignant component.
+contributes 1.4 from gadolinium_enhancement(mild) to diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "PubMed 15538164 (benign fatty cardiac masses show little/no enhancement)" trust authoritative
+
+% rationale: LHIS infiltration of the septum is a recognised benign anatomical substrate for ATRIAL arrhythmias (atrial ectopy / tachyarrhythmia); an ectopic atrial rhythm fits mass-related atrial involvement.
+contributes 1.5 from ecg_finding(ectopic_atrial_rhythm) to diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "PubMed 24629158 (LHIS a benign cause of atrial arrhythmia); OAText LHIS+arrhythmia case report" trust authoritative
+
+% rationale: DEFINITIVE for LHIS — histology showing non-encapsulated benign lipomatous tissue with brown adipose tissue confirms LHIS.
+contributes 5.0 from histology(benign_lipomatous_fat_brown_adipose) to diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "Meridian Arch Pathol Lab Med 130(3):397 (non-encapsulated adipose + brown fat on histology defines LHIS)" trust authoritative
+% rationale: histology proving malignancy excludes the benign LHIS read.
+contributes 0.1 from histology(liposarcoma_malignant) to diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "PMC4544178 (malignant histology excludes benign LHIS)" trust authoritative
+
+% mechanism brown_adipose_tissue_avidity for diagnosis(lipomatous_hypertrophy_interatrial_septum) lr 3.2 : pet_initial_uptake(markedly_elevated), pet_repeat_on_cardiac_prep(markedly_lower)
+%   rationale: LHIS contains metabolically active BROWN fat that is intensely FDG-avid on a standard prep (false-positive for malignancy), then DROPS sharply when a fasting / beta-blocker cardiac-prep protocol rests the brown fat. The high-then-low SUV pair is ONE brown-fat mechanism, not two independent malignancy signals, so its combined LR fires once.
+%   source "PMC10184794 (LHIS SUV ~5.8 extinguished after propranolol prep — brown fat, not tumour); AJR 184(1):339 (LHIS increased FDG uptake, brown fat pitfall)" trust authoritative
+
+% ===========================================================================
+% ===== CARDIAC LIPOMA (benign encapsulated mature-fat tumour) =====
+% ===========================================================================
+
+% rationale: a WELL-CIRCUMSCRIBED fatty mass is the classic morphology of an encapsulated cardiac lipoma (vs the non-encapsulated infiltration of LHIS).
+contributes 1.9 from mass_morphology(well_circumscribed) to diagnosis(cardiac_lipoma)
+  source "PMC4544178 (cardiac lipoma = well-circumscribed encapsulated tumour of mature adipocytes)" trust authoritative
+contributes 1.5 from mass_attenuation(fatty_composition) to diagnosis(cardiac_lipoma)
+  source "PMC4544178 (lipoma is a homogeneous mature-fat mass)" trust authoritative
+
+% rationale: homogeneous T2-bright fat that suppresses on fat-sat is also consistent with a simple lipoma (mature fat), so this benign-fat signature supports lipoma too.
+contributes 1.4 from mri_signal(t2_bright_suppresses_on_fat_sat) to diagnosis(cardiac_lipoma)
+  source "PubMed 15538164 (lipoma: homogeneous high T1/T2 signal that suppresses on fat sat)" trust authoritative
+
+% rationale: a true lipoma is composed of mature WHITE fat, NOT metabolically active brown fat, so it does not classically show intense FDG avidity; intense BAT-type avidity argues somewhat against simple lipoma.
+contributes 0.7 from pet_initial_uptake(markedly_elevated) to diagnosis(cardiac_lipoma)
+  source "AJR 184(1):339 (brown-fat FDG avidity is characteristic of LHIS, not of bland mature-fat lipoma)" trust inferred
+
+% rationale: mass centred squarely ON / within the interatrial septum is the canonical LHIS site; a discrete lipoma more often arises elsewhere, so septal centring slightly favours LHIS over lipoma.
+contributes 0.85 from mass_location(interatrial_septum) to diagnosis(cardiac_lipoma)
+  source "PMC4544178 (interatrial-septum-centred fatty mass is the LHIS pattern; lipoma is the encapsulated alternative)" trust inferred
+
+% rationale: DEFINITIVE for lipoma — histology showing an ENCAPSULATED mass of mature white fat (a capsule) confirms a true lipoma rather than non-encapsulated LHIS.
+contributes 6.0 from histology(encapsulated_mature_fat_lipoma) to diagnosis(cardiac_lipoma)
+  source "PMC4544178 (capsule + mature white adipocytes on histology defines lipoma)" trust authoritative
+% rationale: conversely, histology showing NON-encapsulated lipomatous/brown-fat infiltration (the LHIS pattern) argues against a true lipoma.
+contributes 0.2 from histology(benign_lipomatous_fat_brown_adipose) to diagnosis(cardiac_lipoma)
+  source "Meridian Arch Pathol Lab Med 130(3):397 (LHIS is non-encapsulated, distinguishing it from lipoma)" trust authoritative
+
+% ===========================================================================
+% ===== CARDIAC LIPOSARCOMA / MALIGNANT FATTY TUMOUR =====
+% (the PET team's worry — built so its discriminators can fire NEGATIVE) =====
+% ===========================================================================
+
+% rationale: intense FDG avidity (SUV ~11) on the first study is exactly what prompted the malignant-fatty-tumour (liposarcoma) read, so raw high uptake raises liposarcoma.
+contributes 2.0 from pet_initial_uptake(markedly_elevated) to diagnosis(cardiac_liposarcoma)
+  source "AJR 184(1):339 (intense FDG uptake raises concern for malignancy / liposarcoma before LHIS pitfall is recognised)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — a malignant tumour's FDG uptake reflects tumour metabolism and does NOT suppress with a beta-blocker / cardiac-prep protocol; a MARKED DROP on the repeat cardiac-prep PET argues strongly AGAINST liposarcoma (and toward brown-fat LHIS).
+contributes 0.25 from pet_repeat_on_cardiac_prep(markedly_lower) to diagnosis(cardiac_liposarcoma)
+  source "PMC10184794 (malignancy maintains FDG uptake regardless of beta-blocker prep; extinction excludes cancer)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR — liposarcoma classically contains SOLID ENHANCING non-fatty soft-tissue components; here there is only fat that SUPPRESSES on fat-sat with mild enhancement, the absence of an enhancing fleshy nodule argues against liposarcoma.
+contributes 0.3 from mri_signal(t2_bright_suppresses_on_fat_sat) to diagnosis(cardiac_liposarcoma)
+  source "AJR 182(3):598 / PMC4544178 (liposarcoma has solid enhancing components intermixed with fat; pure fat-suppressing signal argues against it)" trust authoritative
+contributes 0.4 from gadolinium_enhancement(mild) to diagnosis(cardiac_liposarcoma)
+  source "PMC4544178 (liposarcoma shows enhancing solid tumour components; only mild enhancement argues against malignancy)" trust authoritative
+
+% rationale: an interatrial-septal centring of an otherwise benign-appearing fatty lesion is more typical of LHIS than of a primary cardiac liposarcoma, a mild negative for liposarcoma.
+contributes 0.7 from mass_location(interatrial_septum) to diagnosis(cardiac_liposarcoma)
+  source "PMC11954602 (septal fatty lesion is the LHIS pattern); AJR 182(3):598" trust inferred
+
+% rationale: DEFINITIVE for liposarcoma — histology proving a malignant fatty tumour confirms liposarcoma; benign fat histology excludes it.
+contributes 8.0 from histology(liposarcoma_malignant) to diagnosis(cardiac_liposarcoma)
+  source "PMC4544178 (histology with malignant adipocytic features defines liposarcoma)" trust authoritative
+contributes 0.1 from histology(benign_lipomatous_fat_brown_adipose) to diagnosis(cardiac_liposarcoma)
+  source "PMC10184794 (benign brown-fat histology excludes malignancy)" trust authoritative
+
+% ===========================================================================
+% ===== SHARED LOCAL-COMPRESSION / SYNCOPE SYNDROME =====
+% A bulky benign septal fatty mass and a malignant one can BOTH compress the
+% SVC and cause positional symptoms, so this is split by how specific each
+% finding is, not folded entirely into one diagnosis.
+% ===========================================================================
+
+% rationale: a bulky LHIS is a recognised (rare) cause of SVC compression / venous-inflow obstruction and of positional syncope from impaired venous return when supine; the mass abutting and narrowing the SVC fits this benign mechanism.
+contributes 1.4 from mass_effect(abuts_and_narrows_svc) to diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "PubMed 24629158 / journals.lww md-journal 2025 (LHIS can cause SVC syndrome / venous-inflow obstruction)" trust authoritative
+
+% rationale: any sizeable interatrial-septal mass can mechanically narrow the adjacent SVC, so SVC abutment is a non-specific space-occupying effect shared by lipoma and a malignant tumour too (weaker support).
+contributes 1.2 from mass_effect(abuts_and_narrows_svc) to diagnosis(cardiac_liposarcoma)
+  source "PMC4544178 (mass effect / local invasion in the differential of a large IAS mass)" trust inferred
+contributes 1.1 from mass_effect(abuts_and_narrows_svc) to diagnosis(cardiac_lipoma)
+  source "BMC Cardiovasc Disord 2016 (invasive/large cardiac lipoma producing mass effect)" trust inferred
+
+% ===========================================================================
+% ===== NEXT STEP (resolving investigation) =====
+% ===========================================================================
+
+% rationale: a tissue diagnosis (surgical excision / biopsy with histology) is the definitive way to resolve a benign-vs-malignant fatty-mass dilemma when imaging stays discordant, and it is the step the case explicitly seeks.
+prior 0.30 for next_step(tissue_diagnosis_histology)
+  source "PMC4544178 (histology distinguishes LHIS / lipoma / liposarcoma; biopsy when imaging is indeterminate)" trust authoritative
+contributes 2.5 from diagnostic_discordance(pet_avid_vs_mri_benign) to next_step(tissue_diagnosis_histology)
+  source "PMC4544178 (persistent benign-vs-malignant uncertainty -> tissue sampling)" trust authoritative
+contributes 2.0 from mass_morphology(well_circumscribed) to next_step(tissue_diagnosis_histology)
+  source "BMC Cardiovasc Disord 2016 (a discrete resectable cardiac mass -> excision with histology)" trust inferred
+
+% rationale: repeating the FDG-PET with a cardiac-dedicated fasting/beta-blocker preparation is the non-invasive discriminator that resolves brown-fat avidity vs true malignancy and may AVERT biopsy; here it has ALREADY been done and showed the SUV drop, so it is a strong but already-spent option.
+prior 0.40 for next_step(repeat_cardiac_prep_pet)
+  source "PMC10184794 (propranolol/cardiac-prep PET extinguishes brown-fat uptake, avoiding invasive procedure)" trust authoritative
+contributes 3.0 from pet_repeat_on_cardiac_prep(markedly_lower) to next_step(repeat_cardiac_prep_pet)
+  source "PMC10184794 (a marked SUV drop on cardiac-prep PET is the brown-fat confirmatory read)" trust authoritative
+contributes 2.0 from diagnostic_discordance(pet_avid_vs_mri_benign) to next_step(repeat_cardiac_prep_pet)
+  source "PMC4149773 (comparing/repeating PET resolves the LHIS false-positive pitfall)" trust authoritative
+
+% rationale: simple imaging surveillance is appropriate ONCE benignity is established (suppressing fat, BAT-type avidity), kept as a low-prior comparator for a confidently benign lesion.
+prior 0.15 for next_step(imaging_surveillance_only)
+  source "PMC11954602 (LHIS managed conservatively without histology once confidently benign)" trust authoritative
+contributes 1.8 from mri_signal(t2_bright_suppresses_on_fat_sat) to next_step(imaging_surveillance_only)
+  source "PMC11954602 (confirmed benign fat -> conservative follow-up)" trust inferred
+contributes 0.6 from diagnostic_discordance(pet_avid_vs_mri_benign) to next_step(imaging_surveillance_only)
+  source "PMC4544178 (unresolved benign-vs-malignant discordance argues against surveillance alone)" trust inferred
+
+% ===========================================================================
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+% Resolving any of these test-results moves the posterior; each candidate
+% test-result term has a contributes above so the uncertainty is wired in.
+% ===========================================================================
+
+% u4/u5: the lesion's identity and the cause of the SUV drop turn on the brown-fat-vs-tumour metabolic read and ultimately on histology.
+uncertain { pet_repeat_on_cardiac_prep(markedly_lower), histology(benign_lipomatous_fat_brown_adipose), histology(liposarcoma_malignant) } for diagnosis(lipomatous_hypertrophy_interatrial_septum)
+  source "PMC10184794 + PMC4544178 (cardiac-prep PET behaviour then histology adjudicate brown-fat LHIS vs tumour)"
+
+% u4/u5: the SAME metabolic + tissue resolution decides whether the lesion is instead a malignant fatty tumour.
+uncertain { pet_repeat_on_cardiac_prep(markedly_lower), histology(liposarcoma_malignant), histology(benign_lipomatous_fat_brown_adipose) } for diagnosis(cardiac_liposarcoma)
+  source "PMC10184794 (sustained vs extinguished FDG uptake / histology distinguish liposarcoma from brown-fat LHIS)"
+
+% u4: encapsulation on histology distinguishes a true lipoma from non-encapsulated LHIS.
+uncertain { histology(encapsulated_mature_fat_lipoma), histology(benign_lipomatous_fat_brown_adipose) } for diagnosis(cardiac_lipoma)
+  source "PMC4544178 (capsule + mature white fat on histology defines lipoma vs LHIS)"

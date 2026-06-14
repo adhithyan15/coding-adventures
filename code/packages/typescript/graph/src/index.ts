@@ -1,4 +1,11 @@
-export { Graph, GraphRepr, compareNodes, type WeightedEdge } from "./graph.js";
+export {
+  Graph,
+  GraphRepr,
+  compareNodes,
+  type GraphPropertyBag,
+  type GraphPropertyValue,
+  type WeightedEdge,
+} from "./graph.js";
 export {
   bfs,
   connectedComponents,

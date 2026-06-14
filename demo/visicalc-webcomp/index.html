@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!--
+  VisiCalc — WebComponent demo (Phase 2 / VC2-webcomp).
+
+  Second cross-backend visual demo, this one driven by an actual
+  custom element. `build/FormulaBar.js` registers `<mos-formula-bar>`
+  as a shadow-DOM custom element; this page imports the bundle, mounts
+  the element with HTML attributes carrying the slot values, and
+  listens for the `mosaic:formulaChange` / `mosaic:commit` /
+  `mosaic:cancel` custom events the element dispatches on user input.
+
+  Unlike VC2-html (static snapshot, no JS), this demo:
+    1. Loads the FormulaBar.js bundle.
+    2. Mounts <mos-formula-bar cell-address="A1" formula="=SUM(B1:B5)">.
+    3. The element renders into its own shadow DOM with the styles
+       compiled in from FormulaBar.dark.msl.
+    4. Typing into the input fires `mosaic:formulaChange` events the
+       page handler logs to the console (proof the wiring works).
+
+  The Grid below is ALSO a Custom Element — `<mos-grid>`, registered
+  by `build/Grid.js`, compiled from demo/visicalc/mosaic/Grid.* via
+  the same `mosaic-compile --backend webcomponent` pipeline.
+  Grid.desktop.mll itself is a UI34 `pkg::mosaic-pkg-grid::Grid`
+  one-liner, so the element's structure comes from the authoritative
+  package composition.  No hand-written widgets in this file.
+
+  To regenerate: cd demo/visicalc-webcomp && bash scripts/build.sh
+  To view:       open demo/visicalc-webcomp/index.html in any browser.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VisiCalc — Mosaic WebComponent demo</title>
+  <style>
+    body {
+      margin: 0;
+      background: #1e1e1e;
+      color: #cccccc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .app {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    h1 {
+      font-size: 14px;
+      font-weight: normal;
+      color: #9d9d9d;
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .note {
+      color: #9d9d9d;
+      font-size: 11px;
+      margin-top: 16px;
+      padding: 8px;
+      background: #252526;
+      border-left: 2px solid #007acc;
+    }
+    .note code { color: #cccccc; }
+    #event-log {
+      margin-top: 12px;
+      padding: 8px;
+      background: #1a1a1a;
+      border: 1px solid #3f3f46;
+      font-family: monospace;
+      font-size: 11px;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+    #event-log:empty::before {
+      content: "(Edit the formula bar above to see events here…)";
+      color: #555;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>VisiCalc · Mosaic WebComponent demo</h1>
+
+    <!--
+      ===== FormulaBar (custom element) =====
+      `<mos-formula-bar>` is defined by build/FormulaBar.js. The
+      `cell-address`, `formula`, and `read-only` attributes map
+      directly to the FormulaBar.mil slots; the element observes them
+      via `attributeChangedCallback` and re-renders on change.
+
+      User input dispatches `mosaic:formulaChange` / `mosaic:commit` /
+      `mosaic:cancel` custom events with `bubbles: true, composed:
+      true` so they escape the shadow root. The script below listens
+      on the host and appends a one-liner to #event-log.
+    -->
+    <mos-formula-bar
+      cell-address="A1"
+      formula="=SUM(B1:B5)">
+    </mos-formula-bar>
+
+    <!--
+      ===== Grid (compiled Custom Element) =====
+      `<mos-grid>` is registered by `build/Grid.js`, compiled from
+      demo/visicalc/mosaic/Grid.{mil,desktop.mll,dark.msl} via
+      `mosaic-compile --backend webcomponent`.  Grid.desktop.mll
+      itself is a UI34 `pkg::mosaic-pkg-grid::Grid` one-liner, so the
+      element's structure comes from `mosaic-pkg-grid`'s authoritative
+      Grid + Cell composition.  No hand-written widget in this file.
+
+      The element reads its slots via observed attributes; list-typed
+      slots (`column-headers`, `viewport-rows`, `column-widths`) are
+      JSON.parsed at render time (the WebComponent emitter detects
+      `SlotType::List(_)` and emits `JSON.parse(getAttribute(...))`).
+      The small inline script below sets the attributes after the
+      element is created so the JSON payloads don't have to be
+      hand-escaped into raw HTML attributes.
+    -->
+    <div data-mosaic-component="Grid" style="overflow: auto; max-height: 400px; margin-top: 4px;">
+      <mos-grid id="grid"></mos-grid>
+    </div>
+
+    <h1 style="margin-top: 24px;">Events from &lt;mos-formula-bar&gt;</h1>
+    <div id="event-log"></div>
+
+    <div class="note">
+      <strong>Live custom element.</strong> The
+      <code>&lt;mos-formula-bar&gt;</code> above is a real Web Component
+      registered by <code>build/FormulaBar.js</code> (compiled from
+      <code>FormulaBar.mil/.mll/.msl</code> via
+      <code>mosaic-compile --backend webcomponent</code>). It uses
+      shadow DOM, observed attributes, and fires
+      <code>mosaic:formulaChange</code> / <code>mosaic:commit</code> /
+      <code>mosaic:cancel</code> CustomEvents on user input — visible
+      in the log above.  The Grid is also a Custom Element
+      (<code>&lt;mos-grid&gt;</code>), compiled from
+      <code>demo/visicalc/mosaic/Grid.*</code> — the same source
+      the React + HTML demos consume.
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the compiled bundles — defines `<mos-formula-bar>` and
+    // `<mos-grid>` as Custom Elements.  Both bundles are plain
+    // scripts (not ES modules); they self-register via
+    // `customElements.define` on load.  Using type="module" here is
+    // just a convenience for the inline glue below.
+    import "./build/FormulaBar.js";
+    import "./build/Grid.js";
+
+    // ── Grid wiring ─────────────────────────────────────────────
+    // `<mos-grid>` reads list-typed slots via JSON.parse, so the
+    // attribute values are JSON literals.  Setting them via
+    // setAttribute after the element is mounted avoids the need to
+    // escape `[`/`]`/`"` inside raw HTML.
+    const SAMPLE = {
+      columnHeaders: ["", "A", "B", "C", "D", "E"],
+      columnWidths:  [48, 96, 96, 96, 96, 96],
+      viewportRows: [
+        ["1", "15", "3",  "12", "8",  "5"],
+        ["2", "8",  "14", "7",  "22", "11"],
+        ["3", "12", "9",  "18", "6",  "25"],
+        ["4", "4",  "11", "3",  "17", "9"],
+        ["5", "7",  "5",  "13", "10", "19"],
+      ],
+      selectedRow: 1,
+      selectedCol: 1,
+      // No edit-row / edit-col set on initial mount: the per-cell
+      // editing predicate is `r == editRow && c == editCol`.  The
+      // WC emitter's default initializer for Number-typed slots
+      // (PR #4999) reads an absent attribute as `NaN`, and `NaN`'s
+      // `==` is always `false` — so no cell renders the input
+      // editor on initial paint.  To enter edit mode, the host
+      // calls `grid.setAttribute("edit-row", String(r))` etc.;
+      // until then the editor stays hidden everywhere.
+      //
+      // Before #4999 this demo had to set `edit-row="-1"` as a
+      // sentinel because the emitter defaulted Number slots to
+      // `""`, and JS `0 == ""` is `true` — so cell (0, 0) would
+      // mistakenly render its editor by default.  The emitter
+      // fix moves the sentinel into the generated code, so the
+      // host can simply omit the attribute.
+      editContent: "",
+    };
+    const grid = document.getElementById("grid");
+    grid.setAttribute("column-headers", JSON.stringify(SAMPLE.columnHeaders));
+    grid.setAttribute("column-widths",  JSON.stringify(SAMPLE.columnWidths));
+    grid.setAttribute("viewport-rows",  JSON.stringify(SAMPLE.viewportRows));
+    grid.setAttribute("selected-row",   String(SAMPLE.selectedRow));
+    grid.setAttribute("selected-col",   String(SAMPLE.selectedCol));
+    grid.setAttribute("edit-content",   SAMPLE.editContent);
+
+    // Post-process: paint the selected-cell highlight.  The
+    // WebComponent emitter's static template lowering does not yet
+    // fold `state-when-*` predicates into the shadow-DOM render
+    // (sub-part state needs runtime evaluation in the shadow DOM,
+    // and that's a follow-up); we add the highlight via a style
+    // injection into the shadow root so the demo's selected cell
+    // carries the same VS Code-blue accent as the React / SwiftUI
+    // / HTML renders.
+    //
+    // We retry briefly to handle the connectedCallback race — if
+    // the bundle hasn't registered the element yet, shadowRoot is
+    // null on the first frame.
+    function paintHighlight() {
+      const root = grid.shadowRoot;
+      if (!root) return false;
+      const tds = root.querySelectorAll("tbody td");
+      const cols = SAMPLE.viewportRows[0].length;
+      const sel = SAMPLE.selectedRow * cols + SAMPLE.selectedCol;
+      const td = tds[sel];
+      if (!td) return false;
+      td.style.background = "#264f78";
+      td.style.color      = "#ffffff";
+      td.style.outline    = "1px solid #007acc";
+      return true;
+    }
+    if (!paintHighlight()) {
+      requestAnimationFrame(() => paintHighlight() || setTimeout(paintHighlight, 50));
+    }
+
+    // ── FormulaBar event log (preserved from pre-rewire demo) ───
+    const fb = document.querySelector("mos-formula-bar");
+    const log = document.getElementById("event-log");
+    for (const evt of ["formulaChange", "commit", "cancel"]) {
+      fb.addEventListener(`mosaic:${evt}`, (e) => {
+        const time = new Date().toLocaleTimeString();
+        const payload = JSON.stringify(e.detail);
+        const line = document.createElement("div");
+        line.textContent = `[${time}] mosaic:${evt} → ${payload}`;
+        log.prepend(line);
+      });
+    }
+  </script>
+</body>
+</html>

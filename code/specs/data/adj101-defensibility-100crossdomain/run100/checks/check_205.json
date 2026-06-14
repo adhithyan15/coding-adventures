@@ -1,0 +1,8 @@
+{
+ "check_id": 205,
+ "idx": 84,
+ "slot": "force_majeure_event",
+ "claimed_value": true,
+ "scenario": "The service was down for 6 hours during a regional power grid failure. The provider's datacenter lost utility power, and its on-site backup generator did not start, extending the outage. The provider attributes the entire outage to the grid failure and claims a Force Majeure exclusion.",
+ "cited_span": "a regional power grid failure"
+}

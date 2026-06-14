@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.SqlCsvSource.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>CSV-backed data source adapter for the F# SQL execution engine</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="SqlCsvSource.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../csv-parser/CodingAdventures.CsvParser.fsproj" />
+    <ProjectReference Include="../sql-execution-engine/CodingAdventures.SqlExecutionEngine.fsproj" />
+  </ItemGroup>
+</Project>

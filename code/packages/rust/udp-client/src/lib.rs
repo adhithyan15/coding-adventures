@@ -15,6 +15,8 @@ use std::time::Duration;
 
 pub const VERSION: &str = "0.1.0";
 pub const DEFAULT_MAX_DATAGRAM_SIZE: usize = 65_535;
+pub const MDNS_PORT: u16 = 5353;
+pub const SSDP_PORT: u16 = 1900;
 
 /// Configuration for a UDP socket.
 ///
@@ -54,6 +56,89 @@ pub struct UdpDatagram {
     pub payload: Vec<u8>,
 }
 
+/// UDP multicast protocols commonly used for local device discovery.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UdpDiscoveryProtocol {
+    /// Multicast DNS / DNS-SD (`224.0.0.251:5353`, `[ff02::fb]:5353`).
+    Mdns,
+    /// Simple Service Discovery Protocol (`239.255.255.250:1900`).
+    Ssdp,
+}
+
+/// Address family for a UDP discovery endpoint.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UdpAddressFamily {
+    /// IPv4 multicast.
+    Ipv4,
+    /// IPv6 multicast.
+    Ipv6,
+}
+
+/// A well-known UDP multicast endpoint for local discovery flows.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UdpDiscoveryEndpoint {
+    pub protocol: UdpDiscoveryProtocol,
+    pub family: UdpAddressFamily,
+    pub destination: SocketAddr,
+}
+
+impl UdpDiscoveryEndpoint {
+    /// mDNS/DNS-SD over IPv4 (`224.0.0.251:5353`).
+    pub fn mdns_ipv4() -> Self {
+        Self {
+            protocol: UdpDiscoveryProtocol::Mdns,
+            family: UdpAddressFamily::Ipv4,
+            destination: SocketAddr::new(IpAddr::V4(Ipv4Addr::new(224, 0, 0, 251)), MDNS_PORT),
+        }
+    }
+
+    /// mDNS/DNS-SD over IPv6 (`[ff02::fb]:5353`).
+    pub fn mdns_ipv6() -> Self {
+        Self {
+            protocol: UdpDiscoveryProtocol::Mdns,
+            family: UdpAddressFamily::Ipv6,
+            destination: SocketAddr::new(
+                IpAddr::V6(Ipv6Addr::new(0xff02, 0, 0, 0, 0, 0, 0, 0x00fb)),
+                MDNS_PORT,
+            ),
+        }
+    }
+
+    /// SSDP over IPv4 (`239.255.255.250:1900`).
+    pub fn ssdp_ipv4() -> Self {
+        Self {
+            protocol: UdpDiscoveryProtocol::Ssdp,
+            family: UdpAddressFamily::Ipv4,
+            destination: SocketAddr::new(IpAddr::V4(Ipv4Addr::new(239, 255, 255, 250)), SSDP_PORT),
+        }
+    }
+
+    /// Return the unspecified local bind address that matches this endpoint.
+    pub fn bind_addr(self) -> SocketAddr {
+        unspecified_addr_for(self.destination)
+    }
+
+    /// Build [`UdpOptions`] suitable for sending discovery probes.
+    pub fn options(
+        self,
+        max_datagram_size: usize,
+        read_timeout: Option<Duration>,
+        write_timeout: Option<Duration>,
+    ) -> UdpOptions {
+        UdpOptions {
+            bind_addr: Some(self.bind_addr()),
+            max_datagram_size,
+            read_timeout,
+            write_timeout,
+        }
+    }
+
+    /// True when the destination address is multicast.
+    pub fn is_multicast(self) -> bool {
+        self.destination.ip().is_multicast()
+    }
+}
+
 /// Errors from binding, sending, and receiving UDP datagrams.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UdpError {
@@ -63,7 +148,9 @@ pub enum UdpError {
     ReceiveFailed(String),
     Timeout,
     NotConnected,
+    MissingReadTimeout,
     InvalidDatagramSize { size: usize, max: usize },
+    InvalidResponseLimit { max_responses: usize },
     TruncatedDatagram,
 }
 
@@ -76,8 +163,17 @@ impl fmt::Display for UdpError {
             Self::ReceiveFailed(message) => write!(f, "failed to receive UDP datagram: {message}"),
             Self::Timeout => write!(f, "UDP operation timed out"),
             Self::NotConnected => write!(f, "UDP socket has no connected peer"),
+            Self::MissingReadTimeout => {
+                write!(f, "UDP response collection requires a read timeout")
+            }
             Self::InvalidDatagramSize { size, max } => {
                 write!(f, "invalid UDP datagram size {size}; maximum is {max}")
+            }
+            Self::InvalidResponseLimit { max_responses } => {
+                write!(
+                    f,
+                    "invalid UDP response limit {max_responses}; maximum is 1 or more"
+                )
             }
             Self::TruncatedDatagram => write!(f, "UDP datagram exceeded receive buffer"),
         }
@@ -197,6 +293,38 @@ pub fn send_and_receive(
     client.recv_from()
 }
 
+/// Send one datagram to a discovery endpoint and collect replies until the
+/// configured read timeout or response limit is reached.
+pub fn send_to_and_collect(
+    destination: SocketAddr,
+    payload: &[u8],
+    mut options: UdpOptions,
+    max_responses: usize,
+) -> Result<Vec<UdpDatagram>, UdpError> {
+    if max_responses == 0 {
+        return Err(UdpError::InvalidResponseLimit { max_responses });
+    }
+    if options.read_timeout.is_none() {
+        return Err(UdpError::MissingReadTimeout);
+    }
+    if options.bind_addr.is_none() {
+        options.bind_addr = Some(unspecified_addr_for(destination));
+    }
+
+    let client = UdpClient::bind(options)?;
+    client.send_to(payload, destination)?;
+
+    let mut datagrams = Vec::new();
+    while datagrams.len() < max_responses {
+        match client.recv_from() {
+            Ok(datagram) => datagrams.push(datagram),
+            Err(UdpError::Timeout) => break,
+            Err(error) => return Err(error),
+        }
+    }
+    Ok(datagrams)
+}
+
 fn validate_max_datagram_size(size: usize) -> Result<(), UdpError> {
     if size == 0 || size > DEFAULT_MAX_DATAGRAM_SIZE {
         Err(UdpError::InvalidDatagramSize {
@@ -273,6 +401,50 @@ mod tests {
     }
 
     #[test]
+    fn discovery_endpoints_capture_common_multicast_targets() {
+        let mdns_v4 = UdpDiscoveryEndpoint::mdns_ipv4();
+        let mdns_v6 = UdpDiscoveryEndpoint::mdns_ipv6();
+        let ssdp_v4 = UdpDiscoveryEndpoint::ssdp_ipv4();
+
+        assert_eq!(mdns_v4.protocol, UdpDiscoveryProtocol::Mdns);
+        assert_eq!(mdns_v4.family, UdpAddressFamily::Ipv4);
+        assert_eq!(mdns_v4.destination, "224.0.0.251:5353".parse().unwrap());
+        assert!(mdns_v4.is_multicast());
+
+        assert_eq!(mdns_v6.protocol, UdpDiscoveryProtocol::Mdns);
+        assert_eq!(mdns_v6.family, UdpAddressFamily::Ipv6);
+        assert_eq!(mdns_v6.destination, "[ff02::fb]:5353".parse().unwrap());
+        assert!(mdns_v6.is_multicast());
+
+        assert_eq!(ssdp_v4.protocol, UdpDiscoveryProtocol::Ssdp);
+        assert_eq!(ssdp_v4.family, UdpAddressFamily::Ipv4);
+        assert_eq!(ssdp_v4.destination, "239.255.255.250:1900".parse().unwrap());
+        assert!(ssdp_v4.is_multicast());
+    }
+
+    #[test]
+    fn discovery_endpoint_options_bind_to_matching_unspecified_address() {
+        let timeout = Some(Duration::from_millis(250));
+
+        let mdns_options = UdpDiscoveryEndpoint::mdns_ipv4().options(1500, timeout, timeout);
+        assert_eq!(
+            mdns_options.bind_addr,
+            Some(SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 0))
+        );
+        assert_eq!(mdns_options.max_datagram_size, 1500);
+        assert_eq!(mdns_options.read_timeout, timeout);
+        assert_eq!(mdns_options.write_timeout, timeout);
+
+        let mdns_v6_options = UdpDiscoveryEndpoint::mdns_ipv6().options(1500, None, timeout);
+        assert_eq!(
+            mdns_v6_options.bind_addr,
+            Some(SocketAddr::new(IpAddr::V6(Ipv6Addr::UNSPECIFIED), 0))
+        );
+        assert_eq!(mdns_v6_options.read_timeout, None);
+        assert_eq!(mdns_v6_options.write_timeout, timeout);
+    }
+
+    #[test]
     fn error_display_messages_name_the_failure_mode() {
         let cases = [
             (
@@ -294,8 +466,16 @@ mod tests {
             (UdpError::Timeout, "UDP operation timed out"),
             (UdpError::NotConnected, "UDP socket has no connected peer"),
             (
+                UdpError::MissingReadTimeout,
+                "UDP response collection requires a read timeout",
+            ),
+            (
                 UdpError::InvalidDatagramSize { size: 9, max: 8 },
                 "invalid UDP datagram size 9; maximum is 8",
+            ),
+            (
+                UdpError::InvalidResponseLimit { max_responses: 0 },
+                "invalid UDP response limit 0; maximum is 1 or more",
             ),
             (
                 UdpError::TruncatedDatagram,
@@ -320,6 +500,63 @@ mod tests {
 
         assert!(local.is_ipv4());
         assert_ne!(local.port(), 0);
+    }
+
+    #[test]
+    fn send_to_and_collect_gathers_unconnected_replies_until_timeout() {
+        let client = bind_test_client();
+        let client_addr = client.local_addr().unwrap();
+        drop(client);
+        let responder = UdpSocket::bind(localhost(0)).unwrap();
+        let responder_addr = responder.local_addr().unwrap();
+
+        let handle = thread::spawn(move || {
+            let mut buffer = [0u8; 32];
+            let (_, source) = responder.recv_from(&mut buffer).unwrap();
+            responder.send_to(b"one", source).unwrap();
+            responder.send_to(b"two", source).unwrap();
+        });
+
+        let replies = send_to_and_collect(
+            responder_addr,
+            b"probe",
+            UdpOptions {
+                bind_addr: Some(client_addr),
+                max_datagram_size: 16,
+                read_timeout: Some(Duration::from_millis(100)),
+                write_timeout: Some(Duration::from_millis(100)),
+            },
+            4,
+        )
+        .unwrap();
+        handle.join().unwrap();
+
+        assert_eq!(replies.len(), 2);
+        assert_eq!(replies[0].payload, b"one");
+        assert_eq!(replies[1].payload, b"two");
+        assert!(replies.iter().all(|reply| reply.source == responder_addr));
+    }
+
+    #[test]
+    fn send_to_and_collect_requires_timeout_and_positive_limit() {
+        let destination = localhost(9);
+
+        assert_eq!(
+            send_to_and_collect(destination, b"probe", test_options(), 0),
+            Err(UdpError::InvalidResponseLimit { max_responses: 0 })
+        );
+        assert_eq!(
+            send_to_and_collect(
+                destination,
+                b"probe",
+                UdpOptions {
+                    read_timeout: None,
+                    ..test_options()
+                },
+                1,
+            ),
+            Err(UdpError::MissingReadTimeout)
+        );
     }
 
     #[test]

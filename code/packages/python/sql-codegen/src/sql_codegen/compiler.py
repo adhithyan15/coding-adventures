@@ -36,6 +36,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
+from sql_backend.schema import NO_DEFAULT as _BACKEND_NO_DEFAULT
 from sql_planner import (
     Aggregate,
     Begin,
@@ -43,11 +44,13 @@ from sql_planner import (
     CaseExpr,
     Column,
     Commit,
+    CorrelatedRef,
     Delete,
     DerivedTable,
     Distinct,
     EmptyResult,
     Except,
+    ExistsSubquery,
     Expr,
     Filter,
     FunctionCall,
@@ -55,20 +58,30 @@ from sql_planner import (
     In,
     IndexScan,
     Insert,
+    InSubquery,
     Intersect,
     Join,
     JoinKind,
     Literal,
     LogicalPlan,
     NotIn,
+    NotInSubquery,
     Project,
+    ProjectionItem,
     Rollback,
+    RowIdRef,
+    ScalarSubquery,
     Scan,
+    SingleRow,
     Sort,
     UnaryExpr,
     Union,
     Update,
     Wildcard,
+    WorkingSetScan,
+)
+from sql_planner import (
+    AlterTable as PlanAlterTable,
 )
 from sql_planner import (
     Between as AstBetween,
@@ -83,10 +96,16 @@ from sql_planner import (
     CreateTable as PlanCreateTable,
 )
 from sql_planner import (
+    CreateTrigger as PlanCreateTrigger,
+)
+from sql_planner import (
     DropIndex as PlanDropIndex,
 )
 from sql_planner import (
     DropTable as PlanDropTable,
+)
+from sql_planner import (
+    DropTrigger as PlanDropTrigger,
 )
 from sql_planner import (
     IsNotNull as AstIsNotNull,
@@ -101,17 +120,27 @@ from sql_planner import (
     NotLike as AstNotLike,
 )
 from sql_planner import (
+    RecursiveCTE as PlanRecursiveCTE,
+)
+from sql_planner import (
     UnaryOp as AstUnaryOp,
 )
+from sql_planner import (
+    WindowAgg as PlanWindowAgg,
+)
 from sql_planner.ast import ColumnDef as AstColumnDef
-from sql_planner.expr import AggregateExpr
+from sql_planner.expr import AggregateExpr, ExcludedColumn
 from sql_planner.plan import AggFunc as PlanAggFunc
 from sql_planner.plan import Limit as PlanLimit
+from sql_planner.plan import UpsertAction as PlanUpsertAction
+from sql_planner.plan import WindowFuncSpec as PlanWindowFuncSpec
 
 from .errors import UnsupportedNode
 from .ir import (
+    NO_COLUMN_DEFAULT,
     AdvanceCursor,
     AdvanceGroupKey,
+    AlterTable,
     BeginRow,
     BeginTransaction,
     Between,
@@ -121,13 +150,16 @@ from .ir import (
     CaptureLeftResult,
     CloseScan,
     CommitTransaction,
+    ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
+    CreateTriggerDef,
     DeleteRows,
     Direction,
     DistinctResult,
     DropIndex,
     DropTable,
+    DropTriggerDef,
     EmitColumn,
     EmitRow,
     ExceptResult,
@@ -141,6 +173,9 @@ from .ir import (
     IntersectResult,
     IsNotNull,
     IsNull,
+    JoinBeginRow,
+    JoinIfMatched,
+    JoinSetMatched,
     Jump,
     JumpIfFalse,
     Label,
@@ -148,28 +183,44 @@ from .ir import (
     LimitResult,
     LoadColumn,
     LoadConst,
+    LoadExcludedColumn,
     LoadGroupKey,
+    LoadLastInsertedColumn,
+    LoadOuterColumn,
+    LoadRowId,
     NullsOrder,
     OpenIndexScan,
     OpenScan,
+    OpenWorkingSetScan,
     Program,
     RollbackTransaction,
+    RunExistsSubquery,
+    RunInSubquery,
+    RunRecursiveCTE,
+    RunScalarSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
     SetResultSchema,
     SortKey,
     SortResult,
+    StripTrailingColumns,
     UnaryOp,
     UnaryOpCode,
     UpdateAgg,
     UpdateRows,
+    UpsertSpec,
+    WinFunc,
+    WinFuncSpec,
 )
 from .ir import (
     AggFunc as IrAggFunc,
 )
 from .ir import (
     ColumnDef as IrColumnDef,
+)
+from .ir import (
+    UpsertAssignment as IrUpsertAssignment,
 )
 
 # --------------------------------------------------------------------------
@@ -184,12 +235,22 @@ class _Ctx:
     The alias map is how later ``LoadColumn`` calls know which cursor to
     read from. A Scan populates the map when it opens; a Column reference
     uses it to find the scan's cursor.
+
+    ``outer_alias_to_cursor`` is set only when compiling an inner
+    sub-program that may contain :class:`~sql_planner.expr.CorrelatedRef`
+    nodes.  It is a snapshot of the *outer* context's ``alias_to_cursor``
+    at the time the subquery expression was compiled.  When
+    :func:`_compile_expr` encounters a ``CorrelatedRef``, it looks up the
+    outer cursor ID here and emits :class:`~sql_codegen.ir.LoadOuterColumn`.
     """
 
     cursor_counter: int = 0
     label_counter: int = 0
     agg_counter: int = 0
     alias_to_cursor: dict[str, int] = field(default_factory=dict)
+    working_set_cursor_id: int | None = None
+    # Outer cursor map — non-None only inside correlated sub-program compilation.
+    outer_alias_to_cursor: dict[str, int] | None = None
 
     def new_cursor(self, alias: str) -> int:
         cid = self.cursor_counter
@@ -262,12 +323,35 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
         case EmptyResult(columns=cols):
             return [SetResultSchema(columns=cols)], cols
 
-        case PlanCreateTable(table=t, columns=cols, if_not_exists=ine):
-            ir_cols = tuple(_to_ir_col(c) for c in cols)
-            return [CreateTable(table=t, columns=ir_cols, if_not_exists=ine)], ()
+        case PlanCreateTable() as ct:
+            ir_cols = tuple(_to_ir_col(c) for c in ct.columns)
+            return (
+                [CreateTable(
+                    table=ct.table,
+                    columns=ir_cols,
+                    if_not_exists=ct.if_not_exists,
+                    strict=ct.strict,
+                )],
+                (),
+            )
 
         case PlanDropTable(table=t, if_exists=ie):
             return [DropTable(table=t, if_exists=ie)], ()
+
+        case PlanAlterTable() as alt:
+            # One of column / rename_to / rename_column / drop_column
+            # is set; pass them all through.  IR AlterTable mirrors the
+            # plan node's optional-field shape.
+            ir_col = _to_ir_col(alt.column) if alt.column is not None else None
+            return [
+                AlterTable(
+                    table=alt.table,
+                    column=ir_col,
+                    rename_to=alt.rename_to,
+                    rename_column=alt.rename_column,
+                    drop_column=alt.drop_column,
+                ),
+            ], ()
 
         case PlanCreateIndex(name=name, table=table, columns=cols, unique=uniq, if_not_exists=ine):
             return [
@@ -276,6 +360,18 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
 
         case PlanDropIndex(name=name, if_exists=ie):
             return [DropIndex(name=name, if_exists=ie)], ()
+
+        case PlanCreateTrigger(
+            name=name, timing=timing, event=event, table=table, body_sql=body
+        ):
+            return [
+                CreateTriggerDef(
+                    name=name, timing=timing, event=event, table=table, body_sql=body
+                ),
+            ], ()
+
+        case PlanDropTrigger(name=name, if_exists=ie):
+            return [DropTriggerDef(name=name, if_exists=ie)], ()
 
         case Insert():
             return _compile_insert(p, ctx), ()
@@ -295,6 +391,25 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
 
         case Rollback():
             return [RollbackTransaction()], ()
+
+        case PlanWindowAgg(input=inner, specs=specs, output_cols=output_cols):
+            # Window aggregation: compile the inner plan (which emits the
+            # scan loop), then append ComputeWindowFunctions.  We prepend
+            # SetResultSchema(inner_schema) so result.columns correctly
+            # reflects the INNER column layout when ComputeWindowFunctions
+            # looks up arg/partition/order column names.  ComputeWindowFunctions
+            # itself sets result.columns = output_cols at the end.
+            inner_instrs, inner_schema = _compile_plan(inner, ctx)
+            ir_specs = tuple(_to_ir_win_spec(s) for s in specs)
+            win_instr = ComputeWindowFunctions(
+                specs=ir_specs,
+                output_cols=output_cols,
+            )
+            return (
+                [SetResultSchema(columns=inner_schema)]
+                + inner_instrs
+                + [win_instr]
+            ), output_cols
 
         case _:
             # Read-only query path: emit SetResultSchema, then build the
@@ -328,20 +443,22 @@ def _schema_of(p: LogicalPlan) -> tuple[str, ...]:
             names: list[str] = []
             for i, e in enumerate(gb):
                 names.append(_column_display_name(e) or f"group_{i}")
-            names.extend(a.alias for a in aggs)
+            # Only include output aggregates in the schema — hidden aggregates
+            # (output=False) are computed for HAVING/ORDER BY but not emitted.
+            names.extend(a.alias for a in aggs if a.output)
             return tuple(names)
         case Having(input=inner):
             return _schema_of(inner)
         # Set operations: output schema follows the left side's columns.
         case Union(left=left_plan) | Intersect(left=left_plan) | Except(left=left_plan):
             return _schema_of(left_plan)
+        case PlanWindowAgg(output_cols=cols):
+            return cols
         case _:
             return ()
 
 
 def _projection_name(item: object) -> str:
-    from sql_planner import ProjectionItem
-
     if isinstance(item, ProjectionItem):
         if item.alias is not None:
             return item.alias
@@ -354,6 +471,12 @@ def _projection_name(item: object) -> str:
 def _column_display_name(expr: Expr) -> str | None:
     if isinstance(expr, Column):
         return expr.col
+    if isinstance(expr, RowIdRef):
+        # The implicit rowid pseudo-column always surfaces under the name
+        # "rowid" in sort keys, GROUP BY, and other places that need a
+        # display name.  This makes ``ORDER BY rowid`` find the column
+        # emitted by ``SELECT rowid, ...`` via its alias.
+        return "rowid"
     return None
 
 
@@ -368,7 +491,14 @@ def _column_display_name(expr: Expr) -> str | None:
 def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     # Peel outer post-processing operators off the top. Order per spec:
     # Project → Distinct → Sort → Limit — so Limit is the outermost.
+    #
+    # Build an aggregate alias map before peeling so that Sort keys that
+    # reference an AggregateExpr (e.g. ``ORDER BY SUM(val)``) can be
+    # resolved to the output column name emitted by _compile_aggregate.
+    agg_alias_map = _build_agg_alias_map(p)
     post: list[Instruction] = []
+    ir_sort_keys: tuple[SortKey, ...] | None = None   # set if Sort was peeled
+    planner_sort_keys: tuple[object, ...] | None = None  # original planner SortKey objects
     cur = p
     while True:
         match cur:
@@ -376,7 +506,9 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
                 post.append(LimitResult(count=c, offset=o))
                 cur = inner
             case Sort(input=inner, keys=keys):
-                post.append(SortResult(keys=tuple(_to_sort_key(k) for k in keys)))
+                ir_sort_keys = tuple(_to_sort_key(k, agg_alias_map) for k in keys)
+                planner_sort_keys = keys  # preserve original exprs for hidden-col injection
+                post.append(SortResult(keys=ir_sort_keys))
                 cur = inner
             case Distinct(input=inner):
                 post.append(DistinctResult())
@@ -388,7 +520,130 @@ def _compile_read(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     # (Sort, then Limit). We reverse so Sort runs before Limit.
     post.reverse()
 
+    # ── Hidden sort-key columns ───────────────────────────────────────────────
+    # SQL allows ORDER BY to reference columns not in the SELECT list, e.g.
+    #
+    #     SELECT name FROM employees ORDER BY salary DESC
+    #
+    # The VM's SortResult handler looks up each sort-key column by name in
+    # ``st.result.columns``; if the column is absent it raises ValueError.
+    #
+    # Fix: when the inner plan is a Project and a sort key references a column
+    # not in the Project's output, we extend the Project with that column as a
+    # **hidden trailing entry**.  The extended rows flow through the sort, then
+    # StripTrailingColumns removes the extras so callers only see the original
+    # SELECT columns.
+    #
+    # We also prepend SetResultSchema(extended_schema) so the VM's column list
+    # matches the actual row width during the scan/sort phase.  This overrides
+    # the SetResultSchema(original_schema) emitted by _compile_plan, which comes
+    # before the instructions returned here.
+    #
+    # This only applies when the inner plan is a Project.  For Aggregate and
+    # set-operation plans the sort key is always an output column (the planner
+    # enforces this), so no injection is needed.
+    hidden_pairs: list[tuple[str, object]] = []  # (col_name, planner_expr)
+    extended_schema: tuple[str, ...] | None = None
+    # Maps positions in ir_sort_keys that need rewriting to point at a
+    # synthetic hidden-column name (used for arbitrary-expression sort keys
+    # like ``ORDER BY a+b`` whose natural display name is "?").
+    expr_key_renames: dict[int, str] = {}
+
+    if ir_sort_keys is not None and isinstance(cur, Project) and not any(
+        isinstance(it.expr, Wildcard) for it in cur.items  # type: ignore[union-attr]
+    ):
+        # Skip injection entirely when the Project contains SELECT * (Wildcard).
+        # For SELECT *, all table columns appear in the output at runtime via
+        # ScanAllColumns; the sort key is always present, so no injection is
+        # needed.  More importantly, we cannot determine the output column names
+        # at compile time (they depend on the table schema), so we cannot
+        # identify which sort keys are "hidden".
+        from sql_planner.plan import SortKey as PlanSortKey
+
+        output_names: set[str] = {_projection_name(it) for it in cur.items}
+        seen: set[str] = set()
+
+        for i, (ir_sk, plan_sk) in enumerate(
+            zip(ir_sort_keys, planner_sort_keys or (), strict=False),
+        ):
+            # Skip positional sort keys (ORDER BY N): they use column_idx for
+            # direct index lookup and always refer to visible output columns —
+            # no hidden-column injection needed or possible.
+            if ir_sk.column_idx is not None:
+                continue
+            if not isinstance(plan_sk, PlanSortKey):
+                continue
+            col = ir_sk.column
+            if col == "?":
+                # Expression sort key (``ORDER BY a+b``, ``UPPER(x)``,
+                # ``CASE …``, …): the planner expr has no natural display
+                # name, so we cannot look it up by name in the result
+                # schema.  Inject it as a hidden trailing column under a
+                # synthetic name unique to this sort position, then rewrite
+                # the corresponding SortKey IR to reference that name.
+                #
+                # A position-local synthetic name (``__sortkey_<N>``) is
+                # required because two ``ORDER BY`` terms with the same
+                # display name (``"?"``) would otherwise collide on the
+                # same hidden slot — sharing one column would silently
+                # change the sort to use only the first expression.
+                synth = f"__sortkey_{len(hidden_pairs)}"
+                expr_key_renames[i] = synth
+                hidden_pairs.append((synth, plan_sk.expr))
+            elif col not in output_names and col not in seen:
+                # Named column not in SELECT output: inject under its
+                # natural name.  De-dup by column name so multiple ORDER BY
+                # terms referencing the same hidden column share one slot.
+                hidden_pairs.append((col, plan_sk.expr))
+                seen.add(col)
+
+        if hidden_pairs:
+            # Compute the original schema before extending the Project.
+            orig_schema = tuple(_projection_name(it) for it in cur.items)
+            hidden_col_names = [n for n, _ in hidden_pairs]
+            extended_schema = orig_schema + tuple(hidden_col_names)
+
+            # Build new ProjectionItems using the original planner expressions
+            # so _compile_expr generates the right LoadColumn instructions (with
+            # the correct table alias / cursor id), not a generic cursor-0 load.
+            extra_items: list[object] = [
+                ProjectionItem(expr=expr, alias=name)  # type: ignore[arg-type]
+                for name, expr in hidden_pairs
+            ]
+
+            cur = Project(
+                input=cur.input,
+                items=cur.items + tuple(extra_items),  # type: ignore[arg-type]
+            )
+
+            # Rewrite expression-key SortKey IRs to point at their synthetic
+            # hidden-column names, and replace the SortResult instruction in
+            # ``post`` with the rebuilt keys tuple.
+            if expr_key_renames:
+                from dataclasses import replace as _replace
+                ir_sort_keys = tuple(
+                    _replace(sk, column=expr_key_renames[idx])
+                    if idx in expr_key_renames
+                    else sk
+                    for idx, sk in enumerate(ir_sort_keys)
+                )
+                for j, ins in enumerate(post):
+                    if isinstance(ins, SortResult):
+                        post[j] = SortResult(keys=ir_sort_keys)
+                        break
+
+            # Insert StripTrailingColumns immediately after SortResult in post.
+            sort_idx = next(
+                i for i, ins in enumerate(post) if isinstance(ins, SortResult)
+            )
+            post.insert(sort_idx + 1, StripTrailingColumns(count=len(hidden_pairs)))
+
     core = _compile_core(cur, ctx)
+
+    if extended_schema is not None:
+        # Override the result schema for the scan phase to include hidden cols.
+        core = [SetResultSchema(columns=extended_schema)] + core
+
     return core + post
 
 
@@ -402,6 +657,13 @@ def _compile_core(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
         case Aggregate():
             return _compile_aggregate(p, ctx)
         case Having(input=Aggregate() as agg, predicate=pred):
+            return _compile_aggregate(agg, ctx, having=pred)
+        # Project(Aggregate) — occurs in scalar subquery inner plans that haven't
+        # had _flatten_project_over_aggregate applied. Skip the projection layer;
+        # column names don't matter for sub-program result rows.
+        case Project(input=Aggregate() as agg):
+            return _compile_aggregate(agg, ctx)
+        case Project(input=Having(input=Aggregate() as agg, predicate=pred)):
             return _compile_aggregate(agg, ctx, having=pred)
 
         # Set operations — compile left side, then right side, then post-process.
@@ -436,6 +698,30 @@ def _compile_core(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
             out.append(ExceptResult(all=all_flag))
             return out
 
+        case PlanWindowAgg(input=inner, specs=specs, output_cols=output_cols):
+            # Compile the inner plan, then append ComputeWindowFunctions.
+            #
+            # Critical invariant: when ComputeWindowFunctions executes,
+            # result.columns must reflect the INNER schema (the columns
+            # emitted by the scan loop) so it can look up arg/partition/order
+            # columns by name.  The outer _compile_plan catch-all has already
+            # emitted SetResultSchema(output_cols), so we prepend an explicit
+            # SetResultSchema(inner_schema) to override it.  This override is
+            # always correct:
+            #   - non-empty inner_schema: inner_instrs also starts with
+            #     SetResultSchema(inner_schema), so we get a harmless duplicate.
+            #   - empty inner_schema (window-only SELECT with no non-window
+            #     items): inner_instrs emits no SetResultSchema (because the
+            #     catch-all skips it for empty schemas), so the prepend is the
+            #     only one and is required.
+            inner_instrs, inner_schema = _compile_plan(inner, ctx)
+            ir_specs = tuple(_to_ir_win_spec(s) for s in specs)
+            return (
+                [SetResultSchema(columns=inner_schema)]
+                + inner_instrs
+                + [ComputeWindowFunctions(specs=ir_specs, output_cols=output_cols)]
+            )
+
         case _:
             # Project(Filter(Join/Scan)) — the ordinary SELECT shape.
             return _compile_select(p, ctx)
@@ -462,10 +748,14 @@ def _compile_select(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     predicate, inner = _peel_filter(inner)
 
     def body(c: _Ctx) -> list[Instruction]:
+        # Generate a fresh skip label on each invocation so that calling
+        # body twice (e.g. matched path + null-padded path in a LEFT JOIN)
+        # does not produce duplicate Label names in the instruction stream.
+        skip = c.new_label("filter_skip") if predicate is not None else ""
         out: list[Instruction] = []
         if predicate is not None:
             out.extend(_compile_expr(predicate, c))
-            out.append(JumpIfFalse(label=_skip_label))
+            out.append(JumpIfFalse(label=skip))
         # Build the row.
         out.append(BeginRow())
         if project_items is None:
@@ -477,19 +767,22 @@ def _compile_select(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
         else:
             for it in project_items:
                 if isinstance(it.expr, Wildcard):
-                    primary = _primary_cursor(c)
-                    if primary is not None:
-                        out.append(ScanAllColumns(cursor_id=primary))
+                    # SELECT * — emit columns from EVERY open cursor in the
+                    # order they were opened, not just the primary one.  For
+                    # a single-source query this is a no-op change (one
+                    # cursor in alias_to_cursor); for a cross-join across
+                    # N sources this fixes a long-standing bug where only
+                    # the first table's columns appeared in the output.
+                    for cursor_id in c.alias_to_cursor.values():
+                        out.append(ScanAllColumns(cursor_id=cursor_id))
                 else:
                     out.extend(_compile_expr(it.expr, c))
                     out.append(EmitColumn(name=_projection_name(it)))
         out.append(EmitRow())
         if predicate is not None:
-            out.append(Label(name=_skip_label))
+            out.append(Label(name=skip))
         return out
 
-    # Unique skip label per SELECT body.
-    _skip_label = ctx.new_label("filter_skip")
     return _compile_source(inner, body, ctx)
 
 
@@ -510,6 +803,37 @@ def _primary_cursor(ctx: _Ctx) -> int | None:
     if not ctx.alias_to_cursor:
         return None
     return next(iter(ctx.alias_to_cursor.values()))
+
+
+def _plan_alias(p: LogicalPlan) -> str | None:
+    """Return the alias a plan node would register in ``alias_to_cursor``.
+
+    Used by the RIGHT JOIN compiler to reorder ``alias_to_cursor`` so that
+    ``SELECT *`` emits columns in original FROM-clause order even when the
+    physical scan loops have been swapped (rgt as outer, lft as inner).
+
+    Mirrors the alias-extraction logic inside :func:`_compile_source` for
+    each scan-producing plan node:
+
+    - :class:`Scan` / :class:`IndexScan`: ``alias`` if given, else ``table``.
+    - :class:`DerivedTable`, :class:`RecursiveCTE`, :class:`WorkingSetScan`:
+      the node carries its alias directly.
+    - Any other node type (Filter, Project, Join, etc.) doesn't open a
+      cursor directly — returns ``None`` and the caller skips reordering.
+    """
+    match p:
+        case Scan(table=t, alias=a):
+            return a or t
+        case IndexScan(table=t, alias=a):
+            return a or t
+        case DerivedTable(alias=a):
+            return a
+        case PlanRecursiveCTE(alias=a):
+            return a
+        case WorkingSetScan(alias=a):
+            return a
+        case _:
+            return None
 
 
 # --------------------------------------------------------------------------
@@ -625,6 +949,89 @@ def _compile_source(
 
             return _compile_source(inner, wrapped, ctx)
 
+        case WorkingSetScan(alias=alias, columns=_):
+            # The VM stores the working set rows in VmState.working_set_data.
+            # OpenWorkingSetScan creates a fresh _SubqueryCursor from those
+            # rows each time it executes — critical for correctness when the
+            # CTE self-reference appears inside a JOIN (the outer loop would
+            # otherwise exhaust the cursor on the first row and leave nothing
+            # for subsequent rows).
+            cid = ctx.working_set_cursor_id if ctx.working_set_cursor_id is not None else 0
+            ctx.alias_to_cursor[alias] = cid
+            loop = ctx.new_label("wss_loop")
+            end = ctx.new_label("wss_end")
+            out = [
+                OpenWorkingSetScan(cursor_id=cid),
+                Label(name=loop),
+                AdvanceCursor(cursor_id=cid, on_exhausted=end),
+            ]
+            out.extend(body(ctx))
+            out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
+            return out
+
+        case PlanRecursiveCTE(
+            anchor=anchor_plan,
+            recursive=recursive_plan,
+            alias=alias,
+            columns=_,
+            union_all=union_all,
+        ):
+            # Compile anchor as an independent sub-program.
+            anchor_ctx = _Ctx()
+            anchor_instrs, anchor_schema = _compile_plan(anchor_plan, anchor_ctx)
+            anchor_instrs.append(Halt())
+            anchor_prog = Program(
+                instructions=tuple(anchor_instrs),
+                labels=_resolve_labels(anchor_instrs),
+                result_schema=anchor_schema,
+            )
+            # Compile recursive step: cursor 0 is pre-reserved for the working
+            # set cursor (VM pre-populates it before each iteration), so we
+            # start assigning other cursors from 1.
+            recursive_ctx = _Ctx(cursor_counter=1, working_set_cursor_id=0)
+            recursive_instrs, recursive_schema = _compile_plan(recursive_plan, recursive_ctx)
+            recursive_instrs.append(Halt())
+            recursive_prog = Program(
+                instructions=tuple(recursive_instrs),
+                labels=_resolve_labels(recursive_instrs),
+                result_schema=recursive_schema,
+            )
+            cid = ctx.new_cursor(alias)
+            loop = ctx.new_label("rcte_loop")
+            end = ctx.new_label("rcte_end")
+            out = [
+                RunRecursiveCTE(
+                    cursor_id=cid,
+                    anchor_program=anchor_prog,
+                    recursive_program=recursive_prog,
+                    working_cursor_id=0,
+                    union_all=union_all,
+                ),
+                Label(name=loop),
+                AdvanceCursor(cursor_id=cid, on_exhausted=end),
+            ]
+            out.extend(body(ctx))
+            out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
+            return out
+
+        case SingleRow():
+            # SELECT without FROM — body executes exactly once with no cursor.
+            # There is no loop: no AdvanceCursor, no CloseScan, no jump.
+            # The body directly emits its SELECT-list expressions against the
+            # "empty" row context (which only contains literal/scalar values).
+            return body(ctx)
+
+        case EmptyResult():
+            # The planner detected a statically-false WHERE (e.g. WHERE 1 = 0).
+            # No rows will ever satisfy the predicate so the body is never called.
+            # We emit zero instructions — the scan loop is a no-op.
+            #
+            # When an Aggregate wraps an EmptyResult the aggregate accumulator is
+            # never initialized; FinalizeAgg's auto-grow path handles this by
+            # producing the correct zero-state result (0 for COUNT, NULL for
+            # SUM / MIN / MAX / AVG / GROUP_CONCAT).
+            return []
+
         case _:
             raise UnsupportedNode(type(p).__name__)
 
@@ -654,7 +1061,169 @@ def _compile_join(
 
         return _compile_source(lft, outer_body, ctx)
 
-    # LEFT / RIGHT / FULL — not yet implemented; raise a clear error.
+    if kind == JoinKind.LEFT:
+        # Nested-loop LEFT OUTER JOIN.
+        #
+        # For each left row we track whether any right row satisfied the ON
+        # condition (join_match_stack in the VM).  After the right scan
+        # exhausts, if no match was found we emit ``body`` once more; at that
+        # point the right cursor has no current row so every LoadColumn for a
+        # right-side column returns NULL — exactly the null-padding SQL
+        # requires.
+        #
+        # ``body`` is called at most twice per left row:
+        #   1. Once per matching (left, right) pair inside the inner loop.
+        #   2. At most once on the null-padded path if zero right rows matched.
+        # Each call to ``body`` generates a fresh filter-skip label (the body
+        # closure uses c.new_label, not a closed-over static string), so
+        # duplicate label names cannot appear in the instruction stream.
+        matched_label = ctx.new_label("loj_matched")
+
+        def loj_inner_body(c: _Ctx) -> list[Instruction]:
+            out: list[Instruction] = []
+            skip = c.new_label("loj_cond_skip")
+            if cond is not None:
+                out.extend(_compile_expr(cond, c))
+                out.append(JumpIfFalse(label=skip))
+            # ON condition passed: mark this left row as having a match,
+            # then emit the regular (non-null-padded) output row.
+            out.append(JoinSetMatched())
+            out.extend(body(c))
+            out.append(Label(name=skip))
+            return out
+
+        def loj_outer_body(c: _Ctx) -> list[Instruction]:
+            out: list[Instruction] = []
+            # Begin a new match-tracking epoch for this left row.
+            out.append(JoinBeginRow())
+            out.extend(_compile_source(rgt, loj_inner_body, c))
+            # After the right scan: if at least one right row matched ON,
+            # jump past the null-padded emission.
+            out.append(JoinIfMatched(label=matched_label))
+            # No match found: emit body with the right cursor closed.
+            # LoadColumn for right-side columns returns NULL automatically
+            # because the cursor has no current row.
+            out.extend(body(c))
+            out.append(Label(name=matched_label))
+            return out
+
+        return _compile_source(lft, loj_outer_body, ctx)
+
+    if kind == JoinKind.RIGHT:
+        # RIGHT OUTER JOIN = LEFT OUTER JOIN with the two sides swapped in the
+        # execution loop.  The ON condition and body both reference columns by
+        # table alias (via alias_to_cursor), not by physical scan position, so
+        # reversing which side is the outer loop is sufficient: the original
+        # right table becomes the outer "left" (preserved for every row) and
+        # the original left table becomes the inner "right" (null-padded when
+        # no ON match is found).
+        #
+        # ``SELECT *`` column order
+        # -------------------------
+        # The Project node above the join handles explicit column lists by
+        # name, so swapping doesn't affect output order for those.  But for
+        # ``SELECT *``, the codegen iterates ``ctx.alias_to_cursor.values()``
+        # in insertion order (PR #3605), and the swap below would otherwise
+        # cause the RIGHT side's cursor to be allocated first — making
+        # ``SELECT *`` emit right-table columns before left-table columns,
+        # diverging from SQLite.  We wrap ``body`` so that for the duration
+        # of each invocation, ``alias_to_cursor`` is reordered to put the
+        # original LEFT side's alias first, restoring left→right column
+        # order in the output.
+        lft_alias = _plan_alias(lft)
+        rgt_alias = _plan_alias(rgt)
+
+        def reorder_body(c: _Ctx) -> list[Instruction]:
+            """Reorder alias_to_cursor for ``SELECT *`` then call body."""
+            # Only reorder if both aliases are present in the dict.  Defensive
+            # against unusual cases (e.g. one side without an alias key).
+            if (
+                lft_alias is not None
+                and rgt_alias is not None
+                and lft_alias in c.alias_to_cursor
+                and rgt_alias in c.alias_to_cursor
+            ):
+                original_order = c.alias_to_cursor
+                reordered: dict[str, int] = {
+                    lft_alias: original_order[lft_alias],
+                    rgt_alias: original_order[rgt_alias],
+                }
+                # Preserve any other aliases that happen to be in scope (e.g.
+                # outer-query refs in correlated subqueries) at their original
+                # positions after the two reordered ones.
+                for k, v in original_order.items():
+                    if k not in reordered:
+                        reordered[k] = v
+                c.alias_to_cursor = reordered
+                try:
+                    return body(c)
+                finally:
+                    c.alias_to_cursor = original_order
+            return body(c)
+
+        return _compile_join(rgt, lft, JoinKind.LEFT, cond, reorder_body, ctx)
+
+    if kind == JoinKind.FULL:
+        # FULL OUTER JOIN — two-pass strategy:
+        #
+        # Pass 1: LEFT JOIN(lft, rgt)
+        #   Emits every lft row.  If a rgt row matches, the body runs with
+        #   real values on both sides.  If no rgt row matches, the body runs
+        #   with the right cursor closed (right cols = NULL).
+        #
+        # Pass 2: right-anti-join — scan rgt as outer, lft as inner.
+        #   For each rgt row, scan lft and check the ON condition.  If ANY
+        #   lft row matched, the rgt row was already emitted by Pass 1 and
+        #   must be skipped here.  If NO lft row matched, emit the rgt row
+        #   with the left cursor closed (left cols = NULL).
+        #
+        # Cursor IDs: Pass 1 allocates cursors 0=lft, 1=rgt.  Pass 2 calls
+        # _compile_source again, so ctx.new_cursor reassigns the aliases to
+        # fresh IDs (2=rgt, 3=lft for pass 2).  When body(c) executes in
+        # pass 2's null-padded path, alias_to_cursor maps lft_alias→3
+        # (closed, returns NULL) and rgt_alias→2 (open, real values). ✓
+
+        # ------------------------------------------------------------------
+        # Pass 1: standard LEFT JOIN
+        # ------------------------------------------------------------------
+        pass1_instrs = _compile_join(lft, rgt, JoinKind.LEFT, cond, body, ctx)
+
+        # ------------------------------------------------------------------
+        # Pass 2: right-anti-join (rgt rows not matched by any lft row)
+        # ------------------------------------------------------------------
+        anti_matched_label = ctx.new_label("foj_anti_matched")
+
+        def foj_anti_inner(c: _Ctx) -> list[Instruction]:
+            # Inner body: only check ON condition and mark matched.
+            # Do NOT call body(c) here — we only want to detect a match.
+            out: list[Instruction] = []
+            skip = c.new_label("foj_anti_cond_skip")
+            if cond is not None:
+                out.extend(_compile_expr(cond, c))
+                out.append(JumpIfFalse(label=skip))
+            out.append(JoinSetMatched())
+            out.append(Label(name=skip))
+            return out
+
+        def foj_anti_outer(c: _Ctx) -> list[Instruction]:
+            # Outer body: per-rgt-row match tracking.
+            out: list[Instruction] = []
+            out.append(JoinBeginRow())
+            out.extend(_compile_source(lft, foj_anti_inner, c))
+            # If any lft row matched the ON condition, skip emission —
+            # this rgt row was already in Pass 1's output.
+            out.append(JoinIfMatched(label=anti_matched_label))
+            # No lft row matched: emit body with lft cursor closed.
+            # LoadColumn for lft-side columns returns NULL because the
+            # inner cursor has no current row.
+            out.extend(body(c))
+            out.append(Label(name=anti_matched_label))
+            return out
+
+        pass2_instrs = _compile_source(rgt, foj_anti_outer, ctx)
+
+        return pass1_instrs + pass2_instrs
+
     raise UnsupportedNode(f"Join({kind})")
 
 
@@ -685,16 +1254,39 @@ def _compile_aggregate(
         out.append(SaveGroupKey(n=len(group_by)))
         # Initialize slots on first encounter (VM handles idempotence).
         for s, a in zip(slots, aggregates, strict=True):
-            out.append(InitAgg(slot=s, func=_plan_agg_to_ir(a.func)))
+            ir_func = _plan_agg_to_ir(a.func)
+            # GROUP_CONCAT bakes the separator into the instruction so the VM
+            # doesn't need to look it up on every row.  The separator field is
+            # ignored for all other aggregate functions.
+            sep = a.separator if a.separator is not None else ","
+            out.append(InitAgg(slot=s, func=ir_func, separator=sep, distinct=a.distinct))
         # Update each aggregate with the row's value.
         for s, a in zip(slots, aggregates, strict=True):
+            # FILTER (WHERE expr): if the per-row predicate is false or NULL,
+            # skip this aggregate's UpdateAgg entirely.  The filter check is
+            # emitted BEFORE any argument pushes so that no values land on the
+            # stack when we jump — the stack stays balanced unconditionally.
+            filter_skip: str | None = None
+            if a.filter_expr is not None:
+                filter_skip = c.new_label("filter_skip")
+                out.extend(_compile_expr(a.filter_expr, c))
+                out.append(JumpIfFalse(label=filter_skip))
+
             if a.arg.star:
                 # COUNT(*) always increments — push a sentinel 1; the VM's
                 # COUNT_STAR semantics ignore the value and just increment.
                 out.append(LoadConst(value=1))
             else:
+                # JSON_GROUP_OBJECT(key_expr, val_expr): push key *first*, then
+                # the value.  UpdateAgg for JSON_GROUP_OBJECT pops two values
+                # (value on top, key underneath) to build the (key, val) pair.
+                if a.key_arg is not None:
+                    out.extend(_compile_expr(a.key_arg.value, c))  # type: ignore[arg-type]
                 out.extend(_compile_expr(a.arg.value, c))  # type: ignore[arg-type]
             out.append(UpdateAgg(slot=s))
+
+            if filter_skip is not None:
+                out.append(Label(name=filter_skip))
         return out
 
     core = _compile_source(agg.input, body, ctx)
@@ -711,7 +1303,7 @@ def _compile_aggregate(
     # past the block. This is the same header-then-body pattern as Scan.
     post: list[Instruction] = [
         Label(name=emit_start),
-        AdvanceGroupKey(on_exhausted=emit_end),
+        AdvanceGroupKey(on_exhausted=emit_end, has_group_by=bool(group_by)),
     ]
 
     if having is not None:
@@ -719,17 +1311,28 @@ def _compile_aggregate(
         # by the predicate on demand. In this v1 we take a simpler approach
         # and ask the VM to run the whole post block per group, discarding
         # rows for which the predicate is false.
-        post.extend(_compile_having(having, group_by, aggregates, slots))
+        post.extend(_compile_having(having, group_by, aggregates, slots, ctx))
         post.append(JumpIfFalse(label=emit_next))
 
     # Build the output row: group keys first, then finalized aggregates.
+    # Hidden aggregates (output=False) are skipped here — they were already
+    # computed by _compile_having for the HAVING predicate, so we don't need
+    # to finalize them again, and they must not appear as output columns.
     post.append(BeginRow())
     for i, e in enumerate(group_by):
         post.append(LoadGroupKey(i=i))
         name = _column_display_name(e) or f"group_{i}"
         post.append(EmitColumn(name=name))
     for s, a in zip(slots, aggregates, strict=True):
-        post.append(FinalizeAgg(slot=s))
+        if not a.output:
+            # Hidden aggregate: skip output emission entirely.
+            # The slot was used by HAVING/ORDER BY via _compile_having; we
+            # must NOT push its value onto the stack here or the eval-stack
+            # would have a dangling value that corrupts subsequent operations.
+            continue
+        ir_func_fin = _plan_agg_to_ir(a.func)
+        sep_fin = a.separator if a.separator is not None else ","
+        post.append(FinalizeAgg(slot=s, func=ir_func_fin, separator=sep_fin))
         post.append(EmitColumn(name=a.alias))
     post.append(EmitRow())
     post.append(Label(name=emit_next))
@@ -745,14 +1348,15 @@ def _compile_having(
     group_by: tuple[Expr, ...],
     aggregates: tuple[object, ...],
     slots: list[int],
+    ctx: _Ctx,
 ) -> list[Instruction]:
     """Compile a HAVING predicate — aggregates reference slots; plain
     columns reference the saved group key by position.
 
-    Supports a small predicate subset (enough for COUNT(*) > N style
-    expressions). Everything else falls through to plain expression
-    compilation, which raises UnsupportedNode for aggregates outside the
-    slot map.
+    AggregateExpr and Column references are handled via the slot/group-key
+    maps. All other expressions (including EXISTS subqueries, unary ops,
+    and binary comparisons) are delegated to _compile_expr so the full
+    expression language is available in HAVING predicates.
     """
     # Build a lookup: aggregate expression → slot, and column → group-key index.
     group_lookup = {_column_display_name(e): i for i, e in enumerate(group_by)}
@@ -765,11 +1369,16 @@ def _compile_having(
 
                 for s, a in zip(slots, aggregates, strict=True):
                     assert isinstance(a, AggregateItem)
-                    if a.func is f and (
+                    # arg=None is the legacy direct-construction form for COUNT(*);
+                    # planner always produces FuncArg(star=True). Accept both.
+                    matched = (
                         (arg is None and a.arg.star)
-                        or (a.arg.value == arg)
-                    ):
-                        return [FinalizeAgg(slot=s)]
+                        or (arg is not None and a.arg == arg)
+                    )
+                    if a.func is f and matched:
+                        ir_func_hav = _plan_agg_to_ir(a.func)
+                        sep_hav = a.separator if a.separator is not None else ","
+                        return [FinalizeAgg(slot=s, func=ir_func_hav, separator=sep_hav)]
                 raise UnsupportedNode("AggregateExpr not present in Aggregate.aggregates")
             case Column(col=c):
                 if c in group_lookup:
@@ -780,7 +1389,9 @@ def _compile_having(
             case BinaryExpr(op=op, left=l_, right=r_):
                 return walk(l_) + walk(r_) + [BinaryOp(op=_binop_to_ir(op))]
             case _:
-                raise UnsupportedNode(f"HAVING: {type(e).__name__}")
+                # Delegate to general expression compiler for EXISTS, UnaryExpr,
+                # and any other expression that doesn't reference aggregate slots.
+                return _compile_expr(e, ctx)
 
     return walk(having)
 
@@ -794,9 +1405,35 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
     match e:
         case Literal(value=v):
             return [LoadConst(value=v)]
+        case ExcludedColumn(col=c):
+            # The EXCLUDED pseudo-table reference inside an ON CONFLICT DO UPDATE
+            # clause.  The VM resolves this against _VmState.excluded_row at
+            # runtime rather than reading from a cursor.
+            return [LoadExcludedColumn(col=c)]
+        case RowIdRef(table=tbl):
+            # The implicit integer rowid pseudo-column (rowid / _rowid_ / oid).
+            # Map the table alias back to its cursor_id via the alias map;
+            # fall back to cursor 0 for robustness (same convention as Column).
+            cid = ctx.alias_to_cursor.get(tbl, 0)
+            return [LoadRowId(cursor_id=cid)]
         case Column(table=t, col=c):
             cid = ctx.alias_to_cursor.get(t or "", 0)
             return [LoadColumn(cursor_id=cid, column=c)]
+        case CorrelatedRef(outer_alias=alias, col=c):
+            # A correlated reference resolves against the *outer* query's
+            # cursor map.  The outer map was captured when the inner sub-program
+            # compilation started (see the ExistsSubquery / ScalarSubquery /
+            # InSubquery / NotInSubquery cases below).
+            #
+            # At runtime the VM passes the outer state's ``current_row``
+            # snapshot to the inner execution; ``LoadOuterColumn`` reads from
+            # that snapshot rather than the inner program's own cursor table.
+            if ctx.outer_alias_to_cursor is None:
+                raise UnsupportedNode(
+                    f"CorrelatedRef({alias!r}.{c!r}) found but no outer cursor map in context"
+                )
+            cid = ctx.outer_alias_to_cursor.get(alias, 0)
+            return [LoadOuterColumn(cursor_id=cid, col=c)]
         case BinaryExpr(op=op, left=l_, right=r_):
             return _compile_expr(l_, ctx) + _compile_expr(r_, ctx) + [BinaryOp(op=_binop_to_ir(op))]
         case UnaryExpr(op=op, operand=o):
@@ -824,10 +1461,25 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 out.extend(_compile_expr(v, ctx))
             out.extend([InList(n=len(vs)), UnaryOp(op=UnaryOpCode.NOT)])
             return out
-        case AstLike(operand=op_, pattern=pat):
-            return _compile_expr(op_, ctx) + [LoadConst(value=pat), Like(negated=False)]
-        case AstNotLike(operand=op_, pattern=pat):
-            return _compile_expr(op_, ctx) + [LoadConst(value=pat), Like(negated=True)]
+        case AstLike(operand=op_, pattern=pat, escape=esc):
+            # Push value, then pattern, then (optionally) the escape character.
+            # The VM's Like handler with has_escape=True pops escape, pattern,
+            # value in that order.
+            insns_l: list[Instruction] = _compile_expr(op_, ctx) + [LoadConst(value=pat)]
+            if esc is not None:
+                insns_l.append(LoadConst(value=esc))
+                insns_l.append(Like(negated=False, has_escape=True))
+            else:
+                insns_l.append(Like(negated=False))
+            return insns_l
+        case AstNotLike(operand=op_, pattern=pat, escape=esc):
+            insns_nl: list[Instruction] = _compile_expr(op_, ctx) + [LoadConst(value=pat)]
+            if esc is not None:
+                insns_nl.append(LoadConst(value=esc))
+                insns_nl.append(Like(negated=True, has_escape=True))
+            else:
+                insns_nl.append(Like(negated=True))
+            return insns_nl
         case FunctionCall(name=name, args=args):
             # Compile all positional arguments onto the stack left-to-right,
             # then emit CallScalar(func, n_args). The VM's built-in function
@@ -870,6 +1522,61 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 out.append(LoadConst(value=None))
             out.append(Label(name=end_lbl))
             return out
+        case ExistsSubquery(query=inner_plan):
+            # Compile the inner LogicalPlan to a standalone sub-program.
+            # The inner program runs against the same backend but with its
+            # own cursor/label namespace so there is no state leakage.
+            #
+            # ``outer_alias_to_cursor`` captures the enclosing scan map so
+            # that any CorrelatedRef nodes inside the inner plan can resolve
+            # to the correct outer cursor IDs at runtime.
+            inner_ctx = _Ctx(outer_alias_to_cursor=dict(ctx.alias_to_cursor))
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            inner_resolved = _resolve_labels(inner_instrs)
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=inner_resolved,
+                result_schema=(),
+            )
+            return [RunExistsSubquery(sub_program=sub)]
+        case ScalarSubquery(query=inner_plan):
+            # Compile the inner SELECT to a standalone sub-program.  At
+            # runtime the VM executes it, takes the first column of the
+            # single result row, and pushes it as the scalar value.
+            inner_ctx = _Ctx(outer_alias_to_cursor=dict(ctx.alias_to_cursor))
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            inner_resolved = _resolve_labels(inner_instrs)
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=inner_resolved,
+                result_schema=(),
+            )
+            return [RunScalarSubquery(sub_program=sub)]
+        case InSubquery(operand=op, query=inner_plan):
+            # Compile the inner plan to a standalone sub-program, then compile
+            # the outer operand expression (pushes test value), then emit
+            # RunInSubquery which pops the test value and pushes a bool.
+            inner_ctx = _Ctx(outer_alias_to_cursor=dict(ctx.alias_to_cursor))
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=_resolve_labels(inner_instrs),
+                result_schema=(),
+            )
+            return [*_compile_expr(op, ctx), RunInSubquery(sub_program=sub, negate=False)]  # type: ignore[arg-type]
+        case NotInSubquery(operand=op, query=inner_plan):
+            inner_ctx = _Ctx(outer_alias_to_cursor=dict(ctx.alias_to_cursor))
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=_resolve_labels(inner_instrs),
+                result_schema=(),
+            )
+            return [*_compile_expr(op, ctx), RunInSubquery(sub_program=sub, negate=True)]  # type: ignore[arg-type]
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without
@@ -886,23 +1593,159 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
 # --------------------------------------------------------------------------
 
 
+def _returning_col_name(expr: Expr, idx: int) -> str:
+    """Derive a display name for a RETURNING column expression.
+
+    For plain column references we use the column name (e.g. ``'id'``).
+    For anything more complex we fall back to a positional name so downstream
+    code (SetResultSchema, cursor.description) always has a non-empty string.
+    """
+    if isinstance(expr, Column):
+        return expr.col
+    return f"column_{idx}"
+
+
+def _compile_returning_insert_expr(expr: Expr, ctx: _Ctx) -> list[Instruction]:
+    """Compile a RETURNING expression in the context of an INSERT statement.
+
+    Column references (``Column``) are emitted as ``LoadLastInsertedColumn``
+    because there is no open cursor after an INSERT — the row is only
+    accessible via ``_VmState.last_inserted_row``.
+
+    All other expression types (``Literal``, ``BinaryExpr``, etc.) are handled
+    by the regular ``_compile_expr`` — they do not reference cursor state.
+    Note: if a non-Column sub-expression contains a nested Column node it will
+    fall back to the alias-map cursor lookup, which is wrong for INSERT.  In
+    practice RETURNING expressions are simple column references or literals, and
+    complex arithmetic over inserted columns is uncommon.  Support for nested
+    Column refs inside expressions can be added later by making this function
+    fully recursive over every expression kind.
+    """
+    if isinstance(expr, Column):
+        return [LoadLastInsertedColumn(col=expr.col)]
+    # Literals, function calls, arithmetic over literals — no column reads.
+    return _compile_expr(expr, ctx)
+
+
+def _compile_returning_cursor_expr(
+    expr: Expr, ctx: _Ctx, cursor_id: int
+) -> list[Instruction]:
+    """Compile a RETURNING expression in the context of UPDATE or DELETE.
+
+    Column references are emitted as ``LoadColumn(cursor_id, col)`` where
+    ``cursor_id`` is the scan cursor that holds the current row.
+
+    For UPDATE, the cursor's ``current_row`` is already updated when RETURNING
+    is emitted (``UpdateRows`` patches ``st.current_row`` before returning).
+    For DELETE, RETURNING is emitted *before* ``DeleteRows`` so the cursor
+    still holds the pre-deletion row.
+    """
+    if isinstance(expr, Column):
+        return [LoadColumn(cursor_id=cursor_id, column=expr.col)]
+    return _compile_expr(expr, ctx)
+
+
+def _compile_upsert(upsert: PlanUpsertAction | None, ctx: _Ctx) -> UpsertSpec | None:
+    """Compile a ``PlanUpsertAction`` into a ``UpsertSpec`` IR node.
+
+    Each assignment's RHS expression is compiled into a self-contained flat
+    instruction sequence (without a ``Halt``) that the VM executes in a
+    mini-loop to produce a single stack value.
+
+    ``ExcludedColumn`` nodes inside the RHS compile to ``LoadExcludedColumn``
+    instructions (handled by the extended ``_compile_expr`` below).
+
+    When ``upsert`` is ``None`` (no ON CONFLICT clause), returns ``None``.
+    """
+    if upsert is None:
+        return None
+    if upsert.do_nothing:
+        return UpsertSpec(conflict_target=upsert.conflict_target, do_nothing=True)
+
+    compiled_assignments = tuple(
+        IrUpsertAssignment(
+            column=a.column,
+            instructions=tuple(_compile_expr(a.value, ctx)),
+        )
+        for a in upsert.assignments
+    )
+    # SQLite conditional-upsert: pre-compile the optional WHERE predicate to
+    # a self-contained instruction sequence the VM evaluates after binding
+    # EXCLUDED and the existing row.  Empty tuple = no filter.
+    where_instrs: tuple[Instruction, ...] = (
+        tuple(_compile_expr(upsert.where, ctx)) if upsert.where is not None else ()
+    )
+    return UpsertSpec(
+        conflict_target=upsert.conflict_target,
+        do_nothing=False,
+        assignments=compiled_assignments,
+        where_instructions=where_instrs,
+    )
+
+
 def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
     src = ins.source
     cols = ins.columns or ()
+    upsert_spec = _compile_upsert(ins.upsert, ctx)
+
+    # RETURNING preamble: if this INSERT has a RETURNING clause we emit a
+    # SetResultSchema once at the top so the VM knows the output column names.
+    ret_schema: list[Instruction] = []
+    if ins.returning:
+        ret_cols = tuple(
+            _returning_col_name(expr, i + 1) for i, expr in enumerate(ins.returning)
+        )
+        ret_schema = [SetResultSchema(columns=ret_cols)]
+
     if src.values is not None:
-        out: list[Instruction] = []
+        out: list[Instruction] = list(ret_schema)
         for row in src.values:
             for v in row:
                 out.extend(_compile_expr(v, ctx))
-            out.append(InsertRow(table=ins.table, columns=tuple(cols)))
+            out.append(InsertRow(
+                table=ins.table,
+                columns=tuple(cols),
+                on_conflict=ins.on_conflict,
+                upsert=upsert_spec,
+            ))
+            # After InsertRow the VM stores the inserted row in
+            # ``last_inserted_row``.  Emit RETURNING columns by reading from it.
+            if ins.returning:
+                out.append(BeginRow())
+                for i, ret_expr in enumerate(ins.returning):
+                    out.extend(_compile_returning_insert_expr(ret_expr, ctx))
+                    out.append(
+                        EmitColumn(name=_returning_col_name(ret_expr, i + 1))
+                    )
+                out.append(EmitRow())
         return out
+
     # INSERT … SELECT: compile the sub-SELECT into the result buffer, then
     # drain it with InsertFromResult. _compile_plan is safe to call
     # recursively here — it shares the same _Ctx (cursor/label counters stay
     # globally unique) and it does NOT emit a Halt.
+    #
+    # RETURNING support: for plain ``Column`` RETURNING expressions the display
+    # name equals the column name, so a single name tuple serves both as the
+    # result schema (``SetResultSchema`` equivalent) and as the per-row column
+    # lookup key inside ``_do_insert_from_result``.  Complex RETURNING
+    # expressions (very rare in practice) will yield ``None`` for those slots
+    # rather than a computed value — the same documented limitation that applies
+    # to INSERT … VALUES RETURNING for nested column references in expressions.
     assert src.query is not None
+    returning_cols: tuple[str, ...] = ()
+    if ins.returning:
+        returning_cols = tuple(
+            _returning_col_name(expr, i + 1) for i, expr in enumerate(ins.returning)
+        )
     select_instrs, _ = _compile_plan(src.query, ctx)
-    select_instrs.append(InsertFromResult(table=ins.table, columns=tuple(cols)))
+    select_instrs.append(InsertFromResult(
+        table=ins.table,
+        columns=tuple(cols),
+        on_conflict=ins.on_conflict,
+        upsert=upsert_spec,
+        returning_columns=returning_cols,
+    ))
     return select_instrs
 
 
@@ -911,11 +1754,19 @@ def _compile_update(upd: Update, ctx: _Ctx) -> list[Instruction]:
     loop = ctx.new_label("update_loop")
     end = ctx.new_label("update_end")
     skip = ctx.new_label("update_skip")
-    out: list[Instruction] = [
+    out: list[Instruction] = []
+    # Emit SetResultSchema once at the top when RETURNING is present so the VM
+    # knows the output column names before any rows are emitted.
+    if upd.returning:
+        ret_cols = tuple(
+            _returning_col_name(expr, i + 1) for i, expr in enumerate(upd.returning)
+        )
+        out.append(SetResultSchema(columns=ret_cols))
+    out.extend([
         OpenScan(cursor_id=cid, table=upd.table),
         Label(name=loop),
         AdvanceCursor(cursor_id=cid, on_exhausted=end),
-    ]
+    ])
     if upd.predicate is not None:
         out.extend(_compile_expr(upd.predicate, ctx))
         out.append(JumpIfFalse(label=skip))
@@ -928,6 +1779,15 @@ def _compile_update(upd: Update, ctx: _Ctx) -> list[Instruction]:
             cursor_id=cid,
         )
     )
+    # RETURNING: emit columns AFTER UpdateRows — ``st.current_row[cid]`` is
+    # patched by the VM's ``_do_update`` before returning, so LoadColumn reads
+    # the post-update values.
+    if upd.returning:
+        out.append(BeginRow())
+        for i, ret_expr in enumerate(upd.returning):
+            out.extend(_compile_returning_cursor_expr(ret_expr, ctx, cid))
+            out.append(EmitColumn(name=_returning_col_name(ret_expr, i + 1)))
+        out.append(EmitRow())
     if upd.predicate is not None:
         out.append(Label(name=skip))
     out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
@@ -939,14 +1799,29 @@ def _compile_delete(dlt: Delete, ctx: _Ctx) -> list[Instruction]:
     loop = ctx.new_label("delete_loop")
     end = ctx.new_label("delete_end")
     skip = ctx.new_label("delete_skip")
-    out: list[Instruction] = [
+    out: list[Instruction] = []
+    # Emit SetResultSchema once at the top when RETURNING is present.
+    if dlt.returning:
+        ret_cols = tuple(
+            _returning_col_name(expr, i + 1) for i, expr in enumerate(dlt.returning)
+        )
+        out.append(SetResultSchema(columns=ret_cols))
+    out.extend([
         OpenScan(cursor_id=cid, table=dlt.table),
         Label(name=loop),
         AdvanceCursor(cursor_id=cid, on_exhausted=end),
-    ]
+    ])
     if dlt.predicate is not None:
         out.extend(_compile_expr(dlt.predicate, ctx))
         out.append(JumpIfFalse(label=skip))
+    # RETURNING: emit columns BEFORE DeleteRows — ``st.current_row[cid]``
+    # still holds the row at this point.  After DeleteRows it is removed.
+    if dlt.returning:
+        out.append(BeginRow())
+        for i, ret_expr in enumerate(dlt.returning):
+            out.extend(_compile_returning_cursor_expr(ret_expr, ctx, cid))
+            out.append(EmitColumn(name=_returning_col_name(ret_expr, i + 1)))
+        out.append(EmitRow())
     out.append(DeleteRows(table=dlt.table, cursor_id=cid))
     if dlt.predicate is not None:
         out.append(Label(name=skip))
@@ -973,6 +1848,13 @@ _BINOP_MAP = {
     AstBinaryOp.GTE: BinaryOpCode.GTE,
     AstBinaryOp.AND: BinaryOpCode.AND,
     AstBinaryOp.OR: BinaryOpCode.OR,
+    AstBinaryOp.CONCAT: BinaryOpCode.CONCAT,  # SQL || string concatenation
+    AstBinaryOp.IS_DISTINCT_FROM: BinaryOpCode.IS_DISTINCT_FROM,
+    AstBinaryOp.IS_NOT_DISTINCT_FROM: BinaryOpCode.IS_NOT_DISTINCT_FROM,
+    AstBinaryOp.BIT_AND: BinaryOpCode.BIT_AND,
+    AstBinaryOp.BIT_OR: BinaryOpCode.BIT_OR,
+    AstBinaryOp.BIT_SHL: BinaryOpCode.BIT_SHL,
+    AstBinaryOp.BIT_SHR: BinaryOpCode.BIT_SHR,
 }
 
 
@@ -983,6 +1865,8 @@ def _binop_to_ir(op: AstBinaryOp) -> BinaryOpCode:
 def _unop_to_ir(op: AstUnaryOp) -> UnaryOpCode:
     if op is AstUnaryOp.NEG:
         return UnaryOpCode.NEG
+    if op is AstUnaryOp.BIT_NOT:
+        return UnaryOpCode.BIT_NOT
     return UnaryOpCode.NOT
 
 
@@ -991,18 +1875,291 @@ def _plan_agg_to_ir(f: PlanAggFunc) -> IrAggFunc:
 
 
 def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
+    check_instrs: tuple[Instruction, ...] = ()
+    if c.check_expr is not None:
+        # Compile the CHECK expression using a synthetic context where every
+        # unqualified column reference resolves to the sentinel CHECK_CURSOR_ID.
+        # The VM will bind this cursor to the incoming row at validation time.
+        from .ir import CHECK_CURSOR_ID
+        check_ctx = _Ctx()
+        check_ctx.alias_to_cursor[""] = CHECK_CURSOR_ID
+        check_instrs = tuple(_compile_expr(c.check_expr, check_ctx))  # type: ignore[arg-type]
+    fk: tuple[str, str | None] | None = None
+    if c.foreign_key is not None:
+        fk = c.foreign_key  # type: ignore[assignment]
+    # Convert the backend-layer NO_DEFAULT sentinel to the IR-layer
+    # NO_COLUMN_DEFAULT sentinel so that sql-codegen's IR stays decoupled
+    # from sql-backend's type definitions.  Any other value (including None
+    # for SQL NULL) is a literal default and passes through unchanged.
+    ir_default = NO_COLUMN_DEFAULT if c.default is _BACKEND_NO_DEFAULT else c.default
     return IrColumnDef(
         name=c.name,
         type=c.type_name,
-        nullable=not c.effective_not_null(),
+        # Preserve the raw NOT NULL declaration (not the PK-implied one).
+        # The backend's ``effective_not_null()`` reapplies the PK check
+        # at constraint-validation time, so dropping the implicit bit
+        # here doesn't loosen enforcement.  Keeps PRAGMA table_info's
+        # ``notnull`` column matching real sqlite3, which distinguishes
+        # explicit-vs-implicit NOT NULL.
+        nullable=not c.not_null,
+        primary_key=c.primary_key,
+        autoincrement=c.autoincrement,
+        unique=c.unique,
+        default=ir_default,
+        check_instrs=check_instrs,
+        # ``check_expr_text`` is the original CHECK predicate source so
+        # the VM's ConstraintViolation message can quote it verbatim
+        # (matches SQLite: ``CHECK constraint failed: a > 0``).  Falls
+        # back to "" — the VM treats that as "use the older table.col
+        # form" — when the adapter couldn't reconstruct text.
+        check_expr_text=getattr(c, "check_expr_text", ""),
+        foreign_key=fk,
+        collation=c.collation,
     )
 
 
-def _to_sort_key(k: object) -> SortKey:
+def _build_agg_alias_map(p: LogicalPlan) -> dict[tuple, str]:
+    """Return a ``{(func, arg, distinct) → alias}`` map from the Aggregate node
+    reachable by peeling Sort / Distinct / Limit / Having / Project wrappers.
+
+    Used by ``_to_sort_key`` to resolve ``AggregateExpr`` sort keys to the
+    column name that ``_compile_aggregate`` will emit — without this mapping,
+    ``ORDER BY SUM(val)`` would produce a sort key of ``"?"`` (the fallback
+    for unknown expressions) and the VM's ``SortResult`` handler would fail
+    with a ``ValueError`` when it tried to find the column in the result schema.
+    """
+    cur = p
+    while True:
+        match cur:
+            case PlanLimit(input=inner) | Sort(input=inner) | Distinct(input=inner):
+                cur = inner
+            case Having(input=inner) | Project(input=inner):
+                cur = inner
+            case Aggregate(aggregates=aggs):
+                return {(a.func, a.arg, a.distinct): a.alias for a in aggs}
+            case _:
+                return {}
+
+
+def _to_sort_key(k: object, agg_alias_map: dict[tuple, str] | None = None) -> SortKey:
+    """Convert a planner ``SortKey`` to the IR ``SortKey`` used by ``SortResult``.
+
+    ``agg_alias_map`` maps ``(func, arg, distinct)`` tuples to the output column
+    alias that ``_compile_aggregate`` will emit for that aggregate.  When an
+    ``ORDER BY`` clause references an aggregate expression (e.g. ``ORDER BY
+    SUM(val)``), this map lets us resolve the sort column name correctly instead
+    of falling back to ``"?"`` and causing a ``ValueError`` in the VM.
+
+    **Positional sort keys** (``ORDER BY 1``, ``ORDER BY 2``, …) are handled
+    specially.  When the planner records a non-None ``positional_index`` on
+    the sort key, we emit an IR ``SortKey`` with ``column_idx`` set to that
+    index so the VM uses position-based column lookup.  This is essential when
+    multiple computed columns share the display name ``"?"`` — name-based
+    ``columns.index("?")`` would always resolve to column 0, making
+    ``ORDER BY 2`` sort by the first column instead of the second.
+    """
+    from sql_planner.expr import AggregateExpr as PlanAggExpr
     from sql_planner.plan import SortKey as PlanSortKey
 
     assert isinstance(k, PlanSortKey)
-    col = _column_display_name(k.expr) or "?"
     direction = Direction.DESC if k.descending else Direction.ASC
-    nulls = NullsOrder.FIRST if k.nulls_first else NullsOrder.LAST
-    return SortKey(column=col, direction=direction, nulls=nulls)
+    # SQLite-compatible NULL ordering:
+    #   • Explicit  NULLS FIRST / NULLS LAST  → honour the request.
+    #   • Default (nulls_first is None)        → NULLs are treated as smaller
+    #     than any non-NULL value.  Therefore an ASC sort puts NULLs FIRST,
+    #     and a DESC sort puts NULLs LAST.  This matches SQLite's behaviour
+    #     and the SQL:2003 default of NULLS LAST for DESC, NULLS FIRST for ASC.
+    if k.nulls_first is True:
+        nulls = NullsOrder.FIRST
+    elif k.nulls_first is False:
+        nulls = NullsOrder.LAST
+    else:
+        nulls = NullsOrder.LAST if k.descending else NullsOrder.FIRST
+
+    # Positional sort key (ORDER BY N): use column_idx for direct index lookup.
+    if k.positional_index is not None:
+        return SortKey(
+            column="",
+            column_idx=k.positional_index,
+            direction=direction,
+            nulls=nulls,
+            collation=k.collation,
+        )
+
+    col: str
+    if isinstance(k.expr, PlanAggExpr) and agg_alias_map is not None:
+        # Resolve the aggregate expression to the column name that the
+        # _compile_aggregate emit loop will use for that slot.
+        agg_key = (k.expr.func, k.expr.arg, k.expr.distinct)
+        col = agg_alias_map.get(agg_key) or k.expr.func.value.lower()
+    else:
+        col = _column_display_name(k.expr) or "?"
+    return SortKey(column=col, direction=direction, nulls=nulls, collation=k.collation)
+
+
+# Map lower-case window function names to the IR WinFunc enum values.
+_WIN_FUNC_MAP: dict[str, WinFunc] = {
+    "row_number": WinFunc.ROW_NUMBER,
+    "rank": WinFunc.RANK,
+    "dense_rank": WinFunc.DENSE_RANK,
+    "sum": WinFunc.SUM,
+    "count": WinFunc.COUNT,
+    "count_star": WinFunc.COUNT_STAR,
+    "avg": WinFunc.AVG,
+    "min": WinFunc.MIN,
+    "max": WinFunc.MAX,
+    "first_value": WinFunc.FIRST_VALUE,
+    "last_value": WinFunc.LAST_VALUE,
+    # Offset / navigation functions (SQL:2003)
+    "lag": WinFunc.LAG,
+    "lead": WinFunc.LEAD,
+    "nth_value": WinFunc.NTH_VALUE,
+    "ntile": WinFunc.NTILE,
+    "percent_rank": WinFunc.PERCENT_RANK,
+    "cume_dist": WinFunc.CUME_DIST,
+}
+
+
+def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
+    """Convert a planner-level WindowFuncSpec to an IR WinFuncSpec.
+
+    Primary column arguments (``arg_expr``) must be :class:`Column` references
+    — the planner ensures dependency columns are present in the inner projection
+    with matching names.
+
+    Extra scalar arguments (``extra_args``) must be :class:`Literal` nodes
+    that evaluate to Python primitives at codegen time.  The VM reads them from
+    ``WinFuncSpec.extra_args`` rather than from the result-row buffer.
+
+    LAG / LEAD defaults when extra_args are omitted
+    -------------------------------------------------
+    ``LAG(col)``         → offset=1, default=None
+    ``LAG(col, 2)``      → offset=2, default=None
+    ``LAG(col, 2, 0)``   → offset=2, default=0
+    """
+    func_key = spec.func.lower()
+    ir_func = _WIN_FUNC_MAP.get(func_key)
+    if ir_func is None:
+        raise UnsupportedNode(f"unknown window function: {spec.func!r}")
+
+    def _col_name(e: object) -> str:
+        if isinstance(e, Column):
+            return e.col
+        raise UnsupportedNode(
+            "window function partition/order/arg must be a column reference, "
+            f"got {type(e).__name__}"
+        )
+
+    # Contexts whose value must be a non-boolean integer (offset / bucket-count
+    # / row-number).  Floats are silently truncated by int(), which masks user
+    # errors; strings would cause a ValueError deep in the VM, leaking internal
+    # state in the traceback.  We reject both up front at compile time.
+    _INT_REQUIRED_CTXS = frozenset(
+        {"LAG/LEAD offset", "NTILE n", "NTH_VALUE n"}
+    )
+
+    def _literal_val(e: Expr, ctx: str) -> object:
+        """Extract a Python constant from a Literal node.
+
+        Also handles the common case where the parser produces a negated
+        literal (``-1``) as ``UnaryExpr(NEG, Literal(1))`` rather than
+        ``Literal(-1)``.  Only the unary-minus case is folded; all other
+        expression types raise ``UnsupportedNode``.
+
+        For contexts listed in ``_INT_REQUIRED_CTXS`` (offsets, bucket counts,
+        row indices) the extracted value must be a plain Python ``int`` (bool
+        excluded).  Non-integer literals — strings, floats, bytes — raise
+        ``UnsupportedNode`` rather than propagating to the VM where they would
+        either truncate silently (float) or crash with a leaky ``ValueError``
+        (str/bytes).
+        """
+        raw: object
+        if isinstance(e, Literal):
+            raw = e.value
+        elif (
+            isinstance(e, UnaryExpr)
+            and e.op == AstUnaryOp.NEG
+            and isinstance(e.operand, Literal)
+        ):
+            v = e.operand.value
+            if isinstance(v, (int, float)):
+                raw = -v
+            else:
+                raise UnsupportedNode(
+                    f"window function extra argument ({ctx}) must be a literal "
+                    f"constant, got negated {type(v).__name__}"
+                )
+        else:
+            raise UnsupportedNode(
+                f"window function extra argument ({ctx}) must be a literal constant, "
+                f"got {type(e).__name__}"
+            )
+
+        # bools are a subclass of int in Python; SQL has no boolean literals
+        # for numeric arguments, so reject them too.
+        if ctx in _INT_REQUIRED_CTXS and (not isinstance(raw, int) or isinstance(raw, bool)):
+            raise UnsupportedNode(
+                f"window function argument ({ctx}) must be an integer literal, "
+                f"got {type(raw).__name__!r} value {raw!r}"
+            )
+
+        return raw
+
+    # --- Partition / order columns ---
+    partition_cols = tuple(_col_name(e) for e in spec.partition_by)
+    order_cols = tuple((_col_name(e), desc) for e, desc in spec.order_by)
+
+    # --- Extra scalar arguments + primary arg_col ---
+    # NTILE is special: its first (and only) argument is the bucket-count
+    # literal, NOT a column reference.  We handle it here, before the generic
+    # ``arg_col = _col_name(spec.arg_expr)`` path which would wrongly call
+    # _col_name on a Literal and raise UnsupportedNode.
+    extra: tuple[object, ...]
+    arg_col: str | None = None
+
+    if ir_func in (WinFunc.LAG, WinFunc.LEAD):
+        # Primary arg is a column reference.
+        if spec.arg_expr is not None:
+            arg_col = _col_name(spec.arg_expr)
+        # Normalise to exactly 2 extra slots: (offset, default_value).
+        # SQL: LAG(col [, offset [, default]])
+        offset_val: object = 1         # default offset
+        default_val: object = None     # default replacement
+        if len(spec.extra_args) >= 1:
+            offset_val = _literal_val(spec.extra_args[0], "LAG/LEAD offset")
+        if len(spec.extra_args) >= 2:
+            default_val = _literal_val(spec.extra_args[1], "LAG/LEAD default")
+        extra = (offset_val, default_val)
+
+    elif ir_func == WinFunc.NTILE:
+        # NTILE(n): arg_expr holds the Literal(n) — it is not a column.
+        # Move n into extra_args and leave arg_col as None.
+        if spec.arg_expr is None:
+            raise UnsupportedNode("NTILE requires a bucket-count argument")
+        n_val = _literal_val(spec.arg_expr, "NTILE n")
+        arg_col = None          # NTILE has no column arg
+        extra = (n_val,)
+
+    elif ir_func == WinFunc.NTH_VALUE:
+        # NTH_VALUE(col, n): col is the primary arg; n is in extra_args[0].
+        if spec.arg_expr is not None:
+            arg_col = _col_name(spec.arg_expr)
+        if not spec.extra_args:
+            raise UnsupportedNode("NTH_VALUE requires two arguments: NTH_VALUE(col, n)")
+        extra = (_literal_val(spec.extra_args[0], "NTH_VALUE n"),)
+
+    else:
+        # All other functions: primary arg is an optional column reference.
+        if spec.arg_expr is not None:
+            arg_col = _col_name(spec.arg_expr)
+        extra = ()
+
+    return WinFuncSpec(
+        func=ir_func,
+        arg_col=arg_col,
+        partition_cols=partition_cols,
+        order_cols=order_cols,
+        result_col=spec.alias,
+        extra_args=extra,
+        frame=spec.frame,   # type: ignore[arg-type]  WinFrame|None from planner
+    )

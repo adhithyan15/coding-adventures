@@ -1,0 +1,44 @@
+[
+  {
+    "applies_to": ["t1"],
+    "gloss": "Regina (personal name, here as the deceased woman's name)",
+    "justification": "RGYNᵓ is the Palmyrene Aramaic spelling of the Latin name Regina, transliterated into Aramaic consonants R-G-Y-N with the final ᵓ (aleph) representing the Latin '-a' ending / the conventional emphatic/vocalic word-final aleph used for foreign names. Regina ('queen' in Latin) is attested as a personal name at Palmyra; the most famous instance is the bilingual Palmyrene-Latin tombstone of Regina at South Shields (RIB 1065), wife of Barates. The grammatically feminine context (followed by BT 'daughter') confirms a woman's name.",
+    "exists": true,
+    "confidence": 0.82
+  },
+  {
+    "applies_to": ["t2"],
+    "gloss": "daughter of (construct-state noun introducing filiation for a female)",
+    "justification": "BT is the feminine noun 'daughter', Aramaic bart/bat (root b-r-t, cognate with Hebrew bat, Arabic bint). Written defectively as BT in the construct state, it introduces a woman's patronymic ('daughter of X'), exactly parallel to BR 'son of' for men. Standard formula element in Palmyrene funerary onomastics.",
+    "exists": true,
+    "confidence": 0.92
+  },
+  {
+    "applies_to": ["t3"],
+    "gloss": "Ḥairan / Ḥari (the father's personal name, in the genitive of the 'daughter of' phrase)",
+    "justification": "ḤRY is read as a West-Semitic personal name from the consonantal skeleton Ḥ-R-Y. It is most plausibly the well-attested Palmyrene male name Ḥairan (ḤYRN) in a shortened/hypocoristic spelling, or a name of the root meaning 'free/noble' (ḥrr / ḥry, cf. ḥōr 'free, noble'). As the name immediately after BT 'daughter of', it is the patronym. Exact vocalization is uncertain, hence moderate confidence; the slot (a male personal name) is secure from the grammar.",
+    "exists": true,
+    "confidence": 0.6
+  },
+  {
+    "applies_to": ["t4"],
+    "gloss": "son of (construct-state noun introducing filiation for a male)",
+    "justification": "BR is the masculine noun 'son' in construct state, Aramaic bar (root b-r, cognate Hebrew ben, Arabic ibn/bin). It is the ubiquitous filiation marker in Palmyrene and broader Aramaic onomastics: 'PN bar PN' = 'PN son of PN'. Here it links the father ḤRY to the grandfather ᶜTᵓ, i.e. '(Ḥari) son of ᶜAttā'.",
+    "exists": true,
+    "confidence": 0.95
+  },
+  {
+    "applies_to": ["t5"],
+    "gloss": "ᶜAttā / ᶜAttai (the grandfather's personal name)",
+    "justification": "ᶜTᵓ (ᶜayin-T-aleph) is the common Palmyrene/Nabataean hypocoristic personal name ᶜAttā (ᶜTᵓ), a short form built on the divine element ᶜAtta(r)/ᶜAttā or a hypocoristic with theophoric background, with the final aleph marking the determined/vocalic ending typical of such short names (cf. ZBDᵓ Zabdā, BLᵓ, etc.). It stands as the second patronym ('son of ᶜAttā'). Well attested as a Palmyrene name.",
+    "exists": true,
+    "confidence": 0.7
+  },
+  {
+    "applies_to": ["t6"],
+    "gloss": "Alas! / Woe! — the mourning interjection 'ḥabal', i.e. 'alas (for the dead)'",
+    "justification": "ḤBL is the standard Aramaic/Palmyrene funerary lament word ḥăbal, an interjection of grief meaning 'alas!', 'woe!', '(what a) pity!', conventionally rendered 'alas (for him/her)'. From the root ḥ-b-l ('to harm, to damage, loss'), it expresses lamentation over the deceased. It recurs at the end of Palmyrene and other Aramaic epitaphs (e.g. Hatran ḤBL formulae) precisely in this clause-final mourning position, confirming the reading here as the closing exclamation rather than a name.",
+    "exists": true,
+    "confidence": 0.78
+  }
+]

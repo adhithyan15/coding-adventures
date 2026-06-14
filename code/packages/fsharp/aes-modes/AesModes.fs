@@ -1,7 +1,7 @@
 namespace CodingAdventures.AesModes.FSharp
 
 open System
-open System.Security.Cryptography
+open System.Buffers.Binary
 open CodingAdventures.Aes.FSharp
 
 [<RequireQualifiedAccess>]
@@ -158,15 +158,102 @@ module AesModes =
     let ctrDecrypt (ciphertext: byte array) (key: byte array) (nonce: byte array) =
         ctrEncrypt ciphertext key nonce
 
+    let private xorInPlace (left: byte array) (right: byte array) =
+        for index in 0 .. left.Length - 1 do
+            left[index] <- left[index] ^^^ right[index]
+
+    let private getBit (value: byte array) bitIndex =
+        (int value[bitIndex / 8] &&& (1 <<< (7 - bitIndex % 8))) <> 0
+
+    let private shiftRightOne (value: byte array) =
+        let mutable carry = 0
+
+        for index in 0 .. value.Length - 1 do
+            let nextCarry = int value[index] &&& 1
+            value[index] <- byte (((int value[index] >>> 1) ||| (carry <<< 7)) &&& 0xff)
+            carry <- nextCarry
+
+    let private multiplyGf128 (left: byte array) (right: byte array) =
+        let result = Array.zeroCreate<byte> blockSizeBytes
+        let value = Array.copy left
+
+        for bit in 0 .. 127 do
+            if getBit right bit then
+                xorInPlace result value
+
+            let lsbSet = (value[value.Length - 1] &&& 1uy) <> 0uy
+            shiftRightOne value
+
+            if lsbSet then
+                value[0] <- value[0] ^^^ 0xe1uy
+
+        result
+
+    let private ghashBlocks (value: byte array) (hashSubkey: byte array) (data: byte array) =
+        let mutable offset = 0
+
+        while offset < data.Length do
+            let block = Array.zeroCreate<byte> blockSizeBytes
+            let count = min blockSizeBytes (data.Length - offset)
+            Buffer.BlockCopy(data, offset, block, 0, count)
+            xorInPlace value block
+            let multiplied = multiplyGf128 value hashSubkey
+            Buffer.BlockCopy(multiplied, 0, value, 0, blockSizeBytes)
+            offset <- offset + blockSizeBytes
+
+    let private ghash hashSubkey aad ciphertext =
+        let value = Array.zeroCreate<byte> blockSizeBytes
+        ghashBlocks value hashSubkey aad
+        ghashBlocks value hashSubkey ciphertext
+
+        let lengthBlock = Array.zeroCreate<byte> blockSizeBytes
+        BinaryPrimitives.WriteUInt64BigEndian(lengthBlock.AsSpan(0, 8), uint64 aad.Length * 8UL)
+        BinaryPrimitives.WriteUInt64BigEndian(lengthBlock.AsSpan(8, 8), uint64 ciphertext.Length * 8UL)
+        xorInPlace value lengthBlock
+        multiplyGf128 value hashSubkey
+
+    let private gctr key nonce initialCounter (input: byte array) =
+        let result = Array.zeroCreate<byte> input.Length
+        let mutable counter = initialCounter
+        let mutable offset = 0
+
+        while offset < input.Length do
+            let keystream = AesBlock.encryptBlock (buildCounterBlock nonce counter) key
+            let count = min blockSizeBytes (input.Length - offset)
+
+            for index in 0 .. count - 1 do
+                result[offset + index] <- input[offset + index] ^^^ keystream[index]
+
+            counter <- counter + 1u
+            offset <- offset + blockSizeBytes
+
+        result
+
+    let private computeGcmTag key iv aad ciphertext =
+        let hashSubkey = AesBlock.encryptBlock (Array.zeroCreate<byte> blockSizeBytes) key
+        let tagMask = AesBlock.encryptBlock (buildCounterBlock iv 1u) key
+        let authentication = ghash hashSubkey aad ciphertext
+        xorInPlace tagMask authentication
+        tagMask
+
+    let private fixedTimeEquals (expected: byte array) (actual: byte array) =
+        if expected.Length <> actual.Length then
+            false
+        else
+            let mutable diff = 0
+
+            for index in 0 .. expected.Length - 1 do
+                diff <- diff ||| (int expected[index] ^^^ int actual[index])
+
+            diff = 0
+
     let gcmEncrypt (plaintext: byte array) (key: byte array) (iv: byte array) (aad: byte array) =
         requireBytes "plaintext" plaintext
         validateKey key
         validateLength "iv" "GCM IV" gcmNonceSizeBytes iv
         let aadValue = if isNull aad then Array.empty<byte> else aad
-        let ciphertext = Array.zeroCreate<byte> plaintext.Length
-        let tag = Array.zeroCreate<byte> gcmTagSizeBytes
-        use gcm = new AesGcm(key, gcmTagSizeBytes)
-        gcm.Encrypt(iv, plaintext, ciphertext, tag, aadValue)
+        let ciphertext = gctr key iv 2u plaintext
+        let tag = computeGcmTag key iv aadValue ciphertext
         ciphertext, tag
 
     let gcmDecrypt (ciphertext: byte array) (key: byte array) (iv: byte array) (aad: byte array) (tag: byte array) =
@@ -175,7 +262,9 @@ module AesModes =
         validateLength "iv" "GCM IV" gcmNonceSizeBytes iv
         validateLength "tag" "GCM tag" gcmTagSizeBytes tag
         let aadValue = if isNull aad then Array.empty<byte> else aad
-        let plaintext = Array.zeroCreate<byte> ciphertext.Length
-        use gcm = new AesGcm(key, gcmTagSizeBytes)
-        gcm.Decrypt(iv, ciphertext, tag, plaintext, aadValue)
-        plaintext
+        let expectedTag = computeGcmTag key iv aadValue ciphertext
+
+        if not (fixedTimeEquals tag expectedTag) then
+            raise (InvalidOperationException "AES-GCM authentication tag mismatch.")
+
+        gctr key iv 2u ciphertext

@@ -221,6 +221,19 @@ pub fn send_and_receive(
     payload: &[u8],
     options: UdpOptions,
 ) -> Result<UdpDatagram, UdpError>;
+
+/// Send one datagram to a discovery endpoint and collect replies until the
+/// configured read timeout or response limit is reached.
+///
+/// This is useful for multicast discovery protocols such as mDNS, where
+/// responses may arrive from several different hosts and should not be filtered
+/// to the multicast destination address.
+pub fn send_to_and_collect(
+    destination: SocketAddr,
+    payload: &[u8],
+    options: UdpOptions,
+    max_responses: usize,
+) -> Result<Vec<UdpDatagram>, UdpError>;
 ```
 
 ### Error Types
@@ -246,8 +259,14 @@ pub enum UdpError {
     /// Caller attempted `send()` without first calling `connect()`.
     NotConnected,
 
+    /// Response collection was requested without a bounded read timeout.
+    MissingReadTimeout,
+
     /// Payload or receive buffer size is invalid for this package.
     InvalidDatagramSize { size: usize, max: usize },
+
+    /// Response collection was requested with an invalid response limit.
+    InvalidResponseLimit { max_responses: usize },
 
     /// The OS reported that a datagram did not fit in the receive buffer.
     TruncatedDatagram,
@@ -275,6 +294,10 @@ variants while preserving enough detail in string fields to debug locally.
 
 `send_and_receive()` sends once and receives once. If receive times out, it
 returns `UdpError::Timeout`. Higher layers decide whether to retry.
+
+`send_to_and_collect()` also sends exactly once. It does not retry, join
+multicast groups, or parse payloads; it only keeps receiving unconnected
+datagrams until the read timeout fires or `max_responses` replies have arrived.
 
 ### 3. No Hostname Resolution
 

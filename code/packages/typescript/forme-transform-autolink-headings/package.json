@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-transform-autolink-headings",
+  "version": "0.1.0",
+  "description": "Generate deterministic slug ids + self-link anchor metadata for every HeadingNode in a Document AST.  Pure transform: DocumentNode → ordered HeadingSlug[] (level, text, slug, anchor href) that renderers consume to emit `<h2 id=\"slug\"><a href=\"#slug\">…</a></h2>`.  FM00 v0 §5.3 transform.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

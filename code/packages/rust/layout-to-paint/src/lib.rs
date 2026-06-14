@@ -435,6 +435,16 @@ fn wrap_line<S: TextShaper>(
         return vec![segment.to_string()];
     }
 
+    // Preserve source whitespace for fixed-format text when it already fits.
+    // The greedy wrapper below intentionally collapses whitespace for paragraph
+    // text, but ASCII art/code-like content should not be rewritten just because
+    // it passed through UI04.
+    if let Ok(shaped) = shaper.shape(segment, handle, size, &ShapeOptions::default()) {
+        if shaped.total_advance() as f64 <= max_width {
+            return vec![segment.to_string()];
+        }
+    }
+
     let space_width = shaper
         .shape(" ", handle, size, &ShapeOptions::default())
         .map(|r| r.total_advance() as f64)
@@ -880,6 +890,35 @@ mod tests {
                 for (i, g) in gr.glyphs.iter().enumerate() {
                     assert!((g.x - (10.0 + i as f64 * 8.0)).abs() < 1e-6);
                 }
+            }
+            other => panic!("expected GlyphRun, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn fixed_format_text_preserves_spaces_when_line_fits() {
+        let leaf = positioned_leaf(text_content("  / \\  "), 0.0, 0.0, 500.0, 20.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_options(&shaper, &metrics, &resolver);
+        let scene = layout_to_paint(&leaf, &opts);
+
+        match &scene.instructions[0] {
+            PaintInstruction::GlyphRun(gr) => {
+                let glyph_ids: Vec<u32> = gr.glyphs.iter().map(|g| g.glyph_id).collect();
+                assert_eq!(
+                    glyph_ids,
+                    vec![
+                        ' ' as u32,
+                        ' ' as u32,
+                        '/' as u32,
+                        ' ' as u32,
+                        '\\' as u32,
+                        ' ' as u32,
+                        ' ' as u32,
+                    ]
+                );
             }
             other => panic!("expected GlyphRun, got {:?}", other),
         }

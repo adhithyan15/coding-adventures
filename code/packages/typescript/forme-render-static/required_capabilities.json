@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-render-static",
+  "capabilities": [],
+  "justification": "Pure transform: Stream<ContentNode> → Stream<RenderedPage>.  Wraps @coding-adventures/document-ast-to-html, derives a route from sourcePath, wraps the body in a minimal HTML5 document with classless CSS, and emits one RenderedPage per input node.  No filesystem, network, env, or shell access."
+}

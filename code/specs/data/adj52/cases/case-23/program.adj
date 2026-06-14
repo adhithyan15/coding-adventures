@@ -1,0 +1,46 @@
+% ADJ52 case-23 program (this patient's observations + queries only; no rules).
+% 72yo man, ED, acute homonymous visual-field loss on waking (fresh LEFT occipital
+% infarct). Over 10 prior months: progressive forgetfulness, word-finding difficulty,
+% losing thread of conversation, intermittent gait unsteadiness, intermittent DULL
+% headaches; one prior transient speech spell. First MRI 5 months ago: two small old
+% strokes; vascular study unremarkable; treated as TIAs with aspirin/ticlopidine but
+% cognition kept worsening. Admission: disoriented, pronounced anterograde memory
+% loss, mildly slurred speech, abnormal bedside cognitive screen. Repeat MRI: fresh
+% left occipital infarct + multiple scattered OLD cortical infarcts in SEVERAL
+% territories. MRA: mild distal MCA-branch narrowing bilaterally. Catheter angiogram:
+% diffuse smooth tapering of mid-to-distal intracranial vessels. Labs: LDH 372
+% (ref 122-222) = markedly elevated; CRP, ESR, beta-2-microglobulin all normal; ANCA
+% negative. CSF: protein 118 (ref 15-45) elevated, but cytology / paraneoplastic /
+% infectious studies all negative (bland apart from protein). No inflammatory or
+% infectious cause found; underlying process unexplained.
+
+% --- the diffuse multifocal beaded vasculopathy (correlated -> mechanism, fires once) ---
+observe mri_finding(multifocal_cortical_infarcts_multiple_territories)
+observe angiogram_finding(diffuse_smooth_tapering_distal_vessels)
+observe mra_finding(distal_branch_narrowing)
+
+% --- the discriminating lab / CSF signature ---
+observe serum_ldh(markedly_elevated)
+observe systemic_inflammatory_markers(normal)
+observe anca(negative)
+observe csf_profile(elevated_protein_otherwise_bland)
+
+% --- the clinical course and demographics ---
+observe course(subacute_progressive_cognitive_decline)
+observe patient_age(over_fifty)
+observe headache_character(intermittent_dull)
+
+% --- workup status ---
+observe workup(no_inflammatory_or_infectious_cause_found)
+
+% NOT observed (open, decision-relevant): tissue(...) — no biopsy has been done yet.
+% Resolving tissue is what the kickback panel should flag as highest value.
+
+% --- queries: each candidate diagnosis + the recommended next step ---
+? diagnosis(intravascular_large_b_cell_lymphoma)
+? diagnosis(primary_cns_angiitis)
+? diagnosis(intracranial_atherosclerotic_disease)
+? diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+? diagnosis(secondary_systemic_vasculitis)
+? next_step(random_skin_biopsy_then_brain_biopsy)
+? next_step(empiric_immunosuppression_for_presumed_arteritis)

@@ -1,0 +1,22 @@
+// ListGroup.light.msl — default light-theme styling.
+//
+// The outer Column is a plain rounded container. Each row is
+// styled as a flat, full-width button with a bottom border between
+// rows.
+
+style ListGroup {
+  part list-group {
+    border-radius : 4 ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    background    : "#ffffff" ;
+  }
+  part list-group-item {
+    padding       : 12 ;
+    background    : "transparent" ;
+    color         : "#212529" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

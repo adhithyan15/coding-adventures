@@ -1,0 +1,9 @@
+[package]
+name = "ir-to-ge225-compiler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+compiler-ir  = { path = "../compiler-ir" }
+coding-adventures-ge225-simulator = { path = "../ge225-simulator" }
+codegen-core = { path = "../codegen-core" }

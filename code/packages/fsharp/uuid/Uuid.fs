@@ -3,9 +3,11 @@ namespace CodingAdventures.Uuid
 open System
 open System.Buffers.Binary
 open System.Globalization
-open System.Security.Cryptography
 open System.Text
 open System.Text.RegularExpressions
+open CodingAdventures.Csprng.FSharp
+open CodingAdventures.Md5
+open CodingAdventures.Sha1.FSharp
 
 type UuidException(message: string, innerException: exn) =
     inherit ArgumentException(message, innerException)
@@ -63,8 +65,7 @@ module Uuid =
     let private gregorianOffset = 122_192_928_000_000_000UL
 
     let private createClockSequence () =
-        let bytes = Array.zeroCreate<byte> 2
-        RandomNumberGenerator.Fill(bytes)
+        let bytes = Csprng.randomBytes 2
         ((int bytes[0] <<< 8) ||| int bytes[1]) &&& 0x3FFF
 
     let private clockSequence = createClockSequence ()
@@ -129,12 +130,12 @@ module Uuid =
         fromBytes bytes
 
     let v4 () =
-        let bytes = RandomNumberGenerator.GetBytes 16
+        let bytes = Csprng.randomBytes 16
         stampVersionVariant bytes 4
 
     let v7 () =
         let timestampMs = uint64 (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
-        let random = RandomNumberGenerator.GetBytes 10
+        let random = Csprng.randomBytes 10
         let raw = Array.zeroCreate<byte> 16
         raw[0] <- byte ((timestampMs >>> 40) &&& 0xFFUL)
         raw[1] <- byte ((timestampMs >>> 32) &&& 0xFFUL)
@@ -159,7 +160,7 @@ module Uuid =
         let msb = (timeLow <<< 32) ||| (timeMid <<< 16) ||| (0x1000UL ||| timeHi)
         let clockSeqHi = 0x80UL ||| (uint64 clockSequence >>> 8)
         let clockSeqLow = uint64 (clockSequence &&& 0xFF)
-        let nodeBytes = RandomNumberGenerator.GetBytes 6
+        let nodeBytes = Csprng.randomBytes 6
         nodeBytes[0] <- byte (int nodeBytes[0] ||| 0x01)
 
         let mutable node = 0UL
@@ -182,7 +183,7 @@ module Uuid =
 
         let digest =
             concat (namespaceId.ToBytes()) (Encoding.UTF8.GetBytes name)
-            |> SHA1.HashData
+            |> Sha1.hash
 
         let raw = digest[..15]
         stampVersionVariant raw 5
@@ -192,5 +193,5 @@ module Uuid =
             nullArg (nameof name)
 
         concat (namespaceId.ToBytes()) (Encoding.UTF8.GetBytes name)
-        |> MD5.HashData
+        |> Md5.sumMd5
         |> fun digest -> stampVersionVariant digest 3

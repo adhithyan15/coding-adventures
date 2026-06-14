@@ -1,0 +1,6 @@
+# .NET SDK local home directory created by the BUILD script
+.dotnet/
+# Build output and test artifacts
+.artifacts/
+bin/
+obj/

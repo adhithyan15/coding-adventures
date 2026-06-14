@@ -49,8 +49,13 @@ defmodule CodingAdventures.Graph.GraphTest do
   test "bfs dfs connectivity and cycle detection match the spec" do
     for repr <- reprs() do
       graph = make_graph(repr)
-      assert {:ok, ["London", "Amsterdam", "Paris", "Berlin", "Brussels"]} = Graph.bfs(graph, "London")
-      assert {:ok, ["London", "Amsterdam", "Berlin", "Paris", "Brussels"]} = Graph.dfs(graph, "London")
+
+      assert {:ok, ["London", "Amsterdam", "Paris", "Berlin", "Brussels"]} =
+               Graph.bfs(graph, "London")
+
+      assert {:ok, ["London", "Amsterdam", "Berlin", "Paris", "Brussels"]} =
+               Graph.dfs(graph, "London")
+
       assert Graph.is_connected?(graph)
       assert Graph.has_cycle?(graph)
       refute Graph.has_cycle?(make_path(repr))
@@ -97,6 +102,44 @@ defmodule CodingAdventures.Graph.GraphTest do
       {:ok, graph} = Graph.remove_node(graph, "B")
       refute Graph.has_node?(graph, "B")
       assert Graph.nodes(graph) == ["A", "C"]
+    end
+  end
+
+  test "property bags track graph node and edge metadata" do
+    for repr <- reprs() do
+      graph = Graph.new(repr: repr)
+
+      {:ok, graph} = Graph.set_graph_property(graph, "name", "city-map")
+      {:ok, graph} = Graph.set_graph_property(graph, "version", 1)
+      assert Graph.graph_properties(graph) == %{"name" => "city-map", "version" => 1}
+      {:ok, graph} = Graph.remove_graph_property(graph, "version")
+      assert Graph.graph_properties(graph) == %{"name" => "city-map"}
+
+      {:ok, graph} = Graph.add_node(graph, "A", %{"kind" => "input"})
+      {:ok, graph} = Graph.add_node(graph, "A", %{"trainable" => false})
+      {:ok, graph} = Graph.set_node_property(graph, "A", "slot", 0)
+
+      assert {:ok, %{"kind" => "input", "trainable" => false, "slot" => 0}} =
+               Graph.node_properties(graph, "A")
+
+      {:ok, graph} = Graph.remove_node_property(graph, "A", "slot")
+      assert {:ok, %{"kind" => "input", "trainable" => false}} = Graph.node_properties(graph, "A")
+
+      {:ok, graph} = Graph.add_edge(graph, "A", "B", 2.5, %{"role" => "distance"})
+
+      assert {:ok, %{"role" => "distance", "weight" => 2.5}} =
+               Graph.edge_properties(graph, "B", "A")
+
+      {:ok, graph} = Graph.set_edge_property(graph, "B", "A", "weight", 7.0)
+      assert {:ok, 7.0} = Graph.edge_weight(graph, "A", "B")
+      {:ok, graph} = Graph.set_edge_property(graph, "A", "B", "trainable", true)
+      {:ok, graph} = Graph.remove_edge_property(graph, "A", "B", "role")
+
+      assert {:ok, %{"weight" => 7.0, "trainable" => true}} =
+               Graph.edge_properties(graph, "A", "B")
+
+      {:ok, graph} = Graph.remove_edge(graph, "A", "B")
+      assert {:error, %EdgeNotFoundError{}} = Graph.edge_properties(graph, "A", "B")
     end
   end
 end

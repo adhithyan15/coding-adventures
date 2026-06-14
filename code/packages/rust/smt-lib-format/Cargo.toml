@@ -1,0 +1,9 @@
+[package]
+name = "smt-lib-format"
+version = "0.1.0"
+edition = "2021"
+description = "LANG24 PR 24-E — strict SMT-LIB v2 reader/writer for the constraint-instructions IR.  Industry-standard textual format; lets the constraint-VM benchmark against the SMT-LIB suite (Z3 / CVC5)."
+
+[dependencies]
+constraint-core = { path = "../constraint-core" }
+constraint-instructions = { path = "../constraint-instructions" }

@@ -49,11 +49,13 @@
 // ValueType
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// The four numeric value types that WASM 1.0 supports.
+/// The value types that WASM supports, extended for WasmGC (2023).
 ///
-/// Every local variable, function parameter, function return value, and
-/// stack slot holds exactly one of these types. The discriminant values
-/// are the **byte tags** used in the WASM binary format.
+/// WASM 1.0 has four numeric types.  The WasmGC proposal (standardised 2023,
+/// shipping in V8 ≥ 119 / Chrome ≥ 119 and Firefox ≥ 120) adds reference
+/// types: `anyref`, `i31ref`, and concrete struct/array references.
+///
+/// ## Numeric types (WASM 1.0)
 ///
 /// ```text
 /// Byte encoding in WASM binary
@@ -71,20 +73,208 @@
 /// are represented as `i32`, where 0 means false and any non-zero means true.
 ///
 /// Note: The byte values count *down* from 0x7F. This is because the WASM
-/// binary format uses *signed* LEB128 for type bytes. 0x7F is -1 in signed
-/// LEB128, 0x7E is -2, etc.  Newer WASM proposals add more types continuing
-/// the pattern.
+/// binary format uses *signed* LEB128 for type bytes.  0x7F is -1 in signed
+/// LEB128, 0x7E is -2, etc.  Newer WASM proposals continue the pattern.
+///
+/// ## WasmGC reference types
+///
+/// WasmGC extends the type system with *managed references* — values that
+/// point into the GC heap, not into linear memory.  Think of them like
+/// Java/JVM object references: the runtime manages their lifetime.
+///
+/// ```text
+/// ┌────────────────────────┬──────────────────────┬──────────────────────────┐
+/// │  Type                  │ Byte encoding        │ Description              │
+/// ├────────────────────────┼──────────────────────┼──────────────────────────┤
+/// │  anyref (null any)     │ 0x6E                 │ Nullable "top" ref type  │
+/// │  i31ref (non-null i31) │ 0x6C                 │ Boxed 31-bit integer     │
+/// │  (ref null $T)         │ 0x63 + LEB128(idx)   │ Nullable concrete struct │
+/// └────────────────────────┴──────────────────────┴──────────────────────────┘
+/// ```
+///
+/// `anyref` (= `(ref null any)`) is the supertype of all GC-managed values.
+/// In WasmGC, a `LispyPair` struct field can be typed `anyref` to hold *any*
+/// GC value — a cons cell, an integer box, or null.  This mirrors how
+/// dynamic Lisp stores atoms and pairs in the same slot.
+///
+/// `i31ref` is a special type that boxes a 31-bit signed integer *without*
+/// allocating heap memory.  The runtime stores the value in the reference
+/// pointer bits (like V8's small-integer tagging trick).  Unboxing is done
+/// with `i31.get_s`.
+///
+/// `StructRef(idx)` is a *nullable concrete reference* to a specific named
+/// struct type at type-section index `idx`.  The binary encoding is a 2-byte
+/// sequence `0x63 <LEB128(idx)>`.
+///
+/// ## Encoding note
+///
+/// Because `Anyref`, `I31ref`, and `StructRef` have variable-length binary
+/// encodings (unlike the single-byte numeric types), `ValueType` can no
+/// longer use `#[repr(u8)]`.  The encoder calls [`ValueType::encode`] to
+/// emit the correct byte sequence.
+// All variants are trivially Copy: the only data-bearing variant is
+// StructRef(u32), and u32: Copy.  Adding Copy back lets the wasm-execution
+// interpreter call default_for(*local_type) without a clone().
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[repr(u8)]
 pub enum ValueType {
     /// 32-bit integer. Used for booleans, pointers (in linear memory), chars.
-    I32 = 0x7F,
+    I32,
     /// 64-bit integer. Used for 64-bit arithmetic and 64-bit pointers.
-    I64 = 0x7E,
+    I64,
     /// 32-bit IEEE 754 single-precision float.
-    F32 = 0x7D,
+    F32,
     /// 64-bit IEEE 754 double-precision float.
-    F64 = 0x7C,
+    F64,
+
+    /// `(ref null any)` — nullable any-reference (WasmGC supertype).
+    ///
+    /// Encoded as a single byte `0x6E`.  Any GC-managed value (struct
+    /// reference, i31ref, null) is assignment-compatible with `anyref`.
+    /// This is the natural type for a dynamically-typed Lisp value slot.
+    Anyref,
+
+    /// `(ref i31)` — boxed 31-bit signed integer (WasmGC).
+    ///
+    /// Encoded as `0x6C`.  Unlike heap structs, i31ref values do not live
+    /// on the GC heap; the runtime encodes the integer directly in the
+    /// pointer bits.  This makes integer boxing/unboxing essentially free.
+    ///
+    /// ```text
+    /// i31.new   : [i32] → [i31ref]   — box an i32 (top bit dropped)
+    /// i31.get_s : [i31ref] → [i32]   — unbox with sign extension
+    /// ```
+    I31ref,
+
+    /// `(ref null $T)` — nullable reference to a concrete struct type (WasmGC).
+    ///
+    /// The `u32` payload is the index into the type section that names struct
+    /// type `$T`.  Encoded as `0x63` followed by LEB128(index).
+    ///
+    /// Example: if `$LispyPair` is defined at type-section index 1, then a
+    /// local variable holding a nullable `$LispyPair` reference has type
+    /// `StructRef(1)` and is encoded as `[0x63, 0x01]`.
+    StructRef(u32),
+}
+
+impl ValueType {
+    /// Return the single-byte tag for this type, or `None` for multi-byte types.
+    ///
+    /// This mirrors the WASM 1.0 convention where numeric types are single
+    /// bytes.  WasmGC types like `StructRef` need two or more bytes; callers
+    /// that need the full encoding should use [`ValueType::encode`] instead.
+    ///
+    /// ```text
+    /// I32 → Some(0x7F),  I64 → Some(0x7E),  F32 → Some(0x7D),  F64 → Some(0x7C)
+    /// Anyref → Some(0x6E),  I31ref → Some(0x6C)
+    /// StructRef(_) → None   (needs 2+ bytes)
+    /// ```
+    pub fn byte_tag(&self) -> Option<u8> {
+        match self {
+            ValueType::I32 => Some(0x7F),
+            ValueType::I64 => Some(0x7E),
+            ValueType::F32 => Some(0x7D),
+            ValueType::F64 => Some(0x7C),
+            ValueType::Anyref => Some(0x6E),
+            ValueType::I31ref => Some(0x6C),
+            ValueType::StructRef(_) => None,
+        }
+    }
+
+    /// Encode this `ValueType` into its WASM binary representation.
+    ///
+    /// ```text
+    /// I32        → [0x7F]
+    /// I64        → [0x7E]
+    /// F32        → [0x7D]
+    /// F64        → [0x7C]
+    /// Anyref     → [0x6E]
+    /// I31ref     → [0x6C]
+    /// StructRef(n) → [0x63, ...LEB128(n)]
+    /// ```
+    ///
+    /// The LEB128 encoding for small indices fits in one byte, so
+    /// `StructRef(0)` → `[0x63, 0x00]` and `StructRef(127)` → `[0x63, 0x7F]`.
+    pub fn encode(&self) -> Vec<u8> {
+        use wasm_leb128::encode_unsigned;
+        match self {
+            ValueType::I32 => vec![0x7F],
+            ValueType::I64 => vec![0x7E],
+            ValueType::F32 => vec![0x7D],
+            ValueType::F64 => vec![0x7C],
+            ValueType::Anyref => vec![0x6E],
+            ValueType::I31ref => vec![0x6C],
+            ValueType::StructRef(idx) => {
+                // 0x63 = nullable concrete reference tag.
+                let mut bytes = vec![0x63u8];
+                bytes.extend(encode_unsigned(*idx as u64));
+                bytes
+            }
+        }
+    }
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// WasmGC struct types
+// ──────────────────────────────────────────────────────────────────────────────
+
+/// One field in a WasmGC struct type.
+///
+/// In a `.wat` module, this corresponds to:
+/// ```wat
+/// (field $name (mut <val_type>))   ;; mutable
+/// (field $name <val_type>)         ;; immutable
+/// ```
+///
+/// The binary encoding of a field in the type section is:
+/// ```text
+/// <val_type encoding>   ;; the ValueType bytes
+/// <mutability: 0x00 or 0x01>
+/// ```
+///
+/// For a `LispyPair`, both `$head` and `$tail` are mutable `anyref` fields:
+/// ```text
+/// field $head: [0x6E, 0x01]   ;; anyref, mutable
+/// field $tail: [0x6E, 0x01]   ;; anyref, mutable
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FieldType {
+    /// The type stored in this field.
+    pub val_type: ValueType,
+    /// Whether this field can be modified after the struct is created.
+    /// `true` → mutable (heap write is legal via `struct.set`).
+    /// `false` → immutable (write-once, set during `struct.new`).
+    pub mutable: bool,
+}
+
+/// A WasmGC struct type definition — an ordered list of fields.
+///
+/// In the WAT text format, this looks like:
+/// ```wat
+/// (type $LispyPair (struct
+///   (field $head (mut (ref null any)))
+///   (field $tail (mut (ref null any)))))
+/// ```
+///
+/// ## Why structs?
+///
+/// WasmGC structs are the GC heap analogue of C structs.  They are
+/// *heterogeneous* (fields can have different types) and *garbage-collected*
+/// (the runtime tracks them; no `free` needed).  For a Lisp runtime, each
+/// cons cell is a two-field struct with `$head` (the car) and `$tail` (the
+/// cdr), both of type `anyref` so they can hold any Lisp value.
+///
+/// ## Type-section index
+///
+/// In the WASM binary, struct types live alongside function types in the
+/// type section.  We store them separately in [`WasmModule::struct_types`]
+/// and interleave them with function types during encoding.  Struct types
+/// appear *after* all function types, so if there are `N` function types,
+/// struct type `k` is at type-section index `N + k`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StructType {
+    /// The fields of this struct, in declaration order.
+    /// Field index 0 is the first field, 1 the second, and so on.
+    pub fields: Vec<FieldType>,
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -541,32 +731,56 @@ pub struct CustomSection {
 // WasmModule
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// A fully decoded WebAssembly 1.0 module.
+/// A WebAssembly module, extended to support WasmGC struct types.
 ///
-/// This struct holds all data from all sections of a `.wasm` file after parsing.
-/// It is the "intermediate representation" that sits between the raw binary and
-/// any higher-level analysis (validation, interpretation, compilation).
+/// This struct holds all data from all sections of a `.wasm` file after
+/// parsing (or after lowering from IIR).  It is the intermediate
+/// representation between the raw binary and any higher-level analysis
+/// (validation, interpretation, compilation, GC type emission).
+///
+/// ## Relationship between fields
 ///
 /// ```text
-/// Relationship between fields:
+/// types[i]      ←── functions[j] (type index)
+///               ←── imports with ImportTypeInfo::Function(i)
+///               ←── BlockType::TypeIndex(i)
 ///
-///   types[i]      ←── functions[j] (type index)
-///                 ←── imports with ImportTypeInfo::Function(i)
-///                 ←── BlockType::TypeIndex(i)
+/// functions[j]  ←── code[j - num_imported_funcs]  (function body)
 ///
-///   functions[j]  ←── code[j - num_imported_funcs]  (function body)
+/// struct_types[k] is encoded at type-section index  types.len() + k
 ///
-///   tables[0]     ←── elements[k].table_index
+/// tables[0]     ←── elements[e].table_index
 ///
-///   memories[0]   ←── data[k].memory_index
+/// memories[0]   ←── data[d].memory_index
 /// ```
 ///
+/// ## WasmGC type section layout
+///
+/// The WasmGC proposal extends the type section to carry both function types
+/// and GC types.  In the binary, each entry is tagged:
+///
+/// - Function type: starts with `0x60` (the WASM 1.0 function-type prefix).
+/// - Struct type (open sub-type): starts with `0x50 0x00 0x5F` (sub-type
+///   marker, zero supertypes, struct marker).
+///
+/// We keep `types: Vec<FuncType>` for the function types and add a new
+/// `struct_types: Vec<StructType>` for the GC types.  The encoder emits
+/// function types first (indices 0..N-1), then struct types (indices N..).
+///
 /// The `Default` impl produces an empty module (no sections), which is the
-/// natural starting point for an incremental parser.
+/// natural starting point for an incremental builder or parser.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct WasmModule {
     /// Type section (§1): all function signatures, deduplicated.
     pub types: Vec<FuncType>,
+
+    /// WasmGC struct type definitions (also in the type section, after `types`).
+    ///
+    /// Struct type `k` is at type-section index `types.len() + k`.
+    /// When this vec is empty, the type section contains only function types
+    /// and the encoding is identical to WASM 1.0.
+    pub struct_types: Vec<StructType>,
+
     /// Import section (§2): things the module needs from the host.
     pub imports: Vec<Import>,
     /// Function section (§3): type indices for locally-defined functions.
@@ -600,15 +814,37 @@ pub struct WasmModule {
 mod tests {
     use super::*;
 
-    // ── Test 1: ValueType byte values match WASM spec ─────────────────────────
+    // ── Test 1: ValueType byte encoding matches WASM spec ─────────────────────
+    //
+    // WasmGC dropped #[repr(u8)] because StructRef needs a 2-byte encoding.
+    // Use .encode() and .byte_tag() instead of `as u8`.
 
     #[test]
     fn value_type_byte_values() {
-        // The discriminant of each variant must equal the WASM binary tag.
-        assert_eq!(ValueType::I32 as u8, 0x7F, "i32 tag");
-        assert_eq!(ValueType::I64 as u8, 0x7E, "i64 tag");
-        assert_eq!(ValueType::F32 as u8, 0x7D, "f32 tag");
-        assert_eq!(ValueType::F64 as u8, 0x7C, "f64 tag");
+        // Single-byte numeric types.
+        assert_eq!(ValueType::I32.encode(), vec![0x7F], "i32 tag");
+        assert_eq!(ValueType::I64.encode(), vec![0x7E], "i64 tag");
+        assert_eq!(ValueType::F32.encode(), vec![0x7D], "f32 tag");
+        assert_eq!(ValueType::F64.encode(), vec![0x7C], "f64 tag");
+        // WasmGC reference types.
+        assert_eq!(ValueType::Anyref.encode(), vec![0x6E], "anyref tag");
+        assert_eq!(ValueType::I31ref.encode(), vec![0x6C], "i31ref tag");
+        // StructRef(0) → [0x63, 0x00]
+        assert_eq!(ValueType::StructRef(0).encode(), vec![0x63, 0x00], "struct ref tag");
+        // StructRef(1) → [0x63, 0x01]
+        assert_eq!(ValueType::StructRef(1).encode(), vec![0x63, 0x01]);
+    }
+
+    #[test]
+    fn value_type_byte_tag_singles() {
+        assert_eq!(ValueType::I32.byte_tag(), Some(0x7F));
+        assert_eq!(ValueType::I64.byte_tag(), Some(0x7E));
+        assert_eq!(ValueType::F32.byte_tag(), Some(0x7D));
+        assert_eq!(ValueType::F64.byte_tag(), Some(0x7C));
+        assert_eq!(ValueType::Anyref.byte_tag(), Some(0x6E));
+        assert_eq!(ValueType::I31ref.byte_tag(), Some(0x6C));
+        // StructRef has no single-byte tag.
+        assert_eq!(ValueType::StructRef(0).byte_tag(), None);
     }
 
     // ── Test 2: ExternalKind byte values ─────────────────────────────────────
@@ -720,6 +956,9 @@ mod tests {
         assert!(!const_g.mutable);
         assert_eq!(mutable_g.value_type, ValueType::I32);
         assert_eq!(const_g.value_type, ValueType::F64);
+        // Verify encoding still works after WasmGC refactor.
+        assert_eq!(mutable_g.value_type.encode(), vec![0x7F]);
+        assert_eq!(const_g.value_type.encode(), vec![0x7C]);
     }
 
     // ── Test 12: Import for each ExternalKind ────────────────────────────────
@@ -862,6 +1101,7 @@ mod tests {
     fn wasm_module_has_all_fields() {
         let m = WasmModule {
             types: vec![FuncType { params: vec![], results: vec![ValueType::I32] }],
+            struct_types: vec![],
             imports: vec![],
             functions: vec![0],
             tables: vec![],
@@ -875,6 +1115,7 @@ mod tests {
             customs: vec![],
         };
         assert_eq!(m.types.len(), 1);
+        assert_eq!(m.struct_types.len(), 0);
         assert_eq!(m.functions, vec![0]);
         assert_eq!(m.start, Some(0));
         assert_eq!(m.exports[0].name, "main");
@@ -886,6 +1127,7 @@ mod tests {
     fn wasm_module_default_is_empty() {
         let m = WasmModule::default();
         assert!(m.types.is_empty());
+        assert!(m.struct_types.is_empty());
         assert!(m.imports.is_empty());
         assert!(m.functions.is_empty());
         assert!(m.tables.is_empty());
@@ -899,6 +1141,75 @@ mod tests {
         assert!(m.customs.is_empty());
     }
 
+    // ── WasmGC type tests ──────────────────────────────────────────────────────
+
+    // Test 21: FieldType construction
+    #[test]
+    fn field_type_construction() {
+        let f = FieldType { val_type: ValueType::Anyref, mutable: true };
+        assert_eq!(f.val_type, ValueType::Anyref);
+        assert!(f.mutable);
+
+        let g = FieldType { val_type: ValueType::I32, mutable: false };
+        assert_eq!(g.val_type, ValueType::I32);
+        assert!(!g.mutable);
+    }
+
+    // Test 22: StructType for LispyPair has two anyref fields
+    #[test]
+    fn struct_type_lispy_pair() {
+        let lispy_pair = StructType {
+            fields: vec![
+                FieldType { val_type: ValueType::Anyref, mutable: true }, // $head
+                FieldType { val_type: ValueType::Anyref, mutable: true }, // $tail
+            ],
+        };
+        assert_eq!(lispy_pair.fields.len(), 2);
+        assert_eq!(lispy_pair.fields[0].val_type, ValueType::Anyref);
+        assert!(lispy_pair.fields[0].mutable);
+        assert_eq!(lispy_pair.fields[1].val_type, ValueType::Anyref);
+        assert!(lispy_pair.fields[1].mutable);
+    }
+
+    // Test 23: WasmModule with struct_types carries the GC definition
+    #[test]
+    fn wasm_module_with_struct_types() {
+        let m = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            struct_types: vec![StructType {
+                fields: vec![
+                    FieldType { val_type: ValueType::Anyref, mutable: true },
+                    FieldType { val_type: ValueType::Anyref, mutable: true },
+                ],
+            }],
+            ..Default::default()
+        };
+        assert_eq!(m.types.len(), 1);
+        assert_eq!(m.struct_types.len(), 1);
+        // The struct type index in the type section is types.len() + 0 = 1.
+        assert_eq!(m.types.len() + 0, 1);
+    }
+
+    // Test 24: StructRef(idx) encodes correctly
+    #[test]
+    fn struct_ref_encoding() {
+        // StructRef(0) → [0x63, 0x00]
+        assert_eq!(ValueType::StructRef(0).encode(), vec![0x63, 0x00]);
+        // StructRef(5) → [0x63, 0x05]
+        assert_eq!(ValueType::StructRef(5).encode(), vec![0x63, 0x05]);
+        // Large index: 128 needs 2 LEB128 bytes.
+        let enc = ValueType::StructRef(128).encode();
+        assert_eq!(enc[0], 0x63);
+        assert!(enc.len() >= 3); // 0x63 + 2 LEB128 bytes for 128
+    }
+
+    // Test 25: Anyref and I31ref encode as single bytes
+    #[test]
+    fn anyref_i31ref_single_byte() {
+        assert_eq!(ValueType::Anyref.encode(), vec![0x6E]);
+        assert_eq!(ValueType::I31ref.encode(), vec![0x6C]);
+    }
+
     // ── Additional: BlockType variants ───────────────────────────────────────
 
     #[test]
@@ -909,13 +1220,20 @@ mod tests {
         assert_eq!(BlockType::TypeIndex(5), BlockType::TypeIndex(5));
     }
 
-    // ── Additional: ValueType Copy semantics ─────────────────────────────────
+    // ── Additional: ValueType Clone semantics ────────────────────────────────
+    //
+    // ValueType lost Copy when we added StructRef(u32) — that variant holds
+    // a u32 but the enum is no longer #[repr(u8)].  WasmGC encoding instead
+    // uses the ValueType::encode() method.  Use Clone where a copy is needed.
 
     #[test]
-    fn value_type_is_copy() {
+    fn value_type_is_clone() {
         let a = ValueType::I32;
-        let b = a; // Copy trait — no move
+        let b = a.clone();
         assert_eq!(a, b);
+        let c = ValueType::StructRef(42);
+        let d = c.clone();
+        assert_eq!(c, d);
     }
 
     // ── Additional: FUNCREF constant ─────────────────────────────────────────

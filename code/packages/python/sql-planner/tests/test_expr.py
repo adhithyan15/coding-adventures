@@ -10,7 +10,9 @@ from sql_planner.expr import (
     Between,
     BinaryExpr,
     BinaryOp,
+    CaseExpr,
     Column,
+    ExistsSubquery,
     FuncArg,
     FunctionCall,
     In,
@@ -145,6 +147,32 @@ class TestContainsAggregate:
     def test_wildcard_no(self) -> None:
         assert not contains_aggregate(Wildcard())
 
+    def test_case_expr_no_agg(self) -> None:
+        e = CaseExpr(
+            whens=((Column(None, "x"), Literal(value=1)),),
+            else_=Literal(value=0),
+        )
+        assert not contains_aggregate(e)
+
+    def test_case_expr_agg_in_when_condition(self) -> None:
+        agg = AggregateExpr(func=AggFunc.COUNT, arg=FuncArg(star=True))
+        e = CaseExpr(whens=((agg, Literal(value=1)),), else_=None)
+        assert contains_aggregate(e)
+
+    def test_case_expr_agg_in_when_result(self) -> None:
+        agg = AggregateExpr(func=AggFunc.SUM, arg=FuncArg(value=Literal(value=1)))
+        e = CaseExpr(whens=((Literal(value=True), agg),), else_=None)
+        assert contains_aggregate(e)
+
+    def test_case_expr_agg_in_else(self) -> None:
+        agg = AggregateExpr(func=AggFunc.MAX, arg=FuncArg(value=Literal(value=1)))
+        e = CaseExpr(whens=((Literal(value=True), Literal(value=1)),), else_=agg)
+        assert contains_aggregate(e)
+
+    def test_exists_subquery_no(self) -> None:
+        e = ExistsSubquery(query=object())
+        assert not contains_aggregate(e)
+
 
 class TestCollectColumns:
     def test_literal_empty(self) -> None:
@@ -208,3 +236,19 @@ class TestCollectColumns:
 
     def test_wildcard_empty(self) -> None:
         assert collect_columns(Wildcard()) == []
+
+    def test_case_expr(self) -> None:
+        c1 = Column(table=None, col="a")
+        c2 = Column(table=None, col="b")
+        c3 = Column(table=None, col="c")
+        e = CaseExpr(whens=((c1, c2),), else_=c3)
+        assert collect_columns(e) == [c1, c2, c3]
+
+    def test_case_expr_no_else(self) -> None:
+        c = Column(table=None, col="x")
+        e = CaseExpr(whens=((c, Literal(value=1)),), else_=None)
+        assert collect_columns(e) == [c]
+
+    def test_exists_subquery_empty(self) -> None:
+        e = ExistsSubquery(query=object())
+        assert collect_columns(e) == []

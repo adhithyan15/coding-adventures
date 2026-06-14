@@ -7,7 +7,7 @@ from typing import Any
 import pytest
 from interpreter_ir import IIRFunction, IIRInstr, IIRModule
 from interpreter_ir.function import FunctionTypeStatus
-from jit_core.cir import CIRInstr
+from codegen_core import CIRInstr
 
 # ---------------------------------------------------------------------------
 # IIR construction helpers

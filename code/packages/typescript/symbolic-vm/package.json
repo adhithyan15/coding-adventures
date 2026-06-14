@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/symbolic-vm",
+  "version": "0.20.0",
+  "description": "Pure TypeScript symbolic expression evaluator with strict and symbolic backends",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "cas",
+    "symbolic",
+    "vm",
+    "browser"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/cas-factor": "file:../cas-factor",
+    "@coding-adventures/cas-simplify": "file:../cas-simplify",
+    "@coding-adventures/symbolic-ir": "file:../symbolic-ir"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}

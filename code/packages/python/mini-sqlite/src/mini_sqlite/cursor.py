@@ -15,7 +15,7 @@ Connection. ``commit`` and ``rollback`` are not cursor methods.
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Iterator, Sequence
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
 from .engine import run
@@ -33,6 +33,9 @@ def _tcl_keyword(sql: str) -> str | None:
     Parses the first non-whitespace, non-comment token from *sql* and
     returns it (uppercase) if it is a transaction-control keyword
     (BEGIN/COMMIT/ROLLBACK), otherwise returns ``None``.
+
+    Special case: "ROLLBACK TO ..." is a SAVEPOINT rollback and must NOT
+    be intercepted here — it goes through the full engine pipeline instead.
 
     This mirrors the comment-skipping logic in
     :func:`~mini_sqlite.connection._first_keyword` so the two always
@@ -62,7 +65,22 @@ def _tcl_keyword(sql: str) -> str | None:
         word.append(sql[i])
         i += 1
     kw = "".join(word).upper()
-    return kw if kw in _TCL_KEYWORDS else None
+    if kw not in _TCL_KEYWORDS:
+        return None
+    # "ROLLBACK TO <savepoint>" must not be swallowed as a plain ROLLBACK —
+    # it takes the full engine path so the grammar can parse the savepoint name.
+    if kw == "ROLLBACK":
+        # Skip whitespace between ROLLBACK and the next word.
+        j = i
+        while j < n and sql[j].isspace():
+            j += 1
+        next_word: list[str] = []
+        while j < n and sql[j].isalpha():
+            next_word.append(sql[j])
+            j += 1
+        if "".join(next_word).upper() == "TO":
+            return None
+    return kw
 
 if TYPE_CHECKING:
     from .connection import Connection
@@ -108,8 +126,19 @@ class Cursor:
     # Execute.
     # ------------------------------------------------------------------
 
-    def execute(self, sql: str, parameters: Sequence[Any] = ()) -> Cursor:
+    def execute(
+        self,
+        sql: str,
+        parameters: Sequence[Any] | Mapping[str, Any] = (),
+    ) -> Cursor:
         """Execute a single SQL statement. Returns ``self`` for chaining.
+
+        ``parameters`` follows PEP 249 paramstyle:
+
+        * a ``Sequence`` (tuple, list, …) → qmark style; each ``?`` in
+          *sql* consumes the next positional value.
+        * a ``Mapping`` (dict, …) → named style; each ``:identifier`` in
+          *sql* is replaced by ``parameters[identifier]``.
 
         TCL fast-path
         ~~~~~~~~~~~~~
@@ -146,6 +175,12 @@ class Cursor:
             sql,
             parameters,
             advisor=self._connection._advisor,
+            check_registry=self._connection._check_registry,
+            fk_child=self._connection._fk_child,
+            fk_parent=self._connection._fk_parent,
+            view_defs=self._connection._view_defs,
+            savepoints=self._connection._savepoints,
+            user_functions=self._connection._user_functions,
         )
 
         # For DDL (CREATE/DROP/ALTER), auto-commit the single-statement

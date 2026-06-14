@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-aot-meta-link-tags",
+  "version": "0.1.0",
+  "description": "Emit HTML <meta> + <link> head tags from a structured config — canonical, prev/next, icons, preload/prefetch/preconnect, arbitrary <meta name|http-equiv>.  Pure transform: URL accept-list (http(s):// OR root-relative), rel/as allowlists, HTML-attribute-escapes every value.  FM00 v0 emitter.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

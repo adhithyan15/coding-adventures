@@ -816,3 +816,69 @@ describe("Edge cases", () => {
     expect(disabledLog.enabled).toBe(false);
   });
 });
+
+// ─── Edge-branch coverage ────────────────────────────────────────────────────
+//
+// The branches below are the ones vitest 4's stricter v8 counter flagged as
+// unhit: the false sides of `passOrder.includes`, `visited.has`, `if (entry)`,
+// and the malformed-id guards inside `_reconstructCounters`.
+
+describe("edge branch coverage", () => {
+  it("delete + passthrough are idempotent on already-seen sources (passOrder dedupe)", () => {
+    const log = new CVLog();
+    const id1 = log.create(makeOrigin("a", "1"));
+    const id2 = log.create(makeOrigin("a", "2"));
+    log.contribute(id1, "stage_x", "first");
+    log.passthrough(id2, "stage_x");
+    log.delete(id1, "stage_x", "obsolete");
+    log.delete(id2, "stage_x", "obsolete");
+  });
+
+  it("ancestors handles diamond parents (visited dedupe + missing entry)", () => {
+    const log = new CVLog();
+    const root = log.create(makeOrigin("a", "1"));
+    const left = log.derive(root, "split-l");
+    const right = log.derive(root, "split-r");
+    const merged = log.merge([left, right], makeOrigin("a", "merge"));
+    expect(log.ancestors(merged).filter((id) => id === root)).toHaveLength(1);
+
+    const orphan = log.create(makeOrigin("a", "x"));
+    const entry = log.get(orphan)!;
+    (entry.parentIds as string[]).push("nonexistent-id");
+    expect(log.ancestors(orphan)).toContain("nonexistent-id");
+  });
+
+  it("descendants dedupes shared descendants", () => {
+    const log = new CVLog();
+    const root = log.create(makeOrigin("a", "1"));
+    const c1 = log.derive(root, "c1");
+    const c2 = log.derive(root, "c2");
+    log.merge([c1, c2], makeOrigin("a", "m"));
+    const desc = log.descendants(root);
+    expect(new Set(desc).size).toBe(desc.length);
+  });
+
+  it("lineage skips dangling ancestor entries (path's `if (e)` false branch)", () => {
+    const log = new CVLog();
+    const root = log.create(makeOrigin("a", "1"));
+    const child = log.derive(root, "step");
+    const entry = log.get(child)!;
+    (entry.parentIds as string[]).push("ghost");
+    expect(log.lineage(child).every((e) => e.cvId !== "ghost")).toBe(true);
+  });
+
+  it("deserialize tolerates malformed ids (_reconstructCounters guards)", () => {
+    const log = new CVLog();
+    const a = log.create(makeOrigin("a", "1"));
+    log.create(makeOrigin("a", "2"));
+    const child = log.derive(a, "c");
+    const ser = log.serialize() as Record<string, unknown>;
+    const entries = ser.entries as Record<string, unknown>;
+    entries["malformed"] = { cvId: "malformed", origin: makeOrigin("a", "1"), parentIds: [], contributions: [] };
+    entries["xyz.notanumber"] = { cvId: "xyz.notanumber", origin: makeOrigin("a", "1"), parentIds: [], contributions: [] };
+    const base = a.split(".").slice(0, -1).join(".");
+    entries[`${base}.0`] = { cvId: `${base}.0`, origin: makeOrigin("a", "1"), parentIds: [], contributions: [] };
+    entries[`${child}.0`] = { cvId: `${child}.0`, origin: makeOrigin("a", "1"), parentIds: [child], contributions: [] };
+    expect(() => CVLog.deserialize(ser)).not.toThrow();
+  });
+});

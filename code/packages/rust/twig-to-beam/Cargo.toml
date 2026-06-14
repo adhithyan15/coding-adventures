@@ -1,0 +1,33 @@
+[package]
+name = "twig-to-beam"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Twig → BEAM pipeline: parse, type-check, lower builtins, emit BEAM bytecode"
+
+[lib]
+name = "twig_to_beam"
+path = "src/lib.rs"
+
+[dependencies]
+# Stage 1 — Twig source → IIR
+twig-ir-compiler     = { path = "../twig-ir-compiler" }
+
+# Stage 2 — Optional typing inference + validation
+iir-type-checker     = { path = "../iir-type-checker" }
+
+# Stage 3 — Rewrite call_builtin arithmetic ops to typed IIR ops
+iir-builtin-lowering = { path = "../iir-builtin-lowering" }
+
+# IIR types used in the pipeline-local passes (pre_lower_builtins, fixup)
+interpreter-ir       = { path = "../interpreter-ir" }
+
+# Stage 4 — IIR → BEAM bytecode (includes re-export of ir-to-beam::encode_beam)
+iir-to-beam          = { path = "../iir-to-beam" }
+
+# BEAM binary encoding — re-exported from iir-to-beam but listed here for
+# documentation completeness (the actual dependency goes through iir-to-beam).
+ir-to-beam           = { path = "../ir-to-beam" }
+
+[[test]]
+name = "test_pipeline"
+path = "tests/test_pipeline.rs"

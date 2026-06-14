@@ -66,4 +66,32 @@ for my $repr (qw(adjacency_list adjacency_matrix)) {
     like(dies { $graph->minimum_spanning_tree }, qr/not connected/, "$repr disconnected mst");
 }
 
+for my $repr (qw(adjacency_list adjacency_matrix)) {
+    my $graph = CodingAdventures::Graph->new(repr => $repr);
+
+    $graph->set_graph_property('name', 'city-map');
+    $graph->set_graph_property('version', 1);
+    is($graph->graph_properties, { name => 'city-map', version => 1 }, "$repr graph properties");
+    $graph->remove_graph_property('version');
+    is($graph->graph_properties, { name => 'city-map' }, "$repr remove graph property");
+
+    $graph->add_node('A', { kind => 'input' });
+    $graph->add_node('A', { trainable => 0 });
+    $graph->set_node_property('A', 'slot', 0);
+    is($graph->node_properties('A'), { kind => 'input', trainable => 0, slot => 0 }, "$repr node properties");
+    $graph->remove_node_property('A', 'slot');
+    is($graph->node_properties('A'), { kind => 'input', trainable => 0 }, "$repr remove node property");
+
+    $graph->add_edge('A', 'B', 2.5, { role => 'distance' });
+    is($graph->edge_properties('B', 'A'), { role => 'distance', weight => 2.5 }, "$repr edge properties");
+    $graph->set_edge_property('B', 'A', 'weight', 7.0);
+    is($graph->edge_weight('A', 'B'), 7.0, "$repr weight property syncs edge weight");
+    $graph->set_edge_property('A', 'B', 'trainable', 1);
+    $graph->remove_edge_property('A', 'B', 'role');
+    is($graph->edge_properties('A', 'B'), { trainable => 1, weight => 7.0 }, "$repr edge property removal");
+
+    $graph->remove_edge('A', 'B');
+    like(dies { $graph->edge_properties('A', 'B') }, qr/edge not found/, "$repr edge props removed with edge");
+}
+
 done_testing;

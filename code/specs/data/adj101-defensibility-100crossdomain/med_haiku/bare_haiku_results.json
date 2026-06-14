@@ -1,0 +1,50 @@
+[
+ {
+  "id": "MED-CRCL",
+  "kind": "compute",
+  "reasoning": "The Cockcroft-Gault equation for males is:\nCrCl = (140 - age) × weight(kg) / (72 × serum creatinine)\n\nGiven data:\n- Age: 68 years\n- Weight: 80 kg\n- Serum creatinine: 1.2 mg/dL\n- Blood pressure: 130/85 mmHg (not needed for this calculation)\n\nStep-by-step calculation:\n1. Calculate (140 - age): 140 - 68 = 72\n2. Multiply by weight: 72 × 80 = 5,760\n3. Calculate denominator: 72 × 1.2 = 86.4\n4. Divide numerator by denominator: 5,760 / 86.4 = 66.67 mL/min\n\nRounding to practical clinical precision: 66.7 mL/min or approximately 67 mL/min",
+  "answer": "The estimated creatinine clearance using the Cockcroft-Gault equation is approximately 67 mL/min (or 66.7 mL/min with one decimal place).\n\nCalculation:\nCrCl = (140 - 68) × 80 / (72 × 1.2)\nCrCl = 72 × 80 / 86.4\nCrCl = 5,760 / 86.4\nCrCl = 66.7 mL/min ≈ 67 mL/min\n\nThis indicates mild to moderate reduction in renal function (normal GFR is typically >90 mL/min), which is expected in a 68-year-old patient."
+ },
+ {
+  "id": "MED-FLUID",
+  "kind": "compute",
+  "reasoning": "\nThe 4-2-1 rule breaks down pediatric maintenance fluid requirements into three weight brackets:\n\n1. First 10 kg: 4 mL/kg/h\n2. Next 10 kg (kg 11-20): 2 mL/kg/h\n3. Each kg above 20 kg: 1 mL/kg/h\n\nFor a 26 kg patient:\n- First 10 kg: 10 kg × 4 mL/kg/h = 40 mL/h\n- Next 10 kg (kg 11-20): 10 kg × 2 mL/kg/h = 20 mL/h\n- Remaining kg (kg 21-26): 6 kg × 1 mL/kg/h = 6 mL/h\n\nTotal = 40 + 20 + 6 = 66 mL/h\n",
+  "answer": "\nThe maintenance fluid rate for a 26 kg pediatric patient using the 4-2-1 rule is 66 mL/h.\n\nCalculation breakdown:\n- First 10 kg: 10 × 4 = 40 mL/h\n- Next 10 kg: 10 × 2 = 20 mL/h\n- Remaining 6 kg: 6 × 1 = 6 mL/h\n- Total: 40 + 20 + 6 = 66 mL/h\n"
+ },
+ {
+  "id": "MED-DOSE",
+  "kind": "compute",
+  "answer": "120 mg per administration",
+  "reasoning": "The total daily dose is calculated as: 24 kg × 15 mg/kg/day = 360 mg/day. Since the medication is given every 8 hours, there are 3 doses per day (24 hours ÷ 8 hours = 3). Therefore, the dose per administration is 360 mg ÷ 3 = 120 mg."
+ },
+ {
+  "id": "MED-BMI",
+  "kind": "compute",
+  "answer": "BMI = 29.39 kg/m²",
+  "reasoning": "The body mass index (BMI) is calculated using the formula:\n\nBMI = weight (kg) / height (m)²\n\nGiven:\n- Height = 1.75 m\n- Weight = 90 kg\n\nCalculation:\nBMI = 90 / (1.75)²\nBMI = 90 / 3.0625\nBMI = 29.39 kg/m²\n\nThis BMI falls into the \"overweight\" category according to WHO classifications (25.0-29.9 kg/m² is overweight; 30.0+ kg/m² is obese)."
+ },
+ {
+  "id": "MED-ANION",
+  "kind": "compute",
+  "answer": "The anion gap is 18 mmol/L.",
+  "reasoning": "The anion gap is calculated using the formula: Na - (Cl + HCO3)\n\nGiven values:\n- Sodium (Na) = 140 mmol/L\n- Chloride (Cl) = 104 mmol/L\n- Bicarbonate (HCO3) = 18 mmol/L\n\nCalculation:\nAnion Gap = 140 - (104 + 18)\nAnion Gap = 140 - 122\nAnion Gap = 18 mmol/L\n\nThe normal anion gap range is typically 8-16 mmol/L (using this simplified formula without potassium). A value of 18 mmol/L is elevated, suggesting a high anion gap metabolic acidosis. This indicates the presence of unmeasured anions in the serum, which could be from lactic acid, ketones, or other organic acids."
+ },
+ {
+  "id": "MED-CACORR",
+  "kind": "compute",
+  "reasoning": "\nThe corrected calcium formula accounts for the fact that a significant portion of serum calcium is bound to albumin. When albumin is low, the measured total calcium may appear low even if ionized (physiologically active) calcium is normal.\n\nGiven information:\n- Measured serum calcium: 7.6 mg/dL\n- Serum albumin: 2.5 g/dL\n- Correction formula: Add 0.8 mg/dL for each 1 g/dL that albumin is below 4 g/dL\n\nStep 1: Calculate how much albumin is below 4 g/dL\nAlbumin deficit = 4 g/dL - 2.5 g/dL = 1.5 g/dL\n\nStep 2: Calculate the correction amount\nCorrection = 0.8 mg/dL per 1 g/dL deficit\nCorrection = 0.8 × 1.5 = 1.2 mg/dL\n\nStep 3: Add the correction to the measured calcium\nCorrected calcium = 7.6 mg/dL + 1.2 mg/dL = 8.8 mg/dL\n",
+  "answer": "\nThe corrected serum calcium is 8.8 mg/dL.\n\nCalculation:\n- Albumin deficit: 4 - 2.5 = 1.5 g/dL below normal\n- Correction: 0.8 mg/dL × 1.5 = 1.2 mg/dL\n- Corrected calcium: 7.6 + 1.2 = 8.8 mg/dL\n"
+ },
+ {
+  "id": "MED-HEPARIN",
+  "kind": "compute",
+  "answer": "1,200 units per hour",
+  "reasoning": "To find units per hour, I need to:\n\n1. First, determine the concentration of heparin in units per mL:\n   - 25,000 units in 250 mL\n   - Concentration = 25,000 units ÷ 250 mL = 100 units/mL\n\n2. Then, multiply the concentration by the infusion rate to get units per hour:\n   - Infusion rate = 12 mL/h\n   - Units per hour = 100 units/mL × 12 mL/h = 1,200 units/h\n\nTherefore, the patient is receiving 1,200 units of heparin per hour."
+ },
+ {
+  "id": "MED-REIMB",
+  "kind": "compute",
+  "answer": "The question is incomplete. The prompt states \"QUESTION: undefined\" with no actual question provided. I cannot answer an undefined question.",
+  "reasoning": "The user provided insurance scenario context (a patient with a fully met deductible receiving an $1,840 in-network specialist bill, with a 70% reimbursement rate after deductible), but did not include the actual question to be answered. Without knowing what specific information is being requested (e.g., insurance reimbursement amount, patient out-of-pocket cost, coinsurance amount, etc.), I cannot provide a meaningful answer. The question field explicitly states \"undefined.\""
+ }
+]

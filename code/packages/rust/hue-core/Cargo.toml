@@ -1,0 +1,12 @@
+[package]
+name = "hue-core"
+version = "0.1.0"
+edition = "2021"
+description = "Philips Hue CLIP v2 resource and mapping primitives for the smart-home runtime"
+license = "MIT"
+
+[dependencies]
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-discovery = { path = "../smart-home-discovery" }
+smart-home-local-http = { path = "../smart-home-local-http" }

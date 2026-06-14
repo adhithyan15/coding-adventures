@@ -1,0 +1,40 @@
+{
+  "before_decision": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+  "after_decision": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+  "after_margin_db": 24.0,
+  "after_ranked": [
+    {
+      "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+      "score_db": 47.0
+    },
+    {
+      "hypothesis": "Visceral leishmaniasis (kala-azar)",
+      "score_db": 23.0
+    },
+    {
+      "hypothesis": "Tuberculosis (disseminated / CNS)",
+      "score_db": 22.0
+    },
+    {
+      "hypothesis": "Brucellosis",
+      "score_db": 17.0
+    },
+    {
+      "hypothesis": "Arboviral / other viral encephalitis",
+      "score_db": 10.0
+    },
+    {
+      "hypothesis": "Malaria",
+      "score_db": 4.0
+    },
+    {
+      "hypothesis": "Enteric (typhoid) fever",
+      "score_db": 0.0
+    }
+  ],
+  "n_grounded": 8,
+  "n_facts": 12,
+  "margin_rests_on_assumed": false,
+  "rulebook_size": 36,
+  "ground_truth": "Neurobrucellosis (confirmed by Brucella serology + culture, held aside)."
+}

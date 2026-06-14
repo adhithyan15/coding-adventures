@@ -1,0 +1,20 @@
+{
+  "queries": [],
+  "ranked": [],
+  "decision": {
+    "type": "empty"
+  },
+  "solve": {
+    "outcome": "unsupported",
+    "reason": "inequality constraints \u2014 feasibility/LP is track C1/C2"
+  },
+  "check": {
+    "outcome": "unsat",
+    "core": [
+      0,
+      1,
+      2,
+      3
+    ]
+  }
+}

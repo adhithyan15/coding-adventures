@@ -1,0 +1,2481 @@
+//! # mosaic-package-artifact-builder
+//!
+//! Per-backend package-artifact build mode for Mosaic packages, implementing
+//! **UI29 §4.3** (Mosaic Primitive Kernel — "Compiling a package").
+//!
+//! ## The one question this crate answers
+//!
+//! Given:
+//!
+//! - a *package root* directory (containing `mosaic-package.toml` plus a
+//!   `src/` tree of `.mil` / `.mll` / `.msl` triples), and
+//! - a *backend* to target (React, SwiftUI, Qt, …),
+//!
+//! produce a directory of backend-specific source files that some host
+//! application can consume the same way it would consume any other library.
+//! Concretely: take a `mosaic-pkg-grid/` source package and produce a
+//! `dist/react/{Grid.tsx, Cell.tsx, Column.tsx, index.ts}` (or
+//! `dist/swiftui/{Grid.swift, Cell.swift, Column.swift, index.swift}`,
+//! or `dist/qt/{Grid.qml, Cell.qml, Column.qml, qmldir}`).
+//!
+//! ## What this crate is *not*
+//!
+//! - It is not a *resolver*. We do **not** look up cross-package references
+//!   here — every component is compiled in isolation against its own
+//!   three-file triple. Resolving `Grid` inside another package's `.mll`
+//!   is `mosaic-package-resolver`'s job.
+//! - It does not yet wire WebComponent or HTML — those backends do not have
+//!   a `from_pipeline` entry point yet. We return `UnsupportedBackend` for
+//!   them so callers can still type the API surface uniformly.
+//! - It does not modify the existing emitter crates. We *consume* their
+//!   public `from_pipeline(interface, layout, style)` functions and treat
+//!   them as opaque IR-to-string lowerings.
+//!
+//! ## The algorithm in 30 seconds
+//!
+//! ```text
+//! build_package(opts)
+//!     │
+//!     ├── parse <package_root>/mosaic-package.toml
+//!     │     (delegates to mosaic-package-manifest)
+//!     │
+//!     ├── for each <Component> in components.exports:
+//!     │       ├── read src/<Component>.mil      (required)
+//!     │       ├── read src/<Component>.mll      (required)
+//!     │       ├── read src/<Component>.msl      (optional)
+//!     │       │
+//!     │       ├── mosmodel_compiler::compile      → interface IR
+//!     │       ├── moslayout_compiler::compile     → layout IR
+//!     │       ├── mosstyle_compiler::compile      → style IR (or empty default)
+//!     │       │
+//!     │       └── <backend>::from_pipeline(I, L, S)
+//!     │             → write to <output>/<backend>/<Component>.<ext>
+//!     │
+//!     └── write index/qmldir under <output>/<backend>/
+//! ```
+//!
+//! Each step has exactly one failure mode and exactly one error variant;
+//! see [`BuildError`] for the exhaustive list.
+//!
+//! ## Why a separate crate (not part of `mosaic-compile`)?
+//!
+//! The `mosaic-compile` binary should be a thin CLI shell. Tests and
+//! downstream tools want to invoke the package-build logic directly
+//! (e.g. an IDE plugin that rebuilds a package on save). Putting the
+//! algorithm in a library means it can be exercised without spawning a
+//! subprocess and parsing stderr — the standard reason to factor a
+//! library out from underneath its CLI.
+//!
+//! ## Worked example
+//!
+//! ```no_run
+//! use std::path::PathBuf;
+//! use mosaic_package_artifact_builder::{build_package, BuildOptions, Backend};
+//!
+//! let opts = BuildOptions {
+//!     package_root: PathBuf::from("code/packages/mosaic-pkg-grid"),
+//!     output_root:  PathBuf::from("/tmp/mosaic-pkg-grid-dist"),
+//!     backend:      Backend::React,
+//!     emit_project: false,
+//! };
+//! let result = build_package(&opts).expect("package compiles");
+//! for path in &result.artifacts {
+//!     println!("wrote {}", path.display());
+//! }
+//! ```
+
+use std::fs;
+use std::path::{Path, PathBuf};
+
+use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError};
+
+// ===========================================================================
+// Public types
+// ===========================================================================
+
+/// The set of backends this crate knows how to drive.
+///
+/// All six UI29 §4.3 backends are wired (since this update). The HTML
+/// and WebComponent backends ship as part of UI29-2's follow-up; the
+/// XAML backend ships with WinUI3-compatible UserControls + per-
+/// component code-behind partials.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Backend {
+    /// React functional components in `.tsx` files.
+    React,
+    /// SwiftUI `View` structs in `.swift` files.
+    SwiftUI,
+    /// Qt Quick (QML) elements in `.qml` files.
+    Qt,
+    /// One `.js` file per component, defining a self-registering
+    /// `<custom-element>` against the shadow-DOM runtime.
+    WebComponent,
+    /// A `.html` fragment per component. Slot values resolve at the
+    /// host's template engine boundary via `{{handlebars}}` markers.
+    Html,
+    /// WinUI 3 / UWP. Each component emits a triple:
+    /// `{Component}.xaml` (markup), `{Component}.xaml.cs`
+    /// (code-behind partial), and `{Component}.Event.cs`
+    /// (discriminated event union).
+    Xaml,
+    /// Flutter / Dart. Each component emits a single `.dart` file
+    /// containing a sealed `<Component>Event` union and a
+    /// `StatelessWidget` class. Drops into a Flutter `lib/`
+    /// directory; the host imports it like any other Dart file.
+    Flutter,
+}
+
+impl Backend {
+    /// The on-disk subdirectory name beneath `output_root`.
+    ///
+    /// Conforms to the UI29 §4.3 layout: `dist/react/`, `dist/swiftui/`,
+    /// `dist/qt/`, `dist/webcomponent/`, `dist/html/`, `dist/xaml/`.
+    fn dir_name(self) -> &'static str {
+        match self {
+            Backend::React => "react",
+            Backend::SwiftUI => "swiftui",
+            Backend::Qt => "qt",
+            Backend::WebComponent => "webcomponent",
+            Backend::Html => "html",
+            Backend::Xaml => "xaml",
+            Backend::Flutter => "flutter",
+        }
+    }
+
+    /// The file extension for the *primary* component file. Backends
+    /// that emit multiple files per component (currently only XAML —
+    /// `.xaml` + `.xaml.cs` + `.Event.cs`) use the extension of the
+    /// markup file as their "primary"; the secondary files are written
+    /// alongside with their own extensions.
+    ///
+    /// All six backends now return `Some(...)` since every backend has
+    /// a wired `from_pipeline`. The `Option` shape is preserved so a
+    /// future hypothetical "manifest-only" backend can still slot in.
+    fn component_extension(self) -> Option<&'static str> {
+        match self {
+            Backend::React => Some("tsx"),
+            Backend::SwiftUI => Some("swift"),
+            Backend::Qt => Some("qml"),
+            Backend::WebComponent => Some("js"),
+            Backend::Html => Some("html"),
+            Backend::Xaml => Some("xaml"),
+            Backend::Flutter => Some("dart"),
+        }
+    }
+}
+
+/// Inputs to a package build. Owned paths are cheap and side-step lifetime
+/// games for callers (e.g. CLIs constructing this from argv strings).
+#[derive(Debug, Clone)]
+pub struct BuildOptions {
+    /// Directory containing `mosaic-package.toml`. The component sources
+    /// are expected at `<package_root>/src/<Component>.{mil,mll,msl}`.
+    pub package_root: PathBuf,
+    /// Root directory under which `<backend>/` is created.
+    ///
+    /// `<output_root>` is created if missing — the caller does not have to
+    /// `mkdir -p` first.
+    pub output_root: PathBuf,
+    /// Which backend to compile for.
+    pub backend: Backend,
+    /// UI32-M: when true, also emit the per-backend project shell
+    /// (Vite for React, `<!DOCTYPE>` doc for HTML, Custom Element
+    /// for WebComponent, SwiftPM for SwiftUI, etc.) into
+    /// `<output_root>/<backend>/` alongside the per-component
+    /// artifacts. Default `false` for back-compat.
+    ///
+    /// v1 mounts only the FIRST component declared in
+    /// `[components].exports` as the project root. Multi-component
+    /// routing/tabs UI is deferred to UI32-M.1 (per UI32 spec §5
+    /// open question 1). Documented as a deviation in the L8
+    /// CHANGELOG.
+    pub emit_project: bool,
+}
+
+/// What a successful build produced.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BuildResult {
+    /// Every file we wrote, in the order they were written.
+    ///
+    /// Index/qmldir files come last (they reference the per-component
+    /// outputs, so emitting them last makes the order match the eventual
+    /// dependency order if a caller wants to stream-upload artifacts).
+    pub artifacts: Vec<PathBuf>,
+    /// The PascalCase names of every component we compiled.
+    ///
+    /// Same as `manifest.components.exports`, but threaded through here so
+    /// callers don't have to re-parse the manifest to know what they got.
+    pub components_built: Vec<String>,
+}
+
+/// Everything that can go wrong while building a package.
+///
+/// Each variant carries enough context to render a useful CLI message
+/// without the caller having to re-read source files for line numbers —
+/// the upstream compilers already include those in their `error` strings.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BuildError {
+    /// The manifest at `<package_root>/mosaic-package.toml` did not parse
+    /// or was invalid. The wrapped string is the rendered `ManifestError`.
+    Manifest(String),
+    /// A backend was requested that this crate version does not yet wire.
+    /// All six UI29 §4.3 backends are wired since v0.2; this variant
+    /// remains as a future-proof guard against new `Backend::Foo`
+    /// variants that forget to wire `compile_one_component`.
+    UnsupportedBackend(Backend),
+    /// A component or package name in the manifest contains characters
+    /// that would be unsafe to interpolate into a path, an XML attribute,
+    /// or a JavaScript string literal. Filenames are derived directly
+    /// from the manifest, so a name like `../../etc/passwd` or
+    /// `X"; rm -rf "` would escape the dist directory or inject into
+    /// the generated index files. Validation runs up-front, before any
+    /// I/O, so a CLI sees the friendly error before partial output
+    /// hits the disk.
+    UnsafeName {
+        /// What we were validating (`"component"` or `"package"`).
+        kind: &'static str,
+        /// The offending string verbatim.
+        name: String,
+        /// A short explanation of what's allowed
+        /// (e.g. `[A-Za-z][A-Za-z0-9_]*` for components).
+        reason: &'static str,
+    },
+    /// The manifest's `[components].exports` listed a component name that
+    /// matched no source file. (We don't error from this directly today —
+    /// we error from [`SourceNotFound`] instead — but the variant exists
+    /// so future cross-package-aware checks have a place to land without
+    /// breaking the enum's exhaustive-match contract.)
+    ///
+    /// [`SourceNotFound`]: BuildError::SourceNotFound
+    MissingComponent {
+        package: String,
+        component: String,
+    },
+    /// An exported component had no `<Component>.mil` / `<Component>.mll`
+    /// pair under `src/`. The `.msl` is optional so its absence does not
+    /// trigger this.
+    SourceNotFound {
+        component: String,
+        expected_dir: PathBuf,
+    },
+    /// Three-language pipeline compilation failed for a component. The
+    /// `error` string is the rendered `Display` form of whichever sub-
+    /// compiler complained first — mosmodel, moslayout, mosstyle, or the
+    /// backend's `PipelineEmitError`.
+    PipelineError {
+        component: String,
+        error: String,
+    },
+    /// A read/write/mkdir call failed. The string is `io::Error::to_string()`
+    /// because we don't want to leak `std::io::Error`'s `Send`-only quirks
+    /// into our public API.
+    Io(String),
+}
+
+impl std::fmt::Display for BuildError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BuildError::Manifest(e) => write!(f, "manifest error: {e}"),
+            BuildError::UnsupportedBackend(b) => {
+                write!(f, "backend {b:?} is not yet wired in this build")
+            }
+            BuildError::MissingComponent { package, component } => write!(
+                f,
+                "package '{package}' lists component '{component}' but no \
+                 source file matched"
+            ),
+            BuildError::SourceNotFound { component, expected_dir } => write!(
+                f,
+                "no '{component}.mil'/'{component}.mll' under {}",
+                expected_dir.display()
+            ),
+            BuildError::PipelineError { component, error } => {
+                write!(f, "pipeline error for component '{component}': {error}")
+            }
+            BuildError::UnsafeName { kind, name, reason } => write!(
+                f,
+                "unsafe {kind} name '{name}': {reason} (would break path or output safety)"
+            ),
+            BuildError::Io(e) => write!(f, "io error: {e}"),
+        }
+    }
+}
+
+impl std::error::Error for BuildError {}
+
+impl From<ManifestError> for BuildError {
+    fn from(e: ManifestError) -> Self {
+        BuildError::Manifest(e.to_string())
+    }
+}
+
+// ===========================================================================
+// Public entry point
+// ===========================================================================
+
+/// Build a package's artifact for a single backend.
+///
+/// See the crate-level docs for the full algorithm. The high-level contract
+/// is:
+///
+/// - On success, returns the list of files written and the components
+///   built. The output tree is `<output_root>/<backend>/...`; we never
+///   touch files outside that subdirectory.
+/// - On failure, returns the first error encountered. Partial output may
+///   exist on disk — we do not roll back the filesystem, because callers
+///   either build into a temp dir and `mv` (the npm/Cargo pattern) or
+///   build into a stable dist directory and treat a half-written tree as
+///   the same outcome as a successful rebuild that subsequently failed.
+pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
+    // ----- 1. Validate the backend up front --------------------------------
+    //
+    // All six backends are wired since v0.2; `component_extension`
+    // returns `Some(...)` for every variant. The check is kept as a
+    // future-proof guard against new `Backend::Foo` variants that
+    // forget to wire `compile_one_component`.
+    if opts.backend.component_extension().is_none() {
+        return Err(BuildError::UnsupportedBackend(opts.backend));
+    }
+
+    // ----- 2. Read the manifest --------------------------------------------
+    let manifest_path = opts.package_root.join("mosaic-package.toml");
+    let manifest = parse_manifest(&manifest_path)?;
+
+    // ----- 2a. Validate names from the manifest ----------------------------
+    //
+    // The manifest is the threat boundary: a malicious or honestly-
+    // typo'd `[package].name` or `[components].exports` entry flows
+    // directly into filenames we write under `output_root`, into XML
+    // attributes in the XAML props fragment, into JS string literals
+    // in the WebComponent index, and into HTML comments in the HTML
+    // index. Without validation, a name like `../../etc/passwd` would
+    // escape the dist directory and a name like `Grid"; alert(1)//`
+    // would break out of the generated `import "./Grid.js"` line.
+    //
+    // We require strict alphanumeric-plus-underscore for component
+    // names (matches the PascalCase convention every existing example
+    // uses) and strict kebab-case for package names. Anything else is
+    // a hard error before any I/O happens.
+    validate_package_name(&manifest.package.name)?;
+    for component in &manifest.components.exports {
+        validate_component_name(component)?;
+    }
+
+    // ----- 3. Prepare the output directory ---------------------------------
+    //
+    // `create_dir_all` is the friendly "mkdir -p" — it is *not* an error
+    // if the directory already exists, which is the behaviour we want
+    // for incremental rebuilds.
+    let backend_dir = opts.output_root.join(opts.backend.dir_name());
+    create_dir_all(&backend_dir)?;
+
+    // ----- 4. Compile each component (× each variant) ----------------------
+    //
+    // UI30 multi-layout: for every component, discover its variants
+    // by scanning `src/` for `<Component>.<variant>.mll` files, then
+    // emit one artifact per (component, variant) pair. The default
+    // variant (bare `<Component>.mll`) emits the unsuffixed artifact
+    // name `<Component>.<ext>`; named variants emit
+    // `<Component>.<variant>.<ext>`.
+    //
+    // **Back-compat clause:** a component with only a bare
+    // `<Component>.mll` (no `.touch.mll`/etc.) produces exactly one
+    // artifact with the unsuffixed name — same as the pre-UI30
+    // behaviour. Every existing package builds byte-for-byte
+    // identically.
+    let src_dir = opts.package_root.join("src");
+    let mut artifacts = Vec::new();
+    let mut components_built = Vec::new();
+
+    for component in &manifest.components.exports {
+        let variants = discover_variants(&src_dir, component)?;
+        for variant in &variants {
+            let artifact = compile_one_component(
+                component,
+                variant.as_deref(),
+                &src_dir,
+                &backend_dir,
+                opts.backend,
+            )?;
+            artifacts.push(artifact);
+        }
+        // We list the component once in `components_built` even if it
+        // produced multiple variant artifacts — the index file (qmldir
+        // / index.html / etc.) lists components, not artifacts, and
+        // tracking per-variant entries there would mean reworking
+        // every per-backend index emitter (deferred to a follow-up).
+        components_built.push(component.clone());
+    }
+
+    // ----- 5. Emit the per-backend index / qmldir --------------------------
+    //
+    // The index file lists every component built. Empty packages still get
+    // an index — it's just empty — so downstream tools don't have to
+    // special-case "package with zero components".
+    let index_path = emit_index_file(&backend_dir, &components_built, opts.backend, &manifest.package.name)?;
+    artifacts.push(index_path);
+
+    // ----- 6. UI32-M: optional project-shell emission ----------------------
+    //
+    // When `opts.emit_project` is true, route through each backend's
+    // `from_pipeline_with_options(emit_project: true)` to produce a
+    // runnable project shell alongside the per-component artifacts.
+    //
+    // v1 scope (deferred to UI32-M.1):
+    //   - Only the FIRST component in `manifest.components.exports`
+    //     is mounted as the shell's root. Authors with multi-component
+    //     packages who want a tab/route bar between components hit
+    //     this limitation; the spec §5 open question 1 picks
+    //     "first-export-default" as the v1 policy.
+    //   - XAML is excluded — it already has its own `--emit-project`
+    //     mechanism via `EmitOptions::emit_project` in the emitter
+    //     itself (PR #3917), bypassing the artifact-builder. UI32-M.1
+    //     unifies the two paths.
+    //
+    // The shell side-files (package.json, vite.config.ts, etc.) are
+    // written into `backend_dir` alongside the per-component
+    // artifacts. The per-emitter banner contract (UI32 spec §3.5)
+    // means a re-build overwrites them deterministically.
+    if opts.emit_project {
+        if let Some(first_component) = components_built.first() {
+            let shell_artifacts = emit_project_shell(
+                first_component,
+                &src_dir,
+                &backend_dir,
+                opts.backend,
+            )?;
+            artifacts.extend(shell_artifacts);
+        }
+        // Empty packages with emit_project: true don't emit a shell —
+        // there is no component to mount. The bare index file from
+        // step 5 still lands in `backend_dir`.
+    }
+
+    Ok(BuildResult {
+        artifacts,
+        components_built,
+    })
+}
+
+/// UI32-M: emit the per-backend project shell for the package's first
+/// component. Returns the list of side-file paths written into
+/// `backend_dir`.
+///
+/// Re-parses the first component's `.mil`/`.mll`/`.msl` triple and
+/// routes through the backend-specific `from_pipeline_with_options`
+/// with `emit_project: true`. The per-emitter `ProjectFiles` struct
+/// is then written to disk at fixed relative paths per UI32 spec
+/// §2.2 + §3.7.
+///
+/// XAML is intentionally not wired here — its emitter has its own
+/// `EmitOptions::emit_project` mechanism (PR #3917) that runs
+/// through `mosaic-compile` directly, bypassing the artifact-builder.
+/// Unifying the two paths is queued as UI32-M.1.
+fn emit_project_shell(
+    component: &str,
+    src_dir: &Path,
+    backend_dir: &Path,
+    backend: Backend,
+) -> Result<Vec<PathBuf>, BuildError> {
+    // Re-read the triple. This duplicates `compile_one_component`'s
+    // file-loading logic; we accept the redundancy because the shell
+    // emission lives outside the per-component compile loop and we'd
+    // rather not thread the parsed IRs through. The triple is small
+    // (typically < 1 KiB total), so reading + parsing again is
+    // cheap.
+    let mil_path = src_dir.join(format!("{component}.mil"));
+    let mll_path = src_dir.join(format!("{component}.mll"));
+    let msl_path = src_dir.join(format!("{component}.msl"));
+
+    if !mil_path.exists() || !mll_path.exists() {
+        return Err(BuildError::SourceNotFound {
+            component: component.to_string(),
+            expected_dir: src_dir.to_path_buf(),
+        });
+    }
+
+    let mil_src = read_to_string(&mil_path)?;
+    let mll_src = read_to_string(&mll_path)?;
+    let msl_src = if msl_path.exists() {
+        read_to_string(&msl_path)?
+    } else {
+        format!("style {component} {{ }}")
+    };
+
+    let mosmodel_out = mosmodel_compiler::compile(&mil_src)
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+
+    // Per-backend dispatch. Each branch builds an EmitOptions with
+    // emit_project: true, calls the appropriate from_pipeline_with_options,
+    // and writes the resulting ProjectFiles side-files into backend_dir
+    // at the fixed relative paths from UI32 spec §2.2.
+    let mut written: Vec<PathBuf> = Vec::new();
+    match backend {
+        Backend::React => {
+            let mut react_opts = mosaic_emit_react::pipeline::EmitOptions::default();
+            react_opts.emit_project = true;
+            let r = mosaic_emit_react::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &react_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, &str); 4] = [
+                    ("package.json", &proj.package_json),
+                    ("vite.config.ts", &proj.vite_config),
+                    ("index.html", &proj.index_html),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+                let nested = backend_dir.join("src/main.tsx");
+                if let Some(parent) = nested.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&nested, proj.main_tsx.as_bytes())?;
+                written.push(nested);
+            }
+        }
+        Backend::Html => {
+            let mut html_opts = mosaic_emit_html::pipeline::EmitOptions::default();
+            html_opts.emit_project = true;
+            let r = mosaic_emit_html::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &html_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                // HTML names the shell `index.html` (the bare
+                // manifest-only index from step 5 is at the same
+                // path, so this overwrites it — by design per UI32
+                // §3.4: with --emit-project, the shell IS the index).
+                let flat: [(&str, &str); 2] = [
+                    ("index.html", &proj.index_html),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+        }
+        Backend::WebComponent => {
+            let mut wc_opts = mosaic_emit_webcomponent::pipeline::EmitOptions::default();
+            wc_opts.emit_project = true;
+            let r = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &wc_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, &str); 2] = [
+                    ("index.html", &proj.index_html),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+        }
+        Backend::Flutter => {
+            let mut fl_opts = mosaic_emit_flutter::pipeline::EmitOptions::default();
+            fl_opts.emit_project = true;
+            let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &fl_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, &str); 2] = [
+                    ("pubspec.yaml", &proj.pubspec_yaml),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+                let nested = backend_dir.join("lib/main.dart");
+                if let Some(parent) = nested.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&nested, proj.main_dart.as_bytes())?;
+                written.push(nested);
+            }
+        }
+        Backend::Qt => {
+            let mut qt_opts = mosaic_emit_qt::pipeline::EmitOptions::default();
+            qt_opts.emit_project = true;
+            let r = mosaic_emit_qt::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &qt_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                // Qt's qmldir shell file would conflict with the
+                // step-5 qmldir (the module descriptor). The shell's
+                // qmldir is the same shape as the index path — UI32
+                // §3.4 says --emit-project's shell IS the qmldir.
+                let flat: [(&str, &str); 4] = [
+                    ("CMakeLists.txt", &proj.cmake_lists),
+                    ("main.cpp", &proj.main_cpp),
+                    ("qmldir", &proj.qmldir),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+            }
+        }
+        Backend::SwiftUI => {
+            let mut sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions::default();
+            sw_opts.emit_project = true;
+            let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                &sw_opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+            if let Some(proj) = r.project {
+                let flat: [(&str, &str); 2] = [
+                    ("Package.swift", &proj.package_swift),
+                    ("README.md", &proj.readme),
+                ];
+                for (rel, body) in flat {
+                    let p = backend_dir.join(rel);
+                    write_file(&p, body.as_bytes())?;
+                    written.push(p);
+                }
+                let nested = backend_dir.join("Sources/App/App.swift");
+                if let Some(parent) = nested.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&nested, proj.app_swift.as_bytes())?;
+                written.push(nested);
+            }
+        }
+        Backend::Xaml => {
+            // XAML's project shell flows through its own
+            // `EmitOptions::emit_project` from PR #3917, which is
+            // wired in `mosaic-compile`'s xaml branch (not in the
+            // artifact-builder). For UI32-M v1 the artifact-builder
+            // path silently no-ops for XAML — invoking
+            // `--backend xaml --emit-project` through `build_package`
+            // does nothing extra. UI32-M.1 unifies the two paths so
+            // this branch becomes a wired call like the others.
+        }
+    }
+    Ok(written)
+}
+
+// ===========================================================================
+// Per-component pipeline
+// ===========================================================================
+
+/// Compile one component's three-file triple for the chosen backend.
+///
+/// Returns the path of the written artifact, or a [`BuildError`] tagged
+/// with the component name so a CLI can render
+/// `mosaic-compile pkg: error compiling Grid: …`.
+fn compile_one_component(
+    component: &str,
+    variant: Option<&str>,
+    src_dir: &Path,
+    out_dir: &Path,
+    backend: Backend,
+) -> Result<PathBuf, BuildError> {
+    // ----- 1. Locate the three source files --------------------------------
+    //
+    // `.mil` and `.mll` are required; `.msl` is optional. If the user has
+    // multiple `.msl` variants (e.g. `Grid.dark.msl`), we pick `<Component>.msl`
+    // first and fall back to *any* `.msl` whose stem begins with `<Component>.`.
+    // For the v1 packager we keep this simple: only the un-themed `.msl`
+    // matters. Theme handling is a follow-up.
+    //
+    // UI30 multi-layout: the `.mll` resolution honours the `variant`
+    // argument. When `Some("touch")`, we look for `<Component>.touch.mll`
+    // (no fallback at this layer — `discover_variants` is the source of
+    // truth for which variants exist, so the file is guaranteed to be
+    // there). When `None`, we read the bare `<Component>.mll` (default
+    // variant).
+    let mil_path = src_dir.join(format!("{component}.mil"));
+    let mll_path = match variant {
+        Some(v) => src_dir.join(format!("{component}.{v}.mll")),
+        None => src_dir.join(format!("{component}.mll")),
+    };
+    let msl_path = src_dir.join(format!("{component}.msl"));
+
+    if !mil_path.exists() || !mll_path.exists() {
+        return Err(BuildError::SourceNotFound {
+            component: component.to_string(),
+            expected_dir: src_dir.to_path_buf(),
+        });
+    }
+
+    let mil_src = read_to_string(&mil_path)?;
+    let mll_src = read_to_string(&mll_path)?;
+    let msl_src = if msl_path.exists() {
+        read_to_string(&msl_path)?
+    } else {
+        // Defensive default: an empty style block targeting this component.
+        // The mosstyle compiler accepts an empty `style {}` body and
+        // produces an empty StyleDef, which downstream emitters happily
+        // ignore. This is cleaner than wiring a "skip style" path through
+        // every backend's `from_pipeline`.
+        format!("style {component} {{ }}")
+    };
+
+    // ----- 2. Run the three-language pipeline ------------------------------
+    //
+    // Each compile call may return a `Vec<CompileError>`. We render the
+    // first one and wrap it as `PipelineError` so the caller gets one
+    // line per component rather than a flood.
+    let mosmodel_out = mosmodel_compiler::compile(&mil_src)
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+
+    let layout_out = moslayout_compiler::compile(&mll_src, Some(&mosmodel_out.descriptor_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+
+    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
+        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+
+    // ----- 3. Hand the three IRs to the chosen backend ---------------------
+    //
+    // Each backend produces either:
+    //   - a single string (React/SwiftUI/Qt/HTML/WebComponent) → one file
+    //   - a multi-file triple (XAML) → three files written together
+    //
+    // For the single-file shape we write `{Component}.{ext}` and return
+    // its path. For XAML we write all three, return the primary `.xaml`
+    // path, and write the secondaries alongside.
+    let ext = backend
+        .component_extension()
+        .expect("every backend has an extension since the v0.2 wire-up");
+
+    // UI30 multi-layout output filename:
+    //   default variant (variant == None) → `Grid.tsx`     (back-compat)
+    //   named variant   (variant == Some) → `Grid.touch.tsx`
+    //
+    // Embedding the variant infix in the filename lets multiple
+    // variants coexist in one output directory without collision.
+    // Hosts pick which variant to import at build time (or import
+    // all and pick at runtime — UI30 §6 leaves the policy to the
+    // host).
+    let primary_path = match variant {
+        Some(v) => out_dir.join(format!("{component}.{v}.{ext}")),
+        None => out_dir.join(format!("{component}.{ext}")),
+    };
+
+    let primary_bytes: String = match backend {
+        Backend::React => mosaic_emit_react::pipeline::from_pipeline(
+            &mosmodel_out.component,
+            &layout_out.def,
+            &style_out.def,
+        )
+        .map(|r| r.output)
+        .map_err(|e| pipeline_emit_err(component, e))?,
+        Backend::SwiftUI => mosaic_emit_swiftui::pipeline::from_pipeline(
+            &mosmodel_out.component,
+            &layout_out.def,
+            &style_out.def,
+        )
+        .map(|r| r.output)
+        .map_err(|e| pipeline_emit_err(component, e))?,
+        Backend::Qt => mosaic_emit_qt::pipeline::from_pipeline(
+            &mosmodel_out.component,
+            &layout_out.def,
+            &style_out.def,
+        )
+        .map(|r| r.output)
+        .map_err(|e| pipeline_emit_err(component, e))?,
+        Backend::Html => mosaic_emit_html::pipeline::from_pipeline(
+            &mosmodel_out.component,
+            &layout_out.def,
+            &style_out.def,
+        )
+        .map(|r| r.output)
+        .map_err(|e| pipeline_emit_err(component, e))?,
+        Backend::WebComponent => mosaic_emit_webcomponent::pipeline::from_pipeline(
+            &mosmodel_out.component,
+            &layout_out.def,
+            &style_out.def,
+        )
+        .map(|r| r.output)
+        .map_err(|e| pipeline_emit_err(component, e))?,
+        Backend::Xaml => {
+            // XAML produces three files per component. We do the full
+            // emit here (so the secondary writes happen alongside the
+            // primary), then return the primary body string for the
+            // shared single-file write at the end of the function.
+            //
+            // No registry / EmitOptions tweaks for v1: package-builder
+            // mode treats every component as a stand-alone UserControl
+            // (registry=None) and never emits the project shell
+            // (EmitOptions::default()).
+            let opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
+            let result = mosaic_emit_xaml::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_out.def,
+                None,
+                &opts,
+            )
+            .map_err(|e| pipeline_emit_err(component, e))?;
+
+            // Write the secondaries alongside the primary `.xaml`.
+            // `.xaml.cs` is the code-behind partial; `.Event.cs` is
+            // the discriminated event union. Variant infix applies
+            // to both secondaries so a multi-variant XAML build
+            // produces e.g. Grid.touch.xaml + Grid.touch.xaml.cs +
+            // Grid.touch.Event.cs alongside the desktop trio.
+            let (code_behind_path, events_path) = match variant {
+                Some(v) => (
+                    out_dir.join(format!("{component}.{v}.xaml.cs")),
+                    out_dir.join(format!("{component}.{v}.Event.cs")),
+                ),
+                None => (
+                    out_dir.join(format!("{component}.xaml.cs")),
+                    out_dir.join(format!("{component}.Event.cs")),
+                ),
+            };
+            write_file(&code_behind_path, result.code_behind.as_bytes())?;
+            write_file(&events_path, result.events.as_bytes())?;
+
+            result.xaml
+        }
+        Backend::Flutter => mosaic_emit_flutter::pipeline::from_pipeline(
+            &mosmodel_out.component,
+            &layout_out.def,
+            &style_out.def,
+        )
+        .map(|r| r.output)
+        .map_err(|e| pipeline_emit_err(component, e))?,
+    };
+
+    // ----- 4. Write the primary artifact -----------------------------------
+    write_file(&primary_path, primary_bytes.as_bytes())?;
+    Ok(primary_path)
+}
+
+/// UI30 multi-layout — discover the layout variants present for one
+/// component by scanning the package's `src/` directory.
+///
+/// Returns a Vec where each element is either:
+///   - `None`            → the default variant (bare `<Component>.mll` exists)
+///   - `Some("touch")`   → the named variant (`<Component>.touch.mll` exists)
+///
+/// **Filesystem is the source of truth.** UI30 §4 sketches a future
+/// `[variants]` manifest section with explicit declarations + a fallback
+/// chain. v1 of the artifact-builder skips that machinery and just
+/// builds whatever layout files it finds — this keeps the diff scoped
+/// to one crate (no manifest parser changes) and matches the principle
+/// of "what's on disk is what gets shipped." The manifest declaration
+/// is a follow-up PR for packages that want to *constrain* (vs.
+/// enumerate) variants.
+///
+/// **Back-compat clause.** A component with only a bare `<Component>.mll`
+/// (the existing convention for every published package today) returns
+/// `vec![None]` — exactly one default-variant artifact, unchanged
+/// behaviour. The variant infix is opt-in via filesystem.
+///
+/// **Discovery order.** We always emit the default variant FIRST when
+/// present, so back-compat consumers see the unsuffixed filename land
+/// at predictable timestamps; named variants follow alphabetically.
+///
+/// **Filename pattern accepted.** `<Component>.<variant>.mll` where
+/// `<variant>` is ASCII alphanumeric / `_` / `-` and non-empty. Files
+/// failing this pattern (e.g. `Grid..mll`, `Grid.foo bar.mll`) are
+/// silently skipped — they'll surface later as moslayout parse
+/// errors, not silent misses, because they aren't valid mosaic
+/// sources anyway.
+fn discover_variants(src_dir: &Path, component: &str) -> Result<Vec<Option<String>>, BuildError> {
+    let mut variants: Vec<Option<String>> = Vec::new();
+
+    // Default variant: bare `<Component>.mll`.
+    let bare = src_dir.join(format!("{component}.mll"));
+    if bare.exists() {
+        variants.push(None);
+    }
+
+    // Named variants: scan for `<Component>.<variant>.mll`. We can't
+    // use a globbing crate (zero-deps policy), so iterate `read_dir`
+    // and string-match the stem.
+    let entries = match fs::read_dir(src_dir) {
+        Ok(e) => e,
+        Err(e) => {
+            return Err(BuildError::Io(format!(
+                "failed to read src dir {}: {e}",
+                src_dir.display()
+            )));
+        }
+    };
+
+    let prefix = format!("{component}.");
+    let suffix = ".mll";
+    let bare_name = format!("{component}.mll");
+    let mut named: Vec<String> = Vec::new();
+    for entry in entries.flatten() {
+        let name = entry.file_name();
+        let name = match name.to_str() {
+            Some(s) => s,
+            None => continue, // non-UTF8 names are skipped (unlikely on src/)
+        };
+        // Filter: must start with `<Component>.` and end with `.mll`,
+        // AND must NOT be the bare default (`<Component>.mll`) — that
+        // file is handled separately by the bare-default check above.
+        // Without this `name == bare_name` skip, `Grid.mll` would slip
+        // through and the slice math below would underflow (the
+        // "middle" would be the empty string between `Grid.` and
+        // `.mll` — same 6 chars).
+        if !name.starts_with(&prefix) || !name.ends_with(suffix) || name == bare_name {
+            continue;
+        }
+        // Need enough length for a non-empty middle. The minimum valid
+        // filename is something like `Grid.x.mll` (prefix `Grid.` + 1
+        // middle char + `.mll`).
+        if name.len() <= prefix.len() + suffix.len() {
+            continue;
+        }
+        // Strip prefix + `.mll` suffix to recover the variant string.
+        // `Grid.touch.mll` → prefix `Grid.` + middle `touch` + `.mll`.
+        let middle = &name[prefix.len()..name.len() - suffix.len()];
+        if middle.is_empty() {
+            continue; // `Grid..mll` — degenerate, skip
+        }
+        // The middle must itself be a clean identifier — no nested dots
+        // (e.g. `Grid.dark.theme.mll` would have middle `dark.theme`,
+        // which isn't a single variant name). v1 rejects these as
+        // ambiguous; the spec leaves `.<theme>.<variant>` crosses for
+        // a follow-up.
+        if !middle
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-')
+        {
+            continue;
+        }
+        named.push(middle.to_string());
+    }
+    named.sort();
+    named.dedup();
+    for v in named {
+        variants.push(Some(v));
+    }
+
+    // Degenerate case: a component is declared in the manifest but has
+    // neither bare nor variant `.mll` files. We surface this as an
+    // empty Vec; `build_package`'s for-loop becomes a no-op for that
+    // component, and `compile_one_component`'s SourceNotFound check
+    // would have caught it anyway via the old code path — but since
+    // we now skip the call entirely, push a single None entry so the
+    // old error path still fires (consistent UX with pre-UI30 builds).
+    if variants.is_empty() {
+        variants.push(None);
+    }
+
+    Ok(variants)
+}
+
+/// Convenience wrapper turning a backend's `PipelineEmitError` into a
+/// `BuildError::PipelineError` tagged with the component name. Lifted
+/// out of every backend arm so the dispatch above stays compact.
+fn pipeline_emit_err<E: std::fmt::Display>(component: &str, e: E) -> BuildError {
+    BuildError::PipelineError {
+        component: component.to_string(),
+        error: e.to_string(),
+    }
+}
+
+/// Render a sub-compiler's first error as a `BuildError::PipelineError`.
+///
+/// The sub-compilers all expose `CompileError` types whose `Debug` impl is
+/// readable enough; we use that as the message body.
+fn pipeline_err<E: std::fmt::Debug>(component: &str, err: &E) -> BuildError {
+    BuildError::PipelineError {
+        component: component.to_string(),
+        error: format!("{err:?}"),
+    }
+}
+
+// ===========================================================================
+// Index / qmldir emitters
+// ===========================================================================
+
+/// Emit the per-backend index file that re-exports every component.
+///
+/// The exact format differs by backend (see inline comments) but the
+/// purpose is the same: hosts import the package as a *single unit*
+/// rather than reaching into per-component files by name.
+fn emit_index_file(
+    backend_dir: &Path,
+    components: &[String],
+    backend: Backend,
+    package_name: &str,
+) -> Result<PathBuf, BuildError> {
+    match backend {
+        Backend::React => {
+            // `index.ts` lives alongside `Grid.tsx`, `Cell.tsx`, …
+            //
+            // We use `export * from "./Grid"` (no `.tsx` extension) so the
+            // TypeScript module resolver picks the right file regardless
+            // of whether the host's `tsconfig.json` has
+            // `"allowImportingTsExtensions": true`.
+            let path = backend_dir.join("index.ts");
+            let mut body = String::new();
+            body.push_str("// Auto-generated by mosaic-package-artifact-builder. Do not edit.\n");
+            body.push_str(&format!("// Package: {package_name}\n\n"));
+            for c in components {
+                body.push_str(&format!("export * from \"./{c}\";\n"));
+            }
+            write_file(&path, body.as_bytes())?;
+            Ok(path)
+        }
+        Backend::SwiftUI => {
+            // SwiftPM-shaped output is overkill for v1. We emit a single
+            // `index.swift` that re-imports the per-component files via
+            // `@_exported import` so a host's `import MosaicPkgGrid` brings
+            // everything in scope.
+            //
+            // We do NOT generate a real Package.swift here — that requires
+            // module-naming decisions tied to the host's SwiftPM setup
+            // (target name, swift-tools-version), which UI29 §4.3 calls
+            // out as out-of-scope for this PR.
+            let path = backend_dir.join("index.swift");
+            let mut body = String::new();
+            body.push_str("// Auto-generated by mosaic-package-artifact-builder. Do not edit.\n");
+            body.push_str(&format!("// Package: {package_name}\n\n"));
+            for c in components {
+                body.push_str(&format!("// Component: {c}\n"));
+            }
+            write_file(&path, body.as_bytes())?;
+            Ok(path)
+        }
+        Backend::Qt => {
+            // `qmldir` is the Qt module descriptor. Each line is
+            // `<TypeName> <version> <RelativePath>.qml`. For a single-version
+            // package we hard-code `1.0`, which matches the QtQuick.Layouts
+            // 1.15 imports the Qt emitter writes.
+            //
+            // The `module` line gives a fully-qualified import name; we
+            // derive it from the package name by stripping the
+            // `mosaic-pkg-` prefix and PascalCasing (`mosaic-pkg-grid`
+            // → `MosaicPkg.Grid`). For an aggregator package without that
+            // prefix we just PascalCase the whole thing.
+            let path = backend_dir.join("qmldir");
+            let module_name = qmldir_module_name(package_name);
+            let mut body = String::new();
+            body.push_str("# Auto-generated by mosaic-package-artifact-builder. Do not edit.\n");
+            body.push_str(&format!("module {module_name}\n"));
+            for c in components {
+                body.push_str(&format!("{c} 1.0 {c}.qml\n"));
+            }
+            write_file(&path, body.as_bytes())?;
+            Ok(path)
+        }
+        Backend::Html => {
+            // `index.html` aggregates every component fragment into one
+            // browsable file. Each component is wrapped in a
+            // `<section data-component="X">` block so a hosting tool can
+            // find and lift individual components. No JS, no styles — the
+            // index is itself an HTML fragment, not a full document.
+            let path = backend_dir.join("index.html");
+            let mut body = String::new();
+            body.push_str("<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n");
+            body.push_str(&format!("<!-- Package: {package_name} -->\n\n"));
+            for c in components {
+                body.push_str(&format!("<!-- Component: {c} (see {c}.html) -->\n"));
+            }
+            write_file(&path, body.as_bytes())?;
+
+            // UI31-M Phase 3 — multi-component shell.
+            //
+            // The bare `index.html` above is an HTML *fragment*: just
+            // comments listing components. Useful for tools, useless to
+            // open in a browser. Many demos (notably VC2-html, the
+            // VisiCalc HTML demo) end up hand-writing a complete `<html>`
+            // wrapper that inlines each component's `.html` fragment —
+            // boilerplate the builder can absorb.
+            //
+            // The new `index-shell.html` file IS a complete document.
+            // It inlines each component's emitted `.html` content inside
+            // a `<section data-component="X">` block so opening it in a
+            // browser shows the whole package. The bare `index.html`
+            // stays untouched (back-compat) — hosting tools that already
+            // consume `index.html` see no change.
+            //
+            // The shell is intentionally minimal: no styles, no scripts,
+            // no `<head>` chrome beyond `<meta charset>` + `<title>`. A
+            // demo wanting fancier framing replaces the wrapper but the
+            // per-component sections still come from the builder.
+            //
+            // **Read-back safety.** The per-component `.html` files are
+            // produced by mosaic-emit-html (this builder writes them in
+            // step 4 above), so reading them back is reading our own
+            // output — not user-controlled content. The HTML escape
+            // story therefore lives in mosaic-emit-html; nothing extra
+            // is needed here.
+            let shell_path = backend_dir.join("index-shell.html");
+            let mut shell = String::new();
+            shell.push_str("<!DOCTYPE html>\n");
+            shell.push_str("<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n");
+            shell.push_str("<html>\n");
+            shell.push_str("<head>\n");
+            shell.push_str("  <meta charset=\"utf-8\">\n");
+            shell.push_str(&format!("  <title>{package_name}</title>\n"));
+            shell.push_str("</head>\n");
+            shell.push_str("<body>\n");
+            for c in components {
+                shell.push_str(&format!("  <section data-component=\"{c}\">\n"));
+                let frag_path = backend_dir.join(format!("{c}.html"));
+                match read_to_string(&frag_path) {
+                    Ok(frag) => {
+                        // Indent each line of the fragment by 4 spaces
+                        // so the shell stays human-readable. Trailing
+                        // newlines in the fragment fold naturally into
+                        // the section's closing `</section>`.
+                        for line in frag.lines() {
+                            shell.push_str("    ");
+                            shell.push_str(line);
+                            shell.push('\n');
+                        }
+                    }
+                    Err(_) => {
+                        // Defensive: if a per-component fragment is
+                        // missing (shouldn't happen — we just wrote
+                        // it), emit a comment so the shell is still
+                        // valid HTML and the missing piece is visible
+                        // for diagnosis.
+                        shell.push_str(&format!(
+                            "    <!-- {c}.html missing -->\n"
+                        ));
+                    }
+                }
+                shell.push_str("  </section>\n");
+            }
+            shell.push_str("</body>\n");
+            shell.push_str("</html>\n");
+            write_file(&shell_path, shell.as_bytes())?;
+
+            Ok(path)
+        }
+        Backend::WebComponent => {
+            // `index.js` re-exports each component's registration. The
+            // host imports this single file and every component
+            // self-registers as a `<mosaic-{name}>` custom element on
+            // module load. We use bare `import "./X.js"` (not
+            // `export *`) because the per-component file's side effect
+            // is the `customElements.define(...)` call — there's no
+            // named export to forward.
+            let path = backend_dir.join("index.js");
+            let mut body = String::new();
+            body.push_str("// Auto-generated by mosaic-package-artifact-builder. Do not edit.\n");
+            body.push_str(&format!("// Package: {package_name}\n\n"));
+            for c in components {
+                body.push_str(&format!("import \"./{c}.js\";\n"));
+            }
+            write_file(&path, body.as_bytes())?;
+            Ok(path)
+        }
+        Backend::Xaml => {
+            // XAML packages don't have a single "index" notion in the
+            // WinUI 3 world — hosts reference per-component XAML files
+            // and per-component code-behind partials individually. We
+            // emit a `MosaicPackage.props` MSBuild fragment that a
+            // host's `.csproj` can `<Import Project="..."/>` to pull
+            // every component's `.xaml` + `.xaml.cs` + `.Event.cs` into
+            // the build in one line.
+            //
+            // The format is the standard MSBuild item-group shape:
+            //
+            //   <Project xmlns="http://schemas.microsoft.com/...">
+            //     <ItemGroup>
+            //       <Page Include="Grid.xaml"><Generator>MSBuild:...</Generator></Page>
+            //       <Compile Include="Grid.xaml.cs"><DependentUpon>Grid.xaml</DependentUpon></Compile>
+            //       <Compile Include="Grid.Event.cs"/>
+            //     </ItemGroup>
+            //   </Project>
+            //
+            // Authoring this by hand for every package is error-prone;
+            // generating it gets the dependent-upon wiring right every
+            // time.
+            let path = backend_dir.join("MosaicPackage.props");
+            let mut body = String::new();
+            body.push_str("<!-- Auto-generated by mosaic-package-artifact-builder. Do not edit. -->\n");
+            body.push_str(&format!("<!-- Package: {package_name} -->\n"));
+            body.push_str("<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n");
+            body.push_str("  <ItemGroup>\n");
+            for c in components {
+                body.push_str(&format!(
+                    "    <Page Include=\"{c}.xaml\"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>\n"
+                ));
+                body.push_str(&format!(
+                    "    <Compile Include=\"{c}.xaml.cs\"><DependentUpon>{c}.xaml</DependentUpon></Compile>\n"
+                ));
+                body.push_str(&format!("    <Compile Include=\"{c}.Event.cs\"/>\n"));
+            }
+            body.push_str("  </ItemGroup>\n");
+            body.push_str("</Project>\n");
+            write_file(&path, body.as_bytes())?;
+            Ok(path)
+        }
+        Backend::Flutter => {
+            // Flutter packages aggregate via a barrel `index.dart`
+            // that re-exports every component file, paired with a
+            // minimal `pubspec.yaml` so `flutter pub get` knows the
+            // package is a Flutter library and pulls the
+            // `flutter/material.dart` dependency. The barrel is the
+            // first thing a host imports:
+            //
+            //     import 'package:mosaic_pkg_grid/index.dart';
+            //
+            // and `pubspec.yaml` gives the package its name +
+            // dependency graph.
+            //
+            // We emit both files; the returned path is the
+            // `index.dart` (matching the other backends' "index is
+            // the primary aggregator" convention). The `pubspec.yaml`
+            // is a secondary alongside it.
+            let index_path = backend_dir.join("index.dart");
+            let mut idx = String::new();
+            idx.push_str("// Auto-generated by mosaic-package-artifact-builder. Do not edit.\n");
+            idx.push_str(&format!("// Package: {package_name}\n\n"));
+            for c in components {
+                idx.push_str(&format!("export '{c}.dart';\n"));
+            }
+            write_file(&index_path, idx.as_bytes())?;
+
+            // Dart package names are snake_case — kebab → snake.
+            let dart_pkg = package_name.replace('-', "_");
+            let pubspec_path = backend_dir.join("pubspec.yaml");
+            let mut pubspec = String::new();
+            pubspec.push_str("# Auto-generated by mosaic-package-artifact-builder. Do not edit.\n");
+            pubspec.push_str(&format!("name: {dart_pkg}\n"));
+            pubspec.push_str("description: Mosaic-generated Flutter package.\n");
+            pubspec.push_str("version: 0.0.0\n");
+            pubspec.push_str("environment:\n");
+            pubspec.push_str("  sdk: ^3.0.0\n");
+            pubspec.push_str("dependencies:\n");
+            pubspec.push_str("  flutter:\n");
+            pubspec.push_str("    sdk: flutter\n");
+            write_file(&pubspec_path, pubspec.as_bytes())?;
+
+            Ok(index_path)
+        }
+    }
+}
+
+/// Map a kebab-case package name to a Qt-friendly module name.
+///
+/// `mosaic-pkg-grid` → `MosaicPkg.Grid`
+/// `mosaic-pkg-data-grid-pro` → `MosaicPkg.DataGridPro`
+/// `my-thing` → `MyThing`
+///
+/// We split on `-`, PascalCase each segment, and join with a single `.`
+/// after the `MosaicPkg` prefix (if any). Qt module names must be a
+/// dotted sequence of PascalCase identifiers — `[A-Z][A-Za-z0-9]*` — which
+/// is exactly what this produces given that the manifest already validated
+/// the input as kebab-case.
+fn qmldir_module_name(package_name: &str) -> String {
+    let pascal_segments: Vec<String> = package_name
+        .split('-')
+        .map(|seg| {
+            let mut chars = seg.chars();
+            match chars.next() {
+                Some(c) => c.to_ascii_uppercase().to_string() + chars.as_str(),
+                None => String::new(),
+            }
+        })
+        .collect();
+
+    // Apply the `mosaic-pkg-foo-bar` → `MosaicPkg.FooBar` convention.
+    if pascal_segments.len() >= 3
+        && pascal_segments[0] == "Mosaic"
+        && pascal_segments[1] == "Pkg"
+    {
+        let rest = pascal_segments[2..].concat();
+        format!("MosaicPkg.{rest}")
+    } else {
+        pascal_segments.concat()
+    }
+}
+
+// ===========================================================================
+// Small filesystem helpers
+//
+// We wrap `std::fs` calls so that every error converts to `BuildError::Io`
+// without sprinkling `.map_err(...)` at every site. This is a small
+// translation layer, not a portability layer — none of this is unsafe.
+// ===========================================================================
+
+fn read_to_string(path: &Path) -> Result<String, BuildError> {
+    fs::read_to_string(path).map_err(|e| BuildError::Io(format!("read {}: {e}", path.display())))
+}
+
+fn write_file(path: &Path, bytes: &[u8]) -> Result<(), BuildError> {
+    if let Some(parent) = path.parent() {
+        create_dir_all(parent)?;
+    }
+    fs::write(path, bytes).map_err(|e| BuildError::Io(format!("write {}: {e}", path.display())))
+}
+
+fn create_dir_all(path: &Path) -> Result<(), BuildError> {
+    fs::create_dir_all(path)
+        .map_err(|e| BuildError::Io(format!("mkdir {}: {e}", path.display())))
+}
+
+// ===========================================================================
+// Name validation (security boundary — see `build_package` step 2a)
+// ===========================================================================
+
+/// Validate a component name from the manifest's `[components].exports`.
+///
+/// Required shape: `[A-Za-z][A-Za-z0-9_]*` — strict alphanumeric-plus-
+/// underscore, must lead with a letter. This is intentionally
+/// stricter than what most file systems would accept; component names
+/// flow into:
+///
+/// - Filenames: `out_dir.join(format!("{component}.{ext}"))`. Without
+///   validation, `../../etc/passwd` would escape the dist root.
+/// - XAML's MSBuild props XML: `<Page Include="{component}.xaml">`.
+///   Without validation, `Grid"><Exec Command="rm -rf /"/><Page Include="`
+///   would inject an MSBuild task.
+/// - WebComponent's index JS: `import "./{component}.js";`. Without
+///   validation, `Grid"; fetch(...)//`would break out of the string.
+/// - HTML's index comments: `<!-- Component: {component} -->`. Without
+///   validation, `Grid --><script>alert(1)</script><!--` would inject
+///   into the aggregated index.
+///
+/// Every existing component in the codebase follows PascalCase
+/// (`Grid`, `Cell`, `Button`, `HostInput`, `MosaicPkgDialog`, …)
+/// which trivially passes this filter; the validation is purely a
+/// hardening pass against malicious or accidentally-malformed
+/// manifests.
+fn validate_component_name(name: &str) -> Result<(), BuildError> {
+    let unsafe_err = || BuildError::UnsafeName {
+        kind: "component",
+        name: name.to_string(),
+        reason: "must match [A-Za-z][A-Za-z0-9_]* (PascalCase recommended)",
+    };
+
+    let mut chars = name.chars();
+    let first = chars.next().ok_or_else(unsafe_err)?;
+    if !first.is_ascii_alphabetic() {
+        return Err(unsafe_err());
+    }
+    for c in chars {
+        if !c.is_ascii_alphanumeric() && c != '_' {
+            return Err(unsafe_err());
+        }
+    }
+    Ok(())
+}
+
+/// Validate a package name from the manifest's `[package].name`.
+///
+/// Required shape: `[a-z][a-z0-9-]*` — strict lowercase-kebab-case,
+/// must lead with a letter. Package names flow into the generated
+/// index files' "Package: NAME" comments (HTML/JS/XML) and into the
+/// Qt qmldir's `module NAME` line. Same threat model as component
+/// names, plus the Qt `qmldir_module_name` helper relies on kebab-case
+/// to produce a valid `[A-Z][A-Za-z0-9]*` Qt module name.
+///
+/// Every existing `mosaic-pkg-*` package follows this convention; the
+/// validation is purely a hardening pass.
+fn validate_package_name(name: &str) -> Result<(), BuildError> {
+    let unsafe_err = || BuildError::UnsafeName {
+        kind: "package",
+        name: name.to_string(),
+        reason: "must match [a-z][a-z0-9-]* (kebab-case)",
+    };
+
+    let mut chars = name.chars();
+    let first = chars.next().ok_or_else(unsafe_err)?;
+    if !first.is_ascii_lowercase() {
+        return Err(unsafe_err());
+    }
+    for c in chars {
+        if !(c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-') {
+            return Err(unsafe_err());
+        }
+    }
+    Ok(())
+}
+
+// ===========================================================================
+// Tests
+// ===========================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::TempDir;
+
+    // -----------------------------------------------------------------------
+    // Fixture helpers
+    // -----------------------------------------------------------------------
+
+    /// Bare-minimum `.mil` source for a slot-less zero-emit component.
+    ///
+    /// We intentionally keep the fixture identical between tests so a test
+    /// that fails only because of a manifest-level concern doesn't also
+    /// trip mosmodel/moslayout validators.
+    fn minimal_mil(component: &str) -> String {
+        format!("component {component} {{ }}\n")
+    }
+
+    fn minimal_mll(component: &str) -> String {
+        format!("layout {component} {{ Box [ root ] {{ }} }}\n")
+    }
+
+    fn minimal_msl(component: &str) -> String {
+        format!("style {component} {{ part root {{ width: 100% ; }} }}\n")
+    }
+
+    /// Write a manifest + N components into a fresh temp dir, return the
+    /// root path. This is the canonical "valid package" used by the
+    /// happy-path tests.
+    fn make_package(name: &str, components: &[&str]) -> TempDir {
+        make_package_with(name, components, /* write_msl = */ true)
+    }
+
+    fn make_package_with(name: &str, components: &[&str], write_msl: bool) -> TempDir {
+        let tmp = TempDir::new().expect("temp dir");
+        let root = tmp.path();
+
+        // Manifest
+        let exports = components
+            .iter()
+            .map(|c| format!("\"{c}\""))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let manifest = format!(
+            r#"
+[package]
+name = "{name}"
+version = "0.1.0"
+description = "fixture package for tests"
+license = "MIT"
+
+[components]
+exports = [{exports}]
+
+[dependencies]
+
+[kernel]
+version = "1"
+"#
+        );
+        fs::write(root.join("mosaic-package.toml"), manifest).unwrap();
+
+        // Sources
+        let src = root.join("src");
+        fs::create_dir_all(&src).unwrap();
+        for c in components {
+            fs::write(src.join(format!("{c}.mil")), minimal_mil(c)).unwrap();
+            fs::write(src.join(format!("{c}.mll")), minimal_mll(c)).unwrap();
+            if write_msl {
+                fs::write(src.join(format!("{c}.msl")), minimal_msl(c)).unwrap();
+            }
+        }
+
+        tmp
+    }
+
+    // -----------------------------------------------------------------------
+    // 1. Empty package
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn empty_package_builds_with_only_index() {
+        let pkg = make_package("mosaic-pkg-empty", &[]);
+        let out = TempDir::new().unwrap();
+        let opts = BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        };
+        let result = build_package(&opts).expect("empty package should build");
+        assert!(result.components_built.is_empty(), "no components expected");
+        // Only the index file should be written.
+        assert_eq!(result.artifacts.len(), 1, "exactly one artifact (the index)");
+        assert!(result.artifacts[0].ends_with("index.ts"));
+    }
+
+    // -----------------------------------------------------------------------
+    // 2-4. One component, each backend
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn one_component_builds_react() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .expect("react build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        let tsx = out.path().join("react").join("Grid.tsx");
+        assert!(tsx.exists(), "Grid.tsx should be written");
+        let body = fs::read_to_string(&tsx).unwrap();
+        // The React emitter emits a `function Grid(...)` and the props type.
+        assert!(body.contains("Grid"), "tsx must reference component name");
+    }
+
+    #[test]
+    fn one_component_builds_swiftui() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::SwiftUI,
+            emit_project: false,
+        })
+        .expect("swiftui build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        let sw = out.path().join("swiftui").join("Grid.swift");
+        assert!(sw.exists(), "Grid.swift should be written");
+    }
+
+    #[test]
+    fn one_component_builds_qt() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Qt,
+            emit_project: false,
+        })
+        .expect("qt build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        let qml = out.path().join("qt").join("Grid.qml");
+        assert!(qml.exists(), "Grid.qml should be written");
+        let qmldir = out.path().join("qt").join("qmldir");
+        assert!(qmldir.exists(), "qmldir should be written");
+        let body = fs::read_to_string(&qmldir).unwrap();
+        assert!(body.contains("Grid 1.0 Grid.qml"), "qmldir lists the component");
+        assert!(body.contains("module MosaicPkg.Grid"), "module line present");
+    }
+
+    // -----------------------------------------------------------------------
+    // 5-7. Newly-wired backends (HTML, WebComponent, XAML). UI29-2 follow-up.
+    // -----------------------------------------------------------------------
+
+    /// HTML backend: writes `{Component}.html` per component plus a
+    /// fragment-shaped `index.html` aggregator. Static-HTML fragments
+    /// hold `{{slot}}` template markers a host's template engine
+    /// substitutes at render time.
+    #[test]
+    fn html_backend_writes_html_fragment_per_component() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+        })
+        .expect("html build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        assert!(out.path().join("html").join("Grid.html").exists());
+        let idx = out.path().join("html").join("index.html");
+        assert!(idx.exists());
+        let body = fs::read_to_string(&idx).unwrap();
+        assert!(body.contains("Component: Grid"));
+        assert!(body.contains("Package: mosaic-pkg-grid"));
+    }
+
+    /// UI31-M Phase 3 — multi-component shell.
+    ///
+    /// In addition to the bare `index.html` (a fragment of component-
+    /// listing comments), the HTML backend now writes
+    /// `index-shell.html`: a complete `<html><body>` document that
+    /// inlines each component's emitted `.html` content inside a
+    /// `<section data-component="X">` block. This eats the demo-side
+    /// boilerplate that today hand-writes the wrapper + the
+    /// `<section>` blocks (see VC2-html's `index.html`).
+    ///
+    /// Verifies:
+    ///   - The new file exists (`html/index-shell.html`).
+    ///   - It carries a `<!DOCTYPE html>` (i.e. is a complete document,
+    ///     not a fragment).
+    ///   - It contains `<section data-component="Grid">` (the per-
+    ///     component mount block).
+    ///   - The package name shows up in the `<title>`.
+    ///   - The original bare `index.html` is unchanged (back-compat —
+    ///     no tool relying on it sees a regression).
+    #[test]
+    fn html_backend_writes_multi_component_index_shell_in_addition_to_bare_index() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+        })
+        .expect("html build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+
+        let shell_path = out.path().join("html").join("index-shell.html");
+        assert!(
+            shell_path.exists(),
+            "index-shell.html should be written"
+        );
+        let shell = fs::read_to_string(&shell_path).unwrap();
+        assert!(
+            shell.starts_with("<!DOCTYPE html>"),
+            "index-shell.html must be a complete document, got:\n{shell}"
+        );
+        assert!(
+            shell.contains("<section data-component=\"Grid\">"),
+            "expected <section data-component=\"Grid\">, got:\n{shell}"
+        );
+        assert!(
+            shell.contains("<title>mosaic-pkg-grid</title>"),
+            "expected package name in <title>, got:\n{shell}"
+        );
+
+        // Back-compat: the bare index.html still carries comments
+        // only (no DOCTYPE, no <section>). Hosting tools that already
+        // parse it as a fragment must continue to work.
+        let bare = fs::read_to_string(out.path().join("html").join("index.html")).unwrap();
+        assert!(
+            !bare.contains("<!DOCTYPE"),
+            "bare index.html must remain a fragment, got:\n{bare}"
+        );
+        assert!(
+            !bare.contains("<section"),
+            "bare index.html must not contain section blocks, got:\n{bare}"
+        );
+    }
+
+    /// WebComponent backend: writes one `.js` per component (each
+    /// self-registers a `<custom-element>` on import) plus an
+    /// `index.js` that imports each one in turn.
+    #[test]
+    fn webcomponent_backend_writes_js_per_component() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::WebComponent,
+            emit_project: false,
+        })
+        .expect("webcomponent build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        assert!(out.path().join("webcomponent").join("Grid.js").exists());
+        let idx = out.path().join("webcomponent").join("index.js");
+        assert!(idx.exists());
+        let body = fs::read_to_string(&idx).unwrap();
+        assert!(body.contains("import \"./Grid.js\""));
+    }
+
+    /// XAML backend: writes the three-file triple per component
+    /// (`.xaml` + `.xaml.cs` + `.Event.cs`) plus a
+    /// `MosaicPackage.props` MSBuild fragment that wires every
+    /// component into a host's `.csproj` via a single `<Import>`.
+    #[test]
+    fn xaml_backend_writes_triple_per_component_and_props_fragment() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Xaml,
+            emit_project: false,
+        })
+        .expect("xaml build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        let xaml_dir = out.path().join("xaml");
+        assert!(xaml_dir.join("Grid.xaml").exists(), "primary .xaml present");
+        assert!(
+            xaml_dir.join("Grid.xaml.cs").exists(),
+            "code-behind .xaml.cs present"
+        );
+        assert!(
+            xaml_dir.join("Grid.Event.cs").exists(),
+            "event union .Event.cs present"
+        );
+        let props_path = xaml_dir.join("MosaicPackage.props");
+        assert!(props_path.exists(), "MSBuild fragment present");
+        let props = fs::read_to_string(&props_path).unwrap();
+        assert!(props.contains("<Page Include=\"Grid.xaml\""));
+        assert!(props.contains("<Compile Include=\"Grid.xaml.cs\""));
+        assert!(props.contains("DependentUpon>Grid.xaml<"));
+        assert!(props.contains("<Compile Include=\"Grid.Event.cs\""));
+    }
+
+    /// Flutter backend: writes one `.dart` file per component, an
+    /// `index.dart` barrel re-exporting each, and a minimal
+    /// `pubspec.yaml` so `flutter pub get` recognises the package.
+    /// Package name is kebab-to-snake-cased for Dart's package-name
+    /// convention.
+    #[test]
+    fn flutter_backend_writes_dart_per_component_with_pubspec() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Flutter,
+            emit_project: false,
+        })
+        .expect("flutter build");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        let flutter_dir = out.path().join("flutter");
+        assert!(flutter_dir.join("Grid.dart").exists(), "primary .dart present");
+        let index_path = flutter_dir.join("index.dart");
+        assert!(index_path.exists(), "index.dart barrel present");
+        let idx = fs::read_to_string(&index_path).unwrap();
+        assert!(idx.contains("export 'Grid.dart';"));
+        let pubspec_path = flutter_dir.join("pubspec.yaml");
+        assert!(pubspec_path.exists(), "pubspec.yaml present");
+        let pubspec = fs::read_to_string(&pubspec_path).unwrap();
+        assert!(
+            pubspec.contains("name: mosaic_pkg_grid"),
+            "package name must be kebab→snake cased, got:\n{pubspec}"
+        );
+        assert!(pubspec.contains("sdk: flutter"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Security boundary — name validation (see `validate_*_name` helpers).
+    // Both vectors caught during security review of the backend-wiring PR.
+    // -----------------------------------------------------------------------
+
+    /// Helper: build a manifest with arbitrary `package.name` and
+    /// `components.exports`, allowing values that would normally fail
+    /// the validators. Used only by the security-boundary tests below.
+    fn make_package_raw(pkg_name: &str, components: &[&str]) -> TempDir {
+        let tmp = TempDir::new().expect("temp dir");
+        let root = tmp.path();
+        let exports = components
+            .iter()
+            .map(|c| format!("\"{c}\""))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let manifest = format!(
+            r#"
+[package]
+name = "{pkg_name}"
+version = "0.1.0"
+description = "fixture"
+license = "MIT"
+
+[components]
+exports = [{exports}]
+
+[dependencies]
+
+[kernel]
+version = "1"
+"#
+        );
+        fs::write(root.join("mosaic-package.toml"), manifest).unwrap();
+        // Intentionally do NOT create src/ — validation must fire
+        // before any source-file lookup happens.
+        tmp
+    }
+
+    /// Path-traversal regression: a component name with `..` /  `/`
+    /// would let an attacker-controlled manifest write outside
+    /// `output_root`. Validation must reject the name up front before
+    /// any I/O happens.
+    #[test]
+    fn component_name_with_path_traversal_is_rejected() {
+        let pkg = make_package_raw("mosaic-pkg-evil", &["../../etc/passwd"]);
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .unwrap_err();
+        assert!(
+            matches!(err, BuildError::UnsafeName { kind, .. } if kind == "component")
+                || matches!(err, BuildError::Manifest(_)),
+            "expected UnsafeName(component, …) or Manifest(...), got {err:?}"
+        );
+    }
+
+    /// Component name containing a path separator alone (no `..`)
+    /// must also be rejected — the joined `out_dir.join("foo/bar")`
+    /// would silently create a subdirectory under the dist root.
+    #[test]
+    fn component_name_with_slash_is_rejected() {
+        let pkg = make_package_raw("mosaic-pkg-evil", &["foo/bar"]);
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .unwrap_err();
+        // The manifest parser may catch some of these earlier as a
+        // `Manifest(...)` error (it does its own kebab/PascalCase
+        // sanity-check); we accept either error type as long as the
+        // build is rejected. The validator's role is to be the second
+        // line of defense if the manifest parser ever loosens its
+        // grammar.
+        assert!(
+            matches!(err, BuildError::UnsafeName { kind, .. } if kind == "component")
+                || matches!(err, BuildError::Manifest(_)),
+            "expected UnsafeName(component, …) or Manifest(...), got {err:?}"
+        );
+    }
+
+    /// HTML/JS/XML injection regression: a component name containing
+    /// quote / angle-bracket / `-->` characters would break out of
+    /// the generated `import "./X.js"`, `<Page Include="X.xaml">`,
+    /// or `<!-- Component: X -->` strings. The validator's strict
+    /// `[A-Za-z][A-Za-z0-9_]*` rule blocks every such character.
+    #[test]
+    fn component_name_with_injection_characters_is_rejected() {
+        // Some injection chars (`"`) trip the TOML parser before our
+        // validator runs — that's fine, both are rejection paths.
+        // The validator is the second line of defence; either error
+        // type counts.
+        for bad in [
+            "Grid<script>",
+            "Grid-->",
+            "Grid; rm -rf /",
+            "1Grid",        // must lead with a letter
+            "",             // empty
+            "Grid-Hi",      // hyphen not allowed in components (PascalCase only)
+            "Grid.evil",    // dot not allowed
+            "Grid$",        // special chars
+        ] {
+            let pkg = make_package_raw("mosaic-pkg-evil", &[bad]);
+            let out = TempDir::new().unwrap();
+            let err = build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Html,
+                emit_project: false,
+            })
+            .unwrap_err();
+            assert!(
+                matches!(err, BuildError::UnsafeName { kind, .. } if kind == "component")
+                    || matches!(err, BuildError::Manifest(_)),
+                "expected UnsafeName or Manifest error for {bad:?}, got {err:?}"
+            );
+        }
+    }
+
+    /// Package name validation: kebab-case only. Capitals, dots,
+    /// path separators, and injection characters must all be
+    /// rejected before reaching the qmldir / props / index files.
+    /// The manifest parser already enforces most of this (it does
+    /// its own kebab-case sanity check), so the assertion accepts
+    /// either error type. The validator's role is to be the second
+    /// line of defense if the manifest parser ever loosens its
+    /// grammar.
+    #[test]
+    fn package_name_validation_rejects_unsafe_shapes() {
+        for bad in [
+            "Mosaic-Pkg-Grid",  // capitals not allowed
+            "mosaic.pkg.grid",  // dots not allowed
+            "../escape",        // path traversal
+            "mosaic-pkg-grid\"",
+            "9starts-with-digit",
+            "",
+        ] {
+            let pkg = make_package_raw(bad, &["Grid"]);
+            let out = TempDir::new().unwrap();
+            let err = build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::React,
+                emit_project: false,
+            })
+            .unwrap_err();
+            assert!(
+                matches!(err, BuildError::UnsafeName { kind, .. } if kind == "package")
+                    || matches!(err, BuildError::Manifest(_)),
+                "expected UnsafeName(package, …) or Manifest(...) for {bad:?}, got {err:?}"
+            );
+        }
+    }
+
+    /// Positive case: the standard PascalCase component names that
+    /// every existing package uses must pass validation cleanly.
+    #[test]
+    fn standard_component_names_pass_validation() {
+        assert!(validate_component_name("Grid").is_ok());
+        assert!(validate_component_name("HostInput").is_ok());
+        assert!(validate_component_name("Component1").is_ok());
+        assert!(validate_component_name("A_b").is_ok());
+    }
+
+    /// Positive case: the standard `mosaic-pkg-*` package names that
+    /// every existing package uses must pass validation cleanly.
+    #[test]
+    fn standard_package_names_pass_validation() {
+        assert!(validate_package_name("mosaic-pkg-grid").is_ok());
+        assert!(validate_package_name("mosaic-pkg-dialog").is_ok());
+        assert!(validate_package_name("mosaic-pkg-toolkit").is_ok());
+        assert!(validate_package_name("a").is_ok());
+        assert!(validate_package_name("foo-bar-1").is_ok());
+    }
+
+    /// Cross-cutting: a multi-component package builds every component
+    /// on every newly-wired backend without losing any. Pins the
+    /// "no silent skip" invariant.
+    #[test]
+    fn multi_component_builds_on_all_newer_backends() {
+        let pkg = make_package("mosaic-pkg-multi", &["Alpha", "Beta"]);
+        let out = TempDir::new().unwrap();
+
+        for backend in [
+            Backend::Html,
+            Backend::WebComponent,
+            Backend::Xaml,
+            Backend::Flutter,
+        ] {
+            let result = build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+            })
+            .unwrap_or_else(|e| panic!("{backend:?} build failed: {e:?}"));
+            assert_eq!(result.components_built.len(), 2);
+        }
+
+        // All four backends must have produced their per-component files.
+        assert!(out.path().join("html").join("Alpha.html").exists());
+        assert!(out.path().join("html").join("Beta.html").exists());
+        assert!(out.path().join("webcomponent").join("Alpha.js").exists());
+        assert!(out.path().join("webcomponent").join("Beta.js").exists());
+        assert!(out.path().join("xaml").join("Alpha.xaml").exists());
+        assert!(out.path().join("xaml").join("Beta.xaml").exists());
+        assert!(out.path().join("flutter").join("Alpha.dart").exists());
+        assert!(out.path().join("flutter").join("Beta.dart").exists());
+    }
+
+    // -----------------------------------------------------------------------
+    // 7. Missing .mll
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn missing_mll_returns_source_not_found() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        // Remove the .mll, leaving only .mil and .msl.
+        fs::remove_file(pkg.path().join("src").join("Grid.mll")).unwrap();
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .unwrap_err();
+        match err {
+            BuildError::SourceNotFound { component, .. } => assert_eq!(component, "Grid"),
+            other => panic!("expected SourceNotFound, got {other:?}"),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 8. Malformed .mil → PipelineError
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn malformed_mil_returns_pipeline_error() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        // Overwrite the .mil with something the mosmodel grammar will refuse.
+        fs::write(
+            pkg.path().join("src").join("Grid.mil"),
+            "this is not a valid mosmodel file !!!",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .unwrap_err();
+        match err {
+            BuildError::PipelineError { component, .. } => assert_eq!(component, "Grid"),
+            other => panic!("expected PipelineError, got {other:?}"),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 9. Multiple components
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn multiple_components_all_build() {
+        let pkg = make_package("mosaic-pkg-multi", &["Alpha", "Beta", "Gamma"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .expect("multi-component build");
+        assert_eq!(result.components_built.len(), 3);
+        for c in ["Alpha", "Beta", "Gamma"] {
+            assert!(out.path().join("react").join(format!("{c}.tsx")).exists());
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 10. Optional .msl
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn missing_msl_falls_back_to_empty_style() {
+        let pkg = make_package_with("mosaic-pkg-grid", &["Grid"], /* write_msl = */ false);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .expect("build without .msl");
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+        assert!(out.path().join("react").join("Grid.tsx").exists());
+    }
+
+    // -----------------------------------------------------------------------
+    // 11. Output directory is created if missing
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn output_directory_is_created_if_missing() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out_parent = TempDir::new().unwrap();
+        // Use a path that does NOT exist yet — three levels deep.
+        let out = out_parent.path().join("a").join("b").join("dist");
+        assert!(!out.exists(), "precondition: output dir does not exist");
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.clone(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .expect("build should create the output dir");
+        assert!(out.join("react").join("Grid.tsx").exists());
+    }
+
+    // -----------------------------------------------------------------------
+    // 12. Index lists all components
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn react_index_lists_all_components() {
+        let pkg = make_package("mosaic-pkg-multi", &["Alpha", "Beta"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .unwrap();
+        let body = fs::read_to_string(out.path().join("react").join("index.ts")).unwrap();
+        assert!(body.contains("export * from \"./Alpha\""));
+        assert!(body.contains("export * from \"./Beta\""));
+    }
+
+    #[test]
+    fn qmldir_lists_all_components() {
+        let pkg = make_package("mosaic-pkg-multi", &["Alpha", "Beta"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Qt,
+            emit_project: false,
+        })
+        .unwrap();
+        let body = fs::read_to_string(out.path().join("qt").join("qmldir")).unwrap();
+        assert!(body.contains("Alpha 1.0 Alpha.qml"));
+        assert!(body.contains("Beta 1.0 Beta.qml"));
+    }
+
+    // -----------------------------------------------------------------------
+    // Bonus: bad manifest path surfaces a Manifest error.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn missing_manifest_returns_manifest_error() {
+        let tmp = TempDir::new().unwrap();
+        let out = TempDir::new().unwrap();
+        let err = build_package(&BuildOptions {
+            package_root: tmp.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .unwrap_err();
+        assert!(matches!(err, BuildError::Manifest(_)));
+    }
+
+    // -----------------------------------------------------------------------
+    // qmldir module-naming sanity checks.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn qmldir_module_name_strips_mosaic_pkg_prefix() {
+        assert_eq!(qmldir_module_name("mosaic-pkg-grid"), "MosaicPkg.Grid");
+        assert_eq!(
+            qmldir_module_name("mosaic-pkg-data-grid-pro"),
+            "MosaicPkg.DataGridPro"
+        );
+        assert_eq!(qmldir_module_name("my-thing"), "MyThing");
+    }
+
+    // -----------------------------------------------------------------------
+    // UI30 multi-layout — discover_variants + variant artifact filenames
+    // -----------------------------------------------------------------------
+
+    /// Bare default only: a component with `Grid.mll` (no variant files)
+    /// returns `[None]` — the back-compat case that proves UI30 didn't
+    /// regress the single-variant pipeline.
+    #[test]
+    fn discover_variants_bare_default_only_returns_single_none() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let src = pkg.path().join("src");
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(v, vec![None]);
+    }
+
+    /// Bare default + one named variant: returns `[None, Some("touch")]`
+    /// in that order (default first per UI30 §5).
+    #[test]
+    fn discover_variants_default_plus_named_returns_both_in_order() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let src = pkg.path().join("src");
+        fs::write(src.join("Grid.touch.mll"), minimal_mll("Grid")).unwrap();
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(v, vec![None, Some("touch".to_string())]);
+    }
+
+    /// Multiple named variants without a bare default: only the named
+    /// variants are returned, sorted alphabetically. This is the
+    /// "strict mode" the spec mentions — the package author can omit
+    /// the bare default to prevent the fallback chain from firing.
+    #[test]
+    fn discover_variants_only_named_variants_no_default() {
+        let tmp = TempDir::new().unwrap();
+        let src = tmp.path().to_path_buf();
+        // No bare Grid.mll; only desktop + touch variants.
+        fs::write(src.join("Grid.mil"), minimal_mil("Grid")).unwrap();
+        fs::write(src.join("Grid.touch.mll"), minimal_mll("Grid")).unwrap();
+        fs::write(src.join("Grid.desktop.mll"), minimal_mll("Grid")).unwrap();
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(
+            v,
+            vec![Some("desktop".to_string()), Some("touch".to_string())]
+        );
+    }
+
+    /// No `.mll` files at all: returns `[None]` so the existing
+    /// SourceNotFound error path still fires (back-compat UX).
+    #[test]
+    fn discover_variants_no_mll_files_returns_single_none() {
+        let tmp = TempDir::new().unwrap();
+        fs::write(tmp.path().join("Grid.mil"), minimal_mil("Grid")).unwrap();
+        let v = discover_variants(tmp.path(), "Grid").unwrap();
+        assert_eq!(v, vec![None]);
+    }
+
+    /// Different components in the same src/ don't cross-pollute. Looking
+    /// for `Grid`'s variants must not pick up `Sidebar.touch.mll`.
+    #[test]
+    fn discover_variants_does_not_cross_pollute_components() {
+        let pkg = make_package("mosaic-pkg-multi", &["Grid", "Sidebar"]);
+        let src = pkg.path().join("src");
+        fs::write(src.join("Sidebar.touch.mll"), minimal_mll("Sidebar")).unwrap();
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(v, vec![None], "Grid should only see its own .mll, not Sidebar's");
+    }
+
+    /// Filenames that share a prefix-stem but have weird middles are
+    /// silently skipped (the middle would be ambiguous as a variant
+    /// name). `Grid.dark.theme.mll` has middle `dark.theme` which
+    /// contains a dot — we skip it.
+    #[test]
+    fn discover_variants_skips_ambiguous_dotted_middles() {
+        let tmp = TempDir::new().unwrap();
+        let src = tmp.path().to_path_buf();
+        fs::write(src.join("Grid.mil"), minimal_mil("Grid")).unwrap();
+        fs::write(src.join("Grid.mll"), minimal_mll("Grid")).unwrap();
+        fs::write(src.join("Grid.touch.mll"), minimal_mll("Grid")).unwrap();
+        // Decoy: dotted middle is not a single clean variant name.
+        fs::write(src.join("Grid.dark.theme.mll"), minimal_mll("Grid")).unwrap();
+        let v = discover_variants(&src, "Grid").unwrap();
+        assert_eq!(
+            v,
+            vec![None, Some("touch".to_string())],
+            "ambiguous dotted middle must be skipped"
+        );
+    }
+
+    /// End-to-end: a package with one component + one named variant
+    /// builds BOTH artifacts under their UI30 filenames. `Grid.tsx`
+    /// (default) and `Grid.touch.tsx` (variant) coexist in the same
+    /// output directory.
+    #[test]
+    fn build_package_emits_both_default_and_variant_artifacts() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        // Add a touch variant alongside the default.
+        let src = pkg.path().join("src");
+        fs::write(src.join("Grid.touch.mll"), minimal_mll("Grid")).unwrap();
+
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .expect("multi-variant build");
+
+        // components_built tracks COMPONENTS, not artifacts (the index
+        // file should list Grid once, not twice).
+        assert_eq!(result.components_built, vec!["Grid".to_string()]);
+
+        // Two component artifacts + one index file = 3 artifacts.
+        let default_path = out.path().join("react").join("Grid.tsx");
+        let touch_path = out.path().join("react").join("Grid.touch.tsx");
+        assert!(default_path.exists(), "Grid.tsx (default) must exist");
+        assert!(touch_path.exists(), "Grid.touch.tsx (variant) must exist");
+        assert!(
+            result.artifacts.iter().any(|p| p == &default_path)
+                && result.artifacts.iter().any(|p| p == &touch_path),
+            "both artifact paths must be in the result"
+        );
+    }
+
+    /// Back-compat regression test: a package with only the bare
+    /// default `.mll` still produces exactly one unsuffixed artifact
+    /// per component. UI30 is opt-in via filesystem and existing
+    /// packages must build identically.
+    #[test]
+    fn build_package_without_variants_is_unchanged_from_pre_ui30() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .expect("single-variant build");
+
+        // Exactly one component artifact + the index file.
+        let default_path = out.path().join("react").join("Grid.tsx");
+        assert!(default_path.exists());
+        // NO variant-suffixed file should exist.
+        assert!(
+            !out.path().join("react").join("Grid.touch.tsx").exists(),
+            "no variant file should be created without explicit .touch.mll"
+        );
+    }
+
+    // =====================================================================
+    // UI32-M — `emit_project` shell tests
+    //
+    // Covers per-PR gates from UI32 spec §3.1-§3.8 at the
+    // artifact-builder layer (the per-emitter L2-L7 PRs cover the
+    // shell-content gates already; these tests cover the build_package
+    // integration).
+    // =====================================================================
+
+    /// §3.4 Composable: default options (emit_project: false) leave
+    /// the build_package output bit-for-bit identical to pre-UI32-M.
+    /// No shell side-files appear in backend_dir.
+    #[test]
+    fn ui32_m_emit_project_false_does_not_emit_shell_side_files() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: false,
+        })
+        .expect("react build with emit_project: false");
+        assert!(out.path().join("react").join("Grid.tsx").exists());
+        // None of the L2 React shell side-files should exist.
+        assert!(
+            !out.path().join("react").join("package.json").exists(),
+            "package.json must not exist when emit_project is false"
+        );
+        assert!(
+            !out.path().join("react").join("vite.config.ts").exists(),
+            "vite.config.ts must not exist when emit_project is false"
+        );
+        // No new artifacts beyond the per-component + index.ts.
+        assert_eq!(result.artifacts.len(), 2); // Grid.tsx + index.ts
+    }
+
+    /// §3.4 Composable: when emit_project is true, the React backend
+    /// produces a Vite project shell alongside the per-component
+    /// .tsx + the index.ts (no overwrite of the bare per-component
+    /// artifacts).
+    #[test]
+    fn ui32_m_emit_project_true_writes_react_vite_shell() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: true,
+        })
+        .expect("react build with emit_project: true");
+
+        let dir = out.path().join("react");
+        // Per-component artifacts still present.
+        assert!(dir.join("Grid.tsx").exists());
+        assert!(dir.join("index.ts").exists());
+        // L2 React shell side-files now present.
+        assert!(dir.join("package.json").exists(), "package.json missing");
+        assert!(dir.join("vite.config.ts").exists(), "vite.config.ts missing");
+        assert!(dir.join("index.html").exists(), "index.html missing");
+        assert!(dir.join("README.md").exists(), "README.md missing");
+        assert!(
+            dir.join("src/main.tsx").exists(),
+            "src/main.tsx missing (nested per Vite convention)"
+        );
+        // package.json carries the per-emitter banner.
+        let pkg_json = fs::read_to_string(dir.join("package.json")).unwrap();
+        assert!(
+            pkg_json.contains("AUTO-GENERATED by mosaic-compile --emit-project"),
+            "package.json missing UI32 §3.5 banner"
+        );
+        // The shell side-files appear in the returned artifacts list
+        // so callers can stream-upload them.
+        assert!(
+            result.artifacts.iter().any(|p| p.ends_with("package.json")),
+            "package.json must appear in result.artifacts"
+        );
+        assert!(
+            result.artifacts.iter().any(|p| p.ends_with("main.tsx")),
+            "src/main.tsx must appear in result.artifacts"
+        );
+    }
+
+    /// Per-backend smoke test: each non-XAML backend produces its
+    /// expected shell side-files when emit_project is true. Doesn't
+    /// re-test the banner/pinning/etc. contracts (the per-emitter
+    /// L2-L7 PRs do that); just confirms the artifact-builder
+    /// routes correctly.
+    #[test]
+    fn ui32_m_emit_project_true_produces_expected_shell_per_backend() {
+        for (backend, expected_files) in [
+            (Backend::React, vec!["package.json", "vite.config.ts", "index.html", "README.md", "src/main.tsx"]),
+            (Backend::Html, vec!["index.html", "README.md"]),
+            (Backend::WebComponent, vec!["index.html", "README.md"]),
+            (Backend::Flutter, vec!["pubspec.yaml", "README.md", "lib/main.dart"]),
+            (Backend::Qt, vec!["CMakeLists.txt", "main.cpp", "qmldir", "README.md"]),
+            (Backend::SwiftUI, vec!["Package.swift", "README.md", "Sources/App/App.swift"]),
+        ] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: true,
+            })
+            .unwrap_or_else(|e| panic!("{backend:?} build failed: {e:?}"));
+            let dir = out.path().join(backend.dir_name());
+            for rel in &expected_files {
+                assert!(
+                    dir.join(rel).exists(),
+                    "{backend:?}: expected shell file `{rel}` missing"
+                );
+            }
+        }
+    }
+
+    /// XAML's --emit-project is wired through its own emitter
+    /// EmitOptions (PR #3917), bypassing the artifact-builder. v1
+    /// of UI32-M intentionally no-ops on XAML at this layer.
+    /// Documented as a deviation; UI32-M.1 unifies the paths.
+    #[test]
+    fn ui32_m_emit_project_true_xaml_is_currently_a_noop_at_builder_layer() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Xaml,
+            emit_project: true,
+        })
+        .expect("xaml build (emit_project: true) must not error even though shell is no-op'd");
+        // The xaml/ dir has the per-component triple + MosaicPackage.props
+        // but NOT the .csproj/App.xaml/MainWindow.xaml — those come
+        // from the XAML emitter's own --emit-project (PR #3917)
+        // accessed via mosaic-compile, not build_package, in v1.
+        let dir = out.path().join("xaml");
+        assert!(dir.join("Grid.xaml").exists());
+        assert!(!dir.join("Grid.csproj").exists());
+        assert!(!dir.join("App.xaml").exists());
+        assert!(!dir.join("MainWindow.xaml").exists());
+    }
+
+    /// §3.1 Reproducible: two emit_project builds against the same
+    /// inputs produce bit-for-bit identical shell side-files.
+    #[test]
+    fn ui32_m_emit_project_shell_is_byte_deterministic() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let out_a = TempDir::new().unwrap();
+        let out_b = TempDir::new().unwrap();
+        for out in [&out_a, &out_b] {
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::React,
+                emit_project: true,
+            })
+            .expect("react build");
+        }
+        for shell_file in ["package.json", "vite.config.ts", "index.html", "README.md", "src/main.tsx"] {
+            let a = fs::read_to_string(out_a.path().join("react").join(shell_file)).unwrap();
+            let b = fs::read_to_string(out_b.path().join("react").join(shell_file)).unwrap();
+            assert_eq!(a, b, "`{shell_file}` is not deterministic between runs");
+        }
+    }
+}

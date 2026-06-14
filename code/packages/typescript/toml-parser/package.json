@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/toml-parser",
-  "version": "0.1.0",
-  "description": "Parses TOML text into ASTs using the grammar-driven parser — a thin wrapper that loads toml.grammar",
+  "version": "0.1.1",
+  "description": "Parses TOML text into ASTs using the grammar-driven parser.  Pure transform (no fs:read): the parser grammar is precompiled at build time into src/_grammar.ts and embedded as a TypeScript object literal.",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0",
-    "@vitest/coverage-v8": "^3.0.0"
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
   }
 }

@@ -26,6 +26,15 @@ MACSYMA-on-symbolic-VM 0.1
 (%i4) quit;
 ```
 
+To run a file non-interactively:
+
+```
+uv run python main.py --file examples/session.mac
+```
+
+File mode evaluates the program through the same session pipeline as the REPL
+and prints only displayed outputs, without prompts or the interactive banner.
+
 ## Wiring
 
 ```
@@ -62,6 +71,7 @@ cas_pretty_printer.pretty(.., MacsymaDialect())
 - Single-line input — every input must end with ``;`` or ``$``. Multi-line
   buffering is a future extension (the REPL framework is missing the
   ``needs_more?`` hook today).
+- Non-interactive ``--file`` execution for `.mac` source files.
 - ``(%iN) `` global prompt; result printed when the statement ends with
   ``;``, suppressed when it ends with ``$``.
 - ``%``, ``%iN``, ``%oN`` resolve via :class:`History`.
@@ -74,7 +84,7 @@ cas_pretty_printer.pretty(.., MacsymaDialect())
 - No multi-line input.
 - No tab completion.
 - No syntax highlighting.
-- No ``batch("file.mac")`` file loading.
+- No in-language ``batch("file.mac")`` form.
 - No 2D output.
 
 ## Dependencies

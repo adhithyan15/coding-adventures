@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/forme-aot-page-emitter",
+  "version": "0.1.0",
+  "description": "Per-page artefact emitter for the Forme AOT compiler (FM06 §5).  Takes a Map<pageId, CssArtifact> from forme-aot-css-slicer and writes per-page CSS (and optional HTML wrapper) to a distDir.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-aot-css-slicer": "file:../forme-aot-css-slicer",
+    "@coding-adventures/forme-style-ir": "file:../forme-style-ir",
+    "@coding-adventures/forme-style-to-css": "file:../forme-style-to-css",
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "@types/node": "^20.0.0"
+  }
+}

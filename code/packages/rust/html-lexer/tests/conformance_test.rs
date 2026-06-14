@@ -1,5 +1,7 @@
 use coding_adventures_html_lexer::{
-    create_html_lexer, html1_machine, html_skeleton_machine, Attribute, HtmlLexer, Token,
+    apply_html_lex_context, create_html_lexer_with_context, html1_machine, html_skeleton_machine,
+    Attribute, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlTokenizerState, StartTagSeed, Token,
+    HTML_TOKENIZER_STATES,
 };
 use serde::Deserialize;
 use serde_json::Value;
@@ -18,6 +20,7 @@ struct FixtureSuite {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 struct FixtureCase {
     id: String,
     #[serde(default)]
@@ -30,6 +33,50 @@ struct FixtureCase {
     initial_state: Option<String>,
     #[serde(default)]
     last_start_tag: Option<String>,
+    #[serde(default)]
+    current_start_tag: Option<FixtureStartTagSeed>,
+    #[serde(default)]
+    current_end_tag: Option<String>,
+    #[serde(default)]
+    current_comment: Option<String>,
+    #[serde(default)]
+    current_doctype: Option<FixtureDoctypeSeed>,
+    #[serde(default)]
+    temporary_buffer: Option<String>,
+    #[serde(default)]
+    return_state: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
+struct FixtureDoctypeSeed {
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    public_identifier: Option<String>,
+    #[serde(default)]
+    system_identifier: Option<String>,
+    #[serde(default)]
+    force_quirks: bool,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
+struct FixtureStartTagSeed {
+    name: String,
+    #[serde(default)]
+    attributes: Vec<FixtureAttribute>,
+    #[serde(default)]
+    self_closing: bool,
+    #[serde(default)]
+    current_attribute: Option<FixtureAttribute>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
+struct FixtureAttribute {
+    name: String,
+    value: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -38,6 +85,7 @@ struct Html5libTokenizerFile {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct Html5libTokenizerTest {
     description: String,
     input: String,
@@ -46,6 +94,18 @@ struct Html5libTokenizerTest {
     initial_states: Vec<String>,
     #[serde(default, rename = "lastStartTag")]
     last_start_tag: Option<String>,
+    #[serde(default, rename = "currentStartTag")]
+    current_start_tag: Option<FixtureStartTagSeed>,
+    #[serde(default, rename = "currentEndTag")]
+    current_end_tag: Option<String>,
+    #[serde(default, rename = "temporaryBuffer")]
+    temporary_buffer: Option<String>,
+    #[serde(default, rename = "returnState")]
+    return_state: Option<String>,
+    #[serde(default, rename = "currentComment")]
+    current_comment: Option<String>,
+    #[serde(default, rename = "currentDoctype")]
+    current_doctype: Option<FixtureDoctypeSeed>,
     #[serde(default)]
     errors: Vec<Html5libTokenizerError>,
 }
@@ -70,6 +130,7 @@ struct Html5libNormalizedSuite {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct Html5libSkippedCase {
     id: String,
     description: String,
@@ -89,14 +150,14 @@ fn fixture_manifests_parse() {
     assert_eq!(html1.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(html1.suite, "html1");
     assert!(!html1.description.is_empty());
-    assert_eq!(html1.cases.len(), 8);
+    assert_eq!(html1.cases.len(), 147);
 }
 
 #[test]
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 9);
+    assert!(file.tests.len() >= 185);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -104,19 +165,45 @@ fn html5lib_smoke_fixture_file_parses() {
     assert!(file.tests[0].initial_states.is_empty());
     assert!(file.tests[0].last_start_tag.is_none());
     assert_eq!(file.tests[2].initial_states, vec!["Data state".to_string()]);
-    assert_eq!(file.tests[5].errors[0].code, "eof-in-comment");
-    assert_eq!(file.tests[5].errors[0].line, 1);
-    assert_eq!(file.tests[5].errors[0].col, 9);
+    assert_eq!(file.tests[4].errors[0].code, "missing-doctype-name");
+    assert_eq!(file.tests[5].errors[0].code, "eof-in-doctype");
+    assert_eq!(file.tests[6].errors[0].code, "incorrectly-opened-comment");
+    assert_eq!(file.tests[7].errors[0].code, "incorrectly-opened-comment");
     assert_eq!(
-        file.tests[6].initial_states,
+        file.tests[14].errors[0].code,
+        "missing-doctype-public-identifier"
+    );
+    assert_eq!(
+        file.tests[19].errors[0].code,
+        "missing-doctype-system-identifier"
+    );
+    assert_eq!(
+        file.tests[20].errors[0].code,
+        "unexpected-character-after-doctype-system-identifier"
+    );
+    assert_eq!(file.tests[22].errors[0].code, "eof-in-doctype");
+    assert_eq!(file.tests[23].errors[0].code, "eof-in-doctype");
+    assert_eq!(
+        file.tests[24].errors[0].code,
+        "missing-quote-before-doctype-public-identifier"
+    );
+    assert_eq!(file.tests[26].errors[0].code, "eof-in-comment");
+    assert_eq!(file.tests[26].errors[0].line, 1);
+    assert_eq!(file.tests[26].errors[0].col, 9);
+    assert_eq!(
+        file.tests[27].errors[0].code,
+        "abrupt-closing-of-empty-comment"
+    );
+    assert_eq!(
+        file.tests[29].initial_states,
         vec!["RCDATA state".to_string()]
     );
-    assert_eq!(file.tests[6].last_start_tag.as_deref(), Some("title"));
+    assert_eq!(file.tests[29].last_start_tag.as_deref(), Some("title"));
     assert_eq!(
-        file.tests[8].initial_states,
+        file.tests[31].initial_states,
         vec!["RAWTEXT state".to_string()]
     );
-    assert_eq!(file.tests[8].last_start_tag.as_deref(), Some("style"));
+    assert_eq!(file.tests[31].last_start_tag.as_deref(), Some("style"));
 }
 
 #[test]
@@ -128,31 +215,122 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     assert!(!normalized.description.is_empty());
     assert_eq!(normalized.source, "upstream-html5lib-smoke.test");
     assert_eq!(normalized.generator, "normalize_html5lib_fixtures.py");
-    assert_eq!(
-        normalized.supported_initial_states,
-        vec![
-            "Data state".to_string(),
-            "RAWTEXT state".to_string(),
-            "RCDATA state".to_string()
-        ]
-    );
-    assert_eq!(normalized.cases.len(), 9);
+    let mut supported_states = HTML_TOKENIZER_STATES
+        .map(|state| state.as_html5lib_state().to_string())
+        .to_vec();
+    supported_states.sort();
+    assert_eq!(normalized.supported_initial_states, supported_states);
+    assert!(normalized.cases.len() >= 186);
     assert!(normalized.skipped.is_empty());
     assert_eq!(
-        normalized.cases[6].initial_state.as_deref(),
+        normalized.cases[4].diagnostics,
+        vec!["missing-doctype-name".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[5].diagnostics,
+        vec!["eof-in-doctype".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[6].diagnostics,
+        vec!["incorrectly-opened-comment".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[7].diagnostics,
+        vec!["incorrectly-opened-comment".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[14].diagnostics,
+        vec!["missing-doctype-public-identifier".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[19].diagnostics,
+        vec!["missing-doctype-system-identifier".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[20].diagnostics,
+        vec!["unexpected-character-after-doctype-system-identifier".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[22].diagnostics,
+        vec!["eof-in-doctype".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[23].diagnostics,
+        vec!["eof-in-doctype".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[24].diagnostics,
+        vec![
+            "missing-quote-before-doctype-public-identifier".to_string(),
+            "unexpected-null-character".to_string(),
+            "missing-quote-before-doctype-system-identifier".to_string(),
+            "unexpected-null-character".to_string()
+        ]
+    );
+    assert_eq!(
+        normalized.cases[27].diagnostics,
+        vec!["abrupt-closing-of-empty-comment".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[29].initial_state.as_deref(),
         Some("RCDATA state")
     );
-    assert_eq!(normalized.cases[6].last_start_tag.as_deref(), Some("title"));
     assert_eq!(
-        normalized.cases[7].initial_state.as_deref(),
+        normalized.cases[29].last_start_tag.as_deref(),
+        Some("title")
+    );
+    assert_eq!(
+        normalized.cases[30].initial_state.as_deref(),
         Some("RCDATA state")
     );
-    assert_eq!(normalized.cases[7].last_start_tag.as_deref(), Some("title"));
     assert_eq!(
-        normalized.cases[8].initial_state.as_deref(),
+        normalized.cases[30].last_start_tag.as_deref(),
+        Some("title")
+    );
+    assert_eq!(
+        normalized.cases[31].initial_state.as_deref(),
         Some("RAWTEXT state")
     );
-    assert_eq!(normalized.cases[8].last_start_tag.as_deref(), Some("style"));
+    assert_eq!(
+        normalized.cases[31].last_start_tag.as_deref(),
+        Some("style")
+    );
+    assert!(
+        normalized
+            .cases
+            .iter()
+            .any(|case| case.current_end_tag.as_deref() == Some("title")
+                && case.temporary_buffer.as_deref() == Some("title")
+                && case.initial_state.as_deref() == Some("RCDATA end tag name state")),
+        "normalized fixtures should include seeded end-tag continuation states"
+    );
+    assert!(
+        normalized
+            .cases
+            .iter()
+            .any(|case| case.current_comment.as_deref() == Some("seed")
+                && case.initial_state.as_deref() == Some("Comment end dash state")),
+        "normalized fixtures should include seeded comment continuation states"
+    );
+    assert!(
+        normalized.cases.iter().any(|case| case
+            .current_doctype
+            .as_ref()
+            .and_then(|seed| seed.name.as_deref())
+            == Some("html")
+            && case.initial_state.as_deref()
+                == Some("DOCTYPE public identifier double quoted state")),
+        "normalized fixtures should include seeded doctype continuation states"
+    );
+    assert!(
+        normalized
+            .cases
+            .iter()
+            .any(|case| case.return_state.as_deref() == Some("RCDATA state")
+                && case.temporary_buffer.as_deref() == Some("&a")
+                && case.initial_state.as_deref() == Some("Named character reference state")),
+        "normalized fixtures should include seeded character-reference continuation states"
+    );
 }
 
 #[test]
@@ -170,7 +348,7 @@ fn html1_conformance_cases_match_generated_machine() {
     let suite = load_suite(HTML1_FIXTURES);
     run_fixture_suite(&suite, |case| {
         let mut lexer = html1_machine()
-            .map(HtmlLexer::new)
+            .map(|machine| HtmlLexer::new(machine).with_normalized_carriage_returns())
             .map_err(|error| error.to_string())?;
         configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
         Ok(lexer)
@@ -181,9 +359,8 @@ fn html1_conformance_cases_match_generated_machine() {
 fn html1_conformance_cases_match_default_wrapper() {
     let suite = load_suite(HTML1_FIXTURES);
     run_fixture_suite(&suite, |case| {
-        let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
-        configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
-        Ok(lexer)
+        let context = lexer_context_for_case(case);
+        create_html_lexer_with_context(&context).map_err(|error| format!("{error:?}"))
     });
 }
 
@@ -194,12 +371,11 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 9);
+    assert_eq!(suite.cases.len(), normalized.cases.len());
 
     run_fixture_suite(&suite, |case| {
-        let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
-        configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
-        Ok(lexer)
+        let context = lexer_context_for_case(case);
+        create_html_lexer_with_context(&context).map_err(|error| format!("{error:?}"))
     });
 }
 
@@ -210,7 +386,7 @@ fn normalized_html5lib_cases_match_generated_html1_machine() {
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = html1_machine()
-            .map(HtmlLexer::new)
+            .map(|machine| HtmlLexer::new(machine).with_normalized_carriage_returns())
             .map_err(|error| error.to_string())?;
         configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
         Ok(lexer)
@@ -265,10 +441,55 @@ fn unsupported_runtime_cases(normalized: &Html5libNormalizedSuite) -> Vec<Fixtur
 
 fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
     match case.initial_state.as_deref() {
-        None | Some("Data state") => case.last_start_tag.is_none(),
-        Some("RCDATA state") => case.last_start_tag.is_some(),
-        Some("RAWTEXT state") => case.last_start_tag.is_some(),
-        Some(_) => false,
+        None => {
+            case.last_start_tag.is_none()
+                && case.current_start_tag.is_none()
+                && case.current_end_tag.is_none()
+                && case.current_comment.is_none()
+                && case.current_doctype.is_none()
+                && case.temporary_buffer.is_none()
+                && case.return_state.is_none()
+        }
+        Some(initial_state) => {
+            let Some(state) = HtmlTokenizerState::from_html5lib_state(initial_state) else {
+                return false;
+            };
+            let has_end_tag_seed =
+                case.current_end_tag.is_some() && case.temporary_buffer.is_some();
+            let has_start_tag_seed = case.current_start_tag.is_some();
+            let has_comment_seed = case.current_comment.is_some();
+            let has_doctype_seed = case.current_doctype.is_some();
+            let has_character_reference_seed =
+                case.return_state.is_some() && case.temporary_buffer.is_some();
+            let return_state = case
+                .return_state
+                .as_deref()
+                .and_then(HtmlTokenizerState::from_html5lib_state);
+            let needs_last_start_tag = state.requires_last_start_tag()
+                || (state.requires_character_reference_seed()
+                    && return_state == Some(HtmlTokenizerState::Rcdata));
+            needs_last_start_tag == case.last_start_tag.is_some()
+                && state.requires_end_tag_seed() == has_end_tag_seed
+                && state.requires_start_tag_seed() == has_start_tag_seed
+                && state.requires_comment_seed() == has_comment_seed
+                && state.requires_doctype_seed() == has_doctype_seed
+                && state.requires_character_reference_seed() == has_character_reference_seed
+                && (has_end_tag_seed
+                    || has_character_reference_seed
+                    || (case.current_end_tag.is_none() && case.temporary_buffer.is_none()))
+                && (!has_doctype_seed
+                    || (case.current_end_tag.is_none()
+                        && case.current_start_tag.is_none()
+                        && case.current_comment.is_none()
+                        && case.temporary_buffer.is_none()))
+                && (!has_character_reference_seed
+                    || (case.current_end_tag.is_none()
+                        && case.current_start_tag.is_none()
+                        && case.current_comment.is_none()
+                        && case.current_doctype.is_none()
+                        && return_state
+                            .is_some_and(HtmlTokenizerState::is_character_reference_return_state)))
+        }
     }
 }
 
@@ -292,44 +513,208 @@ fn run_fixture_suite(
             .into_iter()
             .map(token_summary)
             .collect::<Vec<_>>();
+        let actual_tokens = coalesce_adjacent_text_summaries(actual_tokens);
+        let expected_tokens = coalesce_adjacent_text_summaries(case.tokens.clone());
         assert_eq!(
-            actual_tokens, case.tokens,
+            actual_tokens, expected_tokens,
             "suite `{}` case `{}` token mismatch",
             suite.suite, case.id
         );
 
-        let actual_diagnostics = lexer
+        let mut actual_diagnostics = lexer
             .diagnostics()
             .iter()
             .map(|diagnostic| diagnostic.code.clone())
             .collect::<Vec<_>>();
+        actual_diagnostics.sort();
+        let mut expected_diagnostics = case.diagnostics.clone();
+        expected_diagnostics.sort();
         assert_eq!(
-            actual_diagnostics, case.diagnostics,
+            actual_diagnostics, expected_diagnostics,
             "suite `{}` case `{}` diagnostic mismatch",
             suite.suite, case.id
         );
     }
 }
 
+fn coalesce_adjacent_text_summaries(tokens: Vec<String>) -> Vec<String> {
+    let mut coalesced: Vec<String> = Vec::new();
+    for token in tokens {
+        let Some(text) = token
+            .strip_prefix("Text(data=")
+            .and_then(|text| text.strip_suffix(')'))
+        else {
+            coalesced.push(token);
+            continue;
+        };
+        if let Some(previous) = coalesced.last_mut() {
+            if previous.starts_with("Text(data=") && previous.ends_with(')') {
+                previous.pop();
+                previous.push_str(text);
+                previous.push(')');
+                continue;
+            }
+        }
+        coalesced.push(token);
+    }
+    coalesced
+}
+
 fn configure_lexer_for_case(
     lexer: &mut HtmlLexer,
     case: &FixtureCase,
 ) -> coding_adventures_html_lexer::Result<()> {
-    if let Some(initial_state) = case.initial_state.as_deref() {
-        lexer.set_initial_state(machine_state_for_fixture(initial_state))?;
-    }
-    if let Some(last_start_tag) = case.last_start_tag.as_deref() {
-        lexer.set_last_start_tag(last_start_tag);
-    }
-    Ok(())
+    apply_html_lex_context(lexer, &lexer_context_for_case(case))
 }
 
-fn machine_state_for_fixture(state: &str) -> &str {
-    match state {
-        "Data state" => "data",
-        "RCDATA state" => "rcdata",
-        "RAWTEXT state" => "rawtext",
-        other => panic!("unsupported fixture state `{other}`"),
+fn lexer_context_for_case(case: &FixtureCase) -> HtmlLexContext {
+    let initial_state = case
+        .initial_state
+        .as_deref()
+        .and_then(HtmlTokenizerState::from_html5lib_state)
+        .unwrap_or(HtmlTokenizerState::Data);
+
+    let mut context = seeded_lexer_context_for_case(initial_state, case)
+        .unwrap_or_else(|| HtmlLexContext::new(initial_state));
+
+    if let Some(last_start_tag) = case.last_start_tag.as_deref() {
+        context = context.with_last_start_tag(last_start_tag);
+    }
+    if !initial_state.requires_start_tag_seed() {
+        if let Some(current_start_tag) = case.current_start_tag.as_ref() {
+            context = context.with_current_start_tag(start_tag_seed(current_start_tag));
+        }
+    }
+    if !initial_state.requires_end_tag_seed() {
+        if let Some(current_end_tag) = case.current_end_tag.as_deref() {
+            context = context.with_current_end_tag(current_end_tag);
+        }
+    }
+    if !initial_state.requires_comment_seed() {
+        if let Some(current_comment) = case.current_comment.as_deref() {
+            context = context.with_current_comment(current_comment);
+        }
+    }
+    if !initial_state.requires_doctype_seed() {
+        if let Some(current_doctype) = case.current_doctype.as_ref() {
+            context = context.with_current_doctype(doctype_seed(current_doctype));
+        }
+    }
+    if !initial_state.requires_character_reference_seed() && !initial_state.requires_end_tag_seed()
+    {
+        if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
+            context = context.with_temporary_buffer(temporary_buffer);
+        }
+    }
+    if !initial_state.requires_character_reference_seed() {
+        if let Some(return_state) = case
+            .return_state
+            .as_deref()
+            .and_then(HtmlTokenizerState::from_html5lib_state)
+        {
+            context = context.with_return_state(return_state);
+        }
+    }
+
+    context
+}
+
+fn seeded_lexer_context_for_case(
+    initial_state: HtmlTokenizerState,
+    case: &FixtureCase,
+) -> Option<HtmlLexContext> {
+    if initial_state.requires_start_tag_seed() {
+        let current_start_tag = case
+            .current_start_tag
+            .as_ref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a current start-tag seed"));
+        return HtmlLexContext::start_tag_continuation(
+            initial_state,
+            start_tag_seed(current_start_tag),
+        );
+    }
+
+    if initial_state.requires_end_tag_seed() {
+        let last_start_tag = case
+            .last_start_tag
+            .as_deref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a last start tag"));
+        let current_end_tag = case
+            .current_end_tag
+            .as_deref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a current end-tag seed"));
+        let temporary_buffer = case.temporary_buffer.as_deref().unwrap_or_else(|| {
+            panic!("state {initial_state:?} requires an end-tag temporary buffer")
+        });
+        return HtmlLexContext::end_tag_continuation(
+            initial_state,
+            last_start_tag,
+            current_end_tag,
+            temporary_buffer,
+        );
+    }
+
+    if initial_state.requires_comment_seed() {
+        let current_comment = case
+            .current_comment
+            .as_deref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a comment seed"));
+        return HtmlLexContext::comment_continuation(initial_state, current_comment);
+    }
+
+    if initial_state.requires_doctype_seed() {
+        let current_doctype = case
+            .current_doctype
+            .as_ref()
+            .unwrap_or_else(|| panic!("state {initial_state:?} requires a doctype seed"));
+        return HtmlLexContext::doctype_continuation(initial_state, doctype_seed(current_doctype));
+    }
+
+    if initial_state.requires_character_reference_seed() {
+        let return_state = case
+            .return_state
+            .as_deref()
+            .and_then(HtmlTokenizerState::from_html5lib_state)
+            .unwrap_or_else(|| {
+                panic!("state {initial_state:?} requires a character-reference return state")
+            });
+        let temporary_buffer = case.temporary_buffer.as_deref().unwrap_or_else(|| {
+            panic!("state {initial_state:?} requires a character-reference temporary buffer")
+        });
+        return HtmlLexContext::character_reference_continuation(
+            initial_state,
+            return_state,
+            temporary_buffer,
+        );
+    }
+
+    None
+}
+
+fn start_tag_seed(seed: &FixtureStartTagSeed) -> StartTagSeed {
+    StartTagSeed {
+        name: seed.name.clone(),
+        attributes: seed.attributes.iter().cloned().map(Into::into).collect(),
+        self_closing: seed.self_closing,
+        current_attribute: seed.current_attribute.clone().map(Into::into),
+    }
+}
+
+fn doctype_seed(seed: &FixtureDoctypeSeed) -> DoctypeSeed {
+    DoctypeSeed {
+        name: seed.name.clone(),
+        public_identifier: seed.public_identifier.clone(),
+        system_identifier: seed.system_identifier.clone(),
+        force_quirks: seed.force_quirks,
+    }
+}
+
+impl From<FixtureAttribute> for Attribute {
+    fn from(attribute: FixtureAttribute) -> Self {
+        Self {
+            name: attribute.name,
+            value: attribute.value,
+        }
     }
 }
 
@@ -346,11 +731,30 @@ fn token_summary(token: Token) -> String {
         ),
         Token::EndTag { name } => format!("EndTag(name={name})"),
         Token::Comment(data) => format!("Comment(data={data})"),
-        Token::Doctype { name, force_quirks } => match name {
-            Some(name) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
-            None => format!("Doctype(name=null, force_quirks={force_quirks})"),
-        },
+        Token::Doctype {
+            name,
+            public_identifier,
+            system_identifier,
+            force_quirks,
+        } => doctype_summary(name, public_identifier, system_identifier, force_quirks),
         Token::Eof => "EOF".to_string(),
+    }
+}
+
+fn doctype_summary(
+    name: Option<String>,
+    public_identifier: Option<String>,
+    system_identifier: Option<String>,
+    force_quirks: bool,
+) -> String {
+    let name = name.unwrap_or_else(|| "null".to_string());
+    match (public_identifier, system_identifier) {
+        (None, None) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
+        (public_identifier, system_identifier) => format!(
+            "Doctype(name={name}, public_identifier={}, system_identifier={}, force_quirks={force_quirks})",
+            public_identifier.unwrap_or_else(|| "null".to_string()),
+            system_identifier.unwrap_or_else(|| "null".to_string())
+        ),
     }
 }
 

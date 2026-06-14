@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-pattern-matching"
-version = "0.1.0"
+version = "0.2.0"
 description = "Mathematica-style pattern variables and rule rewriter on top of the symbolic IR."
 requires-python = ">=3.12"
 license = "MIT"

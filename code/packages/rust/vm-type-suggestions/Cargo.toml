@@ -1,0 +1,9 @@
+[package]
+name = "vm-type-suggestions"
+version = "0.1.0"
+edition = "2021"
+description = "Parameter type suggestions from the VM profiler — reads observed_type feedback and advises which function parameters should gain type annotations (LANG12)."
+license = "MIT"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }

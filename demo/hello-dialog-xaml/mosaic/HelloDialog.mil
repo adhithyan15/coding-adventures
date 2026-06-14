@@ -1,0 +1,14 @@
+// HelloDialog.mil — interface for the minimal "open a dialog" demo.
+//
+// One slot drives the dialog's open state. One emit fires when the user
+// closes the dialog (Esc / clicking the explicit Close button). That's
+// the entire surface — the demo's host project owns the rest of the
+// state machine.
+
+component HelloDialog {
+  slot open    : bool ;
+  slot title   : text ;
+  slot message : text ;
+
+  emit onClose ;
+}

@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_vault_attachments"
+version = "0.1.0"
+edition = "2021"
+description = "VLT14 — streamable encrypted blob attachments for the Vault stack. Per-blob DEK; chunked AEAD framing (64 KiB chunks, counter-nonce, age-v1 style); stream API on read so memory usage stays bounded. Parent record stores blob reference; blob lives in __vault_blobs__."
+
+[dependencies]
+coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_zeroize = { path = "../zeroize" }

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "Q27",
+    "verbatim_source_passage": "Nel mezzo del cammin di nostra vita\nmi ritrovai per una selva oscura,\nché la diritta via era smarrita.",
+    "source_citation": "Dante Alighieri, Inferno (Divina Commedia), Canto I, lines 1–3 (original Italian).",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q28",
+    "verbatim_source_passage": "And so, my fellow Americans: ask not what your country can do for you—ask what you can do for your country.",
+    "source_citation": "John F. Kennedy, Inaugural Address, January 20, 1961.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.96
+  },
+  {
+    "id": "Q29",
+    "verbatim_source_passage": "己所不欲，勿施於人。",
+    "source_citation": "Confucius, Analects (論語), Book XV (Wei Ling Gong), 15.24 (original Chinese). Commonly translated: 'What you do not wish for yourself, do not do to others.'",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q30",
+    "verbatim_source_passage": "Nasce da questo una disputa: s'elli è meglio essere amato che temuto, o e converso. Rispondesi che si vorrebbe essere l'uno e l'altro; ma perché elli è difficile accozzarli insieme, è molto più sicuro essere temuto che amato, quando si abbia a mancare dell'uno de' dua.",
+    "source_citation": "Niccolò Machiavelli, Il Principe (The Prince), Chapter XVII (original Italian). English: 'it is much safer to be feared than loved, when one of the two must be wanting.'",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q31",
+    "verbatim_source_passage": "Longtemps, je me suis couché de bonne heure.",
+    "source_citation": "Marcel Proust, À la recherche du temps perdu, Du côté de chez Swann (Swann's Way), opening sentence (original French).",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q32",
+    "verbatim_source_passage": "道可道，非常道。名可名，非常名。",
+    "source_citation": "Laozi, Tao Te Ching (道德經), Chapter 1, opening lines (original Chinese). Commonly translated: 'The Tao that can be told is not the eternal Tao; the name that can be named is not the eternal name.'",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q33",
+    "verbatim_source_passage": "εὕρηκα",
+    "source_citation": "Attributed to Archimedes; the anecdote is reported by Vitruvius (De Architectura, Book IX, preface), though Vitruvius does not actually quote the Greek word—he says Archimedes leapt from the bath shouting that he had found what he sought. The single-word exclamation 'Eureka' (εὕρηκα, 'I have found it') is the traditional form; its exact verbatim utterance is not directly attested in a primary text.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.55
+  },
+  {
+    "id": "Q34",
+    "verbatim_source_passage": "This preservation of favourable variations and the rejection of injurious variations, I call Natural Selection, or the Survival of the Fittest.",
+    "source_citation": "Charles Darwin, On the Origin of Species, Chapter IV ('Natural Selection; or the Survival of the Fittest'). The phrase 'survival of the fittest', coined by Herbert Spencer, was introduced into the title of Chapter IV and the text from the 5th edition (1869) onward; it does not appear in the 1st edition (1859).",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.75
+  },
+  {
+    "id": "Q35",
+    "verbatim_source_passage": "That's one small step for man, one giant leap for mankind.",
+    "source_citation": "Neil Armstrong, July 20, 1969 (UTC July 21), upon stepping onto the lunar surface during Apollo 11. Armstrong stated he intended 'one small step for a man'; the 'a' is not clearly audible in the transmission, and the recorded/commonly transcribed version is as given.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q36",
+    "verbatim_source_passage": null,
+    "source_citation": "The attribution of 'Let them eat cake' (French: 'Qu'ils mangent de la brioche') to Marie Antoinette is apocryphal. The phrase appears in Jean-Jacques Rousseau's Confessions (Book VI, written c. 1765, when Marie Antoinette was a child), attributed to 'a great princess', and there is no evidence Marie Antoinette ever said it.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.0
+  },
+  {
+    "id": "Q37",
+    "verbatim_source_passage": null,
+    "source_citation": "The 'definition of insanity is doing the same thing over and over again and expecting different results' quote is widely misattributed to Albert Einstein, but there is no evidence he ever said or wrote it. It does not appear in any of his documented works or recorded statements; earlier versions appear in Narcotics Anonymous literature (1981) and other sources.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.0
+  },
+  {
+    "id": "Q38",
+    "verbatim_source_passage": null,
+    "source_citation": "The exact phrase 'Elementary, my dear Watson' does not appear in any of Arthur Conan Doyle's original Sherlock Holmes stories or novels. Holmes says 'Elementary' and 'my dear Watson' separately in various stories, but never the combined catchphrase, which originated in later adaptations (popularized in early 20th-century film/stage and P. G. Wodehouse). The closest is in 'The Crooked Man' (The Memoirs of Sherlock Holmes), where Holmes says 'Elementary,' said he.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.0
+  },
+  {
+    "id": "Q39",
+    "verbatim_source_passage": null,
+    "source_citation": "The exact line 'Play it again, Sam' is never spoken in the 1942 film Casablanca. Ilsa (Ingrid Bergman) says, 'Play it once, Sam. For old times' sake,' and 'Play it, Sam. Play \"As Time Goes By.\"' Rick (Humphrey Bogart) says, 'You played it for her, you can play it for me... If she can stand it, I can. Play it!' The misquote was later popularized by the title of Woody Allen's 1972 film.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.0
+  }
+]

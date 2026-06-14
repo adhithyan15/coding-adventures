@@ -1,0 +1,50 @@
+% ADJ52 case-8 — patient observations + queries.
+% 46-year-old never-smoking man, referred for a second opinion on "poorly
+% controlled asthma": one year of persistent wheeze, dry cough, small-volume
+% episodic hemoptysis; no response to stepped-up ICS/LABA; afebrile, SpO2 95%;
+% unilateral louder/constant left-chest wheeze that does not clear with
+% coughing, reduced left air entry; normal bloods/CRP; plain film shows a
+% smaller left lung; spirometry restrictive and non-reversible; bronchoscopy
+% shows a smooth polypoid mass nearly occluding the left main bronchus.
+% Same vocabulary as the rulebook. No rules here — observe + query only.
+
+observe patient_age(forty_six_years)
+observe patient_sex(male)
+observe symptom(persistent_wheezing)
+observe symptom(dry_cough)
+observe symptom(hemoptysis_small_volume_episodic)
+observe smoking_history(never_smoked)
+observe treatment_response(no_improvement)
+observe treatment_failure(maximal_inhaler_therapy)
+observe denied_symptom(fevers)
+observe denied_symptom(night_sweats)
+observe denied_symptom(weight_loss)
+observe oxygen_saturation(normal_room_air)
+observe exam_finding(audible_wheeze)
+observe wheeze_localization(left_chest_louder_constant)
+observe wheeze_character(does_not_clear_with_coughing)
+observe exam_finding(reduced_air_entry_left_side)
+observe exam_finding(no_clubbing)
+observe exam_finding(no_lymphadenopathy)
+observe lab_crp(normal)
+observe imaging_finding(asymmetric_lung_size)
+observe imaging_finding(left_lung_smaller_than_right)
+observe spirometry_finding(restrictive_process)
+observe bronchodilator_response(no_meaningful_improvement)
+observe procedure(flexible_bronchoscopy)
+observe bronchoscopy_finding(smooth_polypoid_mass)
+observe mass_location(left_main_bronchus)
+observe mass_effect(near_complete_lumen_obstruction)
+
+% q1/q2/q3 — most likely diagnosis displacing the asthma label
+? diagnosis(bronchial_carcinoid_tumor)
+? diagnosis(endobronchial_squamous_cell_carcinoma)
+? diagnosis(benign_endobronchial_tumor_hamartoma_or_lipoma)
+? diagnosis(bronchial_mucoepidermoid_carcinoma)
+? diagnosis(endobronchial_foreign_body)
+? diagnosis(refractory_asthma_true)
+
+% q4 — next step / management of the endobronchial mass
+? next_step(bronchoscopic_biopsy_for_histology)
+? next_step(ct_chest_for_staging)
+? next_step(surgical_resection)

@@ -1,0 +1,8 @@
+{
+ "check_id": 171,
+ "idx": 69,
+ "slot": "classification",
+ "claimed_value": "essential operations",
+ "scenario": "Grace worked 8 hours on a designated public holiday. Her regular rate is $25/hour. Grace is classified as 'essential operations.'",
+ "cited_span": "Grace is classified as 'essential operations.'"
+}

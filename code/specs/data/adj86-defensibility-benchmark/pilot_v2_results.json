@@ -1,0 +1,1804 @@
+{
+  "summary": "ADJ86 pilot v2 — the REAL framework as a PIPELINE, 2x2 (Haiku,Opus) x (bare,framework). Phase 1: scenario -> input-IR (typed slots, verbatim spans, null for unstated). Phase 2: the rulebook derivation takes the INPUT-IR + policy and derives rules OVER THE IR'S EXISTING SLOTS (so the two stages cannot represent the same thing differently). Then deterministic engine.py adjudicates. Plus a bare one-shot arm. A FIXED blind auditor scores bare-prose defensibility. Thesis: framework-Haiku reaches plain-Opus defensibility.",
+  "agentCount": 96,
+  "logs": [],
+  "result": {
+    "results": [
+      {
+        "id": "MED1-specialist",
+        "model": "haiku",
+        "scenario": "A member whose annual deductible is fully met saw an in-network cardiologist for a consultation.",
+        "input_ir": {
+          "slots": {
+            "deductible_status": {
+              "value": "fully_met",
+              "span": "annual deductible is fully met",
+              "type": "stated"
+            },
+            "provider_network_status": {
+              "value": "in_network",
+              "span": "in-network cardiologist",
+              "type": "stated"
+            },
+            "provider_specialty": {
+              "value": "cardiologist",
+              "span": "in-network cardiologist",
+              "type": "stated"
+            },
+            "service_type": {
+              "value": "consultation",
+              "span": "consultation",
+              "type": "stated"
+            },
+            "member_status": {
+              "value": "covered_member",
+              "span": "A member",
+              "type": "inferred"
+            }
+          },
+          "uncertainties": [
+            "Whether the member has active coverage at the time of service (assumed from 'member' language but not explicit)",
+            "Whether the consultation was a new patient or established patient visit (impacts some benefit structures)",
+            "Whether any service limitations or exclusions apply to cardiology consultations under the member's specific plan",
+            "Whether copay, coinsurance, or other cost-sharing applies after deductible is met (depends on plan design)",
+            "The calendar year context (assumed current/relevant year but not stated)"
+          ]
+        },
+        "rulebook_ir": {
+          "default": {
+            "source_span": "The HealthFirst plan reimburses in-network specialist visits at 70% after the annual deductible is met.",
+            "then": "INDETERMINATE - missing member_status evaluation"
+          },
+          "rules": [
+            {
+              "id": "rule-1-deductible-gate",
+              "when": {
+                "deductible_status": "fully_met",
+                "provider_network_status": "in_network",
+                "provider_specialty": "cardiologist",
+                "service_type": "consultation"
+              },
+              "then": "Reimbursement rate: 70%",
+              "source_span": "reimburses in-network specialist visits at 70% after the annual deductible is met"
+            },
+            {
+              "id": "rule-2-deductible-precondition",
+              "when": {
+                "deductible_status": "*"
+              },
+              "then": "If deductible_status != fully_met, reimbursement is 0% or subject to deductible first",
+              "source_span": "after the annual deductible is met"
+            },
+            {
+              "id": "rule-3-specialist-in-network",
+              "when": {
+                "provider_network_status": "in_network",
+                "provider_specialty": "*"
+              },
+              "then": "Specialist visits in-network eligible for 70% reimbursement",
+              "source_span": "in-network specialist visits at 70%"
+            },
+            {
+              "id": "rule-4-coverage-verification",
+              "when": {
+                "member_status": "covered_member"
+              },
+              "then": "Member is eligible for plan benefits",
+              "source_span": "The HealthFirst plan"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "70%",
+          "reasoning": "The policy states that HealthFirst reimburses in-network specialist visits at 70% after the annual deductible is met. The scenario confirms that (1) the member's deductible is fully met, (2) the visit was to an in-network provider (cardiologist), and (3) a cardiologist is a specialist. Therefore, all conditions for the 70% reimbursement rate are satisfied."
+        },
+        "audit": {
+          "claims_total": 5,
+          "claims_unsupported": 2,
+          "unsupported_list": [
+            "A cardiologist is a specialist — neither the POLICY nor the SCENARIO states or defines that a cardiologist falls within the policy's 'specialist' category; this is external world knowledge, and it is the dispositive bridge between the scenario fact ('cardiologist') and the policy term ('specialist').",
+            "Therefore all conditions for the 70% reimbursement rate are satisfied — this determination depends on the unsupported premise that a cardiologist is a specialist; the texts do not support resolving the 'is this a specialist visit?' question because the dispositive classification fact is absent."
+          ],
+          "verdict": "NOT_DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED1-specialist",
+        "model": "opus",
+        "scenario": "A member whose annual deductible is fully met saw an in-network cardiologist for a consultation.",
+        "input_ir": {
+          "slots": {
+            "patient_role": {
+              "value": "member",
+              "span": "A member",
+              "type": "stated"
+            },
+            "deductible_status": {
+              "value": "fully met",
+              "span": "whose annual deductible is fully met",
+              "type": "stated"
+            },
+            "deductible_period": {
+              "value": "annual",
+              "span": "annual deductible",
+              "type": "stated"
+            },
+            "provider_network_status": {
+              "value": "in-network",
+              "span": "in-network cardiologist",
+              "type": "stated"
+            },
+            "provider_type": {
+              "value": "cardiologist",
+              "span": "in-network cardiologist",
+              "type": "stated"
+            },
+            "provider_is_specialist": {
+              "value": true,
+              "span": null,
+              "type": "inferred"
+            },
+            "service_type": {
+              "value": "consultation",
+              "span": "for a consultation",
+              "type": "stated"
+            },
+            "service_occurred": {
+              "value": true,
+              "span": "saw an in-network cardiologist for a consultation",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "provider_is_specialist is inferred: a cardiologist is a specialist (not a primary care provider), but the scenario does not explicitly use the word 'specialist'; whether the relevant policy treats cardiology as specialist care is not stated."
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "reimburse_in_network_specialist_70",
+              "when": {
+                "provider_network_status": "in-network",
+                "provider_is_specialist": "true",
+                "deductible_status": "fully met",
+                "deductible_period": "annual"
+              },
+              "then": "reimburse at 70%",
+              "source_span": "reimburses in-network specialist visits at 70% after the annual deductible is met"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "The visit is reimbursed at 70%.\n\nReasoning: The policy states that in-network specialist visits are reimbursed at 70% after the annual deductible is met. In the scenario, the member's annual deductible is fully met, and a cardiologist is an in-network specialist. Both conditions in the policy are satisfied — (1) the provider is an in-network specialist, and (2) the deductible has been met — so the 70% reimbursement rate applies.",
+          "reasoning": "The policy has a single rule with two conditions: (1) the visit must be an in-network specialist visit, and (2) the annual deductible must be met. The scenario supplies both: a cardiologist is a specialist seen in-network, and the deductible is fully met. With both conditions satisfied, the stated 70% rate applies directly. No competing rule, exception, or copay/coinsurance qualifier is present in the policy that would alter this rate."
+        },
+        "audit": {
+          "claims_total": 5,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED2-mri-priorauth",
+        "model": "haiku",
+        "scenario": "A member underwent an MRI of the knee last month.",
+        "input_ir": {
+          "slots": {
+            "procedure_type": {
+              "value": "MRI",
+              "span": "MRI",
+              "type": "stated"
+            },
+            "anatomical_site": {
+              "value": "knee",
+              "span": "knee",
+              "type": "stated"
+            },
+            "timing_relative": {
+              "value": "last month",
+              "span": "last month",
+              "type": "stated"
+            },
+            "action_occurred": {
+              "value": true,
+              "span": "underwent an MRI",
+              "type": "stated"
+            },
+            "subject_role": {
+              "value": "member",
+              "span": "member",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "Exact calendar date of the MRI procedure (only relative timing 'last month' provided)",
+            "Organizational context of 'member' (health plan, clinical trial, institution, etc.)",
+            "Clinical indication or reason for the MRI (symptomatic, screening, follow-up, etc.)",
+            "MRI findings, results, or clinical interpretation (not stated)",
+            "Whether the member is symptomatic or asymptomatic"
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "mri-90-percent-with-auth",
+              "when": {
+                "procedure_type": "MRI",
+                "prior_authorization_obtained": "true"
+              },
+              "then": "REIMBURSE at 90%",
+              "source_span": "An MRI is reimbursed at 90% if prior authorization was obtained before the scan"
+            },
+            {
+              "id": "mri-deny-without-auth",
+              "when": {
+                "procedure_type": "MRI",
+                "prior_authorization_obtained": "false"
+              },
+              "then": "DENY",
+              "source_span": "without prior authorization the MRI is denied"
+            }
+          ]
+        },
+        "bare": {
+          "reasoning": "The policy establishes a clear conditional rule: MRI is reimbursed at 90% IF prior authorization was obtained before the scan; without prior authorization the MRI is denied. The scenario states only that \"a member underwent an MRI of the knee last month\" but does NOT indicate that prior authorization was obtained. Under standard insurance interpretation, when a policy requires a specific prerequisite and that prerequisite is not documented or affirmed, the claim defaults to denial. Since there is no evidence of prior authorization, the condition for reimbursement was not met.",
+          "answer": "DENIED. The MRI is not reimbursed. The policy requires prior authorization before the scan for reimbursement at 90%. The scenario does not state that prior authorization was obtained, so the claim is denied."
+        },
+        "audit": {
+          "claims_total": 4,
+          "claims_unsupported": 2,
+          "unsupported_list": [
+            "DENIED — the MRI is not reimbursed: this resolves the claim using a dispositive fact (whether prior authorization was obtained) that the SCENARIO does not state. The scenario is silent on prior auth, not negative; the policy's denial branch ('without prior authorization') is not shown to be satisfied.",
+            "'So the claim is denied' / defaulting to denial because prior auth is undocumented: the texts contain no default-to-denial or silence-equals-absence rule. Treating an unstated prior authorization as an absent one is a determination the POLICY and SCENARIO do not support."
+          ],
+          "verdict": "NOT_DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED2-mri-priorauth",
+        "model": "opus",
+        "scenario": "A member underwent an MRI of the knee last month.",
+        "input_ir": {
+          "slots": {
+            "subject": {
+              "value": "member",
+              "span": "A member",
+              "type": "stated"
+            },
+            "procedure": {
+              "value": "MRI",
+              "span": "an MRI",
+              "type": "stated"
+            },
+            "body_part": {
+              "value": "knee",
+              "span": "the knee",
+              "type": "stated"
+            },
+            "procedure_timing": {
+              "value": "last month",
+              "span": "last month",
+              "type": "stated"
+            },
+            "procedure_completed": {
+              "value": true,
+              "span": "underwent an MRI",
+              "type": "inferred"
+            },
+            "imaging_modality": {
+              "value": "MRI",
+              "span": "an MRI",
+              "type": "inferred"
+            }
+          },
+          "uncertainties": [
+            "procedure_completed is inferred from the past-tense verb 'underwent', which indicates the procedure already took place; the scenario does not explicitly state a completion status.",
+            "imaging_modality is inferred by classifying MRI as a diagnostic imaging procedure; the scenario only names 'MRI' without explicitly categorizing it as imaging.",
+            "procedure_timing 'last month' is relative to an unstated reference date; the absolute date of the MRI is not stated."
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "mri_authorized_reimbursed",
+              "when": {
+                "procedure": "MRI",
+                "prior_authorization": "true"
+              },
+              "then": "reimbursed_at_90_percent",
+              "source_span": "An MRI is reimbursed at 90% if prior authorization was obtained before the scan"
+            },
+            {
+              "id": "mri_unauthorized_denied",
+              "when": {
+                "procedure": "MRI",
+                "prior_authorization": "false"
+              },
+              "then": "denied",
+              "source_span": "without prior authorization the MRI is denied"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "Cannot be determined from the information given. The reimbursement rate hinges on a fact the scenario does not state.\n\nPolicy rule: MRI reimbursed at 90% IF prior authorization was obtained before the scan; denied IF no prior authorization. The authorization status is the sole determinant.\n\nScenario: A member underwent a knee MRI last month. It does NOT state whether prior authorization was obtained.\n\nBecause the deciding fact (prior-auth status) is missing, neither branch of the policy can be triggered:\n- If prior auth was obtained before the scan, the MRI is reimbursed at 90%.\n- If prior auth was not obtained, the MRI is denied.\n\nDetermination: Undetermined / insufficient information. To resolve, obtain the prior-authorization record for this MRI. I will not assert a rate, because doing so would require assuming an unstated fact.",
+          "reasoning": "The policy is a conditional with a single pivot variable: whether prior authorization was obtained before the scan. The scenario supplies the procedure (knee MRI) and timing (last month) but is silent on the authorization status — the exact fact the policy turns on. This is a defensibility/verifiability test: the grounded, auditable answer is to refuse to commit to either 90% or denied and instead flag the missing fact, rather than guessing a rate. Picking a rate would launder an unstated assumption into a determination, which is the failure mode this benchmark scores against. The correct move is to state the undetermined verdict, lay out both conditional branches explicitly so the reasoning is checkable, and name the specific record (prior-auth status) needed to close the gap."
+        },
+        "audit": {
+          "claims_total": 10,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED3-specialty-tier",
+        "model": "haiku",
+        "scenario": "A member filled a prescription for a generic medication that is listed on the specialty tier.",
+        "input_ir": {
+          "slots": {
+            "medication_type": {
+              "value": "generic",
+              "span": "generic medication",
+              "type": "stated"
+            },
+            "formulation_status": {
+              "value": "medication",
+              "span": "generic medication",
+              "type": "stated"
+            },
+            "tier_classification": {
+              "value": "specialty",
+              "span": "specialty tier",
+              "type": "stated"
+            },
+            "action_taken": {
+              "value": "filled prescription",
+              "span": "filled a prescription",
+              "type": "stated"
+            },
+            "actor": {
+              "value": "member",
+              "span": "A member",
+              "type": "stated"
+            },
+            "medication_on_formulary": {
+              "value": true,
+              "span": "is listed on the specialty tier",
+              "type": "inferred"
+            }
+          },
+          "uncertainties": [
+            "Whether 'specialty tier' implies prior authorization requirement",
+            "Whether the member had approval/authorization before filling",
+            "Whether coverage determination depends on clinical indication",
+            "Whether the scenario describes a coverage issue or a billing classification issue",
+            "The plan's specific policy on generic medications in specialty tier",
+            "Whether there is a cost-sharing difference between standard and specialty tier"
+          ]
+        },
+        "rulebook_ir": {
+          "default": {
+            "source_span": "Generic medications are reimbursed at 80%. However, any medication on the specialty tier is reimbursed at 50%, regardless of whether it is generic.",
+            "then": "Derive two rules: (1) base rule for generics at 80%, (2) override rule for specialty tier at 50% regardless of generic status"
+          },
+          "rules": [
+            {
+              "id": "R1_generic_base_reimbursement",
+              "when": {
+                "medication_type": "generic"
+              },
+              "then": "Reimbursed at 80%",
+              "source_span": "Generic medications are reimbursed at 80%"
+            },
+            {
+              "id": "R2_specialty_tier_override",
+              "when": {
+                "tier_classification": "specialty"
+              },
+              "then": "Reimbursed at 50%",
+              "source_span": "However, any medication on the specialty tier is reimbursed at 50%, regardless of whether it is generic"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "50%",
+          "reasoning": "The policy explicitly states that specialty tier medications are reimbursed at 50% \"regardless of whether it is generic.\" This creates a clear priority: when a medication qualifies for both the generic tier (80%) and the specialty tier (50%), the specialty tier classification takes precedence. The phrase \"regardless of whether it is generic\" directly addresses this exact scenario and mandates the 50% rate."
+        },
+        "audit": {
+          "claims_total": 4,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED3-specialty-tier",
+        "model": "opus",
+        "scenario": "A member filled a prescription for a generic medication that is listed on the specialty tier.",
+        "input_ir": {
+          "slots": {
+            "member_filled_prescription": {
+              "value": true,
+              "span": "A member filled a prescription",
+              "type": "stated"
+            },
+            "medication_type": {
+              "value": "generic",
+              "span": "a generic medication",
+              "type": "stated"
+            },
+            "medication_tier": {
+              "value": "specialty tier",
+              "span": "listed on the specialty tier",
+              "type": "stated"
+            }
+          },
+          "uncertainties": []
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "generic_reimbursed_80",
+              "when": {
+                "medication_type": "generic"
+              },
+              "then": "reimbursed at 80%",
+              "source_span": "Generic medications are reimbursed at 80%."
+            },
+            {
+              "id": "specialty_tier_override_50",
+              "when": {
+                "medication_tier": "specialty tier"
+              },
+              "then": "reimbursed at 50%",
+              "source_span": "However, any medication on the specialty tier is reimbursed at 50%, regardless of whether it is generic."
+            }
+          ]
+        },
+        "bare": {
+          "answer": "50%.\n\nThe medication is reimbursed at 50%. Although it is generic (which would normally qualify for 80%), the policy states that any medication on the specialty tier is reimbursed at 50% \"regardless of whether it is generic.\" The specialty-tier rule is explicitly an override that takes precedence over the generic rate, and this medication is listed on the specialty tier.",
+          "reasoning": "The policy has two rules: (1) generics reimburse at 80%, and (2) specialty-tier medications reimburse at 50% \"regardless of whether it is generic.\" The phrase \"regardless of whether it is generic\" makes rule (2) an explicit exception/override to rule (1) for the exact case presented — a generic that is also on the specialty tier. The scenario matches this override case exactly, so the specialty rate of 50% governs."
+        },
+        "audit": {
+          "claims_total": 5,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED4-preventive-age",
+        "model": "haiku",
+        "scenario": "A 32-year-old member received the screening.",
+        "input_ir": {
+          "slots": {
+            "member_age": {
+              "value": 32,
+              "span": "32-year-old",
+              "type": "stated"
+            },
+            "age_unit": {
+              "value": "years",
+              "span": "32-year-old",
+              "type": "stated"
+            },
+            "screening_received": {
+              "value": true,
+              "span": "received the screening",
+              "type": "stated"
+            },
+            "action_type": {
+              "value": "screening",
+              "span": "the screening",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "screening_type: The scenario does not specify what type of screening (e.g., health, background, eligibility, etc.). Context needed to determine relevance.",
+            "screening_outcome: Whether the screening resulted in pass/fail/inconclusive is not stated.",
+            "timing: The temporal relationship (past, present, future) is ambiguous; 'received' suggests past but no timestamp is given.",
+            "member_status: The scenario states 'member' but does not clarify member of what organization/plan.",
+            "screening_purpose: The scenario does not explain why the screening was conducted or what decision hinges on it."
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "screening_within_age_range",
+              "when": {
+                "action_type": "screening",
+                "member_age": ">=45"
+              },
+              "then": "reimbursed at 100%",
+              "source_span": "Preventive screenings are reimbursed at 100%"
+            },
+            {
+              "id": "screening_outside_age_range",
+              "when": {
+                "action_type": "screening",
+                "member_age": "<45"
+              },
+              "then": "reimbursed at 80%",
+              "source_span": "except a screening ordered outside the recommended age range, which is reimbursed at 80%"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "80%",
+          "reasoning": "The member is 32 years old, which falls outside the recommended age range of 45 and older. Per policy, screenings ordered outside the recommended age range are reimbursed at 80%, not the standard 100% for preventive screenings. Since the member does not meet the age criterion for full reimbursement, the reduced rate of 80% applies."
+        },
+        "audit": {
+          "claims_total": 4,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED4-preventive-age",
+        "model": "opus",
+        "scenario": "A 32-year-old member received the screening.",
+        "input_ir": {
+          "slots": {
+            "member_age": {
+              "value": 32,
+              "span": "32-year-old",
+              "type": "stated"
+            },
+            "person_role": {
+              "value": "member",
+              "span": "member",
+              "type": "stated"
+            },
+            "received_screening": {
+              "value": true,
+              "span": "received the screening",
+              "type": "stated"
+            }
+          },
+          "uncertainties": []
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "screening_reimbursed_full",
+              "when": {
+                "received_screening": "true"
+              },
+              "then": "reimbursed at 100%",
+              "source_span": "Preventive screenings are reimbursed at 100%"
+            },
+            {
+              "id": "screening_outside_age_range_reduced",
+              "when": {
+                "received_screening": "true",
+                "member_age": "<45"
+              },
+              "then": "reimbursed at 80%",
+              "source_span": "except a screening ordered outside the recommended age range, which is reimbursed at 80%. The recommended age for this screening is 45 and older"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "The screening is reimbursed at 80%.\n\nReasoning: The policy reimburses preventive screenings at 100%, except when a screening is ordered outside the recommended age range, in which case it is reimbursed at 80%. The recommended age for this screening is 45 and older. The member is 32 years old, which is below 45 and therefore outside the recommended age range. The exception applies, so the screening is reimbursed at 80%.",
+          "reasoning": "The policy has a default rate (100%) and a single exception (80%) triggered by a screening ordered outside the recommended age range. The recommended range is \"45 and older.\" The member is 32, which falls below 45 and thus outside the recommended range, triggering the 80% exception. No other facts in the scenario alter this. This is a direct rule-application task requiring no code or file investigation."
+        },
+        "audit": {
+          "claims_total": 6,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED5-er-copay",
+        "model": "haiku",
+        "scenario": "A member visited the emergency room and paid the $200 copay.",
+        "input_ir": {
+          "slots": {
+            "visit_location": {
+              "value": "emergency room",
+              "span": "emergency room",
+              "type": "stated"
+            },
+            "visit_type": {
+              "value": "emergency",
+              "span": "emergency room",
+              "type": "inferred"
+            },
+            "copay_amount": {
+              "value": 200,
+              "span": "$200",
+              "type": "stated"
+            },
+            "copay_currency": {
+              "value": "USD",
+              "span": null,
+              "type": "inferred"
+            },
+            "payment_status": {
+              "value": "paid",
+              "span": "paid",
+              "type": "stated"
+            },
+            "participant_role": {
+              "value": "member",
+              "span": "member",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "copay_currency: assumed USD based on dollar sign; currency not explicitly stated",
+            "visit_type: inferred 'emergency' from 'emergency room' as facility type, not explicit statement of urgency/classification",
+            "member_status: 'member' implies enrollment in a plan/organization, but plan type/carrier not stated",
+            "transaction_timing: whether payment was made at check-in, during, or after visit not specified"
+          ]
+        },
+        "rulebook_ir": {
+          "default": {
+            "source_span": "Emergency room visits are reimbursed at 60% after a $200 copay is paid.",
+            "then": "Member is eligible for reimbursement at 60%"
+          },
+          "rules": [
+            {
+              "id": "ER_visit_trigger",
+              "when": {
+                "visit_location": "emergency room"
+              },
+              "then": "Visit is at an emergency room (triggering service category)",
+              "source_span": "Emergency room visits"
+            },
+            {
+              "id": "copay_amount_satisfied",
+              "when": {
+                "copay_amount": "200",
+                "copay_currency": "USD"
+              },
+              "then": "Required copay amount and currency match policy specification",
+              "source_span": "after a $200 copay"
+            },
+            {
+              "id": "copay_paid_prerequisite",
+              "when": {
+                "payment_status": "paid"
+              },
+              "then": "Copay has been paid; prerequisite satisfied for reimbursement eligibility",
+              "source_span": "after a $200 copay is paid"
+            },
+            {
+              "id": "reimbursement_rate_outcome",
+              "when": {
+                "visit_location": "emergency room",
+                "copay_amount": "200",
+                "copay_currency": "USD",
+                "payment_status": "paid",
+                "participant_role": "member"
+              },
+              "then": "Reimbursement rate is 60%",
+              "source_span": "are reimbursed at 60%"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "60%",
+          "reasoning": "The policy explicitly states that emergency room visits are reimbursed at 60% after a $200 copay is paid. The scenario confirms the copay has been paid. Therefore, the reimbursement rate is 60%. The copay is a separate upfront cost requirement that does not change the stated reimbursement rate."
+        },
+        "audit": {
+          "claims_total": 4,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED5-er-copay",
+        "model": "opus",
+        "scenario": "A member visited the emergency room and paid the $200 copay.",
+        "input_ir": {
+          "slots": {
+            "member_status": {
+              "value": true,
+              "span": "A member",
+              "type": "stated"
+            },
+            "service_received": {
+              "value": "emergency room visit",
+              "span": "visited the emergency room",
+              "type": "stated"
+            },
+            "service_setting": {
+              "value": "emergency room",
+              "span": "emergency room",
+              "type": "stated"
+            },
+            "copay_paid": {
+              "value": true,
+              "span": "paid the $200 copay",
+              "type": "stated"
+            },
+            "copay_amount": {
+              "value": 200,
+              "span": "$200 copay",
+              "type": "stated"
+            }
+          },
+          "uncertainties": []
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "er_reimbursement",
+              "when": {
+                "service_received": "emergency room visit",
+                "copay_paid": "true",
+                "copay_amount": "==200"
+              },
+              "then": "REIMBURSE_60_PERCENT",
+              "source_span": "Emergency room visits are reimbursed at 60% after a $200 copay is paid"
+            },
+            {
+              "id": "er_copay_not_paid",
+              "when": {
+                "service_received": "emergency room visit",
+                "copay_paid": "false"
+              },
+              "then": "NOT_REIMBURSED",
+              "source_span": "after a $200 copay is paid"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "The emergency room visit is reimbursed at 60%.\n\nReasoning: The policy states ER visits are reimbursed at 60% after a $200 copay is paid. The copay is a precondition for reimbursement, not a factor that alters the rate. The scenario confirms the member paid the $200 copay, so the precondition is satisfied and the stated 60% rate applies. The copay amount is subtracted/paid separately and does not change the reimbursement percentage itself.",
+          "reasoning": "The policy specifies a single reimbursement rate (60%) gated on one condition (payment of the $200 copay). The scenario explicitly satisfies that condition (\"paid the $200 copay\"), so the rate stated in the policy applies verbatim. There is no second rate or tier in the policy, and the copay is a flat precondition rather than a modifier of the percentage, so no computation or interpretation beyond reading the stated rate is required. The determination is directly grounded in the policy text."
+        },
+        "audit": {
+          "claims_total": 6,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED6-oon-rider",
+        "model": "haiku",
+        "scenario": "A member received care from an out-of-network provider.",
+        "input_ir": {
+          "slots": {
+            "member_received_care": {
+              "value": true,
+              "span": "A member received care",
+              "type": "stated"
+            },
+            "provider_network_status": {
+              "value": "out-of-network",
+              "span": "out-of-network provider",
+              "type": "stated"
+            },
+            "care_was_delivered": {
+              "value": true,
+              "span": "received care",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "No information about the type of care provided (medical, behavioral, dental, etc.)",
+            "No information about whether the member knew the provider was out-of-network",
+            "No information about whether the member sought prior authorization",
+            "No information about the member's insurance plan coverage policies",
+            "No information about the provider's credentials or licensing",
+            "No information about the cost or billing status of the care",
+            "No information about the timing or duration of the care",
+            "No information about the clinical necessity or appropriateness of the care"
+          ]
+        },
+        "rulebook_ir": {
+          "default": {
+            "source_span": "Out-of-network care is reimbursed at 50% if the member has purchased the out-of-network rider; otherwise out-of-network care is not covered.",
+            "then": "Derive two rules: one for each branch of the rider condition."
+          },
+          "rules": [
+            {
+              "id": "oon-rider-50pct",
+              "when": {
+                "provider_network_status": "out-of-network",
+                "care_was_delivered": "true",
+                "member_purchased_oon_rider": "true"
+              },
+              "then": "Reimburse at 50%",
+              "source_span": "Out-of-network care is reimbursed at 50% if the member has purchased the out-of-network rider"
+            },
+            {
+              "id": "oon-no-rider-not-covered",
+              "when": {
+                "provider_network_status": "out-of-network",
+                "care_was_delivered": "true",
+                "member_purchased_oon_rider": "false"
+              },
+              "then": "Not covered",
+              "source_span": "otherwise out-of-network care is not covered"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "Cannot be determined without knowing whether the member purchased the out-of-network rider. If purchased: covered at 50%. If not purchased: not covered.",
+          "reasoning": "The policy makes coverage conditional on rider purchase status. The scenario provides only that care was out-of-network, not the rider status, so the determination is incomplete without that information."
+        },
+        "audit": {
+          "claims_total": 5,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "MED6-oon-rider",
+        "model": "opus",
+        "scenario": "A member received care from an out-of-network provider.",
+        "input_ir": {
+          "slots": {
+            "subject_role": {
+              "value": "member",
+              "span": "A member",
+              "type": "stated"
+            },
+            "received_care": {
+              "value": true,
+              "span": "received care",
+              "type": "stated"
+            },
+            "provider_network_status": {
+              "value": "out-of-network",
+              "span": "out-of-network provider",
+              "type": "stated"
+            },
+            "care_provider": {
+              "value": "provider",
+              "span": "out-of-network provider",
+              "type": "stated"
+            }
+          },
+          "uncertainties": []
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "oon-with-rider-reimbursed-50",
+              "when": {
+                "provider_network_status": "out-of-network",
+                "out_of_network_rider_purchased": "true"
+              },
+              "then": "Out-of-network care is reimbursed at 50%.",
+              "source_span": "Out-of-network care is reimbursed at 50% if the member has purchased the out-of-network rider"
+            },
+            {
+              "id": "oon-without-rider-not-covered",
+              "when": {
+                "provider_network_status": "out-of-network",
+                "out_of_network_rider_purchased": "false"
+              },
+              "then": "Out-of-network care is not covered.",
+              "source_span": "otherwise out-of-network care is not covered"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "Determination: Cannot be determined from the information given — the answer is conditional on a fact the scenario does not state.\n\nReasoning: The policy makes coverage of out-of-network care depend on a single condition: whether the member purchased the out-of-network rider.\n- If the member HAS the rider: the care is covered, reimbursed at 50%.\n- If the member does NOT have the rider: the care is not covered.\n\nThe scenario states only that the member received care from an out-of-network provider. It does not say whether the out-of-network rider was purchased. Because the rider status is the determining fact and it is unspecified, a definitive coverage determination cannot be made. To resolve it, one additional fact is required: did the member purchase the out-of-network rider?",
+          "reasoning": "The policy is a conditional rule keyed entirely on one fact: possession of the out-of-network rider. The scenario omits that fact, providing only that out-of-network care was received. With the deciding predicate unknown, neither branch of the rule (50% reimbursement vs. not covered) can be selected, so the honest determination is that it is undetermined pending the rider status. Stating a flat \"yes\" or \"no\" would require assuming an unstated fact, which the policy/scenario does not support."
+        },
+        "audit": {
+          "claims_total": 9,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW1-loadingzone",
+        "model": "haiku",
+        "scenario": "A vehicle was parked in a loading zone at 2pm.",
+        "input_ir": {
+          "slots": {
+            "vehicle_status": {
+              "value": "parked",
+              "span": "parked",
+              "type": "stated"
+            },
+            "location_type": {
+              "value": "loading zone",
+              "span": "loading zone",
+              "type": "stated"
+            },
+            "time_of_day": {
+              "value": "2pm",
+              "span": "2pm",
+              "type": "stated"
+            },
+            "duration_of_parking": {
+              "value": null,
+              "span": null,
+              "type": "inferred"
+            },
+            "date_of_incident": {
+              "value": null,
+              "span": null,
+              "type": "inferred"
+            }
+          },
+          "uncertainties": [
+            "duration_of_parking: The scenario does not state how long the vehicle remained parked or when it was moved.",
+            "date_of_incident: The scenario does not specify which date this occurred, only the time of day (2pm).",
+            "vehicle_owner_compliance_intent: No information about whether the vehicle owner was authorized to park in the loading zone or intended to comply with any rules.",
+            "applicable_regulations: No specification of which loading zone rules or local ordinances apply to this situation."
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "R1_fine_trigger",
+              "when": {
+                "vehicle_status": "parked",
+                "location_type": "loading zone",
+                "time_of_day": "2pm"
+              },
+              "then": "Vehicle is subject to a $75 fine",
+              "source_span": "a vehicle parked in a loading zone during the posted hours of 9am to 5pm is subject to a $75 fine"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "Yes, a fine of $75 is owed. The vehicle was parked in a loading zone at 2pm, which falls within the posted restricted hours of 9am-5pm, triggering the $75 fine per the city ordinance.",
+          "reasoning": "The policy clearly states that vehicles parked in loading zones during posted hours (9am-5pm) incur a $75 fine. The scenario presents a parking time (2pm) that is unambiguously within that restricted window. The conditions for the fine are met."
+        },
+        "audit": {
+          "claims_total": 4,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW1-loadingzone",
+        "model": "opus",
+        "scenario": "A vehicle was parked in a loading zone at 2pm.",
+        "input_ir": {
+          "slots": {
+            "object_type": {
+              "value": "vehicle",
+              "span": "A vehicle",
+              "type": "stated"
+            },
+            "object_state": {
+              "value": "parked",
+              "span": "was parked",
+              "type": "stated"
+            },
+            "location": {
+              "value": "loading zone",
+              "span": "in a loading zone",
+              "type": "stated"
+            },
+            "time_of_day": {
+              "value": "2pm",
+              "span": "at 2pm",
+              "type": "stated"
+            }
+          },
+          "uncertainties": []
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "loading_zone_parking_fine",
+              "when": {
+                "object_type": "vehicle",
+                "object_state": "parked",
+                "location": "loading zone",
+                "time_of_day": "2pm"
+              },
+              "then": "$75 fine",
+              "source_span": "a vehicle parked in a loading zone during the posted hours of 9am to 5pm is subject to a $75 fine"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "Yes, a $75 fine is owed.\n\nThe ordinance imposes a $75 fine on a vehicle parked in a loading zone during the posted hours of 9am to 5pm. The vehicle was parked in a loading zone at 2pm. 2pm (14:00) falls within the 9am–5pm window, so all conditions of the ordinance are satisfied: (1) parked in a loading zone, and (2) during posted hours. Therefore the fine applies and the amount is $75.",
+          "reasoning": "The policy has two conditions: location (loading zone) and time (9am–5pm). The scenario satisfies both — the vehicle is in a loading zone, and 2pm is within the 9am–5pm posted hours. Both conjuncts being true triggers the $75 fine. No exceptions, grace periods, or other qualifiers are present in the policy that would alter this outcome."
+        },
+        "audit": {
+          "claims_total": 5,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW2-eviction-notice",
+        "model": "haiku",
+        "scenario": "A landlord filed an eviction action against a tenant for non-payment of rent.",
+        "input_ir": {
+          "slots": {
+            "action_type": {
+              "value": "eviction",
+              "span": "eviction action",
+              "type": "stated"
+            },
+            "plaintiff_role": {
+              "value": "landlord",
+              "span": "A landlord",
+              "type": "stated"
+            },
+            "defendant_role": {
+              "value": "tenant",
+              "span": "tenant",
+              "type": "stated"
+            },
+            "alleged_cause": {
+              "value": "non-payment of rent",
+              "span": "non-payment of rent",
+              "type": "stated"
+            },
+            "action_initiated": {
+              "value": true,
+              "span": "filed an eviction action",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "rent_amount_due: not stated",
+            "rent_period_or_dates: not stated",
+            "payment_deadline_missed: not stated",
+            "notice_given_to_tenant: not stated (may be procedural requirement)",
+            "duration_of_nonpayment: not stated",
+            "tenant_dispute_or_acknowledgment: not stated",
+            "reason_for_nonpayment: not stated",
+            "eviction_jurisdiction: not stated",
+            "lease_terms: not stated"
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "R1-non-payment-requires-notice",
+              "when": {
+                "action_type": "eviction",
+                "alleged_cause": "non-payment of rent",
+                "notice_served": "true",
+                "notice_days_before_filing": ">=14"
+              },
+              "then": "Eviction filing is valid; may proceed on merits",
+              "source_span": "A tenant may be evicted for non-payment only if the landlord served a written notice at least 14 days before filing"
+            },
+            {
+              "id": "R2-non-payment-notice-failure-dismisses-filing",
+              "when": {
+                "action_type": "eviction",
+                "alleged_cause": "non-payment of rent",
+                "notice_served": "false"
+              },
+              "then": "Filing is dismissed",
+              "source_span": "otherwise the filing is dismissed"
+            },
+            {
+              "id": "R3-non-payment-insufficient-notice-period-dismisses-filing",
+              "when": {
+                "action_type": "eviction",
+                "alleged_cause": "non-payment of rent",
+                "notice_served": "true",
+                "notice_days_before_filing": "<14"
+              },
+              "then": "Filing is dismissed",
+              "source_span": "otherwise the filing is dismissed"
+            }
+          ]
+        },
+        "bare": {
+          "reasoning": "The policy establishes a mandatory prerequisite: a written notice must be served at least 14 days before filing an eviction for non-payment; failure to do so results in dismissal. The scenario provides only that a filing occurred, but is silent on whether notice was served and when. The absence of evidence that the notice requirement was met is fatal to the filing's validity under the stated policy.",
+          "answer": "INVALID. The eviction filing should be dismissed because the scenario does not establish that the required 14-day written notice was served before the filing. The policy mandates this notice as a prerequisite; its absence is grounds for dismissal."
+        },
+        "audit": {
+          "claims_total": 4,
+          "claims_unsupported": 2,
+          "unsupported_list": [
+            "INVALID/the eviction filing should be dismissed — the policy makes dismissal follow from notice NOT being served; the scenario is silent on whether notice was served (dispositive fact absent), so resolving the validity question is a determination the texts do not support.",
+            "Its absence is grounds for dismissal — conflates the scenario's silence about notice with established non-service; the policy predicates dismissal on actual failure to serve, a fact the scenario neither states nor negates."
+          ],
+          "verdict": "NOT_DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW2-eviction-notice",
+        "model": "opus",
+        "scenario": "A landlord filed an eviction action against a tenant for non-payment of rent.",
+        "input_ir": {
+          "slots": {
+            "plaintiff_role": {
+              "value": "landlord",
+              "span": "A landlord filed",
+              "type": "stated"
+            },
+            "action_type": {
+              "value": "eviction action",
+              "span": "an eviction action",
+              "type": "stated"
+            },
+            "defendant_role": {
+              "value": "tenant",
+              "span": "against a tenant",
+              "type": "stated"
+            },
+            "grounds_for_action": {
+              "value": "non-payment of rent",
+              "span": "for non-payment of rent",
+              "type": "stated"
+            },
+            "proceeding_initiated": {
+              "value": true,
+              "span": "filed an eviction action",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "proceeding_initiated is inferred-adjacent but is supported directly by the verb 'filed', so it is marked stated; the scenario does not specify jurisdiction, amount of rent owed, lease terms, notice given, or any cure/payment history."
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "eviction_allowed_with_proper_notice",
+              "when": {
+                "grounds_for_action": "non-payment of rent",
+                "written_notice_served": "true",
+                "notice_days_before_filing": ">=14"
+              },
+              "then": "eviction permitted",
+              "source_span": "A tenant may be evicted for non-payment only if the landlord served a written notice at least 14 days before filing"
+            },
+            {
+              "id": "filing_dismissed_without_proper_notice",
+              "when": {
+                "grounds_for_action": "non-payment of rent",
+                "written_notice_served": "false"
+              },
+              "then": "filing dismissed",
+              "source_span": "otherwise the filing is dismissed"
+            },
+            {
+              "id": "filing_dismissed_notice_too_late",
+              "when": {
+                "grounds_for_action": "non-payment of rent",
+                "written_notice_served": "true",
+                "notice_days_before_filing": "<14"
+              },
+              "then": "filing dismissed",
+              "source_span": "served a written notice at least 14 days before filing; otherwise the filing is dismissed"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "Determination: Cannot be determined from the facts given (undetermined).\n\nReasoning: The policy makes a non-payment eviction filing valid only if a condition is met — the landlord must have served a written notice at least 14 days before filing; otherwise the filing is dismissed. The scenario establishes only that (1) the landlord filed an eviction action and (2) the ground is non-payment of rent. It says nothing about whether a written notice was served, and nothing about its timing relative to the filing. Because the deciding fact (the 14-day written notice) is absent from the record, the validity of the filing cannot be established either way. If a conforming notice was served, the filing is valid; if it was not, the filing must be dismissed — but the scenario does not supply the fact needed to choose between these outcomes. The correct answer is therefore that the question is undetermined on the given facts, not a definite \"valid\" or \"invalid.\"",
+          "reasoning": "The policy is a conditional: valid iff written notice served >=14 days before filing. The scenario provides only the filing and its ground (non-payment), with no fact about notice or its timing. The load-bearing fact for the rule's condition is missing, so neither \"valid\" nor \"invalid\" is supported. Asserting \"valid\" would be an ungrounded commission (assuming notice was served); asserting \"invalid\" would assume the opposite. The defensible answer is that it cannot be determined from the given facts."
+        },
+        "audit": {
+          "claims_total": 7,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW3-minor-necessities",
+        "model": "haiku",
+        "scenario": "A sixteen-year-old signed a contract to rent an apartment to live in.",
+        "input_ir": {
+          "slots": {
+            "age": {
+              "value": 16,
+              "span": "sixteen-year-old",
+              "type": "stated"
+            },
+            "age_status": {
+              "value": "minor",
+              "span": null,
+              "type": "inferred"
+            },
+            "action_type": {
+              "value": "contract_signing",
+              "span": "signed a contract",
+              "type": "stated"
+            },
+            "contract_subject": {
+              "value": "apartment_rental",
+              "span": "contract to rent an apartment",
+              "type": "stated"
+            },
+            "party_role": {
+              "value": "lessee",
+              "span": "to rent an apartment to live in",
+              "type": "inferred"
+            },
+            "housing_purpose": {
+              "value": "residential_dwelling",
+              "span": "to live in",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "Whether the minor had parental consent or cosigner involvement (not stated)",
+            "Whether the minor had capacity to understand the contract terms (not stated)",
+            "The jurisdiction governing the contract (not stated)",
+            "Whether the minor was acting independently or with adult supervision (not stated)",
+            "The contract's actual terms and conditions (not stated)",
+            "Whether there are any special exemptions in the relevant jurisdiction for housing contracts (not stated)"
+          ]
+        },
+        "rulebook_ir": {
+          "default": {
+            "source_span": "Contracts signed by minors are voidable. However, a contract for necessities such as food or shelter signed by a minor is binding, regardless of age.",
+            "then": "See rules below"
+          },
+          "rules": [
+            {
+              "id": "R1_minor_voidable",
+              "when": {
+                "age_status": "minor",
+                "action_type": "contract_signing"
+              },
+              "then": "contract is voidable",
+              "source_span": "Contracts signed by minors are voidable."
+            },
+            {
+              "id": "R2_necessity_override",
+              "when": {
+                "age_status": "minor",
+                "action_type": "contract_signing",
+                "is_necessity": "true"
+              },
+              "then": "contract is binding (overrides R1)",
+              "source_span": "However, a contract for necessities such as food or shelter signed by a minor is binding, regardless of age."
+            },
+            {
+              "id": "R3_housing_necessity",
+              "when": {
+                "contract_subject": "apartment_rental",
+                "housing_purpose": "residential_dwelling"
+              },
+              "then": "is_necessity = true",
+              "source_span": "contract for necessities such as food or shelter"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "The contract is BINDING. Under the policy, while contracts signed by minors are generally voidable, contracts for necessities such as shelter are binding regardless of age. Since the sixteen-year-old signed a contract to rent an apartment (shelter), this falls under the necessity exception and is therefore binding.",
+          "reasoning": "The policy establishes a general rule (minors' contracts are voidable) but includes an explicit exception (contracts for necessities like food or shelter are binding). The apartment rental contract involves shelter, which is a necessity. Therefore, the exception applies, and the contract is binding despite the signatory being a minor."
+        },
+        "audit": {
+          "claims_total": 6,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW3-minor-necessities",
+        "model": "opus",
+        "scenario": "A sixteen-year-old signed a contract to rent an apartment to live in.",
+        "input_ir": {
+          "slots": {
+            "person_age": {
+              "value": 16,
+              "span": "sixteen-year-old",
+              "type": "stated"
+            },
+            "is_minor": {
+              "value": true,
+              "span": "sixteen-year-old",
+              "type": "inferred"
+            },
+            "action_taken": {
+              "value": "signed a contract",
+              "span": "signed a contract",
+              "type": "stated"
+            },
+            "contract_subject": {
+              "value": "rent an apartment",
+              "span": "rent an apartment",
+              "type": "stated"
+            },
+            "intended_use": {
+              "value": "to live in",
+              "span": "to live in",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "is_minor is inferred from the age of sixteen; the scenario does not explicitly label the person as a minor, and the legal age of majority/contractual capacity is jurisdiction-dependent and not stated."
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "minor_contract_voidable",
+              "when": {
+                "is_minor": "true",
+                "action_taken": "signed a contract"
+              },
+              "then": "voidable",
+              "source_span": "Contracts signed by minors are voidable."
+            },
+            {
+              "id": "minor_necessity_binding",
+              "when": {
+                "is_minor": "true",
+                "action_taken": "signed a contract",
+                "contract_is_necessity": "true"
+              },
+              "then": "binding",
+              "source_span": "However, a contract for necessities such as food or shelter signed by a minor is binding, regardless of age."
+            }
+          ],
+          "default": {
+            "then": "voidable",
+            "source_span": "Contracts signed by minors are voidable."
+          }
+        },
+        "bare": {
+          "answer": "Binding.\n\nThe policy states that contracts signed by minors are voidable, but carves out an exception: a contract for necessities such as food or shelter signed by a minor is binding regardless of age. The sixteen-year-old is a minor, but the contract is to rent an apartment to live in — i.e., shelter, which the policy explicitly lists as a necessity. Because the necessity exception controls over the general voidability rule, the contract is binding.",
+          "reasoning": "Two policy rules apply. The general rule makes minors' contracts voidable. The exception makes a minor's contract for necessities (food or shelter) binding regardless of age. The signer is sixteen, hence a minor, so the general rule would point to voidable. But an apartment rented to live in is shelter, which the policy names as a necessity. The exception is more specific and is stated to apply \"regardless of age,\" so it overrides the general voidability rule. Therefore the contract is binding."
+        },
+        "audit": {
+          "claims_total": 6,
+          "claims_unsupported": 1,
+          "unsupported_list": [
+            "The sixteen-year-old is a minor — asserts that age sixteen falls below the age of majority, but neither POLICY nor SCENARIO states any age threshold defining 'minor', so classifying sixteen as a minor relies on a fact absent from the authoritative texts."
+          ],
+          "verdict": "NOT_DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW4-capgains-shortterm",
+        "model": "haiku",
+        "scenario": "An investor sold, at a gain, an asset that had been held for four months.",
+        "input_ir": {
+          "slots": {
+            "actor_type": {
+              "value": "investor",
+              "span": "An investor",
+              "type": "stated"
+            },
+            "transaction_type": {
+              "value": "sale",
+              "span": "sold",
+              "type": "stated"
+            },
+            "asset_subject": {
+              "value": "asset",
+              "span": "an asset",
+              "type": "stated"
+            },
+            "gain_or_loss": {
+              "value": "gain",
+              "span": "at a gain",
+              "type": "stated"
+            },
+            "holding_period_months": {
+              "value": 4,
+              "span": "four months",
+              "type": "stated"
+            },
+            "holding_period_less_than_one_year": {
+              "value": true,
+              "span": null,
+              "type": "inferred"
+            },
+            "cost_basis_known": {
+              "value": false,
+              "span": null,
+              "type": "inferred"
+            },
+            "sale_price_known": {
+              "value": false,
+              "span": null,
+              "type": "inferred"
+            },
+            "asset_type_specified": {
+              "value": false,
+              "span": null,
+              "type": "inferred"
+            }
+          },
+          "uncertainties": [
+            "Inferred that holding period < 12 months based on 4-month stated period — threshold significance depends on jurisdiction/context (not provided). Inferred that cost basis and sale price are unknown because scenario only states 'at a gain' without quantifying amounts. Inferred that asset type is unspecified (relevant to whether special tax rules apply, e.g. collectibles, real property, securities)."
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "capital_gains_baseline_rate",
+              "when": {
+                "transaction_type": "sale",
+                "gain_or_loss": "gain",
+                "holding_period_less_than_one_year": "false"
+              },
+              "then": "Tax capital gain at 15%",
+              "source_span": "Capital gains are taxed at 15%"
+            },
+            {
+              "id": "capital_gains_short_term_exception",
+              "when": {
+                "transaction_type": "sale",
+                "gain_or_loss": "gain",
+                "holding_period_less_than_one_year": "true"
+              },
+              "then": "Tax gain at ordinary income rate of 32% instead of capital gains rate",
+              "source_span": "except gains on assets held less than one year, which are taxed at the ordinary income rate of 32%"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "The gain is taxed at 32% (the ordinary income rate).",
+          "reasoning": "Under the stated policy, capital gains are taxed at 15% only if the asset was held for one year or more. Gains on assets held less than one year are taxed at the ordinary income rate of 32%. Since the asset in this scenario was held for four months—less than one year—it qualifies as a short-term capital gain and is therefore taxed at 32%."
+        },
+        "audit": {
+          "claims_total": 5,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW4-capgains-shortterm",
+        "model": "opus",
+        "scenario": "An investor sold, at a gain, an asset that had been held for four months.",
+        "input_ir": {
+          "slots": {
+            "actor": {
+              "value": "investor",
+              "span": "An investor",
+              "type": "stated"
+            },
+            "transaction_type": {
+              "value": "sale",
+              "span": "sold",
+              "type": "stated"
+            },
+            "transaction_outcome": {
+              "value": "gain",
+              "span": "at a gain",
+              "type": "stated"
+            },
+            "asset_disposed": {
+              "value": "asset",
+              "span": "an asset",
+              "type": "stated"
+            },
+            "holding_period": {
+              "value": "four months",
+              "span": "held for four months",
+              "type": "stated"
+            }
+          },
+          "uncertainties": []
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "capital_gain_default_rate",
+              "when": {
+                "transaction_outcome": "gain"
+              },
+              "then": "Taxed at 15% (capital gains rate)",
+              "source_span": "Capital gains are taxed at 15%"
+            },
+            {
+              "id": "short_term_gain_ordinary_rate",
+              "when": {
+                "transaction_outcome": "gain",
+                "holding_period": "four months"
+              },
+              "then": "Taxed at 32% (ordinary income rate) because the asset was held less than one year",
+              "source_span": "except gains on assets held less than one year, which are taxed at the ordinary income rate of 32%"
+            }
+          ],
+          "default": {
+            "then": "INDETERMINATE — no rule applies",
+            "source_span": ""
+          }
+        },
+        "bare": {
+          "answer": "The gain is taxed at 32% (the ordinary income rate).\n\nReasoning: The policy sets a default capital-gains rate of 15%, but carves out an exception for assets held less than one year, which are taxed at the ordinary income rate of 32%. The asset here was held for four months, which is less than one year, so it falls under the exception. Therefore the gain is taxed at 32%, not 15%.",
+          "reasoning": "The policy has a general rule (15% on capital gains) and an exception (32% ordinary income rate for assets held under one year). The scenario states the asset was held four months, which is under one year, triggering the exception. The correct rate is therefore 32%. The trap is defaulting to the headline 15% rate without applying the holding-period exception."
+        },
+        "audit": {
+          "claims_total": 6,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW5-vendor-license",
+        "model": "haiku",
+        "scenario": "A food vendor sold food at events on 25 separate days last year.",
+        "input_ir": {
+          "slots": {
+            "event_count": {
+              "value": 25,
+              "span": "25 separate days",
+              "type": "stated"
+            },
+            "event_count_unit": {
+              "value": "days",
+              "span": "25 separate days",
+              "type": "stated"
+            },
+            "vendor_type": {
+              "value": "food vendor",
+              "span": "food vendor",
+              "type": "stated"
+            },
+            "activity": {
+              "value": "sold food",
+              "span": "sold food",
+              "type": "stated"
+            },
+            "activity_location": {
+              "value": "at events",
+              "span": "at events",
+              "type": "stated"
+            },
+            "time_period": {
+              "value": "last year",
+              "span": "last year",
+              "type": "stated"
+            },
+            "temporal_distribution": {
+              "value": "distributed across a 12-month period",
+              "span": null,
+              "type": "inferred"
+            }
+          },
+          "uncertainties": [
+            "The exact calendar dates of the 25 days are not specified",
+            "Whether the 25 days are consecutive, clustered, or uniformly distributed is unknown",
+            "The specific types of food sold are not stated",
+            "The specific events (names, types, locations) are not stated",
+            "The quantities, prices, or revenue are not provided"
+          ]
+        },
+        "rulebook_ir": {
+          "default": {
+            "source_span": "A business license is required for any food vendor operating more than 10 days per year.",
+            "then": "business license is required"
+          },
+          "rules": [
+            {
+              "id": "license_required_food_vendor_days",
+              "when": {
+                "vendor_type": "food vendor",
+                "event_count": ">10",
+                "event_count_unit": "days"
+              },
+              "then": "business license is required",
+              "source_span": "A business license is required for any food vendor operating more than 10 days per year."
+            }
+          ]
+        },
+        "bare": {
+          "answer": "Yes, a business license is required. The vendor operated on 25 days, which exceeds the 10-day threshold specified in the policy.",
+          "reasoning": "The policy establishes a clear rule: business licenses are required for food vendors operating MORE than 10 days per year. The scenario provides that the vendor operated on 25 separate days. Since 25 > 10, the vendor's activity level satisfies the condition that triggers the license requirement."
+        },
+        "audit": {
+          "claims_total": 3,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW5-vendor-license",
+        "model": "opus",
+        "scenario": "A food vendor sold food at events on 25 separate days last year.",
+        "input_ir": {
+          "slots": {
+            "vendor_type": {
+              "value": "food vendor",
+              "span": "A food vendor",
+              "type": "stated"
+            },
+            "goods_sold": {
+              "value": "food",
+              "span": "sold food",
+              "type": "stated"
+            },
+            "sale_location_context": {
+              "value": "events",
+              "span": "sold food at events",
+              "type": "stated"
+            },
+            "number_of_days_sold": {
+              "value": 25,
+              "span": "25 separate days",
+              "type": "stated"
+            },
+            "days_are_separate": {
+              "value": true,
+              "span": "25 separate days",
+              "type": "stated"
+            },
+            "time_period": {
+              "value": "last year",
+              "span": "last year",
+              "type": "stated"
+            }
+          },
+          "uncertainties": []
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "license_required_food_vendor",
+              "when": {
+                "vendor_type": "food vendor",
+                "number_of_days_sold": ">10"
+              },
+              "then": "REQUIRES_LICENSE",
+              "source_span": "A business license is required for any food vendor operating more than 10 days per year"
+            }
+          ]
+        },
+        "bare": {
+          "answer": "Yes, a business license is required.\n\nReasoning: The policy requires a business license for any food vendor operating more than 10 days per year. The vendor operated on 25 days last year. Since 25 > 10, the threshold is exceeded and a license is required.",
+          "reasoning": "The policy sets a threshold: a business license is required for food vendors operating more than 10 days per year. The scenario states the vendor sold food on 25 separate days last year. 25 exceeds the 10-day threshold, so the condition triggering the license requirement is met. The determination is therefore \"yes.\""
+        },
+        "audit": {
+          "claims_total": 4,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW6-books-duty",
+        "model": "haiku",
+        "scenario": "A shipment of $1,200 worth of books was imported.",
+        "input_ir": {
+          "slots": {
+            "item_category": {
+              "value": "books",
+              "span": "books",
+              "type": "stated"
+            },
+            "item_quantity_unit": {
+              "value": "shipment",
+              "span": "shipment",
+              "type": "stated"
+            },
+            "monetary_value": {
+              "value": 1200,
+              "span": "$1,200",
+              "type": "stated"
+            },
+            "currency": {
+              "value": "USD",
+              "span": "$",
+              "type": "inferred"
+            },
+            "transaction_type": {
+              "value": "import",
+              "span": "imported",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "Currency is inferred as USD from the $ symbol; other currencies use $ (CAD, AUD, etc.) — actual currency withheld",
+            "Quantity of books is not stated — only aggregate monetary value is given",
+            "Origin country/region of import is not specified",
+            "Destination/importing country is not specified",
+            "Purpose of import (commercial resale, personal use, donation, etc.) is not stated",
+            "Importer identity/party is not identified",
+            "Timing of import (date/period) is not provided",
+            "Item condition (new/used/damaged) is not stated",
+            "Whether books are physical items or digital is not specified"
+          ]
+        },
+        "rulebook_ir": {
+          "default": {
+            "source_span": "Imported goods incur a 5% import duty.",
+            "then": "Apply 5% import duty on monetary value"
+          },
+          "rules": [
+            {
+              "id": "import_duty_general",
+              "when": {
+                "transaction_type": "import"
+              },
+              "then": "Apply 5% import duty",
+              "source_span": "Imported goods incur a 5% import duty."
+            },
+            {
+              "id": "books_duty_free_exception",
+              "when": {
+                "item_category": "books"
+              },
+              "then": "Duty-free; no import duty applied",
+              "source_span": "Books, however, are duty-free regardless of order value."
+            }
+          ]
+        },
+        "bare": {
+          "answer": "0% import duty (duty-free)",
+          "reasoning": "The policy explicitly exempts books from import duties \"regardless of order value.\" Since the shipment consists of books, the standard 5% import duty does not apply."
+        },
+        "audit": {
+          "claims_total": 3,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      },
+      {
+        "id": "LAW6-books-duty",
+        "model": "opus",
+        "scenario": "A shipment of $1,200 worth of books was imported.",
+        "input_ir": {
+          "slots": {
+            "shipment_value": {
+              "value": 1200,
+              "span": "$1,200",
+              "type": "stated"
+            },
+            "shipment_currency": {
+              "value": "USD",
+              "span": "$1,200",
+              "type": "inferred"
+            },
+            "goods_type": {
+              "value": "books",
+              "span": "books",
+              "type": "stated"
+            },
+            "was_imported": {
+              "value": true,
+              "span": "was imported",
+              "type": "stated"
+            }
+          },
+          "uncertainties": [
+            "shipment_currency: the '$' symbol is assumed to denote US dollars, but it could represent another dollar-denominated currency (e.g., CAD, AUD)."
+          ]
+        },
+        "rulebook_ir": {
+          "rules": [
+            {
+              "id": "imported_goods_duty",
+              "when": {
+                "was_imported": "true"
+              },
+              "then": "Apply 5% import duty.",
+              "source_span": "Imported goods incur a 5% import duty."
+            },
+            {
+              "id": "books_duty_free_exception",
+              "when": {
+                "goods_type": "books"
+              },
+              "then": "Duty-free; no import duty applies regardless of order value (overrides the import duty rule).",
+              "source_span": "Books, however, are duty-free regardless of order value."
+            }
+          ]
+        },
+        "bare": {
+          "answer": "The applicable import duty rate is 0% — this shipment is duty-free.\n\nReasoning: The policy sets a general 5% import duty on imported goods but carves out an explicit exception: \"Books, however, are duty-free regardless of order value.\" The shipment consists entirely of books, so the exception applies. The $1,200 order value is irrelevant because the policy states the book exemption holds \"regardless of order value.\" Therefore no duty is owed (0%).",
+          "reasoning": "The policy has a general rule (5% on imported goods) and a specific exception (books are duty-free, regardless of order value). The scenario's goods are books, so the exception controls. The $1,200 value is a distractor — the policy explicitly neutralizes order value for books. Correct determination: 0% / duty-free."
+        },
+        "audit": {
+          "claims_total": 6,
+          "claims_unsupported": 0,
+          "unsupported_list": [],
+          "verdict": "DEFENSIBLE"
+        }
+      }
+    ]
+  }
+}

@@ -169,6 +169,17 @@ class TestSolvingFactsAndRules:
 
         assert solve_all(family, x, ancestor("homer", x)) == []
 
+    def test_solver_preserves_prolog_flag_extension_slot(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        family = program(fact(parent("homer", "bart")))
+        initial = State(prolog_flags={"unknown": "error"})
+
+        [state] = list(solve_from(family, parent("homer", x), initial))
+
+        assert state.substitution.reify(x) == atom("bart")
+        assert state.prolog_flags == {"unknown": "error"}
+
 
 class TestPersistentClauseDatabase:
     """Database helpers should update immutable programs in Prolog-like ways."""

@@ -1,0 +1,5 @@
+{
+  "package": "board-vm-usb-cdc",
+  "capabilities": [],
+  "justification": "Pure no_std USB CDC byte-stream adapter. It defines transport traits and fixed-size helpers only; board-specific packages own device controller, USB stack, host serial devices, clocks, and hardware access."
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/forme-aot-fs-cache",
+  "version": "0.1.0",
+  "description": "Disk-backed CacheIO implementation for forme-aot-incremental-cache (FM06 §4 storage backend).  Stores cache entries under a caller-supplied directory; sharded by first 2 hex chars of the cache key; atomic writes via temp-file + rename by default.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-aot-incremental-cache": "file:../forme-aot-incremental-cache",
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "@types/node": "^20.0.0"
+  }
+}

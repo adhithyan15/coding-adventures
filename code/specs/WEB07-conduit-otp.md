@@ -637,7 +637,7 @@ the OTP DSL. 15+ integration tests via `:httpc`.
 
 ## Future work tracked outside this spec
 
-- **WEB08 — Conduit Perl** (next).
+- **WEB09 — Conduit Perl**.
 - **The "tiny BEAM-like VM" project** — re-implement the supervision-tree
   + actor model as a small Rust library, then port WEB07's design to
   Python/Ruby/Lua/etc. Each language gets its own DSL on top of one

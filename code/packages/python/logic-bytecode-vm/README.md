@@ -7,6 +7,11 @@ This package sits one layer below `logic-vm`. Instead of stepping rich
 `logic-bytecode`, resolves pool references, builds runtime state, and then runs
 stored queries through `logic-engine`.
 
+The VM also preserves dynamic relation declarations and can execute stored
+queries from an existing `logic-engine.State`, which lets higher-level Prolog
+runtimes run initialization goals, persist dynamic database updates, and then
+ask later ad-hoc queries through the same bytecode-backed program.
+
 ## Dependencies
 
 - logic-engine
@@ -17,7 +22,7 @@ stored queries through `logic-engine`.
 
 ```python
 from logic_engine import conj, relation, var
-from logic_instructions import defrel, fact, instruction_program, query, rule
+from logic_instructions import defdynamic, defrel, fact, instruction_program, query, rule
 from logic_bytecode import compile_program
 from logic_bytecode_vm import create_logic_bytecode_vm
 
@@ -33,6 +38,7 @@ bytecode = compile_program(
     instruction_program(
         defrel(parent),
         defrel(ancestor),
+        defdynamic(relation("memo", 1)),
         fact(parent("homer", "bart")),
         fact(parent("homer", "lisa")),
         rule(ancestor(x, y), parent(x, y)),
@@ -46,8 +52,9 @@ vm.load(bytecode)
 trace = vm.run()
 answers = vm.run_query()
 
-assert len(trace) == 8
+assert len(trace) == 9
 assert [str(answer) for answer in answers] == ["bart", "lisa"]
+assert relation("memo", 1).key() in vm.state.dynamic_relations
 ```
 
 ## Development

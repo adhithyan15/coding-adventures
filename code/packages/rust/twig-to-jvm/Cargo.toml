@@ -1,0 +1,19 @@
+[package]
+name = "twig-to-jvm"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Twig → JVM class file pipeline: source → IIR → type check → builtin lowering → JvmClassFile"
+
+[lib]
+name = "twig_to_jvm"
+path = "src/lib.rs"
+
+[dependencies]
+twig-ir-compiler      = { path = "../twig-ir-compiler" }
+iir-type-checker      = { path = "../iir-type-checker" }
+iir-builtin-lowering  = { path = "../iir-builtin-lowering" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+interpreter-ir        = { path = "../interpreter-ir" }
+jvm-class-file        = { path = "../jvm-class-file" }
+
+[dev-dependencies]

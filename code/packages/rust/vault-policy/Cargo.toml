@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_vault_policy"
+version = "0.1.0"
+edition = "2021"
+description = "VLT06 — pluggable policy engine for the Vault stack. PolicyEngine trait + SimpleRbacEngine + AllOf/AnyOf/RequireFactor decorators. HCL / Cedar / Rego adapters slot in via the same trait in follow-up PRs."
+
+[dependencies]

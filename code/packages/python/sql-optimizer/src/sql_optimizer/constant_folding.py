@@ -80,7 +80,8 @@ from sql_planner import (
     Update,
 )
 from sql_planner.plan import Assignment as PlanAssignment
-from sql_planner.plan import Limit, SortKey
+from sql_planner.plan import Limit, SortKey, UpsertAction
+from sql_planner.plan import UpsertAssignment as PlanUpsertAssignment
 
 
 class ConstantFolding:
@@ -124,6 +125,14 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                     expr=_fold_expr(k.expr),
                     descending=k.descending,
                     nulls_first=k.nulls_first,
+                    # Preserve positional_index so ORDER BY N and ORDER BY alias
+                    # continue to use index-based column lookup after folding.
+                    positional_index=k.positional_index,
+                    # Preserve COLLATE name so the VM still applies the
+                    # right transform when building the sort key after
+                    # any expression folding (e.g. ``ORDER BY 'A' || x
+                    # COLLATE NOCASE``).
+                    collation=k.collation,
                 )
                 for k in keys
             )
@@ -142,10 +151,15 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             return DerivedTable(query=_fold_plan(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p  # transaction control — nothing to fold
-        case Insert(table=t, columns=cols, source=src):
+        case Insert(table=t, columns=cols, source=src, on_conflict=oc, returning=ret, upsert=up):
             new_src = _fold_insert_source(src)
-            return Insert(table=t, columns=cols, source=new_src)
-        case Update(table=t, assignments=asgs, predicate=pred):
+            new_ret = tuple(_fold_expr(r) for r in ret)
+            new_up = _fold_upsert(up)
+            return Insert(
+                table=t, columns=cols, source=new_src, on_conflict=oc,
+                returning=new_ret, upsert=new_up,
+            )
+        case Update(table=t, assignments=asgs, predicate=pred, returning=ret):
             return Update(
                 table=t,
                 assignments=tuple(
@@ -153,11 +167,13 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                     for a in asgs
                 ),
                 predicate=_fold_expr(pred) if pred is not None else None,
+                returning=tuple(_fold_expr(r) for r in ret),
             )
-        case Delete(table=t, predicate=pred):
+        case Delete(table=t, predicate=pred, returning=ret):
             return Delete(
                 table=t,
                 predicate=_fold_expr(pred) if pred is not None else None,
+                returning=tuple(_fold_expr(r) for r in ret),
             )
         case IndexScan(
             table=t, alias=a, index_name=iname, columns=cols,
@@ -175,6 +191,29 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             )
         case _:
             return p  # CreateTable, DropTable, CreateIndex, DropIndex — nothing to fold
+
+
+def _fold_upsert(up: UpsertAction | None) -> UpsertAction | None:
+    """Constant-fold expressions inside an upsert action's SET assignments.
+
+    When ``up`` is ``None`` (no upsert clause) or ``do_nothing=True`` (no
+    assignments to fold), the node is returned unchanged.  Otherwise, each
+    assignment value is folded in place.
+    """
+    if up is None or up.do_nothing:
+        return up
+    new_assignments = tuple(
+        PlanUpsertAssignment(column=a.column, value=_fold_expr(a.value))
+        for a in up.assignments
+    )
+    # If nothing changed, return the original node to preserve identity.
+    if new_assignments == up.assignments:
+        return up
+    return UpsertAction(
+        conflict_target=up.conflict_target,
+        do_nothing=False,
+        assignments=new_assignments,
+    )
 
 
 def _fold_insert_source(src: InsertSource) -> InsertSource:
@@ -224,10 +263,10 @@ def _fold_expr(e: Expr) -> Expr:
                 operand=_fold_expr(op),
                 values=tuple(_fold_expr(v) for v in vs),
             )
-        case Like(operand=op, pattern=p):
-            return Like(operand=_fold_expr(op), pattern=p)
-        case NotLike(operand=op, pattern=p):
-            return NotLike(operand=_fold_expr(op), pattern=p)
+        case Like(operand=op, pattern=p, escape=e):
+            return Like(operand=_fold_expr(op), pattern=p, escape=e)
+        case NotLike(operand=op, pattern=p, escape=e):
+            return NotLike(operand=_fold_expr(op), pattern=p, escape=e)
         case CaseExpr(whens=whens, else_=else_):
             # Fold each branch, but don't try to short-circuit at plan time
             # — short-circuit evaluation of CASE is the VM's responsibility.
@@ -251,6 +290,26 @@ def _fold_binary(op: BinaryOp, left: Expr, right: Expr) -> Expr:
         simp = _simplify_or(left, right)
         if simp is not None:
             return simp
+
+    # IS [NOT] DISTINCT FROM — NULL-safe comparisons.  Both operators accept
+    # NULL operands and always return a bool, never NULL.  They must be handled
+    # before the generic NULL-propagation guard below.
+    if op is BinaryOp.IS_DISTINCT_FROM or op is BinaryOp.IS_NOT_DISTINCT_FROM:
+        if isinstance(left, Literal) and isinstance(right, Literal):
+            lv, rv = left.value, right.value
+            if op is BinaryOp.IS_DISTINCT_FROM:
+                if lv is None and rv is None:
+                    return Literal(value=False)
+                if lv is None or rv is None:
+                    return Literal(value=True)
+                return Literal(value=lv != rv)
+            else:  # IS_NOT_DISTINCT_FROM
+                if lv is None and rv is None:
+                    return Literal(value=True)
+                if lv is None or rv is None:
+                    return Literal(value=False)
+                return Literal(value=lv == rv)
+        return BinaryExpr(op=op, left=left, right=right)
 
     if not (isinstance(left, Literal) and isinstance(right, Literal)):
         return BinaryExpr(op=op, left=left, right=right)
@@ -290,15 +349,105 @@ def _apply_binary(op: BinaryOp, lv: object, rv: object) -> object:
         case BinaryOp.MUL:
             return lv * rv  # type: ignore[operator]
         case BinaryOp.DIV:
+            # SQLite returns NULL for x / 0 rather than raising — defer
+            # to the VM by leaving the expression un-folded so the
+            # runtime error path is used uniformly.
+            if rv == 0:
+                raise ZeroDivisionError
             # Integer-style division matches SQL: 7/2 = 3 for integers.
             if isinstance(lv, int) and isinstance(rv, int) and not isinstance(lv, bool):
-                return lv // rv
+                # SQLite truncates toward zero (e.g. ``-7 / 2 == -3``),
+                # whereas Python's ``//`` floors (-7 // 2 == -4).
+                q = abs(lv) // abs(rv)
+                return -q if (lv < 0) ^ (rv < 0) else q
             return lv / rv  # type: ignore[operator]
         case BinaryOp.MOD:
-            return lv % rv  # type: ignore[operator]
+            # See the matching comment in sql_vm.operators._arithmetic
+            # for the rationale.  Briefly: SQLite's ``%`` truncates floats
+            # to integers first, then computes C-style modulo (sign
+            # follows the dividend), and casts back to float if either
+            # input was floating-point.  ``mod()`` (the scalar function)
+            # uses true fmod and is handled separately.
+            if rv == 0:
+                raise ZeroDivisionError
+            is_float = isinstance(lv, float) or isinstance(rv, float)
+            ilv, irv = int(lv), int(rv)  # type: ignore[arg-type]
+            if irv == 0:
+                raise ZeroDivisionError
+            magnitude = abs(ilv) % abs(irv)
+            result = -magnitude if ilv < 0 else magnitude
+            return float(result) if is_float else result
+        case BinaryOp.CONCAT:
+            # SQL || string concatenation. Both sides are strings (the SQL type
+            # system guarantees this; if they aren't, fall through to TypeError
+            # and let the VM raise a proper TypeMismatch at runtime).
+            return str(lv) + str(rv)  # type: ignore[operator]
+        case BinaryOp.BIT_AND | BinaryOp.BIT_OR | BinaryOp.BIT_SHL | BinaryOp.BIT_SHR:
+            # SQLite bitwise operators coerce both operands to 64-bit signed
+            # integers (CAST-to-INTEGER semantics: TRUE→1, FALSE→0, floats
+            # truncate toward zero, strings parse via the same rule as
+            # ``CAST(x AS INTEGER)``).  We only fold when both literals are
+            # numeric — anything trickier (string parsing, bool coercion) we
+            # defer to the VM so it can raise consistent error messages.
+            if not (isinstance(lv, (int, float)) and isinstance(rv, (int, float))):
+                raise TypeError("bitwise operands must be numeric for folding")
+            a = int(lv) if not isinstance(lv, bool) else int(lv)
+            b = int(rv) if not isinstance(rv, bool) else int(rv)
+            # 64-bit wrap-around: SQLite's bitwise ops operate on 64-bit
+            # signed integers, so e.g. ``1 << 63`` becomes a large negative
+            # number rather than overflowing.  We emulate by masking to 64
+            # bits and reinterpreting the top bit as the sign.
+            mask = (1 << 64) - 1
+            sign_bit = 1 << 63
+
+            def s64(x: int) -> int:
+                x &= mask
+                return x - (1 << 64) if x & sign_bit else x
+
+            if op is BinaryOp.BIT_AND:
+                return s64(a & b)
+            if op is BinaryOp.BIT_OR:
+                return s64(a | b)
+            if op is BinaryOp.BIT_SHL:
+                # Negative shift counts flip the direction (matches SQLite).
+                if b < 0:
+                    return s64(a >> (-b)) if -b < 64 else (0 if a >= 0 else -1)
+                if b >= 64:
+                    return 0
+                return s64(a << b)
+            # BIT_SHR
+            if b < 0:
+                if -b >= 64:
+                    return 0
+                return s64(a << (-b))
+            if b >= 64:
+                return 0 if a >= 0 else -1
+            return a >> b
         case BinaryOp.AND | BinaryOp.OR:
             # Unreachable — handled by _simplify_and / _simplify_or above.
             raise AssertionError("unreachable")
+
+
+def _truthy(value: object) -> bool | None:
+    """SQL boolean coercion: None → None; numeric zero → False; else True.
+
+    SQLite treats any non-NULL numeric value as a boolean: ``0`` and
+    ``0.0`` are FALSE, everything else (including bools, non-zero ints
+    and floats) is TRUE.  Strings have no defined truth value for ``AND``
+    /``OR`` short-circuit folding — we return ``None`` to signal "leave
+    this as a runtime expression" so the VM can apply its own rules.
+
+    Returning ``None`` for unknown truthiness is what prevents this
+    helper from over-folding: the caller treats ``None`` as "I can't
+    tell, don't simplify on this side".
+    """
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return bool(value)  # 0/0.0 → False; anything else → True
+    return None
 
 
 def _simplify_and(left: Expr, right: Expr) -> Expr | None:
@@ -311,17 +460,26 @@ def _simplify_and(left: Expr, right: Expr) -> Expr | None:
     FALSE     FALSE  FALSE  FALSE
     NULL      NULL   FALSE  NULL
     ========  =====  =====  =====
+
+    Integer-literal coercion: SQLite (and we) treat any non-zero numeric
+    value as TRUE and zero as FALSE.  Without this, ``SELECT 1 AND 0``
+    used to fall through the ``is True`` / ``is False`` identity tests
+    and end up folding to NULL (which is exactly the bug this docstring
+    is preventing from coming back).
     """
-    if isinstance(left, Literal) and left.value is False:
+    lt = _truthy(left.value) if isinstance(left, Literal) else None
+    rt = _truthy(right.value) if isinstance(right, Literal) else None
+    # Truth-value rules — FALSE dominates, then short-circuit on TRUE.
+    if lt is False or rt is False:
         return Literal(value=False)
-    if isinstance(right, Literal) and right.value is False:
-        return Literal(value=False)
-    if isinstance(left, Literal) and left.value is True:
+    if lt is True and rt is True:
+        return Literal(value=True)
+    if lt is True:
         return right
-    if isinstance(right, Literal) and right.value is True:
+    if rt is True:
         return left
+    # Both literals but neither TRUE/FALSE — at least one is NULL → NULL.
     if isinstance(left, Literal) and isinstance(right, Literal):
-        # Both are literals but neither is TRUE/FALSE — one is NULL.
         return Literal(value=None)
     return None
 
@@ -336,14 +494,19 @@ def _simplify_or(left: Expr, right: Expr) -> Expr | None:
     FALSE     TRUE   FALSE  NULL
     NULL      TRUE   NULL   NULL
     ========  =====  =====  =====
+
+    Same integer-literal coercion as ``_simplify_and`` — see that
+    docstring for the rationale.
     """
-    if isinstance(left, Literal) and left.value is True:
+    lt = _truthy(left.value) if isinstance(left, Literal) else None
+    rt = _truthy(right.value) if isinstance(right, Literal) else None
+    if lt is True or rt is True:
         return Literal(value=True)
-    if isinstance(right, Literal) and right.value is True:
-        return Literal(value=True)
-    if isinstance(left, Literal) and left.value is False:
+    if lt is False and rt is False:
+        return Literal(value=False)
+    if lt is False:
         return right
-    if isinstance(right, Literal) and right.value is False:
+    if rt is False:
         return left
     if isinstance(left, Literal) and isinstance(right, Literal):
         return Literal(value=None)
@@ -360,4 +523,14 @@ def _fold_unary(op: UnaryOp, operand: Expr) -> Expr:
         return Literal(value=not v)
     if op is UnaryOp.NEG:
         return Literal(value=-v)  # type: ignore[operator]
+    if op is UnaryOp.BIT_NOT:
+        # ``~x`` flips every bit of the 64-bit signed integer
+        # representation of ``x``.  For integers this is exactly
+        # ``-(x+1)``; we go via the int conversion so floats and bools
+        # follow SQLite's CAST-to-INTEGER coercion.
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            # bool ~ is implementation-defined in SQLite; defer to VM.
+            return UnaryExpr(op=op, operand=operand)
+        iv = int(v)
+        return Literal(value=~iv)
     return UnaryExpr(op=op, operand=operand)  # pragma: no cover

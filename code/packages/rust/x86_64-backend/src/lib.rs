@@ -1,0 +1,2322 @@
+//! # `x86_64-backend` — x86-64 backend for jit-core / aot-core.
+//!
+//! Lowers a `Vec<CIRInstr>` into x86-64 machine code via
+//! [`x86_64_encoder`].  Plugs into both `jit-core` and `aot-core` through
+//! the shared [`jit_core::backend::Backend`] trait.  Implements
+//! [LANG43](../../../../specs/LANG43-x86_64-backend.md).
+//!
+//! ## ABI selection
+//!
+//! V1 supports **both** ABIs in use on x86-64 hosts:
+//!
+//! - [`X86_64Abi::SysV`] — System V AMD64 (Linux, macOS x86-64, FreeBSD).
+//!   Arg regs: RDI, RSI, RDX, RCX, R8, R9.
+//! - [`X86_64Abi::MsX64`] — Microsoft x64 (Windows).
+//!   Arg regs: RCX, RDX, R8, R9.  32-byte shadow space reserved in
+//!   prologue.
+//!
+//! ```
+//! use x86_64_backend::{X86_64Backend, X86_64Abi};
+//! let backend = X86_64Backend::with_abi(X86_64Abi::SysV);   // Linux/macOS
+//! let backend = X86_64Backend::with_abi(X86_64Abi::MsX64);  // Windows
+//! ```
+//!
+//! ## V1 scope
+//!
+//! | Family | CIR mnemonics |
+//! |---|---|
+//! | Constants | `const_<ty>` (int and bool literals) |
+//! | Moves | `mov_<ty>` |
+//! | Integer arithmetic | `add_<ty>`, `sub_<ty>`, `mul_<ty>` |
+//! | Comparisons | `cmp_eq_<ty>`, `cmp_ne_<ty>`, `cmp_lt_<ty>`, `cmp_le_<ty>`, `cmp_gt_<ty>`, `cmp_ge_<ty>` (signed and unsigned) |
+//! | Control flow | `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
+//! | Returns | `ret_<ty>`, `ret_void` |
+//! | Type guards | `type_assert` (`UD2` trap) |
+//!
+//! Everything else (`call`, `global_load`/`store`, `io_out`, division,
+//! logical, shifts, floats, closures) is **not yet** and is added by
+//! later phases.  Unsupported opcodes cause `compile_function` to
+//! return `None`, which `aot-core` reports as a backend miss.
+//!
+//! ## Register allocation
+//!
+//! Stack spill.  Every virtual lives at `[rbp - 8 - slot_idx*8]`.
+//! Three GPRs are reserved as scratch for every instruction emission:
+//!
+//! - `RAX` — primary scratch + return register.
+//! - `RCX` — shift-count register (used in phase 4 for `SHL`/`SHR`/`SAR`).
+//! - `RDX` — high half of `RDX:RAX` for `IDIV`/`DIV` (used in phase 4).
+//!
+//! Reserving all three up front means later phases never have to
+//! shuffle scratch.
+
+#![warn(missing_docs)]
+#![warn(rust_2018_idioms)]
+
+use std::collections::HashMap;
+
+use jit_core::backend::{Backend, FunctionContext};
+use jit_core::cir::{CIRInstr, CIROperand};
+use vm_core::value::Value;
+use x86_64_encoder::{
+    Assembler, Cond, EncodeError, ExternalReloc, ExternalRelocKind, LabelId, Reg,
+};
+
+pub use x86_64_encoder::ExternalReloc as Reloc;
+
+// ===========================================================================
+// ABI selection
+// ===========================================================================
+
+/// x86-64 calling-convention selector.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum X86_64Abi {
+    /// System V AMD64 — Linux, FreeBSD, macOS x86-64.
+    SysV,
+    /// Microsoft x64 — Windows.
+    MsX64,
+}
+
+impl X86_64Abi {
+    /// Integer argument registers in order.
+    fn arg_regs(self) -> &'static [Reg] {
+        match self {
+            X86_64Abi::SysV  => &[Reg::Rdi, Reg::Rsi, Reg::Rdx, Reg::Rcx, Reg::R8, Reg::R9],
+            X86_64Abi::MsX64 => &[Reg::Rcx, Reg::Rdx, Reg::R8, Reg::R9],
+        }
+    }
+
+    /// Maximum number of GPR-passed args supported by this ABI.
+    fn max_args(self) -> usize { self.arg_regs().len() }
+
+    /// 32-byte shadow space the caller must reserve.  Microsoft x64
+    /// only.  V1 reserves it unconditionally in every non-trivial
+    /// function's prologue so call sites don't have to do it
+    /// per-call.
+    fn shadow_space(self) -> u32 {
+        match self {
+            X86_64Abi::SysV  => 0,
+            X86_64Abi::MsX64 => 32,
+        }
+    }
+}
+
+// ===========================================================================
+// Backend implementation
+// ===========================================================================
+
+/// x86-64 native-code backend.
+#[derive(Debug, Default, Clone, Copy)]
+pub struct X86_64Backend {
+    abi: X86_64AbiOption,
+}
+
+// Default::default() must yield Default for X86_64Backend; X86_64Abi
+// doesn't derive Default to make the choice explicit at the call site.
+#[derive(Debug, Default, Clone, Copy)]
+struct X86_64AbiOption(Option<X86_64Abi>);
+
+impl X86_64AbiOption {
+    fn unwrap_or_sysv(self) -> X86_64Abi { self.0.unwrap_or(X86_64Abi::SysV) }
+}
+
+impl X86_64Backend {
+    /// Construct a backend defaulting to System V (Linux/macOS).
+    pub fn new() -> Self { X86_64Backend { abi: X86_64AbiOption(Some(X86_64Abi::SysV)) } }
+
+    /// Construct a backend with an explicit ABI choice.
+    pub fn with_abi(abi: X86_64Abi) -> Self {
+        X86_64Backend { abi: X86_64AbiOption(Some(abi)) }
+    }
+
+    /// The ABI this backend will use.
+    pub fn abi(&self) -> X86_64Abi { self.abi.unwrap_or_sysv() }
+}
+
+impl Backend for X86_64Backend {
+    fn name(&self) -> &str {
+        match self.abi() {
+            X86_64Abi::SysV  => "x86_64-sysv",
+            X86_64Abi::MsX64 => "x86_64-msx64",
+        }
+    }
+
+    /// Without function context the prologue can't be laid out
+    /// (param-arrival registers are unknown).  Mirrors aarch64-backend.
+    fn compile(&self, _ir: &[CIRInstr]) -> Option<Vec<u8>> { None }
+
+    fn run(&self, _binary: &[u8], _args: &[Value]) -> Value {
+        // Native-code execution requires a JIT loader; not in this crate.
+        Value::Null
+    }
+
+    fn compile_function(&self, ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Option<Vec<u8>> {
+        compile_function(ctx, ir, self.abi()).ok()
+    }
+}
+
+// ===========================================================================
+// Public entry points (used by tests and the AOT linker)
+// ===========================================================================
+
+/// Compile a single function with the given ABI.  Returns the
+/// function's machine-code bytes on success, or a diagnostic string on
+/// failure (for surfaceable errors from tests).
+///
+/// External relocations (cross-function calls, runtime helpers) are
+/// silently discarded.  Use [`compile_function_with_relocs`] when the
+/// AOT linker needs the relocation list.
+pub fn compile_function(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    abi: X86_64Abi,
+) -> Result<Vec<u8>, String> {
+    compile_inner(ctx, ir, abi, &HashMap::new())
+        .map(|(bytes, _relocs)| bytes)
+        .map_err(|e| format!("x86_64-backend: {e:?}"))
+}
+
+/// Like [`compile_function`] but also returns the list of external
+/// relocations the AOT linker must patch after concatenating all
+/// function bodies into a single text section.
+///
+/// Each [`Reloc`] points at a 32-bit slot in the function's bytes
+/// (`patch_offset`) plus the symbol name and reloc kind the packager
+/// (LANG45) translates to an OS-specific relocation record.
+pub fn compile_function_with_relocs(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    abi: X86_64Abi,
+) -> Result<(Vec<u8>, Vec<Reloc>), String> {
+    compile_inner(ctx, ir, abi, &HashMap::new())
+        .map_err(|e| format!("x86_64-backend: {e:?}"))
+}
+
+/// Like [`compile_function_with_relocs`] but also handles
+/// `global_load` / `global_store` CIR instructions using the supplied
+/// slot map.
+///
+/// `global_slots` maps each global name (as it appears in
+/// `srcs[0].as_var()`) to a zero-based slot index.  Slot `i`
+/// corresponds to bytes `[i*8, i*8 + 8)` in the `_twig_globals` data
+/// section that the packager (LANG45) emits.
+///
+/// Returns the function's machine code bytes plus any external
+/// relocations.  Cross-function `call`s, `io_out` calls into the
+/// runtime, and globals access all surface as entries in the
+/// returned relocation list (with `PltRel32` for calls and
+/// `PcRel32` for global addresses).
+pub fn compile_function_with_globals(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<Reloc>), String> {
+    compile_inner(ctx, ir, abi, global_slots)
+        .map_err(|e| format!("x86_64-backend: {e:?}"))
+}
+
+// ===========================================================================
+// Stack-spill register allocator
+// ===========================================================================
+
+/// Assigns each CIR virtual register a stack slot.
+///
+/// Slots are addressed as `[rbp - 8 - slot_idx*8]`, growing downward
+/// from the saved RBP.  This means slot 0 lives at `[rbp - 8]`, slot 1
+/// at `[rbp - 16]`, etc.
+#[derive(Debug, Default)]
+struct RegAlloc {
+    slots: HashMap<String, u32>,
+    /// Next slot index to hand out (0-based).
+    next_slot: u32,
+}
+
+impl RegAlloc {
+    fn slot_of(&mut self, name: &str) -> u32 {
+        if let Some(&s) = self.slots.get(name) { return s; }
+        let s = self.next_slot;
+        self.next_slot = self.next_slot.checked_add(1).expect("slot overflow");
+        self.slots.insert(name.to_string(), s);
+        s
+    }
+
+    /// Number of slots in use.
+    fn slot_count(&self) -> u32 { self.next_slot }
+
+    /// Byte offset from RBP for the given slot index (always negative).
+    fn rbp_offset(slot: u32) -> i32 { -8i32 - 8 * (slot as i32) }
+}
+
+// ===========================================================================
+// LANG75 — runtime-helper signature table
+// ===========================================================================
+//
+// `call_builtin "<name>", <args>` looks `name` up in this table.  Every
+// V1 helper has a fixed signature (arg count + returns-a-value bit);
+// the backend rejects mismatched call sites with `MalformedInstr`.
+//
+// Linker symbols are always prefixed `__twig_` — see runtime/twig_runtime.c.
+//
+// | Mnemonic       | C signature                                   | Returns |
+// |---------------|-----------------------------------------------|---------|
+// | `print_i64`   | `void __twig_print_i64(int64_t)`              | no      |
+// | `putchar`     | `void __twig_putchar(int32_t c)`              | no      |
+// | `getchar`     | `int32_t __twig_getchar(void)`                | yes     |
+// | `print_string`| `void __twig_print_string(const char*, int64_t)` | no      |
+// | `input_i64`   | `int64_t __twig_input_i64(void)`              | yes     |
+// | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
+
+#[derive(Debug, Clone, Copy)]
+struct BuiltinSig {
+    /// The bare helper name (e.g. `"putchar"`).  The backend prepends
+    /// `__twig_` when emitting the linker symbol.
+    name: &'static str,
+    /// Number of CIR arguments the helper expects (the `name` Var in
+    /// srcs[0] is not counted here).
+    n_args: usize,
+    /// `true` if the helper writes a return value into RAX/X0 that the
+    /// backend should store into the dest slot.
+    returns: bool,
+}
+
+/// V1 helper table shared by every backend.  Order is the documentation
+/// order from the spec; lookup is `O(n)` against six entries which is
+/// faster than a `HashMap` at this scale.
+const V1_BUILTINS: &[BuiltinSig] = &[
+    BuiltinSig { name: "print_i64",    n_args: 1, returns: false },
+    BuiltinSig { name: "putchar",      n_args: 1, returns: false },
+    BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
+    BuiltinSig { name: "print_string", n_args: 2, returns: false },
+    BuiltinSig { name: "input_i64",    n_args: 0, returns: true  },
+    BuiltinSig { name: "exit",         n_args: 1, returns: false },
+    // LANG76 — heap allocator.  Returns a pointer (treated as i64).
+    BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
+    // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
+    // dispatch to `__twig_lispy_*` in `twig-aot/runtime/lispy_runtime.c`,
+    // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
+    // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
+    // logic — the generic `call_builtin` path marshals args + emits the CALL.
+    BuiltinSig { name: "lispy_cons",   n_args: 2, returns: true  },
+    BuiltinSig { name: "lispy_car",    n_args: 1, returns: true  },
+    BuiltinSig { name: "lispy_cdr",    n_args: 1, returns: true  },
+    // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
+    // program-exit boundary.  `int64_t __twig_lispy_unbox_int(uint64_t)`.
+    BuiltinSig { name: "lispy_unbox_int", n_args: 1, returns: true },
+    // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
+    // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
+    BuiltinSig { name: "lispy_pair_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "lispy_not",       n_args: 1, returns: true },
+    BuiltinSig { name: "lispy_equal",     n_args: 2, returns: true },
+    BuiltinSig { name: "lispy_truthy",    n_args: 1, returns: true },
+    // LANG77 W13b — the universal program-exit coercion for a polymorphic
+    // (lambda / `any`) result: dispatch on the runtime tag.
+    // `int64_t __twig_lispy_to_exit_code(uint64_t)`.
+    BuiltinSig { name: "lispy_to_exit_code", n_args: 1, returns: true },
+];
+
+fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
+    V1_BUILTINS.iter().copied().find(|s| s.name == name)
+}
+
+fn v1_builtin_names() -> Vec<&'static str> {
+    V1_BUILTINS.iter().map(|s| s.name).collect()
+}
+
+// ===========================================================================
+// Errors (internal)
+// ===========================================================================
+
+#[derive(Debug)]
+#[allow(dead_code)]
+enum BackendError {
+    /// CIR contains an opcode this backend doesn't yet support.
+    UnsupportedOp(String),
+    /// CIR uses more parameters than the ABI has GPR slots.
+    TooManyParams { abi: &'static str, got: usize, max: usize },
+    /// An instruction is missing a required `dest` or `srcs` field.
+    MalformedInstr(String),
+    /// Encoder rejected an immediate or branch.
+    Encoder(EncodeError),
+}
+
+impl From<EncodeError> for BackendError {
+    fn from(e: EncodeError) -> Self { BackendError::Encoder(e) }
+}
+
+// ===========================================================================
+// Top-level compile
+// ===========================================================================
+
+fn compile_inner(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<ExternalReloc>), BackendError> {
+    if ctx.params.len() > abi.max_args() {
+        return Err(BackendError::TooManyParams {
+            abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
+            got: ctx.params.len(),
+            max: abi.max_args(),
+        });
+    }
+
+    // ---- Pre-pass: assign slots --------------------------------------------
+    //
+    // Params first, in arg-register order, so the prologue's stores
+    // line up with the slot offsets.  Then walk CIR to allocate
+    // dest slots and source-var slots deterministically.
+    let mut alloc = RegAlloc::default();
+    for (name, _ty) in ctx.params {
+        alloc.slot_of(name);
+    }
+    for instr in ir {
+        if let Some(d) = &instr.dest {
+            alloc.slot_of(d);
+        }
+        for src in &instr.srcs {
+            if let CIROperand::Var(s) = src {
+                alloc.slot_of(s);
+            }
+        }
+    }
+
+    // ---- Frame size --------------------------------------------------------
+    //
+    // Reserve 8 bytes per virtual slot, plus the ABI shadow space, and
+    // round up to a 16-byte multiple so that after `push rbp; sub rsp,
+    // frame` the stack stays 16-byte aligned at every CALL site.
+    let raw_frame = alloc.slot_count() * 8 + abi.shadow_space();
+    // After `push rbp` (8 bytes pushed), RSP is at a 0-mod-16 boundary.
+    // We need rsp + frame ≡ 0 (mod 16), so frame ≡ 0 (mod 16).
+    let frame: u32 = (raw_frame + 15) & !15;
+
+    // ---- Pre-pass: pre-create labels --------------------------------------
+    let mut asm = Assembler::new();
+    let mut labels: HashMap<String, LabelId> = HashMap::new();
+    for instr in ir {
+        if instr.op == "label" {
+            if let Some(name) = label_name(instr) {
+                labels.entry(name.to_string())
+                    .or_insert_with(|| asm.create_label());
+            }
+        }
+    }
+    for instr in ir {
+        if matches!(instr.op.as_str(), "jmp" | "jmp_if_true" | "jmp_if_false") {
+            if let Some(target) = label_name(instr) {
+                labels.entry(target.to_string())
+                    .or_insert_with(|| asm.create_label());
+            }
+        }
+        // Self-recursive call: pre-create a label for the callee name so
+        // it can be bound at the function entry below.
+        if instr.op == "call" {
+            if let Some(CIROperand::Var(name)) = instr.srcs.first() {
+                labels.entry(name.clone())
+                    .or_insert_with(|| asm.create_label());
+            }
+        }
+    }
+
+    // Bind the current function's own name to the very start of the
+    // prologue.  `call <fn_name>` instructions in the body emit
+    // `call_label(entry_label)` which re-enters the function here,
+    // re-executing the full prologue (push rbp + spill args) for each
+    // new call frame.
+    if let Some(&entry_label) = labels.get(ctx.name) {
+        asm.bind(entry_label).map_err(BackendError::from)?;
+    }
+
+    // ---- Prologue ----------------------------------------------------------
+    asm.push(Reg::Rbp);
+    asm.mov_r64_r64(Reg::Rbp, Reg::Rsp);
+    if frame != 0 {
+        asm.sub_imm32(Reg::Rsp, frame as i32);
+    }
+
+    // Spill incoming arg registers to their slots.
+    for (i, (name, _ty)) in ctx.params.iter().enumerate() {
+        let slot = alloc.slot_of(name);
+        let off = RegAlloc::rbp_offset(slot);
+        let arg_reg = abi.arg_regs()[i];
+        asm.mov_mem_r64(Reg::Rbp, off, arg_reg);
+    }
+
+    // ---- Body --------------------------------------------------------------
+    for instr in ir {
+        emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name, abi,
+                   global_slots)?;
+    }
+
+    // ---- Defensive epilogue (in case CIR falls off the end) ----------------
+    emit_epilogue(&mut asm, frame);
+
+    let external_relocs = std::mem::take(&mut asm.external_relocs);
+    let bytes = asm.finish().map_err(BackendError::from)?;
+    Ok((bytes, external_relocs))
+}
+
+fn emit_epilogue(asm: &mut Assembler, _frame: u32) {
+    // `mov rsp, rbp` deallocates the frame regardless of size — one byte
+    // shorter and simpler than `add rsp, frame`.  Works because the
+    // prologue established `mov rbp, rsp` *after* `push rbp`, so
+    // restoring RSP to RBP undoes the `sub rsp, frame` exactly.
+    asm.mov_r64_r64(Reg::Rsp, Reg::Rbp);
+    asm.pop(Reg::Rbp);
+    asm.ret();
+}
+
+// ===========================================================================
+// Per-instruction lowering
+// ===========================================================================
+
+#[allow(clippy::too_many_arguments)]
+fn emit_instr(
+    asm: &mut Assembler,
+    instr: &CIRInstr,
+    alloc: &mut RegAlloc,
+    labels: &HashMap<String, LabelId>,
+    frame: u32,
+    fn_name: &str,
+    abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
+) -> Result<(), BackendError> {
+    let op = instr.op.as_str();
+
+    // --- label ---
+    if op == "label" {
+        let name = label_name(instr)
+            .ok_or_else(|| BackendError::MalformedInstr("label needs srcs[0]=Var(name)".into()))?;
+        let id = *labels.get(name)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("undefined label {name}")))?;
+        asm.bind(id).map_err(BackendError::from)?;
+        return Ok(());
+    }
+
+    // --- jmp ---
+    if op == "jmp" {
+        let name = label_name(instr)
+            .ok_or_else(|| BackendError::MalformedInstr("jmp needs target".into()))?;
+        let id = *labels.get(name)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("unknown label {name}")))?;
+        asm.jmp(id);
+        return Ok(());
+    }
+
+    // --- jmp_if_true / jmp_if_false ---
+    if op == "jmp_if_true" || op == "jmp_if_false" {
+        let cond_var = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]=cond")))?;
+        let target = instr.srcs.get(1).and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[1]=label")))?;
+        let target_id = *labels.get(target)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("unknown label {target}")))?;
+        let slot = alloc.slot_of(cond_var);
+        asm.mov_r64_mem(Reg::Rax, Reg::Rbp, RegAlloc::rbp_offset(slot));
+        asm.test_(Reg::Rax, Reg::Rax);
+        let cc = if op == "jmp_if_true" { Cond::Ne } else { Cond::E };
+        asm.jcc(cc, target_id);
+        return Ok(());
+    }
+
+    // --- type_assert: trap on guard failure ---
+    if op == "type_assert" {
+        asm.ud2();
+        return Ok(());
+    }
+
+    // --- ret_void ---
+    if op == "ret_void" {
+        emit_epilogue(asm, frame);
+        return Ok(());
+    }
+    // --- ret_<ty>: load value into RAX, then epilogue ---
+    if op.starts_with("ret_") {
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::Rax, src);
+        emit_epilogue(asm, frame);
+        return Ok(());
+    }
+
+    // --- mov_<ty>: typed copy ---
+    if op.starts_with("mov_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::Rax, src);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // --- const_<ty>: literal -> slot ---
+    if op.starts_with("const_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        let imm: u64 = match src {
+            CIROperand::Int(n)   => *n as u64,
+            CIROperand::Bool(b)  => if *b { 1 } else { 0 },
+            CIROperand::Float(_) => return Err(BackendError::UnsupportedOp("const_f64".into())),
+            CIROperand::Var(_)   => return Err(BackendError::MalformedInstr(format!("{op} needs literal source"))),
+        };
+        // Prefer the shorter `mov r/m64, imm32` (sign-extended) when it
+        // fits — same as aarch64-backend's compact-immediate path.
+        if (imm as i64) >= i32::MIN as i64 && (imm as i64) <= i32::MAX as i64 {
+            asm.mov_r64_imm32(Reg::Rax, imm as i32);
+        } else {
+            asm.mov_r64_imm64(Reg::Rax, imm);
+        }
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // --- add_<ty> / sub_<ty> / mul_<ty> ---
+    if op.starts_with("add_") { return emit_binop(asm, alloc, instr, BinOp::Add); }
+    if op.starts_with("sub_") { return emit_binop(asm, alloc, instr, BinOp::Sub); }
+    if op.starts_with("mul_") { return emit_binop(asm, alloc, instr, BinOp::Mul); }
+
+    // --- cmp_<rel>_<ty> ---
+    if let Some(rest) = op.strip_prefix("cmp_") {
+        let (rel, signed) = parse_cmp_suffix(rest)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("bad cmp mnemonic: {op}")))?;
+        return emit_cmp(asm, alloc, instr, rel, signed);
+    }
+
+    // --- call callee_name, arg0, ..., argN ---
+    //
+    // CIR encoding: srcs[0] = Var(callee_name), srcs[1..] = arguments.
+    // The dest slot (if any) receives the return value from RAX.
+    //
+    // Self-recursive calls (callee == fn_name) emit `call_label(entry_label)`
+    // resolved within this function's bytes; cross-function calls emit
+    // `call_rel32(callee_name, PltRel32)` and rely on the AOT linker to
+    // patch the displacement once all function bodies are concatenated.
+    if op == "call" {
+        let callee_name = match instr.srcs.first() {
+            Some(CIROperand::Var(name)) => name.as_str(),
+            _ => return Err(BackendError::MalformedInstr(
+                "call: srcs[0] must be Var(function_name)".into(),
+            )),
+        };
+        let arg_srcs = &instr.srcs[1..];
+        if arg_srcs.len() > abi.max_args() {
+            return Err(BackendError::UnsupportedOp(format!(
+                "call: too many arguments ({}) for {:?} ABI — max {}",
+                arg_srcs.len(), abi, abi.max_args()
+            )));
+        }
+
+        // Load each argument from its stack slot into the ABI's arg register.
+        // With stack-spill allocation, all values are already on the stack,
+        // so loading left-to-right is correct — no aliasing between an arg's
+        // source slot and another arg's destination register.
+        let arg_regs = abi.arg_regs();
+        for (i, src) in arg_srcs.iter().enumerate() {
+            load_operand(asm, alloc, arg_regs[i], src);
+        }
+
+        // Emit the call itself.
+        if callee_name == fn_name {
+            let target_id = *labels.get(callee_name).ok_or_else(|| {
+                BackendError::MalformedInstr(format!("call: no label for '{callee_name}'"))
+            })?;
+            asm.call_label(target_id);
+        } else {
+            asm.call_rel32(callee_name, ExternalRelocKind::PltRel32);
+        }
+
+        // Save the return value from RAX into the destination slot.
+        if let Some(dest) = &instr.dest {
+            let slot = alloc.slot_of(dest);
+            asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        }
+        return Ok(());
+    }
+
+    // --- global_load name → dest  (LANG39 parity) ---
+    //
+    // CIR encoding: dest = result_var; srcs[0] = Var(global_name).
+    //
+    // x86-64 sequence (much simpler than ARM64's ADRP+ADD pair):
+    //
+    //   lea  rax, [rip + _twig_globals]    ; PcRel32 reloc on _twig_globals
+    //   mov  rax, [rax + slot*8]            ; load 64-bit value
+    //   mov  [rbp + dest_slot], rax         ; store to dest slot
+    //
+    // The PcRel32 reloc record carries `addend = -4` (encoder default).
+    // The slot byte offset is encoded in the second instruction's disp32.
+    if op == "global_load" {
+        let dest = require_dest(instr)?;
+        let name = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr(
+                "global_load: srcs[0] must be Var(name)".into()))?;
+        let slot_idx = *global_slots.get(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!("global_load: unknown global '{name}'"))
+        })?;
+        asm.lea_rip_rel(Reg::Rax, "_twig_globals", ExternalRelocKind::PcRel32);
+        let byte_off: i32 = (slot_idx as i64 * 8)
+            .try_into()
+            .map_err(|_| BackendError::MalformedInstr(
+                format!("global_load: slot byte offset overflows i32 (slot={slot_idx})")))?;
+        asm.mov_r64_mem(Reg::Rax, Reg::Rax, byte_off);
+        let dest_slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(dest_slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // --- global_store name, val  (LANG39 parity) ---
+    //
+    // CIR encoding: dest = None; srcs[0] = Var(name); srcs[1] = Var(value).
+    //
+    // x86-64 sequence:
+    //
+    //   mov  rcx, [rbp + val_slot]          ; load value
+    //   lea  rax, [rip + _twig_globals]    ; PcRel32 reloc
+    //   mov  [rax + slot*8], rcx            ; write to global slot
+    if op == "global_store" {
+        let name = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr(
+                "global_store: srcs[0] must be Var(name)".into()))?;
+        let slot_idx = *global_slots.get(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!("global_store: unknown global '{name}'"))
+        })?;
+        let val_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("global_store: needs srcs[1]=value".into())
+        })?;
+        // Load value into RCX (RAX is needed for the LEA result).
+        load_operand(asm, alloc, Reg::Rcx, val_src);
+        asm.lea_rip_rel(Reg::Rax, "_twig_globals", ExternalRelocKind::PcRel32);
+        let byte_off: i32 = (slot_idx as i64 * 8)
+            .try_into()
+            .map_err(|_| BackendError::MalformedInstr(
+                format!("global_store: slot byte offset overflows i32 (slot={slot_idx})")))?;
+        asm.mov_mem_r64(Reg::Rax, byte_off, Reg::Rcx);
+        return Ok(());
+    }
+
+    // --- io_out val  (LANG40/LANG41 parity) ---
+    //
+    // CIR encoding: dest = None; srcs[0] = Var(value).
+    //
+    // Lowers to a CALL into the runtime helper `__twig_print_i64`,
+    // passing the value in the ABI's first argument register:
+    //
+    //   System V: mov rdi, [rbp + val_slot]; call __twig_print_i64
+    //   MS x64:   mov rcx, [rbp + val_slot]; call __twig_print_i64
+    //
+    // The runtime archive (LANG46) provides the helper symbol; the
+    // packager (LANG45) emits the PltRel32 reloc record the linker
+    // patches.
+    //
+    // Stack alignment: prologue established RSP ≡ 0 (mod 16); CALL
+    // pushes 8 bytes for the return addr, so during the helper's
+    // execution RSP ≡ 8 (mod 16) — exactly what the ABI requires on
+    // entry to a function.  No per-call adjustment needed.  MS x64
+    // shadow space was already reserved in the prologue.
+    if op == "io_out" {
+        let val_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("io_out: needs srcs[0]=value".into())
+        })?;
+        let arg0_reg = abi.arg_regs()[0];
+        load_operand(asm, alloc, arg0_reg, val_src);
+        asm.call_rel32("__twig_print_i64", ExternalRelocKind::PltRel32);
+        return Ok(());
+    }
+
+    // --- call_builtin "<name>", <args>  (LANG75) ---
+    //
+    // Generic dispatch to runtime helpers.  Looks `name` up in the V1
+    // helper table (see `lookup_builtin`), validates arg count, marshals
+    // each arg into the ABI's i-th argument register (RDI/RSI/… on SysV,
+    // RCX/RDX/… on MS x64), then emits `call rel32` against the symbol
+    // `__twig_<name>` with a `PltRel32` external relocation.  If the
+    // helper returns a value, the dest slot receives RAX after the call.
+    //
+    // `io_out v` is sugar for `call_builtin "print_i64", v` and stays in
+    // the dispatch above for backwards compatibility with existing
+    // frontends and tests.
+    //
+    // Unknown helper names → `BackendError::MalformedInstr` (the spec's
+    // "BackendRefused" — a soft refusal rather than a hard panic).
+    if op == "call_builtin" {
+        // srcs[0] must be Var(name) — the helper name without the
+        // `__twig_` prefix.
+        let name = match instr.srcs.first() {
+            Some(CIROperand::Var(s)) => s.as_str(),
+            _ => return Err(BackendError::MalformedInstr(
+                "call_builtin: srcs[0] must be Var(helper_name)".into(),
+            )),
+        };
+        let sig = lookup_builtin(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!(
+                "call_builtin: unknown helper '{name}' (V1 table: {})",
+                v1_builtin_names().join(", "),
+            ))
+        })?;
+        let arg_srcs = &instr.srcs[1..];
+        if arg_srcs.len() != sig.n_args {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': expected {} arg(s), got {}",
+                sig.n_args, arg_srcs.len(),
+            )));
+        }
+        if sig.returns && instr.dest.is_none() {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': returns a value but dest is None",
+            )));
+        }
+        if !sig.returns && instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(format!(
+                "call_builtin '{name}': returns void but dest is Some",
+            )));
+        }
+        if sig.n_args > abi.max_args() {
+            return Err(BackendError::TooManyParams {
+                abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
+                got: sig.n_args,
+                max: abi.max_args(),
+            });
+        }
+
+        // Marshal arguments into the ABI's argument registers in order.
+        // Stack-spill allocation guarantees no aliasing between sources.
+        let arg_regs = abi.arg_regs();
+        for (i, src) in arg_srcs.iter().enumerate() {
+            load_operand(asm, alloc, arg_regs[i], src);
+        }
+
+        // Emit `call rel32` to the `__twig_<name>` symbol.  Both Linux
+        // (PLT32 → relaxed to PC32 by the linker for local resolution)
+        // and Windows (REL32) treat this the same way.
+        let symbol = format!("__twig_{name}");
+        asm.call_rel32(&symbol, ExternalRelocKind::PltRel32);
+
+        // If the helper returns, store RAX into the dest slot.
+        if sig.returns {
+            if let Some(dest) = &instr.dest {
+                let slot = alloc.slot_of(dest);
+                asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+            }
+        }
+        return Ok(());
+    }
+
+    // ── LANG76 — byte memory ops + heap allocation ────────────────────────────
+
+    // `alloc_bytes <n> -> <dest>` — sugar for `call_builtin "alloc_bytes", n`.
+    //
+    // The spec exposes a separate CIR mnemonic so frontends don't have to
+    // think about V1_BUILTINS arity validation.  Internally we just emit
+    // the same CALL sequence the `call_builtin` arm above would produce,
+    // sharing the `__twig_alloc_bytes` runtime symbol and PltRel32 reloc.
+    if op == "alloc_bytes" {
+        let dest = require_dest(instr)?;
+        let n_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("alloc_bytes: needs srcs[0]=byte_count".into())
+        })?;
+        let arg0_reg = abi.arg_regs()[0];
+        load_operand(asm, alloc, arg0_reg, n_src);
+        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        // Return pointer in RAX → dest slot.
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `load_byte <ptr>, <offset> -> <dest>` — read one byte from
+    // `[ptr + offset]`, zero-extend to 64 bits, store into `dest`.
+    //
+    // Sequence (uses RAX + RCX scratch; both reserved by RegAlloc):
+    //   mov  rax, [rbp + ptr_slot]      ; pointer
+    //   mov  rcx, [rbp + offset_slot]   ; offset
+    //   add  rax, rcx                    ; rax = ptr + offset
+    //   movzx rax, byte ptr [rax]        ; zero-extend load
+    //   mov  [rbp + dest_slot], rax
+    if op == "load_byte" {
+        let dest = require_dest(instr)?;
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("load_byte: needs srcs[0]=ptr".into())
+        })?;
+        let off_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("load_byte: needs srcs[1]=offset".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        load_operand(asm, alloc, Reg::Rcx, off_src);
+        asm.add(Reg::Rax, Reg::Rcx);
+        asm.movzx_r64_byte_at(Reg::Rax, Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `store_byte <ptr>, <offset>, <value>` — write the low 8 bits of
+    // `value` to `[ptr + offset]`.  No dest.
+    //
+    // Sequence:
+    //   mov  rax, [rbp + ptr_slot]
+    //   mov  rcx, [rbp + offset_slot]
+    //   add  rax, rcx
+    //   mov  rdx, [rbp + value_slot]
+    //   mov  byte ptr [rax], dl          ; store low 8 bits
+    if op == "store_byte" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(
+                "store_byte: must not have a dest".into(),
+            ));
+        }
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[0]=ptr".into())
+        })?;
+        let off_src = instr.srcs.get(1).ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[1]=offset".into())
+        })?;
+        let val_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("store_byte: needs srcs[2]=value".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        load_operand(asm, alloc, Reg::Rcx, off_src);
+        asm.add(Reg::Rax, Reg::Rcx);
+        load_operand(asm, alloc, Reg::Rdx, val_src);
+        asm.mov_byte_at_r8(Reg::Rax, Reg::Rdx);
+        return Ok(());
+    }
+
+    // ---- Heap cons cells (lispy `ref<LispyPair>`) — L3b -------------------
+    //
+    // `iir_builtin_lowering::lower_heap_builtins` rewrites a Lisp frontend's
+    // `call_builtin "cons"/"car"/"cdr"/"null?"` into these word-granular heap
+    // ops.  A pair is a 2-word (16-byte) cell: field 0 = car/head, field 1 =
+    // cdr/tail.  We allocate it with `__twig_alloc_bytes` (the helper
+    // `alloc_bytes` uses) and read/write fields with plain 64-bit moves at
+    // byte displacement `idx*8`.  Values are raw 64-bit words — no NaN-boxing
+    // — so `(CAR (CONS 7 9))` round-trips to a raw `7`.  (V1 leaks; no GC.)
+
+    // `alloc -> <dest>` — a fresh 2-word LispyPair cell.
+    if op == "alloc" {
+        let dest = require_dest(instr)?;
+        asm.mov_r64_imm32(abi.arg_regs()[0], 16); // 2 fields × 8 bytes
+        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `field_store <ptr>, <idx>, <value>` — `[ptr + idx*8] = value`.  No dest.
+    if op == "field_store" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(
+                "field_store: must not have a dest".into(),
+            ));
+        }
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("field_store: needs srcs[0]=ptr".into())
+        })?;
+        let disp = field_disp(instr, 1)?;
+        let val_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("field_store: needs srcs[2]=value".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        load_operand(asm, alloc, Reg::Rcx, val_src);
+        asm.mov_mem_r64(Reg::Rax, disp, Reg::Rcx);
+        return Ok(());
+    }
+
+    // `field_load <ptr>, <idx> -> <dest>` — `dest = [ptr + idx*8]`.
+    if op == "field_load" {
+        let dest = require_dest(instr)?;
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("field_load: needs srcs[0]=ptr".into())
+        })?;
+        let disp = field_disp(instr, 1)?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        asm.mov_r64_mem(Reg::Rax, Reg::Rax, disp);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `is_null <x> -> <dest>` — `dest = (x == 0)` (nil is the 0 word).
+    if op == "is_null" {
+        let dest = require_dest(instr)?;
+        let x_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("is_null: needs srcs[0]".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, x_src);
+        asm.cmp_imm32(Reg::Rax, 0);
+        asm.setcc(Cond::E, Reg::Rax);
+        asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // --- LANG38-parity additions ---
+
+    // div_<ty> / mod_<ty> — signed types use IDIV, unsigned use DIV.
+    if let Some(ty) = op.strip_prefix("div_") { return emit_divmod(asm, alloc, instr, ty, false); }
+    if let Some(ty) = op.strip_prefix("mod_") { return emit_divmod(asm, alloc, instr, ty, true);  }
+
+    // and_<ty> / or_<ty> / xor_<ty>
+    if op.starts_with("and_") { return emit_bitwise(asm, alloc, instr, Bitwise::And); }
+    if op.starts_with("or_")  { return emit_bitwise(asm, alloc, instr, Bitwise::Or);  }
+    if op.starts_with("xor_") { return emit_bitwise(asm, alloc, instr, Bitwise::Xor); }
+
+    // shl_<ty>: logical shift left (same for signed/unsigned).
+    if op.starts_with("shl_") { return emit_shift(asm, alloc, instr, ShiftKind::Shl); }
+    // shr_<ty>: arithmetic for signed (SAR), logical for unsigned (SHR).
+    if let Some(ty) = op.strip_prefix("shr_") {
+        let kind = if ty.starts_with('i') { ShiftKind::Sar } else { ShiftKind::Shr };
+        return emit_shift(asm, alloc, instr, kind);
+    }
+
+    // neg_<ty> dest = -src
+    if op.starts_with("neg_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::Rax, src);
+        asm.neg_(Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // not_<ty> dest = ~src
+    if op.starts_with("not_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::Rax, src);
+        asm.not_(Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    Err(BackendError::UnsupportedOp(op.to_string()))
+}
+
+// ===========================================================================
+// Division and modulo
+// ===========================================================================
+
+/// `div_<ty>` and `mod_<ty>` both go through this helper.
+///
+/// x86-64 division is awkward: `IDIV r/m64` consumes `RDX:RAX` as the
+/// 128-bit dividend and produces quotient in `RAX`, remainder in `RDX`.
+/// For signed types we must sign-extend `RAX` into `RDX:RAX` with `CQO`;
+/// for unsigned we just zero `RDX`.
+///
+/// Sequence (signed div):
+///
+/// ```text
+/// mov  rax, [lhs]
+/// cqo                     ; rdx:rax = sign-extend(rax)
+/// mov  rcx, [rhs]
+/// idiv rcx
+/// mov  [dst], rax         ; (for mod_, [dst], rdx)
+/// ```
+fn emit_divmod(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    ty: &str,
+    is_mod: bool,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("div/mod needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("div/mod needs srcs[1]".into()))?;
+    let signed = ty.starts_with('i');
+
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    // Sign-/zero-extend RAX into RDX.
+    if signed {
+        asm.cqo();
+    } else {
+        asm.xor_(Reg::Rdx, Reg::Rdx);
+    }
+    // Load divisor into RCX (IDIV/DIV r/m64 form — divisor in a register).
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    if signed { asm.idiv(Reg::Rcx); } else { asm.div(Reg::Rcx); }
+    // Result lives in RAX (quotient) or RDX (remainder).
+    let result_reg = if is_mod { Reg::Rdx } else { Reg::Rax };
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), result_reg);
+    Ok(())
+}
+
+// ===========================================================================
+// Bitwise ops (AND / OR / XOR)
+// ===========================================================================
+
+#[derive(Debug, Clone, Copy)]
+enum Bitwise { And, Or, Xor }
+
+fn emit_bitwise(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    op: Bitwise,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("bitwise needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("bitwise needs srcs[1]".into()))?;
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    match op {
+        Bitwise::And => asm.and_(Reg::Rax, Reg::Rcx),
+        Bitwise::Or  => asm.or_(Reg::Rax,  Reg::Rcx),
+        Bitwise::Xor => asm.xor_(Reg::Rax, Reg::Rcx),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+// ===========================================================================
+// Variable shifts (SHL / SHR / SAR)
+// ===========================================================================
+
+/// Variable shift kind.  Signed-shift-right (SAR) preserves the sign bit;
+/// logical-shift-right (SHR) zero-fills.
+#[derive(Debug, Clone, Copy)]
+enum ShiftKind { Shl, Shr, Sar }
+
+fn emit_shift(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    kind: ShiftKind,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("shift needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("shift needs srcs[1]".into()))?;
+    // x86-64 variable shift uses CL as the count.  Load the value to be
+    // shifted into RAX and the count into RCX (which has CL in its low
+    // byte), then issue `shl/shr/sar rax, cl`.
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    match kind {
+        ShiftKind::Shl => asm.shl_cl(Reg::Rax),
+        ShiftKind::Shr => asm.shr_cl(Reg::Rax),
+        ShiftKind::Sar => asm.sar_cl(Reg::Rax),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+// ===========================================================================
+// Binary integer ops
+// ===========================================================================
+
+#[derive(Debug, Clone, Copy)]
+enum BinOp { Add, Sub, Mul }
+
+fn emit_binop(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    op: BinOp,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr(format!("{:?} needs srcs[0]", op)))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr(format!("{:?} needs srcs[1]", op)))?;
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    match op {
+        BinOp::Add => asm.add(Reg::Rax, Reg::Rcx),
+        BinOp::Sub => asm.sub(Reg::Rax, Reg::Rcx),
+        BinOp::Mul => asm.imul(Reg::Rax, Reg::Rcx),
+    }
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+// ===========================================================================
+// Comparisons
+// ===========================================================================
+
+/// The six relational predicates Twig/CIR uses.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum CmpRel { Eq, Ne, Lt, Le, Gt, Ge }
+
+/// Parse the suffix after `cmp_` into a predicate + signedness flag.
+///
+/// Accepts mnemonics like `eq_u8`, `lt_i64`, `ge_u32`, `ne_bool`.
+fn parse_cmp_suffix(rest: &str) -> Option<(CmpRel, bool)> {
+    // Split at the first '_': "lt_i64" -> ("lt", "i64").
+    let (rel_str, ty) = rest.split_once('_')?;
+    let rel = match rel_str {
+        "eq" => CmpRel::Eq,
+        "ne" => CmpRel::Ne,
+        "lt" => CmpRel::Lt,
+        "le" => CmpRel::Le,
+        "gt" => CmpRel::Gt,
+        "ge" => CmpRel::Ge,
+        _ => return None,
+    };
+    // Signedness flag: `i*` types signed; everything else unsigned.
+    // `bool` is treated as unsigned (it's 0 or 1).
+    let signed = ty.starts_with('i');
+    Some((rel, signed))
+}
+
+fn emit_cmp(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    rel: CmpRel,
+    signed: bool,
+) -> Result<(), BackendError> {
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr("cmp needs srcs[0]".into()))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr("cmp needs srcs[1]".into()))?;
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    asm.cmp(Reg::Rax, Reg::Rcx);
+    // setcc al; movzx rax, al; store
+    let cc = match (rel, signed) {
+        (CmpRel::Eq, _)     => Cond::E,
+        (CmpRel::Ne, _)     => Cond::Ne,
+        (CmpRel::Lt, true)  => Cond::L,
+        (CmpRel::Lt, false) => Cond::B,
+        (CmpRel::Le, true)  => Cond::Le,
+        (CmpRel::Le, false) => Cond::Be,
+        (CmpRel::Gt, true)  => Cond::G,
+        (CmpRel::Gt, false) => Cond::A,
+        (CmpRel::Ge, true)  => Cond::Ge,
+        (CmpRel::Ge, false) => Cond::Ae,
+    };
+    asm.setcc(cc, Reg::Rax);
+    asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+    Ok(())
+}
+
+// ===========================================================================
+// Helpers
+// ===========================================================================
+
+/// Load a CIR operand into a register: from a stack slot if `Var`,
+/// or materialise the literal if `Int` / `Bool`.
+fn load_operand(asm: &mut Assembler, alloc: &mut RegAlloc, dst: Reg, op: &CIROperand) {
+    match op {
+        CIROperand::Var(name) => {
+            let slot = alloc.slot_of(name);
+            asm.mov_r64_mem(dst, Reg::Rbp, RegAlloc::rbp_offset(slot));
+        }
+        CIROperand::Int(n) => {
+            let v = *n;
+            if (i32::MIN as i64..=i32::MAX as i64).contains(&v) {
+                asm.mov_r64_imm32(dst, v as i32);
+            } else {
+                asm.mov_r64_imm64(dst, v as u64);
+            }
+        }
+        CIROperand::Bool(b) => {
+            asm.mov_r64_imm32(dst, if *b { 1 } else { 0 });
+        }
+        CIROperand::Float(_) => {
+            // V1 doesn't support floats; lower as zero to avoid panic.
+            // The backend will already have refused the surrounding
+            // const_f64 / float op, so this branch is defensive only.
+            asm.mov_r64_imm32(dst, 0);
+        }
+    }
+}
+
+fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
+    instr.dest.as_deref()
+        .ok_or_else(|| BackendError::MalformedInstr(
+            format!("{} needs a dest", instr.op)))
+}
+
+/// Largest field byte-displacement the heap ops accept.  Bounds the offset
+/// **in the backend** rather than relying on the lowering pass only ever
+/// emitting field index 0/1, so a future producer with a larger index gets
+/// a clean `MalformedInstr`, never a wrapped/oversized displacement.
+const MAX_FIELD_DISP: u64 = 0x7FF8;
+
+/// Read a `field_load`/`field_store` field-index operand (a compile-time
+/// `Int`) and convert it to a byte displacement (`idx * 8`).  Pair fields
+/// are word-sized: index 0 → disp 0 (car), index 1 → disp 8 (cdr).  A
+/// negative, non-literal, or out-of-range index is a `MalformedInstr`.
+fn field_disp(instr: &CIRInstr, i: usize) -> Result<i32, BackendError> {
+    match instr.srcs.get(i) {
+        Some(CIROperand::Int(n)) if *n >= 0 => (*n as u64)
+            .checked_mul(8)
+            .filter(|off| *off <= MAX_FIELD_DISP)
+            .map(|off| off as i32)
+            .ok_or_else(|| {
+                BackendError::MalformedInstr(format!(
+                    "{}: field index {n} is out of range",
+                    instr.op
+                ))
+            }),
+        _ => Err(BackendError::MalformedInstr(format!(
+            "{}: field index at srcs[{i}] must be a non-negative integer literal",
+            instr.op
+        ))),
+    }
+}
+
+fn label_name(instr: &CIRInstr) -> Option<&str> {
+    match instr.srcs.first()? {
+        CIROperand::Var(s) => Some(s.as_str()),
+        _ => None,
+    }
+}
+
+// ===========================================================================
+// Tests
+// ===========================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use jit_core::cir::CIROperand as Op;
+
+    fn instr(op: &str, dest: Option<&str>, srcs: Vec<Op>) -> CIRInstr {
+        CIRInstr {
+            op: op.to_string(),
+            dest: dest.map(str::to_string),
+            srcs,
+            ty: "u64".to_string(),
+            deopt_to: None,
+        }
+    }
+
+    fn fn_ctx<'a>(name: &'a str, params: &'a [(String, String)], return_type: &'a str) -> FunctionContext<'a> {
+        FunctionContext { name, params, return_type }
+    }
+
+    // ---- L3b: cons heap ops (alloc / field_store / field_load / is_null) ----
+
+    #[test]
+    fn cons_car_heap_ops_lower() {
+        // CIR for `(CAR (CONS 7 9))`: allocate a 2-word cell, store 7/9 into
+        // fields 0/1, load field 0 back.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9)]),
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(1), Op::Var("t".into())]),
+            instr("field_load", Some("r"), vec![Op::Var("cell".into()), Op::Int(0)]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&fn_ctx("cons_car", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("cons/car heap ops must lower");
+        assert!(!bytes.is_empty());
+    }
+
+    // ---- L3b-2b (LANG77): cons/car via the runtime-call path ----
+
+    fn call_builtin(dest: Option<&str>, name: &str, args: &[&str]) -> CIRInstr {
+        let mut srcs = vec![Op::Var(name.into())];
+        srcs.extend(args.iter().map(|a| Op::Var((*a).into())));
+        instr("call_builtin", dest, srcs)
+    }
+
+    #[test]
+    fn lispy_runtime_cons_car_emit_external_calls() {
+        // `(CAR (CONS 7 9))` through the runtime path: two CALLs to the C
+        // lisp runtime, surfaced as external relocations.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9)]),
+            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
+            call_builtin(Some("r"), "lispy_car", &["cell"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("lispy", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("lispy runtime calls must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(symbols.contains(&"__twig_lispy_cons"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__twig_lispy_car"), "missing car call: {symbols:?}");
+    }
+
+    #[test]
+    fn lispy_cons_wrong_arity_is_rejected() {
+        // lispy_cons takes exactly 2 args; one arg is a soft refusal.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            call_builtin(Some("cell"), "lispy_cons", &["h"]),
+            instr("ret_u64", None, vec![Op::Var("cell".into())]),
+        ];
+        assert!(compile_function(&fn_ctx("bad_cons", &[], "u64"), &ir, X86_64Abi::SysV).is_err());
+    }
+
+    #[test]
+    fn lispy_full_boxed_cons_car_unbox_lowers() {
+        // The complete L3b-2c-1 CIR for `(CAR (CONS 7 9))`: boxed atoms,
+        // cons, car, then unbox the result for the exit code.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7 << 3)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9 << 3)]),
+            call_builtin(Some("cell"), "lispy_cons", &["h", "t"]),
+            call_builtin(Some("boxed"), "lispy_car", &["cell"]),
+            call_builtin(Some("r"), "lispy_unbox_int", &["boxed"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("full", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("boxed cons/car/unbox must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        for want in ["__twig_lispy_cons", "__twig_lispy_car", "__twig_lispy_unbox_int"] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
+    }
+
+    #[test]
+    fn lispy_atom_eq_predicates_and_truthy_lower() {
+        // L3b-2c-2: ATOM = not(pair?), normalised via lispy_truthy; plus EQ.
+        let ir = vec![
+            instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
+            call_builtin(Some("p"), "lispy_pair_p", &["x"]),
+            call_builtin(Some("a"), "lispy_not", &["p"]),
+            call_builtin(Some("t"), "lispy_truthy", &["a"]),
+            call_builtin(Some("e"), "lispy_equal", &["x", "x"]),
+            instr("ret_u64", None, vec![Op::Var("e".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("preds", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("predicates must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        for want in [
+            "__twig_lispy_pair_p", "__twig_lispy_not",
+            "__twig_lispy_truthy", "__twig_lispy_equal",
+        ] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
+    }
+
+    /// W14b (F7): the universal exit coercion `lispy_to_exit_code` — the program
+    /// boundary for a polymorphic lambda result — lowers to a call into the runtime.
+    #[test]
+    fn lispy_to_exit_code_lowers() {
+        let ir = vec![
+            instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
+            call_builtin(Some("r"), "lispy_to_exit_code", &["x"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) =
+            compile_function_with_relocs(&fn_ctx("exit_coerce", &[], "u64"), &ir, X86_64Abi::SysV)
+                .expect("to_exit_code must lower");
+        assert!(!bytes.is_empty());
+        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_lispy_to_exit_code"),
+            "missing __twig_lispy_to_exit_code: {symbols:?}",
+        );
+    }
+
+    #[test]
+    fn is_null_lowers() {
+        let ir = vec![
+            instr("const_u64", Some("x"), vec![Op::Int(0)]),
+            instr("is_null", Some("r"), vec![Op::Var("x".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&fn_ctx("isnull", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("is_null must lower");
+        assert!(!bytes.is_empty());
+    }
+
+    #[test]
+    fn field_store_rejects_dest_and_non_literal_index() {
+        let bad_dest = vec![instr("field_store", Some("oops"),
+            vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())])];
+        assert!(compile_function(&fn_ctx("bad", &[], "u64"), &bad_dest, X86_64Abi::SysV).is_err());
+        let bad_idx = vec![instr("field_load", Some("r"),
+            vec![Op::Var("cell".into()), Op::Var("i".into())])];
+        assert!(compile_function(&fn_ctx("bad2", &[], "u64"), &bad_idx, X86_64Abi::SysV).is_err());
+        let huge = vec![instr("field_load", Some("r"),
+            vec![Op::Var("cell".into()), Op::Int(1 << 40)])];
+        assert!(compile_function(&fn_ctx("bad3", &[], "u64"), &huge, X86_64Abi::SysV).is_err());
+    }
+
+    // ---- Prologue + epilogue shape ----
+
+    #[test]
+    fn empty_fn_sysv_prologue_epilogue() {
+        // fn no_args_no_body() -> void { }
+        // Expected:
+        //   push rbp
+        //   mov  rbp, rsp
+        //   (no sub rsp, frame=0)
+        //   mov  rsp, rbp
+        //   pop  rbp
+        //   ret
+        let ctx = fn_ctx("noop", &[], "void");
+        let bytes = compile_function(&ctx, &[], X86_64Abi::SysV).unwrap();
+        assert_eq!(bytes, vec![
+            0x55,                       // push rbp
+            0x48, 0x89, 0xE5,           // mov rbp, rsp
+            0x48, 0x89, 0xEC,           // mov rsp, rbp
+            0x5D,                       // pop rbp
+            0xC3,                       // ret
+        ]);
+    }
+
+    #[test]
+    fn empty_fn_msx64_reserves_shadow_space() {
+        // Even with no locals, MS x64 reserves 32 bytes of shadow space
+        // in the prologue (treating every fn as potentially non-leaf).
+        // Frame = round_up(0 + 32, 16) = 32.
+        let ctx = fn_ctx("noop", &[], "void");
+        let bytes = compile_function(&ctx, &[], X86_64Abi::MsX64).unwrap();
+        // push rbp; mov rbp, rsp; sub rsp, 0x20; mov rsp, rbp; pop rbp; ret
+        assert_eq!(&bytes[..3], &[0x55, 0x48, 0x89]);            // push rbp; mov ..
+        assert_eq!(&bytes[3..7], &[0xE5, 0x48, 0x81, 0xEC]);     // mov rbp, rsp; sub
+        assert_eq!(&bytes[7..11], &[0x20, 0x00, 0x00, 0x00]);    // 0x20 = 32
+        // Epilogue: mov rsp, rbp; pop rbp; ret
+        assert_eq!(&bytes[bytes.len()-5..], &[0x48, 0x89, 0xEC, 0x5D, 0xC3]);
+    }
+
+    // ---- Constant + return ----
+
+    #[test]
+    fn fn_returns_42_sysv() {
+        // fn ret42() -> u64 { return 42; }
+        //   const_u64 v0 = 42
+        //   ret_u64 v0
+        let ir = vec![
+            instr("const_u64", Some("v0"), vec![Op::Int(42)]),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        let ctx = fn_ctx("ret42", &[], "u64");
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Prologue: push rbp; mov rbp, rsp; sub rsp, 0x10
+        assert_eq!(&bytes[0..3],  &[0x55, 0x48, 0x89]);
+        assert_eq!(&bytes[3..4],  &[0xE5]);
+        assert_eq!(&bytes[4..11], &[0x48, 0x81, 0xEC, 0x10, 0x00, 0x00, 0x00]); // sub rsp, 16
+        // mov rax, 42 (imm32): 48 C7 C0 2A 00 00 00
+        // (rest of the function follows)
+        let body_start = 11;
+        assert_eq!(&bytes[body_start..body_start + 7],
+                   &[0x48, 0xC7, 0xC0, 0x2A, 0x00, 0x00, 0x00]);
+    }
+
+    // ---- One-param identity ----
+
+    #[test]
+    fn fn_identity_u64_sysv_spills_rdi() {
+        // fn id(x: u64) -> u64 { return x; }
+        // Prologue should spill RDI (System V arg 0) to [rbp - 8].
+        let params = vec![("x".to_string(), "u64".to_string())];
+        let ctx = fn_ctx("id", &params, "u64");
+        let ir = vec![
+            instr("ret_u64", None, vec![Op::Var("x".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // After `push rbp; mov rbp, rsp; sub rsp, 16` we expect:
+        //   mov [rbp - 8], rdi   →  48 89 7D F8   (disp8 form)
+        // But the encoder always emits disp32 form, so:
+        //   mov [rbp - 8], rdi   →  48 89 BD F8 FF FF FF
+        // Find the spill — it starts at offset 11.
+        assert_eq!(&bytes[11..18], &[0x48, 0x89, 0xBD, 0xF8, 0xFF, 0xFF, 0xFF]);
+    }
+
+    #[test]
+    fn fn_identity_u64_msx64_spills_rcx() {
+        // Same function, MS x64 ABI: arg 0 is RCX.
+        let params = vec![("x".to_string(), "u64".to_string())];
+        let ctx = fn_ctx("id", &params, "u64");
+        let ir = vec![
+            instr("ret_u64", None, vec![Op::Var("x".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        // Frame = round_up(8 + 32 shadow, 16) = 48 = 0x30.
+        // sub rsp, 0x30: 48 81 EC 30 00 00 00
+        assert_eq!(&bytes[4..11], &[0x48, 0x81, 0xEC, 0x30, 0x00, 0x00, 0x00]);
+        // Spill rcx (NOT rdi): mov [rbp - 8], rcx → 48 89 8D F8 FF FF FF
+        assert_eq!(&bytes[11..18], &[0x48, 0x89, 0x8D, 0xF8, 0xFF, 0xFF, 0xFF]);
+    }
+
+    // ---- Add + return ----
+
+    #[test]
+    fn fn_add_u64() {
+        // fn add(a: u64, b: u64) -> u64 { return a + b; }
+        // CIR: add_u64 v2 = a, b; ret_u64 v2
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("add", &params, "u64");
+        let ir = vec![
+            instr("add_u64", Some("v2"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("v2".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Just sanity-check that the body contains an `add` opcode
+        // (48 01 ..) somewhere.
+        let has_add = bytes.windows(2).any(|w| w == [0x48, 0x01]);
+        assert!(has_add, "expected an `add r/m64, r64` somewhere in {bytes:02X?}");
+    }
+
+    // ---- Comparison ----
+
+    #[test]
+    fn parse_cmp_suffix_works() {
+        assert_eq!(parse_cmp_suffix("eq_u8"),  Some((CmpRel::Eq, false)));
+        assert_eq!(parse_cmp_suffix("lt_i64"), Some((CmpRel::Lt, true)));
+        assert_eq!(parse_cmp_suffix("ge_u32"), Some((CmpRel::Ge, false)));
+        assert_eq!(parse_cmp_suffix("ne_bool"), Some((CmpRel::Ne, false)));
+        assert_eq!(parse_cmp_suffix("xx_u8"), None);
+        assert_eq!(parse_cmp_suffix("eq"), None);
+    }
+
+    #[test]
+    fn fn_eq_i64() {
+        // fn eq(a: i64, b: i64) -> bool { return a == b; }
+        let params = vec![
+            ("a".to_string(), "i64".to_string()),
+            ("b".to_string(), "i64".to_string()),
+        ];
+        let ctx = fn_ctx("eq", &params, "bool");
+        let ir = vec![
+            instr("cmp_eq_i64", Some("r"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_bool", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Body must contain `cmp` (48 39 ..) and `sete` (40 0F 94 ..)
+        let has_cmp = bytes.windows(2).any(|w| w == [0x48, 0x39]);
+        let has_sete = bytes.windows(3).any(|w| w == [0x40, 0x0F, 0x94]);
+        assert!(has_cmp,  "expected cmp in {bytes:02X?}");
+        assert!(has_sete, "expected sete in {bytes:02X?}");
+    }
+
+    // ---- Control flow ----
+
+    #[test]
+    fn fn_with_branch() {
+        // fn branch(x: u64) -> u64 {
+        //   if (x) jmp L1
+        //   const_u64 r0 = 0
+        //   jmp L2
+        // L1:
+        //   const_u64 r1 = 1
+        // L2:
+        //   ... (no merge in V1 — use a mov to a final slot)
+        // }
+        // CIR shape:
+        //   jmp_if_true x, "L1"
+        //   const_u64 v0 = 7
+        //   ret_u64 v0
+        //   label "L1"
+        //   const_u64 v1 = 11
+        //   ret_u64 v1
+        let params = vec![("x".to_string(), "u64".to_string())];
+        let ctx = fn_ctx("branch", &params, "u64");
+        let ir = vec![
+            instr("jmp_if_true", None,
+                  vec![Op::Var("x".into()), Op::Var("L1".into())]),
+            instr("const_u64", Some("v0"), vec![Op::Int(7)]),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+            instr("label", None, vec![Op::Var("L1".into())]),
+            instr("const_u64", Some("v1"), vec![Op::Int(11)]),
+            instr("ret_u64", None, vec![Op::Var("v1".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Must contain a test rax,rax (48 85 C0) + jne rel32 (0F 85 ..).
+        let has_test = bytes.windows(3).any(|w| w == [0x48, 0x85, 0xC0]);
+        let has_jne = bytes.windows(2).any(|w| w == [0x0F, 0x85]);
+        assert!(has_test, "expected test rax,rax in {bytes:02X?}");
+        assert!(has_jne,  "expected jne in {bytes:02X?}");
+    }
+
+    // ---- Type assert ----
+
+    #[test]
+    fn type_assert_lowers_to_ud2() {
+        let ctx = fn_ctx("guarded", &[], "void");
+        let ir = vec![
+            instr("type_assert", None, vec![]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // UD2 = 0F 0B
+        let has_ud2 = bytes.windows(2).any(|w| w == [0x0F, 0x0B]);
+        assert!(has_ud2, "expected UD2 (0F 0B) in {bytes:02X?}");
+    }
+
+    // ---- Errors ----
+
+    #[test]
+    fn too_many_args_sysv() {
+        // 7 args > 6 GPR slots → BackendRefused.
+        let params: Vec<_> = (0..7)
+            .map(|i| (format!("p{i}"), "u64".to_string()))
+            .collect();
+        let ctx = fn_ctx("toomany", &params, "void");
+        let result = compile_function(&ctx, &[], X86_64Abi::SysV);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn too_many_args_msx64() {
+        // 5 args > 4 GPR slots → BackendRefused on Windows.
+        let params: Vec<_> = (0..5)
+            .map(|i| (format!("p{i}"), "u64".to_string()))
+            .collect();
+        let ctx = fn_ctx("toomany", &params, "void");
+        let result = compile_function(&ctx, &[], X86_64Abi::MsX64);
+        assert!(result.is_err());
+    }
+
+    // ---- Backend trait ----
+
+    #[test]
+    fn backend_trait_name_reflects_abi() {
+        assert_eq!(X86_64Backend::with_abi(X86_64Abi::SysV).name(), "x86_64-sysv");
+        assert_eq!(X86_64Backend::with_abi(X86_64Abi::MsX64).name(), "x86_64-msx64");
+    }
+
+    // ---- LANG38-parity opcodes ----
+
+    fn body_contains(bytes: &[u8], needle: &[u8]) -> bool {
+        bytes.windows(needle.len()).any(|w| w == needle)
+    }
+
+    #[test]
+    fn fn_div_i64_emits_cqo_idiv() {
+        // fn d(a: i64, b: i64) -> i64 { return a / b; }
+        let params = vec![
+            ("a".to_string(), "i64".to_string()),
+            ("b".to_string(), "i64".to_string()),
+        ];
+        let ctx = fn_ctx("d", &params, "i64");
+        let ir = vec![
+            instr("div_i64", Some("q"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_i64", None, vec![Op::Var("q".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x99]),         "cqo missing");      // CQO
+        assert!(body_contains(&bytes, &[0x48, 0xF7, 0xF9]),   "idiv rcx missing"); // IDIV rcx
+    }
+
+    #[test]
+    fn fn_div_u64_emits_xor_div() {
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("d", &params, "u64");
+        let ir = vec![
+            instr("div_u64", Some("q"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("q".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Unsigned div: XOR RDX, RDX (48 31 D2) then DIV RCX (48 F7 F1)
+        assert!(body_contains(&bytes, &[0x48, 0x31, 0xD2]),   "xor rdx,rdx missing");
+        assert!(body_contains(&bytes, &[0x48, 0xF7, 0xF1]),   "div rcx missing");
+    }
+
+    #[test]
+    fn fn_mod_i64_stores_rdx() {
+        // mod: result is the remainder (RDX), not the quotient.
+        let params = vec![
+            ("a".to_string(), "i64".to_string()),
+            ("b".to_string(), "i64".to_string()),
+        ];
+        let ctx = fn_ctx("m", &params, "i64");
+        let ir = vec![
+            instr("mod_i64", Some("r"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_i64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // After IDIV, the result slot is written from RDX (encoded as
+        // ModR/M reg=2): `mov [rbp - off], rdx`  →  48 89 95 .. .. .. ..
+        // The reg field's low 3 bits = 2, so ModR/M = (10 << 6) | (010 << 3) | rm = 0x95 when rm=5 (RBP).
+        // We assert the `48 89 95` byte trio appears somewhere after IDIV.
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x95]),
+                "mov [rbp+disp32], rdx missing — should be storing remainder");
+    }
+
+    #[test]
+    fn fn_and_or_xor_emit_correct_opcodes() {
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("f", &params, "u64");
+        let ir = vec![
+            instr("and_u64", Some("v0"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("or_u64",  Some("v1"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("xor_u64", Some("v2"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("v2".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x21, 0xC8]), "and rax,rcx missing");
+        assert!(body_contains(&bytes, &[0x48, 0x09, 0xC8]), "or  rax,rcx missing");
+        assert!(body_contains(&bytes, &[0x48, 0x31, 0xC8]), "xor rax,rcx missing");
+    }
+
+    #[test]
+    fn fn_shl_u64_emits_shl_cl() {
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("s", &params, "u64");
+        let ir = vec![
+            instr("shl_u64", Some("v"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // shl rax, cl: 48 D3 E0
+        assert!(body_contains(&bytes, &[0x48, 0xD3, 0xE0]), "shl rax,cl missing");
+    }
+
+    #[test]
+    fn fn_shr_signed_emits_sar() {
+        // shr_i64 must lower to SAR (arithmetic shift), not SHR (logical).
+        let params = vec![
+            ("a".to_string(), "i64".to_string()),
+            ("b".to_string(), "i64".to_string()),
+        ];
+        let ctx = fn_ctx("s", &params, "i64");
+        let ir = vec![
+            instr("shr_i64", Some("v"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_i64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // sar rax, cl: 48 D3 F8
+        assert!(body_contains(&bytes, &[0x48, 0xD3, 0xF8]), "sar rax,cl missing");
+        // And NOT shr: 48 D3 E8
+        assert!(!body_contains(&bytes, &[0x48, 0xD3, 0xE8]), "shr unexpectedly present");
+    }
+
+    #[test]
+    fn fn_shr_unsigned_emits_shr() {
+        let params = vec![
+            ("a".to_string(), "u64".to_string()),
+            ("b".to_string(), "u64".to_string()),
+        ];
+        let ctx = fn_ctx("s", &params, "u64");
+        let ir = vec![
+            instr("shr_u64", Some("v"),
+                  vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_u64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0xD3, 0xE8]), "shr rax,cl missing");
+        assert!(!body_contains(&bytes, &[0x48, 0xD3, 0xF8]), "sar unexpectedly present");
+    }
+
+    #[test]
+    fn fn_neg_emits_neg() {
+        let params = vec![("a".to_string(), "i64".to_string())];
+        let ctx = fn_ctx("n", &params, "i64");
+        let ir = vec![
+            instr("neg_i64", Some("v"), vec![Op::Var("a".into())]),
+            instr("ret_i64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0xF7, 0xD8]), "neg rax missing");
+    }
+
+    // ---- Calls ----
+
+    #[test]
+    fn fn_call_external_records_reloc() {
+        // fn caller() -> u64 { return external(42); }
+        // CIR: const_u64 v0=42; call external, v0 → r; ret_u64 r
+        let ctx = fn_ctx("caller", &[], "u64");
+        let ir = vec![
+            instr("const_u64", Some("v0"), vec![Op::Int(42)]),
+            instr("call", Some("r"),
+                  vec![Op::Var("external".into()), Op::Var("v0".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Must contain `mov rdi, [rbp-...]` (System V arg 0)
+        // and `call rel32` (E8 ?? ?? ?? ??) with a recorded reloc.
+        assert!(body_contains(&bytes, &[0xE8]),
+                "expected `call rel32` opcode (E8) in {bytes:02X?}");
+        assert_eq!(relocs.len(), 1, "expected exactly one external reloc");
+        assert_eq!(relocs[0].symbol, "external");
+        assert_eq!(relocs[0].kind, ExternalRelocKind::PltRel32);
+        assert_eq!(relocs[0].addend, -4);
+    }
+
+    #[test]
+    fn fn_self_recursive_call_no_reloc() {
+        // fn fact(n: u64) -> u64 { return fact(n); }  (degenerate but tests the wiring)
+        // CIR: call fact, n → r; ret_u64 r
+        let params = vec![("n".to_string(), "u64".to_string())];
+        let ctx = fn_ctx("fact", &params, "u64");
+        let ir = vec![
+            instr("call", Some("r"),
+                  vec![Op::Var("fact".into()), Op::Var("n".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Self-recursive: no external relocation.
+        assert!(relocs.is_empty(),
+                "self-recursive call should not record external reloc, got {relocs:?}");
+        // Must contain a CALL opcode (E8).
+        assert!(body_contains(&bytes, &[0xE8]),
+                "expected `call rel32` opcode (E8) in {bytes:02X?}");
+    }
+
+    #[test]
+    fn fn_call_msx64_loads_into_rcx() {
+        // MS x64: arg 0 → RCX, not RDI.
+        let ctx = fn_ctx("caller", &[], "u64");
+        let ir = vec![
+            instr("const_u64", Some("v0"), vec![Op::Int(42)]),
+            instr("call", Some("r"),
+                  vec![Op::Var("external".into()), Op::Var("v0".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        // Look for `mov rcx, [rbp-disp]` — encoded as 48 8B 8D .. .. .. ..
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x8D]),
+                "expected `mov rcx, [rbp+disp32]` in MS x64 call setup");
+        // And NOT `mov rdi, [rbp-disp]` (48 8B BD) — the SysV arg-0 load.
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "should NOT emit `mov rdi, ...` on MS x64");
+    }
+
+    #[test]
+    fn fn_call_too_many_args_msx64() {
+        // 5 args > 4 GPR slots on MS x64.
+        let ctx = fn_ctx("caller", &[], "u64");
+        let mut srcs = vec![Op::Var("external".into())];
+        for i in 0..5 { srcs.push(Op::Int(i)); }
+        let ir = vec![
+            instr("call", Some("r"), srcs),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::MsX64);
+        assert!(result.is_err(), "expected `too many args` error");
+    }
+
+    // ---- Globals + io_out (phase 6) ----
+
+    #[test]
+    fn fn_global_load_emits_lea_and_mov() {
+        // CIR: global_load "g0" → v0; ret_u64 v0
+        use std::collections::HashMap;
+        let mut globals = HashMap::new();
+        globals.insert("g0".to_string(), 0usize);
+        let ctx = fn_ctx("rd", &[], "u64");
+        let ir = vec![
+            instr("global_load", Some("v0"), vec![Op::Var("g0".into())]),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_globals(&ctx, &ir, X86_64Abi::SysV, &globals).unwrap();
+        // LEA RAX, [RIP+_twig_globals]: 48 8D 05 .. .. .. ..
+        assert!(body_contains(&bytes, &[0x48, 0x8D, 0x05]),
+                "expected `lea rax, [rip+...]` in {bytes:02X?}");
+        // Exactly one PcRel32 reloc on _twig_globals.
+        let pcrel: Vec<_> = relocs.iter()
+            .filter(|r| r.kind == ExternalRelocKind::PcRel32)
+            .collect();
+        assert_eq!(pcrel.len(), 1);
+        assert_eq!(pcrel[0].symbol, "_twig_globals");
+        assert_eq!(pcrel[0].addend, -4);
+    }
+
+    #[test]
+    fn fn_global_store_emits_lea_and_mov() {
+        // CIR: const_u64 v0=42; global_store "g0" = v0; ret_void
+        use std::collections::HashMap;
+        let mut globals = HashMap::new();
+        globals.insert("g0".to_string(), 0usize);
+        let ctx = fn_ctx("wr", &[], "void");
+        let ir = vec![
+            instr("const_u64", Some("v0"), vec![Op::Int(42)]),
+            instr("global_store", None,
+                  vec![Op::Var("g0".into()), Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_globals(&ctx, &ir, X86_64Abi::SysV, &globals).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x8D, 0x05]),
+                "expected `lea rax, [rip+...]` in {bytes:02X?}");
+        let pcrel_count = relocs.iter()
+            .filter(|r| r.kind == ExternalRelocKind::PcRel32)
+            .count();
+        assert_eq!(pcrel_count, 1);
+    }
+
+    #[test]
+    fn fn_global_load_higher_slot_uses_byte_offset() {
+        // global slot 3 should produce a disp32 of 24 in the following MOV.
+        use std::collections::HashMap;
+        let mut globals = HashMap::new();
+        globals.insert("g3".to_string(), 3usize);
+        let ctx = fn_ctx("rd", &[], "u64");
+        let ir = vec![
+            instr("global_load", Some("v0"), vec![Op::Var("g3".into())]),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        let (bytes, _) = compile_function_with_globals(&ctx, &ir, X86_64Abi::SysV, &globals).unwrap();
+        // Look for `mov rax, [rax + 24]` — encoded as 48 8B 80 18 00 00 00.
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x80, 0x18, 0x00, 0x00, 0x00]),
+                "expected `mov rax, [rax+24]` in {bytes:02X?}");
+    }
+
+    #[test]
+    fn fn_io_out_sysv_uses_rdi() {
+        // CIR: const_i64 v0 = 99; io_out v0; ret_void
+        let ctx = fn_ctx("p", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("v0"), vec![Op::Int(99)]),
+            instr("io_out", None, vec![Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // System V arg 0 → RDI.  `mov rdi, [rbp+disp32]` = 48 8B BD ..
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for io_out arg on SysV");
+        // Then `call __twig_print_i64` (E8) with one PltRel32 reloc.
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.kind == ExternalRelocKind::PltRel32
+                     && r.symbol == "__twig_print_i64")
+            .collect();
+        assert_eq!(plt.len(), 1);
+    }
+
+    #[test]
+    fn fn_io_out_msx64_uses_rcx() {
+        let ctx = fn_ctx("p", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("v0"), vec![Op::Int(99)]),
+            instr("io_out", None, vec![Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        // MS x64 arg 0 → RCX.  `mov rcx, [rbp+disp32]` = 48 8B 8D ..
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x8D]),
+                "expected `mov rcx, [rbp+disp]` for io_out arg on MS x64");
+        // And not the System V form (48 8B BD).
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "should NOT emit `mov rdi, ...` on MS x64");
+    }
+
+    #[test]
+    fn fn_global_load_unknown_errors() {
+        use std::collections::HashMap;
+        let globals = HashMap::<String, usize>::new();
+        let ctx = fn_ctx("rd", &[], "u64");
+        let ir = vec![
+            instr("global_load", Some("v0"), vec![Op::Var("nope".into())]),
+            instr("ret_u64", None, vec![Op::Var("v0".into())]),
+        ];
+        let result = compile_function_with_globals(&ctx, &ir, X86_64Abi::SysV, &globals);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn fn_not_emits_not() {
+        let params = vec![("a".to_string(), "u64".to_string())];
+        let ctx = fn_ctx("n", &params, "u64");
+        let ir = vec![
+            instr("not_u64", Some("v"), vec![Op::Var("a".into())]),
+            instr("ret_u64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0xF7, 0xD0]), "not rax missing");
+    }
+
+    #[test]
+    fn backend_trait_compile_function() {
+        let ctx = fn_ctx("noop", &[], "void");
+        let backend = X86_64Backend::with_abi(X86_64Abi::SysV);
+        let bytes = backend.compile_function(&ctx, &[]).unwrap();
+        assert!(bytes.starts_with(&[0x55, 0x48, 0x89, 0xE5])); // push rbp; mov rbp, rsp
+    }
+
+    // ── LANG75 — call_builtin lowering ────────────────────────────────────────
+
+    #[test]
+    fn call_builtin_putchar_sysv_uses_rdi_and_records_reloc() {
+        // CIR: const_i32 v0 = 65; call_builtin "putchar", v0; ret_void
+        let ctx = fn_ctx("emit_A", &[], "void");
+        let ir = vec![
+            instr("const_i32", Some("v0"), vec![Op::Int(65)]),
+            instr("call_builtin", None,
+                  vec![Op::Var("putchar".into()), Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // System V arg 0 → RDI.  `mov rdi, [rbp+disp32]` = 48 8B BD …
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for putchar arg on SysV");
+        // Then `call __twig_putchar` (E8) with one PltRel32 reloc.
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.kind == ExternalRelocKind::PltRel32
+                     && r.symbol == "__twig_putchar")
+            .collect();
+        assert_eq!(plt.len(), 1, "expected exactly one __twig_putchar reloc");
+    }
+
+    #[test]
+    fn call_builtin_putchar_msx64_uses_rcx() {
+        let ctx = fn_ctx("emit_A", &[], "void");
+        let ir = vec![
+            instr("const_i32", Some("v0"), vec![Op::Int(65)]),
+            instr("call_builtin", None,
+                  vec![Op::Var("putchar".into()), Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        // MS x64 arg 0 → RCX.  `mov rcx, [rbp+disp32]` = 48 8B 8D ..
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0x8D]),
+                "expected `mov rcx, [rbp+disp]` for putchar arg on MS x64");
+        assert!(!body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "should NOT emit `mov rdi, ...` on MS x64");
+    }
+
+    #[test]
+    fn call_builtin_getchar_stores_rax_into_dest() {
+        // CIR: call_builtin "getchar" → r; ret_i32 r
+        let ctx = fn_ctx("read_one", &[], "i32");
+        let ir = vec![
+            instr("call_builtin", Some("r"),
+                  vec![Op::Var("getchar".into())]),
+            instr("ret_i32", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // After CALL, store RAX into the dest slot.  `mov [rbp+disp], rax`
+        // = 48 89 85 .. .. .. .. (REX.W + 89 /0 ModR/M with RAX as src).
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x85]),
+                "expected `mov [rbp+disp], rax` after getchar call");
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.symbol == "__twig_getchar")
+            .collect();
+        assert_eq!(plt.len(), 1, "expected exactly one __twig_getchar reloc");
+    }
+
+    #[test]
+    fn call_builtin_print_string_marshals_two_args_sysv() {
+        // CIR: const_i64 p=0; const_i64 n=0; call_builtin "print_string", p, n
+        let ctx = fn_ctx("emit_str", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("p"), vec![Op::Int(0)]),
+            instr("const_i64", Some("n"), vec![Op::Int(0)]),
+            instr("call_builtin", None,
+                  vec![Op::Var("print_string".into()),
+                       Op::Var("p".into()),
+                       Op::Var("n".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // arg 0 → RDI (48 8B BD), arg 1 → RSI (48 8B B5).
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for print_string arg 0");
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xB5]),
+                "expected `mov rsi, [rbp+disp]` for print_string arg 1");
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.symbol == "__twig_print_string")
+            .collect();
+        assert_eq!(plt.len(), 1);
+    }
+
+    #[test]
+    fn call_builtin_unknown_name_refuses() {
+        // Unknown helper → MalformedInstr, not panic.
+        let ctx = fn_ctx("bad", &[], "void");
+        let ir = vec![
+            instr("call_builtin", None,
+                  vec![Op::Var("frobnicate".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
+        assert!(result.is_err(), "expected error for unknown builtin");
+    }
+
+    #[test]
+    fn call_builtin_wrong_arg_count_refuses() {
+        // putchar expects exactly 1 arg; passing 0 must be rejected.
+        let ctx = fn_ctx("bad_arity", &[], "void");
+        let ir = vec![
+            instr("call_builtin", None,
+                  vec![Op::Var("putchar".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
+        assert!(result.is_err(), "expected error for putchar with 0 args");
+    }
+
+    #[test]
+    fn call_builtin_void_with_dest_refuses() {
+        // putchar returns void; supplying a dest is a malformed call site.
+        let ctx = fn_ctx("bad_dest", &[], "void");
+        let ir = vec![
+            instr("const_i32", Some("c"), vec![Op::Int(65)]),
+            instr("call_builtin", Some("r"),
+                  vec![Op::Var("putchar".into()), Op::Var("c".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn call_builtin_returning_without_dest_refuses() {
+        // getchar must have a dest.
+        let ctx = fn_ctx("bad_no_dest", &[], "void");
+        let ir = vec![
+            instr("call_builtin", None,
+                  vec![Op::Var("getchar".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let result = compile_function(&ctx, &ir, X86_64Abi::SysV);
+        assert!(result.is_err());
+    }
+
+    // ── LANG76 — byte memory ops + heap allocation ────────────────────────────
+
+    #[test]
+    fn alloc_bytes_calls_runtime_helper_and_stores_rax() {
+        // alloc_bytes 16 -> buf
+        let ctx = fn_ctx("a", &[], "i64");
+        let ir = vec![
+            instr("const_i64", Some("n"), vec![Op::Int(16)]),
+            instr("alloc_bytes", Some("buf"),
+                  vec![Op::Var("n".into())]),
+            instr("ret_i64", None, vec![Op::Var("buf".into())]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // Arg goes into RDI (SysV).
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for n");
+        // CALL E8 followed by 4 zero placeholder bytes.
+        assert!(body_contains(&bytes, &[0xE8]),
+                "expected CALL opcode E8");
+        // Store RAX to dest slot: 48 89 85 ...
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x85]),
+                "expected `mov [rbp+disp], rax` for buf");
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.symbol == "__twig_alloc_bytes").collect();
+        assert_eq!(plt.len(), 1);
+    }
+
+    #[test]
+    fn load_byte_emits_add_then_movzx() {
+        // load_byte ptr, off -> dest
+        let params = vec![("ptr".into(), "i64".into()),
+                          ("off".into(), "i64".into())];
+        let ctx = fn_ctx("lb", &params, "i64");
+        let ir = vec![
+            instr("load_byte", Some("v"),
+                  vec![Op::Var("ptr".into()), Op::Var("off".into())]),
+            instr("ret_i64", None, vec![Op::Var("v".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // `add rax, rcx` = 48 01 C8
+        assert!(body_contains(&bytes, &[0x48, 0x01, 0xC8]),
+                "expected `add rax, rcx` to combine ptr + offset");
+        // `movzx rax, byte ptr [rax]` = 48 0F B6 00
+        assert!(body_contains(&bytes, &[0x48, 0x0F, 0xB6, 0x00]),
+                "expected `movzx rax, byte [rax]`");
+    }
+
+    #[test]
+    fn store_byte_emits_mov_byte_at_dl() {
+        // store_byte ptr, off, val
+        let params = vec![("ptr".into(), "i64".into()),
+                          ("off".into(), "i64".into()),
+                          ("val".into(), "i64".into())];
+        let ctx = fn_ctx("sb", &params, "void");
+        let ir = vec![
+            instr("store_byte", None,
+                  vec![Op::Var("ptr".into()),
+                       Op::Var("off".into()),
+                       Op::Var("val".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // After `add rax, rcx` (48 01 C8), load val into rdx, then `mov [rax], dl`
+        // which with forced REX prefix is `40 88 10` (REX with all bits 0, opcode 88,
+        // ModRM mod=00 reg=010(DL) rm=000(RAX)).
+        assert!(body_contains(&bytes, &[0x48, 0x01, 0xC8]),
+                "expected `add rax, rcx`");
+        assert!(body_contains(&bytes, &[0x40, 0x88, 0x10]),
+                "expected `mov byte ptr [rax], dl` with empty REX prefix");
+    }
+
+    #[test]
+    fn load_byte_missing_offset_refuses() {
+        let params = vec![("ptr".into(), "i64".into())];
+        let ctx = fn_ctx("bad", &params, "i64");
+        let ir = vec![
+            instr("load_byte", Some("v"),
+                  vec![Op::Var("ptr".into())]),
+            instr("ret_i64", None, vec![Op::Var("v".into())]),
+        ];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err());
+    }
+
+    #[test]
+    fn store_byte_with_dest_refuses() {
+        let ctx = fn_ctx("bad", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("p"), vec![Op::Int(0)]),
+            instr("const_i64", Some("o"), vec![Op::Int(0)]),
+            instr("const_i64", Some("v"), vec![Op::Int(0)]),
+            instr("store_byte", Some("r"),  // illegal!
+                  vec![Op::Var("p".into()),
+                       Op::Var("o".into()),
+                       Op::Var("v".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err());
+    }
+
+    #[test]
+    fn call_builtin_print_i64_matches_io_out() {
+        // call_builtin "print_i64", v0 should produce the same shape as
+        // io_out v0 — same arg marshalling and same `__twig_print_i64` reloc.
+        let ctx = fn_ctx("print_via_builtin", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("v0"), vec![Op::Int(99)]),
+            instr("call_builtin", None,
+                  vec![Op::Var("print_i64".into()), Op::Var("v0".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x8B, 0xBD]),
+                "expected `mov rdi, [rbp+disp]` for print_i64 arg");
+        let plt: Vec<_> = relocs.iter()
+            .filter(|r| r.symbol == "__twig_print_i64")
+            .collect();
+        assert_eq!(plt.len(), 1);
+    }
+}

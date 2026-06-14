@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-jsdoc-types-extractor"
+version = "0.1.0"
+edition = "2021"
+description = "Walks a parsed JSDoc document and emits type-sidecar Records per CLOC05's tag-to-sidecar mapping table. Lowers primitive JSDoc type names to type-sidecar Type variants; falls back to Type::Opaque for anything else."
+
+[dependencies]
+coding-adventures-jsdoc-parser = { path = "../jsdoc-parser" }
+coding-adventures-type-sidecar = { path = "../type-sidecar" }
+parser = { path = "../parser" }
+serde_json = "1"

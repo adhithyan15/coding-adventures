@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–13).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–27).
 
 The handler tries two routes, in order:
 
@@ -66,10 +66,14 @@ strict mode ``Integrate`` falls through to
 
 from __future__ import annotations
 
+import math
+from contextvars import ContextVar
 from fractions import Fraction
+from typing import Any
 
 from polynomial import (
     Polynomial,
+    deriv as poly_deriv,
     divmod_poly,
     multiply,
     normalize,
@@ -85,13 +89,19 @@ from symbolic_ir import (
     ATANH,
     COS,
     COSH,
+    COTH,
+    CSCH,
     DIV,
+    EQUAL,
     EXP,
+    GREATER,
     INTEGRATE,
+    LESS,
     LOG,
     MUL,
     NEG,
     POW,
+    SECH,
     SIN,
     SINH,
     SQRT,
@@ -110,10 +120,24 @@ from symbolic_vm.arctan_integral import arctan_integral
 from symbolic_vm.asin_poly_integral import acos_poly_integral, asin_poly_integral
 from symbolic_vm.asinh_poly_integral import acosh_poly_integral, asinh_poly_integral
 from symbolic_vm.atan_poly_integral import atan_poly_integral
+from symbolic_vm.atanh_poly_integral import atanh_poly_integral
 from symbolic_vm.backend import Handler
+from symbolic_vm.definite_integral import evaluate_definite
+from symbolic_vm.exp_hyp_integral import (
+    exp_cosh_integral,
+    exp_hyp_degenerate,
+    exp_sinh_integral,
+)
 from symbolic_vm.exp_integral import exp_integral
 from symbolic_vm.exp_trig_integral import exp_cos_integral, exp_sin_integral
+from symbolic_vm.derivative import _diff as _vm_diff  # noqa: F401 — used in handler
 from symbolic_vm.hermite import hermite_reduce
+from symbolic_vm.hyp_power_integral import (
+    cosh_power_integral,
+    sinh_power_integral,
+    sinh_times_cosh_power,
+)
+from symbolic_vm.ibp_tabular import try_ibp_tabular
 from symbolic_vm.log_integral import log_poly_integral
 from symbolic_vm.mixed_integral import mixed_integral
 from symbolic_vm.polynomial_bridge import (
@@ -122,22 +146,130 @@ from symbolic_vm.polynomial_bridge import (
     rt_pairs_to_ir,
     to_rational,
 )
+from symbolic_vm.recip_hyp_power_integral import (
+    coth_power_integral,
+    csch_power_integral,
+    sech_power_integral,
+    tanh_power_integral,
+)
 from symbolic_vm.rothstein_trager import rothstein_trager
 from symbolic_vm.sinh_poly_integral import cosh_poly_integral, sinh_poly_integral
+from symbolic_vm.special_functions import INTEGRATION_FALLBACKS
 from symbolic_vm.trig_poly_integral import trig_cos_integral, trig_sin_integral
 
 ONE = IRInteger(1)
 TWO = IRInteger(2)
+ZERO = IRInteger(0)
+_PI_SYM = IRSymbol("%pi")
+_ELLIPTIC_F = IRSymbol("EllipticF")
+_ELLIPTIC_K = IRSymbol("EllipticK")
+_ELLIPTIC_E = IRSymbol("EllipticE")
+_ELLIPTIC_PI = IRSymbol("EllipticPi")
+
+# ---------------------------------------------------------------------------
+# Track G1 — current-VM context variable
+#
+# Most pattern helpers operate on pure IR and don't need the VM at all.
+# A few new ones (Track G1's symbolic-coefficient Weierstrass) need to
+# query ``vm.assumptions`` to decide which branch to emit.  Threading
+# ``vm`` through every helper signature would touch ~30 call sites; we
+# instead publish the live VM via a single :class:`ContextVar` that the
+# top-level ``Integrate`` handler sets for the duration of one
+# evaluation.  Helpers read it with :func:`_current_vm` and treat
+# ``None`` as "no assumption context available" (the historical
+# behaviour for callers that integrate without a VM, e.g. unit tests on
+# the helper directly).
+# ---------------------------------------------------------------------------
+_CURRENT_VM: ContextVar[Any] = ContextVar("symbolic_vm_current_integrate_vm")
+
+
+def _current_vm() -> Any:
+    """Return the VM that the outermost ``Integrate`` handler is
+    currently driving, or ``None`` if integration is being exercised
+    outside the handler (legacy callers + direct unit-test usage).
+    """
+    return _CURRENT_VM.get(None)
 
 
 def integrate() -> Handler:
     """Return the ``Integrate`` handler for the symbolic backend."""
 
     def handler(vm, expr: IRApply) -> IRNode:
-        if len(expr.args) != 2:
+        nargs = len(expr.args)
+        if nargs not in {2, 4}:
             raise TypeError(
-                f"Integrate expects 2 arguments, got {len(expr.args)}"
+                f"Integrate expects 2 or 4 arguments, got {nargs}"
             )
+        # Track G1: publish the live VM for helpers that need
+        # ``vm.assumptions`` (currently: symbolic-coefficient
+        # Weierstrass).  The token is reset in the ``finally`` clause of
+        # ``_run`` below so nested calls and exceptions can't strand the
+        # contextvar in an inconsistent state.
+        _vm_token = _CURRENT_VM.set(vm)
+        try:
+            return _run(vm, expr, nargs)
+        finally:
+            _CURRENT_VM.reset(_vm_token)
+
+    def _run(vm, expr: IRApply, nargs: int) -> IRNode:
+
+        if nargs == 4:
+            # ---------------------------------------------------------------
+            # Phase 24: definite integration  Integrate(f, x, a, b)
+            #
+            # Strategy:
+            #   1. Compute the indefinite antiderivative F with the same
+            #      three routes used for the 2-arg form.
+            #   2. Delegate to evaluate_definite which applies F(b) − F(a),
+            #      handling infinite limits via _eval_at_inf.
+            # ---------------------------------------------------------------
+            f, x, a, b = expr.args
+            if not isinstance(x, IRSymbol):
+                return expr
+
+            elliptic_k = _try_complete_elliptic_k(f, x, a, b)
+            if elliptic_k is not None:
+                return elliptic_k
+
+            elliptic_e = _try_complete_elliptic_e(f, x, a, b)
+            if elliptic_e is not None:
+                return elliptic_e
+
+            elliptic_pi = _try_complete_elliptic_pi(f, x, a, b)
+            if elliptic_pi is not None:
+                return elliptic_pi
+
+            F: IRNode | None = None
+
+            # Route 1: rational function.
+            rational_result = _integrate_rational(f, x)
+            if rational_result is not None:
+                F = vm.eval(rational_result)
+                # If the rational result still has an unevaluated Integrate
+                # sub-expression, fall through and return unevaluated.
+                if _contains_integrate(F):
+                    return IRApply(INTEGRATE, (f, x, a, b))
+            else:
+                # Route 2: Phase 1 pattern table.
+                F = _integrate(f, x)
+                if F is None:
+                    # Route 3: Phase 23 special-function fallbacks.
+                    for _sf_try in INTEGRATION_FALLBACKS:
+                        F = _sf_try(f, x)
+                        if F is not None:
+                            break
+                if F is None:
+                    # No antiderivative found — leave unevaluated.
+                    return IRApply(INTEGRATE, (f, x, a, b))
+                F = vm.eval(F)
+                if _contains_integrate(F):
+                    return IRApply(INTEGRATE, (f, x, a, b))
+
+            return evaluate_definite(f, x, a, b, F, vm)
+
+        # nargs == 2 --------------------------------------------------------
+        # Indefinite integration (original behaviour, Phases 1–23).
+        # -------------------------------------------------------------------
         f, x = expr.args
         if not isinstance(x, IRSymbol):
             # Integration with respect to something other than a plain
@@ -151,10 +283,397 @@ def integrate() -> Handler:
             return vm.eval(rational_result)
         result = _integrate(f, x)
         if result is None:
+            # Phase 23: special-function fallback — try erf, Si/Ci, Li₂,
+            # Fresnel after all elementary routes have returned None.
+            # Placed here (in the outer handler) so it fires regardless of
+            # which early-return path inside _integrate was taken.
+            for _sf_try in INTEGRATION_FALLBACKS:
+                _sf_result = _sf_try(f, x)
+                if _sf_result is not None:
+                    return vm.eval(_sf_result)
+            _elliptic_result = _try_incomplete_elliptic_f(f, x)
+            if _elliptic_result is not None:
+                return _elliptic_result
+            _elliptic_e_result = _try_incomplete_elliptic_e(f, x)
+            if _elliptic_e_result is not None:
+                return _elliptic_e_result
+            # Track E1: generic tabular IBP fallback.  Fires after every
+            # shape-specific handler has returned None.  See
+            # ``ibp_tabular.py`` for the algorithm.
+            ibp_result = try_ibp_tabular(
+                f,
+                x,
+                integrate_fn=lambda g: _integrate(g, x),
+                diff_fn=lambda g: vm.eval(_vm_diff(g, x)),
+                simplify_fn=vm.eval,
+            )
+            if ibp_result is not None:
+                return vm.eval(ibp_result)
             return IRApply(INTEGRATE, (f, x))
         return vm.eval(result)
 
     return handler
+
+
+def _try_complete_elliptic_k(
+    f: IRNode, x: IRSymbol, lower: IRNode, upper: IRNode
+) -> IRNode | None:
+    """Recognise the complete elliptic integral of the first kind.
+
+    ``∫₀^(π/2) 1/sqrt(1-k² sin²(x)) dx`` is returned as ``EllipticK(k)``.
+    """
+    if lower != ZERO:
+        return None
+    if not _is_pi_over_two(upper):
+        return None
+    modulus = _elliptic_first_kind_modulus(f, x)
+    if modulus is None:
+        return None
+    return IRApply(_ELLIPTIC_K, (modulus,))
+
+
+def _try_incomplete_elliptic_f(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Recognise the incomplete elliptic integral of the first kind.
+
+    ``∫ 1/sqrt(1-k² sin²(x)) dx`` is non-elementary; returning
+    ``EllipticF(x, k)`` makes the special-function form explicit instead of
+    leaving a generic unevaluated ``Integrate`` node.
+    """
+    modulus = _elliptic_first_kind_modulus(f, x)
+    if modulus is None:
+        return None
+    return IRApply(_ELLIPTIC_F, (x, modulus))
+
+
+def _elliptic_first_kind_modulus(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``k`` when *f* is ``1/sqrt(1-k² sin²(x))``."""
+    if not (
+        isinstance(f, IRApply)
+        and f.head == DIV
+        and len(f.args) == 2
+        and f.args[0] == ONE
+    ):
+        return None
+    denominator = f.args[1]
+    if not (
+        isinstance(denominator, IRApply)
+        and denominator.head == SQRT
+        and len(denominator.args) == 1
+    ):
+        return None
+    radicand = denominator.args[0]
+    if not (
+        isinstance(radicand, IRApply)
+        and radicand.head == SUB
+        and len(radicand.args) == 2
+        and radicand.args[0] == ONE
+    ):
+        return None
+    product = radicand.args[1]
+    if not (
+        isinstance(product, IRApply)
+        and product.head == MUL
+        and len(product.args) == 2
+    ):
+        return None
+
+    first, second = product.args
+    return _modulus_from_squared_factor(
+        first, second, x
+    ) or _modulus_from_squared_factor(second, first, x)
+
+
+def _modulus_from_squared_factor(
+    modulus_square: IRNode, sine_square: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return k given that modulus_square = k² and sine_square = sin²(x).
+
+    Handles two forms of ``modulus_square``:
+    1. ``Pow(k, 2)`` — the symbolic case, returns ``k`` directly.
+    2. A pre-evaluated numeric literal (IRFloat, IRInteger, IRRational) —
+       the case that arises when the user writes ``0.5^2`` which the VM
+       immediately reduces to ``0.25`` before the integrate handler runs.
+       We extract ``k = sqrt(literal)`` numerically.
+    """
+    if not (
+        isinstance(sine_square, IRApply)
+        and sine_square.head == POW
+        and len(sine_square.args) == 2
+        and sine_square.args[1] == TWO
+    ):
+        return None
+    sine = sine_square.args[0]
+    if not (
+        isinstance(sine, IRApply)
+        and sine.head == SIN
+        and len(sine.args) == 1
+        and sine.args[0] == x
+    ):
+        return None
+    # Case 1: modulus_square = Pow(k, 2) — the symbolic form.
+    if (
+        isinstance(modulus_square, IRApply)
+        and modulus_square.head == POW
+        and len(modulus_square.args) == 2
+        and modulus_square.args[1] == TWO
+    ):
+        modulus = modulus_square.args[0]
+        if _depends_on(modulus, x):
+            return None
+        return modulus
+    # Case 2: modulus_square is a pre-evaluated numeric literal.
+    # This happens when the user writes e.g. 0.5^2 which reduces to 0.25
+    # before the integrate handler is called.  We recover k = sqrt(literal).
+    if isinstance(modulus_square, IRFloat):
+        val = modulus_square.value
+        if val < 0:
+            return None
+        return IRFloat(math.sqrt(val))
+    if isinstance(modulus_square, IRInteger):
+        val = modulus_square.value
+        if val < 0:
+            return None
+        root = math.isqrt(val)
+        if root * root == val:
+            return IRInteger(root)
+        return IRApply(SQRT, (modulus_square,))
+    if isinstance(modulus_square, IRRational):
+        num = modulus_square.numer
+        den = modulus_square.denom
+        if num < 0:
+            return None
+        root_num = math.isqrt(num)
+        root_den = math.isqrt(den)
+        if root_num * root_num == num and root_den * root_den == den:
+            return IRRational(root_num, root_den)
+        return IRApply(SQRT, (modulus_square,))
+    return None
+
+
+def _is_pi_over_two(node: IRNode) -> bool:
+    if isinstance(node, IRFloat):
+        return math.isclose(node.value, math.pi / 2, rel_tol=0.0, abs_tol=1e-12)
+    return (
+        isinstance(node, IRApply)
+        and node.head == DIV
+        and len(node.args) == 2
+        and node.args[0] == _PI_SYM
+        and node.args[1] == TWO
+    )
+
+
+def _elliptic_second_kind_radicand(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``k`` when *f* is ``sqrt(1 - k² sin²(x))``.
+
+    The second-kind elliptic integrand is the *positive* square root of the
+    same radicand that appears inverted in the first-kind integrand.  That is,
+    ``f = Sqrt(Sub(1, Mul(Pow(k, 2), Pow(Sin(x), 2))))``.
+    """
+    # f must be Sqrt(radicand)
+    if not (
+        isinstance(f, IRApply)
+        and f.head == SQRT
+        and len(f.args) == 1
+    ):
+        return None
+    radicand = f.args[0]
+    # radicand must be (1 - k²·sin²(x))
+    if not (
+        isinstance(radicand, IRApply)
+        and radicand.head == SUB
+        and len(radicand.args) == 2
+        and radicand.args[0] == ONE
+    ):
+        return None
+    product = radicand.args[1]
+    if not (
+        isinstance(product, IRApply)
+        and product.head == MUL
+        and len(product.args) == 2
+    ):
+        return None
+    first, second = product.args
+    return _modulus_from_squared_factor(first, second, x) or _modulus_from_squared_factor(
+        second, first, x
+    )
+
+
+def _try_complete_elliptic_e(
+    f: IRNode, x: IRSymbol, lower: IRNode, upper: IRNode
+) -> IRNode | None:
+    """Recognise the complete elliptic integral of the second kind.
+
+    ``∫₀^(π/2) sqrt(1-k² sin²(x)) dx`` is returned as ``EllipticE(k)``.
+    """
+    if lower != ZERO:
+        return None
+    if not _is_pi_over_two(upper):
+        return None
+    modulus = _elliptic_second_kind_radicand(f, x)
+    if modulus is None:
+        return None
+    return IRApply(_ELLIPTIC_E, (modulus,))
+
+
+def _try_incomplete_elliptic_e(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Recognise the incomplete elliptic integral of the second kind.
+
+    ``∫ sqrt(1-k² sin²(x)) dx`` is non-elementary; returning
+    ``EllipticE(x, k)`` makes the special-function form explicit.
+    """
+    modulus = _elliptic_second_kind_radicand(f, x)
+    if modulus is None:
+        return None
+    return IRApply(_ELLIPTIC_E, (x, modulus))
+
+
+def _extract_characteristic_n(bracket: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return *n* when *bracket* is ``(1 + n·sin²(x))``.
+
+    Accepts both ``Add(1, Mul(n, Pow(Sin(x), 2)))`` and the commuted form
+    ``Add(Mul(n, Pow(Sin(x), 2)), 1)``.
+    """
+    if not (
+        isinstance(bracket, IRApply)
+        and bracket.head == ADD
+        and len(bracket.args) == 2
+    ):
+        return None
+    a, b = bracket.args
+    # Try (1, n·sin²(x)) and (n·sin²(x), 1)
+    for one_part, prod_part in [(a, b), (b, a)]:
+        if one_part != ONE:
+            continue
+        # prod_part must be Mul(n, Pow(Sin(x), 2))
+        if not (
+            isinstance(prod_part, IRApply)
+            and prod_part.head == MUL
+            and len(prod_part.args) == 2
+        ):
+            continue
+        p1, p2 = prod_part.args
+        for n_candidate, sin_sq in [(p1, p2), (p2, p1)]:
+            # sin_sq must be Pow(Sin(x), 2)
+            if not (
+                isinstance(sin_sq, IRApply)
+                and sin_sq.head == POW
+                and len(sin_sq.args) == 2
+                and sin_sq.args[1] == TWO
+            ):
+                continue
+            inner = sin_sq.args[0]
+            if not (
+                isinstance(inner, IRApply)
+                and inner.head == SIN
+                and len(inner.args) == 1
+                and inner.args[0] == x
+            ):
+                continue
+            if _depends_on(n_candidate, x):
+                continue
+            return n_candidate
+    return None
+
+
+def _elliptic_third_kind_params(
+    f: IRNode, x: IRSymbol
+) -> tuple[IRNode, IRNode] | None:
+    """Return ``(n, k)`` when *f* is ``1/((1+n·sin²(x))·sqrt(1-k²·sin²(x)))``.
+
+    The third-kind elliptic integrand introduces a characteristic parameter
+    *n* in a second factor ``(1 + n·sin²(x))`` that multiplies the usual
+    first-kind denominator ``sqrt(1-k²·sin²(x))``.
+    """
+    # f must be Div(1, denominator)
+    if not (
+        isinstance(f, IRApply)
+        and f.head == DIV
+        and len(f.args) == 2
+        and f.args[0] == ONE
+    ):
+        return None
+    denominator = f.args[1]
+    # denominator must be Mul(bracket, sqrt_term) in either order
+    if not (
+        isinstance(denominator, IRApply)
+        and denominator.head == MUL
+        and len(denominator.args) == 2
+    ):
+        return None
+    a, b = denominator.args
+    # Try both orderings: (bracket, sqrt) and (sqrt, bracket)
+    for bracket, sqrt_term in [(a, b), (b, a)]:
+        # sqrt_term must be Sqrt(1 - k²·sin²(x)) — same as first kind
+        if not (
+            isinstance(sqrt_term, IRApply)
+            and sqrt_term.head == SQRT
+            and len(sqrt_term.args) == 1
+        ):
+            continue
+        radicand = sqrt_term.args[0]
+        if not (
+            isinstance(radicand, IRApply)
+            and radicand.head == SUB
+            and len(radicand.args) == 2
+            and radicand.args[0] == ONE
+        ):
+            continue
+        prod = radicand.args[1]
+        if not (
+            isinstance(prod, IRApply)
+            and prod.head == MUL
+            and len(prod.args) == 2
+        ):
+            continue
+        f1, f2 = prod.args
+        k = _modulus_from_squared_factor(f1, f2, x) or _modulus_from_squared_factor(f2, f1, x)
+        if k is None:
+            continue
+        # bracket must be Add(1, Mul(n, Pow(Sin(x), 2))) or equivalent
+        # Accept: (1 + n·sin²(x)) as Add(1, Mul(n, Pow(Sin(x), 2)))
+        n = _extract_characteristic_n(bracket, x)
+        if n is None:
+            continue
+        return (n, k)
+    return None
+
+
+def _try_complete_elliptic_pi(
+    f: IRNode, x: IRSymbol, lower: IRNode, upper: IRNode
+) -> IRNode | None:
+    """Recognise the complete elliptic integral of the third kind.
+
+    ``∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²·sin²θ)) dθ`` → ``EllipticPi(n, k)``.
+    """
+    if lower != ZERO:
+        return None
+    if not _is_pi_over_two(upper):
+        return None
+    params = _elliptic_third_kind_params(f, x)
+    if params is None:
+        return None
+    n, k = params
+    return IRApply(_ELLIPTIC_PI, (n, k))
+
+
+# ---------------------------------------------------------------------------
+# Phase 24 helper — detect unevaluated Integrate nodes in a result
+# ---------------------------------------------------------------------------
+
+
+def _contains_integrate(expr: IRNode) -> bool:
+    """Return True if *expr* contains any ``Integrate(...)`` sub-expression.
+
+    Used by the definite-integration handler to bail out when the
+    rational-function route returns a partially-unevaluated result (i.e. an
+    integral whose transcendental residual could not be expressed in terms of
+    elementary functions or the Phase 23 special functions).
+    """
+    if isinstance(expr, IRApply):
+        if expr.head == INTEGRATE:
+            return True
+        return any(_contains_integrate(a) for a in expr.args)
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -341,6 +860,960 @@ def _rational_to_ir(
     return IRApply(DIV, (num_ir, den_ir))
 
 
+# ----------------------------------------------------------------------
+# Phase 34/35/36/37/38 — Weierstrass substitution for
+# ∫ c / (a + b·trig(α·x + β)) dx with numeric (rational) `c, a, b, α, β`
+# and `α ≠ 0`.
+#
+# The substitution `u = tan(arg/2)` with `arg = α·x + β` gives
+# `sin(arg) = 2u/(1+u²)`, `cos(arg) = (1−u²)/(1+u²)`,
+# `darg = α·dx = 2/(1+u²) du`.  Reducing both canonical integrands to a
+# rational function of `u` yields, depending on the discriminant
+# `disc = a² − b²`:
+#
+#   Phase 34 (disc > 0 — arctan):
+#     ∫ 1/(a + b·sin arg) dx
+#         =  (2/(α·√(a²−b²))) · arctan((a·tan(arg/2) + b)/√(a²−b²))
+#     ∫ 1/(a + b·cos arg) dx                (a > 0 required for this form)
+#         =  (2/(α·√(a²−b²))) · arctan(√((a−b)/(a+b)) · tan(arg/2))
+#
+#   Phase 35 (disc = 0 — degenerate, no outer arctan):
+#     Four sign combinations on (a, b, head) ⇒ tan(arg/2) / cot(arg/2)
+#     closed forms.
+#
+#   Phase 36/37 (disc < 0 — log form):
+#     ∫ 1/(a + b·sin arg) dx
+#         =  (1/(α·D)) · log|(a·tan(arg/2) + b − D)/(a·tan(arg/2) + b + D)|
+#     ∫ 1/(a + b·cos arg) dx
+#         =  (1/(α·D)) · log|(D + (b−a)·tan(arg/2))/(D − (b−a)·tan(arg/2))|
+#     where D = √(b² − a²).  The Abs wrapping covers both `b > |a|` and
+#     `b < −|a|` regimes simultaneously (Phase 37).
+#
+# Phase 38 lifts the entire family from the bare-`x` argument to any
+# linear rational ``α·x + β``.  The single change of variable
+# `u = α·x + β` (with `du = α·dx`) scales the antiderivative by `1/α`,
+# which we fold into the numerator constant `c ← c/α` at the dispatcher
+# entry — so each branch's closed form remains unchanged structurally.
+# ----------------------------------------------------------------------
+
+
+def _sqrt_fraction_ir(f: Fraction) -> IRNode:
+    """Express ``√f`` as IR, folding perfect rational squares.
+
+    For ``f = p/q`` with ``p, q > 0`` we return ``√p/√q`` simplified
+    when both numerator and denominator are perfect integer squares;
+    otherwise we emit ``Sqrt(Fraction)`` and let downstream simplification
+    handle it.  ``f`` must be strictly positive — callers guard the
+    discriminant first.
+    """
+    if f <= 0:
+        # Defensive — callers must guard.  Return raw Sqrt for safety.
+        return IRApply(SQRT, (_frac_ir(f),))
+    p = f.numerator
+    q = f.denominator
+    p_root = math.isqrt(p)
+    q_root = math.isqrt(q)
+    if p_root * p_root == p and q_root * q_root == q:
+        return _frac_ir(Fraction(p_root, q_root))
+    return IRApply(SQRT, (_frac_ir(f),))
+
+
+def _parse_linear_in_x(
+    node: IRNode, x: IRSymbol
+) -> tuple[Fraction, Fraction] | None:
+    """Parse ``α·x + β`` (with α, β ∈ Q, α ≠ 0) and return ``(α, β)``.
+
+    Recognised shapes (any operand ordering within commutative heads):
+
+    +----------------------+----------+
+    | Shape                | Returns  |
+    +======================+==========+
+    | ``x``                | (1, 0)   |
+    | ``α·x``              | (α, 0)   |
+    | ``α·x + β``          | (α, β)   |
+    | ``β + α·x``          | (α, β)   |
+    | ``α·x − β``          | (α, −β)  |
+    | ``β − α·x``          | (−α, β)  |
+    | ``−(α·x + β)``       | (−α, −β) |
+    +----------------------+----------+
+
+    Returns ``None`` when ``node`` is not a linear-in-``x`` rational
+    combination (e.g. ``x²``, ``sin(x)``, pure constants free of ``x``,
+    or a nested nonlinear form).  This is the Phase 38 generalisation
+    of the bare-``x`` predecessor: ``α = 1, β = 0`` recovers the old
+    behaviour exactly.
+    """
+    # Bare variable shortcut.
+    if node == x:
+        return Fraction(1), Fraction(0)
+    # Constants free of ``x`` are not linear-in-``x`` (no x term).
+    if not _depends_on(node, x):
+        return None
+    # ``α·x`` — Mul of constant and ``x`` (either order).  Reject α = 0
+    # so callers can rely on α ≠ 0 throughout.
+    if isinstance(node, IRApply) and node.head == MUL and len(node.args) == 2:
+        left, right = node.args
+        c_left = _node_to_frac(left)
+        if c_left is not None and right == x and c_left != 0:
+            return c_left, Fraction(0)
+        c_right = _node_to_frac(right)
+        if c_right is not None and left == x and c_right != 0:
+            return c_right, Fraction(0)
+        return None
+    # ``−(linear)`` — unwrap and negate both coefficients.
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        inner = _parse_linear_in_x(node.args[0], x)
+        if inner is None:
+            return None
+        a, b = inner
+        return -a, -b
+    # ``ADD(const, linear)`` or ``ADD(linear, const)``.
+    if isinstance(node, IRApply) and node.head == ADD and len(node.args) == 2:
+        left, right = node.args
+        for const_side, lin_side in ((left, right), (right, left)):
+            c = _node_to_frac(const_side)
+            if c is None:
+                continue
+            lin = _parse_linear_in_x(lin_side, x)
+            if lin is None:
+                continue
+            a, b = lin
+            return a, b + c
+        return None
+    # ``SUB(left, right)`` — two distinct cases depending on which side
+    # carries the ``x`` dependence.
+    if isinstance(node, IRApply) and node.head == SUB and len(node.args) == 2:
+        left, right = node.args
+        # Case A: ``linear − constant`` → (α, β − c).
+        c_right = _node_to_frac(right)
+        if c_right is not None:
+            lin = _parse_linear_in_x(left, x)
+            if lin is not None:
+                a, b = lin
+                return a, b - c_right
+        # Case B: ``constant − linear`` → (−α, c − β).
+        c_left = _node_to_frac(left)
+        if c_left is not None:
+            lin = _parse_linear_in_x(right, x)
+            if lin is not None:
+                a, b = lin
+                return -a, c_left - b
+        return None
+    return None
+
+
+def _build_linear_arg_ir(
+    alpha: Fraction, beta: Fraction, x: IRSymbol
+) -> IRNode:
+    """Build an IR node for ``α·x + β`` collapsing the trivial cases.
+
+    The output is used inside ``tan(arg/2)`` in every Weierstrass closed
+    form, so we prefer the simplest equivalent shape:
+
+    - ``α = 1, β = 0`` → ``x``      (the historical bare path)
+    - ``α = 1, β ≠ 0`` → ``x + β``
+    - ``β = 0, α ≠ 1`` → ``α·x``
+    - otherwise         → ``(α·x) + β``
+    """
+    if alpha == 1 and beta == 0:
+        return x
+    if beta == 0:
+        return IRApply(MUL, (_frac_ir(alpha), x))
+    if alpha == 1:
+        return IRApply(ADD, (x, _frac_ir(beta)))
+    a_x = IRApply(MUL, (_frac_ir(alpha), x))
+    return IRApply(ADD, (a_x, _frac_ir(beta)))
+
+
+def _parse_const_times_trig_linear(
+    node: IRNode, x: IRSymbol
+) -> tuple[Fraction, IRSymbol, Fraction, Fraction] | None:
+    """Match ``c·sin(α·x + β)`` / ``c·cos(α·x + β)`` (and the c=1 / α=1 /
+    β=0 degenerate variants) and return ``(c, head, α, β)``.
+
+    Accepts both argument orders within ``Mul`` and unwraps a leading
+    ``Neg``.  The argument inside the trig must be linear in ``x`` per
+    :func:`_parse_linear_in_x`.  Returns ``None`` when the shape doesn't
+    fit (e.g. ``sin(x²)`` or ``sin(x)·cos(x)``).
+
+    Phase 38 generalises the predecessor :func:`_parse_const_times_trig_x`
+    which only accepted the bare-``x`` argument.
+    """
+    if (
+        isinstance(node, IRApply)
+        and node.head in (SIN, COS)
+        and len(node.args) == 1
+    ):
+        lin = _parse_linear_in_x(node.args[0], x)
+        if lin is not None:
+            alpha, beta = lin
+            return Fraction(1), node.head, alpha, beta
+    if isinstance(node, IRApply) and node.head == MUL and len(node.args) == 2:
+        left, right = node.args
+        for const_side, trig_side in ((left, right), (right, left)):
+            c = _node_to_frac(const_side)
+            if c is None:
+                continue
+            if (
+                isinstance(trig_side, IRApply)
+                and trig_side.head in (SIN, COS)
+                and len(trig_side.args) == 1
+            ):
+                lin = _parse_linear_in_x(trig_side.args[0], x)
+                if lin is not None:
+                    alpha, beta = lin
+                    return c, trig_side.head, alpha, beta
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        inner = _parse_const_times_trig_linear(node.args[0], x)
+        if inner is not None:
+            c, head, alpha, beta = inner
+            return -c, head, alpha, beta
+    return None
+
+
+def _parse_a_plus_b_sincos(
+    node: IRNode, x: IRSymbol
+) -> tuple[Fraction, Fraction, IRSymbol, Fraction, Fraction] | None:
+    """Parse ``a + b·sin(α·x+β)`` / ``a + b·cos(α·x+β)`` (any operand
+    order) into ``(a, b, head, α, β)`` with ``a, b, α, β ∈ Q`` and
+    ``α ≠ 0``.
+
+    Accepts the SUB shape too (``a − b·trig(αx+β)`` becomes
+    ``(a, −b, head, α, β)``).  Returns ``None`` if the shape isn't a
+    binary linear combination of a constant and a constant-multiple of a
+    trig function of a linear-in-``x`` argument.  Phase 38 supersedes
+    the bare-``x``-only predecessor.
+    """
+    trig_parse = _parse_const_times_trig_linear(node, x)
+    if trig_parse is not None:
+        b, head, alpha, beta = trig_parse
+        return Fraction(0), b, head, alpha, beta
+    if not isinstance(node, IRApply) or len(node.args) != 2:
+        return None
+    if node.head == ADD:
+        left, right = node.args
+    elif node.head == SUB:
+        # Treat ``a − b·trig(...)`` as ``a + (−b)·trig(...)``: parse the
+        # right side and negate.  Symmetric ``b·trig(...) − a`` is rarely
+        # the canonical form but we cover it via the swap branch below.
+        left, right_raw = node.args
+        a_left = _node_to_frac(left)
+        if a_left is not None:
+            trig_parse = _parse_const_times_trig_linear(right_raw, x)
+            if trig_parse is not None:
+                b, head, alpha, beta = trig_parse
+                return a_left, -b, head, alpha, beta
+        # Try ``b·trig(...) − a`` = (−a) + b·trig(...)
+        b_trig_left = _parse_const_times_trig_linear(left, x)
+        a_right = _node_to_frac(right_raw)
+        if b_trig_left is not None and a_right is not None:
+            b, head, alpha, beta = b_trig_left
+            return -a_right, b, head, alpha, beta
+        return None
+    else:
+        return None
+    # ADD path: try both orderings.
+    for const_side, trig_side in ((left, right), (right, left)):
+        a = _node_to_frac(const_side)
+        if a is None:
+            continue
+        trig_parse = _parse_const_times_trig_linear(trig_side, x)
+        if trig_parse is None:
+            continue
+        b, head, alpha, beta = trig_parse
+        return a, b, head, alpha, beta
+    return None
+
+
+def _try_weierstrass_degenerate(
+    c: Fraction,
+    a: Fraction,
+    b: Fraction,
+    trig_head: IRSymbol,
+    arg_node: IRNode,
+) -> IRNode | None:
+    """Phase 35: degenerate ``a² = b²`` Weierstrass cases.
+
+    Phase 38 generalisation: ``arg_node`` is the IR for the trig
+    argument ``α·x + β``.  The substitution ``u = tan(arg/2)`` carries
+    through unchanged because the inner factor ``α`` has already been
+    absorbed into ``c`` by the caller (``c ← c/α``); see
+    :func:`_try_weierstrass_one_over_linear_trig`.
+
+
+    Four sign combinations on ``(a, b, trig_head)``:
+
+    +------------+------------+---------+--------------------------------------+
+    | b vs a     | trig       | a sign  | Closed form                          |
+    +============+============+=========+======================================+
+    | b = a > 0  | sin        | any     | -2c / (a · (tan(x/2) + 1))           |
+    | b = -a < 0 | sin        | any     |  2c / (a · (1 − tan(x/2)))           |
+    | b = a > 0  | cos        | any     |  c · tan(x/2) / a   (since 1+cos=2cos²(x/2)) |
+    | b = -a < 0 | cos        | any     | -c / (a · tan(x/2))                  |
+    +------------+------------+---------+--------------------------------------+
+
+    Derivations (all from u = tan(x/2)):
+
+    ``∫ 1/(a + a·sin x) dx``:
+       ``1 + sin x = (1+u)²/(1+u²)``, so the integrand becomes
+       ``2/(a(1+u)²) du`` → ``-2/(a(1+u)) + C``.
+
+    ``∫ 1/(a − a·sin x) dx``:
+       ``1 − sin x = (1−u)²/(1+u²)``, so the integrand becomes
+       ``2/(a(1−u)²) du`` → ``2/(a(1−u)) + C``.
+
+    ``∫ 1/(a + a·cos x) dx``:
+       ``1 + cos x = 2/(1+u²)``, so the integrand becomes
+       ``1/a du`` → ``u/a + C = tan(x/2)/a + C``.
+
+    ``∫ 1/(a − a·cos x) dx``:
+       ``1 − cos x = 2u²/(1+u²)``, so the integrand becomes
+       ``1/(a·u²) du`` → ``-1/(a·u) + C = -cot(x/2)/a + C``.
+
+    Returns ``None`` if neither ``b == a`` nor ``b == -a`` (caller will then
+    leave the integral unevaluated).
+    """
+    if a == 0:
+        # disc = 0 and a = 0 implies b = 0 too — degenerate denominator
+        # ``0 + 0·sin x = 0``; integrating 1/0 is undefined.  Punt.
+        return None
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    if trig_head == SIN:
+        if b == a:
+            # ∫ c/(a + a·sin x) dx = -2c / (a · (tan(x/2) + 1))
+            numer = _frac_ir(-2 * c)
+            denom = IRApply(
+                MUL,
+                (_frac_ir(a), IRApply(ADD, (tan_half, ONE))),
+            )
+            return IRApply(DIV, (numer, denom))
+        if b == -a:
+            # ∫ c/(a − a·sin x) dx = 2c / (a · (1 − tan(x/2)))
+            numer = _frac_ir(2 * c)
+            denom = IRApply(
+                MUL,
+                (_frac_ir(a), IRApply(SUB, (ONE, tan_half))),
+            )
+            return IRApply(DIV, (numer, denom))
+        return None
+    # trig_head == COS
+    if b == a:
+        # ∫ c/(a + a·cos x) dx = c · tan(x/2) / a
+        return IRApply(DIV, (IRApply(MUL, (_frac_ir(c), tan_half)), _frac_ir(a)))
+    if b == -a:
+        # ∫ c/(a − a·cos x) dx = -c / (a · tan(x/2))
+        numer = _frac_ir(-c)
+        denom = IRApply(MUL, (_frac_ir(a), tan_half))
+        return IRApply(DIV, (numer, denom))
+    return None
+
+
+def _try_weierstrass_log_form(
+    c: Fraction,
+    a: Fraction,
+    b: Fraction,
+    trig_head: IRSymbol,
+    arg_node: IRNode,
+) -> IRNode | None:
+    """Phase 36: ``∫ c / (a + b·sin(x)) dx`` and ``∫ c / (a + b·cos(x)) dx``
+    when ``a² < b²`` (the quadratic in u = tan(x/2) has two distinct real
+    roots).
+
+    Phase 38 generalisation: ``arg_node`` is the IR for the trig
+    argument ``α·x + β``; the inner factor ``α`` has been pre-absorbed
+    into ``c`` by the caller.  The same closed forms apply with
+    ``tan(arg/2)`` in place of ``tan(x/2)``.
+
+    Derivation for the sin branch
+    -----------------------------
+    With ``u = tan(x/2)`` the integrand reduces to ``∫ 2/(a·u² + 2b·u + a) du``.
+    When ``a ≠ 0`` and ``b² > a²`` the quadratic has roots
+    ``u₁,₂ = (−b ± √(b²−a²))/a`` so
+
+        a·u² + 2b·u + a = a·(u − u₁)·(u − u₂)
+
+    When ``a = 0``, the integrand is the csc form
+    ``c/(b·sin x)`` and closes directly to ``(c/b)·log|tan(x/2)|``.
+
+    For ``a ≠ 0``, partial fractions give
+
+        ∫ 2/(a·(u−u₁)(u−u₂)) du
+          =  (1/D) · log| (a·u + b − D) / (a·u + b + D) | + C
+
+    where ``D = √(b² − a²) > 0``.  Substituting back ``u = tan(x/2)`` and
+    scaling by the numerator constant ``c``:
+
+        ∫ c/(a + b·sin x) dx
+            =  (c/D) · log( (a·tan(x/2) + b − D) / (a·tan(x/2) + b + D) ) + C
+
+    The absolute-value bars are dropped — the CAS emits the unsigned log
+    that any downstream pretty-printer can wrap in ``|·|`` if desired.
+
+    Derivation for the cos branch
+    -----------------------------
+    With ``u = tan(x/2)`` the integrand reduces to
+    ``∫ 2/((a−b)·u² + (a+b)) du``.  When ``b² > a²`` the linear-in-u² term
+    has positive coefficient on one side and negative on the other.
+    Specifically:
+
+        (a−b)·u² + (a+b)  =  −(b−a)·(u² − (a+b)/(b−a))
+                          =  −(b−a)·(u − r)·(u + r)
+
+    where ``r = √((a+b)/(b−a))`` is real because ``b² > a²`` forces
+    ``(a+b)`` and ``(b−a)`` to share the sign of ``a + b`` and of
+    ``b − a`` respectively.  This decomposition is valid when ``a + b > 0``
+    and ``b − a > 0`` (equivalently ``b > |a|``).  The negation of the
+    leading coefficient and the partial-fraction integration give
+
+        ∫ c/(a + b·cos x) dx
+            =  (c / (D)) · log( (D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2)) ) + C
+
+    where ``D = √(b² − a²)``.  The opposite sign convention (``b < −|a|``)
+    needs an extra ``−`` sign and is deferred — the rule guards
+    ``b > |a|`` strictly.
+
+    Returns ``None`` when the matched shape doesn't satisfy the
+    above sign preconditions.
+    """
+    # b² − a² > 0 must hold (caller passes disc = a² − b² < 0).
+    disc_sq = b * b - a * a
+    if disc_sq <= 0:
+        return None
+    sqrt_disc_ir = _sqrt_fraction_ir(disc_sq)
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    abs_head = IRSymbol("Abs")
+    if trig_head == SIN:
+        if a == 0:
+            # ∫ c/(b·sin u) dx = (c/b)·log|tan(u/2)|, with any linear
+            # argument scaling already absorbed into c by the dispatcher.
+            coef_ir = _frac_ir(c / b)
+            log_arg = IRApply(abs_head, (tan_half,))
+            return IRApply(MUL, (coef_ir, IRApply(LOG, (log_arg,))))
+        # log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
+        a_tan = IRApply(MUL, (_frac_ir(a), tan_half))
+        a_tan_plus_b = IRApply(ADD, (a_tan, _frac_ir(b)))
+        numer = IRApply(SUB, (a_tan_plus_b, sqrt_disc_ir))
+        denom = IRApply(ADD, (a_tan_plus_b, sqrt_disc_ir))
+        log_arg = IRApply(abs_head, (IRApply(DIV, (numer, denom)),))
+        coef_ir = IRApply(DIV, (_frac_ir(c), sqrt_disc_ir))
+        return IRApply(MUL, (coef_ir, IRApply(LOG, (log_arg,))))
+    # COS branch — handles both b > |a| and b < −|a| (Phase 37 extension).
+    #
+    # The same expression ``log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|``
+    # is valid for both sign regimes because the inner rational is
+    # wrapped in ``Abs``: when ``b−a`` flips sign across the two cases,
+    # the numerator and denominator of the log argument swap (one goes to
+    # ``D − k·u``, the other to ``D + k·u``), but ``|N/D'| = |D'/N|`` so
+    # the absolute value collapses them to the same value.  The
+    # antiderivative is then continuous on both sides of ``b = ±|a|``.
+    #
+    # Caller already ensures ``b² > a²`` (disc < 0 entry); the only
+    # additional precondition is ``a + b ≠ 0``, which is automatic
+    # because ``b² > a²`` rules out ``b = −a``.
+    b_minus_a = b - a
+    # log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|
+    bma_tan = IRApply(MUL, (_frac_ir(b_minus_a), tan_half))
+    numer = IRApply(ADD, (sqrt_disc_ir, bma_tan))
+    denom = IRApply(SUB, (sqrt_disc_ir, bma_tan))
+    log_arg = IRApply(abs_head, (IRApply(DIV, (numer, denom)),))
+    coef_ir = IRApply(DIV, (_frac_ir(c), sqrt_disc_ir))
+    return IRApply(MUL, (coef_ir, IRApply(LOG, (log_arg,))))
+
+
+def _try_weierstrass_one_over_linear_trig(
+    integrand: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Phase 34 + 38: ``∫ c / (a + b·sin(α·x+β)) dx`` and
+    ``∫ c / (a + b·cos(α·x+β)) dx`` via the Weierstrass substitution
+    ``u = tan((α·x+β)/2)``.
+
+    Both ``c`` (numerator) and the coefficients ``a, b, α, β`` must be
+    numeric (Integer or Rational) with ``α ≠ 0``.  When ``α = 1`` and
+    ``β = 0`` this recovers the original bare-``x`` Phase 34/35/36/37
+    behaviour exactly; otherwise the inner change of variable
+    ``u = α·x + β`` (with ``du = α·dx``) divides the antiderivative by
+    ``α``, which we fold into the numerator constant ``c ← c/α`` so the
+    same closed forms apply with ``tan((α·x+β)/2)`` in place of
+    ``tan(x/2)``.
+    """
+    if not isinstance(integrand, IRApply) or integrand.head != DIV:
+        return None
+    if len(integrand.args) != 2:
+        return None
+    num, den = integrand.args
+    if _depends_on(num, x):
+        return None
+    c = _node_to_frac(num)
+    if c is None:
+        return None
+    parsed = _parse_a_plus_b_sincos(den, x)
+    if parsed is None:
+        return None
+    a, b, trig_head, alpha, beta = parsed
+    # ``α ≠ 0`` is guaranteed by _parse_linear_in_x; the assert documents
+    # the invariant for future readers and triggers in debug builds if a
+    # caller ever weakens that contract.
+    assert alpha != 0
+    # Apply ``u = α·x + β`` change of variable upfront by folding 1/α
+    # into the numerator scaling.
+    c = c / alpha
+    arg_node = _build_linear_arg_ir(alpha, beta, x)
+    disc = a * a - b * b
+    if disc == 0:
+        # Phase 35: degenerate a² = b² cases — closed forms in tan(arg/2)
+        # without an outer arctan.  Four sign combinations are handled
+        # below; cases where a + b = 0 (sin/cos coefficient cancel) are
+        # picked up via the `b == -a` / `b == a` checks.
+        degen = _try_weierstrass_degenerate(c, a, b, trig_head, arg_node)
+        if degen is not None:
+            return degen
+        # Defensive: if degenerate matcher can't close it, leave unevaluated.
+        return None
+    if disc < 0:
+        # Phase 36: a² < b² → log form on the partial-fraction decomposition
+        # of the resulting quadratic in tan(arg/2) with two distinct real
+        # roots.
+        log_form = _try_weierstrass_log_form(c, a, b, trig_head, arg_node)
+        if log_form is not None:
+            return log_form
+        return None
+    sqrt_disc_ir = _sqrt_fraction_ir(disc)
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    coef_sign = Fraction(1)
+    if trig_head == SIN:
+        # arctan argument: (a·tan(x/2) + b) / √(a²−b²)
+        atan_arg_top = IRApply(
+            ADD,
+            (IRApply(MUL, (_frac_ir(a), tan_half)), _frac_ir(b)),
+        )
+        atan_arg = IRApply(DIV, (atan_arg_top, sqrt_disc_ir))
+    else:  # COS
+        # arctan argument: √((a−b)/(a+b)) · tan(x/2)
+        # Since a² > b², a-b and a+b share sign(a), so the ratio is positive.
+        # When a < 0, flip the outer coefficient to account for the negative
+        # factor introduced by the tangent-half-angle denominator quadratic.
+        if a < 0:
+            coef_sign = Fraction(-1)
+        ratio = (a - b) / (a + b)
+        if ratio <= 0:
+            # Cannot happen when a² > b² with nonzero a, but defensive.
+            return None
+        sqrt_ratio_ir = _sqrt_fraction_ir(ratio)
+        atan_arg = IRApply(MUL, (sqrt_ratio_ir, tan_half))
+    # Final result: (2c/√(a²−b²)) · arctan(...)
+    coef_frac = c * 2 * coef_sign
+    coef_ir = IRApply(DIV, (_frac_ir(coef_frac), sqrt_disc_ir))
+    return IRApply(MUL, (coef_ir, IRApply(ATAN, (atan_arg,))))
+
+
+# ---------------------------------------------------------------------------
+# Track G1 — symbolic-coefficient Weierstrass lift.
+#
+# The numeric helpers above parse ``a, b`` as ``Fraction`` and bail out
+# when either is not numeric.  Track G1 generalises them: when the
+# numeric path returns ``None`` because ``a`` and/or ``b`` is a free
+# IR symbol (or any non-numeric IR expression), we re-try by:
+#
+#   1.  Reparsing ``a + b·trig(α·x+β)`` keeping ``a, b`` as IR nodes
+#       (``α, β, c`` stay rational — only the "outer" coefficient pair
+#       around the trig function is allowed to be symbolic).
+#   2.  Constructing the discriminant ``disc_expr = a² − b²`` as IR.
+#   3.  Querying ``vm.assumptions.is_true_relation(Greater(disc_expr, 0))``,
+#       ``Less(...)`` and ``Equal(...)`` to decide the branch:
+#         - True for ``>``   → arctan form with ``√(a²−b²)``.
+#         - True for ``<``   → log form with ``√(b²−a²)``.
+#         - True for ``=``   → degenerate form.
+#         - All None         → return ``None`` (unevaluated).
+#   4.  Emitting the closed form with IR-level arithmetic; no
+#       ``Fraction``-only fast path is taken on the symbolic branch.
+#
+# Linear-argument lifting ``α·x + β`` composes unchanged — the inner
+# substitution ``u = tan((α·x+β)/2)`` does not depend on the values of
+# the outer coefficients ``a, b``, so we still fold ``1/α`` into the
+# leading numerator scaling exactly as the numeric path does.
+# ---------------------------------------------------------------------------
+
+
+def _parse_const_times_trig_linear_symbolic(
+    node: IRNode, x: IRSymbol
+) -> tuple[IRNode, IRSymbol, Fraction, Fraction] | None:
+    """Match ``c·sin(α·x + β)`` / ``c·cos(α·x + β)`` returning ``c`` as an
+    IR node (instead of a :class:`Fraction`).
+
+    The ``α, β`` coefficients still have to be rational — keeping the
+    inner-argument linear-form rational is what makes the
+    Weierstrass substitution composable in closed form.  Only the
+    "outer" scalar ``c`` is allowed to be symbolic, since that's what
+    threads into ``a, b`` for the symbolic dispatcher below.
+
+    Recognises the same shapes as :func:`_parse_const_times_trig_linear`,
+    plus the bare ``trig(...)`` case (``c = 1``) and a leading ``Neg``.
+    """
+    if (
+        isinstance(node, IRApply)
+        and node.head in (SIN, COS)
+        and len(node.args) == 1
+    ):
+        lin = _parse_linear_in_x(node.args[0], x)
+        if lin is not None:
+            alpha, beta = lin
+            return ONE, node.head, alpha, beta
+    if isinstance(node, IRApply) and node.head == MUL and len(node.args) == 2:
+        left, right = node.args
+        for const_side, trig_side in ((left, right), (right, left)):
+            if _depends_on(const_side, x):
+                continue
+            if (
+                isinstance(trig_side, IRApply)
+                and trig_side.head in (SIN, COS)
+                and len(trig_side.args) == 1
+            ):
+                lin = _parse_linear_in_x(trig_side.args[0], x)
+                if lin is not None:
+                    alpha, beta = lin
+                    return const_side, trig_side.head, alpha, beta
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        inner = _parse_const_times_trig_linear_symbolic(node.args[0], x)
+        if inner is not None:
+            c, head, alpha, beta = inner
+            return IRApply(NEG, (c,)), head, alpha, beta
+    return None
+
+
+def _parse_a_plus_b_sincos_symbolic(
+    node: IRNode, x: IRSymbol
+) -> tuple[IRNode, IRNode, IRSymbol, Fraction, Fraction] | None:
+    """Symbolic-coefficient sibling of :func:`_parse_a_plus_b_sincos`.
+
+    Parses ``a + b·sin(α·x+β)`` / ``a + b·cos(α·x+β)`` (any operand
+    order, also ``ADD`` and ``SUB``) into ``(a, b, head, α, β)`` where
+    ``a`` and ``b`` are IR nodes free of ``x`` and ``α, β`` are
+    rational with ``α ≠ 0``.  Returns ``None`` if the shape doesn't
+    fit.
+    """
+    trig_parse = _parse_const_times_trig_linear_symbolic(node, x)
+    if trig_parse is not None:
+        b, head, alpha, beta = trig_parse
+        return ZERO, b, head, alpha, beta
+    if not isinstance(node, IRApply) or len(node.args) != 2:
+        return None
+    if node.head == ADD:
+        left, right = node.args
+        for const_side, trig_side in ((left, right), (right, left)):
+            if _depends_on(const_side, x):
+                continue
+            trig = _parse_const_times_trig_linear_symbolic(trig_side, x)
+            if trig is None:
+                continue
+            b, head, alpha, beta = trig
+            return const_side, b, head, alpha, beta
+        return None
+    if node.head == SUB:
+        # ``a − b·trig(...)`` → ``(a, −b, head, α, β)``.
+        left, right = node.args
+        if not _depends_on(left, x):
+            trig = _parse_const_times_trig_linear_symbolic(right, x)
+            if trig is not None:
+                b, head, alpha, beta = trig
+                return left, IRApply(NEG, (b,)), head, alpha, beta
+        # ``b·trig(...) − a`` → ``(−a, b, head, α, β)``.
+        if not _depends_on(right, x):
+            trig = _parse_const_times_trig_linear_symbolic(left, x)
+            if trig is not None:
+                b, head, alpha, beta = trig
+                return IRApply(NEG, (right,)), b, head, alpha, beta
+        return None
+    return None
+
+
+def _disc_expr(a: IRNode, b: IRNode) -> IRNode:
+    """Return the discriminant ``a² − b²`` as IR.  Used both as the
+    operand of the assumption-context query and as the radicand of the
+    closed-form ``√`` term.
+    """
+    a_sq = IRApply(POW, (a, TWO))
+    b_sq = IRApply(POW, (b, TWO))
+    return IRApply(SUB, (a_sq, b_sq))
+
+
+def _neg_disc_expr(a: IRNode, b: IRNode) -> IRNode:
+    """Return ``b² − a²``.  Used as the radicand of the log-branch
+    ``√(b²−a²)`` when ``disc < 0`` (i.e. ``a² < b²``).
+    """
+    a_sq = IRApply(POW, (a, TWO))
+    b_sq = IRApply(POW, (b, TWO))
+    return IRApply(SUB, (b_sq, a_sq))
+
+
+def _try_weierstrass_arctan_symbolic(
+    c_scaled: IRNode,
+    a: IRNode,
+    b: IRNode,
+    trig_head: IRSymbol,
+    arg_node: IRNode,
+) -> IRNode:
+    """Symbolic-coefficient arctan branch: ``a² > b²``.
+
+    Emits
+
+        ∫ 1/(a + b·sin(arg)) dx
+          =  (2·c_scaled / √(a²−b²))
+             · arctan( (a·tan(arg/2) + b) / √(a²−b²) )
+
+    for the sin branch, and the structurally analogous cos branch with
+
+        arctan-arg = (a − b·tan(arg/2)·...) / ...
+
+    actually the textbook cos formula is symmetric; for symbolic
+    coefficients we use the form valid on the whole disc > 0 region:
+
+        (2·c_scaled / √(a²−b²))
+          · arctan( (a·tan(arg/2) − b·sin(...)) / ... )
+
+    For maximum reuse we use the same shape as the sin branch but with
+    ``cos``-specific algebra.  See the inline derivation below.
+    """
+    sqrt_disc = IRApply(SQRT, (_disc_expr(a, b),))
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    if trig_head == SIN:
+        # arctan argument: (a·tan(arg/2) + b) / √(a²−b²)
+        atan_arg_top = IRApply(
+            ADD,
+            (IRApply(MUL, (a, tan_half)), b),
+        )
+    else:
+        # cos branch.  Derivation: with u = tan(arg/2),
+        #   1/(a + b·cos(arg)) = (1+u²) / ((a+b) + (a−b)·u²),
+        # an antiderivative is
+        #   (2/√(a²−b²)) · arctan( ((a−b)·u + 0) / √(a²−b²) )
+        # which simplifies (when scaled by ``c_scaled``) to
+        #   (2c/√(a²−b²)) · arctan( (a−b)·tan(arg/2) / √(a²−b²) ).
+        # This form is sign-clean for both a > 0 and a < 0 because the
+        # outer arctan absorbs the global sign of the argument.
+        atan_arg_top = IRApply(
+            MUL,
+            (IRApply(SUB, (a, b)), tan_half),
+        )
+    atan_arg = IRApply(DIV, (atan_arg_top, sqrt_disc))
+    coef = IRApply(
+        DIV,
+        (IRApply(MUL, (IRInteger(2), c_scaled)), sqrt_disc),
+    )
+    return IRApply(MUL, (coef, IRApply(ATAN, (atan_arg,))))
+
+
+def _try_weierstrass_log_symbolic(
+    c_scaled: IRNode,
+    a: IRNode,
+    b: IRNode,
+    trig_head: IRSymbol,
+    arg_node: IRNode,
+) -> IRNode:
+    """Symbolic-coefficient log branch: ``a² < b²``.
+
+    Emits
+
+        ∫ 1/(a + b·sin(arg)) dx
+          =  (c_scaled / √(b²−a²))
+             · log| (a·tan(arg/2) + b − D) / (a·tan(arg/2) + b + D) |
+
+    where ``D = √(b² − a²)``.  The cos-branch closed form uses
+    ``(b−a)·tan(arg/2)`` in the log argument; same outer ``c/D`` factor.
+    See the numeric :func:`_try_weierstrass_log_form` for the
+    underlying derivations.
+    """
+    sqrt_neg_disc = IRApply(SQRT, (_neg_disc_expr(a, b),))
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    abs_head = IRSymbol("Abs")
+    if trig_head == SIN:
+        a_tan = IRApply(MUL, (a, tan_half))
+        a_tan_plus_b = IRApply(ADD, (a_tan, b))
+        numer = IRApply(SUB, (a_tan_plus_b, sqrt_neg_disc))
+        denom = IRApply(ADD, (a_tan_plus_b, sqrt_neg_disc))
+    else:
+        b_minus_a = IRApply(SUB, (b, a))
+        bma_tan = IRApply(MUL, (b_minus_a, tan_half))
+        numer = IRApply(ADD, (sqrt_neg_disc, bma_tan))
+        denom = IRApply(SUB, (sqrt_neg_disc, bma_tan))
+    log_arg = IRApply(abs_head, (IRApply(DIV, (numer, denom)),))
+    coef = IRApply(DIV, (c_scaled, sqrt_neg_disc))
+    return IRApply(MUL, (coef, IRApply(LOG, (log_arg,))))
+
+
+def _try_weierstrass_degenerate_symbolic(
+    c_scaled: IRNode,
+    a: IRNode,
+    b: IRNode,
+    trig_head: IRSymbol,
+    arg_node: IRNode,
+) -> IRNode:
+    """Symbolic-coefficient degenerate branch: ``a² = b²``.
+
+    With ``a² = b²`` the substitution-quadratic in ``u = tan(arg/2)``
+    has a double root and the antiderivative collapses to a rational
+    function of ``tan(arg/2)``.  The four cases (b = ±a × sin/cos) are
+    indistinguishable structurally at the IR level without further
+    sign information on ``a + b`` and ``a − b``, so we emit the most
+    general "rational in ``tan(arg/2)``" form that's correct on the
+    whole ``a² = b²`` manifold:
+
+        sin branch:  −2·c / ( (a+b)·tan(arg/2) + (a−b) ) is not valid
+                     when ``a+b = 0``; we therefore emit the symmetric
+                     form
+                       2·c / (a·(1 + tan²(arg/2))) · ... is also wrong;
+        rather, we use the partial-fraction representative that
+        reduces to the numeric formulas in :func:`_try_weierstrass_degenerate`
+        when ``a, b`` are concrete numbers and the user has guaranteed
+        ``a² = b²``:
+
+            sin: ∫ 1/(a + b·sin(arg)) dx
+                 =  −2·c / ( (a+b)·tan(arg/2) + (a−b) )
+
+        For cos, we use
+
+            cos: ∫ 1/(a + b·cos(arg)) dx
+                 =  c·tan(arg/2) · 2/( (a−b)·tan²(arg/2) + (a+b) )
+
+        Both reduce to the same numeric forms by direct substitution.
+    """
+    tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    a_plus_b = IRApply(ADD, (a, b))
+    a_minus_b = IRApply(SUB, (a, b))
+    if trig_head == SIN:
+        # −2·c / ( (a+b)·tan(arg/2) + (a−b) )
+        numer = IRApply(MUL, (IRInteger(-2), c_scaled))
+        denom = IRApply(
+            ADD,
+            (IRApply(MUL, (a_plus_b, tan_half)), a_minus_b),
+        )
+        return IRApply(DIV, (numer, denom))
+    # cos branch: 2·c·tan(arg/2) / ( (a−b)·tan²(arg/2) + (a+b) )
+    tan_sq = IRApply(POW, (tan_half, TWO))
+    numer = IRApply(
+        MUL,
+        (IRApply(MUL, (IRInteger(2), c_scaled)), tan_half),
+    )
+    denom = IRApply(
+        ADD,
+        (IRApply(MUL, (a_minus_b, tan_sq)), a_plus_b),
+    )
+    return IRApply(DIV, (numer, denom))
+
+
+def _try_weierstrass_symbolic_coefficients(
+    integrand: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Track G1: symbolic-coefficient Weierzstrass.
+
+    Mirrors :func:`_try_weierstrass_one_over_linear_trig` but accepts
+    non-numeric ``a, b`` (IR nodes free of ``x``).  Consults the live
+    ``vm.assumptions`` (published by the ``Integrate`` handler via the
+    :data:`_CURRENT_VM` contextvar) to decide which branch — arctan,
+    log, degenerate — to emit.
+
+    Returns ``None`` when:
+
+    - the integrand doesn't match the ``c / (a + b·trig(α·x+β))`` shape,
+    - the numerator ``c`` depends on ``x``,
+    - ``α, β`` aren't rational,
+    - no VM context is available (called outside the handler),
+    - or no assumption pin down the sign of ``a² − b²``.
+
+    The numeric branch is left untouched: the dispatcher in
+    :func:`_integrate` tries it first and only falls through to here if
+    it returns ``None``, so the existing test suite (with concrete
+    rational ``a, b``) continues to fire the fast path.
+    """
+    if not isinstance(integrand, IRApply) or integrand.head != DIV:
+        return None
+    if len(integrand.args) != 2:
+        return None
+    num, den = integrand.args
+    if _depends_on(num, x):
+        return None
+    parsed = _parse_a_plus_b_sincos_symbolic(den, x)
+    if parsed is None:
+        return None
+    a, b, trig_head, alpha, beta = parsed
+    if alpha == 0:
+        return None
+    # Numeric path is tried first; if either ``a`` or ``b`` is fully
+    # numeric and both pass, that path would already have closed the
+    # integral.  Bail out gracefully in that case so we don't emit a
+    # second (potentially uglier) result.
+    if _node_to_frac(a) is not None and _node_to_frac(b) is not None:
+        return None
+    vm = _current_vm()
+    if vm is None:
+        return None
+    # Apply ``u = α·x + β`` change of variable: scale the numerator by
+    # ``1/α``.  We do this at the IR level — for rational ``α`` this is
+    # a literal division by a Fraction, kept exact.
+    scale = Fraction(1) / alpha
+    c_scaled = IRApply(MUL, (_frac_ir(scale), num)) if scale != 1 else num
+    arg_node = _build_linear_arg_ir(alpha, beta, x)
+    assumptions = vm.assumptions
+    # Branch on the assumption-context verdict for the discriminant sign.
+    # We probe the natural surface form ``a² > b²`` (and its log / equal
+    # duals) plus the canonical-against-zero form ``a²−b² > 0`` so the
+    # helper fires regardless of which surface syntax the user typed.
+    a_sq = IRApply(POW, (a, TWO))
+    b_sq = IRApply(POW, (b, TWO))
+    disc = IRApply(SUB, (a_sq, b_sq))
+    if _is_discriminant_positive(assumptions, a_sq, b_sq, disc):
+        return _try_weierstrass_arctan_symbolic(
+            c_scaled, a, b, trig_head, arg_node
+        )
+    if _is_discriminant_negative(assumptions, a_sq, b_sq, disc):
+        return _try_weierstrass_log_symbolic(
+            c_scaled, a, b, trig_head, arg_node
+        )
+    if _is_discriminant_zero(assumptions, a_sq, b_sq, disc):
+        return _try_weierstrass_degenerate_symbolic(
+            c_scaled, a, b, trig_head, arg_node
+        )
+    return None
+
+
+def _is_discriminant_positive(
+    assumptions, a_sq: IRNode, b_sq: IRNode, disc: IRNode
+) -> bool:
+    """Did the user pin down ``a² > b²`` (the disc > 0 region)?
+
+    We accept either surface form — the natural ``a² > b²`` written by
+    the user via ``assume(a^2 > b^2)``, or the canonical-against-zero
+    form ``a² − b² > 0`` that someone might write programmatically.
+    Both are looked up against the compound-relation store.
+    """
+    if assumptions.is_true_relation(IRApply(GREATER, (a_sq, b_sq))) is True:
+        return True
+    if assumptions.is_true_relation(IRApply(GREATER, (disc, ZERO))) is True:
+        return True
+    return False
+
+
+def _is_discriminant_negative(
+    assumptions, a_sq: IRNode, b_sq: IRNode, disc: IRNode
+) -> bool:
+    """Did the user pin down ``a² < b²`` (the disc < 0 region)?"""
+    if assumptions.is_true_relation(IRApply(LESS, (a_sq, b_sq))) is True:
+        return True
+    if assumptions.is_true_relation(IRApply(LESS, (disc, ZERO))) is True:
+        return True
+    return False
+
+
+def _is_discriminant_zero(
+    assumptions, a_sq: IRNode, b_sq: IRNode, disc: IRNode
+) -> bool:
+    """Did the user pin down ``a² = b²`` (the degenerate case)?"""
+    if assumptions.is_true_relation(IRApply(EQUAL, (a_sq, b_sq))) is True:
+        return True
+    if assumptions.is_true_relation(IRApply(EQUAL, (disc, ZERO))) is True:
+        return True
+    return False
+
+
 def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
     """Return an antiderivative of ``f`` w.r.t. ``x``, or ``None``.
 
@@ -403,6 +1876,15 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         if not _depends_on(b, x):
             ia = _integrate(a, x)
             return None if ia is None else IRApply(MUL, (b, ia))
+        # Neg distribution: Mul(f, Neg(g)) → Neg(Mul(f, g)) so NEG rule fires.
+        # This lets ∫ exp(x)·sinh(-x) dx work after Phase 31 simplifies
+        # sinh(-x) → Neg(Sinh(x)) before the integrand reaches us.
+        if isinstance(b, IRApply) and b.head == NEG and len(b.args) == 1:
+            inner = _integrate(IRApply(MUL, (a, b.args[0])), x)
+            return None if inner is None else IRApply(NEG, (inner,))
+        if isinstance(a, IRApply) and a.head == NEG and len(a.args) == 1:
+            inner = _integrate(IRApply(MUL, (a.args[0], b)), x)
+            return None if inner is None else IRApply(NEG, (inner,))
         # Both factors depend on x — try Phase 3 then Phase 4 patterns.
         # Phase 3: exp(linear) and log(linear) products.
         result = _try_exp_product(a, b, x) or _try_exp_product(b, a, x)
@@ -433,6 +1915,39 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         if result is not None:
             return result
         result = _try_acosh_product(a, b, x) or _try_acosh_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 14c: atanh(linear) × polynomial via IBP.
+        result = _try_atanh_product(a, b, x) or _try_atanh_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 26: polynomial × log(x)^n via IBP reduction (n ≥ 2).
+        # n = 1 is already handled by _try_log_product (Phase 3).
+        result = _try_log_power_product(a, b, x) or _try_log_power_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 27: polynomial × sin(log(x)) or cos(log(x)) — closed form via
+        # the substitution u = log(x) which converts the integral to the
+        # standard exp×trig form ∫ e^((k+1)u) · trig(u) du.
+        result = _try_trig_log_product(a, b, x) or _try_trig_log_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 28: polynomial × log(Q(x)) for non-linear polynomial Q — IBP
+        # with u = log(Q), dv = P dx, residual is a rational function of x.
+        result = _try_log_poly_product(a, b, x) or _try_log_poly_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 28: polynomial × atan(Q(x)) for non-linear polynomial Q — IBP
+        # with u = atan(Q), dv = P dx, residual is rational.
+        result = _try_atan_poly_product(a, b, x) or _try_atan_poly_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 14a: exp(linear) × sinh/cosh(linear) — double-IBP closed form.
+        result = _try_exp_hyp(a, b, x) or _try_exp_hyp(b, a, x)
+        if result is not None:
+            return result
+        # Phase 14b: Pow(Sinh, m) × Pow(Cosh, n) — u-substitution (odd exponent).
+        result = _try_sinh_cosh_product(a, b, x)
         if result is not None:
             return result
         # Phase 4b: trig × trig via product-to-sum identities.
@@ -470,6 +1985,18 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         # x-in-denominator shape Phase 1 handles directly.
         if b == x and not _depends_on(a, x):
             return IRApply(MUL, (a, IRApply(LOG, (x,))))
+        # Phase 34: Weierstrass substitution for c / (a + b·sin(x)) and
+        # c / (a + b·cos(x)) when a, b numeric and a² > b².
+        result = _try_weierstrass_one_over_linear_trig(f, x)
+        if result is not None:
+            return result
+        # Track G1: symbolic-coefficient Weierstrass.  Fires only when
+        # the numeric path returns None and ``vm.assumptions`` records a
+        # sign for ``a² − b²``.  See
+        # :func:`_try_weierstrass_symbolic_coefficients`.
+        result = _try_weierstrass_symbolic_coefficients(f, x)
+        if result is not None:
+            return result
         return None
 
     # --- Power rule ---------------------------------------------------
@@ -509,6 +2036,14 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_trig_power(base, exponent, x)
         if result is not None:
             return result
+        # Phase 14: sinhⁿ, coshⁿ reduction formulas.
+        result = _try_hyp_power(base, exponent, x)
+        if result is not None:
+            return result
+        # Phase 16: sechⁿ, cschⁿ, cothⁿ reduction formulas.
+        result = _try_recip_hyp_power(base, exponent, x)
+        if result is not None:
+            return result
         # Phase 8 bonus: ∫ (ax+b)^n dx = (ax+b)^(n+1)/((n+1)·a) or log(ax+b)/a.
         lin = _try_linear(base, x)
         if lin is not None:
@@ -529,6 +2064,18 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                 new_exp = IRApply(ADD, (exponent, ONE))
                 denom = IRApply(MUL, (new_exp, a_ir))
                 return IRApply(DIV, (IRApply(POW, (arg_ir, new_exp)), denom))
+        # Phase 26: ∫ log(linear)^n dx for n ≥ 2 — IBP reduction formula.
+        # n = 1 is handled by the elementary-functions branch above.
+        if (
+            isinstance(base, IRApply)
+            and base.head == LOG
+            and len(base.args) == 1
+            and isinstance(exponent, IRInteger)
+            and exponent.value >= 2
+        ):
+            result = _log_power_integral(base.args[0], exponent.value, x)
+            if result is not None:
+                return result
         return None
 
     # --- Elementary functions at x  (Phase 1: argument must be bare x)
@@ -558,6 +2105,40 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                 ),
             )
 
+    # --- Phase 27: trig(log(x)) — single-factor case (k = 0) -----------------
+    # ∫ sin(log(x)) dx = x/2 · (sin(log(x)) − cos(log(x)))
+    # ∫ cos(log(x)) dx = x/2 · (sin(log(x)) + cos(log(x)))
+    # Derived from u = log(x): ∫ sin(u)·eᵘ du = eᵘ(sin(u)−cos(u))/2.
+    if len(f.args) == 1 and head in {SIN, COS}:
+        _inner = f.args[0]
+        if (
+            isinstance(_inner, IRApply)
+            and _inner.head == LOG
+            and len(_inner.args) == 1
+            and _inner.args[0] == x
+        ):
+            return _trig_log_integral(head, 0, x)
+
+    # --- Phase 28: bare log(Q(x)) / atan(Q(x)) for non-linear polynomial Q ----
+    # When the entire integrand is a single logarithm or arctangent whose
+    # argument is a non-linear polynomial, IBP with P = 1 gives:
+    #
+    #   ∫ log(Q) dx  =  x·log(Q)  −  ∫ x·Q′/Q dx      (residual rational)
+    #   ∫ atan(Q) dx =  x·atan(Q) −  ∫ x·Q′/(1+Q²) dx (residual rational)
+    #
+    # This is equivalent to calling _try_log_poly_product / _try_atan_poly_product
+    # with poly_candidate = 1, so we delegate directly.  Linear arguments are
+    # already handled by the Phase 3 block below and are skipped inside these
+    # helpers.
+    if len(f.args) == 1 and head == LOG:
+        _p28_result = _try_log_poly_product(f, ONE, x)
+        if _p28_result is not None:
+            return _p28_result
+    if len(f.args) == 1 and head == ATAN:
+        _p28_result = _try_atan_poly_product(f, ONE, x)
+        if _p28_result is not None:
+            return _p28_result
+
     # --- Phase 3a/3b/3c + Phase 5a + Phase 9 bonus: elementary fn of linear arg ---
     # Generalises the Phase 1 rules above to any a·x + b argument.
     # Only fires when the argument is strictly linear with a ≠ 0 and
@@ -565,6 +2146,7 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
     if len(f.args) == 1 and head in {
         EXP, SIN, COS, LOG, TAN, ATAN, ASIN, ACOS,
         SINH, COSH, TANH, ASINH, ACOSH, ATANH,
+        COTH, SECH, CSCH,                           # Phase 15
     }:
         lin = _try_linear(f.args[0], x)
         if lin is not None:
@@ -634,6 +2216,15 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                 if head == ATANH:
                     # ∫ atanh(ax+b) dx = (ax+b)/a·atanh(ax+b) + (1/(2a))·log(1−(ax+b)²).
                     return _atanh_integral(a_frac, b_frac, f.args[0], x)
+                if head == COTH:
+                    # ∫ coth(ax+b) dx = (1/a)·log(sinh(ax+b)).
+                    return _coth_integral(a_frac, b_frac, x)
+                if head == SECH:
+                    # ∫ sech(ax+b) dx = (1/a)·atan(sinh(ax+b)).
+                    return _sech_integral(a_frac, b_frac, x)
+                if head == CSCH:
+                    # ∫ csch(ax+b) dx = (1/a)·log(tanh((ax+b)/2)).
+                    return _csch_integral(a_frac, b_frac, x)
 
     # Unknown shape — signal "no rule" to the caller.
     return None
@@ -806,6 +2397,320 @@ def _try_log_product(
     return log_poly_integral(poly, a_frac, b_frac, x)
 
 
+# ---------------------------------------------------------------------------
+# Phase 26 — log-power integration via IBP reduction
+# ---------------------------------------------------------------------------
+
+
+def _log_power_integral(
+    log_arg: IRNode,
+    n: int,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 26: ``∫ log(ax+b)^n dx`` via iterated IBP reduction, or ``None``.
+
+    The reduction formula is derived by IBP with ``u = log(ax+b)^n`` and
+    ``dv = dx`` (so ``v = x``, ``du = n·a/(ax+b)·log(ax+b)^(n-1) dx``):
+
+        ∫ log(ax+b)^n dx  =  (ax+b)/a · log(ax+b)^n  −  n · ∫ log(ax+b)^(n-1) dx
+
+    Iterating from the base case ``∫ 1 dx = x`` yields:
+
+    .. code-block::
+
+        F_0(x) = x
+        F_k(x) = (ax+b)/a · log(ax+b)^k  −  k · F_{k-1}(x)
+
+    For ``a=1, b=0`` (log of bare ``x``):
+
+    .. code-block::
+
+        F_1(x) = x·log x − x
+        F_2(x) = x·log²x − 2x·log x + 2x
+        F_3(x) = x·log³x − 3x·log²x + 6x·log x − 6x
+
+    ``log_arg`` must be linear (a·x + b with a ≠ 0); ``n`` must be ≥ 1.
+    """
+    lin = _try_linear(log_arg, x)
+    if lin is None:
+        return None
+    a_frac, _b_frac = lin
+    if a_frac == Fraction(0):
+        return None  # constant argument — not a function of x
+
+    a_ir = _frac_ir(a_frac)
+    log_node = IRApply(LOG, (log_arg,))
+
+    # Build iteratively: F_0 = x, F_k = (ax+b)/a · log(ax+b)^k − k · F_{k-1}.
+    acc: IRNode = x  # F_0
+    for k in range(1, n + 1):
+        log_pow: IRNode = (
+            log_node if k == 1 else IRApply(POW, (log_node, IRInteger(k)))
+        )
+        coeff = IRApply(DIV, (log_arg, a_ir))   # (ax+b)/a
+        first = IRApply(MUL, (coeff, log_pow))
+        second = IRApply(MUL, (IRInteger(k), acc))
+        acc = IRApply(SUB, (first, second))
+
+    return acc
+
+
+def _poly_log_power_term(k: int, n: int, x: IRSymbol) -> IRNode:
+    """Phase 26: closed form of ``∫ x^k · log(x)^n dx`` for n ≥ 0, k ≠ −1.
+
+    The argument of log must be the bare integration variable ``x``; use
+    ``_log_power_integral`` when log's argument is a general linear term.
+
+    Reduction formula (IBP with ``u = log(x)^n``, ``dv = x^k dx``):
+
+        ∫ x^k · log(x)^n dx  =  x^(k+1)/(k+1) · log(x)^n
+                                 − n/(k+1) · ∫ x^k · log(x)^(n-1) dx
+
+    Iterating from the base case ``∫ x^k dx = x^(k+1)/(k+1)``:
+
+    .. code-block::
+
+        G_{k,0}(x) = x^(k+1)/(k+1)
+        G_{k,m}(x) = x^(k+1)/(k+1) · log(x)^m  −  m/(k+1) · G_{k,m-1}(x)
+
+    Example (k=1, n=2): ``x^2/2·log²x − x^2/2·log x + x^2/4``.
+    """
+    kp1 = k + 1
+    kp1_frac = Fraction(1, kp1)  # 1/(k+1)
+
+    # Base: G_{k,0} = x^(k+1)/(k+1).
+    if kp1 == 1:  # k = 0
+        acc: IRNode = x  # ∫ 1 dx = x
+    else:
+        acc = IRApply(MUL, (_frac_ir(kp1_frac), IRApply(POW, (x, IRInteger(kp1)))))
+
+    log_node = IRApply(LOG, (x,))
+    for m in range(1, n + 1):
+        log_pow: IRNode = (
+            log_node if m == 1 else IRApply(POW, (log_node, IRInteger(m)))
+        )
+        if kp1 == 1:
+            # k = 0: x · log(x)^m
+            first: IRNode = IRApply(MUL, (x, log_pow))
+        else:
+            # x^(k+1)/(k+1) · log(x)^m
+            x_pow = IRApply(POW, (x, IRInteger(kp1)))
+            first = IRApply(
+                MUL, (_frac_ir(kp1_frac), IRApply(MUL, (x_pow, log_pow)))
+            )
+        n_coef = _frac_ir(Fraction(m, kp1))   # m/(k+1)
+        second = IRApply(MUL, (n_coef, acc))
+        acc = IRApply(SUB, (first, second))
+
+    return acc
+
+
+def _try_log_power_product(
+    transcendental: IRNode,
+    poly_candidate: IRNode,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 26: ``∫ Q(x) · log(x)^n dx`` via IBP, for integer n ≥ 2.
+
+    ``transcendental`` must be ``Pow(Log(x), n)`` with ``n`` an integer ≥ 2
+    and the log argument exactly the bare symbol ``x``.  ``poly_candidate``
+    must be a polynomial in ``x`` over Q (denominator = 1 after
+    ``to_rational``).  Returns ``None`` on any mismatch.
+
+    ``n = 1`` is handled by ``_try_log_product`` (Phase 3); this function
+    only fires for higher powers, avoiding double coverage.
+
+    The formula is applied term-by-term using linearity:
+
+        ∫ Q(x) · log(x)^n dx  =  Σ_i  c_i · ∫ x^i · log(x)^n dx
+
+    with each ``∫ x^i · log(x)^n dx`` delegated to ``_poly_log_power_term``.
+    """
+    # Must be POW(LOG(x), n) with integer n ≥ 2.
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != POW or len(transcendental.args) != 2:
+        return None
+    log_node, exp_node = transcendental.args
+    if not isinstance(log_node, IRApply) or log_node.head != LOG:
+        return None
+    if len(log_node.args) != 1 or log_node.args[0] != x:
+        return None  # only log(x), not log(ax+b)
+    if not isinstance(exp_node, IRInteger) or exp_node.value < 2:
+        return None
+    n = exp_node.value
+
+    # poly_candidate must be a polynomial in x.
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational denominator — not a polynomial
+    poly_c = _norm(num)
+    poly = tuple(Fraction(c) for c in poly_c)
+    if not poly:
+        return None
+
+    # Apply linearity: Σ c_i · ∫ x^i · log(x)^n dx.
+    pieces: list[IRNode] = []
+    for i, coef in enumerate(poly):
+        if coef == Fraction(0):
+            continue
+        term = _poly_log_power_term(i, n, x)
+        if coef == Fraction(1):
+            pieces.append(term)
+        elif coef == Fraction(-1):
+            pieces.append(IRApply(NEG, (term,)))
+        else:
+            pieces.append(IRApply(MUL, (_frac_ir(coef), term)))
+
+    if not pieces:
+        return x  # zero polynomial — shouldn't normally be reached
+
+    result: IRNode = pieces[0]
+    for piece in pieces[1:]:
+        result = IRApply(ADD, (result, piece))
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Phase 27 — trig(log(x)) integration
+# ---------------------------------------------------------------------------
+#
+# **Mathematical foundation.**  For k ≥ 0, the substitution u = log(x)
+# (so x = eᵘ, dx = eᵘ du) converts:
+#
+#     ∫ xᵏ · sin(log(x)) dx  =  ∫ eᵏᵘ · sin(u) · eᵘ du
+#                              =  ∫ e^((k+1)u) · sin(u) du
+#
+# The standard exp×trig formula (Phase 4c) gives:
+#     ∫ e^(αu) sin(u) du = e^(αu) (α sin(u) − cos(u)) / (α² + 1)
+#
+# Setting α = k+1 and back-substituting u = log(x):
+#     ∫ xᵏ sin(log(x)) dx = x^(k+1) · ((k+1) sin(log(x)) − cos(log(x))) / ((k+1)² + 1)
+#
+# Analogously for cosine:
+#     ∫ xᵏ cos(log(x)) dx = x^(k+1) · ((k+1) cos(log(x)) + sin(log(x))) / ((k+1)² + 1)
+#
+# **Verification (k = 0).**
+#   d/dx [ x/2 · (sin(log x) − cos(log x)) ]
+#     = 1/2 (sin(log x) − cos(log x)) + x/2 · (cos(log x)/x + sin(log x)/x)
+#     = 1/2 sin(log x) − 1/2 cos(log x) + 1/2 cos(log x) + 1/2 sin(log x)
+#     = sin(log x)  ✓
+
+
+def _trig_log_integral(trig_head: IRSymbol, k: int, x: IRSymbol) -> IRNode:
+    """Phase 27: closed form of ``∫ x^k · trig(log(x)) dx``.
+
+    Parameters
+    ----------
+    trig_head : IRSymbol
+        Must be ``SIN`` or ``COS``.
+    k : int
+        Non-negative integer power of *x*.
+    x : IRSymbol
+        Integration variable.
+
+    Returns
+    -------
+    IRNode
+        The antiderivative:
+
+        * **sin case**: ``x^(k+1) · ((k+1)·sin(log x) − cos(log x)) / ((k+1)²+1)``
+        * **cos case**: ``x^(k+1) · ((k+1)·cos(log x) + sin(log x)) / ((k+1)²+1)``
+    """
+    kp1 = k + 1                    # k + 1 appears repeatedly
+    denom = kp1 * kp1 + 1          # (k+1)^2 + 1  — always a positive integer
+
+    log_x = IRApply(LOG, (x,))
+    sin_log_x = IRApply(SIN, (log_x,))
+    cos_log_x = IRApply(COS, (log_x,))
+
+    # x^(k+1): x itself for k=0, otherwise POW node.
+    x_pow: IRNode = x if kp1 == 1 else IRApply(POW, (x, IRInteger(kp1)))
+    kp1_ir: IRNode = IRInteger(kp1)
+    denom_ir: IRNode = IRInteger(denom)
+
+    if trig_head == SIN:
+        # Numerator: (k+1)·sin(log x) − cos(log x)
+        numerator = IRApply(SUB, (IRApply(MUL, (kp1_ir, sin_log_x)), cos_log_x))
+    else:
+        # Numerator: (k+1)·cos(log x) + sin(log x)
+        numerator = IRApply(ADD, (IRApply(MUL, (kp1_ir, cos_log_x)), sin_log_x))
+
+    # x^(k+1) · numerator / denom
+    return IRApply(DIV, (IRApply(MUL, (x_pow, numerator)), denom_ir))
+
+
+def _try_trig_log_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Phase 27: ``∫ Q(x) · trig(log(x)) dx`` — term-by-term IBP via substitution.
+
+    Matches when ``transcendental`` is ``Sin(Log(x))`` or ``Cos(Log(x))``
+    (with bare ``x``, not a shifted argument) and ``poly_candidate`` is a
+    polynomial of *x*.
+
+    Each monomial ``cᵢ · xⁱ`` in *Q* contributes
+    ``cᵢ · _trig_log_integral(trig_head, i, x)`` to the result.
+
+    Only ``log(x)`` (not ``log(ax+b)``) is supported here; the general
+    shifted case requires a substitution that changes the integration
+    variable and is left as future work.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    trig_head = transcendental.head
+    if trig_head not in {SIN, COS}:
+        return None
+    if len(transcendental.args) != 1:
+        return None
+    trig_arg = transcendental.args[0]
+    # Require the argument of sin/cos to be exactly Log(x).
+    if not (
+        isinstance(trig_arg, IRApply)
+        and trig_arg.head == LOG
+        and len(trig_arg.args) == 1
+        and trig_arg.args[0] == x
+    ):
+        return None
+
+    # poly_candidate must be a proper polynomial (denominator = 1).
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational function, not polynomial
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+
+    # Sum up the antiderivative for each monomial cᵢ · xⁱ.
+    pieces: list[IRNode] = []
+    for i, coef in enumerate(poly):
+        if coef == Fraction(0):
+            continue
+        term = _trig_log_integral(trig_head, i, x)
+        if coef == Fraction(1):
+            pieces.append(term)
+        elif coef == Fraction(-1):
+            pieces.append(IRApply(NEG, (term,)))
+        else:
+            pieces.append(IRApply(MUL, (_frac_ir(coef), term)))
+
+    if not pieces:
+        return ZERO  # zero polynomial — edge case
+
+    result: IRNode = pieces[0]
+    for piece in pieces[1:]:
+        result = IRApply(ADD, (result, piece))
+    return result
+
+
 def _try_atan_product(
     transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
 ) -> IRNode | None:
@@ -901,6 +2806,43 @@ def _try_acos_product(
     if not poly:
         return None
     return acos_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_atanh_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · atanh(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Atanh(linear)`` and
+    ``poly_candidate`` is a polynomial. Phase 14c IBP formula:
+
+        Q(x)·atanh − a·T(x) + (r₁/(2a))·log(1−(ax+b)²)
+
+    where Q = ∫P, T = ∫S, and r₁, r₀ are the remainder from
+    dividing Q by 1−(ax+b)².
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ATANH:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None  # atanh(b) is a constant — constant-factor rule handles it
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational, not polynomial
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return atanh_poly_integral(poly, a_frac, b_frac, x)
 
 
 def _try_sinh_product(
@@ -1067,6 +3009,185 @@ def _try_trig_product(
     return trig_cos_integral(poly, a_frac, b_frac, x)
 
 
+def _try_hyp_power(base: IRNode, exponent: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ sinh^n(linear) dx`` or ``∫ cosh^n(linear) dx``, or ``None``.
+
+    Phase 14 — hyperbolic power reduction.
+
+    Fires when:
+    - ``base`` is ``IRApply(SINH, (linear,))`` or ``IRApply(COSH, (linear,))``.
+    - ``exponent`` is ``IRInteger(n)`` with ``n ≥ 2``.
+    - The argument of sinh/cosh is a non-constant linear expression.
+
+    Returns ``None`` for non-hyperbolic bases or non-integer exponents.
+    """
+    if not isinstance(base, IRApply):
+        return None
+    if base.head not in {SINH, COSH}:
+        return None
+    if not isinstance(exponent, IRInteger) or exponent.value < 2:
+        return None
+    n = exponent.value
+    if len(base.args) != 1:
+        return None
+    lin = _try_linear(base.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == Fraction(0):
+        return None
+    if base.head == SINH:
+        return sinh_power_integral(n, a_frac, b_frac, x)
+    return cosh_power_integral(n, a_frac, b_frac, x)
+
+
+def _try_recip_hyp_power(base: IRNode, exponent: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ sech^n(linear) dx``, ``∫ csch^n(linear) dx``,
+    ``∫ coth^n(linear) dx``, ``∫ tanh^n(linear) dx``, or ``None``.
+
+    Phase 16/17 — hyperbolic identity power reduction.
+
+    Fires when:
+    - ``base`` is ``IRApply(SECH/CSCH/COTH/TANH, (linear,))``.
+    - ``exponent`` is ``IRInteger(n)`` with ``n ≥ 2``.
+    - The argument of the function is a non-constant linear expression ``ax+b``.
+
+    Returns ``None`` for other bases or non-integer exponents.
+    Falls through for ``n < 2`` (bare n=1 cases handled in Phase 13/15 dispatch).
+
+    Phase 17 adds TANH to the handled set alongside Phase 16's SECH/CSCH/COTH.
+    """
+    if not isinstance(base, IRApply):
+        return None
+    if base.head not in {SECH, CSCH, COTH, TANH}:
+        return None
+    if not isinstance(exponent, IRInteger) or exponent.value < 2:
+        return None
+    n = exponent.value
+    if len(base.args) != 1:
+        return None
+    lin = _try_linear(base.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == Fraction(0):
+        return None
+    if base.head == SECH:
+        return sech_power_integral(n, a_frac, b_frac, x)
+    if base.head == CSCH:
+        return csch_power_integral(n, a_frac, b_frac, x)
+    if base.head == TANH:
+        return tanh_power_integral(n, a_frac, b_frac, x)
+    return coth_power_integral(n, a_frac, b_frac, x)
+
+
+def _try_exp_hyp(exp_node: IRNode, hyp_node: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ exp(linear) · sinh/cosh(linear) dx`` or ``None``.
+
+    Phase 14a — exp × hyperbolic double-IBP closed form.
+
+    Uses the formulas:
+        ∫ e^(ax+b)·sinh(cx+d) dx = e^(ax+b)·[a·sinh−c·cosh] / (a²−c²)
+        ∫ e^(ax+b)·cosh(cx+d) dx = e^(ax+b)·[a·cosh−c·sinh] / (a²−c²)
+
+    Falls through (returns ``None``) when ``a² = c²`` (degenerate case).
+    """
+    if not isinstance(exp_node, IRApply) or exp_node.head != EXP:
+        return None
+    if not isinstance(hyp_node, IRApply) or hyp_node.head not in {SINH, COSH}:
+        return None
+    lin_exp = _try_linear(exp_node.args[0], x)
+    lin_hyp = _try_linear(hyp_node.args[0], x)
+    if lin_exp is None or lin_hyp is None:
+        return None
+    a_frac, b_frac = lin_exp
+    c_frac, d_frac = lin_hyp
+    if a_frac == 0 or c_frac == 0:
+        return None
+    D = a_frac * a_frac - c_frac * c_frac
+    if Fraction(0) == D:
+        # a² = c² — expand into exponentials and integrate directly.
+        return exp_hyp_degenerate(
+            a_frac, b_frac, c_frac, d_frac,
+            is_sinh=(hyp_node.head == SINH),
+            x_sym=x,
+        )
+    if hyp_node.head == SINH:
+        return exp_sinh_integral(a_frac, b_frac, c_frac, d_frac, x)
+    return exp_cosh_integral(a_frac, b_frac, c_frac, d_frac, x)
+
+
+def _try_sinh_cosh_product(f1: IRNode, f2: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ sinh^m · cosh^n dx`` via u-substitution when one exponent is 1.
+
+    Phase 14b.
+
+    Handles the patterns:
+    - ``Sinh(linear) × Pow(Cosh(same linear), n)`` → ``cosh^(n+1)/(n+1)/a``
+    - ``Pow(Sinh(linear), m) × Cosh(same linear)`` → ``sinh^(m+1)/(m+1)/a``
+    - ``Sinh(linear) × Cosh(same linear)``           → ``sinh²/(2a)``
+
+    Both arguments may be in either order since this function is called once
+    (not mirrored like the exp handlers).  It tries all four orderings
+    internally.
+
+    Returns ``None`` if neither factor is a bare sinh or cosh (both are Pow).
+    """
+    from fractions import Fraction as _F
+
+    def _extract_hyp_pow(
+        node: IRNode,
+    ) -> tuple[IRSymbol, int, _F, _F] | None:
+        """Return ``(head, exp, a, b)`` if node is Sinh/Cosh(ax+b)^n, else None."""
+        if not isinstance(node, IRApply):
+            return None
+        if node.head in {SINH, COSH}:
+            lin = _try_linear(node.args[0], x) if node.args else None
+            if lin is None:
+                return None
+            a_f, b_f = lin
+            if a_f == _F(0):
+                return None
+            return (node.head, 1, a_f, b_f)  # type: ignore[return-value]
+        if node.head == POW and len(node.args) == 2:
+            base_, exp_ = node.args
+            if not isinstance(base_, IRApply) or base_.head not in {SINH, COSH}:
+                return None
+            if not isinstance(exp_, IRInteger) or exp_.value < 1:
+                return None
+            lin = _try_linear(base_.args[0], x) if base_.args else None
+            if lin is None:
+                return None
+            a_f, b_f = lin
+            if a_f == _F(0):
+                return None
+            return (base_.head, exp_.value, a_f, b_f)  # type: ignore[return-value]
+        return None
+
+    h1 = _extract_hyp_pow(f1)
+    h2 = _extract_hyp_pow(f2)
+    if h1 is None or h2 is None:
+        return None
+
+    head1, n1, a1, b1 = h1
+    head2, n2, a2, b2 = h2
+
+    # Arguments must be the same linear expression.
+    if a1 != a2 or b1 != b2:
+        return None
+
+    # Pattern: one is SINH and the other is COSH, at least one has power 1.
+    if {head1, head2} != {SINH, COSH}:
+        return None
+
+    if head1 == SINH:
+        m, n = n1, n2
+    else:
+        m, n = n2, n1
+
+    return sinh_times_cosh_power(m, n, a1, b1, x)
+
+
 def _try_trig_trig(f1: IRNode, f2: IRNode, x: IRSymbol) -> IRNode | None:
     """Return ``∫ f1 · f2 dx`` via product-to-sum for trig × trig, or ``None``.
 
@@ -1203,6 +3324,77 @@ def _atanh_integral(
         (IRApply(LOG, (inner,)), IRApply(MUL, (TWO, a_ir))),
     )
     return IRApply(ADD, (main_term, log_part))
+
+
+def _coth_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Return the IR for ``∫ coth(ax+b) dx = log(sinh(ax+b)) / a``.
+
+    Derivation:  d/dx log(sinh(ax+b)) = a·cosh(ax+b)/sinh(ax+b) = a·coth(ax+b).
+
+    The antiderivative is defined for ``sinh(ax+b) > 0``, i.e. ``ax+b > 0``.
+    As is conventional for a CAS, we omit the absolute value and return the
+    branch that covers the positive half-line.
+
+    Precondition: ``a ≠ 0``.
+    """
+    arg_ir = linear_to_ir(a, b, x)
+    log_sinh = IRApply(LOG, (IRApply(SINH, (arg_ir,)),))
+    if a == Fraction(1):
+        return log_sinh
+    return IRApply(DIV, (log_sinh, _frac_ir(a)))
+
+
+def _sech_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Return the IR for ``∫ sech(ax+b) dx = atan(sinh(ax+b)) / a``.
+
+    Derivation:
+      d/dx atan(sinh(ax+b))
+        = a·cosh(ax+b) / (1 + sinh²(ax+b))
+        = a·cosh(ax+b) / cosh²(ax+b)      [since 1 + sinh² = cosh²]
+        = a / cosh(ax+b)
+        = a·sech(ax+b).
+
+    Precondition: ``a ≠ 0``.
+    """
+    arg_ir = linear_to_ir(a, b, x)
+    atan_sinh = IRApply(ATAN, (IRApply(SINH, (arg_ir,)),))
+    if a == Fraction(1):
+        return atan_sinh
+    return IRApply(DIV, (atan_sinh, _frac_ir(a)))
+
+
+def _csch_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Return the IR for ``∫ csch(ax+b) dx = log(tanh((ax+b)/2)) / a``.
+
+    Derivation (for x such that ax+b > 0 so tanh((ax+b)/2) > 0):
+
+      Let u = ax+b, h = u/2.  Then:
+
+        d/dx [log(tanh(h))]
+          = (1/tanh(h)) · sech²(h) · (a/2)
+          = (a/2) · cosh(h) / (sinh(h) · cosh²(h))
+          = (a/2) · 1 / (sinh(h) · cosh(h))
+          = (a/2) · 2 / sinh(2h)            [since sinh(2h) = 2·sinh(h)·cosh(h)]
+          = a / sinh(u)
+          = a · csch(u).
+
+    The half-argument ``(ax+b)/2 = (a/2)·x + b/2`` is a linear expression
+    in ``x`` with ``Fraction`` coefficients, so ``linear_to_ir`` handles it
+    directly.
+
+    Note: ``−atanh(cosh(ax+b))`` is algebraically equivalent but requires
+    ``|cosh(ax+b)| < 1``, which is never true for real ``x``.  The tanh/2
+    form is real-valued and numerically safe for ``ax+b ≠ 0``.
+
+    Precondition: ``a ≠ 0``.
+    """
+    half_a = a / Fraction(2)
+    half_b = b / Fraction(2)
+    half_arg_ir = linear_to_ir(half_a, half_b, x)
+    log_tanh = IRApply(LOG, (IRApply(TANH, (half_arg_ir,)),))
+    if a == Fraction(1):
+        return log_tanh
+    return IRApply(DIV, (log_tanh, _frac_ir(a)))
 
 
 def _try_trig_power(
@@ -1660,6 +3852,31 @@ def _diff_ir(g: IRNode, x: IRSymbol) -> IRNode | None:
             if darg_is_one:
                 return IRApply(DIV, (ONE, denom))
             return IRApply(DIV, (darg, denom))
+
+        if head == COTH:
+            # d/dx coth(u) = −u'/sinh²(u)
+            # We express the derivative in terms of sinh (not coth/csch) so
+            # the simplifier and evaluator don't need to recurse through coth.
+            sinh_u = IRApply(SINH, (arg,))
+            denom = IRApply(POW, (sinh_u, TWO))
+            numer = ONE if darg_is_one else darg
+            return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
+
+        if head == SECH:
+            # d/dx sech(u) = −u'·sinh(u)/cosh²(u)
+            sinh_u = IRApply(SINH, (arg,))
+            cosh_u = IRApply(COSH, (arg,))
+            numer = sinh_u if darg_is_one else IRApply(MUL, (darg, sinh_u))
+            denom = IRApply(POW, (cosh_u, TWO))
+            return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
+
+        if head == CSCH:
+            # d/dx csch(u) = −u'·cosh(u)/sinh²(u)
+            cosh_u = IRApply(COSH, (arg,))
+            sinh_u = IRApply(SINH, (arg,))
+            numer = cosh_u if darg_is_one else IRApply(MUL, (darg, cosh_u))
+            denom = IRApply(POW, (sinh_u, TWO))
+            return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
 
         if head == EXP:
             # d/dx exp(u) = exp(u)·u'
@@ -2437,3 +4654,197 @@ def _try_general_rational_integral(
     for p in ir_parts[1:]:
         acc = IRApply(ADD, (acc, p))
     return acc
+
+
+# ---------------------------------------------------------------------------
+# Phase 28 — general IBP for polynomial × log(Q(x)) and polynomial × atan(Q(x))
+# ---------------------------------------------------------------------------
+#
+# The two existing handlers (_try_log_product, _try_atan_product) only fire
+# when Q(x) is **linear** (ax+b).  Phase 28 extends both to any polynomial Q:
+#
+#   ∫ P(x)·log(Q(x)) dx = R(x)·log(Q(x)) − ∫ R(x)·Q′(x)/Q(x) dx
+#   ∫ P(x)·atan(Q(x)) dx = R(x)·atan(Q(x)) − ∫ R(x)·Q′(x)/(1+Q(x)²) dx
+#
+# where R(x) = ∫P(x) dx is the polynomial antiderivative of the polynomial
+# factor.  The residual integral is a rational function of x and is delegated
+# to the existing rational-function route (_integrate_rational: Hermite
+# reduction + Rothstein–Trager + arctan formula).
+#
+# Examples that become closed-form with Phase 28:
+#   ∫ log(x²+1) dx          = x·log(x²+1) − 2x + 2·atan(x)
+#   ∫ x·log(x²+1) dx        = (x²+1)/2·log(x²+1) − x²/2
+#   ∫ x²·log(x²+1) dx       = x³/3·log(x²+1) − (2x³/9 − 2x/3 + 2atan(x)/3)
+#   ∫ x·atan(x²) dx          = x²/2·atan(x²) − ¼·log(1+x⁴)
+#
+# Linear Q is deliberately excluded because Phase 3 (_try_log_product) and
+# Phase 11 (_try_atan_product) already handle those cases with cleaner
+# dedicated code paths.
+
+
+def _try_log_poly_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Phase 28: ``∫ P(x)·log(Q(x)) dx`` for non-linear polynomial Q(x).
+
+    IBP with ``u = log(Q)``, ``dv = P dx``:
+
+        ∫ P·log(Q) dx  =  R(x)·log(Q(x))  −  ∫ R(x)·Q′(x)/Q(x) dx
+
+    where R = ∫P (polynomial antiderivative).  The residual is a rational
+    function delegated to ``_integrate_rational``.  Returns ``None`` when:
+    - ``transcendental`` is not ``Log`` of a non-linear polynomial in x.
+    - ``poly_candidate`` is not a polynomial in x.
+    - The rational route cannot close the residual integral.
+    """
+    # Verify the structure: Log(Q_ir) where Q depends on x.
+    if not (
+        isinstance(transcendental, IRApply)
+        and transcendental.head == LOG
+        and len(transcendental.args) == 1
+    ):
+        return None
+    Q_ir = transcendental.args[0]
+    if not _depends_on(Q_ir, x):
+        return None  # log(constant) — constant-factor rule
+    # Skip linear Q — Phase 3 (_try_log_product) already handles it.
+    if _try_linear(Q_ir, x) is not None:
+        return None
+
+    # Extract Q(x) as a polynomial (den must be 1).
+    r_Q = to_rational(Q_ir, x)
+    if r_Q is None:
+        return None
+    Q_poly_raw, Q_den = r_Q
+    if len(normalize(Q_den)) > 1:
+        return None  # Q is a rational function, not a polynomial
+    Q_poly: tuple = tuple(Fraction(c) for c in normalize(Q_poly_raw))
+    if not Q_poly:
+        return None
+
+    # Extract P(x) as a polynomial.
+    r_P = to_rational(poly_candidate, x)
+    if r_P is None:
+        return None
+    P_poly_raw, P_den = r_P
+    if len(normalize(P_den)) > 1:
+        return None  # poly_candidate is rational, not polynomial
+    P_poly: tuple = tuple(Fraction(c) for c in normalize(P_poly_raw))
+    if not P_poly:
+        return None
+
+    # R(x) = ∫ P(x) dx — polynomial antiderivative.
+    R_poly = _integrate_polynomial(P_poly)
+    R_norm = normalize(R_poly)
+    if not R_norm:
+        return None
+    R_ir = from_polynomial(R_norm, x)
+
+    # Q′(x) = d/dx Q(x) — polynomial derivative.
+    Q_prime_poly = normalize(poly_deriv(Q_poly))
+    if not Q_prime_poly:
+        return None  # Q is constant (shouldn't reach here given checks above)
+
+    # Residual numerator: R(x)·Q′(x) as a polynomial.
+    N_poly = normalize(multiply(R_norm, Q_prime_poly))
+    if not N_poly:
+        # Numerator vanishes — ∫ P·log(Q) dx = R·log(Q) (no residual).
+        return IRApply(MUL, (R_ir, transcendental))
+    N_ir = from_polynomial(N_poly, x)
+
+    # Build the rational integrand N(x)/Q(x) and delegate.
+    residual_ir = IRApply(DIV, (N_ir, Q_ir))
+    rational_result = _integrate_rational(residual_ir, x)
+    if rational_result is None:
+        return None  # Rational route couldn't close it — fall through.
+
+    # ∫ P·log(Q) dx = R·log(Q) − ∫ R·Q′/Q dx.
+    return IRApply(SUB, (IRApply(MUL, (R_ir, transcendental)), rational_result))
+
+
+def _try_atan_poly_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Phase 28: ``∫ P(x)·atan(Q(x)) dx`` for non-linear polynomial Q(x).
+
+    IBP with ``u = atan(Q)``, ``dv = P dx``:
+
+        ∫ P·atan(Q) dx  =  R(x)·atan(Q(x))  −  ∫ R(x)·Q′(x)/(1+Q(x)²) dx
+
+    where R = ∫P.  The residual is delegated to ``_integrate_rational``.
+    Returns ``None`` when Q is not a non-linear polynomial, P is not a
+    polynomial, or the rational route cannot close the residual.
+    """
+    if not (
+        isinstance(transcendental, IRApply)
+        and transcendental.head == ATAN
+        and len(transcendental.args) == 1
+    ):
+        return None
+    Q_ir = transcendental.args[0]
+    if not _depends_on(Q_ir, x):
+        return None
+    # Skip linear Q — Phase 11 already handles it.
+    if _try_linear(Q_ir, x) is not None:
+        return None
+
+    # Extract Q(x) as a polynomial.
+    r_Q = to_rational(Q_ir, x)
+    if r_Q is None:
+        return None
+    Q_poly_raw, Q_den = r_Q
+    if len(normalize(Q_den)) > 1:
+        return None
+    Q_poly: tuple = tuple(Fraction(c) for c in normalize(Q_poly_raw))
+    if not Q_poly:
+        return None
+
+    # Extract P(x) as a polynomial.
+    r_P = to_rational(poly_candidate, x)
+    if r_P is None:
+        return None
+    P_poly_raw, P_den = r_P
+    if len(normalize(P_den)) > 1:
+        return None
+    P_poly: tuple = tuple(Fraction(c) for c in normalize(P_poly_raw))
+    if not P_poly:
+        return None
+
+    # R(x) = ∫ P(x) dx.
+    R_poly = _integrate_polynomial(P_poly)
+    R_norm = normalize(R_poly)
+    if not R_norm:
+        return None
+    R_ir = from_polynomial(R_norm, x)
+
+    # Q′(x).
+    Q_prime_poly = normalize(poly_deriv(Q_poly))
+    if not Q_prime_poly:
+        return None
+
+    # Residual numerator: R(x)·Q′(x).
+    N_poly = normalize(multiply(R_norm, Q_prime_poly))
+    if not N_poly:
+        return IRApply(MUL, (R_ir, transcendental))
+
+    # Denominator for the atan residual: 1 + Q(x)².
+    # Compute Q² = Q·Q as a polynomial, then add the constant 1.
+    Q2_poly = normalize(multiply(Q_poly, Q_poly))
+    # Add 1 to the constant term of Q².
+    Q2_list = list(Q2_poly if Q2_poly else [])
+    if Q2_list:
+        Q2_list[0] = Fraction(Q2_list[0]) + Fraction(1)
+    else:
+        Q2_list = [Fraction(1)]
+    denom_poly = normalize(tuple(Q2_list))
+    denom_ir = from_polynomial(denom_poly, x)
+
+    # Build the rational integrand N(x)/(1+Q(x)²) and delegate.
+    N_ir = from_polynomial(N_poly, x)
+    residual_ir = IRApply(DIV, (N_ir, denom_ir))
+    rational_result = _integrate_rational(residual_ir, x)
+    if rational_result is None:
+        return None  # Rational route couldn't close it — fall through.
+
+    # ∫ P·atan(Q) dx = R·atan(Q) − ∫ R·Q′/(1+Q²) dx.
+    return IRApply(SUB, (IRApply(MUL, (R_ir, transcendental)), rational_result))

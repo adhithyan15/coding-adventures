@@ -1,0 +1,8 @@
+{
+ "check_id": 3,
+ "idx": 1,
+ "slot": "covered_screening",
+ "claimed_value": true,
+ "scenario": "James is 52 years old and received a covered colorectal cancer screening billed at $600. The recommended age band for this screening under the plan is 45 to 75.",
+ "cited_span": "received a covered colorectal cancer screening"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 167,
+ "idx": 65,
+ "slot": "internship_hours",
+ "claimed_value": 1740,
+ "scenario": "An applicant reports completing 1,740 hours of supervised pharmacy internship over the past year and submits the hour log with the application.",
+ "cited_span": "completing 1,740 hours of supervised pharmacy internship over the past year"
+}

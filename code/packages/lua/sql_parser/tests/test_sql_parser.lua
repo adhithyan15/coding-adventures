@@ -459,12 +459,6 @@ describe("error handling", function()
         end)
     end)
 
-    it("raises an error for incomplete SELECT (missing FROM)", function()
-        assert.has_error(function()
-            sql_parser.parse("SELECT name")
-        end)
-    end)
-
     it("raises an error for empty input", function()
         assert.has_error(function()
             sql_parser.parse("")

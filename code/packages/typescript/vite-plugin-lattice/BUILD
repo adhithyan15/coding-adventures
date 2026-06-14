@@ -1,4 +1,5 @@
 cd ../directed-graph && npm install --quiet
+cd ../cli-builder && npm install --quiet
 cd ../grammar-tools && npm install --quiet
 cd ../lexer && npm install --quiet
 cd ../state-machine && npm install --quiet

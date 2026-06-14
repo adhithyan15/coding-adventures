@@ -6,6 +6,7 @@ pub const VERSION: &str = "0.1.0";
 
 use barcode_layout_1d::{Barcode1DRenderConfig, PaintBarcode1DOptions};
 use paint_instructions::{PaintScene, PixelContainer};
+use paint_vm_runtime::PaintRenderError;
 
 pub use barcode_layout_1d::{
     Barcode1DLayoutTarget, Barcode1DRenderConfig as RenderConfig,
@@ -67,9 +68,31 @@ pub fn current_backend() -> &'static str {
     {
         "metal"
     }
-    #[cfg(all(not(target_os = "windows"), not(target_vendor = "apple")))]
+    #[cfg(all(
+        not(target_os = "windows"),
+        not(target_vendor = "apple"),
+        any(
+            target_os = "linux",
+            target_os = "freebsd",
+            target_os = "openbsd",
+            target_os = "netbsd"
+        )
+    ))]
     {
-        "unavailable"
+        "cairo"
+    }
+    #[cfg(all(
+        not(target_os = "windows"),
+        not(target_vendor = "apple"),
+        not(any(
+            target_os = "linux",
+            target_os = "freebsd",
+            target_os = "openbsd",
+            target_os = "netbsd"
+        ))
+    ))]
+    {
+        "skia"
     }
 }
 
@@ -151,22 +174,143 @@ pub fn render_png_for_symbology(
     Ok(paint_codec_png::encode_png(&pixels))
 }
 
+/// Format a `PaintRenderError` as a human-readable `String`.
+///
+/// `PaintRenderError` does not implement `std::fmt::Display`; this helper
+/// performs the pattern match manually so call-sites stay concise.
+fn paint_error_to_string(error: PaintRenderError) -> String {
+    match error {
+        PaintRenderError::NoBackendsRegistered => "no paint backends registered".to_string(),
+        PaintRenderError::NoCompatibleBackend { missing, .. } => {
+            format!("no compatible backend: missing features {missing:?}")
+        }
+        PaintRenderError::BackendUnavailable { backend, reason } => {
+            format!("backend '{backend}' unavailable: {reason}")
+        }
+        PaintRenderError::RenderFailed { backend, message } => {
+            format!("render failed in backend '{backend}': {message}")
+        }
+    }
+}
+
 fn render_scene_to_pixels(scene: &PaintScene) -> Result<PixelContainer, String> {
     #[cfg(target_os = "windows")]
     {
         return Ok(paint_vm_direct2d::render(scene));
     }
+
     #[cfg(all(not(target_os = "windows"), target_vendor = "apple"))]
     {
         return Ok(paint_metal::render(scene));
     }
-    #[cfg(all(not(target_os = "windows"), not(target_vendor = "apple")))]
+
+    #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"))]
     {
-        let _ = scene;
-        Err(
-            "native barcode rendering is not wired on this platform yet; build_scene() is available, but pixel rendering awaits a paint backend"
-                .to_string(),
-        )
+        return paint_vm_cairo::render(scene).map_err(paint_error_to_string);
+    }
+
+    // Universal cross-platform fallback via skia-safe (CPU raster). This path
+    // is reached on exotic targets where none of the above cfg blocks apply.
+    #[allow(unreachable_code)]
+    paint_vm_skia::render(scene).map_err(paint_error_to_string)
+}
+
+/// Render barcode data to pixels using a named paint backend.
+///
+/// This is primarily useful for testing or for explicitly choosing a backend
+/// other than the platform default. Supported backend names:
+///
+/// - `"skia"` — Skia CPU raster (all platforms)
+/// - `"cairo"` — Cairo vector raster (macOS, Linux, BSD)
+/// - `"metal"` — Metal GPU (macOS only)
+/// - `"direct2d"` — Direct2D GPU (Windows only)
+///
+/// Returns `Err(String)` when the named backend is not available on the
+/// current platform. Never panics on a bad backend name.
+pub fn render_with_backend(
+    data: &str,
+    options: Option<&Options>,
+    backend: &str,
+) -> Result<PixelContainer, String> {
+    let scene = build_scene(data, options)?;
+    render_scene_with_backend(&scene, backend)
+}
+
+/// Like `render_with_backend` but takes a symbology name string instead of
+/// an `Options` struct.
+pub fn render_with_backend_for_symbology(
+    symbology: &str,
+    data: &str,
+    options: Option<&Options>,
+    backend: &str,
+) -> Result<PixelContainer, String> {
+    let scene = build_scene_for_symbology(symbology, data, options)?;
+    render_scene_with_backend(&scene, backend)
+}
+
+/// Render barcode data to a PNG byte vector using a named paint backend.
+///
+/// See `render_with_backend` for the list of supported backend names.
+pub fn render_png_with_backend(
+    data: &str,
+    options: Option<&Options>,
+    backend: &str,
+) -> Result<Vec<u8>, String> {
+    let pixels = render_with_backend(data, options, backend)?;
+    Ok(paint_codec_png::encode_png(&pixels))
+}
+
+fn render_scene_with_backend(scene: &PaintScene, backend: &str) -> Result<PixelContainer, String> {
+    match backend {
+        "skia" => paint_vm_skia::render(scene).map_err(paint_error_to_string),
+        "cairo" => {
+            #[cfg(any(
+                target_os = "linux",
+                target_os = "macos",
+                target_os = "freebsd",
+                target_os = "openbsd",
+                target_os = "netbsd"
+            ))]
+            {
+                paint_vm_cairo::render(scene).map_err(paint_error_to_string)
+            }
+            #[cfg(not(any(
+                target_os = "linux",
+                target_os = "macos",
+                target_os = "freebsd",
+                target_os = "openbsd",
+                target_os = "netbsd"
+            )))]
+            {
+                let _ = scene;
+                Err("Cairo backend is not available on this platform".to_string())
+            }
+        }
+        "metal" => {
+            #[cfg(target_vendor = "apple")]
+            {
+                Ok(paint_metal::render(scene))
+            }
+            #[cfg(not(target_vendor = "apple"))]
+            {
+                let _ = scene;
+                Err("Metal backend is only available on Apple platforms".to_string())
+            }
+        }
+        "direct2d" => {
+            #[cfg(target_os = "windows")]
+            {
+                Ok(paint_vm_direct2d::render(scene))
+            }
+            #[cfg(not(target_os = "windows"))]
+            {
+                let _ = scene;
+                Err("Direct2D backend is only available on Windows".to_string())
+            }
+        }
+        _ => Err(format!(
+            "unknown backend: '{backend}'. Use 'skia', 'cairo', 'metal', or 'direct2d'"
+        )),
     }
 }
 
@@ -291,10 +435,93 @@ mod tests {
         );
     }
 
-    #[cfg(all(not(target_os = "windows"), not(target_vendor = "apple")))]
+    /// Skia renders all six symbologies on every platform — it bundles its own
+    /// Skia C++ library so there are no system-level dependencies to install.
     #[test]
-    fn render_pixels_is_honest_when_backend_is_missing() {
-        let err = render_pixels("HELLO-123", None).unwrap_err();
-        assert!(err.contains("not wired"));
+    fn skia_renders_all_symbologies() {
+        let cases = [
+            (Symbology::Code39, "HELLO-123"),
+            (Symbology::Code128, "Hello 123"),
+            (Symbology::Codabar, "40156"),
+            (Symbology::Ean13, "4006381333931"),
+            (Symbology::Itf, "01234565"),
+            (Symbology::UpcA, "012345678905"),
+        ];
+        for (symbology, data) in cases {
+            let mut options = Options::default();
+            options.symbology = symbology;
+            let png = render_with_backend(data, Some(&options), "skia")
+                .map(|pixels| paint_codec_png::encode_png(&pixels))
+                .unwrap_or_else(|e| panic!("Skia render failed for {symbology:?}: {e}"));
+            assert!(
+                png.len() > 8,
+                "Expected PNG bytes for {symbology:?} but got {n} bytes",
+                n = png.len()
+            );
+            assert_eq!(
+                &png[0..4],
+                &[0x89, b'P', b'N', b'G'],
+                "Expected PNG magic for {symbology:?}"
+            );
+        }
+    }
+
+    /// Cairo renders all symbologies on macOS, Linux, and BSD where the
+    /// `cairo-rs` crate is compiled in.
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd"
+    ))]
+    #[test]
+    fn cairo_renders_all_symbologies() {
+        let cases = [
+            (Symbology::Code39, "HELLO-123"),
+            (Symbology::Code128, "Hello 123"),
+            (Symbology::Ean13, "4006381333931"),
+            (Symbology::Itf, "01234565"),
+            (Symbology::UpcA, "012345678905"),
+        ];
+        for (symbology, data) in cases {
+            let mut options = Options::default();
+            options.symbology = symbology;
+            let png = render_with_backend(data, Some(&options), "cairo")
+                .map(|pixels| paint_codec_png::encode_png(&pixels))
+                .unwrap_or_else(|e| panic!("Cairo render failed for {symbology:?}: {e}"));
+            assert!(
+                png.len() > 8,
+                "Expected Cairo PNG bytes for {symbology:?} but got {n} bytes",
+                n = png.len()
+            );
+            assert_eq!(
+                &png[0..4],
+                &[0x89, b'P', b'N', b'G'],
+                "Expected PNG magic for {symbology:?}"
+            );
+        }
+    }
+
+    /// The platform-default backend renders a complete, valid PNG. This test
+    /// runs on all platforms (macOS uses Metal, Linux uses Cairo, others use
+    /// Skia) and replaces the old Windows/Apple-only `render_png_returns_bytes`
+    /// smoke test for the non-platform-specific check.
+    #[test]
+    fn primary_backend_renders_png() {
+        let png = render_png("HELLO-123", None).unwrap();
+        assert!(png.len() > 8);
+        assert_eq!(
+            &png[0..8],
+            &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A]
+        );
+    }
+
+    /// Requesting an unknown backend returns a descriptive error and never panics.
+    #[test]
+    fn unknown_backend_returns_error() {
+        let err = render_with_backend("HELLO-123", None, "phantom").unwrap_err();
+        assert!(err.contains("unknown backend"));
+        assert!(err.contains("phantom"));
     }
 }

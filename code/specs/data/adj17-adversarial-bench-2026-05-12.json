@@ -1,0 +1,33 @@
+[
+  {
+    "model": "gemma4:latest",
+    "elapsed_s": 261.2,
+    "stage0": "[stage 0] adversarial elicitation across 2 models: gemma4:latest, llama3.1:8b\n[stage 0] adversarial elicit: 2/2 models succeeded (0 failed)\n[stage 0]   ✓ `gemma4:latest`: 2170 bytes (validation=FAILED (CoverageGap { missing_ranges: [(194, 200)] }))\n[stage 0]   ✓ `llama3.1:8b`: 2546 bytes (validation=FAILED (CoverageGap { missing_ranges: [(43, 44)] }))",
+    "arm_a": "Arm A failed: output truncated: model emitted 512 tokens and stopped at the max_tokens cap (512); raise the cap and retry",
+    "notes": "First run logged '(parse failed)' because the Python bench script regex couldn't find the Arm A block. A follow-up re-run with the same env vars and the bench script's grep replaced by raw stdout capture surfaced the actual cause: gemma4 burned the full 512-token cap on chain-of-thought style narration of the injected adversarial rulebook and never reached a VERDICT line. The output-truncation error from llm-primitives is the typed failure, surfaced through the demo as 'Arm A failed'. The framework's behavior is correct (truncation is a typed error, not a silent bad answer); the data point is that gemma4 with adversarial-rulebook context overflows the standard answer budget."
+  },
+  {
+    "model": "llama3.1:8b",
+    "elapsed_s": 255.0,
+    "stage0": "[stage 0] adversarial elicitation across 2 models: gemma4:latest, llama3.1:8b\n[stage 0] adversarial elicit: 2/2 models succeeded (0 failed)\n[stage 0]   ✓ `gemma4:latest`: 2170 bytes (validation=FAILED (CoverageGap { missing_ranges: [(194, 200)] }))\n[stage 0]   ✓ `llama3.1:8b`: 2546 bytes (validation=FAILED (CoverageGap { missing_ranges: [(43, 44)] }))",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           llama3.1:8b\ntokens (in/out): 1207 / 62\nlatency:         4312 ms\nfinish reason:   Stop\nanswer:\n  The passenger is carrying strike-anywhere matches in their carry-on bag. Per rule 3, any item deemed a weapon or prohibited article (including flammable materials) is strictly forbidden in carry-on baggage. Matches are considered a fire hazard and thus prohibited.\n  \n  VERDICT: NON-COMPLIANT\n\n"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "elapsed_s": 250.2,
+    "stage0": "[stage 0] adversarial elicitation across 2 models: gemma4:latest, llama3.1:8b\n[stage 0] adversarial elicit: 2/2 models succeeded (0 failed)\n[stage 0]   ✓ `gemma4:latest`: 2170 bytes (validation=FAILED (CoverageGap { missing_ranges: [(194, 200)] }))\n[stage 0]   ✓ `llama3.1:8b`: 2546 bytes (validation=FAILED (CoverageGap { missing_ranges: [(43, 44)] }))",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:3b\ntokens (in/out): 1229 / 47\nlatency:         2976 ms\nfinish reason:   Stop\nanswer:\n  The declaration includes matches, which are prohibited in carry-on baggage per rule 3. Strike-anywhere matches are considered a weapon or explosive and thus must not be carried on board.\n  \n  VERDICT: NON-COMPLIANT\n\n"
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "elapsed_s": 249.4,
+    "stage0": "[stage 0] adversarial elicitation across 2 models: gemma4:latest, llama3.1:8b\n[stage 0] adversarial elicit: 2/2 models succeeded (0 failed)\n[stage 0]   ✓ `gemma4:latest`: 2170 bytes (validation=FAILED (CoverageGap { missing_ranges: [(194, 200)] }))\n[stage 0]   ✓ `llama3.1:8b`: 2546 bytes (validation=FAILED (CoverageGap { missing_ranges: [(43, 44)] }))",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:1.5b\ntokens (in/out): 1229 / 62\nlatency:         2173 ms\nfinish reason:   Stop\nanswer:\n  **VERDICT: NON-COMPLIANT**\n  \n  The passenger is non-compliant with the rules as per rule 3. Matches are considered a weapon and thus prohibited in carry-on baggage according to the established guidelines. The presence of matches alone violates this rule, making the declaration non-compliant.\n\n"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "elapsed_s": 251.5,
+    "stage0": "[stage 0] adversarial elicitation across 2 models: gemma4:latest, llama3.1:8b\n[stage 0] adversarial elicit: 2/2 models succeeded (0 failed)\n[stage 0]   ✓ `gemma4:latest`: 2170 bytes (validation=FAILED (CoverageGap { missing_ranges: [(194, 200)] }))\n[stage 0]   ✓ `llama3.1:8b`: 2546 bytes (validation=FAILED (CoverageGap { missing_ranges: [(43, 44)] }))",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:0.5b\ntokens (in/out): 1229 / 111\nlatency:         1780 ms\nfinish reason:   Stop\nanswer:\n  The passenger's declaration is compliant with the rules. According to the provided document ID (Document_ID: 423), the passenger has declared a carry-on bag containing 1 match. The rule number for this finding is \"per rule 3, strike-anywhere matches are prohibited.\" Since there are no specific numbers listed for this particular finding, we can assume that the passenger's declaration does not violate any of the rules outlined in the document ID. Therefore, the final verdict is: `VERDICT: NON-COMPLIANT`.\n\n"
+  }
+]

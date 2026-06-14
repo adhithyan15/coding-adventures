@@ -1,0 +1,8 @@
+{
+ "check_id": 95,
+ "idx": 38,
+ "slot": "released_solely_through_earnings_call",
+ "claimed_value": true,
+ "scenario": "Quanta Devices held its quarterly earnings call to discuss results of operations. The call was a regularly scheduled, previously announced call, and Quanta had already furnished its earnings press release before the call. The only disclosure at issue is the results-of-operations information conveyed on that call.",
+ "cited_span": "The only disclosure at issue is the results-of-operations information conveyed on that call."
+}

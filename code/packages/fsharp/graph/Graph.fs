@@ -31,6 +31,9 @@ type WeightedEdge<'T when 'T : equality> =
         Weight: float
     }
 
+type GraphPropertyValue = obj
+type GraphPropertyBag = Dictionary<string, GraphPropertyValue>
+
 module internal NodeOrdering =
     // Hash-based containers do not preserve insertion order. We sort by a
     // canonical textual key so examples and tests stay deterministic.
@@ -73,6 +76,64 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
     let nodeList = ResizeArray<'T>()
     let nodeIndex = Dictionary<'T, int>()
     let matrix = ResizeArray<ResizeArray<float option>>()
+    let graphProperties = Dictionary<string, GraphPropertyValue>(StringComparer.Ordinal)
+    let nodeProperties = Dictionary<'T, GraphPropertyBag>()
+    let edgeProperties = Dictionary<string, GraphPropertyBag>(StringComparer.Ordinal)
+
+    let copyPropertyBag (properties: GraphPropertyBag) =
+        let result = GraphPropertyBag(StringComparer.Ordinal)
+        for KeyValue(key, value) in properties do
+            result.[key] <- value
+        result
+
+    let mergePropertyBag (target: GraphPropertyBag) (properties: IDictionary<string, GraphPropertyValue> option) =
+        match properties with
+        | Some values ->
+            for KeyValue(key, value) in values do
+                target.[key] <- value
+        | None -> ()
+
+    let nodePropertyBag node =
+        match nodeProperties.TryGetValue(node) with
+        | true, properties -> properties
+        | _ ->
+            let properties = GraphPropertyBag(StringComparer.Ordinal)
+            nodeProperties.[node] <- properties
+            properties
+
+    let edgePropertyBag left right =
+        let key = NodeOrdering.edgeKey left right
+        match edgeProperties.TryGetValue(key) with
+        | true, properties -> properties
+        | _ ->
+            let properties = GraphPropertyBag(StringComparer.Ordinal)
+            edgeProperties.[key] <- properties
+            properties
+
+    let setEdgeWeight left right weight =
+        if representation = GraphRepr.AdjacencyList then
+            adjacency.[left].[right] <- weight
+            adjacency.[right].[left] <- weight
+        else
+            let leftIndex = nodeIndex.[left]
+            let rightIndex = nodeIndex.[right]
+            matrix.[leftIndex].[rightIndex] <- Some weight
+            matrix.[rightIndex].[leftIndex] <- Some weight
+
+    let tryNumeric (value: obj) =
+        match value with
+        | :? byte as value -> Some(float value)
+        | :? sbyte as value -> Some(float value)
+        | :? int16 as value -> Some(float value)
+        | :? uint16 as value -> Some(float value)
+        | :? int as value -> Some(float value)
+        | :? uint32 as value -> Some(float value)
+        | :? int64 as value -> Some(float value)
+        | :? uint64 as value -> Some(float value)
+        | :? single as value -> Some(float value)
+        | :? double as value -> Some(value)
+        | :? decimal as value -> Some(float value)
+        | _ -> None
 
     member _.Representation = representation
 
@@ -82,11 +143,12 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
         else
             nodeList.Count
 
-    member _.AddNode(node: 'T) =
+    member _.AddNode(node: 'T, ?properties: IDictionary<string, GraphPropertyValue>) =
         if representation = GraphRepr.AdjacencyList then
             // In list mode, a node exists once it has an empty neighbor map.
             if not (adjacency.ContainsKey(node)) then
                 adjacency.[node] <- Dictionary<'T, float>()
+            mergePropertyBag (nodePropertyBag node) properties
         else if not (nodeIndex.ContainsKey(node)) then
             // In matrix mode we must grow the matrix in both dimensions.
             let index = nodeList.Count
@@ -100,6 +162,9 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
             for _ in 0 .. index do
                 newRow.Add(None)
             matrix.Add(newRow)
+            mergePropertyBag (nodePropertyBag node) properties
+        else
+            mergePropertyBag (nodePropertyBag node) properties
 
     member _.RemoveNode(node: 'T) =
         if representation = GraphRepr.AdjacencyList then
@@ -107,12 +172,17 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
             | true, neighbors ->
                 for KeyValue(neighbor, _) in neighbors do
                     adjacency.[neighbor].Remove(node) |> ignore
+                    edgeProperties.Remove(NodeOrdering.edgeKey node neighbor) |> ignore
                 adjacency.Remove(node) |> ignore
+                nodeProperties.Remove(node) |> ignore
             | _ ->
                 raise (KeyNotFoundException(sprintf "Node not found: %A" node))
         else
             match nodeIndex.TryGetValue(node) with
             | true, index ->
+                for other in nodeList do
+                    edgeProperties.Remove(NodeOrdering.edgeKey node other) |> ignore
+                nodeProperties.Remove(node) |> ignore
                 nodeIndex.Remove(node) |> ignore
                 nodeList.RemoveAt(index)
                 matrix.RemoveAt(index)
@@ -135,7 +205,7 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
         else
             nodeList |> Seq.toList |> NodeOrdering.orderNodes
 
-    member this.AddEdge(left: 'T, right: 'T, ?weight: float) =
+    member this.AddEdge(left: 'T, right: 'T, ?weight: float, ?properties: IDictionary<string, GraphPropertyValue>) =
         let edgeWeight = defaultArg weight 1.0
         this.AddNode(left)
         this.AddNode(right)
@@ -149,12 +219,17 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
             matrix.[leftIndex].[rightIndex] <- Some edgeWeight
             matrix.[rightIndex].[leftIndex] <- Some edgeWeight
 
+        let edgeBag = edgePropertyBag left right
+        mergePropertyBag edgeBag properties
+        edgeBag.["weight"] <- box edgeWeight
+
     member _.RemoveEdge(left: 'T, right: 'T) =
         if representation = GraphRepr.AdjacencyList then
             match adjacency.TryGetValue(left), adjacency.TryGetValue(right) with
             | (true, leftNeighbors), (true, rightNeighbors) when leftNeighbors.ContainsKey(right) ->
                 leftNeighbors.Remove(right) |> ignore
                 rightNeighbors.Remove(left) |> ignore
+                edgeProperties.Remove(NodeOrdering.edgeKey left right) |> ignore
             | _ ->
                 raise (KeyNotFoundException(sprintf "Edge not found: %A -- %A" left right))
         else
@@ -162,6 +237,7 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
             | (true, leftIndex), (true, rightIndex) when matrix.[leftIndex].[rightIndex].IsSome ->
                 matrix.[leftIndex].[rightIndex] <- None
                 matrix.[rightIndex].[leftIndex] <- None
+                edgeProperties.Remove(NodeOrdering.edgeKey left right) |> ignore
             | _ ->
                 raise (KeyNotFoundException(sprintf "Edge not found: %A -- %A" left right))
 
@@ -262,6 +338,58 @@ type Graph<'T when 'T : equality>(?repr: GraphRepr) =
         result
 
     member this.Degree(node: 'T) = this.Neighbors(node).Length
+
+    member _.GraphProperties() = copyPropertyBag graphProperties
+
+    member _.SetGraphProperty(key: string, value: GraphPropertyValue) =
+        graphProperties.[key] <- value
+
+    member _.RemoveGraphProperty(key: string) =
+        graphProperties.Remove(key) |> ignore
+
+    member this.NodeProperties(node: 'T) =
+        if not (this.HasNode(node)) then
+            raise (KeyNotFoundException(sprintf "Node not found: %A" node))
+        nodePropertyBag node |> copyPropertyBag
+
+    member this.SetNodeProperty(node: 'T, key: string, value: GraphPropertyValue) =
+        if not (this.HasNode(node)) then
+            raise (KeyNotFoundException(sprintf "Node not found: %A" node))
+        (nodePropertyBag node).[key] <- value
+
+    member this.RemoveNodeProperty(node: 'T, key: string) =
+        if not (this.HasNode(node)) then
+            raise (KeyNotFoundException(sprintf "Node not found: %A" node))
+        (nodePropertyBag node).Remove(key) |> ignore
+
+    member this.EdgeProperties(left: 'T, right: 'T) =
+        if not (this.HasEdge(left, right)) then
+            raise (KeyNotFoundException(sprintf "Edge not found: %A -- %A" left right))
+        let key = NodeOrdering.edgeKey left right
+        let properties =
+            match edgeProperties.TryGetValue(key) with
+            | true, values -> copyPropertyBag values
+            | _ -> GraphPropertyBag(StringComparer.Ordinal)
+        properties.["weight"] <- box (this.EdgeWeight(left, right))
+        properties
+
+    member this.SetEdgeProperty(left: 'T, right: 'T, key: string, value: GraphPropertyValue) =
+        if not (this.HasEdge(left, right)) then
+            raise (KeyNotFoundException(sprintf "Edge not found: %A -- %A" left right))
+        if key = "weight" then
+            match tryNumeric value with
+            | Some weight -> setEdgeWeight left right weight
+            | None -> raise (ArgumentException("Edge property 'weight' must be numeric.", nameof value))
+        (edgePropertyBag left right).[key] <- value
+
+    member this.RemoveEdgeProperty(left: 'T, right: 'T, key: string) =
+        if not (this.HasEdge(left, right)) then
+            raise (KeyNotFoundException(sprintf "Edge not found: %A -- %A" left right))
+        if key = "weight" then
+            setEdgeWeight left right 1.0
+            (edgePropertyBag left right).["weight"] <- box 1.0
+        else
+            (edgePropertyBag left right).Remove(key) |> ignore
 
     override this.ToString() =
         sprintf "Graph(nodes=%d, edges=%d, repr=%O)" this.Size (this.Edges().Length) this.Representation

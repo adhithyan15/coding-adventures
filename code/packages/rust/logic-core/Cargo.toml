@@ -1,0 +1,7 @@
+[package]
+name = "logic-core"
+version = "0.1.0"
+edition = "2021"
+description = "Terms, logic variables, substitutions, and unification — the semantic core of a logic VM."
+
+[dependencies]

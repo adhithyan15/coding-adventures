@@ -1,5 +1,692 @@
 # Changelog
 
+## [0.43.0] - 2026-05-23
+
+### Added
+
+- ``_expand_returning_wildcards()`` helper used by the INSERT,
+  UPDATE, and DELETE planners.  Walks the RETURNING list and
+  replaces every :class:`Wildcard` entry with one
+  ``Column(table, col)`` per table column in declaration order.
+  Required because the codegen rejects Wildcards in expression
+  position; expansion must happen before resolution.
+
+## [0.42.0] - 2026-05-23
+
+### Added
+
+- ``TableRef`` (AST) and ``Scan`` (plan node) gain ``index_hint:
+  str | None`` and ``not_indexed: bool`` fields carrying SQLite's
+  ``INDEXED BY`` / ``NOT INDEXED`` query hints from FROM through to
+  the optimizer.
+- ``_try_index_scan`` honours both hints: ``not_indexed=True``
+  short-circuits to a full scan; ``index_hint=<name>`` filters
+  candidate indexes to just the named one and raises
+  ``IndexNotFound`` if no such index exists on the table.
+- New error class ``IndexNotFound`` in ``sql_planner.errors``.
+
+## [0.41.0] - 2026-05-23
+
+### Added
+
+- ``CreateTableStmt`` (AST) and ``CreateTable`` (plan node) gained a
+  ``strict: bool = False`` field carrying SQLite's STRICT trailing
+  table-option through the plan layer.  Forwarded to the codegen IR and
+  ultimately to ``Backend.create_table(strict=...)``.
+
+## [0.40.0] - 2026-05-23
+
+### Added
+
+- ``AlterTableStmt`` and the plan-side ``AlterTable`` both gained
+  three new optional fields — ``rename_to``, ``rename_column``, and
+  ``drop_column`` — alongside the existing ``column`` field.  Exactly
+  one is non-None per instance; the codegen forwards whichever is
+  set.  The previous shape (only ``column``) is preserved when ADD
+  is used, so no breakage for callers that already construct
+  AlterTable nodes.
+- ``_plan_alter_table`` propagates all four optional fields from
+  the AST to the plan node.
+
+## [0.39.0] - 2026-05-23
+
+### Added
+
+- **Implicit COLLATE propagation** from a column's declared collation
+  into comparison operators referencing that column.  Mirrors SQLite::
+
+      CREATE TABLE users(email TEXT COLLATE NOCASE);
+      SELECT * FROM users WHERE email = 'Adhithya@example.com';
+      -- ↑ implicitly NOCASE — case-insensitive match
+
+  Implementation: new ``_propagate_column_collation`` pass runs after
+  ``_resolve`` on WHERE / HAVING / UPDATE-WHERE / DELETE-WHERE
+  predicates.  For each ``BinaryExpr`` comparison whose operand is a
+  resolved ``Column`` with a declared collation (looked up via
+  ``SchemaProvider.column_collation`` introduced in 0.38), both
+  operands get wrapped in the matching scalar function
+  (``lower()`` for NOCASE, ``rtrim()`` for RTRIM).  ``Between``
+  predicates propagate the same way (collation flows to all three
+  operands).
+
+- Known limitations:
+  - Explicit ``COLLATE BINARY`` postfix does NOT override a
+    column-declared NOCASE (because the explicit-BINARY postfix
+    becomes an identity transform at the adapter, leaving no marker
+    for this pass to recognise).  Override with ``COLLATE NOCASE``
+    or ``COLLATE RTRIM`` instead — those work as expected.
+  - HAVING clauses don't propagate column collation through GROUP BY
+    (the column reference there is to the grouped value, not the
+    underlying table column).  Use explicit ``COLLATE NOCASE`` on
+    the HAVING.
+
+## [0.38.0] - 2026-05-23
+
+### Added
+
+- ``_resolve_order_key`` consults ``schema.column_collation(table,
+  column)`` when an ORDER BY references a column without an explicit
+  ``COLLATE`` override.  This lets ``CREATE TABLE t(name TEXT COLLATE
+  NOCASE); SELECT * FROM t ORDER BY name`` sort case-insensitively
+  without the user repeating the COLLATE clause on every query —
+  matching SQLite.  Lookup is via ``getattr(schema, 'column_collation',
+  None)`` so minimal schema providers (e.g. ``InMemorySchemaProvider``
+  used in unit tests) that don't expose the method are silently
+  treated as "no declared collation".
+
+## [0.37.0] - 2026-05-22
+
+### Added
+
+- ``SortKey.collation: str | None`` on both the AST
+  (``sql_planner.ast.SortKey``) and the plan
+  (``sql_planner.plan.SortKey``).  Carries SQLite's ``COLLATE name``
+  clause through to the codegen.  ``None`` means BINARY (default).
+- Planner threads ``collation`` from AST → plan SortKey unchanged.
+
+## [0.36.0] - 2026-05-21
+
+### Added
+
+- Five new bitwise operator variants in the expression AST so plans can
+  represent SQLite's bitwise operators end-to-end:
+  - `BinaryOp.BIT_AND` (`&`), `BinaryOp.BIT_OR` (`|`),
+    `BinaryOp.BIT_SHL` (`<<`), `BinaryOp.BIT_SHR` (`>>`).
+  - `UnaryOp.BIT_NOT` (`~`).
+
+  Plans built by upstream code continue to compare/hash identically;
+  callers that pattern-match on `BinaryOp`/`UnaryOp` should add cases
+  for the new variants (the match is non-exhaustive otherwise).
+
+## [0.35.0] - 2026-05-21
+
+### Changed
+
+- **``DerivedTableRef.alias`` is now ``str | None``** — SQLite allows
+  unaliased derived tables (``SELECT * FROM (SELECT 1)``) and the
+  planner now accepts the absent alias.  When ``alias is None`` the
+  planner synthesises a unique sentinel name of the form
+  ``<derived #hex>`` for scope/cursor registration.  The sentinel
+  starts with ``<`` so it can never collide with a user-supplied
+  identifier (which must be ASCII alphanumerics + underscore).
+
+## [0.34.0] - 2026-05-21
+
+### Added
+
+- **Compound queries (UNION / INTERSECT / EXCEPT) as derived tables.**
+  ``DerivedTableRef.select`` is widened from ``SelectStmt`` to
+  ``SelectStmt | UnionStmt | IntersectStmt | ExceptStmt`` and a new
+  ``_plan_derived_inner`` helper dispatches by statement type so the
+  inner of a ``(query) AS alias`` source can be any of the four
+  query-producing statement forms — matching SQLite.
+  ``_output_columns`` and ``_source_columns`` learn to descend through
+  ``Union`` / ``Intersect`` / ``Except`` nodes, inheriting column
+  names from the left side per SQLite's documented rule.
+
+## [0.33.0] - 2026-05-19
+
+### Fixed
+
+- **``SELECT * ORDER BY N`` now accepts N greater than the number of
+  *unexpanded* SELECT items** (``planner._resolve_order_key``).
+  Previously the validator compared the ordinal against
+  ``len(resolved_items)``, which counted a Wildcard as a single item.
+  So ``SELECT * ORDER BY 2`` fell through to the column-name
+  resolution path, set ``column=""``, and the VM blew up with
+  ``ValueError: tuple.index(x): x not in tuple``.
+
+  The resolver now accepts any ``ordinal ≥ 1`` when at least one
+  SELECT item is a Wildcard, sets ``positional_index = ordinal - 1``
+  directly, and lets the VM use position-based ``row[N-1]`` lookup.
+  Out-of-range indices error out at runtime, matching SQLite.
+
+## [0.32.0] - 2026-05-19
+
+### Added
+
+- **`UpsertClause.where` (AST) and `UpsertAction.where` (Plan)** —
+  optional `Expr | None` field carrying the SQLite conditional-upsert
+  predicate from ``ON CONFLICT … DO UPDATE SET … WHERE pred``.  The
+  resolver in `planner._resolve_upsert` walks the predicate with the
+  same scope used for assignment RHS values (existing-row table cols +
+  ExcludedColumn pass-through) so bare column names and ``EXCLUDED.col``
+  both resolve correctly.
+
+## [0.31.0] - 2026-05-17
+
+### Added
+
+- **`Like.escape` and `NotLike.escape` fields** (`expr.py`) — optional
+  `str | None` field defaulting to `None`.  When set, holds the
+  single-character escape used by the `LIKE … ESCAPE 'c'` clause.  The
+  scope-resolution case in `planner.py` propagates the field through.
+
+## [0.30.0] - 2026-05-15
+
+### Added
+
+- **`SortKey.positional_index`** (`plan.py`) — New optional `int | None` field
+  (default `None`) on `SortKey`.  When set to a 0-based integer it means "sort
+  by the output column at this position" — used for `ORDER BY N` positional
+  references and `ORDER BY alias` where the alias resolves to a computed
+  expression.  The codegen uses this to emit `SortKey.column_idx` in the IR,
+  enabling index-based column lookup instead of name-based lookup in the VM.
+
+### Fixed
+
+- **`ORDER BY N` positional sort** (`planner.py`) — `ORDER BY 1`, `ORDER BY 2`,
+  etc. now correctly set `positional_index` on the resolved `SortKey`.  Without
+  this, all computed-expression columns share the display name `"?"` and
+  `ORDER BY 2` would silently sort by column 0 (the first `"?"` column).
+
+- **`ORDER BY alias_name` for computed expressions** (`planner.py`) — Queries
+  such as `SELECT a+b*2 AS v4 FROM t ORDER BY v4` previously crashed with
+  `InternalError: ValueError: tuple.index(x): x not in tuple` because alias
+  substitution replaced `v4` with the underlying `BinaryExpr`, whose display
+  name is `"?"`.
+
+  The fix: when the ORDER BY expression is a bare `Column(table=None, col=name)`
+  that matches a SELECT-list alias, `_resolve_order_key` treats it identically
+  to a positional reference — it looks up the 0-based index of the aliased
+  SELECT item and records that as `positional_index`.  At runtime the VM uses
+  index-based lookup (`row[idx]`) which is both correct and avoids the name
+  collision for computed columns.
+
+  SQL precedence: a bare name in `ORDER BY` matches a SELECT-list alias before
+  a table column (SQLite-compatible behaviour).
+
+## [0.29.0] - 2026-05-14
+
+### Added
+
+- **`AggregateExpr.filter_expr`** (`expr.py`) — New optional `Expr | None` field
+  (default `None`) on `AggregateExpr` that carries the predicate from a
+  `FILTER (WHERE …)` clause.  When non-`None`, rows for which the predicate
+  evaluates to `False` or `NULL` are skipped before the accumulator is updated.
+- **`AggregateItem.filter_expr`** (`plan.py`) — Matching field on the
+  `AggregateItem` plan node so that the codegen compiler can emit conditional
+  skip logic per aggregate.
+- **`filter_expr` resolution in `_resolve_expr`** (`planner.py`) — Column-name
+  resolution (scope look-up, outer-scope promotion) is applied to the filter
+  expression at the same point as the aggregate argument.
+- **`filter_expr` in deduplication key** (`_collect_aggregates`, `planner.py`) —
+  Two aggregates that differ only in their filter expression are now treated as
+  distinct plan nodes, each with an independent accumulator slot.
+
+## [0.28.0] - 2026-05-14
+
+### Added
+
+- **`AggFunc.JSON_GROUP_ARRAY` / `AggFunc.JSON_GROUP_OBJECT`** (`expr.py`) —
+  Two new aggregate function enum values for JSON aggregation.  `JSON_GROUP_ARRAY`
+  accumulates non-NULL values into a JSON array; `JSON_GROUP_OBJECT` builds a
+  JSON object from (key, value) pairs.
+- **`AggregateExpr.key_arg`** (`expr.py`) — New optional `FuncArg | None` field
+  on `AggregateExpr` that holds the key expression for `JSON_GROUP_OBJECT`.  This
+  allows the planner to carry the key expression through the plan tree to the
+  codegen without changing the existing `arg` semantics.
+- **`AggregateItem.key_arg`** (`plan.py`) — Matching field on the `AggregateItem`
+  plan node so the compiler has access to the key expression when emitting
+  `UpdateAgg` instructions for `JSON_GROUP_OBJECT`.
+- Column-resolution support for `key_arg` in `_resolve_expr` (`planner.py`) so
+  the key expression is correctly disambiguated during planning.
+
+## [0.27.0] - 2026-05-13
+
+### Added
+
+- **`AggFunc.TOTAL`** (`expr.py`) — Added `TOTAL = "TOTAL"` to the `AggFunc`
+  enum in the SQL planner.  The adapter (`mini_sqlite/adapter.py`) maps the
+  SQL name `TOTAL` to this enum value, allowing `TOTAL(col)` expressions to
+  be planned as `AggregateExpr(func=AggFunc.TOTAL, …)`.
+
+## [0.26.0] - 2026-05-13
+
+### Added
+
+- **`FrameBound` dataclass** (`plan.py`) — represents one endpoint of a window
+  frame: `UNBOUNDED_PRECEDING`, `PRECEDING`, `CURRENT_ROW`, `FOLLOWING`, or
+  `UNBOUNDED_FOLLOWING`.  The optional `offset` field carries `N` for `N
+  PRECEDING` / `N FOLLOWING`.
+
+- **`WinFrame` dataclass** (`plan.py`) — represents a full window frame clause
+  (`ROWS | RANGE | GROUPS  BETWEEN start AND end`).  Both types are exported
+  from `sql_planner` and re-exported by `sql_codegen.ir` so that all layers
+  share the same representation.
+
+- **`WindowFuncSpec.frame`** (`plan.py`) — optional `WinFrame` field added to
+  `WindowFuncSpec`.  `None` means "use the SQL-standard default based on
+  ORDER BY presence".  The planner passes the value through unchanged from the
+  adapter.
+
+- **`WindowFuncExpr.frame`** (`expr.py`) — matching `frame` field on the
+  expression-level `WindowFuncExpr`.  The planner's `_resolve` case preserves
+  the frame when resolving column references.
+
+## [0.25.0] - 2026-05-13
+
+### Added
+
+- **`IS_DISTINCT_FROM` and `IS_NOT_DISTINCT_FROM` binary operators** (`expr.py`) —
+  two new `BinaryOp` enum values represent the SQL:1999 NULL-safe equality
+  operators.  They are propagated from the parser tree through the planner without
+  special-casing, appearing in the output plan as `BinaryExpr` nodes with the new
+  operators.
+
+### Fixed
+
+- **Aggregate aliases now resolve in HAVING and ORDER BY** (`planner.py`) — when a
+  SELECT list assigns an alias to an expression (e.g. `SUM(amount) AS total`),
+  referring to that alias in HAVING (`HAVING total > 100`) or ORDER BY
+  (`ORDER BY total DESC`) previously raised a `ColumnNotFound` error because the
+  alias was not in scope during expression resolution.
+
+  The fix introduces `_substitute_aliases(expr, aliases)` — called in `_select`
+  before resolving HAVING and ORDER BY expressions — which walks the expression
+  tree and replaces any `ColumnRef` whose name matches a SELECT alias with the
+  alias's source expression.  After substitution, the resolved expression uses the
+  aggregate slot name rather than the user-facing alias, which the planner can
+  always resolve.
+
+## [0.24.0] - 2026-05-12
+
+### Fixed
+
+- **`_collect_aggregates` deduplication** (`planner.py`) — when the same
+  aggregate expression (e.g. `SUM(val)`) appeared in *both* the SELECT list and
+  the HAVING predicate, the function previously created two separate
+  `AggregateItem` entries (each with a distinct `_agg_N` alias).  The codegen
+  layer then emitted *two* `EmitColumn` calls for the same value, producing an
+  extra spurious column in every grouped query that shared an aggregate between
+  SELECT and HAVING.
+
+  The fix changes `seen` from a `list` to a `dict` keyed by
+  `(func, arg, distinct, separator)`.  Duplicate occurrences of the same
+  aggregate expression reuse the existing entry rather than creating a new one.
+  The slot alias assigned at first encounter is preserved, so all downstream
+  references (HAVING predicate, ORDER BY) automatically resolve to the same
+  slot.
+
+### Tests
+
+- Added `TestHavingDeduplication` class in
+  `tests/test_planner_aggregate.py` with three regression cases:
+  - Same aggregate in SELECT + HAVING → exactly one aggregate slot
+  - Two *different* aggregates → each gets its own slot (no over-dedup)
+  - Aggregate only in HAVING → still creates exactly one slot
+
+## [0.23.0] - 2026-05-12
+
+### Added
+
+- **`RowIdRef` expression node** (`expr.py`) — a new `Expr` variant that
+  represents a reference to the implicit rowid pseudo-column.  `RowIdRef(table=t)`
+  is resolved at planning time and carries the resolved table alias so that the
+  codegen layer knows which cursor to call `.rowid()` on.  Like `ExcludedColumn`,
+  it is intentionally distinct from `Column` so the type system ensures rowid refs
+  never appear where only real schema columns are valid.
+
+- **Rowid alias resolution in `_resolve_column`** (`planner.py`) — when the
+  column name (after case folding) is `"rowid"`, `"_rowid_"`, or `"oid"` and
+  no real schema column of that name exists in the current scope, the planner
+  emits a `RowIdRef` pointing at the unambiguous (or explicitly qualified) table
+  alias.  Ambiguous bare refs across multiple tables raise `AmbiguousColumn`,
+  matching SQLite's error for truly ambiguous identifiers.
+
+- **`_ROWID_ALIASES` frozenset constant** (`planner.py`) — `{"rowid", "_rowid_",
+  "oid"}` centralises the set of recognised rowid pseudo-column names.
+
+- **`RowIdRef` exported from `sql_planner.__init__`** — importable directly as
+  `from sql_planner import RowIdRef`.
+
+## [0.22.0] - 2026-05-05
+
+### Added
+
+- **`ExcludedColumn` expression node** (`expr.py`) — a new `Expr` variant that
+  represents a reference to the *would-be-inserted* row's column value inside
+  an `ON CONFLICT DO UPDATE SET` clause.  `ExcludedColumn(col="qty")` compiles
+  to `LoadExcludedColumn(col="qty")` in the IR, which the VM resolves against
+  `_VmState.excluded_row` at runtime.  The node is intentionally distinct from
+  `Column` so that the type system enforces that EXCLUDED refs only appear in
+  upsert assignment expressions.
+
+- **`UpsertAssignment` and `UpsertClause` AST nodes** (`ast.py`) — two frozen
+  dataclasses for the parsed ON CONFLICT clause:
+  - `UpsertAssignment(column: str, value: Expr)` — one `col = expr` pair.
+  - `UpsertClause(conflict_target, do_nothing, assignments)` — the full parsed
+    clause.  `InsertValuesStmt.upsert_clause` and `InsertSelectStmt.upsert_clause`
+    are both `UpsertClause | None` (default `None`).
+
+- **`UpsertAssignment` and `UpsertAction` plan nodes** (`plan.py`) — the
+  resolver's counterparts:
+  - `UpsertAssignment(column: str, value: Expr)` — an assignment with the planner's
+    `Expr` type (which includes `ExcludedColumn`).
+  - `UpsertAction(conflict_target, do_nothing, assignments)` — carried on
+    `Insert.upsert: UpsertAction | None`.
+
+- **`_resolve_upsert()` and `_resolve_upsert_expr()` in `planner.py`** — convert
+  `UpsertClause` AST → `UpsertAction` plan, passing `ExcludedColumn` nodes through
+  unchanged and recursively resolving `BinaryExpr` operands.  Integrated into
+  `_plan_insert()` and `_plan_insert_select()`.
+
+- **New exports in `__init__.py`**: `AstUpsertAssignment`, `UpsertClause`,
+  `ExcludedColumn`, `UpsertAction`, `UpsertAssignment`.
+
+## [0.21.0] - 2026-05-04
+
+### Added
+
+- **`on_conflict` field on `InsertValuesStmt` and `InsertSelectStmt`** (`ast.py`)
+  — both INSERT AST nodes now carry `on_conflict: str | None` with values
+  `None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"`.  `None`
+  means no conflict clause (default SQLite ABORT behaviour).
+
+- **`on_conflict` field on `Insert` plan node** (`plan.py`) — the logical
+  plan's `Insert` node surfaces the same field so the codegen can emit the
+  correct IR instruction.
+
+- **Planner propagates `on_conflict`** (`planner.py`) — both `_plan_insert()`
+  and `_plan_insert_select()` pass `stmt.on_conflict` through to the `Insert`
+  plan node.
+
+## [0.20.0] - 2026-05-04
+
+### Added
+
+- **`BinaryOp.CONCAT`** (`expr.py`) — SQL `||` string-concatenation operator.
+  Maps to `BinaryOpCode.CONCAT` in codegen and thence to the VM's `_concat`
+  kernel, which enforces string-only operands (NULL propagates).
+
+- **`JoinKind.NATURAL`** (`ast.py`) — string constant for `NATURAL JOIN`,
+  forwarded from the adapter to the planner where schema access is available.
+
+- **`JoinClause.using`** (`ast.py`) — new optional field carrying column names
+  from `JOIN … USING (col1, col2)`.  The adapter sets this field instead of
+  building an ON expression; the planner expands it into a qualified
+  `left.col = right.col AND …` condition once the accumulated join scope is
+  available.  This correctly handles chained three-table USING joins where the
+  USING column may live in an earlier (not immediately preceding) table.
+
+- **NATURAL JOIN resolution** (`planner.py :: _build_from_tree`) — the planner
+  now detects `JoinKind.NATURAL`, collects all shared columns between the left
+  scope and the right table's schema, and builds the equivalent INNER JOIN ON
+  condition.  Falls back to `JoinKind.CROSS` (Cartesian product) when no
+  shared column names exist, matching SQLite behaviour.
+
+- **USING resolution** (`planner.py :: _build_from_tree`) — new `elif j.using`
+  branch that, for each USING column, searches the full accumulated scope for
+  the owning left-side table and emits `Column(table=owner, col=col) = Column(table=right, col=col)`.
+
+### Tests
+
+- `tests/test_planner_join.py` — added `TestJoinUsing` (5 cases: single
+  column, multi-column, three-table chain where USING column lives in an
+  earlier table, unknown column raises, LEFT JOIN USING) and `TestNaturalJoin`
+  (3 cases: shared column → INNER, no shared columns → CROSS, multiple shared
+  columns → AND condition).
+
+## [0.19.0] - 2026-05-04
+
+### Added
+
+- **`SingleRow` plan node** (`plan.py`) — leaf node that yields exactly one
+  empty row; used by `_plan_select` when `SelectStmt.from_` is `None`
+  (SELECT without FROM).  Added to `LogicalPlan` type alias and exported
+  from `__init__.py`.
+
+### Changed
+
+- **`SelectStmt.from_` is now optional** (`ast.py`) — the `from_` field
+  changed from a required `TableRef | DerivedTableRef | RecursiveCTERef` to
+  an optional one that defaults to `None`.  Field ordering was updated so
+  `items` (required) precedes `from_` (optional) to satisfy Python dataclass
+  rules.  Planner now emits `SingleRow()` when `from_` is absent.
+
+## [0.18.0] - 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` aggregate function** (`expr.py`, `plan.py`, `planner.py`) —
+  `AggFunc.GROUP_CONCAT` added to the planner-level `AggFunc` enum, matching
+  the SQL `GROUP_CONCAT(col [, separator])` function.
+- **`separator` field on `AggregateExpr`** (`expr.py`) — optional
+  `str | None` carrying the literal separator from `GROUP_CONCAT(col, sep)`.
+  `None` means "use the SQL default `','`".
+- **`separator` field on `AggregateItem`** (`plan.py`) — same semantics;
+  propagated from the expression level through the plan node so the codegen
+  can bake the separator into `InitAgg` at compile time.
+- **`separator` propagation in the planner** (`planner.py`) — both
+  `_resolve` and `_collect_aggregates` now forward the `separator` field
+  when constructing `AggregateItem`.
+
+## [0.17.0] - 2026-05-04
+
+### Added
+
+- **`extra_args` field on `WindowFuncExpr`** (`expr.py`) — carries zero or
+  more additional literal expressions beyond the primary column argument.
+  Used by multi-argument window functions: `LAG(col, offset, default)`,
+  `LEAD(col, offset, default)`, `NTH_VALUE(col, n)`.
+- **`extra_args` field on `WindowFuncSpec`** (`plan.py`) — same semantics
+  as `WindowFuncExpr.extra_args`, carried through the plan representation
+  so the codegen can extract literal constants at compile time.
+- **`extra_args` propagation in the planner** (`planner.py`) — `_resolve`
+  now recursively resolves all `extra_args` expressions, and
+  `WindowFuncSpec` construction in `_plan_select` passes `extra_args`
+  through from the source expression.
+
+## [0.16.0] - 2026-05-04
+
+### Added
+
+- **`returning` field on DML AST nodes** (`ast.py`) — `InsertValuesStmt`,
+  `InsertSelectStmt`, `UpdateStmt`, and `DeleteStmt` each gain a
+  `returning: tuple[Expr, ...] = ()` field that carries the list of
+  expressions from the SQL `RETURNING` clause.
+- **`returning` field on DML plan nodes** (`plan.py`) — `Insert`, `Update`,
+  and `Delete` each gain the same `returning: tuple[Expr, ...] = ()` field.
+- **RETURNING resolution in the planner** (`planner.py`) — `_plan_insert`,
+  `_plan_insert_select`, `_plan_update`, and `_plan_delete` all resolve
+  RETURNING column references against the target table's column scope (the
+  same scope used for WHERE / SET expressions), converting
+  `Column(table=None, col='x')` to `Column(table='tablename', col='x')`.
+
+## [0.15.0] - 2026-05-04
+
+### Added
+
+- **`CorrelatedRef(outer_alias, col)` expression** (`expr.py`) — represents a
+  column reference that resolves only against the *outer* query's scope inside
+  a subquery.  Distinguished from `Column` so that codegen can emit a
+  `LoadOuterColumn` instruction at runtime.  Returns `False` from
+  `contains_aggregate()` and is a no-op in `_collect_columns()`.
+- **`outer_scope` parameter on `_plan_select()` and `_resolve()`** (`planner.py`)
+  — when planning a subquery, the enclosing query's column scope is passed as
+  `outer_scope`.  Column references not found in the inner scope fall back to
+  `outer_scope` and become `CorrelatedRef` nodes rather than raising
+  `UnknownColumn`.
+- **`_resolve_column()` outer-scope fallback** (`planner.py`) — qualified
+  references (`alias.col`) and bare references (`col`) both try `outer_scope`
+  after failing inner-scope resolution.  Qualified references produce
+  `CorrelatedRef(outer_alias=alias, col=col)`; bare references walk all
+  outer-scope aliases looking for a unique owner.
+- **Subquery correlated planning** (`planner.py`) — `_resolve` cases for
+  `ExistsSubquery`, `ScalarSubquery`, `InSubquery`, and `NotInSubquery` now
+  pass the current query's scope as `outer_scope` when recursively planning
+  the inner `SelectStmt`.
+- **`CorrelatedRef`** exported from `sql_planner.__init__`.
+- **8 new planner unit tests** in `tests/test_planner_correlated.py`
+  covering: correlated IN/EXISTS/scalar/NOT IN subqueries, bare-name outer
+  scope resolution, and error cases (unknown alias, column absent from all
+  scopes).
+
+## [0.14.0] - 2026-05-04
+
+### Added
+
+- **`InSubquery(operand, query)` expression** (`expr.py`) — represents
+  `expr IN (SELECT ...)`.  Contains the resolved inner `LogicalPlan`
+  (after planner rewriting from raw `SelectStmt`).  Returns `False`
+  from `contains_aggregate()` and propagates `collect_columns()` on
+  `operand` only.
+- **`NotInSubquery(operand, query)` expression** (`expr.py`) — same
+  structure as `InSubquery` but represents `expr NOT IN (SELECT ...)`.
+  Both added to the `Expr` union type.
+- **Planner dispatch** (`planner.py`) — `_resolve` cases for
+  `InSubquery` and `NotInSubquery`: resolve `operand` in the current
+  scope, then recursively plan the inner `SelectStmt` via
+  `_plan_select`, replacing the raw AST node with a `LogicalPlan`.
+- **`InSubquery` and `NotInSubquery`** exported from
+  `sql_planner.__init__`.
+
+## [0.13.0] - 2026-04-28
+
+### Added
+
+- **`ScalarSubquery(query)` expression** (`expr.py`) — represents a
+  `(SELECT ...)` in expression position. Contains the resolved inner
+  `LogicalPlan`. Returns `False` from `contains_aggregate()` and is a no-op
+  in `collect_columns()`.
+
+## [0.12.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`CreateTriggerStmt` / `DropTriggerStmt`** (`ast.py`) — typed AST nodes for
+  trigger DDL statements; added to the `Statement` union type.
+- **`CreateTrigger` / `DropTrigger`** (`plan.py`) — logical plan leaf nodes;
+  added to the `LogicalPlan` union; `children()` returns `()` for both.
+- **Planner dispatch** (`planner.py`) — `_plan_create_trigger` and
+  `_plan_drop_trigger` map the AST nodes to plan nodes; exported from
+  `sql_planner.__init__`.
+
+## [0.11.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`WindowFuncExpr` AST expression** — frozen dataclass with `func: str`,
+  `arg: Expr | None`, `partition_by: tuple[Expr, ...]`, and
+  `order_by: tuple[tuple[Expr, bool], ...]` (expr, descending).  Added to
+  the `Expr` union.  `contains_aggregate()` returns `False` for it;
+  `_collect_columns()` walks all sub-expressions.
+- **`WindowFuncSpec` plan node** — frozen dataclass capturing one window
+  function: `func`, `arg_expr`, `partition_by`, `order_by`, `alias`.
+- **`WindowAgg` logical plan node** — `input: LogicalPlan`,
+  `specs: tuple[WindowFuncSpec, ...]`, `output_cols: tuple[str, ...]`.
+  Added to the `LogicalPlan` union.
+- **`_plan_select()` window path** — detects `WindowFuncExpr` items in the
+  SELECT list, builds an inner `Project` materialising non-window columns
+  plus dependency columns (arg / partition_by / order_by refs), then wraps
+  it in `WindowAgg`.  `output_cols` = non-window output names + window
+  alias names.
+- **`_resolve()` extension** — handles `WindowFuncExpr`, recursively
+  resolving its sub-expressions against the FROM scope.
+- All new types exported via `__all__`.
+
+## [0.10.0] - 2026-04-27
+
+### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
+
+- **`SavepointStmt` AST node** — frozen dataclass with `name: str`.
+  Represents `SAVEPOINT name`.
+- **`ReleaseSavepointStmt` AST node** — `name: str`.
+  Represents `RELEASE [SAVEPOINT] name`.
+- **`RollbackToStmt` AST node** — `name: str`.
+  Represents `ROLLBACK TO [SAVEPOINT] name`.
+- All three types added to the `Statement` union and exported via `__all__`.
+
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- **`CreateViewStmt` AST node** (`sql_planner.ast`) — frozen dataclass
+  carrying `name: str`, `query: SelectStmt`, and `if_not_exists: bool`.
+  Represents `CREATE [IF NOT EXISTS] VIEW name AS query`.
+- **`DropViewStmt` AST node** (`sql_planner.ast`) — frozen dataclass with
+  `name: str` and `if_exists: bool`.  Represents `DROP VIEW [IF EXISTS] name`.
+- Both types added to the `Statement` type union and exported from
+  `sql_planner.__init__`.
+
+## [0.8.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **`RecursiveCTERef` AST node** (`sql_planner.ast`) — structured representation
+  of a `WITH RECURSIVE name AS (anchor UNION [ALL] recursive)` CTE reference.
+  Carries `name`, `anchor: SelectStmt`, `recursive: SelectStmt`, `union_all: bool`,
+  and an optional `alias` that defaults to the CTE name.
+- **`WorkingSetScan` plan node** (`sql_planner.plan`) — represents a self-reference
+  inside a recursive CTE body.  Holds `alias` and `columns`.  The VM maps this to
+  the current working set produced by the previous iteration.
+- **`RecursiveCTE` plan node** (`sql_planner.plan`) — wraps `anchor`, `recursive`
+  sub-plans, `alias`, `columns`, and `union_all` flag.  Produced when the planner
+  encounters a `RecursiveCTERef` in the FROM / JOIN tree.
+- **Planner dispatch for `RecursiveCTERef`** — `_plan_table_ref` detects a
+  `RecursiveCTERef` entry, plans the anchor without the self-reference in scope
+  and plans the recursive body with the CTE name mapped to a `WorkingSetScan`,
+  then wraps both in a `RecursiveCTE` plan node.
+- **All three types exported** from `sql_planner.__init__`.
+
+## [0.7.0] - 2026-04-27
+
+### Added
+- `AlterTableStmt` AST node (`sql_planner.ast`) — structured representation of
+  ALTER TABLE … ADD [COLUMN] col_def.
+- `AlterTable` plan node (`sql_planner.plan`) — produced by `_plan_alter_table`.
+- Planner dispatch for `AlterTableStmt` in `planner.py`.
+- Both types exported from `sql_planner.__init__`.
+
+## [0.6.0] - 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`ExistsSubquery` expression node** (`sql_planner.expr`) — new `Expr`
+  variant representing `EXISTS (subquery)`.  Holds `query: object` (typed as
+  `object` rather than `LogicalPlan` to avoid a circular import between
+  `expr.py` and `plan.py`).  Before planning the field holds a raw
+  `SelectStmt`; after `_resolve()` it holds a fully-planned `LogicalPlan`.
+
+- **`ExistsSubquery` exported from `sql_planner.__init__`** — added to both
+  the import block and `__all__`.
+
+- **`_resolve()` threaded with `schema` parameter** — signature extended to
+  `_resolve(expr, scope, schema=None)`.  All internal recursive calls and all
+  external call sites (`_plan_select`, `_build_from_tree`, `_plan_update`,
+  `_plan_delete`) updated to forward the schema context.  Required so the
+  inner SELECT inside an EXISTS can be planned against the same schema.
+
+- **`ExistsSubquery` case in `_resolve()`** — when a pre-planner
+  `ExistsSubquery(query=SelectStmt)` is encountered, `_resolve` calls
+  `_plan_select(stmt, schema)` and returns a post-planner
+  `ExistsSubquery(query=LogicalPlan)`.  Raises `InternalError` if called
+  without a schema.
+
+- **`contains_aggregate` / `_collect_columns` updated** — both helpers return
+  `False` / no-op respectively for `ExistsSubquery` (subquery column
+  references don't propagate into the outer query's column set).
+
 ## [0.5.0] - 2026-04-23
 
 ### Added — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
@@ -130,3 +817,4 @@
 - `plan_all` helper for multi-statement scripts.
 - `children()` tree-walk helper exposed from the plan module.
 - PlanError hierarchy as dataclasses for structural equality in tests.
+

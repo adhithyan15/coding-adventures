@@ -1,0 +1,41 @@
+{
+  "name": "@coding-adventures/macsyma-runtime",
+  "version": "0.5.0",
+  "description": "Pure TypeScript MACSYMA runtime session over the symbolic VM",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["macsyma", "cas", "runtime", "symbolic-vm", "browser"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/macsyma-compiler": "file:../macsyma-compiler",
+    "@coding-adventures/macsyma-lexer": "file:../macsyma-lexer",
+    "@coding-adventures/macsyma-parser": "file:../macsyma-parser",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/state-machine": "file:../state-machine",
+    "@coding-adventures/cas-list-operations": "file:../cas-list-operations",
+    "@coding-adventures/cas-factor": "file:../cas-factor",
+    "@coding-adventures/cas-pattern-matching": "file:../cas-pattern-matching",
+    "@coding-adventures/cas-pretty-printer": "file:../cas-pretty-printer",
+    "@coding-adventures/cas-simplify": "file:../cas-simplify",
+    "@coding-adventures/cas-solve": "file:../cas-solve",
+    "@coding-adventures/cas-substitution": "file:../cas-substitution",
+    "@coding-adventures/cas-trig": "file:../cas-trig",
+    "@coding-adventures/symbolic-ir": "file:../symbolic-ir",
+    "@coding-adventures/symbolic-vm": "file:../symbolic-vm"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}

@@ -1,0 +1,12 @@
+[package]
+name = "hdl-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Hardware Intermediate Representation (HIR) — unified IR for Verilog, VHDL, and Ruby HDL; JSON round-trip via serde"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+serde_json = "1"

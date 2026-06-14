@@ -53,7 +53,13 @@ defmodule CodingAdventures.JsonRpc.JsonCodec do
   def encode(value) do
     if otp27_json_available?() do
       try do
-        {:ok, :json.encode(to_encodable(value))}
+        json =
+          value
+          |> to_otp_json_encodable()
+          |> :json.encode()
+          |> IO.iodata_to_binary()
+
+        {:ok, json}
       rescue
         e -> {:error, "encode failed: #{inspect(e)}"}
       end
@@ -80,11 +86,11 @@ defmodule CodingAdventures.JsonRpc.JsonCodec do
     if otp27_json_available?() do
       try do
         result = :json.decode(json)
-        {:ok, result}
+        {:ok, from_decoded(result)}
       rescue
         e -> {:error, "decode failed: #{inspect(e)}"}
       catch
-        :error, reason -> {:error, "decode failed: #{inspect(reason)}"}
+        kind, reason -> {:error, "decode failed: #{inspect({kind, reason})}"}
       end
     else
       case decode_value(String.trim(json), 0) do
@@ -113,6 +119,37 @@ defmodule CodingAdventures.JsonRpc.JsonCodec do
     end
   end
 
+  defp to_otp_json_encodable(nil), do: :null
+  defp to_otp_json_encodable(true), do: true
+  defp to_otp_json_encodable(false), do: false
+  defp to_otp_json_encodable(n) when is_integer(n), do: n
+  defp to_otp_json_encodable(f) when is_float(f), do: f
+  defp to_otp_json_encodable(s) when is_binary(s), do: s
+  defp to_otp_json_encodable(a) when is_atom(a), do: Atom.to_string(a)
+
+  defp to_otp_json_encodable(list) when is_list(list) do
+    Enum.map(list, &to_otp_json_encodable/1)
+  end
+
+  defp to_otp_json_encodable(map) when is_map(map) do
+    Map.new(map, fn {k, v} ->
+      key = if is_atom(k), do: Atom.to_string(k), else: k
+      {key, to_otp_json_encodable(v)}
+    end)
+  end
+
+  defp from_decoded(:null), do: nil
+
+  defp from_decoded(list) when is_list(list) do
+    Enum.map(list, &from_decoded/1)
+  end
+
+  defp from_decoded(map) when is_map(map) do
+    Map.new(map, fn {k, v} -> {k, from_decoded(v)} end)
+  end
+
+  defp from_decoded(value), do: value
+
   # ---------------------------------------------------------------------------
   # Fallback: hand-written encoder
   # ---------------------------------------------------------------------------
@@ -126,25 +163,6 @@ defmodule CodingAdventures.JsonRpc.JsonCodec do
   #   string s      -> quoted, with RFC 8259 escaping
   #   list l        -> "[elem, ...]"
   #   map m         -> "{\"key\": value, ...}"
-
-  defp to_encodable(nil), do: nil
-  defp to_encodable(true), do: true
-  defp to_encodable(false), do: false
-  defp to_encodable(n) when is_integer(n), do: n
-  defp to_encodable(f) when is_float(f), do: f
-  defp to_encodable(s) when is_binary(s), do: s
-  defp to_encodable(a) when is_atom(a), do: Atom.to_string(a)
-
-  defp to_encodable(list) when is_list(list) do
-    Enum.map(list, &to_encodable/1)
-  end
-
-  defp to_encodable(map) when is_map(map) do
-    Map.new(map, fn {k, v} ->
-      key = if is_atom(k), do: Atom.to_string(k), else: k
-      {key, to_encodable(v)}
-    end)
-  end
 
   defp encode_value(nil), do: "null"
   defp encode_value(true), do: "true"

@@ -1,0 +1,13 @@
+# Node / npm
+node_modules/
+package-lock.json
+
+# Vite / TS build artifacts
+dist/
+*.tsbuildinfo
+
+# Generated components — produced by scripts/build.sh, never edited by hand.
+src/components/
+
+# OS junk
+.DS_Store

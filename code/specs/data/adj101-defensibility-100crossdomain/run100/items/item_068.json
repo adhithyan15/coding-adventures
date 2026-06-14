@@ -1,0 +1,7 @@
+{
+ "idx": 68,
+ "id": "EMP-9",
+ "scenario": "Tomas missed four scheduled shifts in the last 30 days by not clocking in. For all four shifts, an approved leave request was on file in the HR system before each shift began.",
+ "policy": "An employee who fails to clock in for three or more scheduled shifts within a rolling 30-day period is subject to automatic termination, except where the missed shifts were covered by an approved leave request on file before the shift.",
+ "question": "Is Tomas subject to automatic termination?"
+}

@@ -1059,10 +1059,25 @@ func executeOrderBy(node *parser.ASTNode, result *QueryResult) (*QueryResult, er
 
 // executeLimit applies LIMIT and OFFSET to the result set.
 //
-// Grammar: limit_clause = "LIMIT" NUMBER [ "OFFSET" NUMBER ]
+// Grammar:
 //
-// OFFSET skips that many rows from the start.
-// LIMIT caps the number of rows returned after OFFSET is applied.
+//	limit_clause  = "LIMIT" signed_number [ "OFFSET" signed_number | "," signed_number ]
+//	signed_number = [ "-" ] NUMBER
+//
+// Two surface forms produce an offset:
+//
+//	LIMIT n OFFSET m   →  limit = n, offset = m   (SQL standard)
+//	LIMIT m, n         →  limit = n, offset = m   (MySQL shorthand — order swaps!)
+//
+// In the comma form the FIRST number is the offset and the SECOND is the
+// count, the reverse of the OFFSET form. We track whether a comma was seen to
+// disambiguate.
+//
+// A negative LIMIT means "no limit" (SQLite semantics): "LIMIT -1 OFFSET m"
+// skips m rows and returns the rest. We represent that as limitVal = -1.
+//
+// OFFSET skips that many rows from the start; LIMIT then caps the number of
+// rows returned after OFFSET is applied.
 func executeLimit(node *parser.ASTNode, result *QueryResult) *QueryResult {
 	limitNode := findChild(node, "limit_clause")
 	if limitNode == nil {
@@ -1072,31 +1087,37 @@ func executeLimit(node *parser.ASTNode, result *QueryResult) *QueryResult {
 	var limitVal, offsetVal int64
 	limitVal = -1 // -1 means no limit
 
-	// Parse LIMIT and OFFSET values from the NUMBER tokens.
-	// Grammar: "LIMIT" NUMBER [ "OFFSET" NUMBER ]
-	foundLimit := false
-	foundOffset := false
+	// The two signed_number children appear in source order. The keyword/comma
+	// tokens between them tell us how to interpret the second value.
+	numbers := collectRuleChildren(limitNode, "signed_number")
+	hasOffsetKeyword := false
+	hasComma := false
 	for _, child := range limitNode.Children {
 		tok, ok := child.(lexer.Token)
 		if !ok {
 			continue
 		}
-		switch {
-		case strings.ToUpper(tok.Value) == "LIMIT":
-			foundLimit = true
-		case strings.ToUpper(tok.Value) == "OFFSET":
-			foundOffset = true
-			foundLimit = false // reset so next NUMBER goes to offset
-		case tok.TypeName == "NUMBER" || tok.Type == lexer.TokenNumber:
-			n := parseNumber(tok.Value)
-			if nInt, ok := n.(int64); ok {
-				if foundLimit && limitVal == -1 {
-					limitVal = nInt
-					foundLimit = false
-				} else if foundOffset {
-					offsetVal = nInt
-					foundOffset = false
-				}
+		if strings.ToUpper(tok.Value) == "OFFSET" {
+			hasOffsetKeyword = true
+		}
+		if tok.Value == "," {
+			hasComma = true
+		}
+	}
+
+	if len(numbers) >= 1 {
+		first := parseSignedNumber(numbers[0])
+		if hasComma {
+			// MySQL form: LIMIT offset, count.
+			offsetVal = first
+			if len(numbers) >= 2 {
+				limitVal = parseSignedNumber(numbers[1])
+			}
+		} else {
+			// Standard form: LIMIT count [ OFFSET offset ].
+			limitVal = first
+			if hasOffsetKeyword && len(numbers) >= 2 {
+				offsetVal = parseSignedNumber(numbers[1])
 			}
 		}
 	}
@@ -1117,9 +1138,40 @@ func executeLimit(node *parser.ASTNode, result *QueryResult) *QueryResult {
 
 	// Apply LIMIT.
 	// Same int64 comparison to avoid narrowing conversion (CWE-190).
+	// A negative limitVal means "no limit" and is skipped by the >= 0 guard.
 	if limitVal >= 0 && limitVal < int64(len(rows)) {
 		rows = rows[:limitVal]
 	}
 
 	return &QueryResult{Columns: result.Columns, Rows: rows}
+}
+
+// parseSignedNumber reads a signed_number node into an int64.
+//
+// Grammar: signed_number = [ "-" ] NUMBER
+//
+// The lexer emits the optional sign as a separate "-" token, so we scan the
+// node's children for a minus token and a NUMBER token and combine them.
+// Returns 0 if the node has no NUMBER token (malformed input).
+func parseSignedNumber(node *parser.ASTNode) int64 {
+	negative := false
+	var value int64
+	for _, child := range node.Children {
+		tok, ok := child.(lexer.Token)
+		if !ok {
+			continue
+		}
+		switch {
+		case tok.Value == "-":
+			negative = true
+		case tok.TypeName == "NUMBER" || tok.Type == lexer.TokenNumber:
+			if n, ok := parseNumber(tok.Value).(int64); ok {
+				value = n
+			}
+		}
+	}
+	if negative {
+		return -value
+	}
+	return value
 }

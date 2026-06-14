@@ -1,0 +1,49 @@
+% ADJ52 case-28 program (this patient's observations + queries only; no rules).
+% 59-year-old man, ~10 weeks of crampy lower abdominal pain, bloating, audible
+% borborygmi, loose pale-yellow stools 4x/day, ~18 kg unintentional weight loss
+% (malabsorption); new numbness of hands and feet with EMG/NCS-confirmed active
+% peripheral neuropathy; spontaneous bruise-like patches + petechiae over forearms
+% and shins (no trauma); MACROGLOSSIA on exam. Laparotomy for presumed peritonitis:
+% 180 mL dark blood-tinged fluid, NO perforation, cecum-to-ileum diffusely swollen,
+% edematous, firm and granular; diffuse small-bowel wall thickening on imaging.
+% Labs: Hb 86, albumin 22 (markedly low), creatinine 205, urinalysis 2+ protein
+% with micro-haematuria/pyuria, 24h urine protein 910 mg (sub-nephrotic), ESR 52,
+% CRP 188 (markedly elevated), IL-6 47 (elevated), procalcitonin mildly raised,
+% GGT/ALP mildly raised; TSH 21 with low-normal free T4 (primary hypothyroidism);
+% hs-troponin-T 20, NT-proBNP 910; cardiac MRI small lateral-wall myocardial
+% signal change WITHOUT wall thickening. Clonal/monoclonal workup THOROUGHLY
+% NEGATIVE: serum + urine immunofixation negative, Bence-Jones absent, serum free
+% light chains normal, immunoglobulins/CTD panel unremarkable, serum VEGF normal,
+% marrow non-clonal with mild (7%) plasmacytosis. No unifying diagnosis yet.
+% Amyloid tissue typing and TTR sequencing PENDING.
+
+% --- the shared amyloid infiltrative tissue syndrome (one deposition process) ---
+observe bowel_infiltration(firm_granular)
+observe macroglossia(present)
+observe purpura(spontaneous_nontraumatic)
+observe proteinuria(sub_nephrotic)
+observe peripheral_neuropathy(active)
+observe cardiac_signal_change(present)
+
+% --- the acute-phase / SAA-driving inflammatory signature ---
+observe crp(markedly_elevated)
+observe il6(elevated)
+observe esr(elevated)
+
+% --- independent type-discriminating findings ---
+observe clonal_workup(fully_negative)
+observe vegf(normal)
+observe renal_predominant(present)
+observe demographic(older_male)
+
+% NOT observed (open, decision-relevant — these are the pending tests):
+%   amyloid_typing(serum_amyloid_a) vs amyloid_typing(immunoglobulin_light_chain)
+%     vs amyloid_typing(transthyretin)
+%   ttr_gene(pathogenic_variant) vs ttr_gene(no_variant)
+
+% --- queries: each candidate type/diagnosis + the recommended next step ---
+? amyloid_type(aa_amyloidosis)
+? amyloid_type(al_amyloidosis)
+? amyloid_type(attr_amyloidosis)
+? diagnosis(poems_syndrome)
+? next_step(tissue_amyloid_typing_mass_spectrometry_and_ttr_gene_sequencing)

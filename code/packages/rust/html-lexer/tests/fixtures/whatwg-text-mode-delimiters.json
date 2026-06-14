@@ -1,0 +1,782 @@
+{
+  "cases": [
+    {
+      "description": "RCDATA state recognizes its matching end tag delimiter",
+      "diagnostics": [],
+      "id": "rcdata-matching-end-tag",
+      "initial_state": "RCDATA state",
+      "input": "Tom &amp; </title>after",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=Tom & )",
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state matches end tag names ASCII-case-insensitively",
+      "diagnostics": [],
+      "id": "rcdata-uppercase-matching-end-tag",
+      "initial_state": "RCDATA state",
+      "input": "alpha</TITLE>after",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state keeps mismatched apparent end tags literal",
+      "diagnostics": [],
+      "id": "rcdata-mismatched-end-tag",
+      "initial_state": "RCDATA state",
+      "input": "alpha</style>tail</title>",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=alpha</style>tail)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state requires a delimiter after the matching tag name",
+      "diagnostics": [],
+      "id": "rcdata-longer-prefix-mismatch",
+      "initial_state": "RCDATA state",
+      "input": "alpha</titlex>tail</title>",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=alpha</titlex>tail)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state accepts whitespace after a matching end tag name with a diagnostic",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "rcdata-whitespace-after-end-tag-name",
+      "initial_state": "RCDATA state",
+      "input": "alpha</title >tail",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state treats form feed as whitespace after a matching end tag name",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "rcdata-form-feed-after-end-tag-name",
+      "initial_state": "RCDATA state",
+      "input": "alpha</title\f>tail",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state emits matching end tags with recoverable attributes",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "rcdata-end-tag-with-attributes",
+      "initial_state": "RCDATA state",
+      "input": "alpha</title class=x>tail",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state emits matching self-closing-looking end tags with a diagnostic",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "rcdata-self-closing-end-tag",
+      "initial_state": "RCDATA state",
+      "input": "alpha</title/>tail",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=title)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RCDATA state keeps a dangling end-tag opener literal at EOF",
+      "diagnostics": [],
+      "id": "rcdata-eof-after-end-tag-open",
+      "initial_state": "RCDATA state",
+      "input": "alpha</",
+      "last_start_tag": "title",
+      "tokens": [
+        "Text(data=alpha</)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state recognizes its matching end tag delimiter",
+      "diagnostics": [],
+      "id": "rawtext-matching-end-tag",
+      "initial_state": "RAWTEXT state",
+      "input": "Tom &amp; </style>after",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=Tom &amp; )",
+        "EndTag(name=style)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state matches end tag names ASCII-case-insensitively",
+      "diagnostics": [],
+      "id": "rawtext-uppercase-matching-end-tag",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha</STYLE>after",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=style)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state keeps mismatched apparent end tags literal",
+      "diagnostics": [],
+      "id": "rawtext-mismatched-end-tag",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha</title>tail</style>",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=alpha</title>tail)",
+        "EndTag(name=style)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state requires a delimiter after the matching tag name",
+      "diagnostics": [],
+      "id": "rawtext-longer-prefix-mismatch",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha</stylex>tail</style>",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=alpha</stylex>tail)",
+        "EndTag(name=style)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state accepts whitespace after a matching end tag name with a diagnostic",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "rawtext-whitespace-after-end-tag-name",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha</style >tail",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state treats form feed as whitespace after a matching end tag name",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "rawtext-form-feed-after-end-tag-name",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha</style\f>tail",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state emits matching end tags with recoverable attributes",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "rawtext-end-tag-with-attributes",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha</style class=x>tail",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state emits matching self-closing-looking end tags with a diagnostic",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "rawtext-self-closing-end-tag",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha</style/>tail",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "RAWTEXT state keeps a dangling end-tag opener literal at EOF",
+      "diagnostics": [],
+      "id": "rawtext-eof-after-end-tag-open",
+      "initial_state": "RAWTEXT state",
+      "input": "alpha</",
+      "last_start_tag": "style",
+      "tokens": [
+        "Text(data=alpha</)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state recognizes its matching end tag delimiter",
+      "diagnostics": [],
+      "id": "script-data-matching-end-tag",
+      "initial_state": "Script data state",
+      "input": "Tom &amp; </script>after",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=Tom &amp; )",
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state matches end tag names ASCII-case-insensitively",
+      "diagnostics": [],
+      "id": "script-data-uppercase-matching-end-tag",
+      "initial_state": "Script data state",
+      "input": "alpha</SCRIPT>after",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state keeps mismatched apparent end tags literal",
+      "diagnostics": [],
+      "id": "script-data-mismatched-end-tag",
+      "initial_state": "Script data state",
+      "input": "alpha</style>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha</style>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state requires a delimiter after the matching tag name",
+      "diagnostics": [],
+      "id": "script-data-longer-prefix-mismatch",
+      "initial_state": "Script data state",
+      "input": "alpha</scriptx>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha</scriptx>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state accepts whitespace after a matching end tag name with a diagnostic",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "script-data-whitespace-after-end-tag-name",
+      "initial_state": "Script data state",
+      "input": "alpha</script >tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state treats form feed as whitespace after a matching end tag name",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "script-data-form-feed-after-end-tag-name",
+      "initial_state": "Script data state",
+      "input": "alpha</script\f>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state emits matching end tags with recoverable attributes",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "script-data-end-tag-with-attributes",
+      "initial_state": "Script data state",
+      "input": "alpha</script class=x>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state emits matching self-closing-looking end tags with a diagnostic",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "script-data-self-closing-end-tag",
+      "initial_state": "Script data state",
+      "input": "alpha</script/>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data state keeps a dangling end-tag opener literal at EOF",
+      "diagnostics": [],
+      "id": "script-data-eof-after-end-tag-open",
+      "initial_state": "Script data state",
+      "input": "alpha</",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha</)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state recognizes its matching end tag delimiter",
+      "diagnostics": [],
+      "id": "script-data-escaped-matching-end-tag",
+      "initial_state": "Script data escaped state",
+      "input": "Tom &amp; </script>after",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=Tom &amp; )",
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state matches end tag names ASCII-case-insensitively",
+      "diagnostics": [],
+      "id": "script-data-escaped-uppercase-matching-end-tag",
+      "initial_state": "Script data escaped state",
+      "input": "alpha</SCRIPT>after",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state keeps mismatched apparent end tags literal",
+      "diagnostics": [],
+      "id": "script-data-escaped-mismatched-end-tag",
+      "initial_state": "Script data escaped state",
+      "input": "alpha</style>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha</style>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state requires a delimiter after the matching tag name",
+      "diagnostics": [],
+      "id": "script-data-escaped-longer-prefix-mismatch",
+      "initial_state": "Script data escaped state",
+      "input": "alpha</scriptx>tail</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha</scriptx>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state accepts whitespace after a matching end tag name with a diagnostic",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "script-data-escaped-whitespace-after-end-tag-name",
+      "initial_state": "Script data escaped state",
+      "input": "alpha</script >tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state treats form feed as whitespace after a matching end tag name",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "script-data-escaped-form-feed-after-end-tag-name",
+      "initial_state": "Script data escaped state",
+      "input": "alpha</script\f>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state emits matching end tags with recoverable attributes",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "script-data-escaped-end-tag-with-attributes",
+      "initial_state": "Script data escaped state",
+      "input": "alpha</script class=x>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state emits matching self-closing-looking end tags with a diagnostic",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "script-data-escaped-self-closing-end-tag",
+      "initial_state": "Script data escaped state",
+      "input": "alpha</script/>tail",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha)",
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "Script data escaped state keeps a dangling end-tag opener literal at EOF",
+      "diagnostics": [],
+      "id": "script-data-escaped-eof-after-end-tag-open",
+      "initial_state": "Script data escaped state",
+      "input": "alpha</",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha</)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "title",
+      "description": "RCDATA end tag name state emits the seeded matching end tag",
+      "diagnostics": [],
+      "id": "seeded-rcdata-name-delimiter",
+      "initial_state": "RCDATA end tag name state",
+      "input": ">after",
+      "last_start_tag": "title",
+      "temporary_buffer": "title",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "title",
+      "description": "RCDATA end tag name state keeps seeded text literal at EOF",
+      "diagnostics": [],
+      "id": "seeded-rcdata-name-eof",
+      "initial_state": "RCDATA end tag name state",
+      "input": "",
+      "last_start_tag": "title",
+      "temporary_buffer": "title",
+      "tokens": [
+        "Text(data=</title)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "style",
+      "description": "RAWTEXT end tag name state emits the seeded matching end tag",
+      "diagnostics": [],
+      "id": "seeded-rawtext-name-delimiter",
+      "initial_state": "RAWTEXT end tag name state",
+      "input": ">after",
+      "last_start_tag": "style",
+      "temporary_buffer": "style",
+      "tokens": [
+        "EndTag(name=style)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "style",
+      "description": "RAWTEXT end tag name state keeps seeded text literal at EOF",
+      "diagnostics": [],
+      "id": "seeded-rawtext-name-eof",
+      "initial_state": "RAWTEXT end tag name state",
+      "input": "",
+      "last_start_tag": "style",
+      "temporary_buffer": "style",
+      "tokens": [
+        "Text(data=</style)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "script",
+      "description": "Script data end tag name state emits the seeded matching end tag",
+      "diagnostics": [],
+      "id": "seeded-script-name-delimiter",
+      "initial_state": "Script data end tag name state",
+      "input": ">after",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "script",
+      "description": "Script data end tag name state keeps seeded text literal at EOF",
+      "diagnostics": [],
+      "id": "seeded-script-name-eof",
+      "initial_state": "Script data end tag name state",
+      "input": "",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "Text(data=</script)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "script",
+      "description": "Script data escaped end tag name state emits the seeded matching end tag",
+      "diagnostics": [],
+      "id": "seeded-script-escaped-name-delimiter",
+      "initial_state": "Script data escaped end tag name state",
+      "input": ">after",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "script",
+      "description": "Script data escaped end tag name state keeps seeded text literal at EOF",
+      "diagnostics": [],
+      "id": "seeded-script-escaped-name-eof",
+      "initial_state": "Script data escaped end tag name state",
+      "input": "",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "Text(data=</script)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "title",
+      "description": "RCDATA end tag whitespace state emits seeded matching end tag with recovery diagnostic",
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "id": "seeded-rcdata-whitespace-delimiter",
+      "initial_state": "RCDATA end tag whitespace state",
+      "input": ">after",
+      "last_start_tag": "title",
+      "temporary_buffer": "title ",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "style",
+      "description": "RAWTEXT end tag attributes state emits seeded matching end tag with recovery diagnostic",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "seeded-rawtext-attributes-delimiter",
+      "initial_state": "RAWTEXT end tag attributes state",
+      "input": ">after",
+      "last_start_tag": "style",
+      "temporary_buffer": "style class=x",
+      "tokens": [
+        "EndTag(name=style)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "script",
+      "description": "Script data self-closing end tag state emits seeded matching end tag with recovery diagnostic",
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "id": "seeded-script-self-closing-delimiter",
+      "initial_state": "Script data self-closing end tag state",
+      "input": ">after",
+      "last_start_tag": "script",
+      "temporary_buffer": "script",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "script",
+      "description": "Script data escaped end tag attributes state emits seeded matching end tag with recovery diagnostic",
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "id": "seeded-script-escaped-attributes-delimiter",
+      "initial_state": "Script data escaped end tag attributes state",
+      "input": ">after",
+      "last_start_tag": "script",
+      "temporary_buffer": "script class=x",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "style",
+      "description": "seeded RCDATA end-tag name mismatch remains literal before a later delimiter",
+      "diagnostics": [],
+      "id": "seeded-rcdata-name-mismatch",
+      "initial_state": "RCDATA end tag name state",
+      "input": ">text</title>",
+      "last_start_tag": "title",
+      "temporary_buffer": "style",
+      "tokens": [
+        "Text(data=</style>text)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "current_end_tag": "style",
+      "description": "seeded script escaped self-closing mismatch remains literal before a later delimiter",
+      "diagnostics": [],
+      "id": "seeded-script-escaped-self-closing-mismatch",
+      "initial_state": "Script data escaped self-closing end tag state",
+      "input": ">tail</script>",
+      "last_start_tag": "script",
+      "temporary_buffer": "style",
+      "tokens": [
+        "Text(data=</style/>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "script data keeps comment-like escape text before the matching end tag",
+      "diagnostics": [],
+      "id": "script-data-comment-like-escape",
+      "initial_state": "Script data state",
+      "input": "alpha<!-- hidden --></script>after",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha<!-- hidden -->)",
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "script escaped double-escape start keeps inner script delimiters literal",
+      "diagnostics": [],
+      "id": "script-escaped-double-escape-start",
+      "initial_state": "Script data escaped state",
+      "input": "alpha<script>inside</script>after</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=alpha<script>inside</script>after)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "script double escaped less-than state exits on slash-prefixed script text",
+      "diagnostics": [],
+      "id": "script-double-escaped-less-than-slash",
+      "initial_state": "Script data double escaped less-than sign state",
+      "input": "/script>inside</script>after</script>",
+      "last_start_tag": "script",
+      "tokens": [
+        "Text(data=/script>inside)",
+        "EndTag(name=script)",
+        "Text(data=after)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Text-mode end-tag delimiter recovery for parser-controlled RCDATA, RAWTEXT, script data, and seeded continuation states.",
+  "format": "whatwg-html-tokenizer-text-mode-delimiters/v1"
+}

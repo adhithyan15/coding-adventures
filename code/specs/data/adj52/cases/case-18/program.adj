@@ -1,0 +1,59 @@
+% ADJ52 case-18 program (this patient's observations + queries only; no rules).
+% 28yo right-handed woman, no relevant history, ~48h of progressive worsening:
+% severe right-sided headache, expressive aphasia (comprehension preserved),
+% progressive one-sided hemiparesis (right limbs 2/5, extensor plantar), photo/
+% phonophobia, spinning vertigo, recurrent vomiting, crampy generalized abdominal
+% pain. Vitals normal. CT no hemorrhage / no established territorial infarct;
+% CTA suspected proximal-M1 left-MCA cut-off; treated as LVO with aspirin. Hours
+% later: generalized tonic-clonic seizure, GCS 6/15, intubation/ICU, IV
+% levetiracetam, empiric IV aciclovir (encephalitis not excluded), fever 39.7C.
+% MRI: cortical diffusion restriction (parietal/temporal) NOT in a single
+% arterial territory. Catheter DSA: PATENT vessel with segmental vasospasm, NO
+% thromboembolic clot. LP: clear acellular CSF, normal protein/glucose, no
+% pleocytosis, viral DNA PCR negative. EEG: low-amplitude background with
+% generalized irregular 1-3 Hz delta -> diffuse encephalopathy (not a focus).
+% Broad autoimmune/paraneoplastic antibody panel negative. Extubated ~1 day,
+% GCS 13/15, but dense one-sided hemiplegia and persistent speech deficit.
+% Cause undetermined.
+
+% --- demographics / age criterion ---
+observe patient_age(under_40)
+
+% --- migrainous / systemic gestalt (grouped under mechanisms in the rulebook) ---
+observe symptom(headache(severe_migrainous))
+observe symptom(abdominal_pain(crampy_generalized))
+observe symptom(vomiting(recurrent))
+
+% --- focal cortical deficits ---
+observe exam(aphasia(expressive))
+
+% --- the acute deterioration ---
+observe event(seizure(generalized_tonic_clonic))
+observe event(fever(high))
+
+% --- imaging discriminators ---
+observe imaging(non_contrast_head_ct, finding(no_established_territorial_infarct))
+observe imaging(ct_angiography, finding(suspected_cutoff_m1))
+observe imaging(mri_brain, finding(cortical_diffusion_restriction(non_territorial)))
+observe imaging(mri_brain, finding(non_single_arterial_territory_pattern))
+observe imaging(catheter_dsa, finding(segmental_vasospasm_patent_vessel))
+observe imaging(catheter_dsa, finding(no_thromboembolic_clot))
+
+% --- CSF / EEG (the exclusion + encephalopathy data) ---
+observe investigation(csf, profile(acellular_normal))
+observe investigation(csf, viral_dna_pcr(negative))
+observe investigation(eeg, interpretation(diffuse_encephalopathy))
+
+% --- residual course ---
+observe residual_deficit(dense_persistent_hemiplegia)
+
+% NOT observed (open, decision-relevant): lactate(...) and mtdna_m3243(...)
+
+% --- queries: each candidate diagnosis + the recommended next steps ---
+? diagnosis(mitochondrial_stroke_like_episode)
+? diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+? diagnosis(sporadic_hemiplegic_migraine)
+? diagnosis(infectious_encephalitis)
+? diagnosis(acute_large_vessel_ischemic_stroke)
+? next_step(serum_csf_lactate_and_mtdna_m3243_testing)
+? next_step(interval_angiography_for_vasoconstriction_reversibility)

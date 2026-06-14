@@ -35,6 +35,7 @@ state = list(neq(X, atom("homer"))(State()))[0]
 assert state.constraints
 assert State(database={"branch": "local"}).database == {"branch": "local"}
 assert State(fd_store={"domains": "local"}).fd_store == {"domains": "local"}
+assert State(prolog_flags={"unknown": "fail"}).prolog_flags == {"unknown": "fail"}
 ```
 
 ## Dependencies

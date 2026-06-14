@@ -1,5 +1,18 @@
 # Changelog — micro-qr
 
+## [0.2.0] — 2026-05-11
+
+### Added
+
+- `render_png(input, version, ecc, config)` — single-call convenience function that
+  chains `encode()` → `layout_grid()` → `barcode_2d::render_scene_png()` to produce
+  a PNG byte vector in one step. Delegates pixel rasterisation to the barcode-2d
+  rendering hub (Metal on Apple, Cairo on Linux/macOS, Direct2D on Windows, Skia
+  everywhere as the universal CPU fallback).
+- New test `micro_qr_render_png_produces_valid_png` — verifies the 8-byte PNG magic
+  signature `[0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A]` is present in the
+  output of `render_png("HELLO", None, None, None)`.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

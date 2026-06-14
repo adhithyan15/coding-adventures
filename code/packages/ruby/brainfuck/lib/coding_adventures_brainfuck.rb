@@ -21,6 +21,9 @@ require "coding_adventures_virtual_machine"
 require "coding_adventures_grammar_tools"
 require "coding_adventures_lexer"
 require "coding_adventures_parser"
+require "coding_adventures_interpreter_ir"
+require "coding_adventures_vm_core"
+require "coding_adventures_jit_core"
 
 require_relative "coding_adventures/brainfuck/version"
 require_relative "coding_adventures/brainfuck/opcodes"
@@ -29,6 +32,7 @@ require_relative "coding_adventures/brainfuck/handlers"
 require_relative "coding_adventures/brainfuck/vm"
 require_relative "coding_adventures/brainfuck/lexer"
 require_relative "coding_adventures/brainfuck/parser"
+require_relative "coding_adventures/brainfuck/lang_vm"
 
 module CodingAdventures
   module Brainfuck

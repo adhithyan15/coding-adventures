@@ -1,0 +1,10 @@
+[package]
+name = "paint-vm-skia"
+version = "0.1.0"
+edition = "2021"
+description = "Skia backend for the Paint VM runtime"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
+skia-safe = { version = "0.93.1", default-features = true }

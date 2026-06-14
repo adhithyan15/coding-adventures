@@ -50,4 +50,38 @@ class GraphTest {
         val graph = Graph()
         assertFailsWith<NodeNotFoundError> { graph.removeNode("missing") }
     }
+
+    @Test
+    fun propertyBagsTrackGraphNodeAndEdgeMetadata() {
+        val graph = Graph()
+
+        graph.setGraphProperty("name", "city-map")
+        graph.setGraphProperty("version", 1)
+        assertEquals("city-map", graph.graphProperties()["name"])
+        assertEquals(1, graph.graphProperties()["version"])
+        graph.removeGraphProperty("version")
+        assertFalse(graph.graphProperties().containsKey("version"))
+
+        graph.addNode("A", mapOf("kind" to "input"))
+        graph.addNode("A", mapOf("trainable" to false))
+        graph.setNodeProperty("A", "slot", 0)
+        assertEquals("input", graph.nodeProperties("A")["kind"])
+        assertEquals(false, graph.nodeProperties("A")["trainable"])
+        assertEquals(0, graph.nodeProperties("A")["slot"])
+        graph.removeNodeProperty("A", "slot")
+        assertFalse(graph.nodeProperties("A").containsKey("slot"))
+
+        graph.addEdge("A", "B", 2.5, mapOf("role" to "distance"))
+        assertEquals("distance", graph.edgeProperties("B", "A")["role"])
+        assertEquals(2.5, graph.edgeProperties("B", "A")["weight"])
+        graph.setEdgeProperty("B", "A", "weight", 7.0)
+        assertEquals(7.0, graph.edgeWeight("A", "B"))
+        graph.setEdgeProperty("A", "B", "trainable", true)
+        graph.removeEdgeProperty("A", "B", "role")
+        assertEquals(true, graph.edgeProperties("A", "B")["trainable"])
+        assertFalse(graph.edgeProperties("A", "B").containsKey("role"))
+
+        graph.removeEdge("A", "B")
+        assertFailsWith<EdgeNotFoundError> { graph.edgeProperties("A", "B") }
+    }
 }

@@ -61,6 +61,20 @@ class BinaryOp(Enum):
     MUL = "*"
     DIV = "/"
     MOD = "%"
+    CONCAT = "||"  # SQL string concatenation: 'hello' || ' ' || 'world' → 'hello world'
+    # NULL-safe equality operators.  Unlike ``=`` / ``<>``, these never return
+    # NULL: IS DISTINCT FROM returns TRUE when the operands differ *or* one is
+    # NULL while the other is not; IS NOT DISTINCT FROM returns TRUE when they
+    # are equal or both NULL.
+    IS_DISTINCT_FROM = "IS DISTINCT FROM"
+    IS_NOT_DISTINCT_FROM = "IS NOT DISTINCT FROM"
+    # Bitwise operators — match SQLite's operator names.  Operate on
+    # integers (floats truncate toward zero first); NULL on either side
+    # yields NULL.
+    BIT_AND = "&"
+    BIT_OR = "|"
+    BIT_SHL = "<<"
+    BIT_SHR = ">>"
 
 
 class UnaryOp(Enum):
@@ -68,16 +82,31 @@ class UnaryOp(Enum):
 
     NOT = "NOT"
     NEG = "-"
+    BIT_NOT = "~"  # Bitwise NOT (~); inverts bits, NULL → NULL.
 
 
 class AggFunc(Enum):
-    """SQL aggregate functions we support. Add more (stddev, group_concat) later."""
+    """SQL aggregate functions supported by the execution stack.
+
+    Numeric aggregates (COUNT, SUM, AVG, MIN, MAX) follow standard SQL
+    semantics: NULL inputs are ignored except for COUNT(*).
+
+    String aggregates
+    -----------------
+    GROUP_CONCAT(col)           — concatenate non-NULL values with ',' (SQLite default)
+    GROUP_CONCAT(col, sep)      — concatenate non-NULL values with the given separator
+    Returns NULL when the group is empty (no non-NULL inputs).
+    """
 
     COUNT = "COUNT"
     SUM = "SUM"
     AVG = "AVG"
     MIN = "MIN"
     MAX = "MAX"
+    GROUP_CONCAT = "GROUP_CONCAT"
+    TOTAL = "TOTAL"                          # SQLite: like SUM but returns 0.0 for empty/all-null
+    JSON_GROUP_ARRAY = "JSON_GROUP_ARRAY"    # build JSON array from non-NULL values in group
+    JSON_GROUP_OBJECT = "JSON_GROUP_OBJECT"  # build JSON object from (key, value) pairs in group
 
 
 # ---- Expr variants --------------------------------------------------------
@@ -190,18 +219,25 @@ class NotIn:
 
 @dataclass(frozen=True, slots=True)
 class Like:
-    """``expr LIKE 'pattern'`` — SQL pattern matching with % and _ wildcards."""
+    """``expr LIKE 'pattern' [ESCAPE 'c']`` — SQL pattern matching.
+
+    The optional *escape* character (a single-character string) is stored when
+    the SQL statement contained an ``ESCAPE`` clause.  ``None`` means no escape
+    was specified — wildcards ``%`` and ``_`` retain their default meaning.
+    """
 
     operand: Expr
     pattern: str
+    escape: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class NotLike:
-    """``expr NOT LIKE 'pattern'``."""
+    """``expr NOT LIKE 'pattern' [ESCAPE 'c']``."""
 
     operand: Expr
     pattern: str
+    escape: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -255,11 +291,283 @@ class AggregateExpr:
     Aggregates can only appear in SELECT lists, HAVING predicates, and
     ORDER BY keys. The planner rejects aggregates in WHERE (SQL forbids
     this — WHERE runs before grouping, so aggregates make no sense there).
+
+    Fields
+    ------
+    func       : which aggregate operation to perform
+    arg        : the column / expression being aggregated (star=True for COUNT(*))
+    distinct   : TRUE for COUNT(DISTINCT col) — deduplicate before accumulating
+    separator  : separator string for GROUP_CONCAT; ``None`` for all other functions.
+                 When ``func == GROUP_CONCAT`` and ``separator is None``, the VM
+                 defaults to ``","`` (matching SQLite's behaviour).
     """
 
     func: AggFunc
     arg: FuncArg  # star=True for COUNT(*)
     distinct: bool = False
+    separator: str | None = None  # GROUP_CONCAT only; None → use default ","
+    key_arg: FuncArg | None = None    # JSON_GROUP_OBJECT only: the key expression
+    filter_expr: "Expr | None" = None  # FILTER (WHERE expr) — skip rows where False/NULL
+
+
+@dataclass(frozen=True, slots=True)
+class ExistsSubquery:
+    """``EXISTS (subquery)`` — TRUE iff the inner query returns at least one row.
+
+    Lifecycle
+    ---------
+    This node is created by the adapter with ``query`` holding a raw
+    ``SelectStmt``.  The planner's ``_resolve()`` replaces ``query`` with
+    the compiled ``LogicalPlan`` before passing the expression to codegen.
+
+    ``query`` is typed as ``object`` to break the circular import between
+    this module and ``sql_planner.plan`` (which itself imports ``Expr``).
+    Callers narrow the type at the appropriate pipeline stage.
+
+    NOT EXISTS
+    ----------
+    ``NOT EXISTS (...)`` is represented as
+    ``UnaryExpr(op=UnaryOp.NOT, operand=ExistsSubquery(...))``.
+    No ``negated`` field is needed — the existing ``UnaryOp.NOT`` instruction
+    handles inversion at runtime without any extra complexity here.
+    """
+
+    query: object  # SelectStmt before _resolve; LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
+class ScalarSubquery:
+    """A scalar subquery expression: ``(SELECT expr FROM …)`` in expression position.
+
+    Lifecycle
+    ---------
+    Created by the adapter with ``query`` holding a raw ``SelectStmt``.
+    The planner's ``_resolve()`` replaces ``query`` with a compiled
+    ``LogicalPlan`` before passing the expression to codegen.
+
+    Runtime
+    -------
+    The VM executes the inner program and pushes the first column of the
+    single result row onto the stack.  If the subquery returns zero rows the
+    value is ``NULL``.  If it returns more than one row a
+    :class:`~sql_vm.errors.CardinalityError` is raised.
+
+    ``query`` is typed as ``object`` to break the circular import between
+    this module and ``sql_planner.plan``.
+    """
+
+    query: object  # SelectStmt before _resolve; LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
+class InSubquery:
+    """``expr IN (SELECT …)`` — TRUE iff the subquery result set contains the value.
+
+    Lifecycle
+    ---------
+    Created by the adapter with ``query`` holding a raw ``SelectStmt``.
+    The planner's ``_resolve()`` replaces ``query`` with a compiled
+    ``LogicalPlan`` before passing to codegen.
+
+    ``query`` is typed as ``object`` to break the circular import between
+    this module and ``sql_planner.plan``.
+
+    NULL semantics (SQL tri-value logic)
+    ------------------------------------
+    - ``NULL IN (...)`` → NULL
+    - ``x IN (...)`` → TRUE if x equals any non-NULL member
+    - ``x IN (...)`` → NULL  if x has no match and the set contains NULL
+    - ``x IN (...)`` → FALSE otherwise
+    """
+
+    operand: object  # Expr (typed object to avoid forward-reference issues at runtime)
+    query: object    # SelectStmt → LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
+class NotInSubquery:
+    """``expr NOT IN (SELECT …)`` — complement of :class:`InSubquery`.
+
+    Same NULL semantics apply: the result is NULL whenever it would be NULL for
+    the corresponding ``IN`` test.  The boolean TRUE/FALSE cases are inverted.
+    """
+
+    operand: object  # Expr
+    query: object    # SelectStmt → LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
+class CorrelatedRef:
+    """A column reference that resolves against the *outer* query's scope.
+
+    Correlated subqueries
+    ---------------------
+    A correlated subquery is one whose WHERE (or HAVING) clause references
+    a column from an enclosing query.  Example::
+
+        SELECT e.name
+        FROM employees AS e
+        WHERE e.dept_id IN (
+            SELECT id FROM departments AS d WHERE d.id = e.dept_id
+        )
+
+    The inner query references ``e.dept_id`` from the outer scope.  After
+    column resolution the planner replaces the inner ``Column(table="e",
+    col="dept_id")`` with a ``CorrelatedRef(outer_alias="e", col="dept_id")``.
+
+    Lifecycle
+    ---------
+    - **Planner** (``_resolve_column``): when a column is not found in the
+      inner scope but *is* found in the outer scope, a ``CorrelatedRef`` is
+      created.  The ``outer_alias`` is the table alias from the outer scope.
+    - **Codegen** (``_compile_expr``): a ``CorrelatedRef`` compiles to a
+      ``LoadOuterColumn(cursor_id, col)`` instruction, where ``cursor_id`` is
+      looked up from the outer compilation context's ``alias_to_cursor`` map.
+    - **VM**: ``LoadOuterColumn`` reads the column value from the outer
+      execution state's ``current_row`` snapshot that was passed into the
+      inner sub-program at call time.
+
+    Each re-execution of the inner sub-program (once per outer row) gets the
+    outer row at that moment — that is what makes the subquery "correlated".
+    """
+
+    outer_alias: str   # table alias in the outer scope (e.g. "e")
+    col: str           # column name within that alias (e.g. "dept_id")
+
+
+@dataclass(frozen=True, slots=True)
+class WindowFuncExpr:
+    """A window (analytic) function: ``func([arg]) OVER (PARTITION BY … ORDER BY …)``.
+
+    Window functions differ from aggregate functions:
+    - They do *not* collapse rows — one output row per input row.
+    - They operate over a "window" of related rows defined by the OVER clause.
+    - They may appear only in SELECT lists (not WHERE, GROUP BY, or HAVING).
+
+    Fields
+    ------
+    func:
+        Function name in lower-case (``"row_number"``, ``"sum"``, …).
+        The planner normalises to lower-case; codegen maps to :class:`WinFunc`.
+    arg:
+        The single expression argument, or ``None`` for arg-free functions
+        (``ROW_NUMBER``, ``RANK``, ``DENSE_RANK``).  ``COUNT(*)`` passes
+        ``arg=None`` with ``func="count_star"``.
+    partition_by:
+        Tuple of partition key expressions.  Rows with equal partition keys
+        are placed in the same window group.  Empty tuple means the whole
+        result set is one partition.
+    order_by:
+        Tuple of ``(expr, descending)`` sort keys within each partition.
+        Required for ranking functions; optional for aggregating functions.
+    extra_args:
+        Additional constant arguments after the primary column argument.
+        Used by offset functions that take more than one argument:
+
+        - ``LAG(col, offset, default)``  → extra_args = (Literal(offset), Literal(default))
+        - ``LEAD(col, offset, default)`` → extra_args = (Literal(offset), Literal(default))
+        - ``NTILE(n)``                   → arg=Literal(n), extra_args = ()
+        - ``NTH_VALUE(col, n)``          → extra_args = (Literal(n),)
+        - ``PERCENT_RANK()``,  ``CUME_DIST()`` → arg=None, extra_args = ()
+
+        The planner resolves these through ``_resolve()`` just like any
+        other expression (they are typically ``Literal`` nodes and pass
+        through unchanged).
+
+    Lifecycle
+    ---------
+    Created by the adapter with raw ``Column`` references.  ``_resolve()``
+    in the planner qualifies each expression against the current scope,
+    producing a fully-resolved tree that codegen can emit directly.
+    """
+
+    func: str                                    # e.g. "row_number", "sum"
+    arg: Expr | None                           # None for arg-free funcs
+    partition_by: tuple[Expr, ...] = ()
+    order_by: tuple[tuple[Expr, bool], ...] = ()  # (expr, descending)
+    extra_args: tuple[Expr, ...] = ()          # LAG/LEAD offset+default, NTILE n, NTH_VALUE n
+    frame: object | None = None               # WinFrame | None; avoids circular import
+
+
+@dataclass(frozen=True, slots=True)
+class ExcludedColumn:
+    """Reference to the *would-be-inserted* row's value for a column.
+
+    Only valid inside an ``ON CONFLICT DO UPDATE SET`` clause (the upsert
+    action).  The pseudo-table ``EXCLUDED`` contains the row that was
+    rejected because it conflicted with an existing row.  For example::
+
+        INSERT INTO t (id, val)
+        VALUES (1, 42)
+        ON CONFLICT (id) DO UPDATE SET val = EXCLUDED.val
+
+    The ``EXCLUDED.val`` here refers to the value ``42`` from the rejected
+    row — not the value already in the table.
+
+    Why a dedicated node instead of ``Column(table="EXCLUDED", col=…)``?
+    ----------------------------------------------------------------------
+    Using a magic table-name string would silently pass through the normal
+    column-resolution path and break on the ``Scan`` lookup (there is no
+    table named "EXCLUDED" in the schema).  A dedicated node:
+
+    - Is pattern-matchable in the planner without string guards.
+    - Codegen can emit a dedicated ``LoadExcludedColumn`` IR instruction
+      that the VM resolves against the ``excluded_row`` it holds on the
+      side, rather than looking up a cursor.
+    - Makes the AST self-documenting: any reader can see this is EXCLUDED,
+      not a regular column reference.
+
+    The adapter detects ``Column(table="EXCLUDED", col=c)`` inside a upsert
+    clause and rewrites it to ``ExcludedColumn(col=c)``.  Outside a upsert
+    clause, ``EXCLUDED.col`` just resolves as a normal two-part column
+    reference (table alias "EXCLUDED" is very unlikely but harmless).
+    """
+
+    col: str  # column name in the EXCLUDED pseudo-table
+
+
+@dataclass(frozen=True, slots=True)
+class RowIdRef:
+    """Reference to the implicit integer rowid of a table row.
+
+    SQLite assigns every table row an implicit integer row identifier
+    accessible via three pseudo-column aliases: ``rowid``, ``_rowid_``, and
+    ``oid``.  This node is produced by the planner's column-resolution pass
+    when it encounters one of those names and the table has no real column
+    with that spelling.
+
+    Semantics
+    ---------
+    The rowid is a monotonically assigned integer that is unique within a
+    table.  For the in-memory backend it corresponds to the 0-based position
+    of the row in the table's backing list.  For file-backed backends that
+    wrap real SQLite it is the real SQLite rowid.
+
+    Usage examples::
+
+        SELECT rowid, name FROM users
+        DELETE FROM t WHERE rowid = 5
+        SELECT * FROM log WHERE rowid > 100 LIMIT 20   -- efficient pagination
+        SELECT rowid, * FROM t WHERE oid BETWEEN 10 AND 20
+
+    ``table`` holds the resolved alias (or table name as a fallback) of the
+    scan that owns this rowid reference — the same string used for
+    ``Column.table``.  It is always set after planning; bare ``rowid``
+    references in a single-table query are qualified to that table's alias
+    by the planner.
+
+    Limitations
+    -----------
+    - ``RowIdRef`` is read-only: it cannot appear on the left-hand side of
+      an assignment.  ``UPDATE t SET rowid = 99`` is not supported.
+    - ``SELECT *`` does **not** include the rowid; the implicit column is
+      only visible when explicitly named, matching real-SQLite behaviour.
+    - Tables declared ``WITHOUT ROWID`` do not have this pseudo-column; the
+      current backend does not support ``WITHOUT ROWID``, so every table has
+      a valid rowid.
+    """
+
+    table: str  # resolved alias / table name — set by the planner, never None
 
 
 # The type union every non-specialized consumer should match on. Order
@@ -268,6 +576,9 @@ class AggregateExpr:
 Expr = (
     Literal
     | Column
+    | CorrelatedRef
+    | ExcludedColumn
+    | RowIdRef
     | BinaryExpr
     | UnaryExpr
     | FunctionCall
@@ -281,6 +592,11 @@ Expr = (
     | Wildcard
     | CaseExpr
     | AggregateExpr
+    | ExistsSubquery
+    | ScalarSubquery
+    | InSubquery
+    | NotInSubquery
+    | WindowFuncExpr
 )
 
 
@@ -318,6 +634,28 @@ def contains_aggregate(expr: Expr) -> bool:
             ):
                 return True
             return else_ is not None and contains_aggregate(else_)
+        case CorrelatedRef():
+            # A correlated outer-column reference is a leaf that carries no
+            # aggregate semantics in the current scope.
+            return False
+        case ExistsSubquery():
+            # The inner query is independently scoped; from the outer
+            # expression's perspective EXISTS is a boolean atom, not an
+            # aggregate.
+            return False
+        case ScalarSubquery():
+            # Scalar subqueries are self-contained; any aggregation inside
+            # them is scoped to the inner query.
+            return False
+        case InSubquery() | NotInSubquery():
+            # Subquery is independently scoped; the operand could in theory
+            # contain an aggregate, but IN-subquery in a HAVING clause is
+            # unusual enough that we treat it conservatively as non-aggregate.
+            return False
+        case WindowFuncExpr():
+            # Window functions are handled by a separate WindowAgg plan node.
+            # They are not aggregates from the planner's perspective.
+            return False
         case _:
             return False
 
@@ -368,5 +706,29 @@ def _collect_columns(expr: Expr, out: list[Column]) -> None:
         case AggregateExpr(_, arg, _):
             if arg.value is not None:
                 _collect_columns(arg.value, out)
+        case CorrelatedRef():
+            # A correlated reference points into the outer scope — it is NOT
+            # a local column of the inner query, so projection-pruning in the
+            # inner query should not collect it.
+            pass
+        case ExistsSubquery():
+            # Inner query columns are independently scoped — not visible to
+            # projection-pruning or column-resolution in the outer query.
+            pass
+        case ScalarSubquery():
+            # Inner query columns are independently scoped.
+            pass
+        case InSubquery(operand=op) | NotInSubquery(operand=op):
+            # Collect columns from the outer operand expression (e.g., the
+            # left-hand side of `col IN (SELECT ...)`).  The inner subquery
+            # is independently scoped — its columns are not visible here.
+            _collect_columns(op, out)  # type: ignore[arg-type]
+        case WindowFuncExpr(_, arg, partition_by, order_by):
+            if arg is not None:
+                _collect_columns(arg, out)
+            for e in partition_by:
+                _collect_columns(e, out)
+            for e, _ in order_by:
+                _collect_columns(e, out)
         case _:
             pass

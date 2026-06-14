@@ -226,6 +226,82 @@ describe("Single Edge", () => {
   });
 });
 
+describe("Property Bags and Weights", () => {
+  it("stores graph, node, and directed edge metadata", () => {
+    const g = new Graph();
+
+    g.setGraphProperty("name", "neural-dag");
+    g.setGraphProperty("version", 1);
+    expect(g.graphProperties()).toEqual({
+      name: "neural-dag",
+      version: 1,
+    });
+    g.removeGraphProperty("version");
+    expect(g.graphProperties()).toEqual({ name: "neural-dag" });
+
+    g.addNode("input", { kind: "input" });
+    g.addNode("input", { slot: 0 });
+    expect(g.nodeProperties("input")).toEqual({
+      kind: "input",
+      slot: 0,
+    });
+
+    const nodeProperties = g.nodeProperties("input");
+    nodeProperties.kind = "mutated";
+    expect(g.nodeProperties("input").kind).toBe("input");
+
+    g.addEdge("input", "sum", 0.5, { trainable: true });
+    expect(g.edgeProperties("input", "sum")).toEqual({
+      trainable: true,
+      weight: 0.5,
+    });
+    expect(g.edgeWeight("input", "sum")).toBe(0.5);
+    expect(g.edgesWeighted()).toEqual([["input", "sum", 0.5]]);
+
+    g.setEdgeProperty("input", "sum", "weight", 0.75);
+    expect(g.edgeWeight("input", "sum")).toBe(0.75);
+    expect(g.successorsWeighted("input").get("sum")).toBe(0.75);
+
+    g.removeEdgeProperty("input", "sum", "trainable");
+    expect(g.edgeProperties("input", "sum")).toEqual({ weight: 0.75 });
+  });
+
+  it("keeps reverse edge properties independent", () => {
+    const g = new Graph();
+
+    g.addEdge("A", "B", 2, { role: "forward" });
+    g.addEdge("B", "A", 3, { role: "reverse" });
+
+    expect(g.edgeProperties("A", "B")).toEqual({
+      role: "forward",
+      weight: 2,
+    });
+    expect(g.edgeProperties("B", "A")).toEqual({
+      role: "reverse",
+      weight: 3,
+    });
+
+    g.setEdgeProperty("B", "A", "weight", 4);
+    expect(g.edgeWeight("A", "B")).toBe(2);
+    expect(g.edgeWeight("B", "A")).toBe(4);
+  });
+
+  it("removes properties with their graph structure", () => {
+    const g = new Graph();
+
+    g.addNode("A", { kind: "input" });
+    g.addEdge("A", "B", 1.5, { trainable: true });
+
+    g.removeEdge("A", "B");
+    expect(() => g.edgeProperties("A", "B")).toThrow(EdgeNotFoundError);
+
+    g.addEdge("A", "B", 1.5, { trainable: true });
+    g.removeNode("A");
+    expect(() => g.nodeProperties("A")).toThrow(NodeNotFoundError);
+    expect(() => g.edgeProperties("A", "B")).toThrow(EdgeNotFoundError);
+  });
+});
+
 // ======================================================================
 // 4. Multi-Node Operations
 // ======================================================================

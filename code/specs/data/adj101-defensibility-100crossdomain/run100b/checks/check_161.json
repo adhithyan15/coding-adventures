@@ -1,0 +1,8 @@
+{
+ "check_id": 161,
+ "idx": 60,
+ "slot": "total_ce_hours",
+ "claimed_value": 34,
+ "scenario": "An engineer's renewal cycle just closed. During the cycle she logged 34 total continuing-education hours, of which 3 hours were in professional ethics.",
+ "cited_span": "she logged 34 total continuing-education hours"
+}

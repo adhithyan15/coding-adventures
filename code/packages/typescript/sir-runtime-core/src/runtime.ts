@@ -1,0 +1,112 @@
+/**
+ * Closures, the global store, printing, and the builtin dispatch table.
+ *
+ * - **Closures** carry their captured values explicitly (the frontend
+ *   computed them). `makeClosure` binds captures ahead of the call-time
+ *   arguments; `apply` invokes a handle. A uniform `Closure` lets an
+ *   `IndirectCall` invoke any target the same way.
+ * - **Globals** — a process-global name→value store backing SIR `Globals`.
+ * - **Dispatch** — `builtinClosure` wraps a builtin used as a first-class
+ *   value; `callBuiltin` looks one up by SIR name.
+ */
+
+import { add, div, gt, lt, mul, sub } from "./arithmetic.js";
+import { car, cdr, cons, isPair } from "./pairs.js";
+import { Sym } from "./symbols.js";
+import { eq, isNull, isNumber, isSymbol, toDisplay } from "./values.js";
+import type { ClosureLike, Val } from "./values.js";
+
+// --- Closures --------------------------------------------------------------
+
+/** A callable handle wrapping a function. */
+export class Closure implements ClosureLike {
+  readonly __sirClosure = true as const;
+  constructor(public readonly fn: (...args: Val[]) => Val) {}
+}
+
+/** Invoke a closure handle with `args`. Throws on a non-closure. */
+export function apply(c: Val, args: Val[]): Val {
+  if (!(c instanceof Closure)) {
+    throw new TypeError("apply on non-closure");
+  }
+  return c.fn(...args);
+}
+
+/** Build a closure that prepends captured values to each call's arguments. */
+export function makeClosure(fn: (...args: Val[]) => Val, captures: Val[]): Closure {
+  return new Closure((...args: Val[]) => fn(...captures, ...args));
+}
+
+// --- Global store ----------------------------------------------------------
+
+const globals = new Map<string, Val>();
+
+function keyOf(name: Val): string {
+  return name instanceof Sym ? name.name : String(name);
+}
+
+/** Store `value` under `name` (a string or symbol). */
+export function globalSet(name: Val, value: Val): Val {
+  globals.set(keyOf(name), value);
+  return value;
+}
+
+/** Fetch a global by `name` (string or symbol). Throws if undefined. */
+export function globalGet(name: Val): Val {
+  const key = keyOf(name);
+  if (!globals.has(key)) {
+    throw new Error(`undefined global: ${key}`);
+  }
+  return globals.get(key)!;
+}
+
+/** Fetch a global by a statically-known string name. */
+export function globalGetStatic(name: string): Val {
+  if (!globals.has(name)) {
+    throw new Error(`undefined global: ${name}`);
+  }
+  return globals.get(name)!;
+}
+
+// --- Printing --------------------------------------------------------------
+
+/** Print the SIR display form of `v` followed by a newline. */
+export function print(v: Val): null {
+  // eslint-disable-next-line no-console
+  console.log(toDisplay(v));
+  return null;
+}
+
+// --- Builtin dispatch ------------------------------------------------------
+
+const builtins: Record<string, (...args: Val[]) => Val> = {
+  "+": add,
+  "-": sub,
+  "*": mul,
+  "/": div,
+  "=": (a, b) => eq(a!, b!),
+  "<": (a, b) => lt(a!, b!),
+  ">": (a, b) => gt(a!, b!),
+  cons: (a, b) => cons(a!, b!),
+  car: (p) => car(p!),
+  cdr: (p) => cdr(p!),
+  "null?": (v) => isNull(v!),
+  "pair?": (v) => isPair(v!),
+  "number?": (v) => isNumber(v!),
+  "symbol?": (v) => isSymbol(v!),
+  print: (v) => print(v!),
+};
+
+/** Invoke a builtin by SIR name with a list of arguments. */
+export function callBuiltin(name: string, args: Val[]): Val {
+  const fn = builtins[name];
+  if (fn === undefined) {
+    throw new Error(`unknown builtin: ${name}`);
+  }
+  return fn(...args);
+}
+
+/** Wrap a builtin as a first-class {@link Closure}. */
+export function builtinClosure(name: string): Closure {
+  return new Closure((...args: Val[]) => callBuiltin(name, args));
+}

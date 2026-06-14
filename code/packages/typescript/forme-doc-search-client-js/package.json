@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/forme-doc-search-client-js",
+  "version": "0.1.0",
+  "description": "Browser-side search client logic for the documentation-site search.  Consumes the manifest from forme-doc-search-index-builder + an INJECTED shard-fetcher callback; loads shards on demand, tokenises queries via forme-doc-search-tokenizer (must match index-time options), merges postings, ranks results.  Pure transform; capabilities []; the shard-fetcher capability (net:fetch in the browser) lives with the caller, not this package.  DOC00 v0 search-engine package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-doc-search-tokenizer": "file:../forme-doc-search-tokenizer",
+    "@coding-adventures/forme-doc-search-index-builder": "file:../forme-doc-search-index-builder"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

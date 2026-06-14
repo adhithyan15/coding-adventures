@@ -1,0 +1,1386 @@
+use cas_solve::SOLVE;
+use coding_adventures_macsyma_runtime::{
+    extend_macsyma_name_table, macsyma_help_text, macsyma_name_table, parse_macsyma_help_query,
+    MacsymaSession, DECLARE, EV, KILL, PROPERTIES, PROP_VARS,
+};
+use std::collections::HashMap;
+use symbolic_ir::{
+    apply, int, rat, sym, ADD, AND, ASIN, COS, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, LESS,
+    LESS_EQUAL, LIST, LOG, MUL, NEG, POW, RULE, SIN, SQRT, SUB,
+};
+
+const SUBST: &str = "Subst";
+
+#[test]
+fn evaluates_arithmetic_program() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("1 + 2 * 3;").unwrap();
+    assert_eq!(results.len(), 1);
+    assert_eq!(results[0].output, int(7));
+    assert!(results[0].display);
+}
+
+#[test]
+fn preserves_suppressed_statement_metadata() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("x : 5$ x + 1;").unwrap();
+    assert_eq!(results.len(), 2);
+    assert!(!results[0].display);
+    assert!(results[1].display);
+    assert_eq!(results[1].output, int(6));
+}
+
+#[test]
+fn tracks_showtime_option_through_normal_assignments() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("showtime:true$ 2 + 3; showtime:false$ 4 + 5;")
+        .unwrap();
+
+    assert_eq!(results[1].output, int(5));
+    assert_timing_text(results[1].timing_text.as_deref());
+    assert_eq!(results[0].timing_text, None);
+    assert_eq!(results[2].timing_text, None);
+    assert_eq!(results[3].timing_text, None);
+}
+
+#[test]
+fn reports_showtime_diagnostics_for_suppressed_statements() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("showtime:true$ 2 + 3$").unwrap();
+
+    assert_eq!(results[1].output, int(5));
+    assert!(!results[1].display);
+    assert_timing_text(results[1].timing_text.as_deref());
+}
+
+#[test]
+fn parses_and_renders_question_mark_help() {
+    assert_eq!(
+        parse_macsyma_help_query("? solve;").as_deref(),
+        Some("solve")
+    );
+    assert_eq!(parse_macsyma_help_query("solve(x, x);"), None);
+    assert!(macsyma_help_text(Some("solve")).contains("solve(expr, var)"));
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("? solve").unwrap();
+
+    assert_eq!(results.len(), 1);
+    assert!(results[0].display);
+    assert!(results[0].output_text.contains("solve(expr, var)"));
+    assert!(matches!(results[0].input, symbolic_ir::IRNode::Str(_)));
+    assert!(matches!(results[0].output, symbolic_ir::IRNode::Str(_)));
+}
+
+#[test]
+fn canonicalizes_ode2_surface_name_to_ode2_head() {
+    let table = macsyma_name_table();
+    assert_eq!(table.get("ode2").map(String::as_str), Some("ODE2"));
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("ode2(foo, y, x);").unwrap();
+    let expected = apply(sym("ODE2"), vec![sym("foo"), sym("y"), sym("x")]);
+
+    assert_eq!(results[0].input, expected);
+    assert_eq!(results[0].output, expected);
+}
+
+#[test]
+fn factors_univariate_integer_polynomials_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 - 1);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![int(1), sym("x")]),
+                apply(sym(ADD), vec![int(-1), sym("x")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn keeps_multivariate_factor_calls_unevaluated() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x + y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym("Factor"),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")])]
+        )
+    );
+}
+
+#[test]
+fn factors_common_multivariate_terms_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2*y - y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                sym("y"),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![int(1), sym("x")]),
+                        apply(sym(ADD), vec![int(-1), sym("x")]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+// Integer content: GCD of coefficients ± common symbolic factor pulled out
+// before the specific pattern matchers.
+
+#[test]
+fn factors_multivariate_integer_content_only_through_runtime() {
+    // factor(2*x + 4*y) → 2*(x + 2*y)
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(2*x + 4*y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                int(2),
+                apply(
+                    sym(ADD),
+                    vec![sym("x"), apply(sym(MUL), vec![int(2), sym("y")])],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_integer_content_and_symbolic_through_runtime() {
+    // factor(2*x*y + 2*x*z) → 2*x*(y + z)
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(2*x*y + 2*x*z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_integer_content_with_recursive_factoring_through_runtime() {
+    // factor(2*x^2*y - 2*y) → 2*y*(x+1)*(x-1)
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(2*x^2*y - 2*y);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("y")]),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![int(1), sym("x")]),
+                        apply(sym(ADD), vec![int(-1), sym("x")]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_perfect_squares_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 + 2*x*y + y^2);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(POW),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(2)]
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_difference_of_squares_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^2 - y^2);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_difference_of_cubes_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^3 - y^3);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(SUB), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(sym(MUL), vec![sym("x"), sym("y")]),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_sum_of_cubes_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x^3 + y^3);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), sym("y")]),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(
+                            sym(ADD),
+                            vec![
+                                apply(sym(POW), vec![sym("x"), int(2)]),
+                                apply(
+                                    sym(MUL),
+                                    vec![int(-1), apply(sym(MUL), vec![sym("x"), sym("y")]),],
+                                ),
+                            ],
+                        ),
+                        apply(sym(POW), vec![sym("y"), int(2)]),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_grouped_multivariate_terms_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x*y + x*z + y + z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), int(1)]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_grouped_multivariate_terms_with_signed_residuals_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(x*y - x*z + y - z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(ADD), vec![sym("x"), int(1)]),
+                apply(
+                    sym(ADD),
+                    vec![sym("y"), apply(sym(MUL), vec![int(-1), sym("z")]),],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_integer_content_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(2*x*y + 2*x*z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn factors_negative_multivariate_integer_content_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("factor(-2*x*y - 2*x*z);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(MUL), vec![int(-2), sym("x")]),
+                apply(sym(ADD), vec![sym("y"), sym("z")]),
+            ],
+        )
+    );
+}
+
+// Perfect-cube expansions: a^3 ± 3a^2b ± 3ab^2 ± b^3 = (a ± b)^3
+// These are four-term patterns and are detected before the two-term cubic
+// identity a^3 ± b^3, so they must be tested here to confirm the dispatch
+// order does not swallow them as a partial match.
+
+#[test]
+fn factors_multivariate_perfect_cube_sum_through_runtime() {
+    // x^3 + 3*x^2*y + 3*x*y^2 + y^3  =  (x + y)^3
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("factor(x^3 + 3*x^2*y + 3*x*y^2 + y^3);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(POW),
+            vec![apply(sym(ADD), vec![sym("x"), sym("y")]), int(3)],
+        )
+    );
+}
+
+#[test]
+fn factors_multivariate_perfect_cube_difference_through_runtime() {
+    // x^3 - 3*x^2*y + 3*x*y^2 - y^3  =  (x - y)^3
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("factor(x^3 - 3*x^2*y + 3*x*y^2 - y^3);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(POW),
+            vec![apply(sym(SUB), vec![sym("x"), sym("y")]), int(3)],
+        )
+    );
+}
+
+#[test]
+fn recognizes_elliptic_first_kind_integrals_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(1/sqrt(1-k^2*sin(theta)^2), theta);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(sym("EllipticF"), vec![sym("theta"), sym("k")])
+    );
+}
+
+#[test]
+fn recognizes_complete_elliptic_first_kind_integrals_through_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(1/sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);")
+        .unwrap();
+
+    assert_eq!(results[0].output, apply(sym("EllipticK"), vec![sym("k")]));
+}
+
+#[test]
+fn recognizes_elliptic_second_kind_integrals_through_runtime() {
+    // ∫ sqrt(1 - k^2 * sin(theta)^2) dtheta  →  EllipticE(theta, k)
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(sqrt(1-k^2*sin(theta)^2), theta);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(sym("EllipticE"), vec![sym("theta"), sym("k")])
+    );
+}
+
+#[test]
+fn recognizes_complete_elliptic_second_kind_integrals_through_runtime() {
+    // ∫₀^(π/2) sqrt(1 - k^2 * sin(theta)^2) dtheta  →  EllipticE(k)
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);")
+        .unwrap();
+
+    assert_eq!(results[0].output, apply(sym("EllipticE"), vec![sym("k")]));
+}
+
+#[test]
+fn recognizes_complete_elliptic_third_kind_integrals_through_runtime() {
+    // ∫₀^(π/2) 1/((1 + n*sin(theta)^2) * sqrt(1 - k^2*sin(theta)^2)) dtheta  →  EllipticPi(n, k)
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(1/((1+n*sin(theta)^2)*sqrt(1-k^2*sin(theta)^2)), theta, 0, %pi/2);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(sym("EllipticPi"), vec![sym("n"), sym("k")])
+    );
+}
+
+#[test]
+fn elliptic_first_kind_regression_still_works() {
+    // Regression: the existing EllipticK recognition must still fire after the new handlers are
+    // tried first, since complete_elliptic_second_kind and complete_elliptic_third_kind are
+    // attempted before the fallback but must not accidentally consume the 1/sqrt(...) form.
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("integrate(1/sqrt(1-k^2*sin(theta)^2), theta, 0, %pi/2);")
+        .unwrap();
+
+    assert_eq!(results[0].output, apply(sym("EllipticK"), vec![sym("k")]));
+}
+
+#[test]
+fn question_mark_without_topic_lists_help_topics() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("?").unwrap();
+
+    assert!(results[0].output_text.contains("MACSYMA help topics:"));
+    assert!(results[0].output_text.contains("solve"));
+}
+
+#[test]
+fn kill_showtime_restores_false_binding() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("showtime:true$ kill(showtime); showtime; 2;")
+        .unwrap();
+
+    assert_timing_text(results[1].timing_text.as_deref());
+    assert_eq!(results[2].output, sym("False"));
+    assert_eq!(results[2].timing_text, None);
+    assert_eq!(results[3].timing_text, None);
+}
+
+#[test]
+fn records_input_and_output_history() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("x : 5$ x + 2;").unwrap();
+    assert_eq!(results[0].input_index, 1);
+    assert_eq!(results[1].input_index, 2);
+    assert_eq!(session.history().get_output(1), Some(&int(5)));
+    assert_eq!(session.history().last_output(), Some(&int(7)));
+}
+
+#[test]
+fn resolves_history_symbols_from_history_table() {
+    let mut session = MacsymaSession::new();
+    session.eval_source("x; 7;").unwrap();
+
+    assert_eq!(session.history().resolve_history_symbol("%"), Some(&int(7)));
+    assert_eq!(
+        session.history().resolve_history_symbol("%i1"),
+        Some(&sym("x"))
+    );
+    assert_eq!(
+        session.history().resolve_history_symbol("%o2"),
+        Some(&int(7))
+    );
+    assert_eq!(session.history().resolve_history_symbol("%foo"), None);
+    assert_eq!(session.history().resolve_history_symbol("%i999"), None);
+}
+
+#[test]
+fn evaluates_percent_as_previous_output() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("2 + 3; % * 2;").unwrap();
+
+    assert_eq!(results[0].output, int(5));
+    assert_eq!(results[1].input, apply(sym(MUL), vec![sym("%"), int(2)]));
+    assert_eq!(results[1].output, int(10));
+}
+
+#[test]
+fn evaluates_numbered_input_and_output_history_references() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("2 + 3; % * 2; %i1; %o2;").unwrap();
+
+    let original_input = apply(sym(ADD), vec![int(2), int(3)]);
+    assert_eq!(results[0].output, int(5));
+    assert_eq!(results[1].output, int(10));
+    assert_eq!(results[2].input, sym("%i1"));
+    assert_eq!(results[2].output, int(5));
+    assert_eq!(results[3].input, sym("%o2"));
+    assert_eq!(results[3].output, int(10));
+    assert_eq!(session.history().get_input(1), Some(&original_input));
+    assert_eq!(session.history().get_input(3), Some(&sym("%i1")));
+}
+
+#[test]
+fn evaluates_function_definitions_across_statements() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("f(x) := x^2; f(4);").unwrap();
+    assert_eq!(results[0].output, sym("f"));
+    assert_eq!(results[1].output, int(16));
+}
+
+#[test]
+fn leaves_symbolic_results_unevaluated_when_needed() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("(x + 0) * (y^2);").unwrap();
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![sym("x"), apply(sym(POW), vec![sym("y"), int(2)])]
+        )
+    );
+}
+
+#[test]
+fn prebinds_macsyma_numeric_constants() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("%pi; %e;").unwrap();
+    assert_eq!(results.len(), 2);
+    assert!(results[0].output.to_string().starts_with("3.14159"));
+    assert!(results[1].output.to_string().starts_with("2.71828"));
+}
+
+#[test]
+fn history_can_be_reset() {
+    let mut session = MacsymaSession::new();
+    session.eval_source("1; 2;").unwrap();
+    session.history_mut().reset();
+    assert_eq!(session.history().next_input_index(), 1);
+    assert!(session.history().last_output().is_none());
+}
+
+#[test]
+fn exports_and_extends_runtime_name_table_idempotently() {
+    let table = macsyma_name_table();
+    assert_eq!(table.get("kill").map(String::as_str), Some(KILL));
+    assert_eq!(table.get("ev").map(String::as_str), Some(EV));
+    assert_eq!(
+        table.get("ratsimp").map(String::as_str),
+        Some("RatSimplify")
+    );
+    assert_eq!(
+        table.get("trigsimp").map(String::as_str),
+        Some("TrigSimplify")
+    );
+    assert_eq!(table.get("assume").map(String::as_str), Some("Assume"));
+    assert_eq!(table.get("forget").map(String::as_str), Some("Forget"));
+    assert_eq!(table.get("is").map(String::as_str), Some("Is"));
+    assert_eq!(table.get("declare").map(String::as_str), Some(DECLARE));
+    assert_eq!(
+        table.get("properties").map(String::as_str),
+        Some(PROPERTIES)
+    );
+    assert_eq!(table.get("propvars").map(String::as_str), Some(PROP_VARS));
+    assert_eq!(
+        table.get("eigenvalues").map(String::as_str),
+        Some("Eigenvalues")
+    );
+    assert_eq!(
+        table.get("eigenvectors").map(String::as_str),
+        Some("Eigenvectors")
+    );
+    assert_eq!(table.get("charpoly").map(String::as_str), Some("CharPoly"));
+    assert_eq!(
+        table.get("nullspace").map(String::as_str),
+        Some("NullSpace")
+    );
+    assert_eq!(
+        table.get("columnspace").map(String::as_str),
+        Some("ColumnSpace")
+    );
+    assert_eq!(table.get("rowspace").map(String::as_str), Some("RowSpace"));
+    assert_eq!(table.get("norm").map(String::as_str), Some("Norm"));
+    assert_eq!(table.get("lu").map(String::as_str), Some("LU"));
+
+    let mut target = HashMap::from([("custom".to_string(), "CustomHead".to_string())]);
+    extend_macsyma_name_table(&mut target);
+    let once = target.clone();
+    extend_macsyma_name_table(&mut target);
+    assert_eq!(target, once);
+    assert_eq!(target.get("expand").map(String::as_str), Some("Expand"));
+    assert_eq!(target.get("custom").map(String::as_str), Some("CustomHead"));
+}
+
+#[test]
+fn kill_clears_single_and_multiple_bindings() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("x : 5$ y : 7$ kill(x); x; y;").unwrap();
+    assert_eq!(results[2].output, sym("done"));
+    assert_eq!(results[3].output, sym("x"));
+    assert_eq!(results[4].output, int(7));
+
+    let results = session.eval_source("kill(y, missing); y;").unwrap();
+    assert_eq!(results[0].output, sym("done"));
+    assert_eq!(results[1].output, sym("y"));
+}
+
+#[test]
+fn kill_all_clears_bindings_and_history() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("x : 5$ 42; kill(all);").unwrap();
+    assert_eq!(results[2].output, sym("done"));
+    assert_eq!(session.history().next_input_index(), 1);
+    assert!(session.history().last_output().is_none());
+
+    let results = session.eval_source("x; %;").unwrap();
+    assert_eq!(results[0].output, sym("x"));
+    assert_eq!(results[1].output, sym("x"));
+}
+
+#[test]
+fn assume_is_and_forget_share_session_assumptions() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x > 0); is(x > 0); forget(); is(x > 0);")
+        .unwrap();
+
+    assert_eq!(results[0].output, sym("done"));
+    assert_eq!(results[1].output, sym("True"));
+    assert_eq!(results[2].output, sym("done"));
+    assert_eq!(results[3].output, sym("unknown"));
+}
+
+#[test]
+fn declare_feeds_properties_into_is_queries() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(x, positive); is(x > 0);")
+        .unwrap();
+
+    assert_eq!(
+        results[0].input,
+        apply(sym(DECLARE), vec![sym("x"), sym("positive")])
+    );
+    assert_eq!(results[0].output, sym("done"));
+    assert_eq!(results[1].output, sym("True"));
+}
+
+#[test]
+fn nonnegative_session_assumptions_feed_radcan() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x >= 0); radcan(sqrt(x^2));")
+        .unwrap();
+
+    assert_eq!(
+        results[1].input,
+        apply(
+            sym("Radcan"),
+            vec![apply(
+                sym(SQRT),
+                vec![apply(sym(POW), vec![sym("x"), int(2)])]
+            )]
+        )
+    );
+    assert_eq!(results[1].output, sym("x"));
+}
+
+#[test]
+fn declared_positivity_feeds_radcan() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(y, positive); radcan(sqrt(y^2));")
+        .unwrap();
+
+    assert_eq!(results[1].output, sym("y"));
+}
+
+#[test]
+fn assumptions_feed_elementary_abs_sqrt_log_simplification() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x >= 0); sqrt(x^2); log(x^3); abs(x);")
+        .unwrap();
+
+    assert_eq!(results[1].output, sym("x"));
+    assert_eq!(
+        results[2].output,
+        apply(sym(MUL), vec![int(3), apply(sym(LOG), vec![sym("x")])])
+    );
+    assert_eq!(results[3].output, sym("x"));
+}
+
+#[test]
+fn negative_assumptions_feed_abs() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("assume(y < 0); abs(y);").unwrap();
+
+    assert_eq!(results[1].output, apply(sym(NEG), vec![sym("y")]));
+}
+
+#[test]
+fn properties_lists_declared_properties_deterministically() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(n, integer, n, positive); properties(n);")
+        .unwrap();
+
+    assert_eq!(
+        results[1].output,
+        apply(sym(LIST), vec![sym("integer"), sym("positive")])
+    );
+}
+
+#[test]
+fn propvars_lists_symbols_with_declared_properties_deterministically() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(z, integer); declare(a, positive); propvars();")
+        .unwrap();
+
+    assert_eq!(
+        results[2].output,
+        apply(sym(LIST), vec![sym("a"), sym("z")])
+    );
+}
+
+#[test]
+fn properties_queries_raw_symbols_even_when_bound() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("x : 10; declare(x, integer); properties(x);")
+        .unwrap();
+
+    assert_eq!(results[2].output, apply(sym(LIST), vec![sym("integer")]));
+}
+
+#[test]
+fn ev_numer_and_float_coerce_exact_numbers() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("ev(1 / 2, numer); ev(x^2 + 1, float);")
+        .unwrap();
+    assert_eq!(
+        results[0].input,
+        apply(
+            sym(EV),
+            vec![apply(sym(DIV), vec![int(1), int(2)]), sym("numer")]
+        )
+    );
+    assert_eq!(results[0].output, symbolic_ir::flt(0.5));
+    assert_eq!(
+        results[1].output,
+        apply(
+            sym(ADD),
+            vec![
+                apply(sym(POW), vec![sym("x"), int(2)]),
+                symbolic_ir::flt(1.0)
+            ]
+        )
+    );
+}
+
+#[test]
+fn ev_routes_supported_flags_and_preserves_unsupported_heads() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("ev((x + 0) * 1, ratsimp); ev(sin(0) + cos(0), trigsimp); ev(x + 1, expand);")
+        .unwrap();
+
+    assert_eq!(results[0].output, sym("x"));
+    assert_eq!(results[1].output, int(1));
+    assert_eq!(
+        results[2].output,
+        apply(sym("Expand"), vec![apply(sym(ADD), vec![sym("x"), int(1)])])
+    );
+}
+
+#[test]
+fn ev_display2d_routes_output_text_through_box_pretty_printer() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("ev(1/(x + 1), display2d);").unwrap();
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(DIV),
+            vec![int(1), apply(sym(ADD), vec![sym("x"), int(1)])]
+        )
+    );
+    assert!(results[0].output_text.contains('\n'));
+    assert!(results[0].output_text.contains('─'));
+    assert!(results[0].output_text.contains("x + 1"));
+}
+
+#[test]
+fn trigreduce_routes_through_macsyma_runtime() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("trigreduce(sin(x)^2); ev(cos(x)^2, trigreduce);")
+        .unwrap();
+    let cos_2x = apply(sym(COS), vec![apply(sym(MUL), vec![int(2), sym("x")])]);
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(MUL),
+            vec![rat(1, 2), apply(sym(SUB), vec![int(1), cos_2x.clone()])]
+        )
+    );
+    assert_eq!(
+        results[1].output,
+        apply(
+            sym(MUL),
+            vec![rat(1, 2), apply(sym(ADD), vec![int(1), cos_2x])]
+        )
+    );
+}
+
+#[test]
+fn manual_kill_and_ev_heads_are_first_class() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(sym(KILL), vec![sym("all")]),
+        apply(sym(EV), vec![rat(3, 2), sym("numer")]),
+    ]);
+    assert_eq!(results[0].output, sym("done"));
+    assert_eq!(results[1].output, symbolic_ir::flt(1.5));
+}
+
+fn assert_timing_text(value: Option<&str>) {
+    let Some(value) = value else {
+        panic!("expected showtime timing text");
+    };
+    let Some(elapsed) = value
+        .strip_prefix("Evaluation took ")
+        .and_then(|value| value.strip_suffix(" seconds."))
+    else {
+        panic!("unexpected showtime timing text: {value}");
+    };
+    let Some((seconds, micros)) = elapsed.split_once('.') else {
+        panic!("showtime timing text lacks fractional seconds: {value}");
+    };
+    assert!(seconds.parse::<u64>().is_ok());
+    assert_eq!(micros.len(), 6);
+    assert!(micros.chars().all(|ch| ch.is_ascii_digit()));
+}
+
+#[test]
+fn evaluates_linsolve_linear_systems_through_cas_solve() {
+    let x = sym("x");
+    let y = sym("y");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![apply(
+        sym("linsolve"),
+        vec![
+            apply(
+                sym(LIST),
+                vec![
+                    apply(
+                        sym(EQUAL),
+                        vec![apply(sym(ADD), vec![x.clone(), y.clone()]), int(3)],
+                    ),
+                    apply(
+                        sym(EQUAL),
+                        vec![apply(sym(SUB), vec![x.clone(), y.clone()]), int(1)],
+                    ),
+                ],
+            ),
+            apply(sym(LIST), vec![x.clone(), y.clone()]),
+        ],
+    )]);
+
+    assert_eq!(
+        results[0].input,
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(LIST),
+                    vec![
+                        apply(
+                            sym(EQUAL),
+                            vec![apply(sym(ADD), vec![x.clone(), y.clone()]), int(3)]
+                        ),
+                        apply(
+                            sym(EQUAL),
+                            vec![apply(sym(SUB), vec![x.clone(), y.clone()]), int(1)]
+                        ),
+                    ],
+                ),
+                apply(sym(LIST), vec![x.clone(), y.clone()]),
+            ],
+        )
+    );
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(sym(RULE), vec![x.clone(), int(2)]),
+                apply(sym(RULE), vec![y.clone(), int(1)]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn keeps_non_linear_solve_calls_unevaluated() {
+    let x = sym("x");
+    let expr = apply(
+        sym(SOLVE),
+        vec![
+            apply(
+                sym(LIST),
+                vec![apply(
+                    sym(EQUAL),
+                    vec![apply(sym(POW), vec![x.clone(), int(2)]), int(4)],
+                )],
+            ),
+            apply(sym(LIST), vec![x]),
+        ],
+    );
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![expr.clone()]);
+    assert_eq!(results[0].output, expr);
+}
+
+#[test]
+fn solves_polynomial_inequalities_through_cas_solve() {
+    let x = sym("x");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(GREATER),
+                    vec![apply(sym(SUB), vec![x.clone(), int(1)]), int(0)],
+                ),
+                x.clone(),
+            ],
+        ),
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(GREATER),
+                    vec![
+                        apply(
+                            sym(SUB),
+                            vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)],
+                        ),
+                        int(0),
+                    ],
+                ),
+                x.clone(),
+            ],
+        ),
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(LESS_EQUAL),
+                    vec![
+                        apply(
+                            sym(SUB),
+                            vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)],
+                        ),
+                        int(0),
+                    ],
+                ),
+                x.clone(),
+            ],
+        ),
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(
+                    sym(GREATER_EQUAL),
+                    vec![apply(sym(POW), vec![x.clone(), int(2)]), int(0)],
+                ),
+                x.clone(),
+            ],
+        ),
+    ]);
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(LIST),
+            vec![apply(sym(GREATER), vec![x.clone(), int(1)])]
+        )
+    );
+    assert_eq!(
+        results[1].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(sym(LESS), vec![x.clone(), int(-1)]),
+                apply(sym(GREATER), vec![x.clone(), int(1)]),
+            ],
+        )
+    );
+    assert_eq!(
+        results[2].output,
+        apply(
+            sym(LIST),
+            vec![apply(
+                sym(AND),
+                vec![
+                    apply(sym(GREATER_EQUAL), vec![x.clone(), int(-1)]),
+                    apply(sym(LESS_EQUAL), vec![x.clone(), int(1)]),
+                ],
+            )],
+        )
+    );
+    assert_eq!(
+        results[3].output,
+        apply(
+            sym(LIST),
+            vec![apply(sym(GREATER_EQUAL), vec![int(0), int(0)])],
+        )
+    );
+}
+
+#[test]
+fn keeps_unsupported_inequality_solve_calls_unevaluated() {
+    let x = sym("x");
+    let expr = apply(
+        sym(SOLVE),
+        vec![
+            apply(
+                sym(GREATER),
+                vec![apply(sym("Sin"), vec![x.clone()]), int(0)],
+            ),
+            x,
+        ],
+    );
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![expr.clone()]);
+    assert_eq!(results[0].output, expr);
+}
+
+#[test]
+fn solves_direct_transcendental_equations_through_cas_solve() {
+    let x = sym("x");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(sym(EQUAL), vec![apply(sym(EXP), vec![x.clone()]), int(2)]),
+                x.clone(),
+            ],
+        ),
+        apply(
+            sym(SOLVE),
+            vec![
+                apply(sym(EQUAL), vec![apply(sym(SIN), vec![x.clone()]), int(0)]),
+                x,
+            ],
+        ),
+    ]);
+
+    assert_eq!(
+        results[0].output,
+        apply(sym(LIST), vec![apply(sym(LOG), vec![int(2)])])
+    );
+    assert_eq!(
+        results[1].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(ASIN), vec![int(0)]),
+                        apply(
+                            sym(MUL),
+                            vec![
+                                int(2),
+                                apply(sym(MUL), vec![sym("%pi"), sym("FreeInteger")])
+                            ],
+                        ),
+                    ],
+                ),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(SUB), vec![sym("%pi"), apply(sym(ASIN), vec![int(0)])]),
+                        apply(
+                            sym(MUL),
+                            vec![
+                                int(2),
+                                apply(sym(MUL), vec![sym("%pi"), sym("FreeInteger")])
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn keeps_unsupported_transcendental_solve_calls_unevaluated() {
+    let x = sym("x");
+    let expr = apply(
+        sym(SOLVE),
+        vec![
+            apply(
+                sym(EQUAL),
+                vec![
+                    apply(sym(SIN), vec![apply(sym(SIN), vec![x.clone()])]),
+                    int(0),
+                ],
+            ),
+            x,
+        ],
+    );
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![expr.clone()]);
+    assert_eq!(results[0].output, expr);
+}
+
+#[test]
+fn evaluates_structural_substitution_through_cas_substitution() {
+    let x = sym("x");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(
+            sym(SUBST),
+            vec![int(3), x.clone(), apply(sym(POW), vec![x.clone(), int(2)])],
+        ),
+        apply(
+            sym(SUBST),
+            vec![
+                sym("z"),
+                apply(sym(ADD), vec![x.clone(), int(1)]),
+                apply(
+                    sym(MUL),
+                    vec![
+                        apply(sym(ADD), vec![x.clone(), int(1)]),
+                        apply(sym(ADD), vec![x, int(1)]),
+                    ],
+                ),
+            ],
+        ),
+    ]);
+
+    assert_eq!(results[0].output, apply(sym(POW), vec![int(3), int(2)]));
+    assert_eq!(results[1].output, apply(sym(MUL), vec![sym("z"), sym("z")]));
+}
+
+#[test]
+fn keeps_substitution_variables_unevaluated() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("x : 5; subst(3, x, x^2);").unwrap();
+
+    assert_eq!(results[0].output, int(5));
+    assert_eq!(results[1].output, apply(sym(POW), vec![int(3), int(2)]));
+}
+
+#[test]
+fn keeps_invalid_substitution_calls_unevaluated() {
+    let expr = apply(sym(SUBST), vec![int(3), sym("x")]);
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![expr.clone()]);
+
+    assert_eq!(results[0].output, expr);
+}
+
+#[test]
+fn evaluates_deterministic_list_operations_through_cas_list_operations() {
+    let xs = apply(sym(LIST), vec![int(1), int(2), int(3)]);
+    let nested = apply(
+        sym(LIST),
+        vec![
+            int(1),
+            apply(sym(LIST), vec![int(2), apply(sym(LIST), vec![int(3)])]),
+        ],
+    );
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![
+        apply(sym("Length"), vec![xs.clone()]),
+        apply(sym("First"), vec![xs.clone()]),
+        apply(sym("Rest"), vec![xs.clone()]),
+        apply(sym("Last"), vec![xs.clone()]),
+        apply(sym("Reverse"), vec![xs.clone()]),
+        apply(
+            sym("Append"),
+            vec![
+                apply(sym(LIST), vec![int(1)]),
+                apply(sym(LIST), vec![int(2), int(3)]),
+            ],
+        ),
+        apply(
+            sym("Join"),
+            vec![
+                apply(sym(LIST), vec![int(1)]),
+                apply(sym(LIST), vec![int(2)]),
+            ],
+        ),
+        apply(sym("Range"), vec![int(1), int(5), int(2)]),
+        apply(sym("Part"), vec![xs.clone(), int(-1)]),
+        apply(
+            sym("Map"),
+            vec![sym("f"), apply(sym(LIST), vec![sym("x"), sym("y")])],
+        ),
+        apply(
+            sym("Apply"),
+            vec![sym(ADD), apply(sym(LIST), vec![sym("x"), sym("y")])],
+        ),
+        apply(
+            sym("Sort"),
+            vec![apply(sym(LIST), vec![sym("b"), sym("a")])],
+        ),
+        apply(sym("Flatten"), vec![nested, int(-1)]),
+    ]);
+
+    assert_eq!(results[0].output, int(3));
+    assert_eq!(results[1].output, int(1));
+    assert_eq!(results[2].output, apply(sym(LIST), vec![int(2), int(3)]));
+    assert_eq!(results[3].output, int(3));
+    assert_eq!(
+        results[4].output,
+        apply(sym(LIST), vec![int(3), int(2), int(1)])
+    );
+    assert_eq!(
+        results[5].output,
+        apply(sym(LIST), vec![int(1), int(2), int(3)])
+    );
+    assert_eq!(results[6].output, apply(sym(LIST), vec![int(1), int(2)]));
+    assert_eq!(
+        results[7].output,
+        apply(sym(LIST), vec![int(1), int(3), int(5)])
+    );
+    assert_eq!(results[8].output, int(3));
+    assert_eq!(
+        results[9].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(sym("f"), vec![sym("x")]),
+                apply(sym("f"), vec![sym("y")])
+            ]
+        )
+    );
+    assert_eq!(
+        results[10].output,
+        apply(sym(ADD), vec![sym("x"), sym("y")])
+    );
+    assert_eq!(
+        results[11].output,
+        apply(sym(LIST), vec![sym("a"), sym("b")])
+    );
+    assert_eq!(
+        results[12].output,
+        apply(sym(LIST), vec![int(1), int(2), int(3)])
+    );
+}
+
+#[test]
+fn keeps_invalid_list_operation_calls_unevaluated() {
+    let bad_part = apply(sym("Part"), vec![apply(sym(LIST), vec![int(1)]), int(0)]);
+    let bad_length = apply(sym("Length"), vec![sym("x")]);
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![bad_part.clone(), bad_length.clone()]);
+
+    assert_eq!(results[0].output, bad_part);
+    assert_eq!(results[1].output, bad_length);
+}
+
+#[test]
+fn returns_rational_linsolve_results() {
+    let x = sym("x");
+    let y = sym("y");
+    let mut session = MacsymaSession::new();
+    let results = session.eval_statements(vec![apply(
+        sym(SOLVE),
+        vec![
+            apply(
+                sym(LIST),
+                vec![
+                    apply(
+                        sym(EQUAL),
+                        vec![
+                            apply(
+                                sym(ADD),
+                                vec![
+                                    apply(sym(MUL), vec![int(2), x.clone()]),
+                                    apply(sym(MUL), vec![int(3), y.clone()]),
+                                ],
+                            ),
+                            int(7),
+                        ],
+                    ),
+                    apply(
+                        sym(EQUAL),
+                        vec![
+                            apply(
+                                sym(SUB),
+                                vec![apply(sym(MUL), vec![int(4), x.clone()]), y.clone()],
+                            ),
+                            int(1),
+                        ],
+                    ),
+                ],
+            ),
+            apply(sym(LIST), vec![x.clone(), y.clone()]),
+        ],
+    )]);
+
+    assert_eq!(
+        results[0].output,
+        apply(
+            sym(LIST),
+            vec![
+                apply(sym(RULE), vec![x.clone(), rat(5, 7)]),
+                apply(sym(RULE), vec![y.clone(), rat(13, 7)]),
+            ],
+        )
+    );
+}

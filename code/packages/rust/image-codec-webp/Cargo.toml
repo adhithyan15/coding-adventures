@@ -1,0 +1,11 @@
+[package]
+name = "image-codec-webp"
+version = "0.1.0"
+edition = "2021"
+description = "WebP image codec for paint-instructions: PixelContainer ↔ WebP bytes (VP8L lossless + VP8 lossy)"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }
+paint-instructions = { path = "../paint-instructions" }
+huffman-tree = { path = "../huffman-tree" }
+range-coder = { path = "../range-coder" }

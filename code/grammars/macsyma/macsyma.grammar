@@ -23,7 +23,7 @@
 # The precedence is encoded purely through rule nesting — no priority
 # annotations. Higher precedence means deeper in the parse tree.
 
-# @version 1
+# @version 2
 
 # A program is zero or more statements. Each statement is terminated
 # by `;` or `$`. The terminator is kept in the token stream so the
@@ -32,10 +32,63 @@ program     = { statement } ;
 
 statement   = expression ( SEMI | DOLLAR ) ;
 
+# Control-flow forms sit above assignment in the precedence hierarchy
+# because they span the whole statement body. Putting them here means
+# they can appear freely inside `block(...)` argument lists, as the
+# right-hand side of an assignment, or as standalone statements.
+#
+# Ordered-choice (PEG) semantics guarantee unambiguous parse: each
+# alternative leads with a unique keyword, so the parser commits
+# immediately after seeing the keyword and never needs to backtrack
+# across alternatives.
+expression  = if_expr
+            | for_expr
+            | while_expr
+            | block_expr
+            | return_expr
+            | assign ;
+
+# `if c then t elseif c2 then t2 else e`
+# Zero or more `elseif` arms; optional `else`.  Compiles to a right-
+# nested chain of `If(c, t, …)` IR nodes.
+if_expr     = "if" expression "then" expression
+              { "elseif" expression "then" expression }
+              [ "else" expression ] ;
+
+# `for x in list do body`        → ForEach(x, list, body)
+# `for x: a step s thru b do b` → ForRange(x, a, s, b, body)
+# `for x: a thru b do body`     → ForRange(x, a, 1, b, body)   [step defaults to 1]
+# `for x thru b do body`        → ForRange(x, 1, 1, b, body)   [start and step default to 1]
+# `while`/`unless` as terminator keywords are also supported in
+# for_range_expr for loop-while and loop-until variants.
+# The for_each alternative is tried first (PEG ordered choice) so that
+# `for x in …` commits on the `in` keyword without having to exhaust
+# the optional arms of for_range_expr.
+for_expr    = for_each_expr | for_range_expr ;
+
+for_each_expr  = "for" NAME "in" expression "do" expression ;
+
+for_range_expr = "for" NAME [ ":" expression ] [ "step" expression ]
+                 ( "thru" | "while" | "unless" ) expression
+                 "do" expression ;
+
+# `while c do body` → While(c, body)
+while_expr  = "while" expression "do" expression ;
+
+# `block([x: 0, y], stmt1, stmt2, …)` → Block(List(locals…), stmt1, …)
+# `block(stmt1, stmt2, …)`             → Block(List(), stmt1, …)
+# The first argument, if it is a `[…]` list literal, is treated by the
+# compiler as the locals declaration; everything else is a statement.
+block_expr  = "block" "(" [ arglist ] ")" ;
+
+# `return(expr)` inside a block or loop → Return(expr)
+# `return` is a keyword so it is not captured by the `postfix` rule's
+# atom production; this explicit rule handles the call form.
+return_expr = "return" "(" expression ")" ;
+
 # Assignment and definition are right-associative and have the lowest
 # precedence among operators. `x : expr` binds a value; `f(x) := body`
 # defines a function. Syntactically both sit at the same level.
-expression  = assign ;
 assign      = logical_or [ ( COLON | COLONEQ ) assign ] ;
 
 # Boolean OR / AND / NOT. These arrive as KEYWORD tokens from the

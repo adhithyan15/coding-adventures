@@ -99,6 +99,9 @@ public sealed class Graph<T> where T : notnull
     private readonly List<T> _nodeList = new();
     private readonly Dictionary<T, int> _nodeIndex = new();
     private readonly List<List<double?>> _matrix = new();
+    private readonly Dictionary<string, object?> _graphProperties = new(StringComparer.Ordinal);
+    private readonly Dictionary<T, Dictionary<string, object?>> _nodeProperties = new();
+    private readonly Dictionary<string, Dictionary<string, object?>> _edgeProperties = new(StringComparer.Ordinal);
 
     /// <summary>
     /// Create an empty graph backed by the selected representation.
@@ -121,7 +124,7 @@ public sealed class Graph<T> where T : notnull
     /// <summary>
     /// Add a node if it is not already present.
     /// </summary>
-    public void AddNode(T node)
+    public void AddNode(T node, IReadOnlyDictionary<string, object?>? properties = null)
     {
         // In adjacency-list mode, "adding a node" just means ensuring it has an
         // empty neighbor map.
@@ -132,6 +135,7 @@ public sealed class Graph<T> where T : notnull
                 _adj[node] = new Dictionary<T, double>();
             }
 
+            MergeNodeProperties(node, properties);
             return;
         }
 
@@ -139,6 +143,7 @@ public sealed class Graph<T> where T : notnull
         // every existing row gets a new column, and we append one new row.
         if (_nodeIndex.ContainsKey(node))
         {
+            MergeNodeProperties(node, properties);
             return;
         }
 
@@ -158,6 +163,7 @@ public sealed class Graph<T> where T : notnull
         }
 
         _matrix.Add(newRow);
+        MergeNodeProperties(node, properties);
     }
 
     /// <summary>
@@ -175,9 +181,11 @@ public sealed class Graph<T> where T : notnull
             foreach (var neighbor in neighbors.Keys.ToList())
             {
                 _adj[neighbor].Remove(node);
+                _edgeProperties.Remove(NodeOrdering.EdgeKey(node, neighbor));
             }
 
             _adj.Remove(node);
+            _nodeProperties.Remove(node);
             return;
         }
 
@@ -186,6 +194,12 @@ public sealed class Graph<T> where T : notnull
             throw new KeyNotFoundException($"Node not found: {node}");
         }
 
+        foreach (var other in _nodeList)
+        {
+            _edgeProperties.Remove(NodeOrdering.EdgeKey(node, other));
+        }
+
+        _nodeProperties.Remove(node);
         _nodeIndex.Remove(node);
         _nodeList.RemoveAt(index);
         _matrix.RemoveAt(index);
@@ -218,7 +232,7 @@ public sealed class Graph<T> where T : notnull
     /// Add or overwrite an undirected weighted edge between two nodes.
     /// Missing endpoints are created automatically.
     /// </summary>
-    public void AddEdge(T left, T right, double weight = 1.0)
+    public void AddEdge(T left, T right, double weight = 1.0, IReadOnlyDictionary<string, object?>? properties = null)
     {
         AddNode(left);
         AddNode(right);
@@ -227,6 +241,7 @@ public sealed class Graph<T> where T : notnull
         {
             _adj[left][right] = weight;
             _adj[right][left] = weight;
+            MergeEdgeProperties(left, right, weight, properties);
             return;
         }
 
@@ -234,6 +249,7 @@ public sealed class Graph<T> where T : notnull
         var rightIndex = _nodeIndex[right];
         _matrix[leftIndex][rightIndex] = weight;
         _matrix[rightIndex][leftIndex] = weight;
+        MergeEdgeProperties(left, right, weight, properties);
     }
 
     /// <summary>
@@ -252,6 +268,7 @@ public sealed class Graph<T> where T : notnull
 
             leftNeighbors.Remove(right);
             rightNeighbors.Remove(left);
+            _edgeProperties.Remove(NodeOrdering.EdgeKey(left, right));
             return;
         }
 
@@ -264,6 +281,7 @@ public sealed class Graph<T> where T : notnull
 
         _matrix[leftIndex][rightIndex] = null;
         _matrix[rightIndex][leftIndex] = null;
+        _edgeProperties.Remove(NodeOrdering.EdgeKey(left, right));
     }
 
     /// <summary>
@@ -436,10 +454,251 @@ public sealed class Graph<T> where T : notnull
     public int Degree(T node) => Neighbors(node).Count;
 
     /// <summary>
+    /// Return a copy of the graph-level property bag.
+    /// </summary>
+    public IReadOnlyDictionary<string, object?> GraphProperties() =>
+        new Dictionary<string, object?>(_graphProperties, StringComparer.Ordinal);
+
+    /// <summary>
+    /// Add or overwrite one graph-level property.
+    /// </summary>
+    public void SetGraphProperty(string key, object? value) => _graphProperties[key] = value;
+
+    /// <summary>
+    /// Remove one graph-level property if present.
+    /// </summary>
+    public void RemoveGraphProperty(string key) => _graphProperties.Remove(key);
+
+    /// <summary>
+    /// Return a copy of one node's property bag.
+    /// </summary>
+    public IReadOnlyDictionary<string, object?> NodeProperties(T node)
+    {
+        if (!HasNode(node))
+        {
+            throw new KeyNotFoundException($"Node not found: {node}");
+        }
+
+        return _nodeProperties.TryGetValue(node, out var properties)
+            ? new Dictionary<string, object?>(properties, StringComparer.Ordinal)
+            : new Dictionary<string, object?>(StringComparer.Ordinal);
+    }
+
+    /// <summary>
+    /// Add or overwrite one node property.
+    /// </summary>
+    public void SetNodeProperty(T node, string key, object? value)
+    {
+        if (!HasNode(node))
+        {
+            throw new KeyNotFoundException($"Node not found: {node}");
+        }
+
+        if (!_nodeProperties.TryGetValue(node, out var properties))
+        {
+            properties = new Dictionary<string, object?>(StringComparer.Ordinal);
+            _nodeProperties[node] = properties;
+        }
+
+        properties[key] = value;
+    }
+
+    /// <summary>
+    /// Remove one node property if present.
+    /// </summary>
+    public void RemoveNodeProperty(T node, string key)
+    {
+        if (!HasNode(node))
+        {
+            throw new KeyNotFoundException($"Node not found: {node}");
+        }
+
+        if (_nodeProperties.TryGetValue(node, out var properties))
+        {
+            properties.Remove(key);
+        }
+    }
+
+    /// <summary>
+    /// Return a copy of one edge's property bag, including the current weight.
+    /// </summary>
+    public IReadOnlyDictionary<string, object?> EdgeProperties(T left, T right)
+    {
+        if (!HasEdge(left, right))
+        {
+            throw new KeyNotFoundException($"Edge not found: {left} -- {right}");
+        }
+
+        var key = NodeOrdering.EdgeKey(left, right);
+        var result = _edgeProperties.TryGetValue(key, out var properties)
+            ? new Dictionary<string, object?>(properties, StringComparer.Ordinal)
+            : new Dictionary<string, object?>(StringComparer.Ordinal);
+        result["weight"] = EdgeWeight(left, right);
+        return result;
+    }
+
+    /// <summary>
+    /// Add or overwrite one edge property. Setting <c>weight</c> also updates the edge weight.
+    /// </summary>
+    public void SetEdgeProperty(T left, T right, string key, object? value)
+    {
+        if (!HasEdge(left, right))
+        {
+            throw new KeyNotFoundException($"Edge not found: {left} -- {right}");
+        }
+
+        if (key == "weight")
+        {
+            if (!TryConvertToDouble(value, out var weight))
+            {
+                throw new ArgumentException("Edge property 'weight' must be numeric.", nameof(value));
+            }
+
+            SetEdgeWeight(left, right, weight);
+        }
+
+        var edgeKey = NodeOrdering.EdgeKey(left, right);
+        if (!_edgeProperties.TryGetValue(edgeKey, out var properties))
+        {
+            properties = new Dictionary<string, object?>(StringComparer.Ordinal);
+            _edgeProperties[edgeKey] = properties;
+        }
+
+        properties[key] = value;
+    }
+
+    /// <summary>
+    /// Remove one edge property if present. Removing <c>weight</c> resets the edge weight to 1.0.
+    /// </summary>
+    public void RemoveEdgeProperty(T left, T right, string key)
+    {
+        if (!HasEdge(left, right))
+        {
+            throw new KeyNotFoundException($"Edge not found: {left} -- {right}");
+        }
+
+        if (key == "weight")
+        {
+            SetEdgeWeight(left, right, 1.0);
+            var edgeKey = NodeOrdering.EdgeKey(left, right);
+            if (!_edgeProperties.TryGetValue(edgeKey, out var properties))
+            {
+                properties = new Dictionary<string, object?>(StringComparer.Ordinal);
+                _edgeProperties[edgeKey] = properties;
+            }
+
+            properties["weight"] = 1.0;
+            return;
+        }
+
+        if (_edgeProperties.TryGetValue(NodeOrdering.EdgeKey(left, right), out var bag))
+        {
+            bag.Remove(key);
+        }
+    }
+
+    /// <summary>
     /// Produce a short human-readable graph summary.
     /// </summary>
     public override string ToString() =>
         $"Graph(nodes={Size}, edges={Edges().Count}, repr={Representation})";
+
+    private void MergeNodeProperties(T node, IReadOnlyDictionary<string, object?>? properties)
+    {
+        if (!_nodeProperties.TryGetValue(node, out var target))
+        {
+            target = new Dictionary<string, object?>(StringComparer.Ordinal);
+            _nodeProperties[node] = target;
+        }
+
+        if (properties is null)
+        {
+            return;
+        }
+
+        foreach (var (key, value) in properties)
+        {
+            target[key] = value;
+        }
+    }
+
+    private void MergeEdgeProperties(T left, T right, double weight, IReadOnlyDictionary<string, object?>? properties)
+    {
+        var edgeKey = NodeOrdering.EdgeKey(left, right);
+        if (!_edgeProperties.TryGetValue(edgeKey, out var target))
+        {
+            target = new Dictionary<string, object?>(StringComparer.Ordinal);
+            _edgeProperties[edgeKey] = target;
+        }
+
+        if (properties is not null)
+        {
+            foreach (var (key, value) in properties)
+            {
+                target[key] = value;
+            }
+        }
+
+        target["weight"] = weight;
+    }
+
+    private void SetEdgeWeight(T left, T right, double weight)
+    {
+        if (_repr == GraphRepr.AdjacencyList)
+        {
+            _adj[left][right] = weight;
+            _adj[right][left] = weight;
+            return;
+        }
+
+        var leftIndex = _nodeIndex[left];
+        var rightIndex = _nodeIndex[right];
+        _matrix[leftIndex][rightIndex] = weight;
+        _matrix[rightIndex][leftIndex] = weight;
+    }
+
+    private static bool TryConvertToDouble(object? value, out double result)
+    {
+        switch (value)
+        {
+            case byte numeric:
+                result = numeric;
+                return true;
+            case sbyte numeric:
+                result = numeric;
+                return true;
+            case short numeric:
+                result = numeric;
+                return true;
+            case ushort numeric:
+                result = numeric;
+                return true;
+            case int numeric:
+                result = numeric;
+                return true;
+            case uint numeric:
+                result = numeric;
+                return true;
+            case long numeric:
+                result = numeric;
+                return true;
+            case ulong numeric:
+                result = numeric;
+                return true;
+            case float numeric:
+                result = numeric;
+                return true;
+            case double numeric:
+                result = numeric;
+                return true;
+            case decimal numeric:
+                result = (double)numeric;
+                return true;
+            default:
+                result = 0;
+                return false;
+        }
+    }
 }
 
 /// <summary>

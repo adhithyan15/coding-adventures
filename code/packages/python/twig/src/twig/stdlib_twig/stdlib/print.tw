@@ -1,0 +1,54 @@
+; stdlib/print — Twig type-dispatching printer
+;
+; Provides a single ``print`` function that inspects its argument and
+; dispatches to the appropriate representation:
+;
+;   nil        →  "()"
+;   pair / cons →  "(head ...)"  (simplified: prints just first element)
+;   integer    →  decimal via stdlib/io/print-int
+;
+; Design rationale
+; ----------------
+; Full recursive list printing (e.g. "(1 2 3)") requires interleaving
+; integer printing with cons traversal across two stdlib modules, which
+; stresses the multi-module + closures + heap path simultaneously.
+; Phase 4g keeps the implementation intentionally simple: pairs render
+; as "(car)" so that stdlib/print compiles cleanly on all three runtimes
+; without triggering edge cases in the cross-module closure pipeline.
+; A richer printer is a natural follow-on once TW05 lands.
+;
+; Exports
+; -------
+;   print  x  — dispatch on the runtime type of x and write to stdout
+;
+; Dependencies
+; ------------
+;   host       — for write-byte (the '(' and ')' characters)
+;   stdlib/io  — for print-int (integer rendering)
+
+(module stdlib/print
+  (export print)
+  (import host)
+  (import stdlib/io))
+
+; print — dispatch on the type of x.
+;
+; null? check comes first because nil is technically not a pair but
+; a special sentinel.  pair? check comes second to catch all cons
+; cells.  Everything else is treated as an integer.
+;
+; ASCII codes: '(' = 40, ')' = 41
+(define (print x)
+  (if (null? x)
+      ; nil → "()"
+      (begin
+        (host/write-byte 40)   ; '('
+        (host/write-byte 41))  ; ')'
+      (if (pair? x)
+          ; cons cell → "(car)" where car is printed as an integer
+          (begin
+            (host/write-byte 40)              ; '('
+            (stdlib/io/print-int (car x))
+            (host/write-byte 41))             ; ')'
+          ; default: integer
+          (stdlib/io/print-int x))))

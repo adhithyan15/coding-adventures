@@ -1,0 +1,8 @@
+{
+ "check_id": 83,
+ "idx": 35,
+ "slot": "four_or_more_day_trades_in_five_business_days",
+ "claimed_value": true,
+ "scenario": "Customer Lin executed 5 day trades over a four-business-day window in a margin account. The account's equity is $18,000, which is below $25,000.",
+ "cited_span": "executed 5 day trades over a four-business-day window"
+}

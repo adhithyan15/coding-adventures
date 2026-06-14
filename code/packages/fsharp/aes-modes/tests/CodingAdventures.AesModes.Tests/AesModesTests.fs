@@ -1,7 +1,6 @@
 namespace CodingAdventures.AesModes.Tests
 
 open System
-open System.Security.Cryptography
 open Xunit
 open CodingAdventures.AesModes.FSharp
 
@@ -121,6 +120,6 @@ module AesModesTests =
         let ciphertext, tag = AesModes.gcmEncrypt (utf8 "secret") key iv null
 
         ciphertext.[0] <- ciphertext.[0] ^^^ 1uy
-        Assert.Throws<AuthenticationTagMismatchException>(fun () -> AesModes.gcmDecrypt ciphertext key iv null tag |> ignore) |> ignore
+        Assert.Throws<InvalidOperationException>(fun () -> AesModes.gcmDecrypt ciphertext key iv null tag |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> AesModes.gcmEncrypt (utf8 "test") key (Array.zeroCreate<byte> 16) null |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> AesModes.gcmDecrypt Array.empty<byte> key iv null (Array.zeroCreate<byte> 8) |> ignore) |> ignore

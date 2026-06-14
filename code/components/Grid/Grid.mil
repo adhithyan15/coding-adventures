@@ -1,0 +1,18 @@
+// Grid.mil — Component interface for the Grid primitive.
+//
+// Grid renders a static, read-only table from two list-typed slots:
+//   column-headers — the column label row (rendered as <thead>)
+//   viewport-rows  — the data rows (rendered as <tbody>)
+//
+// This is the v1 static model.  Each row is a single text string displayed
+// in a single <td> cell.  Multi-column row data (list<list<text>>) is a v2
+// concern pending a grammar extension in mosmodel-compiler.
+//
+// The onRowClick emit is declared for future interactive use; the static
+// React backend ignores it at emit time.
+
+component Grid {
+  slot column-headers : list<text> ;
+  slot viewport-rows  : list<text> ;
+  emit onRowClick ( row : number ) ;
+}

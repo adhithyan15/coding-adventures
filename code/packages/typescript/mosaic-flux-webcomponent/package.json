@@ -1,0 +1,21 @@
+{
+  "name": "@coding-adventures/mosaic-flux-webcomponent",
+  "version": "0.1.0",
+  "description": "Strict-Flux runtime for Mosaic UI's Web Component emitter. Same core types as mosaic-flux-html (MosaicAction, MosaicStore, middleware, createSelector, devToolsMiddleware, DOM bindings) plus MosaicHostElement base class + defineMosaicElement helper for custom-element lifecycle integration with the store.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "jsdom": "^25.0.0"
+  }
+}

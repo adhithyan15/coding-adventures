@@ -1,0 +1,841 @@
+"""CAS substrate handlers for :class:`MacsymaBackend`.
+
+Each handler dispatches a MACSYMA IR head to the appropriate CAS
+substrate package.  They all follow the standard
+``symbolic_vm.backend.Handler`` signature::
+
+    def handler(vm: VM, expr: IRApply) -> IRNode
+
+Organised in sections that mirror the substrate packages:
+
+- **simplify / expand** — :mod:`cas_simplify`
+- **substitution** — :mod:`cas_substitution`
+- **factor** — canonical :mod:`symbolic_vm.cas_handlers`
+- **solve** — :mod:`cas_solve`
+- **list operations** — :mod:`cas_list_operations`
+- **matrix** — :mod:`cas_matrix`
+- **limit / taylor** — :mod:`cas_limit_series`
+- **ODE solving** — :mod:`cas_ode`
+- **Laplace transforms** — :mod:`cas_laplace`
+- **numeric / arithmetic** — builtin Python :mod:`math`
+
+All handlers follow the same defensive contract:
+
+1. Validate arity. Wrong-arity calls return the expression unevaluated
+   so the user sees e.g. ``Factor(x, y)`` instead of a Python traceback.
+2. Catch the substrate's public exception types and return the expression
+   unevaluated.  This keeps the REPL alive on partial inputs.
+
+:func:`build_cas_handler_table` returns the complete ``dict[str, Handler]``
+that :class:`MacsymaBackend` merges into its dispatcher at startup.
+"""
+
+from __future__ import annotations
+
+import math
+from fractions import Fraction
+from typing import TYPE_CHECKING
+
+from cas_laplace import build_laplace_handler_table as _build_laplace_handlers
+from cas_limit_series import PolynomialError, limit_advanced, limit_direct, taylor_polynomial
+from symbolic_vm.derivative import _diff as _symbolic_diff
+from symbolic_vm.cas_handlers import (
+    expand_handler as _expand_handler_full,
+    taylor_handler as _taylor_handler_full,
+)
+from cas_list_operations import (
+    LIST,
+    ListOperationError,
+    append,
+    apply_,
+    first,
+    flatten,
+    join,
+    last,
+    length,
+    map_,
+    part,
+    range_,
+    rest,
+    reverse,
+    select,
+    sort_,
+)
+from cas_matrix import MatrixError, determinant, inverse, matrix, transpose
+from cas_ode import build_ode_handler_table as _build_ode_handlers
+from cas_simplify import canonical, simplify
+from cas_solve import (
+    ALL,
+    solve_cubic,
+    solve_linear,
+    solve_linear_system,
+    solve_quadratic,
+    solve_quartic,
+)
+from cas_substitution import subst
+from symbolic_ir import (
+    IRApply,
+    IRInteger,
+    IRNode,
+    IRSymbol,
+)
+from symbolic_vm.backend import Handler
+from symbolic_vm.cas_handlers import abs_handler as _abs_handler_full
+from symbolic_vm.cas_handlers import apply1_handler as _apply1_handler
+from symbolic_vm.cas_handlers import apply2_handler as _apply2_handler
+from symbolic_vm.cas_handlers import beta_handler as _beta_handler
+from symbolic_vm.cas_handlers import chi_handler as _chi_handler
+from symbolic_vm.cas_handlers import ci_handler as _ci_handler
+from symbolic_vm.cas_handlers import defrule_handler as _defrule_handler
+from symbolic_vm.cas_handlers import erf_handler as _erf_handler
+from symbolic_vm.cas_handlers import erfc_handler as _erfc_handler
+from symbolic_vm.cas_handlers import erfi_handler as _erfi_handler
+from symbolic_vm.cas_handlers import fresnel_c_handler as _fresnel_c_handler
+from symbolic_vm.cas_handlers import fresnel_s_handler as _fresnel_s_handler
+from symbolic_vm.cas_handlers import factor_handler as _factor_handler_full
+from symbolic_vm.cas_handlers import gamma_handler as _gamma_handler
+from symbolic_vm.cas_handlers import li2_handler as _li2_handler
+from symbolic_vm.cas_handlers import (
+    matchdeclare_handler as _matchdeclare_handler,
+)
+from symbolic_vm.cas_handlers import product_handler as _product_handler
+from symbolic_vm.cas_handlers import shi_handler as _shi_handler
+from symbolic_vm.cas_handlers import si_handler as _si_handler
+from symbolic_vm.cas_handlers import sum_handler as _sum_handler
+from symbolic_vm.cas_handlers import tellsimp_handler as _tellsimp_handler
+from symbolic_vm.numeric import from_number, to_number
+from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
+
+# _numer_fold is defined in handlers.py — import here so float_handler can
+# reuse the same exact-to-float fold logic without duplicating code.  There
+# is no circular import risk: handlers.py does not import cas_handlers.py.
+from macsyma_runtime.handlers import _numer_fold
+
+if TYPE_CHECKING:
+    from symbolic_vm import VM
+
+# ---------------------------------------------------------------------------
+# Constants we never want to treat as variables during factor/solve
+# ---------------------------------------------------------------------------
+
+_CONSTANTS: frozenset[str] = frozenset({"Pi", "E", "%pi", "%e", "True", "False", "i"})
+
+
+# ---------------------------------------------------------------------------
+# Simplify / expand
+# ---------------------------------------------------------------------------
+
+
+def simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Simplify(expr)`` — apply the fixed-point simplifier."""
+    if len(expr.args) != 1:
+        return expr
+    return simplify(expr.args[0])
+
+
+def expand_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Expand(expr)`` — fully distribute products and powers.
+
+    Delegates to the full :func:`symbolic_vm.cas_handlers.expand_handler`
+    which handles both single-variable (via the polynomial bridge) and
+    multi-variable polynomials (via recursive symbolic distribution).
+    """
+    return _expand_handler_full(vm, expr)
+
+
+# ---------------------------------------------------------------------------
+# Substitution
+# ---------------------------------------------------------------------------
+
+
+def subst_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Subst(value, var, target)`` — replace ``var`` with ``value`` in ``target``.
+
+    After substitution the result is re-evaluated through the VM so that
+    ``subst(2, x, x^2 + 1)`` produces ``5`` rather than ``Pow(2, 2) + 1``.
+    """
+    if len(expr.args) != 3:
+        return expr
+    value, var, target = expr.args
+    substituted = subst(value, var, target)
+    return vm.eval(substituted)
+
+
+# ---------------------------------------------------------------------------
+# Factor
+# ---------------------------------------------------------------------------
+
+
+def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Factor(poly_expr)`` — use the canonical symbolic VM factor handler."""
+    return _factor_handler_full(_vm, expr)
+
+
+def _find_variable(node: IRNode) -> IRSymbol | None:
+    """Return the first :class:`IRSymbol` that is not a known constant.
+
+    Recurses into :class:`IRApply` nodes.  Returns ``None`` if no free
+    variable is found or if more than one distinct variable is found
+    (multi-variate — not supported in Phase 1).
+    """
+    found: set[str] = set()
+    _collect_variables(node, found)
+    if len(found) == 1:
+        return IRSymbol(next(iter(found)))
+    return None
+
+
+def _collect_variables(node: IRNode, found: set[str]) -> None:
+    if isinstance(node, IRSymbol):
+        if node.name not in _CONSTANTS:
+            found.add(node.name)
+    elif isinstance(node, IRApply):
+        for arg in node.args:
+            _collect_variables(arg, found)
+
+
+# ---------------------------------------------------------------------------
+# Solve
+# ---------------------------------------------------------------------------
+
+
+def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Solve(equation, var)`` — solve polynomial equations and linear systems.
+
+    Two call forms are handled:
+
+    1. ``Solve(equation, var)`` — single-variable polynomial, up to degree 4.
+       ``equation`` may be any IR expression treated as ``expr = 0``, or an
+       ``Equal(lhs, rhs)`` node rewritten to ``Sub(lhs, rhs) = 0``.
+
+    2. ``Solve(List(eq1, eq2, …), List(x, y, …))`` — linear system of
+       equations solved by Gaussian elimination (MACSYMA's ``linsolve``
+       also compiles to this form).  Returns ``List(Rule(x, val), …)``.
+
+    Returns ``List(solution, …)`` or unevaluated on failure.
+    """
+    if len(expr.args) != 2:
+        return expr
+    eq_ir, var_ir = expr.args
+
+    # ------------------------------------------------------------------
+    # Branch 1 — linear system: both args are List nodes.
+    # ------------------------------------------------------------------
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name == "List"
+        and isinstance(var_ir, IRApply)
+        and isinstance(var_ir.head, IRSymbol)
+        and var_ir.head.name == "List"
+    ):
+        equations = list(eq_ir.args)
+        variables: list[IRSymbol] = []
+        for v in var_ir.args:
+            if not isinstance(v, IRSymbol):
+                return expr
+            variables.append(v)
+        if not equations or not variables:
+            return expr
+        sol = solve_linear_system(equations, variables)
+        if sol is None:
+            return expr
+        return IRApply(LIST, tuple(sol))
+
+    # ------------------------------------------------------------------
+    # Branch 2 — single-variable polynomial equation.
+    # ------------------------------------------------------------------
+    if not isinstance(var_ir, IRSymbol):
+        return expr
+
+    poly_ir = _unwrap_equation(eq_ir)
+    result = to_rational(poly_ir, var_ir)
+    if result is None:
+        return expr
+    num, den = result
+    # Require a pure polynomial (denominator = constant 1).
+    if den != (Fraction(1),):
+        return expr
+
+    coeffs = list(num)
+    deg = len(coeffs) - 1
+
+    if deg < 0:
+        return expr  # zero polynomial — degenerate
+    if deg == 0:
+        # Constant equation: 0 solutions.
+        return IRApply(LIST, ())
+
+    if deg == 1:
+        solutions: list[IRNode] | str = solve_linear(
+            Fraction(coeffs[1]), Fraction(coeffs[0])
+        )
+    elif deg == 2:
+        solutions = solve_quadratic(
+            Fraction(coeffs[2]),
+            Fraction(coeffs[1]),
+            Fraction(coeffs[0]),
+        )
+    elif deg == 3:
+        solutions = solve_cubic(
+            Fraction(coeffs[3]),
+            Fraction(coeffs[2]),
+            Fraction(coeffs[1]),
+            Fraction(coeffs[0]),
+        )
+    elif deg == 4:
+        solutions = solve_quartic(
+            Fraction(coeffs[4]),
+            Fraction(coeffs[3]),
+            Fraction(coeffs[2]),
+            Fraction(coeffs[1]),
+            Fraction(coeffs[0]),
+        )
+    else:
+        # Degree > 4 — unevaluated.
+        return expr
+
+    if solutions == ALL:
+        return IRApply(LIST, ())  # all reals — represent as empty list for now
+    if isinstance(solutions, list) and not solutions:
+        # Empty list means the solver couldn't find closed-form roots
+        # (e.g. casus irreducibilis for cubics) — return unevaluated.
+        return expr
+    assert isinstance(solutions, list)
+    return IRApply(LIST, tuple(solutions))
+
+
+def _unwrap_equation(eq_ir: IRNode) -> IRNode:
+    """If ``eq_ir`` is ``Equal(lhs, rhs)``, return ``Sub(lhs, rhs)``.
+
+    Otherwise return ``eq_ir`` unchanged (treat as ``= 0`` expression).
+    """
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name == "Equal"
+        and len(eq_ir.args) == 2
+    ):
+        from symbolic_ir import SUB
+
+        return IRApply(SUB, eq_ir.args)
+    return eq_ir
+
+
+# ---------------------------------------------------------------------------
+# List operations
+# ---------------------------------------------------------------------------
+
+
+def length_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Length(list)`` — number of elements."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return length(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def first_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``First(list)`` — first element."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return first(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def rest_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Rest(list)`` — all but the first element."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return rest(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def last_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Last(list)`` — last element."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return last(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def append_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Append(list1, list2, …)`` — concatenate lists."""
+    if len(expr.args) < 2:
+        return expr
+    try:
+        return append(*expr.args)
+    except ListOperationError:
+        return expr
+
+
+def reverse_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Reverse(list)`` — reverse the list."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return reverse(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def range_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Range(n)`` or ``Range(start, stop)`` or ``Range(start, stop, step)``.
+
+    Mirrors MACSYMA's ``makelist`` convention: single-arg form generates
+    ``[1, 2, …, n]``.
+    """
+    try:
+        if len(expr.args) == 1:
+            arg = expr.args[0]
+            if not isinstance(arg, IRInteger):
+                return expr
+            return range_(arg.value)
+        if len(expr.args) == 2:
+            a, b = expr.args
+            if not isinstance(a, IRInteger) or not isinstance(b, IRInteger):
+                return expr
+            return range_(a.value, b.value)
+        if len(expr.args) == 3:
+            a, b, s = expr.args
+            if (
+                not isinstance(a, IRInteger)
+                or not isinstance(b, IRInteger)
+                or not isinstance(s, IRInteger)
+            ):
+                return expr
+            return range_(a.value, b.value, s.value)
+        return expr
+    except ListOperationError:
+        return expr
+
+
+def map_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Map(f, list)`` — apply ``f`` to every element through the VM.
+
+    Each application ``f(elem)`` is evaluated by the VM so that
+    ``Map(sin, [0])`` gives ``[0.0]`` rather than ``[Sin(0)]``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    f, lst = expr.args
+    try:
+        mapped = map_(f, lst)
+        # Evaluate each element.
+        evaluated = tuple(vm.eval(e) for e in mapped.args)
+        return IRApply(LIST, evaluated)
+    except ListOperationError:
+        return expr
+
+
+def apply_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Apply(f, list)`` — call ``f`` with the list's elements as args."""
+    if len(expr.args) != 2:
+        return expr
+    f, lst = expr.args
+    try:
+        applied = apply_(f, lst)
+        return vm.eval(applied)
+    except ListOperationError:
+        return expr
+
+
+def select_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Select(pred, list)`` — keep elements where ``pred(elem)`` is truthy.
+
+    The predicate is applied through the VM; an element is kept when the
+    result is the symbol ``True``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    pred, lst = expr.args
+    try:
+
+        def _pred(elem: IRNode) -> bool:
+            result = vm.eval(IRApply(pred, (elem,)))
+            return isinstance(result, IRSymbol) and result.name == "True"
+
+        return select(lst, _pred)
+    except ListOperationError:
+        return expr
+
+
+def sort_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Sort(list)`` — sort by canonical repr ordering."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return sort_(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def part_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Part(list, index)`` — 1-based element access."""
+    if len(expr.args) != 2:
+        return expr
+    lst, idx = expr.args
+    if not isinstance(idx, IRInteger):
+        return expr
+    try:
+        return part(lst, idx.value)
+    except ListOperationError:
+        return expr
+
+
+def flatten_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Flatten(list)`` — one level of nested-list expansion."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return flatten(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def join_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Join(list1, list2, …)`` — Mathematica-spelling append."""
+    if len(expr.args) < 2:
+        return expr
+    try:
+        return join(*expr.args)
+    except ListOperationError:
+        return expr
+
+
+# ---------------------------------------------------------------------------
+# Matrix operations
+# ---------------------------------------------------------------------------
+
+
+def _as_row_args(row: IRNode) -> list[IRNode] | None:
+    """Return the elements of a ``List(…)`` row, or ``None``."""
+    if (
+        isinstance(row, IRApply)
+        and isinstance(row.head, IRSymbol)
+        and row.head.name == "List"
+    ):
+        return list(row.args)
+    return None
+
+
+def matrix_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Matrix(List(…), List(…), …)`` — validate shape and return as-is.
+
+    The IR representation *is* the matrix; this handler just validates
+    that every row has the same width and the input is non-empty.
+    """
+    try:
+        rows = []
+        for arg in expr.args:
+            row = _as_row_args(arg)
+            if row is None:
+                return expr
+            rows.append(row)
+        return matrix(rows)
+    except MatrixError:
+        return expr
+
+
+def transpose_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Transpose(matrix)`` — transpose the matrix."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return transpose(expr.args[0])
+    except (MatrixError, ValueError):
+        return expr
+
+
+def determinant_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Determinant(matrix)`` — compute the determinant (exact, symbolic).
+
+    The :mod:`cas_matrix` substrate returns the determinant as a symbolic
+    IR expression (e.g. ``Sub(Mul(1, 4), Mul(2, 3))``).  We pass it
+    through the VM so numeric entries fold to a concrete integer/rational
+    (e.g. ``IRInteger(-2)``).
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        raw = determinant(expr.args[0])
+        return vm.eval(raw)
+    except (MatrixError, ValueError):
+        return expr
+
+
+def inverse_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Inverse(matrix)`` — compute the matrix inverse."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return inverse(expr.args[0])
+    except (MatrixError, ValueError):
+        return expr
+
+
+# ---------------------------------------------------------------------------
+# Limit and Taylor
+# ---------------------------------------------------------------------------
+
+
+def limit_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Limit(body, var, point[, dir])`` — full limit evaluation.
+
+    Uses :func:`cas_limit_series.limit_advanced` with L'Hôpital's rule and
+    support for all standard indeterminate forms (0/0, ∞/∞, 0·∞, 1^∞, 0^0,
+    ∞^0).
+
+    Call forms:
+      ``Limit(expr, var, point)``          — two-sided limit
+      ``Limit(expr, var, point, plus)``    — right-sided limit
+      ``Limit(expr, var, point, minus)``   — left-sided limit
+
+    Falls through to the unevaluated node if the limit cannot be determined.
+    """
+    n = len(expr.args)
+    if n not in (3, 4):
+        return expr
+    body, var, point = expr.args[:3]
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    # Parse optional direction argument.
+    direction: str | None = None
+    if n == 4:
+        dir_arg = expr.args[3]
+        if isinstance(dir_arg, IRSymbol) and dir_arg.name in ("plus", "minus"):
+            direction = dir_arg.name
+
+    # Inject symbolic differentiation and VM evaluator.
+    def _diff_fn(e: IRNode, v: IRSymbol) -> IRNode:
+        return vm.eval(_symbolic_diff(e, v))
+
+    def _eval_fn(e: IRNode) -> IRNode:
+        # The VM may raise ZeroDivisionError for symbolic 0/0 during exact
+        # substitution inside limit_advanced.  Propagate it so the caller
+        # (limit_advanced) can detect it and route to L'Hôpital.
+        return vm.eval(e)
+
+    try:
+        result = limit_advanced(
+            body,
+            var,
+            point,
+            direction,
+            diff_fn=_diff_fn,
+            eval_fn=_eval_fn,
+        )
+    except (ZeroDivisionError, ArithmeticError):
+        # Genuine division by zero outside the L'Hôpital path — return
+        # unevaluated so the user sees the original Limit expression.
+        return expr
+    return vm.eval(simplify(result))
+
+
+def taylor_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Taylor(body, var, point, order)`` — Taylor expansion.
+
+    Delegates to the full :func:`symbolic_vm.cas_handlers.taylor_handler`
+    which tries the fast polynomial route first (``taylor_polynomial``) and
+    falls back to successive symbolic differentiation for transcendental
+    functions like ``sin``, ``exp``, ``cos``, etc.
+    """
+    return _taylor_handler_full(vm, expr)
+
+
+# ---------------------------------------------------------------------------
+# Numeric / arithmetic
+# ---------------------------------------------------------------------------
+
+
+def floor_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Floor(x)`` — floor function."""
+    if len(expr.args) != 1:
+        return expr
+    n = to_number(expr.args[0])
+    if n is None:
+        return expr
+    return IRInteger(math.floor(float(n)))
+
+
+def ceiling_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Ceiling(x)`` — ceiling function."""
+    if len(expr.args) != 1:
+        return expr
+    n = to_number(expr.args[0])
+    if n is None:
+        return expr
+    return IRInteger(math.ceil(float(n)))
+
+
+def mod_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Mod(a, b)`` — modulo."""
+    if len(expr.args) != 2:
+        return expr
+    na = to_number(expr.args[0])
+    nb = to_number(expr.args[1])
+    if na is None or nb is None or nb == 0:
+        return expr
+    result = Fraction(na) % Fraction(nb)
+    return from_number(result)
+
+
+def gcd_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Gcd(a, b)`` — greatest common divisor (integer args only)."""
+    if len(expr.args) != 2:
+        return expr
+    a, b = expr.args
+    if not isinstance(a, IRInteger) or not isinstance(b, IRInteger):
+        return expr
+    return IRInteger(math.gcd(a.value, b.value))
+
+
+def lcm_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Lcm(a, b)`` — least common multiple (integer args only)."""
+    if len(expr.args) != 2:
+        return expr
+    a, b = expr.args
+    if not isinstance(a, IRInteger) or not isinstance(b, IRInteger):
+        return expr
+    return IRInteger(math.lcm(a.value, b.value))
+
+
+# ---------------------------------------------------------------------------
+# Float coercion (Phase 30)
+# ---------------------------------------------------------------------------
+
+
+def float_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Float(expr)`` — coerce expression to floating-point representation.
+
+    This is the function form of ``ev(expr, numer)``.  It evaluates the
+    argument through the VM then recursively converts every exact numeric
+    leaf (``IRInteger``, ``IRRational``) to ``IRFloat``.
+
+    Examples::
+
+        float(1/2)       →  0.5
+        float(3)         →  3.0
+        float(%pi)       →  3.141592653589793   (pre-bound as IRFloat)
+        float(sin(%pi))  →  1.2246467991473532e-16   (near zero)
+        float(x + 1/3)   →  x + 0.3333333333333333   (symbolic + float)
+
+    Arity: ``Float`` takes exactly one argument.  Wrong-arity calls are
+    returned unevaluated.
+    """
+    if len(expr.args) != 1:
+        return expr
+    result: IRNode = vm.eval(expr.args[0])
+    return _numer_fold(result)
+
+
+# ---------------------------------------------------------------------------
+# Handler-table builder
+# ---------------------------------------------------------------------------
+
+
+def build_cas_handler_table() -> dict[str, Handler]:
+    """Return the complete CAS handler dispatch table.
+
+    Keys are the canonical IR head names (string).  Values are the
+    handler functions defined in this module.  Merge this into the
+    backend's ``_handlers`` dict on startup.
+
+    The table is assembled in four layers:
+
+    1. Handlers defined directly in this module (simplify, factor, solve, …).
+    2. ODE handlers from :func:`cas_ode.build_ode_handler_table` — wires
+       ``ODE2`` for MACSYMA's ``ode2(eqn, y, x)`` surface syntax.
+    3. Laplace transform handlers from
+       :func:`cas_laplace.build_laplace_handler_table` — wires ``Laplace``,
+       ``ILT``, ``DiracDelta``, and ``UnitStep``.
+    4. Delegated handlers from :mod:`symbolic_vm` (pattern-matching, special
+       functions, summation, …).
+
+    All four layers are merged left-to-right; later layers override earlier
+    ones for any conflicting key (there are none in practice).
+    """
+    table: dict[str, Handler] = {
+        # Simplify / expand
+        "Simplify": simplify_handler,
+        "Expand": expand_handler,
+        # Substitution
+        "Subst": subst_handler,
+        # Factor
+        "Factor": factor_handler,
+        # Solve
+        "Solve": solve_handler,
+        # List operations
+        "Length": length_handler,
+        "First": first_handler,
+        "Rest": rest_handler,
+        "Last": last_handler,
+        "Append": append_handler,
+        "Reverse": reverse_handler,
+        "Range": range_handler,
+        "Map": map_handler,
+        "Apply": apply_handler,
+        "Select": select_handler,
+        "Sort": sort_handler,
+        "Part": part_handler,
+        "Flatten": flatten_handler,
+        "Join": join_handler,
+        # Matrix
+        "Matrix": matrix_handler,
+        "Transpose": transpose_handler,
+        "Determinant": determinant_handler,
+        "Inverse": inverse_handler,
+        # Limit / Taylor
+        "Limit": limit_handler,
+        "Taylor": taylor_handler,
+        # Numeric
+        "Abs": _abs_handler_full,  # Phase 28: full handler with vm.assumptions support
+        "Floor": floor_handler,
+        "Ceiling": ceiling_handler,
+        "Mod": mod_handler,
+        "Gcd": gcd_handler,
+        "Lcm": lcm_handler,
+        # Float coercion (Phase 30)
+        "Float": float_handler,
+        # Pattern-matching rule system (Phase 22) — delegated to symbolic_vm
+        "MatchDeclare": _matchdeclare_handler,
+        "Defrule": _defrule_handler,
+        "Apply1": _apply1_handler,
+        "Apply2": _apply2_handler,
+        "TellSimp": _tellsimp_handler,
+        # Special functions (Phase 23) — delegated to symbolic_vm
+        "GammaFunc": _gamma_handler,
+        "BetaFunc": _beta_handler,
+        "Erf": _erf_handler,
+        "Erfc": _erfc_handler,
+        "Erfi": _erfi_handler,
+        "Si": _si_handler,
+        "Ci": _ci_handler,
+        "Shi": _shi_handler,
+        "Chi": _chi_handler,
+        "Li2": _li2_handler,
+        "FresnelS": _fresnel_s_handler,
+        "FresnelC": _fresnel_c_handler,
+        # --- Phase 25: symbolic summation and product -----------------------
+        "Sum": _sum_handler,
+        "Product": _product_handler,
+    }
+
+    # --- Phase 29: ODE solving (cas-ode) ------------------------------------
+    # Adds: ODE2 (ode2 surface name — 7 ODE types, 1st and 2nd order)
+    table.update(_build_ode_handlers())
+
+    # --- Phase 29: Laplace transforms (cas-laplace) -------------------------
+    # Adds: Laplace, ILT, DiracDelta, UnitStep
+    table.update(_build_laplace_handlers())
+
+    return table

@@ -34,10 +34,10 @@
 //! - **Hex** (flat-top hexagons): MaxiCode (ISO/IEC 16023).
 //!   Each dark module becomes a [`PaintPath`] tracing six vertices.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 use paint_instructions::{
-    PaintBase, PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand,
+    PaintBase, PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand, PixelContainer,
 };
 use std::f64::consts::PI;
 
@@ -622,6 +622,259 @@ fn build_flat_top_hex_path(cx: f64, cy: f64, r: f64, fill: &str) -> PaintPath {
 }
 
 // ============================================================================
+// Native rendering pipeline
+// ============================================================================
+//
+// `barcode-2d` is the shared rendering hub for ALL 2D barcode formats.
+//
+// Every 2D barcode encoder (qr-code, pdf417, aztec-code, data-matrix, micro-qr)
+// produces a `PaintScene` via `encode_and_layout()`.  The functions below
+// accept that `PaintScene` and convert it to pixels or a PNG byte vector using
+// the best native backend available on the current platform.
+//
+// ## Backend priority (same as barcode-1d)
+//
+// | Platform   | Primary          | Fallback          |
+// |------------|------------------|-------------------|
+// | Windows    | Direct2D (GPU)   | Skia (CPU raster) |
+// | macOS      | Metal (GPU)      | Skia (CPU raster) |
+// | Linux/BSD  | Cairo (CPU)      | Skia (CPU raster) |
+// | Exotic     | —                | Skia (CPU raster) |
+//
+// Skia is statically linked via the `skia-safe` crate, so it works everywhere
+// with no additional system libraries.  Cairo requires a system-level `cairo`
+// package (available on Linux and macOS via `brew install cairo`).
+//
+// ## Function naming
+//
+// Because the 2D barcode pipeline already has `layout()` that accepts a
+// `ModuleGrid` and produces a `PaintScene`, the rendering layer uses the
+// prefix `render_scene_*` to make the input type clear.
+//
+// ```text
+// ModuleGrid
+//   → layout()         → PaintScene    (this crate, existing)
+//   → render_scene()   → PixelContainer (this section)
+//   → encode_png()     → Vec<u8>       (paint-codec-png)
+// ```
+
+use paint_vm_runtime::PaintRenderError;
+
+/// Report the name of the platform-default paint backend.
+///
+/// This matches the backend that `render_scene()` will use when called without
+/// an explicit backend name.  Useful for logging and for conditional test
+/// skipping.
+///
+/// Returns one of `"direct2d"`, `"metal"`, `"cairo"`, or `"skia"`.
+pub fn current_backend() -> &'static str {
+    #[cfg(target_os = "windows")]
+    {
+        "direct2d"
+    }
+    #[cfg(all(not(target_os = "windows"), target_vendor = "apple"))]
+    {
+        "metal"
+    }
+    #[cfg(all(
+        not(target_os = "windows"),
+        not(target_vendor = "apple"),
+        any(
+            target_os = "linux",
+            target_os = "freebsd",
+            target_os = "openbsd",
+            target_os = "netbsd"
+        )
+    ))]
+    {
+        "cairo"
+    }
+    #[cfg(all(
+        not(target_os = "windows"),
+        not(target_vendor = "apple"),
+        not(any(
+            target_os = "linux",
+            target_os = "freebsd",
+            target_os = "openbsd",
+            target_os = "netbsd"
+        ))
+    ))]
+    {
+        "skia"
+    }
+}
+
+/// Render a [`PaintScene`] to a [`PixelContainer`] using the platform-default
+/// backend.
+///
+/// Call this after `encode_and_layout()` (from `qr-code`, `pdf417`, etc.) to
+/// obtain a pixel buffer suitable for PNG encoding.
+///
+/// # Errors
+///
+/// Returns `Err(String)` when the native backend reports a render failure.
+/// This is rare in practice — it typically means Cairo/Metal initialisation
+/// failed (e.g., running headless without a GPU on macOS).  The Skia fallback
+/// path never fails on valid scenes.
+pub fn render_scene(scene: &PaintScene) -> Result<PixelContainer, String> {
+    #[cfg(target_os = "windows")]
+    {
+        return Ok(paint_vm_direct2d::render(scene));
+    }
+
+    #[cfg(all(not(target_os = "windows"), target_vendor = "apple"))]
+    {
+        return Ok(paint_metal::render(scene));
+    }
+
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd"
+    ))]
+    {
+        return paint_vm_cairo::render(scene).map_err(paint_render_error_to_string);
+    }
+
+    // Universal cross-platform fallback via skia-safe (CPU raster).
+    // Reached on macOS (below Metal layer) or any other exotic target.
+    #[allow(unreachable_code)]
+    paint_vm_skia::render(scene).map_err(paint_render_error_to_string)
+}
+
+/// Render a [`PaintScene`] to a PNG byte vector using the platform-default
+/// backend.
+///
+/// Convenience wrapper around `render_scene()` + `paint_codec_png::encode_png()`.
+///
+/// # Example
+///
+/// ```no_run
+/// use barcode_2d::{
+///     make_module_grid, set_module, layout, render_scene_png,
+///     Barcode2DLayoutConfig, ModuleShape,
+/// };
+///
+/// // Normally produced by qr-code, pdf417, aztec-code, data-matrix, or micro-qr.
+/// let grid = set_module(&make_module_grid(1, 1, ModuleShape::Square), 0, 0, true);
+/// let scene = layout(&grid, &Barcode2DLayoutConfig::default()).unwrap();
+/// let png_bytes = render_scene_png(&scene).unwrap();
+/// std::fs::write("barcode.png", &png_bytes).unwrap();
+/// ```
+pub fn render_scene_png(scene: &PaintScene) -> Result<Vec<u8>, String> {
+    let pixels = render_scene(scene)?;
+    Ok(paint_codec_png::encode_png(&pixels))
+}
+
+/// Render a [`PaintScene`] to a [`PixelContainer`] using a named backend.
+///
+/// This is useful for testing with a specific backend or for users who want to
+/// bypass the platform default.
+///
+/// # Backend names
+///
+/// - `"skia"` — Skia CPU raster (all platforms, always available)
+/// - `"cairo"` — Cairo vector raster (Linux, macOS, BSD; requires system `cairo`)
+/// - `"metal"` — Metal GPU (macOS only)
+/// - `"direct2d"` — Direct2D GPU (Windows only)
+///
+/// # Errors
+///
+/// Returns `Err(String)` when the named backend is unavailable on the current
+/// platform, or when `backend` is not one of the four names above.
+pub fn render_scene_with_backend(
+    scene: &PaintScene,
+    backend: &str,
+) -> Result<PixelContainer, String> {
+    match backend {
+        "skia" => paint_vm_skia::render(scene).map_err(paint_render_error_to_string),
+
+        "cairo" => {
+            #[cfg(any(
+                target_os = "linux",
+                target_os = "macos",
+                target_os = "freebsd",
+                target_os = "openbsd",
+                target_os = "netbsd"
+            ))]
+            {
+                paint_vm_cairo::render(scene).map_err(paint_render_error_to_string)
+            }
+            #[cfg(not(any(
+                target_os = "linux",
+                target_os = "macos",
+                target_os = "freebsd",
+                target_os = "openbsd",
+                target_os = "netbsd"
+            )))]
+            {
+                let _ = scene;
+                Err("Cairo backend is not available on this platform".to_string())
+            }
+        }
+
+        "metal" => {
+            #[cfg(target_vendor = "apple")]
+            {
+                Ok(paint_metal::render(scene))
+            }
+            #[cfg(not(target_vendor = "apple"))]
+            {
+                let _ = scene;
+                Err("Metal backend is only available on Apple platforms".to_string())
+            }
+        }
+
+        "direct2d" => {
+            #[cfg(target_os = "windows")]
+            {
+                Ok(paint_vm_direct2d::render(scene))
+            }
+            #[cfg(not(target_os = "windows"))]
+            {
+                let _ = scene;
+                Err("Direct2D backend is only available on Windows".to_string())
+            }
+        }
+
+        _ => Err(format!(
+            "unknown backend: '{backend}'. Use 'skia', 'cairo', 'metal', or 'direct2d'"
+        )),
+    }
+}
+
+/// Render a [`PaintScene`] to a PNG byte vector using a named backend.
+///
+/// See [`render_scene_with_backend`] for the list of backend names.
+pub fn render_scene_png_with_backend(
+    scene: &PaintScene,
+    backend: &str,
+) -> Result<Vec<u8>, String> {
+    let pixels = render_scene_with_backend(scene, backend)?;
+    Ok(paint_codec_png::encode_png(&pixels))
+}
+
+/// Format a [`PaintRenderError`] as a human-readable `String`.
+///
+/// `PaintRenderError` does not implement `std::fmt::Display`; this helper
+/// performs the pattern match manually so call-sites stay concise.
+fn paint_render_error_to_string(error: PaintRenderError) -> String {
+    match error {
+        PaintRenderError::NoBackendsRegistered => "no paint backends registered".to_string(),
+        PaintRenderError::NoCompatibleBackend { missing, .. } => {
+            format!("no compatible backend: missing features {missing:?}")
+        }
+        PaintRenderError::BackendUnavailable { backend, reason } => {
+            format!("backend '{backend}' unavailable: {reason}")
+        }
+        PaintRenderError::RenderFailed { backend, message } => {
+            format!("render failed in backend '{backend}': {message}")
+        }
+    }
+}
+
+// ============================================================================
 // Tests
 // ============================================================================
 
@@ -633,7 +886,7 @@ mod tests {
 
     #[test]
     fn version_is_correct() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     // ── make_module_grid ─────────────────────────────────────────────────────
@@ -1090,5 +1343,91 @@ mod tests {
     fn default_config_module_shape_square() {
         let cfg = Barcode2DLayoutConfig::default();
         assert_eq!(cfg.module_shape, ModuleShape::Square);
+    }
+
+    // ── Rendering pipeline ───────────────────────────────────────────────────
+    //
+    // These tests exercise the full stack: ModuleGrid → layout() → render_scene*().
+    // We use a tiny 1×1 grid so the scene is trivially small, keeping CI fast.
+
+    /// Helper: build the smallest valid square `PaintScene` for render tests.
+    fn tiny_square_scene() -> PaintScene {
+        let g = set_module(&make_module_grid(1, 1, ModuleShape::Square), 0, 0, true);
+        let config = Barcode2DLayoutConfig {
+            module_size_px: 4.0,
+            quiet_zone_modules: 0,
+            ..Default::default()
+        };
+        layout(&g, &config).unwrap()
+    }
+
+    /// `current_backend()` must return a non-empty string on every platform.
+    #[test]
+    fn current_backend_returns_known_name() {
+        let b = current_backend();
+        assert!(
+            ["skia", "cairo", "metal", "direct2d"].contains(&b),
+            "unexpected backend name: {b}"
+        );
+    }
+
+    /// Skia is the universal fallback — it builds from source via `skia-safe`
+    /// and is always available.  The PNG header magic bytes must be present.
+    #[test]
+    fn skia_renders_tiny_square_to_png() {
+        let scene = tiny_square_scene();
+        let png = render_scene_png_with_backend(&scene, "skia").unwrap();
+        assert!(png.len() > 8, "PNG too small");
+        assert_eq!(
+            &png[0..8],
+            &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A],
+            "not a PNG magic header"
+        );
+    }
+
+    /// Requesting an unknown backend name returns a descriptive error string
+    /// without panicking.
+    #[test]
+    fn unknown_backend_returns_error() {
+        let scene = tiny_square_scene();
+        let err = render_scene_with_backend(&scene, "nonexistent").unwrap_err();
+        assert!(
+            err.contains("nonexistent"),
+            "error should mention the bad backend name: {err}"
+        );
+    }
+
+    /// Cairo renders a valid PNG on macOS and Linux where the system `cairo`
+    /// library is installed.
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd"
+    ))]
+    #[test]
+    fn cairo_renders_tiny_square_to_png() {
+        let scene = tiny_square_scene();
+        let png = render_scene_png_with_backend(&scene, "cairo").unwrap();
+        assert!(png.len() > 8, "Cairo PNG too small");
+        assert_eq!(
+            &png[0..8],
+            &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A],
+            "Cairo output is not a PNG"
+        );
+    }
+
+    /// The platform default produces a valid PNG on all platforms.
+    #[test]
+    fn platform_default_render_produces_png() {
+        let scene = tiny_square_scene();
+        let png = render_scene_png(&scene).unwrap();
+        assert!(png.len() > 8, "default backend PNG too small");
+        assert_eq!(
+            &png[0..8],
+            &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A],
+            "default backend output is not a PNG"
+        );
     }
 }

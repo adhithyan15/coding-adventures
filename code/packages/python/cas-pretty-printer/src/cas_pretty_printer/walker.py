@@ -84,6 +84,7 @@ def unregister_head_formatter(head_name: str) -> None:
 
 
 _PREC_ATOM = 100  # mirrors dialect.PREC_ATOM; duplicated here to avoid import cycle
+_PREC_NEG = 55   # mirrors dialect.PREC_NEG; duplicated here to avoid import cycle
 
 
 def pretty(node: IRNode, dialect: Dialect, *, style: str = "linear") -> str:
@@ -93,12 +94,20 @@ def pretty(node: IRNode, dialect: Dialect, *, style: str = "linear") -> str:
         node: The IR tree.
         dialect: A :class:`Dialect` instance (typically a subclass of
             :class:`BaseDialect`).
-        style: Reserved for future ``"2d"`` ASCII output. Currently only
-            ``"linear"`` is supported.
+        style: ``"linear"`` (default) for a single-line string, or
+            ``"2d"`` for a multi-line ASCII layout using the box engine.
 
     Returns:
-        A single-line (linear style) string.
+        A single-line string for ``style="linear"``, or a multi-line
+        string (rows joined by ``\\n``) for ``style="2d"``.
+
+    Raises:
+        ValueError: For any style other than ``"linear"`` or ``"2d"``.
     """
+    if style == "2d":
+        from cas_pretty_printer.box import pretty_2d
+
+        return pretty_2d(node, dialect)
     if style != "linear":
         raise ValueError(f"unsupported style {style!r}")
     return _format(node, dialect, min_prec=0)
@@ -122,9 +131,15 @@ def _format(node: IRNode, dialect: Dialect, min_prec: int) -> str:
 
 def _format_integer(node: IRInteger, dialect: Dialect, min_prec: int) -> str:
     text = dialect.format_integer(node.value)
-    # Negative literals need parens when nested inside a tighter-binding
-    # operator (e.g. `2^-3` needs `2^(-3)` to round-trip in MACSYMA).
-    if node.value < 0 and min_prec > 0:
+    # Negative literals need parentheses only when the surrounding operator
+    # binds *more tightly* than unary minus (PREC_NEG = 55).  This gives:
+    #
+    #   -2*y   →  no parens (Mul prec 50 < 55),  output  -2*y
+    #   2^(-3) →  parens    (Pow prec 60 > 55),  output  2^(-3)
+    #
+    # The old threshold of `min_prec > 0` was too conservative and produced
+    # the ugly `(-2)*y` form even though `-2*y` is unambiguous.
+    if node.value < 0 and min_prec > _PREC_NEG:
         return f"({text})"
     return text
 

@@ -1,0 +1,40 @@
+// Dialog.mil — interface for the Dialog component (v0.2.0).
+//
+// v0.2.0 rewrites Dialog as a thin wrapper around the UI29-1 kernel
+// primitive `HostDialog`.  v0.1.0 had to be composed from Box + Column +
+// Text + HostButton because no kernel dialog existed — but a composed
+// dialog cannot deliver modal blocking, focus trap, Esc-to-close,
+// top-layer rendering, or the screen-reader `dialog` role.  UI29-1
+// added `HostDialog` to the kernel exactly so userland Dialog could
+// hand all that off to the platform's native primitive.
+//
+// Slot vocabulary
+// ---------------
+//   open          whether the dialog is visible.  v0.2.0's biggest
+//                 change from v0.1.0: the host now drives visibility
+//                 through this slot instead of choosing whether to
+//                 render Dialog at all.  Flipping `open` from false to
+//                 true presents the dialog; flipping back hides it.
+//   title         the heading line shown at the top of the dialog
+//   message       the body text shown between the title and the actions
+//   close-label   the label shown on the close button (e.g. "OK", "Close")
+//
+// Emit vocabulary
+// ---------------
+//   onClose       fired when the dialog should close.  Triggers, all
+//                 wired by the HostDialog primitive:
+//                   - user pressed Esc
+//                   - user clicked the backdrop (default for modal)
+//                   - user clicked the close button child
+//                   - the host flipped `open` back to false
+//                 The host is responsible for flipping `open` back to
+//                 false in response (the dialog does not gate itself).
+
+component Dialog {
+  slot open        : bool ;
+  slot title       : text ;
+  slot message     : text ;
+  slot close-label : text ;
+
+  emit onClose ;
+}

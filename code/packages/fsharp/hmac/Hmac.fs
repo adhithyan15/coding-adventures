@@ -1,7 +1,10 @@
 namespace CodingAdventures.Hmac.FSharp
 
 open System
-open System.Security.Cryptography
+open CodingAdventures.Md5
+open CodingAdventures.Sha1.FSharp
+open CodingAdventures.Sha256.FSharp
+open CodingAdventures.Sha512.FSharp
 
 [<RequireQualifiedAccess>]
 module Hmac =
@@ -26,12 +29,11 @@ module Hmac =
 
         Array.append normalized (Array.zeroCreate (blockSize - normalized.Length))
 
-    let compute (hashFunction: byte array -> byte array) blockSize (key: byte array) (message: byte array) =
+    let computeAllowEmptyKey (hashFunction: byte array -> byte array) blockSize (key: byte array) (message: byte array) =
         if isNull (box hashFunction) then nullArg "hashFunction"
         if isNull key then nullArg "key"
         if isNull message then nullArg "message"
         if blockSize <= 0 then invalidArg "blockSize" "Block size must be positive."
-        ensureNonEmptyKey key
 
         let keyPrime = normalizeKey hashFunction blockSize key
         let innerKey = keyPrime |> Array.map (fun value -> value ^^^ ipad)
@@ -39,13 +41,18 @@ module Hmac =
         let inner = hashFunction (concat innerKey message)
         hashFunction (concat outerKey inner)
 
-    let hmacMd5 key message = compute MD5.HashData 64 key message
+    let compute (hashFunction: byte array -> byte array) blockSize (key: byte array) (message: byte array) =
+        if isNull key then nullArg "key"
+        ensureNonEmptyKey key
+        computeAllowEmptyKey hashFunction blockSize key message
 
-    let hmacSha1 key message = compute SHA1.HashData 64 key message
+    let hmacMd5 key message = compute Md5.sumMd5 64 key message
 
-    let hmacSha256 key message = compute SHA256.HashData 64 key message
+    let hmacSha1 key message = compute Sha1.hash 64 key message
 
-    let hmacSha512 key message = compute SHA512.HashData 128 key message
+    let hmacSha256 key message = compute Sha256.hash 64 key message
+
+    let hmacSha512 key message = compute Sha512.hash 128 key message
 
     let private toHex (data: byte array) =
         Convert.ToHexString(data).ToLowerInvariant()
@@ -61,4 +68,13 @@ module Hmac =
     let verify (expected: byte array) (actual: byte array) =
         if isNull expected then nullArg "expected"
         if isNull actual then nullArg "actual"
-        CryptographicOperations.FixedTimeEquals(expected, actual)
+
+        if expected.Length <> actual.Length then
+            false
+        else
+            let mutable diff = 0
+
+            for index in 0 .. expected.Length - 1 do
+                diff <- diff ||| (int expected[index] ^^^ int actual[index])
+
+            diff = 0

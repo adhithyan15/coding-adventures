@@ -16,4 +16,8 @@
     <ProjectReference Include="../../CodingAdventures.Uuid.fsproj" />
     <Compile Include="UuidTests.fs" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <Exclude>[CodingAdventures.Csprng]*,[CodingAdventures.Md5]*,[CodingAdventures.Sha1]*</Exclude>
+  </PropertyGroup>
 </Project>

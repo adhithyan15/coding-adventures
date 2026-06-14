@@ -1,0 +1,7 @@
+{
+ "idx": 61,
+ "id": "EMP-2",
+ "scenario": "Devon started working at the company on March 1, 2024 and has worked continuously since. As of today, March 1, 2026, he has completed 24 months of continuous service. Devon is 19 years old.",
+ "policy": "An employee is eligible to enroll in the company retirement plan once they have completed at least 12 months of continuous service AND are at least 21 years old. Both conditions must be met.",
+ "question": "Is Devon eligible to enroll in the company retirement plan?"
+}

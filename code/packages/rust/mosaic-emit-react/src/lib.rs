@@ -51,6 +51,16 @@
 use mosaic_vm::{EmitResult, MosaicRenderer, ResolvedProperty, ResolvedValue};
 use mosaic_analyzer::{MosaicSlot, MosaicType};
 
+// =====================================================================
+// New three-file pipeline entry point.
+//
+// `pub mod pipeline` introduces the UI24-compliant `from_pipeline`
+// function alongside the legacy `MosaicVM`-driven `ReactRenderer`.
+// The two code paths do not share state — adding the new pipeline
+// support cannot regress the legacy path.
+// =====================================================================
+pub mod pipeline;
+
 // ===========================================================================
 // Stack frames
 // ===========================================================================
@@ -177,6 +187,58 @@ impl ReactRenderer {
                 let base = "overflow: 'auto'";
                 let combined = combine_styles(base, &style);
                 (format_div(&combined, &class, &extra_attrs), false)
+            }
+            "Grid" => {
+                // The Grid primitive renders a complete, fully-static HTML <table>.
+                //
+                // It receives two slot-reference props:
+                //   - `headers` → the column-headers slot (Array<string>)
+                //   - `rows`    → the viewport-rows slot (Array<Array<string>>)
+                //
+                // The generated JSX uses .map() for both header cells and data rows,
+                // matching the approach used by begin_each() in the VM.
+                //
+                // For the static v1 demo no virtual scrolling or row selection is
+                // emitted — those belong in the interactive phase.
+                let headers = find_slot_ref_prop(props, "headers");
+                let rows    = find_slot_ref_prop(props, "rows");
+
+                let style_attr = if style.is_empty() {
+                    String::new()
+                } else {
+                    format!(" style={{{{ {style} }}}}")
+                };
+                let class_attr = if class.is_empty() {
+                    String::new()
+                } else {
+                    format!(" className=\"{class}\"")
+                };
+
+                // Build the full table JSX as a single self-closing unit (we set
+                // self_closing=true so flush_frame() emits it verbatim).
+                //
+                // v1 static model:
+                //   headers → Array<string>  (column-headers slot)
+                //   rows    → Array<string>  (viewport-rows slot; one string per row)
+                //
+                // Each row is rendered as a single <td> cell.  Nested
+                // list<list<text>> is a v2 concern and requires a grammar
+                // extension in mosmodel-compiler.
+                let table = format!(
+                    "<table{style_attr}{class_attr}>\
+                    <thead><tr>\
+                    {{{h}.map((h, _i) => (<th key={{_i}}>{{h}}</th>))}}\
+                    </tr></thead>\
+                    <tbody>\
+                    {{{r}.map((row, _i) => (<tr key={{_i}}><td>{{row}}</td></tr>))}}\
+                    </tbody>\
+                    </table>",
+                    style_attr = style_attr,
+                    class_attr = class_attr,
+                    h = headers,
+                    r = rows,
+                );
+                (table, true) // self-closing: no child nodes, full JSX inline
             }
             "Divider" => (format!("<hr />"), true),
             "Icon" => {
@@ -599,8 +661,60 @@ fn close_tag_for_primitive(tag: &str) -> String {
         "Box" | "Column" | "Row" | "Stack" | "Spacer" | "Scroll" => "</div>".to_string(),
         "Text" => "</span>".to_string(),
         "Icon" => "</span>".to_string(),
-        "Image" | "Divider" => String::new(), // self-closing
+        // Grid, Image, Divider are self-closing — the full tag is stored in
+        // the frame's `tag` field and emitted verbatim by flush_frame().
+        // This branch is unreachable for them, but guard it for safety.
+        "Image" | "Divider" | "Grid" => String::new(),
         _ => "</div>".to_string(),
+    }
+}
+
+/// Extract the camelCase slot-reference variable name from a named prop.
+///
+/// Grid needs to turn `headers: slot: column-headers` into the JS variable
+/// name `columnHeaders` so it can embed it in the `.map()` expression.
+/// Returns an empty string if the prop is missing or is not a SlotRef.
+///
+/// # Safety
+///
+/// The camelCase identifier is validated against a strict JS-identifier
+/// allow-list before being embedded verbatim in the JSX template string.
+/// If the result is not a safe identifier (a bug in the grammar enforcement
+/// or an unexpected token value), we return an empty string so the generated
+/// JSX produces a harmless empty `.map()` call rather than injected code.
+fn find_slot_ref_prop(props: &[ResolvedProperty], name: &str) -> String {
+    props
+        .iter()
+        .find(|p| p.name == name)
+        .map(|p| match &p.value {
+            ResolvedValue::SlotRef { name: slot_name, .. } => {
+                let camel = to_camel_case(slot_name);
+                // Validate: a safe JS identifier starts with [a-zA-Z_$] and
+                // contains only [a-zA-Z0-9_$].  The NAME token pattern used by
+                // the grammar guarantees alphanumeric + hyphens, and to_camel_case
+                // removes hyphens, so in practice this check always passes.
+                // We guard defensively against future grammar changes or direct
+                // ResolvedValue construction that bypasses the tokeniser.
+                if is_safe_js_identifier(&camel) { camel } else { String::new() }
+            }
+            _ => String::new(),
+        })
+        .unwrap_or_default()
+}
+
+/// Return `true` if `s` is a valid JavaScript identifier.
+///
+/// A JS identifier must start with a letter, underscore, or dollar sign,
+/// and contain only those characters plus ASCII digits.  Embedding anything
+/// else verbatim in a JSX expression string would be a template-injection risk.
+fn is_safe_js_identifier(s: &str) -> bool {
+    let mut chars = s.chars();
+    match chars.next() {
+        None => false,
+        Some(c) => {
+            (c.is_alphabetic() || c == '_' || c == '$')
+                && chars.all(|c| c.is_alphanumeric() || c == '_' || c == '$')
+        }
     }
 }
 
@@ -741,10 +855,9 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 9: each block generates .map()
     // -----------------------------------------------------------------------
-    // NOTE: Uses list<text> which requires a grammar fix in the Rust parser.
+    // list<text> parsing is now fixed; each block test is fully active.
 
     #[test]
-    #[ignore = "Rust GrammarParser resolves 'list' as KEYWORD before list_type"]
     fn test_each_block_map() {
         let out = emit(r#"
           component List {
@@ -768,5 +881,144 @@ mod tests {
         let out = emit(r#"component Empty { Box { } }"#);
         // The function should have no props parameter or an empty one.
         assert!(out.contains("export function Empty"), "Missing function");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 11: renders_simple_text_slot — component with one text slot renders
+    //          as a valid React component with function, import React, export default.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_simple_text_slot() {
+        let out = emit(r#"component Label { slot title: text; Text { content: @title; } }"#);
+        // Must contain: React import, function keyword, and export keyword.
+        assert!(
+            out.contains("import React"),
+            "Missing React import: {out}"
+        );
+        assert!(
+            out.contains("function Label"),
+            "Missing function declaration: {out}"
+        );
+        // The function must be exported (export function or export default).
+        assert!(
+            out.contains("export"),
+            "Missing export: {out}"
+        );
+        // The slot must appear as a camelCase prop.
+        assert!(
+            out.contains("title"),
+            "Missing slot 'title' in output: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 12: renders_column_with_text — Column containing Text renders flex style.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_column_with_text() {
+        let out = emit(r#"component Card { slot label: text; Column { Text { content: @label; } } }"#);
+        assert!(
+            out.contains("flexDirection: 'column'") || out.contains("flexDirection:'column'"),
+            "Expected flex column style: {out}"
+        );
+        assert!(out.contains("<span"), "Expected <span for Text: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 13: renders_when_block — `when @show { ... }` renders as ternary /
+    //          conditional JSX expression.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_when_block() {
+        let out = emit(r#"
+          component Cond {
+            slot show: bool;
+            Column {
+              when @show {
+                Text { content: "Visible"; }
+              }
+            }
+          }
+        "#);
+        // The when block must produce a JS conditional expression (&&) or ternary.
+        assert!(
+            out.contains("show &&") || out.contains("show ?") || out.contains("show&&"),
+            "Expected conditional expression for when block: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 14: renders_each_block — `each @items as item { ... }` renders with .map(
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_each_block() {
+        let out = emit(r#"
+          component List {
+            slot items: list<text>;
+            Column {
+              each @items as item {
+                Text { content: @item; }
+              }
+            }
+          }
+        "#);
+        assert!(out.contains(".map("), "Expected .map() for each block: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 15: renders_all_primitive_nodes — Box/Row/Column/Text/Image/Spacer
+    //          all produce non-empty output.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_all_primitive_nodes() {
+        let tests: &[(&str, &str)] = &[
+            (r#"component X { Box { } }"#, "<div"),
+            (r#"component X { Row { } }"#, "<div"),
+            (r#"component X { Column { } }"#, "<div"),
+            (r#"component X { Text { content: "hi"; } }"#, "<span"),
+            (r#"component X { Column { Divider { } } }"#, "<hr"),
+        ];
+        for (src, expected) in tests {
+            let out = emit(src);
+            assert!(
+                !out.is_empty(),
+                "Expected non-empty output for: {src}"
+            );
+            assert!(
+                out.contains(expected),
+                "Expected '{expected}' in output for: {src}\nGot: {out}"
+            );
+        }
+
+        // Image test: check for img element
+        let img_out = emit(r#"component X { Image { source: "img.png"; } }"#);
+        assert!(!img_out.is_empty(), "Image output must be non-empty");
+        assert!(img_out.contains("<img"), "Expected <img for Image: {img_out}");
+
+        // Spacer test: check for flex:1
+        let spacer_out = emit(r#"component X { Column { Spacer { } } }"#);
+        assert!(!spacer_out.is_empty(), "Spacer output must be non-empty");
+        assert!(
+            spacer_out.contains("flex: 1") || spacer_out.contains("flex:1"),
+            "Expected flex: 1 for Spacer: {spacer_out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 16: version — the crate version is 0.1.0.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn version_is_0_1_0() {
+        assert_eq!(
+            env!("CARGO_PKG_VERSION"),
+            "0.1.0",
+            "Expected crate version 0.1.0"
+        );
     }
 }

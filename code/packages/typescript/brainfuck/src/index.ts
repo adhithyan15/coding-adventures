@@ -61,3 +61,5 @@ export { createBrainfuckVm, executeBrainfuck } from "./vm.js";
 export type { BrainfuckResult } from "./vm.js";
 export { tokenizeBrainfuck } from "./lexer.js";
 export { parseBrainfuck } from "./parser.js";
+export { compileToIir, executeOnLangVm } from "./lang-vm.js";
+export type { BrainfuckLangVmResult } from "./lang-vm.js";

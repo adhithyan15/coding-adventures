@@ -1,0 +1,26 @@
+[package]
+name = "twigc"
+version = "0.2.0"
+edition = "2021"
+description = "TW05-R/S — twigc: command-line compiler driver for Twig. Wraps twig-module-driver (multi-file module resolution + Phase 3.5 type-check) and twig-vm (interpreter execution). Includes --self-check for TW05 fixed-point verification."
+
+[[bin]]
+name = "twigc"
+path = "src/main.rs"
+
+[lib]
+name = "twigc"
+path = "src/lib.rs"
+
+[dependencies]
+# Multi-file module resolution, phase 3.5 type-check, IIR compilation
+twig-module-driver = { path = "../twig-module-driver" }
+
+# Interpreter execution backend
+twig-vm            = { path = "../twig-vm" }
+
+# IIR types for the --emit=iir formatter
+interpreter-ir     = { path = "../interpreter-ir" }
+
+[dev-dependencies]
+# No extra dev deps — tests use std + the lib above

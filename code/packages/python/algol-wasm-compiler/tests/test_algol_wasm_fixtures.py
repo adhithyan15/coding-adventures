@@ -25,6 +25,29 @@ _GOLDEN_FIXTURES = (
     GoldenFixture(name="showcase", result=[12], stdout="ALGOL 2 7.000"),
     GoldenFixture(name="jensens-device", result=[30], stdout=""),
     GoldenFixture(name="control-flow", result=[7], stdout="FLOW 7"),
+    GoldenFixture(name="convergence", result=[39], stdout="CONVERGE 39"),
+    GoldenFixture(name="standard-real-math", result=[478], stdout="MATH 478"),
+    GoldenFixture(name="full-surface", result=[81], stdout="COMPLETE 81"),
+    GoldenFixture(name="switch-actuals", result=[42], stdout="SWITCH 42"),
+    GoldenFixture(name="typed-comparisons", result=[31], stdout="READY 31"),
+    GoldenFixture(name="recursive-lexical", result=[125], stdout="RECURSE 125"),
+    GoldenFixture(name="procedure-formal-closure", result=[25], stdout="FORMAL 25"),
+    GoldenFixture(name="nonlocal-unwind", result=[42], stdout="UNWIND 42"),
+    GoldenFixture(name="dynamic-array-bounds", result=[63], stdout="DYNAMIC 63"),
+    GoldenFixture(name="by-name-mixed-scalars", result=[27], stdout="BYNAME 27"),
+    GoldenFixture(
+        name="noninteger-by-name",
+        result=[111111111],
+        stdout="TYPED LAZY 111111111",
+    ),
+    GoldenFixture(name="runtime-guards", result=[0], stdout=""),
+    GoldenFixture(name="storage-semantics", result=[737], stdout="STORAGE 737"),
+    GoldenFixture(name="edge-semantics", result=[65], stdout="EDGE 65"),
+    GoldenFixture(
+        name="by-name-designators",
+        result=[1111111111],
+        stdout="DESIG 1111111111",
+    ),
 )
 
 

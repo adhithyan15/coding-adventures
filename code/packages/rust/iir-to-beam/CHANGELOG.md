@@ -1,0 +1,254 @@
+# Changelog — iir-to-beam
+
+## [0.5.0] — 2026-06-10 — McCarthy predicates: ATOM / EQ / COND (W10, F3–F5)
+
+Lower the McCarthy predicate `call_builtin`s to native Erlang type/equality
+guards, each producing a 0/1 boolean via the same synthesis the `cmp_*` ops use
+(preload 0 → test that branches to a synth label on FALSE → move 1 → label):
+- `pair?`  → `is_nonempty_list` (opcode 56) — a McCarthy cons IS a list cell `[H|T]`.
+- `equal?` → `is_eq_exact` (`=:=`).
+- `not`    → `is_eq_exact x 0` (logical `x == 0`).
+`COND` reuses the existing `jmp_if_true`/`jmp_if_false`. Removed `call_builtin`
+from `UNSUPPORTED_OPS`; the lowering arm returns `UnsupportedOp` for any builtin
+outside the predicate set. The native-Erlang twins of the JVM instanceof/ixor/
+if_icmpeq and the CLR isinst/xor/ceq.
+
+All notable changes to this crate are documented here.
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [0.4.2] — 2026-05-22
+
+### Added — handle the universal `mov` opcode
+
+- `lower.rs`: new match arm `"mov" => …` that lowers `mov dest = src`
+  to a single BEAM `move {x,src_reg}, {x,dest_reg}` register copy.
+
+### Why this matters
+
+Before this fix, frontends that emit the IIR canonical `mov` (e.g.
+`dartmouth-basic-iir-compiler` for `LET` statements,
+`oct-iir-compiler` for `let`) compiled cleanly through the AOT chain
+(`lang-aot` rewrites `mov` → typed `mov_<ty>` CIR before the native
+backends see it) but **panicked** when handed to
+`IIRBeamCodeGenerator::generate`:
+
+```text
+IIRBeamCodeGenerator::generate called on invalid IIRModule:
+  function "main": unsupported op "mov"
+```
+
+The validator accepted the module (mov wasn't in `UNSUPPORTED_OPS`),
+but the codegen had no lowering rule.  Now both the JIT chain
+(vm-core + jit-core, via the companion `vm-core` 0.2.1 release) and
+the BEAM target accept `mov` directly — closing the gap shown by a
+5-frontend × 4-backend probe matrix run after the vm-core fix.
+
+### Tests
+
+- `mov_lowers_to_beam_move_between_registers`: feeds a 3-instr
+  module (`const 42 → a; mov b = a; ret b`) and asserts at least two
+  `OP_MOVE` instructions appear in the output (one from `const`, one
+  from `mov`).  Before this fix the codegen panicked.
+
+## [0.4.1] — 2026-05-13
+
+### Added
+
+- **Y-register (stack-slot) support** — functions that make internal `call`
+  or `call_ext` instructions now emit `{allocate, StackNeed, Live}` at
+  function entry and `{deallocate, StackNeed}` on every return path.
+  Values that are live across a call are saved to Y-registers before the
+  call and restored afterwards, matching the BEAM calling convention where
+  all X-registers are caller-saved.
+  Live-across-call analysis is done with a lightweight def-pos/last-use
+  pass over the IIR instruction list.
+- **`OP_ALLOCATE` (12) and `OP_DEALLOCATE` (18) constants** — added alongside
+  the existing opcode constants, with full literate-programming explanations.
+
+### Fixed
+
+- **Y-register overflow guard** — `y_reg_map.len() as u8` previously silently
+  truncated to 0 when more than 255 live-across-call variables were present.
+  Now returns `IIRBeamError::UnsupportedOp` with a clear message before the
+  truncation can happen.  BEAM Y-registers are 8-bit (0–255).
+- **`jmp_if_true` / `jmp_if_false` synthesis** — replaced the old three-
+  instruction pattern (`is_eq_exact + jump + label`) with the minimal correct
+  single-instruction form:
+  - `jmp_if_true`  → `is_eq_exact  {f,target} cond 0`
+    (BEAM fails = jumps to target when `cond != 0`, i.e. TRUE)
+  - `jmp_if_false` → `is_ne_exact  {f,target} cond 0`
+    (BEAM fails = jumps to target when `cond == 0`, i.e. FALSE)
+  The previous synthesis used a synthetic fall-through label that inverted
+  the branch sense, which was semantically wrong.  Tests updated to match.
+
+## [0.4.0] — 2026-05-12
+
+### Fixed (OTP 28 runtime compatibility — BEAM opcode correctness)
+
+This release fixes five bugs in `lower.rs` that prevented generated `.beam`
+files from loading under OTP 28.  The root causes were discovered by comparing
+`erlc`-compiled hexdumps against generated output, and by querying
+`beam_opcodes:opcode/2` directly.
+
+#### Corrected opcode numbers
+
+Four opcode constants were wrong, causing the VM to execute unrelated
+instructions:
+
+| Constant | Old value | New value | Old opcode | Correct opcode |
+|---|---|---|---|---|
+| `OP_JUMP` | 36 (`int_bsl`) | **61** | shift-left | unconditional branch |
+| `OP_IS_LT` | 47 (`is_number`) | **39** | type guard | signed less-than |
+| `OP_IS_GE` | 48 (`is_atom`) | **40** | type guard | signed ≥ |
+| `OP_CALL_EXT` | 6 (`call_only`) | **7** | tail call | regular external call |
+
+#### gc_bif2 / gc_bif1 import-index operand type
+
+- The import index in `gc_bif2` and `gc_bif1` must be a **U-type** (tag `0`)
+  compact term, not an A-type (tag `2`) atom reference.  OTP 25+ changed
+  the operand encoding; using A-type caused `{undef, [{M,F,A,[]},...]}` at
+  runtime because the VM decoded the index as an atom selector, not a BIF
+  index.  All 6 call sites (`add`, `sub`, `mul`, `div`, `mod`, `neg`,
+  arithmetic comparisons, global_store/global_load, io_out, and the closure
+  `erlang:'++'` and `erlang:apply`) changed from
+  `BEAMOperand::a(import_idx)` to `BEAMOperand::u(import_idx as u64)`.
+
+#### BEAM nil encoding
+
+- BEAM's compact-term encoding reserves atom index 0 as the **empty list
+  (`[]`)**.  Atom indices for user-defined atoms start at 1.  Four
+  occurrences of `BEAMOperand::a(atom_nil)` (which looked up the atom-table
+  index for the literal atom `'[]'`) were replaced with
+  `BEAMOperand::a(0)`.  Using `atom_nil` put the *atom* `'[]'` in a register
+  rather than a proper nil; `erlang:'++'` then rejected it with `{badarg,...}`.
+
+#### `max_opcode` field in Code chunk header
+
+- Changed from `0` (derived lazily from the instruction stream — always
+  too low) to the hard-coded value **`177`**, which is what `erlc` 28.4.1
+  emits.  The OTP 28 C-loader requires `max_opcode ≥ ~169`; a value of 0
+  or 125 triggers "compiled for an old version" even after the AtU8/Attr/Meta
+  fix.
+
+#### Real-ERL round-trip tests now pass
+
+- **Test 65** (`test_65_real_erl_arithmetic`) — re-enabled; passes with
+  OTP 28 loader after AtU8/Attr/CInf/Meta and max_opcode fixes.
+- **Test 66** (`test_66_real_erl_closure_adder`) — re-enabled; passes after
+  all five fixes above (opcodes, import operand type, nil encoding).
+- Both tests were previously marked `#[ignore]` with "pre-OTP-25 format"
+  notes; those annotations are removed in this release.
+
+---
+
+## [0.3.0] — 2026-05-12
+
+### Added (LANG35 — Closure Backend Integration)
+
+#### Validator accepts closure opcodes
+
+- `validate_for_beam` now accepts `alloc_closure` and `call_closure` (LANG34
+  opcodes) instead of returning `UntypedInstruction` for them.  The validator
+  still rejects `call_builtin "make_closure"` / `"apply_closure"` patterns,
+  which should be lowered by `iir-builtin-lowering` before reaching a backend.
+
+#### BEAM lowering for `alloc_closure`
+
+- Encodes a closure as a BEAM cons-cell list: `[fn_atom | captures]`.
+  - `srcs[0]` must be `Operand::Str(fn_name)` — the callee atom is interned
+    into the module atom table at lowering time.
+  - `srcs[1..]` are capture variables, each resolved to its x-register.
+  - Emits one `put_list` per capture variable (right-fold: innermost cons
+    first).  Zero captures → a single `put_list(fn_atom, nil)`.
+  - The final cons-cell head is stored in `instr.dest`.
+
+#### BEAM lowering for `call_closure`
+
+- Dispatches a closure via `erlang:apply/3`:
+  1. `srcs[0]` is the closure handle (cons-cell list `[fn_atom | caps]`).
+  2. Uses `get_list` to split the list into `head` (atom) and `tail` (caps).
+  3. Appends user args to caps via `erlang:'++'`/2 (BIF import).
+  4. Calls `erlang:apply(Module, Atom, ArgList)` via `erlang:apply/3` (BIF import).
+  - Both `erlang:'++'/2` and `erlang:apply/3` are registered as BIF imports.
+  - 4 scratch registers are allocated beyond the function's max register.
+
+#### Tests (59–66)
+
+- Tests 59–61: validator acceptance — `alloc_closure` / `call_closure` pass
+  validation; `call_builtin "make_closure"` is still rejected.
+- Tests 62–64: lowering checks — correct number of `put_list` opcodes for
+  0 and 2 captures; `call_closure` emits `get_list` + 2× `call_ext`.
+- Test 65 (`test_65_real_erl_arithmetic`): **ignored** — `encode_beam` in
+  `ir-to-beam` produces pre-OTP-25 BEAM format rejected by OTP 28 with
+  "compiled for an old version".  Requires `Meta` chunk + new `AtU8`
+  negative-count encoding to fix.
+- Test 66 (`test_66_real_erl_closure_adder`): **ignored** — same root cause
+  as test 65.
+
+---
+
+## [0.2.0] — 2026-05-11
+
+### Added (LANG32 — Global Variables and I/O)
+
+#### Global variable support via BEAM process dictionary
+
+- `global_store "x", %v` → `erlang:put(x, %v)` via `gc_bif2`.
+  Each global name becomes a BEAM atom constant.
+- `global_load "x" → %r` → `erlang:get(x)` via `gc_bif1`, result
+  moved to `%r`.
+- Atom pre-registration: `erlang:put/2` and `erlang:get/1` BIF
+  imports are added to the atom and import tables during module init.
+
+#### I/O support
+
+- `io_out %v` → `erlang:display(%v)` via `gc_bif1`.
+  The `erlang:display/1` BIF prints any BEAM term to stdout.
+
+---
+
+## [0.1.0] — 2026-05-11
+
+### Added
+
+- `validate::validate_for_beam(module: &IIRModule) -> Vec<String>` — pre-flight
+  validation pass that rejects modules containing BEAM-incompatible instructions
+  or types before any lowering starts. Catches:
+  - Empty module (no functions)
+  - Empty function (function with no instructions)
+  - Untyped instructions (`type_hint == "any"` or `"polymorphic"`)
+  - Unsupported types (`"str"`, `ref<…>`, float constants)
+  - Unsupported opcodes (`call_builtin`, `io_in`, `io_out`, `cast`, memory ops,
+    GC ops, `safepoint`)
+
+- `lower::IIRBeamConfig` — lowering configuration, currently just `module_name`.
+  Implements `Default` (uses `"iir_module"`) and `new(module_name)`.
+
+- `lower::IIRBeamError` — typed error variants:
+  `ValidationFailed`, `UnsupportedOp`, `UnsupportedType`, `UndefinedLabel`,
+  `UndefinedVariable`, `InvalidOperand`. Implements `Display` and `std::error::Error`.
+
+- `lower::lower_iir_to_beam(module: &IIRModule, config: &IIRBeamConfig) -> Result<BEAMModule, IIRBeamError>` —
+  two-pass lowering algorithm:
+  - Pass 1 per function: assign x-registers to params and variable names, scan
+    `label` instructions and assign globally-unique BEAM label numbers.
+  - Emit `func_info` preamble for each function (`{label,N}`, `{func_info,...}`,
+    `{label,N+1}`).
+  - Pass 2 per function: translate each `IIRInstr` to BEAM instructions.
+  - Build atom table, import table, exports, and final `BEAMModule`.
+
+- Supported IIR opcodes:
+  `const` (Int + Bool), `add`, `sub`, `mul`, `div`, `mod`, `neg`,
+  `and`, `or`, `xor`, `not`, `shl`, `shr`,
+  `cmp_eq`, `cmp_ne`, `cmp_lt`, `cmp_le`, `cmp_gt`, `cmp_ge`,
+  `label`, `jmp`, `jmp_if_true`, `jmp_if_false`,
+  `ret`, `ret_void`, `call`, `load_reg`, `store_reg`, `type_assert`.
+
+- `codegen::IIRBeamCodeGenerator` — thin adapter that wires `validate_for_beam`
+  and `lower_iir_to_beam` behind the `name()` / `validate()` / `generate()` API.
+
+- Re-exported `BEAMModule` and `encode_beam` from `ir-to-beam` for convenience.
+
+- 45 integration tests in `tests/test_backend.rs` covering validation, lowering,
+  instruction emission, register allocation, export table, multi-function modules,
+  call sequences, and comparison synthesis.

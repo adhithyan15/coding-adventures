@@ -9,6 +9,9 @@ Public API::
         SUPPRESS,
         KILL,
         EV,
+        DECLARE,
+        PROPERTIES,
+        PROP_VARS,
         MACSYMA_NAME_TABLE,
         extend_compiler_name_table,
     )
@@ -18,35 +21,51 @@ Maxima-flavored evaluator. See ``code/specs/macsyma-runtime.md``.
 """
 
 from macsyma_runtime.backend import MacsymaBackend
+from macsyma_runtime.handlers import MacsymaUserError
 from macsyma_runtime.heads import (
     ALL_SYMBOL,
     ASSUME,
     BLOCK,
+    DECLARE,
     DISPLAY,
     EV,
     FORGET,
     IS,
     KILL,
+    LOAD,
+    PROP_VARS,
+    PROPERTIES,
     SUPPRESS,
 )
+from macsyma_runtime.help import help_text, parse_help_query
 from macsyma_runtime.history import History
 from macsyma_runtime.name_table import (
     MACSYMA_NAME_TABLE,
     extend_compiler_name_table,
 )
+from macsyma_runtime.presentation import has_ev_flag, output_text_for
 
 __all__ = [
     "ALL_SYMBOL",
     "ASSUME",
     "BLOCK",
+    "DECLARE",
     "DISPLAY",
     "EV",
     "FORGET",
     "History",
     "IS",
     "KILL",
+    "LOAD",
     "MACSYMA_NAME_TABLE",
     "MacsymaBackend",
+    "MacsymaUserError",
+    "PROPERTIES",
+    "PROP_VARS",
     "SUPPRESS",
     "extend_compiler_name_table",
+    "has_ev_flag",
+    "help_text",
+    "output_text_for",
+    "parse_help_query",
 ]

@@ -1,0 +1,1 @@
+gradle test --no-daemon

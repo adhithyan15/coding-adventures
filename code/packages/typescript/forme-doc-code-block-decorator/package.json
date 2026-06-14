@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-doc-code-block-decorator",
+  "version": "0.1.0",
+  "description": "Walk a DocumentNode AST and decorate every fenced code block with copy-button hooks, a human-friendly language label, optional filename badge (extracted from `// file: foo.ts` first-line hints across six comment styles), and optional line-number gutter markup.  Recurses into blockquotes, lists, and task lists so nested code blocks get decorated too.  Pure transform: capabilities [].  DOC00 v0 content-pipeline package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

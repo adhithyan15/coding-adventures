@@ -22,11 +22,11 @@ We deliberately keep this set small (five variants) for two reasons:
 
 Everywhere else in this package we alias the Python runtime types:
 
-    SqlValue = None | int | float | str | bool
+    SqlValue = None | int | float | str | bool | bytes
 
 We rely on Python's dynamic typing here instead of defining a wrapper class.
 A wrapper would cost us nothing but boxing overhead on every comparison,
-and Python's ``isinstance`` already discriminates between the five variants.
+and Python's ``isinstance`` already discriminates between the variants.
 
 One sharp edge: in Python, ``bool`` is a subclass of ``int``. That means
 ``isinstance(True, int)`` returns True. Code that needs to distinguish
@@ -36,9 +36,9 @@ booleans from integers must check ``bool`` *first*. The helper
 
 from __future__ import annotations
 
-# Five-variant SQL value. We use a type alias rather than a wrapper class —
+# Six-variant SQL value. We use a type alias rather than a wrapper class —
 # see module docstring for the reasoning.
-SqlValue = None | int | float | str | bool
+SqlValue = None | int | float | str | bool | bytes
 
 
 def sql_type_name(value: SqlValue) -> str:
@@ -58,6 +58,8 @@ def sql_type_name(value: SqlValue) -> str:
         return "REAL"
     if isinstance(value, str):
         return "TEXT"
+    if isinstance(value, bytes):
+        return "BLOB"
     raise TypeError(f"not a SqlValue: {value!r} ({type(value).__name__})")
 
 
@@ -68,4 +70,4 @@ def is_sql_value(value: object) -> bool:
     user-supplied dictionaries — to reject anything we can't handle before it
     reaches the VM.
     """
-    return value is None or isinstance(value, bool | int | float | str)
+    return value is None or isinstance(value, bool | int | float | str | bytes)

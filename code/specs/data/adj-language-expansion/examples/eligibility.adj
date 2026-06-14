@@ -1,0 +1,21 @@
+% Worked example — tax filing eligibility (predicate over a typed value).
+%
+% A single filer under 65 must file a federal return if gross income reaches
+% the standard deduction. The model extracted the income as a typed value; the
+% engine evaluates the threshold comparison on the CPU. A "deterministic" rule
+% is just a saturating likelihood ratio.
+%
+% Expected: gross_income 18000 >= 14600 fires → required_to_file ≈ 1.0,
+% a determinate verdict, with the comparison (>= 14600, observed 18000) and its
+% IRS citation in the proof.
+
+prior 0.10 for required_to_file
+  source "IRS Pub 501 (2024)" trust authoritative
+
+contributes 1000000 from gross_income >= 14600 to required_to_file
+  source "IRS Pub 501 (2024), single filer under 65 filing threshold"
+  trust authoritative
+
+observe gross_income(money(18000, usd))
+
+? required_to_file

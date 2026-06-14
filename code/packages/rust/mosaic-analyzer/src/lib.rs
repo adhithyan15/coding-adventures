@@ -40,13 +40,15 @@ use mosaic_parser::parse;
 
 /// The built-in layout/display elements. Any other name is a component type.
 ///
-/// Primitives: Row, Column, Box, Stack, Text, Image, Icon, Spacer, Divider, Scroll.
+/// Primitives: Row, Column, Box, Stack, Text, Image, Icon, Spacer, Divider,
+/// Scroll, Grid.
 fn is_primitive_node(tag: &str) -> bool {
     matches!(
         tag,
         "Row" | "Column" | "Box" | "Stack"
             | "Text" | "Image" | "Icon"
             | "Spacer" | "Divider" | "Scroll"
+            | "Grid"
     )
 }
 
@@ -811,12 +813,10 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 4: List type slot
     // -----------------------------------------------------------------------
-    // NOTE: list<T> syntax fails to parse in the Rust GrammarParser because
-    // the packrat memo resolves `list` as KEYWORD before trying list_type.
-    // This is a known difference from the TypeScript parser.
+    // list<T> syntax: the grammar now tries list_type before KEYWORD in the
+    // slot_type alternation, so this test passes correctly.
 
     #[test]
-    #[ignore = "Rust GrammarParser resolves 'list' as KEYWORD before list_type"]
     fn test_analyze_list_slot() {
         let src = r#"component ItemList { slot entries: list<text>; Column { } }"#;
         let file = analyze(src).expect("analyze failed");
@@ -927,11 +927,9 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 10: each block
     // -----------------------------------------------------------------------
-    // NOTE: Uses list<node> which fails to parse in the Rust GrammarParser.
-    // Marked ignore pending grammar/parser fix.
+    // list<T> parsing is now fixed; each block test is fully active.
 
     #[test]
-    #[ignore = "Rust GrammarParser resolves 'list' as KEYWORD before list_type"]
     fn test_analyze_each_block() {
         let src = r#"
           component ItemList {

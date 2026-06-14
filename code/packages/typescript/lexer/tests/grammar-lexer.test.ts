@@ -167,6 +167,23 @@ describe("grammarTokenize — basics", () => {
     expect(tokens[0].type).toBe("EOF");
   });
 
+  it("should compile scoped case-insensitive regex groups", () => {
+    const grammar: TokenGrammar = {
+      version: 1,
+      caseInsensitive: false,
+      definitions: [
+        { name: "NAME", pattern: "[A-Za-z]+", isRegex: true, lineNumber: 1 },
+      ],
+      keywords: [],
+      skipDefinitions: [
+        { name: "COMMENT", pattern: "(?i:comment)\\b[^;]*;", isRegex: true, lineNumber: 2 },
+        { name: "WHITESPACE", pattern: "[ \\t]+", isRegex: true, lineNumber: 3 },
+      ],
+    };
+
+    expect(types(grammarTokenize("COMMENT ignored; value", grammar))).toEqual(["NAME", "EOF"]);
+  });
+
   it("should distinguish = from ==", () => {
     const tokens = grammarTokenize("a = b == c", pythonGrammar);
     expect(types(tokens)).toEqual([

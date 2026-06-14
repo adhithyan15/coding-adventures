@@ -7,6 +7,7 @@ adjacency lists for sparse graphs and adjacency matrices for dense ones.
 
 - `Graph<'T>` with `GraphRepr.AdjacencyList` and `GraphRepr.AdjacencyMatrix`
 - weighted undirected edges, including self-loops
+- graph, node, and edge property bags for metadata
 - traversal algorithms: BFS, DFS, connectivity, components, cycle detection
 - path and tree helpers: shortest path and minimum spanning tree
 

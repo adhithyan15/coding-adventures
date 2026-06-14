@@ -74,6 +74,12 @@ extern "C" {
         unicode: PyObjectPtr,
         size: *mut isize,
     ) -> *const c_char;
+    pub fn PyBytes_FromStringAndSize(v: *const c_char, len: isize) -> PyObjectPtr;
+    pub fn PyBytes_AsStringAndSize(
+        obj: PyObjectPtr,
+        buffer: *mut *mut c_char,
+        length: *mut isize,
+    ) -> c_int;
 
     // -- List operations ---------------------------------------------------
     pub fn PyList_New(len: isize) -> PyObjectPtr;
@@ -223,6 +229,30 @@ pub unsafe fn str_from_py(obj: PyObjectPtr) -> Option<String> {
     }
     let slice = std::slice::from_raw_parts(ptr as *const u8, size as usize);
     String::from_utf8(slice.to_vec()).ok()
+}
+
+/// Convert a Rust byte slice to a Python `bytes` object (new reference).
+pub unsafe fn bytes_to_py(bytes: &[u8]) -> PyObjectPtr {
+    unsafe { PyBytes_FromStringAndSize(bytes.as_ptr() as *const c_char, bytes.len() as isize) }
+}
+
+/// Convert a Python `bytes` object to an owned Rust byte buffer.
+pub unsafe fn bytes_from_py(obj: PyObjectPtr) -> Option<Vec<u8>> {
+    if obj.is_null() {
+        return None;
+    }
+
+    let mut ptr: *mut c_char = ptr::null_mut();
+    let mut len: isize = 0;
+    if unsafe { PyBytes_AsStringAndSize(obj, &mut ptr, &mut len) } != 0 {
+        unsafe { PyErr_Clear() };
+        return None;
+    }
+    if ptr.is_null() || len < 0 {
+        return None;
+    }
+
+    Some(unsafe { std::slice::from_raw_parts(ptr as *const u8, len as usize) }.to_vec())
 }
 
 // ---------------------------------------------------------------------------

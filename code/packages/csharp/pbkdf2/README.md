@@ -1,6 +1,6 @@
 # CodingAdventures.Pbkdf2.CSharp
 
-PBKDF2 key derivation helpers for .NET, backed by `Rfc2898DeriveBytes.Pbkdf2`.
+PBKDF2 key derivation helpers for .NET, implemented directly with package-local HMAC and hash primitives.
 
 ```csharp
 using CodingAdventures.Pbkdf2;

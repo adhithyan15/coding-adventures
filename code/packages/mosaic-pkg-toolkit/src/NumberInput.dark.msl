@@ -1,0 +1,13 @@
+// NumberInput.dark.msl — dark-theme styling for NumberInput.
+
+style NumberInput {
+  part number-input {
+    padding       : 8 ;
+    border-radius : 4 ;
+    background    : "#1e293b" ;
+    color         : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#475569" ;
+    font-size     : 14 ;
+  }
+}

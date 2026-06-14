@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_vault_import_export"
+version = "0.1.0"
+edition = "2021"
+description = "VLT15 — import/export tier for the Vault stack. Defines the PortableBundle (versioned JSON) + Importer/Exporter traits + PassthroughImporter reference. Format adapters (.1pux, Bitwarden JSON, KeePassXC .kdbx, LastPass CSV, age, gpg, SOPS) ship as sibling crates."
+
+[dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }

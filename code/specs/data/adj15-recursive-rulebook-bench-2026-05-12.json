@@ -1,0 +1,72 @@
+[
+  {
+    "model": "gemma4:latest",
+    "mode": "none",
+    "elapsed_s": 25.6,
+    "stage0_log": "",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           gemma4:latest\ntokens (in/out): 98 / 308\nlatency:         5664 ms\nfinish reason:   Stop\nanswer:\n  The passenger has declared only one carry-on bag, which is within the standard allowance for carry-on luggage. The declaration does not mention any prohibited items or excessive luggage, suggesting compliance with basic carry-on rules.\n  VERDICT: COMPLIANT\n\n"
+  },
+  {
+    "model": "gemma4:latest",
+    "mode": "elicit",
+    "elapsed_s": 144.8,
+    "stage0_log": "[stage 0] eliciting TSA rulebook from `gemma4:latest` via adjudication_rulebook::acquire_rulebook ...\n[stage 0] elicited 1938 bytes of rulebook text from `gemma4:latest` (trust=tentative, validation_passed=false)\n",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           gemma4:latest\ntokens (in/out): 553 / 352\nlatency:         7105 ms\nfinish reason:   Stop\nanswer:\n  Matches are classified as flammable materials, which are strictly prohibited in all carry-on and checked baggage per rule 5. Therefore, the passenger is carrying an item that violates TSA regulations.\n  \n  VERDICT: NON-COMPLIANT\n\n"
+  },
+  {
+    "model": "llama3.1:8b",
+    "mode": "none",
+    "elapsed_s": 10.6,
+    "stage0_log": "",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           llama3.1:8b\ntokens (in/out): 97 / 68\nlatency:         4789 ms\nfinish reason:   Stop\nanswer:\n  The passenger has declared only one carry-on bag, which is allowed by TSA regulations. There is no indication of any prohibited items in the declaration. The mention of \"matches\" does not pose a security risk as long as they are properly packaged and not in a container larger than 4 ounces.\n  \n  VERDICT: COMPLIANT\n\n"
+  },
+  {
+    "model": "llama3.1:8b",
+    "mode": "elicit",
+    "elapsed_s": 107.1,
+    "stage0_log": "[stage 0] eliciting TSA rulebook from `llama3.1:8b` via adjudication_rulebook::acquire_rulebook ...\n[stage 0] elicited 1709 bytes of rulebook text from `llama3.1:8b` (trust=tentative, validation_passed=false)\n",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           llama3.1:8b\ntokens (in/out): 536 / 66\nlatency:         2730 ms\nfinish reason:   Stop\nanswer:\n  The passenger is carrying matches in their carry-on bag. According to rule 2, prohibited items include but are not limited to flammable liquids and solids, which includes matches. Therefore, the passenger's declaration indicates a non-compliance with the TSA rules per rule 2.\n  \n  VERDICT: NON-COMPLIANT\n\n"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "mode": "none",
+    "elapsed_s": 5.2,
+    "stage0_log": "",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:3b\ntokens (in/out): 95 / 59\nlatency:         1976 ms\nfinish reason:   Stop\nanswer:\n  The declaration mentions only one carry-on bag and matches. According to TSA guidelines, passengers are allowed to bring a personal item like matches in their carry-on luggage as long as it fits within size restrictions. Therefore, this declaration is compliant with TSA rules. VERDICT: COMPLIANT\n\n"
+  },
+  {
+    "model": "qwen2.5:3b",
+    "mode": "elicit",
+    "elapsed_s": 73.6,
+    "stage0_log": "[stage 0] eliciting TSA rulebook from `qwen2.5:3b` via adjudication_rulebook::acquire_rulebook ...\n[stage 0] elicited 3125 bytes of rulebook text from `qwen2.5:3b` (trust=tentative, validation_passed=false)\n",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:3b\ntokens (in/out): 811 / 168\nlatency:         2592 ms\nfinish reason:   Stop\nanswer:\n  **RULES INVOLVED:** \n  - **3.** Passengers must declare any liquids, gels, aerosols, and creams that exceed 3.4 ounces (100 milliliters) in a single container.\n  - **9.** Passengers are required to declare any items that may interfere with security screening equipment, such as large electronic devices or bulky clothing.\n  \n  **REASONING:** \n  The declaration includes matches, which fall under the category of liquids/gels/aerosols/c creams (rule 3) and could potentially interfere with security screening equipment if they are not declared properly. Matches can be considered a liquid item in this context due to their flammable nature. Therefore, the passenger is non-compliant as they have not declared matches.\n  \n  **VERDICT: NON-COMPLIANT**\n\n"
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "mode": "none",
+    "elapsed_s": 4.3,
+    "stage0_log": "",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:1.5b\ntokens (in/out): 95 / 44\nlatency:         1484 ms\nfinish reason:   Stop\nanswer:\n  The passenger is compliant with TSA carry-on rules. The declaration includes one carry-on bag and mentions matches, which are allowed in carry-on luggage as long as they are not lit. Therefore, the passenger is compliant.\n\n"
+  },
+  {
+    "model": "qwen2.5:1.5b",
+    "mode": "elicit",
+    "elapsed_s": 148.5,
+    "stage0_log": "[stage 0] eliciting TSA rulebook from `qwen2.5:1.5b` via adjudication_rulebook::acquire_rulebook ...\n",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:1.5b\ntokens (in/out): 95 / 44\nlatency:         368 ms\nfinish reason:   Stop\nanswer:\n  The passenger is compliant with TSA carry-on rules. The declaration includes one carry-on bag and mentions matches, which are allowed in carry-on luggage as long as they are not lit. Therefore, the passenger is compliant.\n\n"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "mode": "none",
+    "elapsed_s": 3.2,
+    "stage0_log": "",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:0.5b\ntokens (in/out): 95 / 61\nlatency:         1112 ms\nfinish reason:   Stop\nanswer:\n  The passenger's declaration is in compliance with TSA carry-on rules. They have one carry-on bag that matches their previous declaration and does not exceed the weight limit of 30 pounds for a single person. Therefore, they are compliant with the regulations. `VERDICT: COMPLIANT`.\n\n"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "mode": "elicit",
+    "elapsed_s": 47.7,
+    "stage0_log": "[stage 0] eliciting TSA rulebook from `qwen2.5:0.5b` via adjudication_rulebook::acquire_rulebook ...\n[stage 0] elicited 33225 bytes of rulebook text from `qwen2.5:0.5b` (trust=tentative, validation_passed=false)\n",
+    "arm_a": "--- ARM A: raw model ---\nmodel:           qwen2.5:0.5b\ntokens (in/out): 8347 / 62\nlatency:         2215 ms\nfinish reason:   Stop\nanswer:\n  The declaration is compliant with the rules. The passenger has provided a single piece of luggage that meets the weight limit for carry-on baggage (50 kg). No additional fees or restrictions apply to this situation. Therefore, the passenger is compliant with the rules. `VERDICT: COMPLIANT`.\n\n"
+  }
+]

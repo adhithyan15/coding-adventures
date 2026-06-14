@@ -32,16 +32,49 @@ slot neatly into the same dispatch flow as built-ins.
 
 from __future__ import annotations
 
+from cas_pattern_matching.defrule_engine import RuleStore
+from cas_pattern_matching.matchdeclare import MatchDeclareContext
+from cas_pattern_matching.rewriter import apply_rule as _pm_apply_rule
+from cas_simplify import AssumptionContext
 from symbolic_ir import DEFINE, LIST, IRApply, IRNode, IRSymbol
 
 from symbolic_vm.backend import Backend
 
 
 class VM:
-    """Evaluates symbolic IR trees under a policy supplied by a Backend."""
+    """Evaluates symbolic IR trees under a policy supplied by a Backend.
+
+    Attributes
+    ----------
+    backend:
+        The evaluation policy (symbolic, strict-numeric, etc.).
+    assumptions:
+        Per-session :class:`~cas_simplify.assumptions.AssumptionContext`
+        that records facts declared via ``assume(...)`` and removed via
+        ``forget(...)``.  Handlers read from it via ``vm.assumptions``.
+    match_declarations:
+        Per-session :class:`~cas_pattern_matching.matchdeclare.MatchDeclareContext`
+        that records which symbols are pattern variables and their type
+        predicates.  Populated by ``matchdeclare(...)`` calls.
+    named_rules:
+        Per-session :class:`~cas_pattern_matching.defrule_engine.RuleStore`
+        that maps rule names to compiled ``Rule(lhs, rhs)`` IR nodes.
+        Populated by ``defrule(...)`` calls; consumed by ``apply1``/``apply2``.
+    tellsimp_rules:
+        Ordered list of compiled ``Rule(lhs, rhs)`` nodes added via
+        ``tellsimp(...)``.  Tried automatically at step 2b of every
+        ``_eval_apply`` call, just after the backend's built-in rules.
+    """
 
     def __init__(self, backend: Backend) -> None:
         self.backend = backend
+        # Assumption context lives on the VM so every handler in the same
+        # session shares the same declared facts.
+        self.assumptions: AssumptionContext = AssumptionContext()
+        # Pattern-matching state (Phase 22).
+        self.match_declarations: MatchDeclareContext = MatchDeclareContext()
+        self.named_rules: RuleStore = RuleStore()
+        self.tellsimp_rules: list[IRApply] = []
 
     # ------------------------------------------------------------------
     # Public entry points
@@ -100,6 +133,12 @@ class VM:
             if predicate(expr):
                 return self.eval(transform(expr))
 
+        # 2b. Try user-declared tellsimp rules (Phase 22).
+        for rule in self.tellsimp_rules:
+            result = _pm_apply_rule(rule, expr)
+            if result is not None:
+                return self.eval(result)
+
         # 3. Dispatch to a head-specific handler.
         handler = self.backend.handlers().get(head_name)
         if handler is not None:
@@ -111,6 +150,18 @@ class VM:
             bound = self.backend.lookup(head_name)
             if _is_define_record(bound):
                 return self._apply_user_function(bound, new_args)
+
+        # 4b. Inline lambda application?  Head is an IRApply whose own
+        #     head is the symbol ``lambda`` — produced by the MACSYMA
+        #     compiler for ``lambda([x, y], body)`` expressions.  The
+        #     canonical shape is ``lambda(List(params...), body)``.
+        #     Beta-reduce by substituting the actual args for the params.
+        if (
+            isinstance(node.head, IRApply)
+            and isinstance(node.head.head, IRSymbol)
+            and node.head.head.name == "lambda"
+        ):
+            return self._apply_lambda(node.head, new_args)
 
         # 5. No handler, no function — fall back per backend policy.
         return self.backend.on_unknown_head(expr)
@@ -142,6 +193,50 @@ class VM:
         if len(param_names) != len(args):
             raise TypeError(
                 f"arity mismatch: function expects {len(param_names)} "
+                f"args, got {len(args)}"
+            )
+        substitution = dict(zip(param_names, args, strict=True))
+        return self.eval(_substitute(body, substitution))
+
+    def _apply_lambda(
+        self, lambda_expr: IRApply, args: tuple[IRNode, ...]
+    ) -> IRNode:
+        """Beta-reduce an inline lambda application.
+
+        MACSYMA ``lambda([x, y], body)`` compiles to
+        ``IRApply(IRSymbol("lambda"), (List(x, y), body))``.  When that
+        expression is used as the head of a call (e.g. via :func:`map`),
+        this method performs the substitution and evaluates the body.
+
+        This is the anonymous-function analog of
+        :meth:`_apply_user_function`: same mechanism, different IR shape
+        (an inline node rather than a named ``Define`` record).
+
+        Parameters
+        ----------
+        lambda_expr:
+            The ``lambda(List(params), body)`` IR node acting as the head.
+        args:
+            Already-evaluated actual arguments.
+
+        Returns
+        -------
+        IRNode
+            The fully evaluated body after parameter substitution, or the
+            backend's unknown-head result if the lambda is malformed.
+        """
+        if len(lambda_expr.args) != 2:
+            # Malformed — not enough arguments in the lambda node itself.
+            return self.backend.on_unknown_head(IRApply(lambda_expr, args))
+        params, body = lambda_expr.args
+        if not (isinstance(params, IRApply) and params.head == LIST):
+            return self.backend.on_unknown_head(IRApply(lambda_expr, args))
+        param_names = tuple(
+            p.name for p in params.args if isinstance(p, IRSymbol)
+        )
+        if len(param_names) != len(args):
+            raise TypeError(
+                f"arity mismatch: lambda expects {len(param_names)} "
                 f"args, got {len(args)}"
             )
         substitution = dict(zip(param_names, args, strict=True))

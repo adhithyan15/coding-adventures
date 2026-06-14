@@ -1,0 +1,757 @@
+{
+  "summary": "ADJ66 — the spider. ADJ65 found the decision rests on ASSUMED (ungrounded) weights. The principle: nothing may be asserted that is not grounded to bytes — in the input OR in the rulebook we derive for it. The weights are rulebook claims, so the spider FETCHES a source for each load-bearing weight (web search/fetch), grounds the weight in a VERBATIM passage from that source (the rulebook byte), and records the citation. Where no source supports a weight it is flagged ungrounded (not laundered). Then the decision is re-run on grounded weights to see whether it shifts off the overconfident wrong answer.",
+  "agentCount": 6,
+  "logs": [],
+  "result": {
+    "case_text": "A forty-year Indian traveled through Uganda, Tanzania and Kenya. He developed a swelling over the left ankle after an insect bite, then high grade fever with chills and rigors. Hepatomegaly 3 cm, splenomegaly 3 cm. Malaria smear negative. Blood/urine cultures sterile. Widal normal. Viral markers negative. CSF acellular, normal glucose, raised protein. Bone biopsy: single ill-defined granuloma. Brain MRI: mild meningeal enhancement; small pontine T2/FLAIR lesions.",
+    "hypotheses": [
+      "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+      "Malaria",
+      "Enteric (typhoid) fever",
+      "Visceral leishmaniasis (kala-azar)",
+      "Tuberculosis (disseminated / CNS)",
+      "Brucellosis",
+      "Arboviral / other viral encephalitis"
+    ],
+    "facts_grounded": [
+      "ankle_swelling_after_insect_bite",
+      "travel_to_east_africa",
+      "pontine_t2_flair_lesions_meningeal_enhancement",
+      "csf_acellular_normal_glucose_raised_protein",
+      "bone_granuloma",
+      "hepatosplenomegaly"
+    ],
+    "evidence": [
+      {
+        "name": "travel_to_east_africa",
+        "source": "grounded",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 12,
+          "Malaria": 3,
+          "Enteric (typhoid) fever": -1,
+          "Visceral leishmaniasis (kala-azar)": 5,
+          "Tuberculosis (disseminated / CNS)": 2,
+          "Brucellosis": 2,
+          "Arboviral / other viral encephalitis": 3
+        },
+        "citations": [
+          {
+            "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+            "url": "https://www.ncbi.nlm.nih.gov/books/NBK535413/",
+            "quote": "East African HAT mainly occurs in Zimbabwe, Tanzania, Zambia, and Malawi, infecting primarily wild animals. In Uganda and Kenya, East African HAT mostly affects cattle. ... T brucei rhodesiense has been detected in tourists in East Africa, mainly in Tanzania and regions with wild game parks.",
+            "derived_weight_db": 12,
+            "rationale": "T. b. rhodesiense is geographically restricted to exactly the region the patient visited (Uganda, Tanzania, Kenya named explicitly), and is specifically documented as a risk to travelers/tourists there. Travel to East Africa is the near-mandatory exposure gateway for this diagnosis and essentially excludes it without such travel, so the likelihood ratio for this hypothesis is strongly positive: +12 dB (LR ~16). Not the maximum because rhodesiense HAT is rare even among travelers and East Africa travel alone is necessary but far from sufficient."
+          },
+          {
+            "hypothesis": "Visceral leishmaniasis (kala-azar)",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2664918/",
+            "quote": "Eastern Africa is one of the world's main VL-endemic areas, and the disease occurs in numerous foci in Eritrea, Ethiopia, Kenya, Somalia, Sudan and Uganda.",
+            "derived_weight_db": 5,
+            "rationale": "East Africa is one of the world's principal VL foci, including Kenya and Uganda which the patient visited, so the travel raises the prior. Weight held to supportive (+5 dB, LR ~3) rather than strongly characteristic because the Indian subcontinent (the patient's home) is itself a major VL-endemic region, so East African travel is not uniquely discriminating for this Indian patient."
+          },
+          {
+            "hypothesis": "Arboviral / other viral encephalitis",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4503415/",
+            "quote": "Out of the 1,091 samples tested, 210 (19.2%) were positive for IgG antibodies against at least one of the three arboviruses.",
+            "derived_weight_db": 3,
+            "rationale": "Dengue, Rift Valley fever and chikungunya circulate endemically in Kenya/East Africa with ~19% seroprevalence, so vector-borne arboviral infection is a real exposure during this trip. Weight kept modest/supportive (+3 dB) because arboviruses are equally or more endemic in India and globally, so East Africa travel is only weakly specific for an arboviral cause."
+          },
+          {
+            "hypothesis": "Malaria",
+            "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3966389/",
+            "quote": "the profile of illness varied substantially by region: malaria predominated in travelers returning from Central and Western Africa; schistosomiasis, strongyloidiasis, and dengue from Eastern and Western Africa",
+            "derived_weight_db": 3,
+            "rationale": "Malaria is endemic across sub-Saharan Africa including the East African countries visited, so travel there is a genuine malaria exposure (+3 dB supportive). The weight is small because malaria is also endemic in the patient's native India and the source notes malaria predominates in Central/Western rather than Eastern Africa, making East-Africa travel non-specific for malaria; the negative smear is handled by a separate fact."
+          },
+          {
+            "hypothesis": "Tuberculosis (disseminated / CNS)",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8279170/",
+            "quote": "Three of the 6 member states of the East African Community (EAC)—Uganda, Kenya, and Tanzania—are on this high TB burden list.",
+            "derived_weight_db": 2,
+            "rationale": "The exact three countries visited are WHO high-TB-burden states, so travel is a plausible TB exposure. Weight only +2 dB because TB is even more endemic in India (the patient's home, a top global TB-burden country), so East Africa travel adds little discriminating value for TB."
+          },
+          {
+            "hypothesis": "Brucellosis",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8136958/",
+            "quote": "In East African Community (EAC) countries, livestock had an animal-level prevalence of 0.2% to 43.8% for cattle, 0.0% to 20.0% for goats and 0.0% to 13.8% for sheep, while in humans the prevalence varied mostly between 0.0% and 35.8%.",
+            "derived_weight_db": 2,
+            "rationale": "Brucellosis is endemic in the East African Community countries visited, so travel there is a possible exposure (+2 dB). Weight is small/supportive because brucellosis is also endemic in India and the Mediterranean and requires animal/unpasteurized-dairy contact not stated in the case, so the geographic fact alone is weakly specific."
+          },
+          {
+            "hypothesis": "Enteric (typhoid) fever",
+            "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3966389/",
+            "quote": "Quinolone-resistant typhoid and paratyphoid fever are now predominant in the Indian subcontinent and Southeast Asia, where much of the travel-related enteric fever originates.",
+            "derived_weight_db": -1,
+            "rationale": "The literature places the bulk of travel-related enteric fever with the Indian subcontinent/Southeast Asia rather than East Africa. For an Indian patient, travel to East Africa does not preferentially raise typhoid likelihood and if anything points the exposure source away from the highest-incidence region, so a slightly-against weight of -1 dB is justified (near-neutral)."
+          }
+        ],
+        "ungrounded_hypotheses": []
+      },
+      {
+        "name": "ankle_swelling_after_insect_bite",
+        "source": "grounded",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 11,
+          "Malaria": 0,
+          "Enteric (typhoid) fever": 0,
+          "Visceral leishmaniasis (kala-azar)": -3,
+          "Tuberculosis (disseminated / CNS)": 0,
+          "Brucellosis": 0,
+          "Arboviral / other viral encephalitis": 0
+        },
+        "citations": [
+          {
+            "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+            "url": "https://www.msdmanuals.com/professional/infectious-diseases/extraintestinal-protozoa/african-trypanosomiasis",
+            "quote": "A papule may develop at the site of the tsetse fly bite within a few days to 2 weeks. It evolves into a red, painful, indurated nodule that may ulcerate (trypanosomal chancre).",
+            "derived_weight_db": 11,
+            "rationale": "A localized inflammatory swelling (papule/indurated nodule = the trypanosomal chancre) arising at the very site of the insect bite is a specific, near-pathognomonic feature of African trypanosomiasis. The case describes a swelling appearing over the left ankle immediately after an insect bite, which matches the chancre description closely. This is a strongly characteristic association; mapping a near-specific bite-site lesion to roughly +11 dB (LR on the order of ~12) is appropriate. I keep it just under the +12 to +15 maximum because some skin reactions to other arthropod bites are non-specific."
+          },
+          {
+            "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+            "url": "https://www.ncbi.nlm.nih.gov/books/NBK535413/",
+            "quote": "HAT's earliest manifestation is a cutaneous chancre at the inoculation site.",
+            "derived_weight_db": 11,
+            "rationale": "Confirms the chancre is the earliest manifestation of human African trypanosomiasis and forms at the inoculation (bite) site, supporting the bite-site swelling being attributable to trypanosomiasis. Note this source says the chancre is infrequent in T. b. rhodesiense (other sources cite 70-80%), so I keep the weight near +11 rather than the +15 ceiling to acknowledge that the chancre, while characteristic, is not invariably present in rhodesiense disease."
+          },
+          {
+            "hypothesis": "Visceral leishmaniasis (kala-azar)",
+            "url": "https://www.msdmanuals.com/professional/infectious-diseases/extraintestinal-protozoa/leishmaniasis",
+            "quote": "Cutaneous skin lesions rarely occur.",
+            "derived_weight_db": -3,
+            "rationale": "In visceral leishmaniasis, despite transmission by a sandfly bite, a skin lesion at the bite site rarely occurs (skin sores are the hallmark of cutaneous, not visceral, leishmaniasis). A prominent local swelling/lesion at the bite site therefore argues mildly against visceral leishmaniasis, justifying a small negative weight (~-3 dB)."
+          }
+        ],
+        "ungrounded_hypotheses": [
+          "Malaria",
+          "Enteric (typhoid) fever",
+          "Tuberculosis (disseminated / CNS)",
+          "Brucellosis",
+          "Arboviral / other viral encephalitis"
+        ]
+      },
+      {
+        "name": "high_grade_fever_with_chills_rigors",
+        "source": "assumed",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 4,
+          "Malaria": 6,
+          "Enteric (typhoid) fever": 4,
+          "Visceral leishmaniasis (kala-azar)": 4,
+          "Tuberculosis (disseminated / CNS)": 2,
+          "Brucellosis": 4,
+          "Arboviral / other viral encephalitis": 2
+        }
+      },
+      {
+        "name": "partial_response_to_empirical_antibiotics",
+        "source": "assumed",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 2,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": -2,
+          "Visceral leishmaniasis (kala-azar)": 2,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": -1,
+          "Arboviral / other viral encephalitis": 2
+        }
+      },
+      {
+        "name": "hepatosplenomegaly",
+        "source": "grounded",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 3,
+          "Malaria": 2,
+          "Enteric (typhoid) fever": 2,
+          "Visceral leishmaniasis (kala-azar)": 4,
+          "Tuberculosis (disseminated / CNS)": 3,
+          "Brucellosis": 4,
+          "Arboviral / other viral encephalitis": 1
+        },
+        "citations": [
+          {
+            "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2998431/",
+            "quote": "Splenomegaly, caused by increased inflammation with an accumulation of activated macrophages in splenic sinusoids, is described as a symptom characteristic of both early stage T.b. rhodesiense and T.b. gambiense HAT.",
+            "derived_weight_db": 3,
+            "rationale": "Source establishes splenomegaly/hepatomegaly as a characteristic and common sign of rhodesiense HAT (haemolymphatic stage, and significantly more frequent in late-stage Tororo focus cases). This is supportive but non-specific — hepatosplenomegaly appears across many tropical febrile illnesses, so the LR is modest (+3 dB, ~2x). It does not strongly differentiate HAT from the other hypotheses."
+          },
+          {
+            "hypothesis": "Visceral leishmaniasis (kala-azar)",
+            "url": "https://www.sciencedirect.com/topics/medicine-and-dentistry/visceral-leishmaniasis",
+            "quote": "Patients usually have anemia, progressive and occasionally massive splenomegaly, hepatomegaly, lymphadenopathy, and hypergammaglobulinemia, with increasing skin pigmentation. The size of the spleen is related to the length of infection and severity of the pancytopenia.",
+            "derived_weight_db": 4,
+            "rationale": "Hepatosplenomegaly is among the most characteristic features of VL; the visceral form is defined by prolonged fever + splenomegaly + hepatomegaly. This argues for VL more than for most competitors (+4 dB, ~2.5x). However the weight is capped low because the case spleen is only 3 cm — classic kala-azar produces progressive, often MASSIVE splenomegaly, so a modest spleen is somewhat atypical and prevents a strongly characteristic weight."
+          },
+          {
+            "hypothesis": "Brucellosis",
+            "url": "https://www.ncbi.nlm.nih.gov/books/NBK441831/",
+            "quote": "The physical examination is most often normal, although lymphadenopathy, splenomegaly, and hepatomegaly may be found.",
+            "derived_weight_db": 4,
+            "rationale": "StatPearls confirms splenomegaly and hepatomegaly are recognized findings in brucellosis; corroborating reviews cite hepatosplenomegaly in roughly 50% of active brucellosis with the liver/reticuloendothelial system almost invariably involved. Supportive and reasonably frequent (+4 dB). Brucellosis also fits the granuloma (bone marrow/hepatic granulomas) and culture-negative febrile picture, but hepatosplenomegaly itself is non-specific so the organ-size finding alone gives only a modest LR."
+          },
+          {
+            "hypothesis": "Tuberculosis (disseminated / CNS)",
+            "url": "https://www.ncbi.nlm.nih.gov/books/NBK562300/",
+            "quote": "Icterus and hepatosplenomegaly may be seen clinically.",
+            "derived_weight_db": 3,
+            "rationale": "Miliary/disseminated TB classically causes hepatosplenomegaly (the source notes it across acute, pediatric, and cryptic forms; only occasionally/mild in cryptic adult disease). Supportive given the case's single granuloma on bone biopsy and meningeal enhancement (+3 dB, ~2x). Non-specific organ enlargement, so modest weight; the granuloma is the more discriminating finding, not the organomegaly per se."
+          },
+          {
+            "hypothesis": "Enteric (typhoid) fever",
+            "url": "https://www.ncbi.nlm.nih.gov/books/NBK557513/",
+            "quote": "During the third week, complications such as hepatosplenomegaly, intestinal bleeding, and/or perforation with secondary bacteremia and peritonitis may occur.",
+            "derived_weight_db": 2,
+            "rationale": "Hepatosplenomegaly is found in roughly 29-50% of typhoid cases (typically by the third week). Mildly supportive (+2 dB). Capped low because the case's blood cultures were sterile and Widal was normal, so typhoid is poorly supported overall; the organomegaly is a common but non-specific feature."
+          },
+          {
+            "hypothesis": "Malaria",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2680340/",
+            "quote": "Hepatosplenomegaly associated with chronic malaria exposure: evidence for a pro-inflammatory mechanism exacerbated by schistosomiasis",
+            "derived_weight_db": 2,
+            "rationale": "Hepatomegaly and splenomegaly are recognized features of acute and chronic malaria (and massively so in hyper-reactive malarial splenomegaly). Mildly supportive of a malaria-endemic-exposure picture (+2 dB). Kept low because the malaria smear was negative in this case, undercutting acute malaria; the finding is non-specific and only weakly discriminating."
+          },
+          {
+            "hypothesis": "Arboviral / other viral encephalitis",
+            "url": "https://emedicine.medscape.com/article/1166498-clinical",
+            "quote": "The initial episode of CTFV (Colorado tick fever virus) infection includes fever, chills, headaches, photophobia, myalgia, malaise, abdominal pain, hepatosplenomegaly, nausea and vomiting, and a rash.",
+            "derived_weight_db": 1,
+            "rationale": "Hepatosplenomegaly is reported with only certain specific arboviral infections (e.g., Colorado tick fever) and is not a general feature of viral/arboviral encephalitis. Barely supportive (+1 dB). Most arboviral encephalitides do not feature prominent organomegaly, so the finding is close to neutral for this hypothesis."
+          }
+        ],
+        "ungrounded_hypotheses": []
+      },
+      {
+        "name": "malaria_smear_negative",
+        "source": "grounded",
+        "citation": "thick-film sensitivity ~90-95%; one negative ~10x down",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 1,
+          "Malaria": -10,
+          "Enteric (typhoid) fever": 1,
+          "Visceral leishmaniasis (kala-azar)": 1,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": 1,
+          "Arboviral / other viral encephalitis": 1
+        }
+      },
+      {
+        "name": "blood_urine_cultures_sterile",
+        "source": "assumed",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 2,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": -6,
+          "Visceral leishmaniasis (kala-azar)": 2,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": -3,
+          "Arboviral / other viral encephalitis": 2
+        }
+      },
+      {
+        "name": "widal_negative",
+        "source": "grounded",
+        "citation": "Widal sens ~60-80%; negative modestly lowers typhoid",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 1,
+          "Malaria": 0,
+          "Enteric (typhoid) fever": -5,
+          "Visceral leishmaniasis (kala-azar)": 1,
+          "Tuberculosis (disseminated / CNS)": 0,
+          "Brucellosis": 0,
+          "Arboviral / other viral encephalitis": 1
+        }
+      },
+      {
+        "name": "viral_markers_negative",
+        "source": "assumed",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 2,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": 1,
+          "Visceral leishmaniasis (kala-azar)": 2,
+          "Tuberculosis (disseminated / CNS)": 1,
+          "Brucellosis": 1,
+          "Arboviral / other viral encephalitis": -7
+        }
+      },
+      {
+        "name": "csf_acellular_normal_glucose_raised_protein",
+        "source": "grounded",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 2,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": 1,
+          "Visceral leishmaniasis (kala-azar)": 0,
+          "Tuberculosis (disseminated / CNS)": -2,
+          "Brucellosis": -1,
+          "Arboviral / other viral encephalitis": 3
+        },
+        "citations": [
+          {
+            "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+            "url": "https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2019.00039/full",
+            "quote": "The WHO criteria for defining late-stage disease is more than 5 White Blood Cells (WBC)/mm3 or the presence of trypanosomes in the CSF or both",
+            "derived_weight_db": 2,
+            "rationale": "Late-stage HAT CSF is characterized by raised protein and, importantly, staging can rest on trypanosomes-in-CSF alone EVEN without pleocytosis ('or' clause). So an acellular CSF does not exclude CNS-stage HAT, and raised protein is consistent. But established meningoencephalitis usually produces pleocytosis (>5-20 WBC), so a fully acellular CSF is only mildly supportive, not characteristic. Mapped to a small positive ~ +2 db (LR ~1.6)."
+          },
+          {
+            "hypothesis": "Arboviral / other viral encephalitis",
+            "url": "https://www.sciencedirect.com/topics/neuroscience/viral-encephalitis",
+            "quote": "Cerebrospinal fluid (CSF) analysis typically reveals lymphocytic pleocytosis, elevated protein, and normal glucose ... CSF may be normal in up to 15% of cases at the initial lumbar puncture in viral encephalitis",
+            "derived_weight_db": 3,
+            "rationale": "Raised protein WITH NORMAL glucose is the textbook viral-encephalitis biochemical pattern, and an acellular tap occurs in up to ~15% of cases, so the case's acellular + normal-glucose + raised-protein picture is genuinely compatible. The expected finding is usually pleocytosis, so this is supportive but not strong: ~ +3 db (LR ~2)."
+          },
+          {
+            "hypothesis": "Tuberculosis (disseminated / CNS)",
+            "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3335590/",
+            "quote": "Tuberculous meningitis presents with characteristic CSF findings including lymphocytic pleocytosis (typically 5-500 cells/µL), markedly elevated protein (>1 g/L), very low glucose (<2.2 mmol/L) ... In approximately 5% of cases, CSF white cell count may be normal",
+            "derived_weight_db": -2,
+            "rationale": "Classic TBM is LOW glucose with lymphocytic pleocytosis. The case has NORMAL glucose and an ACELLULAR CSF, which is the opposite of the characteristic TBM profile (only ~5% are acellular, and low glucose is expected). The raised protein alone is shared, but normal glucose + acellular argues mildly against typical CNS-TB: ~ -2 db (LR ~0.6)."
+          },
+          {
+            "hypothesis": "Brucellosis",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4733728/",
+            "quote": "increased CSF protein level in all patients (108–400 mg/dl; mean 208.1 ± 82.7), decreased CSF glucose level in all patients (14–47 mg/dl; mean 26.4 ± 8.9) ... lymphocytic pleocytosis in 13 patients",
+            "derived_weight_db": -1,
+            "rationale": "Neurobrucellosis characteristically shows raised protein WITH LOW glucose and lymphocytic pleocytosis (13/14 patients). The case's raised protein matches, but normal glucose and acellular CSF are atypical for the classic neurobrucellosis profile, so the overall pattern is mildly against: ~ -1 db (LR ~0.8)."
+          },
+          {
+            "hypothesis": "Malaria",
+            "url": "https://www.sciencedirect.com/topics/nursing-and-health-professions/cerebral-malaria",
+            "quote": "Microscopy of centrifuged and stained CSF is normal, and there are rarely more than 10 WBC/mm3 present ... The total protein content may be slightly elevated, sometimes reaching a level of 150 mg/dl, and the CSF:serum glucose ratio is invariably normal",
+            "derived_weight_db": 1,
+            "rationale": "Cerebral malaria CSF is acellular (rarely >10 WBC) with a NORMAL glucose ratio and mildly raised protein — which matches the case CSF well. However the malaria smear is negative here, and this CSF picture is non-specific, so the finding only weakly favors malaria on its own: ~ +1 db (LR ~1.25)."
+          },
+          {
+            "hypothesis": "Enteric (typhoid) fever",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4166839/",
+            "quote": "CSF analysis showed albumin-cytological dissociation with protein of 171 mg/dl",
+            "derived_weight_db": 1,
+            "rationale": "Neurological typhoid can produce albuminocytologic dissociation (raised protein, no/few cells) — exactly the case pattern. CSF in enteric fever is often normal or shows raised protein without pleocytosis. But this is an uncommon, non-specific complication, so only a small positive: ~ +1 db (LR ~1.25)."
+          }
+        ],
+        "ungrounded_hypotheses": [
+          "Visceral leishmaniasis (kala-azar) — no source found giving a quantitative CSF profile (cells/glucose/protein) for CNS/visceral leishmaniasis; the neurologic-manifestations review documents only anti-Leishmania IgG in CSF and amastigotes in historical cases, with no protein/glucose/cell-count values. Weight set to 0 rather than invented."
+        ]
+      },
+      {
+        "name": "bone_granuloma",
+        "source": "grounded",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 0,
+          "Malaria": -2,
+          "Enteric (typhoid) fever": 4,
+          "Visceral leishmaniasis (kala-azar)": 4,
+          "Tuberculosis (disseminated / CNS)": 6,
+          "Brucellosis": 4,
+          "Arboviral / other viral encephalitis": 0
+        },
+        "citations": [
+          {
+            "hypothesis": "Tuberculosis (disseminated / CNS)",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5794393/",
+            "quote": "Tuberculosis: 87.32% of infectious cases (62/71) ... Granuloma with caseous necrosis, commonly seen in tuberculosis (TB), can be also seen in fungal infection ... the diagnosis cannot be made solely on pathological criteria",
+            "derived_weight_db": 6,
+            "rationale": "In a high-prevalence clinicopathological series, TB was by far the single most common identifiable cause of bone marrow granulomas (87% of infectious cases). A granuloma is therefore the most likely-to-be-TB single finding, raising LR meaningfully (~+6 dB ~ 4x). But the same source stresses granulomas are non-specific and an ill-defined (non-caseating, no AFB stated) granuloma is weaker than a classic caseating one, so the weight stays moderate rather than strongly characteristic."
+          },
+          {
+            "hypothesis": "Brucellosis",
+            "url": "https://www.frontiersin.org/journals/cellular-and-infection-microbiology/articles/10.3389/fcimb.2023.1136674/full",
+            "quote": "The reticuloendothelial system is the most common site of involvement, and once localized, the Brucella organisms induce a granulomatous reaction ... bone marrow aspiration can show histiocytic hemophagocytosis and granuloma formation.",
+            "derived_weight_db": 4,
+            "rationale": "Brucella localizes in the RES and bone marrow and induces granuloma formation, so a marrow/bone granuloma is consistent with brucellosis (supportive, ~+4 dB ~ 2.5x). It is downweighted because brucellosis was a rare cause in the granuloma series (only 2/110 cases) and the finding is non-specific."
+          },
+          {
+            "hypothesis": "Enteric (typhoid) fever",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4350621/",
+            "quote": "well-formed noncaseating granulomas ... The incidence ranges from 0.3% to 2.2%, depending on the series ... The presence of BMG in the trephine biopsies is a nonspecific finding",
+            "derived_weight_db": 4,
+            "rationale": "Typhoid is a recognized cause of well-formed noncaseating bone marrow granulomas, so the finding is consistent and supportive (~+4 dB ~ 2.5x). Held modest because the paper itself states the granuloma is a non-specific finding and incidence in typhoid is low (0.3-2.2%)."
+          },
+          {
+            "hypothesis": "Visceral leishmaniasis (kala-azar)",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3002089/",
+            "quote": "Also variable degrees of erythrophagocytosis and leukophagocytosis (46%) and granulomatous reaction (25%) may be seen",
+            "derived_weight_db": 4,
+            "rationale": "A granulomatous reaction occurs in roughly a quarter of visceral leishmaniasis marrows, so a granuloma is consistent and supportive (~+4 dB ~ 2.5x). Non-specific and not the dominant VL finding (LD bodies are), so kept moderate."
+          },
+          {
+            "hypothesis": "Malaria",
+            "url": "https://academic.oup.com/jid/article/225/7/1274/5859491",
+            "quote": "Plasmodium vivax infections induce dyserythropoiesis and ineffective erythropoiesis in bone marrow. The deposition of malaria pigments (hemozoin) in the bone marrow ... Bone marrow biopsies of malaria patients demonstrate the presence of Plasmodium parasites, hemozoin, and abnormal erythroblast morphology.",
+            "derived_weight_db": -2,
+            "rationale": "The characteristic malaria marrow lesion is dyserythropoiesis with hemozoin pigment and parasitized cells, not granuloma formation. Granulomas are not a recognized feature of malaria, so this finding argues mildly against malaria (~-2 dB). Kept small because absence of mention is weaker than explicit exclusion."
+          }
+        ],
+        "ungrounded_hypotheses": [
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage) — bone marrow is used to DEMONSTRATE trypanosomes (CDC lists bone marrow aspirate as a sampling site), and the bite produces a trypanosomal chancre (an indurated/ulcerating skin nodule), but no authoritative source was found describing a bone or bone-marrow GRANULOMA as a feature of African trypanosomiasis. Weight left at 0 rather than invented.",
+          "Arboviral / other viral encephalitis — no authoritative source found associating bone or bone-marrow granuloma formation with arboviral/viral encephalitis. Granuloma formation is a feature of chronic mycobacterial/bacterial/parasitic disease, not acute viral encephalitis. Weight left at 0."
+        ]
+      },
+      {
+        "name": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "source": "grounded",
+        "weights": {
+          "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)": 7,
+          "Malaria": 1,
+          "Enteric (typhoid) fever": 1,
+          "Visceral leishmaniasis (kala-azar)": 1,
+          "Tuberculosis (disseminated / CNS)": 7,
+          "Brucellosis": 6,
+          "Arboviral / other viral encephalitis": 2
+        },
+        "citations": [
+          {
+            "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6438401/",
+            "quote": "symmetrical high T2W FLAIR signal abnormalities of the deep white matter tracts, with involvement of the basal nuclei seen less frequently ... extending to involve the cerebellum and brain stem",
+            "derived_weight_db": 7,
+            "rationale": "The meningoencephalitic (second) stage of HAT characteristically produces symmetrical deep white matter T2/FLAIR signal extending into the brainstem/pons, and other reports add perivascular/leptomeningeal enhancement. This is the disease whose CNS imaging signature most directly matches 'pontine T2/FLAIR + meningeal enhancement' in a meningoencephalitic process, so a moderately strong positive LR (~+7 dB, LR ~5) is justified. Not higher because the canonical HAT pattern is white-matter-dominant and meningeal enhancement is inconsistent across reports."
+          },
+          {
+            "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6438401/",
+            "quote": "Signal abnormalities of the cerebellum and brainstem occurred in just over half of published reports",
+            "derived_weight_db": 7,
+            "rationale": "Brainstem (including pontine) involvement is reported in roughly half of HAT MRI cases, confirming that pontine T2/FLAIR is an expected, prevalent feature of the meningoencephalitic stage rather than a rare incidental finding. Supports a moderate positive weight."
+          },
+          {
+            "hypothesis": "Tuberculosis (disseminated / CNS)",
+            "url": "https://emedicine.medscape.com/article/344862-overview",
+            "quote": "Tuberculous rhombencephalitis is a form of neurotuberculosis that affects the hindbrain, including the brainstem and cerebellum, often presenting as tuberculomas ... Deep gray matter nuclei, deep white matter, and pontine infarctions resulting from vasculitis are hyperintense on T2-weighted images ... In tuberculous meningitis (TBM), gadolinium-enhanced T1-weighted images demonstrate prominent leptomeningeal and basal cistern enhancement.",
+            "derived_weight_db": 7,
+            "rationale": "CNS TB explicitly produces both brainstem/pontine T2 hyperintensity (rhombencephalitis, pontine vasculitic infarcts, tuberculomas) AND basal/leptomeningeal enhancement — exactly the dyad in this finding. Combined with the case's single granuloma on bone biopsy and CSF with raised protein, this is a strong match, warranting ~+7 dB (LR ~5)."
+          },
+          {
+            "hypothesis": "Brucellosis",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11746083/",
+            "quote": "Patients had focal hyperintense lesions in the pons and left cerebral peduncle ... Brain imaging shows leptomeningeal, basal meningeal, perivascular enhancement and brain abscess or granuloma with ring enhancement.",
+            "derived_weight_db": 6,
+            "rationale": "Neurobrucellosis is documented to cause focal pontine T2 hyperintensities together with leptomeningeal/basal meningeal enhancement, and (separately) acellular or lymphocytic high-protein CSF — matching this case. Supportive positive weight ~+6 dB (LR ~4); slightly below HAT/TB because pontine localization is less stereotyped for brucellosis."
+          },
+          {
+            "hypothesis": "Arboviral / other viral encephalitis",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3391411/",
+            "quote": "MRI scans show lesions in the thalami in most patients; lesions also occur in the basal ganglia, midbrain and pons, cerebral cortex, and cerebellum",
+            "derived_weight_db": 2,
+            "rationale": "Arboviral encephalitis (e.g., Japanese encephalitis) can involve the pons on T2/FLAIR, but the dominant and characteristic site is the bilateral thalami; pontine involvement is secondary and meningeal enhancement is not the hallmark. Mildly supportive only (~+2 dB, LR ~1.6)."
+          },
+          {
+            "hypothesis": "Malaria",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2747424/",
+            "quote": "an isolated pontine infarct and a hemorrhagic infarct in the parietooccipital lobe have been reported",
+            "derived_weight_db": 1,
+            "rationale": "Pontine lesions in malaria are reported but uncommon and the typical pattern is posterior cortical/white-matter edema, not pontine T2/FLAIR with meningeal enhancement. With a negative malaria smear, this finding does little to favor malaria. Near-neutral, faintly positive (~+1 dB)."
+          },
+          {
+            "hypothesis": "Enteric (typhoid) fever",
+            "url": "https://www.intechopen.com/chapters/76635",
+            "quote": "Encephalopathy with clinical features of brain stem involvement was found to be due to acute disseminated encephalomyelitis (perivenous demyelinating leucoencephalitis) of the midbrain and pons",
+            "derived_weight_db": 1,
+            "rationale": "Typhoid can rarely produce brainstem/pontine demyelinating lesions and leptomeningeal enhancement, but the characteristic typhoid neuro-imaging finding is a reversible splenial lesion (MERS), and Widal was normal here. The pontine+meningeal pattern is non-specific and rare for typhoid, so only a faint positive (~+1 dB)."
+          },
+          {
+            "hypothesis": "Visceral leishmaniasis (kala-azar)",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6019590/",
+            "quote": "an axial fluid-attenuated inversion recovery MRI image (FLAIR) revealed an increase in signal intensity of central part of right side of pons ... Brain involvement rarely occurs in visceral leishmaniasis",
+            "derived_weight_db": 1,
+            "rationale": "A single case report documents pontine FLAIR signal in visceral leishmaniasis, but the same source stresses that brain involvement 'rarely occurs.' Because the finding is possible but extremely uncommon in VL and meningeal enhancement is not a described VL signature, it is essentially non-discriminating — faint positive (~+1 dB)."
+          }
+        ],
+        "ungrounded_hypotheses": []
+      }
+    ],
+    "rulebook": [
+      {
+        "fact": "ankle_swelling_after_insect_bite",
+        "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+        "url": "https://www.msdmanuals.com/professional/infectious-diseases/extraintestinal-protozoa/african-trypanosomiasis",
+        "quote": "A papule may develop at the site of the tsetse fly bite within a few days to 2 weeks. It evolves into a red, painful, indurated nodule that may ulcerate (trypanosomal chancre).",
+        "derived_weight_db": 11,
+        "rationale": "A localized inflammatory swelling (papule/indurated nodule = the trypanosomal chancre) arising at the very site of the insect bite is a specific, near-pathognomonic feature of African trypanosomiasis. The case describes a swelling appearing over the left ankle immediately after an insect bite, which matches the chancre description closely. This is a strongly characteristic association; mapping a near-specific bite-site lesion to roughly +11 dB (LR on the order of ~12) is appropriate. I keep it just under the +12 to +15 maximum because some skin reactions to other arthropod bites are non-specific."
+      },
+      {
+        "fact": "ankle_swelling_after_insect_bite",
+        "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK535413/",
+        "quote": "HAT's earliest manifestation is a cutaneous chancre at the inoculation site.",
+        "derived_weight_db": 11,
+        "rationale": "Confirms the chancre is the earliest manifestation of human African trypanosomiasis and forms at the inoculation (bite) site, supporting the bite-site swelling being attributable to trypanosomiasis. Note this source says the chancre is infrequent in T. b. rhodesiense (other sources cite 70-80%), so I keep the weight near +11 rather than the +15 ceiling to acknowledge that the chancre, while characteristic, is not invariably present in rhodesiense disease."
+      },
+      {
+        "fact": "ankle_swelling_after_insect_bite",
+        "hypothesis": "Visceral leishmaniasis (kala-azar)",
+        "url": "https://www.msdmanuals.com/professional/infectious-diseases/extraintestinal-protozoa/leishmaniasis",
+        "quote": "Cutaneous skin lesions rarely occur.",
+        "derived_weight_db": -3,
+        "rationale": "In visceral leishmaniasis, despite transmission by a sandfly bite, a skin lesion at the bite site rarely occurs (skin sores are the hallmark of cutaneous, not visceral, leishmaniasis). A prominent local swelling/lesion at the bite site therefore argues mildly against visceral leishmaniasis, justifying a small negative weight (~-3 dB)."
+      },
+      {
+        "fact": "travel_to_east_africa",
+        "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK535413/",
+        "quote": "East African HAT mainly occurs in Zimbabwe, Tanzania, Zambia, and Malawi, infecting primarily wild animals. In Uganda and Kenya, East African HAT mostly affects cattle. ... T brucei rhodesiense has been detected in tourists in East Africa, mainly in Tanzania and regions with wild game parks.",
+        "derived_weight_db": 12,
+        "rationale": "T. b. rhodesiense is geographically restricted to exactly the region the patient visited (Uganda, Tanzania, Kenya named explicitly), and is specifically documented as a risk to travelers/tourists there. Travel to East Africa is the near-mandatory exposure gateway for this diagnosis and essentially excludes it without such travel, so the likelihood ratio for this hypothesis is strongly positive: +12 dB (LR ~16). Not the maximum because rhodesiense HAT is rare even among travelers and East Africa travel alone is necessary but far from sufficient."
+      },
+      {
+        "fact": "travel_to_east_africa",
+        "hypothesis": "Visceral leishmaniasis (kala-azar)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2664918/",
+        "quote": "Eastern Africa is one of the world's main VL-endemic areas, and the disease occurs in numerous foci in Eritrea, Ethiopia, Kenya, Somalia, Sudan and Uganda.",
+        "derived_weight_db": 5,
+        "rationale": "East Africa is one of the world's principal VL foci, including Kenya and Uganda which the patient visited, so the travel raises the prior. Weight held to supportive (+5 dB, LR ~3) rather than strongly characteristic because the Indian subcontinent (the patient's home) is itself a major VL-endemic region, so East African travel is not uniquely discriminating for this Indian patient."
+      },
+      {
+        "fact": "travel_to_east_africa",
+        "hypothesis": "Arboviral / other viral encephalitis",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4503415/",
+        "quote": "Out of the 1,091 samples tested, 210 (19.2%) were positive for IgG antibodies against at least one of the three arboviruses.",
+        "derived_weight_db": 3,
+        "rationale": "Dengue, Rift Valley fever and chikungunya circulate endemically in Kenya/East Africa with ~19% seroprevalence, so vector-borne arboviral infection is a real exposure during this trip. Weight kept modest/supportive (+3 dB) because arboviruses are equally or more endemic in India and globally, so East Africa travel is only weakly specific for an arboviral cause."
+      },
+      {
+        "fact": "travel_to_east_africa",
+        "hypothesis": "Malaria",
+        "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3966389/",
+        "quote": "the profile of illness varied substantially by region: malaria predominated in travelers returning from Central and Western Africa; schistosomiasis, strongyloidiasis, and dengue from Eastern and Western Africa",
+        "derived_weight_db": 3,
+        "rationale": "Malaria is endemic across sub-Saharan Africa including the East African countries visited, so travel there is a genuine malaria exposure (+3 dB supportive). The weight is small because malaria is also endemic in the patient's native India and the source notes malaria predominates in Central/Western rather than Eastern Africa, making East-Africa travel non-specific for malaria; the negative smear is handled by a separate fact."
+      },
+      {
+        "fact": "travel_to_east_africa",
+        "hypothesis": "Tuberculosis (disseminated / CNS)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8279170/",
+        "quote": "Three of the 6 member states of the East African Community (EAC)—Uganda, Kenya, and Tanzania—are on this high TB burden list.",
+        "derived_weight_db": 2,
+        "rationale": "The exact three countries visited are WHO high-TB-burden states, so travel is a plausible TB exposure. Weight only +2 dB because TB is even more endemic in India (the patient's home, a top global TB-burden country), so East Africa travel adds little discriminating value for TB."
+      },
+      {
+        "fact": "travel_to_east_africa",
+        "hypothesis": "Brucellosis",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8136958/",
+        "quote": "In East African Community (EAC) countries, livestock had an animal-level prevalence of 0.2% to 43.8% for cattle, 0.0% to 20.0% for goats and 0.0% to 13.8% for sheep, while in humans the prevalence varied mostly between 0.0% and 35.8%.",
+        "derived_weight_db": 2,
+        "rationale": "Brucellosis is endemic in the East African Community countries visited, so travel there is a possible exposure (+2 dB). Weight is small/supportive because brucellosis is also endemic in India and the Mediterranean and requires animal/unpasteurized-dairy contact not stated in the case, so the geographic fact alone is weakly specific."
+      },
+      {
+        "fact": "travel_to_east_africa",
+        "hypothesis": "Enteric (typhoid) fever",
+        "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3966389/",
+        "quote": "Quinolone-resistant typhoid and paratyphoid fever are now predominant in the Indian subcontinent and Southeast Asia, where much of the travel-related enteric fever originates.",
+        "derived_weight_db": -1,
+        "rationale": "The literature places the bulk of travel-related enteric fever with the Indian subcontinent/Southeast Asia rather than East Africa. For an Indian patient, travel to East Africa does not preferentially raise typhoid likelihood and if anything points the exposure source away from the highest-incidence region, so a slightly-against weight of -1 dB is justified (near-neutral)."
+      },
+      {
+        "fact": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6438401/",
+        "quote": "symmetrical high T2W FLAIR signal abnormalities of the deep white matter tracts, with involvement of the basal nuclei seen less frequently ... extending to involve the cerebellum and brain stem",
+        "derived_weight_db": 7,
+        "rationale": "The meningoencephalitic (second) stage of HAT characteristically produces symmetrical deep white matter T2/FLAIR signal extending into the brainstem/pons, and other reports add perivascular/leptomeningeal enhancement. This is the disease whose CNS imaging signature most directly matches 'pontine T2/FLAIR + meningeal enhancement' in a meningoencephalitic process, so a moderately strong positive LR (~+7 dB, LR ~5) is justified. Not higher because the canonical HAT pattern is white-matter-dominant and meningeal enhancement is inconsistent across reports."
+      },
+      {
+        "fact": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6438401/",
+        "quote": "Signal abnormalities of the cerebellum and brainstem occurred in just over half of published reports",
+        "derived_weight_db": 7,
+        "rationale": "Brainstem (including pontine) involvement is reported in roughly half of HAT MRI cases, confirming that pontine T2/FLAIR is an expected, prevalent feature of the meningoencephalitic stage rather than a rare incidental finding. Supports a moderate positive weight."
+      },
+      {
+        "fact": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "hypothesis": "Tuberculosis (disseminated / CNS)",
+        "url": "https://emedicine.medscape.com/article/344862-overview",
+        "quote": "Tuberculous rhombencephalitis is a form of neurotuberculosis that affects the hindbrain, including the brainstem and cerebellum, often presenting as tuberculomas ... Deep gray matter nuclei, deep white matter, and pontine infarctions resulting from vasculitis are hyperintense on T2-weighted images ... In tuberculous meningitis (TBM), gadolinium-enhanced T1-weighted images demonstrate prominent leptomeningeal and basal cistern enhancement.",
+        "derived_weight_db": 7,
+        "rationale": "CNS TB explicitly produces both brainstem/pontine T2 hyperintensity (rhombencephalitis, pontine vasculitic infarcts, tuberculomas) AND basal/leptomeningeal enhancement — exactly the dyad in this finding. Combined with the case's single granuloma on bone biopsy and CSF with raised protein, this is a strong match, warranting ~+7 dB (LR ~5)."
+      },
+      {
+        "fact": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "hypothesis": "Brucellosis",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11746083/",
+        "quote": "Patients had focal hyperintense lesions in the pons and left cerebral peduncle ... Brain imaging shows leptomeningeal, basal meningeal, perivascular enhancement and brain abscess or granuloma with ring enhancement.",
+        "derived_weight_db": 6,
+        "rationale": "Neurobrucellosis is documented to cause focal pontine T2 hyperintensities together with leptomeningeal/basal meningeal enhancement, and (separately) acellular or lymphocytic high-protein CSF — matching this case. Supportive positive weight ~+6 dB (LR ~4); slightly below HAT/TB because pontine localization is less stereotyped for brucellosis."
+      },
+      {
+        "fact": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "hypothesis": "Arboviral / other viral encephalitis",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3391411/",
+        "quote": "MRI scans show lesions in the thalami in most patients; lesions also occur in the basal ganglia, midbrain and pons, cerebral cortex, and cerebellum",
+        "derived_weight_db": 2,
+        "rationale": "Arboviral encephalitis (e.g., Japanese encephalitis) can involve the pons on T2/FLAIR, but the dominant and characteristic site is the bilateral thalami; pontine involvement is secondary and meningeal enhancement is not the hallmark. Mildly supportive only (~+2 dB, LR ~1.6)."
+      },
+      {
+        "fact": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "hypothesis": "Malaria",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2747424/",
+        "quote": "an isolated pontine infarct and a hemorrhagic infarct in the parietooccipital lobe have been reported",
+        "derived_weight_db": 1,
+        "rationale": "Pontine lesions in malaria are reported but uncommon and the typical pattern is posterior cortical/white-matter edema, not pontine T2/FLAIR with meningeal enhancement. With a negative malaria smear, this finding does little to favor malaria. Near-neutral, faintly positive (~+1 dB)."
+      },
+      {
+        "fact": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "hypothesis": "Enteric (typhoid) fever",
+        "url": "https://www.intechopen.com/chapters/76635",
+        "quote": "Encephalopathy with clinical features of brain stem involvement was found to be due to acute disseminated encephalomyelitis (perivenous demyelinating leucoencephalitis) of the midbrain and pons",
+        "derived_weight_db": 1,
+        "rationale": "Typhoid can rarely produce brainstem/pontine demyelinating lesions and leptomeningeal enhancement, but the characteristic typhoid neuro-imaging finding is a reversible splenial lesion (MERS), and Widal was normal here. The pontine+meningeal pattern is non-specific and rare for typhoid, so only a faint positive (~+1 dB)."
+      },
+      {
+        "fact": "pontine_t2_flair_lesions_meningeal_enhancement",
+        "hypothesis": "Visceral leishmaniasis (kala-azar)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6019590/",
+        "quote": "an axial fluid-attenuated inversion recovery MRI image (FLAIR) revealed an increase in signal intensity of central part of right side of pons ... Brain involvement rarely occurs in visceral leishmaniasis",
+        "derived_weight_db": 1,
+        "rationale": "A single case report documents pontine FLAIR signal in visceral leishmaniasis, but the same source stresses that brain involvement 'rarely occurs.' Because the finding is possible but extremely uncommon in VL and meningeal enhancement is not a described VL signature, it is essentially non-discriminating — faint positive (~+1 dB)."
+      },
+      {
+        "fact": "csf_acellular_normal_glucose_raised_protein (CSF with no cells, normal glucose, and raised protein — an albuminocytologic-dissociation pattern)",
+        "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+        "url": "https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2019.00039/full",
+        "quote": "The WHO criteria for defining late-stage disease is more than 5 White Blood Cells (WBC)/mm3 or the presence of trypanosomes in the CSF or both",
+        "derived_weight_db": 2,
+        "rationale": "Late-stage HAT CSF is characterized by raised protein and, importantly, staging can rest on trypanosomes-in-CSF alone EVEN without pleocytosis ('or' clause). So an acellular CSF does not exclude CNS-stage HAT, and raised protein is consistent. But established meningoencephalitis usually produces pleocytosis (>5-20 WBC), so a fully acellular CSF is only mildly supportive, not characteristic. Mapped to a small positive ~ +2 db (LR ~1.6)."
+      },
+      {
+        "fact": "csf_acellular_normal_glucose_raised_protein (CSF with no cells, normal glucose, and raised protein — an albuminocytologic-dissociation pattern)",
+        "hypothesis": "Arboviral / other viral encephalitis",
+        "url": "https://www.sciencedirect.com/topics/neuroscience/viral-encephalitis",
+        "quote": "Cerebrospinal fluid (CSF) analysis typically reveals lymphocytic pleocytosis, elevated protein, and normal glucose ... CSF may be normal in up to 15% of cases at the initial lumbar puncture in viral encephalitis",
+        "derived_weight_db": 3,
+        "rationale": "Raised protein WITH NORMAL glucose is the textbook viral-encephalitis biochemical pattern, and an acellular tap occurs in up to ~15% of cases, so the case's acellular + normal-glucose + raised-protein picture is genuinely compatible. The expected finding is usually pleocytosis, so this is supportive but not strong: ~ +3 db (LR ~2)."
+      },
+      {
+        "fact": "csf_acellular_normal_glucose_raised_protein (CSF with no cells, normal glucose, and raised protein — an albuminocytologic-dissociation pattern)",
+        "hypothesis": "Tuberculosis (disseminated / CNS)",
+        "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3335590/",
+        "quote": "Tuberculous meningitis presents with characteristic CSF findings including lymphocytic pleocytosis (typically 5-500 cells/µL), markedly elevated protein (>1 g/L), very low glucose (<2.2 mmol/L) ... In approximately 5% of cases, CSF white cell count may be normal",
+        "derived_weight_db": -2,
+        "rationale": "Classic TBM is LOW glucose with lymphocytic pleocytosis. The case has NORMAL glucose and an ACELLULAR CSF, which is the opposite of the characteristic TBM profile (only ~5% are acellular, and low glucose is expected). The raised protein alone is shared, but normal glucose + acellular argues mildly against typical CNS-TB: ~ -2 db (LR ~0.6)."
+      },
+      {
+        "fact": "csf_acellular_normal_glucose_raised_protein (CSF with no cells, normal glucose, and raised protein — an albuminocytologic-dissociation pattern)",
+        "hypothesis": "Brucellosis",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4733728/",
+        "quote": "increased CSF protein level in all patients (108–400 mg/dl; mean 208.1 ± 82.7), decreased CSF glucose level in all patients (14–47 mg/dl; mean 26.4 ± 8.9) ... lymphocytic pleocytosis in 13 patients",
+        "derived_weight_db": -1,
+        "rationale": "Neurobrucellosis characteristically shows raised protein WITH LOW glucose and lymphocytic pleocytosis (13/14 patients). The case's raised protein matches, but normal glucose and acellular CSF are atypical for the classic neurobrucellosis profile, so the overall pattern is mildly against: ~ -1 db (LR ~0.8)."
+      },
+      {
+        "fact": "csf_acellular_normal_glucose_raised_protein (CSF with no cells, normal glucose, and raised protein — an albuminocytologic-dissociation pattern)",
+        "hypothesis": "Malaria",
+        "url": "https://www.sciencedirect.com/topics/nursing-and-health-professions/cerebral-malaria",
+        "quote": "Microscopy of centrifuged and stained CSF is normal, and there are rarely more than 10 WBC/mm3 present ... The total protein content may be slightly elevated, sometimes reaching a level of 150 mg/dl, and the CSF:serum glucose ratio is invariably normal",
+        "derived_weight_db": 1,
+        "rationale": "Cerebral malaria CSF is acellular (rarely >10 WBC) with a NORMAL glucose ratio and mildly raised protein — which matches the case CSF well. However the malaria smear is negative here, and this CSF picture is non-specific, so the finding only weakly favors malaria on its own: ~ +1 db (LR ~1.25)."
+      },
+      {
+        "fact": "csf_acellular_normal_glucose_raised_protein (CSF with no cells, normal glucose, and raised protein — an albuminocytologic-dissociation pattern)",
+        "hypothesis": "Enteric (typhoid) fever",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4166839/",
+        "quote": "CSF analysis showed albumin-cytological dissociation with protein of 171 mg/dl",
+        "derived_weight_db": 1,
+        "rationale": "Neurological typhoid can produce albuminocytologic dissociation (raised protein, no/few cells) — exactly the case pattern. CSF in enteric fever is often normal or shows raised protein without pleocytosis. But this is an uncommon, non-specific complication, so only a small positive: ~ +1 db (LR ~1.25)."
+      },
+      {
+        "fact": "bone_granuloma (bone biopsy showing a single ill-defined granuloma)",
+        "hypothesis": "Tuberculosis (disseminated / CNS)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5794393/",
+        "quote": "Tuberculosis: 87.32% of infectious cases (62/71) ... Granuloma with caseous necrosis, commonly seen in tuberculosis (TB), can be also seen in fungal infection ... the diagnosis cannot be made solely on pathological criteria",
+        "derived_weight_db": 6,
+        "rationale": "In a high-prevalence clinicopathological series, TB was by far the single most common identifiable cause of bone marrow granulomas (87% of infectious cases). A granuloma is therefore the most likely-to-be-TB single finding, raising LR meaningfully (~+6 dB ~ 4x). But the same source stresses granulomas are non-specific and an ill-defined (non-caseating, no AFB stated) granuloma is weaker than a classic caseating one, so the weight stays moderate rather than strongly characteristic."
+      },
+      {
+        "fact": "bone_granuloma (bone biopsy showing a single ill-defined granuloma)",
+        "hypothesis": "Brucellosis",
+        "url": "https://www.frontiersin.org/journals/cellular-and-infection-microbiology/articles/10.3389/fcimb.2023.1136674/full",
+        "quote": "The reticuloendothelial system is the most common site of involvement, and once localized, the Brucella organisms induce a granulomatous reaction ... bone marrow aspiration can show histiocytic hemophagocytosis and granuloma formation.",
+        "derived_weight_db": 4,
+        "rationale": "Brucella localizes in the RES and bone marrow and induces granuloma formation, so a marrow/bone granuloma is consistent with brucellosis (supportive, ~+4 dB ~ 2.5x). It is downweighted because brucellosis was a rare cause in the granuloma series (only 2/110 cases) and the finding is non-specific."
+      },
+      {
+        "fact": "bone_granuloma (bone biopsy showing a single ill-defined granuloma)",
+        "hypothesis": "Enteric (typhoid) fever",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4350621/",
+        "quote": "well-formed noncaseating granulomas ... The incidence ranges from 0.3% to 2.2%, depending on the series ... The presence of BMG in the trephine biopsies is a nonspecific finding",
+        "derived_weight_db": 4,
+        "rationale": "Typhoid is a recognized cause of well-formed noncaseating bone marrow granulomas, so the finding is consistent and supportive (~+4 dB ~ 2.5x). Held modest because the paper itself states the granuloma is a non-specific finding and incidence in typhoid is low (0.3-2.2%)."
+      },
+      {
+        "fact": "bone_granuloma (bone biopsy showing a single ill-defined granuloma)",
+        "hypothesis": "Visceral leishmaniasis (kala-azar)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3002089/",
+        "quote": "Also variable degrees of erythrophagocytosis and leukophagocytosis (46%) and granulomatous reaction (25%) may be seen",
+        "derived_weight_db": 4,
+        "rationale": "A granulomatous reaction occurs in roughly a quarter of visceral leishmaniasis marrows, so a granuloma is consistent and supportive (~+4 dB ~ 2.5x). Non-specific and not the dominant VL finding (LD bodies are), so kept moderate."
+      },
+      {
+        "fact": "bone_granuloma (bone biopsy showing a single ill-defined granuloma)",
+        "hypothesis": "Malaria",
+        "url": "https://academic.oup.com/jid/article/225/7/1274/5859491",
+        "quote": "Plasmodium vivax infections induce dyserythropoiesis and ineffective erythropoiesis in bone marrow. The deposition of malaria pigments (hemozoin) in the bone marrow ... Bone marrow biopsies of malaria patients demonstrate the presence of Plasmodium parasites, hemozoin, and abnormal erythroblast morphology.",
+        "derived_weight_db": -2,
+        "rationale": "The characteristic malaria marrow lesion is dyserythropoiesis with hemozoin pigment and parasitized cells, not granuloma formation. Granulomas are not a recognized feature of malaria, so this finding argues mildly against malaria (~-2 dB). Kept small because absence of mention is weaker than explicit exclusion."
+      },
+      {
+        "fact": "Hepatosplenomegaly (hepatomegaly 3 cm, splenomegaly 3 cm — modest, non-massive organ enlargement)",
+        "hypothesis": "East African trypanosomiasis (T. b. rhodesiense, meningoencephalitic stage)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2998431/",
+        "quote": "Splenomegaly, caused by increased inflammation with an accumulation of activated macrophages in splenic sinusoids, is described as a symptom characteristic of both early stage T.b. rhodesiense and T.b. gambiense HAT.",
+        "derived_weight_db": 3,
+        "rationale": "Source establishes splenomegaly/hepatomegaly as a characteristic and common sign of rhodesiense HAT (haemolymphatic stage, and significantly more frequent in late-stage Tororo focus cases). This is supportive but non-specific — hepatosplenomegaly appears across many tropical febrile illnesses, so the LR is modest (+3 dB, ~2x). It does not strongly differentiate HAT from the other hypotheses."
+      },
+      {
+        "fact": "Hepatosplenomegaly (hepatomegaly 3 cm, splenomegaly 3 cm — modest, non-massive organ enlargement)",
+        "hypothesis": "Visceral leishmaniasis (kala-azar)",
+        "url": "https://www.sciencedirect.com/topics/medicine-and-dentistry/visceral-leishmaniasis",
+        "quote": "Patients usually have anemia, progressive and occasionally massive splenomegaly, hepatomegaly, lymphadenopathy, and hypergammaglobulinemia, with increasing skin pigmentation. The size of the spleen is related to the length of infection and severity of the pancytopenia.",
+        "derived_weight_db": 4,
+        "rationale": "Hepatosplenomegaly is among the most characteristic features of VL; the visceral form is defined by prolonged fever + splenomegaly + hepatomegaly. This argues for VL more than for most competitors (+4 dB, ~2.5x). However the weight is capped low because the case spleen is only 3 cm — classic kala-azar produces progressive, often MASSIVE splenomegaly, so a modest spleen is somewhat atypical and prevents a strongly characteristic weight."
+      },
+      {
+        "fact": "Hepatosplenomegaly (hepatomegaly 3 cm, splenomegaly 3 cm — modest, non-massive organ enlargement)",
+        "hypothesis": "Brucellosis",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK441831/",
+        "quote": "The physical examination is most often normal, although lymphadenopathy, splenomegaly, and hepatomegaly may be found.",
+        "derived_weight_db": 4,
+        "rationale": "StatPearls confirms splenomegaly and hepatomegaly are recognized findings in brucellosis; corroborating reviews cite hepatosplenomegaly in roughly 50% of active brucellosis with the liver/reticuloendothelial system almost invariably involved. Supportive and reasonably frequent (+4 dB). Brucellosis also fits the granuloma (bone marrow/hepatic granulomas) and culture-negative febrile picture, but hepatosplenomegaly itself is non-specific so the organ-size finding alone gives only a modest LR."
+      },
+      {
+        "fact": "Hepatosplenomegaly (hepatomegaly 3 cm, splenomegaly 3 cm — modest, non-massive organ enlargement)",
+        "hypothesis": "Tuberculosis (disseminated / CNS)",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK562300/",
+        "quote": "Icterus and hepatosplenomegaly may be seen clinically.",
+        "derived_weight_db": 3,
+        "rationale": "Miliary/disseminated TB classically causes hepatosplenomegaly (the source notes it across acute, pediatric, and cryptic forms; only occasionally/mild in cryptic adult disease). Supportive given the case's single granuloma on bone biopsy and meningeal enhancement (+3 dB, ~2x). Non-specific organ enlargement, so modest weight; the granuloma is the more discriminating finding, not the organomegaly per se."
+      },
+      {
+        "fact": "Hepatosplenomegaly (hepatomegaly 3 cm, splenomegaly 3 cm — modest, non-massive organ enlargement)",
+        "hypothesis": "Enteric (typhoid) fever",
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK557513/",
+        "quote": "During the third week, complications such as hepatosplenomegaly, intestinal bleeding, and/or perforation with secondary bacteremia and peritonitis may occur.",
+        "derived_weight_db": 2,
+        "rationale": "Hepatosplenomegaly is found in roughly 29-50% of typhoid cases (typically by the third week). Mildly supportive (+2 dB). Capped low because the case's blood cultures were sterile and Widal was normal, so typhoid is poorly supported overall; the organomegaly is a common but non-specific feature."
+      },
+      {
+        "fact": "Hepatosplenomegaly (hepatomegaly 3 cm, splenomegaly 3 cm — modest, non-massive organ enlargement)",
+        "hypothesis": "Malaria",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2680340/",
+        "quote": "Hepatosplenomegaly associated with chronic malaria exposure: evidence for a pro-inflammatory mechanism exacerbated by schistosomiasis",
+        "derived_weight_db": 2,
+        "rationale": "Hepatomegaly and splenomegaly are recognized features of acute and chronic malaria (and massively so in hyper-reactive malarial splenomegaly). Mildly supportive of a malaria-endemic-exposure picture (+2 dB). Kept low because the malaria smear was negative in this case, undercutting acute malaria; the finding is non-specific and only weakly discriminating."
+      },
+      {
+        "fact": "Hepatosplenomegaly (hepatomegaly 3 cm, splenomegaly 3 cm — modest, non-massive organ enlargement)",
+        "hypothesis": "Arboviral / other viral encephalitis",
+        "url": "https://emedicine.medscape.com/article/1166498-clinical",
+        "quote": "The initial episode of CTFV (Colorado tick fever virus) infection includes fever, chills, headaches, photophobia, myalgia, malaise, abdominal pain, hepatosplenomegaly, nausea and vomiting, and a rash.",
+        "derived_weight_db": 1,
+        "rationale": "Hepatosplenomegaly is reported with only certain specific arboviral infections (e.g., Colorado tick fever) and is not a general feature of viral/arboviral encephalitis. Barely supportive (+1 dB). Most arboviral encephalitides do not feature prominent organomegaly, so the finding is close to neutral for this hypothesis."
+      }
+    ],
+    "ground_truth": "Neurobrucellosis (confirmed by Brucella serology + culture, held aside)."
+  }
+}

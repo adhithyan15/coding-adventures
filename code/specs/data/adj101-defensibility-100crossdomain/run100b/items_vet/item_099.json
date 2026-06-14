@@ -1,0 +1,8 @@
+{
+ "idx": 99,
+ "policy": "Medical treatment for a compensable injury must be pre-authorized by the insurer, except for emergency treatment necessary to prevent death or serious impairment, which does not require pre-authorization and must be reimbursed.",
+ "scenario": "After a beam crushed Owen's leg at the job site, paramedics rushed him to the ER, where surgeons performed emergency surgery that night to stop life-threatening blood loss and save the limb. No one obtained the insurer's pre-authorization before the surgery. The insurer later argued the surgery was unauthorized.",
+ "question": "Must the insurer reimburse the cost of Owen's emergency surgery?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "must be reimbursed"
+}

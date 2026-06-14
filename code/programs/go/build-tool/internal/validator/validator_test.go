@@ -177,6 +177,33 @@ func TestValidateBuildFilesFailsHiddenReference(t *testing.T) {
 	}
 }
 
+func TestValidateBuildFilesSkipsUnknownLanguagePackages(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "unknown/a", relPath: "code/packages/custom/a", lang: "unknown"},
+		{
+			name:    "unknown/b",
+			relPath: "code/packages/custom/b",
+			lang:    "unknown",
+			commands: []string{
+				`cd ../a && custom-build-tool test`,
+			},
+		},
+	})
+
+	graph := directedgraph.New()
+	graph.AddNode("unknown/a")
+	graph.AddNode("unknown/b")
+
+	if err := ValidateBuildFiles(pkgs, graph); err != nil {
+		t.Fatalf("expected unknown packages to be ignored, got %v", err)
+	}
+}
+
 func TestValidateBuildFilesIgnoresSelfReference(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string

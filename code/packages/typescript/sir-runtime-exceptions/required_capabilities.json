@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/sir-runtime-exceptions",
+  "capabilities": [],
+  "justification": "Pure in-process exception runtime helpers (SIR exception base class, raise helper, rescue-clause class matching against a built-in ancestry table). No filesystem, network, process, or environment access."
+}

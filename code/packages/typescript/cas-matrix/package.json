@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/cas-matrix",
+  "version": "0.1.0",
+  "description": "Pure TypeScript matrix helpers over symbolic IR expressions",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["cas", "matrix", "linear-algebra", "browser"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/cas-solve": "file:../cas-solve",
+    "@coding-adventures/symbolic-ir": "file:../symbolic-ir",
+    "matrix": "file:../matrix"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}

@@ -13,6 +13,12 @@ This crate composes the lower-level WASM packages into a single, user-facing API
               parser)         validator)
 ```
 
+As of 0.3.0 the runtime also runs **WasmGC struct modules**: when a parsed
+module declares struct types (e.g. the `$LispyPair` cons cell emitted for
+McCarthy Lisp), `call` derives each struct's field count and registers it with
+the execution engine automatically, so `(CAR (CONS 7 9))` parses, instantiates,
+and runs to `7` with no manual setup (LANG77 / McCarthy L3b-3a-3c-2).
+
 ## Dependencies
 
 - `wasm-leb128` — LEB128 decoder used by the parser

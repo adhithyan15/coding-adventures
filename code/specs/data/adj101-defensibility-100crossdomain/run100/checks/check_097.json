@@ -1,0 +1,8 @@
+{
+ "check_id": 97,
+ "idx": 42,
+ "slot": "dwelling_insured_value",
+ "claimed_value": 300000,
+ "scenario": "A windstorm tore shingles off an insured home, and the assessed covered roof loss is $15,000. The policy is in force and windstorm is a covered peril.",
+ "cited_span": "the dwelling's insured value of $300,000"
+}

@@ -1,0 +1,10 @@
+[package]
+name = "smart-home-capability-cage"
+version = "0.1.0"
+edition = "2021"
+description = "Smart-home worker capability-cage policy projections"
+license = "MIT"
+
+[dependencies]
+capability-cage = { path = "../capability-cage" }
+smart-home-core = { path = "../smart-home-core" }

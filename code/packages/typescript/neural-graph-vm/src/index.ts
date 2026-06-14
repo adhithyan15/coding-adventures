@@ -1,0 +1,45 @@
+export {
+  NeuralGraphCompileError,
+  applyNeuralActivation,
+  compileNeuralNetworkToBytecode,
+  compileNeuralGraphToBytecode,
+  runNeuralBytecodeForward,
+  runNeuralBytecodeForwardWithTrace,
+  type NeuralBytecodeForwardTrace,
+  type NeuralBytecodeFunction,
+  type NeuralBytecodeInstruction,
+  type NeuralBytecodeInstructionTrace,
+  type NeuralBytecodeModule,
+  type NeuralBytecodeOpcode,
+  type NeuralBytecodeOutputWrite,
+  type NeuralBytecodeValueRead,
+  type NeuralBytecodeValueWrite,
+} from "./neural-graph-vm.js";
+
+export {
+  AsyncTypeScriptMatrixBackend,
+  TypeScriptMatrixBackend,
+  compileBytecodeToMatrixPlan,
+  runNeuralMatrixForward,
+  runNeuralMatrixForwardAsync,
+  runNeuralMatrixForwardScalars,
+  type AsyncNeuralMatrixBackend,
+  type MatrixBackend,
+  type NeuralMatrixForwardResult,
+  type NeuralMatrixInputValue,
+  type NeuralMatrixInputs,
+  type NeuralMatrixPlan,
+  type NeuralMatrixPlanInstruction,
+  type NeuralMatrixPlanOpcode,
+  type NeuralMatrixPlanTerm,
+} from "./matrix-plan.js";
+
+export {
+  WebGpuMatrixBackend,
+  createWebGpuMatrixBackend,
+  getNavigatorGpu,
+  type WebGpuActivationName,
+  type WebGpuLike,
+  type WebGpuMatrix,
+  type WebGpuMatrixBackendOptions,
+} from "./webgpu-matrix-backend.js";

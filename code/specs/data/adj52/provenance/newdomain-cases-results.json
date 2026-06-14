@@ -1,0 +1,98 @@
+{
+  "per_domain": [
+    {
+      "domain": "strep",
+      "target": "group A streptococcal pharyngitis",
+      "prep": {
+        "observations": [
+          "tonsillar_exudate(present)",
+          "history_of_fever(present)",
+          "cough(absent)",
+          "age(under_15)",
+          "throat_culture(positive)"
+        ],
+        "observations_pretest": [
+          "tonsillar_exudate(present)",
+          "history_of_fever(present)",
+          "cough(absent)",
+          "age(under_15)"
+        ],
+        "findings_not_in_vocab": [
+          "right-sided submandibular lymphadenopathy present but tenderness not documented so tender_anterior_cervical_nodes could not be affirmed",
+          "poor feeding / reduced oral intake as infant constitutional symptom",
+          "infant age specifically 62 days, a rare host for GAS pharyngitis",
+          "mild pharyngeal erythema distinct from tonsillar exudate",
+          "culture organism-level identification Streptococcus pyogenes confirmed by PYR-positive catalase-negative gram-positive cocci",
+          "maternal throat swab obtained as possible transmission source",
+          "no rhinorrhea or sneezing"
+        ],
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4976646/",
+        "target_present": "present",
+        "ground_truth": "Final diagnosis: Group A streptococcal (Streptococcus pyogenes) pharyngitis in a 62-day-old female infant. Established by throat swab culture on sheep blood agar which grew Streptococcus pyogenes after 24h incubation, confirmed as immobile, catalase-negative, oxidase-negative, gram-positive cocci that were pyrrolidonyl-arylamidase (PYR) positive. No rapid antigen detection test was performed; culture was the sole confirmatory modality. Disposition: treated with 200,000 units of penicillin intramuscularly; fever resolved the following day. The mother was also swabbed. Target (GAS pharyngitis) was present. Notable atypical host since strep pharyngitis is rare in infants under 1 year.",
+        "prose": "A 62-day-old female infant was brought in with a two-day history of fever and poor feeding. Over this period she had no sneezing and no coughing. On examination her rectal temperature was 38.5 degrees C, documented as high as 38.8. Examination of the oropharynx showed mild erythema with abundant dark exudates over the pharynx and the right tonsil. Examination of the neck revealed multiple right-sided submandibular lymph nodes, each about 1 by 1 cm in size. Throat swabs were obtained from both the infant and her mother and plated on sheep blood agar for culture. A confirmatory microbiological workup was initiated to establish the etiology of the pharyngitis and guide management.</prose>\n</invoke>\n"
+      },
+      "plain": {
+        "p_target": 0.2,
+        "most_likely_diagnosis": "Bacterial exudative pharyngitis/tonsillitis in a young infant \u2014 most likely group B Streptococcus (or another beta-hemolytic strep) acquired from the mother, rather than classic group A strep; awaiting culture and Lancefield grouping to confirm.",
+        "next_step": "Treat empirically while culture is pending: this febrile 2-month-old meets criteria for a serious bacterial infection workup. Obtain blood culture, CBC, CRP/procalcitonin, urinalysis/urine culture, and strongly consider LP, then start empiric IV antibiotics (e.g., ampicillin to cover beta-hemolytic strep including GBS/Listeria). Send the throat swab for culture WITH Lancefield grouping (A vs B vs C/G) and rapid GAS testing; culture the mother's swab in parallel to confirm a shared source.",
+        "would_treat_for_target": true,
+        "answer_text": "This infant has a clear exudative pharyngitis with ipsilateral submandibular nodes, and the clinical gestalt screams bacterial tonsillitis. The catch is age: at 62 days, classic group A strep (GAS) pharyngitis is genuinely uncommon \u2014 GAS is a disease of children over ~3 years, and young infants are relatively protected (maternal antibody, lack of pharyngeal receptors/prior priming). So while penicillin-class therapy is appropriate either way, I would NOT bet that this is specifically GAS.\\n\\nThe paired infant-and-mother swabs plated on sheep blood agar are the diagnostic tell: the team is hunting a transmissible, maternally-acquired beta-hemolytic organism and will Lancefield-group it. In a young infant, group B Streptococcus (S. agalactiae) is the more characteristic vertically/horizontally transmitted strep and is a leading candidate for this picture; non-group-A beta-hemolytic strep (C/G) and other organisms are also on the differential. Hence my p(GAS specifically) ~0.2 \u2014 plausible because the exudate is so classic, but down-weighted heavily by age and by the maternal-source framing.\\n\\nManagement does not wait on speciation. A febrile 62-day-old (T 38.5\u201338.8) falls into the young-infant serious-bacterial-infection category, so I would: (1) run the full sepsis workup \u2014 blood culture, CBC, CRP/procalcitonin, UA and urine culture, and seriously consider an LP given the age and ill appearance with poor feeding; (2) start empiric IV antibiotics now (ampicillin covers beta-hemolytic strep including GBS and also Listeria); (3) send the throat swab for culture with Lancefield grouping plus a rapid GAS test, and culture the mother's swab in parallel to establish a shared source. The grouping result is what cleanly separates GAS from GBS/other and confirms or refutes the target diagnosis.\\n\\nMost likely: maternally-transmitted bacterial exudative pharyngitis, probably a non-group-A (e.g., group B) beta-hemolytic streptococcus, pending culture. Treat empirically now regardless."
+      },
+      "ungrounded": {
+        "p_target": 0.002,
+        "cites_primary_numbers": false,
+        "answer_text": "P(group_a_strep_pharyngitis) ~= 0.002 (about 0.2%).\n\nBAYESIAN RULEBOOK (likelihood-ratio / odds form). LR values are my clinical judgement, NOT extracted primary sensitivity/specificity/OR figures.\n\nPrior: GAS as the etiology of pharyngitis in an infant <3 months old. GAS pharyngitis peaks at ages 5-15 and is rare under age 3; in infants under 3 months it appears only in isolated case reports. Prior probability set to ~0.005 (prior odds ~0.00503).\n\nFindings and assigned LRs:\n- Age 62 days (<3 mo): LR ~0.1 (strongly against; dominant negative \u2014 age-incongruent).\n- Fever 38.5-38.8C: LR ~1.3 (weakly for; nonspecific Centor element).\n- Pharyngeal/tonsillar exudate: LR ~1.5 (for in older children; less informative in infants).\n- \"Dark\" exudate morphology: LR ~0.8 (atypical for GAS, which is classically white/yellow; raises alternative dx).\n- Right submandibular/anterior cervical adenopathy (1x1 cm nodes): LR ~1.5 (Centor criterion).\n- Absence of cough: LR ~1.4 (Centor criterion).\n- Absence of sneezing/coryza: LR ~1.3 (argues against simple viral URI).\n\nCombine: combined LR = 0.1*1.3*1.5*0.8*1.5*1.4*1.3 ~= 0.43.\nPosterior odds = 0.00503 * 0.43 ~= 0.00214 -> posterior probability ~= 0.0021 (~0.2%).\n\nInterpretation: The exudate + adenopathy + fever + absent cough (Centor-like cluster) pull the probability upward, but they are partly offset by the atypical dark exudate and overwhelmed by the age incongruence (LR ~0.1). Centor criteria are not validated under age 3 and are essentially meaningless in a 2-month-old, and routine GAS testing is not recommended under age 3 because pretest probability is so low. The dark exudate, the maternal co-swab, and the \"confirmatory workup\" framing all point toward a non-GAS etiology. The question asks specifically for P(GAS pharyngitis), which remains very low (~0.2%) despite the superficially \"strep-like\" oropharyngeal picture.\n\ncites_primary_numbers = false: all LRs and the prior are plausible judgement-based values, not extracted from cited primary diagnostic-accuracy studies."
+      }
+    },
+    {
+      "domain": "meningitis",
+      "target": "bacterial meningitis",
+      "prep": {
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5562335/",
+        "ground_truth": "Final diagnosis: Invasive pneumococcal meningoencephalitis (bacterial meningitis due to Streptococcus pneumoniae). HOW ESTABLISHED: Lumbar puncture CSF analysis showed 1800 leucocytes/uL (mainly polynuclear), CSF lactate 16.6 mmol/L, protein 7300 mg/L, glucose <0.11 mmol/L; CSF Gram stain showed gram-positive diplococci; both CSF and blood cultures grew Streptococcus pneumoniae, confirmed by PCR. A presumed otogenic (right ear) source was identified. DISPOSITION: Hospital course complicated by status epilepticus (day 3) and transient left hemiplegia; treated with antibiotics, dexamethasone, and IV midazolam for seizures. Survived; transferred to neurological rehabilitation with improved Glasgow Coma Score of 10 and resolution of left-sided hemiparesis. Reported by Grzonka PS and Sutter R, Clinical Medicine Insights: Case Reports.",
+        "target_present": "present",
+        "prose": "A 65-year-old previously healthy man was brought to the emergency department with an acutely altered level of consciousness, initially raising suspicion for acute stroke. Several days earlier he had developed right ear pain. On arrival he was febrile (39 degrees C) and comatose, with a Glasgow Coma Score of 7. Serum C-reactive protein was markedly elevated at greater than 300 mg/L, while the peripheral white blood cell count was normal. Given the clinical picture of fever and depressed consciousness, an acute central nervous system infection was suspected and a lumbar puncture was performed.\n\nThe cerebrospinal fluid was abnormal. It contained 1800 leucocytes per microliter, described as mainly polynuclear (neutrophil-predominant). CSF lactate was markedly elevated at 16.6 mmol/L, and CSF protein was strikingly high at 7300 mg/L. CSF glucose was very low at less than 0.11 mmol/L. Gram staining of the cerebrospinal fluid demonstrated gram-positive diplococci.\n\nAt this point the clinical team faced the decision of whether this represented an acute bacterial meningitis requiring urgent targeted antimicrobial therapy versus an aseptic or viral process, and how aggressively to manage the patient.",
+        "observations": [
+          "csf_gram_stain(positive)",
+          "csf_neutrophilic_pleocytosis(high)",
+          "csf_glucose(low)",
+          "csf_protein(elevated)",
+          "csf_lactate(elevated)",
+          "seizure(present)",
+          "csf_culture(positive)"
+        ],
+        "observations_pretest": [
+          "csf_gram_stain(positive)",
+          "csf_neutrophilic_pleocytosis(high)",
+          "csf_glucose(low)",
+          "csf_protein(elevated)",
+          "csf_lactate(elevated)",
+          "seizure(present)"
+        ],
+        "findings_not_in_vocab": [
+          "Serum C-reactive protein markedly elevated (>300 mg/L)",
+          "Normal peripheral white blood cell count despite severe infection",
+          "Fever 39 degrees C",
+          "Coma / depressed level of consciousness (Glasgow Coma Score 7)",
+          "Preceding right ear pain suggesting otogenic source",
+          "Blood culture positive for Streptococcus pneumoniae",
+          "CSF PCR positive for Streptococcus pneumoniae",
+          "Status epilepticus and transient left-sided hemiplegia developing during hospital course",
+          "Very high absolute CSF leukocyte count (1800/uL)"
+        ]
+      },
+      "plain": {
+        "p_target": 0.99,
+        "most_likely_diagnosis": "Acute bacterial (pneumococcal) meningitis, otogenic source \u2014 Streptococcus pneumoniae from right-sided otitis/mastoiditis",
+        "next_step": "Start empiric IV ceftriaxone + vancomycin + adjunctive dexamethasone immediately (consider ampicillin for Listeria); intubate for airway (GCS 7), ICU admission, blood and CSF cultures, urgent CT temporal bones/mastoid, ENT consult for otogenic source.",
+        "would_treat_for_target": true,
+        "answer_text": "This is unambiguous acute bacterial meningitis, almost certainly pneumococcal, with an otogenic origin (right ear pain preceding the illness). The CSF is at the extreme pyogenic end on every axis: 1800 neutrophil-predominant leucocytes, lactate 16.6 mmol/L (normal <2.1; >3.5 strongly bacterial), protein 7.3 g/L, glucose effectively zero (<0.11 mmol/L \u2014 profound bacterial glucose consumption), and a positive Gram stain showing gram-positive diplococci = S. pneumoniae. None of this fits a viral/aseptic process, which would show a lymphocytic pleocytosis, normal glucose and lactate, and a negative Gram stain. The normal peripheral WBC despite CRP >300 does not lower my suspicion \u2014 in overwhelming sepsis in an older adult an inadequate WBC response is common and is actually a poor-prognostic marker.\n\np_target (bacterial vs viral) \u2248 0.99. I would treat immediately \u2014 this is a time-critical emergency where every hour of antibiotic delay worsens mortality and neurologic outcome. Empiric therapy should already be running: high-dose ceftriaxone plus vancomycin (to cover penicillin/cephalosporin-resistant pneumococcus) with adjunctive dexamethasone (proven mortality/hearing benefit in pneumococcal meningitis, give with or just before the first antibiotic dose); add ampicillin if Listeria is a consideration at age 65. The GCS of 7 mandates airway protection/intubation and ICU care. Because the source is otogenic, get an urgent CT of the head including temporal bones/mastoid to look for mastoiditis, subdural empyema, or abscess, involve ENT early for possible source control, and obtain blood cultures plus CSF culture/PCR/pneumococcal antigen."
+      },
+      "ungrounded": {
+        "p_target": 0.99,
+        "cites_primary_numbers": false,
+        "answer_text": "DIAGNOSIS: Acute bacterial meningitis (almost certainly pneumococcal \u2014 Streptococcus pneumoniae), most plausibly otogenic in origin given the antecedent right ear pain. p_target = 0.99.\n\nBAYESIAN RULEBOOK (priors and likelihood ratios assigned from clinical judgement, anchored qualitatively to the CSF-diagnostics literature; I did NOT transcribe exact sensitivity/specificity/OR values from a specific source, so cites_primary_numbers = false):\n\nPrior: pre-test probability ~0.25 (conditioned on \"adult with fever + acutely depressed consciousness, LP performed for suspected CNS infection\" \u2014 not a general-population rate).\n\nFindings and approximate LR+ (judgement):\n- CSF neutrophil-predominant pleocytosis, 1800 leucocytes/uL ........ LR+ ~15\n- CSF lactate 16.6 mmol/L (>>3.5 threshold) ........................ LR+ ~20 (CSF lactate is among the strongest single discriminators)\n- Profound hypoglycorrhachia, CSF glucose <0.11 mmol/L ............. LR+ ~12\n- CSF protein 7300 mg/L (markedly elevated) ........................ LR+ ~5\n- Gram stain: gram-positive diplococci ............................ LR+ ~100 (near-pathognomonic; this morphology = S. pneumoniae)\n- Otogenic source (right ear pain) + fever 39C + CRP >300 mg/L ..... LR+ ~3 (systemic bacterial infection with a portal of entry)\n\nCOMBINATION: Accumulating log-odds from prior 0.25, the naive independent product drives the posterior to ~0.99999. Because the CSF biochemistry/cytology findings are strongly correlated (they co-vary as one \"bacterial CSF pattern\"), I also computed a deliberately discounted model collapsing them into a single combined LR ~25, then multiplying by the independent Gram-stain channel (LR ~100) and the clinical/systemic channel (LR ~3): posterior ~0.9996. Both converge on near-certainty.\n\nI report p_target = 0.99 rather than >0.999 deliberately: the LRs are judgement-assigned, not extracted, and a small residual must be reserved for Gram-stain misread/contamination or atypical mimics.\n\nCLINICAL BOTTOM LINE: This is unambiguous acute bacterial meningitis, not an aseptic/viral process. The combination of neutrophilic pleocytosis, very high CSF lactate, profound hypoglycorrhachia, high protein, and gram-positive diplococci is the classic pneumococcal signature; viral/aseptic meningitis would show lymphocytic pleocytosis, normal/mildly raised lactate, and normal glucose. Management implication: this warrants immediate empiric urgent antimicrobials covering S. pneumoniae (e.g., a third-generation cephalosporin such as ceftriaxone/cefotaxime plus vancomycin to cover resistant pneumococcus) with adjunctive dexamethasone in adults with suspected pneumococcal meningitis, plus prompt ENT/imaging evaluation of the otogenic source (mastoiditis/otitis with possible intracranial extension) \u2014 do not wait for culture confirmation given GCS 7 and coma."
+      }
+    }
+  ]
+}

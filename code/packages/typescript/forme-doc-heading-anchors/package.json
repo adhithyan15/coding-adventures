@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-doc-heading-anchors",
+  "version": "0.1.0",
+  "description": "Walk a document-ast DocumentNode and generate URL-safe slug IDs for every heading.  Returns a new AST whose HeadingNodes carry an `id` field, plus a flat list of {heading, id, text, level} entries for downstream consumers (TOC builder, deep-link renderer).  Deterministic GitHub-style slug derivation; in-document collisions get -2/-3/… suffixes.  DOC00 v0 content-pipeline package.  Pure transform: capabilities [].",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "mosaic-compile",
+  "display_name": "Mosaic Compile",
+  "description": "Compile a .mosaic component file to a target output format.\n\nReads the unified .mosaic file format (interface + layout + style in one file)\nand emits to the specified backend.\n\nAlso supports a `pkg` subcommand for compiling an entire Mosaic component\npackage (a directory with mosaic-package.toml + src/) per UI29 §4.3.",
+  "version": "0.1.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "backend",
+      "long": "backend",
+      "short": "b",
+      "description": "Output backend: 'webcomponent' (Custom Element JS) or 'html' (static HTML file)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "output",
+      "long": "output",
+      "short": "o",
+      "description": "Output file path (default: <ComponentName>.js or <ComponentName>.html)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "fixtures",
+      "long": "fixtures",
+      "short": "f",
+      "description": "Path to a JSON fixture file providing slot values (for --backend html)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "css",
+      "long": "css",
+      "short": "c",
+      "description": "Path to a CSS file to inline in the HTML output (for --backend html)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "interface",
+      "long": "interface",
+      "description": "Path to a .mil mosmodel interface file (three-file pipeline mode)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "layout",
+      "long": "layout",
+      "description": "Path to a .mll moslayout file (three-file pipeline mode). If this points at a DIRECTORY (UI30 multi-layout), the file is resolved as <Component>.<variant>.mll inside it, with fallback to bare <Component>.mll. The component name comes from the --interface file's component declaration; --variant picks the variant.",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "style",
+      "long": "style",
+      "description": "Path to a .msl mosstyle file (three-file pipeline mode)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "variant",
+      "long": "variant",
+      "description": "UI30 layout variant name (e.g. desktop, touch, tablet, tv, print). Only meaningful when --layout points at a directory — resolves <Component>.<variant>.mll inside. Falls back to bare <Component>.mll if the variant file isn't found. Omitting --variant is equivalent to --variant default (= bare <Component>.mll). Ignored with a warning when --layout points at a file.",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "emit-project",
+      "long": "emit-project",
+      "description": "For --backend xaml: also emit a full WinUI 3 host shell (csproj + App + MainWindow + manifest + build.ps1 + README) next to the component triple. Resulting directory is buildable as-is.",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "id": "package-manifest",
+      "long": "package-manifest",
+      "description": "Optional path to a `mosaic-package.toml` that the current .mil/.mll/.msl belongs to. When set, the backend's component-reference resolver auto-registers every name in `[components].exports` so the .mll can reference sibling components from the same package (e.g. Field referencing Input).",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "package-search-path",
+      "long": "package-search-path",
+      "description": "UI34 — colon-separated list of directories to search for mosaic-package.toml manifests. Used by the package-reference resolver to locate packages named in `pkg::P::C` references. Defaults to `code/packages/` relative to the current working directory; set this when invoking mosaic-compile from a different root.",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "arguments": [
+    {
+      "id": "source",
+      "name": "SOURCE",
+      "description": "Path to the .mosaic source file to compile (legacy single-file mode). Omit when using --interface/--layout/--style or the `pkg` subcommand.",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "commands": [
+    {
+      "id": "pkg",
+      "name": "pkg",
+      "description": "Compile every component in a Mosaic package to a per-backend artifact tree (UI29 §4.3).",
+      "flags": [
+        {
+          "id": "backend",
+          "long": "backend",
+          "short": "b",
+          "description": "Backend to compile for: 'react', 'swiftui', 'qt' (webcomponent / html return UnsupportedBackend)",
+          "type": "string",
+          "required": true
+        },
+        {
+          "id": "output",
+          "long": "output",
+          "short": "o",
+          "description": "Directory under which <backend>/ is created (mkdir -p applied)",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "arguments": [
+        {
+          "id": "package_root",
+          "name": "PACKAGE_ROOT",
+          "description": "Path to the package directory (must contain mosaic-package.toml)",
+          "type": "string",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

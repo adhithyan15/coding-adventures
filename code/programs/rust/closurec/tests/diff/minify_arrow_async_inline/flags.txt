@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_arrow_async_inline/input/a.js
+--compilation_level
+WHITESPACE_ONLY

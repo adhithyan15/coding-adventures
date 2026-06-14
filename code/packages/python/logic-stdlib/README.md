@@ -14,19 +14,41 @@ The first slice includes:
 - `heado(...)`
 - `tailo(...)`
 - `lasto(...)`
+- `lengtho(...)`
 - `listo(...)`
 - `membero(...)`
+- `msorto(...)`
+- `nth0_resto(...)`
+- `nth0o(...)`
+- `nth1_resto(...)`
+- `nth1o(...)`
 - `appendo(...)`
 - `selecto(...)`
 - `permuteo(...)`
 - `subsequenceo(...)`
 - `reverseo(...)`
+- `sorto(...)`
 
 ## Quick Start
 
 ```python
-from logic_engine import atom, conj, eq, logic_list, program, solve_all, solve_n, var
-from logic_stdlib import appendo, lasto, listo, membero, permuteo, reverseo, subsequenceo
+from logic_engine import atom, conj, eq, logic_list, num, program, solve_all, solve_n, var
+from logic_stdlib import (
+    appendo,
+    lasto,
+    lengtho,
+    listo,
+    membero,
+    msorto,
+    nth0_resto,
+    nth0o,
+    nth1_resto,
+    nth1o,
+    permuteo,
+    reverseo,
+    sorto,
+    subsequenceo,
+)
 
 X = var("X")
 Prefix = var("Prefix")
@@ -78,6 +100,48 @@ assert solve_all(
     X,
     lasto(logic_list(["tea", "cake", "jam"]), X),
 ) == [atom("jam")]
+
+assert solve_all(
+    program(),
+    X,
+    lengtho(logic_list(["tea", "cake", "jam"]), X),
+) == [num(3)]
+
+assert solve_all(
+    program(),
+    Order,
+    sorto(logic_list(["tea", "cake", "tea"]), Order),
+) == [logic_list(["cake", "tea"])]
+
+assert solve_all(
+    program(),
+    Order,
+    msorto(logic_list(["tea", "cake", "tea"]), Order),
+) == [logic_list(["cake", "tea", "tea"])]
+
+assert solve_all(
+    program(),
+    X,
+    nth0o(1, logic_list(["tea", "cake", "jam"]), X),
+) == [atom("cake")]
+
+assert solve_all(
+    program(),
+    X,
+    nth1o(2, logic_list(["tea", "cake", "jam"]), X),
+) == [atom("cake")]
+
+assert solve_all(
+    program(),
+    (X, Order),
+    nth0_resto(1, logic_list(["tea", "cake", "jam"]), X, Order),
+) == [(atom("cake"), logic_list(["tea", "jam"]))]
+
+assert solve_all(
+    program(),
+    (X, Order),
+    nth1_resto(2, logic_list(["tea", "cake", "jam"]), X, Order),
+) == [(atom("cake"), logic_list(["tea", "jam"]))]
 
 assert solve_all(
     program(),

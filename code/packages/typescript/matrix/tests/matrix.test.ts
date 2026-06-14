@@ -1,4 +1,10 @@
-import { Matrix } from "../src/matrix";
+import {
+  Matrix,
+  getMatrixBackend,
+  resetMatrixBackend,
+  setMatrixBackend,
+  type MatrixBackend,
+} from "../src/matrix";
 
 // ─── Original Base Tests ─────────────────────────────────────────────
 
@@ -52,6 +58,53 @@ describe("Matrix Base Operations", () => {
     expect(F.data).toEqual([[32.0]]);
 
     expect(() => A.dot(E)).toThrow("Dot product inner dimensions strictly mismatch.");
+  });
+});
+
+describe("Matrix Backend", () => {
+  afterEach(() => {
+    resetMatrixBackend();
+  });
+
+  it("uses the pure JS CPU backend by default", () => {
+    const backend = getMatrixBackend();
+    expect(backend.name).toBe("cpu");
+    expect(backend.dot(
+      new Matrix([[1, 2]]),
+      new Matrix([[3], [4]]),
+    ).data).toEqual([[11]]);
+  });
+
+  it("allows hosts to install a compatible backend", () => {
+    const calls: string[] = [];
+    const base = getMatrixBackend();
+    const backend: MatrixBackend = {
+      name: "test-backend",
+      add(left, right) {
+        calls.push("add");
+        return base.add(left, right);
+      },
+      subtract(left, right) {
+        calls.push("subtract");
+        return base.subtract(left, right);
+      },
+      scale(matrix, scalar) {
+        calls.push("scale");
+        return base.scale(matrix, scalar);
+      },
+      transpose(matrix) {
+        calls.push("transpose");
+        return base.transpose(matrix);
+      },
+      dot(left, right) {
+        calls.push("dot");
+        return base.dot(left, right);
+      },
+    };
+
+    setMatrixBackend(backend);
+    expect(getMatrixBackend().dot(new Matrix([[2]]), new Matrix([[5]])).data).toEqual([[10]]);
+    expect(calls).toEqual(["dot"]);
   });
 });
 

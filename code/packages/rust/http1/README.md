@@ -8,6 +8,8 @@
 - Ordered header parsing that preserves duplicates
 - Head/body boundary detection with `body_offset`
 - Body framing detection for `none`, `content-length`, `until-eof`, and `chunked`
+- Redacted request/response head summaries for telemetry without target,
+  header, reason, or body text
 - Validation errors for malformed start lines, headers, status codes, and `Content-Length`
 
 ## How It Fits The Stack

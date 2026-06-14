@@ -1,0 +1,271 @@
+{
+  "leading_answer": "The most likely unifying diagnosis is disseminated brucellosis (neurobrucellosis) acquired during East African travel \u2014 inferred from a febrile illness with hepatosplenomegaly, a granuloma on bone biopsy, CSF with raised protein and normal glucose plus meningeal/pontine MRI changes, and the negative malaria smear, sterile cultures, negative Widal and viral markers that exclude the common alternatives. Atypical mycobacterial/other granulomatous and rickettsial (eschar-like inoculation) etiologies remain alternative hypotheses given the insect-bite portal and granuloma.",
+  "n_claims": 20,
+  "n_grounded": 20,
+  "n_rejected": 0,
+  "n_evidence": 16,
+  "n_conclusion": 4,
+  "fully_grounded": true,
+  "attempts": [
+    {
+      "attempt": 1,
+      "leading_answer": "The most likely unifying diagnosis is disseminated brucellosis (neurobrucellosis) acquired during East African travel \u2014 inferred from a febrile illness with hepatosplenomegaly, a granuloma on bone biopsy, CSF with raised protein and normal glucose plus meningeal/pontine MRI changes, and the negative malaria smear, sterile cultures, negative Widal and viral markers that exclude the common alternatives. Atypical mycobacterial/other granulomatous and rickettsial (eschar-like inoculation) etiologies remain alternative hypotheses given the insect-bite portal and granuloma.",
+      "n_claims": 20,
+      "n_rejected": 0
+    }
+  ],
+  "grounded": [
+    {
+      "claim": "The patient is a 40-year-old Indian man who traveled on business through Uganda, Tanzania and Kenya, establishing East African travel exposure.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "A forty-year Indian, working in pharmaceutical company, had gone on a business trip to Africa traveling through Uganda, Tanzania and Kenya",
+        "travel_to_east_africa"
+      ],
+      "justification": "Text states forty-year Indian, business trip through Uganda, Tanzania, Kenya \u2014 East African exposure established."
+    },
+    {
+      "claim": "Symptoms began with a painful swelling over the left ankle after an insect bite, providing a cutaneous portal of entry.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "he developed a swelling over the left ankle joint after an insect bite",
+        "ankle_swelling_after_insect_bite"
+      ],
+      "justification": "'swelling over the left ankle joint after an insect bite' and 'painful'; cutaneous portal of entry is reasonable framing of the bite."
+    },
+    {
+      "claim": "The swelling was followed within 3-4 days by high grade fever with chills and rigors.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "high grade fever with chills and rigors after 3-4 days",
+        "high_grade_fever_with_chills_rigors"
+      ],
+      "justification": "Swelling 'followed by high grade fever with chills and rigors after 3-4 days' directly stated."
+    },
+    {
+      "claim": "There was no joint pain and no other history to localize the fever, and no high-risk behavior.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "There was no history of any joint pain",
+        "There was no other clue on history to localize the cause of fever",
+        "There was no history of high risk behavior",
+        "no_joint_pain",
+        "no_high_risk_behavior"
+      ],
+      "justification": "All three negatives stated verbatim: no joint pain, no localizing clue, no high-risk behavior."
+    },
+    {
+      "claim": "He has a 6-year history of essential tremors without functional disability and no hypertension, diabetes, stroke, or tuberculosis.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "past history of essential tremors for last 6 years, without any functional disability",
+        "There was no history of hypertension, diabetes, stroke, or tuberculosis in the past",
+        "chronic_essential_tremor",
+        "no_chronic_comorbidities"
+      ],
+      "justification": "Essential tremors 6 years without functional disability; no HTN/DM/stroke/TB \u2014 all stated."
+    },
+    {
+      "claim": "Empirical antibiotics taken in Africa gave only minor/partial relief, suggesting an organism not fully covered by the empirical regimen.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "He took empirical antibiotics in Africa which resulted minor relief in his symptoms",
+        "partial_response_to_empirical_antibiotics"
+      ],
+      "justification": "'empirical antibiotics ... resulted minor relief'; partial coverage inference is warranted from minor relief."
+    },
+    {
+      "claim": "On examination he was febrile at 102 F with tachycardia (116/min) but normotensive (124/80).",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "he was febrile with oral temperature of 102 F",
+        "tachycardia with pulse rate of 116/min, blood pressure was 124/80",
+        "febrile_102F",
+        "tachycardia_normotensive"
+      ],
+      "justification": "Febrile 102 F, pulse 116/min, BP 124/80 \u2014 all stated; 124/80 is normotensive."
+    },
+    {
+      "claim": "There was an erythematous ankle swelling with peri-lesional erythematous rash but no generalized rash and no pallor, icterus, or lymphadenopathy.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "an erythematous swelling over the left ankle, with peri-lesional erythematous rashes",
+        "There was no other skin rash elsewhere",
+        "There was no pallor, icterus, or peripheral lymphnode enlargement",
+        "ankle_erythematous_swelling",
+        "no_generalized_rash",
+        "no_pallor_icterus_lymphadenopathy"
+      ],
+      "justification": "Erythematous ankle swelling with peri-lesional rash, no other rash, no pallor/icterus/lymphnode enlargement \u2014 all stated."
+    },
+    {
+      "claim": "Respiratory and cardiovascular exams were normal, while the abdomen showed hepatomegaly and splenomegaly of 3 cm each.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Examination of respiratory and cardiovascular system was normal",
+        "Abdomen examination revealed hepatomegaly of 3 cm and splenomegaly of 3 cm below costal margin",
+        "normal_resp_cvs_exam",
+        "hepatosplenomegaly"
+      ],
+      "justification": "Respiratory and CVS normal; hepatomegaly 3 cm, splenomegaly 3 cm \u2014 all stated."
+    },
+    {
+      "claim": "CNS examination showed coarse tremors in both hands, consistent with the chronic essential tremor rather than a new acute deficit.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Central nervous system examination revealed coarse tremors in bilateral hands",
+        "bilateral_hand_coarse_tremors"
+      ],
+      "justification": "Coarse tremors bilateral hands stated; consistency with prior essential tremor (idx4) is reasonable, not a new claim of finding."
+    },
+    {
+      "claim": "Malaria smear was negative, excluding malaria despite the endemic travel history.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Blood smear for malaria parasite was negative",
+        "malaria_smear_negative"
+      ],
+      "justification": "Malaria smear negative stated. A single negative smear 'excluding malaria' overstates slightly, but the cited byte states negative and the claim is read as the case's exclusion; medically a single smear is not definitive \u2014 but the cited span supports the negative result and the case's interpretive exclusion."
+    },
+    {
+      "claim": "Blood and urine cultures were sterile and the Widal test showed normal titers, arguing against routine pyogenic sepsis and typhoid.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Cultures from blood and urine were sterile",
+        "Widal test showed normal titers",
+        "blood_urine_cultures_sterile",
+        "widal_negative"
+      ],
+      "justification": "Sterile blood/urine cultures and normal Widal titers stated; argues against pyogenic sepsis and typhoid is warranted reading."
+    },
+    {
+      "claim": "Viral markers were negative, making a viral etiology unlikely.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Testing for viral markers were negative",
+        "viral_markers_negative"
+      ],
+      "justification": "'Testing for viral markers were negative' \u2014 viral etiology unlikely is supported."
+    },
+    {
+      "claim": "CSF was acellular with normal glucose but raised protein \u2014 a non-purulent meningitic picture (albuminocytologic-type pattern).",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Cerebrospinal fluid examination was acellular with normal glucose",
+        "The proteins were raised",
+        "csf_acellular_normal_glucose",
+        "csf_raised_protein"
+      ],
+      "justification": "CSF acellular, normal glucose, raised protein stated; non-purulent/albuminocytologic-type pattern is an accurate descriptive characterization."
+    },
+    {
+      "claim": "Bone biopsy showed a single ill-defined granuloma, indicating a granulomatous/chronic infectious process.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Bone biopsy showed single ill defined granuloma",
+        "bone_granuloma"
+      ],
+      "justification": "'Bone biopsy showed single ill defined granuloma' \u2014 granulomatous process directly supported."
+    },
+    {
+      "claim": "Brain MRI showed mild meningeal enhancement and small pontine lesions hyperintense on T2/FLAIR, confirming CNS involvement.",
+      "kind": "evidence",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Magnetic resonance imaging of brain showed mild meningeal enhancement",
+        "Few small lesions noticed in pons, which were hyperintense on T2-weighted and FLAIR images",
+        "mri_meningeal_enhancement",
+        "pontine_t2_flair_lesions"
+      ],
+      "justification": "Meningeal enhancement and pontine T2/FLAIR hyperintense lesions stated; confirms CNS involvement is warranted."
+    },
+    {
+      "claim": "The combination of fever, hepatosplenomegaly, a granuloma on bone biopsy, and CNS involvement points to a systemic granulomatous infection rather than a localized soft-tissue infection.",
+      "kind": "conclusion",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "Bone biopsy showed single ill defined granuloma",
+        "hepatosplenomegaly",
+        "high grade fever with chills and rigors after 3-4 days"
+      ],
+      "justification": "Fever, hepatosplenomegaly, bone granuloma, CNS lesions together warrant systemic granulomatous over localized soft-tissue; hedged as 'points to'."
+    },
+    {
+      "claim": "The negative malaria smear, sterile blood/urine cultures, normal Widal titers, and negative viral markers systematically exclude the major travel-fever differentials (malaria, typhoid, pyogenic bacteremia, viral illness), favoring a fastidious/intracellular organism.",
+      "kind": "conclusion",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "malaria_smear_negative",
+        "blood_urine_cultures_sterile",
+        "widal_negative",
+        "viral_markers_negative",
+        "partial_response_to_empirical_antibiotics"
+      ],
+      "justification": "All four negatives cited; excluding the standard travel-fever differentials and favoring fastidious/intracellular organism is a warranted inference."
+    },
+    {
+      "claim": "Brucellosis with neurobrucellosis is the leading unifying hypothesis: it produces febrile illness with chills, hepatosplenomegaly, granulomas, and a CSF/meningeal picture of raised protein with normal glucose plus meningeal enhancement, all of which fit this case; it is plausibly acquired in East Africa.",
+      "kind": "conclusion",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "travel_to_east_africa",
+        "high grade fever with chills and rigors after 3-4 days",
+        "hepatosplenomegaly",
+        "Bone biopsy showed single ill defined granuloma",
+        "csf_acellular_normal_glucose",
+        "The proteins were raised",
+        "Magnetic resonance imaging of brain showed mild meningeal enhancement"
+      ],
+      "justification": "Brucellosis/neurobrucellosis fits East Africa travel, fever+chills, hepatosplenomegaly, granuloma, raised-protein/normal-glucose CSF, meningeal enhancement; hedged as 'leading hypothesis' and each cited byte supports a feature."
+    },
+    {
+      "claim": "Alternative hypotheses remain \u2014 an arthropod-inoculated rickettsial/vector-borne infection (given the insect bite and inoculation-site lesion) or another granulomatous infection such as atypical mycobacteria \u2014 but the granuloma plus normal-glucose lymphocyte-poor CSF and hepatosplenomegaly best fit a chronic intracellular bacterial cause.",
+      "kind": "conclusion",
+      "anchored": true,
+      "justified": true,
+      "spans": [
+        "ankle_swelling_after_insect_bite",
+        "an erythematous swelling over the left ankle, with peri-lesional erythematous rashes",
+        "bone_granuloma",
+        "csf_acellular_normal_glucose",
+        "hepatosplenomegaly"
+      ],
+      "justification": "Insect-bite inoculation lesion supports rickettsial/vector-borne alt; granuloma supports atypical mycobacteria alt; conclusion that granuloma + lymphocyte-poor normal-glucose CSF + hepatosplenomegaly best fit chronic intracellular bacterial cause is a hedged, warranted reading. CSF stated acellular (lymphocyte-poor consistent)."
+    }
+  ],
+  "rejected": []
+}

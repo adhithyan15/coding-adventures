@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/matrix-rust-napi",
+  "version": "0.3.0",
+  "description": "Node.js N-API addon exposing the Rust matrix execution layer (matrix-ir, matrix-runtime, matrix-cpu) to JavaScript via the workspace node-bridge.  MX07 Phase 3 adds the build/smoke pipeline that produces the matrix_rust_napi.node artifact.",
+  "main": "matrix_rust_napi.node",
+  "license": "MIT",
+  "keywords": [
+    "matrix",
+    "tensor",
+    "neural-network",
+    "native",
+    "napi",
+    "n-api",
+    "addon",
+    "node-bridge",
+    "matrix-ir",
+    "matrix-runtime",
+    "matrix-cpu",
+    "ml-framework"
+  ],
+  "scripts": {
+    "build": "cargo build --release && (cp ../target/release/libmatrix_rust_napi.dylib matrix_rust_napi.node 2>/dev/null || cp ../target/release/libmatrix_rust_napi.so matrix_rust_napi.node 2>/dev/null || cp ../target/release/matrix_rust_napi.dll matrix_rust_napi.node 2>/dev/null || (echo 'matrix-rust-napi: no shared library found in ../target/release/'; exit 1))",
+    "smoke": "npm run build && node -e \"const m = require('./matrix_rust_napi.node'); if (typeof m.graphRoundTripJson !== 'function') throw new Error('graphRoundTripJson missing'); if (typeof m.runGraphOnCpu !== 'function') throw new Error('runGraphOnCpu missing'); if (typeof m.Graph !== 'function') throw new Error('Graph class missing'); if (typeof m.Runtime !== 'function') throw new Error('Runtime class missing'); console.log('matrix-rust-napi addon loaded; exports:', Object.keys(m).join(', '));\""
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

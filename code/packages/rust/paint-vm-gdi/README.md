@@ -46,13 +46,13 @@ assert_eq!(pixels.height, 100);
 | PaintLine     | Fully implemented |
 | PaintGroup    | Fully implemented |
 | PaintClip     | Fully implemented |
-| PaintGlyphRun | Planned |
-| PaintEllipse  | Planned |
-| PaintPath     | Planned |
-| PaintLayer    | Planned |
-| PaintGradient | Planned |
-| PaintImage    | Planned |
+| PaintGlyphRun | Fully implemented |
+| PaintEllipse  | Fully implemented |
+| PaintPath     | Fully implemented |
+| PaintLayer    | Fully implemented |
+| PaintGradient | Fully implemented for linear/radial fills and strokes |
+| PaintImage    | Fully implemented |
 
 ## Platform
 
-Windows only. On macOS use `paint-metal`, on Linux use `paint-vm-cairo` (future).
+Windows only. On macOS use `paint-metal`; on Linux use `paint-vm-cairo`.

@@ -1,0 +1,8 @@
+{
+ "check_id": 11,
+ "idx": 7,
+ "slot": "patient_authorized_disclosure",
+ "claimed_value": false,
+ "scenario": "During a session, Mr. Doyle, a competent adult outpatient, tells his psychiatrist Dr. Marsh in clear and credible terms that he intends to seriously harm his named coworker within the week. Mr. Doyle refuses to sign any release of his records and demands confidentiality.",
+ "cited_span": "Mr. Doyle refuses to sign any release of his records and demands confidentiality"
+}

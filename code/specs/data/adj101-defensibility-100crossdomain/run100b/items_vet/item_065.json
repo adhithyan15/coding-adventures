@@ -1,0 +1,8 @@
+{
+ "idx": 65,
+ "policy": "A pharmacist license applicant must complete at least 1,500 hours of supervised internship. Hours completed outside a board-approved internship site do not count toward the requirement.",
+ "scenario": "An applicant reports completing 1,740 hours of supervised pharmacy internship over the past year and submits the hour log with the application.",
+ "question": "Does the applicant satisfy the internship-hours requirement?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "site approval status not stated"
+}

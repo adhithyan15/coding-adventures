@@ -1,0 +1,110 @@
+[
+ {
+  "idx": 0,
+  "votes": [
+   "LEAP",
+   "LEAP",
+   "ENTAILED"
+  ],
+  "majority": "LEAP"
+ },
+ {
+  "idx": 1,
+  "votes": [
+   "ENTAILED",
+   "ENTAILED",
+   "ENTAILED"
+  ],
+  "majority": "ENTAILED"
+ },
+ {
+  "idx": 2,
+  "votes": [
+   "ENTAILED",
+   "ENTAILED",
+   "ENTAILED"
+  ],
+  "majority": "ENTAILED"
+ },
+ {
+  "idx": 3,
+  "votes": [
+   "ENTAILED",
+   "ENTAILED",
+   "ENTAILED"
+  ],
+  "majority": "ENTAILED"
+ },
+ {
+  "idx": 4,
+  "votes": [
+   "ENTAILED",
+   "ENTAILED",
+   "ENTAILED"
+  ],
+  "majority": "ENTAILED"
+ },
+ {
+  "idx": 5,
+  "votes": [
+   "ENTAILED",
+   "ENTAILED",
+   "ENTAILED"
+  ],
+  "majority": "ENTAILED"
+ },
+ {
+  "idx": 6,
+  "votes": [
+   "ENTAILED",
+   "ENTAILED",
+   "ENTAILED"
+  ],
+  "majority": "ENTAILED"
+ },
+ {
+  "idx": 7,
+  "votes": [
+   "ENTAILED",
+   "ENTAILED",
+   "ENTAILED"
+  ],
+  "majority": "ENTAILED"
+ },
+ {
+  "idx": 8,
+  "votes": [
+   "ENTAILED",
+   "LEAP",
+   "LEAP"
+  ],
+  "majority": "LEAP"
+ },
+ {
+  "idx": 9,
+  "votes": [
+   "ENTAILED",
+   "LEAP",
+   "ENTAILED"
+  ],
+  "majority": "ENTAILED"
+ },
+ {
+  "idx": 10,
+  "votes": [
+   "LEAP",
+   "ENTAILED",
+   "LEAP"
+  ],
+  "majority": "LEAP"
+ },
+ {
+  "idx": 11,
+  "votes": [
+   "ENTAILED",
+   "LEAP",
+   "LEAP"
+  ],
+  "majority": "LEAP"
+ }
+]

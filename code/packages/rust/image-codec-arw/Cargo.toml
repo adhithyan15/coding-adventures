@@ -1,0 +1,11 @@
+[package]
+name = "image-codec-arw"
+version = "0.1.0"
+edition = "2021"
+description = "Sony ARW RAW image codec"
+license = "MIT"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }
+paint-instructions = { path = "../paint-instructions" }
+image-codec-tiff = { path = "../image-codec-tiff" }

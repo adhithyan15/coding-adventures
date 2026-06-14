@@ -113,6 +113,84 @@ describe("edge operations", () => {
   }
 });
 
+describe("property bags", () => {
+  for (const repr of representations) {
+    it(`stores graph properties for ${repr}`, () => {
+      const graph = new Graph<string>(repr);
+      graph.setGraphProperty("name", "city-map");
+      graph.setGraphProperty("version", 1);
+      expect(graph.graphProperties()).toEqual({
+        name: "city-map",
+        version: 1,
+      });
+
+      graph.removeGraphProperty("version");
+      expect(graph.graphProperties()).toEqual({ name: "city-map" });
+    });
+
+    it(`stores and merges node properties for ${repr}`, () => {
+      const graph = new Graph<string>(repr);
+      graph.addNode("A", { kind: "input" });
+      graph.addNode("A", { trainable: false });
+      graph.setNodeProperty("A", "slot", 0);
+      expect(graph.nodeProperties("A")).toEqual({
+        kind: "input",
+        trainable: false,
+        slot: 0,
+      });
+
+      const copy = graph.nodeProperties("A");
+      copy.kind = "mutated";
+      expect(graph.nodeProperties("A").kind).toBe("input");
+
+      graph.removeNodeProperty("A", "slot");
+      expect(graph.nodeProperties("A")).toEqual({
+        kind: "input",
+        trainable: false,
+      });
+    });
+
+    it(`stores edge properties and treats weight as canonical for ${repr}`, () => {
+      const graph = new Graph<string>(repr);
+      graph.addEdge("A", "B", 2.5, { role: "distance" });
+
+      expect(graph.edgeProperties("A", "B")).toEqual({
+        role: "distance",
+        weight: 2.5,
+      });
+      expect(graph.edgeProperties("B", "A")).toEqual({
+        role: "distance",
+        weight: 2.5,
+      });
+
+      graph.setEdgeProperty("B", "A", "weight", 7);
+      expect(graph.edgeWeight("A", "B")).toBe(7);
+      expect(graph.edgeProperties("A", "B").weight).toBe(7);
+
+      graph.setEdgeProperty("A", "B", "trainable", true);
+      graph.removeEdgeProperty("A", "B", "role");
+      expect(graph.edgeProperties("A", "B")).toEqual({
+        trainable: true,
+        weight: 7,
+      });
+    });
+
+    it(`removes node and edge properties with their structure for ${repr}`, () => {
+      const graph = new Graph<string>(repr);
+      graph.addNode("A", { kind: "input" });
+      graph.addEdge("A", "B", 3, { role: "data" });
+
+      graph.removeEdge("A", "B");
+      expect(() => graph.edgeProperties("A", "B")).toThrow(/Edge not found/);
+
+      graph.addEdge("A", "B", 3, { role: "data" });
+      graph.removeNode("A");
+      expect(() => graph.nodeProperties("A")).toThrow(/Node not found/);
+      expect(() => graph.edgeProperties("A", "B")).toThrow(/Edge not found/);
+    });
+  }
+});
+
 describe("neighborhood queries", () => {
   for (const repr of representations) {
     it(`returns neighbors, weights, and degree for ${repr}`, () => {

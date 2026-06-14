@@ -1,0 +1,48 @@
+% ADJ52 case-21 program (this patient's observations + queries only; no rules).
+% 52yo man, 3 years of recurrent, stereotyped spells: pounding heartbeat, profuse
+% sweating, throbbing frontal headache, lightheadedness, a wave of nausea
+% occasionally ending in vomiting, feeling suddenly drained and shaky. Spells come
+% on shortly AFTER VOIDING (corroborated by patient + wife), building in the
+% minutes after micturition then settling. Denies dysuria, hematuria, syncope,
+% seizure, fever. Previously labeled panic/anxiety (started on an antidepressant),
+% then a chronic-headache-plus-anxiety syndrome, with a note to rule out secondary
+% causes. Broad labs unremarkable. Pelvic US: hypoechoic upper-anterior bladder-wall
+% lesion, scant peripheral flow. CT urography: polypoid antero-superior/dome
+% bladder mass, avid UNIFORM enhancement. Taken to OR for resection; shortly after
+% induction BP climbed abruptly to 175/105 (controlled with IV nitrate); a firm
+% nodular dome mass was found and a wedge (partial) cystectomy was carried out.
+
+% --- the correlated catecholamine-surge paroxysm (one syndrome; mechanism fires once) ---
+observe symptom(palpitations)
+observe symptom(profuse_sweating)
+observe symptom(throbbing_frontal_headache)
+observe symptom(lightheadedness)
+observe symptom(nausea)
+observe symptom_occasional(vomiting)
+observe symptom(drained_and_shaky)
+
+% --- the two near-pathognomonic mechanical-release triggers ---
+observe spell_trigger(post_voiding)
+observe intraop_event(hypertensive_crisis_on_manipulation)
+
+% --- spell tempo + imaging of the mass ---
+observe spell_pattern(recurrent_stereotyped)
+observe finding(polypoid_mass)
+observe contrast_enhancement(avid_uniform)
+observe mass_location(bladder_dome)
+observe finding(scant_peripheral_blood_flow)
+
+% --- pertinent negatives (argue against urothelial carcinoma) ---
+observe denies(hematuria)
+
+% --- the prior (mis)label ---
+observe prior_diagnosis(presumed_panic_anxiety_disorder)
+
+% NOT observed (open, decision-relevant): metanephrines(...) and histology(...)
+
+% --- queries: each candidate diagnosis + the recommended next step ---
+? diagnosis(bladder_paraganglioma)
+? diagnosis(urothelial_carcinoma)
+? diagnosis(panic_anxiety_disorder)
+? diagnosis(benign_bladder_lesion)
+? next_step(plasma_free_metanephrines_then_alpha_blockade)

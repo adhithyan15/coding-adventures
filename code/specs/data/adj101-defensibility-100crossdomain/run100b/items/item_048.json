@@ -1,0 +1,7 @@
+{
+ "idx": 48,
+ "id": "FOO-9",
+ "scenario": "A steakhouse serves a whole-muscle intact ribeye steak cooked to an internal temperature of 145 degrees F at the customer's request for medium-rare. A consumer advisory regarding undercooked meats is posted on the menu.",
+ "policy": "All TCS foods served to customers must be cooked to a minimum internal temperature of 165 degrees F, except whole-muscle intact beef steaks served at customer request, which may be cooked to 145 degrees F when a consumer advisory is posted.",
+ "question": "Does serving this steak comply with the cooking-temperature policy?"
+}

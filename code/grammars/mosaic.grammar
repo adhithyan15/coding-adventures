@@ -66,9 +66,9 @@ component_decl = KEYWORD NAME LBRACE { slot_decl } node_tree RBRACE ;
 
 slot_decl = KEYWORD NAME COLON slot_type [ EQUALS default_value ] SEMICOLON ;
 
-slot_type = KEYWORD
-          | NAME
-          | list_type ;
+slot_type = list_type
+          | KEYWORD
+          | NAME ;
 
 list_type = KEYWORD LANGLE slot_type RANGLE ;
 

@@ -1,0 +1,8 @@
+{
+ "check_id": 61,
+ "idx": 27,
+ "slot": "months_since_purchase",
+ "claimed_value": 20,
+ "scenario": "Carlos bought a laptop in a store located in the state of Greenfield 20 months ago. The motherboard failed due to a confirmed manufacturing defect, and he filed a claim. The manufacturer pointed to its 1-year warranty term.",
+ "cited_span": "bought a laptop in a store located in the state of Greenfield 20 months ago"
+}

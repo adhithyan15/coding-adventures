@@ -1,0 +1,535 @@
+# Changelog — iir-to-cil-bytecode
+
+## [0.18.0] — 2026-06-12 — byte-tape ops on real CoreCLR (LANG-MATRIX LM-C Brainfuck)
+
+Adds the lowering Brainfuck needs to run on the CLR backend's **textual `.il` path**
+(`emit_il`, assembled by real `ilasm` and run on real `dotnet`) — the **last code-gen
+cell** of the LANG-PLATFORM-MATRIX (after native/LLVM/WASM/JVM). Verified by RUNNING
+`++++++++[>++++++++<-]>+.` on real CoreCLR in `lang-aot/tests/lang_matrix.rs`: it
+prints `A`.
+
+`lower_brainfuck_for_aot` rewrites Brainfuck's tape into `alloc_bytes`/`load_byte`/
+`store_byte` and `concretize_scalar_any_for_cil` retypes the value model to `int32`
+(Brainfuck doesn't call `print_i64`, so it isn't kept at i64 — which is exactly what we
+want: the tape ops and `brfalse` conditions are all `int32`).
+
+### Added (in `il_text.rs::emit_il`)
+
+- **`alloc_bytes dest <- size`** → `ld<size>; newarr [System.Runtime]System.Byte;
+  st<dest>` — a zero-filled `unsigned int8[]` tape. `FnRegs::build` types an
+  `alloc_bytes` dest as `unsigned int8[]` (not the scalar `int32` its concretised hint
+  would give), so the `.locals` declaration matches the array access.
+- **`load_byte dest <- base, idx`** → `ld<base>; ld<idx>; ldelem.u1; st<dest>`.
+  `ldelem.u1` loads an *unsigned* byte (a cell value 200 reads as 200, not −56),
+  zero-extended to `int32`.
+- **`store_byte base, idx, val`** → `ld<base>; ld<idx>; ld<val>; stelem.i1`. `stelem.i1`
+  truncates to a byte — Brainfuck's 8-bit cell wrap-around for free. Rejects a `dest`.
+- **`call_builtin putchar`** → `ld<v>; ldc.i4 0xFF; and; conv.u2; call void
+  [System.Console]System.Console::Write(char)` — writes the cell as a *character* (so
+  `.` of 65 emits `A`, not `65`). Dest-less, handled before the dest lookup like
+  `print_i64`.
+- **`call_builtin getchar`** → `call int32 [System.Console]System.Console::Read()` →
+  dest (EOF `-1` truncates to `0xFF` at a later `store_byte`).
+
+### Changed
+
+- The `Run()` launcher's `prints` detection now also matches `putchar` (not just
+  `print_i64`), so a Brainfuck program **discards** `MccarthyEntry`'s `int32` result
+  (`pop`) instead of `Console.WriteLine`-ing it — otherwise the program would print both
+  its own output and its meaningless exit value (a double-print).
+
+CIL `brfalse`/`brtrue` test any integer width against zero, so the (int32) loop guard
+needs no special handling — unlike the JVM (`lcmp`) and wasm (`i64.eqz`) which had an
+i64 branch-condition ripple. Three new tests in `il_text.rs` cover the tape ops +
+putchar (with the launcher discard), `getchar`, and the `store_byte`-with-dest rejection.
+
+## [0.17.0] — 2026-06-12 — `print_i64` → `Console.WriteLine` + I/O launcher (LANG-MATRIX LM-C BASIC)
+
+The textual `.il` emitter gains the **`print_i64`** I/O primitive that Dartmouth
+BASIC's `PRINT` lowers to — previously `UnsupportedOp`. It has **no dest** (it's a side
+effect), so it's handled before the dest lookup: the value is loaded and handed to
+`call void [System.Console]System.Console::WriteLine(int32)` (the CLR analogue of the
+wasm `env.__print_i64` import / JVM `env.BasicRuntime.println(J)V`).
+
+The `Run()` launcher is now **I/O-aware**: an expression program still
+`Console.WriteLine`s the entry method's `int` result, but a program that calls
+`print_i64` has already written its own output as a side effect, so the launcher merely
+runs the entry and **discards** its (unused) `int32` return with `pop` — no double-print.
+
+Verified by RUNNING on real `ilasm` + `dotnet` (via `lang-aot`'s `lang_matrix` CLR
+column): BASIC `10 PRINT 42` → `Console` `42` (exactly once). New unit test asserts the
+single `Console.WriteLine` and the launcher `pop`. No change to expression-language
+output (the prior CIL suites + conformance stay green).
+
+## [0.16.0] — 2026-06-12 — integer arithmetic + comparison opcodes (LANG-MATRIX LM-C)
+
+The textual `.il` emitter (`il_text.rs`) grows two op families it previously rejected
+with `UnsupportedOp` — McCarthy only ever emitted a constant return, so arithmetic and
+comparison had never been needed until the LANG-MATRIX campaign ran the expression
+languages (Nib, Oct, ALGOL 60) on the real CLR:
+
+* **Binary integer arithmetic** `add` / `sub` / `mul` / `div` / `mod` → the CIL opcodes
+  `add` / `sub` / `mul` / `div` / `rem` (note `mod` → `rem`, signed remainder). Both
+  operands are loaded and the single opcode emitted; CoreCLR's `div`/`rem` raise on
+  divide-by-zero, matching the other backends' trap behaviour.
+* **Integer comparisons** `cmp_eq` / `cmp_ne` / `cmp_lt` / `cmp_le` / `cmp_gt` / `cmp_ge`
+  → a `0`/`1` `int32`. CIL has only `ceq` / `clt` / `cgt`; the other three relations are
+  the logical negation of one (`<primitive>; ldc.i4.0; ceq`). The result feeds either a
+  `st<dest>` or directly a `brfalse`/`brtrue`.
+
+Verified by RUNNING on real `ilasm` + `dotnet` (via `lang-aot`'s `lang_matrix` CLR
+column): Nib `double(21)`→42, Oct `if x == 1`→0, ALGOL `17 mod 5`→2. New unit tests
+assert the emitted opcodes for every arithmetic + comparison op. No change to existing
+behaviour (49 + 86 prior tests still green).
+
+## [0.15.0] — 2026-06-11 — textual `.il`: lambda / LABEL / recursion (CLR-real C5)
+
+`emit_il` becomes a **multi-function** emitter — the last McCarthy F-feature:
+
+- Every IIR function is now its own static `.method` (the entry → `MccarthyEntry`,
+  each hoisted lambda/label keeps its name `lambda_<n>`/`label_<n>`), with a CIL
+  signature derived from its IIR params/return type (a lambda returns `object`).
+- `call <dest> = <fn>(args…)` → a by-name `call <ret> <Class>::<m>(<argtys>)`;
+  `ilasm` resolves the token, so **self-recursive `LABEL`** is just a method calling
+  itself. A `call` to an unknown function is rejected (`UndefinedLabel`).
+- **Parameters** live in `ldarg`/`starg` slots (locals stay `ldloc`/`stloc`) — a new
+  `FnRegs` register model assigns argument slots to params and local slots to dests.
+- `is_null` → `ldnull; ceq`.
+- **`field_*` on an `object`-typed array operand** (a lambda parameter, vs a
+  freshly-`alloc`-ed `object[]`) now emits a `castclass object[]` before
+  `ldelem.ref`/`stelem.ref` — real CoreCLR's importer requires an array on the
+  stack, a constraint the lenient in-repo simulator never enforced (exactly the
+  class of bug this chapter exists to catch).
+
+**Security:** function names join labels as the IIR-supplied *strings* that reach
+the `.il` text (`.method`/`call`), so they go through the same fail-closed
+`[A-Za-z0-9_$]` identifier whitelist (`checked_cil_ident`, which `checked_label`
+now delegates to). New unit test `malicious_function_name_is_rejected_not_injected`.
+
+The resolved entry-point name (`entry_point` or the `"main"` fallback) is computed
+**once** via `entry_name` and used for every entry comparison (the existence check,
+the `MccarthyEntry` rename, `is_entry`, the `call` callee) so the launcher's
+hardcoded `call …::MccarthyEntry()` can never dangle when `entry_point` is `None`.
+
+Verified by RUNNING on real CoreCLR (`lang-aot/tests/clr_real_lambda.rs`):
+`((LAMBDA (X) X) 5)`→5, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
+`((LAMBDA (X Y) (EQ X Y)) 3 3)`→1, a COND-body lambda→100, and a recursive
+`LABEL` descending CARs→7. New unit tests `lambda_emits_second_method_param_ldarg_and_call`,
+`recursive_label_calls_itself_by_name`, `call_to_unknown_function_is_rejected`,
+`none_entry_point_falls_back_to_main_and_names_mccarthy_entry`.
+
+## [0.14.0] — 2026-06-11 — textual `.il`: symbols (CLR-real C4)
+
+**No new emit ops** — symbols reuse the existing value model. The shared
+`intern_symbols_structural` pass lowers each `(QUOTE S)` to a *tagged integer id*
+(`A` → `0x20000000`, `B` → `0x20000001`, …); on the CLR that id is just a boxed
+`System.Int32` atom, the exact scalar/predicate shape C1–C3 already emit. So
+`(EQ (QUOTE A) (QUOTE A))` is two equal `ldc.i4 536870912` consts, boxed, then
+`equal?`-unboxed + `ceq`; `(ATOM (QUOTE A))` is `not (pair? boxed-int)`. New unit
+test `symbol_eq_emits_tagged_id_consts_unboxed_and_compared` pins the value model;
+the real-CoreCLR proof is `lang-aot/tests/clr_real_symbols.rs`.
+
+## [0.13.0] — 2026-06-11 — textual `.il`: predicates + COND (CLR-real C3)
+
+`emit_il` grows the McCarthy predicate primitives and `COND` control flow:
+
+- `call_builtin "pair?"` → `isinst object[]; ldnull; ceq; ldc.i4.0; ceq` (a clean
+  0/1 bool: is the boxed value a cons cell?). Note the **textual** form is
+  `isinst object[]` — `ilasm` rejects an explicit `[System.Runtime]System.Object[]`
+  assembly scope in that position (syntax error), unlike the `newarr` element type.
+- `call_builtin "not"` → `ldc.i4.1; xor` (boolean negation of a 0/1 value).
+- `call_builtin "equal?"` → `unbox.any [System.Runtime]System.Int32` on both
+  operands + `ceq` (atom identity reduces to integer equality; symbols are interned
+  to ints upstream).
+- `COND` lowering: `label` → a `<name>:` anchor, `jmp` → `br <name>`,
+  `jmp_if_false` → `ldloc cond; brfalse <name>` (and `jmp_if_true` → `brtrue`).
+- `const` of a **reference** type (`ref<…>`) is the McCarthy nil — emit `ldnull`
+  (the canonical null `object[]`), never `ldc.i4 0`, which would be an ill-typed
+  store into an object-typed local. A non-zero reference constant is rejected.
+
+**Security:** branch-target / label names are the one IIR-supplied *string* (not a
+numeric slot) that reaches the `.il` text, so they are validated by a new
+`checked_label` helper — only `[A-Za-z0-9_$]` passes, anything else (newlines,
+braces, `.`-directives, `//` comments) is rejected as `InvalidOperand`. This closes
+a latent CIL-injection vector before the source-derived names of C4/C5 land. Unit
+test `malicious_label_name_is_rejected_not_injected`.
+
+Verified by RUNNING on real CoreCLR (`lang-aot/tests/clr_real_predicates.rs`):
+`(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(EQ 7 8)`→0,
+`(COND ((ATOM 7) 11) …)`→11, `(COND ((ATOM (CONS 1 2)) 11) ((EQ 5 5) 22))`→22. New
+unit tests: `atom_emits_isinst_xor_predicate_chain`, `eq_emits_double_unbox_then_ceq`,
+`cond_emits_branches_labels_and_nil_fallthrough`, `const_of_reference_type_rejects_non_nil`.
+
+## [0.12.0] — 2026-06-11 — textual `.il`: cons / car / cdr (CLR-real C2)
+
+`emit_il` grows the cons value model: `alloc` → `ldc.i4.2; newarr
+[System.Runtime]System.Object` (a McCarthy cons cell is a 2-element reference
+array), `box`/`unbox.any [System.Runtime]System.Int32` for integer atoms,
+`field_store` → `stelem.ref`, `field_load` → `ldelem.ref`. Locals are now typed
+per producing instruction — a cons cell local is `object[]`, a boxed atom `object`,
+a raw int `int32` (`cil_local_type`) — so `ilasm` verifies the program. Verified by
+RUNNING on real CoreCLR (`lang-aot/tests/clr_real_cons.rs`): `(CAR (CONS 7 9))`→7,
+`(CDR …)`→9, nested→2. New unit test `cons_car_emits_object_array_box_and_unbox`.
+
+## [0.11.0] — 2026-06-11 — textual `.il` emitter for the real-CoreCLR path (CLR-real C1)
+
+New `il_text` module + `emit_il(module, config) -> String`: emits **textual CIL**
+(`.il`) — the real-runtime counterpart to the binary `lower_iir_to_cil` (which feeds
+the in-repo `clr-simulator`). The `.il` is assembled by real `ilasm` into a loadable
+PE that runs on real `dotnet`, exactly as the LLVM backend emits textual `.ll` for
+real `clang`. Metadata ownership (PE headers + the `#~`/`#Strings`/`#Blob` streams +
+token resolution) is delegated to `ilasm` (no hand-rolled ECMA-335).
+
+C1 covers scalar McCarthy: the entry function's `const`/`mov`/`ret` →
+`ldc.i4`/`ldloc`/`stloc`/`ret`, wrapped in a `MccarthyEntry()` method plus a printing
+`.entrypoint` launcher. Every other op returns `UnsupportedOp`, so later slices grow
+the op match (cons, predicates, COND, symbols, lambda). New unit tests
+`scalar_emits_well_formed_il`, `unsupported_op_is_rejected_not_emitted`.
+
+## [0.10.0] — 2026-06-10 — McCarthy lambda: accept `call`/`ref<any>` (W8b, F7)
+
+The validator now accepts the `call` op with a `ref<any>` type — a lisp function
+call returns the callee's uniform-reference result. The `call` lowering already
+computed the `MethodDef` token + pushed args (boxed by the structural pass); this
+one-line allowlist addition lets McCarthy `(LAMBDA …)` applications validate and
+emit. `((LAMBDA (X) (CAR X)) (CONS 7 9))` → 7 on the `clr-simulator`.
+
+## [0.9.0] — 2026-06-10 — McCarthy predicates: ATOM / EQ / COND (W7, F3–F5)
+
+Lower the structural pass's `pair?`/`not`/`equal?` `call_builtin`s on the CLR:
+`pair?` → `isinst object[]; ldnull; ceq; ldc.i4.0; ceq`; `not` → `x ^ 1`;
+`equal?` → `unbox.any int32; unbox.any int32; ceq`. `COND` reuses the existing
+`jmp_if_true`/`jmp_if_false`. Whitelisted the three names in the validator.
+`(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(COND …)` all run on the
+`clr-simulator`. These are the CLR twins of the JVM `instanceof`/`ixor`/`if_icmpeq`.
+
+## [0.8.0] — 2026-06-10 — McCarthy cons: `box`/`unbox` lowering (W6b)
+
+Lower the shared structural pass's `box`/`unbox` ops: `box` → `ldloc ; box [int32] ; stloc`,
+`unbox` → `ldloc ; unbox.any [int32] ; stloc`. With the already-supported
+`alloc`/`field_*` (`newarr`/`stelem.ref`/`ldelem.ref` over `System.Object[]`),
+McCarthy **cons** runs: `(CAR (CONS 7 9))` → 7 on the in-repo `clr-simulator`.
+Removed `box`/`unbox` from `UNSUPPORTED_OPS`; the validator already accepted
+`ref<any>` and now lists `box`/`unbox` as heap ops.
+
+All notable changes to this crate are documented here.
+
+## [0.7.0] — 2026-06-01 (G4 — `print_i64` host call → `env.BasicRuntime::PrintI64(int64)`)
+
+### Added — `call_builtin "print_i64"` whitelisted and lowered
+
+Completes the cross-backend trio for BASIC's `PRINT`:
+
+| Backend                  | Builtin     | Target                                            |
+|--------------------------|-------------|---------------------------------------------------|
+| iir-to-wasm v0.8.0       | `print_i64` | `env.__print_i64` host import                     |
+| iir-to-jvm-class-file v0.7.0 | `print_i64` | `invokestatic env/BasicRuntime.println(J)V`   |
+| **iir-to-cil-bytecode v0.7.0 (this)** | `print_i64` | `call void env.BasicRuntime::PrintI64(int64)` |
+
+After this release, BASIC's PRINT lowers to real bytecode on all three
+non-BEAM backends — gap G4 (final gap in the `print_i64` group) of the
+[multi-language backend plan][plan].
+
+#### Validator changes (`src/validate.rs`)
+
+* `CALL_BUILTIN_SUPPORTED_NAMES` widened from `["putchar", "getchar"]`
+  to `["putchar", "getchar", "print_i64"]`.  Defence in depth unchanged:
+  every other name still fails with `UnsupportedOp`.
+
+#### Lowering changes (`src/lower.rs`)
+
+* New sentinel metadata token
+  `BASIC_PRINT_I64_TOKEN: u32 = 0x0A00_0005` (MemberRef row 5, next
+  after `BF_GETCHAR_TOKEN` @ row 4).  At link / sim time the token
+  resolves to `env.BasicRuntime::PrintI64(int64)`.
+* New `"print_i64"` arm in the `call_builtin` match:
+  ```
+  srcs = [Var("print_i64"), Var(val: i64)]   dest = None
+  →
+  ldloc val_slot          ; via emit_load (picks width from reg_info)
+  call <BASIC_PRINT_I64_TOKEN>
+  ```
+
+Why a dedicated host class (vs. reusing `env.BFRuntime`): BASIC's I/O
+is line/value oriented; Brainfuck's is byte-stream oriented.  Separate
+host classes let a CLR runtime / launcher stub or provide either one
+independently.
+
+#### Tests added (`tests/test_backend.rs`)
+
+* `g4_validator_accepts_print_i64`
+* `g4_validator_still_rejects_unknown_builtin`
+* `g4_lowers_print_i64_to_call_with_basic_token`
+
+[plan]: ../../../specs/MULTILANG-BACKEND-PLAN.md
+
+## [0.6.0] — 2026-05-26 (Validator accepts `ref<any>` + `mov` for ref types)
+
+### Changed — `ref<any>` widens the supported reference types; `mov` for refs
+
+Companion to Twig path-A increment 6c.  The Phase 2 heap-lowering
+convention is `field_load dest, pair, idx [ref<any>]`.  CLR lowers
+this to `ldelem.ref`, which returns `System.Object` — the same type
+cons-cell fields are declared as in the `System.Object[2]` Phase 2
+representation.
+
+Two validator changes:
+
+1. `ref<any>` is now accepted alongside `ref<LispyPair>`.
+2. `mov` is added to the list of supported ops for reference types
+   (matches the `emit_move` path that twig-ir-compiler uses to flow
+   a `ref<any>` value through a register-to-register copy).
+
+All other `ref<X>` types continue to be rejected.  No lowering
+changes — `ldelem.ref` and `stloc` already work for both types.
+
+## [0.5.0] — 2026-05-22 (Brainfuck — `byte[]` tape + I/O via env.BFRuntime)
+
+### Added — Brainfuck `load_mem` / `store_mem` / `call_builtin` lowering
+
+Stage 3 of 4 for the BF→{wasm,jvm,clr,beam} story.  Mirrors PR #3921
+(iir-to-wasm 0.4.0) and PR #3928 (iir-to-jvm-class-file 0.5.0) for the
+CLR target.  Lets BF's IIR — including `load_mem`, `store_mem`, and
+`call_builtin "putchar"`/`"getchar"` — flow through the same universal
+`iir-to-cil-bytecode` backend that Twig, BASIC, Oct, and Nib already
+use.
+
+#### Validator changes
+
+- `load_mem` and `store_mem` removed from `UNSUPPORTED_OPS` (previously
+  hard-rejected).  Both lower to CIL `ldelem.u1` / `stelem.i1` over a
+  host-provided byte array.
+- `call_builtin` is now **conditionally** accepted via a new
+  `CALL_BUILTIN_SUPPORTED_NAMES` whitelist (currently
+  `["putchar", "getchar"]`).  Unknown builtin names still produce a
+  clear `UnsupportedOp` error that includes the rejected name and the
+  whitelist.
+
+#### Lowering changes
+
+- Three new reserved metadata tokens referencing the simulated
+  `env.BFRuntime` host class:
+  - `BF_TAPE_TOKEN   = 0x0400_0001` — FieldRef row 1, the static `byte[] __tape`.
+  - `BF_PUTCHAR_TOKEN = 0x0A00_0003` — MemberRef row 3 (Console.WriteLine is row 2),
+    `void env.BFRuntime::putchar(int32)`.
+  - `BF_GETCHAR_TOKEN = 0x0A00_0004` — MemberRef row 4,
+    `int32 env.BFRuntime::getchar()`.
+- New `emit_instr` arms:
+  - `load_mem v ptr` → `ldsfld BF_TAPE_TOKEN; ldloc ptr; ldelem.u1;
+    stloc dest`.  `ldelem.u1` zero-extends the byte to int32 — matching
+    BF's u8 cell semantics without the sign-extension surgery the JVM
+    target requires after `baload`.
+  - `store_mem ptr v` → `ldsfld BF_TAPE_TOKEN; ldloc ptr; ldloc v;
+    stelem.i1`.  `stelem.i1` truncates the int32 to a byte, matching
+    BF's u8 wraparound.
+  - `call_builtin "putchar" v` → `ldloc v; call BF_PUTCHAR_TOKEN`.
+  - `call_builtin "getchar" -> v` → `call BF_GETCHAR_TOKEN; stloc v`.
+- Defense in depth: hand-crafted IIR that slips an unknown builtin
+  past the validator still hits a `UnsupportedOp` in `lower.rs`.
+
+#### Host class contract
+
+The CLR runtime / launcher (or PE packager) must provide `env.BFRuntime`:
+
+| Symbol                                       | Metadata token reserved | Notes                          |
+|----------------------------------------------|--------------------------|--------------------------------|
+| `public static byte[] __tape`                | FieldRef row 1           | typically 30 KB BF tape         |
+| `public static void putchar(int32)`          | MemberRef row 3          | write one byte to stdout        |
+| `public static int32 getchar()`              | MemberRef row 4          | read one byte; -1 / 0 on EOF     |
+
+This is the CLR analog of the WASM backend's `env` import namespace
+and the JVM backend's `env/BFRuntime` class — same model, different ABI.
+
+### Tests
+
+- 5 new validator unit tests (`load_mem_accepted_for_bf`,
+  `store_mem_accepted_for_bf`, `call_builtin_putchar_accepted`,
+  `call_builtin_getchar_accepted`,
+  `call_builtin_unknown_name_rejected`).
+- 33 lib + 83 integration tests pass.
+- 4 new BF→CLR e2e tests in
+  `brainfuck-iir-compiler/tests/clr_e2e.rs` assert exact byte
+  sequences for `call BF_PUTCHAR_TOKEN`, `ldsfld BF_TAPE_TOKEN`,
+  and `call BF_GETCHAR_TOKEN`.
+
+### Compatibility
+
+- Non-BF frontends (Twig, BASIC, Oct, Nib) unchanged.  Modules without
+  BF features get no `env.BFRuntime` token references, preserving CIL
+  byte-equivalence with pre-0.5.0 output.
+
+## [0.4.1] — 2026-05-13
+
+### Fixed (Multi-backend demo — fib(10)=55)
+
+- **`"mov"` opcode support** — added handling for the `mov` IIR instruction
+  (pre-lowered form of `call_builtin "_move"`).  The CLR lowerer now emits
+  the source operand load followed by a `stloc`/`starg` store, mirroring what
+  was already done for other copy-value instructions.
+
+## [0.4.0] — 2026-05-12
+
+### Added (LANG37 — CLR Closure Lowering)
+
+#### `int32[]`-based closure representation
+
+The CLR backend now supports first-class closures (LANG34 `alloc_closure` /
+`call_closure` opcodes) using an `int32[]` dispatch-table approach.
+
+A closure is represented as an `int32[]` array:
+- `closure[0]` — function dispatch index (alphabetical among closure targets)
+- `closure[1..n]` — captured values (all stored as `int32`)
+
+#### `alloc_closure` lowering
+
+`alloc_closure(Str("fn_name"), Var(cap0), …) : "closure"` lowers to:
+
+```cil
+ldc.i4 {n+1}              ; array size = 1 (idx) + n (captures)
+newarr [System.Int32]     ; int32[] closure_arr = new int32[n+1]
+dup
+ldc.i4.0
+ldc.i4 {dispatch_idx}
+stelem.i4                 ; closure_arr[0] = dispatch_idx
+dup
+ldc.i4.1
+ldloc cap0_slot
+stelem.i4                 ; closure_arr[1] = cap0
+…
+stloc dest_slot           ; dest = closure_arr
+```
+
+#### `call_closure` lowering
+
+`call_closure(Var(handle), Var(arg0), …) : "any"` lowers to:
+
+```cil
+ldloc handle_slot         ; push closure handle (int32[])
+ldc.i4 {n_args}           ; args array size
+newarr [System.Int32]     ; int32[] args_arr = new int32[n_args]
+dup
+ldc.i4.0
+ldloc arg0_slot
+stelem.i4                 ; args_arr[0] = arg0
+…
+call int32 ClassName::__callClosure(int32[], int32[])
+stloc dest_slot           ; dest = result
+```
+
+#### Synthetic `__callClosure` dispatch method
+
+When any `alloc_closure` instruction is present in the module,
+`lower_iir_to_cil` appends a synthetic `__callClosure(int32[], int32[]) →
+int32` static method.  It reads `closure[0]` and dispatches to the correct
+user function via a chain of `ldc.i4 N; beq case_N` branches.
+
+Token: `0x0600_0001 + module.functions.len()` (the next slot after all user
+functions in the MethodDef table).
+
+#### New token
+
+- `INT32_ARRAY_TYPE_TOKEN = 0x0100_0002` added to `ir-to-cil-bytecode`
+  alongside the existing `OBJECT_ARRAY_TYPE_TOKEN = 0x0100_0001`.  Used with
+  `newarr` to allocate `int32[]` closure and argument arrays.
+
+#### Validator changes
+
+`validate_iir_for_clr` now:
+- **Accepts** `alloc_closure` with `i32`/`bool` captures (LANG37 early-accept).
+- **Accepts** `call_closure` unconditionally (type_hint `"any"` is fine here).
+- **Rejects** `alloc_closure` with `i64`/`u64`/`f32`/`f64` captures with a
+  `ClosureOpcode` error: `"only i32/bool captures are supported by the CLR
+  backend in v1 — use integer types or upgrade to LANG38"`.
+
+#### Tests
+
+- `lang37_alloc_closure_i32_cap_accepted_by_clr_validator`: i32 capture passes.
+- `lang37_call_closure_accepted_by_clr_validator`: call_closure passes.
+- `lang37_i64_capture_still_rejected`: i64 capture → ClosureOpcode.
+- `lang37_float_capture_still_rejected`: f32 capture → ClosureOpcode.
+- `lang37_alloc_closure_emits_newarr`: alloc_closure emits `newarr` (0x8D).
+- `lang37_alloc_closure_emits_stelem_i4`: alloc_closure emits `stelem.i4` (0x9E).
+- `lang37_call_closure_emits_call_dispatch`: call_closure emits `call` (0x28).
+- `lang37_dispatch_method_generated`: artifact contains `__callClosure` method.
+- `lang37_dispatch_method_contains_ldelem_i4`: dispatch body has `ldelem.i4` (0x94).
+
+#### Deferred
+
+- i64/f32/f64 closure captures — LANG38.
+- WASM closure lowering — LANG38.
+- Real .NET round-trip test — LANG39.
+
+---
+
+## [0.3.0] — 2026-05-12
+
+### Added (LANG35 — Closure Backend Integration)
+
+#### Improved `ClosureOpcode` validator error
+
+- `validate_iir_for_clr` now emits a dedicated `ClosureOpcode` error message
+  (format: `"[fn_name] ClosureOpcode: alloc_closure/call_closure require the
+  BEAM backend — CLR does not support heap-allocated closures"`) when it
+  encounters `alloc_closure` or `call_closure`.
+- Previously these fell through to the generic `UntypedInstruction` path;
+  the closure check now runs first to give a more actionable error message.
+
+#### Tests
+
+- `lang35_alloc_closure_closure_opcode_error`: asserts `validate_iir_for_clr`
+  returns an error containing "ClosureOpcode" for a module with `alloc_closure`.
+- `lang35_call_closure_closure_opcode_error`: same for `call_closure`.
+- `lang35_closure_opcode_error_not_untyped`: asserts the error does NOT
+  contain "UntypedInstruction".
+
+---
+
+## [0.2.0] — 2026-05-11
+
+### Added (LANG32 — Global Variables and I/O)
+
+#### I/O support
+
+- `io_out %v` → `ldloc <slot>; call System.Console.WriteLine(int64)`.
+  Uses token `CONSOLE_WRITELINE_I64_TOKEN = 0x0A00_0002` (pre-defined
+  member reference to `Console.WriteLine(long)`).
+
+#### Global variables (LANG32b — deferred)
+
+- `global_load` and `global_store` return `UnsupportedOp` with a clear
+  LANG32b tracking note.  Full CLR static-field globals require extending
+  `CILProgramArtifact` with a fields table and adding `ldsfld`/`stsfld`
+  sequences; tracked in a follow-up PR.
+
+#### Exhaustiveness fixes
+
+- `Operand::Str` arms added to all `match` blocks in `lower.rs` (const,
+  call argument loop).
+
+---
+
+## [0.1.0] — 2026-05-11
+
+### Added
+
+- Initial release.
+- `validate_iir_for_clr(module: &IIRModule) -> Vec<String>` — pre-flight
+  validator that checks for empty modules/functions, untyped instructions
+  (`"any"` / `"polymorphic"` type hints), unsupported types (`"str"`,
+  `"ref<…>"`), float constants (unsupported in CLR v1), and unsupported
+  opcodes.
+- `IIRClrConfig` — backend configuration struct (assembly name).
+- `IIRClrError` — rich error enum with function-scoped context for all
+  failure modes: `ValidationFailed`, `UnsupportedOp`, `UnsupportedType`,
+  `UndefinedLabel`, `UndefinedVariable`, `InvalidOperand`, `AssemblyError`.
+- `lower_iir_to_cil(module: &IIRModule, config: &IIRClrConfig) -> Result<CILProgramArtifact, IIRClrError>`
+  — two-pass register allocator + CIL emitter that lowers every IIRFunction
+  to a `CILMethodArtifact` (assembled CIL body bytes).
+- `IIRClrCodeGenerator` — `codegen_core::CodeGenerator<IIRModule, CILProgramArtifact>`
+  adapter so the backend participates in the shared code-generator protocol.
+- Opcode coverage: `const`, `add`, `sub`, `mul`, `div`, `mod`, `neg`,
+  `and`, `or`, `xor`, `not`, `shl`, `shr`, `cmp_eq`, `cmp_ne`, `cmp_lt`,
+  `cmp_le`, `cmp_gt`, `cmp_ge`, `label`, `jmp`, `jmp_if_true`,
+  `jmp_if_false`, `ret`, `ret_void`, `call`, `load_reg`, `store_reg`,
+  `type_assert`.
+- 47 integration tests in `tests/test_backend.rs`.

@@ -1,0 +1,182 @@
+# Changelog — `oct-iir-compiler`
+
+## 0.4.0 — 2026-05-30 (OCT05 — source-location threading for debugger)
+
+### Added — Real source positions in `IIRFunction.source_map`
+
+Oct's emitted IIR now carries real `(line, column)` per instruction
+in `IIRFunction.source_map`, in lockstep with `instructions`.
+Previously the field was either empty or all `SourceLoc::SYNTHETIC`.
+
+This is the prerequisite for line-based breakpoints in the future
+`oct-dap` debugger crate.  Without real positions, the debug
+sidecar built by the DAP layer cannot resolve `setBreakpoints
+{ file, lines: [N] }` requests to IIR instructions.
+
+### Implementation
+
+- New `node_loc(&GrammarASTNode) -> SourceLoc` helper extracts
+  `(start_line, start_column)` from an AST node, falling back to
+  `SYNTHETIC` when the parser couldn't attach positions.
+- `Compiler` gained two fields: `source_map: Vec<SourceLoc>` (the
+  per-function accumulator) and `current_loc: Cell<SourceLoc>`
+  (the "currently compiling" position).  Reset at the start of
+  every `compile_fn` call.
+- `Compiler::emit` now pushes `current_loc.get()` onto
+  `source_map` for every instruction it appends, maintaining the
+  lockstep invariant.
+- `compile_stmt` calls `set_loc(node_loc(stmt))` on entry, so all
+  instructions emitted while compiling a statement (including from
+  sub-expressions) inherit the statement's source line.  This is
+  the right granularity for line-based debuggers: per-statement,
+  not per-expression-column.
+- `compile_fn` reset/take semantics: each function gets its own
+  source_map slice, moved onto `iir_fn.source_map` at the end.
+  Defensive padding handles the rare case where pre-set_loc
+  emission slipped through (dead today; cheap to keep).
+
+### Tests
+
+- 2 new unit tests:
+  - `source_map_lockstep_with_instructions`: every function's
+    `source_map.len() == instructions.len()`.
+  - `source_map_carries_real_line_numbers`: a 3-line program
+    produces tagged-line entries for both let statements (not
+    just SYNTHETIC).
+- All 11 existing lib tests still pass (13 total).
+- 9 backend_compat + 4 jit_e2e tests still pass.
+- Downstream `lang-aot` (8 + 17) continues to pass.
+
+## 0.3.0 — 2026-05-29 (OCT04 — AOT backend acceptance proofs)
+
+### Added — `tests/backend_compat.rs` exercises every IIR-to-* backend
+
+Oct's emitted IIR is now proven by automated tests to be accepted by
+the validators of every AOT backend (wasm, jvm, clr, beam).  This
+closes the "Oct's IIR shape could regress without anyone noticing"
+gap — the same shape Twig (`twig-ir-compiler/tests/backend_compat.rs`)
+and Nib (`nib-iir-compiler/tests/backend_compat.rs`) already had.
+
+### Coverage (9 tests)
+
+| Group | Test | Asserts |
+|---|---|---|
+| Minimal | `oct_empty_main_accepted_by_every_backend` | `fn main() { }` |
+| Minimal | `oct_return_constant_accepted_by_every_backend` | `fn answer() -> u8 { return 42; }` |
+| Arithmetic | `oct_typed_add_accepted_by_every_backend` | `x + y` (u8) |
+| Arithmetic | `oct_typed_sub_accepted_by_every_backend` | `x - y` (u8) |
+| Comparison | `oct_typed_eq_accepted_by_every_backend` | `x == 5` |
+| Comparison | `oct_typed_lt_accepted_by_every_backend` | `x < 10` |
+| Control flow | `oct_if_else_accepted_by_every_backend` | `if … { … } else { … }` |
+| Control flow | `oct_while_loop_accepted_by_every_backend` | `while n < 10 { n = n + 1 }` |
+| Invariant | `oct_every_function_is_fully_typed` | every fn has `type_status == FullyTyped` |
+
+All 9 pass on first run — proving Oct's IIR is shape-compatible with
+every backend without further changes.  This is the AOT counterpart
+to `tests/jit_e2e.rs` (which proves the JIT path).
+
+### Dependencies
+
+Added `iir-to-wasm`, `iir-to-jvm-class-file`, `iir-to-cil-bytecode`,
+`iir-to-beam` as **dev-dependencies**.  None of them ship to runtime
+consumers of `oct-iir-compiler`.
+
+### Tests
+
+- 9 backend_compat tests pass.
+- 11 lib + 4 jit_e2e existing tests still pass.
+
+## 0.2.0 — 2026-05-28 (OCT03 — JIT via GenericCirJit)
+
+### Added — Oct programs JIT-compile via `jit-core::GenericCirJit`
+
+With `jit-core::GenericCirJit` landed in `jit-core` 0.3.0, Oct gets a
+real JIT **without a per-language Backend impl**.  Oct functions
+compile through `JITCore::execute_with_jit` → `GenericCirJit` →
+packed bytecode.
+
+This is the second language (after Brainfuck and Dartmouth BASIC) to
+plug into the LANG VM's JIT chain.  Unlike Brainfuck and BASIC,
+which still ship their own per-language Backend impls
+(`BrainfuckCirJit` / `BasicCirJit`), Oct uses `GenericCirJit`
+directly — no duplicated code.
+
+### Changed — `IIRFunction::type_status = FullyTyped` override
+
+`IIRFunction::new`'s automatic `infer_type_status` returns
+`PartiallyTyped` because Oct's control-flow ops (`label`, `jmp`,
+`jmp_if_false`, `ret_void`) carry `"void"` hints, and `"void"` is
+NOT in `interpreter_ir::opcodes::CONCRETE_TYPES`.  Every Oct
+instruction is in fact statically known (no `"any"` hints), so the
+function is genuinely fully typed for the JIT's threshold-zero
+compile path.  We now override `type_status = FullyTyped` after
+construction, mirroring Brainfuck and BASIC.
+
+Without this fix, `JITCore` would never call `compile()` on Oct's
+functions, and `GenericCirJit` would never run.
+
+### Tests
+
+- 4 new end-to-end tests in `tests/jit_e2e.rs`:
+  - `oct_jit_returns_constant_42`: `fn answer() -> u8 { return 42; }`
+  - `oct_jit_arithmetic_and_return`: `let x: u8 = 30; let y: u8 = 12;
+    return x + y;` → 42
+  - `oct_jit_if_else`: `if x == 0 { x = 1; } else { x = 2; }` → 1
+  - `oct_jit_while_loop`: `while n < 10 { n = n + 1; }` → 10
+- All 11 existing lib tests continue to pass.
+
+### Dependencies
+
+- Added `vm-core` and `jit-core` as **dev-dependencies** (the JIT
+  test harness lives in `tests/jit_e2e.rs`).  Oct's main library
+  has no runtime JIT dependency — the JIT integration is purely a
+  consumer-side concern (downstream `oct-vm` or similar would pull
+  in `vm-core` + `jit-core` as needed).
+
+## 0.1.0 — 2026-05-20 (OCT02 phase 3)
+
+Initial Rust port of the Oct IIR compiler.  Lowers a parsed +
+type-checked Oct program to `interpreter_ir::IIRModule` ready for the
+LANG VM AOT chain.
+
+### What compiles (V1)
+
+- Function declarations with parameters and return types.
+- Cross-function calls + recursion (uses LANG43's cross-function reloc).
+- Local variables (lowered to named IIR slots) and `mov` updates.
+- Arithmetic `+` `-` → `add` / `sub`.
+- Bitwise `&` `|` `^` → `and` / `or` / `xor`.
+- Comparisons (`==` `!=` `<` `>` `<=` `>=`) → `cmp_*`.
+- Logical `&&` `||` lowered as eager bitwise on 0/1 operands (the type
+  checker already requires `bool` operands, so the truth values are
+  preserved).
+- Unary `!` / `~` → `not` (V1 doesn't distinguish bitwise NOT from
+  logical NOT at the IIR level; on 0/1 operands the result is correct
+  in both interpretations; full-width bitwise NOT for arbitrary `u8`
+  is a V2 follow-up).
+- `if`/`else`, `while`, `loop`, `break` via the canonical IIR loop
+  scaffold (`label` / `jmp_if_false` / `jmp` / `label`).
+- Integer / hex / binary literals → `const`.
+- `true` / `false` → `const 1` / `const 0`.
+
+### What's rejected
+
+- Every 8008 hardware intrinsic (`in`, `out`, `adc`, `sbb`, `rlc`,
+  `rrc`, `ral`, `rar`, `carry`, `parity`) → `OctError::Unsupported8008Intrinsic`.
+- Type errors from the upstream type checker → `OctError::Type` with
+  one message per diagnostic.
+- Parser errors → `OctError::Parse`.
+
+### Entry-point convention
+
+The Oct language spec declares `fn main()` with void return.  The
+LANG VM AOT chain expects `main` to return `i64` so the C runtime's
+`exit()` truncation produces a sensible exit code.  This crate rewrites
+Oct's void `main` to return `i64 0` so the chain works without any
+backend changes.
+
+### Tests
+
+11 unit tests cover minimal main, arithmetic, if/else, while, loop +
+break, cross-function calls, recursion, and every rejection path
+(intrinsic, type error, parse error).

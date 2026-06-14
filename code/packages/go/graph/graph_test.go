@@ -72,6 +72,84 @@ func TestEdgesAndNeighbors(t *testing.T) {
 	}
 }
 
+func TestPropertyBags(t *testing.T) {
+	for _, repr := range representations() {
+		g := New(repr)
+
+		g.SetGraphProperty("name", "city-map")
+		g.SetGraphProperty("version", 1)
+		graphProps := g.GraphProperties()
+		if graphProps["name"] != "city-map" || graphProps["version"] != 1 {
+			t.Fatalf("GraphProperties() = %#v", graphProps)
+		}
+		graphProps["name"] = "mutated"
+		if g.GraphProperties()["name"] != "city-map" {
+			t.Fatalf("GraphProperties should return a copy for repr=%s", repr)
+		}
+		g.RemoveGraphProperty("version")
+		if _, ok := g.GraphProperties()["version"]; ok {
+			t.Fatalf("RemoveGraphProperty failed for repr=%s", repr)
+		}
+
+		g.AddNode("A", PropertyBag{"kind": "input"})
+		g.AddNode("A", PropertyBag{"trainable": false})
+		if err := g.SetNodeProperty("A", "slot", 0); err != nil {
+			t.Fatalf("SetNodeProperty failed: %v", err)
+		}
+		nodeProps, err := g.NodeProperties("A")
+		if err != nil {
+			t.Fatalf("NodeProperties failed: %v", err)
+		}
+		wantNodeProps := PropertyBag{"kind": "input", "trainable": false, "slot": 0}
+		if !reflect.DeepEqual(nodeProps, wantNodeProps) {
+			t.Fatalf("NodeProperties = %#v, want %#v", nodeProps, wantNodeProps)
+		}
+		nodeProps["kind"] = "mutated"
+		nodeProps, _ = g.NodeProperties("A")
+		if nodeProps["kind"] != "input" {
+			t.Fatalf("NodeProperties should return a copy for repr=%s", repr)
+		}
+		if err := g.RemoveNodeProperty("A", "slot"); err != nil {
+			t.Fatalf("RemoveNodeProperty failed: %v", err)
+		}
+
+		g.AddEdge("A", "B", 2.5, PropertyBag{"role": "distance"})
+		edgeProps, err := g.EdgeProperties("B", "A")
+		if err != nil {
+			t.Fatalf("EdgeProperties failed: %v", err)
+		}
+		wantEdgeProps := PropertyBag{"role": "distance", "weight": 2.5}
+		if !reflect.DeepEqual(edgeProps, wantEdgeProps) {
+			t.Fatalf("EdgeProperties = %#v, want %#v", edgeProps, wantEdgeProps)
+		}
+		if err := g.SetEdgeProperty("B", "A", "weight", 7); err != nil {
+			t.Fatalf("SetEdgeProperty weight failed: %v", err)
+		}
+		weight, _ := g.EdgeWeight("A", "B")
+		if weight != 7 {
+			t.Fatalf("EdgeWeight after weight property = %v, want 7", weight)
+		}
+		if err := g.SetEdgeProperty("A", "B", "trainable", true); err != nil {
+			t.Fatalf("SetEdgeProperty failed: %v", err)
+		}
+		if err := g.RemoveEdgeProperty("A", "B", "role"); err != nil {
+			t.Fatalf("RemoveEdgeProperty failed: %v", err)
+		}
+		edgeProps, _ = g.EdgeProperties("A", "B")
+		wantEdgeProps = PropertyBag{"trainable": true, "weight": float64(7)}
+		if !reflect.DeepEqual(edgeProps, wantEdgeProps) {
+			t.Fatalf("EdgeProperties after updates = %#v, want %#v", edgeProps, wantEdgeProps)
+		}
+
+		if err := g.RemoveEdge("A", "B"); err != nil {
+			t.Fatalf("RemoveEdge failed: %v", err)
+		}
+		if _, err := g.EdgeProperties("A", "B"); err == nil {
+			t.Fatalf("EdgeProperties should fail after RemoveEdge for repr=%s", repr)
+		}
+	}
+}
+
 func TestTraversalsAndConnectivity(t *testing.T) {
 	for _, repr := range representations() {
 		bfsResult, _ := BFS(makePath(repr), "A")

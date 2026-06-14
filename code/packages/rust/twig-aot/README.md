@@ -1,0 +1,67 @@
+# twig-aot
+
+Twig ahead-of-time compiler.  Reads a Twig source file, produces a native
+ARM64 Mach-O executable on macOS that you can run directly.
+
+## Usage
+
+```bash
+twig-aot fib.twig -o fib
+./fib
+echo $?    # → main()'s return value modulo 256
+```
+
+## How it works
+
+1. Parse the source with `twig-ir-compiler` → `IIRModule`
+2. For each function: infer types (`aot-core`), specialise to typed CIR
+3. Lower CIR → ARM64 bytes (`aarch64-backend`)
+4. Link per-function bytes (`aot-core::link`)
+5. Wrap in a Mach-O object file (`code-packager::macho_object`)
+6. Shell out to `/usr/bin/ld` for the final link → trusted provenance,
+   ad-hoc code signature, dyld stub
+
+The final `ld` invocation is what makes the binary actually launch on
+modern macOS — see CHANGELOG for the trust-model background.
+
+## The runtime archive
+
+AOT-compiled programs call into a small static runtime that `build.rs`
+compiles (via the `cc` crate) and embeds in the `twig-aot` binary, then
+writes to a temp file and hands to the system linker at compile time. It has
+two translation units:
+
+- `runtime/twig_runtime.c` — portable I/O + heap helpers (`__twig_print_i64`,
+  `__twig_putchar`, `__twig_alloc_bytes`, …).
+- `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
+  `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
+  plus int box/unbox, implementing `lispy-runtime`'s 3-bit-tagged 64-bit
+  `LispyValue` ABI. This is what lets *any* lisp-family frontend (Twig,
+  McCarthy Lisp, future lisps) compile cons cells and interned symbols to a
+  native binary — it is a language-agnostic primitive, not tied to one
+  frontend.
+
+The C lisp runtime and the Rust `lispy-runtime` crate (used by the VM/JIT)
+are two implementations of one documented ABI. The `lispy_runtime_golden`
+unit test pins the C side to the Rust `pub const`s/constructors so they can
+never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
+
+As of 0.10.0, `prepare_module_for_aot` lowers a lisp frontend's `cons`/`car`/
+`cdr` to **calls into this runtime** (via
+`iir_builtin_lowering::lower_heap_builtins_runtime`), so a McCarthy program
+like `(CAR (CONS 7 9))` compiles to a native binary that calls
+`__twig_lispy_cons`/`__twig_lispy_car` and exits 7 — with the cons cell as a
+tagged `LispyValue`.
+
+As of 0.11.0 it also runs `lower_lisp_repr`, a type-directed pass that boxes
+the integer atoms feeding those calls (`n << 3`, so their tag is `000`
+instead of the heap tag a raw int's low bits collide with) and unboxes the
+program result for the exit code. So `(CAR (CONS 7 9))` now round-trips
+through fully **tagged** values — the representation the `pair?`/`ATOM`/`EQ`
+predicates build on. It keys on use-sites, so non-lisp programs are
+untouched.
+
+## Requirements
+
+- Apple Silicon Mac running macOS 15+ (Sequoia / Tahoe)
+- Xcode Command Line Tools (`/usr/bin/ld`, `xcrun`)

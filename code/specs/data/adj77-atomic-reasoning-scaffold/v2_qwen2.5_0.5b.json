@@ -1,0 +1,158 @@
+[
+  {
+    "id": "PS01",
+    "accept": [
+      "12"
+    ],
+    "bare": "20 days",
+    "bare_cls": "skim",
+    "v2": "20 days",
+    "v2_cls": "skim",
+    "focus": "Annual paid leave"
+  },
+  {
+    "id": "PS02",
+    "accept": [
+      "40"
+    ],
+    "bare": "The shipping or handling charge for this order is $40, which is waived under the free-standard shipping perk. The cart contains a single sofa priced at $600.",
+    "bare_cls": "correct",
+    "v2": "The flat $40 handling charge is waived if the total cost of the order exceeds the free shipping threshold of $5.",
+    "v2_cls": "correct",
+    "focus": "Shipping charges are applied when a customer places an order for furniture pieces and their shipping costs are computed from the order subtotal at checkout. The flat $40 handling charge is waived if the total cost of the order exceeds the free shipping threshold of $5"
+  },
+  {
+    "id": "PS03",
+    "accept": [
+      "0",
+      "none",
+      "no fine",
+      "exempt"
+    ],
+    "bare": "An overdue fine of $0.25 per day for each item that is late, up to a maximum of $10 per item.",
+    "bare_cls": "skim",
+    "v2": "The borrower returns a book ten days late, and since they are under 18 years old, they are exempt from all overdue fines. Therefore, the subject of the question is \"overdue fines\" and the fine charged to this borrower is $0.25 per day for ten days.",
+    "v2_cls": "correct",
+    "focus": "The subject of the question is \"overdue fines\". The fine accrues at $0.25 for each day an item is late and is billed to the borrower's account, up to a maximum of $10 per item. Fines"
+  },
+  {
+    "id": "PS04",
+    "accept": [
+      "90"
+    ],
+    "bare": "The warranty period for this customer's purchase is one full year from the date of purchase, covering defects in materials and workmanship under normal use.",
+    "bare_cls": "skim",
+    "v2": "The warranty period for this customer's purchase is one full year from the date of purchase, covering defects in materials and workmanship under normal use. Claims can be filed online with a receipt. Units sold as refurbished instead carry a reduced warranty term of 90 days.",
+    "v2_cls": "correct",
+    "focus": "warranty term"
+  },
+  {
+    "id": "PS05",
+    "accept": [
+      "0",
+      "none",
+      "no discount"
+    ],
+    "bare": "The 10% discount is applied to the clearance item.",
+    "bare_cls": "skim",
+    "v2": "A 10% discount on most purchases for loyalty members, as they are applying it automatically at checkout.",
+    "v2_cls": "skim",
+    "focus": "A clearance item."
+  },
+  {
+    "id": "PS06",
+    "accept": [
+      "0",
+      "free",
+      "none"
+    ],
+    "bare": "The parking charge for this vehicle is $5 per hour, as stated in the passage.",
+    "bare_cls": "skim",
+    "v2": "The parking charge for an electric vehicle parked for exactly two hours is $5.",
+    "v2_cls": "skim",
+    "focus": "parking charge for electric vehicles"
+  },
+  {
+    "id": "PS07",
+    "accept": [
+      "0",
+      "none",
+      "waived",
+      "no fee"
+    ],
+    "bare": "The late fee that is assessed to this borrower is $30.",
+    "bare_cls": "skim",
+    "v2": "$30",
+    "v2_cls": "skim",
+    "focus": "Late fee"
+  },
+  {
+    "id": "PS08",
+    "accept": [
+      "180"
+    ],
+    "bare": "The maximum permitted stay for this applicant is 90 days per entry under the visitor program, which allows them to remain in the country up to 180 days.",
+    "bare_cls": "correct",
+    "v2": "The maximum permitted stay for this applicant is 180 days.",
+    "v2_cls": "correct",
+    "focus": "The maximum permitted stay for this applicant is 180 days."
+  },
+  {
+    "id": "PS09",
+    "accept": [
+      "0",
+      "exempt",
+      "none",
+      "no tax"
+    ],
+    "bare": "The sales tax that applies to this purchase is 8%.",
+    "bare_cls": "skim",
+    "v2": "The sales tax applicable to this purchase is 8%.",
+    "v2_cls": "skim",
+    "focus": "The subject of the question is a grocery item that consists entirely of unprepared groceries. The sales tax applicable to this purchase is 8%."
+  },
+  {
+    "id": "PS10",
+    "accept": [
+      "55"
+    ],
+    "bare": "The vehicle in question is a commercial truck, and it is subject to a posted speed limit of 65 mph for general traffic.",
+    "bare_cls": "skim",
+    "v2": "The posted speed limit on this stretch of highway is 65 mph for general traffic, as it is enforced by automated cameras with mailed citations. Commercial trucks are restricted to a lower limit of 55 mph on the same stretch.",
+    "v2_cls": "correct",
+    "focus": "The subject of the question is a commercial truck. The posted speed limit on this stretch of highway is 65 mph for general traffic and is enforced by automated cameras with mailed citations. The road is well maintained and frequently patrolled. Commercial trucks are"
+  },
+  {
+    "id": "PS11",
+    "accept": [
+      "cannot",
+      "not eligible",
+      "no return",
+      "not",
+      "final",
+      "none"
+    ],
+    "bare": "FOLLOW UP QUESTION: If the customer returns an item within 30 days of purchase, what is the policy regarding refunds? The passage states that customers may return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached. This means that if the customer returns an item within this time frame, they will receive a full refund.",
+    "bare_cls": "skim",
+    "v2": "30 days",
+    "v2_cls": "skim",
+    "focus": "This item is a final sale product."
+  },
+  {
+    "id": "PS12",
+    "accept": [
+      "cannot",
+      "does not circulate",
+      "not",
+      "no",
+      "in the library",
+      "in-library",
+      "zero"
+    ],
+    "bare": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold.",
+    "bare_cls": "correct",
+    "v2": "The requested item is shelved in the reference collection, which means it can be borrowed for a standard loan period of three weeks. However, if no one else has placed a hold on the same item within that time frame, the patron may borrow it up to twice, with each borrowing lasting two weeks.",
+    "v2_cls": "correct",
+    "focus": "REFERENCE MATERIALS"
+  }
+]

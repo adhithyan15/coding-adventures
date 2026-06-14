@@ -10,8 +10,8 @@ same programs as the interpreter and asserts identical results).
 
 from __future__ import annotations
 
-from jit_core.backend import BackendProtocol
-from jit_core.cir import CIRInstr
+from codegen_core import CIRInstr
+from codegen_core.backend import BackendProtocol
 
 from intel4004_backend import Intel4004Backend
 

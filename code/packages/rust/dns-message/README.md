@@ -16,7 +16,8 @@ fixture without changing the message model.
 - Query construction for standard recursive `A`, `AAAA`, and other record types
 - Wire-format serialization with uncompressed names
 - Response parsing with DNS compression-pointer support
-- Typed `A`, `AAAA`, and `CNAME` record data
+- Typed `A`, `AAAA`, `CNAME`, `PTR`, and `SRV` record data
+- DNS-SD/mDNS service discovery records for smart-home fixtures
 - Raw preservation for unknown record types
 
 ## Example

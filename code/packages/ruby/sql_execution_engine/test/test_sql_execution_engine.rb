@@ -163,6 +163,12 @@ class TestSqlExecutionEngine < Minitest::Test
     assert_equal Set["Alice", "Carol"], names
   end
 
+  def test_where_not_in
+    result = run_sql("SELECT name FROM employees WHERE id NOT IN (1, 3)")
+    names = result.rows.map { |r| r["name"] }.to_set
+    assert_equal Set["Bob", "Dave"], names
+  end
+
   # ------------------------------------------------------------------
   # Test 10: WHERE LIKE
   # ------------------------------------------------------------------

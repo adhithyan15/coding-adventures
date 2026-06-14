@@ -1,0 +1,8 @@
+{
+ "check_id": 228,
+ "idx": 95,
+ "slot": "useful_life_more_than_one_year",
+ "claimed_value": true,
+ "scenario": "A lab used grant funds to buy a specialized centrifuge with a useful life of several years. The PI did not seek prior approval before the purchase.",
+ "cited_span": "a specialized centrifuge with a useful life of several years"
+}

@@ -1,5 +1,14 @@
 # LANG16 — gc-core: Heap and Garbage Collection Integration
 
+> **Forward reference:** LANG20 specifies how a per-language
+> `LangBinding` registers its `ClassRef` namespace with `gc-core` and
+> provides the `trace_object` callback the collector dispatches
+> through during marking.  The "language frontend's root scanner"
+> referenced throughout this spec is LANG20's `LangBinding::trace_value`.
+> See [LANG20 §"Cross-language value representation"](LANG20-multilang-runtime.md)
+> for the uniform 16-byte heap object header every binding must
+> agree on.
+
 ## Overview
 
 `gc-core` is the **language-agnostic heap and garbage collection layer** for

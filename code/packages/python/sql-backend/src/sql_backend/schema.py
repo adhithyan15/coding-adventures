@@ -38,7 +38,7 @@ Leaving the format open is what makes the interface portable.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Final
+from typing import Final, Literal
 
 from .values import SqlValue
 
@@ -97,7 +97,26 @@ class ColumnDef:
     not_null: bool = False
     primary_key: bool = False
     unique: bool = False
+    autoincrement: bool = False
     default: ColumnDefault = field(default=NO_DEFAULT)
+    check_expr: object = field(default=None, compare=False, hash=False)
+    # Source text of the CHECK expression — used in error messages.
+    # SQLite renders ``CHECK constraint failed: <expr_text>``; we
+    # round-trip the parsed expression back to text so our error
+    # matches.  Empty string means "no check or no text available";
+    # in that case the VM falls back to the older ``<table>.<col>``
+    # form.  Stored alongside ``check_expr`` rather than on a
+    # parallel struct so the two travel together through the
+    # planner → IR → VM pipeline.
+    check_expr_text: str = ""
+    # (ref_table, ref_col_or_None) — None ref_col means "reference the PK".
+    # Typed as object to avoid circular import with planner types.
+    foreign_key: object = field(default=None, compare=False, hash=False)
+    # ``COLLATE name`` from CREATE TABLE — the column's declared default
+    # comparison-collation.  Used as the default when an ORDER BY clause
+    # references this column without an explicit COLLATE override.
+    # ``None`` means BINARY (the SQLite default).  Stored upper-cased.
+    collation: str | None = None
 
     def effective_not_null(self) -> bool:
         """PRIMARY KEY implies NOT NULL. Convenience for the constraint enforcer."""
@@ -110,3 +129,22 @@ class ColumnDef:
     def has_default(self) -> bool:
         """True iff a DEFAULT clause was specified (even if that default is NULL)."""
         return self.default is not NO_DEFAULT
+
+
+@dataclass(eq=True)
+class TriggerDef:
+    """Definition of a CREATE TRIGGER object stored in the backend.
+
+    ``body`` is the raw SQL text of the trigger body statements (without
+    the outer BEGIN…END wrapper), with individual statements separated by
+    semicolons.  The VM re-parses and re-compiles the body on each firing.
+
+    ``timing`` is ``"BEFORE"`` or ``"AFTER"``.
+    ``event`` is ``"INSERT"``, ``"UPDATE"``, or ``"DELETE"``.
+    """
+
+    name: str
+    table: str
+    timing: Literal["BEFORE", "AFTER"]
+    event: Literal["INSERT", "UPDATE", "DELETE"]
+    body: str

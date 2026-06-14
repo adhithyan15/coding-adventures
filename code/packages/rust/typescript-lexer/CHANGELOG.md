@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-typescript-lexer` crate will be documented in this file.
 
+## [0.3.0] - 2026-05-21
+
+### Removed
+- Dropped support for the empty-string `""` "generic" version that pointed at the stub `code/grammars/typescript.tokens`. The full TS 1.0 through 5.8 grammars under `code/grammars/typescript/` supersede it.
+- Removed the embedded `mod generic` block (~228 lines) from `_grammar.rs`.
+
+### Changed
+- `DEFAULT_VERSION` is now `"ts5.8"` (was `""`). Callers passing the old empty-string version now get `Err` with the supported-versions list.
+- Crate docstring no longer mentions the "generic" grammar.
+
+### Added
+- `default_version_resolves_to_ts5_8` test verifies the new default.
+
+### Migration
+- Replace `tokenize_typescript(source, "")` with `tokenize_typescript(source, "ts5.8")` (or another explicit TS version).
+
+### Notes
+- This PR is the Rust-only second step of CLOC01 Phase 1 stub retirement (sibling of the JS port retirement, PR #3785). The stub `.tokens`/`.grammar` files remain on disk for now because the Go, Python, TypeScript, and Ruby ports still embed them. Those ports get equivalent follow-up PRs.
+
 ## [0.2.0] - 2026-04-05
 
 ### Changed

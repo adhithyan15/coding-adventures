@@ -7,7 +7,7 @@ linear memory, tables, instruction handlers, and the execution engine.
 __version__ = "0.1.0"
 
 from wasm_execution.const_expr import evaluate_const_expr
-from wasm_execution.engine import WasmExecutionEngine
+from wasm_execution.engine import WasmExecutionEngine, WasmExecutionLimits
 from wasm_execution.host_interface import HostFunction, HostInterface, TrapError
 from wasm_execution.linear_memory import LinearMemory
 from wasm_execution.table import Table
@@ -26,6 +26,7 @@ from wasm_execution.values import (
 
 __all__ = [
     "WasmExecutionEngine",
+    "WasmExecutionLimits",
     "LinearMemory",
     "Table",
     "TrapError",

@@ -688,3 +688,212 @@ class TestMultiTableOperations:
         # The file didn't grow — overflow pages came back to freelist.
         assert pager.size_pages == pages_with_overflow
         pager.close()
+
+
+# ---------------------------------------------------------------------------
+# Triggers
+# ---------------------------------------------------------------------------
+
+
+class TestSchemaTriggers:
+    """Schema.create_trigger / find_trigger / list_triggers / drop_trigger."""
+
+    def test_create_and_find(self, tmp_path):
+        """A newly created trigger can be found by name."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("orders", "CREATE TABLE orders (id INTEGER)")
+        trg_sql = "CREATE TRIGGER trg_ai AFTER INSERT ON orders BEGIN SELECT 1; END"
+        schema.create_trigger("trg_ai", "orders", trg_sql)
+        result = schema.find_trigger("trg_ai")
+        assert result is not None
+        rowid, tbl_name, sql = result
+        assert tbl_name == "orders"
+        assert "trg_ai" in sql
+        pager.close()
+
+    def test_find_unknown_returns_none(self, tmp_path):
+        """find_trigger returns None for a name that doesn't exist."""
+        pager, schema = _new_db(tmp_path)
+        assert schema.find_trigger("no_such") is None
+        pager.close()
+
+    def test_list_triggers_empty(self, tmp_path):
+        """list_triggers returns an empty list when no triggers exist."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("t", "CREATE TABLE t (x INTEGER)")
+        assert schema.list_triggers("t") == []
+        pager.close()
+
+    def test_list_triggers_for_table(self, tmp_path):
+        """list_triggers returns only triggers for the requested table."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("orders", "CREATE TABLE orders (id INTEGER)")
+        schema.create_table("users", "CREATE TABLE users (id INTEGER)")
+        sql1 = "CREATE TRIGGER trg1 AFTER INSERT ON orders BEGIN END"
+        sql2 = "CREATE TRIGGER trg2 BEFORE DELETE ON orders BEGIN END"
+        sql3 = "CREATE TRIGGER trg3 AFTER INSERT ON users BEGIN END"
+        schema.create_trigger("trg1", "orders", sql1)
+        schema.create_trigger("trg2", "orders", sql2)
+        schema.create_trigger("trg3", "users", sql3)
+        rows = schema.list_triggers("orders")
+        names = [r[0] for r in rows]
+        assert names == ["trg1", "trg2"]
+        assert all(r[1] == "orders" for r in rows)
+        pager.close()
+
+    def test_list_all_triggers_no_filter(self, tmp_path):
+        """list_triggers(None) returns all triggers."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("t1", "CREATE TABLE t1 (x INTEGER)")
+        schema.create_table("t2", "CREATE TABLE t2 (x INTEGER)")
+        schema.create_trigger("a", "t1", "CREATE TRIGGER a AFTER INSERT ON t1 BEGIN SELECT 1; END")
+        schema.create_trigger("b", "t2", "CREATE TRIGGER b AFTER INSERT ON t2 BEGIN SELECT 1; END")
+        rows = schema.list_triggers(None)
+        assert len(rows) == 2
+        pager.close()
+
+    def test_duplicate_trigger_raises_schema_error(self, tmp_path):
+        """Creating a trigger with a duplicate name raises SchemaError."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("t", "CREATE TABLE t (x INTEGER)")
+        schema.create_trigger("trg", "t", "CREATE TRIGGER trg AFTER INSERT ON t BEGIN END")
+        with pytest.raises(SchemaError):
+            schema.create_trigger("trg", "t", "CREATE TRIGGER trg AFTER INSERT ON t BEGIN END")
+        pager.close()
+
+    def test_drop_trigger(self, tmp_path):
+        """drop_trigger removes the trigger; find_trigger returns None afterward."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("t", "CREATE TABLE t (x INTEGER)")
+        schema.create_trigger("trg", "t", "CREATE TRIGGER trg AFTER INSERT ON t BEGIN END")
+        assert schema.find_trigger("trg") is not None
+        schema.drop_trigger("trg")
+        assert schema.find_trigger("trg") is None
+        pager.close()
+
+    def test_drop_nonexistent_trigger_raises(self, tmp_path):
+        """drop_trigger raises SchemaError for a name that doesn't exist."""
+        pager, schema = _new_db(tmp_path)
+        with pytest.raises(SchemaError):
+            schema.drop_trigger("ghost")
+        pager.close()
+
+    def test_trigger_bumps_schema_cookie(self, tmp_path):
+        """create_trigger and drop_trigger each bump the schema cookie."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("t", "CREATE TABLE t (x INTEGER)")
+        cookie_before = schema.get_schema_cookie()
+        schema.create_trigger("trg", "t", "CREATE TRIGGER trg AFTER INSERT ON t BEGIN END")
+        assert schema.get_schema_cookie() == cookie_before + 1
+        schema.drop_trigger("trg")
+        assert schema.get_schema_cookie() == cookie_before + 2
+        pager.close()
+
+    def test_trigger_rowpage_stored_as_zero(self, tmp_path):
+        """Trigger rows have rootpage = 0 (no B-tree allocation)."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("t", "CREATE TABLE t (x INTEGER)")
+        schema.create_trigger("trg", "t", "CREATE TRIGGER trg AFTER INSERT ON t BEGIN END")
+        rowid, tbl_name, sql = schema.find_trigger("trg")
+        # Verify by scanning sqlite_schema directly.
+        from storage_sqlite import record
+        from storage_sqlite.btree import BTree
+        tree = BTree.open(pager, 1, header_offset=100)
+        for _, payload in tree.scan():
+            cols, _ = record.decode(payload)
+            if cols[0] == "trigger" and cols[1] == "trg":
+                assert int(cols[3]) == 0  # rootpage must be 0
+                break
+        pager.close()
+
+
+# ---------------------------------------------------------------------------
+# update_table_sql
+# ---------------------------------------------------------------------------
+
+
+class TestUpdateTableSql:
+    """Schema.update_table_sql rewrites the stored CREATE TABLE statement."""
+
+    def test_update_sql_changes_stored_text(self, tmp_path):
+        """update_table_sql replaces the sql field for the named table."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("t", "CREATE TABLE t (id INTEGER)")
+        new_sql = "CREATE TABLE t (id INTEGER, name TEXT)"
+        schema.update_table_sql("t", new_sql)
+        _, _, found_sql = schema.find_table("t")
+        assert found_sql == new_sql
+        pager.close()
+
+    def test_rootpage_preserved_after_update(self, tmp_path):
+        """update_table_sql does not change the root page number."""
+        pager, schema = _new_db(tmp_path)
+        original_root = schema.create_table("t", "CREATE TABLE t (id INTEGER)")
+        schema.update_table_sql("t", "CREATE TABLE t (id INTEGER, extra TEXT)")
+        _, new_root, _ = schema.find_table("t")
+        assert new_root == original_root
+        pager.close()
+
+    def test_update_sql_unknown_table_raises(self, tmp_path):
+        """update_table_sql raises SchemaError for an unknown table name."""
+        pager, schema = _new_db(tmp_path)
+        with pytest.raises(SchemaError):
+            schema.update_table_sql("ghost", "CREATE TABLE ghost (x INTEGER)")
+        pager.close()
+
+    def test_update_sql_bumps_cookie(self, tmp_path):
+        """update_table_sql increments the schema cookie."""
+        pager, schema = _new_db(tmp_path)
+        schema.create_table("t", "CREATE TABLE t (id INTEGER)")
+        cookie_before = schema.get_schema_cookie()
+        schema.update_table_sql("t", "CREATE TABLE t (id INTEGER, extra TEXT)")
+        assert schema.get_schema_cookie() == cookie_before + 1
+        pager.close()
+
+
+# ---------------------------------------------------------------------------
+# Configurable page sizes — integration tests
+# ---------------------------------------------------------------------------
+
+
+class TestNonDefaultPageSize:
+    """End-to-end: initialize, create table, write rows, close, reopen."""
+
+    @pytest.mark.parametrize("ps", [1024, 8192])
+    def test_initialize_reports_correct_page_size(self, tmp_path, ps: int) -> None:
+        """initialize_new_database writes the page size into the header."""
+        path = str(tmp_path / "db.db")
+        pager = Pager.create(path, page_size=ps)
+        initialize_new_database(pager)
+        page1 = pager.read(1)
+        hdr = Header.from_bytes(page1[:100])
+        assert hdr.page_size == ps
+        pager.close()
+
+    @pytest.mark.parametrize("ps", [1024, 8192])
+    def test_reopen_detects_page_size(self, tmp_path, ps: int) -> None:
+        """Pager.open detects the page size from the SQLite header on reopen."""
+        path = str(tmp_path / "db.db")
+        with Pager.create(path, page_size=ps) as pager:
+            initialize_new_database(pager)
+            pager.commit()
+
+        with Pager.open(path) as pager2:
+            assert pager2.page_size == ps
+
+    @pytest.mark.parametrize("ps", [1024, 8192])
+    def test_create_table_and_reopen(self, tmp_path, ps: int) -> None:
+        """Create a table in a non-4096 database, close, reopen, verify it survives."""
+        path = str(tmp_path / "db.db")
+        with Pager.create(path, page_size=ps) as pager:
+            schema = initialize_new_database(pager)
+            schema.create_table("users", "CREATE TABLE users (id INTEGER, name TEXT)")
+            pager.commit()
+
+        with Pager.open(path) as pager2:
+            assert pager2.page_size == ps
+            schema2 = Schema(pager2)
+            assert schema2.list_tables() == ["users"]
+            _, root, sql = schema2.find_table("users")
+            assert "users" in sql
+            assert root > 1

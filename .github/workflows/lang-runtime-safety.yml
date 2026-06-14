@@ -1,0 +1,187 @@
+# =============================================================================
+# LANG-runtime safety CI — Miri (UB detection) + cargo-geiger (unsafe budget)
+# =============================================================================
+#
+# Runs only on changes to the LANG20 substrate crates that contain unsafe code.
+# Two independent checks:
+#
+#   1. **Miri** — Rust's interpreter for unsafe code.  Catches actual
+#      undefined behaviour at runtime (out-of-bounds reads, misaligned
+#      access, use-after-free, transmute_copy errors, etc.).
+#      Slow (~30x native test time) so we only run it on the substrate
+#      crates that touch raw pointers — not the whole workspace.
+#
+#   2. **cargo-geiger** — counts unsafe code per crate and per dep.  Used
+#      as a budget enforcer: if a PR introduces unsafe blocks beyond
+#      the documented count, this job fails and the author has to
+#      explicitly justify the increase.
+#
+# Both run on Linux only (the unsafe code is platform-agnostic; macOS/
+# Windows runs would just duplicate work).
+#
+# These are **safety nets**, not the primary defence: the primary
+# defence is the type-system enforcement (private `LispyValue.0`,
+# `unsafe fn` markings on every dangerous operation) plus thorough code
+# review.  Miri catches what review and types miss; geiger guards the
+# unsafe budget against drift.
+
+name: LANG-runtime safety (Miri + Geiger)
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'code/packages/rust/lang-runtime-core/**'
+      - 'code/packages/rust/lispy-runtime/**'
+      - 'code/packages/rust/twig-vm/**'
+      - '.github/workflows/lang-runtime-safety.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'code/packages/rust/lang-runtime-core/**'
+      - 'code/packages/rust/lispy-runtime/**'
+      - 'code/packages/rust/twig-vm/**'
+      - '.github/workflows/lang-runtime-safety.yml'
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────
+  # Per-PR Miri policy (refined in PR 7)
+  #
+  # Goal: fast PR iteration.  Miri belongs on **unsafe code only**
+  # in this workflow.  The unsafe in this stack lives in
+  # `lang-runtime-core` + `lispy-runtime` (tagged-pointer scheme,
+  # heap accessors, FFI).  `twig-vm` has zero unsafe of its own —
+  # its Miri value is the integration seam, which is *already*
+  # exercised by lispy-runtime's own Miri suite plus the local
+  # pre-push verification.  Per-PR twig-vm Miri was costing
+  # 1h+ wallclock per PR for redundant coverage, blocking
+  # iteration speed.
+  #
+  # The new split:
+  #
+  #   - **PR CI** (this workflow): only `miri-blocking` — runs
+  #     Miri on the unsafe-bearing crates only.  ~5 min.
+  #     Required to merge.
+  #
+  #   - **Post-merge + nightly** (`lang-runtime-safety-deep.yml`):
+  #     runs the full twig-vm Miri suite on every push to
+  #     main + at 03:13 UTC daily.  `continue-on-error: true`
+  #     so a regression doesn't propagate to main's status
+  #     badge — the workflow run record IS the regression
+  #     signal.  Faster checks here (because main is the only
+  #     branch we deep-check) and we get coverage without
+  #     gating PRs.
+  #
+  #   - **Local pre-push**: `scripts/miri-twig-vm.sh` is the
+  #     canonical local check before pushing changes that
+  #     touch twig-vm.  Documented in CLAUDE.md.
+  #
+  # See lessons.md for the architectural rationale.
+  # ─────────────────────────────────────────────────────────────────────────
+
+  miri-blocking:
+    name: Miri (UB detection — unsafe-bearing crates only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # Why no `-Zmiri-strict-provenance`?
+      #
+      # Strict provenance rejects ALL integer-to-pointer casts
+      # (including the official `with_exposed_provenance` escape
+      # hatch).  Fundamentally incompatible with tagged-pointer
+      # value reps — every JIT and dynamic-language runtime in
+      # existence (V8, JSC, CPython, MRI, BEAM) uses int↔ptr
+      # round-trips for tag bits.
+      #
+      # Why `-Zmiri-ignore-leaks`?
+      #
+      # PR 2 ships `lispy-runtime` with a `Box::leak`-based "non-
+      # collecting GC" — every `alloc_cons` / `alloc_closure`
+      # leaks intentionally because the real collector lands
+      # in PR 4+ (LANG16 wiring).  Miri correctly reports these
+      # as leaks; we tell it to ignore them so the runtime-UB
+      # checks (the actually-valuable signal) aren't drowned
+      # out.  Once the GC lands, this flag goes away and Miri
+      # starts enforcing the no-leaks-after-collection invariant.
+      #
+      # Default Miri (without strict provenance) still catches
+      # all the actually-exploitable UB classes:
+      #   - out-of-bounds reads / writes
+      #   - use-after-free
+      #   - misaligned access
+      #   - reads from uninitialized memory
+      #   - data races
+      #   - aliasing violations (Stacked / Tree Borrows)
+      MIRIFLAGS: "-Zmiri-ignore-leaks"
+      CARGO_INCREMENTAL: "0"
+      RUST_BACKTRACE: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust nightly with Miri
+        run: |
+          rustup toolchain install nightly --component miri
+          rustup +nightly component add rust-src
+          cargo +nightly miri --version
+
+      - name: Miri — lang-runtime-core
+        working-directory: code/packages/rust
+        run: cargo +nightly miri test -p lang-runtime-core --no-fail-fast
+
+      - name: Miri — lispy-runtime
+        working-directory: code/packages/rust
+        run: cargo +nightly miri test -p lispy-runtime --no-fail-fast
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # Geiger: count unsafe code in our crates + dependencies.
+  #
+  # The LANG20 substrate has documented `unsafe` for raw-pointer / FFI
+  # work — we don't enforce a hard zero.  Instead this job publishes
+  # the per-crate report so PR reviewers see whether new unsafe was
+  # introduced.  Drift is the failure mode geiger catches: a "fix
+  # this with one unsafe block" PR that quietly grows the budget
+  # shows up clearly in the diffed report.
+  #
+  # PR 2 ships the report-only form.  A future PR will set numeric
+  # budgets once we have a stable baseline (the first CI run
+  # establishes one).
+  # ─────────────────────────────────────────────────────────────────────────
+  geiger:
+    name: cargo-geiger (unsafe report)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        run: |
+          rustup toolchain install stable
+          cargo --version
+
+      - name: Install cargo-geiger
+        # `--locked` pins versions for reproducibility.  cargo-geiger
+        # itself has a non-trivial compile time; runtime cache (via
+        # actions/cache) is a follow-up if this becomes slow.
+        run: cargo install --locked cargo-geiger
+
+      - name: Geiger report — lang-runtime-core
+        working-directory: code/packages/rust
+        run: |
+          echo "── lang-runtime-core unsafe summary ─────────────────────"
+          cargo geiger -p lang-runtime-core --quiet || true
+
+      - name: Geiger report — lispy-runtime
+        working-directory: code/packages/rust
+        run: |
+          echo "── lispy-runtime unsafe summary ─────────────────────────"
+          cargo geiger -p lispy-runtime --quiet || true

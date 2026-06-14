@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/forme-doc-frontmatter",
+  "version": "0.2.0",
+  "description": "Strip YAML or TOML frontmatter from a markdown source string.  Returns { body, frontmatter }.  YAML uses an in-house tiny subset parser; TOML delegates to @coding-adventures/toml-parser (full TOML 1.0 lexer+grammar) and walks the AST to enforce the docs-frontmatter subset.  No eval, no prototype pollution.  Pure transform (capabilities: []).  DOC00 v0 content-pipeline package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/toml-parser": "file:../toml-parser",
+    "@coding-adventures/toml-lexer": "file:../toml-lexer",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/cli-builder": "file:../cli-builder",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

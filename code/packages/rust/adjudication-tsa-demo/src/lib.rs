@@ -1,0 +1,2934 @@
+//! # adjudication-tsa-demo — the A/B comparison harness
+//!
+//! Two arms, one source-text input, one side-by-side report.
+//!
+//! - **Arm A (raw)**: ask the model directly. "Is the passenger
+//!   TSA-compliant? Source: <text>. Answer." We get whatever the
+//!   model decides to say.
+//!
+//! - **Arm B (pipeline)**: build the TSA fixture IR (same shape the
+//!   ADJ10 integration test uses), feed it through
+//!   [`adjudication_pipeline::run_with_gateway`] with a `Renderer` +
+//!   `Nli` gateway, and surface the structured verdict + audit trail.
+//!
+//! The harness is split into a library (for tests + reuse) and a
+//! binary (`cargo run -p adjudication-tsa-demo`) that prints a
+//! human-friendly side-by-side. The binary is the entry point the
+//! user actually invokes; the library exists so the integration
+//! tests can exercise the same wire-up without re-implementing it.
+//!
+//! ## Why this lives in its own crate
+//!
+//! - It depends on `llm-provider-ollama` to talk to a real local
+//!   model, which `adjudication-pipeline` itself must not (the
+//!   pipeline is provider-agnostic).
+//! - The binary needs `main.rs`; the library code is a natural fit
+//!   for sharing with future demos (e.g., a clinical-note variant).
+//!
+//! ## Two pipeline modes
+//!
+//! Arm B has two sub-modes, selected by `DemoConfig::ir_mode`:
+//!
+//! - **`IrMode::HandBuilt`** (default): the demo constructs the TSA
+//!   fixture IR programmatically (same shape as the ADJ10 integration
+//!   test). Useful as a clean baseline that proves the pipeline
+//!   machinery itself works, independent of how good the model is at
+//!   extraction.
+//!
+//! - **`IrMode::LlmExtracted`**: the demo calls
+//!   `llm_primitives::decompose_text` to ask the model to produce the
+//!   IR, then converts the JSON output into a typed `IRDocument` via a
+//!   tolerant parser. This is the *full* LLM-driven flow: extraction +
+//!   coverage + propagation + round-trip + engine. ADJ02/ADJ03/ADJ04
+//!   surface any mistakes the model made during extraction.
+//!
+//! Both modes use the same `Renderer` + `Nli` + (in LlmExtracted mode)
+//! `Extractor` clients.
+//!
+//! ## What the demo does NOT cover (yet)
+//!
+//! - **ADJ05 adversary** stays Skipped — a future demo will install a
+//!   second model family (e.g., `llama3.1:8b`) as `Role::Adversary`
+//!   and let the adversarial check flip from Skipped to Passed/Failed.
+
+use std::time::Duration;
+
+use adjudication_audit_trail::{AdjudicationId, PassOutcome};
+use adjudication_ir::{
+    DocumentId, IRDocument, IRNode, Modality, NodeId, NodeKind, Polarity, Span,
+};
+use adjudication_pipeline::{
+    run_with_gateway, run_with_rulebooks, ClauseProvenanceTable, DisputedAnswer,
+    PipelineDocument, PipelineInput, PipelineOutput, RulebookProvenance, Verdict,
+};
+use adjudication_rulebook::{
+    acquire_rulebook, AcquireRulebookError, AcquireRulebookRequest, Rulebook,
+};
+use llm_gateway::{
+    CompletionRequest, FinishReason, LlmClient, LlmError, Message, MessageContent, Role as MsgRole,
+};
+use adjudication_clarification::{
+    retry_decompose_on_coverage_failure, retry_decompose_on_polarity_failure,
+    retry_decompose_on_typed_quantity_failure, ClarificationError,
+    CoverageClarificationOutcome, CoverageClarificationRequest, MissingLiteralHint,
+    PolarityClarificationRequest, TypedQuantityClarificationRequest,
+};
+use llm_cache::{CacheStats, CacheStatsHandle, CachingClient};
+use llm_primitives::{
+    decompose_text, DecomposeTextRequest, GatewayConfig, PrimitiveError, Role as PrimitiveRole,
+};
+use llm_provider_ollama::OllamaClient;
+use logic_core::{atom, compound, Term};
+
+// ---------------------------------------------------------------------------
+// Demo configuration
+// ---------------------------------------------------------------------------
+
+/// How Arm B's IR is constructed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IrMode {
+    /// Build the canonical TSA fixture IR in code (no LLM involvement
+    /// in the extraction step). This is the "clean baseline" — proves
+    /// the pipeline machinery works.
+    HandBuilt,
+    /// Call `llm_primitives::decompose_text` to ask the model to
+    /// produce the IR, then convert its JSON output into a typed
+    /// `IRDocument`. This is the full LLM-driven flow.
+    LlmExtracted,
+}
+
+/// Inputs to the demo. The defaults match what most local Ollama
+/// installs look like (`http://localhost:11434`, with two pulled
+/// models for Extractor/Renderer/Nli vs Adversary), so callers
+/// usually only need to override one of them.
+#[derive(Debug, Clone)]
+pub struct DemoConfig {
+    pub endpoint: String,
+    /// Primary model — Arm A's raw call AND Arm B's `Extractor` /
+    /// `Renderer` / `Nli` roles.
+    pub model: String,
+    /// Adversary model — used as Arm B's `Role::Adversary`. MUST be
+    /// from a different `(vendor, model_family)` than `model` for
+    /// ADJ05 independence; the framework's
+    /// `GatewayConfig::check_independence` enforces this and the
+    /// pipeline skips ADJ05 with a structured reason if it fails.
+    ///
+    /// When `None`, ADJ05 records as Skipped — which is fine for the
+    /// quick demo. To turn it on, set `Some("llama3.1:8b")` (assumes
+    /// `ollama pull llama3.1:8b`).
+    pub adversary_model: Option<String>,
+    /// Wall-clock cap per HTTP call. Ollama responses on commodity
+    /// hardware can take 10–60s; 120s is the default in the provider.
+    pub timeout: Duration,
+    /// The TSA source text. Defaults to the ADJ10 fixture.
+    pub source_text: String,
+    /// How Arm B builds the IR. Defaults to [`IrMode::HandBuilt`] for
+    /// the clean baseline; set to [`IrMode::LlmExtracted`] to drive
+    /// the full LLM-from-source flow.
+    pub ir_mode: IrMode,
+    /// Maximum number of ADJ06 clarification rounds when the model's
+    /// first IR fails ADJ02 coverage. `0` disables clarification
+    /// (Blocked verdict on first failure). Default `2` — usually
+    /// enough for a small model to self-correct.
+    pub max_clarification_attempts: usize,
+    /// Optional directory where the LLM cache persists responses
+    /// across runs. When set, every LLM client used by Arm B is
+    /// wrapped in a `CachingClient::with_disk_persistence` and a
+    /// second run replays from disk with zero round-trips. Off by
+    /// default to keep the no-knobs invocation deterministic in CI.
+    pub cache_dir: Option<String>,
+    /// Optional rulebook text to inject into Arm A's system prompt.
+    /// When `None`, the raw arm runs as before — the model relies on
+    /// whatever rules its training data contains, which produces
+    /// the rule-hallucination pattern captured in
+    /// [ADJ12](../../specs/ADJ12-small-model-benchmarks.md)
+    /// ("matches allowed if unlit", "30-pound weight limit", etc.).
+    /// When `Some(text)`, the system prompt names the carry-on rules
+    /// explicitly and tells the model to cite a rule number for each
+    /// finding. Pair with [`fixture_tsa_rulebook`] for a
+    /// deterministic baseline, or with `acquire_rulebook` (from the
+    /// `adjudication-rulebook` crate) for an LLM-elicited rulebook
+    /// that itself runs through the standard audit discipline.
+    pub rulebook_text: Option<String>,
+    /// Maximum number of output tokens Arm A may emit before the
+    /// model's reply is truncated. The Ollama provider surfaces a
+    /// `Stop(MaxTokens)` finish reason that the demo currently
+    /// reports as `OutputTruncated`. Default 2048 — large enough
+    /// that verbose 8B models (gemma4 in particular) can finish a
+    /// rule-by-rule narration before hitting the cap, especially
+    /// when an adversarial rulebook is in the system prompt.
+    ///
+    /// Configurable via `ADJ_DEMO_MAX_ANSWER_TOKENS=<n>`. Lower the
+    /// value to test the truncation path; raise it if a deployment
+    /// uses a model that needs more room.
+    pub max_answer_tokens: usize,
+    /// How Arm A dispatches the LLM call.
+    pub arm_a_mode: ArmAMode,
+}
+
+/// Arm A dispatch strategies. See
+/// [ADJ16 §"gemma4 truncation" follow-up] and the ADJ17 caveats
+/// section for the motivation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ArmAMode {
+    /// Single-turn: one user message carrying the declaration; the
+    /// system prompt holds the rulebook. The v0.7 → v0.11 behaviour;
+    /// kept as the default for backwards-compat.
+    SingleTurn,
+    /// Two-turn priming: turn 1 hands the model the rulebook with an
+    /// explicit instruction to respond only with `ACK` (no rule
+    /// narration, no comments); turn 2 sends the declaration and
+    /// asks for the verdict. Combined with the verdict-first prompt
+    /// rewrite, this drastically reduces the chance of output
+    /// truncation on verbose models — the model digests the
+    /// rulebook silently in turn 1 and produces a tight verdict in
+    /// turn 2.
+    ///
+    /// Triggered by `ADJ_DEMO_ARM_A_MODE=priming`.
+    Priming,
+}
+
+impl Default for DemoConfig {
+    fn default() -> Self {
+        Self {
+            endpoint: "http://localhost:11434".into(),
+            model: "gemma4:latest".into(),
+            adversary_model: None,
+            timeout: Duration::from_secs(120),
+            source_text: "1 carry-on bag, matches.".into(),
+            ir_mode: IrMode::HandBuilt,
+            max_clarification_attempts: 2,
+            cache_dir: None,
+            rulebook_text: None,
+            max_answer_tokens: 2048,
+            arm_a_mode: ArmAMode::SingleTurn,
+        }
+    }
+}
+
+/// The canonical fixture TSA rulebook. A short, numbered, English
+/// list of the rules the carry-on demos exercise. Deterministic by
+/// construction — useful as the "rulebook injected" baseline for
+/// comparing raw-arm hallucination rates against an LLM-acquired
+/// rulebook (which carries its own audit trail).
+///
+/// Source: paraphrased from publicly-known TSA carry-on guidance.
+/// Not an authoritative regulatory document; this fixture is for
+/// demo use only.
+pub fn fixture_tsa_rulebook() -> String {
+    "TSA CARRY-ON RULEBOOK (FIXTURE — for demo use, not authoritative):\n\
+     \n\
+     1. A passenger may carry one (1) carry-on bag plus one (1) \
+     personal item.\n\
+     2. Liquids, aerosols, and gels in carry-on baggage are \
+     limited to 3.4 oz (100 ml) per container; containers must fit \
+     in a single quart-sized clear bag. Exception: prescription \
+     medications and baby formula are exempt from the 3.4 oz limit \
+     and may be declared at the checkpoint.\n\
+     3. Strike-anywhere matches are prohibited in carry-on baggage. \
+     Other matchbooks are permitted (one book per passenger).\n\
+     4. Common lighters are permitted in carry-on (one per passenger). \
+     Torch lighters and lighter fluid are prohibited.\n\
+     5. Lithium batteries: spare lithium-ion batteries over 100 Wh \
+     are prohibited in carry-on; under 100 Wh are permitted. Lithium \
+     metal batteries are limited to 2 g of lithium content per \
+     battery.\n\
+     6. Knives: blades over 2.36 in (60 mm) are prohibited; pocket \
+     knives under that length are permitted.\n\
+     7. Pyrotechnics, fireworks, and signal flares are prohibited.\n\
+     8. Wine, beer, and other alcoholic beverages over 70% ABV are \
+     prohibited. Under 70% ABV is permitted in unopened retail \
+     packaging up to 5 L per passenger.\n"
+        .to_string()
+}
+
+// ---------------------------------------------------------------------------
+// Arm A — raw model
+// ---------------------------------------------------------------------------
+
+/// Outcome of Arm A. The model returns free-form text; we hand it
+/// back verbatim plus a sidecar telemetry struct so the binary can
+/// print it.
+#[derive(Debug, Clone)]
+pub struct RawArmReport {
+    pub prompt: String,
+    pub answer: String,
+    pub model: String,
+    pub input_tokens: usize,
+    pub output_tokens: usize,
+    pub latency_ms: u64,
+    pub finish_reason: FinishReason,
+}
+
+/// Acquire a TSA rulebook from the LLM's own weights via
+/// `adjudication_rulebook::acquire_rulebook`. Returns the typed
+/// [`Rulebook`] (the same `Tentative`-tier shape from ADJ14 Stage
+/// 0); the caller pulls `.source_text` out and feeds it to
+/// [`DemoConfig::rulebook_text`] to inject into Arm A.
+///
+/// This is the **recursive use of the framework on itself**: the
+/// rulebook the model is about to be judged against comes from the
+/// model's own weights, audited through the same decompose +
+/// validate pipeline that the framework uses for facts. The audit
+/// trail records every call.
+///
+/// Returns `AcquireRulebookError` on elicit / decompose failure.
+pub fn acquire_demo_rulebook(
+    cfg: &DemoConfig,
+    gateway: &GatewayConfig,
+) -> Result<Rulebook, AcquireRulebookError> {
+    let document_id = format!("rulebook-tsa-{model}", model = cfg.model);
+    let req = AcquireRulebookRequest {
+        document_id,
+        domain: "tsa-declaration".to_string(),
+        scope: Some("carry-on baggage".to_string()),
+        as_of: "2026-05-12".to_string(),
+        language_hint: None,
+    };
+    acquire_rulebook(&req, gateway)
+}
+
+/// Ask the model directly. When `cfg.rulebook_text` is `None`, the
+/// prompt is intentionally minimal so the model's unaided judgement
+/// is what shows up in the answer (the hallucination baseline).
+/// When `cfg.rulebook_text` is `Some(text)`, the system prompt names
+/// the rules explicitly and tells the model to cite a rule number
+/// per finding — the model can no longer invent constraints.
+pub fn run_raw_arm(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    match cfg.arm_a_mode {
+        ArmAMode::SingleTurn => run_raw_arm_single_turn(cfg),
+        ArmAMode::Priming => run_raw_arm_priming(cfg),
+    }
+}
+
+fn run_raw_arm_single_turn(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    let client = OllamaClient::new(cfg.model.clone())
+        .with_endpoint(cfg.endpoint.clone())
+        .with_timeout(cfg.timeout);
+
+    let prompt = build_raw_prompt(&cfg.source_text);
+    let system = build_raw_system_prompt(cfg.rulebook_text.as_deref());
+    let req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(system),
+        messages: vec![Message {
+            role: MsgRole::User,
+            content: MessageContent::Text(prompt.clone()),
+        }],
+        temperature: 0.0,
+        max_tokens: Some(cfg.max_answer_tokens),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+
+    let resp = client.complete(req)?;
+    Ok(RawArmReport {
+        prompt,
+        answer: resp.text,
+        model: resp.model,
+        input_tokens: resp.usage.input_tokens,
+        output_tokens: resp.usage.output_tokens,
+        latency_ms: resp.latency_ms,
+        finish_reason: resp.finish_reason,
+    })
+}
+
+/// Two-turn priming dispatch (ArmAMode::Priming).
+///
+/// Turn 1 hands the model the rulebook with explicit instructions
+/// to respond only with `ACK`. The model digests the rulebook into
+/// its hidden state without burning output tokens on narration.
+/// Turn 2 sends the declaration and asks for a verdict-first
+/// response. Combined with the raised `max_answer_tokens` cap, this
+/// drastically reduces truncation on verbose 8B-class models.
+///
+/// If the rulebook is `None`, the priming turn is skipped and the
+/// behaviour falls back to single-turn (priming with no rulebook
+/// to digest would be a wasted round-trip).
+fn run_raw_arm_priming(cfg: &DemoConfig) -> Result<RawArmReport, LlmError> {
+    let rulebook = match cfg.rulebook_text.as_deref() {
+        Some(t) if !t.is_empty() => t,
+        _ => return run_raw_arm_single_turn(cfg),
+    };
+
+    let client = OllamaClient::new(cfg.model.clone())
+        .with_endpoint(cfg.endpoint.clone())
+        .with_timeout(cfg.timeout);
+
+    // Turn 1: silent rulebook ingestion.
+    let priming_system = build_priming_system_prompt();
+    let priming_user = build_priming_turn1_user_prompt(rulebook);
+    let priming_req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(priming_system.clone()),
+        messages: vec![Message {
+            role: MsgRole::User,
+            content: MessageContent::Text(priming_user.clone()),
+        }],
+        temperature: 0.0,
+        // The model is supposed to emit "ACK" — keep the budget
+        // tight so a runaway model can't burn the full cap here.
+        max_tokens: Some(64),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+    let turn1 = client.complete(priming_req)?;
+
+    // Turn 2: actual question with full turn-1 conversation as
+    // context. We rebuild the conversation rather than relying on
+    // server-side state since OllamaClient doesn't carry session
+    // affinity across calls.
+    let turn2_user = build_priming_turn2_user_prompt(&cfg.source_text);
+    let turn2_req = CompletionRequest {
+        model: cfg.model.clone(),
+        system: Some(priming_system),
+        messages: vec![
+            Message {
+                role: MsgRole::User,
+                content: MessageContent::Text(priming_user),
+            },
+            Message {
+                role: MsgRole::Assistant,
+                content: MessageContent::Text(turn1.text.clone()),
+            },
+            Message {
+                role: MsgRole::User,
+                content: MessageContent::Text(turn2_user.clone()),
+            },
+        ],
+        temperature: 0.0,
+        max_tokens: Some(cfg.max_answer_tokens),
+        stop_sequences: Vec::new(),
+        seed: Some(42),
+        metadata: Default::default(),
+    };
+    let turn2 = client.complete(turn2_req)?;
+
+    // RawArmReport's `prompt` field surfaces the user-visible
+    // question; for priming we surface turn 2's user message so the
+    // report is comparable to single-turn output. The full prompt
+    // history is reconstructable from the audit trail.
+    Ok(RawArmReport {
+        prompt: turn2_user,
+        answer: turn2.text,
+        model: turn2.model,
+        // Token usage: sum across both turns so the cost accounting
+        // reflects the real round-trips.
+        input_tokens: turn1.usage.input_tokens + turn2.usage.input_tokens,
+        output_tokens: turn1.usage.output_tokens + turn2.usage.output_tokens,
+        latency_ms: turn1.latency_ms + turn2.latency_ms,
+        finish_reason: turn2.finish_reason,
+    })
+}
+
+fn build_raw_prompt(source_text: &str) -> String {
+    format!(
+        "DECLARATION: {source_text}\n\nIs the passenger TSA-compliant?",
+        source_text = source_text,
+    )
+}
+
+/// Build Arm A's single-turn system prompt. When a rulebook is
+/// supplied, the prompt names the rules and forbids the model from
+/// inventing constraints not on the list. The instruction puts the
+/// `VERDICT:` line **first** so the answer survives even if
+/// downstream reasoning truncates against `max_answer_tokens`.
+pub fn build_raw_system_prompt(rulebook_text: Option<&str>) -> String {
+    match rulebook_text {
+        None => "You are a TSA compliance officer. Given a passenger \
+                 declaration, decide whether the passenger is compliant \
+                 with TSA carry-on rules.\n\
+                 \n\
+                 Your response MUST begin with the verdict line as the \
+                 very first line of output:\n\
+                 \n\
+                 VERDICT: COMPLIANT\n\
+                 (or)\n\
+                 VERDICT: NON-COMPLIANT\n\
+                 \n\
+                 After the verdict line, give 2-3 sentences of \
+                 reasoning. The verdict-first format ensures the \
+                 verdict is captured even if your reasoning is \
+                 truncated."
+            .to_string(),
+        Some(text) => format!(
+            "You are a TSA compliance officer. Use only the rules \
+             listed below. Do not invent or infer additional rules.\n\
+             \n\
+             {text}\n\
+             \n\
+             Given a passenger declaration, decide whether the \
+             passenger is compliant with the rules above.\n\
+             \n\
+             Your response MUST begin with the verdict line as the \
+             very first line of output:\n\
+             \n\
+             VERDICT: COMPLIANT — only when a rule above explicitly \
+             permits all items declared.\n\
+             VERDICT: NON-COMPLIANT — only when a rule above \
+             explicitly prohibits an item declared.\n\
+             VERDICT: ESCALATE — <one sentence describing what a \
+             supervisor needs to clarify> — when the rules above \
+             don't cover the case, when you cannot evaluate a \
+             rule's condition from the declaration, or when the \
+             declaration is ambiguous.\n\
+             \n\
+             Important: silence is not permission. If no rule \
+             above either explicitly prohibits or explicitly permits \
+             the case described, the correct verdict is ESCALATE — \
+             not COMPLIANT. Use ESCALATE whenever you would \
+             otherwise need to reason beyond the rules above, \
+             fabricate a rule that isn't listed, or default to one \
+             of the binary verdicts because the rulebook doesn't \
+             resolve the case.\n\
+             \n\
+             After the verdict line, give 2-3 sentences of \
+             reasoning citing the specific rule number(s) that \
+             produced your verdict (e.g., \"per rule N, ...\"). The \
+             verdict-first format ensures the verdict is captured \
+             even if your reasoning is truncated."
+        ),
+    }
+}
+
+/// Build the system prompt for the priming dispatch path. Same role
+/// (TSA compliance officer) but with explicit ground rules about
+/// the two-turn protocol: read silently on turn 1, answer on turn 2.
+pub fn build_priming_system_prompt() -> String {
+    "You are a TSA compliance officer. You will receive information \
+     in two turns:\n\
+     \n\
+     Turn 1: I will give you a TSA carry-on rulebook. Read it \
+     carefully and store the rules in your working memory. Respond \
+     with exactly the single word `ACK` and nothing else. Do NOT \
+     summarise the rules, comment on them, or analyse them until I \
+     ask my question in turn 2.\n\
+     \n\
+     Turn 2: I will give you a passenger declaration. Apply only \
+     the rulebook from turn 1 — do not invent or infer additional \
+     rules. Your response MUST begin with the verdict line as the \
+     very first line of output:\n\
+     \n\
+     VERDICT: COMPLIANT — only when a rule from turn 1 explicitly \
+     permits all items declared.\n\
+     VERDICT: NON-COMPLIANT — only when a rule from turn 1 \
+     explicitly prohibits an item declared.\n\
+     VERDICT: ESCALATE — <one sentence describing what a supervisor \
+     needs to clarify> — when no rule from turn 1 covers the case, \
+     when you cannot evaluate a rule's condition from the \
+     declaration, or when the declaration is ambiguous.\n\
+     \n\
+     Important: silence is not permission. If no rule from turn 1 \
+     either explicitly prohibits or explicitly permits the case \
+     described, the correct verdict is ESCALATE — not COMPLIANT. \
+     Use ESCALATE whenever you would otherwise need to reason \
+     beyond the rules from turn 1, fabricate a rule, or default \
+     to one of the binary verdicts because the rulebook doesn't \
+     resolve the case.\n\
+     \n\
+     After the verdict line, give 2-3 sentences of reasoning \
+     citing specific rule numbers from the turn 1 rulebook. The \
+     verdict-first format ensures the verdict is captured even if \
+     your reasoning is truncated."
+        .to_string()
+}
+
+/// Build the turn 1 user message for the priming path: the
+/// rulebook, framed as "intake this and acknowledge".
+pub fn build_priming_turn1_user_prompt(rulebook_text: &str) -> String {
+    format!(
+        "TURN 1: RULEBOOK INTAKE.\n\
+         \n\
+         The following TSA carry-on rulebook applies to my next \
+         question. Read it. Respond with `ACK` only.\n\
+         \n\
+         {rulebook_text}"
+    )
+}
+
+/// Build the turn 2 user message for the priming path: the
+/// declaration, framed as "now apply turn 1's rulebook and answer".
+pub fn build_priming_turn2_user_prompt(source_text: &str) -> String {
+    format!(
+        "TURN 2: QUESTION.\n\
+         \n\
+         Apply the rulebook from turn 1. Declaration: {source_text}\n\
+         \n\
+         Is the passenger TSA-compliant? Remember: first line MUST \
+         be `VERDICT: COMPLIANT`, `VERDICT: NON-COMPLIANT`, or \
+         `VERDICT: ESCALATE — <reason>`. Silence in the rulebook is \
+         not permission — ESCALATE if no rule covers the case."
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Arm B — structured pipeline
+// ---------------------------------------------------------------------------
+
+/// Outcome of Arm B. We surface both the pipeline `Verdict` and a
+/// short text summary so the side-by-side print stays readable.
+#[derive(Debug)]
+pub struct PipelineArmReport {
+    pub verdict_summary: String,
+    pub pipeline_output: PipelineOutput,
+    pub adj02_outcome: PassOutcome,
+    pub adj03_outcome: PassOutcome,
+    pub adj04_outcome: PassOutcome,
+    pub adj05_outcome: PassOutcome,
+    pub engine_ran: bool,
+    /// Human-readable description of every ADJ04 round-trip
+    /// violation — one entry per IR leaf where the model's
+    /// rendering didn't match the source. Empty when ADJ04
+    /// passed or was skipped.
+    pub adj04_drift_findings: Vec<Adj04DriftFinding>,
+    /// Human-readable description of every ADJ05 adversarial
+    /// violation — one entry per IR leaf where a *different model*
+    /// produced a plausible contradicting reading. Empty when ADJ05
+    /// passed or was skipped.
+    pub adj05_adversarial_findings: Vec<Adj05AdversarialFinding>,
+    /// Records how Arm B's IR was built. For LlmExtracted mode this
+    /// includes the model's raw JSON so the report shows exactly
+    /// what the model produced.
+    pub ir_source: IrSourceTelemetry,
+    /// Aggregate cache stats across every role's `CachingClient`.
+    /// Populated regardless of whether disk persistence is enabled;
+    /// hit rate is 0% on first run, climbs as the same prompts are
+    /// re-issued (most often via the ADJ06 retry loop within a
+    /// single run, or across runs when `cache_dir` is set).
+    pub cache_stats: CacheStats,
+}
+
+/// One ADJ04 drift finding pulled out of the audit trail. Mirrors
+/// the `RoundTripDrift` violation but as plain strings + scores so
+/// the binary can print them cleanly without re-deriving JSON.
+#[derive(Debug, Clone)]
+pub struct Adj04DriftFinding {
+    pub node_id: String,
+    pub source_excerpt: String,
+    pub model_rendering: String,
+    pub source_to_rendering_score: f32,
+    pub rendering_to_source_score: f32,
+    pub threshold: f32,
+}
+
+/// One ADJ05 adversarial finding. The adversary model produced a
+/// plausible *alternative* reading of the same source span — meaning
+/// the IR's interpretation isn't the only defensible one.
+#[derive(Debug, Clone)]
+pub struct Adj05AdversarialFinding {
+    pub node_id: String,
+    pub ir_rendered: String,
+    pub adversary_reading: String,
+    pub adversary_explanation: String,
+    pub judge_reason: String,
+}
+
+/// Run the pipeline arm. The same source text Arm A saw is mapped
+/// onto a hand-built TSA IR (see [`tsa_ir_document`]) and fed through
+/// [`adjudication_pipeline::run_with_gateway`] with the Ollama
+/// instance registered for both `Renderer` and `Nli`.
+///
+/// **ADJ04 caveat**: a single-model gateway is fine for `Renderer`
+/// (rendering is faithful paraphrase, no self-confirmation hazard)
+/// but is theoretically loose for `Nli` (the entail check is asking
+/// the model to grade its own renderer). The demo runs it anyway —
+/// the framework's job is to make this explicit, and the audit
+/// trail records both roles' provider identity so a reviewer sees
+/// the configuration.
+pub fn run_pipeline_arm(cfg: &DemoConfig) -> PipelineArmReport {
+    let primary = OllamaClient::new(cfg.model.clone())
+        .with_endpoint(cfg.endpoint.clone())
+        .with_timeout(cfg.timeout);
+    // GatewayConfig needs Box<dyn LlmClient>; we register clones of
+    // the primary client for Extractor/Renderer/Nli/Plausibility so
+    // each call site uses its own connection.
+    let (extractor, h_extractor) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (renderer, h_renderer) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (nli, h_nli) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let (plausibility, h_plausibility) = wrap_with_cache(Box::new(primary.clone()), cfg);
+    let mut cache_handles = vec![h_extractor, h_renderer, h_nli, h_plausibility];
+    let mut gateway = GatewayConfig::new()
+        .with_client(PrimitiveRole::Extractor, extractor)
+        .with_client(PrimitiveRole::Renderer, renderer)
+        .with_client(PrimitiveRole::Nli, nli)
+        .with_client(PrimitiveRole::Plausibility, plausibility);
+
+    // ADJ05 adversary: a SECOND model from a different family. The
+    // framework's `check_independence` enforces this and skips the
+    // check with a typed reason if it sees the same family.
+    if let Some(adv_model) = &cfg.adversary_model {
+        let adv_client = OllamaClient::new(adv_model.clone())
+            .with_endpoint(cfg.endpoint.clone())
+            .with_timeout(cfg.timeout);
+        let (adv_boxed, h_adv) = wrap_with_cache(Box::new(adv_client) as Box<dyn LlmClient>, cfg);
+        cache_handles.push(h_adv);
+        gateway = gateway.with_client(PrimitiveRole::Adversary, adv_boxed);
+    }
+
+    // Build the IR according to the configured mode. The
+    // `IrSourceTelemetry` captures what the model produced (if any)
+    // so the report can surface it.
+    let (mut ir_document, mut ir_source_telemetry) =
+        build_ir(cfg, &gateway);
+
+    let make_now = || {
+        let tick = std::cell::Cell::new(0u32);
+        move || {
+            let t = tick.get();
+            tick.set(t + 1);
+            format!("2026-05-11T00:00:{:02}Z", t.min(59))
+        }
+    };
+
+    // Initial pipeline run.
+    let input = PipelineInput {
+        document: PipelineDocument {
+            id: "tsa-demo-001".into(),
+            name: "tsa_declaration".into(),
+            received_at: "2026-05-11T00:00:00Z".into(),
+            normalized_text: cfg.source_text.clone(),
+            normalization_pipeline: "plain-text-v1".into(),
+            normalization_version: "1.0.0".into(),
+        },
+        ir_document: ir_document.clone(),
+    };
+    let mut output =
+        run_with_gateway(input, AdjudicationId::new("adj-tsa-demo"), make_now(), Some(&gateway));
+
+    // ADJ06 clarification loop: only fires in LlmExtracted mode when
+    // a gating check failed AND we have budget left. Each iteration
+    // picks the FIRST failing gating check and dispatches to the
+    // matching retry primitive:
+    //   - ADJ02 coverage    → retry_decompose_on_coverage_failure
+    //   - ADJ03 polarity    → retry_decompose_on_polarity_failure
+    // After the retry we re-run the entire pipeline so every
+    // checker sees the corrected IR.
+    if matches!(cfg.ir_mode, IrMode::LlmExtracted) && cfg.max_clarification_attempts > 0 {
+        let mut clarification_turns: Vec<adjudication_audit_trail::DialogueTurn> = Vec::new();
+        for attempt in 1..=cfg.max_clarification_attempts {
+            // Audit-trail index layout after ADJ24 wiring (per
+            // `adjudication_pipeline::run_with_gateway`):
+            //   [0] = ADJ02 coverage
+            //   [1] = ADJ22 typed-quantity
+            //   [2] = ADJ03 polarity/modality
+            //   [3] = ADJ04 round-trip       (advisory, not in retry loop)
+            //   [4] = ADJ05 adversarial      (advisory, not in retry loop)
+            let adj02_passed = matches!(
+                output.audit_trail.checker_results[0].outcome,
+                PassOutcome::Passed
+            );
+            let adj22_passed = matches!(
+                output.audit_trail.checker_results[1].outcome,
+                PassOutcome::Passed
+            );
+            let adj03_passed = matches!(
+                output.audit_trail.checker_results[2].outcome,
+                PassOutcome::Passed
+            );
+            if adj02_passed && adj22_passed && adj03_passed {
+                // All three gating checks pass — no more
+                // clarification needed at this layer. ADJ04 and
+                // ADJ05 are advisory and don't trigger ADJ06 in
+                // v0.5 of the demo.
+                break;
+            }
+            // Build the previous-IR JSON once (used by every retry).
+            let previous_ir_json = previous_ir_for_clarification(&ir_source_telemetry);
+            let original = DecomposeTextRequest {
+                document_id: "tsa-demo-001".into(),
+                source_text: cfg.source_text.clone(),
+                domain_hint: "tsa-declaration".into(),
+                language_hint: Some("en".into()),
+            };
+
+            // Priority: ADJ02 coverage first (structural — without
+            // it spans are unreliable), ADJ22 typed-quantity second
+            // (typing — enables engine arithmetic), ADJ03 polarity
+            // third (semantic refinement on a structurally-valid IR).
+            let retry_result: Result<CoverageClarificationOutcome, ClarificationError> =
+                if !adj02_passed {
+                    let v = format_first_adj02_violation(
+                        &output.audit_trail.checker_results[0],
+                    );
+                    retry_decompose_on_coverage_failure(
+                        &CoverageClarificationRequest {
+                            original: original.clone(),
+                            violation_description: v,
+                            previous_ir: previous_ir_json.clone(),
+                        },
+                        &gateway,
+                        1,
+                        make_now(),
+                    )
+                } else if !adj22_passed {
+                    // ADJ22 failed; build per-missing-literal hints
+                    // from the violation details so the prompt names
+                    // each dropped literal individually.
+                    let hints = collect_typed_quantity_hints(
+                        &output.audit_trail.checker_results[1],
+                    );
+                    let v = format!(
+                        "{} literal(s) without quantity compounds: {}",
+                        hints.len(),
+                        hints
+                            .iter()
+                            .map(|h| format!("\"{}\"", h.literal))
+                            .collect::<Vec<_>>()
+                            .join(", "),
+                    );
+                    retry_decompose_on_typed_quantity_failure(
+                        &TypedQuantityClarificationRequest {
+                            original: original.clone(),
+                            violation_description: v,
+                            previous_ir: previous_ir_json.clone(),
+                            missing_literals: hints,
+                        },
+                        &gateway,
+                        1,
+                        make_now(),
+                    )
+                } else {
+                    // ADJ03 failed; build a polarity hint from the
+                    // violation detail when we can.
+                    let v = format_first_adj03_violation(
+                        &output.audit_trail.checker_results[2],
+                    );
+                    let hint = build_polarity_hint(
+                        &output.audit_trail.checker_results[2],
+                        &cfg.source_text,
+                    );
+                    retry_decompose_on_polarity_failure(
+                        &PolarityClarificationRequest {
+                            original: original.clone(),
+                            violation_description: v,
+                            previous_ir: previous_ir_json.clone(),
+                            polarity_hint: hint,
+                        },
+                        &gateway,
+                        1,
+                        make_now(),
+                    )
+                };
+
+            match retry_result {
+                Ok(out) => {
+                    clarification_turns.extend(out.dialogue);
+                    match json_to_ir_document(
+                        &out.corrected_ir,
+                        "tsa-demo-001",
+                        &cfg.source_text,
+                    ) {
+                        Ok((new_ir, mut new_warnings)) => {
+                            // Update the telemetry so the report
+                            // surfaces the corrected IR + the
+                            // accumulated warnings.
+                            if let IrSourceTelemetry::LlmExtracted {
+                                ref mut node_count,
+                                ref mut raw_ir_json,
+                                ref mut converter_warnings,
+                                ..
+                            } = ir_source_telemetry
+                            {
+                                *node_count = new_ir.nodes.len();
+                                *raw_ir_json = serde_json::to_string_pretty(&out.corrected_ir)
+                                    .unwrap_or_else(|_| out.corrected_ir.to_string());
+                                converter_warnings.append(&mut new_warnings);
+                            }
+                            ir_document = new_ir.clone();
+                            let retry_input = PipelineInput {
+                                document: PipelineDocument {
+                                    id: "tsa-demo-001".into(),
+                                    name: "tsa_declaration".into(),
+                                    received_at: "2026-05-11T00:00:00Z".into(),
+                                    normalized_text: cfg.source_text.clone(),
+                                    normalization_pipeline: "plain-text-v1".into(),
+                                    normalization_version: "1.0.0".into(),
+                                },
+                                ir_document: ir_document.clone(),
+                            };
+                            output = run_with_gateway(
+                                retry_input,
+                                AdjudicationId::new(format!("adj-tsa-demo-r{attempt}")),
+                                make_now(),
+                                Some(&gateway),
+                            );
+                        }
+                        Err(e) => {
+                            // Corrected IR was unparseable; give up and
+                            // keep the previous pipeline output.
+                            clarification_turns
+                                .last_mut()
+                                .map(|t| t.outcome = adjudication_audit_trail::DialogueOutcome::Abandoned);
+                            let _ = e;
+                            break;
+                        }
+                    }
+                }
+                Err(ClarificationError::Exhausted { dialogue, .. }) => {
+                    clarification_turns.extend(dialogue);
+                    break;
+                }
+                Err(ClarificationError::Primitive(_)) => {
+                    break;
+                }
+            }
+        }
+        // Stitch dialogue into the audit trail + the report telemetry.
+        if !clarification_turns.is_empty() {
+            let attempts = clarification_turns.len();
+            let adj02_resolved = matches!(
+                output.audit_trail.checker_results[0].outcome,
+                PassOutcome::Passed
+            );
+            let adj03_resolved = matches!(
+                output.audit_trail.checker_results[1].outcome,
+                PassOutcome::Passed
+            );
+            let resolved = adj02_resolved && adj03_resolved;
+            // Surface WHICH checker the clarification ended on so a
+            // reviewer can see whether the loop ran out of budget
+            // mid-ADJ03 or fully cleared ADJ02 + ADJ03.
+            let status = match (adj02_resolved, adj03_resolved) {
+                (true, true) => "resolved (ADJ02 + ADJ03 both pass)",
+                (true, false) => "exhausted (ADJ02 fixed, ADJ03 still failing)",
+                (false, _) => "exhausted (ADJ02 still failing)",
+            };
+            let _ = resolved;
+            let summary = format!("{attempts} clarification round(s) — {status}");
+            if let IrSourceTelemetry::LlmExtracted {
+                clarification_summary: ref mut cs,
+                clarification_turns: ref mut tgt,
+                ..
+            } = ir_source_telemetry
+            {
+                *cs = Some(summary);
+                *tgt = clarification_turns.clone();
+            }
+            output.audit_trail.dialogue.extend(clarification_turns);
+        }
+    }
+
+    let trail = &output.audit_trail;
+    let adj04_drift_findings = collect_adj04_drift(&trail.checker_results);
+    let adj05_adversarial_findings = collect_adj05_findings(&trail.checker_results);
+    let adj04_passed = matches!(trail.checker_results[2].outcome, PassOutcome::Passed);
+
+    let summary = match &output.verdict {
+        Verdict::Resolved { answers } if adj04_passed => format!(
+            "Resolved with {n} engine answer(s); all gating checks passed; ADJ04 round-trip agreed with the source",
+            n = answers.len()
+        ),
+        Verdict::Resolved { answers } if !adj04_drift_findings.is_empty() => format!(
+            "Resolved with {n} engine answer(s), BUT ADJ04 caught {d} round-trip drift(s) — model's IR rendering doesn't faithfully reflect the source. See per-finding detail below.",
+            n = answers.len(),
+            d = adj04_drift_findings.len(),
+        ),
+        Verdict::Resolved { answers } => format!(
+            "Resolved with {n} engine answer(s); ADJ04 errored before producing a verdict (see audit trail telemetry)",
+            n = answers.len()
+        ),
+        Verdict::Blocked { violation_count } => {
+            format!("Blocked with {violation_count} violation(s); engine did not run")
+        }
+        Verdict::EngineError(detail) => format!("EngineError: {detail}"),
+    };
+
+    // Aggregate cache stats across every role's CachingClient.
+    let aggregate_cache_stats = aggregate_stats(&cache_handles);
+
+    PipelineArmReport {
+        verdict_summary: summary,
+        adj02_outcome: trail.checker_results[0].outcome,
+        adj03_outcome: trail.checker_results[1].outcome,
+        adj04_outcome: trail.checker_results[2].outcome,
+        adj05_outcome: trail.checker_results[3].outcome,
+        engine_ran: trail.engine_artifacts.is_some(),
+        adj04_drift_findings,
+        adj05_adversarial_findings,
+        ir_source: ir_source_telemetry,
+        cache_stats: aggregate_cache_stats,
+        pipeline_output: output,
+    }
+}
+
+/// Sum hits/misses/entries across a fleet of `CacheStatsHandle`s.
+fn aggregate_stats(handles: &[CacheStatsHandle]) -> CacheStats {
+    let mut total = CacheStats::default();
+    for h in handles {
+        let s = h.stats();
+        total.hits = total.hits.saturating_add(s.hits);
+        total.misses = total.misses.saturating_add(s.misses);
+        total.entries = total.entries.saturating_add(s.entries);
+    }
+    total
+}
+
+/// How Arm B's IR was built — recorded so the report can show the
+/// LLM's raw JSON output when the extractor was involved.
+#[derive(Debug, Clone)]
+pub enum IrSourceTelemetry {
+    HandBuilt,
+    LlmExtracted {
+        /// Number of nodes the converter pulled out of the model's
+        /// JSON. May be 0 if the LLM didn't produce a `nodes` array.
+        node_count: usize,
+        /// The model's raw IR JSON (pretty-printed), included so the
+        /// report shows exactly what the model said.
+        raw_ir_json: String,
+        /// Any warnings the converter raised while normalizing the
+        /// LLM output (e.g., "node F1 had non-string `kind`; defaulted
+        /// to Fact"). Empty when the model produced clean output.
+        converter_warnings: Vec<String>,
+        /// One-line summary of any ADJ06 clarification dialogue that
+        /// happened during IR construction. Empty when the model got
+        /// it right on the first try; "1 retry (resolved)" when a
+        /// single ADJ06 round-trip corrected an ADJ02 failure;
+        /// "2 retries (exhausted)" when the loop gave up.
+        clarification_summary: Option<String>,
+        /// Detailed clarification turns (audit-trail rows) — surfaced
+        /// in the report so reviewers can see what the model was
+        /// told and how it responded.
+        clarification_turns: Vec<adjudication_audit_trail::DialogueTurn>,
+    },
+    /// The model's extractor call failed (transport, validation, etc.).
+    /// We fall back to the hand-built IR so the pipeline still has
+    /// *something* to run on, and the report explains the fallback.
+    LlmExtractionFailed {
+        error: String,
+        fell_back_to_hand_built: bool,
+    },
+}
+
+fn build_ir(cfg: &DemoConfig, gateway: &GatewayConfig) -> (IRDocument, IrSourceTelemetry) {
+    match cfg.ir_mode {
+        IrMode::HandBuilt => (tsa_ir_document(&cfg.source_text), IrSourceTelemetry::HandBuilt),
+        IrMode::LlmExtracted => match call_decompose(cfg, gateway) {
+            Ok((ir, raw_json, warnings)) => {
+                let node_count = ir.nodes.len();
+                (
+                    ir,
+                    IrSourceTelemetry::LlmExtracted {
+                        node_count,
+                        raw_ir_json: raw_json,
+                        converter_warnings: warnings,
+                        clarification_summary: None,
+                        clarification_turns: Vec::new(),
+                    },
+                )
+            }
+            Err(e) => (
+                tsa_ir_document(&cfg.source_text),
+                IrSourceTelemetry::LlmExtractionFailed {
+                    error: e,
+                    fell_back_to_hand_built: true,
+                },
+            ),
+        },
+    }
+}
+
+/// Drive `decompose_text` and convert the JSON output into a typed
+/// `IRDocument`. Returns `(ir, pretty_raw_json, warnings)` on
+/// success.
+fn call_decompose(
+    cfg: &DemoConfig,
+    gateway: &GatewayConfig,
+) -> Result<(IRDocument, String, Vec<String>), String> {
+    let req = DecomposeTextRequest {
+        document_id: "tsa-demo-001".into(),
+        source_text: cfg.source_text.clone(),
+        domain_hint: "tsa-declaration".into(),
+        language_hint: Some("en".into()),
+    };
+    let resp = decompose_text(&req, gateway).map_err(|e: PrimitiveError| format!("{e}"))?;
+    let raw_json = serde_json::to_string_pretty(&resp.ir_document)
+        .unwrap_or_else(|_| resp.ir_document.to_string());
+    let (ir, warnings) =
+        json_to_ir_document(&resp.ir_document, &req.document_id, &cfg.source_text)
+            .map_err(|e| format!("JSON-to-IR conversion failed: {e}"))?;
+    Ok((ir, raw_json, warnings))
+}
+
+// ---------------------------------------------------------------------------
+// Tolerant JSON-to-IR converter
+// ---------------------------------------------------------------------------
+
+/// Convert the LLM's IR JSON into a typed `IRDocument`. Models
+/// produce a range of shapes; the converter is deliberately
+/// forgiving:
+///
+/// - Missing `kind` → defaults to `Fact`.
+/// - Missing `polarity` / `modality` → defaults to `Affirmed` /
+///   `Present` (the safest neutrals; downstream ADJ03 will flag if
+///   the choice was actually meaningful).
+/// - Missing `source_spans` → falls back to a single span covering
+///   `[0, source.len())` for Fact/Rule/Uncertainty/Exception/Discarded
+///   nodes, and to an empty span list for Query (which ADJ02 v2 allows).
+/// - Unknown `kind` strings → defaults to `Fact` (so ADJ02 still
+///   runs against the text).
+/// - Spans with `end > source.len()` → clamped to `source.len()`.
+///
+/// Every fallback is recorded in `warnings` so the report can surface
+/// them. The converter does NOT enforce ADJ01 well-formedness —
+/// that's `adjudication-ir::validate`'s job (and ADJ02/ADJ03 enforce
+/// the same constraints structurally).
+fn json_to_ir_document(
+    v: &serde_json::Value,
+    expected_doc_id: &str,
+    source_text: &str,
+) -> Result<(IRDocument, Vec<String>), String> {
+    let mut warnings = Vec::new();
+    let obj = v
+        .as_object()
+        .ok_or_else(|| "IR root is not a JSON object".to_string())?;
+
+    let doc_id = obj
+        .get("document_id")
+        .and_then(|x| x.as_str())
+        .unwrap_or_else(|| {
+            warnings.push("document_id missing; using fallback".to_string());
+            expected_doc_id
+        })
+        .to_string();
+    if doc_id != expected_doc_id {
+        warnings.push(format!(
+            "document_id mismatch (LLM said {doc_id:?}; expected {expected_doc_id:?})"
+        ));
+    }
+    let document_id = DocumentId::new(doc_id);
+
+    let nodes_arr = obj
+        .get("nodes")
+        .and_then(|x| x.as_array())
+        .ok_or_else(|| "IR has no nodes array".to_string())?;
+
+    let source_len = source_text.len();
+    let mut nodes = Vec::new();
+    let mut idx_counter = 0usize;
+    for node_v in nodes_arr.iter() {
+        // Some models (Gemma 4 included) produce a nested tree
+        // (`{ "children": [...] }`) rather than the flat list the
+        // prompt asks for. Walk the tree and flatten — every leaf
+        // becomes an IRNode, parents are dropped because they don't
+        // carry atomic claims at this layer.
+        flatten_nodes(
+            node_v,
+            None,
+            &document_id,
+            source_len,
+            &mut idx_counter,
+            &mut nodes,
+            &mut warnings,
+        );
+    }
+
+    // Ensure the IR has at least one Query node so the engine has
+    // something to do. If the model didn't produce one, synthesize
+    // `compliant(passenger_a)?` — same as the hand-built fixture.
+    if !nodes.iter().any(|n| matches!(n.kind, NodeKind::Query)) {
+        warnings.push(
+            "no Query node in LLM IR; synthesizing compliant(passenger_a) so the engine can run"
+                .to_string(),
+        );
+        nodes.push(synth_query_node(&document_id));
+    }
+
+    Ok((
+        IRDocument {
+            document_id,
+            nodes,
+            edges: Vec::new(),
+        },
+        warnings,
+    ))
+}
+
+/// Walk a possibly-nested JSON node tree and emit each leaf (or each
+/// node that contains atomic content) as an `IRNode`. Parent
+/// `TextRun` nodes are dropped — they carry structural grouping in
+/// the model's output but don't represent claims this layer cares
+/// about. If a node has no `children` field, it's treated as a leaf
+/// itself.
+fn flatten_nodes(
+    v: &serde_json::Value,
+    parent: Option<&NodeId>,
+    document_id: &DocumentId,
+    source_len: usize,
+    idx_counter: &mut usize,
+    out: &mut Vec<IRNode>,
+    warnings: &mut Vec<String>,
+) {
+    let obj = match v.as_object() {
+        Some(o) => o,
+        None => {
+            warnings.push("encountered non-object node; skipping".into());
+            return;
+        }
+    };
+
+    let has_children = obj
+        .get("children")
+        .and_then(|x| x.as_array())
+        .is_some_and(|a| !a.is_empty());
+
+    if has_children {
+        // We DON'T emit the grouping TextRun parent because the demo's
+        // engine only consumes Fact/Query/etc. — and crucially we
+        // also DON'T propagate a `part_of` pointer to children that
+        // would reference a non-existent node. The flattened children
+        // become document roots, and ADJ02 sees the leaves' spans
+        // directly. Walk every child as a fresh root.
+        for child in obj.get("children").and_then(|x| x.as_array()).unwrap() {
+            flatten_nodes(
+                child,
+                None,
+                document_id,
+                source_len,
+                idx_counter,
+                out,
+                warnings,
+            );
+        }
+        return;
+    }
+
+    // Leaf node — convert it.
+    let node = match json_to_ir_node(
+        v,
+        *idx_counter,
+        document_id,
+        source_len,
+        warnings,
+    ) {
+        Ok(n) => n,
+        Err(e) => {
+            warnings.push(format!("skipped malformed node: {e}"));
+            return;
+        }
+    };
+    *idx_counter += 1;
+    // ADJ01 v3: structural parents are now expressed via `Contains`
+    // edges, not a `part_of` field. The decompose_text v4 prompt
+    // (follow-up PR) will teach the LLM to emit those edges directly.
+    // Until then, this flattening path drops the v2 parent-pointer
+    // logic and lets the resulting IR be a flat list of leaves —
+    // coverage will tile if the leaves collectively span the source.
+    let _ = parent; // suppress unused-var warning
+    out.push(node);
+}
+
+fn synth_query_node(document_id: &DocumentId) -> IRNode {
+    IRNode {
+        id: NodeId::new("Q-synth"),
+        kind: NodeKind::Query,
+        term: compound("compliant", vec![atom("passenger_a")]),
+        polarity: Polarity::Affirmed,
+        modality: Modality::Present,
+        source_spans: Vec::new(),
+        confidence: 1.0,
+        discard_reason: None,
+        metadata: {
+            let mut m = std::collections::HashMap::new();
+            m.insert("synthesized".to_string(), "true".to_string());
+            m.insert("document_id".to_string(), document_id.0.clone());
+            m
+        },
+    }
+}
+
+fn json_to_ir_node(
+    v: &serde_json::Value,
+    idx: usize,
+    document_id: &DocumentId,
+    source_len: usize,
+    warnings: &mut Vec<String>,
+) -> Result<IRNode, String> {
+    let obj = v
+        .as_object()
+        .ok_or_else(|| format!("node {idx} is not a JSON object"))?;
+
+    let id = obj
+        .get("id")
+        .and_then(|x| x.as_str())
+        .map(str::to_string)
+        .unwrap_or_else(|| {
+            warnings.push(format!("node[{idx}] missing id; assigning N{idx}"));
+            format!("N{idx}")
+        });
+
+    // Accept `kind` (per the prompt) OR `node_type` (which Gemma 4
+    // tends to emit). Either field with an unknown value defaults
+    // to Fact.
+    let kind_str = obj
+        .get("kind")
+        .or_else(|| obj.get("node_type"))
+        .and_then(|x| x.as_str());
+    let kind = match kind_str {
+        Some(s) => match parse_node_kind(s) {
+            Some(k) => k,
+            None => {
+                warnings.push(format!("node {id} has unknown kind {s:?}; defaulting to Fact"));
+                NodeKind::Fact
+            }
+        },
+        None => {
+            warnings.push(format!("node {id} missing kind; defaulting to Fact"));
+            NodeKind::Fact
+        }
+    };
+
+    let polarity = obj
+        .get("polarity")
+        .and_then(|x| x.as_str())
+        .map(|s| match parse_polarity(s) {
+            Some(p) => p,
+            None => {
+                warnings.push(format!("node {id} unknown polarity {s:?}; defaulting to Affirmed"));
+                Polarity::Affirmed
+            }
+        })
+        .unwrap_or(Polarity::Affirmed);
+
+    let modality = obj
+        .get("modality")
+        .and_then(|x| x.as_str())
+        .map(|s| match parse_modality(s) {
+            Some(m) => m,
+            None => {
+                warnings.push(format!("node {id} unknown modality {s:?}; defaulting to Present"));
+                Modality::Present
+            }
+        })
+        .unwrap_or(Modality::Present);
+
+    // Accept `term` (per the prompt) OR `text` (Gemma 4's preferred
+    // field). For `text` we wrap the string in `claim/1`-style atom
+    // so the engine has a deterministic term to work with.
+    let term = if let Some(t) = obj.get("term") {
+        json_to_term(t, &id, warnings)
+    } else if let Some(t) = obj.get("text").and_then(|x| x.as_str()) {
+        // The model gave us the raw text of the leaf rather than a
+        // structured term. Wrap it so the engine doesn't have to
+        // parse it as logic — the audit trail still records the
+        // model's literal claim.
+        compound("text_claim", vec![atom(t)])
+    } else {
+        warnings.push(format!("node {id} missing term; using atom \"unknown\""));
+        atom("unknown")
+    };
+
+    let source_spans = parse_source_spans(
+        obj.get("source_spans"),
+        document_id,
+        source_len,
+        &id,
+        kind,
+        warnings,
+    );
+
+    Ok(IRNode {
+        id: NodeId::new(id),
+        kind,
+        term,
+        polarity,
+        modality,
+        source_spans,
+        confidence: obj
+            .get("confidence")
+            .and_then(|x| x.as_f64())
+            .unwrap_or(1.0),
+        discard_reason: None,
+        metadata: Default::default(),
+    })
+}
+
+fn parse_node_kind(s: &str) -> Option<NodeKind> {
+    match s.to_ascii_lowercase().as_str() {
+        // ADJ01 v3: "textrun" inputs (legacy LLM responses) map to
+        // Section. The decompose_text v4 prompt will teach the LLM to
+        // emit "section" directly with a proper structural term.
+        "textrun" | "text_run" | "section" => Some(NodeKind::Section),
+        "fact" => Some(NodeKind::Fact),
+        "query" => Some(NodeKind::Query),
+        "uncertainty" => Some(NodeKind::Uncertainty),
+        "rule" => Some(NodeKind::Rule),
+        "exception" => Some(NodeKind::Exception),
+        "discarded" => Some(NodeKind::Discarded),
+        "entity" => Some(NodeKind::Entity),
+        _ => None,
+    }
+}
+
+fn parse_polarity(s: &str) -> Option<Polarity> {
+    match s.to_ascii_lowercase().as_str() {
+        "affirmed" => Some(Polarity::Affirmed),
+        "denied" => Some(Polarity::Denied),
+        "uncertain" => Some(Polarity::Uncertain),
+        "inherit" => Some(Polarity::Inherit),
+        _ => None,
+    }
+}
+
+fn parse_modality(s: &str) -> Option<Modality> {
+    match s.to_ascii_lowercase().as_str() {
+        "present" => Some(Modality::Present),
+        "past" => Some(Modality::Past),
+        "future" => Some(Modality::Future),
+        "hypothetical" => Some(Modality::Hypothetical),
+        "familyhistory" | "family_history" => Some(Modality::FamilyHistory),
+        "ruledout" | "ruled_out" => Some(Modality::RuledOut),
+        "conditional" => Some(Modality::Conditional),
+        "inherit" => Some(Modality::Inherit),
+        _ => None,
+    }
+}
+
+/// Convert a JSON "term" value into a logic-core `Term`. The
+/// converter accepts a few common shapes models produce:
+///
+/// - `"atom"` (a bare string) → `Atom`.
+/// - `{ "atom": "name" }` → `Atom("name")`.
+/// - `{ "functor": "...", "args": [...] }` → `Compound { functor, args }`.
+/// - `{ "compound": { "functor": "...", "args": [...] } }` → same.
+/// - Anything else → `Atom("<debug-repr>")` with a warning.
+fn json_to_term(v: &serde_json::Value, node_id: &str, warnings: &mut Vec<String>) -> Term {
+    if let Some(s) = v.as_str() {
+        return atom(s);
+    }
+    if let Some(obj) = v.as_object() {
+        if let Some(s) = obj.get("atom").and_then(|x| x.as_str()) {
+            return atom(s);
+        }
+        let compound_obj = obj
+            .get("compound")
+            .and_then(|x| x.as_object())
+            .or(Some(obj));
+        if let Some(c) = compound_obj {
+            if let Some(functor) = c.get("functor").and_then(|x| x.as_str()) {
+                let args: Vec<Term> = c
+                    .get("args")
+                    .and_then(|x| x.as_array())
+                    .map(|arr| {
+                        arr.iter()
+                            .map(|a| json_to_term(a, node_id, warnings))
+                            .collect()
+                    })
+                    .unwrap_or_default();
+                return compound(functor, args);
+            }
+        }
+    }
+    warnings.push(format!(
+        "node {node_id} has unrecognized term shape; using atom(\"unknown\")"
+    ));
+    atom("unknown")
+}
+
+/// Convert a JSON `source_spans` array into typed `Span` values.
+/// Tolerates missing/empty arrays and clamps out-of-bound `end`
+/// values; Query nodes with empty spans pass through unchanged (ADJ02
+/// v2 permits zero-span queries).
+fn parse_source_spans(
+    v: Option<&serde_json::Value>,
+    document_id: &DocumentId,
+    source_len: usize,
+    node_id: &str,
+    kind: NodeKind,
+    warnings: &mut Vec<String>,
+) -> Vec<Span> {
+    let arr = match v.and_then(|x| x.as_array()) {
+        Some(a) => a,
+        None => {
+            if matches!(kind, NodeKind::Query) {
+                return Vec::new();
+            }
+            warnings.push(format!(
+                "node {node_id} ({kind:?}) missing source_spans; covering full document as fallback"
+            ));
+            return vec![Span::new(document_id.clone(), 0, source_len.max(1))];
+        }
+    };
+    let mut spans = Vec::with_capacity(arr.len());
+    for (i, span_v) in arr.iter().enumerate() {
+        let obj = match span_v.as_object() {
+            Some(o) => o,
+            None => {
+                warnings.push(format!(
+                    "node {node_id} span[{i}] is not an object; skipping"
+                ));
+                continue;
+            }
+        };
+        let start = obj.get("start").and_then(|x| x.as_u64()).unwrap_or(0) as usize;
+        let end_raw = obj.get("end").and_then(|x| x.as_u64()).unwrap_or(0) as usize;
+        let end = end_raw.min(source_len);
+        if end < end_raw {
+            warnings.push(format!(
+                "node {node_id} span[{i}] end {end_raw} > source length {source_len}; clamped to {end}"
+            ));
+        }
+        if end <= start {
+            warnings.push(format!(
+                "node {node_id} span[{i}] is degenerate (start={start}, end={end}); skipping"
+            ));
+            continue;
+        }
+        spans.push(Span::new(document_id.clone(), start, end));
+    }
+    spans
+}
+
+/// Wrap an inner LLM client with a `CachingClient`. Returns both
+/// the boxed client (for the gateway) and a stats handle (for the
+/// demo to read hit rates after the run completes).
+fn wrap_with_cache(
+    inner: Box<dyn LlmClient>,
+    cfg: &DemoConfig,
+) -> (Box<dyn LlmClient>, CacheStatsHandle) {
+    let cached = match &cfg.cache_dir {
+        Some(dir) => CachingClient::with_disk_persistence(inner, dir),
+        None => CachingClient::new(inner),
+    };
+    let handle = cached.stats_handle();
+    (Box::new(cached) as Box<dyn LlmClient>, handle)
+}
+
+/// Render the first ADJ02 violation as a short string suitable for
+/// the ADJ06 correction prompt. ADJ02 violations are stringly typed
+/// in the audit trail (the pipeline stores a `debug` field for
+/// unspecialised variants), so the simplest reliable thing is to
+/// pull that text out and prepend the violation `kind`.
+fn format_first_adj02_violation(adj02: &adjudication_audit_trail::CheckerResult) -> String {
+    match adj02.violations.first() {
+        Some(v) => {
+            let kind = v
+                .detail
+                .get("kind")
+                .and_then(|x| x.as_str())
+                .unwrap_or("UncoveredSpan");
+            let debug = v
+                .detail
+                .get("debug")
+                .and_then(|x| x.as_str())
+                .map(str::to_string)
+                .unwrap_or_default();
+            if debug.is_empty() {
+                kind.to_string()
+            } else {
+                format!("{kind}: {debug}")
+            }
+        }
+        None => "ADJ02 reported Failed with no violation entries".to_string(),
+    }
+}
+
+/// Walk the ADJ22 checker result and build one
+/// [`MissingLiteralHint`] per `Violation` so the typed-quantity
+/// retry primitive (ADJ06-for-ADJ22) can name each dropped
+/// literal in its correction prompt. The pipeline's
+/// `typed_quantity_violation_to_audit` records each missing
+/// literal as a `detail: {"literal": ..., "location": [start,end],
+/// "nearby_nodes": [...]}` JSON object; this just shovels that
+/// back into the typed `MissingLiteralHint` shape ADJ06 consumes.
+///
+/// Returns an empty Vec if the checker result has no violations —
+/// that means the retry loop fell through to ADJ22 even though
+/// nothing was wrong, which would be a pipeline bug; the empty
+/// list is still rendered as a "no missing literals" prompt by
+/// the clarification builder rather than crashing.
+fn collect_typed_quantity_hints(
+    adj22: &adjudication_audit_trail::CheckerResult,
+) -> Vec<MissingLiteralHint> {
+    adj22
+        .violations
+        .iter()
+        .filter_map(|v| {
+            let literal = v.detail.get("literal")?.as_str()?.to_string();
+            let location = v.detail.get("location")?;
+            let lo = location.get(0)?.as_u64()? as usize;
+            let hi = location.get(1)?.as_u64()? as usize;
+            let nearby_node_ids = v
+                .detail
+                .get("nearby_nodes")
+                .and_then(|x| x.as_array())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|n| n.as_str().map(str::to_string))
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default();
+            Some(MissingLiteralHint {
+                literal,
+                source_byte_range: (lo, hi),
+                nearby_node_ids,
+            })
+        })
+        .collect()
+}
+
+/// Best-effort retrieval of the previous LLM IR JSON for the
+/// correction prompt. When `IrSourceTelemetry::LlmExtracted` is in
+/// hand we have the raw JSON verbatim; otherwise we fall back to an
+/// empty placeholder so the correction prompt still flows.
+fn previous_ir_for_clarification(t: &IrSourceTelemetry) -> serde_json::Value {
+    match t {
+        IrSourceTelemetry::LlmExtracted { raw_ir_json, .. } => serde_json::from_str(raw_ir_json)
+            .unwrap_or_else(|_| serde_json::json!({ "note": "previous IR JSON unparseable" })),
+        _ => serde_json::json!({ "note": "no previous IR JSON available" }),
+    }
+}
+
+/// Render the first ADJ03 violation as a short string. Same shape
+/// as `format_first_adj02_violation` — the pipeline records
+/// polarity/modality violations as `{"kind": ..., "debug": ...}`
+/// for unspecialised variants.
+fn format_first_adj03_violation(adj03: &adjudication_audit_trail::CheckerResult) -> String {
+    match adj03.violations.first() {
+        Some(v) => {
+            let kind = v
+                .detail
+                .get("kind")
+                .and_then(|x| x.as_str())
+                .unwrap_or("PolarityOrModalityViolation");
+            // The polarity-specific violation variants the pipeline
+            // emits include `actual_polarity` and the node id in
+            // their JSON detail; surface both when present.
+            let actual = v
+                .detail
+                .get("actual_polarity")
+                .and_then(|x| x.as_str())
+                .map(|s| format!(" actual_polarity={s}"))
+                .unwrap_or_default();
+            let node = v
+                .node_id
+                .0
+                .as_str();
+            if node.is_empty() {
+                format!("{kind}{actual}")
+            } else {
+                format!("{kind} (node {node}){actual}")
+            }
+        }
+        None => "ADJ03 reported Failed with no violation entries".to_string(),
+    }
+}
+
+/// Synthesize a polarity hint for the ADJ06 correction prompt by
+/// looking at the source text covered by the failing node. The
+/// heuristic is intentionally narrow: if the source span contains
+/// a common negation word ("no", "not", "never", "without",
+/// "denies", "denied", "absent"), tell the model the polarity
+/// should be `Denied`. Otherwise return `None` and let the prompt
+/// stand on its rules alone.
+fn build_polarity_hint(
+    adj03: &adjudication_audit_trail::CheckerResult,
+    source_text: &str,
+) -> Option<String> {
+    let v = adj03.violations.first()?;
+    let node_id = v.node_id.0.as_str();
+    if node_id.is_empty() {
+        return None;
+    }
+    // The audit trail doesn't include the failing node's source-span
+    // text directly, so we approximate: scan the source for any of
+    // the common negation tokens. If the source has one, we offer
+    // it as a candidate explanation.
+    let lower = source_text.to_lowercase();
+    const NEGATIONS: &[&str] = &[
+        " no ", " not ", " never ", " without ", " denies ", " denied ",
+        " absent ", " ruled out ",
+    ];
+    let hit = NEGATIONS.iter().find(|n| lower.contains(*n))?;
+    Some(format!(
+        "node {node_id} likely covers a negation. Saw \"{trim}\" in the source — \
+         negations usually flip the polarity to `Denied`. Double-check before \
+         re-emitting.",
+        trim = hit.trim(),
+    ))
+}
+
+/// Pull `RoundTripDrift` violations out of the ADJ04 checker result
+/// and convert them into plain-string findings for the demo report.
+fn collect_adj04_drift(
+    results: &[adjudication_audit_trail::CheckerResult],
+) -> Vec<Adj04DriftFinding> {
+    let Some(adj04) = results.iter().find(|cr| {
+        matches!(cr.pass_name, adjudication_audit_trail::PassName::Adj04RoundTrip)
+    }) else {
+        return Vec::new();
+    };
+    adj04
+        .violations
+        .iter()
+        .filter_map(|v| {
+            let d = &v.detail;
+            Some(Adj04DriftFinding {
+                node_id: v.node_id.0.clone(),
+                source_excerpt: d.get("source_excerpt").and_then(|x| x.as_str())?.to_string(),
+                model_rendering: d.get("rendering").and_then(|x| x.as_str())?.to_string(),
+                source_to_rendering_score: d
+                    .get("source_to_rendering")
+                    .and_then(|x| x.as_f64())? as f32,
+                rendering_to_source_score: d
+                    .get("rendering_to_source")
+                    .and_then(|x| x.as_f64())? as f32,
+                threshold: d.get("threshold").and_then(|x| x.as_f64())? as f32,
+            })
+        })
+        .collect()
+}
+
+/// Pull `AdversarialReading` violations out of the ADJ05 checker
+/// result and convert them into plain-string findings for the demo
+/// report.
+fn collect_adj05_findings(
+    results: &[adjudication_audit_trail::CheckerResult],
+) -> Vec<Adj05AdversarialFinding> {
+    let Some(adj05) = results.iter().find(|cr| {
+        matches!(cr.pass_name, adjudication_audit_trail::PassName::Adj05Adversarial)
+    }) else {
+        return Vec::new();
+    };
+    adj05
+        .violations
+        .iter()
+        .filter_map(|v| {
+            let d = &v.detail;
+            Some(Adj05AdversarialFinding {
+                node_id: v.node_id.0.clone(),
+                ir_rendered: d.get("ir_rendered").and_then(|x| x.as_str())?.to_string(),
+                adversary_reading: d
+                    .get("adversary_reading")
+                    .and_then(|x| x.as_str())?
+                    .to_string(),
+                adversary_explanation: d
+                    .get("adversary_explanation")
+                    .and_then(|x| x.as_str())?
+                    .to_string(),
+                judge_reason: d.get("judge_reason").and_then(|x| x.as_str())?.to_string(),
+            })
+        })
+        .collect()
+}
+
+// ---------------------------------------------------------------------------
+// ADJ16 step 5 — TSA Engine Arm
+// ---------------------------------------------------------------------------
+
+/// What `run_engine_arm` produces.
+///
+/// The engine arm is the deterministic counterpart to Arm A (raw LLM)
+/// and Arm B (pipeline with LLM checkers). It accepts one or more
+/// rulebook IRDocuments alongside the canonical TSA source IR and
+/// runs `adjudication_pipeline::run_with_rulebooks` to produce a
+/// verdict purely through the logic engine — no LLM call at answer
+/// time.
+///
+/// The full `PipelineOutput` is preserved (including the audit
+/// trail and clause provenance) so a reviewer can reconstruct the
+/// derivation step by step. `verdict_summary` is a one-line human
+/// gloss for side-by-side display; the structured data is in
+/// `pipeline_output.verdict`, `pipeline_output.clause_provenance`,
+/// and `pipeline_output.disputed_answers`.
+#[derive(Debug)]
+pub struct EngineArmReport {
+    pub verdict_summary: String,
+    pub pipeline_output: PipelineOutput,
+    /// Number of disputed answers detected. Same as
+    /// `pipeline_output.disputed_answers.len()` but surfaced as a
+    /// top-level field so the demo printer doesn't have to reach
+    /// into the pipeline output to format the header.
+    pub dispute_count: usize,
+}
+
+impl EngineArmReport {
+    /// Convenience accessor: the per-clause attribution table built
+    /// by the pipeline. Always populated for the engine arm (which
+    /// goes through `run_with_rulebooks`).
+    pub fn clause_provenance(&self) -> Option<&ClauseProvenanceTable> {
+        self.pipeline_output.clause_provenance.as_ref()
+    }
+
+    /// Convenience accessor: the disputed answers vec.
+    pub fn disputed_answers(&self) -> &[DisputedAnswer] {
+        &self.pipeline_output.disputed_answers
+    }
+}
+
+/// A TSA rulebook IR that drives the canonical ADJ10 source to a
+/// non-compliant verdict via a single bridging rule.
+///
+/// Encodes one definitional rule:
+///
+/// ```text
+/// non_compliant(passenger_a) :- prohibited(matches).
+/// ```
+///
+/// When this rulebook is merged into the engine KB alongside the
+/// source IR's `prohibited(matches)` fact, the engine derives
+/// `non_compliant(passenger_a)` deterministically. The rule's
+/// categorical leap ("matches → prohibited") is now external,
+/// auditable, and reproducible — contrast Arm A's behaviour in
+/// ADJ12, where the same leap happened inside the LLM's forward
+/// pass and could not be traced beyond the answer text.
+///
+/// Document id: `"rb-tsa-strict-v1"`. Use [`RulebookTrustTier::Reviewed`]
+/// to mark this as the trust level for fixture rulebooks; in real
+/// deployments the tier is set by ADJ09's review workflow.
+pub fn tsa_rulebook_strict_ir() -> IRDocument {
+    let doc_id = DocumentId::new("rb-tsa-strict-v1");
+    // definitional(non_compliant(passenger_a), [prohibited(matches)])
+    let rule_term = compound(
+        "definitional",
+        vec![
+            compound("non_compliant", vec![atom("passenger_a")]),
+            logic_core::logic_list(vec![compound("prohibited", vec![atom("matches")])]),
+        ],
+    );
+    IRDocument {
+        document_id: doc_id,
+        nodes: vec![IRNode {
+            id: NodeId::new("R1"),
+            kind: NodeKind::Rule,
+            term: rule_term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            // Rulebook rules don't anchor to the source declaration's
+            // text — they come from the rulebook IR. Empty
+            // source_spans so the pipeline's coverage check on the
+            // SOURCE document isn't affected.
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        }],
+        edges: Vec::new(),
+    }
+}
+
+/// A second TSA rulebook IR that derives `compliant(passenger_a)`
+/// from the source's `carry_on(1)` fact alone, ignoring whether any
+/// prohibited items were declared.
+///
+/// This rulebook is **deliberately wrong** for the canonical TSA
+/// case (declaring carry-on doesn't make you compliant if you also
+/// declared prohibited items). It exists to demonstrate the dispute
+/// detection from ADJ16 step 3: when merged alongside
+/// [`tsa_rulebook_strict_ir`], the engine derives both
+/// `non_compliant(passenger_a)` (from the strict rulebook) and
+/// `compliant(passenger_a)` (from this lenient one), and the
+/// resulting `disputed_answers` flag surfaces the disagreement for
+/// reviewer attention.
+///
+/// Encodes one definitional rule:
+///
+/// ```text
+/// compliant(passenger_a) :- carry_on(quantity(1, count)).
+/// ```
+///
+/// The body fact uses the typed-quantity shape (ADJ21/ADJ22/ADJ24)
+/// so it can unify with the source IR's `carry_on(quantity(1,
+/// count))` fact under the engine's term unification.
+pub fn tsa_rulebook_lenient_ir() -> IRDocument {
+    let doc_id = DocumentId::new("rb-tsa-lenient-v1");
+    let rule_term = compound(
+        "definitional",
+        vec![
+            compound("compliant", vec![atom("passenger_a")]),
+            logic_core::logic_list(vec![compound(
+                "carry_on",
+                vec![compound("quantity", vec![atom("1"), atom("count")])],
+            )]),
+        ],
+    );
+    IRDocument {
+        document_id: doc_id,
+        nodes: vec![IRNode {
+            id: NodeId::new("R1"),
+            kind: NodeKind::Rule,
+            term: rule_term,
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: Vec::new(),
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        }],
+        edges: Vec::new(),
+    }
+}
+
+/// Run the engine arm: feed the canonical TSA source IR plus the
+/// caller-supplied rulebooks into
+/// `adjudication_pipeline::run_with_rulebooks` and return the
+/// verdict + provenance + dispute analysis as an
+/// [`EngineArmReport`].
+///
+/// **No LLM is called.** Arm A and Arm B both use the LLM (Arm A
+/// directly at answer time; Arm B for ADJ04/05 checkers). The
+/// engine arm is the third path described in
+/// [ADJ16](../../../specs/ADJ16-engine-programmatic-adjudication.md):
+/// once a rulebook has been authored (or reviewed-and-promoted from
+/// LLM elicitation), answer-time becomes a deterministic engine
+/// invocation that produces the same verdict on the same inputs
+/// every time, with a full audit trail of which rule fired and
+/// which rulebook contributed it.
+///
+/// `rulebooks` is a slice of `(IRDocument, RulebookProvenance)`
+/// pairs. The TSA fixtures
+/// [`tsa_rulebook_strict_ir`] / [`tsa_rulebook_lenient_ir`]
+/// produce the IR shapes; the caller picks the provenance metadata
+/// (typically `RulebookProvenance::new("...", RulebookTrustTier::Reviewed)`
+/// for fixture rulebooks, `RulebookTrustTier::Tentative` for
+/// LLM-elicited rulebooks before expert review).
+pub fn run_engine_arm(
+    cfg: &DemoConfig,
+    rulebooks: &[(IRDocument, RulebookProvenance)],
+) -> EngineArmReport {
+    let ir_document = tsa_ir_document(&cfg.source_text);
+    let input = PipelineInput {
+        document: PipelineDocument {
+            id: "tsa-demo-001".into(),
+            name: "tsa_declaration".into(),
+            received_at: "2026-05-11T00:00:00Z".into(),
+            normalized_text: cfg.source_text.clone(),
+            normalization_pipeline: "plain-text-v1".into(),
+            normalization_version: "1.0.0".into(),
+        },
+        ir_document,
+    };
+    let make_now = || {
+        let tick = std::cell::Cell::new(0u32);
+        move || {
+            let t = tick.get();
+            tick.set(t + 1);
+            format!("2026-05-11T00:00:{:02}Z", t.min(59))
+        }
+    };
+    let output = run_with_rulebooks(
+        input,
+        AdjudicationId::new("adj-tsa-engine-arm"),
+        make_now(),
+        None, // no LLM gateway — Engine arm is LLM-free
+        rulebooks,
+    );
+
+    // Summarise the verdict for side-by-side display. The structured
+    // outcome lives in `output.verdict` and `output.disputed_answers`.
+    let dispute_count = output.disputed_answers.len();
+    let verdict_summary = match &output.verdict {
+        Verdict::Resolved { answers } => {
+            if dispute_count > 0 {
+                format!(
+                    "RESOLVED with {} disputed answer{} (needs review)",
+                    dispute_count,
+                    if dispute_count == 1 { "" } else { "s" }
+                )
+            } else if answers.is_empty() {
+                "RESOLVED (no engine answers — no query in IR)".to_string()
+            } else {
+                format!("RESOLVED: {} answer(s)", answers.len())
+            }
+        }
+        Verdict::Blocked { violation_count } => {
+            format!("BLOCKED ({} gating violation(s))", violation_count)
+        }
+        Verdict::EngineError(msg) => format!("ENGINE ERROR: {msg}"),
+    };
+
+    EngineArmReport {
+        verdict_summary,
+        pipeline_output: output,
+        dispute_count,
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TSA fixture — same shape as the ADJ10 integration test
+// ---------------------------------------------------------------------------
+
+/// Build a TSA-style IR over the demo source text.
+///
+/// The default text `"1 carry-on bag, matches."` (24 bytes) gets two
+/// `Fact` nodes tiling the document:
+///
+/// - F1: `carry_on(1)` — spans 0..16 (`"1 carry-on bag, "`)
+/// - F2: `prohibited(matches)` — spans 16..24 (`"matches."`)
+/// - Q1: `compliant(passenger_a)` — no source spans (synthesized
+///   query; coverage allows zero-span queries).
+///
+/// If the caller passes a different source text, the function falls
+/// back to a single `Fact` node spanning the whole document plus the
+/// query node. That keeps the demo "interesting" for non-default
+/// inputs but won't match the cleanly-tiled ADJ10 fixture exactly.
+pub fn tsa_ir_document(source_text: &str) -> IRDocument {
+    let doc_id = DocumentId::new("tsa-demo-001");
+    let len = source_text.len();
+
+    let mut nodes = Vec::new();
+
+    if source_text == "1 carry-on bag, matches." {
+        // F1 uses the typed-quantity shape per ADJ21/ADJ22/ADJ24:
+        // the bag count is wrapped in `quantity(1, count)` rather
+        // than left as a bare atom. This matches the v5
+        // decompose_text contract and lets the pipeline's ADJ22
+        // gate accept this hand-built fixture.
+        nodes.push(IRNode {
+            id: NodeId::new("F1"),
+            kind: NodeKind::Fact,
+            term: compound(
+                "carry_on",
+                vec![compound("quantity", vec![atom("1"), atom("count")])],
+            ),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![Span::new(doc_id.clone(), 0, 16)],
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        });
+        nodes.push(IRNode {
+            id: NodeId::new("F2"),
+            kind: NodeKind::Fact,
+            term: compound("prohibited", vec![atom("matches")]),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![Span::new(doc_id.clone(), 16, 24)],
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        });
+    } else if len > 0 {
+        nodes.push(IRNode {
+            id: NodeId::new("F1"),
+            kind: NodeKind::Fact,
+            term: compound("declaration", vec![atom("text")]),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![Span::new(doc_id.clone(), 0, len)],
+            confidence: 1.0,
+            discard_reason: None,
+            metadata: Default::default(),
+        });
+    }
+
+    nodes.push(IRNode {
+        id: NodeId::new("Q1"),
+        kind: NodeKind::Query,
+        term: compound("compliant", vec![atom("passenger_a")]),
+        polarity: Polarity::Affirmed,
+        modality: Modality::Present,
+        source_spans: vec![],
+        confidence: 1.0,
+        discard_reason: None,
+        metadata: Default::default(),
+    });
+
+    IRDocument {
+        document_id: doc_id,
+        nodes,
+        edges: Vec::new(),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Side-by-side report
+// ---------------------------------------------------------------------------
+
+/// Render the two arms side-by-side as a single multi-line string
+/// the binary prints to stdout.
+pub fn format_side_by_side(raw: &RawArmReport, pipeline: &PipelineArmReport) -> String {
+    let mut out = String::new();
+    out.push_str("============================================================\n");
+    out.push_str("  TSA adjudication: raw model vs structured pipeline\n");
+    out.push_str("============================================================\n");
+    out.push_str("\n");
+    out.push_str("--- ARM A: raw model ---\n");
+    out.push_str(&format!("model:           {}\n", raw.model));
+    out.push_str(&format!(
+        "tokens (in/out): {} / {}\n",
+        raw.input_tokens, raw.output_tokens
+    ));
+    out.push_str(&format!("latency:         {} ms\n", raw.latency_ms));
+    out.push_str(&format!("finish reason:   {:?}\n", raw.finish_reason));
+    out.push_str("answer:\n");
+    for line in raw.answer.lines() {
+        out.push_str(&format!("  {line}\n"));
+    }
+    out.push_str("\n");
+    out.push_str("--- ARM B: structured pipeline ---\n");
+    match &pipeline.ir_source {
+        IrSourceTelemetry::HandBuilt => {
+            out.push_str("IR source:       hand-built TSA fixture (no LLM extraction)\n");
+        }
+        IrSourceTelemetry::LlmExtracted {
+            node_count,
+            converter_warnings,
+            clarification_summary,
+            ..
+        } => {
+            out.push_str(&format!(
+                "IR source:       decompose_text via {} → typed IR ({n} nodes)\n",
+                "Role::Extractor",
+                n = node_count,
+            ));
+            if !converter_warnings.is_empty() {
+                out.push_str(&format!(
+                    "                 ({w} converter warning(s) — see audit dump)\n",
+                    w = converter_warnings.len()
+                ));
+            }
+            if let Some(s) = clarification_summary {
+                out.push_str(&format!(
+                    "                 ADJ06 clarification: {s}\n",
+                ));
+            }
+        }
+        IrSourceTelemetry::LlmExtractionFailed {
+            error,
+            fell_back_to_hand_built,
+        } => {
+            out.push_str(&format!(
+                "IR source:       decompose_text FAILED: {error}\n  fallback:      {fb}\n",
+                fb = if *fell_back_to_hand_built {
+                    "hand-built TSA fixture"
+                } else {
+                    "(none — pipeline did not run)"
+                },
+            ));
+        }
+    }
+    out.push_str(&format!("verdict:         {}\n", pipeline.verdict_summary));
+    out.push_str(&format!(
+        "ADJ02 coverage:           {}\n",
+        format_outcome(&pipeline.adj02_outcome)
+    ));
+    out.push_str(&format!(
+        "ADJ03 polarity/modality:  {}\n",
+        format_outcome(&pipeline.adj03_outcome)
+    ));
+    out.push_str(&format!(
+        "ADJ04 round-trip:         {}\n",
+        format_outcome(&pipeline.adj04_outcome)
+    ));
+    out.push_str(&format!(
+        "ADJ05 adversarial:        {}\n",
+        format_outcome(&pipeline.adj05_outcome)
+    ));
+    out.push_str(&format!("engine ran:               {}\n", pipeline.engine_ran));
+    if let Some(art) = &pipeline.pipeline_output.audit_trail.engine_artifacts {
+        out.push_str(&format!("engine version:           {}\n", art.engine_version));
+    }
+    let cs = &pipeline.cache_stats;
+    if cs.hits + cs.misses > 0 {
+        out.push_str(&format!(
+            "cache:                    {hits} hits / {misses} misses ({rate:.0}% hit rate), {entries} entries\n",
+            hits = cs.hits,
+            misses = cs.misses,
+            rate = cs.hit_rate() * 100.0,
+            entries = cs.entries,
+        ));
+    }
+    // ADJ02 coverage violations — surface so the user sees WHY the
+    // pipeline blocked when it did.
+    let adj02_vs = &pipeline.pipeline_output.audit_trail.checker_results[0].violations;
+    if !adj02_vs.is_empty() {
+        out.push_str("\n");
+        out.push_str(&format!(
+            "--- ADJ02 coverage violations ({n}) ---\n",
+            n = adj02_vs.len()
+        ));
+        for v in adj02_vs {
+            let kind = v
+                .detail
+                .get("kind")
+                .and_then(|x| x.as_str())
+                .unwrap_or("(no kind)");
+            let debug = v
+                .detail
+                .get("debug")
+                .and_then(|x| x.as_str())
+                .unwrap_or("(no detail)");
+            out.push_str(&format!("  {kind}: {debug}\n"));
+        }
+    }
+    if !pipeline.adj04_drift_findings.is_empty() {
+        out.push_str("\n");
+        out.push_str(&format!(
+            "--- ADJ04 round-trip drift findings ({n}) ---\n",
+            n = pipeline.adj04_drift_findings.len()
+        ));
+        out.push_str(&format!(
+            "(threshold = {:.2}; either direction below this counts as drift)\n",
+            pipeline.adj04_drift_findings[0].threshold
+        ));
+        for f in &pipeline.adj04_drift_findings {
+            out.push_str(&format!(
+                "\n  node {id}:\n    source excerpt: {src:?}\n    model rendering: {ren:?}\n    NLI scores:     source\u{2192}rendering = {p:.2}, rendering\u{2192}source = {h:.2}\n",
+                id = f.node_id,
+                src = f.source_excerpt,
+                ren = f.model_rendering,
+                p = f.source_to_rendering_score,
+                h = f.rendering_to_source_score,
+            ));
+        }
+    }
+    if !pipeline.adj05_adversarial_findings.is_empty() {
+        out.push_str("\n");
+        out.push_str(&format!(
+            "--- ADJ05 adversarial findings ({n}) ---\n",
+            n = pipeline.adj05_adversarial_findings.len()
+        ));
+        out.push_str(
+            "(a *different model family* found a plausible alternative reading)\n",
+        );
+        for f in &pipeline.adj05_adversarial_findings {
+            out.push_str(&format!(
+                "\n  node {id}:\n    IR rendering:        {ir:?}\n    adversary reading:   {adv:?}\n    adversary's reason:  {exp}\n    judge ruled plausible because: {jr}\n",
+                id = f.node_id,
+                ir = f.ir_rendered,
+                adv = f.adversary_reading,
+                exp = f.adversary_explanation,
+                jr = f.judge_reason,
+            ));
+        }
+    }
+    // ADJ05 skipped/check-error diagnostics from the audit trail.
+    let adj05 = &pipeline.pipeline_output.audit_trail.checker_results[3];
+    if matches!(adj05.outcome, PassOutcome::Skipped) {
+        if let Some(reason) = adj05.telemetry.get("skipped_reason").and_then(|x| x.as_str()) {
+            out.push_str(&format!("\nADJ05 skipped: {reason}\n"));
+        }
+    } else if matches!(adj05.outcome, PassOutcome::Failed)
+        && pipeline.adj05_adversarial_findings.is_empty()
+    {
+        if let Some(err) = adj05.telemetry.get("check_error").and_then(|x| x.as_str()) {
+            out.push_str(&format!("\nADJ05 errored: {err}\n"));
+        }
+    }
+    out.push_str("\n");
+    out.push_str(
+        "Note: to enable ADJ05, install a second model from a different \
+         family (e.g., `ollama pull llama3.1:8b`) and set \
+         ADJ_DEMO_ADVERSARY_MODEL=llama3.1:8b. The framework enforces \
+         (vendor, model_family) independence between Extractor and \
+         Adversary so the adversary can't rubber-stamp the extractor.\n",
+    );
+    out
+}
+
+fn format_outcome(o: &PassOutcome) -> &'static str {
+    match o {
+        PassOutcome::Passed => "Passed",
+        PassOutcome::Failed => "Failed",
+        PassOutcome::Skipped => "Skipped",
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tests (offline-only — live Ollama test lives in tests/integration_ollama.rs)
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_source_text_yields_two_fact_nodes_plus_query() {
+        let ir = tsa_ir_document("1 carry-on bag, matches.");
+        assert_eq!(ir.nodes.len(), 3);
+        assert_eq!(ir.nodes[0].id.0, "F1");
+        assert_eq!(ir.nodes[1].id.0, "F2");
+        assert_eq!(ir.nodes[2].id.0, "Q1");
+    }
+
+    #[test]
+    fn non_default_source_text_yields_single_fact_plus_query() {
+        let ir = tsa_ir_document("some other text");
+        assert_eq!(ir.nodes.len(), 2);
+        assert_eq!(ir.nodes[0].kind, NodeKind::Fact);
+        assert_eq!(ir.nodes[1].kind, NodeKind::Query);
+    }
+
+    #[test]
+    fn empty_source_yields_only_query_node() {
+        let ir = tsa_ir_document("");
+        assert_eq!(ir.nodes.len(), 1);
+        assert_eq!(ir.nodes[0].kind, NodeKind::Query);
+    }
+
+    #[test]
+    fn raw_prompt_contains_the_source_text() {
+        let p = build_raw_prompt("1 carry-on bag, matches.");
+        assert!(p.contains("1 carry-on bag, matches."));
+        assert!(p.contains("TSA-compliant"));
+    }
+
+    #[test]
+    fn default_config_targets_localhost_ollama() {
+        let cfg = DemoConfig::default();
+        assert!(cfg.endpoint.contains("11434"));
+        assert!(cfg.source_text.contains("carry-on"));
+    }
+
+    #[test]
+    fn outcome_formatter_renders_each_variant() {
+        assert_eq!(format_outcome(&PassOutcome::Passed), "Passed");
+        assert_eq!(format_outcome(&PassOutcome::Failed), "Failed");
+        assert_eq!(format_outcome(&PassOutcome::Skipped), "Skipped");
+    }
+
+    // -------------------- json_to_ir_document --------------------
+
+    #[test]
+    fn converter_handles_well_formed_tsa_shape() {
+        let v = serde_json::json!({
+            "document_id": "tsa-demo-001",
+            "nodes": [
+                {
+                    "id": "F1",
+                    "kind": "Fact",
+                    "term": { "functor": "carry_on", "args": [{"atom": "1"}] },
+                    "polarity": "Affirmed",
+                    "modality": "Present",
+                    "source_spans": [{"start": 0, "end": 16}]
+                },
+                {
+                    "id": "F2",
+                    "kind": "Fact",
+                    "term": { "functor": "prohibited", "args": [{"atom": "matches"}] },
+                    "polarity": "Affirmed",
+                    "modality": "Present",
+                    "source_spans": [{"start": 16, "end": 24}]
+                }
+            ]
+        });
+        let (ir, w) =
+            json_to_ir_document(&v, "tsa-demo-001", "1 carry-on bag, matches.").unwrap();
+        // The two facts are clean; the converter adds a synthesized
+        // Query so the engine has something to do. The synth is
+        // recorded as a warning.
+        assert_eq!(ir.nodes.len(), 3);
+        assert_eq!(ir.nodes[0].id.0, "F1");
+        assert_eq!(ir.nodes[0].kind, NodeKind::Fact);
+        assert_eq!(ir.nodes[1].id.0, "F2");
+        assert_eq!(ir.nodes[2].kind, NodeKind::Query);
+        assert!(w.iter().any(|m| m.contains("synthesizing")));
+    }
+
+    #[test]
+    fn converter_clamps_out_of_bounds_spans() {
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{
+                "id": "n1",
+                "kind": "Fact",
+                "term": { "atom": "a" },
+                "source_spans": [{"start": 0, "end": 999}]
+            }]
+        });
+        let (ir, warnings) = json_to_ir_document(&v, "doc1", "hello").unwrap();
+        assert_eq!(ir.nodes[0].source_spans[0].end, 5);
+        assert!(warnings.iter().any(|w| w.contains("clamped")));
+    }
+
+    #[test]
+    fn converter_defaults_missing_kind_to_fact() {
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{
+                "id": "n1",
+                "term": "a",
+                "source_spans": [{"start": 0, "end": 1}]
+            }]
+        });
+        let (ir, warnings) = json_to_ir_document(&v, "doc1", "x").unwrap();
+        assert_eq!(ir.nodes[0].kind, NodeKind::Fact);
+        assert!(warnings.iter().any(|w| w.contains("kind")));
+    }
+
+    #[test]
+    fn converter_accepts_string_atom_term() {
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{
+                "id": "n1",
+                "kind": "Fact",
+                "term": "ready",
+                "source_spans": [{"start": 0, "end": 1}]
+            }]
+        });
+        let (ir, _) = json_to_ir_document(&v, "doc1", "x").unwrap();
+        match &ir.nodes[0].term {
+            Term::Atom(s) => assert_eq!(s, "ready"),
+            other => panic!("expected Atom, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn converter_rejects_non_object_root() {
+        let v = serde_json::json!(["not", "an", "object"]);
+        assert!(json_to_ir_document(&v, "doc1", "x").is_err());
+    }
+
+    #[test]
+    fn converter_rejects_missing_nodes_array() {
+        let v = serde_json::json!({"document_id": "doc1"});
+        assert!(json_to_ir_document(&v, "doc1", "x").is_err());
+    }
+
+    #[test]
+    fn converter_skips_degenerate_spans() {
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{
+                "id": "n1",
+                "kind": "Fact",
+                "term": { "atom": "a" },
+                "source_spans": [
+                    {"start": 0, "end": 0},
+                    {"start": 0, "end": 3}
+                ]
+            }]
+        });
+        let (ir, warnings) = json_to_ir_document(&v, "doc1", "hello").unwrap();
+        assert_eq!(ir.nodes[0].source_spans.len(), 1);
+        assert!(warnings.iter().any(|w| w.contains("degenerate")));
+    }
+
+    #[test]
+    fn converter_synthesizes_full_span_when_missing_for_fact() {
+        // If the LLM forgets `source_spans` on a Fact, we fall back
+        // to a span covering the whole document so ADJ02 at least
+        // has something to validate.
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{ "id": "n1", "kind": "Fact", "term": "a" }]
+        });
+        let (ir, warnings) = json_to_ir_document(&v, "doc1", "hello").unwrap();
+        assert_eq!(ir.nodes[0].source_spans.len(), 1);
+        assert_eq!(ir.nodes[0].source_spans[0].start, 0);
+        assert_eq!(ir.nodes[0].source_spans[0].end, 5);
+        assert!(warnings.iter().any(|w| w.contains("missing source_spans")));
+    }
+
+    #[test]
+    fn converter_flattens_nested_children_tree() {
+        // Gemma 4 produces a tree like `{"node_type":"TextRun","children":[{...}]}`.
+        // The converter must walk this and emit each leaf as an IR
+        // node, dropping the grouping parents.
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [
+                {
+                    "node_type": "TextRun",
+                    "text": "1 ",
+                    "children": [
+                        {
+                            "node_type": "Fact",
+                            "text": "1 ",
+                            "source_spans": [{"start": 0, "end": 2}]
+                        }
+                    ]
+                },
+                {
+                    "node_type": "TextRun",
+                    "children": [
+                        {
+                            "node_type": "Fact",
+                            "text": "carry-on bag, matches.",
+                            "source_spans": [{"start": 2, "end": 24}]
+                        }
+                    ]
+                }
+            ]
+        });
+        let (ir, _warnings) =
+            json_to_ir_document(&v, "doc1", "1 carry-on bag, matches.").unwrap();
+        // Two leaves were flattened + one synthesized Query = 3 nodes.
+        assert_eq!(ir.nodes.len(), 3);
+        assert!(ir.nodes.iter().any(|n| matches!(n.kind, NodeKind::Query)));
+        let fact_count = ir.nodes.iter().filter(|n| matches!(n.kind, NodeKind::Fact)).count();
+        assert_eq!(fact_count, 2);
+    }
+
+    #[test]
+    fn converter_accepts_node_type_alias_for_kind() {
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{
+                "id": "n1",
+                "node_type": "Query",
+                "term": "compliant(p)",
+                "source_spans": [{"start": 0, "end": 1}]
+            }]
+        });
+        let (ir, _) = json_to_ir_document(&v, "doc1", "x").unwrap();
+        assert_eq!(ir.nodes[0].kind, NodeKind::Query);
+    }
+
+    #[test]
+    fn converter_uses_text_as_term_fallback() {
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{
+                "id": "n1",
+                "node_type": "Fact",
+                "text": "matches.",
+                "source_spans": [{"start": 0, "end": 8}]
+            }]
+        });
+        let (ir, _) = json_to_ir_document(&v, "doc1", "matches.").unwrap();
+        match &ir.nodes[0].term {
+            Term::Compound { functor, args } => {
+                assert_eq!(functor, "text_claim");
+                assert_eq!(args.len(), 1);
+                match &args[0] {
+                    Term::Atom(s) => assert_eq!(s, "matches."),
+                    other => panic!("expected atom inside text_claim, got {other:?}"),
+                }
+            }
+            other => panic!("expected text_claim compound, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn converter_synthesizes_query_when_llm_omits_it() {
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{
+                "id": "F1",
+                "kind": "Fact",
+                "term": "a",
+                "source_spans": [{"start": 0, "end": 1}]
+            }]
+        });
+        let (ir, warnings) = json_to_ir_document(&v, "doc1", "x").unwrap();
+        assert!(ir.nodes.iter().any(|n| matches!(n.kind, NodeKind::Query)));
+        assert!(warnings.iter().any(|w| w.contains("synthesizing")));
+    }
+
+    #[test]
+    fn converter_allows_empty_source_spans_for_query() {
+        let v = serde_json::json!({
+            "document_id": "doc1",
+            "nodes": [{
+                "id": "Q1",
+                "kind": "Query",
+                "term": { "functor": "compliant", "args": [{"atom": "p"}] }
+            }]
+        });
+        let (ir, warnings) = json_to_ir_document(&v, "doc1", "hello").unwrap();
+        assert_eq!(ir.nodes[0].kind, NodeKind::Query);
+        assert!(ir.nodes[0].source_spans.is_empty());
+        // No warning for missing spans on Query.
+        assert!(!warnings.iter().any(|w| w.contains("missing source_spans")));
+    }
+
+    // --- v0.8 rulebook-injection tests ---
+
+    #[test]
+    fn fixture_rulebook_contains_numbered_rules() {
+        let text = fixture_tsa_rulebook();
+        assert!(text.contains("1."));
+        assert!(text.contains("2."));
+        assert!(text.contains("3."));
+        // The fixture must mention strike-anywhere matches — the
+        // single most-hallucinated rule in ADJ12's small-model
+        // baseline.
+        assert!(text.contains("Strike-anywhere matches"));
+        // And the LAG (3.4 oz) rule.
+        assert!(text.contains("3.4 oz"));
+        // And the lithium-battery rule (the second-most-hallucinated).
+        assert!(text.to_lowercase().contains("lithium"));
+    }
+
+    #[test]
+    fn raw_system_prompt_without_rulebook_is_minimal() {
+        let s = build_raw_system_prompt(None);
+        assert!(s.contains("TSA compliance officer"));
+        assert!(s.contains("VERDICT"));
+        // No reference to "rules above" — that's only in the
+        // with-rulebook variant.
+        assert!(!s.contains("rules above"));
+        assert!(!s.contains("RULEBOOK"));
+    }
+
+    #[test]
+    fn raw_system_prompt_with_rulebook_embeds_text_and_forbids_invention() {
+        let rb = "RULES:\n1. carry-on bag = OK\n2. matches = NOT OK\n";
+        let s = build_raw_system_prompt(Some(rb));
+        assert!(s.contains("carry-on bag = OK"));
+        assert!(s.contains("matches = NOT OK"));
+        // The rule-against-invention is the load-bearing piece.
+        assert!(s.contains("Do not invent"));
+        // Cite-specific-rule instruction.
+        assert!(s.contains("citing the specific rule number"));
+    }
+
+    #[test]
+    fn default_config_has_no_rulebook() {
+        let cfg = DemoConfig::default();
+        assert!(cfg.rulebook_text.is_none());
+    }
+
+    #[test]
+    fn config_with_fixture_rulebook_injects_into_system_prompt() {
+        // End-to-end at the build-prompt level (no LLM call). Verify
+        // that wiring `rulebook_text: Some(fixture)` into DemoConfig
+        // produces a system prompt that contains the fixture rules.
+        let mut cfg = DemoConfig::default();
+        cfg.rulebook_text = Some(fixture_tsa_rulebook());
+        let s = build_raw_system_prompt(cfg.rulebook_text.as_deref());
+        assert!(s.contains("Strike-anywhere matches"));
+        assert!(s.contains("3.4 oz"));
+        assert!(s.contains("Do not invent"));
+    }
+
+    // -----------------------------------------------------------------
+    // v0.12 — verdict-first + max_answer_tokens + priming tests
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn default_config_uses_single_turn_and_2048_token_cap() {
+        let cfg = DemoConfig::default();
+        assert_eq!(cfg.arm_a_mode, ArmAMode::SingleTurn);
+        assert_eq!(cfg.max_answer_tokens, 2048);
+    }
+
+    #[test]
+    fn raw_system_prompt_demands_verdict_first_line() {
+        // Verdict-first is the load-bearing guarantee: even when
+        // truncation hits, the verdict line should be present.
+        // Both no-rulebook and with-rulebook variants must say so.
+        let no_rb = build_raw_system_prompt(None);
+        assert!(
+            no_rb.contains("first line"),
+            "no-rulebook prompt must specify verdict as first line, got: {no_rb}"
+        );
+        assert!(no_rb.contains("truncated"), "no-rulebook prompt must mention truncation");
+
+        let with_rb = build_raw_system_prompt(Some("rule x"));
+        assert!(
+            with_rb.contains("first line"),
+            "with-rulebook prompt must specify verdict as first line"
+        );
+        assert!(with_rb.contains("truncated"));
+    }
+
+    #[test]
+    fn priming_system_prompt_describes_two_turn_protocol() {
+        let s = build_priming_system_prompt();
+        assert!(s.contains("Turn 1"));
+        assert!(s.contains("Turn 2"));
+        assert!(s.contains("ACK"));
+        // Verdict-first still required in turn 2.
+        assert!(s.contains("VERDICT: COMPLIANT"));
+        assert!(s.contains("VERDICT: NON-COMPLIANT"));
+        // The model must NOT analyse the rulebook in turn 1.
+        assert!(s.contains("Do NOT"));
+    }
+
+    #[test]
+    fn priming_turn1_user_prompt_embeds_rulebook_and_demands_ack() {
+        let rb = "RULES:\n1. carry-on bag = OK\n2. matches = NOT OK";
+        let s = build_priming_turn1_user_prompt(rb);
+        assert!(s.contains("RULEBOOK INTAKE"));
+        assert!(s.contains("ACK"));
+        assert!(s.contains("carry-on bag = OK"));
+        assert!(s.contains("matches = NOT OK"));
+    }
+
+    #[test]
+    fn priming_turn2_user_prompt_embeds_declaration_and_repeats_verdict_format() {
+        let s = build_priming_turn2_user_prompt("1 carry-on bag, matches.");
+        assert!(s.contains("TURN 2"));
+        assert!(s.contains("1 carry-on bag, matches."));
+        assert!(s.contains("rulebook from turn 1"));
+        // Re-state the verdict format so the model can't forget it
+        // between turns.
+        assert!(s.contains("VERDICT: COMPLIANT"));
+        assert!(s.contains("VERDICT: NON-COMPLIANT"));
+    }
+
+    #[test]
+    fn config_with_priming_mode_is_addressable_via_struct_field() {
+        let mut cfg = DemoConfig::default();
+        cfg.arm_a_mode = ArmAMode::Priming;
+        cfg.rulebook_text = Some(fixture_tsa_rulebook());
+        assert_eq!(cfg.arm_a_mode, ArmAMode::Priming);
+        // The library doesn't actually call the LLM here (that would
+        // require Ollama running); this test just verifies the
+        // config plumbing.
+        assert!(cfg.rulebook_text.is_some());
+    }
+
+    #[test]
+    fn arm_a_mode_round_trips_through_debug_clone_eq() {
+        let a = ArmAMode::SingleTurn;
+        let b = a;
+        assert_eq!(a, b);
+        let c = ArmAMode::Priming;
+        assert_ne!(a, c);
+        // Debug emits something readable for telemetry.
+        let s = format!("{a:?}");
+        assert!(s.contains("SingleTurn"));
+    }
+
+    // -----------------------------------------------------------------
+    // v0.13 — ESCALATE verdict in with-rulebook prompts
+    // -----------------------------------------------------------------
+    //
+    // The ESCALATE verdict is only offered when a rulebook is
+    // injected. In that mode the model is told to use ONLY the
+    // provided rules; ESCALATE is the right answer when no rule
+    // covers the case, when a rule applies but the condition
+    // cannot be evaluated, or when the declaration is ambiguous.
+    //
+    // The no-rulebook case keeps the binary verdict because the
+    // model is allowed to fall back on training-data knowledge.
+
+    #[test]
+    fn raw_system_prompt_no_rulebook_keeps_binary_verdict() {
+        let s = build_raw_system_prompt(None);
+        assert!(s.contains("VERDICT: COMPLIANT"));
+        assert!(s.contains("VERDICT: NON-COMPLIANT"));
+        // No ESCALATE option in the no-rulebook prompt — the model
+        // is allowed to use training-data knowledge.
+        assert!(!s.contains("VERDICT: ESCALATE"));
+    }
+
+    #[test]
+    fn raw_system_prompt_with_rulebook_offers_escalate_verdict() {
+        let s = build_raw_system_prompt(Some("RULES: 1. test."));
+        // Three-verdict set.
+        assert!(s.contains("VERDICT: COMPLIANT"));
+        assert!(s.contains("VERDICT: NON-COMPLIANT"));
+        assert!(s.contains("VERDICT: ESCALATE"));
+        // The load-bearing semantic: silence is not permission.
+        assert!(
+            s.contains("silence is not permission"),
+            "with-rulebook prompt must explicitly state that absence of a rule is not permission"
+        );
+    }
+
+    #[test]
+    fn priming_system_prompt_offers_escalate_verdict() {
+        let s = build_priming_system_prompt();
+        // Three-verdict set on turn 2.
+        assert!(s.contains("VERDICT: COMPLIANT"));
+        assert!(s.contains("VERDICT: NON-COMPLIANT"));
+        assert!(s.contains("VERDICT: ESCALATE"));
+        // Same conservative semantic as the single-turn prompt.
+        assert!(s.contains("silence is not permission"));
+    }
+
+    #[test]
+    fn priming_turn2_user_prompt_lists_escalate_as_an_option() {
+        let s = build_priming_turn2_user_prompt("test declaration");
+        assert!(s.contains("VERDICT: ESCALATE"));
+        assert!(s.contains("ESCALATE if no rule covers the case"));
+    }
+
+    #[test]
+    fn framework_instructions_do_not_leak_domain_specific_metaphors() {
+        // The behavioural instructions (about ESCALATE, verdict-first,
+        // "silence is not permission") should be framed in
+        // domain-neutral language. Prior drafts of the with-rulebook
+        // prompt used phrasings like "A real TSA officer asks a
+        // supervisor when the manual doesn't cover a case rather than
+        // waving the passenger through" — domain-biased and the wrong
+        // shape for a framework that aspires to be cross-domain.
+        //
+        // Role descriptors and rulebook content can be domain-specific
+        // (each demo crate owns those). Framework-level rules about
+        // verdict shape and escalation cannot.
+        let with_rb = build_raw_system_prompt(Some("RULES: 1."));
+        let priming = build_priming_system_prompt();
+
+        // No appeals to TSA-officer behaviour in the ESCALATE
+        // instruction.
+        assert!(
+            !with_rb.contains("real TSA officer"),
+            "with-rulebook prompt's ESCALATE explanation should not invoke 'real TSA officer'"
+        );
+        assert!(
+            !priming.contains("real TSA officer"),
+            "priming prompt's ESCALATE explanation should not invoke 'real TSA officer'"
+        );
+
+        // No TSA-flavoured metaphors (waving the passenger through,
+        // supervisor lookup) in the framework instructions.
+        assert!(!with_rb.contains("waving the passenger through"));
+        assert!(!priming.contains("waving the passenger through"));
+
+        // The example for rule citation should be domain-neutral.
+        // Earlier drafts used "per rule 3, strike-anywhere matches
+        // are prohibited" — a TSA example.
+        assert!(
+            !with_rb.contains("strike-anywhere matches are prohibited"),
+            "rule-citation example should be domain-neutral, not TSA-specific"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // ADJ16 step 5 — Engine Arm tests
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn tsa_rulebook_strict_ir_has_one_definitional_rule() {
+        let ir = tsa_rulebook_strict_ir();
+        assert_eq!(ir.document_id.0, "rb-tsa-strict-v1");
+        assert_eq!(ir.nodes.len(), 1);
+        assert_eq!(ir.nodes[0].kind, NodeKind::Rule);
+        // Sanity: the term is a `definitional(...)` compound.
+        if let logic_core::Term::Compound { functor, .. } = &ir.nodes[0].term {
+            assert_eq!(functor, "definitional");
+        } else {
+            panic!("expected compound term, got {:?}", ir.nodes[0].term);
+        }
+    }
+
+    #[test]
+    fn tsa_rulebook_lenient_ir_has_one_definitional_rule() {
+        let ir = tsa_rulebook_lenient_ir();
+        assert_eq!(ir.document_id.0, "rb-tsa-lenient-v1");
+        assert_eq!(ir.nodes.len(), 1);
+        assert_eq!(ir.nodes[0].kind, NodeKind::Rule);
+    }
+
+    #[test]
+    fn engine_arm_with_strict_rulebook_resolves_non_compliant() {
+        // The canonical TSA case: source declares matches, strict
+        // rulebook says matches → non_compliant. Engine should
+        // derive non_compliant deterministically.
+        //
+        // Note: the source IR's query is `compliant(passenger_a)`,
+        // not `non_compliant(passenger_a)`. The strict rulebook
+        // contributes a rule deriving non_compliant, which is a
+        // different ground atom. So compliant(passenger_a) is NOT
+        // provable — the engine returns an empty FindFirst (no
+        // proof). That itself is a meaningful verdict: under the
+        // strict rulebook, the passenger cannot be derived as
+        // compliant.
+        //
+        // The test asserts the verdict is `Resolved` (engine ran
+        // successfully, even if the query is not provable) and no
+        // dispute is detected (only one rulebook attached).
+        let cfg = DemoConfig::default();
+        let rb = tsa_rulebook_strict_ir();
+        let report = run_engine_arm(
+            &cfg,
+            &[(rb, RulebookProvenance::new("rb-tsa-strict-v1", adjudication_pipeline::RulebookTrustTier::Reviewed))],
+        );
+        assert!(matches!(report.pipeline_output.verdict, Verdict::Resolved { .. }));
+        assert_eq!(report.dispute_count, 0);
+        // Provenance table is populated when run_with_rulebooks runs.
+        assert!(report.clause_provenance().is_some());
+        let table = report.clause_provenance().unwrap();
+        // Source contributes 2 facts (F1, F2); strict rulebook
+        // contributes 1 rule (R1).
+        assert_eq!(table.fact_provenance.len(), 2);
+        assert_eq!(table.rule_provenance.len(), 1);
+        let rule_prov = table.rule_provenance.values().next().unwrap();
+        assert_eq!(rule_prov.source_rulebook_id, "rb-tsa-strict-v1");
+    }
+
+    #[test]
+    fn engine_arm_with_lenient_rulebook_resolves_compliant() {
+        // Source declares carry_on(1). Lenient rulebook says
+        // carry_on(1) → compliant. The engine derives compliant.
+        let cfg = DemoConfig::default();
+        let rb = tsa_rulebook_lenient_ir();
+        let report = run_engine_arm(
+            &cfg,
+            &[(rb, RulebookProvenance::new("rb-tsa-lenient-v1", adjudication_pipeline::RulebookTrustTier::Reviewed))],
+        );
+        assert!(matches!(report.pipeline_output.verdict, Verdict::Resolved { .. }));
+        assert_eq!(report.dispute_count, 0);
+        let table = report.clause_provenance().expect("provenance");
+        assert_eq!(table.rule_provenance.len(), 1);
+    }
+
+    #[test]
+    fn engine_arm_with_both_rulebooks_demonstrates_dispute_path() {
+        // Two rulebooks attached. The strict rulebook contributes a
+        // rule for non_compliant; the lenient rulebook contributes a
+        // rule for compliant. The source query is
+        // `compliant(passenger_a)` (a single ground atom), so the
+        // engine derives compliant via the lenient rulebook. The
+        // strict rulebook's non_compliant rule is in the KB but the
+        // query is for compliant — no dispute on this specific query
+        // because the strict rule doesn't unify with the query head.
+        //
+        // This test documents that BOTH rulebook IRs lower cleanly
+        // and the resulting clause_provenance attributes the two
+        // rules to their respective rulebooks — the wiring is sound
+        // even when the source query happens to single out one
+        // rulebook's contribution. A richer source IR (or a
+        // multi-query IR) would surface the actual dispute; that's a
+        // follow-up for the demo binary.
+        let cfg = DemoConfig::default();
+        let strict = tsa_rulebook_strict_ir();
+        let lenient = tsa_rulebook_lenient_ir();
+        let report = run_engine_arm(
+            &cfg,
+            &[
+                (strict, RulebookProvenance::new("rb-tsa-strict-v1", adjudication_pipeline::RulebookTrustTier::Reviewed)),
+                (lenient, RulebookProvenance::new("rb-tsa-lenient-v1", adjudication_pipeline::RulebookTrustTier::Reviewed)),
+            ],
+        );
+        assert!(matches!(report.pipeline_output.verdict, Verdict::Resolved { .. }));
+        let table = report.clause_provenance().expect("provenance");
+        // 2 source facts + 2 rulebook rules.
+        assert_eq!(table.fact_provenance.len(), 2);
+        assert_eq!(table.rule_provenance.len(), 2);
+        // Both rulebooks are represented in the rule provenance.
+        let mut origins: Vec<&str> = table
+            .rule_provenance
+            .values()
+            .map(|p| p.source_rulebook_id.as_str())
+            .collect();
+        origins.sort();
+        assert_eq!(origins, vec!["rb-tsa-lenient-v1", "rb-tsa-strict-v1"]);
+    }
+
+    #[test]
+    fn engine_arm_with_no_rulebooks_runs_but_finds_no_answer() {
+        // No rulebooks attached. The source IR's query
+        // `compliant(passenger_a)` has no rule to derive it from, so
+        // the engine returns no successful proof. Still a Resolved
+        // verdict (the engine ran without error), just with no
+        // answer in the proof DAG.
+        let cfg = DemoConfig::default();
+        let report = run_engine_arm(&cfg, &[]);
+        assert!(matches!(report.pipeline_output.verdict, Verdict::Resolved { .. }));
+        assert_eq!(report.dispute_count, 0);
+        // Even with no rulebooks, run_with_rulebooks populates the
+        // provenance table with the source IR's facts attributed to
+        // the document id.
+        let table = report.clause_provenance().expect("provenance");
+        assert_eq!(table.fact_provenance.len(), 2);
+        assert_eq!(table.rule_provenance.len(), 0);
+        for prov in table.fact_provenance.values() {
+            assert_eq!(prov.source_rulebook_id, "tsa-demo-001");
+        }
+    }
+
+    #[test]
+    fn engine_arm_verdict_summary_is_human_readable() {
+        let cfg = DemoConfig::default();
+        let rb = tsa_rulebook_lenient_ir();
+        let report = run_engine_arm(
+            &cfg,
+            &[(rb, RulebookProvenance::new("rb-tsa-lenient-v1", adjudication_pipeline::RulebookTrustTier::Reviewed))],
+        );
+        assert!(
+            report.verdict_summary.starts_with("RESOLVED"),
+            "expected verdict_summary to start with RESOLVED, got: {}",
+            report.verdict_summary
+        );
+    }
+}

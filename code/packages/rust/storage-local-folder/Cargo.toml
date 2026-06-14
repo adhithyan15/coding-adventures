@@ -1,0 +1,13 @@
+[package]
+name = "storage-local-folder"
+version = "0.1.0"
+edition = "2021"
+description = "D18A local-folder StorageBackend adapter for Chief of Staff stores"
+
+[dependencies]
+storage-core = { path = "../storage-core" }
+coding_adventures_storage_fs = { path = "../storage-fs" }
+
+[dev-dependencies]
+context-store = { path = "../context-store" }
+coding-adventures-json-value = { path = "../json-value" }

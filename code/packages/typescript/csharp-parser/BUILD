@@ -1,4 +1,5 @@
 cd ../directed-graph && npm ci --quiet
+cd ../cli-builder && npm ci --quiet
 cd ../grammar-tools && npm ci --quiet
 cd ../lexer && npm ci --quiet
 cd ../csharp-lexer && npm ci --quiet

@@ -1,0 +1,292 @@
+% ============================================================================
+% ADJ52 case-19 derived rulebook (deriver subagent output).
+% Clinical area: chronic cavitary pulmonary disease with eosinophilia and
+% hemoptysis, anti-TB unresponsive, in a rural endemic region.
+%
+% The IR describes a 23-year-old woman from a rural mountainous district in the
+% southwest of an (un-named) country, with ~5 years of intermittent productive
+% cough and episodic hemoptysis, a chronic cavitary pulmonary process on CT
+% (patchy/nodular/band-like opacities, heterogeneous density, poorly defined
+% borders, RUL+RML zones, localized pleural thickening/adhesion, a few thin-
+% walled cavities), peripheral eosinophilia (8.4%; absolute count near upper-
+% normal), POSITIVE TST + IGRA, but REPEATEDLY NEGATIVE AFB smear, mycobacterial
+% culture, and GeneXpert MTB/RIF, non-granulomatous endobronchial biopsy, and NO
+% response to a full four-drug anti-TB course taken adherently.
+%
+% Differential built from the IR ALONE (no answer given). Recurses into
+% subcategories: parasitic (paragonimiasis = lung fluke), mycobacterial (active
+% TB = the prior label; NTM), fungal (chronic cavitary aspergillosis; ABPA as the
+% eosinophilic-lung mimic), and neoplastic (cavitary lung malignancy red herring).
+% Every clause carries a % rationale + source + trust.
+% Magnitudes are qualitative atoms (adj-lang IDENT grammar: lowercase, no leading
+% digit, no uppercase).
+%
+% ANTI-OVERFIT NOTE: clauses are added ONLY where a citable source supports the
+% DIRECTION of the likelihood ratio, never to force a verdict. The strongest
+% discriminators fire AGAINST the tempting wrong answer (active TB, the prior
+% label): the triad of negative AFB smear + negative mycobacterial culture +
+% negative GeneXpert, the non-granulomatous biopsy, and the failure of adherent
+% four-drug therapy each independently argue against active TB. The positive
+% TST/IGRA are encoded as NON-discriminating (latent-infection markers, near-
+% universal background in a TB-endemic rural region) so they do not spuriously
+% resurrect active TB.
+%
+% CORRELATED EVIDENCE: paragonimiasis is ONE fluke syndrome whose pulmonary
+% manifestations co-segregate (chronic productive cough, episodic hemoptysis /
+% blood-tinged sputum, the characteristic band-like/nodular CT pattern with worm-
+% migration-track appearance, pleural thickening/adhesion, thin-walled cavities).
+% These are correlated effects of the SAME migrating worm, so they are grouped
+% under ONE % mechanism directive (fires the combined LR ONCE; no double-count).
+% Peripheral eosinophilia (the host Th2 response to the helminth) and the dietary
+% exposure are genuinely independent signals and stay as separate contributes.
+% ============================================================================
+
+% ===== PRIORS (base rates for a young adult with chronic cavitary lung disease,
+%        hemoptysis, eosinophilia, anti-TB unresponsive, rural endemic region) ===
+
+% rationale: pulmonary paragonimiasis is THE unifying parasitic etiology that
+% explains chronic cough + episodic hemoptysis + peripheral eosinophilia + a
+% band-like/nodular cavitary CT pattern in a rural mountainous endemic region,
+% and is a classic mimic of (and frequent misdiagnosis as) pulmonary TB.
+prior 0.22 for diagnosis(pulmonary_paragonimiasis)
+  source "Misdiagnosis of pulmonary paragonimiasis as TB PMC12863842; Features of paragonimiasis misdiagnosed as TB PMC9682384" trust authoritative
+
+% rationale: active pulmonary TB is the patient's PRIOR working label and the
+% leading differential for chronic cavitary upper-zone disease + hemoptysis in an
+% endemic area; kept as a candidate to be tested DOWN by the negative micro.
+prior 0.20 for diagnosis(active_pulmonary_tuberculosis)
+  source "Paragonimiasis as alternative for AFB smear-negative suspected TB PMC3919254" trust authoritative
+
+% rationale: chronic cavitary pulmonary aspergillosis is a recognized chronic
+% cavitary mimic of TB with hemoptysis and constitutional symptoms.
+prior 0.10 for diagnosis(chronic_pulmonary_aspergillosis)
+  source "Chronic Cavitary Pulmonary Aspergillosis case report/review PMC6711266" trust authoritative
+
+% rationale: ABPA is the canonical EOSINOPHILIC lung disease; kept on the
+% differential because peripheral eosinophilia is foregrounded by the IR.
+prior 0.08 for diagnosis(allergic_bronchopulmonary_aspergillosis)
+  source "Allergic Bronchopulmonary Aspergillosis StatPearls NBK542329" trust authoritative
+
+% rationale: nontuberculous mycobacterial pulmonary infection causes chronic
+% cavitary disease that is smear/Xpert-discordant and anti-TB unresponsive.
+prior 0.07 for diagnosis(nontuberculous_mycobacterial_infection)
+  source "Cavitary lung disease differential incl NTM (StatPearls/ABPA review NBK542329)" trust authoritative
+
+% rationale: cavitary lung malignancy is the neoplastic red herring for a chronic
+% cavitary lesion; low prior given the young age, kept to let the data argue down.
+prior 0.05 for diagnosis(cavitary_lung_malignancy)
+  source "Cavitary lung lesion differential (bacterial/fungal/neoplastic) PMC6711266" trust authoritative
+
+% ===== PULMONARY PARAGONIMIASIS (lung fluke) =====
+
+% --- MECHANISM: the migrating Paragonimus worm produces ONE correlated
+% pleuropulmonary syndrome. Chronic productive cough, episodic hemoptysis /
+% blood-tinged sputum, the band-like + patchy + nodular heterogeneous CT pattern
+% with poorly-defined borders (worm-migration tracks/cysts), pleural thickening/
+% adhesion, and thin-walled cavities are correlated effects of the SAME fluke ->
+% fire the combined LR ONCE (anti double-count). ---
+% mechanism fluke_pleuropulmonary_syndrome for diagnosis(pulmonary_paragonimiasis) lr 8.0 : cough_productive_of(sputum), hemoptysis(episodic_chronic), chest_ct_finding(patchy_nodular_bandlike_heterogeneous_poorly_defined), ct_finding(pleural_thickening_adhesion), ct_finding(thin_walled_cavities)
+%   source "Imaging of P. westermani ScienceDirect S2352621116300018 (worm cyst + migration track, band-like nodular opacity, pleural thickening, thin-walled cavities); Pleuropulmonary paragonimiasis CT AJR 185:616" trust authoritative
+
+% rationale: residence in a rural mountainous district where raw/undercooked
+% freshwater crab/crayfish ingestion is endemic is the cardinal epidemiologic
+% exposure for the lung fluke and the single strongest pointer to paragonimiasis.
+contributes 4.0 from residence_history(rural_mountainous_endemic_region) to diagnosis(pulmonary_paragonimiasis)
+  source "Paragonimiasis as alternative for AFB smear-negative TB PMC3919254 (raw crab/crayfish ingestion); WHO Paragonimiasis Q&A" trust authoritative
+
+% rationale: peripheral eosinophilia is the host Th2 readout of helminth infection
+% and a recognized feature that distinguishes paragonimiasis from TB (TB is not an
+% eosinophilic disease). Encoded as a moderate (not extreme) LR because the
+% ABSOLUTE eosinophil count is only near upper-normal here.
+contributes 3.0 from eosinophilia(peripheral_mild) to diagnosis(pulmonary_paragonimiasis)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (eosinophilia distinguishes from TB, though up to 25% normal)" trust authoritative
+
+% rationale: a chronic (multi-year), waxing-and-waning, never-resolving course
+% fits the slow indolent natural history of an untreated tissue fluke.
+contributes 1.6 from symptom_course(chronic_waxing_waning_unresolved) to diagnosis(pulmonary_paragonimiasis)
+  source "Misdiagnosis of paragonimiasis as TB PMC12863842 (chronic indolent cough/hemoptysis)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR FOR (not against) — total failure of adherent four-
+% drug anti-TB therapy is expected in paragonimiasis (anti-TB drugs have no anti-
+% fluke activity) and is exactly the trigger for reconsidering the diagnosis.
+contributes 2.2 from treatment_response(no_response_to_anti_tb) to diagnosis(pulmonary_paragonimiasis)
+  source "Misdiagnosis of paragonimiasis as TB PMC12863842 (persistent symptoms despite anti-TB; resolves with praziquantel)" trust authoritative
+
+% rationale: SYNERGY — endemic-region exposure PLUS peripheral eosinophilia
+% together is the paragonimiasis gestalt that the mycobacterial/fungal/neoplastic
+% mimics do not jointly reproduce.
+interacts 2.5 when residence_history(rural_mountainous_endemic_region) and eosinophilia(peripheral_mild) for diagnosis(pulmonary_paragonimiasis)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (endemic exposure + eosinophilia = differential markers)" trust authoritative
+
+% ===== ACTIVE PULMONARY TUBERCULOSIS (the patient's PRIOR label) =====
+
+% rationale: chronic cough + episodic hemoptysis + upper/middle-zone cavitary
+% disease in an endemic region is the classic TB syndrome that originally
+% justified the empiric four-drug course.
+contributes 2.0 from hemoptysis(episodic_chronic) to diagnosis(active_pulmonary_tuberculosis)
+  source "Misdiagnosis of paragonimiasis as TB PMC12863842 (cough/hemoptysis are cardinal TB features)" trust authoritative
+contributes 1.5 from ct_location(right_upper_and_middle_zones) to diagnosis(active_pulmonary_tuberculosis)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (TB favors upper zones)" trust authoritative
+
+% rationale: NON-DISCRIMINATOR — a positive TST and a positive IGRA indicate TB
+% INFECTION/SENSITIZATION (latent or remote), which is near-universal background
+% in a TB-endemic rural population; they do NOT establish ACTIVE disease. Encoded
+% as a near-neutral LR so they cannot spuriously resurrect active TB.
+contributes 1.2 from tuberculin_skin_test(positive) to diagnosis(active_pulmonary_tuberculosis)
+  source "Paragonimiasis misdiagnosed as TB PMC10103015 (positive PPD/TST contributed to TB misdiagnosis; TST/IGRA mark infection not active disease)" trust authoritative
+contributes 1.2 from igra(positive) to diagnosis(active_pulmonary_tuberculosis)
+  source "Helminth-TB co-infection PMC5003706 (IGRA marks LTBI/sensitization, common background in endemic areas)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR AGAINST — repeatedly negative AFB smear on BOTH
+% sputum and BAL is strong evidence against an active mycobacterial burden.
+contributes 0.30 from afb_smear(negative_repeated) to diagnosis(active_pulmonary_tuberculosis)
+  source "Paragonimiasis as alternative for smear-negative suspected TB PMC3919254 (repeated AFB negativity argues against active TB)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR AGAINST — negative mycobacterial CULTURE is the
+% gold-standard exclusion of active TB.
+contributes 0.20 from mycobacterial_culture(negative) to diagnosis(active_pulmonary_tuberculosis)
+  source "IGRA+TST insufficient for culture-negative TB PMC4164613 (culture is the reference standard)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR AGAINST — a negative GeneXpert MTB/RIF nucleic-acid
+% amplification assay further lowers the probability of active TB.
+contributes 0.35 from genexpert(negative) to diagnosis(active_pulmonary_tuberculosis)
+  source "Paragonimiasis as alternative for smear-negative TB PMC3919254 (negative NAAT/Xpert favors non-TB)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR AGAINST — an endobronchial biopsy with NO
+% granulomatous or caseating pathology is against active TB histology.
+contributes 0.40 from endobronchial_biopsy(no_granulomatous_pathology) to diagnosis(active_pulmonary_tuberculosis)
+  source "Paragonimiasis misdiagnosed as TB PMC10103015 (absence of granulomata/caseation argues against TB)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR AGAINST — failure of an ADHERENT full four-drug
+% regimen is itself strong evidence the process is not drug-susceptible TB.
+contributes 0.45 from treatment_response(no_response_to_anti_tb) to diagnosis(active_pulmonary_tuberculosis)
+  source "Misdiagnosis of paragonimiasis as TB PMC12863842 (anti-TB failure prompts reconsideration of diagnosis)" trust authoritative
+
+% rationale: DISCRIMINATOR AGAINST — TB is not an eosinophilic disease; peripheral
+% eosinophilia mildly argues against active TB.
+contributes 0.7 from eosinophilia(peripheral_mild) to diagnosis(active_pulmonary_tuberculosis)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (eosinophilia atypical for TB)" trust authoritative
+
+% ===== CHRONIC CAVITARY PULMONARY ASPERGILLOSIS (CCPA) =====
+
+% rationale: chronic cavitary disease with hemoptysis and constitutional symptoms
+% overlaps with CCPA.
+contributes 2.0 from ct_finding(thin_walled_cavities) to diagnosis(chronic_pulmonary_aspergillosis)
+  source "Chronic Cavitary Pulmonary Aspergillosis review PMC6711266 (chronic cavities, hemoptysis)" trust authoritative
+contributes 1.5 from hemoptysis(episodic_chronic) to diagnosis(chronic_pulmonary_aspergillosis)
+  source "Chronic Cavitary Pulmonary Aspergillosis review PMC6711266 (hemoptysis common)" trust authoritative
+
+% rationale: DISCRIMINATOR AGAINST — CCPA classically affects older patients with
+% pre-existing structural lung disease (COPD/old TB cavities); a previously well
+% 23-year-old is atypical.
+contributes 0.5 from patient_age(young_adult) to diagnosis(chronic_pulmonary_aspergillosis)
+  source "Chronic Cavitary Pulmonary Aspergillosis review PMC6711266 (favors middle-aged with abnormal lung structure)" trust authoritative
+
+% rationale: DISCRIMINATOR AGAINST — band-like worm-migration-track opacities with
+% pleural adhesion are the paragonimiasis pattern, not the fungal-ball/aspergilloma
+% pattern of CCPA.
+contributes 0.6 from chest_ct_finding(patchy_nodular_bandlike_heterogeneous_poorly_defined) to diagnosis(chronic_pulmonary_aspergillosis)
+  source "Imaging of P. westermani ScienceDirect S2352621116300018 (migration-track/band pattern specific to fluke, not CCPA aspergilloma)" trust inferred
+
+% ===== ALLERGIC BRONCHOPULMONARY ASPERGILLOSIS (ABPA, eosinophilic mimic) =====
+
+% rationale: peripheral eosinophilia + pulmonary opacities can suggest ABPA.
+contributes 2.0 from eosinophilia(peripheral_mild) to diagnosis(allergic_bronchopulmonary_aspergillosis)
+  source "ABPA StatPearls NBK542329 (peripheral eosinophilia is a diagnostic criterion)" trust authoritative
+
+% rationale: DISCRIMINATOR AGAINST — ABPA is an asthma/cystic-fibrosis disease with
+% central bronchiectasis and mucoid impaction; it does NOT produce chronic
+% cavitation with hemoptysis, and there is no asthma history here.
+contributes 0.3 from ct_finding(thin_walled_cavities) to diagnosis(allergic_bronchopulmonary_aspergillosis)
+  source "ABPA StatPearls NBK542329 (bronchiectasis/mucous plugging, not cavitary disease)" trust authoritative
+contributes 0.4 from hemoptysis(episodic_chronic) to diagnosis(allergic_bronchopulmonary_aspergillosis)
+  source "Merck Manual ABPA (recurrent asthma exacerbations; frank hemoptysis not characteristic)" trust authoritative
+
+% rationale: DISCRIMINATOR AGAINST — ABPA eosinophilia is typically marked (often
+% >1.0 x10^9/L); the near-normal ABSOLUTE count here is against ABPA.
+contributes 0.5 from eosinophilia_absolute(near_upper_normal) to diagnosis(allergic_bronchopulmonary_aspergillosis)
+  source "ABPA StatPearls NBK542329 (eosinophil criterion typically >500/uL, often markedly elevated)" trust authoritative
+
+% ===== NONTUBERCULOUS MYCOBACTERIAL INFECTION (NTM) =====
+
+% rationale: NTM causes chronic cavitary disease that mimics TB but is culture-
+% distinct.
+contributes 1.6 from ct_finding(thin_walled_cavities) to diagnosis(nontuberculous_mycobacterial_infection)
+  source "Cavitary lung disease differential incl NTM (ABPA/cavitary review NBK542329)" trust inferred
+
+% rationale: DISCRIMINATOR AGAINST — NTM is also acid-fast; a repeatedly NEGATIVE
+% AFB smear AND negative mycobacterial culture argue against an NTM burden too.
+contributes 0.4 from afb_smear(negative_repeated) to diagnosis(nontuberculous_mycobacterial_infection)
+  source "Mycobacterial culture/smear principles (AFB+culture negativity argues against any mycobacterial infection) PMC4164613" trust inferred
+contributes 0.35 from mycobacterial_culture(negative) to diagnosis(nontuberculous_mycobacterial_infection)
+  source "Mycobacterial culture is reference standard for NTM PMC4164613" trust inferred
+
+% rationale: DISCRIMINATOR AGAINST — NTM is not an eosinophilic disease.
+contributes 0.7 from eosinophilia(peripheral_mild) to diagnosis(nontuberculous_mycobacterial_infection)
+  source "Eosinophilia atypical for mycobacterial disease PMC9682384" trust inferred
+
+% ===== CAVITARY LUNG MALIGNANCY (neoplastic red herring) =====
+
+% rationale: a chronic cavitary mass with hemoptysis can be cavitary carcinoma.
+contributes 1.4 from ct_finding(thin_walled_cavities) to diagnosis(cavitary_lung_malignancy)
+  source "Cavitary lung lesion differential (neoplastic) PMC6711266" trust inferred
+
+% rationale: DISCRIMINATOR AGAINST — a 23-year-old is an unlikely age for primary
+% cavitary lung cancer; strong against.
+contributes 0.2 from patient_age(young_adult) to diagnosis(cavitary_lung_malignancy)
+  source "Lung cancer epidemiology (rare under 40) PMC6711266" trust authoritative
+
+% rationale: DISCRIMINATOR AGAINST — a non-malignant, non-granulomatous biopsy with
+% only mucosal atrophy/scarring argues against endobronchial malignancy.
+contributes 0.4 from endobronchial_biopsy(no_granulomatous_pathology) to diagnosis(cavitary_lung_malignancy)
+  source "Endobronchial biopsy showing benign mucosa argues against malignancy PMC10103015" trust inferred
+
+% rationale: DISCRIMINATOR AGAINST — a 5-year indolent waxing/waning course without
+% progressive constitutional decline is against an aggressive malignancy.
+contributes 0.5 from symptom_course(chronic_waxing_waning_unresolved) to diagnosis(cavitary_lung_malignancy)
+  source "Cavitary malignancy typically progressive, not multi-year waxing/waning PMC6711266" trust inferred
+
+% ===== NEXT STEP (confirmatory investigation) =====
+
+% rationale: Paragonimus-specific antibody serology (ELISA) is the most reliable
+% confirmatory test and directly settles the unifying-diagnosis question when egg
+% detection is insensitive.
+prior 0.30 for next_step(paragonimus_serology_elisa)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (serology most reliable differential marker; eggs detected in only ~25%)" trust authoritative
+contributes 5.0 from residence_history(rural_mountainous_endemic_region) to next_step(paragonimus_serology_elisa)
+  source "Paragonimiasis as alternative for smear-negative TB PMC3919254 (exposure history prompts Paragonimus serology)" trust authoritative
+contributes 3.0 from eosinophilia(peripheral_mild) to next_step(paragonimus_serology_elisa)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (eosinophilia + cavitary disease prompts fluke serology)" trust authoritative
+
+% rationale: examining sputum/BAL for operculated Paragonimus eggs (incl. careful
+% Ziehl-Neelsen review, on which eggs stain with fuchsin) is the cheap, specific,
+% point-of-care confirmatory step.
+prior 0.18 for next_step(sputum_bal_examination_for_paragonimus_eggs)
+  source "Paragonimiasis as alternative for smear-negative TB PMC3919254 (10x objective ZN review reveals fuchsin-stained eggs)" trust authoritative
+contributes 3.0 from cough_productive_of(sputum) to next_step(sputum_bal_examination_for_paragonimus_eggs)
+  source "Misdiagnosis of paragonimiasis as TB PMC12863842 (egg detection in sputum/BAL confirms)" trust authoritative
+
+% rationale: a praziquantel therapeutic trial is both confirmatory-by-response and
+% the definitive treatment once paragonimiasis is suspected.
+prior 0.10 for next_step(praziquantel_trial)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (95% respond to praziquantel with resolution of eosinophilia and imaging)" trust authoritative
+contributes 3.0 from treatment_response(no_response_to_anti_tb) to next_step(praziquantel_trial)
+  source "Misdiagnosis of paragonimiasis as TB PMC12863842 (praziquantel resolves anti-TB-refractory disease)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u: a Paragonimus-specific antibody result settles paragonimiasis vs the mimics.
+uncertain { test(paragonimus_antibody_positive), test(paragonimus_antibody_negative) } for diagnosis(pulmonary_paragonimiasis)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (serology is the most reliable confirmatory marker)"
+contributes 8.0 from test(paragonimus_antibody_positive) to diagnosis(pulmonary_paragonimiasis)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (positive Paragonimus antibody confirms)" trust authoritative
+contributes 0.20 from test(paragonimus_antibody_negative) to diagnosis(pulmonary_paragonimiasis)
+  source "Features of paragonimiasis misdiagnosed as TB PMC9682384 (negative serology lowers; egg detection may still apply)" trust empirical
+
+% u: finding operculated eggs in sputum/BAL is definitively confirmatory.
+uncertain { test(paragonimus_eggs_found), test(paragonimus_eggs_absent) } for diagnosis(pulmonary_paragonimiasis)
+  source "Paragonimiasis as alternative for smear-negative TB PMC3919254 (egg detection definitive but ~25% sensitive)"
+contributes 9.0 from test(paragonimus_eggs_found) to diagnosis(pulmonary_paragonimiasis)
+  source "Paragonimiasis as alternative for smear-negative TB PMC3919254 (operculated eggs are pathognomonic)" trust authoritative
+contributes 0.6 from test(paragonimus_eggs_absent) to diagnosis(pulmonary_paragonimiasis)
+  source "Paragonimiasis as alternative for smear-negative TB PMC3919254 (egg sensitivity only ~25%, absence does not exclude)" trust authoritative

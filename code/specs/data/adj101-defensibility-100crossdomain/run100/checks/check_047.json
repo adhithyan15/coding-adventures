@@ -1,0 +1,8 @@
+{
+ "check_id": 47,
+ "idx": 18,
+ "slot": "checked_baggage_loss",
+ "claimed_value": true,
+ "scenario": "A passenger's checked suitcase was confiscated and never returned after customs authorities seized it during a lawful government inspection at the destination airport.",
+ "cited_span": "A passenger's checked suitcase was confiscated and never returned"
+}

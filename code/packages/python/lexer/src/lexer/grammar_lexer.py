@@ -323,9 +323,10 @@ class GrammarLexer:
                 ``.tokens`` file using ``grammar_tools.parse_token_grammar``).
         """
         # For case-insensitive languages, lowercase the source text so that
-        # regex patterns match regardless of input casing. Keep the original
-        # source separately so emitted token values can preserve the user's
-        # original spelling.
+        # regex patterns match regardless of input casing. We keep the original
+        # source so that string literal values can preserve their original case
+        # (e.g., 'Ada' should tokenize as STRING("Ada"), not STRING("ada")).
+        # Keywords are uppercased explicitly via value.upper() in token emission.
         self._original_source = source
         self._source = (
             source.lower() if (grammar.case_insensitive or not grammar.case_sensitive)
@@ -1181,12 +1182,14 @@ class GrammarLexer:
                 # Escape mode controls what happens to STRING values:
                 # - None (default): strip quotes AND process escape sequences
                 # - "none": strip quotes only, leave escapes as-is
+                #
+                # IMPORTANT: use the original (non-lowercased) source for
+                # the string body so that 'Ada' tokenizes as STRING("Ada"),
+                # not STRING("ada"). The lowercased source is only for
+                # pattern matching; string content should be case-preserved.
                 effective_name = self._alias_map.get(token_name, token_name)
                 if effective_name == "STRING" or token_name == "STRING":
-                    string_value = (
-                        original_value if self._case_insensitive else value
-                    )
-                    inner = string_value[1:-1]
+                    inner = original_value[1:-1]
                     if self._escape_mode != "none":
                         inner = self._process_escapes(inner)
                     token = Token(

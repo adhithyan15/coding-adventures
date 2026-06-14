@@ -1,10 +1,11 @@
 namespace CodingAdventures.Hmac.Tests
 
 open System
-open System.Security.Cryptography
 open System.Text
 open Xunit
 open CodingAdventures.Hmac.FSharp
+open CodingAdventures.Sha256.FSharp
+open CodingAdventures.Sha512.FSharp
 
 module HmacTests =
     [<Fact>]
@@ -48,8 +49,8 @@ module HmacTests =
         let key = Array.create 100 0x01uy
         let message = "msg"B
 
-        Assert.Equal<byte array>(Hmac.hmacSha256 key message, Hmac.compute SHA256.HashData 64 key message)
-        Assert.Equal<byte array>(Hmac.hmacSha512 key message, Hmac.compute SHA512.HashData 128 key message)
+        Assert.Equal<byte array>(Hmac.hmacSha256 key message, Hmac.compute Sha256.hash 64 key message)
+        Assert.Equal<byte array>(Hmac.hmacSha512 key message, Hmac.compute Sha512.hash 128 key message)
 
     [<Fact>]
     let ``verify uses constant time comparison semantics`` () =
@@ -62,6 +63,7 @@ module HmacTests =
     [<Fact>]
     let ``empty key is rejected but empty message is allowed`` () =
         Assert.Throws<ArgumentException>(fun () -> Hmac.hmacSha256 [||] "message"B |> ignore) |> ignore
+        Assert.Equal(32, (Hmac.computeAllowEmptyKey Sha256.hash 64 [||] "message"B).Length)
         Assert.Equal(32, (Hmac.hmacSha256 "key"B [||]).Length)
 
     [<Fact>]
@@ -75,5 +77,5 @@ module HmacTests =
 
     [<Fact>]
     let ``invalid block size is rejected`` () =
-        Assert.Throws<ArgumentException>(fun () -> Hmac.compute SHA256.HashData 0 "key"B "message"B |> ignore)
+        Assert.Throws<ArgumentException>(fun () -> Hmac.compute Sha256.hash 0 "key"B "message"B |> ignore)
         |> ignore

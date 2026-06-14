@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-attachments",
+  "capabilities": [
+    "csprng"
+  ],
+  "justification": "`AttachmentEncryptor::new_random` draws a 128-bit blob id and a 256-bit DEK from the OS CSPRNG (transitively via coding_adventures_csprng). Everything else is in-memory crypto. No filesystem, network, process, environment, or wallclock access — chunk persistence is the host's job."
+}

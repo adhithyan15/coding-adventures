@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/adjudication-contract-demo",
+  "capabilities": [
+    { "category": "net",    "action": "connect", "target": "127.0.0.1:11434", "justification": "Default Ollama endpoint." },
+    { "category": "net",    "action": "connect", "target": "*:11434",        "justification": "Non-localhost Ollama via ADJ_DEMO_ENDPOINT." },
+    { "category": "net",    "action": "dns",     "target": "*",              "justification": "OllamaClient resolves endpoint host before connecting." },
+    { "category": "env",    "action": "read",    "target": "ADJ_DEMO_ENDPOINT",         "justification": "Override Ollama endpoint." },
+    { "category": "env",    "action": "read",    "target": "ADJ_DEMO_MODEL",            "justification": "Override primary model." },
+    { "category": "env",    "action": "read",    "target": "ADJ_DEMO_ADVERSARY_MODEL",  "justification": "ADJ05 adversary model." },
+    { "category": "env",    "action": "read",    "target": "ADJ_DEMO_SOURCE",           "justification": "Override the contract clause text." },
+    { "category": "env",    "action": "read",    "target": "ADJ_DEMO_TIMEOUT_SECS",     "justification": "Override HTTP timeout." },
+    { "category": "env",    "action": "read",    "target": "ADJ_DEMO_AUDIT",            "justification": "Enable audit-trail dump." },
+    { "category": "env",    "action": "read",    "target": "ADJ_DEMO_CACHE_DIR",        "justification": "Enable disk-persisted prompt cache." },
+    { "category": "fs",     "action": "read",    "target": "*", "justification": "llm-cache reads cache files from ADJ_DEMO_CACHE_DIR." },
+    { "category": "fs",     "action": "write",   "target": "*", "justification": "llm-cache writes cache files to ADJ_DEMO_CACHE_DIR." },
+    { "category": "fs",     "action": "create",  "target": "*", "justification": "llm-cache creates the cache directory on demand." },
+    { "category": "stdout", "action": "write",   "target": "*", "justification": "Side-by-side report + optional audit-trail dump." }
+  ],
+  "justification": "Third-domain demo binary. Same OS surface as adjudication-tsa-demo and adjudication-clinical-demo."
+}

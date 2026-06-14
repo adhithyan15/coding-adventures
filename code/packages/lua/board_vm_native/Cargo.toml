@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "board-vm-native-lua"
+version = "0.1.0"
+edition = "2021"
+description = "Lua C extension exposing Board VM protocol builders from Rust"
+build = "build.rs"
+
+[lib]
+name = "board_vm_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+board-vm-host = { path = "../../rust/board-vm-host" }
+board-vm-language-core = { path = "../../rust/board-vm-language-core" }
+lua-bridge = { path = "../../rust/lua-bridge" }

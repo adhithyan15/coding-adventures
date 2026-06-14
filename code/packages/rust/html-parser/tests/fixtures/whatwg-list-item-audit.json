@@ -1,0 +1,358 @@
+{
+  "case_count": 57,
+  "cases": [
+    {
+      "axis": "list-with-paragraph",
+      "id": "blocks-dat-38",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "blocks.dat:38"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "blocks-dat-39",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "blocks.dat:39"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "blocks-dat-58",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "blocks.dat:58"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "blocks-dat-59",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "blocks.dat:59"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "blocks-dat-66",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "blocks.dat:66"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "blocks-dat-67",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "blocks.dat:67"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "html5test-com-dat-289",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "html5test-com.dat:289"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "inbody01-dat-297",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "inbody01.dat:297"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "inbody01-dat-298",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "inbody01.dat:298"
+    },
+    {
+      "axis": "li-implied-end-tag",
+      "id": "menuitem-element-dat-312",
+      "reason": "adjacent li start tags and stray li recovery",
+      "source": "menuitem-element.dat:312"
+    },
+    {
+      "axis": "li-implied-end-tag",
+      "id": "menuitem-element-dat-325",
+      "reason": "adjacent li start tags and stray li recovery",
+      "source": "menuitem-element.dat:325"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "tests1-dat-599",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "tests1.dat:599"
+    },
+    {
+      "axis": "list-with-formatting",
+      "id": "tests1-dat-668",
+      "reason": "list item implied end tags with active formatting elements",
+      "source": "tests1.dat:668"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "tests1-dat-669",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "tests1.dat:669"
+    },
+    {
+      "axis": "list-with-formatting",
+      "id": "tests1-dat-675",
+      "reason": "list item implied end tags with active formatting elements",
+      "source": "tests1.dat:675"
+    },
+    {
+      "axis": "list-in-table",
+      "id": "tests1-dat-676",
+      "reason": "list item recovery while table insertion modes are active",
+      "source": "tests1.dat:676"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "tests10-dat-710",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "tests10.dat:710"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "tests10-dat-711",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "tests10.dat:711"
+    },
+    {
+      "axis": "li-implied-end-tag",
+      "id": "tests19-dat-1037",
+      "reason": "adjacent li start tags and stray li recovery",
+      "source": "tests19.dat:1037"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "tests19-dat-1043",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "tests19.dat:1043"
+    },
+    {
+      "axis": "li-implied-end-tag",
+      "id": "tests19-dat-1064",
+      "reason": "adjacent li start tags and stray li recovery",
+      "source": "tests19.dat:1064"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "tests19-dat-1065",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "tests19.dat:1065"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "tests19-dat-1066",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "tests19.dat:1066"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-1127",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:1127"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-1137",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:1137"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-1142",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:1142"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-1148",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:1148"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-1149",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:1149"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-1150",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:1150"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "tests2-dat-11",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "tests2.dat:11"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests2-dat-26",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests2.dat:26"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests2-dat-27",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests2.dat:27"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests2-dat-28",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests2.dat:28"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests3-dat-20",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests3.dat:20"
+    },
+    {
+      "axis": "list-in-table",
+      "id": "tests8-dat-6",
+      "reason": "list item recovery while table insertion modes are active",
+      "source": "tests8.dat:6"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "tests1-dat-34",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "tests1.dat:34"
+    },
+    {
+      "axis": "list-with-formatting",
+      "id": "tests1-dat-103",
+      "reason": "list item implied end tags with active formatting elements",
+      "source": "tests1.dat:103"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "tests1-dat-104",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "tests1.dat:104"
+    },
+    {
+      "axis": "list-with-formatting",
+      "id": "tests1-dat-110",
+      "reason": "list item implied end tags with active formatting elements",
+      "source": "tests1.dat:110"
+    },
+    {
+      "axis": "list-in-table",
+      "id": "tests1-dat-111",
+      "reason": "list item recovery while table insertion modes are active",
+      "source": "tests1.dat:111"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "tests10-dat-33",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "tests10.dat:33"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "tests10-dat-34",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "tests10.dat:34"
+    },
+    {
+      "axis": "li-implied-end-tag",
+      "id": "tests19-dat-24",
+      "reason": "adjacent li start tags and stray li recovery",
+      "source": "tests19.dat:24"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "tests19-dat-30",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "tests19.dat:30"
+    },
+    {
+      "axis": "li-implied-end-tag",
+      "id": "tests19-dat-51",
+      "reason": "adjacent li start tags and stray li recovery",
+      "source": "tests19.dat:51"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "tests19-dat-52",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "tests19.dat:52"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "tests19-dat-53",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "tests19.dat:53"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-11",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:11"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-21",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:21"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-26",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:26"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-32",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:32"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-33",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:33"
+    },
+    {
+      "axis": "list-with-paragraph",
+      "id": "tests20-dat-34",
+      "reason": "list and definition tags that implicitly close open paragraphs",
+      "source": "tests20.dat:34"
+    },
+    {
+      "axis": "list-with-formatting",
+      "id": "tricky01-dat-4",
+      "reason": "list item implied end tags with active formatting elements",
+      "source": "tricky01.dat:4"
+    },
+    {
+      "axis": "dt-dd-implied-end-tag",
+      "id": "webkit01-dat-33",
+      "reason": "definition term and description implied end-tag recovery",
+      "source": "webkit01.dat:33"
+    },
+    {
+      "axis": "list-with-formatting",
+      "id": "webkit01-dat-39",
+      "reason": "list item implied end tags with active formatting elements",
+      "source": "webkit01.dat:39"
+    },
+    {
+      "axis": "nested-list-boundary",
+      "id": "webkit01-dat-46",
+      "reason": "nested ul and ol boundaries around list item insertion",
+      "source": "webkit01.dat:46"
+    }
+  ],
+  "counts_by_axis": {
+    "dt-dd-implied-end-tag": 10,
+    "li-implied-end-tag": 6,
+    "list-in-table": 3,
+    "list-with-formatting": 6,
+    "list-with-paragraph": 22,
+    "nested-list-boundary": 10
+  },
+  "description": "Focused parser audit over selected html5lib tree-construction cases that stress li, dt, and dd implied end-tag recovery, nested list boundaries, paragraph/list interactions, formatting reconstruction, and list recovery in table insertion modes.",
+  "format": "whatwg-html-list-item-audit/v1",
+  "source_fixture": "html5lib-tree-construction-smoke.dat"
+}

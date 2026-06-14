@@ -15,9 +15,9 @@ reference backends ship in the box:
 | `SymbolicBackend` | returns symbol as-is  | returns expr as-is    | applies identities, else leaves expression |
 
 `StrictBackend` is the "calculator" — bind your variables, get numbers
-back. `SymbolicBackend` is a miniature Mathematica — free variables
-survive, algebraic identities collapse, and a derivative handler
-implements the standard calculus rules.
+back. `SymbolicBackend` is the CAS-oriented backend — free variables
+survive, algebraic identities collapse, and calculus, algebra, summation,
+and integration handlers layer on top of the same VM dispatch loop.
 
 ## How the VM decides
 
@@ -32,9 +32,9 @@ eval(node):
       5. fall through to on_unknown_head
 ```
 
-The handler table is shared between strict and symbolic backends; the
-only head that differs is `D` (differentiation), which lives only on
-the symbolic side.
+The core handler table is shared between strict and symbolic backends.
+CAS-only heads such as `D`, `Integrate`, `Sum`, and `Product` live on the
+symbolic side.
 
 ## Usage
 
@@ -62,8 +62,19 @@ print(vm.eval_program(statements))
   arguments.
 - Logic: `And`, `Or`, `Not` — short-circuit over literal booleans.
 - Calculus: `D` (symbolic backend only) — sum, difference, product,
-  quotient, general power, and chain rules for `Sin`/`Cos`/`Exp`/
-  `Log`/`Sqrt`.
+  quotient, general power, and chain rules for elementary, inverse trig,
+  hyperbolic, and selected special functions.
+- Integration: `Integrate` (symbolic backend only) — elementary pattern
+  rules, rational-function integration, trigonometric/hyperbolic families,
+  u-substitution, definite integrals, special-function fallbacks, and
+  tabular integration-by-parts fallback.
+- Summation and products: `Sum` / `Product` handlers cover constant,
+  geometric, power, telescoping, selected special-series, factorial, and
+  finite-product shapes.
+- CAS bridges: selected handlers delegate into companion CAS packages for
+  simplification, factorization, substitution, equation solving, lists,
+  matrices, limits/series, number theory, complex arithmetic, transforms,
+  ODEs, algebraic numbers, multivariate polynomials, and summation helpers.
 - Binding: `Assign` (eager), `Define` (delayed, for function bodies).
 - `If` — held; only the chosen branch runs.
 
@@ -74,7 +85,11 @@ print(vm.eval_program(statements))
 - No pattern-variable rewrite rules (`x_` in Mathematica). The
   `rules()` hook accepts predicate/transform pairs, so a real pattern
   matcher can be layered on without changing the VM.
-- No symbolic integration. The Risch algorithm is out of scope.
+- No full Risch integration algorithm. Integration is broad but intentionally
+  rule/algorithm driven rather than a complete decision procedure.
+- No complete expression canonicalization. Companion simplifier packages cover
+  many shapes, but this VM still preserves unreduced structure when no handler
+  owns a form.
 
 ## Extending with a new backend
 
@@ -89,13 +104,18 @@ class MapleBackend(SymbolicBackend):
         return base
 ```
 
-That's the "80% reuse" promise: everything above — the walker, the
-arithmetic fold, the identity rewrites, the derivative engine — comes
+That's the "80% reuse" promise: everything above — the walker, arithmetic
+folding, identity rewrites, calculus handlers, and CAS bridge points — comes
 for free.
 
 ## Dependencies
 
 - `coding-adventures-symbolic-ir` — the IR node types.
+- `coding-adventures-polynomial` and the `coding-adventures-cas-*`
+  packages — algebra, calculus, simplification, and helper algorithms used by
+  the symbolic backend.
+- `coding-adventures-macsyma-parser` and `coding-adventures-macsyma-compiler`
+  — end-to-end MACSYMA examples and tests.
 
 Runtime has zero capabilities (`required_capabilities.json`): the VM
 is a pure in-memory tree walker.

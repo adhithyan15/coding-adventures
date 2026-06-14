@@ -832,10 +832,12 @@ impl<'a> GrammarLexer<'a> {
             if chars[i] == '\\' && i + 1 < chars.len() {
                 let next = chars[i + 1];
                 match next {
-                    'n' => result.push('\n'),
-                    't' => result.push('\t'),
+                    'n'  => result.push('\n'),
+                    't'  => result.push('\t'),
+                    'r'  => result.push('\r'),
                     '\\' => result.push('\\'),
-                    '"' => result.push('"'),
+                    '"'  => result.push('"'),
+                    '\'' => result.push('\''),
                     other => result.push(other),
                 }
                 i += 2;

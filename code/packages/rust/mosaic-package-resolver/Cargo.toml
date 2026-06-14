@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-package-resolver"
+version = "0.1.0"
+edition = "2021"
+description = "Component-reference resolver for Mosaic packages (UI29 §4.4)"
+
+[dependencies]
+mosaic-package-manifest = { path = "../mosaic-package-manifest" }
+
+[dev-dependencies]
+tempfile = "3"

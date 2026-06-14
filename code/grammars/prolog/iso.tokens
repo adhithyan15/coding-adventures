@@ -19,13 +19,21 @@
 # - symbolic operator atoms used in ordinary programs
 
 skip:
-  WHITESPACE = /[ \t\r\n]+/
-  COMMENT    = /%[^\n]*/
+  WHITESPACE     = /[ \t\r\n]+/
+  LINE_COMMENT   = /%[^\n]*/
+  # Block comments — ISO Prolog (and every dialect in practice) supports
+  # /* ... */. Non-greedy match so the closing `*/` is the FIRST one.
+  BLOCK_COMMENT  = /\/\*[\s\S]*?\*\//
 
 # Multi-character structural tokens must come before symbolic atoms.
+# `NAF` (`\+`) is the negation-as-failure operator and `PROB_SEP`
+# (`::`) is the ProbLog probability separator. Both must come before
+# the catch-all `ATOM_SYMBOLIC` rule so they win for structural use.
 DCG          = "-->"
 QUERY        = "?-"
 RULE         = ":-"
+NAF          = "\+"
+PROB_SEP     = "::"
 
 # Common dedicated punctuation tokens for the first parser pass.
 LPAREN       = "("

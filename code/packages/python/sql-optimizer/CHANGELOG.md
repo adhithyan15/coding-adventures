@@ -1,5 +1,184 @@
 # Changelog
 
+## [0.16.0] - 2026-05-22
+
+### Fixed
+
+- Constant-folding pass now preserves ``SortKey.collation`` when
+  rebuilding a Sort node.  Without this, the COLLATE clause from an
+  ``ORDER BY name COLLATE NOCASE`` query was silently dropped by the
+  optimizer before the codegen ever saw it, falling back to BINARY
+  comparison and producing wrong row ordering.
+
+## [0.15.0] - 2026-05-21
+
+### Added
+
+- Constant folding for SQLite bitwise operators:
+  - Binary: `BinaryOp.BIT_AND`, `BIT_OR`, `BIT_SHL`, `BIT_SHR`.
+  - Unary:  `UnaryOp.BIT_NOT`.
+
+  The folder applies the *same* 64-bit two's-complement wrap-around
+  that sql-vm uses at runtime, so literal-only expressions like
+  `SELECT 1 << 63` are folded to `-9223372036854775808` rather than
+  the unbounded Python int.  Without this, the constant-folded result
+  would silently disagree with what the VM computes for column-bearing
+  expressions — a subtle byte-incompat bug.
+- Bool operands are *not* folded for `~`; the result is left for the
+  VM to evaluate, matching SQLite's implementation-defined behaviour.
+- String operands raise `TypeError` inside `_apply_binary` and the
+  outer try/except leaves the expression intact for the VM to report
+  at runtime with full source position.
+
+## [0.14.0] - 2026-05-20
+
+### Fixed
+
+- **Constant folding of ``/`` and ``%`` now matches SQLite semantics.**
+  Previously the folder used Python's ``//`` and ``%`` directly, which
+  diverges from SQLite for negative integers (Python's floor-vs-trunc,
+  and Python's divisor-sign vs SQLite's dividend-sign modulo).  Folds
+  now mirror the runtime behaviour: ``-7 / 2 → -3``, ``-7 % 3 → -1``,
+  ``7.5 % 2.0 → 1.0``.  Divisions by zero raise inside the folder
+  (caught by the existing try/except and left for the VM to evaluate
+  at runtime, where they correctly produce NULL).
+
+## [0.13.0] - 2026-05-20
+
+### Fixed
+
+- **``ConstantFolding`` simplification of ``AND``/``OR`` now coerces
+  numeric literals to truth values** instead of identity-checking
+  against the Python ``True``/``False`` singletons.  The previous
+  ``is True`` / ``is False`` tests treated ``Literal(1)`` and
+  ``Literal(0)`` as neither-true-nor-false and folded them to NULL —
+  so the optimizer was turning ``SELECT 1 AND 0`` into ``SELECT NULL``
+  *before* the VM ever ran.  A new ``_truthy`` helper returns
+  ``True``/``False`` for any non-NULL numeric and ``None`` for strings/
+  other types so unfoldable operands fall through to the runtime.
+
+## [0.12.0] - 2026-05-17
+
+### Changed
+
+- **`constant_folding._fold_expr` propagates `Like.escape`** — the constant
+  folder now copies the new `escape` field from `Like` / `NotLike` through
+  the rewrite so the `LIKE … ESCAPE 'c'` clause survives optimisation.
+
+## [0.11.0] - 2026-05-15
+
+### Fixed
+
+- **`positional_index` preservation in `Sort` folding** (`constant_folding.py`) —
+  When `_fold_plan` rewrites a `Sort` node, it now copies `k.positional_index`
+  from each input `SortKey` to the corresponding output `SortKey`.  Previously
+  the field was silently dropped (defaulted to `None`), causing `ORDER BY N`
+  and `ORDER BY alias` queries to regress to name-based lookup after constant
+  folding, producing `ValueError: tuple.index("?")` at runtime.
+
+## [0.10.0] - 2026-05-13
+
+### Fixed
+
+- **`IS DISTINCT FROM` / `IS NOT DISTINCT FROM` constant folding** (`constant_folding.py`) —
+  these NULL-safe operators must be evaluated *before* the generic NULL-propagation
+  guard in `_fold_binary`.  The previous code would short-circuit `IS DISTINCT FROM
+  NULL, 1` to `Literal(None)` instead of `Literal(True)` because the generic
+  ``if lv is None or rv is None: return Literal(None)`` clause fired first.
+
+  The fix inserts a dedicated branch at the top of `_fold_binary` for
+  `BinaryOp.IS_DISTINCT_FROM` and `BinaryOp.IS_NOT_DISTINCT_FROM`.  When both
+  operands are literals the branch folds them to the correct boolean (following the
+  same truth table as the VM's ``apply_binary``); otherwise it returns the
+  expression unchanged so the VM evaluates it at runtime.
+
+### Tests
+
+- Added `TestIsDistinctFrom` in `tests/test_constant_folding.py` with 11 cases
+  covering all combinations of NULL / non-NULL / non-literal operands for both
+  operators.
+
+## [0.9.0] - 2026-05-12
+
+### Added
+
+- **`RowIdRef` support in predicate pushdown** (`predicate_pushdown.py`) — the
+  `_walk_column_aliases` helper now handles `RowIdRef(table=t)` nodes by adding
+  `t` to the set of referenced table aliases.  Without this, `WHERE rowid = N`
+  predicates on a single-table scan would not be pushed through the filter,
+  causing full table scans where a rowid seek could suffice.
+
+## [0.8.0] - 2026-05-05
+
+### Fixed
+
+- **`ConstantFolding` now preserves `upsert` on `Insert` nodes**
+  (`constant_folding.py`) — the pattern match for `Insert` was extended to capture
+  `upsert=up`, call `_fold_upsert(up)` on it, and pass `upsert=new_up` to the
+  rebuilt node.  Without this fix the optimizer silently stripped the `UpsertAction`
+  from every `Insert` that passed through constant folding, causing the VM to
+  execute a plain INSERT instead of the intended upsert.
+
+### Added
+
+- **`_fold_upsert(up: UpsertAction | None) -> UpsertAction | None`** — helper
+  that applies constant folding to each assignment's `value` expression inside a
+  `UpsertAction`.  Returns `None` unchanged, forwards DO-NOTHING actions unchanged,
+  and rebuilds `UpsertAction` with folded assignments for DO-UPDATE actions.
+
+## [0.7.0] - 2026-05-04
+
+### Fixed
+
+- **`ConstantFolding` silently dropped `on_conflict` from `Insert` nodes**
+  (`constant_folding.py`) — the pattern match `case Insert(table=t, columns=cols,
+  source=src, returning=ret)` did not capture `on_conflict`, so when rebuilding
+  the node as `Insert(table=t, columns=cols, source=new_src, returning=new_ret)`
+  it defaulted back to `None`.  This caused `INSERT OR REPLACE` and
+  `INSERT OR IGNORE` to silently behave as plain `INSERT` after optimization,
+  raising `IntegrityError` instead of replacing or ignoring conflicting rows.
+  Fix: the pattern now captures `on_conflict=oc` and passes it through.
+
+## [0.6.0] - 2026-05-04
+
+### Fixed
+
+- **`ConstantFolding` silent NULL for `||`** (`constant_folding.py`) — the
+  `_apply_binary` function's `match` statement did not have a case for
+  `BinaryOp.CONCAT`.  Python's structural pattern matching silently falls
+  through unmatched cases and returns `None`, so `'hello' || 'world'` was
+  constant-folded to `Literal(value=None)` instead of `Literal(value='helloworld')`.
+  Added `case BinaryOp.CONCAT: return str(lv) + str(rv)` to fix this.
+
+## [0.5.0] - 2026-05-04
+
+### Fixed
+
+- **`PredicatePushdown` outer-join correctness** — predicates on the
+  null-padded side of an outer join were incorrectly being pushed inside
+  the join's sub-scan, converting an outer join into a de-facto inner
+  join. Fix: `_distribute_conjuncts` now consults the join `kind` before
+  pushing to each side.
+  - `LEFT JOIN` → only left-side predicates may be pushed into the left
+    scan; right-side predicates remain above the join.
+  - `RIGHT JOIN` → only right-side predicates may be pushed.
+  - `FULL JOIN` → no single-side push at all.
+  - `INNER` / `CROSS` → unchanged (both sides OK).
+
+### Added
+
+- `JoinKind` imported from `sql_planner` in `predicate_pushdown.py` to
+  support the outer-join guard.
+
+### Fixed (RETURNING)
+
+- **`ConstantFolding` preserves `returning` on DML nodes** (`constant_folding.py`)
+  — the `Insert`, `Update`, and `Delete` match arms in `_fold_plan` were
+  rebuilding the nodes without passing the `returning` field, silently stripping
+  the RETURNING clause before codegen.  All three cases now capture `returning=ret`
+  and emit `returning=tuple(_fold_expr(r) for r in ret)` so that RETURNING
+  expressions are folded rather than dropped.
+
 ## [0.4.0] - 2026-04-23
 
 ### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)

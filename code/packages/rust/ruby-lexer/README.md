@@ -1,50 +1,92 @@
 # coding-adventures-ruby-lexer
 
-A Ruby lexer for the coding-adventures project. This crate tokenizes Ruby source code using the grammar-driven lexer from the `lexer` crate.
+Ruby lexer driven by a **TOML-encoded state machine**.  Phase 1 of
+the multi-phase plan in
+[code/specs/ruby-parser.md](../../../specs/ruby-parser.md).
 
 ## How it works
 
-Instead of hand-writing tokenization rules, this crate loads the `ruby.tokens` grammar file and feeds it to the generic `GrammarLexer`. The grammar file defines all of Ruby's tokens — keywords, identifiers, numbers, strings, symbols, operators, and delimiters — in a declarative format.
+The state machine lives in [`ruby-1.8.lexer.states.toml`](./ruby-1.8.lexer.states.toml)
+— a hand-authored TOML file using the
+`state-machine-markup-deserializer/v1` schema.  It declares the
+states (`data`, `ident_body`, `int_body`, `string_d_body`,
+`comment_body`, the multi-character-operator peek states, etc.),
+the transitions between them, and the **portable action verbs**
+the runtime fires (`emit(<TokenName>)`, `append_text(current)`,
+`clear_text`, `parse_error(<code>)`).
 
-## How it fits in the stack
+This crate:
+
+1. Loads the TOML at build via `include_str!`.
+2. Parses it through `state_machine_markup_deserializer::from_states_toml`.
+3. Builds an `EffectfulStateMachine` from the typed definition.
+4. Drives it character-by-character; on each step the engine
+   returns a list of effect strings.  The action interpreter in
+   this crate turns those into `lexer::token::Token` values.
 
 ```
-ruby.tokens      (grammar file)
-       |
-       v
-grammar-tools    (parses .tokens into TokenGrammar)
-       |
-       v
-lexer            (GrammarLexer: tokenizes source using TokenGrammar)
-       |
-       v
-ruby-lexer       (THIS CRATE: wires grammar + lexer together for Ruby)
-       |
-       v
-ruby-parser      (consumes tokens to build AST)
+ruby-1.8.lexer.states.toml   (source of truth, hand-authored)
+     │
+     ▼  state_machine_markup_deserializer::from_states_toml
+StateMachineDefinition       (typed AST of the TOML)
+     │
+     ▼  state_machine::EffectfulStateMachine::from_definition
+EffectfulStateMachine        (engine, runs states + transitions)
+     │
+     ▼  step()  → emits effect strings on every character
+action interpreter (ruby-lexer/src/lib.rs)
+     │
+     ▼  Vec<Token>
+ruby-parser consumes the tokens
 ```
+
+## Phase 1 scope (what this crate covers today)
+
+- Identifiers (keywords distinguished by the action interpreter)
+- Integers (decimal only — `0x` / `0b` / `0o` arrive in a later phase)
+- Strings (`"..."` and `'...'`) — no interpolation yet
+- Line comments (`# ...`)
+- Operators: `+`, `-`, `*`, `/`, `%`, `==`, `!=`, `<`, `>`, `<=`,
+  `>=`, `=`, `!`, `&&`, `||`, `=>`, `**`
+- Punctuation: `( ) [ ] { } , ; : :: .`
+- Newlines emitted as `Newline` tokens (Ruby treats them as
+  statement terminators)
+- Method-name `?` / `!` suffixes (`empty?`, `save!`)
+
+## Out of Phase 1 (later phases per
+[ruby-parser.md](../../../specs/ruby-parser.md))
+
+- Heredocs, `%w[]` / `%q{}` / `%r{}` percent literals
+- String interpolation `"a#{expr}b"`
+- Regex `/.../` (needs parser-feedback to disambiguate `f /x/`)
+- Parser-driven local-variable lexing (Phase 2)
+- Hash shorthand, lambdas, keyword args (later eras: 1.9.1+)
 
 ## Usage
 
 ```rust
-use coding_adventures_ruby_lexer::{create_ruby_lexer, tokenize_ruby};
+use coding_adventures_ruby_lexer::{tokenize_ruby, RubyLexer};
 
-// Quick tokenization — returns a Vec<Token>
-let tokens = tokenize_ruby("x = 1 + 2");
+// One-shot convenience.
+let tokens = tokenize_ruby("def factorial(n)\n  n * factorial(n - 1)\nend\n");
 
-// Or get the lexer object for more control
-let mut lexer = create_ruby_lexer("def greet(name)\n  puts name\nend");
-let tokens = lexer.tokenize().expect("tokenization failed");
+// Or drive the lexer directly:
+let mut lexer = RubyLexer::new("1.8").unwrap();
+lexer.push("foo + 1").unwrap();
+lexer.finish().unwrap();
+let tokens = lexer.drain_tokens();
+let diagnostics = lexer.diagnostics();  // non-fatal lex errors
 ```
 
-## Token types
+## Adding a new Ruby version
 
-The Ruby lexer produces these token categories:
+1. Author a `ruby-<ver>.lexer.states.toml` at the crate root.
+2. Wire it into `src/machine.rs::definition_for_version`.
+3. Note the syntax additions in
+   [`code/specs/ruby-version-evolution.md`](../../../specs/ruby-version-evolution.md).
 
-- **NAME** — identifiers like `x`, `my_method`, `_private`
-- **KEYWORD** — reserved words: `def`, `end`, `if`, `else`, `class`, `module`, `return`, etc.
-- **NUMBER** — numeric literals (integers and floats)
-- **STRING** — string literals (single-quoted and double-quoted)
-- **Operators** — `+`, `-`, `*`, `/`, `==`, `!=`, `<=`, `>=`, `&&`, `||`, etc.
-- **Delimiters** — `(`, `)`, `[`, `]`, `{`, `}`, `,`, `.`, `:`, `;`
-- **EOF** — end of file
+## Tests
+
+`cargo test -p coding-adventures-ruby-lexer` runs the unit suite,
+including a factorial-program tokenization smoke test and several
+operator-precision tests.

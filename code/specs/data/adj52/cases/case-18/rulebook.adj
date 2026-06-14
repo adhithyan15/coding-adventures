@@ -1,0 +1,248 @@
+% ============================================================================
+% ADJ52 case-18 derived rulebook.
+% Clinical area: acute stroke-MIMIC encephalopathy in a young adult
+%   (non-territorial cortical diffusion restriction + segmental vasospasm with a
+%    PATENT vessel + seizure + diffuse encephalopathy + fever + systemic GI
+%    features). domain_key = clinical_neurology_stroke_mimic.
+%
+% The central puzzle the IR poses (q1-q4): one unifying diagnosis that explains
+%   - headache + aphasia + hemiparesis + generalized seizure + encephalopathy,
+%   - a non-territorial cortical (parietal/temporal) diffusion restriction that
+%     does NOT match a single arterial territory and is contralateral to the
+%     angiographic abnormality,
+%   - a CTA "M1 cut-off" that DSA reclassifies as a PATENT vessel with segmental
+%     vasospasm and NO thromboembolic clot,
+%   - and systemic features (crampy generalized abdominal pain, vomiting, fever,
+%     diffuse encephalopathy) pointing at a SYSTEMIC process with neurological
+%     manifestation rather than a focal embolic stroke.
+%
+% Differential built from the IR alone (no answer given), recursing into the
+% stroke-mimic subcategories: metabolic/mitochondrial stroke-like episode,
+% reversible cerebral vasoconstriction, hemiplegic migraine, infectious
+% encephalitis (excluded arm), and the prior working diagnosis large-vessel
+% ischemic stroke (argued down).
+%
+% Magnitudes are encoded QUALITATIVELY per adj-lang grammar (lowercase, no
+% leading digit, no uppercase). Anti-overfit: every clause is added because a
+% cited source supports the DIRECTION of the likelihood ratio for that finding
+% in that disease, not to make the case land anywhere. Discriminators that argue
+% AGAINST a tempting wrong answer carry LR<1 wherever a source supports them.
+% ============================================================================
+
+% ===== PRIORS (base rates among young-adult stroke-mimic / undetermined cases) =====
+
+% rationale: A mitochondrial stroke-like episode (MELAS-spectrum) is the
+% prototypical young-adult stroke MIMIC: stroke-like episode before 40 +
+% encephalopathy (seizures) + a metabolic, non-vascular lesion. Moderate prior
+% as the unifying-systemic candidate.
+prior 0.22 for diagnosis(mitochondrial_stroke_like_episode)
+  source "GeneReviews NBK1233 MELAS; StatPearls NBK532959 (stroke-like episode <40 + encephalopathy + lactic acidosis)" trust authoritative
+
+% rationale: RCVS is a recognized cause of segmental cerebral vasoconstriction
+% with thunderclap headache, focal deficits and occasional seizures; it is the
+% leading vasospasm-with-patent-vessel mimic to consider.
+prior 0.18 for diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "AJNR 36(9):1580 RCVS part 2; StatPearls NBK551723 (segmental vasoconstriction, thunderclap headache)" trust authoritative
+
+% rationale: Sporadic hemiplegic migraine presents with migraine aura plus
+% hemiparesis/aphasia and is a classic stroke mimic in young women.
+prior 0.15 for diagnosis(sporadic_hemiplegic_migraine)
+  source "PMC11076926 (sporadic hemiplegic migraine mimicking stroke); AHA Stroke 2022 hemiplegic migraine stroke mimic" trust authoritative
+
+% rationale: Infectious (herpsimplex/viral) encephalitis is a must-not-miss
+% cause of fever + encephalopathy + seizure + cortical signs; empiric aciclovir
+% was correctly started, so it carries a real prior until CSF excludes it.
+prior 0.12 for diagnosis(infectious_encephalitis)
+  source "StatPearls NBK557643 (HSE: fever, encephalopathy, seizures, temporal cortical involvement)" trust authoritative
+
+% rationale: acute large-vessel ischemic stroke was the INITIAL working
+% diagnosis here; high prior so the engine must EARN the move away from it on the
+% non-territorial, patent-vessel, no-clot data.
+prior 0.25 for diagnosis(acute_large_vessel_ischemic_stroke)
+  source "f26 initial_working_diagnosis(acute_large_vessel_ischemic_stroke); CTA suspected M1 cut-off" trust authoritative
+
+% ===== SHARED MITOCHONDRIAL STROKE-LIKE-EPISODE SIGNATURE =====
+% rationale: The conjunction non-territorial cortical diffusion restriction +
+% segmental vasospasm in a PATENT vessel with NO clot + seizure/diffuse
+% encephalopathy is ONE correlated syndrome (the mitochondrial angiopathy /
+% neuronal hyperexcitability of a stroke-like episode), not four independent
+% facts. Counting them once avoids Naive-Bayes saturation.
+% mechanism mitochondrial_stroke_like_episode_gestalt for diagnosis(mitochondrial_stroke_like_episode) lr 7.0 : imaging(mri_brain, finding(non_single_arterial_territory_pattern)), imaging(mri_brain, finding(cortical_diffusion_restriction(non_territorial))), imaging(catheter_dsa, finding(segmental_vasospasm_patent_vessel)), event(seizure(generalized_tonic_clonic)), investigation(eeg, interpretation(diffuse_encephalopathy))
+
+% rationale: The systemic gestalt of a multi-organ mitochondrial crisis
+% (crampy generalized abdominal pain + recurrent vomiting from GI dysmotility,
+% plus migrainous headache with photo/phonophobia) is ONE correlated multi-organ
+% process, fired once.
+% mechanism mitochondrial_multiorgan_gestalt for diagnosis(mitochondrial_stroke_like_episode) lr 3.0 : symptom(abdominal_pain(crampy_generalized)), symptom(vomiting(recurrent)), symptom(headache(severe_migrainous))
+
+% ===== MITOCHONDRIAL STROKE-LIKE EPISODE (MELAS-spectrum) — independent edges =====
+
+% rationale: stroke-like episode before age 40 is an invariant MELAS diagnostic
+% criterion; a 28-year-old fits squarely. Independent of the imaging gestalt.
+contributes 2.0 from patient_age(under_40) to diagnosis(mitochondrial_stroke_like_episode)
+  source "GeneReviews NBK1233; ScienceDirect 0960896692900458 (invariant: stroke-like episode before age 40)" trust authoritative
+
+% rationale: fever during a stroke-like episode is common (mitochondrial
+% energy-failure / central neurogenic), so fever here is supportive not against.
+contributes 1.5 from event(fever(high)) to diagnosis(mitochondrial_stroke_like_episode)
+  source "Frontiers Neurol 2022 843386 MRI features of stroke-like episodes (peri-ictal hyperthermia)" trust empirical
+
+% rationale: KEY DISCRIMINATOR (positive) — DSA showing a PATENT vessel with
+% segmental vasospasm and NO thromboembolic clot reclassifies the CTA "cut-off"
+% as non-embolic, fitting mitochondrial angiopathy rather than occlusion. Kept
+% independent because it is the angiographic discriminator, not the imaging gestalt.
+contributes 2.0 from imaging(catheter_dsa, finding(no_thromboembolic_clot)) to diagnosis(mitochondrial_stroke_like_episode)
+  source "Frontiers Neurosci 2022 1028762 (stroke-like lesions are non-occlusive; mitochondrial angiopathy, patent vessels)" trust authoritative
+
+% rationale: a normal, acellular CSF (normal protein/glucose, no pleocytosis)
+% is consistent with a non-inflammatory metabolic process.
+contributes 1.3 from investigation(csf, profile(acellular_normal)) to diagnosis(mitochondrial_stroke_like_episode)
+  source "GeneReviews NBK1233 (CSF often acellular; lactate elevated, not an inflammatory pleocytosis)" trust authoritative
+
+% ===== REVERSIBLE CEREBRAL VASOCONSTRICTION SYNDROME (RCVS) =====
+
+% rationale: segmental cerebral vasoconstriction on angiography (here the DSA
+% segmental vasospasm) is the defining vascular feature of RCVS.
+contributes 3.0 from imaging(catheter_dsa, finding(segmental_vasospasm_patent_vessel)) to diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "AJNR 36(9):1580; StatPearls NBK551723 (reversible segmental vasoconstriction of cerebral arteries)" trust authoritative
+
+% rationale: a severe acute headache is the dominant and near-universal RCVS
+% symptom, so the severe headache is supportive.
+contributes 2.0 from symptom(headache(severe_migrainous)) to diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "PMC3002654 (RCVS: recurrent thunderclap / severe headaches are the hallmark)" trust authoritative
+
+% rationale: seizures occur in a minority of RCVS, weakly supportive.
+contributes 1.3 from event(seizure(generalized_tonic_clonic)) to diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "PMC3002654 (RCVS: occasional seizures and focal deficits)" trust empirical
+
+% rationale: DISCRIMINATOR (fires negative) — RCVS infarcts characteristically
+% sit in WATERSHED/border-zone territory; a cortical lesion that does NOT conform
+% to any single arterial territory AND is non-watershed argues against RCVS as
+% the lesion mechanism.
+contributes 0.5 from imaging(mri_brain, finding(non_single_arterial_territory_pattern)) to diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "AJNR 36(9):1580 RCVS part 2 (ischemic strokes over watershed zones; not cytotoxic cortical ribboning)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — RCVS is typically NOT a
+% multi-organ systemic illness; prominent crampy generalized abdominal pain with
+% recurrent vomiting and diffuse encephalopathy points away from a purely
+% cerebrovascular vasoconstrictive syndrome.
+contributes 0.6 from symptom(abdominal_pain(crampy_generalized)) to diagnosis(reversible_cerebral_vasoconstriction_syndrome)
+  source "AHA Stroke 2019 RCVS review (RCVS is a cerebral arteriopathy, not a systemic visceral syndrome)" trust authoritative
+
+% ===== SPORADIC HEMIPLEGIC MIGRAINE =====
+
+% rationale: hemiplegic migraine presents with migrainous severe headache plus
+% motor aura (hemiparesis) and aphasia, with photophobia/phonophobia/vomiting.
+contributes 2.5 from symptom(headache(severe_migrainous)) to diagnosis(sporadic_hemiplegic_migraine)
+  source "PMC11076926 (hemiplegic migraine: severe headache, hemiparesis, aphasia, facial palsy, vomiting)" trust authoritative
+
+% rationale: prolonged motor aura (hemiparesis) plus aphasia is the cardinal
+% hemiplegic-migraine deficit.
+contributes 2.5 from exam(aphasia(expressive)) to diagnosis(sporadic_hemiplegic_migraine)
+  source "PMC11076926 (aphasia and hemiparesis as hemiplegic-migraine aura)" trust authoritative
+
+% rationale: contralateral diffuse EEG slowing in the aura phase is supportive
+% of hemiplegic migraine.
+contributes 1.5 from investigation(eeg, interpretation(diffuse_encephalopathy)) to diagnosis(sporadic_hemiplegic_migraine)
+  source "AHA Stroke 2022 (diffuse EEG slowing contralateral to deficit supports hemiplegic migraine aura)" trust empirical
+
+% rationale: DISCRIMINATOR (fires negative) — a generalized tonic-clonic
+% seizure with fever and a DENSE PERSISTENT hemiplegia plus cortical diffusion
+% restriction is atypical for hemiplegic migraine, whose aura is reversible.
+contributes 0.4 from event(seizure(generalized_tonic_clonic)) to diagnosis(sporadic_hemiplegic_migraine)
+  source "PMC8578066 / AHA Stroke 2022 (seizure + encephalopathy + fixed restriction atypical for hemiplegic migraine; usually reversible)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — persistent dense hemiplegia at
+% the residual stage argues against a reversible migrainous aura.
+contributes 0.5 from residual_deficit(dense_persistent_hemiplegia) to diagnosis(sporadic_hemiplegic_migraine)
+  source "PMC11076926 (hemiplegic-migraine deficits are characteristically fully reversible)" trust authoritative
+
+% ===== INFECTIOUS ENCEPHALITIS (HSV / viral) — the excluded arm =====
+
+% rationale: fever + encephalopathy + seizure + cortical (temporal) involvement
+% is the classic HSE syndrome, which is why empiric aciclovir was started.
+contributes 2.5 from event(fever(high)) to diagnosis(infectious_encephalitis)
+  source "StatPearls NBK557643 (HSE: fever, encephalopathy, seizures, temporal lobe involvement)" trust authoritative
+contributes 1.5 from event(seizure(generalized_tonic_clonic)) to diagnosis(infectious_encephalitis)
+  source "StatPearls NBK557643 (seizures are common in herpes simplex encephalitis)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires negative) — a clear, acellular CSF with
+% NORMAL protein/glucose and NO pleocytosis is strongly against an infectious
+% encephalitis, which characteristically produces a lymphocytic pleocytosis and
+% raised protein. This is the single biggest demotion of the empiric-aciclovir
+% candidate.
+contributes 0.15 from investigation(csf, profile(acellular_normal)) to diagnosis(infectious_encephalitis)
+  source "StatPearls NBK557643; PMC4462661 (HSE: CSF lymphocytic pleocytosis and raised protein expected)" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative, but bounded) — a NEGATIVE CSF viral
+% DNA PCR argues against HSE, though PCR sensitivity is imperfect early, so the
+% LR is moved below 1 but not to near-zero (a single negative PCR does not fully
+% exclude). Combined with the acellular CSF this demotes the infectious arm.
+contributes 0.4 from investigation(csf, viral_dna_pcr(negative)) to diagnosis(infectious_encephalitis)
+  source "ScienceDirect HSE overview; PMC4462661 (CSF HSV PCR sens 96% but can be negative early; negative does not fully exclude)" trust authoritative
+
+% ===== ACUTE LARGE-VESSEL ISCHEMIC STROKE (prior working dx — argued DOWN) =====
+
+% rationale: the CTA suspicion of an abrupt proximal M1 cut-off is what first
+% invoked a large-vessel occlusion, so it supports the embolic hypothesis.
+contributes 2.5 from imaging(ct_angiography, finding(suspected_cutoff_m1)) to diagnosis(acute_large_vessel_ischemic_stroke)
+  source "f25 CTA suspected M1 cut-off; standard LVO stroke imaging (abrupt vessel cut-off)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires negative) — catheter DSA showing a PATENT
+% vessel with NO thromboembolic clot directly refutes a large-vessel occlusion as
+% the mechanism. This is the clause that demotes the initial working diagnosis.
+contributes 0.10 from imaging(catheter_dsa, finding(no_thromboembolic_clot)) to diagnosis(acute_large_vessel_ischemic_stroke)
+  source "f38-f40 DSA patent vessel, no clot; LVO requires an occlusive thrombus (its absence refutes LVO)" trust authoritative
+
+% rationale: KEY DISCRIMINATOR (fires negative) — a cortical lesion not
+% conforming to a single arterial territory (and contralateral to the CTA
+% abnormality) is incompatible with a single-vessel territorial infarct.
+contributes 0.20 from imaging(mri_brain, finding(non_single_arterial_territory_pattern)) to diagnosis(acute_large_vessel_ischemic_stroke)
+  source "f37 non-single-territory pattern; territorial infarct should match one arterial territory" trust authoritative
+
+% rationale: DISCRIMINATOR (fires negative) — no established territorial
+% infarct on early CT alongside the above further argues against completed LVO.
+contributes 0.6 from imaging(non_contrast_head_ct, finding(no_established_territorial_infarct)) to diagnosis(acute_large_vessel_ischemic_stroke)
+  source "f24 non-contrast CT no established territorial infarct" trust empirical
+
+% ===== NEXT STEP (confirmatory pathway) =====
+
+% rationale: the decisive next step is serum + CSF lactate (typically elevated
+% in a stroke-like episode) and mtDNA testing for the m.3243A>G MT-TL1 variant,
+% which confirms the mitochondrial diagnosis and unifies the whole picture.
+prior 0.25 for next_step(serum_csf_lactate_and_mtdna_m3243_testing)
+  source "GeneReviews NBK1233; StatPearls NBK532959 (m.3243A>G confirms MELAS in ~80%; elevated serum/CSF lactate)" trust authoritative
+contributes 4.0 from imaging(mri_brain, finding(non_single_arterial_territory_pattern)) to next_step(serum_csf_lactate_and_mtdna_m3243_testing)
+  source "Frontiers Neurosci 2022 1028762 (non-territorial stroke-like lesion -> pursue mitochondrial workup)" trust authoritative
+contributes 3.0 from imaging(catheter_dsa, finding(no_thromboembolic_clot)) to next_step(serum_csf_lactate_and_mtdna_m3243_testing)
+  source "GeneReviews NBK1233 (non-occlusive stroke-like episode -> lactate + mtDNA testing)" trust authoritative
+contributes 2.5 from patient_age(under_40) to next_step(serum_csf_lactate_and_mtdna_m3243_testing)
+  source "StatPearls NBK532959 (young stroke-like episode <40 -> mitochondrial genetic testing)" trust authoritative
+
+% rationale: alternative confirmatory arm — a repeat MRA/DSA at interval to
+% demonstrate REVERSIBILITY of the vasoconstriction would confirm RCVS instead.
+prior 0.12 for next_step(interval_angiography_for_vasoconstriction_reversibility)
+  source "AJNR 36(9):1580 RCVS part 2 (diagnosis requires demonstrating reversibility of vasoconstriction by ~3 months)" trust authoritative
+contributes 2.5 from imaging(catheter_dsa, finding(segmental_vasospasm_patent_vessel)) to next_step(interval_angiography_for_vasoconstriction_reversibility)
+  source "StatPearls NBK551723 (interval angiographic reversibility confirms RCVS)" trust authoritative
+
+% ===== UNCERTAINTIES (decision-relevant, unresolved) =====
+
+% u-lactate: serum/CSF lactate has not been reported; an elevated lactate is a
+% near-defining MELAS criterion, a normal lactate argues against. Each result
+% moves the mitochondrial posterior.
+contributes 6.0 from lactate(elevated) to diagnosis(mitochondrial_stroke_like_episode)
+  source "GeneReviews NBK1233; ScienceDirect 0960896692900458 (lactic acidosis is an invariant MELAS criterion)" trust authoritative
+contributes 0.3 from lactate(normal) to diagnosis(mitochondrial_stroke_like_episode)
+  source "StatPearls NBK532959 (absent lactic acidosis argues against MELAS-spectrum)" trust authoritative
+uncertain { lactate(elevated), lactate(normal) } for diagnosis(mitochondrial_stroke_like_episode)
+  source "GeneReviews NBK1233 (serum/CSF lactate not yet measured; near-defining discriminator)"
+
+% u-mtdna: mtDNA m.3243A>G testing has not been sent; a pathogenic variant is
+% near-dispositive for the mitochondrial diagnosis, its absence strongly against.
+contributes 20.0 from mtdna_m3243(pathogenic_variant) to diagnosis(mitochondrial_stroke_like_episode)
+  source "GeneReviews NBK1233 (m.3243A>G in MT-TL1 confirms MELAS in ~80%)" trust authoritative
+contributes 0.2 from mtdna_m3243(not_detected) to diagnosis(mitochondrial_stroke_like_episode)
+  source "StatPearls NBK532959 (no detectable variant in blood lowers likelihood; consider urine/muscle)" trust authoritative
+uncertain { mtdna_m3243(pathogenic_variant), mtdna_m3243(not_detected) } for diagnosis(mitochondrial_stroke_like_episode)
+  source "GeneReviews NBK1233 (mtDNA m.3243A>G genetic testing is confirmatory; not yet sent)"

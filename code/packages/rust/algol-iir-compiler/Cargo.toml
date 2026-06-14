@@ -1,0 +1,21 @@
+[package]
+name = "algol-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule."
+
+[dependencies]
+coding-adventures-algol-parser = { path = "../algol-parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+vm-core = { path = "../vm-core" }
+
+[dev-dependencies]
+aot-core = { path = "../aot-core" }
+iir-to-beam = { path = "../iir-to-beam" }
+iir-to-cil-bytecode = { path = "../iir-to-cil-bytecode" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-llvm = { path = "../iir-to-llvm" }
+iir-to-wasm = { path = "../iir-to-wasm" }
+jit-core = { path = "../jit-core" }

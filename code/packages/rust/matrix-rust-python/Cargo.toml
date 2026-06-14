@@ -1,0 +1,40 @@
+# matrix-rust-python — Python C extension exposing the Rust matrix
+# execution layer to Python.
+#
+# Phase 1 (MX09 §"Phases"): crate skeleton + Graph JSON round-trip
+# only.  Runtime + Graph execution land in Phase 2.
+#
+# Build produces a .so/.dylib/.pyd that Python imports as
+# `matrix_rust_python`.  crate-type = ["cdylib"]: emit a C-compatible
+# shared library with no Rust-specific symbols — this is what
+# Python's import machinery expects.
+#
+# Follows the workspace convention established by font-parser-python:
+# zero-dependency on pyo3 / pyo3-ffi.  All Python C API access goes
+# through python-bridge, which declares the extern "C" functions
+# itself.  Python's Limited API (PEP 384) is ABI-stable by design,
+# so the bridge works on every Python 3.x version without rebuilding.
+
+[package]
+name = "matrix-rust-python"
+version = "0.1.0"
+edition = "2021"
+description = "MX09 Phase 1 — Python C extension exposing the Rust matrix execution layer (matrix-ir / matrix-ir-json / matrix-runtime / matrix-cpu / matrix-metal / matrix-cuda) to Python.  v0.1 exposes only graph_round_trip_json(json_string) -> json_string — a smoke function that proves the matrix-ir-json wire format survives a trip through the Python C API boundary.  v0.2+ adds Graph + Runtime classes with actual execution per MX09.  Zero external Rust dependencies beyond the workspace; no pyo3."
+license = "MIT"
+
+[lib]
+# cdylib: produce a .so / .dylib / .pyd that Python can `import`.
+# No rlib because we are not a reusable Rust library — only a bridge.
+crate-type = ["cdylib"]
+name = "matrix_rust_python"
+
+[dependencies]
+matrix-ir                          = { path = "../matrix-ir" }
+matrix-ir-json                     = { path = "../matrix-ir-json" }
+matrix-runtime                     = { path = "../matrix-runtime" }
+matrix-cpu                         = { path = "../matrix-cpu" }
+compute-ir                         = { path = "../compute-ir" }
+executor-protocol                  = { path = "../executor-protocol" }
+coding-adventures-json-value       = { path = "../json-value" }
+coding-adventures-json-serializer  = { path = "../json-serializer" }
+python-bridge                      = { path = "../python-bridge" }

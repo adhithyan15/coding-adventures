@@ -1,0 +1,8 @@
+{
+ "check_id": 167,
+ "idx": 67,
+ "slot": "tenure_months",
+ "claimed_value": 2,
+ "scenario": "Nadia has been employed for 2 months. Her job requisition designates her role as 'remote-first.' She has requested to work remotely.",
+ "cited_span": "Nadia has been employed for 2 months."
+}

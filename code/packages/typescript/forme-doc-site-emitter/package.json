@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/forme-doc-site-emitter",
+  "version": "0.1.0",
+  "description": "Glue package for the DOC00 documentation-site cluster: composes per-page HTML + sidebar tree + search-engine outputs (manifest + shards + client JS) + site config into a PageBundleConfig that the FM00 deploy chain (forme-aot-page-bundle-emitter, forme-aot-deploy-manifest-emitter, forme-deploy-runner) consumes unchanged.  Pure transform; capabilities []; the disk-write capability lives downstream in the deploy runner, not here.  ELEVENTH AND FINAL DOC00 v0 package — closes the cluster.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-doc-sidebar-builder": "file:../forme-doc-sidebar-builder",
+    "@coding-adventures/forme-doc-search-index-builder": "file:../forme-doc-search-index-builder",
+    "@coding-adventures/forme-aot-page-bundle-emitter": "file:../forme-aot-page-bundle-emitter"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

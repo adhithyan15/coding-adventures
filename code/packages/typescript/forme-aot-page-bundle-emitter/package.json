@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/forme-aot-page-bundle-emitter",
+  "version": "0.1.0",
+  "description": "Wrap multiple HTML pages into a deterministic deploy bundle manifest with route table.  Pure transform: route validation (root-relative, no .., no //, no \\), deterministic file-path derivation (e.g. /about → about/index.html), SHA-256 hash via Node's built-in crypto (no network), canonical JSON output (sorted keys, fixed key order per entry).  FM00 v0 emitter.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

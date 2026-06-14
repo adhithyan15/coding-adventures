@@ -1,6 +1,7 @@
-using System.Security.Cryptography;
 using System.Text;
 using HmacAlgorithm = CodingAdventures.Hmac.Hmac;
+using Sha256Algorithm = CodingAdventures.Sha256.Sha256;
+using Sha512Algorithm = CodingAdventures.Sha512.Sha512;
 
 namespace CodingAdventures.Hmac.Tests;
 
@@ -59,8 +60,8 @@ public sealed class HmacTests
         var key = Enumerable.Repeat((byte)0x01, 100).ToArray();
         var message = "msg"u8.ToArray();
 
-        Assert.Equal(HmacAlgorithm.HmacSha256(key, message), HmacAlgorithm.Compute(SHA256.HashData, 64, key, message));
-        Assert.Equal(HmacAlgorithm.HmacSha512(key, message), HmacAlgorithm.Compute(SHA512.HashData, 128, key, message));
+        Assert.Equal(HmacAlgorithm.HmacSha256(key, message), HmacAlgorithm.Compute(Sha256Algorithm.Hash, 64, key, message));
+        Assert.Equal(HmacAlgorithm.HmacSha512(key, message), HmacAlgorithm.Compute(Sha512Algorithm.Hash, 128, key, message));
     }
 
     [Fact]
@@ -77,6 +78,7 @@ public sealed class HmacTests
     public void EmptyKeyIsRejectedButEmptyMessageIsAllowed()
     {
         Assert.Throws<ArgumentException>(() => HmacAlgorithm.HmacSha256([], "message"u8.ToArray()));
+        Assert.Equal(32, HmacAlgorithm.ComputeAllowEmptyKey(Sha256Algorithm.Hash, 64, [], "message"u8.ToArray()).Length);
         Assert.Equal(32, HmacAlgorithm.HmacSha256("key"u8.ToArray(), []).Length);
     }
 
@@ -94,6 +96,6 @@ public sealed class HmacTests
     public void InvalidBlockSizeIsRejected()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            HmacAlgorithm.Compute(SHA256.HashData, 0, "key"u8.ToArray(), "message"u8.ToArray()));
+            HmacAlgorithm.Compute(Sha256Algorithm.Hash, 0, "key"u8.ToArray(), "message"u8.ToArray()));
     }
 }

@@ -1233,11 +1233,13 @@ mod tests {
     use resp_protocol::{decode, encode, RespValue};
     use serde::{Deserialize, Serialize};
     use std::io::{Read, Write};
-    use std::net::TcpStream;
+    use std::net::{SocketAddr, TcpStream};
     use std::path::{Path, PathBuf};
+    use std::sync::{Arc, Barrier};
     use std::thread;
     use std::time::Duration;
 
+    const DEFAULT_STRESS_CLIENTS: usize = 128;
     const MAX_TCP_CHUNK_BYTES: usize = 1024 * 1024;
 
     #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -1342,14 +1344,14 @@ mod tests {
             .map(|program| WorkerCommand::new(program, vec!["-c".to_string(), script.to_string()]))
     }
 
-    fn execute_scripted_worker(script: &str) -> Result<TcpOutputFrame, WorkerError> {
-        let worker_command = scripted_worker(script).expect("python interpreter");
+    fn execute_scripted_worker(script: &str) -> Option<Result<TcpOutputFrame, WorkerError>> {
+        let worker_command = scripted_worker(script)?;
         let mut worker = StdioJobWorker::<TcpInputJob, TcpOutputFrame>::spawn(&worker_command)
             .expect("spawn scripted worker");
-        worker.execute(TcpInputJob {
+        Some(worker.execute(TcpInputJob {
             stream_id: "test-stream".to_string(),
             bytes_hex: hex_encode(command(&[b"PING"])),
-        })
+        }))
     }
 
     fn handle_tcp_bytes(
@@ -1511,7 +1513,11 @@ assert payload["stream_id"] == "test-stream"
 assert payload["bytes_hex"].startswith("2a")
 print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"ok","payload":{"writes_hex":[],"close":False}},"metadata":body["metadata"]}}), flush=True)
 "#;
-        execute_scripted_worker(script).expect("opaque TCP bytes response");
+        let Some(result) = execute_scripted_worker(script) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+        result.expect("opaque TCP bytes response");
     }
 
     fn start_test_server(
@@ -1546,6 +1552,14 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
             .set_read_timeout(Some(Duration::from_secs(3)))
             .expect("set read timeout");
         stream
+    }
+
+    fn connect_stress_client(addr: SocketAddr) -> io::Result<TcpStream> {
+        let stream = TcpStream::connect(addr)?;
+        stream.set_nodelay(true)?;
+        stream.set_read_timeout(Some(Duration::from_secs(10)))?;
+        stream.set_write_timeout(Some(Duration::from_secs(10)))?;
+        Ok(stream)
     }
 
     fn stop_server(server: EmbeddableTcpServer<()>, handle: thread::JoinHandle<io::Result<()>>) {
@@ -1804,11 +1818,19 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         worker_count: usize,
         worker_queue_depth: usize,
     ) -> (EmbeddableTcpServer<()>, thread::JoinHandle<io::Result<()>>) {
+        start_async_inprocess_test_server_with_options(worker_count, worker_queue_depth, 64)
+    }
+
+    fn start_async_inprocess_test_server_with_options(
+        worker_count: usize,
+        worker_queue_depth: usize,
+        max_connections: usize,
+    ) -> (EmbeddableTcpServer<()>, thread::JoinHandle<io::Result<()>>) {
         let server = EmbeddableTcpServer::new_inprocess_mailbox(
             EmbeddableTcpServerOptions {
                 host: "127.0.0.1".to_string(),
                 port: 0,
-                max_connections: 64,
+                max_connections,
                 event_loop_threads: 1,
                 worker_processes: worker_count.max(1),
                 worker_queue_depth,
@@ -1835,6 +1857,14 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         (server, handle)
     }
 
+    fn stress_count(var: &str, default: usize) -> usize {
+        std::env::var(var)
+            .ok()
+            .and_then(|value| value.parse::<usize>().ok())
+            .filter(|value| *value > 0)
+            .unwrap_or(default)
+    }
+
     fn assert_scripted_worker_maps_control_results() {
         let error_script = r#"
 import json, sys
@@ -1842,7 +1872,11 @@ frame = json.loads(sys.stdin.readline())
 body = frame["body"]
 print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"error","error":{"code":"worker_failed","message":"boom","retryable":False,"origin":"worker","detail":None}},"metadata":body["metadata"]}}), flush=True)
 "#;
-        let error = execute_scripted_worker(error_script).expect_err("worker error should fail");
+        let Some(result) = execute_scripted_worker(error_script) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+        let error = result.expect_err("worker error should fail");
         assert!(error.to_string().contains("worker_failed: boom"));
 
         let cancelled = r#"
@@ -1851,7 +1885,9 @@ frame = json.loads(sys.stdin.readline())
 body = frame["body"]
 print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"cancelled","cancellation":{"message":"stopped"}},"metadata":body["metadata"]}}), flush=True)
 "#;
-        let error = execute_scripted_worker(cancelled).expect_err("cancelled job should fail");
+        let error = execute_scripted_worker(cancelled)
+            .expect("python interpreter should stay available")
+            .expect_err("cancelled job should fail");
         assert!(error.to_string().contains("cancelled job: stopped"));
 
         let timed_out = r#"
@@ -1860,7 +1896,9 @@ frame = json.loads(sys.stdin.readline())
 body = frame["body"]
 print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"timed_out","timeout":{"message":"too slow"}},"metadata":body["metadata"]}}), flush=True)
 "#;
-        let error = execute_scripted_worker(timed_out).expect_err("timed out job should fail");
+        let error = execute_scripted_worker(timed_out)
+            .expect("python interpreter should stay available")
+            .expect_err("timed out job should fail");
         assert!(error.to_string().contains("timed out job: too slow"));
     }
 
@@ -2012,7 +2050,11 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
     fn stdio_worker_rejects_mismatched_response_ids() {
         let script = scripted_success_response(r#"body["id"] + "-wrong""#);
 
-        let error = execute_scripted_worker(&script).expect_err("mismatched response should fail");
+        let Some(result) = execute_scripted_worker(&script) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+        let error = result.expect_err("mismatched response should fail");
         assert!(error.to_string().contains("response id mismatch"));
     }
 
@@ -2162,6 +2204,54 @@ emit(second, "second")
         let mut response = vec![0u8; request_len];
         stream.read_exact(&mut response).expect("read response");
         assert_eq!(response, request);
+        stop_server(server, handle);
+    }
+
+    #[test]
+    #[ignore]
+    fn inprocess_mailbox_server_sustains_configured_concurrent_clients() {
+        let client_count = stress_count(
+            "EMBEDDABLE_TCP_SERVER_STRESS_CLIENTS",
+            DEFAULT_STRESS_CLIENTS,
+        );
+        let (server, handle) = start_async_inprocess_test_server_with_options(
+            8,
+            client_count.saturating_add(64),
+            client_count.saturating_add(64),
+        );
+        let addr = server.local_addr();
+        let barrier = Arc::new(Barrier::new(client_count));
+        let clients = (0..client_count)
+            .map(|client_index| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || -> io::Result<()> {
+                    barrier.wait();
+                    let mut stream = connect_stress_client(addr)?;
+                    let payload = format!("stress-client-{client_index:04}").into_bytes();
+                    stream.write_all(&payload)?;
+                    let mut response = vec![0u8; payload.len()];
+                    stream.read_exact(&mut response)?;
+                    if response != payload {
+                        return Err(io::Error::new(
+                            io::ErrorKind::InvalidData,
+                            format!(
+                                "client {client_index} received {}",
+                                String::from_utf8_lossy(&response)
+                            ),
+                        ));
+                    }
+                    Ok(())
+                })
+            })
+            .collect::<Vec<_>>();
+
+        for client in clients {
+            client
+                .join()
+                .expect("TCP stress client thread")
+                .expect("TCP stress client");
+        }
+
         stop_server(server, handle);
     }
 

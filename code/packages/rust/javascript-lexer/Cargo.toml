@@ -1,9 +1,11 @@
 [package]
 name = "coding-adventures-javascript-lexer"
-version = "0.1.0"
+version = "0.5.1"
 edition = "2021"
-description = "JavaScript lexer — tokenizes JavaScript source code using the grammar-driven lexer and the javascript.tokens grammar file"
+description = "JavaScript lexer — tokenizes JavaScript source code against any ECMAScript edition (es1 through es2025) using the grammar-driven lexer. Includes correlation-vector plumbing per CLOC03."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }
 lexer = { path = "../lexer" }
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+coding_adventures_correlation_vector = { path = "../correlation-vector" }

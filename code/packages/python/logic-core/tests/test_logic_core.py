@@ -239,6 +239,7 @@ class TestGoalsAndSearch:
         initial = State(
             database={"dynamic": "snapshot"},
             fd_store={"domains": "snapshot"},
+            prolog_flags={"unknown": "fail"},
         )
 
         [state] = list(eq(x, atom("tea"))(initial))
@@ -246,8 +247,10 @@ class TestGoalsAndSearch:
 
         assert state.database == {"dynamic": "snapshot"}
         assert state.fd_store == {"domains": "snapshot"}
+        assert state.prolog_flags == {"unknown": "fail"}
         assert fresh_state.database == {"dynamic": "snapshot"}
         assert fresh_state.fd_store == {"domains": "snapshot"}
+        assert fresh_state.prolog_flags == {"unknown": "fail"}
 
     def test_run_n_truncates_without_consuming_every_answer(self) -> None:
         x = var("X")

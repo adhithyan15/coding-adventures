@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-x86-64-simulator"
+version = "0.1.0"
+description = "x86-64 (AMD64) behavioral simulator — Layer 07w"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-simulator-protocol",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/x86_64_simulator"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=x86_64_simulator --cov-report=term-missing --cov-fail-under=80"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501", "E701", "E702"]

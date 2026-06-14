@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-oct-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Oct lexer — tokenizes Oct source text using the grammar-driven Rust lexer (OCT02 phase 1)."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

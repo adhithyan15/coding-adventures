@@ -1,0 +1,18 @@
+[package]
+name = "silicon-rust-napi"
+version = "0.1.0"
+edition = "2021"
+description = "Node.js N-API addon for the silicon simulation stack: device-physics, mosfet-models, fab-process-simulation"
+
+[lib]
+# cdylib → the .node file Node.js loads.  `cargo test --lib` compiles a
+# separate test binary (no cdylib output), so Windows CI skips the cdylib
+# build entirely (node.lib not available) while still running pure-Rust tests.
+crate-type = ["cdylib"]
+name = "silicon_rust_napi"
+
+[dependencies]
+device-physics          = { path = "../device-physics" }
+mosfet-models           = { path = "../mosfet-models" }
+fab-process-simulation  = { path = "../fab-process-simulation" }
+node-bridge             = { path = "../node-bridge" }

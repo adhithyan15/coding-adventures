@@ -1,0 +1,685 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [0.13.0] - 2026-05-14 — ADJ28: anti-discard + yes/no boolean kind schema
+
+### Changed
+
+`DECOMPOSE_LEVEL_PROMPT_VERSION: "decompose-level-v1" → "decompose-level-v2"`.
+
+Three structural changes to the per-level system prompts, targeting
+the small-model failure modes the ADJ27 bench surfaced:
+
+1. **"WHAT NOT TO DO" worked example** added to every level's
+   system prompt. Shows the cost of dropping content or escape-
+   hatching to Discarded. Operationalises the ADJ27 finding that
+   3 of 3 fully-passing cells were degenerate (gemma4 marking the
+   whole document as Discarded to satisfy coverage trivially).
+
+2. **Yes/no boolean kind schema** at the multi-option levels
+   (`Phrase → Claim` with 4 options, `Fact → TypedComponent` with
+   7). Each node now carries `is_X` booleans per allowed kind
+   instead of a single `kind` string; exactly one must be `true`.
+   Decomposes N-way classification into N binary decisions, which
+   small models handle better. (The 0.5B model emitted *no* nodes
+   at the Claim level in the ADJ27 walkthrough; with the new
+   schema it now emits a correct Fact in ~3s on the same input.)
+   Levels 1 and 2 keep the single `kind` field since they only
+   have 2 options each.
+
+3. **Discarded requires `discard_reason` AND
+   `discard_justification`** — the latter is a sentence
+   explaining WHY discarding the chunk loses no information the
+   framework needs. Lazy whole-parent Discarded becomes hard to
+   justify in prose; the cost of dishonest discarding goes up.
+   Prompts also explicitly forbid whole-parent Discarded
+   ("at least one node MUST have `kind: Sentence/Phrase/...`").
+
+Each prompt is still under 4 KB (regression-guarded). The new
+content adds ~1 KB total across the four prompts.
+
+### Tests
+
+4 new test cases:
+
+- `adj28_every_prompt_carries_what_not_to_do_example` — regression
+  guard for the negative example block in every prompt.
+- `adj28_discard_prompts_require_justification` — every level
+  that allows Discarded requires both `discard_reason` and
+  `discard_justification`.
+- `adj28_claim_and_typed_component_use_yes_no_booleans` — the
+  4 / 7 booleans are named verbatim in their respective prompts.
+- `adj28_prompts_forbid_whole_parent_discard_at_anti_escape_levels`
+  — every level (except level 4 which has no Discarded option)
+  forbids whole-parent Discarded.
+
+Plus updated `prompt_version_constant_is_stable` to expect v2.
+
+Total `llm-primitives` tests: 91 → 95, all passing.
+
+### Notes
+
+- Version: 0.12.0 → 0.13.0 (additive schema change with prompt-version bump).
+- Smoke test on qwen2.5:0.5b confirms the Claim-level empty-nodes
+  failure from ADJ27 is fixed (~3s, valid `is_fact: true` Fact node
+  produced). Level 4 still occasionally drops `text` on the 0.5B
+  model — the bench will quantify.
+
+## [0.12.0] - 2026-05-13 — decompose_level: per-level prompts + content-shaped contract for ADJ25 hierarchy
+
+### Contract change: text instead of byte offsets
+
+The model emits a literal `text` field per child (the exact
+substring it claims) instead of `source_spans` byte offsets. The
+framework matches each child's text against the parent text to
+derive document-absolute spans. This pulls byte arithmetic — which
+LLMs reliably get wrong, especially small ones — out of the model's
+job. Per `feedback_no_byte_arithmetic_for_llm`.
+
+All four per-level system prompts (Sentence / Phrase / Claim /
+TypedComponent) were updated to:
+
+- Drop `source_spans` from the worked examples.
+- Add a `text` field instead, explaining "copy the LITERAL
+  substring — character for character — and the framework computes
+  byte offsets from your text; you do NOT compute offsets."
+- Show the worked examples with `text` strings that include exact
+  whitespace (the trailing space in `"200 Wh "` etc.) so the model
+  learns the every-character contract by example.
+
+Otherwise, the v0.12.0 entry below applies.
+
+
+
+### Added
+
+New primitive `decompose_level` with **per-level system prompts** —
+one focused short prompt per decomposition level boundary
+(`Document → Sentence`, `Sentence → Phrase`, `Phrase → Claim`,
+`Fact → TypedComponent`). Each prompt teaches ONLY the kinds valid
+at its level + the byte-tiling contract + one worked example. None
+of them exceed 4 KB.
+
+This addresses the root cause the ADJ26 foundation bench surfaced:
+the previous orchestrator routed per-parent calls through
+`decompose_text`, whose v5 system prompt instructs the model to
+produce flat IR (`Fact`/`Rule`/etc.). The orchestrator's correction
+prompt asked for the hierarchy (`Sentence`/`Phrase`/etc.); the
+model followed the dominant system prompt; 0/40 cells produced
+usable IR. The new primitive removes the conflict by giving each
+level its own system prompt.
+
+### New public surface
+
+- `DecomposeLevel` enum — 4 variants matching the orchestrator's
+  level enum.
+- `DecomposeLevelRequest { document_id, level, parent_text,
+  correction_context, ancestor_context }`.
+- `DecomposeLevelResponse { ir_document, structural_ok, call_record }`.
+- `decompose_level(req, gateway) -> Result<DecomposeLevelResponse, PrimitiveError>`.
+- `DECOMPOSE_LEVEL_PROMPT_VERSION = "decompose-level-v1"`.
+
+### Tests
+
+7 new test cases: per-level system-prompt selection, prompt
+compactness (each < 4 KB), no-flattening rule taught at level 4,
+user-text correction-context embedding, user-text omits
+correction when absent, user-text renders ancestor context,
+prompt-version constant lock. Total `llm-primitives` tests:
+81 → 88, all passing.
+
+### Notes
+
+- The `decompose_text` primitive is unchanged; v5 stays the
+  contract for flat-IR consumers. Once the hierarchical
+  orchestrator is the only consumer, `decompose_text` can retire
+  with ADJ25 PR-7 cutover.
+- Smoke test against `llama3.1:8b` shows 3 of 4 levels now
+  succeed end-to-end on the canonical `"1 carry-on bag, matches."`
+  fixture (up from 0/4 in ADJ26). Full bench re-run lands in a
+  follow-up data PR.
+
+## [0.11.0] - 2026-05-13 — decompose-text-v5 (typed quantities)
+
+### Changed
+
+`DECOMPOSE_TEXT_PROMPT_VERSION: "decompose-text-v4" → "decompose-text-v5"`.
+
+The prompt now teaches typed-quantity extraction. See
+[ADJ21](../../../specs/ADJ21-typed-quantity-decomposition.md)
+for the full motivation.
+
+#### What the prompt now says
+
+A new "QUANTITY rules" section between the existing NODE and
+EDGE rule sections:
+
+- **7a**: Every numerical quantity in the source MUST appear as a
+  `quantity(<value>, <unit>)` compound term. Values are atoms
+  with literal numbers preserved (no rounding, no conversion).
+  Units are snake_case atoms (`oz`, `ml`, `inches`, `wh`,
+  `celsius`, `percent_abv`, etc.). The quantity is embedded
+  inside the surrounding fact's args — never flattened into the
+  predicate name.
+
+    > **Wrong**: `blade_4_inches(knife)`
+    > **Right**: `blade_length(knife, quantity(4, inches))`
+
+- **7b**: Bare numbers without units use `count` or
+  domain-appropriate predicates.
+  `"1 carry-on bag"` → `carry_on_bag(quantity(1, count))`.
+
+- **7c**: The rationale — downstream rules compare quantities
+  against thresholds; the engine evaluates these
+  deterministically only if the source IR preserves the typed
+  value.
+
+#### Second worked example
+
+A new worked example for `"4 inch pocket knife."` was added after
+the existing matches example, demonstrating the typed-quantity
+shape end-to-end including the rationale paragraph that
+references the engine evaluating `4 > 2.36`.
+
+### Why now
+
+The ADJ18 v0.13 bench surfaced empirical evidence: every model
+mishandled numerical thresholds (the pocket-knife regression).
+The LLM cannot reliably do arithmetic inside its forward pass.
+The structural fix is to lower comparisons to the engine —
+which requires the source IR to preserve typed values. This PR
+is the prompt side of that fix; ADJ22 (queued) adds the
+validator that catches the LLM dropping units.
+
+### Tests
+
+3 new offline unit tests (81 lib total):
+
+- `system_prompt_documents_typed_quantity_extraction`
+- `system_prompt_includes_pocket_knife_worked_example`
+- `system_prompt_uses_domain_neutral_quantity_rules`
+
+Updated `prompt_version_constants_are_stable` to expect
+`decompose-text-v5`.
+
+### Compatibility
+
+- Audit-trail compatible: old v4 records remain replayable.
+- Wire format unchanged: ADJ01 v3 IR already supports
+  `quantity(value, unit)` compounds.
+- Caller API unchanged: `decompose_text(req, gateway)` signature
+  the same.
+- Other primitives untouched.
+
+### Follow-ups
+
+- **ADJ22**: typed-quantity coverage checker.
+- **ADJ23**: end-to-end re-bench against v5 + fact sheets.
+
+## [0.10.0] - 2026-05-12
+
+### Changed (breaking on-the-wire shape)
+
+`decompose_text` system prompt bumped to **`decompose-text-v4`** to
+teach the LLM the multi-directed acyclic graph IR shape introduced
+in [ADJ01 v3](../../specs/ADJ01-adjudication-ir-grammar.md). The
+JSON response now has **two top-level arrays**:
+
+```jsonc
+{
+  "document_id": "...",
+  "nodes": [ /* IRNode objects */ ],
+  "edges": [ /* IREdge objects, REQUIRED, at minimum [] */ ]
+}
+```
+
+#### What changed about nodes
+
+- `NodeKind` drops `TextRun`; adds `Section` (a structural unit
+  whose `term` names the unit type — `paragraph(_)`, `sentence(_)`,
+  `table(_)`, `row(_)`, `cell(_)`, `heading(_)`, …) and `Entity` (a
+  deduplicated reference target with possibly-empty `source_spans`).
+- `IRNode` drops the `part_of` and `lowered_from` fields; structural
+  parents now live in `Contains` edges and clarification lineage in
+  `Clarifies` edges.
+- A Section's `source_spans` cover only the meta-text (heading,
+  numbering, delimiters), **not** the content; the content lives in
+  other nodes reached via `Contains` edges.
+- `Inherit` polarity / modality is valid **only** on nodes that have
+  at least one incoming `Contains` edge.
+
+#### What's new about edges
+
+- Closed-set `relation` taxonomy with 30+ variants in eleven
+  groups, listed verbatim in the prompt: Structural, Identity, Rule
+  modification, Application, Provenance, Tabular, Temporal,
+  Cross-source, Discourse, Refinement, plus an inherent escape via
+  `Refers` + metadata when nothing fits (the prompt asks the model
+  not to invent new relation names).
+- Edges carry `source`, `target`, `relation`, `polarity`, `modality`,
+  `source_spans`, and `confidence`. Their `source_spans` cover the
+  *textual marker* that signals the relation (`except`, `see §5`,
+  the comma between list items), not the spans of the related
+  nodes themselves. Synthesized edges carry empty `source_spans`.
+
+#### Coverage rule
+
+- The flat tile now covers `(nodes ∪ edges).source_spans` rather
+  than only nodes. Every byte from 0 to `len(SOURCE_bytes)` must
+  appear in exactly one `source_span` across both arrays —
+  synthesized objects (Query / Entity / spanless edges) are exempt.
+- The model can choose, byte by byte, whether a connective belongs
+  to a node or to an edge.
+
+#### Worked example
+
+The prompt includes a complete v4 worked example for the canonical
+`\"1 carry-on bag, matches.\"` source (24 bytes):
+
+- N1 Fact `carry_on(1)` spans `[0, 14)`
+- N2 Fact `prohibited(matches)` spans `[16, 23)`
+- S1 Section `sentence` spans `[14, 16) ∪ [23, 24)` (the comma and
+  the trailing period)
+- Q1 Query synthesized
+- E1, E2 `Contains` edges from S1 to N1 and N2 (empty spans)
+
+Coverage: `[0,14) + [14,16) + [16,23) + [23,24) = [0, 24)`. ✓
+
+#### Other rules
+
+- Exception nodes MUST be the source of at least one `Excepts`
+  edge — re-states what the validator already enforces, but having
+  it in the prompt cuts down on ADJ06 round-trips.
+- Acyclicity: the graph (nodes, edges) MUST be a DAG across ALL
+  relations. The prompt forbids self-loops and transitive cycles
+  uniformly; the validator catches anything the model misses.
+- The Banff-magnet punctuation rule (rule 18 in v4, was rule 11 in
+  v3) is preserved verbatim.
+
+### Audit-trail impact
+
+Every `LlmCallRecord.prompt_version` for `decompose_text` now reads
+`\"decompose-text-v4\"`. Cached responses keyed on
+`(prompt_version, prompt_hash)` from v3 will miss and re-run — the
+model is being asked to produce a fundamentally different shape so
+the misses are intentional.
+
+## [0.9.0] - 2026-05-12
+
+### Changed
+
+`decompose_text` system prompt bumped to `decompose-text-v3` with an
+explicit **punctuation and delimiter awareness rule** (rule 11). The
+v2 prompt covered structural shape (flat nodes, exact field names,
+tiling spans) but said nothing about how delimiters can flip meaning.
+A single comma can invert intent — the canonical example baked into
+the prompt:
+
+* `"Let's eat, Bob."` — Bob is being invited to a meal.
+* `"Let's eat Bob."` — Bob is the meal.
+
+The bytes differ by one comma; the meaning differs by an order of
+magnitude. The ADJ02 coverage rule already forces the model to
+account for every byte, but covering a byte is not the same as
+reading it correctly. v3 explicitly directs the model to scan
+surrounding punctuation before assigning a `term`:
+
+* commas separating list items vs vocatives
+* periods ending sentences vs abbreviations
+* quotes scoping a quoted phrase vs marking emphasis
+* colons introducing definitions vs ratios
+* parentheses denoting asides vs grouping
+
+When punctuation is load-bearing or ambiguous, the model is told to
+prefer an `Uncertainty` node with `polarity: "Uncertain"` over a
+confident guess. This pairs with the v0.4 ADJ06 adversarial-retry
+flow: the adversary can now find punctuation-driven alt readings and
+hand them back for an `Uncertainty` rewrite.
+
+**Audit-trail impact**: every `LlmCallRecord.prompt_version` for
+`decompose_text` now reads `"decompose-text-v3"`. Cached responses
+keyed on `(prompt_version, prompt_hash)` from v2 will miss and
+re-run against the new prompt — intentional, since the model is
+being asked to do strictly more work.
+
+## [0.8.0] - 2026-05-12
+
+### Changed
+
+`decompose_text` system prompt rewritten as `decompose-text-v2`.
+The v1 prompt described an abstract "hierarchical IR per ADJ01 v2"
+without showing the model what the JSON should look like. Smaller
+models (Gemma 4 in particular) invented their own field names —
+`node_type` instead of `kind`, `text` instead of `term`, nested
+`children` arrays instead of a flat node list. v2 ships a concrete
+worked example showing the exact desired JSON shape, plus 10 numbered
+mandatory rules including explicit "Do NOT nest nodes inside a
+`children` field" and "Use `kind` (not `node_type`), `term` (not
+`text`)".
+
+**Result**: against `gemma4:latest`, the IR now passes ADJ02 coverage
+on the first try with zero converter warnings. The full source-text
+→ decompose_text → typed IR → ADJ02 + ADJ03 + ADJ04 + ADJ05 + engine
+chain runs cleanly. Where v1 produced a nested tree with a 1-byte
+coverage gap, v2 produces a flat 3-node IR that tiles the source.
+
+- `DECOMPOSE_TEXT_PROMPT_VERSION` bumped to `"decompose-text-v2"`.
+  Prompt-version constant test updated.
+- All audit-trail records produced after this change carry
+  `prompt_version = "decompose-text-v2"`. Old records keyed to
+  `v1` are still replayable against the v1 prompt by checking out
+  prior commits — the framework's `(prompt_version, prompt_hash)`
+  scheme means version bumps are non-destructive.
+
+### Notes
+
+The system prompt for v2 grew from ~600 bytes to ~2700 bytes. With
+the `complete_json_with_truncation_retry` helper added in v0.7
+(initial cap 1024, doubles to 32_768), this stays well within budget
+for any production model. Smaller models on commodity hardware paid
+~120-200ms additional latency per decompose_text call for the
+larger system context, which is recovered many times over by not
+having to fall back to the tolerant JSON-to-IR converter or retry.
+
+## [0.7.0] - 2026-05-11
+
+### Added
+
+Thinking-mode tolerance for every primitive. The previous defaults
+(`max_tokens: Some(256)` on `entail`, `Some(512)` on
+`judge_plausibility` / `find_contradicting_reading`, `Some(256)` on
+`render_node`) were calibrated for non-thinking models. With models
+like Gemma 4 — which routinely burn 500-1000+ tokens on chain-of-
+thought before emitting structured output — those caps produced
+empty `content` and `done_reason: "length"`, which the gateway now
+surfaces as `LlmError::OutputTruncated`.
+
+- `complete_json_with_truncation_retry(client, request, schema)` — a
+  helper that retries on `OutputTruncated` by doubling
+  `max_tokens` up to `MAX_TOKENS_CEILING = 32_768`, with a hard
+  cap of `TRUNCATION_MAX_ATTEMPTS = 6` retries. Any other error
+  returns immediately.
+- `complete_with_truncation_retry(client, request)` — same loop for
+  the free-form text path.
+- Initial `max_tokens` defaults bumped: `entail` 256 → 2048,
+  `render_node` 256 → 2048, `judge_plausibility` 512 → 2048,
+  `find_contradicting_reading` 512 → 4096. `decompose_text` already
+  used `Some(8192)`.
+- Every JSON-emitting primitive (`entail`, `decompose_text`,
+  `judge_plausibility`, `find_contradicting_reading`) now goes
+  through the retry helper. `render_node` uses the text-path
+  helper.
+- 6 new unit tests cover the helper: doubling-until-success,
+  cap-at-ceiling, give-up-after-max-attempts, no-retry on non-
+  truncation errors, plus the text-path equivalent.
+
+## [0.6.0] - 2026-05-11
+
+### Added
+
+- `decompose_text` module — **the headline extraction primitive**.
+  Given source text + a domain hint, calls the `Extractor` role's
+  client to produce a hierarchical IR document (per ADJ01 v2). The
+  pipeline runs `check_coverage` and `check_propagation` against the
+  result.
+- `DecomposeTextRequest { document_id, source_text, domain_hint,
+  language_hint }` and `DecomposeTextResponse { ir_document,
+  structural_ok, call_record }`.
+- `ir_document` is a `serde_json::Value` at v0.6 because
+  `adjudication_ir::IRDocument` doesn't yet derive `Serialize` /
+  `Deserialize`. A future version will swap to the typed shape; the
+  on-wire JSON is unchanged.
+- Lightweight structural sanity check: `structural_ok = true` iff
+  the response is an object with a non-empty string `document_id`
+  matching the request AND an array `nodes`. Full ADJ01 v2
+  well-formedness lives in `adjudication_ir::validate` and is the
+  caller's job.
+- Routes via `LlmClient::complete_json` with `max_tokens: 8192`
+  (IR documents for long sources can run to several thousand
+  tokens). Schema: top-level object with required `document_id`
+  (string ≥ 1 char) and `nodes` (array), `additionalProperties:
+  true` so the LLM can include richer per-node fields beyond the
+  primitive's minimal probe.
+- `LlmCallRecord`: `primitive="decompose_text"`, `role="extractor"`,
+  `prompt_version="decompose-text-v1"`, content-addressed
+  `prompt_hash`, provider, usage, latency.
+- Re-exported at the crate root: `decompose_text`,
+  `DecomposeTextRequest`, `DecomposeTextResponse`.
+- 11 new tests. Coverage: `NoClientForRole` when Extractor
+  unregistered; happy path with full IR + call record; user message
+  tags DOMAIN / LANGUAGE / DOCUMENT_ID / SOURCE; missing
+  `language_hint` renders `"auto-detect"`; `ContextTooLarge` gateway
+  error propagates; non-object response → `ValidationExhausted`;
+  `structural_ok` false-positives covered (missing / wrong
+  `document_id`; non-array `nodes`); empty-`nodes` array is
+  structurally OK; `prompt_hash` matches an independently-built
+  request; the IR JSON round-trips unchanged.
+
+### Notes
+
+This is the **single-shot bottom layer** of the LM00b spec's retry-
+with-correction loop. A future retry harness will wrap it with a
+policy + count; the primitive owns the single LLM round-trip.
+
+`domain_hint` and `language_hint` stay free-form strings at v0.6 to
+avoid binding to a not-yet-existent `DomainHints` enum.
+
+With this primitive, the **input side of the semantic source map is
+complete** — source text → IR happens through the primitive layer.
+
+## [0.5.0] - 2026-05-11
+
+### Added
+
+- `find_contradicting_reading` module — fourth concrete primitive from
+  LM00b. ADJ05 **adversary**. Given a source span + the IR's
+  rendering, find the strongest reading of the source that contradicts
+  the IR — or report CONCURS if no plausible alternative exists.
+- `FindContradictingReadingRequest { source_span_text, ir_rendered,
+  domain_hint }` and
+  `FindContradictingReadingResponse::Concurs { call_record } |
+  Reading { text, explanation, call_record }`. Plus
+  `FindContradictingReadingResponse::call_record()` accessor so
+  callers can log without pattern-matching first.
+- Re-exported at the crate root: `llm_primitives::find_contradicting_reading`,
+  `FindContradictingReadingRequest`, `FindContradictingReadingResponse`.
+- **Asymmetric** system prompt: "assume the extraction is wrong, find
+  a reading that contradicts it" — per ADJ05, the asymmetry is the
+  whole point.
+- Routes via `LlmClient::complete_json` with a strict 3-field schema
+  (`concurs: bool`, `text: string<=1024`, `explanation: string<=1024`,
+  `additionalProperties: false`).
+- Self-consistency validation: a model that returns `concurs: false`
+  with empty `text` or empty `explanation` surfaces as
+  `PrimitiveError::ValidationExhausted` rather than being silently
+  treated as Concurs. ADJ06 sees the malformed response.
+- `LlmCallRecord` populated: `primitive = "find_contradicting_reading"`,
+  `role = "adversary"`, `prompt_version = "adversary-v1"`,
+  content-addressed `prompt_hash`, provider, usage, latency.
+- 11 new tests. Coverage: missing client → `NoClientForRole`; CONCURS
+  response is recognised; full Reading response with text +
+  explanation; user message tags SOURCE / IR-RENDERED / DOMAIN
+  separately; gateway `Refused` propagates as `Gateway`; missing or
+  wrong-typed `concurs` → `ValidationExhausted`; `concurs: false`
+  with empty `text` or empty `explanation` → `ValidationExhausted`;
+  Reading text and explanation are trimmed on success; `prompt_hash`
+  matches an independently-built request.
+
+### Notes
+
+`domain_hint` is a string at v0.5 — the LM00b spec defines a
+`DomainHints` enum; a follow-up will swap to the enum once that type
+lands. Independence between `Role::Adversary` and `Role::Extractor`
+is enforced at deployment time via `GatewayConfig::check_independence`,
+not by the primitive.
+
+With this primitive, the **ADJ05 adversarial triad is complete**:
+`render_node` (v0.3) + `find_contradicting_reading` (v0.5) +
+`judge_plausibility` (v0.4) — ADJ05's checker crate (a follow-up)
+will compose them.
+
+## [0.4.0] - 2026-05-11
+
+### Added
+
+- `judge_plausibility` module — third concrete primitive from LM00b.
+  Binary judge for ADJ05's adversarial verifier. Takes
+  `JudgePlausibilityRequest { source_span_text, ir_rendered,
+  adversary_reading, domain_hint }`; returns
+  `JudgePlausibilityResponse { plausible, reason, call_record }`.
+  Decides whether a competent practitioner in the named domain
+  would actually adopt the adversary's reading. An `IMPLAUSIBLE`
+  verdict logs the adversary's reading in the audit trail but does
+  not fail the adjudication; a `PLAUSIBLE` verdict surfaces as an
+  `AdversarialReading` violation for ADJ06.
+- Re-exported at the crate root: `llm_primitives::judge_plausibility`,
+  `llm_primitives::JudgePlausibilityRequest`,
+  `llm_primitives::JudgePlausibilityResponse`.
+- Routes via `LlmClient::complete_json` with a strict 2-field schema
+  (`plausible: bool`, `reason: string`, `additionalProperties: false`,
+  `reason` `minLength: 1`, `maxLength: 1024`).
+- `LlmCallRecord` populated: `primitive="judge_plausibility"`,
+  `role="plausibility"`, `prompt_version="plausibility-v1"`,
+  content-addressed `prompt_hash`, provider, usage, latency.
+- 10 new tests. Coverage: `NoClientForRole` when plausibility role
+  unregistered; happy path for both `plausible: true` and `false`;
+  user message tags SOURCE / IR-RENDERED / ADVERSARY / DOMAIN
+  separately; gateway `Auth` error propagates; missing `plausible`
+  field → `ValidationExhausted`; wrong-typed `plausible` (string
+  `"maybe"`) → `ValidationExhausted`; empty/whitespace-only `reason`
+  → `ValidationExhausted`; reason is trimmed on success;
+  `prompt_hash` matches an independently-built request.
+
+### Notes
+
+`JudgePlausibilityRequest.domain_hint` is a free-form string at v0.4.
+The LM00b spec defines a `DomainHints` enum (None / Clinical / Legal /
+TsaDeclaration / LicenseCompatibility / Custom); a follow-up will
+swap to the enum once that type lands in a shared crate. Prompt and
+wire shape unchanged across the upgrade.
+
+## [0.3.0] - 2026-05-11
+
+### Added
+
+- `render_node` module — second concrete primitive from LM00b.
+  Faithful natural-language rendering of one IR node. Takes a
+  caller-formatted `node_description`, a `document_excerpt` for
+  grounding, and a target `RenderStyle` (`Plain` / `Clinical` /
+  `Legal`); returns a `rendering` string plus the `LlmCallRecord`.
+- `RenderStyle` enum + `as_str()` for audit-trail tags and
+  per-style prompt directives (plain English / clinical shorthand /
+  formal legal register).
+- Routes via `LlmClient::complete` (free-form text, not JSON).
+  The only structural failure surfaced is whitespace-only output,
+  which returns `PrimitiveError::ValidationExhausted` so ADJ06 can
+  clarify. Substantive faithfulness is ADJ04's job via `entail`.
+- `LlmCallRecord` populated with `primitive = "render_node"`,
+  `role = "renderer"`, `prompt_version = "render-node-v1"`, content-
+  addressed `prompt_hash`, plus provider identity, token usage,
+  finish reason, and latency from the gateway response.
+- 8 new tests. Coverage: `RenderStyle::as_str` stability,
+  `NoClientForRole` when renderer is unregistered, happy-path
+  trimmed-rendering with full `call_record` population, style
+  directives in the user message (Clinical and Legal),
+  whitespace-only response → `ValidationExhausted`, `RateLimit`
+  propagates as `Gateway`, `prompt_hash` matches an
+  independently-built request, `finish_reason` passes through to
+  the call record.
+
+### Notes
+
+`render_node`'s `RenderNodeRequest.node_description` is a string at
+v0.3 — the caller formats their IR node however they like. A
+follow-up will swap to typed `adjudication_ir::IRNode` once that
+crate ships its `serde` feature; the prompt and wire shape stay
+unchanged.
+
+## [0.2.0] - 2026-05-11
+
+### Added
+
+- `entail` module — first concrete primitive from LM00b. Bidirectional
+  textual entailment: takes `EntailRequest { premise, hypothesis }`,
+  returns `EntailResponse { premise_entails_hypothesis, p_to_h_score,
+  hypothesis_entails_premise, h_to_p_score, call_record }`. Synchronous,
+  matches the v0.1 `LlmClient` trait.
+- Re-exported at the crate root: `llm_primitives::entail(...)`,
+  `llm_primitives::EntailRequest`, `llm_primitives::EntailResponse`
+  (function and module share the name; Rust allows this since they're
+  in different namespaces).
+- Stable system prompt for the `Role::Nli` slot baked into the module.
+  Bumping `ENTAIL_PROMPT_VERSION` is the audited way to change it.
+- Response JSON-schema validation:
+  - Routes via `LlmClient::complete_json` so providers with native
+    JSON mode use it.
+  - Per-field check (booleans + scores) — a missing field returns
+    `PrimitiveError::ValidationExhausted` with the raw response so
+    ADJ06 can clarify.
+  - Score range-check `[0, 1]`. Out-of-range or wrong-typed values
+    surface as `ValidationExhausted`, not silent clamping.
+- `LlmCallRecord` populated automatically: `primitive = "entail"`,
+  `role = "nli"`, `prompt_version = "entail-v1"`, content-addressed
+  `prompt_hash`, plus provider identity, token usage, and latency from
+  the gateway response.
+- 10 new tests covering: missing `Nli` client returns `NoClientForRole`;
+  happy path round-trips; user message has `PREMISE:` / `HYPOTHESIS:`
+  markers; gateway transport error propagates; missing / wrong-type /
+  out-of-range fields all surface as `ValidationExhausted`; boundary
+  scores (0.0 and 1.0) accepted; `call_record.prompt_hash` matches an
+  independently-computed hash of the built request.
+
+### Notes
+
+`serde_json = "1"` is now a direct dep (used internally for JSON
+parsing). The five remaining primitives (`decompose_text`,
+`render_node`, `find_contradicting_reading`, `judge_plausibility`,
+`extract_rules`) ship in follow-up PRs that can land in parallel —
+each in its own module under `src/`.
+
+## [0.1.0] - 2026-05-11
+
+### Added
+
+- `Role` enum: `Extractor`, `Renderer`, `Nli`, `Adversary`,
+  `Plausibility`, `RuleExtractor`. Stable `as_str()` for audit-trail
+  records.
+- `GatewayConfig` — role-keyed registry of `Box<dyn LlmClient>` with
+  builder-style `with_client`. Lookup via `client(Role)` returns
+  `Option<&dyn LlmClient>`.
+- `GatewayConfig::check_independence()` — ADJ05 startup check that
+  `Role::Extractor` and `Role::Adversary` come from different
+  `(vendor, model_family)` pairs. Returns `IndependenceViolation`
+  with full provider identities on failure.
+- `LlmCallRecord` — one row of the LLM audit trail. Carries
+  `primitive`, `role`, `prompt_version`, `prompt_hash`, `provider`,
+  `usage`, `finish_reason`, `latency_ms`, `cost_usd`. `PartialEq`
+  only (not `Eq`) because `cost_usd: f64`.
+- `PrimitiveCallRecord` — wraps one or more `LlmCallRecord`s (one
+  per retry attempt) with primitive-level context (`inputs_hash`,
+  `outputs_hash`, `cache_hit`, `attempts`, `total_cost_usd`).
+- `PrimitiveError`: `Gateway(LlmError)`, `ValidationExhausted`,
+  `StructuralFailure`, `NoClientForRole`. `From<LlmError>` impl
+  for `?`-friendly propagation.
+- Six prompt-version constants (`DECOMPOSE_TEXT_PROMPT_VERSION` …
+  `EXTRACT_RULES_PROMPT_VERSION`) covering the LM00b primitive set.
+- `fingerprint_prompt(&CompletionRequest) -> String` — deterministic
+  FNV-1a-based hash of the prompt portion of a request, ignoring
+  `temperature` and `seed` so retries match.
+- 15 tests covering: `Role::as_str` stability, `GatewayConfig`
+  registration / lookup, ADJ05 independence-check pass and fail
+  cases (different families, same family same vendor, same vendor
+  different families), `fingerprint_prompt` determinism and
+  insensitivity to temperature/seed, `PrimitiveError` display, and
+  prompt-version constant stability.
+
+### Notes
+
+This is the **skeleton-only** v0.1.0. The six primitive functions
+(`decompose_text`, `render_node`, `entail`,
+`find_contradicting_reading`, `judge_plausibility`,
+`extract_rules`) ship in follow-up PRs that can land in parallel
+because they don't conflict on a shared file.
+
+Reference: [`LM00b`](../../../specs/LM00b-llm-primitives.md).

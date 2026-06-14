@@ -33,7 +33,8 @@
 //! - **[`cross_validator`]** — check that `.tokens` and `.grammar` files
 //!   are consistent with each other.
 
-pub mod token_grammar;
-pub mod parser_grammar;
-pub mod cross_validator;
 pub mod compiler;
+pub mod cross_validator;
+pub mod dump_spec;
+pub mod parser_grammar;
+pub mod token_grammar;

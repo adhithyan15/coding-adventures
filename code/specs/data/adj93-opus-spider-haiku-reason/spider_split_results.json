@@ -1,0 +1,304 @@
+{
+  "summary": "CAS division-of-labor test. Split the open-book framework into SPIDER (search the web + decompose sources into a clean grounded IR = what would be cached in the CAS) and REASONER (reason over that IR only, no new search). Vary who does the spider while Haiku always reasons. 4 arms per item: plain-Haiku (floor, no retrieval); Haiku-spider+Haiku-reason (all-Haiku); Opus-spider+Haiku-reason (THE TEST); Opus-spider+Opus-reason (ceiling). If Opus->Haiku ~ Opus->Opus, the SPIDER is the bottleneck and a cheap model reasoning over a big-model-built IR matches the frontier -- strengthening the CAS case (digest sources once with the big model, reason cheaply many times). 5 ADJ88 Opus-failure items, N samples. Open-book (spider searches); reasoner is instructed to use only the provided IR.",
+  "agentCount": 110,
+  "logs": [],
+  "result": {
+    "samples": 2,
+    "total_items": 5,
+    "totals": {
+      "plain_haiku": 1,
+      "haiku_haiku": 2,
+      "opus_haiku": 2,
+      "opus_opus": 2
+    },
+    "scorecard": [
+      {
+        "id": "66e93b7099",
+        "gold": "hereth",
+        "n": 2,
+        "plain_haiku": 0,
+        "haiku_haiku": 0,
+        "opus_haiku": 0,
+        "opus_opus": 0
+      },
+      {
+        "id": "66e884515a",
+        "gold": "Shuriken",
+        "n": 2,
+        "plain_haiku": 1,
+        "haiku_haiku": 2,
+        "opus_haiku": 2,
+        "opus_opus": 2
+      },
+      {
+        "id": "66eaa5ddc7",
+        "gold": "10",
+        "n": 2,
+        "plain_haiku": 0,
+        "haiku_haiku": 0,
+        "opus_haiku": 0,
+        "opus_opus": 0
+      },
+      {
+        "id": "669402b41d",
+        "gold": "Z+Z+Z+Z+Z",
+        "n": 2,
+        "plain_haiku": 0,
+        "haiku_haiku": 0,
+        "opus_haiku": 0,
+        "opus_opus": 0
+      },
+      {
+        "id": "66ea814c55",
+        "gold": "1.776 * 10^-3 ",
+        "n": 2,
+        "plain_haiku": 0,
+        "haiku_haiku": 0,
+        "opus_haiku": 0,
+        "opus_opus": 0
+      }
+    ],
+    "detail": [
+      {
+        "id": "66e93b7099",
+        "s": 1,
+        "plain_haiku": {
+          "answer": "sheweth",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "sheweth",
+          "n_facts": 13,
+          "grade": "incorrect"
+        },
+        "opus_haiku": {
+          "answer": "hwǣreth (or in normalized Middle English spelling: hwereth)\n\nThis form derives from PIE *kʷeys- via the o-grade causative *kʷoys-éye-ti, which becomes PGmc *hwaiz-éye-ti (after Grimm's Law *kʷ→*hw and diphthong shift *oy→*ai) and then *hwair-ij-iþi after Verner's Law voicing and West Germanic rhotacism (*z→*r). The Class I weak suffix *-ij- triggers i-umlaut of the root vowel (ā→ǣ), yielding OE hwǣrieþ/hwǣrjeþ, which in Middle English standardizes to hwǣreth. The meaning is approximately \"he shows\" or \"he causes to see.\"",
+          "n_facts": 16,
+          "grade": "partial"
+        },
+        "opus_opus": {
+          "answer": "**hweereth** (approximately *hwēreþ* / *hwereth*) — the Middle English 3sg present indicative.\n\nStep-by-step derivation from the retrieved facts:\n\n1. **PIE o-grade causative** [3,4,5]: o-grade of *kʷeys- is *kʷoys- (*oy replaces *ey); adding the accented causative suffix *-éye-ti gives **\\*kʷoys-éye-ti** (3sg present), accent on the suffix, not the root.\n\n2. **Grimm's Law** [8]: initial voiceless labiovelar *kʷ > PGmc *hʷ (hw-). → *hʷoys-...\n\n3. **o-grade diphthong** [9]: PIE *oy > PGmc *ai. → *hʷais-...\n\n4. **Verner's Law** [10,11,12]: because the suffix (*-éye-) carried the accent and the root did not, the root-final voiceless *s sits in a Verner voicing environment and becomes voiced *z (exactly as in the *rīsaną → *raizijaną parallel). → root *hwaiz-\n\n5. **PGmc Class-1 weak causative** [6,7,17]: with suffix *-janą, the long-stemmed (long vowel + single consonant) infinitive is **\\*hwaizijaną** [20]. No West Germanic gemination (long stem).\n\n6. **West Germanic rhotacism** [13,17]: non-final *z > *r. → *hwairijaną-type stem; OE reflex stem *hwair- > hwēr-.\n\n7. **PGmc *ai > Old English ǣ** [14,15]: *ai monophthongizes to OE ǣ. The OE long-stemmed Class-1 weak verb (parallel to hīeran, dēman) would be **\\*hwǣran** \"to show/cause to see.\"\n\n8. **OE ǣ > Middle English long open e (ē)** [16]: ǣ develops into ME ē/ǣ (/ɛː/). Stem → *hwēr-.\n\n9. **Middle English 3sg present ending** [18,19]: long-stemmed Class-1 weak verbs take 3sg pres. ind. -(e)þ in OE (-þ), continuing as Southern/Midlands ME **-eth/-eþ**.\n\nCombining the ME stem *hwēr-* with the 3sg ending *-eth*: **hwēreth** ≈ \"he showeth / he shows.\"\n\n**Final answer (Middle English 3sg present): *hwēreth* (spelled *hwereth* / *hwereþ*).**",
+          "n_facts": 20,
+          "grade": "partial"
+        }
+      },
+      {
+        "id": "66e93b7099",
+        "s": 2,
+        "plain_haiku": {
+          "answer": "he cheseth (or alternatively: he chaseth)",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "The actual Middle English third-person singular present form of the English reflex of PIE *(s)kewh₁- (the correct root, not *kʷeys) is: **scheweth** (meaning \"he/she shows\").\n\nThe question's premise contains an error: the PIE root is *(s)kewh₁-, not *kʷeys. The etymology follows: *(s)kewh₁- → o-grade *(s)kowh₁-éh₂-(ye)-ti → Proto-Germanic *skawwōną → Proto-West Germanic *skauwōn → Old English scēawian → Middle English schewen → 3rd sg. present scheweth.\n\nIf the hypothetical *kʷeys root had undergone identical sound changes through the same language stages, the resulting Middle English form would likely also be **scheweth** or a phonologically identical reflex, but this cannot be definitively derived from the provided facts alone.",
+          "n_facts": 9,
+          "grade": "incorrect"
+        },
+        "opus_haiku": {
+          "answer": "The third person singular present indicative form in Middle English would be **wēseþ** (or **weseth** in modern orthography). \n\nThe derivation:\n1. PIE *kʷeys- → o-grade *kʷoys- + causative *-éye/o- suffix\n2. Grimm's Law: *kʷ → PGmc *hʷ\n3. Verner's Law (unstressed suffix): *hʷ → *gw\n4. Intervocalic development: *gw → *w\n5. Vowel merger: PIE *oy → PGmc *ai\n6. i-umlaut (OE): *ai → ǣ\n7. OE ǣ development: → ME ē/ee\n8. Class 1 weak verb conjugation: -eþ/-eth ending\n\nThis would approximately mean \"he shows\" or \"he causes to see,\" reflecting the original causative semantics.",
+          "n_facts": 17,
+          "grade": "incorrect"
+        },
+        "opus_opus": {
+          "answer": "**hweereth** (i.e. hwēreþ)\n\nFinal Middle English 3sg present form: **hweereth** (hwēreth)",
+          "n_facts": 15,
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66e884515a",
+        "s": 1,
+        "plain_haiku": {
+          "answer": "Shuriken",
+          "n_facts": 0,
+          "grade": "correct"
+        },
+        "haiku_haiku": {
+          "answer": "The Shuriken is the flying unit from a tier 1 building in BAR that can shoot and stun enemy targets. It is a T1 Light Paralyzer Drone aircraft produced by Cortex tier 1 aircraft factories, equipped with a Beam Laser EMP weapon that stuns enemies for 7 seconds.",
+          "n_facts": 10,
+          "grade": "correct"
+        },
+        "opus_haiku": {
+          "answer": "The Shuriken is the flying unit from a tier 1 building in BAR that can shoot and stun enemy targets. It is a Tier 1 light paralyzer drone aircraft from the Cortex faction, produced by the Aircraft Plant. The Shuriken is armed with an EMP beam laser weapon that paralyzes (stuns) enemy units for approximately 7 seconds with a weapon range of 220 and reload time of 1.20 seconds. It cannot deal any HP damage but serves as support to turn the tide of battle by immobilizing enemy forces.",
+          "n_facts": 10,
+          "grade": "correct"
+        },
+        "opus_opus": {
+          "answer": "The Shuriken (Cortex faction; unit ID 'corbw').\n\nReasoning from the facts:\n- The question asks for a flying unit, built by a Tier 1 building, that can shoot and stun enemy targets.\n- Fact [1]/[2]/[3]: The Shuriken is a Tier 1 (T1) aircraft (flying) unit of the Cortex faction that uses an EMP weapon to paralyze (stun) enemies.\n- Fact [4]/[11]: It is produced by the Cortex T1 Aircraft Factory/Plant — a Tier 1 building.\n- Fact [7]/[8]: It fires a weapon (Beam Laser / EMP strike, ~600 paralyze damage, ~7s stun) — so it \"shoots and stuns.\"\n- Fact [12] rules out the Armada Stiletto EMP aircraft because that is T2, not from a T1 building.\n\nTherefore the flying unit from a Tier 1 building that can shoot and stun enemy targets is the Shuriken.",
+          "n_facts": 12,
+          "grade": "correct"
+        }
+      },
+      {
+        "id": "66e884515a",
+        "s": 2,
+        "plain_haiku": {
+          "answer": "This question cannot be answered based on the available codebase. The repository at /Users/adhithya/Downloads/coding-adventures is a learning-focused monorepo for programming language implementations, compilers, VMs, and computer architecture education. It contains no information about BAR (Beyond All Reason), which is a real-time strategy game. The question asks about game units, but this codebase contains no game-related content, unit specifications, weapons data, or game mechanics documentation. To answer this question, you would need access to BAR's game documentation or a dedicated gaming codebase.",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "The Shuriken is the flying unit from a Tier 1 building in Beyond All Reason that can shoot and stun enemy targets. It is a Tier 1 aircraft unit from the Cortex faction, built from their Tier 1 aircraft factory, armed with EMP beams that can paralyze and stun enemies.",
+          "n_facts": 9,
+          "grade": "correct"
+        },
+        "opus_haiku": {
+          "answer": "The Shuriken is the flying unit from a Tier 1 building in BAR that can shoot and stun enemy targets. It is a Light Paralyzer Drone produced by the Cortex faction's T1 Aircraft Plant, equipped with a Beam Laser weapon that delivers an EMP (electromagnetic pulse) effect, paralyzing enemies for 7 seconds at a rate of 500 paralyze damage per second, though it deals no direct HP damage.",
+          "n_facts": 9,
+          "grade": "correct"
+        },
+        "opus_opus": {
+          "answer": "The Shuriken (internal id 'corbw'), a T1 Cortex aircraft.",
+          "n_facts": 7,
+          "grade": "correct"
+        }
+      },
+      {
+        "id": "66eaa5ddc7",
+        "s": 1,
+        "plain_haiku": {
+          "answer": "40",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "60",
+          "n_facts": 8,
+          "grade": "incorrect"
+        },
+        "opus_haiku": {
+          "answer": "0",
+          "n_facts": 9,
+          "grade": "incorrect"
+        },
+        "opus_opus": {
+          "answer": "20",
+          "n_facts": 9,
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66eaa5ddc7",
+        "s": 2,
+        "plain_haiku": {
+          "answer": "20",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "20",
+          "n_facts": 10,
+          "grade": "incorrect"
+        },
+        "opus_haiku": {
+          "answer": "60",
+          "n_facts": 10,
+          "grade": "incorrect"
+        },
+        "opus_opus": {
+          "answer": "0",
+          "n_facts": 10,
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "669402b41d",
+        "s": 1,
+        "plain_haiku": {
+          "answer": "The reduced 12-th dimensional Spin bordism of the classifying space of G2 is trivial: Ω̃^Spin_12(BG2) ≅ 0.\n\nThis follows from the structure of the Spin bordism ring of BG2, where non-trivial bordism generators in low dimensions do not produce independent reduced classes in dimension 12. The characteristic class structure (p₁ in degree 4 and p₂ in degree 8) produces a single degree-12 invariant, but all bordism classes in this dimension are boundaries or equivalent to classes in the non-reduced bordism that vanish when taking the quotient by trivial G2-bundles.",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "Ω̃₁₂^Spin(BG₂) = Z\n\nThe reduced 12-dimensional spin bordism of the classifying space of G₂ is the infinite cyclic group Z. This is generated by bordism classes of 12-dimensional spin manifolds equipped with non-trivial principal G₂ bundles, detected by the Pontrjagin class p₃ ∈ H¹²(BG₂; Z), which is the primary characteristic class at this dimension. The reduction kernel isolates precisely those bordism classes where the G₂-bundle is non-trivial (i.e., excludes the image of Ω₁₂^Spin(pt) = Z³ arising from manifolds with trivial G₂ bundles).",
+          "n_facts": 12,
+          "grade": "incorrect"
+        },
+        "opus_haiku": {
+          "answer": "The reduced 12-th dimensional Spin bordism of the classifying space BG₂ is computed via the Atiyah-Hirzebruch spectral sequence with coefficients Ω^Spin_*(pt). The computation proceeds as follows:\n\n**Setup:**\n- H*(BG₂; Z) = Z[u₄, u₇, v₁₂]/(2u₇), with generators in degrees 4, 7, and 12\n- H*(BG₂; Z/2) = Z/2[x₄, x₆, x₇] with generators x₄ (degree 4), x₆ (degree 6), x₇ (degree 7)\n- The Steenrod square relations are: Sq²x₄ = x₆ and Sq¹x₆ = x₇\n- Ω^Spin_12(pt) = Z³ and Ω^Spin_8(pt) = Z² (from ABP tables)\n\n**AHSS Analysis:**\n\nThe Atiyah-Hirzebruch spectral sequence has E₂ term:\nE₂^{p,q} = H_p(BG₂; Ω^Spin_q(pt)) ⇒ Ω^Spin_{p+q}(BG₂)\n\nFor dimension 12 (p + q = 12), the relevant pages are:\n- E₂^{0,12} = Ω^Spin_12(pt) = Z³ (no differential can originate from this page)\n- E₂^{4,8} = H₄(BG₂) ⊗ Ω^Spin_8(pt) = Z ⊗ Z² = Z² (cohomology class u₄/x₄ acts on the 2-dimensional Spin bordism in degree 8)\n- E₂^{8,4} = H₈(BG₂) ⊗ Ω^Spin_4(pt) = Z/2 ⊗ Z = Z/2 (the mod-2 cohomology class x₆ in degree 6 yields 2-torsion contribution, paired with Ω^Spin_4(pt) = Z)\n- E₂^{12,0} = H₁₂(BG₂) ⊗ Ω^Spin_0(pt) = Z ⊗ Z = Z (the top class v₁₂ contributes a free generator)\n\n**Differentials and Filtration:**\n\n1. The differential d₅ : E₅^{7,5} → E₅^{12,0} from the degree-7 cohomology interacting with Ω^Spin_5(pt) = 0 (vanishes).\n2. The primary filtration contribution comes from:\n   - E₂^{0,12} → Z³ (survives to E_∞)\n   - E₂^{12,0} → Z (the v₁₂ class; survives to E_∞)\n   - E₂^{4,8} contributes Z² but may have differentials involving the x₄ class (the instanton number), which is a generator feeding higher degree groups\n\n3. The mod-2 contribution from E₂^{8,4} = Z/2 is subject to action by Sq¹ on the cohomology; this typically survives as Z/2 torsion in degree 12.\n\n4. However, **a key constraint**: The reduced bordism tilde-Ω^Spin_12(BG₂) must account for the multiplication structure. The u₄ generator (degree 4) acts on the dimensional-8 classes via cup product in H*(BG₂), and the relation 2u₇ = 0 controls torsion propagation.\n\n**Result:**\n\nBy the AHSS and the multiplicative structure of H*(BG₂), the reduced Spin bordism in dimension 12 is:\n\n**tilde-Ω^Spin_12(BG₂) = Z² ⊕ Z/2**\n\nThis consists of:\n- **Z²** (two independent free generators): These arise from the interaction of the degree-4 instanton class u₄ with the two generators of Ω^Spin_8(pt) = Z² (the quaternionic projective plane HP² and the K3-derived 8-manifold), representing distinct G₂-bundle classes that cannot be represented by trivial bundles.\n- **Z/2** (one mod-2 torsion generator): This arises from the Steenrod square structure and the 2-torsion in the integral cohomology (the relation 2u₇ = 0 in degree 7, which feeds into degree 12 via the AHSS), contributing Z/2 to the reduced bordism.\n\nAlternatively, if the torsion is absorbed more deeply in the spectral sequence structure, the answer could be **Z² ⊕ Z/2** or **Z³** depending on the detailed differentials; however, the canonical answer from the literature-assembled structure is **Z² ⊕ Z/2** for the reduced group.",
+          "n_facts": 14,
+          "grade": "incorrect"
+        },
+        "opus_opus": {
+          "answer": "reduced-Omega^Spin_12(BG2) = Z (free rank 1, no torsion).",
+          "n_facts": 14,
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "669402b41d",
+        "s": 2,
+        "plain_haiku": {
+          "answer": "The reduced 12-th dimensional Spin bordism of the classifying space of G2 is trivial:\n\nΩ^{Spin}_12(BG2) = 0\n\nThis follows from the theory of Spin bordism of classifying spaces of Lie groups. Since dimension 12 is less than the dimension of G2 (which is 14), and the characteristic classes needed to distinguish non-trivial principal G2-bundles don't produce independent bordism classes in this low-dimensional range, the reduced Spin bordism group vanishes.",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "\nBased on the retrieved facts, I cannot compute the reduced 12-th dimensional Spin bordism of BG2 with certainty. Here is my reasoning:\n\n**What we know:**\n\n1. **Definition of reduced Spin bordism** (Fact 4): The reduced Spin bordism group is defined as ker(Φ_pt), the kernel of the forgetful map from Spin bordism groups with a principal G-bundle structure to standard Spin bordism groups of a point.\n\n2. **Dimension 12 status** (Fact 19): \"Dimension 12 computations extend beyond what is routinely tabulated in standard references.\" This indicates that the Spin bordism groups of a point in dimension 12 are not included in the standard tabulated data.\n\n3. **What is tabulated** (Fact 8): The Spin bordism groups of the point are explicitly computed only for dimensions 0-9: Z, Z_2, Z_2, 0, Z, 0, 0, 0, Z_2, Z_2.\n\n4. **Computational techniques available** (Facts 6-7): The Atiyah-Hirzebruch spectral sequence and Adams spectral sequence are standard tools, but their application requires:\n   - Computing H_*(BG2; Ω_q^Spin(*)) for the AHSS\n   - Knowing Ω_q^Spin(*) in dimension 12, which is not provided\n\n5. **G2 structure knowledge** (Facts 1-3, 13-14): While we have good information about G2 embeddings and the fibration S7 → BG2 → B Spin(7), these describe the geometry but don't directly compute Ω_12^Spin(BG2).\n\n**Why computation fails:**\n\nTo compute Ω_12^Spin(BG2) and then extract the reduced (kernel) part, one would need either:\n- The Ω_12^Spin(*) value explicitly, or\n- A complete computational sequence using spectral methods with Ω_12^Spin(*) as input\n\nNeither is provided in the facts. The Pontryagin class information (Fact 16) and recent moduli space work (Fact 20) are geometric but not enough to determine the bordism group structure in dimension 12.\n\n**Best-supported answer:**\n\nThe reduced 12-th dimensional Spin bordism of BG2, denoted Ω̃_12^Spin(BG2), cannot be determined from the provided facts alone. Its computation would require either:\n1. The value of Ω_12^Spin(*) (which extends beyond routinely tabulated dimensions), or\n2. Application of the Atiyah-Hirzebruch or Adams spectral sequence with complete input data for dimension 12.\n",
+          "n_facts": 21,
+          "grade": "incorrect"
+        },
+        "opus_haiku": {
+          "answer": "The reduced 12-dimensional Spin bordism of the classifying space BG2 is:\n\nΩ̃^Spin_12(BG2) ≅ Z ⊕ Z\n\nThe two generators arise from:\n1. The degree-8 generator from the reduced bordism (Σ^4 Q-module structure produces a Z in Ω̃^Spin_8(BG2) = Z^⊕2) paired with the degree-4 universal class y4 via the Atiyah–Hirzebruch spectral sequence, contributing one Z generator.\n2. The shifted-ko (Anderson–Brown–Peterson MSpin splitting) contribution: the ko⟨2⟩ summand (starting in degree 8) combines with the degree-4 class y4 and the degree-8 contribution to produce an additional free generator in degree 12, contributing the second Z.\n\nThe computation uses:\n- H^*(BG2;Z) = Z[y4,y12] ⊕ (2-torsion) (fact [5])\n- Ω̃^Spin_8(BG2) = Z^⊕2 (from fact [6], table 3.18)\n- Ω^Spin_8(pt) = Z ⊕ Z with the second summand from ko⟨2⟩ (facts [10], [13])\n- The Atiyah–Hirzebruch spectral sequence E2_{p,q} = H_p(BG2; Ω^Spin_q(pt)) (fact [15]) contributes:\n  - H_4(BG2) ⊗ Ω^Spin_8(pt) = Z ⊗ (Z ⊕ Z) yields one Z from the universal class pairing with each Ω^Spin_8 generator\n  - The integral cohomology in degree 12 (from y4^3 and y12) produces additional free rank\n- 2-adic completion analysis (fact [11]) confirms Ω^Spin_12(pt) ⊗ (2-completion) has rank 3, and the G2 structure eliminates one generator through kernel reduction, leaving rank 2 for the reduced bordism.\n\nThus: **Ω̃^Spin_12(BG2) ≅ Z^⊕2**",
+          "n_facts": 17,
+          "grade": "incorrect"
+        },
+        "opus_opus": {
+          "answer": "tilde-Omega^Spin_12(BG2) = Z^3 ⊕ (Z/2)^2 (free rank 3, plus two Z/2 summands).\n\nCaveat: the facts are sufficient to pin down the free rank (3) with confidence, but the exact torsion is a best-supported inference rather than something the cited paper tabulates (it only publishes degrees 0–7). The most defensible single answer for the reduced group is Z^3 ⊕ (Z/2)^2.",
+          "n_facts": 14,
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66ea814c55",
+        "s": 1,
+        "plain_haiku": {
+          "answer": "\n## Solution: Solubility of Al(OH)₃ in Pure Water\n\n### Given Information\n- Ksp of Al(OH)₃ = 5.3 × 10⁻²⁷\n- Kf of Al(OH)₄⁻ = 1.1 × 10³¹ (not needed for pure water solubility)\n\n### Chemical Equilibrium\n\nThe dissolution of Al(OH)₃ in pure water is described by:\n\nAl(OH)₃(s) ⇌ Al³⁺(aq) + 3OH⁻(aq)\n\nThe solubility product expression is:\n**Ksp = [Al³⁺][OH⁻]³ = 5.3 × 10⁻²⁷**\n\n### Setting Up the Calculation\n\nLet s = molar solubility of Al(OH)₃ in mol/L\n\nFrom the stoichiometry:\n- [Al³⁺] = s\n- [OH⁻] = 3s\n\nSubstituting into the Ksp expression:\nKsp = (s)(3s)³ = s · 27s³ = 27s⁴\n\n### Solving for Solubility\n\n27s⁴ = 5.3 × 10⁻²⁷\n\ns⁴ = (5.3 × 10⁻²⁷) / 27\n\ns⁴ = 1.963 × 10⁻²⁸\n\ns = ⁴√(1.963 × 10⁻²⁸)\n\ns = (1.963 × 10⁻²⁸)^(1/4)\n\nCalculating:\n- 1.963^(1/4) ≈ 1.188\n- (10⁻²⁸)^(1/4) = 10⁻⁷\n\ns ≈ 1.188 × 10⁻⁷ mol/L\n\n### Final Answer\n\n**The solubility of Al(OH)₃ in pure water is approximately 1.2 × 10⁻⁷ mol/L** (or more precisely, 1.19 × 10⁻⁷ mol/L)\n\nNote: The complex formation constant Kf for Al(OH)₄⁻ is not used in this calculation because in pure water (neutral pH ≈ 7), the concentration of OH⁻ is only 10⁻⁷ M, which is too low to form significant amounts of the Al(OH)₄⁻ complex. The complex becomes important only in basic solutions where [OH⁻] is much higher.\n",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "The solubility of Al(OH)₃ in pure water is approximately 1.2 × 10⁻⁷ mol L⁻¹.\n\n**Reasoning:**\nIn pure water without excess OH⁻, the Kf constant is irrelevant (fact [6]). Only the dissolution equilibrium applies:\n\nAl(OH)₃(s) ⇌ Al³⁺(aq) + 3OH⁻(aq)\n\nWith molar solubility x:\n- [Al³⁺] = x, [OH⁻] = 3x\n- Ksp = x(3x)³ = 27x⁴\n\nSolving with Ksp = 5.3 × 10⁻²⁷:\n- 27x⁴ = 5.3 × 10⁻²⁷\n- x⁴ = 1.963 × 10⁻²⁸\n- x = 1.19 × 10⁻⁷ mol L⁻¹",
+          "n_facts": 11,
+          "grade": "incorrect"
+        },
+        "opus_haiku": {
+          "answer": "The solubility of Al(OH)₃ in pure water is **5.8 × 10⁻³ mol L⁻¹** (or 0.0058 mol/L).\n\n**Calculation summary:**\n- [OH⁻] in pure water = 1.0 × 10⁻⁷ mol/L\n- [Al³⁺] from Ksp = 5.3 × 10⁻⁶ mol/L\n- [Al(OH)₄⁻] from K = Ksp·Kf = (5.83 × 10⁴) × (1.0 × 10⁻⁷) = 5.83 × 10⁻³ mol/L\n- Total solubility S = [Al³⁺] + [Al(OH)₄⁻] ≈ 5.8 × 10⁻³ mol/L\n\nThe solubility is dominated by the soluble tetrahydroxoaluminate complex Al(OH)₄⁻, which forms favorably at neutral pH despite the extremely low Ksp of the solid.",
+          "n_facts": 12,
+          "grade": "incorrect"
+        },
+        "opus_opus": {
+          "answer": "Solubility of Al(OH)3 in pure water ≈ 5.8 × 10^-3 mol L^-1.",
+          "n_facts": 10,
+          "grade": "incorrect"
+        }
+      },
+      {
+        "id": "66ea814c55",
+        "s": 2,
+        "plain_haiku": {
+          "answer": "\n**Solution:**\n\nFor Al(OH)₃ dissolving in pure water:\nAl(OH)₃(s) ⇌ Al³⁺(aq) + 3OH⁻(aq)\n\nGiven: Ksp = 5.3 × 10⁻²⁷\n\nLet s = solubility of Al(OH)₃ in mol/L\n\nAt equilibrium:\n- [Al³⁺] = s\n- [OH⁻] = 3s\n\nApplying the solubility product expression:\nKsp = [Al³⁺][OH⁻]³\n5.3 × 10⁻²⁷ = (s)(3s)³\n5.3 × 10⁻²⁷ = s · 27s³\n5.3 × 10⁻²⁷ = 27s⁴\n\nSolving for s:\ns⁴ = (5.3 × 10⁻²⁷)/27\ns⁴ = 1.963 × 10⁻²⁸\ns = (1.963 × 10⁻²⁸)^(1/4)\ns = 1.18 × 10⁻⁷ mol/L\n\n**Answer: 1.2 × 10⁻⁷ mol L⁻¹** (or 1.18 × 10⁻⁷ mol L⁻¹ to 3 significant figures)\n\nNote: The complex formation constant Kf for Al(OH)₄⁻ is given but not needed for calculating solubility in pure water. It would be relevant if the pH were significantly elevated (strongly basic conditions) where the hydroxo complex becomes significant.\n",
+          "n_facts": 0,
+          "grade": "incorrect"
+        },
+        "haiku_haiku": {
+          "answer": "The solubility of Al(OH)₃ in pure water is approximately 1.2 × 10⁻⁷ mol L⁻¹ (or more precisely 1.19 × 10⁻⁷ mol L⁻¹).\n\n## Solution Method\n\nUsing the Ksp equilibrium for Al(OH)₃ dissolution:\nAl(OH)₃(s) ⇌ Al³⁺(aq) + 3OH⁻(aq)\n\nWith Ksp expression: Ksp = [Al³⁺][OH⁻]³\n\nLet x = molar solubility. Then:\n- [Al³⁺] = x\n- [OH⁻] = 3x\n\nSubstituting:\nKsp = x(3x)³ = 27x⁴ = 5.3 × 10⁻²⁷\n\nSolving for x:\nx⁴ = (5.3 × 10⁻²⁷)/27 = 1.963 × 10⁻²⁸\nx = (1.963 × 10⁻²⁸)^(1/4) ≈ 1.2 × 10⁻⁷ mol L⁻¹\n\nThis calculation uses only the Ksp equilibrium because we are in pure water at neutral pH, where the amphoteric Al(OH)₄⁻ complex formation is not significantly engaged.",
+          "n_facts": 10,
+          "grade": "incorrect"
+        },
+        "opus_haiku": {
+          "answer": "5.84 × 10⁻³ mol/L (or 0.00584 mol/L)",
+          "n_facts": 10,
+          "grade": "incorrect"
+        },
+        "opus_opus": {
+          "answer": "The solubility of Al(OH)3 in pure water is approximately 5.8 × 10^-3 mol L^-1 (≈ 0.0058 M).\n\nThis is dominated by the complex-formation (amphoteric) pathway:\n- [Al(OH)4-] = Ksp·Kf·[OH-] = (5.3×10^-27)(1.1×10^31)(1.0×10^-7) = 5.83×10^-3 M\n- [Al3+] = Ksp/[OH-]^3 = 5.3×10^-6 M (negligible, ~1000× smaller)\n- S = [Al3+] + [Al(OH)4-] ≈ 5.8×10^-3 mol L^-1\n\n(Using [OH-] ≈ 1.0×10^-7 M from water autoionization in pure water.)",
+          "n_facts": 11,
+          "grade": "incorrect"
+        }
+      }
+    ]
+  }
+}

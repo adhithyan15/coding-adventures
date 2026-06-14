@@ -1,0 +1,7 @@
+{
+ "idx": 52,
+ "id": "BUI-3",
+ "scenario": "An interior stairway has six risers. A continuous handrail runs the full length of the stair on one side. The handrail is mounted at a uniform height of 36 inches measured vertically from the sloped plane adjoining the tread nosings.",
+ "policy": "A stairway handrail must be mounted at a height of not less than 34 inches and not more than 38 inches, measured vertically from the sloped plane adjoining the tread nosing. Handrails are required on at least one side of any stairway having four or more risers.",
+ "question": "Does the handrail installation comply with the height and presence requirements?"
+}

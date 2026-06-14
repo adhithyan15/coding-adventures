@@ -1,10 +1,11 @@
 [package]
 name = "ir-to-wasm-compiler"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 description = "Lower the generic compiler IR into WebAssembly 1.0 modules"
 
 [dependencies]
+codegen-core = { path = "../codegen-core" }
 compiler-ir = { path = "../compiler-ir" }
 wasm-leb128 = { path = "../wasm-leb128" }
 wasm-opcodes = { path = "../wasm-opcodes" }

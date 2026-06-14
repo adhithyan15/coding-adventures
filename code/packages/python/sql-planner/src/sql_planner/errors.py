@@ -95,3 +95,19 @@ class InternalError(PlanError):
 
     def __str__(self) -> str:
         return self.message
+
+
+@dataclass(eq=True)
+class IndexNotFound(PlanError):
+    """Raised when an ``INDEXED BY <name>`` hint names a non-existent index.
+
+    SQLite's INDEXED BY is not just a hint — it's a hard constraint that
+    the planner MUST use the named index.  If no such index exists on the
+    table, real SQLite raises ``no such index: <name>`` at parse time;
+    we surface the same error at plan time.
+    """
+
+    message: str
+
+    def __str__(self) -> str:
+        return self.message

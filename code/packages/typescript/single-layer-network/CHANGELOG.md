@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Changed (transparent via dep)
+
+- **MX08 Phase 3 (verification)**: on Node, the `matrix` package's
+  `CpuMatrixBackend` now delegates to the Rust `matrix-cpu` executor
+  via `@coding-adventures/matrix-rust-napi` (MX08 Phase 2, PR #3571).
+  This package's `fit()` / `predict()` paths and its low-level matrix
+  API pick up the speedup transparently — **no source change in this
+  package**.  Test re-run on this branch hits a pre-existing
+  vitest/vite ESM/CJS version-conflict that also occurs on `main`
+  (unrelated to MX08); MX08 Phase 2's parity tests prove numerical
+  equivalence within f32 tolerance for every op this package uses.
+  Browser builds keep the pure-TS implementation.
+
 ## [0.1.0] - 2026-04-26
 
 ### Added

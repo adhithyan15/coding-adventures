@@ -1,0 +1,20 @@
+// Checkbox.light.msl — default light-theme styling (v0.3).
+//
+// **v0.3 trim.** The pre-v0.3 .msl carried two sibling rules for
+// the fake `checkbox-box-checked` / `checkbox-box-unchecked` parts.
+// Those parts no longer exist — the v0.3 `Checkbox.mll` is a thin
+// wrapper around the native `HostCheckbox` widget, which renders
+// its own check glyph and exposes no inner element to style. Only
+// the `checkbox` root part survives.
+//
+// Native platform checkboxes already ship with sensible default
+// padding/sizing, so this style mostly just controls outer
+// spacing. Authors who want heavy custom skinning should compose
+// their own component on top of `HostCheckbox` rather than fight
+// the native widget through `part` overrides.
+
+style Checkbox {
+  part checkbox {
+    padding : 4 ;
+  }
+}

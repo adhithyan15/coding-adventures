@@ -1,0 +1,8 @@
+{
+ "check_id": 201,
+ "idx": 82,
+ "slot": "response_elapsed_hours",
+ "claimed_value": 3.5,
+ "scenario": "The customer's stated timezone is US Eastern. A standard support request was submitted on Wednesday at 11:00 Eastern. The provider responded at 14:30 Eastern the same day.",
+ "cited_span": "submitted on Wednesday at 11:00 Eastern. The provider responded at 14:30 Eastern the same day."
+}

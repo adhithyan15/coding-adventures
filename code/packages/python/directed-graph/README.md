@@ -2,6 +2,11 @@
 
 DT01 — A directed graph library extending `Graph[T]` (DT00). Provides directed edges, reverse adjacency for efficient predecessor lookups, topological sort, cycle detection, transitive closure, parallel execution level computation, and Strongly Connected Components.
 
+This package also carries the DT00 graph/node/edge property-bag contract into
+directed graphs. Directed edge metadata is keyed by ordered edge identity, so
+`(u, v)` and `(v, u)` can hold independent weights, training flags, gradient
+slots, labels, and runtime annotations.
+
 ## Where it fits in the stack
 
 This package is the directed graph layer in the DT data structure series:
@@ -47,6 +52,8 @@ g.add_edge("compile", "parse")
 g.add_edge("compile", "typecheck")
 g.add_edge("link", "compile")
 g.add_edge("package", "link")
+g.add_node("compile", {"kind": "task"})
+g.set_edge_property("link", "compile", "weight", 2.0)
 
 # Valid build order
 topological_sort(g)
@@ -88,6 +95,20 @@ Extends `Graph[T]` from DT00. Always uses adjacency list internally.
 | `edge_weight(u, v)` | Weight of edge u→v; raises `KeyError` if missing |
 | `len(g)` | Number of nodes |
 | `node in g` | Same as `has_node` |
+
+#### Property methods
+
+| Method | Description |
+|--------|-------------|
+| `graph_properties()` | Copy of graph-level metadata |
+| `set_graph_property(key, value)` | Set graph-level metadata |
+| `remove_graph_property(key)` | Remove graph-level metadata |
+| `node_properties(node)` | Copy of node metadata |
+| `set_node_property(node, key, value)` | Set node metadata |
+| `remove_node_property(node, key)` | Remove node metadata |
+| `edge_properties(u, v)` | Copy of directed edge metadata, always including `weight` |
+| `set_edge_property(u, v, key, value)` | Set edge metadata; `weight` updates edge weight |
+| `remove_edge_property(u, v, key)` | Remove edge metadata; `weight` resets to `1.0` |
 
 #### Overridden
 

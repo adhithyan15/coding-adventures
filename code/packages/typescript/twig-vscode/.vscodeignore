@@ -1,0 +1,10 @@
+.vscode/**
+.vscode-test/**
+src/**
+tests/**
+**/*.ts
+!out/**/*.js
+**/tsconfig.json
+.gitignore
+.vscodeignore
+vitest.config.ts

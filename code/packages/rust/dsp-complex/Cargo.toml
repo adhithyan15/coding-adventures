@@ -1,0 +1,11 @@
+[package]
+name = "dsp-complex"
+version = "0.1.0"
+edition = "2021"
+description = "DSP01 Phase 2: complex-number helper for the DSP layer. Interleaved [real, imag] f32 storage (last axis size 2), per the DSP00 convention. V1 provides a scalar ComplexTensor that wraps a Vec<f32>; Phase 3 will introduce a matrix-ir-backed variant that builds Slice/Mul/Sqrt graphs for accessors once Slice op support lands in matrix-ir."
+license = "MIT"
+
+[dependencies]
+matrix-ir = { path = "../matrix-ir" }
+
+[dev-dependencies]

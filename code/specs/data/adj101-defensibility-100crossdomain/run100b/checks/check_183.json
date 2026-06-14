@@ -1,0 +1,8 @@
+{
+ "check_id": 183,
+ "idx": 71,
+ "slot": "cleared_within_period",
+ "claimed_value": false,
+ "scenario": "A container of furniture belonging to Hartwell Imports arrived at the Port of Easton on March 3. Hartwell did not file any clearance paperwork. The goods were still sitting uncleared in the customs warehouse on March 22.",
+ "cited_span": "The goods were still sitting uncleared in the customs warehouse on March 22."
+}

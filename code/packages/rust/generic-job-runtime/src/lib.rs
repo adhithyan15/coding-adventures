@@ -23,7 +23,8 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use generic_job_protocol::{
     decode_response_json_line_with_limit, encode_request_json_line, JobCancellation, JobCodecError,
-    JobError, JobErrorOrigin, JobMetadata, JobRequest, JobResponse, JobResult, JobTimeout,
+    JobError, JobErrorOrigin, JobMetadata, JobRequest, JobResponse, JobResponseSummary, JobResult,
+    JobTerminalStatus, JobTimeout,
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -44,6 +45,118 @@ pub struct ExecutorCapabilities {
     pub max_payload_bytes: usize,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ExecutorCapabilityFleetSummary {
+    pub total_executors: usize,
+    pub parallel_execution_executors: usize,
+    pub parallel_callback_executors: usize,
+    pub vm_lock_required_executors: usize,
+    pub process_isolated_executors: usize,
+    pub cancellation_capable_executors: usize,
+    pub timeout_capable_executors: usize,
+    pub affinity_capable_executors: usize,
+    pub ordered_response_executors: usize,
+    pub serializable_payload_required_executors: usize,
+    pub total_max_workers: usize,
+    pub total_max_queue_depth: usize,
+    pub smallest_max_payload_bytes: Option<usize>,
+    pub largest_max_payload_bytes: Option<usize>,
+}
+
+impl ExecutorCapabilityFleetSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_capabilities<'a, I>(capabilities: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ExecutorCapabilities>,
+    {
+        let mut summary = Self::empty();
+        for capabilities in capabilities {
+            summary.total_executors += 1;
+            summary.total_max_workers += capabilities.max_workers;
+            summary.total_max_queue_depth += capabilities.max_queue_depth;
+
+            if capabilities.supports_parallel_execution {
+                summary.parallel_execution_executors += 1;
+            }
+            if capabilities.supports_parallel_callbacks {
+                summary.parallel_callback_executors += 1;
+            }
+            if capabilities.requires_vm_lock {
+                summary.vm_lock_required_executors += 1;
+            }
+            if capabilities.supports_process_isolation {
+                summary.process_isolated_executors += 1;
+            }
+            if capabilities.supports_cancellation {
+                summary.cancellation_capable_executors += 1;
+            }
+            if capabilities.supports_timeouts {
+                summary.timeout_capable_executors += 1;
+            }
+            if capabilities.supports_affinity {
+                summary.affinity_capable_executors += 1;
+            }
+            if capabilities.supports_ordered_responses {
+                summary.ordered_response_executors += 1;
+            }
+            if capabilities.requires_serializable_payloads {
+                summary.serializable_payload_required_executors += 1;
+            }
+
+            summary.smallest_max_payload_bytes = Some(
+                summary
+                    .smallest_max_payload_bytes
+                    .map_or(capabilities.max_payload_bytes, |value| {
+                        value.min(capabilities.max_payload_bytes)
+                    }),
+            );
+            summary.largest_max_payload_bytes = Some(
+                summary
+                    .largest_max_payload_bytes
+                    .map_or(capabilities.max_payload_bytes, |value| {
+                        value.max(capabilities.max_payload_bytes)
+                    }),
+            );
+        }
+        summary
+    }
+
+    pub fn has_executors(&self) -> bool {
+        self.total_executors > 0
+    }
+
+    pub fn has_process_isolation(&self) -> bool {
+        self.process_isolated_executors > 0
+    }
+
+    pub fn supports_all_timeouts(&self) -> bool {
+        self.has_executors() && self.timeout_capable_executors == self.total_executors
+    }
+
+    pub fn supports_all_affinity(&self) -> bool {
+        self.has_executors() && self.affinity_capable_executors == self.total_executors
+    }
+
+    pub fn requires_any_vm_lock(&self) -> bool {
+        self.vm_lock_required_executors > 0
+    }
+
+    pub fn requires_only_serializable_payloads(&self) -> bool {
+        self.has_executors() && self.serializable_payload_required_executors == self.total_executors
+    }
+
+    pub fn has_cancellation_support(&self) -> bool {
+        self.cancellation_capable_executors > 0
+    }
+
+    pub fn has_ordered_response_support(&self) -> bool {
+        self.ordered_response_executors > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExecutorLimits {
     pub max_queue_depth: usize,
@@ -57,6 +170,370 @@ impl Default for ExecutorLimits {
             max_queue_depth: 1024,
             max_payload_bytes: 1024 * 1024,
             max_response_bytes: 1024 * 1024,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ExecutorSnapshot {
+    pub worker_count: usize,
+    pub live_workers: usize,
+    pub in_flight_jobs: usize,
+    pub queued_jobs: usize,
+    pub running_jobs: usize,
+    pub shutting_down: bool,
+    pub max_queue_depth: usize,
+    pub max_payload_bytes: usize,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorHealth {
+    Idle,
+    Busy,
+    Saturated,
+    Draining,
+    Offline,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorQueuePressure {
+    Idle,
+    Nominal,
+    Elevated,
+    Saturated,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorAdmissionStatus {
+    Accepting,
+    Draining,
+    Offline,
+    QueueFull,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorSupervisionAction {
+    None,
+    ObserveDraining,
+    ApplyBackpressure,
+    RestartWorkers,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorFleetStatus {
+    Empty,
+    Idle,
+    Busy,
+    Pressured,
+    Saturated,
+    Draining,
+    Offline,
+}
+
+impl ExecutorFleetStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Empty => "empty",
+            Self::Idle => "idle",
+            Self::Busy => "busy",
+            Self::Pressured => "pressured",
+            Self::Saturated => "saturated",
+            Self::Draining => "draining",
+            Self::Offline => "offline",
+        }
+    }
+
+    pub fn needs_attention(self) -> bool {
+        matches!(
+            self,
+            Self::Pressured | Self::Saturated | Self::Draining | Self::Offline
+        )
+    }
+}
+
+impl fmt::Display for ExecutorFleetStatus {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ExecutorFleetStatusSummary {
+    pub status: ExecutorFleetStatus,
+    pub total_executors: usize,
+    pub accepting_executors: usize,
+    pub pending_jobs: usize,
+    pub remaining_queue_capacity: usize,
+    pub aggregate_queue_pressure_percent: u8,
+    pub supervision_recommendations: usize,
+}
+
+impl ExecutorFleetStatusSummary {
+    pub fn has_executors(&self) -> bool {
+        self.total_executors > 0
+    }
+
+    pub fn can_accept_jobs(&self) -> bool {
+        self.accepting_executors > 0 && self.remaining_queue_capacity > 0
+    }
+
+    pub fn needs_attention(&self) -> bool {
+        self.status.needs_attention() || self.supervision_recommendations > 0
+    }
+
+    pub fn is_quiescent(&self) -> bool {
+        self.status == ExecutorFleetStatus::Idle && self.pending_jobs == 0
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ExecutorFleetSummary {
+    pub total_executors: usize,
+    pub worker_count: usize,
+    pub live_workers: usize,
+    pub in_flight_jobs: usize,
+    pub queued_jobs: usize,
+    pub running_jobs: usize,
+    pub remaining_queue_capacity: usize,
+    pub max_queue_depth: usize,
+    pub idle_executors: usize,
+    pub busy_executors: usize,
+    pub saturated_executors: usize,
+    pub draining_executors: usize,
+    pub offline_executors: usize,
+    pub accepting_executors: usize,
+    pub queue_full_executors: usize,
+    pub elevated_pressure_executors: usize,
+    pub saturated_pressure_executors: usize,
+    pub backpressure_recommendations: usize,
+    pub restart_recommendations: usize,
+    pub drain_observation_recommendations: usize,
+}
+
+impl ExecutorFleetSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_snapshots<'a, I>(snapshots: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ExecutorSnapshot>,
+    {
+        let mut summary = Self::empty();
+        for snapshot in snapshots {
+            summary.total_executors += 1;
+            summary.worker_count += snapshot.worker_count;
+            summary.live_workers += snapshot.live_workers;
+            summary.in_flight_jobs += snapshot.in_flight_jobs;
+            summary.queued_jobs += snapshot.queued_jobs;
+            summary.running_jobs += snapshot.running_jobs;
+            summary.remaining_queue_capacity += snapshot.remaining_queue_capacity();
+            summary.max_queue_depth += snapshot.max_queue_depth;
+
+            match snapshot.health() {
+                ExecutorHealth::Idle => summary.idle_executors += 1,
+                ExecutorHealth::Busy => summary.busy_executors += 1,
+                ExecutorHealth::Saturated => summary.saturated_executors += 1,
+                ExecutorHealth::Draining => summary.draining_executors += 1,
+                ExecutorHealth::Offline => summary.offline_executors += 1,
+            }
+
+            match snapshot.admission_status() {
+                ExecutorAdmissionStatus::Accepting => summary.accepting_executors += 1,
+                ExecutorAdmissionStatus::QueueFull => summary.queue_full_executors += 1,
+                ExecutorAdmissionStatus::Draining | ExecutorAdmissionStatus::Offline => {}
+            }
+
+            match snapshot.queue_pressure() {
+                ExecutorQueuePressure::Elevated => summary.elevated_pressure_executors += 1,
+                ExecutorQueuePressure::Saturated => summary.saturated_pressure_executors += 1,
+                ExecutorQueuePressure::Idle | ExecutorQueuePressure::Nominal => {}
+            }
+
+            match snapshot.recommended_supervision_action() {
+                ExecutorSupervisionAction::ApplyBackpressure => {
+                    summary.backpressure_recommendations += 1;
+                }
+                ExecutorSupervisionAction::RestartWorkers => {
+                    summary.restart_recommendations += 1;
+                }
+                ExecutorSupervisionAction::ObserveDraining => {
+                    summary.drain_observation_recommendations += 1;
+                }
+                ExecutorSupervisionAction::None => {}
+            }
+        }
+        summary
+    }
+
+    pub fn has_executors(&self) -> bool {
+        self.total_executors > 0
+    }
+
+    pub fn pending_jobs(&self) -> usize {
+        self.queued_jobs.saturating_add(self.running_jobs)
+    }
+
+    pub fn aggregate_queue_pressure_percent(&self) -> u8 {
+        if !self.has_executors() {
+            return 0;
+        }
+        if self.max_queue_depth == 0 {
+            return 100;
+        }
+        let percent = self.in_flight_jobs.saturating_mul(100) / self.max_queue_depth;
+        percent.min(100) as u8
+    }
+
+    pub fn has_live_capacity(&self) -> bool {
+        self.live_workers > 0 && self.remaining_queue_capacity > 0
+    }
+
+    pub fn has_backpressure(&self) -> bool {
+        self.queue_full_executors > 0 || self.backpressure_recommendations > 0
+    }
+
+    pub fn has_offline_executors(&self) -> bool {
+        self.offline_executors > 0
+    }
+
+    pub fn has_supervision_work(&self) -> bool {
+        self.backpressure_recommendations > 0
+            || self.restart_recommendations > 0
+            || self.drain_observation_recommendations > 0
+    }
+
+    pub fn is_fully_accepting(&self) -> bool {
+        self.has_executors() && self.accepting_executors == self.total_executors
+    }
+
+    pub fn supervision_recommendations(&self) -> usize {
+        self.backpressure_recommendations
+            .saturating_add(self.restart_recommendations)
+            .saturating_add(self.drain_observation_recommendations)
+    }
+
+    pub fn status(&self) -> ExecutorFleetStatus {
+        if !self.has_executors() {
+            ExecutorFleetStatus::Empty
+        } else if self.offline_executors > 0 || self.restart_recommendations > 0 {
+            ExecutorFleetStatus::Offline
+        } else if self.draining_executors > 0 || self.drain_observation_recommendations > 0 {
+            ExecutorFleetStatus::Draining
+        } else if self.saturated_executors > 0
+            || self.saturated_pressure_executors > 0
+            || self.queue_full_executors > 0
+            || self.backpressure_recommendations > 0
+        {
+            ExecutorFleetStatus::Saturated
+        } else if self.elevated_pressure_executors > 0 {
+            ExecutorFleetStatus::Pressured
+        } else if self.pending_jobs() > 0 || self.busy_executors > 0 {
+            ExecutorFleetStatus::Busy
+        } else {
+            ExecutorFleetStatus::Idle
+        }
+    }
+
+    pub fn status_summary(&self) -> ExecutorFleetStatusSummary {
+        ExecutorFleetStatusSummary {
+            status: self.status(),
+            total_executors: self.total_executors,
+            accepting_executors: self.accepting_executors,
+            pending_jobs: self.pending_jobs(),
+            remaining_queue_capacity: self.remaining_queue_capacity,
+            aggregate_queue_pressure_percent: self.aggregate_queue_pressure_percent(),
+            supervision_recommendations: self.supervision_recommendations(),
+        }
+    }
+}
+
+impl ExecutorSnapshot {
+    pub fn remaining_queue_capacity(&self) -> usize {
+        self.max_queue_depth.saturating_sub(self.in_flight_jobs)
+    }
+
+    pub fn is_saturated(&self) -> bool {
+        self.in_flight_jobs >= self.max_queue_depth
+    }
+
+    pub fn pending_jobs(&self) -> usize {
+        self.queued_jobs.saturating_add(self.running_jobs)
+    }
+
+    pub fn has_live_capacity(&self) -> bool {
+        !self.shutting_down && self.live_workers > 0 && self.remaining_queue_capacity() > 0
+    }
+
+    pub fn admission_status(&self) -> ExecutorAdmissionStatus {
+        if self.shutting_down {
+            ExecutorAdmissionStatus::Draining
+        } else if self.live_workers == 0 {
+            ExecutorAdmissionStatus::Offline
+        } else if self.remaining_queue_capacity() == 0 {
+            ExecutorAdmissionStatus::QueueFull
+        } else {
+            ExecutorAdmissionStatus::Accepting
+        }
+    }
+
+    pub fn is_accepting_jobs(&self) -> bool {
+        self.admission_status() == ExecutorAdmissionStatus::Accepting
+    }
+
+    pub fn health(&self) -> ExecutorHealth {
+        if self.shutting_down {
+            return ExecutorHealth::Draining;
+        }
+        if self.live_workers == 0 {
+            return ExecutorHealth::Offline;
+        }
+        if self.is_saturated() {
+            return ExecutorHealth::Saturated;
+        }
+        if self.pending_jobs() > 0 {
+            return ExecutorHealth::Busy;
+        }
+        ExecutorHealth::Idle
+    }
+
+    pub fn needs_supervisor_attention(&self) -> bool {
+        matches!(
+            self.health(),
+            ExecutorHealth::Offline | ExecutorHealth::Saturated
+        )
+    }
+
+    pub fn queue_pressure_percent(&self) -> u8 {
+        if self.max_queue_depth == 0 {
+            return 100;
+        }
+        let percent = self.in_flight_jobs.saturating_mul(100) / self.max_queue_depth;
+        percent.min(100) as u8
+    }
+
+    pub fn queue_pressure(&self) -> ExecutorQueuePressure {
+        if self.in_flight_jobs == 0 {
+            ExecutorQueuePressure::Idle
+        } else if self.is_saturated() {
+            ExecutorQueuePressure::Saturated
+        } else if self.queue_pressure_percent() >= 75 {
+            ExecutorQueuePressure::Elevated
+        } else {
+            ExecutorQueuePressure::Nominal
+        }
+    }
+
+    pub fn exceeds_queue_pressure_percent(&self, threshold: u8) -> bool {
+        self.queue_pressure_percent() > threshold.min(100)
+    }
+
+    pub fn recommended_supervision_action(&self) -> ExecutorSupervisionAction {
+        match self.health() {
+            ExecutorHealth::Idle | ExecutorHealth::Busy => ExecutorSupervisionAction::None,
+            ExecutorHealth::Draining => ExecutorSupervisionAction::ObserveDraining,
+            ExecutorHealth::Saturated => ExecutorSupervisionAction::ApplyBackpressure,
+            ExecutorHealth::Offline => ExecutorSupervisionAction::RestartWorkers,
         }
     }
 }
@@ -174,11 +651,111 @@ impl fmt::Display for RuntimeError {
 
 impl std::error::Error for RuntimeError {}
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JobResponseDrainSummary {
+    pub responses: Vec<JobResponseSummary>,
+    pub ok_count: usize,
+    pub error_count: usize,
+    pub cancelled_count: usize,
+    pub timed_out_count: usize,
+    pub retryable_error_count: usize,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JobResponseDrainOutcome {
+    Empty,
+    AllSucceeded,
+    Failed,
+    RetryableFailure,
+}
+
+impl JobResponseDrainSummary {
+    pub fn from_responses<I>(responses: I) -> Self
+    where
+        I: IntoIterator<Item = JobResponseSummary>,
+    {
+        let responses = responses.into_iter().collect::<Vec<_>>();
+        let mut summary = Self {
+            responses,
+            ok_count: 0,
+            error_count: 0,
+            cancelled_count: 0,
+            timed_out_count: 0,
+            retryable_error_count: 0,
+        };
+
+        for response in &summary.responses {
+            match response.status {
+                JobTerminalStatus::Ok => summary.ok_count += 1,
+                JobTerminalStatus::Error => summary.error_count += 1,
+                JobTerminalStatus::Cancelled => summary.cancelled_count += 1,
+                JobTerminalStatus::TimedOut => summary.timed_out_count += 1,
+            }
+            if response.retryable_error {
+                summary.retryable_error_count += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn len(&self) -> usize {
+        self.responses.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.responses.is_empty()
+    }
+
+    pub fn failure_count(&self) -> usize {
+        self.error_count
+            .saturating_add(self.cancelled_count)
+            .saturating_add(self.timed_out_count)
+    }
+
+    pub fn has_failures(&self) -> bool {
+        self.failure_count() > 0
+    }
+
+    pub fn has_retryable_errors(&self) -> bool {
+        self.retryable_error_count > 0
+    }
+
+    pub fn needs_retry_supervision(&self) -> bool {
+        self.has_retryable_errors()
+    }
+
+    pub fn outcome(&self) -> JobResponseDrainOutcome {
+        if self.is_empty() {
+            JobResponseDrainOutcome::Empty
+        } else if self.has_retryable_errors() {
+            JobResponseDrainOutcome::RetryableFailure
+        } else if self.has_failures() {
+            JobResponseDrainOutcome::Failed
+        } else {
+            JobResponseDrainOutcome::AllSucceeded
+        }
+    }
+}
+
 pub trait JobExecutor<Request, Response> {
     fn capabilities(&self) -> ExecutorCapabilities;
+    fn capability_fleet_summary(&self) -> ExecutorCapabilityFleetSummary {
+        let capabilities = self.capabilities();
+        ExecutorCapabilityFleetSummary::from_capabilities([&capabilities])
+    }
     fn try_submit(&self, request: JobRequest<Request>) -> Result<(), SubmitError>;
     fn cancel(&self, id: &str) -> CancelResult;
     fn drain_responses(&self, max: usize) -> Vec<JobResponse<Response>>;
+    fn drain_response_summaries(&self, max: usize) -> Vec<JobResponseSummary> {
+        self.drain_responses(max)
+            .into_iter()
+            .map(|response| response.summary())
+            .collect()
+    }
+    fn drain_response_summary_batch(&self, max: usize) -> JobResponseDrainSummary {
+        JobResponseDrainSummary::from_responses(self.drain_response_summaries(max))
+    }
     fn shutdown(&self);
 }
 
@@ -323,6 +900,31 @@ where
             Ok(response) => Ok(Some(response)),
             Err(mpsc::RecvTimeoutError::Timeout) => Ok(None),
             Err(mpsc::RecvTimeoutError::Disconnected) => Ok(None),
+        }
+    }
+
+    pub fn snapshot(&self) -> ExecutorSnapshot {
+        self.expire_timed_out_jobs();
+        let queue = self
+            .inner
+            .queue
+            .lock()
+            .expect("thread pool queue mutex poisoned");
+        let queued_jobs = queue.jobs.len();
+        let pending_jobs = queue.pending.len();
+        ExecutorSnapshot {
+            worker_count: self.inner.worker_count,
+            live_workers: if self.inner.shutting_down.load(Ordering::SeqCst) {
+                0
+            } else {
+                self.inner.worker_count
+            },
+            in_flight_jobs: self.inner.in_flight.load(Ordering::SeqCst),
+            queued_jobs,
+            running_jobs: pending_jobs.saturating_sub(queued_jobs),
+            shutting_down: queue.closed || self.inner.shutting_down.load(Ordering::SeqCst),
+            max_queue_depth: self.inner.limits.max_queue_depth,
+            max_payload_bytes: self.inner.limits.max_payload_bytes,
         }
     }
 
@@ -761,6 +1363,31 @@ where
             Ok(response) => Ok(Some(response)),
             Err(mpsc::RecvTimeoutError::Timeout) => Ok(None),
             Err(mpsc::RecvTimeoutError::Disconnected) => Ok(None),
+        }
+    }
+
+    pub fn snapshot(&self) -> ExecutorSnapshot {
+        self.expire_timed_out_jobs();
+        let pending_jobs = self
+            .inner
+            .pending
+            .lock()
+            .expect("pending job table mutex poisoned")
+            .len();
+        ExecutorSnapshot {
+            worker_count: self.inner.workers.len(),
+            live_workers: self
+                .inner
+                .worker_alive
+                .iter()
+                .filter(|alive| alive.load(Ordering::SeqCst))
+                .count(),
+            in_flight_jobs: self.inner.in_flight.load(Ordering::SeqCst),
+            queued_jobs: 0,
+            running_jobs: pending_jobs,
+            shutting_down: self.inner.shutting_down.load(Ordering::SeqCst),
+            max_queue_depth: self.inner.limits.max_queue_depth,
+            max_payload_bytes: self.inner.limits.max_payload_bytes,
         }
     }
 
@@ -1243,7 +1870,7 @@ fn panic_message(panic: Box<dyn std::any::Any + Send>) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use generic_job_protocol::{JobMetadata, JobResult};
+    use generic_job_protocol::{JobMetadata, JobResult, JobTerminalStatus};
     use serde::{Deserialize, Serialize};
     use std::process::Command;
 
@@ -1311,6 +1938,110 @@ for line in sys.stdin:
     }
 
     #[test]
+    fn capability_fleet_summary_rolls_up_executor_placement_facts() {
+        let thread_capabilities = ExecutorCapabilities {
+            supports_parallel_execution: true,
+            supports_parallel_callbacks: false,
+            requires_vm_lock: false,
+            supports_process_isolation: false,
+            supports_cancellation: true,
+            supports_timeouts: true,
+            supports_affinity: false,
+            supports_ordered_responses: true,
+            requires_serializable_payloads: false,
+            max_workers: 4,
+            max_queue_depth: 16,
+            max_payload_bytes: 1024,
+        };
+        let process_capabilities = ExecutorCapabilities {
+            supports_parallel_execution: true,
+            supports_parallel_callbacks: true,
+            requires_vm_lock: true,
+            supports_process_isolation: true,
+            supports_cancellation: false,
+            supports_timeouts: true,
+            supports_affinity: true,
+            supports_ordered_responses: false,
+            requires_serializable_payloads: true,
+            max_workers: 2,
+            max_queue_depth: 8,
+            max_payload_bytes: 4096,
+        };
+
+        let summary = ExecutorCapabilityFleetSummary::from_capabilities([
+            &thread_capabilities,
+            &process_capabilities,
+        ]);
+
+        assert_eq!(
+            summary,
+            ExecutorCapabilityFleetSummary {
+                total_executors: 2,
+                parallel_execution_executors: 2,
+                parallel_callback_executors: 1,
+                vm_lock_required_executors: 1,
+                process_isolated_executors: 1,
+                cancellation_capable_executors: 1,
+                timeout_capable_executors: 2,
+                affinity_capable_executors: 1,
+                ordered_response_executors: 1,
+                serializable_payload_required_executors: 1,
+                total_max_workers: 6,
+                total_max_queue_depth: 24,
+                smallest_max_payload_bytes: Some(1024),
+                largest_max_payload_bytes: Some(4096),
+            }
+        );
+        assert!(summary.has_executors());
+        assert!(summary.has_process_isolation());
+        assert!(summary.supports_all_timeouts());
+        assert!(!summary.supports_all_affinity());
+        assert!(summary.requires_any_vm_lock());
+        assert!(!summary.requires_only_serializable_payloads());
+        assert!(summary.has_cancellation_support());
+        assert!(summary.has_ordered_response_support());
+
+        let empty = ExecutorCapabilityFleetSummary::empty();
+        assert!(!empty.has_executors());
+        assert!(!empty.supports_all_timeouts());
+        assert_eq!(empty.smallest_max_payload_bytes, None);
+    }
+
+    #[test]
+    fn executor_exposes_single_capability_summary() {
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 2,
+                limits: ExecutorLimits {
+                    max_queue_depth: 4,
+                    max_payload_bytes: 2048,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            |_request: JobRequest<EchoJob>| JobResult::Ok {
+                payload: EchoResponse {
+                    stream_id: "stream".to_string(),
+                    counter: 1,
+                    text: "ok".to_string(),
+                },
+            },
+        );
+
+        let summary = pool.capability_fleet_summary();
+
+        assert_eq!(summary.total_executors, 1);
+        assert_eq!(summary.parallel_execution_executors, 1);
+        assert_eq!(summary.cancellation_capable_executors, 1);
+        assert_eq!(summary.total_max_workers, 2);
+        assert_eq!(summary.total_max_queue_depth, 4);
+        assert_eq!(summary.smallest_max_payload_bytes, Some(2048));
+        assert_eq!(summary.largest_max_payload_bytes, Some(2048));
+        assert!(!summary.has_process_isolation());
+        assert!(!summary.requires_any_vm_lock());
+    }
+
+    #[test]
     fn thread_pool_runs_jobs_without_transport_knowledge() {
         let executions = Arc::new(AtomicUsize::new(0));
         let seen = Arc::clone(&executions);
@@ -1353,6 +2084,203 @@ for line in sys.stdin:
             }
             other => panic!("expected thread-pool success, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn executor_drains_compact_response_summaries() {
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 2,
+                limits: ExecutorLimits {
+                    max_queue_depth: 4,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            |request: JobRequest<EchoJob>| {
+                if request.payload.text == "fail" {
+                    return JobResult::Error {
+                        error: JobError::new(
+                            "worker_busy",
+                            "worker queue saturated",
+                            JobErrorOrigin::Executor,
+                        )
+                        .with_retryable(true),
+                    };
+                }
+
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(
+            JobRequest::new(
+                "job-ok",
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: "ok".to_string(),
+                },
+            )
+            .with_metadata(JobMetadata::default().with_trace_id("trace-ok")),
+        )
+        .expect("submit success job");
+        pool.try_submit(
+            JobRequest::new(
+                "job-error",
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: "fail".to_string(),
+                },
+            )
+            .with_metadata(
+                JobMetadata::default()
+                    .with_attempt(2)
+                    .with_trace_id("trace-error"),
+            ),
+        )
+        .expect("submit failing job");
+
+        let mut summaries = Vec::new();
+        for _ in 0..100 {
+            summaries.extend(pool.drain_response_summaries(4));
+            if summaries.len() == 2 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        summaries.sort_by(|left, right| left.id.cmp(&right.id));
+
+        assert_eq!(summaries.len(), 2);
+        assert_eq!(summaries[0].id, "job-error");
+        assert_eq!(summaries[0].status, JobTerminalStatus::Error);
+        assert_eq!(summaries[0].attempt, 2);
+        assert_eq!(summaries[0].trace_id.as_deref(), Some("trace-error"));
+        assert!(summaries[0].retryable_error);
+        assert_eq!(summaries[0].error_code.as_deref(), Some("worker_busy"));
+        assert_eq!(
+            summaries[0].message.as_deref(),
+            Some("worker queue saturated")
+        );
+        assert_eq!(summaries[1].id, "job-ok");
+        assert_eq!(summaries[1].status, JobTerminalStatus::Ok);
+        assert_eq!(summaries[1].trace_id.as_deref(), Some("trace-ok"));
+        assert!(!summaries[1].retryable_error);
+    }
+
+    #[test]
+    fn executor_drains_response_summary_batches_with_terminal_counts() {
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 2,
+                limits: ExecutorLimits {
+                    max_queue_depth: 4,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            |request: JobRequest<EchoJob>| match request.payload.text.as_str() {
+                "retry" => JobResult::Error {
+                    error: JobError::new(
+                        "worker_busy",
+                        "worker queue saturated",
+                        JobErrorOrigin::Executor,
+                    )
+                    .with_retryable(true),
+                },
+                "fail" => JobResult::Error {
+                    error: JobError::new(
+                        "bad_request",
+                        "payload rejected",
+                        JobErrorOrigin::Producer,
+                    ),
+                },
+                _ => JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                },
+            },
+        );
+
+        for (id, text) in [
+            ("job-ok", "ok"),
+            ("job-retryable-error", "retry"),
+            ("job-permanent-error", "fail"),
+        ] {
+            pool.try_submit(JobRequest::new(
+                id,
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: text.to_string(),
+                },
+            ))
+            .expect("submit job");
+        }
+
+        let mut responses = Vec::new();
+        for _ in 0..100 {
+            let mut batch = pool.drain_response_summary_batch(8);
+            responses.append(&mut batch.responses);
+            if responses.len() == 3 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+
+        let batch = JobResponseDrainSummary::from_responses(responses);
+
+        assert_eq!(batch.len(), 3);
+        assert_eq!(batch.ok_count, 1);
+        assert_eq!(batch.error_count, 2);
+        assert_eq!(batch.cancelled_count, 0);
+        assert_eq!(batch.timed_out_count, 0);
+        assert_eq!(batch.retryable_error_count, 1);
+        assert_eq!(batch.failure_count(), 2);
+        assert!(batch.has_failures());
+        assert!(batch.has_retryable_errors());
+        assert!(batch.needs_retry_supervision());
+        assert_eq!(batch.outcome(), JobResponseDrainOutcome::RetryableFailure);
+        assert!(!batch.is_empty());
+    }
+
+    #[test]
+    fn response_drain_summary_classifies_empty_success_and_failed_batches() {
+        let empty = JobResponseDrainSummary::from_responses(Vec::new());
+        let success = JobResponseDrainSummary::from_responses([JobResponseSummary {
+            id: "job-ok".to_string(),
+            status: JobTerminalStatus::Ok,
+            attempt: 1,
+            trace_id: None,
+            retryable_error: false,
+            error_code: None,
+            message: None,
+        }]);
+        let failed = JobResponseDrainSummary::from_responses([JobResponseSummary {
+            id: "job-cancelled".to_string(),
+            status: JobTerminalStatus::Cancelled,
+            attempt: 1,
+            trace_id: None,
+            retryable_error: false,
+            error_code: None,
+            message: Some("cancelled by supervisor".to_string()),
+        }]);
+
+        assert_eq!(empty.outcome(), JobResponseDrainOutcome::Empty);
+        assert!(!empty.has_failures());
+        assert!(!empty.needs_retry_supervision());
+        assert_eq!(success.outcome(), JobResponseDrainOutcome::AllSucceeded);
+        assert!(!success.has_failures());
+        assert_eq!(failed.outcome(), JobResponseDrainOutcome::Failed);
+        assert!(failed.has_failures());
+        assert!(!failed.needs_retry_supervision());
     }
 
     #[test]
@@ -1404,6 +2332,405 @@ for line in sys.stdin:
             .expect_err("second job should hit backpressure");
         assert_eq!(err, SubmitError::QueueFull);
         open_gate(&gate);
+    }
+
+    #[test]
+    fn thread_pool_snapshot_reports_capacity_and_lifecycle() {
+        let entered = Arc::new(AtomicUsize::new(0));
+        let gate = Arc::new((Mutex::new(false), Condvar::new()));
+        let handler_entered = Arc::clone(&entered);
+        let handler_gate = Arc::clone(&gate);
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 2,
+                    max_payload_bytes: 256,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            move |request: JobRequest<EchoJob>| {
+                handler_entered.fetch_add(1, Ordering::SeqCst);
+                wait_for_gate(&handler_gate);
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "running".to_string(),
+            },
+        ))
+        .expect("submit running job");
+        wait_until(|| entered.load(Ordering::SeqCst) == 1);
+        pool.try_submit(JobRequest::new(
+            "job-2",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "queued".to_string(),
+            },
+        ))
+        .expect("submit queued job");
+
+        let snapshot = pool.snapshot();
+        assert_eq!(snapshot.worker_count, 1);
+        assert_eq!(snapshot.live_workers, 1);
+        assert_eq!(snapshot.in_flight_jobs, 2);
+        assert_eq!(snapshot.queued_jobs, 1);
+        assert_eq!(snapshot.running_jobs, 1);
+        assert_eq!(snapshot.max_queue_depth, 2);
+        assert_eq!(snapshot.max_payload_bytes, 256);
+        assert_eq!(snapshot.remaining_queue_capacity(), 0);
+        assert!(snapshot.is_saturated());
+        assert_eq!(snapshot.pending_jobs(), 2);
+        assert_eq!(snapshot.health(), ExecutorHealth::Saturated);
+        assert_eq!(snapshot.queue_pressure(), ExecutorQueuePressure::Saturated);
+        assert!(snapshot.exceeds_queue_pressure_percent(75));
+        assert_eq!(
+            snapshot.admission_status(),
+            ExecutorAdmissionStatus::QueueFull
+        );
+        assert!(!snapshot.is_accepting_jobs());
+        assert!(!snapshot.has_live_capacity());
+        assert!(snapshot.needs_supervisor_attention());
+        assert!(!snapshot.shutting_down);
+
+        open_gate(&gate);
+        let mut responses = Vec::new();
+        for _ in 0..100 {
+            responses.extend(pool.drain_responses(4));
+            if responses.len() == 2 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        assert_eq!(responses.len(), 2);
+
+        let idle_pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits::default(),
+                default_job_timeout: None,
+            },
+            |_request: JobRequest<EchoJob>| JobResult::Ok {
+                payload: EchoResponse {
+                    stream_id: "idle".to_string(),
+                    counter: 1,
+                    text: "idle".to_string(),
+                },
+            },
+        );
+        assert!(!idle_pool.snapshot().shutting_down);
+        idle_pool.shutdown();
+        let shutdown_snapshot = idle_pool.snapshot();
+        assert!(shutdown_snapshot.shutting_down);
+        assert_eq!(shutdown_snapshot.live_workers, 0);
+        assert_eq!(shutdown_snapshot.health(), ExecutorHealth::Draining);
+        assert_eq!(
+            shutdown_snapshot.admission_status(),
+            ExecutorAdmissionStatus::Draining
+        );
+        assert!(!shutdown_snapshot.needs_supervisor_attention());
+    }
+
+    #[test]
+    fn executor_snapshot_health_classifies_supervisor_states() {
+        let idle = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        assert_eq!(idle.health(), ExecutorHealth::Idle);
+        assert_eq!(idle.queue_pressure_percent(), 0);
+        assert_eq!(idle.queue_pressure(), ExecutorQueuePressure::Idle);
+        assert!(!idle.exceeds_queue_pressure_percent(0));
+        assert_eq!(idle.admission_status(), ExecutorAdmissionStatus::Accepting);
+        assert!(idle.is_accepting_jobs());
+        assert_eq!(
+            idle.recommended_supervision_action(),
+            ExecutorSupervisionAction::None
+        );
+        assert!(idle.has_live_capacity());
+        assert!(!idle.needs_supervisor_attention());
+
+        let busy = ExecutorSnapshot {
+            in_flight_jobs: 1,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(busy.health(), ExecutorHealth::Busy);
+        assert_eq!(busy.pending_jobs(), 1);
+        assert_eq!(busy.queue_pressure_percent(), 25);
+        assert_eq!(busy.queue_pressure(), ExecutorQueuePressure::Nominal);
+        assert!(busy.exceeds_queue_pressure_percent(20));
+        assert!(!busy.exceeds_queue_pressure_percent(25));
+        assert_eq!(busy.admission_status(), ExecutorAdmissionStatus::Accepting);
+        assert_eq!(
+            busy.recommended_supervision_action(),
+            ExecutorSupervisionAction::None
+        );
+        assert!(busy.has_live_capacity());
+
+        let elevated = ExecutorSnapshot {
+            in_flight_jobs: 3,
+            queued_jobs: 2,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(elevated.health(), ExecutorHealth::Busy);
+        assert_eq!(elevated.queue_pressure_percent(), 75);
+        assert_eq!(elevated.queue_pressure(), ExecutorQueuePressure::Elevated);
+        assert!(elevated.exceeds_queue_pressure_percent(74));
+        assert_eq!(
+            elevated.admission_status(),
+            ExecutorAdmissionStatus::Accepting
+        );
+
+        let saturated = ExecutorSnapshot {
+            in_flight_jobs: 4,
+            queued_jobs: 3,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(saturated.health(), ExecutorHealth::Saturated);
+        assert_eq!(saturated.queue_pressure_percent(), 100);
+        assert_eq!(saturated.queue_pressure(), ExecutorQueuePressure::Saturated);
+        assert!(!saturated.exceeds_queue_pressure_percent(100));
+        assert_eq!(
+            saturated.admission_status(),
+            ExecutorAdmissionStatus::QueueFull
+        );
+        assert!(!saturated.is_accepting_jobs());
+        assert_eq!(
+            saturated.recommended_supervision_action(),
+            ExecutorSupervisionAction::ApplyBackpressure
+        );
+
+        let offline = ExecutorSnapshot {
+            live_workers: 0,
+            ..idle.clone()
+        };
+        assert_eq!(offline.health(), ExecutorHealth::Offline);
+        assert_eq!(offline.admission_status(), ExecutorAdmissionStatus::Offline);
+        assert_eq!(
+            offline.recommended_supervision_action(),
+            ExecutorSupervisionAction::RestartWorkers
+        );
+        assert!(offline.needs_supervisor_attention());
+
+        let draining = ExecutorSnapshot {
+            live_workers: 0,
+            shutting_down: true,
+            ..idle
+        };
+        assert_eq!(draining.health(), ExecutorHealth::Draining);
+        assert_eq!(
+            draining.admission_status(),
+            ExecutorAdmissionStatus::Draining
+        );
+        assert_eq!(
+            draining.recommended_supervision_action(),
+            ExecutorSupervisionAction::ObserveDraining
+        );
+        assert!(!draining.has_live_capacity());
+        assert!(!draining.needs_supervisor_attention());
+    }
+
+    #[test]
+    fn executor_fleet_summary_rolls_up_capacity_and_supervision_state() {
+        let idle = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        let busy = ExecutorSnapshot {
+            worker_count: 3,
+            live_workers: 3,
+            in_flight_jobs: 2,
+            queued_jobs: 1,
+            running_jobs: 1,
+            shutting_down: false,
+            max_queue_depth: 8,
+            max_payload_bytes: 1024,
+        };
+        let elevated = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 3,
+            queued_jobs: 2,
+            running_jobs: 1,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        let saturated = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 4,
+            queued_jobs: 3,
+            running_jobs: 1,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        let offline = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 0,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        let draining = ExecutorSnapshot {
+            worker_count: 1,
+            live_workers: 0,
+            in_flight_jobs: 1,
+            queued_jobs: 1,
+            running_jobs: 0,
+            shutting_down: true,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+
+        let snapshots = vec![idle, busy, elevated, saturated, offline, draining];
+        let summary = ExecutorFleetSummary::from_snapshots(&snapshots);
+
+        assert_eq!(
+            summary,
+            ExecutorFleetSummary {
+                total_executors: 6,
+                worker_count: 12,
+                live_workers: 9,
+                in_flight_jobs: 10,
+                queued_jobs: 7,
+                running_jobs: 3,
+                remaining_queue_capacity: 18,
+                max_queue_depth: 28,
+                idle_executors: 1,
+                busy_executors: 2,
+                saturated_executors: 1,
+                draining_executors: 1,
+                offline_executors: 1,
+                accepting_executors: 3,
+                queue_full_executors: 1,
+                elevated_pressure_executors: 1,
+                saturated_pressure_executors: 1,
+                backpressure_recommendations: 1,
+                restart_recommendations: 1,
+                drain_observation_recommendations: 1,
+            }
+        );
+        assert!(summary.has_executors());
+        assert_eq!(summary.pending_jobs(), 10);
+        assert_eq!(summary.aggregate_queue_pressure_percent(), 35);
+        assert!(summary.has_live_capacity());
+        assert!(summary.has_backpressure());
+        assert!(summary.has_offline_executors());
+        assert!(summary.has_supervision_work());
+        assert!(!summary.is_fully_accepting());
+        assert_eq!(summary.supervision_recommendations(), 3);
+        assert_eq!(summary.status(), ExecutorFleetStatus::Offline);
+
+        let status_summary = summary.status_summary();
+        assert_eq!(
+            status_summary,
+            ExecutorFleetStatusSummary {
+                status: ExecutorFleetStatus::Offline,
+                total_executors: 6,
+                accepting_executors: 3,
+                pending_jobs: 10,
+                remaining_queue_capacity: 18,
+                aggregate_queue_pressure_percent: 35,
+                supervision_recommendations: 3,
+            }
+        );
+        assert!(status_summary.has_executors());
+        assert!(status_summary.can_accept_jobs());
+        assert!(status_summary.needs_attention());
+        assert!(!status_summary.is_quiescent());
+
+        let accepting_only = ExecutorFleetSummary::from_snapshots(&snapshots[..3]);
+        assert!(accepting_only.is_fully_accepting());
+        assert!(!accepting_only.has_backpressure());
+        assert!(!accepting_only.has_supervision_work());
+        assert_eq!(accepting_only.status(), ExecutorFleetStatus::Pressured);
+
+        let empty = ExecutorFleetSummary::empty();
+        assert!(!empty.has_executors());
+        assert_eq!(empty.aggregate_queue_pressure_percent(), 0);
+        assert!(!empty.has_live_capacity());
+        assert!(!empty.is_fully_accepting());
+        assert_eq!(empty.status(), ExecutorFleetStatus::Empty);
+        assert!(!empty.status_summary().can_accept_jobs());
+    }
+
+    #[test]
+    fn executor_fleet_status_summary_classifies_idle_busy_and_saturated_states() {
+        let idle = ExecutorFleetSummary::from_snapshots([&ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        }]);
+        assert_eq!(idle.status(), ExecutorFleetStatus::Idle);
+        assert_eq!(idle.status().as_str(), "idle");
+        assert_eq!(idle.status().to_string(), "idle");
+        assert!(idle.status_summary().is_quiescent());
+        assert!(!idle.status_summary().needs_attention());
+
+        let busy = ExecutorFleetSummary::from_snapshots([&ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 1,
+            queued_jobs: 1,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        }]);
+        assert_eq!(busy.status(), ExecutorFleetStatus::Busy);
+        assert!(busy.status_summary().can_accept_jobs());
+        assert!(!busy.status_summary().needs_attention());
+
+        let saturated = ExecutorFleetSummary::from_snapshots([&ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 4,
+            queued_jobs: 2,
+            running_jobs: 2,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        }]);
+        let saturated_summary = saturated.status_summary();
+        assert_eq!(saturated_summary.status, ExecutorFleetStatus::Saturated);
+        assert!(!saturated_summary.can_accept_jobs());
+        assert!(saturated_summary.needs_attention());
     }
 
     #[test]

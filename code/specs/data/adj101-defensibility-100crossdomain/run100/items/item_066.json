@@ -1,0 +1,7 @@
+{
+ "idx": 66,
+ "id": "EMP-7",
+ "scenario": "Carlos resigned with only 3 days' notice. He provided documentation that his household relocated 250 miles away for his spouse's job, which is why he could not give two weeks' notice.",
+ "policy": "General rule: employees must provide at least two weeks' written notice before resignation to remain eligible for rehire. Override: notwithstanding the notice requirement, any employee who resigns due to a documented relocation of their household more than 100 miles away remains rehire-eligible regardless of notice given.",
+ "question": "Is Carlos eligible for rehire?"
+}

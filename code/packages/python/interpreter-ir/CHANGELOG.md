@@ -2,6 +2,144 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 4: RESTART_OPS and EXIT_OPS opcode sets
+
+Implements the opcode-metadata side of VMCOND00 Layers 4 and 5 — named restarts
+and non-local exits — in the interpreter IR world.  Seven new mnemonic strings
+are added to the opcode registry.
+
+**New constant: `RESTART_OPS`** — `frozenset[str]` containing the five Layer 4
+restart opcodes: `"push_restart"`, `"pop_restart"`, `"find_restart"`,
+`"invoke_restart"`, `"compute_restarts"`.
+
+**New constant: `EXIT_OPS`** — `frozenset[str]` containing the two Layer 5 exit
+opcodes: `"establish_exit"`, `"exit_to"`.
+
+Membership guarantees:
+- `RESTART_OPS ⊆ SIDE_EFFECT_OPS` and `RESTART_OPS ⊆ ALL_OPS`.
+- `EXIT_OPS ⊆ SIDE_EFFECT_OPS` and `EXIT_OPS ⊆ ALL_OPS`.
+- Both sets are disjoint from `VALUE_OPS`, `BRANCH_OPS`, and `CONTROL_OPS`.
+
+Both constants are exported from `interpreter_ir.__init__` and listed in
+`__all__`.
+
+**Tests** — 18 new tests in `test_interpreter_ir.py` explicitly verify that
+each new opcode belongs to the correct membership sets.
+
+---
+
+### Added — VMCOND00 Phase 3: HANDLER_OPS opcode set
+
+Implements the opcode-metadata side of VMCOND00 Layer 3 — dynamic handlers —
+in the interpreter IR world.  Five new mnemonic strings are added to the opcode
+registry so analyzers, validators, and coverage tools can classify them
+correctly.
+
+**New constant: `HANDLER_OPS`** — `frozenset[str]` containing the five Layer 3
+opcodes: `"push_handler"`, `"pop_handler"`, `"signal"`, `"error"`, `"warn"`.
+
+- `HANDLER_OPS ⊆ SIDE_EFFECT_OPS` — all five have observable side effects
+  (mutating the handler chain or invoking a handler frame).
+- `HANDLER_OPS ⊆ ALL_OPS` — included in the complete opcode universe.
+- `HANDLER_OPS` is disjoint from `VALUE_OPS`, `BRANCH_OPS`, `CONTROL_OPS`,
+  and `THROW_OPS` — the handler protocol is orthogonal to Layer 2 throw/unwind.
+
+`HANDLER_OPS` is exported from `interpreter_ir.__init__` and listed in
+`__all__`.
+
+---
+
+### Added — VMCOND00 Phase 2: ExceptionTableEntry and throw opcode
+
+Implements VMCOND00 Layer 2 — unwind exceptions — in the interpreter IR world.
+The new `ExceptionTableEntry` type gives each `IIRFunction` a static exception
+table that the VM walks during `throw` propagation, and the `"throw"` mnemonic
+is added to the opcode registry so analyzers and validators see it as a side-
+effecting instruction.
+
+**New module: `interpreter_ir.exception_table`**
+
+- **`CATCH_ALL: str = "*"`** — sentinel `type_id` value that matches every
+  thrown condition regardless of Python type.  Use `"*"` in `type_id` to
+  write a catch-all handler.
+
+- **`ExceptionTableEntry`** — frozen dataclass describing one protected region
+  and its handler:
+  - `from_ip: int` — first IIR instruction index in the guarded range
+    (inclusive).
+  - `to_ip: int` — first IIR instruction index *outside* the guarded range
+    (exclusive).  Semantics: `from_ip <= throw_ip < to_ip` triggers the handler.
+    This matches JVM and CPython half-open convention.
+  - `handler_ip: int` — IIR instruction index of the first handler instruction.
+  - `type_id: str` — `"*"` (catch-all) or a Python type name such as `"ValueError"`.
+    Phase 2 matching is exact name equality (`type(condition).__name__`); subtype
+    hierarchy is deferred to Phase 3.
+  - `val_reg: str` — name of the register that receives the caught condition
+    object when the handler is entered.
+
+**Changes to `interpreter_ir.function`**
+
+- `IIRFunction.exception_table: list[ExceptionTableEntry]` — new per-function
+  field, `default_factory=list`.  The field is marked `repr=False, compare=False`
+  (consistent with `feedback_slots` and `source_map`) so existing equality checks
+  and textual representations are unaffected; the exception table is pure runtime
+  metadata assembled by the front-end and consumed by the VM.
+
+**Changes to `interpreter_ir.opcodes`**
+
+- **`THROW_OPS: frozenset[str] = frozenset({"throw"})`** — new opcode-category
+  frozenset for the single `"throw"` mnemonic.
+- `THROW_OPS` is folded into `SIDE_EFFECT_OPS` (a throw has observable side
+  effects — it may unwind the call stack) and into `ALL_OPS`.  It is intentionally
+  **not** in `BRANCH_OPS` or `CONTROL_OPS`: the VM handles the IP jump internally
+  inside `handle_throw`; the static analyzer does not need to model throw as a
+  branch.
+
+**Exports**
+
+`ExceptionTableEntry`, `CATCH_ALL`, and `THROW_OPS` are now exported from the
+package root (`interpreter_ir.__init__`).
+
+**Test additions (`tests/test_interpreter_ir.py`):**
+
+- 9 new tests in `TestOpcodeSets` covering `THROW_OPS` membership, set-algebra
+  relationships with `SIDE_EFFECT_OPS` / `ALL_OPS`, and the exclusions from
+  `BRANCH_OPS` / `CONTROL_OPS`.
+- New `TestExceptionTableEntry` class (7 tests): construction, immutability
+  (`frozen=True`), equality, hash stability, the `CATCH_ALL` constant, and the
+  `compare=False` contract on `IIRFunction.exception_table`.
+
+**Spec reference:** VMCOND00 §3 Layer 2 — unwind exceptions.
+
+---
+
+### Added — VMCOND00 Phase 1: syscall_checked and branch_err opcodes
+
+Two new IIR string mnemonics implementing the VMCOND00 Layer 1 result-value
+error protocol in the interpreter IR world.
+
+- **`"syscall_checked"`** — Invoke a SYSCALL00-numbered host syscall without
+  trapping on errors.  IIR operand layout:
+  `srcs = [n (immediate int), arg_reg, val_dst, err_dst]`
+  Placed in **`SYSCALL_CHECKED_OPS`** (new frozenset) and **`SIDE_EFFECT_OPS`**
+  (it performs I/O).  Not in `VALUE_OPS` (two output slots in `srcs`, not a
+  single `dest`).
+
+- **`"branch_err"`** — Branch to a label when an error register is non-zero.
+  IIR operand layout: `srcs = [err_reg, label_str]`.
+  Added to **`BRANCH_OPS`** so live-variable analysis and control-flow passes
+  treat it as a conditional branch.  Falls through on `err_reg == 0`.
+
+**New export:** `SYSCALL_CHECKED_OPS: frozenset[str]` — exported from
+`interpreter_ir.__init__` alongside the other opcode-category frozensets.
+
+Programs that don't use these opcodes are fully unaffected — the new mnemonics
+never appear in their IIR.
+
+**Spec reference:** VMCOND00 §3 Layer 1; SYSCALL00 §2 canonical table.
+
+---
+
 ### Added — LANG16 PR1: heap / GC opcodes and ref<T> type encoding
 
 Schema-only foundation for the GC plug-in framework — vm-core, jit-core,

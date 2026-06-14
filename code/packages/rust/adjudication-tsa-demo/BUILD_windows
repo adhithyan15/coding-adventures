@@ -1,0 +1,1 @@
+cargo test -p adjudication-tsa-demo -- --nocapture

@@ -1,0 +1,58 @@
+% ADJ52 case-6 — patient observations + queries.
+% 76-year-old man: months of progressive weight loss, fatigue, declining
+% functional status; tense large-volume ascites; palpable splenomegaly; no
+% alcohol / no known liver disease / no metabolic-or-drug liver injury;
+% cholestatic-predominant chemistry (ALP markedly elevated 540, AST 152,
+% ALT 68, bilirubin 3.1); anemia + thrombocytopenia; high-SAAG (>1.1)
+% portal-hypertensive ascites with cytology negative for malignancy; full
+% viral / metabolic / autoimmune / zoonotic work-up negative; imaging away
+% from cirrhosis and from venous-outflow obstruction; no dominant hepatic
+% mass but splenic lesions; PET-CT diffuse FDG uptake in liver, spleen, and
+% marrow; marrow aspirate + peripheral flow both unrevealing.
+% Numeric/unit term-args normalized to qualitative atoms for the IDENT grammar.
+
+observe patient_age(over_50)
+observe patient_sex(male)
+observe symptom_duration(several_months)
+observe syndrome(constitutional_decline_weight_loss_fatigue)
+observe exam(tense_large_volume_ascites)
+observe exam(splenomegaly)
+observe history(no_alcohol)
+observe history(no_known_liver_disease)
+observe history(no_cirrhosis_risk_factors)
+observe lab_pattern(cholestatic_predominant)
+observe alkaline_phosphatase(markedly_elevated)
+observe aspartate_aminotransferase(elevated)
+observe alanine_aminotransferase(mildly_elevated)
+observe total_bilirubin(elevated)
+observe serum_albumin(low_normal)
+observe finding(anemia)
+observe finding(thrombocytopenia)
+observe finding(bicytopenia)
+observe ascites(high_saag_portal_hypertensive)
+observe ascitic_cytology(negative_for_malignancy)
+observe serology(zoonotic_screen_negative)
+observe viral_hepatitis(negative)
+observe test(alpha_1_antitrypsin, negative)
+observe test(hereditary_iron_overload, negative)
+observe test(autoimmune_liver_panel, unremarkable)
+observe imaging(no_chronic_venous_outflow_obstruction)
+observe imaging(features_away_from_cirrhosis)
+observe imaging(no_dominant_hepatic_mass)
+observe imaging(splenic_lesions_present)
+observe pet_fdg_avidity(liver)
+observe pet_fdg_avidity(spleen)
+observe pet_fdg_avidity(bone_marrow)
+observe test(marrow_aspirate_and_flow, unrevealing)
+
+% q1 — identify the unifying underlying process
+? diagnosis(hepatosplenic_infiltrative_lymphoma)
+? diagnosis(hepatic_systemic_amyloidosis)
+? diagnosis(hepatic_sarcoidosis)
+? diagnosis(myelofibrosis_extramedullary_hematopoiesis)
+? diagnosis(nodular_regenerative_hyperplasia)
+? diagnosis(decompensated_cirrhosis)
+
+% q5 — recommended next diagnostic step
+? next_step(tissue_biopsy_fdg_avid_target)
+? next_step(repeat_marrow_core_biopsy)

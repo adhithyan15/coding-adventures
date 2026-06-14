@@ -156,7 +156,7 @@ def test_compile_f64_function_with_typed_signature() -> None:
     program.add_instruction(
         IrInstruction(
             IrOp.F64_ADD,
-            [IrRegister(1), IrRegister(2), IrRegister(3)],
+            [IrRegister(31), IrRegister(2), IrRegister(3)],
             id=gen.next(),
         )
     )
@@ -176,6 +176,54 @@ def test_compile_f64_function_with_typed_signature() -> None:
     )
 
     assert _runtime_result(module, "add_real", [1.25, 2.5]) == [3.75]
+
+
+def test_compile_f64_function_can_call_i32_function() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_real_from_double")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_real_from_double")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(7)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.CALL, [IrLabel("_fn_double")], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.F64_FROM_I32,
+            [IrRegister(31), IrRegister(1)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_double")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.ADD,
+            [IrRegister(1), IrRegister(2), IrRegister(2)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_real_from_double",
+                param_count=0,
+                export_name="real_from_double",
+                result_types=(ValueType.F64,),
+            ),
+            FunctionSignature(label="_fn_double", param_count=1),
+        ],
+    )
+
+    assert _runtime_result(module, "real_from_double", []) == [14.0]
 
 
 def test_compile_f64_memory_load_store() -> None:
@@ -206,7 +254,7 @@ def test_compile_f64_memory_load_store() -> None:
     program.add_instruction(
         IrInstruction(
             IrOp.LOAD_F64,
-            [IrRegister(1), IrRegister(2), IrRegister(3)],
+            [IrRegister(31), IrRegister(2), IrRegister(3)],
             id=gen.next(),
         )
     )
@@ -295,6 +343,115 @@ def test_compile_f64_to_i32_truncation() -> None:
 
     assert _runtime_result(module, "trunc_real", [3.75]) == [3]
     assert _runtime_result(module, "trunc_real", [-2.9]) == [-2]
+
+
+def test_compile_f64_sqrt() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_sqrt_real")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_sqrt_real")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.F64_SQRT, [IrRegister(31), IrRegister(2)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_sqrt_real",
+                param_count=1,
+                export_name="sqrt_real",
+                param_types=(ValueType.F64,),
+                result_types=(ValueType.F64,),
+            )
+        ],
+    )
+
+    assert _runtime_result(module, "sqrt_real", [9.0]) == [3.0]
+    assert _runtime_result(module, "sqrt_real", [0.25]) == [0.5]
+
+
+@pytest.mark.parametrize(
+    ("opcode", "import_name", "arg", "expected"),
+    [
+        (IrOp.F64_SIN, "f64_sin", 0.0, 0.0),
+        (IrOp.F64_COS, "f64_cos", 0.0, 1.0),
+        (IrOp.F64_ATAN, "f64_atan", 1.0, 0.7853981633974483),
+        (IrOp.F64_LN, "f64_ln", 2.718281828459045, 1.0),
+        (IrOp.F64_EXP, "f64_exp", 1.0, 2.718281828459045),
+    ],
+)
+def test_compile_f64_unary_math_imports(
+    opcode: IrOp,
+    import_name: str,
+    arg: float,
+    expected: float,
+) -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_real_math")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_real_math")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(opcode, [IrRegister(31), IrRegister(2)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_real_math",
+                param_count=1,
+                export_name="real_math",
+                param_types=(ValueType.F64,),
+                result_types=(ValueType.F64,),
+            )
+        ],
+    )
+
+    assert [(imp.module_name, imp.name) for imp in module.imports] == [
+        ("compiler_math", import_name)
+    ]
+    result = _runtime_result(module, "real_math", [arg], host=WasiHost())
+    assert result == pytest.approx([expected])
+
+
+def test_compile_f64_pow_import() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_real_pow")
+    program.add_instruction(
+        IrInstruction(IrOp.LABEL, [IrLabel("_fn_real_pow")], id=-1)
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.F64_POW,
+            [IrRegister(31), IrRegister(2), IrRegister(3)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(
+                label="_fn_real_pow",
+                param_count=2,
+                export_name="real_pow",
+                param_types=(ValueType.F64, ValueType.F64),
+                result_types=(ValueType.F64,),
+            )
+        ],
+    )
+
+    assert [(imp.module_name, imp.name) for imp in module.imports] == [
+        ("compiler_math", "f64_pow")
+    ]
+    result = _runtime_result(module, "real_pow", [9.0, 0.5], host=WasiHost())
+    assert result == pytest.approx([3.0])
 
 
 def test_compile_function_call_and_run_it() -> None:

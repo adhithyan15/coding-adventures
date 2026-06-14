@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/forme-doc-page-shell",
+  "version": "0.1.0",
+  "description": "RTD-minimal two-column HTML page-shell: sidebar on the left, content in the middle, optional in-page TOC on the right.  Header bar with site title / GitHub link / search input; footer with version / 'edit this page' link / copyright.  Emits { head, body } HTML chunks suitable for `forme-aot-html-doc-emitter` to wrap into a full document.  All user-supplied strings HTML-escaped; URL scheme allowlist defeats `javascript:` injection.  Pure transform, capability [].  DOC00 v0 site-structure package.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

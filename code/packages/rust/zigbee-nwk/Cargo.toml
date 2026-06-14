@@ -1,0 +1,9 @@
+[package]
+name = "zigbee-nwk"
+version = "0.1.0"
+edition = "2021"
+description = "Zigbee network-layer frame and address primitives built above IEEE 802.15.4"
+license = "MIT"
+
+[dependencies]
+ieee802154-core = { path = "../ieee802154-core" }

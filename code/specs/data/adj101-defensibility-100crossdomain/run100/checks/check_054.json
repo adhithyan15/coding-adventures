@@ -1,0 +1,8 @@
+{
+ "check_id": 54,
+ "idx": 21,
+ "slot": "declared_customs_value",
+ "claimed_value": 2000,
+ "scenario": "A shipment of ceramic tiles arrives at the border with a declared customs value of $2,000.",
+ "cited_span": "a declared customs value of $2,000"
+}

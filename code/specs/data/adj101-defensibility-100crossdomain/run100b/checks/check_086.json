@@ -1,0 +1,8 @@
+{
+ "check_id": 86,
+ "idx": 36,
+ "slot": "tipper_received_personal_benefit",
+ "claimed_value": false,
+ "scenario": "Avery received a tip about Crest Corp's unannounced earnings miss from an insider, Sam. Avery traded on the information and profited. It is established that Sam disclosed the information by accident during an unrelated conversation and received no personal benefit of any kind — no money, no gift, no reputational gain, and no familial or friendship benefit.",
+ "cited_span": "received no personal benefit of any kind — no money, no gift, no reputational gain, and no familial or friendship benefit"
+}

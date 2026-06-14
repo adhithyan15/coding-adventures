@@ -899,6 +899,49 @@ pub fn encode_and_layout(
     barcode_2d::layout(&grid, &cfg).map_err(|e| AztecError::LayoutError(format!("{:?}", e)))
 }
 
+/// Encode raw bytes as an Aztec Code symbol and render it to PNG bytes.
+///
+/// This is the single-call convenience path from raw data to a PNG image.
+/// Internally it calls [`encode_and_layout`] to produce a [`PaintScene`],
+/// then delegates pixel rendering to `barcode_2d::render_scene_png`, which
+/// dispatches to the platform-default backend (Metal on macOS, Cairo on
+/// Linux, Direct2D on Windows, or Skia as a cross-platform fallback).
+///
+/// # Arguments
+///
+/// - `data` — the raw bytes to encode.
+/// - `options` — optional [`AztecOptions`] (e.g. custom ECC percentage).
+///   Pass `None` to use defaults (23% ECC).
+///
+/// # Returns
+///
+/// `Ok(Vec<u8>)` containing the PNG file bytes, starting with the standard
+/// PNG magic header `[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A]`.
+///
+/// # Errors
+///
+/// Returns `Err(String)` if:
+/// - The data is too long to fit in any Aztec symbol (`InputTooLong`).
+/// - The layout or rendering step fails (propagated as-is from barcode-2d).
+///
+/// # Example
+///
+/// ```rust
+/// use aztec_code::render_png;
+///
+/// let png_bytes = render_png(b"Hello, boarding pass!", None).unwrap();
+/// assert_eq!(&png_bytes[..4], b"\x89PNG");
+/// ```
+pub fn render_png(data: &[u8], options: Option<AztecOptions>) -> Result<Vec<u8>, String> {
+    // Build the PaintScene by encoding data into a ModuleGrid and then
+    // computing pixel geometry (module size, quiet zone, canvas dimensions).
+    let scene = encode_and_layout(data, options, None)
+        .map_err(|e| e.to_string())?;
+
+    // Rasterize the scene to PNG via barcode-2d's rendering hub.
+    barcode_2d::render_scene_png(&scene)
+}
+
 // ============================================================================
 // Tests
 // ============================================================================
@@ -1372,6 +1415,29 @@ mod tests {
         let g = encode("こんにちは".as_bytes(), None).unwrap();
         assert!(g.rows >= 15);
         assert_eq!(g.rows, g.cols);
+    }
+
+    // -----------------------------------------------------------------------
+    // render_png
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn aztec_code_render_png_produces_valid_png() {
+        // render_png should return PNG bytes whose first 8 bytes are the
+        // standard PNG magic signature: 0x89 'P' 'N' 'G' \r \n 0x1A \n.
+        // This signature is defined in the PNG specification (ISO 15948:2003).
+        let png = render_png(b"HELLO", None).unwrap();
+        let png_magic: [u8; 8] = [0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A];
+        assert!(
+            png.len() >= 8,
+            "PNG output too short ({} bytes)",
+            png.len()
+        );
+        assert_eq!(
+            &png[..8],
+            &png_magic,
+            "First 8 bytes are not a valid PNG magic header"
+        );
     }
 
     // -----------------------------------------------------------------------

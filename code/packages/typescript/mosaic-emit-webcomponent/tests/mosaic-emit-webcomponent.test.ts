@@ -639,3 +639,49 @@ describe("full integration", () => {
     expect(code).toContain("_title");
   });
 });
+
+// ============================================================================
+// 19. Primitive element coverage
+// ============================================================================
+//
+// The pre-existing suite covered Row + Text heavily; these tests fill in the
+// remaining primitives (Box, Column, Spacer, Scroll, Divider, Image) and the
+// a11y-heading-role promotion of Text→h2.
+
+describe("primitive element coverage", () => {
+  it("Box → div with position:relative", () => {
+    const code = compile("component X { Box {} }");
+    expect(code).toContain("position:relative");
+  });
+
+  it("Column → flex column", () => {
+    const code = compile("component X { Column {} }");
+    expect(code).toMatch(/flex-direction:column/);
+  });
+
+  it("Spacer → div with flex:1", () => {
+    const code = compile("component X { Spacer {} }");
+    expect(code).toContain("flex:1");
+  });
+
+  it("Scroll → div with overflow:auto", () => {
+    const code = compile("component X { Scroll {} }");
+    expect(code).toContain("overflow:auto");
+  });
+
+  it("Divider → self-closing hr with border-top", () => {
+    const code = compile("component X { Divider {} }");
+    expect(code).toContain("<hr");
+    expect(code).toContain("border-top:1px solid currentColor");
+  });
+
+  it("Image → self-closing img", () => {
+    const code = compile("component X { Image { src: \"foo.png\"; } }");
+    expect(code).toContain("<img");
+  });
+
+  it("Text with a11y-role heading is promoted to h2", () => {
+    const code = compile("component X { Text { content: \"H\"; a11y-role: heading; } }");
+    expect(code).toContain("<h2");
+  });
+});

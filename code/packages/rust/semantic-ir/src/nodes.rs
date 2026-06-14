@@ -1,0 +1,854 @@
+//! Node definitions for the narrow-waist Semantic IR.
+//!
+//! See SIR10 for the design discussion.  The goal of this module is
+//! to define exactly one Rust type per semantic concept the IR
+//! supports, so that backends can `match` on node kind and emit
+//! code without ever having to ask "what did the programmer mean
+//! here?".
+//!
+//! ## Reading guide
+//!
+//! Nodes form a tree rooted at [`Module`].  Each level introduces
+//! one or two concepts:
+//!
+//! - [`Module`] — top-level compilation unit; collects functions,
+//!   globals, imports/exports, manifest, metadata.
+//! - [`Function`] — a callable with typed params, optional return
+//!   type, captures (for closures), and a body block.
+//! - [`Block`] — a list of statements followed by a *value
+//!   expression*.  Every block produces a value; this rule lets the
+//!   backend always emit an expression-position result.
+//! - [`Stmt`] — three kinds: parallel `let`, sequential `let*`, and
+//!   bare expression statements.
+//! - [`Expr`] — the open-ended expression grammar; one variant per
+//!   semantic concept (atoms, references, control flow, calls,
+//!   closure construction, intrinsic escape hatch).
+
+use crate::effects::EffectSet;
+use crate::manifest::FeatureManifest;
+use crate::metadata::Metadata;
+use crate::span::Span;
+use crate::types::SirType;
+
+// ---------------------------------------------------------------------------
+// Module-level structure
+// ---------------------------------------------------------------------------
+
+/// A compilation unit.
+///
+/// ```text
+/// Module
+///   ├── name        : String                  — module identifier
+///   ├── manifest    : FeatureManifest         — features used
+///   ├── imports     : Vec<Import>             — referenced modules
+///   ├── exports     : Vec<ExportName>         — names this module exposes
+///   ├── functions   : Vec<Function>           — function table
+///   ├── globals     : Vec<Global>             — top-level value bindings
+///   ├── metadata    : Metadata                — advisory info
+///   └── span        : Span                    — source position
+/// ```
+///
+/// Note: `Eq` is intentionally omitted because [`Expr::FloatLit`] holds
+/// a raw `f64`, which only implements `PartialEq` (NaN ≠ NaN).  All
+/// types that transitively contain `Expr` follow the same rule.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Module {
+    pub name: String,
+    pub manifest: FeatureManifest,
+    pub imports: Vec<Import>,
+    pub exports: Vec<ExportName>,
+    pub functions: Vec<Function>,
+    pub globals: Vec<Global>,
+    pub metadata: Metadata,
+    pub span: Span,
+}
+
+/// An imported module reference.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Import {
+    pub module_path: String,
+    pub names: Vec<ImportName>,
+    pub span: Span,
+}
+
+/// A name imported from another module.  `local_name` may differ
+/// from `source_name` to support renaming on import.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ImportName {
+    pub source_name: String,
+    pub local_name: String,
+}
+
+/// A name this module exposes to other modules.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ExportName {
+    pub name: String,
+    pub span: Span,
+}
+
+/// A top-level value binding.
+///
+/// The actual initialization expression lives in the synthesised
+/// `_init` function (referenced by `init_function`).  This separation
+/// keeps `Global` a pure declaration; backends can still emit
+/// native top-level `let`/`var` declarations by recognising the
+/// `global_set` calls inside `_init` (SIR12 covers the convention).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Global {
+    pub name: String,
+    pub sir_type: Option<SirType>,
+    pub init_function: String,
+    pub span: Span,
+}
+
+// ---------------------------------------------------------------------------
+// Function
+// ---------------------------------------------------------------------------
+
+/// A callable with parameters, an optional return type, optional
+/// captures (for closure bodies), an effect annotation, and a
+/// `Block` body.
+///
+/// A function with non-empty `captures` is a closure body — it is
+/// referenced by `MakeClosure { fn_name, ... }` rather than called
+/// directly.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Function {
+    pub name: String,
+    pub params: Vec<Param>,
+    pub return_type: Option<SirType>,
+    pub captures: Vec<Capture>,
+    pub body: Block,
+    pub effects: EffectSet,
+    pub metadata: Metadata,
+    pub span: Span,
+}
+
+/// A function parameter.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Param {
+    pub name: String,
+    pub sir_type: Option<SirType>,
+    pub span: Span,
+}
+
+/// A capture binding.  Note: no `span` field — captures originate
+/// from the call site (`MakeClosure`'s `CaptureValue`), not from a
+/// source position inside the function body.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Capture {
+    pub name: String,
+    pub sir_type: Option<SirType>,
+}
+
+// ---------------------------------------------------------------------------
+// Blocks, statements, expressions
+// ---------------------------------------------------------------------------
+
+/// A list of statements followed by a value expression.
+///
+/// Every `Block` produces a value (`value`).  This means a SIR
+/// program is fully expression-oriented at the block boundary: the
+/// `body` of an `If`, a `Function`, or a let binding always yields
+/// a typed value.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Block {
+    pub stmts: Vec<Stmt>,
+    pub value: Expr,
+    pub span: Span,
+}
+
+/// One `rescue` clause of a [`Stmt::TryCatch`] (SIR17, Ruby Phase 16a).
+///
+/// A `begin … rescue … end` may carry several `rescue` clauses, each
+/// matching a (possibly empty) set of exception classes and optionally
+/// binding the caught exception to a local.
+#[derive(Debug, Clone, PartialEq)]
+pub struct RescueClause {
+    /// Exception class names this clause matches (`rescue Foo, Bar`).
+    /// **Empty** means a bare `rescue` (catch-all).  These are advisory
+    /// names only: SIR v0 has no exception-class symbol table, so the
+    /// validator does not resolve them (mirroring `ClassDef.superclass`).
+    pub exception_types: Vec<String>,
+    /// Optional binding for the caught exception (`rescue … => e`).
+    /// When `Some`, the name is in scope as a `Scope::Local` within
+    /// `body` only.
+    pub binding: Option<String>,
+    /// The clause body, a bare statement list (no trailing value slot,
+    /// like `ClassDef.body`).
+    pub body: Vec<Stmt>,
+    pub span: Span,
+}
+
+/// Statement kinds.
+///
+/// SIR v0 had only `LetBinding`, `LetStarBinding`, and `ExprStmt`.
+/// SIR16 (Python/JS interop) extends this with mutation (`Assign`),
+/// loops (`While`, `ForRange`, `ForEach`), and indexed assignment on
+/// sequences and maps (`SeqSet`, `MapSet`).
+#[derive(Debug, Clone, PartialEq)]
+pub enum Stmt {
+    /// Parallel-let semantics.  Multiple consecutive `LetBinding`
+    /// statements have their RHS evaluated in the scope outside the
+    /// group; they may run in any order.
+    LetBinding {
+        name: String,
+        sir_type: Option<SirType>,
+        value: Expr,
+        span: Span,
+    },
+    /// Sequential-let* semantics.  Each RHS sees prior `LetStarBinding`s
+    /// in the same group.  Order is observable.
+    LetStarBinding {
+        name: String,
+        sir_type: Option<SirType>,
+        value: Expr,
+        span: Span,
+    },
+    /// A bare expression evaluated for its side effects.
+    ExprStmt { expr: Expr, span: Span },
+
+    // ── SIR16: mutation ────────────────────────────────────────────
+    /// Re-bind an already-declared name.  Frontends use `LetBinding`
+    /// for first-occurrence binding and `Assign` for subsequent
+    /// re-assignments.  `scope` is the same enum used by `VarRef`.
+    Assign {
+        name: String,
+        scope: Scope,
+        value: Expr,
+        span: Span,
+    },
+
+    // ── SIR16: loops ────────────────────────────────────────────────
+    /// `while <cond>: <body>` — body re-executes while `cond` is truthy.
+    While { cond: Expr, body: Block, span: Span },
+    /// `for var in range(start, stop, step): body`.  Half-open: `stop`
+    /// is exclusive.  `step` is typically `IntLit(1)`.
+    ForRange {
+        var: String,
+        start: Expr,
+        stop: Expr,
+        step: Expr,
+        body: Block,
+        span: Span,
+    },
+    /// `for var in iter: body` — iterates a Seq.
+    ForEach {
+        var: String,
+        iter: Expr,
+        body: Block,
+        span: Span,
+    },
+
+    // ── SIR16: indexed assignment ──────────────────────────────────
+    /// `seq[index] = value` — mutate a sequence element.
+    SeqSet {
+        seq: Expr,
+        index: Expr,
+        value: Expr,
+        span: Span,
+    },
+    /// `map[key] = value` — set a map entry.
+    MapSet {
+        map: Expr,
+        key: Expr,
+        value: Expr,
+        span: Span,
+    },
+
+    // ── SIR17: class declarations ──────────────────────────────────
+    /// `class Name; body; end` — a class declaration.
+    ///
+    /// SIR v0 represents a class as a named declaration whose body is
+    /// itself a list of statements.  Phase 14a (Ruby frontend) lands
+    /// the *empty-body* case: `class Foo; end` lowers to
+    /// `ClassDef { name: "Foo", body: vec![], span }`.  Method bodies
+    /// are *not* nested here yet — they continue to be hoisted to
+    /// top-level `Function`s by the Ruby lowerer's existing pass
+    /// (see ruby-to-semantic-ir Phase 6f).  Later Ruby phases (14b)
+    /// will populate `body` directly so methods nest under their
+    /// owning class.
+    ///
+    /// Why a `Vec<Stmt>` body rather than `Block`?  A class body
+    /// produces no value — it is a declaration, not an expression —
+    /// so the per-Block trailing `value` field doesn't apply.
+    /// Backends emit each statement in source order.
+    ///
+    /// `superclass` (SIR17, Ruby Phase 14c) carries the parent class
+    /// name for `class Foo < Bar` — `Some("Bar")` — and is `None` for
+    /// a base class (`class Foo`).  It is an advisory name only: SIR v0
+    /// has no class symbol table, so the validator does not resolve it
+    /// (mirroring how the class's own `name` is not bound as a local).
+    ClassDef {
+        name: String,
+        superclass: Option<String>,
+        body: Vec<Stmt>,
+        span: Span,
+    },
+
+    /// `module Name; body; end` — a module (namespace / mixin)
+    /// declaration.  Structurally a `ClassDef` without inheritance:
+    /// a named declaration whose `body` is a list of statements.
+    ///
+    /// Introduced by the Ruby frontend's Phase 14d.  Like `ClassDef`,
+    /// method `def`s inside the body are hoisted to top-level
+    /// `Function`s by the lowerer (SIR v0 has no method-as-statement
+    /// node); the `body` carries the module's *non-def* statements in
+    /// source order.  A module has no superclass, so there is no
+    /// `superclass` field.
+    ModuleDef {
+        name: String,
+        body: Vec<Stmt>,
+        span: Span,
+    },
+
+    /// `class << receiver; body; end` — a singleton-class (metaclass)
+    /// declaration.  Introduced by the Ruby frontend's Phase 14e.
+    ///
+    /// `target` is the receiver whose singleton class is opened — the
+    /// dominant idiom is `class << self` (`target = "self"`), but a
+    /// bare object name is also accepted (`class << obj`).  Like
+    /// `ClassDef`/`ModuleDef`, method `def`s inside the body are
+    /// hoisted to top-level `Function`s by the lowerer; `body` carries
+    /// the non-`def` statements.  Triggers `Feature::Classes` (a
+    /// singleton class is a class-opening construct, not a new
+    /// feature).
+    SingletonClassDef {
+        target: String,
+        body: Vec<Stmt>,
+        span: Span,
+    },
+
+    // ── SIR17: exception handling ──────────────────────────────────
+    /// `begin; body; rescue …; ensure …; end` — structured exception
+    /// handling.  Introduced by the Ruby frontend's Phase 16a, which
+    /// replaces the earlier `__rescue_marker__` / `__ensure_marker__`
+    /// inline `BuiltinCall` placeholders with this first-class node.
+    ///
+    /// - `body` runs first (a bare statement list, like `ClassDef.body`).
+    /// - `rescues` are tried in order if `body` raises; each
+    ///   [`RescueClause`] matches a set of exception classes and may
+    ///   bind the exception.
+    /// - `ensure_body`, when `Some`, runs unconditionally afterwards.
+    ///
+    /// Gated by `Feature::Exceptions`; backends that don't accept it
+    /// reject the module at the capability check before emit.
+    TryCatch {
+        body: Vec<Stmt>,
+        rescues: Vec<RescueClause>,
+        ensure_body: Option<Vec<Stmt>>,
+        span: Span,
+    },
+}
+
+impl Stmt {
+    pub fn span(&self) -> &Span {
+        match self {
+            Stmt::LetBinding { span, .. } => span,
+            Stmt::LetStarBinding { span, .. } => span,
+            Stmt::ExprStmt { span, .. } => span,
+            Stmt::Assign { span, .. } => span,
+            Stmt::While { span, .. } => span,
+            Stmt::ForRange { span, .. } => span,
+            Stmt::ForEach { span, .. } => span,
+            Stmt::SeqSet { span, .. } => span,
+            Stmt::MapSet { span, .. } => span,
+            Stmt::ClassDef { span, .. } => span,
+            Stmt::ModuleDef { span, .. } => span,
+            Stmt::SingletonClassDef { span, .. } => span,
+            Stmt::TryCatch { span, .. } => span,
+        }
+    }
+}
+
+/// Scope tag attached to every variable reference.  Frontend commits
+/// to a scope at lowering time; the backend never re-resolves.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Scope {
+    /// Bound by `let` / `let*` in the current scope chain.
+    Local,
+    /// Function parameter.
+    Param,
+    /// Captured from an enclosing scope (closure body only).
+    Capture,
+    /// Top-level value binding in this module.
+    Global,
+    /// Language built-in (`+`, `cons`, etc.).
+    Builtin,
+    /// Object instance variable (Ruby `@x`).  Unlike `Local`, an
+    /// instance variable needs **no prior declaration**: reading an
+    /// unset `@x` yields nil in Ruby, so the validator performs no
+    /// scope-existence check for this kind.  The leading `@` sigil is
+    /// preserved in the `VarRef` / `Assign` name.  Introduced by the
+    /// Ruby frontend's Phase 15a; gated by `Feature::InstanceVars`.
+    Instance,
+    /// Class variable (Ruby `@@x`).  Like `Instance`, it needs **no
+    /// prior declaration** (the validator performs no scope-existence
+    /// check) — but it is shared across the class hierarchy rather than
+    /// per-object.  The leading `@@` sigil is preserved in the name.
+    /// Introduced by the Ruby frontend's Phase 15b; gated by
+    /// `Feature::ClassVars`.
+    ClassVar,
+    /// Constant (Ruby `FOO`, `MyClass` — any name whose first letter is
+    /// uppercase).  Like `Instance`/`ClassVar`, it needs **no prior
+    /// declaration** in the SIR sense (the validator performs no
+    /// scope-existence check): a constant is resolved against the
+    /// enclosing lexical/constant scope at runtime, not against a `let`
+    /// binding.  The name is preserved verbatim.  Introduced by the
+    /// Ruby frontend's Phase 15c; gated by `Feature::Constants`.
+    Const,
+}
+
+impl Scope {
+    /// Kebab-case name used by the SIR text format.
+    pub fn name(&self) -> &'static str {
+        match self {
+            Scope::Local => "local",
+            Scope::Param => "param",
+            Scope::Capture => "capture",
+            Scope::Global => "global",
+            Scope::Builtin => "builtin",
+            Scope::Instance => "instance",
+            Scope::ClassVar => "class-var",
+            Scope::Const => "const",
+        }
+    }
+
+    /// Inverse of [`name`].
+    pub fn from_name(s: &str) -> Option<Scope> {
+        Some(match s {
+            "local" => Scope::Local,
+            "param" => Scope::Param,
+            "capture" => Scope::Capture,
+            "global" => Scope::Global,
+            "builtin" => Scope::Builtin,
+            "instance" => Scope::Instance,
+            "class-var" => Scope::ClassVar,
+            "const" => Scope::Const,
+            _ => return None,
+        })
+    }
+}
+
+/// The expression grammar.  Every variant is a distinct semantic
+/// concept.  Backends `match` on the variant and emit code; the IR
+/// guarantees this match is exhaustive.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Expr {
+    // ── atomic literals ────────────────────────────────────────────
+    IntLit { value: i64, span: Span },
+    BoolLit { value: bool, span: Span },
+    NilLit { span: Span },
+    SymLit { name: String, span: Span },
+    StrLit { value: String, span: Span },
+
+    // ── reference ───────────────────────────────────────────────────
+    VarRef {
+        name: String,
+        scope: Scope,
+        span: Span,
+    },
+
+    // ── control flow / sequencing ──────────────────────────────────
+    If {
+        cond: Box<Expr>,
+        then_branch: Box<Block>,
+        else_branch: Box<Block>,
+        span: Span,
+    },
+    Block(Box<Block>),
+
+    // ── calls (three distinct kinds) ───────────────────────────────
+    /// A call to a top-level function known by name.
+    DirectCall {
+        fn_name: String,
+        args: Vec<Expr>,
+        effects: EffectSet,
+        span: Span,
+    },
+    /// A call through a value (closure handle) at runtime.
+    IndirectCall {
+        target: Box<Expr>,
+        args: Vec<Expr>,
+        effects: EffectSet,
+        span: Span,
+    },
+    /// A call to a language builtin.
+    BuiltinCall {
+        name: String,
+        args: Vec<Expr>,
+        effects: EffectSet,
+        span: Span,
+    },
+
+    // ── closure construction ───────────────────────────────────────
+    MakeClosure {
+        fn_name: String,
+        captures: Vec<CaptureValue>,
+        span: Span,
+    },
+
+    // ── escape hatch ───────────────────────────────────────────────
+    Intrinsic {
+        targets: Vec<String>,
+        name: String,
+        args: Vec<Expr>,
+        return_type: SirType,
+        effects: EffectSet,
+        span: Span,
+    },
+
+    // ── SIR16: floats ──────────────────────────────────────────────
+    /// 64-bit floating-point literal.
+    FloatLit { value: f64, span: Span },
+
+    // ── SIR16: sequences ───────────────────────────────────────────
+    /// `[item0, item1, ...]` literal.
+    SeqLit { items: Vec<Expr>, span: Span },
+    /// `seq[index]` — 0-indexed.  Out-of-bounds behaviour is target-
+    /// language-defined.
+    SeqIndex {
+        seq: Box<Expr>,
+        index: Box<Expr>,
+        span: Span,
+    },
+    /// `len(seq)` — convenience operator distinct from `BuiltinCall("len", ...)`
+    /// so backends can emit native length access (`xs.length` /
+    /// `len(xs)` / `xs.len()`).  Frontends should prefer this node
+    /// over the builtin form.
+    SeqLen { seq: Box<Expr>, span: Span },
+
+    // ── SIR16: maps ────────────────────────────────────────────────
+    /// `{key: value, ...}` literal.
+    MapLit { entries: Vec<MapEntry>, span: Span },
+    /// `map[key]` — missing-key behaviour is target-language-defined.
+    MapGet {
+        map: Box<Expr>,
+        key: Box<Expr>,
+        span: Span,
+    },
+
+    // ── SIR16: short-circuit logical ───────────────────────────────
+    /// `lhs && rhs` / `lhs and rhs` — short-circuits.  Distinct from
+    /// `BuiltinCall("and", ...)` because the latter would eagerly
+    /// evaluate both arguments before invoking the helper.
+    LogicalAnd {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+    /// `lhs || rhs` / `lhs or rhs` — short-circuits.
+    LogicalOr {
+        lhs: Box<Expr>,
+        rhs: Box<Expr>,
+        span: Span,
+    },
+
+    // ── SIR18: string interpolation ────────────────────────────────
+    /// String concatenation of two or more `parts`, evaluated left to
+    /// right and joined into a single string.  This is the first-class
+    /// replacement for the v0 `BuiltinCall("string_concat", parts)`
+    /// marker that Ruby's `"a#{x}b"` interpolation used to lower to —
+    /// the same relationship `SeqLen` has to `BuiltinCall("len", ...)`
+    /// or `TryCatch` has to the old `__rescue_marker__` builtin.
+    ///
+    /// Giving concatenation a dedicated node lets a backend emit native
+    /// string building (`format!` / template literals / f-strings)
+    /// instead of routing through a runtime helper, and lets the
+    /// validator track interpolation usage via
+    /// `Feature::StringInterpolation` distinctly from a plain `StrLit`.
+    ///
+    /// Invariant: `parts.len() >= 2`.  A zero- or one-part concat is
+    /// degenerate — frontends emit a bare `StrLit` (empty string) or the
+    /// single part directly rather than wrapping it.
+    StrConcat { parts: Vec<Expr>, span: Span },
+}
+
+/// A single capture provided to `MakeClosure`.  The `name` matches a
+/// `Capture` in the referenced Function; `value` is evaluated at the
+/// call site and stored in the closure handle.
+#[derive(Debug, Clone, PartialEq)]
+pub struct CaptureValue {
+    pub name: String,
+    pub value: Expr,
+}
+
+/// A single key/value entry in a `MapLit`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MapEntry {
+    pub key: Expr,
+    pub value: Expr,
+}
+
+impl Expr {
+    /// Source span of the expression.
+    pub fn span(&self) -> &Span {
+        match self {
+            Expr::IntLit { span, .. } => span,
+            Expr::BoolLit { span, .. } => span,
+            Expr::NilLit { span } => span,
+            Expr::SymLit { span, .. } => span,
+            Expr::StrLit { span, .. } => span,
+            Expr::VarRef { span, .. } => span,
+            Expr::If { span, .. } => span,
+            Expr::Block(b) => &b.span,
+            Expr::DirectCall { span, .. } => span,
+            Expr::IndirectCall { span, .. } => span,
+            Expr::BuiltinCall { span, .. } => span,
+            Expr::MakeClosure { span, .. } => span,
+            Expr::Intrinsic { span, .. } => span,
+            Expr::FloatLit { span, .. } => span,
+            Expr::SeqLit { span, .. } => span,
+            Expr::SeqIndex { span, .. } => span,
+            Expr::SeqLen { span, .. } => span,
+            Expr::MapLit { span, .. } => span,
+            Expr::MapGet { span, .. } => span,
+            Expr::LogicalAnd { span, .. } => span,
+            Expr::LogicalOr { span, .. } => span,
+            Expr::StrConcat { span, .. } => span,
+        }
+    }
+
+    /// A short discriminator string for diagnostics — the head
+    /// keyword of the text format.
+    pub fn kind_name(&self) -> &'static str {
+        match self {
+            Expr::IntLit { .. } => "int",
+            Expr::BoolLit { .. } => "bool",
+            Expr::NilLit { .. } => "nil",
+            Expr::SymLit { .. } => "sym",
+            Expr::StrLit { .. } => "str",
+            Expr::VarRef { .. } => "var-ref",
+            Expr::If { .. } => "if",
+            Expr::Block(_) => "block",
+            Expr::DirectCall { .. } => "direct-call",
+            Expr::IndirectCall { .. } => "indirect-call",
+            Expr::BuiltinCall { .. } => "builtin-call",
+            Expr::MakeClosure { .. } => "make-closure",
+            Expr::Intrinsic { .. } => "intrinsic",
+            Expr::FloatLit { .. } => "float",
+            Expr::SeqLit { .. } => "seq",
+            Expr::SeqIndex { .. } => "seq-index",
+            Expr::SeqLen { .. } => "seq-len",
+            Expr::MapLit { .. } => "map",
+            Expr::MapGet { .. } => "map-get",
+            Expr::LogicalAnd { .. } => "and",
+            Expr::LogicalOr { .. } => "or",
+            Expr::StrConcat { .. } => "str-concat",
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::span::Span;
+
+    fn s() -> Span {
+        Span::point("<t>", 1, 1)
+    }
+
+    #[test]
+    fn expr_span_helper() {
+        let e = Expr::IntLit { value: 42, span: s() };
+        assert_eq!(e.span(), &s());
+        assert_eq!(e.kind_name(), "int");
+    }
+
+    #[test]
+    fn scope_name_round_trips() {
+        for sc in [
+            Scope::Local,
+            Scope::Param,
+            Scope::Capture,
+            Scope::Global,
+            Scope::Builtin,
+        ] {
+            assert_eq!(Scope::from_name(sc.name()), Some(sc));
+        }
+        assert_eq!(Scope::from_name("bogus"), None);
+    }
+
+    #[test]
+    fn stmt_span_helper() {
+        let st = Stmt::ExprStmt {
+            expr: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        assert_eq!(st.span(), &s());
+    }
+
+    #[test]
+    fn sir16_stmt_kinds_have_spans() {
+        // Exercise span() for every new statement variant so a future
+        // refactor that drops a span field gets caught here.
+        let cases: Vec<Stmt> = vec![
+            Stmt::Assign {
+                name: "x".into(),
+                scope: Scope::Local,
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            },
+            Stmt::While {
+                cond: Expr::BoolLit { value: true, span: s() },
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                span: s(),
+            },
+            Stmt::ForRange {
+                var: "i".into(),
+                start: Expr::IntLit { value: 0, span: s() },
+                stop: Expr::IntLit { value: 10, span: s() },
+                step: Expr::IntLit { value: 1, span: s() },
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                span: s(),
+            },
+            Stmt::ForEach {
+                var: "x".into(),
+                iter: Expr::SeqLit { items: vec![], span: s() },
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                span: s(),
+            },
+            Stmt::SeqSet {
+                seq: Expr::VarRef { name: "xs".into(), scope: Scope::Local, span: s() },
+                index: Expr::IntLit { value: 0, span: s() },
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            },
+            Stmt::MapSet {
+                map: Expr::VarRef { name: "d".into(), scope: Scope::Local, span: s() },
+                key: Expr::StrLit { value: "k".into(), span: s() },
+                value: Expr::IntLit { value: 1, span: s() },
+                span: s(),
+            },
+        ];
+        for st in &cases {
+            assert_eq!(st.span(), &s());
+        }
+    }
+
+    #[test]
+    fn sir16_expr_kind_names() {
+        let span = s();
+        let cases: Vec<(Expr, &'static str)> = vec![
+            (Expr::FloatLit { value: 3.14, span: span.clone() }, "float"),
+            (Expr::SeqLit { items: vec![], span: span.clone() }, "seq"),
+            (
+                Expr::SeqIndex {
+                    seq: Box::new(Expr::NilLit { span: span.clone() }),
+                    index: Box::new(Expr::IntLit { value: 0, span: span.clone() }),
+                    span: span.clone(),
+                },
+                "seq-index",
+            ),
+            (
+                Expr::SeqLen {
+                    seq: Box::new(Expr::NilLit { span: span.clone() }),
+                    span: span.clone(),
+                },
+                "seq-len",
+            ),
+            (Expr::MapLit { entries: vec![], span: span.clone() }, "map"),
+            (
+                Expr::MapGet {
+                    map: Box::new(Expr::NilLit { span: span.clone() }),
+                    key: Box::new(Expr::NilLit { span: span.clone() }),
+                    span: span.clone(),
+                },
+                "map-get",
+            ),
+            (
+                Expr::LogicalAnd {
+                    lhs: Box::new(Expr::BoolLit { value: true, span: span.clone() }),
+                    rhs: Box::new(Expr::BoolLit { value: false, span: span.clone() }),
+                    span: span.clone(),
+                },
+                "and",
+            ),
+            (
+                Expr::LogicalOr {
+                    lhs: Box::new(Expr::BoolLit { value: true, span: span.clone() }),
+                    rhs: Box::new(Expr::BoolLit { value: false, span: span.clone() }),
+                    span: span.clone(),
+                },
+                "or",
+            ),
+            (
+                Expr::StrConcat {
+                    parts: vec![
+                        Expr::StrLit { value: "a".into(), span: span.clone() },
+                        Expr::StrLit { value: "b".into(), span: span.clone() },
+                    ],
+                    span: span.clone(),
+                },
+                "str-concat",
+            ),
+        ];
+        for (e, expected) in &cases {
+            assert_eq!(e.kind_name(), *expected);
+            assert_eq!(e.span(), &span);
+        }
+    }
+
+    #[test]
+    fn float_lit_partial_eq_handles_nan() {
+        // f64::NAN is never equal to itself — Expr only impls
+        // PartialEq, not Eq, and that's the reason.  This test pins
+        // the contract.
+        let a = Expr::FloatLit { value: f64::NAN, span: s() };
+        let b = Expr::FloatLit { value: f64::NAN, span: s() };
+        assert_ne!(a, b);
+        let c = Expr::FloatLit { value: 3.14, span: s() };
+        let d = Expr::FloatLit { value: 3.14, span: s() };
+        assert_eq!(c, d);
+    }
+
+    #[test]
+    fn expr_kind_names_exhaustive() {
+        let span = s();
+        let cases: Vec<Expr> = vec![
+            Expr::IntLit { value: 1, span: span.clone() },
+            Expr::BoolLit { value: true, span: span.clone() },
+            Expr::NilLit { span: span.clone() },
+            Expr::SymLit { name: "x".into(), span: span.clone() },
+            Expr::StrLit { value: "y".into(), span: span.clone() },
+            Expr::VarRef { name: "z".into(), scope: Scope::Local, span: span.clone() },
+            Expr::DirectCall {
+                fn_name: "f".into(),
+                args: vec![],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            },
+            Expr::BuiltinCall {
+                name: "+".into(),
+                args: vec![],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            },
+            Expr::MakeClosure {
+                fn_name: "__lambda_0".into(),
+                captures: vec![],
+                span: span.clone(),
+            },
+        ];
+        let names: Vec<&'static str> = cases.iter().map(Expr::kind_name).collect();
+        assert_eq!(
+            names,
+            vec![
+                "int", "bool", "nil", "sym", "str", "var-ref",
+                "direct-call", "builtin-call", "make-closure"
+            ]
+        );
+    }
+}

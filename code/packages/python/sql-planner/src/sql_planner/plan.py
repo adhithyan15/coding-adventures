@@ -50,6 +50,18 @@ class Scan:
     references using it — the codegen uses the alias (or table name if none)
     to look up column values on the row the scan yields.
 
+    SQLite query hints carried through from the FROM clause:
+
+    - ``index_hint`` — if set, the planner is required to use this index
+      via :class:`IndexScan` substitution.  An error is raised at plan
+      time if the named index doesn't exist on the table.  Mirrors
+      ``INDEXED BY <name>``.
+    - ``not_indexed`` — if True, the planner must NOT substitute an
+      :class:`IndexScan` for this scan.  Mirrors ``NOT INDEXED``.
+
+    Exactly one of ``index_hint`` and ``not_indexed`` may be set (the
+    adapter enforces mutual exclusion at parse time).
+
     Optimizer-added annotations (always None from the planner):
 
     - ``required_columns`` — if set, the column subset the query actually
@@ -63,6 +75,8 @@ class Scan:
     alias: str | None = None
     required_columns: tuple[str, ...] | None = None
     scan_limit: int | None = None
+    index_hint: str | None = None
+    not_indexed: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -76,6 +90,29 @@ class EmptyResult:
     """
 
     columns: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class SingleRow:
+    """Leaf node: yields exactly one empty row. Used for SELECT without FROM.
+
+    This is the semantic equivalent of SQLite's internal "dual" table — a
+    conceptual source of exactly one row with no columns. Any SELECT items
+    above it are evaluated exactly once, making it the correct scan base for
+    queries like::
+
+        SELECT 1 + 1
+        SELECT UPPER('hello')
+        SELECT CAST(3.14 AS INTEGER)
+        SELECT DATE('now')
+
+    The codegen executes the body function once with no cursor loop. No
+    AdvanceCursor, CloseScan, or jump instructions are emitted. This means
+    expressions in the SELECT list that reference columns will raise at
+    runtime (there are no columns on a rowless source), but the planner has
+    already validated that no unqualified column references appear in a
+    from-less SELECT during column resolution.
+    """
 
 
 # ---- Transform nodes ------------------------------------------------------
@@ -140,12 +177,27 @@ class AggregateItem:
     ``alias`` is the output column name. If the user wrote
     ``COUNT(*) AS n`` the alias is ``n``; otherwise the planner derives
     a default alias (``count``, ``sum_salary``) using standard SQL rules.
+
+    ``separator`` is only meaningful for ``GROUP_CONCAT``.  When ``None``
+    the VM uses the SQLite default of ``","`` .
+
+    ``output`` controls whether this aggregate appears as a column in the
+    query result.  When ``True`` (the default), the aggregate value is
+    emitted as an output column.  When ``False``, the slot is computed
+    during the aggregate pass (so HAVING / ORDER BY can reference it), but
+    the value is *not* included in the rows returned to the caller.  This
+    lets the planner represent aggregates used only in HAVING or ORDER BY
+    without leaking extra columns into the result.
     """
 
     func: AggFunc
     arg: FuncArg
     alias: str
     distinct: bool = False
+    separator: str | None = None    # GROUP_CONCAT only
+    key_arg: FuncArg | None = None  # JSON_GROUP_OBJECT only: the key expression
+    filter_expr: "Expr | None" = None  # FILTER (WHERE expr) — skip rows where False/NULL
+    output: bool = True  # False → compute but do not emit as a result column
 
 
 @dataclass(frozen=True, slots=True)
@@ -178,11 +230,25 @@ class Having:
 
 @dataclass(frozen=True, slots=True)
 class SortKey:
-    """One key in an ORDER BY clause."""
+    """One key in an ORDER BY clause.
+
+    ``positional_index``: when the ORDER BY expression was a positional
+    integer literal (``ORDER BY 1``, ``ORDER BY 2``, etc.), this field
+    is set to the corresponding 0-based output-column index.  The codegen
+    uses it to generate a position-based ``SortKey`` so the VM can look
+    up the column by index instead of by name — important when multiple
+    computed columns share the fallback display name ``"?"``.
+    """
 
     expr: Expr
     descending: bool = False
     nulls_first: bool | None = None  # None = backend default
+    positional_index: int | None = None  # 0-based; set when ORDER BY N
+    # COLLATE name from the SQL — carried through unchanged from the AST.
+    # ``None`` means BINARY (the default).  The VM applies the named
+    # transform when building the sort key (NOCASE → lowercase ASCII,
+    # RTRIM → strip trailing spaces).
+    collation: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -262,7 +328,46 @@ class Except:
     all: bool = False
 
 
-# ---- Derived table (subquery in FROM) -------------------------------------
+# ---- Derived table (subquery in FROM) and recursive CTEs ------------------
+
+
+@dataclass(frozen=True, slots=True)
+class WorkingSetScan:
+    """Leaf: scans the current iteration's working set inside a recursive CTE.
+
+    Used inside the recursive query plan where the CTE's self-reference appears.
+    The codegen emits only the ``AdvanceCursor`` loop — no ``OpenScan`` or
+    ``RunSubquery`` — because the VM's ``RunRecursiveCTE`` handler pre-populates
+    the cursor before each iteration.
+
+    ``alias`` matches the CTE name; ``columns`` is the anchor's output schema.
+    """
+
+    alias: str
+    columns: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class RecursiveCTE:
+    """Fixed-point iteration: anchor ∪ recursive(working_set) until working_set empty.
+
+    The planner produces this node when a SELECT's FROM clause references a
+    ``WITH RECURSIVE`` CTE.  The codegen compiles it to a ``RunRecursiveCTE``
+    instruction; the VM executes the fixed-point loop at runtime.
+
+    ``anchor`` is the base-case plan (evaluated once).  ``recursive`` contains
+    a :class:`WorkingSetScan` as its leaf, representing the self-reference.
+    ``columns`` is the anchor's output schema — used by the outer query to
+    resolve column references without executing anything.  ``union_all`` is
+    True for ``UNION ALL`` (keep all rows) and False for ``UNION``
+    (deduplicate accumulated rows after each iteration).
+    """
+
+    anchor: LogicalPlan
+    recursive: LogicalPlan
+    alias: str
+    columns: tuple[str, ...]
+    union_all: bool = True
 
 
 @dataclass(frozen=True, slots=True)
@@ -341,12 +446,76 @@ class InsertSource:
 
 
 @dataclass(frozen=True, slots=True)
+class UpsertAssignment:
+    """One column assignment in an ``ON CONFLICT DO UPDATE SET`` clause.
+
+    ``value`` may reference :class:`~sql_planner.expr.ExcludedColumn` to
+    access the would-be-inserted row's value for that column.
+    """
+
+    column: str
+    value: Expr
+
+
+@dataclass(frozen=True, slots=True)
+class UpsertAction:
+    """The resolved ``ON CONFLICT … DO …`` clause from an INSERT statement.
+
+    UPSERT semantics
+    ----------------
+    When an INSERT would violate a UNIQUE or PRIMARY KEY constraint:
+
+    - ``do_nothing=True``   → silently skip the conflicting row (like
+                              ``INSERT OR IGNORE`` but scoped to the specific
+                              constraint named by ``conflict_target``)
+    - ``do_nothing=False``  → apply ``assignments`` in-place on the existing
+                              conflicting row.  ``ExcludedColumn(col=c)``
+                              expressions inside ``assignments`` resolve to the
+                              would-be-inserted value for column ``c``.
+
+    conflict_target
+    ---------------
+    Column names naming the unique constraint to watch.  When empty, any
+    constraint violation fires the action.  The VM uses this to look up the
+    rowid of the conflicting existing row via ``backend.find_conflicting_row``.
+
+    Codegen uses this node to emit a ``UpsertSpec`` IR value that the VM
+    carries alongside each ``InsertRow`` / ``InsertFromResult`` instruction.
+    """
+
+    conflict_target: tuple[str, ...]  # empty = any unique constraint
+    do_nothing: bool = False
+    assignments: tuple[UpsertAssignment, ...] = ()  # populated when do_nothing=False
+    where: Expr | None = None  # optional conditional-upsert WHERE predicate
+
+
+@dataclass(frozen=True, slots=True)
 class Insert:
-    """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ...."""
+    """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ... [RETURNING ...].
+
+    ``on_conflict`` mirrors the SQL ``INSERT OR <action>`` clause and the
+    ``REPLACE INTO`` shorthand.  The VM uses it to decide what to do when a
+    constraint violation occurs:
+
+    - ``None``        — raise :class:`IntegrityError` (default)
+    - ``"REPLACE"``   — delete every conflicting row, then insert
+    - ``"IGNORE"``    — silently discard the new row and continue
+    - ``"ABORT"`` / ``"FAIL"`` / ``"ROLLBACK"`` — raise an error
+                        (full FAIL/ROLLBACK transaction semantics are left
+                        to the connection layer; the VM raises IntegrityError)
+
+    ``upsert`` holds the resolved ``ON CONFLICT … DO …`` plan node.  When
+    present it takes precedence over ``on_conflict`` for constraint handling.
+    The two may coexist in theory (``INSERT OR ABORT … ON CONFLICT DO NOTHING``
+    is syntactically valid) but in practice only one is used per statement.
+    """
 
     table: str
     columns: tuple[str, ...] | None  # None = implicit column list
     source: InsertSource
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert: UpsertAction | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -359,19 +528,21 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class Update:
-    """UPDATE t SET col = expr, ... WHERE predicate."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
 
     table: str
     assignments: tuple[Assignment, ...]
     predicate: Expr | None = None  # None = update every row
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
 class Delete:
-    """DELETE FROM t WHERE predicate."""
+    """DELETE FROM t WHERE predicate [RETURNING ...]."""
 
     table: str
     predicate: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 # ---- DDL nodes ------------------------------------------------------------
@@ -379,11 +550,18 @@ class Delete:
 
 @dataclass(frozen=True, slots=True)
 class CreateTable:
-    """CREATE TABLE. Column defs come from sql-backend unchanged."""
+    """CREATE TABLE. Column defs come from sql-backend unchanged.
+
+    ``strict`` carries the SQLite STRICT trailing-option through the plan
+    layer.  The codegen layer mirrors this field on its IR ``CreateTable``
+    instruction; the VM forwards it as a keyword arg to
+    :meth:`sql_backend.Backend.create_table`.
+    """
 
     table: str
     columns: tuple[ColumnDef, ...]
     if_not_exists: bool = False
+    strict: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -392,6 +570,22 @@ class DropTable:
 
     table: str
     if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class AlterTable:
+    """ALTER TABLE — four flavours, mirroring :class:`AlterTableStmt`.
+
+    Exactly one of ``column`` / ``rename_to`` / ``rename_column`` /
+    ``drop_column`` is non-None per instance; the codegen forwards
+    whichever is set to the IR node, and the VM dispatches on it.
+    """
+
+    table: str
+    column: ColumnDef | None = None
+    rename_to: str | None = None
+    rename_column: tuple[str, str] | None = None  # (old, new)
+    drop_column: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -413,6 +607,30 @@ class CreateIndex:
 @dataclass(frozen=True, slots=True)
 class DropIndex:
     """DROP INDEX [IF EXISTS] name."""
+
+    name: str
+    if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class CreateTrigger:
+    """CREATE TRIGGER plan node.
+
+    ``body_sql`` carries the raw SQL of the trigger body statements without
+    the surrounding BEGIN…END.  The VM stores it verbatim in the backend's
+    :class:`~sql_backend.schema.TriggerDef` and re-parses it at fire time.
+    """
+
+    name: str
+    timing: str   # "BEFORE" | "AFTER"
+    event: str    # "INSERT" | "UPDATE" | "DELETE"
+    table: str
+    body_sql: str
+
+
+@dataclass(frozen=True, slots=True)
+class DropTrigger:
+    """DROP TRIGGER [IF EXISTS] name."""
 
     name: str
     if_exists: bool = False
@@ -472,12 +690,129 @@ class IndexScan:
     residual: Expr | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class FrameBound:
+    """One endpoint of a window frame specification.
+
+    The ``kind`` field describes what this bound means:
+
+    - ``"UNBOUNDED_PRECEDING"`` — the start of the partition (always the first
+      row in physical/logical/group-count order).
+    - ``"PRECEDING"`` — ``offset`` rows/peers/groups before the current row.
+    - ``"CURRENT_ROW"`` — the current row (ROWS mode) or its peer group
+      (RANGE mode) or its peer-group count (GROUPS mode).
+    - ``"FOLLOWING"`` — ``offset`` rows/peers/groups after the current row.
+    - ``"UNBOUNDED_FOLLOWING"`` — the end of the partition.
+
+    The ``offset`` field is only meaningful when ``kind`` is ``"PRECEDING"``
+    or ``"FOLLOWING"``; all other kinds ignore it.
+    """
+
+    # UNBOUNDED_PRECEDING | PRECEDING | CURRENT_ROW | FOLLOWING | UNBOUNDED_FOLLOWING
+    kind: str
+    offset: int = 0    # N for N PRECEDING / N FOLLOWING; 0 otherwise
+
+
+@dataclass(frozen=True, slots=True)
+class WinFrame:
+    """Window frame clause (ROWS / RANGE / GROUPS BETWEEN start AND end).
+
+    A ``WinFrame`` is attached to a :class:`WindowFuncSpec` when the user
+    wrote an explicit ``ROWS BETWEEN … AND …`` (or similar) clause.  When
+    ``None`` is stored on the spec, the VM applies the SQL-standard default:
+
+    - No ORDER BY  →  ``RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED
+      FOLLOWING``  (full-partition aggregate).
+    - ORDER BY present  →  ``RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT
+      ROW``  (cumulative/running aggregate).
+
+    Fields
+    ------
+    unit:
+        ``"ROWS"`` (physical row offset), ``"RANGE"`` (peer-group extent),
+        or ``"GROUPS"`` (peer-group count offset).  The VM currently
+        implements ``ROWS`` and ``RANGE``; ``GROUPS`` is accepted by the
+        parser but treated as ``ROWS`` for simplicity.
+    start:
+        The lower bound of the frame.
+    end:
+        The upper bound of the frame.
+    """
+
+    unit: str           # "ROWS" | "RANGE" | "GROUPS"
+    start: FrameBound
+    end: FrameBound
+
+
+@dataclass(frozen=True, slots=True)
+class WindowFuncSpec:
+    """Specification for a single window function inside a :class:`WindowAgg` node.
+
+    One ``WindowFuncSpec`` is created per window function appearing in the
+    SELECT list.  The planner collects all window specs from resolved SELECT
+    items and emits a single ``WindowAgg`` node that post-processes every
+    window function in one pass.
+
+    Fields
+    ------
+    func:
+        Lower-case function name (``"row_number"``, ``"sum"``, …).
+    arg_expr:
+        The resolved argument expression, or ``None`` for arg-free functions
+        and ``COUNT(*)``.
+    partition_by:
+        Tuple of resolved partition key expressions.
+    order_by:
+        Tuple of ``(resolved_expr, descending)`` sort keys.
+    alias:
+        Output column name — the SELECT-item alias or a generated name.
+    frame:
+        Explicit window frame specification, or ``None`` to use the SQL
+        standard default (full partition when no ORDER BY; cumulative when
+        ORDER BY is present).
+    """
+
+    func: str
+    arg_expr: Expr | None
+    partition_by: tuple[Expr, ...]
+    order_by: tuple[tuple[Expr, bool], ...]
+    alias: str
+    extra_args: tuple[Expr, ...] = ()   # LAG/LEAD offset+default; NTH_VALUE n
+    frame: WinFrame | None = None       # explicit ROWS/RANGE/GROUPS BETWEEN … AND …
+
+
+@dataclass(frozen=True, slots=True)
+class WindowAgg:
+    """Post-process a materialised result buffer to compute window functions.
+
+    The ``input`` plan is compiled normally and its rows are collected into
+    the result buffer.  The VM then executes :class:`ComputeWindowFunctions`
+    which walks the buffer, groups rows by partition key, and evaluates each
+    window function to produce an additional output column.
+
+    ``output_cols`` is the final ordered column list the query presents to the
+    caller — it equals the inner projection columns *plus* the window function
+    alias columns.
+
+    Wrapper nodes (Sort, Limit, Distinct) may appear above WindowAgg; the
+    codegen correctly wraps ``ComputeWindowFunctions`` before those
+    post-processing steps.
+    """
+
+    input: LogicalPlan
+    specs: tuple[WindowFuncSpec, ...]
+    output_cols: tuple[str, ...]  # inner cols + window alias cols
+
+
 # The root union. Every plan function returns one of these.
 LogicalPlan = (
     Scan
     | IndexScan
     | EmptyResult
+    | SingleRow
     | DerivedTable
+    | WorkingSetScan
+    | RecursiveCTE
     | Filter
     | Project
     | Join
@@ -489,6 +824,7 @@ LogicalPlan = (
     | Union
     | Intersect
     | Except
+    | WindowAgg
     | Begin
     | Commit
     | Rollback
@@ -497,8 +833,11 @@ LogicalPlan = (
     | Delete
     | CreateTable
     | DropTable
+    | AlterTable
     | CreateIndex
     | DropIndex
+    | CreateTrigger
+    | DropTrigger
 )
 
 
@@ -518,17 +857,23 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
     plan nodes.
     """
     match node:
-        case Scan() | IndexScan() | EmptyResult() | CreateTable() | DropTable():
+        case Scan() | IndexScan() | EmptyResult() | SingleRow() | CreateTable() | DropTable():
             return ()
         case CreateIndex() | DropIndex():
             return ()
+        case CreateTrigger() | DropTrigger():
+            return ()
         case Begin() | Commit() | Rollback():
+            return ()
+        case WorkingSetScan():
             return ()
         case DerivedTable(query=q, alias=_, columns=_):
             return (q,)
+        case RecursiveCTE(anchor=a, recursive=r):
+            return (a, r)
         case (
             Filter() | Project() | Aggregate() | Having()
-            | Sort() | Limit() | Distinct()
+            | Sort() | Limit() | Distinct() | WindowAgg()
         ):
             return (node.input,)
         case Join() | Union() | Intersect() | Except():

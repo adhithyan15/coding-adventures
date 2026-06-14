@@ -3,6 +3,17 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-05-11
+
+### Added
+
+- `render_png(data: &[u8], options: Option<AztecOptions>) -> Result<Vec<u8>, String>` —
+  single-call convenience path from raw data to PNG bytes. Calls `encode_and_layout`
+  internally, then delegates to `barcode_2d::render_scene_png` which dispatches to the
+  platform-default rendering backend (Metal/Cairo/Direct2D/Skia).
+- Test `aztec_code_render_png_produces_valid_png` — verifies that the PNG magic header
+  `[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A]` is present in the output.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

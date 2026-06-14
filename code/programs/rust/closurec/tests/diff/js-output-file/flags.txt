@@ -1,0 +1,4 @@
+--js
+tests/diff/js-output-file/input/a.js
+--js
+tests/diff/js-output-file/input/b.js

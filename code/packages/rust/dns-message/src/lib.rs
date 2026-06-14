@@ -211,6 +211,7 @@ pub enum DnsRecordType {
     MX,
     TXT,
     AAAA,
+    SRV,
     Unknown(u16),
 }
 
@@ -225,6 +226,7 @@ impl DnsRecordType {
             15 => Self::MX,
             16 => Self::TXT,
             28 => Self::AAAA,
+            33 => Self::SRV,
             other => Self::Unknown(other),
         }
     }
@@ -239,6 +241,7 @@ impl DnsRecordType {
             Self::MX => 15,
             Self::TXT => 16,
             Self::AAAA => 28,
+            Self::SRV => 33,
             Self::Unknown(value) => value,
         }
     }
@@ -275,12 +278,23 @@ pub struct DnsQuestion {
     pub qclass: DnsClass,
 }
 
+/// DNS SRV record data used by DNS-SD and mDNS service discovery.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DnsSrvRecord {
+    pub priority: u16,
+    pub weight: u16,
+    pub port: u16,
+    pub target: DnsName,
+}
+
 /// The interpreted payload of a DNS resource record.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DnsRecordData {
     A([u8; 4]),
     AAAA([u8; 16]),
     CNAME(DnsName),
+    PTR(DnsName),
+    SRV(DnsSrvRecord),
     Raw(Vec<u8>),
 }
 
@@ -332,6 +346,29 @@ impl DnsMessage {
             .iter()
             .filter_map(|record| match record.data {
                 DnsRecordData::AAAA(address) => Some(address),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Return all PTR records from the answer section.
+    pub fn ptr_answers(&self) -> Vec<&DnsName> {
+        self.answers
+            .iter()
+            .filter_map(|record| match &record.data {
+                DnsRecordData::PTR(name) => Some(name),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Return all SRV records from answer and additional sections.
+    pub fn service_records(&self) -> Vec<&DnsSrvRecord> {
+        self.answers
+            .iter()
+            .chain(self.additionals.iter())
+            .filter_map(|record| match &record.data {
+                DnsRecordData::SRV(service) => Some(service),
                 _ => None,
             })
             .collect()
@@ -500,18 +537,40 @@ fn parse_records(
                 }
                 DnsRecordData::AAAA(input[rdata_start..rdata_end].try_into().unwrap())
             }
-            DnsRecordType::CNAME => {
+            DnsRecordType::CNAME => DnsRecordData::CNAME(read_single_rdata_name(
+                input,
+                rdata_start,
+                rdata_end,
+                "CNAME record data must contain exactly one DNS name",
+            )?),
+            DnsRecordType::PTR => DnsRecordData::PTR(read_single_rdata_name(
+                input,
+                rdata_start,
+                rdata_end,
+                "PTR record data must contain exactly one DNS name",
+            )?),
+            DnsRecordType::SRV => {
+                if rdlength < 7 {
+                    return Err(DnsError::Unsupported(
+                        "SRV record data must contain priority, weight, port, and target",
+                    ));
+                }
                 let mut data_cursor = rdata_start;
-                let cname = read_name(input, &mut data_cursor)?;
+                let service = DnsSrvRecord {
+                    priority: read_u16(input, &mut data_cursor)?,
+                    weight: read_u16(input, &mut data_cursor)?,
+                    port: read_u16(input, &mut data_cursor)?,
+                    target: read_name(input, &mut data_cursor)?,
+                };
                 if data_cursor > rdata_end {
                     return Err(DnsError::UnexpectedEof);
                 }
                 if data_cursor != rdata_end {
                     return Err(DnsError::Unsupported(
-                        "CNAME record data must contain exactly one DNS name",
+                        "SRV record data must contain exactly priority, weight, port, and target",
                     ));
                 }
-                DnsRecordData::CNAME(cname)
+                DnsRecordData::SRV(service)
             }
             _ => DnsRecordData::Raw(input[rdata_start..rdata_end].to_vec()),
         };
@@ -526,6 +585,23 @@ fn parse_records(
         });
     }
     Ok(records)
+}
+
+fn read_single_rdata_name(
+    input: &[u8],
+    rdata_start: usize,
+    rdata_end: usize,
+    trailing_error: &'static str,
+) -> Result<DnsName, DnsError> {
+    let mut data_cursor = rdata_start;
+    let name = read_name(input, &mut data_cursor)?;
+    if data_cursor > rdata_end {
+        return Err(DnsError::UnexpectedEof);
+    }
+    if data_cursor != rdata_end {
+        return Err(DnsError::Unsupported(trailing_error));
+    }
+    Ok(name)
 }
 
 fn read_name(input: &[u8], cursor: &mut usize) -> Result<DnsName, DnsError> {
@@ -630,6 +706,13 @@ fn write_record(output: &mut Vec<u8>, record: &DnsResourceRecord) -> Result<(), 
         DnsRecordData::A(address) => data.extend_from_slice(address),
         DnsRecordData::AAAA(address) => data.extend_from_slice(address),
         DnsRecordData::CNAME(name) => write_name(&mut data, name)?,
+        DnsRecordData::PTR(name) => write_name(&mut data, name)?,
+        DnsRecordData::SRV(service) => {
+            write_u16(&mut data, service.priority);
+            write_u16(&mut data, service.weight);
+            write_u16(&mut data, service.port);
+            write_name(&mut data, &service.target)?;
+        }
         DnsRecordData::Raw(bytes) => data.extend_from_slice(bytes),
     }
 
@@ -929,6 +1012,88 @@ mod tests {
     }
 
     #[test]
+    fn serializes_and_parses_dns_sd_ptr_and_srv_records() {
+        let service_name = DnsName::from_ascii("_hue._tcp.local").unwrap();
+        let instance_name = DnsName::from_ascii("bridge-1._hue._tcp.local").unwrap();
+        let target = DnsName::from_ascii("bridge-1.local").unwrap();
+        let service = DnsSrvRecord {
+            priority: 0,
+            weight: 0,
+            port: 443,
+            target: target.clone(),
+        };
+        let message = DnsMessage {
+            header: DnsHeader {
+                id: 0,
+                flags: DnsFlags {
+                    is_response: true,
+                    opcode: DnsOpcode::Query,
+                    authoritative_answer: true,
+                    truncated: false,
+                    recursion_desired: false,
+                    recursion_available: false,
+                    response_code: DnsResponseCode::NoError,
+                },
+                question_count: 0,
+                answer_count: 1,
+                authority_count: 0,
+                additional_count: 1,
+            },
+            questions: vec![],
+            answers: vec![DnsResourceRecord {
+                name: service_name,
+                rrtype: DnsRecordType::PTR,
+                class: DnsClass::IN,
+                ttl: 120,
+                data: DnsRecordData::PTR(instance_name.clone()),
+            }],
+            authorities: vec![],
+            additionals: vec![DnsResourceRecord {
+                name: instance_name,
+                rrtype: DnsRecordType::SRV,
+                class: DnsClass::IN,
+                ttl: 120,
+                data: DnsRecordData::SRV(service.clone()),
+            }],
+        };
+
+        let parsed = parse_dns_message(&serialize_dns_message(&message).unwrap()).unwrap();
+
+        assert_eq!(parsed.ptr_answers().len(), 1);
+        assert_eq!(
+            parsed.ptr_answers()[0].to_string(),
+            "bridge-1._hue._tcp.local"
+        );
+        assert_eq!(parsed.service_records(), vec![&service]);
+        assert_eq!(parsed.service_records()[0].target, target);
+    }
+
+    #[test]
+    fn parses_compressed_ptr_record_data_for_mdns_responses() {
+        let mut bytes = serialize_dns_message(&build_query(
+            0xabcd,
+            DnsName::from_ascii("_hue._tcp.local").unwrap(),
+            DnsRecordType::PTR,
+        ))
+        .unwrap();
+        bytes[2] = 0x84;
+        bytes[3] = 0x00;
+        bytes[6] = 0x00;
+        bytes[7] = 0x01;
+        bytes.extend_from_slice(&[
+            0xc0, 0x0c, 0x00, 0x0c, 0x00, 0x01, 0, 0, 0, 120, 0, 9, 0x06, b'b', b'r', b'i', b'd',
+            b'g', b'e', 0xc0, 0x0c,
+        ]);
+
+        let parsed = parse_dns_message(&bytes).unwrap();
+
+        assert_eq!(
+            parsed.ptr_answers()[0].to_string(),
+            "bridge._hue._tcp.local"
+        );
+    }
+
+    #[test]
     fn first_answer_of_type_finds_matching_record() {
         let mut message = empty_message();
         message.answers.push(DnsResourceRecord {
@@ -953,6 +1118,7 @@ mod tests {
             DnsRecordType::MX,
             DnsRecordType::TXT,
             DnsRecordType::AAAA,
+            DnsRecordType::SRV,
             DnsRecordType::Unknown(65400),
         ];
 
@@ -1230,6 +1396,26 @@ mod tests {
         assert_eq!(
             parse_dns_message(&bytes),
             Err(DnsError::Unsupported("AAAA record data must be 16 bytes"))
+        );
+    }
+
+    #[test]
+    fn rejects_srv_record_without_target_name() {
+        let mut message = empty_message();
+        message.header.flags.is_response = true;
+        message.answers.push(DnsResourceRecord {
+            name: DnsName::from_ascii("_hue._tcp.local").unwrap(),
+            rrtype: DnsRecordType::SRV,
+            class: DnsClass::IN,
+            ttl: 0,
+            data: DnsRecordData::Raw(vec![0, 0, 0, 0, 1, 187]),
+        });
+
+        assert_eq!(
+            parse_dns_message(&serialize_dns_message(&message).unwrap()),
+            Err(DnsError::Unsupported(
+                "SRV record data must contain priority, weight, port, and target"
+            ))
         );
     }
 

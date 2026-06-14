@@ -1,12 +1,29 @@
-//! JavaScript lexer backed by compiled generic and ECMAScript token grammars.
+//! JavaScript lexer backed by compiled ECMAScript token grammars (es1 through es2025).
+//!
+//! # Correlation-vector plumbing
+//!
+//! Per [CLOC03](../../../specs/CLOC03-correlation-vector-plumbing.md)
+//! §"Stage 1 — Lexer," when called via [`tokenize_javascript_with_cv`] the
+//! lexer assigns a fresh correlation-vector ID to every emitted token via
+//! `CVLog::create(Some(Origin{ ... }))`. The `Origin` records the source
+//! filename and a `line:column` location string built from the token's
+//! own positional info. No `Contribution` is appended at this stage —
+//! lexing is the act of *creation*, and there is nothing yet to contribute
+//! about.
 
+use coding_adventures_correlation_vector::{CVLog, Origin};
+use coding_adventures_javascript_tokens::EsVersion;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
+use std::collections::HashMap;
 
 mod _grammar;
 
 pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
-pub const DEFAULT_VERSION: &str = "";
+pub const DEFAULT_VERSION: &str = "es2025";
+
+/// Typed default version. New code should prefer this over [`DEFAULT_VERSION`].
+pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;
 
 fn validate_version(version: &str) -> Result<&str, String> {
     if SUPPORTED_VERSIONS.contains(&version) {
@@ -43,14 +60,94 @@ pub fn tokenize_javascript(source: &str, version: &str) -> Result<Vec<Token>, St
         .map_err(|e| format!("JavaScript tokenization failed: {e}"))
 }
 
+/// Typed version of [`create_javascript_lexer`]. Takes an [`EsVersion`]
+/// directly; cannot fail with an unknown-version error.
+pub fn create_javascript_lexer_typed<'src>(
+    source: &'src str,
+    version: EsVersion,
+) -> GrammarLexer<'src> {
+    let grammar = _grammar::token_grammar(version.as_str())
+        .expect("compiled JavaScript token grammar missing supported version");
+    GrammarLexer::new(source, &grammar)
+}
+
+/// Typed version of [`tokenize_javascript`]. Takes an [`EsVersion`] directly;
+/// cannot fail with an unknown-version error. The only error path is
+/// tokenization itself.
+pub fn tokenize_javascript_typed(
+    source: &str,
+    version: EsVersion,
+) -> Result<Vec<Token>, String> {
+    let grammar = _grammar::token_grammar(version.as_str())
+        .expect("compiled JavaScript token grammar missing supported version");
+    let mut lexer = GrammarLexer::new(source, &grammar);
+    lexer
+        .tokenize()
+        .map_err(|e| format!("JavaScript tokenization failed: {e}"))
+}
+
+/// A token paired with the correlation-vector ID assigned to it by
+/// [`tokenize_javascript_with_cv`].
+///
+/// The CV ID is a string in the same format that
+/// [`CVLog`](coding_adventures_correlation_vector::CVLog) returns — e.g.
+/// `"a3f1.1"`. Downstream consumers (the parser, the AST) can look it up
+/// in the same `CVLog` they passed in.
+#[derive(Debug, Clone)]
+pub struct TokenWithCv {
+    /// The token as produced by [`tokenize_javascript_typed`]. Fields are
+    /// unchanged; nothing about the token itself depends on CV plumbing.
+    pub token: Token,
+    /// The CV ID assigned to this token. Use it to look up the
+    /// `CVEntry` (origin, contributions, parents) in the same `CVLog`.
+    pub cv: String,
+}
+
+/// Tokenize and assign a fresh correlation-vector ID to every emitted token.
+///
+/// Per CLOC03 §"Stage 1 — Lexer", every token gets exactly one
+/// `CVLog::create(Some(Origin{ ... }))` call with an `Origin` whose
+/// `source` is `source_file` and whose `location` is `"line:col"` built
+/// from the token's own `line` and `column` fields. No `Contribution` is
+/// appended; lexing is creation, not modification.
+///
+/// `source_file` should be the path or display name of the input file
+/// (e.g. `"src/api.js"`). For stdin input, conventions vary — the existing
+/// repo uses `"stdin"`. The string ends up in `Origin.source` and is what
+/// the source-map generator resolves back to.
+///
+/// The `cv` log is borrowed mutably for the duration of the call. The same
+/// log is then handed to the parser, typechecker, and every downstream
+/// pass — see CLOC03 for the full lifecycle.
+pub fn tokenize_javascript_with_cv(
+    source: &str,
+    source_file: &str,
+    version: EsVersion,
+    cv: &mut CVLog,
+) -> Result<Vec<TokenWithCv>, String> {
+    let tokens = tokenize_javascript_typed(source, version)?;
+    let mut out = Vec::with_capacity(tokens.len());
+    for token in tokens {
+        let origin = Origin {
+            source: source_file.to_string(),
+            location: format!("{}:{}", token.line, token.column),
+            timestamp: None,
+            meta: HashMap::new(),
+        };
+        let id = cv.create(Some(origin));
+        out.push(TokenWithCv { token, cv: id });
+    }
+    Ok(out)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use lexer::token::TokenType;
 
     #[test]
-    fn tokenizes_generic_javascript() {
-        let tokens = tokenize_javascript("var x = 1;", "").unwrap();
+    fn tokenizes_es5_javascript() {
+        let tokens = tokenize_javascript("var x = 1;", "es5").unwrap();
         assert_eq!(tokens[0].type_, TokenType::Keyword);
         assert_eq!(tokens[0].value, "var");
     }
@@ -63,10 +160,149 @@ mod tests {
     }
 
     #[test]
+    fn default_version_resolves_to_es2025() {
+        let tokens = tokenize_javascript("let x = 1;", DEFAULT_VERSION).unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Keyword);
+        assert_eq!(tokens[0].value, "let");
+    }
+
+    #[test]
     fn all_supported_versions_load() {
         for version in SUPPORTED_VERSIONS {
             let tokens = tokenize_javascript("42;", version).unwrap();
             assert_eq!(tokens[0].type_, TokenType::Number, "version {version:?}");
+        }
+    }
+
+    #[test]
+    fn tokenize_typed_es2015() {
+        let tokens = tokenize_javascript_typed("let x = 1;", EsVersion::Es2015).unwrap();
+        assert_eq!(tokens[0].type_, TokenType::Keyword);
+        assert_eq!(tokens[0].value, "let");
+    }
+
+    #[test]
+    fn default_es_version_constant_is_es2025() {
+        assert_eq!(DEFAULT_ES_VERSION, EsVersion::Es2025);
+        // And it must agree with the string DEFAULT_VERSION.
+        assert_eq!(DEFAULT_ES_VERSION.as_str(), DEFAULT_VERSION);
+    }
+
+    #[test]
+    fn all_typed_versions_load() {
+        for &version in EsVersion::ALL {
+            let tokens = tokenize_javascript_typed("42;", version).unwrap();
+            assert_eq!(tokens[0].type_, TokenType::Number, "version {version}");
+        }
+    }
+
+    #[test]
+    fn create_lexer_typed_returns_grammar_lexer() {
+        // Constructor returns infallibly (no unknown-version path).
+        let _lexer = create_javascript_lexer_typed("var x = 1;", EsVersion::Es5);
+    }
+
+    // gap-096 (CLOC12.99) regression: the ES2024/ES2025 REGEX token's
+    // flag character class once read `[dgimsvy]`, accidentally dropping
+    // the ES2015 `u` (unicode) flag when `v` (unicodeSets) was added.
+    // A regex carrying every modern flag must lex as ONE token, not a
+    // truncated regex followed by a stray identifier of the leftover
+    // flags. We assert the whole `/x/dgimsuy` literal survives intact.
+    #[test]
+    fn es2025_regex_accepts_all_modern_flags_as_one_token() {
+        let tokens =
+            tokenize_javascript_typed("var r=/x/dgimsuy;", EsVersion::Es2025).unwrap();
+        let regex = tokens
+            .iter()
+            .find(|t| t.value.starts_with("/x/"))
+            .expect("expected a single regex token beginning with /x/");
+        assert_eq!(
+            regex.value, "/x/dgimsuy",
+            "all of d,g,i,m,s,u,y must be consumed as part of the regex; \
+             a split here means a flag is missing from the grammar's class"
+        );
+        // And crucially there is NO stray identifier `uy` left behind.
+        assert!(
+            tokens.iter().all(|t| t.value != "uy" && t.value != "u"),
+            "regex flags must not split off into a separate identifier"
+        );
+    }
+
+    // The same flag set under ES2024 (the other grammar that carried the
+    // typo) must likewise lex as one token.
+    #[test]
+    fn es2024_regex_accepts_u_flag() {
+        let tokens =
+            tokenize_javascript_typed("var r=/x/gimsuy;", EsVersion::Es2024).unwrap();
+        let regex = tokens
+            .iter()
+            .find(|t| t.value.starts_with("/x/"))
+            .expect("expected a single regex token beginning with /x/");
+        assert_eq!(regex.value, "/x/gimsuy");
+    }
+
+    // ----- CV-plumbed tokenization (CLOC03 Stage 1) -----
+
+    #[test]
+    fn tokenize_with_cv_assigns_an_id_per_token() {
+        let mut cv = CVLog::new(true);
+        let tokens =
+            tokenize_javascript_with_cv("var x = 1;", "src/test.js", EsVersion::Es5, &mut cv)
+                .unwrap();
+        assert!(!tokens.is_empty(), "expected at least one token");
+        for t in &tokens {
+            assert!(!t.cv.is_empty(), "expected a non-empty CV id");
+        }
+    }
+
+    #[test]
+    fn tokenize_with_cv_ids_are_unique() {
+        let mut cv = CVLog::new(true);
+        let tokens =
+            tokenize_javascript_with_cv("var x = 1; var y = 2;", "u.js", EsVersion::Es5, &mut cv)
+                .unwrap();
+        let mut ids: Vec<&str> = tokens.iter().map(|t| t.cv.as_str()).collect();
+        let len = ids.len();
+        ids.sort();
+        ids.dedup();
+        assert_eq!(ids.len(), len, "all CV ids should be unique");
+    }
+
+    #[test]
+    fn tokenize_with_cv_entries_resolvable_in_log() {
+        let mut cv = CVLog::new(true);
+        let tokens =
+            tokenize_javascript_with_cv("var x = 1;", "lookup.js", EsVersion::Es5, &mut cv)
+                .unwrap();
+        for t in &tokens {
+            let entry = cv
+                .get(&t.cv)
+                .unwrap_or_else(|| panic!("CV id {:?} not found in log", t.cv));
+            let origin = entry
+                .origin
+                .as_ref()
+                .expect("token CV must have an Origin");
+            assert_eq!(origin.source, "lookup.js");
+            // location is "line:col" — must contain a colon.
+            assert!(
+                origin.location.contains(':'),
+                "expected line:col location, got {:?}",
+                origin.location
+            );
+        }
+    }
+
+    #[test]
+    fn tokenize_with_cv_disabled_log_still_returns_tokens() {
+        // Per CLOC03, when the log is disabled, create() still returns IDs
+        // (so call sites stay shape-identical) but no entries get stored.
+        let mut cv = CVLog::new(false);
+        let tokens =
+            tokenize_javascript_with_cv("var x = 1;", "off.js", EsVersion::Es5, &mut cv).unwrap();
+        assert!(!tokens.is_empty());
+        // Log has no entries, but tokens do have (synthetic) IDs.
+        for t in &tokens {
+            assert!(!t.cv.is_empty());
         }
     }
 }

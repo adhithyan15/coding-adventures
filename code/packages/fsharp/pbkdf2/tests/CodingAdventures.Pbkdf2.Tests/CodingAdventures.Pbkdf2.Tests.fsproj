@@ -16,4 +16,8 @@
     <ProjectReference Include="../../CodingAdventures.Pbkdf2.fsproj" />
     <Compile Include="Pbkdf2Tests.fs" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <Exclude>[CodingAdventures.Hmac]*,[CodingAdventures.Md5]*,[CodingAdventures.Sha1]*,[CodingAdventures.Sha256]*,[CodingAdventures.Sha512]*</Exclude>
+  </PropertyGroup>
 </Project>

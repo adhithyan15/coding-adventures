@@ -43,6 +43,42 @@ from __future__ import annotations
 
 import math
 
+from ._rust_backend import (
+    abs_via_rust,
+    add_via_rust,
+    div_backward_via_rust,
+    div_via_rust,
+    gelu_backward_via_rust,
+    gelu_via_rust,
+    matmul_via_rust,
+    mean_axis_via_rust,
+    mean_backward_axis_via_rust,
+    mean_backward_reduce_all_via_rust,
+    mean_via_rust,
+    mul_backward_via_rust,
+    mul_via_rust,
+    neg_via_rust,
+    pow_backward_via_rust,
+    pow_via_rust,
+    relu_backward_via_rust,
+    relu_via_rust,
+    should_use_rust_for_activation,
+    should_use_rust_for_backward_broadcast,
+    should_use_rust_for_elementwise,
+    should_use_rust_for_matmul,
+    should_use_rust_for_reduction,
+    sigmoid_backward_via_rust,
+    sigmoid_via_rust,
+    softmax_backward_via_rust,
+    softmax_via_rust,
+    sub_via_rust,
+    sum_axis_via_rust,
+    sum_backward_axis_via_rust,
+    sum_backward_reduce_all_via_rust,
+    sum_via_rust,
+    tanh_backward_via_rust,
+    tanh_via_rust,
+)
 from .autograd import Function
 from .tensor import Tensor, _compute_strides, _numel
 
@@ -60,6 +96,9 @@ class AddFunction(Function):
 
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         self.save_for_backward(a, b)
+        # MX10 Phase 2 — optional Rust fast path (elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return add_via_rust(a, b)
         data = [x + y for x, y in zip(a.data, b.data, strict=False)]
         return Tensor(data, a.shape, device=a.device)
 
@@ -78,6 +117,9 @@ class SubFunction(Function):
 
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         self.save_for_backward(a, b)
+        # MX10 Phase 2 — optional Rust fast path (elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return sub_via_rust(a, b)
         data = [x - y for x, y in zip(a.data, b.data, strict=False)]
         return Tensor(data, a.shape, device=a.device)
 
@@ -101,11 +143,32 @@ class MulFunction(Function):
 
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         self.save_for_backward(a, b)
+        # MX10 Phase 2 — optional Rust fast path (elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return mul_via_rust(a, b)
         data = [x * y for x, y in zip(a.data, b.data, strict=False)]
         return Tensor(data, a.shape, device=a.device)
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         a, b = self.saved_tensors
+        # MX10 Phase 2-back — optional Rust fast path.  Single FFI
+        # envelope with two outputs computes both ``g * b`` and
+        # ``g * a`` in one call.  Same threshold as forward.  We
+        # still respect ``requires_grad`` by returning ``None`` for
+        # sides that don't need a gradient — slightly wasteful (we
+        # compute both grads even when only one is needed), but the
+        # FFI round-trip cost dominates, so one round-trip > two
+        # round-trips even when half the work is discarded.
+        if (a.requires_grad or b.requires_grad) and should_use_rust_for_elementwise(
+            len(a.data)
+        ):
+            grad_a_rust, grad_b_rust = mul_backward_via_rust(
+                grad_output.data, a.data, b.data, a.shape, device=a.device
+            )
+            return (
+                grad_a_rust if a.requires_grad else None,
+                grad_b_rust if b.requires_grad else None,
+            )
         grad_a = (
             Tensor(
                 [g * bv for g, bv in zip(grad_output.data, b.data, strict=False)],
@@ -136,11 +199,28 @@ class DivFunction(Function):
 
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         self.save_for_backward(a, b)
+        # MX10 Phase 2 — optional Rust fast path (elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return div_via_rust(a, b)
         data = [x / y for x, y in zip(a.data, b.data, strict=False)]
         return Tensor(data, a.shape, device=a.device)
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         a, b = self.saved_tensors
+        # MX10 Phase 2-back — optional Rust fast path.  Single FFI
+        # envelope with 5 ops and two outputs computes ``g/b`` and
+        # ``-g*a/b²`` together.  Same requires_grad handling as
+        # MulFunction.backward above.
+        if (a.requires_grad or b.requires_grad) and should_use_rust_for_elementwise(
+            len(a.data)
+        ):
+            grad_a_rust, grad_b_rust = div_backward_via_rust(
+                grad_output.data, a.data, b.data, a.shape, device=a.device
+            )
+            return (
+                grad_a_rust if a.requires_grad else None,
+                grad_b_rust if b.requires_grad else None,
+            )
         grad_a = (
             Tensor(
                 [g / bv for g, bv in zip(grad_output.data, b.data, strict=False)],
@@ -173,6 +253,9 @@ class NegFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 2 — optional Rust fast path (unary elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return neg_via_rust(a)
         data = [-x for x in a.data]
         return Tensor(data, a.shape, device=a.device)
 
@@ -196,12 +279,26 @@ class PowFunction(Function):
     def forward(self, a: Tensor, exponent: float) -> Tensor:
         self.save_for_backward(a)
         self.saved_metadata["exponent"] = exponent
+        # MX10 Phase 2b — optional Rust fast path.  Broadcasts the
+        # scalar exponent to a full-shape constant tensor in Python
+        # then routes through matrix-cpu's binary Pow op.
+        if should_use_rust_for_elementwise(len(a.data)):
+            return pow_via_rust(a, exponent)
         data = [x**exponent for x in a.data]
         return Tensor(data, a.shape, device=a.device)
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         (a,) = self.saved_tensors
         n = self.saved_metadata["exponent"]
+        # MX10 Phase 2b — optional Rust fast path.  Power-rule
+        # backward composed as Pow → Mul → Mul with two scalar
+        # constants broadcast to full shape (n-1 and n).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return (
+                pow_backward_via_rust(
+                    grad_output.data, a.data, n, a.shape, device=a.device
+                ),
+            )
         pairs = zip(a.data, grad_output.data, strict=False)
         grad_a = Tensor(
             [n * (x ** (n - 1)) * g for x, g in pairs],
@@ -245,7 +342,17 @@ class MatMulFunction(Function):
             )
         m, k = a.shape
         _, n = b.shape
-        # Naive matmul (BLAS sgemm dispatch could be added here)
+        # MX10 Phase 1 — optional fast path through matrix-rust-python.
+        # The predicate fires only when (a) the C extension is
+        # installed AND (b) M*K*N is large enough that the FFI
+        # round-trip is cheaper than the pure-Python triple loop.
+        # See _rust_backend.py for the full rationale.
+        if should_use_rust_for_matmul(m, k, n):
+            return matmul_via_rust(a, b)
+        # ── Pure-Python fallback (unchanged from pre-MX10) ────────
+        # Used when the C extension isn't installed OR when the
+        # matmul is too small for the FFI overhead to amortise.
+        # Naive matmul (BLAS sgemm dispatch could be added here).
         data = [0.0] * (m * n)
         for i in range(m):
             for j in range(n):
@@ -369,12 +476,27 @@ class SumFunction(Function):
         self.saved_metadata["keepdim"] = keepdim
 
         if dim is None:
+            # MX10 Phase 3 — optional Rust fast path (reduce-all).
+            # Axis-specific reductions (dim != None) stay pure-Python
+            # in Phase 3; broadcasting + output-shape computation
+            # differ enough to warrant their own sub-phase.
+            if should_use_rust_for_reduction(len(a.data)):
+                return sum_via_rust(a)
             # Sum all elements → scalar
             total = sum(a.data)
             return Tensor([total], (1,), device=a.device)
 
         if dim < 0:
             dim = a.ndim + dim
+
+        # MX10 Phase 3b — optional Rust fast path (axis-specific).
+        # Same threshold as reduce-all (per-cell cost is similar);
+        # matrix-cpu's ReduceSum takes an ``axes=[dim]`` list and
+        # ``keep_dims=keepdim`` flag.  Pure-Python axis loop below
+        # is the fallback for small tensors or when the extension
+        # isn't installed.
+        if should_use_rust_for_reduction(len(a.data)):
+            return sum_axis_via_rust(a, dim, keepdim)
 
         # Sum along a specific dimension
         list(a.shape)
@@ -426,7 +548,16 @@ class SumFunction(Function):
         dim = self.saved_metadata["dim"]
 
         if dim is None:
-            # Scalar sum: broadcast gradient to all elements
+            # Scalar sum: broadcast gradient to all elements.
+            # MX10 Phase 3c — optional Rust fast path.  Same scalar
+            # broadcast via matrix-cpu's Broadcast op (input shape
+            # (1,) → target_shape).
+            if should_use_rust_for_backward_broadcast(a.numel):
+                return (
+                    sum_backward_reduce_all_via_rust(
+                        grad_output.data[0], a.shape, device=a.device
+                    ),
+                )
             return (
                 Tensor(
                     [grad_output.data[0]] * a.numel,
@@ -437,6 +568,18 @@ class SumFunction(Function):
 
         if dim < 0:
             dim = a.ndim + dim
+
+        # MX10 Phase 3d — optional Rust fast path (axis-specific
+        # backward).  Same threshold as Phase 3c.  The Rust helper
+        # declares grad_output with shape "input shape with size 1
+        # at dim" — which works regardless of the user's keepdim
+        # flag because the flat data ordering matches either way.
+        if should_use_rust_for_backward_broadcast(a.numel):
+            return (
+                sum_backward_axis_via_rust(
+                    grad_output.data, a.shape, dim, device=a.device
+                ),
+            )
 
         # Expand gradient along the reduced dimension
         grad_data = [0.0] * a.numel
@@ -477,8 +620,23 @@ class MeanFunction(Function):
         self.saved_metadata["dim"] = dim
 
         if dim is None:
+            # MX10 Phase 3 — optional Rust fast path (reduce-all).
+            # Axis-specific path stays pure-Python in Phase 3.
+            if should_use_rust_for_reduction(len(a.data)):
+                return mean_via_rust(a)
             total = sum(a.data)
             return Tensor([total / a.numel], (1,), device=a.device)
+
+        # MX10 Phase 3b — optional Rust fast path (axis-specific).
+        # We dispatch directly to ReduceMean (rather than reusing the
+        # ReduceSum-then-divide composition below) so the division
+        # happens inside matrix-cpu in f32 throughout, and we skip
+        # creating a spurious SumFunction autograd node.  Normalise
+        # the dim to non-negative first because matrix-ir-json's
+        # axes are unsigned.
+        norm_dim = dim if dim >= 0 else a.ndim + dim
+        if should_use_rust_for_reduction(len(a.data)):
+            return mean_axis_via_rust(a, norm_dim, keepdim)
 
         # Use SumFunction then divide
         sum_result = SumFunction.apply(a, dim, keepdim)
@@ -495,6 +653,16 @@ class MeanFunction(Function):
 
         if dim is None:
             n = a.numel
+            # MX10 Phase 3c — optional Rust fast path.  Pre-divide
+            # the scalar once in Python, then broadcast via matrix-cpu
+            # (same single Broadcast op as Sum.backward; the Mean
+            # /n is folded into the scalar before dispatch).
+            if should_use_rust_for_backward_broadcast(n):
+                return (
+                    mean_backward_reduce_all_via_rust(
+                        grad_output.data[0], a.shape, n, device=a.device
+                    ),
+                )
             return (
                 Tensor(
                     [grad_output.data[0] / n] * n,
@@ -506,6 +674,17 @@ class MeanFunction(Function):
         if dim < 0:
             dim = a.ndim + dim
         count = a.shape[dim]
+
+        # MX10 Phase 3d — optional Rust fast path.  Pre-divides each
+        # grad cell by ``count`` in Python (cheap — len(grad_data)
+        # divisions, where grad_data is the reduced shape) then
+        # broadcasts.  Same single-op Broadcast graph as Sum.
+        if should_use_rust_for_backward_broadcast(a.numel):
+            return (
+                mean_backward_axis_via_rust(
+                    grad_output.data, a.shape, dim, device=a.device
+                ),
+            )
 
         # Expand gradient (same as SumFunction) then divide by count
         sum_grad_fn = SumFunction()
@@ -586,6 +765,9 @@ class AbsFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 2 — optional Rust fast path (unary elementwise).
+        if should_use_rust_for_elementwise(len(a.data)):
+            return abs_via_rust(a)
         data = [abs(x) for x in a.data]
         return Tensor(data, a.shape, device=a.device)
 
@@ -652,11 +834,30 @@ class ReLUFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 4 — optional Rust fast path.  ReLU is composed
+        # as max(x, 0) via matrix-cpu's Max op with a zero-constant
+        # tensor of the same shape.
+        if should_use_rust_for_activation(len(a.data)):
+            return relu_via_rust(a)
         data = [max(0.0, x) for x in a.data]
         return Tensor(data, a.shape, device=a.device)
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         (a,) = self.saved_tensors
+        # MX10 Phase 4-back-relu — optional Rust fast path.  ReLU
+        # backward = ``g * (x > 0)``; composed as a 3-op graph
+        # (Greater → Cast → Mul) using matrix-cpu's u8-output
+        # comparison op plus a Cast back to f32.  Reuses Phase 4's
+        # activation predicate and 100_000-cell threshold.
+        if should_use_rust_for_activation(len(a.data)):
+            return (
+                relu_backward_via_rust(
+                    grad_output.data,
+                    a.data,
+                    a.shape,
+                    device=a.device,
+                ),
+            )
         return (
             Tensor(
                 [
@@ -680,12 +881,36 @@ class SigmoidFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 4b — optional Rust fast path.  Sigmoid is
+        # composed as a 4-op graph (Neg → Exp → Add(1) → Recip)
+        # in matrix-cpu; the entire composition is bundled into one
+        # FFI envelope so we pay the per-call overhead just once.
+        # Output is saved for backward via the same metadata key the
+        # pure-Python path uses (backward formula: y * (1 - y) only
+        # depends on the output, not the input).
+        if should_use_rust_for_activation(len(a.data)):
+            result = sigmoid_via_rust(a)
+            self.saved_metadata["output"] = result.data
+            return result
         data = [1.0 / (1.0 + math.exp(-x)) for x in a.data]
         self.saved_metadata["output"] = data
         return Tensor(data, a.shape, device=a.device)
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         output = self.saved_metadata["output"]
+        # MX10 Phase 4-back — optional Rust fast path.  Sigmoid backward
+        # is ``g * y * (1 - y)`` — a 3-op composed graph on (grad, y)
+        # with a ones-constant tensor at target_shape.  Same threshold
+        # as forward (the per-cell cost is two muls plus a sub).
+        if should_use_rust_for_activation(len(output)):
+            return (
+                sigmoid_backward_via_rust(
+                    grad_output.data,
+                    output,
+                    grad_output.shape,
+                    device=grad_output.device,
+                ),
+            )
         return (
             Tensor(
                 [
@@ -709,12 +934,32 @@ class TanhFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 4 — optional Rust fast path (direct unary Tanh).
+        # The output is saved into saved_metadata for backward; we
+        # extract it from the returned Tensor either way.
+        if should_use_rust_for_activation(len(a.data)):
+            result = tanh_via_rust(a)
+            self.saved_metadata["output"] = result.data
+            return result
         data = [math.tanh(x) for x in a.data]
         self.saved_metadata["output"] = data
         return Tensor(data, a.shape, device=a.device)
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         output = self.saved_metadata["output"]
+        # MX10 Phase 4-back — optional Rust fast path.  Tanh backward
+        # is ``g * (1 - y²)`` — a 3-op composed graph on (grad, y)
+        # with a ones-constant tensor at target_shape.  Same threshold
+        # as forward.
+        if should_use_rust_for_activation(len(output)):
+            return (
+                tanh_backward_via_rust(
+                    grad_output.data,
+                    output,
+                    grad_output.shape,
+                    device=grad_output.device,
+                ),
+            )
         return (
             Tensor(
                 [
@@ -741,6 +986,22 @@ class GELUFunction(Function):
 
     def forward(self, a: Tensor) -> Tensor:
         self.save_for_backward(a)
+        # MX10 Phase 4c — optional Rust fast path.  GELU is composed
+        # as a 9-op graph using the standard tanh approximation:
+        #   0.5 * x * (1 + tanh(sqrt(2/π) * x * (1 + 0.044715 * x²)))
+        # Algebraically equivalent to the 4-line pure-Python loop
+        # below, but the entire composition ships in one FFI envelope
+        # so the per-call overhead is paid once rather than once per
+        # intermediate.  Four constants (0.044715, 1.0, sqrt(2/π),
+        # 0.5) are materialised as full-shape tensors because
+        # matrix-cpu Mul/Add don't broadcast scalars.
+        #
+        # No saved_metadata handshake needed: GELU's backward
+        # recomputes ``inner`` and ``tanh(inner)`` from the input
+        # ``a`` (saved via save_for_backward above), so backward
+        # works the same regardless of which forward path ran.
+        if should_use_rust_for_activation(len(a.data)):
+            return gelu_via_rust(a)
         data = []
         for x in a.data:
             inner = self._SQRT_2_PI * (x + self._COEFF * x * x * x)
@@ -749,6 +1010,21 @@ class GELUFunction(Function):
 
     def backward(self, grad_output: Tensor) -> tuple[Tensor | None, ...]:
         (a,) = self.saved_tensors
+        # MX10 Phase 4-back-gelu — optional Rust fast path.  GELU
+        # backward = ``g * (0.5 * (1 + tanh_v) + 0.5 * x * sech² * d_inner)``
+        # with ``tanh_v = tanh(inner)``, ``sech² = 1 - tanh_v²``, and
+        # ``d_inner = sqrt(2/π) * (1 + 3 * 0.044715 * x²)``.  Composed
+        # as an 18-op graph (the heaviest activation backward by op
+        # count) with 5 full-shape constants; same threshold as forward.
+        if should_use_rust_for_activation(len(a.data)):
+            return (
+                gelu_backward_via_rust(
+                    grad_output.data,
+                    a.data,
+                    a.shape,
+                    device=a.device,
+                ),
+            )
         grad_data = []
         for x, g in zip(a.data, grad_output.data, strict=False):
             inner = self._SQRT_2_PI * (x + self._COEFF * x * x * x)
@@ -775,6 +1051,22 @@ class SoftmaxFunction(Function):
 
         if dim < 0:
             dim = a.ndim + dim
+
+        # MX10 Phase 4d — optional Rust fast path.  Softmax composes
+        # as a 7-op graph (ReduceMax → Broadcast → Sub → Exp →
+        # ReduceSum → Broadcast → Div) in a single FFI envelope.
+        # All seven ops share the input tensor's element-cost
+        # profile, so the same threshold as elementwise/activation
+        # applies.  Backward needs ``saved_metadata["output"]``;
+        # populate it from the Rust result the same way TanhFunction
+        # / SigmoidFunction do.
+        #
+        # The 1-D and n-D pure-Python branches below are byte-for-byte
+        # unchanged in the fallback path.
+        if should_use_rust_for_activation(len(a.data)):
+            result = softmax_via_rust(a, dim)
+            self.saved_metadata["output"] = result.data
+            return result
 
         if a.ndim == 1:
             max_val = max(a.data)
@@ -836,6 +1128,22 @@ class SoftmaxFunction(Function):
         if dim < 0:
             dim = a.ndim + dim
 
+        # MX10 Phase 4-back-softmax — optional Rust fast path.
+        # Softmax backward = ``y * (grad - sum(grad * y, dim, keepdim=True))``
+        # via a 5-op composed graph (Mul → ReduceSum → Broadcast →
+        # Sub → Mul) reusing Phase 3b/3d axis-reduction and broadcast
+        # building blocks.  Same threshold as forward.
+        if should_use_rust_for_activation(len(output)):
+            return (
+                softmax_backward_via_rust(
+                    grad_output.data,
+                    output,
+                    a.shape,
+                    dim,
+                    device=a.device,
+                ),
+            )
+
         if a.ndim == 1:
             # y * (grad - sum(grad * y))
             dot_product = sum(
@@ -889,9 +1197,21 @@ class SoftmaxFunction(Function):
 
 
 def _matmul_2d(a: Tensor, b: Tensor) -> Tensor:
-    """Simple 2-D matrix multiply without autograd tracking."""
+    """Simple 2-D matrix multiply without autograd tracking.
+
+    Used by ``MatMulFunction.backward`` to compute ``grad @ B.T`` and
+    ``A.T @ grad``.  Picks up the same Rust fast path as the forward
+    pass so backward dispatch is automatic — important because
+    backward is typically run many times per training step.
+    """
     m, k = a.shape
     _, n = b.shape
+    # MX10 Phase 1 — same dispatch as MatMulFunction.forward.
+    # The backward pass for matmul is itself a matmul (twice), so
+    # routing through the same predicate gives the backward path
+    # the same FFI-vs-pure-Python tradeoff.
+    if should_use_rust_for_matmul(m, k, n):
+        return matmul_via_rust(a, b)
     data = [0.0] * (m * n)
     for i in range(m):
         for j in range(n):

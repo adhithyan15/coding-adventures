@@ -4,6 +4,121 @@ All notable changes to `tetrad-runtime` will be documented in this file.
 
 ## [Unreleased]
 
+### Added — LANG18: Source-line coverage via DebugSidecar composition
+
+LANG18 layers source-level coverage reporting on top of the IIR-level coverage
+collected by `vm-core` (LANG18 vm-core).  The key insight is that the
+`DebugSidecar` built by `sidecar_builder` already maps every IIR instruction
+index back to a `(file, line, col)` — we simply compose that with the
+set of executed IIR indices.
+
+**New module: `tetrad_runtime.coverage`**
+
+- `CoveredLine` — dataclass: `file: str`, `line: int`, `iir_hit_count: int`.
+  `iir_hit_count` is the number of *distinct* IIR instruction indices at that
+  source line that were executed (not how many times the line ran — for frequency
+  use LANG17 `BranchStats`).
+
+- `LineCoverageReport` — report dataclass containing `covered_lines: list[CoveredLine]`
+  with two helpers:
+  - `lines_for_file(path) -> list[int]` — sorted covered line numbers for one file.
+  - `total_lines_covered() -> int` — total number of distinct `(file, line)` pairs.
+  - `files() -> list[str]` — sorted list of unique source files in the report.
+
+- `build_report(iir_coverage, sidecar_bytes) -> LineCoverageReport` — projection
+  function.  For every `(fn_name, ip_set)` entry in `iir_coverage` (from
+  `VMCore.coverage_data()`), calls `DebugSidecarReader.lookup(fn_name, ip)` to
+  obtain a `SourceLocation`, accumulates the `(file, line)` pairs, and builds the
+  report.  IIR instructions with no sidecar entry (synthetic preamble instructions)
+  are silently skipped.
+
+**New method: `TetradRuntime.run_with_coverage(source, source_path) -> LineCoverageReport`**
+
+  End-to-end entry point:
+  1. Calls `compile_with_debug(source, source_path)` to get `(module, sidecar)`.
+  2. Creates a fresh `VMCore` with `enable_coverage()`.
+  3. Executes the module.
+  4. Reads `vm.coverage_data()` and calls `build_report(iir_cov, sidecar)`.
+  5. Returns the `LineCoverageReport`.
+
+**Updated exports** in `tetrad_runtime/__init__.py`:
+- `CoveredLine` and `LineCoverageReport` are now exported from the package root.
+- `__all__` updated accordingly.
+
+**New tests: `tests/test_coverage.py`** — 19 tests in five classes:
+  `TestReturnType`, `TestBasicCoverage`, `TestTwoFunctionCoverage`,
+  `TestBuildReport`, `TestTotalLinesCovered`.  Full suite passes at 95.89%
+  coverage.
+
+### Added — LANG06: source-map composition sidecar and debug execution API
+
+The LANG06 debug integration connects every stage of the Tetrad pipeline
+into a single end-to-end debugger story: set a breakpoint by source line →
+VM pauses → inspect frame state → resume.
+
+**New module: `tetrad_runtime.sidecar_builder`**
+
+- `code_object_to_iir_with_sidecar(main, source_path, module_name="tetrad-program") -> (IIRModule, bytes)`
+  — performs the standard Tetrad → IIR translation and additionally builds a
+  `DebugSidecar` that maps every IIR instruction index in every function back
+  to the original Tetrad source file, line, and column.
+
+  The core composition algorithm:
+  ```
+  CodeObject.source_map:   (tetrad_ip=7)  → (line=3, col=5)
+  IIRFunction.source_map:  (iir_start=14) → (tetrad_ip=7)
+  ──────────────────────────────────────────────────────────────
+  Composed:                (iir_start=14) → (line=3, col=5)
+  ```
+  Written into a `DebugSidecar` via `DebugSidecarWriter`.
+  The `DebugSidecarReader` then answers `lookup(fn, ip)` → `SourceLocation`
+  and `find_instr(file, line)` → IIR index for breakpoint resolution.
+
+  Variable declarations are also written:
+  - Parameters: one `Variable` per `code.params[i]`, `reg_index=i`, live
+    for the full function body.
+  - Locals: one `Variable` per `code.var_names[len(params):]`, live from 0
+    (conservative but correct for the Variables panel).
+
+**New `TetradRuntime` methods**
+
+- `compile_with_debug(source, source_path) -> (IIRModule, bytes)` — compile
+  source and build the sidecar in one call.  Stores the sidecar in
+  `self._last_sidecar`.
+- `run_with_debug(source, source_path, *, hooks=None, breakpoints=None) -> Any`
+  — compile, attach hooks, pre-set breakpoints (as `{fn_name: [iir_idx, ...]}`),
+  then execute.  The `DebugHooks` subclass receives `on_instruction` for every
+  pause, `on_call` on every function entry, `on_return` on every function exit,
+  and `on_exception` on unhandled errors.  `hooks=None` → zero debug overhead.
+
+**Updated `tetrad_runtime/__init__.py`**
+
+- Re-exports `code_object_to_iir_with_sidecar` from the package root.
+- Docstring updated to document all four new debug-related entry points.
+
+**Updated dependencies**
+
+- `pyproject.toml` — added `coding-adventures-debug-sidecar` as a runtime
+  dependency (required by `sidecar_builder`).
+- `BUILD` — added `-e ../debug-sidecar` to the `uv pip install` chain.
+
+**New test module: `tests/test_debug_integration.py`** (29 tests across 4 classes)
+
+- `TestSidecarBuilder` — verifies `compile_with_debug` returns valid sidecar
+  bytes, registers the source file and both function names, stores the sidecar
+  on the runtime, and produces the same structure as the standalone function.
+- `TestSourceLineQueries` — verifies `find_instr(file, line)` resolves known
+  source lines to non-negative IIR indices; `lookup(fn, iir_idx)` returns the
+  expected `SourceLocation`; nearest-preceding lookup semantics hold; both
+  functions in a two-function program are reachable.
+- `TestLiveVariables` — verifies parameters and locals appear in
+  `live_variables(fn, 0)` with `type_hint="u8"`; `main` has no variables.
+- `TestRunWithDebug` — verifies: correct return values; `on_instruction` fires
+  at the breakpoint IIR index; `reader.lookup(fn, ip)` inside the hook resolves
+  to the expected source line; `step_in` visits multiple instructions and
+  enters callees; `call_stack()` shows the callee function on top when paused
+  inside it; multiple breakpoints in the same function all fire.
+
 ### Changed — Intel 4004 codegen extracted into intel4004-backend
 
 The `Intel4004Backend` class and the codegen / IR it depends on

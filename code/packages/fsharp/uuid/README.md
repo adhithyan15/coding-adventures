@@ -2,3 +2,6 @@
 
 RFC 4122 and RFC 9562 UUID parsing, formatting, byte conversion, comparison,
 namespace constants, and v1/v3/v4/v5/v7 generation helpers.
+
+Name-based UUIDs use package-local MD5/SHA-1 implementations, and random UUIDs
+draw bytes through the repository CSPRNG package.

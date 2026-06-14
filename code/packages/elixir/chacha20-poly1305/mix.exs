@@ -8,16 +8,12 @@ defmodule CodingAdventures.ChaCha20Poly1305.MixProject do
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      test_coverage: [
-        summary: [threshold: 80]
-      ]
+      test_coverage: [summary: [threshold: 80]]
     ]
   end
 
   def application do
-    [
-      extra_applications: [:logger]
-    ]
+    [extra_applications: [:logger]]
   end
 
   defp deps do

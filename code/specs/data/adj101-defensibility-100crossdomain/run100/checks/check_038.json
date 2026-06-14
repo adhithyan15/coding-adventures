@@ -1,0 +1,8 @@
+{
+ "check_id": 38,
+ "idx": 15,
+ "slot": "within_scope_of_employment",
+ "claimed_value": true,
+ "scenario": "A delivery-company driver, while behind the wheel of the company van during his shift, rear-ended another car and injured its driver.",
+ "cited_span": "while behind the wheel of the company van during his shift"
+}

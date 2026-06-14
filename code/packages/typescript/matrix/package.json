@@ -3,15 +3,41 @@
   "version": "1.0.0",
   "description": "Pure ML Matrix dimensional operations",
   "main": "dist/matrix.js",
+  "module": "src/matrix.ts",
   "types": "dist/matrix.d.ts",
+  "exports": {
+    ".": {
+      "node": {
+        "types": "./src/entry-node.ts",
+        "import": "./src/entry-node.ts",
+        "require": "./src/entry-node.ts",
+        "default": "./src/entry-node.ts"
+      },
+      "browser": {
+        "types": "./src/entry-browser.ts",
+        "import": "./src/entry-browser.ts",
+        "default": "./src/entry-browser.ts"
+      },
+      "default": {
+        "types": "./src/matrix.ts",
+        "import": "./src/matrix.ts",
+        "require": "./dist/matrix.js",
+        "default": "./src/matrix.ts"
+      }
+    }
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest"
+  },
+  "dependencies": {
+    "@coding-adventures/matrix-rust-napi": "file:../matrix-rust-napi"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
     "jest": "^29.0.0",
     "ts-jest": "^29.0.0",
-    "@types/jest": "^29.0.0"
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0"
   }
 }

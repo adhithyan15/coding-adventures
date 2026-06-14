@@ -1,0 +1,28 @@
+// Tabs.dark.msl — dark-theme styling.
+
+style Tabs {
+  part tabs {
+    padding : 0 ;
+  }
+  part tabs-bar {
+    padding      : 0 ;
+    border-width : 0 ;
+  }
+  part tabs-tab {
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#60a5fa" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part tabs-panel {
+    padding      : 16 ;
+    background   : "#1f2937" ;
+    color        : "#f3f4f6" ;
+    border-width : 1 ;
+    border-color : "#374151" ;
+    font-size    : 14 ;
+  }
+}

@@ -1,5 +1,2571 @@
 # Changelog
 
+## [0.75.0] — 2026-05-29
+
+**Track K1 — n-variate Hensel bridge in the ``Factor`` handler (PR #5590).**
+
+Bridges the newly-shipped ``cas_factor.try_n_variate_hensel`` (also
+PR #5590) into the symbolic-vm ``Factor`` handler so that
+``factor(x^3 + y^3 + z^3 - 3·x·y·z)`` and other tri-/higher-variate
+polynomials finally factor through the user-visible MACSYMA pipeline,
+not just from a direct cas-factor call.
+
+### What the bridge does
+
+Three new helpers in ``cas_handlers.py``:
+
+- ``_find_n_variables(node, max_vars=8)`` — generalises
+  ``_find_two_variables`` to return *all* distinct free symbols in
+  encounter order.  The first variable becomes Hensel's *main*
+  variable for the univariate-image specialisation step.  Bounded at
+  ``max_vars`` so a pathological input with hundreds of free symbols
+  can't make us allocate gigantic sparse-dict keys.
+- ``_ir_to_npoly(node, vars)`` — IR → ``NPoly`` (``dict[tuple[int, …], Fraction]``)
+  for the polynomial subset of IR (Add / Sub / Neg / Mul / Pow with
+  non-negative integer exponents, rationals, no floats, no
+  transcendentals, no foreign symbols).  Returns ``None`` on anything
+  outside ℚ[v_0, …, v_{n-1}].
+- ``_npoly_to_ir(p, vars)`` — round-trip back to IR with a stable
+  canonical monomial order (descending total degree, then lex on the
+  exponent tuple).
+
+These compose in ``_try_n_variate_hensel_ir(inner)``, which is hooked
+into ``factor_handler`` immediately after the existing bivariate path:
+
+```text
+factor(expr)
+├─ univariate over Z → rational-root + Kronecker
+├─ pattern handlers (perfect cube, cubic identity, …)
+├─ bivariate Hensel (Track D1)
+└─ NEW: n-variate Hensel (Track K1)   ← three or more free symbols
+```
+
+The bridge is ONE generic helper that serves ``n = 3, 4, 5, …`` — no
+per-arity copies.
+
+### Tests
+
+New file ``tests/test_n_variate_factor.py`` with end-to-end Factor
+pipeline tests:
+
+- ``x^3 + y^3 + z^3 - 3·x·y·z`` factors successfully; round-trip
+  verifies algebraic equality (the expanded result equals the input).
+- ``(x+y+z)·(x+2·y+3·z)`` — accepts either a successful factoring or
+  unevaluated fall-through, but if a factoring is returned it must
+  round-trip.
+- ``x^2 + y^2 + z^2 + 1`` (irreducible over Q) — must fall through
+  cleanly without producing a wrong factoring.
+- ``sin(x) + y + z`` (transcendental) — must not crash.
+
+### What this unblocks
+
+Track K2 (TS + Rust port) — the Python bridge defines the canonical
+shape the port will follow.  Track N (final spec closure) can mark
+n-variate factoring done across the matrix.
+
+## [0.74.0] — 2026-05-29
+
+**Track G1 — symbolic-coefficient Weierzstrass lift.**
+
+Generalises the Phase-34/35/36/37 Weierzstrass substitution
+``∫ c / (a + b·trig(α·x + β)) dx`` from concrete rational ``a, b`` to
+symbolic ones.  When the numeric pattern returns ``None`` because
+either coefficient is a free IR expression, the new helper consults
+``vm.assumptions`` for the sign of the discriminant ``a² − b²`` and,
+upon finding a declared inequality / equality, emits the matching
+arctan / log / degenerate closed form with symbolic ``Sqrt(a² − b²)``
+in the result.  When no assumption pins down the sign, the integral
+is left unevaluated.
+
+This depends on the compound-relation extension to
+``cas_simplify.AssumptionContext`` shipped in cas-simplify 0.4.0
+(same PR, Track G1).
+
+### Algorithm
+
+For ``∫ c / (a + b·sin(α·x+β)) dx`` with ``a, b`` non-numeric:
+
+1.  Parse ``a + b·trig(α·x+β)`` (any operand order, ADD or SUB) into
+    ``(a, b, head, α, β)`` keeping ``a, b`` as IR nodes (only ``α, β, c``
+    are required to be rational).
+2.  Fold ``1/α`` into the numerator scaling
+    (``c_scaled = c / α``).
+3.  Build ``arg = α·x + β`` via the shared linear-arg constructor.
+4.  Query ``vm.assumptions`` for the discriminant sign — accepts both
+    the natural surface form ``a² > b²`` and the canonical-against-zero
+    form ``a² − b² > 0``.
+5.  Emit the corresponding closed form:
+    - ``disc > 0`` → ``(2·c/√(a²−b²))·atan((a·tan(arg/2)+b)/√(a²−b²))``
+      (sin branch).  cos branch uses ``(a−b)·tan(arg/2) / √(a²−b²)`` in
+      the arctan argument.
+    - ``disc < 0`` → ``(c/√(b²−a²))·log|N/D|`` (log form).
+    - ``disc = 0`` → rational closed form in ``tan(arg/2)``.
+
+Linear-argument lifting (``α·x + β``) composes unchanged because the
+inner substitution ``u = tan(arg/2)`` depends only on ``α, β`` (which
+remain rational).
+
+### Added
+
+- `integrate._CURRENT_VM` — `ContextVar` that publishes the live VM to
+  Weierzstrass helpers without threading ``vm`` through every signature.
+- `integrate._try_weierstrass_symbolic_coefficients` — symbolic
+  dispatcher.
+- `integrate._parse_a_plus_b_sincos_symbolic` — symbolic sibling of
+  the numeric ``_parse_a_plus_b_sincos`` parser.
+- `integrate._try_weierstrass_{arctan,log,degenerate}_symbolic` — branch
+  closed-form emitters.
+
+### Regression
+
+The numeric Weierzstrass path is tried first and unchanged; the
+symbolic path explicitly bails out when both ``a`` and ``b`` are
+numeric, so concrete-coefficient integrals continue to use the
+arithmetic-folded ``Fraction`` closed forms.  All 38 existing
+``test_phase34_weierstrass`` tests still pass.
+
+## 0.73.0 — 2026-05-28
+
+**Track E1 — generic tabular integration-by-parts fallback.**
+
+Adds a last-ditch generic IBP handler that fires only after every
+shape-specific elementary / Phase 23 special-function / Elliptic
+handler has returned ``None``.  Closes the integration gap for
+``Mul``-shaped integrands that no per-shape recogniser matches but
+that admit the textbook tabular IBP factorisation
+``f = u(x) · w(x)`` with ``u`` polynomial and ``w`` integrable.
+
+### Algorithm
+
+For ``∫ u·w dx`` with ``u`` polynomial of degree ``N − 1`` and ``w``
+integrable, the antiderivative is the alternating sum
+
+```
+∫ u·w dx  =  Σ_{k=0}^{N-1}  (-1)^k · u^(k)(x) · I^(k+1)(w)
+```
+
+derived from N successive applications of IBP; the trailing remainder
+``(-1)^N · ∫ u^(N)·I^N(w) dx`` vanishes because ``u^(N) = 0``.  The
+implementation enumerates ``Mul`` factor partitions, picks the
+polynomial-on-one-side / integrable-on-the-other split, and assembles
+the table.  Bounded by ``_MAX_FACTORS = 5`` and ``_MAX_POLY_DEGREE =
+8`` so the search never explodes.
+
+### Added
+
+- ``ibp_tabular`` module with ``try_ibp_tabular(f, x, integrate_fn,
+  diff_fn, simplify_fn)`` — pure function, no VM dependency.
+- New test file ``tests/test_ibp.py`` exercising the three named
+  acceptance cases (``∫ x·sin(x) dx``, ``∫ x²·eˣ dx``,
+  ``∫ x³·cos(x) dx``), the new gap case
+  ``∫ x·sin(x)·cos(x) dx`` (three-factor Mul that per-shape
+  handlers don't recognise), and the two fallthroughs (``∫ 1/x dx``
+  via the elementary log rule; ``∫ sin(x²) dx`` via Phase 23
+  Fresnel — neither lets the generic IBP fabricate a closed form).
+
+### Changed
+
+- ``integrate.py`` — wires ``try_ibp_tabular`` into the
+  indefinite-integration outer handler **after** Phase 23
+  special-function and Elliptic fallbacks, as the final attempt
+  before returning unevaluated.
+- ``tests/test_phase16.py::test_poly_times_sech_squared_unevaluated``
+  → ``test_poly_times_sech_squared_via_ibp`` — Track E1 closes
+  ``∫ x·sech²(x) dx`` to ``x·tanh(x) − log(cosh(x))``, which the
+  earlier test asserted unevaluated.  Updated to check the new
+  closed form via numerical ``F'(x) ≈ f(x)``.
+- ``tests/test_phase17.py::test_poly_times_tanh_squared_unevaluated``
+  → ``test_poly_times_tanh_squared_via_ibp`` — same pattern; the
+  identity ``tanh²(x) = 1 − sech²(x)`` makes the integrand
+  elementary (the earlier docstring's "polylogarithm" label was
+  incorrect).  Track E1 produces ``x²/2 − x·tanh(x) + log(cosh(x))``.
+
+### Notes
+
+- Anti-pattern guard: this is ONE generic algorithm, not a
+  helper-per-shape.  The lesson check in
+  ``code/specs/macsyma-finish-plan.md`` forbids
+  ``_int_x_times_sin``-style additions; the new module's only
+  public entry is the single ``try_ibp_tabular`` function.
+- Termination: the D-column terminates at ``u^(N) = 0`` (guaranteed
+  for polynomial ``u``); the I-column terminates at ``N`` steps
+  (matched to D); the partition search is ``2^n − 2`` where
+  ``n ≤ 5`` factors.  No unbounded recursion.
+
+## 0.72.0 — 2026-05-22
+
+**Phase 48 — Apart for repeated linear factors.**
+
+Closes the last Phase 45-documented gap (the repeated-factor case
+``∑_{k=1}^∞ (2k+1)/(k²(k+1)²) = 1``).  Extends ``_apart_proper`` to
+handle denominators of the form ``∏_r (x − r)^{m_r}`` where each
+``r`` is rational and ``m_r ≥ 1``.
+
+> Note: stacks on PR #3922 (Phase 47, version 0.71.0).  If PR #3922
+> merges first this PR needs no rebase; if this lands first PR #3922
+> needs the version-history reconciliation.
+
+### Algorithm
+
+For a proper rational ``P(x)/den(x)`` whose denominator factors over
+ℚ as ``∏_r (x − r)^{m_r}``, the partial-fraction expansion has the
+form
+
+    ∑_r ∑_{j=1..m_r}  A_{r,j} / (x − r)^j
+
+For each root ``r`` of multiplicity ``m``, define
+``Q(x) = den(x) / (x − r)^m`` and
+``φ(t) = P(r + t) / Q(r + t)``.  Then
+``A_{r, m − j} = φ_j`` (coefficient of ``t^j`` in φ's Taylor series).
+
+We compute φ to ``O(t^m)`` via:
+
+1. Taylor-expand ``P(r + t)`` and ``Q(r + t)`` around ``t = 0``
+   using the standard binomial identity
+   ``p(r + t)_j = ∑_{i≥j} p_i · C(i, j) · r^{i − j}``.
+2. Divide as power series via the recurrence
+   ``φ_j = (N_j − ∑_{k=1..j} D_k · φ_{j−k}) / D_0``.
+
+Everything stays exact (``Fraction`` arithmetic, arbitrary-precision
+``int``).
+
+### Added
+
+- **`_binomial(n, k)`** — exact integer binomial coefficient.
+- **`_taylor_expand_around_r(poly, r, length)`** — first
+  ``length`` Taylor coefficients of ``poly(r + t)``.
+- **`_series_div(N, D, length)`** — first ``length`` Taylor
+  coefficients of ``N(t) / D(t)`` (requires ``D(0) ≠ 0``).
+- **`_root_multiplicities(den, roots)`** — counts how many times
+  each rational root divides ``den``; returns ``None`` if
+  ``den`` has an irreducible non-linear factor on top.
+- **`_apart_simple_roots`** — Phase 1 distinct-root fast path,
+  factored out of ``_apart_proper`` to keep the simple-pole
+  output shape stable for the existing regression tests.
+- **`_build_apart_term(A, r, power, x)`** — emits one
+  ``A / (x − r)^power`` term, dropping explicit ±1 coefficients
+  to match the formatting choice of the simple-root path.
+
+### Changed
+
+- ``_apart_proper`` now:
+  1. Computes per-root multiplicities up-front.
+  2. Falls back to ``_apart_simple_roots`` when every multiplicity
+     is 1 (preserves Phase 1 output shape).
+  3. Otherwise applies the Taylor + series-division residue
+     formula to assemble all ``A_{r, j}/(x − r)^j`` terms.
+- The function still returns ``None`` when ``den`` has an
+  irreducible quadratic factor — those need an extension into
+  complex roots or a different algorithm (out of scope).
+
+### Added — tests
+
+`tests/test_phase25.py::TestPhase40_ApartTelescope` — 3 new cases
+(and the previously-skipped Phase-45 test renamed to
+``test_phase48_repeated_factor_closes``, now passing):
+
+- ``test_phase48_repeated_factor_closes`` — verifies
+  ``∑_{k=1}^∞ (2k+1)/(k²(k+1)²) = 1`` (closes the Phase 45 skip).
+- ``test_phase48_simple_repeated_root`` — ``Apart(1/k², k)`` no
+  longer bails out (regression for the bare-Pow case).
+- ``test_phase48_apart_higher_multiplicity`` — ``Apart(1/(k(k+1)²), k)``
+  produces a non-trivial decomposition (mixed simple + double
+  roots).
+- ``test_phase48_repeated_factor_higher_start`` — verifies
+  ``∑_{k=2}^∞ (2k+1)/(k²(k+1)²) = 1/4`` (arbitrary ``lo``).
+
+Test sweep: ``tests/test_phase25.py`` → **72 passed, 9 skipped**
+(was 68 passed + 10 skipped; +3 net new + 1 flipped from skip).
+Broader suite: **1499 passed** (was 1495; +4 new passes, -1
+flipped skip).  No new failures; the 59 pre-existing ``test_phase9``
+failures are unrelated.
+
+### What's left of the Phase 45 documented gaps
+
+All three Phase-45 ``pytest.skip`` markers are now closed:
+- Constant numerator → Phase 46
+- Shifted-only denominator → Phase 47 (PR #3922, in flight)
+- Repeated linear factors → Phase 48 (this PR)
+
+### Still deferred (genuinely future work)
+
+- ``Apart`` over irreducible quadratic factors (would need
+  complex-arithmetic support or an alternative decomposition).
+- Transcendental limit-finder for shapes the polynomial-degree
+  path doesn't cover (e.g. ``sin(k)/k²``).
+
+## 0.71.0 — 2026-05-22
+
+**Phase 47 — Nested-Add flattening in the symbolic VM.**
+
+Closes the shifted-denominator gap previously documented as
+Phase 45's ``test_phase45_chain_shifted_denominator`` skip
+(``∑_{k=1}^∞ 1/((k+1)(k+2)) = 1/2``).  This was NOT an ``Apart`` gap
+— ``Apart`` already decomposes the shifted form to
+``Add(Neg(Div(1, k+2)), Div(1, k+1))``.  The gap was downstream:
+cas-summation's telescope detector substitutes ``k → k+1`` in
+``Div(1, Add(k, 1))`` and produces ``Div(1, Add(Add(k, 1), 1))``.
+The symbolic-vm ``Add`` handler used to leave that nested form
+alone, so structural equality against ``Div(1, Add(k, 2))`` failed.
+
+### Changed
+
+- **`add(simplify=True)` handler** in
+  ``src/symbolic_vm/handlers.py`` now flattens nested ``Add``
+  trees before the binary numeric fold.  When either operand is
+  itself an ``Add(...)`` apply, the handler:
+  1. Collects every non-``Add`` leaf via the new
+     ``_flatten_add(node, out)`` recursive walker.
+  2. Partitions leaves into literals (``IRInteger``,
+     ``IRRational``, ``IRFloat``) and symbolic terms.
+  3. Sums the literals once (priority: float > Fraction > int)
+     and rebuilds a left-associated chain
+     ``Add(*non_literals, lit_sum)``.
+  4. Drops the trailing literal when it sums to zero, collapses
+     a single-element result back to the bare symbol, etc.
+
+  Strict mode (``simplify=False``) is unchanged — there's no
+  "symbolic" combination there; everything must be numeric.
+
+### Added — helper
+
+- **`_flatten_add(node: IRNode, out: list[IRNode]) -> None`** —
+  recursive walker that appends every non-``Add`` leaf of a
+  nested ``Add`` tree to the ``out`` accumulator.
+
+### Added — tests
+
+`tests/test_phase25.py::TestPhase40_ApartTelescope` — 4 new
+``test_phase47_*`` cases:
+
+- ``test_phase47_chain_shifted_denominator``: closes the
+  Phase-45-documented skip.  ``∑ 1/((k+1)(k+2)) = 1/2``.
+- ``test_phase47_nested_add_flattens``: direct test that
+  ``Add(Add(k, 1), 1)`` evaluates to ``Add(k, 2)``.
+- ``test_phase47_triply_nested_add``: recursive flattening across
+  three levels.  ``Add(Add(Add(k, 1), 1), 1) → Add(k, 3)``.
+- ``test_phase47_higher_shifted_denominator``: arbitrary shifts
+  still telescope.  ``∑ 1/((k+2)(k+3)) = 1/3``.
+
+Full suite: ``tests/test_phase25.py`` → **69 passed, 9 skipped**
+(was 65 passed + 11 skipped; +4 passing, -1 skipped — the Phase-45
+shifted-denominator skip is now a Phase-47 pass).  Broader suite:
+**1496 passed** (was 1495; +1 from the dropped skip).  No new
+failures; the 59 pre-existing test_phase9 failures are unrelated.
+
+### Why this is more general than a "shifted denominator" patch
+
+The nested-Add flattening is a *substrate* fix — it makes ``Add``
+canonical for any consumer that compares trees structurally.  The
+telescope detector is one consumer; other CAS modules that pattern-
+match on ``Add(k, c)`` shapes also benefit immediately.
+
+### Still deferred
+
+- Apart Phase 2: repeated linear factors (``1/(k²(k+1)²)``) — Apart
+  itself doesn't decompose these yet.
+
+
+## 0.70.0 — 2026-05-22
+
+**Phase 46 — Apart-retry constant-numerator widening.**
+
+Closes the constant-numerator gap previously documented as Phase 45's
+``test_phase45_chain_with_outer_constant_numerator`` skip.  The
+Phase 40 Apart-retry path now correctly handles ``Div(c, k(k+1))``
+shapes with arbitrary integer / rational / float constant ``c``, not
+just the unit numerator ``1``.
+
+### Root cause
+
+``Apart(5/(k(k+1)), k)`` returns ``Add(Div(-5, k+1), Div(5, k))`` —
+the negation is folded into the ``Div`` numerator rather than wrapped
+in a top-level ``Neg``.  The previous version of
+``_normalise_add_neg_to_sub`` only matched ``Add(a, Neg(b))`` /
+``Add(Neg(b), a)`` shapes, so the Apart-rewritten summand was
+returned as an unchanged ``Add`` and the Phase 39 telescope detector
+(which keys off ``Sub``) never fired.
+
+### Added
+
+- **`_extract_negation(node) -> IRNode | None`** in
+  ``src/symbolic_vm/cas_handlers.py`` — uniform negation recogniser
+  that returns the positive magnitude of:
+  1. ``Neg(x)`` (top-level wrapper)               → ``x``
+  2. ``Div(c, d)`` with literal ``c < 0`` (numerator-folded sign)
+     → ``Div(|c|, d)``
+  Handles ``IRInteger``, ``IRRational``, and ``IRFloat`` numerators.
+
+### Changed
+
+- ``_normalise_add_neg_to_sub`` now calls ``_extract_negation`` on
+  each side of the two-term ``Add`` rather than checking the ``Neg``
+  head directly.  The case table grows two rows for the new
+  numerator-folded shape but the rewrite logic is identical.
+
+### Added — tests
+
+`tests/test_phase25.py::TestPhase40_ApartTelescope` — 3 new cases (and
+the renamed Phase-45 skip that now passes):
+
+- `test_phase46_chain_with_outer_constant_numerator` — verifies
+  ``∑_{k=1}^∞ 5/(k(k+1)) = 5``.  Previously ``test_phase45_*``
+  skipped; now passes.
+- `test_phase46_negative_constant_numerator` — verifies the sign
+  propagates: ``∑_{k=1}^∞ (-3)/(k(k+1)) = -3``.  Exercises the
+  *opposite* orientation (standard ``g(k+1) − g(k)``) when the
+  outer constant is negative.
+- `test_phase46_rational_outer_constant` — verifies
+  ``∑_{k=1}^∞ (1/2)/(k(k+1)) = 1/2``.  Pins the ``IRRational``
+  numerator path of ``_extract_negation``.
+
+Test sweep: `tests/test_phase25.py` → **68 passed, 10 skipped** (was
+65 passed + 11 skipped; +3 passing, -1 skipped — the Phase-45 skip
+is now a Phase-46 pass).
+
+### Still deferred
+
+- Apart Phase 2: repeated linear factors (``1/(k²(k+1)²)``).
+- Apart Phase 3: shifted-only denominators (``1/((k+1)(k+2))``) —
+  CLOSED in Phase 47 (see 0.71.0 above).
+
+## 0.69.0 — 2026-05-22
+
+**Phase 45 — End-to-end integration tests for the Apart + telescope
+chain.**
+
+Tests-only release.  Adds four new integration tests inside
+`tests/test_phase25.py::TestPhase40_ApartTelescope` that pin the
+cross-phase composition behaviour and surface the remaining gaps as
+documented `pytest.skip` markers (so a future generalisation of Apart
+drops the skips and the tests pass automatically).
+
+### Added — tests
+
+`tests/test_phase25.py::TestPhase40_ApartTelescope` — 4 new cases:
+
+- `test_phase45_chain_higher_starting_index` — verifies
+  ``∑_{k=2}^∞ 1/(k(k+1)) = 1/2`` (Apart → Phase 41 antisymmetric
+  telescope at an arbitrary ``lo``).
+- `test_phase45_chain_shifted_denominator` — documents that
+  ``∑_{k=1}^∞ 1/((k+1)(k+2))`` stays unevaluated because the
+  Phase 40 Apart-retry doesn't currently re-shift purely shifted
+  denominators (no bare ``k`` factor).  Skipped with a "drop me
+  when Apart Phase 3 lands" hint; math closes to ``1/2``.
+- `test_phase45_repeated_factor_known_gap` — documents that
+  ``∑_{k=1}^∞ (2k+1)/(k²(k+1)²)`` stays unevaluated because Apart's
+  current implementation doesn't decompose denominators with
+  repeated linear factors.  Skipped with a "drop me when Apart
+  Phase 2 lands" hint; math closes to ``1``.
+- `test_phase45_chain_with_outer_constant_numerator` — documents
+  that ``∑_{k=1}^∞ 5/(k(k+1))`` stays unevaluated because the
+  Apart-retry recogniser only matches the unit-numerator shape
+  ``Div(1, k(k+1))``.  Skipped with a "drop me when the retry
+  generalises" hint; math closes to ``5``.
+
+No production code touched; no version bumps to dependencies.
+Full ``tests/test_phase25.py`` sweep: **65 passed, 11 skipped**
+(63 passed + 8 skipped prior; +2 passing, +3 documented gaps).
+
+### Still deferred
+
+- Apart Phase 2: repeated linear factors (e.g. ``1/(k²(k+1)²)``).
+- Apart Phase 3: shifted-only denominators (e.g. ``1/((k+1)(k+2))``).
+- Apart-retry generalisation to fan non-unit constant numerators
+  through to the telescope branch.
+
+## 0.68.0 — 2026-05-22
+
+**Phase 44 dep bump — Log divergence in vanishing-at-infinity.**
+
+Bumps `coding-adventures-cas-summation` to `>=0.6.0` (introduces the
+new ``Log(h(k))`` divergence recogniser).  Combined with the existing
+Phase 40 Apart-retry path, infinite series involving ``log(...)``
+denominators now close in one dispatch through the `sum_handler`.
+
+### Changed
+
+- Bumped dep `coding-adventures-cas-summation>=0.6.0` (was `>=0.5.0`).
+
+## 0.67.0 — 2026-05-22
+
+**Phase 43 dep bump — transcendental vanishing-at-infinity.**
+
+Bumps the `coding-adventures-cas-summation` dependency to `>=0.5.0`,
+which introduces Phase 43's transcendental denominator recogniser
+(``Exp(h(k))``, ``Pow(b, h(k))`` with ``|b| > 1``, and ``Mul`` of
+such factors).  Combined with the existing Phase 40 Apart-retry path,
+``∑_{k=0}^∞ [c_1/2^k + c_2/3^k + …]`` style series now close in one
+dispatch through the `sum_handler`.
+
+### Changed
+
+- Bumped dep `coding-adventures-cas-summation>=0.5.0` (was `>=0.4.0`).
+
+## 0.66.0 — 2026-05-22
+
+**Phase 42 dep bump — degree-aware vanishing-at-infinity.**
+
+Bumps the `coding-adventures-cas-summation` dependency to `>=0.4.0`,
+which introduces Phase 42's degree-aware `_g_vanishes_at_infinity`
+recogniser.  No symbolic-vm code changes — the existing Phase 40
+Apart-retry path automatically benefits when the partial-fraction
+output has a non-constant numerator, e.g. infinite series like
+``∑_{k=1}^∞ k/(k²+1) − (k+1)/((k+1)²+1) = 1/2`` now close in one
+dispatch through the `sum_handler`.
+
+### Changed
+
+- Bumped dep `coding-adventures-cas-summation>=0.4.0` (was `>=0.3.0`).
+
+## 0.65.0 — 2026-05-22
+
+**Phase 40 + Phase 41 chain end-to-end.**
+
+Bumps the `coding-adventures-cas-summation` dependency to `>=0.3.0`,
+which introduces Phase 41 limit-aware infinite telescopes.  Combined
+with the existing Phase 40 Apart-retry path in `sum_handler`, the
+following canonical series now closes in a single dispatch:
+
+```
+∑_{k=1}^∞ 1/(k(k+1))
+  →  Apart (Phase 40)            →  ∑_{k=1}^∞ [1/k − 1/(k+1)]
+  →  telescope (Phase 39)        →  antisymmetric, g(k) = 1/k
+  →  g vanishes at ∞ (Phase 41)  →  g(1) − 0
+  →  eval                         →  1
+```
+
+### Added — tests
+
+- **`test_phase40_plus_phase41_infinite_chain`** in
+  `tests/test_phase25.py` confirms the end-to-end pipeline returns the
+  scalar integer `1` for ``∑_{k=1}^∞ 1/(k(k+1))``.
+
+### Changed
+
+- Bumped dep `coding-adventures-cas-summation>=0.3.0` (was `>=0.1.0`)
+  to lock in the Phase 41 closure capability.
+
+## 0.64.0 — 2026-05-22
+
+**Phase 40 — Apart + telescope composition.**
+
+The `sum_handler` now composes the existing partial-fraction
+decomposition (`Apart`) with the Phase 39 telescoping detector so
+classic sums like `∑ 1/(k·(k+1))` close in one step.
+
+Pipeline:
+
+```
+∑ 1/(k·(k+1))  →  Apart → 1/k − 1/(k+1)
+                  → telescope → 1 − 1/(N+1)
+                  → eval → N/(N+1)
+```
+
+When the initial `evaluate_sum` call falls through to the unevaluated
+`Sum(...)` shape AND the summand has a `Div` head, the handler runs
+`Apart(f, k)` once.  If Apart actually changes the shape (i.e. the
+denominator factors over ℚ), the handler normalises the
+`Add(a, Neg(b))` output into a `Sub(a, b)` and deep-canonicalises ADD
+operand ordering, then re-runs `evaluate_sum`.  The Phase 39 telescope
+detector matches on the rewritten form and emits the closed sum.  When
+Apart doesn't change the shape (irreducible denominator), the retry is
+a no-op and the original unevaluated `Sum(...)` is returned.
+
+### Added
+
+- **`_normalise_add_neg_to_sub(node)`** in `cas_handlers.py` — rewrites
+  the two-term `Add(a, Neg(b))` / `Add(Neg(b), a)` shape into the
+  equivalent `Sub(a, b)` form.  Apart emits the negative half via
+  `Neg(...)`, but the Phase 39 telescope detector keys off the `Sub`
+  head, so the rewrite is required for the two phases to compose.
+- **`_canonicalise_add_operand_order(node)`** — recursive walker that
+  reorders each `Add`'s arguments so numeric literals appear *last*.
+  The symbolic VM doesn't impose a canonical operand order on `Add`,
+  so `Add(k, 1)` and `Add(1, k)` are structurally distinct; the
+  telescope detector's `==` comparison after `vm.eval` therefore needs
+  both halves to agree on operand order.
+
+### Changed
+
+- **`sum_handler`** (`cas_handlers.py`) — adds a Phase 40 retry block
+  between the initial `evaluate_sum` call and the unevaluated
+  fallback.  Guarded by `isinstance(f, IRApply) and f.head == DIV` so
+  non-rational summands (Sin/Log/etc.) skip the extra dispatch cost.
+
+### Added — tests
+
+`tests/test_phase25.py` — new `TestPhase40_ApartTelescope` class with
+6 cases:
+
+- `test_one_over_k_times_kp1_concrete` — `∑_{k=1}^{4} 1/(k(k+1)) = 4/5`.
+- `test_one_over_k_times_kp1_concrete_larger` —
+  `∑_{k=1}^{10} 1/(k(k+1)) = 10/11`.
+- `test_one_over_k_times_kp1_symbolic_upper` — symbolic `n` bound; the
+  result must not be the unevaluated `Sum(...)`.
+- `test_one_over_kp1_times_kp2_concrete` —
+  `∑_{k=1}^{4} 1/((k+1)(k+2)) = 1/3` (shifted-denominator telescope).
+- `test_apart_irreducible_quadratic_stays_unevaluated` — `1/(k²+1)`
+  has no rational roots, so Apart leaves the input unchanged and the
+  retry is a no-op; result stays unevaluated.
+- `test_non_div_summand_skips_apart_retry` — `sin(k)` summand never
+  reaches the Apart retry (non-`Div` head).
+
+Full sum test set: 45 passed (39 prior Phase 25 + 6 net new Phase 40).
+Broader symbolic-vm slice (Phase 25 / 34 / integrate / cas-handlers):
+295 passed, 8 skipped, no regressions.
+
+### Still deferred
+
+- Hypergeometric / closed-form telescoping that needs more than one
+  Apart pass (e.g. nested denominators).
+- Limit-aware infinite telescope (`∑_{k=1}^{∞} 1/(k(k+1)) = 1`).
+- Cross-language port to TypeScript / Rust (a separate sprint).
+
+## 0.63.0 — 2026-05-20
+
+**Phase 38 — Weierstrass closed forms lifted to linear trig arguments
+`sin(α·x + β)` and `cos(α·x + β)`.**
+
+The previous Phases 34–37 closed Weierstrass for `∫ c / (a + b·trig(x)) dx`
+in all discriminant regimes (`a² > b²` arctan, `a² = b²` degenerate,
+`a² < b²` log) but only when the trig argument was the bare variable
+`x`.  Phase 38 generalises every branch to accept any linear-in-`x`
+rational argument `α·x + β` (with `α, β ∈ Q`, `α ≠ 0`).
+
+The mathematics is a single inner change of variable: with `u = α·x + β`
+we have `du = α · dx`, so
+
+    ∫ c/(a + b·sin(α·x + β)) dx
+        =  (1/α) · ∫ c/(a + b·sin u) du   (Phase 34/36/37 closed form in `u`)
+
+The closed form is the existing one with `tan((α·x + β)/2)` substituted
+for `tan(x/2)` and the outer constant scaled by `1/α`.  When `α = 1` and
+`β = 0`, the new code path is bit-for-bit identical to the old Phases
+34–37 — full backwards compatibility.
+
+### Added
+
+- **`_parse_linear_in_x(node, x)`** in `integrate.py` — parses a node
+  into a `(α, β)` rational pair when it represents `α·x + β`.  Handles
+  bare `x`, scalar multiples, ADD/SUB with any operand ordering, and
+  leading `Neg` wrappers.  Rejects nonlinear (`x²`) and pure-constant
+  shapes by returning `None`.  `α = 0` is filtered out so callers may
+  rely on `α ≠ 0` throughout.
+- **`_build_linear_arg_ir(α, β, x)`** — converts the parsed `(α, β)`
+  back into IR, collapsing trivial cases (`α=1, β=0 → x`, etc.) so the
+  emitted `tan(arg/2)` carries the simplest equivalent argument.
+- **`_parse_const_times_trig_linear(node, x)`** — supersedes the
+  Phase 34 bare-`x` predecessor.  Returns `(c, head, α, β)` for any
+  shape matching `c·sin(α·x+β)` or `c·cos(α·x+β)` (plus all the
+  scalar / Neg / order variants the old code handled).
+
+### Changed
+
+- **`_parse_a_plus_b_sincos`** — now returns `(a, b, head, α, β)`
+  instead of `(a, b, head)`.  All four signs/orderings of the parent
+  ADD/SUB pattern continue to work; the extra `α, β` carry the inner
+  trig argument's linear coefficients through to the dispatcher.
+- **`_try_weierstrass_degenerate`, `_try_weierstrass_log_form`,
+  `_try_weierstrass_one_over_linear_trig`** — accept an `arg_node`
+  IR parameter representing `α·x + β` and substitute it into the
+  `tan(arg/2)` construction.  The outer `c ← c/α` scaling is applied
+  once at the dispatcher entry, so each branch's closed form is
+  otherwise unchanged.
+
+### Added — tests
+
+`tests/test_phase34_weierstrass.py` (10 new cases, including one
+promoted from the prior fallthrough):
+
+- `test_phase38_sin_two_x_closes` — `∫ 1/(2 + sin(2x)) dx` closes; the
+  derivative numerically matches `1/(2 + sin 2x)` on `(−π/2, π/2)`.
+- `test_phase38_cos_three_x` — `α = 3` cos variant.
+- `test_phase38_sin_x_plus_constant_phase` — `α = 1, β = 1` isolates
+  the phase shift.
+- `test_phase38_sin_two_x_plus_phase` — full `α = 2, β = 1` general case.
+- `test_phase38_rational_alpha` — `α = 1/2` rational coefficient.
+- `test_phase38_negative_alpha` — `α = −2` sign-flipped case.
+- `test_phase38_degenerate_branch_under_substitution` — `∫ 1/(1+cos 2x) dx`
+  exercises the Phase 35 degenerate path with α=2.
+- `test_phase38_log_form_under_substitution` — `∫ 1/(1+2·sin 2x) dx`
+  exercises the Phase 36 log path with α=2.
+- `test_phase38_fallthrough_nonlinear_argument` — `sin(x²)` is correctly
+  left unevaluated.
+- `test_phase38_fallthrough_symbolic_alpha` — `sin(α·x)` with symbolic
+  α defers gracefully.
+
+### Still deferred
+
+- Symbolic coefficients (`a`, `b`, `α`, or `β` non-numeric) — needs an
+  assumption context to decide discriminant sign.
+- Trig argument involving `x²` or other nonlinear forms — out of scope
+  for Weierstrass; a future substitution phase would compose with these.
+
+## 0.62.0 — 2026-05-20
+
+**Phase 37 — Weierstrass log form extended to `b < −|a|` cos branch.**
+
+Phase 36 closed the `a² < b²` log form for the `b > |a|` case but
+explicitly deferred the symmetric `b < −|a|` case under the
+(incorrect) assumption that a separate sign-flipped formula was
+needed.  A more careful derivation shows that the existing
+``log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|`` formula already
+handles both sign regimes correctly when the `Abs` wrapping is in
+place — the numerator and denominator swap as `b−a` changes sign, and
+``|N/D'| = |D'/N|`` collapses them to the same value.
+
+### Changed
+
+- **`_try_weierstrass_log_form` cos branch** (`integrate.py`): removed
+  the ``if b <= abs(a): return None`` and ``if b_minus_a <= 0: return None``
+  guards.  The remaining caller-side guarantee (``b² > a²``, from the
+  Phase 34 dispatcher's ``disc < 0`` entry condition) is sufficient for
+  the formula to produce the correct antiderivative across all sign
+  combinations of `a` and `b` with `|b| > |a|`.
+
+### Added — tests
+
+`tests/test_phase34_weierstrass.py` (3 new cases — one promoted from
+the prior fallthrough):
+
+- `test_phase37_cos_negative_b_now_closes` — `∫ 1/(1 − 2·cos x) dx`
+  closes; numerical derivative matches across the open interval where
+  the integrand is finite (avoiding the zeros at `cos x = 1/2`).
+- `test_phase37_cos_negative_b_with_negative_a` — `∫ 1/(−1 − 3·cos x) dx`
+  with both `a` and `b` negative.
+- `test_phase37_cos_negative_b_with_numerator_coefficient` —
+  `∫ 5/(1 − 2·cos x) dx` confirms the coefficient passes through.
+
+Full suite: **1686 passed, 85 skipped, 81.44% coverage.**
+
+### Still deferred
+
+- Non-bare trig arguments (e.g. `sin(αx + β)`) — needs composition with
+  a linear-substitution phase.
+- Symbolic `a` or `b`.
+- `a = 0` sin branch (would reduce to `∫ c/(b·sin x) dx` — falls back
+  to the elementary table).
+
+## 0.61.0 — 2026-05-20
+
+**Phase 36 integration — Weierstrass log form for `a² < b²` denominators.**
+
+Closes the deferred `a² < b²` branch of Phase 34 (PR #3472) by emitting
+the explicit log-form closed solution.  After the substitution
+`u = tan(x/2)` the quadratic in `u` has two distinct real roots; partial
+fractions integrate to
+
+    ∫ c/(a + b·sin x) dx
+        =  (c/D) · log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|  +  C
+
+    ∫ c/(a + b·cos x) dx
+        =  (c/D) · log|(D + (b−a)·tan(x/2)) / (D − (b−a)·tan(x/2))|   +  C
+
+where `D = √(b² − a²) > 0`.  The sin formula is valid for any nonzero
+rational `a`.  The cos formula requires `b > |a|` strictly (and hence
+`b > 0`, `b − a > 0`) — the symmetric `b < −|a|` cos case is deferred
+because it has the opposite sign pattern and needs a separate
+branch in the log.
+
+The log argument is emitted as `Log(Abs(ratio))` because the
+inner rational changes sign as `x` moves through the singularities of
+the integrand; the absolute value lets the closed form be evaluated
+numerically across the full domain.
+
+### Added
+
+- **`_try_weierstrass_log_form(c, a, b, trig_head, x)`** — Phase 36
+  helper called from `_try_weierstrass_one_over_linear_trig` when
+  `disc = a² − b² < 0`.  Returns the closed form for sin (any nonzero
+  `a`) and for cos when `b > |a|`; returns `None` for the remaining
+  symmetric cos case and for `a = 0` in the sin branch.
+
+- The Phase 34 dispatcher's `disc < 0` arm now calls
+  `_try_weierstrass_log_form` and falls back to `None` only when the
+  log-form helper itself defers.
+
+### Tests
+
+`tests/test_phase34_weierstrass.py` (6 new cases — one promoted from
+the prior fallthrough):
+
+- `test_phase36_a_less_than_b_sin_now_closes` — ∫ 1/(1+2 sin x) dx
+  closes; numerical derivative matches on a sample stride avoiding
+  the integrand's singularities.
+- `test_phase36_a_less_than_b_cos_now_closes` — ∫ 1/(1+2 cos x) dx
+  closes; numerical match.
+- `test_phase36_negative_a_sin` — ∫ 1/(−1 + 2 sin x) dx with a < 0
+  closes (the sin formula has no sign restriction).
+- `test_phase36_with_numerator_coefficient` — ∫ 3/(1+2 sin x) dx
+  scales correctly.
+- `test_phase36_perfect_square_discriminant` — ∫ 1/(3 + 5 sin x) dx
+  with |disc| = 16 (perfect square) emits a `Sqrt`-free coefficient.
+- `test_phase36_cos_negative_b_still_defers` — ∫ 1/(1 − 2 cos x) dx
+  (effective `b = −2 < |a| = 1`) stays unevaluated.
+
+Full suite: **1684 passed, 85 skipped, 81.45% coverage.**
+
+### Still deferred
+
+- Cos branch with `b < −|a|` (sign-flipped log form).
+- Non-bare trig arguments such as `sin(αx + β)` — composition with a
+  later linear-substitution phase will lift this.
+- Symbolic `a` or `b`.
+
+## 0.60.0 — 2026-05-18
+
+**Phase 35 integration — degenerate `a² = b²` Weierstrass cases.**
+
+Closes the four degenerate-discriminant branches that Phase 34 left as
+unevaluated:
+
+    ∫ 1/(a + a·sin x) dx  =  -2 / (a · (tan(x/2) + 1))
+    ∫ 1/(a − a·sin x) dx  =   2 / (a · (1 − tan(x/2)))
+    ∫ 1/(a + a·cos x) dx  =   tan(x/2) / a
+    ∫ 1/(a − a·cos x) dx  =  -1 / (a · tan(x/2))     (= -cot(x/2)/a)
+
+Each formula is exact (no `Sqrt` factor, no `Atan` wrapper) because the
+post-substitution quadratic in `u = tan(x/2)` factors as `a(u ± 1)²` for
+sin and reduces to `2a` (constant) or `2a·u²` for cos.  A numerator
+constant `c` scales every output.
+
+### Added
+
+- **`_try_weierstrass_degenerate(c, a, b, trig_head, x)`** — Phase 35
+  helper.  Called from `_try_weierstrass_one_over_linear_trig` when
+  `disc == 0` (the existing function previously returned `None` in this
+  case).  Matches the four sign combinations on `(b == a, b == -a) ×
+  (SIN, COS)` and emits the corresponding closed form.  Returns `None`
+  for the pathological `a = 0` sub-case (which only fires when
+  `b = 0` too — a zero denominator, not integrable).
+
+- Updated the existing `_try_weierstrass_one_over_linear_trig`
+  dispatcher to call `_try_weierstrass_degenerate` for `disc == 0` and
+  to return `None` (defer) for `disc < 0` (log form, still open).
+
+### Tests
+
+`tests/test_phase34_weierstrass.py` (5 new tests + 1 promoted from
+fallthrough to closed form):
+
+- `test_phase35_a_equals_b_now_closes` — ∫ 1/(1 + sin x) dx now closes;
+  numerical derivative matches.  (Previously a fallthrough test.)
+- `test_phase35_one_minus_sin_closes` — ∫ 1/(2 − 2·sin x) dx.
+- `test_phase35_one_plus_cos_closes` — ∫ 1/(1 + cos x) dx → tan(x/2).
+- `test_phase35_one_minus_cos_closes` — ∫ 1/(1 − cos x) dx → −cot(x/2).
+- `test_phase35_with_numerator_coefficient` — ∫ 5/(2 + 2·sin x) dx.
+- `test_phase35_rational_coefficients` — ∫ 1/(3/2 + 3/2·cos x) dx.
+
+### Deferred to a future phase
+
+- `a² < b²` — log form on `(a·tan(x/2) + b ± √(b²−a²))` requires sign
+  analysis on the log argument; not implemented in this release.
+- Non-bare trig arguments (e.g. `sin(2x)`) and symbolic coefficients
+  remain unchanged from Phase 34.
+
+## 0.59.0 — 2026-05-18
+
+**Phase 34 integration — Weierstrass substitution for `∫ c/(a + b·sin(x)) dx`
+and `∫ c/(a + b·cos(x)) dx`.**
+
+The substitution `u = tan(x/2)` gives `sin(x) = 2u/(1+u²)`,
+`cos(x) = (1−u²)/(1+u²)`, `dx = 2/(1+u²) du` and reduces the two
+canonical denominator shapes to a rational function in `u`.  When
+the discriminant `a² − b² > 0` (denominator never zero on ℝ) the
+result is a clean arctan.
+
+Closed forms now produced:
+
+    ∫ 1/(a + b·sin x) dx  =  (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
+    ∫ 1/(a + b·cos x) dx  =  (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
+
+For numeric `a, b` with `a² > b²` and `a > 0` the integrator now closes
+the form directly; a numerator constant `c` simply scales the result.
+
+Deliberately deferred (return `None` and the caller emits an
+unevaluated `Integrate`):
+
+- `a² < b²` — log form on `(a·tan(x/2)+b ± √(b²−a²))`.
+- `a² = b²` — degenerate, reduces to `1/(a + b·tan(x/2))`.
+- `a ≤ 0` for the cos case — sign analysis of `(a−b)/(a+b)` needs more
+  care; the formula above assumes both `a+b > 0` and `a−b > 0`.
+- Symbolic `a` or `b` — discriminant sign undecidable without an
+  assumption context.
+- Non-bare trig arguments (e.g. `sin(2x)`) — composition with a future
+  linear-substitution phase will lift this.
+
+### Added
+
+- **`_try_weierstrass_one_over_linear_trig(integrand, x)`** — the entry
+  point.  Matches `Div(c, Add(a, ...))` where the `Add` resolves to
+  `a + b·sin(x)` or `a + b·cos(x)` and `a, b ∈ Q`.  Returns the closed
+  form in IR (an `arctan` wrapped around a `tan(x/2)` expression) or
+  `None`.  Wired into the `DIV` branch of `_integrate` after the
+  existing constant-denominator and `1/x` cases.
+
+- **`_parse_a_plus_b_sincos(node, x)`** — structural matcher returning
+  `(a, b, trig_head)` for the four canonical operand orderings of the
+  denominator.  Handles `Add` and `Sub` heads; unwraps a leading `Neg`
+  on the trig factor; falls back to `None` when the shape is not the
+  expected linear combination.
+
+- **`_parse_const_times_trig_x(node, x)`** — matches `c·sin(x)`,
+  `c·cos(x)`, `sin(x)`, `cos(x)`, and their `Neg`-wrapped variants.
+
+- **`_sqrt_fraction_ir(f)`** — emits `√(p/q)` IR, folding to a clean
+  rational when both `p` and `q` are perfect integer squares; otherwise
+  wraps the rational in `Sqrt(...)`.
+
+### Tests
+
+`tests/test_phase34_weierstrass.py` (14 cases):
+
+- ∫ 1/(2 + sin x) dx: closed form contains Atan, derivative matches
+  numerically across `x ∈ {−2.5, −1, −0.3, 0, 0.3, 1, 2.5}`.
+- ∫ 1/(5 + 3·sin x) dx: perfect-square discriminant (16) → no `Sqrt`
+  in the output; numeric derivative matches.
+- ∫ 3/(2 + sin x) dx: numerator coefficient scales the closed form.
+- ∫ 1/(3/2 + (1/2)·sin x) dx: rational `a, b` with `a² > b²`.
+- ∫ 1/(2 + cos x) dx and ∫ 1/(5 + 3·cos x) dx: both close; the
+  five-plus-three case has perfect-square ratio (1/4) and avoids `Sqrt`.
+- Operand-order robustness: ∫ 1/(sin x + 2) dx still closes.
+- Fallthrough: ∫ 1/(1 + 2·sin x) dx (a² < b²) stays unevaluated.
+- Fallthrough: ∫ 1/(1 + sin x) dx (a² = b²) stays unevaluated.
+- Fallthrough: ∫ 1/(2 + sin(2x)) dx (non-bare argument) stays unevaluated.
+- Fallthrough: ∫ 1/(a + sin x) dx with symbolic `a` stays unevaluated.
+- Regression: ∫ sin(x) dx = −cos(x) unchanged.
+- Regression: ∫ 1/cos(x) dx is **not** misinterpreted as a Weierstrass
+  case (denominator has no additive constant; Phase 34 must not fire).
+
+## 0.58.0 — 2026-05-16
+
+**Phase 28 integration — general IBP for `∫ P(x)·log(Q(x)) dx` and
+`∫ P(x)·atan(Q(x)) dx` with non-linear polynomial Q(x).**
+
+The existing Phase 3 and Phase 11 handlers only fire when Q(x) is a linear
+polynomial (ax+b).  Phase 28 generalises both via IBP:
+
+    ∫ P(x)·log(Q(x)) dx  =  R(x)·log(Q(x))  −  ∫ R(x)·Q′(x)/Q(x) dx
+    ∫ P(x)·atan(Q(x)) dx  =  R(x)·atan(Q(x))  −  ∫ R(x)·Q′(x)/(1+Q(x)²) dx
+
+where R(x) = ∫P(x) dx (polynomial antiderivative).  The residual in each case
+is a rational function delegated to the existing Hermite + Rothstein–Trager +
+arctan machinery (Phase 2c–2f, 9, 10).
+
+Example closed forms now produced:
+
+    ∫ log(x²+1) dx      = x·log(x²+1) − 2x + 2·atan(x)
+    ∫ x·log(x²+1) dx    = (x²+1)/2·log(x²+1) − x²/2
+    ∫ x²·log(x²+1) dx   = x³/3·log(x²+1) − 2x³/9 + 2x/3 − (2/3)·atan(x)
+    ∫ x·atan(x²) dx      = x²/2·atan(x²) − (1/4)·log(1+x⁴)
+
+### Added
+
+- **`_try_log_poly_product(transcendental, poly_candidate, x)`** — Phase 28
+  log handler.  Requires `transcendental = Log(Q)` with Q a non-linear
+  polynomial in x, and `poly_candidate` a polynomial.  Skips linear Q
+  (Phase 3 handles it).  Returns `None` if the rational residual cannot be
+  closed.
+
+- **`_try_atan_poly_product(transcendental, poly_candidate, x)`** — Phase 28
+  arctan handler.  Requires `transcendental = Atan(Q)` with Q non-linear
+  polynomial.  Skips linear Q (Phase 11 handles it).  The rational residual
+  has denominator `1+Q(x)²`; returns `None` when the rational route fails
+  (e.g. when `1+Q⁴` does not factor over Q).
+
+- Imported **`poly_deriv`** alias from the `polynomial` package to compute
+  polynomial derivatives in the IBP reduction.
+
+## 0.57.0 — 2026-05-16
+
+**Phase 27 integration — trig-of-log: `∫ sin(log x) dx`, `∫ cos(log x) dx`,
+and `∫ Q(x)·sin/cos(log x) dx`.**
+
+The substitution u = log(x) converts `∫ x^k · trig(log x) dx` into the
+standard exp×trig form `∫ e^((k+1)u) · trig(u) du` (Phase 4c), yielding:
+
+    ∫ sin(log x) dx = x/2 · (sin(log x) − cos(log x))
+    ∫ cos(log x) dx = x/2 · (sin(log x) + cos(log x))
+
+    ∫ x^k sin(log x) dx = x^(k+1) · ((k+1)·sin(log x) − cos(log x)) / ((k+1)²+1)
+    ∫ x^k cos(log x) dx = x^(k+1) · ((k+1)·cos(log x) + sin(log x)) / ((k+1)²+1)
+
+### Added
+
+- **`_trig_log_integral(trig_head, k, x)`** — closed-form kernel for
+  `∫ x^k · sin/cos(log x) dx` for integer k ≥ 0.  The denominator
+  `(k+1)²+1` is always a positive integer; no division by zero possible.
+
+- **`_try_trig_log_product(transcendental, poly_candidate, x)`** — matches
+  when `transcendental` is `Sin(Log(x))` or `Cos(Log(x))` (bare `x` only;
+  shifted log arguments deferred) and `poly_candidate` is a polynomial of x.
+  Sums `_trig_log_integral` over each monomial.
+
+- **Phase 27 pure-form hook** — recognises `Sin(Log(x))` / `Cos(Log(x))`
+  in the single-function branch of `_integrate`, triggering
+  `_trig_log_integral(head, 0, x)` before the Phase 3 linear-argument scan.
+
+- **Phase 27 MUL hook** — inserted in the MUL product handler directly
+  after Phase 26, trying both orderings of the two factors.
+
+- **13 new tests** in `tests/test_phase27_trig_log.py`:
+  - Pure sin(log(x)) and cos(log(x)): closed-form check + numerical (≤1e-5).
+  - x·sin/cos(log(x)): closed-form check + numerical.
+  - x²·sin/cos(log(x)): numerical (≤1e-4).
+  - (x²+2x+1)·sin(log(x)): structural closed-form check.
+  - Regression: `∫ sin(x) dx = −cos(x)` and `∫ cos(x) dx = sin(x)` still correct.
+
+## 0.56.0 — 2026-05-16
+
+**Phase 26 integration — log-power IBP reduction: `∫ log(ax+b)^n dx` and
+`∫ Q(x)·log(x)^n dx` for n ≥ 2.**
+
+### Added
+
+- **`_log_power_integral(log_arg, n, x)`** — computes `∫ log(ax+b)^n dx` for
+  any rational-linear `ax+b` (a ≠ 0) and positive integer `n ≥ 1` using the
+  iterated IBP reduction formula:
+
+      F_n(x) = (ax+b)/a · log(ax+b)^n  −  n · F_{n-1}(x)
+
+  with base case `F_0(x) = x`.  Wired into the `POW` branch of `_integrate`
+  for `POW(LOG(linear), n)` with integer `n ≥ 2` (n = 1 already handled by
+  the elementary-function table).  Example closed forms:
+
+      ∫ log(x)^2 dx = x·log(x)^2 − 2x·log(x) + 2x
+      ∫ log(x)^3 dx = x·log(x)^3 − 3x·log(x)^2 + 6x·log(x) − 6x
+      ∫ log(2x+1)^2 dx = (2x+1)/2·log(2x+1)^2 − (2x+1)/2·log(2x+1) + x + …
+
+- **`_poly_log_power_term(k, n, x)`** — closed form of `∫ x^k · log(x)^n dx`
+  (log argument must be the bare variable `x`; k ≠ −1) built by the
+  term-level reduction:
+
+      G_{k,n}(x) = x^(k+1)/(k+1) · log(x)^n  −  n/(k+1) · G_{k,n-1}(x)
+
+  with `G_{k,0}(x) = x^(k+1)/(k+1)`.  Used by `_try_log_power_product`.
+
+- **`_try_log_power_product(transcendental, poly_candidate, x)`** — handles
+  the `MUL` head pattern `Q(x) · POW(LOG(x), n)` for polynomial `Q` over Q
+  and integer `n ≥ 2`.  Applies linearity `∫ Q(x)·log(x)^n dx = Σ cᵢ ∫ xⁱ
+  log(x)^n dx` and delegates each monomial term to `_poly_log_power_term`.
+  Wired into the `MUL` dispatcher after `_try_atanh_product` (Phase 14c).
+  Examples:
+
+      ∫ x·log(x)^2 dx = x^2/2·log(x)^2 − x^2/2·log(x) + x^2/4
+      ∫ x^2·log(x)^2 dx = x^3/3·log(x)^2 − 2x^3/9·log(x) + 2x^3/27
+
+### Tests
+
+- `tests/test_phase26_log_power.py` — 12 new tests:
+  - Closed-form checks for `log(x)^2`, `log(x)^3`, `log(x)^4`,
+    `x·log(x)^2`, `x^2·log(x)^2`, `log(2x+1)^2` (structural — no
+    `Integrate` head in result, `LOG` head present).
+  - Numerical correctness: antiderivative difference `F(b) − F(a)` compared
+    with trapezoidal quadrature for each of the above (< 1×10⁻⁴ tolerance).
+  - Regression: `∫ log(x) dx` still returns `x·log(x) − x` via the existing
+    Phase 3 elementary-function path (Phase 26 only fires for n ≥ 2).
+
+## 0.55.0 — 2026-05-14
+
+**Phase 26 — MACSYMA stress-test parity fixes: differentiation order, pattern matching,
+multivariate expansion, and elliptic integral float-modulus recognition.**
+
+### Bug fixes
+
+- **`D(f, x, n)` three-argument differentiation** (`derivative.py`): The `D` handler now
+  accepts a third integer argument `n` and applies `_diff` n times in a loop.  Previously
+  only `D(f, x)` was accepted; `D(f, x, 2)` raised `TypeError`.
+
+- **`apply1` / `apply2` argument order** (`cas_handlers.py`): MACSYMA convention is
+  `apply1(target, rule_name)` (target first, rule second).  The handlers had the arguments
+  reversed, so `defrule(r1, …); apply1(expr, r1)` silently returned the expression
+  unapplied.  Fixed by swapping `name_node, raw_target = expr.args` to
+  `raw_target, name_node = expr.args` in both handlers.
+
+- **Multivariate polynomial expansion** (`cas_handlers.py`): The `expand_handler` now
+  includes a `_sym_expand` fallback that recursively distributes `Mul` over `Add`/`Sub`
+  and uses binary-exponentiation for integer powers.  This makes
+  `expand((a+b)^2)` → `a^2 + 2ab + b^2` and `expand((a+b)^3)` work correctly
+  for multivariate inputs where the polynomial bridge previously returned the input unchanged.
+
+- **EllipticK/E/Pi float-modulus recognition** (`integrate.py`): `_modulus_from_squared_factor`
+  now handles pre-evaluated numeric literals (`IRFloat`, `IRInteger`, `IRRational`) as `k²`
+  by computing `k = sqrt(k²)` numerically.  Previously `0.5^2` evaluated to `IRFloat(0.25)`
+  before the integrate handler ran, causing the EllipticK/E/Pi pattern recogniser to miss it.
+  Now `integrate(1/sqrt(1-0.5^2*sin(theta)^2), theta, 0, %pi/2)` → `EllipticK(0.5)`,
+  and similarly for EllipticE and EllipticPi.
+
+- Recognised the first elliptic integration foothold: `Integrate` now returns
+  `EllipticF(theta, k)` for `1/sqrt(1-k^2*sin(theta)^2)` and `EllipticK(k)`
+  for the corresponding definite integral from `0` to `%pi/2`.
+- Extended the common multivariate factoring foothold to extract shared
+  integer content as well as symbolic powers, so expressions like
+  `2*x*y + 2*x*z` now factor to `2*x*(y+z)`.
+- Added another small multivariate factoring foothold to `Factor`: four-term
+  perfect-cube expansions such as `x^3 + 3*x^2*y + 3*x*y^2 + y^3` now factor
+  to `(x+y)^3`, and `x^3 - 3*x^2*y + 3*x*y^2 - y^3` to `(x-y)^3`.
+- Added another small multivariate factoring foothold to `Factor`: four-term
+  bilinear grouping such as `x*y + x*z + y + z` now factors to
+  `(x+1)*(y+z)`.
+- Added another small multivariate factoring foothold to `Factor`: bivariate
+  cubic identities such as `x^3 - y^3` and `x^3 + y^3` now factor to their
+  textbook two-factor decompositions.
+- Added another small multivariate factoring foothold to `Factor`: bivariate
+  differences of squares such as `x^2 - y^2` now factor to `(x-y)*(x+y)`.
+- Added a second small multivariate factoring foothold to `Factor`:
+  bivariate perfect-square quadratics such as `x^2 + 2*x*y + y^2` now factor
+  to `(x+y)^2`.
+- Added a small multivariate factoring foothold to `Factor`: additive
+  expressions with a common symbolic factor, such as `x^2*y - y`, now extract
+  that common factor and then reuse the existing univariate integer factorizer
+  on the residual.
+
+## 0.54.0 — 2026-05-14
+
+**Phase 25 — Elliptic integrals of the second and third kind.**
+
+Extended the integration engine with two new special-function fallbacks that
+complement the first-kind handlers (EllipticF/EllipticK) added in the previous
+release.
+
+### New functions
+
+- `_elliptic_second_kind_radicand(f, x)` — extracts the modulus *k* from the
+  second-kind integrand `sqrt(1 - k²·sin²(x))`.
+- `_try_complete_elliptic_e(f, x, lower, upper)` — recognises the complete
+  second-kind integral `∫₀^(π/2) sqrt(1-k²·sin²θ) dθ` → `EllipticE(k)`.
+- `_try_incomplete_elliptic_e(f, x)` — recognises the indefinite form
+  `∫ sqrt(1-k²·sin²θ) dθ` → `EllipticE(θ, k)`.
+- `_extract_characteristic_n(bracket, x)` — extracts the characteristic
+  parameter *n* from a `(1 + n·sin²(x))` factor.
+- `_elliptic_third_kind_params(f, x)` — extracts `(n, k)` from the third-kind
+  integrand `1/((1+n·sin²x)·sqrt(1-k²·sin²x))`.
+- `_try_complete_elliptic_pi(f, x, lower, upper)` — recognises the complete
+  third-kind integral `∫₀^(π/2) 1/((1+n·sin²θ)·sqrt(1-k²·sin²θ)) dθ`
+  → `EllipticPi(n, k)`.
+
+### Integration points
+
+- Definite handler: EllipticE(k) and EllipticPi(n,k) are tried immediately
+  after EllipticK(k), before computing any antiderivative.
+- Indefinite handler: EllipticE(θ,k) is tried after EllipticF(θ,k) in the
+  special-function fallback chain.
+
+### Not implemented
+
+- Incomplete EllipticPi(φ,n,k) — the general 3-argument form with variable
+  upper limit. Returns unevaluated `Integrate(...)`.
+- Second and third-kind elliptic integrals in non-canonical forms (e.g., with
+  additional constant factors or shifted sine arguments). Returns unevaluated.
+
+## 0.53.0 — 2026-05-05
+
+**Phase 33 — Trig special values at rational multiples of π.**
+
+The `sin`, `cos`, and `tan` CAS handlers gain a **π-multiple detection** rule
+that fires before the generic numeric fold.  When the argument is recognised as
+`q · π` for a rational `q` with denominator in `{1, 2, 3, 4, 6}`, the handler
+returns the exact algebraic IR constant from a lookup table rather than a
+floating-point approximation.
+
+### `_try_pi_multiple(arg)` helper
+
+A new `_try_pi_multiple` helper extracts the rational coefficient `q` from the
+argument using two strategies:
+
+1. **Structural matching** — recognises `%pi`, `Neg(%pi)`, `Mul(n, %pi)`,
+   `Div(%pi, n)`, `Div(Mul(n, %pi), d)`, and `Neg(any_of_the_above)`.
+2. **IRFloat matching** — for backends such as `MacsymaBackend` that evaluate
+   `%pi → IRFloat(3.14159…)` before the handler sees the argument.  The
+   strategy divides the float value by `math.pi` and checks whether the ratio
+   is within `1 × 10⁻⁹` of a rational with denominator in `{1, 2, 3, 4, 6}`.
+
+### Lookup tables
+
+Three module-level dicts (`_SIN_PI_TABLE`, `_COS_PI_TABLE`, `_TAN_PI_TABLE`)
+cover all 16 special angles in `[0, 2π)`.  Values are represented as exact IR:
+`IRInteger`, `IRRational`, `Div(Sqrt(n), d)`, `Neg(…)`.
+
+`tan(π/2)` and `tan(3π/2)` are **undefined** — they are absent from
+`_TAN_PI_TABLE`, so the handler leaves those expressions unevaluated rather
+than raising an exception.
+
+### Handler changes
+
+- `sin_handler` — periodic reduction `q mod 2`; falls through to Phase 31/30
+  rules for non-special angles.
+- `cos_handler` — same `q mod 2` reduction; even symmetry means
+  `cos(-q·π) = cos(q·π)` is automatically absorbed by `Fraction(-q) % 2`.
+- `tan_handler` — periodic reduction `q mod 1` (tan has period π); sign
+  handling for negative multiples.
+
+### Files changed
+
+- `src/symbolic_vm/cas_handlers.py` — `_try_pi_multiple`, three constant
+  blocks, three updated handlers.
+- `tests/test_phase33.py` — 54 new tests across six classes.
+- `code/specs/phase33-trig-pi-values.md` — full specification.
+
+---
+
+## 0.52.0 — 2026-05-05
+
+**Phase 32 — Inverse trig/hyperbolic odd symmetry.**
+
+Five new CAS handlers override the `_elementary`-factory `Asin`, `Acos`,
+`Atan`, `Asinh`, `Atanh` handlers from `handlers.py` via the standard
+`handlers.update(build_cas_handler_table())` mechanism.  `Acosh` is
+intentionally excluded — its domain is `[1, ∞)` so `acosh(-x)` has no
+real-domain symmetry rule.  All numeric fold behaviour is preserved.
+
+### Negation symmetry rules
+
+- **`asin(-x) → -asin(x)`**: Arc-sine is an odd function on `[-1, 1]`.
+  The handler recurses so `asin(-(-x)) = asin(x)` collapses correctly.
+- **`acos(-x) → π - acos(x)`**: Arc-cosine satisfies a reflection identity
+  rather than simple negation.  The `%pi` symbol reuses the existing
+  `IRSymbol("%pi")` convention (`_INV_TRIG_PI` constant).
+- **`atan(-x) → -atan(x)`**: Arc-tangent is odd for all real `x`.
+- **`asinh(-x) → -asinh(x)`**: Hyperbolic arc-sine is odd for all real `x`.
+- **`atanh(-x) → -atanh(x)`**: Hyperbolic arc-tangent is odd on `(-1, 1)`.
+
+### Special numeric values
+
+All five handlers preserve exact IRInteger returns for key values:
+`asin(0) = 0`, `acos(1) = 0`, `atan(0) = 0`, `asinh(0) = 0`,
+`atanh(0) = 0` — matching the existing `{0: ZERO}` / `{1: ZERO}`
+special-case conventions from the `_elementary` factory.
+
+### Test coverage
+
+47 new tests across 6 classes in `tests/test_phase32.py`.  Total suite
+grows to 1639 tests at 82.53% coverage.
+
+## 0.51.0 — 2026-05-05
+
+**Phase 31 — Trig symmetry and arc-cancellation identities.**
+
+Six new handlers override the `_elementary`-factory `Sin`, `Cos`, `Tan`,
+`Sinh`, `Cosh`, `Tanh` handlers from `handlers.py` via the standard
+`handlers.update(build_cas_handler_table())` mechanism.  All numeric fold
+behaviour is preserved.
+
+### Negation symmetry rules
+
+- **`sin(-x) → -sin(x)`**: Sine is an odd function — `sin(-x) = -sin(x)` for
+  all real `x`.  The handler recurses so double negations collapse correctly:
+  `sin(-(-x)) = sin(x)`.
+- **`cos(-x) → cos(x)`**: Cosine is an even function — the negation is stripped
+  and the handler recurses, allowing numeric fold to fire on the inner expression.
+- **`tan(-x) → -tan(x)`**: Tangent is odd — same recursive pattern as sine.
+- **`sinh(-x) → -sinh(x)`**: Hyperbolic sine is odd.
+- **`cosh(-x) → cosh(x)`**: Hyperbolic cosine is even.
+- **`tanh(-x) → -tanh(x)`**: Hyperbolic tangent is odd.
+
+### Arc-function cancellation rules
+
+All six cancellations are structural identities — no assumption is needed:
+
+- **`sin(asin(x)) → x`**: `asin` maps `[-1,1]→[-π/2,π/2]`; `sin` on that
+  interval is the exact left inverse.
+- **`cos(acos(x)) → x`**: `acos` maps `[-1,1]→[0,π]`; `cos∘acos = id`.
+- **`tan(atan(x)) → x`**: `atan` maps `ℝ→(-π/2,π/2)` where `tan` is defined.
+- **`sinh(asinh(x)) → x`**: `asinh` is the exact left inverse of `sinh`.
+- **`cosh(acosh(x)) → x`**: `acosh` maps `[1,∞)→[0,∞)`, exact left inverse.
+- **`tanh(atanh(x)) → x`**: `atanh` is the exact left inverse of `tanh`.
+
+### MACSYMA wiring
+
+All 6 functions wire through MACSYMA surface syntax.  New e2e tests cover
+`sin(-x)`, `cos(-x)`, `tan(-x)`, `cosh(-x)`, `sin(asin(x))`, `tanh(atanh(y))`.
+
+---
+
+## 0.50.0 — 2026-05-05
+
+**Phase 30 — Algebraic `log` and `exp` cancellation identities.**
+
+Two new handlers override the `_elementary`-factory `Log` and `Exp` handlers
+from `handlers.py` via the standard `handlers.update(build_cas_handler_table())`
+mechanism.  All numeric fold behaviour is preserved.
+
+### `log_handler` (Phase 30, new function)
+
+New algebraic rules on top of the preserved numeric fold:
+
+- **`log(exp(x)) → x`**: Cancellation identity.  `exp` maps all of ℝ into ℝ⁺
+  and `log` is its exact inverse, so this holds for every real `x` without any
+  assumption.
+- **`log(x^n) → n * log(x)`**: Power rule.  Applied only when
+  `vm.assumptions.is_nonneg(x.name)` is True (prevents incorrect simplification
+  in the absence of positivity information).
+- **Guard for undefined inputs**: Negative or zero numeric arguments leave
+  the expression unevaluated (real-valued log is undefined there).
+
+### `exp_handler` (Phase 30, new function)
+
+New algebraic rules on top of the preserved numeric fold:
+
+- **`exp(log(x)) → x`**: Structural cancellation.  Any expression containing
+  `log(x)` already requires `x > 0` in the real domain, so `exp(log(x)) = x`
+  is always safe without an explicit assumption.
+- **`exp(n*log(x)) → x^n`**: Power form.  Recognises both `Mul(n, Log(x))`
+  and the commuted `Mul(Log(x), n)`, returning `Pow(x, n)`.  This simplifies
+  outputs of `logcontract`, `exponentialize`, and user-written expressions
+  like `exp(2*log(x))`.
+
+### Tests
+
+41 new tests in `tests/test_phase30.py` (total suite: 1558 tests, 82.29% coverage):
+
+- `TestPhase30_LogExpCancel` (6) — `log(exp(x))→x`, including compound args
+- `TestPhase30_ExpLogCancel` (7) — `exp(log(x))→x`, `exp(n*log(x))→x^n`
+- `TestPhase30_LogPower` (6) — power rule with/without assumption
+- `TestPhase30_LogNumeric` (5) — numeric fold, `log(1)→0`, negative guard
+- `TestPhase30_ExpNumeric` (5) — numeric fold, `exp(0)→1`
+- `TestPhase30_Regressions` (6) — Phase 29/28/3 regression checks
+- `TestPhase30_Macsyma` (6) — end-to-end MACSYMA surface syntax
+
+## 0.49.0 — 2026-05-04
+
+**Phase 29 — Algebraic `abs` and `sqrt` simplification.**
+
+Pure structural rules that hold for all real inputs with no user assumptions
+required. All Phase 28 assumption-aware folding is fully preserved.
+
+### `abs_handler` extensions (Phase 29)
+
+Four new algebraic rules fire before the "leave unevaluated" fallback:
+
+- **Idempotency**: `abs(abs(x))` → `abs(x)`
+- **Negation strip**: `abs(-x)` = `abs(Neg(x))` → `abs(x)` (|−x| = |x|)
+- **Mul(−1, x) strip**: `abs(Mul(-1, x))` → `abs(x)` (−x after eval)
+- **Even power**: `abs(x^{2k})` → `x^{2k}` for even integer `2k ≥ 2`
+  (x^{2k} ≥ 0 for all real x, so the absolute value is a no-op)
+
+These rules compose correctly with the Phase 28 assumption rules:
+`abs(-x)` strips the negation to `abs(x)`, then the assumption context may
+further fold `abs(x)` → `x` if `x ≥ 0` is known.
+
+### `sqrt_handler` (Phase 29, new function)
+
+A new `sqrt_handler` in `cas_handlers.py` overrides the `_elementary`-factory
+`Sqrt` handler (which was numeric-only) via the standard
+`handlers.update(build_cas_handler_table())` mechanism in `SymbolicBackend`.
+
+Numeric behaviour is fully preserved and enhanced:
+
+- Special values: `sqrt(0) → 0`, `sqrt(1) → 1`
+- Perfect-square integers return `IRInteger` rather than `IRFloat`:
+  `sqrt(4) → 2`, `sqrt(9) → 3`
+- Other numeric inputs fold to `IRFloat` via `math.sqrt`
+
+Algebraic rules for `sqrt(x^{2k})` (positive even exponent):
+
+| `2k` | `k` | result | reason |
+|------|-----|--------|--------|
+| 2    | 1 (odd)  | `Abs(x)`       | sign of x unknown |
+| 4    | 2 (even) | `Pow(x, 2)`    | x² ≥ 0 always |
+| 6    | 3 (odd)  | `Abs(Pow(x,3))`| sign of x³ unknown |
+| 8    | 4 (even) | `Pow(x, 4)`    | x⁴ ≥ 0 always |
+
+Assumption integration (Phase 28): `sqrt(x^2) → x` when `assume(x >= 0)`
+has been issued, since `|x| = x` under non-negativity.
+
+`sqrt(x^n)` for odd `n` remains unevaluated.
+
+### Tests
+
+46 new tests in `tests/test_phase29.py` (total suite: 1517 tests, 82.78% coverage):
+
+- `TestPhase29_AbsNeg` (7) — negation stripping in abs
+- `TestPhase29_AbsEvenPower` (6) — even-power abs folding
+- `TestPhase29_AbsIdempotent` (4) — idempotency
+- `TestPhase29_SqrtEvenPower` (8) — algebraic sqrt reduction
+- `TestPhase29_SqrtNumeric` (6) — numeric fold with perfect-square detection
+- `TestPhase29_SqrtAssumptions` (4) — assumption-aware sqrt(x²)
+- `TestPhase29_Regressions` (6) — Phase 28/27/3 regression checks
+- `TestPhase29_Macsyma` (5) — end-to-end MACSYMA surface syntax
+
+## 0.48.0 — 2026-05-04
+
+**Phase 28 — Assumptions-aware `abs` and `sign` folding.**
+
+Two existing handlers in `cas_handlers.py` are extended to consult the
+per-VM assumption context (`vm.assumptions`, provided by
+`cas_simplify.AssumptionContext`, first wired in Phase 21):
+
+### `abs_handler` (Phase 28 addition)
+
+`Abs(x)` now folds symbolically when the sign of `x` is known:
+
+- `assume(x > 0)` or `assume(x >= 0)` → `abs(x)` = `x`
+- `assume(x < 0)` → `abs(x)` = `-x`
+- Zero case: `sign_of(x) == 0` → `abs(x)` = `0`
+- No assumption → left unevaluated as `Abs(x)` (unchanged behaviour)
+- Numeric inputs (`IRInteger`, `IRRational`, `IRFloat`) still fold via
+  Python's `abs()`.
+
+The local `abs_handler` in `macsyma_runtime.cas_handlers` (which only
+handled numeric inputs) is replaced by a delegation to the full
+`symbolic_vm.cas_handlers.abs_handler` that carries all three rules.
+
+### `sign_handler` (Phase 28 addition)
+
+`Sign(n)` now folds for all numeric IR literals:
+
+- `sign(5)` → `1`, `sign(-3)` → `-1`, `sign(0)` → `0`
+- Works for `IRInteger`, `IRRational`, `IRFloat`
+- Symbolic folding via assumptions was already present from Phase 21;
+  numeric folding is the new addition.
+
+### New test file: `tests/test_phase28.py`
+
+43 tests across 8 classes:
+
+- `TestPhase28_SignNumeric` — 9 tests: int/rational/float → 1/-1/0
+- `TestPhase28_SignSymbolic` — 5 tests: positive/nonneg/negative/unknown/spill
+- `TestPhase28_AbsAssumptions` — 5 tests: pos/nonneg/neg/different-var/forget
+- `TestPhase28_AbsFallthrough` — 5 tests: numeric/no-assumption fallthrough
+- `TestPhase28_AssumeForgetIs` — 6 tests: full round-trip
+- `TestPhase28_KillResetsDB` — 1 test: forget-all
+- `TestPhase28_Regressions` — 4 tests: Phase 27/3/21 regressions
+- `TestPhase28_Macsyma` — 8 tests: end-to-end MACSYMA surface syntax
+
+Total test count: 1471 (up from 1428). Coverage: 82.66%.
+
+## 0.47.0 — 2026-05-05
+
+**Phase 27 — Polynomial inequality solving.**
+
+`solve_handler` in `cas_handlers.py` now dispatches polynomial inequalities
+``p(x) op 0`` (op ∈ {<, >, ≤, ≥}) to the new `cas_solve.try_solve_inequality`
+function before falling through to equation solving.
+
+- Inequality heads (`Less`, `Greater`, `LessEqual`, `GreaterEqual`) are
+  detected immediately after the system-form check, before `_unwrap_equation`
+  is called (which would strip the comparison head).
+- `cas_solve>=0.8.0` is now required (was `>=0.7.0`).
+- New import: `from cas_solve import try_solve_inequality as _try_inequality`.
+
+**Surface syntax** (via MACSYMA):
+
+```
+solve(x - 1 > 0, x)          →  [x > 1]
+solve(x^2 - 1 < 0, x)        →  [and(x > -1, x < 1)]
+solve(x^2 - 3*x + 2 <= 0, x) →  [and(x >= 1, x <= 2)]
+solve(x^2 + 1 > 0, x)        →  [0 >= 0]  (all reals)
+solve(x^2 + 1 < 0, x)        →  []        (no solution)
+```
+
+---
+
+## 0.46.0 — 2026-05-05
+
+**Phase 26 — Transcendental equation solving + Lambert W handler.**
+
+### New handler in `cas_handlers.py`
+
+`lambert_w_handler` evaluates `LambertW(x)` — the principal branch W₀ of the
+Lambert W function — when `x` is a concrete rational or floating-point constant.
+Uses Newton iteration (64 iterations max, quadratic convergence, stopping
+criterion `|Δw| < 1e-12·(1 + |w|)`).  Returns unevaluated for symbolic
+arguments and out-of-domain inputs (`x < −1/e`).
+
+Registered as `"LambertW": lambert_w_handler` in `build_cas_handler_table()`.
+
+### Changes to `solve_handler`
+
+The single-equation `Solve(eq, var)` path now falls through to
+`try_solve_transcendental` from `cas-solve>=0.7.0` before returning
+unevaluated.  This adds five transcendental families:
+
+- **26a — Trigonometric**: `sin/cos/tan(ax+b) = c` → two periodic families with
+  free-integer `%k` (`FreeInteger` IR symbol).
+- **26b — Exponential/Logarithmic**: `exp(ax+b) = c` and `log(ax+b) = c`.
+- **26c — Lambert W**: `f(x)·exp(f(x)) = c` with linear `f` → `LambertW(c)`.
+- **26d — Hyperbolic**: `sinh/cosh/tanh(ax+b) = c` with exact inverse formulas.
+- **26e — Compound substitution**: equations that are polynomials in a single
+  transcendental function of the variable (e.g. `sin²(x) + sin(x) = 0`).
+
+### New imports
+
+`FREE_INTEGER` and `LAMBERT_W` from `symbolic_ir>=0.13.0`;
+`try_solve_transcendental` from `cas_solve>=0.7.0`.
+
+### Dependency bumps
+
+- `symbolic-ir` ≥ 0.13.0 (for `FREE_INTEGER`, `LAMBERT_W`)
+- `cas-solve` ≥ 0.7.0 (for `try_solve_transcendental`)
+
+---
+
+## 0.45.0 — 2026-05-04
+
+**Phase 25 — Symbolic summation and product evaluation.**
+
+### New handlers in `cas_handlers.py`
+
+`sum_handler` and `product_handler` implement the `Sum` and `Product` IR heads.
+Both delegate to the `cas-summation` package (new dependency):
+
+- `Sum(f, k, lo, hi)` → closed-form evaluation via `evaluate_sum`:
+  - Constant summand: `f * (hi − lo + 1)`
+  - Geometric series (finite and infinite)
+  - Faulhaber power sums `Σ k^m` for m = 0…5
+  - Classic infinite series (Basel π²/6, Leibniz π/4, Taylor e and exp(x))
+  - Numeric small ranges via `cas_substitution.subst`
+  - Fallback: unevaluated `Sum(f, k, lo, hi)`
+- `Product(f, k, lo, hi)` → closed-form evaluation via `evaluate_product`:
+  - Constant factor: `f^(hi − lo + 1)`
+  - Identity product: `Γ(hi+1)` (i.e. `hi!`) when f=k, lo=1
+  - Scaled identity: `c^hi · Γ(hi+1)` when f=c·k, lo=1
+  - Numeric small ranges
+  - Fallback: unevaluated `Product(f, k, lo, hi)`
+
+### New IR heads imported
+
+`SUM` and `PRODUCT` from `symbolic_ir` 0.12.0 are now imported in `cas_handlers.py`.
+
+### New dependency
+
+`coding-adventures-cas-summation>=0.1.0` added to `pyproject.toml`.
+
+## 0.44.0 — 2026-05-04
+
+**Phase 24 — Definite integration via the Fundamental Theorem of Calculus.**
+
+### New module: `definite_integral.py`
+
+Evaluates `Integrate(f, x, a, b)` using `F(b) − F(a)` where `F` is any
+antiderivative of `f`.
+
+**Finite limits**: structural substitution via `cas_substitution.subst`,
+then `vm.eval`.  Improper integrals with `log(0)` at `x = 0` are handled by
+`_eval_at_zero_plus`, which applies the symbolic limit
+`lim_{x→0+} xⁿ·log(x) = 0` (n > 0).
+
+**Infinite limits** (`%inf` / `%minf`): `_eval_at_inf` walks the
+antiderivative tree and applies a table of one-sided limits for the special
+functions introduced in Phase 23:
+
+| Function | lim at +∞ | lim at −∞ |
+|----------|-----------|-----------|
+| `erf(u)` | 1 | −1 |
+| `erfc(u)` | 0 | 2 |
+| `Si(u)` | π/2 | −π/2 |
+| `atan(u)` | π/2 | −π/2 |
+| `tanh(u)` / `coth(u)` | 1 | −1 |
+| `sech(u)` / `csch(u)` | 0 | 0 |
+| `FresnelS(u)` / `FresnelC(u)` | 1/2 | −1/2 |
+| `exp(u)` | diverges | 0 |
+
+**Divergent integrals** return the unevaluated `Integrate(f, x, a, b)` node
+rather than raising an error.
+
+### Changes to `integrate.py`
+
+The `Integrate` handler now accepts 2 **or** 4 arguments:
+
+* 2 args: unchanged indefinite integration (Phases 1–23).
+* 4 args: definite integration — computes the indefinite integral via all
+  three routes (rational, Phase-1 table, Phase-23 special-function
+  fallbacks), then calls `evaluate_definite`.
+
+New helper `_contains_integrate(expr)` detects when a partially-evaluated
+rational antiderivative still contains unevaluated `Integrate` sub-nodes
+(which would cause incorrect definite results); those cases fall back to
+returning the 4-argument unevaluated form.
+
+### Updates to tests
+
+* `test_phase24.py` — 54 new tests across 10 test classes covering polynomial,
+  trig, exponential, rational, log, semi-infinite, fully-infinite,
+  special-function, unevaluated, regression, and MACSYMA end-to-end cases.
+* `test_integrate.py` — updated error message match for wrong-arity test.
+* `test_cas_handlers.py` — fixed duplicate `test_expand_wrong_arity_passthrough`
+  function name (renamed second occurrence to `…_two_args`).
+
+---
+
+## 0.43.0 — 2026-05-04
+
+**Phase 23 — Special functions as integration and differentiation fallback.**
+
+Bumps `coding-adventures-symbolic-ir` to `>=0.11.0`.
+
+### New module: `special_functions.py`
+
+Contains all Phase 23 logic: integration pattern matchers, differentiation
+chain-rule rules, and numeric evaluation helpers.
+
+**Integration fallbacks** (appended to `_integrate()` in `integrate.py`):
+| Pattern | Result |
+|---------|--------|
+| `∫ exp(c·x²) dx` (c < 0) | `√π/(2·√\|c\|) · erf(√\|c\|·x)` |
+| `∫ exp(c·x²) dx` (c > 0) | `√π/(2·√c) · erfi(√c·x)` |
+| `∫ sin(ax)/x dx` | `Si(ax)` |
+| `∫ cos(ax)/x dx` | `Ci(ax)` |
+| `∫ sinh(ax)/x dx` | `Shi(ax)` |
+| `∫ cosh(ax)/x dx` | `Chi(ax)` |
+| `∫ log(1−ax)/x dx` | `−Li₂(ax)` |
+| `∫ log(x)/(1−x) dx` | `Li₂(1−x)` |
+| `∫ sin(q·π·x²) dx` | `(1/√(2q))·FresnelS(√(2q)·x)` |
+| `∫ cos(q·π·x²) dx` | `(1/√(2q))·FresnelC(√(2q)·x)` |
+| `∫ sin(a·x²) dx` | `√(π/(2a))·FresnelS(x·√(2a/π))` |
+| `∫ cos(a·x²) dx` | `√(π/(2a))·FresnelC(x·√(2a/π))` |
+
+**Differentiation rules** (dispatched from `derivative.py` via `diff_special`):
+
+`erf`, `erfc`, `erfi`, `Si`, `Ci`, `Shi`, `Chi`, `Li₂`, `FresnelS`, `FresnelC`
+— all via the chain rule `d/dx f(g(x)) = f′(g(x)) · g′(x)`.
+
+**Numeric evaluation helpers** (`gamma_eval`, `beta_eval`, `erf_numeric`,
+`erfi_numeric`, `si_numeric`, `ci_numeric`, `shi_numeric`, `chi_numeric`,
+`li2_numeric`, `fresnel_s_numeric`, `fresnel_c_numeric`).
+
+### New handlers (`cas_handlers.py`)
+
+Twelve new handlers registered in `build_cas_handler_table()`:
+
+| Head | Handler | Special values / method |
+|------|---------|------------------------|
+| `GammaFunc` | `gamma_handler` | Exact for integers/half-integers; Lanczos otherwise |
+| `BetaFunc` | `beta_handler` | Reduces via Γ; `B(½,½) = π` |
+| `Erf` | `erf_handler` | `erf(0) = 0`; float via `math.erf` |
+| `Erfc` | `erfc_handler` | `erfc(0) = 1`; float |
+| `Erfi` | `erfi_handler` | `erfi(0) = 0`; series |
+| `Si` | `si_handler` | `Si(0) = 0`; series |
+| `Ci` | `ci_handler` | Series + log; x > 0 only |
+| `Shi` | `shi_handler` | `Shi(0) = 0`; series |
+| `Chi` | `chi_handler` | Series + log; x > 0 only |
+| `Li2` | `li2_handler` | `Li₂(0)=0`, `Li₂(1)=π²/6`; series |
+| `FresnelS` | `fresnel_s_handler` | `FresnelS(0) = 0`; series |
+| `FresnelC` | `fresnel_c_handler` | `FresnelC(0) = 0`; series |
+
+---
+
+## 0.42.0 — 2026-05-04
+
+**Phase 22 — MACSYMA pattern-matching rule system: `matchdeclare`, `defrule`,
+`apply1`, `apply2`, `tellsimp`.**
+
+### New VM state (`vm.py`)
+
+Three new attributes on every `VM` instance:
+
+- `vm.match_declarations: MatchDeclareContext` — per-session store of
+  pattern-variable declarations (`matchdeclare`).
+- `vm.named_rules: RuleStore` — per-session named-rule dictionary
+  populated by `defrule`.
+- `vm.tellsimp_rules: list[IRApply]` — ordered list of auto-applied
+  rules installed by `tellsimp`.
+
+`_eval_apply` gains step 2b: after backend built-in rules and before
+handler dispatch, every `tellsimp` rule is tried in registration order.
+
+### Held heads (`backends.py`)
+
+`MatchDeclare`, `Defrule`, `Apply1`, `Apply2`, `TellSimp` added to
+`_HELD_HEADS` so pattern LHSes and rule names are not pre-evaluated.
+
+### New handlers (`cas_handlers.py`)
+
+| Function | Handler key |
+|---|---|
+| `matchdeclare_handler` | `"MatchDeclare"` |
+| `defrule_handler` | `"Defrule"` |
+| `apply1_handler` | `"Apply1"` |
+| `apply2_handler` | `"Apply2"` |
+| `tellsimp_handler` | `"TellSimp"` |
+
+### Dependency bumps
+
+- `coding-adventures-symbolic-ir>=0.10.0`
+- `coding-adventures-cas-pattern-matching>=0.2.0`
+
+---
+
+## 0.41.0 — 2026-05-04
+
+**Phase 21 — Assumption framework, `radcan`, `logcontract`/`logexpand`,
+`exponentialize`/`demoivre`.**
+
+Bumps `coding-adventures-cas-simplify` to `>=0.3.0` and
+`coding-adventures-symbolic-ir` to `>=0.9.0`.
+
+### Changes in `vm.py`
+
+- `VM.__init__` gains `self.assumptions = AssumptionContext()`.  This
+  per-session mutable store is shared across all handlers so `assume(x > 0)`
+  recorded in one handler call is visible to `radcan`, `logexpand`, etc. in
+  the same session.
+
+### New handlers in `cas_handlers.py`
+
+Nine new handlers registered in `build_cas_handler_table()`:
+
+| Head              | Handler                 | Action                                   |
+|-------------------|-------------------------|------------------------------------------|
+| `Assume`          | `assume_handler`        | Record a relational or property fact     |
+| `Forget`          | `forget_handler`        | Remove a specific fact or clear all      |
+| `Is`              | `is_handler`            | → "true" / "false" / "unknown"           |
+| `Sign`            | `sign_handler`          | → 1 / -1 / 0 / unevaluated              |
+| `Radcan`          | `radcan_handler`        | Radical canonicalization                 |
+| `LogContract`     | `logcontract_handler`   | Combine log sums into one log            |
+| `LogExpand`       | `logexpand_handler`     | Expand log over products and powers      |
+| `Exponentialize`  | `exponentialize_handler`| Trig/hyp → exp form                     |
+| `DeMoivre`        | `demoivre_handler`      | exp(a+bi) → exp(a)·(cos b + i·sin b)    |
+
+---
+
+## 0.40.0 — 2026-05-04
+
+**Phase 20 — Upgraded `limit_handler`: L'Hôpital, ±∞, indeterminate forms, one-sided limits.**
+
+Bumps `coding-adventures-cas-limit-series` minimum version from unversioned to
+`>=0.2.0` and upgrades the `Limit` VM handler to use `limit_advanced`.
+
+### Changes in `cas_handlers.py`
+
+- **`limit_handler`** now calls `cas_limit_series.limit_advanced` with injected
+  `diff_fn=lambda e,v: vm.eval(_symbolic_diff(e,v))` and `eval_fn=vm.eval`.
+  Supports the optional 4th argument for direction: `Limit(expr, var, point, plus)`
+  or `Limit(expr, var, point, minus)`.
+- The old Phase 1 direct-substitution-only path is fully replaced.
+- Falls through to unevaluated `Limit(…)` when the limit cannot be determined
+  (oscillating, unknown form, depth exceeded).
+
+---
+
+## 0.39.0 — 2026-05-04
+
+**Phase 19 — Linear algebra completion: 8 new VM handlers for `cas-matrix` 0.3.0.**
+
+Bumps `coding-adventures-cas-matrix` minimum version from `>=0.2.0` to
+`>=0.3.0` and wires in handlers for all six new linear algebra operations
+added in `cas-matrix` 0.3.0.
+
+### New VM handlers in `cas_handlers.py`
+
+| Handler | Expression form | Returns |
+|---------|-----------------|---------|
+| `eigenvalues_handler` | `Eigenvalues(M)` | `List(List(λ₁,m₁), …)` — eigenvalue/multiplicity pairs |
+| `eigenvectors_handler` | `Eigenvectors(M)` | `List(List(λ,m,List(v₁,…)), …)` — eigenvalue + basis vectors |
+| `charpoly_handler` | `CharPoly(M, λ)` | IR polynomial `det(λI−M)` in the given symbol |
+| `lu_handler` | `LU(M)` | `List(L, U, P)` from Doolittle partial-pivoting decomposition |
+| `nullspace_handler` | `NullSpace(M)` | `List(v₁,…)` of n×1 null-space basis column vectors |
+| `columnspace_handler` | `ColumnSpace(M)` | `List(c₁,…)` of m×1 column-space basis vectors |
+| `rowspace_handler` | `RowSpace(M)` | `List(r₁,…)` of 1×n row-space basis vectors |
+| `norm_handler` | `Norm(v)` or `Norm(M, frobenius)` | Euclidean or Frobenius norm |
+
+All handlers fall through to the unevaluated `IRApply` on `MatrixError` (symbolic
+entries, wrong shape, size > 4×4 for eigenvalue routines, etc.).
+
+`CharPoly` requires the second argument to be an `IRSymbol` naming the variable.
+`Norm` with `frobenius` keyword accepts `IRSymbol("frobenius")` as the kind argument.
+
+### Fallthrough semantics
+
+All eight handlers return the original unevaluated `expr` on any `MatrixError`,
+matching the pattern used by `rank_handler`, `row_reduce_handler`, and the other
+existing matrix handlers.
+
+---
+
+## 0.38.0 — 2026-04-29
+
+**Phase 18 — `cas-ode` 0.2.0 dependency bump (Bernoulli · Exact · Non-homogeneous 2nd-order).**
+
+Bumps the `coding-adventures-cas-ode` minimum version from `>=0.1.0` to
+`>=0.2.0` to pull in the three new ODE solver classes added in `cas-ode`
+0.2.0.  No changes to `symbolic_vm` source code — this is a pure dependency
+upgrade so users get the improved `ode2(...)` evaluation automatically.
+
+### What changed in `cas-ode` 0.2.0
+
+- **Bernoulli ODE solver** (`y' + P(x)·y = Q(x)·y^n`, n ≠ 0,1):
+  substitution `v = y^(1−n)` reduces to first-order linear; returns
+  `Equal(y, v_sol^(1/(1−n)))`.
+- **Exact ODE solver** (`M dx + N dy = 0`, ∂M/∂y = ∂N/∂x):
+  computes potential F and returns the implicit solution `Equal(F + g, %c)`.
+  Exactness check uses numerical evaluation to handle structurally different
+  but mathematically equal IR trees.
+- **Second-order non-homogeneous solver** (`a·y'' + b·y' + c·y = f(x)`):
+  undetermined coefficients for constant, polynomial (≤ degree 2),
+  exponential, trig, and exp×trig forcing; full resonance handling
+  (s = 0, 1, 2 multiplicity shifts).
+- Dispatcher updated: non-homogeneous 2nd-order checked before homogeneous;
+  exact solver runs last to preserve explicit `Equal(y, f(x))` forms.
+- 47 new tests (135 total); combined coverage 82.89%.
+
+---
+
+## 0.37.0 — 2026-04-28
+
+**Phase 17 — `∫ tanh^n(ax+b) dx` power reduction.**
+
+Completes the hyperbolic power-reduction suite (Phases 14 and 16 covered the
+other five functions; tanh was the only remaining gap).
+
+### Algorithm
+
+Uses the Pythagorean identity `tanh²(t) = 1 − sech²(t)`:
+
+```
+I_n = I_{n-2} − tanh^(n-1)(ax+b) / ((n-1)·a)
+
+Base cases:
+  n = 0  →  x
+  n = 1  →  log(cosh(ax+b)) / a      [Phase 13 bare tanh integral]
+```
+
+This is the direct analog of `coth^n` (Phase 16) — same recursion structure,
+different Pythagorean identity (`−sech²` vs `+csch²`).
+
+**Verification examples:**
+- n=2: `F = x − tanh(x)`.  `F' = 1 − sech² = tanh²`  ✓
+- n=3: `F = log(cosh) − tanh²/2`.  `F' = tanh − tanh·sech² = tanh³`  ✓
+- n=4: `F = x − tanh − tanh³/3`.  `F' = tanh²(1−sech²) = tanh⁴`  ✓
+
+### Implementation
+
+- `recip_hyp_power_integral.py` — new public function `tanh_power_integral(n, a, b, x)`;
+  `COSH` added to imports (needed for the n=1 base-case `log(cosh)/a`).
+- `integrate.py` — `_try_recip_hyp_power` extended to include `TANH` in the
+  handled-head set; `tanh_power_integral` added to the import block.
+
+### Tests (`test_phase17.py`) — 16 tests
+
+| Class | Tests | What is verified |
+|-------|-------|-----------------|
+| `TestPhase17_TanhPowers` | 10 | n=2,3,4,5; a=2; b=1; a=1/2; structural (Tanh/log(cosh)) |
+| `TestPhase17_Fallthrough` | 3 | poly×tanh², non-linear arg, poly×tanh (non-elementary) |
+| `TestPhase17_Regressions` | 3 | Phase 16 sech², Phase 13 tanh bare, Phase 14 sinh^4 |
+
+All antiderivatives verified numerically at two test points.
+
+---
+
+## 0.36.0 — 2026-04-28
+
+**Phase 16 — Reciprocal hyperbolic power integrals: `sech^n`, `csch^n`, `coth^n`.**
+
+Closes the gap left by Phase 15, which deferred `∫ sech²(x) dx` and all higher
+powers of the three reciprocal hyperbolic functions.  Each family gets a full
+IBP (or identity-based) reduction formula valid for any non-negative integer `n`.
+
+### New module: `recip_hyp_power_integral.py`
+
+Exports three public functions, all pure-recursive with no back-calls into
+`integrate.py` (avoiding circular imports):
+
+| Function | Formula |
+|----------|---------|
+| `sech_power_integral(n,a,b,x)` | IBP: `I_n = sech^(n-2)·tanh/((n-1)a) + (n-2)/(n-1)·I_{n-2}` |
+| `csch_power_integral(n,a,b,x)` | IBP: `I_n = −csch^(n-2)·coth/((n-1)a) − (n-2)/(n-1)·I_{n-2}` |
+| `coth_power_integral(n,a,b,x)` | Identity: `I_n = I_{n-2} − coth^(n-1)/((n-1)a)` |
+
+**sech^n base cases:** `n=0→x`, `n=1→atan(sinh(ax+b))/a`, `n=2→tanh(ax+b)/a`.
+
+**csch^n base cases:** `n=0→x`, `n=1→log(tanh((ax+b)/2))/a`, `n=2→−coth(ax+b)/a`.
+
+**coth^n base cases:** `n=0→x`, `n=1→log(sinh(ax+b))/a`.
+
+The `coth^n` recursion is derived from `coth²=1+csch²` (Pythagorean identity)
+rather than IBP — it produces a cleaner telescoping result with no outer product.
+
+No new IR heads required; all output uses existing heads (`TANH`, `COTH`, `SINH`,
+`ATAN`, `LOG`).
+
+### `integrate.py` changes
+
+1. Imported the three new functions from `recip_hyp_power_integral`.
+2. Added `_try_recip_hyp_power(base, exponent, x)` dispatcher — fires for
+   `SECH`/`CSCH`/`COTH` base with integer exponent ≥ 2 and linear argument.
+3. Call site added immediately after `_try_hyp_power` (~line 544).
+
+### `test_phase15.py` update
+
+`test_sech_squared_unevaluated` renamed to `test_sech_squared_now_evaluates`
+and updated to assert `_was_evaluated` (previously asserted `_is_unevaluated`).
+
+### Tests (`test_phase16.py`) — 34 tests
+
+| Class | Tests | What is verified |
+|-------|-------|-----------------|
+| `TestPhase16_SechPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Tanh in result |
+| `TestPhase16_CschPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Coth in result |
+| `TestPhase16_CothPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Coth power in result |
+| `TestPhase16_Fallthrough` | 3 | poly×sech², non-linear arg, mixed product |
+| `TestPhase16_Regressions` | 3 | Phase 15 bare, Phase 14 sinh^4, Phase 3 exp |
+| `TestPhase16_Macsyma` | 4 | end-to-end via MACSYMA string interface |
+
+Antiderivative correctness verified numerically at two test points per case.
+
+---
+
+## 0.35.0 — 2026-04-28
+
+**Phase 15 — Reciprocal hyperbolic functions: `coth`, `sech`, `csch`.**
+
+Completes the hyperbolic set started in Phase 13 by adding the three reciprocal
+functions.  Each one gets a numeric evaluation handler, symbolic differentiation
+rules, and a closed-form bare integral.
+
+### New handlers (`handlers.py`)
+
+| Handler | `numeric_fn` | Exact identity |
+|---------|-------------|----------------|
+| `coth(simplify)` | `cosh(x)/sinh(x)` | none (pole at 0) |
+| `sech(simplify)` | `1/cosh(x)` | `sech(0) = 1` |
+| `csch(simplify)` | `1/sinh(x)` | none (pole at 0) |
+
+All three registered in `build_handler_table` after the existing ATANH entry.
+
+### Differentiation rules (`integrate.py`)
+
+```
+d/dx coth(u) = −u' / sinh²(u)
+d/dx sech(u) = −u'·sinh(u) / cosh²(u)
+d/dx csch(u) = −u'·cosh(u) / sinh²(u)
+```
+
+Derivatives are expressed via `SINH`/`COSH` to avoid self-referential recursion.
+When `u = x` (darg is the integer literal 1) the chain-rule factor is omitted.
+
+### Bare integration formulas (`integrate.py`)
+
+```
+∫ coth(ax+b) dx = (1/a)·log(sinh(ax+b))
+∫ sech(ax+b) dx = (1/a)·atan(sinh(ax+b))
+∫ csch(ax+b) dx = (1/a)·log(tanh((ax+b)/2))
+```
+
+Three private helpers added after `_atanh_integral`: `_coth_integral`,
+`_sech_integral`, `_csch_integral`.
+
+Note: `∫ csch(ax+b) dx = −atanh(cosh(ax+b))/a` is algebraically equivalent but
+not numerically safe on the reals (cosh ≥ 1 always, outside `atanh`'s domain).
+The `log(tanh(half_arg))` form is used instead.
+
+Poly×coth/sech/csch integration is deferred to a future phase.
+
+### Phase 3 head set extended
+
+`COTH`, `SECH`, `CSCH` added to the head-recognition set in Phase 3 of
+`_integrate`, enabling bare dispatch for any linear argument `ax+b`.
+
+### Tests (`test_phase15.py`) — 41 tests
+
+| Class | Tests |
+|-------|-------|
+| `TestPhase15_HandlerEval` | 6 |
+| `TestPhase15_Differentiation` | 9 |
+| `TestPhase15_CothIntegral` | 5 |
+| `TestPhase15_SechIntegral` | 5 |
+| `TestPhase15_CschIntegral` | 5 |
+| `TestPhase15_Fallthrough` | 3 |
+| `TestPhase15_Regressions` | 3 |
+| `TestPhase15_Macsyma` | 5 |
+
+Depends on `symbolic-ir >= 0.8.0`.
+
+---
+
+## 0.34.0 — 2026-04-28
+
+**Phase 14 deferred fixes: exp×hyp degenerate case, sinh^m·cosh^n (both≥2), atanh×poly.**
+
+### 14a-fix: `∫ exp(ax+b)·sinh/cosh(cx+d) dx` when `a² = c²`
+
+`exp_hyp_integral.py` gains `exp_hyp_degenerate(a, b, c, d, is_sinh, x_sym)`.
+
+Previously `_try_exp_hyp` fell through to unevaluated when `D = a²−c² = 0`.
+The fix expands sinh/cosh into exponentials, giving two terms — one
+exponential and one constant — whose antiderivatives are trivial:
+
+```
+a=c:   e^(2ax+b+d)/(4a)  ±  e^(b-d)·x/2
+a=-c:  e^(b+d)·x/2  ±  e^(2ax+b-d)/(4a)
+```
+
+`+` for cosh, `−` for sinh.
+
+### 14b-fix: `∫ sinh^m·cosh^n dx` for both `m, n ≥ 2`
+
+`hyp_power_integral.sinh_times_cosh_power` is extended with three sub-cases
+(replacing the old `return None`).  A new private helper `_fold_add` left-folds
+term lists into binary ADD nodes.
+
+| Sub-case | Condition | Method |
+|----------|-----------|--------|
+| A | m odd | u=cosh, expand (u²−1)^p by binomial → sum of cosh powers |
+| B | n odd | u=sinh, expand (u²+1)^q by binomial → sum of sinh powers |
+| C | both even | sinh²p=(cosh²−1)^p → reduce to Σ cosh_power_integral calls |
+
+### 14c-fix: `∫ P(x)·atanh(ax+b) dx` for `P ∈ Q[x]`
+
+New file: `atanh_poly_integral.py`.  IBP with u=atanh gives the closed form:
+
+```
+[Q(x) − (r₀ − r₁·b/a)]·atanh(ax+b)  −  a·T(x)  +  (r₁/(2a))·log(1−(ax+b)²)
+```
+
+where `Q = ∫P`, `T = ∫S`, and `r₁x+r₀` is the remainder from dividing `Q`
+by `1−(ax+b)²`.
+
+`integrate.py` gains `_try_atanh_product` wired in the MUL block after the
+Phase 13 inverse-hyp handlers.
+
+### Tests
+
+`test_phase14.py`: three formerly-unevaluated fallthroughs changed to
+closed-form assertions; new class `TestPhase14_DeferredFixes` (18 tests).
+
+`test_phase13.py`: `test_atanh_times_x` updated from unevaluated to evaluated.
+
+Total: 1018 tests, 86% coverage.
+
+---
+
+## 0.33.0 — 2026-04-28
+
+**Group E: complete matrix handler set + Phase 14 hyperbolic integration.**
+
+### Group E — matrix operation completeness
+
+All seven remaining matrix handlers wired into `SymbolicBackend` via
+`cas_handlers.py`:
+
+| Handler | Operation |
+|---------|-----------|
+| `Dot(A, B)` | Matrix product (rows of A × cols of B) |
+| `Trace(M)` | Sum of main diagonal; left-folded into binary ADDs |
+| `Dimensions(M)` | `List(rows, cols)` shape query |
+| `IdentityMatrix(n)` | n×n identity matrix |
+| `ZeroMatrix(m, n)` / `ZeroMatrix(n)` | m×n (or n×n) zero matrix |
+| `Rank(M)` | Rank via forward REF over `Fraction` (exact arithmetic) |
+| `RowReduce(M)` | Reduced row-echelon form via Gauss-Jordan elimination |
+
+`trace_handler` now left-folds any n-ary `IRApply(ADD, ...)` returned by
+`cas_matrix.trace` into a chain of binary additions to stay within the VM's
+binary-ADD contract.
+
+### Phase 14 — hyperbolic power and exp×hyperbolic integration
+
+Three new integration families added to `integrate.py`:
+
+**14a: `∫ exp(ax+b)·sinh(cx+d) dx` and `∫ exp(ax+b)·cosh(cx+d) dx`**
+
+New file: `exp_hyp_integral.py`.  Uses the exponential expansion of sinh/cosh
+to reduce to two pure-exponential integrals, then recombines:
+
+```
+∫ e^(ax+b)·sinh(cx+d) dx = e^(ax+b)·[a·sinh(cx+d) − c·cosh(cx+d)] / (a²−c²)
+∫ e^(ax+b)·cosh(cx+d) dx = e^(ax+b)·[a·cosh(cx+d) − c·sinh(cx+d)] / (a²−c²)
+```
+
+Falls through (returns unevaluated) when `a² = c²` (degenerate denominator).
+
+**14b: `∫ sinh^n(ax+b) dx` and `∫ cosh^n(ax+b) dx`** (n ≥ 2)
+
+New file: `hyp_power_integral.py`.  Recursive IBP reduction formulas:
+
+```
+I_n(sinh) = (1/(na))·sinh^(n-1)·cosh − (n-1)/n · I_{n-2}   (−)
+I_n(cosh) = (1/(na))·cosh^(n-1)·sinh + (n-1)/n · I_{n-2}   (+)
+```
+
+**14c: `∫ sinh^m · cosh^n dx`** when min(m,n) = 1
+
+u-substitution: if m=1, u=cosh → cosh^(n+1)/(n+1)/a; if n=1, u=sinh →
+sinh^(m+1)/(m+1)/a.  Returns `None` (falls through) when both m,n ≥ 2.
+
+### Dispatcher functions added to `integrate.py`
+
+- `_try_hyp_power(base, exponent, x)` — fires for `Pow(Sinh/Cosh(linear), n≥2)`
+- `_try_exp_hyp(exp_node, hyp_node, x)` — fires for `exp(linear)×sinh/cosh(linear)`
+- `_try_sinh_cosh_product(f1, f2, x)` — fires for `sinh^m × cosh^n` (m or n = 1)
+
+### Tests
+
+New `tests/test_phase14.py` with 62 tests covering:
+- `TestPhase14_ExpSinh` (7) — exp×sinh integration cases
+- `TestPhase14_ExpCosh` (5) — exp×cosh integration cases
+- `TestPhase14_SinhPowers` (7) — sinh^n for n=2..5, linear args
+- `TestPhase14_CoshPowers` (7) — cosh^n for n=2..5, linear args
+- `TestPhase14_SinhCoshProduct` (7) — u-sub mixed products
+- `TestPhase14_MatrixOps` (12) — all 7 new matrix handlers
+- `TestPhase14_Fallthroughs` (6) — degenerate/unsupported cases
+- `TestPhase14_Regressions` (5) — Phases 1/4/12/13 still work
+- `TestPhase14_Macsyma` (4) — end-to-end via Macsyma string interface
+
+`test_phase13.py`: removed `test_sinh_squared` fallthrough (Phase 14 now
+evaluates `∫ sinh²(x) dx` via the reduction formula).
+
+### Version
+
+- Bumped to **0.33.0**; `cas-matrix>=0.2.0` dependency floor raised.
+
+---
+
+## 0.32.8 — 2026-04-28
+
+**Wire `cas-multivariate` into `SymbolicBackend` (Gröbner bases).**
+
+- `cas_handlers.py`: imports `build_multivariate_handler_table` from `cas_multivariate`
+  and merges it into the handler table via `**_build_multivariate()`.
+- `pyproject.toml`: added `"coding-adventures-cas-multivariate>=0.1.0"` as a dependency.
+
+This wires `Groebner(List(polys), List(vars))`, `PolyReduce(f, List(polys), List(vars))`,
+and `IdealSolve(List(polys), List(vars))` into the symbolic VM.
+
+---
+
+## 0.32.7 — 2026-04-27
+
+**Wire `cas-algebraic` into `SymbolicBackend`; add `AlgFactor` to held heads.**
+
+- `cas_handlers.py`: imports `build_alg_factor_handler_table` from `cas_algebraic`
+  and merges it into the handler table via `**_build_algebraic()`.
+- `backends.py`: added `"AlgFactor"` to `_HELD_HEADS` so the `Sqrt(d)` second
+  argument is not pre-evaluated to a float before the handler can inspect it.
+  This is the same pattern used for `"ODE2"`.
+- `pyproject.toml`: added `"coding-adventures-cas-algebraic>=0.1.0"` as a dependency.
+
+This wires `AlgFactor(poly, Sqrt(d))` into the symbolic VM so that
+`algfactor(x^4+1, sqrt(2))` compiles to `AlgFactor(x^4+1, Sqrt(2))` IR and
+evaluates to `(x^2+sqrt(2)*x+1)*(x^2-sqrt(2)*x+1)`.
+
+---
+
+## 0.32.6 — 2026-04-28
+
+**Bump `cas-factor` dependency to 0.3.0 (BZH Phase 3).**
+
+No source changes to `symbolic-vm` itself. The upgraded `cas-factor 0.3.0`
+adds Berlekamp-Zassenhaus-Hensel factoring as a fallback for monic polynomials
+of degree ≥ 4 that Kronecker misses. This means `factor(x^5 - 1)`,
+`factor(x^8 - 1)`, `factor(x^9 - 1)`, and other high-degree cyclotomic
+polynomials now factor correctly through the MACSYMA `factor(...)` surface
+syntax without any VM changes.
+
+---
+
+## 0.32.5 — 2026-04-27
+
+**Wire `cas-ode` into `SymbolicBackend`; add `ODE2` to held heads.**
+
+- `cas_handlers.py`: imports `build_ode_handler_table` from `cas_ode` and
+  merges it into the handler table at the end of `build_cas_handler_table()`.
+- `backends.py`: added `"ODE2"` to `_HELD_HEADS` so that `D(y, x)` inside
+  the ODE expression argument is not pre-evaluated to zero before the ODE
+  handler sees it. This is the correct semantic: the ODE solver needs to
+  inspect the derivative structure of the equation.
+- Added `coding-adventures-cas-ode>=0.1.0` as a dependency.
+
+---
+
+## 0.32.4 — 2026-04-27
+
+**Wire `cas-fourier` into `SymbolicBackend`.**
+
+- Added `from cas_fourier import build_fourier_handler_table as _build_fourier`
+  to `cas_handlers.py`.
+- Added `**_build_fourier()` to the `build_cas_handler_table()` return dict.
+- Added `"coding-adventures-cas-fourier>=0.1.0"` to `pyproject.toml` dependencies.
+
+This wires `Fourier(f, t, ω)` and `IFourier(F, ω, t)` into the symbolic VM.
+Both operations follow the graceful fall-through contract: unknown inputs return
+the expression unevaluated.
+
+---
+
+## 0.32.3 — 2026-04-27
+
+**Wire `cas-laplace` into `SymbolicBackend`.**
+
+- Added `from cas_laplace import build_laplace_handler_table as _build_laplace`
+  to `cas_handlers.py`.
+- Added `**_build_laplace()` to the `build_cas_handler_table()` return dict.
+- Added `"coding-adventures-cas-laplace>=0.1.0"` to `pyproject.toml` dependencies.
+
+This wires `Laplace(f, t, s)`, `ILT(F, s, t)`, `DiracDelta(x)`, and `UnitStep(x)`
+into the symbolic VM. All four operations follow the graceful fall-through contract.
+
+---
+
+## 0.32.2 — 2026-04-27
+
+**Wire `cas-mnewton` into `SymbolicBackend`.**
+
+- Added `from cas_mnewton import build_mnewton_handler_table as _build_mnewton`
+  to `cas_handlers.py`.
+- Added `**_build_mnewton()` to the `build_cas_handler_table()` return dict
+  so `MNewton(f, x, x0)` is handled by every `SymbolicBackend`-derived VM.
+- Added `coding-adventures-cas-mnewton` to `pyproject.toml` dependencies.
+- `MNewton(f, x, x0)` now evaluates to `IRFloat(root)` for numeric x0, and
+  falls through to unevaluated on non-numeric input or zero-derivative.
+
+---
+
+## 0.32.1 — 2026-04-27
+
+**Bug fix — hyperbolic differentiation via `derivative.py` pathway.**
+
+Phase 13 added differentiation rules for `sinh/cosh/tanh/asinh/acosh/atanh` to
+`integrate.py`'s `_diff_ir` helper, but the standalone `derivative.py` module
+(used when callers invoke `diff` directly rather than through the integrator) was
+not updated.  Without this fix, `diff(sinh(x), x)` called through `derivative.py`
+entered infinite recursion and raised `RecursionError`.
+
+Added chain-rule branches to `derivative.py` for all six hyperbolic heads:
+
+- `Sinh(u)` → `Cosh(u) · u'`
+- `Cosh(u)` → `Sinh(u) · u'`
+- `Tanh(u)` → `u' / Cosh(u)²`
+- `Asinh(u)` → `u' / √(u²+1)`
+- `Acosh(u)` → `u' / √(u²−1)`
+- `Atanh(u)` → `u' / (1−u²)`
+
+---
+
+## 0.32.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic function evaluation, differentiation, and integration.**
+
+New evaluation handlers (six `_elementary`-based handlers in `handlers.py`,
+registered in `build_handler_table`):
+
+- `sinh(simplify)` — `Sinh(u)`, exact identity `Sinh(0) = 0`.
+- `cosh(simplify)` — `Cosh(u)`, exact identity `Cosh(0) = 1`.
+- `tanh(simplify)` — `Tanh(u)`, exact identity `Tanh(0) = 0`.
+- `asinh(simplify)` — `Asinh(u)`, exact identity `Asinh(0) = 0`.
+- `acosh(simplify)` — `Acosh(u)`, exact identity `Acosh(1) = 0`.
+- `atanh(simplify)` — `Atanh(u)`, exact identity `Atanh(0) = 0`.
+
+New integration modules:
+
+- `sinh_poly_integral.py` — tabular IBP for `∫ P(x)·sinh(ax+b) dx` and
+  `∫ P(x)·cosh(ax+b) dx`. Sign alternation `(−1)^k` (period 2, vs trig's
+  period 4). Public API: `sinh_poly_integral`, `cosh_poly_integral`.
+- `asinh_poly_integral.py` — reduction IBP for `∫ P(x)·asinh(ax+b) dx` and
+  `∫ P(x)·acosh(ax+b) dx`. Uses the reduction formula
+  `Iₙ = (1/n)·tⁿ⁻¹·√(t²±1) ∓ (n−1)/n · Iₙ₋₂`. Public API:
+  `asinh_poly_integral`, `acosh_poly_integral`.
+
+Changes to `integrate.py` (9 change sites):
+
+1. Imports: added `SINH`, `COSH`, `TANH`, `ASINH`, `ACOSH`, `ATANH` and
+   the two new module imports.
+2. Phase 1 head set: added all six hyperbolic heads.
+3. Phase 3 head set: added all six.
+4. Bare dispatch: `SINH`/`COSH` → tabular IBP; `TANH` → `log(cosh(ax+b))/a`;
+   `ASINH`/`ACOSH` → reduction IBP; `ATANH` → inline IBP formula.
+5. Dispatcher functions: `_try_sinh_product`, `_try_cosh_product`,
+   `_try_asinh_product`, `_try_acosh_product`.
+6. Phase 13 MUL hooks wired in after Phase 12 block.
+7. Diff rules in `_diff_ir`: all six hyperbolic functions.
+8. Helper functions: `_tanh_integral`, `_atanh_integral`.
+
+New test file `tests/test_phase13.py` with 55 tests across 9 classes:
+`TestPhase13_SinhCanonical` (8), `TestPhase13_CoshCanonical` (7),
+`TestPhase13_LinearHyp` (8), `TestPhase13_AsinhCanonical` (8),
+`TestPhase13_AcoshCanonical` (5), `TestPhase13_BareAtanhTanh` (4),
+`TestPhase13_Fallthrough` (4), `TestPhase13_Regressions` (6),
+`TestPhase13_Macsyma` (5).
+
+Bumped `symbolic-ir` dependency to `>=0.7.0`.
+
+New spec: `code/specs/phase13-hyperbolic.md`.
+
+## 0.31.0 — 2026-04-27
+
+**Phase G — Control-flow VM handlers.**
+
+Added five new evaluation handlers to `handlers.py` and wired them into
+`build_handler_table()`:
+
+- `while_(simplify)` — `While(condition, body)` loop handler. Re-evaluates
+  `condition` before each iteration; exits when condition is falsy or
+  indeterminate. Returns the last body value (or `False` if never entered).
+- `for_range_(simplify)` — `ForRange(var, start, step, end, body)` handler.
+  Evaluates bounds once, iterates `var` from `start` to `end` inclusive
+  (step can be negative). Saves and restores the loop variable's binding.
+- `for_each_(simplify)` — `ForEach(var, list, body)` handler. Evaluates the
+  list once; iterates over elements, binding `var` to each in turn.
+- `block_(simplify)` — `Block(List(locals), stmt1, …, stmtN)` handler.
+  Installs local bindings, evaluates statements in order, returns the last
+  value, restores all bindings (including via `Return` exit).
+- `return_(_simplify)` — `Return(value)` handler. Raises `_ReturnSignal`
+  to unwind through any enclosing Block/While/ForRange/ForEach handler.
+
+Also:
+
+- Added `_ReturnSignal(BaseException)` exception class for early-exit
+  signalling through nested control flow.
+- Extended `_HELD_HEADS` in `backends.py` with `WHILE`, `FOR_RANGE`,
+  `FOR_EACH`, `BLOCK` (args not pre-evaluated before dispatch).
+- Added `unbind(name)` to `Backend` ABC (default no-op) and `_BaseBackend`
+  (calls `self._env.pop(name, None)`) for block scope restoration.
+- Bumped `symbolic-ir` dependency to `>=0.6.0`.
+
+Required by `macsyma-grammar-extensions.md` (Phase G). Companion releases:
+`symbolic-ir` 0.6.0, `macsyma-compiler` 0.6.0.
+
+## 0.30.0 — 2026-04-27
+
+**`Cbrt` evaluation handler — exact cube-root simplification.**
+
+Added `cbrt_handler` and `_integer_cbrt` helper to `cas_handlers.py`,
+registered under the `"Cbrt"` key in `build_cas_handler_table()`.
+
+Evaluation rules:
+- **Perfect integer cubes**: `Cbrt(8) → 2`, `Cbrt(-27) → -3`,
+  `Cbrt(0) → 0`, `Cbrt(1) → 1`.
+- **Exact rational**: `Cbrt(8/27) → 2/3`, `Cbrt(-8/27) → -2/3`.
+  Both numerator and denominator must be perfect cubes; otherwise the
+  node is left unevaluated.
+- **Float**: `Cbrt(8.0) → 2.0`, `Cbrt(-27.0) → -3.0` (uses
+  `n^(1/3)` with sign-aware handling for negatives).
+- **Symbolic / imperfect**: `Cbrt(x)`, `Cbrt(2)`, `Cbrt(1/2)` all
+  pass through unevaluated.
+
+`_integer_cbrt(n)` uses a float estimate plus ±1 probe to find the
+exact integer cube root without floating-point rounding errors.
+
+20 new tests in `test_cas_handlers.py` covering every branch (positive
+perfect cubes, zero, negative cubes, rational exact, rational imperfect
+passthrough, float positive, float negative, symbolic passthrough).
+Total test count 864; coverage 86 %.
+
+## 0.29.0 — 2026-04-27
+
+**REPL quality fixes — lambda beta-reduction and transcendental Taylor.**
+
+Two VM-level bugs fixed, one import alias added in `derivative.py`:
+
+1. **Lambda beta-reduction** (`vm.py`): `map(lambda([z], z^2), [1,2,3])`
+   previously returned unevaluated because the VM's `_eval_apply` only
+   handled named function calls (via `Define` records) and never dispatched
+   when the head was itself an `IRApply(lambda, ...)`.  A new `_apply_lambda`
+   method and a step 4b in `_eval_apply` now detect inline lambdas and perform
+   the parameter substitution, making `Map` + `Select` + direct lambda calls
+   all work correctly.
+
+2. **Transcendental Taylor** (`cas_handlers.py`): `taylor(sin(y), y, 0, 4)`
+   previously returned the expression unevaluated because
+   `cas_limit_series.taylor_polynomial` only handles polynomial inputs.  The
+   handler now falls back to `_taylor_derivative_fallback`, which computes each
+   coefficient `f^(k)(a)/k!` via successive symbolic differentiation (using the
+   existing `_diff` from `derivative.py`) followed by point-substitution.
+   `_symbolic_diff` import added at module level.  Both polynomial and
+   transcendental paths are tested.
+
+3 new lambda tests (`test_map_with_lambda`, `test_lambda_direct_call`,
+`test_lambda_two_params`) and 1 updated Taylor test
+(`test_taylor_transcendental_sin`) added.  Total test count 850, coverage 86 %.
+
+## 0.28.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic functions (sinh, cosh, tanh, asinh, acosh, atanh).**
+
+**Roadmap item A1 — Kronecker polynomial factoring (Phase 2) wired through `cas-factor 0.2.0`.**
+
+Upgrades `coding-adventures-cas-factor` dependency to `>=0.2.0`.
+
+The `Factor` handler in `build_cas_handler_table()` transparently benefits
+from `cas-factor`'s new Kronecker algorithm — no handler code changes needed.
+Factoring now handles:
+
+- **Sophie Germain identity**: `x⁴ + 4 = (x²+2x+2)(x²−2x+2)`
+- **Cyclotomic**: `x⁴+x²+1 = (x²+x+1)(x²−x+1)`
+- **Repeated irreducibles**: `x⁴+2x²+1 = (x²+1)²`
+- **Mixed**: `(x²+1)(x−2)` correctly split
+
+Updated `factor_handler` docstring to reflect Phase 2 capabilities.
+
+2 new tests in `test_cas_handlers.py` (Sophie Germain, cyclotomic), verifying
+that `Factor(x⁴+4)` and `Factor(x⁴+x²+1)` both return non-trivial `Mul` trees.
+
+## 0.26.0 — 2026-04-27
+
+**Roadmap item A3 — rational function operations (Collect, Together, RatSimplify, Apart, full Expand).**
+
+`Expand` handler upgraded from a `canonical()`-only pass to full polynomial
+distribution via the polynomial bridge.  Four new IR heads wired into
+`SymbolicBackend` via `build_cas_handler_table()`:
+
+- **`Expand`** (improved): calls `to_rational` + `from_polynomial` to distribute
+  `Mul` over `Add` and expand integer powers for single-variable polynomials
+  with rational coefficients. Falls back to `canonical` for multi-variable /
+  transcendental expressions.
+- **`Collect(expr, var)`**: groups terms by powers of `var` for single-variable
+  polynomials with rational coefficients (same mechanism as `Expand` but takes
+  an explicit variable argument). MACSYMA surface: `collect`.
+- **`Together(expr)`**: combines a sum of rational functions into a single
+  fraction `P(x)/Q(x)` with monic denominator. MACSYMA surface: `together`.
+- **`RatSimplify(expr)`**: cancels the GCD of numerator and denominator,
+  reducing the rational expression to lowest terms. MACSYMA surface: `ratsimp`.
+- **`Apart(expr, var)`**: partial-fraction decomposition (Phase 1 — distinct
+  rational linear factors only). Uses residue formula `A_i = P(r_i)/Q'(r_i)`.
+  MACSYMA surface: `partfrac`. Falls back to unevaluated for irreducible
+  quadratic or repeated factors.
+
+**Dependencies**: `coding-adventures-polynomial` was already in
+`pyproject.toml`; the new handlers import `gcd`, `monic`, `deriv`,
+`evaluate`, `rational_roots`, `divmod_poly` directly from `polynomial`.
+
+**New tests (18 in Section 14 of `test_cas_handlers.py`)** +
+**6 new pipeline tests in `macsyma-runtime`**.
+
+## 0.25.0 — 2026-04-27
+
+**Roadmap item B1 (cas-trig) wired into SymbolicBackend.**
+
+`cas-trig` is now a dependency. Its handler table is merged via
+`_build_trig()` in `SymbolicBackend.__init__`.
+
+**New IR heads** (3 total):
+`TrigSimplify`, `TrigExpand`, `TrigReduce`.
+
+- `TrigSimplify`: Pythagorean identity (`sin²+cos²→1`), sign rules
+  (`sin(-x)→-sin(x)`, `cos(-x)→cos(x)`), and special-value lookup
+  (`sin(π/6)→1/2`, etc.).
+- `TrigExpand`: angle-addition formulas and Chebyshev recurrence for
+  integer multiples (`sin(2x)→2sin(x)cos(x)`, `cos(3x)→...`).
+- `TrigReduce`: power-to-multiple-angle reduction
+  (`sin²(x)→(1-cos(2x))/2`, `cos³(x)→(3cos(x)+cos(3x))/4`, etc.).
+
+**Dependencies updated:**
+- `cas-trig>=0.1.0` added to `pyproject.toml`.
+
+**New tests (5 in `test_cas_handlers.py`)** + **5 pipeline tests**.
+
+## 0.24.0 — 2026-04-27
+
+**Roadmap items A2c + A2d (NSolve and linear systems) wired in.**
+
+- `solve_handler` extended to detect `Solve(List(eqs...), List(vars...))`
+  and route it to `solve_linear_system` (Gaussian elimination, exact
+  rational arithmetic). Returns `List(Rule(var, val), ...)`.
+- `nsolve_handler` added for `NSolve(poly, var)`: Durand-Kerner iteration
+  returning `IRFloat`/complex IR roots for any polynomial degree.
+- `MACSYMA_NAME_TABLE` gains `"nsolve"→NSolve` and `"linsolve"→Solve`.
+- `cas-solve>=0.6.0` dependency pin updated.
+- 4 new tests in `test_cas_handlers.py` + 4 new pipeline tests.
+
+## 0.23.0 — 2026-04-27
+
+**Roadmap items A2a + A2b (cubic and quartic solvers) wired into `solve_handler`.**
+
+The `Solve` handler in `cas_handlers.py` now supports degree-3 and degree-4
+polynomials via `cas-solve`'s new `solve_cubic` and `solve_quartic`:
+
+- **Degree 3**: routes through `solve_cubic` (rational-root theorem → Cardano).
+  Returns a `List` of roots, or unevaluated for casus irreducibilis.
+- **Degree 4**: routes through `solve_quartic` (rational-root theorem →
+  biquadratic → Ferrari). Returns a `List` of roots, or unevaluated when the
+  Ferrari resolvent has no rational root.
+- Empty or "ALL" results are propagated as unevaluated expressions.
+
+**Dependencies updated:**
+- `cas-solve` bumped to `>=0.4.0` in `pyproject.toml`.
+
+**New tests (4 in `test_cas_handlers.py`):**
+`test_solve_cubic_three_rational`, `test_solve_cubic_one_rational_two_complex`,
+`test_solve_quartic_four_rational`, `test_solve_degree_5_passthrough`.
+
+## 0.22.0 — 2026-04-27
+
+**Roadmap item B2 (cas-complex) wired into SymbolicBackend.**
+
+`cas-complex` is now a dependency. Its handler table is merged into
+`build_cas_handler_table()` via `**_build_complex()`, and two additional
+integration points are set up in `SymbolicBackend.__init__`:
+
+- `ImaginaryUnit` is pre-bound to itself so it evaluates as an inert
+  symbol (rather than triggering the unresolved-symbol fall-through).
+- A wrapper around the `Pow` handler routes `ImaginaryUnit^n` through
+  `imaginary_power_handler` (reducing `i^n → {1, i, -1, -i}` via `n % 4`)
+  before falling through to the standard power handler.
+- `Abs` is extended: when its argument contains `ImaginaryUnit`, it
+  delegates to `abs_complex_handler` (returning `sqrt(re² + im²)`).
+
+**New IR heads** (7 total):
+`Re`, `Im`, `Conjugate`, `Arg`, `RectForm`, `PolarForm`, `AbsComplex`.
+
+## 0.21.0 — 2026-04-27
+
+**Roadmap item B3 (cas-number-theory) wired into SymbolicBackend.**
+
+The new `cas-number-theory` package is now a dependency and its handler
+table is merged into `build_cas_handler_table()` via `**_build_nt()`.
+
+**New IR heads** (10 total, all language-neutral):
+`IsPrime`, `NextPrime`, `PrevPrime`, `FactorInteger`, `Divisors`,
+`Totient`, `MoebiusMu`, `JacobiSymbol`, `ChineseRemainder`, `IntegerLength`.
+
+## 0.20.0 — 2026-04-27
+
+**Roadmap items C2, C4, C5 implemented** — three items from the MACSYMA
+completion roadmap (`macsyma-completion.md`) are now live in `SymbolicBackend`.
+All three are language-neutral IR heads; every future CAS frontend inherits
+them automatically.
+
+**New handlers installed on `SymbolicBackend`**:
+
+- **`Lhs(Equal(a, b))` → `a`** (C5) — left-hand side of an equation.
+- **`Rhs(Equal(a, b))` → `b`** (C5) — right-hand side of an equation.
+- **`MakeList(expr, var, n)` / `MakeList(expr, var, from, to[, step])`** (C2)
+  — generative list construction: evaluates `expr` for each integer value
+  of `var` in the specified range.  Replaces the previous stub that mapped
+  `makelist` → `Range`.
+- **`At(expr, Equal(var, val))` / `At(expr, List(…))` → substitution then eval** (C4)
+  — point evaluation; sugar over `Subst`.  Handles both single rules and
+  lists of rules.
+
+**Bug fix**: `MACSYMA_NAME_TABLE["makelist"]` previously routed to `Range`
+(a plain integer range generator). It now routes to the correct `MakeList`
+head, which evaluates an arbitrary expression over a range.
+
+**New import**: `EQUAL` added to the `cas_handlers.py` imports from
+`symbolic_ir`.
+
+## 0.19.0 — 2026-04-27
+
+**CAS substrate handlers wired into SymbolicBackend** — the universal inner
+doll. Every CAS frontend that extends `SymbolicBackend` (MACSYMA, Maple,
+Mathematica, …) now inherits the full algebraic operation set for free.
+Language-specific quirks (Display/Suppress/Kill/Ev) remain in the language
+backend subclass (the outer doll).
+
+**New module**: `symbolic_vm/cas_handlers.py`
+
+**New handlers installed on `SymbolicBackend`**:
+
+- **Algebraic**: `Simplify`, `Expand`, `Factor` (Phase 1: integer-root
+  factoring via rational-root theorem), `Solve` (linear and quadratic over Q),
+  `Subst` (structural substitution + re-evaluation).
+- **List operations**: `Length`, `First`, `Rest`, `Last`, `Append`, `Reverse`,
+  `Range`, `Map`, `Apply`, `Select`, `Sort`, `Part`, `Flatten`, `Join`.
+- **Matrix**: `Matrix`, `Transpose`, `Determinant`, `Inverse`.
+- **Calculus**: `Limit` (direct-substitution Phase 1), `Taylor` (polynomial
+  Taylor expansion).
+- **Numeric**: `Abs`, `Floor`, `Ceiling`, `Mod`, `Gcd`, `Lcm`.
+
+**Package dependencies added**: `cas-pattern-matching`, `cas-substitution`,
+`cas-simplify`, `cas-factor`, `cas-solve`, `cas-list-operations`,
+`cas-matrix`, `cas-limit-series`.
+
+**Architecture note**: These handlers are the **inner doll** — universal
+CAS operations that any symbolic algebra language can use unchanged. They
+are explicitly *not* placed in `MacsymaBackend` so that future Maple and
+Mathematica backends can extend `SymbolicBackend` directly and inherit
+the complete algebraic substrate without touching any MACSYMA-specific code.
+
 ## 0.18.0 — 2026-04-23
 
 Phase 13 of the integration roadmap — hyperbolic functions.

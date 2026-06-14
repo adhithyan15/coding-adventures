@@ -1,0 +1,5775 @@
+//! # `dispatch` — the real interpreter dispatch loop for `twig-vm`.
+//!
+//! Originally LANG20 PR 4 (tree-walking dispatcher); extended in
+//! PR 5 to cover closures, top-level value defines, and quoted
+//! symbols; extended in PR 6 to cover the method-dispatch
+//! opcodes `send`, `load_property`, `store_property`; extended in
+//! PR 7 with **persistent inline-cache slots** so a hot
+//! `load_property` site shares one IC instance across all its
+//! activations (the V8-style IC machinery the JIT will speculate
+//! on).  Runs an entire `IIRModule` end to end and returns a
+//! `LispyValue`.
+//!
+//! ## Scope
+//!
+//! Through PR 6 the dispatcher covers the IIR subset emitted by
+//! every Lispy frontend plus the method-dispatch opcodes Ruby /
+//! JavaScript frontends will eventually need.  The supported
+//! opcodes:
+//!
+//! | Opcode             | What it does                                      |
+//! |--------------------|---------------------------------------------------|
+//! | `const Int/Bool`   | bind register ← `Int` / `Bool` immediate          |
+//! | `const Var(s)`     | bind register ← `LispyValue::symbol(intern(s))` (PR 5: string-via-symbol convention) |
+//! | `call_builtin`     | look up Lispy builtin OR special-case             |
+//! | `call`             | resolve callee in module, recurse into dispatcher |
+//! | `jmp`              | unconditional branch to label                     |
+//! | `jmp_if_false`     | branch if cond register is `false` or `nil`       |
+//! | `label`            | no-op marker (jump target)                        |
+//! | `ret`              | return value to caller                            |
+//! | `send`             | (PR 6) dispatch a method via `LangBinding::send_message` |
+//! | `load_property`    | (PR 6) read a property via `LangBinding::load_property` |
+//! | `store_property`   | (PR 6) write a property via `LangBinding::store_property` |
+//! | `alloc_closure`    | (LANG34) allocate closure: `srcs[0] = Str(fn_name)`, `srcs[1..] = captures` |
+//! | `call_closure`     | (LANG34) invoke closure: `srcs[0] = handle`, `srcs[1..] = user args` |
+//!
+//! ### Special-cased `call_builtin` names (PR 5 + LANG55)
+//!
+//! These builtin names need access to per-VM state (globals
+//! table, IIRModule, dispatcher recursion) and so are handled
+//! inline in `exec_call_builtin` rather than as context-free
+//! `BuiltinFn` pointers:
+//!
+//! | Name            | Behaviour                                          |
+//! |-----------------|----------------------------------------------------|
+//! | `apply_closure` | Extract `(fn_name, captures)` from the closure handle.  If the closure flag says builtin, dispatch via `LispyBinding::resolve_builtin`.  Else look `fn_name` up in `module.functions` and recurse into `dispatch` with `captures ++ args`. |
+//! | `global_set`    | Write `globals[name] = value` (name and value both supplied as srcs). |
+//! | `global_get`    | Read `globals[name]`; error if unset.              |
+//! | `map`           | `(map fn lst)` — apply `fn` to each element; return new list. |
+//! | `filter`        | `(filter pred lst)` — keep elements for which `pred` is truthy. |
+//! | `fold-left`     | `(fold-left fn init lst)` — left fold: `acc = (fn acc elem)`. |
+//! | `fold-right`    | `(fold-right fn init lst)` — right fold: `acc = (fn elem acc)`. |
+//!
+//! `map`, `filter`, `fold-left`, `fold-right` share the `invoke_closure_value`
+//! helper which drives `dispatch` recursively for each element.
+//!
+//! All other `call_builtin` names route through
+//! `LispyBinding::resolve_builtin` exactly as before.
+//!
+//! ### Method dispatch opcodes (PR 6)
+//!
+//! The three opcodes added in PR 6 (`send`, `load_property`,
+//! `store_property`) all share the same shape: extract the
+//! receiver/object from `srcs[0]`, extract a `SymbolId` from
+//! `srcs[1]` (the selector / property key, lowered through the
+//! string-as-symbol convention), allocate a per-instruction
+//! [`InlineCache<LispyICEntry>`], and call the corresponding
+//! `LangBinding` trait method.
+//!
+//! For Lispy specifically the binding methods correctly return
+//! `RuntimeError::NoSuchMethod` / `NoSuchProperty` — Lispy doesn't
+//! have method dispatch, and a Twig program that emits these
+//! opcodes is using a feature the language doesn't have.  PR 6's
+//! value is **wiring the opcodes through the trait machinery**
+//! so a future Ruby- or JS-binding can implement them and have
+//! them dispatched by exactly the same dispatcher.  Tests
+//! hand-build IIRModules using these opcodes since
+//! `twig-ir-compiler` doesn't emit them yet (no `(send obj msg
+//! ...)` form in Twig source).
+//!
+//! ### IC slot lookup (PR 7)
+//!
+//! When the IIR compiler assigns `IIRInstr::ic_slot = Some(slot)`
+//! to an IC-owning instruction, the dispatcher routes through
+//! the **persistent [`ICTable`]** — a per-function vector of
+//! [`InlineCache<LispyICEntry>`] indexed by slot id.  Two
+//! activations of the same function hit the same IC instance,
+//! so a `load_property` that observes a class on call N can
+//! benefit on call N+1 (the V8-style fast-path the JIT
+//! eventually compiles against).
+//!
+//! When `ic_slot` is `None` (the PR 6 default), the dispatcher
+//! stack-allocates a fresh IC per dispatch — backwards-
+//! compatible with hand-built IIRModules in tests that don't
+//! assign slots.  New IC-owning frontends (Ruby, JS) emit slot
+//! ids; existing tests keep working.
+//!
+//! For Lispy specifically the binding's `send_message` etc. don't
+//! consult the IC (they error immediately), so the IC table
+//! mostly verifies plumbing.  The cache fills the moment a Ruby-
+//! or JS-binding's `send_message` calls
+//! `InlineCache::record(...)`.
+//!
+//! Out of scope (later PRs):
+//!
+//! - **Profiler that reads IC observations** — PR 8 wires the
+//!   `vm-core` profiler that dumps `.ldp` artefacts (LANG22) from
+//!   IC contents.
+//! - **JIT promotion, deopt** — PR 8+.
+//!
+//! ## Recursion model
+//!
+//! Each `call` opcode recurses into a fresh `Frame`, using the
+//! Rust call stack as the activation stack.  This is the same
+//! tactic Python's `eval` uses internally; it caps Twig recursion
+//! at the host's stack depth.  We additionally guard with
+//! [`MAX_DISPATCH_DEPTH`] so adversarial input can't crash the
+//! process before the OS kicks in.
+//!
+//! When PR 6+ adds JIT-style on-stack replacement we'll replace
+//! this with an explicit frame stack inside `LangVM`.  The public
+//! API (`run`) stays compatible.
+//!
+//! ## Frame layout
+//!
+//! `Frame::registers` is a `HashMap<String, LispyValue>` —
+//! string-keyed by SSA name as emitted by the IIR compiler.  This
+//! is **not** how `vm-core` will represent frames in production —
+//! that's a `Vec<LispyValue>` indexed by register-id.  But the
+//! IIR carries names today, and rewriting to ids is a separate
+//! commit; this PR's contract is to make Twig programs *run*,
+//! not to land the final register-allocator.
+
+use std::collections::HashMap;
+
+use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand, SlotState};
+use lang_runtime_core::{
+    DispatchCx, InlineCache, LangBinding, RuntimeError, SymbolId,
+};
+use lispy_runtime::{intern, name_of, LispyBinding, LispyICEntry, LispyValue};
+
+use crate::operand::operand_to_value;
+
+// ---------------------------------------------------------------------------
+// Limits
+// ---------------------------------------------------------------------------
+
+/// Maximum number of nested `call` opcodes the dispatcher will
+/// follow before refusing to recurse further.
+///
+/// At PR 4 each Twig call uses the host Rust stack frame, so this
+/// indirectly caps stack usage.  The VM returns [`RunError::DepthExceeded`]
+/// *before* recursing at the limit, so no stack overflow occurs at
+/// exactly the boundary.
+///
+/// ## Realistic recursion depth vs. the ceiling
+///
+/// `lex-loop` recurses once per input character.  The deepest realistic
+/// source file in TW05-J is `lexer.tw` at 8593 chars — requiring up to
+/// 8593 dispatch frames.  In **debug** builds Rust stack frames for the
+/// dispatcher are ~60 KiB each, so 8593 frames ≈ 500 MiB of native stack.
+/// Integration tests therefore spawn a dedicated 768 MiB thread via
+/// `run_in_large_stack`.  In **release** builds frames shrink to ~1–2 KiB,
+/// well within any default stack.
+///
+/// 131072 (2^17) is a safety ceiling chosen for TW05-L (LANG66).
+///
+/// The self-hosted `lex-loop` is NOT tail-call optimised by the Twig IIR
+/// compiler.  Each source character consumed by `lex-loop` adds ~2–3
+/// dispatch frames (one for `lex-loop`, one for `cond-dispatch`, and
+/// optionally one for a scanner helper such as `scan-identifier`).
+///
+/// | Milestone | Largest file | Chars | Est. depth | Limit |
+/// |-----------|-------------|-------|-----------|-------|
+/// | LANG64 TW05-J | `lexer.tw` | 8 593 | ~19 K | 65 536 |
+/// | LANG65 TW05-K | `emit.tw`  | 22 697 | ~51 K | 65 536 |
+/// | LANG66 TW05-L | `cst-parser.tw` | 29 122 | ~66 K | **131 072** |
+///
+/// Empirical ratio from TW05-K/TW05-L boundary: 29 122 chars × ~2.25
+/// frames/char ≈ 65 524, which just exceeds the old 65 536 ceiling.
+/// 131 072 gives ~2× headroom over the measured TW05-L peak.
+///
+/// If a future file exceeds this limit the VM returns `DepthExceeded`;
+/// bump this constant and re-run in a larger-stack thread.
+///
+/// **History**:
+///   - bumped 256 → 4096 in LANG62 (TW05-I) to unblock the first
+///     self-compilation check (stripped span.tw ≈ 365 chars).
+///   - bumped 4096 → 65536 in LANG64 (TW05-J) to allow lexing
+///     compiler source files up to 65 536 chars.
+///   - bumped 65536 → 131072 in LANG66 (TW05-L) to allow lexing
+///     `cst-parser.tw` (29 122 chars, ~65 K dispatch depth).
+pub const MAX_DISPATCH_DEPTH: usize = 131072;
+
+/// Maximum number of instructions any single dispatcher invocation
+/// will execute before refusing.  Catches infinite loops in
+/// hand-built malformed IIR (the parser/compiler can't produce
+/// these for well-formed Twig source, but the VM has no way to
+/// know that).
+///
+/// ## Budget analysis
+///
+/// The `self-compile-all` function compiles seven real `.tw` files
+/// through the full lex → parse → emit-program pipeline in one run
+/// (TW05-L / LANG66).  The self-hosted `lex-loop` executes roughly
+/// **90 IIR instructions per source character** (lex-loop dispatch +
+/// cond-dispatch comparison chain + scanner helpers).
+///
+/// | Milestone | Total chars | Est. instrs | Limit |
+/// |-----------|------------|-------------|-------|
+/// | TW05-J (4 files) | 19 743 | ~1.8 M | 8 M ✓ |
+/// | TW05-K (6 files) | 62 148 | ~5.6 M | 8 M ✓ |
+/// | TW05-L (7 files) | 91 270 | ~8.2 M | **8 M** ✗ → **32 M** ✓ |
+///
+/// 2²⁵ = 32 M instructions provides comfortable headroom above the
+/// measured TW05-L peak (~8.2 M) while still protecting against
+/// infinite loops.
+///
+/// **History**:
+///   - 2²⁰ (1 M) in LANG62
+///   - bumped to 2²³ (8 M) in LANG64 (TW05-J)
+///   - bumped to 2²⁵ (32 M) in LANG66 (TW05-L): 7-file self-compile-all
+///     empirically needs ~8.2 M instructions
+pub const MAX_INSTRUCTIONS_PER_RUN: u64 = 1 << 25;
+
+/// Maximum register-file size the dispatcher will pre-allocate
+/// for a single frame.
+///
+/// `IIRFunction::register_count` is computed by the IR compiler,
+/// but the dispatcher must not trust it — a hand-built module
+/// with `register_count = usize::MAX` would allocate a
+/// `HashMap` with that capacity and abort the process before
+/// any instruction tick fires.  Clamping at 2¹⁶ matches what a
+/// real-world Twig function ever uses (factorial uses ~12
+/// registers; the largest test case here uses ~30) and bounds
+/// the up-front allocation.
+pub const MAX_REGISTERS_PER_FRAME: usize = 1 << 16;
+
+/// Maximum inline-cache slots any single function can declare
+/// (LANG20 PR 7).
+///
+/// `IIRInstr::ic_slot: Option<u32>` permits values up to
+/// `u32::MAX`; `ICTable::get_or_alloc` calls
+/// `Vec::resize_with(slot + 1, …)` on first access, so a
+/// hand-built or malformed IIR with `ic_slot = Some(u32::MAX -
+/// 1)` would attempt a multi-hundred-GB allocation and OOM-abort
+/// the process.  Capping at 2¹⁶ matches the
+/// [`MAX_REGISTERS_PER_FRAME`] convention — a real-world Twig
+/// function won't approach it (most have <10 IC sites; the
+/// largest realistic case is <100).  Found by PR 7 security
+/// review.
+pub const MAX_IC_SLOTS_PER_FUNCTION: u32 = 1 << 16;
+
+/// Maximum number of distinct functions an [`ICTable`] will
+/// hold (LANG20 PR 7).
+///
+/// Bounds the outer HashMap's growth so a hand-built module
+/// declaring millions of functions can't unboundedly grow the
+/// per-process IC storage.  Matches the
+/// [`MAX_IC_SLOTS_PER_FUNCTION`] cap; combined the two limit
+/// total IC storage to ~2³² entries × ~64 bytes = ~256 GB
+/// which still permits every reasonable program but stops
+/// adversarial inputs at the boundary.  Found by PR 7
+/// security review.
+pub const MAX_IC_FUNCTIONS: usize = 1 << 16;
+
+/// Maximum number of elements `collect_list` (LANG55) will materialise
+/// from a single cons-cell chain in one call.
+///
+/// ## Security rationale (found by LANG55 security review)
+///
+/// `collect_list` walks a runtime cons chain without access to the IIR
+/// instruction budget.  Without a cap, a single `(map fn huge-list)`
+/// instruction costs **one** budget tick but allocates O(N) `Vec` storage
+/// (for the element buffer), O(N) more storage for the result buffer, and
+/// O(N) `Box::leak`'d cons cells via `build_list` — all permanent because
+/// there is no GC yet.  An adversary who can supply a hand-built IIR
+/// module (or who can construct a large list at runtime) could OOM the
+/// process in a single budget tick.
+///
+/// Capping at `MAX_INSTRUCTIONS_PER_RUN` aligns the per-call work bound
+/// with the existing budget ceiling: iterating the maximum list costs
+/// exactly `MAX_INSTRUCTIONS_PER_RUN` budget ticks (one per element, via
+/// the `budget.tick()` call in `collect_list`), so a single HOF call on a
+/// maximum-length list costs the entire budget.  Real programs never
+/// approach this limit — compiler passes operate on thousands of tokens,
+/// not millions.
+pub const MAX_HOF_LIST_ELEMENTS: usize = MAX_INSTRUCTIONS_PER_RUN as usize;
+
+// ---------------------------------------------------------------------------
+// RunError
+// ---------------------------------------------------------------------------
+
+/// Errors the dispatcher can surface.
+///
+/// Returned by [`run`] and [`crate::TwigVM::run`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum RunError {
+    /// The module's `entry_point` doesn't name any function in
+    /// `module.functions`.  Should never happen for compiler-
+    /// generated modules — `twig-ir-compiler` always synthesises
+    /// `main`.
+    NoEntryPoint(String),
+
+    /// The dispatcher hit an opcode it doesn't implement.  See the
+    /// "Scope" section of the module docs for the supported set.
+    UnsupportedOpcode(String),
+
+    /// An instruction was structurally malformed — wrong number of
+    /// operands, missing dest, etc.  This indicates a bug in the
+    /// frontend, not in user code.
+    MalformedInstruction(String),
+
+    /// `Operand::Var(name)` referenced a register that hasn't been
+    /// written.  In well-formed IIR every read is dominated by a
+    /// write, so this is also a frontend bug.
+    UnknownRegister(String),
+
+    /// `call <name>` referenced a function that doesn't exist in
+    /// the module.  Frontend bug or hand-built broken IIR.
+    UnknownFunction(String),
+
+    /// `jmp <label>` referenced a label that wasn't emitted by any
+    /// `label` instruction in the same function.
+    UnknownLabel(String),
+
+    /// `call_builtin <name>` named a builtin that
+    /// [`LispyBinding::resolve_builtin`] doesn't know.
+    UnknownBuiltin(String),
+
+    /// A `call_builtin` argument couldn't be converted to a
+    /// `LispyValue`.
+    OperandConversion(RuntimeError),
+
+    /// A builtin or callee returned a runtime error.
+    Runtime(RuntimeError),
+
+    /// Recursion hit [`MAX_DISPATCH_DEPTH`] — refused.
+    DepthExceeded,
+
+    /// Total instruction count hit
+    /// [`MAX_INSTRUCTIONS_PER_RUN`] — refused.
+    InstructionLimitExceeded,
+
+    /// Function arity mismatch on `call`.
+    ArityMismatch {
+        /// Number of parameters declared by the callee function.
+        expected: usize,
+        /// Number of arguments actually supplied at the call site.
+        got: usize,
+        /// Name of the callee function (the `srcs[0]` of the
+        /// failing `call` instruction).
+        callee: String,
+    },
+
+    /// Reached the end of a function body without ever executing a
+    /// `ret`.  Frontend bug — `twig-ir-compiler` always emits a
+    /// trailing `ret`.
+    FellOffEnd(String),
+
+    /// `global_get <name>` referenced a name that has never been
+    /// the target of a `global_set`.  In Twig source this is a
+    /// "use before define" — a forward reference to a top-level
+    /// `(define x ...)` from inside a function whose body runs
+    /// before the define.
+    UndefinedGlobal(String),
+
+    /// `apply_closure` was called on a value that isn't a closure
+    /// (heap-allocated with `class_or_kind == CLASS_CLOSURE`).
+    /// User-visible "<value> is not callable" surface.
+    NotCallable(String),
+
+    /// A `host/` stdlib call failed at the OS level — e.g. a write to
+    /// stdout returned an I/O error.  This should be extremely rare
+    /// (stdout closed, disk full) but must not be silently swallowed.
+    HostIo(String),
+
+    /// A `host/` stdlib call received an argument of the wrong type.
+    /// For example, `host/write_byte` expects an integer but received
+    /// a symbol or cons cell.
+    HostArgType {
+        /// Name of the `host/` function that rejected the argument.
+        function: String,
+        /// Human-readable description of what was received.
+        received: String,
+    },
+}
+
+impl std::fmt::Display for RunError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RunError::NoEntryPoint(s) => write!(f, "no entry point: {s:?}"),
+            RunError::UnsupportedOpcode(s) => write!(f, "unsupported opcode: {s:?}"),
+            RunError::MalformedInstruction(s) => write!(f, "malformed instruction: {s}"),
+            RunError::UnknownRegister(s) => write!(f, "unknown register: {s:?}"),
+            RunError::UnknownFunction(s) => write!(f, "unknown function: {s:?}"),
+            RunError::UnknownLabel(s) => write!(f, "unknown label: {s:?}"),
+            RunError::UnknownBuiltin(s) => write!(f, "unknown builtin: {s:?}"),
+            RunError::OperandConversion(e) => write!(f, "operand conversion: {e}"),
+            RunError::Runtime(e) => write!(f, "runtime error: {e}"),
+            RunError::DepthExceeded => write!(f, "max dispatch depth ({MAX_DISPATCH_DEPTH}) exceeded"),
+            RunError::InstructionLimitExceeded => {
+                write!(f, "max instructions per run ({MAX_INSTRUCTIONS_PER_RUN}) exceeded")
+            }
+            RunError::ArityMismatch { expected, got, callee } => {
+                write!(f, "arity mismatch on call to {callee:?}: expected {expected}, got {got}")
+            }
+            RunError::FellOffEnd(name) => write!(f, "function {name:?} fell off end without ret"),
+            RunError::UndefinedGlobal(s) => write!(f, "undefined global: {s:?}"),
+            RunError::NotCallable(s) => write!(f, "not callable: {s}"),
+            RunError::HostIo(e) => write!(f, "host I/O error: {e}"),
+            RunError::HostArgType { function, received } => {
+                write!(f, "host/{function}: expected integer, got {received}")
+            }
+        }
+    }
+}
+
+impl std::error::Error for RunError {}
+
+// ---------------------------------------------------------------------------
+// Frame
+// ---------------------------------------------------------------------------
+
+/// Per-call-activation register file.  One `Frame` per `call`
+/// opcode, plus one for the entry-point function.
+///
+/// **GC-rooting note** (relevant for PR 5+ when a real
+/// collector lands): values stored in `registers` are roots that
+/// must be traced.  Today the runtime uses `Box::leak` so heap
+/// pointers never get freed — that lets us hold raw `LispyValue`
+/// copies in this `HashMap` safely.  When the leak is replaced
+/// with a real collector, this struct's storage becomes a root
+/// set and the dispatcher will need to expose it to the GC's
+/// `trace_value` hook.
+///
+/// `pub(crate)` so the [`crate::debug::FrameView`] wrapper can borrow
+/// it.  All callers outside `dispatch` go through `FrameView`'s narrow
+/// API rather than touching the registers HashMap directly.
+#[derive(Debug)]
+pub(crate) struct Frame {
+    /// SSA name → current value.  Names are unique within a
+    /// function (the IIR is in SSA form), so a flat HashMap is
+    /// adequate.
+    registers: HashMap<String, LispyValue>,
+}
+
+impl Frame {
+    fn new(func: &IIRFunction, args: &[LispyValue]) -> Result<Self, RunError> {
+        if args.len() != func.params.len() {
+            return Err(RunError::ArityMismatch {
+                expected: func.params.len(),
+                got: args.len(),
+                callee: func.name.clone(),
+            });
+        }
+        // Cap the up-front HashMap capacity at a sane bound.
+        // `register_count` comes from the IR compiler and is not
+        // user-controlled in practice, but a hand-built module
+        // could ship `register_count = usize::MAX`, which would
+        // abort the process at allocation time.  See the
+        // `MAX_REGISTERS_PER_FRAME` doc-comment for the rationale.
+        let cap = func
+            .register_count
+            .max(args.len())
+            .min(MAX_REGISTERS_PER_FRAME);
+        let mut registers = HashMap::with_capacity(cap);
+        for ((name, _ty), val) in func.params.iter().zip(args.iter()) {
+            registers.insert(name.clone(), *val);
+        }
+        Ok(Frame { registers })
+    }
+
+    fn get(&self, name: &str) -> Option<LispyValue> {
+        self.registers.get(name).copied()
+    }
+
+    /// All register names live in the frame.  Used by the debug bridge.
+    pub(crate) fn register_names(&self) -> Vec<String> {
+        self.registers.keys().cloned().collect()
+    }
+
+    /// Debug-printable rendering of a register's current value.
+    ///
+    /// Returns `None` if the register is not bound.  Used by the debug
+    /// hook to honour DAP's `variables` request.
+    /// Return a human-readable string for the named register, or `None`.
+    ///
+    /// Uses `Display` (not `Debug`) so integers render as `"7"` rather than
+    /// `"LispyValue(56)"`.  The DAP `variables` panel shows this string
+    /// directly to the user in the editor's Variables pane.
+    pub(crate) fn debug_print(&self, name: &str) -> Option<String> {
+        self.registers.get(name).map(|v| format!("{v}"))
+    }
+
+    /// Insert or update `name → value`.
+    ///
+    /// Errors if the frame already holds [`MAX_REGISTERS_PER_FRAME`]
+    /// distinct names and `name` is new.  Hand-built malformed IIR
+    /// could otherwise grow the per-frame `HashMap` unboundedly with
+    /// fresh names (one heap allocation per name); the per-run
+    /// instruction budget partially limits this but not strongly
+    /// enough to prevent multi-gigabyte allocation.  Found by
+    /// PR 5 security review (#10).
+    fn set(&mut self, name: String, value: LispyValue) -> Result<(), RunError> {
+        if !self.registers.contains_key(&name)
+            && self.registers.len() >= MAX_REGISTERS_PER_FRAME
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "frame register count exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})"
+            )));
+        }
+        self.registers.insert(name, value);
+        Ok(())
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Globals
+// ---------------------------------------------------------------------------
+
+/// Top-level value-define table.  One per [`run`] invocation;
+/// shared across all `Frame`s within that run via a `&mut`
+/// reference threaded through `dispatch`.
+///
+/// Twig's `(define x value)` form lowers to
+/// `call_builtin "global_set" name value`; references to top-level
+/// values lower to `call_builtin "global_get" name`.  This struct
+/// is the storage backing both.
+///
+/// Keyed by [`SymbolId`] rather than `String` because the IR
+/// compiler interns names through `lispy-runtime::intern` already
+/// (the dispatcher's `const Var(text)` handler creates a symbol),
+/// so SymbolId comparisons stay O(1) integer-equality.
+///
+/// **Lifetime note.**  Globals are per-run, not per-process.
+/// Calling `TwigVM::run` twice gives two independent global
+/// tables.  When PR 6+ adds `LangVM`-level state, globals will
+/// move there and persist across runs — at that point this
+/// struct moves to a shared location.  The dispatcher API stays
+/// the same.
+#[derive(Debug, Default)]
+pub struct Globals {
+    map: HashMap<SymbolId, LispyValue>,
+}
+
+impl Globals {
+    /// Construct an empty globals table.
+    pub fn new() -> Self {
+        Globals { map: HashMap::new() }
+    }
+
+    /// Read a global by interned name.  Returns `None` if the name
+    /// has never been the target of a `set`.
+    pub fn get(&self, name: SymbolId) -> Option<LispyValue> {
+        self.map.get(&name).copied()
+    }
+
+    /// Write `value` to the global named `name`.  Overwrites any
+    /// prior value.
+    pub fn set(&mut self, name: SymbolId, value: LispyValue) {
+        self.map.insert(name, value);
+    }
+
+    /// Number of globals currently set.  Mostly for testing.
+    pub fn len(&self) -> usize {
+        self.map.len()
+    }
+
+    /// `true` if no globals are set.
+    pub fn is_empty(&self) -> bool {
+        self.map.is_empty()
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Label index
+// ---------------------------------------------------------------------------
+
+/// Map from `label` instruction's name → index of that instruction.
+///
+/// Built once per function on entry; jumps then resolve in O(1).
+///
+/// Errors on duplicate label names — `twig-ir-compiler` always
+/// generates fresh names via `fresh_label`, so duplicates are
+/// only possible from hand-built malformed IIR.  Failing fast
+/// here prevents the silent "last write wins" behaviour where
+/// a `jmp L` could quietly redirect to the wrong target.
+fn build_label_index(func: &IIRFunction) -> Result<HashMap<String, usize>, RunError> {
+    let mut idx = HashMap::new();
+    for (i, instr) in func.instructions.iter().enumerate() {
+        if instr.op == "label" {
+            let name = match instr.srcs.first() {
+                Some(Operand::Var(s)) => s.clone(),
+                _ => return Err(RunError::MalformedInstruction(format!(
+                    "label at instr {i} of {:?} missing Var operand", func.name
+                ))),
+            };
+            if idx.insert(name.clone(), i).is_some() {
+                return Err(RunError::MalformedInstruction(format!(
+                    "duplicate label {name:?} in function {:?}", func.name
+                )));
+            }
+        }
+    }
+    Ok(idx)
+}
+
+// ---------------------------------------------------------------------------
+// IC table (PR 7)
+// ---------------------------------------------------------------------------
+
+/// Persistent inline-cache storage indexed by `(function_name,
+/// ic_slot)`.
+///
+/// One [`InlineCache<LispyICEntry>`] per IC-owning instruction
+/// (`send`, `load_property`, `store_property`).  Two activations
+/// of the same function hit the **same IC instance**, so a hot
+/// site that observed a class on call N benefits on call N+1
+/// (the V8-style fast path the JIT eventually compiles
+/// against).
+///
+/// **Storage shape.**  `HashMap<String, Vec<InlineCache<...>>>`.
+/// The outer key is the function name (the IIR carries names,
+/// not numeric ids); the inner Vec is dense — slot N occupies
+/// index N.  Functions without IC-owning instructions never get
+/// an entry.
+///
+/// **Lifetime.**  Per-run today (one [`ICTable`] per call to
+/// [`run`]); PR 8+ moves it to per-VM state when `LangVM` lands,
+/// so the cache survives across multiple `run` calls.  The
+/// public API stays the same.
+///
+/// **Why string-keyed instead of function-id-indexed?**  The IIR
+/// already keys functions by name everywhere (`UnknownFunction`,
+/// `module.functions.find`); using the same key avoids
+/// introducing a separate identifier scheme.  When register
+/// allocation refactors functions to numeric ids in a future PR,
+/// this field migrates with them.
+#[derive(Debug, Default)]
+pub struct ICTable {
+    by_function: HashMap<String, Vec<InlineCache<LispyICEntry>>>,
+}
+
+impl ICTable {
+    /// Construct an empty IC table.
+    pub fn new() -> Self {
+        ICTable {
+            by_function: HashMap::new(),
+        }
+    }
+
+    /// Get a `&mut` reference to the IC at `(fn_name, slot)`,
+    /// growing the per-function vector if needed.
+    ///
+    /// First access to a slot allocates a fresh
+    /// [`InlineCache::new`] (state Uninit, zero entries, zero
+    /// counters).  Subsequent accesses return the existing
+    /// instance.  This is the API the dispatcher's IC-owning
+    /// opcode handlers use on every dispatch.
+    ///
+    /// Errors if `slot >= MAX_IC_SLOTS_PER_FUNCTION` or the
+    /// table already holds `MAX_IC_FUNCTIONS` distinct
+    /// functions and `fn_name` is new.  Both caps are defensive
+    /// against hand-built malformed IIR; well-formed input
+    /// never approaches them.
+    pub fn get_or_alloc(
+        &mut self,
+        fn_name: &str,
+        slot: u32,
+    ) -> Result<&mut InlineCache<LispyICEntry>, RunError> {
+        if slot >= MAX_IC_SLOTS_PER_FUNCTION {
+            return Err(RunError::MalformedInstruction(format!(
+                "ic_slot {slot} exceeds MAX_IC_SLOTS_PER_FUNCTION ({MAX_IC_SLOTS_PER_FUNCTION})"
+            )));
+        }
+        // Reject new function entries beyond MAX_IC_FUNCTIONS.
+        // `entry().or_default()` would silently grow past the
+        // cap; check membership first (cheap when the function
+        // is already present, the common case).
+        if !self.by_function.contains_key(fn_name)
+            && self.by_function.len() >= MAX_IC_FUNCTIONS
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "ICTable function count exceeds MAX_IC_FUNCTIONS ({MAX_IC_FUNCTIONS})"
+            )));
+        }
+        let entry = self.by_function.entry(fn_name.to_string()).or_default();
+        let slot_idx = slot as usize;
+        if entry.len() <= slot_idx {
+            entry.resize_with(slot_idx + 1, InlineCache::new);
+        }
+        Ok(&mut entry[slot_idx])
+    }
+
+    /// Read-only lookup.  Returns `None` if the slot has never
+    /// been accessed (either the function has no IC entries or
+    /// the slot is beyond the highest slot ever requested).
+    /// Tests use this to verify the table mechanics.
+    pub fn get(&self, fn_name: &str, slot: u32) -> Option<&InlineCache<LispyICEntry>> {
+        self.by_function
+            .get(fn_name)
+            .and_then(|v| v.get(slot as usize))
+    }
+
+    /// Number of slots currently allocated for `fn_name`.
+    /// Returns 0 for functions that have no IC entries.  Tests
+    /// use this to verify dense allocation.
+    pub fn slot_count(&self, fn_name: &str) -> usize {
+        self.by_function
+            .get(fn_name)
+            .map(|v| v.len())
+            .unwrap_or(0)
+    }
+
+    /// Total IC slots across all functions.  Mostly for testing
+    /// + future profile-artefact dumps.
+    pub fn total_slots(&self) -> usize {
+        self.by_function.values().map(|v| v.len()).sum()
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Profile table (PR 8)
+// ---------------------------------------------------------------------------
+
+/// Maximum number of distinct functions the profiler tracks.
+///
+/// Mirrors [`MAX_IC_FUNCTIONS`] — same defensive cap shape.
+/// Hand-built malformed IIR with millions of unique function
+/// names can't unboundedly grow the per-process profile state.
+pub const MAX_PROFILED_FUNCTIONS: usize = 1 << 16;
+
+/// Maximum number of `(function_name, instr_index)` slots the
+/// profiler tracks across all functions.
+///
+/// `MAX_PROFILED_FUNCTIONS × max_instructions_per_function` would
+/// be `2³² ≈ 4 billion` entries in the absolute worst case —
+/// roughly 150 GB of HashMap.  In practice the per-run
+/// instruction budget (`MAX_INSTRUCTIONS_PER_RUN = 2²³`) bounds a
+/// single run's growth, but `ProfileTable` is designed to be
+/// reused across multiple `run_with_profile` calls (the future
+/// per-VM state pattern).  This cap ensures even a long-lived
+/// table reused across many adversarial-IIR runs can't grow
+/// without bound.
+///
+/// 2²⁰ = ~1M slots is plenty for realistic Twig programs (a
+/// 1000-function program with 100 dest-producing instructions
+/// per function uses 100K slots — 10% of the cap).  Found by
+/// PR 8 security review (Medium #3).
+pub const MAX_PROFILED_INSTRUCTION_SLOTS: usize = 1 << 20;
+
+/// V8 Ignition-style profile data collected during dispatch.
+///
+/// The `IIRModule` is borrowed `&` by the dispatcher — multiple
+/// frames see the same module on the recursion stack — so the
+/// profiler can't mutate `IIRInstr::observed_slot` directly.
+/// Instead, observations live in a side-table here, keyed by
+/// `(function_name, instr_index)`.  Per-function call counts
+/// live in their own map.
+///
+/// **Lifetime.**  Per-run today (one [`ProfileTable`] per call
+/// to [`run`]); future PRs that introduce a long-lived `LangVM`
+/// will move it there so the cache survives across runs.  The
+/// public API stays the same.
+///
+/// **What feeds in.**
+///
+/// - On dispatch entry: increment `call_count` for `func.name`.
+/// - On every instruction with a `dest` that produced a value:
+///   classify the value via `LispyBinding::class_of` and call
+///   `SlotState::record(class_str)`.
+/// - On every IC consult: the binding's `note_hit` /
+///   `note_miss` already runs through the persistent IC table
+///   (PR 7); the profile table observes the *result* of those
+///   consults via the same `class_of` pass on the dest.
+///
+/// The IC table tracks per-call-site cache hit/miss; this
+/// table tracks per-instruction *result-type* observations and
+/// per-function *warmth*.  Together they answer the V8-style
+/// "is this site monomorphic, polymorphic, or megamorphic, and
+/// is the function hot enough to JIT?" question — the data
+/// feed for LANG22's `.ldp` profile artefact format.
+///
+/// **What's NOT here in PR 8.**  The `.ldp` binary serialiser
+/// (LANG22 PR 11d) and the JIT promotion threshold (LANG22
+/// PR 11f) consume this table.  PR 8 just collects.
+#[derive(Debug, Default)]
+pub struct ProfileTable {
+    /// Function name → call count.  Incremented once per call to
+    /// `dispatch()` for that function.  `u64` so even very long
+    /// production runs don't overflow.
+    call_counts: HashMap<String, u64>,
+    /// `(function_name, instr_index)` → SlotState.  Sparse:
+    /// only instructions that produced an observable result
+    /// have entries.
+    instruction_slots: HashMap<(String, usize), SlotState>,
+}
+
+impl ProfileTable {
+    /// Construct an empty profile table.
+    pub fn new() -> Self {
+        ProfileTable {
+            call_counts: HashMap::new(),
+            instruction_slots: HashMap::new(),
+        }
+    }
+
+    /// Increment the per-function call count.  Returns the new
+    /// value so JIT-promotion-threshold checks can branch on it
+    /// inline (future PR).
+    ///
+    /// Errors if `fn_name` is new and the table already holds
+    /// [`MAX_PROFILED_FUNCTIONS`] distinct names.  Re-incrementing
+    /// existing functions always succeeds.
+    pub fn note_call(&mut self, fn_name: &str) -> Result<u64, RunError> {
+        if !self.call_counts.contains_key(fn_name)
+            && self.call_counts.len() >= MAX_PROFILED_FUNCTIONS
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "ProfileTable function count exceeds MAX_PROFILED_FUNCTIONS ({MAX_PROFILED_FUNCTIONS})"
+            )));
+        }
+        let entry = self
+            .call_counts
+            .entry(fn_name.to_string())
+            .and_modify(|n| *n = n.saturating_add(1))
+            .or_insert(1);
+        Ok(*entry)
+    }
+
+    /// Record a runtime observation for `(fn_name, instr_index)`.
+    ///
+    /// Advances the V8-style state machine on the slot:
+    /// Uninitialized → Monomorphic → Polymorphic → Megamorphic.
+    /// `class_str` is the language-defined type tag (here
+    /// always one of "int", "nil", "bool", "symbol", "cons",
+    /// "closure" — the LispyClass kinds).
+    ///
+    /// Two caps are enforced:
+    ///
+    /// - If `fn_name` is new and the table already holds
+    ///   [`MAX_PROFILED_FUNCTIONS`] distinct names → reject.
+    /// - If the `(fn_name, instr_index)` slot is new and the
+    ///   table already holds [`MAX_PROFILED_INSTRUCTION_SLOTS`]
+    ///   slots → reject.  The second cap is the load-bearing
+    ///   one for `ProfileTable`s reused across many runs.
+    pub fn note_observation(
+        &mut self,
+        fn_name: &str,
+        instr_index: usize,
+        class_str: &str,
+    ) -> Result<(), RunError> {
+        if !self.call_counts.contains_key(fn_name)
+            && self.call_counts.len() >= MAX_PROFILED_FUNCTIONS
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "ProfileTable observation for new function exceeds MAX_PROFILED_FUNCTIONS ({MAX_PROFILED_FUNCTIONS})"
+            )));
+        }
+        let key = (fn_name.to_string(), instr_index);
+        if !self.instruction_slots.contains_key(&key)
+            && self.instruction_slots.len() >= MAX_PROFILED_INSTRUCTION_SLOTS
+        {
+            return Err(RunError::MalformedInstruction(format!(
+                "ProfileTable instruction-slot count exceeds MAX_PROFILED_INSTRUCTION_SLOTS ({MAX_PROFILED_INSTRUCTION_SLOTS})"
+            )));
+        }
+        let slot = self.instruction_slots.entry(key).or_insert_with(SlotState::new);
+        slot.record(class_str);
+        Ok(())
+    }
+
+    /// Read-only access to a function's call count.  Returns 0
+    /// for never-called functions.
+    pub fn call_count(&self, fn_name: &str) -> u64 {
+        self.call_counts.get(fn_name).copied().unwrap_or(0)
+    }
+
+    /// Read-only access to a single instruction's observation
+    /// slot.  Returns `None` if the instruction has never produced
+    /// an observation (e.g. it's a control-flow opcode, or
+    /// hasn't executed yet).
+    pub fn observed_slot(
+        &self,
+        fn_name: &str,
+        instr_index: usize,
+    ) -> Option<&SlotState> {
+        self.instruction_slots
+            .get(&(fn_name.to_string(), instr_index))
+    }
+
+    /// Number of distinct functions tracked.  Mostly for tests.
+    pub fn function_count(&self) -> usize {
+        self.call_counts.len()
+    }
+
+    /// Number of per-instruction slots tracked.  Mostly for tests.
+    pub fn instruction_slot_count(&self) -> usize {
+        self.instruction_slots.len()
+    }
+}
+
+/// Map a [`LispyValue`] to the canonical class-name string used
+/// by the profiler's [`SlotState::record`] and the future
+/// `.ldp` serialiser.  `None` for values whose class can't be
+/// determined (shouldn't happen in well-formed dispatch — every
+/// `LispyValue` has a class).
+fn lispy_class_str(value: LispyValue) -> Option<&'static str> {
+    use lispy_runtime::LispyClass;
+    match LispyBinding::class_of(value)? {
+        LispyClass::Int => Some("int"),
+        LispyClass::Nil => Some("nil"),
+        LispyClass::Bool => Some("bool"),
+        LispyClass::Symbol => Some("symbol"),
+        LispyClass::Cons => Some("cons"),
+        LispyClass::Closure => Some("closure"),
+        LispyClass::String => Some("string"),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Run
+// ---------------------------------------------------------------------------
+
+/// Run an `IIRModule` end-to-end and return the value produced by
+/// its entry-point function.
+///
+/// This is the main entry point for [`crate::TwigVM::run`].  Most
+/// callers should go through that facade rather than this free
+/// function — the facade exists to grow per-VM state in later PRs.
+///
+/// # Errors
+///
+/// See [`RunError`] for the variant table.  In short: any
+/// structural problem with the IR, any unsupported opcode, any
+/// runtime trap raised by a builtin, and any resource limit
+/// (depth, instruction count) all surface as a `RunError`.
+pub fn run(module: &IIRModule) -> Result<LispyValue, RunError> {
+    let mut globals = Globals::new();
+    let mut ic_table = ICTable::new();
+    let mut profile = ProfileTable::new();
+    run_with_profile(module, &mut globals, &mut ic_table, &mut profile)
+}
+
+/// Run an `IIRModule` against a caller-supplied globals table.
+///
+/// Equivalent to [`run_with_profile`] with fresh IC + profile
+/// tables.  Retained as a public entry point for backward
+/// compatibility (PR 5 callers); new callers that want IC or
+/// profile inspection should use [`run_with_profile`].
+pub fn run_with_globals(
+    module: &IIRModule,
+    globals: &mut Globals,
+) -> Result<LispyValue, RunError> {
+    let mut ic_table = ICTable::new();
+    let mut profile = ProfileTable::new();
+    run_with_profile(module, globals, &mut ic_table, &mut profile)
+}
+
+/// Run an `IIRModule` against caller-supplied globals + IC table.
+///
+/// Equivalent to [`run_with_profile`] with a fresh profile table.
+/// Retained as a public entry point for PR 7 callers that don't
+/// need profile observations.
+pub fn run_with_state(
+    module: &IIRModule,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+) -> Result<LispyValue, RunError> {
+    let mut profile = ProfileTable::new();
+    run_with_profile(module, globals, ic_table, &mut profile)
+}
+
+/// Run an `IIRModule` against caller-supplied globals, IC table,
+/// and profile table.
+///
+/// The profile table accumulates per-function call counts and
+/// per-instruction type observations across the run.  Tests pass
+/// an external `ProfileTable` to inspect observations after the
+/// run; the JIT promotion threshold (LANG22 PR 11f) reads this
+/// to decide which functions are hot enough to specialise.
+///
+/// This is the most-flexible entry point.  All three tables
+/// persist for the duration of the call — pass the same tables
+/// to a subsequent `run_with_profile` to accumulate across
+/// multiple runs (the future per-VM state pattern).
+pub fn run_with_profile(
+    module: &IIRModule,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+) -> Result<LispyValue, RunError> {
+    let entry_name = module
+        .entry_point
+        .as_deref()
+        .ok_or_else(|| RunError::NoEntryPoint("module.entry_point is None".into()))?;
+    let entry = module
+        .functions
+        .iter()
+        .find(|f| f.name == entry_name)
+        .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
+
+    let mut budget = ExecutionBudget::new();
+    let mut debug: Option<&mut dyn crate::debug::DebugHooks> = None;
+    dispatch(module, entry, &[], 0, &mut budget, globals, ic_table, profile, &mut debug)
+}
+
+/// Run a module under a debug hook.
+///
+/// The hook is invoked at every safepoint (between IIR instructions at
+/// every recursion depth).  Production callers wire this up to a
+/// [`crate::debug_server::DebugServer`] for DAP support; tests can
+/// supply any [`crate::debug::DebugHooks`] impl.
+///
+/// `globals`, `ic_table`, `profile` follow the same lifetime contract as
+/// [`run_with_profile`] — fresh each call unless the caller is
+/// accumulating state across runs.
+pub fn run_with_debug(
+    module: &IIRModule,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut dyn crate::debug::DebugHooks,
+) -> Result<LispyValue, RunError> {
+    let entry_name = module
+        .entry_point
+        .as_deref()
+        .ok_or_else(|| RunError::NoEntryPoint("module.entry_point is None".into()))?;
+    let entry = module
+        .functions
+        .iter()
+        .find(|f| f.name == entry_name)
+        .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
+
+    let mut budget = ExecutionBudget::new();
+    let mut debug_opt: Option<&mut dyn crate::debug::DebugHooks> = Some(debug);
+    dispatch(module, entry, &[], 0, &mut budget, globals, ic_table, profile, &mut debug_opt)
+}
+
+// Per-run instruction counter — enforces
+// [`MAX_INSTRUCTIONS_PER_RUN`].
+struct ExecutionBudget {
+    instructions: u64,
+}
+
+impl ExecutionBudget {
+    fn new() -> Self {
+        ExecutionBudget { instructions: 0 }
+    }
+
+    fn tick(&mut self) -> Result<(), RunError> {
+        self.instructions += 1;
+        if self.instructions > MAX_INSTRUCTIONS_PER_RUN {
+            return Err(RunError::InstructionLimitExceeded);
+        }
+        Ok(())
+    }
+}
+
+/// Execute `func` with `args` against the surrounding `module`.
+///
+/// `depth` is the current call-stack depth; the guard at the top
+/// rejects depths beyond [`MAX_DISPATCH_DEPTH`].  Recursive calls
+/// pass `depth + 1`.
+fn dispatch(
+    module: &IIRModule,
+    func: &IIRFunction,
+    args: &[LispyValue],
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<LispyValue, RunError> {
+    if depth > MAX_DISPATCH_DEPTH {
+        return Err(RunError::DepthExceeded);
+    }
+
+    // PR 8: increment per-function call count once per
+    // dispatch entry.  This is the JIT-promotion-threshold
+    // signal — `LANG20 §"Tier interaction matrix"` says
+    // Untyped functions promote at call_count > 100.
+    profile.note_call(&func.name)?;
+
+    let mut frame = Frame::new(func, args)?;
+    let labels = build_label_index(func)?;
+
+    let mut pc = 0;
+    while pc < func.instructions.len() {
+        // Debug safepoint — between every instruction.  The hook may
+        // process incoming wire commands, detect breakpoints, and
+        // block waiting for a resume.  Cost when no debugger is
+        // attached: one `Option::is_some` branch per instruction.
+        if let Some(d) = debug.as_deref_mut() {
+            let view = crate::debug::FrameView::new(&frame);
+            d.before_instruction(&func.name, depth, pc, &view);
+        }
+
+        budget.tick()?;
+        let instr = &func.instructions[pc];
+        // Capture before the match — `pc` may be updated to an
+        // arbitrary label index by jmp / jmp_if_false, so we
+        // need the just-executed instruction's index recorded
+        // up-front for the post-match profile-recording site.
+        let instr_pc = pc;
+
+        match instr.op.as_str() {
+            "const" => {
+                exec_const(instr, &mut frame)?;
+                pc += 1;
+            }
+            "call_builtin" => {
+                exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
+                pc += 1;
+            }
+            "call" => {
+                exec_call(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
+                pc += 1;
+            }
+            "send" => {
+                exec_send(instr, &mut frame, ic_table, &func.name)?;
+                pc += 1;
+            }
+            "load_property" => {
+                exec_load_property(instr, &mut frame, ic_table, &func.name)?;
+                pc += 1;
+            }
+            "store_property" => {
+                exec_store_property(instr, &mut frame, ic_table, &func.name)?;
+                pc += 1;
+            }
+            "jmp" => {
+                pc = exec_jmp(instr, &labels)?;
+            }
+            "jmp_if_false" => {
+                pc = exec_jmp_if_false(instr, &frame, &labels, pc)?;
+            }
+            "label" => {
+                pc += 1;
+            }
+            "ret" => {
+                return exec_ret(instr, &frame);
+            }
+            // ── LANG34: first-class closure opcodes ──────────────────────────
+            //
+            // `alloc_closure` and `call_closure` are the successor forms of
+            // the older `call_builtin "make_closure"` / `"apply_closure"` that
+            // required a preceding `const` instruction to materialise the
+            // function name as a register value.  The new opcodes carry the
+            // fn_name inline as `Operand::Str` (no register lookup).
+            //
+            // The old `call_builtin` forms remain in `exec_call_builtin` for
+            // backward compatibility with existing compiled modules.
+            "alloc_closure" => {
+                exec_alloc_closure(instr, &mut frame)?;
+                pc += 1;
+            }
+            "call_closure" => {
+                exec_call_closure(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
+                pc += 1;
+            }
+
+            // ── Typed CIR mnemonics (Twig path-A increments 2 & 3) ──────────
+            //
+            // The Twig IIR compiler increments 2/3 (PRs #3949, #3950) emit
+            // typed CIR mnemonics (`add` / `sub` / `mul` / `div` / `cmp_*`
+            // / `mov`) instead of the legacy `call_builtin "<op>"` dispatch.
+            // The IIR-to-* backends (wasm/jvm/clr/beam) only accept this
+            // typed form; vm-core handles it natively (PR #3888).
+            //
+            // twig-vm is the third runtime — it predates this convergence.
+            // We bring it up to parity by reconstructing the equivalent
+            // `call_builtin "<runtime_name>"` form and delegating to the
+            // existing builtin dispatch.  This keeps the (already-tested)
+            // arithmetic / comparison / move semantics intact at the
+            // runtime layer while satisfying the new IR shape.
+            //
+            // Each typed mnemonic maps to its Twig-builtin runtime name:
+            //
+            //   add → "+"      sub → "-"      mul → "*"      div → "/"
+            //   cmp_eq → "="   cmp_lt → "<"   cmp_gt → ">"
+            //   cmp_le → "<="  cmp_ge → ">="
+            //   mov → "_move"
+            //
+            // For `mov` specifically, the synthesised call_builtin form is
+            // `call_builtin "_move" src`, which the existing dispatch
+            // already handles correctly.
+            // ── Path A increment 6b: typed heap-allocation opcodes ─────
+            //
+            // The Twig IIR compiler now emits `(cons head tail)` as a
+            // three-instruction sequence:
+            //
+            //     alloc cell [ref<LispyPair>]
+            //     field_store cell, 0, head [void]    -- car
+            //     field_store cell, 1, tail [void]    -- cdr
+            //
+            // matching the IIR-to-{wasm,jvm,clr,beam} backends' Phase 2
+            // heap-lowering convention.  twig-vm executes the sequence
+            // by allocating a fresh (NIL,NIL) cons cell at `alloc` and
+            // mutating the fields in place at `field_store`.  Both
+            // opcodes also accept `type_hint == "ref<*>"`-shaped variants
+            // for forward-compatibility with future record types, but
+            // the current path only specialises ref<LispyPair>.
+            "alloc" => {
+                exec_alloc(instr, &mut frame)?;
+                pc += 1;
+            }
+            "field_store" => {
+                exec_field_store(instr, &mut frame)?;
+                pc += 1;
+            }
+            // Path A increment 6c: typed `field_load[idx]` replaces
+            // `call_builtin "car"` / `call_builtin "cdr"`.
+            "field_load" => {
+                exec_field_load(instr, &mut frame)?;
+                pc += 1;
+            }
+
+            "add" | "sub" | "mul" | "div"
+            | "cmp_eq" | "cmp_lt" | "cmp_gt" | "cmp_le" | "cmp_ge"
+            | "mov" => {
+                let runtime_name = match instr.op.as_str() {
+                    "add"    => "+",
+                    "sub"    => "-",
+                    "mul"    => "*",
+                    "div"    => "/",
+                    "cmp_eq" => "=",
+                    "cmp_lt" => "<",
+                    "cmp_gt" => ">",
+                    "cmp_le" => "<=",
+                    "cmp_ge" => ">=",
+                    "mov"    => "_move",
+                    _ => unreachable!(),
+                };
+                // Synthesise the equivalent `call_builtin` form:
+                //   op = "call_builtin"
+                //   srcs = [Var(runtime_name)] ++ original srcs
+                //   dest / type_hint preserved
+                let mut synth_srcs: Vec<Operand> =
+                    Vec::with_capacity(instr.srcs.len() + 1);
+                synth_srcs.push(Operand::Var(runtime_name.to_string()));
+                synth_srcs.extend(instr.srcs.iter().cloned());
+                let synth = IIRInstr {
+                    op: "call_builtin".to_string(),
+                    dest: instr.dest.clone(),
+                    srcs: synth_srcs,
+                    type_hint: instr.type_hint.clone(),
+                    ..instr.clone()
+                };
+                exec_call_builtin(
+                    module, &synth, &mut frame, depth, budget, globals,
+                    ic_table, profile, debug,
+                )?;
+                pc += 1;
+            }
+
+            other => {
+                return Err(RunError::UnsupportedOpcode(other.to_string()));
+            }
+        }
+
+        // PR 8: profile the just-completed instruction.
+        //
+        // We observe the *result* of every dest-producing opcode —
+        // that's the "what type does this expression evaluate
+        // to" signal V8-style speculation needs.  Control-flow
+        // opcodes (jmp/label/ret) and side-effecting ones
+        // (store_property) have no dest; the `if let Some(dest)`
+        // guard short-circuits and nothing is recorded.
+        //
+        // **Why the just-completed instruction is `instr_pc` here?**
+        // The match arms above either incremented `pc` by 1
+        // (most cases) or set `pc` to a label index (jmp /
+        // jmp_if_false).  But the only opcodes that produce a
+        // dest are the `pc += 1` ones; those are the only paths
+        // that reach this branch.  `instr_pc` captured before
+        // the match holds the just-executed instruction's index
+        // unambiguously, so the recording site doesn't need to
+        // reason about post-match `pc` semantics.  Cleanup
+        // recommended by PR 8 security review (Low #2).
+        if let Some(dest) = &instr.dest {
+            if let Some(value) = frame.get(dest) {
+                if let Some(class_str) = lispy_class_str(value) {
+                    profile.note_observation(&func.name, instr_pc, class_str)?;
+                }
+            }
+        }
+    }
+
+    Err(RunError::FellOffEnd(func.name.clone()))
+}
+
+// ---------------------------------------------------------------------------
+// Per-opcode handlers
+// ---------------------------------------------------------------------------
+
+fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("const requires dest".into())
+    })?;
+    let src = instr.srcs.first().ok_or_else(|| {
+        RunError::MalformedInstruction("const requires srcs[0]".into())
+    })?;
+    // ── Path A increment 6a (twig-vm dispatch wrapper) ──────────────
+    //
+    // The twig-ir-compiler now emits `const 0 [ref<LispyPair>]` for
+    // every `(make_nil)` / `nil` site (matching the IIR-to-{wasm,jvm,
+    // clr,beam} backends' Phase 2 heap-lowering convention).  Under
+    // the plain `Operand::Int(0)` path that would produce
+    // `LispyValue::int(0)` — but the runtime semantic is "the empty
+    // list", which is `LispyValue::NIL`.  Fix: special-case the
+    // typed-const-of-zero into NIL when `type_hint == "ref<LispyPair>"`.
+    //
+    // This is the symmetric companion to the increment 2 dispatch
+    // wrapper that synthesised `call_builtin "+"` from typed `add`.
+    // Without this, HOF builtins like `map` / `filter` / `fold-*`
+    // see Int(0) where they expect a NIL sentinel and bail out with
+    // `"list tail 0 is not a cons cell"`.
+    if instr.type_hint == "ref<LispyPair>" {
+        if let Operand::Int(0) = src {
+            frame.set(dest.clone(), LispyValue::NIL)?;
+            return Ok(());
+        }
+    }
+    let value = match src {
+        Operand::Int(n) => {
+            // Same range check as operand_to_value — keep behaviour
+            // consistent across the two conversion sites.
+            const MAX: i64 = (1 << 60) - 1;
+            const MIN: i64 = -(1 << 60);
+            if !(MIN..=MAX).contains(n) {
+                return Err(RunError::OperandConversion(RuntimeError::TypeError(
+                    format!("integer literal {n} outside Lispy's tagged-int range"),
+                )));
+            }
+            LispyValue::int(*n)
+        }
+        Operand::Bool(b) => LispyValue::bool(*b),
+        Operand::Float(_) => {
+            return Err(RunError::OperandConversion(RuntimeError::TypeError(
+                "Lispy doesn't have flonums yet".into(),
+            )));
+        }
+        Operand::Var(text) => {
+            // PR 5: `const _s1 = "literal"` — the IR compiler emits
+            // these for the string-shaped arguments to
+            // `make_closure` / `make_builtin_closure` /
+            // `make_symbol` / `global_set` / `global_get`.  We
+            // intern the text and store the result as a symbol;
+            // downstream builtins read the symbol's name back via
+            // the intern table when they need the original string.
+            //
+            // The "string-as-symbol" convention loses the user-
+            // facing distinction between strings and symbols.
+            // Intentional at PR 5: Lispy's surface syntax has
+            // only symbols (no string literal form).  When a
+            // proper string value lands in a future PR, this arm
+            // changes; the IR compiler already emits the right
+            // operand shape.
+            // Detect intern-table exhaustion eagerly — `intern`
+            // returns `SymbolId::NONE` when the table is full, and
+            // letting NONE flow through would surface as a confusing
+            // `MalformedInstruction("...unknown fn_name id...")`
+            // much later in `exec_apply_closure`.  Found by PR 5
+            // security review (#8).
+            let id = intern(text);
+            if id == SymbolId::NONE {
+                return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+                    "intern table exhausted: cannot intern {text:?}"
+                ))));
+            }
+            LispyValue::symbol(id)
+        }
+        // LANG47: Str is a compile-time string literal — allocate a LangString
+        // heap object.  The old PR 5 behaviour (intern as a symbol) is no longer
+        // needed here: LANG34 removed the last user of `Operand::Str` through a
+        // `const` instruction for non-string purposes (closure fn names are now
+        // inline in `alloc_closure`'s operand list, not through a register).
+        //
+        // String-valued constants produced by the twig-ir-compiler for explicit
+        // `"hello"` literals in Twig source now produce real heap strings that
+        // `string-length`, `string-ref`, etc. can operate on.
+        Operand::Str(text) => {
+            lispy_runtime::heap::alloc_string(text.as_bytes())
+        }
+    };
+    frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+/// ── Path A increment 6b: `alloc [ref<LispyPair>]` ─────────────────
+///
+/// Allocates a fresh cons cell with NIL placeholders for both fields.
+/// The following two `field_store` instructions overwrite those
+/// placeholders with the head and tail values.
+///
+/// This matches the Phase 2 heap-lowering convention used by the
+/// IIR-to-{wasm,jvm,clr,beam} backends: a `call_builtin "cons"`
+/// instruction lowers to `alloc + 2× field_store`, and twig-vm now
+/// executes that same form natively.
+fn exec_alloc(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("alloc requires dest".into())
+    })?;
+    // Only `ref<LispyPair>` is currently supported.  Future record
+    // types would extend this match.
+    match instr.type_hint.as_str() {
+        "ref<LispyPair>" => {
+            let cell = lispy_runtime::heap::alloc_cons(
+                LispyValue::NIL,
+                LispyValue::NIL,
+            );
+            frame.set(dest.clone(), cell)?;
+            Ok(())
+        }
+        other => Err(RunError::MalformedInstruction(format!(
+            "alloc: unsupported type_hint {other:?} (only ref<LispyPair> is wired)"
+        ))),
+    }
+}
+
+/// ── Path A increment 6b: `field_store dest_unused, idx, value [void]` ──
+///
+/// Writes `value` (srcs[2]) into field `idx` (srcs[1], an integer
+/// operand) of the cons cell named by srcs[0].  Returns no result.
+///
+/// `dest` is intentionally unused — `field_store` is a side-effecting
+/// opcode.  In twig-vm we keep the side-table-update semantics in
+/// `lispy_runtime::heap::set_field_unchecked` to centralise the
+/// "mutate a leaked cons" path.
+fn exec_field_store(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "field_store requires 3 srcs [pair, idx, value]; got {}",
+            instr.srcs.len()
+        )));
+    }
+    // srcs[0] — the pair register.
+    let pair_name = match &instr.srcs[0] {
+        Operand::Var(name) => name.clone(),
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_store srcs[0] must be Var(pair_register); got {other:?}"
+        ))),
+    };
+    let pair = frame.get(&pair_name).ok_or_else(|| {
+        RunError::Runtime(RuntimeError::Custom(format!(
+            "field_store: undefined pair register {pair_name:?}"
+        )))
+    })?;
+    // srcs[1] — the field index (must be 0 or 1).
+    let index: usize = match &instr.srcs[1] {
+        Operand::Int(0) => 0,
+        Operand::Int(1) => 1,
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_store srcs[1] must be Int(0|1); got {other:?}"
+        ))),
+    };
+    // srcs[2] — the value to write.  Resolve to LispyValue using the
+    // same operand-to-value bridge that exec_call_builtin uses.
+    let value = match &instr.srcs[2] {
+        Operand::Var(name) => frame.get(name).ok_or_else(|| {
+            RunError::Runtime(RuntimeError::Custom(format!(
+                "field_store: undefined value register {name:?}"
+            )))
+        })?,
+        Operand::Int(n) => LispyValue::int(*n),
+        Operand::Bool(b) => LispyValue::bool(*b),
+        Operand::Float(_) => return Err(RunError::OperandConversion(
+            RuntimeError::TypeError("field_store: floats not supported".into()),
+        )),
+        Operand::Str(_) => return Err(RunError::OperandConversion(
+            RuntimeError::TypeError("field_store: string operands not supported".into()),
+        )),
+    };
+    // SAFETY: `pair` is the value last written into `pair_name` by
+    // either `exec_alloc` (which uses `alloc_cons`) or a previous
+    // value-flow that itself came from a heap-allocating builtin.  In
+    // PR 2's Box::leak model every such value is a live cons forever.
+    // `set_field_unchecked` re-validates the class id internally and
+    // returns Err on non-cons input, so misuse surfaces as a
+    // MalformedInstruction rather than memory corruption.
+    unsafe {
+        lispy_runtime::heap::set_field_unchecked(pair, index, value)
+            .map_err(|e| RunError::MalformedInstruction(format!(
+                "field_store: {e}"
+            )))?;
+    }
+    Ok(())
+}
+
+/// ── Path A increment 6c: `field_load dest, pair, idx [ref<any>]` ─────
+///
+/// Reads `car` (idx 0) or `cdr` (idx 1) from a cons cell.  This is the
+/// runtime companion to twig-ir-compiler's increment 6c typed accessor
+/// emission, matching the Phase 2 heap-lowering convention used by the
+/// IIR-to-{wasm,jvm,clr,beam} backends.
+///
+/// srcs layout: `[Var(pair_register), Int(idx)]`
+fn exec_field_load(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("field_load requires dest".into())
+    })?;
+    if instr.srcs.len() != 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "field_load requires 2 srcs [pair, idx]; got {}",
+            instr.srcs.len()
+        )));
+    }
+    let pair_name = match &instr.srcs[0] {
+        Operand::Var(name) => name,
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_load srcs[0] must be Var(pair_register); got {other:?}"
+        ))),
+    };
+    let pair = frame.get(pair_name).ok_or_else(|| {
+        RunError::Runtime(RuntimeError::Custom(format!(
+            "field_load: undefined pair register {pair_name:?}"
+        )))
+    })?;
+    let value = match &instr.srcs[1] {
+        Operand::Int(0) => {
+            // SAFETY: `pair` came from `alloc_cons` (via exec_alloc or a
+            // heap-allocating builtin).  In PR 2's Box::leak model every
+            // such value is a live cons forever.  `heap::car` returns
+            // None on non-cons input, which we surface as Err.
+            unsafe { lispy_runtime::heap::car(pair) }.ok_or_else(|| {
+                RunError::Runtime(RuntimeError::TypeError(format!(
+                    "field_load[0] (car): {pair_name:?} is not a cons cell"
+                )))
+            })?
+        }
+        Operand::Int(1) => {
+            // SAFETY: same as above for `cdr`.
+            unsafe { lispy_runtime::heap::cdr(pair) }.ok_or_else(|| {
+                RunError::Runtime(RuntimeError::TypeError(format!(
+                    "field_load[1] (cdr): {pair_name:?} is not a cons cell"
+                )))
+            })?
+        }
+        other => return Err(RunError::MalformedInstruction(format!(
+            "field_load srcs[1] must be Int(0|1); got {other:?}"
+        ))),
+    };
+    frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+fn exec_call_builtin(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let name = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.as_str(),
+        Some(_) => return Err(RunError::MalformedInstruction(
+            "call_builtin srcs[0] must be Var(name)".into(),
+        )),
+        None => return Err(RunError::MalformedInstruction(
+            "call_builtin requires srcs[0]".into(),
+        )),
+    };
+
+    // ── Special-cased builtins (PR 5) ────────────────────────────
+    //
+    // These names need access to per-VM state (globals table,
+    // module reference, dispatcher recursion) and so are handled
+    // inline here rather than as context-free `BuiltinFn`
+    // pointers.  Everything else falls through to the normal
+    // resolve_builtin path.
+    match name {
+        "global_set" => return exec_global_set(instr, frame, globals),
+        "global_get" => return exec_global_get(instr, frame, globals),
+        "apply_closure" => {
+            return exec_apply_closure(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
+        // ── host/ stdlib (LANG26) ────────────────────────────────────
+        //
+        // `host/<capability>` instructions are the Twig standard-library
+        // I/O bridge.  The Rust implementation here is the **interpreter
+        // path** — the canonical host stdlib.
+        //
+        // For AOT / backend compilation paths (WASM, JVM, CLR, BEAM),
+        // the `cir-to-compiler-ir` lowering converts these call_builtin
+        // names to `SYSCALL N` instructions in IrProgram:
+        //
+        //   host/write_byte  → SYSCALL 1   (fd_write / System.Console.Write / …)
+        //   host/read_byte   → SYSCALL 2   (fd_read  / System.Console.Read / …)
+        //   host/exit        → SYSCALL 10  (proc_exit / System.Environment.Exit / …)
+        //
+        // Each backend already handles those SYSCALL numbers, so there
+        // is nothing extra to change in the backends when using host/.
+        name if name.starts_with("host/") => {
+            return exec_host_call(name, instr, frame);
+        }
+        // ── LANG55: higher-order list operations ─────────────────────
+        //
+        // `map`, `filter`, `fold-left`, `fold-right` all need to call a
+        // user-supplied closure for each list element, which requires
+        // recursing into `dispatch`.  They are special-cased here for the
+        // same reason as `apply_closure` — context-free `BuiltinFn` pointers
+        // in `lispy-runtime` have no access to the VM state needed to drive
+        // the recursive call.
+        "map" => {
+            return exec_hof_map(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
+        "filter" => {
+            return exec_hof_filter(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
+        "fold-left" => {
+            return exec_hof_fold_left(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
+        "fold-right" => {
+            return exec_hof_fold_right(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
+        }
+        _ => {}
+    }
+
+    // ── Normal builtin path ──────────────────────────────────────
+    let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(name)
+        .ok_or_else(|| RunError::UnknownBuiltin(name.to_string()))?;
+
+    // DoS guard: cap the args allocation.  Matches exec_send, exec_apply_closure,
+    // exec_alloc_closure, exec_call_closure.  A malicious IIR module calling
+    // a valid builtin with millions of srcs would OOM on Vec::with_capacity
+    // before the budget check fires (budget counts instructions, not operands).
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call_builtin({name}): srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
+    let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
+    for src in &instr.srcs[1..] {
+        // Read-only borrow of frame for the lookup callback —
+        // dropped before we touch frame.set below.
+        let frame_ref = &*frame;
+        let v = operand_to_value(src, &|n| frame_ref.get(n))
+            .map_err(RunError::OperandConversion)?;
+        call_args.push(v);
+    }
+
+    let result = builtin(&call_args).map_err(RunError::Runtime)?;
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+fn exec_call(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let callee_name = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.as_str(),
+        Some(_) => return Err(RunError::MalformedInstruction(
+            "call srcs[0] must be Var(name)".into(),
+        )),
+        None => return Err(RunError::MalformedInstruction(
+            "call requires srcs[0]".into(),
+        )),
+    };
+
+    let callee = module
+        .functions
+        .iter()
+        .find(|f| f.name == callee_name)
+        .ok_or_else(|| RunError::UnknownFunction(callee_name.to_string()))?;
+
+    // DoS guard — mirrors exec_call_builtin, exec_apply_closure, exec_send, etc.
+    // A hand-crafted IIR `call` instruction with millions of srcs would OOM via
+    // Vec::with_capacity before the budget check fires (one tick per instruction,
+    // not per operand).
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
+    let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
+    for src in &instr.srcs[1..] {
+        let frame_ref = &*frame;
+        let v = operand_to_value(src, &|n| frame_ref.get(n))
+            .map_err(RunError::OperandConversion)?;
+        call_args.push(v);
+    }
+
+    let result = dispatch(module, callee, &call_args, depth + 1, budget, globals, ic_table, profile, debug)?;
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// PR 5: special-cased builtins (need module / globals / recursion)
+// ---------------------------------------------------------------------------
+
+/// Handle `call_builtin "global_set" name value`.
+///
+/// `srcs[1]` is the global's name (must resolve to a symbol value
+/// — the IR compiler emits a `const`-via-symbol for it); `srcs[2]`
+/// is the value to store.  No dest (return value is discarded;
+/// the IR compiler emits these for top-level value-defines).
+fn exec_global_set(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    globals: &mut Globals,
+) -> Result<(), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "global_set expects 3 srcs (name, name_arg, value), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let frame_ref = &*frame;
+    let name_v = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let value = operand_to_value(&instr.srcs[2], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let name_id = name_v.as_symbol().ok_or_else(|| {
+        RuntimeError::TypeError(format!("global_set: expected symbol name, got {name_v}"))
+    }).map_err(RunError::Runtime)?;
+    globals.set(name_id, value);
+    Ok(())
+}
+
+/// Handle `call_builtin "global_get" name`.
+///
+/// `srcs[1]` is the global's name (symbol).  Returns the stored
+/// value; errors with `UndefinedGlobal` if the name has never been
+/// the target of a `global_set`.
+fn exec_global_get(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    globals: &Globals,
+) -> Result<(), RunError> {
+    if instr.srcs.len() != 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "global_get expects 2 srcs (\"global_get\", name_arg), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let frame_ref = &*frame;
+    let name_v = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let name_id = name_v.as_symbol().ok_or_else(|| {
+        RuntimeError::TypeError(format!("global_get: expected symbol name, got {name_v}"))
+    }).map_err(RunError::Runtime)?;
+    let value = globals.get(name_id).ok_or_else(|| {
+        let s = name_of(name_id).unwrap_or_else(|| format!("<symbol {}>", name_id.0));
+        RunError::UndefinedGlobal(s)
+    })?;
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), value)?;
+    }
+    Ok(())
+}
+
+/// Handle `call_builtin "apply_closure" handle arg0 arg1 ...`.
+///
+/// `srcs[1]` is the closure handle (must be a heap value with
+/// `class_or_kind == CLASS_CLOSURE`).  Remaining srcs are the
+/// user-supplied arguments.
+///
+/// **For builtin closures** (`CLOSURE_FLAG_BUILTIN`): look the
+/// closure's `fn_name` up via `LispyBinding::resolve_builtin` and
+/// call the resolved fn pointer with the user args.  Captures
+/// are guaranteed empty by construction.
+///
+/// **For user-fn closures**: look `fn_name` up in
+/// `module.functions`, recurse into `dispatch` with
+/// `captures ++ args` as the parameter list (Twig closures
+/// receive captures as the first parameters of the underlying
+/// function — see `twig-ir-compiler` §"Anonymous lambda").
+fn exec_apply_closure(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    if instr.srcs.len() < 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "apply_closure expects at least 2 srcs (\"apply_closure\", handle), got {}",
+            instr.srcs.len()
+        )));
+    }
+
+    // DoS guard — mirrors the cap in exec_call_closure, exec_alloc_closure, exec_send.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "apply_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
+    // Resolve the handle to a LispyValue and confirm it's a closure.
+    let frame_ref = &*frame;
+    let handle = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    // SAFETY: see the detailed comment in exec_call_closure for the full
+    // invariant analysis.  Summary: only values with TAG_HEAP set (from
+    // alloc_closure / alloc_cons / etc.) are dereferenced; integers, booleans,
+    // and symbols all have non-HEAP tags and cause as_heap_ptr() to return None
+    // before any pointer dereference occurs.  Heap-tagged values come
+    // exclusively from lispy_runtime allocators that Box::leak aligned objects.
+    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+        RunError::NotCallable(format!("apply_closure: {handle} is not a closure"))
+    })?;
+    let fn_name_id = closure.fn_name;
+    let captures = closure.captures.clone();
+    let is_builtin = closure.is_builtin();
+
+    // Resolve user args.
+    let mut user_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len() - 2);
+    for src in &instr.srcs[2..] {
+        let v = operand_to_value(src, &|n| frame_ref.get(n))
+            .map_err(RunError::OperandConversion)?;
+        user_args.push(v);
+    }
+
+    let result = if is_builtin {
+        // Hard runtime guard: a well-formed builtin closure must have zero
+        // captures.  `make_builtin_closure` / `alloc_builtin_closure` never
+        // attach captures.  A malformed closure with CLOSURE_FLAG_BUILTIN AND
+        // non-empty captures would silently drop those captures if we only used
+        // debug_assert! (which is a no-op in --release).  Replacing it with a
+        // hard error means release builds are equally protected, matching the
+        // same guard in exec_call_closure.  Originally found by PR 5 review;
+        // upgraded to hard error in LANG34 security review.
+        if !captures.is_empty() {
+            return Err(RunError::MalformedInstruction(format!(
+                "apply_closure: builtin closure must have no captures, got {}",
+                captures.len()
+            )));
+        }
+        // Builtin closure: dispatch via resolve_builtin.
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "apply_closure: builtin closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
+            .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
+        builtin(&user_args).map_err(RunError::Runtime)?
+    } else {
+        // User-fn closure: prepend captures, look up function,
+        // recurse into dispatch.
+        let mut all_args = captures;
+        all_args.extend(user_args);
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "apply_closure: closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let callee = module
+            .functions
+            .iter()
+            .find(|f| f.name == name_str)
+            .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
+        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table, profile, debug)?
+    };
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG34: first-class closure opcodes
+// ---------------------------------------------------------------------------
+//
+// `alloc_closure` and `call_closure` are the successor forms of the older
+// `call_builtin "make_closure"` / `"apply_closure"` pattern.  The key
+// improvement: the function name is now an inline `Operand::Str` in
+// `srcs[0]`, eliminating the preceding `const` instruction that the
+// twig-ir-compiler previously had to emit via the `string_arg` helper.
+
+/// Handle `alloc_closure(Str(fn_name), cap0, cap1, …) : "closure"`.
+///
+/// Allocates a closure pairing `fn_name` with captured values, using the
+/// same `lispy_runtime::heap::alloc_closure` path that the old
+/// `call_builtin "make_closure"` form used — the representation is
+/// identical so `exec_call_closure` / `exec_apply_closure` can both read
+/// the resulting heap object.
+///
+/// # Operand layout
+///
+/// | Index | Expected | Meaning |
+/// |-------|----------|---------|
+/// | `srcs[0]` | `Operand::Str(name)` | Name of the IIR function to close over |
+/// | `srcs[1..]` | `Operand::Var(name)` | Captured variables in order |
+///
+/// The dest is required — closures always produce a value.
+fn exec_alloc_closure(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("alloc_closure requires dest".into())
+    })?;
+
+    // srcs[0] must be Operand::Str carrying the compile-time function name.
+    let fn_name = match instr.srcs.first() {
+        Some(Operand::Str(s)) => s.as_str(),
+        Some(other) => return Err(RunError::MalformedInstruction(format!(
+            "alloc_closure: srcs[0] must be Operand::Str(fn_name), got {other}"
+        ))),
+        None => return Err(RunError::MalformedInstruction(
+            "alloc_closure requires at least one src (fn_name as Operand::Str)".into()
+        )),
+    };
+
+    // Guard against absurdly long fn_name strings.
+    //
+    // `intern()` adds every unique string to a global table that is never
+    // freed (the leak-forever invariant that `as_closure` relies on).
+    // Without a length cap, a malicious IIR module could carry a very long
+    // or high-entropy fn_name and consume unbounded memory on every
+    // `alloc_closure` execution.  The cap is generous enough to accommodate
+    // any reasonable compiler-generated name (the twig-ir-compiler emits
+    // names like `__lambda_0`, `adder`, etc.) while excluding payloads.
+    const MAX_FN_NAME_LEN: usize = 512;
+    if fn_name.len() > MAX_FN_NAME_LEN {
+        return Err(RunError::MalformedInstruction(format!(
+            "alloc_closure: fn_name exceeds maximum length ({} > {MAX_FN_NAME_LEN})",
+            fn_name.len()
+        )));
+    }
+
+    // Intern the function name to a SymbolId — the closure heap record stores
+    // names as interned symbol ids for O(1) equality checks.
+    let sym_id = intern(fn_name);
+    if sym_id == SymbolId::NONE {
+        // Use RuntimeError::Custom, not TypeError — this is a resource-
+        // exhaustion condition (the symbol intern table is full), not a
+        // type mismatch.  Callers that need to distinguish resource errors
+        // from type errors should match on Custom("intern table exhausted").
+        return Err(RunError::Runtime(RuntimeError::Custom(format!(
+            "alloc_closure: intern table exhausted for fn_name {fn_name:?}"
+        ))));
+    }
+
+    // DoS guard — mirrors the cap added for exec_send.
+    //
+    // `instr.srcs.len()` is controlled by the IIR module, which could be
+    // hand-crafted with millions of operands.  Without a cap the
+    // Vec::with_capacity call below would attempt a huge heap allocation
+    // before the budget or depth check fires.  Well-formed Twig programs
+    // never come close to MAX_REGISTERS_PER_FRAME captures.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "alloc_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
+    // Collect captured values from srcs[1..].
+    let frame_ref = &*frame;
+    let mut captures: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
+    for src in &instr.srcs[1..] {
+        let v = operand_to_value(src, &|n| frame_ref.get(n))
+            .map_err(RunError::OperandConversion)?;
+        captures.push(v);
+    }
+
+    // Allocate the closure via lispy-runtime's canonical path.
+    // `lispy_runtime::alloc_closure` is re-exported from `lispy_runtime::heap::alloc_closure`.
+    let closure_val = lispy_runtime::alloc_closure(sym_id, captures);
+    frame.set(dest.clone(), closure_val)?;
+    Ok(())
+}
+
+/// Handle `call_closure(Var(handle), arg0, arg1, …) : "any"`.
+///
+/// Invokes a closure previously created by `alloc_closure` (or by the older
+/// `call_builtin "make_closure"` path — the representation is identical).
+/// Prepends captured values to the user args before calling the underlying
+/// function, matching the ABI that `compile_anonymous_lambda` relies on.
+///
+/// This is equivalent to `exec_apply_closure` but with the operand layout
+/// shifted by one:
+///
+/// | Opcode | srcs[0] | srcs[1] | srcs[2..] |
+/// |--------|---------|---------|-----------|
+/// | `apply_closure` (legacy) | Var("apply_closure") | closure handle | user args |
+/// | `call_closure` (LANG34)  | closure handle       | user args[0]  | user args[1..] |
+fn exec_call_closure(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    if instr.srcs.is_empty() {
+        return Err(RunError::MalformedInstruction(
+            "call_closure requires at least 1 src (closure handle)".into()
+        ));
+    }
+
+    // DoS guard — mirrors the cap added for exec_send.
+    //
+    // A hand-crafted IIR module can embed a call_closure instruction with
+    // millions of srcs; Vec::with_capacity below would OOM before the budget
+    // or depth guard fires.  One budget tick per instruction means a single
+    // malformed call_closure consumes only 1 tick, not proportional to srcs.
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "call_closure: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+
+    // srcs[0] is the closure handle variable.
+    let frame_ref = &*frame;
+    let handle = operand_to_value(&instr.srcs[0], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+
+    // SAFETY: `lispy_runtime::as_closure` is an `unsafe fn` that:
+    //
+    //   1. Calls `handle.as_heap_ptr()` which first checks the tag bits.
+    //      LispyValue's tag encoding uses TAG_INT = 0b000, TAG_HEAP = 0b111,
+    //      TAG_TRUE = 0b011, TAG_FALSE = 0b001, TAG_SYMBOL = 0b101, TAG_NIL = 0b010.
+    //      Only values produced by `alloc_closure`, `alloc_cons`, etc. have
+    //      TAG_HEAP set.  Integers, booleans, and symbols will cause
+    //      `as_heap_ptr()` to return `None` → `as_closure` immediately returns
+    //      `None` — no pointer dereference occurs.
+    //
+    //   2. For values that DO have TAG_HEAP, the pointer was produced by
+    //      `lispy_runtime::heap::alloc_closure` / `alloc_cons` / etc. which
+    //      Box::leak a properly-aligned heap allocation with a valid
+    //      `ObjectHeader` at offset 0.  Dereferencing that pointer to read
+    //      `class_or_kind` is safe given the leak-forever invariant.
+    //
+    //   3. An adversarially crafted IIR integer that happens to have the
+    //      low 3 bits set (TAG_HEAP) CANNOT be produced by `exec_const`
+    //      for `Operand::Int(n)`, because `LispyValue::int(n)` shifts
+    //      left by 3 bits making the low 3 bits always 0 (TAG_INT = 0b000).
+    //      The only way to introduce an invalid heap-tagged value would be
+    //      through a foreign `unsafe` block — which does not exist in the
+    //      normal IIR execution path.
+    //
+    // Together, these guarantees make the call safe in the twig-vm context.
+    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+        RunError::NotCallable(format!("call_closure: {handle} is not a closure"))
+    })?;
+    let fn_name_id = closure.fn_name;
+    let captures = closure.captures.clone();
+    let is_builtin = closure.is_builtin();
+
+    // Collect user-visible args from srcs[1..].
+    let mut user_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len().saturating_sub(1));
+    for src in &instr.srcs[1..] {
+        let v = operand_to_value(src, &|n| frame_ref.get(n))
+            .map_err(RunError::OperandConversion)?;
+        user_args.push(v);
+    }
+
+    let result = if is_builtin {
+        // Builtin closure: dispatch via resolve_builtin.
+        //
+        // Hard runtime guard: a well-formed builtin closure must have zero
+        // captures.  `make_builtin_closure` / `alloc_builtin_closure` never
+        // attach captures; LANG34's `alloc_closure` is for user functions only.
+        // Reject malformed IR that somehow produces a builtin closure with
+        // non-empty captures — this is not a style check, it is a correctness
+        // boundary: passing captures to `builtin(&user_args)` would silently
+        // drop them and produce wrong results.  We enforce it unconditionally
+        // (not just in debug builds) so release builds are equally protected.
+        if !captures.is_empty() {
+            return Err(RunError::MalformedInstruction(format!(
+                "call_closure: builtin closure must have no captures, got {}",
+                captures.len()
+            )));
+        }
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "call_closure: builtin closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
+            .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
+        builtin(&user_args).map_err(RunError::Runtime)?
+    } else {
+        // User-fn closure: prepend captures to args then recurse.
+        //
+        // Depth / stack-overflow protection: `dispatch` itself checks
+        // `depth > MAX_DISPATCH_DEPTH` at entry and returns `RunError::DepthExceeded`
+        // before any allocation or further recursion.  Passing `depth + 1`
+        // here means the guard fires on the *next* call, bounding the
+        // total native call-stack depth to MAX_DISPATCH_DEPTH + 1 (256 + 1 = 257
+        // by default).  This is consistent with `exec_apply_closure` and
+        // `exec_call` which use the same `depth + 1` pattern.
+        let mut all_args = captures;
+        all_args.extend(user_args);
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "call_closure: closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let callee = module
+            .functions
+            .iter()
+            .find(|f| f.name == name_str)
+            .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
+        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table, profile, debug)?
+    };
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG26: host/ stdlib — platform I/O bridge
+// ---------------------------------------------------------------------------
+//
+// These functions implement Twig's standard-library I/O surface for the
+// **interpreter path**.  The Rust standard library is the authoritative
+// implementation; other runtimes (WASM, JVM, CLR, BEAM) produce
+// semantically equivalent behaviour through backend-specific code
+// generated from `SYSCALL N` instructions (see the dispatch comment above
+// for the mapping table).
+//
+// ## Function conventions
+//
+// Every `host/<name>` call follows the same IIR calling convention as
+// `call_builtin`:
+//
+//   srcs[0]  — the literal function name (e.g. `Operand::Var("host/write_byte")`)
+//   srcs[1…] — positional arguments, in order
+//   dest     — optional return register (absent for void functions)
+//
+// ## Buffering policy
+//
+// `host/write_byte` writes directly to `std::io::stdout()` without
+// explicit flushing after every byte.  Rust's default stdout is
+// line-buffered when connected to a terminal and fully buffered when
+// piped, which matches the behaviour of C's `putchar`.  Programs that
+// need a flush boundary (e.g. after printing a prompt) can call
+// `host/flush_stdout` (a future addition).  The OS flushes all open
+// stdio streams on normal process exit.
+
+/// Dispatch a `call_builtin "host/<capability>"` instruction.
+///
+/// Returns `Ok(())` on success.  Propagates I/O errors as
+/// [`RunError::HostIo`] and type errors as [`RunError::HostArgType`].
+fn exec_host_call(
+    name: &str,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+) -> Result<(), RunError> {
+    // Strip the leading "host/" prefix for the match arm.  The full name
+    // is kept for error messages.
+    match &name["host/".len()..] {
+
+        // ── host/write_byte ───────────────────────────────────────────
+        //
+        // Write a single byte to stdout.  The argument is treated as a
+        // signed or unsigned 64-bit integer; only the low 8 bits are
+        // used (standard `putchar` semantics).
+        //
+        // IIR:  call_builtin "host/write_byte" <byte_reg>
+        // WASM: SYSCALL 1  (WASI fd_write on fd=1)
+        // JVM:  invokestatic TwigHost.writeByte(int)V
+        // CLR:  call void [System.Console]System.Console::Write(char)
+        // BEAM: apply twig_host:write_byte/1
+        "write_byte" => {
+            let byte = host_arg_int(name, instr, frame, 1)?;
+            let b = (byte & 0xFF) as u8;
+            use std::io::Write as _;
+            std::io::stdout()
+                .write_all(&[b])
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            // void — no dest
+            Ok(())
+        }
+
+        // ── host/read_byte ────────────────────────────────────────────
+        //
+        // Read one byte from stdin.  Returns the byte as a non-negative
+        // integer, or −1 to signal end-of-file (the same convention as
+        // C's `getchar` / POSIX `read`).
+        //
+        // IIR:  call_builtin "host/read_byte" → dest
+        // WASM: SYSCALL 2  (WASI fd_read on fd=0)
+        // JVM:  invokestatic TwigHost.readByte()I
+        // CLR:  call int32 [System.Console]System.Console::Read()
+        // BEAM: apply twig_host:read_byte/0
+        "read_byte" => {
+            use std::io::Read as _;
+            let mut buf = [0u8; 1];
+            let n = std::io::stdin()
+                .read(&mut buf)
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            let result = if n == 0 {
+                LispyValue::int(-1) // EOF sentinel
+            } else {
+                LispyValue::int(i64::from(buf[0]))
+            };
+            if let Some(d) = &instr.dest {
+                frame.set(d.clone(), result)?;
+            }
+            Ok(())
+        }
+
+        // ── host/exit ─────────────────────────────────────────────────
+        //
+        // Terminate the process with the supplied exit code.  This
+        // function never returns.  A code of 0 signals success; any
+        // other value signals failure (POSIX convention).
+        //
+        // Backends: SYSCALL 10 (WASI proc_exit / System.Environment.Exit
+        // / erlang:halt / WASM unreachable after proc_exit).
+        "exit" => {
+            let code = host_arg_int(name, instr, frame, 1)?;
+            std::process::exit(code as i32);
+        }
+
+        // ── host/flush_stdout ─────────────────────────────────────────
+        //
+        // Flush the stdout buffer.  Useful before reading from stdin in
+        // interactive programs so the prompt appears before blocking.
+        //
+        // Backends: most targets flush lazily; this is a no-op on
+        // platforms where stdout is unbuffered (JVM, CLR already flush
+        // after every Write).
+        "flush_stdout" => {
+            use std::io::Write as _;
+            std::io::stdout()
+                .flush()
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            Ok(())
+        }
+
+        // ── host/write_string (LANG52) ────────────────────────────────
+        //
+        // Write the UTF-8 bytes of a heap string to stdout.  The single
+        // argument must be a `LangString` heap object produced by
+        // `alloc_string` (i.e. a value whose class tag is CLASS_STRING).
+        //
+        // IIR: call_builtin "host/write_string" <string_reg>
+        //
+        // This is the idiomatic way to print string values from Twig
+        // code; `host/write_byte` writes individual bytes and is useful
+        // for protocol-level I/O.
+        "write_string" => {
+            let bytes = host_arg_string(name, instr, frame, 1)?;
+            use std::io::Write as _;
+            std::io::stdout()
+                .write_all(bytes)
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            // void — no dest
+            Ok(())
+        }
+
+        // ── host/read_line (LANG52) ───────────────────────────────────
+        //
+        // Read one line from stdin, stripping the trailing `\n` (and
+        // `\r\n` on Windows).  Returns the content as a heap string.
+        // Returns an empty string on EOF.
+        //
+        // IIR: call_builtin "host/read_line" → dest
+        //
+        // Security: capped at 1 MiB per line to prevent adversarial
+        // input from causing unbounded memory growth (DoS).  Lines that
+        // exceed the cap return a HostIo error rather than truncating
+        // silently (truncation would produce a different semantic result,
+        // which is harder to reason about).
+        "read_line" => {
+            use std::io::{BufRead as _, Read as _};
+            /// Maximum bytes we will read for a single line.
+            const MAX_LINE_BYTES: u64 = 1 * 1024 * 1024; // 1 MiB
+            let mut line = String::new();
+            let stdin = std::io::stdin();
+            let mut limited = stdin.lock().take(MAX_LINE_BYTES + 1);
+            limited
+                .read_line(&mut line)
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            // Reject lines that hit or exceed the cap.
+            if line.len() as u64 > MAX_LINE_BYTES {
+                return Err(RunError::HostIo(
+                    "host/read_line: line exceeds 1 MiB limit".into(),
+                ));
+            }
+            // Strip trailing newline / CRLF.
+            if line.ends_with('\n') {
+                line.pop();
+                if line.ends_with('\r') {
+                    line.pop();
+                }
+            }
+            let val = lispy_runtime::heap::alloc_string(line.as_bytes());
+            if let Some(d) = &instr.dest {
+                frame.set(d.clone(), val)?;
+            }
+            Ok(())
+        }
+
+        // ── host/read_file (LANG52) ───────────────────────────────────
+        //
+        // Read the entire contents of the file at the path given by the
+        // argument string.  Returns the file contents as a heap string.
+        // Propagates OS errors as `RunError::HostIo`.
+        //
+        // IIR: call_builtin "host/read_file" <path_reg> → dest
+        //
+        // Security hardening:
+        //
+        // 1. **Size cap** — files larger than 64 MiB return a HostIo
+        //    error.  `std::fs::read` on an unbounded file (or a synthetic
+        //    "infinite" file like `/dev/zero`) would otherwise OOM the
+        //    process.
+        //
+        // 2. **Error message** — the path is NOT included in the public
+        //    error string to prevent filesystem enumeration via
+        //    OS-error side channels ("permission denied" vs "not found").
+        //    The path is Debug-printed only at the `RunError::HostIo`
+        //    level, which the host can choose to log or suppress.
+        //
+        // Note: path-traversal sandboxing (restricting which directories
+        // are accessible) is a host-level concern.  The VM's caller is
+        // responsible for not passing untrusted Twig programs to VMs
+        // with ambient filesystem access.
+        "read_file" => {
+            /// Maximum bytes we will read from a single file.
+            ///
+            /// The cap is enforced via `Read::take()` on the open file handle
+            /// (NOT via a `metadata()` pre-check).  `metadata()` reports
+            /// `len() == 0` for special files such as FIFOs, named pipes, and
+            /// `/proc` virtual files, which would bypass a metadata-based
+            /// guard entirely.  `take()` limits the actual bytes transferred
+            /// regardless of file type.
+            const MAX_FILE_BYTES: u64 = 64 * 1024 * 1024; // 64 MiB
+            let path_bytes = host_arg_string(name, instr, frame, 1)?;
+            let path_str = std::str::from_utf8(path_bytes)
+                .map_err(|_| RunError::HostIo(
+                    "host/read_file: path argument is not valid UTF-8".into(),
+                ))?;
+            // Open the file, then read through a `take()` adapter that limits
+            // how many bytes are transferred.  We request one byte beyond the
+            // cap so we can distinguish "exactly at the limit" from "over".
+            use std::io::Read as _;
+            let f = std::fs::File::open(path_str)
+                .map_err(|e| RunError::HostIo(format!("host/read_file: {e}")))?;
+            let mut buf = Vec::with_capacity(
+                (MAX_FILE_BYTES as usize).min(256 * 1024) // 256 KiB initial
+            );
+            f.take(MAX_FILE_BYTES + 1)
+                .read_to_end(&mut buf)
+                .map_err(|e| RunError::HostIo(format!("host/read_file: {e}")))?;
+            // If we read more bytes than the cap, the file was too large.
+            if buf.len() as u64 > MAX_FILE_BYTES {
+                return Err(RunError::HostIo(format!(
+                    "host/read_file: file exceeds {MAX_FILE_BYTES}-byte limit",
+                )));
+            }
+            let val = lispy_runtime::heap::alloc_string(&buf);
+            if let Some(d) = &instr.dest {
+                frame.set(d.clone(), val)?;
+            }
+            Ok(())
+        }
+
+        // ── Unknown host/ capability ──────────────────────────────────
+        //
+        // Any unrecognised `host/<name>` is an error.  Future
+        // capabilities (e.g. `host/open_file`, `host/write_file`) will
+        // be added here alongside their backend lowering rules.
+        cap => {
+            Err(RunError::UnknownBuiltin(format!("host/{cap}")))
+        }
+    }
+}
+
+/// Extract the integer at argument position `pos` (1-based, matching
+/// `instr.srcs` where index 0 is the callee name).
+///
+/// Returns a type error if the value is not an integer, or a malformed-
+/// instruction error if the source is missing.
+fn host_arg_int(
+    host_fn: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<i64, RunError> {
+    let src = instr.srcs.get(pos)
+        .ok_or_else(|| RunError::MalformedInstruction(
+            format!("host/{host_fn}: missing argument at position {pos}"),
+        ))?;
+    let frame_ref = frame;
+    let val = operand_to_value(src, &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    val.as_int().ok_or_else(|| RunError::HostArgType {
+        function: host_fn.to_string(),
+        received: format!("{val}"),
+    })
+}
+
+/// Extract the heap-string bytes at argument position `pos` (1-based).
+///
+/// Used by `host/write_string`, `host/read_file`, and any future
+/// host call that takes a string argument.  Returns a `HostArgType`
+/// error if the value is not a `LangString` heap object.
+///
+/// The returned slice is `'static` because `alloc_string` uses
+/// `Box::leak` — all heap strings live for the process lifetime.
+fn host_arg_string(
+    host_fn: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<&'static [u8], RunError> {
+    let src = instr.srcs.get(pos)
+        .ok_or_else(|| RunError::MalformedInstruction(
+            format!("host/{host_fn}: missing argument at position {pos}"),
+        ))?;
+    let frame_ref = frame;
+    let val = operand_to_value(src, &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    // SAFETY: values in the dispatch loop come from the VM's value space —
+    // heap tags always reflect real, live allocations.
+    unsafe { lispy_runtime::heap::string_bytes(val) }
+        .ok_or_else(|| RunError::HostArgType {
+            function: host_fn.to_string(),
+            received: format!("{val}"),
+        })
+}
+
+// ---------------------------------------------------------------------------
+// LANG55: higher-order list operations
+// ---------------------------------------------------------------------------
+//
+// `map`, `filter`, `fold-left`, and `fold-right` all need to call a closure
+// for each element of a list, which requires recursing into `dispatch`.
+// They are implemented here — in the layer of the VM that has access to
+// `module`, `depth`, `budget`, `globals`, etc. — for the same reason that
+// `apply_closure` and `global_set` live here rather than in `lispy-runtime`.
+//
+// ## Shared helper: `invoke_closure_value`
+//
+// The core "call a heap closure value with a slice of arguments" logic is
+// extracted into `invoke_closure_value` so that `map`, `filter`, and the
+// two fold variants don't each duplicate it.  The logic mirrors
+// `exec_call_closure` / `exec_apply_closure` but works directly on
+// `Vec<LispyValue>` rather than on an `IIRInstr`.
+//
+// ## List iteration protocol
+//
+// The list argument must be a **proper list**: a sequence of cons cells
+// terminated by `nil`.  Each iteration step is:
+//
+//   1. If the current cursor is `nil`, iteration is done.
+//   2. Otherwise read `car` (current element) and `cdr` (rest).
+//   3. Invoke the closure on the element.
+//   4. Advance the cursor to `cdr`.
+//
+// Passing a dotted pair (improper list) raises `HostArgType` on the step
+// where the tail is neither cons nor nil.
+//
+// ## Budget
+//
+// Each closure call ticks the budget once via the budget check inside
+// `dispatch`.  The outer HOF handler itself does not tick the budget —
+// the loop overhead is negligible compared to the body invocations.
+
+/// Call a `LispyValue` that is a heap closure (user-function or builtin).
+///
+/// This extracts the core closure-invocation logic shared by `exec_call_closure`,
+/// `exec_apply_closure`, and the four LANG55 higher-order functions.  Using a
+/// dedicated helper avoids three copies of the same `unsafe as_closure` +
+/// `is_builtin` + `dispatch` dance.
+///
+/// # Arguments
+///
+/// * `handle` — must be a heap closure value (`CLASS_CLOSURE`).
+/// * `args` — positional arguments to pass.  For user closures, captures are
+///   prepended automatically (same as `exec_call_closure`).
+///
+/// # Errors
+///
+/// Returns `RunError::NotCallable` if `handle` is not a closure.
+/// Returns `RunError::DepthExceeded` if `depth >= MAX_DISPATCH_DEPTH`.
+/// Propagates errors from the callee body.
+fn invoke_closure_value(
+    module: &IIRModule,
+    handle: LispyValue,
+    args: Vec<LispyValue>,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<LispyValue, RunError> {
+    // SAFETY: LispyValue tag encoding.
+    //
+    // `as_closure` first calls `as_heap_ptr()` which checks the low-3-bit tag.
+    // Only values with TAG_HEAP (= 0b111) pass the check; integers, booleans,
+    // nil, and symbols have distinct tags and return `None` before any
+    // pointer dereference.  All heap-tagged values in the dispatcher were
+    // produced by `lispy_runtime` allocators that `Box::leak` properly
+    // aligned objects — the live-pointer invariant holds for the process
+    // lifetime (no GC yet).  An adversarially-crafted integer that happens
+    // to have low bits 0b111 cannot be produced by `exec_const` for
+    // `Operand::Int(n)`, because `LispyValue::int(n)` shifts left 3,
+    // making the low bits always 0.
+    let closure = unsafe { lispy_runtime::as_closure(handle) }.ok_or_else(|| {
+        RunError::NotCallable(format!("invoke_closure_value: {handle} is not a closure"))
+    })?;
+    let fn_name_id = closure.fn_name;
+    let captures = closure.captures.clone();
+    let is_builtin = closure.is_builtin();
+
+    if is_builtin {
+        // Hard guard: builtin closures must have zero captures.
+        // `make_builtin_closure` / `alloc_builtin_closure` never attach
+        // captures.  A malformed heap object with `CLOSURE_FLAG_BUILTIN`
+        // AND non-empty captures would silently drop the captures — reject
+        // it unconditionally (not just debug_assert!) so release builds are
+        // equally protected.
+        if !captures.is_empty() {
+            return Err(RunError::MalformedInstruction(format!(
+                "invoke_closure_value: builtin closure must have no captures, got {}",
+                captures.len()
+            )));
+        }
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "invoke_closure_value: builtin closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let builtin = <LispyBinding as lang_runtime_core::LangBinding>::resolve_builtin(&name_str)
+            .ok_or_else(|| RunError::UnknownBuiltin(name_str.clone()))?;
+        builtin(&args).map_err(RunError::Runtime)
+    } else {
+        // User-fn closure: prepend captures to args then recurse into dispatch.
+        //
+        // Depth / stack-overflow protection: `dispatch` checks
+        // `depth > MAX_DISPATCH_DEPTH` at entry and returns `RunError::DepthExceeded`
+        // before any allocation.  Passing `depth + 1` here matches the convention
+        // in `exec_call_closure`, `exec_apply_closure`, and `exec_call`.
+        let mut all_args = captures;
+        all_args.extend(args);
+        let name_str = name_of(fn_name_id).ok_or_else(|| {
+            RunError::MalformedInstruction(format!(
+                "invoke_closure_value: closure has unknown fn_name id {}",
+                fn_name_id.0
+            ))
+        })?;
+        let callee = module
+            .functions
+            .iter()
+            .find(|f| f.name == name_str)
+            .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
+        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table, profile, debug)
+    }
+}
+
+/// Walk a `LispyValue` proper-list into a `Vec<LispyValue>`.
+///
+/// Returns `Err(RunError::HostArgType)` if a tail is neither nil nor a cons
+/// cell (improper list / wrong type).
+///
+/// Returns `Err(RunError::InstructionLimitExceeded)` if the list length
+/// exceeds [`MAX_HOF_LIST_ELEMENTS`].  Each element also ticks `budget`
+/// once, so iterating a list of length N charges N budget ticks.  This
+/// ensures that a single `call_builtin "map"` instruction cannot traverse
+/// more elements than the total `MAX_INSTRUCTIONS_PER_RUN` budget allows,
+/// preventing DoS via unbounded memory allocation.
+///
+/// # Security
+///
+/// Without a cap, a single HOF instruction on a very large list costs only
+/// **one** budget tick (the `call_builtin` itself) while performing O(N)
+/// allocations — a multiplier attack.  See `MAX_HOF_LIST_ELEMENTS` for the
+/// detailed rationale.
+///
+/// # Safety
+///
+/// Caller guarantees the value lives for the duration of this call (true
+/// for all VM-managed `LispyValue`s because allocations are `Box::leak`'d).
+fn collect_list(
+    fn_name: &str,
+    mut cursor: LispyValue,
+    budget: &mut ExecutionBudget,
+) -> Result<Vec<LispyValue>, RunError> {
+    let mut out = Vec::new();
+    loop {
+        if cursor.is_nil() {
+            return Ok(out);
+        }
+        // DoS guard: cap list length so one HOF instruction cannot
+        // allocate O(N) memory for an unbounded N.  `MAX_HOF_LIST_ELEMENTS`
+        // matches `MAX_INSTRUCTIONS_PER_RUN` so iterating the maximum list
+        // costs the whole budget.  Found by LANG55 security review.
+        if out.len() >= MAX_HOF_LIST_ELEMENTS {
+            return Err(RunError::InstructionLimitExceeded);
+        }
+        // Charge one budget tick per element traversed.  This accounts for
+        // the work that `dispatch` would normally charge per-instruction but
+        // cannot here because list traversal happens outside the dispatch loop.
+        budget.tick()?;
+
+        // SAFETY: see `invoke_closure_value` safety note — all heap-tagged
+        // values in the dispatcher came from `lispy_runtime` allocators.
+        let (head, tail) = unsafe {
+            let h = lispy_runtime::heap::car(cursor).ok_or_else(|| RunError::HostArgType {
+                function: fn_name.to_string(),
+                received: format!("list tail {cursor} is not a cons cell"),
+            })?;
+            let t = lispy_runtime::heap::cdr(cursor).ok_or_else(|| RunError::HostArgType {
+                function: fn_name.to_string(),
+                received: format!("list tail {cursor} is not a cons cell"),
+            })?;
+            (h, t)
+        };
+        out.push(head);
+        cursor = tail;
+    }
+}
+
+/// Build a proper `LispyValue` list from a `Vec<LispyValue>`.
+///
+/// Constructs `(cons v0 (cons v1 … nil))` — the natural in-order list.
+fn build_list(elements: Vec<LispyValue>) -> LispyValue {
+    let mut acc = LispyValue::NIL;
+    for elem in elements.into_iter().rev() {
+        acc = lispy_runtime::heap::alloc_cons(elem, acc);
+    }
+    acc
+}
+
+/// Helper: extract the fn-closure and list arguments from a HOF instruction.
+///
+/// For `map` and `filter`:
+///   `srcs = [name, fn_closure, list]`
+///   Returns `(fn_closure_val, list_val)`.
+///
+/// Validates argument count (exactly 3 srcs including the name).
+fn hof_fn_and_list(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+) -> Result<(LispyValue, LispyValue), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "{op}: expected 3 srcs (name, fn, list), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let frame_ref = frame;
+    let fn_val = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let list_val = operand_to_value(&instr.srcs[2], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    Ok((fn_val, list_val))
+}
+
+/// Helper: extract the fn-closure, init, and list arguments from a fold HOF instruction.
+///
+/// For `fold-left` and `fold-right`:
+///   `srcs = [name, fn_closure, init, list]`
+///   Returns `(fn_closure_val, init_val, list_val)`.
+///
+/// Validates argument count (exactly 4 srcs including the name).
+fn hof_fn_init_and_list(
+    op: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+) -> Result<(LispyValue, LispyValue, LispyValue), RunError> {
+    if instr.srcs.len() != 4 {
+        return Err(RunError::MalformedInstruction(format!(
+            "{op}: expected 4 srcs (name, fn, init, list), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let frame_ref = frame;
+    let fn_val = operand_to_value(&instr.srcs[1], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let init_val = operand_to_value(&instr.srcs[2], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let list_val = operand_to_value(&instr.srcs[3], &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    Ok((fn_val, init_val, list_val))
+}
+
+/// `(map fn lst)` — apply `fn` to each element of `lst`; return a new list.
+///
+/// IIR convention: `call_builtin "map" fn_reg list_reg`.
+///
+/// ```text
+/// (map (lambda (x) (* x x)) (list 1 2 3)) → (1 4 9)
+/// (map fn nil)                             → nil
+/// ```
+///
+/// Error if `fn` is not a closure or `lst` is not a proper list.
+fn exec_hof_map(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let (fn_val, list_val) = hof_fn_and_list("map", instr, frame)?;
+    let elements = collect_list("map", list_val, budget)?;
+
+    // Apply fn to each element, collecting results.
+    let mut results = Vec::with_capacity(elements.len());
+    for elem in elements {
+        let r = invoke_closure_value(
+            module, fn_val, vec![elem], depth, budget, globals, ic_table, profile, debug,
+        )?;
+        results.push(r);
+    }
+
+    let result_list = build_list(results);
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result_list)?;
+    }
+    Ok(())
+}
+
+/// `(filter pred lst)` — keep elements for which `pred` returns truthy.
+///
+/// IIR convention: `call_builtin "filter" pred_reg list_reg`.
+///
+/// Truthy means anything except `#f` and `nil` (same as `jmp_if_false`).
+///
+/// ```text
+/// (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5)) → (1 3 5)
+/// (filter pred nil)                                          → nil
+/// ```
+fn exec_hof_filter(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let (fn_val, list_val) = hof_fn_and_list("filter", instr, frame)?;
+    let elements = collect_list("filter", list_val, budget)?;
+
+    // Keep elements for which pred returns truthy.
+    let mut kept = Vec::with_capacity(elements.len());
+    for elem in elements {
+        let test = invoke_closure_value(
+            module, fn_val, vec![elem], depth, budget, globals, ic_table, profile, debug,
+        )?;
+        if test.is_truthy() {
+            kept.push(elem);
+        }
+    }
+
+    let result_list = build_list(kept);
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result_list)?;
+    }
+    Ok(())
+}
+
+/// `(fold-left fn init lst)` — left fold: `acc = (fn acc elem)` for each element.
+///
+/// IIR convention: `call_builtin "fold-left" fn_reg init_reg list_reg`.
+///
+/// ```text
+/// (fold-left + 0 (list 1 2 3 4)) → 10
+/// (fold-left fn init nil)        → init
+/// ```
+fn exec_hof_fold_left(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let (fn_val, init_val, list_val) = hof_fn_init_and_list("fold-left", instr, frame)?;
+    let elements = collect_list("fold-left", list_val, budget)?;
+
+    let mut acc = init_val;
+    for elem in elements {
+        // Left fold: (fn acc elem)
+        acc = invoke_closure_value(
+            module, fn_val, vec![acc, elem], depth, budget, globals, ic_table, profile, debug,
+        )?;
+    }
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), acc)?;
+    }
+    Ok(())
+}
+
+/// `(fold-right fn init lst)` — right fold: `acc = (fn elem acc)` for each element.
+///
+/// IIR convention: `call_builtin "fold-right" fn_reg init_reg list_reg`.
+///
+/// The list is collected into a `Vec` first, then traversed in reverse so
+/// that the rightmost element is processed first.
+///
+/// ```text
+/// (fold-right cons nil (list 1 2 3)) → (1 2 3)   ; identity for proper lists
+/// (fold-right fn init nil)           → init
+/// ```
+fn exec_hof_fold_right(
+    module: &IIRModule,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    depth: usize,
+    budget: &mut ExecutionBudget,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
+) -> Result<(), RunError> {
+    let (fn_val, init_val, list_val) = hof_fn_init_and_list("fold-right", instr, frame)?;
+    let elements = collect_list("fold-right", list_val, budget)?;
+
+    // Process elements from right to left.
+    let mut acc = init_val;
+    for elem in elements.into_iter().rev() {
+        // Right fold: (fn elem acc)
+        acc = invoke_closure_value(
+            module, fn_val, vec![elem, acc], depth, budget, globals, ic_table, profile, debug,
+        )?;
+    }
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), acc)?;
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// PR 6: method-dispatch opcodes (send / load_property / store_property)
+// ---------------------------------------------------------------------------
+//
+// These three opcodes route through the corresponding `LangBinding`
+// trait method.  For Lispy, the trait methods correctly return
+// `NoSuchMethod` / `NoSuchProperty` (Lispy has no method dispatch);
+// the value of PR 6 is wiring the dispatcher path so a future
+// Ruby-binding or JS-binding can implement these and immediately
+// have them dispatched without further dispatcher changes.
+//
+// The IC parameter is allocated **fresh per dispatch** in PR 6.
+// PR 7 (IC machinery) introduces a per-call-site IC table indexed
+// by `IIRInstr::ic_slot` — at that point this allocation moves to
+// table lookup but the trait calls stay identical.
+
+/// Helper: extract the SymbolId stored in a register (the
+/// dispatcher's string-as-symbol convention from PR 5).  Used by
+/// every method-dispatch opcode for the selector / key argument.
+fn read_symbol_arg(
+    operand: &Operand,
+    frame: &Frame,
+    op_for_msg: &str,
+    arg_idx_for_msg: usize,
+) -> Result<SymbolId, RunError> {
+    let v = operand_to_value(operand, &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+    v.as_symbol().ok_or_else(|| {
+        RunError::Runtime(RuntimeError::TypeError(format!(
+            "{op_for_msg}: srcs[{arg_idx_for_msg}] expected symbol selector/key, got {v}"
+        )))
+    })
+}
+
+/// Handle the `send recv, selector, args...` IIR opcode (LANG20
+/// §"IIR additions").
+///
+/// `srcs[0]` is the receiver; `srcs[1]` is the symbol-id register
+/// holding the method selector; `srcs[2..]` are the user-supplied
+/// arguments.  Allocates a fresh per-instruction `InlineCache` (PR
+/// 7 makes it persistent) and calls
+/// `LispyBinding::send_message`.  For Lispy this returns
+/// `RuntimeError::NoSuchMethod`, which is the correct behaviour
+/// for a language without method dispatch.
+fn exec_send(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    ic_table: &mut ICTable,
+    fn_name: &str,
+) -> Result<(), RunError> {
+    if instr.srcs.len() < 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "send expects at least 2 srcs (recv, selector), got {}",
+            instr.srcs.len()
+        )));
+    }
+    // DoS guard: cap the args allocation up-front.  Hand-built
+    // malformed IIR could declare an instruction with millions of
+    // srcs and OOM us via `Vec::with_capacity`.  Found by PR 6
+    // security review.  The cap is defensive — well-formed IIR
+    // never approaches it (function arities are bounded by source
+    // syntax; a Twig function can't have 65k arguments).
+    if instr.srcs.len() > MAX_REGISTERS_PER_FRAME {
+        return Err(RunError::MalformedInstruction(format!(
+            "send: srcs.len()={} exceeds MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            instr.srcs.len()
+        )));
+    }
+    let receiver = operand_to_value(&instr.srcs[0], &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let selector = read_symbol_arg(&instr.srcs[1], frame, "send", 1)?;
+
+    let mut args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len() - 2);
+    for src in &instr.srcs[2..] {
+        let v = operand_to_value(src, &|n| frame.get(n))
+            .map_err(RunError::OperandConversion)?;
+        args.push(v);
+    }
+
+    // PR 7: route IC through the persistent table when a slot is
+    // assigned; fall back to a stack-allocated fresh IC otherwise.
+    // TODO(LANG20 PR 8): `DispatchCx::new_for_test` is the only
+    // constructor today; replace with the production constructor
+    // when the type grows real fields.
+    let mut local_ic = InlineCache::<LispyICEntry>::new();
+    let mut cx = DispatchCx::<LispyBinding>::new_for_test();
+    let result = match instr.ic_slot {
+        Some(slot) => {
+            let ic = ic_table.get_or_alloc(fn_name, slot)?;
+            LispyBinding::send_message(receiver, selector, &args, ic, &mut cx)
+        }
+        None => {
+            LispyBinding::send_message(receiver, selector, &args, &mut local_ic, &mut cx)
+        }
+    }
+    .map_err(RunError::Runtime)?;
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+/// Handle the `load_property obj, key` IIR opcode.
+///
+/// `srcs[0]` is the object; `srcs[1]` is the symbol-id register
+/// holding the property key.  Routes through the persistent IC
+/// table when `ic_slot` is assigned (PR 7); falls back to a
+/// stack-allocated fresh IC otherwise (PR 6 backward compat).
+/// For Lispy returns `RuntimeError::NoSuchProperty`.
+fn exec_load_property(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    ic_table: &mut ICTable,
+    fn_name: &str,
+) -> Result<(), RunError> {
+    if instr.srcs.len() != 2 {
+        return Err(RunError::MalformedInstruction(format!(
+            "load_property expects 2 srcs (obj, key), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let obj = operand_to_value(&instr.srcs[0], &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let key = read_symbol_arg(&instr.srcs[1], frame, "load_property", 1)?;
+
+    let mut local_ic = InlineCache::<LispyICEntry>::new();
+    let result = match instr.ic_slot {
+        Some(slot) => {
+            let ic = ic_table.get_or_alloc(fn_name, slot)?;
+            LispyBinding::load_property(obj, key, ic)
+        }
+        None => LispyBinding::load_property(obj, key, &mut local_ic),
+    }
+    .map_err(RunError::Runtime)?;
+
+    if let Some(d) = &instr.dest {
+        frame.set(d.clone(), result)?;
+    }
+    Ok(())
+}
+
+/// Handle the `store_property obj, key, value` IIR opcode.
+///
+/// `srcs[0]` is the object; `srcs[1]` is the symbol-id register
+/// holding the property key; `srcs[2]` is the value to write.
+/// No dest (`store_property` returns void; the IIR compiler
+/// emits this as a side-effecting instruction).  Routes through
+/// the persistent IC table when `ic_slot` is assigned.
+fn exec_store_property(
+    instr: &IIRInstr,
+    frame: &mut Frame,
+    ic_table: &mut ICTable,
+    fn_name: &str,
+) -> Result<(), RunError> {
+    if instr.srcs.len() != 3 {
+        return Err(RunError::MalformedInstruction(format!(
+            "store_property expects 3 srcs (obj, key, value), got {}",
+            instr.srcs.len()
+        )));
+    }
+    let obj = operand_to_value(&instr.srcs[0], &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+    let key = read_symbol_arg(&instr.srcs[1], frame, "store_property", 1)?;
+    let value = operand_to_value(&instr.srcs[2], &|n| frame.get(n))
+        .map_err(RunError::OperandConversion)?;
+
+    let mut local_ic = InlineCache::<LispyICEntry>::new();
+    match instr.ic_slot {
+        Some(slot) => {
+            let ic = ic_table.get_or_alloc(fn_name, slot)?;
+            LispyBinding::store_property(obj, key, value, ic)
+        }
+        None => LispyBinding::store_property(obj, key, value, &mut local_ic),
+    }
+    .map_err(RunError::Runtime)?;
+    // store_property has no dest — the result is the side-effect.
+    Ok(())
+}
+
+fn exec_jmp(instr: &IIRInstr, labels: &HashMap<String, usize>) -> Result<usize, RunError> {
+    let label = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.as_str(),
+        _ => return Err(RunError::MalformedInstruction(
+            "jmp requires Var(label) in srcs[0]".into(),
+        )),
+    };
+    labels
+        .get(label)
+        .copied()
+        .ok_or_else(|| RunError::UnknownLabel(label.to_string()))
+}
+
+fn exec_jmp_if_false(
+    instr: &IIRInstr,
+    frame: &Frame,
+    labels: &HashMap<String, usize>,
+    pc: usize,
+) -> Result<usize, RunError> {
+    // srcs[0] = condition register, srcs[1] = label
+    let cond_name = match instr.srcs.first() {
+        Some(Operand::Var(s)) => s.as_str(),
+        _ => return Err(RunError::MalformedInstruction(
+            "jmp_if_false requires Var(cond) in srcs[0]".into(),
+        )),
+    };
+    let label = match instr.srcs.get(1) {
+        Some(Operand::Var(s)) => s.as_str(),
+        _ => return Err(RunError::MalformedInstruction(
+            "jmp_if_false requires Var(label) in srcs[1]".into(),
+        )),
+    };
+    let cond = frame
+        .get(cond_name)
+        .ok_or_else(|| RunError::UnknownRegister(cond_name.to_string()))?;
+    // Scheme semantics: only #f and nil branch.  Everything else
+    // (including 0, empty string, empty list head, etc.) is truthy.
+    if cond.is_truthy() {
+        Ok(pc + 1)
+    } else {
+        labels
+            .get(label)
+            .copied()
+            .ok_or_else(|| RunError::UnknownLabel(label.to_string()))
+    }
+}
+
+fn exec_ret(instr: &IIRInstr, frame: &Frame) -> Result<LispyValue, RunError> {
+    let src = instr.srcs.first().ok_or_else(|| {
+        RunError::MalformedInstruction("ret requires srcs[0]".into())
+    })?;
+    operand_to_value(src, &|n| frame.get(n)).map_err(RunError::OperandConversion)
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use twig_ir_compiler::compile_source;
+
+    fn run_source(src: &str) -> Result<LispyValue, RunError> {
+        let module = compile_source(src, "test").expect("compilation failed");
+        run(&module)
+    }
+
+    // ── Arithmetic and comparisons ──────────────────────────────────
+
+    #[test]
+    fn addition_returns_sum() {
+        assert_eq!(run_source("(+ 1 2)").unwrap().as_int(), Some(3));
+    }
+
+    #[test]
+    fn subtraction_returns_diff() {
+        assert_eq!(run_source("(- 10 3)").unwrap().as_int(), Some(7));
+    }
+
+    #[test]
+    fn multiplication_returns_product() {
+        assert_eq!(run_source("(* 6 7)").unwrap().as_int(), Some(42));
+    }
+
+    #[test]
+    fn nested_arithmetic() {
+        // (+ (* 2 3) (- 10 4)) → 6 + 6 = 12
+        assert_eq!(run_source("(+ (* 2 3) (- 10 4))").unwrap().as_int(), Some(12));
+    }
+
+    #[test]
+    fn comparison_lt_true() {
+        assert_eq!(run_source("(< 1 2)").unwrap(), LispyValue::TRUE);
+    }
+
+    #[test]
+    fn comparison_lt_false() {
+        assert_eq!(run_source("(< 5 5)").unwrap(), LispyValue::FALSE);
+    }
+
+    #[test]
+    fn equality_true() {
+        assert_eq!(run_source("(= 7 7)").unwrap(), LispyValue::TRUE);
+    }
+
+    // ── if ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn if_true_branch_taken() {
+        assert_eq!(
+            run_source("(if (< 1 2) 100 200)").unwrap().as_int(),
+            Some(100),
+        );
+    }
+
+    #[test]
+    fn if_false_branch_taken() {
+        assert_eq!(
+            run_source("(if (< 5 2) 100 200)").unwrap().as_int(),
+            Some(200),
+        );
+    }
+
+    #[test]
+    fn if_with_bool_literal_condition() {
+        assert_eq!(run_source("(if #t 1 2)").unwrap().as_int(), Some(1));
+        assert_eq!(run_source("(if #f 1 2)").unwrap().as_int(), Some(2));
+    }
+
+    // ── let ─────────────────────────────────────────────────────────
+
+    #[test]
+    fn let_single_binding() {
+        assert_eq!(run_source("(let ((x 5)) (* x x))").unwrap().as_int(), Some(25));
+    }
+
+    #[test]
+    fn let_multiple_bindings() {
+        assert_eq!(
+            run_source("(let ((x 1) (y 2)) (+ x y))").unwrap().as_int(),
+            Some(3),
+        );
+    }
+
+    #[test]
+    fn let_body_uses_let_bound_names_only() {
+        // `let` is parallel-bind: y on the RHS does NOT see x's
+        // freshly-bound value.  Twig source:
+        //   (let ((x 10) (y x)) y)
+        // would error at compile time because `x` isn't yet in
+        // outer scope.  Instead, test that nested lets work as
+        // expected.
+        let src = "(let ((x 1)) (let ((y (+ x 1))) (+ x y)))";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(3));
+    }
+
+    // ── begin ───────────────────────────────────────────────────────
+
+    #[test]
+    fn begin_returns_last_value() {
+        assert_eq!(run_source("(begin 1 2 3)").unwrap().as_int(), Some(3));
+    }
+
+    // ── User-defined functions ──────────────────────────────────────
+
+    #[test]
+    fn define_and_call_simple() {
+        let src = "(define (square x) (* x x)) (square 7)";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(49));
+    }
+
+    #[test]
+    fn define_two_args() {
+        let src = "(define (add3 a b c) (+ (+ a b) c)) (add3 1 2 3)";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(6));
+    }
+
+    #[test]
+    fn factorial_recursion() {
+        let src = "
+            (define (fact n)
+              (if (= n 0) 1 (* n (fact (- n 1)))))
+            (fact 5)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(120));
+    }
+
+    #[test]
+    fn fibonacci_recursion() {
+        let src = "
+            (define (fib n)
+              (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))
+            (fib 10)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(55));
+    }
+
+    #[test]
+    fn mutual_recursion() {
+        // even? and odd? — classic mutual recursion test.
+        let src = "
+            (define (is_even n)
+              (if (= n 0) #t (is_odd (- n 1))))
+            (define (is_odd n)
+              (if (= n 0) #f (is_even (- n 1))))
+            (is_even 10)
+        ";
+        assert_eq!(run_source(src).unwrap(), LispyValue::TRUE);
+    }
+
+    // ── Cons / car / cdr through the dispatcher ─────────────────────
+
+    #[test]
+    fn cons_car_returns_first() {
+        assert_eq!(run_source("(car (cons 1 2))").unwrap().as_int(), Some(1));
+    }
+
+    #[test]
+    fn cons_cdr_returns_second() {
+        assert_eq!(run_source("(cdr (cons 1 2))").unwrap().as_int(), Some(2));
+    }
+
+    #[test]
+    fn pair_p_is_true_for_cons_cell() {
+        assert_eq!(run_source("(pair? (cons 1 2))").unwrap(), LispyValue::TRUE);
+    }
+
+    // ── Bool / nil handling in conditionals ─────────────────────────
+
+    #[test]
+    fn zero_is_truthy_in_scheme() {
+        // Crucial: in Scheme, 0 is truthy (only #f and nil are false).
+        assert_eq!(run_source("(if 0 1 2)").unwrap().as_int(), Some(1));
+    }
+
+    // ── Error paths ─────────────────────────────────────────────────
+
+    #[test]
+    fn no_entry_point_errors_out() {
+        let mut module = compile_source("(+ 1 2)", "test").unwrap();
+        module.entry_point = None;
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::NoEntryPoint(_)));
+    }
+
+    #[test]
+    fn entry_point_referencing_missing_fn_errors() {
+        let mut module = compile_source("(+ 1 2)", "test").unwrap();
+        module.entry_point = Some("does_not_exist".into());
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::NoEntryPoint(s) => assert_eq!(s, "does_not_exist"),
+            other => panic!("expected NoEntryPoint, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn unknown_opcode_surfaces_unsupported() {
+        // Hand-craft a module that uses an opcode we don't support.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                IIRInstr::new("not_a_real_opcode", None, vec![], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::UnsupportedOpcode(s) if s == "not_a_real_opcode"));
+    }
+
+    #[test]
+    fn fall_off_end_errors() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        // Function with no instructions at all → falls off end immediately.
+        let main = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 0,
+            instructions: vec![],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::FellOffEnd(s) if s == "main"));
+    }
+
+    #[test]
+    fn division_by_zero_surfaces_runtime() {
+        let err = run_source("(/ 7 0)").unwrap_err();
+        assert!(matches!(err, RunError::Runtime(RuntimeError::TypeError(_))));
+    }
+
+    #[test]
+    fn unknown_function_in_call_errors() {
+        // Compiler enforces this at compile time, but if a hand-
+        // built module names a missing callee we surface
+        // UnknownFunction.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                IIRInstr::new("call", Some("r".into()), vec![Operand::Var("ghost".into())], "any"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::UnknownFunction(s) if s == "ghost"));
+    }
+
+    #[test]
+    fn deep_recursion_surfaces_depth_exceeded() {
+        // Self-recursion that never terminates — should hit the depth cap
+        // rather than blowing the host stack.  We don't assert the exact
+        // depth (the limit is intentionally generous for the self-hosted
+        // compiler's lex-loop), only that we get the right error variant.
+        //
+        // With MAX_DISPATCH_DEPTH = 65536 (LANG64), infinite recursion needs
+        // 65537 nested Rust `dispatch` frames before the guard fires.  The
+        // default test-thread stack (8 MiB on macOS/Linux) is too small for
+        // that, so we spawn a dedicated thread with 1 GiB of stack.  Each
+        // dispatch frame is conservatively ≤ 10 KiB, so 65536 frames ≤
+        // 640 MiB — well within the 1 GiB budget.  (In practice frames are
+        // much smaller; the 10 KiB upper bound is a worst-case estimate.)
+        let result = std::thread::Builder::new()
+            .stack_size(1024 * 1024 * 1024) // 1 GiB
+            .spawn(|| {
+                let src = "
+                    (define (loop n) (loop (+ n 1)))
+                    (loop 0)
+                ";
+                run_source(src).unwrap_err()
+            })
+            .expect("thread spawn failed")
+            .join()
+            .expect("thread panicked");
+
+        // Depth or instruction limit — both are acceptable termination
+        // signals for an infinite-recursion test.
+        assert!(
+            matches!(result, RunError::DepthExceeded | RunError::InstructionLimitExceeded),
+            "expected DepthExceeded or InstructionLimitExceeded, got {result:?}",
+        );
+    }
+
+    // ── Internal helpers ────────────────────────────────────────────
+
+    #[test]
+    fn frame_arity_check_fires_on_mismatch() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let f = IIRFunction {
+            name: "f".into(),
+            params: vec![("x".into(), "any".into())],
+            return_type: "any".into(),
+            register_count: 1,
+            instructions: vec![],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let err = Frame::new(&f, &[]).unwrap_err();
+        match err {
+            RunError::ArityMismatch { expected, got, callee } => {
+                assert_eq!(expected, 1);
+                assert_eq!(got, 0);
+                assert_eq!(callee, "f");
+            }
+            other => panic!("expected ArityMismatch, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn build_label_index_rejects_duplicate_labels() {
+        // Hand-build a function with two `label "L"` instructions.
+        // The IR compiler never emits this (fresh_label generates
+        // unique names) but the dispatcher must refuse it rather
+        // than silently letting the second occurrence shadow the
+        // first.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let f = IIRFunction {
+            name: "f".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 1,
+            instructions: vec![
+                IIRInstr::new("label", None, vec![Operand::Var("L".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("L".into())], "void"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let err = build_label_index(&f).unwrap_err();
+        match err {
+            RunError::MalformedInstruction(s) => assert!(s.contains("duplicate label")),
+            other => panic!("expected MalformedInstruction, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn frame_caps_register_count() {
+        // Hand-build a function claiming usize::MAX registers.
+        // Without the cap, `HashMap::with_capacity(usize::MAX)`
+        // aborts the process; with it, allocation succeeds and
+        // the dispatcher can refuse on a more graceful boundary.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let f = IIRFunction {
+            name: "huge".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: usize::MAX,
+            instructions: vec![],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        // Should succeed (clamped to MAX_REGISTERS_PER_FRAME).
+        let frame = Frame::new(&f, &[]).expect("frame creation must not abort");
+        // Capacity is implementation-defined to be ≥ requested,
+        // but should not be near usize::MAX.
+        assert!(
+            frame.registers.capacity() <= MAX_REGISTERS_PER_FRAME * 2,
+            "capacity {} should be near MAX_REGISTERS_PER_FRAME ({MAX_REGISTERS_PER_FRAME})",
+            frame.registers.capacity(),
+        );
+    }
+
+    #[test]
+    fn build_label_index_finds_emitted_labels() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let f = IIRFunction {
+            name: "f".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 1,
+            instructions: vec![
+                IIRInstr::new("label", None, vec![Operand::Var("L1".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("L2".into())], "void"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let idx = build_label_index(&f).unwrap();
+        assert_eq!(idx.get("L1"), Some(&0));
+        assert_eq!(idx.get("L2"), Some(&1));
+    }
+
+    #[test]
+    fn execution_budget_enforces_cap() {
+        let mut b = ExecutionBudget::new();
+        // Burn through the budget — increment to one past the limit.
+        for _ in 0..MAX_INSTRUCTIONS_PER_RUN {
+            b.tick().expect("budget shouldn't overflow yet");
+        }
+        // The MAX_INSTRUCTIONS_PER_RUN+1th tick should fail.
+        let err = b.tick().unwrap_err();
+        assert!(matches!(err, RunError::InstructionLimitExceeded));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR 5: closures, top-level value defines, quoted symbols
+    // ─────────────────────────────────────────────────────────────────
+
+    // ── Quoted symbols ──────────────────────────────────────────────
+
+    #[test]
+    fn quoted_symbol_round_trips() {
+        // 'foo evaluates to a symbol value with name "foo".
+        let v = run_source("'foo").unwrap();
+        let sym_id = v.as_symbol().expect("expected symbol value");
+        let name = lispy_runtime::name_of(sym_id).unwrap();
+        assert_eq!(name, "foo");
+    }
+
+    #[test]
+    fn symbol_p_recognises_quoted_symbol() {
+        // (symbol? 'bar) is #t.
+        let v = run_source("(symbol? 'bar)").unwrap();
+        assert_eq!(v, LispyValue::TRUE);
+    }
+
+    // ── Anonymous lambdas + apply ───────────────────────────────────
+
+    #[test]
+    fn anonymous_lambda_no_capture() {
+        // ((lambda (x) (* x x)) 5)  → 25
+        assert_eq!(
+            run_source("((lambda (x) (* x x)) 5)").unwrap().as_int(),
+            Some(25),
+        );
+    }
+
+    #[test]
+    fn anonymous_lambda_two_params() {
+        // ((lambda (x y) (+ x y)) 3 4)  → 7
+        assert_eq!(
+            run_source("((lambda (x y) (+ x y)) 3 4)").unwrap().as_int(),
+            Some(7),
+        );
+    }
+
+    #[test]
+    fn lambda_captures_enclosing_let() {
+        // (let ((x 10)) ((lambda (y) (+ x y)) 5))  → 15
+        let src = "(let ((x 10)) ((lambda (y) (+ x y)) 5))";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(15));
+    }
+
+    #[test]
+    fn lambda_captures_multiple_values() {
+        // Captures both x and y.
+        let src = "(let ((x 1) (y 2)) ((lambda (z) (+ x (+ y z))) 4))";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(7));
+    }
+
+    #[test]
+    fn nested_lambdas() {
+        // Curried add: ((lambda (x) (lambda (y) (+ x y))) 3) returns
+        // a closure that adds 3 to its argument.  Apply that to 4.
+        let src = "(((lambda (x) (lambda (y) (+ x y))) 3) 4)";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(7));
+    }
+
+    // ── Higher-order via builtin closure ────────────────────────────
+
+    #[test]
+    fn higher_order_passing_user_fn() {
+        // (define (apply-it f x y) (f x y))
+        // (apply-it (lambda (a b) (* a b)) 6 7)  → 42
+        let src = "
+            (define (apply-it f x y) (f x y))
+            (apply-it (lambda (a b) (* a b)) 6 7)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(42));
+    }
+
+    #[test]
+    fn higher_order_passing_builtin() {
+        // Pass `+` itself as a value.  Twig wraps it in
+        // `make_builtin_closure`; apply_closure routes through
+        // resolve_builtin.
+        let src = "
+            (define (apply-it f x y) (f x y))
+            (apply-it + 2 3)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(5));
+    }
+
+    // ── Top-level value defines ─────────────────────────────────────
+
+    #[test]
+    fn top_level_value_define_then_use() {
+        // (define x 42) x  → 42
+        assert_eq!(run_source("(define x 42) x").unwrap().as_int(), Some(42));
+    }
+
+    #[test]
+    fn top_level_value_define_used_in_function() {
+        // (define base 100)
+        // (define (bump n) (+ base n))
+        // (bump 5)  → 105
+        let src = "
+            (define base 100)
+            (define (bump n) (+ base n))
+            (bump 5)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(105));
+    }
+
+    #[test]
+    fn top_level_value_define_overwrites() {
+        // Last write wins.
+        assert_eq!(
+            run_source("(define x 1) (define x 99) x").unwrap().as_int(),
+            Some(99),
+        );
+    }
+
+    // ── Closure-returning functions ─────────────────────────────────
+
+    #[test]
+    fn function_returning_closure() {
+        // Make-adder pattern.  Tests that a closure returned from
+        // a function still has working captures after the maker
+        // returns (Box::leak ensures correctness).
+        let src = "
+            (define (make-adder x) (lambda (y) (+ x y)))
+            ((make-adder 10) 5)
+        ";
+        assert_eq!(run_source(src).unwrap().as_int(), Some(15));
+    }
+
+    // ── Error paths ─────────────────────────────────────────────────
+
+    #[test]
+    fn apply_closure_on_non_closure_errors() {
+        // Hand-craft a module that calls apply_closure on an int.
+        // The IR compiler can't generate this directly (it always
+        // wraps in make_closure first), but we test the dispatcher
+        // refuses the malformed input.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                IIRInstr::new(
+                    "const",
+                    Some("x".into()),
+                    vec![Operand::Int(7)],
+                    "any",
+                ),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("apply_closure".into()),
+                        Operand::Var("x".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::NotCallable(_)));
+    }
+
+    #[test]
+    fn global_get_undefined_errors() {
+        // Hand-craft a module that calls global_get on a name
+        // that was never set.  The IR compiler doesn't emit this
+        // directly (compile_var_ref errors at compile time on
+        // unbound names), but the dispatcher must refuse.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                IIRInstr::new(
+                    "const",
+                    Some("name".into()),
+                    vec![Operand::Var("ghost".into())],
+                    "any",
+                ),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("global_get".into()),
+                        Operand::Var("name".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::UndefinedGlobal(n) => assert_eq!(n, "ghost"),
+            other => panic!("expected UndefinedGlobal, got {other:?}"),
+        }
+    }
+
+    // ── Globals struct sanity ───────────────────────────────────────
+
+    #[test]
+    fn globals_set_and_get_round_trip() {
+        let mut g = Globals::new();
+        assert!(g.is_empty());
+        let id = lispy_runtime::intern("foo");
+        g.set(id, LispyValue::int(7));
+        assert_eq!(g.len(), 1);
+        assert_eq!(g.get(id), Some(LispyValue::int(7)));
+        assert_eq!(g.get(lispy_runtime::intern("bar")), None);
+    }
+
+    #[test]
+    fn run_with_globals_threads_the_table() {
+        // The Twig frontend rejects unbound name references at
+        // compile time, so a program that touches a pre-seeded
+        // global isn't expressible from source.  Instead we verify
+        // that `run_with_globals` accepts a non-empty seed table,
+        // runs a program that doesn't interfere with it, and
+        // leaves the table intact afterwards (so a future
+        // multi-run TwigVM can reuse it).
+        let mut g = Globals::new();
+        g.set(lispy_runtime::intern("seed"), LispyValue::int(99));
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let v = run_with_globals(&module, &mut g).unwrap();
+        assert_eq!(v.as_int(), Some(3));
+        // Pre-seeded value is still there after the run.
+        assert_eq!(g.get(lispy_runtime::intern("seed")), Some(LispyValue::int(99)));
+    }
+
+    #[test]
+    fn defines_then_run_with_seeded_globals_writes_more() {
+        // (define x 5) (+ x 10) → 15.  Verifies that global_set
+        // works when the dispatcher receives a non-empty initial
+        // globals table, and that the new entry coexists with
+        // pre-seeded ones.
+        let mut g = Globals::new();
+        g.set(lispy_runtime::intern("seed"), LispyValue::int(99));
+        let module = compile_source("(define x 5) (+ x 10)", "test").unwrap();
+        let v = run_with_globals(&module, &mut g).unwrap();
+        assert_eq!(v.as_int(), Some(15));
+        // Both the seed and the program-defined x are present.
+        assert_eq!(g.get(lispy_runtime::intern("seed")), Some(LispyValue::int(99)));
+        assert_eq!(g.get(lispy_runtime::intern("x")), Some(LispyValue::int(5)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR 6: send / load_property / store_property opcodes
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // `twig-ir-compiler` doesn't yet emit these opcodes — Twig source
+    // syntax has no `(send obj msg ...)` form.  These tests therefore
+    // hand-build a minimal IIRModule using each opcode and run it
+    // through the dispatcher.  For Lispy, the binding methods return
+    // `NoSuchMethod` / `NoSuchProperty`, which is the correct
+    // behaviour for a language without method dispatch — PR 6's value
+    // is wiring the OPCODES through the trait machinery so a future
+    // Ruby/JS binding gets dispatch for free.
+
+    use interpreter_ir::function::{FunctionTypeStatus, IIRFunction as F};
+
+    /// Build a minimal module with `main` containing `instrs` plus a
+    /// trailing `(ret nil)`.  Convenient for the hand-built opcode
+    /// tests below.
+    fn module_with_main(instrs: Vec<IIRInstr>, register_count: usize) -> IIRModule {
+        let main = F {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count,
+            instructions: instrs,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        IIRModule {
+            name: "test".into(),
+            functions: vec![main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        }
+    }
+
+    // ── send ────────────────────────────────────────────────────────
+
+    #[test]
+    fn send_on_lispy_value_returns_no_such_method() {
+        // Hand-build:
+        //   r0 = const 42                    (receiver)
+        //   sel = const "any-method"         (interned as symbol)
+        //   r1 = send r0 sel                 (no extra args)
+        //   ret r1
+        let instrs = vec![
+            IIRInstr::new("const", Some("r0".into()), vec![Operand::Int(42)], "any"),
+            IIRInstr::new("const", Some("sel".into()), vec![Operand::Var("any-method".into())], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r1".into()),
+                vec![Operand::Var("r0".into()), Operand::Var("sel".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r1".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 8);
+        let err = run(&module).unwrap_err();
+        // Lispy correctly refuses send on any value — the runtime
+        // surface for a language without method dispatch.
+        match err {
+            RunError::Runtime(RuntimeError::NoSuchMethod { selector }) => {
+                assert_eq!(
+                    lispy_runtime::name_of(selector).as_deref(),
+                    Some("any-method"),
+                );
+            }
+            other => panic!("expected Runtime(NoSuchMethod), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn send_with_args_routes_through_binding() {
+        // send recv sel arg1 arg2 — verifies the args slice is
+        // forwarded.  Lispy still rejects, but the rejection
+        // includes the named selector — which means args were
+        // correctly assembled and the binding's send_message was
+        // invoked.
+        let instrs = vec![
+            IIRInstr::new("const", Some("recv".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new("const", Some("sel".into()), vec![Operand::Var("plus".into())], "any"),
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(2)], "any"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(3)], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r".into()),
+                vec![
+                    Operand::Var("recv".into()),
+                    Operand::Var("sel".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 8);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::Runtime(RuntimeError::NoSuchMethod { .. })
+        ));
+    }
+
+    #[test]
+    fn send_missing_selector_errors_malformed() {
+        // send with only 1 src (just the receiver) — selector is missing.
+        let instrs = vec![
+            IIRInstr::new("const", Some("recv".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r".into()),
+                vec![Operand::Var("recv".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::MalformedInstruction(s) if s.contains("send")));
+    }
+
+    #[test]
+    fn send_non_symbol_selector_errors_typed() {
+        // Selector must be a symbol; passing an int is a type error.
+        let instrs = vec![
+            IIRInstr::new("const", Some("recv".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new("const", Some("sel".into()), vec![Operand::Int(7)], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r".into()),
+                vec![Operand::Var("recv".into()), Operand::Var("sel".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::Runtime(RuntimeError::TypeError(msg)) => {
+                assert!(msg.contains("symbol"));
+            }
+            other => panic!("expected Runtime(TypeError(symbol)), got {other:?}"),
+        }
+    }
+
+    // ── load_property ───────────────────────────────────────────────
+
+    #[test]
+    fn load_property_on_lispy_value_returns_no_such_property() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(42)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("name".into())], "any"),
+            IIRInstr::new(
+                "load_property",
+                Some("r".into()),
+                vec![Operand::Var("obj".into()), Operand::Var("k".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::Runtime(RuntimeError::NoSuchProperty { key }) => {
+                assert_eq!(lispy_runtime::name_of(key).as_deref(), Some("name"));
+            }
+            other => panic!("expected Runtime(NoSuchProperty), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn load_property_wrong_arity_errors() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            // Missing key.
+            IIRInstr::new(
+                "load_property",
+                Some("r".into()),
+                vec![Operand::Var("obj".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("load_property")
+        ));
+    }
+
+    // ── store_property ──────────────────────────────────────────────
+
+    #[test]
+    fn store_property_on_lispy_value_returns_no_such_property() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(42)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("count".into())], "any"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "any"),
+            IIRInstr::new(
+                "store_property",
+                None, // no dest — store_property is side-effecting
+                vec![
+                    Operand::Var("obj".into()),
+                    Operand::Var("k".into()),
+                    Operand::Var("v".into()),
+                ],
+                "void",
+            ),
+            // store_property has no result; return nil after.
+            IIRInstr::new(
+                "call_builtin",
+                Some("nil_v".into()),
+                vec![Operand::Var("make_nil".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("nil_v".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 8);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::Runtime(RuntimeError::NoSuchProperty { key }) => {
+                assert_eq!(lispy_runtime::name_of(key).as_deref(), Some("count"));
+            }
+            other => panic!("expected Runtime(NoSuchProperty), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn store_property_wrong_arity_errors() {
+        // 2 srcs (obj, key) — missing value.
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("x".into())], "any"),
+            IIRInstr::new(
+                "store_property",
+                None,
+                vec![Operand::Var("obj".into()), Operand::Var("k".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("store_property")
+        ));
+    }
+
+    // ── Selector / key validation shared between send / load / store ─
+
+    #[test]
+    fn send_with_too_many_srcs_caps_at_max_registers() {
+        // DoS guard: a hand-built `send` with srcs.len() >
+        // MAX_REGISTERS_PER_FRAME should be refused before
+        // allocating the args Vec.  Found by PR 6 security review.
+        let mut srcs: Vec<Operand> = Vec::with_capacity(MAX_REGISTERS_PER_FRAME + 2);
+        srcs.push(Operand::Var("recv".into()));
+        srcs.push(Operand::Var("sel".into()));
+        for _ in 0..MAX_REGISTERS_PER_FRAME {
+            srcs.push(Operand::Int(0));
+        }
+        // The instruction itself is too large to embed in a
+        // realistic test program, so we skip the const-prelude
+        // and exercise the bounds check directly via a malformed
+        // module — the dispatcher should reject before reading
+        // srcs[0].
+        let instrs = vec![IIRInstr::new("send", Some("r".into()), srcs, "any")];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_REGISTERS_PER_FRAME")
+        ));
+    }
+
+    #[test]
+    fn store_property_non_symbol_key_errors_typed() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            // Key is an int, not a symbol.
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Int(7)], "any"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(99)], "any"),
+            IIRInstr::new(
+                "store_property",
+                None,
+                vec![
+                    Operand::Var("obj".into()),
+                    Operand::Var("k".into()),
+                    Operand::Var("v".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::Runtime(RuntimeError::TypeError(msg)) => {
+                assert!(msg.contains("store_property"));
+                assert!(msg.contains("symbol"));
+            }
+            other => panic!("expected Runtime(TypeError(...symbol...)), got {other:?}"),
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR 7: persistent IC slot machinery
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // The PR 6 path stack-allocated a fresh IC per dispatch.  PR 7
+    // adds the persistent table indexed by `IIRInstr::ic_slot` so a
+    // hot site shares one IC instance across activations — the V8-
+    // style fast path the JIT eventually compiles against.  Tests
+    // verify:
+    //
+    //   - ICTable mechanics in isolation (alloc, get, slot count)
+    //   - The dispatcher routes through the table when ic_slot is
+    //     Some(slot)
+    //   - Backward compat: ic_slot=None falls through to a fresh
+    //     stack IC (PR 6 behaviour) and the table stays empty
+    //   - The same instruction's IC is reused across two activations
+    //     of the same function (the hot-site invariant)
+
+    // ── ICTable in isolation ─────────────────────────────────────────
+
+    #[test]
+    fn ic_table_starts_empty() {
+        let t = ICTable::new();
+        assert_eq!(t.total_slots(), 0);
+        assert_eq!(t.slot_count("anything"), 0);
+        assert!(t.get("anything", 0).is_none());
+    }
+
+    #[test]
+    fn ic_table_allocates_on_first_access() {
+        let mut t = ICTable::new();
+        t.get_or_alloc("f", 0).unwrap();
+        assert_eq!(t.slot_count("f"), 1);
+        assert_eq!(t.total_slots(), 1);
+        assert!(t.get("f", 0).is_some());
+    }
+
+    #[test]
+    fn ic_table_is_dense_per_function() {
+        // Accessing slot 5 directly grows the function's vec to
+        // 6 entries (0..=5); the gap entries are pre-allocated
+        // empty ICs.  Tests the resize-with logic.
+        let mut t = ICTable::new();
+        t.get_or_alloc("f", 5).unwrap();
+        assert_eq!(t.slot_count("f"), 6);
+        for slot in 0..6 {
+            assert!(
+                t.get("f", slot).is_some(),
+                "slot {slot} should be allocated by gap-filling",
+            );
+        }
+    }
+
+    #[test]
+    fn ic_table_separate_functions_dont_share() {
+        let mut t = ICTable::new();
+        t.get_or_alloc("f", 0).unwrap();
+        t.get_or_alloc("g", 0).unwrap();
+        assert_eq!(t.slot_count("f"), 1);
+        assert_eq!(t.slot_count("g"), 1);
+        // Mutating one IC must not affect the other.
+        t.get_or_alloc("f", 0).unwrap().note_hit();
+        assert_eq!(t.get("f", 0).unwrap().hit_count(), 1);
+        assert_eq!(t.get("g", 0).unwrap().hit_count(), 0);
+    }
+
+    #[test]
+    fn ic_table_repeated_access_returns_same_instance() {
+        // Same IC across multiple `get_or_alloc` calls — verify
+        // by mutating once and reading the count back.
+        let mut t = ICTable::new();
+        t.get_or_alloc("f", 0).unwrap().note_hit();
+        t.get_or_alloc("f", 0).unwrap().note_hit();
+        t.get_or_alloc("f", 0).unwrap().note_hit();
+        assert_eq!(t.get("f", 0).unwrap().hit_count(), 3);
+    }
+
+    #[test]
+    fn ic_table_rejects_slot_at_max() {
+        // PR 7 security review (HIGH #1): ic_slot >= MAX_IC_SLOTS_PER_FUNCTION
+        // is rejected instead of attempting a multi-GB
+        // resize_with.  Test exactly the boundary.
+        let mut t = ICTable::new();
+        let err = t.get_or_alloc("f", MAX_IC_SLOTS_PER_FUNCTION).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_IC_SLOTS_PER_FUNCTION")
+        ));
+        // The cap is exclusive — slot MAX-1 still works.
+        t.get_or_alloc("f", MAX_IC_SLOTS_PER_FUNCTION - 1).unwrap();
+    }
+
+    #[test]
+    fn ic_table_rejects_too_many_functions() {
+        // PR 7 security review (MEDIUM #2): adding the
+        // MAX_IC_FUNCTIONS+1th distinct function name fails.
+        // We don't actually allocate 65k entries (slow); just
+        // synthesize the invariant by populating up to the cap.
+        let mut t = ICTable::new();
+        for i in 0..MAX_IC_FUNCTIONS {
+            t.get_or_alloc(&format!("f{i}"), 0).unwrap();
+        }
+        assert_eq!(t.by_function.len(), MAX_IC_FUNCTIONS);
+        // The next distinct name is rejected.
+        let err = t.get_or_alloc("overflow", 0).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_IC_FUNCTIONS")
+        ));
+        // But re-accessing an existing function still works (cap
+        // is on distinct names, not on accesses).
+        t.get_or_alloc("f0", 1).unwrap();
+    }
+
+    // ── Dispatcher routes through the table ──────────────────────────
+
+    #[test]
+    fn send_with_ic_slot_uses_table() {
+        // send instr with ic_slot=Some(0).  After running, the
+        // table should have a slot allocated for the current
+        // function.  For Lispy the binding errors before
+        // touching the IC, so hit/miss counts stay 0 — but the
+        // slot existence proves the table was consulted.
+        let instrs = vec![
+            IIRInstr::new("const", Some("recv".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new("const", Some("sel".into()), vec![Operand::Var("m".into())], "any"),
+            IIRInstr::new(
+                "send",
+                Some("r".into()),
+                vec![Operand::Var("recv".into()), Operand::Var("sel".into())],
+                "any",
+            )
+            .with_ic_slot(0),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let err = run_with_state(&module, &mut globals, &mut ic_table).unwrap_err();
+        // The send still surfaces NoSuchMethod for Lispy.
+        assert!(matches!(
+            err,
+            RunError::Runtime(RuntimeError::NoSuchMethod { .. })
+        ));
+        // Slot 0 was allocated on the `main` function.
+        assert_eq!(ic_table.slot_count("main"), 1);
+        assert!(ic_table.get("main", 0).is_some());
+    }
+
+    #[test]
+    fn load_property_without_ic_slot_skips_table() {
+        // Backward compat: ic_slot=None falls through to a
+        // stack-allocated IC.  The persistent table stays empty.
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("x".into())], "any"),
+            IIRInstr::new(
+                "load_property",
+                Some("r".into()),
+                vec![Operand::Var("obj".into()), Operand::Var("k".into())],
+                "any",
+            ), // no with_ic_slot — defaults to None
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let module = module_with_main(instrs, 4);
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let _ = run_with_state(&module, &mut globals, &mut ic_table).unwrap_err();
+        assert_eq!(ic_table.total_slots(), 0);
+    }
+
+    #[test]
+    fn store_property_with_ic_slot_uses_table() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("obj".into()), vec![Operand::Int(0)], "any"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("x".into())], "any"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "any"),
+            IIRInstr::new(
+                "store_property",
+                None,
+                vec![
+                    Operand::Var("obj".into()),
+                    Operand::Var("k".into()),
+                    Operand::Var("v".into()),
+                ],
+                "void",
+            )
+            .with_ic_slot(2), // arbitrary slot id
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "any"),
+        ];
+        let module = module_with_main(instrs, 8);
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let _ = run_with_state(&module, &mut globals, &mut ic_table).unwrap_err();
+        // Slot 2 access pre-fills 0, 1, 2.
+        assert_eq!(ic_table.slot_count("main"), 3);
+    }
+
+    #[test]
+    fn ic_persists_across_two_calls_to_same_function() {
+        // Build a function `do-it` containing a single
+        // `load_property` with ic_slot=0.  Call it twice from
+        // `main`.  The IC for slot 0 in `do-it` should be the
+        // SAME instance both times — verifiable via hit count
+        // accumulation through note_hit() in the table itself
+        // (we manually note_hit between calls to simulate what
+        // a real binding's send_message would do).
+        let do_it_instrs = vec![
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Var("x".into())], "any"),
+            IIRInstr::new(
+                "load_property",
+                Some("r".into()),
+                vec![Operand::Var("o".into()), Operand::Var("k".into())],
+                "any",
+            )
+            .with_ic_slot(0),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let do_it = F {
+            name: "do-it".into(),
+            params: vec![("o".into(), "any".into())],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: do_it_instrs,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let main_instrs = vec![
+            IIRInstr::new("const", Some("o1".into()), vec![Operand::Int(1)], "any"),
+            IIRInstr::new("call", Some("_unused".into()), vec![
+                Operand::Var("do-it".into()), Operand::Var("o1".into()),
+            ], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "any"),
+        ];
+        let main = F {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: main_instrs,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![do_it, main],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+
+        // First call.  load_property errors with NoSuchProperty
+        // (since Lispy doesn't have properties), but the IC slot
+        // for "do-it" gets allocated.
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let err = run_with_state(&module, &mut globals, &mut ic_table).unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::Runtime(RuntimeError::NoSuchProperty { .. })
+        ));
+        assert_eq!(ic_table.slot_count("do-it"), 1);
+
+        // Manually note a hit on the slot to simulate what a
+        // real binding's load_property would do on a cache hit.
+        ic_table.get_or_alloc("do-it", 0).unwrap().note_hit();
+        assert_eq!(ic_table.get("do-it", 0).unwrap().hit_count(), 1);
+
+        // Second call (re-using the same ic_table).  The same
+        // IC instance is consulted — its hit count is still 1
+        // even though the dispatcher's IC access for this call
+        // didn't note a hit (Lispy errors before that path).
+        // The persistence is the test: the previous note_hit
+        // wasn't lost.
+        let _ = run_with_state(&module, &mut globals, &mut ic_table);
+        assert_eq!(
+            ic_table.get("do-it", 0).unwrap().hit_count(),
+            1,
+            "IC instance must persist across calls (the V8-style hot-site invariant)",
+        );
+
+        // Slot count unchanged — second call doesn't grow the table.
+        assert_eq!(ic_table.slot_count("do-it"), 1);
+    }
+
+    // ── ic_slot field round-trip on IIRInstr ─────────────────────────
+
+    #[test]
+    fn ic_slot_default_none() {
+        let i = IIRInstr::new("send", None, vec![], "any");
+        assert_eq!(i.ic_slot, None);
+    }
+
+    #[test]
+    fn ic_slot_builder_sets_field() {
+        let i = IIRInstr::new("send", None, vec![], "any").with_ic_slot(42);
+        assert_eq!(i.ic_slot, Some(42));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // PR 8: profiler (per-function call_count + per-instr SlotState)
+    // ─────────────────────────────────────────────────────────────────
+
+    use interpreter_ir::SlotKind;
+
+    // ── ProfileTable mechanics ──────────────────────────────────────
+
+    #[test]
+    fn profile_table_starts_empty() {
+        let p = ProfileTable::new();
+        assert_eq!(p.function_count(), 0);
+        assert_eq!(p.instruction_slot_count(), 0);
+        assert_eq!(p.call_count("anything"), 0);
+        assert!(p.observed_slot("anything", 0).is_none());
+    }
+
+    #[test]
+    fn profile_table_note_call_increments() {
+        let mut p = ProfileTable::new();
+        assert_eq!(p.note_call("f").unwrap(), 1);
+        assert_eq!(p.note_call("f").unwrap(), 2);
+        assert_eq!(p.note_call("f").unwrap(), 3);
+        assert_eq!(p.call_count("f"), 3);
+        assert_eq!(p.call_count("g"), 0);
+    }
+
+    #[test]
+    fn profile_table_note_observation_advances_slot() {
+        let mut p = ProfileTable::new();
+        // First observation: slot becomes monomorphic on "int".
+        p.note_observation("f", 0, "int").unwrap();
+        let slot = p.observed_slot("f", 0).unwrap();
+        assert_eq!(slot.kind, SlotKind::Monomorphic);
+        assert_eq!(slot.count, 1);
+
+        // Same type again: still mono, count goes up.
+        p.note_observation("f", 0, "int").unwrap();
+        let slot = p.observed_slot("f", 0).unwrap();
+        assert_eq!(slot.kind, SlotKind::Monomorphic);
+        assert_eq!(slot.count, 2);
+
+        // Distinct second type: poly.
+        p.note_observation("f", 0, "bool").unwrap();
+        let slot = p.observed_slot("f", 0).unwrap();
+        assert_eq!(slot.kind, SlotKind::Polymorphic);
+    }
+
+    #[test]
+    fn profile_table_separate_keys_dont_share() {
+        let mut p = ProfileTable::new();
+        p.note_observation("f", 0, "int").unwrap();
+        p.note_observation("f", 1, "bool").unwrap();
+        p.note_observation("g", 0, "cons").unwrap();
+        assert_eq!(p.observed_slot("f", 0).unwrap().observations, vec!["int"]);
+        assert_eq!(p.observed_slot("f", 1).unwrap().observations, vec!["bool"]);
+        assert_eq!(p.observed_slot("g", 0).unwrap().observations, vec!["cons"]);
+        assert_eq!(p.instruction_slot_count(), 3);
+    }
+
+    #[test]
+    fn profile_table_rejects_too_many_functions() {
+        let mut p = ProfileTable::new();
+        for i in 0..MAX_PROFILED_FUNCTIONS {
+            p.note_call(&format!("f{i}")).unwrap();
+        }
+        assert_eq!(p.function_count(), MAX_PROFILED_FUNCTIONS);
+        let err = p.note_call("overflow").unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_PROFILED_FUNCTIONS")
+        ));
+        // Existing functions still increment.
+        p.note_call("f0").unwrap();
+    }
+
+    #[test]
+    fn profile_table_rejects_too_many_instruction_slots() {
+        // PR 8 security review (Medium #3): cap on the per-instr
+        // slot map.  This prevents long-lived ProfileTables
+        // reused across many runs from growing without bound.
+        let mut p = ProfileTable::new();
+        // Use a single function name to hit the slot cap quickly.
+        p.note_call("f").unwrap();
+        for slot in 0..MAX_PROFILED_INSTRUCTION_SLOTS {
+            p.note_observation("f", slot, "int").unwrap();
+        }
+        assert_eq!(p.instruction_slot_count(), MAX_PROFILED_INSTRUCTION_SLOTS);
+        // Next distinct slot is rejected.
+        let err = p.note_observation("f", MAX_PROFILED_INSTRUCTION_SLOTS, "int").unwrap_err();
+        assert!(matches!(
+            err,
+            RunError::MalformedInstruction(s) if s.contains("MAX_PROFILED_INSTRUCTION_SLOTS")
+        ));
+        // Re-observing an existing slot still works (cap is on
+        // distinct slots, not on observations).
+        p.note_observation("f", 0, "bool").unwrap();
+    }
+
+    // ── Dispatcher records observations + call counts ────────────────
+
+    #[test]
+    fn dispatch_increments_call_count_for_main() {
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        // `main` is called exactly once per `run_with_profile`.
+        assert_eq!(profile.call_count("main"), 1);
+    }
+
+    #[test]
+    fn dispatch_call_counts_grow_with_recursion() {
+        // (fact 5) recurses 6 times: fact(5), fact(4), fact(3),
+        // fact(2), fact(1), fact(0).
+        let src = "
+            (define (fact n)
+              (if (= n 0) 1 (* n (fact (- n 1)))))
+            (fact 5)
+        ";
+        let module = compile_source(src, "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        assert_eq!(profile.call_count("main"), 1);
+        assert_eq!(profile.call_count("fact"), 6);
+    }
+
+    #[test]
+    fn dispatch_records_int_observations_for_arithmetic() {
+        // (+ 1 2) — main has these instructions:
+        //   const _n1 = 1
+        //   const _n2 = 2
+        //   call_builtin "+" _n1 _n2 -> _r3
+        //   ret _r3
+        // After one run, the call_builtin instr should have a
+        // monomorphic int observation.
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+
+        // Find a call_builtin instr with dest in main.  All three
+        // dest-producing instructions should have observations.
+        let main = module.functions.iter().find(|f| f.name == "main").unwrap();
+        let mut int_observations = 0;
+        for (i, instr) in main.instructions.iter().enumerate() {
+            if instr.dest.is_some() {
+                if let Some(slot) = profile.observed_slot("main", i) {
+                    if slot.observations.iter().any(|s| s == "int") {
+                        int_observations += 1;
+                    }
+                }
+            }
+        }
+        assert!(
+            int_observations >= 3,
+            "expected ≥3 int observations (2 const + 1 add result), got {int_observations}",
+        );
+    }
+
+    #[test]
+    fn dispatch_records_polymorphic_observation_across_recursive_calls() {
+        // fact(5) returns int every iteration, but the (if (= n 0) 1 ...)
+        // branches to either `1` (int) or `(* n ...)` (also int) — so
+        // the `_move` instructions inside `if` lowering should
+        // observe int monomorphically.  This test mostly verifies
+        // that the same slot accumulates observations across
+        // recursive calls.
+        let src = "
+            (define (fact n)
+              (if (= n 0) 1 (* n (fact (- n 1)))))
+            (fact 5)
+        ";
+        let module = compile_source(src, "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+
+        // Find any instr in fact that produced multiple
+        // observations.  The recursive call_builtin "*" should
+        // have run once per non-base-case iteration (5 times).
+        let fact = module.functions.iter().find(|f| f.name == "fact").unwrap();
+        let max_observation_count = (0..fact.instructions.len())
+            .filter_map(|i| profile.observed_slot("fact", i))
+            .map(|slot| slot.count)
+            .max()
+            .unwrap_or(0);
+        assert!(
+            max_observation_count >= 5,
+            "expected ≥5 observations on the most-hit instr, got {max_observation_count}",
+        );
+    }
+
+    #[test]
+    fn dispatch_does_not_observe_control_flow_opcodes() {
+        // jmp / label / ret have no dest — no observation should
+        // be recorded for those positions.
+        let module = compile_source("(if (< 1 2) 100 200)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+
+        let main = module.functions.iter().find(|f| f.name == "main").unwrap();
+        for (i, instr) in main.instructions.iter().enumerate() {
+            // Control-flow ops have no dest; the profiler must
+            // not have recorded an observation at this index.
+            if matches!(instr.op.as_str(), "jmp" | "jmp_if_false" | "label" | "ret") {
+                assert!(
+                    profile.observed_slot("main", i).is_none(),
+                    "{} at instr {i} should have no observation",
+                    instr.op,
+                );
+            }
+        }
+    }
+
+    // ── run/run_with_globals/run_with_state still work ──────────────
+
+    #[test]
+    fn run_creates_internal_profile_table_and_discards_it() {
+        // Backward compat: callers that don't care about the
+        // profile use `run` and get a freshly-allocated profile
+        // that's dropped on return.
+        assert_eq!(run(&compile_source("(+ 1 2)", "test").unwrap()).unwrap().as_int(), Some(3));
+    }
+
+    #[test]
+    fn run_with_state_creates_internal_profile_table() {
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        run_with_state(&module, &mut globals, &mut ic_table).unwrap();
+        // Caller didn't ask for profile — IC table also stays empty
+        // since no IC-owning instructions ran.
+        assert_eq!(ic_table.total_slots(), 0);
+    }
+
+    #[test]
+    fn profile_persists_across_two_calls_to_run_with_profile() {
+        // Same `&mut ProfileTable` reused for two runs — call
+        // counts and observations accumulate.  This is the
+        // future per-VM state pattern (LANG22 §"Migration path").
+        let module = compile_source("(+ 1 2)", "test").unwrap();
+        let mut globals = Globals::new();
+        let mut ic_table = ICTable::new();
+        let mut profile = ProfileTable::new();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
+        assert_eq!(profile.call_count("main"), 3);
+    }
+
+    // ── LANG26: host/ stdlib tests ────────────────────────────────────
+    //
+    // These tests verify the interpreter-path host/ dispatch.
+    //
+    // I/O-side-effect tests (write_byte, flush_stdout) capture stdout
+    // by running the Twig program and checking the return value plus
+    // that no errors are thrown.  Exact stdout content is not tested
+    // here because test harnesses may or may not capture it; the
+    // *functional* property (returns correct value, doesn't panic) is
+    // what matters for unit coverage.
+
+    /// Helper: build a minimal single-function IIRModule for testing.
+    ///
+    /// The module name is `"test_module"`, language `"twig"`, entry
+    /// point `"main"`.  Instructions are inserted directly so tests
+    /// don't depend on the full Twig frontend.
+    fn make_host_test_module(instrs: Vec<IIRInstr>) -> IIRModule {
+        use interpreter_ir::{IIRFunction, IIRModule};
+        let func = IIRFunction::new("main", vec![], "void", instrs);
+        let mut module = IIRModule::new("test_module", "twig");
+        module.entry_point = Some("main".into());
+        module.functions.push(func);
+        module
+    }
+
+    #[test]
+    fn host_write_byte_succeeds_for_printable_ascii() {
+        // Writing 'A' (65) should return without error.  We build the
+        // IIR module directly to avoid depending on the Twig frontend.
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("host/write_byte".into()), Operand::Int(65)],
+                "void",
+            ),
+            // Void functions still pass Operand::Int(0) as the return sentinel
+            // because exec_ret unconditionally reads srcs[0].
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        let result = run(&module);
+        assert!(result.is_ok(), "host/write_byte should not fail: {result:?}");
+    }
+
+    #[test]
+    fn host_write_byte_truncates_to_low_8_bits() {
+        // 0x141 = 321 decimal; low 8 bits = 0x41 = 'A'.
+        // Should succeed without error — high bits are silently masked.
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("host/write_byte".into()), Operand::Int(0x141)],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        assert!(run(&module).is_ok());
+    }
+
+    #[test]
+    fn host_write_byte_rejects_non_integer_arg() {
+        // Passing a boolean value instead of an integer should produce
+        // HostArgType, not a panic.  `Operand::Bool(false)` is the
+        // easiest non-integer value available directly as an operand.
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![
+                    Operand::Var("host/write_byte".into()),
+                    Operand::Bool(false),   // wrong type — must trigger HostArgType
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::HostArgType { function, .. } => {
+                // The error stores the full host/ prefixed name.
+                assert_eq!(function, "host/write_byte");
+            }
+            other => panic!("expected HostArgType, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn host_read_byte_returns_value_in_dest() {
+        // On most CI environments stdin is /dev/null so read_byte returns
+        // the EOF sentinel (-1).  Either way the call must succeed and
+        // store an integer in the dest register.
+        use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+        let func = IIRFunction::new("main", vec![], "i32", vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("ch".into()),
+                vec![Operand::Var("host/read_byte".into())],
+                "i32",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("ch".into())], "i32"),
+        ]);
+        let mut module = IIRModule::new("test_module", "twig");
+        module.entry_point = Some("main".into());
+        module.functions.push(func);
+        let result = run(&module);
+        assert!(result.is_ok(), "host/read_byte should not fail: {result:?}");
+        assert!(
+            result.unwrap().as_int().is_some(),
+            "host/read_byte must store an integer in dest"
+        );
+    }
+
+    #[test]
+    fn host_flush_stdout_succeeds() {
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("host/flush_stdout".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        assert!(run(&module).is_ok());
+    }
+
+    #[test]
+    fn host_unknown_capability_returns_unknown_builtin_error() {
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("host/no_such_function".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::UnknownBuiltin(name) => {
+                assert!(name.contains("no_such_function"), "got: {name}");
+            }
+            other => panic!("expected UnknownBuiltin, got {other:?}"),
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // LANG34: first-class closure opcodes
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // These tests drive `alloc_closure` and `call_closure` directly
+    // through hand-built IIRModules so we can verify the new dispatch
+    // arms independently of the twig-ir-compiler.
+
+    /// Helper: build a minimal two-function module where `main` allocates a
+    /// closure over `inner`, stores it in a register, then calls it.
+    ///
+    /// `inner` takes `captures ++ [arg]` as parameters (captures first, then
+    /// the single user-visible arg).
+    ///
+    /// The module structure mirrors what the twig-ir-compiler emits for:
+    ///   (define (make-adder x) (lambda (y) (+ x y)))
+    ///   ((make-adder 10) 5)
+    fn make_alloc_call_closure_module(
+        inner_name: &str,
+        capture_param: &str,   // name of the captured param in inner
+        user_param: &str,      // name of the user-visible param in inner
+        inner_body: Vec<IIRInstr>,
+        main_instructions: Vec<IIRInstr>,
+    ) -> IIRModule {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let inner = IIRFunction {
+            name: inner_name.into(),
+            params: vec![
+                (capture_param.into(), "any".into()),
+                (user_param.into(), "any".into()),
+            ],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: inner_body,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 8,
+            instructions: main_instructions,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        IIRModule {
+            name: "test".into(),
+            functions: vec![inner, main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        }
+    }
+
+    /// `alloc_closure` with zero captures, then `call_closure` with one arg.
+    ///
+    /// Builds a module equivalent to:
+    ///   inner(_, y) = y + 1   (capture slot unused — allocated as placeholder)
+    ///   main: c = alloc_closure("inner"); r = call_closure(c, 41); ret r
+    ///
+    /// Expects r = 42.
+    #[test]
+    fn alloc_and_call_closure_no_captures() {
+        // inner: just returns user_arg + 1  (ignore capture)
+        let inner_body = vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("res".into()),
+                vec![
+                    Operand::Var("+".into()),
+                    Operand::Var("y".into()),
+                    Operand::Int(1),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
+        ];
+        // main: alloc_closure("inner"), call_closure(c, 41)
+        //
+        // Note: inner expects (capture_param, user_param) so we must supply
+        // a dummy capture.  alloc_closure with zero captures still works —
+        // the inner function just has an unused first param.
+        // Simplest: use an inner that takes only ONE param (no capture).
+        // Build a simpler inner that takes just y.
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let inner_fn = IIRFunction {
+            name: "add_one".into(),
+            params: vec![("y".into(), "any".into())],
+            return_type: "any".into(),
+            register_count: 2,
+            instructions: vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("res".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("y".into()),
+                        Operand::Int(1),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                // c = alloc_closure(Str("add_one"))   — no captures
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![Operand::Str("add_one".into())],
+                    "closure",
+                ),
+                // r = call_closure(c, 41)
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("c".into()),
+                        Operand::Int(41),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![inner_fn, main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let result = run(&module).unwrap();
+        assert_eq!(result.as_int(), Some(42), "expected 42, got {result}");
+    }
+
+    /// `alloc_closure` with one captured variable, then `call_closure`.
+    ///
+    /// Equivalent to:
+    ///   inner(x, y) = x + y   where x is captured
+    ///   main: c = alloc_closure("inner", 10); r = call_closure(c, 5); ret r
+    ///
+    /// Expects r = 15.
+    #[test]
+    fn alloc_and_call_closure_with_one_capture() {
+        let module = make_alloc_call_closure_module(
+            "add_capture",
+            "x",   // capture param
+            "y",   // user param
+            // inner body: x + y
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("res".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("x".into()),
+                        Operand::Var("y".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
+            ],
+            // main: capture = const 10, alloc_closure, call_closure(c, 5)
+            vec![
+                // cap = 10
+                IIRInstr::new("const", Some("cap".into()), vec![Operand::Int(10)], "any"),
+                // c = alloc_closure(Str("add_capture"), cap)
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![
+                        Operand::Str("add_capture".into()),
+                        Operand::Var("cap".into()),
+                    ],
+                    "closure",
+                ),
+                // r = call_closure(c, 5)
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("c".into()),
+                        Operand::Int(5),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+        );
+        let result = run(&module).unwrap();
+        assert_eq!(result.as_int(), Some(15), "expected 15, got {result}");
+    }
+
+    /// `alloc_closure` with two captured variables.
+    ///
+    /// Equivalent to: inner(a, b, y) = a + b + y  where a,b are captures.
+    /// main: c = alloc_closure("sum3", 3, 4); r = call_closure(c, 5); ret r
+    /// Expects r = 12.
+    #[test]
+    fn alloc_and_call_closure_with_two_captures() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let inner_fn = IIRFunction {
+            name: "sum3".into(),
+            params: vec![
+                ("a".into(), "any".into()),
+                ("b".into(), "any".into()),
+                ("y".into(), "any".into()),
+            ],
+            return_type: "any".into(),
+            register_count: 4,
+            instructions: vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("ab".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("a".into()),
+                        Operand::Var("b".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("res".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("ab".into()),
+                        Operand::Var("y".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("res".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 6,
+            instructions: vec![
+                IIRInstr::new("const", Some("ca".into()), vec![Operand::Int(3)], "any"),
+                IIRInstr::new("const", Some("cb".into()), vec![Operand::Int(4)], "any"),
+                // c = alloc_closure(Str("sum3"), ca, cb)
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![
+                        Operand::Str("sum3".into()),
+                        Operand::Var("ca".into()),
+                        Operand::Var("cb".into()),
+                    ],
+                    "closure",
+                ),
+                // r = call_closure(c, 5)
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("c".into()),
+                        Operand::Int(5),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![inner_fn, main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let result = run(&module).unwrap();
+        assert_eq!(result.as_int(), Some(12), "expected 12, got {result}");
+    }
+
+    /// `alloc_closure` with a non-Str srcs[0] must return MalformedInstruction.
+    #[test]
+    fn alloc_closure_wrong_operand_type_errors() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 2,
+            instructions: vec![
+                // Deliberately pass Var instead of Str for fn_name.
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![Operand::Int(99)],  // wrong: must be Str
+                    "closure",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        assert!(
+            matches!(err, RunError::MalformedInstruction(_)),
+            "expected MalformedInstruction, got {err:?}"
+        );
+    }
+
+    /// `call_closure` on a non-closure value must return NotCallable.
+    #[test]
+    fn call_closure_on_non_closure_errors() {
+        use interpreter_ir::function::{FunctionTypeStatus, IIRFunction};
+        let main_fn = IIRFunction {
+            name: "main".into(),
+            params: vec![],
+            return_type: "any".into(),
+            register_count: 3,
+            instructions: vec![
+                IIRInstr::new("const", Some("x".into()), vec![Operand::Int(7)], "any"),
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![Operand::Var("x".into())],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: std::collections::HashMap::new(),
+            source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        };
+        let module = IIRModule {
+            name: "test".into(),
+            functions: vec![main_fn],
+            entry_point: Some("main".into()),
+            language: "twig".into(),
+            exports: vec![],
+            imports: vec![],
+        };
+        let err = run(&module).unwrap_err();
+        assert!(matches!(err, RunError::NotCallable(_)));
+    }
+
+    /// End-to-end: Twig source that produces lambdas now emits `alloc_closure`
+    /// / `call_closure` (not `call_builtin`) and executes correctly.
+    ///
+    /// This test verifies that the twig-ir-compiler changes in Commit 4 are
+    /// correct: after LANG34, `run_source` on a lambda program still returns
+    /// the right value.  The opcodes used internally have changed but the
+    /// semantics must be identical.
+    #[test]
+    fn e2e_lambda_with_capture_via_new_opcodes() {
+        // Curried adder: (((lambda (x) (lambda (y) (+ x y))) 3) 4) → 7
+        let src = "(((lambda (x) (lambda (y) (+ x y))) 3) 4)";
+        let result = run_source(src).unwrap();
+        assert_eq!(result.as_int(), Some(7), "expected 7, got {result}");
+    }
+
+    #[test]
+    fn e2e_make_adder_with_new_opcodes() {
+        // Classic make-adder: ((make-adder 10) 5) → 15
+        let src = "
+            (define (make-adder x) (lambda (y) (+ x y)))
+            ((make-adder 10) 5)
+        ";
+        let result = run_source(src).unwrap();
+        assert_eq!(result.as_int(), Some(15), "expected 15, got {result}");
+    }
+
+    // ── String builtins (LANG47) ────────────────────────────────────
+    //
+    // These tests hand-build IIRModules with `const dest = Operand::Str(…)`
+    // and `call_builtin "string-length" / "string-ref" / …` to exercise
+    // every string operation end-to-end through the dispatch loop.
+
+    /// Build: `const s = Operand::Str(text); r = call_builtin name s; ret r`
+    fn string_builtin_1(text: &str, builtin: &str) -> LispyValue {
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str(text.into())], "string"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var(builtin.into()), Operand::Var("s".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        run(&module_with_main(instrs, 3)).unwrap()
+    }
+
+    /// Build: `const s = Str; const i = Int; r = call_builtin name s i; ret r`
+    fn string_builtin_str_int(text: &str, builtin: &str, n: i64) -> LispyValue {
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str(text.into())], "string"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(n)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var(builtin.into()),
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        run(&module_with_main(instrs, 4)).unwrap()
+    }
+
+    #[test]
+    fn string_const_operand_str_produces_heap_string() {
+        // After LANG47, `const s = Operand::Str("hello")` must produce
+        // a heap string (not an interned symbol).
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str("hello".into())], "string"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 1)).unwrap();
+        assert!(v.is_heap(), "Operand::Str should produce a heap value");
+        // SAFETY: v was produced by alloc_string in exec_const.
+        unsafe {
+            assert!(lispy_runtime::is_string(v), "heap value should be a LangString");
+            let bytes = lispy_runtime::string_bytes(v).expect("string bytes");
+            assert_eq!(bytes, b"hello");
+        }
+    }
+
+    #[test]
+    fn string_p_builtin_true_for_heap_string() {
+        let v = string_builtin_1("hi", "string?");
+        assert_eq!(v, LispyValue::TRUE);
+    }
+
+    #[test]
+    fn string_p_builtin_false_for_integer() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(42)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("string?".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 2)).unwrap();
+        assert_eq!(v, LispyValue::FALSE);
+    }
+
+    #[test]
+    fn string_length_builtin_ascii() {
+        let v = string_builtin_1("hello", "string-length");
+        assert_eq!(v.as_int(), Some(5), "\"hello\" has 5 code points");
+    }
+
+    #[test]
+    fn string_length_builtin_empty() {
+        let v = string_builtin_1("", "string-length");
+        assert_eq!(v.as_int(), Some(0));
+    }
+
+    #[test]
+    fn string_ref_builtin_returns_codepoint() {
+        // 'h' = 104
+        let v = string_builtin_str_int("hello", "string-ref", 0);
+        assert_eq!(v.as_int(), Some(104), "'h' should be code point 104");
+    }
+
+    #[test]
+    fn string_ref_builtin_last_char() {
+        // 'o' = 111
+        let v = string_builtin_str_int("hello", "string-ref", 4);
+        assert_eq!(v.as_int(), Some(111), "'o' should be code point 111");
+    }
+
+    #[test]
+    fn string_ref_builtin_out_of_bounds_errors() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str("hi".into())], "string"),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(5)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("string-ref".into()),
+                    Operand::Var("s".into()),
+                    Operand::Var("i".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let result = run(&module_with_main(instrs, 4));
+        assert!(result.is_err(), "string-ref out-of-bounds must error");
+    }
+
+    #[test]
+    fn string_append_builtin_concatenates() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Str("foo".into())], "string"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Str("bar".into())], "string"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("string-append".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 4)).unwrap();
+        // SAFETY: v was produced by alloc_string.
+        unsafe {
+            let bytes = lispy_runtime::string_bytes(v).expect("appended string bytes");
+            assert_eq!(bytes, b"foobar");
+        }
+    }
+
+    #[test]
+    fn substring_builtin_slices_correctly() {
+        // "hello"[1..4) = "ell"
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str("hello".into())], "string"),
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "int"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(4)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("substring".into()),
+                    Operand::Var("s".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 5)).unwrap();
+        // SAFETY: v was produced by alloc_string.
+        unsafe {
+            let bytes = lispy_runtime::string_bytes(v).expect("substring bytes");
+            assert_eq!(bytes, b"ell");
+        }
+    }
+
+    #[test]
+    fn string_eq_p_builtin_equal_strings() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Str("abc".into())], "string"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Str("abc".into())], "string"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("string=?".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 4)).unwrap(), LispyValue::TRUE);
+    }
+
+    #[test]
+    fn number_to_string_builtin_decimal() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(42)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("number->string".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 3)).unwrap();
+        unsafe {
+            let bytes = lispy_runtime::string_bytes(v).expect("number->string bytes");
+            assert_eq!(bytes, b"42");
+        }
+    }
+
+    #[test]
+    fn string_to_number_builtin_parses_valid() {
+        let v = string_builtin_1("42", "string->number");
+        assert_eq!(v.as_int(), Some(42));
+    }
+
+    #[test]
+    fn string_to_number_builtin_invalid_returns_false() {
+        let v = string_builtin_1("abc", "string->number");
+        assert_eq!(v, LispyValue::FALSE);
+    }
+
+    #[test]
+    fn string_to_symbol_and_back_roundtrip() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Str("my-sym".into())], "string"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("sym".into()),
+                vec![Operand::Var("string->symbol".into()), Operand::Var("s".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("back".into()),
+                vec![Operand::Var("symbol->string".into()), Operand::Var("sym".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("back".into())], "any"),
+        ];
+        let v = run(&module_with_main(instrs, 4)).unwrap();
+        unsafe {
+            let bytes = lispy_runtime::string_bytes(v).expect("roundtrip string bytes");
+            assert_eq!(bytes, b"my-sym");
+        }
+    }
+
+    #[test]
+    fn char_alphabetic_p_builtin() {
+        // 'a' = 97
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(97)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("char-alphabetic?".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 3)).unwrap(), LispyValue::TRUE);
+    }
+
+    #[test]
+    fn char_whitespace_p_builtin_space() {
+        // 32 = space
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(32)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("char-whitespace?".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 3)).unwrap(), LispyValue::TRUE);
+    }
+
+    #[test]
+    fn char_upcase_builtin_lowercases_to_uppercase() {
+        // 'a' (97) → 'A' (65)
+        let instrs = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(97)], "int"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("char-upcase".into()), Operand::Var("n".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 3)).unwrap().as_int(), Some(65));
+    }
+
+    // ── LANG55: higher-order list operations ────────────────────────────
+
+    /// Helper: collect a proper-list `LispyValue` into a `Vec<i64>`.
+    ///
+    /// Panics with a clear message if the value is not a proper integer list.
+    fn collect_int_list(v: LispyValue) -> Vec<i64> {
+        let mut out = Vec::new();
+        let mut cur = v;
+        loop {
+            if cur.is_nil() { return out; }
+            let head = unsafe { lispy_runtime::heap::car(cur) }
+                .expect("car failed — not a cons cell");
+            let tail = unsafe { lispy_runtime::heap::cdr(cur) }
+                .expect("cdr failed — not a cons cell");
+            out.push(head.as_int().expect("element is not an integer"));
+            cur = tail;
+        }
+    }
+
+    #[test]
+    fn map_squares_list() {
+        // (define (sq x) (* x x))
+        // (map sq (list 1 2 3))  →  (1 4 9)
+        let result = run_source("
+            (define (sq x) (* x x))
+            (map sq (list 1 2 3))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![1, 4, 9]);
+    }
+
+    #[test]
+    fn map_empty_list() {
+        // (map fn nil) → nil
+        let result = run_source("
+            (define (inc x) (+ x 1))
+            (map inc nil)
+        ").unwrap();
+        assert!(result.is_nil(), "expected nil, got {result}");
+    }
+
+    #[test]
+    fn map_with_lambda() {
+        // inline lambda: (map (lambda (x) (* x 2)) (list 3 5 7)) → (6 10 14)
+        let result = run_source("
+            (map (lambda (x) (* x 2)) (list 3 5 7))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![6, 10, 14]);
+    }
+
+    #[test]
+    fn filter_keeps_odds() {
+        // (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5)) → (1 3 5)
+        let result = run_source("
+            (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![1, 3, 5]);
+    }
+
+    #[test]
+    fn filter_empty_input() {
+        // (filter pred nil) → nil
+        let result = run_source("
+            (define (pos? x) (> x 0))
+            (filter pos? nil)
+        ").unwrap();
+        assert!(result.is_nil(), "expected nil, got {result}");
+    }
+
+    #[test]
+    fn filter_all_drop() {
+        // (filter (lambda (x) #f) (list 1 2 3)) → nil
+        let result = run_source("
+            (filter (lambda (x) #f) (list 1 2 3))
+        ").unwrap();
+        assert!(result.is_nil(), "expected nil, got {result}");
+    }
+
+    #[test]
+    fn fold_left_sum() {
+        // (fold-left + 0 (list 1 2 3 4 5)) → 15
+        let result = run_source("
+            (fold-left + 0 (list 1 2 3 4 5))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(15));
+    }
+
+    #[test]
+    fn fold_left_empty() {
+        // (fold-left + 0 nil) → 0
+        let result = run_source("
+            (fold-left + 0 nil)
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(0));
+    }
+
+    #[test]
+    fn fold_left_string_build() {
+        // Check ordering: (fold-left (lambda (acc x) (+ acc x)) 0 (list 10 3))
+        // = ((0 + 10) + 3) = 13
+        let result = run_source("
+            (fold-left (lambda (acc x) (+ acc x)) 0 (list 10 3))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(13));
+    }
+
+    #[test]
+    fn fold_right_cons_identity() {
+        // (fold-right cons nil (list 1 2 3)) → (1 2 3)   ; identity for proper lists
+        let result = run_source("
+            (fold-right cons nil (list 1 2 3))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![1, 2, 3]);
+    }
+
+    #[test]
+    fn fold_right_sum() {
+        // (fold-right + 0 (list 1 2 3)) → 6
+        let result = run_source("
+            (fold-right + 0 (list 1 2 3))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(6));
+    }
+
+    #[test]
+    fn fold_right_ordering() {
+        // fold-right processes right-to-left: (fn elem acc)
+        // (fold-right (lambda (x acc) (- acc x)) 100 (list 1 2 3))
+        // = (fn 3 (fn 2 (fn 1 100)))
+        // = (fn 3 (fn 2 99)) = (fn 3 97) = 94
+        let result = run_source("
+            (fold-right (lambda (x acc) (- acc x)) 100 (list 1 2 3))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(94));
+    }
+
+    #[test]
+    fn map_then_fold() {
+        // Compose: (fold-left + 0 (map (lambda (x) (* x x)) (list 1 2 3))) → 14
+        let result = run_source("
+            (fold-left + 0 (map (lambda (x) (* x x)) (list 1 2 3)))
+        ").unwrap();
+        assert_eq!(result.as_int(), Some(14));
+    }
+
+    #[test]
+    fn filter_then_map() {
+        // (map (lambda (x) (* x 2)) (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5)))
+        // → (2 6 10)
+        let result = run_source("
+            (map (lambda (x) (* x 2))
+                 (filter (lambda (x) (= (modulo x 2) 1)) (list 1 2 3 4 5)))
+        ").unwrap();
+        assert_eq!(collect_int_list(result), vec![2, 6, 10]);
+    }
+}

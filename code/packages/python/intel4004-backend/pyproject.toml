@@ -12,7 +12,7 @@ authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["intel-4004", "backend", "jit", "aot", "lang", "interpreter-ir"]
 dependencies = [
-    "coding-adventures-jit-core",
+    "coding-adventures-codegen-core",
     "coding-adventures-intel4004-simulator",
 ]
 classifiers = [

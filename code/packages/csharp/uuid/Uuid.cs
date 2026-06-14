@@ -1,8 +1,10 @@
 using System.Buffers.Binary;
 using System.Globalization;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using CsprngAlgorithm = CodingAdventures.Csprng.Csprng;
+using Md5Algorithm = CodingAdventures.Md5.Md5;
+using Sha1Algorithm = CodingAdventures.Sha1.Sha1;
 
 namespace CodingAdventures.Uuid;
 
@@ -186,7 +188,7 @@ public readonly record struct Uuid(ulong Msb, ulong Lsb) : IComparable<Uuid>
     /// </summary>
     public static Uuid V4()
     {
-        var bytes = RandomNumberGenerator.GetBytes(16);
+        var bytes = CsprngAlgorithm.RandomBytes(16);
         return StampVersionVariant(bytes, 4);
     }
 
@@ -196,7 +198,7 @@ public readonly record struct Uuid(ulong Msb, ulong Lsb) : IComparable<Uuid>
     public static Uuid V7()
     {
         var timestampMs = (ulong)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        var random = RandomNumberGenerator.GetBytes(10);
+        var random = CsprngAlgorithm.RandomBytes(10);
         var raw = new byte[16];
         raw[0] = (byte)((timestampMs >> 40) & 0xFFUL);
         raw[1] = (byte)((timestampMs >> 32) & 0xFFUL);
@@ -224,7 +226,7 @@ public readonly record struct Uuid(ulong Msb, ulong Lsb) : IComparable<Uuid>
 
         var clockSeqHi = 0x80UL | ((uint)ClockSequence >> 8);
         var clockSeqLow = (uint)ClockSequence & 0xFFU;
-        var nodeBytes = RandomNumberGenerator.GetBytes(6);
+        var nodeBytes = CsprngAlgorithm.RandomBytes(6);
         nodeBytes[0] = (byte)(nodeBytes[0] | 0x01);
 
         var node = 0UL;
@@ -243,7 +245,7 @@ public readonly record struct Uuid(ulong Msb, ulong Lsb) : IComparable<Uuid>
     public static Uuid V5(Uuid namespaceId, string name)
     {
         ArgumentNullException.ThrowIfNull(name);
-        var digest = SHA1.HashData(Concat(namespaceId.ToBytes(), Encoding.UTF8.GetBytes(name)));
+        var digest = Sha1Algorithm.Hash(Concat(namespaceId.ToBytes(), Encoding.UTF8.GetBytes(name)));
         var raw = new byte[16];
         digest.AsSpan(0, 16).CopyTo(raw);
         return StampVersionVariant(raw, 5);
@@ -255,7 +257,7 @@ public readonly record struct Uuid(ulong Msb, ulong Lsb) : IComparable<Uuid>
     public static Uuid V3(Uuid namespaceId, string name)
     {
         ArgumentNullException.ThrowIfNull(name);
-        return StampVersionVariant(MD5.HashData(Concat(namespaceId.ToBytes(), Encoding.UTF8.GetBytes(name))), 3);
+        return StampVersionVariant(Md5Algorithm.SumMd5(Concat(namespaceId.ToBytes(), Encoding.UTF8.GetBytes(name))), 3);
     }
 
     private static Uuid StampVersionVariant(byte[] bytes, int version)
@@ -275,8 +277,7 @@ public readonly record struct Uuid(ulong Msb, ulong Lsb) : IComparable<Uuid>
 
     private static int CreateClockSequence()
     {
-        Span<byte> bytes = stackalloc byte[2];
-        RandomNumberGenerator.Fill(bytes);
+        var bytes = CsprngAlgorithm.RandomBytes(2);
         return (((bytes[0] << 8) | bytes[1]) & 0x3FFF);
     }
 }

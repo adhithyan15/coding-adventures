@@ -92,6 +92,22 @@ function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+/**
+ * JavaScript RegExp does not support scoped inline flags such as
+ * `(?i:comment)`, but several shared grammar files use that portable
+ * notation for a small literal prefix inside an otherwise case-sensitive
+ * pattern. Lower those groups into character classes before compilation.
+ */
+function lowerScopedCaseInsensitiveGroups(pattern: string): string {
+  return pattern.replace(/\(\?i:([^()]+)\)/g, (_match, body: string) =>
+    body.replace(/[A-Za-z]/g, (ch) => `[${ch.toLowerCase()}${ch.toUpperCase()}]`),
+  );
+}
+
+function compileGrammarRegExp(patternSource: string, flags: string): RegExp {
+  return new RegExp(lowerScopedCaseInsensitiveGroups(patternSource), flags);
+}
+
 // ---------------------------------------------------------------------------
 // Token Type Resolution
 // ---------------------------------------------------------------------------
@@ -675,7 +691,7 @@ export class GrammarLexer {
       const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
       return {
         name: defn.name,
-        pattern: new RegExp(patternSource, reFlags),
+        pattern: compileGrammarRegExp(patternSource, reFlags),
         alias: defn.alias,
       };
     });
@@ -686,7 +702,7 @@ export class GrammarLexer {
       const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
       return {
         name: defn.name,
-        pattern: new RegExp(patternSource, reFlags),
+        pattern: compileGrammarRegExp(patternSource, reFlags),
       };
     });
 
@@ -708,7 +724,7 @@ export class GrammarLexer {
           }
           return {
             name: defn.name,
-            pattern: new RegExp(patternSource, reFlags),
+            pattern: compileGrammarRegExp(patternSource, reFlags),
             alias: defn.alias,
           };
         });

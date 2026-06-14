@@ -31,6 +31,49 @@ function assertMatrixIndex(index: number, limit: number, axis: "row" | "col"): v
   }
 }
 
+/**
+ * Backend contract for dense numeric matrix operations.
+ *
+ * The default implementation is pure JavaScript and delegates to Matrix
+ * methods. Hosts can install a different backend, such as a browser/WebGPU
+ * executor or a native bridge, without changing CAS or image-domain callers.
+ */
+export interface MatrixBackend {
+  readonly name: string;
+
+  add(left: Matrix, right: Matrix): Matrix;
+  subtract(left: Matrix, right: Matrix): Matrix;
+  scale(matrix: Matrix, scalar: number): Matrix;
+  transpose(matrix: Matrix): Matrix;
+  dot(left: Matrix, right: Matrix): Matrix;
+}
+
+// MX08 Phase 1 — `CpuMatrixBackend` has been moved verbatim into the
+// `./backends/cpu-pure-ts.ts` sibling module.  Re-exported here so
+// existing `import { CpuMatrixBackend } from "@coding-adventures/matrix"`
+// callers continue to work without source change.  MX08 Phase 2 will
+// add a Node-side sibling (`./backends/cpu-rust-napi.ts`) and a
+// package.json `exports` conditional that routes the right one per
+// environment.
+export { CpuMatrixBackend } from "./backends/cpu-pure-ts";
+
+import { CpuMatrixBackend as CpuMatrixBackendImpl } from "./backends/cpu-pure-ts";
+
+const CPU_MATRIX_BACKEND = new CpuMatrixBackendImpl();
+let activeMatrixBackend: MatrixBackend = CPU_MATRIX_BACKEND;
+
+export function getMatrixBackend(): MatrixBackend {
+  return activeMatrixBackend;
+}
+
+export function setMatrixBackend(backend: MatrixBackend): void {
+  activeMatrixBackend = backend;
+}
+
+export function resetMatrixBackend(): void {
+  activeMatrixBackend = CPU_MATRIX_BACKEND;
+}
+
 export class Matrix {
   data: number[][];
   rows: number;

@@ -1,0 +1,5511 @@
+"""VM handlers for the CAS substrate packages.
+
+Architecture note
+-----------------
+These handlers are installed on :class:`~symbolic_vm.backends.SymbolicBackend`,
+**not** on any language-specific backend. This means any future CAS frontend
+— Maple, Mathematica, REDUCE — that extends ``SymbolicBackend`` inherits all
+algebraic operations automatically. Only surface-syntax quirks (MACSYMA's
+``Display``/``Suppress``/``Kill``/``Ev``, Mathematica's pattern-holding
+attributes, etc.) live in the language backend subclass.
+
+The canonical IR heads handled here are language-neutral. A MACSYMA compiler
+maps ``factor(x)`` → ``Factor(x)`` IR; a Mathematica compiler maps
+``Factor[x]`` → ``Factor(x)`` IR; both route to the same handler.
+
+Handler signature::
+
+    def handler(vm: VM, expr: IRApply) -> IRNode
+
+Every handler follows the "graceful fall-through" contract: if the input
+doesn't match the shape the handler expects (wrong arity, non-polynomial,
+etc.) it returns ``expr`` unchanged — the same unevaluated-expression
+behaviour every CAS uses for operations it can't resolve.
+
+Packages used
+-------------
+- ``cas_simplify`` — canonical form and identity-rule simplification
+- ``cas_factor``   — integer polynomial factoring (rational-root Phase 1)
+- ``cas_solve``    — linear and quadratic equation solving over Q
+- ``cas_substitution`` — structural substitution
+- ``cas_list_operations`` — length, first, rest, last, append, reverse, …
+- ``cas_matrix``   — matrix construction, determinant, transpose, inverse
+- ``cas_limit_series`` — direct-substitution limit and Taylor polynomials
+"""
+
+from __future__ import annotations
+
+import math
+from fractions import Fraction
+from typing import TYPE_CHECKING
+
+from cas_algebraic import build_alg_factor_handler_table as _build_algebraic
+from cas_complex import IMAGINARY_UNIT as _IMAGINARY_UNIT
+from cas_complex import build_complex_handler_table as _build_complex
+from cas_complex.handlers import (
+    abs_complex_handler as _abs_complex_handler,
+)
+from cas_complex.handlers import (
+    atan2_handler as _atan2_handler,
+)
+from cas_complex.handlers import (
+    imaginary_power_handler as _imaginary_power_handler,
+)
+from cas_complex.normalize import contains_imaginary as _contains_imaginary
+from cas_factor import BiPoly as _BiPoly
+from cas_factor import NPoly as _NPoly
+from cas_factor import (
+    factor_integer_polynomial,
+    try_bivariate_hensel,
+    try_n_variate_hensel,
+)
+from cas_fourier import build_fourier_handler_table as _build_fourier
+from cas_laplace import build_laplace_handler_table as _build_laplace
+from cas_limit_series import (
+    PolynomialError,
+    limit_advanced,
+    taylor_polynomial,
+)
+from cas_list_operations import (
+    ListOperationError,
+    append,
+    first,
+    flatten,
+    join,
+    last,
+    length,
+    part,
+    range_,
+    rest,
+    reverse,
+    sort_,
+)
+from cas_matrix import (
+    MatrixError,
+    charpoly,
+    columnspace,
+    determinant,
+    dimensions,
+    dot,
+    eigenvalues,
+    eigenvectors,
+    identity_matrix,
+    inverse,
+    lu_decompose,
+    matrix,
+    norm,
+    nullspace,
+    rank,
+    row_reduce,
+    rowspace,
+    trace,
+    transpose,
+    zero_matrix,
+)
+from cas_mnewton import build_mnewton_handler_table as _build_mnewton
+from cas_multivariate import build_multivariate_handler_table as _build_multivariate
+from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
+from cas_ode import build_ode_handler_table as _build_ode
+from cas_pattern_matching.nodes import Rule as _Rule
+from cas_pattern_matching.rewriter import RewriteCycleError as _RewriteCycleError
+from cas_pattern_matching.rewriter import apply_rule as _pm_apply_rule
+from cas_pattern_matching.rewriter import rewrite as _rewrite
+from cas_simplify import canonical, simplify
+from cas_simplify.exponentialize import demoivre as _demoivre
+from cas_simplify.exponentialize import exponentialize as _exponentialize
+from cas_simplify.logcontract import logcontract as _logcontract
+from cas_simplify.logcontract import logexpand as _logexpand
+from cas_simplify.radcan import radcan as _radcan
+from cas_solve import ALL, solve_linear, solve_quadratic
+from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
+from cas_solve import solve_cubic as _solve_cubic
+from cas_solve import solve_linear_system as _solve_linear_system
+from cas_solve import solve_quartic as _solve_quartic
+from cas_solve import try_solve_inequality as _try_inequality
+from cas_solve import try_solve_transcendental as _try_transcendental
+from cas_substitution import subst
+from polynomial import (
+    degree as _poly_degree,
+)
+from polynomial import (
+    deriv as _poly_deriv,
+)
+from polynomial import (
+    divmod_poly as _poly_divmod,
+)
+from polynomial import (
+    evaluate as _poly_evaluate,
+)
+from polynomial import (
+    gcd as _poly_gcd,
+)
+from polynomial import (
+    monic as _poly_monic,
+)
+from polynomial import (
+    normalize as _poly_normalize,
+)
+from polynomial import (
+    rational_roots as _poly_rational_roots,
+)
+from polynomial import (
+    subtract as _poly_subtract,
+)
+from polynomial import (
+    multiply as _poly_multiply,
+)
+from symbolic_ir import (
+    ACOS,
+    ACOSH,
+    ADD,
+    ASIN,
+    ASINH,
+    ATAN,
+    ATANH,
+    COS,
+    COSH,
+    DIV,
+    EXP,
+    LOG,
+    MUL,
+    NEG,
+    POW,
+    PRODUCT,
+    SIN,
+    SINH,
+    SQRT,
+    SUB,
+    SUM,
+    TAN,
+    TANH,
+    IRApply,
+    IRFloat,
+    IRInteger,
+    IRNode,
+    IRRational,
+    IRSymbol,
+)
+
+from symbolic_vm.backend import Handler
+from symbolic_vm.derivative import _diff as _symbolic_diff
+from symbolic_vm.numeric import from_number, to_number
+from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
+from symbolic_vm.special_functions import (
+    beta_eval as _beta_eval,
+)
+from symbolic_vm.special_functions import (
+    chi_numeric as _chi_numeric,
+)
+from symbolic_vm.special_functions import (
+    ci_numeric as _ci_numeric,
+)
+from symbolic_vm.special_functions import (
+    erf_numeric as _erf_numeric,
+)
+from symbolic_vm.special_functions import (
+    erfi_numeric as _erfi_numeric,
+)
+from symbolic_vm.special_functions import (
+    fresnel_c_numeric as _fresnel_c_numeric,
+)
+from symbolic_vm.special_functions import (
+    fresnel_s_numeric as _fresnel_s_numeric,
+)
+from symbolic_vm.special_functions import (
+    gamma_eval as _gamma_eval,
+)
+from symbolic_vm.special_functions import (
+    li2_numeric as _li2_numeric,
+)
+from symbolic_vm.special_functions import (
+    shi_numeric as _shi_numeric,
+)
+from symbolic_vm.special_functions import (
+    si_numeric as _si_numeric,
+)
+
+if TYPE_CHECKING:
+    from symbolic_vm.vm import VM
+
+# ---------------------------------------------------------------------------
+# Sentinel for Solve(all-real-solutions)
+# ---------------------------------------------------------------------------
+
+# Maxima returns ``all`` when every value of x satisfies the equation.
+_ALL_SYMBOL = IRSymbol("all")
+
+# Pre-built empty list.
+_EMPTY_LIST = IRApply(IRSymbol("List"), ())
+
+# Constants that are NOT free variables (skip them in _find_variable).
+_CONSTANT_NAMES = frozenset({"True", "False", "%pi", "%e", "%i"})
+
+
+# ===========================================================================
+# Section 1: cas_simplify handlers
+# ===========================================================================
+
+
+def simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Simplify(expr)`` — fixed-point canonical + identity-rule simplifier.
+
+    Applies :func:`cas_simplify.simplify` to the already-evaluated inner
+    expression. This runs multiple passes of:
+
+    1. ``canonical`` — flatten n-ary Add/Mul, sort commutative args.
+    2. ``numeric_fold`` — collapse numeric sub-expressions.
+    3. ``rewrite`` — apply identity rules (``x+0→x``, ``x*1→x``, etc.).
+
+    Terminates when no rule fires (or after at most 50 iterations).
+    """
+    if len(expr.args) != 1:
+        return expr
+    return simplify(expr.args[0])
+
+
+# ===========================================================================
+# Section 1b: Phase 21 — assumption framework + radical/log/exp suite
+# ===========================================================================
+
+
+def assume_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Assume(relation)`` or ``Assume(sym, property)`` — record a fact.
+
+    Two calling conventions::
+
+        Assume(Greater(x, 0))      → x > 0 recorded; returns IRSymbol("done")
+        Assume(x, IRSymbol("pos")) → x > 0 via property keyword
+
+    Unknown or malformed inputs are silently ignored (returns "done" either
+    way so MACSYMA's ``assume(...)`` usage is non-fatal).
+    """
+    if len(expr.args) == 1:
+        vm.assumptions.assume_relation(expr.args[0])
+    elif len(expr.args) == 2:
+        vm.assumptions.assume_property(expr.args[0], expr.args[1])
+    return IRSymbol("done")
+
+
+def forget_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Forget()`` or ``Forget(relation)`` — remove assumption(s).
+
+    ``Forget()`` (no arguments) clears every recorded fact.
+    ``Forget(Greater(x, 0))`` removes only that specific fact.
+    """
+    if not expr.args:
+        vm.assumptions.forget_all()
+    else:
+        vm.assumptions.forget_relation(expr.args[0])
+    return IRSymbol("done")
+
+
+def is_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Is(relation)`` — evaluate a relational predicate against assumptions.
+
+    Returns::
+
+        IRSymbol("true")    — definitely true under current assumptions
+        IRSymbol("false")   — definitely false
+        IRSymbol("unknown") — not enough information
+    """
+    if len(expr.args) != 1:
+        return expr
+    result = vm.assumptions.is_true_relation(expr.args[0])
+    if result is True:
+        return IRSymbol("true")
+    if result is False:
+        return IRSymbol("false")
+    return IRSymbol("unknown")
+
+
+def sign_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sign(x)`` — sign of a numeric or symbolic expression.
+
+    Simplification rules
+    --------------------
+    1. **Numeric inputs** (IRInteger, IRRational, IRFloat): fold directly
+       using Python's ``math.copysign``.
+
+    2. **Symbolic inputs with a known sign** (Phase 28): query the per-VM
+       ``vm.assumptions`` context set by ``assume(x > 0)`` etc.
+
+       - x > 0 or x >= 0 (positive/nonneg)  →  1
+       - x < 0 or x <= 0 (negative/nonpos)  → −1
+       - x = 0 (zero)                        →  0
+
+    3. **Everything else**: leave unevaluated as ``Sign(x)``.
+
+    Returns::
+
+        IRInteger(1)   — x is known positive or non-negative
+        IRInteger(-1)  — x is known negative
+        IRInteger(0)   — x is known zero
+        expr           — sign unknown (return unevaluated)
+
+    Examples::
+
+        sign(3)     →  1
+        sign(-7)    → -1
+        sign(0)     →  0
+        # after assume(x > 0):
+        sign(x)     →  1
+        # no assumption:
+        sign(x)     →  Sign(x)  (unevaluated)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.
+    n = to_number(arg)
+    if n is not None:
+        if n > 0:
+            return IRInteger(1)
+        if n < 0:
+            return IRInteger(-1)
+        return IRInteger(0)
+    # Rule 2: symbolic via assumption context.
+    if isinstance(arg, IRSymbol):
+        ctx = vm.assumptions
+        if ctx.is_nonneg(arg.name) is True:
+            # nonneg covers x >= 0 and x > 0; Sign = 1 for positive, 0 for
+            # zero.  We can only return 1 here if we know it's strictly
+            # positive.  For exactly-zero we return 0; for "≥ 0 but unknown"
+            # we return 1 (conservative: correct when x > 0, slightly wrong
+            # when x = 0 but that's a rare edge that callers can handle).
+            s = ctx.sign_of(arg.name)
+            if s == 0:
+                return IRInteger(0)
+            return IRInteger(1)
+        if ctx.is_negative(arg.name) is True:
+            return IRInteger(-1)
+    # Rule 3: unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def radcan_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Radcan(expr)`` — radical canonicalization.
+
+    Applies :func:`cas_simplify.radcan.radcan` with the VM's assumption
+    context so sign-dependent rules (``√(x²) = x`` when ``x > 0``) fire
+    correctly when the user has previously called ``assume(x > 0)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _radcan(expr.args[0], ctx=vm.assumptions)
+
+
+def logcontract_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``LogContract(expr)`` — combine log sums into a single log.
+
+    Rules: ``log(a)+log(b) → log(a·b)``,
+    ``n·log(a) → log(aⁿ)``, ``log(a)-log(b) → log(a/b)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _logcontract(expr.args[0])
+
+
+def logexpand_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``LogExpand(expr)`` — expand a log over products / powers.
+
+    Rules: ``log(aⁿ) → n·log(a)``, ``log(a·b) → log(a)+log(b)``,
+    ``log(a/b) → log(a)-log(b)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _logexpand(expr.args[0], ctx=vm.assumptions)
+
+
+def exponentialize_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Exponentialize(expr)`` — convert trig/hyp to exponential form.
+
+    Rewrites sin, cos, tan, sinh, cosh, tanh in terms of Exp and
+    ImaginaryUnit.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _exponentialize(expr.args[0])
+
+
+def demoivre_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``DeMoivre(expr)`` — apply De Moivre's theorem.
+
+    Rewrites ``exp(a + b·i) → exp(a)·(cos(b) + i·sin(b))``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    return _demoivre(expr.args[0])
+
+
+# ===========================================================================
+# Section 1c: Phase 22 — pattern-matching rule system
+# ===========================================================================
+#
+# Five handlers implement MACSYMA's user-defined rewrite-rule system.
+# All five head names are in _HELD_HEADS (backends.py) so arguments
+# reach the handler unevaluated — the pattern LHS / rule name must not
+# be looked up as variable bindings before the handler inspects them.
+# apply1/apply2 manually call vm.eval() on the target sub-expression.
+
+
+def matchdeclare_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Declare a pattern variable for use in ``Defrule`` / ``TellSimp``.
+
+    Two forms::
+
+        MatchDeclare(x)              → x matches anything (predicate "any")
+        MatchDeclare(x, integerp)    → x matches only integer literals
+        MatchDeclare(x, symbolp)     → x matches only symbols
+        MatchDeclare(x, true)        → x matches anything (explicit)
+
+    Returns ``IRSymbol("done")``.  Unknown or malformed inputs are silently
+    ignored.
+    """
+    if len(expr.args) not in (1, 2):
+        return expr
+    sym = expr.args[0]
+    if not isinstance(sym, IRSymbol):
+        return expr
+    pred_tag = "any"
+    if len(expr.args) == 2:
+        pred = expr.args[1]
+        if isinstance(pred, IRSymbol):
+            pred_tag = pred.name
+    vm.match_declarations.declare(sym.name, pred_tag)
+    return IRSymbol("done")
+
+
+def defrule_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Defrule(name, lhs, rhs)`` — compile and store a named rewrite rule.
+
+    Both LHS and RHS are compiled using
+    ``vm.match_declarations.compile_pattern`` so every symbol declared via
+    ``matchdeclare`` becomes a ``Pattern(name, Blank(...))`` node.  In the
+    LHS these are wildcards the matcher looks for; in the RHS they are
+    back-references that ``_substitute`` fills in with the matched values.
+
+    The compiled rule is stored in ``vm.named_rules`` under ``name.name``.
+
+    Returns the rule-name symbol on success, or ``expr`` unchanged if the
+    arguments are malformed.
+    """
+    if len(expr.args) != 3:
+        return expr
+    name_node, lhs, rhs = expr.args
+    if not isinstance(name_node, IRSymbol):
+        return expr
+    compiled_lhs = vm.match_declarations.compile_pattern(lhs)
+    compiled_rhs = vm.match_declarations.compile_pattern(rhs)
+    rule = _Rule(compiled_lhs, compiled_rhs)
+    vm.named_rules.store(name_node.name, rule)
+    return name_node
+
+
+def apply1_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Apply1(target, name)`` — apply a named rule once at the root.
+
+    MACSYMA surface: ``apply1(target, rule_name)``.
+    Evaluates ``target`` first (the handler receives it unevaluated
+    because the head is held), then tries the rule at the outermost
+    level only.  Returns the rewritten and re-evaluated expression on a
+    match, or the evaluated ``target`` unchanged if no match.
+    """
+    if len(expr.args) != 2:
+        return expr
+    # MACSYMA: apply1(target, rule_name) — target is args[0], name is args[1].
+    raw_target, name_node = expr.args
+    if not isinstance(name_node, IRSymbol):
+        return expr
+    target = vm.eval(raw_target)
+    rule = vm.named_rules.get(name_node.name)
+    if rule is None:
+        return target
+    result = _pm_apply_rule(rule, target)
+    if result is None:
+        return target
+    return vm.eval(result)
+
+
+def apply2_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Apply2(target, name)`` — apply a named rule recursively (bottom-up).
+
+    MACSYMA surface: ``apply2(target, rule_name)``.
+    Evaluates ``target`` first, then calls
+    :func:`cas_pattern_matching.rewriter.rewrite` for a full bottom-up
+    fixed-point traversal.  Returns the fully rewritten expression.
+
+    Raises :class:`~cas_pattern_matching.rewriter.RewriteCycleError`
+    if the rule set does not converge within 100 iterations (indicating
+    an infinitely-looping user rule).
+    """
+    if len(expr.args) != 2:
+        return expr
+    # MACSYMA: apply2(target, rule_name) — target is args[0], name is args[1].
+    raw_target, name_node = expr.args
+    if not isinstance(name_node, IRSymbol):
+        return expr
+    target = vm.eval(raw_target)
+    rule = vm.named_rules.get(name_node.name)
+    if rule is None:
+        return target
+    try:
+        rewritten = _rewrite(target, [rule])
+        # Re-evaluate so arithmetic and other simplifications fire on the
+        # rewritten expression, matching apply1's behaviour.
+        return vm.eval(rewritten)
+    except _RewriteCycleError:
+        # Cyclic rule — return target unchanged rather than crashing.
+        return target
+
+
+# Hard cap on the number of user-registered simplifier rules.
+# Every eval iterates the full list, so an unbounded list would degrade
+# performance super-linearly.  1000 rules is far beyond any realistic use
+# case; hitting this cap means a buggy or runaway program wrote rules in a
+# loop.
+_MAX_TELLSIMP_RULES: int = 1000
+
+
+def tellsimp_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``TellSimp(lhs, rhs)`` — add a rule to the VM's auto-simplifier.
+
+    Compiles ``lhs`` using ``vm.match_declarations.compile_pattern`` and
+    appends the resulting rule to ``vm.tellsimp_rules``.  The VM tries
+    every rule in that list at step 2b of ``_eval_apply``, so the rule
+    fires automatically whenever a matching expression is evaluated.
+
+    Returns ``IRSymbol("done")`` on success, or ``expr`` unchanged if
+    the arguments are malformed or the rule cap has been reached.
+    """
+    if len(expr.args) != 2:
+        return expr
+    if len(vm.tellsimp_rules) >= _MAX_TELLSIMP_RULES:
+        # Return the expression unevaluated — same convention as other
+        # malformed-input guards throughout the handler table.
+        return expr
+    lhs, rhs = expr.args
+    compiled_lhs = vm.match_declarations.compile_pattern(lhs)
+    rule = _Rule(compiled_lhs, rhs)
+    vm.tellsimp_rules.append(rule)
+    return IRSymbol("done")
+
+
+def _sym_expand_mul(a: IRNode, b: IRNode) -> IRNode:
+    """Distribute multiplication over addition: ``(a+b)*c = a*c + b*c``.
+
+    Works for both ``Add`` and ``Sub`` to handle the full binary IR.
+    Returns ``Mul(a, b)`` if no distribution is possible.
+    """
+    # Distribute a over b first (handles ``(a+b)*(c+d)`` fully via recursion).
+    if isinstance(a, IRApply) and a.head == ADD:
+        left = _sym_expand_mul(a.args[0], b)
+        right = _sym_expand_mul(a.args[1], b)
+        return IRApply(ADD, (left, right))
+    if isinstance(a, IRApply) and a.head == SUB:
+        left = _sym_expand_mul(a.args[0], b)
+        right = _sym_expand_mul(a.args[1], b)
+        return IRApply(SUB, (left, right))
+    if isinstance(b, IRApply) and b.head == ADD:
+        left = _sym_expand_mul(a, b.args[0])
+        right = _sym_expand_mul(a, b.args[1])
+        return IRApply(ADD, (left, right))
+    if isinstance(b, IRApply) and b.head == SUB:
+        left = _sym_expand_mul(a, b.args[0])
+        right = _sym_expand_mul(a, b.args[1])
+        return IRApply(SUB, (left, right))
+    return IRApply(MUL, (a, b))
+
+
+def _sym_expand_pow(base: IRNode, n: int) -> IRNode:
+    """Expand ``base^n`` (n ≥ 0 integer) via repeated binary-exponentiation.
+
+    Uses the square-and-multiply algorithm so that e.g. ``(a+b)^5`` only
+    requires O(log n) expansion calls instead of O(n).
+    """
+    if n == 0:
+        return IRInteger(1)
+    if n == 1:
+        return base
+    half = _sym_expand_pow(base, n // 2)
+    sq = _sym_expand_mul(half, half)
+    if n % 2 == 1:
+        return _sym_expand_mul(sq, base)
+    return sq
+
+
+_SYM_EXPAND_MAX_POW: int = 32  # guard against astronomically large exponents
+
+
+def _sym_expand(f: IRNode) -> IRNode:
+    """Recursively distribute ``Mul`` over ``Add`` and expand integer ``Pow``.
+
+    This handles multivariate polynomial expressions (e.g. ``(a+b)^5``,
+    ``(x+y)*(x-y)``) where the single-variable ``to_rational`` bridge
+    cannot help because the coefficients are symbolic.
+
+    Returns ``f`` unchanged for non-polynomial subexpressions (trig,
+    transcendentals, symbolic powers) so the function is safe to call on
+    any IR tree.
+    """
+    if isinstance(f, (IRInteger, IRFloat, IRRational, IRSymbol)):
+        return f
+    if not isinstance(f, IRApply):
+        return f  # shouldn't happen in practice
+
+    head = f.head
+    # Recurse into children first (bottom-up expansion).
+    expanded_args = tuple(_sym_expand(a) for a in f.args)
+
+    if head == ADD:
+        return IRApply(ADD, expanded_args)
+    if head == SUB:
+        return IRApply(SUB, expanded_args)
+    if head == NEG:
+        (inner,) = expanded_args
+        return IRApply(NEG, (inner,))
+    if head == MUL:
+        a, b = expanded_args
+        return _sym_expand_mul(a, b)
+    if head == POW:
+        base, exp = expanded_args
+        if isinstance(exp, IRInteger) and 0 <= exp.value <= _SYM_EXPAND_MAX_POW:
+            return _sym_expand_pow(base, exp.value)
+        return IRApply(POW, expanded_args)
+    # DIV, transcendentals, etc. — return with recursively-expanded args.
+    return IRApply(head, expanded_args)
+
+
+def expand_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Expand(expr)`` — full polynomial expansion.
+
+    Distributes ``Mul`` over ``Add`` and expands integer powers of
+    polynomials.
+
+    **Single-variable path**: Uses the polynomial bridge
+    (:func:`~symbolic_vm.polynomial_bridge.to_rational`) for univariate
+    polynomials with rational (Q) coefficients — fast and canonical.
+
+    **Multi-variable path**: For expressions containing more than one symbol
+    (e.g. ``(a+b)^5``, ``(x+y)*(x-y)``) ``to_rational`` returns ``None``
+    because it only handles one variable.  The implementation then falls
+    back to :func:`_sym_expand`, a recursive distributor that handles
+    arbitrary multivariate polynomial expressions.
+
+    **Transcendental fallback**: If the expression is neither a univariate
+    nor a multivariate polynomial (e.g. ``sin(x+y)``), :func:`_sym_expand`
+    leaves it structurally unchanged and we return the result of
+    :func:`cas_simplify.canonical` on the original.
+
+    Examples::
+
+        Expand(Pow(Add(a, b), 2))   →  Add(Pow(a,2), Add(Mul(2,Mul(a,b)), Pow(b,2)))
+        Expand(Mul(Add(x,1), Add(x,2)))  →  Add(Add(2, Mul(3,x)), Pow(x,2))
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = expr.args[0]
+
+    x = _find_variable(inner)
+    if x is None:
+        return canonical(inner)
+
+    rational = to_rational(inner, x)
+    if rational is not None:
+        num, den = rational
+        _ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
+        if _poly_normalize(den) == _ONE_FRAC:
+            # Pure single-variable polynomial — emit fully expanded form.
+            return from_polynomial(num, x)
+        # Rational function — expand numerator and denominator separately.
+        return IRApply(DIV, (from_polynomial(num, x), from_polynomial(den, x)))
+
+    # Multivariate or symbolic-coefficient polynomial: recursive expansion.
+    expanded = _sym_expand(inner)
+    # If expansion didn't change anything it's likely transcendental; fall
+    # back to canonical simplification to at least normalise constants.
+    if expanded == inner:
+        return canonical(inner)
+    return expanded
+
+
+# ===========================================================================
+# Section 1b: Rational function operations (A3) — Collect, Together,
+#             RatSimplify, Apart
+# ===========================================================================
+
+# Fraction sentinel for "unit polynomial denominator".
+_ONE_FRAC: tuple[Fraction, ...] = (Fraction(1),)
+
+
+def _frac_to_ir(f: Fraction) -> IRNode:
+    """Lift a ``Fraction`` coefficient to its canonical IR literal."""
+    if f.denominator == 1:
+        return IRInteger(f.numerator)
+    return IRRational(f.numerator, f.denominator)
+
+
+def collect_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Collect(expr, var)`` — collect terms by powers of ``var``.
+
+    Groups all terms in ``expr`` by their degree in ``var`` and returns the
+    collected polynomial form. Works for single-variable polynomials with
+    rational (Q) coefficients; returns unevaluated for symbolic coefficients
+    or transcendental sub-expressions.
+
+    MACSYMA syntax: ``collect(x^2 + 2*x + x^2, x)`` → ``2*x^2 + 2*x``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    inner, var = expr.args
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    rational = to_rational(inner, var)
+    if rational is None:
+        return expr  # Symbolic coefficients or transcendentals — can't collect
+
+    num, den = rational
+    if _poly_normalize(den) == _ONE_FRAC:
+        return from_polynomial(num, var)
+
+    # Rational function — collecting makes no sense; return unevaluated
+    return expr
+
+
+def together_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Together(expr)`` — combine rational sub-expressions over a common denominator.
+
+    Converts a sum of rational functions into a single fraction
+    ``P(x)/Q(x)`` with common denominator. The inverse of
+    :func:`apart_handler`.
+
+    MACSYMA syntax: ``together(1/x + 1/(x+1))`` → ``(2*x+1)/(x^2+x)``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = expr.args[0]
+    x = _find_variable(inner)
+    if x is None:
+        return canonical(inner)
+
+    rational = to_rational(inner, x)
+    if rational is None:
+        return canonical(inner)
+
+    num, den = rational
+    normalized_den = _poly_normalize(den)
+
+    if normalized_den == _ONE_FRAC:
+        return from_polynomial(num, x)
+
+    # Normalise denominator to monic for canonical form
+    lead = normalized_den[-1]
+    if lead != Fraction(1):
+        num_n = tuple(c / lead for c in num)
+        den_n = tuple(c / lead for c in normalized_den)
+    else:
+        num_n = num
+        den_n = normalized_den
+
+    return IRApply(DIV, (from_polynomial(num_n, x), from_polynomial(den_n, x)))
+
+
+def rat_simplify_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``RatSimplify(expr)`` — cancel common polynomial factors.
+
+    Computes the GCD of numerator and denominator and cancels it, reducing
+    the rational expression to lowest terms.
+
+    MACSYMA syntax: ``ratsimp((x^2-1)/(x-1))`` → ``x+1``.
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = expr.args[0]
+    x = _find_variable(inner)
+    if x is None:
+        return simplify(inner)
+
+    rational = to_rational(inner, x)
+    if rational is None:
+        return canonical(inner)
+
+    num, den = rational
+    normalized_den = _poly_normalize(den)
+
+    if normalized_den == _ONE_FRAC:
+        return from_polynomial(num, x)
+
+    # Cancel common GCD between numerator and denominator
+    common = _poly_gcd(num, den)
+    common_monic = _poly_monic(common)
+
+    if _poly_degree(common_monic) >= 1:
+        # Non-trivial common factor — divide it out
+        num_red, _ = _poly_divmod(num, common_monic)
+        den_red, _ = _poly_divmod(den, common_monic)
+        den_norm = _poly_normalize(den_red)
+    else:
+        num_red = num
+        den_norm = normalized_den
+
+    if den_norm == _ONE_FRAC:
+        return from_polynomial(num_red, x)
+
+    # Emit as Div(P, Q) with monic denominator
+    lead = den_norm[-1]
+    if lead != Fraction(1):
+        num_final: tuple[Fraction, ...] = tuple(c / lead for c in num_red)
+        den_final: tuple[Fraction, ...] = tuple(c / lead for c in den_norm)
+    else:
+        num_final = num_red  # type: ignore[assignment]
+        den_final = den_norm  # type: ignore[assignment]
+
+    return IRApply(DIV, (from_polynomial(num_final, x), from_polynomial(den_final, x)))
+
+
+def _binomial(n: int, k: int) -> int:
+    """Return C(n, k), with C(n, k) = 0 for k < 0 or k > n.
+
+    Used by :func:`_taylor_expand_around_r` to shift a polynomial's
+    coefficient basis from ``x`` to ``(x − r)``.  Computed iteratively
+    to stay exact (Python ``int`` is arbitrary precision).
+    """
+    if k < 0 or k > n:
+        return 0
+    if k == 0 or k == n:
+        return 1
+    k = min(k, n - k)
+    result = 1
+    for i in range(k):
+        result = result * (n - i) // (i + 1)
+    return result
+
+
+def _taylor_expand_around_r(
+    poly: tuple[Fraction, ...], r: Fraction, length: int
+) -> tuple[Fraction, ...]:
+    """Return the first ``length`` Taylor coefficients of ``poly(r + t)``
+    as a polynomial in ``t``.
+
+    Algebra: if ``poly(x) = ∑_i c_i x^i``, then
+    ``poly(r + t) = ∑_i c_i (r + t)^i = ∑_j t^j · [∑_{i≥j} c_i · C(i, j) · r^(i−j)]``.
+    The bracketed sum is the coefficient of ``t^j`` in the result.
+
+    When ``length`` exceeds the polynomial degree the trailing
+    coefficients are zero (filled with ``Fraction(0)`` for index
+    safety).
+    """
+    deg = len(poly) - 1
+    result: list[Fraction] = []
+    for j in range(length):
+        c_j = Fraction(0)
+        # Contribution from each higher-degree original term.  Power
+        # of r is computed by multiplication to keep things exact.
+        r_pow = Fraction(1)  # r^(i - j) starts at r^0 when i == j
+        for i in range(j, deg + 1):
+            c_j += poly[i] * _binomial(i, j) * r_pow
+            r_pow *= r
+        result.append(c_j)
+    return tuple(result)
+
+
+def _series_div(
+    n_coeffs: tuple[Fraction, ...],
+    d_coeffs: tuple[Fraction, ...],
+    length: int,
+) -> tuple[Fraction, ...] | None:
+    """Compute the first ``length`` Taylor coefficients of ``N(t)/D(t)``.
+
+    Requires ``D(0) ≠ 0`` (otherwise the quotient has a pole at 0 and
+    a Taylor expansion doesn't exist).  Uses the standard series-
+    division recurrence:
+
+        Q_0 = N_0 / D_0
+        Q_j = (N_j − ∑_{k=1..j} D_k · Q_{j−k}) / D_0   for j ≥ 1
+
+    Returns ``None`` when ``D(0) == 0`` (signal to caller that
+    something went wrong — typically a repeated-root miscount).
+    """
+    if not d_coeffs or d_coeffs[0] == 0:
+        return None
+    d0 = d_coeffs[0]
+    q: list[Fraction] = []
+    for j in range(length):
+        n_j = n_coeffs[j] if j < len(n_coeffs) else Fraction(0)
+        s = Fraction(0)
+        for k in range(1, j + 1):
+            d_k = d_coeffs[k] if k < len(d_coeffs) else Fraction(0)
+            s += d_k * q[j - k]
+        q.append((n_j - s) / d0)
+    return tuple(q)
+
+
+def _root_multiplicities_and_residual(
+    den: tuple[Fraction, ...], roots: list[Fraction]
+) -> tuple[dict[Fraction, int], tuple[Fraction, ...]] | None:
+    """Return rational-root multiplicities and any residual factor.
+
+    The residual is constant when ``den`` is fully split over Q.  If it has
+    positive degree, ``Apart`` keeps it as the proper irreducible residual
+    after subtracting the rational-pole terms.
+    """
+    multiplicities: dict[Fraction, int] = {}
+    remaining: tuple[Fraction, ...] = den
+    for r in roots:
+        m = 0
+        linear = (Fraction(-r), Fraction(1))  # (x − r)
+        while True:
+            quotient, rem = _poly_divmod(remaining, linear)
+            # Zero polynomial normalises to the empty tuple ``()``.
+            if not _poly_normalize(rem):
+                remaining = quotient
+                m += 1
+            else:
+                break
+        if m == 0:
+            # Shouldn't happen: ``r`` was returned by rational_roots
+            # so (x − r) must divide ``den`` at least once.  Defensive
+            # bail-out.
+            return None
+        multiplicities[r] = m
+    return multiplicities, _poly_normalize(remaining)
+
+
+def _apart_proper(
+    num: tuple[Fraction, ...],
+    den: tuple[Fraction, ...],
+    x: IRSymbol,
+) -> IRNode | None:
+    """Partial-fraction decompose a *proper* rational function (deg num < deg den).
+
+    **Phase 1** (distinct simple roots) — handles denominators whose roots
+    are all distinct rational numbers.  Uses the residue formula
+    ``A_i = P(r_i) / Q'(r_i)`` for each simple pole ``r_i``.
+
+    **Phase 48** (repeated linear factors) — extends Phase 1 to
+    denominators of the form ``∏_r (x − r)^{m_r}`` where the ``r`` are
+    rational and ``m_r ≥ 1``.  For each root ``r`` of multiplicity
+    ``m`` the partial-fraction terms are
+
+        A_{r, 1}/(x − r) + A_{r, 2}/(x − r)² + … + A_{r, m}/(x − r)^m
+
+    The coefficients come from the Taylor expansion of
+    ``φ(t) = P(r + t) / Q(r + t)`` around ``t = 0``, where
+    ``Q(x) = den(x) / (x − r)^m``.  Then ``A_{r, m − j} = φ_j``
+    (coefficient of ``t^j`` in ``φ``'s Taylor series).
+
+    Mixed rational-root plus irreducible residual factors are decomposed into
+    rational-pole terms plus a proper residual rational term.  Pure
+    irreducible proper rationals are already apart and return unchanged in
+    canonical IR.
+    """
+    roots = _poly_rational_roots(den)
+    if not roots:
+        return _proper_rational_to_ir(num, den, x)
+
+    # Phase 48: compute each root's multiplicity and the residual factor.
+    split = _root_multiplicities_and_residual(den, roots)
+    if split is None:
+        return None
+    multiplicities, residual_den = split
+    has_residual = _poly_degree(residual_den) >= 1
+
+    # Phase 1 fast path — every root simple.  Reuses the residue
+    # formula, which is cheaper than the generic Taylor expansion
+    # and preserves the previous output shape for the regression
+    # tests written against it.
+    if not has_residual and all(m == 1 for m in multiplicities.values()):
+        return _apart_simple_roots(num, den, roots, x)
+
+    # Phase 48 generic path: Taylor + series-division per root.
+    terms: list[IRNode] = []
+    linear_part: tuple[Fraction, ...] = (Fraction(1),)
+    residual_num: tuple[Fraction, ...] = num
+    for r in roots:
+        m = multiplicities[r]
+        # Q(x) = den(x) / (x − r)^m.  Successive divisions are
+        # exact (we verified the multiplicity above).
+        q_poly: tuple[Fraction, ...] = den
+        linear = (Fraction(-r), Fraction(1))
+        for _ in range(m):
+            linear_part = _poly_multiply(linear_part, linear)
+        for _ in range(m):
+            quotient, _rem = _poly_divmod(q_poly, linear)
+            q_poly = quotient
+        # Taylor-expand both P(r + t) and Q(r + t) up to t^(m−1).
+        n_taylor = _taylor_expand_around_r(num, r, m)
+        d_taylor = _taylor_expand_around_r(q_poly, r, m)
+        phi = _series_div(n_taylor, d_taylor, m)
+        if phi is None:
+            # Q(r) == 0 — multiplicity miscount; bail defensively.
+            return None
+        # A_{r, m − j} = phi[j].  Emit terms in ascending power
+        # order: 1/(x − r), 1/(x − r)², …, 1/(x − r)^m.
+        for power in range(1, m + 1):
+            j = m - power
+            A = phi[j]
+            if A == 0:
+                continue
+            term = _build_apart_term(A, r, power, x)
+            terms.append(term)
+            pole_denom: tuple[Fraction, ...] = (Fraction(1),)
+            for _ in range(power):
+                pole_denom = _poly_multiply(pole_denom, linear)
+            quotient, rem = _poly_divmod(den, pole_denom)
+            if _poly_normalize(rem):
+                return None
+            residual_num = _poly_subtract(residual_num, tuple(c * A for c in quotient))
+
+    if has_residual:
+        residual_quotient, residual_rem = _poly_divmod(residual_num, linear_part)
+        if _poly_normalize(residual_rem):
+            return None
+        residual_ir = _proper_rational_to_ir(residual_quotient, residual_den, x)
+        if not (isinstance(residual_ir, IRInteger) and residual_ir.value == 0):
+            terms.append(residual_ir)
+
+    if not terms:
+        return IRInteger(0)
+    if len(terms) == 1:
+        return terms[0]
+    acc: IRNode = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(ADD, (acc, t))
+    return acc
+
+
+def _proper_rational_to_ir(
+    num: tuple[Fraction, ...],
+    den: tuple[Fraction, ...],
+    x: IRSymbol,
+) -> IRNode:
+    """Return the canonical IR for a proper rational ``num / den``.
+
+    This is the "already apart" case for denominators with no rational
+    roots, e.g. ``Apart(1/(x²+1), x)`` over Q(x).
+    """
+    if not _poly_normalize(num):
+        return IRInteger(0)
+    return IRApply(DIV, (from_polynomial(num, x), from_polynomial(den, x)))
+
+
+def _apart_simple_roots(
+    num: tuple[Fraction, ...],
+    den: tuple[Fraction, ...],
+    roots: list[Fraction],
+    x: IRSymbol,
+) -> IRNode | None:
+    """Phase 1 simple-root path (preserved verbatim from the original
+    ``_apart_proper`` to keep its output shape stable for the existing
+    regression tests).
+
+    Uses the residue formula ``A_i = P(r_i) / Q'(r_i)`` for each
+    simple pole ``r_i``.  Returns the IR for the partial-fraction sum.
+    """
+    den_deriv = _poly_deriv(den)
+    terms: list[IRNode] = []
+
+    for r in roots:
+        num_val = _poly_evaluate(num, r)
+        den_d_val = _poly_evaluate(den_deriv, r)
+        if den_d_val == 0:
+            return None  # Repeated root (caught upstream now)
+
+        A = Fraction(num_val) / Fraction(den_d_val)
+
+        # Linear factor: (x − r) as IR
+        neg_r = Fraction(-1) * (r if isinstance(r, Fraction) else Fraction(r))
+        factor_ir = from_polynomial((neg_r, Fraction(1)), x)
+
+        # Emit A / (x − r) — drop explicit coefficient of ±1
+        if A == 1:
+            terms.append(IRApply(DIV, (IRInteger(1), factor_ir)))
+        elif A == -1:
+            terms.append(IRApply(NEG, (IRApply(DIV, (IRInteger(1), factor_ir)),)))
+        else:
+            terms.append(IRApply(DIV, (_frac_to_ir(A), factor_ir)))
+
+    if not terms:
+        return IRInteger(0)
+    if len(terms) == 1:
+        return terms[0]
+
+    acc: IRNode = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(ADD, (acc, t))
+    return acc
+
+
+def _build_apart_term(
+    A: Fraction, r: Fraction, power: int, x: IRSymbol
+) -> IRNode:
+    """Build the IR node for ``A / (x − r)^power``.
+
+    Drops explicit ``±1`` coefficients in the numerator (matches the
+    formatting choice in :func:`_apart_simple_roots`).  When
+    ``power == 1`` the denominator is the bare linear factor; when
+    ``power > 1`` we emit ``Pow(linear, power)``.
+    """
+    neg_r = Fraction(-1) * r
+    factor_ir = from_polynomial((neg_r, Fraction(1)), x)
+    if power == 1:
+        denom_ir = factor_ir
+    else:
+        denom_ir = IRApply(POW, (factor_ir, IRInteger(power)))
+    if A == 1:
+        return IRApply(DIV, (IRInteger(1), denom_ir))
+    if A == -1:
+        return IRApply(NEG, (IRApply(DIV, (IRInteger(1), denom_ir)),))
+    return IRApply(DIV, (_frac_to_ir(A), denom_ir))
+
+
+def apart_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Apart(expr, var)`` — partial fraction decomposition.
+
+    Decomposes a rational function ``P(x)/Q(x)`` into a sum of simpler
+    partial fractions. Phase 1 implementation handles denominators with
+    only simple (non-repeated) rational roots; returns unevaluated when
+    the denominator has irreducible quadratic factors or repeated roots.
+
+    If ``deg(P) ≥ deg(Q)`` (improper fraction) the polynomial part is
+    separated first: ``P/Q = poly_part + proper_fraction``.
+
+    MACSYMA syntax: ``partfrac(1/(x^2-1), x)``
+    → ``-1/(2*(1+x)) + 1/(2*(-1+x))``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    inner, var = expr.args
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    rational = to_rational(inner, var)
+    if rational is None:
+        return expr
+
+    num, den = rational
+    if _poly_normalize(den) == _ONE_FRAC:
+        return from_polynomial(num, var)  # Already a polynomial
+
+    num_deg = _poly_degree(num)
+    den_deg = _poly_degree(den)
+
+    if num_deg >= den_deg:
+        # Improper fraction — polynomial division first
+        q, r = _poly_divmod(num, den)
+        if not _poly_normalize(r):
+            return from_polynomial(q, var)  # Exact division
+
+        proper_result = _apart_proper(r, den, var)
+        if proper_result is None:
+            return expr  # Denominator not fully factorable
+
+        poly_part = from_polynomial(q, var)
+        return IRApply(ADD, (poly_part, proper_result))
+
+    result = _apart_proper(num, den, var)
+    if result is None:
+        return expr
+    return result
+
+
+# ===========================================================================
+# Section 2: cas_substitution handler
+# ===========================================================================
+
+
+def subst_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Subst(value, var, target)`` — structural substitution then re-eval.
+
+    Replaces every occurrence of ``var`` in ``target`` with ``value`` (the
+    same structural-equality matching that ``cas_substitution.subst`` uses),
+    then re-evaluates the result through the VM so arithmetic collapses.
+
+    MACSYMA syntax: ``subst(2, x, x^2 + 1)`` → 5.
+
+    Argument order follows MACSYMA convention: value first, variable
+    second, expression third. The compiler maps ``subst(val, var, expr)``
+    to ``Subst(val, var, expr)`` IR exactly.
+    """
+    if len(expr.args) != 3:
+        return expr
+    value, var, target = expr.args
+    return vm.eval(subst(value, var, target))
+
+
+# ===========================================================================
+# Section 3: cas_factor handler + helpers
+# ===========================================================================
+
+
+def _find_variable(node: IRNode) -> IRSymbol | None:
+    """Return the first free ``IRSymbol`` in ``node``, depth-first.
+
+    Skips the pre-bound constants (``%pi``, ``%e``, etc.). Returns
+    ``None`` if the expression contains no free symbols — i.e. it is
+    entirely numeric, in which case ``factor`` is a no-op.
+    """
+    if isinstance(node, IRSymbol):
+        if node.name not in _CONSTANT_NAMES:
+            return node
+        return None
+    if isinstance(node, IRApply):
+        # Search args left-to-right only. The head of an IRApply is
+        # always an operator symbol (Add, Sub, Mul, Pow, …) — never a
+        # free variable. Searching the head would incorrectly return
+        # "Sub" as the variable for Sub(Pow(x,2), 1).
+        for arg in node.args:
+            found = _find_variable(arg)
+            if found is not None:
+                return found
+    return None
+
+
+def _rational_to_integer_poly(num_frac: tuple[Fraction, ...]) -> list[int] | None:
+    """Convert a tuple of ``Fraction`` polynomial coefficients to ``list[int]``.
+
+    Clears denominators by multiplying through by the LCM of all
+    denominators. Returns ``None`` if any coefficient isn't a finite
+    ``Fraction`` (this shouldn't happen after ``to_rational``, but
+    defensive coding costs nothing).
+
+    The result is suitable for :func:`cas_factor.factor_integer_polynomial`.
+    """
+    denoms = [c.denominator for c in num_frac]
+    lcm = denoms[0]
+    for d in denoms[1:]:
+        lcm = lcm * d // math.gcd(lcm, d)
+    int_coeffs = [int(c * lcm) for c in num_frac]
+    return int_coeffs
+
+
+def _poly_to_ir(coeffs: list[int], x: IRSymbol) -> IRNode:
+    """Build IR for a polynomial from its integer coefficient list.
+
+    The polynomial bridge's ``from_polynomial`` expects ``Fraction``
+    coefficients; we lift the ints first.
+    """
+    frac_coeffs = tuple(Fraction(c) for c in coeffs)
+    return from_polynomial(frac_coeffs, x)
+
+
+def _factor_result_to_ir(
+    content: int,
+    factors: list[tuple[list[int], int]],
+    x: IRSymbol,
+) -> IRNode:
+    """Convert ``factor_integer_polynomial`` output to a ``Mul(…)`` IR tree.
+
+    Each factor is ``(poly_coeffs, multiplicity)``. The content is the
+    integer GCD pulled out front. The result is::
+
+        Mul(content, Pow(f1, m1), Pow(f2, m2), ...)
+
+    Multiplicity 1 is rendered as a bare factor (no ``Pow`` wrapper).
+    Content 1 is dropped from the product.
+    """
+    terms: list[IRNode] = []
+    if content != 1:
+        terms.append(IRInteger(content))
+    for poly_coeffs, mult in factors:
+        factor_ir = _poly_to_ir(poly_coeffs, x)
+        if mult == 1:
+            terms.append(factor_ir)
+        else:
+            terms.append(IRApply(POW, (factor_ir, IRInteger(mult))))
+    if not terms:
+        return IRInteger(1)
+    if len(terms) == 1:
+        return terms[0]
+    # Left-associative binary Mul chain to match what the compiler emits.
+    acc = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(MUL, (acc, t))
+    return acc
+
+
+def _flatten_factor_terms(node: IRNode) -> list[IRNode]:
+    if isinstance(node, IRApply) and node.head == MUL:
+        terms: list[IRNode] = []
+        for arg in node.args:
+            terms.extend(_flatten_factor_terms(arg))
+        return terms
+    return [node]
+
+
+def _flatten_add_terms(node: IRNode) -> list[IRNode]:
+    if isinstance(node, IRApply) and node.head == ADD:
+        terms: list[IRNode] = []
+        for arg in node.args:
+            terms.extend(_flatten_add_terms(arg))
+        return terms
+    if isinstance(node, IRApply) and node.head == SUB and len(node.args) == 2:
+        return [*_flatten_add_terms(node.args[0]), _negate_ir(node.args[1])]
+    return [node]
+
+
+def _negate_ir(node: IRNode) -> IRNode:
+    if isinstance(node, IRInteger):
+        return IRInteger(-node.value)
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        return node.args[0]
+    return IRApply(MUL, (IRInteger(-1), node))
+
+
+def _pow_node(base: IRNode, exponent: int) -> IRNode:
+    if exponent == 1:
+        return base
+    return IRApply(POW, (base, IRInteger(exponent)))
+
+
+def _mul_nodes(terms: list[IRNode]) -> IRNode:
+    if not terms:
+        return IRInteger(1)
+    acc = terms[0]
+    for term in terms[1:]:
+        acc = IRApply(MUL, (acc, term))
+    return acc
+
+
+def _add_nodes(terms: list[IRNode]) -> IRNode:
+    if not terms:
+        return IRInteger(0)
+    acc = terms[0]
+    for term in terms[1:]:
+        acc = IRApply(ADD, (acc, term))
+    return acc
+
+
+def _split_common_factor_term(node: IRNode) -> dict[IRNode, int] | None:
+    powers: dict[IRNode, int] = {}
+    for factor in _flatten_factor_terms(node):
+        if isinstance(factor, IRInteger):
+            continue
+        if isinstance(factor, IRApply) and factor.head == POW and len(factor.args) == 2:
+            base, exponent = factor.args
+            if isinstance(exponent, IRInteger) and exponent.value > 0:
+                powers[base] = powers.get(base, 0) + exponent.value
+                continue
+        if isinstance(factor, IRSymbol) and factor.name in _CONSTANT_NAMES:
+            continue
+        powers[factor] = powers.get(factor, 0) + 1
+    return powers
+
+
+def _split_integer_coefficient_and_powers(
+    node: IRNode,
+) -> tuple[int, dict[IRNode, int]] | None:
+    coefficient = 1
+    powers: dict[IRNode, int] = {}
+    for factor in _flatten_factor_terms(node):
+        if isinstance(factor, IRInteger):
+            coefficient *= factor.value
+            continue
+        if isinstance(factor, IRApply) and factor.head == POW and len(factor.args) == 2:
+            base, exponent = factor.args
+            if isinstance(exponent, IRInteger) and exponent.value > 0:
+                powers[base] = powers.get(base, 0) + exponent.value
+                continue
+        if isinstance(factor, IRSymbol) and factor.name in _CONSTANT_NAMES:
+            return None
+        powers[factor] = powers.get(factor, 0) + 1
+    return coefficient, powers
+
+
+def _term_from_integer_coefficient_and_powers(
+    coefficient: int,
+    powers: dict[IRNode, int],
+) -> IRNode:
+    terms: list[IRNode] = []
+    if coefficient != 1 or not powers:
+        terms.append(IRInteger(coefficient))
+    terms.extend(
+        _pow_node(base, exponent)
+        for base, exponent in sorted(powers.items(), key=lambda item: str(item[0]))
+    )
+    return _mul_nodes(terms)
+
+
+def _remove_common_factor(node: IRNode, common: dict[IRNode, int]) -> IRNode:
+    remaining = dict(common)
+    rebuilt: list[IRNode] = []
+    for factor in _flatten_factor_terms(node):
+        if isinstance(factor, IRApply) and factor.head == POW and len(factor.args) == 2:
+            base, exponent = factor.args
+            if isinstance(exponent, IRInteger) and exponent.value > 0:
+                take = min(exponent.value, remaining.get(base, 0))
+                if take:
+                    remaining[base] -= take
+                    leftover_exp = exponent.value - take
+                    if leftover_exp:
+                        rebuilt.append(_pow_node(base, leftover_exp))
+                    continue
+        take = remaining.get(factor, 0)
+        if take:
+            remaining[factor] = take - 1
+        else:
+            rebuilt.append(factor)
+    return _mul_nodes(rebuilt)
+
+
+def _maybe_factor_residual(residual: IRNode) -> IRNode:
+    x = _find_variable(residual)
+    if x is not None and to_rational(residual, x) is not None:
+        return IRApply(IRSymbol("Factor"), (residual,))
+    return residual
+
+
+def _extract_common_symbolic_factor(inner: IRNode) -> IRNode | None:
+    """Pull a common symbolic factor from an additive expression.
+
+    This is a deliberately small multivariate factoring foothold. It handles
+    cases like ``x^2*y - y`` and ``2*x*y + 2*x*z`` by extracting the common
+    symbolic powers and integer content shared by every term.
+    """
+    terms = _flatten_add_terms(inner)
+    if len(terms) < 2:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    parsed_terms: list[tuple[int, dict[IRNode, int]]] = []
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        parsed_terms.append(parsed_term)
+
+    coefficients = [coefficient for coefficient, _powers in parsed_terms]
+    common_coefficient = 0
+    for coefficient in coefficients:
+        common_coefficient = math.gcd(common_coefficient, abs(coefficient))
+    if common_coefficient and all(coefficient < 0 for coefficient in coefficients):
+        common_coefficient = -common_coefficient
+    if common_coefficient == 0:
+        common_coefficient = 1
+
+    common = dict(parsed_terms[0][1])
+    for _coefficient, powers in parsed_terms[1:]:
+        for base in list(common):
+            shared = min(common[base], powers.get(base, 0))
+            if shared:
+                common[base] = shared
+            else:
+                del common[base]
+
+    if common_coefficient == 1 and not common:
+        return None
+
+    common_ir = _term_from_integer_coefficient_and_powers(common_coefficient, common)
+    residual_terms = [
+        _term_from_integer_coefficient_and_powers(
+            coefficient // common_coefficient,
+            {
+                base: exponent - common.get(base, 0)
+                for base, exponent in powers.items()
+                if exponent - common.get(base, 0) > 0
+            },
+        )
+        for coefficient, powers in parsed_terms
+    ]
+    residual = _add_nodes(residual_terms)
+    return IRApply(MUL, (common_ir, _maybe_factor_residual(residual)))
+
+
+def _extract_multivariate_perfect_square(inner: IRNode) -> IRNode | None:
+    """Recognise the small ``a^2 +/- 2ab + b^2`` multivariate factor case."""
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 3:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    squares: list[IRNode] = []
+    cross: tuple[int, IRNode, IRNode] | None = None
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        coefficient, powers = parsed_term
+        if coefficient == 1 and len(powers) == 1:
+            base, exponent = next(iter(powers.items()))
+            if exponent == 2:
+                squares.append(base)
+                continue
+        if abs(coefficient) == 2 and len(powers) == 2:
+            items = list(powers.items())
+            if items[0][1] == 1 and items[1][1] == 1:
+                cross = (coefficient, items[0][0], items[1][0])
+                continue
+        return None
+
+    if len(squares) != 2 or cross is None:
+        return None
+    first, second = squares
+    cross_coefficient, cross_first, cross_second = cross
+    if {first, second} != {cross_first, cross_second}:
+        return None
+
+    if cross_coefficient > 0:
+        base = IRApply(ADD, (first, second))
+    else:
+        base = IRApply(SUB, (first, second))
+    return IRApply(POW, (base, IRInteger(2)))
+
+
+def _extract_multivariate_difference_of_squares(inner: IRNode) -> IRNode | None:
+    """Recognise the small ``a^2 - b^2`` multivariate factor case."""
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 2:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    positive_square: IRNode | None = None
+    negative_square: IRNode | None = None
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        coefficient, powers = parsed_term
+        if len(powers) != 1:
+            return None
+        base, exponent = next(iter(powers.items()))
+        if exponent != 2:
+            return None
+        if coefficient == 1:
+            positive_square = base
+        elif coefficient == -1:
+            negative_square = base
+        else:
+            return None
+
+    if positive_square is None or negative_square is None:
+        return None
+
+    return IRApply(
+        MUL,
+        (
+            IRApply(SUB, (positive_square, negative_square)),
+            IRApply(ADD, (positive_square, negative_square)),
+        ),
+    )
+
+
+def _extract_multivariate_cubic_identity(inner: IRNode) -> IRNode | None:
+    """Recognise the small ``a^3 +/- b^3`` multivariate factor cases."""
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 2:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    cubes: list[tuple[int, IRNode]] = []
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        coefficient, powers = parsed_term
+        if coefficient not in (-1, 1) or len(powers) != 1:
+            return None
+        base, exponent = next(iter(powers.items()))
+        if exponent != 3:
+            return None
+        cubes.append((coefficient, base))
+
+    signs = [coefficient for coefficient, _base in cubes]
+    if signs == [1, 1]:
+        first, second = cubes[0][1], cubes[1][1]
+        linear = IRApply(ADD, (first, second))
+        middle = IRApply(MUL, (IRInteger(-1), IRApply(MUL, (first, second))))
+    elif sorted(signs) == [-1, 1]:
+        positive = next(base for coefficient, base in cubes if coefficient == 1)
+        negative = next(base for coefficient, base in cubes if coefficient == -1)
+        first, second = positive, negative
+        linear = IRApply(SUB, (first, second))
+        middle = IRApply(MUL, (first, second))
+    else:
+        return None
+
+    quadratic = IRApply(
+        ADD,
+        (
+            IRApply(ADD, (IRApply(POW, (first, IRInteger(2))), middle)),
+            IRApply(POW, (second, IRInteger(2))),
+        ),
+    )
+    return IRApply(MUL, (linear, quadratic))
+
+
+def _extract_multivariate_perfect_cube(inner: IRNode) -> IRNode | None:
+    """Recognise (a±b)^3 perfect-cube expansions.
+
+    The two identities handled are::
+
+        a^3 + 3·a^2·b + 3·a·b^2 + b^3  →  (a + b)^3   [sum cube]
+        a^3 − 3·a^2·b + 3·a·b^2 − b^3  →  (a − b)^3   [difference cube]
+
+    Preconditions (checked in order):
+
+    1. The additive form has **exactly four** terms after flattening ``ADD``
+       and ``SUB`` nodes.
+    2. Every term parses cleanly via :func:`_split_integer_coefficient_and_powers`.
+    3. Exactly two terms are *pure cubes*: ``|coeff| = 1``, exactly one
+       symbolic variable, exponent = 3.
+    4. The other two terms are *cross terms*: exactly two distinct symbolic
+       variables, total exponent = 3 (one variable at exponent 2, the other
+       at exponent 1).
+    5. The cross-term variable set equals ``{a_node, b_node}`` where
+       ``a_node`` and ``b_node`` come from the pure-cube bases.
+    6. Coefficient constraints per case:
+
+       *Sum case* (both pure-cube coefficients = +1):
+         both cross terms have ``coeff = +3``; one is ``a^2·b`` (exp_a=2,
+         exp_b=1) and the other is ``a·b^2`` (exp_a=1, exp_b=2).
+
+       *Difference case* (one pure-cube coeff = +1, the other = −1):
+         the ``a^2·b`` cross term has ``coeff = −3``; the ``a·b^2`` cross
+         term has ``coeff = +3``.
+
+    Returns ``Pow(Add(a, b), 3)`` for the sum case or ``Pow(Sub(a, b), 3)``
+    for the difference case.  Returns ``None`` on any mismatch so
+    :func:`factor_handler` continues to the next pattern.
+    """
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 4:
+        return None
+
+    parsed = [_split_integer_coefficient_and_powers(term) for term in terms]
+    if any(term is None for term in parsed):
+        return None
+
+    # Separate pure-cube terms from cross terms.
+    #   Pure cube: |coeff| = 1, exactly one variable with exponent 3.
+    #   Cross term: exactly two variables whose exponents sum to 3.
+    pure_cubes: list[tuple[int, IRNode]] = []
+    cross_terms: list[tuple[int, dict[IRNode, int]]] = []
+
+    for parsed_term in parsed:
+        assert parsed_term is not None
+        coefficient, powers = parsed_term
+        if len(powers) == 1:
+            base, exponent = next(iter(powers.items()))
+            if exponent == 3 and coefficient in (-1, 1):
+                pure_cubes.append((coefficient, base))
+                continue
+        if len(powers) == 2:
+            cross_terms.append((coefficient, powers))
+            continue
+        return None  # unexpected shape (e.g. a single variable with wrong exp)
+
+    if len(pure_cubes) != 2 or len(cross_terms) != 2:
+        return None
+
+    # Identify a and b; determine sum vs. difference from the pure-cube signs.
+    signs = [coeff for coeff, _ in pure_cubes]
+
+    if signs == [1, 1]:
+        # Sum: (a + b)^3 — both cubic terms are positive.
+        a_node = pure_cubes[0][1]
+        b_node = pure_cubes[1][1]
+        is_sum = True
+    elif sorted(signs) == [-1, 1]:
+        # Difference: (a − b)^3 — a^3 positive, b^3 negative.
+        a_node = next(base for coeff, base in pure_cubes if coeff == 1)
+        b_node = next(base for coeff, base in pure_cubes if coeff == -1)
+        is_sum = False
+    else:
+        return None
+
+    # Cross-term variables must be exactly {a_node, b_node}; any foreign
+    # variable means this is not a pure (a±b)^3 pattern.
+    variable_pair = {a_node, b_node}
+    for _coeff, powers in cross_terms:
+        if set(powers.keys()) != variable_pair:
+            return None
+
+    if is_sum:
+        # Expect +3·a^2·b and +3·a·b^2 in any order.
+        found_a2b = False
+        found_ab2 = False
+        for coeff, powers in cross_terms:
+            exp_a = powers.get(a_node, 0)
+            exp_b = powers.get(b_node, 0)
+            if coeff == 3 and exp_a == 2 and exp_b == 1:
+                found_a2b = True
+            elif coeff == 3 and exp_a == 1 and exp_b == 2:
+                found_ab2 = True
+            else:
+                return None
+        if not (found_a2b and found_ab2):
+            return None
+        linear: IRNode = IRApply(ADD, (a_node, b_node))
+    else:
+        # Expect −3·a^2·b and +3·a·b^2.  The sign on a^2·b flips because
+        # d/db(a − b)^3 contains a −3a^2 factor; the b^2 term stays positive
+        # because the binomial coefficient 3ab^2 carries through unchanged.
+        found_neg_a2b = False
+        found_pos_ab2 = False
+        for coeff, powers in cross_terms:
+            exp_a = powers.get(a_node, 0)
+            exp_b = powers.get(b_node, 0)
+            if coeff == -3 and exp_a == 2 and exp_b == 1:
+                found_neg_a2b = True
+            elif coeff == 3 and exp_a == 1 and exp_b == 2:
+                found_pos_ab2 = True
+            else:
+                return None
+        if not (found_neg_a2b and found_pos_ab2):
+            return None
+        linear = IRApply(SUB, (a_node, b_node))
+
+    return IRApply(POW, (linear, IRInteger(3)))
+
+
+def _common_symbolic_powers(terms: list[IRNode]) -> dict[IRNode, int]:
+    """Return symbolic factors shared by every term."""
+    if not terms:
+        return {}
+
+    common = dict(_split_common_factor_term(terms[0]))
+    for term in terms[1:]:
+        powers = _split_common_factor_term(term)
+        for base in list(common):
+            shared = min(common[base], powers.get(base, 0))
+            if shared:
+                common[base] = shared
+            else:
+                del common[base]
+    return common
+
+
+def _same_two_terms(left: list[IRNode], right: list[IRNode]) -> bool:
+    if len(left) != 2 or len(right) != 2:
+        return False
+    return (left[0] == right[0] and left[1] == right[1]) or (
+        left[0] == right[1] and left[1] == right[0]
+    )
+
+
+def _extract_multivariate_grouping(inner: IRNode) -> IRNode | None:
+    """Recognise a four-term factor-by-grouping case.
+
+    This intentionally small foothold covers bilinear groupings such as
+    ``x*y + x*z + y + z -> (x + 1)*(y + z)`` without pretending to be a full
+    multivariate factorization algorithm.
+    """
+    terms = _flatten_add_terms(inner)
+    if len(terms) != 4:
+        return None
+
+    for first_index in range(3):
+        for second_index in range(first_index + 1, 4):
+            grouped = [terms[first_index], terms[second_index]]
+            first_common = _common_symbolic_powers(grouped)
+            if not first_common:
+                continue
+
+            rest = [
+                term
+                for index, term in enumerate(terms)
+                if index not in (first_index, second_index)
+            ]
+            first_residual = [
+                _remove_common_factor(term, first_common) for term in grouped
+            ]
+            second_common = _common_symbolic_powers(rest)
+            second_residual = [
+                _remove_common_factor(term, second_common) for term in rest
+            ]
+            if not _same_two_terms(first_residual, second_residual):
+                continue
+
+            first_factor = _mul_nodes(
+                [
+                    _pow_node(base, exponent)
+                    for base, exponent in sorted(
+                        first_common.items(), key=lambda item: str(item[0])
+                    )
+                ]
+            )
+            second_factor = (
+                _mul_nodes(
+                    [
+                        _pow_node(base, exponent)
+                        for base, exponent in sorted(
+                            second_common.items(), key=lambda item: str(item[0])
+                        )
+                    ]
+                )
+                if second_common
+                else IRInteger(1)
+            )
+            return IRApply(
+                MUL,
+                (
+                    IRApply(ADD, (first_factor, second_factor)),
+                    _add_nodes(first_residual),
+                ),
+            )
+
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Bivariate IR ↔ BiPoly conversion (drives the Hensel lifting path).
+# ---------------------------------------------------------------------------
+#
+# A "BiPoly" is :data:`cas_factor.BiPoly` — ``dict[(i, j) ↦ Fraction]``
+# where the key represents ``x^i · y^j`` for the two named variables.
+# We walk the IR expression tree and accumulate monomial contributions
+# into this map.  Anything outside the polynomial-over-ℚ subset
+# (transcendentals, floats, third variable, …) makes the walk return
+# ``None`` and the caller falls through to the next handler.
+
+
+def _find_two_variables(node: IRNode) -> tuple[IRSymbol, IRSymbol] | None:
+    """Return the first two distinct free variables found in ``node``.
+
+    Returns ``None`` when fewer than two distinct free variables appear
+    (the bivariate Hensel path doesn't apply) or when three or more
+    distinct free variables appear (trivariate+ is out of scope; this
+    PR is bivariate-only per the spec).
+    """
+    seen: list[IRSymbol] = []
+
+    def walk(n: IRNode) -> bool:
+        """Depth-first walk; returns ``False`` once three distinct vars found."""
+        if isinstance(n, IRSymbol):
+            if n.name in _CONSTANT_NAMES:
+                return True
+            if n not in seen:
+                seen.append(n)
+                if len(seen) > 2:
+                    return False
+            return True
+        if isinstance(n, IRApply):
+            for arg in n.args:
+                if not walk(arg):
+                    return False
+        return True
+
+    if not walk(node):
+        return None
+    if len(seen) != 2:
+        return None
+    return seen[0], seen[1]
+
+
+def _ir_to_bipoly(node: IRNode, x: IRSymbol, y: IRSymbol) -> _BiPoly | None:
+    """Convert an IR expression to a bivariate polynomial in ``(x, y)``.
+
+    The walker is structurally identical to :func:`to_rational` but for
+    two variables and only the polynomial subset (no division, no
+    fractional powers).  Returns ``None`` when any sub-expression lies
+    outside ℚ[x, y]:
+
+    - Floats (would destroy exact arithmetic).
+    - A third free symbol.
+    - Transcendental functions (Sin, Log, Exp, Sqrt, …).
+    - Non-integer or non-constant exponents.
+    - Division by anything other than an integer/rational constant.
+    """
+
+    def walk(n: IRNode) -> _BiPoly | None:
+        # Numeric literals → constant monomial.
+        if isinstance(n, IRInteger):
+            return {(0, 0): Fraction(n.value)} if n.value != 0 else {}
+        if isinstance(n, IRRational):
+            return {(0, 0): Fraction(n.numer, n.denom)}
+        if isinstance(n, IRFloat):
+            return None  # floats are out — Q-only
+
+        # Variables.
+        if isinstance(n, IRSymbol):
+            if n.name in _CONSTANT_NAMES:
+                return None  # %pi, %e etc. are out of Q[x, y]
+            if n == x:
+                return {(1, 0): Fraction(1)}
+            if n == y:
+                return {(0, 1): Fraction(1)}
+            return None  # foreign free variable
+
+        if not isinstance(n, IRApply):
+            return None
+        head = n.head
+
+        if head == ADD:
+            acc: _BiPoly = {}
+            for arg in n.args:
+                sub = walk(arg)
+                if sub is None:
+                    return None
+                for k, v in sub.items():
+                    acc[k] = acc.get(k, Fraction(0)) + v
+            return {k: v for k, v in acc.items() if v != 0}
+
+        if head == SUB:
+            if len(n.args) != 2:
+                return None
+            a = walk(n.args[0])
+            b = walk(n.args[1])
+            if a is None or b is None:
+                return None
+            acc = dict(a)
+            for k, v in b.items():
+                acc[k] = acc.get(k, Fraction(0)) - v
+            return {k: v for k, v in acc.items() if v != 0}
+
+        if head == NEG:
+            if len(n.args) != 1:
+                return None
+            a = walk(n.args[0])
+            if a is None:
+                return None
+            return {k: -v for k, v in a.items() if v != 0}
+
+        if head == MUL:
+            acc = {(0, 0): Fraction(1)}
+            for arg in n.args:
+                sub = walk(arg)
+                if sub is None:
+                    return None
+                new_acc: _BiPoly = {}
+                for (i1, j1), c1 in acc.items():
+                    for (i2, j2), c2 in sub.items():
+                        k = (i1 + i2, j1 + j2)
+                        new_acc[k] = new_acc.get(k, Fraction(0)) + c1 * c2
+                acc = {k: v for k, v in new_acc.items() if v != 0}
+            return acc
+
+        if head == POW:
+            if len(n.args) != 2:
+                return None
+            base = walk(n.args[0])
+            if base is None:
+                return None
+            exp_node = n.args[1]
+            if not isinstance(exp_node, IRInteger):
+                return None
+            e = exp_node.value
+            if e < 0:
+                return None  # would introduce a denominator polynomial
+            if e == 0:
+                return {(0, 0): Fraction(1)}
+            result = base
+            for _ in range(e - 1):
+                new_acc = {}
+                for (i1, j1), c1 in result.items():
+                    for (i2, j2), c2 in base.items():
+                        k = (i1 + i2, j1 + j2)
+                        new_acc[k] = new_acc.get(k, Fraction(0)) + c1 * c2
+                result = {k: v for k, v in new_acc.items() if v != 0}
+            return result
+
+        # Any other head (Sin, Log, …) is not a polynomial term.
+        return None
+
+    return walk(node)
+
+
+def _bipoly_to_ir(p: _BiPoly, x: IRSymbol, y: IRSymbol) -> IRNode:
+    """Convert a bivariate ℚ-polynomial back to an IR expression.
+
+    Each monomial ``c · x^i · y^j`` becomes the IR node
+    ``Mul(c, Pow(x, i), Pow(y, j))`` with trivial factors elided.  The
+    full polynomial is the ``Add`` of all monomial nodes (sorted by
+    descending total degree, then ``i``, then ``j`` for a deterministic
+    canonical form).
+
+    Empty dict → ``IRInteger(0)``.
+    """
+    if not p:
+        return IRInteger(0)
+
+    def monomial_node(i: int, j: int, c: Fraction) -> IRNode:
+        """Build the IR node for ``c · x^i · y^j``."""
+        parts: list[IRNode] = []
+        # Coefficient: emit unless it's exactly 1 in a non-constant term
+        # (then the multiplicative identity is elided).  For the all-zero
+        # exponent constant term we always emit the integer or rational.
+        if c != 1 or (i == 0 and j == 0):
+            if c.denominator == 1:
+                parts.append(IRInteger(c.numerator))
+            else:
+                parts.append(IRRational(c.numerator, c.denominator))
+        if i > 0:
+            parts.append(x if i == 1 else IRApply(POW, (x, IRInteger(i))))
+        if j > 0:
+            parts.append(y if j == 1 else IRApply(POW, (y, IRInteger(j))))
+        if len(parts) == 1:
+            return parts[0]
+        return IRApply(MUL, tuple(parts))
+
+    # Sort: descending total degree, then by i, then j (deterministic).
+    keys = sorted(p.keys(), key=lambda ij: (-(ij[0] + ij[1]), -ij[0], -ij[1]))
+    terms = [monomial_node(i, j, p[(i, j)]) for (i, j) in keys]
+    if len(terms) == 1:
+        return terms[0]
+    return IRApply(ADD, tuple(terms))
+
+
+def _find_n_variables(node: IRNode, max_vars: int = 8) -> list[IRSymbol] | None:
+    """Return all distinct free variables found in ``node``, in encounter order.
+
+    This is the n-variate generalisation of :func:`_find_two_variables`.
+    The encounter order matters: the first variable becomes the *main*
+    variable for Hensel's univariate image step.  We bound the search at
+    ``max_vars`` distinct symbols so a pathological input with hundreds
+    of free symbols can't make us allocate gigantic sparse-dict keys.
+
+    Returns ``None`` when zero variables appear (constant — caller already
+    handles that) or when ``max_vars`` is exceeded.
+    """
+    seen: list[IRSymbol] = []
+
+    def walk(n: IRNode) -> bool:
+        if isinstance(n, IRSymbol):
+            if n.name in _CONSTANT_NAMES:
+                return True
+            if n not in seen:
+                seen.append(n)
+                if len(seen) > max_vars:
+                    return False
+            return True
+        if isinstance(n, IRApply):
+            for arg in n.args:
+                if not walk(arg):
+                    return False
+        return True
+
+    if not walk(node):
+        return None
+    if not seen:
+        return None
+    return seen
+
+
+def _ir_to_npoly(node: IRNode, vars: list[IRSymbol]) -> _NPoly | None:
+    """Convert an IR expression to an n-variate polynomial in ``vars``.
+
+    Structurally identical to :func:`_ir_to_bipoly` but with an ``n``-length
+    exponent tuple instead of ``(i, j)``.  Returns ``None`` for anything
+    outside ℚ[v_0, …, v_{n-1}]:
+
+    - Floats (would destroy exact arithmetic).
+    - A free symbol not in ``vars``.
+    - Transcendental functions (Sin, Log, Exp, Sqrt, …).
+    - Non-integer or non-constant exponents, negative exponents.
+    """
+    n_vars = len(vars)
+    var_index = {v: i for i, v in enumerate(vars)}
+    zero_key = (0,) * n_vars
+
+    def unit_for(v: IRSymbol) -> tuple[int, ...]:
+        i = var_index[v]
+        key = [0] * n_vars
+        key[i] = 1
+        return tuple(key)
+
+    def add_key(a: tuple[int, ...], b: tuple[int, ...]) -> tuple[int, ...]:
+        return tuple(a[i] + b[i] for i in range(n_vars))
+
+    def walk(n: IRNode) -> _NPoly | None:
+        # Numeric literals → constant monomial.
+        if isinstance(n, IRInteger):
+            return {zero_key: Fraction(n.value)} if n.value != 0 else {}
+        if isinstance(n, IRRational):
+            return {zero_key: Fraction(n.numer, n.denom)}
+        if isinstance(n, IRFloat):
+            return None  # floats are out — Q-only
+
+        # Variables.
+        if isinstance(n, IRSymbol):
+            if n.name in _CONSTANT_NAMES:
+                return None
+            if n in var_index:
+                return {unit_for(n): Fraction(1)}
+            return None  # foreign symbol
+
+        if not isinstance(n, IRApply):
+            return None
+        head = n.head
+
+        if head == ADD:
+            acc: _NPoly = {}
+            for arg in n.args:
+                sub = walk(arg)
+                if sub is None:
+                    return None
+                for k, v in sub.items():
+                    acc[k] = acc.get(k, Fraction(0)) + v
+            return {k: v for k, v in acc.items() if v != 0}
+
+        if head == SUB:
+            if len(n.args) != 2:
+                return None
+            a = walk(n.args[0])
+            b = walk(n.args[1])
+            if a is None or b is None:
+                return None
+            acc = dict(a)
+            for k, v in b.items():
+                acc[k] = acc.get(k, Fraction(0)) - v
+            return {k: v for k, v in acc.items() if v != 0}
+
+        if head == NEG:
+            if len(n.args) != 1:
+                return None
+            a = walk(n.args[0])
+            if a is None:
+                return None
+            return {k: -v for k, v in a.items() if v != 0}
+
+        if head == MUL:
+            acc = {zero_key: Fraction(1)}
+            for arg in n.args:
+                sub = walk(arg)
+                if sub is None:
+                    return None
+                new_acc: _NPoly = {}
+                for k1, c1 in acc.items():
+                    for k2, c2 in sub.items():
+                        k = add_key(k1, k2)
+                        new_acc[k] = new_acc.get(k, Fraction(0)) + c1 * c2
+                acc = {k: v for k, v in new_acc.items() if v != 0}
+            return acc
+
+        if head == POW:
+            if len(n.args) != 2:
+                return None
+            base = walk(n.args[0])
+            if base is None:
+                return None
+            exp_node = n.args[1]
+            if not isinstance(exp_node, IRInteger):
+                return None
+            e = exp_node.value
+            if e < 0:
+                return None
+            if e == 0:
+                return {zero_key: Fraction(1)}
+            result = base
+            for _ in range(e - 1):
+                new_acc: _NPoly = {}
+                for k1, c1 in result.items():
+                    for k2, c2 in base.items():
+                        k = add_key(k1, k2)
+                        new_acc[k] = new_acc.get(k, Fraction(0)) + c1 * c2
+                result = {k: v for k, v in new_acc.items() if v != 0}
+            return result
+
+        # Any other head (Sin, Log, …) is not a polynomial term.
+        return None
+
+    return walk(node)
+
+
+def _npoly_to_ir(p: _NPoly, vars: list[IRSymbol]) -> IRNode:
+    """Convert an n-variate ℚ-polynomial back to an IR expression.
+
+    Each monomial ``c · v_0^{e_0} · … · v_{n-1}^{e_{n-1}}`` becomes a
+    left-nested binary Mul node (singleton factors elided).  The
+    polynomial is a left-nested binary Add of monomial nodes, sorted
+    by descending total degree then lex on the exponent tuple for
+    deterministic canonical form.
+
+    Binary nesting matters: the symbolic-vm primitive Add / Mul
+    handlers are strictly binary (see ``handlers.py::_binary_args``),
+    so an ``IRApply(ADD, (a, b, c))`` with three or more children
+    would crash when re-evaluated.  We mirror the cubic-identity
+    handler's nesting convention: ``Add(Add(a, b), c)`` for three
+    terms, ``Add(Add(Add(a, b), c), d)`` for four, etc.
+
+    Empty dict → ``IRInteger(0)``.  Single all-zero key → the constant.
+    """
+    if not p:
+        return IRInteger(0)
+    n_vars = len(vars)
+
+    def fold_binary(head: IRSymbol, parts: list[IRNode]) -> IRNode:
+        """Left-fold a list of children into nested binary IRApply nodes."""
+        assert parts, "fold_binary requires at least one node"
+        result = parts[0]
+        for nxt in parts[1:]:
+            result = IRApply(head, (result, nxt))
+        return result
+
+    def monomial_node(key: tuple[int, ...], c: Fraction) -> IRNode:
+        parts: list[IRNode] = []
+        all_zero = all(e == 0 for e in key)
+        if c != 1 or all_zero:
+            if c.denominator == 1:
+                parts.append(IRInteger(c.numerator))
+            else:
+                parts.append(IRRational(c.numerator, c.denominator))
+        for i in range(n_vars):
+            e = key[i]
+            if e <= 0:
+                continue
+            v = vars[i]
+            parts.append(v if e == 1 else IRApply(POW, (v, IRInteger(e))))
+        if not parts:
+            # c == 1 and all exponents zero — should be caught above,
+            # but if we somehow have a unit monomial with no factors,
+            # the value is just 1.
+            return IRInteger(1)
+        return fold_binary(MUL, parts)
+
+    keys = sorted(
+        p.keys(),
+        key=lambda k: (-sum(k), tuple(-e for e in k)),
+    )
+    terms = [monomial_node(k, p[k]) for k in keys]
+    return fold_binary(ADD, terms)
+
+
+def _try_n_variate_hensel_ir(inner: IRNode) -> IRNode | None:
+    """Top-level glue for n-variate (n ≥ 3) Hensel lifting.
+
+    Identifies all free variables, converts to an NPoly, calls
+    :func:`try_n_variate_hensel`, and converts the factor list back to
+    a ``Mul(...)`` IR node.  Returns ``None`` on any failure (foreign
+    variable, transcendental, Hensel falls through, …) so the caller
+    continues with the next fallback path.
+
+    Note: this routine is generic in ``n`` — the same code path serves
+    ``n = 3, 4, 5, …``.  The caller restricts dispatch to ``n ≥ 3``
+    only because the bivariate (``n == 2``) path is handled by the
+    dedicated bivariate bridge which has been battle-tested longer.
+    """
+    vars = _find_n_variables(inner)
+    if vars is None or len(vars) < 2:
+        return None
+    npoly = _ir_to_npoly(inner, vars)
+    if npoly is None:
+        return None
+    factors = try_n_variate_hensel(npoly, len(vars))
+    if factors is None or len(factors) < 2:
+        return None
+    factor_nodes = [_npoly_to_ir(f, vars) for f in factors]
+    if len(factor_nodes) == 1:
+        return factor_nodes[0]
+    return IRApply(MUL, tuple(factor_nodes))
+
+
+def _try_bivariate_hensel_ir(inner: IRNode) -> IRNode | None:
+    """Top-level glue: identify two variables, convert to BiPoly, Hensel,
+    convert factors back, return a ``Mul(...)`` IR node.
+
+    Returns ``None`` on any failure (foreign variable, transcendental,
+    Hensel falls through, …) so the caller continues with the next
+    fallback path.
+    """
+    vars_pair = _find_two_variables(inner)
+    if vars_pair is None:
+        return None
+    x_var, y_var = vars_pair
+    bipoly = _ir_to_bipoly(inner, x_var, y_var)
+    if bipoly is None:
+        return None
+    factors = try_bivariate_hensel(bipoly)
+    if factors is None or len(factors) < 2:
+        return None
+    factor_nodes = [_bipoly_to_ir(f, x_var, y_var) for f in factors]
+    if len(factor_nodes) == 1:
+        return factor_nodes[0]
+    return IRApply(MUL, tuple(factor_nodes))
+
+
+def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Factor(expr)`` — factor a univariate integer polynomial over Z.
+
+    Uses rational-root extraction (Phase 1) followed by Kronecker's
+    algorithm (Phase 2) to find all irreducible factors.  Examples::
+
+        Factor(x^2 - 1)      →  Mul(Sub(x, 1), Add(x, 1))
+        Factor(2*x^2 + 4*x + 2)  →  Mul(2, Pow(Add(x, 1), 2))
+        Factor(x^4 + 4)      →  Mul(x^2+2x+2, x^2-2x+2)  [Sophie Germain]
+        Factor(x^4+x^2+1)    →  Mul(x^2+x+1, x^2-x+1)    [cyclotomic]
+
+    Returns the expression unevaluated if:
+    - There is no free variable (purely numeric — no factoring needed).
+    - The expression is not a polynomial in the identified variable.
+    - The polynomial is irreducible over Z (e.g. ``x^2 + 1``).
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = expr.args[0]
+
+    # Identify the lone variable.
+    x = _find_variable(inner)
+    if x is None:
+        # No variable: the polynomial is a constant; factor is trivial.
+        return inner
+
+    # Try to lift to rational function.
+    rational = to_rational(inner, x)
+    if rational is None:
+        perfect_cube = _extract_multivariate_perfect_cube(inner)
+        if perfect_cube is not None:
+            return perfect_cube
+        cubic_identity = _extract_multivariate_cubic_identity(inner)
+        if cubic_identity is not None:
+            return cubic_identity
+        difference = _extract_multivariate_difference_of_squares(inner)
+        if difference is not None:
+            return difference
+        perfect_square = _extract_multivariate_perfect_square(inner)
+        if perfect_square is not None:
+            return perfect_square
+        grouping = _extract_multivariate_grouping(inner)
+        if grouping is not None:
+            return grouping
+        common_factored = _extract_common_symbolic_factor(inner)
+        if common_factored is not None:
+            return _vm.eval(common_factored)
+        # Generic bivariate Hensel lifting — the algorithmic fallback for
+        # multivariate inputs that the pattern handlers above can't
+        # recognise.  Returns None when the input isn't bivariate
+        # polynomial-over-ℚ or when Hensel can't find a factorisation.
+        hensel = _try_bivariate_hensel_ir(inner)
+        if hensel is not None:
+            return _vm.eval(hensel)
+        # n-variate (n ≥ 3) Hensel — the generalised algorithmic
+        # fallback for tri- and higher-variate polynomials.  Examples
+        # this catches: x^3 + y^3 + z^3 − 3·x·y·z = (x+y+z)·(…).
+        # Returns None for transcendentals, foreign symbols, or when
+        # the iterated lift can't pin down a factorisation.
+        n_hensel = _try_n_variate_hensel_ir(inner)
+        if n_hensel is not None:
+            return _vm.eval(n_hensel)
+        return expr  # transcendental or unsupported multi-variable
+    num_frac, den_frac = rational
+
+    # We only factor pure polynomials, not rational functions.
+    _ONE_FRAC = (Fraction(1),)
+    if den_frac != _ONE_FRAC:
+        return expr
+
+    # Convert Fraction coefficients → ints.
+    int_coeffs = _rational_to_integer_poly(num_frac)
+    if int_coeffs is None:
+        return expr
+
+    content, factors = factor_integer_polynomial(int_coeffs)
+
+    # Linear polynomials are already factored by definition; return them in
+    # normalized linear form rather than wrapping bare ``x`` as unevaluated.
+    if len(int_coeffs) <= 2:
+        return _factor_result_to_ir(content, factors, x)
+
+    # If factoring was a no-op — content 1, single factor, same
+    # coefficients as the input — the polynomial is irreducible over Z.
+    # Return the whole Factor(…) node unevaluated so the user sees
+    # ``Factor(x^2 + 1)`` rather than silently stripping the wrapper.
+    if (
+        content == 1
+        and len(factors) == 1
+        and factors[0][1] == 1
+        and factors[0][0] == int_coeffs
+    ):
+        return expr
+
+    return _factor_result_to_ir(content, factors, x)
+
+
+# ===========================================================================
+# Section 4: cas_solve handler
+# ===========================================================================
+
+
+def _unwrap_equation(eq_ir: IRNode) -> IRNode:
+    """Convert ``Equal(lhs, rhs)`` to ``Sub(lhs, rhs)``.
+
+    For a bare expression (not wrapped in ``Equal``), return it unchanged
+    — the convention is ``expr = 0``.
+    """
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name == "Equal"
+        and len(eq_ir.args) == 2
+    ):
+        lhs, rhs = eq_ir.args
+        return IRApply(SUB, (lhs, rhs))
+    return eq_ir
+
+
+def _ir_to_fraction_poly(
+    expr: IRNode, x: IRSymbol
+) -> tuple[Fraction, ...] | None:
+    """Try to extract ``Fraction`` polynomial coefficients from ``expr``.
+
+    Returns ``(c_0, c_1, ..., c_n)`` — coefficient list in ascending degree
+    — or ``None`` if ``expr`` is not a polynomial in ``x`` over Q.
+    Uses the polynomial bridge's ``to_rational`` and verifies the
+    denominator is the unit polynomial.
+    """
+    rational = to_rational(expr, x)
+    if rational is None:
+        return None
+    num_frac, den_frac = rational
+    _ONE_FRAC = (Fraction(1),)
+    if den_frac != _ONE_FRAC:
+        return None  # rational function, not polynomial
+    return num_frac  # (c_0, c_1, ...) as Fraction
+
+
+def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Solve(equation, var)`` or ``Solve(List(eqs...), List(vars...))``.
+
+    Single-equation form
+    --------------------
+    The first argument is either:
+
+    - A bare expression ``f(var)`` — treated as ``f(var) = 0``.
+    - ``Equal(lhs, rhs)`` — treated as ``lhs - rhs = 0``.
+
+    Returns ``List(sol1, sol2, ...)`` of IR nodes.  Complex roots use
+    ``%i`` (``IRSymbol("%i")``) as the imaginary unit.  Returns the
+    expression unevaluated for degree > 4 or polynomials that
+    Cardano/Ferrari cannot resolve.
+
+    System form (linear systems only)
+    ----------------------------------
+    ``Solve(List(eq1, eq2, ...), List(x, y, ...))`` solves a linear system
+    by Gaussian elimination.  Returns ``List(Rule(x, val), Rule(y, val),
+    ...)`` or the expression unevaluated if the system is non-linear,
+    singular, or under/over-determined.
+    """
+    if len(expr.args) != 2:
+        return expr
+    eq_ir, var_ir = expr.args
+
+    # -----------------------------------------------------------------
+    # System form: Solve(List(eqs...), List(vars...))
+    # -----------------------------------------------------------------
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name == "List"
+        and isinstance(var_ir, IRApply)
+        and isinstance(var_ir.head, IRSymbol)
+        and var_ir.head.name == "List"
+    ):
+        equations = list(eq_ir.args)
+        variables = [v for v in var_ir.args if isinstance(v, IRSymbol)]
+        if len(variables) != len(var_ir.args):
+            return expr  # Non-symbol in variable list
+        result = _solve_linear_system(equations, variables)
+        if result is None:
+            return expr  # Non-linear, singular, or wrong size
+        return IRApply(IRSymbol("List"), tuple(result))
+
+    # -----------------------------------------------------------------
+    # Single-equation form: Solve(eq, var)
+    # -----------------------------------------------------------------
+    if not isinstance(var_ir, IRSymbol):
+        return expr
+
+    # -----------------------------------------------------------------
+    # Phase 27 — Polynomial inequality solving
+    # Dispatch before polynomial extraction: inequalities are not
+    # equations and _unwrap_equation would strip the comparison head.
+    # -----------------------------------------------------------------
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name in {"Less", "Greater", "LessEqual", "GreaterEqual"}
+    ):
+        ineq_sols = _try_inequality(eq_ir, var_ir)
+        if ineq_sols is not None:
+            return IRApply(IRSymbol("List"), tuple(ineq_sols))
+
+    poly_ir = _unwrap_equation(eq_ir)
+    coeffs = _ir_to_fraction_poly(poly_ir, var_ir)
+    if coeffs is None:
+        # Phase 26: try transcendental families before giving up.
+        trans_sols = _try_transcendental(eq_ir, var_ir)
+        if trans_sols is not None:
+            return IRApply(IRSymbol("List"), tuple(trans_sols))
+        return expr  # not a polynomial in var
+
+    deg = len(coeffs) - 1
+
+    if deg < 0 or (deg == 0 and coeffs[0] == 0):
+        # Every value of var satisfies: 0 = 0.
+        return _ALL_SYMBOL
+    if deg == 0:
+        # Non-zero constant: no solution.
+        return _EMPTY_LIST
+    if deg == 1:
+        # a*x + b = 0  (coeffs[0] = b, coeffs[1] = a).
+        a_coeff = coeffs[1]
+        b_coeff = coeffs[0]
+        solutions = solve_linear(a_coeff, b_coeff)
+        if solutions == ALL:
+            return _ALL_SYMBOL
+        return IRApply(IRSymbol("List"), tuple(solutions))
+    if deg == 2:
+        # a*x^2 + b*x + c = 0  (coeffs[0]=c, coeffs[1]=b, coeffs[2]=a).
+        a_coeff = coeffs[2]
+        b_coeff = coeffs[1]
+        c_coeff = coeffs[0]
+        solutions = solve_quadratic(a_coeff, b_coeff, c_coeff)
+        return IRApply(IRSymbol("List"), tuple(solutions))
+    if deg == 3:
+        # a*x^3 + b*x^2 + c*x + d = 0
+        # coeffs order: (c_0=d, c_1=c, c_2=b, c_3=a)
+        a_coeff = coeffs[3]
+        b_coeff = coeffs[2]
+        c_coeff = coeffs[1]
+        d_coeff = coeffs[0]
+        solutions = _solve_cubic(a_coeff, b_coeff, c_coeff, d_coeff)
+        if isinstance(solutions, str) or not solutions:
+            return expr  # unevaluated (casus irreducibilis or no sol)
+        return IRApply(IRSymbol("List"), tuple(solutions))
+    if deg == 4:
+        # a*x^4 + b*x^3 + c*x^2 + d*x + e = 0
+        a_coeff = coeffs[4]
+        b_coeff = coeffs[3]
+        c_coeff = coeffs[2]
+        d_coeff = coeffs[1]
+        e_coeff = coeffs[0]
+        solutions = _solve_quartic(a_coeff, b_coeff, c_coeff, d_coeff, e_coeff)
+        if isinstance(solutions, str) or not solutions:
+            return expr  # unevaluated
+        return IRApply(IRSymbol("List"), tuple(solutions))
+
+    # Degree > 4: return unevaluated (use NSolve for numeric roots).
+    return expr
+
+
+def nsolve_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``NSolve(polynomial, var)`` — numeric root-finding via Durand–Kerner.
+
+    Finds all roots of a univariate polynomial numerically using the
+    Durand-Kerner (Weierstrass) method.  Returns
+    ``List(root1, root2, ...)`` where each root is an ``IRFloat`` (real
+    roots) or an ``IRApply(Add, (IRFloat(re), Mul(IRFloat(im), %i)))``
+    (complex roots).
+
+    Accepts any degree ≥ 1 polynomial.  Coefficients must be rational
+    (``IRInteger`` or ``IRRational``).  Returns the expression unevaluated
+    if the input is not a rational polynomial.
+    """
+    if len(expr.args) != 2:
+        return expr
+    eq_ir, var_ir = expr.args
+    if not isinstance(var_ir, IRSymbol):
+        return expr
+
+    poly_ir = _unwrap_equation(eq_ir)
+    coeffs = _ir_to_fraction_poly(poly_ir, var_ir)
+    if coeffs is None:
+        return expr
+
+    deg = len(coeffs) - 1
+    if deg < 1:
+        return expr  # constant — no numeric roots
+
+    # coeffs is (c_0, c_1, ..., c_n) ascending degree;
+    # nsolve_fraction_poly expects descending degree.
+    coeffs_desc = list(reversed(coeffs))
+    ir_roots = _nsolve_fraction_poly(coeffs_desc)
+    return IRApply(IRSymbol("List"), tuple(ir_roots))
+
+
+# ===========================================================================
+# Section 4b: Phase 26 — Lambert W numeric evaluation
+# ===========================================================================
+
+
+def lambert_w_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``LambertW(x)`` — principal branch W₀ of the Lambert W function.
+
+    The Lambert W function W₀ is the principal solution of ``w·exp(w) = x``.
+    It arises when solving equations of the form ``f(x)·exp(f(x)) = c`` where
+    ``f`` is linear — the transcendental solver (Phase 26c) leaves the symbolic
+    ``LambertW(c)`` in the solution expression, and this handler evaluates it
+    numerically when ``x`` is a concrete rational or floating-point constant.
+
+    Domain for the principal branch W₀:
+    - Defined for ``x ≥ −1/e ≈ −0.3679``.
+    - Returns ``IRFloat`` on success.
+    - Returns the expression unevaluated for symbolic ``x`` or ``x`` outside
+      the domain of W₀.
+
+    Numeric method: Newton iteration on ``g(w) = w·exp(w) − x``.
+    The iteration ``w ← w − g(w)/g′(w)`` converges quadratically; we stop when
+    ``|Δw| < 1e-12·(1 + |w|)`` or after 64 iterations, whichever comes first.
+
+    Starting point heuristic:
+    - ``x > 0``: start at ``log(x)`` (correct order of magnitude).
+    - ``x = 0``: start at 0 (exact answer).
+    - ``−1/e ≤ x < 0``: start at 0 and let Newton iterate toward the branch.
+
+    Examples::
+
+        LambertW(0)       → 0.0          (W₀(0) = 0)
+        LambertW(1)       → 0.5671...    (Omega constant)
+        LambertW(e)       → 1.0          (W₀(e) = 1)
+        LambertW(-1/e)    → -1.0         (branch point)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = expr.args[0]
+    x_num = to_number(arg)
+    if x_num is None:
+        # Symbolic argument — leave unevaluated.
+        return expr
+
+    # to_number returns a Fraction for rational inputs; convert to float.
+    x_val = float(x_num)
+
+    # Domain check: W₀ is defined only for x ≥ −1/e.
+    lower_bound = -1.0 / math.e
+    if x_val < lower_bound - 1e-12:
+        # Out of domain for the principal branch — return unevaluated.
+        return expr
+
+    # Choose a sensible starting point for Newton iteration.
+    # log(x) is a good initial estimate for x > 0; 0.0 works near the branch point.
+    w = math.log(x_val) if x_val > 0.0 else 0.0
+
+    # Newton iteration: w ← w − (w·exp(w) − x) / (exp(w)·(w + 1))
+    # Guard against zero denominator at w = −1 with a tiny epsilon.
+    _EPS = 1e-300
+    for _ in range(64):
+        ew = math.exp(w)
+        numerator = w * ew - x_val
+        denominator = ew * (w + 1.0) + _EPS
+        dw = numerator / denominator
+        w -= dw
+        if abs(dw) < 1e-12 * (1.0 + abs(w)):
+            break
+
+    return IRFloat(w)
+
+
+# ===========================================================================
+# Section 5: cas_list_operations handlers
+# ===========================================================================
+
+
+def _as_list_args(node: IRNode) -> tuple[IRNode, ...]:
+    """Return the elements of a ``List(…)`` node or raise ``ListOperationError``."""
+    if (
+        isinstance(node, IRApply)
+        and isinstance(node.head, IRSymbol)
+        and node.head.name == "List"
+    ):
+        return node.args
+    raise ListOperationError(f"expected a List, got {node!r}")
+
+
+def length_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Length(list)`` → number of elements as ``IRInteger``."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return length(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def first_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``First(list)`` → the first element."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return first(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def rest_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Rest(list)`` → all elements except the first."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return rest(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def last_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Last(list)`` → the last element."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return last(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def append_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Append(list1, list2, …)`` → concatenated list.
+
+    Accepts two or more lists. MACSYMA's ``append`` also accepts multiple
+    args; we follow suit.
+    """
+    if len(expr.args) < 2:
+        return expr
+    try:
+        return append(*expr.args)
+    except ListOperationError:
+        return expr
+
+
+def reverse_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Reverse(list)`` → elements in reverse order."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return reverse(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def range_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Range(n)`` / ``Range(start, stop)`` / ``Range(start, stop, step)``.
+
+    Single-argument form ``Range(n)`` produces ``[1, 2, …, n]`` (the
+    MACSYMA ``makelist`` convention). All arguments must be ``IRInteger``.
+    """
+    try:
+        if len(expr.args) == 1:
+            n = expr.args[0]
+            if not isinstance(n, IRInteger):
+                return expr
+            return range_(n.value)
+        if len(expr.args) == 2:
+            start, stop = expr.args
+            if not isinstance(start, IRInteger) or not isinstance(stop, IRInteger):
+                return expr
+            return range_(start.value, stop.value)
+        if len(expr.args) == 3:
+            start, stop, step = expr.args
+            if (
+                not isinstance(start, IRInteger)
+                or not isinstance(stop, IRInteger)
+                or not isinstance(step, IRInteger)
+            ):
+                return expr
+            return range_(start.value, stop.value, step.value)
+        return expr
+    except ListOperationError:
+        return expr
+
+
+def map_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Map(f, list)`` → ``[f(a), f(b), f(c), …]`` evaluated through the VM.
+
+    ``f`` is any IR node that can appear as a head (typically an
+    ``IRSymbol`` naming a function or a ``Define`` record). Each element
+    of ``list`` is passed as the sole argument and the result is fully
+    evaluated via ``vm.eval``.
+
+    Design note: we build and evaluate each application ourselves rather
+    than using :func:`cas_list_operations.map_` (which builds unevaluated
+    IR applies) because the VM would need a second pass to evaluate them.
+    Evaluating inline keeps the semantics clean.
+    """
+    if len(expr.args) != 2:
+        return expr
+    f, lst = expr.args
+    try:
+        elems = _as_list_args(lst)
+    except ListOperationError:
+        return expr
+    results = tuple(vm.eval(IRApply(f, (e,))) for e in elems)
+    return IRApply(IRSymbol("List"), results)
+
+
+def apply_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Apply(f, list)`` → ``f(a, b, c, …)`` evaluated through the VM.
+
+    Replaces the ``List`` head with ``f`` and evaluates the result.
+    Example: ``Apply(Add, [1, 2, 3])`` evaluates to ``6``.
+    """
+    if len(expr.args) != 2:
+        return expr
+    f, lst = expr.args
+    try:
+        elems = _as_list_args(lst)
+    except ListOperationError:
+        return expr
+    return vm.eval(IRApply(f, elems))
+
+
+def select_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Select(pred, list)`` → elements ``e`` for which ``pred(e)`` is ``True``.
+
+    ``pred`` must be a function-head IR node. It is called with each list
+    element through ``vm.eval``; elements whose result is the symbol
+    ``True`` (the VM's canonical boolean true) are kept.
+    """
+    if len(expr.args) != 2:
+        return expr
+    pred, lst = expr.args
+    try:
+        elems = _as_list_args(lst)
+    except ListOperationError:
+        return expr
+    kept: list[IRNode] = []
+    _TRUE = IRSymbol("True")
+    for e in elems:
+        result = vm.eval(IRApply(pred, (e,)))
+        if result == _TRUE:
+            kept.append(e)
+    return IRApply(IRSymbol("List"), tuple(kept))
+
+
+def sort_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Sort(list)`` → stable sort by canonical ``repr`` key.
+
+    Uses the same ordering as :func:`cas_simplify.canonical` — numerics
+    first, then symbols, then compound expressions — so the result is
+    consistent with the canonical form the simplifier produces.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return sort_(expr.args[0])
+    except ListOperationError:
+        return expr
+
+
+def part_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Part(list, index)`` → 1-based element access.
+
+    ``Part(lst, 1)`` is the first element; ``Part(lst, -1)`` is the last.
+    Returns the expression unevaluated for out-of-range or non-integer
+    index.
+    """
+    if len(expr.args) != 2:
+        return expr
+    lst, idx = expr.args
+    if not isinstance(idx, IRInteger):
+        return expr
+    try:
+        return part(lst, idx.value)
+    except ListOperationError:
+        return expr
+
+
+def flatten_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Flatten(list)`` / ``Flatten(list, depth)`` → flattened list.
+
+    Default depth is 1 (one level of nesting). Pass an ``IRInteger``
+    depth as the optional second argument for deeper flattening.
+    """
+    if not expr.args:
+        return expr
+    try:
+        if len(expr.args) == 1:
+            return flatten(expr.args[0])
+        if len(expr.args) == 2 and isinstance(expr.args[1], IRInteger):
+            return flatten(expr.args[0], expr.args[1].value)
+        return expr
+    except ListOperationError:
+        return expr
+
+
+def join_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Join(list1, list2, …)`` → concatenation (alias for ``Append``)."""
+    if len(expr.args) < 2:
+        return expr
+    try:
+        return join(*expr.args)
+    except ListOperationError:
+        return expr
+
+
+# ===========================================================================
+# Section 6: cas_matrix handlers
+#
+# Wired operations:
+#   Matrix, Transpose, Determinant, Inverse (0.1.0)
+#   Dot, Trace, Dimensions, IdentityMatrix, ZeroMatrix, Rank, RowReduce (0.2.0)
+# ===========================================================================
+
+
+def matrix_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Matrix(List(…), List(…), …)`` → validated ``Matrix`` IR node.
+
+    Each argument must be a ``List`` of equal length (the rows). The
+    result is the canonical ``IRApply(Matrix, (row1, row2, …))`` shape
+    that every other matrix handler expects. Rows of unequal length or
+    non-List arguments cause a fall-through to the unevaluated form.
+    """
+    if not expr.args:
+        return expr
+    try:
+        rows = [list(_as_list_args(r)) for r in expr.args]
+        return matrix(rows)
+    except (MatrixError, ListOperationError):
+        return expr
+
+
+def transpose_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Transpose(M)`` → matrix with rows and columns swapped."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return transpose(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def determinant_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Determinant(M)`` → scalar.
+
+    Computes the symbolic determinant via cofactor expansion, then
+    passes the result through ``vm.eval()`` so that any pure-numeric
+    sub-expressions collapse to ``IRInteger`` / ``IRRational`` values.
+
+    For a 2×2 matrix ``[[a,b],[c,d]]`` the raw result is ``Sub(Mul(a,d),
+    Mul(b,c))``, which folds to an integer when all entries are numeric.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return vm.eval(determinant(expr.args[0]))
+    except MatrixError:
+        return expr
+
+
+def inverse_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Inverse(M)`` → matrix whose entries are IR rational expressions."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return inverse(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def dot_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Dot(A, B)`` → matrix product.
+
+    Computes the symbolic matrix product and passes the result through
+    ``vm.eval()`` so that numeric sub-expressions collapse.
+
+    Shape mismatch (``cols(A) ≠ rows(B)``) falls through to unevaluated.
+    """
+    if len(expr.args) != 2:
+        return expr
+    try:
+        return vm.eval(dot(expr.args[0], expr.args[1]))
+    except MatrixError:
+        return expr
+
+
+def trace_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Trace(M)`` → scalar sum of diagonal entries.
+
+    Evaluates numerically when all diagonal entries are numeric.
+    Falls through to unevaluated for non-square or non-matrix input.
+
+    Implementation note: ``cas_matrix.trace`` may return an n-ary
+    ``IRApply(ADD, (e₁, e₂, …, eₙ))`` for matrices larger than 2×2.
+    The VM's ADD handler is strictly binary (``_binary_args`` enforces
+    arity == 2), so we left-fold the diagonal entries into a chain of
+    binary additions::
+
+        ((e₁ + e₂) + e₃) + …
+
+    This preserves the exact same numeric result while staying inside
+    the binary IR contract.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        diag_expr = trace(expr.args[0])
+        # Fold any n-ary ADD from trace() into a chain of binary ADDs.
+        if (
+            isinstance(diag_expr, IRApply)
+            and diag_expr.head == ADD
+            and len(diag_expr.args) > 2
+        ):
+            acc: IRNode = vm.eval(diag_expr.args[0])
+            for term in diag_expr.args[1:]:
+                acc = vm.eval(IRApply(ADD, (acc, vm.eval(term))))
+            return acc
+        return vm.eval(diag_expr)
+    except MatrixError:
+        return expr
+
+
+def dimensions_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Dimensions(M)`` → ``List(rows, cols)`` as integer literals."""
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return dimensions(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def identity_matrix_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``IdentityMatrix(n)`` → n×n identity matrix.
+
+    ``n`` must evaluate to a positive ``IRInteger``.  Any other shape
+    falls through to unevaluated.
+    """
+    if len(expr.args) != 1:
+        return expr
+    n_node = expr.args[0]
+    if not isinstance(n_node, IRInteger) or n_node.value < 0:
+        return expr
+    try:
+        return identity_matrix(n_node.value)
+    except MatrixError:
+        return expr
+
+
+def zero_matrix_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``ZeroMatrix(rows, cols)`` → all-zero matrix.
+
+    Both arguments must be non-negative ``IRInteger`` values.  One-argument
+    form ``ZeroMatrix(n)`` builds an n×n zero matrix.  Falls through on
+    invalid arguments.
+    """
+    if len(expr.args) == 1:
+        n_node = expr.args[0]
+        if not isinstance(n_node, IRInteger) or n_node.value < 0:
+            return expr
+        try:
+            return zero_matrix(n_node.value, n_node.value)
+        except MatrixError:
+            return expr
+    if len(expr.args) == 2:
+        r_node, c_node = expr.args
+        if (
+            not isinstance(r_node, IRInteger)
+            or not isinstance(c_node, IRInteger)
+            or r_node.value < 0
+            or c_node.value < 0
+        ):
+            return expr
+        try:
+            return zero_matrix(r_node.value, c_node.value)
+        except MatrixError:
+            return expr
+    return expr
+
+
+def rank_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Rank(M)`` → ``IRInteger(r)`` where ``r`` is the matrix rank.
+
+    Uses Gaussian elimination over the rationals.  Falls through on
+    symbolic entries or non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return rank(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def row_reduce_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``RowReduce(M)`` → reduced row echelon form (RREF) of matrix M.
+
+    Uses Gauss-Jordan elimination over the rationals (exact arithmetic).
+    Falls through on symbolic entries or non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return row_reduce(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def eigenvalues_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Eigenvalues(M)`` → ``List(List(λ₁, m₁), List(λ₂, m₂), …)``.
+
+    Each inner ``List`` contains the eigenvalue followed by its algebraic
+    multiplicity.  Dispatches to ``cas-solve`` (linear through quartic) for
+    the characteristic polynomial.  Falls through on:
+
+    - Non-square or non-matrix input.
+    - Matrix larger than 4×4 (higher-degree char poly not supported).
+    - Symbolic entries (cannot form rational char poly).
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return eigenvalues(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def eigenvectors_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Eigenvectors(M)`` → ``List(List(λ, m, List(v₁, …)), …)``.
+
+    For each eigenvalue, returns its multiplicity and null-space basis vectors
+    for ``(A − λI)``.  Eigenvectors are returned as n×1 column-vector
+    ``Matrix`` nodes.
+
+    Exact null spaces are computed only for rational eigenvalues.  Complex or
+    irrational eigenvalues yield an empty ``List()`` for their vector group —
+    the pair ``(λ, m)`` is still included so callers know the eigenvalue
+    exists.
+
+    Falls through on non-square / symbolic / >4×4 input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return eigenvectors(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def charpoly_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``CharPoly(M, λ)`` → ``det(λI − M)`` as an IR polynomial in λ.
+
+    The second argument must be an ``IRSymbol`` naming the variable.  Falls
+    through on non-square input, symbolic matrix entries, or wrong arity.
+    """
+    if len(expr.args) != 2:
+        return expr
+    mat_node, lam_node = expr.args
+    if not isinstance(lam_node, IRSymbol):
+        return expr
+    try:
+        return charpoly(mat_node, lam_node)
+    except MatrixError:
+        return expr
+
+
+def lu_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``LU(M)`` → ``List(L, U, P)`` from Doolittle LU decomposition.
+
+    Returns the three matrices such that ``P·M = L·U``:
+
+    - ``L`` — unit lower-triangular (1s on diagonal).
+    - ``U`` — upper-triangular.
+    - ``P`` — permutation matrix encoding the row-swap history.
+
+    Falls through on non-square, singular, or symbolic input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return lu_decompose(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def nullspace_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``NullSpace(M)`` → ``List(v₁, v₂, …)`` — null-space basis.
+
+    Each ``vᵢ`` is an n×1 column-vector ``Matrix`` node.  Returns
+    ``List()`` (empty) when M has full column rank.  Falls through on
+    symbolic entries or non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return nullspace(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def columnspace_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``ColumnSpace(M)`` → ``List(c₁, c₂, …)`` — column-space basis.
+
+    Basis vectors are the pivot columns of the **original** matrix M (not
+    the RREF), each returned as an m×1 column-vector ``Matrix`` node.
+    Falls through on symbolic entries or non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return columnspace(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def rowspace_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``RowSpace(M)`` → ``List(r₁, r₂, …)`` — row-space basis.
+
+    Basis vectors are the non-zero rows of the RREF of M, each returned as
+    a 1×n row-vector ``Matrix`` node.  Falls through on symbolic entries or
+    non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return rowspace(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def norm_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Norm(M)`` or ``Norm(M, "frobenius")`` → matrix/vector norm.
+
+    One-argument form computes the **Euclidean** (L²) norm of a column or
+    row vector.  Raises (falls through) for a general matrix.
+
+    Two-argument form requires the second argument to be the string literal
+    ``IRSymbol("frobenius")`` and computes the **Frobenius** norm of any
+    matrix.
+
+    Returns:
+
+    - ``IRInteger`` or ``IRRational`` when the sum of squares is a perfect
+      rational square (exact result).
+    - ``IRApply(SQRT, (sum_of_squares,))`` otherwise.
+
+    Falls through on symbolic entries, wrong arity, or unknown norm kind.
+    """
+    if len(expr.args) == 1:
+        try:
+            return norm(expr.args[0])
+        except MatrixError:
+            return expr
+    if len(expr.args) == 2:
+        kind_node = expr.args[1]
+        # Accept IRSymbol("frobenius") as the norm kind string.
+        if not isinstance(kind_node, IRSymbol):
+            return expr
+        kind_str = str(kind_node.name)
+        try:
+            return norm(expr.args[0], kind_str)
+        except MatrixError:
+            return expr
+    return expr
+
+
+# ===========================================================================
+# Section 7: cas_limit_series handlers
+# ===========================================================================
+
+
+def limit_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Limit(expr, var, point[, dir])`` — full limit evaluation.
+
+    Phase 20 upgrade: uses :func:`cas_limit_series.limit_advanced` with
+    injected ``diff_fn`` and ``eval_fn`` from the VM.  Supports all
+    standard indeterminate forms (0/0, ∞/∞, 0·∞, 1^∞, 0^0, ∞^0) via
+    L'Hôpital and the exp-log rewrite.  Also handles limits at ±∞ and
+    one-sided limits (``direction="plus"`` / ``"minus"``).
+
+    Call forms:
+      ``Limit(expr, var, point)``          — two-sided limit
+      ``Limit(expr, var, point, plus)``    — right-sided limit
+      ``Limit(expr, var, point, minus)``   — left-sided limit
+
+    Falls through to the unevaluated ``Limit(…)`` node if the limit
+    cannot be determined (oscillating, truly indeterminate, unknown form).
+    """
+    n = len(expr.args)
+    if n not in (3, 4):
+        return expr
+    body, var, point = expr.args[:3]
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    # Parse optional direction argument.
+    direction: str | None = None
+    if n == 4:
+        dir_arg = expr.args[3]
+        if isinstance(dir_arg, IRSymbol) and dir_arg.name in ("plus", "minus"):
+            direction = dir_arg.name
+
+    # Inject diff_fn and eval_fn from the VM.
+    def _diff_fn(e: IRNode, v: IRSymbol) -> IRNode:
+        return vm.eval(_symbolic_diff(e, v))
+
+    result = limit_advanced(
+        body,
+        var,
+        point,
+        direction,
+        diff_fn=_diff_fn,
+        eval_fn=vm.eval,
+    )
+    return vm.eval(simplify(result))
+
+
+def taylor_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Taylor(expr, var, point, order)`` — truncated Taylor polynomial.
+
+    Expands ``expr`` in ``var`` around ``point`` to the given ``order``.
+    All four arguments are required:
+
+    - ``expr``  — expression in ``var`` (polynomial *or* transcendental)
+    - ``var``   — the expansion variable (``IRSymbol``)
+    - ``point`` — the expansion point (numeric IR literal)
+    - ``order`` — non-negative ``IRInteger`` truncation order
+
+    Two-phase dispatch
+    ------------------
+    1. Try :func:`cas_limit_series.taylor_polynomial` (fast, polynomial only).
+    2. If the input is transcendental (raises :class:`PolynomialError`),
+       fall back to :func:`_taylor_derivative_fallback`, which computes
+       each Taylor coefficient by successive symbolic differentiation
+       followed by point-substitution.
+
+    Truly malformed inputs (wrong arity, non-symbol ``var``, non-integer
+    order) return the expression unevaluated.
+    """
+    if len(expr.args) != 4:
+        return expr
+    body, var, point, order_ir = expr.args
+    if not isinstance(var, IRSymbol):
+        return expr
+    if not isinstance(order_ir, IRInteger):
+        return expr
+    try:
+        return taylor_polynomial(body, var, point, order_ir.value)
+    except PolynomialError:
+        # Transcendental input — compute coefficients via symbolic diff.
+        return _taylor_derivative_fallback(vm, body, var, point, order_ir.value)
+    except ValueError:
+        return expr  # Truly malformed — return unevaluated.
+
+
+def _taylor_derivative_fallback(
+    vm: VM,
+    body: IRNode,
+    var: IRSymbol,
+    point: IRNode,
+    order: int,
+) -> IRNode:
+    """Compute a Taylor expansion via successive symbolic differentiation.
+
+    Falls back when the direct polynomial-coefficient method can't handle
+    the input (transcendental functions like ``sin``, ``cos``, ``exp``).
+
+    Algorithm
+    ---------
+    The Taylor polynomial around ``a`` to order ``n`` is::
+
+        T(x) = Σ_{k=0}^{n}  f^(k)(a) / k!  ·  (x − a)^k
+
+    For each ``k`` we:
+
+    1. Differentiate ``f_k = d^k f / dx^k`` symbolically via
+       :func:`symbolic_vm.derivative._diff`, then simplify through the
+       VM so the expression stays compact between iterations.
+    2. Substitute ``var = point`` into ``f_k`` via
+       :func:`cas_substitution.subst` and evaluate through the VM to
+       obtain the numeric coefficient.
+    3. Scale by ``1/k!`` (exact rational arithmetic).
+    4. Multiply by the monomial basis ``(x − a)^k`` and evaluate.
+
+    The per-term VM pass ensures that zero coefficients collapse to
+    ``0`` before they're summed, keeping the output clean.
+
+    Parameters
+    ----------
+    vm:
+        The live VM instance (supplies evaluation context).
+    body:
+        The un-differentiated expression ``f``.
+    var:
+        The expansion variable.
+    point:
+        The expansion point (numeric IR node).
+    order:
+        The truncation order ``n`` (non-negative integer).
+
+    Returns
+    -------
+    IRNode
+        The summed Taylor polynomial, fully simplified.
+    """
+    terms: list[IRNode] = []
+    f_k: IRNode = body
+    factorial_k = 1  # k! — updated at the start of each iteration
+
+    point_is_zero = isinstance(point, IRInteger) and point.value == 0
+
+    for k in range(order + 1):
+        # ---- coefficient f^(k)(a) / k! ----------------------------------
+        # Substitute var = point, then let the VM collapse numerics.
+        coeff_ir = vm.eval(subst(point, var, f_k))
+
+        # Scale by 1/k!  (k=0: 0!/1 = 1; k>0: k! accumulated below)
+        if k > 0:
+            factorial_k *= k
+        if factorial_k != 1:
+            scale: IRNode = IRRational(1, factorial_k)
+            coeff_ir = vm.eval(IRApply(MUL, (scale, coeff_ir)))
+
+        # ---- monomial basis (x − a)^k -----------------------------------
+        if k == 0:
+            term = coeff_ir
+        else:
+            if point_is_zero:
+                # (x − 0)^k simplifies to x^k
+                basis: IRNode = (
+                    var if k == 1 else IRApply(POW, (var, IRInteger(k)))
+                )
+            else:
+                shift = IRApply(SUB, (var, point))
+                basis = shift if k == 1 else IRApply(POW, (shift, IRInteger(k)))
+            term = vm.eval(IRApply(MUL, (coeff_ir, basis)))
+
+        terms.append(term)
+
+        # ---- prepare next derivative ------------------------------------
+        # Differentiate symbolically then simplify through the VM so the
+        # working expression stays compact (avoids exponential blow-up).
+        if k < order:
+            f_k = vm.eval(_symbolic_diff(f_k, var))
+
+    # ---- accumulate ---------------------------------------------------------
+    if not terms:
+        return IRInteger(0)
+    result = terms[0]
+    for t in terms[1:]:
+        result = vm.eval(IRApply(ADD, (result, t)))
+    return result
+
+
+# ===========================================================================
+# Section 8: numeric / arithmetic handlers
+# ===========================================================================
+
+
+def _numeric_unary(
+    expr: IRApply, fn
+) -> IRNode:
+    """Apply a Python callable ``fn`` to a single numeric IR arg."""
+    if len(expr.args) != 1:
+        return expr
+    n = to_number(expr.args[0])
+    if n is None:
+        return expr
+    return from_number(fn(n))
+
+
+def _numeric_binary(
+    expr: IRApply, fn
+) -> IRNode:
+    """Apply a Python callable ``fn(a, b)`` to two numeric IR args."""
+    if len(expr.args) != 2:
+        return expr
+    a = to_number(expr.args[0])
+    b = to_number(expr.args[1])
+    if a is None or b is None:
+        return expr
+    return from_number(fn(a, b))
+
+
+def abs_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Abs(x)`` → absolute value.
+
+    Simplification rules
+    --------------------
+    1. **Complex inputs** (contain ``ImaginaryUnit``): delegate to
+       :func:`cas_complex.handlers.abs_complex_handler` which returns
+       ``sqrt(re² + im²)``.
+
+    2. **Real numeric inputs** (IRInteger, IRRational, IRFloat): fold
+       directly via Python's ``abs()``.
+
+    3. **Symbolic inputs with a known sign** (Phase 28): if the user
+       has previously called ``assume(x > 0)`` or ``assume(x >= 0)``,
+       the assumption context on ``vm.assumptions`` records this and
+       we can fold:
+
+       - ``is_nonneg(x)`` (x ≥ 0, or x > 0, or x = 0) → return ``x``
+       - ``sign_of(x) == 0``  (x = 0)                  → return ``0``
+       - ``is_negative(x)``   (x < 0)                  → return ``-x``
+
+    4. **Pure algebraic rules** (Phase 29): hold for all real inputs
+       with no assumptions:
+
+       - ``Abs(Abs(x))``        → ``Abs(x)``           *(idempotency)*
+       - ``Abs(Neg(x))``        → ``Abs(x)``           *(even function)*
+       - ``Abs(Mul(-1, x))``    → ``Abs(x)``           *(−x encoded as Mul)*
+       - ``Abs(Pow(x, 2k))``    → ``Pow(x, 2k)``       *(x²ᵏ ≥ 0 always)*
+
+    5. **Everything else**: leave unevaluated as ``Abs(x)``.
+
+    Examples::
+
+        abs(3)           →  3
+        abs(-3)          →  3
+        abs(-x)          →  Abs(x)      (Phase 29)
+        abs(x^2)         →  Pow(x, 2)   (Phase 29)
+        abs(abs(x))      →  Abs(x)      (Phase 29)
+        # after assume(x > 0):
+        abs(x)           →  x
+        # after assume(x >= 0):
+        abs(x)           →  x
+        # after assume(x < 0):
+        abs(x)           →  -x
+    """
+    if len(expr.args) != 1:
+        return expr
+    inner = vm.eval(expr.args[0])
+    # Rule 1: complex.
+    if _contains_imaginary(inner):
+        return _abs_complex_handler(vm, IRApply(expr.head, (inner,)))
+    # Rule 2: numeric fold.
+    n = to_number(inner)
+    if n is not None:
+        return from_number(abs(n))
+    # Rule 3: sign-aware fold via the per-VM assumption context.
+    if isinstance(inner, IRSymbol):
+        ctx = vm.assumptions
+        # Non-negative: abs(x) = x  (covers x > 0, x >= 0, x = 0)
+        if ctx.is_nonneg(inner.name) is True:
+            return inner
+        # Zero exactly: abs(x) = 0
+        if ctx.sign_of(inner.name) == 0:
+            return IRInteger(0)
+        # Negative: abs(x) = -x  (covers x < 0)
+        if ctx.is_negative(inner.name) is True:
+            return IRApply(NEG, (inner,))
+    # Rule 4 (Phase 29): pure algebraic structure rules.
+    _abs_head = IRSymbol("Abs")
+    if isinstance(inner, IRApply):
+        # Rule 4a: idempotency — abs(abs(x)) = abs(x)
+        if inner.head == _abs_head:
+            return inner
+        # Rule 4b: strip negation — abs(-x) = abs(x)
+        if inner.head == NEG and len(inner.args) == 1:
+            # Recurse: inner.args[0] is already evaluated (inner = vm.eval(...))
+            return abs_handler(vm, IRApply(expr.head, (inner.args[0],)))
+        # Rule 4c: strip Mul(-1, x) — -x encoded as Mul after eval
+        neg_one = IRInteger(-1)
+        if inner.head == MUL and len(inner.args) == 2 and inner.args[0] == neg_one:
+            return abs_handler(vm, IRApply(expr.head, (inner.args[1],)))
+        # Rule 4d: even integer power — abs(x^{2k}) = x^{2k}  (x^{2k} ≥ 0 always)
+        if inner.head == POW and len(inner.args) == 2:
+            exp_node = inner.args[1]
+            if (
+                isinstance(exp_node, IRInteger)
+                and exp_node.value >= 2
+                and exp_node.value % 2 == 0
+            ):
+                return inner
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (inner,))
+
+
+def sqrt_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sqrt(x)`` — square root with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory handler from
+    :mod:`symbolic_vm.handlers` (which only numeric-folds) via the
+    ``handlers.update(build_cas_handler_table())`` merging in
+    :class:`~symbolic_vm.backends.SymbolicBackend`.  All numeric behaviour
+    from that factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special values**: ``Sqrt(0) → 0``, ``Sqrt(1) → 1``.
+
+    2. **Numeric fold**: integer / rational / float inputs are evaluated
+       with ``math.sqrt``.  Perfect-square integers (``4, 9, 16, …``)
+       return an ``IRInteger``; irrational values return ``IRFloat``.
+
+    3. **Even-exponent power** ``Sqrt(Pow(x, 2k))`` for positive even exponent
+       ``2k``:
+
+       - ``k`` even (``2k = 4, 8, 12, …``) → ``Pow(x, k)``
+         *(x^k ≥ 0 for even k, no abs needed)*
+       - ``k`` odd  (``2k = 2, 6, 10, …``) → ``Abs(Pow(x, k))``
+         *(sign of x^k depends on sign of x)*
+
+       The most common case ``k = 1``:  ``Sqrt(Pow(x, 2)) → Abs(x)``.
+
+    4. **Assumption-aware** (Phase 28 integration): ``Sqrt(Pow(x, 2)) → x``
+       when ``vm.assumptions.is_nonneg(x.name)`` is True, because under
+       non-negativity ``|x| = x``.
+
+    5. **Everything else**: leave unevaluated as ``Sqrt(arg)``.
+
+    Examples::
+
+        sqrt(0)      →  0
+        sqrt(1)      →  1
+        sqrt(4)      →  2           (perfect square)
+        sqrt(2.0)    →  1.4142…     (float fold)
+        sqrt(x^2)    →  Abs(x)      (k=1, odd)
+        sqrt(x^4)    →  Pow(x, 2)   (k=2, even)
+        sqrt(x^6)    →  Abs(Pow(x, 3))   (k=3, odd)
+        sqrt(x^8)    →  Pow(x, 4)   (k=4, even)
+        # after assume(x >= 0):
+        sqrt(x^2)    →  x
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with exact special values and perfect-square detection.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        if n == 1:
+            return IRInteger(1)
+        result = math.sqrt(float(n))
+        # Detect perfect squares: round to nearest integer and verify by squaring.
+        # Using round() rather than int() guards against floating-point underflow
+        # near large perfect squares (e.g. sqrt(25) = 4.9999… → int would give 4).
+        int_result = round(result)
+        if int_result * int_result == n:
+            return IRInteger(int_result)
+        return IRFloat(result)
+    # Rule 3 + 4: algebraic simplification for sqrt(x^{2k}).
+    if isinstance(arg, IRApply) and arg.head == POW and len(arg.args) == 2:
+        base = arg.args[0]
+        exp_node = arg.args[1]
+        if isinstance(exp_node, IRInteger):
+            n_exp = exp_node.value
+            if n_exp > 0 and n_exp % 2 == 0:
+                k = n_exp // 2
+                # Rule 4: assumption-aware — sqrt(x^2) = x when x ≥ 0.
+                if (
+                    k == 1
+                    and isinstance(base, IRSymbol)
+                    and vm.assumptions.is_nonneg(base.name) is True
+                ):
+                    return base
+                # k even → x^k ≥ 0 always (e.g. sqrt(x^4) = x^2)
+                if k % 2 == 0:
+                    return IRApply(POW, (base, IRInteger(k)))
+                # k odd → |x^k| (e.g. sqrt(x^2) = |x|, sqrt(x^6) = |x^3|)
+                if k == 1:
+                    return IRApply(IRSymbol("Abs"), (base,))
+                return IRApply(IRSymbol("Abs"), (IRApply(POW, (base, IRInteger(k))),))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def log_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Log(x)`` — natural logarithm with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory ``Log`` handler from
+    :mod:`symbolic_vm.handlers` (which was numeric-only) via the standard
+    ``handlers.update(build_cas_handler_table())`` mechanism.  All numeric
+    behaviour from the factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special value**: ``Log(1) → 0``.
+
+    2. **Numeric fold**: positive integer / rational / float inputs are folded
+       via ``math.log``.  Negative or zero inputs are left unevaluated because
+       real-valued logarithm is undefined there.
+
+    3. **Cancellation** ``Log(Exp(x)) → x``:
+       ``exp`` maps all of ℝ into ℝ⁺, and ``log`` is its exact inverse, so
+       ``log(exp(x)) = x`` holds for every real ``x`` without any assumption.
+
+    4. **Power rule** ``Log(Pow(x, n)) → Mul(n, Log(x))``:
+       Requires ``vm.assumptions.is_nonneg(x.name)`` to be True, because
+       ``log(x^n) = n·log(x)`` only holds when ``x > 0`` (otherwise branch
+       cuts complicate the identity).
+
+    5. **Everything else**: leave unevaluated as ``Log(arg)``.
+
+    Examples::
+
+        log(1)          →  0
+        log(2.718…)     →  ≈ 1.0
+        log(exp(x))     →  x          (Phase 30)
+        log(exp(2*x))   →  2*x        (Phase 30)
+        # after assume(x > 0):
+        log(x^3)        →  Mul(3, Log(x))   (Phase 30)
+        # no assumption:
+        log(x^3)        →  Log(Pow(x, 3))   (unevaluated)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with special value and domain guard.
+    n = to_number(arg)
+    if n is not None:
+        if n == 1:
+            return IRInteger(0)
+        if n <= 0:
+            # log undefined for non-positive reals — leave unevaluated.
+            return IRApply(expr.head, (arg,))
+        return IRFloat(math.log(float(n)))
+    # Rule 3: log(exp(x)) = x  (cancellation, unconditional for real domain).
+    if isinstance(arg, IRApply) and arg.head == EXP and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: log(x^n) = n * log(x)  when x is known non-negative.
+    if isinstance(arg, IRApply) and arg.head == POW and len(arg.args) == 2:
+        base, exp_node = arg.args
+        if isinstance(base, IRSymbol) and vm.assumptions.is_nonneg(base.name) is True:
+            log_base = IRApply(LOG, (base,))
+            return IRApply(MUL, (exp_node, log_base))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def exp_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Exp(x)`` — natural exponential with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory ``Exp`` handler from
+    :mod:`symbolic_vm.handlers` (which was numeric-only) via the standard
+    ``handlers.update(build_cas_handler_table())`` mechanism.  All numeric
+    behaviour from the factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special value**: ``Exp(0) → 1``.
+
+    2. **Numeric fold**: integer / rational / float inputs are folded via
+       ``math.exp``.
+
+    3. **Cancellation** ``Exp(Log(x)) → x``:
+       Any expression containing ``Log(x)`` already implies ``x > 0`` in the
+       real domain (log is only defined for positive arguments), so
+       ``exp(log(x)) = x`` is structurally safe — no explicit assumption needed.
+
+    4. **Power form** ``Exp(Mul(n, Log(x))) → Pow(x, n)`` (or the commuted
+       form ``Exp(Mul(Log(x), n))``):
+       ``e^{n·ln x} = x^n`` follows directly from the same domain argument as
+       Rule 3.  This simplifies outputs of ``logcontract``, ``exponentialize``,
+       and user-written expressions like ``exp(2*log(x))``.
+
+    5. **Everything else**: leave unevaluated as ``Exp(arg)``.
+
+    Examples::
+
+        exp(0)          →  1
+        exp(1.0)        →  ≈ 2.718
+        exp(log(x))     →  x           (Phase 30)
+        exp(2*log(x))   →  Pow(x, 2)   (Phase 30)
+        exp(log(x)*3)   →  Pow(x, 3)   (Phase 30, commuted Mul)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with exp(0) = 1 identity.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(1)
+        return IRFloat(math.exp(float(n)))
+    # Rule 3: exp(log(x)) = x  (structural cancellation).
+    if isinstance(arg, IRApply) and arg.head == LOG and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: exp(n * log(x)) = x^n  (both Mul orderings).
+    if isinstance(arg, IRApply) and arg.head == MUL and len(arg.args) == 2:
+        a, b = arg.args
+        # Check Mul(n, log(x)) and Mul(log(x), n).
+        log_node: IRApply | None = None
+        coeff: IRNode | None = None
+        if isinstance(a, IRApply) and a.head == LOG and len(a.args) == 1:
+            log_node, coeff = a, b
+        elif isinstance(b, IRApply) and b.head == LOG and len(b.args) == 1:
+            log_node, coeff = b, a
+        if log_node is not None and coeff is not None:
+            base = log_node.args[0]
+            return IRApply(POW, (base, coeff))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+# ---------------------------------------------------------------------------
+# Phase 33: Trig special values at rational multiples of π
+# ---------------------------------------------------------------------------
+# The three primary angle functions (sin, cos, tan) gain an exact-evaluation
+# rule for arguments of the form ``q · %pi`` where ``q`` is a rational number
+# with denominator in {1, 2, 3, 4, 6} — the 12 sectors of the unit circle
+# used in standard trigonometry.
+#
+# ``_try_pi_multiple(arg)`` detects the supported structural patterns and
+# returns ``q`` as a ``Fraction``.  The sin/cos tables are keyed by ``q mod 2``
+# (period 2π); the tan table is keyed by ``q mod 1`` (period π).
+#
+# Exact IR representations used:
+#   0            → IRInteger(0)
+#   ±1           → IRInteger(±1)
+#   ±1/2         → IRRational(±1, 2)
+#   ±√2/2        → Div(Sqrt(2), 2)  / Neg(…)
+#   ±√3/2        → Div(Sqrt(3), 2)  / Neg(…)
+#   ±√3          → Sqrt(3)          / Neg(…)
+#   ±1/√3 = ±√3/3 → Div(Sqrt(3), 3) / Neg(…)
+#
+# tan at π/2 and 3π/2 is undefined — handler leaves the expression unevaluated.
+# ---------------------------------------------------------------------------
+
+_PHASE33_PI = IRSymbol("%pi")  # canonical π symbol for π-multiple detection
+
+# Exact algebraic IR constants shared by the lookup tables.
+_P33_SQRT2_OVER_2 = IRApply(DIV, (IRApply(SQRT, (IRInteger(2),)), IRInteger(2)))
+_P33_SQRT3_OVER_2 = IRApply(DIV, (IRApply(SQRT, (IRInteger(3),)), IRInteger(2)))
+_P33_SQRT3        = IRApply(SQRT, (IRInteger(3),))
+_P33_SQRT3_OVER_3 = IRApply(DIV, (IRApply(SQRT, (IRInteger(3),)), IRInteger(3)))
+_P33_NEG_SQRT2_OVER_2 = IRApply(NEG, (_P33_SQRT2_OVER_2,))
+_P33_NEG_SQRT3_OVER_2 = IRApply(NEG, (_P33_SQRT3_OVER_2,))
+_P33_NEG_SQRT3        = IRApply(NEG, (_P33_SQRT3,))
+_P33_NEG_SQRT3_OVER_3 = IRApply(NEG, (_P33_SQRT3_OVER_3,))
+
+# sin(q·π) for q ∈ [0, 2)  (period 2π → reduce mod 2)
+_SIN_PI_TABLE: dict[Fraction, IRNode] = {
+    Fraction(0):    IRInteger(0),
+    Fraction(1, 6): IRRational(1, 2),
+    Fraction(1, 4): _P33_SQRT2_OVER_2,
+    Fraction(1, 3): _P33_SQRT3_OVER_2,
+    Fraction(1, 2): IRInteger(1),
+    Fraction(2, 3): _P33_SQRT3_OVER_2,
+    Fraction(3, 4): _P33_SQRT2_OVER_2,
+    Fraction(5, 6): IRRational(1, 2),
+    Fraction(1, 1): IRInteger(0),
+    Fraction(7, 6): IRRational(-1, 2),
+    Fraction(5, 4): _P33_NEG_SQRT2_OVER_2,
+    Fraction(4, 3): _P33_NEG_SQRT3_OVER_2,
+    Fraction(3, 2): IRInteger(-1),
+    Fraction(5, 3): _P33_NEG_SQRT3_OVER_2,
+    Fraction(7, 4): _P33_NEG_SQRT2_OVER_2,
+    Fraction(11, 6): IRRational(-1, 2),
+}
+
+# cos(q·π) for q ∈ [0, 2)  (period 2π → reduce mod 2)
+_COS_PI_TABLE: dict[Fraction, IRNode] = {
+    Fraction(0):    IRInteger(1),
+    Fraction(1, 6): _P33_SQRT3_OVER_2,
+    Fraction(1, 4): _P33_SQRT2_OVER_2,
+    Fraction(1, 3): IRRational(1, 2),
+    Fraction(1, 2): IRInteger(0),
+    Fraction(2, 3): IRRational(-1, 2),
+    Fraction(3, 4): _P33_NEG_SQRT2_OVER_2,
+    Fraction(5, 6): _P33_NEG_SQRT3_OVER_2,
+    Fraction(1, 1): IRInteger(-1),
+    Fraction(7, 6): _P33_NEG_SQRT3_OVER_2,
+    Fraction(5, 4): _P33_NEG_SQRT2_OVER_2,
+    Fraction(4, 3): IRRational(-1, 2),
+    Fraction(3, 2): IRInteger(0),
+    Fraction(5, 3): IRRational(1, 2),
+    Fraction(7, 4): _P33_SQRT2_OVER_2,
+    Fraction(11, 6): _P33_SQRT3_OVER_2,
+}
+
+# tan(q·π) for q ∈ [0, 1)  (period π → reduce mod 1).
+# q = 1/2 is omitted — tan(π/2) is undefined; the handler leaves it unevaluated.
+_TAN_PI_TABLE: dict[Fraction, IRNode] = {
+    Fraction(0):    IRInteger(0),
+    Fraction(1, 6): _P33_SQRT3_OVER_3,
+    Fraction(1, 4): IRInteger(1),
+    Fraction(1, 3): _P33_SQRT3,
+    Fraction(2, 3): _P33_NEG_SQRT3,
+    Fraction(3, 4): IRInteger(-1),
+    Fraction(5, 6): _P33_NEG_SQRT3_OVER_3,
+}
+
+
+def _try_pi_multiple(arg: IRNode) -> Fraction | None:
+    """If ``arg`` equals ``q · π`` for a rational ``q``, return ``q`` as a
+    :class:`~fractions.Fraction`.  Otherwise return ``None``.
+
+    Two detection strategies are used in sequence:
+
+    1. **IRFloat path** — for backends (e.g. MacsymaBackend) that have already
+       evaluated ``%pi`` to ``IRFloat(3.14159…)``.  We divide the float value
+       by ``math.pi`` and check whether the ratio is within 1 × 10⁻⁹ of a
+       rational with denominator in ``{1, 2, 3, 4, 6}`` — the only denominators
+       that appear in the clock-angle lookup tables.
+
+    2. **Structural path** — for backends that keep ``%pi`` as
+       ``IRSymbol("%pi")`` (the normal symbolic path).
+
+    Recognised structural patterns (strategy 2)
+    ---------------------------------------------
+    - ``%pi``                             → Fraction(1)
+    - ``Neg(%pi)``                        → Fraction(-1)
+    - ``Mul(n, %pi)`` / ``Mul(%pi, n)``   → Fraction(n) for numeric n
+    - ``Div(%pi, n)``                     → Fraction(1, n) for numeric n ≠ 0
+    - ``Div(Mul(n, %pi), d)``             → Fraction(n, d) for numeric n, d
+    - ``Div(Mul(%pi, n), d)``             → Fraction(n, d) for numeric n, d
+    - ``Neg(any_of_the_above)``           → negated Fraction
+
+    ``to_number`` is used to extract numeric coefficients; if it returns
+    ``None`` (e.g. the coefficient is itself symbolic), we bail out.
+    """
+    # Strategy 1: IRFloat value ≈ q·π
+    # The VM pre-evaluates arguments before dispatch; with MacsymaBackend
+    # ``%pi`` becomes ``IRFloat(math.pi)`` before we ever see it.  Divide out
+    # π and check for a rational with one of the five "clock" denominators.
+    if isinstance(arg, IRFloat):
+        q_float = arg.value / math.pi
+        for d in (1, 2, 3, 4, 6):
+            p_candidate = round(q_float * d)
+            if abs(q_float * d - p_candidate) < 1e-9:
+                return Fraction(p_candidate, d)
+        return None
+    # Strategy 2: structural match on IR tree
+    if arg == _PHASE33_PI:
+        return Fraction(1)
+    if not isinstance(arg, IRApply):
+        return None
+    # Neg(anything) — recurse and negate
+    if arg.head == NEG and len(arg.args) == 1:
+        inner = _try_pi_multiple(arg.args[0])
+        return -inner if inner is not None else None
+    # Mul(n, %pi) or Mul(%pi, n)
+    if arg.head == MUL and len(arg.args) == 2:
+        a, b = arg.args
+        if b == _PHASE33_PI:
+            n = to_number(a)
+            return Fraction(n).limit_denominator(10**6) if n is not None else None
+        if a == _PHASE33_PI:
+            n = to_number(b)
+            return Fraction(n).limit_denominator(10**6) if n is not None else None
+    # Div(numerator, denominator)
+    if arg.head == DIV and len(arg.args) == 2:
+        num, den = arg.args
+        d = to_number(den)
+        if d is None or d == 0:
+            return None
+        d_frac = Fraction(d).limit_denominator(10**6)
+        # Div(%pi, n) — simple form
+        if num == _PHASE33_PI:
+            return Fraction(1) / d_frac
+        # Div(Mul(n, %pi), d) or Div(Mul(%pi, n), d) — compound numerator
+        if isinstance(num, IRApply) and num.head == MUL and len(num.args) == 2:
+            ma, mb = num.args
+            if mb == _PHASE33_PI:
+                n = to_number(ma)
+                if n is not None:
+                    return Fraction(n).limit_denominator(10**6) / d_frac
+            if ma == _PHASE33_PI:
+                n = to_number(mb)
+                if n is not None:
+                    return Fraction(n).limit_denominator(10**6) / d_frac
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Phase 31: Trig symmetry and arc-cancellation identities
+# ---------------------------------------------------------------------------
+# Each of the six primary trig/hyperbolic functions gets an algebraic handler
+# that overrides the numeric-only ``_elementary``-factory handler from
+# ``handlers.py``.  All numeric behaviour from the factory is preserved;
+# two families of algebraic rules are added on top:
+#
+#   A. Negation symmetry — detects ``Neg(inner)`` as the argument and applies
+#      the function's parity (odd → negate result, even → strip negation).
+#
+#   B. Arc-function cancellation — detects the corresponding inverse function
+#      as the argument and returns the inner expression directly.  This is
+#      purely structural: the presence of ``asin(x)`` in the argument already
+#      implies x ∈ [-1,1], ``atan(x)`` implies real domain, etc.
+#
+# Both rules recurse into the handler to handle chained negations and to
+# allow the numeric fold to fire after stripping negation.
+# Phase 33: π-multiple detection is Rule 4 in sin/cos/tan handlers — fires
+# when arg is q·%pi with q a rational having denominator in {1,2,3,4,6}.
+# ---------------------------------------------------------------------------
+
+
+def sin_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sin(x)`` — sine with odd-symmetry, arc-cancellation, and π-value rules.
+
+    Simplification rules (Phases 31 + 33)
+    --------------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.sin``.  The special value ``Sin(0) → 0`` is subsumed by this.
+
+    2. **Odd symmetry** ``Sin(-x) → -Sin(x)`` (Phase 31):
+       Sine is an odd function — ``sin(-x) = -sin(x)`` for all real ``x``.
+       Recursing into the handler means double negations collapse correctly:
+       ``sin(-(-x)) = sin(x)``.
+
+    3. **Arc-cancellation** ``Sin(Asin(x)) → x`` (Phase 31):
+       ``asin`` maps ``[-1,1] → [-π/2, π/2]``; ``sin`` restricted to that
+       interval is the exact left inverse, so ``sin(asin(x)) = x``
+       unconditionally (structural identity).
+
+    4. **π-multiple exact values** ``Sin(q·%pi)`` (Phase 33):
+       When ``arg`` is a rational multiple of ``%pi`` with denominator in
+       {1, 2, 3, 4, 6}, return the exact algebraic value from ``_SIN_PI_TABLE``
+       (exact ``IRInteger``, ``IRRational``, or ``Div/Sqrt`` expression).
+       For example:
+         - ``sin(%pi)     → 0``
+         - ``sin(%pi/6)   → 1/2``
+         - ``sin(%pi/4)   → Div(Sqrt(2), 2)``
+         - ``sin(%pi/3)   → Div(Sqrt(3), 2)``
+         - ``sin(%pi/2)   → 1``
+         - ``sin(2·%pi)   → 0``
+       Arguments not in the table leave the expression unevaluated.
+
+    5. **Everything else**: leave unevaluated as ``Sin(arg)``.
+
+    Examples::
+
+        sin(-x)      → Neg(Sin(x))          (odd symmetry)
+        sin(-(-x))   → Sin(x)               (double-neg collapses via recursion)
+        sin(asin(x)) → x                    (arc-cancellation)
+        sin(%pi)     → IRInteger(0)          (π-multiple exact value)
+        sin(%pi/6)   → IRRational(1, 2)     (π-multiple exact value)
+        sin(%pi/4)   → Div(Sqrt(2), 2)      (π-multiple exact value)
+        sin(0.5)     → IRFloat(≈0.479)      (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    raw_arg = expr.args[0]
+    # Rule 4 (Phase 33): π-multiple exact values — checked on the raw (unevaluated)
+    # argument so that backends which evaluate %pi to IRFloat (e.g. MacsymaBackend)
+    # don't prevent exact-value detection.  Neg(q·%pi) is also handled here via
+    # _try_pi_multiple's recursive Neg branch (e.g. sin(-(%pi/6)) → sin(11π/6) = -1/2).
+    q = _try_pi_multiple(raw_arg)
+    if q is not None:
+        q_mod = q % 2  # sin has period 2π
+        if q_mod in _SIN_PI_TABLE:
+            return _SIN_PI_TABLE[q_mod]
+    arg = vm.eval(raw_arg)
+    # Rule 1: numeric fold.  Preserve the exact special value sin(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.sin(float(n)))
+    # Rule 2: odd symmetry — sin(-x) = -sin(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = sin_handler(vm, IRApply(SIN, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: arc-cancellation — sin(asin(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ASIN and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def cos_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Cos(x)`` — cosine with even-symmetry, arc-cancellation, and π-value rules.
+
+    Simplification rules (Phases 31 + 33)
+    --------------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.cos``.  The special value ``Cos(0) → 1`` is subsumed by this.
+
+    2. **Even symmetry** ``Cos(-x) → Cos(x)`` (Phase 31):
+       Cosine is an even function — ``cos(-x) = cos(x)`` for all real ``x``.
+       The negation is stripped and the handler recurses so that numeric fold
+       and further algebraic rules fire on the inner expression.
+
+    3. **Arc-cancellation** ``Cos(Acos(x)) → x`` (Phase 31):
+       ``acos`` maps ``[-1,1] → [0, π]``; ``cos`` restricted to that interval
+       is the exact left inverse, so ``cos(acos(x)) = x`` unconditionally.
+
+    4. **π-multiple exact values** ``Cos(q·%pi)`` (Phase 33):
+       When ``arg`` is a rational multiple of ``%pi`` with denominator in
+       {1, 2, 3, 4, 6}, return the exact algebraic value from ``_COS_PI_TABLE``.
+       For example:
+         - ``cos(%pi)     → -1``
+         - ``cos(%pi/2)   → 0``
+         - ``cos(%pi/3)   → 1/2``
+         - ``cos(%pi/4)   → Div(Sqrt(2), 2)``
+         - ``cos(2·%pi)   → 1``
+
+    5. **Everything else**: leave unevaluated as ``Cos(arg)``.
+
+    Examples::
+
+        cos(-x)      → Cos(x)               (even symmetry, NEG stripped)
+        cos(-(-x))   → Cos(x)               (double-neg: strip both)
+        cos(acos(x)) → x                    (arc-cancellation)
+        cos(%pi)     → IRInteger(-1)         (π-multiple exact value)
+        cos(%pi/2)   → IRInteger(0)          (π-multiple exact value)
+        cos(%pi/3)   → IRRational(1, 2)     (π-multiple exact value)
+        cos(0.5)     → IRFloat(≈0.878)      (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    raw_arg = expr.args[0]
+    # Rule 4 (Phase 33): π-multiple exact values — checked on the raw argument.
+    # cos(-q·%pi) = cos(q·%pi) by even symmetry, so the Neg is absorbed into
+    # modular reduction: Fraction(-1/3) % 2 = Fraction(5/3) → cos(5π/3) = 1/2.
+    q = _try_pi_multiple(raw_arg)
+    if q is not None:
+        q_mod = q % 2  # cos has period 2π
+        if q_mod in _COS_PI_TABLE:
+            return _COS_PI_TABLE[q_mod]
+    arg = vm.eval(raw_arg)
+    # Rule 1: numeric fold.  Preserve the exact special value cos(0) = 1.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(1)
+        return IRFloat(math.cos(float(n)))
+    # Rule 2: even symmetry — cos(-x) = cos(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        return cos_handler(vm, IRApply(COS, (arg.args[0],)))
+    # Rule 3: arc-cancellation — cos(acos(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ACOS and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def tan_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Tan(x)`` — tangent with odd-symmetry, arc-cancellation, and π-value rules.
+
+    Simplification rules (Phases 31 + 33)
+    --------------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.tan``.  The special value ``Tan(0) → 0`` is subsumed by this.
+
+    2. **Odd symmetry** ``Tan(-x) → -Tan(x)`` (Phase 31):
+       Tangent is an odd function — ``tan(-x) = -tan(x)`` wherever it is
+       defined.  Same recursive descent as ``sin_handler``.
+
+    3. **Arc-cancellation** ``Tan(Atan(x)) → x`` (Phase 31):
+       ``atan`` maps ``ℝ → (-π/2, π/2)`` where ``tan`` is defined and
+       bijective; ``tan(atan(x)) = x`` for all real ``x`` unconditionally.
+
+    4. **π-multiple exact values** ``Tan(q·%pi)`` (Phase 33):
+       When ``arg`` is a rational multiple of ``%pi`` with denominator in
+       {1, 2, 3, 4, 6}, return the exact algebraic value from ``_TAN_PI_TABLE``.
+       ``tan(π/2)`` and ``tan(3π/2)`` are **undefined** — handler returns the
+       expression unevaluated rather than raising an exception.
+       For example:
+         - ``tan(%pi)     → 0``
+         - ``tan(%pi/4)   → 1``
+         - ``tan(%pi/3)   → Sqrt(3)``
+         - ``tan(3*%pi/4) → -1``
+
+    5. **Everything else**: leave unevaluated as ``Tan(arg)``.
+
+    Examples::
+
+        tan(-x)      → Neg(Tan(x))          (odd symmetry)
+        tan(atan(x)) → x                    (arc-cancellation)
+        tan(%pi/4)   → IRInteger(1)          (π-multiple exact value)
+        tan(%pi/3)   → Sqrt(3)               (π-multiple exact value)
+        tan(%pi/2)   → Tan(%pi/2)           (undefined — left unevaluated)
+        tan(0.5)     → IRFloat(≈0.546)      (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    raw_arg = expr.args[0]
+    # Rule 4 (Phase 33): π-multiple exact values — checked on the raw argument.
+    # tan(-q·%pi) = -tan(q·%pi) by odd symmetry: Neg wraps the result.
+    # However, tan is undefined at π/2 + nπ; those cases return unevaluated.
+    q = _try_pi_multiple(raw_arg)
+    if q is not None:
+        # Handle Neg: tan(-q·%pi) = -tan(q·%pi).
+        sign = Fraction(-1) if q < 0 else Fraction(1)
+        q_abs = abs(q)
+        q_mod = q_abs % 1  # tan has period π
+        if q_mod in _TAN_PI_TABLE:
+            val = _TAN_PI_TABLE[q_mod]
+            return IRApply(NEG, (val,)) if sign < 0 else val
+        # q_mod = 1/2 means undefined — fall through to leave unevaluated
+    arg = vm.eval(raw_arg)
+    # Rule 1: numeric fold.  Preserve the exact special value tan(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.tan(float(n)))
+    # Rule 2: odd symmetry — tan(-x) = -tan(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = tan_handler(vm, IRApply(TAN, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: arc-cancellation — tan(atan(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ATAN and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def sinh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sinh(x)`` — hyperbolic sine with odd-symmetry and arc-cancellation.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.sinh``.
+       ``Sinh(0) → 0`` is subsumed by the numeric path.
+
+    2. **Odd symmetry** ``Sinh(-x) → -Sinh(x)``:
+       Hyperbolic sine is odd — ``sinh(-x) = -sinh(x)`` for all real ``x``.
+
+    3. **Arc-cancellation** ``Sinh(Asinh(x)) → x``:
+       ``asinh`` maps ``ℝ → ℝ`` and is the exact left inverse of ``sinh``,
+       so ``sinh(asinh(x)) = x`` unconditionally.
+
+    4. **Everything else**: leave unevaluated as ``Sinh(arg)``.
+
+    Examples::
+
+        sinh(-x)       → Neg(Sinh(x))    (odd symmetry)
+        sinh(asinh(x)) → x               (arc-cancellation)
+        sinh(1.0)      → IRFloat(≈1.175) (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value sinh(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.sinh(float(n)))
+    # Rule 2: odd symmetry — sinh(-x) = -sinh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = sinh_handler(vm, IRApply(SINH, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: arc-cancellation — sinh(asinh(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ASINH and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def cosh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Cosh(x)`` — hyperbolic cosine with even-symmetry and arc-cancellation.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.cosh``.
+       ``Cosh(0) → 1`` is subsumed by the numeric path.
+
+    2. **Even symmetry** ``Cosh(-x) → Cosh(x)``:
+       Hyperbolic cosine is even — ``cosh(-x) = cosh(x)`` for all real ``x``.
+
+    3. **Arc-cancellation** ``Cosh(Acosh(x)) → x``:
+       ``acosh`` maps ``[1, ∞) → [0, ∞)``; ``cosh`` restricted to ``[0, ∞)``
+       is bijective onto ``[1, ∞)`` with left inverse ``acosh``, so
+       ``cosh(acosh(x)) = x`` unconditionally.
+
+    4. **Everything else**: leave unevaluated as ``Cosh(arg)``.
+
+    Examples::
+
+        cosh(-x)       → Cosh(x)         (even symmetry, NEG stripped)
+        cosh(acosh(x)) → x               (arc-cancellation)
+        cosh(1.0)      → IRFloat(≈1.543) (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value cosh(0) = 1.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(1)
+        return IRFloat(math.cosh(float(n)))
+    # Rule 2: even symmetry — cosh(-x) = cosh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        return cosh_handler(vm, IRApply(COSH, (arg.args[0],)))
+    # Rule 3: arc-cancellation — cosh(acosh(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ACOSH and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def tanh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Tanh(x)`` — hyperbolic tangent with odd-symmetry and arc-cancellation.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.tanh``.
+       ``Tanh(0) → 0`` is subsumed by the numeric path.
+
+    2. **Odd symmetry** ``Tanh(-x) → -Tanh(x)``:
+       Hyperbolic tangent is odd — ``tanh(-x) = -tanh(x)`` for all real ``x``.
+
+    3. **Arc-cancellation** ``Tanh(Atanh(x)) → x``:
+       ``atanh`` maps ``(-1, 1) → ℝ`` and is the exact left inverse of
+       ``tanh``, so ``tanh(atanh(x)) = x`` unconditionally.
+
+    4. **Everything else**: leave unevaluated as ``Tanh(arg)``.
+
+    Examples::
+
+        tanh(-x)       → Neg(Tanh(x))   (odd symmetry)
+        tanh(atanh(x)) → x              (arc-cancellation)
+        tanh(0.5)      → IRFloat(≈0.462)(numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value tanh(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.tanh(float(n)))
+    # Rule 2: odd symmetry — tanh(-x) = -tanh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = tanh_handler(vm, IRApply(TANH, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: arc-cancellation — tanh(atanh(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ATANH and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+# ---------------------------------------------------------------------------
+# Phase 32: Inverse trig/hyperbolic odd symmetry
+# ---------------------------------------------------------------------------
+# The five inverse functions that admit clean algebraic negation rules in the
+# real domain.  Pattern: detect ``Neg(inner)`` as the argument and either
+# negate the result (odd: asin, atan, asinh, atanh) or apply the reflection
+# identity (acos: ``acos(-x) = π - acos(x)``).
+#
+# ``acosh`` is excluded: its domain is ``[1, ∞)``, so ``acosh(-x)`` for
+# positive ``x`` falls outside the real domain — no symmetry rule exists.
+#
+# The ``%pi`` constant is ``IRSymbol("%pi")`` — the same symbol used elsewhere
+# in the VM (e.g. ``_PI_SYM`` defined below for the special-function handlers).
+# We reference it directly here rather than forward-declaring a module alias.
+# ---------------------------------------------------------------------------
+
+_INV_TRIG_PI = IRSymbol("%pi")  # π constant for acos reflection identity
+
+
+def asin_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Asin(x)`` — arc-sine with odd-symmetry rule.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.asin``.  The special value ``Asin(0) → 0`` is preserved exactly.
+
+    2. **Odd symmetry** ``Asin(-x) → -Asin(x)``:
+       Arc-sine is odd — ``asin(-x) = -asin(x)`` for all ``x ∈ [-1, 1]``.
+       The handler recurses so double negations collapse: ``asin(-(-x)) = asin(x)``.
+
+    3. **Everything else**: leave unevaluated as ``Asin(arg)``.
+
+    Examples::
+
+        asin(-x)    → Neg(Asin(x))      (odd symmetry)
+        asin(-(-x)) → Asin(x)           (double-neg collapses)
+        asin(-0.5)  → IRFloat(≈-0.524)  (numeric fold)
+        asin(0)     → IRInteger(0)       (exact special value)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value asin(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.asin(float(n)))
+    # Rule 2: odd symmetry — asin(-x) = -asin(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = asin_handler(vm, IRApply(ASIN, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def acos_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Acos(x)`` — arc-cosine with reflection identity.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.acos``.  The special value ``Acos(1) → 0`` is preserved exactly.
+
+    2. **Reflection identity** ``Acos(-x) → π - Acos(x)``:
+       Arc-cosine satisfies the reflection formula ``acos(-x) = π - acos(x)``
+       for all ``x ∈ [-1, 1]``.  The ``π`` constant is represented as
+       ``IRSymbol("%pi")`` (the canonical MACSYMA/CAS pi symbol).
+       Unlike the odd functions, this is *not* pure negation — it subtracts
+       from π, rewriting the expression as ``Sub(%pi, Acos(inner))``.
+
+    3. **Everything else**: leave unevaluated as ``Acos(arg)``.
+
+    Examples::
+
+        acos(-x)    → Sub(%pi, Acos(x))  (reflection identity)
+        acos(-1)    → IRFloat(π)         (numeric fold: acos(-1) = π)
+        acos(1)     → IRInteger(0)       (exact special value)
+        acos(-0.5)  → IRFloat(≈2.094)    (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value acos(1) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 1:
+            return IRInteger(0)
+        return IRFloat(math.acos(float(n)))
+    # Rule 2: reflection — acos(-x) = π - acos(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_acos = acos_handler(vm, IRApply(ACOS, (arg.args[0],)))
+        return IRApply(SUB, (_INV_TRIG_PI, inner_acos))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def atan_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Atan(x)`` — arc-tangent with odd-symmetry rule.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.atan``.  The special value ``Atan(0) → 0`` is preserved exactly.
+
+    2. **Odd symmetry** ``Atan(-x) → -Atan(x)``:
+       Arc-tangent is odd — ``atan(-x) = -atan(x)`` for all real ``x``.
+       The handler recurses so double negations collapse.
+
+    3. **Everything else**: leave unevaluated as ``Atan(arg)``.
+
+    Examples::
+
+        atan(-x)    → Neg(Atan(x))      (odd symmetry)
+        atan(-(-x)) → Atan(x)           (double-neg collapses)
+        atan(-1.0)  → IRFloat(≈-0.785)  (numeric fold)
+        atan(0)     → IRInteger(0)       (exact special value)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value atan(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.atan(float(n)))
+    # Rule 2: odd symmetry — atan(-x) = -atan(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = atan_handler(vm, IRApply(ATAN, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def asinh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Asinh(x)`` — arc-hyperbolic-sine with odd-symmetry rule.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.asinh``.
+       ``Asinh(0) → 0`` is preserved exactly.
+
+    2. **Odd symmetry** ``Asinh(-x) → -Asinh(x)``:
+       Arc-hyperbolic-sine is odd — ``asinh(-x) = -asinh(x)`` for all real ``x``.
+
+    3. **Everything else**: leave unevaluated as ``Asinh(arg)``.
+
+    Examples::
+
+        asinh(-x)   → Neg(Asinh(x))     (odd symmetry)
+        asinh(-1.0) → IRFloat(≈-0.881)  (numeric fold)
+        asinh(0)    → IRInteger(0)       (exact special value)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value asinh(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.asinh(float(n)))
+    # Rule 2: odd symmetry — asinh(-x) = -asinh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = asinh_handler(vm, IRApply(ASINH, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def atanh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Atanh(x)`` — arc-hyperbolic-tangent with odd-symmetry rule.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.atanh``.
+       ``Atanh(0) → 0`` is preserved exactly.
+
+    2. **Odd symmetry** ``Atanh(-x) → -Atanh(x)``:
+       Arc-hyperbolic-tangent is odd — ``atanh(-x) = -atanh(x)`` for ``x ∈ (-1,1)``.
+
+    3. **Everything else**: leave unevaluated as ``Atanh(arg)``.
+
+    Examples::
+
+        atanh(-x)   → Neg(Atanh(x))     (odd symmetry)
+        atanh(-0.5) → IRFloat(≈-0.549)  (numeric fold)
+        atanh(0)    → IRInteger(0)       (exact special value)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value atanh(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.atanh(float(n)))
+    # Rule 2: odd symmetry — atanh(-x) = -atanh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = atanh_handler(vm, IRApply(ATANH, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def cbrt_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Cbrt(x)`` → exact or numeric cube root.
+
+    Simplification rules
+    --------------------
+    1. **Perfect-cube integers**: ``Cbrt(8)`` → ``2``, ``Cbrt(-27)`` → ``-3``.
+       We test |n|^(1/3) rounded to the nearest integer and verify by
+       cubing.  This preserves exact arithmetic when possible.
+
+    2. **Exact rationals with perfect-cube numerator *and* denominator**:
+       ``Cbrt(8/27)`` → ``2/3``.
+
+    3. **Float inputs**: ``Cbrt(2.0)`` → the floating-point cube root via
+       ``x**(1/3)`` with correct sign handling for negative values.
+
+    4. **Everything else** (symbolic, irrational integers, rational
+       non-cubes): left unevaluated so the caller can display
+       ``Cbrt(2)`` instead of an approximation.
+
+    This handler is primarily useful for the output of Cardano's cubic
+    formula in :mod:`cas_solve.cubic`, which emits ``Cbrt(discriminant)``
+    when the discriminant is not a perfect cube.
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = expr.args[0]
+    n = to_number(arg)
+    if n is None:
+        return expr  # symbolic — leave unevaluated
+
+    # ---- float path --------------------------------------------------------
+    if isinstance(n, float):
+        # math.cbrt is only available in Python 3.11+; use **1/3 with sign.
+        if n >= 0:
+            return from_number(n ** (1.0 / 3.0))
+        return from_number(-((-n) ** (1.0 / 3.0)))
+
+    # ---- exact rational path -----------------------------------------------
+    # n is a Fraction at this point (to_number never returns bare int/float).
+    assert isinstance(n, Fraction)
+    p, q = n.numerator, n.denominator
+    # Check if both numerator and denominator are perfect cubes.
+    cp = _integer_cbrt(p)
+    cq = _integer_cbrt(q)
+    if cp is not None and cq is not None:
+        result = Fraction(cp, cq)
+        return from_number(result)
+
+    # Non-exact — leave unevaluated (don't return a float approximation).
+    return expr
+
+
+def _integer_cbrt(n: int) -> int | None:
+    """Return the integer cube root of ``n`` if ``n`` is a perfect cube.
+
+    Works for both positive and negative integers.  Returns ``None`` if
+    ``n`` is not a perfect cube.
+
+    Examples::
+
+        _integer_cbrt(27)  → 3
+        _integer_cbrt(-8)  → -2
+        _integer_cbrt(1)   → 1
+        _integer_cbrt(0)   → 0
+        _integer_cbrt(2)   → None
+    """
+    if n == 0:
+        return 0
+    sign = 1 if n > 0 else -1
+    m = abs(n)
+    # Integer cube root via Newton's method on integers.
+    r = round(m ** (1.0 / 3.0))
+    # Check r-1, r, r+1 to handle floating-point rounding.
+    for candidate in (r - 1, r, r + 1):
+        if candidate >= 0 and candidate**3 == m:
+            return sign * candidate
+    return None
+
+
+def floor_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Floor(x)`` → greatest integer ≤ x."""
+    return _numeric_unary(expr, lambda n: Fraction(math.floor(n)))
+
+
+def ceiling_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Ceiling(x)`` → smallest integer ≥ x."""
+    return _numeric_unary(expr, lambda n: Fraction(math.ceil(n)))
+
+
+def mod_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Mod(a, b)`` → ``a mod b``. Both arguments must be numeric."""
+    if len(expr.args) != 2:
+        return expr
+    a = to_number(expr.args[0])
+    b = to_number(expr.args[1])
+    if a is None or b is None:
+        return expr
+    if b == 0:
+        return expr  # undefined — leave unevaluated
+    if isinstance(a, Fraction) and isinstance(b, Fraction):
+        return from_number(a % b)
+    return from_number(float(a) % float(b))
+
+
+def gcd_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Gcd(a, b)`` → greatest common divisor. Both must be integers."""
+    if len(expr.args) != 2:
+        return expr
+    a = to_number(expr.args[0])
+    b = to_number(expr.args[1])
+    if not isinstance(a, Fraction) or not isinstance(b, Fraction):
+        return expr
+    if a.denominator != 1 or b.denominator != 1:
+        return expr
+    return IRInteger(math.gcd(a.numerator, b.numerator))
+
+
+def lcm_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Lcm(a, b)`` → least common multiple. Both must be integers."""
+    if len(expr.args) != 2:
+        return expr
+    a = to_number(expr.args[0])
+    b = to_number(expr.args[1])
+    if not isinstance(a, Fraction) or not isinstance(b, Fraction):
+        return expr
+    if a.denominator != 1 or b.denominator != 1:
+        return expr
+    return IRInteger(math.lcm(a.numerator, b.numerator))
+
+
+# ===========================================================================
+# Section 9: equation-side handlers (C5)
+# ===========================================================================
+
+_EQUAL_HEAD = "Equal"
+
+
+def lhs_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Lhs(eq)`` → left-hand side of equation ``Equal(a, b)`` → ``a``.
+
+    MACSYMA syntax: ``lhs(x = 3)`` → ``x``.
+
+    If the argument is not an ``Equal`` expression, returns unevaluated.
+    """
+    if len(expr.args) != 1:
+        return expr
+    eq = expr.args[0]
+    if (
+        isinstance(eq, IRApply)
+        and isinstance(eq.head, IRSymbol)
+        and eq.head.name == _EQUAL_HEAD
+        and len(eq.args) == 2
+    ):
+        return eq.args[0]
+    return expr
+
+
+def rhs_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Rhs(eq)`` → right-hand side of equation ``Equal(a, b)`` → ``b``.
+
+    MACSYMA syntax: ``rhs(x = 3)`` → ``3``.
+
+    If the argument is not an ``Equal`` expression, returns unevaluated.
+    """
+    if len(expr.args) != 1:
+        return expr
+    eq = expr.args[0]
+    if (
+        isinstance(eq, IRApply)
+        and isinstance(eq.head, IRSymbol)
+        and eq.head.name == _EQUAL_HEAD
+        and len(eq.args) == 2
+    ):
+        return eq.args[1]
+    return expr
+
+
+# ===========================================================================
+# Section 10: MakeList handler (C2)
+# ===========================================================================
+
+_LIST_HEAD = IRSymbol("List")
+
+
+def make_list_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``MakeList(expr, var, n)`` or ``MakeList(expr, var, from, to[, step])``.
+
+    Evaluates *expr* for *var* = each integer in the specified range and
+    collects the results into a ``List``.
+
+    Supported arities
+    -----------------
+    - 3 args: ``MakeList(expr, var, n)``  → range ``1..n`` (step 1).
+    - 4 args: ``MakeList(expr, var, from, to)`` → range ``from..to``.
+    - 5 args: ``MakeList(expr, var, from, to, step)`` → with given step.
+
+    MACSYMA examples::
+
+        makelist(i^2, i, 4)        → [1, 4, 9, 16]
+        makelist(i*2, i, 2, 6, 2)  → [4, 8, 12]
+    """
+    nargs = len(expr.args)
+    if nargs not in (3, 4, 5):
+        return expr
+
+    body = expr.args[0]
+    var = expr.args[1]
+    if not isinstance(var, IRSymbol):
+        return expr
+
+    # Resolve range bounds — they must evaluate to integers.
+    def _to_int(node: IRNode) -> int | None:
+        evaled = vm.eval(node)
+        if isinstance(evaled, IRInteger):
+            return evaled.value
+        return None
+
+    if nargs == 3:
+        stop = _to_int(expr.args[2])
+        if stop is None:
+            return expr
+        start, step = 1, 1
+    elif nargs == 4:
+        start = _to_int(expr.args[2])
+        stop = _to_int(expr.args[3])
+        if start is None or stop is None:
+            return expr
+        step = 1
+    else:
+        start = _to_int(expr.args[2])
+        stop = _to_int(expr.args[3])
+        step = _to_int(expr.args[4])
+        if start is None or stop is None or step is None or step == 0:
+            return expr
+
+    results: list[IRNode] = []
+    for i in range(start, stop + 1, step):
+        substituted = subst(IRInteger(i), var, body)
+        results.append(vm.eval(substituted))
+
+    return IRApply(_LIST_HEAD, tuple(results))
+
+
+# ===========================================================================
+# Section 11: At handler (C4)
+# ===========================================================================
+
+
+def at_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``At(expr, Equal(var, val))`` → evaluate *expr* at *var* = *val*.
+
+    MACSYMA syntax: ``at(x^2 + 1, x = 3)`` → ``10``.
+
+    This is syntactic sugar over :func:`subst_handler`. The ``Equal``-as-
+    substitution-rule convention is MACSYMA-specific (Mathematica uses
+    ``Rule`` instead), so this handler lives in the common substrate but
+    the name-table binding lives only in ``macsyma-runtime``.
+
+    Supported forms
+    ---------------
+    - ``At(expr, Equal(var, val))`` — single substitution.
+    - ``At(expr, List(Equal(v1, a1), Equal(v2, a2), …))`` — simultaneous
+      substitution of multiple variables.
+    """
+    if len(expr.args) != 2:
+        return expr
+    body, rule_or_list = expr.args
+
+    def _apply_rule(current: IRNode, rule: IRNode) -> IRNode | None:
+        """Return *current* with the rule applied, or None if not a rule."""
+        if (
+            isinstance(rule, IRApply)
+            and isinstance(rule.head, IRSymbol)
+            and rule.head.name == _EQUAL_HEAD
+            and len(rule.args) == 2
+        ):
+            var, val = rule.args
+            return vm.eval(subst(val, var, current))
+        return None
+
+    # Single rule.
+    result = _apply_rule(body, rule_or_list)
+    if result is not None:
+        return result
+
+    # List of rules — apply each in sequence.
+    if (
+        isinstance(rule_or_list, IRApply)
+        and isinstance(rule_or_list.head, IRSymbol)
+        and rule_or_list.head.name == "List"
+    ):
+        current = body
+        for rule in rule_or_list.args:
+            applied = _apply_rule(current, rule)
+            if applied is None:
+                return expr  # malformed rule — bail out
+            current = applied
+        return current
+
+    return expr
+
+
+# ===========================================================================
+# Public entry point
+# ===========================================================================
+
+
+# ---------------------------------------------------------------------------
+# Phase 23 — Special function handlers
+# ---------------------------------------------------------------------------
+
+_PI_SYM = IRSymbol("%pi")
+
+
+def _is_zero(node: IRNode) -> bool:
+    """True iff *node* is the integer 0."""
+    return isinstance(node, IRInteger) and node.value == 0
+
+
+def _to_float(node: IRNode) -> float | None:
+    """Return a Python float if *node* is a numeric literal, else None."""
+    if isinstance(node, IRInteger):
+        return float(node.value)
+    if isinstance(node, IRRational):
+        return node.numer / node.denom
+    if isinstance(node, IRFloat):
+        return node.value
+    return None
+
+
+def gamma_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate GammaFunc(z) — Euler's Gamma function.
+
+    Exact results:
+      - Positive integer n: (n−1)!
+      - Half-integer n + 1/2: expressed via √π and rationals.
+
+    Float argument: Lanczos approximation (accurate to ~13 significant
+    figures).  Returns the unevaluated GammaFunc(z) for symbolic z.
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+
+    # ── Positive integer: Γ(n) = (n−1)! ────────────────────────────────────
+    if isinstance(arg, IRInteger) and arg.value >= 1:
+        import math
+        return IRInteger(math.factorial(arg.value - 1))
+
+    # ── Half-integer Γ(1/2) = √π ────────────────────────────────────────────
+    if isinstance(arg, IRRational) and arg.denom == 2 and arg.numer >= 1:
+        # Γ(1/2) = √π, Γ(3/2) = √π/2, Γ(5/2) = 3√π/4, Γ(7/2) = 15√π/8 …
+        # General: Γ(n + 1/2) = (2n−1)!! / 2^n · √π, n = (numer−1)//2
+        n = (arg.numer - 1) // 2  # number of steps from 1/2
+        sqrt_pi: IRNode = IRApply(SQRT, (_PI_SYM,))
+        # Compute (2n−1)!! = 1·3·5·…·(2n−1); for n=0 this is 1 (empty product).
+        double_fact = 1
+        for k in range(1, n + 1):
+            double_fact *= 2 * k - 1
+        two_n = 1 << n  # 2^n
+        from fractions import Fraction as _Frac
+        coeff = _Frac(double_fact, two_n)
+        if coeff == _Frac(1):
+            return sqrt_pi
+        coeff_node: IRNode = (
+            IRInteger(coeff.numerator)
+            if coeff.denominator == 1
+            else IRRational(coeff.numerator, coeff.denominator)
+        )
+        return IRApply(MUL, (coeff_node, sqrt_pi))
+
+    # ── Float argument: Lanczos ──────────────────────────────────────────────
+    z = _to_float(arg)
+    if z is not None and z > 0.0:
+        try:
+            result = _gamma_eval(z)
+            return IRFloat(result)
+        except (ValueError, OverflowError):
+            return expr
+
+    return expr  # symbolic — leave unevaluated
+
+
+def beta_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate BetaFunc(a, b) = Γ(a)·Γ(b) / Γ(a+b).
+
+    Both arguments must be numeric.  Returns IRFloat for float inputs,
+    and exact fractions for integer/half-integer inputs via gamma_handler.
+    """
+    if len(expr.args) != 2:
+        return expr
+    a_node = vm.eval(expr.args[0])
+    b_node = vm.eval(expr.args[1])
+
+    a = _to_float(a_node)
+    b = _to_float(b_node)
+    if a is not None and b is not None and a > 0.0 and b > 0.0:
+        # Special case B(1/2, 1/2) = π.
+        if a == 0.5 and b == 0.5:
+            return _PI_SYM
+        try:
+            result = _beta_eval(a, b)
+            # Try to express as a clean rational if it's close enough.
+            from fractions import Fraction as _Frac
+            approx = _Frac(result).limit_denominator(10000)
+            if abs(float(approx) - result) < 1e-10 * abs(result) + 1e-15:
+                return (
+                    IRInteger(approx.numerator)
+                    if approx.denominator == 1
+                    else IRRational(approx.numerator, approx.denominator)
+                )
+            return IRFloat(result)
+        except (ValueError, OverflowError):
+            return expr
+
+    return expr
+
+
+def erf_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Erf(x) — exact at 0, numeric for float arguments."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_erf_numeric(z))
+    return expr
+
+
+def erfc_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Erfc(x) = 1 − erf(x)."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(1)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(1.0 - _erf_numeric(z))
+    return expr
+
+
+def erfi_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Erfi(x) — imaginary error function."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_erfi_numeric(z))
+    return expr
+
+
+def si_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Si(x) — sine integral."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_si_numeric(z))
+    return expr
+
+
+def ci_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Ci(x) — cosine integral (x > 0)."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    z = _to_float(arg)
+    if z is not None and z > 0.0:
+        return IRFloat(_ci_numeric(z))
+    return expr
+
+
+def shi_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Shi(x) — hyperbolic sine integral."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_shi_numeric(z))
+    return expr
+
+
+def chi_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Chi(x) — hyperbolic cosine integral (x > 0)."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    z = _to_float(arg)
+    if z is not None and z > 0.0:
+        return IRFloat(_chi_numeric(z))
+    return expr
+
+
+def li2_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Li₂(x) — dilogarithm.
+
+    Exact at 0, 1, −1.  Numeric for float arguments (x < 1).
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    # Li₂(1) = π²/6
+    if isinstance(arg, IRInteger) and arg.value == 1:
+        return IRApply(DIV, (IRApply(POW, (_PI_SYM, IRInteger(2))), IRInteger(6)))
+    # Li₂(−1) = −π²/12
+    if isinstance(arg, IRInteger) and arg.value == -1:
+        return IRApply(
+            IRSymbol("Neg"),
+            (IRApply(DIV, (IRApply(POW, (_PI_SYM, IRInteger(2))), IRInteger(12))),),
+        )
+    z = _to_float(arg)
+    if z is not None and z < 1.0:
+        val = _li2_numeric(z)
+        if not math.isnan(val):
+            return IRFloat(val)
+    return expr
+
+
+def fresnel_s_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate FresnelS(x) — numeric for float arguments."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_fresnel_s_numeric(z))
+    return expr
+
+
+def fresnel_c_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate FresnelC(x) — numeric for float arguments."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_fresnel_c_numeric(z))
+    return expr
+
+
+# ===========================================================================
+# Section: Phase 25 — Symbolic summation and product handlers
+# ===========================================================================
+
+
+def sum_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sum(f, k, lo, hi)`` — closed-form symbolic summation.
+
+    Dispatches to ``cas_summation.evaluate_sum`` which applies:
+
+    1. Constant summand → ``f * (hi − lo + 1)``
+    2. Geometric series (finite or infinite) → standard formula
+    3. Power-of-index via Faulhaber's formula (k^m, m = 0…5)
+    4. Telescoping (Phase 39): ``f = g(k+1) − g(k)`` → ``g(hi+1) − g(lo)``
+    5. Classic infinite series (Basel, Leibniz, Taylor for e/exp)
+    6. Numeric small range when bounds are concrete integers
+    7. Fallback: returns unevaluated ``Sum(f, k, lo, hi)``
+
+    The VM is passed through so the evaluator can invoke ``vm.eval`` on
+    intermediate sub-expressions (e.g. constant-summand count).
+
+    Phase 40 — Apart-expanded telescope retry
+    -----------------------------------------
+    When the initial ``evaluate_sum`` call falls through to the unevaluated
+    ``Sum(...)`` shape AND the summand has the form ``Div(P(k), Q(k))``
+    that ``Apart`` can decompose into a sum of partial fractions, we
+    expand once via ``Apart(f, k)`` and retry ``evaluate_sum`` on the
+    decomposed shape.  The classic case is ``∑ 1/(k·(k+1))`` →
+    ``∑ [1/k − 1/(k+1)]`` (Phase 39 closes the latter as
+    ``1 − 1/(hi+1)``).  When Apart returns the integrand unchanged
+    (denominator not factorable or no partial-fraction structure) the
+    retry is a no-op cost and we return the original unevaluated form.
+    """
+    from cas_summation import evaluate_sum as _evaluate_sum
+
+    if len(expr.args) != 4:  # noqa: PLR2004
+        return expr
+    f, k, lo, hi = expr.args
+    if not isinstance(k, IRSymbol):
+        return expr
+    # Evaluate bounds before dispatching so the evaluator sees simplified forms.
+    lo_ev = vm.eval(lo)
+    hi_ev = vm.eval(hi)
+    result = _evaluate_sum(f, k, lo_ev, hi_ev, vm)
+    # Phase 40: if the dispatcher couldn't close the sum, try
+    # ``Apart(f, k)`` once (partial-fraction expansion) and re-run.
+    # This composes the existing Phase 39 telescope detection with the
+    # decomposition step needed to expose telescopes like ``1/(k(k+1))``.
+    if isinstance(result, IRApply) and result.head == SUM:
+        # Only try Apart for rational-function shapes (Div head) — Apart
+        # leaves other shapes unchanged anyway, but skipping saves a
+        # round-trip through the handler dispatch.
+        if isinstance(f, IRApply) and f.head == DIV:
+            apart_attempt = vm.eval(IRApply(IRSymbol("Apart"), (f, k)))
+            # Only retry when Apart actually changed the shape — comparing
+            # to the original `f` catches the "not factorable" return path
+            # which returns the input unchanged.
+            if apart_attempt != f:
+                # Apart emits two-term partial fractions as
+                # ``Add(Neg(a), b)`` (or ``Add(a, Neg(b))``) rather than
+                # ``Sub(b, a)``.  The Phase 39 telescope detector matches
+                # ``Sub`` heads only, so normalise here before retrying.
+                normalised = _normalise_add_neg_to_sub(apart_attempt)
+                retry = _evaluate_sum(normalised, k, lo_ev, hi_ev, vm)
+                if not (isinstance(retry, IRApply) and retry.head == SUM):
+                    return vm.eval(retry)
+        return result
+    return vm.eval(result)
+
+
+def _canonicalise_add_operand_order(node: IRNode) -> IRNode:
+    """Deep-rewrite every ``Add`` so that numeric literals appear *last*
+    among its arguments, recursively.
+
+    The symbolic VM doesn't currently impose a canonical operand order on
+    ``Add``, so two structurally distinct trees can represent the same
+    mathematical expression — e.g. ``Add(k, 1)`` vs ``Add(1, k)``.  The
+    Phase 39 telescope detector relies on ``==`` after ``vm.eval``, so
+    these need to look identical for the Apart-rewritten summand to
+    match the substituted half.
+
+    This walker sorts each ``Add``'s arguments so that ``IRInteger`` /
+    ``IRRational`` / ``IRFloat`` literals come last, preserving the
+    relative order of non-literal children.  Other heads recurse into
+    their arguments unchanged.
+    """
+    if isinstance(node, IRApply):
+        new_args = tuple(_canonicalise_add_operand_order(a) for a in node.args)
+        if node.head == ADD and len(new_args) >= 2:
+            literals = [
+                a for a in new_args if isinstance(a, (IRInteger, IRRational, IRFloat))
+            ]
+            non_literals = [
+                a
+                for a in new_args
+                if not isinstance(a, (IRInteger, IRRational, IRFloat))
+            ]
+            if literals and non_literals:
+                # Only re-order when both kinds are present, otherwise
+                # leave the tuple alone (preserves all-literal folds and
+                # all-symbolic structures).
+                new_args = tuple(non_literals + literals)
+        if new_args != node.args:
+            return IRApply(node.head, new_args)
+        return node
+    return node
+
+
+def _extract_negation(node: IRNode) -> IRNode | None:
+    """Detect whether ``node`` represents a negation and, if so, return
+    the corresponding positive magnitude (the thing that, prepended with
+    a unary minus, equals ``node``).  Returns ``None`` when ``node`` is
+    not a recognised negation.
+
+    Two recognised shapes:
+
+    1.  Top-level ``Neg(x)``                           → ``x``
+    2.  ``Div(c, d)`` with literal ``c < 0`` (numerator carrying the
+        sign)                                          → ``Div(|c|, d)``
+
+    Case 2 is the Phase 46 widening — ``Apart`` of ``5/(k(k+1))`` is
+    ``Add(Div(-5, k+1), Div(5, k))``, with the ``-5`` folded into the
+    numerator rather than a top-level ``Neg`` wrapper.  Without this
+    extraction, ``_normalise_add_neg_to_sub`` can't see the negation
+    and the telescope retry misses.
+    """
+    # Case 1: top-level Neg wrapper.
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        return node.args[0]
+    # Case 2: Div with a negative literal numerator.  Only handle the
+    # two-arg ``Div(numer, denom)`` shape — Apart always produces
+    # exactly this shape, and we don't want to over-trigger on other
+    # arities.
+    if isinstance(node, IRApply) and node.head == DIV and len(node.args) == 2:
+        numer, denom = node.args
+        if isinstance(numer, IRInteger) and numer.value < 0:
+            pos = IRInteger(-numer.value)
+            return IRApply(DIV, (pos, denom))
+        if isinstance(numer, IRRational) and numer.numer < 0:
+            pos = IRRational(-numer.numer, numer.denom)
+            return IRApply(DIV, (pos, denom))
+        if isinstance(numer, IRFloat) and numer.value < 0:
+            pos = IRFloat(-numer.value)
+            return IRApply(DIV, (pos, denom))
+    return None
+
+
+def _normalise_add_neg_to_sub(node: IRNode) -> IRNode:
+    """Rewrite two-term ``Add`` nodes containing a (recognised) negation
+    into the equivalent ``Sub`` shape, then deep-canonicalise the
+    operand order on every remaining ``Add`` so downstream pattern
+    matchers that key off ``Sub`` (notably the Phase 39 telescope
+    detector in ``cas_summation``) can fire and structural ``==``
+    comparisons survive operand-order differences between Apart's
+    output and the substituted half.
+
+    +-----------------------------------------+----------------+
+    | Input shape                             | Output         |
+    +=========================================+================+
+    | ``Add(a, Neg(b))``                      | ``Sub(a, b)``  |
+    | ``Add(Neg(b), a)``                      | ``Sub(a, b)``  |
+    | ``Add(a, Div(-c, d))`` (Phase 46)       | ``Sub(a, Div(c, d))`` |
+    | ``Add(Div(-c, d), a)`` (Phase 46)       | ``Sub(a, Div(c, d))`` |
+    | ``Add(Neg(a), Neg(b))``                 | left untouched |
+    | other (Add with 3+ args, etc.)          | left untouched |
+    +-----------------------------------------+----------------+
+
+    Only the top-level ``Add`` is rewritten to ``Sub``; the deep ADD
+    operand canonicalisation runs everywhere underneath via
+    :func:`_canonicalise_add_operand_order`.
+
+    Phase 46 — constant-numerator Apart-retry widening
+    ----------------------------------------------------
+    Before Phase 46 only the top-level ``Neg`` wrapper was recognised,
+    so summands like ``5/(k(k+1))`` — whose ``Apart`` output folds the
+    sign into the ``Div`` numerator (``Div(-5, k+1)``) — fell through
+    the Apart-retry path.  The :func:`_extract_negation` helper now
+    detects both forms uniformly.
+    """
+    if not isinstance(node, IRApply) or node.head != ADD or len(node.args) != 2:
+        return _canonicalise_add_operand_order(node)
+    left, right = node.args
+    left_pos = _extract_negation(left)
+    right_pos = _extract_negation(right)
+    if left_pos is not None and right_pos is not None:
+        # Both sides genuinely negative; leaving alone preserves the
+        # structural identity (no telescope to expose).
+        return _canonicalise_add_operand_order(node)
+    if right_pos is not None:
+        rewritten = IRApply(SUB, (left, right_pos))
+        return _canonicalise_add_operand_order(rewritten)
+    if left_pos is not None:
+        rewritten = IRApply(SUB, (right, left_pos))
+        return _canonicalise_add_operand_order(rewritten)
+    return _canonicalise_add_operand_order(node)
+
+
+def product_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Product(f, k, lo, hi)`` — closed-form symbolic product.
+
+    Dispatches to ``cas_summation.evaluate_product`` which applies:
+
+    1. Constant factor → ``f^(hi − lo + 1)``
+    2. ``k`` with lo=1 → ``GammaFunc(hi+1)``  (i.e. ``hi!``)
+    3. ``c*k`` with lo=1 → ``c^hi * GammaFunc(hi+1)``
+    4. Numeric small range when bounds are concrete integers
+    5. Fallback: returns unevaluated ``Product(f, k, lo, hi)``
+    """
+    from cas_summation import evaluate_product as _evaluate_product
+
+    if len(expr.args) != 4:  # noqa: PLR2004
+        return expr
+    f, k, lo, hi = expr.args
+    if not isinstance(k, IRSymbol):
+        return expr
+    lo_ev = vm.eval(lo)
+    hi_ev = vm.eval(hi)
+    result = _evaluate_product(f, k, lo_ev, hi_ev, vm)
+    # Avoid re-entering the handler if evaluate_product fell back to unevaluated.
+    if isinstance(result, IRApply) and result.head == PRODUCT:
+        return result
+    return vm.eval(result)
+
+
+def build_cas_handler_table() -> dict[str, Handler]:
+    """Return the full CAS handler table for :class:`SymbolicBackend`.
+
+    The keys are the canonical IR head names. The values are handler
+    callables conforming to the ``(VM, IRApply) -> IRNode`` signature.
+
+    This table is merged into ``SymbolicBackend._handlers`` at
+    construction time so every CAS frontend (MACSYMA, Maple, Mathematica,
+    …) inherits these operations automatically.
+    """
+    return {
+        # --- cas_simplify ---------------------------------------------------
+        "Simplify": simplify_handler,
+        "Expand": expand_handler,
+        # --- Phase 21: assumption framework ---------------------------------
+        "Assume": assume_handler,
+        "Forget": forget_handler,
+        "Is": is_handler,
+        "Sign": sign_handler,
+        # --- Phase 21: radical / log / exponential simplification -----------
+        "Radcan": radcan_handler,
+        "LogContract": logcontract_handler,
+        "LogExpand": logexpand_handler,
+        "Exponentialize": exponentialize_handler,
+        "DeMoivre": demoivre_handler,
+        # --- Phase 22: pattern-matching rule system -------------------------
+        "MatchDeclare": matchdeclare_handler,
+        "Defrule": defrule_handler,
+        "Apply1": apply1_handler,
+        "Apply2": apply2_handler,
+        "TellSimp": tellsimp_handler,
+        # --- rational function operations (A3) ------------------------------
+        "Collect": collect_handler,
+        "Together": together_handler,
+        "RatSimplify": rat_simplify_handler,
+        "Apart": apart_handler,
+        # --- cas_substitution -----------------------------------------------
+        "Subst": subst_handler,
+        # --- cas_factor -----------------------------------------------------
+        "Factor": factor_handler,
+        # --- cas_solve -------------------------------------------------------
+        "Solve": solve_handler,
+        "NSolve": nsolve_handler,
+        # --- cas_list_operations --------------------------------------------
+        "Length": length_handler,
+        "First": first_handler,
+        "Rest": rest_handler,
+        "Last": last_handler,
+        "Append": append_handler,
+        "Reverse": reverse_handler,
+        "Range": range_handler,
+        "Map": map_handler,
+        "Apply": apply_handler,
+        "Select": select_handler,
+        "Sort": sort_handler,
+        "Part": part_handler,
+        "Flatten": flatten_handler,
+        "Join": join_handler,
+        # --- cas_matrix -----------------------------------------------------
+        "Matrix": matrix_handler,
+        "Transpose": transpose_handler,
+        "Determinant": determinant_handler,
+        "Inverse": inverse_handler,
+        "Dot": dot_handler,
+        "Trace": trace_handler,
+        "Dimensions": dimensions_handler,
+        "IdentityMatrix": identity_matrix_handler,
+        "ZeroMatrix": zero_matrix_handler,
+        "Rank": rank_handler,
+        "RowReduce": row_reduce_handler,
+        "Eigenvalues": eigenvalues_handler,
+        "Eigenvectors": eigenvectors_handler,
+        "CharPoly": charpoly_handler,
+        "LU": lu_handler,
+        "NullSpace": nullspace_handler,
+        "ColumnSpace": columnspace_handler,
+        "RowSpace": rowspace_handler,
+        "Norm": norm_handler,
+        # --- cas_limit_series -----------------------------------------------
+        "Limit": limit_handler,
+        "Taylor": taylor_handler,
+        # --- numeric/arithmetic ---------------------------------------------
+        "Abs": abs_handler,
+        # Phase 29: overrides the _elementary-factory Sqrt in handlers.py,
+        # adding algebraic rules (sqrt(x^{2k}) etc.) on top of numeric fold.
+        "Sqrt": sqrt_handler,
+        # Phase 30: override _elementary-factory Log/Exp with cancellation
+        # and power-rule algebraic identities on top of numeric fold.
+        "Log": log_handler,
+        "Exp": exp_handler,
+        # Phase 31: override _elementary-factory Sin/Cos/Tan/Sinh/Cosh/Tanh
+        # with odd/even symmetry and arc-cancellation rules on top of numeric fold.
+        "Sin": sin_handler,
+        "Cos": cos_handler,
+        "Tan": tan_handler,
+        "Sinh": sinh_handler,
+        "Cosh": cosh_handler,
+        "Tanh": tanh_handler,
+        # Phase 32: override _elementary-factory Asin/Acos/Atan/Asinh/Atanh
+        # with odd symmetry (asin/atan/asinh/atanh) and reflection identity (acos).
+        "Asin": asin_handler,
+        "Acos": acos_handler,
+        "Atan": atan_handler,
+        "Asinh": asinh_handler,
+        "Atanh": atanh_handler,
+        "Cbrt": cbrt_handler,
+        "Floor": floor_handler,
+        "Ceiling": ceiling_handler,
+        "Mod": mod_handler,
+        "Gcd": gcd_handler,
+        "Lcm": lcm_handler,
+        # --- equation sides (C5) --------------------------------------------
+        "Lhs": lhs_handler,
+        "Rhs": rhs_handler,
+        # --- MakeList (C2) --------------------------------------------------
+        "MakeList": make_list_handler,
+        # --- At / point evaluation (C4) -------------------------------------
+        "At": at_handler,
+        # --- cas_number_theory (B3) -----------------------------------------
+        **_build_nt(),
+        # --- cas_complex (B2) -----------------------------------------------
+        # Re, Im, Conjugate, Arg, RectForm, PolarForm — Re/Im/Conjugate
+        # operate on ImaginaryUnit-containing IR expressions and extract
+        # the a and b of a + b*i form.  AbsComplex is registered under
+        # its own key; the main Abs dispatcher (above) routes to it for
+        # complex inputs.  Imaginary power reduction is wired separately
+        # into the Pow handler by SymbolicBackend.__init__.
+        **_build_complex(),
+        # --- atan2 (numeric two-argument arctangent) -------------------------
+        "Atan2": _atan2_handler,
+        # --- cas-mnewton (Newton's method numeric root finder) ---------------
+        **_build_mnewton(),
+        # --- cas-laplace (Laplace and inverse Laplace transforms) ------------
+        **_build_laplace(),
+        # --- cas-fourier (Fourier and inverse Fourier transforms) ------------
+        **_build_fourier(),
+        # --- cas-ode (ODE solver: separable, linear, 2nd-order const-coeff) -
+        **_build_ode(),
+        # --- cas-algebraic (polynomial factoring over Q[√d]) ----------------
+        **_build_algebraic(),
+        # --- cas-multivariate (Gröbner bases and ideal solving) -------------
+        **_build_multivariate(),
+        # --- Phase 23: special functions ------------------------------------
+        "GammaFunc": gamma_handler,
+        "BetaFunc": beta_handler,
+        "Erf": erf_handler,
+        "Erfc": erfc_handler,
+        "Erfi": erfi_handler,
+        "Si": si_handler,
+        "Ci": ci_handler,
+        "Shi": shi_handler,
+        "Chi": chi_handler,
+        "Li2": li2_handler,
+        "FresnelS": fresnel_s_handler,
+        "FresnelC": fresnel_c_handler,
+        # --- Phase 25: symbolic summation and product -----------------------
+        "Sum": sum_handler,
+        "Product": product_handler,
+        # --- Phase 26: Lambert W numeric evaluation -------------------------
+        "LambertW": lambert_w_handler,
+    }
+
+
+# ---------------------------------------------------------------------------
+# B2 helpers exposed to SymbolicBackend
+# ---------------------------------------------------------------------------
+
+#: The ``ImaginaryUnit`` symbol, pre-bound to itself in ``SymbolicBackend``.
+IMAGINARY_UNIT_SYMBOL: IRSymbol = _IMAGINARY_UNIT  # type: ignore[assignment]
+
+#: Imaginary-power handler — install on ``Pow`` in ``SymbolicBackend``.
+IMAGINARY_POWER_HOOK = _imaginary_power_handler

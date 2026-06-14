@@ -1,0 +1,633 @@
+{
+  "cases": [
+    {
+      "description": "markup declaration recognizes an ordinary HTML comment",
+      "diagnostics": [],
+      "id": "comment-basic",
+      "input": "a<!--note-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=note)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "empty comment closes through the abrupt <!--> recovery path",
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
+      "id": "comment-empty-abrupt",
+      "input": "a<!-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "three-dash empty comment closes without comment text",
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
+      "id": "comment-empty-start-dash",
+      "input": "a<!--->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "nested-looking comment openers stay literal comment data",
+      "diagnostics": [
+        "nested-comment"
+      ],
+      "id": "comment-nested-looking-opener",
+      "input": "a<!--x<!--y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<!--y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "incorrect --!> comment close emits the comment and diagnostic",
+      "diagnostics": [
+        "incorrectly-closed-comment"
+      ],
+      "id": "comment-end-bang-close",
+      "input": "a<!--x--!>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "non-closing --! text remains inside the comment",
+      "diagnostics": [],
+      "id": "comment-end-bang-not-close",
+      "input": "a<!--x--!y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x--!y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside comment data is replaced with U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "comment-null-replacement",
+      "input": "a<!--x\u0000y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x�y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "less-than signs that do not nest remain comment text",
+      "diagnostics": [],
+      "id": "comment-less-than-text",
+      "input": "a<!--x<y-->b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=x<y)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "question-mark tag open recovers as a bogus comment",
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ],
+      "id": "processing-instruction-bogus-comment",
+      "input": "a<?xml version='1.0'?>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=?xml version='1.0'?)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "unknown markup declarations recover as bogus comments",
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ],
+      "id": "malformed-declaration-bogus-comment",
+      "input": "a<!foo>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=foo)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "empty malformed declaration emits an empty bogus comment",
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ],
+      "id": "empty-malformed-declaration",
+      "input": "a<!>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "one-dash markup declaration uses bogus-comment recovery",
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ],
+      "id": "one-dash-declaration",
+      "input": "a<!-x>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=-x)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "malformed end-tag openers recover as bogus comments",
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ],
+      "id": "invalid-end-tag-open-bogus-comment",
+      "input": "a</3>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=3)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside bogus comments is replaced before emission",
+      "diagnostics": [
+        "incorrectly-opened-comment",
+        "unexpected-null-character"
+      ],
+      "id": "bogus-comment-null-replacement",
+      "input": "a<!foo\u0000bar>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=foo�bar)",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "partial CDATA openers recover as bogus comments",
+      "diagnostics": [],
+      "id": "malformed-cdata-bogus-comment",
+      "input": "a<![CDATAx]>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=[CDATAx])",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "default HTML data state recovers CDATA opener as a bogus comment",
+      "diagnostics": [
+        "cdata-in-html-content"
+      ],
+      "id": "cdata-section-from-markup-declaration",
+      "input": "a<![CDATA[x<y&z]]>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=[CDATA[x<y&z]])",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "default HTML CDATA-looking declarations stay bogus comments",
+      "diagnostics": [
+        "cdata-in-html-content"
+      ],
+      "id": "cdata-section-bracket-not-end",
+      "input": "a<![CDATA[x]y]]>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=[CDATA[x]y]])",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL inside default HTML CDATA-looking bogus comments is replaced",
+      "diagnostics": [
+        "cdata-in-html-content",
+        "unexpected-null-character"
+      ],
+      "id": "cdata-section-null-replacement",
+      "input": "a<![CDATA[x\u0000y]]>b",
+      "tokens": [
+        "Text(data=a)",
+        "Comment(data=[CDATA[x�y]])",
+        "Text(data=b)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "simple DOCTYPE emits a non-quirks doctype token",
+      "diagnostics": [],
+      "id": "doctype-simple",
+      "input": "<!DOCTYPE html>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "DOCTYPE keyword and name are ASCII-case-insensitive",
+      "diagnostics": [],
+      "id": "doctype-uppercase-keyword-and-name",
+      "input": "<!doctype HTML>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "DOCTYPE without a name forces quirks mode",
+      "diagnostics": [
+        "missing-doctype-name"
+      ],
+      "id": "doctype-missing-name",
+      "input": "<!DOCTYPE>",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "DOCTYPE with only whitespace before close forces quirks mode",
+      "diagnostics": [
+        "missing-doctype-name"
+      ],
+      "id": "doctype-missing-name-after-whitespace",
+      "input": "<!DOCTYPE >",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PUBLIC identifier is preserved on the DOCTYPE token",
+      "diagnostics": [],
+      "id": "doctype-public-identifier",
+      "input": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//W3C//DTD HTML 4.01//EN, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PUBLIC and system identifiers are preserved together",
+      "diagnostics": [],
+      "id": "doctype-public-and-system-identifiers",
+      "input": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//W3C//DTD HTML 4.01//EN, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "SYSTEM identifier is preserved on the DOCTYPE token",
+      "diagnostics": [],
+      "id": "doctype-system-identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "single-quoted PUBLIC and system identifiers are preserved",
+      "diagnostics": [],
+      "id": "doctype-single-quoted-identifiers",
+      "input": "<!DOCTYPE html PUBLIC '-//ID//' 'sys'>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//ID//, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL in a DOCTYPE name is replaced with U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "doctype-null-in-name",
+      "input": "<!DOCTYPE ht\u0000ml>",
+      "tokens": [
+        "Doctype(name=ht�ml, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "NULL in a public identifier is replaced with U+FFFD",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "doctype-null-in-public-identifier",
+      "input": "<!DOCTYPE html PUBLIC \"a\u0000b\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=a�b, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PUBLIC keyword without separating whitespace is diagnosed",
+      "diagnostics": [],
+      "id": "doctype-missing-whitespace-before-public",
+      "input": "<!DOCTYPE htmlPUBLIC>",
+      "tokens": [
+        "Doctype(name=htmlpublic, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "PUBLIC without quoted identifier forces quirks mode",
+      "diagnostics": [
+        "missing-quote-before-doctype-public-identifier"
+      ],
+      "id": "doctype-missing-public-identifier-quotes",
+      "input": "<!DOCTYPE html PUBLIC x>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "SYSTEM without quoted identifier forces quirks mode",
+      "diagnostics": [
+        "missing-quote-before-doctype-system-identifier"
+      ],
+      "id": "doctype-missing-system-identifier-quotes",
+      "input": "<!DOCTYPE html SYSTEM x>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "trailing junk after a system identifier is diagnosed without forcing quirks",
+      "diagnostics": [
+        "unexpected-character-after-doctype-system-identifier"
+      ],
+      "id": "doctype-unexpected-trailing-junk",
+      "input": "<!DOCTYPE html SYSTEM \"sys\" junk>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "malformed DOCTYPE keyword recovers as a bogus comment",
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ],
+      "id": "doctype-malformed-keyword",
+      "input": "<!DOCTYPX html>",
+      "tokens": [
+        "Comment(data=DOCTYPX html)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "seeded comment body appends data before closing",
+      "diagnostics": [],
+      "id": "seeded-comment-body-close",
+      "initial_state": "Comment state",
+      "input": " tail-->after",
+      "tokens": [
+        "Comment(data=seed tail)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "",
+      "description": "seeded comment start dash can close an empty comment",
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
+      "id": "seeded-comment-start-dash-close",
+      "initial_state": "Comment start dash state",
+      "input": ">after",
+      "tokens": [
+        "Comment(data=)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "seeded comment end dash preserves pending text before close",
+      "diagnostics": [],
+      "id": "seeded-comment-end-dash-close",
+      "initial_state": "Comment end dash state",
+      "input": "->after",
+      "tokens": [
+        "Comment(data=seed)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "seeded comment end bang closes with incorrectly-closed diagnostic",
+      "diagnostics": [
+        "incorrectly-closed-comment"
+      ],
+      "id": "seeded-comment-end-bang-close",
+      "initial_state": "Comment end bang state",
+      "input": ">after",
+      "tokens": [
+        "Comment(data=seed)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_comment": "seed",
+      "description": "seeded bogus comment closes on greater-than",
+      "diagnostics": [],
+      "id": "seeded-bogus-comment-close",
+      "initial_state": "Bogus comment state",
+      "input": " tail>after",
+      "tokens": [
+        "Comment(data=seed tail)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "seeded CDATA section returns to data state at delimiter",
+      "diagnostics": [],
+      "id": "seeded-cdata-section-close",
+      "initial_state": "CDATA section state",
+      "input": "x]]>after",
+      "tokens": [
+        "Text(data=x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "seeded CDATA bracket substate preserves non-closing bracket",
+      "diagnostics": [],
+      "id": "seeded-cdata-bracket-not-close",
+      "initial_state": "CDATA section bracket state",
+      "input": "x]]>after",
+      "tokens": [
+        "Text(data=]x)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "description": "seeded CDATA end substate closes on greater-than",
+      "diagnostics": [],
+      "id": "seeded-cdata-end-close",
+      "initial_state": "CDATA section end state",
+      "input": ">after",
+      "tokens": [
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html"
+      },
+      "description": "seeded DOCTYPE name closes as a non-quirks token",
+      "diagnostics": [],
+      "id": "seeded-doctype-name-close",
+      "initial_state": "DOCTYPE name state",
+      "input": ">after",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "ht"
+      },
+      "description": "seeded DOCTYPE name state replaces NULL while appending",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-doctype-name-null",
+      "initial_state": "DOCTYPE name state",
+      "input": "\u0000>",
+      "tokens": [
+        "Doctype(name=ht�, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html",
+        "public_identifier": "pub-"
+      },
+      "description": "seeded public identifier appends text before closing",
+      "diagnostics": [],
+      "id": "seeded-public-identifier-close",
+      "initial_state": "DOCTYPE public identifier double quoted state",
+      "input": "id\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub-id, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html",
+        "public_identifier": "pub"
+      },
+      "description": "seeded between identifiers reads a following system identifier",
+      "diagnostics": [],
+      "id": "seeded-between-public-and-system",
+      "initial_state": "Between DOCTYPE public and system identifiers state",
+      "input": "\"sys\">after",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=sys, force_quirks=false)",
+        "Text(data=after)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html",
+        "system_identifier": "sys"
+      },
+      "description": "seeded system identifier replaces NULL while appending",
+      "diagnostics": [
+        "unexpected-null-character"
+      ],
+      "id": "seeded-system-identifier-null",
+      "initial_state": "DOCTYPE system identifier double quoted state",
+      "input": "\u0000\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys�, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "name": "html",
+        "system_identifier": "sys"
+      },
+      "description": "seeded after-system-identifier state diagnoses trailing junk",
+      "diagnostics": [
+        "unexpected-character-after-doctype-system-identifier"
+      ],
+      "id": "seeded-after-system-identifier-junk",
+      "initial_state": "After DOCTYPE system identifier state",
+      "input": " junk>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "current_doctype": {
+        "force_quirks": true,
+        "name": "html"
+      },
+      "description": "seeded bogus DOCTYPE closes while preserving force-quirks",
+      "diagnostics": [],
+      "id": "seeded-bogus-doctype-close",
+      "initial_state": "Bogus DOCTYPE state",
+      "input": " ignored>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ]
+    }
+  ],
+  "description": "Markup declaration recovery for comments, bogus comments, CDATA, DOCTYPE tokens, and seeded continuation states.",
+  "format": "whatwg-html-tokenizer-markup-declarations/v1"
+}
