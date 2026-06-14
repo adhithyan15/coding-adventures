@@ -157,6 +157,82 @@ pub unsafe extern "C" fn sc_get_values(s: *mut ScSession) -> *mut c_char {
     into_cstr((*s).inner.get_values())
 }
 
+// ── Viewport primitive (virtualized infinite sheet) ──────────────────
+// Integer coordinates (1-based, inclusive) so a native scrolling host can fetch
+// just the visible window of an unbounded sheet.
+
+/// `get_window(row0, col0, row1, col1)` → window JSON. See
+/// [`SpreadsheetSession::get_window`]. Returns null only on a null `s`.
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_get_window(
+    s: *mut ScSession,
+    row0: u32,
+    col0: u32,
+    row1: u32,
+    col1: u32,
+) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.get_window(row0, col0, row1, col1))
+}
+
+/// `used_range()` → data-extent JSON, or the literal `null`. See
+/// [`SpreadsheetSession::used_range`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_used_range(s: *mut ScSession) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.used_range())
+}
+
+/// `column_letters(index)` → `"A"`/`"AA"`/… for a 1-based column index. See
+/// [`SpreadsheetSession::column_letters`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_column_letters(s: *mut ScSession, index: u32) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.column_letters(index))
+}
+
+/// `current_revision()` → the per-edit revision clock (a plain integer, not a
+/// string). Returns 0 on a null session. See
+/// [`SpreadsheetSession::current_revision`].
+///
+/// # Safety
+/// `s` must be a valid session (or null).
+#[no_mangle]
+pub unsafe extern "C" fn sc_current_revision(s: *mut ScSession) -> u64 {
+    if s.is_null() {
+        return 0;
+    }
+    (*s).inner.current_revision()
+}
+
+/// `changed_since(since)` → changed-cells JSON. See
+/// [`SpreadsheetSession::changed_since`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_changed_since(s: *mut ScSession, since: u64) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.changed_since(since))
+}
+
 // ---------------------------------------------------------------------------
 // Host-target tests: drive the C ABI from Rust (so they run under `cargo test`
 // without a C compiler). A separate test/smoke.c exercises the same calls from
@@ -224,6 +300,42 @@ mod tests {
             assert!(sc_set_cell(ptr::null_mut(), ca.as_ptr(), ca.as_ptr()).is_null());
             sc_session_free(ptr::null_mut()); // no-op
             sc_string_free(ptr::null_mut()); // no-op
+        }
+    }
+
+    /// Call an `sc_*` getter returning a char* and return the freed string.
+    unsafe fn take(out: *mut c_char) -> String {
+        let str = CStr::from_ptr(out).to_string_lossy().into_owned();
+        sc_string_free(out);
+        str
+    }
+
+    #[test]
+    fn c_abi_viewport_round_trips() {
+        unsafe {
+            let s = sc_session_new();
+            set(s, "A1", "15");
+            set(s, "B1", "3");
+            set(s, "C1", "=SUM(A1:B1)"); // 18
+
+            let w = take(sc_get_window(s, 1, 1, 1, 3));
+            assert!(w.contains(r#""rows":1"#) && w.contains(r#""cols":3"#), "{w}");
+            assert!(w.contains(r#"{"kind":"number","value":18.0}"#), "{w}");
+
+            assert!(take(sc_used_range(s)).contains(r#""maxCol":3"#));
+            assert_eq!(take(sc_column_letters(s, 27)), "AA");
+
+            let snap = sc_current_revision(s);
+            set(s, "A1", "100");
+            let c = take(sc_changed_since(s, snap));
+            assert!(c.contains("\"A1\"") && c.contains("\"C1\""), "{c}");
+
+            // Bad window → error object; null handle → null / 0, never a crash.
+            assert_eq!(take(sc_get_window(s, 0, 0, 5, 5)), r##"{"error":"#REF!"}"##);
+            assert!(sc_get_window(ptr::null_mut(), 1, 1, 1, 1).is_null());
+            assert_eq!(sc_current_revision(ptr::null_mut()), 0);
+
+            sc_session_free(s);
         }
     }
 }

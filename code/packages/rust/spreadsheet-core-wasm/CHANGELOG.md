@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0
+
+Viewport primitive (for the virtualized infinite sheet), wrapping
+`spreadsheet-core` 0.2.0's reads as string-in/JSON-out:
+
+- `get_window(row0, col0, row1, col1)` → `{"row0":..,"col0":..,"rows":R,"cols":C,
+  "values":[[<value>,..],..]}` (row-major, blanks included as `{"kind":"empty"}`),
+  or `{"error":"#REF!"}` on a bad/oversized request.
+- `used_range()` → `{"minRow":..,"minCol":..,"maxRow":..,"maxCol":..}` or `null`.
+- `column_letters(index)` → `"A"`/`"AA"`/… for a 1-based column index.
+- `current_revision()` + `changed_since(since)` →
+  `{"revision":N,"changed":["B2",..]}` or `{"revision":N,"stale":true}`.
+
 ## 0.1.0
 
 Initial release — the browser/WASM-facing JSON facade over `spreadsheet-core`.
