@@ -1258,6 +1258,98 @@ pub fn summarize_thread_attach_readiness(
     ThreadAttachReadinessSummary::from_summaries(message_summary, neighbor_summary)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadAttachActionSummary {
+    pub readiness_summary: ThreadAttachReadinessSummary,
+    pub required_action_count: usize,
+    pub pending_action_count: usize,
+    pub clear_action_count: usize,
+    pub start_parent_selection: bool,
+    pub wait_for_attach_response: bool,
+    pub refresh_neighbors: bool,
+    pub inspect_statuses: bool,
+    pub inspect_unknown_commands: bool,
+    pub attach_action_clear: bool,
+}
+
+impl ThreadAttachActionSummary {
+    pub fn from_readiness(readiness_summary: ThreadAttachReadinessSummary) -> Self {
+        let start_parent_selection = readiness_summary.needs_parent_selection;
+        let wait_for_attach_response = readiness_summary.waiting_for_attach_response;
+        let refresh_neighbors = readiness_summary.requires_neighbor_refresh;
+        let inspect_statuses = readiness_summary.has_statuses();
+        let inspect_unknown_commands = readiness_summary.has_unknown_commands();
+        let actions = [
+            start_parent_selection,
+            wait_for_attach_response,
+            refresh_neighbors,
+            inspect_statuses,
+            inspect_unknown_commands,
+        ];
+        let pending_action_count = actions.iter().filter(|pending| **pending).count();
+        let required_action_count = actions.len();
+        let clear_action_count = required_action_count - pending_action_count;
+        let attach_action_clear = readiness_summary.attach_ready && pending_action_count == 0;
+
+        Self {
+            readiness_summary,
+            required_action_count,
+            pending_action_count,
+            clear_action_count,
+            start_parent_selection,
+            wait_for_attach_response,
+            refresh_neighbors,
+            inspect_statuses,
+            inspect_unknown_commands,
+            attach_action_clear,
+        }
+    }
+
+    pub fn from_summaries(
+        message_summary: MleMessageBatchSummary,
+        neighbor_summary: NeighborTableSummary,
+    ) -> Self {
+        Self::from_readiness(summarize_thread_attach_readiness(
+            message_summary,
+            neighbor_summary,
+        ))
+    }
+
+    pub fn has_pending_actions(self) -> bool {
+        self.pending_action_count > 0
+    }
+
+    pub fn is_attach_action_clear(self) -> bool {
+        self.attach_action_clear
+    }
+
+    pub fn needs_parent_selection(self) -> bool {
+        self.start_parent_selection
+    }
+
+    pub fn waiting_on_attach_response(self) -> bool {
+        self.wait_for_attach_response
+    }
+
+    pub fn needs_neighbor_refresh(self) -> bool {
+        self.refresh_neighbors
+    }
+
+    pub fn needs_status_review(self) -> bool {
+        self.inspect_statuses
+    }
+
+    pub fn needs_unknown_command_review(self) -> bool {
+        self.inspect_unknown_commands
+    }
+}
+
+pub fn summarize_thread_attach_actions(
+    readiness_summary: ThreadAttachReadinessSummary,
+) -> ThreadAttachActionSummary {
+    ThreadAttachActionSummary::from_readiness(readiness_summary)
+}
+
 impl NeighborTable {
     pub fn new(local_role: DeviceRole) -> Self {
         Self {
@@ -2683,6 +2775,115 @@ mod tests {
         assert!(attached_with_stale_parent.attached);
         assert!(attached_with_stale_parent.attach_ready);
         assert!(attached_with_stale_parent.requires_neighbor_refresh);
+    }
+
+    #[test]
+    fn attach_action_summary_marks_clear_ready_attach() {
+        let parent_request = MleMessage {
+            command: MleCommand::ParentRequest,
+            tlvs: vec![
+                Tlv::new(
+                    TlvType::ScanMask,
+                    vec![ScanMask {
+                        routers: true,
+                        end_devices: false,
+                    }
+                    .encode()],
+                )
+                .unwrap(),
+                Tlv::new(TlvType::Version, vec![0x00, 0x04]).unwrap(),
+            ],
+        };
+        let parent_response = MleMessage {
+            command: MleCommand::ParentResponse,
+            tlvs: vec![Tlv::new(
+                TlvType::Mode,
+                vec![Mode {
+                    receiver_on_when_idle: true,
+                    secure_data_requests: true,
+                    full_thread_device: true,
+                    full_network_data: true,
+                }
+                .encode()],
+            )
+            .unwrap()],
+        };
+        let mut table = NeighborTable::new(DeviceRole::Detached);
+        table.upsert(
+            ThreadNeighbor::new(
+                ThreadNeighborId(0x3000),
+                DeviceRole::Router,
+                NeighborRelationship::RouterPeer,
+                1_200,
+                10_000,
+            )
+            .with_link_margin(60),
+        );
+        let message_summary =
+            MleMessageBatchSummary::from_messages([&parent_request, &parent_response]);
+        let neighbor_summary = table.summary_at(1_250);
+        let readiness = summarize_thread_attach_readiness(message_summary, neighbor_summary);
+
+        let summary = summarize_thread_attach_actions(readiness);
+
+        assert_eq!(summary.readiness_summary, readiness);
+        assert_eq!(summary.required_action_count, 5);
+        assert_eq!(summary.pending_action_count, 0);
+        assert_eq!(summary.clear_action_count, 5);
+        assert!(!summary.start_parent_selection);
+        assert!(!summary.wait_for_attach_response);
+        assert!(!summary.refresh_neighbors);
+        assert!(!summary.inspect_statuses);
+        assert!(!summary.inspect_unknown_commands);
+        assert!(summary.attach_action_clear);
+        assert!(!summary.has_pending_actions());
+        assert!(summary.is_attach_action_clear());
+        assert!(!summary.needs_parent_selection());
+        assert!(!summary.waiting_on_attach_response());
+        assert!(!summary.needs_neighbor_refresh());
+        assert!(!summary.needs_status_review());
+        assert!(!summary.needs_unknown_command_review());
+    }
+
+    #[test]
+    fn attach_action_summary_counts_pending_attach_work() {
+        let status = MleMessage {
+            command: MleCommand::ChildUpdateResponse,
+            tlvs: vec![Tlv::new(TlvType::Status, vec![0x01]).unwrap()],
+        };
+        let unknown = MleMessage {
+            command: MleCommand::Unknown(0xfe),
+            tlvs: Vec::new(),
+        };
+        let message_summary = MleMessageBatchSummary::from_messages([&status, &unknown]);
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::RouterPeer,
+            1_000,
+            500,
+        ));
+        let neighbor_summary = table.summary_at(1_500);
+
+        let summary = ThreadAttachActionSummary::from_summaries(message_summary, neighbor_summary);
+
+        assert_eq!(summary.required_action_count, 5);
+        assert_eq!(summary.pending_action_count, 4);
+        assert_eq!(summary.clear_action_count, 1);
+        assert!(summary.start_parent_selection);
+        assert!(!summary.wait_for_attach_response);
+        assert!(summary.refresh_neighbors);
+        assert!(summary.inspect_statuses);
+        assert!(summary.inspect_unknown_commands);
+        assert!(!summary.attach_action_clear);
+        assert!(summary.has_pending_actions());
+        assert!(!summary.is_attach_action_clear());
+        assert!(summary.needs_parent_selection());
+        assert!(!summary.waiting_on_attach_response());
+        assert!(summary.needs_neighbor_refresh());
+        assert!(summary.needs_status_review());
+        assert!(summary.needs_unknown_command_review());
     }
 
     #[test]
