@@ -38,6 +38,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   Network Data readiness and routing-anchor checks
 - attach route audit summaries that turn route-handoff readiness into final
   route audit checks
+- attach route signoff summaries that turn route-audit readiness into final
+  route signoff checks
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection

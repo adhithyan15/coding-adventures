@@ -1883,6 +1883,96 @@ pub fn summarize_thread_attach_route_audit(
     ThreadAttachRouteAuditSummary::from_handoff_summary(handoff_summary)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadAttachRouteSignoffSummary {
+    pub audit_summary: ThreadAttachRouteAuditSummary,
+    pub required_signoff_check_count: usize,
+    pub passed_signoff_check_count: usize,
+    pub missing_signoff_check_count: usize,
+    pub route_audit_ready: bool,
+    pub route_handoff_ready: bool,
+    pub attach_complete: bool,
+    pub network_data_ready: bool,
+    pub routing_surface_ready: bool,
+    pub parent_or_route_anchor_ready: bool,
+    pub route_signoff_ready: bool,
+}
+
+impl ThreadAttachRouteSignoffSummary {
+    pub fn from_audit_summary(audit_summary: ThreadAttachRouteAuditSummary) -> Self {
+        let route_audit_ready = audit_summary.is_route_audit_ready();
+        let route_handoff_ready = !audit_summary.needs_route_handoff();
+        let attach_complete = !audit_summary.needs_attach_completion();
+        let network_data_ready = !audit_summary.needs_network_data();
+        let routing_surface_ready = !audit_summary.needs_routing_surface();
+        let parent_or_route_anchor_ready = !audit_summary.needs_parent_or_route_anchor();
+        let checks = [
+            route_audit_ready,
+            route_handoff_ready,
+            attach_complete,
+            network_data_ready,
+            routing_surface_ready,
+            parent_or_route_anchor_ready,
+        ];
+        let passed_signoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_signoff_check_count = checks.len();
+        let missing_signoff_check_count = required_signoff_check_count - passed_signoff_check_count;
+        let route_signoff_ready = missing_signoff_check_count == 0;
+
+        Self {
+            audit_summary,
+            required_signoff_check_count,
+            passed_signoff_check_count,
+            missing_signoff_check_count,
+            route_audit_ready,
+            route_handoff_ready,
+            attach_complete,
+            network_data_ready,
+            routing_surface_ready,
+            parent_or_route_anchor_ready,
+            route_signoff_ready,
+        }
+    }
+
+    pub fn is_route_signoff_ready(self) -> bool {
+        self.route_signoff_ready
+    }
+
+    pub fn has_signoff_gaps(self) -> bool {
+        self.missing_signoff_check_count > 0
+    }
+
+    pub fn needs_route_audit(self) -> bool {
+        !self.route_audit_ready
+    }
+
+    pub fn needs_route_handoff(self) -> bool {
+        !self.route_handoff_ready
+    }
+
+    pub fn needs_attach_completion(self) -> bool {
+        !self.attach_complete
+    }
+
+    pub fn needs_network_data(self) -> bool {
+        !self.network_data_ready
+    }
+
+    pub fn needs_routing_surface(self) -> bool {
+        !self.routing_surface_ready
+    }
+
+    pub fn needs_parent_or_route_anchor(self) -> bool {
+        !self.parent_or_route_anchor_ready
+    }
+}
+
+pub fn summarize_thread_attach_route_signoff(
+    audit_summary: ThreadAttachRouteAuditSummary,
+) -> ThreadAttachRouteSignoffSummary {
+    ThreadAttachRouteSignoffSummary::from_audit_summary(audit_summary)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ThreadDiagnosticSnapshot {
     pub captured_at_ms: u64,
@@ -3572,6 +3662,113 @@ mod tests {
         assert!(!summary.route_audit_ready);
         assert!(!summary.is_route_audit_ready());
         assert!(summary.has_audit_gaps());
+        assert!(summary.needs_route_handoff());
+        assert!(summary.needs_attach_completion());
+        assert!(summary.needs_network_data());
+        assert!(summary.needs_routing_surface());
+        assert!(summary.needs_parent_or_route_anchor());
+    }
+
+    #[test]
+    fn attach_route_signoff_summary_marks_ready_route_signoff() {
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_200,
+            10_000,
+        ));
+        let action_summary = ThreadAttachActionSummary::from_summaries(
+            MleMessageBatchSummary::empty(),
+            table.summary_at(1_250),
+        );
+        let completion_summary = summarize_thread_attach_completion(
+            action_summary,
+            table
+                .diagnostic_snapshot(None, 1_250)
+                .unwrap()
+                .supervision_plan(),
+        );
+        let border_router =
+            NetworkDataTlv::new(NetworkDataTlvType::BorderRouter, true, vec![0xaa]).unwrap();
+        let context = NetworkDataTlv::new(NetworkDataTlvType::Context, true, vec![0x01]).unwrap();
+        let prefix = ThreadPrefixData::new(
+            true,
+            3,
+            64,
+            vec![0xfd, 0x00, 0xab, 0xcd, 0, 0, 0, 0],
+            vec![border_router, context],
+        )
+        .unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap()]).unwrap();
+        let network_data_readiness =
+            summarize_thread_network_data_readiness(&network_data).unwrap();
+        let handoff_summary =
+            summarize_thread_attach_route_handoff(completion_summary, network_data_readiness);
+        let audit_summary = summarize_thread_attach_route_audit(handoff_summary);
+
+        let summary = summarize_thread_attach_route_signoff(audit_summary);
+
+        assert_eq!(summary.audit_summary, audit_summary);
+        assert_eq!(summary.required_signoff_check_count, 6);
+        assert_eq!(summary.passed_signoff_check_count, 6);
+        assert_eq!(summary.missing_signoff_check_count, 0);
+        assert!(summary.route_audit_ready);
+        assert!(summary.route_handoff_ready);
+        assert!(summary.attach_complete);
+        assert!(summary.network_data_ready);
+        assert!(summary.routing_surface_ready);
+        assert!(summary.parent_or_route_anchor_ready);
+        assert!(summary.route_signoff_ready);
+        assert!(summary.is_route_signoff_ready());
+        assert!(!summary.has_signoff_gaps());
+        assert!(!summary.needs_route_audit());
+        assert!(!summary.needs_route_handoff());
+        assert!(!summary.needs_attach_completion());
+        assert!(!summary.needs_network_data());
+        assert!(!summary.needs_routing_surface());
+        assert!(!summary.needs_parent_or_route_anchor());
+    }
+
+    #[test]
+    fn attach_route_signoff_summary_routes_blocked_signoff() {
+        let table = NeighborTable::new(DeviceRole::Child);
+        let action_summary = ThreadAttachActionSummary::from_summaries(
+            MleMessageBatchSummary::empty(),
+            table.summary_at(1_250),
+        );
+        let completion_summary = summarize_thread_attach_completion(
+            action_summary,
+            table
+                .diagnostic_snapshot(None, 1_250)
+                .unwrap()
+                .supervision_plan(),
+        );
+        let unknown = NetworkDataTlv::new(NetworkDataTlvType::Unknown(42), false, vec![3]).unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![unknown]).unwrap();
+        let network_data_readiness = network_data.summary().unwrap().readiness();
+        let handoff_summary = ThreadAttachRouteHandoffSummary::from_completion_and_network_data(
+            completion_summary,
+            network_data_readiness,
+        );
+        let audit_summary = ThreadAttachRouteAuditSummary::from_handoff_summary(handoff_summary);
+
+        let summary = ThreadAttachRouteSignoffSummary::from_audit_summary(audit_summary);
+
+        assert_eq!(summary.required_signoff_check_count, 6);
+        assert_eq!(summary.passed_signoff_check_count, 0);
+        assert_eq!(summary.missing_signoff_check_count, 6);
+        assert!(!summary.route_audit_ready);
+        assert!(!summary.route_handoff_ready);
+        assert!(!summary.attach_complete);
+        assert!(!summary.network_data_ready);
+        assert!(!summary.routing_surface_ready);
+        assert!(!summary.parent_or_route_anchor_ready);
+        assert!(!summary.route_signoff_ready);
+        assert!(!summary.is_route_signoff_ready());
+        assert!(summary.has_signoff_gaps());
+        assert!(summary.needs_route_audit());
         assert!(summary.needs_route_handoff());
         assert!(summary.needs_attach_completion());
         assert!(summary.needs_network_data());
