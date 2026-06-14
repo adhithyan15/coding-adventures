@@ -10,13 +10,21 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.Timeout;
 
-/** Integration tests for the conduit-hello demo, driven over real HTTP. */
+/**
+ * Integration tests for the conduit-hello demo, driven over real HTTP.
+ *
+ * <p>A 30s class-level {@link Timeout} surfaces any hung server/dispatch as a
+ * test failure instead of stalling CI toward the multi-hour job limit.
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Timeout(value = 30, unit = TimeUnit.SECONDS)
 class ConduitHelloTest {
 
     private Application app;

@@ -9,17 +9,24 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.Timeout;
 
 /**
  * End-to-end tests: a real server on an OS-assigned port, driven over HTTP with
  * {@link HttpClient}. One application with every feature is started once and
  * shared across the test methods.
+ *
+ * <p>A class-level {@link Timeout} fails any test (or lifecycle method) that
+ * runs longer than 30s, so a hung server/dispatch surfaces as a clear failure
+ * instead of stalling the whole CI job toward the multi-hour default limit.
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Timeout(value = 30, unit = TimeUnit.SECONDS)
 class ServerTest {
 
     private Application app;
@@ -175,11 +182,16 @@ class ServerTest {
     }
 
     @Test
-    void runningTogglesAfterStop() {
+    void runningTogglesAfterStop() throws Exception {
         try (Application a = new Application()) {
             a.get("/", req -> Responses.text("ok"));
             Server s = Server.bind(a, "127.0.0.1", 0);
             s.serveBackground();
+            // Let the background accept loop fully enter its event wait before
+            // stopping, so stop() reliably wakes it (mirrors the @BeforeAll
+            // pattern). Stopping the instant after serveBackground() can race
+            // the loop's startup on some platforms.
+            Thread.sleep(150);
             assertTrue(s.running());
             s.stop();
             assertFalse(s.running());
