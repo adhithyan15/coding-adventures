@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/excel-parser",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Parses Excel formulas into grammar-driven ASTs",
   "type": "module",
   "main": "src/index.ts",
