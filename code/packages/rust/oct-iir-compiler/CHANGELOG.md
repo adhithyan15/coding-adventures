@@ -1,5 +1,30 @@
 # Changelog — `oct-iir-compiler`
 
+## 0.5.0 — 2026-06-13 — the `out` intrinsic prints to stdout (LANG-FULL O-OUT)
+
+`compile_intrinsic` previously rejected **all** Intel-8008 intrinsics. It now wires
+`out(port, value)` to stdout: the 8008 writes `value` to I/O `port`; on the general
+LANG backends all 24 output ports collapse to **stdout**, lowered as
+`call_builtin "print_i64"` — the same print builtin Dartmouth BASIC's `PRINT` uses,
+already supported on every backend (VM/JIT, LLVM `@__print_i64`, JVM `System.out`,
+CLR `Console.WriteLine`, WASM `env.__print_i64`). The `port` argument is a
+compile-time-constant hardware selector and, with all ports mapped to stdout, has no
+effect, so it is not evaluated. `out` is statement-shaped (no value); the lowering
+returns a fresh `const 0` for the discarded expression slot.
+
+**Why this matters:** Oct had *no observable output* — its `main` is forced void
+(always exits 0), so no Oct program could witness a computed result, which made the
+LANG-MATRIX unable to verify any Oct value-level feature by running. With `out`, Oct
+gets stdout, so its behaviour is now checkable: `lang-aot`'s `lang_matrix` battery
+RUNS `out(1, 200)` → prints `200` and `out(1, 100 + 100)` → prints `200` (arithmetic
+proven observably) across native / LLVM / WASM / JVM / CLR / VM / JIT. This unblocks
+verification of the deferred Oct items (O1 short-circuit, O2, O3).
+
+The other intrinsics (`in`, `adc`, `sbb`, `rlc`/`rrc`/`ral`/`rar`, `carry`, `parity`)
+have no general-backend model yet and remain cleanly rejected. New unit tests:
+`out_intrinsic_lowers_to_print_i64`, `out_of_computed_value`,
+`other_intrinsics_still_rejected`.
+
 ## 0.4.0 — 2026-05-30 (OCT05 — source-location threading for debugger)
 
 ### Added — Real source positions in `IIRFunction.source_map`
