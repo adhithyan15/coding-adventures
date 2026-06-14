@@ -682,6 +682,8 @@ mod v_2_7 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1249,6 +1251,8 @@ mod v_3_0 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1823,6 +1827,8 @@ mod v_3_6 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -2453,6 +2459,8 @@ mod v_3_8 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3118,6 +3126,8 @@ mod v_3_10 {
             context_keywords: vec![],
             soft_keywords: vec![r#"match"#.to_string(), r#"case"#.to_string(), r#"_"#.to_string()],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -3783,6 +3793,8 @@ mod v_3_12 {
             context_keywords: vec![],
             soft_keywords: vec![r#"match"#.to_string(), r#"case"#.to_string(), r#"_"#.to_string(), r#"type"#.to_string()],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }

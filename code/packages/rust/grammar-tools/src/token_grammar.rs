@@ -122,6 +122,64 @@ pub struct PatternGroup {
     pub definitions: Vec<TokenDefinition>,
 }
 
+/// One action a [`ModeTransition`] applies to the lexer's mode register after a
+/// token is emitted. See `F10-declarative-lexer-modes.md`.
+///
+/// The lexer keeps a single "active mode" register — the top of its group stack
+/// (F04). These actions mutate it:
+///
+/// - `SetMode(m)` — replace the active mode **without saving** the previous one.
+///   This is the flat flex-style toggle (e.g. JavaScript expression-position vs
+///   operand-position for regex-vs-division). Stack depth is unchanged.
+/// - `Push(g)`    — save the current mode and make `g` active (F04 push). +1 depth.
+/// - `Pop`        — restore the saved mode (F04 pop). No-op at the floor.
+/// - `EnableSkip` / `DisableSkip` — toggle skip-pattern processing, for regions
+///   where whitespace is significant (mirrors F04's `set_skip_enabled`).
+#[derive(Debug, Clone, PartialEq)]
+pub enum TransitionAction {
+    SetMode(String),
+    Push(String),
+    Pop,
+    EnableSkip,
+    DisableSkip,
+}
+
+/// One declarative lexer mode transition rule, parsed from a `transitions:`
+/// section line of the form `on TOKENS [in MODE] -> ACTION [, ACTION ...]`.
+///
+/// This is pure data — the lexer interprets it after each token is emitted
+/// (first matching rule wins). It replaces the hand-written per-language
+/// `on-token` callback that F04 required for context-sensitive lexing. See
+/// `F10-declarative-lexer-modes.md`.
+///
+/// # Fields
+///
+/// - `on_tokens` — Emitted token type-names that trigger the rule (the *alias*
+///   target if the matched pattern was aliased, e.g. `STRING` not `STRING_DQ`).
+///   The literal `KEYWORD` matches promoted keyword tokens; pair it with
+///   `on_value` to match a specific keyword.
+/// - `on_value` — Optional keyword-value guard, e.g. `Some("return")`. When set,
+///   the rule fires only if the emitted token's value equals this string.
+/// - `in_mode` — Optional active-mode guard. `None` means "in any mode".
+/// - `actions` — Ordered actions applied when the rule fires.
+/// - `line_number` — Source line for diagnostics.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ModeTransition {
+    pub on_tokens: Vec<String>,
+    pub on_value: Option<String>,
+    pub in_mode: Option<String>,
+    pub actions: Vec<TransitionAction>,
+    pub line_number: usize,
+}
+
+/// Upper bound on the number of transition rules in one grammar.
+///
+/// A defensive cap so an untrusted `.tokens` file cannot blow up generated-code
+/// size or lexer memory with a pathological transition table. No real grammar
+/// approaches this — JavaScript's full regex/division + template table is a few
+/// dozen rules.
+pub const MAX_TRANSITIONS: usize = 4096;
+
 /// The complete contents of a parsed `.tokens` file.
 ///
 /// # Fields
@@ -223,6 +281,13 @@ pub struct TokenGrammar {
     /// Keywords that introduce a Haskell-style layout context when
     /// `mode == "layout"`.
     pub layout_keywords: Vec<String>,
+    /// The lexer mode (active group) the tokenizer starts in. `None` means
+    /// `"default"`. Set by the `start_mode:` directive. See F10.
+    pub start_mode: Option<String>,
+    /// Declarative lexer mode transition table (F10). Empty means no
+    /// transitions — behaviour is identical to F04 (the lexer never switches
+    /// modes on its own). Set by the `transitions:` section.
+    pub transitions: Vec<ModeTransition>,
 }
 
 // ===========================================================================
@@ -485,6 +550,9 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     let mut case_sensitive: bool = true;
     let mut error_definitions = Vec::new();
     let mut groups: HashMap<String, PatternGroup> = HashMap::new();
+    // F10 declarative lexer modes.
+    let mut start_mode: Option<String> = None;
+    let mut transitions: Vec<ModeTransition> = Vec::new();
     // Magic comment fields — set by `# @key value` lines.
     let mut version: u32 = 0;
     let mut case_insensitive: bool = false;
@@ -510,6 +578,10 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             "layout_keywords",
             "context_keywords",
             "soft_keywords",
+            // F10 reserved section/directive names.
+            "transitions",
+            "modes",
+            "start_mode",
         ]
         .iter()
         .copied()
@@ -647,6 +719,14 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             current_section = String::from("soft_keywords");
             continue;
         }
+        // --- F10: transitions section ---
+        //
+        // The `transitions:` section holds declarative lexer mode transition
+        // rules. Each indented line is `on TOKENS [in MODE] -> ACTION, ...`.
+        if stripped == "transitions:" || stripped == "transitions :" {
+            current_section = String::from("transitions");
+            continue;
+        }
 
         // --- Escapes directive ---
         //
@@ -674,6 +754,25 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
                 });
             }
             mode = Some(mode_value.to_string());
+            continue;
+        }
+
+        // --- F10: start_mode directive ---
+        //
+        // `start_mode: NAME` names the lexer mode (active group) the tokenizer
+        // begins in. Defaults to "default" when omitted. Must be checked BEFORE
+        // the generic token-definition fallthrough, and the name is validated
+        // against declared groups in `validate_token_grammar`.
+        if stripped.starts_with("start_mode:") || stripped.starts_with("start_mode :") {
+            let colon_idx = stripped.find(':').unwrap();
+            let sm_value = stripped[colon_idx + 1..].trim();
+            if sm_value.is_empty() {
+                return Err(TokenGrammarError {
+                    message: "Missing mode name after 'start_mode:'".to_string(),
+                    line_number,
+                });
+            }
+            start_mode = Some(sm_value.to_string());
             continue;
         }
 
@@ -725,6 +824,9 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
                         soft_keywords.push(stripped.to_string());
                     } else if current_section == "reserved" {
                         reserved_keywords.push(stripped.to_string());
+                    } else if current_section == "transitions" {
+                        let rule = parse_transition(stripped, line_number)?;
+                        transitions.push(rule);
                     } else if current_section == "skip" {
                         let defn = parse_definition(stripped, line_number)?;
                         skip_definitions.push(defn);
@@ -792,7 +894,168 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         context_keywords,
         soft_keywords,
         layout_keywords,
+        start_mode,
+        transitions,
     })
+}
+
+// ===========================================================================
+// F10: transition-rule parser
+// ===========================================================================
+
+/// Parse one `transitions:` line into a [`ModeTransition`].
+///
+/// Grammar of a rule line (keywords are lowercase):
+///
+/// ```text
+/// on TOKENS [in MODE] -> ACTION [, ACTION ...]
+/// ```
+///
+/// where
+/// - `TOKENS` is one token name (`NAME`), an alternation `(A | B | C)`, or the
+///   special `KEYWORD="value"` form for a specific promoted keyword,
+/// - `[in MODE]` is an optional active-mode guard,
+/// - each `ACTION` is `set-mode M` | `push G` | `pop` | `enable-skip` |
+///   `disable-skip`.
+///
+/// # Examples
+///
+/// ```text
+/// on (NAME | NUMBER | RPAREN) -> set-mode div
+/// on KEYWORD="return" -> set-mode default
+/// on TEMPLATE_HEAD in default -> push template, set-mode default
+/// ```
+fn parse_transition(line: &str, line_number: usize) -> Result<ModeTransition, TokenGrammarError> {
+    // Split on the mandatory `->` arrow separating the matcher from the actions.
+    let arrow = line.find("->").ok_or_else(|| TokenGrammarError {
+        message: format!("Transition rule missing '->': '{}'", line),
+        line_number,
+    })?;
+    let head = line[..arrow].trim();
+    let action_str = line[arrow + 2..].trim();
+    if action_str.is_empty() {
+        return Err(TokenGrammarError {
+            message: format!("Transition rule has no actions after '->': '{}'", line),
+            line_number,
+        });
+    }
+
+    // --- Head: `on TOKENS [in MODE]` ---
+    let head = head.strip_prefix("on ").map(str::trim).ok_or_else(|| {
+        TokenGrammarError {
+            message: format!("Transition rule must start with 'on ': '{}'", line),
+            line_number,
+        }
+    })?;
+
+    // Optional `in MODE` guard. We split on the whitespace-delimited ` in `
+    // token so that a token-set like `(A | B)` is not mistaken for the guard.
+    let (tokens_part, in_mode) = match split_in_guard(head) {
+        Some((toks, mode)) => (toks.trim().to_string(), Some(mode.trim().to_string())),
+        None => (head.to_string(), None),
+    };
+
+    // --- Token set, with optional `KEYWORD="value"` form ---
+    let mut on_value: Option<String> = None;
+    let tokens_inner = tokens_part
+        .strip_prefix('(')
+        .and_then(|s| s.strip_suffix(')'))
+        .unwrap_or(&tokens_part);
+    let mut on_tokens = Vec::new();
+    for raw in tokens_inner.split('|') {
+        let item = raw.trim();
+        if item.is_empty() {
+            continue;
+        }
+        // `KEYWORD="value"` — a value-guarded keyword. Only one value guard is
+        // supported per rule (the common case: `on KEYWORD="return"`).
+        if let Some(eq) = item.find('=') {
+            let name = item[..eq].trim();
+            let value_raw = item[eq + 1..].trim();
+            let value = value_raw
+                .strip_prefix('"')
+                .and_then(|s| s.strip_suffix('"'))
+                .unwrap_or(value_raw);
+            on_tokens.push(name.to_string());
+            on_value = Some(value.to_string());
+        } else {
+            on_tokens.push(item.to_string());
+        }
+    }
+    if on_tokens.is_empty() {
+        return Err(TokenGrammarError {
+            message: format!("Transition rule has no trigger tokens: '{}'", line),
+            line_number,
+        });
+    }
+
+    // --- Actions: comma-separated ---
+    let mut actions = Vec::new();
+    for raw in action_str.split(',') {
+        let act = raw.trim();
+        if act.is_empty() {
+            continue;
+        }
+        let parsed = if let Some(m) = act.strip_prefix("set-mode ") {
+            TransitionAction::SetMode(m.trim().to_string())
+        } else if let Some(g) = act.strip_prefix("push ") {
+            TransitionAction::Push(g.trim().to_string())
+        } else if act == "pop" {
+            TransitionAction::Pop
+        } else if act == "enable-skip" {
+            TransitionAction::EnableSkip
+        } else if act == "disable-skip" {
+            TransitionAction::DisableSkip
+        } else {
+            return Err(TokenGrammarError {
+                message: format!(
+                    "Unknown transition action '{}' \
+                     (expected set-mode/push/pop/enable-skip/disable-skip)",
+                    act
+                ),
+                line_number,
+            });
+        };
+        actions.push(parsed);
+    }
+    if actions.is_empty() {
+        return Err(TokenGrammarError {
+            message: format!("Transition rule has no valid actions: '{}'", line),
+            line_number,
+        });
+    }
+
+    Ok(ModeTransition {
+        on_tokens,
+        on_value,
+        in_mode,
+        actions,
+        line_number,
+    })
+}
+
+/// Split a transition head on a top-level ` in ` mode guard, ignoring any ` in `
+/// that appears inside a parenthesised token set. Returns
+/// `Some((tokens, mode))` when a guard is present, else `None`.
+fn split_in_guard(head: &str) -> Option<(&str, &str)> {
+    let bytes = head.as_bytes();
+    let mut depth = 0i32;
+    let mut i = 0usize;
+    while i < bytes.len() {
+        match bytes[i] {
+            b'(' => depth += 1,
+            b')' => depth -= 1,
+            b' ' if depth == 0 => {
+                // Check for the literal token ` in ` at a top-level boundary.
+                if head[i..].starts_with(" in ") {
+                    return Some((&head[..i], &head[i + 4..]));
+                }
+            }
+            _ => {}
+        }
+        i += 1;
+    }
+    None
 }
 
 // ===========================================================================
@@ -924,6 +1187,58 @@ pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
         let mut group_seen: std::collections::HashMap<String, usize> =
             std::collections::HashMap::new();
         validate_definitions(&group.definitions, &mut group_seen, &mut issues);
+    }
+
+    // F10: validate declarative lexer modes.
+    //
+    // A mode name is valid if it is "default" (the implicit base group) or a
+    // declared group. `set-mode`/`push` targets and `in MODE` guards must all
+    // resolve to a real mode, otherwise the lexer would silently fall back to
+    // the wrong group — a silent-failure hazard we reject up front.
+    let mode_exists = |name: &str| name == "default" || grammar.groups.contains_key(name);
+
+    if let Some(ref sm) = grammar.start_mode {
+        if !mode_exists(sm) {
+            issues.push(format!(
+                "start_mode '{}' is not 'default' or a declared group",
+                sm
+            ));
+        }
+    }
+
+    // Defensive cap so an untrusted grammar cannot blow up codegen/lexer size.
+    if grammar.transitions.len() > MAX_TRANSITIONS {
+        issues.push(format!(
+            "Too many transition rules ({}, max {})",
+            grammar.transitions.len(),
+            MAX_TRANSITIONS
+        ));
+    }
+
+    for rule in &grammar.transitions {
+        if let Some(ref m) = rule.in_mode {
+            if !mode_exists(m) {
+                issues.push(format!(
+                    "Transition guard 'in {}' (line {}) names an undeclared mode",
+                    m, rule.line_number
+                ));
+            }
+        }
+        for action in &rule.actions {
+            match action {
+                TransitionAction::SetMode(m) | TransitionAction::Push(m) => {
+                    if !mode_exists(m) {
+                        issues.push(format!(
+                            "Transition action targets undeclared mode '{}' (line {})",
+                            m, rule.line_number
+                        ));
+                    }
+                }
+                TransitionAction::Pop
+                | TransitionAction::EnableSkip
+                | TransitionAction::DisableSkip => {}
+            }
+        }
     }
 
     issues
@@ -1153,6 +1468,8 @@ case_sensitive: true,
             layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
+            start_mode: None,
+            transitions: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1183,6 +1500,8 @@ case_sensitive: true,
             layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
+            start_mode: None,
+            transitions: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1213,6 +1532,8 @@ case_sensitive: true,
             layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
+            start_mode: None,
+            transitions: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1422,6 +1743,8 @@ case_sensitive: true,
             layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
+            start_mode: None,
+            transitions: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Unknown mode")));
@@ -1617,6 +1940,8 @@ case_sensitive: true,
             layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
+            start_mode: None,
+            transitions: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Invalid regex")));
@@ -1648,6 +1973,8 @@ case_sensitive: true,
             layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
+            start_mode: None,
+            transitions: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Empty pattern group")));
@@ -1916,6 +2243,8 @@ case_sensitive: true,
             layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
+            start_mode: None,
+            transitions: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|issue| issue.contains("layout_keywords")));
@@ -1945,5 +2274,150 @@ case_sensitive: true,
         let result = parse_token_grammar(source);
         assert!(result.is_err());
         assert!(result.unwrap_err().message.contains("Reserved group name"));
+    }
+
+    // -----------------------------------------------------------------------
+    // F10: declarative lexer mode transitions
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_no_transitions_means_empty_defaults() {
+        // Backward compat: a grammar with no F10 sections parses to the
+        // F04-identical empty defaults.
+        let grammar = parse_token_grammar("NUMBER = /[0-9]+/").unwrap();
+        assert_eq!(grammar.start_mode, None);
+        assert!(grammar.transitions.is_empty());
+    }
+
+    #[test]
+    fn test_parse_start_mode_directive() {
+        let source = "NAME = /[a-z]+/\nstart_mode: div\ngroup div:\n  SLASH = \"/\"\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.start_mode.as_deref(), Some("div"));
+    }
+
+    #[test]
+    fn test_start_mode_missing_value_errors() {
+        let result = parse_token_grammar("NAME = /[a-z]+/\nstart_mode:\n");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("start_mode"));
+    }
+
+    #[test]
+    fn test_parse_transition_alternation_to_set_mode() {
+        let source = "\
+NAME = /[a-z]+/
+transitions:
+  on (NAME | NUMBER | RPAREN) -> set-mode div
+";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.transitions.len(), 1);
+        let rule = &grammar.transitions[0];
+        assert_eq!(rule.on_tokens, vec!["NAME", "NUMBER", "RPAREN"]);
+        assert_eq!(rule.on_value, None);
+        assert_eq!(rule.in_mode, None);
+        assert_eq!(rule.actions, vec![TransitionAction::SetMode("div".to_string())]);
+    }
+
+    #[test]
+    fn test_parse_transition_keyword_value_form() {
+        let source = "NAME = /[a-z]+/\ntransitions:\n  on KEYWORD=\"return\" -> set-mode default\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        let rule = &grammar.transitions[0];
+        assert_eq!(rule.on_tokens, vec!["KEYWORD"]);
+        assert_eq!(rule.on_value.as_deref(), Some("return"));
+    }
+
+    #[test]
+    fn test_parse_transition_in_guard_and_multiple_actions() {
+        // The `in MODE` guard must not be confused with a parenthesised token
+        // set, and multiple comma-separated actions are applied in order.
+        let source = "\
+NAME = /[a-z]+/
+group template:
+  TAIL = \"x\"
+transitions:
+  on TEMPLATE_HEAD in default -> push template, set-mode default
+";
+        let grammar = parse_token_grammar(source).unwrap();
+        let rule = &grammar.transitions[0];
+        assert_eq!(rule.on_tokens, vec!["TEMPLATE_HEAD"]);
+        assert_eq!(rule.in_mode.as_deref(), Some("default"));
+        assert_eq!(
+            rule.actions,
+            vec![
+                TransitionAction::Push("template".to_string()),
+                TransitionAction::SetMode("default".to_string()),
+            ]
+        );
+    }
+
+    #[test]
+    fn test_parse_transition_pop_and_skip_actions() {
+        let source = "\
+NAME = /[a-z]+/
+transitions:
+  on RBRACE -> pop, disable-skip
+  on LBRACE -> enable-skip
+";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(
+            grammar.transitions[0].actions,
+            vec![TransitionAction::Pop, TransitionAction::DisableSkip]
+        );
+        assert_eq!(
+            grammar.transitions[1].actions,
+            vec![TransitionAction::EnableSkip]
+        );
+    }
+
+    #[test]
+    fn test_transition_missing_arrow_errors() {
+        let result = parse_token_grammar("NAME = /x/\ntransitions:\n  on NAME set-mode div\n");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("->"));
+    }
+
+    #[test]
+    fn test_transition_unknown_action_errors() {
+        let result = parse_token_grammar("NAME = /x/\ntransitions:\n  on NAME -> teleport\n");
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Unknown transition action"));
+    }
+
+    #[test]
+    fn test_validate_rejects_undefined_target_mode() {
+        // `set-mode div` with no `group div:` declared is a hard validation error.
+        let grammar =
+            parse_token_grammar("NAME = /x/\ntransitions:\n  on NAME -> set-mode div\n").unwrap();
+        let issues = validate_token_grammar(&grammar);
+        assert!(issues.iter().any(|i| i.contains("undeclared mode")));
+    }
+
+    #[test]
+    fn test_validate_accepts_default_and_declared_modes() {
+        let source = "\
+NAME = /[a-z]+/
+start_mode: default
+group div:
+  SLASH = \"/\"
+transitions:
+  on NAME -> set-mode div
+  on KEYWORD=\"return\" -> set-mode default
+";
+        let grammar = parse_token_grammar(source).unwrap();
+        let issues = validate_token_grammar(&grammar);
+        assert!(
+            !issues.iter().any(|i| i.contains("mode")),
+            "unexpected mode issues: {:?}",
+            issues
+        );
+    }
+
+    #[test]
+    fn test_validate_rejects_undefined_start_mode() {
+        let grammar = parse_token_grammar("NAME = /x/\nstart_mode: nope\n").unwrap();
+        let issues = validate_token_grammar(&grammar);
+        assert!(issues.iter().any(|i| i.contains("start_mode")));
     }
 }

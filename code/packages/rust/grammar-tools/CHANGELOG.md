@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - F10 declarative lexer mode transitions
+
+### Added
+- `ModeTransition` and `TransitionAction` types, plus `start_mode` and
+  `transitions` fields on `TokenGrammar`, implementing the declarative
+  lexer-mode transition table from `F10-declarative-lexer-modes.md`. A
+  grammar can now drive context-sensitive lexing (regex-vs-division,
+  template substitutions) from the `.tokens` file instead of a
+  hand-written host-language callback.
+- `.tokens` DSL: a `start_mode:` directive and a `transitions:` section
+  whose lines read `on TOKENS [in MODE] -> ACTION [, ACTION ...]`
+  (actions: `set-mode`/`push`/`pop`/`enable-skip`/`disable-skip`;
+  `KEYWORD="value"` value-guard form supported).
+- `parse_transition` parser, validation (undefined target/guard modes are
+  rejected; `start_mode` must resolve; `MAX_TRANSITIONS` cap as a DoS
+  guard), and `transitions_src`/`transition_src`/`action_src` codegen in
+  `compiler.rs` (emits the table as pure data, mirroring `groups_src`).
+
+### Changed
+- All compiled `_grammar.rs` artifacts gain the two new fields as trivial
+  defaults (`start_mode: None, transitions: vec![]`); behaviour is
+  byte-identical to before for any grammar that declares no transitions
+  (full F04 backward-compat).
+
+### Notes
+- Interpreting the table in the lexer is a separate change (F10 step 2,
+  `grammar_lexer.rs`). This entry covers the grammar-tools core: types,
+  parse, validation, and codegen.
+
 ## [0.6.0] - LS04 spec dump
 
 ### Added
