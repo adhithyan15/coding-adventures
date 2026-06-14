@@ -111,15 +111,17 @@ pub fn wb_from_as_shot_neutral(neutrals: &[f64]) -> [f64; 3] {
 ///
 /// This is O(27) floating-point multiplications for 3×3.
 pub fn matrix_multiply(a: &[[f64; 3]; 3], b: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
-    let mut out = [[0f64; 3]; 3];
-    for i in 0..3 {
-        for j in 0..3 {
-            for k in 0..3 {
-                out[i][j] += a[i][k] * b[k][j];
-            }
-        }
-    }
-    out
+    // Decompose B column-by-column: each column of A×B is mat3x3_mul(A, col_j(B)).
+    // col_j(B) = [B[0][j], B[1][j], B[2][j]]  (B is row-major)
+    let c0 = image_raw_pipeline::mat3x3_mul(a, [b[0][0], b[1][0], b[2][0]]);
+    let c1 = image_raw_pipeline::mat3x3_mul(a, [b[0][1], b[1][1], b[2][1]]);
+    let c2 = image_raw_pipeline::mat3x3_mul(a, [b[0][2], b[1][2], b[2][2]]);
+    // Reassemble: result[i][j] = c_j[i]
+    [
+        [c0[0], c1[0], c2[0]],
+        [c0[1], c1[1], c2[1]],
+        [c0[2], c1[2], c2[2]],
+    ]
 }
 
 // ─── ForwardMatrix path ───────────────────────────────────────────────────────
@@ -192,28 +194,5 @@ pub fn camera_to_srgb_via_forward(forward: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
 /// assert!((inv[0][0] - 1.0).abs() < 1e-9);
 /// ```
 pub fn invert_3x3(m: &[[f64; 3]; 3]) -> Option<[[f64; 3]; 3]> {
-    // Determinant by cofactor expansion along the first row.
-    let det = m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
-        - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
-        + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
-
-    if det.abs() < 1e-10 {
-        return None; // singular matrix
-    }
-
-    let inv_det = 1.0 / det;
-    let mut inv = [[0f64; 3]; 3];
-
-    // Cofactors (note the sign alternation pattern: +, -, +, -, +, -, +, -, +)
-    inv[0][0] = (m[1][1] * m[2][2] - m[1][2] * m[2][1]) * inv_det;
-    inv[0][1] = -(m[0][1] * m[2][2] - m[0][2] * m[2][1]) * inv_det;
-    inv[0][2] = (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * inv_det;
-    inv[1][0] = -(m[1][0] * m[2][2] - m[1][2] * m[2][0]) * inv_det;
-    inv[1][1] = (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * inv_det;
-    inv[1][2] = -(m[0][0] * m[1][2] - m[0][2] * m[1][0]) * inv_det;
-    inv[2][0] = (m[1][0] * m[2][1] - m[1][1] * m[2][0]) * inv_det;
-    inv[2][1] = -(m[0][0] * m[2][1] - m[0][1] * m[2][0]) * inv_det;
-    inv[2][2] = (m[0][0] * m[1][1] - m[0][1] * m[1][0]) * inv_det;
-
-    Some(inv)
+    image_raw_pipeline::invert_3x3(m)
 }
