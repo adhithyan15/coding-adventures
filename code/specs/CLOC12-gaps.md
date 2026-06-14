@@ -635,9 +635,17 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-083 — precedence-aware operand paren elision
 
-- **Status:** OPEN (discovered CLOC14.38). `minify_precedence_operand` ignored.
+- **Status:** RESOLVED in CLOC12.130. `minify_precedence_operand` now ENFORCED.
+- **Resolution:** When a binary operator's parenthesised right operand has a minimum
+  top-level operator precedence STRICTLY GREATER than the outer binary operator, the
+  parens are dropped. `a==(b+c)` → `a==b+c` (outer `==` prec 9 < inner `+` prec 12).
+  `a*(b+c)` keeps its parens (outer `*` prec 13 > inner `+` prec 12). Implemented
+  by extending the gap-078 drop block in `whitespace_only.rs` with two new helpers:
+  `binary_op_prec` (precedence table for symbol binary ops) and
+  `min_toplevel_binary_prec` (depth-0 scan for minimum precedence in a span).
+  Only BINARY outer operators participate; prefix-unary ops are excluded.
 - **Input:** `var x=a==(b+c);` → **Upstream:** `var x=a==b+c;` (also `a||(b&&c)` → `a||b&&c`, `(a*b)+c` → `a*b+c`).
-- **What it needs:** The fuller version of gap-077/078, which only strip an ATOMIC (self-delimiting) operand. Upstream also strips when the parenthesised operand's lowest-precedence operator binds *at least as tightly* as the outer operator (so removing the parens does not change grouping): `+` binds tighter than `==`, `&&` tighter than `||`, `*` tighter than `+`. Needs an operator-precedence table and an "outer op" lookup on both the left (`(a*b)+c`) and right (`a==(b+c)`) operand sides. Must still KEEP `a*(b+c)`, `a-(b-c)` (associativity/precedence would change).
+- **What it needed:** The fuller version of gap-077/078, which only strip an ATOMIC (self-delimiting) operand. Upstream also strips when the parenthesised operand's lowest-precedence operator binds *at least as tightly* as the outer operator (so removing the parens does not change grouping): `+` binds tighter than `==`, `&&` tighter than `||`, `*` tighter than `+`. Needs an operator-precedence table and an "outer op" lookup on both the left (`(a*b)+c`) and right (`a==(b+c)`) operand sides. Must still KEEP `a*(b+c)`, `a-(b-c)` (associativity/precedence would change).
 
 ### gap-084 — nested double-paren full strip around var-init RHS
 

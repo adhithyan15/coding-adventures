@@ -229,11 +229,12 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // (`12345678901234567890` -> `1.2345678901234567E19`) never reaches
     // the arm (all-digits, no `.`). `minify_num_frac_trail_zero` /
     // `..._trail_zeros` / `..._lead_zero` now ENFORCED.
-    // gap-083 (CLOC14.38): PRECEDENCE-aware operand paren elision —
-    // `a==(b+c)` → `a==b+c` (the inner op binds tighter than the
-    // outer). Extends gap-077/078 beyond the atomic-operand guard;
-    // needs an operator-precedence table.
-    ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
+    // gap-083 RESOLVED in CLOC12.130 — precedence-aware operand paren
+    // elision. When the inner operator's minimum precedence is STRICTLY
+    // GREATER than the outer binary operator's precedence, the grouping
+    // parens are redundant: `a==(b+c)` → `a==b+c` (`+` prec 12 > `==`
+    // prec 9). Implemented via `binary_op_prec` + `min_toplevel_binary_prec`
+    // helpers in `whitespace_only.rs`. `minify_precedence_operand` ENFORCED.
     // gap-108 RESOLVED in CLOC12.111 — a single-statement DO-body block
     // is flattened — `do{x()}while(a)` -> `do x();while(a)` — the same
     // single-statement-block-flatten family as gap-074 (loop body),

@@ -905,7 +905,30 @@ pub fn whitespace_only_minify(
                 }
                 if let Some(close) = close {
                     let span = &kept[open + 1..close];
-                    if is_safe_unary_paren_operand(span) {
+                    // gap-075/078: atomic-operand elision (existing).
+                    // gap-083: precedence-aware elision — if the span has a
+                    // top-level binary operator whose minimum precedence is
+                    // STRICTLY GREATER than the outer operator's precedence,
+                    // the parens are redundant (inner binds tighter).
+                    // `a==(b+c)` → `a==b+c` (outer `==` prec 9, inner `+`
+                    // prec 12 > 9). Only applies to BINARY outer operators
+                    // (`is_binary_sym`); prefix-unary outer ops (gap-075)
+                    // are excluded — `-(b+c)` must never strip.
+                    let should_drop = if is_safe_unary_paren_operand(span) {
+                        true
+                    } else if is_binary_sym {
+                        if let (Some(outer_p), Some(inner_min_p)) = (
+                            binary_op_prec(kept[i]),
+                            min_toplevel_binary_prec(span),
+                        ) {
+                            inner_min_p > outer_p
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    };
+                    if should_drop {
                         drops.push(open);
                         drops.push(close);
                         i = close + 1;
@@ -5790,6 +5813,86 @@ fn is_regex(tok: &lexer::token::Token) -> bool {
 }
 
 // ---------------------------------------------------------------------------
+// gap-083: operator-precedence helpers
+// ---------------------------------------------------------------------------
+
+/// Returns the JS operator precedence for a BINARY SYMBOL operator token,
+/// or `None` if the token is not a recognised binary symbol operator.
+///
+/// Precedence table (higher number = tighter binding):
+///   `**`            → 14   (right-associative — kept conservative)
+///   `*` `/` `%`     → 13
+///   `+` `-`         → 12
+///   `<<` `>>` `>>>` → 11
+///   `<` `>` `<=` `>=` → 10
+///   `==` `!=` `===` `!==` → 9
+///   `&`             → 8
+///   `^`             → 7
+///   `|`             → 6
+///   `??`            → 5
+///   `&&`            → 4
+///   `||`            → 3
+///
+/// Assignment operators (`=`, `+=`, …) and the comma operator are NOT
+/// included — they are never safe to treat as "inner binds tighter"
+/// in the `a==(b+c)` shape.
+fn binary_op_prec(tok: &lexer::token::Token) -> Option<u8> {
+    if is_string_literal(tok) || is_word_like(tok) {
+        return None;
+    }
+    match tok.value.as_str() {
+        "**" => Some(14),
+        "*" | "/" | "%" => Some(13),
+        "+" | "-" => Some(12),
+        "<<" | ">>" | ">>>" => Some(11),
+        "<" | ">" | "<=" | ">=" => Some(10),
+        "==" | "!=" | "===" | "!==" => Some(9),
+        "&" => Some(8),
+        "^" => Some(7),
+        "|" => Some(6),
+        "??" => Some(5),
+        "&&" => Some(4),
+        "||" => Some(3),
+        _ => None,
+    }
+}
+
+/// Returns the MINIMUM precedence of any top-level binary operator found in
+/// `span`, or `None` if no such operator exists at depth 0.
+///
+/// "Top-level" means depth 0 with respect to `(`, `[`, `{` / `)`, `]`, `}`.
+/// Tokens inside nested brackets are invisible to this scan.
+///
+/// The minimum is the right metric because it determines the weakest binding
+/// at the outermost expression level — that is what must beat the outer
+/// operator's precedence for the parens to be elide-safe.
+fn min_toplevel_binary_prec(span: &[&lexer::token::Token]) -> Option<u8> {
+    let mut depth: i32 = 0;
+    let mut min_prec: Option<u8> = None;
+    for tok in span {
+        if is_structural_punct(tok, "(")
+            || is_structural_punct(tok, "[")
+            || is_structural_punct(tok, "{")
+        {
+            depth += 1;
+        } else if is_structural_punct(tok, ")")
+            || is_structural_punct(tok, "]")
+            || is_structural_punct(tok, "}")
+        {
+            depth -= 1;
+        } else if depth == 0 {
+            if let Some(p) = binary_op_prec(tok) {
+                min_prec = Some(match min_prec {
+                    None => p,
+                    Some(m) => m.min(p),
+                });
+            }
+        }
+    }
+    min_prec
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
@@ -8254,15 +8357,25 @@ mod tests {
         assert_eq!(minify("var x=a==(b.c);"), "var x=a==b.c;");
     }
 
-    /// gap-078 boundary (DEFERRED precedence-aware case): an operand
-    /// containing a top-level binary operator KEEPS its parens — the
-    /// conservative atomic-operand guard does not yet do the full
-    /// precedence analysis the JAR does (`a==(b+c)` → upstream
-    /// `a==b+c`). Output stays valid; just not byte-identical.
+    /// gap-083: precedence-aware paren elision — when the inner operator
+    /// has STRICTLY HIGHER precedence than the outer, the parens are
+    /// redundant. `==` (prec 9) wrapping `b+c` (inner `+` prec 12 > 9)
+    /// → parens dropped. `*` (prec 13) wrapping `b+c` (inner `+` prec
+    /// 12 < 13) → parens kept (inner is WEAKER; removing them would
+    /// change grouping).
     #[test]
-    fn gap078_operator_operand_kept() {
-        assert_eq!(minify("var x=a==(b+c);"), "var x=a==(b+c);");
+    fn gap083_precedence_aware_paren_elision() {
+        // Inner prec strictly greater → strip.
+        assert_eq!(minify("var x=a==(b+c);"), "var x=a==b+c;");
+        // Inner prec strictly less → keep.
         assert_eq!(minify("var x=a*(b+c);"), "var x=a*(b+c);");
+        // Inner prec equal → keep (conservative; `a==(b==c)` stays).
+        assert_eq!(minify("var x=a==(b==c);"), "var x=a==(b==c);");
+        // Multiple operators in span — min inner prec must beat outer.
+        // `||` (prec 3) outer, inner has `+` (12) AND `*` (13) → min = 12 > 3 → strip.
+        assert_eq!(minify("var x=a||(b+c*d);"), "var x=a||b+c*d;");
+        // `*` (13) outer, span has `+` (12) AND `&&` (4) → min = 4 < 13 → keep.
+        assert_eq!(minify("var x=a*(b+c&&d);"), "var x=a*(b+c&&d);");
     }
 
     /// gap-078 SAFETY: a string/regex literal whose CONTENT is an
