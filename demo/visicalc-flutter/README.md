@@ -1,36 +1,56 @@
-# VisiCalc — Flutter demo
+# VisiCalc — Flutter demo (live, on the Rust engine)
 
-Third cross-backend visual demo (Phase 2 / VC2-flutter), running on
-the Flutter framework.
+The Flutter VisiCalc demo, now **computing on the shared Rust `spreadsheet-core`
+engine** through its C ABI (`spreadsheet-capi`), reached via `dart:ffi` — the
+same engine the SwiftUI and Qt demos link natively and the web demos run as
+WebAssembly. This is the third native backend wired to the engine.
 
 ## What it shows
 
-A `MaterialApp` shell containing:
+A `MaterialApp` shell containing the auto-generated `FormulaBar` and `Grid`
+widgets (`lib/generated/`, produced by `mosaic-compile --backend flutter` from
+the shared `demo/visicalc/mosaic/*` sources).
 
-- An auto-generated `FormulaBar extends StatelessWidget` (from
-  `lib/generated/formula_bar.dart`, produced by
-  `mosaic-compile --backend flutter` from
-  `demo/visicalc/mosaic/FormulaBar.{mil,desktop.mll,dark.msl}`).
-- A hand-written `Grid extends StatelessWidget` (in
-  `lib/generated/grid.dart`), visually matching what the eventual
-  Flutter Grid emitter should produce.
+- The grid renders **engine-computed** values: the classic cross-footing budget
+  where column E totals each row, row 5 totals each column, and E5 is the grand
+  total (169) — all formulas evaluated by the Rust engine, not hard-coded.
+- Editing the formula bar writes through to the engine via
+  `SpreadsheetModel.setCell`, which recomputes every dependent cell.
 
-Tap a cell — the formula bar updates with its value and the selected
-cell gets the excel-blue highlight (`#264F78` outline / `#007ACC`).
-Type in the formula bar — it updates the local state.
+## How it's wired to the engine
 
-5×5 sample spreadsheet hard-coded in `lib/main.dart`'s `_sampleRows`.
-Same data as VC2-html and VC2-webcomp so all three demos look
-visually identical.
-
-## How to build the generated FormulaBar
-
-```bash
-bash scripts/build.sh
+```
+Flutter widgets (generated)  ──  SpreadsheetModel / SpreadsheetSession (lib/engine.dart)
+   Grid(viewportRows: model…)     │  sc_set_cell / sc_get_value … (dart:ffi, String↔char*)
+                                  ▼
+   native/libspreadsheet_capi.dylib  ←  spreadsheet-capi (Rust C ABI)  ←  spreadsheet-core
 ```
 
-This invokes `mosaic-compile --backend flutter` against the canonical
-Mosaic sources and writes `lib/generated/formula_bar.dart`.
+`lib/engine.dart` loads the engine dynamic library with `DynamicLibrary.open`
+and marshals strings by hand (UTF-8 via `dart:convert`, libc `malloc`/`free`
+bound through `DynamicLibrary.process()`) — **no extra pub dependency**, not even
+`package:ffi`. It maps the engine's JSON value shape (the same contract the
+TS/WASM/Swift/Qt engines emit) into display text.
+
+## Build, test, run
+
+```bash
+bash scripts/build.sh   # regenerate widgets + build & vendor the engine (cdylib)
+flutter test            # HEADLESS: proves the grid is engine-computed + recomputes
+flutter pub get && flutter run -d macos   # launch the desktop app
+```
+
+`test/engine_test.dart` loads the vendored engine through `dart:ffi` and asserts
+the grid is engine-computed (E1 = 38, A5 = 39, E5 = 169), that editing A1
+15 → 115 recomputes the totals (E5 → 269), and that a formula entry computes with
+binary-op error propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it → `#DIV/0!`).
+
+> Known gap (tracked separately): the generated Flutter `FormulaBar` places its
+> `TextField` directly in a `Row` without a `Flexible` wrapper, so it throws an
+> unbounded-width layout assertion when the full app is pumped. That's a
+> `mosaic-emit-flutter` emitter bug, independent of the engine wiring (the grid
+> renders fine). The headless `engine_test.dart` is the canonical proof here,
+> matching how the SwiftUI and Qt demos verify.
 
 ## How to run the app
 
@@ -69,32 +89,14 @@ Volatile per-platform caches (`android/.gradle/`, `ios/Pods/`,
 `xcuserdata/`, etc.) are gitignored — `flutter build` regenerates
 them on first run.
 
-## The Grid gap
-
-The `mosaic-emit-flutter` pipeline emits a placeholder
-`SizedBox.shrink()` for the `Grid` built-in primitive — only the
-React emitter knows how to lower it into a real table widget. Until
-the Flutter Grid emitter lands, `lib/generated/grid.dart` is
-**hand-written** to mirror what the auto-generated widget should
-produce.
-
-The hand-written Grid uses native Flutter widgets (`Column` of
-`Row`s with `Container` cells, `InkWell` for taps) styled to match
-`Grid.dark.msl`'s palette — same look as VC2-html and VC2-webcomp.
-
-When the Flutter Grid emitter lands, `build.sh` gains a second
-`mosaic-compile --backend flutter` invocation that overwrites
-`lib/generated/grid.dart` with the auto-generated output.
-
 ## Where this fits in the cross-backend demo plan
 
-| Phase | Demo | Status |
+| Backend | Engine | Status |
 |---|---|---|
-| 2 | VC2-html | ✅ |
-| 2 | VC2-webcomp | ✅ |
-| 2 | VC2-flutter (this one) | ✅ |
-| 2 | VC2-qt | TODO |
-| 2 | VC2-swiftui | TODO |
-| 2 | VC2-xaml | TODO |
-| 3 | multi-component artifact-builder shells | TODO |
-| 4 | demo/visicalc-all/ | TODO |
+| HTML (web) | WASM | ✅ live |
+| WebComponent (web) | WASM | ✅ live |
+| SwiftUI (macOS / iOS) | C ABI | ✅ live |
+| Qt / C++ | C ABI | ✅ live |
+| Flutter (this one) | C ABI (dart:ffi) | ✅ live (grid; formula-bar emitter gap tracked) |
+| Compose / Android (Kotlin) | C ABI (FFM / JNI) | in progress |
+| XAML (.NET, Windows) | C ABI (P/Invoke) | in progress |

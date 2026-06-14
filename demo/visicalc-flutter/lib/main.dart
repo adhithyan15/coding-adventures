@@ -17,6 +17,7 @@
 //   flutter run
 
 import 'package:flutter/material.dart';
+import 'engine.dart';
 import 'generated/formula_bar.dart';
 import 'generated/grid.dart';
 
@@ -55,23 +56,27 @@ class VisiCalcHome extends StatefulWidget {
 }
 
 class _VisiCalcHomeState extends State<VisiCalcHome> {
-  // Hard-coded 5×5 sample spreadsheet — same data as VC2-html /
-  // VC2-webcomp so the demos look visually identical across backends.
-  //
-  // Each row is PREFIXED with its 1-based row label ('1'..'5') so the
-  // grid renders a row-number gutter on the left, mirroring the
-  // SwiftUI / Qt / HTML hosts. The label occupies column 0; the five
-  // data columns A–E follow. `columnHeaders` (below) and the
-  // gutter-aware selection math account for this offset.
-  static const _sampleRows = [
-    ['1', '15', '3', '12', '8', '5'],
-    ['2', '8', '14', '7', '22', '11'],
-    ['3', '12', '9', '18', '6', '25'],
-    ['4', '4', '11', '3', '17', '9'],
-    ['5', '7', '5', '13', '10', '19'],
-  ];
+  // The 5×5 spreadsheet is no longer hard-coded: it's computed by the shared
+  // Rust engine, reached through the C ABI via dart:ffi (see lib/engine.dart).
+  // The model seeds the same cross-footing budget as every other VC2-* demo
+  // (column E totals each row, row 5 totals each column, E5 = 169), and editing
+  // the formula bar writes through to the engine and recomputes every cell.
+  late final SpreadsheetModel _model = SpreadsheetModel();
 
-  String _formula = '=SUM(B1:B5)';
+  @override
+  void initState() {
+    super.initState();
+    // Show the selected cell's source (A1 → "15") in the bar on launch.
+    _formula = _model.rawAt(_selectedRow.toInt(), _selectedCol.toInt());
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+    super.dispose();
+  }
+
+  String _formula = '';
   // The generated Grid widget uses `double` for every numeric
   // coordinate (the Flutter emitter lowers `number` slots to
   // `double` so verbatim expressions like
@@ -99,12 +104,13 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
         case FormulaBarEventFormulaChange(:final value):
           _formula = value;
         case FormulaBarEventCommit():
-          // No-op — the React demo would commit to cells[r][c]; the
-          // Flutter demo just keeps the formula bar text.
-          break;
+          // Write the edited text to the engine and recompute every dependent
+          // cell, then reflect the cell's (possibly canonicalised) source.
+          _model.setCell(_selectedRow.toInt(), _selectedCol.toInt(), _formula);
+          _formula = _model.rawAt(_selectedRow.toInt(), _selectedCol.toInt());
         case FormulaBarEventCancel():
-          // Reset to the cell's stored value.
-          _formula = _sampleRows[_selectedRow.toInt()][_selectedCol.toInt()];
+          // Discard the edit: restore the cell's stored source from the engine.
+          _formula = _model.rawAt(_selectedRow.toInt(), _selectedCol.toInt());
       }
     });
   }
@@ -115,7 +121,7 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
         case GridEventNavigate(:final row, :final col):
           _selectedRow = row.toDouble();
           _selectedCol = col.toDouble();
-          _formula = _sampleRows[row.toInt()][col.toInt()];
+          _formula = _model.rawAt(row.toInt(), col.toInt());
         case GridEventFormulaChange(:final value):
           _editContent = value;
         case GridEventEditCommit():
@@ -162,7 +168,7 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
                     // Leading '' is the row-label gutter header (above
                     // the '1'..'5' column); A–E label the data columns.
                     columnHeaders: const ['', 'A', 'B', 'C', 'D', 'E'],
-                    viewportRows: _sampleRows,
+                    viewportRows: _model.viewportRows,
                     // Narrow gutter (48) + five data columns (96 each).
                     columnWidths: const [48, 96, 96, 96, 96, 96],
                     totalHeight: 400,
