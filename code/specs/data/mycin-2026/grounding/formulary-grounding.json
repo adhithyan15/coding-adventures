@@ -1,0 +1,673 @@
+{
+  "_doc": "Formulary spider grounding \u2014 drug-covers-organism + CSF penetration facts grounded in primary sources with verbatim byte-quotes + independent re-extraction. status grounded = source affirms + re-extraction-stable + entailed; refuted = source contradicts the authored fact; unclear/grounded_unstable = flagged.",
+  "domain": "antibiotic_formulary_meningitis",
+  "n": 30,
+  "tally": {
+    "refuted": 3,
+    "grounded": 21,
+    "unclear": 1,
+    "grounded_unstable": 5
+  },
+  "records": [
+    {
+      "id": "vancomycin__covers__s_pneumoniae_resistant",
+      "drug": "vancomycin",
+      "kind": "covers",
+      "organism": "s_pneumoniae_resistant",
+      "claim": "vancomycin provides reliable antimicrobial coverage of ceftriaxone-nonsusceptible (resistant) Streptococcus pneumoniae (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html",
+        "source_title": "Management of Bacterial Meningitis: New Guidelines from the IDSA (AAFP summary of Tunkel et al., IDSA Practice Guidelines for Bacterial Meningitis)",
+        "byte_quote": "In patients with meningitis caused by penicillin- or cephalosporin-resistant strains it may be used in combination with a third-generation cephalosporin but should not be used alone (A-III).",
+        "supports": false,
+        "verdict": "refuted",
+        "note": "The fact claims vancomycin provides RELIABLE standalone coverage of ceftriaxone-/cephalosporin-resistant S. pneumoniae in meningitis. The IDSA guideline (summarized by AAFP) explicitly refutes vancomycin monotherapy: for penicillin-/cephalosporin-resistant strains vancomycin \"may be used in combination with a third-generation cephalosporin but should not be used alone (A-III).\" Vancomycin IS active in vitro against these resistant pneumococci, but it is NOT reliable as sole therapy for CNS infection because of inconsistent CSF penetration \u2014 the guideline mandates combination with a third-gen cephalosporin (commonly plus rifampin when dexamethasone is co-administered). So the in vitro coverage claim is partly true, but the clinical claim of \"reliable coverage\" for serious infection/meningitis is refuted as stated. A grounded version would be: \"vancomycin is active against ceftriaxone-resistant S. pneumoniae but must be combined with a third-generation cephalosporin for meningitis.\""
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "In patients with meningitis caused by penicillin- or cephalosporin-resistant strains it may be used in combination with a third-generation cephalosporin but should not be used alone (A-III).",
+        "note": "Re-extraction is stable: the identical passage was located on an independent WebFetch of the AAFP/IDSA-guidelines page, including corroborating sentences (\"use of vancomycin is not recommended ... non-resistant strains\" (E-II); dexamethasone-CSF-vancomycin efficacy concern). However, the source does NOT entail the claim as worded. The claim asserts vancomycin \"provides RELIABLE antimicrobial coverage\" of ceftriaxone-nonsusceptible S. pneumoniae. The source's actual recommendation is the opposite emphasis: for resistant strains vancomycin \"may be used in combination with a third-generation cephalosporin but SHOULD NOT BE USED ALONE (A-III).\" A guideline that explicitly forbids monotherapy and mandates combination with a cephalosporin is not asserting that vancomycin is reliable standalone coverage; the dexamethasone-may-inhibit-CSF-vancomycin caveat further signals concern about its reliability in the CNS. So while vancomycin is part of the resistant-strain regimen, the source does not support \"reliable coverage\" \u2014 it supports \"use only in combination, never alone.\" Claim overstates; entailment fails."
+      },
+      "status": "refuted"
+    },
+    {
+      "id": "vancomycin__covers__mrsa",
+      "drug": "vancomycin",
+      "kind": "covers",
+      "organism": "mrsa",
+      "claim": "vancomycin provides reliable antimicrobial coverage of methicillin-resistant Staphylococcus aureus (MRSA) (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://academic.oup.com/cid/article/52/3/e18/306145",
+        "source_title": "Clinical Practice Guidelines by the Infectious Diseases Society of America for the Treatment of Methicillin-Resistant Staphylococcus aureus Infections in Adults and Children (Clinical Infectious Diseases, 2011;52(3):e18\u2013e55)",
+        "byte_quote": "IV vancomycin for 2 weeks is recommended (B-II).",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "IDSA MRSA treatment guideline (CID 2011) \u2014 Section VI, Meningitis subsection (recommendation 49) \u2014 recommends IV vancomycin as therapy for MRSA meningitis. Throughout the guideline vancomycin is the primary recommended agent for serious/CNS MRSA infections (also rated A-II/A-I for bacteremia and endocarditis), confirming vancomycin provides reliable coverage of MRSA in serious infection / meningitis. Supports the FACT."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Vancomycin has been the mainstay of parenteral therapy for MRSA infections. ... For CNS/meningitis: \"IV vancomycin for 2 weeks is recommended (B-II).\"",
+        "note": "Source is the IDSA 2011 Clinical Practice Guidelines for the Treatment of MRSA Infections (Liu et al., CID 52:3, e18). Independent re-extraction (direct WebFetch + corroborating WebSearch) reproduces the prior finding. The document explicitly frames vancomycin as the standard/mainstay anti-MRSA agent (\"Vancomycin has been the mainstay of parenteral therapy for MRSA infections\") and, in the CNS-infection section, recommends \"IV vancomycin for 2 weeks is recommended (B-II)\" for MRSA meningitis, plus high-dose serious-infection dosing (15-20 mg/kg q8-12h). The entire document is, by title, about treating MRSA, so the subject (vancomycin) covering the object (MRSA) in the meningitis/serious-infection context is directly entailed, not inferred. One honest caveat the source itself raises (does not negate the claim): it advises considering an alternative agent if vancomycin MIC is >=1-2 ug/mL, i.e. coverage is \"reliable\" as first-line but susceptibility-dependent. The prior quote is accurate and on-point. re_extraction_stable=true, entails=true."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "vancomycin__csf",
+      "drug": "vancomycin",
+      "kind": "csf_penetration",
+      "organism": null,
+      "claim": "vancomycin achieves therapeutic concentrations in cerebrospinal fluid (adequate CNS/CSF penetration to treat meningitis).",
+      "grounded": {
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=06dcfd36-942f-4752-86ad-4c5a6fc3e48f",
+        "source_title": "VANCOMYCIN HYDROCHLORIDE FOR INJECTION, USP \u2014 FDA Label (Clinical Pharmacology), DailyMed",
+        "byte_quote": "Vancomycin does not readily diffuse across normal meninges into the spinal fluid; but, when the meninges are inflamed, penetration into the spinal fluid occurs.",
+        "supports": true,
+        "verdict": "unclear",
+        "note": "FDA label (authoritative primary source) confirms vancomycin penetration into spinal fluid occurs WHEN meninges are inflamed \u2014 i.e., in meningitis \u2014 but does NOT readily diffuse across normal meninges. This is equivocal relative to the fact's claim of \"therapeutic/adequate\" CSF concentrations: the label affirms that penetration occurs in the inflamed (meningitis) state that the fact concerns, but stops short of asserting therapeutic adequacy. Corroborating primary literature (IDSA 2017 healthcare-associated ventriculitis/meningitis guideline, PMC5848239; systematic reviews PubMed 28528396) characterizes IV vancomycin CSF penetration as limited (~1% uninflamed, ~5% inflamed; CSF:serum ratio ~18-48%) and recommends therapeutic drug monitoring and intraventricular dosing for difficult cases \u2014 so \"adequate therapeutic CNS penetration\" as a flat claim is not cleanly grounded. Verdict 'unclear': the affirming span is real and source-grounded for the inflamed-meninges condition, but the strength implied by the fact (reliably therapeutic) is not supported. supports=true reflects that the cited span affirms penetration in the meningitis scenario."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "Vancomycin does not readily diffuse across normal meninges into the spinal fluid; but, when the meninges are inflamed, penetration into the spinal fluid occurs.",
+        "note": "Independent WebFetch of the DailyMed label returned the identical passage in the CLINICAL PHARMACOLOGY section \u2014 re-extraction is stable. However, the source does NOT entail the claim as stated. The claim asserts vancomycin \"achieves therapeutic concentrations\" / \"adequate CNS/CSF penetration to treat meningitis.\" The label only states qualitatively that (a) vancomycin does NOT readily diffuse across NORMAL meninges, and (b) when meninges are INFLAMED, \"penetration into the spinal fluid occurs.\" \"Penetration occurs\" is a qualitative statement and does not establish that concentrations are THERAPEUTIC or ADEQUATE to treat meningitis, and the unconditional claim ignores the normal-meninges caveat (penetration is poor absent inflammation). The source is at best partial/conditional support, not entailment of the adequacy claim."
+      },
+      "status": "unclear"
+    },
+    {
+      "id": "ceftriaxone__covers__n_meningitidis",
+      "drug": "ceftriaxone",
+      "kind": "covers",
+      "organism": "n_meningitidis",
+      "claim": "ceftriaxone provides reliable antimicrobial coverage of Neisseria meningitidis (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://www.cdc.gov/meningococcal/hcp/clinical-guidance/index.html",
+        "source_title": "Clinical Guidance for Meningococcal Disease | Meningococcal | CDC",
+        "byte_quote": "Empirical therapy for suspected meningococcal disease should include an extended-spectrum cephalosporin, such as cefotaxime or ceftriaxone.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "CDC clinical guidance for meningococcal disease (Neisseria meningitidis) recommends ceftriaxone as both empirical and definitive therapy. Corroborated by IDSA bacterial meningitis guidelines (vancomycin plus ceftriaxone or cefotaxime; third-gen cephalosporins recommended for meningococcal meningitis), and the noted clinical fact that almost all N. meningitidis strains are sensitive to ceftriaxone. The fact is grounded/affirmed."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Empirical therapy for suspected meningococcal disease should include an extended-spectrum cephalosporin, such as cefotaxime or ceftriaxone. ... Once the microbiologic diagnosis is established, definitive treatment can be continued with an extended-spectrum cephalosporin (cefotaxime or ceftriaxone).",
+        "note": "Independent re-fetch of the CDC meningococcal clinical-guidance page reproduces the prior quote verbatim and adds a definitive-treatment statement. The source names ceftriaxone as both empirical and definitive therapy for meningococcal (N. meningitidis) disease, and notes single-dose ceftriaxone clears nasopharyngeal carriage. This directly entails that ceftriaxone provides reliable antimicrobial coverage of N. meningitidis in the context of treating serious infection/meningitis. Finding stable and entailment holds."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "ceftriaxone__covers__h_influenzae",
+      "drug": "ceftriaxone",
+      "kind": "covers",
+      "organism": "h_influenzae",
+      "claim": "ceftriaxone provides reliable antimicrobial coverage of Haemophilus influenzae (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "source_title": "Practice Guidelines for the Management of Bacterial Meningitis (IDSA; Tunkel et al., Clinical Infectious Diseases 2004)",
+        "byte_quote": "In patients with H. influenzae type b meningitis, the emergence of \u03b2-lactamase\u2014producing strains and resistance to chloramphenicol has made these agents the drugs of choice for empirical therapy for H. influenzae meningitis, pending results of in vitro susceptibility testing.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "\"These agents\" refers to third-generation cephalosporins (cefotaxime/ceftriaxone), which the IDSA bacterial meningitis guideline names as the drugs of choice for empirical therapy of H. influenzae meningitis. The IDSA pathogen-specific recommendations also list ceftriaxone (a 3rd-gen cephalosporin) as standard therapy for H. influenzae type b. This directly affirms that ceftriaxone provides reliable coverage of H. influenzae in serious infection/meningitis. Source = IDSA primary guideline."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "In patients with H. influenzae type b meningitis, the emergence of \u03b2-lactamase-producing strains and resistance to chloramphenicol has made these agents the drugs of choice for empirical therapy for H. influenzae meningitis, pending results of in vitro susceptibility testing.",
+        "note": "Independent re-fetch of the OUP CID article (IDSA Practical Guidelines for the Management of Bacterial Meningitis, Tunkel et al. 2004) reproduces the prior quote verbatim. The antecedent \"these agents\" = the third-generation cephalosporins, established by the immediately preceding sentence: \"The treatment of bacterial meningitis has been revolutionized by the availability of the third-generation cephalosporins.\" Ceftriaxone is one of the two third-gen cephalosporins named (alongside cefotaxime) and they are used interchangeably in the empirical-therapy recommendations (e.g., \"vancomycin combined with either cefotaxime or ceftriaxone\"). The source therefore declares ceftriaxone (as a third-gen cephalosporin) a drug of choice for H. influenzae meningitis, including against \u03b2-lactamase-producing strains \u2014 which entails reliable antimicrobial coverage of H. influenzae in the meningitis/serious-infection context. One caveat: the source attributes the \"drugs of choice\" status to the third-gen cephalosporin class generically rather than singling out ceftriaxone by name in this specific sentence, but ceftriaxone's membership in that class and its explicit listing as an empirical option make the entailment hold."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "ceftriaxone__covers__s_pneumoniae_susceptible",
+      "drug": "ceftriaxone",
+      "kind": "covers",
+      "organism": "s_pneumoniae_susceptible",
+      "claim": "ceftriaxone provides reliable antimicrobial coverage of penicillin-susceptible Streptococcus pneumoniae (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10215215/",
+        "source_title": "Penicillin-Susceptible Streptococcus pneumoniae Meningitis in Adults: Does the Ceftriaxone Dosing Matter? (PMC10215215)",
+        "byte_quote": "After S. pneumoniae is isolated and the penicillin susceptibility of the causative strain is confirmed, antibiotic treatment should be streamlined to either penicillin or ceftriaxone (or ampicillin, amoxicillin, or cefotaxime).",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Primary source: peer-reviewed PMC clinical article on penicillin-susceptible S. pneumoniae meningitis in adults. It affirms ceftriaxone as a recommended directed/streamlined therapy once penicillin susceptibility is confirmed, and separately reports \"All isolates were susceptible to ceftriaxone,\" confirming reliable in-vitro coverage. This grounds the FACT that ceftriaxone provides reliable coverage of penicillin-susceptible S. pneumoniae in the meningitis/serious-infection context. (IDSA 2004 guidelines corroborate third-gen cephalosporins for pneumococcal meningitis; this source is the most directly on-point for the penicillin-susceptible subgroup.)"
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "After S. pneumoniae is isolated and the penicillin susceptibility of the causative strain is confirmed, antibiotic treatment should be streamlined to either penicillin or ceftriaxone (or ampicillin, amoxicillin, or cefotaxime).",
+        "note": "Independent re-fetch of PMC10215215 reproduces the prior quote verbatim; re-extraction is stable. The article is titled \"Penicillin-Susceptible Streptococcus pneumoniae Meningitis in Adults: Does the Ceftriaxone Dosing Matter?\" \u2014 exactly the meningitis/serious-infection context of the claim. Entailment is sound and corroborated beyond the single sentence: the source states \"All isolates were susceptible to ceftriaxone\" (MIC50 0.016 mg/L, MIC90 0.0625 mg/L) and endorses ceftriaxone as definitive therapy for penicillin-susceptible pneumococcal meningitis. The streamlining sentence lists ceftriaxone among recommended targeted agents once penicillin susceptibility is confirmed, which directly entails that ceftriaxone provides reliable coverage of penicillin-susceptible S. pneumoniae. entails=true."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "ceftriaxone__csf",
+      "drug": "ceftriaxone",
+      "kind": "csf_penetration",
+      "organism": null,
+      "claim": "ceftriaxone achieves therapeutic concentrations in cerebrospinal fluid (adequate CNS/CSF penetration to treat meningitis).",
+      "grounded": {
+        "resolved_url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2014/065169s022lbl.pdf",
+        "source_title": "Ceftriaxone for Injection, USP \u2014 FDA Label (accessdata.fda.gov, application 065169s022)",
+        "byte_quote": "Ceftriaxone penetrated the inflamed meninges of infants and pediatric patients; CSF concentrations after a 50 mg/kg IV dose and after a 75 mg/kg IV dose are also shown in Table 3.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "FDA package insert (primary source) confirms adequate CSF penetration. Table 3 reports measured CSF concentrations of 5.6 mcg/mL (range 1.3\u201318.5) after a 50 mg/kg IV dose and 6.4 mcg/mL (range 1.3\u201344) after a 75 mg/kg IV dose in pediatric patients with bacterial meningitis \u2014 concentrations bactericidal against typical meningitis pathogens (label MIC90 for meningitis isolates \u22640.5 mcg/mL). The label's DOSAGE section also gives a meningitis-specific regimen (initial 100 mg/kg, not to exceed 4 g), corroborating that ceftriaxone reaches therapeutic CSF levels to treat meningitis. PDF fetched via curl (WebFetch hit a transient 404); text extracted with pdftotext."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Ceftriaxone penetrated the inflamed meninges of infants and pediatric patients; CSF concentrations after a 50 mg/kg IV dose and after a 75 mg/kg IV dose are also shown in Table 3. ... CSF Concentration\u2014inflamed meninges (\u03bcg/mL): 5.6 (50 mg/kg IV), 6.4 (75 mg/kg IV). ... INDICATIONS: MENINGITIS caused by Haemophilus influenzae, Neisseria meningitidis or Streptococcus pneumoniae. ... In the treatment of meningitis, it is recommended that the initial therapeutic dose be 100 mg/kg (not to exceed 4 grams).</quote_reextracted>\n<parameter name=\"note\">Independently re-extracted. The prior 2014 URL (065169s022lbl.pdf) now returns HTTP 404, and accessdata.fda.gov PDFs blocked WebFetch. I instead downloaded a live FDA Rocephin (ceftriaxone sodium) label PDF directly via curl from accessdata.fda.gov (050585s061lbl.pdf, HTTP 200) and extracted the text with pdfminer myself rather than trusting any search summary. The prior quote is verbatim correct. Stronger than the quote alone: Table 3 reports actual measured CSF concentrations in inflamed meninges (5.6 and 6.4 \u00b5g/mL), the label's INDICATIONS AND USAGE explicitly lists meningitis (H. influenzae, N. meningitidis, S. pneumoniae) as an approved indication, and DOSAGE gives a specific meningitis regimen (initial 100 mg/kg). The source words therefore entail the claim that ceftriaxone achieves therapeutic CSF concentrations adequate to treat meningitis. Caveat (does not break entailment): adequate CSF penetration is demonstrated for INFLAMED meninges; penetration through uninflamed meninges is lower \u2014 but the claim is specifically about treating meningitis, where meninges are inflamed.</note>\n</invoke>\n",
+        "note": null
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "ampicillin__covers__listeria",
+      "drug": "ampicillin",
+      "kind": "covers",
+      "organism": "listeria",
+      "claim": "ampicillin provides reliable antimicrobial coverage of Listeria monocytogenes (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12738974/",
+        "source_title": "Listeria monocytogenes Infective Endocarditis With Concurrent Bacterial Meningitis and Systemic Embolization: A Case Report and Literature Review (PMC12738974)",
+        "byte_quote": "The cornerstone of treatment is high-dose beta-lactam antibiotics (typically ampicillin or penicillin), often combined with an aminoglycoside for synergy.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "PMC peer-reviewed case report/literature review affirms ampicillin (or penicillin G) as the cornerstone/first-line agent for Listeria monocytogenes infections including meningitis, typically combined with gentamicin for synergy. This is corroborated by IDSA bacterial meningitis guidance (ampicillin/penicillin G preferred; L. monocytogenes is intrinsically resistant to cephalosporins). Fact is grounded/supported."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "The cornerstone of treatment is high-dose beta-lactam antibiotics (typically ampicillin or penicillin), often combined with an aminoglycoside for synergy.",
+        "note": "Independent WebFetch of PMC12738974 reproduces the prior quote verbatim and adds strongly corroborating passages: \"high-dose intravenous ampicillin or penicillin G together with gentamicin\"; \"Ampicillin targets bacterial cell walls... bactericidal effect\"; and the contrast that \"L. monocytogenes is intrinsically resistant to cephalosporins... will not respond to the usual third-generation cephalosporin-based empiric therapy,\" necessitating a switch to ampicillin. The source explicitly names ampicillin as the cornerstone/treatment of choice for Listeria in serious CNS infection, which entails the claim that ampicillin provides reliable coverage of Listeria monocytogenes in meningitis/serious infection. Re-extraction stable; source words entail the claim."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "ampicillin__covers__e_coli",
+      "drug": "ampicillin",
+      "kind": "covers",
+      "organism": "e_coli",
+      "claim": "ampicillin provides reliable antimicrobial coverage of Escherichia coli (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12472492/",
+        "source_title": "Trends in Antibiotic Resistance of Escherichia coli Strains Isolated from Clinical Samples (2019\u20132023): A Hospital-Based Retrospective Analysis (PMC12472492)",
+        "byte_quote": "In 2020, ampicillin resistance among E. coli isolates rose to over 55%, confirming the persistent inefficacy of this agent.",
+        "supports": false,
+        "verdict": "refuted",
+        "note": "The FACT claims ampicillin provides RELIABLE coverage of E. coli. A PMC peer-reviewed retrospective surveillance study refutes this: ampicillin resistance among E. coli isolates exceeded 55% in 2020 and remained the highest of all tested agents across 2019\u20132023 (>48% every year), with the authors stating the data confirm \"the persistent inefficacy of this agent\" and that ampicillin \"should be avoided for empirical treatment.\" Corroborated by IDSA bacterial-meningitis guidance, where empiric gram-negative (including E. coli) coverage is provided by third-generation cephalosporins (cefotaxime/ceftriaxone), NOT ampicillin \u2014 ampicillin is added only for Listeria monocytogenes coverage. Note: a minority of E. coli isolates remain ampicillin-susceptible, but the agent does not provide RELIABLE empiric coverage, so the fact as stated is refuted."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "In 2020, ampicillin resistance among E. coli isolates rose to over 55%, confirming the persistent inefficacy of this agent.",
+        "note": "Independent re-fetch of PMC12472492 reproduces the prior quote verbatim (re-extraction stable). The source CONTRADICTS the claim: it reports ampicillin resistance among E. coli exceeding 48% in every year 2019-2023 (>55% in 2020), describing ampicillin as having \"limited therapeutic value\" / \"persistent inefficacy\" and recommending it \"should be avoided for empirical treatment.\" Therefore the source's words do NOT entail that ampicillin provides reliable coverage of E. coli \u2014 they entail the opposite, so entails=false. Caveat: the article's clinical context is uncomplicated UTIs in a Romanian hospital, not bacterial meningitis as framed in the FACT; the surveillance data is a microbiological resistance fact that bears on the claim but is not meningitis-specific."
+      },
+      "status": "refuted"
+    },
+    {
+      "id": "ampicillin__csf",
+      "drug": "ampicillin",
+      "kind": "csf_penetration",
+      "organism": null,
+      "claim": "ampicillin achieves therapeutic concentrations in cerebrospinal fluid (adequate CNS/CSF penetration to treat meningitis).",
+      "grounded": {
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9774927/",
+        "source_title": "The Blood\u2013Brain Barrier and Pharmacokinetic/Pharmacodynamic Optimization of Antibiotics for the Treatment of Central Nervous System Infections in Adults (PMC9774927)",
+        "byte_quote": "ampicillin was able to reach therapeutic CSF concentrations in healthy volunteers without the presence of inflammation",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Authoritative peer-reviewed review (PMC) on BBB PK/PD optimization of antibiotics for CNS infections in adults affirms the fact. The source states ampicillin reaches therapeutic CSF concentrations even without meningeal inflammation, notes \"the significant advantage of penetration through an intact BBB beyond 48 h of therapy as clinical improvement occurs and the BBB normalizes,\" and describes ampicillin as long part of empiric meningitis treatment (esp. Listeria coverage in adults 50+). Corroborated by clinical PK data (Sulbactam/ampicillin in infants/children, PMC175024) showing measurable therapeutic CSF levels. Verdict: grounded; supports=true."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "ampicillin was able to reach therapeutic CSF concentrations in healthy volunteers without the presence of inflammation and reached concentrations higher than amoxicillin.",
+        "note": "Independent re-fetch of PMC9774927 reproduced the exact quote, so the finding is stable. The source is a peer-reviewed review titled \"The Blood-Brain Barrier and Pharmacokinetic/Pharmacodynamic Optimization of Antibiotics for the Treatment of Central Nervous System Infections in Adults.\" The passage entails the claim on two independent grounds: (1) it states ampicillin reaches THERAPEUTIC CSF concentrations even WITHOUT meningeal inflammation (a stricter/worst-case condition \u2014 penetration only improves with inflamed meninges in meningitis), and (2) the article explicitly recommends ampicillin as empiric meningitis therapy, particularly for Listeria monocytogenes in adults >=50, and notes it stays above MIC as the BBB normalizes. Both the CSF-penetration fact and the meningitis-treatment application are directly supported. entails = true."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "cefepime__covers__n_meningitidis",
+      "drug": "cefepime",
+      "kind": "covers",
+      "organism": "n_meningitidis",
+      "claim": "cefepime provides reliable antimicrobial coverage of Neisseria meningitidis (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "source_title": "Tunkel AR, et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases (IDSA), 2004;39(9):1267-1284",
+        "byte_quote": "A fourth-generation cephalosporin, cefepime, has been shown to be safe and therapeutically equivalent to cefotaxime in the treatment of bacterial meningitis in infants and children.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "PRIMARY SOURCE: IDSA 2004 bacterial-meningitis guideline (Tunkel et al., CID). The verbatim quoted sentence (read from the full text) establishes cefepime as a fourth-generation cephalosporin therapeutically EQUIVALENT to cefotaxime for bacterial meningitis. Cefotaxime/ceftriaxone are the gold-standard agents for N. meningitidis, and IDSA Table 5 lists cefepime among acceptable alternative agents for meningococcal meningitis (the table itself is rendered as an image and could not be transcribed verbatim via fetch). CORROBORATION: a PMC meningococcal-meningitis review (PMC4922928) and the IDSA healthcare-associated ventriculitis/meningitis guideline both treat cefepime as an extended-spectrum beta-lactam appropriate in CNS infection. CAVEAT / partial counter-signal: the FDA Maxipime (cefepime) package insert, 2012 revision (accessdata.fda.gov/drugsatfda_docs/label/2012/050679s036lbl.pdf), does NOT list Neisseria meningitidis in either its clinically-validated or in-vitro-only spectrum lists, and UK/NICE meningococcal evidence reviews (NBK604080/NBK604081) and a Canadian PMC review do not name cefepime among meningococcal options (they emphasize penicillin G, cefotaxime/ceftriaxone, meropenem, chloramphenicol). This is an omission, not a stated lack of activity. Net: cefepime reliably covers N. meningitidis pharmacologically and is an IDSA-sanctioned alternative, so the FACT is GROUNDED, though it is a second-line/alternative rather than first-line meningococcal agent."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "A fourth-generation cephalosporin, cefepime, has been shown to be safe and therapeutically equivalent to cefotaxime in the treatment of bacterial meningitis in infants and children.",
+        "note": "Re-extraction stable: the prior quote appears verbatim in the article's \"Cephalosporins\" section. However, the source does NOT strictly entail the specific claim about N. meningitidis coverage. The quote only asserts general therapeutic equivalence to cefotaxime for bacterial meningitis in infants/children; it never names Neisseria meningitidis in connection with cefepime. The only organisms the passage explicitly attributes to cefepime are Enterobacter species and Pseudomonas aeruginosa (\"greater in vitro activity than the third-generation cephalosporins against Enterobacter species and Pseudomonas aeruginosa\"). The article's pathogen-specific recommendations for N. meningitidis list third-generation cephalosporins (cefotaxime/ceftriaxone), not cefepime. Coverage of N. meningitidis by cefepime is a plausible clinical inference (equivalence-to-cefotaxime + fourth-gen spectrum), but it is an inference the reader must supply, not something the quoted source words state. Marking entails=false because the entailment requires external pharmacologic knowledge, not the source's words alone."
+      },
+      "status": "grounded_unstable"
+    },
+    {
+      "id": "cefepime__covers__pseudomonas",
+      "drug": "cefepime",
+      "kind": "covers",
+      "organism": "pseudomonas",
+      "claim": "cefepime provides reliable antimicrobial coverage of Pseudomonas aeruginosa (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK551517/",
+        "source_title": "Cephalosporins - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Similar to ceftazidime, cefepime, very importantly, can cover for P aeruginosa.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Grounded in StatPearls (NCBI Bookshelf), a peer-reviewed clinical pharmacology reference. The Fourth-generation cephalosporin section states verbatim that cefepime \"can cover for P aeruginosa.\" Corroborated by the Wikipedia cefepime article (\"Cefepime has good activity against important pathogens including Pseudomonas aeruginosa\"). The FDA label PDF (accessdata.fda.gov/.../050817s008lbl.pdf) returned 404 and Drugs.com returned 403, so they were not used as the cited span. Caveat surfaced in search but outside this FACT's scope: cefepime is an established antipseudomonal beta-lactam, but its use specifically in Pseudomonas meningitis depends on CNS/CSF penetration, where sources are less uniform \u2014 the affirmed claim here is the antimicrobial coverage of P. aeruginosa, which is well established."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Similar to ceftazidime, cefepime, very importantly, can cover for P aeruginosa.",
+        "note": "Independent WebFetch of NBK551517 reproduced the prior quote verbatim. The source, in its section on fourth-generation cephalosporins, states cefepime (like ceftazidime) covers P. aeruginosa \u2014 directly entailing the claim that cefepime provides antipseudomonal coverage. One caveat: the source says cefepime \"can cover for\" P. aeruginosa rather than quantifying reliability; the claim's word \"reliable\" is a slight strengthening, but the antipseudomonal-coverage assertion itself is well supported and consistent with standard pharmacology (cefepime is a recognized antipseudomonal cephalosporin). Stable finding, claim entailed."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "cefepime__covers__gram_negative",
+      "drug": "cefepime",
+      "kind": "covers",
+      "organism": "gram_negative",
+      "claim": "cefepime provides reliable antimicrobial coverage of aerobic gram-negative bacilli (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK542232/",
+        "source_title": "Cefepime - StatPearls - NCBI Bookshelf (NIH)",
+        "byte_quote": "Cefepime is also a zwitterion, which has faster gram-negative bacteria cell wall penetration. This is also why it has broader gram-negative coverage than third-generation cephalosporins.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "StatPearls (NCBI Bookshelf, NIH) affirms cefepime's reliable, broad aerobic gram-negative coverage: as a zwitterion it penetrates the gram-negative cell wall faster and has broader gram-negative coverage than third-generation cephalosporins. The same source lists susceptible aerobic gram-negative bacilli including Pseudomonas aeruginosa, Klebsiella pneumoniae, Enterobacter, E. coli, and Proteus mirabilis. FDA MAXIPIME label PDFs (050679s031/s032) returned 404 via WebFetch; StatPearls served as the authoritative peer-reviewed substitute. Supports the FACT in the meningitis/serious-infection context."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Cefepime is also a zwitterion, which has faster gram-negative bacteria cell wall penetration. This is also why it has broader gram-negative coverage than third-generation cephalosporins.",
+        "note": "Independent WebFetch of NBK542232 reproduced the prior quote verbatim (re-extraction stable). The source also independently corroborates the claim through multiple passages: it lists specific susceptible aerobic gram-negative bacilli (Klebsiella pneumoniae, Enterobacter group, Haemophilus influenzae, Pseudomonas aeruginosa, Escherichia coli, Proteus mirabilis), states cefepime \"has increased gram-negative coverage and is more stable against beta-lactamases when compared to third-generation cephalosporins,\" and notes IDSA-recommended high-dose cefepime for Pseudomonas. These named organisms are precisely the aerobic gram-negative bacilli relevant to serious infection/meningitis empiric therapy, so the source entails the claim. Minor skeptical caveat: the source frames coverage as \"broader than 3rd-gen cephalosporins\" and susceptibility-dependent rather than using the word \"reliable\" in the abstract; however, listing P. aeruginosa and Enterobacteriaceae as treated organisms plus the meningitis-dosing context supports the claim as stated."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "cefepime__covers__s_pneumoniae_susceptible",
+      "drug": "cefepime",
+      "kind": "covers",
+      "organism": "s_pneumoniae_susceptible",
+      "claim": "cefepime provides reliable antimicrobial coverage of penicillin-susceptible Streptococcus pneumoniae (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=be5f8ca6-7232-423a-a2d5-cccb7abe7921",
+        "source_title": "DailyMed \u2014 CEFEPIME injection, solution (FDA package insert / label)",
+        "byte_quote": "Cefepime Injection is indicated for pneumonia (moderate to severe) caused by Streptococcus pneumoniae, including cases associated with concurrent bacteremia, Pseudomonas aeruginosa, Klebsiella pneumoniae, or Enterobacter species.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Grounded in the FDA label (DailyMed), the most authoritative primary source reachable. The label carries an explicit indication for pneumonia caused by Streptococcus pneumoniae (incl. concurrent bacteremia) and lists S. pneumoniae among organisms cefepime \"has been shown to be active against most isolates of ... both in vitro and in clinical infections\" \u2014 affirming reliable coverage of (penicillin-susceptible) S. pneumoniae in serious infection. CAVEAT on the meningitis framing: cefepime carries NO FDA meningitis indication, and a vetted clinical source (PMC10215215) states the standard streamlined therapy once penicillin-susceptibility is confirmed is \"either penicillin or ceftriaxone (or ampicillin, amoxicillin, or cefotaxime)\" \u2014 cefepime is not the meningitis agent of choice for PSSP. Supporting context: the IDSA bacterial meningitis guideline (per AAFP summary, https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html) states cefepime \"has proved safe and effective in the treatment of infants and children with bacterial meningitis (A-II).\" Note: accessdata.fda.gov label PDFs returned 403/404 to WebFetch; DailyMed mirrors the same FDA label content and was used instead."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "Cefepime Injection is indicated for pneumonia (moderate to severe) caused by Streptococcus pneumoniae, including cases associated with concurrent bacteremia, Pseudomonas aeruginosa, Klebsiella pneumoniae, or Enterobacter species.",
+        "note": "Independent re-fetch of the DailyMed label reproduces the prior quote verbatim, so the extraction is stable. However, the source's words do NOT entail the full claim as scoped. (1) Penicillin-susceptible qualifier: the label never uses \"penicillin-susceptible\" anywhere \u2014 S. pneumoniae is listed plainly in both the indications and the Microbiology/Antimicrobial Activity section with no stratification by penicillin susceptibility. The only \"penicillin\"-adjacent sentence concerns chromosomal beta-lactamases, not pneumococcal penicillin status. So \"penicillin-susceptible\" is an unsupported narrowing the source does not state. (2) Meningitis/serious-infection context: the claim is explicitly framed \"in the context of treating bacterial meningitis.\" The label only supports coverage in PNEUMONIA (moderate to severe), and it AFFIRMATIVELY CONTRADICTS the meningitis framing \u2014 the pediatric section states that where meningitis is suspected or documented, \"an alternate agent with demonstrated clinical efficacy in this setting should be used.\" Meningitis is not an indication. The label supports \"cefepime covers S. pneumoniae in pneumonia,\" not \"reliable coverage for penicillin-susceptible S. pneumoniae in meningitis/serious infection.\" entails=false."
+      },
+      "status": "grounded_unstable"
+    },
+    {
+      "id": "cefepime__csf",
+      "drug": "cefepime",
+      "kind": "csf_penetration",
+      "organism": null,
+      "claim": "cefepime achieves therapeutic concentrations in cerebrospinal fluid (adequate CNS/CSF penetration to treat meningitis).",
+      "grounded": {
+        "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "source_title": "Practice Guidelines for the Management of Bacterial Meningitis (IDSA), Clinical Infectious Diseases 2004;39(9):1267",
+        "byte_quote": "A fourth-generation cephalosporin, cefepime, has been shown to be safe and therapeutically equivalent to cefotaxime in the treatment of bacterial meningitis in infants and children.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "IDSA 2004 Practice Guidelines for the Management of Bacterial Meningitis (Tunkel et al., Clin Infect Dis) \u2014 a primary authoritative guideline \u2014 affirm that cefepime is safe and therapeutically equivalent to cefotaxime for treating bacterial meningitis, and state it \"has been used successfully in some patients with meningitis caused by these bacteria [Enterobacter, Pseudomonas aeruginosa], making it a useful agent in the treatment of patients with bacterial meningitis (A-II).\" Cefepime is also the recommended beta-lactam for Pseudomonas meningitis in the IDSA 2017 healthcare-associated ventriculitis/meningitis guidelines. This grounds the claim that cefepime reaches therapeutic CNS/CSF concentrations adequate to treat meningitis. Caveat surfaced during search: cefepime's CSF penetration is modest (CSF/serum AUC ~8%, range 3-22%), increased by meningeal inflammation; efficacy depends on susceptible organisms with low MICs, but the guideline-level recommendation affirms therapeutic adequacy."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "A fourth-generation cephalosporin, cefepime, has been shown to be safe and therapeutically equivalent to cefotaxime in the treatment of bacterial meningitis in infants and children. ... Cefepime also has greater in vitro activity than the third-generation cephalosporins against Enterobacter species and Pseudomonas aeruginosa and has been used successfully in some patients with meningitis caused by these bacteria, making it a useful agent in the treatment of patients with bacterial meningitis (A-II).",
+        "note": "Independent WebFetch of the IDSA practice guideline (Tunkel et al., CID 2004, 39:1267) reproduced the prior quote verbatim and yielded an additional supporting sentence giving cefepime an A-II recommendation as a useful agent for bacterial meningitis. The source asserts clinical efficacy/therapeutic equivalence to cefotaxime in meningitis, which entails adequate CNS/CSF penetration sufficient to treat meningitis (the claim). Note the source does not report numeric CSF penetration figures itself; it argues from clinical efficacy. Corroborating PK literature confirms cefepime does enter CSF but with modest/variable penetration (AUC CSF/serum ~8%, range 3-22%), so the claim is true in the clinical-efficacy sense the guideline supports, though penetration is not high in absolute terms. Re-extraction stable and finding unchanged from prior pass."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "meropenem__covers__n_meningitidis",
+      "drug": "meropenem",
+      "kind": "covers",
+      "organism": "n_meningitidis",
+      "claim": "meropenem provides reliable antimicrobial coverage of Neisseria meningitidis (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=240325ba-47a8-4ad1-bcab-6772069ee790",
+        "source_title": "DailyMed \u2014 Meropenem for Injection, FDA Prescribing Information (Section 1.1 Bacterial Meningitis)",
+        "byte_quote": "Meropenem for Injection is indicated for the treatment of bacterial meningitis caused by Haemophilus influenzae, Neisseria meningitidis and penicillin-susceptible isolates of Streptococcus pneumoniae, in pediatric patients 3 months of age and older.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Grounded in the FDA-approved prescribing information (DailyMed primary source). The label explicitly indicates meropenem for bacterial meningitis caused by Neisseria meningitidis (alongside H. influenzae and penicillin-susceptible S. pneumoniae), confirming reliable coverage of N. meningitidis in the meningitis context. Corroborated by IDSA bacterial meningitis guidelines, which list meropenem as an acceptable alternative to third-generation cephalosporins for N. meningitidis when susceptible. Note the FDA meningitis indication is formally stated for pediatric patients 3 months and older, but the antimicrobial-coverage claim itself is affirmed."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Meropenem for Injection is indicated for the treatment of bacterial meningitis caused by Haemophilus influenzae, Neisseria meningitidis and penicillin-susceptible isolates of Streptococcus pneumoniae, in pediatric patients 3 months of age and older.",
+        "note": "Independent WebFetch of the DailyMed label reproduces the same indication passage verbatim. The label names Neisseria meningitidis explicitly as one of the three organisms for which meropenem is FDA-indicated to treat bacterial meningitis (alongside H. influenzae and penicillin-susceptible S. pneumoniae). An FDA meningitis indication against a named organism entails reliable antimicrobial coverage in the serious-infection context, so the source words entail the claim. Minor caveat: the indication is scoped to pediatric patients 3 months and older, but that limits the labeled population, not the coverage of the organism itself; the claim about coverage of N. meningitidis still holds. Re-extraction stable."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "meropenem__covers__listeria",
+      "drug": "meropenem",
+      "kind": "covers",
+      "organism": "listeria",
+      "claim": "meropenem provides reliable antimicrobial coverage of Listeria monocytogenes (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11422092/",
+        "source_title": "Analysis of a case report of meningitis caused by Listeria monocytogenes (PMC11422092)",
+        "byte_quote": "It is recommended to use penicillin or meropenem as the initial regimen and not to use cephalosporins alone.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Meropenem DOES cover Listeria monocytogenes \u2014 distinct from cephalosporins, which do not. The PMC review explicitly recommends penicillin OR meropenem (not cephalosporins alone) as the initial regimen for Listeria meningitis, and lists meropenem as an option for penicillin-allergic patients (\"Meropenem or linezolid can also be used in patients who are allergic to ampicillin/penicillin\"). Listeria is \"highly susceptible to meropenem in vitro\" (PubMed 15141335). CAVEAT to \"reliable\": meropenem is an alternative/empirical agent, NOT first-line \u2014 ampicillin/penicillin + gentamicin is the gold standard, and documented clinical failures exist (PubMed 15141335: \"data on the efficacy of meropenem in clinical cases of listeriosis are scarce,\" with an observed therapy failure). So coverage is real and guideline-acknowledged (verdict grounded), but it is second-line, not the preferred reliable choice."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "It is recommended to use penicillin or meropenem as the initial regimen and not to use cephalosporins alone.",
+        "note": "Independent re-fetch of PMC11422092 reproduces the prior quote verbatim and surrounding context fully supports the claim. The article (a Listeria monocytogenes meningitis case report/review) recommends meropenem as an initial regimen, states \"Meropenem or linezolid can also be used in patients who are allergic to ampicillin/penicillin,\" and reports the patient was successfully treated with meropenem plus penicillin and recovered without sequelae. Meropenem is explicitly grouped with the effective agents (penicillin/ampicillin) and contrasted against cephalosporins, which the source calls \"usually ineffective.\" This entails that meropenem provides reliable coverage of L. monocytogenes in the serious-infection/meningitis context. Re-extraction stable; entails true."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "meropenem__covers__pseudomonas",
+      "drug": "meropenem",
+      "kind": "covers",
+      "organism": "pseudomonas",
+      "claim": "meropenem provides reliable antimicrobial coverage of Pseudomonas aeruginosa (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2016/205883Orig1s000lbl.pdf",
+        "source_title": "MEROPENEM for Injection, USP (I.V.) \u2014 FDA Prescribing Information / Package Insert (NDA 205883)",
+        "byte_quote": "Meropenem has been shown to be active against most isolates of the following bacteria, both in vitro and in clinical infections as described in the INDICATIONS AND USAGE section (1).\nGram-negative bacteria\nEscherichia coli\nHaemophilus influenzae\nKlebsiella pneumoniae\nNeisseria meningitidis\nPseudomonas aeruginosa\nProteus mirabilis",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Grounded in the FDA prescribing information for meropenem (MERREM IV / NDA 205883). The label's \"Spectrum of Activity\" section lists Pseudomonas aeruginosa among the Gram-negative bacteria meropenem \"has been shown to be active against most isolates of,\" and P. aeruginosa is named in two approved indications (complicated skin/skin-structure and intra-abdominal infections). VERBATIM corroborating indication text: \"...complicated skin and skin structure infections due to Staphylococcus aureus (methicillin-susceptible isolates only), Streptococcus pyogenes, Streptococcus agalactiae, viridans group streptococci, Enterococcus faecalis (vancomycin-susceptible isolates only), Pseudomonas aeruginosa, Escherichia coli, Proteus mirabilis, Bacteroides fragilis and Peptostreptococcus species.\" IMPORTANT NUANCE for the meningitis context: the label's Bacterial Meningitis indication (1.3) is restricted to Haemophilus influenzae, Neisseria meningitidis, and penicillin-susceptible Streptococcus pneumoniae in pediatric patients \u22653 months \u2014 P. aeruginosa is NOT an FDA-approved meningitis indication. So the antipseudomonal coverage claim itself is affirmed for serious infection generally, but the specific framing \"for treating bacterial meningitis\" exceeds the FDA-labeled meningitis indication. WebFetch returned 404 on the accessdata PDFs; quote was obtained by downloading the PDF via curl and extracting text with pdftotext."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Spectrum of Activity. Meropenem has been shown to be active against most isolates of the following bacteria, both in vitro and in clinical infections as described in the INDICATIONS AND USAGE section (1). ... Gram-negative bacteria: Escherichia coli, Haemophilus influenzae, Klebsiella pneumoniae, Neisseria meningitidis, Pseudomonas aeruginosa, Proteus mirabilis",
+        "note": "Independent re-extraction stable. The prior URL (205883Orig1s000lbl.pdf) 404'd via WebFetch but downloaded fine via curl; I extracted the text directly. The cited passage is reproduced verbatim: under \"Spectrum of Activity,\" Pseudomonas aeruginosa is listed among Gram-negative bacteria meropenem is \"active against most isolates of ... both in vitro and in clinical infections.\" This entails the core predicate (meropenem covers P. aeruginosa). It is reinforced by labeled INDICATIONS naming P. aeruginosa for complicated skin/skin-structure (1.1) and intra-abdominal (1.2) infections. CAVEAT on the parenthetical framing: the meningitis indication (1.3) is restricted to S. pneumoniae, H. influenzae, and N. meningitidis only \u2014 Pseudomonas is NOT a labeled meningitis pathogen for meropenem. So the source supports general anti-pseudomonal coverage but does NOT support a meningitis-specific claim that meropenem covers Pseudomonas IN meningitis. Marking entails=true because the load-bearing predicate is general coverage; the \"(in context of meningitis)\" is contextual framing of the rule, not the asserted fact. Also note \"active against most isolates\" is a hedge (\"most,\" not all), consistent with documented resistance mechanisms \u2014 \"reliable\" is a mild overstatement but within label language."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "meropenem__covers__gram_negative",
+      "drug": "meropenem",
+      "kind": "covers",
+      "organism": "gram_negative",
+      "claim": "meropenem provides reliable antimicrobial coverage of aerobic gram-negative bacilli (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=12714f80-d6e5-4453-b66c-62f57c16ddfc",
+        "source_title": "DailyMed \u2014 MEROPENEM injection, powder, for solution (FDA package insert), Microbiology section",
+        "byte_quote": "Meropenem has been shown to be active against most isolates of the following microorganisms, both in vitro and in clinical infections",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "The FDA label (DailyMed) Microbiology section affirms meropenem activity against aerobic gram-negative bacteria, listing Escherichia coli, Haemophilus influenzae, Klebsiella pneumoniae, Neisseria meningitidis, Proteus mirabilis, and Pseudomonas aeruginosa among organisms it is \"active against most isolates of... both in vitro and in clinical infections.\" The label also indicates meropenem for bacterial meningitis (H. influenzae, N. meningitidis, penicillin-susceptible S. pneumoniae), tying the gram-negative coverage to the serious-infection/meningitis context of the FACT. Supports the claim."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Meropenem has been shown to be active against most isolates of the following microorganisms, both in vitro and in clinical infections [listed under the subheading \"Gram-negative bacteria,\" including Escherichia coli, Klebsiella pneumoniae, Proteus mirabilis, Pseudomonas aeruginosa, Haemophilus influenzae, and Neisseria meningitidis].",
+        "note": "Independent WebFetch of the DailyMed label (section 12.4 Microbiology) reproduces the prior quote verbatim. The sentence introduces a list grouped under the subheading \"Gram-negative bacteria,\" which includes aerobic gram-negative bacilli (E. coli, K. pneumoniae, P. mirabilis, P. aeruginosa). The meningitis context is also grounded: the label indicates meropenem for bacterial meningitis caused by H. influenzae, N. meningitidis, and penicillin-susceptible S. pneumoniae. Skeptical caveat: the label phrasing is \"active against most isolates,\" which supports \"reliable coverage\" of the listed organisms but is marginally weaker than a blanket claim over ALL aerobic gram-negative bacilli; within the stated meningitis/serious-infection scope and the enumerated organisms, the claim is entailed."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "meropenem__covers__s_pneumoniae_susceptible",
+      "drug": "meropenem",
+      "kind": "covers",
+      "organism": "s_pneumoniae_susceptible",
+      "claim": "meropenem provides reliable antimicrobial coverage of penicillin-susceptible Streptococcus pneumoniae (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://www.aafp.org/pubs/afp/issues/2005/0515/p2003.html",
+        "source_title": "Management of Bacterial Meningitis: New Guidelines from the IDSA (AAFP summary of IDSA Practice Guidelines for Bacterial Meningitis)",
+        "byte_quote": "Although meropenem is effective in treating patients with pneumococcal meningitis caused by penicillin- or cephalosporin-resistant strains, the prevalence of strains with shared resistance may undermine its usefulness (D-II).",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Source: AAFP summary of the IDSA bacterial meningitis practice guidelines. The guideline states meropenem \"is effective in treating patients with pneumococcal meningitis caused by penicillin- or cephalosporin-resistant strains,\" and separately recommends it \"as an alternative to cefotaxime and ceftriaxone in the treatment of patients with bacterial meningitis (A-I).\" Because meropenem is documented effective even against penicillin/cephalosporin-RESISTANT pneumococcus, coverage of penicillin-SUSCEPTIBLE S. pneumoniae follows a fortiori (susceptible strains are inherently easier to treat). This affirms the FACT that meropenem provides reliable coverage of penicillin-susceptible S. pneumoniae in meningitis/serious infection. Note: third-generation cephalosporins (ceftriaxone/cefotaxime) or penicillin remain the preferred first-line agents for susceptible strains; meropenem is positioned as an effective alternative. Primary fetch of the Drugs.com/FDA monograph returned HTTP 403; this IDSA-derived guideline source is authoritative and directly verbatim-quoted."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Although meropenem is effective in treating patients with pneumococcal meningitis caused by penicillin- or cephalosporin-resistant strains, the prevalence of strains with shared resistance may undermine its usefulness (D-II).",
+        "note": "Independent re-extraction via WebFetch and a corroborating WebSearch both returned the identical passage, so the finding is stable. The source also states: \"Meropenem (Merrem) has less potential for seizure and is recommended as an alternative to cefotaxime and ceftriaxone in the treatment of patients with bacterial meningitis (A-I).\" Entailment assessment: the quoted sentence explicitly attests meropenem's effectiveness against penicillin- or cephalosporin-RESISTANT pneumococcal meningitis. By standard pharmacological logic, an agent effective against penicillin-resistant S. pneumoniae is necessarily effective against the easier-to-kill penicillin-SUSCEPTIBLE strains (lower MICs); resistant-coverage entails susceptible-coverage. Combined with the A-I recommendation of meropenem as a meningitis alternative to cefotaxime/ceftriaxone (the standard regimen for pneumococcal meningitis), the source's words do entail reliable coverage of penicillin-susceptible S. pneumoniae. Skeptical caveat: the source never names \"susceptible\" strains explicitly \u2014 the claim rests on the resistant-implies-susceptible inference rather than a verbatim statement, and the D-II caveat (\"may undermine its usefulness\") pertains to resistant/shared-resistance strains, not to susceptible ones. Net: entailed."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "meropenem__csf",
+      "drug": "meropenem",
+      "kind": "csf_penetration",
+      "organism": null,
+      "claim": "meropenem achieves therapeutic concentrations in cerebrospinal fluid (adequate CNS/CSF penetration to treat meningitis).",
+      "grounded": {
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6592555/",
+        "source_title": "Development of a physiologically-based pharmacokinetic pediatric brain model for prediction of cerebrospinal fluid drug concentrations and the influence of meningitis (PMC6592555)",
+        "byte_quote": "Simulated and measured maximum concentrations and AUCcsf/AUCserum ratios were higher in patients suffering from sepsis/meningitis compared to relatively healthy individuals.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Affirmed by multiple authoritative primary sources. The FDA MERREM (meropenem) label indicates the drug for bacterial meningitis in pediatric patients >=3 months, and reports a mean peak CSF concentration of 3.3 mcg/mL (range 0.9-6.5 mcg/mL) 3 hours after a 40 mg/kg dose in pediatric patients with inflamed meninges. The cited PMC PBPK review (PMC6592555) verbatim states CSF concentrations are HIGHER in meningitis patients, confirming meropenem penetrates CSF and that meningeal inflammation increases penetration. NUANCE/CAVEAT: baseline CSF penetration is modest. The NeoMero neonatal study (PMC6005047) verbatim states \"CSF penetration was low (8%), but rose with increasing CSF protein, with 40% penetration predicted at a protein concentration of 6 g/L,\" and a case report (PMC6310956) notes standard 2 g q8h dosing yields CSF concentrations of only 1-2 mg/L, below the breakpoint for many Gram-negatives -- so adequacy is dose-dependent and aided by the inflamed meninges of active meningitis. On balance the FACT (adequate CNS/CSF penetration to treat meningitis) is supported: meropenem is an established, FDA-approved meningitis therapy that achieves therapeutic CSF concentrations under the meningeal-inflammation conditions in which it is used."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "Simulated and measured maximum concentrations and AUCcsf/AUCserum ratios were higher in patients suffering from sepsis/meningitis compared to relatively healthy individuals.",
+        "note": "Independent re-extraction is stable: two separate WebFetch reads returned the same passage and the same numeric ratios (healthy AUCcsf/AUCserum = 0.047; sepsis/meningitis simulated 0.09-0.12). However the source does NOT entail the claim. The article (PMC6592555) is a PBPK pediatric brain modeling study; meropenem is one of several drugs used to validate the model. The cited sentence is purely COMPARATIVE (\"higher in sepsis/meningitis compared to healthy\") \u2014 it says penetration increases with BBB inflammation, not that meropenem reaches therapeutic/adequate CSF levels sufficient to treat meningitis. The absolute ratios (~0.09-0.12) are low, and the paper makes no treatment-adequacy claim; it concludes only that the model can serve as a prediction template. So the claim \"achieves therapeutic concentrations ... adequate CNS/CSF penetration to treat meningitis\" is not supported by these words. (The clinical claim may be true from other sources, but THIS source does not entail it.)"
+      },
+      "status": "grounded_unstable"
+    },
+    {
+      "id": "moxifloxacin__covers__s_pneumoniae_resistant",
+      "drug": "moxifloxacin",
+      "kind": "covers",
+      "organism": "s_pneumoniae_resistant",
+      "claim": "moxifloxacin provides reliable antimicrobial coverage of ceftriaxone-nonsusceptible (resistant) Streptococcus pneumoniae (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "source_title": "IDSA Practice Guidelines for the Management of Bacterial Meningitis (Tunkel et al., Clinical Infectious Diseases 2004)",
+        "byte_quote": "Pending results of ongoing trials, these agents (i.e., gatifloxacin and moxifloxacin) should only be used as alternative agents in patients with bacterial meningitis (B-II).",
+        "supports": false,
+        "verdict": "refuted",
+        "note": "The IDSA bacterial-meningitis guideline (Tunkel et al., CID 2004), a primary authoritative source, refutes the FACT's claim of \"reliable\" coverage. While it acknowledges moxifloxacin has \"enhanced in vitro activity against S. pneumoniae,\" it explicitly restricts it: gatifloxacin and moxifloxacin \"should only be used as alternative agents\" (B-II), i.e., not reliable primary therapy. For penicillin- and cephalosporin- (ceftriaxone-) resistant pneumococcal meningitis the guideline instead recommends \"vancomycin should be combined with a third-generation cephalosporin (A-III).\" Thus moxifloxacin is positioned as a reserve/alternative agent based on in-vitro/experimental data, not as established reliable coverage for ceftriaxone-nonsusceptible pneumococcus in serious CNS infection."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "Pending results of ongoing trials, these agents (i.e., gatifloxacin and moxifloxacin) should only be used as alternative agents in patients with bacterial meningitis (B-II).",
+        "note": "Independent re-fetch of the OUP/CID URL reproduced the same passage verbatim across two reads, so the extraction is stable. However the source does NOT entail the claim of \"reliable antimicrobial coverage\" of ceftriaxone-nonsusceptible S. pneumoniae. The guideline only positions moxifloxacin/gatifloxacin as B-II \"alternative agents,\" explicitly hedged \"pending results of ongoing trials,\" and (for children) only when not responding to standard therapy. It cites enhanced in vitro / experimental-animal-model activity, not proven clinical reliability. The document's actual recommendation for cephalosporin-resistant pneumococci is vancomycin PLUS a third-generation cephalosporin (A-III), with vancomycin explicitly \"not to be used as a single agent\" \u2014 moxifloxacin is never endorsed as reliable monotherapy coverage. \"Alternative agent, B-II, pending trials\" does not support \"reliable coverage.\""
+      },
+      "status": "refuted"
+    },
+    {
+      "id": "moxifloxacin__covers__n_meningitidis",
+      "drug": "moxifloxacin",
+      "kind": "covers",
+      "organism": "n_meningitidis",
+      "claim": "moxifloxacin provides reliable antimicrobial coverage of Neisseria meningitidis (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/12866985/",
+        "source_title": "Fluoroquinolones in the Treatment of Meningitis (Current Infectious Disease Reports, PMID 12866985)",
+        "byte_quote": "fluoroquinolones appear promising for the treatment of meningitis caused by gram-negative microorganisms, ie, Neisseria meningitidis and nosocomial gram-negative bacilli",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Peer-reviewed review (Current Infectious Disease Reports). The abstract affirms fluoroquinolone coverage of N. meningitidis in meningitis and names moxifloxacin among the newer fluoroquinolones (\"The newer fluoroquinolones (moxifloxacin, gemifloxacin, gatifloxacin, and garenoxacin) have excellent activity...\"). Caveat: support is at the fluoroquinolone-class level (moxifloxacin is in vitro active against N. meningitidis and penetrates CSF), not a moxifloxacin-specific N. meningitidis treatment endpoint; moxifloxacin is not a guideline first-line agent for meningococcal meningitis (ceftriaxone/penicillin), and emerging fluoroquinolone resistance in N. meningitidis is documented (e.g., CDC PMC10861203, ciprofloxacin-resistant strains). So the FACT is grounded as \"reliable in vitro/spectrum coverage,\" with the clinical-use caveats noted. The Springer/Journal-of-Infection full texts were paywalled (303/403); grounding rests on the open PubMed abstract."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "fluoroquinolones appear promising for the treatment of meningitis caused by gram-negative microorganisms, ie, Neisseria meningitidis and nosocomial gram-negative bacilli",
+        "note": "Independent WebFetch of PubMed 12866985 (Cottagnoud & Tauber, \"Fluoroquinolones in the Treatment of Meningitis,\" Curr Infect Dis Rep 2003) confirms the quote re-extracts verbatim and stably. However, the source does NOT entail the claim as stated. Two gaps: (1) Attribution \u2014 N. meningitidis coverage is attributed to fluoroquinolones AS A CLASS, not to moxifloxacin by name; moxifloxacin is named in this article only for gram-positive activity. (2) Strength \u2014 the source hedges heavily (\"appear promising,\" \"may play a future role,\" \"Clinical trials are needed to further explore the usefulness\"), describing in-vitro promise and CSF penetration, NOT established clinical efficacy. The claim's word \"reliable antimicrobial coverage\" overreads a source that explicitly frames this as preliminary and unvalidated. Class-level promising in-vitro activity does not entail reliable drug-specific clinical coverage."
+      },
+      "status": "grounded_unstable"
+    },
+    {
+      "id": "moxifloxacin__csf",
+      "drug": "moxifloxacin",
+      "kind": "csf_penetration",
+      "organism": null,
+      "claim": "moxifloxacin achieves therapeutic concentrations in cerebrospinal fluid (adequate CNS/CSF penetration to treat meningitis).",
+      "grounded": {
+        "resolved_url": "https://academic.oup.com/cid/article/49/7/1080/316132",
+        "source_title": "Pharmacokinetics of Moxifloxacin in Cerebrospinal Fluid and Plasma in Patients with Tuberculous Meningitis (Clinical Infectious Diseases, Oxford Academic)",
+        "byte_quote": "The geometric mean ratio of the areas under the curve for CSF to plasma were 0.82 (range, 0.70\u20130.94) at 400 mg once per day and 0.71 (0.58\u20130.84) at 800 mg once per day.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Primary source (Clinical Infectious Diseases / Oxford Academic) reports a high CSF-to-plasma AUC ratio of 0.71\u20130.82 in tuberculous meningitis patients, confirming substantial (71\u201382%) CSF penetration. Corroborated by a second PMC review (PMC9791083), which reports adjusted median CSF/serum ratios of 0.44 at 2h rising to 0.62 at 6h and concludes \"Fluoroquinolones demonstrated high CSF penetration indicating their potential usefulness for the treatment of TBM.\" Both affirm adequate CNS/CSF penetration. Caveat: the strongest clinical evidence is in tuberculous meningitis; the high penetration is established, though the CID abstract does not itself assert clinical outcome superiority."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "The geometric mean ratio of the areas under the curve for CSF to plasma were 0.82 (range, 0.70\u20130.94) at 400 mg once per day and 0.71 (0.58\u20130.84) at 800 mg once per day.",
+        "note": "Independent re-fetch of the OUP/CID article (Alffenaar et al., 2009, \"Pharmacokinetics of Moxifloxacin in Cerebrospinal Fluid and Plasma in Patients with Tuberculous Meningitis\") reproduces the prior quote verbatim. CSF:plasma AUC ratios of 0.71\u20130.82 indicate moxifloxacin reaches 71\u201382% of plasma exposure in CSF, i.e., substantial/adequate CNS penetration. This entails the claim that moxifloxacin achieves therapeutic CSF concentrations adequate to treat meningitis. A corroborating AAC case report (Antimicrob Agents Chemother 2008, 52:2293) independently states \"adequate MFX concentrations were achieved in CSF\" with AUC_CSF/AUC_plasma 0.74\u20130.94. Caveat (does not change verdict): the primary study population is TUBERCULOUS meningitis specifically, and the high penetration ratio \u2014 not a stated MIC-exceedance conclusion in the abstract \u2014 is the load-bearing evidence; the generic \"meningitis\" claim rests on the PK penetration property of the drug crossing the blood-CSF barrier, which the source directly supports."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "aztreonam__covers__n_meningitidis",
+      "drug": "aztreonam",
+      "kind": "covers",
+      "organism": "n_meningitidis",
+      "claim": "aztreonam provides reliable antimicrobial coverage of Neisseria meningitidis (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK545311/",
+        "source_title": "Beta-Lactam Antibiotics \u2014 StatPearls, NCBI Bookshelf",
+        "byte_quote": "It is effective only against aerobic gram-negative organisms but shows no activity against gram-positive bacteria or anaerobes.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Neisseria meningitidis is an aerobic gram-negative diplococcus, so it falls within aztreonam's stated spectrum (\"effective only against aerobic gram-negative organisms\"). This is corroborated by direct in vitro susceptibility data: a PubMed study (PMID 2731448) reported \"1 Neisseria meningitidis ... isolates were inhibited by 0.19 micrograms/ml,\" and a separate gram-negative meningitis case series (PMID 2068463) treated N. meningitidis among its pathogens. CAVEAT on \"reliable\" clinical coverage: aztreonam is NOT a guideline-recommended agent for meningococcal meningitis (penicillin/ceftriaxone are first-line); FDA-class labeling lists N. meningitidis only as in-vitro active, not as an approved clinical indication. So the FACT is grounded at the spectrum/in-vitro level but should not be read as endorsing aztreonam as a preferred therapy for meningococcal meningitis. WebFetch of the Drugs.com FDA monograph returned HTTP 403; StatPearls Beta-Lactam page used as the primary fetched source."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": false,
+        "quote_reextracted": "It is effective only against aerobic gram-negative organisms but shows no activity against gram-positive bacteria or anaerobes.",
+        "note": "Re-extraction is stable: the cited NBK545311 passage reproduces verbatim on an independent read. But the cited quote does NOT entail the specific claim. The quote was extracted to characterize aztreonam's NEGATIVE spectrum (no gram-positive, no anaerobe coverage); it never names Neisseria meningitidis, never addresses CSF penetration or meningitis efficacy, and says nothing about 'reliable' coverage. Entailment requires an inference chain the quote itself does not supply: N. meningitidis is a gram-negative diplococcus, and aztreonam covers 'aerobic gram-negative organisms,' so it is not excluded \u2014 and external sources (Drugs.com, ScienceDirect) do confirm in-vitro activity against N. meningitidis. That makes the claim plausibly TRUE in fact, but it is not entailed by this source's words. The quote, read on its own terms, is a statement about what aztreonam lacks, not an affirmation of reliable meningococcal coverage. Marking entails=false: the source passage does not support the positive claim as written."
+      },
+      "status": "grounded_unstable"
+    },
+    {
+      "id": "aztreonam__covers__gram_negative",
+      "drug": "aztreonam",
+      "kind": "covers",
+      "organism": "gram_negative",
+      "claim": "aztreonam provides reliable antimicrobial coverage of aerobic gram-negative bacilli (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/3512234/",
+        "source_title": "Aztreonam. A review of its antibacterial activity, pharmacokinetic properties and therapeutic use (Drugs, 1986; PMID 3512234)",
+        "byte_quote": "Aztreonam is selectively active against Gram-negative aerobic bacteria and inactive against Gram-positive bacteria.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Grounded in a PubMed-indexed peer-reviewed pharmacology review (Brogden & Heel, Drugs 1986). The abstract states aztreonam is \"selectively active against Gram-negative aerobic bacteria,\" directly affirming reliable coverage of aerobic gram-negative bacilli, and further specifies it is \"inhibitory at low concentrations (MIC90 less than or equal to 1.6 mg/L) against Enterobacteriaceae ... and is active against Pseudomonas aeruginosa.\" This is consistent with the FDA AZACTAM package insert (which lists E. coli, Klebsiella, Proteus, P. aeruginosa, Enterobacter, Serratia, H. influenzae as covered gram-negative aerobic bacilli). Note: aztreonam covers ONLY aerobic gram-negatives \u2014 no gram-positive or anaerobic activity. FDA accessdata PDFs (050580/050632) returned 404 and drugs.com returned 403, so the PubMed review was used as the authoritative primary source."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Aztreonam is selectively active against Gram-negative aerobic bacteria and inactive against Gram-positive bacteria.",
+        "note": "Independent WebFetch of PubMed 3512234 (Brogden & Heel, \"Aztreonam. A review of its antibacterial activity, pharmacokinetic properties and therapeutic use\") reproduced the identical passage: \"Aztreonam is selectively active against Gram-negative aerobic bacteria and inactive against Gram-positive bacteria.\" Re-extraction stable. The source's words entail the claim that aztreonam provides reliable coverage of aerobic gram-negative bacilli \u2014 \"selectively active against Gram-negative aerobic bacteria\" directly asserts that activity. One caveat (does not block entailment): the source says \"bacteria\" not \"bacilli\" specifically, but the gram-negative aerobic spectrum aztreonam covers is predominantly bacilli (Enterobacteriaceae, Pseudomonas) plus Neisseria; the broader \"bacteria\" claim subsumes the bacilli claim. The \"reliable\" qualifier is consistent with the review's spectrum description. The meningitis/serious-infection framing is contextual packaging in the FACT, not a claim the source must support; the source does discuss serious infections including septicemia. Entailment holds on the substantive coverage claim."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "aztreonam__covers__pseudomonas",
+      "drug": "aztreonam",
+      "kind": "covers",
+      "organism": "pseudomonas",
+      "claim": "aztreonam provides reliable antimicrobial coverage of Pseudomonas aeruginosa (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://labeling.pfizer.com/ShowLabeling.aspx?id=16671",
+        "source_title": "Aztreonam for Injection, USP \u2014 FDA Prescribing Information (Pfizer label)",
+        "byte_quote": "For Pseudomonas aeruginosa, a single 2 g intravenous dose produces serum levels that exceed the MIC90 for approximately 4 to 6 hours.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "FDA prescribing information (Pfizer Aztreonam for Injection, USP) confirms aztreonam covers Pseudomonas aeruginosa: it lists P. aeruginosa among susceptible Gram-negative aerobes and as an indicated pathogen across UTI, lower respiratory, septicemia, skin/skin-structure, and intra-abdominal infections; the cited pharmacokinetic line shows serum levels exceeding the P. aeruginosa MIC90. Caveat not contradicting the fact: aztreonam is a monobactam with reliable Gram-negative aerobic (incl. P. aeruginosa) activity but NO Gram-positive or anaerobic coverage \u2014 relevant for empiric meningitis where it would be combined, and resistance/MIC variability exists clinically."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Aztreonam has been shown to be active against most strains of the following microorganisms...Pseudomonas aeruginosa. For Pseudomonas aeruginosa, a single 2 g intravenous dose produces serum levels that exceed the MIC90 for approximately 4 to 6 hours.",
+        "note": "Independent WebFetch of the Pfizer/Hospira Aztreonam for Injection USP label reproduces the prior quote verbatim and finds stronger corroboration: P. aeruginosa is explicitly listed among organisms aztreonam is \"active against most strains of,\" and the drug is indicated for P. aeruginosa infections (lower respiratory tract, septicemia, etc.), with \"2 g every six or eight hours recommended... because of the serious nature of infections due to Pseudomonas aeruginosa.\" The core claim (aztreonam covers P. aeruginosa) is clearly entailed. Caveat on the parenthetical meningitis framing: this label does NOT list meningitis/CNS as an indication and reports only limited CSF penetration (3 mcg/mL with inflamed meninges, Table 1), so the source does not support reliable CNS/meningitis coverage specifically \u2014 but the FACT's antimicrobial-coverage assertion itself is entailed."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "aztreonam__csf",
+      "drug": "aztreonam",
+      "kind": "csf_penetration",
+      "organism": null,
+      "claim": "aztreonam achieves therapeutic concentrations in cerebrospinal fluid (adequate CNS/CSF penetration to treat meningitis).",
+      "grounded": {
+        "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/6542765/",
+        "source_title": "Penetration of aztreonam into cerebrospinal fluid of patients with and without inflamed meninges (Antimicrob Agents Chemother)",
+        "byte_quote": "Aztreonam concentrations in cerebrospinal fluid in the presence of normal and inflamed meninges exceeded the inhibitory and bactericidal concentrations for most gram-negative bacteria.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Primary clinical PK source (Antimicrobial Agents and Chemotherapy). In 34 patients given a single 2 g IV dose, CSF aztreonam exceeded inhibitory/bactericidal concentrations for most gram-negative bacteria; levels were 4x higher with inflamed meninges, and authors concluded a 2 g IV q6h regimen is appropriate for clinical trials of gram-negative bacillary meningitis. Corroborated by PMID 4040132 (J Antimicrob Chemother), which states CSF penetration with meningeal inflammation \"appears adequate to warrant\" therapeutic trials. Caveat: efficacy is gram-negative-specific (aztreonam has no gram-positive coverage), and viral-meningitis CSF levels were notably lower."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "Aztreonam concentrations in cerebrospinal fluid in the presence of normal and inflamed meninges exceeded the inhibitory and bactericidal concentrations for most gram-negative bacteria.",
+        "note": "Independent WebFetch of PMID 6542765 reproduces the prior quote verbatim. Article title: \"Penetration of aztreonam into cerebrospinal fluid of patients with and without inflamed meninges.\" Multiple corroborating sentences support entailment: aztreonam was detected in CSF 1h post-infusion; CSF levels were 4x higher with inflamed meninges; concentrations exceeded MIC/MBC for most gram-negative bacteria in both normal AND inflamed meninges; authors recommend a 2-g IV q6h regimen for clinical trials treating gram-negative bacillary meningitis. Caveat (does not break entailment but worth noting for precision): the therapeutic adequacy is specifically for gram-negative organisms \u2014 aztreonam is a monobactam with no gram-positive coverage, so the claim's general \"treat meningitis\" should be read as gram-negative meningitis. The source clearly entails adequate CSF/CNS penetration to treat susceptible (gram-negative) meningitis."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "tmp_smx__covers__listeria",
+      "drug": "tmp_smx",
+      "kind": "covers",
+      "organism": "listeria",
+      "claim": "trimethoprim-sulfamethoxazole provides reliable antimicrobial coverage of Listeria monocytogenes (in the context of treating bacterial meningitis / serious infection).",
+      "grounded": {
+        "resolved_url": "https://www.hopkinsguides.com/hopkins/view/Johns_Hopkins_ABX_Guide/540318/all/Listeria_Monocytogenes",
+        "source_title": "Listeria Monocytogenes \u2014 Johns Hopkins ABX Guide",
+        "byte_quote": "TMP/SMX is the preferred drug in patients who cannot take ampicillin. This combination has good in vitro activity and is bactericidal vs. Listeria.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "The Johns Hopkins ABX Guide (Listeria Monocytogenes monograph) affirms that TMP-SMX has good in vitro activity and is bactericidal against Listeria, and is the preferred agent in patients who cannot take ampicillin; it lists TMP/SMX 3-5 mg/kg (trimethoprim) q6h IV x >=3 wks as an alternative meningitis regimen. This is consistent with IDSA bacterial-meningitis guidance, which lists TMP-SMX as the alternative to penicillin G/ampicillin for L. monocytogenes (notably for beta-lactam-allergic patients). Corroborating real-world use: the PMC nationwide Listeria-meningitis cohort (PMC10050789) reports cotrimoxazole was used to treat patients with amoxicillin allergy. Caveat: TMP-SMX is an ALTERNATIVE, not first-line; ampicillin/penicillin G (+/- gentamicin) remains preferred."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "TMP/SMX is the preferred drug in patients who cannot take ampicillin. This combination has good in vitro activity and is bactericidal vs. Listeria.",
+        "note": "Independent WebFetch of the Johns Hopkins ABX Guide Listeria page reproduces the prior quote verbatim. Source additionally lists TMP/SMX as an alternative meningitis regimen (\"TMP/SMX 3-5mg/kg (trimethoprim) q6h IV x >=3wks\") and notes it is bactericidal whereas ampicillin is \"allegedly bacteriostatic,\" and that cephalosporins/vancomycin lack Listeria activity while TMP/SMX retains it. The source's words (good in vitro activity, bactericidal vs. Listeria, preferred drug when ampicillin cannot be used, explicit meningitis dosing) entail that TMP-SMX provides reliable antimicrobial coverage of L. monocytogenes in serious infection/meningitis. Finding is stable on independent read; entailment holds."
+      },
+      "status": "grounded"
+    },
+    {
+      "id": "tmp_smx__csf",
+      "drug": "tmp_smx",
+      "kind": "csf_penetration",
+      "organism": null,
+      "claim": "trimethoprim-sulfamethoxazole achieves therapeutic concentrations in cerebrospinal fluid (adequate CNS/CSF penetration to treat meningitis).",
+      "grounded": {
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9774927/",
+        "source_title": "The Blood\u2013Brain Barrier and Pharmacokinetic/Pharmacodynamic Optimization of Antibiotics for the Treatment of Central Nervous System Infections in Adults (PMC9774927)",
+        "byte_quote": "At doses of 20 mg/kg/day (based on TMP component) divided every 6\u201312 h, TMP-SMX is an agent qualified for use for CNS infections caused by susceptible bacterial pathogens.",
+        "supports": true,
+        "verdict": "grounded",
+        "note": "Peer-reviewed PMC pharmacokinetic review (Antibiotics, 2022). TMP-SMX CSF penetration measured at 18% (TMP) and 12% (SMX) of serum; CSF concentrations of TMP 0.5-3.2 mg/L and SMX 5-40 mg/L at 20 mg/kg/day exceed MIC for susceptible pathogens. The review explicitly states TMP-SMX is \"qualified for use for CNS infections\" including Listeria monocytogenes meningitis and resistant gram-negative meningitis. Affirms adequate CNS/CSF penetration to treat meningitis caused by susceptible organisms."
+      },
+      "verification": {
+        "re_extraction_stable": true,
+        "entails": true,
+        "quote_reextracted": "At doses of 20 mg/kg/day (based on TMP component) divided every 6\u201312 h, TMP-SMX is an agent qualified for use for CNS infections caused by susceptible bacterial pathogens.",
+        "note": "Independent WebFetch of PMC9774927 reproduces the prior quote verbatim and the finding is stable. The source entails the claim and goes beyond the single quote: (1) \"TMP and SMX are small lipophilic molecules, and thus, penetration into the CSF is higher than that of beta-lactam antimicrobials or aminoglycosides\"; (2) quantified CSF penetration \"18% for TMP and 12% for SMX\"; (3) clinical evidence of therapeutic adequacy \u2014 in 15 preoperative patients, \"the CSF concentrations in 11 of 14 patients achieved levels exceeding MIC for Staphylococcus aureus and Staphylococcus epidermidis\"; (4) listed indications include Listeria monocytogenes meningitis (alternative to ampicillin) and Gram-negative meningitis. One caveat for downstream use: the source frames TMP-SMX as a qualified/alternative agent for susceptible pathogens, not a universal first-line meningitis drug, and separately notes TMP-SMX is the most common antibiotic cause of drug-induced aseptic meningitis (an adverse effect, not a penetration contradiction). Net: the claim of adequate CNS/CSF penetration to treat susceptible meningitis is entailed."
+      },
+      "status": "grounded"
+    }
+  ]
+}
