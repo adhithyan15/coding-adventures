@@ -1,25 +1,52 @@
-# VisiCalc — XAML (WinUI 3) demo
+# VisiCalc — XAML (WinUI 3) demo (live, on the Rust engine)
 
-Sixth and final per-backend cross-backend visual demo (Phase 2 /
-VC2-xaml), running on WinUI 3 / .NET 9 (Windows-only).
+The WinUI 3 / .NET 9 VisiCalc demo (Windows-only GUI), now **computing on the
+shared Rust `spreadsheet-core` engine** through its C ABI (`spreadsheet-capi`),
+reached via **P/Invoke** — the path WinUI / XAML use. The same engine the
+SwiftUI and Qt demos link natively, the Flutter demo loads via dart:ffi, the
+Compose demo reaches via Java FFM, and the web demos run as WebAssembly.
 
 ## What it shows
 
-A `Window` containing:
+A `Window` containing the auto-generated `FormulaBar` and `Grid` UserControls
+(`Generated/`, produced by `mosaic-compile --backend xaml`).
 
-- An auto-generated `FormulaBar` UserControl (from
-  `Generated/FormulaBar.{xaml,xaml.cs,Event.cs}`, produced by
-  `mosaic-compile --backend xaml`).
-- An auto-generated `Grid` UserControl (from
-  `Generated/Grid.{xaml,xaml.cs,Event.cs}` + `Grid_*Vm.cs` +
-  `BoolToVisibilityConverter.cs`), produced by the SAME
-  `mosaic-compile --backend xaml` pipeline from `mosaic-pkg-grid`
-  (`HostTable` + nested `For` + `Cell`). There is no hand-written
-  grid anymore — `MainWindow.xaml.cs` feeds the generated control's
-  dependency properties and handles its `Dispatch` event.
+- The grid is fed **engine-computed** values: the classic cross-footing budget
+  where column E totals each row, row 5 totals each column, and E5 is the grand
+  total (169) — all formulas evaluated by the Rust engine, not hard-coded.
+- `MainWindow.xaml.cs` feeds the generated control's dependency properties from
+  `SpreadsheetModel` (`Engine.cs`); committing an inline cell edit calls
+  `model.SetCell`, which writes to the engine and recomputes every dependent.
 
-Same hard-coded 5×5 sample data as the other VC2-* demos so the
-WinUI render matches React/HTML/WebComp/Flutter/Qt/SwiftUI.
+## How it's wired to the engine
+
+```
+WinUI controls (generated)  ──  SpreadsheetModel / SpreadsheetSession (Engine.cs)
+   Grid.ViewportRows = …         │  sc_set_cell / sc_get_value … (P/Invoke, string↔char*)
+                                 ▼
+   native/spreadsheet_capi.dll   ←  spreadsheet-capi (Rust C ABI)  ←  spreadsheet-core
+```
+
+`Engine.cs` is deliberately free of any WinUI dependency (just
+`System.Runtime.InteropServices` + `System.Text.Json`), so the same file
+compiles into the WinUI app on Windows AND into the cross-platform console test
+(`test/`) that proves the engine path on macOS/Linux.
+
+## Verify the engine path (cross-platform)
+
+The WinUI GUI is Windows-only, but the engine path is verifiable anywhere .NET 9
+runs:
+
+```bash
+bash scripts/build.sh    # regenerate controls + build & vendor the engine (cdylib)
+bash scripts/verify.sh   # runs test/ — P/Invokes the engine, asserts the grid is
+                         #   engine-computed (E1=38, A5=39, E5=169), recomputes on
+                         #   edit (E5 -> 269), and propagates =1/0 -> #DIV/0!
+```
+
+This is the .NET analog of the SwiftUI demo's `swift test`, the Qt demo's
+`tst_model`, the Flutter demo's `flutter test`, and the Compose demo's
+`verify.sh`. Verified green on macOS (12/12 checks).
 
 ## How to build the generated controls
 

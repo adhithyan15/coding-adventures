@@ -61,4 +61,13 @@
     </Page>
   </ItemGroup>
 
+  <!-- The cross-platform engine smoke under test/ is a SEPARATE console project
+       (test/EngineSmoke.csproj). Keep its sources out of this WinUI app's
+       default compile glob so the two projects don't double-compile Program.cs.
+       Engine.cs (project root) IS part of the app — it's the P/Invoke glue the
+       WinUI code-behind drives, shared verbatim with the console smoke. -->
+  <ItemGroup>
+    <Compile Remove="test/**/*.cs" />
+  </ItemGroup>
+
 </Project>

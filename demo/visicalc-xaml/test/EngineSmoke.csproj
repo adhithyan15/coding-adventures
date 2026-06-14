@@ -1,0 +1,22 @@
+<!-- EngineSmoke.csproj — a cross-platform console harness that proves the XAML
+     demo's engine path works, WITHOUT WinUI (which is Windows-only). It compiles
+     the WinUI-free ../Engine.cs together with Program.cs and runs on any OS that
+     has .NET 9, so the Kotlin↔P/Invoke↔C ABI↔Rust path is verifiable on macOS /
+     Linux / Windows alike. This is the .NET analog of the SwiftUI demo's
+     `swift test`, the Qt demo's tst_model, and the Compose demo's verify.sh. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Mosaic.Generated.Test</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The engine glue, shared verbatim with the WinUI app. -->
+    <Compile Include="../Engine.cs" />
+  </ItemGroup>
+
+</Project>
