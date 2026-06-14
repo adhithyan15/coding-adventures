@@ -1,0 +1,97 @@
+// SpreadsheetModel.h — the Qt/C++ host model for the VisiCalc demo, computing
+// on the shared Rust `spreadsheet-core` engine through its C ABI
+// (spreadsheet-capi). This is the Qt sibling of the SwiftUI demo's
+// SpreadsheetModel: it owns NO spreadsheet logic. The engine (cells,
+// dependency graph, recalc, formulas) lives behind the C ABI; this class
+// marshals QStrings across it and maps the engine's JSON value shape into the
+// display text a spreadsheet should show — the same engine, and the same JSON
+// contract, the web demos drive as WebAssembly.
+//
+// Why QtCore-only (no QtGui/QtQuick include here): keeping the model free of
+// GUI types lets the headless QtTest (test/tst_model.cpp) link and exercise it
+// without a display — the automated proof that "Qt does real formula work on
+// the engine," exactly like `swift test` does for the SwiftUI demo.
+//
+// Exposed to QML as the `model` context property (see main.cpp). main.qml binds
+// the generated Grid's `viewportRows` to `model.viewportRows`, and routes the
+// FormulaBar's commit through `model.setSelected(...)`, which writes to the
+// engine and recomputes — so every dependent cell updates live.
+
+#ifndef VISICALC_QT_SPREADSHEET_MODEL_H
+#define VISICALC_QT_SPREADSHEET_MODEL_H
+
+#include <QObject>
+#include <QString>
+#include <QVariantList>
+
+// The opaque session handle is forward-declared so this header doesn't drag the
+// C ABI header into every translation unit; SpreadsheetModel.cpp includes it.
+struct ScSession;
+
+class SpreadsheetModel : public QObject {
+    Q_OBJECT
+
+    // The display matrix fed to the generated GridView: each row is
+    // [rowLabel, A, B, C, D, E]. A QVariantList of QVariantList<QString>, which
+    // QML sees as a JS array of arrays — the exact shape the Qt Grid emitter's
+    // `property var viewportRows` Repeater consumes.
+    Q_PROPERTY(QVariantList viewportRows READ viewportRows NOTIFY changed)
+    // The current selection, in the grid's display coordinates: row 0..4, and
+    // column 1..5 (column 0 is the row-label gutter, which has no address).
+    Q_PROPERTY(int selectedRow READ selectedRow NOTIFY selectionChanged)
+    Q_PROPERTY(int selectedCol READ selectedCol NOTIFY selectionChanged)
+    // The A1 address of the selected cell (e.g. "B3"), for the formula bar.
+    Q_PROPERTY(QString cellAddress READ cellAddress NOTIFY selectionChanged)
+    // The raw source (formula/literal) of the selected cell, for the bar's text.
+    Q_PROPERTY(QString selectedRaw READ selectedRaw NOTIFY selectionChanged)
+
+public:
+    explicit SpreadsheetModel(QObject *parent = nullptr);
+    ~SpreadsheetModel() override;
+
+    // 5 data rows, columns A..E.
+    static constexpr int Rows = 5;
+    static constexpr int Cols = 5;
+
+    QVariantList viewportRows() const { return viewportRows_; }
+    int selectedRow() const { return selectedRow_; }
+    int selectedCol() const { return selectedCol_; }
+    QString cellAddress() const;
+    QString selectedRaw() const;
+
+    // Move the selection, clamped to the grid (col >= 1 — never the gutter).
+    Q_INVOKABLE void select(int row, int col);
+    // Write `raw` (a literal like "100" or a formula like "=SUM(A1:A4)") into the
+    // selected cell, then recompute the whole display matrix from the engine.
+    Q_INVOKABLE void setSelected(const QString &raw);
+    // Write `raw` into an explicit A1 address and recompute. Used by tests.
+    Q_INVOKABLE void setCell(const QString &a1, const QString &raw);
+    // The display string of a cell (what the grid shows). Used by tests.
+    Q_INVOKABLE QString display(const QString &a1) const;
+    // The raw value JSON the engine returns for a cell. Used by tests to assert
+    // the engine contract directly.
+    Q_INVOKABLE QString valueJson(const QString &a1) const;
+
+signals:
+    // viewportRows changed (after a recompute) — QML rebinds the grid.
+    void changed();
+    // The selection moved — QML rebinds cellAddress / selectedRaw / highlight.
+    void selectionChanged();
+
+private:
+    // A1 address for grid display row `r` (0-based) and column `c` (1..5).
+    static QString address(int r, int c);
+    // Seed the classic cross-footing budget (column E totals each row, row 5
+    // totals each column, E5 the grand total — all formulas). Identical seed to
+    // the SwiftUI and web demos so every render shows the same numbers.
+    void seed();
+    // Rebuild viewportRows_ from the engine's computed values and emit changed().
+    void recompute();
+
+    ScSession *session_;
+    QVariantList viewportRows_;
+    int selectedRow_ = 0; // 0..4
+    int selectedCol_ = 1; // 1..5 (0 = gutter)
+};
+
+#endif // VISICALC_QT_SPREADSHEET_MODEL_H

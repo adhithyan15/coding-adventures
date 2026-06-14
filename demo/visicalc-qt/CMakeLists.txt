@@ -1,41 +1,60 @@
-# CMakeLists.txt — optional C++/CMake host for VC2-qt.
+# CMakeLists.txt — C++/CMake host for VC2-qt, computing on the shared Rust
+# spreadsheet engine through its C ABI.
 #
-# Two ways to run the demo:
+# Two ways to build the demo:
 #
-#   1. Quickest:   `qml main.qml`  (requires Qt 6's `qml` runner)
-#   2. CMake build: `cmake -B build && cmake --build build && ./build/visicalc_qt_app`
+#   1. qmake (no CMake needed):
+#        bash scripts/build.sh        # regenerate QML + build & vendor the engine
+#        qmake && make && ./visicalc_qt_app
 #
-# The CMake path is needed when you want to ship a real binary
-# (Qt's `qml` runner is for development). It builds a tiny C++
-# wrapper that just hosts main.qml in a QQmlApplicationEngine.
+#   2. CMake:
+#        bash scripts/build.sh
+#        cmake -B build-cmake && cmake --build build-cmake && ./build-cmake/visicalc_qt_app
+#
+# Both compile the same sources (src/main.cpp + src/SpreadsheetModel.cpp) and
+# link the vendored Rust engine static library (Vendor/libspreadsheet_capi.a,
+# produced by scripts/build.sh). The model exposes the engine to QML as the
+# `model` context property; main.qml's generated Grid / FormulaBar bind to it.
 
 cmake_minimum_required(VERSION 3.16)
 project(visicalc_qt LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Qt 6 — adjust the find_package version if you have Qt 5.
 find_package(Qt6 6.2 COMPONENTS Core Gui Qml Quick REQUIRED)
 
 add_executable(visicalc_qt_app
     src/main.cpp
+    src/SpreadsheetModel.cpp
+)
+
+# main.cpp needs the directory holding main.qml + the qml/ module so it can set
+# the QML import path and load the UI regardless of the working directory.
+target_compile_definitions(visicalc_qt_app PRIVATE
+    VISICALC_QML_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
+# The model header (src/) and the C ABI header (Vendor/spreadsheet.h).
+target_include_directories(visicalc_qt_app PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/Vendor
 )
 
 target_link_libraries(visicalc_qt_app
     PRIVATE Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick
 )
 
-# Bundle the QML sources via Qt's resource system. main.cpp loads
-# `qrc:/main.qml`; the QML import path is set to look up the
-# FormulaBar module alongside.
-qt_add_qml_module(visicalc_qt_app
-    URI VisiCalc
-    VERSION 1.0
-    QML_FILES
-        main.qml
-        # qmldir is in qml/ (tracked); FormulaBar.qml in build/
-        # (auto-generated, gitignored). Both bundled into qrc.
-        qml/qmldir
-        build/FormulaBar.qml
+# Link the Rust engine's C ABI static library, vendored by scripts/build.sh.
+target_link_libraries(visicalc_qt_app
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Vendor/libspreadsheet_capi.a
 )
+# Rust's std pulls in a few system libraries through the static archive.
+if(APPLE)
+    target_link_libraries(visicalc_qt_app PRIVATE
+        "-framework CoreFoundation" "-framework Security" "-framework SystemConfiguration")
+elseif(UNIX)
+    target_link_libraries(visicalc_qt_app PRIVATE dl pthread m)
+endif()

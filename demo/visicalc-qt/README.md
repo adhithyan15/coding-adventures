@@ -1,76 +1,83 @@
-# VisiCalc — Qt demo
+# VisiCalc — Qt demo (live, on the Rust engine)
 
-Fourth cross-backend visual demo (Phase 2 / VC2-qt), running on the
-Qt/QML stack.
+The Qt/QML VisiCalc demo (C++ host), now **computing on the shared Rust
+`spreadsheet-core` engine** through its C ABI (`spreadsheet-capi`) — the same
+engine the SwiftUI demo links natively and the HTML / WebComponent demos run as
+WebAssembly. This is the second native backend wired to the engine, and the
+proof that the one-engine-everywhere architecture reaches C++.
 
 ## What it shows
 
-A `Window` containing:
+- An auto-generated `FormulaBar.qml` and `Grid.qml`
+  (`build/`, produced by `mosaic-compile --backend qt` from the shared
+  `demo/visicalc/mosaic/*` sources — the same triples the React, HTML,
+  WebComponent, and SwiftUI demos consume).
+- The grid renders **engine-computed** values: the classic cross-footing budget
+  where column E totals each row, row 5 totals each column, and E5 is the grand
+  total (169) — all formulas evaluated by the Rust engine, not hard-coded.
+- Editing the formula bar (e.g. `100` or `=SUM(A1:A4)`) writes through to the
+  engine via `SpreadsheetModel.setSelected`, which recomputes every dependent
+  cell. Clicking a cell selects it and pulls its source into the bar.
 
-- An auto-generated `FormulaBar.qml` (from `build/FormulaBar.qml`,
-  produced by `mosaic-compile --backend qt`). Exposes properties
-  (`cellAddress`, `formula`, `readOnly`) and signals (`formulaChange`,
-  `commit`, `cancel`) — the host wires them in `main.qml`.
-- A hand-written 5×5 spreadsheet grid below, styled to match
-  `Grid.dark.msl`. Tap a cell to select it and pull its value into
-  the formula bar.
+## How it's wired to the engine
 
-Hard-coded sample data matches VC2-html / VC2-webcomp / VC2-flutter
-so all four demos look visually identical across backends.
-
-## How to build the generated FormulaBar
-
-```bash
-bash scripts/build.sh
+```
+QML views (generated)  ──  SpreadsheetModel  (src/SpreadsheetModel.{h,cpp})
+   main.qml binds              │  sc_set_cell / sc_get_value … (C strings → QString)
+   model.viewportRows          ▼
+                       spreadsheet.h  (C ABI header, vendored)
+                               │  links
+   libspreadsheet_capi.a  ←  spreadsheet-capi (Rust C ABI)  ←  spreadsheet-core
 ```
 
-Runs `mosaic-compile --backend qt` against the Mosaic sources and
-writes `build/FormulaBar.qml`.
+`SpreadsheetModel` is a `QObject` that owns the engine session and exposes the
+computed display matrix (`viewportRows`), the selection, and `setSelected(...)`
+to QML. `main.cpp` registers it as the `model` context property before loading
+`main.qml`; the generated `Grid` binds its `viewportRows` to `model.viewportRows`.
+The model is QtCore-only (no GUI types), so the headless test exercises it
+without a display.
 
-## How to run the demo
+## Build, test, run
 
-Two options. **Either requires Qt 6 SDK installed** (https://www.qt.io/download).
-
-### 1. Quickest: `qml` runner (one command)
-
-```bash
-qml main.qml
-```
-
-The `qml` binary ships with Qt 6 in `<qt-install>/bin/qml`. It loads
-a single QML file into a `QQmlApplicationEngine` with no
-compilation step — ideal for development.
-
-### 2. CMake build (real binary)
+All paths need the **Qt 6 SDK** (https://www.qt.io/download). CMake is optional —
+qmake (which ships with Qt) is enough.
 
 ```bash
-cmake -B build-cmake
-cmake --build build-cmake
-./build-cmake/visicalc_qt_app
+bash scripts/build.sh   # regenerate QML + build & vendor the engine static lib
 ```
 
-Builds a standalone executable using the C++ wrapper in
-`src/main.cpp`. This is what you'd ship.
+### Run the engine-backed GUI
 
-## The Grid gap
+```bash
+qmake && make && ./visicalc_qt_app          # qmake — no CMake needed
+# or, if you have CMake:
+cmake -B build-cmake && cmake --build build-cmake && ./build-cmake/visicalc_qt_app
+```
 
-The `mosaic-emit-qt` pipeline doesn't yet support the `Grid`
-built-in primitive — only the React emitter knows how to lower it
-into a real table. Until the Qt Grid emitter lands,
-`main.qml` inlines a hand-written QtQuick block (nested
-`RowLayout`/`Repeater` over the `sampleRows` property) that
-visually mirrors what the eventual auto-generated `Grid.qml`
-should produce.
+### Headless proof (the Qt equivalent of `swift test`)
+
+```bash
+cd test && qmake && make && ./tst_model
+```
+
+`test/tst_model.cpp` (QtTest) links the vendored engine and asserts the grid
+values are engine-computed (E1 = 38, A5 = 39, E5 = 169), that editing A1
+15 → 115 recomputes the totals (E5 → 269), and that a formula entry computes
+with binary-op error propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it →
+`#DIV/0!`). A green run means the C++ ↔ C ABI ↔ Rust path is sound end-to-end.
+
+> Note: `qml main.qml` still opens the layout for QML iteration, but the bare
+> runner can't expose the C++ `model` or link the engine, so its grid is empty.
+> Build and run the binary to see the live spreadsheet.
 
 ## Where this fits in the cross-backend demo plan
 
-| Phase | Demo | Status |
+| Backend | Engine | Status |
 |---|---|---|
-| 2 | VC2-html | ✅ |
-| 2 | VC2-webcomp | ✅ |
-| 2 | VC2-flutter | ✅ |
-| 2 | VC2-qt (this one) | ✅ |
-| 2 | VC2-swiftui | TODO |
-| 2 | VC2-xaml | TODO |
-| 3 | multi-component artifact-builder shells | TODO |
-| 4 | demo/visicalc-all/ | TODO |
+| HTML (web) | WASM | ✅ live |
+| WebComponent (web) | WASM | ✅ live |
+| SwiftUI (macOS / iOS) | C ABI | ✅ live |
+| Qt / C++ (this one) | C ABI | ✅ live |
+| Flutter (Dart) | C ABI (dart:ffi) | in progress |
+| Compose / Android (Kotlin) | C ABI (FFM / JNI) | in progress |
+| XAML (.NET, Windows) | C ABI (P/Invoke) | in progress |
