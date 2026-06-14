@@ -125,13 +125,14 @@
 //!   (e.g. extracting `event.target.value` for an `onChange`) is wired
 //!   inline for `HostInput` only.
 
+use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
 };
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue};
-use mosstyle_compiler::StyleDef;
+use mosstyle_compiler::{StyleDef, StyleProp};
 
 // =====================================================================
 // Public API
@@ -355,7 +356,7 @@ fn build_webcomp_readme(component_name: &str, custom_tag: &str) -> String {
 pub fn from_pipeline(
     interface: &MosmodelComponent,
     layout: &LayoutDef,
-    _style: &StyleDef,
+    style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
     // 1. Sanity check: the three IRs must agree on the component name.
     //    Style is allowed to differ when targeting a variant (UI23 §4);
@@ -419,7 +420,11 @@ pub fn from_pipeline(
     writeln!(out).unwrap();
 
     // 7. _render — read slot attributes into locals, set shadowRoot.innerHTML.
-    out.push_str(&emit_render(&interface.slots, &layout.root)?);
+    //    Build the author-declared part-style map first (UI28 — style
+    //    inlining) so the HTML walker can attach `style="..."` to every
+    //    element that carries a `part_name`.
+    let part_styles = build_part_style_map(style);
+    out.push_str(&emit_render(&interface.slots, &layout.root, &part_styles)?);
     writeln!(out).unwrap();
 
     // 8. dispatch — UI24 Flux entry point. Wraps the event payload in a
@@ -503,6 +508,7 @@ fn emit_observed_attributes(slots: &[SlotDecl]) -> String {
 fn emit_render(
     slots: &[SlotDecl],
     layout_root: &LayoutNode,
+    part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     writeln!(out, "  _render() {{").unwrap();
@@ -571,7 +577,7 @@ fn emit_render(
     // live. Every `HostDialog` occurrence gets a unique id of the form
     // `mos-dlg-N` so the post-script can `getElementById` it.
     let mut ctx = RenderCtx::default();
-    let html = emit_html_tree(layout_root, 0, &mut ctx)?;
+    let html = emit_html_tree(layout_root, 0, &mut ctx, part_styles)?;
     // The HTML tree is one flat string for now (no per-line indentation
     // inside the template literal — keeps the output compact and avoids
     // surprising whitespace inside `<span>` and `<div>` text content).
@@ -667,6 +673,7 @@ fn emit_html_tree(
     node: &LayoutNode,
     _depth: usize,
     ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     // -----------------------------------------------------------------
     // UI29 kernel — dedicated emitters first.
@@ -679,7 +686,7 @@ fn emit_html_tree(
     match node.tag.as_str() {
         "HostInput" => return Ok(emit_host_input(node)),
         "HostButton" => return Ok(emit_host_button(node)),
-        "HostDialog" => return emit_host_dialog(node, ctx),
+        "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
         // UI29-2 — `HostCheckbox` and `HostRadio` lower to native
         // `<input type="checkbox|radio">` elements with inline
@@ -699,7 +706,7 @@ fn emit_html_tree(
         // UI29-4 — `HostTooltip` wraps its child(ren) in `<span
         // title="${text}">…</span>`. Plain-text only in v1 per
         // UI29-4 §3.2; richer tooltips are reserved for UI29-5.
-        "HostTooltip" => return emit_host_tooltip(node, ctx),
+        "HostTooltip" => return emit_host_tooltip(node, ctx, part_styles),
 
         // UI29-4 — `HostNumberInput` → `<input type="number"
         // inputmode="numeric" ...>` with onchange wired through
@@ -707,8 +714,8 @@ fn emit_html_tree(
         // event.target.valueAsNumber})`.
         "HostNumberInput" => return Ok(emit_host_number_input(node)),
 
-        "If" => return emit_if(node, None, ctx),
-        "For" => return emit_for(node, ctx),
+        "If" => return emit_if(node, None, ctx, part_styles),
+        "For" => return emit_for(node, ctx, part_styles),
         // `Else` appearing as a top-level walker target means it was NOT
         // consumed by a preceding `If` (orphan). Validation in
         // moslayout-compiler already rejects this case; here we render
@@ -721,12 +728,25 @@ fn emit_html_tree(
         open,
         close,
         self_closing,
+        builtin_style,
     } = primitive_to_html_tag(&node.tag)?;
+
+    let mut open_with_attrs = open;
+
+    // UI28 — style inlining. Merge the primitive's built-in CSS with the
+    // author-declared part style (looked up by `node.part_name`) and,
+    // for a `Col`, the runtime per-column `width`. Then weave the
+    // resulting `style="..."` into the open tag. Author declarations
+    // come AFTER the built-in so they win on collisions, exactly like
+    // the HTML/React backends' `merge_styles`.
+    let style_attr = build_style_attr(node, &builtin_style, part_styles);
+    if !style_attr.is_empty() {
+        open_with_attrs = insert_attrs_before_close(&open_with_attrs, &style_attr);
+    }
 
     // Build any emit-driven attributes (per UI24 connects wiring) onto
     // the open tag. For leaf primitives this is what wires
     // `onclick="this.dispatch({type:'click'})"` into the DOM.
-    let mut open_with_attrs = open;
     let event_attrs = build_event_attributes(node);
     if !event_attrs.is_empty() {
         // Insert event attrs immediately before the closing `>` of the
@@ -751,21 +771,18 @@ fn emit_html_tree(
         return Ok(open_with_attrs);
     }
 
-    // HostTable section tags (HostTableHead/Body/Foot) synthesise a
-    // single `<tr>` row inside their wrapper, mapping each direct child
-    // to a `<th>` or `<td>` cell.
+    // HostTable section tags (HostTableHead/Body/Foot) produce REAL
+    // `<tr>` rows and `<th>`/`<td>` cells so the table is a genuine
+    // multi-column grid — not flex `<div>`s crammed into one `<td>`.
+    // This is what lets the `<colgroup>`'s per-column `<col>` widths
+    // actually size the columns (a `<col>` width only governs a real
+    // table column). See `emit_table_section`.
     if matches!(
         node.tag.as_str(),
         "HostTableHead" | "HostTableBody" | "HostTableFoot"
     ) {
         let cell_tag = if node.tag == "HostTableHead" { "th" } else { "td" };
-        let mut inner = String::from("<tr>");
-        for child in &node.children {
-            inner.push_str(&format!("<{cell_tag}>"));
-            inner.push_str(&emit_html_tree(child, _depth + 1, ctx)?);
-            inner.push_str(&format!("</{cell_tag}>"));
-        }
-        inner.push_str("</tr>");
+        let inner = emit_table_section(node, cell_tag, ctx, part_styles)?;
         return Ok(format!("{open_with_attrs}{inner}{close}"));
     }
 
@@ -789,11 +806,11 @@ fn emit_html_tree(
         if child.tag == "If" {
             // Look ahead for a paired `Else` sibling.
             let else_node = node.children.get(i + 1).filter(|n| n.tag == "Else");
-            inner.push_str(&emit_if(child, else_node, ctx)?);
+            inner.push_str(&emit_if(child, else_node, ctx, part_styles)?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
-        inner.push_str(&emit_html_tree(child, _depth + 1, ctx)?);
+        inner.push_str(&emit_html_tree(child, _depth + 1, ctx, part_styles)?);
         i += 1;
     }
     Ok(format!("{open_with_attrs}{inner}{close}"))
@@ -810,6 +827,7 @@ fn emit_html_tree(
 fn emit_branch_children(
     parent: &LayoutNode,
     ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -817,11 +835,11 @@ fn emit_branch_children(
         let child = &parent.children[i];
         if child.tag == "If" {
             let else_node = parent.children.get(i + 1).filter(|n| n.tag == "Else");
-            out.push_str(&emit_if(child, else_node, ctx)?);
+            out.push_str(&emit_if(child, else_node, ctx, part_styles)?);
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
-        out.push_str(&emit_html_tree(child, 0, ctx)?);
+        out.push_str(&emit_html_tree(child, 0, ctx, part_styles)?);
         i += 1;
     }
     Ok(out)
@@ -845,6 +863,7 @@ fn emit_if(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     // Pull the `when:` prop. moslayout-compiler's validator already
     // requires this and rejects any other prop name on an `If`; this
@@ -856,9 +875,9 @@ fn emit_if(
         .map(|p| layout_value_to_js_expr(&p.value))
         .unwrap_or_else(|| "false".to_string());
 
-    let then_branch = emit_branch_children(if_node, ctx)?;
+    let then_branch = emit_branch_children(if_node, ctx, part_styles)?;
     let else_branch = match else_node {
-        Some(n) => emit_branch_children(n, ctx)?,
+        Some(n) => emit_branch_children(n, ctx, part_styles)?,
         None => String::new(),
     };
 
@@ -879,11 +898,183 @@ fn emit_if(
 /// `Text { content: slot: row }` style reference to the bound name
 /// just works because slot interpolation lowers to `${row}` — and
 /// `row` is the arrow-function parameter.
-fn emit_for(node: &LayoutNode, ctx: &mut RenderCtx) -> Result<String, PipelineEmitError> {
+fn emit_for(
+    node: &LayoutNode,
+    ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let (each_expr, as_name, index_name) = for_bindings(node);
+    let body = emit_branch_children(node, ctx, part_styles)?;
+    Ok(format!(
+        "${{{each_expr}.map(({as_name}, {index_name}) => `{body}`).join('')}}"
+    ))
+}
+
+// =====================================================================
+// HostTable section synthesis — REAL `<tr>` / `<td>` rows
+//
+// The single-`<td>`-with-flex-divs lowering this replaced rendered
+// fine visually for content but made the `<colgroup>`'s `<col>` widths
+// inert (a `<col>` only sizes a real table column). The grid demo's
+// columns collapsed to content width as a result. Producing genuine
+// `<tr>`/`<td>` structure — exactly what the HTML backend does — lets
+// the per-column widths size the columns and gives the cells their own
+// table-cell boxes for borders/alignment.
+//
+// Shapes handled (mosaic-pkg-grid v0.2.0 composition):
+//
+//   thead:  Row [header-row] { For (each:…, as:h) { Box[header-cell]{Text} } }
+//           → one `<tr>`, one `<th>` per header.
+//   tbody:  For (each:…, as:row, index:r) { Row [data-row] {
+//             For (each: row, as: v, index: c) { Box[cell]{ If/Else } } } }
+//           → one `<tr>` per row, one `<td>` per cell.
+// =====================================================================
+
+/// Emit the inner `<tr>…</tr>` content for a table section
+/// (`thead`/`tbody`/`tfoot`). Walks the section's children:
+///
+///  - a direct `Row` becomes one `<tr>` (header case),
+///  - a `For { Row { … } }` becomes a `.map(...)` producing one `<tr>`
+///    per element (body case),
+///  - anything else falls back to the generic walker so the output is
+///    still well-formed (author-error path).
+fn emit_table_section(
+    node: &LayoutNode,
+    cell_tag: &str,
+    ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    for child in &node.children {
+        if child.tag == "Row" {
+            out.push_str(&emit_table_row(child, cell_tag, ctx, part_styles)?);
+        } else if child.tag == "For" {
+            if let Some(block) = try_emit_table_for_rows(child, cell_tag, ctx, part_styles)? {
+                out.push_str(&block);
+            } else {
+                // Pattern didn't match (For body isn't a single Row) —
+                // recurse generically. Structurally odd inside a
+                // section but preserves intent for unexpected shapes.
+                out.push_str(&emit_html_tree(child, 0, ctx, part_styles)?);
+            }
+        } else {
+            out.push_str(&emit_html_tree(child, 0, ctx, part_styles)?);
+        }
+    }
+    Ok(out)
+}
+
+/// Lower a `For (each:…, as:NAME, index:NAME) { Row { … } }` inside a
+/// section to `${each.map((row, r) => `<tr>…cells…</tr>`).join('')}`.
+///
+/// Returns `Ok(None)` when the For's body is not exactly one `Row`.
+fn try_emit_table_for_rows(
+    for_node: &LayoutNode,
+    cell_tag: &str,
+    ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
+) -> Result<Option<String>, PipelineEmitError> {
+    if for_node.children.len() != 1 || for_node.children[0].tag != "Row" {
+        return Ok(None);
+    }
+    let (each_expr, as_name, index_name) = for_bindings(for_node);
+    let row = &for_node.children[0];
+    let row_html = emit_table_row(row, cell_tag, ctx, part_styles)?;
+    Ok(Some(format!(
+        "${{{each_expr}.map(({as_name}, {index_name}) => `{row_html}`).join('')}}"
+    )))
+}
+
+/// Emit one `<tr>…</tr>` for a `Row` node. Each child becomes a cell:
+///
+///  - `Text` → `<td>${content}</td>` (content-only, no inner `<span>`),
+///  - `For { <cell> }` → `.map(...)` producing one `<td>` per element,
+///  - anything else (e.g. `Box [cell]`) → `<td style=…>…</td>` with the
+///    node's own part style applied to the `<td>` so cell borders /
+///    padding / alignment / state highlights land on the table cell.
+///
+/// The Row's own `part_name` (`header-row` / `data-row`) styles the
+/// `<tr>` via `build_style_attr`.
+fn emit_table_row(
+    row: &LayoutNode,
+    cell_tag: &str,
+    ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let tr_style = build_style_attr(row, "", part_styles);
+    let mut cells = String::new();
+    for cell in &row.children {
+        match cell.tag.as_str() {
+            "Text" => {
+                let body = build_text_content(cell).unwrap_or_default();
+                cells.push_str(&format!("<{cell_tag}>{body}</{cell_tag}>"));
+            }
+            "For" => {
+                if let Some(block) =
+                    try_emit_table_for_cells(cell, cell_tag, ctx, part_styles)?
+                {
+                    cells.push_str(&block);
+                } else {
+                    let inner = emit_html_tree(cell, 0, ctx, part_styles)?;
+                    cells.push_str(&format!("<{cell_tag}>{inner}</{cell_tag}>"));
+                }
+            }
+            _ => {
+                cells.push_str(&emit_table_cell(cell, cell_tag, ctx, part_styles)?);
+            }
+        }
+    }
+    Ok(format!("<tr{tr_style}>{cells}</tr>"))
+}
+
+/// Lower a `For (each:…, as:NAME, index:NAME) { <cell-node> }` inside a
+/// Row to `${each.map((v, c) => `<td …>…</td>`).join('')}`.
+///
+/// Returns `Ok(None)` when the For's body is not a single non-Row node.
+fn try_emit_table_for_cells(
+    for_node: &LayoutNode,
+    cell_tag: &str,
+    ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
+) -> Result<Option<String>, PipelineEmitError> {
+    if for_node.children.len() != 1 || for_node.children[0].tag == "Row" {
+        return Ok(None);
+    }
+    let (each_expr, as_name, index_name) = for_bindings(for_node);
+    let leaf = &for_node.children[0];
+    let cell_html = if leaf.tag == "Text" {
+        let body = build_text_content(leaf).unwrap_or_default();
+        format!("<{cell_tag}>{body}</{cell_tag}>")
+    } else {
+        emit_table_cell(leaf, cell_tag, ctx, part_styles)?
+    };
+    Ok(Some(format!(
+        "${{{each_expr}.map(({as_name}, {index_name}) => `{cell_html}`).join('')}}"
+    )))
+}
+
+/// Emit one `<td>`/`<th>` whose styling comes from the cell node's own
+/// `part_name` (the `cell` / `header-cell` part). The node's built-in
+/// CSS, author part style, and `state-when-*` highlight ternaries all
+/// land on the table cell itself via `build_style_attr`. The node's
+/// children render inside.
+fn emit_table_cell(
+    cell: &LayoutNode,
+    cell_tag: &str,
+    ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let style_attr = build_style_attr(cell, "", part_styles);
+    let inner = emit_branch_children(cell, ctx, part_styles)?;
+    Ok(format!("<{cell_tag}{style_attr}>{inner}</{cell_tag}>"))
+}
+
+/// Extract `(each-expr, as-name, index-name)` from a `For` node's
+/// props, with the same defaults and camelCasing `emit_for` uses.
+fn for_bindings(node: &LayoutNode) -> (String, String, String) {
     let mut each_expr = String::from("[]");
     let mut as_name = String::from("item");
     let mut index_name = String::from("idx");
-
     for prop in &node.props {
         match prop.name.as_str() {
             "each" => each_expr = layout_value_to_js_expr(&prop.value),
@@ -906,11 +1097,7 @@ fn emit_for(node: &LayoutNode, ctx: &mut RenderCtx) -> Result<String, PipelineEm
             _ => {}
         }
     }
-
-    let body = emit_branch_children(node, ctx)?;
-    Ok(format!(
-        "${{{each_expr}.map(({as_name}, {index_name}) => `{body}`).join('')}}"
-    ))
+    (each_expr, as_name, index_name)
 }
 
 /// Convert a moslayout prop value to the JS expression text suitable
@@ -1365,6 +1552,7 @@ fn emit_host_link(node: &LayoutNode) -> String {
 fn emit_host_tooltip(
     node: &LayoutNode,
     ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let mut attrs = String::new();
 
@@ -1383,7 +1571,7 @@ fn emit_host_tooltip(
 
     let mut inner = String::new();
     for child in &node.children {
-        inner.push_str(&emit_html_tree(child, 0, ctx)?);
+        inner.push_str(&emit_html_tree(child, 0, ctx, part_styles)?);
     }
     Ok(format!("<span{attrs}>{inner}</span>"))
 }
@@ -1488,6 +1676,7 @@ fn emit_host_number_input(node: &LayoutNode) -> String {
 fn emit_host_dialog(
     node: &LayoutNode,
     ctx: &mut RenderCtx,
+    part_styles: &HashMap<String, String>,
 ) -> Result<String, PipelineEmitError> {
     let dlg_idx = ctx.next_dialog_id();
     let dlg_id = format!("mos-dlg-{dlg_idx}");
@@ -1553,7 +1742,7 @@ fn emit_host_dialog(
     // ----- children — recursively rendered into the dialog body -----
     // We re-use the standard branch walker so `If`/`Else`/`For` nested
     // inside a dialog body lower correctly.
-    let body = emit_branch_children(node, ctx)?;
+    let body = emit_branch_children(node, ctx, part_styles)?;
 
     // ----- markup -----
     let markup = format!(r#"<dialog id="{dlg_id}">{title_html}{body}</dialog>"#);
@@ -1693,13 +1882,23 @@ fn escape_html_attribute(s: &str) -> String {
 /// One primitive's lowering: the open tag, the matching close tag, and
 /// whether the element is a void / self-closing HTML element.
 struct HtmlTag {
-    /// The full opening tag, e.g. `"<div>"` or `"<img>"`.
+    /// The full opening tag, e.g. `"<div>"` or `"<img>"`.  This is the
+    /// tag WITHOUT any built-in `style="..."` attribute — the built-in
+    /// CSS lives in [`HtmlTag::builtin_style`] so the walker can merge
+    /// it with the author-declared part style (UI28 style inlining)
+    /// before composing one combined `style="..."`.
     open: String,
     /// The closing tag, empty for void elements.
     close: String,
     /// True for HTML void elements that have no closing tag (`<img>`,
     /// `<hr>`).
     self_closing: bool,
+    /// The primitive's built-in CSS declaration list (no `style="…"`
+    /// wrapper), e.g. `"display: flex; flex-direction: row;"` for `Row`.
+    /// Empty for primitives with no intrinsic style (`Box`, `Text`,
+    /// `Col`, …).  Merged with the author part style in the walker;
+    /// built-in comes first so author declarations win on collisions.
+    builtin_style: String,
 }
 
 /// Map a moslayout primitive tag to its HTML decomposition.
@@ -1710,74 +1909,52 @@ struct HtmlTag {
 /// semantics and is exactly the bug class we want to surface at
 /// compile time.
 fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
+    // Helper: a styled/plain container or leaf. The built-in CSS is kept
+    // SEPARATE from the `open` tag (no inline `style="…"`) so the walker
+    // can merge it with the author part style before composing the final
+    // `style="…"`. This is the same split the HTML/React backends use.
+    fn mk(open: &str, close: &str, self_closing: bool, builtin_style: &str) -> HtmlTag {
+        HtmlTag {
+            open: open.to_string(),
+            close: close.to_string(),
+            self_closing,
+            builtin_style: builtin_style.to_string(),
+        }
+    }
     Ok(match tag {
-        "Box" => HtmlTag {
-            open: "<div>".to_string(),
-            close: "</div>".to_string(),
-            self_closing: false,
-        },
-        "Row" => HtmlTag {
-            open: r#"<div style="display: flex; flex-direction: row;">"#.to_string(),
-            close: "</div>".to_string(),
-            self_closing: false,
-        },
-        "Column" => HtmlTag {
-            open: r#"<div style="display: flex; flex-direction: column;">"#.to_string(),
-            close: "</div>".to_string(),
-            self_closing: false,
-        },
-        "Text" => HtmlTag {
-            open: "<span>".to_string(),
-            close: "</span>".to_string(),
-            self_closing: false,
-        },
-        "Image" => HtmlTag {
+        "Box" => mk("<div>", "</div>", false, ""),
+        "Row" => mk("<div>", "</div>", false, "display: flex; flex-direction: row;"),
+        "Column" => mk("<div>", "</div>", false, "display: flex; flex-direction: column;"),
+        "Text" => mk("<span>", "</span>", false, ""),
+        "Image" => {
             // Image is a void element. Future PRs can wire in `src` /
             // `alt` props from `source` / `a11y-label`; this first cut
             // emits a bare `<img>` because there is no UI29-driven
             // primitive yet that needs binding.
-            open: "<img>".to_string(),
-            close: String::new(),
-            self_closing: true,
-        },
-        "Spacer" => HtmlTag {
-            open: r#"<div style="flex: 1"></div>"#.to_string(),
-            // Spacer is structurally a container with empty body — we
-            // emit the full `<div ...></div>` as the open and an empty
-            // close so the tree walker treats it as self-closing.
-            close: String::new(),
-            self_closing: true,
-        },
-        "Divider" => HtmlTag {
-            open: "<hr>".to_string(),
-            close: String::new(),
-            self_closing: true,
-        },
-        "Icon" => HtmlTag {
-            open: r#"<span class="icon">"#.to_string(),
-            close: "</span>".to_string(),
-            self_closing: false,
-        },
+            mk("<img>", "", true, "")
+        }
+        "Spacer" => {
+            // Spacer is an empty flex-filling container. Lowered as a
+            // normal (non-void) empty `<div>` so its built-in `flex: 1`
+            // merges with any author part style; with no children the
+            // walker emits `<div style="flex: 1"></div>` — same visual
+            // output as before, now style-mergeable.
+            mk("<div>", "</div>", false, "flex: 1")
+        }
+        "Divider" => mk("<hr>", "", true, ""),
+        "Icon" => mk(r#"<span class="icon">"#, "</span>", false, ""),
         // UI29 kernel primitives below ---------------------------------
         // `Stack` lays its children at the same origin via CSS positioning
         // — the children themselves opt into `position: absolute` via
         // mosstyle if they want to overlap; the stack just establishes
         // the containing block via `position: relative`.
-        "Stack" => HtmlTag {
-            open: r#"<div style="position: relative;">"#.to_string(),
-            close: "</div>".to_string(),
-            self_closing: false,
-        },
+        "Stack" => mk("<div>", "</div>", false, "position: relative;"),
         // `HostScroll` is the kernel-canonical name for what UI21 called
         // `Scroll`. The lowering matches the React backend: a div with
         // `overflow: auto` becomes a scroll container for any content that
         // exceeds its bounds. (Some other backends still ship `Scroll`;
         // adding that alias is a separate cleanup PR — U29-X1.)
-        "HostScroll" => HtmlTag {
-            open: r#"<div style="overflow: auto;">"#.to_string(),
-            close: "</div>".to_string(),
-            self_closing: false,
-        },
+        "HostScroll" => mk("<div>", "</div>", false, "overflow: auto;"),
         // `HostTable` and its four sub-tags lower to the matching native
         // HTML table elements. The semantic structure
         // (colgroup/thead/tbody/tfoot) is preserved 1:1 so accessibility
@@ -1786,52 +1963,24 @@ fn primitive_to_html_tag(tag: &str) -> Result<HtmlTag, PipelineEmitError> {
         // in `emit_html_tree` because the row/cell shape (single `<tr>`
         // wrapping the body children as `<th>`/`<td>`) is fixed by the
         // sub-tag, not author-declarable.
-        "HostTable" => HtmlTag {
-            open: "<table>".to_string(),
-            close: "</table>".to_string(),
-            self_closing: false,
-        },
-        "HostTableHead" => HtmlTag {
-            // The `<tr><th>…</th></tr>` shape is synthesised in
-            // `emit_host_table_section`; the open/close here are just the
-            // outer `<thead>` wrapper.
-            open: "<thead>".to_string(),
-            close: "</thead>".to_string(),
-            self_closing: false,
-        },
-        "HostTableBody" => HtmlTag {
-            open: "<tbody>".to_string(),
-            close: "</tbody>".to_string(),
-            self_closing: false,
-        },
-        "HostTableFoot" => HtmlTag {
-            open: "<tfoot>".to_string(),
-            close: "</tfoot>".to_string(),
-            self_closing: false,
-        },
-        "HostTableColGroup" => HtmlTag {
-            // Open `<colgroup>` then let the children (Col primitives,
-            // possibly wrapped in For) render inside. The previous
-            // "Single `<col>` child" placeholder produced a fixed single
-            // `<col>` and then concatenated the children — which both
-            // dropped per-column widths AND produced invalid markup
-            // when more than one Col was emitted. The Col primitive's
-            // void-tag dispatch (below) handles the per-column emission.
-            open: "<colgroup>".to_string(),
-            close: "</colgroup>".to_string(),
-            self_closing: false,
-        },
+        "HostTable" => mk("<table>", "</table>", false, ""),
+        // The `<tr><th>…</th></tr>` shape is synthesised in the section
+        // branch of `emit_html_tree`; the open/close here are just the
+        // outer `<thead>` wrapper.
+        "HostTableHead" => mk("<thead>", "</thead>", false, ""),
+        "HostTableBody" => mk("<tbody>", "</tbody>", false, ""),
+        "HostTableFoot" => mk("<tfoot>", "</tfoot>", false, ""),
+        // Open `<colgroup>` then let the children (Col primitives,
+        // possibly wrapped in For) render inside. The Col primitive's
+        // void-tag dispatch (below) handles the per-column emission.
+        "HostTableColGroup" => mk("<colgroup>", "</colgroup>", false, ""),
         // UI31 §3.2 / UI28-1 / U29-D1 — `Col` is the cell-definition
         // sub-tag inside HostTableColGroup. mosaic-pkg-grid v0.2.0's
         // shape is `For (each: slot: column-widths, as: w) { Col [col]
         // (width: ( w )) }`; the For walker iterates the body and the
         // generic dispatcher reaches here with `node.tag == "Col"`.
         // `<col>` is HTML's canonical void column-definition element.
-        "Col" => HtmlTag {
-            open: "<col>".to_string(),
-            close: String::new(),
-            self_closing: true,
-        },
+        "Col" => mk("<col>", "", true, ""),
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
 }
@@ -2008,6 +2157,233 @@ fn insert_attrs_before_close(open_tag: &str, attrs: &str) -> String {
     } else {
         format!("{open_tag}{attrs}")
     }
+}
+
+// =====================================================================
+// Style inlining (UI28 — author-declared part styles)
+//
+// The WebComponent emitter builds its shadow-DOM markup as a JS
+// template-literal string. So a `style="..."` attribute is just a
+// literal slice of that string — for STATIC part styles (the common
+// case: borders, padding, text-align) the merged CSS goes straight in.
+// For per-cell STATE highlights (selected / editing) we weave a JS
+// ternary INTO the `style="..."` value so the runtime predicate
+// (`r == editRow && c == editCol`, etc.) flips the appearance without
+// any extra JS plumbing.
+//
+// These functions are ported from `mosaic-emit-html`'s style inliner
+// (`build_part_style_map` / `build_inline_css_fragment` / `merge_styles`
+// / `build_style_attr` / `camel_to_kebab` / `escape_html_attr`) and
+// extended with: (1) `Col` runtime-width emission and (2) the state
+// ternary that the HTML/React backends express differently.
+// =====================================================================
+
+/// Build a `part_name -> "css: value; ..."` lookup table from a mosstyle
+/// `StyleDef`.
+///
+/// Base properties land under the bare part name (`cell`,
+/// `header-cell`, …). State blocks (`state selected { ... }`) land under
+/// a composite key `"{part}:{state}"` (`cell:selected`, `cell:editing`)
+/// so the cell-state ternary can fetch them — mirroring the React
+/// backend's `build_part_style_map`.
+fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
+    let mut out = HashMap::with_capacity(style.parts.len());
+    for part in &style.parts {
+        let frag = build_inline_css_fragment(&part.base);
+        if !frag.is_empty() {
+            out.insert(part.name.clone(), frag);
+        }
+        for state in &part.states {
+            let state_frag = build_inline_css_fragment(&state.props);
+            if !state_frag.is_empty() {
+                out.insert(format!("{}:{}", part.name, state.state), state_frag);
+            }
+        }
+    }
+    out
+}
+
+/// Convert a slice of [`StyleProp`] values into a `key: value; ...` CSS
+/// declaration list, suitable for embedding in a `style="..."`
+/// attribute that itself lives inside a JS template literal.
+///
+/// kebab-case names pass through verbatim — they are already valid CSS
+/// property syntax. A `camelCase` name (e.g. `backgroundColor`) is
+/// canonicalised to `background-color`. Values are escaped for the
+/// double-quoted-attribute-inside-template-literal context via
+/// [`escape_html_attribute`] (handles `"`, backtick, and `${`).
+fn build_inline_css_fragment(props: &[StyleProp]) -> String {
+    let mut parts: Vec<String> = Vec::with_capacity(props.len());
+    for p in props {
+        let key = camel_to_kebab(&p.name);
+        let value = escape_html_attribute(&p.value);
+        parts.push(format!("{key}: {value}"));
+    }
+    parts.join("; ")
+}
+
+/// Concatenate two CSS declaration lists, semicolon-separated, dropping
+/// empty inputs. Built-in style comes first so the author's
+/// declarations can override defaults (last-property-wins in CSS).
+fn merge_styles(builtin: &str, author: &str) -> String {
+    match (builtin.is_empty(), author.is_empty()) {
+        (true, true) => String::new(),
+        (false, true) => builtin.to_string(),
+        (true, false) => author.to_string(),
+        (false, false) => format!("{builtin}; {author}"),
+    }
+}
+
+/// Build the ` style="..."` attribute (leading space included) for a
+/// node by merging:
+///
+/// 1. the primitive's **built-in** CSS (`builtin`),
+/// 2. the author-declared **part** style (looked up by `node.part_name`),
+/// 3. for a `Col`, the runtime per-column **width** expression, and
+/// 4. **state** ternaries (`cell:selected` / `cell:editing`) driven by
+///    the node's `state-when-*` predicate props.
+///
+/// Returns `""` when nothing applies, so the caller can splice it
+/// unconditionally.
+fn build_style_attr(
+    node: &LayoutNode,
+    builtin: &str,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let part_style = node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    let mut base = merge_styles(builtin, part_style);
+
+    // `Col [col] ( width: ( w ) )` — the For-binding `w` is the runtime
+    // per-column pixel width. Emit `width: ${w}px` so each column gets a
+    // fixed width. Without this the table auto-sizes and columns
+    // collapse to content width, which is exactly the "run-together"
+    // failure mode the demo showed.
+    if node.tag == "Col" {
+        if let Some(width_css) = build_col_width_css(node) {
+            base = merge_styles(&base, &width_css);
+        }
+    }
+
+    // State highlights — a JS ternary woven into the `style="..."` value.
+    // `${(<pred>) ? '; <css>' : ''}` appends the state CSS only when the
+    // runtime predicate is true. We extract the predicate from the
+    // `state-when-<state>` prop and the CSS from the `<part>:<state>`
+    // entry in the part-style map.
+    let state_ternaries = build_state_ternaries(node, part_styles);
+
+    if base.is_empty() && state_ternaries.is_empty() {
+        return String::new();
+    }
+    format!(r#" style="{base}{state_ternaries}""#)
+}
+
+/// Build the `width: ${w}px` CSS for a `Col` node from its `width:` prop.
+///
+/// The grid layout writes `Col [col] ( width: ( w ) )` where `w` is the
+/// `For (each: slot: column-widths, as: w)` binding — so the prop value
+/// is an `Expr("( w )")`. We strip the outer parens and interpolate the
+/// runtime expression into a `px` width. A bare `Number` literal is also
+/// accepted (static width). Slot refs camel-case as usual.
+///
+/// Returns `None` when there is no `width` prop or the expression is
+/// empty.
+fn build_col_width_css(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "width")?;
+    let expr = match &prop.value {
+        LayoutPropValue::Expr(e) => {
+            let trimmed = strip_outer_parens(e.trim());
+            if trimmed.is_empty() {
+                return None;
+            }
+            trimmed.to_string()
+        }
+        LayoutPropValue::SlotRef(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if !is_safe_identifier(&camel) {
+                return None;
+            }
+            camel
+        }
+        LayoutPropValue::Number(n) => {
+            // Static literal — no template interpolation needed.
+            return Some(format!("width: {n}px"));
+        }
+        _ => return None,
+    };
+    Some(format!("width: ${{{expr}}}px"))
+}
+
+/// Build the per-state CSS ternaries for a node's `state-when-*` props.
+///
+/// For every prop named `state-when-<state>` whose matching
+/// `<part>:<state>` entry exists in the part-style map, emit a JS
+/// ternary `${(<pred>) ? '; <css>' : ''}` that appends the state's CSS
+/// to the cell's inline `style` only when the runtime predicate is true.
+///
+/// The predicate text comes from the prop value: an `Expr` is spliced
+/// verbatim (the moslayout resolver already produced a JS-compatible
+/// substring such as `r == editRow && c == editCol`); a `SlotRef`
+/// camel-cases to an in-scope identifier; a bare `Keyword` (`true` /
+/// `false`) passes through.
+///
+/// Returns `""` when the node has no `part_name` or no applicable
+/// `state-when-*` props.
+fn build_state_ternaries(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let Some(part) = node.part_name.as_deref() else {
+        return String::new();
+    };
+    let mut out = String::new();
+    for prop in &node.props {
+        let Some(state_name) = prop.name.strip_prefix("state-when-") else {
+            continue;
+        };
+        let state_key = format!("{part}:{state_name}");
+        let Some(state_css) = part_styles.get(&state_key) else {
+            continue;
+        };
+        if state_css.is_empty() {
+            continue;
+        }
+        let cond = match &prop.value {
+            LayoutPropValue::Expr(t) => t.clone(),
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Keyword(k) => k.clone(),
+            // Numbers / strings / emit refs are not valid boolean
+            // predicates — skip rather than emit broken JS.
+            _ => continue,
+        };
+        // The single-quoted string keeps the inner CSS clear of the
+        // surrounding double-quoted `style="..."` attribute and the
+        // outer template literal. The leading `; ` separates the state
+        // CSS from the base declarations already in the attribute.
+        out.push_str(&format!(r#"${{({cond}) ? '; {state_css}' : ''}}"#));
+    }
+    out
+}
+
+/// Convert a `camelCase` CSS property name to `kebab-case`
+/// (`backgroundColor` → `background-color`). kebab-case names pass
+/// through unchanged because no character is uppercase. Ported from the
+/// HTML emitter so both backends canonicalise property names the same
+/// way.
+fn camel_to_kebab(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 2);
+    for (i, ch) in s.chars().enumerate() {
+        if ch.is_ascii_uppercase() && i > 0 {
+            out.push('-');
+            out.push(ch.to_ascii_lowercase());
+        } else {
+            out.push(ch.to_ascii_lowercase());
+        }
+    }
+    out
 }
 
 // =====================================================================
@@ -2226,6 +2602,42 @@ mod tests {
     use super::*;
     use moslayout_compiler::{LayoutNode, LayoutProp};
     use mosmodel_compiler::{EmitParam, SlotDecl};
+    use mosstyle_compiler::{PartStyle, StateStyle};
+
+    // -------- Style fixtures (UI28 — part-style inlining) --------
+
+    fn prop(name: &str, value: &str) -> StyleProp {
+        StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    /// A part with base props and optional per-state overrides.
+    fn part(name: &str, base: Vec<StyleProp>, states: Vec<StateStyle>) -> PartStyle {
+        PartStyle {
+            name: name.to_string(),
+            base,
+            states,
+        }
+    }
+
+    fn style_with_parts(component: &str, parts: Vec<PartStyle>) -> StyleDef {
+        StyleDef {
+            component_name: component.to_string(),
+            parts,
+        }
+    }
+
+    /// Helper: a Box carrying a `part_name` + arbitrary props + children.
+    fn box_part(part_name: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some(part_name.to_string()),
+            props,
+            children,
+        }
+    }
 
     // -------- Test fixtures --------
 
@@ -2969,55 +3381,36 @@ mod tests {
 
     // -------- K6/K7/K8/K9: HostTable sub-tags --------
 
-    /// `HostTableHead` wraps its children in a single `<tr>` row of
-    /// `<th>` cells.
+    /// `HostTableHead` lowers a `Row` child to a REAL `<tr>` whose
+    /// `Text` cells become content-only `<th>` cells. (Real table rows
+    /// are what let the `<colgroup>` widths size the columns.)
     #[test]
     fn host_table_head_wraps_children_in_tr_of_th_cells() {
         let m = component("T", vec![], vec![]);
-        let head = container(
-            "HostTableHead",
-            vec![
-                LayoutNode {
-                    tag: "Text".to_string(),
-                    part_name: None,
-                    props: vec![LayoutProp {
-                        name: "content".to_string(),
-                        value: LayoutPropValue::String("A".to_string()),
-                    }],
-                    children: Vec::new(),
-                },
-                LayoutNode {
-                    tag: "Text".to_string(),
-                    part_name: None,
-                    props: vec![LayoutProp {
-                        name: "content".to_string(),
-                        value: LayoutPropValue::String("B".to_string()),
-                    }],
-                    children: Vec::new(),
-                },
-            ],
-        );
+        let row = container("Row", vec![text_leaf("A"), text_leaf("B")]);
+        let head = container("HostTableHead", vec![row]);
         let l = root_layout("T", head);
         let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
         assert!(
             r.output
-                .contains("<thead><tr><th><span>A</span></th><th><span>B</span></th></tr></thead>"),
+                .contains("<thead><tr><th>A</th><th>B</th></tr></thead>"),
             "HostTableHead row/cell shape wrong, got:\n{}",
             r.output
         );
     }
 
-    /// `HostTableBody` wraps its children in a single `<tr>` row of
-    /// `<td>` cells (note: `<td>`, not `<th>`).
+    /// `HostTableBody` lowers a `Row` child to a REAL `<tr>` whose
+    /// `Box` cell becomes a `<td>` (the cell's own part style lands on
+    /// the `<td>`, so the wrapper `<div>` is no longer needed).
     #[test]
     fn host_table_body_wraps_children_in_tr_of_td_cells() {
         let m = component("T", vec![], vec![]);
-        let body = container("HostTableBody", vec![leaf("Box")]);
+        let row = container("Row", vec![leaf("Box")]);
+        let body = container("HostTableBody", vec![row]);
         let l = root_layout("T", body);
         let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
         assert!(
-            r.output
-                .contains("<tbody><tr><td><div></div></td></tr></tbody>"),
+            r.output.contains("<tbody><tr><td></td></tr></tbody>"),
             "HostTableBody row/cell shape wrong, got:\n{}",
             r.output
         );
@@ -3028,12 +3421,12 @@ mod tests {
     #[test]
     fn host_table_foot_wraps_children_in_tr_of_td_cells() {
         let m = component("T", vec![], vec![]);
-        let foot = container("HostTableFoot", vec![leaf("Box")]);
+        let row = container("Row", vec![leaf("Box")]);
+        let foot = container("HostTableFoot", vec![row]);
         let l = root_layout("T", foot);
         let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
         assert!(
-            r.output
-                .contains("<tfoot><tr><td><div></div></td></tr></tfoot>"),
+            r.output.contains("<tfoot><tr><td></td></tr></tfoot>"),
             "HostTableFoot row/cell shape wrong, got:\n{}",
             r.output
         );
@@ -3272,9 +3665,9 @@ mod tests {
             "HostTable",
             vec![
                 leaf("HostTableColGroup"),
-                container("HostTableHead", vec![text_leaf("Name")]),
-                container("HostTableBody", vec![text_leaf("Alice")]),
-                container("HostTableFoot", vec![text_leaf("Total")]),
+                container("HostTableHead", vec![container("Row", vec![text_leaf("Name")])]),
+                container("HostTableBody", vec![container("Row", vec![text_leaf("Alice")])]),
+                container("HostTableFoot", vec![container("Row", vec![text_leaf("Total")])]),
             ],
         );
         let l = root_layout("T", table);
@@ -3285,11 +3678,15 @@ mod tests {
         // `<colgroup><col></colgroup>`). Per-column `<col>` emission
         // is the Col primitive's job, driven by the author writing
         // explicit Col children (often wrapped in a For).
+        //
+        // Real `<tr>`/`<th>`/`<td>` rows: a `Row` child of each section
+        // becomes one `<tr>`; its `Text` cells become content-only
+        // `<th>`/`<td>` cells (no inner `<span>`).
         let expected = "<table>\
                         <colgroup></colgroup>\
-                        <thead><tr><th><span>Name</span></th></tr></thead>\
-                        <tbody><tr><td><span>Alice</span></td></tr></tbody>\
-                        <tfoot><tr><td><span>Total</span></td></tr></tfoot>\
+                        <thead><tr><th>Name</th></tr></thead>\
+                        <tbody><tr><td>Alice</td></tr></tbody>\
+                        <tfoot><tr><td>Total</td></tr></tfoot>\
                         </table>";
         assert!(
             r.output.contains(expected),
@@ -4696,6 +5093,298 @@ mod tests {
         assert!(
             out.contains("const label = this.getAttribute(\"label\") ?? \"\";"),
             "text slot must keep the string default:\n{out}"
+        );
+    }
+
+    // =================================================================
+    // UI28 — author-declared part-style inlining
+    // =================================================================
+
+    /// A `Box [cell]` whose `cell` part declares border / padding /
+    /// text-align must carry those CSS declarations in a `style="..."`
+    /// on the generated `<div>`. This is the core fix: the emitter used
+    /// to DROP the StyleDef and emit a bare `<div>`.
+    #[test]
+    fn cell_part_inlines_border_padding_text_align() {
+        let m = component("X", vec![slot("v", SlotType::Text, true)], vec![]);
+        let cell = box_part(
+            "cell",
+            vec![],
+            vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("v".to_string()),
+                }],
+                children: Vec::new(),
+            }],
+        );
+        let s = style_with_parts(
+            "X",
+            vec![part(
+                "cell",
+                vec![
+                    prop("border-width", "1px"),
+                    prop("border-style", "solid"),
+                    prop("border-color", "#3f3f46"),
+                    prop("padding", "2px"),
+                    prop("text-align", "right"),
+                ],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &root_layout("X", cell), &s).unwrap().output;
+        assert!(
+            out.contains("border-width: 1px"),
+            "cell must carry border CSS:\n{out}"
+        );
+        assert!(
+            out.contains("padding: 2px"),
+            "cell must carry padding CSS:\n{out}"
+        );
+        assert!(
+            out.contains("text-align: right"),
+            "cell must carry text-align CSS:\n{out}"
+        );
+        // The bare styleless div is gone.
+        assert!(
+            !out.contains("<div><span>${v}</span></div>"),
+            "styleless cell div must be gone:\n{out}"
+        );
+    }
+
+    /// A header `Box [header-cell]` whose `header-cell` part declares a
+    /// background + center alignment must inline those onto its `<div>`.
+    #[test]
+    fn header_cell_part_inlines_background_and_text_align() {
+        let m = component("X", vec![], vec![]);
+        let header = box_part(
+            "header-cell",
+            vec![],
+            vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("A".to_string()),
+                }],
+                children: Vec::new(),
+            }],
+        );
+        let s = style_with_parts(
+            "X",
+            vec![part(
+                "header-cell",
+                vec![prop("background", "#2d2d30"), prop("text-align", "center")],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &root_layout("X", header), &s)
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("background: #2d2d30"),
+            "header-cell must carry background CSS:\n{out}"
+        );
+        assert!(
+            out.contains("text-align: center"),
+            "header-cell must carry center alignment:\n{out}"
+        );
+    }
+
+    /// Built-in primitive style (Row's flex row) must MERGE with the
+    /// author part style, built-in first so the author wins on
+    /// collisions.
+    #[test]
+    fn row_builtin_style_merges_with_part_style() {
+        let m = component("X", vec![], vec![]);
+        let row = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: Some("header-row".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        let s = style_with_parts(
+            "X",
+            vec![part("header-row", vec![prop("height", "24px")], vec![])],
+        );
+        let out = from_pipeline(&m, &root_layout("X", row), &s).unwrap().output;
+        assert!(
+            out.contains("display: flex; flex-direction: row;; height: 24px"),
+            "Row built-in style must merge with the part style (built-in first):\n{out}"
+        );
+    }
+
+    /// A `Col [col] ( width: ( w ) )` inside a `For (as: w)` must emit
+    /// `<col style="width: ${w}px">` so columns get their runtime
+    /// per-column widths.
+    #[test]
+    fn col_emits_runtime_width_px() {
+        let m = component(
+            "X",
+            vec![slot(
+                "column-widths",
+                SlotType::List(Box::new(ListInnerType::Number)),
+                true,
+            )],
+            vec![],
+        );
+        // For ( each: slot: column-widths, as: w ) { Col [col] ( width: ( w ) ) }
+        let col = LayoutNode {
+            tag: "Col".to_string(),
+            part_name: Some("col".to_string()),
+            props: vec![LayoutProp {
+                name: "width".to_string(),
+                value: LayoutPropValue::Expr("( w )".to_string()),
+            }],
+            children: vec![],
+        };
+        let for_node = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("column-widths".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("w".to_string()),
+                },
+            ],
+            children: vec![col],
+        };
+        let out = from_pipeline(&m, &root_layout("X", for_node), &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains(r#"<col style="width: ${w}px">"#),
+            "Col must emit a runtime px width:\n{out}"
+        );
+    }
+
+    /// The `cell:selected` / `cell:editing` state blocks must surface as
+    /// JS ternaries woven into the cell's `style="..."`, gated on the
+    /// `state-when-selected` / `state-when-editing` predicates.
+    #[test]
+    fn cell_state_blocks_emit_style_ternaries() {
+        let m = component("X", vec![slot("v", SlotType::Text, true)], vec![]);
+        let cell = box_part(
+            "cell",
+            vec![
+                LayoutProp {
+                    name: "state-when-selected".to_string(),
+                    value: LayoutPropValue::Expr(
+                        "( r == selectedRow && c == selectedCol )".to_string(),
+                    ),
+                },
+                LayoutProp {
+                    name: "state-when-editing".to_string(),
+                    value: LayoutPropValue::Expr("( r == editRow && c == editCol )".to_string()),
+                },
+            ],
+            vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("v".to_string()),
+                }],
+                children: Vec::new(),
+            }],
+        );
+        let s = style_with_parts(
+            "X",
+            vec![part(
+                "cell",
+                vec![prop("padding", "2px")],
+                vec![
+                    StateStyle {
+                        state: "selected".to_string(),
+                        props: vec![prop("background", "#264f78"), prop("color", "#ffffff")],
+                    },
+                    StateStyle {
+                        state: "editing".to_string(),
+                        props: vec![prop("background", "#1f4f3f")],
+                    },
+                ],
+            )],
+        );
+        let out = from_pipeline(&m, &root_layout("X", cell), &s).unwrap().output;
+        // Selected ternary: predicate + the selected-state CSS.
+        assert!(
+            out.contains(
+                r#"${(( r == selectedRow && c == selectedCol )) ? '; background: #264f78; color: #ffffff' : ''}"#
+            ),
+            "selected-state ternary missing:\n{out}"
+        );
+        // Editing ternary.
+        assert!(
+            out.contains(
+                r#"${(( r == editRow && c == editCol )) ? '; background: #1f4f3f' : ''}"#
+            ),
+            "editing-state ternary missing:\n{out}"
+        );
+    }
+
+    /// A `state-when-X` prop with no matching `cell:X` state block in the
+    /// stylesheet is silently ignored (no broken ternary in the output).
+    #[test]
+    fn state_when_without_matching_block_is_ignored() {
+        let m = component("X", vec![], vec![]);
+        let cell = box_part(
+            "cell",
+            vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                value: LayoutPropValue::Expr("( true )".to_string()),
+            }],
+            vec![],
+        );
+        // `cell` part exists but declares NO `selected` state block.
+        let s = style_with_parts("X", vec![part("cell", vec![prop("padding", "2px")], vec![])]);
+        let out = from_pipeline(&m, &root_layout("X", cell), &s).unwrap().output;
+        assert!(
+            !out.contains("? '; "),
+            "no state ternary should be emitted without a matching block:\n{out}"
+        );
+    }
+
+    // -------- direct unit tests for the ported style helpers --------
+
+    #[test]
+    fn camel_to_kebab_canonicalises_css_property_names() {
+        assert_eq!(camel_to_kebab("backgroundColor"), "background-color");
+        assert_eq!(camel_to_kebab("text-align"), "text-align");
+        assert_eq!(camel_to_kebab("padding"), "padding");
+    }
+
+    #[test]
+    fn merge_styles_puts_builtin_first_and_drops_empties() {
+        assert_eq!(merge_styles("a: 1", ""), "a: 1");
+        assert_eq!(merge_styles("", "b: 2"), "b: 2");
+        assert_eq!(merge_styles("a: 1", "b: 2"), "a: 1; b: 2");
+        assert_eq!(merge_styles("", ""), "");
+    }
+
+    #[test]
+    fn part_style_map_surfaces_base_and_state_keys() {
+        let s = style_with_parts(
+            "X",
+            vec![part(
+                "cell",
+                vec![prop("padding", "2px")],
+                vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![prop("background", "blue")],
+                }],
+            )],
+        );
+        let map = build_part_style_map(&s);
+        assert_eq!(map.get("cell").map(String::as_str), Some("padding: 2px"));
+        assert_eq!(
+            map.get("cell:selected").map(String::as_str),
+            Some("background: blue")
         );
     }
 }
