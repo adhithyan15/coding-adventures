@@ -691,6 +691,10 @@ impl BindingTable {
         summary.unique_device_destinations = unique_device_destinations.len();
         summary
     }
+
+    pub fn readiness_summary(&self) -> BindingTableReadinessSummary {
+        self.summary().readiness()
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -763,6 +767,98 @@ impl BindingTableSummary {
 
     pub fn has_non_application_sources(self) -> bool {
         self.non_application_source_bindings > 0
+    }
+
+    pub fn has_destination_coverage(self) -> bool {
+        self.has_group_bindings() && self.has_device_bindings()
+    }
+
+    pub fn has_cluster_coverage(self) -> bool {
+        self.general_cluster_bindings > 0 && self.measurement_and_sensing_bindings > 0
+    }
+
+    pub fn readiness(self) -> BindingTableReadinessSummary {
+        BindingTableReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BindingTableReadinessSummary {
+    pub binding_summary: BindingTableSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub bindings_present: bool,
+    pub application_sources_ready: bool,
+    pub destination_coverage_ready: bool,
+    pub cluster_coverage_ready: bool,
+    pub zdo_sources_absent: bool,
+    pub non_application_sources_absent: bool,
+    pub binding_ready: bool,
+}
+
+impl BindingTableReadinessSummary {
+    pub fn from_summary(binding_summary: BindingTableSummary) -> Self {
+        let bindings_present = binding_summary.has_bindings();
+        let application_sources_ready = binding_summary.has_application_sources();
+        let destination_coverage_ready = binding_summary.has_destination_coverage();
+        let cluster_coverage_ready = binding_summary.has_cluster_coverage();
+        let zdo_sources_absent = !binding_summary.has_zdo_sources();
+        let non_application_sources_absent = !binding_summary.has_non_application_sources();
+        let checks = [
+            bindings_present,
+            application_sources_ready,
+            destination_coverage_ready,
+            cluster_coverage_ready,
+            zdo_sources_absent,
+            non_application_sources_absent,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let binding_ready = missing_check_count == 0;
+
+        Self {
+            binding_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            bindings_present,
+            application_sources_ready,
+            destination_coverage_ready,
+            cluster_coverage_ready,
+            zdo_sources_absent,
+            non_application_sources_absent,
+            binding_ready,
+        }
+    }
+
+    pub fn is_binding_ready(self) -> bool {
+        self.binding_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_binding_discovery(self) -> bool {
+        !self.bindings_present
+    }
+
+    pub fn needs_application_source_binding(self) -> bool {
+        !self.application_sources_ready
+    }
+
+    pub fn needs_destination_coverage(self) -> bool {
+        !self.destination_coverage_ready
+    }
+
+    pub fn needs_cluster_coverage(self) -> bool {
+        !self.cluster_coverage_ready
+    }
+
+    pub fn has_source_endpoint_issues(self) -> bool {
+        !self.zdo_sources_absent || !self.non_application_sources_absent
     }
 }
 
@@ -1413,5 +1509,77 @@ mod tests {
         assert!(summary.has_zdo_sources());
         assert!(!summary.has_application_sources());
         assert!(summary.has_non_application_sources());
+    }
+
+    #[test]
+    fn binding_table_readiness_summary_marks_application_binding_surface_ready() {
+        let source = BindingSource::new(IeeeAddress(0x0012_4b00_0000_0001), Endpoint(1));
+        let mut table = BindingTable::new();
+        table.upsert(BindingEntry::new(
+            source,
+            ClusterId::ON_OFF,
+            BindingDestination::group(GroupAddress(0x1234)),
+        ));
+        table.upsert(BindingEntry::new(
+            source,
+            ClusterId::TEMPERATURE_MEASUREMENT,
+            BindingDestination::device(IeeeAddress(0x0012_4b00_0000_0002), Endpoint(2)),
+        ));
+
+        let readiness = table.readiness_summary();
+
+        assert_eq!(readiness.binding_summary, table.summary());
+        assert_eq!(readiness.required_check_count, 6);
+        assert_eq!(readiness.passed_check_count, 6);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.bindings_present);
+        assert!(readiness.application_sources_ready);
+        assert!(readiness.destination_coverage_ready);
+        assert!(readiness.cluster_coverage_ready);
+        assert!(readiness.zdo_sources_absent);
+        assert!(readiness.non_application_sources_absent);
+        assert!(readiness.binding_ready);
+        assert!(readiness.is_binding_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_binding_discovery());
+        assert!(!readiness.needs_application_source_binding());
+        assert!(!readiness.needs_destination_coverage());
+        assert!(!readiness.needs_cluster_coverage());
+        assert!(!readiness.has_source_endpoint_issues());
+    }
+
+    #[test]
+    fn binding_table_readiness_summary_flags_endpoint_and_cluster_gaps() {
+        let mut table = BindingTable::new();
+        table.upsert(BindingEntry::new(
+            BindingSource::new(IeeeAddress(0x0012_4b00_0000_0010), Endpoint::ZDO),
+            ClusterId::BASIC,
+            BindingDestination::group(GroupAddress(0x1000)),
+        ));
+        table.upsert(BindingEntry::new(
+            BindingSource::new(IeeeAddress(0x0012_4b00_0000_0011), Endpoint(241)),
+            ClusterId(0x1234),
+            BindingDestination::device(IeeeAddress(0x0012_4b00_0000_0012), Endpoint(3)),
+        ));
+
+        let readiness = BindingTableReadinessSummary::from_summary(table.summary());
+
+        assert_eq!(readiness.required_check_count, 6);
+        assert_eq!(readiness.passed_check_count, 2);
+        assert_eq!(readiness.missing_check_count, 4);
+        assert!(readiness.bindings_present);
+        assert!(!readiness.application_sources_ready);
+        assert!(readiness.destination_coverage_ready);
+        assert!(!readiness.cluster_coverage_ready);
+        assert!(!readiness.zdo_sources_absent);
+        assert!(!readiness.non_application_sources_absent);
+        assert!(!readiness.binding_ready);
+        assert!(!readiness.is_binding_ready());
+        assert!(readiness.has_missing_checks());
+        assert!(!readiness.needs_binding_discovery());
+        assert!(readiness.needs_application_source_binding());
+        assert!(!readiness.needs_destination_coverage());
+        assert!(readiness.needs_cluster_coverage());
+        assert!(readiness.has_source_endpoint_issues());
     }
 }
