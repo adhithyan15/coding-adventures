@@ -788,5 +788,6 @@ members = [
     "fpga-bitstream",
     "spreadsheet-core",
     "spreadsheet-core-wasm",
+    "spreadsheet-capi",
     "spreadsheet-wasm",
 ]
