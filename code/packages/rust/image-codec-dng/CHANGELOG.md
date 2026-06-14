@@ -5,6 +5,24 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- **`color.rs`** — `invert_3x3` now delegates to
+  `image_raw_pipeline::invert_3x3` (IMG07). The previous inline Cramer's rule
+  implementation is replaced by a one-line wrapper so the shared crate owns the
+  canonical implementation. `matrix_multiply` body is rewritten using three
+  `image_raw_pipeline::mat3x3_mul` column-vector calls instead of a triple
+  loop, composing the shared vector primitive. Both public APIs and all 21 unit
+  tests + 2 doc-tests are unchanged.
+
+### Dependencies
+
+- Added `image-raw-pipeline = { path = "../image-raw-pipeline" }` (IMG07)
+
+---
+
 ## [0.1.0] — 2026-05-30
 
 ### Added
