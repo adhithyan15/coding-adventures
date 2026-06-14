@@ -326,6 +326,26 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
+    // sq(x); value x; integer x; sq := x*x`) called from the main block:
+    // `result := sq(7)` ⇒ exit 49.  `algol-iir-compiler` lowers the procedure
+    // out of line into a second `IIRFunction sq(x:i64) -> i64` (its body assigns
+    // the result to the in-scope `sq` slot and `ret`s it), and the call site to
+    // a `call` whose `srcs[0]` names `sq` and whose remaining `srcs` carry the
+    // argument slots.  Every backend already iterates `module.functions` and
+    // resolves a same-module `call` by name, so the procedure runs everywhere:
+    // native-AOT/LLVM emit a real `call @sq`, WASM a `call $sq`, the JVM a static
+    // `invokestatic Program.sq(J)J`, the CLR a `call int64 Program::sq(int64)`,
+    // and the VM/JIT push a frame for `sq`.  No backend learned anything about
+    // ALGOL — procedures are just functions + calls in the shared IIR.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; integer procedure sq(x); value x; integer x; \
+               sq := x * x; result := sq(7) end",
+        expect: Expect::Exit(49),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)
