@@ -1648,6 +1648,94 @@ pub fn hue_package_spec_summary(plan: &HueBridgePairingPlan) -> HuePackageSpecSu
     HuePackageSpecSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueCatalogPackageReadinessSummary {
+    pub spec_summary: HuePackageSpecSummary,
+    pub required_catalog_check_count: usize,
+    pub passed_catalog_check_count: usize,
+    pub missing_catalog_check_count: usize,
+    pub package_spec_ready: bool,
+    pub release_ready: bool,
+    pub catalog_identity_ready: bool,
+    pub clip_v2_transport_ready: bool,
+    pub runtime_model_ready: bool,
+    pub pairing_handoff_ready: bool,
+    pub catalog_ready: bool,
+}
+
+impl HueCatalogPackageReadinessSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_spec_summary(hue_package_spec_summary(plan))
+    }
+
+    pub fn from_spec_summary(spec_summary: HuePackageSpecSummary) -> Self {
+        let descriptor = spec_summary
+            .release_readiness
+            .package_summary
+            .descriptor_summary;
+        let pairing = spec_summary
+            .release_readiness
+            .package_summary
+            .pairing_plan_summary;
+        let package_spec_ready = spec_summary.is_spec_ready();
+        let release_ready = spec_summary.release_readiness.is_release_ready();
+        let catalog_identity_ready = spec_summary.canonical_integration_id
+            && descriptor.has_agent_facing_capabilities()
+            && descriptor.has_bridge_roles();
+        let clip_v2_transport_ready = spec_summary.clip_v2_resource_root
+            && spec_summary.registration_endpoint_ready
+            && spec_summary.application_key_header_ready
+            && spec_summary.event_stream_path_ready;
+        let runtime_model_ready = spec_summary.declares_runtime_model_surface();
+        let pairing_handoff_ready = pairing.ready_for_local_registration()
+            && spec_summary.release_readiness.physical_presence_required;
+        let checks = [
+            package_spec_ready,
+            release_ready,
+            catalog_identity_ready,
+            clip_v2_transport_ready,
+            runtime_model_ready,
+            pairing_handoff_ready,
+        ];
+        let passed_catalog_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_catalog_check_count = checks.len();
+        let missing_catalog_check_count = required_catalog_check_count - passed_catalog_check_count;
+        let catalog_ready = missing_catalog_check_count == 0;
+
+        Self {
+            spec_summary,
+            required_catalog_check_count,
+            passed_catalog_check_count,
+            missing_catalog_check_count,
+            package_spec_ready,
+            release_ready,
+            catalog_identity_ready,
+            clip_v2_transport_ready,
+            runtime_model_ready,
+            pairing_handoff_ready,
+            catalog_ready,
+        }
+    }
+
+    pub fn is_catalog_ready(self) -> bool {
+        self.catalog_ready
+    }
+
+    pub fn has_missing_catalog_checks(self) -> bool {
+        self.missing_catalog_check_count > 0
+    }
+
+    pub fn transport_or_runtime_blocked(self) -> bool {
+        !self.clip_v2_transport_ready || !self.runtime_model_ready
+    }
+}
+
+pub fn hue_catalog_package_readiness_summary(
+    plan: &HueBridgePairingPlan,
+) -> HueCatalogPackageReadinessSummary {
+    HueCatalogPackageReadinessSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -4876,5 +4964,70 @@ mod tests {
         assert!(!summary.is_spec_ready());
         assert!(summary.has_missing_spec_checks());
         assert!(summary.declares_runtime_model_surface());
+    }
+
+    #[test]
+    fn hue_catalog_package_readiness_summary_marks_catalog_ready_package() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_catalog_package_readiness_summary(&plan);
+
+        assert_eq!(summary.spec_summary, hue_package_spec_summary(&plan));
+        assert_eq!(summary.required_catalog_check_count, 6);
+        assert_eq!(summary.passed_catalog_check_count, 6);
+        assert_eq!(summary.missing_catalog_check_count, 0);
+        assert!(summary.package_spec_ready);
+        assert!(summary.release_ready);
+        assert!(summary.catalog_identity_ready);
+        assert!(summary.clip_v2_transport_ready);
+        assert!(summary.runtime_model_ready);
+        assert!(summary.pairing_handoff_ready);
+        assert!(summary.catalog_ready);
+        assert!(summary.is_catalog_ready());
+        assert!(!summary.has_missing_catalog_checks());
+        assert!(!summary.transport_or_runtime_blocked());
+    }
+
+    #[test]
+    fn hue_catalog_package_readiness_summary_counts_handoff_gaps() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HueCatalogPackageReadinessSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_catalog_check_count, 6);
+        assert_eq!(summary.passed_catalog_check_count, 2);
+        assert_eq!(summary.missing_catalog_check_count, 4);
+        assert!(!summary.package_spec_ready);
+        assert!(!summary.release_ready);
+        assert!(summary.catalog_identity_ready);
+        assert!(!summary.clip_v2_transport_ready);
+        assert!(summary.runtime_model_ready);
+        assert!(!summary.pairing_handoff_ready);
+        assert!(!summary.catalog_ready);
+        assert!(!summary.is_catalog_ready());
+        assert!(summary.has_missing_catalog_checks());
+        assert!(summary.transport_or_runtime_blocked());
     }
 }
