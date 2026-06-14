@@ -7,7 +7,7 @@
 
 use std::collections::{BTreeMap, VecDeque};
 use std::net::SocketAddr;
-use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use transport_platform::{
@@ -74,8 +74,15 @@ impl StreamHandlerResult {
 pub struct StreamReactorOptions {
     pub listener: ListenerOptions,
     pub stream: StreamOptions,
-    /// Shared counter used by sharded reactors to allocate unique connection IDs.
-    pub connection_id_seed: Option<Arc<AtomicU64>>,
+    /// This reactor's shard index within a sharded runtime (0 for a lone reactor).
+    /// It is baked into the low bits of every [`ConnectionId`] this reactor hands
+    /// out, so a mailbox can route a write to the one reactor that owns the
+    /// connection using pure arithmetic — no shared registry.  See [`StreamReactor`].
+    pub shard_index: u64,
+    /// Number of low bits reserved for the shard index: `ceil(log2(worker_count))`.
+    /// `0` for a single reactor, which makes [`ConnectionId`]s identical to the
+    /// original unsharded scheme (a sequence counter starting at 1).
+    pub shard_bits: u32,
     pub read_buffer_size: usize,
     pub max_connections: usize,
     pub max_pending_write_bytes: usize,
@@ -87,7 +94,8 @@ impl Default for StreamReactorOptions {
         Self {
             listener: ListenerOptions::default(),
             stream: StreamOptions::default(),
-            connection_id_seed: None,
+            shard_index: 0,
+            shard_bits: 0,
             read_buffer_size: DEFAULT_READ_BUFFER_SIZE,
             max_connections: DEFAULT_MAX_CONNECTIONS,
             max_pending_write_bytes: DEFAULT_MAX_PENDING_WRITE_BYTES,
@@ -100,7 +108,8 @@ impl PartialEq for StreamReactorOptions {
     fn eq(&self, other: &Self) -> bool {
         self.listener == other.listener
             && self.stream == other.stream
-            && self.connection_id_seed.is_some() == other.connection_id_seed.is_some()
+            && self.shard_index == other.shard_index
+            && self.shard_bits == other.shard_bits
             && self.read_buffer_size == other.read_buffer_size
             && self.max_connections == other.max_connections
             && self.max_pending_write_bytes == other.max_pending_write_bytes
@@ -221,6 +230,10 @@ pub struct StreamReactor<P, S = ()> {
     connections: BTreeMap<StreamId, ConnectionState<S>>,
     connection_index: BTreeMap<ConnectionId, StreamId>,
     next_connection_id: u64,
+    /// Low bits stamped into every `ConnectionId` to identify this reactor as the
+    /// owning shard; `shard_bits` is how many low bits are reserved for it.
+    shard_index: u64,
+    shard_bits: u32,
     stop_flag: Arc<AtomicBool>,
     mailbox: StreamMailbox,
     read_buffer_size: usize,
@@ -228,7 +241,6 @@ pub struct StreamReactor<P, S = ()> {
     max_pending_write_bytes: usize,
     poll_timeout: Duration,
     stream_options: StreamOptions,
-    connection_id_seed: Option<Arc<AtomicU64>>,
     state_init: StateInit<S>,
     handler: StatefulHandler<S>,
     on_close: CloseHandler<S>,
@@ -290,6 +302,8 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             connections: BTreeMap::new(),
             connection_index: BTreeMap::new(),
             next_connection_id: 1,
+            shard_index: options.shard_index,
+            shard_bits: options.shard_bits,
             stop_flag: Arc::new(AtomicBool::new(false)),
             mailbox: StreamMailbox::default(),
             read_buffer_size: options.read_buffer_size.max(1),
@@ -297,7 +311,6 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             max_pending_write_bytes: options.max_pending_write_bytes.max(1),
             poll_timeout: options.poll_timeout,
             stream_options: options.stream,
-            connection_id_seed: options.connection_id_seed,
             state_init: Arc::new(init),
             handler: Arc::new(handler),
             on_close: Arc::new(on_close),
@@ -385,13 +398,22 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                     self.platform
                         .set_stream_interest(accepted.stream, StreamInterest::readable())?;
 
-                    let connection_id = if let Some(seed) = &self.connection_id_seed {
-                        ConnectionId(seed.fetch_add(1, Ordering::SeqCst))
-                    } else {
-                        let id = ConnectionId(self.next_connection_id);
-                        self.next_connection_id += 1;
-                        id
-                    };
+                    // Every ConnectionId encodes its owning shard in the low bits:
+                    //
+                    //     id = (sequence << shard_bits) | shard_index
+                    //
+                    // so a `TcpMailbox` can route a write to the one reactor that
+                    // owns the connection with pure arithmetic — no shared registry
+                    // and no cross-shard atomic on the accept hot path.  Uniqueness
+                    // holds because the low `shard_bits` distinguish the shard and
+                    // the high bits carry this reactor's own monotonic sequence.
+                    // For a lone reactor (`shard_bits == 0`, `shard_index == 0`)
+                    // the id is just `sequence`, byte-identical to the original
+                    // unsharded scheme.
+                    let sequence = self.next_connection_id;
+                    self.next_connection_id += 1;
+                    let connection_id =
+                        ConnectionId((sequence << self.shard_bits) | self.shard_index);
                     self.connection_index.insert(connection_id, accepted.stream);
                     self.connections.insert(
                         accepted.stream,
@@ -863,6 +885,57 @@ mod tests {
         stop.stop();
         let result = server.join().expect("server thread");
         assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn connection_ids_encode_the_shard_index_in_their_low_bits() {
+        // Stand a lone reactor up as if it were shard 1 of a 4-shard runtime
+        // (shard_bits = 2).  Every ConnectionId it allocates must carry `1` in its
+        // low two bits and a non-zero sequence in the high bits, so a routed
+        // mailbox can send a write back to exactly this reactor.
+        let seen = Arc::new(Mutex::new(Vec::<u64>::new()));
+        let seen_in_handler = Arc::clone(&seen);
+        let options = StreamReactorOptions {
+            shard_index: 1,
+            shard_bits: 2,
+            ..StreamReactorOptions::default()
+        };
+        let mut reactor = StreamReactor::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            options,
+            |_| (),
+            move |info, _, bytes| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen mutex poisoned")
+                    .push(info.id.0);
+                StreamHandlerResult::write(bytes.to_vec())
+            },
+            |_, _| {},
+        )
+        .expect("bind");
+        let addr = reactor.local_addr();
+        let stop = reactor.stop_handle();
+        let server = thread::spawn(move || reactor.serve());
+
+        for _ in 0..3 {
+            let mut stream = TcpStream::connect(addr).expect("connect");
+            stream.write_all(b"x").expect("write");
+            stream.shutdown(Shutdown::Write).expect("shutdown");
+            let mut echoed = Vec::new();
+            stream.read_to_end(&mut echoed).expect("read echo");
+            assert_eq!(echoed, b"x");
+        }
+
+        stop.stop();
+        server.join().expect("server thread").expect("serve");
+
+        let ids = seen.lock().expect("seen mutex poisoned").clone();
+        assert_eq!(ids.len(), 3, "every connection should be observed");
+        for id in ids {
+            assert_eq!(id & 0b11, 1, "shard index must occupy the low 2 bits: {id}");
+            assert!(id >> 2 >= 1, "the sequence (high bits) must start at 1: {id}");
+        }
     }
 
     #[test]

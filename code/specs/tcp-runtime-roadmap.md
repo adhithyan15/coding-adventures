@@ -311,19 +311,32 @@ well-controlled transport engine.
 The current `tcp-reactor` proves correctness and architecture, but a serious
 runtime needs a scaling story.
 
-Missing pieces:
-
-- one-reactor-per-core or one-reactor-per-shard architecture
-- listener sharding policy
-- connection affinity policy
-- cross-thread wakeups
-- lock-minimal metrics and connection handoff paths
-
-The key decision:
+The key decision (held to):
 
 - keep each connection owned by exactly one reactor thread
 - communicate across reactors with explicit wakeups and queues, not shared
   mutable connection state
+
+Status:
+
+- **Done** — one-reactor-per-shard architecture (`ShardedTcpRuntime`: N reactors
+  on N threads, each with its own kqueue/epoll/IOCP instance).
+- **Done** — listener sharding policy (`SO_REUSEPORT` auto-enabled when
+  `worker_count > 1`; the kernel load-balances accepts across the per-shard
+  listeners).
+- **Done** — connection affinity / routing. Each reactor stamps its shard index
+  into the low `shard_bits` of every `ConnectionId`
+  (`id = (sequence << shard_bits) | shard_index`), so `TcpMailbox` routes an
+  off-reactor write to the one owning reactor with a single mask — no shared
+  registry and no O(N) broadcast. This replaced the earlier shared-`AtomicU64`
+  connection-id seed.
+
+Missing pieces:
+
+- cross-thread wakeups (the wakeup primitive exists in `transport-platform`, but
+  the mailbox does not yet trigger it, so an off-reactor write waits up to the
+  poll timeout before flushing)
+- lock-minimal metrics and connection handoff paths
 
 ### 5. Hardening, observability, and benchmarking
 
