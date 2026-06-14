@@ -22,11 +22,11 @@
 
 use std::collections::HashSet;
 
-use adj_lang::{ConstraintSystem, OptDir, RelOp};
+use adj_lang::{ConstraintSystem, LoweredConstraint, OptDir, RelOp};
 use cas_solve::frac::Frac;
 use cas_solve::{solve_cubic, solve_quadratic, solve_quartic, SolveResult};
 use constraint_core::Predicate;
-use constraint_engine::{lia::LiaTactic, SolverResult, Value};
+use constraint_engine::{lia::LiaTactic, Model, SolverResult, Value};
 use logic_engine::{ComputeExpr, ComputeOp, KnowledgeBase};
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, EQUAL, MUL, SUB};
 
@@ -1021,10 +1021,367 @@ pub enum OptimizeOutcome {
     Unknown { reason: String },
 }
 
+/// Solve the optimization declared by a [`ConstraintSystem`]'s `objective`
+/// against its `constrain` half-planes (observed facts substituted first).
+///
+/// Dispatch on the declared symbol sorts:
+/// - if **every** symbol is integer- or boolean-sorted (`: int` / `: integer` /
+///   `: bool` / `: boolean`) and the objective + constraints are integer-linear,
+///   solve the **integer program** exactly ([`optimize_integer`]) — this is what
+///   makes a minimum-cost **set-cover** (pick the fewest/cheapest drugs covering
+///   every organism; `x_d ∈ {0,1}`) a native, proof-carrying engine result
+///   rather than a Python loop. The real LP relaxation would return fractional
+///   selections (`0.5·vancomycin`), which is meaningless for a yes/no choice.
+/// - otherwise (the default: `: scalar`, `: money(...)`, …) solve the real-valued
+///   (QF_LRA) LP via Fourier–Motzkin, byte-for-byte as before.
+pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
+    if is_integer_program(cs) {
+        if let Some(out) = optimize_integer(cs, kb) {
+            return out;
+        }
+        // Fell through (objective/constraints not integer-linear, or the integer
+        // tactic punted) — the real solver still answers (or says Unknown).
+    }
+    optimize_real(cs, kb)
+}
+
+/// True iff this is an opted-in integer program: it has an objective, at least
+/// one symbol, and **every** declared symbol carries an integral sort. Anything
+/// else (the existing `: scalar`/`: money(...)` programs) stays on the real path,
+/// so prior behavior is unchanged by construction.
+fn is_integer_program(cs: &ConstraintSystem) -> bool {
+    cs.objective.is_some()
+        && !cs.symbols.is_empty()
+        && cs
+            .symbols
+            .iter()
+            .all(|(_, sort)| sort_is_integral(&sort.to_string()).is_some())
+}
+
+/// Classify a sort by its surface name: `Some(true)` = boolean (the LIA tactic
+/// grounds it to `{0,1}`), `Some(false)` = general integer, `None` = not integral
+/// (real-valued). Matched on the sort term's `Display` so no extra dependency is
+/// needed to read it.
+fn sort_is_integral(sort: &str) -> Option<bool> {
+    match sort {
+        "bool" | "boolean" => Some(true),
+        "int" | "integer" => Some(false),
+        _ => None,
+    }
+}
+
+/// Exact integer linear optimization. Returns `None` when the system isn't
+/// integer-linear after all (so the caller falls back to the real LP); otherwise
+/// an [`OptimizeOutcome`] with the **integral** optimum.
+///
+/// Method (reusing the exact pieces already in this crate, no new tactic):
+/// 1. The real LP relaxation ([`optimize_real`]) classifies the system and gives
+///    a numeric bound — `Infeasible`/`Unbounded` pass straight through; a finite
+///    real optimum `rv` bounds the integer optimum (`int_opt ≥ ⌈rv⌉` for a min,
+///    `≤ ⌊rv⌋` for a max).
+/// 2. The exact integer tactic ([`LiaTactic`]) gives an initial feasible integer
+///    point, whose objective is the other end of the bracket.
+/// 3. **Binary search** the threshold `K`: the optimum is the smallest `K` with
+///    `obj ≤ K` still integer-feasible (min) — each probe is an exact LIA solve,
+///    so the answer is exact. The witness at `K*` is the achieving assignment;
+///    the constraints tight there are the binding provenance.
+fn optimize_integer(cs: &ConstraintSystem, kb: &KnowledgeBase) -> Option<OptimizeOutcome> {
+    let (dir, obj_expr) = cs.objective.as_ref()?;
+    let syms: Vec<String> = cs.symbols.iter().map(|(n, _)| n.clone()).collect();
+    let var_set: HashSet<&str> = syms.iter().map(String::as_str).collect();
+
+    // Classify the declared symbols into integer vs boolean (grounded to {0,1}).
+    let (mut int_vars, mut bool_vars): (Vec<String>, Vec<String>) = (Vec::new(), Vec::new());
+    for (n, sort) in &cs.symbols {
+        match sort_is_integral(&sort.to_string())? {
+            true => bool_vars.push(n.clone()),
+            false => int_vars.push(n.clone()),
+        }
+    }
+
+    // Substitute observed facts, then require every constraint + the objective to
+    // be integer-linear; otherwise this isn't an integer program (fall back).
+    let subbed: Vec<(ComputeExpr, RelOp, ComputeExpr)> = cs
+        .constraints
+        .iter()
+        .map(|c| {
+            (
+                substitute_observed(&c.lhs, &var_set, kb),
+                c.op,
+                substitute_observed(&c.rhs, &var_set, kb),
+            )
+        })
+        .collect();
+    let mut assertions = integer_assertions(&subbed)?;
+    // Pin every boolean to `{0,1}` explicitly. The LIA tactic grounds bool vars
+    // to 0/1 when building the model, but its bounded variable-elimination search
+    // still explores the integers unless the range is constrained — without these
+    // bounds it exhausts its budget and punts (`Unknown`) once there are ~4+ vars.
+    // Adding `0 ≤ v ≤ 1` caps each boolean's search to two values, so a formulary
+    // of N drugs is a 2^N search the budget handles comfortably (N ≲ 21).
+    for b in &bool_vars {
+        assertions.push(Predicate::Ge(
+            Box::new(Predicate::Var(b.clone())),
+            Box::new(Predicate::Int(0)),
+        ));
+        assertions.push(Predicate::Le(
+            Box::new(Predicate::Var(b.clone())),
+            Box::new(Predicate::Int(1)),
+        ));
+    }
+    let obj_pred = expr_to_pred(&substitute_observed(obj_expr, &var_set, kb))?;
+
+    // An initial feasible integer point bounds one end of the search.
+    let witness0 = match LiaTactic::solve(&assertions, &int_vars, &bool_vars) {
+        SolverResult::Sat(m) => m,
+        SolverResult::Unsat => {
+            return Some(OptimizeOutcome::Infeasible {
+                core: minimal_unsat_core(&subbed, &syms),
+            })
+        }
+        SolverResult::Unknown(_) => return None, // tactic punted → real fallback
+    };
+    let feasible_obj = eval_lin_int(&obj_pred, &witness0)?;
+
+    // Bracket the integer optimum: `feasible_obj` is one end (a real feasible
+    // point), and we need a bound on the other. Prefer a STRUCTURAL bound when
+    // the objective is purely over booleans — each `x ∈ {0,1}` contributes
+    // between `min(0,coef)` and `max(0,coef)`, so the optimum lies in
+    // `[Σ min + k, Σ max + k]` for *any* number of variables. This is what lets
+    // set-cover scale to a real formulary; the Fourier–Motzkin relaxation below
+    // caps out at a handful of variables. For objectives mentioning general
+    // integers we fall back to that relaxation (small systems only).
+    let (coeffs, konst) = linear_coeffs(&obj_pred)?;
+    let bool_set: HashSet<&str> = bool_vars.iter().map(String::as_str).collect();
+    let opt_bound: i128 = if coeffs.keys().all(|v| bool_set.contains(v.as_str())) {
+        match dir {
+            OptDir::Minimize => konst + coeffs.values().map(|c| (*c).min(0)).sum::<i128>(),
+            OptDir::Maximize => konst + coeffs.values().map(|c| (*c).max(0)).sum::<i128>(),
+        }
+    } else {
+        // General-integer objective: the real relaxation (with bool `0≤x≤1`
+        // bounds injected so it isn't spuriously unbounded) gives the bound.
+        match optimize_real(&with_bool_bounds(cs), kb) {
+            OptimizeOutcome::Optimal { value, .. } => match dir {
+                OptDir::Minimize => (value - 1e-9).ceil() as i128,
+                OptDir::Maximize => (value + 1e-9).floor() as i128,
+            },
+            OptimizeOutcome::Unbounded => return Some(OptimizeOutcome::Unbounded),
+            OptimizeOutcome::Infeasible { .. } => {
+                return Some(OptimizeOutcome::Infeasible {
+                    core: minimal_unsat_core(&subbed, &syms),
+                })
+            }
+            OptimizeOutcome::Unknown { .. } => return None, // can't bound → fall back
+        }
+    };
+
+    let (k_opt, witness) = match dir {
+        // int_opt ∈ [opt_bound, feasible_obj]; smallest K with (obj ≤ K) feasible.
+        OptDir::Minimize => extremal_feasible(
+            &assertions,
+            &obj_pred,
+            true,
+            opt_bound,
+            feasible_obj,
+            &int_vars,
+            &bool_vars,
+        )?,
+        // int_opt ∈ [feasible_obj, opt_bound]; largest K with (obj ≥ K) feasible.
+        OptDir::Maximize => extremal_feasible(
+            &assertions,
+            &obj_pred,
+            false,
+            feasible_obj,
+            opt_bound,
+            &int_vars,
+            &bool_vars,
+        )?,
+    };
+
+    let assignments: Vec<(String, f64)> = syms
+        .iter()
+        .filter_map(|v| match witness.get(v) {
+            Some(Value::Int(n)) => Some((v.clone(), *n as f64)),
+            Some(Value::Bool(b)) => Some((v.clone(), if *b { 1.0 } else { 0.0 })),
+            _ => None,
+        })
+        .collect();
+    let binding = binding_constraints(cs, kb, &var_set, &assignments);
+    Some(OptimizeOutcome::Optimal {
+        value: k_opt as f64,
+        assignments,
+        binding,
+    })
+}
+
+/// Clone `cs`, adding `0 ≤ x ≤ 1` for every boolean symbol so the **real**
+/// relaxation is bounded (a `bool` is `{0,1}`, which the LP solver wouldn't
+/// otherwise enforce). General integer symbols get no synthetic bounds — their
+/// range is whatever the user constrained, and a genuinely unbounded integer
+/// objective should report `Unbounded`.
+fn with_bool_bounds(cs: &ConstraintSystem) -> ConstraintSystem {
+    let mut aug = cs.clone();
+    for (name, sort) in &cs.symbols {
+        if sort_is_integral(&sort.to_string()) == Some(true) {
+            aug.constraints.push(LoweredConstraint {
+                lhs: ComputeExpr::Ref(name.clone()),
+                op: RelOp::Ge,
+                rhs: ComputeExpr::Lit(0.0),
+            });
+            aug.constraints.push(LoweredConstraint {
+                lhs: ComputeExpr::Ref(name.clone()),
+                op: RelOp::Le,
+                rhs: ComputeExpr::Lit(1.0),
+            });
+        }
+    }
+    aug
+}
+
+/// Is `obj ⋈ bound` integer-feasible together with `assertions`? `le = true`
+/// tests `obj ≤ bound`, `le = false` tests `obj ≥ bound`. Returns the witness
+/// model when feasible.
+fn bounded_feasible(
+    assertions: &[Predicate],
+    obj: &Predicate,
+    le: bool,
+    bound: i128,
+    int_vars: &[String],
+    bool_vars: &[String],
+) -> Option<Model> {
+    let mut a = assertions.to_vec();
+    let (l, r) = (Box::new(obj.clone()), Box::new(Predicate::Int(bound)));
+    a.push(if le {
+        Predicate::Le(l, r)
+    } else {
+        Predicate::Ge(l, r)
+    });
+    match LiaTactic::solve(&a, int_vars, bool_vars) {
+        SolverResult::Sat(m) => Some(m),
+        _ => None,
+    }
+}
+
+/// Binary-search the extremal feasible objective bound in `[lo, hi]`, where the
+/// `hi` end (minimize) or `lo` end (maximize) is known feasible. For a minimize
+/// (`le = true`) it returns the **smallest** `K` with `obj ≤ K` feasible; for a
+/// maximize (`le = false`) the **largest** `K` with `obj ≥ K` feasible. Each
+/// probe is an exact LIA solve, so the returned bound and witness are exact.
+fn extremal_feasible(
+    assertions: &[Predicate],
+    obj: &Predicate,
+    le: bool,
+    lo: i128,
+    hi: i128,
+    int_vars: &[String],
+    bool_vars: &[String],
+) -> Option<(i128, Model)> {
+    // The tight end first: if the optimum is already at the bound, return it.
+    let tight = if le { lo } else { hi };
+    if let Some(m) = bounded_feasible(assertions, obj, le, tight, int_vars, bool_vars) {
+        return Some((tight, m));
+    }
+    // Otherwise bracket [lo, hi] with the slack end feasible, and bisect.
+    let mut loi = lo;
+    let mut hii = hi;
+    let mut best = bounded_feasible(
+        assertions,
+        obj,
+        le,
+        if le { hi } else { lo },
+        int_vars,
+        bool_vars,
+    )?;
+    while hii - loi > 1 {
+        let mid = loi + (hii - loi) / 2;
+        match bounded_feasible(assertions, obj, le, mid, int_vars, bool_vars) {
+            // Feasible at `mid`: a min can tighten down, a max can tighten up.
+            Some(m) => {
+                if le {
+                    hii = mid;
+                } else {
+                    loi = mid;
+                }
+                best = m;
+            }
+            None => {
+                if le {
+                    loi = mid;
+                } else {
+                    hii = mid;
+                }
+            }
+        }
+    }
+    Some((if le { hii } else { loi }, best))
+}
+
+/// Extract the linear coefficients (`var → coefficient`) and constant term of a
+/// linear-integer [`Predicate`]. Returns `None` if the predicate isn't linear.
+/// Used to bound a boolean objective structurally (each `x ∈ {0,1}` contributes
+/// between `min(0, coef)` and `max(0, coef)`), which scales to any number of
+/// variables — unlike the Fourier–Motzkin relaxation, which caps out at a handful.
+fn linear_coeffs(p: &Predicate) -> Option<(std::collections::BTreeMap<String, i128>, i128)> {
+    use std::collections::BTreeMap;
+    fn go(p: &Predicate, scale: i128, m: &mut BTreeMap<String, i128>, k: &mut i128) -> Option<()> {
+        match p {
+            Predicate::Int(n) => {
+                *k = k.checked_add(scale.checked_mul(*n)?)?;
+                Some(())
+            }
+            Predicate::Bool(b) => {
+                *k = k.checked_add(scale * (*b as i128))?;
+                Some(())
+            }
+            Predicate::Var(name) => {
+                let e = m.entry(name.clone()).or_insert(0);
+                *e = e.checked_add(scale)?;
+                Some(())
+            }
+            Predicate::Add(parts) => {
+                for q in parts {
+                    go(q, scale, m, k)?;
+                }
+                Some(())
+            }
+            Predicate::Sub(a, b) => {
+                go(a, scale, m, k)?;
+                go(b, scale.checked_neg()?, m, k)
+            }
+            Predicate::Mul { coef, term } => go(term, scale.checked_mul(*coef)?, m, k),
+            _ => None,
+        }
+    }
+    let mut m = BTreeMap::new();
+    let mut k = 0i128;
+    go(p, 1, &mut m, &mut k)?;
+    Some((m, k))
+}
+
+/// Evaluate a linear-integer [`Predicate`] (the objective) at an integer model.
+/// Variables absent from the model default to 0 (the LIA tactic's convention for
+/// an unconstrained variable). Returns `None` if the predicate isn't linear.
+fn eval_lin_int(p: &Predicate, model: &Model) -> Option<i128> {
+    match p {
+        Predicate::Int(n) => Some(*n),
+        Predicate::Bool(b) => Some(*b as i128),
+        Predicate::Var(name) => Some(match model.get(name) {
+            Some(Value::Int(n)) => *n,
+            Some(Value::Bool(b)) => *b as i128,
+            _ => 0,
+        }),
+        Predicate::Add(parts) => parts.iter().map(|q| eval_lin_int(q, model)).sum(),
+        Predicate::Sub(a, b) => Some(eval_lin_int(a, model)?.checked_sub(eval_lin_int(b, model)?)?),
+        Predicate::Mul { coef, term } => coef.checked_mul(eval_lin_int(term, model)?),
+        _ => None,
+    }
+}
+
 /// Solve the LP declared by a [`ConstraintSystem`]'s `objective` against its
 /// `constrain` half-planes, substituting observed facts first. Real-valued
 /// (QF_LRA) optimization over exact rationals via Fourier–Motzkin projection.
-pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
+fn optimize_real(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
     let Some((dir, obj_expr)) = &cs.objective else {
         return OptimizeOutcome::Unknown {
             reason: "no objective to optimize".to_string(),
@@ -2197,6 +2554,106 @@ mod tests {
         );
         let (value, _, _) = expect_optimal(&out);
         assert!((value - 5.0).abs() < 1e-9, "value {value}");
+    }
+
+    // ---- Integer optimization (set-cover) -------------------------------
+
+    /// Pull the integer-valued optimum + the selected (value ≈ 1) variables.
+    fn expect_int_optimum(out: &OptimizeOutcome) -> (i128, Vec<String>) {
+        match out {
+            OptimizeOutcome::Optimal {
+                value, assignments, ..
+            } => {
+                let selected = assignments
+                    .iter()
+                    .filter(|(_, v)| (*v - 1.0).abs() < 1e-9)
+                    .map(|(n, _)| n.clone())
+                    .collect();
+                (value.round() as i128, selected)
+            }
+            other => panic!("expected Optimal, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn min_cost_set_cover_prefers_the_cheaper_single_agent() {
+        // Cover o1,o2,o3. `broad` (cost 2) covers all; a,b,c (cost 1 each) cover
+        // one organism each. Min cost = 2 (broad), beating a+b+c = 3.
+        let out = optimize_src(
+            "symbol broad : bool\nsymbol a : bool\nsymbol b : bool\nsymbol c : bool\n\
+             constrain broad + a >= 1\nconstrain broad + b >= 1\nconstrain broad + c >= 1\n\
+             minimize 2 * broad + a + b + c",
+        );
+        let (value, selected) = expect_int_optimum(&out);
+        assert_eq!(value, 2, "min cost should be 2 (broad alone)");
+        assert_eq!(selected, vec!["broad".to_string()]);
+    }
+
+    #[test]
+    fn set_cover_integer_optimum_beats_the_fractional_relaxation() {
+        // Three drugs, each covering two of three organisms. The LP relaxation
+        // is 1.5 (every x = 0.5); the only integral cover needs TWO drugs → 2.
+        // This is the whole point of solving it as an integer program.
+        let out = optimize_src(
+            "symbol d1 : bool\nsymbol d2 : bool\nsymbol d3 : bool\n\
+             constrain d1 + d2 >= 1\nconstrain d2 + d3 >= 1\nconstrain d1 + d3 >= 1\n\
+             minimize d1 + d2 + d3",
+        );
+        let (value, selected) = expect_int_optimum(&out);
+        assert_eq!(value, 2, "integer optimum is 2, not the fractional 1.5");
+        assert_eq!(selected.len(), 2, "exactly two drugs chosen: {selected:?}");
+    }
+
+    #[test]
+    fn set_cover_scales_past_the_fourier_motzkin_variable_cap() {
+        // Eight booleans — beyond the real LP's variable cap. The structural
+        // boolean bound keeps it solvable. `big` (cost 5) covers o1..o5; the five
+        // singletons also cost 5 — a tie, so the optimum value is 5 either way.
+        let out = optimize_src(
+            "symbol big : bool\nsymbol p1 : bool\nsymbol p2 : bool\nsymbol p3 : bool\n\
+             symbol p4 : bool\nsymbol p5 : bool\nsymbol p6 : bool\nsymbol p7 : bool\n\
+             constrain big + p1 >= 1\nconstrain big + p2 >= 1\nconstrain big + p3 >= 1\n\
+             constrain big + p4 >= 1\nconstrain big + p5 >= 1\n\
+             minimize 5 * big + p1 + p2 + p3 + p4 + p5 + p6 + p7",
+        );
+        let (value, _) = expect_int_optimum(&out);
+        assert_eq!(value, 5, "min cost is 5");
+    }
+
+    #[test]
+    fn an_uncoverable_organism_makes_the_set_cover_infeasible() {
+        // o2 has no drug covering it (no constraint can be met) → Infeasible.
+        let out = optimize_src(
+            "symbol a : bool\n\
+             constrain a >= 1\nconstrain a <= 0\n\
+             minimize a",
+        );
+        assert!(
+            matches!(out, OptimizeOutcome::Infeasible { .. }),
+            "got {out:?}"
+        );
+    }
+
+    #[test]
+    fn maximize_over_booleans_picks_the_most_valuable_feasible_set() {
+        // Maximize value subject to a budget: pick 2 of 3 unit-value items under
+        // "at most 2" (a + b + c ≤ 2) → optimum 2.
+        let out = optimize_src(
+            "symbol a : bool\nsymbol b : bool\nsymbol c : bool\n\
+             constrain a + b + c <= 2\nmaximize a + b + c",
+        );
+        let (value, selected) = expect_int_optimum(&out);
+        assert_eq!(value, 2);
+        assert_eq!(selected.len(), 2, "two items chosen: {selected:?}");
+    }
+
+    #[test]
+    fn scalar_optimization_is_unchanged_by_the_integer_path() {
+        // A `: scalar` program with an integer-linear shape still takes the real
+        // LP path: min x s.t. 2x ≥ 3 → 1.5 (NOT lifted to an integer 2).
+        let out = optimize_src("symbol x : scalar\nconstrain x + x >= 3\nminimize x");
+        let (value, _, _) = expect_optimal(&out);
+        assert!((value - 1.5).abs() < 1e-9, "scalar stays real: {value}");
     }
 
     #[test]
