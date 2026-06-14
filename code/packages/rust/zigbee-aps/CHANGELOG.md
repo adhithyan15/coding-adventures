@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   identifiers, key-management classification, and command payload preservation.
 - `BindingTableSummary` for counting group/device bindings, cluster families,
   unique APS binding endpoints, source endpoint shapes, and cluster coverage.
+- `BindingTableReadinessSummary` for application-source, destination, cluster,
+  and source-endpoint hygiene checks.
 
 ## [0.1.0] - 2026-05-06
 

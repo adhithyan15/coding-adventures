@@ -17,6 +17,8 @@ boundary:
 - frame-batch summary counts for delivery modes, profile/cluster families,
   security, ack requests, and payload volume
 - binding summary counts for source endpoint shape and cluster coverage
+- binding readiness summaries for application-source, destination, cluster, and
+  source-endpoint hygiene checks
 - APS command identifiers and payload preservation for key-management commands
 - APS counters
 - payload preservation
