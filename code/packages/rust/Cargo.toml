@@ -787,4 +787,5 @@ members = [
     "fpga-place-route-bridge",
     "fpga-bitstream",
     "spreadsheet-core",
+    "spreadsheet-core-wasm",
 ]
