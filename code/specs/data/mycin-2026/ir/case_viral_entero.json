@@ -1,0 +1,59 @@
+{
+  "case_id": "case_viral_entero",
+  "findings": [
+    {
+      "functor": "csf_lymphocytic_pleocytosis",
+      "value": "high",
+      "polarity": "stated",
+      "span": "lymphocyte-predominant pleocytosis"
+    },
+    {
+      "functor": "csf_glucose",
+      "value": "normal",
+      "polarity": "stated",
+      "span": "normal glucose (60 mg/dL, ratio 0.6)"
+    },
+    {
+      "functor": "csf_protein",
+      "value": "high",
+      "polarity": "inferred",
+      "span": "mildly elevated protein"
+    },
+    {
+      "functor": "csf_gram_stain",
+      "value": "negative",
+      "polarity": "stated",
+      "span": "Gram stain negative"
+    },
+    {
+      "functor": "enteroviral_pcr",
+      "value": "positive",
+      "polarity": "stated",
+      "span": "CSF enterovirus PCR returned positive"
+    }
+  ],
+  "discard": [
+    {
+      "text": "A 24-year-old with a 3-day history of headache, photophobia, and low-grade fever.",
+      "reason": "no specific findings"
+    },
+    {
+      "text": "low-grade fever",
+      "reason": "not a specific finding (fever is present)"
+    },
+    {
+      "text": "CSF shows",
+      "reason": "too vague"
+    }
+  ],
+  "inference_justifications": [
+    {
+      "finding": "csf_protein",
+      "value": "high",
+      "polarity": "inferred",
+      "span": "mildly elevated protein",
+      "verdict": "LEAP"
+    }
+  ],
+  "_model_raw_ok": true
+}

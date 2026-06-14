@@ -112,6 +112,30 @@ optional independent N-reader refute vote (`gate/votes.json`) when present.
 - **M4** ✓ — grounded vocab + arm libraries; the spider grounds every LR.
 - **M5** ✓ — the CAS: content-address each library (Merkle hashes) + manifest;
   the write gate accepts-at-trust-tier vs flags-and-downgrades per clause.
+- **M6** ✓ — the warm path: decompose prose → typed findings → diagnosis at **0
+  answer-time model calls** (see below).
+
+## Warm path — `warm/` (decompose once, decide on the CPU)
+
+```sh
+python3 warm/dict_export.py    # lib/meningitis-vocab.adj → warm/dictionary.json (one source of truth)
+python3 warm/decompose.py      # the ONE model touchpoint: Ollama llama3.1:8b, prose → ir/<id>.json
+python3 warm/run_warm.py       # DETERMINISTIC: ir_to_adj → decide (imports the CAS rulebook); scores
+python3 warm/test_warm.py      # CI: the committed IRs re-decide at 0 answer-time model calls
+```
+
+The model runs **once per case** (`decompose.py`), constrained to the dictionary,
+and writes *only* typed findings (`ir/<id>.json`) — it never names a diagnosis.
+Everything after is CPU: `ir_to_adj.py` turns the IR into `observe` lines
+(dropping denied findings, adversarial-LEAP inferences, and — the closed-vocab
+gate — any hallucinated functor/value, all recorded), and `decide.py` links the
+case to the content-addressed rulebook by `import "objects/<root>.adj"` and runs
+`adj-lang-cli` for the differential + proof DAG.
+
+Result on the 4 vignettes: **4/4 correct, answer-time model calls = 0**. The
+bacterial case dropped 2 small-model hallucinations at the vocabulary gate —
+they never reached the engine. Re-running `run_warm.py` reproduces every
+diagnosis with no model in the loop (the golden-rulebook property, proved in M8).
 - **M6** — warm pipeline: decompose prose → typed findings (dictionary-constrained,
   decompose-only) → `import`-linked case → differential at 0 answer-time calls.
 - **M7** — rulebook self-consistency (`check`/IIS) + value-of-information

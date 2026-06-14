@@ -1,0 +1,56 @@
+{
+  "case_id": "case_viral_chemistry",
+  "findings": [
+    {
+      "functor": "csf_lymphocytic_pleocytosis",
+      "value": "high",
+      "polarity": "stated",
+      "span": "CSF white cells are mildly elevated with lymphocyte predominance"
+    },
+    {
+      "functor": "csf_glucose",
+      "value": "normal",
+      "polarity": "stated",
+      "span": "CSF glucose is normal"
+    },
+    {
+      "functor": "csf_lactate",
+      "value": "normal",
+      "polarity": "stated",
+      "span": "CSF lactate is normal"
+    },
+    {
+      "functor": "csf_gram_stain",
+      "value": "negative",
+      "polarity": "inferred",
+      "span": "No organisms on Gram stain.",
+      "inference_justification": {
+        "verdict": "ENTAILED"
+      }
+    },
+    {
+      "functor": "enteroviral_pcr",
+      "value": "negative",
+      "polarity": "stated",
+      "span": "Enterovirus PCR not yet resulted."
+    }
+  ],
+  "discard": [
+    {
+      "text": "A college student with headache and neck discomfort.",
+      "reason": "no specific finding"
+    },
+    {
+      "text": "CSF white cells are mildly elevated with lymphocyte predominance.",
+      "reason": "already mapped"
+    }
+  ],
+  "inference_justifications": [
+    {
+      "functor": "csf_gram_stain",
+      "value": "negative",
+      "verdict": "ENTAILED"
+    }
+  ],
+  "_model_raw_ok": true
+}

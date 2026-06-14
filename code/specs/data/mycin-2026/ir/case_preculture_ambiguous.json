@@ -1,0 +1,49 @@
+{
+  "case_id": "case_preculture_ambiguous",
+  "findings": [
+    {
+      "functor": "csf_neutrophilic_pleocytosis",
+      "value": "high",
+      "polarity": "stated",
+      "span": "neutrophil-predominant pleocytosis"
+    },
+    {
+      "functor": "csf_glucose",
+      "value": "low",
+      "polarity": "stated",
+      "span": "low CSF glucose"
+    },
+    {
+      "functor": "csf_protein",
+      "value": "high",
+      "polarity": "stated",
+      "span": "elevated CSF protein"
+    },
+    {
+      "functor": "fever",
+      "value": "present",
+      "polarity": "stated",
+      "span": "fever and headache"
+    }
+  ],
+  "discard": [
+    {
+      "text": "Gram stain is pending",
+      "reason": "no value specified"
+    },
+    {
+      "text": "Procalcitonin not sent",
+      "reason": "no result mentioned"
+    }
+  ],
+  "inference_justifications": [
+    {
+      "functor": "csf_culture",
+      "value": "negative",
+      "polarity": "inferred",
+      "span": "Gram stain is pending and no culture result is available yet",
+      "verdict": "ENTAILED"
+    }
+  ],
+  "_model_raw_ok": true
+}
