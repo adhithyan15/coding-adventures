@@ -134,15 +134,24 @@ enum BlockKind {
 /// Returns the comment-stripped, whitespace-collapsed equivalent.
 /// `version` selects the JS spec the tokenizer should use.
 ///
-/// # Correlation-vector tracing (CLOC12.132)
+/// # Correlation-vector tracing (CLOC12.132 / CLOC12.133)
 ///
 /// When `cv` is `Some((log, file_cv_id, token_cv_ids))`, this
-/// function tombstones every non-trivia token that the gap pre-passes
-/// remove from the token stream. Trivia (comments, whitespace) and
-/// EOF tombstones are handled upstream in `run.rs` via the
-/// `whitespace_only_dropped` path; this function only handles the
-/// *semantic* tokens that gap rules drop (e.g. gap-050 empty-paren
-/// drop, gap-054 redundant-grouping-paren drop).
+/// function tombstones every non-trivia token that is removed from
+/// the token stream by either the gap pre-passes OR the emit loop:
+///
+/// - **Pre-pass drops (CLOC12.132):** tokens not present in `kept`
+///   after all pre-passes settle. These are tombstoned with
+///   `reason = "gap_drop"`.
+/// - **Emit-loop skips (CLOC12.133):** tokens in `kept` that the emit
+///   loop decides to suppress (gap-050 empty-paren elision, gap-030
+///   rule-A `;` before `}`, gap-045 arrow-paren elision, gap-046
+///   trailing-comma, gap-031 `{}` → `;` substitution, gap-032
+///   flatten-brace skips). Tombstoned with `reason = "emit_skip"` and
+///   `meta.gap` identifying the specific rule.
+///
+/// Trivia (comments, whitespace) and EOF tombstones are handled
+/// upstream in `run.rs` via the `whitespace_only_dropped` path.
 ///
 /// `token_cv_ids` must be parallel to the full token array returned
 /// by `tokenize_javascript_typed(source, version)` — same order,
@@ -154,7 +163,7 @@ enum BlockKind {
 pub fn whitespace_only_minify(
     source: &str,
     version: EsVersion,
-    cv: Option<(
+    mut cv: Option<(
         &mut coding_adventures_correlation_vector::CVLog,
         &str,
         &[String],
@@ -2925,30 +2934,49 @@ pub fn whitespace_only_minify(
 
     let kept = kept;
 
-    // CLOC12.132 — correlation-vector tombstones for gap-rule drops.
+    // CLOC12.132 / CLOC12.133 — correlation-vector tombstones.
     //
-    // After all pre-passes have settled, compare the set of pointers
-    // still in `kept` against the full token array. Any non-trivia,
-    // non-EOF token that is no longer reachable was dropped by one
-    // of the gap rules above. Issue a DeletionRecord on its CV entry
-    // so the sidecar shows precisely which bytes the pass killed and
-    // what rule killed them.
+    // Two sweep phases:
+    //   1. Pre-pass tombstones (CLOC12.132): any non-trivia, non-EOF
+    //      token absent from `kept` was dropped by a gap pre-pass.
+    //   2. Emit-loop tombstones (CLOC12.133): tokens in `kept` that
+    //      the emit loop suppresses (gap-050 empty-paren elision,
+    //      gap-030 rule-A `;`, gap-045 arrow-paren elision, etc.).
     //
-    // Trivia/EOF tombstones are handled upstream in `run.rs` (the
-    // `whitespace_only_dropped` path); this block covers the semantic
-    // tokens removed by gap pre-passes.
+    // We build a ptr→cv_id lookup shared by both phases so each
+    // skip site in the emit loop can resolve a `&Token` pointer to its
+    // CV ID in O(1).
     //
-    // Implementation note: we compare raw pointer addresses to check
-    // membership. Synthetic tokens (synth_open, synth_close, etc.)
-    // are allocated as local variables distinct from the `tokens` Vec;
-    // their addresses never appear in the `tokens` iteration below, so
-    // they're naturally excluded. Safe Rust guarantees that the
-    // addresses of slice elements do not alias with unrelated locals.
-    if let Some((cv_log, _file_cv_id, token_cv_ids)) = cv {
+    // Synthetic tokens (synth_open, synth_close, etc.) are stack-
+    // allocated distinct from the `tokens` Vec slice; their addresses
+    // never appear in the map, so they're naturally excluded. Safe
+    // Rust guarantees slice-element addresses do not alias locals.
+    use std::collections::HashMap as CvMap;
+    let ptr_to_cv_id: CvMap<*const lexer::token::Token, String> =
+        match &cv {
+            Some((_, _, token_cv_ids)) => tokens
+                .iter()
+                .enumerate()
+                .filter_map(|(i, t)| {
+                    if is_trivia(t) || is_eof(t) {
+                        return None;
+                    }
+                    token_cv_ids
+                        .get(i)
+                        .map(|id| (t as *const lexer::token::Token, id.clone()))
+                })
+                .collect(),
+            None => CvMap::new(),
+        };
+
+    // Phase 1 — pre-pass tombstones (gap_drop).
+    // Use `cv.as_mut()` (borrow, not move) so `cv` is still usable
+    // in the emit-loop phase below.
+    if let Some((cv_log, _file_cv_id, _token_cv_ids)) = cv.as_mut() {
         use std::collections::HashSet;
         let kept_ptrs: HashSet<*const lexer::token::Token> =
             kept.iter().map(|t| *t as *const _).collect();
-        for (orig_idx, orig_tok) in tokens.iter().enumerate() {
+        for orig_tok in tokens.iter() {
             if is_trivia(orig_tok) || is_eof(orig_tok) {
                 continue;
             }
@@ -2956,14 +2984,10 @@ pub fn whitespace_only_minify(
             if kept_ptrs.contains(&ptr) {
                 continue;
             }
-            let Some(cv_id) = token_cv_ids.get(orig_idx) else {
+            let Some(cv_id) = ptr_to_cv_id.get(&ptr) else {
                 continue;
             };
             let mut meta = std::collections::HashMap::new();
-            meta.insert(
-                "token_index".to_string(),
-                serde_json::Value::Number((orig_idx as u64).into()),
-            );
             meta.insert(
                 "lexeme".to_string(),
                 serde_json::Value::String(orig_tok.value.clone()),
@@ -2971,6 +2995,43 @@ pub fn whitespace_only_minify(
             cv_log.delete(cv_id, "whitespace_only", "gap_drop", meta);
         }
     }
+
+    // Phase 2 helper — emit-loop tombstone (emit_skip).
+    //
+    // Called at every skip site in the emit loop below. Resolves the
+    // token's pointer through `ptr_to_cv_id` and records a
+    // DeletionRecord with `reason = "emit_skip"` and `meta.gap`
+    // identifying the rule. No-op when `cv` is None or the token has
+    // no CV entry (synthetic tokens, tokens outside the ID slice).
+    let mut emit_cv: Option<&mut coding_adventures_correlation_vector::CVLog> =
+        cv.as_mut().map(|(log, _, _)| &mut **log);
+
+    // `tombstone_emit_skip` is a local closure that captures
+    // `emit_cv` and `ptr_to_cv_id` by mutable + shared reference.
+    // Re-borrowing `emit_cv` each call satisfies the borrow checker:
+    // the temporary `&mut` lasts only for the duration of one call.
+    let tombstone_emit_skip =
+        |cv_ref: &mut Option<&mut coding_adventures_correlation_vector::CVLog>,
+         tok: &lexer::token::Token,
+         gap: &str| {
+            let ptr = tok as *const lexer::token::Token;
+            let Some(cv_id) = ptr_to_cv_id.get(&ptr) else {
+                return;
+            };
+            let Some(log) = cv_ref else {
+                return;
+            };
+            let mut meta = std::collections::HashMap::new();
+            meta.insert(
+                "lexeme".to_string(),
+                serde_json::Value::String(tok.value.clone()),
+            );
+            meta.insert(
+                "gap".to_string(),
+                serde_json::Value::String(gap.to_string()),
+            );
+            log.delete(cv_id, "whitespace_only", "emit_skip", meta);
+        };
 
     // Re-stitch: insert a single space between two adjacent
     // word-like tokens; otherwise concatenate directly. String
@@ -3156,6 +3217,9 @@ pub fn whitespace_only_minify(
             // body_position_next purposes anyway (parens
             // around an empty arg list don't open a body
             // slot).
+            // CLOC12.133 — tombstone the two elided tokens.
+            tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-050");
+            tombstone_emit_skip(&mut emit_cv, kept[idx + 1], "gap-050");
             idx += 2;
             continue;
         }
@@ -3196,6 +3260,11 @@ pub fn whitespace_only_minify(
             // word-like(NAME, NAME) → space. WRONG. So set
             // prev_emitted_tok to the `=>` token instead.
             prev_emitted_tok = Some(kept[idx + 3]);
+            // CLOC12.133 — tombstone the two elided parens
+            // (idx = `(`, idx+2 = `)`; idx+1 = IDENT and
+            // idx+3 = `=>` were both emitted, so no tombstone).
+            tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-045");
+            tombstone_emit_skip(&mut emit_cv, kept[idx + 2], "gap-045");
             idx += 4;
             continue;
         }
@@ -3204,6 +3273,8 @@ pub fn whitespace_only_minify(
         // synthetic `;` from rule B.
         if val == ";" && last_emit_was_synthetic_semi {
             last_emit_was_synthetic_semi = false;
+            // CLOC12.133 — tombstone the redundant source `;`.
+            tombstone_emit_skip(&mut emit_cv, tok, "gap-030-rule-c");
             idx += 1;
             continue;
         }
@@ -3252,6 +3323,8 @@ pub fn whitespace_only_minify(
             && !is_structural_punct(kept[idx - 1], ",")
             && !is_structural_punct(kept[idx - 1], "[")
         {
+            // CLOC12.133 — tombstone the trailing comma.
+            tombstone_emit_skip(&mut emit_cv, tok, "gap-046");
             idx += 1;
             continue;
         }
@@ -3281,6 +3354,8 @@ pub fn whitespace_only_minify(
         if val == ","
             && kept.get(idx + 1).map(|t| t.value.as_str()) == Some("}")
         {
+            // CLOC12.133 — tombstone the trailing comma.
+            tombstone_emit_skip(&mut emit_cv, tok, "gap-046b");
             idx += 1;
             continue;
         }
@@ -3407,6 +3482,8 @@ pub fn whitespace_only_minify(
                     } else {
                         close_idx
                     };
+                    // CLOC12.133 — tombstone the opening `{`.
+                    tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-032");
                     for content_idx in (idx + 1)..emit_end {
                         let t = kept[content_idx];
                         if let Some(prev) = prev_emitted_tok {
@@ -3423,6 +3500,16 @@ pub fn whitespace_only_minify(
                         }
                         prev_emitted_tok = Some(t);
                     }
+                    // CLOC12.133 — tombstone the dropped trailing `;`
+                    // (when next-after is `}`) and the closing `}`.
+                    if drop_trailing_semi {
+                        tombstone_emit_skip(
+                            &mut emit_cv,
+                            kept[close_idx - 1],
+                            "gap-032",
+                        );
+                    }
+                    tombstone_emit_skip(&mut emit_cv, kept[close_idx], "gap-032");
                     // The body slot is now filled.
                     body_position_next = false;
                     at_stmt_boundary = true;
@@ -3444,6 +3531,8 @@ pub fn whitespace_only_minify(
                     // boundary after dropping it (the
                     // upcoming `}` terminates the enclosing
                     // statement just as a `;` would).
+                    // CLOC12.133 — tombstone the dropped `;`.
+                    tombstone_emit_skip(&mut emit_cv, tok, "gap-030-rule-a");
                     at_stmt_boundary = true;
                     idx += 1;
                     continue;
@@ -3492,6 +3581,10 @@ pub fn whitespace_only_minify(
                     // our substituted `;` (typically `)`),
                     // which is not word-like so no separator
                     // is needed.
+                    // CLOC12.133 — tombstone the `{` and `}`
+                    // replaced by the synthetic `;`.
+                    tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-031");
+                    tombstone_emit_skip(&mut emit_cv, kept[idx + 1], "gap-031");
                     idx += 2; // Skip `{` and `}`.
                     continue;
                 }

@@ -925,5 +925,29 @@ historical context with status `RESOLVED` and a link to the fix PR.
     `&[String]` (per-token CV ID slice); callers passing `Some(...)` now
     include `token_cv_ids` (hoisted in `run_compiler` from the lex block).
   - Two new tests in `run.rs` pin the contract.
-- **Scope:** covers pre-pass drops only. Emit-loop drops (e.g. gap-050
-  `new Foo()` → `new Foo`) are not yet tombstoned — tracked as follow-up.
+- **Scope:** covers pre-pass drops only. Emit-loop drops are covered in
+  CLOC12.133 (v0.133.0).
+
+## CLOC12.133 — correlation-vector emit-loop skip tombstones in `whitespace_only_minify`
+
+- **Status:** RESOLVED in CLOC12.133 (v0.133.0).
+- **What it was missing:** CLOC12.132 tombstoned tokens dropped by gap
+  *pre-passes* but not tokens in `kept` that the emit loop suppresses.
+  Seven skip sites in the emit loop had no CV record.
+- **Resolution:**
+  - `whitespace_only_minify` parameter changed from `cv` to `mut cv` to
+    allow reborrowing.
+  - A `ptr_to_cv_id: HashMap<*const Token, String>` is built once before
+    the emit loop (O(n) setup, O(1) lookup per site).
+  - The pre-pass sweep (CLOC12.132) now uses `cv.as_mut()` (borrow, not
+    consume) so `cv` is available in the emit loop phase.
+  - A `tombstone_emit_skip` closure is defined with access to both
+    `emit_cv: Option<&mut CVLog>` and `ptr_to_cv_id`.
+  - **Seven emit-loop sites tombstoned:** gap-050 (empty `new X()` parens),
+    gap-030-rule-a (`;` before `}`), gap-030-rule-c (dedup `;` after
+    synthetic `;`), gap-046 (trailing array `,`), gap-046b (trailing object
+    `,`), gap-032 (`{`/`}` in flatten path), gap-031 (`{}`→`;`
+    substitution).
+  - All tombstones: `source="whitespace_only"`, `reason="emit_skip"`,
+    `meta.gap=<rule>`, `meta.lexeme=<original value>`.
+  - Two new integration tests in `run.rs` pin gap-050 and gap-030-rule-a.
