@@ -68,9 +68,25 @@ echo "Compiling Grid (XAML)..."
   --package-search-path "$REPO_ROOT/code/packages" \
   -o "$OUT_DIR/Grid"
 
-echo "Done. Generated:"
+echo "Building the spreadsheet engine (Rust → dynamic lib) and vendoring it..."
+# The C ABI dynamic library the .NET host P/Invokes (see Engine.cs), built from
+# the spreadsheet-capi crate (cdylib) and copied into native/ (git-ignored). On
+# Windows the WinUI app needs spreadsheet_capi.dll; on this macOS/Linux checkout
+# we vendor the host slice so the cross-platform console test (test/) can run.
+RUST="$REPO_ROOT/code/packages/rust"
+(cd "$RUST" && cargo build -p spreadsheet-capi --release)
+mkdir -p "$DEMO_DIR/native"
+case "$(uname -s)" in
+  Darwin) LIB="libspreadsheet_capi.dylib" ;;
+  *)      LIB="libspreadsheet_capi.so" ;;
+esac
+cp "$RUST/target/release/$LIB" "$DEMO_DIR/native/$LIB"
+
+echo "Done. Generated controls + vendored engine:"
 ls -la "$OUT_DIR"
+ls -la "$DEMO_DIR/native"
 echo
-echo "To run the demo (Windows + .NET 9 + WindowsAppRuntime 1.7):"
-echo "  cd $DEMO_DIR"
-echo "  dotnet build && dotnet run"
+echo "Verify the engine path (cross-platform, runs on macOS/Linux/Windows):"
+echo "  cd $DEMO_DIR && bash scripts/verify.sh"
+echo "Run the WinUI app (Windows + .NET 9 + WindowsAppRuntime 1.7 only):"
+echo "  cd $DEMO_DIR && dotnet build && dotnet run"

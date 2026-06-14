@@ -23,14 +23,13 @@ namespace Mosaic.Generated;
 public partial class MainWindow : Window
 {
     // 5x5 sample spreadsheet — same data as the other VC2-* demos.
-    private static readonly string[][] SampleRows = new[]
-    {
-        new[] { "15", "3",  "12", "8",  "5"  },
-        new[] { "8",  "14", "7",  "22", "11" },
-        new[] { "12", "9",  "18", "6",  "25" },
-        new[] { "4",  "11", "3",  "17", "9"  },
-        new[] { "7",  "5",  "13", "10", "19" },
-    };
+    // The 5x5 spreadsheet is computed by the shared Rust engine, reached through
+    // the C ABI via P/Invoke (see Engine.cs). The model seeds the same
+    // cross-footing budget every other VC2-* demo shows (column E totals each
+    // row, row 5 totals each column, E5 = 169) and recomputes on edit. Column
+    // indices here are 0-based data columns (0 = A), so calls into the model —
+    // whose columns are 1-based (1 = A) — add one.
+    private readonly SpreadsheetModel _model = new();
 
     // Column headers: a blank gutter ("") + the five data columns.
     private static readonly string[] Headers = { "", "A", "B", "C", "D", "E" };
@@ -42,7 +41,7 @@ public partial class MainWindow : Window
 
     private int _selectedRow;
     private int _selectedCol;
-    private string _formula = "=SUM(B1:B5)";
+    private string _formula = string.Empty;
 
     // Edit state mirrors the Grid.mil contract: editRow == -1 means
     // "not editing". The live edit buffer is _editContent.
@@ -55,6 +54,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        // Show the selected cell's source (A1 → "15") in the bar on launch.
+        _formula = _model.RawAt(_selectedRow, _selectedCol + 1);
         WireFormulaBar();
         WireGrid();
     }
@@ -80,7 +81,7 @@ public partial class MainWindow : Window
                 // no-op for v1
                 break;
             case FormulaBarEvent.Cancel:
-                _formula = SampleRows[_selectedRow][_selectedCol];
+                _formula = _model.RawAt(_selectedRow, _selectedCol + 1);
                 FormulaBarControl.Formula = _formula;
                 break;
         }
@@ -111,19 +112,10 @@ public partial class MainWindow : Window
         SheetGrid.ViewportRows = BuildViewportRows();
     }
 
-    // Build the viewport rows: prefix each data row with its label.
-    //   row 0 -> [ "1", "15", "3", "12", "8", "5" ]
-    private static IReadOnlyList<IReadOnlyList<string>> BuildViewportRows()
-    {
-        var rows = new List<IReadOnlyList<string>>(SampleRows.Length);
-        for (int r = 0; r < SampleRows.Length; r++)
-        {
-            var row = new List<string> { (r + 1).ToString() };
-            row.AddRange(SampleRows[r]);
-            rows.Add(row);
-        }
-        return rows;
-    }
+    // The viewport rows come straight from the engine: each row is
+    //   [ rowLabel, A, B, C, D, E ]   e.g. row 0 -> [ "1", "15", "3", "12", "8", "38" ]
+    // with column E and row 5 being engine-computed formula totals.
+    private IReadOnlyList<IReadOnlyList<string>> BuildViewportRows() => _model.ViewportRows();
 
     // ───────────────────────────────────────────────────────────────
     // WINDOWS-DEV TODO — per-cell VM projection (Group C population).
@@ -190,7 +182,9 @@ public partial class MainWindow : Window
                 // leave edit mode.
                 if (_editRow >= 0 && _editCol >= 0)
                 {
-                    SampleRows[_editRow][_editCol] = _editContent;
+                    // Write the edit through to the engine; EndEdit re-feeds the
+                    // recomputed viewport so every dependent total updates.
+                    _model.SetCell(_editRow, _editCol + 1, _editContent);
                 }
                 EndEdit();
                 break;
@@ -206,10 +200,9 @@ public partial class MainWindow : Window
     {
         _selectedRow = r;
         _selectedCol = c;
-        // The data cell at (r, c) is SampleRows[r][c]; the Grid's first
-        // column is the row-label gutter, so column 0 of the viewport
-        // is the label and data columns are 1..5.
-        _formula = SampleRows[r][c];
+        // Pull the newly-selected cell's source from the engine. `c` is a
+        // 0-based data column (0 = A); the model's columns are 1-based.
+        _formula = _model.RawAt(r, c + 1);
 
         SheetGrid.SelectedRow = r;
         SheetGrid.SelectedCol = c;

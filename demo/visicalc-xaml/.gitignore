@@ -15,3 +15,7 @@ Generated/Grid_HVm.cs
 Generated/Grid_RowVm.cs
 Generated/Grid_VVm.cs
 Generated/BoolToVisibilityConverter.cs
+
+# Vendored engine — the C ABI dynamic library the .NET host P/Invokes, built
+# by scripts/build.sh from the spreadsheet-capi crate (cdylib). A build artifact.
+native/
