@@ -73,6 +73,25 @@ describe("formatNib()", () => {
     );
   });
 
+  it("formats multiplicative (mul_expr) operators canonically", () => {
+    // Regression for the precedence cascade add_expr → mul_expr →
+    // bitwise_expr → unary_expr: the printer must recognise `mul_expr`
+    // as an infix-expression rule. Before this was wired, `a * b` parsed
+    // to an add_expr whose only operand was a mul_expr node, and the
+    // printer threw "Malformed add_expr: expected at least one operand".
+    expect(formatNib("fn main(){return a*b;}")).toBe(
+      "fn main() {\n  return a * b;\n}",
+    );
+  });
+
+  it("respects mul-over-add precedence when printing a mixed chain", () => {
+    // `a + b * c` — the `b * c` mul_expr nests inside the add_expr without
+    // needing parentheses, exactly as the precedence cascade implies.
+    expect(formatNib("fn main(){return a+b*c;}")).toBe(
+      "fn main() {\n  return a + b * c;\n}",
+    );
+  });
+
   it("uses the shared infix-chain printer for longer operator chains", () => {
     expect(formatNib("fn main(){return a+b+c;}")).toBe(
       "fn main() {\n  return a +\n    b +\n    c;\n}",

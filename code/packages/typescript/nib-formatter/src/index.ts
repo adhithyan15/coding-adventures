@@ -49,6 +49,7 @@ const EXPRESSION_RULES = new Set([
   "eq_expr",
   "cmp_expr",
   "add_expr",
+  "mul_expr",
   "bitwise_expr",
   "unary_expr",
   "primary",
@@ -520,6 +521,7 @@ function printExpression(node: ASTNode): Doc {
     case "eq_expr":
     case "cmp_expr":
     case "add_expr":
+    case "mul_expr":
     case "bitwise_expr":
       return printInfixExpression(node);
     case "unary_expr":
