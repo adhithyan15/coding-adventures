@@ -92,7 +92,9 @@ Ordered so the quick, frontend-local wins (lower to **existing** IIR ops, run on
 backend immediately) come before the enabler-dependent items.
 
 ### Nib  (closest to done — start here)
-- ☐ **N1** — `*` and `/` (`STAR`→`mul`, `SLASH`→`div`). Lowers to existing IIR. *(first item)*
+- ✅ **N1** — `*` and `/` (`STAR`→`mul`, `SLASH`→`div`). New `mul_expr` grammar level
+  (binds tighter than additive); lowers to existing IIR `mul`/`div`; verified by RUNNING
+  `6 * 7`→42 and `84 / 2`→42 across native/LLVM/WASM/JVM/CLR/VM/JIT.
 - ☐ **N2** — `for` loop (desugar to the existing `while` lowering).
 - ☐ **N3** — bitwise `&` `|` `^` (existing IIR `and`/`or`/`xor`) + proper unary `~` (needs E2 for the width mask).
 - ☐ **N4** — `&&` / `||` short-circuit (desugar to branches).

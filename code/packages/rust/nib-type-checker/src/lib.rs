@@ -169,7 +169,7 @@ impl Checker {
             | "unary_expr" => child_nodes(node)
                 .first()
                 .and_then(|child| self.infer_expr(child, env)),
-            "add_expr" => {
+            "add_expr" | "mul_expr" => {
                 let operands = child_nodes(node);
                 let left = operands
                     .first()

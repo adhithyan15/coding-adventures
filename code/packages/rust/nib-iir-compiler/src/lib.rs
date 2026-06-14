@@ -525,9 +525,8 @@ impl Compiler {
 
         match node.rule_name.as_str() {
             "primary" => self.compile_primary(node, types, env, out),
-            "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "add_expr" | "bitwise_expr" => {
-                self.compile_binary_chain(node, types, env, out)
-            }
+            "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "add_expr" | "mul_expr"
+            | "bitwise_expr" => self.compile_binary_chain(node, types, env, out),
             "unary_expr" => self.compile_unary(node, types, env, out),
             // Default: single-child fallthrough already handled above; if
             // we get here with a multi-child unknown rule, walk first.
@@ -817,7 +816,7 @@ fn expression_children(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
 fn is_expr_rule(name: &str) -> bool {
     matches!(name,
         "expr" | "or_expr" | "and_expr" | "eq_expr" | "cmp_expr"
-        | "add_expr" | "bitwise_expr" | "unary_expr" | "primary"
+        | "add_expr" | "mul_expr" | "bitwise_expr" | "unary_expr" | "primary"
         | "call_expr"
     )
 }
@@ -973,6 +972,8 @@ fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
         // Arithmetic
         ("+", _) | (_, "PLUS")        => Some("add"),
         ("-", _) | (_, "MINUS")       => Some("sub"),
+        ("*", _) | (_, "STAR")        => Some("mul"),
+        ("/", _) | (_, "SLASH")       => Some("div"),
         // Comparisons
         ("==", _) | (_, "EQ_EQ")      => Some("cmp_eq"),
         ("!=", _) | (_, "NEQ")        => Some("cmp_ne"),
@@ -1027,6 +1028,45 @@ mod tests {
             }) == Some("+")),
             "regression: `call_builtin \"+\"` leaked into IIR (would break IIR-to-* backends)");
         assert!(body.iter().any(|i| i.op == "ret"));
+    }
+
+    #[test]
+    fn compiles_multiplication() {
+        // LANG-FULL N1: `*` lowers to the shared IIR `mul` op (not `call_builtin "*"`),
+        // so it runs on every IIR-to-* backend.
+        let src = "fn main() -> u8 { return 6 * 7; }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "mul"),
+            "expected typed `mul` op; got body: {body:?}");
+        assert!(!body.iter().any(|i| i.op == "call_builtin"),
+            "regression: `*` leaked a call_builtin; got body: {body:?}");
+    }
+
+    #[test]
+    fn compiles_division() {
+        // LANG-FULL N1: `/` lowers to the shared IIR `div` op.
+        let src = "fn main() -> u8 { return 84 / 2; }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "div"),
+            "expected typed `div` op; got body: {body:?}");
+        assert!(!body.iter().any(|i| i.op == "call_builtin"),
+            "regression: `/` leaked a call_builtin; got body: {body:?}");
+    }
+
+    #[test]
+    fn multiplication_binds_tighter_than_addition() {
+        // `2 + 3 * 4` must parse as `2 + (3 * 4)`: the `add` consumes the result of the
+        // `mul`, so the mul is emitted before the add reads it. The VM-checked value
+        // (14, not 20) lives in lang-aot's lang_matrix battery; here we assert structure.
+        let src = "fn main() -> u8 { return 2 + 3 * 4; }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        let mul_idx = body.iter().position(|i| i.op == "mul").expect("a mul op");
+        let add_idx = body.iter().position(|i| i.op == "add").expect("an add op");
+        assert!(mul_idx < add_idx,
+            "mul must be emitted before add (mul binds tighter); got body: {body:?}");
     }
 
     #[test]

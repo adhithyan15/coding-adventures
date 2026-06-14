@@ -138,6 +138,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — multiplication (LANG-FULL N1). `*` lowers to the shared IIR `mul`; the
+    // multiplicative level binds tighter than additive (so `2 + 3 * 4` is `2 + (3*4)`).
+    // Executed on every backend — the anti-smoke-test guardrail: proven by RUNNING, not
+    // validating/encoding. `6 * 7` exits 42.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 6 * 7; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — division (LANG-FULL N1). `/` lowers to the shared IIR `div`. `84 / 2` exits 42.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 84 / 2; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,
