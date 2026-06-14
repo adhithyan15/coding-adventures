@@ -698,6 +698,51 @@ mod tests {
             "`+` over a dynamic source must fall back to call_builtin");
     }
 
+    // ---- TW1: typed variadic arithmetic fold ----
+
+    #[test]
+    fn variadic_add_folds_to_typed_chain() {
+        // `(+ 1 2 3 4)` (four i64 literals) folds to three typed `add`s and no
+        // `call_builtin "+"` — the n-ary call clears the backend validators.
+        let i = main_instrs("(+ 1 2 3 4)");
+        let adds = i.iter().filter(|x| x.op == "add").count();
+        assert_eq!(adds, 3, "(+ a b c d) folds to 3 typed adds");
+        assert!(i.iter().all(|x| x.op != "call_builtin"
+            || x.srcs.first() != Some(&Operand::Var("+".into()))),
+            "variadic typed `+` must not emit call_builtin");
+        assert!(i.iter().filter(|x| x.op == "add").all(|x| x.type_hint == "i64"));
+    }
+
+    #[test]
+    fn variadic_mul_and_sub_fold() {
+        assert_eq!(main_instrs("(* 2 3 7)").iter().filter(|x| x.op == "mul").count(), 2);
+        // `(- 100 30 28)` left-associates to `(100 - 30) - 28` → two typed subs.
+        assert_eq!(main_instrs("(- 100 30 28)").iter().filter(|x| x.op == "sub").count(), 2);
+    }
+
+    #[test]
+    fn variadic_comparison_stays_dynamic() {
+        // A chained comparison `(< 1 2 3)` is a predicate (`1<2 ∧ 2<3`), not a
+        // fold, so it must NOT be lowered to a typed `cmp_*` chain — it stays on
+        // the dynamic `call_builtin "<"` path.
+        let i = main_instrs("(< 1 2 3)");
+        assert!(i.iter().any(|x| x.op == "call_builtin"
+            && x.srcs.first() == Some(&Operand::Var("<".into()))),
+            "variadic comparison must stay on the dynamic path");
+        assert!(!i.iter().any(|x| x.op.starts_with("cmp_")),
+            "variadic comparison must not fold to typed cmp");
+    }
+
+    #[test]
+    fn variadic_arith_with_dynamic_arg_falls_back() {
+        // If any argument is dynamically typed, the whole variadic call falls
+        // back to `call_builtin "+"` (no typed fold).
+        let i = main_instrs("(+ (car (cons 1 2)) 3 4)");
+        assert!(i.iter().any(|x| x.op == "call_builtin"
+            && x.srcs.first() == Some(&Operand::Var("+".into()))),
+            "a dynamic arg forces the dynamic `+` path");
+    }
+
     #[test]
     fn builtins_recognised() {
         // Path-A increment 2 narrowed the set that lowers to

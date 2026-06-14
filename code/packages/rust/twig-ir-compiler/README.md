@@ -29,10 +29,20 @@ The compiler decides at compile time:
 | Function position           | Emitted IIR                                 |
 |-----------------------------|---------------------------------------------|
 | Top-level user fn           | `call <name>, ...args`                      |
-| Builtin (`+`, `cons`, …)    | `call_builtin <name>, ...args`              |
+| Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
+| Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
 | Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
 
 Top-level recursion stays on the fast `call` path; only locals holding closures pay the indirect cost.
+
+### Typed arithmetic fold
+
+Scheme arithmetic is variadic. When every argument is statically `i64`, an
+arithmetic call folds to a **left-associated chain of typed binary CIR ops** —
+`(+ 10 20 12)` becomes `r1 = add 10, 20; r2 = add r1, 12` — which the
+IIR-to-{llvm,wasm,jvm,clr} backends accept directly. A call with any
+dynamically-typed argument, or a chained comparison like `(< a b c)` (a
+predicate, not a fold), stays on the dynamic `call_builtin` path.
 
 ## Builtins
 

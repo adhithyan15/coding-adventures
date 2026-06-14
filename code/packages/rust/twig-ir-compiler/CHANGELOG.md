@@ -1,5 +1,33 @@
 # Changelog — twig-ir-compiler
 
+## [0.23.0] — 2026-06-14 (Path A increment 3 — typed variadic arithmetic, LANG-FULL TW1)
+
+### Added — n-ary `(+ a b c …)` folds to a typed binary chain
+
+Scheme arithmetic is variadic, but only the binary form `(+ a b)` lowered to a
+typed CIR `add`; a three-or-more-argument call (`(+ 10 20 12)`) fell back to the
+legacy `call_builtin "+"` path with `type_hint = "any"`, which every
+IIR-to-{llvm,wasm,jvm,clr} backend validator rejects — so variadic Twig
+arithmetic ran only on the dynamic VM path.
+
+This increment folds an all-`i64` arithmetic call (`+`, `-`, `*`, `/`) into a
+**left-associated chain of typed binary mnemonics**:
+
+```text
+(+ 10 20 12)   →   r1 = add 10, 20  [i64]
+                   r2 = add r1, 12  [i64]      ⇒ result r2
+```
+
+so the call now clears every backend validator. Verified by RUNNING:
+`lang-aot`'s `lang_matrix.rs` executes `(+ 10 20 12)` ⇒ exit 42 across
+native / LLVM / WASM / JVM / CLR / VM / JIT.
+
+Comparisons are deliberately excluded: variadic `(< a b c)` is a chained
+predicate (`a<b ∧ b<c`), not a fold, so it stays on the dynamic path. Unary /
+nullary forms (`(+)`, `(- a)`) also stay on the fallback; this increment targets
+the `n ≥ 2` arithmetic fold (the `n == 2` case was already typed). A call with
+any dynamically-typed argument continues to use `call_builtin`.
+
 ## [0.22.0] — 2026-05-26 (Path A increment 6c — typed `car` / `cdr`)
 
 ### Added — `car` / `cdr` emit `field_load [ref<any>]`

@@ -196,7 +196,13 @@ backend immediately) come before the enabler-dependent items.
 - ☐ **AL8** — standard functions (`abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/… — needs **E3**).
 
 ### Twig
-- ☐ **TW1** — variadic arithmetic typed lowering (so `(+ a b c)` clears backend validators).
+- ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /
+  `-` / `*` / `/` call folds to a left-associated chain of typed binary CIR ops, so
+  n-ary arithmetic clears the code-gen backend validators (previously only binary
+  `(+ a b)` was typed; 3+ args fell back to the rejected `call_builtin "any"` path).
+  **Verified by running** `(+ 10 20 12)` ⇒ exit 42 across native/LLVM/WASM/JVM/CLR/VM/JIT
+  (`lang_matrix.rs`). Chained comparisons (`(< a b c)`, a predicate not a fold) and
+  unary/nullary forms stay on the dynamic path.
 - ☐ **TW2** — top-level value `define` on the code-gen backends.
 - ☐ **TW3** — list / cons ops on code-gen backends (needs **E5**/**E6**).
 - ☐ **TW4** — strings on code-gen backends (needs **E4**).
