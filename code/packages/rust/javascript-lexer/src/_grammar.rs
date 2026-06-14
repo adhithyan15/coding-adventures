@@ -8204,7 +8204,9 @@ mod v_es2025 {
                 },
             ],
             reserved_keywords: vec![r#"enum"#.to_string()],
-            escapes: None,
+            // gap-090: raw string bodies delivered to whitespace_only.rs
+            // for full ECMAScript escape normalisation (see es2025.tokens).
+            escapes: Some(r#"none"#.to_string()),
             error_definitions: vec![
                 TokenDefinition {
                     name: r#"BAD_STRING_DQ"#.to_string(),

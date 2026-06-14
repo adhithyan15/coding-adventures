@@ -2,6 +2,54 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.128.0] - 2026-06-14
+
+### Fixed
+- **CLOSES gap-090 (CORRECTNESS)** — string escape sequences (`\xNN`, `\uNNNN`,
+  `\u{N+}`, `\0`, and any other non-standard escape) were previously mangled:
+  the `grammar_lexer.rs` `process_escapes` function had `other => result.push(other)`
+  which **dropped the backslash**, so `"\x41"` arrived in `whitespace_only.rs`
+  as `x41` and was emitted as `"x41"` (corrupted string value, not mere
+  byte-identity divergence).
+
+  **Root cause:** the lexer's escape-processing ran before the emitter had a
+  chance to re-normalise, and left an ambiguous `tok.value` (`x41` is
+  indistinguishable from a source string `"x41"`).
+
+  **Fix:** `es2025.tokens` now declares `escapes: none` on the string rule
+  section, which instructs the grammar lexer to deliver the **raw string
+  interior** (quotes stripped, backslash sequences untouched) in `tok.value`.
+  `whitespace_only.rs` gained three new functions:
+
+  - `decode_js_string(raw)` — decodes every ECMAScript escape form to actual
+    Unicode chars: `\xNN` (2-hex byte), `\uNNNN` (BMP unit), `\u{N+}` (code
+    point), `\0` (null when not followed by 1–9), `\n`/`\t`/`\r`/`\b`/`\f`/`\v`,
+    `\\`/`\"`/`\'`, and the ES-spec `\X → X` fallback for anything else.
+  - `encode_js_char(out, c, quote)` — re-emits one decoded char in Closure
+    WHITESPACE_ONLY canonical form: `\x00` for null, `\b`/`\t`/`\n`/`\f`/`\r`,
+    `\x0b` for VT, `\\`, escaped-quote, `\xNN` for C0/DEL, `\uHHHH\uHHHH`
+    surrogate pairs for non-BMP (U+10000+), literal otherwise.
+  - `emit_quoted_string(out, raw)` — decode → choose delimiter (more `"` than
+    `'` → single-quote, else double-quote; ties → double) → re-encode each char.
+    Subsumes the old `push_quoted_string_content` / `emit_quoted_string`.
+
+  Both functions are `pub(crate)`.  `defines.rs` updated to call
+  `emit_quoted_string` for pass-through string tokens (their `tok.value` is
+  also now raw with `escapes: none`).
+
+  **Before/after:**
+  ```
+  "\x41"        →  "A"             (was "x41")
+  "A"      →  "A"             (was "A" — already worked via process_escapes)
+  "\u{1F600}"   →  "😀"  (was "u{1F600}")
+  "\x27s"       →  "'s"            (was "x27s")
+  "\0"          →  "\x00"          (was "0")
+  ```
+
+  Five end-to-end fixtures (`str_codepoint_esc`, `str_unicode4_esc`,
+  `str_hex_esc`, `str_hex27_esc`, `str_null_esc`) are now **enforced**
+  (un-ignored).  All 640 unit tests + the full diff_minify suite pass.
+
 ## [0.127.0] - 2026-06-14
 
 ### Fixed
