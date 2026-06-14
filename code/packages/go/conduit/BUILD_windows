@@ -1,0 +1,1 @@
+echo Go Conduit uses CGO + the Rust static lib — skipping on Windows (requires cl.exe / clang-cl setup)
