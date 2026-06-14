@@ -62,6 +62,8 @@ packages a typed surface for:
   payload-free catalog handoff check
 - Hue catalog package gap summaries that route blocked catalog handoffs to
   spec, release, identity, transport/runtime, or pairing-handoff review
+- Hue catalog/spec handoff summaries that count accepted catalog, spec,
+  release, and runtime/pairing review gates
 
 ## Dependencies
 
