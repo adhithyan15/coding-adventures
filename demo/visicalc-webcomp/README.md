@@ -1,72 +1,58 @@
-# VisiCalc — WebComponent demo
+# VisiCalc — WebComponent demo (live)
 
-Second cross-backend visual demo (Phase 2 / VC2-webcomp), driven by a
-real Web Component. Companion to `demo/visicalc-html/`'s static
-snapshot.
+A **working** VisiCalc built from real Web Components, computing live on the
+Rust `spreadsheet-core` engine **compiled to WebAssembly** — the same `.wasm`
+module the [HTML demo](../visicalc-html) runs. The companion web backend to the
+HTML one: same engine, different UI technology.
 
 ## What it shows
 
-- `<mos-formula-bar cell-address="A1" formula="=SUM(B1:B5)">` rendered
-  as a live custom element with its own shadow DOM. Styles compiled
-  in from `FormulaBar.dark.msl`.
-- Typing into the input dispatches `mosaic:formulaChange` /
-  `mosaic:commit` / `mosaic:cancel` CustomEvents that escape the
-  shadow root (because the emitter sets `bubbles: true, composed:
-  true`).
-- A small event log at the bottom shows the events as they fire —
-  proof the wiring works end-to-end.
-- A 5×5 sample grid below (hand-written for now — see the gap note).
+A cross-footing budget (column E totals each row, row 5 totals each column,
+E5 is the grand total — all formulas). Click a cell to select it; the formula
+bar shows its source. Type a value or a formula (e.g. `=SUM(A1:A4)`) in the
+formula bar and press Enter, or double-click a cell to edit in place — every
+dependent cell recomputes.
 
-## How it's built
+## How it works
 
-```bash
-bash scripts/build.sh
+Two independently-generated halves, glued by host code that owns *no*
+spreadsheet logic:
+
+1. **The UI** — two real custom elements compiled by
+   `mosaic-compile --backend webcomponent` from `demo/visicalc/mosaic/*` (the
+   same source the React and HTML demos consume):
+   - `<mos-grid>` — a shadow-DOM table rendered from its observed attributes
+     (`viewport-rows`, `selected-row/col`, `edit-row/col`, …).
+   - `<mos-formula-bar>` — a shadow-DOM input that fires `mosaic:commit` /
+     `mosaic:formulaChange` / `mosaic:cancel` CustomEvents.
+
+   Both are committed under `vendor/` (regenerate with `bash scripts/build.sh`,
+   which writes `build/`, then copy into `vendor/`).
+
+2. **The engine** — the Rust `spreadsheet-core` engine compiled to `wasm32`,
+   loaded by `vendor/spreadsheet-engine-wasm.js` (the `.wasm` embedded as
+   base64, so the page opens from `file://`). Regenerate with
+   `bash scripts/bundle-wasm-engine.sh`.
+
+The inline glue awaits the WASM module, seeds a workbook, pushes the workbook's
+*computed* values into the `<mos-grid>` attributes, and feeds user edits
+(formula-bar commit, inline-cell edit, cell-click selection) back through
+`workbook.setCell`. `<mos-grid>` cells carry no click handler, so selection is
+wired by reaching into the element's shadow DOM — the engine stays the single
+source of truth.
+
 ```
-
-Runs `mosaic-compile --backend webcomponent` against
-`demo/visicalc/mosaic/FormulaBar.{mil,desktop.mll,dark.msl}` and
-writes `build/FormulaBar.js`. The bundle is a self-registering
-script: it calls `customElements.define("mos-formula-bar", ...)` at
-parse time.
-
-## The Grid gap
-
-The `Grid` built-in primitive isn't yet supported by the
-`mosaic-emit-webcomponent` pipeline (only the React emitter knows how
-to lower it — see
-`code/packages/rust/mosaic-emit-react/src/pipeline.rs`). Until the
-WebComponent Grid emitter lands, the grid below the formula bar in
-`index.html` is hand-written to mirror what the eventual `<mos-grid>`
-custom element should render.
+index.html
+  ├─ <script src="vendor/spreadsheet-engine-wasm.js">  ← Rust engine, as WASM
+  ├─ import vendor/{Grid,FormulaBar}.js                ← mosaic-compiled elements
+  └─ <script type="module"> (inline)                  ← thin glue: model → attrs → edit
+```
 
 ## How to view
 
-The page uses an ES module import (`import "./build/FormulaBar.js"`)
-to register the `<mos-formula-bar>` custom element. Browsers
-restrict module loading over `file://` — Safari and Chrome both
-block it. Serve over `http://` instead:
-
 ```
-cd demo/visicalc-webcomp
-bash scripts/build.sh           # regenerate build/FormulaBar.js
-python3 -m http.server 8765      # any static server works
-open http://127.0.0.1:8765/      # then open the URL in any browser
+open demo/visicalc-webcomp/index.html
 ```
 
-(Type into the formula bar and watch the events stream into the log
-below. If you serve the file via `file://` instead, the grid still
-renders but the formula bar will be missing — the browser silently
-refused to load the module.)
-
-## Where this fits in the cross-backend demo plan
-
-| Phase | Demo | Status |
-|---|---|---|
-| 2 | VC2-html | ✅ |
-| 2 | VC2-webcomp (this one) | ✅ |
-| 2 | VC2-flutter | TODO |
-| 2 | VC2-qt | TODO |
-| 2 | VC2-swiftui | TODO |
-| 2 | VC2-xaml | TODO |
-| 3 | multi-component artifact-builder shells | TODO |
-| 4 | demo/visicalc-all/ (all 7 backends) | TODO |
+Any modern browser works — no server. The events from `<mos-formula-bar>` /
+`<mos-grid>` are also logged at the bottom of the page.
