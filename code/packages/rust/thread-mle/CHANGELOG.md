@@ -18,6 +18,8 @@ All notable changes to this package will be documented in this file.
   typed Prefix TLV projection for prefix diagnostics.
 - Compact Thread Network Data summaries for top-level TLV, prefix, stability,
   routing, service, and unknown-TLV coverage.
+- Thread Network Data readiness summaries for prefix, routing, stable-data,
+  service/context, and unknown-TLV coverage checks.
 - Typed Connectivity TLV helpers for route-cost, link-quality, active-router,
   and sleepy-end-device diagnostic fields.
 - Thread diagnostic snapshots that combine neighbor, leader, connectivity,
