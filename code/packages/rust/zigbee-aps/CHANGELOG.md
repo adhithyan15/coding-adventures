@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   cluster, security, ack-request, and payload-volume rollups.
 - `ApsFrameBatchReadinessSummary` for application-delivery, home-automation,
   cluster, and payload capture readiness checks.
+- `ApsDeliveryHandoffSummary` for combining frame-batch readiness with
+  application-delivery, payload, and security/ack context checks.
 - `ApsFrameSummary` for payload-free APS routing, delivery, profile, and
   cluster read models.
 - `ApsCommandFrame`, `ApsCommandId`, and `ApsCommandSummary` for APS command
