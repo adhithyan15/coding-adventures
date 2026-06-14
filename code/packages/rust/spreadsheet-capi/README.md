@@ -44,9 +44,18 @@ identical output.
 ## Build & test
 
 ```bash
-bash build-capi.sh   # builds the .dylib/.so and runs test/smoke.c against it
+bash build-capi.sh      # builds the .dylib/.so and runs test/smoke.c against it
+bash verify-native.sh   # also runs the Swift + Dart/FFI smokes (real native langs)
 ```
 
 - `cargo test -p spreadsheet-capi` — host tests driving the C ABI from Rust.
-- `test/smoke.c` — a real C program linked against the built library, asserting
-  SUM = 46, AVERAGE = 9.2, `#DIV/0!`, and incremental recalc (146).
+- `test/smoke.c` — a real **C** program linked against the built library.
+- `test/smoke.swift` — the same checks from **Swift** (the SwiftUI path), via
+  the C header (clang importer).
+- `test/smoke.dart` — the same checks from **Dart** through `dart:ffi` (the
+  Flutter path), opening the shared library at runtime.
+
+All three assert SUM = 46, AVERAGE = 9.2, `#DIV/0!`, and incremental recalc
+(146) — proving the engine computes identically when driven from C, Swift, and
+Dart. The remaining native frontends (Kotlin/JNI, .NET/P-Invoke, C++/Qt) bind
+the very same C ABI.
