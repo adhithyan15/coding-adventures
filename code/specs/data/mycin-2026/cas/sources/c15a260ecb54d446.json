@@ -1,0 +1,93 @@
+{
+  "hash": "c15a260ecb54d446",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/",
+  "title": "Management of meningitis due to antibiotic-resistant Acinetobacter species (Lancet Infect Dis. 2009;9(4):245-255)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "SCOPE NOTE: This source is narrowly about Acinetobacter meningitis, NOT a general bacterial-meningitis review. It contains NO general organism epidemiology (S. pneumoniae / N. meningitidis / Listeria proportions), NO CSF gram-stain morphology, and NO first-line empiric dosing (ceftriaxone/cefotaxime/vancomycin/ampicillin monotherapy). Only Acinetobacter-specific epidemiology, post-neurosurgical risk factors, and salvage/CNS antibiotic dosing are present.",
+      "byte_quote": "Management of meningitis due to antibiotic-resistant Acinetobacter species"
+    },
+    {
+      "id": "c2",
+      "text": "Among adults with community-acquired bacterial meningitis (1737 patients across six studies), only 0.2% (3 patients) were due to Acinetobacter spp.",
+      "byte_quote": "In a review of six studies comprising 1737 adults with community-acquired bacterial meningitis, just 0.2% (three patients) had meningitis due to Acinetobacter spp."
+    },
+    {
+      "id": "c3",
+      "text": "Among adults with hospital-acquired bacterial meningitis (281 patients across four studies), 3.6% (10 patients) were due to Acinetobacter spp.",
+      "byte_quote": "In a review of four studies comprising 281 adult patients with hospital-acquired bacterial meningitis, 3.6% (ten patients) had meningitis due to Acinetobacter spp."
+    },
+    {
+      "id": "c4",
+      "text": "In children with nosocomial meningitis, Acinetobacter accounted for 11.2% (20/178) of cases in one evaluation.",
+      "byte_quote": "The authors of one evaluation of children with nosocomial meningitis reported that acinetobacter accounted for 11.2% (20/178) of cases."
+    },
+    {
+      "id": "c5",
+      "text": "Geographic variation: Acinetobacter was the fifth most common genus in nosocomial meningitis in US and Taiwan series, but two Turkish studies found it the leading cause of Gram-negative postneurosurgical meningitis.",
+      "byte_quote": "In large series in the USA and Taiwan, acinetobacter ranked the fifth most common genus to be associated with nosocomial meningitis. However, two recent studies from Turkey have documented acinetobacter as the leading cause of Gram-negative postneurosurgical meningitis."
+    },
+    {
+      "id": "c6",
+      "text": "HOST/RISK FACTOR: Acinetobacter meningitis typically occurs following neurosurgery (post-neurosurgical, not community-acquired).",
+      "byte_quote": "Acinetobacter meningitis typically occurs following neurosurgery."
+    },
+    {
+      "id": "c7",
+      "text": "HOST/RISK FACTORS for post-neurosurgical bacterial meningitis: CSF leakage, concomitant incision infection, prolonged surgery, surgery entering a sinus, severity of illness, prolonged external ventricular drainage, and repeat surgery.",
+      "byte_quote": "Patients at risk for post-neurosurgical bacterial meningitis include those with cerebrospinal leakage, concomitant incision infection, prolonged duration of surgery, surgery that enters a sinus, increased severity of illness, prolonged external ventricular drainage, and need for repeat surgery."
+    },
+    {
+      "id": "c8",
+      "text": "HOST/RISK FACTOR (antibiotic exposure): Prior use of extended-spectrum cephalosporins was a common feature of patients with Acinetobacter meningitis in one study.",
+      "byte_quote": "Prior use of extended-spectrum cephalosporins was identified as a common feature of patients with acinetobacter meningitis in one study."
+    },
+    {
+      "id": "c9",
+      "text": "Timing: median time to develop Acinetobacter meningitis after a neurosurgical procedure is 12 days (range 1-40 days).",
+      "byte_quote": "The median time to develop acinetobacter meningitis after a neurosurgical procedure is 12 days (range 1–40 days)."
+    },
+    {
+      "id": "c10",
+      "text": "ANTIBIOTIC DOSING (meropenem, IV, meningitis): 2 g every 8 h as a 30 min infusion, per IDSA bacterial-meningitis dose.",
+      "byte_quote": "Meropenem 2 g every 8 h as a 30 min infusion (IDSA recommended dose for bacterial meningitis)."
+    },
+    {
+      "id": "c11",
+      "text": "ANTIBIOTIC DOSING (ampicillin/sulbactam): 2 g ampicillin and 1 g sulbactam every 6 h.",
+      "byte_quote": "2 g of ampicillin and 1 g of sulbactam every 6 h"
+    },
+    {
+      "id": "c12",
+      "text": "ANTIBIOTIC DOSING (gentamicin, intraventricular): IDSA recommends a daily intraventricular gentamicin dose of 4-8 mg.",
+      "byte_quote": "IDSA guidelines for therapy of bacterial meningitis recommend a daily intraventricular gentamicin dose of 4–8 mg."
+    },
+    {
+      "id": "c13",
+      "text": "ANTIBIOTIC DOSING (amikacin, intraventricular): IDSA recommends daily intraventricular amikacin of 5-50 mg, with 30 mg most commonly used.",
+      "byte_quote": "IDSA guidelines recommend daily intraventricular doses of amikacin of 5–50 mg, with 30 mg being the most commonly used daily dose."
+    },
+    {
+      "id": "c14",
+      "text": "ANTIBIOTIC DOSING (polymyxin B, intraventricular): 5 mg daily in adults and 2 mg daily in children, per IDSA.",
+      "byte_quote": "The recommended dosage in IDSA guidelines for polymyxin B administered by the intraventricular route is 5 mg daily in adults and 2 mg daily in children."
+    },
+    {
+      "id": "c15",
+      "text": "ANTIBIOTIC DOSING (colistin / colistin methanesulphonate, intraventricular): 10 mg daily.",
+      "byte_quote": "The recommended dose of colistin or colistin methane-sulphonate by the intraventricular route is 10 mg daily."
+    },
+    {
+      "id": "c16",
+      "text": "DURATION: IDSA recommends 21 days of antibiotic therapy for Gram-negative bacterial meningitis.",
+      "byte_quote": "The IDSA guidelines for management of bacterial meningitis recommend antibiotic therapy for Gram-negative meningitis for 21 days."
+    }
+  ],
+  "cites": [
+    "IDSA practice guidelines for the management of bacterial meningitis (Tunkel AR et al., Clin Infect Dis 2004)",
+    "Perez F, Hujer AM, et al.",
+    "Karageorgopoulos DE, Falagas ME"
+  ]
+}

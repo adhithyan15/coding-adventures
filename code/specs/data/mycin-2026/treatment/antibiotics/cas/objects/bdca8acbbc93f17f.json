@@ -2,7 +2,7 @@
   "hash": "bdca8acbbc93f17f",
   "kind": "formulary",
   "domain": "Grounded antibiotic FORMULARY \u2014 drug FACTS, not regimens. Ea",
-  "source": "formulary-spider (coverage + CSF penetration) + adversarial gate; dose/tier authored (illustrative).",
+  "source": "formulary-spider (coverage + CSF penetration) + adversarial gate; dose anchors spider-grounded per drug (dose_grounding); dose-window numeric model + tier structural.",
   "drugs": {
     "vancomycin": {
       "covers_accepted": [
@@ -28,7 +28,14 @@
           "renal_moderate": 2
         }
       },
-      "dose_note": "authored illustrative model (not spidered)"
+      "dose_grounding": {
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
+        "byte_quote": "vancomycin should be administered to maintain serum vancomycin trough concentrations of approximately 15\u201320 \u00b5g/mL (B-III)",
+        "url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "value_found": "IV vancomycin dosed to maintain serum trough concentrations of approximately 15\u201320 \u00b5g/mL. (Table 6 specifies the weight-based dose, but that cell is an unreadable table image and is NOT verbatim-grounded here; current practice derived from the guideline cites ~30\u201345 (up to 60) mg/kg/day IV divided every 8\u201312 h titrated to that trough.)",
+        "source_title": "Tunkel AR et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA)"
+      }
     },
     "ceftriaxone": {
       "covers_accepted": [
@@ -54,7 +61,14 @@
         "ceiling_base_mg_per_kg": 50,
         "ceiling_penalty_mg_per_kg": {}
       },
-      "dose_note": "authored illustrative model (not spidered)"
+      "dose_grounding": {
+        "status": "refuted",
+        "note": "cited source did NOT confirm the adult CNS dose (debt remains)",
+        "byte_quote": "In the treatment of meningitis, it is recommended that the initial therapeutic dose be 100 mg/kg (not to exceed 4 grams). Thereafter, a total daily dose of 100 mg/kg/day (not to exceed 4 grams daily) is recommended. The daily dose may be administered once a day (or in equally divided doses every 12 hours).",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29",
+        "value_found": "For meningitis: total daily dose 100 mg/kg/day, not to exceed 4 grams/day, given once daily or in equally divided doses every 12 hours (i.e., up to 2 g IV every 12 hours in an adult reaching the 4 g/day ceiling).",
+        "source_title": "CEFTRIAXONE FOR INJECTION, USP \u2014 FDA prescribing information (DailyMed / NLM)"
+      }
     },
     "ampicillin": {
       "covers_accepted": [
@@ -78,7 +92,14 @@
         "ceiling_base_mg_per_kg": 50,
         "ceiling_penalty_mg_per_kg": {}
       },
-      "dose_note": "authored illustrative model (not spidered)"
+      "dose_grounding": {
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
+        "byte_quote": "12 g/day in divided doses every 4 h",
+        "url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "value_found": "Ampicillin 12 g/day IV in divided doses every 4 h (i.e., 2 g IV every 4 hours) for adults",
+        "source_title": "Tunkel AR, et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA)"
+      }
     },
     "cefepime": {
       "covers_accepted": [
@@ -109,7 +130,14 @@
           "renal_severe": 4
         }
       },
-      "dose_note": "authored illustrative model (not spidered)"
+      "dose_grounding": {
+        "status": "grounded",
+        "note": "meningitis dose grounded to a primary source",
+        "byte_quote": "As mentioned previously, the dose of cefepime recommended in the IDSA guidelines for Gram-negative meningitis is 2 g every 8 h.",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/",
+        "value_found": "2 g IV every 8 hours (adult bacterial/Gram-negative meningitis)",
+        "source_title": "Kim BN, Peleg AY, Lodise TP, Lipman J, Li J, Nation R, Paterson DL. Management of meningitis due to antibiotic-resistant Acinetobacter species. Lancet Infect Dis (PMC2760093)"
+      }
     },
     "meropenem": {
       "covers_accepted": [
@@ -141,7 +169,14 @@
           "renal_severe": 3
         }
       },
-      "dose_note": "authored illustrative model (not spidered)"
+      "dose_grounding": {
+        "status": "grounded",
+        "note": "meningitis dose grounded to a primary source",
+        "byte_quote": "meropenem 2 g q8h",
+        "url": "https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines",
+        "value_found": "2 g IV every 8 hours (q8h); total 6 g/day",
+        "source_title": "Initial management of acute bacterial meningitis in adults: summary of IDSA guidelines (Tunkel et al., IDSA Practice Guidelines for the Management of Bacterial Meningitis)"
+      }
     },
     "moxifloxacin": {
       "covers_accepted": [
@@ -163,7 +198,14 @@
         "ceiling_base_mg_per_kg": 8,
         "ceiling_penalty_mg_per_kg": {}
       },
-      "dose_note": "authored illustrative model (not spidered)"
+      "dose_grounding": {
+        "status": "refuted",
+        "note": "cited source did NOT confirm the adult CNS dose (debt remains)",
+        "byte_quote": "The dose of AVELOX is 400 mg (orally or as an intravenous infusion) once every 24 hours.",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=7d74dfa6-0468-43ad-ad7f-dd90d9ae7706",
+        "value_found": "400 mg IV once every 24 hours",
+        "source_title": "AVELOX (moxifloxacin hydrochloride) FDA Prescribing Information \u2014 DailyMed (NLM mirror of the FDA-approved label)"
+      }
     },
     "aztreonam": {
       "covers_accepted": [
@@ -190,7 +232,14 @@
           "renal_severe": 4
         }
       },
-      "dose_note": "authored illustrative model (not spidered)"
+      "dose_grounding": {
+        "status": "refuted",
+        "note": "cited source did NOT confirm the adult CNS dose (debt remains)",
+        "byte_quote": "Severe Systemic or Life-Threatening Infections: 2 g [given every] 6 or 8 [hours]; maximum recommended daily dose is 8 g per day.",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+        "value_found": "2 g IV every 6 to 8 hours (maximum 8 g/day) \u2014 labeled for severe systemic/life-threatening infections, NOT specifically for meningitis",
+        "source_title": "AZACTAM (aztreonam for injection, USP) \u2014 FDA prescribing information, DailyMed"
+      }
     },
     "tmp_smx": {
       "covers_accepted": [
@@ -212,8 +261,21 @@
           "renal_severe": 3
         }
       },
-      "dose_note": "authored illustrative model (not spidered)"
+      "dose_grounding": {
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
+        "byte_quote": "Trimethoprim-sulfamethoxazole row, under header \"Total daily dose (dosing interval in hours)\": \"TMP-SMZ \u2026 10\u201320 mg/kg (6\u201312)\". Footnote: \"TMP-SMZ, trimethoprim-sulfamethoxazole.\"",
+        "url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+        "value_found": "Trimethoprim component 10-20 mg/kg per day IV, dosing interval every 6-12 hours (i.e., the claim's \"5 mg/kg every 6 hours\" corresponds to the upper end, 20 mg/kg/day q6h)",
+        "source_title": "Tunkel AR, et al. Practice Guidelines for the Management of Bacterial Meningitis. Clinical Infectious Diseases 2004;39(9):1267-1284 (IDSA), Table 6: Recommended dosages of antimicrobial therapy in adults with bacterial meningitis"
+      }
     }
+  },
+  "dose_grounding_summary": {
+    "grounded": 2,
+    "direction_only": 3,
+    "refuted": 3,
+    "pending": 0
   },
   "combinations": [
     {

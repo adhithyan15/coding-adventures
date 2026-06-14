@@ -35,6 +35,7 @@ HERE = Path(__file__).resolve().parent
 MYCIN = HERE.parent.parent
 AUTHORED = HERE / "formulary.json"
 GROUNDING = MYCIN / "grounding" / "formulary-grounding.json"
+DOSE_GROUNDING = MYCIN / "grounding" / "dose-window-grounding.json"   # G3 dose anchors
 CAS = HERE / "cas"
 OBJECTS = CAS / "objects"
 
@@ -51,6 +52,14 @@ def gate_status(rec: dict) -> str:
     return "FLAG"  # unclear / unstable / failed
 
 
+def _dose_summary(drugs: dict) -> dict:
+    """Count per-drug dose-anchor grounding status — the dose debt made visible."""
+    from collections import Counter
+    c = Counter(d["dose_grounding"]["status"] for d in drugs.values())
+    return {"grounded": c.get("grounded", 0), "direction_only": c.get("direction_only", 0),
+            "refuted": c.get("refuted", 0), "pending": c.get("pending", 0)}
+
+
 def build(check: bool = False) -> int:
     authored = json.loads(AUTHORED.read_text())
     if not GROUNDING.exists():
@@ -58,6 +67,29 @@ def build(check: bool = False) -> int:
               file=sys.stderr)
         return 2
     grounding = {r["id"]: r for r in json.loads(GROUNDING.read_text()).get("records", [])}
+    # G3 — dose-anchor grounding (optional). The dose-window numeric model is structural;
+    # this records, per drug, whether a PRIMARY source confirms the bacterial-meningitis
+    # (CNS, adult) dose. grounded = source states the adult meningitis dose verbatim;
+    # direction_only = indication/target confirmed but the exact figure not verbatim;
+    # refuted = the cited source did NOT confirm it (e.g. pediatric-only or general dose);
+    # pending = not yet grounded. Dose debt is whatever is not grounded.
+    dose_g = {}
+    if DOSE_GROUNDING.exists():
+        dose_g = {r["id"]: r for r in json.loads(DOSE_GROUNDING.read_text()).get("records", [])}
+
+    def dose_provenance(drug: str) -> dict:
+        rec = dose_g.get(f"dose_{drug}")
+        if rec is None:
+            return {"status": "pending", "note": "authored illustrative model (not yet grounded)",
+                    "byte_quote": None, "url": None, "value_found": None}
+        g = rec.get("grounded") or {}
+        return {"status": rec.get("spider_status", "pending"),
+                "note": {"grounded": "meningitis dose grounded to a primary source",
+                         "direction_only": "indication/target grounded; exact figure not verbatim",
+                         "refuted": "cited source did NOT confirm the adult CNS dose (debt remains)",
+                         }.get(rec.get("spider_status"), "authored illustrative model (not grounded)"),
+                "byte_quote": g.get("byte_quote"), "url": g.get("resolved_url"),
+                "value_found": g.get("value_found"), "source_title": g.get("source_title")}
 
     drugs = {}
     adj_lines = [
@@ -109,7 +141,7 @@ def build(check: bool = False) -> int:
             "covers_dropped": dropped_covers, "csf_penetrant": csf_ok,
             "contraindications": f.get("contraindications", []),
             "betalactam": f.get("betalactam", False), "tier": f["tier"],
-            "dose": f["dose"], "dose_note": "authored illustrative model (not spidered)",
+            "dose": f["dose"], "dose_grounding": dose_provenance(drug),
         }
     # combination-coverage facts (grounded by the spider's refutation evidence —
     # e.g. resistant pneumococcus is covered by vancomycin + a cephalosporin, never
@@ -125,8 +157,10 @@ def build(check: bool = False) -> int:
     manifest = {
         "hash": digest, "kind": "formulary", "domain": authored.get("_doc", "")[:60],
         "source": "formulary-spider (coverage + CSF penetration) + adversarial gate; "
-                  "dose/tier authored (illustrative).",
+                  "dose anchors spider-grounded per drug (dose_grounding); dose-window "
+                  "numeric model + tier structural.",
         "drugs": drugs,
+        "dose_grounding_summary": _dose_summary(drugs),
         "combinations": combinations,
         "gate": {"accepted_facts": report["accepted"], "dropped": report["dropped"],
                  "flagged": report["flagged"]},

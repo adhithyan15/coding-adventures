@@ -1,0 +1,69 @@
+{
+  "hash": "2db76968e15d84f7",
+  "source_id": "https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines",
+  "title": "Initial management of acute bacterial meningitis in adults: summary of IDSA guidelines",
+  "resolved_url": "https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "In patients aged 2-50 years, the common bacterial meningitis pathogens are N. meningitidis and S. pneumoniae.",
+      "byte_quote": "N. meningitidis, S. pneumoniae"
+    },
+    {
+      "id": "c2",
+      "text": "In patients aged 50 years and older, the pathogens broaden to include S. pneumoniae, N. meningitidis, L. monocytogenes, and aerobic gram-negative bacilli.",
+      "byte_quote": "S. pneumoniae, N. meningitidis, L. monocytogenes, aerobic gram-negative bacilli"
+    },
+    {
+      "id": "c3",
+      "text": "After neurosurgery or with a CSF shunt/device, likely organisms include S. aureus, coagulase-negative staphylococci, Pseudomonas aeruginosa, and other gram-negative bacilli.",
+      "byte_quote": "S. aureus, coagulase negative Staphylococci, Pseudomonas aeruginosa and other gram-negative bacilli"
+    },
+    {
+      "id": "c4",
+      "text": "Host factors such as immune suppression and recent neurosurgical procedures including ventricular shunts influence the presentation of bacterial meningitis.",
+      "byte_quote": "The presentation of bacterial meningitis is also influenced by host factors, such as immune suppression or recent neurosurgical procedures including ventricular shunts."
+    },
+    {
+      "id": "c5",
+      "text": "Only 44%-51% of patients have the classic triad of fever, neck stiffness, and impaired consciousness.",
+      "byte_quote": "44% to 51% have the triad of fever, neck stiffness, and impaired consciousness."
+    },
+    {
+      "id": "c6",
+      "text": "CSF Gram stain is positive in 60%-90% of patients, with a specificity of at least 97%.",
+      "byte_quote": "Positive in 60%-90% of patients with a specificity of ≥97%."
+    },
+    {
+      "id": "c7",
+      "text": "Empiric therapy for ages 2-50 is vancomycin plus ceftriaxone or cefotaxime.",
+      "byte_quote": "Vancomycin and ceftriaxone or cefotaxime"
+    },
+    {
+      "id": "c8",
+      "text": "Empiric therapy for ages over 50 adds ampicillin: vancomycin, ampicillin, and ceftriaxone or cefotaxime.",
+      "byte_quote": "Vancomycin, ampicillin, and ceftriaxone or cefotaxime"
+    },
+    {
+      "id": "c9",
+      "text": "Adult vancomycin dose is 15 mg/kg every 8-12 hours, adjusted to maintain trough concentrations of 15-20 ug/mL.",
+      "byte_quote": "15 mg/kg q8-12h adjusted to maintain trough concentrations of 15-20 µg/mL"
+    },
+    {
+      "id": "c10",
+      "text": "Adult ceftriaxone dose is 2 g every 12 hours.",
+      "byte_quote": "ceftriaxone 2 g q12h"
+    },
+    {
+      "id": "c11",
+      "text": "Adjunctive dexamethasone dose is 0.15 mg/kg every 6 hours for 2-4 days, given before antibiotics in pneumococcal cases.",
+      "byte_quote": "Dexamethasone (0.15 mg/kg q6h for 2-4 days)"
+    }
+  ],
+  "cites": [
+    "Tunkel et al. (IDSA practice guidelines)",
+    "Hasbun et al. (CT before lumbar puncture criteria)",
+    "de Gans & van de Beek, NEJM 2002 (dexamethasone trial)",
+    "van de Beek et al., NEJM 2004 (clinical features of community-acquired bacterial meningitis)"
+  ]
+}

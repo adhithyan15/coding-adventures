@@ -1,0 +1,44 @@
+{
+  "hash": "16a3d991d0803827",
+  "source_id": "https://academic.oup.com/cid/article/39/9/1267/402080",
+  "title": "Practice Guidelines for the Management of Bacterial Meningitis (IDSA, Clinical Infectious Diseases 2004; Tunkel et al.)",
+  "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Gram-stain positivity in CSF varies by pathogen: ~90% for S. pneumoniae, 86% for H. influenzae, 75% for N. meningitidis, 50% for gram-negative bacilli, and about one-third for L. monocytogenes.",
+      "byte_quote": "90% of cases caused by *Streptococcus pneumoniae*, 86% of cases caused by *Haemophilus influenzae*, 75% of cases caused by *Neisseria meningitidis*, 50% of cases caused by gram-negative bacilli, and approximately one-third of cases of meningitis caused by *Listeria monocytogenes* have positive Gram stain results"
+    },
+    {
+      "id": "c2",
+      "text": "A positive CSF Gram stain can modify empirical therapy, e.g. adding ampicillin when gram-positive bacilli (suggesting Listeria) are seen.",
+      "byte_quote": "a positive CSF Gram stain result may modify this approach by the addition of another agent (e.g., ampicillin for the presence of gram-positive bacilli)"
+    },
+    {
+      "id": "c3",
+      "text": "Empirical antimicrobial choice should be driven by patient age and predisposing conditions.",
+      "byte_quote": "The choice of empirical antimicrobial therapy in this situation should be governed by the patient's age and by various conditions that may have predisposed the patient to meningitis."
+    },
+    {
+      "id": "c4",
+      "text": "For children older than 1 month, empirical therapy is vancomycin plus either cefotaxime or ceftriaxone pending cultures.",
+      "byte_quote": "empirical antimicrobial therapy with vancomycin combined with either cefotaxime or ceftriaxone can be provided pending culture results"
+    },
+    {
+      "id": "c5",
+      "text": "Adjunctive dexamethasone is dosed at 0.15 mg/kg every 6 hours for 2-4 days, started 10-20 min before or with the first antimicrobial dose.",
+      "byte_quote": "Dexamethasone should be initiated 10–20 min prior to, or at least concomitant with, the first antimicrobial dose, at 0.15 mg/kg every 6 h for 2–4 days."
+    },
+    {
+      "id": "c6",
+      "text": "Host factors associated with abnormal head CT before LP include age >=60, history of CNS disease, immunocompromised state (HIV/AIDS, immunosuppressive therapy, transplantation), and seizure within 1 week.",
+      "byte_quote": "the clinical features at baseline that were associated with abnormal findings of a CT scan of the head were an age of ⩾60 years, a history of CNS disease (e.g., mass lesion, stroke, and focal infection), an immunocompromised state (e.g., that due to HIV infection or AIDS, immunosuppressive therapy, or transplantation), a history of seizure ⩽1 week before presentation"
+    },
+    {
+      "id": "c7",
+      "text": "For CSF shunt infections caused by S. aureus, 10 days of negative cultures are recommended before reshunting.",
+      "byte_quote": "For shunt infections caused by *S. aureus*, 10 days of negative culture results are recommended prior to reshunting."
+    }
+  ],
+  "cites": []
+}
