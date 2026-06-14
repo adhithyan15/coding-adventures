@@ -114,6 +114,16 @@ optional independent N-reader refute vote (`gate/votes.json`) when present.
   the write gate accepts-at-trust-tier vs flags-and-downgrades per clause.
 - **M6** ✓ — the warm path: decompose prose → typed findings → diagnosis at **0
   answer-time model calls** (see below).
+- **M7** ✓ — value-of-information ("order-next") + rulebook self-consistency:
+  - `warm/voi.py <case>` ranks the **unobserved** findings by how much observing
+    each would move the differential (pure CPU, re-decides). On the knife's-edge
+    pre-culture case it flags that `csf_lactate(normal)` / `enteroviral_pcr(positive)`
+    would *flip* the diagnosis — i.e. the highest-value tests to order next, each
+    citing the rulebook clause that would fire.
+  - `consistency/*.adj` encode a rulebook invariant (the two priors must partition
+    to 1.0) as `constrain`/`check`. The real priors → SAT; a mis-authored prior
+    → UNSAT with an **IIS `core`** naming the exact conflicting clauses —
+    machine-checked "these rules contradict", the basis of error localization.
 
 ## Warm path — `warm/` (decompose once, decide on the CPU)
 
