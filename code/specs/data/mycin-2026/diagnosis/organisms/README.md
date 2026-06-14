@@ -49,11 +49,46 @@ could plausibly be there," and it is what makes empiric therapy correct:
 
 - `organism-vocab.adj` — controlled vocabulary (organism hypotheses + findings),
   an importable CAS library; names align with the formulary's organism tokens.
-- `organism-id.adj` — the differential rulebook (imports the vocab).
+- `organism-id.adj` — the differential rulebook (imports the vocab). **GENERATED**
+  by the write gate from grounding — do not hand-edit values.
 - `identify.py` — runs the differential, computes the significant set, maps it to
   the formulary, and derives the regimen + dose windows (`python3 identify.py`).
 - `test_identify.py` — guards the behavior; 0 answer-time model calls; skips if
   the CLI isn't built.
+
+## Grounding — nothing is hand-authored (G1)
+
+The priors and gram-stain morphology mappings are **not authored** — they are
+spider-grounded against primary sources and committed through an adversarial write
+gate, the same cold path the meningitis formulary uses:
+
+- `../../grounding/workflows/ground-organism-id.workflow.js` — the spider: one
+  agent grounds each claim against a primary source (byte-quote + URL + **discards**
+  + ENTAILED/LEAP justification), an independent agent re-extracts and tries to
+  refute (byte-stability) → a reconciled verdict.
+- `../../grounding/organism-id-grounding.json` — the resulting records.
+- `organism_id_ground.py` — the write gate (mirrors `cas_build.py`): `grounded` →
+  ACCEPT (source value, trust authoritative); `direction_only`/`refuted`/ungrounded
+  → FLAG (kept at trust `inferred`, never silently used) → **regenerates
+  `organism-id.adj`** + `organism-id-manifest.json` + the `../../PROVENANCE-LEDGER.md`.
+- `test_organism_id_ground.py` — guards the gate + that the rulebook is up to date.
+
+First batch result: 7 priors/morphology mappings GROUNDED (e.g. *S. pneumoniae* 0.51
+from van de Beek NEJM 2004), 4 FLAGGED direction-only, **2 REFUTED** (the authored
+*S. aureus* community prior — the source figure was nosocomial; and the "GN rods =
+enteric GNB" mapping — overlaps H. flu). To correct a wrong fact, edit the grounding
+record and re-run the gate — never edit `organism-id.adj` by hand.
+
+## Known limitation (honest)
+
+The grounded priors are still an adult-community distribution, so in the **neonate**
+scenario pneumococcus over-leads even though neonatal meningitis is GBS/E. coli/
+Listeria. The significant set still pulls in the right organisms to cover, but
+population-specific priors (peds/neonatal/immunocompromised) are future work — a
+sub-population prior layer, grounded the same way. The **host-factor LRs** (age band,
+immune status, exposures) are not yet grounded either — they are carried at trust
+`inferred` and tracked as authoring debt in the provenance ledger, queued for the
+next grounding batch.
 
 ## Known limitation (honest)
 
