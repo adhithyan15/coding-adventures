@@ -734,6 +734,7 @@ members = [
     "conduit-jni",
     "conduit-capi",
     "irc-server-native-jni",
+    "irc-server-capi",
     "smart-home-core",
     "smart-home-capability-cage",
     "smart-home-discovery",
