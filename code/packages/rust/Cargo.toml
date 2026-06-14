@@ -731,6 +731,7 @@ members = [
     "twig-dap",
     "conduit",
     "conduit-jni",
+    "conduit-capi",
     "smart-home-core",
     "smart-home-capability-cage",
     "smart-home-discovery",

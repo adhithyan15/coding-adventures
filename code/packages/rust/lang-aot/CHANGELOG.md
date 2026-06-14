@@ -1,5 +1,33 @@
 # Changelog — `lang-aot`
 
+## 0.78.0 — 2026-06-13 — BASIC control flow runs on the code-gen backends (LANG-FULL BA0)
+
+`tests/lang_matrix.rs` gains two executed Dartmouth BASIC programs exercising real
+control flow — a `FOR`/`NEXT` accumulator (`FOR I = 1 TO 5: S = S + I` → prints
+**15**) and an `IF A > 5 THEN 100` jump (→ prints **7**) — across native / LLVM /
+WASM / CLR / VM / JIT. Until now BASIC loops/conditionals executed only on the
+VM/JIT. Backed by `dartmouth-basic-iir-compiler` 0.5.0, which fixes the comparison
+`type_hint` (`bool` → `i64` operand width) that had LLVM comparing at a 1-bit `i1`
+width. JVM is excluded for these two programs pending BA-JVM-1 (a StackMapTable
+follow-up for branch + `print_i64`). No `lang-aot/src` change.
+
+## 0.77.0 — 2026-06-13 — Nib `const` declarations executed on every backend (LANG-FULL N5)
+
+`tests/lang_matrix.rs` gains two executed Nib programs using module-scoped
+`const`s — `const N: u8 = 42; … return N;` → 42 and `const A = 30; const B = 12;
+… A + B` → 42 — across native/LLVM/WASM/JVM/CLR/VM/JIT. Backed by
+`nib-iir-compiler` 0.13.0 (a const reference folds to its literal). Frontend-only;
+no backend change. No `lang-aot/src` change.
+
+## 0.76.0 — 2026-06-13 — Nib `&&` / `||` short-circuit executed on every backend (LANG-FULL N4)
+
+`tests/lang_matrix.rs` gains three executed Nib programs proving short-circuit
+`&&`/`||` across native/LLVM/WASM/JVM/CLR/VM/JIT: `1 == 2 && 84 / 0 == 0` → 7 and
+`1 == 1 || 84 / 0 == 0` → 7 (the divide-by-zero right operand is positive proof it
+was never evaluated — if it were, the program would trap), plus a `&&` true-path
+program → 1. Backed by `nib-iir-compiler` 0.12.0 (`compile_short_circuit`). Frontend-
+only — no backend change. No `lang-aot/src` change.
+
 ## 0.75.0 — 2026-06-13 — Nib bitwise `& | ^` executed on every backend (LANG-FULL N3)
 
 `tests/lang_matrix.rs` gains three executed Nib programs — `12 & 10` → 8,

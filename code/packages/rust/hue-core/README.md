@@ -66,6 +66,12 @@ packages a typed surface for:
   spec, release, identity, transport/runtime, or pairing-handoff review
 - Hue catalog/spec handoff summaries that count accepted catalog, spec,
   release, and runtime/pairing review gates
+- Hue package publish-gate summaries that route blocked handoffs to catalog,
+  release, or runtime/pairing review queues
+- Hue package lifecycle summaries that count release, spec, catalog, handoff,
+  and publish stages as one ordered package readiness view
+- Hue package review-queue summaries that turn lifecycle stage blockers into
+  release, spec, catalog, handoff, and publish acceptance queues
 
 ## Dependencies
 

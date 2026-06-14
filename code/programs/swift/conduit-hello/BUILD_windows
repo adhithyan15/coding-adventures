@@ -1,0 +1,1 @@
+( cd ..\..\..\packages\rust\conduit-capi && cargo build --release ) && (where swift >/dev/null 2>/dev/null && ( copy ..\..\..\packages\rust\target\release\conduit_capi.lib ..\..\..\packages\swift\conduit\Sources\CConduit\ && swift test ) || echo Swift not available — conduit-capi built, skipping swift test)

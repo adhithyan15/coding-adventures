@@ -22,4 +22,6 @@ All notable changes to this package will be documented in this file.
 - Command-class interview descriptors that expose state-query commands and D23
   capability projection for supported classes.
 - Command-class projection summaries for D23 command and sensor surface checks.
+- Command-class projection readiness summaries for command-class inventory,
+  projected capability, command, sensor, and observe-only surface gates.
 - D23 capability and state-delta mapping for common reports.

@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - `ApsFrameBatchSummary` for payload-free APS frame-stream delivery, profile,
   cluster, security, ack-request, and payload-volume rollups.
+- `ApsFrameBatchReadinessSummary` for application-delivery, home-automation,
+  cluster, and payload capture readiness checks.
 - `ApsFrameSummary` for payload-free APS routing, delivery, profile, and
   cluster read models.
 - `ApsCommandFrame`, `ApsCommandId`, and `ApsCommandSummary` for APS command

@@ -1,0 +1,137 @@
+% ============================================================================
+% organism-id — WHICH bacterium? The organism-identification rulebook, as an
+% IMPORTABLE CAS library.
+% ============================================================================
+% MYCIN-2026 A1. A differential over the specific meningitis pathogens. Two kinds
+% of evidence, exactly as MYCIN reasoned:
+%
+%   1. Gram-stain MORPHOLOGY — near-decisive when present. The morphology of the
+%      organism seen on the CSF Gram stain points at the genus (lancet-shaped
+%      gram-positive diplococci → pneumococcus; gram-negative diplococci →
+%      meningococcus; gram-positive rods → Listeria; …). These are large,
+%      definitional likelihood ratios (textbook morphology), trust authoritative.
+%
+%   2. EPIDEMIOLOGY — the priors and the host-factor shifters. Age band is the
+%      dominant determinant of the pre-test organism distribution; immune status,
+%      pregnancy/listeria exposure, recent neurosurgery, crowding, and a
+%      petechial rash shift it. These magnitudes are authored from standard
+%      references (Brouwer/Tunkel/van de Beek, Clin Microbiol Rev 2010;23:467)
+%      and are NOT yet spider-grounded — they are clearly marked `trust
+%      consensus`/`empirical` and are one CAS edit from a grounded value, the
+%      same honesty boundary the formulary dose-windows carry.
+%
+% The output (a posterior over organisms) is read as the *significant-organism
+% set* and handed to the set-cover therapy deriver: identify → cover → dose.
+%
+% Use:  import "organism-id.adj"  then add observe lines + the ? queries are here.
+
+import "organism-vocab.adj"
+
+rulebook organism_id {
+    use organism_vocab
+
+    % ===================== Epidemiologic priors =====================
+    % Community-acquired adult bacterial-meningitis organism distribution
+    % (Brouwer MC, Tunkel AR, van de Beek D, Clin Microbiol Rev 2010;23(3):467-92).
+    % Priors need not sum to 1 — the differential normalizes shares across queries.
+    prior 0.50 for s_pneumoniae
+        source "Brouwer 2010 CMR (pneumococcus the leading community pathogen)"
+        trust consensus
+    prior 0.15 for n_meningitidis
+        source "Brouwer 2010 CMR (meningococcus, esp. adolescents/young adults)"
+        trust consensus
+    prior 0.05 for h_influenzae
+        source "Brouwer 2010 CMR (Hib much reduced post-vaccine; still seen)"
+        trust consensus
+    prior 0.05 for listeria
+        source "Brouwer 2010 CMR (Listeria ~ older/immunocompromised/pregnant)"
+        trust consensus
+    prior 0.03 for gram_negative_bacilli
+        source "Brouwer 2010 CMR (enteric GNB: neonates, elderly, post-neurosurgical)"
+        trust consensus
+    prior 0.02 for group_b_strep
+        source "Brouwer 2010 CMR (GBS: neonates + some adults)"
+        trust consensus
+    prior 0.01 for s_aureus
+        source "Brouwer 2010 CMR (S. aureus: healthcare-associated / post-procedural)"
+        trust consensus
+
+    % ===================== Gram-stain morphology (decisive) =====================
+    % Definitional textbook morphology → genus. Large LRs, trust authoritative.
+    contributes 50 from csf_gram_morphology(gram_positive_diplococci) to s_pneumoniae
+        source "CSF Gram-stain morphology: lancet-shaped GP diplococci = pneumococcus (textbook/definitional)"
+        trust authoritative
+    contributes 50 from csf_gram_morphology(gram_negative_diplococci) to n_meningitidis
+        source "CSF Gram-stain morphology: GN diplococci = meningococcus (textbook/definitional)"
+        trust authoritative
+    contributes 45 from csf_gram_morphology(gram_positive_bacilli) to listeria
+        source "CSF Gram-stain morphology: GP rods/coccobacilli = Listeria (textbook/definitional)"
+        trust authoritative
+    contributes 45 from csf_gram_morphology(gram_negative_coccobacilli) to h_influenzae
+        source "CSF Gram-stain morphology: pleomorphic GN coccobacilli = H. influenzae (textbook/definitional)"
+        trust authoritative
+    contributes 40 from csf_gram_morphology(gram_negative_bacilli) to gram_negative_bacilli
+        source "CSF Gram-stain morphology: GN rods = enteric gram-negative bacilli (textbook/definitional)"
+        trust authoritative
+    contributes 45 from csf_gram_morphology(gram_positive_cocci_clusters) to s_aureus
+        source "CSF Gram-stain morphology: GP cocci in clusters = staphylococci (textbook/definitional)"
+        trust authoritative
+
+    % ===================== Age-band epidemiology =====================
+    % Neonate: GBS + enteric GNB (E. coli) + Listeria dominate.
+    contributes 12 from age_band(neonate) to group_b_strep
+        source "Brouwer 2010 CMR / neonatal meningitis (GBS leading neonatal pathogen)"
+        trust empirical
+    contributes 8 from age_band(neonate) to gram_negative_bacilli
+        source "Brouwer 2010 CMR (E. coli a leading neonatal pathogen)"
+        trust empirical
+    contributes 4 from age_band(neonate) to listeria
+        source "Brouwer 2010 CMR (Listeria in neonates)"
+        trust empirical
+    % Older adult (>50): Listeria + GNB rise alongside pneumococcus.
+    contributes 5 from age_band(older_adult) to listeria
+        source "Brouwer 2010 CMR / IDSA Tunkel 2004 (Listeria risk over age 50)"
+        trust empirical
+    contributes 2 from age_band(older_adult) to gram_negative_bacilli
+        source "Brouwer 2010 CMR (GNB risk rises with age)"
+        trust empirical
+    % Adolescent/young-adult skew of meningococcus is folded into infant_child.
+    contributes 2 from age_band(infant_child) to n_meningitidis
+        source "Brouwer 2010 CMR (meningococcus weighted to younger ages)"
+        trust empirical
+    contributes 2 from age_band(infant_child) to h_influenzae
+        source "Brouwer 2010 CMR (Hib historically pediatric)"
+        trust empirical
+
+    % ===================== Host risk factors =====================
+    contributes 6 from immunocompromised(present) to listeria
+        source "IDSA Tunkel 2004 (impaired cell-mediated immunity → Listeria)"
+        trust empirical
+    contributes 3 from immunocompromised(present) to gram_negative_bacilli
+        source "IDSA Tunkel 2004 (immunocompromise → GNB)"
+        trust empirical
+    contributes 9 from listeria_exposure(present) to listeria
+        source "Listeria foodborne/pregnancy exposure (unpasteurized dairy, deli meats)"
+        trust empirical
+    contributes 8 from recent_neurosurgery_or_shunt(present) to s_aureus
+        source "IDSA 2017 healthcare-associated ventriculitis/meningitis (staph)"
+        trust empirical
+    contributes 6 from recent_neurosurgery_or_shunt(present) to gram_negative_bacilli
+        source "IDSA 2017 healthcare-associated ventriculitis/meningitis (GNB incl. Pseudomonas)"
+        trust empirical
+    contributes 4 from crowding_exposure(present) to n_meningitidis
+        source "Meningococcal transmission in crowded settings (dorms, barracks)"
+        trust empirical
+    contributes 7 from petechial_rash(present) to n_meningitidis
+        source "Petechial/purpuric rash strongly associated with meningococcemia"
+        trust empirical
+}
+
+% The differential: rank the competing organism hypotheses by posterior.
+? s_pneumoniae
+? n_meningitidis
+? listeria
+? h_influenzae
+? group_b_strep
+? gram_negative_bacilli
+? s_aureus

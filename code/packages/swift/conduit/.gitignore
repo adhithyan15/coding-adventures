@@ -1,0 +1,3 @@
+.build/
+Sources/CConduit/libconduit_capi.a
+Sources/CConduit/conduit_capi.lib
