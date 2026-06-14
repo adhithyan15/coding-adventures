@@ -39,6 +39,8 @@ All notable changes to this package will be documented in this file.
   final release/manual-review handoff checks.
 - Hue package release queue summaries that turn release handoff readiness into
   final queue entry checks for publish/release coordination.
+- Hue package release coordination summaries that combine release queue,
+  handoff, acceptance, review, and publish gates for final coordination checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
