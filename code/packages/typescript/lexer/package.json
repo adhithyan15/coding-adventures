@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/lexer",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Tokenizer/scanner that breaks source code into a stream of tokens — Layer 6 of the computing stack",
   "type": "module",
   "main": "src/index.ts",
