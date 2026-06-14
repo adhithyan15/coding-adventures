@@ -1,0 +1,70 @@
+# Training the local specialist decomposer
+
+The warm path asks the local model for exactly **one** thing: turn messy clinical
+prose into typed findings in the closed dictionary. Everything downstream is the
+same 0-answer-time-model-call CPU engine over the grounded rulebook. So the model
+is a small, swappable part — and the goal is to make a model that does *only*
+decomposition, as **small and fast** as possible, so it runs on a doctor's own
+machine and the patient's data never leaves it (privacy / HIPAA by architecture).
+
+This directory trains that specialist with MLX LoRA on Apple Silicon.
+
+## The idea: the framework authors its own training data (backward generation)
+
+To make a small model an expert decomposer we need many `(prose → IR)` pairs with
+**perfect** labels. Distilling a teacher's *extraction* would inherit the
+teacher's errors. So `gen_data.py` runs the generator **backward**:
+
+1. sample a finding-set from the dictionary — this **is** the gold IR, by
+   construction;
+2. ask a teacher model to write natural clinical prose stating exactly those
+   findings (varied phrasing, optional noise sentence);
+3. the training pair is `(decompose-prompt + prose) → (the sampled IR)`.
+
+Because we *chose* the findings, the label is exact — the teacher only supplies
+language, never the ground truth. The mix deliberately includes bacterial / viral
+/ mixed profiles, negations, and **ABSTAIN** cases (prose with no dictionary
+findings → empty IR) so the model learns to decline rather than hallucinate.
+
+## Workflow
+
+```sh
+# 1. author the data (teacher writes prose for sampled finding-sets)
+python3 gen_data.py --n 300 --teacher llama3.1:8b --seed 0   # → data/train.jsonl, data/valid.jsonl
+
+# 2. LoRA fine-tune a small base with mlx-lm (example: Gemma-3-1B)
+mlx_lm.lora --model mlx-community/gemma-3-1b-it-4bit --train \
+    --data data --adapter-path adapters --iters 400 --mask-prompt
+
+# 3. score base vs base+LoRA through the SAME framework (ir_to_adj → decide)
+python3 eval_specialist.py --model mlx-community/gemma-3-1b-it-4bit                     # base
+python3 eval_specialist.py --model mlx-community/gemma-3-1b-it-4bit --adapter adapters  # specialist
+```
+
+`eval_specialist.py` runs the model as the warm-path decomposer and scores the
+engine's diagnosis vs gold — identical scoring to `../bench/bench_models.py`, so
+base-vs-specialist is apples-to-apples. The model never diagnoses; it only
+decomposes.
+
+## Result
+
+Training the framework-authored data took the base model from **0/4 → 4/4** on the
+meningitis vignettes (training loss ~1.9 → ~0.02) — a small local model made an
+expert decomposer by data the framework wrote itself, with no human labels. See
+`../bench/BENCH_FINDINGS.md` for how small the *base* models can go with a tolerant
+framework (down to ~1 GB), and `../LOCAL-MODEL-FINDINGS.md` for the privacy thesis.
+
+## What is and isn't committed
+
+Source only: `gen_data.py`, `eval_specialist.py`, this README. The `.gitignore`
+excludes `.venv/`, `data/` (generated pairs), `adapters/` (trained weights), and
+`*.log` — those are reproducible from the scripts + a base model, and the weights
+are large/environment-specific. Regenerate with the workflow above.
+
+## Honest limits
+
+- 4 vignettes, one differential — directional, not a powered benchmark.
+- The trained adapter overfits a narrow task by design (decompose *this*
+  dictionary); it is a proof that the specialist approach works, not a shippable
+  clinical model.
+- Requires `mlx-lm` (Apple Silicon) for training and `ollama` for the teacher.
