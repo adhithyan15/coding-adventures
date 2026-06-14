@@ -1,0 +1,12 @@
+{
+  "hash": "9bb5d9645e2edb7e",
+  "kind": "dictionary",
+  "source_name": "meningitis-vocab.adj",
+  "imports": [],
+  "clauses": [],
+  "gate": {
+    "n_clauses": 0,
+    "accepted": 0,
+    "flagged_downgraded_to_inferred": []
+  }
+}
