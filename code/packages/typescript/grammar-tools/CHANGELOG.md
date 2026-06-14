@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-06-13
+
+### Added
+- **F10 declarative lexer mode transitions** (TypeScript port of the Rust
+  grammar-tools core, #5662, the merged Python port #5668, and the merged
+  Ruby port #5689). A `.tokens` grammar may now declare a `start_mode:`
+  directive and a `transitions:` section; the generic `GrammarLexer`
+  (separate PR) interprets the table to switch lexer modes after each token,
+  enabling context-sensitive lexing (JavaScript regex-vs-division, template
+  substitutions) without a hand-written callback.
+  - New `TransitionAction` interface (`kind` is one of
+    `set_mode`/`push`/`pop`/`enable_skip`/`disable_skip`, with optional
+    `target`) and `ModeTransition` interface (`onTokens`, `onValue`,
+    `inMode`, `actions`, `lineNumber`).
+  - `TokenGrammar` gains `readonly startMode?: string` and
+    `readonly transitions?: readonly ModeTransition[]`; both default to
+    `undefined` so existing grammars are unchanged.
+  - Parser: `start_mode:` directive + `transitions:` section header +
+    `parseTransition`/`splitInGuard` (rule form
+    `on TOKENS [in MODE] -> ACTION [, ACTION ...]`, with `(A | B)`
+    alternation and `KEYWORD="value"` guards).
+    `transitions`/`modes`/`start_mode` added to the reserved group-name set.
+  - Validator: rejects a `startMode` / `in MODE` guard / `set-mode`/`push`
+    target that is not `"default"` or a declared group, and caps the rule
+    count at `MAX_TRANSITIONS` (4096).
+  - +17 unit tests. Fully backward compatible.
+
+  Action-kind strings use underscores (`set_mode`/`enable_skip`) to match
+  the Python and Ruby ports; the DSL keeps hyphens
+  (`set-mode`/`enable-skip`).
+
 ## [0.4.0] - 2026-03-26
 
 ### Added
