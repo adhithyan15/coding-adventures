@@ -36,7 +36,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 MYCIN = HERE.parent.parent
 GROUNDING = MYCIN / "grounding" / "organism-id-grounding.json"
-LEDGER = MYCIN / "PROVENANCE-LEDGER.md"
+HOST_GROUNDING = MYCIN / "grounding" / "host-factor-grounding.json"
 
 # The rulebook STRUCTURE (closed vocabulary — which organisms / findings exist).
 # VALUES + provenance + trust come from the grounding, never authored here.
@@ -57,22 +57,25 @@ MORPH = [  # (grounding id, morphology value, organism, definitional LR magnitud
     ("morph_gnb_enteric", "gram_negative_bacilli", "gram_negative_bacilli", 40),
     ("morph_gpcc_saureus", "gram_positive_cocci_clusters", "s_aureus", 45),
 ]
-# Host-factor contributes: carried, NOT yet grounded (tracked as debt in the ledger).
+# Host-factor contributes (G2): the host-factor → organism ASSOCIATION is spider-
+# grounded (grounding/host-factor-grounding.json); the LR MAGNITUDE stays a structural
+# risk-multiplier (like the morphology LRs — the source grounds direction, not a number).
+# (grounding id, structural LR, evidence predicate, organism)
 HOST = [
-    (12, "age_band(neonate)", "group_b_strep"),
-    (8, "age_band(neonate)", "gram_negative_bacilli"),
-    (4, "age_band(neonate)", "listeria"),
-    (5, "age_band(older_adult)", "listeria"),
-    (2, "age_band(older_adult)", "gram_negative_bacilli"),
-    (2, "age_band(infant_child)", "n_meningitidis"),
-    (2, "age_band(infant_child)", "h_influenzae"),
-    (6, "immunocompromised(present)", "listeria"),
-    (3, "immunocompromised(present)", "gram_negative_bacilli"),
-    (9, "listeria_exposure(present)", "listeria"),
-    (8, "recent_neurosurgery_or_shunt(present)", "s_aureus"),
-    (6, "recent_neurosurgery_or_shunt(present)", "gram_negative_bacilli"),
-    (4, "crowding_exposure(present)", "n_meningitidis"),
-    (7, "petechial_rash(present)", "n_meningitidis"),
+    ("host_neonate_gbs", 12, "age_band(neonate)", "group_b_strep"),
+    ("host_neonate_gnb", 8, "age_band(neonate)", "gram_negative_bacilli"),
+    ("host_neonate_listeria", 4, "age_band(neonate)", "listeria"),
+    ("host_olderadult_listeria", 5, "age_band(older_adult)", "listeria"),
+    ("host_olderadult_gnb", 2, "age_band(older_adult)", "gram_negative_bacilli"),
+    ("host_infantchild_nmen", 2, "age_band(infant_child)", "n_meningitidis"),
+    ("host_infantchild_hflu", 2, "age_band(infant_child)", "h_influenzae"),
+    ("host_immuno_listeria", 6, "immunocompromised(present)", "listeria"),
+    ("host_immuno_gnb", 3, "immunocompromised(present)", "gram_negative_bacilli"),
+    ("host_listeriaexp_listeria", 9, "listeria_exposure(present)", "listeria"),
+    ("host_neurosurg_saureus", 8, "recent_neurosurgery_or_shunt(present)", "s_aureus"),
+    ("host_neurosurg_gnb", 6, "recent_neurosurgery_or_shunt(present)", "gram_negative_bacilli"),
+    ("host_crowding_nmen", 4, "crowding_exposure(present)", "n_meningitidis"),
+    ("host_petechial_nmen", 7, "petechial_rash(present)", "n_meningitidis"),
 ]
 
 PROP_RE = re.compile(r"(?:proportion[^0-9]*~?|~)\s*(0?\.\d+)")
@@ -83,11 +86,15 @@ def parse_proportion(value_found: str) -> float | None:
     """Pull the source-derived proportion (0–1) out of the spider's value text. The
     text is web/LLM-derived (untrusted), so an out-of-range value (e.g. "999%") is
     rejected (→ None → the fallback prior) — a prior must be a probability."""
-    m = PROP_RE.search(value_found or "")
+    # Bound the (spider/web-derived, untrusted) input before regex search — a very long
+    # crafted string could make PCT_RE/PROP_RE superlinear (ReDoS). A real proportion
+    # phrase is short; 200 chars is ample.
+    value_found = (value_found or "")[:200]
+    m = PROP_RE.search(value_found)
     if m:
         v = float(m.group(1))
     else:
-        m = PCT_RE.search(value_found or "")
+        m = PCT_RE.search(value_found)
         if not m:
             return None
         v = round(float(m.group(1)) / 100.0, 4)
@@ -124,6 +131,10 @@ def build(check: bool = False) -> int:
               file=sys.stderr)
         return 2
     recs = {r["id"]: r for r in json.loads(GROUNDING.read_text())["records"]}
+    # Host-factor grounding (G2) — optional; if absent, host clauses stay authored-debt.
+    host_recs: dict[str, dict] = {}
+    if HOST_GROUNDING.exists():
+        host_recs = {r["id"]: r for r in json.loads(HOST_GROUNDING.read_text())["records"]}
 
     lines = [
         "% ============================================================================",
@@ -142,7 +153,6 @@ def build(check: bool = False) -> int:
         "",
         "    % ===================== Epidemiologic priors (spider-grounded) =====================",
     ]
-    ledger_rows = []
     manifest = {"kind": "organism-id", "clauses": {}}
 
     def record_clause(cid, status, verdict, trust, value, rec):
@@ -151,9 +161,6 @@ def build(check: bool = False) -> int:
             "byte_quote": ((rec or {}).get("grounded") or {}).get("byte_quote"),
             "url": ((rec or {}).get("grounded") or {}).get("resolved_url"),
         }
-        ledger_rows.append((cid, "grounded" if verdict == "ACCEPT" else
-                            ("refuted" if status == "refuted" else "inferred-flagged"),
-                            verdict, cite(rec)[:48]))
 
     for cid, org, fallback in PRIORS:
         rec = recs.get(cid)
@@ -182,12 +189,30 @@ def build(check: bool = False) -> int:
                   f"        trust {trust}{tag}"]
         record_clause(cid, status, verdict, trust, lr, rec)
 
-    lines += ["", "    % ===================== Host factors (AUTHORED — pending grounding) ====================="]
-    for lr, evidence, org in HOST:
+    lines += ["", "    % ===================== Host factors (spider-grounded associations) ====================="]
+    pending_host = 0
+    for cid, lr, evidence, org in HOST:
+        rec = host_recs.get(cid)
+        if rec is None:
+            # No grounding record yet → still authoring debt (carried, marked pending).
+            pending_host += 1
+            lines += [f"    contributes {lr} from {evidence} to {org}",
+                      '        source "authored — PENDING GROUNDING (provenance ledger)"',
+                      "        trust inferred"]
+            manifest["clauses"][cid] = {"status": "missing", "verdict": "PENDING",
+                                        "trust": "inferred", "value": lr,
+                                        "byte_quote": None, "url": None}
+            continue
+        status = rec["spider_status"]
+        verdict, _ = gate(status)
+        # The ASSOCIATION is grounded; the LR magnitude is structural (a risk-multiplier),
+        # so a grounded host factor is consensus-level — like the morphology mappings.
+        trust = "consensus" if verdict == "ACCEPT" else "inferred"
+        tag = "" if verdict == "ACCEPT" else "   % [FLAG: " + status + "]"
         lines += [f"    contributes {lr} from {evidence} to {org}",
-                  '        source "authored — PENDING GROUNDING (provenance ledger)"',
-                  "        trust inferred"]
-        ledger_rows.append((f"host:{evidence}->{org}", "authored-debt", "PENDING", "—"))
+                  f'        source "{cite(rec)}"',
+                  f"        trust {trust}{tag}"]
+        record_clause(cid, status, verdict, trust, lr, rec)
 
     lines += ["}", ""]
     for org in [o for _, o, _ in PRIORS]:
@@ -207,34 +232,12 @@ def build(check: bool = False) -> int:
 
     (HERE / "organism-id.adj").write_text(adj_text)
     (HERE / "organism-id-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    _write_ledger(ledger_rows, accepted, flagged)
+    # The system-wide PROVENANCE-LEDGER.md is owned by grounding/ground_sources.py, which
+    # reads this manifest (counts + citation verification). We only emit .adj + manifest.
     print(f"organism_id_ground: regenerated organism-id.adj from grounding "
-          f"({accepted} ACCEPTED grounded, {flagged} FLAGGED; {len(HOST)} host clauses pending)")
+          f"({accepted} ACCEPTED grounded, {flagged} FLAGGED; {pending_host} host clauses "
+          f"pending). Run grounding/ground_sources.py to rebuild the provenance ledger.")
     return 0
-
-
-def _write_ledger(rows: list, accepted: int, flagged: int) -> None:
-    """The provenance ledger — every fact's status, so authoring debt is visible."""
-    out = ["# Provenance ledger — MYCIN-2026",
-           "",
-           "Every fact must enter the CAS only via the cold path (spider → byte-provenance",
-           "→ adversarial gate). This ledger tracks each fact's status so **authoring debt**",
-           "is visible and drives to zero. Generated by the gates (e.g. organism_id_ground.py).",
-           "",
-           "## organism identification (diagnosis/organisms)",
-           "",
-           f"grounded: **{accepted}** · inferred-flagged: **{flagged}** · "
-           f"authored-debt (host factors): **{len(HOST)}**",
-           "",
-           "| clause | status | gate | source |",
-           "|---|---|---|---|"]
-    for cid, status, verdict, src in rows:
-        out.append(f"| `{cid}` | {status} | {verdict} | {src} |")
-    out += ["",
-            "**Authoring debt remaining in this domain:** the host-factor contributes "
-            "(age band, immune status, exposures) are not yet spider-grounded — next batch.",
-            ""]
-    LEDGER.write_text("\n".join(out) + "\n")
 
 
 if __name__ == "__main__":

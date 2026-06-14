@@ -32,16 +32,27 @@ sys.path.insert(0, str(HERE))
 import harness  # noqa: E402
 
 ORG_GROUNDING = HERE / "organism-id-grounding.json"
+HOST_GROUNDING = HERE / "host-factor-grounding.json"
 SOURCE_LIST = HERE / "source-list.json"
 SOURCE_OBJECTS = HERE / "source-objects.json"
 LEDGER = MYCIN / "PROVENANCE-LEDGER.md"
 ORG_MANIFEST = MYCIN / "diagnosis" / "organisms" / "organism-id-manifest.json"
 
+# Every grounding file whose records cite sources we decompose + verify against.
+GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING]
+
 
 def grounded_records() -> list[dict]:
-    """The organism-id grounding records that cite a real source (verdict-bearing)."""
-    recs = json.loads(ORG_GROUNDING.read_text())["records"]
-    return [r for r in recs if (r.get("grounded") or {}).get("resolved_url")]
+    """All grounding records (priors/morphology + host factors) that cite a real
+    source (verdict-bearing) — the facts whose citations we verify against sources."""
+    out: list[dict] = []
+    for f in GROUNDING_FILES:
+        if not f.exists():
+            continue
+        for r in json.loads(f.read_text())["records"]:
+            if (r.get("grounded") or {}).get("resolved_url"):
+                out.append(r)
+    return out
 
 
 def emit_source_list() -> int:
@@ -108,8 +119,11 @@ def commit_and_verify() -> int:
     man = json.loads(ORG_MANIFEST.read_text()) if ORG_MANIFEST.exists() else {"clauses": {}}
     grounded = sum(1 for c in man["clauses"].values() if c["verdict"] == "ACCEPT")
     flagged = sum(1 for c in man["clauses"].values() if c["verdict"] == "FLAG")
+    # Authoring debt = clauses still carried without grounding (verdict PENDING). Drives
+    # to 0 as the spider grounds the host factors (G2) — no longer a hardcoded count.
+    debt = sum(1 for c in man["clauses"].values() if c["verdict"] == "PENDING")
     artifact = {"name": "organism identification", "path": "diagnosis/organisms/organism-id.adj",
-                "grounded": grounded, "flagged": flagged, "authored_debt": 14, "rows": rows}
+                "grounded": grounded, "flagged": flagged, "authored_debt": debt, "rows": rows}
     LEDGER.write_text(harness.build_ledger([artifact]) +
                       f"\n_Citation verification against decomposed sources in the CAS: "
                       f"**{verified_n} fully verified**, {partial_n} core-verified (citation "

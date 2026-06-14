@@ -49,15 +49,22 @@ const SCHEMA = {
 }
 
 // The organism-id citation frontier (output of `ground_sources.py --list`).
+// The most recent grounding frontier (G2 host-factor sources). Pass args.sources to
+// override; earlier organism-id epidemiology/morphology sources are already in the CAS.
 const EMBEDDED = [
-  'https://pubmed.ncbi.nlm.nih.gov/15509818/',
-  'https://www.ncbi.nlm.nih.gov/books/NBK470351/',
-  'https://pmc.ncbi.nlm.nih.gov/articles/PMC12662076/',
-  'https://pmc.ncbi.nlm.nih.gov/articles/PMC5995389/',
-  'https://academic.oup.com/ofid/article/3/4/ofw206/2593338',
-  'https://www.ncbi.nlm.nih.gov/books/NBK562176/',
-  'https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-8-haemophilus-influenzae.html',
-  'https://www.ncbi.nlm.nih.gov/books/NBK470553/',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC6508726/',
+  'https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC5121369/',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC2995464/',
+  'https://pubmed.ncbi.nlm.nih.gov/23446215/',
+  'https://www.ncbi.nlm.nih.gov/books/NBK549849/',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC5405091/',
+  'https://pubmed.ncbi.nlm.nih.gov/16451418/',
+  'https://www.who.int/news-room/fact-sheets/detail/listeriosis',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC3372798/',
+  'https://academic.oup.com/cid/article/64/6/e34/2996079',
+  'https://www.cdc.gov/mmwr/preview/mmwrhtml/rr4907a2.htm',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC3719428/',
 ]
 const sources = (args && args.sources) || EMBEDDED.map((u) => ({ source_id: u, resolved_url: u }))
 
@@ -65,7 +72,7 @@ const objs = await pipeline(
   sources,
   (s) => agent(
     `Fetch this source and DECOMPOSE it (nothing on blind trust). WebFetch the URL and read it. ` +
-    `Extract the KEY factual claims it makes about bacterial-meningitis ORGANISM EPIDEMIOLOGY (which pathogens, what proportions, in which populations) and CSF GRAM-STAIN MORPHOLOGY. ` +
+    `Extract the KEY factual claims it makes about bacterial-meningitis ORGANISM EPIDEMIOLOGY (which pathogens, what proportions, in which populations), HOST / RISK FACTORS (age band, immune status, exposures, recent neurosurgery or CSF device, crowding, rash — which host factor RAISES which organism), and CSF GRAM-STAIN MORPHOLOGY. ` +
     `For EACH claim give a short normalized \`text\` and a VERBATIM \`byte_quote\` copied exactly from the fetched page (never paraphrase or invent — if you cannot fetch the page, return an empty claims array). ` +
     `Also list in \`cites\` any source THIS page attributes a figure to (e.g. "As per Thigpen et al." → "Thigpen et al. NEJM 2011") — that is the recursion frontier. ` +
     `URL: ${s.resolved_url}`,

@@ -1,0 +1,39 @@
+{
+  "hash": "9b77152f9ff9f833",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6508726/",
+  "title": "Disease burden of neonatal invasive Group B Streptococcus infection in the Netherlands (de Gier et al., PLoS One 2019;14(5):e0216749)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6508726/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Group B Streptococcus (Streptococcus agalactiae) is the leading cause of neonatal sepsis and meningitis.",
+      "byte_quote": "Streptococcus agalactiae or group B Streptococcus (GBS) is the leading cause of neonatal sepsis and meningitis."
+    },
+    {
+      "id": "c2",
+      "text": "Early-onset GBS = invasive infection in the first 7 days of life; late-onset GBS = infection from one week up to three months of age (host age-band stratification).",
+      "byte_quote": "Invasive infections presenting within the first 7 days of life are categorized as 'early-onset GBS'. Infections presenting after one week, up to three months of age, are termed 'late-onset GBS'."
+    },
+    {
+      "id": "c3",
+      "text": "Early-onset disease results from vertical transmission from the colonised mother; late-onset may also be nosocomial or community-transmitted (host exposure/risk factor).",
+      "byte_quote": "Early onset disease results from vertical transmission from the colonised mother, in late onset disease the pathogen may also be transmitted by nosocomial or community sources."
+    },
+    {
+      "id": "c4",
+      "text": "GBS colonises the maternal intestinal and urogenital tract at a carriage rate of about 20% (host carriage risk factor for the neonate).",
+      "byte_quote": "GBS is part of the microbiome of the intestinal and urogenital tract, with a carriage rate of around 20%"
+    },
+    {
+      "id": "c5",
+      "text": "Estimated 97 cases and 6.5 deaths from culture-positive neonatal invasive GBS infection in the Netherlands in 2017 (population-specific incidence).",
+      "byte_quote": "An estimated 97 cases and 6.5 deaths occurred in the Netherlands in 2017 due to culture positive neonatal invasive GBS infection."
+    }
+  ],
+  "cites": [
+    "Kohli-Lynch et al.",
+    "Schroeder et al. 2009",
+    "Van Kassel et al.",
+    "Trijbels-Smeulders et al. 2007"
+  ]
+}

@@ -41,10 +41,24 @@ load-bearing span present). An over-stuffed citation — a real proportion plus 
 context span the source decomposition didn't capture — is thus flagged `◑ core ✓
 (over-reach)` for fix-up without falsely discrediting the fact's actual evidence.
 
-The current organism-id run: **7 citations fully verified, 1 core-verified (over-reach),
-5 unverified — and every ACCEPTed (grounded) prior has at least its load-bearing span
-verified.** The unverified five are all already-`FLAG` facts (direction_only/refuted),
-i.e. exactly the citations the rulebook never trusts as authoritative.
+It is robust to web-fetch byte-class artifacts that wrap the same prose: Markdown
+emphasis (`_x_`), HTML entities (`&lt;`), and en/em-dash vs `--` in ranges (`9–23` ≡
+`9--23`). What it deliberately does NOT paper over is a genuinely different *sentence*:
+if a fact cites one verbatim span and the independent decomposition captured a
+different (even semantically-equivalent) one, the deterministic floor reports it
+unverified — that's an entailment-level match for the adversarial pass, not a verbatim
+one.
+
+**Status after G2 (organism-id priors + morphology + 14 host-factor LRs all grounded):
+authored-debt 0.** Across the 27 organism-id citations: **17 fully verified, 2
+core-verified (composite over-reach), 8 unverified** against the 25 decomposed sources
+in `cas/sources/`. Of the **18 grounded (ACCEPT)** facts, 17 verbatim/core-verify; the
+sole exception, `host_neonate_gnb`, is content-corroborated by its *same* source (Merck
+independently lists *E. coli* among predominant neonatal pathogens) but cited a
+different sentence than the decomposition captured — flagged for verbatim
+re-decomposition. The 8 unverified are otherwise all `FLAG` facts
+(direction_only/refuted) — exactly the citations the rulebook never trusts as
+authoritative.
 
 ## Run it
 

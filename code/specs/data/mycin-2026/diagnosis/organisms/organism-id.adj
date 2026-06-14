@@ -55,49 +55,49 @@ rulebook organism_id {
         source "Gram-Positive Bacteria — StatPearls, NCBI Bookshelf (NIH)"
         trust inferred   % [FLAG: direction_only]
 
-    % ===================== Host factors (AUTHORED — pending grounding) =====================
+    % ===================== Host factors (spider-grounded associations) =====================
     contributes 12 from age_band(neonate) to group_b_strep
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Disease burden of neonatal invasive Group B Streptococcus infection in"
+        trust consensus
     contributes 8 from age_band(neonate) to gram_negative_bacilli
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Neonatal Bacterial Meningitis — Merck Manual Professional Edition (Ped"
+        trust consensus
     contributes 4 from age_band(neonate) to listeria
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "The Brief Case: Neonatal Meningitis Caused by Listeria monocytogenes D"
+        trust consensus
     contributes 5 from age_band(older_adult) to listeria
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Three-year multicenter surveillance of community-acquired Listeria mon"
+        trust inferred   % [FLAG: direction_only]
     contributes 2 from age_band(older_adult) to gram_negative_bacilli
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "The spectrum of acute bacterial meningitis in elderly patients (BMC In"
+        trust consensus
     contributes 2 from age_band(infant_child) to n_meningitidis
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Meningococcal Disease (Neisseria meningitidis Infection) — StatPearls,"
+        trust consensus
     contributes 2 from age_band(infant_child) to h_influenzae
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Chapter 8: Haemophilus influenzae — Epidemiology and Prevention of Vac"
+        trust inferred   % [FLAG: direction_only]
     contributes 6 from immunocompromised(present) to listeria
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Bacterial Meningitis in Patients using Immunosuppressive Medication: a"
+        trust consensus
     contributes 3 from immunocompromised(present) to gram_negative_bacilli
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Adults with spontaneous aerobic Gram-negative bacillary meningitis adm"
+        trust inferred   % [FLAG: direction_only]
     contributes 9 from listeria_exposure(present) to listeria
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Listeriosis — WHO (World Health Organization) Fact Sheet"
+        trust consensus
     contributes 8 from recent_neurosurgery_or_shunt(present) to s_aureus
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Nosocomial Meningitis: Moving beyond Description to Prevention (Hong B"
+        trust consensus
     contributes 6 from recent_neurosurgery_or_shunt(present) to gram_negative_bacilli
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "2017 Infectious Diseases Society of America's Clinical Practice Guidel"
+        trust consensus
     contributes 4 from crowding_exposure(present) to n_meningitidis
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Meningococcal Disease and College Students — Recommendations of the Ad"
+        trust consensus
     contributes 7 from petechial_rash(present) to n_meningitidis
-        source "authored — PENDING GROUNDING (provenance ledger)"
-        trust inferred
+        source "Skin rash in meningitis and meningoencephalitis (PMC3719428, peer-revi"
+        trust consensus
 }
 
 ? s_pneumoniae

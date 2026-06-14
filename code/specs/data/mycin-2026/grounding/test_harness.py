@@ -60,6 +60,11 @@ def test_citation_robust_to_markdown_and_entities() -> None:
         claims=[h.SourceClaim(id="c1", text="x",
                               byte_quote="_S. pneumoniae_ was predominant (P&lt;0.001)")])
     assert h.verify_citation("S. pneumoniae was predominant (P<0.001)", so)["verified"]
+    # En/em-dash and "--" are the same range to a reader: "9–23" must match "9--23".
+    so2 = h.SourceObject(source_id="s", title="t", resolved_url="u",
+                         claims=[h.SourceClaim(id="c1", text="x",
+                                 byte_quote="occurred 9--23 times more frequently in dormitories")])
+    assert h.verify_citation("occurred 9–23 times more frequently in dormitories", so2)["verified"]
 
 
 def test_composite_quote_fragment_coverage() -> None:

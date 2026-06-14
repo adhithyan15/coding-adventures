@@ -82,6 +82,7 @@ def _norm(s: str) -> str:
     s = (s or "")
     s = s.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
     s = re.sub(r"[*_`]", "", s)               # strip Markdown emphasis markers
+    s = re.sub(r"[–—]|--", "-", s)   # en/em-dash & "--" → hyphen (range "9–23" == "9--23")
     return re.sub(r"\s+", " ", s).strip().lower()
 
 
