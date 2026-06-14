@@ -54,7 +54,11 @@
  *     const tokens = lexer.tokenize();
  */
 
-import type { TokenGrammar } from "@coding-adventures/grammar-tools";
+import type {
+  ModeTransition,
+  TokenGrammar,
+  TransitionAction,
+} from "@coding-adventures/grammar-tools";
 
 import type { Token, Trivia } from "./token.js";
 import { TOKEN_CONTEXT_KEYWORD } from "./token.js";
@@ -575,10 +579,35 @@ export class GrammarLexer {
   // -- Group stack and callback --
 
   /**
-   * The group stack. Bottom is always "default". Top is the active
+   * The group stack. Bottom is the configured start mode (F10);
+   * "default" for grammars without a `start_mode:`. Top is the active
    * group whose patterns are tried during token matching.
    */
   private _groupStack: string[] = ["default"];
+
+  // -- F10: declarative lexer mode transitions --
+
+  /**
+   * Mode-transition rules from the grammar. Empty when the grammar
+   * has no `transitions:` section, in which case `_applyTransitions`
+   * is a no-op and behavior is identical to F04.
+   */
+  private readonly _transitions: readonly ModeTransition[];
+
+  /**
+   * Configured start mode (`start_mode:` directive). Used to
+   * initialize the group stack and to reset it between `tokenize()`
+   * calls. Defaults to `"default"` when unset or unrecognized.
+   */
+  private readonly _startMode: string;
+
+  /**
+   * Set of group names that should inherit the default group's
+   * patterns. A `set-mode` target is a FLAT MODE — its own patterns
+   * take priority but unmatched input falls through to the default
+   * patterns. `push` targets stay exclusive (F04 / XML semantics).
+   */
+  private readonly _inheritingModes: ReadonlySet<string>;
 
   /**
    * On-token callback — null means no callback (zero overhead).
@@ -731,6 +760,47 @@ export class GrammarLexer {
         this._groupPatterns[groupName] = compiled;
       }
     }
+
+    // --- F10: declarative lexer mode transitions ---
+    // A .tokens grammar may declare a transitions: table plus a
+    // start_mode:. The matcher (try_match_token_in_group) selects
+    // patterns by the active mode (top of _groupStack); we consult
+    // this table after each emitted token (apply_transitions) to
+    // switch the active mode -- enabling context-sensitive lexing
+    // (regex-vs-division, template substitution) without a
+    // host-language callback.
+    this._transitions = grammar.transitions ?? [];
+
+    // Resolve start_mode (default to "default" if unset or unknown).
+    const startCandidate = grammar.startMode;
+    this._startMode =
+      startCandidate !== undefined &&
+      (startCandidate === "default" ||
+        Object.prototype.hasOwnProperty.call(this._groupPatterns, startCandidate))
+        ? startCandidate
+        : "default";
+
+    // A group reached via set-mode is a FLAT MODE that inherits the
+    // default group's patterns; one reached only by push is exclusive.
+    // Compute the set of inheriting modes at construction time so the
+    // pattern-match hot path is just a Set lookup.
+    const pushTargets = new Set<string>();
+    const setModeTargets = new Set<string>();
+    for (const rule of this._transitions) {
+      for (const action of rule.actions) {
+        if (action.target === undefined) continue;
+        if (action.kind === "push") pushTargets.add(action.target);
+        if (action.kind === "set_mode") setModeTargets.add(action.target);
+      }
+    }
+    const inheriting = new Set<string>();
+    for (const name of setModeTargets) {
+      if (name !== "default" && !pushTargets.has(name)) inheriting.add(name);
+    }
+    this._inheritingModes = inheriting;
+
+    // Initialize the group stack with the configured start mode (F10).
+    this._groupStack = [this._startMode];
   }
 
   // -- Public API: callback registration --
@@ -977,8 +1047,17 @@ export class GrammarLexer {
           if (ctx._skipEnabled !== null) {
             this._skipEnabled = ctx._skipEnabled;
           }
+
+          // F10: the declarative table is the default; a registered
+          // callback's actions run first and the table acts on the
+          // resulting state. No-op when the grammar has no transitions.
+          this._applyTransitions(token);
         } else {
           this._emitToken(tokens, token);
+
+          // F10: consult the declarative table so the new mode governs
+          // the NEXT match. No-op when the grammar has no transitions.
+          this._applyTransitions(token);
         }
         continue;
       }
@@ -1000,8 +1079,9 @@ export class GrammarLexer {
     this._emitToken(tokens, this._withOptionalSourceInfo(eof, this._pos));
 
     // Reset group stack and skip flag for reuse (in case tokenize is
-    // called again on the same instance).
-    this._groupStack = ["default"];
+    // called again on the same instance). F10: reset to the configured
+    // start mode, not the bare "default".
+    this._groupStack = [this._startMode];
     this._skipEnabled = true;
 
     return tokens;
@@ -1025,6 +1105,76 @@ export class GrammarLexer {
       case "]": if (this._bracketDepths.bracket > 0) this._bracketDepths.bracket--; break;
       case "{": this._bracketDepths.brace++; break;
       case "}": if (this._bracketDepths.brace > 0) this._bracketDepths.brace--; break;
+    }
+  }
+
+  // -- F10: declarative lexer mode transitions --
+
+  /**
+   * The grammar token name used to match a token against transition
+   * rules. The Token.type discriminator already matches the .tokens
+   * token name (e.g. "NAME", "NUMBER", "KEYWORD"), so a token's type
+   * IS its transition key.
+   */
+  private _transitionKey(token: Token): string {
+    return token.type;
+  }
+
+  /**
+   * Apply the declarative mode-transition table after a token is
+   * emitted. The first rule whose trigger token-name, optional `in MODE`
+   * guard, and optional `KEYWORD="value"` guard all match wins; its
+   * actions mutate the active-mode register (top of `_groupStack`)
+   * and/or the skip flag:
+   *
+   *   set_mode      -- replace the active mode in place (flat toggle)
+   *   push / pop    -- F04 nested-region save / restore
+   *   enable_skip /
+   *   disable_skip  -- toggle skip processing
+   *
+   * No-op when the table is empty (behavior identical to F04).
+   */
+  private _applyTransitions(token: Token): void {
+    if (this._transitions.length === 0) return;
+
+    const key = this._transitionKey(token);
+    const active = this._groupStack[this._groupStack.length - 1] ?? "default";
+
+    let matchedActions: readonly TransitionAction[] | null = null;
+    for (const rule of this._transitions) {
+      if (!rule.onTokens.includes(key)) continue;
+      if (rule.inMode !== undefined && rule.inMode !== active) continue;
+      if (rule.onValue !== undefined && rule.onValue !== token.value) continue;
+
+      matchedActions = rule.actions;
+      break;
+    }
+    if (matchedActions === null) return;
+
+    for (const action of matchedActions) {
+      switch (action.kind) {
+        case "set_mode":
+          if (action.target !== undefined) {
+            this._groupStack[this._groupStack.length - 1] = action.target;
+          }
+          break;
+        case "push":
+          if (action.target !== undefined) {
+            this._groupStack.push(action.target);
+          }
+          break;
+        case "pop":
+          if (this._groupStack.length > 1) {
+            this._groupStack.pop();
+          }
+          break;
+        case "enable_skip":
+          this._skipEnabled = true;
+          break;
+        case "disable_skip":
+          this._skipEnabled = false;
+          break;
+      }
     }
   }
 
@@ -1110,6 +1260,9 @@ export class GrammarLexer {
         // Track bracket depth (shared for callback access)
         this._updateBracketDepth(tok.value);
         this._emitToken(tokens, tok);
+
+        // F10: apply declarative mode transitions. No-op when empty.
+        this._applyTransitions(tok);
         continue;
       }
 
@@ -1151,8 +1304,8 @@ export class GrammarLexer {
       column: this._column,
     }, this._pos));
 
-    // Reset group stack for reuse.
-    this._groupStack = ["default"];
+    // Reset group stack for reuse. F10: configured start mode.
+    this._groupStack = [this._startMode];
     this._skipEnabled = true;
 
     return tokens;
@@ -1442,7 +1595,25 @@ export class GrammarLexer {
    */
   private _tryMatchTokenInGroup(groupName: string): Token | null {
     const remaining = this._source.slice(this._pos);
-    const patterns = this._groupPatterns[groupName] ?? this._patterns;
+    // F10: a flat mode (a set-mode target) inherits the default group's
+    // patterns. Its own patterns take priority (tried first); the rest
+    // fall through by appending the default patterns. Nested push regions
+    // are NOT in _inheritingModes and so stay exclusive (F04 / XML
+    // semantics).
+    //
+    // Use `hasOwnProperty` (not bare bracket access) so that a grammar
+    // whose `transitions:` table set a target like `"toString"` or
+    // `"__proto__"` cannot reach an inherited prototype value — the
+    // lookup must miss and fall back to the default patterns.
+    let patterns = Object.prototype.hasOwnProperty.call(this._groupPatterns, groupName)
+      ? this._groupPatterns[groupName]
+      : this._patterns;
+    if (groupName !== "default" && this._inheritingModes.has(groupName)) {
+      const defaults = Object.prototype.hasOwnProperty.call(this._groupPatterns, "default")
+        ? this._groupPatterns["default"]
+        : this._patterns;
+      patterns = patterns.concat(defaults);
+    }
 
     for (const { name, pattern, alias } of patterns) {
       const match = pattern.exec(remaining);
