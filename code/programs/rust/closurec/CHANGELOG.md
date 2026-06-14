@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.129.0] - 2026-06-14
+
+### Fixed
+
+- **CLOSES gap-085 (WHITESPACE_ONLY)** — both remaining fractional-shortest-form
+  sub-cases were discovered to already produce byte-identical output (silently fixed
+  by earlier gap work). The two fixtures are now enforced:
+
+  - `num_neg_exp_frac`: `a=5e-3;` → `a=.005;`
+    (negative-exponent scientific → fractional shortest-form)
+  - `num_small_frac`: `a=0.0001;` → `a=1E-4;`
+    (small decimal → exponential shortest-form)
+
+  Both entries removed from `IGNORE_FIXTURES` in `tests/diff_minify.rs`.
+  `CLOC12-gaps.md` gap-085 updated to RESOLVED.
+
+- **CLOSES gap-106 (WHITESPACE_ONLY)** — non-integer numeric float property key
+  canonicalisation was discovered to already be byte-identical (silently fixed by
+  earlier gap work):
+
+  - `minify_obj_numkey_float`: `x={.5:1};` → `x={"0.5":1};`
+
+  Entry removed from `IGNORE_FIXTURES`. `CLOC12-gaps.md` gap-106 updated to
+  RESOLVED.
+
 ## [0.128.0] - 2026-06-14
 
 ### Fixed

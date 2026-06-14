@@ -204,14 +204,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // 1000 → `1E3`, `1.5e10` → `15E9`, `1.0` → `1`, `100.00` → `100`)
     // is now routed through the shortest-form integer logic by
     // `decimal_float_as_u128`. `minify_num_exp_case` enforced.
-    // Residual (still deferred): the V8 fractional shortest-form
-    // (`0.5` → `.5`, `1e-5` → `1E-5`, `0.0001` → `1E-4`) and
-    // out-of-u128 magnitudes (`1e100` → `1E100`) need a Grisu/Ryu
-    // float formatter — tracked as gap-085. `minify_num_neg_exp_frac`
-    // (`5e-3` → `.005`) is the negative-exponent fractional case of the
-    // same deferred gap.
-    ("num_neg_exp_frac", "gap-085: negative-exp scientific -> fractional shortest-form"),
-    ("num_small_frac",   "gap-085: small decimal fraction -> exponential (0.0001 -> 1E-4)"),
+    // gap-085 RESOLVED in CLOC12.129 — both remaining fractional-shortest-form
+    // sub-cases now produce byte-identical output:
+    //   `5e-3`   → `.005`  (`num_neg_exp_frac`: negative-exponent scientific)
+    //   `0.0001` → `1E-4`  (`num_small_frac`:   small decimal → exponential)
+    // Both fixtures now ENFORCED.
     // gap-107 RESOLVED in CLOC12.110 — a FRACTIONAL float literal
     // (non-integer value) with trailing zeros in its fractional part
     // now has them stripped to the shortest exact decimal, plus a lone
@@ -355,7 +352,8 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // numeric token `.5`. Integer numeric keys (`{1:2}`) are already
     // byte-identical (both keep `1`); only non-integer numeric keys
     // diverge. Needs object-key-specific number→string canonicalisation.
-    ("obj_numkey_float", "gap-106: numeric float property key .5 -> \"0.5\""),
+    // gap-106 RESOLVED in CLOC12.129 — `{.5:1}` → `{"0.5":1}` now
+    // byte-identical. `minify_obj_numkey_float` now ENFORCED.
     // gap-103 RESOLVED in CLOC12.107 — a CLASS-BODY computed `get`/`set`
     // accessor preceded by a previous member's `}` (consecutive members)
     // or the `static` modifier now gets the same separating space
