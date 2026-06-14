@@ -20,6 +20,8 @@ coordinator policy. It provides:
   coverage, and raw/unknown-type hygiene checks
 - ZCL report operator summaries that combine frame telemetry with attribute
   report readiness for capture/backlog/review routing
+- ZCL report signoff summaries that turn operator readiness into final
+  report capture signoff checks
 - D23 capability projection for common clusters
 - D23 `StateDelta` projection for on/off, level, color-temperature, occupancy,
   lock-state, temperature, humidity, and illuminance reports

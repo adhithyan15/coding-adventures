@@ -783,6 +783,92 @@ pub fn zcl_report_operator_summary<'a, 'b>(
     ZclReportOperatorSummary::from_parts(frame_batch, report_readiness)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclReportSignoffSummary {
+    pub operator_summary: ZclReportOperatorSummary,
+    pub required_signoff_check_count: usize,
+    pub passed_signoff_check_count: usize,
+    pub missing_signoff_check_count: usize,
+    pub operator_ready: bool,
+    pub report_frame_observed: bool,
+    pub report_payloads_present: bool,
+    pub default_response_backlog_clear: bool,
+    pub report_readiness_ready: bool,
+    pub signoff_ready: bool,
+}
+
+impl ZclReportSignoffSummary {
+    pub fn from_operator_summary(operator_summary: ZclReportOperatorSummary) -> Self {
+        let operator_ready = operator_summary.is_operator_ready();
+        let report_frame_observed = !operator_summary.needs_report_frame_capture();
+        let report_payloads_present = !operator_summary.needs_report_payloads();
+        let default_response_backlog_clear = !operator_summary.has_default_response_backlog();
+        let report_readiness_ready = !operator_summary.needs_report_readiness_work();
+        let checks = [
+            operator_ready,
+            report_frame_observed,
+            report_payloads_present,
+            default_response_backlog_clear,
+            report_readiness_ready,
+        ];
+        let passed_signoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_signoff_check_count = checks.len();
+        let missing_signoff_check_count = required_signoff_check_count - passed_signoff_check_count;
+        let signoff_ready = missing_signoff_check_count == 0;
+
+        Self {
+            operator_summary,
+            required_signoff_check_count,
+            passed_signoff_check_count,
+            missing_signoff_check_count,
+            operator_ready,
+            report_frame_observed,
+            report_payloads_present,
+            default_response_backlog_clear,
+            report_readiness_ready,
+            signoff_ready,
+        }
+    }
+
+    pub fn is_signoff_ready(self) -> bool {
+        self.signoff_ready
+    }
+
+    pub fn has_missing_signoff_checks(self) -> bool {
+        self.missing_signoff_check_count > 0
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_report_frame_capture(self) -> bool {
+        !self.report_frame_observed
+    }
+
+    pub fn needs_report_payloads(self) -> bool {
+        !self.report_payloads_present
+    }
+
+    pub fn has_default_response_backlog(self) -> bool {
+        !self.default_response_backlog_clear
+    }
+
+    pub fn needs_report_readiness_work(self) -> bool {
+        !self.report_readiness_ready
+    }
+}
+
+pub fn zcl_report_signoff_summary<'a, 'b>(
+    frames: impl IntoIterator<Item = &'a ZclFrame>,
+    cluster_id: ZclClusterId,
+    reports: impl IntoIterator<Item = &'b ZclAttributeReport>,
+) -> ZclReportSignoffSummary {
+    ZclReportSignoffSummary::from_operator_summary(zcl_report_operator_summary(
+        frames, cluster_id, reports,
+    ))
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ZclError {
     Truncated { needed: usize, remaining: usize },
@@ -1652,6 +1738,66 @@ mod tests {
         assert!(!summary.operator_ready);
         assert!(!summary.is_operator_ready());
         assert!(summary.has_missing_checks());
+        assert!(summary.needs_report_frame_capture());
+        assert!(summary.needs_report_payloads());
+        assert!(summary.has_default_response_backlog());
+        assert!(summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_signoff_summary_reports_ready_path() {
+        let reports = vec![ZclAttributeReport {
+            cluster_id: ZclClusterId::ON_OFF,
+            attribute_id: ZclAttributeId::ON_OFF,
+            data_type: ZclDataType::Bool,
+            value: ZclValue::Bool(true),
+        }];
+        let frame = report_attributes_frame(0x61, &reports).unwrap();
+
+        let summary = zcl_report_signoff_summary([&frame], ZclClusterId::ON_OFF, &reports);
+
+        assert_eq!(
+            summary.operator_summary,
+            zcl_report_operator_summary([&frame], ZclClusterId::ON_OFF, &reports)
+        );
+        assert_eq!(summary.required_signoff_check_count, 5);
+        assert_eq!(summary.passed_signoff_check_count, 5);
+        assert_eq!(summary.missing_signoff_check_count, 0);
+        assert!(summary.operator_ready);
+        assert!(summary.report_frame_observed);
+        assert!(summary.report_payloads_present);
+        assert!(summary.default_response_backlog_clear);
+        assert!(summary.report_readiness_ready);
+        assert!(summary.signoff_ready);
+        assert!(summary.is_signoff_ready());
+        assert!(!summary.has_missing_signoff_checks());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_report_frame_capture());
+        assert!(!summary.needs_report_payloads());
+        assert!(!summary.has_default_response_backlog());
+        assert!(!summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_signoff_summary_routes_blocked_path() {
+        let read = ZclFrame::parse(&[0x00, 0x62, ZCL_READ_ATTRIBUTES_COMMAND_ID]).unwrap();
+        let reports =
+            parse_attribute_reports(ZclClusterId::BASIC, &[0x99, 0x00, 0xff, 0xde, 0xad]).unwrap();
+
+        let summary = zcl_report_signoff_summary([&read], ZclClusterId::BASIC, &reports);
+
+        assert_eq!(summary.required_signoff_check_count, 5);
+        assert_eq!(summary.passed_signoff_check_count, 0);
+        assert_eq!(summary.missing_signoff_check_count, 5);
+        assert!(!summary.operator_ready);
+        assert!(!summary.report_frame_observed);
+        assert!(!summary.report_payloads_present);
+        assert!(!summary.default_response_backlog_clear);
+        assert!(!summary.report_readiness_ready);
+        assert!(!summary.signoff_ready);
+        assert!(!summary.is_signoff_ready());
+        assert!(summary.has_missing_signoff_checks());
+        assert!(summary.needs_operator_readiness());
         assert!(summary.needs_report_frame_capture());
         assert!(summary.needs_report_payloads());
         assert!(summary.has_default_response_backlog());
