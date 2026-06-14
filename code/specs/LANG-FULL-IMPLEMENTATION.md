@@ -128,9 +128,12 @@ backend immediately) come before the enabler-dependent items.
   (`call_builtin "print_i64"`, all ports → stdout). Verified by RUNNING `out(1, 200)`→`200`
   and `out(1, 100 + 100)`→`200` across native/LLVM/WASM/JVM/CLR/VM/JIT. **Unblocks O1/O2/O3
   verification.** (`in` + the arithmetic/rotation intrinsics stay rejected — see O4.)
-- ☐ **O1** — `&&` / `||` short-circuit (currently eager bitwise). Now **verifiable** via `out`
-  (prove the RHS is/ isn't evaluated by `out`-ing distinguishing values). Reuse Nib's
-  `compile_short_circuit` (jmp_if_false/jmp/label only).
+- ✅ **O1** — `&&` / `||` short-circuit (was eager bitwise). `compile_short_circuit` (result
+  slot + jmp_if_false/jmp/label). **Proven by running** via a side-effecting function call in
+  the RHS: `if 1 == 2 && side() == 1 { … } else { out(1, 9) }` where `side()` prints 5 →
+  stdout `9` (old eager printed `5`,`9`); `||` analogue → `7`. Across native/LLVM/WASM/CLR/VM/JIT
+  (JVM = BA-JVM-1). Also fixed Oct non-void function returns to materialise as `i64` (the
+  `side() -> u8` helper exposed `define i8 @side()` mismatching its i64 body on LLVM).
 - ☐ **O2** — proper `~` 8-bit mask + u8 wrap (needs **E2**).
 - ☐ **O3** — `static` globals (currently silently dropped) — now verifiable via `out`.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).

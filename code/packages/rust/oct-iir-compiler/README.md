@@ -34,13 +34,14 @@ native executable
 
 ## V1 scope
 
-| Compiles                         | Doesn't                                   |
-|----------------------------------|-------------------------------------------|
-| Arithmetic, bitwise, comparison  | `in` + arithmetic/rotation intrinsics     |
-| `if` / `while` / `loop` / `break`| Strings (no STRING token in Oct grammar)  |
-| User fns, recursion              | Static globals (silently ignored for V1)  |
-| Local variables                  | Floating-point (8008 doesn't have FP)     |
-| `out(port, value)` → stdout      |                                           |
+| Compiles                          | Doesn't                                   |
+|-----------------------------------|-------------------------------------------|
+| Arithmetic, bitwise, comparison   | `in` + arithmetic/rotation intrinsics     |
+| short-circuit `&&` / `||`         | Strings (no STRING token in Oct grammar)  |
+| `if` / `while` / `loop` / `break` | Static globals (silently ignored for V1)  |
+| User fns (i64 returns), recursion | Floating-point (8008 doesn't have FP)     |
+| Local variables                   |                                           |
+| `out(port, value)` → stdout       |                                           |
 
 `out(port, value)` (LANG-FULL O-OUT) lowers to `call_builtin "print_i64"` — all 24
 8008 output ports collapse to stdout — giving Oct its first observable output (its

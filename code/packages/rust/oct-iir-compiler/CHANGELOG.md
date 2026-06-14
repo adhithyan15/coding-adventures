@@ -1,5 +1,36 @@
 # Changelog — `oct-iir-compiler`
 
+## 0.6.0 — 2026-06-13 — short-circuit `&&` / `||` + i64 function returns (LANG-FULL O1)
+
+### `&&` / `||` now short-circuit
+
+They were lowered as **eager** bitwise `and`/`or` (both sides always evaluated).
+That is observably wrong once an operand has a side effect — in Oct, a comparison
+whose side is a function call that `out`-puts (`f() == 1`): the call ran
+unconditionally. `compile_expr` now routes `and_expr`/`or_expr` to a new
+`compile_short_circuit` that builds a result slot guarded by `jmp_if_false` / `jmp`
+/ `label` (the portable subset — the CLR textual path has no `jmp_if_true`); the
+right operand is evaluated only when the left doesn't decide the result.
+Single-operand `and_expr`/`or_expr` (no real operator) pass through to
+`compile_binary`. The eager `LAND`/`LOR` arms are removed.
+
+This is now **verifiable by running** thanks to O-OUT: `lang-aot`'s `lang_matrix`
+runs `if 1 == 2 && side() == 1 { … } else { out(1, 9) }` where `side()` prints 5 —
+correct short-circuit prints just `9`; the old eager code printed `5` then `9`. So
+stdout `"9"` (and `"7"` for the `||` case) is positive proof the RHS was skipped.
+
+### Fixed — a non-void function's return type materialises as `i64`
+
+The proof needs a `side() -> u8` helper, which surfaced a latent bug: Oct put the
+**declared** return type (`u8`) on the `IIRFunction`, but params and the body
+already flow as `i64` — so the IIR-to-LLVM backend emitted `define i8 @side()` and
+the `ret` of an i64 value failed (`value doesn't match function result type 'i8'`).
+A non-void return now materialises as `i64`, matching the params (already widened)
+and the body — the same convention Nib uses.
+
+New unit tests: `logical_and_short_circuits`, `logical_or_short_circuits`,
+`typed_function_return_materialises_as_i64`.
+
 ## 0.5.0 — 2026-06-13 — the `out` intrinsic prints to stdout (LANG-FULL O-OUT)
 
 `compile_intrinsic` previously rejected **all** Intel-8008 intrinsics. It now wires

@@ -291,8 +291,21 @@ impl Compiler {
         // Synthesize an i64 ret on `main` so the AOT chain's exit-code
         // convention works.  Oct's `main` is declared void; we materialise
         // it as `i64` returning 0.
-        let actual_return_type = if name == "main" { "i64".to_string() }
-            else { return_type.clone().unwrap_or_else(|| "void".to_string()) };
+        //
+        // A non-void return type must materialise as `i64` too — every Oct value
+        // flows through 64-bit slots (params are widened to `i64` below, and the
+        // body's arithmetic/`ret` emit `i64`), so a function signature declaring the
+        // narrow source type (`u8` → LLVM `i8`) would mismatch the `i64` value the
+        // body returns ("value doesn't match function result type 'i8'").  Matches
+        // how Nib materialises its function types.
+        let actual_return_type = if name == "main" {
+            "i64".to_string()
+        } else {
+            match return_type.as_deref() {
+                None | Some("void") => "void".to_string(),
+                Some(_) => "i64".to_string(), // u8 / bool / … all flow as i64
+            }
+        };
 
         if name == "main" {
             // Ensure main ends with `const 0; ret 0`.  If user wrote an
@@ -548,7 +561,12 @@ impl Compiler {
                     .ok_or_else(|| OctError::Malformed("empty expr".into()))?;
                 self.compile_expr(inner, out)
             }
-            "or_expr" | "and_expr" | "eq_expr" | "cmp_expr"
+            // `&&` / `||` must SHORT-CIRCUIT (LANG-FULL O1): the right operand is
+            // evaluated only when the left doesn't already decide the result. They
+            // cannot go through `compile_binary` (which eagerly evaluates both sides).
+            "or_expr"  => self.compile_short_circuit(node, false, out),
+            "and_expr" => self.compile_short_circuit(node, true, out),
+            "eq_expr" | "cmp_expr"
             | "add_expr" | "bitwise_expr" => self.compile_binary(node, out),
             "unary_expr" => self.compile_unary(node, out),
             "primary"    => self.compile_primary(node, out),
@@ -606,13 +624,8 @@ impl Compiler {
                 "GT" => "cmp_gt",
                 "LEQ" => "cmp_le",
                 "GEQ" => "cmp_ge",
-                // Short-circuit `&&` / `||` are lowered as eager bitwise
-                // for V1.  Oct programs that depend on lazy evaluation
-                // (side-effecting RHS) are out of V1 scope — the type
-                // checker already requires bool operands, so bitwise
-                // and / or on 0/1 values produces the right truth value.
-                "LAND" => "and",
-                "LOR"  => "or",
+                // `LAND` / `LOR` no longer reach here — `compile_expr` routes
+                // `and_expr` / `or_expr` to `compile_short_circuit` (LANG-FULL O1).
                 other => return Err(OctError::Malformed(format!(
                     "unknown operator token `{other}`"))),
             };
@@ -622,6 +635,58 @@ impl Compiler {
             acc = dest;
         }
         Ok(acc)
+    }
+
+    /// Compile a short-circuiting `&&` (`is_and = true`) or `||` chain (LANG-FULL O1).
+    ///
+    /// `&&` / `||` evaluate the right operand only when the left does not already
+    /// decide the result.  This matters once an operand has a side effect — in Oct,
+    /// a comparison whose side is a function call that `out`-puts (`f() == 1`): under
+    /// the old eager bitwise lowering that call ran unconditionally.  We lower to a
+    /// result slot guarded by branches, using only `jmp_if_false` / `jmp` / `label`
+    /// (the portable subset every backend lowers — the CLR textual `.il` path has no
+    /// `jmp_if_true`).  Single-operand `and_expr`/`or_expr` (no real operator) fall
+    /// through to `compile_binary`.
+    fn compile_short_circuit(&mut self, node: &GrammarASTNode, is_and: bool,
+        out: &mut Vec<IIRInstr>) -> Result<String, OctError>
+    {
+        let operands: Vec<&GrammarASTNode> = node.children.iter().filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            _ => None,
+        }).collect();
+        if operands.len() < 2 {
+            // No real `&&`/`||` operator at this level — pass through.
+            return self.compile_binary(node, out);
+        }
+
+        let result = self.fresh_tmp();
+        let end_lbl = self.fresh_label("sc_end");
+
+        // result = first operand
+        let v0 = self.compile_expr(operands[0], out)?;
+        self.emit(out, "mov", Some(&result), vec![Operand::Var(v0)], "i64");
+
+        for operand in &operands[1..] {
+            if is_and {
+                // If the accumulator is already false, short-circuit (stays false).
+                self.emit(out, "jmp_if_false", None,
+                    vec![Operand::Var(result.clone()), Operand::Var(end_lbl.clone())], "void");
+                let v = self.compile_expr(operand, out)?;
+                self.emit(out, "mov", Some(&result), vec![Operand::Var(v)], "i64");
+            } else {
+                // `||`: with only `jmp_if_false`, false → evaluate next; true → jump end.
+                let eval_lbl = self.fresh_label("sc_eval");
+                self.emit(out, "jmp_if_false", None,
+                    vec![Operand::Var(result.clone()), Operand::Var(eval_lbl.clone())], "void");
+                self.emit(out, "jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+                self.emit(out, "label", None, vec![Operand::Var(eval_lbl)], "void");
+                let v = self.compile_expr(operand, out)?;
+                self.emit(out, "mov", Some(&result), vec![Operand::Var(v)], "i64");
+            }
+        }
+
+        self.emit(out, "label", None, vec![Operand::Var(end_lbl)], "void");
+        Ok(result)
     }
 
     fn compile_unary(&mut self, node: &GrammarASTNode, out: &mut Vec<IIRInstr>)
@@ -1048,5 +1113,50 @@ mod tests {
             assert!(matches!(err, OctError::Unsupported8008Intrinsic(_)),
                 "expected Unsupported8008Intrinsic for {src:?}; got {err:?}");
         }
+    }
+
+    #[test]
+    fn logical_and_short_circuits() {
+        // LANG-FULL O1: `a && b` lowers to a result slot guarded by a `jmp_if_false`
+        // BEFORE the right operand — so the right side runs only when the left is true.
+        // The two operands are comparisons (`cmp_eq`); the second must be emitted AFTER
+        // the short-circuit guard.
+        let m = compile_source(
+            "fn main() { if 1 == 2 && 3 == 4 { out(1, 1); } else { out(1, 0); } }", "test",
+        ).expect("ok");
+        let ops: Vec<&str> = m.functions.iter().find(|f| f.name == "main").unwrap()
+            .instructions.iter().map(|i| i.op.as_str()).collect();
+        let first_guard = ops.iter().position(|o| *o == "jmp_if_false").expect("a jmp_if_false");
+        let cmps: Vec<usize> =
+            ops.iter().enumerate().filter(|(_, o)| **o == "cmp_eq").map(|(i, _)| i).collect();
+        assert_eq!(cmps.len(), 2, "both operands compiled; got {ops:?}");
+        assert!(cmps[1] > first_guard,
+            "right operand must be guarded by the short-circuit jmp_if_false; got {ops:?}");
+        // The old eager lowering used a bitwise `and` on the two bools — must be gone.
+        assert!(!ops.contains(&"and"),
+            "&& must not lower to an eager bitwise `and`; got {ops:?}");
+    }
+
+    #[test]
+    fn logical_or_short_circuits() {
+        let m = compile_source(
+            "fn main() { if 1 == 1 || 3 == 4 { out(1, 1); } else { out(1, 0); } }", "test",
+        ).expect("ok");
+        let ops: Vec<&str> = m.functions.iter().find(|f| f.name == "main").unwrap()
+            .instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"jmp_if_false"), "|| must emit a short-circuit guard; got {ops:?}");
+        assert!(ops.contains(&"jmp"), "|| must emit the short-circuit jump; got {ops:?}");
+        assert!(!ops.contains(&"or"), "|| must not lower to an eager bitwise `or`; got {ops:?}");
+    }
+
+    #[test]
+    fn typed_function_return_materialises_as_i64() {
+        // A non-void user function's signature must be `i64` (not the narrow source
+        // `u8`), matching the i64 value its body returns — else the IIR-to-LLVM backend
+        // emits `define i8 @f()` and the `ret` mismatches (LANG-FULL O1 fix).
+        let m = compile_source("fn answer() -> u8 { return 42; } fn main() { out(1, answer()); }", "test")
+            .expect("ok");
+        let f = m.functions.iter().find(|f| f.name == "answer").expect("answer fn");
+        assert_eq!(f.return_type, "i64", "a typed return must materialise as i64; got {:?}", f.return_type);
     }
 }
