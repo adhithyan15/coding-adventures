@@ -1,0 +1,4 @@
+__pycache__/
+_cache/
+_test_cache/
+_setcover_*.adj
