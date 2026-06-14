@@ -58,6 +58,16 @@ pub enum Value { Int(i64), Float(f64), Bool(bool), Str(String), Null }
 `iir_type_name()` maps a `Value` to its IIR type string, with range-aware
 integer classification (`0–255 → "u8"`, `0–65535 → "u16"`, etc.).
 
+The standard dispatch covers the shared IIR: `const`/`mov`, arithmetic
+(`add`/`sub`/`mul`/`div`/`mod`/`neg`), bitwise (`and`/`or`/`xor`/`not`/`shl`/`shr`),
+all `cmp_*`, control flow (`label`/`jmp`/`jmp_if_*`/`ret`), registers
+(`load_reg`/`store_reg`), the flat memory ops (`load_mem`/`store_mem`), the **byte-tape
+ops** (`alloc_bytes`/`load_byte`/`store_byte` — a cell is `memory[base+idx]`, `store_byte`
+masks to a byte; this is how Brainfuck runs on the VM, v0.4.0), `call`/`call_builtin`, and
+`io_*`. Because dispatch is over the shared IIR, **any** frontend that lowers to it runs
+here unchanged — the matrix's six scalar languages all share this one interpreter
+(LANG-MATRIX Phase V).
+
 ### `VMFrame` — per-call state
 
 One frame per active function call.  Holds a flat `registers: Vec<Value>` and a
