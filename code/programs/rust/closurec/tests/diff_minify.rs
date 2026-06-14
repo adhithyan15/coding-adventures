@@ -130,19 +130,13 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // So `/x/gimsuy` stopped at `u`, lexing as `/x/gims` + a stray `uy`
     // identifier emitted as the corrupt `/x/gims uy`. Fixed in the
     // source grammars (`[dgimsuvy]`) + regenerated lexer pattern.
-    // gap-090 (CLOC14.40) — CORRECTNESS: a string with a backslash
-    // escape that closurec does NOT explicitly handle (`\u{…}` code-
-    // point, `\xNN` hex, `\0` null, legacy octal) has its backslash
-    // DROPPED, mangling the string value (`"\x41"` -> `"x41"` instead
-    // of `"A"`; `"\u{1F600}"` -> `"u{1F600}"`). Upstream decodes and
-    // re-escapes (`\x41` -> `A`, `\u{1F600}` -> `😀`,
-    // `\0` -> `\x00`). Lexer/emitter string-escape handling. HIGH
-    // PRIORITY — corrupts output, not just byte-identity.
-    ("str_codepoint_esc", "gap-090: \\u{...} code-point escape mangled"),
-    ("str_unicode4_esc",  "gap-090: \\uNNNN 4-hex unicode escape mangled"),
-    ("str_hex_esc",       "gap-090: \\xNN hex escape mangled"),
-    ("str_hex27_esc",     "gap-090: \\x27 hex escape mangled (-> apostrophe)"),
-    ("str_null_esc",      "gap-090: \\0 null escape mangled"),
+    // gap-090 RESOLVED — es2025.tokens now declares `escapes: none` so the
+    // grammar lexer delivers raw string interiors to whitespace_only.rs.
+    // `emit_quoted_string` fully decodes every ECMAScript escape form
+    // (\xNN, \uNNNN, \u{N+}, \0, standard single-char) and re-emits in
+    // Closure canonical form (`\x41` -> `A`, `\u{1F600}` -> `😀`,
+    // `\0` -> `\x00`). `str_codepoint_esc` / `str_unicode4_esc` /
+    // `str_hex_esc` / `str_hex27_esc` / `str_null_esc` are now ENFORCED.
     // gap-091 RESOLVED in CLOC12.96 — a BigInt RADIX literal is now
     // canonicalised to decimal (`0xFFn` -> `255n`, `0o17n` -> `15n`,
     // `0b101n` -> `5n`) by parsing the radix body to u128 in the BigInt

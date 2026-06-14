@@ -158,9 +158,11 @@ pub fn apply_defines(
             out.push(' ');
         }
         if is_string_literal(tok) {
-            out.push('"');
-            push_quoted_string_content(&mut out, &tok.value);
-            out.push('"');
+            // gap-090: tok.value is the raw string interior (escapes not
+            // processed) because es2025.tokens uses `escapes: none`. Use
+            // the same normalising emitter as whitespace_only.rs so the
+            // defines pass does not double-escape backslashes.
+            crate::whitespace_only::emit_quoted_string(&mut out, &tok.value);
             last_emitted_was_word_like = false;
         } else {
             out.push_str(&tok.value);
@@ -199,9 +201,15 @@ fn render_define_value(value: &DefineValue) -> (String, bool) {
             }
         }
         DefineValue::String(s) => {
+            // `s` is an already-decoded Rust string (parsed from the
+            // --define CLI flag), not a raw JS escape sequence. Re-encode
+            // each char in Closure canonical form (double-quote delimited;
+            // no quote-choice needed for synthesised values).
             let mut out = String::with_capacity(s.len() + 2);
             out.push('"');
-            push_quoted_string_content(&mut out, s);
+            for c in s.chars() {
+                crate::whitespace_only::encode_js_char(&mut out, c, '"');
+            }
             out.push('"');
             // Quoted string is NOT word-like.
             (out, false)
@@ -306,19 +314,6 @@ fn is_string_literal(tok: &lexer::token::Token) -> bool {
         }
     }
     matches!(tok.type_, lexer::token::TokenType::String)
-}
-
-fn push_quoted_string_content(out: &mut String, content: &str) {
-    for c in content.chars() {
-        match c {
-            '"' => out.push_str("\\\""),
-            '\\' => out.push_str("\\\\"),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
-            other => out.push(other),
-        }
-    }
 }
 
 // ---------------------------------------------------------------------------

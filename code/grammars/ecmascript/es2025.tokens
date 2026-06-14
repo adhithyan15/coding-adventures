@@ -98,6 +98,16 @@ SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
 INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
 
 # --- Strings ---
+#
+# escapes: none — the grammar lexer strips the surrounding quotes but does
+# NOT process backslash escape sequences. The raw interior (e.g. `\x41`)
+# is delivered verbatim in tok.value so that whitespace_only.rs's
+# emit_quoted_string can decode every ECMAScript escape form (\xNN,
+# \uNNNN, \u{N+}, \0, etc.) and re-emit in Closure's canonical form.
+# Upstream Closure normalises e.g. "\x41" → "A", "\u{1F600}" → the
+# surrogate pair "😀", "\0" → "\x00".
+
+escapes: none
 
 STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
 STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING

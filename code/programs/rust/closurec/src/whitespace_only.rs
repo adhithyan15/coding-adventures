@@ -4396,74 +4396,229 @@ fn is_string_literal(tok: &lexer::token::Token) -> bool {
     matches!(tok.type_, lexer::token::TokenType::String)
 }
 
-/// Push the JS-escaped form of `content` into `out`. Closure's
-/// WHITESPACE_ONLY canonicalizes to double-quoted strings; we
-/// follow. We escape:
+/// gap-090: decode every ECMAScript string escape sequence in `raw`
+/// (the raw interior of a JS string literal after the surrounding
+/// quotes are stripped; backslash sequences are NOT pre-processed by
+/// the grammar lexer because es2025.tokens declares `escapes: none`).
 ///
-/// - `"`  → `\"`
-/// - `\`  → `\\`
-/// - LF   → `\n`
-/// - CR   → `\r`
-/// - TAB  → `\t`
+/// Maps every standard JS escape to its decoded character:
 ///
-/// Other control characters and non-ASCII pass through
-/// unchanged. (CC has a more elaborate escape table; we'll
-/// expand to match in a follow-up if needed.)
-fn push_quoted_string_content(out: &mut String, content: &str) {
-    for c in content.chars() {
-        match c {
-            '"' => out.push_str("\\\""),
-            '\\' => out.push_str("\\\\"),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
-            other => out.push(other),
+/// | Escape        | Char             |
+/// |---------------|------------------|
+/// | `\n`          | LF               |
+/// | `\t`          | TAB              |
+/// | `\r`          | CR               |
+/// | `\\`          | `\`              |
+/// | `\"`          | `"`              |
+/// | `\'`          | `'`              |
+/// | `\b`          | BS (U+0008)      |
+/// | `\f`          | FF (U+000C)      |
+/// | `\v`          | VT (U+000B)      |
+/// | `\xNN`        | hex char         |
+/// | `\uNNNN`      | BMP code unit    |
+/// | `\u{N…}`      | code point       |
+/// | `\0` (not followed by `1`-`7`) | null (U+0000) |
+/// | `\X` (other)  | `X` (spec §12.9) |
+///
+/// The returned `String` holds the fully-decoded sequence as a Rust
+/// string (UTF-8 backed, `char` scalars). Non-BMP code points
+/// (U+10000 and above) are stored as a single `char` — they get
+/// split into surrogate pairs at the re-encoding step.
+pub(crate) fn decode_js_string(raw: &str) -> String {
+    let chars: Vec<char> = raw.chars().collect();
+    let mut result = String::with_capacity(raw.len());
+    let mut i = 0;
+    while i < chars.len() {
+        if chars[i] != '\\' {
+            result.push(chars[i]);
+            i += 1;
+            continue;
         }
+        // Backslash escape — guard against a lone trailing `\`.
+        if i + 1 >= chars.len() {
+            result.push('\\');
+            i += 1;
+            continue;
+        }
+        let esc = chars[i + 1];
+        match esc {
+            'n'  => { result.push('\n');    i += 2; }
+            't'  => { result.push('\t');    i += 2; }
+            'r'  => { result.push('\r');    i += 2; }
+            '\\' => { result.push('\\');   i += 2; }
+            '"'  => { result.push('"');    i += 2; }
+            '\'' => { result.push('\'');   i += 2; }
+            'b'  => { result.push('\x08'); i += 2; }
+            'f'  => { result.push('\x0C'); i += 2; }
+            'v'  => { result.push('\x0B'); i += 2; }
+            'x'  => {
+                // \xNN — exactly 2 hex digits.
+                if i + 3 < chars.len() {
+                    if let (Some(n1), Some(n2)) = (
+                        chars[i + 2].to_digit(16),
+                        chars[i + 3].to_digit(16),
+                    ) {
+                        // 0..=255 always valid Unicode.
+                        result.push(char::from_u32(n1 * 16 + n2).unwrap_or('\u{FFFD}'));
+                        i += 4;
+                        continue;
+                    }
+                }
+                // Malformed — pass through verbatim.
+                result.push('\\');
+                result.push('x');
+                i += 2;
+            }
+            'u' => {
+                if i + 2 < chars.len() && chars[i + 2] == '{' {
+                    // \u{N+} — Unicode code-point escape (ES2015+).
+                    let start = i + 3;
+                    let mut j = start;
+                    while j < chars.len() && chars[j] != '}' {
+                        j += 1;
+                    }
+                    if j < chars.len() {
+                        let hex: String = chars[start..j].iter().collect();
+                        if let Ok(cp) = u32::from_str_radix(&hex, 16) {
+                            if let Some(c) = char::from_u32(cp) {
+                                result.push(c);
+                                i = j + 1;
+                                continue;
+                            }
+                        }
+                    }
+                    // Malformed / out-of-range.
+                    result.push('\\');
+                    result.push('u');
+                    i += 2;
+                } else if i + 5 < chars.len() {
+                    // \uNNNN — BMP 4-hex Unicode escape.
+                    let hex: String = chars[i + 2..i + 6].iter().collect();
+                    if let Ok(cp) = u32::from_str_radix(&hex, 16) {
+                        if let Some(c) = char::from_u32(cp) {
+                            result.push(c);
+                            i += 6;
+                            continue;
+                        }
+                    }
+                    // Malformed.
+                    result.push('\\');
+                    result.push('u');
+                    i += 2;
+                } else {
+                    result.push('\\');
+                    result.push('u');
+                    i += 2;
+                }
+            }
+            '0' => {
+                // \0 is the null character ONLY when not followed by
+                // another octal digit (1–9), per ES strict-mode rules
+                // (non-strict also accepts legacy octals \01..\077 but
+                // upstream Closure always treats `\0` as null here).
+                let next_is_octal_digit = i + 2 < chars.len()
+                    && matches!(chars[i + 2], '1'..='9');
+                if !next_is_octal_digit {
+                    result.push('\x00');
+                    i += 2;
+                } else {
+                    // Legacy octal — pass through.
+                    result.push('\\');
+                    result.push(esc);
+                    i += 2;
+                }
+            }
+            // Per ES spec §12.9.4.1 Non-Escape Characters: a backslash
+            // before any other character produces just that character.
+            other => {
+                result.push(other);
+                i += 2;
+            }
+        }
+    }
+    result
+}
+
+/// Re-encode a single decoded character into the canonical
+/// Closure WHITESPACE_ONLY form for a string quoted with `quote`.
+///
+/// Canonical rules (matching upstream v20240317):
+///
+/// - U+0000 (null)          → `\x00`
+/// - U+0008 (BS)            → `\b`   (upstream uses `\b` not `\x08`)
+/// - U+0009 (TAB)           → `\t`
+/// - U+000A (LF)            → `\n`
+/// - U+000C (FF)            → `\f`
+/// - U+000D (CR)            → `\r`
+/// - U+000B (VT)            → `\x0b`
+/// - Other C0 / U+007F      → `\xNN` (2 lowercase hex digits)
+/// - `\` (backslash)        → `\\`
+/// - chosen quote char      → `\"` or `\'`
+/// - Non-BMP (U+10000+)     → UTF-16 surrogate pair `\uHHHH\uHHHH`
+/// - BMP U+0080–U+FFFF      → pass through as UTF-8 (literal char)
+/// - Printable ASCII (U+0020–U+007E, not `\`, not quote) → literal
+pub(crate) fn encode_js_char(out: &mut String, c: char, quote: char) {
+    match c {
+        '\x00' => out.push_str("\\x00"),
+        '\x08' => out.push_str("\\b"),
+        '\t'   => out.push_str("\\t"),
+        '\n'   => out.push_str("\\n"),
+        '\x0C' => out.push_str("\\f"),
+        '\r'   => out.push_str("\\r"),
+        '\x0B' => out.push_str("\\x0b"),
+        '\\' => out.push_str("\\\\"),
+        c if c == quote => {
+            out.push('\\');
+            out.push(quote);
+        }
+        c if (c as u32) < 0x20 || c as u32 == 0x7F => {
+            // Remaining ASCII control characters.
+            out.push_str(&format!("\\x{:02x}", c as u32));
+        }
+        c if (c as u32) > 0xFFFF => {
+            // Non-BMP: split into UTF-16 surrogate pair and emit as
+            // two \uHHHH sequences (lowercase, 4 digits each).
+            let cp = c as u32 - 0x10000;
+            let high = 0xD800_u32 + (cp >> 10);
+            let low  = 0xDC00_u32 + (cp & 0x3FF);
+            out.push_str(&format!("\\u{:04x}\\u{:04x}", high, low));
+        }
+        other => out.push(other),
     }
 }
 
-/// gap-043: pick the shorter delimiter for a string literal.
-/// Upstream Closure (under WHITESPACE_ONLY) re-quotes string
-/// literals to minimise the escape weight: when content has
-/// more `"` than `'`, switch to single-quoted form (so the
-/// `"` chars stay unescaped); otherwise keep double-quoted.
-/// Ties go to double per upstream's `CodePrinter` (verified
-/// by the JAR probe `'a'` → `"a"`).
+/// gap-043 + gap-090: pick the shorter delimiter for a string literal
+/// and emit it in Closure's canonical form.
 ///
-/// This function emits the complete `"..."` or `'...'`
-/// sequence (delimiters + content) to `out`, with all
-/// content characters appropriately escaped for the chosen
-/// quote style. Backslash/control-char escapes are
-/// independent of quote choice.
+/// Since es2025.tokens declares `escapes: none`, `raw_content` is the
+/// raw interior of the JS string literal — quotes stripped, escape
+/// sequences **not** pre-processed by the grammar lexer.
 ///
-/// Mirrors the logic in `closure-emitter`'s
-/// `choose_quote_and_escape` (closed CLOC12 gap-026). The
-/// AST emitter goes through that path; the CLI WHITESPACE_ONLY
-/// path uses this independent copy because it doesn't build
-/// an AST.
-fn emit_quoted_string(out: &mut String, content: &str) {
-    let dq = content.chars().filter(|c| *c == '"').count();
-    let sq = content.chars().filter(|c| *c == '\'').count();
-    if dq > sq {
-        // Single-quote wins — escape `\` and `'`.
-        out.push('\'');
-        for c in content.chars() {
-            match c {
-                '\'' => out.push_str("\\'"),
-                '\\' => out.push_str("\\\\"),
-                '\n' => out.push_str("\\n"),
-                '\r' => out.push_str("\\r"),
-                '\t' => out.push_str("\\t"),
-                other => out.push(other),
-            }
-        }
-        out.push('\'');
-    } else {
-        // Double-quote (default, tie-break).
-        out.push('"');
-        push_quoted_string_content(out, content);
-        out.push('"');
+/// The function:
+///   1. Decodes all ECMAScript escape sequences to actual characters.
+///   2. Counts decoded `"` and `'` to choose the delimiter (more `"`
+///      → single-quote; otherwise double-quote; ties → double).
+///   3. Re-encodes each decoded character in Closure's canonical form.
+///
+/// Mirrors the logic in `closure-emitter`'s `choose_quote_and_escape`
+/// (closed CLOC12 gap-026). The AST emitter goes through that path;
+/// the CLI WHITESPACE_ONLY path uses this independent copy because it
+/// doesn't build an AST.
+pub(crate) fn emit_quoted_string(out: &mut String, raw_content: &str) {
+    // Step 1: decode.
+    let decoded = decode_js_string(raw_content);
+
+    // Step 2: choose delimiter.
+    let dq = decoded.chars().filter(|c| *c == '"').count();
+    let sq = decoded.chars().filter(|c| *c == '\'').count();
+    let quote = if dq > sq { '\'' } else { '"' };
+
+    // Step 3: re-encode.
+    out.push(quote);
+    for c in decoded.chars() {
+        encode_js_char(out, c, quote);
     }
+    out.push(quote);
 }
 
 // ---------------------------------------------------------------------------
