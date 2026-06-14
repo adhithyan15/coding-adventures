@@ -566,3 +566,15 @@ full path in `#cgo LDFLAGS: ${SRCDIR}/.../libconduit_capi.a` instead.
 **cgo LDFLAGS native deps differ by OS.** macOS needs `-liconv`; Linux needs
 `-lpthread -ldl -lm -lrt -lutil`. The full list comes from
 `cargo rustc --release --crate-type staticlib -- --print native-static-libs`.
+
+**Go BUILD files that link a Rust static lib must be self-sufficient (build
+the Rust lib themselves).** The `# build-tool: deps=rust/foo` directive ensures
+ordering in the *normal* build workflow (which uses the build-tool directly),
+but the CodeQL workflow generates a `build-plan.json` of 300+ packages and
+processes them in plan order — which may reach `go/conduit` before
+`rust/conduit-capi`. Bare `go test` then fails: `libconduit_capi.a: No such
+file or directory`. Fix: add a `tools/run-tests.sh` that runs `cargo build
+--release` for the Rust crate first (mirroring the C++ pattern), and call
+`sh tools/run-tests.sh` from the BUILD file. The deps= hint still fires in
+the normal build (making the cargo step a fast no-op); CodeQL gets the Rust
+lib on demand. Surfaced in PR #5739.
