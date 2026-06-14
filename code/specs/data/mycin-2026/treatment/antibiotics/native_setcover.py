@@ -54,7 +54,8 @@ def _sym(prefix: str, *parts: str) -> str:
 
 
 def emit_program(organisms: list[str], exclusions: set[str],
-                 defeated: set[tuple[str, str]] = frozenset()) -> tuple[str, dict, bool]:
+                 defeated: set[tuple[str, str]] = frozenset(),
+                 dose_excluded: set[str] = frozenset()) -> tuple[str, dict, bool]:
     """Emit the adj-lang integer program for this cover. Returns (program text,
     {x_var → drug}, feasible?) — feasible is False if some organism has no coverer
     (the program is then trivially infeasible and the engine will say so).
@@ -64,8 +65,15 @@ def emit_program(organisms: list[str], exclusions: set[str],
     drug. A defeated edge is dropped before the cover is built, so the regimen
     re-derives around it (MYCIN's "culture-directed" refinement of empiric therapy).
     A combination is defeated for an organism if any of its members is resistant to
-    that organism (the synergy rationale is undercut)."""
-    cands = reg.candidates(exclusions)  # CSF-penetrant, not contraindicated
+    that organism (the synergy rationale is undercut).
+
+    `dose_excluded` (CC-2) is the set of drugs that have NO safe-and-effective dose for
+    this patient — their efficacy floor exceeds their toxicity ceiling once the chart's
+    renal/interaction risks shrink it (dose_window UNSAT). Such a drug is dropped from the
+    candidate set before the cover is built, so the optimizer re-derives around it (or
+    abstains if it was load-bearing) — dose feasibility folded INTO the cover, not a
+    post-hoc warning."""
+    cands = [d for d in reg.candidates(exclusions) if d not in dose_excluded]
     lines: list[str] = []
     xvar = {d: _sym("x", d) for d in cands}
     var_to_drug = {v: d for d, v in xvar.items()}
@@ -117,10 +125,12 @@ def emit_program(organisms: list[str], exclusions: set[str],
 
 
 def solve(cli: Path, organisms: list[str], exclusions: set[str],
-          defeated: set[tuple[str, str]] = frozenset()) -> dict:
+          defeated: set[tuple[str, str]] = frozenset(),
+          dose_excluded: set[str] = frozenset()) -> dict:
     """Run the emitted program through the engine; return the engine's regimen.
-    `defeated` carries culture-sensitivity results (resistant drug→organism edges)."""
-    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated)
+    `defeated` carries culture-sensitivity results (resistant drug→organism edges);
+    `dose_excluded` carries drugs with no safe-and-effective dose for this patient (CC-2)."""
+    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, dose_excluded)
     fd, name = tempfile.mkstemp(suffix=".adj", prefix="_tmp_native_", dir=HERE)
     p = Path(name)
     try:

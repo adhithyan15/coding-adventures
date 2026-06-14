@@ -67,6 +67,8 @@ class Cop:
     organisms: list[str] = field(default_factory=list)
     exclusions: set[str] = field(default_factory=set)
     defeated: set[tuple[str, str]] = field(default_factory=set)
+    risks: set[str] = field(default_factory=set)             # CC-2 dose-ceiling risks
+    weight: float = 70.0                                      # kg; for the mg dose window
     constraints: list[dict] = field(default_factory=list)   # provenance per constraint
     discards: list[dict] = field(default_factory=list)       # facts not mapped + reason
 
@@ -109,6 +111,36 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
             else:
                 cop.discards.append({"fact": f"allergy={f.value}",
                                      "reason": "no grounded drug-class exclusion rule for this allergen yet (CC-3)"})
+        elif f.kind == "renal_status":
+            # renal impairment shrinks the safe dose ceiling (CC-2 dose feasibility).
+            if f.value in ("renal_severe", "renal_moderate"):
+                cop.risks.add(f.value)
+                cop.constraints.append({"type": "dose_risk", "from": f"renal_status={f.value}",
+                                        "rule": "renal impairment lowers the safe dose ceiling", "span": f.span})
+            else:
+                cop.discards.append({"fact": f"renal_status={f.value}",
+                                     "reason": "unrecognized renal status (want renal_severe/renal_moderate)"})
+        elif f.kind == "interaction":
+            # an additive-toxicity interaction (e.g. another nephrotoxin) lowers the ceiling.
+            if f.value == "nephrotoxin_interaction":
+                cop.risks.add(f.value)
+                cop.constraints.append({"type": "dose_risk", "from": "interaction=nephrotoxin_interaction",
+                                        "rule": "additive nephrotoxicity lowers the safe dose ceiling", "span": f.span})
+            else:
+                cop.discards.append({"fact": f"interaction={f.value}",
+                                     "reason": "no grounded dose-interaction rule for this interaction yet (CC-3)"})
+        elif f.kind == "weight":
+            try:
+                w = float(f.value)
+            except (TypeError, ValueError):
+                w = float("nan")
+            # A body weight feeds the displayed mg dose range — accept only a finite,
+            # physiologically plausible value, else discard (don't anchor on a nonsense weight).
+            if 0.0 < w < 1000.0:
+                cop.weight = w
+            else:
+                cop.discards.append({"fact": f"weight={f.value}",
+                                     "reason": "implausible or non-numeric body weight (kg)"})
         elif f.kind == "culture_resistance":
             # value is "drug:organism" — an in-vitro resistance result voids that edge.
             drug, _, org = f.value.partition(":")
@@ -138,16 +170,39 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
     return cop
 
 
+def dose_infeasible(cli: Path, drugs: list[str], risks: set[str], weight: float) -> dict:
+    """CC-2: the drugs with NO safe-and-effective dose for this patient — efficacy floor
+    exceeds the toxicity ceiling once `risks` shrink it (the engine's dose_window check
+    returns UNSAT). Returns {drug: window} for each excluded drug (for provenance)."""
+    out = {}
+    for d in drugs:
+        w = reg.dose_window(cli, d, weight, risks)
+        if not w["feasible"]:
+            out[d] = w
+    return out
+
+
 def derive(cli: Path, facts: list[ChartFact]) -> dict:
     """Compile the chart → COP, solve it, and return the regimen with provenance.
-    On INFEASIBLE, the engine's conflict core is surfaced (honest abstention)."""
+    Dose feasibility (CC-2) is folded into the cover: a drug with no safe-and-effective
+    dose under the chart's renal/interaction risks is excluded, so the optimizer
+    re-derives around it or abstains. On INFEASIBLE the engine's conflict core is
+    surfaced (honest abstention)."""
     cop = compile_cop(facts)
-    res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated)
+    # CC-2: drop drugs that can't be safely + effectively dosed for this patient.
+    undosable = dose_infeasible(cli, reg.candidates(cop.exclusions), cop.risks, cop.weight)
+    for d, w in undosable.items():
+        cop.constraints.append({
+            "type": "dose_infeasible", "from": f"risks={sorted(cop.risks)}", "detail": d,
+            "rule": f"no safe+effective dose: floor {w['floor_per_kg']} > ceiling "
+                    f"{w['ceiling_per_kg']} mg/kg"})
+    res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, set(undosable))
     return {
         "regimen": res["regimen"], "outcome": res["outcome"],
         "cost": res.get("cost"), "conflict": res.get("iis"),
         "organisms": cop.organisms, "exclusions": sorted(cop.exclusions),
         "defeated": sorted(map(list, cop.defeated)),
+        "risks": sorted(cop.risks), "dose_infeasible": sorted(undosable),
         "constraints": cop.constraints, "discards": cop.discards,
     }
 
