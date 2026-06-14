@@ -78,6 +78,9 @@
       freeInput(bp, bl);
       return readResult(r);
     };
+    // The viewport exports take integer coordinates directly (no strings) and
+    // return a packed result; `>>> 0` coerces each arg to an unsigned 32-bit int.
+    const callInts = (fn, ...ints) => readResult(ex[fn](...ints.map((n) => n >>> 0)));
 
     return {
       createSpreadsheet() {
@@ -90,6 +93,16 @@
           getValue: (a1) => JSON.parse(call1("get_value", String(a1))),
           getRaw: (a1) => call1("get_raw", String(a1)),
           getValues: () => JSON.parse(call0("get_values")),
+
+          // Viewport primitive — render only the visible window of an unbounded
+          // sheet. 1-based inclusive coords.
+          getWindow: (row0, col0, row1, col1) =>
+            JSON.parse(callInts("get_window", row0, col0, row1, col1)),
+          usedRange: () => JSON.parse(call0("used_range")),
+          columnLetters: (index) => callInts("column_letters", index),
+          currentRevision: () => Number(ex.current_revision()),
+          changedSince: (since) =>
+            JSON.parse(readResult(ex.changed_since(BigInt(since)))),
         };
       },
     };

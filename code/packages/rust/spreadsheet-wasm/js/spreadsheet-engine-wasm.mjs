@@ -82,6 +82,13 @@ export function createEngine(wasmBytes) {
     return readResult(r);
   }
 
+  // The viewport exports take integer coordinates directly (no string inputs)
+  // and return a packed `[len][bytes]` buffer — so we just forward the ints and
+  // read the result. (`>>> 0` coerces each to an unsigned 32-bit int.)
+  function callInts(fn, ...ints) {
+    return readResult(ex[fn](...ints.map((n) => n >>> 0)));
+  }
+
   return {
     /**
      * Start a fresh, empty workbook and return a handle whose methods mirror
@@ -99,6 +106,34 @@ export function createEngine(wasmBytes) {
         getRaw: (a1) => call1("get_raw", String(a1)),
         /** Every set cell's computed value, keyed by A1. */
         getValues: () => JSON.parse(call0("get_values")),
+
+        // ── Viewport primitive (virtualized infinite sheet) ──────────
+        // A scrolling host renders only the visible window of an unbounded
+        // sheet: getWindow for the visible rectangle, usedRange for scrollbar
+        // sizing, columnLetters for the frozen header, and currentRevision +
+        // changedSince to refetch only what an edit dirtied.
+
+        /**
+         * Dense computed values for the inclusive 1-based rectangle, as
+         * `{ row0, col0, rows, cols, values: CellValue[][] }` (row-major,
+         * blanks included as `{ kind: "empty" }`), or `{ error }` on a
+         * bad/oversized request.
+         */
+        getWindow: (row0, col0, row1, col1) =>
+          JSON.parse(callInts("get_window", row0, col0, row1, col1)),
+        /** Data extent `{ minRow, minCol, maxRow, maxCol }`, or `null`. */
+        usedRange: () => JSON.parse(call0("used_range")),
+        /** Column letters for a 1-based index: `1 → "A"`, `27 → "AA"`. */
+        columnLetters: (index) => callInts("column_letters", index),
+        /** The per-edit revision clock (a Number; the ABI returns u64). */
+        currentRevision: () => Number(ex.current_revision()),
+        /**
+         * Cells changed since a revision: `{ revision, changed: string[] }`,
+         * or `{ revision, stale: true }` (re-read the whole window). `since`
+         * is widened to the ABI's u64 at the boundary.
+         */
+        changedSince: (since) =>
+          JSON.parse(readResult(ex.changed_since(BigInt(since)))),
       };
     },
   };

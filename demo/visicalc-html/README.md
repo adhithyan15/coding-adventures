@@ -9,6 +9,19 @@ pipeline, the *behaviour* comes from the engine. (The same engine, via
 the same WASM module, also backs the WebComponent demo; native demos use
 it through a C ABI.)
 
+> **Also here: [`infinite.html`](infinite.html) — a virtualized, effectively
+> *infinite* sheet.** Where `index.html` is the fixed 5×5 parity grid, this page
+> proves the engine's *viewport primitive*: the sheet is u32 × u32 (~4.3 billion
+> each way) and sparse, and only the **visible window** of cells is ever in the
+> DOM. Scroll thousands of rows / dozens of columns and the on-page "DOM cells
+> materialized" counter stays small. It's driven entirely by the engine's
+> `getWindow` (visible rectangle), `usedRange` (scrollbar sizing),
+> `columnLetters` (A…Z, AA…), and `changedSince` (re-fetch only what an edit
+> dirtied). Headless proof: `node scripts/verify-infinite.mjs` replays the exact
+> windowing math against the committed WASM bundle and asserts the render stays
+> bounded, a formula 1000 rows down is reachable, the gaps are empty (sparse),
+> and an edit's diff reaches the far cell that depends on it.
+
 ## What it shows
 
 A cross-footing budget: columns A–D hold numbers, column E totals each

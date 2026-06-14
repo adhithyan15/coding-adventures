@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VisiCalc — Infinite Virtualized Sheet (Rust engine, WASM)</title>
+  <!--
+    infinite.html — a VIRTUALIZED, effectively-infinite spreadsheet rendered on
+    the shared Rust engine (spreadsheet-core) compiled to WebAssembly.
+
+    Where index.html renders the fixed 5x5 parity grid, this page proves the
+    "infinite sheet" abstraction: the sheet is u32 x u32 (~4.3 billion each way)
+    and sparse, and only the VISIBLE window of cells is ever in the DOM. Scroll
+    thousands of rows / dozens of columns and the DOM-cell counter stays small.
+
+    How it works (all engine-driven; no data is hard-coded into the renderer):
+      - workbook.usedRange()        sizes the scrollable area to the data.
+      - workbook.getWindow(r0,c0,r1,c1) returns ONLY the visible rectangle's
+        computed values; we paint just those, repositioning on every scroll.
+      - workbook.columnLetters(i)   labels the frozen header (A..Z, AA, AB, ...).
+      - workbook.changedSince(rev)  tells us which cells an edit dirtied.
+
+    Dependency-free; opens directly from disk (file://) — the .wasm is embedded
+    as base64 in vendor/spreadsheet-engine-wasm.js.
+  -->
+  <style>
+    :root {
+      --bg: #1e1e1e; --fg: #cccccc; --muted: #9d9d9d; --line: #3f3f46;
+      --head-bg: #2d2d30; --sel: #264f78; --sel-line: #007acc;
+      --row-h: 22px; --col-w: 80px; --gutter-w: 56px; --head-h: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--fg);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 12px; letter-spacing: 1px; color: var(--muted); font-weight: 400; margin: 0 0 10px; }
+    .bar { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .bar .addr { color: var(--muted); min-width: 56px; }
+    .bar input {
+      flex: 1; background: #121212; color: var(--fg); border: 1px solid var(--line);
+      padding: 5px 8px; font: inherit; border-radius: 3px;
+    }
+    .status { color: var(--muted); margin: 8px 0 0; font-size: 11px; }
+    .status b { color: var(--sel-line); font-weight: 600; }
+
+    /* The scroll container. Its single child .canvas is sized to the (huge)
+       virtual content, which is what gives the scrollbar its range. */
+    .sheet {
+      position: relative; overflow: auto; height: 62vh;
+      border: 1px solid var(--line); background: var(--bg);
+    }
+    .canvas { position: relative; }
+
+    /* Cells / headers are absolutely positioned inside .canvas. Only the
+       visible window's worth ever exist in the DOM at once. */
+    .cell, .colhead, .rowhead, .corner {
+      position: absolute; height: var(--row-h); line-height: var(--row-h);
+      border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      padding: 0 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    }
+    .cell { width: var(--col-w); text-align: right; cursor: cell; }
+    .cell.sel { outline: 2px solid var(--sel-line); outline-offset: -2px; background: var(--sel); color: #fff; }
+    .colhead {
+      width: var(--col-w); height: var(--head-h); line-height: var(--head-h);
+      background: var(--head-bg); color: var(--muted); text-align: center; z-index: 2;
+    }
+    .rowhead {
+      width: var(--gutter-w); background: var(--head-bg); color: var(--muted);
+      text-align: center; z-index: 2;
+    }
+    .corner {
+      width: var(--gutter-w); height: var(--head-h); background: var(--head-bg);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>VISICALC · INFINITE VIRTUALIZED SHEET · RUST ENGINE (WASM)</h1>
+
+    <div class="bar">
+      <span class="addr" id="addr">A1</span>
+      <input id="formula" placeholder="Enter a value or formula (e.g. =SUM(A1:A4)) and press Enter" />
+    </div>
+
+    <div class="sheet" id="sheet">
+      <div class="canvas" id="canvas">
+        <div id="cells"></div>
+        <div id="heads"></div>
+      </div>
+    </div>
+
+    <p class="status" id="status">Booting the Rust engine…</p>
+  </div>
+
+  <script src="vendor/spreadsheet-engine-wasm.js"></script>
+  <script>
+    "use strict";
+
+    // Geometry (must match the CSS variables above).
+    var ROW_H = 22, COL_W = 80, GUTTER_W = 56, HEAD_H = 24, OVERSCAN = 3;
+
+    var sheet = document.getElementById("sheet");
+    var canvas = document.getElementById("canvas");
+    var cellsEl = document.getElementById("cells");
+    var headsEl = document.getElementById("heads");
+    var statusEl = document.getElementById("status");
+    var addrEl = document.getElementById("addr");
+    var formulaEl = document.getElementById("formula");
+
+    var workbook = null;
+    var TOTAL_ROWS = 1000, TOTAL_COLS = 60; // recomputed from usedRange after seeding
+    var selRow = 1, selCol = 1;
+    var lastRev = 0;
+
+    // Escape text before it goes into innerHTML — cell *text* is user data.
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    // Engine CellValue -> the string a spreadsheet cell shows.
+    function display(v) {
+      if (!v) return "";
+      switch (v.kind) {
+        case "number": {
+          var n = v.value;
+          return (n === Math.trunc(n) && Math.abs(n) < 1e15) ? String(n) : String(n);
+        }
+        case "text": return v.value;
+        case "boolean": return v.value ? "TRUE" : "FALSE";
+        case "error": return v.code;
+        default: return ""; // empty
+      }
+    }
+
+    function a1(r, c) { return workbook.columnLetters(c) + r; }
+
+    // Size the virtual canvas to the data extent plus a comfortable margin, so
+    // you can scroll past the data into blank space and it still feels endless.
+    function resize() {
+      var u = workbook.usedRange();
+      var maxRow = u ? u.maxRow : 1, maxCol = u ? u.maxCol : 1;
+      TOTAL_ROWS = Math.max(maxRow + 200, 1000);
+      TOTAL_COLS = Math.max(maxCol + 30, 60);
+      canvas.style.width = (GUTTER_W + TOTAL_COLS * COL_W) + "px";
+      canvas.style.height = (HEAD_H + TOTAL_ROWS * ROW_H) + "px";
+    }
+
+    // Paint ONLY the visible window. Cells are positioned in canvas space (they
+    // scroll naturally); headers/gutter are positioned at the live scroll offset
+    // so they stay pinned to the top/left edge.
+    function render() {
+      var st = sheet.scrollTop, sl = sheet.scrollLeft;
+      var vh = sheet.clientHeight, vw = sheet.clientWidth;
+
+      var firstRow = Math.max(1, Math.floor(st / ROW_H) + 1 - OVERSCAN);
+      var lastRow = Math.min(TOTAL_ROWS, Math.ceil((st + vh) / ROW_H) + OVERSCAN);
+      var firstCol = Math.max(1, Math.floor(sl / COL_W) + 1 - OVERSCAN);
+      var lastCol = Math.min(TOTAL_COLS, Math.ceil((sl + vw) / COL_W) + OVERSCAN);
+
+      var win = workbook.getWindow(firstRow, firstCol, lastRow, lastCol);
+      if (win.error) { statusEl.textContent = "window error: " + win.error; return; }
+
+      var cellHtml = "";
+      for (var r = firstRow; r <= lastRow; r++) {
+        var row = win.values[r - firstRow];
+        var top = HEAD_H + (r - 1) * ROW_H;
+        for (var c = firstCol; c <= lastCol; c++) {
+          var left = GUTTER_W + (c - 1) * COL_W;
+          var sel = (r === selRow && c === selCol) ? " sel" : "";
+          cellHtml += '<div class="cell' + sel + '" data-r="' + r + '" data-c="' + c +
+            '" style="top:' + top + 'px;left:' + left + 'px">' +
+            esc(display(row[c - firstCol])) + "</div>";
+        }
+      }
+      cellsEl.innerHTML = cellHtml;
+
+      // Frozen chrome: column letters across the top, row numbers down the left.
+      var headHtml = '<div class="corner" style="top:' + st + 'px;left:' + sl + 'px"></div>';
+      for (var hc = firstCol; hc <= lastCol; hc++) {
+        headHtml += '<div class="colhead" style="top:' + st + 'px;left:' +
+          (GUTTER_W + (hc - 1) * COL_W) + 'px">' + esc(workbook.columnLetters(hc)) + "</div>";
+      }
+      for (var hr = firstRow; hr <= lastRow; hr++) {
+        headHtml += '<div class="rowhead" style="top:' + (HEAD_H + (hr - 1) * ROW_H) +
+          'px;left:' + sl + 'px">' + hr + "</div>";
+      }
+      headsEl.innerHTML = headHtml;
+
+      statusEl.innerHTML =
+        "Virtual grid: <b>" + TOTAL_ROWS.toLocaleString() + "</b> rows × <b>" +
+        TOTAL_COLS + "</b> cols &nbsp;·&nbsp; DOM cells materialized: <b>" +
+        cellsEl.children.length + "</b> &nbsp;·&nbsp; revision <b>" +
+        workbook.currentRevision() + "</b>";
+    }
+
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { render(); ticking = false; });
+    }
+
+    function selectCell(r, c) {
+      selRow = r; selCol = c;
+      addrEl.textContent = a1(r, c);
+      formulaEl.value = workbook.getRaw(a1(r, c));
+      render();
+    }
+
+    cellsEl.addEventListener("click", function (e) {
+      var t = e.target.closest(".cell");
+      if (!t) return;
+      selectCell(+t.dataset.r, +t.dataset.c);
+    });
+
+    formulaEl.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter") return;
+      var rev = workbook.currentRevision();
+      workbook.setCell(a1(selRow, selCol), formulaEl.value);
+      // Demonstrate the change-diff: which cells did that edit dirty?
+      var diff = workbook.changedSince(rev);
+      var note = diff.stale ? "(stale — full refresh)" :
+        diff.changed.length + " cell(s) recomputed: " + diff.changed.slice(0, 8).join(", ");
+      formulaEl.value = workbook.getRaw(a1(selRow, selCol));
+      render();
+      statusEl.innerHTML += " &nbsp;·&nbsp; last edit → " + esc(note);
+    });
+
+    // The classic cross-footing budget, PLUS deliberately far-flung cells to
+    // prove the sheet is sparse and unbounded: a formula at Z1000 and a couple
+    // near BA50/BB50 — thousands of rows and dozens of columns from the origin,
+    // with nothing materialized in between.
+    var SEED = {
+      A1: "15", B1: "3", C1: "12", D1: "8", E1: "=SUM(A1:D1)",
+      A2: "8", B2: "14", C2: "7", D2: "22", E2: "=SUM(A2:D2)",
+      A3: "12", B3: "9", C3: "18", D3: "6", E3: "=SUM(A3:D3)",
+      A4: "4", B4: "11", C4: "3", D4: "17", E4: "=SUM(A4:D4)",
+      A5: "=SUM(A1:A4)", B5: "=SUM(B1:B4)", C5: "=SUM(C1:C4)", D5: "=SUM(D1:D4)", E5: "=SUM(E1:E4)",
+      Z1000: "=SUM(A1:A4)",       // a formula 1000 rows down: 15+8+12+4 = 39
+      BA50: "far cell", BB50: "=Z1000*2" // col 53/54, row 50: 78
+    };
+
+    function boot() {
+      var Engine = window.SpreadsheetEngine;
+      workbook = Engine.createSpreadsheet();
+      workbook.setCells(SEED);
+      resize();
+      selectCell(1, 1);
+      sheet.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", render);
+      render();
+    }
+
+    if (window.__spreadsheetEngineReady) {
+      window.__spreadsheetEngineReady.then(boot).catch(function (e) {
+        statusEl.textContent = "Failed to load the engine: " + e;
+      });
+    } else {
+      statusEl.textContent = "Engine bundle missing (run scripts/bundle-wasm-engine.sh).";
+    }
+  </script>
+</body>
+</html>
