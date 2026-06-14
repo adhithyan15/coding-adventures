@@ -18,6 +18,8 @@ coordinator policy. It provides:
   coverage
 - attribute report readiness summaries for D23 delta coverage, typed value
   coverage, and raw/unknown-type hygiene checks
+- ZCL report operator summaries that combine frame telemetry with attribute
+  report readiness for capture/backlog/review routing
 - D23 capability projection for common clusters
 - D23 `StateDelta` projection for on/off, level, color-temperature, occupancy,
   lock-state, temperature, humidity, and illuminance reports
