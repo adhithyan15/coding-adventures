@@ -12,10 +12,13 @@ VisiCalc demos.
 - crate-type cdylib + staticlib + rlib (dynamic, static, and host-test linking).
 - `build-capi.sh` builds the library and runs `test/smoke.c` against it.
 - 3 host-target tests + the C smoke test; zero clippy warnings.
-- `verify-native.sh` additionally compiles + runs `test/smoke.swift` (Swift via
-  the C header) and `test/smoke.dart` (Dart through `dart:ffi`) against the
-  built library — proving the engine is callable and correct from real native
-  languages (the SwiftUI and Flutter paths), not just C.
+- `verify-native.sh` compiles + runs the same checks from every native language
+  the cross-backend demos use, against the built library, proving the engine
+  computes identically from each runtime:
+  C (`smoke.c`, Qt/C++), Swift (`smoke.swift`, SwiftUI), Dart (`smoke.dart`,
+  Flutter via `dart:ffi`), .NET (`test/dotnet/`, XAML via P/Invoke), and Kotlin
+  (`smoke.kt`, Compose/Android via Java FFM — no hand-written JNI). All five
+  pass on macOS.
 
 The native sibling of `spreadsheet-wasm` (WASM ABI) over the same
 `spreadsheet-core-wasm` facade. Next: per-platform bindings (Swift, then JNI /
