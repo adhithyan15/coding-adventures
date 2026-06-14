@@ -33,10 +33,10 @@ MYCIN = HERE.parent.parent
 sys.path.insert(0, str(MYCIN / "warm"))
 import decide as decide_mod  # noqa: E402
 
-def load_formulary() -> tuple[dict, dict, str]:
+def load_formulary() -> tuple[dict, dict, list, str]:
     """Prefer the GROUNDED, gated formulary from the CAS (formulary_build.py output);
     fall back to the authored draft if the CAS hasn't been built yet. Returns
-    (drugs, organisms_by_scenario, provenance)."""
+    (drugs, organisms_by_scenario, combinations, provenance)."""
     authored = json.loads((HERE / "formulary.json").read_text())
     reg = HERE / "cas" / "registry.json"
     if reg.exists():
@@ -47,11 +47,24 @@ def load_formulary() -> tuple[dict, dict, str]:
                      "tier": v["tier"], "dose": v["dose"],
                      "source": f"grounded (formulary CAS {root})"}
                  for d, v in man["drugs"].items()}
-        return drugs, authored["organisms_by_scenario"], f"CAS object {root} (spider-grounded + gated)"
-    return authored["drugs"], authored["organisms_by_scenario"], "authored draft (formulary.json; CAS not built)"
+        return (drugs, authored["organisms_by_scenario"], man.get("combinations", []),
+                f"CAS object {root} (spider-grounded + gated)")
+    return (authored["drugs"], authored["organisms_by_scenario"], authored.get("combinations", []),
+            "authored draft (formulary.json; CAS not built)")
 
 
-DRUGS, SCENARIOS, FORMULARY_SOURCE = load_formulary()
+DRUGS, SCENARIOS, COMBINATIONS, FORMULARY_SOURCE = load_formulary()
+
+
+def coverage_of(combo: tuple[str, ...] | list[str]) -> set[str]:
+    """Organisms covered by a set of drugs: each drug's single-agent spectrum, PLUS
+    any organism a grounded COMBINATION rule covers when its whole drug-set is present
+    (e.g. resistant pneumococcus is covered only by vancomycin + a cephalosporin)."""
+    cov = set().union(*(DRUGS[d]["covers"] for d in combo)) if combo else set()
+    for rule in COMBINATIONS:
+        if set(rule["drugs"]) <= set(combo):
+            cov.add(rule["covers"])
+    return cov
 
 
 def candidates(exclusions: set[str]) -> list[str]:
@@ -67,10 +80,10 @@ def min_cost_cover(cands: list[str], organisms: list[str]) -> list[str] | None:
     best, best_key = None, None
     # Minimize total PREFERENCE cost (first-line over reserve), then fewest drugs.
     # A 2-drug first-line regimen (tier 1+1) beats a 1-drug reserve agent (tier 4).
+    # coverage_of() folds in grounded COMBINATION rules.
     for k in range(1, len(cands) + 1):
         for combo in combinations(cands, k):
-            covered = set().union(*(DRUGS[d]["covers"] for d in combo))
-            if need <= covered:
+            if need <= coverage_of(combo):
                 key = (sum(DRUGS[d]["tier"] for d in combo), len(combo))
                 if best_key is None or key < best_key:
                     best, best_key = list(combo), key
@@ -110,9 +123,15 @@ def derive(cli: Path, title: str, organisms: list[str], exclusions: set[str],
         print("  NO REGIMEN can cover all organisms under these exclusions -> escalate / specialist.")
         return
     print(f"  DERIVED REGIMEN: {' + '.join(cover)}")
+    single_cov = set().union(*(DRUGS[d]["covers"] for d in cover)) if cover else set()
+    for rule in COMBINATIONS:
+        if set(rule["drugs"]) <= set(cover) and rule["covers"] in set(organisms) - single_cov:
+            print(f"    + COMBINATION {' + '.join(rule['drugs'])} covers {rule['covers']}")
+            print(f"        [{rule['source'][:120]}]")
     for d in cover:
         covered = sorted(set(DRUGS[d]["covers"]) & set(organisms))
-        print(f"    - {d:13s} covers {covered}   [{DRUGS[d]['source']}]")
+        if covered:
+            print(f"    - {d:13s} covers {covered}   [{DRUGS[d]['source']}]")
         w = dose_window(cli, d, weight, risks)
         if w["feasible"]:
             print(f"        dose window: {w['floor_per_kg']}-{w['ceiling_per_kg']} mg/kg "

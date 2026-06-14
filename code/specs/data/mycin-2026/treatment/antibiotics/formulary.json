@@ -5,6 +5,12 @@
     "over_50_or_immunocompromised": ["s_pneumoniae_resistant", "n_meningitidis", "listeria"],
     "post_neurosurgical_or_shunt": ["s_pneumoniae_resistant", "mrsa", "pseudomonas", "gram_negative"]
   },
+  "combinations": [
+    {"drugs": ["vancomycin", "ceftriaxone"], "covers": "s_pneumoniae_resistant",
+     "source": "IDSA Tunkel 2004 (via AAFP summary): for penicillin-/cephalosporin-resistant pneumococcus, vancomycin 'may be used in combination with a third-generation cephalosporin but should not be used alone (A-III)' — the spider REFUTED single-drug coverage and grounded this COMBINATION rule."},
+    {"drugs": ["vancomycin", "cefepime"], "covers": "s_pneumoniae_resistant",
+     "source": "IDSA Tunkel 2004: vancomycin + a broad cephalosporin (cefepime) covers resistant pneumococcus in the nosocomial setting."}
+  ],
   "drugs": {
     "vancomycin":   {"covers": ["s_pneumoniae_resistant", "mrsa"], "csf_penetrant": true, "betalactam": false, "contraindications": [], "tier": 1,
                      "dose": {"floor_mg_per_kg": 15, "ceiling_base_mg_per_kg": 20, "ceiling_penalty_mg_per_kg": {"renal_severe": 6, "nephrotoxin_interaction": 6, "renal_moderate": 2}},

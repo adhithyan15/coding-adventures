@@ -74,7 +74,7 @@ def build(check: bool = False) -> int:
     report = {"accepted": 0, "dropped": [], "flagged": []}
 
     for drug, f in authored["drugs"].items():
-        kept_covers, dropped_covers, flagged_covers = [], [], []
+        kept_covers, inferred_covers, dropped_covers = [], [], []
         for org in f["covers"]:
             rid = f"{drug}__covers__{org}"
             verdict = gate_status(grounding.get(rid))
@@ -82,30 +82,42 @@ def build(check: bool = False) -> int:
             if verdict == "ACCEPT":
                 kept_covers.append(org)
                 cite = (g.get("source_title") or g.get("resolved_url") or "grounded")
-                adj_lines.append(f"observe covers({drug}, {org})   % [{cite}]")
+                adj_lines.append(f"observe covers({drug}, {org})   % [grounded] {cite[:50]}")
                 report["accepted"] += 1
-            elif verdict == "DROP":
+            elif verdict == "DROP":   # source REFUTED the authored fact -> removed
                 dropped_covers.append(org)
                 report["dropped"].append(f"covers({drug},{org})")
-            else:
-                flagged_covers.append(org)
+            else:                     # FLAG: kept at trust inferred, never deleted
+                inferred_covers.append(org)
+                adj_lines.append(f"observe covers({drug}, {org})   % [inferred — flagged by gate]")
                 report["flagged"].append(f"covers({drug},{org})")
-        # CSF penetration
+        # CSF penetration: refuted -> not penetrant; flagged -> penetrant but inferred.
         pen = gate_status(grounding.get(f"{drug}__csf"))
-        if pen == "ACCEPT":
-            adj_lines.append(f"observe csf_penetrant({drug})")
-        elif pen != "ACCEPT":
+        csf_ok = pen != "DROP"
+        if csf_ok:
+            tag = "" if pen == "ACCEPT" else "   % [inferred — flagged by gate]"
+            adj_lines.append(f"observe csf_penetrant({drug}){tag}")
+        if pen != "ACCEPT":
             report["flagged"].append(f"csf_penetrant({drug})")
-        # contraindications (authored; carried through)
         for c in f.get("contraindications", []):
             adj_lines.append(f"observe contraindicated({drug}, {c})")
         drugs[drug] = {
-            "covers_accepted": kept_covers, "covers_dropped": dropped_covers,
-            "covers_flagged": flagged_covers, "csf_penetrant": pen == "ACCEPT",
+            # effective covers used for derivation = grounded + inferred (flagged kept,
+            # refuted removed); separated for transparency.
+            "covers_accepted": kept_covers + inferred_covers,
+            "covers_grounded": kept_covers, "covers_inferred": inferred_covers,
+            "covers_dropped": dropped_covers, "csf_penetrant": csf_ok,
             "contraindications": f.get("contraindications", []),
             "betalactam": f.get("betalactam", False), "tier": f["tier"],
             "dose": f["dose"], "dose_note": "authored illustrative model (not spidered)",
         }
+    # combination-coverage facts (grounded by the spider's refutation evidence —
+    # e.g. resistant pneumococcus is covered by vancomycin + a cephalosporin, never
+    # vancomycin alone). These let the set-cover express what no single drug can.
+    combinations = authored.get("combinations", [])
+    for comb in combinations:
+        ds = ", ".join(comb["drugs"])
+        adj_lines.append(f"observe combination_covers({ds}, {comb['covers']})   % [{comb['source'][:50]}]")
     adj_lines.append("")
     adj_text = "\n".join(adj_lines)
     digest = hashlib.sha256(adj_text.encode()).hexdigest()[:16]
@@ -115,6 +127,7 @@ def build(check: bool = False) -> int:
         "source": "formulary-spider (coverage + CSF penetration) + adversarial gate; "
                   "dose/tier authored (illustrative).",
         "drugs": drugs,
+        "combinations": combinations,
         "gate": {"accepted_facts": report["accepted"], "dropped": report["dropped"],
                  "flagged": report["flagged"]},
         "grounding": {rid: {"status": r.get("status"),
