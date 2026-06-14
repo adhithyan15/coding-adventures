@@ -1,0 +1,44 @@
+{
+  "hash": "8481259fa1454601",
+  "source_id": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+  "title": "AZACTAM (aztreonam for injection, USP) - FDA Prescribing Information (DailyMed)",
+  "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Aztreonam adult dosing for severe systemic or life-threatening infections is 2 g every 6 to 8 hours.",
+      "byte_quote": "Severe systemic or life-threatening infections: 2 g, 6 or 8 hours."
+    },
+    {
+      "id": "c2",
+      "text": "Aztreonam adult dosing for moderately severe systemic infections is 1 g or 2 g every 8 or 12 hours.",
+      "byte_quote": "Moderately severe systemic infections: 1 g or 2 g, 8 or 12 hours."
+    },
+    {
+      "id": "c3",
+      "text": "Aztreonam adult dosing for urinary tract infections is 500 mg or 1 g every 8 or 12 hours.",
+      "byte_quote": "Urinary tract infections: 500 mg or 1 g, 8 or 12 hours."
+    },
+    {
+      "id": "c4",
+      "text": "Aztreonam pediatric dosing for moderate to severe infections is 30 mg/kg every 6 or 8 hours.",
+      "byte_quote": "Moderate to severe infections: 30 mg/kg, 6 or 8 hours."
+    },
+    {
+      "id": "c5",
+      "text": "Aztreonam pediatric dosing for mild to moderate infections is 30 mg/kg every 8 hours.",
+      "byte_quote": "Mild to moderate infections: 30 mg/kg, 8 hours."
+    },
+    {
+      "id": "c6",
+      "text": "Aztreonam penetrates inflamed meninges, reaching cerebrospinal fluid concentrations of about 3 mcg/mL after a 2 g IV dose.",
+      "byte_quote": "cerebrospinal fluid (inflamed meninges)"
+    },
+    {
+      "id": "c7",
+      "text": "Aztreonam is active against gram-negative organisms including Haemophilus influenzae (including ampicillin-resistant and penicillinase-producing strains), Pseudomonas aeruginosa, Escherichia coli, Klebsiella, Enterobacter, Serratia, Citrobacter, and Proteus mirabilis.",
+      "byte_quote": "Citrobacter species, Enterobacter species, Escherichia coli, Haemophilus influenzae (including ampicillin-resistant and other penicillinase-producing strains), Klebsiella oxytoca, Klebsiella pneumoniae, Proteus mirabilis, Pseudomonas aeruginosa, Serratia species."
+    }
+  ],
+  "cites": []
+}

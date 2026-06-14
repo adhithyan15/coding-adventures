@@ -60,6 +60,15 @@ re-decomposition. The 8 unverified are otherwise all `FLAG` facts
 (direction_only/refuted) — exactly the citations the rulebook never trusts as
 authoritative.
 
+**G3 added a second ledger artifact — meningitis dosing** (`treatment/antibiotics/`).
+Dose grounding is the hardest frontier: the canonical IDSA Tunkel Table 6 is an
+unreadable image, so the adversarial verifier refused doses that were pediatric-only,
+general-indication, or non-verbatim. Honest result: **2 grounded, 3 direction_only,
+3 refuted (authored-debt)** across 8 drugs — the gate attaches that status per drug
+(`dose_grounding` in the formulary manifest) and the dose-window numeric model stays a
+structural feasibility band. `ground_sources.py` now emits one artifact per domain
+(organism-id + dosing), each with its own grounded/flagged/authored-debt counts.
+
 ## Run it
 
 ```bash

@@ -23,6 +23,7 @@ Usage:  python3 ground_sources.py --list      # produce the source worklist for 
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -37,9 +38,47 @@ SOURCE_LIST = HERE / "source-list.json"
 SOURCE_OBJECTS = HERE / "source-objects.json"
 LEDGER = MYCIN / "PROVENANCE-LEDGER.md"
 ORG_MANIFEST = MYCIN / "diagnosis" / "organisms" / "organism-id-manifest.json"
+DOSE_GROUNDING = HERE / "dose-window-grounding.json"
+FORMULARY_REGISTRY = MYCIN / "treatment" / "antibiotics" / "cas" / "registry.json"
 
 # Every grounding file whose records cite sources we decompose + verify against.
-GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING]
+GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING, DOSE_GROUNDING]
+
+
+def _records(*files: Path) -> list[dict]:
+    """Grounding records (with a cited source) from the given files."""
+    out: list[dict] = []
+    for f in files:
+        if f.exists():
+            out += [r for r in json.loads(f.read_text())["records"]
+                    if (r.get("grounded") or {}).get("resolved_url")]
+    return out
+
+
+def _verify_rows(records: list[dict], by_url: dict[str, str]) -> tuple[list, dict]:
+    """Verify each record's citation against its decomposed source; return (rows, counts)."""
+    rows, c = [], {"verified": 0, "partial": 0, "unverified": 0, "nosrc": 0}
+    for r in records:
+        g = r["grounded"]
+        h = by_url.get(g["resolved_url"])
+        so = harness.load_source_object(h) if h else None
+        if so is None:
+            rows.append((r["id"], r["spider_status"], "—", g.get("source_title", "")[:36], "no-source-obj"))
+            c["nosrc"] += 1
+            continue
+        v = harness.verify_citation(g["byte_quote"], so)
+        m, t = v["fragments_matched"], v["fragments_total"]
+        if v["verified"]:
+            c["verified"] += 1
+            mark = f"✓ verified ({m}/{t})"
+        elif v["core_verified"]:
+            c["partial"] += 1
+            mark = f"◑ core ✓ ({m}/{t} spans; over-reach)"
+        else:
+            c["unverified"] += 1
+            mark = f"✗ UNVERIFIED ({m}/{t})"
+        rows.append((r["id"], r["spider_status"], harness.gate(r["spider_status"])[0], f"src:{h}", mark))
+    return rows, c
 
 
 def grounded_records() -> list[dict]:
@@ -91,47 +130,53 @@ def commit_and_verify() -> int:
         by_url[so.source_id] = h
     print(f"ground_sources: committed {len(set(by_url.values()))} source objects to cas/sources/")
 
-    # 2. Verify each fact's citation against its decomposed source (no blind trust).
-    rows, verified_n, partial_n, unverified_n, nosrc_n = [], 0, 0, 0, 0
-    for r in grounded_records():
-        g = r["grounded"]
-        h = by_url.get(g["resolved_url"])
-        so = harness.load_source_object(h) if h else None
-        if so is None:
-            rows.append((r["id"], r["spider_status"], "—", g.get("source_title", "")[:36], "no-source-obj"))
-            nosrc_n += 1
-            continue
-        v = harness.verify_citation(g["byte_quote"], so)
-        m, t = v["fragments_matched"], v["fragments_total"]
-        if v["verified"]:
-            verified_n += 1
-            mark = f"✓ verified ({m}/{t})"
-        elif v["core_verified"]:
-            partial_n += 1
-            mark = f"◑ core ✓ ({m}/{t} spans; over-reach)"
-        else:
-            unverified_n += 1
-            mark = f"✗ UNVERIFIED ({m}/{t})"
-        rows.append((r["id"], r["spider_status"],
-                     harness.gate(r["spider_status"])[0], f"src:{h}", mark))
+    # 2. Verify each fact's citation against its decomposed source (no blind trust),
+    #    grouped into one artifact per domain.
+    artifacts, tot = [], {"verified": 0, "partial": 0, "unverified": 0, "nosrc": 0}
 
-    # 3. Rebuild the system-wide provenance ledger (organism-id + source verification).
+    # 2a. Organism identification (priors + morphology + host factors).
+    org_rows, c = _verify_rows(_records(ORG_GROUNDING, HOST_GROUNDING), by_url)
+    for k in tot:
+        tot[k] += c[k]
     man = json.loads(ORG_MANIFEST.read_text()) if ORG_MANIFEST.exists() else {"clauses": {}}
-    grounded = sum(1 for c in man["clauses"].values() if c["verdict"] == "ACCEPT")
-    flagged = sum(1 for c in man["clauses"].values() if c["verdict"] == "FLAG")
-    # Authoring debt = clauses still carried without grounding (verdict PENDING). Drives
-    # to 0 as the spider grounds the host factors (G2) — no longer a hardcoded count.
-    debt = sum(1 for c in man["clauses"].values() if c["verdict"] == "PENDING")
-    artifact = {"name": "organism identification", "path": "diagnosis/organisms/organism-id.adj",
-                "grounded": grounded, "flagged": flagged, "authored_debt": debt, "rows": rows}
-    LEDGER.write_text(harness.build_ledger([artifact]) +
+    artifacts.append({
+        "name": "organism identification", "path": "diagnosis/organisms/organism-id.adj",
+        "grounded": sum(1 for x in man["clauses"].values() if x["verdict"] == "ACCEPT"),
+        "flagged": sum(1 for x in man["clauses"].values() if x["verdict"] == "FLAG"),
+        # debt = clauses carried without grounding (verdict PENDING) — computed, not hardcoded.
+        "authored_debt": sum(1 for x in man["clauses"].values() if x["verdict"] == "PENDING"),
+        "rows": org_rows})
+
+    # 2b. Meningitis dosing (G3) — dose anchors. grounded = primary source confirms the
+    #     adult CNS dose; direction_only → flagged; refuted/pending → debt (needs a better
+    #     primary source; the canonical IDSA dose table is an unreadable image).
+    if DOSE_GROUNDING.exists():
+        dose_rows, c = _verify_rows(_records(DOSE_GROUNDING), by_url)
+        for k in tot:
+            tot[k] += c[k]
+        ds = {"grounded": 0, "direction_only": 0, "refuted": 0, "pending": 0}
+        if FORMULARY_REGISTRY.exists():
+            reg = json.loads(FORMULARY_REGISTRY.read_text())
+            # The registry is build-generated (object == objects/<sha256>.adj), but
+            # validate before joining so a tampered registry can't escape the CAS dir.
+            obj = str(reg.get("object", ""))
+            if obj == f"objects/{reg.get('root', '')}.adj" and re.fullmatch(r"objects/[0-9a-f]{1,64}\.adj", obj):
+                p = (FORMULARY_REGISTRY.parent / obj.replace(".adj", ".json")).resolve()
+                if FORMULARY_REGISTRY.parent.resolve() in p.parents and p.exists():
+                    ds = json.loads(p.read_text()).get("dose_grounding_summary", ds)
+        artifacts.append({
+            "name": "meningitis dosing", "path": "treatment/antibiotics/formulary.json",
+            "grounded": ds["grounded"], "flagged": ds["direction_only"],
+            "authored_debt": ds["refuted"] + ds["pending"], "rows": dose_rows})
+
+    # 3. Rebuild the system-wide provenance ledger.
+    LEDGER.write_text(harness.build_ledger(artifacts) +
                       f"\n_Citation verification against decomposed sources in the CAS: "
-                      f"**{verified_n} fully verified**, {partial_n} core-verified (citation "
-                      f"over-reaches the current decomposition — queued for deeper grounding), "
-                      f"{unverified_n} unverified, {nosrc_n} pending. Every ACCEPTed (grounded) "
-                      f"prior has at least its load-bearing span verified._\n")
-    print(f"ground_sources: citations — {verified_n} fully verified, {partial_n} core-verified "
-          f"(over-reach), {unverified_n} UNVERIFIED, {nosrc_n} pending; ledger rebuilt")
+                      f"**{tot['verified']} fully verified**, {tot['partial']} core-verified "
+                      f"(over-reach), {tot['unverified']} unverified, {tot['nosrc']} pending._\n")
+    print(f"ground_sources: citations — {tot['verified']} fully verified, {tot['partial']} "
+          f"core-verified, {tot['unverified']} UNVERIFIED, {tot['nosrc']} pending; "
+          f"{len(artifacts)} artifacts; ledger rebuilt")
     return 0
 
 

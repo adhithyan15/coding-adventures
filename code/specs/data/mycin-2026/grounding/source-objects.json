@@ -1175,5 +1175,322 @@
       }
     ],
     "cites": []
+  },
+  {
+    "source_id": "https://academic.oup.com/cid/article/39/9/1267/402080",
+    "resolved_url": "https://academic.oup.com/cid/article/39/9/1267/402080",
+    "title": "Practice Guidelines for the Management of Bacterial Meningitis (IDSA, Clinical Infectious Diseases 2004; Tunkel et al.)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Gram-stain positivity in CSF varies by pathogen: ~90% for S. pneumoniae, 86% for H. influenzae, 75% for N. meningitidis, 50% for gram-negative bacilli, and about one-third for L. monocytogenes.",
+        "byte_quote": "90% of cases caused by *Streptococcus pneumoniae*, 86% of cases caused by *Haemophilus influenzae*, 75% of cases caused by *Neisseria meningitidis*, 50% of cases caused by gram-negative bacilli, and approximately one-third of cases of meningitis caused by *Listeria monocytogenes* have positive Gram stain results"
+      },
+      {
+        "id": "c2",
+        "text": "A positive CSF Gram stain can modify empirical therapy, e.g. adding ampicillin when gram-positive bacilli (suggesting Listeria) are seen.",
+        "byte_quote": "a positive CSF Gram stain result may modify this approach by the addition of another agent (e.g., ampicillin for the presence of gram-positive bacilli)"
+      },
+      {
+        "id": "c3",
+        "text": "Empirical antimicrobial choice should be driven by patient age and predisposing conditions.",
+        "byte_quote": "The choice of empirical antimicrobial therapy in this situation should be governed by the patient's age and by various conditions that may have predisposed the patient to meningitis."
+      },
+      {
+        "id": "c4",
+        "text": "For children older than 1 month, empirical therapy is vancomycin plus either cefotaxime or ceftriaxone pending cultures.",
+        "byte_quote": "empirical antimicrobial therapy with vancomycin combined with either cefotaxime or ceftriaxone can be provided pending culture results"
+      },
+      {
+        "id": "c5",
+        "text": "Adjunctive dexamethasone is dosed at 0.15 mg/kg every 6 hours for 2-4 days, started 10-20 min before or with the first antimicrobial dose.",
+        "byte_quote": "Dexamethasone should be initiated 10–20 min prior to, or at least concomitant with, the first antimicrobial dose, at 0.15 mg/kg every 6 h for 2–4 days."
+      },
+      {
+        "id": "c6",
+        "text": "Host factors associated with abnormal head CT before LP include age >=60, history of CNS disease, immunocompromised state (HIV/AIDS, immunosuppressive therapy, transplantation), and seizure within 1 week.",
+        "byte_quote": "the clinical features at baseline that were associated with abnormal findings of a CT scan of the head were an age of ⩾60 years, a history of CNS disease (e.g., mass lesion, stroke, and focal infection), an immunocompromised state (e.g., that due to HIV infection or AIDS, immunosuppressive therapy, or transplantation), a history of seizure ⩽1 week before presentation"
+      },
+      {
+        "id": "c7",
+        "text": "For CSF shunt infections caused by S. aureus, 10 days of negative cultures are recommended before reshunting.",
+        "byte_quote": "For shunt infections caused by *S. aureus*, 10 days of negative culture results are recommended prior to reshunting."
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29",
+    "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29",
+    "title": "Ceftriaxone for Injection, USP — FDA Prescribing Information (Hikma Pharmaceuticals USA Inc.) [DailyMed]",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Ceftriaxone is FDA-indicated for meningitis caused by Haemophilus influenzae, Neisseria meningitidis, or Streptococcus pneumoniae.",
+        "byte_quote": "MENINGITIS caused by Haemophilus influenzae, Neisseria meningitidis or Streptococcus pneumoniae."
+      },
+      {
+        "id": "c2",
+        "text": "Ceftriaxone has also been used successfully in a limited number of meningitis and shunt-infection cases caused by Staphylococcus epidermidis and Escherichia coli.",
+        "byte_quote": "Ceftriaxone for Injection, USP has also been used successfully in a limited number of cases of meningitis and shunt infection caused by Staphylococcus epidermidis 1 and Escherichia coli. 1"
+      },
+      {
+        "id": "c3",
+        "text": "Pediatric meningitis dosing: initial therapeutic dose 100 mg/kg (max 4 g), then 100 mg/kg/day (max 4 g/day), once daily or divided every 12 hours, for a usual duration of 7 to 14 days.",
+        "byte_quote": "In the treatment of meningitis, it is recommended that the initial therapeutic dose be 100 mg/kg (not to exceed 4 grams). Thereafter, a total daily dose of 100 mg/‌kg/‌day (not to exceed 4 grams daily) is recommended. The daily dose may be administered once a day (or in equally divided doses every 12 hours). The usual duration of therapy is 7 to 14 days."
+      },
+      {
+        "id": "c4",
+        "text": "For serious non-meningitis pediatric infections, the recommended total daily dose is 50 to 75 mg/kg in divided doses every 12 hours, not to exceed 2 g/day — distinguishing the higher meningitis (CNS) dose from the general indication.",
+        "byte_quote": "For the treatment of serious miscellaneous infections other than meningitis, the recommended total daily dose is 50 to 75 mg/kg, given in divided doses every 12 hours. The total daily dose should not exceed 2 grams."
+      },
+      {
+        "id": "c5",
+        "text": "Usual adult daily dose is 1 to 2 g once daily (or divided twice daily) depending on infection type and severity, not to exceed 4 g/day (general adult indication, not meningitis-specific).",
+        "byte_quote": "The usual adult daily dose is 1 to 2 grams given once a day (or in equally divided doses twice a day) depending on the type and severity of infection. The total daily dose should not exceed 4 grams."
+      },
+      {
+        "id": "c6",
+        "text": "Ceftriaxone penetrates the inflamed meninges of infants and pediatric patients; CSF concentrations were measured after 50 mg/kg and 75 mg/kg IV doses.",
+        "byte_quote": "Ceftriaxone penetrated the inflamed meninges of infants and pediatric patients; CSF concentrations after a 50 mg/kg IV dose and after a 75 mg/kg IV dose are also shown in Table 3 ."
+      },
+      {
+        "id": "c7",
+        "text": "Measured CSF concentration through inflamed meninges was 5.6 mcg/mL after the 50 mg/kg IV dose and 6.4 mcg/mL after the 75 mg/kg IV dose.",
+        "byte_quote": "CSF Concentration - inflamed meninges (mcg/mL) 5.6 6.4"
+      },
+      {
+        "id": "c8",
+        "text": "In neonates, intravenous ceftriaxone doses should be given over 60 minutes to reduce the risk of bilirubin encephalopathy (neonate-specific host/administration factor).",
+        "byte_quote": "Intravenous doses should be given over 60 minutes in neonates to reduce the risk of bilirubin encephalopathy."
+      },
+      {
+        "id": "c9",
+        "text": "Ceftriaxone is bactericidal, acting by inhibition of bacterial cell wall synthesis, with activity in the presence of some beta-lactamases of both Gram-negative and Gram-positive bacteria.",
+        "byte_quote": "Ceftriaxone is a bactericidal agent that acts by inhibition of bacterial cell wall synthesis. Ceftriaxone has activity in the presence of some beta-lactamases, both penicillinases and cephalosporinases, of Gram-negative and Gram-positive bacteria."
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/",
+    "title": "Management of meningitis due to antibiotic-resistant Acinetobacter species (Lancet Infect Dis. 2009;9(4):245-255)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "SCOPE NOTE: This source is narrowly about Acinetobacter meningitis, NOT a general bacterial-meningitis review. It contains NO general organism epidemiology (S. pneumoniae / N. meningitidis / Listeria proportions), NO CSF gram-stain morphology, and NO first-line empiric dosing (ceftriaxone/cefotaxime/vancomycin/ampicillin monotherapy). Only Acinetobacter-specific epidemiology, post-neurosurgical risk factors, and salvage/CNS antibiotic dosing are present.",
+        "byte_quote": "Management of meningitis due to antibiotic-resistant Acinetobacter species"
+      },
+      {
+        "id": "c2",
+        "text": "Among adults with community-acquired bacterial meningitis (1737 patients across six studies), only 0.2% (3 patients) were due to Acinetobacter spp.",
+        "byte_quote": "In a review of six studies comprising 1737 adults with community-acquired bacterial meningitis, just 0.2% (three patients) had meningitis due to Acinetobacter spp."
+      },
+      {
+        "id": "c3",
+        "text": "Among adults with hospital-acquired bacterial meningitis (281 patients across four studies), 3.6% (10 patients) were due to Acinetobacter spp.",
+        "byte_quote": "In a review of four studies comprising 281 adult patients with hospital-acquired bacterial meningitis, 3.6% (ten patients) had meningitis due to Acinetobacter spp."
+      },
+      {
+        "id": "c4",
+        "text": "In children with nosocomial meningitis, Acinetobacter accounted for 11.2% (20/178) of cases in one evaluation.",
+        "byte_quote": "The authors of one evaluation of children with nosocomial meningitis reported that acinetobacter accounted for 11.2% (20/178) of cases."
+      },
+      {
+        "id": "c5",
+        "text": "Geographic variation: Acinetobacter was the fifth most common genus in nosocomial meningitis in US and Taiwan series, but two Turkish studies found it the leading cause of Gram-negative postneurosurgical meningitis.",
+        "byte_quote": "In large series in the USA and Taiwan, acinetobacter ranked the fifth most common genus to be associated with nosocomial meningitis. However, two recent studies from Turkey have documented acinetobacter as the leading cause of Gram-negative postneurosurgical meningitis."
+      },
+      {
+        "id": "c6",
+        "text": "HOST/RISK FACTOR: Acinetobacter meningitis typically occurs following neurosurgery (post-neurosurgical, not community-acquired).",
+        "byte_quote": "Acinetobacter meningitis typically occurs following neurosurgery."
+      },
+      {
+        "id": "c7",
+        "text": "HOST/RISK FACTORS for post-neurosurgical bacterial meningitis: CSF leakage, concomitant incision infection, prolonged surgery, surgery entering a sinus, severity of illness, prolonged external ventricular drainage, and repeat surgery.",
+        "byte_quote": "Patients at risk for post-neurosurgical bacterial meningitis include those with cerebrospinal leakage, concomitant incision infection, prolonged duration of surgery, surgery that enters a sinus, increased severity of illness, prolonged external ventricular drainage, and need for repeat surgery."
+      },
+      {
+        "id": "c8",
+        "text": "HOST/RISK FACTOR (antibiotic exposure): Prior use of extended-spectrum cephalosporins was a common feature of patients with Acinetobacter meningitis in one study.",
+        "byte_quote": "Prior use of extended-spectrum cephalosporins was identified as a common feature of patients with acinetobacter meningitis in one study."
+      },
+      {
+        "id": "c9",
+        "text": "Timing: median time to develop Acinetobacter meningitis after a neurosurgical procedure is 12 days (range 1-40 days).",
+        "byte_quote": "The median time to develop acinetobacter meningitis after a neurosurgical procedure is 12 days (range 1–40 days)."
+      },
+      {
+        "id": "c10",
+        "text": "ANTIBIOTIC DOSING (meropenem, IV, meningitis): 2 g every 8 h as a 30 min infusion, per IDSA bacterial-meningitis dose.",
+        "byte_quote": "Meropenem 2 g every 8 h as a 30 min infusion (IDSA recommended dose for bacterial meningitis)."
+      },
+      {
+        "id": "c11",
+        "text": "ANTIBIOTIC DOSING (ampicillin/sulbactam): 2 g ampicillin and 1 g sulbactam every 6 h.",
+        "byte_quote": "2 g of ampicillin and 1 g of sulbactam every 6 h"
+      },
+      {
+        "id": "c12",
+        "text": "ANTIBIOTIC DOSING (gentamicin, intraventricular): IDSA recommends a daily intraventricular gentamicin dose of 4-8 mg.",
+        "byte_quote": "IDSA guidelines for therapy of bacterial meningitis recommend a daily intraventricular gentamicin dose of 4–8 mg."
+      },
+      {
+        "id": "c13",
+        "text": "ANTIBIOTIC DOSING (amikacin, intraventricular): IDSA recommends daily intraventricular amikacin of 5-50 mg, with 30 mg most commonly used.",
+        "byte_quote": "IDSA guidelines recommend daily intraventricular doses of amikacin of 5–50 mg, with 30 mg being the most commonly used daily dose."
+      },
+      {
+        "id": "c14",
+        "text": "ANTIBIOTIC DOSING (polymyxin B, intraventricular): 5 mg daily in adults and 2 mg daily in children, per IDSA.",
+        "byte_quote": "The recommended dosage in IDSA guidelines for polymyxin B administered by the intraventricular route is 5 mg daily in adults and 2 mg daily in children."
+      },
+      {
+        "id": "c15",
+        "text": "ANTIBIOTIC DOSING (colistin / colistin methanesulphonate, intraventricular): 10 mg daily.",
+        "byte_quote": "The recommended dose of colistin or colistin methane-sulphonate by the intraventricular route is 10 mg daily."
+      },
+      {
+        "id": "c16",
+        "text": "DURATION: IDSA recommends 21 days of antibiotic therapy for Gram-negative bacterial meningitis.",
+        "byte_quote": "The IDSA guidelines for management of bacterial meningitis recommend antibiotic therapy for Gram-negative meningitis for 21 days."
+      }
+    ],
+    "cites": [
+      "IDSA practice guidelines for the management of bacterial meningitis (Tunkel AR et al., Clin Infect Dis 2004)",
+      "Perez F, Hujer AM, et al.",
+      "Karageorgopoulos DE, Falagas ME"
+    ]
+  },
+  {
+    "source_id": "https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines",
+    "resolved_url": "https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines",
+    "title": "Initial management of acute bacterial meningitis in adults: summary of IDSA guidelines",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "In patients aged 2-50 years, the common bacterial meningitis pathogens are N. meningitidis and S. pneumoniae.",
+        "byte_quote": "N. meningitidis, S. pneumoniae"
+      },
+      {
+        "id": "c2",
+        "text": "In patients aged 50 years and older, the pathogens broaden to include S. pneumoniae, N. meningitidis, L. monocytogenes, and aerobic gram-negative bacilli.",
+        "byte_quote": "S. pneumoniae, N. meningitidis, L. monocytogenes, aerobic gram-negative bacilli"
+      },
+      {
+        "id": "c3",
+        "text": "After neurosurgery or with a CSF shunt/device, likely organisms include S. aureus, coagulase-negative staphylococci, Pseudomonas aeruginosa, and other gram-negative bacilli.",
+        "byte_quote": "S. aureus, coagulase negative Staphylococci, Pseudomonas aeruginosa and other gram-negative bacilli"
+      },
+      {
+        "id": "c4",
+        "text": "Host factors such as immune suppression and recent neurosurgical procedures including ventricular shunts influence the presentation of bacterial meningitis.",
+        "byte_quote": "The presentation of bacterial meningitis is also influenced by host factors, such as immune suppression or recent neurosurgical procedures including ventricular shunts."
+      },
+      {
+        "id": "c5",
+        "text": "Only 44%-51% of patients have the classic triad of fever, neck stiffness, and impaired consciousness.",
+        "byte_quote": "44% to 51% have the triad of fever, neck stiffness, and impaired consciousness."
+      },
+      {
+        "id": "c6",
+        "text": "CSF Gram stain is positive in 60%-90% of patients, with a specificity of at least 97%.",
+        "byte_quote": "Positive in 60%-90% of patients with a specificity of ≥97%."
+      },
+      {
+        "id": "c7",
+        "text": "Empiric therapy for ages 2-50 is vancomycin plus ceftriaxone or cefotaxime.",
+        "byte_quote": "Vancomycin and ceftriaxone or cefotaxime"
+      },
+      {
+        "id": "c8",
+        "text": "Empiric therapy for ages over 50 adds ampicillin: vancomycin, ampicillin, and ceftriaxone or cefotaxime.",
+        "byte_quote": "Vancomycin, ampicillin, and ceftriaxone or cefotaxime"
+      },
+      {
+        "id": "c9",
+        "text": "Adult vancomycin dose is 15 mg/kg every 8-12 hours, adjusted to maintain trough concentrations of 15-20 ug/mL.",
+        "byte_quote": "15 mg/kg q8-12h adjusted to maintain trough concentrations of 15-20 µg/mL"
+      },
+      {
+        "id": "c10",
+        "text": "Adult ceftriaxone dose is 2 g every 12 hours.",
+        "byte_quote": "ceftriaxone 2 g q12h"
+      },
+      {
+        "id": "c11",
+        "text": "Adjunctive dexamethasone dose is 0.15 mg/kg every 6 hours for 2-4 days, given before antibiotics in pneumococcal cases.",
+        "byte_quote": "Dexamethasone (0.15 mg/kg q6h for 2-4 days)"
+      }
+    ],
+    "cites": [
+      "Tunkel et al. (IDSA practice guidelines)",
+      "Hasbun et al. (CT before lumbar puncture criteria)",
+      "de Gans & van de Beek, NEJM 2002 (dexamethasone trial)",
+      "van de Beek et al., NEJM 2004 (clinical features of community-acquired bacterial meningitis)"
+    ]
+  },
+  {
+    "source_id": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=7d74dfa6-0468-43ad-ad7f-dd90d9ae7706",
+    "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=7d74dfa6-0468-43ad-ad7f-dd90d9ae7706",
+    "title": "AVELOX (moxifloxacin hydrochloride) tablet, film coated — FDA label (DailyMed)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "This source is the FDA product label for AVELOX (moxifloxacin hydrochloride), an oral/IV fluoroquinolone antibiotic — not a meningitis-specific reference.",
+        "byte_quote": "AVELOX (moxifloxacin hydrochloride) tablet, film coated"
+      },
+      {
+        "id": "c2",
+        "text": "General (non-meningitis) AVELOX dosing for adults is 400 mg orally or IV once every 24 hours.",
+        "byte_quote": "The dose of AVELOX is 400 mg (orally or as an intravenous infusion) once every 24 hours."
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+    "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display",
+    "title": "AZACTAM (aztreonam for injection, USP) - FDA Prescribing Information (DailyMed)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Aztreonam adult dosing for severe systemic or life-threatening infections is 2 g every 6 to 8 hours.",
+        "byte_quote": "Severe systemic or life-threatening infections: 2 g, 6 or 8 hours."
+      },
+      {
+        "id": "c2",
+        "text": "Aztreonam adult dosing for moderately severe systemic infections is 1 g or 2 g every 8 or 12 hours.",
+        "byte_quote": "Moderately severe systemic infections: 1 g or 2 g, 8 or 12 hours."
+      },
+      {
+        "id": "c3",
+        "text": "Aztreonam adult dosing for urinary tract infections is 500 mg or 1 g every 8 or 12 hours.",
+        "byte_quote": "Urinary tract infections: 500 mg or 1 g, 8 or 12 hours."
+      },
+      {
+        "id": "c4",
+        "text": "Aztreonam pediatric dosing for moderate to severe infections is 30 mg/kg every 6 or 8 hours.",
+        "byte_quote": "Moderate to severe infections: 30 mg/kg, 6 or 8 hours."
+      },
+      {
+        "id": "c5",
+        "text": "Aztreonam pediatric dosing for mild to moderate infections is 30 mg/kg every 8 hours.",
+        "byte_quote": "Mild to moderate infections: 30 mg/kg, 8 hours."
+      },
+      {
+        "id": "c6",
+        "text": "Aztreonam penetrates inflamed meninges, reaching cerebrospinal fluid concentrations of about 3 mcg/mL after a 2 g IV dose.",
+        "byte_quote": "cerebrospinal fluid (inflamed meninges)"
+      },
+      {
+        "id": "c7",
+        "text": "Aztreonam is active against gram-negative organisms including Haemophilus influenzae (including ampicillin-resistant and penicillinase-producing strains), Pseudomonas aeruginosa, Escherichia coli, Klebsiella, Enterobacter, Serratia, Citrobacter, and Proteus mirabilis.",
+        "byte_quote": "Citrobacter species, Enterobacter species, Escherichia coli, Haemophilus influenzae (including ampicillin-resistant and other penicillinase-producing strains), Klebsiella oxytoca, Klebsiella pneumoniae, Proteus mirabilis, Pseudomonas aeruginosa, Serratia species."
+      }
+    ],
+    "cites": []
   }
 ]
