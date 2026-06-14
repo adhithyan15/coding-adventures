@@ -97,6 +97,8 @@ packages a typed surface for:
   into final package release archive signoff checks
 - Hue package release archive closure summaries that turn archive signoff
   readiness into final package release archive closure checks
+- Hue package release archive handoff summaries that turn archive closure
+  readiness into final package release archive handoff checks
 
 ## Dependencies
 
