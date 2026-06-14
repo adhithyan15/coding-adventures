@@ -55,29 +55,6 @@ pub const PANASONIC_COLOR_MATRIX: [[f64; 3]; 3] = [
     [ 0.055, -0.413,  1.358],
 ];
 
-/// Apply the sRGB gamma (IEC 61966-2-1) transfer function to a linear [0,1]
-/// value, producing an output in [0,1].
-///
-/// Formula (pseudocode, not Rust):
-///
-/// ```text
-/// if v <= 0.0031308: out = 12.92 * v
-/// else:              out = 1.055 * v^(1/2.4) - 0.055
-/// ```
-#[inline]
-fn srgb_gamma(v: f64) -> f64 {
-    if v <= 0.0031308 {
-        12.92 * v
-    } else {
-        1.055 * v.powf(1.0 / 2.4) - 0.055
-    }
-}
-
-/// Clamp a floating-point value to [0.0, 1.0].
-#[inline]
-fn clamp01(v: f64) -> f64 {
-    v.max(0.0).min(1.0)
-}
 
 /// Apply the full camera-to-display colour pipeline.
 ///
@@ -102,49 +79,9 @@ pub fn apply_color_pipeline(
     wb: [f64; 3],
     color_matrix: [[f64; 3]; 3],
 ) -> Vec<(u8, u8, u8)> {
-    // Guard against divide-by-zero if white_level == black_level.
-    let range = (white_level as f64 - black_level as f64).max(1.0);
-
-    rgb.into_iter()
-        .map(|(r16, g16, b16)| {
-            // ── Step 1: subtract black level, floor at 0 ──────────────────
-            let r_blk = (r16 as i64 - black_level as i64).max(0) as f64;
-            let g_blk = (g16 as i64 - black_level as i64).max(0) as f64;
-            let b_blk = (b16 as i64 - black_level as i64).max(0) as f64;
-
-            // ── Step 2: normalise to [0.0, 1.0] ───────────────────────────
-            let r_norm = r_blk / range;
-            let g_norm = g_blk / range;
-            let b_norm = b_blk / range;
-
-            // ── Step 3: apply white balance gains ─────────────────────────
-            let r_wb = r_norm * wb[0];
-            let g_wb = g_norm * wb[1];
-            let b_wb = b_norm * wb[2];
-
-            // ── Step 4: apply 3×3 camera-to-sRGB matrix ───────────────────
-            // Each output channel is a weighted sum of all three input channels.
-            let r_mat = color_matrix[0][0] * r_wb
-                + color_matrix[0][1] * g_wb
-                + color_matrix[0][2] * b_wb;
-            let g_mat = color_matrix[1][0] * r_wb
-                + color_matrix[1][1] * g_wb
-                + color_matrix[1][2] * b_wb;
-            let b_mat = color_matrix[2][0] * r_wb
-                + color_matrix[2][1] * g_wb
-                + color_matrix[2][2] * b_wb;
-
-            // ── Step 5: apply sRGB gamma ───────────────────────────────────
-            // Clip to [0,1] first so gamma works correctly (powf on negative is NaN).
-            let r_gamma = srgb_gamma(clamp01(r_mat));
-            let g_gamma = srgb_gamma(clamp01(g_mat));
-            let b_gamma = srgb_gamma(clamp01(b_mat));
-
-            // ── Step 6: clip to [0,1] and scale to u8 ─────────────────────
-            let to_u8 = |v: f64| -> u8 { (clamp01(v) * 255.0).round() as u8 };
-            (to_u8(r_gamma), to_u8(g_gamma), to_u8(b_gamma))
-        })
-        .collect()
+    // The shared pipeline's signature matches directly: single black_level u32,
+    // white_level u32, pre-normalised wb [f64;3]. No pre-processing needed.
+    image_raw_pipeline::apply_color_pipeline(&rgb, black_level, white_level, wb, color_matrix)
 }
 
 /// Compute the white balance multipliers from IFD RedBalance / BlueBalance tags.
@@ -199,13 +136,13 @@ mod tests {
     #[test]
     fn srgb_gamma_zero() {
         // 0.0 → 0.0 (linear segment)
-        assert!((srgb_gamma(0.0)).abs() < 1e-12);
+        assert!((image_raw_pipeline::srgb_gamma(0.0)).abs() < 1e-12);
     }
 
     #[test]
     fn srgb_gamma_one() {
         // 1.0 → 1.0 (both segments agree at endpoints by construction)
-        assert!((srgb_gamma(1.0) - 1.0).abs() < 1e-9);
+        assert!((image_raw_pipeline::srgb_gamma(1.0) - 1.0).abs() < 1e-9);
     }
 
     #[test]
