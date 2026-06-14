@@ -89,6 +89,8 @@ packages a typed surface for:
   audit/signoff checks
 - Hue package release signoff summaries that turn audit readiness into final
   package release signoff checks
+- Hue package release closure summaries that turn signoff readiness into final
+  package release closure checks
 
 ## Dependencies
 
