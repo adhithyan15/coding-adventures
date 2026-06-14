@@ -2618,6 +2618,93 @@ pub fn hue_package_release_dispatch_summary(
     HuePackageReleaseDispatchSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseOperatorSummary {
+    pub dispatch_summary: HuePackageReleaseDispatchSummary,
+    pub required_operator_check_count: usize,
+    pub passed_operator_check_count: usize,
+    pub blocked_operator_check_count: usize,
+    pub dispatch_ready: bool,
+    pub coordination_ready: bool,
+    pub package_accepted: bool,
+    pub review_queues_clear: bool,
+    pub publish_gate_ready: bool,
+    pub release_operator_ready: bool,
+}
+
+impl HuePackageReleaseOperatorSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_dispatch_summary(hue_package_release_dispatch_summary(plan))
+    }
+
+    pub fn from_dispatch_summary(dispatch_summary: HuePackageReleaseDispatchSummary) -> Self {
+        let dispatch_ready = dispatch_summary.is_release_dispatch_ready();
+        let coordination_ready = !dispatch_summary.needs_coordination();
+        let package_accepted = !dispatch_summary.needs_package_acceptance();
+        let review_queues_clear = !dispatch_summary.needs_review_queue_clearance();
+        let publish_gate_ready = !dispatch_summary.needs_publish_gate();
+        let checks = [
+            dispatch_ready,
+            coordination_ready,
+            package_accepted,
+            review_queues_clear,
+            publish_gate_ready,
+        ];
+        let passed_operator_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_operator_check_count = checks.len();
+        let blocked_operator_check_count =
+            required_operator_check_count - passed_operator_check_count;
+        let release_operator_ready = blocked_operator_check_count == 0;
+
+        Self {
+            dispatch_summary,
+            required_operator_check_count,
+            passed_operator_check_count,
+            blocked_operator_check_count,
+            dispatch_ready,
+            coordination_ready,
+            package_accepted,
+            review_queues_clear,
+            publish_gate_ready,
+            release_operator_ready,
+        }
+    }
+
+    pub fn is_release_operator_ready(self) -> bool {
+        self.release_operator_ready
+    }
+
+    pub fn has_blocked_operator_checks(self) -> bool {
+        self.blocked_operator_check_count > 0
+    }
+
+    pub fn needs_dispatch(self) -> bool {
+        !self.dispatch_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_package_acceptance(self) -> bool {
+        !self.package_accepted
+    }
+
+    pub fn needs_review_queue_clearance(self) -> bool {
+        !self.review_queues_clear
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_operator_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseOperatorSummary {
+    HuePackageReleaseOperatorSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -6679,6 +6766,81 @@ mod tests {
         assert!(summary.has_blocked_dispatch_checks());
         assert!(summary.needs_coordination());
         assert!(summary.needs_release_queue());
+        assert!(summary.needs_package_acceptance());
+        assert!(summary.needs_review_queue_clearance());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_operator_summary_reports_ready_operator() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_operator_summary(&plan);
+
+        assert_eq!(
+            summary.dispatch_summary,
+            hue_package_release_dispatch_summary(&plan)
+        );
+        assert_eq!(summary.required_operator_check_count, 5);
+        assert_eq!(summary.passed_operator_check_count, 5);
+        assert_eq!(summary.blocked_operator_check_count, 0);
+        assert!(summary.dispatch_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.package_accepted);
+        assert!(summary.review_queues_clear);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_operator_ready);
+        assert!(summary.is_release_operator_ready());
+        assert!(!summary.has_blocked_operator_checks());
+        assert!(!summary.needs_dispatch());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_package_acceptance());
+        assert!(!summary.needs_review_queue_clearance());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_operator_summary_routes_blocked_operator() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseOperatorSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_operator_check_count, 5);
+        assert_eq!(summary.passed_operator_check_count, 0);
+        assert_eq!(summary.blocked_operator_check_count, 5);
+        assert!(!summary.dispatch_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.package_accepted);
+        assert!(!summary.review_queues_clear);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_operator_ready);
+        assert!(!summary.is_release_operator_ready());
+        assert!(summary.has_blocked_operator_checks());
+        assert!(summary.needs_dispatch());
+        assert!(summary.needs_coordination());
         assert!(summary.needs_package_acceptance());
         assert!(summary.needs_review_queue_clearance());
         assert!(summary.needs_publish_gate());
