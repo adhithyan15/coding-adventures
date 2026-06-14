@@ -24,4 +24,5 @@ All notable changes to this package will be documented in this file.
 - Command-class projection summaries for D23 command and sensor surface checks.
 - Command-class projection readiness summaries for command-class inventory,
   projected capability, command, sensor, and observe-only surface gates.
+- Command-class projection signoff summaries for final D23 projection gates.
 - D23 capability and state-delta mapping for common reports.

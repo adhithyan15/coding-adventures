@@ -590,6 +590,101 @@ impl CommandClassProjectionReadinessSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CommandClassProjectionSignoffSummary {
+    pub readiness_summary: CommandClassProjectionReadinessSummary,
+    pub required_signoff_check_count: usize,
+    pub passed_signoff_check_count: usize,
+    pub missing_signoff_check_count: usize,
+    pub projection_ready: bool,
+    pub command_classes_present: bool,
+    pub capability_projection_ready: bool,
+    pub command_surface_ready: bool,
+    pub sensor_surface_ready: bool,
+    pub observe_only_surface_ready: bool,
+    pub signoff_ready: bool,
+}
+
+impl CommandClassProjectionSignoffSummary {
+    pub fn from_command_classes<I>(command_classes: I) -> Self
+    where
+        I: IntoIterator<Item = CommandClassId>,
+    {
+        Self::from_readiness_summary(
+            CommandClassProjectionReadinessSummary::from_command_classes(command_classes),
+        )
+    }
+
+    pub fn from_readiness_summary(
+        readiness_summary: CommandClassProjectionReadinessSummary,
+    ) -> Self {
+        let projection_ready = readiness_summary.is_projection_ready();
+        let command_classes_present = !readiness_summary.needs_command_class_inventory();
+        let capability_projection_ready = !readiness_summary.needs_capability_projection();
+        let command_surface_ready = !readiness_summary.needs_command_surface();
+        let sensor_surface_ready = !readiness_summary.needs_sensor_surface();
+        let observe_only_surface_ready = !readiness_summary.needs_observe_only_surface();
+        let checks = [
+            projection_ready,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+        ];
+        let passed_signoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_signoff_check_count = checks.len();
+        let missing_signoff_check_count = required_signoff_check_count - passed_signoff_check_count;
+        let signoff_ready = missing_signoff_check_count == 0;
+
+        Self {
+            readiness_summary,
+            required_signoff_check_count,
+            passed_signoff_check_count,
+            missing_signoff_check_count,
+            projection_ready,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+            signoff_ready,
+        }
+    }
+
+    pub fn is_signoff_ready(self) -> bool {
+        self.signoff_ready
+    }
+
+    pub fn has_missing_signoff_checks(self) -> bool {
+        self.missing_signoff_check_count > 0
+    }
+
+    pub fn needs_projection_readiness(self) -> bool {
+        !self.projection_ready
+    }
+
+    pub fn needs_command_class_inventory(self) -> bool {
+        !self.command_classes_present
+    }
+
+    pub fn needs_capability_projection(self) -> bool {
+        !self.capability_projection_ready
+    }
+
+    pub fn needs_command_surface(self) -> bool {
+        !self.command_surface_ready
+    }
+
+    pub fn needs_sensor_surface(self) -> bool {
+        !self.sensor_surface_ready
+    }
+
+    pub fn needs_observe_only_surface(self) -> bool {
+        !self.observe_only_surface_ready
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CommandClassError {
     Truncated {
@@ -2013,6 +2108,71 @@ mod tests {
         assert_eq!(empty.passed_projection_check_count, 0);
         assert!(empty.needs_command_class_inventory());
         assert!(empty.has_missing_projection_checks());
+    }
+
+    #[test]
+    fn command_class_projection_signoff_marks_mixed_surface_ready() {
+        let readiness = CommandClassProjectionReadinessSummary::from_command_classes([
+            CommandClassId::SWITCH_BINARY,
+            CommandClassId::DOOR_LOCK,
+            CommandClassId::BATTERY,
+            COMMAND_CLASS_METER,
+            COMMAND_CLASS_NOTIFICATION,
+        ]);
+
+        let signoff = CommandClassProjectionSignoffSummary::from_readiness_summary(readiness);
+
+        assert_eq!(signoff.readiness_summary, readiness);
+        assert_eq!(signoff.required_signoff_check_count, 6);
+        assert_eq!(signoff.passed_signoff_check_count, 6);
+        assert_eq!(signoff.missing_signoff_check_count, 0);
+        assert!(signoff.projection_ready);
+        assert!(signoff.command_classes_present);
+        assert!(signoff.capability_projection_ready);
+        assert!(signoff.command_surface_ready);
+        assert!(signoff.sensor_surface_ready);
+        assert!(signoff.observe_only_surface_ready);
+        assert!(signoff.signoff_ready);
+        assert!(signoff.is_signoff_ready());
+        assert!(!signoff.has_missing_signoff_checks());
+        assert!(!signoff.needs_projection_readiness());
+        assert!(!signoff.needs_command_class_inventory());
+        assert!(!signoff.needs_capability_projection());
+        assert!(!signoff.needs_command_surface());
+        assert!(!signoff.needs_sensor_surface());
+        assert!(!signoff.needs_observe_only_surface());
+    }
+
+    #[test]
+    fn command_class_projection_signoff_routes_sparse_inventory_gaps() {
+        let basic_only = CommandClassProjectionSignoffSummary::from_command_classes([
+            CommandClassId::BASIC,
+            CommandClassId::BASIC,
+        ]);
+
+        assert_eq!(basic_only.required_signoff_check_count, 6);
+        assert_eq!(basic_only.passed_signoff_check_count, 1);
+        assert_eq!(basic_only.missing_signoff_check_count, 5);
+        assert!(!basic_only.projection_ready);
+        assert!(basic_only.command_classes_present);
+        assert!(!basic_only.capability_projection_ready);
+        assert!(!basic_only.command_surface_ready);
+        assert!(!basic_only.sensor_surface_ready);
+        assert!(!basic_only.observe_only_surface_ready);
+        assert!(!basic_only.signoff_ready);
+        assert!(!basic_only.is_signoff_ready());
+        assert!(basic_only.has_missing_signoff_checks());
+        assert!(basic_only.needs_projection_readiness());
+        assert!(!basic_only.needs_command_class_inventory());
+        assert!(basic_only.needs_capability_projection());
+        assert!(basic_only.needs_command_surface());
+        assert!(basic_only.needs_sensor_surface());
+        assert!(basic_only.needs_observe_only_surface());
+
+        let empty = CommandClassProjectionSignoffSummary::from_command_classes([]);
+        assert_eq!(empty.passed_signoff_check_count, 0);
+        assert!(empty.needs_command_class_inventory());
+        assert!(empty.has_missing_signoff_checks());
     }
 
     #[test]
