@@ -45,7 +45,7 @@ struct GridView: View {
                         let c: Double = Double(_swiftIdxc)
                         Group {
                             if ( r == editRow && c == editCol ) {
-                                TextField("", text: .constant(editContent)).onChange(of: editContent) { dispatch(.formulaChange(value: editContent)) }.onSubmit { dispatch(.editCommit) }
+                                TextField("", text: Binding(get: { editContent }, set: { dispatch(.formulaChange(value: $0)) })).onSubmit { dispatch(.editCommit) }
                                     #if os(macOS)
                                     .onExitCommand { dispatch(.editCancel) }
                                     #endif

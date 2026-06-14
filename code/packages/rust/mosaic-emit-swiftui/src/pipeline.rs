@@ -1791,8 +1791,34 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
         None => "\"\"".to_string(),
     };
 
+    // Is this input EDITABLE? An input is editable when it has both an
+    // `onChange` emit handler and a bound `value` slot. For an editable input
+    // we synthesise a real two-way `Binding` whose setter dispatches the change
+    // on every keystroke (the same pattern the `Toggle` lowering uses), so the
+    // `TextField` can actually be typed into. Without an `onChange` handler
+    // there is nowhere to write edits back to, so we keep the read-only
+    // `.constant(...)` form (a label-like display).
+    let editable_case = match find_emit_ref_prop(node, "onChange") {
+        Some(emit_name) if find_slot_ref_prop(node, "value").is_some() => {
+            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+            validate_emit_name(&case_name)?;
+            Some(case_name)
+        }
+        _ => None,
+    };
+
+    // `text:` binding — a writable `Binding(get:set:)` for editable inputs
+    // (setter dispatches the `onChange` event with the new value `$0`), or the
+    // read-only `.constant(...)` otherwise.
+    let text_binding = match &editable_case {
+        Some(case_name) => format!(
+            "Binding(get: {{ {value_expr} }}, set: {{ dispatch(.{case_name}(value: $0)) }})"
+        ),
+        None => format!(".constant({value_expr})"),
+    };
+
     // The opening `TextField` expression.
-    let mut line = format!("{pad}TextField({placeholder_lit}, text: .constant({value_expr}))");
+    let mut line = format!("{pad}TextField({placeholder_lit}, text: {text_binding})");
 
     // Modifier chain. We deliberately keep each modifier on the same
     // line — Swift accepts chained modifiers without line breaks, and
@@ -1809,23 +1835,11 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
         }
     }
 
-    // `.onChange(of: value) { dispatch(.e(value: value)) }`. Only fires
-    // when the bound slot itself changes (which, with `.constant`, only
-    // happens if the host re-renders with a new `value` slot). This is
-    // intentionally a no-op on most keystrokes — full per-keystroke
-    // dispatch lands with the `@State`-proxy option in a future PR.
-    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
-        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_emit_name(&case_name)?;
-        // If no value slot is bound, the `of:` target is the empty literal
-        // we synthesised above, which is invalid Swift. Skip the modifier
-        // in that case — there's nothing meaningful to observe.
-        if find_slot_ref_prop(node, "value").is_some() {
-            line.push_str(&format!(
-                ".onChange(of: {value_expr}) {{ dispatch(.{case_name}(value: {value_expr})) }}"
-            ));
-        }
-    }
+    // The `onChange` handler is wired through the `text:` binding's setter
+    // above (it dispatches the event with the new value on every keystroke),
+    // so there is no separate `.onChange(of:)` modifier here. Emitting one in
+    // addition would feed back: the setter dispatches -> the host updates the
+    // bound slot -> `.onChange(of:)` fires -> dispatches again.
 
     // `.onSubmit { dispatch(.e) }`. SwiftUI fires onSubmit when the
     // user presses Enter / Return in the TextField.
@@ -3886,6 +3900,58 @@ mod tests {
         assert!(
             out.contains(r#"TextField("Search…", text: .constant(query))"#),
             "expected TextField with .constant binding, got:\n{out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // Test 16b — a `HostInput` with BOTH a `value` slot and an `onChange`
+    // handler is EDITABLE: it lowers to a writable `Binding(get:set:)` whose
+    // setter dispatches the change per keystroke (so the field can be typed
+    // into), instead of the read-only `.constant(...)`. The separate
+    // `.onChange(of:)` modifier is NOT emitted (the setter is the dispatch
+    // path; emitting both would feed back).
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn host_input_with_on_change_emits_editable_binding() {
+        let layout = layout_with(
+            "Form",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostInput",
+                    vec![
+                        prop_string("placeholder", "Enter formula"),
+                        prop_slot_ref("value", "formula"),
+                        prop_emit_ref("onChange", "onFormulaChange"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Form",
+                vec![slot("formula", SlotType::Text, true)],
+                vec![emit("onFormulaChange", vec![param("value", EmitPayloadType::Text)])],
+            ),
+            &layout,
+            &empty_style("Form"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(
+                "text: Binding(get: { formula }, set: { dispatch(.formulaChange(value: $0)) })"
+            ),
+            "expected an editable Binding setter, got:\n{out}"
+        );
+        assert!(
+            !out.contains(".constant(formula)"),
+            "editable input must not use a read-only .constant binding, got:\n{out}"
+        );
+        assert!(
+            !out.contains(".onChange(of:"),
+            "the setter is the dispatch path; no separate .onChange modifier, got:\n{out}"
         );
     }
 

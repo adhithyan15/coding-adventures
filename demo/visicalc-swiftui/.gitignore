@@ -11,3 +11,6 @@ Sources/VisiCalc/Generated/FormulaBar.swift
 
 # Vendored engine static library — built by scripts/build.sh from spreadsheet-capi
 Vendor/
+
+# Built .app bundle (scripts/make-app.sh)
+VisiCalc.app/

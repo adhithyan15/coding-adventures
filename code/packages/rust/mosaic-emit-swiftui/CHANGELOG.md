@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — editable `HostInput` (the formula-bar issue)
+
+A `HostInput` with an `onChange` handler and a bound `value` slot now lowers to
+a **writable** `TextField` binding — `Binding(get: { value }, set: { dispatch(.onChange(value: $0)) })`
+— instead of the read-only `text: .constant(value)`. Previously the generated
+`TextField` could not be typed into at all (the constant binding discarded
+every keystroke, and the separate `.onChange(of:)` modifier only fired when the
+*prop* changed). The setter now dispatches the change per keystroke, so hosts
+get a genuinely editable field; the redundant `.onChange(of:)` modifier is no
+longer emitted for editable inputs (emitting both would feed back: setter →
+host updates slot → `.onChange` fires → dispatches again). Inputs without an
+`onChange` handler keep the read-only `.constant(...)` form (label-like
+display). This is what makes the VisiCalc SwiftUI demo's formula bar actually
+editable.
+
 ### Added — UI32-K-swiftui — `--emit-project` SwiftPM macOS shell
 
 L7 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2-L6: #4297, #4309, #4315, #4319, #4325). `mosaic-compile --backend swiftui --emit-project` now produces a SwiftPM scaffold:
