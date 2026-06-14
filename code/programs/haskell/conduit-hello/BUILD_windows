@@ -1,0 +1,1 @@
+echo "Haskell conduit-hello uses GHC FFI against the Rust cdylib — skipping on Windows (requires cross-compile setup for conduit_capi.dll)"
