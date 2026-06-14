@@ -348,6 +348,100 @@ impl HueSnapshotSummary {
             self.stateful_light_resources + self.stateful_grouped_light_resources;
         stateful_lighting_resources > 0 && stateful_lighting_resources < lighting_resources
     }
+
+    pub fn readiness(self) -> HueSnapshotReadinessSummary {
+        HueSnapshotReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueSnapshotReadinessSummary {
+    pub snapshot_summary: HueSnapshotSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub bridge_identity_ready: bool,
+    pub lighting_surface_ready: bool,
+    pub relationship_refs_ready: bool,
+    pub scene_projection_ready: bool,
+    pub sensor_or_input_surface_ready: bool,
+    pub state_projection_ready: bool,
+    pub snapshot_ready: bool,
+}
+
+impl HueSnapshotReadinessSummary {
+    pub fn from_snapshot(snapshot: &HueSnapshot) -> Self {
+        Self::from_summary(snapshot.summary())
+    }
+
+    pub fn from_summary(snapshot_summary: HueSnapshotSummary) -> Self {
+        let bridge_identity_ready = snapshot_summary.bridge_resources > 0;
+        let lighting_surface_ready = snapshot_summary.has_lighting_resources();
+        let relationship_refs_ready = snapshot_summary.has_relationship_refs();
+        let scene_projection_ready = snapshot_summary.has_scene_state_projection();
+        let sensor_or_input_surface_ready = snapshot_summary.has_sensor_or_input_resources();
+        let state_projection_ready = snapshot_summary.has_state_projection();
+        let projectable_resources_ready = snapshot_summary.has_projectable_resources();
+        let checks = [
+            bridge_identity_ready,
+            lighting_surface_ready,
+            relationship_refs_ready,
+            scene_projection_ready,
+            sensor_or_input_surface_ready,
+            state_projection_ready,
+            projectable_resources_ready,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let snapshot_ready = missing_check_count == 0;
+
+        Self {
+            snapshot_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            bridge_identity_ready,
+            lighting_surface_ready,
+            relationship_refs_ready,
+            scene_projection_ready,
+            sensor_or_input_surface_ready,
+            state_projection_ready,
+            snapshot_ready,
+        }
+    }
+
+    pub fn is_snapshot_ready(self) -> bool {
+        self.snapshot_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_bridge_identity(self) -> bool {
+        !self.bridge_identity_ready
+    }
+
+    pub fn needs_lighting_surface(self) -> bool {
+        !self.lighting_surface_ready
+    }
+
+    pub fn needs_relationship_refs(self) -> bool {
+        !self.relationship_refs_ready
+    }
+
+    pub fn needs_scene_projection(self) -> bool {
+        !self.scene_projection_ready
+    }
+
+    pub fn needs_sensor_or_input_surface(self) -> bool {
+        !self.sensor_or_input_surface_ready
+    }
+
+    pub fn needs_state_projection(self) -> bool {
+        !self.state_projection_ready
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -2596,6 +2690,26 @@ mod tests {
         assert!(summary.has_projectable_resources());
         assert!(summary.has_state_projection());
         assert!(!summary.has_partial_lighting_state_projection());
+        let readiness = summary.readiness();
+        assert_eq!(readiness.snapshot_summary, summary);
+        assert_eq!(readiness.required_check_count, 7);
+        assert_eq!(readiness.passed_check_count, 7);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.bridge_identity_ready);
+        assert!(readiness.lighting_surface_ready);
+        assert!(readiness.relationship_refs_ready);
+        assert!(readiness.scene_projection_ready);
+        assert!(readiness.sensor_or_input_surface_ready);
+        assert!(readiness.state_projection_ready);
+        assert!(readiness.snapshot_ready);
+        assert!(readiness.is_snapshot_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_bridge_identity());
+        assert!(!readiness.needs_lighting_surface());
+        assert!(!readiness.needs_relationship_refs());
+        assert!(!readiness.needs_scene_projection());
+        assert!(!readiness.needs_sensor_or_input_surface());
+        assert!(!readiness.needs_state_projection());
 
         let empty = HueSnapshotSummary::empty();
         assert!(empty.is_empty());
@@ -2623,6 +2737,25 @@ mod tests {
         assert_eq!(partial_lighting.lighting_resource_count(), 3);
         assert!(partial_lighting.mixes_direct_and_grouped_light_resources());
         assert!(partial_lighting.has_partial_lighting_state_projection());
+        let partial_readiness = HueSnapshotReadinessSummary::from_summary(partial_lighting);
+        assert_eq!(partial_readiness.required_check_count, 7);
+        assert_eq!(partial_readiness.passed_check_count, 3);
+        assert_eq!(partial_readiness.missing_check_count, 4);
+        assert!(!partial_readiness.bridge_identity_ready);
+        assert!(partial_readiness.lighting_surface_ready);
+        assert!(!partial_readiness.relationship_refs_ready);
+        assert!(!partial_readiness.scene_projection_ready);
+        assert!(!partial_readiness.sensor_or_input_surface_ready);
+        assert!(partial_readiness.state_projection_ready);
+        assert!(!partial_readiness.snapshot_ready);
+        assert!(!partial_readiness.is_snapshot_ready());
+        assert!(partial_readiness.has_missing_checks());
+        assert!(partial_readiness.needs_bridge_identity());
+        assert!(!partial_readiness.needs_lighting_surface());
+        assert!(partial_readiness.needs_relationship_refs());
+        assert!(partial_readiness.needs_scene_projection());
+        assert!(partial_readiness.needs_sensor_or_input_surface());
+        assert!(!partial_readiness.needs_state_projection());
     }
 
     #[test]
