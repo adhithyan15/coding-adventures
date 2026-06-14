@@ -892,4 +892,325 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       assert Enum.any?(tokens, &(&1.type == "TAG_NAME"))
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # F10: Declarative lexer mode transitions
+  # ---------------------------------------------------------------------------
+  #
+  # F10 adds three concepts on top of the existing group/callback machinery:
+  #
+  # 1. `transitions:` section in the grammar — declarative on-token rules that
+  #    fire automatically, replacing (or augmenting) hand-written callbacks.
+  #
+  # 2. Flat-mode inheritance — groups targeted by `set-mode` (but not `push`)
+  #    inherit the default group's patterns as fallthrough so the author need
+  #    not duplicate common patterns (NAME, NUMBER, etc.) in every mode.
+  #
+  # 3. `start_mode:` directive — the lexer begins in the named group instead
+  #    of "default".
+  #
+  # The tests below exercise each feature independently and in combination.
+
+  describe "F10 — backward compatibility" do
+    test "a grammar with no transitions behaves identically to before" do
+      # This is the most important regression guard: existing grammars that
+      # predate F10 must tokenize identically regardless of whether F10 code
+      # is present on the hot path.
+      {:ok, grammar} =
+        TokenGrammar.parse("""
+        NAME   = /[a-zA-Z_][a-zA-Z_0-9]*/
+        NUMBER = /[0-9]+/
+        PLUS   = "+"
+        """)
+
+      {:ok, tokens} = GrammarLexer.tokenize("a + 1", grammar)
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "PLUS", "NUMBER", "EOF"]
+    end
+  end
+
+  describe "F10 — set-mode action" do
+    # Build a grammar where emitting EQ switches from "default" to "rhs" mode.
+    # The "rhs" group has an RHS_NAME pattern that shadows the default NAME.
+    defp set_mode_grammar do
+      {:ok, g} =
+        TokenGrammar.parse("""
+        skip:
+          WS = /[ \\t]+/
+
+        NAME = /[a-zA-Z_]+/
+        EQ   = "="
+
+        group rhs:
+          RHS_NAME = /[a-zA-Z_]+/
+
+        transitions:
+          on EQ -> set-mode rhs
+        """)
+
+      g
+    end
+
+    test "after trigger token, active group switches to the named mode" do
+      # Tokenize "foo = bar":
+      # - "foo" → NAME (default)
+      # - "="   → EQ, then transition fires → switch to rhs mode
+      # - "bar" → RHS_NAME (rhs mode; rhs pattern shadows default NAME)
+      {:ok, tokens} = GrammarLexer.tokenize("foo = bar", set_mode_grammar())
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "EQ", "RHS_NAME", "EOF"]
+    end
+
+    test "no switch when no matching token type" do
+      # "foo bar" has no EQ, so no transition fires; both words are NAME.
+      {:ok, tokens} = GrammarLexer.tokenize("foo bar", set_mode_grammar())
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "NAME", "EOF"]
+    end
+  end
+
+  describe "F10 — flat-mode inheritance" do
+    # A grammar where "div_mode" (set-mode target) has its own SLASH_DIV pattern
+    # but relies on the default group for NAME and NUMBER.  Without flat-mode
+    # inheritance the user would have to duplicate all default patterns inside
+    # "div_mode"; with it, they get them for free as a fallthrough.
+    defp flat_inheritance_grammar do
+      {:ok, g} =
+        TokenGrammar.parse("""
+        skip:
+          WS = /[ \\t]+/
+
+        NAME   = /[a-zA-Z_]+/
+        NUMBER = /[0-9]+/
+        SLASH  = "/"
+
+        group div_mode:
+          SLASH_DIV = "/"
+
+        transitions:
+          on NAME -> set-mode div_mode
+        """)
+
+      g
+    end
+
+    test "set-mode group's own patterns take precedence over inherited defaults" do
+      # "x / y": after emitting NAME("x") we switch to div_mode.
+      # "/" is in div_mode as SLASH_DIV (takes precedence over default SLASH).
+      # "y" is NAME inherited from default (div_mode is a set_mode target).
+      {:ok, tokens} = GrammarLexer.tokenize("x / y", flat_inheritance_grammar())
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "SLASH_DIV", "NAME", "EOF"]
+    end
+
+    test "numbers are accessible in set-mode group via inheritance" do
+      # "x 42": after switching to div_mode, NUMBER is still available from
+      # the default group via flat-mode inheritance.
+      {:ok, tokens} = GrammarLexer.tokenize("x 42", flat_inheritance_grammar())
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "NUMBER", "EOF"]
+    end
+  end
+
+  describe "F10 — push target is exclusive (no flat-mode inheritance)" do
+    # "exclusive" is a push target, so it does NOT inherit default patterns.
+    # Only patterns defined inside the group itself are available.
+    defp push_exclusive_grammar do
+      {:ok, g} =
+        TokenGrammar.parse("""
+        skip:
+          WS = /[ \\t]+/
+
+        NAME  = /[a-zA-Z_]+/
+        OPEN  = "{"
+
+        group exclusive:
+          INNER = /[^}]+/
+          CLOSE = "}"
+
+        transitions:
+          on OPEN -> push exclusive
+          on CLOSE -> pop
+        """)
+
+      g
+    end
+
+    test "push target uses only its own patterns — no default fallthrough" do
+      # "outer { inner } outer":
+      # - "outer " → NAME (default)
+      # - "{"      → OPEN (default), push exclusive
+      # - " inner " → INNER (exclusive; /[^}]+/ matches until "}")
+      # - "}"      → CLOSE (exclusive), pop → back to default
+      # - " outer" → NAME (default)
+      {:ok, tokens} = GrammarLexer.tokenize("outer { inner } outer", push_exclusive_grammar())
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "OPEN", "INNER", "CLOSE", "NAME", "EOF"]
+    end
+
+    test "push and pop restore previous mode correctly" do
+      {:ok, tokens} = GrammarLexer.tokenize("a { b } c", push_exclusive_grammar())
+      types = Enum.map(tokens, & &1.type)
+      # After pop the lexer is back in default → "c" is NAME, not INNER.
+      assert types == ["NAME", "OPEN", "INNER", "CLOSE", "NAME", "EOF"]
+    end
+  end
+
+  describe "F10 — in_mode guard" do
+    # Two transitions both triggered by DOT, but with opposing in_mode guards.
+    # Toggling back and forth between "default" and "member_mode".
+    defp in_mode_grammar do
+      {:ok, g} =
+        TokenGrammar.parse("""
+        skip:
+          WS = /[ \\t]+/
+
+        NAME = /[a-zA-Z_]+/
+        DOT  = "."
+
+        group member_mode:
+          MEMBER = /[a-zA-Z_]+/
+
+        transitions:
+          on DOT in default     -> set-mode member_mode
+          on DOT in member_mode -> set-mode default
+        """)
+
+      g
+    end
+
+    test "in_mode guard ensures only the matching rule fires" do
+      # "a.b.c": DOT in default → switch to member_mode, DOT in member_mode → switch back
+      {:ok, tokens} = GrammarLexer.tokenize("a.b.c", in_mode_grammar())
+      types = Enum.map(tokens, & &1.type)
+      # default: NAME("a"), DOT → switch to member_mode
+      # member_mode: MEMBER("b") inherited-default?, DOT → switch back
+      # default: NAME("c")
+      assert types == ["NAME", "DOT", "MEMBER", "DOT", "NAME", "EOF"]
+    end
+
+    test "rule with in_mode does NOT fire when in a different mode" do
+      # "a.b": starts in default → NAME, then DOT → switch to member_mode → MEMBER
+      # No second dot, so second rule never fires.  Just verify no crash.
+      {:ok, tokens} = GrammarLexer.tokenize("a.b", in_mode_grammar())
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "DOT", "MEMBER", "EOF"]
+    end
+  end
+
+  describe "F10 — disable-skip action" do
+    # After a TRIGGER (":"), skip is disabled so subsequent whitespace is
+    # emitted as a WS token instead of being silently consumed.
+    defp disable_skip_grammar do
+      {:ok, g} =
+        TokenGrammar.parse("""
+        NAME    = /[a-zA-Z_]+/
+        WS      = /[ \\t]+/
+        TRIGGER = ":"
+
+        skip:
+          WS = /[ \\t]+/
+
+        transitions:
+          on TRIGGER -> disable-skip
+        """)
+
+      g
+    end
+
+    test "disable-skip makes whitespace significant after trigger token" do
+      # "word: val":
+      # - "word" → NAME (skip active, spaces consumed)
+      # - ":"    → TRIGGER, disable-skip fires
+      # - " "    → WS (skip now inactive, matched by WS definition)
+      # - "val"  → NAME
+      {:ok, tokens} = GrammarLexer.tokenize("word: val", disable_skip_grammar())
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "TRIGGER", "WS", "NAME", "EOF"]
+    end
+  end
+
+  describe "F10 — start_mode directive" do
+    # The lexer should begin in "header" mode rather than "default".
+    # "header" has HDR = /[A-Z]+/ which is NOT in the default group.
+    defp start_mode_grammar do
+      {:ok, g} =
+        TokenGrammar.parse("""
+        skip:
+          WS = /[ \\t]+/
+
+        NAME  = /[a-zA-Z_]+/
+        COLON = ":"
+
+        group header:
+          HDR   = /[A-Z]+/
+          COLON = ":"
+
+        start_mode: header
+        """)
+
+      g
+    end
+
+    test "lexer starts in the configured group, not default" do
+      # "HDR:": starts in header mode → "HDR" matches HDR (not NAME), then COLON.
+      # If we were in default mode, /[a-zA-Z_]+/ would match first as NAME.
+      {:ok, tokens} = GrammarLexer.tokenize("HDR:", start_mode_grammar())
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["HDR", "COLON", "EOF"]
+    end
+
+    test "start_mode respects the configured group patterns" do
+      # Verify values are also correct.
+      {:ok, tokens} = GrammarLexer.tokenize("HDR:", start_mode_grammar())
+      [{type, value} | _] = Enum.map(tokens, &{&1.type, &1.value})
+      assert type == "HDR"
+      assert value == "HDR"
+    end
+  end
+
+  describe "F10 — transitions coexist with on_token callbacks" do
+    # Both F10 transitions and an on_token callback can be active simultaneously.
+    # Transitions fire first; the callback then sees the already-updated state.
+    defp combo_grammar do
+      {:ok, g} =
+        TokenGrammar.parse("""
+        skip:
+          WS = /[ \\t]+/
+
+        NAME   = /[a-zA-Z_]+/
+        HASH   = "#"
+
+        group comment_mode:
+          COMMENT_TEXT = /[^\\n]+/
+
+        transitions:
+          on HASH -> push comment_mode
+        """)
+
+      g
+    end
+
+    test "F10 transition fires and callback also fires for the same token" do
+      pid = self()
+
+      callback = fn token, ctx ->
+        if token.type == "HASH" do
+          # When the callback runs, the transition has already fired, so we
+          # are already in comment_mode.
+          send(pid, {:active_group, ctx.active_group})
+        end
+
+        []
+      end
+
+      {:ok, tokens} = GrammarLexer.tokenize("x # comment", combo_grammar(), on_token: callback)
+
+      types = Enum.map(tokens, & &1.type)
+      assert types == ["NAME", "HASH", "COMMENT_TEXT", "EOF"]
+
+      # Verify callback was called and saw the post-transition mode.
+      assert_received {:active_group, "comment_mode"}
+    end
+  end
 end

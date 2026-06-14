@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.4.0 — 2026-06-14
+
+### Added
+
+- **F10 declarative lexer mode transitions**: The lexer now reads `transitions:`
+  and `start_mode:` from the `TokenGrammar` (parsed by the F10 grammar-tools
+  upgrade) and fires mode-switch actions automatically after every emitted token
+  — no `on_token` callback code required for common mode-switching patterns.
+
+  New `State` fields:
+  - `transitions` — list of `mode_transition` maps from `TokenGrammar.transitions`
+  - `inheriting_modes` — MapSet of group names that inherit default patterns
+  - `start_mode` — the mode the lexer starts in (defaults to `"default"`)
+
+  Supported actions per transition rule (first-match-wins):
+  - `{:set_mode, name}` — flat toggle: replace the active group in-place.
+  - `{:push, name}` — nested region: push an exclusive group onto the stack.
+  - `:pop` — close a nested region, restoring the previous group.
+  - `:enable_skip` — resume skip-pattern processing.
+  - `:disable_skip` — suspend skip-pattern processing.
+
+  Guard semantics (all must match for a rule to fire):
+  1. Token type must be in the rule's `on_tokens` list (required).
+  2. If `in_mode` is set, the current active group must match.
+  3. If `on_value` is set, the token's value must match.
+
+- **Flat-mode inheritance** (`compute_inheriting_modes/1`): Groups targeted by
+  `set_mode` (but not `push`) automatically inherit the default group's patterns
+  as a fallthrough. Push targets remain exclusive — only their own patterns apply.
+  This lets a subsidiary mode (e.g., `div_mode`) recognise its own tokens first
+  and fall back to identifiers, numbers, etc. from the default group without
+  duplicating patterns.
+
+- **`start_mode` field** on `State`: when `TokenGrammar.start_mode` is set,
+  the lexer begins in that group (previously always began in `"default"`).
+
+- **F10 transitions coexist with `on_token` callbacks**: transitions fire before
+  the callback, so the callback's `ctx.active_group` already reflects the
+  post-transition mode. Both mechanisms can be active simultaneously.
+
+- **13 new F10 tests** covering: backward compatibility, `set-mode` switching,
+  flat-mode inheritance (set_mode target sees default patterns; push target does
+  not), `in_mode` guard, push/pop nesting, `disable-skip` action, `start_mode`
+  directive, and callback/transition coexistence.
+
 ## 0.3.0 — 2026-04-04
 
 ### Added
