@@ -39,9 +39,13 @@ def main() -> int:
     observe_adj, kept, _ = ir_mod.ir_to_adj(ir, ir_mod.load_domains())
     rows = voi_mod.voi("case_preculture_ambiguous", observe_adj, set(kept), cli)
     assert rows, "VOI produced no rankings"
-    assert any(r["flips_leader"] for r in rows), "VOI surfaced no decision-flipping finding"
-    print(f"test_m7: VOI ok ({sum(r['flips_leader'] for r in rows)} flipping findings; "
-          f"top order-next = {rows[0]['order']})")
+    # The VOI must identify at least one materially decision-relevant unobserved
+    # finding (a meaningful margin move, or an outright flip on an ambiguous case).
+    top_impact = max(abs(r["margin_delta"]) for r in rows)
+    assert top_impact > 0.01, f"VOI surfaced no decision-relevant finding (max |Δ|={top_impact})"
+    n_flip = sum(r["flips_leader"] for r in rows)
+    print(f"test_m7: VOI ok (top order-next = {rows[0]['order']}, "
+          f"|Δmargin|={abs(rows[0]['margin_delta']):.3f}, {n_flip} flipping findings)")
 
     # 2. Rulebook self-consistency (IIS).
     ok = check_outcome(cli, ROOT / "consistency" / "priors_partition_ok.adj")

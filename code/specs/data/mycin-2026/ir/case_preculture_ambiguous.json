@@ -20,29 +20,39 @@
       "span": "elevated CSF protein"
     },
     {
+      "functor": "csf_lactate",
+      "value": "high",
+      "polarity": "stated",
+      "span": "elevated CSF lactate"
+    },
+    {
       "functor": "fever",
       "value": "present",
       "polarity": "stated",
       "span": "fever and headache"
+    },
+    {
+      "functor": "seizure",
+      "value": "absent",
+      "polarity": "inferred",
+      "span": "no seizure mentioned"
     }
   ],
   "discard": [
     {
       "text": "Gram stain is pending",
-      "reason": "no value specified"
+      "reason": "pending result, no value to map"
     },
     {
       "text": "Procalcitonin not sent",
-      "reason": "no result mentioned"
+      "reason": "not sent, no value to map"
     }
   ],
   "inference_justifications": [
     {
-      "functor": "csf_culture",
-      "value": "negative",
-      "polarity": "inferred",
-      "span": "Gram stain is pending and no culture result is available yet",
-      "verdict": "ENTAILED"
+      "finding": "seizure",
+      "verdict": "ENTAILLED",
+      "span": "no seizure mentioned"
     }
   ],
   "_model_raw_ok": true
