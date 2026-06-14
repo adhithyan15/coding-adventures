@@ -1,6 +1,6 @@
 [package]
 name = "sharded-echo-bench"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Scaling benchmark for the multi-core ShardedTcpRuntime: throughput/latency at 1..N reactor shards"
 publish = false

@@ -80,6 +80,7 @@ fn shard_bits_for(worker_count: usize) -> u32 {
 fn bind_echo(
     worker_count: usize,
     shard_accepts: Arc<Vec<AtomicU64>>,
+    work_per_request: usize,
 ) -> Result<EchoRuntime, tcp_runtime::PlatformError> {
     let mask = (1u64 << shard_bits_for(worker_count)) - 1;
     let init = move |info: TcpConnectionInfo| {
@@ -88,8 +89,23 @@ fn bind_echo(
             counter.fetch_add(1, Ordering::Relaxed);
         }
     };
-    let handler =
-        |_info: TcpConnectionInfo, _state: &mut (), bytes: &[u8]| TcpHandlerResult::write(bytes.to_vec());
+    let handler = move |_info: TcpConnectionInfo, _state: &mut (), bytes: &[u8]| {
+        // Optional CPU work per request: `work_per_request` rounds of a cheap hash
+        // over the payload, kept from being optimised away by `black_box`.  This
+        // makes each request cost real CPU, so the load becomes CPU-bound and the
+        // reactor shards can each saturate a core in parallel — turning even
+        // connection distribution into actual throughput scaling.
+        if work_per_request > 0 {
+            let mut acc = 0u64;
+            for _ in 0..work_per_request {
+                for &byte in bytes {
+                    acc = acc.wrapping_mul(1_000_003).wrapping_add(byte as u64);
+                }
+            }
+            std::hint::black_box(acc);
+        }
+        TcpHandlerResult::write(bytes.to_vec())
+    };
     let on_close = |_info: TcpConnectionInfo, _state: ()| {};
 
     #[cfg(any(
@@ -146,6 +162,13 @@ pub struct BenchParams {
     pub payload_len: usize,
     /// How long the throughput phase runs.
     pub duration: Duration,
+    /// Synthetic CPU work per request: rounds of a cheap hash over the payload,
+    /// run inside the echo handler before replying.  `0` is a pure echo
+    /// (latency-bound on loopback, so distribution doesn't add throughput); a
+    /// non-zero value makes each request **CPU-bound**, which is the regime where
+    /// adding reactor shards actually adds throughput.  This is the knob that turns
+    /// "connections are evenly distributed" into "and req/s scales with cores".
+    pub work_per_request: usize,
 }
 
 /// The measured outcome of one run.
@@ -188,7 +211,7 @@ pub fn run_benchmark(params: BenchParams) -> Result<BenchResult, tcp_runtime::Pl
     let shard_accepts: Arc<Vec<AtomicU64>> =
         Arc::new((0..worker_count).map(|_| AtomicU64::new(0)).collect());
 
-    let mut runtime = bind_echo(worker_count, Arc::clone(&shard_accepts))?;
+    let mut runtime = bind_echo(worker_count, Arc::clone(&shard_accepts), params.work_per_request)?;
     let actual_workers = runtime.worker_count();
     let addr = runtime.local_addr();
     let stop: ShardedStopHandle = runtime.stop_handle();
@@ -347,8 +370,20 @@ pub fn format_table(results: &[BenchResult]) -> String {
 }
 
 /// Run the standard sweep (`worker_count = 1, 2, 4, 8`) with the given client
-/// pool / payload / duration, returning one result per shard count.
-pub fn run_sweep(clients: usize, payload_len: usize, duration: Duration) -> Vec<BenchResult> {
+/// pool / payload / duration / per-request CPU work, returning one result per
+/// shard count.
+///
+/// With `work_per_request = 0` the echo is latency-bound (loopback round-trip
+/// dominates) and `req/s` stays roughly flat across shard counts.  With a
+/// non-zero `work_per_request` each request burns real CPU, so the shards can
+/// each saturate a core and `req/s` climbs with the worker count — the
+/// throughput-scaling proof.
+pub fn run_sweep(
+    clients: usize,
+    payload_len: usize,
+    duration: Duration,
+    work_per_request: usize,
+) -> Vec<BenchResult> {
     [1usize, 2, 4, 8]
         .iter()
         .filter_map(|&worker_count| {
@@ -357,6 +392,7 @@ pub fn run_sweep(clients: usize, payload_len: usize, duration: Duration) -> Vec<
                 clients,
                 payload_len,
                 duration,
+                work_per_request,
             })
             .ok()
         })
@@ -378,6 +414,7 @@ mod tests {
             clients: 4,
             payload_len: 64,
             duration: Duration::from_millis(300),
+            work_per_request: 0,
         };
         let result = run_benchmark(params).expect("server binds");
 
@@ -401,11 +438,36 @@ mod tests {
             clients: 2,
             payload_len: 16,
             duration: Duration::from_millis(150),
+            work_per_request: 0,
         })
         .expect("server binds");
         assert_eq!(result.worker_count, 1);
         assert_eq!(result.shard_accepts.len(), 1);
         assert_eq!(result.shard_accepts[0], 2);
+    }
+
+    #[test]
+    fn cpu_bound_mode_still_echoes_correctly() {
+        // With `work_per_request > 0` the handler does real CPU work before
+        // echoing.  The point of this test is to prove the CPU-work path doesn't
+        // corrupt the response: the bytes must still round-trip unchanged (a
+        // mismatched echo errors the client and drops the request to zero), and
+        // the run must still complete and report.
+        let result = run_benchmark(BenchParams {
+            worker_count: 2,
+            clients: 3,
+            payload_len: 32,
+            duration: Duration::from_millis(200),
+            work_per_request: 50,
+        })
+        .expect("server binds");
+
+        assert_eq!(result.worker_count, 2);
+        assert!(
+            result.total_requests > 0,
+            "echoes must still complete with CPU work enabled"
+        );
+        assert_eq!(result.shard_accepts.iter().sum::<u64>(), 3);
     }
 
     #[test]
