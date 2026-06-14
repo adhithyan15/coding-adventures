@@ -144,7 +144,30 @@ def decompose_text(prose: str, gen: "callable" = None, dictionary: dict = None,
     # prose asides are non-findings and would be discarded anyway.)
     ir["inference_justifications"] = [j for j in ir["inference_justifications"] if isinstance(j, dict)]
     ir["discard"] = [d for d in ir["discard"] if isinstance(d, dict)]
+    # Drop findings the deterministic step cannot parse - e.g. a bare "fever" with
+    # no value (a present/absent finding the small model stated without its value).
+    # We do NOT guess the value (that would fabricate data); we drop the malformed
+    # shape so the pipeline never crashes. Unknown-but-well-formed functors/values
+    # are still handled downstream (ir_to_adj records them as `dropped`); this only
+    # removes shapes ir_to_adj would raise on. Reuses ir_to_adj's exact acceptance.
+    try:
+        import ir_to_adj as _ir
+        ir["findings"] = [f for f in ir["findings"] if _well_formed(f, _ir)]
+    except Exception:  # noqa: BLE001 - best-effort; if ir_to_adj is unavailable, leave as-is
+        pass
     return ir
+
+
+def _well_formed(finding: object, ir_to_adj_mod) -> bool:
+    """True iff `finding` is a dict the deterministic normalizer can parse into a
+    functor(value)."""
+    if not isinstance(finding, dict):
+        return False
+    try:
+        ir_to_adj_mod.normalize_finding(finding)
+        return True
+    except Exception:  # noqa: BLE001 - malformed shape -> drop it
+        return False
 
 
 def load_domains() -> dict:

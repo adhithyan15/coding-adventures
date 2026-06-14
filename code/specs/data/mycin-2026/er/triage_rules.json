@@ -1,0 +1,46 @@
+{
+  "_doc": "ER TRIAGE rules — map the warm-path output (leading diagnosis + its determinacy, and red-flag findings) to an acuity level + the immediate actions to take, with provenance. Acuity is the Emergency Severity Index (ESI v4, Gilboy/AHRQ 2011): 1 = resuscitation, 2 = emergent, 3 = urgent, 4 = less urgent, 5 = non-urgent. Red flags escalate acuity regardless of the differential (a high-risk presentation is emergent even before the diagnosis is settled). Time targets + the meningitis action bundle are grounded in IDSA Tunkel 2004 (door-to-antibiotic < 1 h). These are AUTHORED from standard references, not spider-grounded — marked, and one edit overridable, the same honesty boundary the rest of MYCIN-2026 carries. THIS IS DECISION SUPPORT: the acuity + actions are a starting checklist the triage nurse / physician reviews and overrides; it never replaces clinical judgment.",
+  "red_flags": [
+    {
+      "finding": "seizure(present)",
+      "acuity": 1,
+      "label": "resuscitation",
+      "action": "ABC + immediate physician; treat seizure (benzodiazepine), consider raised ICP / status epilepticus — do not wait on the differential",
+      "source": "ESI v4 high-risk presentation (Gilboy AHRQ 2011); seizure in CNS infection"
+    }
+  ],
+  "diagnosis_acuity": {
+    "bacterial_meningitis": {
+      "acuity": 2,
+      "label": "emergent",
+      "time_target_min": 60,
+      "immediate_actions": [
+        "2 sets of blood cultures BEFORE antibiotics — but do not delay antibiotics for them",
+        "empiric IV antibiotics + dexamethasone within 60 min of arrival (door-to-antibiotic < 1 h)",
+        "lumbar puncture for CSF — do NOT delay antibiotics for CT/LP if there are signs of raised ICP",
+        "droplet isolation until 24 h of effective therapy"
+      ],
+      "source": "IDSA Tunkel 2004 (empiric therapy + door-to-antibiotic < 1 h; dexamethasone NEJM 2002); ESI v4 acuity 2"
+    },
+    "viral_meningitis": {
+      "acuity": 3,
+      "label": "urgent",
+      "time_target_min": 180,
+      "immediate_actions": [
+        "supportive care + analgesia / antipyretics",
+        "consider IV aciclovir empirically if HSV encephalitis is possible (altered mental status, focal signs)",
+        "observe — most aseptic meningitis is self-limited; reassess if course worsens"
+      ],
+      "source": "ESI v4 acuity 3; aseptic-meningitis supportive management"
+    }
+  },
+  "insufficient_evidence": {
+    "acuity": 3,
+    "label": "urgent",
+    "immediate_actions": [
+      "full vital signs + structured reassessment",
+      "physician evaluation; gather the highest-value missing data (see what-to-check-next / VOI)"
+    ],
+    "source": "ESI v4 — an undifferentiated but concerning presentation errs toward urgent, not low-acuity"
+  }
+}
