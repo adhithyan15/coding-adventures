@@ -55,6 +55,8 @@ packages a typed surface for:
   pairing readiness
 - Hue package release-readiness summaries for catalog publish checks across
   worker, command-flow, local-pairing, event-stream, and physical-presence gates
+- Hue package spec summaries for catalog/spec handoff checks across canonical
+  identity, CLIP v2 endpoints, registration headers, and runtime model surface
 
 ## Dependencies
 
