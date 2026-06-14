@@ -182,7 +182,7 @@ defmodule CodingAdventures.NibIrCompiler do
       node.rule_name == "call_expr" ->
         compile_call(node, register_index, state)
 
-      node.rule_name == "add_expr" ->
+      node.rule_name in ["add_expr", "mul_expr"] ->
         compile_add(node, register_index, state)
 
       expression_rule?(node.rule_name) and length(child_nodes(node)) == 1 ->
@@ -346,9 +346,9 @@ defmodule CodingAdventures.NibIrCompiler do
   defp child_nodes(_), do: []
 
   defp expression_children(%ASTNode{} = node),
-    do: Enum.filter(child_nodes(node), &(&1.rule_name in ~w(expr or_expr and_expr eq_expr cmp_expr add_expr bitwise_expr unary_expr primary call_expr)))
+    do: Enum.filter(child_nodes(node), &(&1.rule_name in ~w(expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr)))
 
-  defp expression_rule?(name), do: name in ~w(expr or_expr and_expr eq_expr cmp_expr add_expr bitwise_expr unary_expr primary call_expr)
+  defp expression_rule?(name), do: name in ~w(expr or_expr and_expr eq_expr cmp_expr add_expr mul_expr bitwise_expr unary_expr primary call_expr)
 
   defp first_rule(%ASTNode{} = node, rule_name), do: Enum.find(child_nodes(node), &(&1.rule_name == rule_name))
   defp first_rule(_, _), do: nil
