@@ -29,6 +29,8 @@ let obj = compile_module_macos_arm64_object(&m)?;
 
 ## Status
 
-V1 covers literals, let/return, identifiers, binary arithmetic / comparisons,
-`if`/`else`. Cross-function calls, wrap/sat arithmetic, bitwise ops, for
-loops, and BCD are deferred — see CHANGELOG.
+Covers literals, let/return, identifiers, binary arithmetic (`+` `-` `*` `/`) /
+comparisons, `if`/`else`, `while`, and cross-function calls. `*` and `/` lower to
+the shared IIR `mul`/`div` (LANG-FULL N1) and run on every backend. Wrap/sat
+arithmetic, bitwise ops, `for` loops, `const`/`static`, and BCD are deferred —
+see CHANGELOG and `code/specs/LANG-FULL-IMPLEMENTATION.md`.

@@ -1,5 +1,26 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.9.0 — 2026-06-13 — multiplication and division (LANG-FULL N1)
+
+Adds `*` and `/` to Nib. The Intel-4004 has no multiply/divide instruction, so
+these were reserved tokens in v1; they now lower to the shared IIR `mul` / `div`
+ops, which every general backend (VM / JIT / native / LLVM / WASM / JVM / CLR)
+implements directly.
+
+- New grammar level `mul_expr = bitwise_expr { ( STAR | SLASH ) bitwise_expr }`,
+  slotted between `add_expr` and `bitwise_expr` so `*`/`/` bind tighter than
+  `+`/`-` (`2 + 3 * 4` = `2 + (3*4)` = 14) and are left-associative. Parser
+  regenerated.
+- `cir_op_for`: `STAR` → `mul`, `SLASH` → `div` (typed CIR mnemonics, not
+  `call_builtin "*"`, so the IIR-to-* backends accept them).
+- `compile_expr` routes the new `mul_expr` node through the generic
+  `compile_binary_chain`; `is_expr_rule` recognises it.
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains
+`6 * 7` → 42 and `84 / 2` → 42, executed across native/LLVM/WASM/JVM/CLR/VM/JIT.
+New unit tests: `compiles_multiplication`, `compiles_division`,
+`multiplication_binds_tighter_than_addition`.
+
 ## 0.8.0 — 2026-06-11 — finish the i64 materialization (const literals + call results) (LANG-MATRIX LM-W Nib)
 
 Completes the integer-type materialization started in 0.7.0. That release fixed
