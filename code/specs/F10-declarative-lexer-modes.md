@@ -209,6 +209,27 @@ fn apply_transitions(emitted_token):
 unification with F04's stack. `SetMode` keeps the depth constant (a flat toggle);
 `Push`/`Pop` change it (nested regions).
 
+### Flat modes inherit the default patterns
+
+F04 matches a non-default group's patterns **exclusively** — correct for XML
+regions (`tag`/`cdata` have their own small token sets). But a flat mode like
+JavaScript's `div` is *nearly identical* to `default`: it differs only by reading
+`/` as division instead of regex. Exclusive matching would force the `div` group
+to redeclare the entire grammar. So F10 distinguishes the two by how a group is
+*entered*:
+
+- A group reached via **`set-mode`** is a **flat mode**: the matcher tries its own
+  patterns first, then **falls through to the default group's patterns**. The mode
+  only declares its *overrides* (`div` = `{SLASH_EQUALS, SLASH}`), which win on
+  priority over the inherited `REGEX`.
+- A group reached via **`push`** is a **nested region**: it stays **exclusive**
+  (F04 semantics), so an XML `tag` region never matches default content.
+
+The classification is derived automatically from the transition table (a group is
+a flat mode iff some rule `set-mode`s to it and no rule `push`es it) — no extra DSL
+surface. Because matching is first-pattern-wins by order, a flat mode's overrides
+are simply tried ahead of the inherited defaults; nothing is removed.
+
 **Coexistence with callbacks.** If an `on-token` callback is registered (F04), it runs
 first and applies its actions, then the table runs and refines. The table is the
 declarative default; callbacks are the escape hatch. For grammars with neither, neither
@@ -255,6 +276,15 @@ transitions:
   on KEYWORD="case"       -> set-mode default
   on KEYWORD="yield"      -> set-mode default
   on KEYWORD="await"      -> set-mode default
+```
+
+The `div` mode declares only its slash **overrides** and inherits the rest from
+`default` (see [Flat modes inherit the default patterns](#flat-modes-inherit-the-default-patterns)):
+
+```
+group div:
+  SLASH_EQUALS = "/="
+  SLASH = "/"
 ```
 
 `++`/`--` deliberately emit **no** rule: Acorn leaves `exprAllowed` unchanged across
