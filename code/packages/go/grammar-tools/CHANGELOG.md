@@ -1,5 +1,50 @@
 # Changelog
 
+## [0.7.0] - 2026-06-14
+
+### Added (F10 — declarative lexer mode transitions, Go port)
+
+- **`TransitionAction`** struct — one action applied to the lexer's mode stack
+  when a rule fires. `Kind` is one of `set_mode`/`push`/`pop`/`enable_skip`/
+  `disable_skip` (underscores, matching the Python/Ruby/TS ports); the DSL uses
+  hyphens and the parser converts. `Target` carries the group/mode name for
+  `set_mode` and `push`; empty otherwise.
+
+- **`ModeTransition`** struct — one declarative rule parsed from a
+  `transitions:` line of the form `on TOKENS [in MODE] -> ACTION [, ...]`.
+  Holds `OnTokens []string`, `OnValue string` (keyword-value guard),
+  `InMode string` (active-mode guard), `Actions []TransitionAction`, and
+  `LineNumber int`.
+
+- **`MaxTransitions = 4096`** constant — safety cap on declared rules, matching
+  all other language ports.
+
+- **`TokenGrammar.StartMode string`** — populated by the `start_mode:` directive;
+  `""` means start in the default mode (backward-compatible zero value).
+
+- **`TokenGrammar.Transitions []ModeTransition`** — populated by the
+  `transitions:` section; empty slice = no transitions (pre-F10 behaviour).
+
+- **`splitInGuard`** (unexported) — splits `TOKENS [in MODE]` at a top-level
+  ` in ` guard, ignoring any ` in ` inside a parenthesised token set.
+
+- **`parseTransition`** (unexported) — parses one `transitions:` line into a
+  `ModeTransition`, returning an error on malformed input.
+
+- `ParseTokenGrammar` now recognises `start_mode:` and `transitions:` sections.
+
+- `ValidateTokenGrammar` now checks that `start_mode` and all transition targets
+  and guards refer to `"default"` or a declared group.
+
+- `CompileTokenGrammar` emits `StartMode` and `Transitions` in the generated Go
+  literal, enabling lossless round-trips through the compiler.
+
+- **15 new tests** in `f10_test.go` covering: backward compatibility, `start_mode`
+  parsing, transition alternation + keyword-value guards, `in` guards, all five
+  action kinds, error cases (missing `->`, unknown action, missing `on`), and
+  all four validation rules (undefined target mode, undefined start_mode,
+  accepted declared modes, undefined in-guard mode), plus compiler round-trip.
+
 ## [0.6.0] - 2026-05-16
 
 ### Added (LANG63 — Twig codegen in grammar-tools library)
