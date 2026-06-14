@@ -1,5 +1,95 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
+
+The VisiCalc `Grid` (from `mosaic-pkg-grid`, lowered through
+`HostTable` + nested `For` + `Cell`) regenerated into XAML that the
+WinUI 3 markup compiler would reject and that would block
+`dotnet build`. Four groups of fixes make it valid and
+spreadsheet-correct. The demo `demo/visicalc-xaml/` is rewired to
+mount the generated `<gen:Grid>` instead of its hand-written
+placeholder.
+
+> Verified on macOS via `cargo test -p mosaic-emit-xaml --lib`
+> (164 passing) + structural inspection of the generated XAML/C#.
+> Runtime / `dotnet build` verification needs Windows.
+
+### Group A — WinUI value translation (X5)
+
+`build_style_fragment` gained a value-translation layer
+(`translate_xaml_value`) below the X1 name-mapping and X4 color
+PascalCasing. `css_property_to_xaml_setter` now returns
+`Option<String>` so CSS-only properties can be dropped.
+
+- **px-strip** — length setters (`FontSize`, `Height`, `Width`,
+  `Padding`, `Margin`, `BorderThickness`, `CornerRadius`) emit bare
+  numbers / `Thickness`: `12px`→`12`, `0,0,0,1px`→`0,0,0,1`.
+- **drop CSS-only props** — `border-collapse`, `border-style`,
+  `outline`, `text-decoration`, `box-shadow` return `None` (omitted,
+  not emitted as invalid attrs / `<Setter>`s).
+- **drop `Width="100%"`** — WinUI `Width` is a `Double`, not a
+  percentage.
+- **`text-align` → `TextAlignment`** with a PascalCase value
+  (`center`→`Center`, `right`→`Right`, `left`→`Left`). The old output
+  emitted `<Setter Property="TextAlign" Value="center"/>` — invalid
+  on both the property name and the value.
+- **`font-weight`** → WinUI `FontWeights` constant
+  (`normal`→`Normal`, `bold`→`Bold`, `600`/`semibold`→`SemiBold`,
+  `500`/`medium`→`Medium`).
+- `{x:Bind …}` markup-extension values pass through unmangled (never
+  px-stripped or case-mangled).
+
+Tests: `x5_px_units_stripped_from_length_setters`,
+`x5_css_only_properties_are_dropped`,
+`x5_percentage_width_is_dropped`,
+`x5_text_align_maps_to_textalignment_pascalcase`,
+`x5_font_weight_maps_to_named_constant`,
+`x5_binding_value_passes_through_unmangled`,
+`x5_strip_px_units_preserves_thickness_shape`,
+`group_a_cell_style_is_valid_winui`. Updated
+`x4_non_color_setters_pass_through_unchanged` and
+`box_partitions_style_between_border_and_textblock_resource` which
+asserted the old (now-invalid) `FontWeight="normal"` / `"500"`.
+
+### Group B — nested-For inner value type (compile gate)
+
+The inner `For (each: row, as: v)` (UI29 §3.4, `each:` referencing
+the outer For's `as:` binding) inferred the cell value type as
+`IReadOnlyList<string>` instead of `string`, because `emit_for`'s
+Keyword arm used the enclosing binding's `element_type` verbatim
+(that is the type of `row` ITSELF). The cell then bound a `string`
+`<TextBlock Text="{x:Bind V}"/>` to a list field — a `dotnet build`
+blocker. Fixed by peeling exactly one `List<>` level
+(`inner_type_of_list(outer_type)`), so the inner value VM
+(`Grid_VVm`) types `V` as `string` while the outer `Grid_RowVm`
+keeps `IReadOnlyList<string> Row`.
+
+Test: `group_b_inner_value_vm_field_is_string_not_list`.
+
+### Group C — per-column fixed widths
+
+The per-column cell loop's value VM (`Grid_VVm`) now carries a
+`double Width` field, and the generated cell element binds
+`Width="{x:Bind Width}"` (injected via
+`inject_attr_into_first_element`). The host-side VM-builder that
+POPULATES the width (zipping cell value + column index → width) is
+host code the emitter doesn't generate — a `<remarks>` doc comment
+in the generated value-VM `.cs` tells the Windows dev exactly how
+(`new Grid_VVm(value, col, ColumnWidths[col])`).
+
+Tests: `group_c_value_vm_carries_width_and_cell_binds_it`.
+
+### Group D — demo rewired (no hand-written placeholder)
+
+`demo/visicalc-xaml/`: `scripts/build.sh` now runs a second
+`mosaic-compile --backend xaml` for the Grid (with
+`--package-search-path code/packages`); `MainWindow.xaml` mounts
+`<gen:Grid>`; `MainWindow.xaml.cs` feeds the generated control's
+dependency properties + a `Dispatch` handler; `VisiCalc.csproj`
+compiles the generated Grid files. The per-cell VM projection and
+the selected/editing background highlight remain for a Windows dev
+(see the demo README + `MainWindow.xaml.cs` TODO).
+
 ## [Unreleased] — #4548 toolkit-demo regressions — three emitter gaps closed
 
 Three mosaic-emit-xaml code-gen bugs surfaced when compiling

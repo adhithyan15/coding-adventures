@@ -566,6 +566,12 @@ struct RowVm {
     element_type: String,
     /// `true` iff the matching `For` declared an `index:` binding.
     has_index: bool,
+    /// GROUP C: `true` iff this VM is the per-column cell loop (a `For`
+    /// whose `each:` is an enclosing For binding — UI29 §3.4). Such VMs
+    /// carry an extra `double Width` field so the host can thread the
+    /// matching column's fixed pixel width onto every cell, and the
+    /// generated cell element binds `Width="{x:Bind Width}"`.
+    has_width: bool,
 }
 
 /// Mutable state threaded through the recursive XAML emission.
@@ -725,24 +731,173 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
 fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
     let mut parts: Vec<String> = Vec::with_capacity(props.len());
     for p in props {
-        let key = css_property_to_xaml_setter(&p.name);
-        // Color-typed setters (`Background`, `Foreground`, `BorderBrush`)
-        // need a normalization pass so CSS-style lowercase color names
-        // (`transparent`, `red`, …) survive the XAML markup compiler.
-        // WinUI 3's `Background="transparent"` is rejected as invalid —
-        // the markup compiler wants `Transparent` (PascalCase) or the
-        // hex form `#00000000`.  Non-color setters (FontSize, Padding,
-        // CornerRadius, …) pass through unchanged.  See toolkit-multi-
-        // demo's `ISSUES.md` X4 for the surfacing repro.
-        let value = if is_color_setter(&key) {
-            normalize_xaml_color_value(&p.value)
-        } else {
-            p.value.clone()
+        // X5: `css_property_to_xaml_setter` now returns `None` for
+        // CSS-only properties with no WinUI analog (`border-collapse`,
+        // `border-style`, `outline`, `text-decoration`, `box-shadow`).
+        // Dropping them here means they never reach the XAML markup
+        // compiler as invalid attributes / `<Setter>`s.
+        let key = match css_property_to_xaml_setter(&p.name) {
+            Some(k) => k,
+            None => continue,
+        };
+        // X5: translate the *value* into the form the WinUI 3 markup
+        // compiler accepts. `translate_xaml_value` may return `None`
+        // when the whole property must be dropped (e.g. a percentage
+        // `Width="100%"` — WinUI's `Width` is a `Double`, not a
+        // percentage). `{x:Bind …}` / `{Binding …}` markup extensions
+        // pass through untouched (never px-stripped or case-mangled).
+        let value = match translate_xaml_value(&key, &p.value) {
+            Some(v) => v,
+            None => continue,
         };
         let escaped = value.replace('\\', "\\\\").replace('"', "\\\"");
         parts.push(format!("{key}=\"{escaped}\""));
     }
     parts.join(" ")
+}
+
+/// Translate a mosstyle CSS *value* into the form the WinUI 3 XAML
+/// markup compiler accepts for the given setter `key`. Returns `None`
+/// when the whole property must be dropped (e.g. a percentage width).
+///
+/// This is the X5 value-translation layer. It sits below the X1
+/// name-mapping (`css_property_to_xaml_setter`) and the X4 color
+/// PascalCasing (`normalize_xaml_color_value`), and handles the value
+/// shapes the earlier layers didn't:
+///
+/// | CSS source            | WinUI key       | Emitted value |
+/// |-----------------------|-----------------|---------------|
+/// | `font-size: 12px`     | `FontSize`      | `12`          |
+/// | `border-width: 0,0,0,1px` | `BorderThickness` | `0,0,0,1`|
+/// | `width: 100%`         | `Width`         | (dropped)     |
+/// | `text-align: center`  | `TextAlignment` | `Center`      |
+/// | `font-weight: 600`    | `FontWeight`    | `SemiBold`    |
+/// | `background: red`     | `Background`    | `Red`         |
+///
+/// `{x:Bind …}` / `{Binding …}` values pass through verbatim — a
+/// binding expression is not a literal and must never be mangled.
+fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
+    let trimmed = raw.trim();
+
+    // Markup extensions (`{x:Bind …}`, `{Binding …}`, `{StaticResource …}`)
+    // pass through untouched — they are not literal values.
+    if trimmed.starts_with('{') {
+        return Some(raw.to_string());
+    }
+
+    // Color setters: hand off to the X4 PascalCasing pass.
+    if is_color_setter(key) {
+        return Some(normalize_xaml_color_value(raw));
+    }
+
+    // Length setters: strip CSS `px` units (and reject percentages,
+    // which WinUI's `Double`-typed length properties can't express).
+    if is_length_setter(key) {
+        // `100%` (or any percentage) — WinUI lengths are absolute
+        // Doubles. Drop the whole property; the layout container
+        // (StackPanel / Grid `*`) sizes the element instead.
+        if trimmed.ends_with('%') {
+            return None;
+        }
+        return Some(strip_px_units(trimmed));
+    }
+
+    // `text-align` → WinUI `TextAlignment` enum (PascalCase value).
+    if key == "TextAlignment" {
+        return Some(pascalcase_text_alignment(trimmed));
+    }
+
+    // `font-weight` → WinUI `FontWeight` named-constant (PascalCase).
+    if key == "FontWeight" {
+        return Some(pascalcase_font_weight(trimmed));
+    }
+
+    // Everything else passes through verbatim.
+    Some(raw.to_string())
+}
+
+/// Which XAML setter properties take an absolute length (a `Double` or
+/// a `Thickness` / `CornerRadius` built from Doubles). These are the
+/// setters whose values must have CSS `px` units stripped and reject
+/// percentages.
+fn is_length_setter(setter: &str) -> bool {
+    matches!(
+        setter,
+        "FontSize"
+            | "Height"
+            | "Width"
+            | "Padding"
+            | "Margin"
+            | "BorderThickness"
+            | "CornerRadius"
+    )
+}
+
+/// Strip CSS `px` suffixes from a length value, preserving the
+/// comma-separated `Thickness` shape WinUI uses for multi-edge values.
+///
+/// - `12px`          → `12`
+/// - `0,0,0,1px`     → `0,0,0,1`
+/// - `8px 4px`       → `8 4`   (space-separated multi-value)
+/// - `12`            → `12`    (already clean)
+///
+/// Only a trailing `px` on each component is removed; the numeric body
+/// is left exactly as written so the host's XAML `Double` / `Thickness`
+/// parser does the final conversion.
+fn strip_px_units(value: &str) -> String {
+    // Pick the separator the source used so the WinUI shape is
+    // preserved: commas (`0,0,0,1`) form a `Thickness`; a single space
+    // (`8 4`) is the space-separated `Thickness` shorthand.
+    let sep = if value.contains(',') { ',' } else { ' ' };
+    value
+        .split(sep)
+        .map(|seg| {
+            let s = seg.trim();
+            s.strip_suffix("px").unwrap_or(s)
+        })
+        .collect::<Vec<_>>()
+        .join(&sep.to_string())
+}
+
+/// `center` → `Center`, `right` → `Right`, `left` → `Left`, `justify`
+/// → `Justify`. Maps a CSS `text-align` value to the WinUI
+/// `TextAlignment` enum member (PascalCase). Unknown values are
+/// PascalCased generically so a typo surfaces at the markup compiler
+/// rather than silently mangling.
+fn pascalcase_text_alignment(value: &str) -> String {
+    match value.to_ascii_lowercase().as_str() {
+        "center" => "Center".to_string(),
+        "right" => "Right".to_string(),
+        "left" => "Left".to_string(),
+        "justify" => "Justify".to_string(),
+        // `start` / `end` are logical CSS values; WinUI's
+        // TextAlignment has `Start`/`End` too (since the 2020 SDK).
+        "start" => "Start".to_string(),
+        "end" => "End".to_string(),
+        other => kebab_to_pascal_case(other),
+    }
+}
+
+/// Map a CSS `font-weight` value (a keyword or a 100–900 numeric) to
+/// the WinUI `FontWeights` named constant. WinUI's `FontWeight` setter
+/// accepts the named constants (`Normal`, `Bold`, `SemiBold`, …) but
+/// NOT the bare CSS keyword `normal`/`bold` in lowercase, and not the
+/// numeric `600` form in a `<Setter>`.
+fn pascalcase_font_weight(value: &str) -> String {
+    match value.to_ascii_lowercase().as_str() {
+        "100" | "thin" => "Thin".to_string(),
+        "200" | "extralight" | "ultralight" => "ExtraLight".to_string(),
+        "300" | "light" => "Light".to_string(),
+        "400" | "normal" | "regular" => "Normal".to_string(),
+        "500" | "medium" => "Medium".to_string(),
+        "600" | "semibold" | "demibold" => "SemiBold".to_string(),
+        "700" | "bold" => "Bold".to_string(),
+        "800" | "extrabold" | "ultrabold" => "ExtraBold".to_string(),
+        "900" | "black" | "heavy" => "Black".to_string(),
+        // Unknown — PascalCase generically so the markup compiler flags
+        // it rather than us silently emitting an invalid lowercase form.
+        other => kebab_to_pascal_case(other),
+    }
 }
 
 /// Which XAML setter properties take a `Brush` (the WinUI color type).
@@ -808,30 +963,58 @@ fn normalize_xaml_color_value(s: &str) -> String {
 /// Map a mosstyle CSS property name to its XAML setter property name.
 /// The table is intentionally small in PR-1 — only what the nine simple
 /// primitives need. PR-3..PR-6 grow it.
-fn css_property_to_xaml_setter(name: &str) -> String {
+fn css_property_to_xaml_setter(name: &str) -> Option<String> {
     match name {
-        "background"     => "Background".to_string(),
-        "color"          => "Foreground".to_string(),
-        "font-family"    => "FontFamily".to_string(),
-        "font-size"      => "FontSize".to_string(),
-        "font-weight"    => "FontWeight".to_string(),
-        "padding"        => "Padding".to_string(),
-        "margin"         => "Margin".to_string(),
-        "width"          => "Width".to_string(),
-        "height"         => "Height".to_string(),
-        "border-width"   => "BorderThickness".to_string(),
-        "border-color"   => "BorderBrush".to_string(),
+        "background"     => Some("Background".to_string()),
+        "color"          => Some("Foreground".to_string()),
+        "font-family"    => Some("FontFamily".to_string()),
+        "font-size"      => Some("FontSize".to_string()),
+        "font-weight"    => Some("FontWeight".to_string()),
+        "padding"        => Some("Padding".to_string()),
+        "margin"         => Some("Margin".to_string()),
+        "width"          => Some("Width".to_string()),
+        "height"         => Some("Height".to_string()),
+        "border-width"   => Some("BorderThickness".to_string()),
+        "border-color"   => Some("BorderBrush".to_string()),
         // X1 fix: mosstyle's `border-radius` maps to WinUI's
         // `CornerRadius` (UIElement.CornerRadius), NOT `BorderRadius`.
         // The latter isn't a real WinUI 3 property; the XAML markup
         // compiler rejects it silently (XamlCompiler.exe exits 1 with
         // no diagnostic). Caught by the toolkit Button + Alert + Badge
         // demo (#4548).
-        "border-radius"  => "CornerRadius".to_string(),
+        "border-radius"  => Some("CornerRadius".to_string()),
+        // X5: `text-align` maps to WinUI's `TextAlignment` (a
+        // `TextBlock` enum property), NOT `TextAlign`. The value side
+        // is PascalCased by `translate_xaml_value`
+        // (`center`→`Center`). The old `kebab_to_pascal_case` fallback
+        // produced `TextAlign` — a property that doesn't exist — so the
+        // setter was silently dropped by the markup compiler.
+        "text-align"     => Some("TextAlignment".to_string()),
+        // X5: CSS-only properties with NO WinUI analog. Returning `None`
+        // omits them entirely rather than emitting an invalid attribute
+        // / `<Setter>` the markup compiler rejects.
+        //
+        //   border-collapse — WinUI has no table model; gridlines are
+        //                     drawn by per-cell BorderThickness.
+        //   border-style    — WinUI borders are always solid; there is
+        //                     no dashed/dotted `BorderStyle` property.
+        //   outline         — no WinUI equivalent (focus visuals use
+        //                     the FocusVisual* attached properties).
+        //   text-decoration — TextBlock uses the `TextDecorations`
+        //                     property with a different value shape;
+        //                     not wired yet, so drop rather than emit
+        //                     an invalid literal.
+        //   box-shadow      — WinUI shadows use `<ThemeShadow>` /
+        //                     translation Z, not a CSS-shaped property.
+        "border-collapse"
+        | "border-style"
+        | "outline"
+        | "text-decoration"
+        | "box-shadow"   => None,
         // Anything else passes through PascalCased so we don't crash; the
         // emitter prefers a stale-but-running output to a hard error in
         // PR-1. A real CSS → XAML completeness check lands later.
-        other => kebab_to_pascal_case(other),
+        other => Some(kebab_to_pascal_case(other)),
     }
 }
 
@@ -1935,7 +2118,12 @@ fn emit_for(
 
     // -- 2. Resolve the `each:` source to a {x:Bind} path and an
     //    element type --
-    let (items_path, element_type) = match find_prop_value(node, "each") {
+    // `is_cell_loop` is `true` only for the per-column cell loop —
+    // a `For` whose `each:` is an enclosing For binding (UI29 §3.4,
+    // the inner `For (each: row, …)`). GROUP C threads the colgroup
+    // width onto that loop's value VM (a `double Width` field) so each
+    // column renders at a fixed pixel width.
+    let (items_path, element_type, is_cell_loop) = match find_prop_value(node, "each") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = kebab_to_pascal_case(slot);
             if !is_safe_identifier(&pascal) {
@@ -1946,7 +2134,7 @@ fn emit_for(
             let csharp_type =
                 ctx.slot_types.get(slot.as_str()).cloned().unwrap_or_else(|| "object".to_string());
             let elem_type = inner_type_of_list(&csharp_type);
-            (pascal, elem_type)
+            (pascal, elem_type, false)
         }
         Some(LayoutPropValue::Expr(expr_src)) => {
             // Could be a for-bound name's member access, e.g.
@@ -1956,7 +2144,7 @@ fn emit_for(
                     // Without further type info we can't determine the
                     // element type; default to `object` (the host's C#
                     // compiler will catch any real mismatch).
-                    (path, "object".to_string())
+                    (path, "object".to_string(), false)
                 }
                 ExprLowering::Helper(_) | ExprLowering::Unsupported(_) => {
                     return Err(PipelineEmitError::UnsupportedExpression(format!(
@@ -1977,14 +2165,30 @@ fn emit_for(
             if !is_safe_identifier(&pascal) {
                 return Err(PipelineEmitError::UnsafeSlotName(pascal));
             }
-            let elem_type = ctx
+            // GROUP B FIX (element-type peel). `each: <NAME>` where NAME
+            // is an enclosing `For`'s `as:` binding (UI29 §3.4 — the
+            // nested cell loop `For (each: row, as: v)`). The enclosing
+            // binding's `element_type` is the type of NAME *itself*
+            // (e.g. `row` is `IReadOnlyList<string>`). But THIS `For`
+            // iterates over NAME's elements, so each `as:` element is
+            // one level deeper — `v` is `string`, not the whole row
+            // list. We must peel exactly one `List<>` level.
+            //
+            // The pre-fix code used `fb.element_type` verbatim, so the
+            // inner value VM (`Grid_VVm`) typed its value field as
+            // `IReadOnlyList<string>`. The cell then bound
+            // `<TextBlock Text="{x:Bind V}"/>` — a `string` Text bound
+            // to a list — which BLOCKS `dotnet build`. Peeling one
+            // level types `V` as `string`, so the bind type-checks.
+            let outer_type = ctx
                 .for_scope
                 .iter()
                 .rev()
                 .find(|fb| fb.as_name == *name)
                 .map(|fb| fb.element_type.clone())
                 .unwrap_or_else(|| "object".to_string());
-            (pascal, elem_type)
+            let elem_type = inner_type_of_list(&outer_type);
+            (pascal, elem_type, true)
         }
         _ => {
             return Err(PipelineEmitError::UnsupportedPrimitive(
@@ -2009,6 +2213,8 @@ fn emit_for(
         element_property: element_property.clone(),
         element_type: element_type.clone(),
         has_index,
+        // GROUP C: only the per-column cell loop's VM carries `Width`.
+        has_width: is_cell_loop,
     };
     if !ctx.row_vms.iter().any(|v| v.class_name == vm.class_name) {
         ctx.row_vms.push(vm);
@@ -2021,9 +2227,20 @@ fn emit_for(
         element_type,
         vm_class: vm_class.clone(),
     });
-    let body =
+    let mut body =
         emit_xaml_children(&node.children, indent + 12, part_styles, ctx)?;
     ctx.for_scope.pop();
+
+    // GROUP C: bind the fixed per-column width onto the rendered cell.
+    // The cell element is the first opening tag of this loop's body —
+    // either a kernel `<Border …>` (when Cell.mll resolved inline) or
+    // a component reference `<grid:Cell …>` (both are FrameworkElements
+    // and so have a `Width` property). Inject `Width="{x:Bind Width}"`
+    // into that opening tag so the column renders at the colgroup's
+    // fixed pixel width regardless of cell content.
+    if is_cell_loop {
+        body = inject_attr_into_first_element(&body, "Width=\"{x:Bind Width}\"");
+    }
 
     // -- 5. Assemble the XAML --
     let pad = " ".repeat(indent);
@@ -2044,6 +2261,57 @@ fn emit_for(
     writeln!(out, "{pad2}</ItemsRepeater.ItemTemplate>").unwrap();
     writeln!(out, "{pad}</ItemsRepeater>").unwrap();
     Ok(out)
+}
+
+/// Inject an extra attribute into the opening tag of the first XML
+/// element in `body`. Used by GROUP C to bind `Width="{x:Bind Width}"`
+/// onto a per-column cell element without re-plumbing every cell
+/// emitter to thread a width argument.
+///
+/// The first element's opening tag is the first `<` that starts a tag
+/// name (not a comment `<!--` and not a closing `</`). The attribute is
+/// spliced just before that tag's terminating `>` (or `/>`), preserving
+/// the existing attributes. If no suitable element is found the body is
+/// returned unchanged.
+///
+/// Example: `inject_attr_into_first_element("  <Border A=\"1\">\n…", "W=\"2\"")`
+/// → `"  <Border A=\"1\" W=\"2\">\n…"`.
+fn inject_attr_into_first_element(body: &str, attr: &str) -> String {
+    let bytes = body.as_bytes();
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'<' {
+            // Skip comments (`<!-- … -->`) and closing tags (`</…>`).
+            let next = bytes.get(i + 1).copied();
+            if next == Some(b'!') || next == Some(b'/') {
+                // Advance past this `<` and continue scanning.
+                i += 1;
+                continue;
+            }
+            // Found an opening tag at `i`. Locate its terminating `>`.
+            if let Some(rel_close) = body[i..].find('>') {
+                let close = i + rel_close;
+                // `/>` self-closing: splice before the `/`.
+                let insert_at = if close > 0 && bytes[close - 1] == b'/' {
+                    close - 1
+                } else {
+                    close
+                };
+                let mut out = String::with_capacity(body.len() + attr.len() + 1);
+                out.push_str(&body[..insert_at]);
+                // Ensure a single separating space before the new attr.
+                if !out.ends_with(' ') {
+                    out.push(' ');
+                }
+                out.push_str(attr);
+                out.push_str(&body[insert_at..]);
+                return out;
+            }
+            return body.to_string();
+        }
+        i += 1;
+    }
+    body.to_string()
 }
 
 /// `If (when: <expr>) { <then> } [Else { <else> }]` → twin
@@ -2200,6 +2468,11 @@ fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> St
     } else {
         ""
     };
+    // GROUP C: the per-column cell loop's VM carries a `double Width`
+    // field. The generated cell element binds `Width="{x:Bind Width}"`,
+    // so the host must populate Width with the matching column's pixel
+    // width when it builds the VM instances.
+    let width_field = if vm.has_width { ", double Width" } else { "" };
     let mut out = String::new();
     writeln!(out, "// Auto-generated by mosaic-emit-xaml. Do not edit.").unwrap();
     writeln!(out, "namespace {ns};").unwrap();
@@ -2209,9 +2482,34 @@ fn emit_row_vm_source(_component: &str, vm: &RowVm, options: &EmitOptions) -> St
         "/// <summary>DataTemplate context for a `For` block iterating one row.</summary>"
     )
     .unwrap();
+    if vm.has_width {
+        // The host-side VM-builder that POPULATES these instances (zipping
+        // each cell value with its column index → width) is host code the
+        // emitter doesn't generate. Tell the Windows dev exactly how, in a
+        // `<remarks>` the IDE surfaces on hover.
+        writeln!(
+            out,
+            "/// <remarks>\n\
+             /// GROUP C — fixed per-column widths. This VM carries a `Width`\n\
+             /// (double) the cell element binds via `Width=\"{{x:Bind Width}}\"`.\n\
+             /// The emitter does NOT generate the code that fills it — the\n\
+             /// host builds these VMs per row and must zip each cell value\n\
+             /// with its column index to look up the column's pixel width.\n\
+             /// Example (inside the per-row VM builder):\n\
+             /// <code>\n\
+             /// for (int col = 0; col &lt; row.Count; col++)\n\
+             ///     cells.Add(new {class_name}(row[col], col, ColumnWidths[col]));\n\
+             /// </code>\n\
+             /// where `ColumnWidths` is the host's `column-widths` slot\n\
+             /// (e.g. [48, 96, 96, 96, 96, 96] for a gutter + five data\n\
+             /// columns).\n\
+             /// </remarks>"
+        )
+        .unwrap();
+    }
     writeln!(
         out,
-        "public sealed record {class_name}({element_type} {element_property}{index_field});"
+        "public sealed record {class_name}({element_type} {element_property}{index_field}{width_field});"
     )
     .unwrap();
     out
@@ -8685,8 +8983,10 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+        // X5: numeric CSS font-weight `500` → WinUI `Medium` constant
+        // (the bare `500` is not a valid WinUI `<Setter>` value).
         assert!(
-            r.xaml.contains("<Setter Property=\"FontWeight\" Value=\"500\"/>"),
+            r.xaml.contains("<Setter Property=\"FontWeight\" Value=\"Medium\"/>"),
             "got:\n{}",
             r.xaml
         );
@@ -8768,10 +9068,10 @@ mod tests {
         assert!(frag.contains("Foreground=\"#055160\""), "got:\n{frag}");
     }
 
-    /// X4 scope: non-color setters (FontSize, Padding) must NOT
-    /// be PascalCased — `"normal"` font-weight is a real CSS keyword
-    /// that XAML happens to accept verbatim, and we mustn't shift
-    /// `"600"` into `"600"` either (no-op for numerics).
+    /// X4/X5 scope: hex color setters and unit-free lengths pass
+    /// through untouched, while `font-weight: normal` is now PascalCased
+    /// to the WinUI `FontWeights.Normal` constant (X5) — the lowercase
+    /// CSS keyword is NOT a valid WinUI `<Setter>` value.
     #[test]
     fn x4_non_color_setters_pass_through_unchanged() {
         let props = vec![
@@ -8781,7 +9081,9 @@ mod tests {
         ];
         let frag = build_style_fragment(&props);
         assert!(frag.contains("FontSize=\"12\""), "got:\n{frag}");
-        assert!(frag.contains("FontWeight=\"normal\""), "got:\n{frag}");
+        // X5: `normal` → WinUI `Normal` (the lowercase form is invalid).
+        assert!(frag.contains("FontWeight=\"Normal\""), "got:\n{frag}");
+        assert!(!frag.contains("FontWeight=\"normal\""), "got:\n{frag}");
         assert!(frag.contains("Padding=\"6\""), "got:\n{frag}");
     }
 
@@ -8814,5 +9116,324 @@ mod tests {
         assert_eq!(parsed[1], ("Background".to_string(), "#ffffff".to_string()));
         assert_eq!(parsed[2], ("Foreground".to_string(), "#212529".to_string()));
         assert_eq!(parsed[3], ("CornerRadius".to_string(), "4".to_string()));
+    }
+
+    // ── X5: WinUI value translation (Group A) ──────────────────────
+
+    /// X5: CSS `px` units are stripped from every length setter so the
+    /// WinUI `Double` / `Thickness` parser accepts the value. A literal
+    /// `12px` FontSize breaks the markup compiler.
+    #[test]
+    fn x5_px_units_stripped_from_length_setters() {
+        let props = vec![
+            StyleProp { name: "font-size".to_string(),    value: "12px".to_string() },
+            StyleProp { name: "height".to_string(),       value: "22px".to_string() },
+            StyleProp { name: "padding".to_string(),      value: "2px".to_string() },
+            StyleProp { name: "border-width".to_string(), value: "0,0,0,1px".to_string() },
+        ];
+        let frag = build_style_fragment(&props);
+        assert!(frag.contains("FontSize=\"12\""), "got:\n{frag}");
+        assert!(frag.contains("Height=\"22\""), "got:\n{frag}");
+        assert!(frag.contains("Padding=\"2\""), "got:\n{frag}");
+        // Thickness comma-shape is preserved while px is stripped.
+        assert!(frag.contains("BorderThickness=\"0,0,0,1\""), "got:\n{frag}");
+        // No `px` survives anywhere.
+        assert!(!frag.contains("px\""), "no px should survive, got:\n{frag}");
+    }
+
+    /// X5: CSS-only properties with no WinUI analog are dropped, not
+    /// emitted as invalid attributes / `<Setter>`s.
+    #[test]
+    fn x5_css_only_properties_are_dropped() {
+        let props = vec![
+            StyleProp { name: "border-collapse".to_string(), value: "collapse".to_string() },
+            StyleProp { name: "border-style".to_string(),    value: "solid".to_string() },
+            StyleProp { name: "outline".to_string(),         value: "1px solid #007acc".to_string() },
+            StyleProp { name: "text-decoration".to_string(), value: "underline".to_string() },
+            StyleProp { name: "box-shadow".to_string(),      value: "0 1px 2px #000".to_string() },
+            // A real one alongside, to prove only the CSS-only ones drop.
+            StyleProp { name: "background".to_string(),       value: "#1e1e1e".to_string() },
+        ];
+        let frag = build_style_fragment(&props);
+        assert!(!frag.contains("BorderCollapse"), "got:\n{frag}");
+        assert!(!frag.contains("BorderStyle"), "got:\n{frag}");
+        assert!(!frag.contains("Outline"), "got:\n{frag}");
+        assert!(!frag.contains("TextDecoration"), "got:\n{frag}");
+        assert!(!frag.contains("BoxShadow"), "got:\n{frag}");
+        assert!(frag.contains("Background=\"#1e1e1e\""), "got:\n{frag}");
+    }
+
+    /// X5: `width: 100%` is dropped — WinUI's `Width` is an absolute
+    /// `Double`, not a percentage. The layout container sizes instead.
+    #[test]
+    fn x5_percentage_width_is_dropped() {
+        let props = vec![
+            StyleProp { name: "width".to_string(), value: "100%".to_string() },
+        ];
+        let frag = build_style_fragment(&props);
+        assert!(!frag.contains("Width"), "percentage Width must drop, got:\n{frag}");
+        assert!(!frag.contains("100%"), "got:\n{frag}");
+    }
+
+    /// X5: `text-align` → WinUI `TextAlignment` with a PascalCase value.
+    /// The old output emitted `TextAlign="center"` — wrong on both the
+    /// property name (no such property) and the value (lowercase).
+    #[test]
+    fn x5_text_align_maps_to_textalignment_pascalcase() {
+        let center = build_style_fragment(&[
+            StyleProp { name: "text-align".to_string(), value: "center".to_string() },
+        ]);
+        assert!(center.contains("TextAlignment=\"Center\""), "got:\n{center}");
+        assert!(!center.contains("TextAlign=\""), "got:\n{center}");
+        assert!(!center.contains("\"center\""), "got:\n{center}");
+
+        let right = build_style_fragment(&[
+            StyleProp { name: "text-align".to_string(), value: "right".to_string() },
+        ]);
+        assert!(right.contains("TextAlignment=\"Right\""), "got:\n{right}");
+
+        let left = build_style_fragment(&[
+            StyleProp { name: "text-align".to_string(), value: "left".to_string() },
+        ]);
+        assert!(left.contains("TextAlignment=\"Left\""), "got:\n{left}");
+    }
+
+    /// X5: `font-weight` keyword and numeric forms map to WinUI
+    /// `FontWeights` named constants (PascalCase).
+    #[test]
+    fn x5_font_weight_maps_to_named_constant() {
+        let cases = [
+            ("normal", "Normal"),
+            ("bold", "Bold"),
+            ("600", "SemiBold"),
+            ("semibold", "SemiBold"),
+            ("500", "Medium"),
+            ("medium", "Medium"),
+        ];
+        for (input, expected) in cases {
+            let frag = build_style_fragment(&[
+                StyleProp { name: "font-weight".to_string(), value: input.to_string() },
+            ]);
+            assert!(
+                frag.contains(&format!("FontWeight=\"{expected}\"")),
+                "font-weight {input:?} should map to {expected:?}, got:\n{frag}"
+            );
+        }
+    }
+
+    /// X5: a `{x:Bind …}` binding value must pass through unmangled —
+    /// it is never px-stripped or case-mangled.
+    #[test]
+    fn x5_binding_value_passes_through_unmangled() {
+        // FontSize is a length setter; a binding must not be px-touched.
+        assert_eq!(
+            translate_xaml_value("FontSize", "{x:Bind CellFontSize}"),
+            Some("{x:Bind CellFontSize}".to_string())
+        );
+        // TextAlignment binding must not be PascalCase-mangled.
+        assert_eq!(
+            translate_xaml_value("TextAlignment", "{x:Bind Align}"),
+            Some("{x:Bind Align}".to_string())
+        );
+    }
+
+    /// X5 unit: `strip_px_units` preserves the Thickness separator
+    /// (comma vs space) while removing each `px`.
+    #[test]
+    fn x5_strip_px_units_preserves_thickness_shape() {
+        assert_eq!(strip_px_units("12px"), "12");
+        assert_eq!(strip_px_units("0,0,0,1px"), "0,0,0,1");
+        assert_eq!(strip_px_units("8px 4px"), "8 4");
+        assert_eq!(strip_px_units("12"), "12");
+    }
+
+    // ── Group B / Group C: the nested cell loop ────────────────────
+
+    /// Build a Grid-shaped layout: an outer `For (each: slot:
+    /// viewport-rows, as: row, index: r)` whose body is an inner
+    /// `For (each: row, as: v, index: c)` rendering one styled cell
+    /// containing `Text (content: v)`. Mirrors mosaic-pkg-grid's
+    /// resolved body shape (UI29 §3.4 nested For).
+    fn grid_nested_for_root() -> LayoutNode {
+        let inner_for = LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("v".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("c".to_string()),
+                },
+            ],
+            children: vec![LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("cell".to_string()),
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::Keyword("v".to_string()),
+                    }],
+                    children: Vec::new(),
+                }],
+            }],
+        };
+        LayoutNode {
+            tag: "For".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("viewport-rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("r".to_string()),
+                },
+            ],
+            children: vec![inner_for],
+        }
+    }
+
+    fn grid_component() -> MosmodelComponent {
+        component(
+            "Grid",
+            vec![slot(
+                "viewport-rows",
+                SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                true,
+            )],
+            vec![],
+        )
+    }
+
+    /// GROUP B: the inner value VM (`Grid_VVm`) must type its value
+    /// field as `string`, NOT `IReadOnlyList<string>`. The outer row VM
+    /// keeps `IReadOnlyList<string> Row`. Binding a `string` Text to a
+    /// list field would block `dotnet build`.
+    #[test]
+    fn group_b_inner_value_vm_field_is_string_not_list() {
+        let c = grid_component();
+        let l = layout_with_root("Grid", grid_nested_for_root());
+        let r = compile(&c, &l, &empty_style("Grid"));
+
+        let vvm = r
+            .for_view_models
+            .iter()
+            .find(|f| f.filename.contains("Grid_VVm"))
+            .map(|f| f.source.as_str())
+            .unwrap_or("");
+        assert!(
+            vvm.contains("string V"),
+            "inner value VM must type V as `string`, got:\n{vvm}"
+        );
+        assert!(
+            !vvm.contains("IReadOnlyList<string> V"),
+            "inner value VM must NOT type V as a list, got:\n{vvm}"
+        );
+
+        // The outer row VM keeps the list type.
+        let rowvm = r
+            .for_view_models
+            .iter()
+            .find(|f| f.filename.contains("Grid_RowVm"))
+            .map(|f| f.source.as_str())
+            .unwrap_or("");
+        assert!(
+            rowvm.contains("IReadOnlyList<string> Row"),
+            "outer row VM must keep the list type, got:\n{rowvm}"
+        );
+    }
+
+    /// GROUP C: the per-column cell loop's value VM carries a
+    /// `double Width` field and the generated cell element binds
+    /// `Width="{x:Bind Width}"`.
+    #[test]
+    fn group_c_value_vm_carries_width_and_cell_binds_it() {
+        let c = grid_component();
+        let l = layout_with_root("Grid", grid_nested_for_root());
+        let r = compile(&c, &l, &empty_style("Grid"));
+
+        let vvm = r
+            .for_view_models
+            .iter()
+            .find(|f| f.filename.contains("Grid_VVm"))
+            .map(|f| f.source.as_str())
+            .unwrap_or("");
+        assert!(
+            vvm.contains("double Width"),
+            "value VM must carry a `double Width` field, got:\n{vvm}"
+        );
+        // The <remarks> tells the Windows dev how to populate it.
+        assert!(
+            vvm.contains("<remarks>") && vvm.contains("ColumnWidths"),
+            "value VM must document how the host populates Width, got:\n{vvm}"
+        );
+
+        // The cell element binds the width.
+        assert!(
+            r.xaml.contains("Width=\"{x:Bind Width}\""),
+            "cell element must bind Width, got:\n{}",
+            r.xaml
+        );
+
+        // The OUTER row VM must NOT carry a Width (only the per-column
+        // cell loop does).
+        let rowvm = r
+            .for_view_models
+            .iter()
+            .find(|f| f.filename.contains("Grid_RowVm"))
+            .map(|f| f.source.as_str())
+            .unwrap_or("");
+        assert!(
+            !rowvm.contains("double Width"),
+            "outer row VM must NOT carry Width, got:\n{rowvm}"
+        );
+    }
+
+    /// GROUP A end-to-end on the Grid shape: the cell's `text-align:
+    /// right` style lands as a valid `TextAlignment="Right"` Setter and
+    /// the px-laden `padding`/`height` are stripped — proving the
+    /// translation runs through the full pipeline, not just the unit.
+    #[test]
+    fn group_a_cell_style_is_valid_winui() {
+        let c = grid_component();
+        let l = layout_with_root("Grid", grid_nested_for_root());
+        let s = StyleDef {
+            component_name: "Grid".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![
+                    StyleProp { name: "padding".to_string(),    value: "2px".to_string() },
+                    StyleProp { name: "height".to_string(),     value: "22px".to_string() },
+                    StyleProp { name: "border-style".to_string(), value: "solid".to_string() },
+                    StyleProp { name: "text-align".to_string(), value: "right".to_string() },
+                ],
+                states: Vec::new(),
+            }],
+        };
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("Padding=\"2\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Height=\"22\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("<Setter Property=\"TextAlignment\" Value=\"Right\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("BorderStyle"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("px\""), "no px should survive, got:\n{}", r.xaml);
     }
 }
