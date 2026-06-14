@@ -97,9 +97,13 @@ backend immediately) come before the enabler-dependent items.
   `6 * 7`→42 and `84 / 2`→42 across native/LLVM/WASM/JVM/CLR/VM/JIT.
 - ✅ **N2** — `for` loop. `for NAME: type in lo .. hi block` (exclusive range) desugars to
   the canonical counter loop; verified by RUNNING a sum-loop (`1..6`→15) and nested loops
-  (3×2→6) across native/LLVM/WASM/JVM/CLR/VM/JIT. (Note: reassigning a *parameter* in a
-  loop is invalid on the IIR-to-LLVM backend — a separate backend limitation; the for-loop
-  idiom uses a `let` local.)
+  (3×2→6) across native/LLVM/WASM/JVM/CLR/VM/JIT.
+- ✅ **E-LLVM-1** — *reassigned parameters on LLVM* (LLVM first-class). The N2 build
+  surfaced that the IIR-to-LLVM backend kept parameters in SSA, so reassigning a parameter
+  across a loop back-edge (`fn run(acc) { for … { acc = acc + 6 } }`) silently dropped the
+  update. Fixed in `iir-to-llvm` 0.10.0 — a reassigned parameter is promoted to an i64
+  stack slot, initialised from the incoming argument. Verified by RUNNING `acc`-accumulator
+  → 42 across every backend.
 - ☐ **N3** — bitwise `&` `|` `^` (existing IIR `and`/`or`/`xor`) + proper unary `~` (needs E2 for the width mask).
 - ☐ **N4** — `&&` / `||` short-circuit (desugar to branches).
 - ☐ **N5** — `const` declarations (constant folding / global).

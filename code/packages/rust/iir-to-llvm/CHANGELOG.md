@@ -3,6 +3,38 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.10.0] — 2026-06-13 — reassigned parameters become stack slots (LANG-FULL — LLVM first-class)
+
+### Fixed — a reassigned function parameter is no longer silently dropped
+
+`collect_slot_vars` promoted a variable to an `alloca` stack slot only when it was
+the `dest` of **two or more** instructions. A parameter reassigned in the body —
+e.g. `acc = acc + 6`, the shape of a loop accumulator — is the `dest` of only one
+instruction, so it stayed a pure SSA value. Across a loop back-edge the
+straight-line `const`/`mov` side-map is invalid, and the update was silently
+dropped: the emitted IR computed `add %acc, 6` but never stored it back, so the
+loop returned the unmodified incoming argument. (A `let` local works because its
+declaration is a second `dest`; only parameters had this hole.)
+
+A parameter's incoming binding **is** its first assignment, so:
+
+- `collect_slot_vars` now seeds each i64-slot-compatible parameter with a count of
+  1, so a single later reassignment crosses the `>= 2` promotion threshold. The new
+  `param_slot_compatible` helper gates this to values that fit the i64 slot model
+  (every integer width, `bool`, `any`, `symbol`, lisp `ref<Lispy…>`); a `float`/
+  `double` parameter is **not** promoted (the i64 slot can't represent it — that is
+  a separate concern under enabler E3, and is no worse than before).
+- `lower_function` initialises each promoted parameter's slot from its incoming SSA
+  argument at function entry (`store i64 %p, ptr %p.slot`), zero-extending a narrow
+  `i1`/`i8`/`i16`/`i32` argument to the i64 slot width first.
+
+Verified by RUNNING on real `clang`: a Nib program accumulating into a **parameter**
+across a loop (`fn run(acc: u8) { for i in 0..7 { acc = acc + 6 } return acc }`)
+now returns 42 — and is added to `lang-aot`'s `lang_matrix` battery across every
+backend. New unit tests: `reassigned_parameter_is_promoted_to_a_stack_slot`,
+`narrow_reassigned_parameter_is_zero_extended_into_its_slot`,
+`non_reassigned_parameter_stays_pure_ssa`.
+
 ## [0.9.0] — 2026-06-12 (LLVM05 — byte-tape ops + Brainfuck I/O; LANG-MATRIX LM-L Brainfuck)
 
 Adds the byte-tape memory ops and character I/O that Brainfuck needs, so the
