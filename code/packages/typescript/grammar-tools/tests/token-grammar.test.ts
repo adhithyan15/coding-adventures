@@ -870,3 +870,142 @@ group tag:
     expect(() => parseTokenGrammar(source)).toThrow(/Incomplete definition/);
   });
 });
+
+// ---------------------------------------------------------------------------
+// F10 — declarative lexer mode transitions
+// ---------------------------------------------------------------------------
+
+describe("F10 declarative lexer mode transitions", () => {
+  it("parses start_mode directive", () => {
+    const g = parseTokenGrammar("NAME = /[a-z]+/\nstart_mode: div\n");
+    expect(g.startMode).toBe("div");
+  });
+
+  it("defaults start_mode and transitions to undefined", () => {
+    const g = parseTokenGrammar("NAME = /[a-z]+/\n");
+    expect(g.startMode).toBeUndefined();
+    expect(g.transitions).toBeUndefined();
+  });
+
+  it("rejects missing start_mode value", () => {
+    expect(() => parseTokenGrammar("start_mode:\n")).toThrow(/Missing mode name/);
+  });
+
+  it("parses a simple transition rule", () => {
+    const g = parseTokenGrammar(
+      "NAME = /[a-z]+/\ntransitions:\n  on NAME -> set-mode div\n",
+    );
+    expect(g.transitions).toBeDefined();
+    expect(g.transitions!.length).toBe(1);
+    const rule = g.transitions![0];
+    expect(rule.onTokens).toEqual(["NAME"]);
+    expect(rule.onValue).toBeUndefined();
+    expect(rule.inMode).toBeUndefined();
+    expect(rule.actions).toEqual([{ kind: "set_mode", target: "div" }]);
+  });
+
+  it("parses an alternation token set", () => {
+    const g = parseTokenGrammar(
+      "NAME = /[a-z]+/\ntransitions:\n  on (NAME | NUMBER | RPAREN) -> set-mode div\n",
+    );
+    expect(g.transitions![0].onTokens).toEqual(["NAME", "NUMBER", "RPAREN"]);
+  });
+
+  it("parses a keyword-value guard", () => {
+    const g = parseTokenGrammar(
+      'NAME = /[a-z]+/\ntransitions:\n  on KEYWORD="return" -> set-mode default\n',
+    );
+    const rule = g.transitions![0];
+    expect(rule.onTokens).toEqual(["KEYWORD"]);
+    expect(rule.onValue).toBe("return");
+  });
+
+  it("parses an in-mode guard", () => {
+    const g = parseTokenGrammar(
+      "NAME = /[a-z]+/\ntransitions:\n  on RBRACE in template -> pop\n",
+    );
+    const rule = g.transitions![0];
+    expect(rule.onTokens).toEqual(["RBRACE"]);
+    expect(rule.inMode).toBe("template");
+    expect(rule.actions).toEqual([{ kind: "pop" }]);
+  });
+
+  it("parses multiple actions", () => {
+    const g = parseTokenGrammar(
+      "NAME = /[a-z]+/\ntransitions:\n  on TEMPLATE_HEAD -> push template, set-mode default\n",
+    );
+    expect(g.transitions![0].actions).toEqual([
+      { kind: "push", target: "template" },
+      { kind: "set_mode", target: "default" },
+    ]);
+  });
+
+  it("parses skip toggle actions", () => {
+    const g = parseTokenGrammar(
+      "NAME = /[a-z]+/\ntransitions:\n  on OPEN -> disable-skip\n  on CLOSE -> enable-skip\n",
+    );
+    expect(g.transitions![0].actions).toEqual([{ kind: "disable_skip" }]);
+    expect(g.transitions![1].actions).toEqual([{ kind: "enable_skip" }]);
+  });
+
+  it("rejects a transition with no '->'", () => {
+    expect(() =>
+      parseTokenGrammar("transitions:\n  on NAME set-mode div\n"),
+    ).toThrow(/missing '->'/);
+  });
+
+  it("rejects an unknown action", () => {
+    expect(() =>
+      parseTokenGrammar("transitions:\n  on NAME -> teleport div\n"),
+    ).toThrow(/Unknown transition action/);
+  });
+
+  it("rejects a rule that doesn't start with 'on '", () => {
+    expect(() =>
+      parseTokenGrammar("transitions:\n  when NAME -> pop\n"),
+    ).toThrow(/must start with 'on '/);
+  });
+
+  it("rejects 'transitions' as a group name", () => {
+    expect(() =>
+      parseTokenGrammar('group transitions:\n  X = "x"\n'),
+    ).toThrow(/Reserved group name/);
+  });
+
+  it("flags an undefined start_mode", () => {
+    const g = parseTokenGrammar("NAME = /[a-z]+/\nstart_mode: nope\n");
+    const issues = validateTokenGrammar(g);
+    expect(issues.some((s) => s.includes("start_mode 'nope'"))).toBe(true);
+  });
+
+  it("flags a set-mode target that is not a declared group", () => {
+    const g = parseTokenGrammar(
+      "NAME = /[a-z]+/\ntransitions:\n  on NAME -> set-mode ghost\n",
+    );
+    const issues = validateTokenGrammar(g);
+    expect(issues.some((s) => s.includes("undeclared mode 'ghost'"))).toBe(true);
+  });
+
+  it("flags an undeclared 'in MODE' guard", () => {
+    const g = parseTokenGrammar(
+      "NAME = /[a-z]+/\ntransitions:\n  on NAME in ghost -> pop\n",
+    );
+    const issues = validateTokenGrammar(g);
+    expect(issues.some((s) => s.includes("'in ghost'"))).toBe(true);
+  });
+
+  it("accepts a transitions table targeting a declared group", () => {
+    const g = parseTokenGrammar(
+      "NAME = /[a-z]+/\n" +
+        'group div:\n  SLASH = "/"\n' +
+        "start_mode: default\n" +
+        "transitions:\n  on NAME -> set-mode div\n",
+    );
+    const issues = validateTokenGrammar(g);
+    expect(
+      issues.some(
+        (s) => s.includes("undeclared") || s.includes("start_mode"),
+      ),
+    ).toBe(false);
+  });
+});

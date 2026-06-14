@@ -128,6 +128,55 @@ export interface PatternGroup {
 }
 
 /**
+ * Safety cap on the number of declarative mode-transition rules a grammar
+ * may declare (F10). Grammars are static/trusted build artifacts, but this
+ * bounds the table so a malformed file cannot produce an unreasonable rule
+ * list (mirrors `MAX_TRANSITIONS` in the Rust/Python/Ruby ports).
+ */
+export const MAX_TRANSITIONS = 4096;
+
+/**
+ * One action taken when a mode-transition rule fires (F10).
+ *
+ * `kind` is the action; `target` is the mode/group name for
+ * `"set_mode"`/`"push"` and `undefined` for `"pop"`/`"enable_skip"`/
+ * `"disable_skip"`.
+ *
+ * Action-kind strings use UNDERSCORES (`set_mode`/`enable_skip`) to match
+ * the Python and Ruby ports; the surface DSL keeps hyphens
+ * (`set-mode`/`enable-skip`).
+ */
+export interface TransitionAction {
+  readonly kind:
+    | "set_mode"
+    | "push"
+    | "pop"
+    | "enable_skip"
+    | "disable_skip";
+  readonly target?: string;
+}
+
+/**
+ * One declarative mode-transition rule (F10), parsed from a `transitions:`
+ * line of the form `on TOKENS [in MODE] -> ACTION [, ACTION ...]`.
+ *
+ * Properties:
+ *   onTokens:   Emitted token type-names that trigger the rule (alias
+ *               targets; `"KEYWORD"` for promoted keywords).
+ *   onValue:    Optional keyword-value guard (e.g. `"return"`).
+ *   inMode:     Optional active-mode guard; `undefined` means "in any mode".
+ *   actions:    Ordered list of `TransitionAction` applied when it fires.
+ *   lineNumber: 1-based line where the rule appeared.
+ */
+export interface ModeTransition {
+  readonly onTokens: readonly string[];
+  readonly onValue?: string;
+  readonly inMode?: string;
+  readonly actions: readonly TransitionAction[];
+  readonly lineNumber: number;
+}
+
+/**
  * The complete contents of a parsed .tokens file.
  *
  * Properties:
@@ -210,6 +259,19 @@ export interface TokenGrammar {
    * A `soft_keywords:` section in a .tokens file populates this field.
    */
   readonly softKeywords?: readonly string[];
+  /**
+   * F10 — the mode the lexer starts in. `undefined` is interpreted as
+   * `"default"` (the base group) by the lexer. Set by the `start_mode:`
+   * directive.
+   */
+  readonly startMode?: string;
+  /**
+   * F10 — declarative mode-transition rules, applied by the lexer after
+   * each emitted token. Empty/undefined ⇒ behaviour identical to F04
+   * (every interpreter helper early-returns / stays inert). Set by the
+   * `transitions:` section.
+   */
+  readonly transitions?: readonly ModeTransition[];
 }
 
 function parseMagicComment(line: string): { key: string; value: string } | null {
@@ -459,6 +521,130 @@ function parseDefinition(
   }
 }
 
+/**
+ * Split a transition head on a top-level ` in ` mode guard, ignoring any
+ * ` in ` inside a parenthesised token set (F10). Returns `[tokens, mode]`
+ * where `mode` is `undefined` when there is no guard.
+ */
+function splitInGuard(head: string): [string, string | undefined] {
+  let depth = 0;
+  for (let i = 0; i < head.length; i++) {
+    const ch = head[i];
+    if (ch === "(") {
+      depth += 1;
+    } else if (ch === ")") {
+      depth -= 1;
+    } else if (
+      ch === " " &&
+      depth === 0 &&
+      head.startsWith(" in ", i)
+    ) {
+      return [head.slice(0, i), head.slice(i + 4)];
+    }
+  }
+  return [head, undefined];
+}
+
+/**
+ * Parse one `transitions:` line into a {@link ModeTransition} (F10).
+ *
+ * Grammar: `on TOKENS [in MODE] -> ACTION [, ACTION ...]` where TOKENS is
+ * a name or `(A | B | C)` (or `KEYWORD="value"`) and each ACTION is
+ * `set-mode M` | `push G` | `pop` | `enable-skip` | `disable-skip`.
+ */
+function parseTransition(line: string, lineNumber: number): ModeTransition {
+  if (!line.includes("->")) {
+    throw new TokenGrammarError(
+      `Transition rule missing '->': '${line}'`,
+      lineNumber,
+    );
+  }
+  const arrowIdx = line.indexOf("->");
+  const head = line.slice(0, arrowIdx).trim();
+  const actionStr = line.slice(arrowIdx + 2).trim();
+  if (!actionStr) {
+    throw new TokenGrammarError(
+      `Transition rule has no actions after '->': '${line}'`,
+      lineNumber,
+    );
+  }
+  if (!head.startsWith("on ")) {
+    throw new TokenGrammarError(
+      `Transition rule must start with 'on ': '${line}'`,
+      lineNumber,
+    );
+  }
+  const headTail = head.slice(3).trim();
+
+  const [tokensPartRaw, inModeRaw] = splitInGuard(headTail);
+  const tokensPart = tokensPartRaw.trim();
+  const inMode = inModeRaw === undefined ? undefined : inModeRaw.trim();
+
+  let inner = tokensPart;
+  if (inner.startsWith("(") && inner.endsWith(")")) {
+    inner = inner.slice(1, -1);
+  }
+  const onTokens: string[] = [];
+  let onValue: string | undefined;
+  for (const raw of inner.split("|")) {
+    const item = raw.trim();
+    if (!item) {
+      continue;
+    }
+    if (item.includes("=")) {
+      const eqIdx = item.indexOf("=");
+      const nameP = item.slice(0, eqIdx).trim();
+      let value = item.slice(eqIdx + 1).trim();
+      if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.slice(1, -1);
+      }
+      onTokens.push(nameP);
+      onValue = value;
+    } else {
+      onTokens.push(item);
+    }
+  }
+  if (onTokens.length === 0) {
+    throw new TokenGrammarError(
+      `Transition rule has no trigger tokens: '${line}'`,
+      lineNumber,
+    );
+  }
+
+  const actions: TransitionAction[] = [];
+  for (const raw of actionStr.split(",")) {
+    const act = raw.trim();
+    if (!act) {
+      continue;
+    }
+    if (act.startsWith("set-mode ")) {
+      actions.push({ kind: "set_mode", target: act.slice(9).trim() });
+    } else if (act.startsWith("push ")) {
+      actions.push({ kind: "push", target: act.slice(5).trim() });
+    } else if (act === "pop") {
+      actions.push({ kind: "pop" });
+    } else if (act === "enable-skip") {
+      actions.push({ kind: "enable_skip" });
+    } else if (act === "disable-skip") {
+      actions.push({ kind: "disable_skip" });
+    } else {
+      throw new TokenGrammarError(
+        `Unknown transition action '${act}' (expected set-mode/push/` +
+          `pop/enable-skip/disable-skip)`,
+        lineNumber,
+      );
+    }
+  }
+  if (actions.length === 0) {
+    throw new TokenGrammarError(
+      `Transition rule has no valid actions: '${line}'`,
+      lineNumber,
+    );
+  }
+
+  return { onTokens, onValue, inMode, actions, lineNumber };
+}
+
 export function parseTokenGrammar(source: string): TokenGrammar {
   const lines = source.split("\n");
   const definitions: TokenDefinition[] = [];
@@ -505,7 +691,17 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     "layout_keywords",
     "context_keywords",
     "soft_keywords",
+    "transitions",
+    "modes",
+    "start_mode",
   ]);
+
+  // F10: declarative lexer mode transitions — collected as the parser walks
+  // a `transitions:` section line-by-line; `startMode` comes from a single
+  // `start_mode:` directive. Both default to "unset" so a grammar with no F10
+  // directives produces an unchanged TokenGrammar.
+  let startMode: string | undefined;
+  const transitions: ModeTransition[] = [];
 
   for (let i = 0; i < lines.length; i++) {
     const lineNumber = i + 1;
@@ -584,6 +780,22 @@ export function parseTokenGrammar(source: string): TokenGrammar {
           lineNumber,
         );
       }
+      currentSection = "definitions";
+      continue;
+    }
+
+    // --- start_mode directive (F10) ---
+    // Single-value directive: `start_mode: NAME`. The lexer interprets
+    // an unset value as "default" (the base group).
+    if (stripped.startsWith("start_mode:") || stripped.startsWith("start_mode :")) {
+      const smValue = stripped.slice(stripped.indexOf(":") + 1).trim();
+      if (!smValue) {
+        throw new TokenGrammarError(
+          "Missing mode name after 'start_mode:'",
+          lineNumber,
+        );
+      }
+      startMode = smValue;
       currentSection = "definitions";
       continue;
     }
@@ -667,6 +879,13 @@ export function parseTokenGrammar(source: string): TokenGrammar {
       currentSection = "soft_keywords";
       continue;
     }
+    // F10 — transitions: section. Each indented line is a full rule
+    // (`on TOKENS [in MODE] -> ACTION [, ACTION ...]`), parsed by
+    // parseTransition. No `NAME = pattern` shape applies here.
+    if (stripped === "transitions:" || stripped === "transitions :") {
+      currentSection = "transitions";
+      continue;
+    }
 
     // --- Inside a section ---
     const isIndented = line[0] === " " || line[0] === "\t";
@@ -695,6 +914,15 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     if (isIndented && currentSection === "soft_keywords") {
       if (stripped) {
         softKeywords.push(stripped);
+      }
+      continue;
+    }
+
+    // F10 — each indented line in transitions: is a full rule. Delegate
+    // entirely to parseTransition (no NAME = pattern shape check).
+    if (isIndented && currentSection === "transitions") {
+      if (stripped) {
+        transitions.push(parseTransition(stripped, lineNumber));
       }
       continue;
     }
@@ -825,6 +1053,8 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     caseInsensitive,
     contextKeywords: contextKeywords.length > 0 ? contextKeywords : undefined,
     softKeywords: softKeywords.length > 0 ? softKeywords : undefined,
+    startMode,
+    transitions: transitions.length > 0 ? transitions : undefined,
   };
 }
 
@@ -963,6 +1193,51 @@ export function validateTokenGrammar(grammar: TokenGrammar): string[] {
     }
   }
 
+  // F10 — declarative lexer mode validation. A mode is valid if it is
+  // "default" or a declared group. Undefined targets/guards are rejected
+  // so the lexer never silently falls back to the wrong group.
+  // Use `hasOwnProperty` (not `in`) so a group named after an inherited
+  // prototype key (e.g. `"toString"`) is not silently accepted as a valid
+  // target — `grammar.groups` is a plain object literal.
+  const modeExists = (name: string): boolean =>
+    name === "default" ||
+    (grammar.groups !== undefined &&
+      Object.prototype.hasOwnProperty.call(grammar.groups, name));
+
+  if (grammar.startMode !== undefined && !modeExists(grammar.startMode)) {
+    issues.push(
+      `start_mode '${grammar.startMode}' is not 'default' or a declared group`,
+    );
+  }
+
+  if (grammar.transitions !== undefined) {
+    if (grammar.transitions.length > MAX_TRANSITIONS) {
+      issues.push(
+        `Too many transition rules (${grammar.transitions.length}, ` +
+          `max ${MAX_TRANSITIONS})`,
+      );
+    }
+    for (const rule of grammar.transitions) {
+      if (rule.inMode !== undefined && !modeExists(rule.inMode)) {
+        issues.push(
+          `Transition guard 'in ${rule.inMode}' (line ${rule.lineNumber}) ` +
+            "names an undeclared mode",
+        );
+      }
+      for (const action of rule.actions) {
+        if (
+          (action.kind === "set_mode" || action.kind === "push") &&
+          action.target !== undefined &&
+          !modeExists(action.target)
+        ) {
+          issues.push(
+            `Transition action targets undeclared mode ` +
+              `'${action.target}' (line ${rule.lineNumber})`,
+          );
+        }
+      }
+    }
+  }
 
   return issues;
 }

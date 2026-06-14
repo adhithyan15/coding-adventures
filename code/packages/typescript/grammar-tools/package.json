@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/grammar-tools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Define and validate .tokens and .grammar file formats — grammar-driven lexer and parser generation",
   "type": "module",
   "main": "src/index.ts",
