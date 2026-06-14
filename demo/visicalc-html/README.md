@@ -2,10 +2,12 @@
 
 A **working** VisiCalc in a single `index.html` you can open from disk:
 a formula bar above a 5×5 grid that actually computes. It is VisiCalc
-built on top of the generic
-[`@coding-adventures/spreadsheet-engine`](../../code/packages/typescript/spreadsheet-engine) —
-the UI shell comes from the Mosaic pipeline, the *behaviour* comes from
-the engine.
+built on top of the Rust
+[`spreadsheet-core`](../../code/packages/rust/spreadsheet-core) engine
+**compiled to WebAssembly** — the UI shell comes from the Mosaic
+pipeline, the *behaviour* comes from the engine. (The same engine, via
+the same WASM module, also backs the WebComponent demo; native demos use
+it through a C ABI.)
 
 ## What it shows
 
@@ -34,23 +36,26 @@ that own *no* spreadsheet logic:
    `mosaic-if` markers and `{{…}}` placeholders; a small inline
    template-expander hydrates it. Regenerate with `bash scripts/build.sh`.
 
-2. **The engine** — `@coding-adventures/spreadsheet-engine` (cells +
-   dependency graph + incremental topological recalc + the default
-   Excel/CAS formula adapter) is bundled to a browser IIFE at
-   `vendor/spreadsheet-engine.js`, exposed on `window.SpreadsheetEngine`.
-   Regenerate with `bash scripts/bundle-engine.sh`.
+2. **The engine** — the Rust `spreadsheet-core` engine (cells +
+   dependency graph + incremental topological recalc + ~50 functions
+   delegated to the Layer-1 cores) compiled to `wasm32`. The browser
+   loader `vendor/spreadsheet-engine-wasm.js` embeds the `.wasm` as
+   base64 and, once instantiated, exposes `window.SpreadsheetEngine`
+   (same API as the TypeScript engine). Regenerate with
+   `bash scripts/bundle-wasm-engine.sh`.
 
-The inline `<script>` in `index.html` is the glue: it seeds a
-`Workbook`, renders the workbook's *computed* values through the
-compiled Grid template on every change, and feeds user edits back into
-`workbook.setCell(addr, raw)`. No framework — and because the engine is
-a plain `<script>`, the page still opens directly via `file://`.
+The inline `<script>` in `index.html` is the glue: it awaits the WASM
+module, seeds a workbook, renders the workbook's *computed* values
+through the compiled Grid template on every change, and feeds user edits
+back into `workbook.setCell(addr, raw)`. No framework — and because the
+`.wasm` is embedded (not fetched), the page still opens directly via
+`file://`.
 
 ```
 index.html
-  ├─ <script src="vendor/spreadsheet-engine.js">   ← the generic engine
-  ├─ <template id="grid-template">                 ← mosaic-compiled UI shell
-  └─ <script> (inline)                             ← thin glue: model → render → edit
+  ├─ <script src="vendor/spreadsheet-engine-wasm.js">  ← Rust engine, as WASM
+  ├─ <template id="grid-template">                     ← mosaic-compiled UI shell
+  └─ <script> (inline)                                 ← thin glue: model → render → edit
 ```
 
 ## How to view
@@ -63,8 +68,8 @@ Any modern browser works — no module loader, no server. To regenerate
 the artifacts after changing sources:
 
 ```bash
-bash scripts/build.sh          # UI shell (needs the Rust mosaic-compile)
-bash scripts/bundle-engine.sh  # engine bundle (needs esbuild via mise)
+bash scripts/build.sh              # UI shell (needs the Rust mosaic-compile)
+bash scripts/bundle-wasm-engine.sh # engine bundle (embeds the Rust engine's .wasm)
 ```
 
 ## Where this fits in the cross-backend demo plan

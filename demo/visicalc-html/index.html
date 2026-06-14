@@ -24,8 +24,8 @@
   them out here would prematurely terminate this very comment.)
 
   This demo is LIVE.  The inline `<script>` below seeds a workbook in
-  `@coding-adventures/spreadsheet-engine` (bundled to
-  vendor/spreadsheet-engine.js), renders the workbook's *computed*
+  the Rust `spreadsheet-core` engine compiled to WebAssembly (loaded by
+  vendor/spreadsheet-engine-wasm.js), renders the workbook's *computed*
   values through the compiled Grid template via a ~80-line template-
   expander, and feeds user edits back into `workbook.setCell(...)`.
   Click a cell to select it, type a value or formula (e.g.
@@ -138,11 +138,12 @@
       recomputes.  The UI <em>shell</em> (FormulaBar + Grid) is generated
       by <code>mosaic-compile --backend html</code> from
       <code>demo/visicalc/mosaic/*</code>; the <em>behaviour</em> is the
-      generic <code>@coding-adventures/spreadsheet-engine</code> (bundled
-      to <code>vendor/spreadsheet-engine.js</code>), which owns the cells,
-      dependency graph, recalc, and Excel/CAS formula evaluation.  This
-      file is thin glue — it holds no spreadsheet logic of its own — and
-      the page still opens directly from disk via <code>file://</code>.
+      generic <code>spreadsheet-core</code> engine <strong>written in Rust
+      and compiled to WebAssembly</strong> (<code>vendor/spreadsheet-engine-wasm.js</code>),
+      which owns the cells, dependency graph, recalc, and formula
+      evaluation.  This file is thin glue — it holds no spreadsheet logic
+      of its own — and the page still opens directly from disk via
+      <code>file://</code> (the <code>.wasm</code> is embedded as base64).
     </div>
   </div>
 
@@ -190,10 +191,13 @@
   </table>
 </div></template>
 
-  <!-- The generic spreadsheet engine, bundled to a browser IIFE.
-       Exposes `window.SpreadsheetEngine`.  Regenerate with
-       `bash scripts/bundle-engine.sh`. -->
-  <script src="vendor/spreadsheet-engine.js"></script>
+  <!-- The Rust spreadsheet engine compiled to WebAssembly, loaded via a
+       dependency-free browser loader. Sets `window.SpreadsheetEngine` (same
+       API as the TypeScript engine) and resolves `window.__spreadsheetEngineReady`
+       once the .wasm has instantiated. The .wasm bytes are embedded as base64
+       so the page still opens directly from disk via file://.
+       Regenerate with `bash scripts/bundle-wasm-engine.sh`. -->
+  <script src="vendor/spreadsheet-engine-wasm.js"></script>
 
   <script>
   // ====================================================================
@@ -392,15 +396,22 @@
   // LIVE engine wiring — this is "VisiCalc built on top of the generic
   // spreadsheet engine".  Everything below is host glue: it owns no
   // spreadsheet logic of its own.  Cells, the dependency graph,
-  // topological recalc, and formula evaluation all live in
-  // `@coding-adventures/spreadsheet-engine` (bundled into
-  // vendor/spreadsheet-engine.js and exposed on `SpreadsheetEngine`).
+  // topological recalc, and formula evaluation all live in the Rust
+  // `spreadsheet-core` engine compiled to WebAssembly (loaded by
+  // vendor/spreadsheet-engine-wasm.js and exposed on `SpreadsheetEngine`).
   // The glue's whole job is: seed the workbook, render its computed
   // values through the compiled Grid template above, and feed user
   // edits back into `workbook.setCell(...)`.
   // ====================================================================
 
-  const Engine = window.SpreadsheetEngine;
+  // The engine is now the Rust spreadsheet engine compiled to WebAssembly
+  // (vendor/spreadsheet-engine-wasm.js exposes window.SpreadsheetEngine once
+  // the .wasm has instantiated). Because that is asynchronous, `Engine` and
+  // `workbook` are bound in `boot()` after `window.__spreadsheetEngineReady`
+  // resolves — not at top level. The API surface is identical to the
+  // TypeScript engine, so nothing else in this file changes.
+  let Engine;
+  let workbook;
 
   // The visible grid: 5 rows (1..5) × 5 columns (A..E).  Display column 0
   // is the row-label gutter; display columns 1..5 are spreadsheet columns
@@ -435,8 +446,7 @@
     D5: "=SUM(D1:D4)", E5: "=SUM(E1:E4)",
   };
 
-  const workbook = Engine.createSpreadsheet(); // pre-wired Excel/CAS adapter
-  workbook.setCells(SEED);
+  // (workbook is created in boot(), once the WASM engine is ready.)
 
   // UI state the engine doesn't own: which cell is selected, and which
   // cell (if any) is being edited inline.  Coordinates are template
@@ -563,7 +573,14 @@
   }
 
   // ----- Boot ----------------------------------------------------------
-  function boot() {
+  async function boot() {
+    // Wait for the WASM engine to instantiate, then bind it and seed the
+    // workbook. (WebAssembly compilation of a >4 KB module must be async on
+    // the browser main thread, so this is a promise, not a synchronous load.)
+    Engine = await window.__spreadsheetEngineReady;
+    workbook = Engine.createSpreadsheet();
+    workbook.setCells(SEED);
+
     render();
     const input = document.getElementById("formula-input");
     input.addEventListener("keydown", (e) => {
