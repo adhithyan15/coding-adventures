@@ -91,6 +91,8 @@ packages a typed surface for:
   package release signoff checks
 - Hue package release closure summaries that turn signoff readiness into final
   package release closure checks
+- Hue package release archive summaries that turn closure readiness into final
+  package release archive checks
 
 ## Dependencies
 
