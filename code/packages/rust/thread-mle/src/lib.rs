@@ -1537,6 +1537,89 @@ impl ThreadSupervisionPlan {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadAttachCompletionSummary {
+    pub action_summary: ThreadAttachActionSummary,
+    pub supervision_plan: ThreadSupervisionPlan,
+    pub required_completion_check_count: usize,
+    pub passed_completion_check_count: usize,
+    pub missing_completion_check_count: usize,
+    pub actions_clear: bool,
+    pub supervision_clear: bool,
+    pub attached_or_attach_ready: bool,
+    pub review_queues_clear: bool,
+    pub attach_complete: bool,
+}
+
+impl ThreadAttachCompletionSummary {
+    pub fn from_action_and_supervision(
+        action_summary: ThreadAttachActionSummary,
+        supervision_plan: ThreadSupervisionPlan,
+    ) -> Self {
+        let actions_clear = action_summary.is_attach_action_clear();
+        let supervision_clear = !supervision_plan.needs_intervention();
+        let attached_or_attach_ready = action_summary.readiness_summary.attached
+            || action_summary.readiness_summary.attach_ready;
+        let review_queues_clear =
+            !action_summary.needs_status_review() && !action_summary.needs_unknown_command_review();
+        let checks = [
+            actions_clear,
+            supervision_clear,
+            attached_or_attach_ready,
+            review_queues_clear,
+        ];
+        let passed_completion_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_completion_check_count = checks.len();
+        let missing_completion_check_count =
+            required_completion_check_count - passed_completion_check_count;
+        let attach_complete = missing_completion_check_count == 0;
+
+        Self {
+            action_summary,
+            supervision_plan,
+            required_completion_check_count,
+            passed_completion_check_count,
+            missing_completion_check_count,
+            actions_clear,
+            supervision_clear,
+            attached_or_attach_ready,
+            review_queues_clear,
+            attach_complete,
+        }
+    }
+
+    pub fn is_attach_complete(self) -> bool {
+        self.attach_complete
+    }
+
+    pub fn has_completion_gaps(self) -> bool {
+        self.missing_completion_check_count > 0
+    }
+
+    pub fn needs_action_clearance(self) -> bool {
+        !self.actions_clear
+    }
+
+    pub fn needs_supervision_clearance(self) -> bool {
+        !self.supervision_clear
+    }
+
+    pub fn needs_attach_readiness(self) -> bool {
+        !self.attached_or_attach_ready
+    }
+
+    pub fn needs_review_queue_clearance(self) -> bool {
+        !self.review_queues_clear
+    }
+}
+
+pub fn summarize_thread_attach_completion(
+    action_summary: ThreadAttachActionSummary,
+    supervision_plan: ThreadSupervisionPlan,
+) -> ThreadAttachCompletionSummary {
+    ThreadAttachCompletionSummary::from_action_and_supervision(action_summary, supervision_plan)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ThreadDiagnosticSnapshot {
     pub captured_at_ms: u64,
@@ -2884,6 +2967,93 @@ mod tests {
         assert!(summary.needs_neighbor_refresh());
         assert!(summary.needs_status_review());
         assert!(summary.needs_unknown_command_review());
+    }
+
+    #[test]
+    fn attach_completion_summary_marks_clear_attached_child() {
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_200,
+            10_000,
+        ));
+        let message_summary = MleMessageBatchSummary::empty();
+        let neighbor_summary = table.summary_at(1_250);
+        let action_summary =
+            ThreadAttachActionSummary::from_summaries(message_summary, neighbor_summary);
+        let supervision_plan = table
+            .diagnostic_snapshot(None, 1_250)
+            .unwrap()
+            .supervision_plan();
+
+        let summary = summarize_thread_attach_completion(action_summary, supervision_plan);
+
+        assert_eq!(summary.action_summary, action_summary);
+        assert_eq!(summary.supervision_plan, supervision_plan);
+        assert_eq!(summary.required_completion_check_count, 4);
+        assert_eq!(summary.passed_completion_check_count, 4);
+        assert_eq!(summary.missing_completion_check_count, 0);
+        assert!(summary.actions_clear);
+        assert!(summary.supervision_clear);
+        assert!(summary.attached_or_attach_ready);
+        assert!(summary.review_queues_clear);
+        assert!(summary.attach_complete);
+        assert!(summary.is_attach_complete());
+        assert!(!summary.has_completion_gaps());
+        assert!(!summary.needs_action_clearance());
+        assert!(!summary.needs_supervision_clearance());
+        assert!(!summary.needs_attach_readiness());
+        assert!(!summary.needs_review_queue_clearance());
+    }
+
+    #[test]
+    fn attach_completion_summary_routes_blocked_attach_work() {
+        let status = MleMessage {
+            command: MleCommand::ChildUpdateResponse,
+            tlvs: vec![Tlv::new(TlvType::Status, vec![0x01]).unwrap()],
+        };
+        let unknown = MleMessage {
+            command: MleCommand::Unknown(0xfe),
+            tlvs: Vec::new(),
+        };
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::RouterPeer,
+            1_000,
+            500,
+        ));
+        let message_summary = MleMessageBatchSummary::from_messages([&status, &unknown]);
+        let neighbor_summary = table.summary_at(1_500);
+        let action_summary =
+            ThreadAttachActionSummary::from_summaries(message_summary, neighbor_summary);
+        let supervision_plan = table
+            .diagnostic_snapshot(None, 1_500)
+            .unwrap()
+            .supervision_plan();
+
+        let summary = ThreadAttachCompletionSummary::from_action_and_supervision(
+            action_summary,
+            supervision_plan,
+        );
+
+        assert_eq!(summary.required_completion_check_count, 4);
+        assert_eq!(summary.passed_completion_check_count, 0);
+        assert_eq!(summary.missing_completion_check_count, 4);
+        assert!(!summary.actions_clear);
+        assert!(!summary.supervision_clear);
+        assert!(!summary.attached_or_attach_ready);
+        assert!(!summary.review_queues_clear);
+        assert!(!summary.attach_complete);
+        assert!(!summary.is_attach_complete());
+        assert!(summary.has_completion_gaps());
+        assert!(summary.needs_action_clearance());
+        assert!(summary.needs_supervision_clearance());
+        assert!(summary.needs_attach_readiness());
+        assert!(summary.needs_review_queue_clearance());
     }
 
     #[test]
