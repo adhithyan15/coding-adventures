@@ -57,12 +57,18 @@ class VisiCalcHome extends StatefulWidget {
 class _VisiCalcHomeState extends State<VisiCalcHome> {
   // Hard-coded 5×5 sample spreadsheet — same data as VC2-html /
   // VC2-webcomp so the demos look visually identical across backends.
+  //
+  // Each row is PREFIXED with its 1-based row label ('1'..'5') so the
+  // grid renders a row-number gutter on the left, mirroring the
+  // SwiftUI / Qt / HTML hosts. The label occupies column 0; the five
+  // data columns A–E follow. `columnHeaders` (below) and the
+  // gutter-aware selection math account for this offset.
   static const _sampleRows = [
-    ['15', '3', '12', '8', '5'],
-    ['8', '14', '7', '22', '11'],
-    ['12', '9', '18', '6', '25'],
-    ['4', '11', '3', '17', '9'],
-    ['7', '5', '13', '10', '19'],
+    ['1', '15', '3', '12', '8', '5'],
+    ['2', '8', '14', '7', '22', '11'],
+    ['3', '12', '9', '18', '6', '25'],
+    ['4', '4', '11', '3', '17', '9'],
+    ['5', '7', '5', '13', '10', '19'],
   ];
 
   String _formula = '=SUM(B1:B5)';
@@ -72,14 +78,18 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
   // `r == editRow && c == editCol` line up across backends).
   // The host mirrors that on its state so the dispatch wiring
   // is a clean pass-through.
+  // Selection defaults to A1, which after the row-label gutter is
+  // column index 1 (column 0 is the '1'..'5' row-number gutter).
   double _selectedRow = 0;
-  double _selectedCol = 0;
+  double _selectedCol = 1;
   double _editRow = -1;
   double _editCol = -1;
   String _editContent = '';
 
   String get _cellAddress {
-    final colLetter = String.fromCharCode(65 + _selectedCol.toInt());
+    // Column 0 is the row-label gutter; data columns A–E start at
+    // index 1, so the letter is offset by one (`65 + col - 1`).
+    final colLetter = String.fromCharCode(65 + _selectedCol.toInt() - 1);
     return '$colLetter${_selectedRow.toInt() + 1}';
   }
 
@@ -149,9 +159,12 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Grid(
-                    columnHeaders: const ['A', 'B', 'C', 'D', 'E'],
+                    // Leading '' is the row-label gutter header (above
+                    // the '1'..'5' column); A–E label the data columns.
+                    columnHeaders: const ['', 'A', 'B', 'C', 'D', 'E'],
                     viewportRows: _sampleRows,
-                    columnWidths: const [96, 96, 96, 96, 96],
+                    // Narrow gutter (48) + five data columns (96 each).
+                    columnWidths: const [48, 96, 96, 96, 96, 96],
                     totalHeight: 400,
                     selectedRow: _selectedRow,
                     selectedCol: _selectedCol,
