@@ -5,3 +5,8 @@ build/
 *.iml
 local.properties
 out/
+
+# Vendored engine — the C ABI dynamic library the Java FFM API loads, built
+# by scripts/build.sh from the spreadsheet-capi crate (cdylib). A build
+# artifact, like the SwiftUI/Qt demos' Vendor/.
+native/
