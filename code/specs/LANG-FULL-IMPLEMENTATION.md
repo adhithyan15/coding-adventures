@@ -71,7 +71,10 @@ multiple languages; close an enabler before the features that depend on it.
   - ✅ **vm-core** (1/6) — `mask_result(v, type_hint, u8_wrap)` masks every arithmetic /
     bitwise / shift result to the hint width; unit-tested (`200u8+100u8=44`, `~0u8=255`,
     `1u8<<8=0`, u4/u16/u32). LLVM already wraps natively (`u8`→`i8`).
-  - ☐ **jit-core**, ☐ **iir-to-wasm**, ☐ **iir-to-jvm-class-file**, ☐ **iir-to-cil-bytecode**
+  - ✅ **jit-core** (2/6) — compiled tier emits a `MASK_WIDTH <reg> <bits>` opcode after a
+    narrow `_u8`/`_u16`/`_u32` add/sub/mul/div/neg (`u4`/signed handled by the interpreter
+    fallback); unit-tested. Matches vm-core's interpreter-tier mask.
+  - ☐ **iir-to-wasm**, ☐ **iir-to-jvm-class-file**, ☐ **iir-to-cil-bytecode**
     (mirror the per-backend byte-tape mask onto register arithmetic).
   - ☐ **Integration** — wire Nib (then Oct) to emit narrow `type_hint`s for narrow-declared
     values + an executed matrix proof (`200u8+100u8=44`, Nib unary `~`) across all backends;

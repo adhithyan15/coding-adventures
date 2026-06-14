@@ -5,6 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.5.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 2 of 6)
+
+### Added — the compiled tier wraps narrow-width arithmetic
+
+`GenericCirJit`'s bytecode compiler mapped every integer-width arithmetic op
+(`add_u8`, `mul_u16`, …) to the same width-erased `ADD_I64`/`MUL_I64`/… opcode
+and ran it at full `i64` width, so a JIT-compiled `200u8 + 100u8` produced `300`
+instead of `44`.  (The interpreter tier already wrapped via vm-core 0.5.0.)
+
+This adds a `MASK_WIDTH <reg> <bits>` opcode (`0x15`).  `compile_to_bytecode`
+now emits it right after a narrow-suffixed (`_u8`/`_u16`/`_u32`) add / sub / mul
+/ div / neg, and the run loop applies `regs[reg] &= (1<<bits)-1` — so the
+compiled tier wraps mod-2ⁿ exactly like vm-core's `mask_result`.  `u4` is not in
+the CIR allowlist, so a `u4`-typed op specialises to the generic path and runs
+on the interpreter tier (which masks it); the observable wrap is identical.
+Signed narrow types and `i64`/`u64`/`any` keep full machine width.
+
+Unit tests: `add_u8`/`mul_u8`/`sub_u8` wrap, `u16`/`u32` widths, `neg_u8`, and
+`i64`-width-does-not-mask.
+
 ## [0.4.1] — 2026-06-14 (CIROptimizer constant-propagation soundness fix)
 
 ### Fixed — stale constants no longer survive a reassignment or a block boundary
