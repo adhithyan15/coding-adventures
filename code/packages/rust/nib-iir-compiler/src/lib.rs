@@ -1069,6 +1069,14 @@ fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
         ("-", _) | (_, "MINUS")       => Some("sub"),
         ("*", _) | (_, "STAR")        => Some("mul"),
         ("/", _) | (_, "SLASH")       => Some("div"),
+        // Bitwise (LANG-FULL N3). The grammar's `bitwise_expr` level already
+        // produces these; they lower to the shared IIR `and`/`or`/`xor` ops, which
+        // every backend implements directly. (Unary `~` (TILDE) is deferred: a
+        // correct width-mask needs the integer-wrap enabler E2 — `~x` on a u8 must
+        // flip 8 bits, not the full 64-bit register.)
+        ("&", _) | (_, "AMP")         => Some("and"),
+        ("|", _) | (_, "PIPE")        => Some("or"),
+        ("^", _) | (_, "CARET")       => Some("xor"),
         // Comparisons
         ("==", _) | (_, "EQ_EQ")      => Some("cmp_eq"),
         ("!=", _) | (_, "NEQ")        => Some("cmp_ne"),
@@ -1148,6 +1156,23 @@ mod tests {
             "expected typed `div` op; got body: {body:?}");
         assert!(!body.iter().any(|i| i.op == "call_builtin"),
             "regression: `/` leaked a call_builtin; got body: {body:?}");
+    }
+
+    #[test]
+    fn compiles_bitwise_and_or_xor() {
+        // LANG-FULL N3: `&`/`|`/`^` lower to the shared IIR `and`/`or`/`xor` ops.
+        for (src, op) in [
+            ("fn main() -> u8 { return 12 & 10; }", "and"),
+            ("fn main() -> u8 { return 12 | 3; }", "or"),
+            ("fn main() -> u8 { return 6 ^ 5; }", "xor"),
+        ] {
+            let m = compile_source(src, "test").expect("ok");
+            let body = &m.functions[0].instructions;
+            assert!(body.iter().any(|i| i.op == op),
+                "expected typed `{op}` op for {src:?}; got body: {body:?}");
+            assert!(!body.iter().any(|i| i.op == "call_builtin"),
+                "regression: bitwise op leaked a call_builtin in {src:?}; got body: {body:?}");
+        }
     }
 
     #[test]

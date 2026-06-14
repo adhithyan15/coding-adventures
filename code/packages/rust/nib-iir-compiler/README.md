@@ -29,9 +29,10 @@ let obj = compile_module_macos_arm64_object(&m)?;
 
 ## Status
 
-Covers literals, let/return, identifiers, binary arithmetic (`+` `-` `*` `/`) /
-comparisons, `if`/`else`, `while`, `for` (exclusive `lo .. hi` range, LANG-FULL
-N2), and cross-function calls. `*` and `/` lower to the shared IIR `mul`/`div`
-(LANG-FULL N1). All of these run on every backend. Wrap/sat arithmetic, bitwise
-ops, `const`/`static`, and BCD are deferred — see CHANGELOG and
-`code/specs/LANG-FULL-IMPLEMENTATION.md`.
+Covers literals, let/return, identifiers, binary arithmetic (`+` `-` `*` `/`),
+bitwise (`&` `|` `^`, LANG-FULL N3), comparisons, `if`/`else`, `while`, `for`
+(exclusive `lo .. hi` range, LANG-FULL N2), and cross-function calls. `*`/`/`
+lower to the shared IIR `mul`/`div` (N1); `&`/`|`/`^` to `and`/`or`/`xor` (N3).
+All of these run on every backend. Wrap/sat arithmetic, unary `~` (needs the
+integer-wrap enabler E2), `&&`/`||`, `const`/`static`, and BCD are deferred — see
+CHANGELOG and `code/specs/LANG-FULL-IMPLEMENTATION.md`.

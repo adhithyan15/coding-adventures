@@ -1,5 +1,22 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.11.0 — 2026-06-13 — bitwise `&` `|` `^` (LANG-FULL N3)
+
+Adds Nib's binary bitwise operators. The grammar's `bitwise_expr` level already
+produced `AMP`/`PIPE`/`CARET` nodes routed through `compile_binary_chain`, so this
+is a `cir_op_for`-only change: `&` → `and`, `|` → `or`, `^` → `xor` (the shared IIR
+ops every backend implements).
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains
+`12 & 10` → 8, `12 | 3` → 15, `6 ^ 5` → 3, executed across
+native/LLVM/WASM/JVM/CLR/VM/JIT. (The CLR textual `.il` path was missing these
+opcodes — fixed in `iir-to-cil-bytecode` 0.19.0, surfaced by the executed test.)
+New unit test `compiles_bitwise_and_or_xor`.
+
+Unary `~` (bitwise NOT) is still deferred: a correct result needs to mask to the
+declared width (`~x` on a `u8` flips 8 bits, not the full 64-bit register), which
+depends on the integer-wrap enabler **E2**.
+
 ## 0.10.0 — 2026-06-13 — for loops (LANG-FULL N2)
 
 `compile_stmt` no longer returns `Unsupported("stmt: for_stmt")` — Nib's
