@@ -786,4 +786,5 @@ members = [
     "real-fpga-export",
     "fpga-place-route-bridge",
     "fpga-bitstream",
+    "spreadsheet-core",
 ]
