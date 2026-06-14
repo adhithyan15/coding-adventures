@@ -52,7 +52,9 @@ use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use serde_json::{json, Value};
-use spreadsheet_core::{CellAddress, CellValue, SheetId, SpreadsheetError, Workbook};
+use spreadsheet_core::{
+    column_index_to_letters, CellAddress, CellValue, ChangeSet, SheetId, SpreadsheetError, Workbook,
+};
 
 /// A single-sheet spreadsheet session with a JSON boundary.
 ///
@@ -161,6 +163,84 @@ impl SpreadsheetSession {
             map.insert(addr.to_a1(), value_to_json(&v));
         }
         Value::Object(map).to_string()
+    }
+
+    // ── Viewport primitive (virtualized infinite sheet) ──────────────
+    //
+    // These mirror the engine's `Workbook::get_window` / `used_range` /
+    // `changed_since` reads (1-based, inclusive coords) so a JS host can render
+    // only the visible window of an unbounded sheet. Coordinates are integers
+    // here, not A1 strings — a scrolling host computes them from pixel offsets.
+
+    /// Computed values for the inclusive 1-based rectangle, as JSON:
+    /// `{"row0":1,"col0":1,"rows":R,"cols":C,"values":[[<value>,…],…]}` where
+    /// each `<value>` is the usual value-object shape and `values` is a row-major
+    /// `R×C` array (empty cells included as `{"kind":"empty"}`). On a bad
+    /// request (inverted/oversized/0-coord) returns `{"error":"#REF!"}`.
+    pub fn get_window(&self, row0: u32, col0: u32, row1: u32, col1: u32) -> String {
+        match self.wb.get_window(self.sheet, row0, col0, row1, col1) {
+            Ok(w) => {
+                let mut rows = Vec::with_capacity(w.rows as usize);
+                for r in 0..w.rows {
+                    let mut row = Vec::with_capacity(w.cols as usize);
+                    for c in 0..w.cols {
+                        row.push(value_to_json(&w.values[(r * w.cols + c) as usize]));
+                    }
+                    rows.push(Value::Array(row));
+                }
+                json!({
+                    "row0": w.row0, "col0": w.col0,
+                    "rows": w.rows, "cols": w.cols,
+                    "values": rows,
+                })
+                .to_string()
+            }
+            Err(e) => json!({ "error": e.display() }).to_string(),
+        }
+    }
+
+    /// The data extent as JSON `{"minRow":…,"minCol":…,"maxRow":…,"maxCol":…}`,
+    /// or the JSON literal `null` if the sheet has no non-empty cells. A host
+    /// sizes its scrollable area to this.
+    pub fn used_range(&self) -> String {
+        match self.wb.used_range(self.sheet) {
+            Some(u) => json!({
+                "minRow": u.min_row, "minCol": u.min_col,
+                "maxRow": u.max_row, "maxCol": u.max_col,
+            })
+            .to_string(),
+            None => "null".to_string(),
+        }
+    }
+
+    /// The column letters for a 1-based column index (`1` → `"A"`, `27` → `"AA"`).
+    /// Hosts use this for the frozen header row instead of re-implementing the
+    /// base-26-bijective math.
+    pub fn column_letters(&self, index: u32) -> String {
+        column_index_to_letters(index)
+    }
+
+    /// The per-edit revision clock. A host snapshots this, then passes it to
+    /// [`changed_since`](Self::changed_since) to learn what changed in between.
+    pub fn current_revision(&self) -> u64 {
+        self.wb.current_revision()
+    }
+
+    /// Which cells changed since `since_revision`, as JSON:
+    /// `{"revision":N,"changed":["B2",…]}` (a complete deduped list), or
+    /// `{"revision":N,"stale":true}` when the query reaches before the retained
+    /// change log — the host then re-reads its whole visible window.
+    pub fn changed_since(&self, since_revision: u64) -> String {
+        match self.wb.changed_since(self.sheet, since_revision) {
+            ChangeSet::Delta { current_revision, changed } => {
+                let cells: Vec<Value> =
+                    changed.iter().map(|a| Value::String(a.to_a1())).collect();
+                json!({ "revision": current_revision, "changed": cells }).to_string()
+            }
+            ChangeSet::Stale { current_revision } => {
+                json!({ "revision": current_revision, "stale": true }).to_string()
+            }
+        }
     }
 }
 
@@ -331,5 +411,68 @@ mod tests {
         let mut s = SpreadsheetSession::new();
         s.set_cell("A1", "=SUM(A1:XFD1048576)");
         assert_eq!(s.get_value("A1"), r##"{"code":"#REF!","kind":"error"}"##);
+    }
+
+    // ── Viewport facade ──────────────────────────────────────────────
+
+    #[test]
+    fn get_window_returns_dense_row_major_json() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "15");
+        s.set_cell("B1", "3");
+        s.set_cell("C1", "=SUM(A1:B1)"); // 18
+        // Window A1:C1 — one row, three columns, computed values, dense.
+        let out = s.get_window(1, 1, 1, 3);
+        assert_eq!(
+            out,
+            r#"{"col0":1,"cols":3,"row0":1,"rows":1,"values":[[{"kind":"number","value":15.0},{"kind":"number","value":3.0},{"kind":"number","value":18.0}]]}"#
+        );
+    }
+
+    #[test]
+    fn get_window_includes_blanks_and_rejects_bad_requests() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "1"); // B1 left empty
+        let out = s.get_window(1, 1, 1, 2);
+        assert!(out.contains(r#"{"kind":"number","value":1.0}"#));
+        assert!(out.contains(r#"{"kind":"empty"}"#)); // blank cell present, not omitted
+        // 0-coord / oversized → an error object, never a panic.
+        assert_eq!(s.get_window(0, 0, 10, 10), r##"{"error":"#REF!"}"##);
+        assert_eq!(s.get_window(1, 1, 1000, 1000), r##"{"error":"#REF!"}"##);
+    }
+
+    #[test]
+    fn used_range_reports_extent_or_null() {
+        let mut s = SpreadsheetSession::new();
+        assert_eq!(s.used_range(), "null");
+        s.set_cell("A1", "1");
+        s.set_cell("Z100", "2");
+        assert_eq!(
+            s.used_range(),
+            r#"{"maxCol":26,"maxRow":100,"minCol":1,"minRow":1}"#
+        );
+    }
+
+    #[test]
+    fn column_letters_matches_excel() {
+        let s = SpreadsheetSession::new();
+        assert_eq!(s.column_letters(1), "A");
+        assert_eq!(s.column_letters(26), "Z");
+        assert_eq!(s.column_letters(27), "AA");
+        assert_eq!(s.column_letters(703), "AAA");
+    }
+
+    #[test]
+    fn changed_since_reports_delta_then_current_revision() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "1");
+        s.set_cell("B1", "=A1*10");
+        let snap = s.current_revision();
+        s.set_cell("A1", "9"); // A1 + dependent B1
+        let out = s.changed_since(snap);
+        assert!(out.contains("\"changed\""));
+        assert!(out.contains("\"A1\""));
+        assert!(out.contains("\"B1\""));
+        assert!(!out.contains("\"stale\""));
     }
 }

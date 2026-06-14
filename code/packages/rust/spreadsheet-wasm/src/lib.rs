@@ -195,6 +195,46 @@ pub extern "C" fn get_values() -> *mut u8 {
     pack(SESSION.with(|s| s.borrow().get_values()))
 }
 
+// ── Viewport primitive (virtualized infinite sheet) ──────────────────
+// These take integer coordinates directly (no pointer marshalling), so a
+// scrolling JS host can fetch just the visible window of an unbounded sheet.
+
+/// `get_window(row0, col0, row1, col1)` → window JSON (1-based, inclusive). See
+/// [`SpreadsheetSession::get_window`].
+#[no_mangle]
+pub extern "C" fn get_window(row0: u32, col0: u32, row1: u32, col1: u32) -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().get_window(row0, col0, row1, col1)))
+}
+
+/// `used_range()` → data-extent JSON, or the literal `null`. See
+/// [`SpreadsheetSession::used_range`].
+#[no_mangle]
+pub extern "C" fn used_range() -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().used_range()))
+}
+
+/// `column_letters(index)` → `"A"`/`"AA"`/… for a 1-based column index. See
+/// [`SpreadsheetSession::column_letters`].
+#[no_mangle]
+pub extern "C" fn column_letters(index: u32) -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().column_letters(index)))
+}
+
+/// `current_revision()` → the per-edit revision clock, returned directly (it's a
+/// plain integer, not a packed string). See
+/// [`SpreadsheetSession::current_revision`].
+#[no_mangle]
+pub extern "C" fn current_revision() -> u64 {
+    SESSION.with(|s| s.borrow().current_revision())
+}
+
+/// `changed_since(since)` → changed-cells JSON. See
+/// [`SpreadsheetSession::changed_since`].
+#[no_mangle]
+pub extern "C" fn changed_since(since: u64) -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().changed_since(since)))
+}
+
 // ---------------------------------------------------------------------------
 // Host-target tests: exercise the ABI exactly as the JS loader would, but in
 // Rust (so they run under `cargo test` with no WASM toolchain). We drive the
@@ -298,5 +338,36 @@ mod tests {
         reset();
         set("A1", "=1/0");
         assert_eq!(value("A1"), r##"{"code":"#DIV/0!","kind":"error"}"##);
+    }
+
+    #[test]
+    fn abi_viewport_round_trips() {
+        reset();
+        set("A1", "15");
+        set("B1", "3");
+        set("C1", "=SUM(A1:B1)"); // 18
+
+        // get_window over A1:C1 — integer coords passed straight through.
+        let w = take(get_window(1, 1, 1, 3));
+        assert!(w.contains(r#""rows":1"#) && w.contains(r#""cols":3"#), "{w}");
+        assert!(w.contains(r#"{"kind":"number","value":18.0}"#), "{w}");
+
+        // used_range covers A1..C1.
+        let u = take(used_range());
+        assert!(u.contains(r#""minRow":1"#) && u.contains(r#""maxCol":3"#), "{u}");
+
+        // column_letters beyond Z.
+        assert_eq!(take(column_letters(27)), "AA");
+
+        // revision clock + changed_since diff: editing A1 dirties A1 and its
+        // dependent C1, but not B1.
+        let snap = current_revision();
+        set("A1", "100");
+        let c = take(changed_since(snap));
+        assert!(c.contains("\"A1\"") && c.contains("\"C1\""), "{c}");
+        assert!(!c.contains("\"stale\""), "{c}");
+
+        // A bad window surfaces an error object — never a panic/trap.
+        assert_eq!(take(get_window(0, 0, 5, 5)), r##"{"error":"#REF!"}"##);
     }
 }

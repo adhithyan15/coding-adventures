@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0
+
+Viewport entry points for the virtualized infinite sheet, mirroring
+`spreadsheet-core-wasm` 0.2.0. Integer coordinates are passed directly (no
+pointer marshalling); JSON results use the existing `[len][bytes]` pack:
+
+- `get_window(row0, col0, row1, col1) -> *mut u8` (packed window JSON).
+- `used_range() -> *mut u8`, `column_letters(index) -> *mut u8`.
+- `current_revision() -> u64` (returned directly, not packed).
+- `changed_since(since: u64) -> *mut u8`.
+
 ## 0.1.0
 
 Initial release — the `extern "C"` + linear-memory WASM ABI over the

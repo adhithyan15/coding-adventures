@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0
+
+Viewport C ABI for the virtualized infinite sheet, mirroring
+`spreadsheet-core-wasm` 0.2.0 (`include/spreadsheet.h` now pulls in `<stdint.h>`
+for the integer widths):
+
+- `sc_get_window(s, row0, col0, row1, col1) -> char*` (window JSON; `{"error":..}`
+  on a bad/oversized request).
+- `sc_used_range(s) -> char*` (extent JSON or the literal `null`).
+- `sc_column_letters(s, index) -> char*` (1-based index → `"A"`/`"AA"`/…).
+- `sc_current_revision(s) -> uint64_t` (the per-edit clock; 0 if `s` is NULL).
+- `sc_changed_since(s, since) -> char*` (changed-cells JSON).
+
+Each `char*` is freed with `sc_string_free`, per the existing contract; a NULL
+session yields NULL / 0 rather than a crash.
+
 ## 0.1.0
 
 Initial release — the stable C ABI over the spreadsheet engine, for the native
