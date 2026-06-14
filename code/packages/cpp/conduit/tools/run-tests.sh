@@ -21,9 +21,15 @@ CAPI_DIR=$(cd ../../rust/conduit-capi && pwd)
 TARGET_REL=$(cd ../../rust && pwd)/target/release
 
 # ── 1. Build the C ABI and capture its native-static-libs ────────────────────
+# CARGO_TERM_COLOR=never: CI sets CARGO_TERM_COLOR=always, which makes rustc
+# colorize the "native-static-libs:" note — the trailing ANSI reset would get
+# captured into the link line (e.g. "-lm\033[0m" → ld: library 'm...' not found).
+# The ESC-stripping sed is a defensive second layer.
 echo "==> Building conduit-capi (release static lib)"
-NATIVE_LIBS=$(cd "$CAPI_DIR" && cargo rustc --release --crate-type staticlib -- \
-    --print native-static-libs 2>&1 | sed -n 's/.*native-static-libs: //p' | tail -1)
+ESC=$(printf '\033')
+NATIVE_LIBS=$(cd "$CAPI_DIR" && CARGO_TERM_COLOR=never cargo rustc --release \
+    --crate-type staticlib -- --print native-static-libs 2>&1 \
+    | sed -n 's/.*native-static-libs: //p' | tail -1 | sed "s/${ESC}\\[[0-9;]*m//g")
 echo "==> native-static-libs: ${NATIVE_LIBS:-(none)}"
 
 if [ ! -f "$TARGET_REL/libconduit_capi.a" ]; then

@@ -10,8 +10,12 @@ CAPI_DIR=$(cd ../../../packages/rust/conduit-capi && pwd)
 TARGET_REL=$(cd ../../../packages/rust && pwd)/target/release
 
 echo "==> Building conduit-capi"
-NATIVE_LIBS=$(cd "$CAPI_DIR" && cargo rustc --release --crate-type staticlib -- \
-    --print native-static-libs 2>&1 | sed -n 's/.*native-static-libs: //p' | tail -1)
+# CARGO_TERM_COLOR=never so the rustc note isn't colorized (CI forces color) —
+# otherwise a trailing ANSI reset gets captured into the link line.
+ESC=$(printf '\033')
+NATIVE_LIBS=$(cd "$CAPI_DIR" && CARGO_TERM_COLOR=never cargo rustc --release \
+    --crate-type staticlib -- --print native-static-libs 2>&1 \
+    | sed -n 's/.*native-static-libs: //p' | tail -1 | sed "s/${ESC}\\[[0-9;]*m//g")
 
 if [ -n "${CXX:-}" ] && command -v "$CXX" >/dev/null 2>&1; then COMPILER="$CXX";
 elif command -v clang++ >/dev/null 2>&1; then COMPILER=clang++;
