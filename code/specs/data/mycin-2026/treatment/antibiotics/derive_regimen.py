@@ -33,8 +33,25 @@ MYCIN = HERE.parent.parent
 sys.path.insert(0, str(MYCIN / "warm"))
 import decide as decide_mod  # noqa: E402
 
-FORMULARY = json.loads((HERE / "formulary.json").read_text())
-DRUGS = FORMULARY["drugs"]
+def load_formulary() -> tuple[dict, dict, str]:
+    """Prefer the GROUNDED, gated formulary from the CAS (formulary_build.py output);
+    fall back to the authored draft if the CAS hasn't been built yet. Returns
+    (drugs, organisms_by_scenario, provenance)."""
+    authored = json.loads((HERE / "formulary.json").read_text())
+    reg = HERE / "cas" / "registry.json"
+    if reg.exists():
+        root = json.loads(reg.read_text())["root"]
+        man = json.loads((HERE / "cas" / "objects" / f"{root}.json").read_text())
+        drugs = {d: {"covers": v["covers_accepted"], "csf_penetrant": v["csf_penetrant"],
+                     "contraindications": v["contraindications"], "betalactam": v["betalactam"],
+                     "tier": v["tier"], "dose": v["dose"],
+                     "source": f"grounded (formulary CAS {root})"}
+                 for d, v in man["drugs"].items()}
+        return drugs, authored["organisms_by_scenario"], f"CAS object {root} (spider-grounded + gated)"
+    return authored["drugs"], authored["organisms_by_scenario"], "authored draft (formulary.json; CAS not built)"
+
+
+DRUGS, SCENARIOS, FORMULARY_SOURCE = load_formulary()
 
 
 def candidates(exclusions: set[str]) -> list[str]:
@@ -112,7 +129,8 @@ def main() -> int:
     if cli is None:
         print("derive_regimen: adj-lang-cli not built", file=sys.stderr)
         return 3
-    org = FORMULARY["organisms_by_scenario"]
+    print(f"formulary: {FORMULARY_SOURCE}\n")
+    org = SCENARIOS
     derive(cli, "1) Adult community meningitis (no allergy, normal renal)",
            org["adult_community"], set(), set(), 70)
     derive(cli, "2) GENERALIZATION — post-neurosurgical (adds Pseudomonas/MRSA): no new rule",
