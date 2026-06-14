@@ -101,6 +101,23 @@ def parse_proportion(value_found: str) -> float | None:
     return v if 0.0 <= v <= 1.0 else None
 
 
+KNOWN_STATUS = {"grounded", "direction_only", "refuted", "ungrounded", "missing"}
+
+
+def safe_status(status: object) -> str:
+    """The spider_status is semi-trusted (spider/web/LLM-derived) and is interpolated into
+    a `% [FLAG: <status>]` COMMENT in the generated rulebook. An adj-lang line comment ends
+    at a newline, so a crafted status containing a newline could close the comment and inject
+    a live clause. Coerce anything outside the known vocabulary to a safe literal (strip to
+    [a-z_], bounded) so no untrusted bytes reach the generated program — the same discipline
+    cite() applies to source titles."""
+    s = str(status)
+    if s in KNOWN_STATUS:
+        return s
+    cleaned = re.sub(r"[^a-z_]", "", s.lower())[:32]
+    return cleaned or "ungrounded"
+
+
 def gate(status: str) -> tuple[str, str]:
     """(verdict, trust) for a gradeable clause given its spider_status."""
     if status == "grounded":
@@ -168,7 +185,7 @@ def build(check: bool = False) -> int:
         verdict, trust = gate(status)
         grounded_val = parse_proportion((rec or {}).get("grounded", {}).get("value_found", "")) if rec else None
         value = grounded_val if (verdict == "ACCEPT" and grounded_val is not None) else fallback
-        tag = "" if verdict == "ACCEPT" else "   % [FLAG: " + status + "]"
+        tag = "" if verdict == "ACCEPT" else "   % [FLAG: " + safe_status(status) + "]"
         lines += [f"    prior {value} for {org}",
                   f'        source "{cite(rec)}"',
                   f"        trust {trust}{tag}"]
@@ -183,7 +200,7 @@ def build(check: bool = False) -> int:
         # near-certainty (like csf_culture in the meningitis arm), so trust consensus
         # when the mapping is grounded.
         trust = "consensus" if verdict == "ACCEPT" else "inferred"
-        tag = "" if verdict == "ACCEPT" else "   % [FLAG: " + status + "]"
+        tag = "" if verdict == "ACCEPT" else "   % [FLAG: " + safe_status(status) + "]"
         lines += [f"    contributes {lr} from csf_gram_morphology({morph}) to {org}",
                   f'        source "{cite(rec)}"',
                   f"        trust {trust}{tag}"]
@@ -208,7 +225,7 @@ def build(check: bool = False) -> int:
         # The ASSOCIATION is grounded; the LR magnitude is structural (a risk-multiplier),
         # so a grounded host factor is consensus-level — like the morphology mappings.
         trust = "consensus" if verdict == "ACCEPT" else "inferred"
-        tag = "" if verdict == "ACCEPT" else "   % [FLAG: " + status + "]"
+        tag = "" if verdict == "ACCEPT" else "   % [FLAG: " + safe_status(status) + "]"
         lines += [f"    contributes {lr} from {evidence} to {org}",
                   f'        source "{cite(rec)}"',
                   f"        trust {trust}{tag}"]

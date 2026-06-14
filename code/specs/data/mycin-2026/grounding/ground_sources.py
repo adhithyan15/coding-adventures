@@ -40,9 +40,11 @@ LEDGER = MYCIN / "PROVENANCE-LEDGER.md"
 ORG_MANIFEST = MYCIN / "diagnosis" / "organisms" / "organism-id-manifest.json"
 DOSE_GROUNDING = HERE / "dose-window-grounding.json"
 FORMULARY_REGISTRY = MYCIN / "treatment" / "antibiotics" / "cas" / "registry.json"
+UTI_GROUNDING = HERE / "uti-id-grounding.json"                       # G4 — new specialty
+UTI_MANIFEST = MYCIN / "diagnosis" / "uti" / "uti-id-manifest.json"
 
 # Every grounding file whose records cite sources we decompose + verify against.
-GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING, DOSE_GROUNDING]
+GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING, DOSE_GROUNDING, UTI_GROUNDING]
 
 
 def _records(*files: Path) -> list[dict]:
@@ -168,6 +170,21 @@ def commit_and_verify() -> int:
             "name": "meningitis dosing", "path": "treatment/antibiotics/formulary.json",
             "grounded": ds["grounded"], "flagged": ds["direction_only"],
             "authored_debt": ds["refuted"] + ds["pending"], "rows": dose_rows})
+
+    # 2c. UTI organism identification (G4 — the first specialty expansion). Its cited
+    #     sources are not yet decomposed, so citation rows show pending until a UTI
+    #     decompose-source run lands them in the CAS (a noted follow-up).
+    if UTI_GROUNDING.exists():
+        uti_rows, c = _verify_rows(_records(UTI_GROUNDING), by_url)
+        for k in tot:
+            tot[k] += c[k]
+        uman = json.loads(UTI_MANIFEST.read_text()) if UTI_MANIFEST.exists() else {"clauses": {}}
+        artifacts.append({
+            "name": "UTI organism identification", "path": "diagnosis/uti/uti-id.adj",
+            "grounded": sum(1 for x in uman["clauses"].values() if x["verdict"] == "ACCEPT"),
+            "flagged": sum(1 for x in uman["clauses"].values() if x["verdict"] == "FLAG"),
+            "authored_debt": sum(1 for x in uman["clauses"].values() if x["verdict"] == "PENDING"),
+            "rows": uti_rows})
 
     # 3. Rebuild the system-wide provenance ledger.
     LEDGER.write_text(harness.build_ledger(artifacts) +
