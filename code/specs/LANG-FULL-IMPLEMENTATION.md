@@ -120,9 +120,17 @@ backend immediately) come before the enabler-dependent items.
 - ☐ **N7** — `+%` (wrap add) / `+?` (saturating add) (needs **E2**).
 
 ### Oct  (sister to Nib)
-- ☐ **O1** — `&&` / `||` short-circuit (currently eager bitwise — wrong for side effects).
-- ☐ **O2** — proper `~` 8-bit mask + u8 wrap (needs **E2**).
-- ☐ **O3** — `static` globals (currently silently dropped).
+> ⚠ **Oct is matrix-unverifiable for value-level features.** Oct's type checker forces
+> `main` to be **void and return no value**, so every Oct program exits 0 — the matrix can
+> only ever prove "runs, exits 0", never a computed result. With bool-only `&&`/`||`
+> operands, no side effects, and no division/traps, short-circuit vs. eager-bitwise is
+> *behaviorally indistinguishable*; O1/O2/O3 can't satisfy "verified by RUNNING". Skip the
+> Oct feature items until Oct grows an observable (stdout/print or a value-returning main),
+> or treat Oct as parse/typecheck-only. (Finding: 2026-06-13.)
+- ⏸ **O1** — `&&` / `||` short-circuit. Correct semantics, but **unverifiable** (see above) —
+  eager-bitwise is already behaviorally correct for Oct's observable surface. Deferred.
+- ☐ **O2** — proper `~` 8-bit mask + u8 wrap (needs **E2**; also unverifiable until Oct has output).
+- ⏸ **O3** — `static` globals (currently silently dropped) — unverifiable until Oct has output.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).
   These are hardware-specific; on general backends they need a host/IIR-builtin model or a
   defined semantics. **Decision point — surface to the user before implementing.**
@@ -134,8 +142,17 @@ backend immediately) come before the enabler-dependent items.
   smoke-test gap into real coverage with no new language features.)
 
 ### Dartmouth BASIC
-- ☐ **BA0** — fix the `#[ignore]`d wasm `cmp_le`/`cmp_gt` lowering so FOR/IF actually
-  *encode+run* on WASM (currently a known bug). Add executed FOR/IF/GOTO matrix programs.
+- ✅ **BA0** — BASIC control flow on the code-gen backends. The real bug wasn't wasm
+  (`iir-to-wasm` already lowers all `cmp_*`; the `#[ignore]`s were stale and are removed) —
+  it was the BASIC compiler emitting `cmp_*` with a **`bool`** type hint, so LLVM compared
+  at 1-bit `i1` width (`7 > 5` → `1 > 1` → false). Fixed to emit the `i64` operand width
+  (like Nib/Oct/ALGOL). Verified by RUNNING `FOR I = 1 TO 5: S = S + I`→`15` and
+  `IF A > 5 THEN 100`→`7` across native/LLVM/WASM/CLR/VM/JIT.
+- ☐ **BA-JVM-1** — BASIC branch (`IF`/`FOR`) **+ `print_i64`** on the JVM. The two BA0
+  control-flow programs are excluded from the JVM cell: `iir-to-jvm-class-file`'s
+  StackMapTable generation trips on the frame at a branch target when several `long`
+  locals are live across a host-method invoke. (A print with no branch and a loop with no
+  print both work on JVM; only the combination fails.) A self-contained `iir-to-jvm` fix.
 - ☐ **BA1** — `GOSUB` / `RETURN` (needs **E7**).
 - ☐ **BA2** — multi-item `PRINT`, `;`/`,` separators, more relops.
 - ☐ **BA3** — arrays / `DIM` (needs **E5**).

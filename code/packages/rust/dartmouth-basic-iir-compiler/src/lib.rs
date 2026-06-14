@@ -423,9 +423,13 @@ impl Compiler {
         let lhs = self.emit_expr(exprs[0])?;
         let rhs = self.emit_expr(exprs[1])?;
         let cond = self.fresh_temp();
+        // The `type_hint` on a comparison is the OPERAND width, not the (always
+        // boolean) result — the IIR-to-* backends size the machine compare from
+        // it (`i1 sgt` truncates to a 1-bit compare, the LANG-FULL BA0 bug).
+        // BASIC's scalars materialise as `i64`, matching Nib/Oct/ALGOL.
         self.emit(cmp_op, Some(&cond),
             vec![Operand::Var(lhs), Operand::Var(rhs)],
-            "bool");
+            "i64");
 
         // THEN target — find the NUMBER token (after the THEN keyword).
         let target_line = extract_if_target(stmt)?;
@@ -487,9 +491,11 @@ impl Compiler {
         // `var <= limit` is false from the start.  This matches the
         // PL05 spec's "two-test loop semantics like the BASIC manual" —
         // the user can manually compute the right comparison.
+        // Operand width is `i64` (see the IF note above) — `"bool"` made the
+        // backends emit a 1-bit `i1` compare, breaking FOR on LLVM/WASM.
         self.emit("cmp_le", Some(&cond),
             vec![Operand::Var(var.clone()), Operand::Var(limit_slot.clone())],
-            "bool");
+            "i64");
         self.emit("jmp_if_false", None,
             vec![Operand::Var(cond), Operand::Var(end_label.clone())],
             "void");
