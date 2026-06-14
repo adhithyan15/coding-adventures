@@ -206,13 +206,21 @@ inline ConduitResponse* conduit_cpp_before_tramp(void* ctx, const ConduitRequest
 inline ConduitResponse* conduit_cpp_after_tramp(void* ctx, const ConduitRequest* req,
                                                 ConduitResponse* current) {
     auto* fn = static_cast<AfterHandler*>(ctx);
-    Request r(req);
-    Response cur = Response::fromC(current);
-    conduit_response_free(current);  // we own `current`: read then free
+    // Everything that can allocate (fromC, the user hook, toC's header loop) must
+    // be inside the try so no C++ exception unwinds across this extern "C" frame.
+    // `current` is freed exactly once: on the happy path after reading it, or in
+    // the catch if fromC threw before we got there.
     try {
+        Request r(req);
+        Response cur = Response::fromC(current);  // may throw (allocates)
+        conduit_response_free(current);
+        current = nullptr;
         return (*fn)(r, std::move(cur)).toC();
     } catch (...) {
-        return Response::text("after hook error", 500).toC();
+        if (current) conduit_response_free(current);
+        // Build the fallback with a single C call — no C++ allocation that could
+        // itself throw out of this handler under OOM.
+        return conduit_response_new(500, nullptr, 0);
     }
 }
 
