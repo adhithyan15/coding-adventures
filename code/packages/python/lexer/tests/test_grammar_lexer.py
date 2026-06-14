@@ -1902,3 +1902,109 @@ class TestCaseInsensitiveKeywords:
         tok = non_eof[0]
         assert _token_type_name(tok) == "STRING"
         assert tok.value == "Ada"
+
+
+# ============================================================================
+# F10 — declarative lexer mode transitions (regex-vs-division)
+# ============================================================================
+#
+# These mirror the Rust `grammar_lexer.rs` F10 suite. A flat `div` mode is
+# entered after value-producing tokens (where `/` is DIVISION); operators
+# return to `default` (where `/` starts a REGEX). The `div` mode inherits the
+# default patterns, overriding only the slash tokens.
+
+
+def _f10_regex_div_grammar() -> TokenGrammar:
+    """A minimal regex-vs-division grammar with a flat `div` mode."""
+    return parse_token_grammar(
+        "NAME = /[a-z]+/\n"
+        "REGEX = /\\/[a-z]+\\//\n"
+        'SLASH_EQUALS = "/="\n'
+        'SLASH = "/"\n'
+        'EQUALS = "="\n'
+        'PLUS = "+"\n'
+        "\n"
+        "group div:\n"
+        '  SLASH_EQUALS = "/="\n'
+        '  SLASH = "/"\n'
+        "\n"
+        "start_mode: default\n"
+        "transitions:\n"
+        "  on NAME -> set-mode div\n"
+        "  on (EQUALS | PLUS | SLASH | SLASH_EQUALS | REGEX) -> set-mode default\n"
+    )
+
+
+def _names(tokens: list[Token]) -> list[str]:
+    """The grammar token names (UPPER_SNAKE), excluding EOF."""
+    return [_token_type_name(t) for t in tokens if _token_type_name(t) != "EOF"]
+
+
+class TestF10ModeTransitions:
+    """Declarative mode transitions interpreted by the GrammarLexer."""
+
+    def test_division_chain_lexed_as_slashes(self) -> None:
+        # `a/b/c` in operand position: each `/` is division, not a regex.
+        grammar = _f10_regex_div_grammar()
+        toks = grammar_tokenize("a/b/c", grammar)
+        assert _names(toks) == ["NAME", "SLASH", "NAME", "SLASH", "NAME"]
+
+    def test_regex_in_expression_position(self) -> None:
+        # After `=`, a `/.../` is a regex literal.
+        grammar = _f10_regex_div_grammar()
+        toks = grammar_tokenize("x=/ab/", grammar)
+        assert _names(toks) == ["NAME", "EQUALS", "REGEX"]
+
+    def test_flat_mode_inherits_default_patterns(self) -> None:
+        # In `div` mode a NAME has no override, so it must be matched via
+        # inheritance from the default group. If inheritance were off the
+        # second identifier would fail to lex.
+        grammar = _f10_regex_div_grammar()
+        toks = grammar_tokenize("ab cd", grammar)
+        assert _names(toks) == ["NAME", "NAME"]
+
+    def test_slash_equals_override_beats_inherited_regex(self) -> None:
+        # `a/=b` — in div mode the `/=` override wins over inherited REGEX/SLASH.
+        grammar = _f10_regex_div_grammar()
+        toks = grammar_tokenize("a/=b", grammar)
+        assert _names(toks) == ["NAME", "SLASH_EQUALS", "NAME"]
+
+    def test_no_transitions_is_backward_compatible(self) -> None:
+        # The SAME tokens without a transitions table: REGEX greedily wins, so
+        # `a/b/c` lexes as NAME REGEX NAME (the pre-F10 behaviour).
+        grammar = parse_token_grammar(
+            "NAME = /[a-z]+/\n"
+            "REGEX = /\\/[a-z]+\\//\n"
+            'SLASH = "/"\n'
+        )
+        toks = grammar_tokenize("a/b/c", grammar)
+        assert _names(toks) == ["NAME", "REGEX", "NAME"]
+
+    def test_push_region_stays_exclusive(self) -> None:
+        # A `push`ed region is NOT a flat mode: it does NOT inherit default,
+        # preserving F04 exclusivity. The `tag` region only knows WORD/CLOSE;
+        # the default BANG is invisible inside it.
+        grammar = parse_token_grammar(
+            'OPEN = "<"\n'
+            'BANG = "!"\n'
+            "group tag:\n"
+            "  WORD = /[a-z]+/\n"
+            '  CLOSE = ">"\n'
+            "transitions:\n"
+            "  on OPEN -> push tag\n"
+            "  on CLOSE -> pop\n"
+        )
+        # Inside the region, `!` (a default token) must NOT match.
+        with pytest.raises(LexerError):
+            grammar_tokenize("<a!>", grammar)
+        # A well-formed region tokenizes; after `>` we pop back to default
+        # where `!` is valid again.
+        toks = grammar_tokenize("<ab>!", grammar)
+        assert _names(toks) == ["OPEN", "WORD", "CLOSE", "BANG"]
+
+    def test_start_mode_is_respected(self) -> None:
+        # Starting directly in `div` means the first `/` is a division slash.
+        grammar = _f10_regex_div_grammar()
+        grammar.start_mode = "div"
+        toks = grammar_tokenize("a/b", grammar)
+        assert _names(toks) == ["NAME", "SLASH", "NAME"]

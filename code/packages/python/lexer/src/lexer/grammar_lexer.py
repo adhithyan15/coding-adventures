@@ -453,9 +453,50 @@ class GrammarLexer:
                     self._alias_map[defn.name] = defn.alias
             self._group_patterns[group_name] = compiled
 
-        # The group stack. Bottom is always "default". Top is the active
-        # group whose patterns are tried during token matching.
-        self._group_stack: list[str] = ["default"]
+        # --- F10: declarative lexer mode transitions ---
+        # A ``.tokens`` grammar may declare a ``transitions:`` table plus a
+        # ``start_mode:``. The table is pure data (``ModeTransition`` /
+        # ``TransitionAction``); the lexer interprets it after every token
+        # (see ``_apply_transitions``) to switch the active mode — enabling
+        # context-sensitive lexing (JavaScript regex-vs-division) WITHOUT a
+        # hand-written ``on-token`` callback. Empty table ⇒ behaviour identical
+        # to F04 (every helper early-returns / stays inert).
+        self._transitions = list(getattr(grammar, "transitions", []) or [])
+
+        # The mode the lexer starts in. Defaults to "default" (the base group).
+        # If a grammar names a mode with no group, fall back to "default" so
+        # tokenization never crashes on a malformed compiled artifact (the
+        # validator rejects this upstream; this is defence in depth).
+        start_mode = getattr(grammar, "start_mode", None)
+        if start_mode and (
+            start_mode in self._group_patterns or start_mode == "default"
+        ):
+            self._start_mode = start_mode
+        else:
+            self._start_mode = "default"
+
+        # A group reached via ``set-mode`` is a FLAT MODE that inherits the
+        # default group's patterns (its own patterns win on priority); a group
+        # reached only via ``push`` stays EXCLUSIVE (F04 nested-region
+        # semantics). ``push`` wins the classification when a group is both.
+        # Derived once from the table so ``_try_match_token_in_group`` can fall
+        # through to the default patterns for flat modes.
+        set_mode_targets: set[str] = set()
+        push_targets: set[str] = set()
+        for rule in self._transitions:
+            for action in rule.actions:
+                if action.kind == "set_mode" and action.target:
+                    set_mode_targets.add(action.target)
+                elif action.kind == "push" and action.target:
+                    push_targets.add(action.target)
+        self._inheriting_modes: frozenset[str] = frozenset(
+            m for m in set_mode_targets if m != "default" and m not in push_targets
+        )
+
+        # The group stack. Bottom is the configured start mode (F10); "default"
+        # for grammars without a ``start_mode:``. Top is the active group whose
+        # patterns are tried during token matching.
+        self._group_stack: list[str] = [self._start_mode]
 
         # On-token callback â€” None means no callback (zero overhead).
         self._on_token: (
@@ -762,7 +803,15 @@ class GrammarLexer:
                     # Apply skip toggle if the callback changed it.
                     if ctx._skip_enabled is not None:
                         self._skip_enabled = ctx._skip_enabled
+
+                    # F10: the declarative table is the default; a registered
+                    # callback runs first (above) and the table refines, so the
+                    # resulting mode governs the NEXT token match.
+                    self._apply_transitions(token)
                 else:
+                    # F10: consult the declarative table so the new mode governs
+                    # the NEXT match. No-op when the grammar has no transitions.
+                    self._apply_transitions(token)
                     tokens.append(token)
                     self._last_emitted_token = token
                 continue
@@ -791,7 +840,8 @@ class GrammarLexer:
         ))
 
         # Reset state for reuse (in case tokenize is called again).
-        self._group_stack = ["default"]
+        # F10: reset to the configured start mode, not the bare "default".
+        self._group_stack = [self._start_mode]
         self._skip_enabled = True
         self._last_emitted_token = None
         self._bracket_depths = {"paren": 0, "bracket": 0, "brace": 0}
@@ -1162,6 +1212,16 @@ class GrammarLexer:
         remaining = self._source[self._pos:]
         patterns = self._group_patterns.get(group_name, self._patterns)
 
+        # F10: a flat mode (a ``set-mode`` target) inherits the default group's
+        # patterns. Its own patterns take priority (tried first below); the rest
+        # fall through by appending the default patterns. Nested ``push`` regions
+        # are NOT in ``_inheriting_modes`` and so stay exclusive (F04 / XML).
+        if (
+            group_name != "default"
+            and group_name in self._inheriting_modes
+        ):
+            patterns = list(patterns) + self._group_patterns["default"]
+
         for token_name, pattern in patterns:
             match = pattern.match(remaining)
             if match:
@@ -1265,6 +1325,72 @@ class GrammarLexer:
                 return token
 
         return None
+
+    # -- F10: declarative mode transitions ------------------------------------
+
+    @staticmethod
+    def _transition_key(token: Token) -> str:
+        """Return the grammar token NAME used to match transition rules (F10).
+
+        Token identity in a ``.tokens`` grammar is UPPER_SNAKE (``NAME``,
+        ``SLASH``, ``RPAREN``, ``KEYWORD``, ...). A matched token's ``type`` is
+        either a string (custom token names and promoted ``KEYWORD``) — returned
+        verbatim — or a ``TokenType`` enum member whose ``.name`` is already the
+        UPPER_SNAKE grammar name (unlike Rust's CamelCase variants, so no
+        inverse table is needed here).
+        """
+        ttype = token.type
+        if isinstance(ttype, str):
+            return ttype
+        # TokenType enum member — its name is the UPPER_SNAKE grammar key.
+        return ttype.name
+
+    def _apply_transitions(self, token: Token) -> None:
+        """Apply the declarative mode-transition table after ``token`` is emitted.
+
+        The first rule whose trigger token-name, optional ``in MODE`` guard, and
+        optional keyword-value guard all match wins; its actions mutate the
+        active-mode register (top of ``_group_stack``) and/or the skip flag:
+
+        - ``set_mode`` — replace the active mode in place (flat toggle, no depth
+          change). This is how JS regex-vs-division position is tracked.
+        - ``push`` / ``pop`` — F04 nested-region save/restore (templates).
+        - ``enable_skip`` / ``disable_skip`` — toggle skip processing.
+
+        No-op when the table is empty (behaviour identical to F04).
+        """
+        if not self._transitions:
+            return
+        key = self._transition_key(token)
+        active = self._group_stack[-1] if self._group_stack else "default"
+
+        matched_actions = None
+        for rule in self._transitions:
+            if key not in rule.on_tokens:
+                continue
+            if rule.in_mode is not None and rule.in_mode != active:
+                continue
+            if rule.on_value is not None and rule.on_value != token.value:
+                continue
+            matched_actions = rule.actions
+            break
+
+        if matched_actions is None:
+            return
+        for action in matched_actions:
+            if action.kind == "set_mode":
+                if self._group_stack and action.target is not None:
+                    self._group_stack[-1] = action.target
+            elif action.kind == "push":
+                if action.target is not None:
+                    self._group_stack.append(action.target)
+            elif action.kind == "pop":
+                if len(self._group_stack) > 1:
+                    self._group_stack.pop()
+            elif action.kind == "enable_skip":
+                self._skip_enabled = True
+            elif action.kind == "disable_skip":
+                self._skip_enabled = False
 
     def _advance(self) -> None:
         """Move position forward by one character, tracking line and column.
