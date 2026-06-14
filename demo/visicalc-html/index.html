@@ -14,12 +14,14 @@
   `Grid.desktop.mll` is now a one-line `pkg::mosaic-pkg-grid::Grid (
   ... )` reference (UI34 §5).  `mosaic-compile`'s package resolver
   substitutes the package's full Grid + Cell composition at build
-  time.  The HTML emitter produces a STATIC TEMPLATE with these
-  markers:
-
-    <!-- mosaic-for each="X" as="Y" index="Z" -->...<!-- /mosaic-for -->
-    <!-- mosaic-if when="EXPR" -->...<!-- mosaic-else -->...<!-- /mosaic-if -->
-    {{name}}
+  time.  The HTML emitter produces a STATIC TEMPLATE built from
+  HTML marker-comments — `mosaic-for` (with each / as / index
+  attributes), `mosaic-if` / `mosaic-else`, their closing
+  `/mosaic-for` and `/mosaic-if` partners — plus `{{name}}`
+  mustache interpolation placeholders.  (The literal marker syntax
+  isn't reproduced in this banner: an HTML comment can't contain a
+  close-comment sequence, and the markers end in one, so spelling
+  them out here would prematurely terminate this very comment.)
 
   The inline `<script>` below carries a ~80-line template-expander
   that hydrates the template with hard-coded sample data, so the
@@ -166,7 +168,7 @@
         <tr>
           <!-- mosaic-for each="row" as="v" index="c" -->
             <td>
-              <div style="border-width: 1px; border-style: solid; border-color: #3f3f46; padding: 2px; height: 22px">
+              <div style="border-width: 1px; border-style: solid; border-color: #3f3f46; padding: 2px; height: 22px; text-align: right">
                 <!-- mosaic-if when="( r == editRow &amp;&amp; c == editCol )" -->
                   <input type="text" value="{{editContent}}">
                 <!-- mosaic-else -->
