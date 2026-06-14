@@ -157,6 +157,30 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — `for` loop (LANG-FULL N2). Desugars to the canonical counter loop; the range
+    // `1 .. 6` is exclusive (`i = 1,2,3,4,5`), summing the loop variable into a local
+    // accumulator → 15. Reassigning the loop counter + a local each iteration is the same
+    // slot-mutation shape every backend already lowers for Brainfuck's pointer. Executed
+    // on every backend. (The accumulator is a `let` local, not a parameter: the IIR-to-LLVM
+    // backend allocas locals but keeps params in SSA, so reassigning a *parameter* in a
+    // loop is a separate backend limitation, out of scope for N2.)
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u4 { let s: u4 = 0; for i: u4 in 1 .. 6 { s = s + i; } return s; }",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — nested `for` loops (LANG-FULL N2). 3 × 2 = 6 body executions; proves distinct
+    // loop labels and nested counter reassignment lower correctly on every backend.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u4 { let s: u4 = 0; \
+               for i: u4 in 0 .. 3 { for j: u4 in 0 .. 2 { s = s + 1; } } return s; }",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,
