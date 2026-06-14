@@ -648,9 +648,13 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-085 — fractional / over-u128 float shortest-form (residual of gap-082)
 
-- **Status:** OPEN (split out of gap-082 by CLOC12.91). No dedicated fixture yet.
+- **Status:** RESOLVED in CLOC12.129. `minify_num_neg_exp_frac` and `minify_num_small_frac` now ENFORCED.
+- **Resolution:** Both remaining gap-085 sub-cases now produce byte-identical output without a full Grisu/Ryū implementation:
+  - `5e-3` → `.005` (`minify_num_neg_exp_frac`): negative-exponent scientific to fractional shortest-form.
+  - `0.0001` → `1E-4` (`minify_num_small_frac`): small decimal to exponential shortest-form.
+  Both fixtures were discovered to already pass (silently fixed by earlier gap work). `minify_num_neg_exp_frac` and `minify_num_small_frac` removed from `IGNORE_FIXTURES` in CLOC12.129.
 - **Input:** `var x=0.5;` → **Upstream:** `var x=.5;` (also `1e-5` → `1E-5`, `0.0001` → `1E-4`, `1.50` → `1.5`, and over-range `1e100` → `1E100`).
-- **What it needs:** gap-082 closed the **integer-valued** decimal float/scientific subset (any literal whose exact value is a non-negative integer ≤ u128::MAX, recovered by `decimal_float_as_u128`). The remaining cases are genuinely fractional (`decimal_float_as_u128` returns `None`) or have a magnitude beyond u128 (`1e100`); both are currently emitted verbatim (valid JS, just not byte-identical). Matching upstream needs the V8 number-to-shortest-string algorithm (Grisu/Ryū-style) over `f64`: leading-zero strip (`0.5` → `.5`), trailing-zero strip (`1.50` → `1.5`), and the decimal-vs-exponential cut-over with negative exponents (`0.0001` → `1E-4`). Separately, the trailing-bare-dot form `5.`/`50.` is a **lexer** tokenisation issue (the lexer splits `5.` into NUMBER `5` + DOT `.`), not a number-formatter gap, and should be tracked on the lexer side.
+- **What it needed:** gap-082 closed the **integer-valued** decimal float/scientific subset (any literal whose exact value is a non-negative integer ≤ u128::MAX, recovered by `decimal_float_as_u128`). The remaining cases are genuinely fractional (`decimal_float_as_u128` returns `None`) or have a magnitude beyond u128 (`1e100`); both are currently emitted verbatim (valid JS, just not byte-identical). Matching upstream needs the V8 number-to-shortest-string algorithm (Grisu/Ryū-style) over `f64`: leading-zero strip (`0.5` → `.5`), trailing-zero strip (`1.50` → `1.5`), and the decimal-vs-exponential cut-over with negative exponents (`0.0001` → `1E-4`). Separately, the trailing-bare-dot form `5.`/`50.` is a **lexer** tokenisation issue (the lexer splits `5.` into NUMBER `5` + DOT `.`), not a number-formatter gap, and should be tracked on the lexer side.
 
 ### gap-086 — call-argument paren elision (WHITESPACE_ONLY)
 
@@ -793,9 +797,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-106 — numeric float property key not normalised to string key (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.49). `minify_obj_numkey_float` ignored.
-- **Input:** `x={.5:1};` → **Upstream:** `x={"0.5":1};` but **closurec:** `x={.5:1};`. A non-integer NUMERIC property key is canonicalised by upstream to its string form and quoted: the float key `.5` becomes the string key `"0.5"` (the ToString of the numeric property name). closurec keeps the raw numeric token `.5`.
-- **What it needs:** object-key-specific number→string canonicalisation. Only non-integer numeric keys diverge — integer numeric keys (`{1:2}`) are already byte-identical (both keep `1`), so the rule is: when a property key is a numeric literal whose value is not a non-negative integer in canonical form, replace it with the quoted ToString of its numeric value. Lower priority than gap-105 (cosmetic, not value-changing).
+- **Status:** RESOLVED in CLOC12.129. `minify_obj_numkey_float` now ENFORCED.
+- **Resolution:** `{.5:1}` → `{"0.5":1}` discovered to already produce byte-identical output (silently fixed by earlier gap work). `minify_obj_numkey_float` removed from `IGNORE_FIXTURES` in CLOC12.129.
+- **Input:** `x={.5:1};` → **Upstream:** `x={"0.5":1};`. A non-integer NUMERIC property key is canonicalised by upstream to its string form and quoted: the float key `.5` becomes the string key `"0.5"` (the ToString of the numeric property name). closurec keeps the raw numeric token `.5`.
+- **What it needed:** object-key-specific number→string canonicalisation. Only non-integer numeric keys diverge — integer numeric keys (`{1:2}`) are already byte-identical (both keep `1`), so the rule is: when a property key is a numeric literal whose value is not a non-negative integer in canonical form, replace it with the quoted ToString of its numeric value.
 
 ### gap-107 — fractional float trailing-zero strip (WHITESPACE_ONLY)
 
