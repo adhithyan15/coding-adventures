@@ -2205,6 +2205,82 @@ pub fn hue_package_review_queue_summary(
     HuePackageReviewQueueSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageAcceptanceSummary {
+    pub review_queue_summary: HuePackageReviewQueueSummary,
+    pub required_acceptance_check_count: usize,
+    pub passed_acceptance_check_count: usize,
+    pub failed_acceptance_check_count: usize,
+    pub lifecycle_complete: bool,
+    pub review_queues_clear: bool,
+    pub publish_gate_ready: bool,
+    pub package_accepted: bool,
+}
+
+impl HuePackageAcceptanceSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_review_queue_summary(hue_package_review_queue_summary(plan))
+    }
+
+    pub fn from_review_queue_summary(review_queue_summary: HuePackageReviewQueueSummary) -> Self {
+        let lifecycle_complete = review_queue_summary
+            .lifecycle_summary
+            .is_lifecycle_complete();
+        let review_queues_clear = !review_queue_summary.has_active_review_queues();
+        let publish_gate_ready = review_queue_summary
+            .lifecycle_summary
+            .publish_gate
+            .is_publish_ready();
+        let package_acceptance_ready = review_queue_summary.is_package_acceptance_ready();
+        let checks = [
+            lifecycle_complete,
+            review_queues_clear,
+            publish_gate_ready,
+            package_acceptance_ready,
+        ];
+        let passed_acceptance_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_acceptance_check_count = checks.len();
+        let failed_acceptance_check_count =
+            required_acceptance_check_count - passed_acceptance_check_count;
+        let package_accepted = failed_acceptance_check_count == 0;
+
+        Self {
+            review_queue_summary,
+            required_acceptance_check_count,
+            passed_acceptance_check_count,
+            failed_acceptance_check_count,
+            lifecycle_complete,
+            review_queues_clear,
+            publish_gate_ready,
+            package_accepted,
+        }
+    }
+
+    pub fn is_package_accepted(self) -> bool {
+        self.package_accepted
+    }
+
+    pub fn has_acceptance_failures(self) -> bool {
+        self.failed_acceptance_check_count > 0
+    }
+
+    pub fn needs_lifecycle_completion(self) -> bool {
+        !self.lifecycle_complete
+    }
+
+    pub fn needs_review_queue_clearance(self) -> bool {
+        !self.review_queues_clear
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_acceptance_summary(plan: &HueBridgePairingPlan) -> HuePackageAcceptanceSummary {
+    HuePackageAcceptanceSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -5910,5 +5986,72 @@ mod tests {
         assert!(summary.needs_catalog_queue());
         assert!(summary.needs_handoff_queue());
         assert!(summary.needs_publish_queue());
+    }
+
+    #[test]
+    fn hue_package_acceptance_summary_marks_accepted_package() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_acceptance_summary(&plan);
+
+        assert_eq!(
+            summary.review_queue_summary,
+            hue_package_review_queue_summary(&plan)
+        );
+        assert_eq!(summary.required_acceptance_check_count, 4);
+        assert_eq!(summary.passed_acceptance_check_count, 4);
+        assert_eq!(summary.failed_acceptance_check_count, 0);
+        assert!(summary.lifecycle_complete);
+        assert!(summary.review_queues_clear);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.package_accepted);
+        assert!(summary.is_package_accepted());
+        assert!(!summary.has_acceptance_failures());
+        assert!(!summary.needs_lifecycle_completion());
+        assert!(!summary.needs_review_queue_clearance());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_acceptance_summary_routes_acceptance_failures() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageAcceptanceSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_acceptance_check_count, 4);
+        assert_eq!(summary.passed_acceptance_check_count, 0);
+        assert_eq!(summary.failed_acceptance_check_count, 4);
+        assert!(!summary.lifecycle_complete);
+        assert!(!summary.review_queues_clear);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.package_accepted);
+        assert!(!summary.is_package_accepted());
+        assert!(summary.has_acceptance_failures());
+        assert!(summary.needs_lifecycle_completion());
+        assert!(summary.needs_review_queue_clearance());
+        assert!(summary.needs_publish_gate());
     }
 }
