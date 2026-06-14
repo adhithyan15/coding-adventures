@@ -2791,6 +2791,100 @@ pub fn hue_package_release_audit_summary(
     HuePackageReleaseAuditSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseSignoffSummary {
+    pub audit_summary: HuePackageReleaseAuditSummary,
+    pub required_signoff_check_count: usize,
+    pub passed_signoff_check_count: usize,
+    pub blocked_signoff_check_count: usize,
+    pub release_audit_ready: bool,
+    pub operator_ready: bool,
+    pub dispatch_ready: bool,
+    pub coordination_ready: bool,
+    pub review_queues_clear: bool,
+    pub publish_gate_ready: bool,
+    pub release_signoff_ready: bool,
+}
+
+impl HuePackageReleaseSignoffSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_audit_summary(hue_package_release_audit_summary(plan))
+    }
+
+    pub fn from_audit_summary(audit_summary: HuePackageReleaseAuditSummary) -> Self {
+        let release_audit_ready = audit_summary.is_release_audit_ready();
+        let operator_ready = !audit_summary.needs_operator_readiness();
+        let dispatch_ready = !audit_summary.needs_dispatch();
+        let coordination_ready = !audit_summary.needs_coordination();
+        let review_queues_clear = !audit_summary.needs_review_queue_clearance();
+        let publish_gate_ready = !audit_summary.needs_publish_gate();
+        let checks = [
+            release_audit_ready,
+            operator_ready,
+            dispatch_ready,
+            coordination_ready,
+            review_queues_clear,
+            publish_gate_ready,
+        ];
+        let passed_signoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_signoff_check_count = checks.len();
+        let blocked_signoff_check_count = required_signoff_check_count - passed_signoff_check_count;
+        let release_signoff_ready = blocked_signoff_check_count == 0;
+
+        Self {
+            audit_summary,
+            required_signoff_check_count,
+            passed_signoff_check_count,
+            blocked_signoff_check_count,
+            release_audit_ready,
+            operator_ready,
+            dispatch_ready,
+            coordination_ready,
+            review_queues_clear,
+            publish_gate_ready,
+            release_signoff_ready,
+        }
+    }
+
+    pub fn is_release_signoff_ready(self) -> bool {
+        self.release_signoff_ready
+    }
+
+    pub fn has_blocked_signoff_checks(self) -> bool {
+        self.blocked_signoff_check_count > 0
+    }
+
+    pub fn needs_release_audit(self) -> bool {
+        !self.release_audit_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_dispatch(self) -> bool {
+        !self.dispatch_ready
+    }
+
+    pub fn needs_coordination(self) -> bool {
+        !self.coordination_ready
+    }
+
+    pub fn needs_review_queue_clearance(self) -> bool {
+        !self.review_queues_clear
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_signoff_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseSignoffSummary {
+    HuePackageReleaseSignoffSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -7000,6 +7094,85 @@ mod tests {
         assert!(!summary.release_audit_ready);
         assert!(!summary.is_release_audit_ready());
         assert!(summary.has_blocked_audit_checks());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_dispatch());
+        assert!(summary.needs_coordination());
+        assert!(summary.needs_review_queue_clearance());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_signoff_summary_reports_ready_signoff() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_signoff_summary(&plan);
+
+        assert_eq!(
+            summary.audit_summary,
+            hue_package_release_audit_summary(&plan)
+        );
+        assert_eq!(summary.required_signoff_check_count, 6);
+        assert_eq!(summary.passed_signoff_check_count, 6);
+        assert_eq!(summary.blocked_signoff_check_count, 0);
+        assert!(summary.release_audit_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.dispatch_ready);
+        assert!(summary.coordination_ready);
+        assert!(summary.review_queues_clear);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_signoff_ready);
+        assert!(summary.is_release_signoff_ready());
+        assert!(!summary.has_blocked_signoff_checks());
+        assert!(!summary.needs_release_audit());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_dispatch());
+        assert!(!summary.needs_coordination());
+        assert!(!summary.needs_review_queue_clearance());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_signoff_summary_routes_blocked_signoff() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseSignoffSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_signoff_check_count, 6);
+        assert_eq!(summary.passed_signoff_check_count, 0);
+        assert_eq!(summary.blocked_signoff_check_count, 6);
+        assert!(!summary.release_audit_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.dispatch_ready);
+        assert!(!summary.coordination_ready);
+        assert!(!summary.review_queues_clear);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_signoff_ready);
+        assert!(!summary.is_release_signoff_ready());
+        assert!(summary.has_blocked_signoff_checks());
+        assert!(summary.needs_release_audit());
         assert!(summary.needs_operator_readiness());
         assert!(summary.needs_dispatch());
         assert!(summary.needs_coordination());

@@ -47,6 +47,8 @@ All notable changes to this package will be documented in this file.
   final operator-facing release checks.
 - Hue package release audit summaries that turn operator readiness into final
   audit/signoff checks.
+- Hue package release signoff summaries that turn audit readiness into final
+  package release signoff checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
