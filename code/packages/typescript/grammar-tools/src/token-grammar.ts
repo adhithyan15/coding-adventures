@@ -1196,8 +1196,13 @@ export function validateTokenGrammar(grammar: TokenGrammar): string[] {
   // F10 — declarative lexer mode validation. A mode is valid if it is
   // "default" or a declared group. Undefined targets/guards are rejected
   // so the lexer never silently falls back to the wrong group.
+  // Use `hasOwnProperty` (not `in`) so a group named after an inherited
+  // prototype key (e.g. `"toString"`) is not silently accepted as a valid
+  // target — `grammar.groups` is a plain object literal.
   const modeExists = (name: string): boolean =>
-    name === "default" || (grammar.groups !== undefined && name in grammar.groups);
+    name === "default" ||
+    (grammar.groups !== undefined &&
+      Object.prototype.hasOwnProperty.call(grammar.groups, name));
 
   if (grammar.startMode !== undefined && !modeExists(grammar.startMode)) {
     issues.push(
