@@ -1,5 +1,32 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.13.0 — 2026-06-13 — module-scoped `const` declarations (LANG-FULL N5)
+
+Adds Nib's top-level `const NAME: type = literal;`. Previously `const_decl` (and
+`static_decl`) were silently dropped by `function_nodes`, so referencing a const
+produced a dangling variable.
+
+- New `collect_consts` gathers module-scoped consts (they are `top_decl`, like
+  `fn`) into a `name → i64` map before any function is compiled, folding each
+  value expression to an `i64`. `compile_program` populates `Compiler.consts`.
+- `compile_primary` resolves a const reference to a fresh `const` instruction
+  with the const's value — a compile-time fold, so consts need **no runtime
+  storage** and run on every backend with no per-backend work. A `let`/parameter
+  of the same name **shadows** the const (the fold only fires when the name isn't
+  a local in scope).
+- V1 folds **integer-literal** consts (`INT_LIT`/`HEX_LIT`); a non-literal value
+  (`const N = 6 * 7;`) is a clear error (`const-expression folding is deferred`)
+  rather than a silent miscompile.
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains
+`const N: u8 = 42; … return N;` → 42 and `const A = 30; const B = 12; … A + B`
+→ 42, across native/LLVM/WASM/JVM/CLR/VM/JIT. New unit tests
+`const_reference_folds_to_its_literal`, `multiple_consts_in_arithmetic`,
+`non_literal_const_is_rejected`.
+
+`static` declarations remain deferred (mutable module state is a larger,
+backend-touching item).
+
 ## 0.12.0 — 2026-06-13 — short-circuit `&&` / `||` (LANG-FULL N4)
 
 Adds Nib's logical `&&` / `||`. Unlike the other operators these cannot go through

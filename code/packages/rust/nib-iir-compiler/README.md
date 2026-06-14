@@ -31,9 +31,10 @@ let obj = compile_module_macos_arm64_object(&m)?;
 
 Covers literals, let/return, identifiers, binary arithmetic (`+` `-` `*` `/`),
 bitwise (`&` `|` `^`, N3), short-circuit logical `&&`/`||` (N4), comparisons,
-`if`/`else`, `while`, `for` (exclusive `lo .. hi` range, N2), and cross-function
-calls. `*`/`/` lower to `mul`/`div` (N1); `&`/`|`/`^` to `and`/`or`/`xor` (N3);
-`&&`/`||` short-circuit via `jmp_if_false` branches (N4). All run on every backend.
-Wrap/sat arithmetic, unary `~` (needs the integer-wrap enabler E2),
-`const`/`static`, and BCD are deferred — see CHANGELOG and
-`code/specs/LANG-FULL-IMPLEMENTATION.md`.
+`if`/`else`, `while`, `for` (exclusive `lo .. hi` range, N2), module-scoped
+integer-literal `const`s (N5), and cross-function calls. `*`/`/` lower to
+`mul`/`div` (N1); `&`/`|`/`^` to `and`/`or`/`xor` (N3); `&&`/`||` short-circuit
+via `jmp_if_false` branches (N4); a `const` reference folds to its literal (N5).
+All run on every backend. Wrap/sat arithmetic, unary `~` (needs the integer-wrap
+enabler E2), const-expression folding, mutable `static`, and BCD are deferred —
+see CHANGELOG and `code/specs/LANG-FULL-IMPLEMENTATION.md`.
