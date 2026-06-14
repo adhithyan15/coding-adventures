@@ -112,7 +112,10 @@ backend immediately) come before the enabler-dependent items.
   guarded by `jmp_if_false`/`jmp`/`label` (portable subset — CLR textual path has no
   `jmp_if_true`); verified by RUNNING divide-by-zero short-circuit proofs (`1==2 && 84/0==0`
   →7, `1==1 || 84/0==0`→7, RHS never evaluated) + a true-path program, across all backends.
-- ☐ **N5** — `const` declarations (constant folding / global).
+- ✅ **N5** — `const` declarations. Module-scoped integer-literal consts are collected and
+  folded to their literal at each use (no runtime storage, runs everywhere); verified by
+  RUNNING `const N: u8 = 42; … return N`→42 and `const A=30; const B=12; … A + B`→42 across
+  all backends. (Const-*expression* folding and mutable `static` deferred.)
 - ☐ **N6** — u4/u8 wrap semantics (needs **E2**).
 - ☐ **N7** — `+%` (wrap add) / `+?` (saturating add) (needs **E2**).
 

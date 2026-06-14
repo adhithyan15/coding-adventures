@@ -140,6 +140,12 @@ struct Compiler {
     /// `&self`-style call sites in expression compilation from
     /// requiring a borrow-checker dance.
     current_loc: std::cell::Cell<SourceLoc>,
+    /// Top-level `const NAME: type = literal;` values, keyed by name.
+    /// Collected once before any function is compiled (consts are
+    /// module-scoped — `top_decl`, like `fn`).  A reference to a const in a
+    /// function body resolves to its literal value (a compile-time fold), so
+    /// consts need no runtime storage and run on every backend.
+    consts: HashMap<String, i64>,
 }
 
 impl Default for Compiler {
@@ -149,6 +155,7 @@ impl Default for Compiler {
             label_counter: 0,
             source_map: Vec::new(),
             current_loc: std::cell::Cell::new(SourceLoc::SYNTHETIC),
+            consts: HashMap::new(),
         }
     }
 }
@@ -190,6 +197,9 @@ impl Compiler {
         types: &HashMap<usize, NibType>,
         module: &mut IIRModule,
     ) -> Result<(), CompileError> {
+        // Collect module-scoped `const`s first, so a function body that
+        // references one resolves to its literal (see `compile_primary`).
+        self.consts = collect_consts(root)?;
         for fn_decl in function_nodes(root) {
             let f = self.compile_function(fn_decl, types)?;
             module.add_or_replace(f);
@@ -678,7 +688,23 @@ impl Compiler {
         }
 
         if let Some(name) = lookup_name(node) {
-            // Variable reference — return its IIR name directly.
+            // A reference to a module-scoped `const` folds to its literal value
+            // (LANG-FULL N5) — emit a fresh `const` instruction rather than a
+            // dangling variable reference, so it needs no runtime storage and
+            // runs on every backend.  A local `let`/parameter of the same name
+            // SHADOWS the const, so only fold when the name is not already a
+            // local in scope (`env`).
+            if !env.contains_key(&name) {
+                if let Some(&value) = self.consts.get(&name) {
+                    let v = self.fresh_var();
+                    self.emit_to(out, IIRInstr::new(
+                        "const", Some(v.clone()), vec![Operand::Int(value)], "i64",
+                    ));
+                    return Ok(v);
+                }
+            }
+            // Otherwise it's an ordinary variable reference — return its IIR
+            // name directly.
             return Ok(name);
         }
 
@@ -970,6 +996,60 @@ impl Compiler {
 // ---------------------------------------------------------------------------
 // AST traversal helpers
 // ---------------------------------------------------------------------------
+
+/// Collect module-scoped `const NAME: type = literal;` declarations into a
+/// `name → value` map.  Consts appear at the top level (`top_decl`), like `fn`.
+///
+/// V1 supports **literal** const values (an integer or hex literal); the value
+/// expression is folded to an `i64` at compile time, so a const reference in a
+/// function body compiles to a plain `const` instruction and needs no runtime
+/// storage. A non-literal const value (e.g. `const N: u8 = 6 * 7;`) is rejected
+/// with a clear error rather than silently mis-lowered — const-expression
+/// folding is a follow-up.
+fn collect_consts(root: &GrammarASTNode) -> Result<HashMap<String, i64>, CompileError> {
+    let mut consts = HashMap::new();
+    for decl in child_nodes(root) {
+        // A `const_decl` may be wrapped in a generic `top_decl` node.
+        let cd = if decl.rule_name == "const_decl" {
+            decl
+        } else if decl.rule_name == "top_decl" {
+            match child_nodes(decl).into_iter().find(|c| c.rule_name == "const_decl") {
+                Some(c) => c,
+                None => continue,
+            }
+        } else {
+            continue;
+        };
+
+        let name = first_name(cd)
+            .ok_or_else(|| CompileError::Unsupported("const_decl missing name".into()))?;
+        let value_expr = child_nodes(cd)
+            .into_iter()
+            .find(|n| is_expr_rule(&n.rule_name))
+            .ok_or_else(|| CompileError::Unsupported(format!("const `{name}` missing value")))?;
+        let value = const_literal_value(value_expr).ok_or_else(|| {
+            CompileError::Unsupported(format!(
+                "const `{name}` must be an integer literal (const-expression folding is deferred)"
+            ))
+        })?;
+        consts.insert(name, value);
+    }
+    Ok(consts)
+}
+
+/// Fold a const's value expression to an `i64` when it is a single integer/hex
+/// literal.  Descends the single-child wrapper chain `expr → … → primary` that
+/// a bare literal produces, returning `None` for any non-literal expression.
+fn const_literal_value(expr: &GrammarASTNode) -> Option<i64> {
+    if let Some(v) = parse_literal(expr) {
+        return Some(v);
+    }
+    let kids = child_nodes(expr);
+    if kids.len() == 1 {
+        return const_literal_value(kids[0]);
+    }
+    None
+}
 
 fn function_nodes(root: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     child_nodes(root)
@@ -1297,6 +1377,70 @@ mod tests {
         let cmp_count = ops.iter().filter(|o| **o == "cmp_eq").count();
         assert_eq!(cmp_count, 2, "both operands compiled; got {ops:?}");
         assert!(!ops.contains(&"call_builtin"), "|| must not leak a call_builtin; got {ops:?}");
+    }
+
+    #[test]
+    fn const_reference_folds_to_its_literal() {
+        // LANG-FULL N5: a module-scoped `const` reference compiles to a `const`
+        // instruction with the const's value — no dangling variable reference.
+        let m = compile_source(
+            "const N: u8 = 42; fn main() -> u8 { return N; }", "test",
+        ).expect("ok");
+        let main = m.functions.iter().find(|f| f.name == "main").expect("main");
+        let folded = main.instructions.iter().any(|i|
+            i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(42))));
+        assert!(folded, "const N must fold to `const 42`; got {:?}", main.instructions);
+        // The const is not a function of its own (it's module-scoped, folded away).
+        assert!(!m.functions.iter().any(|f| f.name == "N"),
+            "a const must not become a function");
+    }
+
+    #[test]
+    fn multiple_consts_in_arithmetic() {
+        // Two consts used in `A + B` both fold; the result still lowers to a real `add`.
+        let m = compile_source(
+            "const A: u8 = 30; const B: u8 = 12; fn main() -> u8 { return A + B; }", "test",
+        ).expect("ok");
+        let body = &m.functions[0].instructions;
+        let const_vals: Vec<i64> = body.iter()
+            .filter(|i| i.op == "const")
+            .filter_map(|i| match i.srcs.first() { Some(Operand::Int(n)) => Some(*n), _ => None })
+            .collect();
+        assert!(const_vals.contains(&30) && const_vals.contains(&12),
+            "both consts must fold to their literals; got {const_vals:?}");
+        assert!(body.iter().any(|i| i.op == "add"), "A + B must still emit an add");
+    }
+
+    #[test]
+    fn local_shadows_module_const() {
+        // A `let` of the same name as a module const wins — the body must read the
+        // local slot, NOT fold to the const's literal. (Both literals are > 15 so
+        // they infer `u8` and satisfy Nib's strict literal-width type checker.)
+        let m = compile_source(
+            "const N: u8 = 20; fn main() -> u8 { let N: u8 = 30; return N; }", "test",
+        ).expect("ok");
+        let body = &m.functions[0].instructions;
+        // The local's value 30 is materialised and bound via `mov N`...
+        assert!(body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(30)))),
+            "the local's value 30 must be materialised; got {body:?}");
+        assert!(body.iter().any(|i| i.op == "mov" && i.dest.as_deref() == Some("N")),
+            "the local `N` must be bound via mov; got {body:?}");
+        // ...and the const's value 20 is NEVER folded in (the local shadows it).
+        assert!(!body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(20)))),
+            "the const value 20 must NOT appear — the local shadows it; got {body:?}");
+    }
+
+    #[test]
+    fn non_literal_const_is_rejected() {
+        // V1 only folds integer-literal consts; a const-expression is a clear error
+        // (not a silent miscompile). Folding `6 * 7` is a documented follow-up.
+        let err = compile_source(
+            "const N: u8 = 6 * 7; fn main() -> u8 { return N; }", "test",
+        ).unwrap_err();
+        let msg = format!("{err:?}");
+        assert!(msg.contains("integer literal"), "expected a clear const-literal error; got {msg}");
     }
 
     #[test]

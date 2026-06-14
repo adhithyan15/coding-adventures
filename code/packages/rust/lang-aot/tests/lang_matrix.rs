@@ -247,6 +247,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — module-scoped `const` (LANG-FULL N5). A top-level `const N: u8 = 42;` is folded
+    // to its literal at each use, so referencing it in `main` needs no runtime storage and
+    // runs on every backend.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "const N: u8 = 42; fn main() -> u8 { return N; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — multiple consts used in arithmetic: `30 + 12` = 42.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "const A: u8 = 30; const B: u8 = 12; fn main() -> u8 { return A + B; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,
