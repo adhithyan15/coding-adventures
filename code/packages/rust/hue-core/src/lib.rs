@@ -2281,6 +2281,84 @@ pub fn hue_package_acceptance_summary(plan: &HueBridgePairingPlan) -> HuePackage
     HuePackageAcceptanceSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseHandoffSummary {
+    pub acceptance_summary: HuePackageAcceptanceSummary,
+    pub required_handoff_check_count: usize,
+    pub passed_handoff_check_count: usize,
+    pub blocked_handoff_check_count: usize,
+    pub package_accepted: bool,
+    pub lifecycle_complete: bool,
+    pub review_queues_clear: bool,
+    pub publish_gate_ready: bool,
+    pub release_handoff_ready: bool,
+}
+
+impl HuePackageReleaseHandoffSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_acceptance_summary(hue_package_acceptance_summary(plan))
+    }
+
+    pub fn from_acceptance_summary(acceptance_summary: HuePackageAcceptanceSummary) -> Self {
+        let package_accepted = acceptance_summary.is_package_accepted();
+        let lifecycle_complete = !acceptance_summary.needs_lifecycle_completion();
+        let review_queues_clear = !acceptance_summary.needs_review_queue_clearance();
+        let publish_gate_ready = !acceptance_summary.needs_publish_gate();
+        let checks = [
+            package_accepted,
+            lifecycle_complete,
+            review_queues_clear,
+            publish_gate_ready,
+        ];
+        let passed_handoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_handoff_check_count = checks.len();
+        let blocked_handoff_check_count = required_handoff_check_count - passed_handoff_check_count;
+        let release_handoff_ready = blocked_handoff_check_count == 0;
+
+        Self {
+            acceptance_summary,
+            required_handoff_check_count,
+            passed_handoff_check_count,
+            blocked_handoff_check_count,
+            package_accepted,
+            lifecycle_complete,
+            review_queues_clear,
+            publish_gate_ready,
+            release_handoff_ready,
+        }
+    }
+
+    pub fn is_release_handoff_ready(self) -> bool {
+        self.release_handoff_ready
+    }
+
+    pub fn has_blocked_handoff_checks(self) -> bool {
+        self.blocked_handoff_check_count > 0
+    }
+
+    pub fn needs_package_acceptance(self) -> bool {
+        !self.package_accepted
+    }
+
+    pub fn needs_lifecycle_completion(self) -> bool {
+        !self.lifecycle_complete
+    }
+
+    pub fn needs_review_queue_clearance(self) -> bool {
+        !self.review_queues_clear
+    }
+
+    pub fn needs_publish_gate(self) -> bool {
+        !self.publish_gate_ready
+    }
+}
+
+pub fn hue_package_release_handoff_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseHandoffSummary {
+    HuePackageReleaseHandoffSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -6050,6 +6128,77 @@ mod tests {
         assert!(!summary.package_accepted);
         assert!(!summary.is_package_accepted());
         assert!(summary.has_acceptance_failures());
+        assert!(summary.needs_lifecycle_completion());
+        assert!(summary.needs_review_queue_clearance());
+        assert!(summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_handoff_summary_marks_ready_package() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_handoff_summary(&plan);
+
+        assert_eq!(
+            summary.acceptance_summary,
+            hue_package_acceptance_summary(&plan)
+        );
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 4);
+        assert_eq!(summary.blocked_handoff_check_count, 0);
+        assert!(summary.package_accepted);
+        assert!(summary.lifecycle_complete);
+        assert!(summary.review_queues_clear);
+        assert!(summary.publish_gate_ready);
+        assert!(summary.release_handoff_ready);
+        assert!(summary.is_release_handoff_ready());
+        assert!(!summary.has_blocked_handoff_checks());
+        assert!(!summary.needs_package_acceptance());
+        assert!(!summary.needs_lifecycle_completion());
+        assert!(!summary.needs_review_queue_clearance());
+        assert!(!summary.needs_publish_gate());
+    }
+
+    #[test]
+    fn hue_package_release_handoff_summary_routes_blocked_handoff() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseHandoffSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 0);
+        assert_eq!(summary.blocked_handoff_check_count, 4);
+        assert!(!summary.package_accepted);
+        assert!(!summary.lifecycle_complete);
+        assert!(!summary.review_queues_clear);
+        assert!(!summary.publish_gate_ready);
+        assert!(!summary.release_handoff_ready);
+        assert!(!summary.is_release_handoff_ready());
+        assert!(summary.has_blocked_handoff_checks());
+        assert!(summary.needs_package_acceptance());
         assert!(summary.needs_lifecycle_completion());
         assert!(summary.needs_review_queue_clearance());
         assert!(summary.needs_publish_gate());
