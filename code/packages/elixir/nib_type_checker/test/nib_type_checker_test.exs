@@ -40,4 +40,15 @@ defmodule CodingAdventures.NibTypeCheckerTest do
     refute result.ok
     assert Enum.any?(result.errors, &String.contains?(&1.message, "expects 2 args"))
   end
+
+  test "accepts multiplicative expressions (regression: mul_expr level)" do
+    result = tc("fn double(n: u4) -> u4 { return n * 2; }")
+    assert result.ok
+  end
+
+  test "reports multiplicative type mismatches" do
+    result = tc("fn bad() -> u4 { let b: bool = true; let n: u4 = 1; return b * n; }")
+    refute result.ok
+    assert Enum.any?(result.errors, &String.contains?(&1.message, "type mismatch"))
+  end
 end

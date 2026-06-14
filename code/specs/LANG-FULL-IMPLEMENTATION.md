@@ -171,7 +171,14 @@ backend immediately) come before the enabler-dependent items.
 ### ALGOL 60
 - ☐ **AL1** — real arithmetic + `/` (needs **E3**).
 - ☐ **AL2** — arrays with runtime bounds (needs **E5**).
-- ☐ **AL3** — procedures with value parameters (call — partly present; verify cross-backend).
+- ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
+  value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
+  across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a
+  sibling `IIRFunction` + IIR `call`; supports forward references + recursion + multi-arg.
+  Surfaced & fixed a real `jit-core` constant-propagation bug (reassigned result slot
+  propagated its dead seed → only the JIT returned 0). **Limits (follow-ups):** typed
+  procedures only — proper (void) procedures rejected (inert on this slice); bodies are
+  lexically flat (no enclosing-scope access yet); `value` params only (by-name is AL7).
 - ☐ **AL4** — strings + `print`/`output` I/O (needs **E4**).
 - ☐ **AL5** — switches + conditional designational expressions in `goto`.
 - ☐ **AL6** — `own` variables (static lifetime).

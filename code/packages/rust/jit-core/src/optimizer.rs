@@ -91,6 +91,14 @@ fn is_foldable(op: &str) -> bool {
     FOLDABLE_OPS.contains(&base)
 }
 
+/// True for ops that begin or end a basic block: a `label` (a join point that
+/// a backward edge may reach) or any jump/branch (a block terminator).  The
+/// linear constant-propagation table is cleared at these so a constant never
+/// leaks across a control-flow edge into code where the register has changed.
+fn is_block_boundary(op: &str) -> bool {
+    matches!(op, "label" | "jmp" | "jmp_if_true" | "jmp_if_false") || op.starts_with("br_")
+}
+
 // ---------------------------------------------------------------------------
 // CIROptimizer
 // ---------------------------------------------------------------------------
@@ -131,11 +139,37 @@ impl CIROptimizer {
         // We keep a "known constant" map: register name → CIROperand literal.
         // Every `const_<t>` with a single literal source is added here so
         // subsequent instructions can propagate the constant.
+        //
+        // Two soundness rules govern the lifetime of an entry:
+        //
+        //   1. **Reassignment kills.**  When an instruction *writes* a register
+        //      (has it as `dest`) without re-establishing a constant value for
+        //      it, any previously-known constant for that register is now
+        //      stale and MUST be dropped.  Without this, a sequence like
+        //
+        //          const sq = 0      ; known[sq] = 0
+        //          mul   t  = x, x
+        //          mov   sq = t      ; sq is reassigned — but known still says 0
+        //          ret   sq          ; ← 0 wrongly propagated; sq is really t
+        //
+        //      mis-propagates the dead initial `0` into the `ret`, silently
+        //      miscompiling any procedure whose result slot is seeded then
+        //      overwritten (exactly how ALGOL function procedures lower).
+        //
+        //   2. **Block boundaries kill everything.**  This is a single linear
+        //      pass with no control-flow graph, so a constant is only valid
+        //      within its basic block.  At a `label` (a join point reachable
+        //      by a backward edge) or a branch/jump (a block terminator) we
+        //      clear the whole map — otherwise a constant defined before a loop
+        //      would be propagated into iterations where the register has since
+        //      changed.
         let mut known: HashMap<String, CIROperand> = HashMap::new();
         let mut out = Vec::with_capacity(ir.len());
 
         for mut instr in ir {
-            // Propagate known constants into the instruction's sources.
+            // Propagate known constants into the instruction's sources.  This
+            // happens first, so a branch condition / jump still sees constants
+            // live within the current block before we clear at the boundary.
             for src in &mut instr.srcs {
                 if let CIROperand::Var(name) = src {
                     if let Some(literal) = known.get(name) {
@@ -152,19 +186,32 @@ impl CIROptimizer {
             };
 
             if let (Some(literal), Some(dest)) = (folded_literal, &instr.dest) {
-                // Replace with const_<type>.
+                // Replace with const_<type>; `dest` now holds a known constant.
                 let const_op = const_op_for_ty(&instr.ty);
                 let new_instr = CIRInstr::new(const_op, Some(dest.clone()), vec![literal.clone()], instr.ty.clone());
                 known.insert(dest.clone(), literal);
                 out.push(new_instr);
-            } else {
-                // If this is a `const_<t>` with a single literal src, record it.
-                if instr.op.starts_with("const_") && instr.srcs.len() == 1 && instr.srcs[0].is_literal() {
-                    if let Some(dest) = &instr.dest {
-                        known.insert(dest.clone(), instr.srcs[0].clone());
-                    }
+            } else if instr.op.starts_with("const_")
+                && instr.srcs.len() == 1
+                && instr.srcs[0].is_literal()
+            {
+                // A `const_<t>` with a single literal src — record it (rule 1's
+                // re-establish case: overwrites any prior binding for `dest`).
+                if let Some(dest) = &instr.dest {
+                    known.insert(dest.clone(), instr.srcs[0].clone());
                 }
                 out.push(instr);
+            } else {
+                // Any other write to `dest` makes a prior constant stale (rule 1).
+                if let Some(dest) = &instr.dest {
+                    known.remove(dest);
+                }
+                out.push(instr);
+            }
+
+            // Rule 2: a basic-block boundary invalidates all known constants.
+            if is_block_boundary(out.last().map(|i| i.op.as_str()).unwrap_or("")) {
+                known.clear();
             }
         }
 
@@ -512,5 +559,68 @@ mod tests {
     fn empty_cir_ok() {
         let opt = CIROptimizer::new().run(vec![]);
         assert!(opt.is_empty());
+    }
+
+    #[test]
+    fn reassignment_kills_stale_constant() {
+        // Regression: a result slot seeded with a constant and then overwritten
+        // must NOT propagate the dead seed.  This is exactly how an ALGOL
+        // function procedure lowers — `const sq = 0; …; mov sq = t; ret sq` —
+        // and the stale-constant bug silently returned 0 instead of the result.
+        let cir = vec![
+            CIRInstr::new("const_i64", Some("sq"), ints(&[0]), "i64"),
+            CIRInstr::new("mul_i64", Some("t"), vars(&["x", "x"]), "i64"),
+            CIRInstr::new("mov", Some("sq"), vars(&["t"]), "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vars(&["sq"]), "i64"),
+        ];
+        let opt = CIROptimizer::new().run(cir);
+        let ret = opt.iter().find(|i| i.op == "ret_i64").unwrap();
+        // The ret must read the register `sq` (now holding `t`), NOT the dead 0.
+        assert_eq!(
+            ret.srcs[0],
+            CIROperand::Var("sq".into()),
+            "ret must not propagate the overwritten constant"
+        );
+        // The `mov` writing the live value must survive.
+        assert!(opt.iter().any(|i| i.op == "mov" && i.dest.as_deref() == Some("sq")));
+    }
+
+    #[test]
+    fn constants_do_not_cross_a_label() {
+        // A constant defined before a loop header must not be propagated past
+        // the `label` (a backward-edge join point): inside the loop the
+        // register may already hold a different value.
+        let cir = vec![
+            CIRInstr::new("const_i64", Some("i"), ints(&[0]), "i64"),
+            CIRInstr::new("label", None::<&str>, vars(&["loop_top"]), "any"),
+            // First use of `i` inside the block must stay a Var, not 0.
+            CIRInstr::new("add_i64", Some("i"), vec![
+                CIROperand::Var("i".into()),
+                CIROperand::Int(1),
+            ], "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vars(&["i"]), "i64"),
+        ];
+        let opt = CIROptimizer::new().run(cir);
+        let add = opt.iter().find(|i| i.op == "add_i64").unwrap();
+        assert_eq!(
+            add.srcs[0],
+            CIROperand::Var("i".into()),
+            "constant must not leak across the label into the loop body"
+        );
+    }
+
+    #[test]
+    fn straight_line_constant_still_propagates_within_block() {
+        // The boundary/reassignment rules must not over-clear: a plain
+        // straight-line constant still folds and propagates.
+        let cir = vec![
+            CIRInstr::new("const_i64", Some("a"), ints(&[6]), "i64"),
+            CIRInstr::new("const_i64", Some("b"), ints(&[7]), "i64"),
+            CIRInstr::new("mul_i64", Some("z"), vars(&["a", "b"]), "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vars(&["z"]), "i64"),
+        ];
+        let opt = CIROptimizer::new().run(cir);
+        let ret = opt.iter().find(|i| i.op == "ret_i64").unwrap();
+        assert_eq!(ret.srcs[0], CIROperand::Int(42), "6 * 7 should fold to 42");
     }
 }

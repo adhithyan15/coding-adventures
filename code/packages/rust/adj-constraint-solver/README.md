@@ -127,6 +127,20 @@ exact. Booleans are pinned to `{0,1}` so the search stays bounded (`2^N`, fine t
 N ≲ 21). The integer path is **opt-in via the declared sort** — `: scalar` /
 `: money(...)` programs take the real Fourier–Motzkin path exactly as before.
 
+### Scaling set-cover — the SAT oracle
+
+For a **pure-boolean** minimum-cost set-cover (every constraint an at-least-one
+covering clause `Σ xᵢ ≥ 1`, all selectors `: bool`), `optimize` routes the
+binary-search feasibility probes to the DPLL `SatTactic` instead of LIA's bounded
+enumeration. The cost bound `Σ wᵢ·xᵢ ≤ K` at each probe is a **Sinz sequential
+at-most-k** encoding (verified exact vs brute force). Same optimum as the LIA
+path; the difference is reach: LIA tops out around **24 selectors**, the SAT
+oracle handles a **full hospital formulary (100+ candidate drugs)** — 123 drugs
+in ~15 s, where LIA could not run at all. (Plain DPLL, so an adversarial cycle
+cover still slows past ~30–50; a real per-patient candidate set of ~10–30 drugs is
+sub-second. A CDCL/PB-native solver would lift the worst case — the oracle
+interface is already in place for that swap.)
+
 ## Where it fits
 
 Part of the ADJ constraint-solving arc

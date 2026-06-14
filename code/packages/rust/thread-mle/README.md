@@ -32,6 +32,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   response-wait, neighbor-refresh, status-review, and unknown-command queues
 - attach completion summaries that combine attach action clearance with
   supervision-plan clearance for runtime handoff checks
+- attach route-handoff summaries that combine attach completion with Thread
+  Network Data readiness and routing-anchor checks
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection

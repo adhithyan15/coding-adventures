@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.9.0] - 2026-06-14 — SAT-scaled set-cover (a full-formulary feasibility oracle)
+
+### Added
+
+- **A SAT-based feasibility oracle for pure-boolean minimum-cost set-cover**, so
+  the regimen optimization scales from ~24 selectors (the LIA enumeration ceiling)
+  to a **full hospital formulary (100+ candidate drugs)**. When a `minimize` is
+  over all-boolean symbols and every constraint is an at-least-one covering clause
+  (`Σ xᵢ ≥ 1`) or a trivial `{0,1}` bound, `optimize` routes the binary-search-on-
+  cost feasibility probes to the DPLL `SatTactic` instead of `LiaTactic`. The
+  optimum is **identical** to the LIA path (verified by tests) — only the oracle
+  changes — because the covering structure is exactly what SAT unit-propagation
+  exploits.
+- The cost bound `Σ wᵢ·xᵢ ≤ K` at each probe is encoded with a **Sinz (2005)
+  sequential at-most-k counter** (each tier weight `wᵢ` modeled by repeating `xᵢ`
+  `wᵢ` times; aux vars namespaced `__pb…`, uncollidable with user symbols). The
+  encoder is **verified exact against brute force** over all assignments on small
+  weighted instances.
+- +3 tests: the Sinz encoder vs brute force (incl. weighted), SAT agrees with LIA
+  on the fractional case (optimum 2, not 1.5), and a 30-selector cover the LIA
+  enumeration could not finish.
+
+### Performance (honest)
+
+- Realistic formulary structure (a few broad drugs + many narrow): 33 drugs 0.6 s,
+  63 drugs 3 s, 123 drugs 15 s, 243 drugs ~3 min — all **correct**, where the LIA
+  path could not run past ~24 at all. A real per-patient candidate set (~10–30
+  drugs) is sub-second.
+- The tactic is plain DPLL (no clause learning), so an **adversarial** worst case
+  (a pure cycle cover with no broad drug) still slows past ~30–50. A CDCL/PB-native
+  solver would lift that; the encoding + oracle interface are already in place for
+  that swap.
+
+### Unchanged
+
+- General-integer programs, `maximize`, and `: scalar` optimization take the
+  existing LIA / Fourier–Motzkin paths byte-for-byte — the SAT path is gated to the
+  pure-boolean clausal set-cover shape and falls through otherwise. All prior tests
+  pass (the existing set-cover tests now exercise the SAT path and return the same
+  answers).
+
 ## [0.8.0] - 2026-06-13 — integer linear optimization (native minimum-cost set-cover)
 
 ### Added

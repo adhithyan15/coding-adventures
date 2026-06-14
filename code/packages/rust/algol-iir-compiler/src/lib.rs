@@ -147,6 +147,30 @@ struct VarBinding {
     ty: ScalarType,
 }
 
+/// The compile-time signature of a procedure: the ordered types of its
+/// value parameters plus its return type.
+///
+/// ALGOL 60 lets a procedure be *called before it is textually declared*
+/// (mutual recursion lives on this), so we register every procedure's
+/// signature in a pre-pass over the block — `proc_sigs` below — before we
+/// lower any procedure *body*.  When a call site is reached the lowerer
+/// looks the name up here to know (a) how many arguments to evaluate,
+/// (b) what type each argument must be, and (c) what type the call yields.
+///
+/// We deliberately only model **typed** procedures (ALGOL "function
+/// procedures") with **value** parameters.  A proper (void) procedure has
+/// no observable effect on the current executable slice — there is no
+/// output statement and no by-reference / enclosing-scope mutation yet —
+/// so admitting one would be lowering code no test could ever witness.
+/// Those are rejected with a clear message and tracked as follow-up work.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ProcSig {
+    /// Parameter types in declaration order (matches `IIRFunction::params`).
+    params: Vec<ScalarType>,
+    /// The procedure's return type (always `Some` on the supported slice).
+    ret: ScalarType,
+}
+
 #[derive(Debug, Clone)]
 enum Piece<'a> {
     Node(&'a GrammarASTNode),
@@ -164,6 +188,12 @@ struct Compiler {
     register_names: HashSet<String>,
     defined_labels: HashSet<String>,
     referenced_labels: HashSet<String>,
+    /// Procedures lowered out of line, in declaration order.  These become
+    /// extra `IIRFunction`s alongside `main` when the module is assembled.
+    functions: Vec<IIRFunction>,
+    /// Procedure name → signature, registered in a pre-pass so a call can be
+    /// lowered before the callee's body is (forward references / recursion).
+    proc_sigs: HashMap<String, ProcSig>,
 }
 
 impl Default for Compiler {
@@ -179,6 +209,8 @@ impl Default for Compiler {
             register_names: HashSet::new(),
             defined_labels: HashSet::new(),
             referenced_labels: HashSet::new(),
+            functions: Vec::new(),
+            proc_sigs: HashMap::new(),
         }
     }
 }
@@ -228,6 +260,12 @@ impl Compiler {
 
         let mut module = IIRModule::new(module_name, "algol60");
         module.functions.push(main);
+        // Out-of-line procedures lowered during the block become sibling
+        // functions of `main`.  Every backend iterates `module.functions`, so
+        // a same-module `call` resolves the callee's signature by name.
+        for proc in self.functions {
+            module.functions.push(proc);
+        }
         module.entry_point = Some("main".to_string());
 
         let validation = module.validate();
@@ -245,6 +283,18 @@ impl Compiler {
             self.push_scope();
         }
 
+        // Pass 0 — register every procedure's signature *before* lowering any
+        // body.  ALGOL allows a call to appear ahead of the textual
+        // declaration (and a procedure may call itself), so the call site must
+        // be able to resolve the signature even though the body is not yet
+        // compiled.
+        for child in direct_nodes(node) {
+            if child.rule_name == "declaration" {
+                if let Some(proc_decl) = first_direct_node(child, "procedure_decl") {
+                    self.register_proc_sig(proc_decl)?;
+                }
+            }
+        }
         for child in direct_nodes(node) {
             if child.rule_name == "declaration" {
                 self.emit_declaration(child)?;
@@ -263,6 +313,13 @@ impl Compiler {
 
     fn emit_declaration(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
+        // A procedure declaration is lowered out of line into its own
+        // `IIRFunction` (its signature was already registered in pass 0).
+        if let Some(proc_decl) = first_direct_node(node, "procedure_decl") {
+            let func = self.compile_procedure(proc_decl)?;
+            self.functions.push(func);
+            return Ok(());
+        }
         let Some(type_decl) = first_direct_node(node, "type_decl") else {
             let construct = direct_nodes(node)
                 .first()
@@ -310,6 +367,320 @@ impl Compiler {
         }
     }
 
+    /// Map a `specifier` keyword (the type a `spec_part` attaches to a formal
+    /// parameter) to a scalar type.  `specifier` is a superset of `type`: it
+    /// also admits `array`, `label`, `switch`, and `procedure`, none of which
+    /// the current executable slice carries, so those produce a clear
+    /// "unsupported" message rather than a confusing "unknown token".
+    fn specifier_scalar_type(&self, node: &GrammarASTNode) -> Result<ScalarType, CompileError> {
+        let token = single_token_recursive(node)
+            .ok_or_else(|| CompileError::Malformed("specifier has no token".into()))?;
+        match token.value.as_str() {
+            "integer" => Ok(ScalarType::Integer),
+            "boolean" => Ok(ScalarType::Boolean),
+            "real" => Err(CompileError::Unsupported(
+                "real parameters on the common VM/JIT/backend slice".into(),
+            )),
+            "string" => Err(CompileError::Unsupported("string parameters".into())),
+            kind @ ("array" | "label" | "switch" | "procedure") => Err(
+                CompileError::Unsupported(format!("{kind} parameters")),
+            ),
+            other => Err(CompileError::Malformed(format!(
+                "unknown specifier token {other:?}"
+            ))),
+        }
+    }
+
+    /// Read a `procedure_decl` node into `(name, value-params, return-type)`.
+    ///
+    /// The grammar splits a procedure heading across three places:
+    ///
+    /// ```text
+    /// integer procedure sq(x);   value x;   integer x;   sq := x*x
+    ///   ^type   ^kw    ^name(^formal_params) ^value_part ^spec_part  ^proc_body
+    /// ```
+    ///
+    /// * `formal_params` gives the parameter *names* in call order.
+    /// * `value_part` lists which of them are passed **by value** (a copy).
+    /// * each `spec_part` declares the *type* of one or more parameters.
+    ///
+    /// On the supported slice every parameter must be a `value` parameter
+    /// (call-by-name / Jensen's device is not modelled), the procedure must
+    /// have a return type (proper/void procedures are inert here), and every
+    /// parameter must be specified exactly once.
+    fn procedure_parts(
+        &self,
+        proc_decl: &GrammarASTNode,
+    ) -> Result<(String, Vec<(String, ScalarType)>, ScalarType), CompileError> {
+        let name = direct_tokens(proc_decl)
+            .into_iter()
+            .find(|t| t.effective_type_name() == "NAME")
+            .map(|t| t.value.clone())
+            .ok_or_else(|| CompileError::Malformed("procedure_decl missing name".into()))?;
+
+        let ret = match first_direct_node(proc_decl, "type") {
+            Some(type_node) => self.scalar_type(type_node)?,
+            None => {
+                return Err(CompileError::Unsupported(format!(
+                    "proper (void) procedure {name:?}: only typed procedures with a return \
+                     value are observable on the current ALGOL slice"
+                )))
+            }
+        };
+
+        // Parameter names, in call order, from `formal_params`.
+        let param_names: Vec<String> = match first_direct_node(proc_decl, "formal_params") {
+            Some(fp) => match first_direct_node(fp, "ident_list") {
+                Some(list) => ident_list_names(list),
+                None => Vec::new(),
+            },
+            None => Vec::new(),
+        };
+
+        // Which parameters are passed by value.
+        let value_names: HashSet<String> = match first_direct_node(proc_decl, "value_part") {
+            Some(vp) => first_direct_node(vp, "ident_list")
+                .map(ident_list_names)
+                .unwrap_or_default()
+                .into_iter()
+                .collect(),
+            None => HashSet::new(),
+        };
+        for p in &param_names {
+            if !value_names.contains(p) {
+                return Err(CompileError::Unsupported(format!(
+                    "call-by-name parameter {p:?}: only `value` parameters are supported"
+                )));
+            }
+        }
+
+        // Each parameter's type, gathered from the `spec_part` declarations.
+        let mut type_of: HashMap<String, ScalarType> = HashMap::new();
+        for spec in direct_nodes(proc_decl)
+            .into_iter()
+            .filter(|n| n.rule_name == "spec_part")
+        {
+            let specifier = first_direct_node(spec, "specifier")
+                .ok_or_else(|| CompileError::Malformed("spec_part missing specifier".into()))?;
+            let ty = self.specifier_scalar_type(specifier)?;
+            let list = first_direct_node(spec, "ident_list")
+                .ok_or_else(|| CompileError::Malformed("spec_part missing ident_list".into()))?;
+            for n in ident_list_names(list) {
+                type_of.insert(n, ty);
+            }
+        }
+
+        let mut params = Vec::with_capacity(param_names.len());
+        for p in param_names {
+            let ty = type_of.get(&p).copied().ok_or_else(|| {
+                CompileError::Malformed(format!("parameter {p:?} has no specification"))
+            })?;
+            params.push((p, ty));
+        }
+
+        Ok((name, params, ret))
+    }
+
+    /// Pre-pass: record a procedure's signature so call sites can resolve it
+    /// before the body is lowered (forward references and recursion).
+    fn register_proc_sig(&mut self, proc_decl: &GrammarASTNode) -> Result<(), CompileError> {
+        let (name, params, ret) = self.procedure_parts(proc_decl)?;
+        if self.proc_sigs.contains_key(&name) {
+            return Err(CompileError::Type(format!(
+                "duplicate declaration for procedure {name:?}"
+            )));
+        }
+        self.proc_sigs.insert(
+            name,
+            ProcSig {
+                params: params.into_iter().map(|(_, ty)| ty).collect(),
+                ret,
+            },
+        );
+        Ok(())
+    }
+
+    /// Lower a procedure body into its own `IIRFunction`.
+    ///
+    /// A procedure is a *fresh* compilation context: its instructions,
+    /// source map, register set, labels, and scopes are entirely its own.
+    /// We therefore swap those fields out for empty ones, lower the body, snap
+    /// them back, and hand the collected instructions to a new function.  The
+    /// monotonic `temp_counter` / `label_counter` are intentionally **not**
+    /// reset, so generated names stay globally unique across functions.
+    ///
+    /// Parameter binding mirrors ALGOL's "the procedure name behaves like a
+    /// local variable holding the result": each value parameter is declared in
+    /// the procedure's root scope (slot == bare name == `IIRFunction` param),
+    /// and so is the procedure's own name, which the body assigns to and we
+    /// `ret` at the end.
+    fn compile_procedure(
+        &mut self,
+        proc_decl: &GrammarASTNode,
+    ) -> Result<IIRFunction, CompileError> {
+        self.set_loc(proc_decl);
+        let (name, params, ret) = self.procedure_parts(proc_decl)?;
+
+        // ── swap in a fresh emission context ─────────────────────────────
+        let saved_instrs = std::mem::take(&mut self.instrs);
+        let saved_source_map = std::mem::take(&mut self.source_map);
+        let saved_registers = std::mem::take(&mut self.register_names);
+        let saved_defined = std::mem::take(&mut self.defined_labels);
+        let saved_referenced = std::mem::take(&mut self.referenced_labels);
+        let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
+
+        // Bind value parameters and the result variable (the procedure name).
+        let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len());
+        for (pname, pty) in &params {
+            let slot = self.declare_var(pname, *pty)?;
+            param_pairs.push((slot, pty.iir().to_string()));
+        }
+        // The procedure's name is an in-scope variable holding the return
+        // value; seed it with a default so a path that never assigns it still
+        // returns a defined value.
+        let result_slot = self.declare_var(&name, ret)?;
+        self.emit(IIRInstr::new(
+            "const",
+            Some(result_slot.clone()),
+            vec![ret.default_operand()],
+            ret.iir(),
+        ));
+
+        // ── lower the body ───────────────────────────────────────────────
+        let body = first_direct_node(proc_decl, "proc_body")
+            .ok_or_else(|| CompileError::Malformed("procedure_decl missing proc_body".into()))?;
+        let inner = direct_nodes(body)
+            .first()
+            .copied()
+            .ok_or_else(|| CompileError::Malformed("proc_body is empty".into()))?;
+        match inner.rule_name.as_str() {
+            "block" => self.emit_block(inner, false)?,
+            "statement" => self.emit_statement(inner)?,
+            other => {
+                return Err(CompileError::Malformed(format!(
+                    "unexpected proc_body child {other:?}"
+                )))
+            }
+        }
+
+        // Labels do not cross the procedure boundary, so every `goto` target
+        // referenced inside the body must be defined inside the body.
+        for label in &self.referenced_labels {
+            if !self.defined_labels.contains(label) {
+                return Err(CompileError::Malformed(format!(
+                    "goto references undefined label {label:?} in procedure {name:?}"
+                )));
+            }
+        }
+
+        self.emit(IIRInstr::new(
+            "ret",
+            None,
+            vec![Operand::Var(result_slot)],
+            ret.iir(),
+        ));
+
+        // ── assemble the function and restore the caller's context ───────
+        let body_instrs = std::mem::take(&mut self.instrs);
+        let body_len = body_instrs.len();
+        let mut func = IIRFunction::new(name, param_pairs, ret.iir(), body_instrs);
+        func.type_status = FunctionTypeStatus::FullyTyped;
+        func.register_count = self.register_names.len().saturating_add(8).max(8);
+        let mut sm = std::mem::take(&mut self.source_map);
+        while sm.len() < body_len {
+            sm.push(SourceLoc::SYNTHETIC);
+        }
+        sm.truncate(body_len);
+        func.source_map = sm;
+
+        self.instrs = saved_instrs;
+        self.source_map = saved_source_map;
+        self.register_names = saved_registers;
+        self.defined_labels = saved_defined;
+        self.referenced_labels = saved_referenced;
+        self.scopes = saved_scopes;
+
+        Ok(func)
+    }
+
+    /// Lower a procedure *call* in value position (`sq(7)`), returning the
+    /// slot that holds the result.  Used from `emit_expr`.
+    fn emit_proc_call(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        self.set_loc(node);
+        let dest = self.emit_call_common(node)?;
+        Ok(dest)
+    }
+
+    /// Lower a procedure *call* in statement position (`bump(3)`).  The
+    /// returned value is computed but discarded.
+    fn emit_proc_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
+        self.set_loc(node);
+        self.emit_call_common(node)?;
+        Ok(())
+    }
+
+    /// Shared call-lowering for `proc_call` and `proc_stmt`: resolve the
+    /// signature, evaluate and type-check the actuals, then emit a `call`
+    /// whose `srcs[0]` names the callee and whose remaining `srcs` are the
+    /// argument slots, matching the IIR calling convention every backend
+    /// understands.
+    fn emit_call_common(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|t| t.effective_type_name() == "NAME")
+            .map(|t| t.value.clone())
+            .ok_or_else(|| CompileError::Malformed("call has no procedure name".into()))?;
+
+        let sig = self
+            .proc_sigs
+            .get(&name)
+            .cloned()
+            .ok_or_else(|| CompileError::Type(format!("call to undeclared procedure {name:?}")))?;
+
+        let actuals: Vec<&GrammarASTNode> = match first_direct_node(node, "actual_params") {
+            Some(ap) => direct_nodes(ap)
+                .into_iter()
+                .filter(|n| n.rule_name == "expression")
+                .collect(),
+            None => Vec::new(),
+        };
+        if actuals.len() != sig.params.len() {
+            return Err(CompileError::Type(format!(
+                "procedure {name:?} expects {} argument(s), got {}",
+                sig.params.len(),
+                actuals.len()
+            )));
+        }
+
+        let mut arg_slots = Vec::with_capacity(actuals.len());
+        for (actual, expected) in actuals.iter().zip(sig.params.iter()) {
+            let value = self.emit_expr(actual)?;
+            if value.ty != *expected {
+                return Err(CompileError::Type(format!(
+                    "procedure {name:?}: argument is {} but parameter is {}",
+                    value.ty.name(),
+                    expected.name()
+                )));
+            }
+            arg_slots.push(value.slot);
+        }
+
+        let dest = self.fresh_temp();
+        let mut srcs = Vec::with_capacity(arg_slots.len() + 1);
+        srcs.push(Operand::Var(name));
+        srcs.extend(arg_slots.into_iter().map(Operand::Var));
+        self.emit(IIRInstr::new(
+            "call",
+            Some(dest.clone()),
+            srcs,
+            sig.ret.iir(),
+        ));
+        Ok(ExprValue {
+            slot: dest,
+            ty: sig.ret,
+        })
+    }
+
     fn emit_statement(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
 
@@ -346,9 +717,7 @@ impl Compiler {
             "compound_stmt" => self.emit_compound(child),
             "for_stmt" => self.emit_for(child),
             "block" => self.emit_block(child, false),
-            "proc_stmt" => Err(CompileError::Unsupported(
-                "procedure call statements".into(),
-            )),
+            "proc_stmt" => self.emit_proc_stmt(child),
             other => Err(CompileError::Unsupported(format!("{other} statements"))),
         }
     }
@@ -746,9 +1115,7 @@ impl Compiler {
                     ty: binding.ty,
                 })
             }
-            "proc_call" => Err(CompileError::Unsupported(
-                "procedure calls in expressions".into(),
-            )),
+            "proc_call" => self.emit_proc_call(node),
             "expression" | "arith_expr" | "bool_expr" => self.emit_single_child_expr(node),
             "expr_eqv" | "expr_impl" | "expr_or" | "expr_and" | "simple_bool" | "implication"
             | "bool_term" | "bool_factor" => self.emit_bool_wrapper(node),
@@ -1416,6 +1783,17 @@ fn first_direct_node<'a>(node: &'a GrammarASTNode, rule: &str) -> Option<&'a Gra
     })
 }
 
+/// Collect the `NAME` tokens of an `ident_list` (`NAME { COMMA NAME }`) in
+/// order — used to read a procedure's formal parameters, `value` list, and
+/// `spec_part` identifier groups.
+fn ident_list_names(node: &GrammarASTNode) -> Vec<String> {
+    direct_tokens(node)
+        .into_iter()
+        .filter(|t| t.effective_type_name() == "NAME")
+        .map(|t| t.value.clone())
+        .collect()
+}
+
 fn single_token_recursive(node: &GrammarASTNode) -> Option<&Token> {
     let tokens = recursive_tokens(node);
     (tokens.len() == 1).then_some(tokens[0])
@@ -1611,5 +1989,112 @@ mod tests {
         let main = module.get_function("main").expect("main exists");
         assert_eq!(main.instructions.len(), main.source_map.len());
         assert_eq!(main.type_status, FunctionTypeStatus::FullyTyped);
+    }
+
+    // ---- AL3: typed procedures with value parameters ----
+
+    #[test]
+    fn compiles_and_runs_value_procedure() {
+        let src = "begin integer result; integer procedure sq(x); value x; integer x; \
+                   sq := x * x; result := sq(7) end";
+        assert_eq!(run_i64(src), 49);
+    }
+
+    #[test]
+    fn procedure_takes_multiple_value_parameters() {
+        let src = "begin integer result; integer procedure add(a, b); value a, b; integer a, b; \
+                   add := a + b; result := add(20, 22) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn recursive_procedure_runs() {
+        // Factorial uses an if-*statement* body so the recursion's base case is
+        // a `cond_stmt`, and recurses through a `proc_call` in the else branch.
+        let src = "begin integer result; integer procedure fact(n); value n; integer n; \
+                   if n < 2 then fact := 1 else fact := n * fact(n - 1); result := fact(5) end";
+        assert_eq!(run_i64(src), 120);
+    }
+
+    #[test]
+    fn boolean_value_procedure_runs() {
+        let src = "begin boolean b; integer result; boolean procedure neg(p); value p; boolean p; \
+                   neg := not p; b := neg(false); if b then result := 42 else result := 1 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn procedure_call_as_statement_runs() {
+        // A typed procedure invoked in statement position: the result is
+        // discarded, but the call still executes (and the assignment of `m`
+        // observes the surrounding program reached the statement).
+        let src = "begin integer result; integer procedure id(x); value x; integer x; id := x; \
+                   id(99); result := 42 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn procedure_emitted_as_sibling_function() {
+        let module = compile_source(
+            "begin integer result; integer procedure sq(x); value x; integer x; \
+             sq := x * x; result := sq(3) end",
+            "proc",
+        )
+        .expect("procedure should compile");
+        let sq = module.get_function("sq").expect("sq is a sibling function");
+        assert_eq!(sq.params, vec![("x".to_string(), "i64".to_string())]);
+        assert_eq!(sq.return_type, "i64");
+        assert_eq!(sq.type_status, FunctionTypeStatus::FullyTyped);
+        assert_eq!(sq.instructions.len(), sq.source_map.len());
+        // The call site in `main` names `sq` as srcs[0].
+        let main = module.get_function("main").expect("main exists");
+        let call = main
+            .instructions
+            .iter()
+            .find(|i| i.op == "call")
+            .expect("main calls sq");
+        assert!(matches!(call.srcs.first(), Some(Operand::Var(s)) if s == "sq"));
+    }
+
+    #[test]
+    fn rejects_void_procedure_cleanly() {
+        let err = compile_source(
+            "begin integer result; procedure noop; result := 1; result := 42 end",
+            "bad",
+        )
+        .expect_err("proper (void) procedures are outside this slice");
+        assert!(err.to_string().contains("void"));
+    }
+
+    #[test]
+    fn rejects_call_by_name_parameter() {
+        let err = compile_source(
+            "begin integer result; integer procedure f(x); integer x; f := x; result := f(1) end",
+            "bad",
+        )
+        .expect_err("call-by-name parameters are unsupported");
+        assert!(err.to_string().contains("value"));
+    }
+
+    #[test]
+    fn rejects_argument_count_mismatch() {
+        let err = compile_source(
+            "begin integer result; integer procedure sq(x); value x; integer x; sq := x * x; \
+             result := sq(1, 2) end",
+            "bad",
+        )
+        .expect_err("arity mismatch");
+        assert!(err.to_string().contains("argument"));
+    }
+
+    #[test]
+    fn rejects_argument_type_mismatch() {
+        let err = compile_source(
+            "begin integer result; integer procedure sq(x); value x; integer x; sq := x * x; \
+             result := sq(true) end",
+            "bad",
+        )
+        .expect_err("argument type mismatch");
+        assert!(err.to_string().to_lowercase().contains("boolean"));
     }
 }
