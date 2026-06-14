@@ -425,6 +425,19 @@ type GrammarLexer struct {
 	// tokenization. Multiple hooks compose left-to-right.
 	postTokenizeHooks []PostTokenizeHook
 
+	// F10: declarative mode transitions (from the transitions: section).
+	// Empty when the grammar has no transitions table (pre-F10 behaviour).
+	transitions []grammartools.ModeTransition
+
+	// F10: set of group names that inherit the default group's patterns.
+	// A group inherits when it is a set_mode target but not a push target.
+	// Pre-computed from transitions at construction time.
+	inheritingModes map[string]bool
+
+	// F10: the group the lexer starts in. Set from the grammar's start_mode:
+	// directive; defaults to "default" when unset.
+	startMode string
+
 	// caseInsensitive is true when the grammar was loaded with
 	// # @case_insensitive true. In this mode:
 	//   - The keyword set stores uppercase keyword values.
@@ -569,6 +582,14 @@ func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *Gra
 		layoutKeywordSet[kw] = struct{}{}
 	}
 
+	// F10: Compute flat-mode inheritance and resolve the start mode.
+	// When start_mode: is unset in the grammar, startMode defaults to "default".
+	startMode := grammar.StartMode
+	if startMode == "" {
+		startMode = "default"
+	}
+	inheritingModes := computeInheritingModes(grammar.Transitions)
+
 	return &GrammarLexer{
 		source:            src,
 		originalSource:    source,
@@ -586,7 +607,7 @@ func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *Gra
 		indentStack:       []int{0},
 		bracketDepth:      0,
 		groupPatterns:     groupPatterns,
-		groupStack:        []string{"default"},
+		groupStack:        []string{startMode},
 		onToken:           nil,
 		skipEnabled:       true,
 		aliasMap:          aliasMap,
@@ -595,6 +616,9 @@ func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *Gra
 		postTokenizeHooks: nil,
 		contextKeywordSet: contextKeywordSet,
 		layoutKeywordSet:  layoutKeywordSet,
+		transitions:       grammar.Transitions,
+		inheritingModes:   inheritingModes,
+		startMode:         startMode,
 	}
 }
 
@@ -838,6 +862,18 @@ func (l *GrammarLexer) tryMatchTokenInGroup(groupName string) *Token {
 	patterns, ok := l.groupPatterns[groupName]
 	if !ok {
 		patterns = l.patterns
+	}
+
+	// F10: flat-mode inheritance. Groups targeted by set_mode (but not push)
+	// inherit the default group's patterns as a fallthrough. This means
+	// group-specific patterns take priority, then the default patterns are
+	// tried for tokens that the group does not override.
+	if groupName != "default" && l.inheritingModes[groupName] {
+		defaultPatterns := l.groupPatterns["default"]
+		merged := make([]compiledPattern, 0, len(patterns)+len(defaultPatterns))
+		merged = append(merged, patterns...)
+		merged = append(merged, defaultPatterns...)
+		patterns = merged
 	}
 
 	for _, p := range patterns {
@@ -1104,9 +1140,16 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 				if ctx.skipEnabled != nil {
 					l.skipEnabled = *ctx.skipEnabled
 				}
+
+				// F10: Apply declarative transitions after callback processing.
+				// Transitions see the group stack state after the callback has
+				// already applied its push/pop actions.
+				l.applyTransitions(*tok)
 			} else {
 				tokens = append(tokens, *tok)
 				l.lastEmittedToken = tok
+				// F10: Apply declarative transitions.
+				l.applyTransitions(*tok)
 			}
 			continue
 		}
@@ -1119,7 +1162,7 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 	// Reset group stack and skip state for reuse. This ensures the lexer
 	// can be called multiple times without group state leaking between
 	// tokenize() calls.
-	l.groupStack = []string{"default"}
+	l.groupStack = []string{l.startMode}
 	l.skipEnabled = true
 
 	return tokens
@@ -1184,6 +1227,8 @@ func (l *GrammarLexer) tokenizeIndentation() []Token {
 			l.updateBracketDepth(tok.Value)
 			tokens = append(tokens, *tok)
 			l.lastEmittedToken = tok
+			// F10: Apply declarative transitions after each regular token.
+			l.applyTransitions(*tok)
 			continue
 		}
 
