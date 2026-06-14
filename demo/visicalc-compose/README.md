@@ -1,82 +1,86 @@
-# VisiCalc — Compose for Desktop demo
+# VisiCalc — Compose for Desktop demo (live, on the Rust engine)
 
-Sixth cross-backend visual demo (Phase 2 / VC2-compose), running on
-[Compose Multiplatform for Desktop](https://www.jetbrains.com/lp/compose-multiplatform/).
+The Compose Multiplatform (Desktop) VisiCalc demo, now **computing on the shared
+Rust `spreadsheet-core` engine** through its C ABI (`spreadsheet-capi`), reached
+via the **Java Foreign Function & Memory API** — the zero-JNI path Compose and
+Android use. The same engine the SwiftUI / Qt demos link natively, the Flutter
+demo loads via dart:ffi, and the web demos run as WebAssembly. Fourth native
+backend on the one engine.
 
 ## What it shows
 
-A `Window` (from `androidx.compose.ui.window`) containing:
+A `Window` (from `androidx.compose.ui.window`) mounting the auto-generated
+`FormulaBar` and `Grid` composables (`src/main/kotlin/generated/`, produced by
+`mosaic-compile --backend compose` from the shared `demo/visicalc/mosaic/*`
+sources).
 
-- A hand-written **`FormulaBar`** composable
-  (`src/main/kotlin/FormulaBar.kt`) — placeholder for the eventual
-  `mosaic-compile --backend compose` output.
-- A hand-written **`Grid`** composable (`src/main/kotlin/Grid.kt`),
-  visually matching what the eventual Compose Grid emitter should
-  produce.
+- The grid renders **engine-computed** values: the classic cross-footing budget
+  where column E totals each row, row 5 totals each column, and E5 is the grand
+  total (169) — all formulas evaluated by the Rust engine, not hard-coded.
+- Editing the formula bar writes through to the engine via
+  `SpreadsheetModel.setCell`; the host rebuilds `viewportRows` from the engine,
+  so Compose recomposes the grid with the recomputed values.
 
-Tap a cell — the formula bar updates with its value, the selected
-cell gets the excel-blue highlight. Type in the formula bar — it
-updates the local `mutableStateOf`.
+## How it's wired to the engine
 
-5×5 sample spreadsheet hard-coded in `src/main/kotlin/Main.kt`'s
-`sampleRows`, matching the data in every other VisiCalc demo so all
-seven look visually identical.
-
-## What this demo does NOT yet do
-
-- **No `mosaic-compile --backend compose`** exists in the repo.
-  Everything in `src/main/kotlin/` is hand-written.  When the
-  Compose emitter lands, `FormulaBar.kt` will be replaced by
-  `src/main/kotlin/generated/FormulaBar.kt` and this demo will
-  shift to a half-generated, half-hand-written shape like
-  `demo/visicalc-swiftui` does today.
-- **No strict-Flux dispatch yet.**  Local state via
-  `remember { mutableStateOf(...) }` for v0.1.0.  When the Compose
-  emitter is generating a real `dispatch: (Event) -> Unit`
-  parameter, the host will switch to a `MosaicStore<AppState>` from
-  the `mosaic-flux-compose` runtime (which is already pulled in as
-  an `includeBuild` composite-build dep, just not exercised yet).
-
-## How to run the app
-
-```bash
-./gradlew run                  # launches the desktop window
-./gradlew packageDistributionForCurrentOS    # native installer
+```
+Compose composables (generated)  ──  SpreadsheetModel / SpreadsheetSession (Engine.kt)
+   Grid(viewportRows = …)            │  sc_set_cell / sc_get_value … (Java FFM, String↔char*)
+                                     ▼
+   native/libspreadsheet_capi.dylib  ←  spreadsheet-capi (Rust C ABI)  ←  spreadsheet-core
 ```
 
-Compose Multiplatform handles the JVM + native bundling for macOS
-(`.dmg`), Linux (`.deb`), and Windows (`.msi`).
+`Engine.kt` binds the C ABI with `java.lang.foreign` (`Linker`/`SymbolLookup`/
+`Arena`) — **no third-party FFI dependency** — and maps the engine's JSON value
+shape into display text.
 
-## Prerequisites
+## Build, test, run
 
-- JDK 17+ (Compose 1.6 requires Java 17 minimum).
-- Gradle is fetched automatically by `./gradlew`; no system install
-  needed.
-- macOS / Linux / Windows.  No Android SDK required — Compose
-  Multiplatform for Desktop targets the JVM directly.
+Requires **JDK 21+** (the Java FFM API is preview on 21, final on 22) and a Rust
+toolchain to build the engine.
+
+```bash
+bash scripts/build.sh    # regenerate composables + build & vendor the engine (cdylib)
+bash scripts/verify.sh   # HEADLESS: compile Engine.kt + smoke, run via FFM — proves
+                         #   the grid is engine-computed and recomputes on edit
+gradle --no-daemon run   # launch the desktop window (FFM run args set in build.gradle.kts)
+```
+
+`scripts/verify.sh` compiles `Engine.kt` + `test/EngineSmoke.kt` with `kotlinc`
+(no Compose, no Gradle) and runs them with `--enable-preview
+--enable-native-access=ALL-UNNAMED`, loading the vendored engine. It asserts the
+grid is engine-computed (E1 = 38, A5 = 39, E5 = 169), that editing A1 15 → 115
+recomputes the totals (E5 → 269), and that a formula computes with binary-op
+error propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it → `#DIV/0!`).
 
 ## Why "Compose for Desktop" rather than Jetpack Compose for Android?
 
 Same `androidx.compose.*` packages, same composable functions, same
-`MaterialTheme`.  The runtime API is identical.  We target Desktop
-here so the demo runs locally with no emulator and screenshots come
-out of a real OS window.  An Android variant is a straight port:
-swap `WindowGroup`/`Window` for an `Activity` + `setContent`, the
-composables themselves are unchanged.
+`MaterialTheme`.  The runtime API is identical.  We target Desktop here so the
+demo runs locally with no emulator.  An Android variant is a straight UI port
+(swap `Window` for an `Activity` + `setContent`) — the one engine difference is
+that Android's runtime has no Java FFM, so the engine would be reached through a
+thin **JNI** bridge over the same C ABI, with the Rust library cross-compiled to
+a per-ABI `.so` and bundled under `jniLibs/`. The C ABI is unchanged; only the
+binding mechanism differs (FFM on the JVM, JNI on Android).
 
 ## File tree
 
 ```
 demo/visicalc-compose/
 ├── README.md                     ← this file
-├── BUILD                          ← `./gradlew run` from the build-tool
-├── .gitignore                     ← .gradle/, .gradle-out/, build/, etc.
+├── BUILD                          ← `gradle run` from the build-tool
+├── .gitignore                     ← .gradle/, .gradle-out/, build/, native/, …
 ├── settings.gradle.kts            ← includes ../../code/packages/kotlin/mosaic-flux-compose
-├── build.gradle.kts               ← kotlin("jvm") + org.jetbrains.compose plugin
+├── build.gradle.kts              ← kotlin("jvm") + compose plugin; JDK 21 + FFM run args
+├── native/                        ← vendored libspreadsheet_capi.* (git-ignored)
 ├── scripts/
-│   └── build.sh                   ← stub for future mosaic-compile --backend compose
+│   ├── build.sh                  ← mosaic-compile --backend compose + build/vendor engine
+│   └── verify.sh                 ← headless FFM smoke (kotlinc + java --enable-preview)
+├── test/
+│   └── EngineSmoke.kt            ← asserts the grid is engine-computed + recomputes
 └── src/main/kotlin/
-    ├── Main.kt                    ← `application { Window { ... } }`
-    ├── FormulaBar.kt              ← hand-written FormulaBar composable
-    └── Grid.kt                    ← hand-written Grid composable
+    ├── Main.kt                   ← `application { Window { ... } }`, binds the engine model
+    ├── Engine.kt                 ← Java FFM bindings + SpreadsheetModel
+    └── generated/                ← FormulaBar.kt + Grid.kt (mosaic-compile output)
 ```

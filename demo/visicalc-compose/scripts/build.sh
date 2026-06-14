@@ -88,9 +88,25 @@ TMP="$OUT_DIR/Grid.kt.tmp"
 } > "$TMP"
 mv "$TMP" "$OUT_DIR/Grid.kt"
 
-echo "Done. Generated:"
+echo "Building the spreadsheet engine (Rust → dynamic lib) and vendoring it..."
+# The C ABI dynamic library the Kotlin host loads through the Java FFM API (see
+# Engine.kt), built from the spreadsheet-capi crate (cdylib) and copied into
+# native/ (git-ignored). Java FFM's SymbolLookup.libraryLookup needs a
+# .dylib/.so/.dll, the same dynamic packaging the Flutter demo uses.
+RUST="$REPO_ROOT/code/packages/rust"
+(cd "$RUST" && cargo build -p spreadsheet-capi --release)
+mkdir -p "$DEMO_DIR/native"
+case "$(uname -s)" in
+  Darwin) LIB="libspreadsheet_capi.dylib" ;;
+  *)      LIB="libspreadsheet_capi.so" ;;
+esac
+cp "$RUST/target/release/$LIB" "$DEMO_DIR/native/$LIB"
+
+echo "Done. Generated composables + vendored engine:"
 ls -la "$OUT_DIR"
+ls -la "$DEMO_DIR/native"
 echo
-echo "To run the demo:"
-echo "  cd $DEMO_DIR"
-echo "  gradle --no-daemon run"
+echo "Verify (headless: grid is engine-computed + recomputes; needs JDK 21+):"
+echo "  cd $DEMO_DIR && bash scripts/verify.sh"
+echo "Run the desktop app (needs JDK 21+ for the FFM API):"
+echo "  cd $DEMO_DIR && gradle --no-daemon run"

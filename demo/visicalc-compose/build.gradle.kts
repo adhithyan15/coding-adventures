@@ -42,24 +42,33 @@ dependencies {
     implementation("org.mosaic.flux:mosaic-flux-compose:0.1.0")
 }
 
+// Target JDK 21: the engine is reached through the Java Foreign Function &
+// Memory API (Engine.kt), which is preview on JDK 21 and final on JDK 22.
 kotlin {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 compose.desktop {
     application {
         mainClass = "MainKt"
 
-        // Native-distribution packaging (.dmg / .msi / .deb) is
-        // intentionally left unconfigured for v0.1.0.  The demo's
-        // sole job is to render the window via `./gradlew run`; the
-        // packaging story belongs to a follow-up PR.
+        // The demo computes on the Rust engine through the Java FFM API (see
+        // src/main/kotlin/Engine.kt). FFM is a preview feature on JDK 21, so
+        // pass --enable-preview at run time; --enable-native-access silences the
+        // restricted-method warning. (Both become unnecessary on JDK 22+, where
+        // FFM is final.) Engine.kt loads native/libspreadsheet_capi.* relative
+        // to the run directory.
+        jvmArgs += listOf("--enable-preview", "--enable-native-access=ALL-UNNAMED")
+
+        // Native-distribution packaging (.dmg / .msi / .deb) is intentionally
+        // left unconfigured; the demo's job is to render the window via
+        // `gradle run`.
     }
 }

@@ -46,19 +46,12 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.rememberWindowState
 
-// The 5×5 sample dataset shared with every other visicalc-* demo.
-// Hard-coded here for the v0.1.0 visual parity exercise — when the
-// strict-Flux contract is wired up, this moves into `AppState.cells`.
-// The first cell of every row is the spreadsheet's row-number gutter
-// ("1".."5"), mirroring the row-label column the React / HTML / SwiftUI
-// demos render down the left edge.  The five data columns A–E follow.
-private val sampleRows: List<List<String>> = listOf(
-    listOf("1", "15", "3",  "12", "8",  "5"),
-    listOf("2", "8",  "14", "7",  "22", "11"),
-    listOf("3", "12", "9",  "18", "6",  "25"),
-    listOf("4", "4",  "11", "3",  "17", "9"),
-    listOf("5", "7",  "5",  "13", "10", "19"),
-)
+// The 5×5 spreadsheet is no longer hard-coded: it's computed by the shared Rust
+// engine, reached through the C ABI via the Java Foreign Function & Memory API
+// (see Engine.kt). The model seeds the same cross-footing budget every other
+// VC2-* demo shows (column E totals each row, row 5 totals each column,
+// E5 = 169), and editing the formula bar writes through to the engine and
+// recomputes every cell.
 
 fun main() = application {
     Window(
@@ -89,6 +82,12 @@ private fun VisiCalcApp() {
     // to `Double` and casts For-loop indices to `Double` too so
     // verbatim Expr like `r == editRow` compiles cleanly).  The
     // host mirrors that on its state for a clean pass-through.
+    // The engine-backed model. Its display matrix is held in `viewportRows`
+    // state, rebuilt from the engine after every edit so Compose recomposes the
+    // grid with freshly-computed values.
+    val model = remember { SpreadsheetModel() }
+    var viewportRows by remember { mutableStateOf(model.viewportRows()) }
+
     var selectedRow by remember { mutableStateOf(0.0) }
     // Column 0 is the row-number gutter, so the first *data* column (A)
     // is index 1.  Start with A1 selected to match the sibling demos.
@@ -96,7 +95,8 @@ private fun VisiCalcApp() {
     var editRow     by remember { mutableStateOf(-1.0) }
     var editCol     by remember { mutableStateOf(-1.0) }
     var editContent by remember { mutableStateOf("") }
-    var formulaText by remember { mutableStateOf("=SUM(B1:B5)") }
+    // Start showing the selected cell's source (A1 → "15") in the bar.
+    var formulaText by remember { mutableStateOf(model.rawAt(0, 1)) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         // Title row — kebab-cased label up top, matching the
@@ -119,9 +119,15 @@ private fun VisiCalcApp() {
                 dispatch = { event ->
                     when (event) {
                         is FormulaBarEvent.FormulaChange -> formulaText = event.value
-                        is FormulaBarEvent.Commit -> { /* no-op for v0.1.0 */ }
+                        is FormulaBarEvent.Commit -> {
+                            // Write the edit to the engine, recompute the grid,
+                            // and reflect the cell's canonicalised source.
+                            model.setCell(selectedRow.toInt(), selectedCol.toInt(), formulaText)
+                            viewportRows = model.viewportRows()
+                            formulaText = model.rawAt(selectedRow.toInt(), selectedCol.toInt())
+                        }
                         is FormulaBarEvent.Cancel ->
-                            formulaText = sampleRows[selectedRow.toInt()][selectedCol.toInt()]
+                            formulaText = model.rawAt(selectedRow.toInt(), selectedCol.toInt())
                     }
                 },
             )
@@ -135,7 +141,7 @@ private fun VisiCalcApp() {
                 // Leading "" is the empty header above the row-number
                 // gutter column; A–E label the five data columns.
                 columnHeaders = listOf("", "A", "B", "C", "D", "E"),
-                viewportRows = sampleRows,
+                viewportRows = viewportRows,
                 columnWidths = listOf(48.0, 96.0, 96.0, 96.0, 96.0, 96.0),
                 totalHeight = 0.0,
                 selectedRow = selectedRow,
@@ -148,12 +154,8 @@ private fun VisiCalcApp() {
                         is GridEvent.Navigate -> {
                             selectedRow = event.row
                             selectedCol = event.col
-                            val r = event.row.toInt()
-                            val c = event.col.toInt()
-                            if (r in sampleRows.indices &&
-                                c in sampleRows[r].indices) {
-                                formulaText = sampleRows[r][c]
-                            }
+                            // Pull the newly-selected cell's source into the bar.
+                            formulaText = model.rawAt(event.row.toInt(), event.col.toInt())
                         }
                         is GridEvent.FormulaChange -> editContent = event.value
                         is GridEvent.EditCommit -> {
