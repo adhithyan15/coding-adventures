@@ -77,6 +77,8 @@ packages a typed surface for:
   acceptance gate
 - Hue package release handoff summaries that turn accepted package state into
   final release/manual-review handoff checks
+- Hue package release queue summaries that turn release handoff readiness into
+  final queue entry checks for publish/release coordination
 
 ## Dependencies
 
