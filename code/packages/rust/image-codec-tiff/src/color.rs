@@ -129,85 +129,30 @@ pub fn apply_color_pipeline(
     rgb_linear: Vec<(u16, u16, u16)>,
     opts: &TiffDecodeOptions,
 ) -> Vec<(u8, u8, u8)> {
-    // Effective white level: if set to u32::MAX (the default), treat 65535 as full scale.
-    let white = if opts.white_level == u32::MAX {
-        65535.0f64
-    } else {
-        opts.white_level as f64
-    };
+    // Translate the u32::MAX sentinel: default opts mean "16-bit full scale".
+    // The shared pipeline takes a concrete white_level, not a sentinel.
+    let white_level = if opts.white_level == u32::MAX { 65535 } else { opts.white_level };
 
-    // Avoid division by zero.
-    let white = if white <= 0.0 { 65535.0 } else { white };
-
-    rgb_linear
-        .into_iter()
-        .map(|(r_raw, g_raw, b_raw)| {
-            // Step 1: Normalize to [0.0, 1.0].
-            let r = r_raw as f64 / white;
-            let g = g_raw as f64 / white;
-            let b = b_raw as f64 / white;
-
-            // Step 2: Apply white balance multipliers.
-            // Each channel is scaled independently to compensate for the
-            // colour temperature of the scene illuminant.
-            let r = r * opts.wb_multipliers[0];
-            let g = g * opts.wb_multipliers[1];
-            let b = b * opts.wb_multipliers[2];
-
-            // Step 3: Apply 3×3 colour matrix.
-            // The matrix maps camera RGB → linear sRGB. For most images, this
-            // is the identity. RAW codec callers supply camera-specific matrices.
-            //
-            // ```text
-            // [r']   [m00 m01 m02]   [r]
-            // [g'] = [m10 m11 m12] × [g]
-            // [b']   [m20 m21 m22]   [b]
-            // ```
-            let m = &opts.color_matrix;
-            let r2 = m[0][0] * r + m[0][1] * g + m[0][2] * b;
-            let g2 = m[1][0] * r + m[1][1] * g + m[1][2] * b;
-            let b2 = m[2][0] * r + m[2][1] * g + m[2][2] * b;
-
-            // Step 4: Apply sRGB gamma transfer function.
-            // Clip to [0, 1] first to keep gamma well-behaved.
-            let r3 = apply_srgb_gamma(r2.clamp(0.0, 1.0));
-            let g3 = apply_srgb_gamma(g2.clamp(0.0, 1.0));
-            let b3 = apply_srgb_gamma(b2.clamp(0.0, 1.0));
-
-            // Step 5: Scale to [0, 255] and round.
-            let to_u8 = |v: f64| (v * 255.0).round().clamp(0.0, 255.0) as u8;
-            (to_u8(r3), to_u8(g3), to_u8(b3))
-        })
-        .collect()
+    // opts.black_level is [u32;4] (per CFA channel). The TIFF decoder applies
+    // pedestal subtraction during Bayer demosaicing, so by the time pixels
+    // reach this function they are already pedestal-free — pass 0 here.
+    image_raw_pipeline::apply_color_pipeline(
+        &rgb_linear,
+        0,
+        white_level,
+        opts.wb_multipliers,
+        opts.color_matrix,
+    )
 }
 
 /// Apply the sRGB gamma transfer function to a single linear value.
 ///
-/// The IEC 61966-2-1 (sRGB) standard specifies:
-///
-/// ```text
-/// V = 12.92 × L                     if L ≤ 0.0031308
-/// V = 1.055 × L^(1/2.4) − 0.055    if L > 0.0031308
-/// ```
-///
-/// This converts a linear-light value in [0, 1] to a gamma-corrected value
-/// in [0, 1] that monitors display correctly.
-///
-/// ## Why gamma at all?
-///
-/// Human vision is non-linear — we can distinguish more shades in the dark
-/// than in the light. Gamma encoding allocates more bits to the darker tones,
-/// which is more efficient. Monitors apply the inverse (display gamma ≈ 2.2)
-/// to recover the linear signal.
+/// Delegates to `image_raw_pipeline::srgb_gamma` — the canonical IEC 61966-2-1
+/// implementation. Kept as a named entry-point so downstream callers and tests
+/// don't need to know about the shared crate directly.
 #[inline]
 pub fn apply_srgb_gamma(linear: f64) -> f64 {
-    if linear <= 0.0031308 {
-        // Linear segment: very dark values
-        12.92 * linear
-    } else {
-        // Power segment: standard gamma for everything else
-        1.055 * linear.powf(1.0 / 2.4) - 0.055
-    }
+    image_raw_pipeline::srgb_gamma(linear)
 }
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
