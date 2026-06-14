@@ -695,9 +695,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-092 — division mis-lexed as regex (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.40). `minify_regex_div` ignored.
+- **Status:** RESOLVED by F10 (declarative lexer mode transitions). `regex_div` enforced.
 - **Input:** `var x=a/b/c;` → **Upstream:** `var x=a/b/c;` (closurec emits `a /b/ c`).
 - **What it needs:** the JavaScript lexer treats the `/b/` in `a/b/c` as a REGEX literal rather than two DIVISION operators, and the re-stitcher then adds separating spaces around the "regex". Regex-vs-division disambiguation requires knowing whether the preceding token ends an expression (then `/` is division) or not (then `/` may start a regex) — a lexer-level concern. The output stays valid JS (same grouping), so this is byte-identity only, not a correctness bug.
+- **F10 resolution:** `es2025.tokens` now declares `start_mode: default` and a flat `div` mode plus a `transitions:` table (Acorn's `exprAllowed`, expressed declaratively). After a value-producing token (NAME/NUMBER/STRING/REGEX/`)`/`]`/`this`/…) the lexer enters `div` mode, whose `group div:` overrides `SLASH`/`SLASH_EQUALS` ahead of `REGEX`, so the next `/` lexes as DIVISION. Operators, openers and expression-keywords return it to `default` (regex) mode. The shared `GrammarLexer` interprets the table (no hand-written per-language callback). `javascript-lexer/_grammar.rs` regenerated. Sibling gap-115 (`a/b/c` chain) and gap-119 (`return/re/`) resolved by the same mechanism.
 
 ### gap-093 — number-literal member access paren-wrap (WHITESPACE_ONLY)
 
@@ -847,9 +848,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-115 — regex/division disambiguation: `a/b/c` mis-lexed as a regex (WHITESPACE_ONLY, CORRECTNESS)
 
-- **Status:** OPEN (discovered CLOC14.56). `minify_div_chain` ignored. **HIGH PRIORITY — corrupts output to non-parseable JS.**
+- **Status:** RESOLVED by F10 (declarative lexer mode transitions). `div_chain` enforced. (Was HIGH PRIORITY — it corrupted output to non-parseable JS.)
 - **Input:** `x=a/b/c;` → **Upstream:** `x=a/b/c;` but **closurec:** `x=a /b/ c;`. A `/` that follows a VALUE-producing token (identifier, number, `)`, `]`, string, etc.) is the DIVISION operator; only after an operator / statement-start / `(` / `,` / etc. does `/` begin a regex literal. closurec's lexer greedily pairs the two slashes of `a/b/c` into a REGEX literal `/b/`, yielding the token stream `a` `/b/` `c` and emitting `a /b/ c` — which is INVALID JS (two adjacent primary expressions with a regex between them). Affects `a/b/c`, `4/2/1`, `a/b+c/d`, `(a)/b/c`; a SINGLE division `a/b` already lexes correctly (only one slash, no regex pairing). This is the classic ASI-free regex-vs-division context problem.
 - **What it needs:** the lexer must track whether a `/` is in DIVISION position (after a value-producing token) or REGEX position (after an operator / `(` / `,` / `{` / `;` / keyword / statement start) and only start a regex literal in the latter. Lexer-level (sibling of gap-044 template lexing) — likely a grammar/lexer-callback change, not a token re-stitch. CORRECTNESS, not just byte-identity.
+- **F10 resolution:** the `div`/`default` mode table (see gap-092) tracks division-vs-regex position declaratively. Each operand re-establishes division position: `a` (value-producer) → `div`, so the first `/` lexes as DIVISION and returns the lexer to `default`; then `b` → `div`, so the second `/` is again DIVISION. The whole chain `a/b/c` lexes as `a / b / c` and round-trips byte-identically. No hand-written lexer callback.
 
 ### gap-116 — canonical numeric string property key not unquoted (WHITESPACE_ONLY)
 
@@ -874,9 +876,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-119 — spurious space between `return` keyword and regex literal (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.57). `minify_regex_after_return` ignored.
+- **Status:** RESOLVED by F10 + a `needs_separator` refinement. `regex_after_return` enforced.
 - **Input:** `function f(){return/a/g}` → **Upstream:** `function f(){return/a/g};` but **closurec:** `function f(){return /a/g};`. A regex literal immediately following the `return` keyword gets a spurious separating space. `return/a/g` is valid JS (a regex is expected in expression position after `return`), so upstream glues them; closurec's separator logic inserts a space between the word-like `return` token and the `/`-led regex token.
-- **Family / risk:** regex/division disambiguation family — sibling of gap-115 (`a/b/c` mis-lexed as regex, CORRECTNESS). The space here is harmless (output stays valid) but non-byte-identical. Because the separator decision is entangled with whether the `/` begins a regex or a division operator, this is deferred until the regex/division lexing (gap-115) is settled, so a fix here does not paper over the deeper lexer issue.
+- **Family / risk:** regex/division disambiguation family — sibling of gap-115 (`a/b/c` mis-lexed as regex, CORRECTNESS). The space here is harmless (output stays valid) but non-byte-identical.
+- **Resolution:** two parts. (1) F10's `default`-mode rule keeps `return` in regex position, so `/a/g` lexes as a SINGLE `REGEX` token (no longer split into `/a/` + `g`). (2) `needs_separator` in `whitespace_only.rs` gained a short-circuit: a `REGEX` literal as the RIGHT token never needs a leading separator from a word-like token, because a regex's first emitted character is `/` (a punctuator) — `return/a/g`, `typeof/x/`, `x in/re/` all join cleanly. The lone hazard (the previous token's emitted text ENDING in `/`, which would glue into a `//` line comment) is guarded: only a `/` division operator or a flagless `/x/` regex can do that, and we fail safe and keep the space for them. New helper `is_regex(tok)` (grammar `type_name == "REGEX"`); unit tests `gap119_regex_after_return_no_space` + `gap119_regex_after_assign_preserved`.
 
 ### gap-120 — non-integer numeric property key not quoted/canonicalised (WHITESPACE_ONLY)
 
