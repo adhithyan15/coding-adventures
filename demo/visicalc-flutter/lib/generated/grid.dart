@@ -62,50 +62,56 @@ class Grid extends StatelessWidget {
         children: [
           Column(
             children: [
-              Column(children: columnWidths.asMap().entries.map((entry) {
+              ...columnWidths.asMap().entries.map((entry) {
                 final cw = entry.key;
                 final w = entry.value;
-                return KeyedSubtree(key: ValueKey(cw), child: const SizedBox.shrink() /* Col — Flutter colgroup has no visual analog */);
-              }).toList()),
+                return const SizedBox.shrink() /* Col — Flutter colgroup has no visual analog */;
+              }),
             ],
           ),
           Column(
             children: [
               Row(
                 children: [
-                  Column(children: columnHeaders.asMap().entries.map((entry) {
+                  ...columnHeaders.asMap().entries.map((entry) {
                     final ch = entry.key;
                     final h = entry.value;
-                    return KeyedSubtree(key: ValueKey(ch), child: Container(
-                          child:                           Text(( h )), color: const Color(0xFF9D9D9D)
-                        ));
-                  }).toList()),
+                    return Container(
+                        width: columnWidths[ch],
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(color: const Color(0xFF2D2D30), border: Border.all(color: const Color(0xFF3F3F46), width: 1)),
+                        child: DefaultTextStyle.merge(style: TextStyle(color: const Color(0xFF9D9D9D), fontFamily: "monospace", fontSize: 12), child: Text(( h ))),
+                      );
+                  }),
                 ],
               ),
             ],
           ),
           Column(
             children: [
-              Column(children: viewportRows.asMap().entries.map((entry) {
+              ...viewportRows.asMap().entries.map((entry) {
                 final r = entry.key;
                 final row = entry.value;
-                return KeyedSubtree(key: ValueKey(r), child: Row(
-                      children: [
-                        Column(children: row.asMap().entries.map((entry) {
-                          final c = entry.key;
-                          final v = entry.value;
-                          return KeyedSubtree(key: ValueKey(c), child: Container(
-                                child: Column(children: [
-                                  ((( r == editRow && c == editCol )) ? TextField(
-                                      controller: TextEditingController(text: editContent),
-                                      onChanged: (value) => dispatch(GridEventFormulaChange(value: value)),
-                                    ) : Text(( v ))),
-                                ]), padding: const EdgeInsets.all(2), height: 22
-                              ));
-                        }).toList()),
-                      ],
-                    ));
-              }).toList()),
+                return Row(
+                    children: [
+                      ...row.asMap().entries.map((entry) {
+                        final c = entry.key;
+                        final v = entry.value;
+                        return Container(
+                            width: columnWidths[c],
+                            height: 22,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(color: (( ( r == selectedRow && c == selectedCol ) )) ? const Color(0xFF264F78) : (( ( r == editRow && c == editCol ) )) ? const Color(0xFF1F4F3F) : null, border: Border.all(color: const Color(0xFF3F3F46), width: 1)),
+                            child: DefaultTextStyle.merge(style: TextStyle(color: (( ( r == selectedRow && c == selectedCol ) )) ? const Color(0xFFFFFFFF) : const Color(0xFFCCCCCC), fontFamily: "monospace", fontSize: 12), child: ((( r == editRow && c == editCol )) ? TextField(
+                                  controller: TextEditingController(text: editContent),
+                                  onChanged: (value) => dispatch(GridEventFormulaChange(value: value)),
+                                ) : Text(( v )))),
+                          );
+                      }),
+                    ],
+                  );
+              }),
             ],
           ),
         ],
