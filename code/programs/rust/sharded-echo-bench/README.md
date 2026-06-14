@@ -50,14 +50,33 @@ This is a kernel-policy difference, not a bug in the runtime:
 | **macOS / *BSD** | permits the multi-bind but delivers all connections to **one** socket (in practice the last bound) — no distribution |
 | **FreeBSD** | balanced *only* with `SO_REUSEPORT_LB` (a separate option) |
 
-So the multi-core runtime scales on **Linux** (the deployment target, and where
-CI runs); on macOS it binds N reactors but the kernel hands them all to one. The
-benchmark makes that explicit rather than hiding it behind an averaged number.
+The benchmark makes that explicit rather than hiding it behind an averaged number.
 
-**Future work** (not this crate): for real multi-core accept distribution on
-macOS/BSD, the runtime would need an explicit fan-out — e.g. a single accept loop
-that round-robins accepted fds to per-core reactors, or `SO_REUSEPORT_LB` on
-FreeBSD — instead of relying on the kernel to balance plain `SO_REUSEPORT`.
+### Resolved: macOS/BSD now distribute via an accept fan-out
+
+`tcp-runtime` since 0.1.5 closes this gap: on macOS/BSD a `ShardedTcpRuntime` with
+`worker_count > 1` uses an explicit **accept fan-out** — one acceptor owns the
+client-facing listener and round-robins each accepted socket to a worker reactor
+(via `adopt_stream` / `StreamMailbox::adopt_connection`) — instead of relying on
+the kernel to balance plain `SO_REUSEPORT`. With the fan-out the macOS shard
+balance is now even:
+
+```
+ workers |   conns/s |     req/s |   MiB/s |  p50 µs |  p99 µs | shard balance
+       1 |     40569 |    111142 |     6.8 |   604.0 |   824.6 | [100%]
+       2 |     64655 |    108901 |     6.6 |   587.3 |   753.0 | [50% 50%]
+       4 |     70556 |    104371 |     6.4 |   605.2 |   853.5 | [25% 25% 25% 25%]
+       8 |     76954 |     99503 |     6.1 |   619.3 |  1131.1 | [13% 13% 13% 13% 13% 13% 13% 13%]
+```
+
+`conns/s` now scales with shards (connection *setup* parallelizes, 40k → 77k).
+But note the steady-state `req/s` for this trivial echo is still flat — that's
+expected and honest: echo on loopback is **latency-bound, not CPU-bound**, so even
+distribution doesn't add throughput until the per-connection work is heavy enough
+to saturate a core (real parsing, TLS, compute…). Even distribution is necessary
+for multi-core scaling; it is not sufficient on its own for a near-zero workload.
+Linux uses the kernel `SO_REUSEPORT` balancing and reaches the same even
+distribution by a different route.
 
 ## Reading the rest honestly
 

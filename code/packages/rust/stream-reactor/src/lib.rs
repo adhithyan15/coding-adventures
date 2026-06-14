@@ -84,6 +84,12 @@ pub struct StreamReactorOptions {
     /// `0` for a single reactor, which makes [`ConnectionId`]s identical to the
     /// original unsharded scheme (a sequence counter starting at 1).
     pub shard_bits: u32,
+    /// Whether this reactor accepts new connections on its own listener (`true`,
+    /// the default).  A fan-out *worker* sets this `false`: it still binds a
+    /// listener (the constructor requires one) but never enables accept interest,
+    /// so it serves only connections handed to it by adoption — direct connects to
+    /// its throwaway port are never accepted, closing an otherwise-open ingress.
+    pub accept_connections: bool,
     pub read_buffer_size: usize,
     pub max_connections: usize,
     pub max_pending_write_bytes: usize,
@@ -97,6 +103,7 @@ impl Default for StreamReactorOptions {
             stream: StreamOptions::default(),
             shard_index: 0,
             shard_bits: 0,
+            accept_connections: true,
             read_buffer_size: DEFAULT_READ_BUFFER_SIZE,
             max_connections: DEFAULT_MAX_CONNECTIONS,
             max_pending_write_bytes: DEFAULT_MAX_PENDING_WRITE_BYTES,
@@ -111,6 +118,7 @@ impl PartialEq for StreamReactorOptions {
             && self.stream == other.stream
             && self.shard_index == other.shard_index
             && self.shard_bits == other.shard_bits
+            && self.accept_connections == other.accept_connections
             && self.read_buffer_size == other.read_buffer_size
             && self.max_connections == other.max_connections
             && self.max_pending_write_bytes == other.max_pending_write_bytes
@@ -325,11 +333,18 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         let listener_addr = platform.local_addr(listener).map_err(|error| {
             PlatformError::ProviderFault(format!("read listener address: {error}"))
         })?;
-        platform
-            .set_listener_interest(listener, true)
-            .map_err(|error| {
-                PlatformError::ProviderFault(format!("enable listener interest: {error}"))
-            })?;
+        // A fan-out worker (`accept_connections == false`) binds a listener but
+        // never enables accept interest, so it never accepts on its own port — it
+        // serves only adopted connections.  A direct connect to that throwaway
+        // port is left unaccepted in the kernel backlog rather than served, which
+        // closes it as an ingress.
+        if options.accept_connections {
+            platform
+                .set_listener_interest(listener, true)
+                .map_err(|error| {
+                    PlatformError::ProviderFault(format!("enable listener interest: {error}"))
+                })?;
+        }
 
         // Register a wakeup and grab a cross-thread handle for the mailbox, so an
         // off-reactor write can interrupt `poll` and flush at once instead of
