@@ -22,6 +22,8 @@ coordinator policy. It provides:
   report readiness for capture/backlog/review routing
 - ZCL report signoff summaries that turn operator readiness into final
   report capture signoff checks
+- ZCL report closure summaries that turn signoff readiness into final
+  report closure checks
 - D23 capability projection for common clusters
 - D23 `StateDelta` projection for on/off, level, color-temperature, occupancy,
   lock-state, temperature, humidity, and illuminance reports

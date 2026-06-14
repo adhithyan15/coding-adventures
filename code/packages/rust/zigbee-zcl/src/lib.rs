@@ -869,6 +869,100 @@ pub fn zcl_report_signoff_summary<'a, 'b>(
     ))
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclReportClosureSummary {
+    pub signoff_summary: ZclReportSignoffSummary,
+    pub required_closure_check_count: usize,
+    pub passed_closure_check_count: usize,
+    pub missing_closure_check_count: usize,
+    pub signoff_ready: bool,
+    pub operator_ready: bool,
+    pub report_frame_observed: bool,
+    pub report_payloads_present: bool,
+    pub default_response_backlog_clear: bool,
+    pub report_readiness_ready: bool,
+    pub closure_ready: bool,
+}
+
+impl ZclReportClosureSummary {
+    pub fn from_signoff_summary(signoff_summary: ZclReportSignoffSummary) -> Self {
+        let signoff_ready = signoff_summary.is_signoff_ready();
+        let operator_ready = !signoff_summary.needs_operator_readiness();
+        let report_frame_observed = !signoff_summary.needs_report_frame_capture();
+        let report_payloads_present = !signoff_summary.needs_report_payloads();
+        let default_response_backlog_clear = !signoff_summary.has_default_response_backlog();
+        let report_readiness_ready = !signoff_summary.needs_report_readiness_work();
+        let checks = [
+            signoff_ready,
+            operator_ready,
+            report_frame_observed,
+            report_payloads_present,
+            default_response_backlog_clear,
+            report_readiness_ready,
+        ];
+        let passed_closure_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_closure_check_count = checks.len();
+        let missing_closure_check_count = required_closure_check_count - passed_closure_check_count;
+        let closure_ready = missing_closure_check_count == 0;
+
+        Self {
+            signoff_summary,
+            required_closure_check_count,
+            passed_closure_check_count,
+            missing_closure_check_count,
+            signoff_ready,
+            operator_ready,
+            report_frame_observed,
+            report_payloads_present,
+            default_response_backlog_clear,
+            report_readiness_ready,
+            closure_ready,
+        }
+    }
+
+    pub fn is_closure_ready(self) -> bool {
+        self.closure_ready
+    }
+
+    pub fn has_missing_closure_checks(self) -> bool {
+        self.missing_closure_check_count > 0
+    }
+
+    pub fn needs_signoff(self) -> bool {
+        !self.signoff_ready
+    }
+
+    pub fn needs_operator_readiness(self) -> bool {
+        !self.operator_ready
+    }
+
+    pub fn needs_report_frame_capture(self) -> bool {
+        !self.report_frame_observed
+    }
+
+    pub fn needs_report_payloads(self) -> bool {
+        !self.report_payloads_present
+    }
+
+    pub fn has_default_response_backlog(self) -> bool {
+        !self.default_response_backlog_clear
+    }
+
+    pub fn needs_report_readiness_work(self) -> bool {
+        !self.report_readiness_ready
+    }
+}
+
+pub fn zcl_report_closure_summary<'a, 'b>(
+    frames: impl IntoIterator<Item = &'a ZclFrame>,
+    cluster_id: ZclClusterId,
+    reports: impl IntoIterator<Item = &'b ZclAttributeReport>,
+) -> ZclReportClosureSummary {
+    ZclReportClosureSummary::from_signoff_summary(zcl_report_signoff_summary(
+        frames, cluster_id, reports,
+    ))
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ZclError {
     Truncated { needed: usize, remaining: usize },
@@ -1797,6 +1891,70 @@ mod tests {
         assert!(!summary.signoff_ready);
         assert!(!summary.is_signoff_ready());
         assert!(summary.has_missing_signoff_checks());
+        assert!(summary.needs_operator_readiness());
+        assert!(summary.needs_report_frame_capture());
+        assert!(summary.needs_report_payloads());
+        assert!(summary.has_default_response_backlog());
+        assert!(summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_closure_summary_reports_ready_path() {
+        let reports = vec![ZclAttributeReport {
+            cluster_id: ZclClusterId::ON_OFF,
+            attribute_id: ZclAttributeId::ON_OFF,
+            data_type: ZclDataType::Bool,
+            value: ZclValue::Bool(true),
+        }];
+        let frame = report_attributes_frame(0x61, &reports).unwrap();
+
+        let summary = zcl_report_closure_summary([&frame], ZclClusterId::ON_OFF, &reports);
+
+        assert_eq!(
+            summary.signoff_summary,
+            zcl_report_signoff_summary([&frame], ZclClusterId::ON_OFF, &reports)
+        );
+        assert_eq!(summary.required_closure_check_count, 6);
+        assert_eq!(summary.passed_closure_check_count, 6);
+        assert_eq!(summary.missing_closure_check_count, 0);
+        assert!(summary.signoff_ready);
+        assert!(summary.operator_ready);
+        assert!(summary.report_frame_observed);
+        assert!(summary.report_payloads_present);
+        assert!(summary.default_response_backlog_clear);
+        assert!(summary.report_readiness_ready);
+        assert!(summary.closure_ready);
+        assert!(summary.is_closure_ready());
+        assert!(!summary.has_missing_closure_checks());
+        assert!(!summary.needs_signoff());
+        assert!(!summary.needs_operator_readiness());
+        assert!(!summary.needs_report_frame_capture());
+        assert!(!summary.needs_report_payloads());
+        assert!(!summary.has_default_response_backlog());
+        assert!(!summary.needs_report_readiness_work());
+    }
+
+    #[test]
+    fn zcl_report_closure_summary_routes_blocked_path() {
+        let read = ZclFrame::parse(&[0x00, 0x62, ZCL_READ_ATTRIBUTES_COMMAND_ID]).unwrap();
+        let reports =
+            parse_attribute_reports(ZclClusterId::BASIC, &[0x99, 0x00, 0xff, 0xde, 0xad]).unwrap();
+
+        let summary = zcl_report_closure_summary([&read], ZclClusterId::BASIC, &reports);
+
+        assert_eq!(summary.required_closure_check_count, 6);
+        assert_eq!(summary.passed_closure_check_count, 0);
+        assert_eq!(summary.missing_closure_check_count, 6);
+        assert!(!summary.signoff_ready);
+        assert!(!summary.operator_ready);
+        assert!(!summary.report_frame_observed);
+        assert!(!summary.report_payloads_present);
+        assert!(!summary.default_response_backlog_clear);
+        assert!(!summary.report_readiness_ready);
+        assert!(!summary.closure_ready);
+        assert!(!summary.is_closure_ready());
+        assert!(summary.has_missing_closure_checks());
+        assert!(summary.needs_signoff());
         assert!(summary.needs_operator_readiness());
         assert!(summary.needs_report_frame_capture());
         assert!(summary.needs_report_payloads());
