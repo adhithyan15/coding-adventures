@@ -147,6 +147,10 @@ struct VarBinding {
     ty: ScalarType,
 }
 
+/// A procedure heading read off the AST: `(name, value-params, return-type)`,
+/// where each value parameter is `(name, type)` in declaration order.
+type ProcedureParts = (String, Vec<(String, ScalarType)>, ScalarType);
+
 /// The compile-time signature of a procedure: the ordered types of its
 /// value parameters plus its return type.
 ///
@@ -194,6 +198,11 @@ struct Compiler {
     /// Procedure name → signature, registered in a pre-pass so a call can be
     /// lowered before the callee's body is (forward references / recursion).
     proc_sigs: HashMap<String, ProcSig>,
+    /// Switch name → its ordered list of target label slots.  A
+    /// `switch s := first, second` becomes `s → ["L_first", "L_second"]`, and a
+    /// `goto s[i]` (1-based) selects the i-th target.  Declared in the block's
+    /// declaration part, before the statements that use it.
+    switches: HashMap<String, Vec<String>>,
 }
 
 impl Default for Compiler {
@@ -211,6 +220,7 @@ impl Default for Compiler {
             referenced_labels: HashSet::new(),
             functions: Vec::new(),
             proc_sigs: HashMap::new(),
+            switches: HashMap::new(),
         }
     }
 }
@@ -320,6 +330,11 @@ impl Compiler {
             self.functions.push(func);
             return Ok(());
         }
+        // A switch declaration records a named jump table; the labels it lists
+        // are resolved (and validated) when a `goto s[i]` uses it.
+        if let Some(switch_decl) = first_direct_node(node, "switch_decl") {
+            return self.register_switch(switch_decl);
+        }
         let Some(type_decl) = first_direct_node(node, "type_decl") else {
             let construct = direct_nodes(node)
                 .first()
@@ -411,7 +426,7 @@ impl Compiler {
     fn procedure_parts(
         &self,
         proc_decl: &GrammarASTNode,
-    ) -> Result<(String, Vec<(String, ScalarType)>, ScalarType), CompileError> {
+    ) -> Result<ProcedureParts, CompileError> {
         let name = direct_tokens(proc_decl)
             .into_iter()
             .find(|t| t.effective_type_name() == "NAME")
@@ -527,6 +542,7 @@ impl Compiler {
         let saved_registers = std::mem::take(&mut self.register_names);
         let saved_defined = std::mem::take(&mut self.defined_labels);
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
+        let saved_switches = std::mem::take(&mut self.switches);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
 
         // Bind value parameters and the result variable (the procedure name).
@@ -598,6 +614,7 @@ impl Compiler {
         self.register_names = saved_registers;
         self.defined_labels = saved_defined;
         self.referenced_labels = saved_referenced;
+        self.switches = saved_switches;
         self.scopes = saved_scopes;
 
         Ok(func)
@@ -774,15 +791,197 @@ impl Compiler {
         self.set_loc(node);
         let desig = first_direct_node(node, "desig_expr")
             .ok_or_else(|| CompileError::Malformed("goto_stmt has no desig_expr".into()))?;
-        let label = self.designational_label(desig)?;
-        self.referenced_labels.insert(label.clone());
-        self.emit(IIRInstr::new(
-            "jmp",
-            None,
-            vec![Operand::Var(label)],
-            "void",
-        ));
+        self.emit_desig_jump(desig)
+    }
+
+    /// Emit the jump(s) that transfer control to a designational expression.
+    ///
+    /// A designational expression resolves to a label at run time and can be:
+    ///
+    /// * a plain `label` — a single `jmp`;
+    /// * a switch subscript `s[i]` — a 1-based selection among the switch's
+    ///   target labels (out-of-range falls through, per the ALGOL report's
+    ///   "undefined" rule, which real implementations treat as a no-op);
+    /// * a conditional `if b then d1 else d2` — branch on `b`, then jump to
+    ///   whichever sub-designator is selected.
+    ///
+    /// All control flow uses only the portable `jmp` / `jmp_if_false` / `label`
+    /// subset (the CLR textual `.il` path has no `jmp_if_true`), so a computed
+    /// goto lowers to a chain every backend already runs.
+    fn emit_desig_jump(&mut self, desig: &GrammarASTNode) -> Result<(), CompileError> {
+        self.set_loc(desig);
+        // desig_expr = "if" bool_expr "then" simple_desig "else" desig_expr
+        //            | simple_desig
+        if direct_tokens(desig).iter().any(|t| t.value == "if") {
+            let cond_node = first_direct_node(desig, "bool_expr").ok_or_else(|| {
+                CompileError::Malformed("conditional designator missing condition".into())
+            })?;
+            let then_node = first_direct_node(desig, "simple_desig").ok_or_else(|| {
+                CompileError::Malformed("conditional designator missing then target".into())
+            })?;
+            let else_node = direct_nodes(desig)
+                .into_iter()
+                .find(|n| n.rule_name == "desig_expr")
+                .ok_or_else(|| {
+                    CompileError::Malformed("conditional designator missing else target".into())
+                })?;
+            let cond = self.emit_expr(cond_node)?;
+            if cond.ty != ScalarType::Boolean {
+                return Err(CompileError::Type(
+                    "designator condition must be boolean".into(),
+                ));
+            }
+            let else_label = self.fresh_label("desig_else");
+            self.emit(IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var(cond.slot), Operand::Var(else_label.clone())],
+                "void",
+            ));
+            self.emit_simple_desig_jump(then_node)?;
+            self.emit_label(&else_label);
+            self.emit_desig_jump(else_node)
+        } else {
+            let simple = first_direct_node(desig, "simple_desig").ok_or_else(|| {
+                CompileError::Malformed("designator missing simple_desig".into())
+            })?;
+            self.emit_simple_desig_jump(simple)
+        }
+    }
+
+    /// Emit the jump(s) for a `simple_desig`: a switch subscript, a
+    /// parenthesised designator, or a plain label.
+    fn emit_simple_desig_jump(
+        &mut self,
+        simple: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        let tokens = direct_tokens(simple);
+        // simple_desig = NAME LBRACKET arith_expr RBRACKET   (switch subscript)
+        if tokens.iter().any(|t| t.effective_type_name() == "LBRACKET") {
+            let name = tokens
+                .iter()
+                .find(|t| t.effective_type_name() == "NAME")
+                .map(|t| t.value.clone())
+                .ok_or_else(|| CompileError::Malformed("switch subscript missing name".into()))?;
+            let index_node = first_direct_node(simple, "arith_expr").ok_or_else(|| {
+                CompileError::Malformed("switch subscript missing index".into())
+            })?;
+            let labels = self.switches.get(&name).cloned().ok_or_else(|| {
+                CompileError::Type(format!("goto uses undeclared switch {name:?}"))
+            })?;
+            let index = self.emit_expr(index_node)?;
+            if index.ty != ScalarType::Integer {
+                return Err(CompileError::Type(
+                    "switch subscript index must be an integer".into(),
+                ));
+            }
+            // 1-based: `goto s[k]` jumps to the k-th target.  Emit a linear
+            // `index == k ? jmp Lk` chain; an out-of-range index matches no arm
+            // and falls through.
+            for (i, label) in labels.iter().enumerate() {
+                let k = ExprValue {
+                    slot: self.emit_const(ScalarType::Integer, Operand::Int((i as i64) + 1)),
+                    ty: ScalarType::Integer,
+                };
+                let matched = self.emit_binary("=", index.clone(), k)?;
+                let next_label = self.fresh_label("switch_next");
+                self.emit(IIRInstr::new(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(matched.slot), Operand::Var(next_label.clone())],
+                    "void",
+                ));
+                self.referenced_labels.insert(label.clone());
+                self.emit(IIRInstr::new(
+                    "jmp",
+                    None,
+                    vec![Operand::Var(label.clone())],
+                    "void",
+                ));
+                self.emit_label(&next_label);
+            }
+            Ok(())
+        } else if tokens.iter().any(|t| t.effective_type_name() == "LPAREN") {
+            // simple_desig = LPAREN desig_expr RPAREN
+            let inner = first_direct_node(simple, "desig_expr").ok_or_else(|| {
+                CompileError::Malformed("parenthesised designator missing inner".into())
+            })?;
+            self.emit_desig_jump(inner)
+        } else {
+            // simple_desig = label
+            let label_node = first_direct_node(simple, "label")
+                .ok_or_else(|| CompileError::Malformed("designator missing label".into()))?;
+            let label = self.label_name(label_node)?;
+            self.referenced_labels.insert(label.clone());
+            self.emit(IIRInstr::new("jmp", None, vec![Operand::Var(label)], "void"));
+            Ok(())
+        }
+    }
+
+    /// Record a switch declaration's ordered target labels.
+    ///
+    /// `switch_decl = "switch" NAME ASSIGN switch_list` and
+    /// `switch_list = desig_expr { COMMA desig_expr }`.  On the executable
+    /// slice each element must be a plain label (the overwhelmingly common
+    /// form); conditional or nested-subscript switch elements are rejected.
+    fn register_switch(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
+        self.set_loc(node);
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|t| t.effective_type_name() == "NAME")
+            .map(|t| t.value.clone())
+            .ok_or_else(|| CompileError::Malformed("switch_decl missing name".into()))?;
+        let switch_list = first_direct_node(node, "switch_list")
+            .ok_or_else(|| CompileError::Malformed("switch_decl missing switch_list".into()))?;
+
+        let mut labels = Vec::new();
+        for elem in direct_nodes(switch_list)
+            .into_iter()
+            .filter(|n| n.rule_name == "desig_expr")
+        {
+            labels.push(self.switch_element_label(elem)?);
+        }
+        if labels.is_empty() {
+            return Err(CompileError::Malformed("switch has no targets".into()));
+        }
+        if self.switches.contains_key(&name) {
+            return Err(CompileError::Type(format!(
+                "duplicate declaration for switch {name:?}"
+            )));
+        }
+        self.switches.insert(name, labels);
         Ok(())
+    }
+
+    /// Resolve a switch-list element to a single target label slot.  Only plain
+    /// labels are supported as switch elements on the current slice.
+    fn switch_element_label(&self, desig: &GrammarASTNode) -> Result<String, CompileError> {
+        let toks = recursive_tokens(desig);
+        if toks.iter().any(|t| t.value == "if") {
+            return Err(CompileError::Unsupported(
+                "conditional switch-list elements".into(),
+            ));
+        }
+        if toks
+            .iter()
+            .any(|t| matches!(t.effective_type_name(), "LBRACKET" | "RBRACKET"))
+        {
+            return Err(CompileError::Unsupported(
+                "nested switch-list elements".into(),
+            ));
+        }
+        let names: Vec<&Token> = toks
+            .into_iter()
+            .filter(|t| matches!(t.effective_type_name(), "NAME" | "INTEGER_LIT"))
+            .collect();
+        if names.len() == 1 {
+            Ok(format!("L_{}", names[0].value))
+        } else {
+            Err(CompileError::Malformed(format!(
+                "switch element should be one label, got {} tokens",
+                names.len()
+            )))
+        }
     }
 
     fn emit_cond_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
@@ -1468,12 +1667,20 @@ impl Compiler {
                     ">=" => "cmp_ge",
                     _ => unreachable!(),
                 };
+                // The comparison's `type_hint` is the **operand** width, not the
+                // `bool` result width.  Code-gen backends size the compare from
+                // this hint: emitting `bool` made LLVM compare two `i64` operands
+                // at 1-bit `i1` (`3 == 1` truncates both to `1` → wrongly equal),
+                // and produced invalid IR clang rejects outright.  Comparing at
+                // the operand width (`i64` for integers, `bool` for booleans) is
+                // the same fix the BASIC BA0 work applied. The *result* is still
+                // a boolean (`ExprValue.ty`).
                 let dest = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     iir_op,
                     Some(dest.clone()),
                     vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
-                    "bool",
+                    lhs.ty.iir(),
                 ));
                 Ok(ExprValue {
                     slot: dest,
@@ -1697,33 +1904,6 @@ impl Compiler {
         }
     }
 
-    fn designational_label(&self, node: &GrammarASTNode) -> Result<String, CompileError> {
-        if recursive_tokens(node).iter().any(|t| t.value == "if") {
-            return Err(CompileError::Unsupported(
-                "conditional designational expressions".into(),
-            ));
-        }
-        if recursive_tokens(node)
-            .iter()
-            .any(|t| matches!(t.effective_type_name(), "LBRACKET" | "RBRACKET"))
-        {
-            return Err(CompileError::Unsupported(
-                "switch/subscript designators".into(),
-            ));
-        }
-        let tokens: Vec<&Token> = recursive_tokens(node)
-            .into_iter()
-            .filter(|t| matches!(t.effective_type_name(), "NAME" | "INTEGER_LIT"))
-            .collect();
-        if tokens.len() == 1 {
-            Ok(format!("L_{}", tokens[0].value))
-        } else {
-            Err(CompileError::Malformed(format!(
-                "goto designator should resolve to one label, got {} tokens",
-                tokens.len()
-            )))
-        }
-    }
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -2096,5 +2276,94 @@ mod tests {
         )
         .expect_err("argument type mismatch");
         assert!(err.to_string().to_lowercase().contains("boolean"));
+    }
+
+    // ---- AL5: switches + conditional designational expressions ----
+
+    fn switch_prog(index: i64) -> String {
+        format!(
+            "begin integer result; switch s := a1, a2, a3; integer i; i := {index}; \
+             goto s[i]; a1: result := 1; goto done; a2: result := 2; goto done; \
+             a3: result := 3; done: end"
+        )
+    }
+
+    #[test]
+    fn switch_selects_first_target() {
+        assert_eq!(run_i64(&switch_prog(1)), 1);
+    }
+
+    #[test]
+    fn switch_selects_middle_target() {
+        assert_eq!(run_i64(&switch_prog(2)), 2);
+    }
+
+    #[test]
+    fn switch_selects_last_target() {
+        // s[3] is the case that an i1-truncated compare would mis-select, so it
+        // also guards the cmp operand-width fix.
+        assert_eq!(run_i64(&switch_prog(3)), 3);
+    }
+
+    #[test]
+    fn switch_out_of_range_falls_through() {
+        // An out-of-range subscript matches no arm and continues to the next
+        // statement (ALGOL leaves this undefined; we treat it as a no-op).
+        let src = "begin integer result; switch s := a1, a2; integer i; result := 7; i := 9; \
+                   goto s[i]; result := 42; a1: ; a2: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn conditional_designator_picks_then() {
+        let src = "begin integer result; boolean b; b := true; goto if b then yes else no; \
+                   yes: result := 42; goto fin; no: result := 1; fin: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn conditional_designator_picks_else() {
+        let src = "begin integer result; boolean b; b := false; goto if b then yes else no; \
+                   yes: result := 1; goto fin; no: result := 42; fin: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn rejects_goto_undeclared_switch() {
+        let err = compile_source(
+            "begin integer result; integer i; i := 1; goto s[i] end",
+            "bad",
+        )
+        .expect_err("switch s is undeclared");
+        assert!(err.to_string().contains("switch"));
+    }
+
+    #[test]
+    fn rejects_non_integer_switch_index() {
+        let err = compile_source(
+            "begin integer result; boolean b; switch s := a1; b := true; goto s[b]; a1: end",
+            "bad",
+        )
+        .expect_err("switch index must be integer");
+        assert!(err.to_string().contains("integer"));
+    }
+
+    #[test]
+    fn comparison_uses_operand_width_not_bool() {
+        // Regression for the cmp width: an integer comparison must lower to a
+        // `cmp_*` whose type_hint is the i64 operand width, not the bool result
+        // (emitting `bool` made LLVM truncate to a 1-bit compare).
+        let module = compile_source(
+            "begin integer x, result; x := 3; if x = 3 then result := 1 else result := 2 end",
+            "cmp",
+        )
+        .expect("compiles");
+        let main = module.get_function("main").expect("main exists");
+        let cmp = main
+            .instructions
+            .iter()
+            .find(|i| i.op == "cmp_eq")
+            .expect("emits cmp_eq");
+        assert_eq!(cmp.type_hint, "i64", "cmp must carry the i64 operand width");
     }
 }
