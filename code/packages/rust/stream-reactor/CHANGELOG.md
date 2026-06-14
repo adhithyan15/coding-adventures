@@ -78,3 +78,33 @@ All notable changes to this package will be documented in this file.
   timeout proves the wake fires — a dropped wake fails the test, not just slows it)
   and `concurrent_off_reactor_wakes_do_not_corrupt_the_reactor` (8 threads hammer
   the wake while clients echo). Both pass under ThreadSanitizer.
+
+## [0.1.6] - 2026-06-14
+
+### Added
+
+- **`StreamMailbox::adopt_connection(fd, peer_addr)`** — the receiving half of an
+  accept fan-out. An acceptor thread accepts on a single listener and round-robins
+  each accepted socket to a worker reactor's mailbox; the reactor adopts the `fd`
+  via `TransportPlatform::adopt_stream` and then serves it like any connection it
+  accepted itself. The enqueue wakes the reactor (PR2 wake handle), so adoption is
+  prompt. Admission control (the connection cap) is enforced in the reactor: a
+  full reactor drops the `fd` (closing the socket) rather than admitting it; a
+  failed adopt drops just that one connection instead of tearing down the reactor.
+- New `AdoptConnection { fd, peer_addr }` mailbox command, routed in
+  `drain_mailbox` (it mints a fresh `ConnectionId`, so it bypasses the
+  `ConnectionId`-keyed dispatch path).
+
+### Changed
+
+- Extracted `register_connection(stream, peer_addr)` — the shared tail that
+  configures a stream, sets readable interest, mints the shard-encoded
+  `ConnectionId`, and builds per-connection state — so `accept_ready` and the new
+  adopt path produce identical connection state. No behavior change for accept.
+
+### Tested
+
+- `adopts_an_externally_accepted_connection_via_the_mailbox`: a separate listener
+  accepts a real loopback connection, the socket is handed to the reactor via
+  `adopt_connection`, and the reactor echoes it. Passes under ThreadSanitizer
+  (the `OwnedFd` crosses threads through the mailbox).
