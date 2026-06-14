@@ -9,3 +9,4 @@ repository = "https://github.com/coding-adventures/coding-adventures"
 [dependencies]
 pixel-container = { path = "../pixel-container" }
 paint-instructions = { path = "../paint-instructions" }
+image-raw-pipeline = { path = "../image-raw-pipeline" }

@@ -599,6 +599,32 @@ fn lower_function(
         out.push_str(&format!("  %{slot}.slot = alloca i64\n"));
     }
 
+    // Initialise the slot of any **promoted parameter** (a parameter that is
+    // reassigned in the body) from its incoming SSA argument, so the first
+    // `load` sees the caller's value. Narrow integer / `i1` params are zero-
+    // extended to the i64 slot width. Non-slot params stay pure SSA (seeded
+    // into `env` below) and are unaffected.
+    for (pname, pty) in &func.params {
+        // Only initialise slots we can represent in the i64 slot model. A
+        // non-compatible param (e.g. a `float` reassigned 2+ times) can still be
+        // in `slots` via the body-`dest` count, but the i64 load/store protocol
+        // already can't model it — so we must NOT emit a bogus `zext double …`
+        // here. That float-in-slot case is pre-existing and tracked under E3.
+        if !slots.contains(pname) || !param_slot_compatible(pty) {
+            continue;
+        }
+        let pllvm = llvm_type_for(pty, &func.name)?;
+        let init = if pllvm == "i64" {
+            format!("%{pname}")
+        } else {
+            // i1 / i8 / i16 / i32 → widen to the i64 slot.
+            let widened = format!("%{pname}.init");
+            out.push_str(&format!("  {widened} = zext {pllvm} %{pname} to i64\n"));
+            widened
+        };
+        out.push_str(&format!("  store i64 {init}, ptr %{pname}.slot\n"));
+    }
+
     let mut state = FnState {
         env: HashMap::new(),
         env_i1: HashMap::new(),
@@ -626,9 +652,22 @@ fn lower_function(
 /// side-map (which keeps only the latest binding and so is valid only within a
 /// single straight-line block); it needs a stack slot so each assignment is a
 /// real `store` and each read a real `load` (McCarthy W12b-3, F5 — `COND`).
+///
+/// A **parameter** counts as already having one assignment — the incoming
+/// argument binding. So a parameter that is reassigned even *once* in the body
+/// (e.g. `x = x + 1`, the common shape of a loop accumulator) must also become a
+/// stack slot: across a loop back-edge the straight-line side-map is invalid and
+/// would silently drop the update, producing wrong LLVM IR (LANG-FULL — LLVM is
+/// first-class). We seed each i64-slot-compatible parameter with a count of 1 so
+/// that a single later reassignment crosses the `>= 2` promotion threshold.
 fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
     use std::collections::HashMap as Map;
     let mut counts: Map<&str, usize> = Map::new();
+    for (pname, pty) in &func.params {
+        if param_slot_compatible(pty) {
+            counts.insert(pname.as_str(), 1);
+        }
+    }
     for instr in &func.instructions {
         if let Some(dest) = &instr.dest {
             *counts.entry(dest.as_str()).or_insert(0) += 1;
@@ -639,6 +678,20 @@ fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
         .filter(|&(_, n)| n >= 2)
         .map(|(name, _)| name.to_string())
         .collect()
+}
+
+/// Whether a parameter of IIR type `pty` can be promoted to a stack slot.
+/// Slots are `i64`, so only values that already flow as a 64-bit word qualify:
+/// every integer width, `bool`, `any`, `symbol`, and the lisp heap references.
+/// Floats/doubles do not fit the i64 slot model, so a reassigned float parameter
+/// is left as SSA (that path is a separate concern, tracked under enabler E3 —
+/// real arithmetic — and is no worse than before this change).
+fn param_slot_compatible(pty: &str) -> bool {
+    matches!(
+        pty,
+        "bool" | "i1" | "i8" | "u8" | "i16" | "u16" | "i32" | "u32" | "i64" | "u64"
+            | "any" | "symbol"
+    ) || pty.starts_with("ref<Lispy")
 }
 
 /// Wrap [`lower_instr`] with the slot (`alloca`/`load`/`store`) protocol:

@@ -7,6 +7,17 @@ This crate uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- **`color.rs`** — `apply_color_pipeline` and `apply_srgb_gamma` now delegate to
+  `image-raw-pipeline` (IMG07). The implementations are identical; this change
+  eliminates the duplication that existed across TIFF, RAF, and RW2 codecs.
+  Public API and all 80 tests are unchanged.
+
+---
+
 ## [0.1.0] — 2026-05-30
 
 ### Added

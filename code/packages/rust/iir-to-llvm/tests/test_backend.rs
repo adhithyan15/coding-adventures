@@ -1203,3 +1203,70 @@ fn slot_var_assigned_twice_by_arith_has_unique_ssa_names() {
     // Each add result is stored back to the slot.
     assert!(ll.matches("store i64").count() >= 3, "each assignment stores to the slot; got:\n{ll}");
 }
+
+// ── Reassigned-parameter promotion (LANG-FULL — LLVM first-class) ──────────────
+//
+// A parameter reassigned in the body is the `dest` of only one instruction, but
+// its incoming argument binding is an implicit first assignment. Without
+// promoting it to a stack slot, a reassignment across a loop back-edge is
+// silently dropped by the straight-line const/mov side-map. These tests pin the
+// fix: reassigned params get an i64 slot initialised from the argument.
+
+#[test]
+fn reassigned_parameter_is_promoted_to_a_stack_slot() {
+    let f = IIRFunction::new(
+        "run",
+        vec![("acc".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("c6".into()), vec![Operand::Int(6)], "i64"),
+            IIRInstr::new("add", Some("t".into()),
+                vec![Operand::Var("acc".into()), Operand::Var("c6".into())], "i64"),
+            // Reassign the parameter — this is the second effective assignment.
+            IIRInstr::new("mov", Some("acc".into()), vec![Operand::Var("t".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("acc".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%acc.slot = alloca i64"),
+        "reassigned param must get a stack slot; got:\n{ll}");
+    assert!(ll.contains("store i64 %acc, ptr %acc.slot"),
+        "param slot must be initialised from the incoming argument; got:\n{ll}");
+    assert!(ll.contains("load i64, ptr %acc.slot"),
+        "param reads must load from the slot, not the stale SSA arg; got:\n{ll}");
+}
+
+#[test]
+fn narrow_reassigned_parameter_is_zero_extended_into_its_slot() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("x".into(), "u8".into())],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("c1".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("add", Some("t".into()),
+                vec![Operand::Var("x".into()), Operand::Var("c1".into())], "i64"),
+            IIRInstr::new("mov", Some("x".into()), vec![Operand::Var("t".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    // The u8 param is `i8` in LLVM; the slot is i64, so the init must widen.
+    assert!(ll.contains("zext i8 %x to i64"),
+        "narrow param must widen to the i64 slot; got:\n{ll}");
+    assert!(ll.contains("store i64 %x.init, ptr %x.slot"),
+        "widened param must be stored into its slot; got:\n{ll}");
+}
+
+#[test]
+fn non_reassigned_parameter_stays_pure_ssa() {
+    let f = IIRFunction::new(
+        "id",
+        vec![("x".into(), "i64".into())],
+        "i64",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64")],
+    );
+    let ll = lower(&module_with(f));
+    assert!(!ll.contains("%x.slot"),
+        "a parameter that is never reassigned must NOT be slotted; got:\n{ll}");
+}

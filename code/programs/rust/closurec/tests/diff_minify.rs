@@ -154,7 +154,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // spaces (`a /b/ c`). Still valid JS (same grouping) but not byte-
     // identical. Regex-vs-division disambiguation is a lexer-level
     // gap (needs parser context to know `/` after a value is division).
-    ("regex_div", "gap-092: division mis-lexed as regex (spacing)"),
+    // gap-092 RESOLVED by F10 (declarative lexer mode transitions): the
+    // es2025 grammar now declares a `div` mode entered after value-producing
+    // tokens, so `/` after an identifier/number/`)`/`]` lexes as SLASH, not
+    // REGEX. `regex_div` is now ENFORCED (un-ignored below).
     // gap-044: JavaScript lexer does not yet support
     // template literal SUBSTITUTIONS (`${expr}` inside
     // a backtick-delimited string). Lexer-level gap.
@@ -314,7 +317,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // Affects `a/b/c`, `4/2/1`, `a/b+c/d`, `(a)/b/c`. A SINGLE division
     // (`a/b`) already lexes correctly. Lexer-level (sibling of gap-044).
     // HIGH PRIORITY — corrupts output to non-parseable JS.
-    ("div_chain", "gap-115: a/b/c mis-lexed as regex -> invalid `a /b/ c` (CORRECTNESS)"),
+    // gap-115 RESOLVED by F10: once in `div` mode, every subsequent `/` after a
+    // value-producing token stays a division, so `a/b/c` lexes as `a / b / c`
+    // (byte-identical `a/b/c`), not `a /b/ c`. `div_chain` un-ignored below.
     // gap-116 RESOLVED in CLOC12.116 — a STRING property key that is a
     // CANONICAL non-negative integer (< 2^53) is now unquoted to a numeric
     // key and printed in shortest numeric form: `{"123":1}` -> `{123:1}`,
@@ -519,7 +524,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // inserts a space between the word-like `return` and the `/`-led
     // regex token. Entangled with division disambiguation — deferred
     // until the regex/division lexing (gap-115) is settled.
-    ("regex_after_return", "gap-119: spurious space between return keyword and regex literal"),
+    // gap-119 RESOLVED by F10: `return` keeps the lexer in `default` (regex)
+    // mode, so `return/a/g` lexes the `/a/g` as a single REGEX token with no
+    // intervening value token — the separator logic no longer splits it.
+    // `regex_after_return` un-ignored below.
     // gap-120 RESOLVED in CLOC12.120 — a NON-INTEGER numeric property key
     // is now emitted as a QUOTED `String(Number(key))` string:
     //   {.5:1} -> {"0.5":1}   {1.5:1} -> {"1.5":1}   {1e-3:1} -> {"0.001":1}

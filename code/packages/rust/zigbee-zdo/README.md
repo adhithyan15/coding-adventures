@@ -17,6 +17,8 @@ This crate starts the D25 device-interview layer above APS. It provides:
   tools that need endpoint and cluster coverage without carrying full payloads
 - descriptor-inventory summaries that retain node and endpoint shape while
   omitting raw cluster payload lists
+- descriptor-inventory readiness summaries for identity, endpoint, profile,
+  cluster, and lighting coverage handoff checks
 - unique cluster and profile-family counts for descriptor read-side coverage
 - read-summary helper predicates for duplicate cluster refs, lighting cluster
   coverage, and mixed profile-family interviews

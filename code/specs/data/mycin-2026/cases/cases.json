@@ -14,7 +14,7 @@
     },
     {
       "id": "case_preculture_ambiguous",
-      "vignette": "A previously healthy adult with fever and headache. Lumbar puncture shows neutrophil-predominant pleocytosis, low CSF glucose, and elevated protein. Gram stain is pending and no culture result is available yet. Procalcitonin not sent.",
+      "vignette": "A previously healthy adult with fever and headache. Lumbar puncture shows neutrophil-predominant pleocytosis, low CSF glucose, elevated CSF protein, and elevated CSF lactate. Gram stain is pending and no culture result is available yet. Procalcitonin not sent.",
       "gold": "bacterial_meningitis"
     },
     {

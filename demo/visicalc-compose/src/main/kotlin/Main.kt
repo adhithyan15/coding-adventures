@@ -49,12 +49,15 @@ import androidx.compose.ui.window.rememberWindowState
 // The 5×5 sample dataset shared with every other visicalc-* demo.
 // Hard-coded here for the v0.1.0 visual parity exercise — when the
 // strict-Flux contract is wired up, this moves into `AppState.cells`.
+// The first cell of every row is the spreadsheet's row-number gutter
+// ("1".."5"), mirroring the row-label column the React / HTML / SwiftUI
+// demos render down the left edge.  The five data columns A–E follow.
 private val sampleRows: List<List<String>> = listOf(
-    listOf("15", "3",  "12", "8",  "5"),
-    listOf("8",  "14", "7",  "22", "11"),
-    listOf("12", "9",  "18", "6",  "25"),
-    listOf("4",  "11", "3",  "17", "9"),
-    listOf("7",  "5",  "13", "10", "19"),
+    listOf("1", "15", "3",  "12", "8",  "5"),
+    listOf("2", "8",  "14", "7",  "22", "11"),
+    listOf("3", "12", "9",  "18", "6",  "25"),
+    listOf("4", "4",  "11", "3",  "17", "9"),
+    listOf("5", "7",  "5",  "13", "10", "19"),
 )
 
 fun main() = application {
@@ -87,7 +90,9 @@ private fun VisiCalcApp() {
     // verbatim Expr like `r == editRow` compiles cleanly).  The
     // host mirrors that on its state for a clean pass-through.
     var selectedRow by remember { mutableStateOf(0.0) }
-    var selectedCol by remember { mutableStateOf(0.0) }
+    // Column 0 is the row-number gutter, so the first *data* column (A)
+    // is index 1.  Start with A1 selected to match the sibling demos.
+    var selectedCol by remember { mutableStateOf(1.0) }
     var editRow     by remember { mutableStateOf(-1.0) }
     var editCol     by remember { mutableStateOf(-1.0) }
     var editContent by remember { mutableStateOf("") }
@@ -105,7 +110,10 @@ private fun VisiCalcApp() {
 
         Box(modifier = Modifier.padding(top = 8.dp)) {
             FormulaBar(
-                cellAddress = "${('A' + selectedCol.toInt())}${selectedRow.toInt() + 1}",
+                // Column 0 is the gutter, so subtract 1 to map the
+                // selected data column back to a spreadsheet letter
+                // (col 1 → 'A', col 2 → 'B', …).
+                cellAddress = "${('A' + selectedCol.toInt() - 1)}${selectedRow.toInt() + 1}",
                 formula = formulaText,
                 readOnly = false,
                 dispatch = { event ->
@@ -124,7 +132,9 @@ private fun VisiCalcApp() {
             // comes from `mosaic-pkg-grid::Grid` after UI34 PR-3's
             // resolver inlines the package composition.
             Grid(
-                columnHeaders = listOf("A", "B", "C", "D", "E"),
+                // Leading "" is the empty header above the row-number
+                // gutter column; A–E label the five data columns.
+                columnHeaders = listOf("", "A", "B", "C", "D", "E"),
                 viewportRows = sampleRows,
                 columnWidths = listOf(48.0, 96.0, 96.0, 96.0, 96.0, 96.0),
                 totalHeight = 0.0,

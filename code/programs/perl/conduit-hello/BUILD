@@ -1,0 +1,2 @@
+# build-tool: deps=perl/conduit
+if command -v mise >/dev/null 2>&1; then PERL_BIN=$(mise which perl 2>/dev/null || true); fi && if [ -z "${PERL_BIN:-}" ]; then PERL_BIN=$(command -v perl); fi && ( cd ../../../packages/perl/conduit && cargo build --release && soext=$("$PERL_BIN" -MConfig -e 'print $Config{so}') && dlext=$("$PERL_BIN" -MConfig -e 'print $Config{dlext}') && mkdir -p lib/auto/CodingAdventures/Conduit && cp target/release/libConduit.$soext lib/auto/CodingAdventures/Conduit/Conduit.$dlext ) && "$PERL_BIN" -c hello.pl && prove -v t/

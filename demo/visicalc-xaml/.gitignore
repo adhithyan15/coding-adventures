@@ -8,3 +8,10 @@ obj/
 Generated/FormulaBar.xaml
 Generated/FormulaBar.xaml.cs
 Generated/FormulaBar.Event.cs
+Generated/Grid.xaml
+Generated/Grid.xaml.cs
+Generated/Grid.Event.cs
+Generated/Grid_HVm.cs
+Generated/Grid_RowVm.cs
+Generated/Grid_VVm.cs
+Generated/BoolToVisibilityConverter.cs

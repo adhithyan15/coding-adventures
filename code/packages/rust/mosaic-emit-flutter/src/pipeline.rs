@@ -69,9 +69,9 @@ use std::fmt::Write as _;
 
 use mosmodel_compiler::{EmitDecl, EmitPayloadType, MosmodelComponent, SlotDecl, SlotType};
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
-use mosstyle_compiler::{PartStyle, StyleDef};
+use mosstyle_compiler::{StyleDef, StyleProp};
 #[cfg(test)]
-use mosstyle_compiler::StyleProp;
+use mosstyle_compiler::PartStyle;
 
 // =====================================================================
 // Public types — mirrors the other six backends' shapes.
@@ -483,7 +483,7 @@ fn emit_widget_class(
     writeln!(out, "  @override").unwrap();
     writeln!(out, "  Widget build(BuildContext context) {{").unwrap();
     writeln!(out, "    return").unwrap();
-    let tree = emit_widget_tree(layout_root, 6, part_styles, component)?;
+    let tree = emit_widget_tree(layout_root, 6, part_styles, component, TableCtx::default())?;
     out.push_str(&tree);
     // Trim trailing newline before adding the closing `;`.
     if out.ends_with('\n') {
@@ -494,6 +494,74 @@ fn emit_widget_class(
     writeln!(out, "}}").unwrap();
 
     Ok(out)
+}
+
+// =====================================================================
+// Table context — column-widths threading + cell-position tracking
+// =====================================================================
+
+/// Threaded down the widget walker so cell-position widgets pick up the
+/// right `width:` and parents know whether to *spread* a `For` child
+/// into their `children: [...]` list (orientation-correct) instead of
+/// nesting a standalone `Column`.
+///
+/// Two facts travel together:
+///
+///   * `column_widths_slot` — the camelCased name of the host's
+///     column-widths array (`columnWidths`), discovered at `HostTable`
+///     entry from the `HostTableColGroup > For (each: slot: …) { Col }`
+///     shape.  Cells index into it (`columnWidths[c]`) to render at a
+///     stable column width.  Mirrors the SwiftUI backend's
+///     `TableContext` (PR #4393 lineage).
+///   * `cell_index` — set to the enclosing cell-position `For`'s index
+///     binding (`c` for body cells, `ch` for header cells) while that
+///     `For`'s body is being emitted, so the cell's `Container` can use
+///     `columnWidths[<cell_index>]`.
+///
+/// `Copy` so it threads by value with zero ceremony.  The default
+/// (`None`/`None`) is the non-table case — every existing single-shot
+/// emit path keeps working unchanged.
+#[derive(Clone, Copy, Default)]
+struct TableCtx<'a> {
+    column_widths_slot: Option<&'a str>,
+    cell_index: Option<&'a str>,
+    /// The table's own (`sheet`) part base text colour / font, threaded
+    /// so cells fall back to the sheet's `color` / `font-family` /
+    /// `font-size` instead of `null`. Each is the already-lowered Dart
+    /// expression (`const Color(0xFFCCCCCC)`) or family/size literal.
+    sheet_text_color: Option<&'a str>,
+    sheet_font_family: Option<&'a str>,
+    sheet_font_size: Option<&'a str>,
+}
+
+/// Scan a `HostTable`'s children for the
+/// `HostTableColGroup > For (each: slot: <name>) { Col … }` shape and
+/// return the camelCased column-widths slot name.  `None` when the
+/// table has no such col-group (cells then size to content, matching
+/// the pre-fix behaviour).  Structural twin of the SwiftUI backend's
+/// `extract_table_context`.
+fn extract_column_widths_slot(host_table: &LayoutNode) -> Option<String> {
+    for child in &host_table.children {
+        if child.tag != "HostTableColGroup" {
+            continue;
+        }
+        for cg_child in &child.children {
+            if cg_child.tag != "For" {
+                continue;
+            }
+            // The For body must contain a `Col` (the colgroup cell tag).
+            if !cg_child.children.iter().any(|n| n.tag == "Col") {
+                continue;
+            }
+            if let Some(slot) = find_slot_ref_prop(cg_child, "each") {
+                let camel = to_camel_case_first_lower(slot);
+                if is_safe_dart_identifier(&camel) {
+                    return Some(camel);
+                }
+            }
+        }
+    }
+    None
 }
 
 // =====================================================================
@@ -509,6 +577,7 @@ fn emit_widget_tree(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -526,13 +595,13 @@ fn emit_widget_tree(
         return emit_host_radio(node, indent, part_styles, component);
     }
     if node.tag == "HostScroll" {
-        return emit_host_scroll(node, indent, part_styles, component);
+        return emit_host_scroll(node, indent, part_styles, component, ctx);
     }
     if node.tag == "HostDialog" {
         return emit_host_dialog(node, indent, part_styles, component);
     }
     if node.tag == "HostTable" {
-        return emit_host_table(node, indent, part_styles, component);
+        return emit_host_table(node, indent, part_styles, component, ctx);
     }
     // UI29-4 kernel — three new primitives. `HostLink` lowers to an
     // `InkWell` wrapping a `Text` (with a `url_launcher` TODO comment
@@ -545,7 +614,7 @@ fn emit_widget_tree(
         return emit_host_link(node, indent, component);
     }
     if node.tag == "HostTooltip" {
-        return emit_host_tooltip(node, indent, part_styles, component);
+        return emit_host_tooltip(node, indent, part_styles, component, ctx);
     }
     if node.tag == "HostNumberInput" {
         return emit_host_number_input(node, indent, component);
@@ -630,7 +699,7 @@ fn emit_widget_tree(
         ));
     }
     if let Some(widget) = container {
-        return emit_container(node, widget, indent, part_styles, component);
+        return emit_container(node, widget, indent, part_styles, component, ctx);
     }
 
     // --- Routing: meta-primitives ---
@@ -658,11 +727,16 @@ fn emit_widget_tree(
     // (`emit_container_paired_children`) handles the multi-child case
     // where `If`/`Else` siblings need to combine.
     match node.tag.as_str() {
-        "For" => return emit_for_dart(node, indent, part_styles, component),
+        // Standalone `For` — NOT a direct child of a Row/Column
+        // children-list (the spread path in `emit_paired_children`
+        // handles that case). Falls back to a self-contained
+        // `Column(children: …map().toList())` so it slots into any
+        // single-child parent.
+        "For" => return emit_for_dart(node, indent, part_styles, component, ctx),
         // Standalone If — no Else paired. The container walker fuses
         // sibling pairs, so this branch fires only when If is the lone
         // child or the parent didn't pair-walk.
-        "If" => return emit_if_dart(node, None, indent, part_styles, component),
+        "If" => return emit_if_dart(node, None, indent, part_styles, component, ctx),
         "Else" => {
             return Ok(format!(
                 "{pad}/* orphan Else — analyzer should have rejected this */ const SizedBox.shrink()\n"
@@ -716,6 +790,7 @@ fn emit_container(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 2);
@@ -726,40 +801,55 @@ fn emit_container(
         .and_then(|p| part_styles.get(p).map(String::as_str))
         .unwrap_or("");
 
-    // Special case for Box. A `Container` with no children just
-    // collapses to the styled box; a Container with multiple
-    // children needs a child Column wrapper since Container only
-    // accepts one direct child.
+    // Special case for Box → Container.
     if widget == "Container" {
+        // Styled-cell path (Bug B). A Box that carries a `part_name`
+        // with real styling — a border, background, height, text-align,
+        // and/or `state-when-*` highlights — must lower to a `Container`
+        // whose visual properties live in a `BoxDecoration` (a Container
+        // can't take BOTH `color:` and `decoration:`; the background goes
+        // INSIDE the decoration when a border is also present). The cell
+        // also threads the column width (`columnWidths[<idx>]`) and folds
+        // its `state-when-selected` / `state-when-editing` predicates into
+        // conditional background + text colour. See `emit_styled_box`.
+        if let Some(part) = node.part_name.as_deref() {
+            if part_has_decoration(style_props) || node_has_state_when(node) {
+                return emit_styled_box(node, part, indent, part_styles, component, ctx);
+            }
+        }
+
+        // Plain Box (no decorative styling) — keep the lightweight inline
+        // form. A `Container` with no children just collapses to the box;
+        // multiple children need a child Column wrapper since Container
+        // only accepts one direct child.
         let style_args = args_for_container_inline(style_props);
         if node.children.is_empty() {
-            // No child — emit `Container(<style-args>)`. The
-            // `style_to_container_args` form returns args WITHOUT a
-            // leading comma, so it slots cleanly into the parens.
             return Ok(format!(
                 "{pad}Container({})\n",
                 style_to_container_args(style_props)
             ));
         }
         if node.children.len() == 1 {
-            // Single child — emit a `child:` arg + trailing style args
-            // (style_args already starts with a comma).
-            let child_src = emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?;
+            let child_src =
+                emit_widget_tree(&node.children[0], indent + 2, part_styles, component, ctx)?;
             let child_src = child_src.trim_end_matches('\n');
             return Ok(format!(
                 "{pad}Container(\n{inner_pad}child: {child_src}{style_args}\n{pad})\n",
                 inner_pad = " ".repeat(indent + 2),
             ));
         }
-        // Multiple children — wrap in Column inside the Container.
-        let children = emit_paired_children(&node.children, indent + 4, part_styles, component)?;
+        let children = emit_paired_children(&node.children, indent + 4, part_styles, component, ctx)?;
         return Ok(format!(
             "{pad}Container(\n{pad}  child: Column(children: [\n{children}{pad}  ]){style_args}\n{pad})\n"
         ));
     }
 
     // Row / Column / Stack — direct Flutter widgets with a children list.
-    let children = emit_paired_children(&node.children, indent + 4, part_styles, component)?;
+    // `emit_paired_children` handles the For-spread (Bug A): a `For`
+    // child of this Row/Column SPREADS its mapped widgets into THIS
+    // `children: [...]` list, so the Row lays cells across and the
+    // Column stacks rows down — the parent controls orientation.
+    let children = emit_paired_children(&node.children, indent + 4, part_styles, component, ctx)?;
 
     if children.is_empty() {
         return Ok(format!("{pad}const {widget}(children: [])\n"));
@@ -789,6 +879,7 @@ fn emit_paired_children(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -797,22 +888,154 @@ fn emit_paired_children(
         if child.tag == "If" {
             // Peek for `Else` immediately after; pair if present.
             let else_node = children.get(i + 1).filter(|n| n.tag == "Else");
-            let if_src = emit_if_dart(child, else_node, indent, part_styles, component)?;
+            let if_src = emit_if_dart(child, else_node, indent, part_styles, component, ctx)?;
             let trimmed = if_src.trim_end_matches('\n');
             out.push_str(trimmed);
             out.push_str(",\n");
             i += if else_node.is_some() { 2 } else { 1 };
             continue;
         }
+        // Bug A — a `For` that is a DIRECT child of this container's
+        // children-list SPREADS its mapped widgets into the parent's
+        // `children: [ ... ]` using Dart's collection-spread (`...expr`),
+        // instead of nesting a standalone `Column`. The parent (a Row vs
+        // a Column) then controls orientation: header `Row` + cell `Row`
+        // lay their `For`-mapped cells ACROSS; the outer body `Column`
+        // stacks `For`-mapped rows DOWN. Nesting a `Column` here was the
+        // bug that made the header A–E and each row's cells render as a
+        // vertical stack.
+        if child.tag == "For" {
+            let spread = emit_for_spread(child, indent, part_styles, component, ctx)?;
+            out.push_str(spread.trim_end_matches('\n'));
+            out.push_str(",\n");
+            i += 1;
+            continue;
+        }
         // Orphan Else falls through to the standalone routing in
         // `emit_widget_tree`, which emits a documenting placeholder.
-        let sub = emit_widget_tree(child, indent, part_styles, component)?;
+        let sub = emit_widget_tree(child, indent, part_styles, component, ctx)?;
         let sub = sub.trim_end_matches('\n');
         out.push_str(sub);
         out.push_str(",\n");
         i += 1;
     }
     Ok(out)
+}
+
+/// Lower a `For` that sits directly inside a parent's `children: [...]`
+/// list to a Dart **collection spread** — `...<coll>.asMap().entries
+/// .map((entry) { final <idx> = entry.key; final <as> = entry.value;
+/// return <body>; })` — so the mapped widgets flatten into the parent's
+/// child list and the PARENT (Row vs Column) decides orientation.
+///
+/// This is the Bug-A fix. The standalone `Column(children: …map()
+/// .toList())` form (in [`emit_for_dart`]) is kept ONLY for a `For` that
+/// is not a direct child of a Row/Column children-list (single-child
+/// parents, the layout root).
+///
+/// When this `For` is in *cell position* (its index binding names the
+/// column, and the surrounding [`TableCtx`] carries a `columnWidths`
+/// slot), the index is threaded into `ctx.cell_index` so the cell
+/// `Container` deeper down picks up `width: columnWidths[<idx>]`.
+fn emit_for_spread(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+
+    let coll_expr = for_collection_expr(node);
+    let as_name = find_keyword_prop(node, "as")
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "item".to_string());
+    let index_name = find_keyword_prop(node, "index").map(to_camel_case_first_lower);
+
+    // Thread the column index into the body so a cell Container can read
+    // `columnWidths[<idx>]`. Only meaningful when an `index:` binding is
+    // present and the table carries a column-widths slot.
+    let body_ctx = TableCtx {
+        cell_index: match (&index_name, ctx.column_widths_slot) {
+            (Some(idx), Some(_)) => Some(idx.as_str()),
+            _ => ctx.cell_index,
+        },
+        ..ctx
+    };
+
+    let body_pad = indent + 4;
+    let body = for_body_widget(node, body_pad, part_styles, component, body_ctx)?;
+    let body_trimmed = body.trim_start();
+
+    match index_name {
+        Some(idx) => Ok(format!(
+            "{pad}...{coll}.asMap().entries.map(({entry}) {{\n\
+             {p2}final {idx} = {entry}.key;\n\
+             {p2}final {asn} = {entry}.value;\n\
+             {p2}return {body};\n\
+             {pad}}})\n",
+            coll = coll_expr,
+            idx = idx,
+            asn = as_name,
+            body = body_trimmed,
+            entry = "entry",
+            p2 = " ".repeat(indent + 2),
+        )),
+        None => Ok(format!(
+            "{pad}...{coll}.map(({asn}) => {body})\n",
+            coll = coll_expr,
+            asn = as_name,
+            body = body_trimmed,
+        )),
+    }
+}
+
+/// Resolve a `For`'s `each:` prop to its Dart collection expression.
+///
+/// `each:` may be a `SlotRef` (lowered to its camelCase name), an
+/// `Expr` (passed through verbatim — author-controlled), or a UI29 §3.4
+/// `Keyword` that names an enclosing `For`'s `as:`/`index:` binding
+/// (also camelCased). Falls back to `<dynamic>[]` so the file
+/// type-checks if validation was somehow skipped.
+fn for_collection_expr(node: &LayoutNode) -> String {
+    match node.props.iter().find(|p| p.name == "each") {
+        Some(p) => match &p.value {
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Expr(text) => text.clone(),
+            LayoutPropValue::Keyword(name) => to_camel_case_first_lower(name),
+            _ => "<dynamic>[]".to_string(),
+        },
+        None => "<dynamic>[]".to_string(),
+    }
+}
+
+/// Render a `For`'s body as a single Dart widget expression (indented
+/// to `body_pad`), suitable as the `=> <body>` of an arrow map or the
+/// `return <body>;` of a block map. Empty body → `const
+/// SizedBox.shrink()`; single child → recurse; multiple children →
+/// wrap in a `Column`.
+fn for_body_widget(
+    node: &LayoutNode,
+    body_pad: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    if node.children.is_empty() {
+        return Ok(format!("{}const SizedBox.shrink()", " ".repeat(body_pad)));
+    }
+    if node.children.len() == 1 {
+        return Ok(emit_widget_tree(&node.children[0], body_pad, part_styles, component, ctx)?
+            .trim_end_matches('\n')
+            .to_string());
+    }
+    let inner = emit_paired_children(&node.children, body_pad + 4, part_styles, component, ctx)?;
+    Ok(format!(
+        "{}Column(children: [\n{}{}])",
+        " ".repeat(body_pad),
+        inner,
+        " ".repeat(body_pad + 2),
+    ))
 }
 
 /// Lower a UI29 `For` (§3.1) to a Dart `Column` whose `children:`
@@ -843,26 +1066,11 @@ fn emit_for_dart(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // `each:` — required. `validate_for_node` guarantees SlotRef,
-    // Expr, OR (UI29 §3.4) Keyword that names an enclosing For's
-    // `as:`/`index:` binding. Fall back to `<dynamic>[]` so the file
-    // type-checks if validation was somehow skipped.
-    let coll_expr = match node.props.iter().find(|p| p.name == "each") {
-        Some(p) => match &p.value {
-            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
-            LayoutPropValue::Expr(text) => text.clone(),
-            // UI29 §3.4 — `each: <NAME>` where NAME is an enclosing
-            // For's `as:`/`index:` binding. Lower to the camelCased
-            // Dart identifier (matching the binding name as declared
-            // in the outer .map closure's signature).
-            LayoutPropValue::Keyword(name) => to_camel_case_first_lower(name),
-            _ => "<dynamic>[]".to_string(),
-        },
-        None => "<dynamic>[]".to_string(),
-    };
+    let coll_expr = for_collection_expr(node);
 
     // `as:` — required, always a Keyword per UI29 §3.1. Defensive
     // fallback to `item` matches SwiftUI.
@@ -873,27 +1081,9 @@ fn emit_for_dart(node: &LayoutNode,
     // `index:` — optional, always a Keyword when present.
     let index_name = find_keyword_prop(node, "index").map(to_camel_case_first_lower);
 
-    // Body is the children of the For. May be empty (rare but legal)
-    // — emit `const SizedBox.shrink()` so the closure returns a Widget.
+    // Body is the children of the For.
     let body_pad = indent + 6;
-    let body = if node.children.is_empty() {
-        format!("{}const SizedBox.shrink()", " ".repeat(body_pad))
-    } else if node.children.len() == 1 {
-        emit_widget_tree(&node.children[0], body_pad, part_styles, component)?
-            .trim_end_matches('\n')
-            .to_string()
-    } else {
-        // Multiple children — wrap in a Column so the map closure
-        // returns a single Widget.
-        let inner = emit_paired_children(&node.children, body_pad + 4, part_styles, component)?;
-        format!(
-            "{}Column(children: [\n{}{}])",
-            " ".repeat(body_pad),
-            inner,
-            " ".repeat(body_pad + 2),
-        )
-    };
-
+    let body = for_body_widget(node, body_pad, part_styles, component, ctx)?;
     let body_trimmed = body.trim_start();
 
     match index_name {
@@ -947,6 +1137,7 @@ fn emit_if_dart(if_node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -963,9 +1154,9 @@ fn emit_if_dart(if_node: &LayoutNode,
     };
 
     let body_pad = indent + 2;
-    let then_branch = render_branch(&if_node.children, body_pad, part_styles, component)?;
+    let then_branch = render_branch(&if_node.children, body_pad, part_styles, component, ctx)?;
     let else_branch = match else_node {
-        Some(en) => render_branch(&en.children, body_pad, part_styles, component)?,
+        Some(en) => render_branch(&en.children, body_pad, part_styles, component, ctx)?,
         None => "const SizedBox.shrink()".to_string(),
     };
 
@@ -988,15 +1179,16 @@ fn render_branch(
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     if children.is_empty() {
         return Ok("const SizedBox.shrink()".to_string());
     }
     if children.len() == 1 {
-        let s = emit_widget_tree(&children[0], indent, part_styles, component)?;
+        let s = emit_widget_tree(&children[0], indent, part_styles, component, ctx)?;
         return Ok(s.trim_end_matches('\n').trim_start().to_string());
     }
-    let inner = emit_paired_children(children, indent + 2, part_styles, component)?;
+    let inner = emit_paired_children(children, indent + 2, part_styles, component, ctx)?;
     Ok(format!(
         "Column(children: [\n{}{}])",
         inner,
@@ -1090,6 +1282,301 @@ fn css_color_to_dart(s: &str) -> Option<String> {
 // single-child Container branch was rewritten to format inline.
 // The hole here is intentional — re-add if a future emitter needs
 // the same indent-then-line shape.
+
+// =====================================================================
+// Styled cell / header-cell lowering (Bug B)
+// =====================================================================
+
+/// Split a joined `"key: value; key: value"` part-style string into a
+/// `key → value` map. Both halves are trimmed; values keep their CSS
+/// units (`22px`, `#3f3f46`) for downstream parsing.
+fn parse_style_props(style_props: &str) -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    for prop in style_props.split(';') {
+        if let Some((k, v)) = prop.split_once(':') {
+            let k = k.trim();
+            if k.is_empty() {
+                continue;
+            }
+            map.insert(k.to_string(), v.trim().trim_matches('"').to_string());
+        }
+    }
+    map
+}
+
+/// True when a part's base style declares anything that needs a real
+/// `Container` decoration / sizing pass: a border, a background, an
+/// explicit height/width, or a text alignment. Plain parts (no visual
+/// styling) keep the lightweight inline form in [`emit_container`].
+fn part_has_decoration(style_props: &str) -> bool {
+    let m = parse_style_props(style_props);
+    m.contains_key("border-width")
+        || m.contains_key("border-color")
+        || m.contains_key("background")
+        || m.contains_key("background-color")
+        || m.contains_key("height")
+        || m.contains_key("width")
+        || m.contains_key("text-align")
+}
+
+/// True when the node carries any `state-when-*` predicate prop — the
+/// signal that this box wants conditional (selected / editing) styling
+/// folded in even if its base part is otherwise plain.
+fn node_has_state_when(node: &LayoutNode) -> bool {
+    node.props
+        .iter()
+        .any(|p| p.name.starts_with("state-when-"))
+}
+
+/// Map a mosstyle `text-align` value to a Flutter `Alignment` constant.
+fn text_align_to_alignment(value: &str) -> &'static str {
+    match value.trim() {
+        "right" => "Alignment.centerRight",
+        "center" => "Alignment.center",
+        "left" => "Alignment.centerLeft",
+        _ => "Alignment.centerLeft",
+    }
+}
+
+/// One conditional state layer on a styled box: the Dart predicate text
+/// plus that state's resolved background + text colours (either may be
+/// absent if the `state X { }` block didn't set them).
+struct StateLayer {
+    cond: String,
+    background: Option<String>,
+    text_color: Option<String>,
+}
+
+/// Collect `state-when-<X>: ( expr )` props on a node, pairing each with
+/// the resolved `{part}:{X}` style block's background + text colour.
+/// Declaration order is preserved; the cell-styling fold treats the
+/// FIRST matching layer as highest precedence (selected beats editing),
+/// matching the `.msl` author order and the other backends.
+fn collect_cell_state_layers(
+    node: &LayoutNode,
+    part: &str,
+    part_styles: &HashMap<String, String>,
+) -> Vec<StateLayer> {
+    let mut layers = Vec::new();
+    for prop in &node.props {
+        let Some(state_name) = prop.name.strip_prefix("state-when-") else {
+            continue;
+        };
+        let Some(state_style) = part_styles.get(&format!("{part}:{state_name}")) else {
+            continue;
+        };
+        let cond = match &prop.value {
+            LayoutPropValue::Expr(t) => t.clone(),
+            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::Keyword(k) => k.clone(),
+            // EmitRef / Number / String can't be boolean predicates.
+            _ => continue,
+        };
+        let m = parse_style_props(state_style);
+        let background = m
+            .get("background")
+            .or_else(|| m.get("background-color"))
+            .and_then(|v| css_color_to_dart(v));
+        let text_color = m.get("color").and_then(|v| css_color_to_dart(v));
+        layers.push(StateLayer {
+            cond,
+            background,
+            text_color,
+        });
+    }
+    layers
+}
+
+/// Build a nested-ternary Dart expression for a colour that flips with
+/// state. `layers` are tried in order; each contributes
+/// `(cond) ? <color> :` when it carries the requested colour. `base` is
+/// the final fallback (`null` for "no fill"). Returns just `base` when
+/// no layer supplies the colour, so the cheapest expression is emitted.
+fn state_color_expr(
+    layers: &[StateLayer],
+    pick: impl Fn(&StateLayer) -> Option<&String>,
+    base: &str,
+) -> String {
+    let mut acc = base.to_string();
+    // Fold from the LAST layer to the FIRST so the first layer ends up
+    // the outermost (highest-precedence) condition.
+    for layer in layers.iter().rev() {
+        if let Some(color) = pick(layer) {
+            acc = format!("(( {} )) ? {} : {}", layer.cond.trim(), color, acc);
+        }
+    }
+    acc
+}
+
+/// Lower a styled `Box [part]` (a spreadsheet cell or header-cell) to a
+/// fully-decorated Flutter `Container`. This is the Bug-B fix.
+///
+/// Produces (cell example):
+///
+/// ```dart
+/// Container(
+///   width: columnWidths[c],
+///   height: 22,
+///   alignment: Alignment.centerRight,
+///   padding: const EdgeInsets.symmetric(horizontal: 2),
+///   decoration: BoxDecoration(
+///     color: (( r == selectedRow && c == selectedCol )) ? const Color(0xFF264F78)
+///          : (( r == editRow && c == editCol )) ? const Color(0xFF1F4F3F)
+///          : null,
+///     border: Border.all(color: const Color(0xFF3F3F46), width: 1),
+///   ),
+///   child: DefaultTextStyle.merge(
+///     style: TextStyle(color: (( r == … )) ? const Color(0xFFFFFFFF) : const Color(0xFFCCCCCC)),
+///     child: <inner>,
+///   ),
+/// )
+/// ```
+///
+/// A `Container` cannot take BOTH `color:` and `decoration:`, so the
+/// background ALWAYS rides inside `BoxDecoration(color: …)` here. The
+/// per-state text colour is applied with `DefaultTextStyle.merge` so it
+/// reaches the child whether the child is a bare `Text` or an
+/// `If`/`Else` ternary (Text vs editing TextField).
+fn emit_styled_box(
+    node: &LayoutNode,
+    part: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let ip = " ".repeat(indent + 2);
+
+    let style_props = part_styles.get(part).map(String::as_str).unwrap_or("");
+    let base = parse_style_props(style_props);
+    let layers = collect_cell_state_layers(node, part, part_styles);
+
+    // --- Sizing / alignment / padding args ---------------------------
+    let mut args: Vec<String> = Vec::new();
+
+    // width: a discovered column width (`columnWidths[c]`) wins; else an
+    // explicit base `width`.
+    if let (Some(slot), Some(idx)) = (ctx.column_widths_slot, ctx.cell_index) {
+        args.push(format!("width: {slot}[{idx}]"));
+    } else if let Some(w) = base.get("width") {
+        args.push(format!("width: {}", parse_pixel_value(w)));
+    }
+    if let Some(h) = base.get("height") {
+        args.push(format!("height: {}", parse_pixel_value(h)));
+    }
+    if let Some(ta) = base.get("text-align") {
+        args.push(format!("alignment: {}", text_align_to_alignment(ta)));
+    }
+    if let Some(p) = base.get("padding") {
+        args.push(format!(
+            "padding: const EdgeInsets.symmetric(horizontal: {})",
+            parse_pixel_value(p)
+        ));
+    }
+
+    // --- BoxDecoration: background (state-conditional) + border -------
+    let base_bg = base
+        .get("background")
+        .or_else(|| base.get("background-color"))
+        .and_then(|v| css_color_to_dart(v));
+    let bg_expr = state_color_expr(
+        &layers,
+        |l| l.background.as_ref(),
+        base_bg.as_deref().unwrap_or("null"),
+    );
+    let mut deco_parts: Vec<String> = vec![format!("color: {bg_expr}")];
+    if let (Some(bc), Some(bw)) = (
+        base.get("border-color").and_then(|v| css_color_to_dart(v)),
+        base.get("border-width"),
+    ) {
+        deco_parts.push(format!(
+            "border: Border.all(color: {bc}, width: {})",
+            parse_pixel_value(bw)
+        ));
+    }
+    args.push(format!(
+        "decoration: BoxDecoration({})",
+        deco_parts.join(", ")
+    ));
+
+    // --- Child, wrapped in a per-state text colour -------------------
+    //
+    // The Box [cell] body is an `If (is-editing) { HostInput } Else
+    // { Text }` pair — exactly one rendered widget after fusing. Detect
+    // the leading `If` (+ optional `Else`) and emit the single ternary
+    // directly, so the cell's `alignment:` actually positions the
+    // content (a `Column` wrapper would expand to fill and defeat it).
+    // Other shapes fall back to single-child / Column wrapping.
+    let inner_child = if node.children.is_empty() {
+        format!("{ip}const SizedBox.shrink()")
+    } else if node.children[0].tag == "If" {
+        let else_node = node.children.get(1).filter(|n| n.tag == "Else");
+        emit_if_dart(
+            &node.children[0],
+            else_node,
+            indent + 4,
+            part_styles,
+            component,
+            ctx,
+        )?
+        .trim_end_matches('\n')
+        .to_string()
+    } else if node.children.len() == 1 {
+        emit_widget_tree(&node.children[0], indent + 4, part_styles, component, ctx)?
+            .trim_end_matches('\n')
+            .to_string()
+    } else {
+        let kids = emit_paired_children(&node.children, indent + 6, part_styles, component, ctx)?;
+        format!("{ip}Column(children: [\n{kids}{ip}])")
+    };
+    let inner_child = inner_child.trim_start();
+
+    // Text colour: the part's own base `color`, else the sheet's
+    // inherited `color` (threaded via [`TableCtx`]), with the
+    // per-state overrides folded on top. A `TextStyle` whose `color:`
+    // is a runtime ternary can't be `const`.
+    let base_text = base
+        .get("color")
+        .and_then(|v| css_color_to_dart(v))
+        .or_else(|| ctx.sheet_text_color.map(str::to_string))
+        .unwrap_or_else(|| "null".to_string());
+    let text_color_expr =
+        state_color_expr(&layers, |l| l.text_color.as_ref(), &base_text);
+
+    // Font family / size: the part's own, else the sheet's (the
+    // VisiCalc monospace 12px lives on the `sheet` part, not the cell).
+    let font_family = base
+        .get("font-family")
+        .map(String::as_str)
+        .or(ctx.sheet_font_family);
+    let font_size = base
+        .get("font-size")
+        .map(|v| parse_pixel_value(v))
+        .or_else(|| ctx.sheet_font_size.map(str::to_string));
+
+    let mut text_style_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
+    if let Some(ff) = font_family {
+        text_style_parts.push(format!("fontFamily: \"{}\"", escape_dart_string(ff)));
+    }
+    if let Some(fs) = font_size {
+        text_style_parts.push(format!("fontSize: {fs}"));
+    }
+    let child_expr = format!(
+        "DefaultTextStyle.merge(style: TextStyle({}), child: {inner_child})",
+        text_style_parts.join(", ")
+    );
+    args.push(format!("child: {child_expr}"));
+
+    // --- Assemble ----------------------------------------------------
+    let mut out = String::new();
+    out.push_str(&format!("{pad}Container(\n"));
+    for a in &args {
+        out.push_str(&format!("{ip}{a},\n"));
+    }
+    out.push_str(&format!("{pad})\n"));
+    Ok(out)
+}
 
 // =====================================================================
 // Text + Image leaves
@@ -1394,13 +1881,14 @@ fn emit_host_scroll(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     if node.children.is_empty() {
         return Ok(format!("{pad}const SingleChildScrollView()\n"));
     }
     if node.children.len() == 1 {
-        let child = emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?;
+        let child = emit_widget_tree(&node.children[0], indent + 2, part_styles, component, ctx)?;
         let child = child.trim_end_matches('\n');
         return Ok(format!(
             "{pad}SingleChildScrollView(\n{pad}  child: {child},\n{pad})\n"
@@ -1409,7 +1897,7 @@ fn emit_host_scroll(node: &LayoutNode,
     // Multi-child path. Use the paired walker so an `If`/`Else`
     // sibling pair (Cell-style conditionals inside a scroll viewport)
     // is consumed correctly.
-    let children = emit_paired_children(&node.children, indent + 6, part_styles, component)?;
+    let children = emit_paired_children(&node.children, indent + 6, part_styles, component, ctx)?;
     Ok(format!(
         "{pad}SingleChildScrollView(\n{pad}  child: Column(\n{pad}    children: [\n{children}{pad}    ],\n{pad}  ),\n{pad})\n"
     ))
@@ -1459,8 +1947,40 @@ fn emit_host_table(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    parent_ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+
+    // Discover the column-widths slot from the `HostTableColGroup >
+    // For (each: slot: …) { Col }` shape and thread it down so each
+    // cell `Container` renders at a stable column width
+    // (`columnWidths[<idx>]`). `None` → cells size to content (the
+    // pre-fix behaviour); other backends thread the same fact.
+    let column_widths_slot = extract_column_widths_slot(node);
+
+    // The HostTable's own (`sheet`) part carries the inherited text
+    // colour + monospace font. Thread them so cells / header-cells fall
+    // back to the sheet's `color` / `font-family` / `font-size` rather
+    // than `null` (which would inherit whatever the ambient theme says).
+    let sheet_style = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p).map(String::as_str))
+        .map(parse_style_props)
+        .unwrap_or_default();
+    let sheet_text_color = sheet_style.get("color").and_then(|v| css_color_to_dart(v));
+    let sheet_font_family = sheet_style.get("font-family").cloned();
+    let sheet_font_size = sheet_style
+        .get("font-size")
+        .map(|v| parse_pixel_value(v));
+
+    let ctx = TableCtx {
+        column_widths_slot: column_widths_slot.as_deref(),
+        cell_index: parent_ctx.cell_index,
+        sheet_text_color: sheet_text_color.as_deref(),
+        sheet_font_family: sheet_font_family.as_deref(),
+        sheet_font_size: sheet_font_size.as_deref(),
+    };
 
     // UI28-1 / U29-D1 — HostTable now walks its children (sub-tags:
     // HostTableColGroup / HostTableHead / HostTableBody / HostTableFoot)
@@ -1492,7 +2012,7 @@ fn emit_host_table(node: &LayoutNode,
     let body_inner = if node.children.is_empty() {
         format!("{}const SizedBox.shrink()\n", " ".repeat(indent + 2))
     } else {
-        emit_paired_children(&node.children, indent + 4, part_styles, component)?
+        emit_paired_children(&node.children, indent + 4, part_styles, component, ctx)?
     };
     let table_body = format!(
         "Column(\n{p}children: [\n{body}{p}],\n{pad})",
@@ -1701,6 +2221,7 @@ fn emit_host_tooltip(node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
     component: &str,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 2);
@@ -1721,12 +2242,12 @@ fn emit_host_tooltip(node: &LayoutNode,
     let child_src: String = if node.children.is_empty() {
         format!("{inner_pad}const SizedBox.shrink()\n")
     } else if node.children.len() == 1 {
-        emit_widget_tree(&node.children[0], indent + 2, part_styles, component)?
+        emit_widget_tree(&node.children[0], indent + 2, part_styles, component, ctx)?
     } else {
         // Multiple children — wrap in Column. Shouldn't happen for a
         // spec-conformant HostTooltip but we handle it defensively
         // (and through the paired walker so `If`/`Else` still fuses).
-        let children = emit_paired_children(&node.children, indent + 6, part_styles, component)?;
+        let children = emit_paired_children(&node.children, indent + 6, part_styles, component, ctx)?;
         format!(
             "{inner_pad}Column(\n{inner_pad}  children: [\n{children}{inner_pad}  ],\n{inner_pad})\n"
         )
@@ -1866,18 +2387,32 @@ fn emit_host_number_input(node: &LayoutNode,
 fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
     let mut map: HashMap<String, String> = HashMap::new();
     for part in &style.parts {
-        map.insert(part.name.clone(), format_part_base(part));
+        map.insert(part.name.clone(), format_props(&part.base));
+        // State blocks (`state selected { ... }`) are surfaced under a
+        // composite key `{part}:{state}` so the cell-styling path can
+        // look up `cell:selected` / `cell:editing` without having to
+        // walk `style.parts` again.  Mirrors the React + SwiftUI
+        // backends' `build_part_style_map` shape — same composite-key
+        // convention, so the same `.msl` `state X { ... }` block drives
+        // the per-cell highlight on every backend.
+        for state in &part.states {
+            let fragment = format_props(&state.props);
+            if !fragment.is_empty() {
+                map.insert(format!("{}:{}", part.name, state.state), fragment);
+            }
+        }
     }
     map
 }
 
-/// Render one part's base props as a joined `"key: value; key: value"`
+/// Render a slice of style props as a joined `"key: value; key: value"`
 /// string the widget builder can split + match on. `StyleProp.value` is
 /// already a `String` in the IR — we don't need to re-format scalar /
-/// keyword distinctions here.
-fn format_part_base(part: &PartStyle) -> String {
+/// keyword distinctions here. Shared by the base-part and
+/// `state X { ... }` paths.
+fn format_props(props: &[StyleProp]) -> String {
     let mut joined = String::new();
-    for p in &part.base {
+    for p in props {
         if !joined.is_empty() {
             joined.push_str("; ");
         }
@@ -4110,5 +4645,294 @@ mod tests {
         assert!(out.contains("row.asMap().entries.map((entry)"));
         assert!(out.contains("final c = entry.key;"));
         assert!(out.contains("final cell = entry.value;"));
+    }
+
+    // ====================================================================
+    // Spreadsheet-grid lowering (Bug A: For-spread; Bug B: cell styling)
+    // ====================================================================
+
+    /// A `Box` carrying a `part_name`, so the styled-cell path fires.
+    fn box_part(part: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".into(),
+            part_name: Some(part.to_string()),
+            props,
+            children,
+        }
+    }
+
+    /// `state-when-<state>: ( expr )` prop on a Box, matching the
+    /// post-resolution Cell.mll shape.
+    fn state_when(state: &str, expr: &str) -> LayoutProp {
+        LayoutProp {
+            name: format!("state-when-{state}"),
+            value: LayoutPropValue::Expr(expr.into()),
+        }
+    }
+
+    /// The Grid.dark.msl `cell` part (border + padding + height +
+    /// right-align + selected/editing state blocks) as a StyleDef.
+    fn grid_cell_style() -> StyleDef {
+        StyleDef {
+            component_name: "Grid".into(),
+            parts: vec![
+                PartStyle {
+                    name: "cell".into(),
+                    base: vec![
+                        StyleProp { name: "border-width".into(), value: "1px".into() },
+                        StyleProp { name: "border-color".into(), value: "#3f3f46".into() },
+                        StyleProp { name: "padding".into(), value: "2px".into() },
+                        StyleProp { name: "height".into(), value: "22px".into() },
+                        StyleProp { name: "text-align".into(), value: "right".into() },
+                    ],
+                    states: vec![
+                        mosstyle_compiler::StateStyle {
+                            state: "selected".into(),
+                            props: vec![
+                                StyleProp { name: "background".into(), value: "#264f78".into() },
+                                StyleProp { name: "color".into(), value: "#ffffff".into() },
+                            ],
+                        },
+                        mosstyle_compiler::StateStyle {
+                            state: "editing".into(),
+                            props: vec![
+                                StyleProp { name: "background".into(), value: "#1f4f3f".into() },
+                            ],
+                        },
+                    ],
+                },
+                PartStyle {
+                    name: "header-cell".into(),
+                    base: vec![
+                        StyleProp { name: "background".into(), value: "#2d2d30".into() },
+                        StyleProp { name: "color".into(), value: "#9d9d9d".into() },
+                        StyleProp { name: "text-align".into(), value: "center".into() },
+                        StyleProp { name: "border-width".into(), value: "1px".into() },
+                        StyleProp { name: "border-color".into(), value: "#3f3f46".into() },
+                    ],
+                    states: vec![],
+                },
+            ],
+        }
+    }
+
+    // ----- Bug A: a For inside a Row SPREADS its cells (no Column) ----------
+
+    #[test]
+    fn for_inside_row_spreads_into_parent_children_no_nested_column() {
+        // Row { For ( each: slot: cells , as: v , index: c ) { Text(( v )) } }
+        // The header / data-row shape. The For must SPREAD with `...` so
+        // the Row lays the cells out HORIZONTALLY; a nested `Column`
+        // (the old bug) would stack them vertically.
+        let m = component("X", vec![slot("cells", SlotType::Text, true)], vec![]);
+        let inner_for = for_node(
+            LayoutPropValue::SlotRef("cells".into()),
+            "v",
+            Some("c"),
+            vec![text_node("x")],
+        );
+        let l = layout("X", node_with("Row", vec![], vec![inner_for]));
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        // The For lowered to a collection spread directly in the Row.
+        assert!(
+            out.contains("...cells.asMap().entries.map((entry)"),
+            "expected a `...`-spread For inside the Row, got:\n{out}"
+        );
+        // The Row owns the cells; the For must NOT wrap them in its own
+        // Column (that was the vertical-stack bug).
+        assert!(
+            !out.contains("Column(children: cells"),
+            "For inside a Row must NOT nest a Column, got:\n{out}"
+        );
+        assert!(out.contains("Row("), "expected the enclosing Row, got:\n{out}");
+    }
+
+    // ----- A top-level For keeps the standalone Column fallback ------------
+
+    #[test]
+    fn for_at_root_keeps_standalone_column_fallback() {
+        // A `For` that is NOT a direct child of a Row/Column children-list
+        // (here it's the layout root) keeps the self-contained
+        // `Column(children: …map().toList())` form.
+        let m = component("X", vec![slot("rows", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "X",
+            for_node(
+                LayoutPropValue::SlotRef("rows".into()),
+                "row",
+                Some("r"),
+                vec![text_node("x")],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        let out = &r.output;
+        assert!(
+            out.contains("Column(children: rows.asMap().entries.map((entry)"),
+            "root For must keep the standalone Column form, got:\n{out}"
+        );
+        assert!(
+            out.contains(".toList())"),
+            "standalone form ends in `.toList())`, got:\n{out}"
+        );
+        assert!(
+            !out.trim_start().starts_with("...") && !out.contains("return\n      ...rows"),
+            "root For must not be a bare spread, got:\n{out}"
+        );
+    }
+
+    // ----- Bug B: cell Container has decoration.border / width / alignment --
+
+    #[test]
+    fn styled_cell_box_emits_decorated_container() {
+        // Row { For ( each: slot: cells , index: c ) {
+        //   Box [cell] ( state-when-selected, state-when-editing ) {
+        //     If (when: slot: is-editing) { HostInput } Else { Text }
+        //   }
+        // } }  inside a HostTable that carries the columnWidths colgroup.
+        let m = component(
+            "Grid",
+            vec![
+                slot("cells", SlotType::Text, true),
+                slot("column-widths", SlotType::List(Box::new(ListInnerType::Number)), true),
+                slot("is-editing", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+
+        let cell = box_part(
+            "cell",
+            vec![
+                state_when("selected", "( r == selectedRow && c == selectedCol )"),
+                state_when("editing", "( r == editRow && c == editCol )"),
+            ],
+            vec![
+                if_node(LayoutPropValue::SlotRef("is-editing".into()), vec![text_node("e")]),
+                else_node(vec![text_node("d")]),
+            ],
+        );
+        let row = node_with(
+            "Row",
+            vec![],
+            vec![for_node(
+                LayoutPropValue::SlotRef("cells".into()),
+                "v",
+                Some("c"),
+                vec![cell],
+            )],
+        );
+        // colgroup so columnWidths threading fires.
+        let colgroup = node_with(
+            "HostTableColGroup",
+            vec![],
+            vec![for_node(
+                LayoutPropValue::SlotRef("column-widths".into()),
+                "w",
+                Some("cw"),
+                vec![node("Col")],
+            )],
+        );
+        let table = node_with("HostTable", vec![], vec![colgroup, row]);
+        let l = layout("Grid", table);
+
+        let r = from_pipeline(&m, &l, &grid_cell_style()).expect("ok");
+        let out = &r.output;
+
+        // Border, width, height, alignment present on the cell Container.
+        assert!(
+            out.contains("border: Border.all(color: const Color(0xFF3F3F46), width: 1)"),
+            "cell must draw the 1px #3f3f46 border, got:\n{out}"
+        );
+        assert!(
+            out.contains("width: columnWidths[c]"),
+            "cell width must index the columnWidths slot by the For index, got:\n{out}"
+        );
+        assert!(
+            out.contains("height: 22"),
+            "cell height must be 22, got:\n{out}"
+        );
+        assert!(
+            out.contains("alignment: Alignment.centerRight"),
+            "text-align:right must lower to Alignment.centerRight, got:\n{out}"
+        );
+        // Background rides inside the decoration (NOT a Container `color:`
+        // alongside `decoration:` — that's a Flutter assertion failure).
+        assert!(
+            out.contains("decoration: BoxDecoration(color:"),
+            "background must live inside BoxDecoration, got:\n{out}"
+        );
+        assert!(
+            !out.contains("Container(\n") || !out.contains(", color: const Color")
+                || out.contains("decoration: BoxDecoration"),
+            "a Container must not carry both color: and decoration:, got:\n{out}"
+        );
+        // Selected → blue fill + white text; editing → green fill.
+        assert!(
+            out.contains("? const Color(0xFF264F78)"),
+            "selected state must fill #264f78, got:\n{out}"
+        );
+        assert!(
+            out.contains("? const Color(0xFF1F4F3F)"),
+            "editing state must fill #1f4f3f, got:\n{out}"
+        );
+        assert!(
+            out.contains("? const Color(0xFFFFFFFF)"),
+            "selected state must whiten text, got:\n{out}"
+        );
+        // The state predicate text threads through verbatim.
+        assert!(
+            out.contains("r == selectedRow && c == selectedCol"),
+            "selected predicate must reach the generated Dart, got:\n{out}"
+        );
+    }
+
+    // ----- Bug B: header cell background is #2d2d30, not the text color ----
+
+    #[test]
+    fn header_cell_background_is_panel_color_not_text_color() {
+        // Row { For ( each: slot: headers , index: ch ) {
+        //   Box [header-cell] { Text(( h )) }
+        // } }
+        let m = component(
+            "Grid",
+            vec![slot("headers", SlotType::Text, true)],
+            vec![],
+        );
+        let header = box_part("header-cell", vec![], vec![text_node("A")]);
+        let row = node_with(
+            "Row",
+            vec![],
+            vec![for_node(
+                LayoutPropValue::SlotRef("headers".into()),
+                "h",
+                Some("ch"),
+                vec![header],
+            )],
+        );
+        let l = layout("Grid", node_with("HostTableHead", vec![], vec![row]));
+
+        let r = from_pipeline(&m, &l, &grid_cell_style()).expect("ok");
+        let out = &r.output;
+
+        // The Container BACKGROUND must be the panel color #2d2d30 …
+        assert!(
+            out.contains("decoration: BoxDecoration(color: const Color(0xFF2D2D30)"),
+            "header background must be #2d2d30 inside the decoration, got:\n{out}"
+        );
+        // … and the TEXT color #9d9d9d must land on the child Text style,
+        // NOT on the Container background (the original bug).
+        assert!(
+            out.contains("color: const Color(0xFF9D9D9D)"),
+            "header text color #9d9d9d must reach the TextStyle, got:\n{out}"
+        );
+        assert!(
+            !out.contains("color: const Color(0xFF9D9D9D), border"),
+            "the #9d9d9d TEXT color must not be used as the box background, got:\n{out}"
+        );
+        // Header is center-aligned.
+        assert!(
+            out.contains("alignment: Alignment.center"),
+            "header text-align:center must lower to Alignment.center, got:\n{out}"
+        );
     }
 }

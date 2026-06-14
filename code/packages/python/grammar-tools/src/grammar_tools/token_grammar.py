@@ -163,6 +163,54 @@ class PatternGroup:
     definitions: list[TokenDefinition]
 
 
+@dataclass(frozen=True)
+class TransitionAction:
+    """One action a :class:`ModeTransition` applies to the lexer's mode
+    register after a token is emitted (F10).
+
+    ``kind`` is one of ``"set_mode"``, ``"push"``, ``"pop"``, ``"enable_skip"``,
+    ``"disable_skip"``. ``target`` is the mode/group name for ``set_mode``/
+    ``push`` and ``None`` otherwise.
+
+    - ``set_mode`` replaces the active mode (top of group stack) in place — the
+      flat flex-style toggle used for regex-vs-division.
+    - ``push`` / ``pop`` are the F04 nested-region save/restore (templates).
+    - ``enable_skip`` / ``disable_skip`` toggle skip-pattern processing.
+    """
+
+    kind: str
+    target: str | None = None
+
+
+@dataclass(frozen=True)
+class ModeTransition:
+    """One declarative lexer mode transition rule (F10).
+
+    Parsed from a ``transitions:`` line ``on TOKENS [in MODE] -> ACTION, ...``.
+    Pure data; the lexer interprets it after each token is emitted (first
+    matching rule wins). See ``F10-declarative-lexer-modes.md``.
+
+    Attributes:
+        on_tokens: Emitted token type-names that trigger the rule (alias
+            targets; ``"KEYWORD"`` for promoted keywords).
+        on_value: Optional keyword-value guard (e.g. ``"return"``).
+        in_mode: Optional active-mode guard; ``None`` means "in any mode".
+        actions: Ordered actions applied when the rule fires.
+        line_number: Source line for diagnostics.
+    """
+
+    on_tokens: tuple[str, ...]
+    on_value: str | None
+    in_mode: str | None
+    actions: tuple[TransitionAction, ...]
+    line_number: int
+
+
+#: Upper bound on transition rules per grammar — a DoS guard against a
+#: pathological ``.tokens`` file blowing up codegen/lexer memory.
+MAX_TRANSITIONS = 4096
+
+
 @dataclass
 class TokenGrammar:
     """The complete contents of a parsed .tokens file.
@@ -224,6 +272,13 @@ class TokenGrammar:
     error_definitions: list[TokenDefinition] = field(default_factory=list)
     groups: dict[str, PatternGroup] = field(default_factory=dict)
     case_sensitive: bool = True
+    start_mode: str | None = None
+    """F10: the mode (active group) the lexer starts in. ``None`` means
+    ``"default"``. Set by the ``start_mode:`` directive."""
+    transitions: list[ModeTransition] = field(default_factory=list)
+    """F10: declarative lexer mode transition table. Empty means no
+    transitions — behaviour is identical to F04. Set by the ``transitions:``
+    section."""
     layout_keywords: list[str] = field(default_factory=list)
     """Keywords that introduce a Haskell-style layout context when
     ``mode == "layout"``."""
@@ -461,6 +516,109 @@ def _parse_definition(
         )
 
 
+def _split_in_guard(head: str) -> tuple[str, str | None]:
+    """Split a transition head on a top-level `` in `` mode guard, ignoring
+    any `` in `` inside a parenthesised token set (F10)."""
+    depth = 0
+    i = 0
+    while i < len(head):
+        ch = head[i]
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        elif ch == " " and depth == 0 and head[i:].startswith(" in "):
+            return head[:i], head[i + 4 :]
+        i += 1
+    return head, None
+
+
+def _parse_transition(line: str, line_number: int) -> ModeTransition:
+    """Parse one ``transitions:`` line into a :class:`ModeTransition` (F10).
+
+    Grammar: ``on TOKENS [in MODE] -> ACTION [, ACTION ...]`` where TOKENS is a
+    name or ``(A | B | C)`` (or ``KEYWORD="value"``) and each ACTION is
+    ``set-mode M`` | ``push G`` | ``pop`` | ``enable-skip`` | ``disable-skip``.
+    """
+    if "->" not in line:
+        raise TokenGrammarError(
+            f"Transition rule missing '->': {line!r}", line_number
+        )
+    head, action_str = (part.strip() for part in line.split("->", 1))
+    if not action_str:
+        raise TokenGrammarError(
+            f"Transition rule has no actions after '->': {line!r}", line_number
+        )
+
+    if not head.startswith("on "):
+        raise TokenGrammarError(
+            f"Transition rule must start with 'on ': {line!r}", line_number
+        )
+    head = head[3:].strip()
+
+    tokens_part, in_mode = _split_in_guard(head)
+    tokens_part = tokens_part.strip()
+    if in_mode is not None:
+        in_mode = in_mode.strip()
+
+    inner = tokens_part
+    if inner.startswith("(") and inner.endswith(")"):
+        inner = inner[1:-1]
+    on_tokens: list[str] = []
+    on_value: str | None = None
+    for raw in inner.split("|"):
+        item = raw.strip()
+        if not item:
+            continue
+        if "=" in item:
+            name_p, value_p = (p.strip() for p in item.split("=", 1))
+            value = value_p
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1]
+            on_tokens.append(name_p)
+            on_value = value
+        else:
+            on_tokens.append(item)
+    if not on_tokens:
+        raise TokenGrammarError(
+            f"Transition rule has no trigger tokens: {line!r}", line_number
+        )
+
+    actions: list[TransitionAction] = []
+    for raw in action_str.split(","):
+        act = raw.strip()
+        if not act:
+            continue
+        if act.startswith("set-mode "):
+            actions.append(TransitionAction("set_mode", act[9:].strip()))
+        elif act.startswith("push "):
+            actions.append(TransitionAction("push", act[5:].strip()))
+        elif act == "pop":
+            actions.append(TransitionAction("pop"))
+        elif act == "enable-skip":
+            actions.append(TransitionAction("enable_skip"))
+        elif act == "disable-skip":
+            actions.append(TransitionAction("disable_skip"))
+        else:
+            raise TokenGrammarError(
+                f"Unknown transition action {act!r} (expected set-mode/push/"
+                "pop/enable-skip/disable-skip)",
+                line_number,
+            )
+    if not actions:
+        raise TokenGrammarError(
+            f"Transition rule has no valid actions: {line!r}", line_number
+        )
+
+    return ModeTransition(
+        on_tokens=tuple(on_tokens),
+        on_value=on_value,
+        in_mode=in_mode,
+        actions=tuple(actions),
+        line_number=line_number,
+    )
+
+
 def parse_token_grammar(source: str) -> TokenGrammar:
     """Parse the text of a .tokens file into a TokenGrammar.
 
@@ -582,6 +740,18 @@ def parse_token_grammar(source: str) -> TokenGrammar:
             current_section = None
             continue
 
+        # --- start_mode: directive (F10) ---
+        if stripped.startswith("start_mode:"):
+            sm_value = stripped[11:].strip()
+            if not sm_value:
+                raise TokenGrammarError(
+                    "Missing mode name after 'start_mode:'",
+                    line_number,
+                )
+            grammar.start_mode = sm_value
+            current_section = None
+            continue
+
         # --- Group headers ---
         # Pattern groups are declared with ``group NAME:`` where NAME is
         # a lowercase identifier. All subsequent indented lines belong to
@@ -608,6 +778,9 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                 "layout_keywords",
                 "context_keywords",
                 "soft_keywords",
+                "transitions",
+                "modes",
+                "start_mode",
             }
             if group_name in reserved_names:
                 raise TokenGrammarError(
@@ -655,6 +828,10 @@ def parse_token_grammar(source: str) -> TokenGrammar:
             current_section = "soft_keywords"
             continue
 
+        if stripped in ("transitions:", "transitions :"):
+            current_section = "transitions"
+            continue
+
         # --- Inside a section ---
         if current_section is not None:
             # Sections contain indented lines. A non-indented line exits
@@ -675,6 +852,11 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                 elif current_section == "soft_keywords":
                     if stripped:
                         grammar.soft_keywords.append(stripped)
+                elif current_section == "transitions":
+                    if stripped:
+                        grammar.transitions.append(
+                            _parse_transition(stripped, line_number)
+                        )
                 elif current_section == "skip":
                     # Skip section contains token definitions
                     if "=" not in stripped:
@@ -929,5 +1111,40 @@ def validate_token_grammar(grammar: TokenGrammar) -> list[str]:
         issues.extend(
             _validate_definitions(group.definitions, f"group '{group_name}' token")
         )
+
+    # F10: validate declarative lexer modes. A mode is valid if it is
+    # "default" or a declared group. Undefined targets/guards are rejected so
+    # the lexer never silently falls back to the wrong group.
+    def _mode_exists(name: str) -> bool:
+        return name == "default" or name in grammar.groups
+
+    if grammar.start_mode is not None and not _mode_exists(grammar.start_mode):
+        issues.append(
+            f"start_mode '{grammar.start_mode}' is not 'default' "
+            f"or a declared group"
+        )
+
+    if len(grammar.transitions) > MAX_TRANSITIONS:
+        issues.append(
+            f"Too many transition rules ({len(grammar.transitions)}, "
+            f"max {MAX_TRANSITIONS})"
+        )
+
+    for rule in grammar.transitions:
+        if rule.in_mode is not None and not _mode_exists(rule.in_mode):
+            issues.append(
+                f"Transition guard 'in {rule.in_mode}' (line "
+                f"{rule.line_number}) names an undeclared mode"
+            )
+        for action in rule.actions:
+            if (
+                action.kind in ("set_mode", "push")
+                and action.target is not None
+                and not _mode_exists(action.target)
+            ):
+                issues.append(
+                    f"Transition action targets undeclared mode "
+                    f"'{action.target}' (line {rule.line_number})"
+                )
 
     return issues

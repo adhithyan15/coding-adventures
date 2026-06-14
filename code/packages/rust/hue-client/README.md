@@ -15,6 +15,8 @@ Included surfaces:
 - resource snapshot summaries for resource-family, owner ref, scene action, and
   state projection coverage, with relationship, scene-state, projectable-surface,
   and partial-lighting predicates
+- resource snapshot readiness summaries for bridge identity, lighting, area
+  relationship, scene, sensor/input, and state projection handoff checks
 - resource-specific reads
 - structured command request bodies from `hue-core`
 - command-plan execution through the `HueClient` facade

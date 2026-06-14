@@ -410,6 +410,8 @@ mod v_1995 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -802,6 +804,8 @@ mod v_2001 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }
@@ -1194,6 +1198,8 @@ mod v_2005 {
             context_keywords: vec![],
             soft_keywords: vec![],
             layout_keywords: vec![],
+            start_mode: None,
+            transitions: vec![],
         }
     }
 }

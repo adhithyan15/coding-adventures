@@ -45,19 +45,28 @@ Window {
     // Host state — mirrors the Flutter / React reducer pattern at
     // smaller scale. The 5×5 sample spreadsheet is hard-coded; tap
     // on a cell to select it and pull its value into the formula bar.
+    // Each row's leading cell is the row-label ("1".."5"), matching
+    // the shape the HTML / SwiftUI / WebComponent demos feed their
+    // Grid: the column count then lines up 1:1 with columnHeaders
+    // (leading "" corner) and columnWidths (leading 48px gutter), so
+    // the row numbers march down the left edge like a real spreadsheet.
     property var sampleRows: [
-        ["15", "3",  "12", "8",  "5"],
-        ["8",  "14", "7",  "22", "11"],
-        ["12", "9",  "18", "6",  "25"],
-        ["4",  "11", "3",  "17", "9"],
-        ["7",  "5",  "13", "10", "19"]
+        ["1", "15", "3",  "12", "8",  "5"],
+        ["2", "8",  "14", "7",  "22", "11"],
+        ["3", "12", "9",  "18", "6",  "25"],
+        ["4", "4",  "11", "3",  "17", "9"],
+        ["5", "7",  "5",  "13", "10", "19"]
     ]
+    // Column 0 is the row-label gutter; the first data cell is column 1.
+    // Start with A1 (data column 1, row 0) selected.
     property int selectedRow: 0
-    property int selectedCol: 0
+    property int selectedCol: 1
     property string formulaText: "=SUM(B1:B5)"
 
     function cellAddress() {
-        return String.fromCharCode(65 + selectedCol) + (selectedRow + 1);
+        // Column 0 is the gutter (no address); column 1 → "A".
+        if (selectedCol < 1) return String(selectedRow + 1);
+        return String.fromCharCode(65 + selectedCol - 1) + (selectedRow + 1);
     }
 
     ColumnLayout {
@@ -110,7 +119,10 @@ Window {
             Layout.fillHeight: true
             Layout.margins: 16
 
-            columnHeaders: ["A", "B", "C", "D", "E"]
+            // Leading "" is the empty corner above the row-label gutter;
+            // A–E label the five data columns.  Six entries line up with
+            // columnWidths and each row's six cells.
+            columnHeaders: ["", "A", "B", "C", "D", "E"]
             // 6 widths: row-label column + 5 data columns.
             columnWidths: [48, 96, 96, 96, 96, 96]
             viewportRows: root.sampleRows

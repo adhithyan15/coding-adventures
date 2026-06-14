@@ -98,6 +98,34 @@ module CodingAdventures
     #                  top-level definitions list.
     PatternGroup = Data.define(:name, :definitions)
 
+    # Safety cap on the number of declarative transition rules a grammar may
+    # declare (F10). Grammars are static/trusted artifacts, but this bounds the
+    # table so a malformed file cannot produce an unreasonable rule list.
+    MAX_TRANSITIONS = 4096
+
+    # A single action taken when a mode-transition rule fires (F10).
+    #
+    # +kind+ is one of "set_mode", "push", "pop", "enable_skip", or
+    # "disable_skip". +target+ is the mode/group name for "set_mode"/"push"
+    # and nil for "pop"/"enable_skip"/"disable_skip".
+    TransitionAction = Data.define(:kind, :target) do
+      def initialize(kind:, target: nil)
+        super(kind: kind, target: target)
+      end
+    end
+
+    # One declarative mode-transition rule (F10), parsed from a transitions:
+    # line of the form +on TOKENS [in MODE] -> ACTION [, ACTION ...]+.
+    #
+    # Attributes:
+    #   on_tokens   -- emitted token type-names that trigger the rule (alias
+    #                  targets; "KEYWORD" for promoted keywords).
+    #   on_value    -- optional keyword-value guard (e.g. "return"); nil = none.
+    #   in_mode     -- optional active-mode guard; nil = "in any mode".
+    #   actions     -- ordered list of TransitionAction applied when it fires.
+    #   line_number -- 1-based line where the rule appeared.
+    ModeTransition = Data.define(:on_tokens, :on_value, :in_mode, :actions, :line_number)
+
     # The complete contents of a parsed .tokens file.
     #
     # definitions       -- ordered list of TokenDefinition (order = priority)
@@ -155,15 +183,17 @@ module CodingAdventures
     class TokenGrammar
       attr_reader :definitions, :keywords, :skip_definitions, :error_definitions,
                   :reserved_keywords, :groups, :layout_keywords,
-                  :context_keywords, :soft_keywords
-      attr_accessor :mode, :escape_mode, :case_sensitive, :version, :case_insensitive
+                  :context_keywords, :soft_keywords, :transitions
+      attr_accessor :mode, :escape_mode, :case_sensitive, :version, :case_insensitive,
+                    :start_mode
 
       def initialize(definitions: [], keywords: [], mode: nil,
                      skip_definitions: [], error_definitions: [],
                      reserved_keywords: [], escape_mode: nil, groups: {},
                      layout_keywords: [],
                      case_sensitive: true, version: 0, case_insensitive: false,
-                     context_keywords: [], soft_keywords: [])
+                     context_keywords: [], soft_keywords: [],
+                     start_mode: nil, transitions: [])
         @definitions = definitions
         @keywords = keywords
         @mode = mode
@@ -178,6 +208,11 @@ module CodingAdventures
         @case_insensitive = case_insensitive
         @context_keywords = context_keywords
         @soft_keywords = soft_keywords
+        # F10: declarative lexer mode transitions. +start_mode+ defaults to nil
+        # (interpreted as "default" by the lexer); +transitions+ is the rule
+        # table (empty == F04 behaviour).
+        @start_mode = start_mode
+        @transitions = transitions
       end
 
       # Return the set of all defined token names (including aliases).
@@ -328,6 +363,114 @@ module CodingAdventures
       end
     end
 
+    # Split a transition head on a top-level " in " mode guard, ignoring any
+    # " in " inside a parenthesised token set (F10). Returns [tokens, mode]
+    # where mode is nil when there is no guard.
+    def self.split_in_guard(head)
+      depth = 0
+      i = 0
+      while i < head.length
+        ch = head[i]
+        if ch == "("
+          depth += 1
+        elsif ch == ")"
+          depth -= 1
+        elsif ch == " " && depth.zero? && head[i..].start_with?(" in ")
+          return [head[0...i], head[(i + 4)..]]
+        end
+        i += 1
+      end
+      [head, nil]
+    end
+
+    # Parse one transitions: line into a ModeTransition (F10).
+    #
+    # Grammar: +on TOKENS [in MODE] -> ACTION [, ACTION ...]+ where TOKENS is a
+    # name or +(A | B | C)+ (or +KEYWORD="value"+) and each ACTION is
+    # +set-mode M+ | +push G+ | +pop+ | +enable-skip+ | +disable-skip+.
+    def self.parse_transition(line, line_number)
+      unless line.include?("->")
+        raise TokenGrammarError.new(
+          "Transition rule missing '->': #{line.inspect}", line_number
+        )
+      end
+      head, action_str = line.split("->", 2).map(&:strip)
+      if action_str.nil? || action_str.empty?
+        raise TokenGrammarError.new(
+          "Transition rule has no actions after '->': #{line.inspect}", line_number
+        )
+      end
+
+      unless head.start_with?("on ")
+        raise TokenGrammarError.new(
+          "Transition rule must start with 'on ': #{line.inspect}", line_number
+        )
+      end
+      head = head[3..].strip
+
+      tokens_part, in_mode = split_in_guard(head)
+      tokens_part = tokens_part.strip
+      in_mode = in_mode.strip unless in_mode.nil?
+
+      inner = tokens_part
+      inner = inner[1...-1] if inner.start_with?("(") && inner.end_with?(")")
+      on_tokens = []
+      on_value = nil
+      inner.split("|").each do |raw|
+        item = raw.strip
+        next if item.empty?
+
+        if item.include?("=")
+          name_p, value_p = item.split("=", 2).map(&:strip)
+          value = value_p
+          value = value[1...-1] if value.start_with?('"') && value.end_with?('"')
+          on_tokens << name_p
+          on_value = value
+        else
+          on_tokens << item
+        end
+      end
+      if on_tokens.empty?
+        raise TokenGrammarError.new(
+          "Transition rule has no trigger tokens: #{line.inspect}", line_number
+        )
+      end
+
+      actions = []
+      action_str.split(",").each do |raw|
+        act = raw.strip
+        next if act.empty?
+
+        if act.start_with?("set-mode ")
+          actions << TransitionAction.new(kind: "set_mode", target: act[9..].strip)
+        elsif act.start_with?("push ")
+          actions << TransitionAction.new(kind: "push", target: act[5..].strip)
+        elsif act == "pop"
+          actions << TransitionAction.new(kind: "pop")
+        elsif act == "enable-skip"
+          actions << TransitionAction.new(kind: "enable_skip")
+        elsif act == "disable-skip"
+          actions << TransitionAction.new(kind: "disable_skip")
+        else
+          raise TokenGrammarError.new(
+            "Unknown transition action #{act.inspect} (expected set-mode/push/" \
+            "pop/enable-skip/disable-skip)",
+            line_number
+          )
+        end
+      end
+      if actions.empty?
+        raise TokenGrammarError.new(
+          "Transition rule has no valid actions: #{line.inspect}", line_number
+        )
+      end
+
+      ModeTransition.new(
+        on_tokens: on_tokens, on_value: on_value, in_mode: in_mode,
+        actions: actions, line_number: line_number
+      )
+    end
+
     # Parse the text of a .tokens file into a TokenGrammar.
     #
     # The parser operates line-by-line with several modes:
@@ -437,6 +580,20 @@ module CodingAdventures
           next
         end
 
+        # start_mode: directive (F10) -- the mode the lexer starts in. nil
+        # (unset) is interpreted as "default" by the lexer.
+        if stripped.start_with?("start_mode:")
+          sm_value = stripped[11..].strip
+          if sm_value.empty?
+            raise TokenGrammarError.new(
+              "Missing mode name after 'start_mode:'", line_number
+            )
+          end
+          grammar.start_mode = sm_value
+          current_section = nil
+          next
+        end
+
         # Group headers -- "group NAME:" declares a named pattern group.
         # All subsequent indented lines belong to that group, just like
         # skip: or reserved: sections.
@@ -456,7 +613,7 @@ module CodingAdventures
           end
           reserved_names = %w[
             default skip keywords reserved errors layout_keywords
-            context_keywords soft_keywords
+            context_keywords soft_keywords transitions modes start_mode
           ].to_set
           if reserved_names.include?(group_name)
             raise TokenGrammarError.new(
@@ -526,6 +683,13 @@ module CodingAdventures
           next
         end
 
+        # transitions: section (F10) -- declarative mode-transition rules.
+        # Each indented line is parsed by parse_transition.
+        if stripped == "transitions:" || stripped == "transitions :"
+          current_section = "transitions"
+          next
+        end
+
         # Inside a section -- indented lines belong to the section.
         if current_section
           if line.start_with?(" ", "\t")
@@ -538,6 +702,11 @@ module CodingAdventures
               grammar.context_keywords << stripped unless stripped.empty?
             when "soft_keywords"
               grammar.soft_keywords << stripped unless stripped.empty?
+            when "transitions"
+              # F10: each indented line is a full transition rule
+              # (e.g. "on NAME -> set-mode div"). parse_transition handles
+              # the whole line, so no NAME = pattern shape check applies.
+              grammar.transitions << parse_transition(stripped, line_number)
             when "reserved"
               grammar.reserved_keywords << stripped unless stripped.empty?
             when "skip"
@@ -746,6 +915,38 @@ module CodingAdventures
         issues.concat(
           validate_definitions(group.definitions, "group '#{group_name}' token")
         )
+      end
+
+      # F10: validate declarative lexer modes. A mode is valid if it is
+      # "default" or a declared group. Undefined targets/guards are rejected so
+      # the lexer never silently falls back to the wrong group.
+      mode_exists = lambda do |name|
+        name == "default" || grammar.groups.key?(name)
+      end
+
+      if !grammar.start_mode.nil? && !mode_exists.call(grammar.start_mode)
+        issues << "start_mode '#{grammar.start_mode}' is not 'default' " \
+                  "or a declared group"
+      end
+
+      if grammar.transitions.length > MAX_TRANSITIONS
+        issues << "Too many transition rules (#{grammar.transitions.length}, " \
+                  "max #{MAX_TRANSITIONS})"
+      end
+
+      grammar.transitions.each do |rule|
+        if !rule.in_mode.nil? && !mode_exists.call(rule.in_mode)
+          issues << "Transition guard 'in #{rule.in_mode}' " \
+                    "(line #{rule.line_number}) names an undeclared mode"
+        end
+        rule.actions.each do |action|
+          target = action.target
+          next unless %w[set_mode push].include?(action.kind)
+          next if target.nil? || mode_exists.call(target)
+
+          issues << "Transition action targets undeclared mode " \
+                    "'#{target}' (line #{rule.line_number})"
+        end
       end
 
       issues

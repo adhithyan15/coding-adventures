@@ -18,13 +18,21 @@ LANG VM chain.
 > The frontend itself is unchanged, so the `vm-core`/`jit-core` Brainfuck paths (which key
 > CIR widths off `u8`/`u32`) keep working.
 
-> **LANG-MATRIX Phase V — generic register VM (v0.69.0):** the **VM** column runs the
-> *shared* IIR on `vm_core::VMCore` — the general register VM, no per-language code — so a
-> future Ruby/JS frontend would run on it unchanged. `tests/lang_matrix.rs`'s `run_vm` does
-> `compile_source_to_iir` → `VMCore::execute`; the I/O languages print via a registered
-> `print_i64` builtin closure. Verified by RUNNING in-process: Twig→42, Nib→42, Oct→0, ALGOL
-> `17 mod 5`→2, BASIC→`42`. 5/6 of the column; Brainfuck-on-VM (the `alloc_bytes`/`load_byte`/
-> `store_byte` tape ops on `vm-core`) and the generic JIT column are next.
+> **LANG-MATRIX — PLATFORM MATRIX COMPLETE (v0.71.0):** every language runs on every
+> backend except BEAM, **verified by running**. The two **execution columns** are both
+> generic over the shared IIR, so a future Ruby/JS frontend runs on them unchanged:
+> - **VM** (`v0.69.0`–`v0.70.0`): `run_vm` does `compile_source_to_iir` → `vm_core::VMCore`,
+>   the general register VM — no per-language code. The byte-tape ops live in `vm-core`
+>   0.4.0, over its flat `memory`.
+> - **JIT** (`v0.71.0`): `run_jit` does `compile_source_to_iir` → `jit_core::JITCore` +
+>   the language-agnostic `GenericCirJit`. `execute_with_jit` compiles fully-typed
+>   functions to JIT bytecode and interprets the rest, so each program runs *through the
+>   JIT pipeline*. (`jit-core` 0.4.0 made compiled functions bind their parameters, so
+>   Nib's `double(21)` JITs correctly.)
+>
+> Both run **all six languages** in-process — Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2,
+> BASIC→`42`, Brainfuck→`A` — the I/O languages via registered `print_i64`/`putchar`
+> builtin closures.
 > (McCarthy Lisp is wired as of L3a — scalar programs run
 end-to-end natively; symbol/cons backend support is L3b.)  As of L3b-3a-3c,
 `compile_source_to_wasm` also compiles McCarthy **cons** programs to a runnable
@@ -161,8 +169,10 @@ follow-up. The **CLR** column runs on the **real CoreCLR** (textual `.il` → `i
 `dotnet`, the CLR-real path) and is green for Twig / Nib / Oct / ALGOL 60 (exit code —
 this needed `iir-to-cil-bytecode` to grow integer arithmetic + comparison opcodes) and
 Dartmouth BASIC (stdout — `print_i64` → `Console.WriteLine(int32)` with an I/O-aware
-launcher that discards the entry result); Brainfuck (tape ops) is the only CLR follow-up.
-The VM/JIT columns are McCarthy-specialized and need op-coverage work.
+launcher that discards the entry result), and Brainfuck (tape ops, v0.68.0) — the CLR
+column is complete. The **VM** and **JIT** columns are generic register interpreters/JITs
+over the shared IIR (`vm_core::VMCore`, `jit_core::JITCore` + `GenericCirJit`) and now run
+all six languages too — **every column except BEAM is complete.**
 
 ## Stack position
 

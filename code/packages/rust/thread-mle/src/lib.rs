@@ -450,6 +450,14 @@ impl ThreadNetworkDataSummary {
         self.unknown_tlvs > 0
     }
 
+    pub fn has_service_or_context_data(self) -> bool {
+        self.has_services() || self.context_tlvs > 0
+    }
+
+    pub fn readiness(self) -> ThreadNetworkDataReadinessSummary {
+        ThreadNetworkDataReadinessSummary::from_summary(self)
+    }
+
     fn add_tlv_type(&mut self, tlv_type: NetworkDataTlvType) {
         match tlv_type {
             NetworkDataTlvType::HasRoute => self.has_route_tlvs += 1,
@@ -463,6 +471,100 @@ impl ThreadNetworkDataSummary {
             NetworkDataTlvType::Prefix => {}
         }
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadNetworkDataReadinessSummary {
+    pub network_data_summary: ThreadNetworkDataSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub network_data_present: bool,
+    pub prefix_coverage_ready: bool,
+    pub routing_coverage_ready: bool,
+    pub stable_data_ready: bool,
+    pub service_or_context_ready: bool,
+    pub unknown_tlvs_absent: bool,
+    pub network_data_ready: bool,
+}
+
+impl ThreadNetworkDataReadinessSummary {
+    pub fn from_network_data(network_data: &ThreadNetworkData) -> Result<Self, MleError> {
+        Ok(Self::from_summary(network_data.summary()?))
+    }
+
+    pub fn from_summary(network_data_summary: ThreadNetworkDataSummary) -> Self {
+        let network_data_present = !network_data_summary.is_empty();
+        let prefix_coverage_ready = network_data_summary.has_prefixes();
+        let routing_coverage_ready = network_data_summary.has_routing_data();
+        let stable_data_ready = network_data_summary.has_stable_data();
+        let service_or_context_ready = network_data_summary.has_service_or_context_data();
+        let unknown_tlvs_absent = !network_data_summary.has_unknown_tlvs();
+        let checks = [
+            network_data_present,
+            prefix_coverage_ready,
+            routing_coverage_ready,
+            stable_data_ready,
+            service_or_context_ready,
+            unknown_tlvs_absent,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let network_data_ready = missing_check_count == 0;
+
+        Self {
+            network_data_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            network_data_present,
+            prefix_coverage_ready,
+            routing_coverage_ready,
+            stable_data_ready,
+            service_or_context_ready,
+            unknown_tlvs_absent,
+            network_data_ready,
+        }
+    }
+
+    pub fn is_network_data_ready(self) -> bool {
+        self.network_data_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_network_data(self) -> bool {
+        !self.network_data_present
+    }
+
+    pub fn needs_prefix_coverage(self) -> bool {
+        !self.prefix_coverage_ready
+    }
+
+    pub fn needs_routing_coverage(self) -> bool {
+        !self.routing_coverage_ready
+    }
+
+    pub fn needs_stable_data(self) -> bool {
+        !self.stable_data_ready
+    }
+
+    pub fn needs_service_or_context_data(self) -> bool {
+        !self.service_or_context_ready
+    }
+
+    pub fn has_unknown_tlv_gaps(self) -> bool {
+        !self.unknown_tlvs_absent
+    }
+}
+
+pub fn summarize_thread_network_data_readiness(
+    network_data: &ThreadNetworkData,
+) -> Result<ThreadNetworkDataReadinessSummary, MleError> {
+    ThreadNetworkDataReadinessSummary::from_network_data(network_data)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2125,6 +2227,7 @@ mod tests {
         assert!(summary.has_stable_data());
         assert!(summary.has_routing_data());
         assert!(summary.has_services());
+        assert!(summary.has_service_or_context_data());
         assert!(summary.has_unknown_tlvs());
 
         let advertisement = NetworkDataAdvertisement {
@@ -2139,6 +2242,79 @@ mod tests {
         .network_data_summary()
         .unwrap()
         .is_empty());
+    }
+
+    #[test]
+    fn network_data_readiness_summary_marks_prefix_route_surface_ready() {
+        let border_router =
+            NetworkDataTlv::new(NetworkDataTlvType::BorderRouter, true, vec![0xaa]).unwrap();
+        let context = NetworkDataTlv::new(NetworkDataTlvType::Context, true, vec![0x01]).unwrap();
+        let prefix = ThreadPrefixData::new(
+            true,
+            3,
+            64,
+            vec![0xfd, 0x00, 0xab, 0xcd, 0, 0, 0, 0],
+            vec![border_router, context],
+        )
+        .unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap()]).unwrap();
+
+        let readiness = summarize_thread_network_data_readiness(&network_data).unwrap();
+
+        assert_eq!(
+            readiness.network_data_summary,
+            network_data.summary().unwrap()
+        );
+        assert_eq!(readiness.required_check_count, 6);
+        assert_eq!(readiness.passed_check_count, 6);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.network_data_present);
+        assert!(readiness.prefix_coverage_ready);
+        assert!(readiness.routing_coverage_ready);
+        assert!(readiness.stable_data_ready);
+        assert!(readiness.service_or_context_ready);
+        assert!(readiness.unknown_tlvs_absent);
+        assert!(readiness.network_data_ready);
+        assert!(readiness.is_network_data_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_network_data());
+        assert!(!readiness.needs_prefix_coverage());
+        assert!(!readiness.needs_routing_coverage());
+        assert!(!readiness.needs_stable_data());
+        assert!(!readiness.needs_service_or_context_data());
+        assert!(!readiness.has_unknown_tlv_gaps());
+    }
+
+    #[test]
+    fn network_data_readiness_summary_flags_missing_and_unknown_tlvs() {
+        let unknown = NetworkDataTlv::new(NetworkDataTlvType::Unknown(42), false, vec![3]).unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![unknown]).unwrap();
+
+        let readiness = network_data.summary().unwrap().readiness();
+
+        assert_eq!(readiness.required_check_count, 6);
+        assert_eq!(readiness.passed_check_count, 1);
+        assert_eq!(readiness.missing_check_count, 5);
+        assert!(readiness.network_data_present);
+        assert!(!readiness.prefix_coverage_ready);
+        assert!(!readiness.routing_coverage_ready);
+        assert!(!readiness.stable_data_ready);
+        assert!(!readiness.service_or_context_ready);
+        assert!(!readiness.unknown_tlvs_absent);
+        assert!(!readiness.network_data_ready);
+        assert!(!readiness.is_network_data_ready());
+        assert!(readiness.has_missing_checks());
+        assert!(!readiness.needs_network_data());
+        assert!(readiness.needs_prefix_coverage());
+        assert!(readiness.needs_routing_coverage());
+        assert!(readiness.needs_stable_data());
+        assert!(readiness.needs_service_or_context_data());
+        assert!(readiness.has_unknown_tlv_gaps());
+
+        let empty = ThreadNetworkDataSummary::empty().readiness();
+        assert!(empty.needs_network_data());
+        assert_eq!(empty.passed_check_count, 1);
+        assert_eq!(empty.missing_check_count, 5);
     }
 
     #[test]

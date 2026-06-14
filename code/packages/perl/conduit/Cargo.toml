@@ -1,0 +1,19 @@
+[workspace]
+
+[package]
+name = "conduit-perl"
+version = "0.1.0"
+edition = "2021"
+description = "Perl XS extension exposing the Conduit web framework (web-core) to Perl"
+build = "build.rs"
+
+[lib]
+name = "Conduit"
+crate-type = ["cdylib"]
+
+[dependencies]
+perl-bridge = { path = "../../rust/perl-bridge" }
+conduit     = { path = "../../rust/conduit" }
+web-core    = { path = "../../rust/web-core" }
+embeddable-http-server = { path = "../../rust/embeddable-http-server" }
+tcp-runtime = { path = "../../rust/tcp-runtime" }

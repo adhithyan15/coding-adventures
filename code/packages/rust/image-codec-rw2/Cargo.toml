@@ -7,3 +7,4 @@ description = "Panasonic RW2 RAW image decoder and minimal encoder using PixelCo
 [dependencies]
 pixel-container = { path = "../pixel-container" }
 paint-instructions = { path = "../paint-instructions" }
+image-raw-pipeline = { path = "../image-raw-pipeline" }

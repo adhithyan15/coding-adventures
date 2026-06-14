@@ -114,6 +114,34 @@ optional independent N-reader refute vote (`gate/votes.json`) when present.
   the write gate accepts-at-trust-tier vs flags-and-downgrades per clause.
 - **M6** ✓ — the warm path: decompose prose → typed findings → diagnosis at **0
   answer-time model calls** (see below).
+- **M7** ✓ — value-of-information ("order-next") + rulebook self-consistency:
+  - `warm/voi.py <case>` ranks the **unobserved** findings by how much observing
+    each would move the differential (pure CPU, re-decides). On the knife's-edge
+    pre-culture case it flags that `csf_lactate(normal)` / `enteroviral_pcr(positive)`
+    would *flip* the diagnosis — i.e. the highest-value tests to order next, each
+    citing the rulebook clause that would fire.
+  - `consistency/*.adj` encode a rulebook invariant (the two priors must partition
+    to 1.0) as `constrain`/`check`. The real priors → SAT; a mis-authored prior
+    → UNSAT with an **IIS `core`** naming the exact conflicting clauses —
+    machine-checked "these rules contradict", the basis of error localization.
+- **M8** ✓ — the five proofs + [FINDINGS](proofs/FINDINGS.md):
+
+```sh
+python3 proofs/test_proofs.py          # all five proofs + VOI/IIS (CI entry point)
+python3 proofs/cost_to_correct.py      # headline: 1 clause edit, 0.9995→0.7752, propagates
+python3 proofs/golden_and_cpu.py       # derive-once/0-calls + CPU-bound (~26 ms/case)
+python3 proofs/audit_trail.py <case>   # verdict → clause → verbatim byte-quote + URL
+```
+
+  1. **golden-rulebook** — cases decided twice, identical, 4/4 correct, 0 calls.
+  2. **cost-to-correct** — the naïve correlated-CSF over-count (0.9995) localizes
+     from the proof DAG; **one** explaining-away `interacts` clause calibrates it
+     to 0.7752 and propagates to every case at 0 model calls. (Honest sub-finding:
+     calibration drops bacterial below the aseptic base rate — pre-culture you
+     treat on cost, not probability.)
+  3. **auditable** — every contribution cites its source + byte-quote.
+  4. **error-localizable** — a wrong verdict is one clause (proof DAG + IIS).
+  5. **CPU-bound** — ~26 ms/case; the reasoning is the engine, not a model.
 
 ## Warm path — `warm/` (decompose once, decide on the CPU)
 

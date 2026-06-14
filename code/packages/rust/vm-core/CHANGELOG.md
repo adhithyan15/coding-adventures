@@ -1,5 +1,29 @@
 # Changelog — vm-core
 
+## [0.4.0] — 2026-06-13 (LANG-MATRIX Phase V — byte-tape ops; Brainfuck on the VM)
+
+Adds the lowered byte-tape ops to the dispatch table so the **generic** register VM runs
+Brainfuck — completing the matrix's VM column (every language now runs on this one
+interpreter, no per-language code). Verified by RUNNING `++++++++[>++++++++<-]>+.` on the
+VM in `lang-aot/tests/lang_matrix.rs`: it prints `A`.
+
+`lang-aot::lower_brainfuck_for_aot` rewrites Brainfuck's tape into `alloc_bytes` /
+`load_byte` / `store_byte` (the same ops every code-gen backend grew for LM-L/W/J/C). The
+VM implements them over its **existing flat `memory` address space** (the same
+`HashMap<i64, Value>` `load_mem`/`store_mem` use) — no new value kind, no new state:
+
+- **`alloc_bytes dest <- size`** → binds `dest` to the tape base address `0`. Each function
+  allocs one tape; cells are sparse `memory` entries keyed by `base + idx`, so an untouched
+  cell reads `0` (Brainfuck's zero-cell convention). `size` is advisory.
+- **`load_byte dest <- base, idx`** → `memory[base + idx]` (default `0`), masked to a byte
+  (unsigned: 200 reads as 200, never sign-extended).
+- **`store_byte base, idx, val`** → writes `val & 0xFF` to `memory[base + idx]` — the mask is
+  Brainfuck's 8-bit cell wrap-around. Reuses `store_mem`'s `max_memory_entries` cap (a loop
+  storing to distinct cells can't grow the map without bound).
+
+Two new tests in `src/core.rs` (`byte_tape_round_trips_unsigned_and_wraps`,
+`untouched_byte_tape_cell_reads_zero`).
+
 ## [0.3.0] — 2026-06-10 (McCarthy W15b — lambda-frame register sizing)
 
 ### Fixed

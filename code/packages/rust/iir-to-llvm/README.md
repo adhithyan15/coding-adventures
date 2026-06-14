@@ -88,6 +88,7 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.7.0  | Lisp symbols — `symbol` type → `i64` tagged immediate (McCarthy W13a). |
 | v0.8.0  | Lisp lambda (F7) — declare `lispy_to_exit_code` runtime switch; **LLVM McCarthy-complete F1–F7** (McCarthy W13b). |
 | v0.9.0  | Byte-tape ops `alloc_bytes`→`@calloc`, `load_byte`/`store_byte` (zext/trunc at the byte boundary), `putchar`/`getchar` libc builtins, + slot-dest SSA rename. **Brainfuck runs on LLVM** (LANG-MATRIX LM-L Brainfuck). |
+| v0.10.0 | Reassigned **parameters** are promoted to i64 stack slots (initialised from the incoming argument, narrow args zext'd) — a parameter accumulated across a loop back-edge is no longer silently dropped (LANG-FULL — LLVM first-class). |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Byte-tape memory (v0.9.0)

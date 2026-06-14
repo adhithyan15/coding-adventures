@@ -80,6 +80,18 @@ enum Backend {
     /// matrix's six languages are all scalar, so they share this one.) In-process, so
     /// no host gate; the I/O languages' `print_i64`/`putchar` are registered builtins.
     Vm,
+    /// Source → IIR (`compile_source_to_iir`) → the **generic JIT** (`jit_core::JITCore`
+    /// driving the language-agnostic `GenericCirJit` backend) over the shared IIR
+    /// (Phase I). `execute_with_jit` eagerly compiles every fully-typed function to JIT
+    /// bytecode and installs a native handler, falling back to the `VMCore` interpreter
+    /// for anything the backend can't yet lower — so a program runs *through the JIT
+    /// pipeline* and produces the same observable result. Like `Vm`, this consumes the
+    /// same `IIRModule` as every other backend with **zero** language-specific code: a
+    /// compiled function reads its arguments because `GenericCirJit` pre-binds parameters
+    /// to registers `0..n` and `JITCore` seeds them from the call args (the generic
+    /// register-VM/JIT design a future Ruby/JS frontend reuses unchanged). In-process, so
+    /// no host gate; the I/O builtins are registered on both the VM and the JIT backend.
+    Jit,
 }
 
 /// The known, backend-independent observable result of a conformance program.
@@ -100,7 +112,7 @@ struct Prog {
     backends: &'static [Backend],
 }
 
-use Backend::{Clr, Jvm, Llvm, NativeAot, Vm, Wasm};
+use Backend::{Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 
 /// The real-CoreCLR helpers (`find_ilasm`, the NuGet-cache assembler search) are
 /// shared with the McCarthy CLR-real chapter; `#[path]`-include the module so we
@@ -114,7 +126,7 @@ mod clr_support;
 /// so a backend that merely emits a literal would not pass.
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
-    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm] },
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
     // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument
@@ -124,7 +136,116 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — multiplication (LANG-FULL N1). `*` lowers to the shared IIR `mul`; the
+    // multiplicative level binds tighter than additive (so `2 + 3 * 4` is `2 + (3*4)`).
+    // Executed on every backend — the anti-smoke-test guardrail: proven by RUNNING, not
+    // validating/encoding. `6 * 7` exits 42.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 6 * 7; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — division (LANG-FULL N1). `/` lowers to the shared IIR `div`. `84 / 2` exits 42.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 84 / 2; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `for` loop (LANG-FULL N2). Desugars to the canonical counter loop; the range
+    // `1 .. 6` is exclusive (`i = 1,2,3,4,5`), summing the loop variable into a local
+    // accumulator → 15. Reassigning the loop counter + a local each iteration is the same
+    // slot-mutation shape every backend already lowers for Brainfuck's pointer. Executed
+    // on every backend. (The accumulator is a `let` local, not a parameter: the IIR-to-LLVM
+    // backend allocas locals but keeps params in SSA, so reassigning a *parameter* in a
+    // loop is a separate backend limitation, out of scope for N2.)
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u4 { let s: u4 = 0; for i: u4 in 1 .. 6 { s = s + i; } return s; }",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — nested `for` loops (LANG-FULL N2). 3 × 2 = 6 body executions; proves distinct
+    // loop labels and nested counter reassignment lower correctly on every backend.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u4 { let s: u4 = 0; \
+               for i: u4 in 0 .. 3 { for j: u4 in 0 .. 2 { s = s + 1; } } return s; }",
+        expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — reassigning a *function parameter* inside a loop (LLVM first-class fix).
+    // `acc` is a parameter accumulated across the loop (`acc = acc + 6`, 7 times) → 42.
+    // The IIR-to-LLVM backend previously kept params in SSA and only allocated locals,
+    // so a reassigned param silently dropped its update; now a promoted param is copied
+    // into an i64 stack slot at entry. Executed on every backend to prove parity.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn run(acc: u8) -> u8 { for i: u8 in 0 .. 7 { acc = acc + 6; } return acc; } \
+               fn main() -> u8 { return run(0); }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — bitwise AND / OR / XOR (LANG-FULL N3). `& | ^` lower to the shared IIR
+    // `and`/`or`/`xor`. Executed on every backend: `12 & 10` = 0b1100 & 0b1010 = 0b1000 = 8.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 12 & 10; }",
+        expect: Expect::Exit(8),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // `12 | 3` = 0b1100 | 0b0011 = 0b1111 = 15.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 12 | 3; }",
+        expect: Expect::Exit(15),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // `6 ^ 5` = 0b110 ^ 0b101 = 0b011 = 3.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 6 ^ 5; }",
+        expect: Expect::Exit(3),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `&&` SHORT-CIRCUIT (LANG-FULL N4). The left `1 == 2` is false, so the right
+    // operand `84 / 0 == 0` must NOT be evaluated — if it were, the division by zero would
+    // trap. The program returning 7 (not crashing, not 9) on every backend is positive
+    // proof the RHS was skipped. (`&&`/`||` lower to a result slot + jmp_if_false branches.)
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { if 1 == 2 && 84 / 0 == 0 { return 9; } return 7; }",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `||` SHORT-CIRCUIT (LANG-FULL N4). The left `1 == 1` is true, so `84 / 0 == 0`
+    // must NOT be evaluated. Returns 7 on every backend ⇒ the RHS was skipped.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { if 1 == 1 || 84 / 0 == 0 { return 7; } return 9; }",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `&&` true path: both sides true ⇒ the `if` is taken ⇒ 1.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { if 1 == 1 && 2 == 2 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
@@ -132,7 +253,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "oct",
         src: "fn main() { let x: u8 = 1; if x == 1 { let y: u8 = 2; } else { let z: u8 = 3; } }",
         expect: Expect::Exit(0),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
@@ -140,7 +261,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin integer result; result := 17 mod 5 end",
         expect: Expect::Exit(2),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
@@ -160,12 +281,16 @@ const PROGRAMS: &[Prog] = &[
     // `stelem.i1`) and `.` to `Console::Write(char)` (so `.` of 65 writes `A`); the
     // `Run()` launcher discards the entry result (the `putchar` side effect is the
     // output). `run_clr` assembles with real `ilasm` and runs on real `dotnet`.
+    // On the VM (Phase V), `vm-core`'s dispatch grew the byte-tape ops `alloc_bytes`/
+    // `load_byte`/`store_byte` over its flat `memory` (a cell is `memory[base+idx]`,
+    // `store_byte` masks to a byte for the 8-bit wrap); `.` is the registered
+    // `putchar` builtin capturing bytes (→ `A`). No per-language VM code.
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++[>++++++++<-]>+.",
         expect: Expect::Stdout("A"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
@@ -183,7 +308,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 
@@ -878,6 +1003,90 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
     Some((code, stdout))
 }
 
+/// Run a program through the **generic JIT** and return `(exit_code, stdout)`.
+///
+/// This is the execution-time sibling of [`run_vm`]: same shared `IIRModule`, but
+/// driven by `jit_core::JITCore` over the language-agnostic `GenericCirJit` backend
+/// instead of the bare interpreter. `execute_with_jit` eagerly compiles every
+/// fully-typed function to JIT bytecode (installing a native handler) and interprets
+/// the rest, so the program runs *through the JIT pipeline*. A compiled function with
+/// parameters — e.g. Nib's `double(x)` — reads its arguments because `GenericCirJit`
+/// pre-binds params to registers `0..n` and `JITCore` seeds those registers from the
+/// call args; that's the generic register-VM/JIT contract a future Ruby/JS frontend
+/// reuses unchanged, with **zero** language-specific code here.
+///
+/// The I/O builtins must be registered on **both** the VM (the interpreter-fallback
+/// path) and the `GenericCirJit` backend (the compiled path) so output is captured
+/// regardless of which tier a given function lands on. Each closure appends a bounded
+/// amount per call — no DoS vector.
+fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
+    use std::sync::{Arc, Mutex};
+    use jit_core::core::JITCore;
+    use jit_core::GenericCirJit;
+    use vm_core::core::VMCore;
+    use vm_core::value::Value;
+
+    let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
+
+    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
+
+    // --- interpreter-fallback path: builtins on the VM (closures return Result) ---
+    let mut vm = VMCore::new();
+    let ints = Arc::clone(&printed_ints);
+    vm.builtins_mut().register("print_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        ints.lock().expect("lang-matrix JIT print buffer poisoned").push(n);
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("putchar", move |args: &[Value]| {
+        let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
+        bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
+        Ok(Value::Null)
+    });
+    vm.builtins_mut().register("getchar", move |_args: &[Value]| Ok(Value::Int(0)));
+
+    // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
+    let backend = GenericCirJit::new();
+    let ints = Arc::clone(&printed_ints);
+    backend.register_builtin("print_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        ints.lock().expect("lang-matrix JIT print buffer poisoned").push(n);
+        Value::Null
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    backend.register_builtin("putchar", move |args: &[Value]| {
+        let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
+        bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
+        Value::Null
+    });
+    backend.register_builtin("getchar", move |_args: &[Value]| Value::Int(0));
+
+    // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the
+    // borrow, so `execute_with_jit` can re-borrow `vm` for the interpreter tier.
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    let result = jit.execute_with_jit(&mut vm, &mut module, &entry, &[]).ok()?;
+
+    // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
+    // equivalent to the interpreter, which is the whole point of a JIT.
+    let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
+    let byte_buf = printed_bytes.lock().expect("lang-matrix JIT putchar buffer poisoned");
+    let stdout = if byte_buf.is_empty() {
+        printed_ints
+            .lock()
+            .expect("lang-matrix JIT print buffer poisoned")
+            .iter()
+            .map(|v| v.to_string())
+            .collect::<Vec<_>>()
+            .join("\n")
+    } else {
+        String::from_utf8_lossy(&byte_buf).to_string()
+    };
+    Some((code, stdout))
+}
+
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
 /// unavailable on this host (skip, like the W16 external-tool backends).
 fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
@@ -888,6 +1097,7 @@ fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
         Backend::Jvm => run_jvm(p),
         Backend::Clr => run_clr(p),
         Backend::Vm => run_vm(p),
+        Backend::Jit => run_jit(p),
     }
 }
 
@@ -966,6 +1176,15 @@ fn proven_columns_do_not_silently_skip() {
         assert!(
             run_vm(p).is_some(),
             "in-process vm-core failed to run {:?}",
+            p.lang
+        );
+    }
+    // JIT: the generic `jit_core::JITCore` + `GenericCirJit` run in-process (always
+    // present), so every JIT-tagged program must run — no host gate.
+    for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Jit)) {
+        assert!(
+            run_jit(p).is_some(),
+            "in-process jit-core failed to run {:?}",
             p.lang
         );
     }

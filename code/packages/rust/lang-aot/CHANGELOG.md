@@ -1,5 +1,97 @@
 # Changelog — `lang-aot`
 
+## 0.76.0 — 2026-06-13 — Nib `&&` / `||` short-circuit executed on every backend (LANG-FULL N4)
+
+`tests/lang_matrix.rs` gains three executed Nib programs proving short-circuit
+`&&`/`||` across native/LLVM/WASM/JVM/CLR/VM/JIT: `1 == 2 && 84 / 0 == 0` → 7 and
+`1 == 1 || 84 / 0 == 0` → 7 (the divide-by-zero right operand is positive proof it
+was never evaluated — if it were, the program would trap), plus a `&&` true-path
+program → 1. Backed by `nib-iir-compiler` 0.12.0 (`compile_short_circuit`). Frontend-
+only — no backend change. No `lang-aot/src` change.
+
+## 0.75.0 — 2026-06-13 — Nib bitwise `& | ^` executed on every backend (LANG-FULL N3)
+
+`tests/lang_matrix.rs` gains three executed Nib programs — `12 & 10` → 8,
+`12 | 3` → 15, `6 ^ 5` → 3 — asserted across native/LLVM/WASM/JVM/CLR/VM/JIT.
+Backed by `nib-iir-compiler` 0.11.0 (lowers `& | ^` to the shared IIR
+`and`/`or`/`xor`). The executed test surfaced a CLR backend gap — the textual
+`.il` path didn't emit the bitwise opcodes — fixed in `iir-to-cil-bytecode`
+0.19.0. No `lang-aot/src` change.
+
+## 0.74.0 — 2026-06-13 — reassigning a parameter in a loop runs on LLVM too (LANG-FULL — LLVM first-class)
+
+`tests/lang_matrix.rs` gains an executed Nib program that accumulates into a
+**function parameter** across a loop — `fn run(acc: u8) { for i in 0 .. 7 { acc = acc + 6 } return acc }`
+→ exit 42 — asserted across native/LLVM/WASM/JVM/CLR/VM/JIT. This was the
+limitation surfaced (and scoped out) in N2: the IIR-to-LLVM backend kept params in
+SSA, so a reassigned param was silently dropped. Fixed in `iir-to-llvm` 0.10.0
+(reassigned params are promoted to i64 stack slots, initialised from the incoming
+argument). The other backends already handled it; this closes the LLVM gap so the
+column is genuinely first-class. No `lang-aot/src` change.
+
+## 0.73.0 — 2026-06-13 — Nib `for` loops executed on every backend (LANG-FULL N2)
+
+`tests/lang_matrix.rs` gains two executed Nib `for`-loop programs — a sum loop
+`for i in 1 .. 6 { s = s + i }` → exit 15 (uses the loop variable) and a nested
+loop (3 × 2) → exit 6 — asserted across native/LLVM/WASM/JVM/CLR/VM/JIT. Backed
+by `nib-iir-compiler` 0.10.0 (lowers `for` to the canonical counter loop). The
+matrix battery now exercises real cross-backend loop control flow with counter +
+accumulator reassignment, not just straight-line arithmetic. No `lang-aot/src`
+change.
+
+## 0.72.0 — 2026-06-13 — Nib `*` and `/` executed on every backend (LANG-FULL N1)
+
+First slice of the LANG-FULL campaign (full implementations of every matrix
+language, each feature **verified by RUNNING** on every backend, not just
+validated/encoded). `tests/lang_matrix.rs` gains two executed Nib programs —
+`fn main() -> u8 { return 6 * 7; }` → exit 42 and `… 84 / 2; }` → exit 42 —
+asserted across native/LLVM/WASM/JVM/CLR/VM/JIT. Backed by `nib-iir-compiler`
+0.9.0 (lowers `*`/`/` to the shared IIR `mul`/`div`). No `lang-aot/src` change;
+the matrix battery now has more than one executed program per language.
+
+## 0.71.0 — 2026-06-13 — Every language on the generic JIT — JIT COLUMN COMPLETE → MATRIX COMPLETE (LANG-MATRIX Phase I)
+
+Completes the **JIT column** — the last open column of the platform matrix. All six
+matrix languages now run on the **generic JIT**, so every language runs on every backend
+except BEAM, **verified by running**.
+
+`tests/lang_matrix.rs` gains a `Backend::Jit` runner: source →
+`compile_source_to_iir` (the *same* shared pipeline every other column uses) →
+`jit_core::JITCore` driving the language-agnostic `GenericCirJit` over the shared IIR.
+`execute_with_jit` eagerly compiles each fully-typed function to JIT bytecode (installing
+a native handler) and interprets the rest on `VMCore`, so each program runs *through the
+JIT pipeline*. The I/O builtins (`print_i64`/`putchar`/`getchar`) are registered as
+callbacks on **both** the VM (interpreter-fallback tier) and the `GenericCirJit` backend
+(compiled tier) — **no per-language code**, exactly the way a future Ruby/JS frontend
+would plug in. Verified by RUNNING in-process: Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2,
+BASIC `10 PRINT 42`→stdout `42`, Brainfuck `++++++++[…]>+.`→`A`. The matrix's floor test
+asserts every JIT-tagged cell actually runs.
+
+The Nib cell (`double(21)`) surfaced — and this slice fixes, in `jit-core` 0.4.0 — a
+genuine generic-JIT gap: `GenericCirJit::run` ignored its `args`, so a JIT-compiled
+function read its parameters as zero. See that crate's changelog; the upshot is any
+frontend whose functions take arguments now JITs correctly.
+
+### Also — fix the pre-existing `cil_emit.rs` test
+
+`tests/cil_emit.rs` (CLR-emit, McCarthy W6a) no longer compiled: the `clr-simulator`
+evaluation stack became `Vec<Option<Value>>` in W6b (#5296), but this scalar test — which
+predates that change and only ever ran via its own (dev-dependency) edge — still expected a
+bare `i32`. It now matches `Value::Int(n)`. Unrelated to the JIT work, but `cil_emit` is a
+`lang-aot` test, so this slice (which touches `lang-aot`) restores it to green.
+
+## 0.70.0 — 2026-06-13 — Brainfuck on the VM — VM COLUMN COMPLETE (LANG-MATRIX Phase V, slice 2)
+
+Completes the **VM column**: Brainfuck now runs on the generic register VM too, so **all
+six matrix languages run on the one `vm_core::VMCore` interpreter** via the shared IIR.
+Verified by RUNNING `++++++++[>++++++++<-]>+.` on the VM: it prints `A`.
+
+The lowering work is in `vm-core` 0.4.0 (the byte-tape ops `alloc_bytes`/`load_byte`/
+`store_byte` over its flat `memory` — see that crate's changelog). This crate's change is
+the test tag: `tests/lang_matrix.rs` adds `Vm` to the Brainfuck `Prog`. `run_vm` already
+registered the `putchar` builtin (slice 1), so Brainfuck's `.` captures bytes (→ `A`) with
+no further wiring. No `lang-aot/src` change.
+
 ## 0.69.0 — 2026-06-12 — generic register VM column (LANG-MATRIX Phase V, slice 1)
 
 Begins the **VM column** of the matrix — and does it the way the project intends: a
