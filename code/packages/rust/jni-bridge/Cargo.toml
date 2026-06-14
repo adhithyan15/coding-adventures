@@ -1,0 +1,6 @@
+[package]
+name = "jni-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Zero-dependency Rust wrapper for the Java Native Interface (JNI)"
+publish = false

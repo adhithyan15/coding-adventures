@@ -263,6 +263,8 @@ members = [
     "silicon-rust-python",
     "silicon-rust-napi",
     "silicon-rust-ruby-native",
+    "jni-bridge",
+    "silicon-rust-jni",
     "system-board",
     "block-ram",
     "device-driver-framework",
