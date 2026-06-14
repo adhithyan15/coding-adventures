@@ -240,6 +240,17 @@ default group; transitions are a no-op there (orthogonal, exactly as F04 groups 
 
 ## JavaScript Profile (the first consumer)
 
+> **Status (landed):** the regex-vs-division table below ships in
+> `code/grammars/ecmascript/es2025.tokens` (closurec's default edition) and the
+> regenerated `javascript-lexer` `_grammar.rs`. It closes **gap-092 / gap-115 /
+> gap-119** — the three byte-identity fixtures `regex_div` / `div_chain` /
+> `regex_after_return` are un-ignored and enforced. The shipped operator/keyword
+> sets are supersets of the illustrative lists below (the full ES2025 punctuator
+> table). Two follow-ups remain: (1) the **template-substitution** rules
+> (gap-044, below) are NOT yet wired — templates need the brace-depth guard;
+> (2) sibling editions (`es2022`…`es2024`) can adopt the same table when needed
+> (trivial: copy the `start_mode`/`group div`/`transitions` block).
+
 ### Regex-vs-division (gap-115, gap-119)
 
 Two flat modes: `default` = expression position (a `/` lexes as `REGEX`), `div` =

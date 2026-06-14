@@ -4526,6 +4526,22 @@ fn needs_separator(a: &lexer::token::Token, b: &lexer::token::Token) -> bool {
     if b.value.starts_with('`') {
         return false;
     }
+    // gap-119: a REGEX literal as the RIGHT token never needs a leading
+    // separator from a word-like token, because a regex's first emitted
+    // character is `/` (a punctuator): `return/a/g`, `typeof/x/`,
+    // `x in/re/` all join cleanly. Without this short-circuit the
+    // word-like rule below would treat `return` (KEYWORD) + `/a/g`
+    // (REGEX) as two word-like tokens and wrongly emit `return /a/g`.
+    //
+    // The ONE hazard is `a`'s emitted text ENDING in `/`, which would
+    // glue into `//` (a line comment) or `/*` (a block comment). Only a
+    // `/` division operator or a flagless REGEX literal (`/x/`) ends in
+    // `/`; neither is valid JS immediately before another regex, but we
+    // fail safe and keep the separating space for them.
+    if is_regex(b) {
+        let a_ends_slash = is_regex(a) || (is_punct(a) && a.value.ends_with('/'));
+        return a_ends_slash;
+    }
     // Conservative rule: both word-like → space; otherwise none.
     if is_word_like(a) && is_word_like(b) {
         return true;
@@ -5590,6 +5606,18 @@ fn is_word_like(tok: &lexer::token::Token) -> bool {
     )
 }
 
+/// gap-119: True only for a REGEX literal token. A regex's emitted text
+/// always BEGINS with `/` (a punctuator), so — unlike a generic word-like
+/// token — it never needs a leading separator from the preceding token.
+/// We detect it by grammar `type_name` (the JavaScript grammar tags regex
+/// literals `REGEX`); there is no dedicated `TokenType::Regex`, so a
+/// grammar without the name simply never matches (fail-closed).
+fn is_regex(tok: &lexer::token::Token) -> bool {
+    tok.type_name
+        .as_deref()
+        .is_some_and(|n| n.eq_ignore_ascii_case("REGEX"))
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -5637,6 +5665,37 @@ mod tests {
         let out = minify(src);
         assert!(out.contains("return typeof"), "got: {out:?}");
         assert!(out.contains("typeof x"), "got: {out:?}");
+    }
+
+    // ---- gap-092 / gap-115 / gap-119: regex-vs-division (F10) ----
+
+    /// gap-092: a `/` after a value-producing token is DIVISION, not the
+    /// start of a regex — `a/b` must NOT pick up spurious regex spacing.
+    #[test]
+    fn gap092_single_division_no_space() {
+        assert_eq!(minify("var x=a/b;"), "var x=a/b;");
+    }
+
+    /// gap-115 (CORRECTNESS): a CHAIN of divisions must stay divisions —
+    /// `a/b/c` must round-trip, not corrupt to `a /b/ c` (regex `/b/`).
+    #[test]
+    fn gap115_division_chain_round_trips() {
+        assert_eq!(minify("var x=a/b/c;"), "var x=a/b/c;");
+    }
+
+    /// gap-119: a REGEX literal after the `return` keyword needs NO
+    /// separating space — a regex begins with `/`, which already breaks
+    /// the keyword. `return/a/g`, not `return /a/g`.
+    #[test]
+    fn gap119_regex_after_return_no_space() {
+        assert_eq!(minify("function f(){return/a/g}"), "function f(){return/a/g};");
+    }
+
+    /// gap-119 sibling: a regex in expression position (after `=`) also
+    /// joins cleanly and is preserved as a single REGEX token.
+    #[test]
+    fn gap119_regex_after_assign_preserved() {
+        assert_eq!(minify("var re=/ab+c/i;"), "var re=/ab+c/i;");
     }
 
     // ---- gap-063: same-sign `+`/`-` adjacency (CORRECTNESS) ----

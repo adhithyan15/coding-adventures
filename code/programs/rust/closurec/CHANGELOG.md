@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.126.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-092, gap-115, gap-119** — regex-vs-division disambiguation,
+  via the new F10 declarative lexer mode transitions (no hand-written
+  per-language lexer callback). The `es2025.tokens` grammar now declares a
+  flat `div` mode entered after value-producing tokens; the shared
+  `GrammarLexer` interprets the transition table.
+  - **gap-115 (CORRECTNESS)** — `a/b/c` previously mis-lexed as `a` + regex
+    `/b/` + `c`, emitting the INVALID `a /b/ c`. It now lexes as three
+    divisions and round-trips byte-identically.
+  - **gap-092** — `var x=a/b/c;` byte-identical (was `a /b/ c`).
+  - **gap-119** — a regex after `return` no longer takes a spurious
+    separating space (`return/a/g`, not `return /a/g`). The lexer half is
+    F10; the emitter half is a `needs_separator` refinement: a `REGEX`
+    literal as the RIGHT token never needs a leading separator from a
+    word-like token (a regex starts with `/`, a punctuator), guarded
+    against the `//`-comment merge hazard. New `is_regex` helper; unit
+    tests `gap092_single_division_no_space`,
+    `gap115_division_chain_round_trips`,
+    `gap119_regex_after_return_no_space`,
+    `gap119_regex_after_assign_preserved`. The three byte-identity
+    fixtures `regex_div` / `div_chain` / `regex_after_return` are
+    un-ignored and ENFORCED.
+
 ## [0.125.0] - 2026-06-13
 
 ### Fixed
