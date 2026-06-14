@@ -129,6 +129,12 @@ the JVM (LANG-MATRIX LM-J): the tape is a host-provided static `byte[]`, `baload
 index it (masking the sign-extended load back to an unsigned cell), and `.`/`,` call the
 `env.BFRuntime` host class — the JVM sibling of the LLVM libc / wasm `env.putchar` I/O.
 
+**Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): a `u4`/`u8`/`u16`
+arithmetic/bitwise/`neg`/`not`/`shl` result is masked with `iconst/sipush/ldc <mask>;
+iand` after the `int` op, so `200u8+100u8=44` and `~0u8=255`. JVM `int` ops already wrap
+mod-2³², so `u32`/`i32` need no mask. A positive mask + `iand` is used (not `i2b`/`i2s`,
+which sign-extend) to keep the unsigned widths unsigned.
+
 ## Closures (LANG36)
 
 The JVM backend supports **first-class closures** via a `long[]`-based

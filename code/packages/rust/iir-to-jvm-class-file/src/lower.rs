@@ -918,6 +918,27 @@ fn emit_iconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i32) 
     }
 }
 
+/// Mask the `int` on top of the operand stack to a narrow width (LANG-FULL E2).
+///
+/// JVM `int` arithmetic (`iadd`/`imul`/…) wraps mod-2³², so `u32`/`i32` are
+/// already correct.  The smaller widths (`u4`/`u8`/`u16`) need an explicit
+/// `iconst/sipush/ldc <mask>; iand` after the op so `200u8 + 100u8` becomes
+/// `44` and `~0u8` is `255` — mirroring vm-core's `mask_result`, jit-core's
+/// `MASK_WIDTH`, and the wasm `i32.and`, and the byte-tape `baload`+mask
+/// precedent.  We deliberately use a positive mask + `iand` rather than `i2b`/
+/// `i2s` (which sign-extend, giving a *signed* byte — wrong for the unsigned
+/// narrow types the LANG-FULL frontends use).  `i64`/`u64`/floats emit nothing.
+fn emit_jvm_width_mask(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, type_hint: &str) {
+    let mask: i32 = match type_hint {
+        "u4" => 0xF,
+        "u8" => 0xFF,
+        "u16" => 0xFFFF,
+        _ => return,
+    };
+    emit_iconst_cp(code, cp, mask);
+    code.push(IAND);
+}
+
 /// Emit a long constant push.
 ///
 /// JVM only has short forms for `0L` and `1L`.  Anything else needs an
@@ -1749,6 +1770,9 @@ fn lower_function(
                     _ => IADD, // fallback
                 };
                 code.push(opcode);
+                // E2: wrap a narrow (u4/u8/u16) result; u32/i32 already wrap via
+                // the i32 op, i64 via the long op.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
 
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
@@ -1769,6 +1793,8 @@ fn lower_function(
                     _ => INEG,
                 };
                 code.push(opcode);
+                // E2: a narrow `neg` is `(0 - r)` mod-2ⁿ — mask it to the width.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1792,6 +1818,8 @@ fn lower_function(
                     _ => IAND,
                 };
                 code.push(opcode);
+                // E2: keep a narrow bitwise result canonical for its width.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1814,6 +1842,9 @@ fn lower_function(
                     emit_iconst(&mut code, -1);
                     code.push(IXOR);
                 }
+                // E2: `~x` on a narrow width must flip only its low bits
+                // (`~0u8 == 255`, not `-1`) — mask after the XOR.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
@@ -1836,6 +1867,9 @@ fn lower_function(
                     _ => ISHL,
                 };
                 code.push(opcode);
+                // E2: a narrow left-shift can push bits past the width
+                // (`1u8 << 8`), so mask the result.
+                emit_jvm_width_mask(&mut code, cp, &instr.type_hint);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, _) = lookup_var(dest)?;
                     emit_typed_store(&mut code, dest_slot, instr_jtype);
