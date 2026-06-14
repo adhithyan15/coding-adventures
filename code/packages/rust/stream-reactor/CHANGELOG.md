@@ -63,3 +63,18 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - Regression test `connection_ids_encode_the_shard_index_in_their_low_bits`.
+
+## [0.1.5] - 2026-06-14
+
+### Added
+
+- **Cross-thread reactor wakeup.** Each reactor registers a wakeup at construction
+  and hands its `StreamMailbox` a `WakeHandle`; `StreamMailbox::push` fires it
+  after enqueuing, so an off-reactor write interrupts `poll` and flushes in
+  milliseconds instead of waiting out the poll timeout (default 10 ms). Best-effort
+  and non-fatal: on platforms whose wakeup can't be shared across threads, the
+  mailbox simply has no handle and the reactor drains on its next poll as before.
+- Tests: `off_reactor_mailbox_write_wakes_the_reactor_immediately` (a 30 s poll
+  timeout proves the wake fires — a dropped wake fails the test, not just slows it)
+  and `concurrent_off_reactor_wakes_do_not_corrupt_the_reactor` (8 threads hammer
+  the wake while clients echo). Both pass under ThreadSanitizer.

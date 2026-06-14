@@ -330,12 +330,17 @@ Status:
   off-reactor write to the one owning reactor with a single mask — no shared
   registry and no O(N) broadcast. This replaced the earlier shared-`AtomicU64`
   connection-id seed.
+- **Done** — cross-thread wakeups. `transport-platform` exposes a `Send + Sync`
+  `WakeHandle` (a duplicated kqueue fd / `eventfd`); each reactor hands one to its
+  mailbox, which fires it on enqueue so an off-reactor write interrupts `poll` and
+  flushes in milliseconds instead of waiting the poll timeout. macOS/Linux only so
+  far; Windows/IOCP falls back to the poll timeout (a follow-up). Validated under
+  ThreadSanitizer.
 
 Missing pieces:
 
-- cross-thread wakeups (the wakeup primitive exists in `transport-platform`, but
-  the mailbox does not yet trigger it, so an off-reactor write waits up to the
-  poll timeout before flushing)
+- IOCP cross-thread wake (share the completion port so `PostQueuedCompletionStatus`
+  can fire from a `WakeHandle`)
 - lock-minimal metrics and connection handoff paths
 
 ### 5. Hardening, observability, and benchmarking

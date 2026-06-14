@@ -11,6 +11,7 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::io::{self, IoSlice};
 use std::net::{Shutdown, SocketAddr, TcpListener, TcpStream};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -240,6 +241,48 @@ pub enum WriteOutcome {
     Closed,
 }
 
+/// A thread-safe trigger for one platform's wakeup, callable from *any* thread.
+///
+/// `create_wakeup` registers a wakeup with the platform and `wake(&mut self)`
+/// fires it — but that lives on the platform, which is owned by the single
+/// reactor thread.  A `WakeHandle` decouples the *firing* from the `&mut self`
+/// platform: it owns a thread-safe clone of the underlying OS primitive (a
+/// duplicated kqueue fd, a duplicated `eventfd`, …), so an off-reactor producer
+/// (e.g. a mailbox on another thread) can interrupt the reactor's `poll` the
+/// instant it enqueues work, instead of waiting for the poll timeout.
+///
+/// Obtain one from [`TransportPlatform::wake_handle`].  It is cheap to clone
+/// (the trigger is reference-counted).
+#[derive(Clone)]
+pub struct WakeHandle {
+    trigger: Arc<dyn Fn() -> Result<(), PlatformError> + Send + Sync>,
+}
+
+impl WakeHandle {
+    /// Build a handle from a backend-specific trigger closure.  Crate-internal:
+    /// only the platform backends construct these.
+    pub(crate) fn from_trigger(
+        trigger: impl Fn() -> Result<(), PlatformError> + Send + Sync + 'static,
+    ) -> Self {
+        Self {
+            trigger: Arc::new(trigger),
+        }
+    }
+
+    /// Fire the wakeup.  Safe to call from any thread.  A failure here is
+    /// non-fatal to the caller: the reactor will still drain on its next poll
+    /// timeout, so producers typically ignore the result.
+    pub fn wake(&self) -> Result<(), PlatformError> {
+        (self.trigger)()
+    }
+}
+
+impl fmt::Debug for WakeHandle {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("WakeHandle").finish_non_exhaustive()
+    }
+}
+
 pub trait TransportPlatform {
     fn native_event_provider(&self) -> NativeEventProvider {
         NativeEventProvider::ReadinessProbe
@@ -302,6 +345,20 @@ pub trait TransportPlatform {
     fn create_wakeup(&mut self) -> Result<WakeupId, PlatformError>;
 
     fn wake(&mut self, wakeup: WakeupId) -> Result<(), PlatformError>;
+
+    /// Return a thread-safe [`WakeHandle`] that fires `wakeup` from any thread.
+    ///
+    /// The default returns [`PlatformError::Unsupported`]; backends that can
+    /// safely share their wakeup primitive across threads (kqueue, epoll)
+    /// override it.  A caller that gets `Unsupported` simply forgoes the
+    /// low-latency wake and relies on the reactor's poll timeout instead — so
+    /// this never breaks a platform, it only makes cross-thread sends flush a
+    /// little later there.
+    fn wake_handle(&self, _wakeup: WakeupId) -> Result<WakeHandle, PlatformError> {
+        Err(PlatformError::Unsupported(
+            "cross-thread wake handle not supported by this platform",
+        ))
+    }
 
     fn poll(
         &mut self,
@@ -838,6 +895,28 @@ pub mod bsd {
                     .with_fflags(kqueue::note_trigger()),
             )?;
             Ok(())
+        }
+
+        fn wake_handle(&self, wakeup: WakeupId) -> Result<WakeHandle, PlatformError> {
+            // The user event must already be registered (via `create_wakeup`);
+            // capture its ident/token and a *duplicate* of the kqueue fd so the
+            // returned handle can re-issue the NOTE_TRIGGER from another thread.
+            let state = self
+                .wakeups
+                .get(&wakeup)
+                .ok_or(PlatformError::InvalidResource)?;
+            let ident = state.ident;
+            let token = wakeup.0;
+            let queue = self.queue.try_clone().map_err(PlatformError::from)?;
+            Ok(WakeHandle::from_trigger(move || {
+                queue
+                    .apply(
+                        kqueue::KqueueChange::user(ident, token)
+                            .with_flags(kqueue::EventFlags::ENABLE | kqueue::EventFlags::CLEAR)
+                            .with_fflags(kqueue::note_trigger()),
+                    )
+                    .map_err(PlatformError::from)
+            }))
         }
 
         fn poll(
@@ -1480,6 +1559,40 @@ pub mod linux {
                 .get(&wakeup)
                 .ok_or(PlatformError::InvalidResource)?;
             Self::write_counter_fd(&state.fd, 1)
+        }
+
+        fn wake_handle(&self, wakeup: WakeupId) -> Result<WakeHandle, PlatformError> {
+            // Duplicate the eventfd so the handle can post a wake from another
+            // thread.  A wake is a single `write` of the counter value `1`; the
+            // eventfd is registered with the epoll instance, so the write makes a
+            // blocked `epoll_wait` return.  The fd is `EFD_NONBLOCK`, so a full
+            // counter (after 2^64-1 unread wakes — effectively never) returns
+            // `EAGAIN`, which we treat as "a wake is already pending" = success.
+            let state = self
+                .wakeups
+                .get(&wakeup)
+                .ok_or(PlatformError::InvalidResource)?;
+            let fd = state.fd.try_clone().map_err(PlatformError::from)?;
+            Ok(WakeHandle::from_trigger(move || {
+                let value: u64 = 1;
+                let written = unsafe {
+                    libc::write(
+                        fd.as_raw_fd(),
+                        (&value as *const u64).cast(),
+                        std::mem::size_of::<u64>(),
+                    )
+                };
+                if written == -1 {
+                    let error = io::Error::last_os_error();
+                    if error.kind() == io::ErrorKind::WouldBlock {
+                        Ok(())
+                    } else {
+                        Err(PlatformError::from(error))
+                    }
+                } else {
+                    Ok(())
+                }
+            }))
         }
 
         fn poll(

@@ -27,3 +27,17 @@ All notable changes to this package will be documented in this file.
 - Windows listeners now use exclusive address ownership instead of mapping the
   cross-platform `reuse_address` flag onto Winsock's unsafe TCP listener
   `SO_REUSEADDR` semantics
+
+## [0.1.1] - 2026-06-14
+
+### Added
+
+- `WakeHandle` — a `Send + Sync`, cloneable, thread-safe trigger for a platform's
+  wakeup, and a `TransportPlatform::wake_handle(wakeup)` method that returns one.
+  Unlike `wake(&mut self)` (which lives on the reactor-owned platform), a
+  `WakeHandle` owns a thread-safe clone of the underlying OS primitive, so an
+  off-reactor producer can interrupt the reactor's `poll` the instant it has work.
+  - kqueue: duplicates the kqueue fd and re-issues `EVFILT_USER` + `NOTE_TRIGGER`.
+  - epoll: duplicates the wakeup `eventfd` and `write`s the counter.
+  - Default impl returns `Unsupported`; Windows/IOCP uses it for now (callers fall
+    back to the poll timeout), so no platform is broken — they just wake later.

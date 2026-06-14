@@ -12,7 +12,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use transport_platform::{
     BindAddress, CloseKind, ListenerId, ListenerOptions, PlatformError, PlatformEvent, ReadOutcome,
-    StreamId, StreamInterest, StreamOptions, TransportPlatform, WriteOutcome,
+    StreamId, StreamInterest, StreamOptions, TransportPlatform, WakeHandle, WriteOutcome,
 };
 
 const DEFAULT_MAX_CONNECTIONS: usize = 1_024;
@@ -131,6 +131,11 @@ impl StopHandle {
 #[derive(Clone, Default)]
 pub struct StreamMailbox {
     commands: Arc<Mutex<VecDeque<StreamMailboxCommand>>>,
+    /// Optional cross-thread trigger that interrupts the owning reactor's `poll`
+    /// the instant a command is enqueued, so an off-reactor write flushes without
+    /// waiting for the poll timeout.  `None` on platforms whose wakeup primitive
+    /// can't be shared across threads (the reactor then drains on its next poll).
+    wake: Option<WakeHandle>,
 }
 
 impl StreamMailbox {
@@ -167,10 +172,19 @@ impl StreamMailbox {
     }
 
     fn push(&self, command: StreamMailboxCommand) {
+        // Enqueue *first*, then wake: the reactor, once interrupted, must already
+        // see the command in the queue.  (`serve` drains at both the top and
+        // bottom of every poll cycle, so a wake that races mid-cycle is still
+        // caught.)
         self.commands
             .lock()
             .expect("stream mailbox mutex poisoned")
             .push_back(command);
+        if let Some(wake) = &self.wake {
+            // Best-effort: a failed wake just means the reactor flushes on its
+            // next poll timeout instead of immediately — never a lost command.
+            let _ = wake.wake();
+        }
     }
 
     fn drain(&self) -> Vec<StreamMailboxCommand> {
@@ -295,6 +309,21 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                 PlatformError::ProviderFault(format!("enable listener interest: {error}"))
             })?;
 
+        // Register a wakeup and grab a cross-thread handle for the mailbox, so an
+        // off-reactor write can interrupt `poll` and flush at once instead of
+        // waiting out the poll timeout.  Best-effort: if the platform can't create
+        // a wakeup or can't share it across threads (the default `wake_handle`
+        // returns `Unsupported`, e.g. on Windows), the mailbox just has no handle
+        // and the reactor drains on its next poll timeout exactly as before.
+        let wake = match platform.create_wakeup() {
+            Ok(wakeup) => platform.wake_handle(wakeup).ok(),
+            Err(_) => None,
+        };
+        let mailbox = StreamMailbox {
+            commands: Arc::new(Mutex::new(VecDeque::new())),
+            wake,
+        };
+
         Ok(Self {
             platform,
             listener,
@@ -305,7 +334,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             shard_index: options.shard_index,
             shard_bits: options.shard_bits,
             stop_flag: Arc::new(AtomicBool::new(false)),
-            mailbox: StreamMailbox::default(),
+            mailbox,
             read_buffer_size: options.read_buffer_size.max(1),
             max_connections: options.max_connections.max(1),
             max_pending_write_bytes: options.max_pending_write_bytes.max(1),
@@ -376,6 +405,10 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                         }
                         _ => {}
                     },
+                    // A mailbox wakeup: its only job is to break us out of `poll`.
+                    // The mailbox drain at the bottom of this loop iteration does
+                    // the actual work, so there is nothing to handle here.
+                    PlatformEvent::Wakeup { .. } => {}
                     _ => {}
                 }
             }
@@ -936,6 +969,124 @@ mod tests {
             assert_eq!(id & 0b11, 1, "shard index must occupy the low 2 bits: {id}");
             assert!(id >> 2 >= 1, "the sequence (high bits) must start at 1: {id}");
         }
+    }
+
+    #[test]
+    fn off_reactor_mailbox_write_wakes_the_reactor_immediately() {
+        // Give the reactor a deliberately huge poll timeout (30s).  Without a
+        // cross-thread wakeup, a mailbox write enqueued from another thread would
+        // sit until the next socket event or that timeout — so the client's 3s
+        // read would fail.  The wake handle interrupts `poll` at once, so the
+        // write flushes in milliseconds.  A regression that drops the wake makes
+        // this test fail (the read times out), not merely run slow.
+        let seen = Arc::new(Mutex::new(Vec::<ConnectionId>::new()));
+        let seen_in_handler = Arc::clone(&seen);
+        let options = StreamReactorOptions {
+            poll_timeout: Duration::from_secs(30),
+            ..StreamReactorOptions::default()
+        };
+        let mut reactor = StreamReactor::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            options,
+            |_| (),
+            move |info, _, _| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen mutex poisoned")
+                    .push(info.id);
+                StreamHandlerResult::default() // do not reply from the handler
+            },
+            |_, _| {},
+        )
+        .expect("bind");
+        let addr = reactor.local_addr();
+        let mailbox = reactor.mailbox();
+        let stop = reactor.stop_handle();
+        let server = thread::spawn(move || reactor.serve());
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client
+            .set_read_timeout(Some(Duration::from_secs(3)))
+            .expect("read timeout");
+        client.write_all(b"ping").expect("write");
+
+        let mut id = None;
+        for _ in 0..300 {
+            if let Some(first) = seen.lock().expect("seen mutex poisoned").first().copied() {
+                id = Some(first);
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+        let id = id.expect("handler should observe the connection");
+
+        let start = std::time::Instant::now();
+        mailbox.send(id, b"pong".to_vec());
+        let mut buf = [0u8; 4];
+        client
+            .read_exact(&mut buf)
+            .expect("off-reactor write should arrive promptly");
+        assert_eq!(&buf, b"pong");
+        assert!(
+            start.elapsed() < Duration::from_secs(2),
+            "wake should flush in ms, took {:?}",
+            start.elapsed()
+        );
+
+        stop.stop();
+        // The reactor is back in its 30s poll; wake it so it sees the stop flag.
+        mailbox.resume_all_reads();
+        server.join().expect("server thread").expect("serve");
+    }
+
+    #[test]
+    fn concurrent_off_reactor_wakes_do_not_corrupt_the_reactor() {
+        // Hammer the cross-thread wake from many threads while the reactor serves
+        // real clients.  This exercises the duplicated-fd wake handle for data
+        // races / use-after-free and is the test to run under ThreadSanitizer.
+        let mut reactor = StreamReactor::bind_kqueue(("127.0.0.1", 0), |_, bytes| {
+            StreamHandlerResult::write(bytes.to_vec())
+        })
+        .expect("bind");
+        let addr = reactor.local_addr();
+        let mailbox = reactor.mailbox();
+        let stop = reactor.stop_handle();
+        let server = thread::spawn(move || reactor.serve());
+
+        // 8 threads each firing thousands of wakes (resume_all_reads enqueues a
+        // command and wakes; send targets mostly-unknown ids, drained and dropped).
+        let wakers: Vec<_> = (0..8)
+            .map(|_| {
+                let mailbox = mailbox.clone();
+                thread::spawn(move || {
+                    for n in 0..2000u64 {
+                        mailbox.resume_all_reads();
+                        // Target ids far above any real connection's sequence so a
+                        // speculative send is always dropped (id miss) rather than
+                        // injecting bytes into a live client's stream.
+                        mailbox.send(ConnectionId(1_000_000 + n), b"x".to_vec());
+                    }
+                })
+            })
+            .collect();
+
+        // Meanwhile real clients must still echo correctly.
+        for i in 0..12 {
+            let mut stream = TcpStream::connect(addr).expect("connect");
+            let payload = format!("client-{i}").into_bytes();
+            stream.write_all(&payload).expect("write");
+            stream.shutdown(Shutdown::Write).expect("shutdown");
+            let mut echoed = Vec::new();
+            stream.read_to_end(&mut echoed).expect("read echo");
+            assert_eq!(echoed, payload);
+        }
+
+        for waker in wakers {
+            waker.join().expect("waker thread");
+        }
+        stop.stop();
+        mailbox.resume_all_reads(); // break the final poll
+        server.join().expect("server thread").expect("serve");
     }
 
     #[test]
