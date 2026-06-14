@@ -87,6 +87,8 @@ packages a typed surface for:
   final operator-facing release checks
 - Hue package release audit summaries that turn operator readiness into final
   audit/signoff checks
+- Hue package release signoff summaries that turn audit readiness into final
+  package release signoff checks
 
 ## Dependencies
 
