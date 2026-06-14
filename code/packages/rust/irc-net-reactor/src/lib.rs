@@ -53,11 +53,28 @@
 //! single reactor thread the mutex is essentially uncontended; the design also
 //! stays correct under a future sharded runtime because mailbox sends are
 //! themselves thread-safe.
+//!
+//! ## Resilience to a hostile client (panic isolation)
+//!
+//! The reactor runs the connection callbacks inline on its single event-loop
+//! thread with no `catch_unwind` of its own, so an unhandled panic inside a
+//! callback would tear down the **entire** server — every connected client, not
+//! just the offender.  To keep one malicious or malformed message from becoming
+//! a whole-server denial of service we apply two safeguards here:
+//!
+//! 1. **Panic containment** — each callback is wrapped in `catch_unwind`; a
+//!    panic that escapes `IRCServer` is caught and turned into "close just this
+//!    connection," leaving every other client untouched.
+//! 2. **Poison tolerance** — a panic while the `IRCServer` mutex is held poisons
+//!    it; we recover the guard with `into_inner()` instead of re-panicking, so a
+//!    single contained failure does not permanently brick the shared state for
+//!    everyone else.
 
 use std::io;
 use std::net::SocketAddr;
+use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Mutex, OnceLock};
+use std::sync::{Arc, Mutex, MutexGuard, OnceLock};
 
 use irc_framing::Framer;
 use irc_proto::{parse, serialize, ParseError};
@@ -199,7 +216,10 @@ impl IrcReactorServer {
         let mut runtime = self
             .runtime
             .lock()
-            .expect("irc-net-reactor runtime mutex poisoned")
+            // Recover rather than re-panic if a prior holder panicked: this mutex
+            // only guards the runtime handoff and is never touched on the remote
+            // data path, but recovering keeps `serve` callable regardless.
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
             .take()
             .ok_or_else(|| {
                 io::Error::new(
@@ -230,8 +250,21 @@ impl IrcReactorServer {
 // Connection callbacks — the bridge between the reactor and IRCServer
 //
 // These are free functions (rather than inline closures) so the three
-// platform-specific `build_runtime` variants can share one implementation.
+// platform-specific `build_runtime` variants can share one implementation.  The
+// macro that wires them into the reactor wraps each in `catch_unwind`, so a
+// panic inside `IRCServer` closes only the offending connection instead of
+// crashing the shared event-loop thread.
 // ──────────────────────────────────────────────────────────────────────────────
+
+/// Lock the shared `IRCServer`, recovering the guard if the mutex was poisoned
+/// by an earlier (contained) panic.  Re-panicking on a poisoned mutex would turn
+/// one bad message into a permanent outage for every client, so we deliberately
+/// keep serving with the recovered state instead.
+fn lock_server(server: &Mutex<IRCServer>) -> MutexGuard<'_, IRCServer> {
+    server
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner())
+}
 
 /// A new connection opened: tell the IRC state machine, deliver any responses
 /// (normally none until the client registers), and hand back a fresh `Framer`
@@ -243,10 +276,7 @@ fn handle_connect(
 ) -> Framer {
     // The peer's IP becomes the host part of the client's `nick!user@host` mask.
     let host = info.peer_addr.ip().to_string();
-    let responses = {
-        let mut server = server.lock().expect("IRCServer mutex poisoned");
-        server.on_connect(ConnId(info.id.0), &host)
-    };
+    let responses = lock_server(server).on_connect(ConnId(info.id.0), &host);
     deliver(mailbox, responses);
     Framer::new()
 }
@@ -275,10 +305,7 @@ fn handle_data(
             Err(ParseError(_)) => continue,
         };
 
-        let responses = {
-            let mut server = server.lock().expect("IRCServer mutex poisoned");
-            server.on_message(ConnId(info.id.0), &msg)
-        };
+        let responses = lock_server(server).on_message(ConnId(info.id.0), &msg);
         deliver(mailbox, responses);
     }
 
@@ -295,10 +322,7 @@ fn handle_close(
     info: TcpConnectionInfo,
     _framer: Framer,
 ) {
-    let responses = {
-        let mut server = server.lock().expect("IRCServer mutex poisoned");
-        server.on_disconnect(ConnId(info.id.0))
-    };
+    let responses = lock_server(server).on_disconnect(ConnId(info.id.0));
     deliver(mailbox, responses);
 }
 
@@ -346,14 +370,36 @@ macro_rules! bind_with {
         let close_server = Arc::clone(&$server);
         let close_mailbox = Arc::clone(&$mailbox);
 
+        // Each callback is wrapped in `catch_unwind` so that a panic inside
+        // `IRCServer` (on some crafted message) is contained to the offending
+        // connection rather than unwinding into — and killing — the reactor's
+        // single event-loop thread.  `AssertUnwindSafe` is sound here: on a
+        // caught panic the shared `IRCServer` mutex may be poisoned, but
+        // `lock_server` recovers it, so observing post-panic state is acceptable.
         $bind(
             (host.as_str(), $config.port),
             runtime_options($config),
-            move |info| handle_connect(&connect_server, &connect_mailbox, info),
-            move |info, framer, bytes| {
-                handle_data(&data_server, &data_mailbox, info, framer, bytes)
+            move |info| {
+                catch_unwind(AssertUnwindSafe(|| {
+                    handle_connect(&connect_server, &connect_mailbox, info)
+                }))
+                // A panic during connect setup: hand back a fresh framer and let
+                // the connection proceed (it has no IRC state yet).
+                .unwrap_or_else(|_| Framer::new())
             },
-            move |info, framer| handle_close(&close_server, &close_mailbox, info, framer),
+            move |info, framer, bytes| {
+                catch_unwind(AssertUnwindSafe(|| {
+                    handle_data(&data_server, &data_mailbox, info, framer, bytes)
+                }))
+                // A panic while handling this client's data closes *only* this
+                // connection; every other client keeps running.
+                .unwrap_or_else(|_| TcpHandlerResult::close())
+            },
+            move |info, framer| {
+                let _ = catch_unwind(AssertUnwindSafe(|| {
+                    handle_close(&close_server, &close_mailbox, info, framer)
+                }));
+            },
         )
     }};
 }
@@ -602,6 +648,32 @@ mod tests {
 
         server.stop();
         handle.join().expect("server thread").expect("server exit");
+    }
+
+    #[test]
+    fn lock_server_recovers_from_a_poisoned_mutex() {
+        // A panic while the IRCServer lock is held poisons the mutex.  The
+        // resilience contract is that the next lock recovers the state and keeps
+        // serving, rather than re-panicking and bricking the server for everyone.
+        let server = Mutex::new(IRCServer::new("irc.local", vec!["hi".to_string()], ""));
+
+        // Poison the mutex deliberately, swallowing the panic (and its noisy
+        // default hook) so the test output stays clean.
+        let prev_hook = std::panic::take_hook();
+        std::panic::set_hook(Box::new(|_| {}));
+        let _ = catch_unwind(AssertUnwindSafe(|| {
+            let _guard = server.lock().unwrap();
+            panic!("boom while holding the IRCServer lock");
+        }));
+        std::panic::set_hook(prev_hook);
+        assert!(server.is_poisoned(), "mutex should be poisoned");
+
+        // lock_server hands back a usable guard, and the recovered server still works.
+        let responses = lock_server(&server).on_connect(ConnId(1), "127.0.0.1");
+        assert!(
+            responses.is_empty(),
+            "on_connect returns no immediate responses"
+        );
     }
 
     #[test]

@@ -20,9 +20,16 @@ All notable changes to this package will be documented in this file.
 - `bind` / `local_addr` / `serve` / `stop` / `is_running` control surface,
   mirroring `mini-redis`'s `MiniRedisServer` shape so language bindings can follow
   the proven `conduit` embedding pattern.
+- **Hostile-client resilience**: each reactor callback is wrapped in
+  `catch_unwind` so a panic inside `IRCServer` on a crafted message closes only
+  the offending connection instead of crashing the single event-loop thread
+  (which would drop every connected client); the shared `IRCServer` mutex is
+  locked poison-tolerantly (`into_inner` recovery) so one contained failure does
+  not permanently brick state for everyone else.
 - Real-socket integration tests covering registration (001 welcome), PING/PONG,
-  channel `PRIVMSG` broadcast to a different connection, `QUIT` broadcast on
-  disconnect, config defaults, and double-`serve` rejection.
+  channel `PRIVMSG` broadcast to a different connection, graceful `QUIT`-command
+  broadcast, abrupt-disconnect `QUIT` broadcast, poisoned-mutex recovery, config
+  defaults, and double-`serve` rejection.
 
 ### Notes
 
