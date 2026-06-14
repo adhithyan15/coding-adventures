@@ -30,10 +30,10 @@ struct GridView: View {
                     Group {
                         Text(( h )).bold()
                     }
-                        .background(Color(red: 0.176, green: 0.176, blue: 0.188))
                         .foregroundColor(Color(red: 0.616, green: 0.616, blue: 0.616))
+                        .frame(width: columnWidths[Int(ch)], alignment: .center)
+                        .background(Color(red: 0.176, green: 0.176, blue: 0.188))
                         .border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)
-                        .frame(width: columnWidths[Int(ch)])
                 }
             }
             Divider()
@@ -53,19 +53,18 @@ struct GridView: View {
                                 Text(( v ))
                             }
                         }
-                            .frame(height: 22)
-                            .padding(2)
-                            .background(((( r == editRow && c == editCol )) ? Color(red: 0.122, green: 0.31, blue: 0.247) : ((( r == selectedRow && c == selectedCol )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color.clear)))
                             .foregroundColor(((( r == selectedRow && c == selectedCol )) ? Color(red: 1, green: 1, blue: 1) : Color.primary))
+                            .padding(2)
+                            .frame(width: columnWidths[Int(c)], height: 22, alignment: .trailing)
+                            .background(((( r == editRow && c == editCol )) ? Color(red: 0.122, green: 0.31, blue: 0.247) : ((( r == selectedRow && c == selectedCol )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color.clear)))
                             .border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)
-                            .frame(width: columnWidths[Int(c)])
                     }
                 }
                     .frame(height: 22)
             }
         }
-            .background(Color(red: 0.118, green: 0.118, blue: 0.118))
             .foregroundColor(Color(red: 0.8, green: 0.8, blue: 0.8))
             .font(.system(size: 12, design: .monospaced))
+            .background(Color(red: 0.118, green: 0.118, blue: 0.118))
     }
 }

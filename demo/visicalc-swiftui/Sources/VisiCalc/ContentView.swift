@@ -16,12 +16,17 @@ import SwiftUI
 
 struct ContentView: View {
     // 5×5 sample spreadsheet, same data as VC2-react / -html / -webcomp.
+    // The leading column on every row is the row-label ("1".."5") —
+    // exactly the shape the web demos feed their Grid, so the SwiftUI
+    // render carries row numbers down the left edge like a real
+    // spreadsheet (and the column count lines up with columnWidths and
+    // columnHeaders below).
     static let sampleRows: [[String]] = [
-        ["15", "3",  "12", "8",  "5"],
-        ["8",  "14", "7",  "22", "11"],
-        ["12", "9",  "18", "6",  "25"],
-        ["4",  "11", "3",  "17", "9"],
-        ["7",  "5",  "13", "10", "19"],
+        ["1", "15", "3",  "12", "8",  "5"],
+        ["2", "8",  "14", "7",  "22", "11"],
+        ["3", "12", "9",  "18", "6",  "25"],
+        ["4", "4",  "11", "3",  "17", "9"],
+        ["5", "7",  "5",  "13", "10", "19"],
     ]
 
     // The generated GridView's slot signature uses Double for every
@@ -29,8 +34,10 @@ struct ContentView: View {
     // the SwiftUI emitter).  We mirror that here so the SwiftUI
     // type-checker sees a clean pass-through; arithmetic / display
     // logic that wants integer indices can re-cast at the use site.
+    // Column 0 is the row-label gutter, so the first *data* cell is at
+    // column 1.  Start with A1 (data column 1, row 0) selected.
     @State private var selectedRow: Double = 0
-    @State private var selectedCol: Double = 0
+    @State private var selectedCol: Double = 1
     @State private var editRow:     Double = -1
     @State private var editCol:     Double = -1
     @State private var editContent: String = ""
@@ -39,7 +46,10 @@ struct ContentView: View {
     private var cellAddress: String {
         let colIdx = Int(selectedCol)
         let rowIdx = Int(selectedRow)
-        let colLetter = Character(UnicodeScalar(65 + UInt32(colIdx))!)
+        // colIdx 1 → "A" (column 0 is the row-label gutter, which has no
+        // spreadsheet address).  Clicking the gutter just shows the row.
+        guard colIdx >= 1 else { return "\(rowIdx + 1)" }
+        let colLetter = Character(UnicodeScalar(65 + UInt32(colIdx - 1))!)
         return "\(colLetter)\(rowIdx + 1)"
     }
 
@@ -67,10 +77,13 @@ struct ContentView: View {
             // emitter substitutes the package's full composition at
             // build time and lowers it to a SwiftUI `View` struct.
             GridView(
-                columnHeaders: ["A", "B", "C", "D", "E"],
+                // Leading "" is the empty corner above the row-label
+                // column; A–E label the five data columns.  Six entries
+                // line up 1:1 with columnWidths and each row's six cells.
+                columnHeaders: ["", "A", "B", "C", "D", "E"],
                 viewportRows: ContentView.sampleRows,
-                // Fixed-width 96px per column (visicalc convention).
-                // The first slot is the row-label column.
+                // First column is the 48px row-label gutter; the five
+                // data columns are 96px each (visicalc convention).
                 columnWidths: [48, 96, 96, 96, 96, 96],
                 totalHeight: 0,  // Sticky-header viewport size — not
                                  // exercised by VC2; the package's

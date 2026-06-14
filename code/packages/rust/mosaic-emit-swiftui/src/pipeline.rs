@@ -737,15 +737,34 @@ fn round3(x: f64) -> f64 {
 /// | `font-weight: semibold` / `SemiBold` / `600`   | `.fontWeight(.semibold)`                                         |
 /// | `font-weight: medium` / `500`                  | `.fontWeight(.medium)`                                           |
 /// | `border-width: Npx` (+ optional `border-color`)| `.border(<color or Color.gray>, width: N)`                       |
+/// | `text-align: left`/`center`/`right` (base only)| `alignment:` arg of `.frame(...)` (`.leading`/`.center`/`.trailing`) |
 /// | anything else                                  | silently skipped (React emitter does the same for v1)            |
 ///
 /// `border-style: solid` is silently ignored — SwiftUI's `.border` is
 /// always a solid stroke.  `border-color` without `border-width` is also
 /// dropped (the modifier needs the width).
+///
+/// ## Modifier ORDER (load-bearing)
+///
+/// Emitted top-to-bottom: `.foregroundColor` → `.font` → `.fontWeight`
+/// → `.padding` → `.frame(width:,height:,alignment:)` → `.background`
+/// → `.border`.  Content styling and sizing come BEFORE paint so the
+/// background fills, and the border strokes, the full frame rather than
+/// a text-sized box.  See the inline comment in the emission body.
+///
+/// ## `injected_width`
+///
+/// When `Some(expr)`, the `.frame(...)` ALWAYS emits and uses `expr`
+/// (a Swift expression such as `columnWidths[Int(c)]`) for `width:`,
+/// taking precedence over any `width` from the part's own props.  This
+/// is how the HostTable column-width thread injects the cell width INTO
+/// the chain at the correct position (before background/border) instead
+/// of appending a trailing `.frame(width:)` that paints too late.
 fn swiftui_modifier_chain(
     base_props: &[StyleProp],
     state_layers: &[StateLayer],
     indent: usize,
+    injected_width: Option<&str>,
 ) -> String {
     let pad = " ".repeat(indent);
 
@@ -770,6 +789,21 @@ fn swiftui_modifier_chain(
         }
     }
 
+    // Map a CSS `text-align` value to a SwiftUI `Alignment`.  The
+    // alignment becomes the `alignment:` argument of the `.frame(...)`
+    // call so the (now full-width) cell positions its content the way
+    // the author asked — `text-align: right` on a spreadsheet number
+    // column pins the digits to the right edge, etc.  Unrecognised
+    // values (`justify`, etc.) map to `None` so no alignment is emitted.
+    fn text_align_swift(v: &str) -> Option<&'static str> {
+        match v.trim() {
+            "left" | "start" => Some(".leading"),
+            "center" => Some(".center"),
+            "right" | "end" => Some(".trailing"),
+            _ => None,
+        }
+    }
+
     let layer_count = state_layers.len();
 
     // One bucket per logical property.  We collect base values first,
@@ -786,6 +820,15 @@ fn swiftui_modifier_chain(
     let mut font_weight = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+
+    // `text-align` is a static layout concern — we deliberately do NOT
+    // layer it per state (a per-state alignment flip is never needed for
+    // the table/spreadsheet cases this v1 targets, and it would force a
+    // ternary into the `.frame(alignment:)` argument, which SwiftUI does
+    // not accept there).  We therefore capture only the BASE value and
+    // resolve it to a SwiftUI `Alignment` token (`.leading` / `.center`
+    // / `.trailing`).  See [`text_align_swift`].
+    let mut text_align: Option<&'static str> = None;
 
     // Helper closure: dispatch one StyleProp into the right bucket.
     // `layer_idx == None` means "base"; `Some(i)` means "state layer i".
@@ -840,6 +883,16 @@ fn swiftui_modifier_chain(
                 }
             }
             "border-color" => set(&mut border_color, swiftui_color_value(&p.value)),
+            "text-align" => {
+                // Base-only by design (see the `text_align` binding's
+                // doc comment).  A state layer that sets `text-align` is
+                // intentionally ignored — only `layer_idx == None` wins.
+                if layer_idx.is_none() {
+                    if let Some(a) = text_align_swift(&p.value) {
+                        text_align = Some(a);
+                    }
+                }
+            }
             // border-style, border-collapse, outline, etc. — silently
             // skipped.  Matches the React emitter's v1 posture.
             _ => {}
@@ -857,50 +910,39 @@ fn swiftui_modifier_chain(
 
     let mut out = String::new();
 
-    // .frame — combine width+height into one call when either is
-    // present.  Each argument is independently layered, so a state
-    // that changes only `background` leaves `.frame` at the base
-    // value (the ternary collapses).
-    match (!width.empty(), !height.empty()) {
-        (true, true) => {
-            let w = layer_value(&width, state_layers, "0");
-            let h = layer_value(&height, state_layers, "0");
-            out.push_str(&format!("\n{pad}.frame(width: {w}, height: {h})"));
-        }
-        (true, false) => {
-            let w = layer_value(&width, state_layers, "0");
-            out.push_str(&format!("\n{pad}.frame(width: {w})"));
-        }
-        (false, true) => {
-            let h = layer_value(&height, state_layers, "0");
-            out.push_str(&format!("\n{pad}.frame(height: {h})"));
-        }
-        (false, false) => {}
-    }
+    // -----------------------------------------------------------------
+    // MODIFIER ORDER (this ordering is load-bearing — see the bug fix in
+    // PR feat/emit-swiftui-cell-fill-and-alignment).
+    //
+    // SwiftUI modifiers wrap the view left-to-right: each `.background`
+    // / `.border` paints around the view *at its size at that point in
+    // the chain*.  So content-styling and sizing MUST come BEFORE
+    // paint, or the background/border draw around the text-sized box and
+    // a later `.frame` just re-centers that small painted box inside a
+    // bigger invisible frame.
+    //
+    // Correct order, top to bottom:
+    //   1. .foregroundColor  ─┐ content styling — affects the text only,
+    //   2. .font              │ independent of the box geometry, so it
+    //   3. .fontWeight       ─┘ goes first.
+    //   4. .padding           — insets the content.
+    //   5. .frame(width:,height:,alignment:) — fixes the cell's box size
+    //      and positions the (padded) content within it.
+    //   6. .background        — fills the FRAME (now full cell size).
+    //   7. .border            — strokes the FRAME edge.
+    // -----------------------------------------------------------------
 
-    if !padding.empty() {
-        let expr = layer_value(&padding, state_layers, "0");
-        out.push_str(&format!("\n{pad}.padding({expr})"));
-    }
-
-    if !background.empty() {
-        // A state that overrides background where there's NO base value
-        // gets `Color.clear` in the "no value" branch — matches the
-        // SwiftUI default for an unstyled view.
-        let expr = layer_value(&background, state_layers, "Color.clear");
-        out.push_str(&format!("\n{pad}.background({expr})"));
-    }
-
+    // 1. .foregroundColor
     if !foreground.empty() {
         let expr = layer_value(&foreground, state_layers, "Color.primary");
         out.push_str(&format!("\n{pad}.foregroundColor({expr})"));
     }
 
-    // .font — combine size + monospaced family into one call when
-    // either is present.  Standalone family lowers to
+    // 2. + 3. .font — combine size + monospaced family into one call
+    // when either is present.  Standalone family lowers to
     // `.system(.body, design: ...)` because `.font(.system(size:))`
-    // requires the size; we use `.body` as the implicit textstyle
-    // when only the family is set.
+    // requires the size; we use `.body` as the implicit textstyle when
+    // only the family is set.
     match (!font_size.empty(), !font_family_mono.empty()) {
         (true, true) => {
             let sz = layer_value(&font_size, state_layers, "0");
@@ -918,15 +960,85 @@ fn swiftui_modifier_chain(
         (false, false) => {}
     }
 
+    // 3. .fontWeight
     if !font_weight.empty() {
         let expr = layer_value(&font_weight, state_layers, ".regular");
         out.push_str(&format!("\n{pad}.fontWeight({expr})"));
     }
 
-    // .border — needs at least the width.  If color is unset, default
-    // to `Color.gray` so the modifier emits a visible (and
-    // predictable) stroke rather than nothing.  Each argument is
-    // layered independently.
+    // 4. .padding — insets the content before the frame sizes it.
+    if !padding.empty() {
+        let expr = layer_value(&padding, state_layers, "0");
+        out.push_str(&format!("\n{pad}.padding({expr})"));
+    }
+
+    // 5. .frame(width:, height:, alignment:) — the cell's box.
+    //
+    // An `injected_width` (the threaded column-width Swift expression,
+    // e.g. `columnWidths[Int(c)]`) takes precedence over any `width`
+    // from the part's own props and FORCES the frame to emit.  The
+    // alignment argument (resolved from base `text-align`) is appended
+    // when present.  Three width sources, in precedence order:
+    //   a. injected width        → always wins.
+    //   b. part `width` prop      → used when no injected width.
+    //   c. (none)                 → frame may still emit for height
+    //      and/or alignment only.
+    let align_arg = text_align.map(|a| format!(", alignment: {a}"));
+    let frame_width: Option<String> = if let Some(iw) = injected_width {
+        Some(iw.to_string())
+    } else if !width.empty() {
+        Some(layer_value(&width, state_layers, "0"))
+    } else {
+        None
+    };
+    let frame_height: Option<String> = if !height.empty() {
+        Some(layer_value(&height, state_layers, "0"))
+    } else {
+        None
+    };
+    match (frame_width, frame_height) {
+        (Some(w), Some(h)) => {
+            let a = align_arg.as_deref().unwrap_or("");
+            out.push_str(&format!("\n{pad}.frame(width: {w}, height: {h}{a})"));
+        }
+        (Some(w), None) => {
+            let a = align_arg.as_deref().unwrap_or("");
+            out.push_str(&format!("\n{pad}.frame(width: {w}{a})"));
+        }
+        (None, Some(h)) => {
+            let a = align_arg.as_deref().unwrap_or("");
+            out.push_str(&format!("\n{pad}.frame(height: {h}{a})"));
+        }
+        (None, None) => {
+            // No explicit size, but an alignment was requested.  Stretch
+            // to the available width so the content can actually shift to
+            // the requested edge — without a width, `.frame(alignment:)`
+            // alone has nothing to align within.  `.infinity` is the v1
+            // cut: it claims all available horizontal space, which is the
+            // right behaviour for a cell/label but may over-expand a
+            // free-floating element.  A future cut could gate this on a
+            // container hint.
+            if let Some(a) = text_align {
+                out.push_str(&format!(
+                    "\n{pad}.frame(maxWidth: .infinity, alignment: {a})"
+                ));
+            }
+        }
+    }
+
+    // 6. .background — fills the frame (now full cell size).  A state
+    // that overrides background where there's NO base value gets
+    // `Color.clear` in the "no value" branch — matches the SwiftUI
+    // default for an unstyled view.
+    if !background.empty() {
+        let expr = layer_value(&background, state_layers, "Color.clear");
+        out.push_str(&format!("\n{pad}.background({expr})"));
+    }
+
+    // 7. .border — strokes the frame edge.  Needs at least the width.
+    // If color is unset, default to `Color.gray` so the modifier emits a
+    // visible (and predictable) stroke rather than nothing.  Each
+    // argument is layered independently.
     if !border_width.empty() {
         let w_expr = layer_value(&border_width, state_layers, "0");
         let c_expr = if border_color.empty() {
@@ -1162,7 +1274,7 @@ fn emit_view_struct(
 
     // body computed property.
     writeln!(out, "    var body: some View {{").unwrap();
-    let body = emit_view_tree(layout_root, 8, part_styles, None)?;
+    let body = emit_view_tree(layout_root, 8, part_styles, None, None)?;
     if body.trim().is_empty() {
         // Empty layout — emit an EmptyView so the file still type-checks.
         // Swift's `some View` cannot resolve to "nothing"; EmptyView is the
@@ -1203,6 +1315,15 @@ fn emit_view_tree(
     indent: usize,
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
+    // The threaded column-width Swift expression (e.g.
+    // `columnWidths[Int(c)]`) for THIS node only — `Some` exactly when
+    // this is a direct body child of a width-threading HostTable cell
+    // `For`.  It is consumed here (merged into this node's own modifier
+    // chain, or emitted as a standalone `.frame` if the node has no part
+    // style) and is NOT propagated into this node's children — every
+    // recursive call below passes `None`.  See [`emit_for_swift`]'s
+    // width-thread path for where `Some(...)` originates.
+    injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -1351,20 +1472,49 @@ fn emit_view_tree(
     // The lookup is `part_styles.get(part)`; an absent part_name OR an
     // empty `chain` is the no-op path (the inner emission renders
     // identically to a styleless node).
+    //
+    // `injected_width` (the threaded column width) is consumed HERE so it
+    // lands at the correct position inside the chain (before
+    // background/border — see [`swiftui_modifier_chain`]'s ordering),
+    // rather than being appended as a trailing `.frame(width:)`.
+    let mut consumed_injected = false;
     if let Some(part) = &node.part_name {
         let base_props = part_styles
             .get(part)
             .map(|v| v.as_slice())
             .unwrap_or(&[]);
         let state_layers = collect_state_layers(node, part, part_styles);
-        if !base_props.is_empty() || !state_layers.is_empty() {
-            let chain = swiftui_modifier_chain(base_props, &state_layers, indent + 4);
+        // When a width is injected we MUST run the chain even if the part
+        // carries no styles, so the frame still emits.
+        if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
+            let chain =
+                swiftui_modifier_chain(base_props, &state_layers, indent + 4, injected_width);
+            if injected_width.is_some() {
+                consumed_injected = true;
+            }
             if !chain.is_empty() {
                 let mut spliced = inner.trim_end_matches('\n').to_string();
                 spliced.push_str(&chain);
                 spliced.push('\n');
                 inner = spliced;
             }
+        }
+    }
+
+    // Robustness fallback: a width was injected but the node had NO
+    // part_name at all (so the chain above never ran).  Emit a standalone
+    // `.frame(width: <expr>, alignment: .center)` so the threaded column
+    // width is still honored.  `.center` is the neutral default — without
+    // a part there's no `text-align` to consult.
+    if injected_width.is_some() && !consumed_injected {
+        if let Some(iw) = injected_width {
+            let frame_pad = " ".repeat(indent + 4);
+            let mut spliced = inner.trim_end_matches('\n').to_string();
+            spliced.push_str(&format!(
+                "\n{frame_pad}.frame(width: {iw}, alignment: .center)"
+            ));
+            spliced.push('\n');
+            inner = spliced;
         }
     }
 
@@ -1392,7 +1542,10 @@ fn container(
         return Ok(format!("{pad}{swiftui_view} {{ }}\n"));
     }
     let mut out = format!("{pad}{swiftui_view} {{\n");
-    out.push_str(&emit_children(&node.children, indent + 4, part_styles, table_ctx)?);
+    // A container's own children never receive the injected width — the
+    // injection target is the container node itself, consumed in
+    // [`emit_view_tree`]'s splice.  Pass `None` here.
+    out.push_str(&emit_children(&node.children, indent + 4, part_styles, table_ctx, None)?);
     out.push_str(&format!("{pad}}}\n"));
     Ok(out)
 }
@@ -1459,7 +1612,7 @@ fn emit_table_cell(
             return emit_for_swift(cell, indent, part_styles, table_ctx, /*width_thread=*/ true);
         }
     }
-    emit_view_tree(cell, indent, part_styles, table_ctx)
+    emit_view_tree(cell, indent, part_styles, table_ctx, None)
 }
 
 /// Walk a flat list of sibling layout nodes at `indent`, with two
@@ -1479,6 +1632,13 @@ fn emit_children(
     indent: usize,
     part_styles: &PartStyleMap,
     table_ctx: Option<&TableContext>,
+    // The threaded column-width Swift expression to inject into each
+    // DIRECT child's modifier chain.  `Some` only on the body-children
+    // dispatch of a width-threading HostTable cell `For`; `None`
+    // everywhere else (the common case).  `If`/`Else` control-flow
+    // children cannot carry a frame, so the injection only applies to
+    // the plain-view dispatch below.
+    injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -1502,7 +1662,7 @@ fn emit_children(
             i += 1;
             continue;
         }
-        out.push_str(&emit_view_tree(child, indent, part_styles, table_ctx)?);
+        out.push_str(&emit_view_tree(child, indent, part_styles, table_ctx, injected_width)?);
         i += 1;
     }
     Ok(out)
@@ -2151,7 +2311,7 @@ fn emit_host_tooltip(
     let mut out = String::new();
     writeln!(out, "{pad}VStack {{").unwrap();
     if !node.children.is_empty() {
-        out.push_str(&emit_children(&node.children, indent + 4, part_styles, None)?);
+        out.push_str(&emit_children(&node.children, indent + 4, part_styles, None, None)?);
     }
     writeln!(out, "{pad}}}").unwrap();
     writeln!(out, "{mod_pad}.help(\"{escaped}\")").unwrap();
@@ -2541,7 +2701,7 @@ fn emit_host_dialog(
     // children we emit the VStack so the modifier signature is correct.
     writeln!(out, "{inner_pad}VStack {{").unwrap();
     if !node.children.is_empty() {
-        out.push_str(&emit_children(&node.children, indent + 12, part_styles, None)?);
+        out.push_str(&emit_children(&node.children, indent + 12, part_styles, None, None)?);
     }
     writeln!(out, "{inner_pad}}}").unwrap();
 
@@ -2638,7 +2798,7 @@ fn emit_table_section_rows(
             // body) can pick up `HStack(spacing: 0)` and width
             // threading on the inner cell Fors.
             writeln!(out, "{pad}// non-Row child '{}' in table section", child.tag).unwrap();
-            let emitted = emit_view_tree(child, indent, part_styles, table_ctx)?;
+            let emitted = emit_view_tree(child, indent, part_styles, table_ctx, None)?;
             out.push_str(&emitted);
         }
     }
@@ -2778,34 +2938,31 @@ fn emit_for_swift(
         ),
     };
 
-    let mut out = header;
-    if node.children.is_empty() {
-        // Empty body — SwiftUI's view builder requires *something* in
-        // the closure. `EmptyView()` is the canonical no-op.
-        out.push_str(&format!("{}EmptyView()\n", " ".repeat(body_indent)));
-    } else {
-        out.push_str(&emit_children(&node.children, body_indent, part_styles, table_ctx)?);
-    }
-
     // -----------------------------------------------------------------
     // HostTable column-width threading.
     //
-    // When this For sits in cell-position inside a HostTable Row AND
-    // the enclosing TableContext carries a `column_widths_slot` AND we
-    // have an `index:` binding, the SwiftUI cell view inside each
-    // iteration picks up `.frame(width: <slot>[Int(<idx>)])` so each
-    // column gets an explicit pixel width rather than auto-sizing to
-    // its text content.
+    // When this For sits in cell-position inside a HostTable Row AND the
+    // enclosing TableContext carries a `column_widths_slot` AND we have
+    // an `index:` binding, each iteration's cell view must take an
+    // explicit column width (`columnWidths[Int(<idx>)]`) rather than
+    // auto-sizing to its text content.
     //
-    // The modifier is appended to the body content as a continuation
-    // line, indented one extra level past the body so SwiftUI parses it
-    // as a chained modifier on the cell view (i.e. the last expression
-    // in the closure).  For cells whose body already has a modifier
-    // chain via [`emit_view_tree`]'s part-styles splice, this lands at
-    // the end of that chain — exactly the cleanest splice point.
+    // We do NOT append a trailing `.frame(width:)` after the cell's own
+    // modifier chain (that paints too late — the cell's `.background` /
+    // `.border` would already have drawn around the text-sized box, and
+    // a trailing width frame just re-centers that tiny painted box in a
+    // wide invisible column).  Instead we thread the width EXPRESSION
+    // into the body child's modifier chain via `injected_width`, where
+    // it merges with the cell's own height + alignment and lands BEFORE
+    // background/border.  See [`swiftui_modifier_chain`] and the
+    // body-cell ordering fix in PR
+    // feat/emit-swiftui-cell-fill-and-alignment.
     //
-    // Discoverability gates (all must hold; otherwise existing
-    // behaviour is preserved unchanged):
+    // The injection is scoped to the For's DIRECT body children only;
+    // anything nested deeper gets `None`.
+    //
+    // Discoverability gates (all must hold; otherwise existing behaviour
+    // is preserved unchanged):
     //
     //   1. `width_thread` true (caller is [`emit_table_cell`]).
     //   2. `table_ctx` carries a `column_widths_slot`.
@@ -2814,22 +2971,28 @@ fn emit_for_swift(
     //
     // The slot name has already been camel-cased and identifier-checked
     // when the TableContext was extracted in [`extract_table_context`].
-    if width_thread {
-        if let Some(idx) = &index_name {
-            if let Some(slot) = table_ctx.and_then(|c| c.column_widths_slot.as_deref()) {
-                let frame_pad = " ".repeat(body_indent + 4);
-                // Strip the body's trailing newline so the `.frame(...)`
-                // line attaches to the last view as a modifier
-                // continuation, then restore the newline after.
-                if out.ends_with('\n') {
-                    out.pop();
-                }
-                out.push('\n');
-                out.push_str(&format!(
-                    "{frame_pad}.frame(width: {slot}[Int({idx})])\n",
-                ));
-            }
+    let width_expr: Option<String> = if width_thread {
+        match (&index_name, table_ctx.and_then(|c| c.column_widths_slot.as_deref())) {
+            (Some(idx), Some(slot)) => Some(format!("{slot}[Int({idx})]")),
+            _ => None,
         }
+    } else {
+        None
+    };
+
+    let mut out = header;
+    if node.children.is_empty() {
+        // Empty body — SwiftUI's view builder requires *something* in
+        // the closure. `EmptyView()` is the canonical no-op.
+        out.push_str(&format!("{}EmptyView()\n", " ".repeat(body_indent)));
+    } else {
+        out.push_str(&emit_children(
+            &node.children,
+            body_indent,
+            part_styles,
+            table_ctx,
+            width_expr.as_deref(),
+        )?);
     }
 
     out.push_str(&format!("{pad}}}\n"));
@@ -2877,7 +3040,7 @@ fn emit_if_swift(
     if if_node.children.is_empty() {
         out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
     } else {
-        out.push_str(&emit_children(&if_node.children, indent + 4, part_styles, table_ctx)?);
+        out.push_str(&emit_children(&if_node.children, indent + 4, part_styles, table_ctx, None)?);
     }
 
     if let Some(en) = else_node {
@@ -2885,7 +3048,7 @@ fn emit_if_swift(
         if en.children.is_empty() {
             out.push_str(&format!("{}EmptyView()\n", " ".repeat(indent + 4)));
         } else {
-            out.push_str(&emit_children(&en.children, indent + 4, part_styles, table_ctx)?);
+            out.push_str(&emit_children(&en.children, indent + 4, part_styles, table_ctx, None)?);
         }
         out.push_str(&format!("{pad}}}\n"));
     } else {
@@ -6243,7 +6406,7 @@ mod tests {
             sp("outline", "none"),
             sp("cursor", "pointer"),
         ];
-        let chain = swiftui_modifier_chain(&props, &[], 0);
+        let chain = swiftui_modifier_chain(&props, &[], 0, None);
         assert_eq!(chain, "");
     }
 
@@ -6254,13 +6417,13 @@ mod tests {
     #[test]
     fn part_style_width_height_collapses_to_single_frame_call() {
         let props = vec![sp("width", "80px"), sp("height", "22px")];
-        let chain = swiftui_modifier_chain(&props, &[], 0);
+        let chain = swiftui_modifier_chain(&props, &[], 0, None);
         assert_eq!(chain, "\n.frame(width: 80, height: 22)");
         // Singletons render as the one-side form so the user gets
         // SwiftUI's "intrinsic on the other axis" default.
-        let only_w = swiftui_modifier_chain(&[sp("width", "80px")], &[], 0);
+        let only_w = swiftui_modifier_chain(&[sp("width", "80px")], &[], 0, None);
         assert_eq!(only_w, "\n.frame(width: 80)");
-        let only_h = swiftui_modifier_chain(&[sp("height", "22px")], &[], 0);
+        let only_h = swiftui_modifier_chain(&[sp("height", "22px")], &[], 0, None);
         assert_eq!(only_h, "\n.frame(height: 22)");
     }
 
@@ -6295,7 +6458,7 @@ mod tests {
         assert_eq!(swiftui_color_value("rebeccapurple"), "Color.clear");
 
         // Confirm the .background modifier line is emitted end-to-end.
-        let chain = swiftui_modifier_chain(&[sp("background", "#1e1e1e")], &[], 0);
+        let chain = swiftui_modifier_chain(&[sp("background", "#1e1e1e")], &[], 0, None);
         assert_eq!(
             chain,
             "\n.background(Color(red: 0.118, green: 0.118, blue: 0.118))"
@@ -6309,15 +6472,15 @@ mod tests {
     #[test]
     fn part_style_font_size_and_monospace_combine_to_single_font_call() {
         let props = vec![sp("font-size", "12px"), sp("font-family", "monospace")];
-        let chain = swiftui_modifier_chain(&props, &[], 0);
+        let chain = swiftui_modifier_chain(&props, &[], 0, None);
         assert_eq!(chain, "\n.font(.system(size: 12, design: .monospaced))");
 
         // Standalone font-size emits the size-only form.
-        let only_size = swiftui_modifier_chain(&[sp("font-size", "14px")], &[], 0);
+        let only_size = swiftui_modifier_chain(&[sp("font-size", "14px")], &[], 0, None);
         assert_eq!(only_size, "\n.font(.system(size: 14))");
 
         // Standalone monospace family emits the .body shape.
-        let only_mono = swiftui_modifier_chain(&[sp("font-family", "monospace")], &[], 0);
+        let only_mono = swiftui_modifier_chain(&[sp("font-family", "monospace")], &[], 0, None);
         assert_eq!(only_mono, "\n.font(.system(.body, design: .monospaced))");
     }
 
@@ -6328,7 +6491,7 @@ mod tests {
     #[test]
     fn part_style_border_width_and_color_emit_border_modifier() {
         let props = vec![sp("border-width", "1px"), sp("border-color", "#3f3f46")];
-        let chain = swiftui_modifier_chain(&props, &[], 0);
+        let chain = swiftui_modifier_chain(&props, &[], 0, None);
         assert_eq!(
             chain,
             "\n.border(Color(red: 0.247, green: 0.247, blue: 0.275), width: 1)"
@@ -6336,7 +6499,7 @@ mod tests {
 
         // border-width alone defaults to Color.gray so the modifier
         // still emits something predictable.
-        let only_w = swiftui_modifier_chain(&[sp("border-width", "2px")], &[], 0);
+        let only_w = swiftui_modifier_chain(&[sp("border-width", "2px")], &[], 0, None);
         assert_eq!(only_w, "\n.border(Color.gray, width: 2)");
 
         // border-color WITHOUT border-width emits nothing (no width to
@@ -6346,6 +6509,7 @@ mod tests {
             &[sp("border-color", "#aaa"), sp("border-style", "solid")],
             &[],
             0,
+            None,
         );
         assert_eq!(only_color, "");
     }
@@ -6433,38 +6597,38 @@ mod tests {
     fn part_style_font_weight_variants_all_lower_to_swiftui_weight() {
         // semibold synonyms.
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "600")], &[], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "600")], &[], 0, None),
             "\n.fontWeight(.semibold)"
         );
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "SemiBold")], &[], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "SemiBold")], &[], 0, None),
             "\n.fontWeight(.semibold)"
         );
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "semibold")], &[], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "semibold")], &[], 0, None),
             "\n.fontWeight(.semibold)"
         );
         // bold synonyms.
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "700")], &[], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "700")], &[], 0, None),
             "\n.fontWeight(.bold)"
         );
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "bold")], &[], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "bold")], &[], 0, None),
             "\n.fontWeight(.bold)"
         );
         // medium synonyms.
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "500")], &[], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "500")], &[], 0, None),
             "\n.fontWeight(.medium)"
         );
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "medium")], &[], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "medium")], &[], 0, None),
             "\n.fontWeight(.medium)"
         );
         // Unknown weight — silently skipped (matches React emitter posture).
         assert_eq!(
-            swiftui_modifier_chain(&[sp("font-weight", "ultraheavy")], &[], 0),
+            swiftui_modifier_chain(&[sp("font-weight", "ultraheavy")], &[], 0, None),
             ""
         );
     }
@@ -6490,8 +6654,177 @@ mod tests {
 
     #[test]
     fn part_style_chain_respects_indent_argument() {
-        let chain = swiftui_modifier_chain(&[sp("padding", "4px")], &[], 12);
+        let chain = swiftui_modifier_chain(&[sp("padding", "4px")], &[], 12, None);
         assert_eq!(chain, "\n            .padding(4)");
+    }
+
+    // ---------------------------------------------------------------------
+    // T13 — `text-align` maps to the `.frame(alignment:)` argument.
+    //
+    //   right/end   → .trailing
+    //   center      → .center
+    //   left/start  → .leading
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn text_align_right_sets_frame_trailing_alignment() {
+        // With width+height present, the alignment rides the SAME frame
+        // call (no separate `.frame`).
+        let chain = swiftui_modifier_chain(
+            &[sp("width", "80px"), sp("height", "22px"), sp("text-align", "right")],
+            &[],
+            0,
+            None,
+        );
+        assert_eq!(chain, "\n.frame(width: 80, height: 22, alignment: .trailing)");
+        // `end` is the logical synonym for `right`.
+        let chain_end = swiftui_modifier_chain(
+            &[sp("height", "22px"), sp("text-align", "end")],
+            &[],
+            0,
+            None,
+        );
+        assert_eq!(chain_end, "\n.frame(height: 22, alignment: .trailing)");
+    }
+
+    #[test]
+    fn text_align_center_and_left_map_to_center_and_leading() {
+        let center = swiftui_modifier_chain(
+            &[sp("width", "60px"), sp("text-align", "center")],
+            &[],
+            0,
+            None,
+        );
+        assert_eq!(center, "\n.frame(width: 60, alignment: .center)");
+
+        let left = swiftui_modifier_chain(
+            &[sp("width", "60px"), sp("text-align", "left")],
+            &[],
+            0,
+            None,
+        );
+        assert_eq!(left, "\n.frame(width: 60, alignment: .leading)");
+
+        // `start` is the logical synonym for `left`.
+        let start = swiftui_modifier_chain(
+            &[sp("width", "60px"), sp("text-align", "start")],
+            &[],
+            0,
+            None,
+        );
+        assert_eq!(start, "\n.frame(width: 60, alignment: .leading)");
+    }
+
+    #[test]
+    fn text_align_without_width_or_height_emits_maxwidth_frame() {
+        // No width/height — alignment still needs SOMETHING to align
+        // within, so we stretch to `.infinity` (v1 cut).
+        let chain = swiftui_modifier_chain(
+            &[sp("text-align", "right")],
+            &[],
+            0,
+            None,
+        );
+        assert_eq!(chain, "\n.frame(maxWidth: .infinity, alignment: .trailing)");
+    }
+
+    #[test]
+    fn text_align_unrecognised_value_emits_no_alignment() {
+        // `justify` has no SwiftUI Alignment analog → no frame at all
+        // (no width/height/alignment present).
+        let chain = swiftui_modifier_chain(
+            &[sp("text-align", "justify")],
+            &[],
+            0,
+            None,
+        );
+        assert_eq!(chain, "");
+    }
+
+    // ---------------------------------------------------------------------
+    // T14 — Modifier ORDER (the cell-fill bug fix).  For a part with
+    // padding + height + background + border, the chain MUST be:
+    //   .padding  →  .frame  →  .background  →  .border
+    // so the background fills, and border strokes, the full frame.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn modifier_order_padding_before_frame_before_background_and_border() {
+        let chain = swiftui_modifier_chain(
+            &[
+                sp("padding", "2px"),
+                sp("height", "22px"),
+                sp("background", "#1e1e1e"),
+                sp("border-width", "1px"),
+            ],
+            &[],
+            0,
+            None,
+        );
+        let pad_at = chain.find(".padding").expect("padding present");
+        let frame_at = chain.find(".frame").expect("frame present");
+        let bg_at = chain.find(".background").expect("background present");
+        let border_at = chain.find(".border").expect("border present");
+        assert!(pad_at < frame_at, "padding must precede frame:\n{chain}");
+        assert!(frame_at < bg_at, "frame must precede background:\n{chain}");
+        assert!(frame_at < border_at, "frame must precede border:\n{chain}");
+        assert!(bg_at < border_at, "background must precede border:\n{chain}");
+    }
+
+    // ---------------------------------------------------------------------
+    // T15 — `injected_width` FORCES the frame to emit (even with no width
+    // prop) and takes precedence over any part `width`.  It merges with
+    // the part's own height + alignment and lands BEFORE background/border.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn injected_width_merges_into_frame_before_paint() {
+        let chain = swiftui_modifier_chain(
+            &[
+                sp("height", "22px"),
+                sp("text-align", "right"),
+                sp("background", "#1e1e1e"),
+                sp("border-width", "1px"),
+            ],
+            &[],
+            0,
+            Some("columnWidths[Int(c)]"),
+        );
+        // Single merged frame with injected width + height + alignment.
+        assert!(
+            chain.contains(
+                ".frame(width: columnWidths[Int(c)], height: 22, alignment: .trailing)"
+            ),
+            "expected merged frame, got:\n{chain}"
+        );
+        // It appears BEFORE both background and border.
+        let frame_at = chain.find(".frame(width: columnWidths").unwrap();
+        let bg_at = chain.find(".background").unwrap();
+        let border_at = chain.find(".border").unwrap();
+        assert!(frame_at < bg_at && frame_at < border_at, "got:\n{chain}");
+        // No SECOND, trailing `.frame(width:` after the border.
+        assert_eq!(
+            chain.matches(".frame(width:").count(),
+            1,
+            "expected exactly one width frame, got:\n{chain}"
+        );
+    }
+
+    #[test]
+    fn injected_width_overrides_part_own_width() {
+        // The part sets its own `width: 80px`, but the injected width
+        // wins.
+        let chain = swiftui_modifier_chain(
+            &[sp("width", "80px"), sp("height", "22px")],
+            &[],
+            0,
+            Some("columnWidths[Int(c)]"),
+        );
+        assert_eq!(
+            chain,
+            "\n.frame(width: columnWidths[Int(c)], height: 22)"
+        );
+        assert!(!chain.contains("width: 80"), "injected width must win:\n{chain}");
     }
 
     // =====================================================================
@@ -6629,7 +6962,7 @@ mod tests {
         );
         let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
-        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // Modifier wraps the bucket value in `(...)`; the bucket value
         // is itself a parenthesised ternary `((cond) ? v : base)` where
         // `cond` is the moslayout-parser-supplied Expr text (already
@@ -6660,7 +6993,7 @@ mod tests {
             vec![prop_expr("state-when-selected", "( isSel )")],
         );
         let layers = collect_state_layers(&node, "cell", &map);
-        let chain = swiftui_modifier_chain(&[], &layers, 0);
+        let chain = swiftui_modifier_chain(&[], &layers, 0, None);
         assert!(
             chain.contains(".background(((( isSel )) ? Color(red: 0.149, green: 0.31, blue: 0.471) : Color.clear))"),
             "chain = {chain}"
@@ -6693,7 +7026,7 @@ mod tests {
         );
         let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
-        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // editing wraps selected; selected wraps base.  The modifier
         // adds one outer `(...)` and each layer_value wraps in
         // `((cond) ? v : inner)`.
@@ -6779,7 +7112,7 @@ mod tests {
         );
         let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
-        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // .background stays at the base value — no ternary.
         assert!(
             chain.contains(".background(Color(red: 0.118, green: 0.118, blue: 0.118))"),
@@ -6820,7 +7153,7 @@ mod tests {
         );
         let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
         let layers = collect_state_layers(&node, "cell", &map);
-        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // Only `.padding(4)` — no ternary, no `( sel )`, no extra parens.
         assert_eq!(chain, "\n.padding(4)", "chain = {chain}");
     }
@@ -6847,7 +7180,7 @@ mod tests {
         let layers = collect_state_layers(&node, "cell", &map);
         assert!(layers.is_empty());
         let base_props = map.get("cell").map(|v| v.as_slice()).unwrap_or(&[]);
-        let chain = swiftui_modifier_chain(base_props, &layers, 0);
+        let chain = swiftui_modifier_chain(base_props, &layers, 0, None);
         // No ternary, just the base background.
         assert!(
             chain.contains(".background(Color(red: 0.118, green: 0.118, blue: 0.118))"),
@@ -7086,10 +7419,14 @@ mod tests {
         )
         .unwrap()
         .output;
-        // The inner For (`index: c`) emits `.frame(width:
-        // columnWidths[Int(c)])` after its body.
+        // The inner For (`index: c`) injects the column width INTO the
+        // cell's frame.  The cell body here is a bare `Text` (no part
+        // style), so the standalone-frame fallback fires and emits
+        // `.frame(width: columnWidths[Int(c)], alignment: .center)`.  We
+        // match the width prefix (not the closing paren) so the
+        // alignment argument doesn't break the assertion.
         assert!(
-            out.contains(".frame(width: columnWidths[Int(c)])"),
+            out.contains(".frame(width: columnWidths[Int(c)]"),
             "expected width threading on body inner For, got:\n{out}"
         );
         // The OUTER For (`index: r`, iterates rows) must NOT get a
@@ -7184,7 +7521,7 @@ mod tests {
         .unwrap()
         .output;
         assert!(
-            out.contains(".frame(width: columnWidths[Int(ch)])"),
+            out.contains(".frame(width: columnWidths[Int(ch)]"),
             "expected width threading on header For, got:\n{out}"
         );
         // The header text still gets `.bold()` — width threading does
@@ -7245,13 +7582,15 @@ mod tests {
             out.contains("HStack(spacing: 0) {"),
             "expected spacing: 0 HStack, got:\n{out}"
         );
-        // Width threading on both header and body cells.
+        // Width threading on both header and body cells (the bare-Text
+        // cells take the standalone-frame fallback, so the frame also
+        // carries an `alignment:` argument — match the width prefix).
         assert!(
-            out.contains(".frame(width: columnWidths[Int(ch)])"),
+            out.contains(".frame(width: columnWidths[Int(ch)]"),
             "expected header width threading, got:\n{out}"
         );
         assert!(
-            out.contains(".frame(width: columnWidths[Int(c)])"),
+            out.contains(".frame(width: columnWidths[Int(c)]"),
             "expected body width threading, got:\n{out}"
         );
     }
@@ -7389,6 +7728,143 @@ mod tests {
         assert!(
             out.contains("HStack(spacing: 0) {"),
             "expected spacing: 0 HStack even with malformed ColGroup, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W9 — Injected width on a cell that HAS a `cell` part with
+    // height + border (the visicalc shape).  The threaded column width
+    // must merge into the part's OWN frame and land BEFORE
+    // `.background`/`.border`, with NO trailing standalone
+    // `.frame(width:)` after the border.  This is the headline cell-fill
+    // bug-fix assertion at the end-to-end (`from_pipeline`) level.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn injected_width_merges_into_cell_part_frame_before_paint_e2e() {
+        // Body For whose iteration body is a `Box [cell]` (a styled cell,
+        // not a bare Text), inside a HostTable with a ColGroup so the
+        // width thread is live.
+        let cell_box = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some("cell".to_string()),
+            props: Vec::new(),
+            children: vec![leaf("Text", vec![prop_slot_ref("content", "v")])],
+        };
+        let inner_for = node_with_props(
+            "For",
+            vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::Keyword("row".to_string()),
+                },
+                prop_keyword("as", "v"),
+                prop_keyword("index", "c"),
+            ],
+            vec![cell_box],
+        );
+        let row = LayoutNode {
+            tag: "Row".to_string(),
+            part_name: Some("data-row".to_string()),
+            props: Vec::new(),
+            children: vec![inner_for],
+        };
+        let outer_for = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "viewport-rows"),
+                prop_keyword("as", "row"),
+                prop_keyword("index", "r"),
+            ],
+            vec![row],
+        );
+        let body = container_node("HostTableBody", vec![outer_for]);
+        let layout = layout_with(
+            "T",
+            container_node(
+                "Box",
+                vec![container_node(
+                    "HostTable",
+                    vec![col_group_widths("column-widths"), body],
+                )],
+            ),
+        );
+        // `cell` part: padding + height + border + right-align background.
+        let style = style_with_part(
+            "T",
+            "cell",
+            vec![
+                sp("padding", "2px"),
+                sp("height", "22px"),
+                sp("text-align", "right"),
+                sp("background", "#1e1e1e"),
+                sp("border-width", "1px"),
+            ],
+        );
+        let out = from_pipeline(&component("T", vec![], vec![]), &layout, &style)
+            .unwrap()
+            .output;
+
+        // A SINGLE merged frame carrying the injected width + the part's
+        // own height + the base text-align alignment.
+        assert!(
+            out.contains(
+                ".frame(width: columnWidths[Int(c)], height: 22, alignment: .trailing)"
+            ),
+            "expected merged width+height+alignment frame, got:\n{out}"
+        );
+        // The merged frame precedes both `.background` and `.border`.
+        let frame_at = out.find(".frame(width: columnWidths[Int(c)]").unwrap();
+        let bg_at = out.find(".background(").unwrap();
+        let border_at = out.find(".border(").unwrap();
+        assert!(
+            frame_at < bg_at && frame_at < border_at,
+            "frame must precede background+border, got:\n{out}"
+        );
+        // Exactly ONE injected-width frame — no trailing
+        // `.frame(width: columnWidths...)` after the border (the old,
+        // buggy placement).  We match the `columnWidths` indexer rather
+        // than a bare `.frame(width:` so the explanatory ColGroup
+        // comment line (which mentions `.frame(width:)`) is not counted.
+        assert_eq!(
+            out.matches(".frame(width: columnWidths").count(),
+            1,
+            "expected exactly one injected-width frame, got:\n{out}"
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // Test W10 — Injected width on a cell with NO part style.  The
+    // standalone-frame fallback must still honor the threaded column
+    // width (with a neutral `.center` alignment).
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn injected_width_on_unstyled_cell_emits_standalone_frame() {
+        // The body cell is a bare `Text` — no part_name, so the part
+        // chain never runs; the fallback must emit the frame anyway.
+        let out = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout_with(
+                "T",
+                container_node(
+                    "Box",
+                    vec![container_node(
+                        "HostTable",
+                        vec![
+                            col_group_widths("column-widths"),
+                            body_for_rows_then_inner_for("r", Some("c")),
+                        ],
+                    )],
+                ),
+            ),
+            &empty_style("T"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".frame(width: columnWidths[Int(c)], alignment: .center)"),
+            "expected standalone width frame on unstyled cell, got:\n{out}"
         );
     }
 }
