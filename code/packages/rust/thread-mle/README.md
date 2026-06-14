@@ -36,6 +36,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   supervision-plan clearance for runtime handoff checks
 - attach route-handoff summaries that combine attach completion with Thread
   Network Data readiness and routing-anchor checks
+- attach route audit summaries that turn route-handoff readiness into final
+  route audit checks
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection
