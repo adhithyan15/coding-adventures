@@ -41,5 +41,7 @@ All notable changes to this package will be documented in this file.
   Network Data readiness, routing surface, and parent/router anchor checks.
 - Thread attach route audit summaries that turn route-handoff readiness into
   final route audit checks.
+- Thread attach route signoff summaries that turn route-audit readiness into
+  final route signoff checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
