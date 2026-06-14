@@ -43,6 +43,8 @@ All notable changes to this package will be documented in this file.
   handoff, acceptance, review, and publish gates for final coordination checks.
 - Hue package release dispatch summaries that turn coordinated release state
   into final dispatch readiness checks.
+- Hue package release operator summaries that turn dispatch readiness into
+  final operator-facing release checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`

@@ -83,6 +83,8 @@ packages a typed surface for:
   handoff, acceptance, review, and publish gates for final coordination checks
 - Hue package release dispatch summaries that turn coordinated release state
   into final dispatch readiness checks
+- Hue package release operator summaries that turn dispatch readiness into
+  final operator-facing release checks
 
 ## Dependencies
 
