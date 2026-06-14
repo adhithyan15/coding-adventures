@@ -5,6 +5,26 @@ All notable changes to the grammar-tools package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - F10 declarative lexer mode transitions
+
+### Added
+- `ModeTransition` and `TransitionAction` dataclasses, plus `start_mode` and
+  `transitions` fields on `TokenGrammar`, porting the F10 declarative
+  lexer-mode transition table (`F10-declarative-lexer-modes.md`) from the Rust
+  reference. A `.tokens` grammar can declare context-sensitive lexing
+  (regex-vs-division, template substitutions) as data rather than a callback.
+- `.tokens` parsing: a `start_mode:` directive and a `transitions:` section
+  (`on TOKENS [in MODE] -> ACTION, ...`; actions `set-mode`/`push`/`pop`/
+  `enable-skip`/`disable-skip`; `KEYWORD="value"` guard). Validation rejects
+  undefined target/guard modes and caps rule count (`MAX_TRANSITIONS`).
+- `compile_token_grammar` emits the two new fields (the dataclass reprs are
+  valid constructor source); the generated import line carries the new types.
+
+### Notes
+- Backward compatible: a grammar with no `transitions:`/`start_mode:` parses to
+  empty defaults. Interpreting the table in the Python `lexer` package is a
+  follow-up (mirrors the Rust grammar-tools → lexer split).
+
 ## [0.3.0] - 2026-03-26
 
 ### Added
