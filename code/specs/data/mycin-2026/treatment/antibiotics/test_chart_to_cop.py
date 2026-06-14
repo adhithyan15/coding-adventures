@@ -50,6 +50,37 @@ def test_culture_resistance_becomes_defeated_edge():
     assert any(c["type"] == "defeated_edge" for c in cop.constraints)
 
 
+def test_dose_risk_facts_become_dose_constraints():
+    # renal + interaction facts compile into dose-ceiling risks + provenance.
+    cop = cc.compile_cop([cc.ChartFact("renal_status", "renal_severe", "eGFR 12"),
+                          cc.ChartFact("interaction", "nephrotoxin_interaction", "tacrolimus"),
+                          cc.ChartFact("weight", "80")])
+    assert cop.risks == {"renal_severe", "nephrotoxin_interaction"}, cop.risks
+    assert cop.weight == 80.0
+    assert sum(c["type"] == "dose_risk" for c in cop.constraints) == 2
+    # an unrecognized renal/interaction value is discarded, not silently turned into a risk.
+    bad = cc.compile_cop([cc.ChartFact("interaction", "qt_additive")])
+    assert not bad.risks and any("qt_additive" in d["fact"] for d in bad.discards)
+
+
+def test_dose_infeasibility_folds_into_the_cover():
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # Control: no dose risks → vancomycin is dosable → the standard regimen stands.
+    base = cc.derive(cli, [cc.ChartFact("age_band", "adult")])
+    assert base["regimen"] and "vancomycin" in base["regimen"] and not base["dose_infeasible"]
+    # Severe renal + a concurrent nephrotoxin push vancomycin's ceiling below its efficacy
+    # floor → no safe+effective dose → excluded from the cover → honest abstention (the
+    # combination that covers resistant pneumococcus needs vancomycin), never a toxic dose.
+    risky = cc.derive(cli, [cc.ChartFact("age_band", "adult"),
+                            cc.ChartFact("renal_status", "renal_severe"),
+                            cc.ChartFact("interaction", "nephrotoxin_interaction")])
+    assert "vancomycin" in risky["dose_infeasible"], risky["dose_infeasible"]
+    assert risky["regimen"] is None and risky["outcome"] == "infeasible", risky
+    assert any(c["type"] == "dose_infeasible" for c in risky["constraints"])
+
+
 def test_unmapped_fact_is_discarded_not_ignored():
     # No silent drops: a fact with no rule lands in discards WITH a reason.
     cop = cc.compile_cop([cc.ChartFact("age_band", "adult"),
@@ -85,6 +116,8 @@ def main() -> int:
     test_scenario_selection_and_provenance()
     test_allergy_becomes_exclusion()
     test_culture_resistance_becomes_defeated_edge()
+    test_dose_risk_facts_become_dose_constraints()
+    test_dose_infeasibility_folds_into_the_cover()
     test_unmapped_fact_is_discarded_not_ignored()
     test_engine_reproduces_existing_regimens()
     return 0
