@@ -685,6 +685,107 @@ impl CommandClassProjectionSignoffSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CommandClassProjectionClosureSummary {
+    pub signoff_summary: CommandClassProjectionSignoffSummary,
+    pub required_closure_check_count: usize,
+    pub passed_closure_check_count: usize,
+    pub missing_closure_check_count: usize,
+    pub signoff_ready: bool,
+    pub projection_ready: bool,
+    pub command_classes_present: bool,
+    pub capability_projection_ready: bool,
+    pub command_surface_ready: bool,
+    pub sensor_surface_ready: bool,
+    pub observe_only_surface_ready: bool,
+    pub closure_ready: bool,
+}
+
+impl CommandClassProjectionClosureSummary {
+    pub fn from_command_classes<I>(command_classes: I) -> Self
+    where
+        I: IntoIterator<Item = CommandClassId>,
+    {
+        Self::from_signoff_summary(CommandClassProjectionSignoffSummary::from_command_classes(
+            command_classes,
+        ))
+    }
+
+    pub fn from_signoff_summary(signoff_summary: CommandClassProjectionSignoffSummary) -> Self {
+        let signoff_ready = signoff_summary.is_signoff_ready();
+        let projection_ready = !signoff_summary.needs_projection_readiness();
+        let command_classes_present = !signoff_summary.needs_command_class_inventory();
+        let capability_projection_ready = !signoff_summary.needs_capability_projection();
+        let command_surface_ready = !signoff_summary.needs_command_surface();
+        let sensor_surface_ready = !signoff_summary.needs_sensor_surface();
+        let observe_only_surface_ready = !signoff_summary.needs_observe_only_surface();
+        let checks = [
+            signoff_ready,
+            projection_ready,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+        ];
+        let passed_closure_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_closure_check_count = checks.len();
+        let missing_closure_check_count = required_closure_check_count - passed_closure_check_count;
+        let closure_ready = missing_closure_check_count == 0;
+
+        Self {
+            signoff_summary,
+            required_closure_check_count,
+            passed_closure_check_count,
+            missing_closure_check_count,
+            signoff_ready,
+            projection_ready,
+            command_classes_present,
+            capability_projection_ready,
+            command_surface_ready,
+            sensor_surface_ready,
+            observe_only_surface_ready,
+            closure_ready,
+        }
+    }
+
+    pub fn is_closure_ready(self) -> bool {
+        self.closure_ready
+    }
+
+    pub fn has_missing_closure_checks(self) -> bool {
+        self.missing_closure_check_count > 0
+    }
+
+    pub fn needs_projection_signoff(self) -> bool {
+        !self.signoff_ready
+    }
+
+    pub fn needs_projection_readiness(self) -> bool {
+        !self.projection_ready
+    }
+
+    pub fn needs_command_class_inventory(self) -> bool {
+        !self.command_classes_present
+    }
+
+    pub fn needs_capability_projection(self) -> bool {
+        !self.capability_projection_ready
+    }
+
+    pub fn needs_command_surface(self) -> bool {
+        !self.command_surface_ready
+    }
+
+    pub fn needs_sensor_surface(self) -> bool {
+        !self.sensor_surface_ready
+    }
+
+    pub fn needs_observe_only_surface(self) -> bool {
+        !self.observe_only_surface_ready
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CommandClassError {
     Truncated {
@@ -2173,6 +2274,75 @@ mod tests {
         assert_eq!(empty.passed_signoff_check_count, 0);
         assert!(empty.needs_command_class_inventory());
         assert!(empty.has_missing_signoff_checks());
+    }
+
+    #[test]
+    fn command_class_projection_closure_marks_mixed_surface_ready() {
+        let signoff = CommandClassProjectionSignoffSummary::from_command_classes([
+            CommandClassId::SWITCH_BINARY,
+            CommandClassId::DOOR_LOCK,
+            CommandClassId::BATTERY,
+            COMMAND_CLASS_METER,
+            COMMAND_CLASS_NOTIFICATION,
+        ]);
+
+        let closure = CommandClassProjectionClosureSummary::from_signoff_summary(signoff);
+
+        assert_eq!(closure.signoff_summary, signoff);
+        assert_eq!(closure.required_closure_check_count, 7);
+        assert_eq!(closure.passed_closure_check_count, 7);
+        assert_eq!(closure.missing_closure_check_count, 0);
+        assert!(closure.signoff_ready);
+        assert!(closure.projection_ready);
+        assert!(closure.command_classes_present);
+        assert!(closure.capability_projection_ready);
+        assert!(closure.command_surface_ready);
+        assert!(closure.sensor_surface_ready);
+        assert!(closure.observe_only_surface_ready);
+        assert!(closure.closure_ready);
+        assert!(closure.is_closure_ready());
+        assert!(!closure.has_missing_closure_checks());
+        assert!(!closure.needs_projection_signoff());
+        assert!(!closure.needs_projection_readiness());
+        assert!(!closure.needs_command_class_inventory());
+        assert!(!closure.needs_capability_projection());
+        assert!(!closure.needs_command_surface());
+        assert!(!closure.needs_sensor_surface());
+        assert!(!closure.needs_observe_only_surface());
+    }
+
+    #[test]
+    fn command_class_projection_closure_routes_sparse_inventory_gaps() {
+        let basic_only = CommandClassProjectionClosureSummary::from_command_classes([
+            CommandClassId::BASIC,
+            CommandClassId::BASIC,
+        ]);
+
+        assert_eq!(basic_only.required_closure_check_count, 7);
+        assert_eq!(basic_only.passed_closure_check_count, 1);
+        assert_eq!(basic_only.missing_closure_check_count, 6);
+        assert!(!basic_only.signoff_ready);
+        assert!(!basic_only.projection_ready);
+        assert!(basic_only.command_classes_present);
+        assert!(!basic_only.capability_projection_ready);
+        assert!(!basic_only.command_surface_ready);
+        assert!(!basic_only.sensor_surface_ready);
+        assert!(!basic_only.observe_only_surface_ready);
+        assert!(!basic_only.closure_ready);
+        assert!(!basic_only.is_closure_ready());
+        assert!(basic_only.has_missing_closure_checks());
+        assert!(basic_only.needs_projection_signoff());
+        assert!(basic_only.needs_projection_readiness());
+        assert!(!basic_only.needs_command_class_inventory());
+        assert!(basic_only.needs_capability_projection());
+        assert!(basic_only.needs_command_surface());
+        assert!(basic_only.needs_sensor_surface());
+        assert!(basic_only.needs_observe_only_surface());
+
+        let empty = CommandClassProjectionClosureSummary::from_command_classes([]);
+        assert_eq!(empty.passed_closure_check_count, 0);
+        assert!(empty.needs_command_class_inventory());
+        assert!(empty.has_missing_closure_checks());
     }
 
     #[test]
