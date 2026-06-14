@@ -1,0 +1,1 @@
+echo C# Conduit uses P/Invoke against the Rust cdylib — skipping on Windows (requires cross-compile setup for libconduit_capi.dll)
