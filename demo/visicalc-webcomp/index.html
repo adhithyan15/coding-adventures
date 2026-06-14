@@ -95,7 +95,7 @@
     -->
     <mos-formula-bar
       cell-address="A1"
-      formula="=SUM(B1:B5)">
+      formula="">
     </mos-formula-bar>
 
     <!--
@@ -123,113 +123,221 @@
     <div id="event-log"></div>
 
     <div class="note">
-      <strong>Live custom element.</strong> The
-      <code>&lt;mos-formula-bar&gt;</code> above is a real Web Component
-      registered by <code>build/FormulaBar.js</code> (compiled from
-      <code>FormulaBar.mil/.mll/.msl</code> via
-      <code>mosaic-compile --backend webcomponent</code>). It uses
-      shadow DOM, observed attributes, and fires
-      <code>mosaic:formulaChange</code> / <code>mosaic:commit</code> /
-      <code>mosaic:cancel</code> CustomEvents on user input — visible
-      in the log above.  The Grid is also a Custom Element
-      (<code>&lt;mos-grid&gt;</code>), compiled from
-      <code>demo/visicalc/mosaic/Grid.*</code> — the same source
-      the React + HTML demos consume.
+      <strong>Live.</strong> Click a cell, type a value or formula (e.g.
+      <code>=SUM(A1:A4)</code>) in the formula bar and press Enter — or
+      double-click a cell to edit in place. Every dependent cell recomputes.
+      The UI is two real Web Components compiled by
+      <code>mosaic-compile --backend webcomponent</code> from
+      <code>demo/visicalc/mosaic/*</code> (the same source the React + HTML
+      demos use): <code>&lt;mos-grid&gt;</code> for display and
+      <code>&lt;mos-formula-bar&gt;</code> for input, both shadow-DOM custom
+      elements firing <code>mosaic:*</code> CustomEvents (logged above). The
+      <em>behaviour</em> is the Rust <code>spreadsheet-core</code> engine
+      <strong>compiled to WebAssembly</strong> — the very same
+      <code>.wasm</code> module the HTML demo runs. This file is thin glue
+      that owns no spreadsheet logic, and the page opens directly from disk
+      via <code>file://</code>.
     </div>
   </div>
 
+  <!-- The Rust spreadsheet-core engine compiled to WebAssembly. Sets
+       window.SpreadsheetEngine (same API as the TS engine) and resolves
+       window.__spreadsheetEngineReady once instantiated. .wasm embedded as
+       base64 so the page opens from file://. The SAME module backs the HTML
+       demo; the native demos use it through a C ABI. -->
+  <script src="vendor/spreadsheet-engine-wasm.js"></script>
+
   <script type="module">
-    // Import the compiled bundles — defines `<mos-formula-bar>` and
-    // `<mos-grid>` as Custom Elements.  Both bundles are plain
-    // scripts (not ES modules); they self-register via
-    // `customElements.define` on load.  Using type="module" here is
-    // just a convenience for the inline glue below.
-    import "./build/FormulaBar.js";
-    import "./build/Grid.js";
+    // The compiled custom elements (self-register via customElements.define).
+    import "./vendor/FormulaBar.js";
+    import "./vendor/Grid.js";
 
-    // ── Grid wiring ─────────────────────────────────────────────
-    // `<mos-grid>` reads list-typed slots via JSON.parse, so the
-    // attribute values are JSON literals.  Setting them via
-    // setAttribute after the element is mounted avoids the need to
-    // escape `[`/`]`/`"` inside raw HTML.
-    const SAMPLE = {
-      columnHeaders: ["", "A", "B", "C", "D", "E"],
-      columnWidths:  [48, 96, 96, 96, 96, 96],
-      viewportRows: [
-        ["1", "15", "3",  "12", "8",  "5"],
-        ["2", "8",  "14", "7",  "22", "11"],
-        ["3", "12", "9",  "18", "6",  "25"],
-        ["4", "4",  "11", "3",  "17", "9"],
-        ["5", "7",  "5",  "13", "10", "19"],
-      ],
-      selectedRow: 1,
-      selectedCol: 1,
-      // No edit-row / edit-col set on initial mount: the per-cell
-      // editing predicate is `r == editRow && c == editCol`.  The
-      // WC emitter's default initializer for Number-typed slots
-      // (PR #4999) reads an absent attribute as `NaN`, and `NaN`'s
-      // `==` is always `false` — so no cell renders the input
-      // editor on initial paint.  To enter edit mode, the host
-      // calls `grid.setAttribute("edit-row", String(r))` etc.;
-      // until then the editor stays hidden everywhere.
-      //
-      // Before #4999 this demo had to set `edit-row="-1"` as a
-      // sentinel because the emitter defaulted Number slots to
-      // `""`, and JS `0 == ""` is `true` — so cell (0, 0) would
-      // mistakenly render its editor by default.  The emitter
-      // fix moves the sentinel into the generated code, so the
-      // host can simply omit the attribute.
-      editContent: "",
-    };
+    // ====================================================================
+    // LIVE engine wiring. This demo is the same generic engine as the HTML
+    // demo, here driving real Web Components: <mos-grid> for display,
+    // <mos-formula-bar> for input. The glue owns no spreadsheet logic — it
+    // seeds a workbook, pushes the workbook's computed values into the
+    // element attributes, and feeds user edits back through workbook.setCell.
+    // ====================================================================
     const grid = document.getElementById("grid");
-    grid.setAttribute("column-headers", JSON.stringify(SAMPLE.columnHeaders));
-    grid.setAttribute("column-widths",  JSON.stringify(SAMPLE.columnWidths));
-    grid.setAttribute("viewport-rows",  JSON.stringify(SAMPLE.viewportRows));
-    grid.setAttribute("selected-row",   String(SAMPLE.selectedRow));
-    grid.setAttribute("selected-col",   String(SAMPLE.selectedCol));
-    grid.setAttribute("edit-content",   SAMPLE.editContent);
-
-    // Selected-cell highlight: the WebComponent emitter now folds
-    // the `cell:selected` / `cell:editing` state blocks directly
-    // into each `<td>`'s inline `style` via a runtime ternary on the
-    // `state-when-*` predicate (so the blue accent comes from the
-    // compiled Grid.js itself, matching the React / SwiftUI / HTML
-    // renders).  This belt-and-suspenders pass is kept only as a
-    // defensive fallback for browsers/situations where the ternary
-    // hasn't painted yet; it sets the same colours the emitter does.
-    //
-    // We retry briefly to handle the connectedCallback race — if
-    // the bundle hasn't registered the element yet, shadowRoot is
-    // null on the first frame.
-    function paintHighlight() {
-      const root = grid.shadowRoot;
-      if (!root) return false;
-      const tds = root.querySelectorAll("tbody td");
-      const cols = SAMPLE.viewportRows[0].length;
-      const sel = SAMPLE.selectedRow * cols + SAMPLE.selectedCol;
-      const td = tds[sel];
-      if (!td) return false;
-      td.style.background = "#264f78";
-      td.style.color      = "#ffffff";
-      td.style.outline    = "1px solid #007acc";
-      return true;
-    }
-    if (!paintHighlight()) {
-      requestAnimationFrame(() => paintHighlight() || setTimeout(paintHighlight, 50));
-    }
-
-    // ── FormulaBar event log (preserved from pre-rewire demo) ───
     const fb = document.querySelector("mos-formula-bar");
     const log = document.getElementById("event-log");
-    for (const evt of ["formulaChange", "commit", "cancel"]) {
-      fb.addEventListener(`mosaic:${evt}`, (e) => {
-        const time = new Date().toLocaleTimeString();
-        const payload = JSON.stringify(e.detail);
-        const line = document.createElement("div");
-        line.textContent = `[${time}] mosaic:${evt} → ${payload}`;
-        log.prepend(line);
+
+    const ROWS = 5, COLS = 5; // A..E
+    const columnHeaders = ["", "A", "B", "C", "D", "E"];
+    const columnWidths  = [48, 96, 96, 96, 96, 96];
+
+    // Cross-footing budget — column E totals each row, row 5 totals each
+    // column, E5 is the grand total. All totals are formulas, so editing any
+    // input ripples through.
+    const SEED = {
+      A1: "15", B1: "3",  C1: "12", D1: "8",  E1: "=SUM(A1:D1)",
+      A2: "8",  B2: "14", C2: "7",  D2: "22", E2: "=SUM(A2:D2)",
+      A3: "12", B3: "9",  C3: "18", D3: "6",  E3: "=SUM(A3:D3)",
+      A4: "4",  B4: "11", C4: "3",  D4: "17", E4: "=SUM(A4:D4)",
+      A5: "=SUM(A1:A4)", B5: "=SUM(B1:B4)", C5: "=SUM(C1:C4)",
+      D5: "=SUM(D1:D4)", E5: "=SUM(E1:E4)",
+    };
+
+    let Engine, wb;
+    let selRow = 0, selCol = 1;     // template coords: row 0..4, col 1..5 (0 = gutter)
+    let editRow = -1, editCol = -1; // -1 = not editing
+
+    // Grid display column `c` (1..5) ⇄ A1 column letter.
+    const addrOf = (r, c) => Engine.columnToLetters(c - 1) + (r + 1);
+
+    // The compiled <mos-grid> interpolates cell values straight into its
+    // shadow innerHTML, so any value carrying HTML must be escaped here (the
+    // grid trusts its attributes). Escaping is also the *correct* spreadsheet
+    // behaviour — a cell holding the text `<b>x</b>` should show that text
+    // literally, not render bold. (A future fix is to escape in the
+    // WebComponent emitter itself; until then the host escapes.)
+    function htmlEscape(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function display(v) {
+      switch (v.kind) {
+        case "empty":   return "";
+        case "number":  return String(v.value);
+        case "text":    return htmlEscape(v.value);
+        case "boolean": return v.value ? "TRUE" : "FALSE";
+        case "error":   return v.code;
+      }
+      return "";
+    }
+
+    // Build viewport-rows from the *current* workbook state.
+    function viewportRows() {
+      const rows = [];
+      for (let r = 0; r < ROWS; r++) {
+        const row = [String(r + 1)];
+        for (let c = 1; c <= COLS; c++) row.push(display(wb.getValue(addrOf(r, c))));
+        rows.push(row);
+      }
+      return rows;
+    }
+
+    // Push state into <mos-grid> (it re-renders its shadow DOM on each
+    // attribute change), then re-attach the cell listeners the re-render
+    // wipes, and sync the formula bar.
+    function render() {
+      grid.setAttribute("column-headers", JSON.stringify(columnHeaders));
+      grid.setAttribute("column-widths",  JSON.stringify(columnWidths));
+      grid.setAttribute("viewport-rows",  JSON.stringify(viewportRows()));
+      grid.setAttribute("selected-row",   String(selRow));
+      grid.setAttribute("selected-col",   String(selCol));
+      if (editRow >= 0) {
+        grid.setAttribute("edit-row", String(editRow));
+        grid.setAttribute("edit-col", String(editCol));
+        // edit-content left empty; the editor's value is set via the DOM
+        // property below (same XSS-safety reason as the formula bar).
+        grid.setAttribute("edit-content", "");
+      } else {
+        grid.removeAttribute("edit-row");
+        grid.removeAttribute("edit-col");
+      }
+      wireCells();
+      syncFormulaBar();
+      // Populate + focus the inline editor via the `.value` property (not the
+      // interpolated edit-content attribute) if we just entered edit mode.
+      if (editRow >= 0) {
+        const input = grid.shadowRoot && grid.shadowRoot.querySelector("input");
+        if (input) {
+          input.value = wb.getRaw(addrOf(editRow, editCol));
+          input.focus();
+          input.setSelectionRange(input.value.length, input.value.length);
+        }
+      }
+    }
+
+    // <mos-grid> cells carry no click handler, so we reach into the shadow
+    // DOM (single source of truth stays the engine) to wire select + edit.
+    function wireCells() {
+      const root = grid.shadowRoot;
+      if (!root) return;
+      root.querySelectorAll("tbody tr").forEach((tr, r) => {
+        tr.querySelectorAll("td").forEach((td, c) => {
+          if (c < 1) return; // row-label gutter
+          td.style.cursor = "cell";
+          td.addEventListener("click", () => selectCell(r, c));
+          td.addEventListener("dblclick", () => beginEdit(r, c));
+        });
       });
     }
+
+    function selectCell(r, c) {
+      if (editRow >= 0) { editRow = editCol = -1; }
+      selRow = r; selCol = c;
+      render();
+    }
+
+    function syncFormulaBar() {
+      const addr = addrOf(selRow, selCol);
+      fb.setAttribute("cell-address", addr);
+      // Set the input's text via the DOM `.value` PROPERTY, not the `formula`
+      // attribute. The compiled element interpolates `formula` straight into
+      // `value="${formula}"` in its innerHTML, so a raw value containing `">`
+      // could break out; a property assignment is XSS-safe and preserves the
+      // literal value for round-tripping. We leave the attribute empty.
+      fb.setAttribute("formula", "");
+      const input = fb.shadowRoot && fb.shadowRoot.querySelector("input");
+      if (input) input.value = wb.getRaw(addr);
+    }
+
+    function commitFormulaBar() {
+      const input = fb.shadowRoot && fb.shadowRoot.querySelector("input");
+      if (!input) return;
+      wb.setCell(addrOf(selRow, selCol), input.value);
+      render();
+    }
+
+    function beginEdit(r, c) {
+      selRow = r; selCol = c;
+      editRow = r; editCol = c;
+      render();
+    }
+
+    function commitInlineEdit() {
+      if (editRow < 0) return;
+      const input = grid.shadowRoot && grid.shadowRoot.querySelector("input");
+      const addr = addrOf(editRow, editCol);
+      const value = input ? input.value : wb.getRaw(addr);
+      editRow = editCol = -1;
+      wb.setCell(addr, value);
+      render();
+    }
+
+    // FormulaBar: Enter → mosaic:commit, blur → mosaic:formulaChange. Neither
+    // carries the value, so we read it from the element's shadow input.
+    fb.addEventListener("mosaic:commit", commitFormulaBar);
+    fb.addEventListener("mosaic:formulaChange", commitFormulaBar);
+    // Inline cell editor (Grid) → mosaic:editCommit / mosaic:editCancel.
+    grid.addEventListener("mosaic:editCommit", commitInlineEdit);
+    grid.addEventListener("mosaic:editCancel", () => { editRow = editCol = -1; render(); });
+
+    // Keep the original event log as a bonus view of the element's events.
+    for (const el of [fb, grid]) {
+      for (const evt of ["formulaChange", "commit", "cancel", "editCommit", "editCancel"]) {
+        el.addEventListener(`mosaic:${evt}`, (e) => {
+          const line = document.createElement("div");
+          line.textContent = `mosaic:${evt} → ${JSON.stringify(e.detail)}`;
+          log.prepend(line);
+        });
+      }
+    }
+
+    // Boot once the WASM engine is ready.
+    window.__spreadsheetEngineReady.then((engine) => {
+      Engine = engine;
+      wb = engine.createSpreadsheet();
+      wb.setCells(SEED);
+      render();
+    });
   </script>
 </body>
 </html>
