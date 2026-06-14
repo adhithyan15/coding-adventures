@@ -20,6 +20,8 @@ All notable changes to this package will be documented in this file.
   identity, CLIP v2 endpoints, registration headers, and runtime model surface.
 - Hue catalog package readiness summaries that combine package/spec, release,
   identity, CLIP v2 transport, runtime model, and pairing-handoff gates.
+- Hue catalog package gap summaries that route blocked catalog handoffs to spec,
+  release, identity, transport/runtime, or pairing-handoff review.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`

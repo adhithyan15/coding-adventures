@@ -60,6 +60,8 @@ packages a typed surface for:
 - Hue catalog package readiness summaries that roll package/spec, release,
   identity, transport, runtime model, and pairing-handoff gates into one
   payload-free catalog handoff check
+- Hue catalog package gap summaries that route blocked catalog handoffs to
+  spec, release, identity, transport/runtime, or pairing-handoff review
 
 ## Dependencies
 
