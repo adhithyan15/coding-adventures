@@ -36,8 +36,12 @@ let package = Package(
             dependencies: ["CSpreadsheetEngine"],
             path: "Sources/VisiCalc",
             linkerSettings: [
-                // Link the Rust static library vendored by scripts/build.sh.
-                .unsafeFlags(["-L\(packageDir)/Vendor", "-lspreadsheet_capi"]),
+                // Link the Rust static library vendored by scripts/build.sh,
+                // per platform (the engine is cross-compiled for each target):
+                //   macOS → Vendor/macos     (cargo --target <host>)
+                //   iOS   → Vendor/ios-sim   (cargo --target aarch64-apple-ios-sim)
+                .unsafeFlags(["-L\(packageDir)/Vendor/macos", "-lspreadsheet_capi"], .when(platforms: [.macOS])),
+                .unsafeFlags(["-L\(packageDir)/Vendor/ios-sim", "-lspreadsheet_capi"], .when(platforms: [.iOS])),
             ]
         ),
         .testTarget(
@@ -45,7 +49,8 @@ let package = Package(
             dependencies: ["VisiCalc"],
             path: "Tests/VisiCalcTests",
             linkerSettings: [
-                .unsafeFlags(["-L\(packageDir)/Vendor", "-lspreadsheet_capi"]),
+                // Tests run on the host (macOS).
+                .unsafeFlags(["-L\(packageDir)/Vendor/macos", "-lspreadsheet_capi"], .when(platforms: [.macOS])),
             ]
         ),
     ]
