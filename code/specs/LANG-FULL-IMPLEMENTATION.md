@@ -104,7 +104,10 @@ backend immediately) come before the enabler-dependent items.
   update. Fixed in `iir-to-llvm` 0.10.0 — a reassigned parameter is promoted to an i64
   stack slot, initialised from the incoming argument. Verified by RUNNING `acc`-accumulator
   → 42 across every backend.
-- ☐ **N3** — bitwise `&` `|` `^` (existing IIR `and`/`or`/`xor`) + proper unary `~` (needs E2 for the width mask).
+- ◑ **N3** — bitwise `&` `|` `^` ✅ (lower to existing IIR `and`/`or`/`xor`; verified by RUNNING
+  `12 & 10`→8, `12 | 3`→15, `6 ^ 5`→3 across native/LLVM/WASM/JVM/CLR/VM/JIT — also fixed a CLR
+  textual-`.il` gap in `iir-to-cil-bytecode` 0.19.0). Unary `~` ☐ — still deferred; a correct
+  width-mask needs enabler **E2** (`~x` on a u8 flips 8 bits, not 64).
 - ☐ **N4** — `&&` / `||` short-circuit (desugar to branches).
 - ☐ **N5** — `const` declarations (constant folding / global).
 - ☐ **N6** — u4/u8 wrap semantics (needs **E2**).

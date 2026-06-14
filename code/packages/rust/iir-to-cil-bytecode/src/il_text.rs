@@ -772,7 +772,10 @@ fn emit_method(
             //
             // (CoreCLR's `div`/`rem` raise on divide-by-zero, matching the other
             // backends' trap-on-zero behaviour — no guard needed here.)
-            "add" | "sub" | "mul" | "div" | "mod" => {
+            // Bitwise `and`/`or`/`xor` map to the identically-named CIL opcodes
+            // (LANG-FULL N3). `shl`/`shr` are the CIL shift ops; included here so
+            // the textual path matches the bytecode path's binary-op coverage.
+            "add" | "sub" | "mul" | "div" | "mod" | "and" | "or" | "xor" | "shl" | "shr" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: format!("{} must have a dest", instr.op),
@@ -787,6 +790,11 @@ fn emit_method(
                     "mul" => "mul",
                     "div" => "div",
                     "mod" => "rem",
+                    "and" => "and",
+                    "or" => "or",
+                    "xor" => "xor",
+                    "shl" => "shl",
+                    "shr" => "shr",
                     _ => unreachable!(),
                 };
                 let _ = writeln!(il, "    {cil}");
@@ -908,6 +916,19 @@ mod tests {
         for (op, cil) in
             [("add", "add"), ("sub", "sub"), ("mul", "mul"), ("div", "div"), ("mod", "rem")]
         {
+            let il = emit_il(&binop_module(op), &IIRClrConfig::new("Main")).unwrap();
+            assert!(
+                il.lines().any(|l| l.trim() == cil),
+                "op {op:?} must emit a bare `{cil}` instruction; got:\n{il}"
+            );
+        }
+    }
+
+    #[test]
+    fn bitwise_ops_emit_cil_opcodes() {
+        // LANG-FULL N3: the textual `.il` path must emit the bitwise CIL opcodes
+        // (the bytecode path already did) so Nib `& | ^` runs on real CoreCLR.
+        for (op, cil) in [("and", "and"), ("or", "or"), ("xor", "xor")] {
             let il = emit_il(&binop_module(op), &IIRClrConfig::new("Main")).unwrap();
             assert!(
                 il.lines().any(|l| l.trim() == cil),
