@@ -1,0 +1,65 @@
+{
+  "hash": "e7ccec85df7a92d9",
+  "kind": "rulebook",
+  "source_name": "viral-arm.adj",
+  "imports": [
+    "9bb5d9645e2edb7e"
+  ],
+  "clauses": [
+    {
+      "key": "viral_meningitis::prior",
+      "lr": 0.963,
+      "declared_trust": "authoritative",
+      "accepted_trust": "authoritative",
+      "verdict": "ACCEPT",
+      "grounding_id": "prior_viral",
+      "spider_status": "grounded",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "viral_meningitis::csf_glucose(normal)",
+      "lr": 3.38,
+      "declared_trust": "empirical",
+      "accepted_trust": "empirical",
+      "verdict": "ACCEPT",
+      "grounding_id": "csf_glucose_normal",
+      "spider_status": "direction_only",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "viral_meningitis::csf_lactate(normal)",
+      "lr": 13.7,
+      "declared_trust": "empirical",
+      "accepted_trust": "empirical",
+      "verdict": "ACCEPT",
+      "grounding_id": "csf_lactate_normal",
+      "spider_status": "grounded",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "viral_meningitis::csf_lymphocytic_pleocytosis(high)",
+      "lr": 2.3,
+      "declared_trust": "empirical",
+      "accepted_trust": "empirical",
+      "verdict": "ACCEPT",
+      "grounding_id": "csf_lymphocytic_pleocytosis_high",
+      "spider_status": "direction_only",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    },
+    {
+      "key": "viral_meningitis::enteroviral_pcr(positive)",
+      "lr": 14.05,
+      "declared_trust": "authoritative",
+      "accepted_trust": "authoritative",
+      "verdict": "ACCEPT",
+      "grounding_id": "enteroviral_pcr_positive",
+      "spider_status": "direction_only",
+      "reason": "re-extraction-stable; rulebook LR matches source"
+    }
+  ],
+  "gate": {
+    "n_clauses": 5,
+    "accepted": 5,
+    "flagged_downgraded_to_inferred": []
+  }
+}

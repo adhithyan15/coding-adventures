@@ -46,8 +46,13 @@ produces a new hash, and every citing case re-derives against the new object at
 - **`grounding/`** — the spider's output: for every clause, the primary-source
   URL, a **verbatim byte-quote**, the numbers, the computed LR, and an
   independent re-extraction check (`grounding-results.json`).
-- **`cas/`** — (M5) content-addressed copies of the accepted libraries +
-  per-object manifests recording grounding + the adversarial-gate verdict.
+- **`cas/`** — the content-addressed store, built by `cas_build.py`:
+  - `cas/objects/<hash>.adj` — each library, with its `import`s rewritten to
+    **dependency hashes** (Merkle-style: editing the vocab changes its hash,
+    which changes every arm, which changes the composed rulebook).
+  - `cas/objects/<hash>.json` — the manifest: kind, dependency hashes, and the
+    write-gate verdict per clause (accepted-at-trust-tier vs flagged→`inferred`).
+  - `cas/registry.json` — the index: `name → hash`, the root object, the graph.
 - **`cases/`** — (M6) clinical vignettes + their decomposed `.adj`.
 - **`proofs/`** — (M8) the five end-to-end proofs.
 
@@ -83,12 +88,30 @@ proof localizes it from the proof DAG / IIS and fixes it with a single
 explaining-away `interacts` clause, then shows the fix propagates to every
 citing case at 0 model calls.
 
+## Building & checking the CAS
+
+```sh
+python3 cas_build.py          # lib/ + grounding/ → cas/objects/<hash>.{adj,json} + registry.json
+python3 cas_build.py --check  # CI: assert the committed CAS matches a fresh build
+python3 test_cas.py           # determinism + a case imports objects/<root>.adj and decides
+```
+
+The **write gate** in `cas_build.py` decides, per clause, ACCEPT (keep the
+declared trust tier) vs FLAG (downgrade to `inferred`, but **never delete** — a
+flagged clause stays runnable, so dropping a prior can't break the rulebook). A
+clause is accepted iff the spider's quote survived independent re-extraction
+**and** the rulebook's LR matches the magnitude the source's numbers entail
+(`computed_lr`) — i.e. the rulebook was calibrated to the evidence. Of 14
+clauses, 12 accept; 2 flag: `csf_culture` (271 is definitional, not
+study-anchored) and `csf_neutrophilic_pleocytosis` (15 is a conservative value;
+the source supports a higher LR at extreme thresholds). The gate also consumes an
+optional independent N-reader refute vote (`gate/votes.json`) when present.
+
 ## Roadmap (M4 → M8)
 
-- **M4** (this) — grounded vocab + arm libraries; the spider grounds every LR.
-- **M5** — the CAS: content-address each library + manifest; the adversarial
-  write gate (N entailment readers × re-extraction stability × blind judge ×
-  completeness) decides accept-at-trust-tier vs flag-and-downgrade.
+- **M4** ✓ — grounded vocab + arm libraries; the spider grounds every LR.
+- **M5** ✓ — the CAS: content-address each library (Merkle hashes) + manifest;
+  the write gate accepts-at-trust-tier vs flags-and-downgrades per clause.
 - **M6** — warm pipeline: decompose prose → typed findings (dictionary-constrained,
   decompose-only) → `import`-linked case → differential at 0 answer-time calls.
 - **M7** — rulebook self-consistency (`check`/IIS) + value-of-information
