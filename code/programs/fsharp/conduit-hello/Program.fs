@@ -61,8 +61,9 @@ let apiKeyFilter (req: Request) =
 
 let metaHook (req: Request) (resp: Response) =
     resp
-    |> Response.withHeader "x-served-by" $"{appName}/{version}"
-    |> Response.withHeader "x-env"        env
+    |> Response.withHeader "x-served-by"            $"{appName}/{version}"
+    |> Response.withHeader "x-env"                   env
+    |> Response.withHeader "x-content-type-options" "nosniff"
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 

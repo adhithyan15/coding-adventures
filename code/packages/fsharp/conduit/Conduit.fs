@@ -45,6 +45,7 @@
 module CodingAdventures.Conduit.FSharp
 
 open System
+open System.IO
 open System.Net
 open System.Reflection
 open System.Runtime.InteropServices
@@ -68,11 +69,18 @@ module internal Native =
     // No File.Exists pre-check — that would introduce a TOCTOU race.
     // NativeLibrary.Load throws DllNotFoundException with a clear message if the
     // path is absent or not a valid shared library.
+    //
+    // The path MUST be absolute. Relative paths resolve against the process
+    // working directory and create a path-traversal window; we reject them early
+    // so operators get a clear error instead of a subtle load from the wrong place.
     let private resolve (name: string) (asm: Assembly) (paths: DllImportSearchPath Nullable) =
         if name <> Lib then nativeint 0
         else
             let env = Environment.GetEnvironmentVariable "CONDUIT_CAPI_PATH"
             if not (String.IsNullOrEmpty env) then
+                if not (Path.IsPathRooted env) then
+                    raise (InvalidOperationException
+                        "CONDUIT_CAPI_PATH must be an absolute path.")
                 NativeLibrary.Load env
             else
                 NativeLibrary.Load(name, asm, paths)
@@ -194,6 +202,15 @@ module internal Native =
 
     let cstrNotNull (p: nativeint) : string =
         cstr p |> Option.defaultValue ""
+
+    // Strip ASCII control characters and cap at 512 characters — used when
+    // writing native-sourced strings to stderr to prevent log-injection attacks.
+    let sanitizeForLog (s: string) : string =
+        let sb = StringBuilder(min s.Length 512)
+        for c in s do
+            if c >= '\x20' && c <> '\x7f' then
+                if sb.Length < 512 then sb.Append c |> ignore
+        sb.ToString()
 
 
 // ── Response ─────────────────────────────────────────────────────────────────
@@ -407,17 +424,13 @@ module internal Trampolines =
 
     // ── Error sanitisation ────────────────────────────────────────────────────
     //
-    // Strip ASCII control characters and cap at 512 bytes before logging to
-    // the native error channel. Prevents log injection and runaway allocations.
+    // Routes managed exception messages through sanitizeForLog before forwarding
+    // to the native error channel. Prevents log injection and runaway allocations.
 
     let private reportError (ex: exn) =
         try
             let raw  = ex.Message |> Option.ofObj |> Option.defaultValue "unknown error"
-            let safe = StringBuilder(min raw.Length 512)
-            for c in raw do
-                if c >= '\x20' && c <> '\x7f' then
-                    if safe.Length < 512 then safe.Append c |> ignore
-            conduit_capi_report_error (safe.ToString())
+            conduit_capi_report_error (sanitizeForLog raw)
         with _ -> ()  // best-effort
 
     // ── Route / not-found / error handler trampoline ─────────────────────────
@@ -708,7 +721,7 @@ module Application =
         app.MarkConsumed()
         let srv = conduit_server_bind(host, port, ptr)
         if srv = 0n then
-            let rawErr = cstrNotNull (conduit_last_error())
+            let rawErr = cstrNotNull (conduit_last_error()) |> sanitizeForLog
             eprintfn $"[conduit] conduit_server_bind failed: {rawErr}"
             raise (InvalidOperationException(
                 $"Failed to bind conduit server on {host}:{port}. See stderr for details."))
