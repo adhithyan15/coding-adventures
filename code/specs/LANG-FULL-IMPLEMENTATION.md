@@ -120,17 +120,19 @@ backend immediately) come before the enabler-dependent items.
 - ☐ **N7** — `+%` (wrap add) / `+?` (saturating add) (needs **E2**).
 
 ### Oct  (sister to Nib)
-> ⚠ **Oct is matrix-unverifiable for value-level features.** Oct's type checker forces
-> `main` to be **void and return no value**, so every Oct program exits 0 — the matrix can
-> only ever prove "runs, exits 0", never a computed result. With bool-only `&&`/`||`
-> operands, no side effects, and no division/traps, short-circuit vs. eager-bitwise is
-> *behaviorally indistinguishable*; O1/O2/O3 can't satisfy "verified by RUNNING". Skip the
-> Oct feature items until Oct grows an observable (stdout/print or a value-returning main),
-> or treat Oct as parse/typecheck-only. (Finding: 2026-06-13.)
-- ⏸ **O1** — `&&` / `||` short-circuit. Correct semantics, but **unverifiable** (see above) —
-  eager-bitwise is already behaviorally correct for Oct's observable surface. Deferred.
-- ☐ **O2** — proper `~` 8-bit mask + u8 wrap (needs **E2**; also unverifiable until Oct has output).
-- ⏸ **O3** — `static` globals (currently silently dropped) — unverifiable until Oct has output.
+> **Oct had no observable output** (void `main` → always exits 0), which made its value-level
+> features unverifiable-by-running — so the user chose to **give Oct an output op first**
+> (decision 2026-06-13). With `out` → stdout (O-OUT below), Oct is now observable and its
+> feature items are verifiable.
+- ✅ **O-OUT** — the 8008 `out(port, value)` intrinsic prints `value` to stdout
+  (`call_builtin "print_i64"`, all ports → stdout). Verified by RUNNING `out(1, 200)`→`200`
+  and `out(1, 100 + 100)`→`200` across native/LLVM/WASM/JVM/CLR/VM/JIT. **Unblocks O1/O2/O3
+  verification.** (`in` + the arithmetic/rotation intrinsics stay rejected — see O4.)
+- ☐ **O1** — `&&` / `||` short-circuit (currently eager bitwise). Now **verifiable** via `out`
+  (prove the RHS is/ isn't evaluated by `out`-ing distinguishing values). Reuse Nib's
+  `compile_short_circuit` (jmp_if_false/jmp/label only).
+- ☐ **O2** — proper `~` 8-bit mask + u8 wrap (needs **E2**).
+- ☐ **O3** — `static` globals (currently silently dropped) — now verifiable via `out`.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).
   These are hardware-specific; on general backends they need a host/IIR-builtin model or a
   defined semantics. **Decision point — surface to the user before implementing.**
