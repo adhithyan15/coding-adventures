@@ -1,0 +1,20 @@
+[package]
+name = "conduit-jni"
+version = "0.1.0"
+edition = "2021"
+description = "JNI native library bridging Java to the Conduit web framework (web-core)"
+publish = false
+
+[lib]
+# cdylib → the libconduit_jni.{so,dylib,dll} that the JVM loads via
+# System.loadLibrary("conduit_jni"). `cargo test --lib` builds a separate
+# test binary (no cdylib) so pure-Rust helpers can be tested without a JVM.
+crate-type = ["cdylib", "lib"]
+name = "conduit_jni"
+
+[dependencies]
+jni-bridge             = { path = "../jni-bridge" }
+conduit                = { path = "../conduit" }
+web-core               = { path = "../web-core" }
+embeddable-http-server = { path = "../embeddable-http-server" }
+tcp-runtime            = { path = "../tcp-runtime" }

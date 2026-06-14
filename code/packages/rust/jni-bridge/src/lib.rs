@@ -168,6 +168,16 @@ pub union jvalue {
 /// Internally this is a pointer-to-pointer-to-function-table.
 pub type JNIEnv = *const *const c_void;
 
+/// The Java VM pointer type.
+///
+/// Unlike `JNIEnv` (which is thread-local and points at the
+/// `JNINativeInterface_` table), `JavaVM` is process-global, valid from
+/// any thread, and points at a *different* table — `JNIInvokeInterface_`.
+/// You obtain it once with `jni_get_java_vm(env)` on a JVM thread, then use
+/// it from Rust-spawned threads to `AttachCurrentThreadAsDaemon` and get a
+/// thread-local `JNIEnv` for that thread.
+pub type JavaVM = *const *const c_void;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // JNI function table offsets (JNI spec §Table 4-1)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -179,9 +189,19 @@ pub type JNIEnv = *const *const c_void;
 
 const FIND_CLASS_OFFSET:              usize = 6;   // jclass FindClass(env, name)
 const THROW_NEW_OFFSET:               usize = 14;  // jint ThrowNew(env, cls, msg)
+const EXCEPTION_OCCURRED_OFFSET:      usize = 15;  // jthrowable ExceptionOccurred(env)
 const EXCEPTION_CLEAR_OFFSET:         usize = 17;  // void ExceptionClear(env)
+const PUSH_LOCAL_FRAME_OFFSET:        usize = 19;  // jint PushLocalFrame(env, capacity)
+const POP_LOCAL_FRAME_OFFSET:         usize = 20;  // jobject PopLocalFrame(env, result)
+const NEW_GLOBAL_REF_OFFSET:          usize = 21;  // jobject NewGlobalRef(env, obj)
+const DELETE_GLOBAL_REF_OFFSET:       usize = 22;  // void DeleteGlobalRef(env, obj)
 const NEW_OBJECT_A_OFFSET:            usize = 30;  // jobject NewObjectA(env, cls, ctor, args)
+const GET_OBJECT_CLASS_OFFSET:        usize = 31;  // jclass GetObjectClass(env, obj)
+const IS_INSTANCE_OF_OFFSET:          usize = 32;  // jboolean IsInstanceOf(env, obj, cls)
 const GET_METHOD_ID_OFFSET:           usize = 33;  // jmethodID GetMethodID(env, cls, name, sig)
+const CALL_OBJECT_METHOD_A_OFFSET:    usize = 36;  // jobject CallObjectMethodA(env, obj, mid, args)
+const CALL_INT_METHOD_A_OFFSET:       usize = 51;  // jint CallIntMethodA(env, obj, mid, args)
+const CALL_VOID_METHOD_A_OFFSET:      usize = 63;  // void CallVoidMethodA(env, obj, mid, args)
 const GET_FIELD_ID_OFFSET:            usize = 94;  // jfieldID GetFieldID(env, cls, name, sig)
 const SET_OBJECT_FIELD_OFFSET:        usize = 104; // void SetObjectField(env, obj, fid, val)
 const SET_DOUBLE_FIELD_OFFSET:        usize = 112; // void SetDoubleField(env, obj, fid, val)
@@ -190,7 +210,20 @@ const GET_STRING_UTF_CHARS_OFFSET:    usize = 169; // const char* GetStringUTFCh
 const RELEASE_STRING_UTF_CHARS_OFFSET:usize = 170; // void ReleaseStringUTFChars(env, str, chars)
 const NEW_DOUBLE_ARRAY_OFFSET:        usize = 182; // jarray NewDoubleArray(env, len)
 const SET_DOUBLE_ARRAY_REGION_OFFSET: usize = 214; // void SetDoubleArrayRegion(env, arr, start, len, buf)
+const GET_JAVA_VM_OFFSET:             usize = 219; // jint GetJavaVM(env, JavaVM**)
 const EXCEPTION_CHECK_OFFSET:         usize = 228; // jboolean ExceptionCheck(env)
+
+// ─────────────────────────────────────────────────────────────────────────────
+// JavaVM invocation-interface offsets (JNI spec §Table 4-2)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// The JavaVM points at the `JNIInvokeInterface_` table, NOT the JNIEnv table.
+// It has only a handful of slots; these are the ones we need for managing
+// the attachment of Rust-spawned threads to the JVM.
+
+const VM_ATTACH_CURRENT_THREAD_OFFSET:           usize = 4; // jint AttachCurrentThread(vm, void** env, void* args)
+const VM_DETACH_CURRENT_THREAD_OFFSET:           usize = 5; // jint DetachCurrentThread(vm)
+const VM_ATTACH_CURRENT_THREAD_AS_DAEMON_OFFSET: usize = 7; // jint AttachCurrentThreadAsDaemon(vm, void** env, void* args)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Internal: read and call a function pointer from the JNI table
@@ -463,4 +496,294 @@ pub unsafe fn jni_set_double_array_region(
     type F = unsafe extern "C" fn(*mut JNIEnv, jarray, jsize, jsize, *const jdouble);
     let f: F = table_fn(env, SET_DOUBLE_ARRAY_REGION_OFFSET);
     f(env, arr, start, len, buf);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Local reference frames (JNI spec §5.1.2)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Every JNI call that returns an object (FindClass, NewObjectA, NewStringUTF,
+// CallObjectMethod, …) produces a *local* reference.  When a native method is
+// invoked from Java, all its local refs are freed automatically once it
+// returns.  But on a thread that Rust attached itself (and that runs a loop
+// without ever returning to Java) local refs accumulate forever — a leak.
+//
+// `PushLocalFrame` / `PopLocalFrame` bracket a scope: every local ref created
+// after the push is freed by the matching pop.  Wrap each request dispatch in
+// a frame and copy out any data you need (into owned Rust values) before
+// popping.
+
+/// Create a new local-reference frame with room for at least `capacity`
+/// local references.  Returns 0 on success, negative on failure (an
+/// `OutOfMemoryError` is pending).
+///
+/// # Safety
+/// `env` must be a valid JNIEnv.  Must be balanced by `jni_pop_local_frame`.
+pub unsafe fn jni_push_local_frame(env: *mut JNIEnv, capacity: jint) -> jint {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jint) -> jint;
+    let f: F = table_fn(env, PUSH_LOCAL_FRAME_OFFSET);
+    f(env, capacity)
+}
+
+/// Pop the current local-reference frame, freeing every local ref created
+/// since the matching `jni_push_local_frame`.
+///
+/// Pass null for `result` to discard all refs.  (To keep one ref alive past
+/// the pop, pass it as `result`; the return value is a fresh local ref to the
+/// same object in the enclosing frame — we don't use that form here.)
+///
+/// # Safety
+/// `env` must be a valid JNIEnv with a frame previously pushed.
+pub unsafe fn jni_pop_local_frame(env: *mut JNIEnv) {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jobject) -> jobject;
+    let f: F = table_fn(env, POP_LOCAL_FRAME_OFFSET);
+    f(env, null_mut());
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Global references (JNI spec §5.1.1)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Local references (the kind returned by FindClass, NewObjectA, method calls,
+// etc.) are only valid until the native function returns.  To keep a Java
+// object alive and callable across multiple native calls — or, crucially,
+// across *threads* — you must promote it to a global reference.  Global refs
+// stay valid until explicitly deleted with DeleteGlobalRef and may be used
+// from any thread.
+
+/// Promote a local reference to a global reference.
+///
+/// The returned reference stays valid (and keeps the Java object from being
+/// GC'd) until passed to `jni_delete_global_ref`.  Returns null if `obj` is
+/// null or the JVM is out of memory.
+///
+/// # Safety
+/// `env` must be a valid JNIEnv.  `obj` must be a valid local/global ref or
+/// null.
+pub unsafe fn jni_new_global_ref(env: *mut JNIEnv, obj: jobject) -> jobject {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jobject) -> jobject;
+    let f: F = table_fn(env, NEW_GLOBAL_REF_OFFSET);
+    f(env, obj)
+}
+
+/// Delete a global reference created with `jni_new_global_ref`.
+///
+/// After this call the underlying Java object becomes eligible for GC (unless
+/// other references keep it alive).  Deleting null is a documented no-op.
+///
+/// # Safety
+/// `env` must be a valid JNIEnv.  `obj` must be a global ref previously
+/// returned by `jni_new_global_ref`, or null.
+pub unsafe fn jni_delete_global_ref(env: *mut JNIEnv, obj: jobject) {
+    if obj.is_null() {
+        return;
+    }
+    type F = unsafe extern "C" fn(*mut JNIEnv, jobject);
+    let f: F = table_fn(env, DELETE_GLOBAL_REF_OFFSET);
+    f(env, obj);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Object inspection (JNI spec §5.3)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Return the runtime class of `obj` (like Java's `obj.getClass()`).
+///
+/// The returned `jclass` is a local reference.
+///
+/// # Safety
+/// `env` and `obj` must be valid non-null JNI values.
+pub unsafe fn jni_get_object_class(env: *mut JNIEnv, obj: jobject) -> jclass {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jobject) -> jclass;
+    let f: F = table_fn(env, GET_OBJECT_CLASS_OFFSET);
+    f(env, obj)
+}
+
+/// Test whether `obj` is an instance of `cls` (like Java's `instanceof`).
+///
+/// Returns `false` if `obj` is null (consistent with `null instanceof X`).
+///
+/// # Safety
+/// `env` and `cls` must be valid; `obj` may be null.
+pub unsafe fn jni_is_instance_of(env: *mut JNIEnv, obj: jobject, cls: jclass) -> bool {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jobject, jclass) -> jboolean;
+    let f: F = table_fn(env, IS_INSTANCE_OF_OFFSET);
+    f(env, obj, cls) != 0
+}
+
+/// Return the pending exception (if any) without clearing it.
+///
+/// Returns null if no exception is pending.  The returned `jthrowable` is a
+/// local reference.  Most JNI calls are illegal while an exception is
+/// pending, so the usual sequence is: `jni_exception_occurred` →
+/// `jni_exception_clear` → inspect the throwable.
+///
+/// # Safety
+/// `env` must be a valid JNIEnv.
+pub unsafe fn jni_exception_occurred(env: *mut JNIEnv) -> jthrowable {
+    type F = unsafe extern "C" fn(*mut JNIEnv) -> jthrowable;
+    let f: F = table_fn(env, EXCEPTION_OCCURRED_OFFSET);
+    f(env)
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Instance method calls — the `*A` (jvalue-array) variants (JNI spec §4.2)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// As with NewObjectA, we use the `*A` forms that take a `*const jvalue` array
+// rather than C varargs (which Rust cannot express portably).  Pass a null
+// `args` pointer for zero-argument methods.
+
+/// Call a Java method returning an object (`CallObjectMethodA`).
+///
+/// `obj`  — the receiver (instance the method is called on)
+/// `mid`  — method ID from `jni_get_method_id`
+/// `args` — `jvalue` array (or null for no args)
+///
+/// Returns the result (a local reference, possibly null).  If the method
+/// throws, a Java exception is left pending — check with
+/// `jni_exception_check` afterwards.
+///
+/// # Safety
+/// `env`, `obj`, and `mid` must be valid non-null JNI values.  `args` must
+/// point to enough `jvalue`s for the method's arity.
+pub unsafe fn jni_call_object_method_a(
+    env: *mut JNIEnv,
+    obj: jobject,
+    mid: jmethodID,
+    args: *const jvalue,
+) -> jobject {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jobject, jmethodID, *const jvalue) -> jobject;
+    let f: F = table_fn(env, CALL_OBJECT_METHOD_A_OFFSET);
+    f(env, obj, mid, args)
+}
+
+/// Call a Java method returning an `int` (`CallIntMethodA`).
+///
+/// # Safety
+/// `env`, `obj`, and `mid` must be valid non-null JNI values.
+pub unsafe fn jni_call_int_method_a(
+    env: *mut JNIEnv,
+    obj: jobject,
+    mid: jmethodID,
+    args: *const jvalue,
+) -> jint {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jobject, jmethodID, *const jvalue) -> jint;
+    let f: F = table_fn(env, CALL_INT_METHOD_A_OFFSET);
+    f(env, obj, mid, args)
+}
+
+/// Call a Java method returning `void` (`CallVoidMethodA`).
+///
+/// # Safety
+/// `env`, `obj`, and `mid` must be valid non-null JNI values.
+pub unsafe fn jni_call_void_method_a(
+    env: *mut JNIEnv,
+    obj: jobject,
+    mid: jmethodID,
+    args: *const jvalue,
+) {
+    type F = unsafe extern "C" fn(*mut JNIEnv, jobject, jmethodID, *const jvalue);
+    let f: F = table_fn(env, CALL_VOID_METHOD_A_OFFSET);
+    f(env, obj, mid, args);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// JavaVM and thread attachment (JNI spec §5.4)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// To call into Java from a thread the JVM did not create (e.g. a Rust I/O
+// thread spawned by an event-loop runtime), that thread must first attach to
+// the JVM to obtain its own thread-local `JNIEnv`.  The JavaVM pointer needed
+// for attachment is process-global; capture it once on a JVM thread with
+// `jni_get_java_vm`, then carry it to the background threads.
+
+/// Read the function pointer at `offset` from the JavaVM invocation table.
+///
+/// The JavaVM points at `JNIInvokeInterface_`, a different (and much smaller)
+/// table than the per-thread `JNINativeInterface_`.
+///
+/// # Safety
+/// - `vm` must be a valid non-null JavaVM pointer
+/// - `offset` must be a valid slot in the invocation table
+/// - `F` must exactly match the function type at that slot
+#[inline(always)]
+unsafe fn vm_table_fn<F: Copy>(vm: *mut JavaVM, offset: usize) -> F {
+    debug_assert!(!vm.is_null(), "JavaVM pointer must not be null");
+    debug_assert!(!(*vm).is_null(), "JavaVM invocation table must not be null");
+    let fn_ptr = *(*vm).add(offset);
+    std::mem::transmute_copy::<*const c_void, F>(&fn_ptr)
+}
+
+/// Obtain the process-global `JavaVM` pointer from a thread-local `JNIEnv`.
+///
+/// Call this once on a JVM thread (e.g. inside a native registration method)
+/// and stash the result; it is valid for the life of the JVM and may be used
+/// from any thread.  Returns null if the call fails.
+///
+/// # Safety
+/// `env` must be a valid JNIEnv.
+pub unsafe fn jni_get_java_vm(env: *mut JNIEnv) -> *mut JavaVM {
+    type F = unsafe extern "C" fn(*mut JNIEnv, *mut *mut JavaVM) -> jint;
+    let f: F = table_fn(env, GET_JAVA_VM_OFFSET);
+    let mut vm: *mut JavaVM = null_mut();
+    let rc = f(env, &mut vm);
+    if rc != 0 { null_mut() } else { vm }
+}
+
+/// Attach the current OS thread to the JVM as a *daemon* thread and return a
+/// thread-local `JNIEnv` for it.
+///
+/// Daemon attachment is preferred for long-lived worker threads because such
+/// threads do not need an explicit `DetachCurrentThread` and do not block JVM
+/// shutdown.  Calling this on an already-attached thread simply returns the
+/// existing `JNIEnv` (idempotent and cheap).  Returns null on failure.
+///
+/// # Safety
+/// `vm` must be a valid JavaVM pointer obtained from `jni_get_java_vm`.
+pub unsafe fn jni_attach_current_thread_as_daemon(vm: *mut JavaVM) -> *mut JNIEnv {
+    type F = unsafe extern "C" fn(*mut JavaVM, *mut *mut c_void, *mut c_void) -> jint;
+    let f: F = vm_table_fn(vm, VM_ATTACH_CURRENT_THREAD_AS_DAEMON_OFFSET);
+    let mut env: *mut c_void = null_mut();
+    let rc = f(vm, &mut env, null_mut());
+    if rc != 0 {
+        null_mut()
+    } else {
+        env as *mut JNIEnv
+    }
+}
+
+/// Attach the current OS thread to the JVM (non-daemon) and return its
+/// thread-local `JNIEnv`.
+///
+/// A non-daemon attached thread MUST be detached with
+/// `jni_detach_current_thread` before it exits, or the JVM may abort.  Prefer
+/// `jni_attach_current_thread_as_daemon` for pooled/long-lived threads.
+///
+/// # Safety
+/// `vm` must be a valid JavaVM pointer.
+pub unsafe fn jni_attach_current_thread(vm: *mut JavaVM) -> *mut JNIEnv {
+    type F = unsafe extern "C" fn(*mut JavaVM, *mut *mut c_void, *mut c_void) -> jint;
+    let f: F = vm_table_fn(vm, VM_ATTACH_CURRENT_THREAD_OFFSET);
+    let mut env: *mut c_void = null_mut();
+    let rc = f(vm, &mut env, null_mut());
+    if rc != 0 {
+        null_mut()
+    } else {
+        env as *mut JNIEnv
+    }
+}
+
+/// Detach the current OS thread from the JVM.
+///
+/// Required before a non-daemon attached thread exits.  No-op semantics for a
+/// thread that is not attached are implementation-defined, so only call this
+/// on threads you attached with `jni_attach_current_thread`.
+///
+/// # Safety
+/// `vm` must be a valid JavaVM pointer.
+pub unsafe fn jni_detach_current_thread(vm: *mut JavaVM) {
+    type F = unsafe extern "C" fn(*mut JavaVM) -> jint;
+    let f: F = vm_table_fn(vm, VM_DETACH_CURRENT_THREAD_OFFSET);
+    f(vm);
 }
