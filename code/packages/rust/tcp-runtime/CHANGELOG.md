@@ -65,3 +65,30 @@ All notable changes to this package will be documented in this file.
 - End-to-end test `sharded_mailbox_routes_replies_through_the_owning_shard`:
   replies routed only through the mailbox reach the correct connection across a
   4-shard runtime (a wrong shard mask would hang the client read).
+
+## [0.1.5] - 2026-06-14
+
+### Added
+
+- **Accept fan-out on macOS/BSD.** `ShardedTcpRuntime` with `worker_count > 1` now
+  distributes connections with an explicit acceptor instead of relying on
+  `SO_REUSEPORT` (which doesn't load-balance on Darwin/BSD — it delivers every
+  connection to one socket). A single `FanoutAcceptor` owns the client-facing
+  listener and round-robins each accepted socket to a worker reactor via
+  `StreamMailbox::adopt_connection`; the worker reactors bind throwaway loopback
+  listeners and only *serve* the connections handed to them. Linux keeps the
+  simpler `SO_REUSEPORT` path (the kernel balances there). `ShardedStopHandle` /
+  `stop` now also signal the acceptor's stop flag; `serve` runs and joins it.
+- Test `sharded_runtime_distributes_connections_across_shards`: with 3 shards and
+  12 clients, connections land on more than one shard — the regression guard that
+  the old all-on-one-shard macOS behavior would fail. Stress-looped (8×, stable);
+  the acceptor's cross-thread `OwnedFd` handoff passes under ThreadSanitizer.
+
+### Result
+
+- `sharded-echo-bench` on macOS now reports an even shard balance
+  (`[13% 13% …]`) where it previously showed `[0% … 100%]`, and `conns/s` scales
+  with shards (connection setup parallelizes). Steady-state `req/s` for a trivial
+  echo stays flat — that workload is latency-bound on loopback, not CPU-bound, so
+  even distribution doesn't add throughput until the per-connection work is heavy
+  enough to saturate a core.

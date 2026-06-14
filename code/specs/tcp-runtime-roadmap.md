@@ -321,9 +321,15 @@ Status:
 
 - **Done** — one-reactor-per-shard architecture (`ShardedTcpRuntime`: N reactors
   on N threads, each with its own kqueue/epoll/IOCP instance).
-- **Done** — listener sharding policy (`SO_REUSEPORT` auto-enabled when
-  `worker_count > 1`; the kernel load-balances accepts across the per-shard
-  listeners).
+- **Done** — listener sharding policy. On Linux, `SO_REUSEPORT` is auto-enabled
+  when `worker_count > 1` and the kernel load-balances accepts across the
+  per-shard listeners. On macOS/BSD, where plain `SO_REUSEPORT` does *not*
+  load-balance (it delivers every connection to one socket — measured by
+  `sharded-echo-bench`, which showed `[0% … 100%]` shard balance), the runtime
+  instead uses an explicit **accept fan-out**: one acceptor owns the listener and
+  round-robins each accepted socket to a worker reactor via `adopt_stream` /
+  `StreamMailbox::adopt_connection`. With the fan-out the macOS shard balance is
+  even (`[13% × 8]`).
 - **Done** — connection affinity / routing. Each reactor stamps its shard index
   into the low `shard_bits` of every `ConnectionId`
   (`id = (sequence << shard_bits) | shard_index`), so `TcpMailbox` routes an

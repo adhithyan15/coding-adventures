@@ -108,3 +108,13 @@ All notable changes to this package will be documented in this file.
   accepts a real loopback connection, the socket is handed to the reactor via
   `adopt_connection`, and the reactor echoes it. Passes under ThreadSanitizer
   (the `OwnedFd` crosses threads through the mailbox).
+
+## [0.1.7] - 2026-06-14
+
+### Added
+
+- `StreamReactorOptions::accept_connections` (default `true`). When `false`, the
+  reactor still binds a listener (the constructor requires one) but never enables
+  accept interest on it, so it serves only adopted connections — used by the
+  macOS/BSD fan-out worker reactors so a direct connect to a worker's throwaway
+  port is left unaccepted (closing it as an ingress) rather than served.

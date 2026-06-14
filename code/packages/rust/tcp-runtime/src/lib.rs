@@ -8,6 +8,7 @@
 //! convenience constructors.
 
 use std::net::{SocketAddr, ToSocketAddrs};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, OnceLock};
 use std::thread;
 use std::time::Duration;
@@ -85,6 +86,10 @@ pub struct TcpRuntimeOptions {
     /// (which leaves `ConnectionId`s identical to the unsharded scheme).
     pub shard_index: u64,
     pub shard_bits: u32,
+    /// Whether the runtime accepts on its own listener (`true`, the default).  Set
+    /// `false` automatically for fan-out worker reactors, which serve only adopted
+    /// connections.
+    pub accept_connections: bool,
     pub read_buffer_size: usize,
     pub max_connections: usize,
     pub max_pending_write_bytes: usize,
@@ -99,6 +104,7 @@ impl Default for TcpRuntimeOptions {
             stream: defaults.stream,
             shard_index: 0,
             shard_bits: 0,
+            accept_connections: true,
             read_buffer_size: defaults.read_buffer_size,
             max_connections: defaults.max_connections,
             max_pending_write_bytes: defaults.max_pending_write_bytes,
@@ -113,6 +119,7 @@ impl PartialEq for TcpRuntimeOptions {
             && self.stream == other.stream
             && self.shard_index == other.shard_index
             && self.shard_bits == other.shard_bits
+            && self.accept_connections == other.accept_connections
             && self.read_buffer_size == other.read_buffer_size
             && self.max_connections == other.max_connections
             && self.max_pending_write_bytes == other.max_pending_write_bytes
@@ -129,6 +136,7 @@ impl From<TcpRuntimeOptions> for StreamReactorOptions {
             stream: value.stream,
             shard_index: value.shard_index,
             shard_bits: value.shard_bits,
+            accept_connections: value.accept_connections,
             read_buffer_size: value.read_buffer_size,
             max_connections: value.max_connections,
             max_pending_write_bytes: value.max_pending_write_bytes,
@@ -148,17 +156,30 @@ pub struct ShardedTcpRuntime<P, S = ()> {
     mailbox: TcpMailbox,
     stop_handles: Vec<StopHandle>,
     runtimes: Vec<TcpRuntime<P, S>>,
+    /// The fan-out acceptor (macOS/BSD only).  `None` on platforms where
+    /// `SO_REUSEPORT` already load-balances accepts across the per-shard listeners
+    /// (Linux); there the workers accept on their own listeners and no separate
+    /// acceptor is needed.  `take`n and run by [`serve`](Self::serve).
+    acceptor: Option<FanoutAcceptor>,
+    /// A clone of the acceptor's stop flag, kept so [`stop`](Self::stop) and the
+    /// [`ShardedStopHandle`] can signal it after `serve` has moved the acceptor
+    /// onto its thread.
+    acceptor_stop: Option<Arc<AtomicBool>>,
 }
 
 #[derive(Clone)]
 pub struct ShardedStopHandle {
     stop_handles: Arc<[StopHandle]>,
+    acceptor_stop: Option<Arc<AtomicBool>>,
 }
 
 impl ShardedStopHandle {
     pub fn stop(&self) {
         for stop in self.stop_handles.iter() {
             stop.stop();
+        }
+        if let Some(acceptor_stop) = &self.acceptor_stop {
+            acceptor_stop.store(true, Ordering::SeqCst);
         }
     }
 }
@@ -179,12 +200,16 @@ impl<P, S> ShardedTcpRuntime<P, S> {
     pub fn stop_handle(&self) -> ShardedStopHandle {
         ShardedStopHandle {
             stop_handles: Arc::from(self.stop_handles.clone().into_boxed_slice()),
+            acceptor_stop: self.acceptor_stop.clone(),
         }
     }
 
     pub fn stop(&self) {
         for stop in &self.stop_handles {
             stop.stop();
+        }
+        if let Some(acceptor_stop) = &self.acceptor_stop {
+            acceptor_stop.store(true, Ordering::SeqCst);
         }
     }
 }
@@ -195,6 +220,11 @@ where
     S: Send + 'static,
 {
     pub fn serve(&mut self) -> Result<(), PlatformError> {
+        // Start the fan-out acceptor (if any) first, so it is ready to distribute
+        // connections the instant the workers begin serving.  Each worker reactor
+        // serves on its own thread; the acceptor (macOS/BSD) runs on one more.
+        let acceptor = self.acceptor.take().and_then(FanoutAcceptor::spawn);
+
         let runtimes = std::mem::take(&mut self.runtimes);
         let mut workers = Vec::with_capacity(runtimes.len());
         for mut runtime in runtimes {
@@ -214,10 +244,74 @@ where
             }
         }
 
+        // The workers have exited (via `stop`); the acceptor's stop flag was set
+        // alongside theirs, so it has exited its accept loop too — join it.
+        if let Some(handle) = acceptor {
+            let _ = handle.join();
+        }
+
         if let Some(error) = first_error {
             Err(error)
         } else {
             Ok(())
+        }
+    }
+}
+
+/// The macOS/BSD accept fan-out: a single listener whose accepted connections are
+/// round-robined to the worker reactors.  Plain `SO_REUSEPORT` does not
+/// load-balance on Darwin/BSD (it delivers every connection to one socket), so
+/// instead one acceptor owns the listener and hands each accepted socket to a
+/// worker via [`StreamMailbox::adopt_connection`].  On Linux the kernel already
+/// balances the reuseport group, so this is unused there.
+struct FanoutAcceptor {
+    /// The single listener clients connect to (set non-blocking so the loop can
+    /// poll the stop flag).
+    listener: std::net::TcpListener,
+    /// One mailbox per worker reactor; accepted sockets are dealt out round-robin.
+    mailboxes: Vec<StreamMailbox>,
+    /// Set by `stop`/`ShardedStopHandle` to break the accept loop.
+    stop: Arc<AtomicBool>,
+}
+
+impl FanoutAcceptor {
+    /// Spawn the accept-and-distribute loop on its own thread.  Returns `None` on
+    /// non-Unix targets (where the fan-out is never constructed).
+    #[cfg(unix)]
+    fn spawn(self) -> Option<thread::JoinHandle<()>> {
+        Some(thread::spawn(move || self.run()))
+    }
+
+    #[cfg(not(unix))]
+    fn spawn(self) -> Option<thread::JoinHandle<()>> {
+        None
+    }
+
+    #[cfg(unix)]
+    fn run(self) {
+        use std::os::fd::OwnedFd;
+
+        let worker_count = self.mailboxes.len().max(1);
+        let mut next = 0usize;
+        while !self.stop.load(Ordering::SeqCst) {
+            match self.listener.accept() {
+                Ok((stream, peer_addr)) => {
+                    // Transfer the accepted socket to the next worker (round-robin).
+                    // `adopt_connection` wakes that reactor, which adopts the fd and
+                    // serves it.  `AdoptableFd` is `OwnedFd` on Unix.
+                    let fd = OwnedFd::from(stream);
+                    self.mailboxes[next % worker_count].adopt_connection(fd, peer_addr);
+                    next = next.wrapping_add(1);
+                }
+                // No pending connection: nap briefly, then re-check the stop flag.
+                // (The listener is non-blocking so `stop` can't be stranded behind
+                // a blocked `accept`.)
+                Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
+                    thread::sleep(std::time::Duration::from_millis(1));
+                }
+                // Listener error (e.g. closed on shutdown): stop accepting.
+                Err(_) => break,
+            }
         }
     }
 }
@@ -462,9 +556,6 @@ where
     C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
 {
     let worker_count = worker_count.max(1);
-    if worker_count > 1 {
-        options.listener.reuse_port = true;
-    }
 
     // Each reactor stamps its own shard index into the low `shard_bits` of every
     // ConnectionId it allocates, so the shared mailbox routes a write straight to
@@ -476,6 +567,38 @@ where
     let handler: Arc<dyn Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync> =
         Arc::new(handler);
     let on_close: Arc<dyn Fn(TcpConnectionInfo, S) + Send + Sync> = Arc::new(on_close);
+
+    // macOS/BSD: plain `SO_REUSEPORT` does not load-balance accepts, so instead of
+    // N reuseport listeners we use an explicit acceptor fan-out — one listener
+    // distributing accepted sockets to the workers.  (Linux's reuseport does
+    // balance, so it keeps the simpler N-listener path below.)
+    #[cfg(any(
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    ))]
+    {
+        if worker_count > 1 {
+            return build_fanout_runtime(
+                address,
+                options,
+                worker_count,
+                shard_bits,
+                init,
+                handler,
+                on_close,
+                &new_platform,
+            );
+        }
+    }
+
+    // Default path: each worker accepts on its own `SO_REUSEPORT` listener (Linux
+    // balances them; a single worker needs no reuseport at all).
+    if worker_count > 1 {
+        options.listener.reuse_port = true;
+    }
 
     let mut bind_address = address;
     let mut runtimes = Vec::with_capacity(worker_count);
@@ -522,6 +645,108 @@ where
         mailbox,
         stop_handles,
         runtimes,
+        acceptor: None,
+        acceptor_stop: None,
+    })
+}
+
+/// Build a sharded runtime using an explicit **accept fan-out** (macOS/BSD).
+///
+/// The worker reactors bind throwaway loopback listeners — they never accept real
+/// traffic, they only *serve* connections handed to them by adoption — while a
+/// single [`FanoutAcceptor`] owns the client-facing listener and round-robins each
+/// accepted socket to a worker via `adopt_connection`.  This is what makes the
+/// runtime actually scale across cores on Darwin/BSD, where plain `SO_REUSEPORT`
+/// would deliver every connection to one socket.
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+#[allow(clippy::too_many_arguments, clippy::type_complexity)]
+fn build_fanout_runtime<P, S>(
+    address: SocketAddr,
+    mut options: TcpRuntimeOptions,
+    worker_count: usize,
+    shard_bits: u32,
+    init: Arc<dyn Fn(TcpConnectionInfo) -> S + Send + Sync>,
+    handler: Arc<dyn Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync>,
+    on_close: Arc<dyn Fn(TcpConnectionInfo, S) + Send + Sync>,
+    new_platform: impl Fn() -> Result<P, PlatformError>,
+) -> Result<ShardedTcpRuntime<P, S>, PlatformError>
+where
+    P: TransportPlatform + 'static,
+    S: Send + 'static,
+{
+    // Workers don't accept client traffic.  They still bind a listener (the
+    // constructor requires one), but `accept_connections = false` means they never
+    // enable accept interest on it — so a direct connect to a worker's throwaway
+    // loopback port is left in the kernel backlog, never served, and can't be used
+    // to bypass the acceptor.  reuse_port is irrelevant (each is a separate port).
+    options.listener.reuse_port = false;
+    options.accept_connections = false;
+    let throwaway: SocketAddr = "127.0.0.1:0".parse().expect("valid loopback address");
+
+    let mut runtimes = Vec::with_capacity(worker_count);
+    for shard_index in 0..worker_count {
+        let mut worker_options = options.clone();
+        worker_options.shard_index = shard_index as u64;
+        worker_options.shard_bits = shard_bits;
+
+        let init = Arc::clone(&init);
+        let handler = Arc::clone(&handler);
+        let on_close = Arc::clone(&on_close);
+        let runtime = TcpRuntime::bind_with_state(
+            new_platform()?,
+            BindAddress::Ip(throwaway),
+            worker_options,
+            move |info| init(info),
+            move |info, state, bytes| handler(info, state, bytes),
+            move |info, state| on_close(info, state),
+        )?;
+        runtimes.push(runtime);
+    }
+
+    // The acceptor's listener is the one clients actually connect to; bind it on
+    // the requested address and report *its* address as the runtime's local_addr.
+    // Non-blocking so the accept loop can poll its stop flag.
+    let acceptor_listener = std::net::TcpListener::bind(address).map_err(PlatformError::from)?;
+    acceptor_listener
+        .set_nonblocking(true)
+        .map_err(PlatformError::from)?;
+    let local_addr = acceptor_listener
+        .local_addr()
+        .map_err(PlatformError::from)?;
+
+    let worker_mailboxes: Vec<StreamMailbox> = runtimes
+        .iter()
+        .map(|runtime| runtime.reactor.mailbox())
+        .collect();
+    let stop_handles = runtimes
+        .iter()
+        .map(TcpRuntime::stop_handle)
+        .collect::<Vec<_>>();
+    // The write-routing mailbox is still keyed by the shard bits in each
+    // ConnectionId, which adopted connections carry just like accepted ones.
+    let mailbox = TcpMailbox::from_mailboxes(worker_mailboxes.clone());
+    let acceptor_stop = Arc::new(AtomicBool::new(false));
+    let acceptor = FanoutAcceptor {
+        listener: acceptor_listener,
+        mailboxes: worker_mailboxes,
+        stop: Arc::clone(&acceptor_stop),
+    };
+    let worker_count = runtimes.len();
+
+    Ok(ShardedTcpRuntime {
+        local_addr,
+        worker_count,
+        mailbox,
+        stop_handles,
+        runtimes,
+        acceptor: Some(acceptor),
+        acceptor_stop: Some(acceptor_stop),
     })
 }
 
@@ -1111,6 +1336,75 @@ mod tests {
         assert_eq!(unique.len(), client_count);
 
         mailbox.resume_all_reads();
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn sharded_runtime_distributes_connections_across_shards() {
+        // With several shards and many clients, connections must land on MORE than
+        // one shard.  On macOS/BSD plain SO_REUSEPORT fails to provide this (every
+        // connection goes to one listener), so the sharded runtime uses the accept
+        // fan-out — a single acceptor round-robining accepts across the workers.
+        // Each ConnectionId encodes its owning shard in its low bits, so the
+        // handler can report which reactor accepted (or adopted) it.  Against the
+        // old all-on-one-shard behavior this test would see a single shard and
+        // fail.
+        let worker_count = 3usize;
+        let shard_mask = (1u64 << shard_bits_for(worker_count)) - 1;
+        let shards_seen = Arc::new(Mutex::new(std::collections::BTreeSet::<u64>::new()));
+        let shards_in_handler = Arc::clone(&shards_seen);
+        let mut runtime = TcpRuntime::bind_kqueue_sharded(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            worker_count,
+            move |info, bytes| {
+                shards_in_handler
+                    .lock()
+                    .expect("shards mutex poisoned")
+                    .insert(info.id.0 & shard_mask);
+                TcpHandlerResult::write(bytes.to_vec())
+            },
+        )
+        .expect("bind sharded runtime");
+        assert_eq!(runtime.worker_count(), worker_count);
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+        let server = thread::spawn(move || runtime.serve());
+
+        // Drive enough clients that distribution must touch more than one shard.
+        let client_count = 12usize;
+        let mut clients = Vec::new();
+        for i in 0..client_count {
+            // Retry briefly while the background acceptor/reactors come up.
+            let mut stream = None;
+            for _ in 0..200 {
+                if let Ok(s) = TcpStream::connect(addr) {
+                    stream = Some(s);
+                    break;
+                }
+                thread::sleep(Duration::from_millis(5));
+            }
+            let mut stream = stream.expect("connect to sharded runtime");
+            stream
+                .set_read_timeout(Some(Duration::from_secs(5)))
+                .expect("read timeout");
+            let payload = (i as u32).to_le_bytes();
+            stream.write_all(&payload).expect("write payload");
+            let mut echoed = [0u8; 4];
+            stream.read_exact(&mut echoed).expect("read echo");
+            assert_eq!(echoed, payload, "echo mismatch for client {i}");
+            clients.push(stream);
+        }
+
+        let distinct = shards_seen.lock().expect("shards mutex poisoned").len();
+        assert!(
+            distinct >= 2,
+            "connections should spread across shards, but all landed on {distinct} shard(s)"
+        );
+
+        drop(clients);
         stop.stop();
         let result = server.join().expect("server thread");
         assert!(result.is_ok(), "server should exit cleanly: {result:?}");
