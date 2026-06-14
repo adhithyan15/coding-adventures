@@ -1,0 +1,73 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "_doc": "Synthetic FHIR Bundle — a coded bacterial-meningitis chart export, for the D1 ingestion demo. CSF labs carry LOINC codes + HL7 interpretation flags; the febrile vital is a temperature valueQuantity; neck stiffness is a SNOMED Condition; a penicillin allergy is an AllergyIntolerance. No real patient data.",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p1",
+        "gender": "male",
+        "birthDate": "1953"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {"text": "CSF glucose", "coding": [{"system": "http://loinc.org", "code": "2342-4", "display": "Glucose [Mass/volume] in CSF"}]},
+        "valueQuantity": {"value": 28, "unit": "mg/dL"},
+        "interpretation": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation", "code": "L", "display": "Low"}]}]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {"text": "CSF protein", "coding": [{"system": "http://loinc.org", "code": "2880-3", "display": "Protein [Mass/volume] in CSF"}]},
+        "valueQuantity": {"value": 220, "unit": "mg/dL"},
+        "interpretation": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation", "code": "H", "display": "High"}]}]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {"text": "CSF neutrophils", "coding": [{"system": "http://loinc.org", "code": "30451-9", "display": "Neutrophils/100 leukocytes in CSF"}]},
+        "valueQuantity": {"value": 92, "unit": "%"},
+        "interpretation": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation", "code": "H", "display": "High"}]}]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {"text": "CSF Gram stain", "coding": [{"system": "http://loinc.org", "code": "664-3", "display": "Bacteria identified in CSF by Gram stain"}]},
+        "valueCodeableConcept": {"text": "Gram-positive diplococci seen"},
+        "interpretation": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation", "code": "POS", "display": "Positive"}]}]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {"text": "Body temperature", "coding": [{"system": "http://loinc.org", "code": "8310-5", "display": "Body temperature"}]},
+        "valueQuantity": {"value": 39.1, "unit": "Cel"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "clinicalStatus": {"coding": [{"code": "active"}]},
+        "code": {"text": "Neck stiffness", "coding": [{"system": "http://snomed.info/sct", "code": "161115002", "display": "Neck stiffness"}]}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "code": {"text": "Penicillin", "coding": [{"system": "http://snomed.info/sct", "code": "373270004", "display": "Penicillin"}]},
+        "reaction": [{"manifestation": [{"text": "anaphylaxis"}], "severity": "severe"}]
+      }
+    }
+  ]
+}
