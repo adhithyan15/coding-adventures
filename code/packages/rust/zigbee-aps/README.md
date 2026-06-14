@@ -16,6 +16,8 @@ boundary:
   supervision
 - frame-batch summary counts for delivery modes, profile/cluster families,
   security, ack requests, and payload volume
+- frame-batch readiness summaries for application-delivery, home-automation,
+  cluster, and payload capture checks
 - binding summary counts for source endpoint shape and cluster coverage
 - binding readiness summaries for application-source, destination, cluster, and
   source-endpoint hygiene checks
