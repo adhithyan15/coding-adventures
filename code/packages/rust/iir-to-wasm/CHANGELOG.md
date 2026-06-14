@@ -3,6 +3,25 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 3 of 6)
+
+### Added — narrow-width arithmetic wraps mod-2ⁿ on real wasm
+
+WASM maps every narrow integer type to `i32`, and an `i32` op already wraps
+mod-2³² — so `u32`/`i32` arithmetic was already correct.  But `u8`/`u16` left a
+full 32-bit result, so a lowered `200u8 + 100u8` gave `300`, not `44`.
+
+This masks a narrow-width (`u4`/`u8`/`u16`) arithmetic / bitwise / shift / `neg`
+/ `not` result with `i32.const <mask>; i32.and` after the i32 op
+(`emit_wasm_width_mask`), mirroring vm-core's `mask_result` and jit-core's
+`MASK_WIDTH` — the register-arithmetic analogue of the existing byte-tape
+`i32.store8`.  `u4` is now mapped to `i32` (it was previously unrepresentable);
+`u32`/`i32` need no mask; `i64`/`u64`/floats are unchanged.
+
+Verified by **running** the lowered wasm on `wasm-runtime` (new dev-dependency):
+`tests/width_wrap.rs` executes `200u8+100u8=44`, `~0u8=255`, `1u8<<8=0`,
+u16/u4 wraps, the native u32 wrap, and `i64`-does-not-mask.
+
 ## [0.13.0] — 2026-06-12 (LANG-MATRIX LM-W Brainfuck — byte-tape ops on wasm)
 
 Adds the lowering Brainfuck needs to run on the WASM backend — the last code-gen

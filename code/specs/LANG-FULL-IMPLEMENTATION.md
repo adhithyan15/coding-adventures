@@ -74,7 +74,10 @@ multiple languages; close an enabler before the features that depend on it.
   - ✅ **jit-core** (2/6) — compiled tier emits a `MASK_WIDTH <reg> <bits>` opcode after a
     narrow `_u8`/`_u16`/`_u32` add/sub/mul/div/neg (`u4`/signed handled by the interpreter
     fallback); unit-tested. Matches vm-core's interpreter-tier mask.
-  - ☐ **iir-to-wasm** (3/6, in flight #5812 — `i32.and` width mask).
+  - ✅ **iir-to-wasm** (3/6) — masks a narrow `u4`/`u8`/`u16` arith/bitwise/neg/not result
+    with `i32.const <mask>; i32.and` after the i32 op (`u32`/`i32` already wrap mod-2³² via
+    the i32 op; `u4` newly mapped to i32). **Executed proof** on real `wasm-runtime`
+    (`200u8+100u8=44`, `~0u8=255`, `1u8<<8=0`).
   - ✅ **iir-to-jvm-class-file** (4/6) — `emit_jvm_width_mask` appends `iconst/sipush/ldc
     <mask>; iand` after a narrow `u4`/`u8`/`u16` arith/bitwise/neg/not/shl `int` op (positive
     mask + `iand`, not `i2b`, to keep unsigned widths unsigned; `0xFFFF` via the constant
