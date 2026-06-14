@@ -81,6 +81,33 @@ def test_dose_infeasibility_folds_into_the_cover():
     assert any(c["type"] == "dose_infeasible" for c in risky["constraints"])
 
 
+def test_pregnancy_contraindicates_drugs():
+    # CC-3: a pregnancy fact excludes the pregnancy-contraindicated drugs by name, each with
+    # its own provenance constraint (the rules are grounded in treatment-constraints).
+    cop = cc.compile_cop([cc.ChartFact("pregnancy", "present", "28wk")])
+    assert cop.contraindicated == {"moxifloxacin", "tmp_smx"}
+    ci = [c for c in cop.constraints if c["type"] == "contraindication"]
+    assert len(ci) == 2 and all(c["from"] == "pregnancy=present" for c in ci)
+    # A non-'present' pregnancy value applies nothing and is discarded (no silent effect).
+    cop2 = cc.compile_cop([cc.ChartFact("pregnancy", "unknown")])
+    assert not cop2.contraindicated and any("pregnancy" in d["fact"] for d in cop2.discards)
+
+
+def test_pregnancy_engine_behaviour():
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # Pregnant adult, no allergy → the standard regimen stands (vanc/ceftriaxone aren't
+    # pregnancy-contraindicated); moxifloxacin/tmp_smx are flagged contraindicated.
+    ok = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("pregnancy", "present")])
+    assert ok["regimen"] and {"moxifloxacin", "tmp_smx"} <= set(ok["contraindicated"])
+    # Pregnant + penicillin allergy → β-lactams AND the fluoroquinolone/TMP-SMX alternatives
+    # all excluded → honest abstention with the conflict named.
+    none = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("pregnancy", "present"),
+                           cc.ChartFact("allergy", "penicillin")])
+    assert none["regimen"] is None and none["outcome"] == "infeasible" and none["conflict"] is not None
+
+
 def test_unmapped_fact_is_discarded_not_ignored():
     # No silent drops: a fact with no rule lands in discards WITH a reason.
     cop = cc.compile_cop([cc.ChartFact("age_band", "adult"),
@@ -118,6 +145,8 @@ def main() -> int:
     test_culture_resistance_becomes_defeated_edge()
     test_dose_risk_facts_become_dose_constraints()
     test_dose_infeasibility_folds_into_the_cover()
+    test_pregnancy_contraindicates_drugs()
+    test_pregnancy_engine_behaviour()
     test_unmapped_fact_is_discarded_not_ignored()
     test_engine_reproduces_existing_regimens()
     return 0
