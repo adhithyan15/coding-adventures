@@ -21,6 +21,8 @@ All notable changes to this package will be documented in this file.
   capture/backlog/review routing.
 - `ZclReportSignoffSummary` plus `zcl_report_signoff_summary()` for turning
   operator readiness into final report capture signoff checks.
+- `ZclReportClosureSummary` plus `zcl_report_closure_summary()` for turning
+  signoff readiness into final report closure checks.
 - `encode_attribute_reports()` and `report_attributes_frame()` for generating
   typed ZCL Report Attributes payloads and foundation frames.
 
