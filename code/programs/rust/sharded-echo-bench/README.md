@@ -27,7 +27,12 @@ count), so it is *not* what CI runs — CI runs only a fast `#[test]` smoke:
 cargo run -p sharded-echo-bench --release
 # tunables:
 BENCH_CLIENTS=128 BENCH_PAYLOAD=64 BENCH_SECONDS=3 cargo run -p sharded-echo-bench --release
+# make each request CPU-bound so req/s scales with shards (see the throughput proof below):
+BENCH_WORK=20000 cargo run -p sharded-echo-bench --release
 ```
+
+`BENCH_WORK` (default `0`) is rounds of synthetic CPU work per request: `0` is a
+pure echo (latency-bound), non-zero makes the load CPU-bound.
 
 ## The `shard balance` column is the headline
 
@@ -77,6 +82,35 @@ to saturate a core (real parsing, TLS, compute…). Even distribution is necessa
 for multi-core scaling; it is not sufficient on its own for a near-zero workload.
 Linux uses the kernel `SO_REUSEPORT` balancing and reaches the same even
 distribution by a different route.
+
+### The throughput proof: `BENCH_WORK` makes requests CPU-bound
+
+The claim above — "even distribution adds throughput *once the work saturates a
+core*" — is testable, so the benchmark tests it. `BENCH_WORK=N` makes the echo
+handler do `N` rounds of a cheap hash over the payload **before** replying, turning
+each request from a near-free loopback round-trip into real CPU work. Now the
+shards have something to parallelize, and `req/s` scales with the worker count:
+
+```
+$ BENCH_CLIENTS=32 BENCH_WORK=20000 cargo run -p sharded-echo-bench --release   # macOS, 14 cores
+
+ workers |   conns/s |     req/s |   MiB/s |  p50 µs |  p99 µs | shard balance
+---------+-----------+-----------+---------+---------+---------+---------------
+       1 |     36495 |       800 |     0.0 | 39543.7 | 47535.4 | [100%]
+       2 |     32686 |      1588 |     0.1 | 20229.1 | 21574.2 | [50% 50%]
+       4 |     31739 |      2962 |     0.2 | 10724.2 | 14313.7 | [25% 25% 25% 25%]
+       8 |     34985 |      5830 |     0.4 |  5423.8 |  6736.9 | [13% 13% 13% 13% 13% 13% 13% 13%]
+
+8-shard throughput is 7.29x the single-shard baseline.
+```
+
+That is the multi-core payoff, end to end: **800 → 1588 → 2962 → 5830 req/s** is
+near-linear scaling across `1 → 2 → 4 → 8` shards (≈7.3× at 8×), and `p50` latency
+falls in lockstep (39.5 ms → 5.4 ms) because eight reactors are draining the same
+offered load in parallel. Run the same sweep with `BENCH_WORK=0` (the default) and
+`req/s` stays flat — the two runs side by side are the whole thesis: a multi-core
+runtime turns parallel-izable work into throughput, and trivial work has none to
+turn.
 
 ## Reading the rest honestly
 

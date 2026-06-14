@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-06-14
+
+### Added
+
+- **CPU-bound workload mode** (`BenchParams::work_per_request`, env var
+  `BENCH_WORK`, default `0`). The echo handler optionally does `N` rounds of a
+  cheap hash over the payload before replying, turning each request from a
+  latency-bound loopback round-trip into real CPU work. This is the regime where
+  adding reactor shards actually adds throughput.
+- **The throughput-scaling proof.** With `BENCH_WORK=20000` on a 14-core macOS box,
+  `req/s` scales near-linearly with shards — `800 → 1588 → 2962 → 5830` across
+  `1 → 2 → 4 → 8` shards (≈7.3× at 8×), with `p50` latency falling in lockstep
+  (39.5 ms → 5.4 ms). The default `BENCH_WORK=0` run stays flat; the two side by
+  side close the loop the 0.1.0 finding left open ("even distribution is necessary
+  but not sufficient — you need CPU-bound work to see req/s scale").
+- Test `cpu_bound_mode_still_echoes_correctly` — proves the CPU-work path doesn't
+  corrupt the response (bytes still round-trip) and the run still reports.
+
+### Changed
+
+- `run_sweep` gains a `work_per_request` parameter; the CLI prints the
+  `work/req` setting and a one-line regime description (latency-bound vs CPU-bound).
+
 ## [0.1.0] - 2026-06-14
 
 ### Added
