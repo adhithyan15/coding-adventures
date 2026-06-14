@@ -743,6 +743,60 @@ mod tests {
             "a dynamic arg forces the dynamic `+` path");
     }
 
+    // ---- TW2: top-level value `define` → typed main local ----
+
+    fn has_global_call(i: &[IIRInstr], which: &str) -> bool {
+        i.iter().any(|x| x.op == "call_builtin"
+            && x.srcs.first() == Some(&Operand::Var(which.into())))
+    }
+
+    #[test]
+    fn toplevel_value_define_lowers_to_typed_local() {
+        // `(define x 40) (define y 2) (+ x y)` — neither x nor y is captured by a
+        // lambda, so both stay in typed `main` registers: no `global_set` /
+        // `global_get`, and `(+ x y)` is a typed `add`.
+        let i = main_instrs("(define x 40) (define y 2) (+ x y)");
+        assert!(!has_global_call(&i, "global_set"), "no global_set for main-only defines");
+        assert!(!has_global_call(&i, "global_get"), "no global_get for main-only reads");
+        let add = i.iter().find(|x| x.op == "add").expect("(+ x y) is a typed add");
+        assert_eq!(add.type_hint, "i64");
+    }
+
+    #[test]
+    fn toplevel_value_define_chains() {
+        // A later define may read an earlier one at the top level; both remain
+        // typed locals (`b`'s RHS reads `a`'s register).
+        let i = main_instrs("(define a 40) (define b (+ a 2)) b");
+        assert!(!has_global_call(&i, "global_set"));
+        assert!(!has_global_call(&i, "global_get"));
+    }
+
+    #[test]
+    fn value_define_captured_by_lambda_stays_global() {
+        // `k` is referenced inside `addk`'s body, so it escapes into a separate
+        // function and must stay on the host global table.
+        let i = main_instrs("(define k 5) (define (addk n) (+ n k)) (addk 37)");
+        assert!(has_global_call(&i, "global_set"),
+            "a lambda-captured value-global keeps its global_set");
+    }
+
+    #[test]
+    fn value_define_bool_lowers_to_typed_local() {
+        // Boolean-typed value defines are eligible too.
+        let i = main_instrs("(define b #t) (if b 42 0)");
+        assert!(!has_global_call(&i, "global_set"));
+        assert!(!has_global_call(&i, "global_get"));
+    }
+
+    #[test]
+    fn forward_referenced_value_define_stays_global() {
+        // `z` reads `w` before `w`'s define — the forward reference forces `w`
+        // onto the global table so behaviour matches the pre-TW2 dynamic path.
+        let i = main_instrs("(define z (+ w 1)) (define w 41) z");
+        assert!(has_global_call(&i, "global_get"), "forward read emits global_get");
+        assert!(has_global_call(&i, "global_set"), "forward-referenced define keeps global_set");
+    }
+
     #[test]
     fn builtins_recognised() {
         // Path-A increment 2 narrowed the set that lowers to
@@ -829,17 +883,23 @@ mod tests {
     // ---- Top-level value defines ---------------------------------------
 
     #[test]
-    fn top_level_value_define_uses_global_set() {
-        let i = main_instrs("(define x 42)");
+    fn captured_value_define_uses_global_set() {
+        // TW2: a value-global captured by a lambda (here `f`) stays on the host
+        // global table, so its `define` still emits `global_set`.  (A value
+        // read only from `main` now lowers to a typed local — see
+        // `toplevel_value_define_lowers_to_typed_local`.)
+        let i = main_instrs("(define x 42) (define (f) x) (f)");
         let gs = i.iter().find(|x| matches!(&x.srcs.first(), Some(Operand::Var(s)) if s == "global_set"));
-        assert!(gs.is_some(), "expected a global_set call_builtin");
+        assert!(gs.is_some(), "expected a global_set call_builtin for a captured global");
     }
 
     #[test]
-    fn value_global_reference_uses_global_get() {
-        let i = main_instrs("(define x 42) x");
+    fn captured_value_global_reference_uses_global_get() {
+        // A `main`-level read of a *captured* (escaping) value-global still goes
+        // through `global_get` — it is not eligible for the typed-local form.
+        let i = main_instrs("(define x 42) (define (f) x) x");
         let gg = i.iter().find(|x| matches!(&x.srcs.first(), Some(Operand::Var(s)) if s == "global_get"));
-        assert!(gg.is_some(), "expected a global_get call_builtin");
+        assert!(gg.is_some(), "expected a global_get call_builtin for a captured global");
     }
 
     // ---- if + let + begin ---------------------------------------------

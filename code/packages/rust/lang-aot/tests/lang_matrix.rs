@@ -142,6 +142,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
+    // y 2) (+ x y)` = 42).  A value define previously lowered to
+    // `call_builtin "global_set"` (and reads to `global_get`), `type_hint =
+    // "any"` — rejected by every code-gen backend validator, so top-level
+    // constants ran only on the VM.  TW2: a value define that is **not captured
+    // by a lambda** (read only from `main`) now keeps its statically-typed value
+    // in a `main` register, and reads return that register — so `x`/`y` are
+    // plain `i64` consts and `(+ x y)` is a typed `add`.  No `call_builtin`
+    // survives, so it runs across native / LLVM / WASM / JVM / CLR / VM / JIT.
+    // (A value captured by a closure stays on the host global table, unchanged.)
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define x 40) (define y 2) (+ x y)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
     // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument

@@ -1,5 +1,30 @@
 # Changelog — twig-ir-compiler
 
+## [0.24.0] — 2026-06-14 (Path A increment 4 — top-level value `define`, LANG-FULL TW2)
+
+### Added — a `main`-only value `define` lowers to a typed local
+
+A top-level value `define` previously lowered to `call_builtin "global_set" name
+value`, and every read to `call_builtin "global_get" name` — both carrying
+`type_hint = "any"`, which every IIR-to-{llvm,wasm,jvm,clr} backend validator
+rejects.  So a program as simple as `(define x 40) (define y 2) (+ x y)` ran only
+on the VM.
+
+This increment adds a small **escape analysis** (`free_vars::lambda_captured_globals`):
+a value `define` that is **not captured by any lambda** is read only from `main`,
+so the compiler keeps its statically-typed (`i64` / `bool`) value in a `main`
+register and resolves reads to that register directly.  No `global_set` /
+`global_get` is emitted, so `main` stays fully typed and clears every backend
+validator.  Verified by RUNNING: `lang-aot`'s `lang_matrix.rs` executes
+`(define x 40) (define y 2) (+ x y)` ⇒ exit 42 across native / LLVM / WASM / JVM
+/ CLR / VM / JIT.
+
+A value captured by a closure (read inside a lambda body) still compiles to a
+separate function with no access to `main`'s registers, so it stays on the host
+global table (`global_set` / `global_get`) exactly as before.  A top-level
+forward reference (a read before the matching `define`) likewise stays on the
+global table, keeping behaviour byte-identical to the pre-TW2 dynamic path.
+
 ## [0.23.0] — 2026-06-14 (Path A increment 3 — typed variadic arithmetic, LANG-FULL TW1)
 
 ### Added — n-ary `(+ a b c …)` folds to a typed binary chain
