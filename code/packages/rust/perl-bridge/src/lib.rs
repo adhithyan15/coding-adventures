@@ -232,6 +232,24 @@ extern "C" {
     fn raw_croak_message(msg: *const c_char) -> !;
     #[link_name = "perl_bridge_warn_message"]
     fn raw_warn_message(msg: *const c_char);
+    // -- Conduit (WEB11) additions ----------------------------------------
+    #[link_name = "perl_bridge_call_coderef"]
+    fn raw_call_coderef(
+        coderef: *mut SV,
+        argv: *const *mut SV,
+        argc: c_int,
+        err_out: *mut *mut c_char,
+    ) -> *mut SV;
+    #[link_name = "perl_bridge_newHV"]
+    fn raw_newHV() -> *mut HV;
+    #[link_name = "perl_bridge_hv_store"]
+    fn raw_hv_store(hv: *mut HV, key: *const c_char, klen: c_int, val: *mut SV);
+    #[link_name = "perl_bridge_newRV_inc"]
+    fn raw_newRV_inc(sv: *mut SV) -> *mut SV;
+    #[link_name = "perl_bridge_get_context"]
+    fn raw_get_context() -> *mut c_void;
+    #[link_name = "perl_bridge_set_context"]
+    fn raw_set_context(ctx: *mut c_void);
     #[link_name = "perl_bridge_xsub_frame"]
     fn raw_xsub_frame(frame: *mut XsubFrame);
     #[link_name = "perl_bridge_xsub_return"]
@@ -462,6 +480,102 @@ pub unsafe fn die(msg: &str) -> ! {
 pub unsafe fn warn(msg: &str) {
     let c_msg = CString::new(msg).unwrap_or_else(|_| CString::new("(error in warn)").unwrap());
     raw_warn_message(c_msg.as_ptr());
+}
+
+// ---------------------------------------------------------------------------
+// Conduit (WEB11) helpers — coderef calls, hashes, thread context
+// ---------------------------------------------------------------------------
+//
+// These power the Perl Conduit port: calling Perl handler subs from Rust I/O
+// threads, building the env hash, and binding the interpreter context on a
+// non-Perl thread. See `code/specs/WEB11-conduit-perl.md`.
+
+/// Result of calling a Perl coderef.
+pub enum CallResult {
+    /// The sub returned a value (an SV the caller now owns — `SvREFCNT_dec`
+    /// it when done).
+    Ok(*mut SV),
+    /// The sub returned nothing (empty list).
+    Empty,
+    /// The sub died; carries the stringified `$@`.
+    Died(String),
+}
+
+/// Call a Perl coderef with the given SV arguments under `G_SCALAR | G_EVAL`.
+///
+/// Returns [`CallResult`]. On death the `$@` string is captured and the Perl
+/// error state is cleared. The caller MUST hold the interpreter lock (Perl is
+/// single-threaded) and have bound the interpreter context for the current
+/// thread via [`set_context`] when running on a non-Perl thread.
+///
+/// # Safety
+/// `coderef` must be a valid Perl coderef SV; each `args` element a valid SV.
+pub unsafe fn call_coderef(coderef: *mut SV, args: &[*mut SV]) -> CallResult {
+    let mut err: *mut c_char = std::ptr::null_mut();
+    let result = raw_call_coderef(
+        coderef,
+        args.as_ptr(),
+        args.len() as c_int,
+        &mut err,
+    );
+    if !err.is_null() {
+        let msg = std::ffi::CStr::from_ptr(err).to_string_lossy().into_owned();
+        // The shim allocated this with malloc; free it with the matching free.
+        extern "C" {
+            fn free(ptr: *mut c_void);
+        }
+        free(err as *mut c_void);
+        return CallResult::Died(msg);
+    }
+    if result.is_null() {
+        CallResult::Empty
+    } else {
+        CallResult::Ok(result)
+    }
+}
+
+/// Create a new empty Perl hash (HV).
+///
+/// # Safety
+/// Must be called with a valid interpreter context.
+pub unsafe fn new_hv() -> *mut HV {
+    raw_newHV()
+}
+
+/// Store `val` under `key` in `hv`. The hash takes ownership of `val`'s
+/// reference count (do not `SvREFCNT_dec` it afterwards).
+///
+/// # Safety
+/// `hv` must be a valid HV; `val` a valid SV.
+pub unsafe fn hv_store(hv: *mut HV, key: &str, val: *mut SV) {
+    // hv_store copies the key bytes; no NUL-termination required, we pass len.
+    raw_hv_store(hv, key.as_ptr() as *const c_char, key.len() as c_int, val);
+}
+
+/// Make a reference to `sv` (incrementing its refcount) — e.g. a hashref from
+/// an HV cast to `*mut SV`.
+///
+/// # Safety
+/// `sv` must be a valid SV/HV/AV pointer.
+pub unsafe fn new_rv_inc(sv: *mut SV) -> *mut SV {
+    raw_newRV_inc(sv)
+}
+
+/// Capture the current Perl interpreter context (on the main Perl thread).
+///
+/// Returns null on a non-`MULTIPLICITY` build (single global interpreter),
+/// where [`set_context`] is a no-op.
+pub unsafe fn get_context() -> *mut c_void {
+    raw_get_context()
+}
+
+/// Bind `ctx` as the interpreter for the current OS thread before any Perl API
+/// use from a non-Perl (web-core I/O) thread. No-op on non-`MULTIPLICITY`.
+///
+/// # Safety
+/// `ctx` must be a context previously returned by [`get_context`].
+pub unsafe fn set_context(ctx: *mut c_void) {
+    raw_set_context(ctx);
 }
 
 // ---------------------------------------------------------------------------
