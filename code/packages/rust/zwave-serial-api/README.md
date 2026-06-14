@@ -26,6 +26,8 @@ control-plane layer:
   next-timeout diagnostics
 - request tracker summary helpers for idle, callback/response wait mix, and
   dominant pending-function checks
+- request tracker readiness summaries for idle request-loop, pending wait, and
+  timeout-queue drain checks
 
 It does not yet open a serial port, interview nodes, handle inclusion, or decode
 command-class payload semantics.

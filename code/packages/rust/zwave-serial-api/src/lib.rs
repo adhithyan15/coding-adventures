@@ -689,6 +689,92 @@ impl RequestTrackerSummary {
         }
         best
     }
+
+    pub fn readiness(self) -> RequestTrackerReadinessSummary {
+        RequestTrackerReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RequestTrackerReadinessSummary {
+    pub request_summary: RequestTrackerSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub tracker_idle: bool,
+    pub callback_waits_clear: bool,
+    pub response_waits_clear: bool,
+    pub mixed_waits_absent: bool,
+    pub timeout_queue_clear: bool,
+    pub request_loop_ready: bool,
+}
+
+impl RequestTrackerReadinessSummary {
+    pub fn from_tracker(tracker: &RequestTracker) -> Self {
+        Self::from_summary(tracker.summary())
+    }
+
+    pub fn from_summary(request_summary: RequestTrackerSummary) -> Self {
+        let tracker_idle = request_summary.is_idle();
+        let callback_waits_clear = !request_summary.has_pending_callbacks();
+        let response_waits_clear = !request_summary.has_pending_responses();
+        let mixed_waits_absent = !request_summary.has_mixed_pending_waits();
+        let timeout_queue_clear = request_summary.next_timeout_at_ms.is_none();
+        let checks = [
+            tracker_idle,
+            callback_waits_clear,
+            response_waits_clear,
+            mixed_waits_absent,
+            timeout_queue_clear,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let request_loop_ready = missing_check_count == 0;
+
+        Self {
+            request_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            tracker_idle,
+            callback_waits_clear,
+            response_waits_clear,
+            mixed_waits_absent,
+            timeout_queue_clear,
+            request_loop_ready,
+        }
+    }
+
+    pub fn is_request_loop_ready(&self) -> bool {
+        self.request_loop_ready
+    }
+
+    pub fn has_missing_checks(&self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_callback_drain(&self) -> bool {
+        !self.callback_waits_clear
+    }
+
+    pub fn needs_response_drain(&self) -> bool {
+        !self.response_waits_clear
+    }
+
+    pub fn has_mixed_wait_gaps(&self) -> bool {
+        !self.mixed_waits_absent
+    }
+
+    pub fn waiting_on_timeout_queue(&self) -> bool {
+        !self.timeout_queue_clear
+    }
+}
+
+pub fn summarize_request_tracker_readiness(
+    tracker: &RequestTracker,
+) -> RequestTrackerReadinessSummary {
+    RequestTrackerReadinessSummary::from_tracker(tracker)
 }
 
 #[derive(Debug, Clone, Default)]
@@ -1432,5 +1518,63 @@ mod tests {
             summary.most_pending_function(),
             Some((FunctionId::SEND_DATA, 2))
         );
+    }
+
+    #[test]
+    fn request_tracker_readiness_marks_idle_tracker_ready() {
+        let tracker = RequestTracker::new();
+
+        let readiness = summarize_request_tracker_readiness(&tracker);
+
+        assert_eq!(readiness.request_summary, tracker.summary());
+        assert_eq!(readiness.required_check_count, 5);
+        assert_eq!(readiness.passed_check_count, 5);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.tracker_idle);
+        assert!(readiness.callback_waits_clear);
+        assert!(readiness.response_waits_clear);
+        assert!(readiness.mixed_waits_absent);
+        assert!(readiness.timeout_queue_clear);
+        assert!(readiness.request_loop_ready);
+        assert!(readiness.is_request_loop_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_callback_drain());
+        assert!(!readiness.needs_response_drain());
+        assert!(!readiness.has_mixed_wait_gaps());
+        assert!(!readiness.waiting_on_timeout_queue());
+    }
+
+    #[test]
+    fn request_tracker_readiness_routes_pending_waits() {
+        let version = SerialMessage::request(FunctionId::GET_VERSION, Vec::new());
+        let send_data = SendDataRequest::new(
+            NodeId::Classic(2),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x44,
+        )
+        .to_message()
+        .unwrap();
+        let mut tracker = RequestTracker::new();
+        tracker.track(&version, 100, 500).unwrap();
+        tracker.track(&send_data, 120, 200).unwrap();
+
+        let readiness = tracker.summary().readiness();
+
+        assert_eq!(readiness.required_check_count, 5);
+        assert_eq!(readiness.passed_check_count, 0);
+        assert_eq!(readiness.missing_check_count, 5);
+        assert!(!readiness.tracker_idle);
+        assert!(!readiness.callback_waits_clear);
+        assert!(!readiness.response_waits_clear);
+        assert!(!readiness.mixed_waits_absent);
+        assert!(!readiness.timeout_queue_clear);
+        assert!(!readiness.request_loop_ready);
+        assert!(!readiness.is_request_loop_ready());
+        assert!(readiness.has_missing_checks());
+        assert!(readiness.needs_callback_drain());
+        assert!(readiness.needs_response_drain());
+        assert!(readiness.has_mixed_wait_gaps());
+        assert!(readiness.waiting_on_timeout_queue());
     }
 }
