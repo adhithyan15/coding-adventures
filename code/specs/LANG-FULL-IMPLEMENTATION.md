@@ -180,7 +180,16 @@ backend immediately) come before the enabler-dependent items.
   procedures only — proper (void) procedures rejected (inert on this slice); bodies are
   lexically flat (no enclosing-scope access yet); `value` params only (by-name is AL7).
 - ☐ **AL4** — strings + `print`/`output` I/O (needs **E4**).
-- ☐ **AL5** — switches + conditional designational expressions in `goto`.
+- ✅ **AL5** — switches (computed goto) + conditional designational expressions.
+  `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
+  native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). `goto s[i]` lowers to a 1-based
+  `index == k ? jmp Lk` chain; `goto if b then L1 else L2` lowers via the portable
+  branch subset. **Surfaced & fixed a latent ALGOL cmp bug**: comparisons emitted a
+  `bool` type_hint, so LLVM compared `i64` operands at 1-bit `i1` and emitted invalid IR
+  (the cell *failed to run*) — fixed to emit the i64 operand width (the BA0 fix). This was
+  the first ALGOL comparison ever exercised on a code-gen backend. **Limits:** switch-list
+  elements must be plain labels (no conditional/nested elements); switches aren't
+  block-scope-shadowable.
 - ☐ **AL6** — `own` variables (static lifetime).
 - ☐ **AL7** — ⚠ call-by-name (Jensen-style expression thunks). **Hardest item in the
   campaign — design pass + user check before implementing.**

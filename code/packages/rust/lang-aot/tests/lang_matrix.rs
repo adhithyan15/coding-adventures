@@ -346,6 +346,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
+    // it.  `switch s := a1, a2, a3; … goto s[i]` selects the i-th label by a
+    // 1-based linear `index == k ? jmp Lk` chain (portable jmp/jmp_if_false/label
+    // subset).  With `i := 3` control reaches `a3` ⇒ exit 49.  The index test
+    // (`i == k`) is also the first ALGOL comparison exercised on a code-gen
+    // backend: `algol-iir-compiler` now emits `cmp_*` with the **operand** width
+    // (`i64`), not the `bool` result width — emitting `bool` made LLVM compare at
+    // 1-bit `i1` (`3 == 1` → `1 == 1` → true → wrong target), the same latent
+    // truncation the BASIC BA0 fix found. `s[3]` is chosen specifically because
+    // an i1 compare would mis-select the first arm, so the cell proves the fix.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; switch s := a1, a2, a3; integer i; i := 3; \
+               goto s[i]; a1: result := 1; goto done; a2: result := 2; goto done; \
+               a3: result := 49; done: end",
+        expect: Expect::Exit(49),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)
