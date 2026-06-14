@@ -181,6 +181,19 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(6),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — reassigning a *function parameter* inside a loop (LLVM first-class fix).
+    // `acc` is a parameter accumulated across the loop (`acc = acc + 6`, 7 times) → 42.
+    // The IIR-to-LLVM backend previously kept params in SSA and only allocated locals,
+    // so a reassigned param silently dropped its update; now a promoted param is copied
+    // into an i64 stack slot at entry. Executed on every backend to prove parity.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn run(acc: u8) -> u8 { for i: u8 in 0 .. 7 { acc = acc + 6; } return acc; } \
+               fn main() -> u8 { return run(0); }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,
