@@ -1,0 +1,16 @@
+{
+  "hash": "d42174be8075a408",
+  "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK470553/",
+  "title": "Gram-Positive Bacteria — StatPearls (Sizar, Leslie, Unakal)",
+  "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470553/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Streptococcus pneumoniae is a gram-positive, encapsulated, lancet-shaped diplococcus, and is among the organisms that cause meningitis.",
+      "byte_quote": "Streptococcus pneumoniae is a gram-positive, encapsulated, lancet-shaped diplococci, most commonly causing otitis media, pneumonia, sinusitis, and meningitis."
+    }
+  ],
+  "cites": [
+    "SCOPE project (Surveillance and Control of Pathogens of Epidemiologic Importance)"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "hash": "4a712229b5d33c46",
+  "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK470351/",
+  "title": "Bacterial Meningitis (StatPearls, NCBI Bookshelf NBK470351)",
+  "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470351/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Group B Streptococcus is the common cause in infants under 2 months of age.",
+      "byte_quote": "Group B _Streptococcus_ is common in infants less than 2 months of age while _Streptococcus pneumoniae_ is the most common in all other age groups, with the exception of 11 - 17 year old, where _Neisseria meningitidis is_ still the most common cause."
+    },
+    {
+      "id": "c2",
+      "text": "Streptococcus pneumoniae is the most common cause in all age groups except 11-17 year olds, where Neisseria meningitidis is most common.",
+      "byte_quote": "Group B _Streptococcus_ is common in infants less than 2 months of age while _Streptococcus pneumoniae_ is the most common in all other age groups, with the exception of 11 - 17 year old, where _Neisseria meningitidis is_ still the most common cause."
+    },
+    {
+      "id": "c3",
+      "text": "In 1670 US cases during 2003-2007, S. pneumoniae was predominant at 58.0%, followed by GBS 18.1%, N. meningitidis 13.9%, H. influenzae 6.7%, and L. monocytogenes 3.4%.",
+      "byte_quote": "As per Thigpen etal. out of the 1670 cases reported in the U.S. during 2003–2007, _S. pneumoniae_ was the predominant infective species (58.0%), followed by GBS (18.1%), _N. meningitidis_ (13.9%), _H. influenzae_ (6.7%), and _L. monocytogenes_ (3.4%)."
+    },
+    {
+      "id": "c4",
+      "text": "Listeria monocytogenes and gram-negative bacteria such as E. coli, Klebsiella, Enterobacter, and Pseudomonas aeruginosa are less common causes.",
+      "byte_quote": "_Listeria monocytogenes_ and gram-negative bacteria such as _Escherichia coli_, _Klebsiella_, _Enterobacter_, _Pseudomonas aeruginosa_ are other less common causes."
+    },
+    {
+      "id": "c5",
+      "text": "Nosocomial meningitis infections are caused by S. pneumoniae, Staphylococcus aureus, Staphylococcus albus, and gram-negative bacilli.",
+      "byte_quote": "Nosocomial infections are caused by _S. pneumonia_, _Staphylococcus aureus_, _Staphylococcus albus_, and gram-negative bacilli."
+    }
+  ],
+  "cites": [
+    "Thigpen MC, Whitney CG, Messonnier NE, Zell ER, Lynfield R, Hadler JL, Harrison LH, Farley MM, Reingold A, Bennett NM, Craig AS, Schaffner W, Thomas A, Lewis MM, Scallan E, Schuchat A., Emerging Infections Programs Network. Bacterial meningitis in the United States, 1998-2007. N Engl J Med. 2011 May 26;364(21):2016-25."
+  ]
+}
