@@ -7,6 +7,52 @@ import (
 	"strings"
 )
 
+// MaxTransitions is a safety cap on the number of declarative mode-transition
+// rules a grammar may declare (F10). Grammars are trusted build-time
+// artifacts, but this bounds the table so a malformed file cannot produce
+// an unreasonably large rule list (mirrors MAX_TRANSITIONS in the Rust,
+// Python, Ruby, and TypeScript ports).
+const MaxTransitions = 4096
+
+// TransitionAction is one action applied to the lexer's mode stack when a
+// ModeTransition fires (F10).
+//
+// Kind is the action; Target is the mode/group name for "set_mode" and
+// "push", and "" for "pop"/"enable_skip"/"disable_skip".
+//
+// Kind strings use UNDERSCORES ("set_mode", "enable_skip") to match the
+// Python, Ruby, and TypeScript ports; the surface DSL uses hyphens
+// ("set-mode", "enable-skip") and the parser converts.
+type TransitionAction struct {
+	// Kind is one of "set_mode", "push", "pop", "enable_skip", "disable_skip".
+	Kind string
+	// Target is the mode/group name for "set_mode" and "push"; empty otherwise.
+	Target string
+}
+
+// ModeTransition is one declarative mode-transition rule (F10), parsed from a
+// "transitions:" line of the form:
+//
+//	on TOKENS [in MODE] -> ACTION [, ACTION ...]
+//
+// where TOKENS is a bare name, a parenthesised set "(A | B | C)", or a
+// keyword-value guard "KEYWORD=\"value\"", and each ACTION is one of
+// set-mode/push/pop/enable-skip/disable-skip.
+type ModeTransition struct {
+	// OnTokens is the list of token type-names that trigger this rule.
+	// "KEYWORD" is the special name for promoted keyword tokens with a value
+	// guard stored in OnValue.
+	OnTokens []string
+	// OnValue is the optional keyword-value guard (e.g. "return").
+	OnValue string
+	// InMode is the optional active-mode guard; "" means "in any mode".
+	InMode string
+	// Actions is the ordered list of TransitionActions applied when the rule fires.
+	Actions []TransitionAction
+	// LineNumber is the 1-based line where the rule appeared.
+	LineNumber int
+}
+
 // TokenDefinition represents a single token rule from a .tokens file.
 type TokenDefinition struct {
 	Name       string
@@ -88,6 +134,17 @@ type TokenGrammar struct {
 	//
 	// A `soft_keywords:` section in a .tokens file populates this field.
 	SoftKeywords []string
+
+	// StartMode is the name of the initial lexer mode for this grammar (F10).
+	// When set, the lexer begins in this mode instead of "default". Corresponds
+	// to the `start_mode:` directive. "" means "start in default mode".
+	StartMode string
+
+	// Transitions is the ordered list of declarative mode-transition rules (F10).
+	// The lexer applies the first matching rule after emitting each token. An
+	// empty slice means no declarative transitions are declared (equivalent to
+	// the pre-F10 behaviour). Populated by the `transitions:` section.
+	Transitions []ModeTransition
 }
 
 // TokenNames returns the set of all defined token names (including aliases).
@@ -279,6 +336,126 @@ var reservedGroupNames = map[string]bool{
 // identifier. All subsequent indented lines belong to that group. Groups
 // enable context-sensitive lexing: the lexer maintains a stack of active
 // groups and only tries patterns from the group on top of the stack.
+// splitInGuard splits a transition rule head on a top-level " in " mode guard,
+// ignoring any " in " that appears inside a parenthesised token set (F10).
+//
+// For example:
+//
+//	"(A | B) in div"   → ("(A | B)", "div")
+//	"NAME"             → ("NAME",     "")
+//	"A | B in default" → ("A | B", "default")   // no parens, splits on first " in "
+func splitInGuard(head string) (tokens, inMode string) {
+	depth := 0
+	for i := 0; i < len(head); i++ {
+		switch head[i] {
+		case '(':
+			depth++
+		case ')':
+			depth--
+		case ' ':
+			if depth == 0 && strings.HasPrefix(head[i:], " in ") {
+				return head[:i], strings.TrimSpace(head[i+4:])
+			}
+		}
+	}
+	return head, ""
+}
+
+// parseTransition parses one indented line from the `transitions:` section
+// into a ModeTransition (F10).
+//
+// Expected form:  on TOKENS [in MODE] -> ACTION [, ACTION ...]
+//
+// TOKENS is either a bare token type-name, a parenthesised list "(A | B | C)",
+// or a keyword-value guard "KEYWORD=\"value\"".  Each ACTION is one of:
+//
+//	set-mode MODE  |  push GROUP  |  pop  |  enable-skip  |  disable-skip
+func parseTransition(line string, lineNumber int) (ModeTransition, error) {
+	arrowIdx := strings.Index(line, "->")
+	if arrowIdx == -1 {
+		return ModeTransition{}, fmt.Errorf("Line %d: Transition rule missing '->': %q", lineNumber, line)
+	}
+	head := strings.TrimSpace(line[:arrowIdx])
+	actionStr := strings.TrimSpace(line[arrowIdx+2:])
+	if actionStr == "" {
+		return ModeTransition{}, fmt.Errorf("Line %d: Transition rule has no actions after '->': %q", lineNumber, line)
+	}
+
+	if !strings.HasPrefix(head, "on ") {
+		return ModeTransition{}, fmt.Errorf("Line %d: Transition rule must start with 'on ': %q", lineNumber, line)
+	}
+	head = strings.TrimSpace(head[3:])
+
+	tokensRaw, inMode := splitInGuard(head)
+	tokensRaw = strings.TrimSpace(tokensRaw)
+
+	// Unwrap optional parens around the token set.
+	inner := tokensRaw
+	if strings.HasPrefix(inner, "(") && strings.HasSuffix(inner, ")") {
+		inner = inner[1 : len(inner)-1]
+	}
+
+	var onTokens []string
+	var onValue string
+	for _, raw := range strings.Split(inner, "|") {
+		item := strings.TrimSpace(raw)
+		if item == "" {
+			continue
+		}
+		if eqIdx := strings.Index(item, "="); eqIdx != -1 {
+			// KEYWORD="value" guard.
+			namePart := strings.TrimSpace(item[:eqIdx])
+			valuePart := strings.TrimSpace(item[eqIdx+1:])
+			if strings.HasPrefix(valuePart, `"`) && strings.HasSuffix(valuePart, `"`) {
+				valuePart = valuePart[1 : len(valuePart)-1]
+			}
+			onTokens = append(onTokens, namePart)
+			onValue = valuePart
+		} else {
+			onTokens = append(onTokens, item)
+		}
+	}
+	if len(onTokens) == 0 {
+		return ModeTransition{}, fmt.Errorf("Line %d: Transition rule has no trigger tokens: %q", lineNumber, line)
+	}
+
+	var actions []TransitionAction
+	for _, raw := range strings.Split(actionStr, ",") {
+		act := strings.TrimSpace(raw)
+		if act == "" {
+			continue
+		}
+		switch {
+		case strings.HasPrefix(act, "set-mode "):
+			actions = append(actions, TransitionAction{Kind: "set_mode", Target: strings.TrimSpace(act[9:])})
+		case strings.HasPrefix(act, "push "):
+			actions = append(actions, TransitionAction{Kind: "push", Target: strings.TrimSpace(act[5:])})
+		case act == "pop":
+			actions = append(actions, TransitionAction{Kind: "pop"})
+		case act == "enable-skip":
+			actions = append(actions, TransitionAction{Kind: "enable_skip"})
+		case act == "disable-skip":
+			actions = append(actions, TransitionAction{Kind: "disable_skip"})
+		default:
+			return ModeTransition{}, fmt.Errorf(
+				"Line %d: Unknown transition action %q (expected set-mode/push/pop/enable-skip/disable-skip)",
+				lineNumber, act,
+			)
+		}
+	}
+	if len(actions) == 0 {
+		return ModeTransition{}, fmt.Errorf("Line %d: Transition rule has no valid actions: %q", lineNumber, line)
+	}
+
+	return ModeTransition{
+		OnTokens:   onTokens,
+		OnValue:    onValue,
+		InMode:     inMode,
+		Actions:    actions,
+		LineNumber: lineNumber,
+	}, nil
+}
+
 func ParseTokenGrammar(source string) (*TokenGrammar, error) {
 	return StartNew[*TokenGrammar]("grammar-tools.ParseTokenGrammar", nil,
 		func(op *Operation[*TokenGrammar], rf *ResultFactory[*TokenGrammar]) *OperationResult[*TokenGrammar] {
@@ -426,6 +603,26 @@ func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 			continue
 		}
 
+		// start_mode: directive (F10) — sets the initial lexer mode.
+		// Form: `start_mode: MODE` (a single mode name following the colon).
+		if strings.HasPrefix(stripped, "start_mode:") || strings.HasPrefix(stripped, "start_mode :") {
+			colonIdx := strings.Index(stripped, ":")
+			smValue := strings.TrimSpace(stripped[colonIdx+1:])
+			if smValue == "" {
+				return nil, fmt.Errorf("Line %d: Missing mode name after 'start_mode:'", lineNumber)
+			}
+			grammar.StartMode = smValue
+			currentSection = ""
+			continue
+		}
+
+		// transitions: section (F10) — each indented line is a full rule of
+		// the form `on TOKENS [in MODE] -> ACTION [, ACTION ...]`.
+		if stripped == "transitions:" || stripped == "transitions :" {
+			currentSection = "transitions"
+			continue
+		}
+
 		// Inside a section
 		if currentSection != "" {
 			if len(line) > 0 && (line[0] == ' ' || line[0] == '\t') {
@@ -510,6 +707,15 @@ func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 					}
 					group := grammar.Groups[groupName]
 					group.Definitions = append(group.Definitions, defn)
+
+				case currentSection == "transitions":
+					// Each indented line in a transitions: section is a full rule;
+					// delegate entirely to parseTransition (no NAME = pattern form).
+					rule, err := parseTransition(stripped, lineNumber)
+					if err != nil {
+						return nil, err
+					}
+					grammar.Transitions = append(grammar.Transitions, rule)
 				}
 				continue
 			}
@@ -662,6 +868,45 @@ func validateTokenGrammarImpl(grammar *TokenGrammar) []string {
 			"Unknown escape mode '%s' (only 'none' is supported)",
 			grammar.EscapeMode,
 		))
+	}
+
+	// F10: validate declarative lexer modes. A mode is valid if it is
+	// "default" or a declared group name. Undefined targets are rejected so
+	// the lexer never silently falls back to the wrong group.
+	modeExists := func(name string) bool {
+		if name == "default" {
+			return true
+		}
+		_, ok := grammar.Groups[name]
+		return ok
+	}
+	if grammar.StartMode != "" && !modeExists(grammar.StartMode) {
+		issues = append(issues, fmt.Sprintf(
+			"start_mode '%s' is not 'default' or a declared group",
+			grammar.StartMode,
+		))
+	}
+	if len(grammar.Transitions) > MaxTransitions {
+		issues = append(issues, fmt.Sprintf(
+			"Too many transition rules (%d, max %d)",
+			len(grammar.Transitions), MaxTransitions,
+		))
+	}
+	for _, rule := range grammar.Transitions {
+		if rule.InMode != "" && !modeExists(rule.InMode) {
+			issues = append(issues, fmt.Sprintf(
+				"Transition guard 'in %s' (line %d) names an undeclared mode",
+				rule.InMode, rule.LineNumber,
+			))
+		}
+		for _, action := range rule.Actions {
+			if (action.Kind == "set_mode" || action.Kind == "push") && action.Target != "" && !modeExists(action.Target) {
+				issues = append(issues, fmt.Sprintf(
+					"Transition action targets undeclared mode '%s' (line %d)",
+					action.Target, rule.LineNumber,
+				))
+			}
+		}
 	}
 
 	// Validate pattern groups
