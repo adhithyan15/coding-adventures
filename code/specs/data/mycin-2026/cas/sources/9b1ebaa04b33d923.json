@@ -1,0 +1,69 @@
+{
+  "hash": "9b1ebaa04b33d923",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2995464/",
+  "title": "Three-year multicenter surveillance of community-acquired Listeria monocytogenes meningitis in adults",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2995464/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "In a multicenter series of community-acquired bacterial meningitis, the leading organisms were S. pneumoniae (48.5%), N. meningitidis (22.6%), and L. monocytogenes (16.5%).",
+      "byte_quote": "Streptococcus pneumoniae (135, 48.5%), Neisseria meningitidis (63, 22.6%), Listeria monocytogenes (46, 16.5%)"
+    },
+    {
+      "id": "c2",
+      "text": "L. monocytogenes is the third most frequent cause of community-acquired bacterial meningitis, after S. pneumoniae and N. meningitidis.",
+      "byte_quote": "_Lm_ is the third most frequent cause of community-acquired bacterial meningitis, after _Streptococcus pneumoniae_ and _Neisseria meningitidis_"
+    },
+    {
+      "id": "c3",
+      "text": "L. monocytogenes meningitis accounted for 16.5% (46/278) of acute community-acquired cases in adults in this series.",
+      "byte_quote": "The incidence of acute community-acquired _Lm_ meningitis in adults was 16.5% (46/278)"
+    },
+    {
+      "id": "c4",
+      "text": "Estimated incidence of L. monocytogenes meningitis is 0.2 cases per 100,000 adults per year in developed countries.",
+      "byte_quote": "The estimated incidence is 0.2 cases per 100.000 adults per year in developed countries"
+    },
+    {
+      "id": "c5",
+      "text": "L. monocytogenes meningitis occurs mainly in immunocompromised patients, newborns, and elderly individuals, though previously healthy adults can also be affected.",
+      "byte_quote": "This entity occurs mainly in immunocompromised patients, newborns, and elderly individuals, although previously healthy adults can be affected as well."
+    },
+    {
+      "id": "c6",
+      "text": "Older age was independently associated with Listeria meningitis (OR 1.026).",
+      "byte_quote": "Age (OR 1.026; 95% CI 1.00-1.05; p = 0.042)"
+    },
+    {
+      "id": "c7",
+      "text": "Immunosuppression was independently associated with L. monocytogenes meningitis (OR 2.520).",
+      "byte_quote": "Immunosupression (OR 2.520; 95% CI 1.05-6.00; p = 0.037)"
+    },
+    {
+      "id": "c8",
+      "text": "Sixty-eight percent of Listeria meningitis patients were immunocompromised.",
+      "byte_quote": "Twenty-nine (68%) patients were immunocompromised"
+    },
+    {
+      "id": "c9",
+      "text": "Among immunocompromised Listeria patients, 41% were receiving immunosuppressive therapy and 27.5% had haematological or solid malignancy.",
+      "byte_quote": "Twelve (41%) patients were receiving immunosuppressive therapy, 8 (27.5%) had haematological and solid malignancy"
+    },
+    {
+      "id": "c10",
+      "text": "An elevated CSF/blood glucose ratio was independently associated with L. monocytogenes meningitis (OR 39.42).",
+      "byte_quote": "CSF/blood glucose ratio (OR 39.42; 95% CI 4.01-387.50; p = 0.002)"
+    },
+    {
+      "id": "c11",
+      "text": "L. monocytogenes appears as Gram-positive rods on Gram stain.",
+      "byte_quote": "Gram-positive rods"
+    },
+    {
+      "id": "c12",
+      "text": "CSF Gram stain is negative in two-thirds of L. monocytogenes meningitis cases and may be misleading in many of the rest.",
+      "byte_quote": "the Gram stain is negative in two-thirds of the cases of _Lm_ meningitis, and may be misleading in many of the remaining cases"
+    }
+  ],
+  "cites": []
+}

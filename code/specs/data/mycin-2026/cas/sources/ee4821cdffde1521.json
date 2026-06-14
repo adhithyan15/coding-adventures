@@ -1,0 +1,54 @@
+{
+  "hash": "ee4821cdffde1521",
+  "source_id": "https://pubmed.ncbi.nlm.nih.gov/23446215/",
+  "title": "The spectrum of acute bacterial meningitis in elderly patients (Domingo et al., BMC Infect Dis. 2013;13:108)",
+  "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/23446215/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Meningococcal meningitis is less frequent in elderly patients (>=65 years) than in younger adults.",
+      "byte_quote": "Meningococcal meningitis was less frequent in elderly patients (P < 0.0001)"
+    },
+    {
+      "id": "c2",
+      "text": "Listerial meningitis (Listeria monocytogenes) is more frequent in elderly patients.",
+      "byte_quote": "whereas listerial (P = 0.0196), gram-negative bacillary (P = 0.0065), and meningitis of unknown origin (P = 0.0076) were more frequent"
+    },
+    {
+      "id": "c3",
+      "text": "Gram-negative bacillary meningitis is more frequent in elderly patients.",
+      "byte_quote": "gram-negative bacillary (P = 0.0065)"
+    },
+    {
+      "id": "c4",
+      "text": "Meningitis of unknown origin is more frequent in elderly patients.",
+      "byte_quote": "and meningitis of unknown origin (P = 0.0076) were more frequent"
+    },
+    {
+      "id": "c5",
+      "text": "Bacterial meningitis in the elderly tends to have a non-meningococcal etiology.",
+      "byte_quote": "is clinically subtler, has a longer interval admission-antibiotic therapy, and has non-meningococcal etiology"
+    },
+    {
+      "id": "c6",
+      "text": "Advanced age (>=65 years) raises the risk of acute bacterial meningitis: incidence 7.40/100,000/year in the elderly vs 4.03/100,000 in adults 15-64 (RR 1.84).",
+      "byte_quote": "The incidence was 4.03/100,000 (Group I) and 7.40 /100,000 inhabitants/year (Group II) (RR = 1.84; 95%CI: 1.56-2.17, P < 0.0001)"
+    },
+    {
+      "id": "c7",
+      "text": "Elderly patients had co-morbid conditions more frequently than younger adults.",
+      "byte_quote": "Elderly patients had co-morbid conditions more frequently (P < 0.0001)"
+    },
+    {
+      "id": "c8",
+      "text": "Elderly patients more frequently lacked fever, neck stiffness, and skin rash, and more often had altered level of consciousness.",
+      "byte_quote": "more frequently lacked fever (P = 0.0625), neck stiffness (P < 0.0001) and skin rash (P < 0.0001), but had an altered level of consciousness more often (P < 0.0001)"
+    },
+    {
+      "id": "c9",
+      "text": "The study defined two age groups: 15-64 years (Group I) and >=65 years (Group II).",
+      "byte_quote": "There were two groups: I (15-64 years) and II (≥ 65 years)"
+    }
+  ],
+  "cites": []
+}

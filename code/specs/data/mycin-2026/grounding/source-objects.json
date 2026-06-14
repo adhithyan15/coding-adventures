@@ -470,5 +470,710 @@
     "cites": [
       "Farber, J. M., and Peterkin P. I. 1991. Listeria monocytogenes, a food-borne pathogen. Microbiol. Rev. 55:476-511."
     ]
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6508726/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6508726/",
+    "title": "Disease burden of neonatal invasive Group B Streptococcus infection in the Netherlands (de Gier et al., PLoS One 2019;14(5):e0216749)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Group B Streptococcus (Streptococcus agalactiae) is the leading cause of neonatal sepsis and meningitis.",
+        "byte_quote": "Streptococcus agalactiae or group B Streptococcus (GBS) is the leading cause of neonatal sepsis and meningitis."
+      },
+      {
+        "id": "c2",
+        "text": "Early-onset GBS = invasive infection in the first 7 days of life; late-onset GBS = infection from one week up to three months of age (host age-band stratification).",
+        "byte_quote": "Invasive infections presenting within the first 7 days of life are categorized as 'early-onset GBS'. Infections presenting after one week, up to three months of age, are termed 'late-onset GBS'."
+      },
+      {
+        "id": "c3",
+        "text": "Early-onset disease results from vertical transmission from the colonised mother; late-onset may also be nosocomial or community-transmitted (host exposure/risk factor).",
+        "byte_quote": "Early onset disease results from vertical transmission from the colonised mother, in late onset disease the pathogen may also be transmitted by nosocomial or community sources."
+      },
+      {
+        "id": "c4",
+        "text": "GBS colonises the maternal intestinal and urogenital tract at a carriage rate of about 20% (host carriage risk factor for the neonate).",
+        "byte_quote": "GBS is part of the microbiome of the intestinal and urogenital tract, with a carriage rate of around 20%"
+      },
+      {
+        "id": "c5",
+        "text": "Estimated 97 cases and 6.5 deaths from culture-positive neonatal invasive GBS infection in the Netherlands in 2017 (population-specific incidence).",
+        "byte_quote": "An estimated 97 cases and 6.5 deaths occurred in the Netherlands in 2017 due to culture positive neonatal invasive GBS infection."
+      }
+    ],
+    "cites": [
+      "Kohli-Lynch et al.",
+      "Schroeder et al. 2009",
+      "Van Kassel et al.",
+      "Trijbels-Smeulders et al. 2007"
+    ]
+  },
+  {
+    "source_id": "https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis",
+    "resolved_url": "https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis",
+    "title": "Neonatal Bacterial Meningitis - Merck Manual Professional Edition",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "The predominant pathogens of neonatal bacterial meningitis are Group B streptococcus (GBS), Escherichia coli (especially K1-polysaccharide strains), and Listeria monocytogenes.",
+        "byte_quote": "The **predominant pathogens** are the following: [Group B streptococcus](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections) (GBS) [_Escherichia coli_](/professional/infectious-diseases/gram-negative-bacilli/escherichia-coli-infections) (particularly those strains containing the K1 polysaccharide) [_Listeria monocytogenes_](/professional/infectious-diseases/gram-positive-bacilli/listeriosis)"
+      },
+      {
+        "id": "c2",
+        "text": "Other reported pathogens include enterococci, nonenterococcal group D streptococci, alpha-hemolytic streptococci, Staphylococcus aureus, coagulase-negative staphylococci, gram-negative enteric organisms (Klebsiella, Enterobacter, Citrobacter diversus), Haemophilus influenzae, Neisseria meningitidis, and Streptococcus pneumoniae.",
+        "byte_quote": "**Other reported pathogens** include [enterococci](/professional/infectious-diseases/gram-positive-cocci/enterococcal-infections), nonenterococcal group D streptococci, [alpha-hemolytic streptococci](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections), [_Staphylococcus aureus_](/professional/infectious-diseases/gram-positive-cocci/staphylococcal-infections), [coagulase-negative staphylococci](/professional/infectious-diseases/gram-positive-cocci/staphylococcal-infections), gram-negative enteric organisms (eg, [_Klebsiella_](/professional/infectious-diseases/gram-negative-bacilli/klebsiella-enterobacter-and-serratia-infections) species, [_Enterobacter_](/professional/infectious-diseases/gram-negative-bacilli/klebsiella-enterobacter-and-serratia-infections) species, _Citrobacter diversus_), [_Haemophilus influenzae_](/professional/infectious-diseases/gram-negative-bacilli/haemophilus-infections), [_Neisseria meningitidis_](/professional/infectious-diseases/gram-negative-cocci-and-coccobacilli/meningococcal-diseases), and [_Streptococcus pneumoniae_](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections)."
+      },
+      {
+        "id": "c3",
+        "text": "Incidence is 3/10,000 in full-term neonates and 1/1,000 in low-birth-weight neonates, so low birth weight is a host risk factor.",
+        "byte_quote": "Neonatal bacterial meningitis occurs in 3/10,000 full-term and in 1/1,000 low-birth-weight (LBW) neonates"
+      },
+      {
+        "id": "c4",
+        "text": "Neonatal bacterial meningitis most often results from the bacteremia of neonatal sepsis, with higher blood-culture colony counts conferring higher meningitis risk.",
+        "byte_quote": "Neonatal bacterial meningitis most frequently results from the bacteremia that occurs with neonatal sepsis; the higher the colony count in the blood culture, the higher the risk of meningitis."
+      },
+      {
+        "id": "c5",
+        "text": "Scalp lesions are a route of infection, particularly developmental defects creating communication between the skin surface and the subarachnoid space.",
+        "byte_quote": "Neonatal bacterial meningitis may also result from scalp lesions, particularly when developmental defects lead to communication between the skin surface and the subarachnoid space"
+      },
+      {
+        "id": "c6",
+        "text": "Definitive diagnosis is made by CSF examination via lumbar puncture in any neonate suspected of sepsis or meningitis; no Gram-stain organism morphology is described on this page.",
+        "byte_quote": "Definitive diagnosis of neonatal bacterial meningitis is made by CSF examination. Lumbar puncture (LP), which should be performed in any neonate suspected of having sepsis or meningitis."
+      }
+    ],
+    "cites": [
+      "Okike IO, Johnson AP, Henderson KL, et al. Clin Infect Dis. 2014",
+      "Schrag SJ, Farley MM, Petit S, et al. Pediatrics. 2016",
+      "Srinivasan L, Shah SS, Padula MA, et al. J Pediatr. 2012",
+      "Zimmermann P, Curtis N. Neonatology. 2021",
+      "Curtis S, Stobart K, Vandermeer B, Simel DL, Klassen T. Pediatrics. 2010"
+    ]
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5121369/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5121369/",
+    "title": "The Brief Case: Neonatal Meningitis Caused by Listeria monocytogenes Diagnosed by Multiplex Molecular Panel",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "GBS and Escherichia coli together cause more than 70% of neonatal bacterial meningitis cases.",
+        "byte_quote": "The most common organisms that cause neonatal bacterial meningitis are GBS and _Escherichia coli_, which together account for >70% of the cases in this age group"
+      },
+      {
+        "id": "c2",
+        "text": "Listeria monocytogenes is a rare but significant cause of meningitis, affecting 0.5 to 3 per 100,000 live births.",
+        "byte_quote": "_L. monocytogenes_ is a relatively rare yet clinically significant cause of meningitis, affecting 0.5 to 3 per 100,000 live births"
+      },
+      {
+        "id": "c3",
+        "text": "Host/risk factors for severe Listeria disease are pregnancy, infants under 2 months, the elderly, and immunodeficiency with impaired T-cell function (e.g. HIV/AIDS).",
+        "byte_quote": "Those most at risk for severe disease are pregnant women, infants <2 months of age, the elderly, and those with immunodeficiencies, particularly with impairment of T-cell function such as in HIV/AIDS"
+      },
+      {
+        "id": "c4",
+        "text": "Pregnancy lowers T-cell function, letting Listeria proliferate in the placenta — the proposed reason pregnant women have increased invasive disease risk.",
+        "byte_quote": "Pregnant women have a decline in T-cell function that allows them to accommodate a fetus, which allows the bacteria to proliferate in the placenta and may be the reason for the increased risk of invasive disease in this population"
+      },
+      {
+        "id": "c5",
+        "text": "On CSF Gram stain, Listeria monocytogenes is a Gram-positive, non-spore-forming rod or coccobacillus.",
+        "byte_quote": "In the laboratory setting, _L. monocytogenes_ is a Gram positive, non-spore-forming rod or coccobacillus"
+      }
+    ],
+    "cites": [
+      "Harrison GL, Kim KS. 2013. Bacterial meningitis beyond the neonatal period, p 425-461. In Cherry J, Demmler-Harrison GJ, Kaplan SL, Steinbach WJ, Hotez P (ed), Feigin and Cherry's textbook of pediatric infectious diseases, 7th edition. Elsevier Saunders, Philadelphia, PA. (ref 1)",
+      "Harrison GL, Kim KS. 2013. Approach to infections in the fetus and newborn, p 877-901. In Cherry J, Demmler-Harrison GJ, Kaplan SL, Steinbach WJ, Hotez P (ed), Feigin and Cherry's textbook of pediatric infectious diseases, 7th edition. Elsevier Saunders, Philadelphia, PA. (ref 2)",
+      "Lorber B. 2010. Listeria monocytogenes, p 2707-2714. In Mandell GL, Bennett JE, Dolin R (ed), Mandell, Douglas, and Bennett's principles and practice of infectious diseases, 7th edition. Churchill Livingstone Elsevier, Philadelphia, PA. (ref 6)"
+    ]
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2995464/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2995464/",
+    "title": "Three-year multicenter surveillance of community-acquired Listeria monocytogenes meningitis in adults",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "In a multicenter series of community-acquired bacterial meningitis, the leading organisms were S. pneumoniae (48.5%), N. meningitidis (22.6%), and L. monocytogenes (16.5%).",
+        "byte_quote": "Streptococcus pneumoniae (135, 48.5%), Neisseria meningitidis (63, 22.6%), Listeria monocytogenes (46, 16.5%)"
+      },
+      {
+        "id": "c2",
+        "text": "L. monocytogenes is the third most frequent cause of community-acquired bacterial meningitis, after S. pneumoniae and N. meningitidis.",
+        "byte_quote": "_Lm_ is the third most frequent cause of community-acquired bacterial meningitis, after _Streptococcus pneumoniae_ and _Neisseria meningitidis_"
+      },
+      {
+        "id": "c3",
+        "text": "L. monocytogenes meningitis accounted for 16.5% (46/278) of acute community-acquired cases in adults in this series.",
+        "byte_quote": "The incidence of acute community-acquired _Lm_ meningitis in adults was 16.5% (46/278)"
+      },
+      {
+        "id": "c4",
+        "text": "Estimated incidence of L. monocytogenes meningitis is 0.2 cases per 100,000 adults per year in developed countries.",
+        "byte_quote": "The estimated incidence is 0.2 cases per 100.000 adults per year in developed countries"
+      },
+      {
+        "id": "c5",
+        "text": "L. monocytogenes meningitis occurs mainly in immunocompromised patients, newborns, and elderly individuals, though previously healthy adults can also be affected.",
+        "byte_quote": "This entity occurs mainly in immunocompromised patients, newborns, and elderly individuals, although previously healthy adults can be affected as well."
+      },
+      {
+        "id": "c6",
+        "text": "Older age was independently associated with Listeria meningitis (OR 1.026).",
+        "byte_quote": "Age (OR 1.026; 95% CI 1.00-1.05; p = 0.042)"
+      },
+      {
+        "id": "c7",
+        "text": "Immunosuppression was independently associated with L. monocytogenes meningitis (OR 2.520).",
+        "byte_quote": "Immunosupression (OR 2.520; 95% CI 1.05-6.00; p = 0.037)"
+      },
+      {
+        "id": "c8",
+        "text": "Sixty-eight percent of Listeria meningitis patients were immunocompromised.",
+        "byte_quote": "Twenty-nine (68%) patients were immunocompromised"
+      },
+      {
+        "id": "c9",
+        "text": "Among immunocompromised Listeria patients, 41% were receiving immunosuppressive therapy and 27.5% had haematological or solid malignancy.",
+        "byte_quote": "Twelve (41%) patients were receiving immunosuppressive therapy, 8 (27.5%) had haematological and solid malignancy"
+      },
+      {
+        "id": "c10",
+        "text": "An elevated CSF/blood glucose ratio was independently associated with L. monocytogenes meningitis (OR 39.42).",
+        "byte_quote": "CSF/blood glucose ratio (OR 39.42; 95% CI 4.01-387.50; p = 0.002)"
+      },
+      {
+        "id": "c11",
+        "text": "L. monocytogenes appears as Gram-positive rods on Gram stain.",
+        "byte_quote": "Gram-positive rods"
+      },
+      {
+        "id": "c12",
+        "text": "CSF Gram stain is negative in two-thirds of L. monocytogenes meningitis cases and may be misleading in many of the rest.",
+        "byte_quote": "the Gram stain is negative in two-thirds of the cases of _Lm_ meningitis, and may be misleading in many of the remaining cases"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pubmed.ncbi.nlm.nih.gov/23446215/",
+    "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/23446215/",
+    "title": "The spectrum of acute bacterial meningitis in elderly patients (Domingo et al., BMC Infect Dis. 2013;13:108)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Meningococcal meningitis is less frequent in elderly patients (>=65 years) than in younger adults.",
+        "byte_quote": "Meningococcal meningitis was less frequent in elderly patients (P < 0.0001)"
+      },
+      {
+        "id": "c2",
+        "text": "Listerial meningitis (Listeria monocytogenes) is more frequent in elderly patients.",
+        "byte_quote": "whereas listerial (P = 0.0196), gram-negative bacillary (P = 0.0065), and meningitis of unknown origin (P = 0.0076) were more frequent"
+      },
+      {
+        "id": "c3",
+        "text": "Gram-negative bacillary meningitis is more frequent in elderly patients.",
+        "byte_quote": "gram-negative bacillary (P = 0.0065)"
+      },
+      {
+        "id": "c4",
+        "text": "Meningitis of unknown origin is more frequent in elderly patients.",
+        "byte_quote": "and meningitis of unknown origin (P = 0.0076) were more frequent"
+      },
+      {
+        "id": "c5",
+        "text": "Bacterial meningitis in the elderly tends to have a non-meningococcal etiology.",
+        "byte_quote": "is clinically subtler, has a longer interval admission-antibiotic therapy, and has non-meningococcal etiology"
+      },
+      {
+        "id": "c6",
+        "text": "Advanced age (>=65 years) raises the risk of acute bacterial meningitis: incidence 7.40/100,000/year in the elderly vs 4.03/100,000 in adults 15-64 (RR 1.84).",
+        "byte_quote": "The incidence was 4.03/100,000 (Group I) and 7.40 /100,000 inhabitants/year (Group II) (RR = 1.84; 95%CI: 1.56-2.17, P < 0.0001)"
+      },
+      {
+        "id": "c7",
+        "text": "Elderly patients had co-morbid conditions more frequently than younger adults.",
+        "byte_quote": "Elderly patients had co-morbid conditions more frequently (P < 0.0001)"
+      },
+      {
+        "id": "c8",
+        "text": "Elderly patients more frequently lacked fever, neck stiffness, and skin rash, and more often had altered level of consciousness.",
+        "byte_quote": "more frequently lacked fever (P = 0.0625), neck stiffness (P < 0.0001) and skin rash (P < 0.0001), but had an altered level of consciousness more often (P < 0.0001)"
+      },
+      {
+        "id": "c9",
+        "text": "The study defined two age groups: 15-64 years (Group I) and >=65 years (Group II).",
+        "byte_quote": "There were two groups: I (15-64 years) and II (≥ 65 years)"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK549849/",
+    "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK549849/",
+    "title": "Meningococcal Disease (StatPearls, NCBI Bookshelf NBK549849)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "N. meningitidis is a common, significant cause of community-acquired bacterial meningitis in the US.",
+        "byte_quote": "N meningitidis_ is a common and significant cause of community-acquired bacterial meningitis in the US"
+      },
+      {
+        "id": "c2",
+        "text": "N. meningitidis is the second most common cause of community-acquired bacterial meningitis in adults, after Streptococcus pneumoniae.",
+        "byte_quote": "it is the second most common cause of community-acquired bacterial meningitis in adults after _Streptococcus pneumoniae_"
+      },
+      {
+        "id": "c3",
+        "text": "Meningococcal disease incidence fell from 1.2/100,000 in 1996 to 0.1/100,000 in 2018.",
+        "byte_quote": "The incidence has decreased from 1.2 cases per 100,000 individuals in 1996 to 0.1 cases per 100,000 individuals in 2018"
+      },
+      {
+        "id": "c4",
+        "text": "Highest meningococcal disease incidence is in infants younger than 1 year (2.45 cases per 100,000).",
+        "byte_quote": "The highest incidence of meningococcal disease appears in infants younger than 1 year of age, with 2.45 cases reported per 100,000 individuals"
+      },
+      {
+        "id": "c5",
+        "text": "Serotypes A, B, C, W, X, and Y are responsible for most meningococcal infections.",
+        "byte_quote": "serotypes A, B, C, W, X, and Y responsible for most meningococcal infections"
+      },
+      {
+        "id": "c6",
+        "text": "Serotypes B, C, and Y are the main disease-causing serotypes in Europe, the US, and Canada.",
+        "byte_quote": "Serotypes B, C, and Y are the main serotypes causing disease in Europe, the United States (US), and Canada"
+      },
+      {
+        "id": "c7",
+        "text": "Meningococcal disease primarily affects children and young adults.",
+        "byte_quote": "This condition primarily affects children and young adults"
+      },
+      {
+        "id": "c8",
+        "text": "Risk factors for meningococcal carriage include adolescence/young adulthood, male sex, living in a communal setting, and exposure to cigarette smoke.",
+        "byte_quote": "Risk factors for meningococcal carriage include adolescence and young adulthood, male sex, living in a communal setting, exposure to cigarette smoke"
+      },
+      {
+        "id": "c9",
+        "text": "Immunocompromising conditions raising meningococcal risk include HIV, AIDS, asplenia, and complement deficiencies.",
+        "byte_quote": "These conditions include human immunodeficiency virus infection, acquired immune deficiency syndrome, asplenia, and complement deficiencies"
+      },
+      {
+        "id": "c10",
+        "text": "Nasopharyngeal colonization raises transmission risk to close contacts such as family members, college roommates, and military recruits.",
+        "byte_quote": "Nasopharyngeal colonization increases the risk of transmission to individuals in close contact with infected patients, such as family members, college roommates, and military recruits"
+      },
+      {
+        "id": "c11",
+        "text": "N. meningitidis is an aerobic or facultative anaerobic gram-negative diplococcus.",
+        "byte_quote": "N meningitidis_ is an aerobic or facultative anaerobic, gram-negative diplococcus"
+      },
+      {
+        "id": "c12",
+        "text": "Gram staining is diagnostic in 85% of patients with meningococcal meningitis.",
+        "byte_quote": "Gram staining is diagnostic in 85% of patients with meningococcal meningitis"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5405091/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5405091/",
+    "title": "Bacterial Meningitis in Patients using Immunosuppressive Medication: a Population-based Prospective Nationwide Study",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Community-acquired bacterial meningitis is most commonly caused by Streptococcus pneumoniae (general-population background statement).",
+        "byte_quote": "Community-acquired bacterial meningitis is a severe infectious disease with high morbidity and mortality rates (Brouwer et al. 2010 ), and is most commonly caused by Streptococcus pneumoniae (van de Beek et al. 2004b )."
+      },
+      {
+        "id": "c2",
+        "text": "In the immunosuppressed cohort, CSF cultures revealed S. pneumoniae in 41% and L. monocytogenes in 40% of episodes.",
+        "byte_quote": "CSF cultures revealed S. pneumoniae in 41 % and L. monocytogenes in 40 % of episodes."
+      },
+      {
+        "id": "c3",
+        "text": "Detailed organism breakdown in immunosuppressed patients: S. pneumoniae 36 (41%), L. monocytogenes 35 (40%), H. influenzae 6 (7%), N. meningitidis 2 (2%).",
+        "byte_quote": "CSF cultures revealed S. pneumoniae in 36 episodes (41 %), L. monocytogenes in 35 episodes (40 %), Haemophilus influenzae in six episodes (7 %), and Neisseria meningitidis in two episodes (2 %)."
+      },
+      {
+        "id": "c4",
+        "text": "Other (rarer) causative organisms in the immunosuppressed cohort: E. coli (2), Nocardia farcinica, Streptococcus anginosus, Streptococcus mitis, Pseudomonas aeruginosa (1 each).",
+        "byte_quote": "Other causative organisms were Escherichia coli in two episodes and Nocardia farcinica , Streptococcus anginosus , Streptococcus mitis , and Pseudomonas aeruginosa in one episode each."
+      },
+      {
+        "id": "c5",
+        "text": "Immunosuppression shifts epidemiology: pneumococcal and meningococcal meningitis less common (43% vs 73%; 2% vs 11%) and listerial meningitis more common (40% vs 3%) than in non-immunosuppressed patients.",
+        "byte_quote": "Pneumococcal and meningococcal meningitis occurred less often in patients using immunosuppressive medication compared to those who did not (37 of 87 [43 %] vs. 981 of 1348 [73 %], P = <0.0001 and 2 of 87 [2 %] vs. 147 of 1348 [11 %], P  = 0.006), whilst listerial meningitis was encountered more frequently (35 of 87 [40 %] vs. 43 of 1348 [3 %], P  < 0.0001)."
+      },
+      {
+        "id": "c6",
+        "text": "Overall, 6% (87 of 1447) of bacterial meningitis episodes occurred in patients on immunosuppressive medication, mostly corticosteroids (82%).",
+        "byte_quote": "Eighty-seven of 1447 episodes (6 %) of bacterial meningitis occurred in patients using immunosuppressive medication, and consisted of corticosteroids in 82 %."
+      },
+      {
+        "id": "c7",
+        "text": "Bacterial meningitis in immunosuppressed patients is often caused by atypical bacteria, mainly L. monocytogenes.",
+        "byte_quote": "is often caused by atypical bacteria, mainly L. monocytogenes ."
+      },
+      {
+        "id": "c8",
+        "text": "HOST FACTOR: use of immunosuppressive medication is an important predisposing factor for Listeria monocytogenes infection.",
+        "byte_quote": "The use of immunosuppressive medication has been reported to be an important predisposing factor for infections with Listeria monocytogenes (Yildiz et al. 2007 )."
+      },
+      {
+        "id": "c9",
+        "text": "HOST FACTOR: acquired immunodeficiency (incl. immunosuppressive drugs/corticosteroids) raises overall risk of bacterial meningitis.",
+        "byte_quote": "Acquired immunodeficiency previously has been associated with an increased risk of bacterial meningitis (Adriani et al. 2013 ; van Veen et al. 2016 ; Weisfelt et al. 2010 )."
+      },
+      {
+        "id": "c10",
+        "text": "HOST FACTOR (mechanism): Listeria's predilection for immunocompromised hosts reflects its intracellular life cycle; resistance is cell-mediated (T lymphocytes).",
+        "byte_quote": "The predilection for immunocompromised hosts may be explained by the intracellular life cycle of L. monocytogenes by which it avoids host bactericidal mechanisms. Resistance to infection is predominantly mediated by cellular immunity and their elimination requires T lymphocytes mediated cytotoxicity (Horta-Baas et al. 2013 )."
+      },
+      {
+        "id": "c11",
+        "text": "HOST FACTOR (age band): median age of immunosuppressed bacterial-meningitis patients was 65 years (range 19-91).",
+        "byte_quote": "The median age of patients using immunosuppressive medication at the time of the episode of bacterial meningitis was 65 years (range 19–91 years; Table 2 )."
+      },
+      {
+        "id": "c12",
+        "text": "HOST FACTORS (other comorbidities raising meningitis risk): diabetes mellitus, alcoholism, and splenectomy.",
+        "byte_quote": "Other co-existing conditions increasing the risk of meningitis were diabetes mellitus (in 16 episodes), alcoholism (in six episodes), and splenectomy (in four episodes)."
+      },
+      {
+        "id": "c13",
+        "text": "EXCLUSION (CSF device / neurosurgery): patients with a neurosurgical device, neurosurgical operation/procedure, or neurotrauma within one month were excluded — i.e. this is a community-acquired cohort, device/post-neurosurgical organisms are out of scope.",
+        "byte_quote": "Patients with a neurosurgical device, neurosurgical operation or procedure and patients with neurotrauma within one month of the onset of meningitis were excluded from the cohort."
+      },
+      {
+        "id": "c14",
+        "text": "Empiric coverage implication: high L. monocytogenes frequency in immunosuppressed patients warrants adding ampicillin/amoxicillin to an extended-spectrum cephalosporin.",
+        "byte_quote": "empiric treatment for patients using immunosuppressive medication should be broad and include ampicillin or amoxicillin for listeria coverage in combination with an extended spectrum cephalosporin."
+      }
+    ],
+    "cites": [
+      "van de Beek et al. 2004b",
+      "Brouwer et al. 2010",
+      "Yildiz et al. 2007",
+      "Adriani et al. 2013",
+      "van Veen et al. 2016",
+      "Weisfelt et al. 2010",
+      "Horta-Baas et al. 2013 (Reumatol Clin)",
+      "Hooper, Pruitt, Rubin 1982",
+      "Stuck, Minder, Frey 1989",
+      "Fardet et al. 2007",
+      "Spanos et al. 1989",
+      "Bijlsma et al. 2016",
+      "Koopmans et al. 2013 (Clin Infect Dis)",
+      "Selby et al. 1997",
+      "de Gans and van de Beek 2002",
+      "Tunkel et al. 2004",
+      "Chaudhuri et al. 2008",
+      "Halloran 2004 (NEJM)"
+    ]
+  },
+  {
+    "source_id": "https://pubmed.ncbi.nlm.nih.gov/16451418/",
+    "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/16451418/",
+    "title": "Adults with spontaneous aerobic Gram-negative bacillary meningitis admitted to the intensive care unit",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Escherichia coli was the most frequent pathogen in adult spontaneous aerobic Gram-negative bacillary meningitis, accounting for 57% of cases.",
+        "byte_quote": "Escherichia coli (57%) and Klebsiella pneumoniae (17%) were the most frequent pathogens."
+      },
+      {
+        "id": "c2",
+        "text": "Klebsiella pneumoniae was the second most frequent pathogen, accounting for 17% of adult spontaneous aerobic Gram-negative bacillary meningitis cases.",
+        "byte_quote": "Escherichia coli (57%) and Klebsiella pneumoniae (17%) were the most frequent pathogens."
+      },
+      {
+        "id": "c3",
+        "text": "The host population studied was adults admitted to the ICU with spontaneous aerobic Gram-negative bacillary meningitis (40 patients over 16 years across ten French hospitals).",
+        "byte_quote": "The study examined 40 adult ICU patients with spontaneous aerobic Gram-negative bacillary meningitis over 16 years across ten French hospitals."
+      },
+      {
+        "id": "c4",
+        "text": "Most patients had predisposing risk factors, primarily chronic alcoholism and immunocompromised status; three immunosuppressed patients developed disseminated strongyloidiasis.",
+        "byte_quote": "Most patients had predisposing factors, primarily chronic alcoholism and immunocompromised status. Three immunosuppressed patients developed disseminated strongyloidiasis."
+      },
+      {
+        "id": "c5",
+        "text": "CSF Gram's stain was positive in 85% of cases, CSF cultures positive in 98%, and blood cultures positive in 80%.",
+        "byte_quote": "Gram's stain, cerebrospinal fluid and blood cultures were positive for 85%, 98% and 80% of cases, respectively."
+      },
+      {
+        "id": "c6",
+        "text": "Spontaneous aerobic Gram-negative bacillary meningitis is a rare complication of bacteraemia in adults.",
+        "byte_quote": "Spontaneous AGNBM is a rare complication of bacteraemia in adults."
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://www.who.int/news-room/fact-sheets/detail/listeriosis",
+    "resolved_url": "https://www.who.int/news-room/fact-sheets/detail/listeriosis",
+    "title": "Listeriosis — WHO Fact Sheet",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Listeriosis is caused by the bacterium Listeria monocytogenes.",
+        "byte_quote": "It is caused by the bacteria  Listeria monocytogenes ."
+      },
+      {
+        "id": "c2",
+        "text": "Listeriosis is rare, with 0.1 to 10 cases per 1 million people per year depending on country/region.",
+        "byte_quote": "It is a relatively rare disease with 0.1 to 10 cases per 1 million people per year depending on the countries and regions of the world."
+      },
+      {
+        "id": "c3",
+        "text": "Highest-risk hosts for severe listeriosis are pregnant women, the elderly, and the immunocompromised (HIV, leukaemia, cancer, kidney transplant, steroid therapy).",
+        "byte_quote": "Pregnant women, the elderly or individuals with a weakened immune system, such as people with immuno-compromised status due to HIV, leukaemia, cancer, kidney transplant and steroid therapy, are at greatest risk of severe listeriosis and should avoid high risk foods."
+      },
+      {
+        "id": "c4",
+        "text": "Invasive listeriosis affects high-risk groups: pregnant women, cancer/HIV/organ-transplant patients, the elderly, and infants.",
+        "byte_quote": "These include pregnant women, patients undergoing treatment for cancer, HIV and organ transplants, elderly people and infants."
+      },
+      {
+        "id": "c5",
+        "text": "Invasive listeriosis symptoms include fever, myalgia, septicaemia, and meningitis; mortality is 20-30%.",
+        "byte_quote": "This form of disease is characterized by severe symptoms and a high mortality rate (20–30%). The symptoms include fever, myalgia (muscle pain), septicemia, meningitis."
+      },
+      {
+        "id": "c6",
+        "text": "Pregnant women are about 20 times more likely to contract listeriosis than other healthy adults.",
+        "byte_quote": "Pregnant women are about 20 times more likely to contract listeriosis than other healthy adults."
+      },
+      {
+        "id": "c7",
+        "text": "People with HIV are at least 300 times more likely to get listeriosis than the immunocompetent.",
+        "byte_quote": "People with HIV are at least 300 times more likely to get ill than those with a normally functioning immune system."
+      },
+      {
+        "id": "c8",
+        "text": "Newborns may develop low birth weight, septicaemia, and meningitis from listeriosis.",
+        "byte_quote": "Newborn may also have low birth weight, septicaemia and meningitis."
+      },
+      {
+        "id": "c9",
+        "text": "Diagnosis is by detecting the bacteria in a smear from blood, cerebrospinal fluid (CSF), or meconium of newborns, among other specimens.",
+        "byte_quote": "detection of the bacteria in a smear from blood, cerebrospinal fluid (CSF), meconium of newborns (or the fetus in abortion cases), as well as from faeces, vomitus, foods or animal feed"
+      },
+      {
+        "id": "c10",
+        "text": "Listeriosis is acquired mainly by eating contaminated food; can also transmit from pregnant woman to unborn baby.",
+        "byte_quote": "Eating contaminated food with high numbers of  L. monocytogenes  is the main route of infection. Infection can also be transmitted between humans, notably from pregnant women to unborn babies."
+      },
+      {
+        "id": "c11",
+        "text": "High-risk food exposures include deli/ready-to-eat meats, soft cheeses, and cold-smoked fishery products.",
+        "byte_quote": "High risk foods include deli meat and ready-to-eat meat products (such as cooked, cured and/or fermented meats and sausages), soft cheeses and cold smoked fishery products."
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3372798/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3372798/",
+    "title": "Nosocomial Meningitis: Moving beyond Description to Prevention (editorial, Korean J Intern Med 2012)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "In nosocomial meningitis, the most common organisms by rank were coagulase-negative staphylococci, Acinetobacter species, and Staphylococcus aureus.",
+        "byte_quote": "the most common organisms by rank were coagulase-negative staphylococci, *Acinetobacter* species, and *Staphylococcus aureus*"
+      },
+      {
+        "id": "c2",
+        "text": "Acinetobacter species are nosocomial pathogens of increasing importance.",
+        "byte_quote": "_Acinetobacter_ species are nosocomial pathogens of increasing importance"
+      },
+      {
+        "id": "c3",
+        "text": "Acinetobacter was the second most common cause of nosocomial meningitis in this cohort.",
+        "byte_quote": "_Acinetobacter_ was the second most common cause of nosocomial meningitis"
+      },
+      {
+        "id": "c4",
+        "text": "Most of the nosocomial meningitis infections (78/91, 86%) were related to placement of an external ventricular drain (EVD).",
+        "byte_quote": "Most (78/91, 86%) of the infections were related to the placement of an external ventricular drain (EVD)"
+      },
+      {
+        "id": "c5",
+        "text": "The incidence of EVD-related infections ranges from 2% to 27%.",
+        "byte_quote": "the incidence of EVD-related infections ranges from 2% to 27%"
+      },
+      {
+        "id": "c6",
+        "text": "26% of Acinetobacter isolates were resistant to imipenem and 27% of patients infected with them died.",
+        "byte_quote": "26% of _Acinetobacter_ species were resistant to imipenem and 27% of the patients infected with them died"
+      },
+      {
+        "id": "c7",
+        "text": "Invasive neurosurgical procedures are exposures predisposing to nosocomial meningitis: craniotomies, internal/external ventricular catheters, lumbar puncture, intrathecal medication infusions, and spinal anesthesia.",
+        "byte_quote": "invasive procedures (for examples, such as craniotomies, the placement of internal or external ventricular catheters, lumbar puncture, intrathecal infusions of medications, or spinal anesthesia)"
+      },
+      {
+        "id": "c8",
+        "text": "Risk factors for EVD-related infection include duration of catheterization, frequency of EVD manipulation, intraventricular hemorrhage, and insertion technique.",
+        "byte_quote": "Relevant risk factors have been identified as the duration of catheterization, frequency of EVD manipulation, intraventricular hemorrhage, and insertion techniques"
+      },
+      {
+        "id": "c9",
+        "text": "The epidemiology and outcomes described are drawn from Kim et al., a study of nosocomial meningitis.",
+        "byte_quote": "In this issue of the Korean J Intern Med, Kim et al. [3] described the epidemiology of nosocomial meningitis and its outcomes."
+      }
+    ],
+    "cites": [
+      "Kim HI, Kim SW, Park GY, et al. The causes and treatment outcomes of 91 patients with adult nosocomial meningitis. Korean J Intern Med. 2012;27:171-179."
+    ]
+  },
+  {
+    "source_id": "https://academic.oup.com/cid/article/64/6/e34/2996079",
+    "resolved_url": "https://academic.oup.com/cid/article/64/6/e34/2996079",
+    "title": "2017 IDSA Clinical Practice Guidelines for Healthcare-Associated Ventriculitis and Meningitis (Tunkel et al., Clinical Infectious Diseases)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "In healthcare-associated ventriculitis/meningitis the likely etiologic agents differ from community-acquired disease, being resistant gram-negative bacilli and staphylococci.",
+        "byte_quote": "resistant gram-negative bacilli and staphylococci"
+      },
+      {
+        "id": "c2",
+        "text": "CSF shunt infections are commonly caused by coagulase-negative staphylococci and Propionibacterium acnes, which are indolent and evoke minimal inflammation.",
+        "byte_quote": "coagulase-negative staphylococci and _P. acnes_, are indolent, evoke minimal inflammation"
+      },
+      {
+        "id": "c3",
+        "text": "Organisms implicated include S. aureus, a coagulase-negative staphylococcus, or Propionibacterium acnes.",
+        "byte_quote": "_S. aureus_, a coagulase-negative staphylococcus, or _Propionibacterium acnes_"
+      },
+      {
+        "id": "c4",
+        "text": "Gram-negative bacilli and S. aureus are among the causative organisms.",
+        "byte_quote": "gram-negative bacilli and _S. aureus_"
+      },
+      {
+        "id": "c5",
+        "text": "Host/risk factors raising CSF shunt infection risk include premature birth (especially with intraventricular hemorrhage), younger age, and previous shunt infection.",
+        "byte_quote": "Factors associated with an increased risk of CSF shunt infection include premature birth (especially when associated with intraventricular hemorrhage), younger age, previous shunt infection"
+      },
+      {
+        "id": "c6",
+        "text": "Shunt infection risk depends on the cause of hydrocephalus, being more likely after purulent meningitis, hemorrhage, and myelomeningocele.",
+        "byte_quote": "cause of hydrocephalus (more likely after purulent meningitis, hemorrhage, and myelomeningocele)"
+      },
+      {
+        "id": "c7",
+        "text": "Procedural/exposure risk factors include less experienced neurosurgeon, more people traversing the operating theater, and exposure to perforated surgical gloves.",
+        "byte_quote": "less experienced neurosurgeon, higher number of people traversing the operating theater, exposure to perforated surgical gloves"
+      },
+      {
+        "id": "c8",
+        "text": "Additional procedural risk factors include intraoperative use of the neuroendoscope and longer duration of the shunt procedure.",
+        "byte_quote": "intraoperative use of the neuroendoscope, longer duration of the shunt procedure"
+      },
+      {
+        "id": "c9",
+        "text": "Risk factors for infection (drain/device context) include intraventricular or subarachnoid hemorrhage, cranial fracture with CSF leak, catheter irrigation, and craniotomy.",
+        "byte_quote": "Factors associated with an increased risk of infection are intraventricular or subarachnoid hemorrhage, cranial fracture with CSF leak, catheter irrigation, craniotomy"
+      },
+      {
+        "id": "c10",
+        "text": "A negative CSF Gram stain does not exclude infection, especially after prior antimicrobial therapy.",
+        "byte_quote": "A negative CSF Gram stain does not exclude the presence of infection, especially in patients who have received previous antimicrobial therapy"
+      },
+      {
+        "id": "c11",
+        "text": "Gram-stain diagnostic accuracy depends on the number of organisms present, the type of meningeal pathogen, and receipt of prior antimicrobial therapy.",
+        "byte_quote": "The diagnostic accuracy of a Gram stain is a function of the number of microorganisms present, the type of meningeal pathogen, and the receipt of prior antimicrobial therapy"
+      },
+      {
+        "id": "c12",
+        "text": "In one study of nosocomial meningitis the CSF Gram stain was positive in 65 (71%) of 91 cases.",
+        "byte_quote": "The CSF Gram stain was positive in 65 (71%) of 91 cases in one study of patients with nosocomial meningitis"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://www.cdc.gov/mmwr/preview/mmwrhtml/rr4907a2.htm",
+    "resolved_url": "https://www.cdc.gov/mmwr/preview/mmwrhtml/rr4907a2.htm",
+    "title": "Meningococcal Disease and College Students — Recommendations of the Advisory Committee on Immunization Practices (ACIP), MMWR Recomm Rep 2000;49(RR-7)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Following control of Haemophilus influenzae type b, N. meningitidis is the leading cause of bacterial meningitis in U.S. children and young adults.",
+        "byte_quote": "As a result of the control of Haemophilus influenzae type b infections, N. meningitidis has become the leading cause of bacterial meningitis in children and young adults in the United States"
+      },
+      {
+        "id": "c2",
+        "text": "During 1994-1998, about two thirds of meningococcal cases in persons aged 18-23 years were due to serogroups C, Y, or W135.",
+        "byte_quote": "During 1994--1998, approximately two thirds of cases among persons aged 18--23 years were caused\nby serogroups C, Y, or W135"
+      },
+      {
+        "id": "c3",
+        "text": "Among college undergraduate isolates with serogroup data: 49% serogroup C, 24% serogroup B, 21% serogroup Y, 1% serogroup W-135.",
+        "byte_quote": "35 (49%)\nwere serogroup C, 17 (24%) were serogroup B, 15 (21%) were serogroup Y, and one (1%)\nwas serogroup W-135"
+      },
+      {
+        "id": "c4",
+        "text": "Host/exposure risk factor (crowding): meningococcal disease occurred 9-23 times more often in students living in dormitories than other accommodations.",
+        "byte_quote": "cases of meningococcal disease occurred 9--23 times\nmore frequently in students residing in dormitories than in those residing in other types"
+      },
+      {
+        "id": "c5",
+        "text": "Freshmen living in dormitories were at higher risk; white race, radiator heat, and recent upper respiratory infection were also associated with meningococcal disease.",
+        "byte_quote": "freshmen living in dormitories were at higher risk for meningococcal disease. In\naddition, white race, radiator heat, and recent upper respiratory infection were"
+      },
+      {
+        "id": "c6",
+        "text": "Meningococcal disease rate was higher among freshmen in dormitories than students living off-campus (3.2 vs 0.96 per 100,000).",
+        "byte_quote": "dormitories compared with students living off-campus (3.2/100,000 vs. 0.96/100,000, p=0.05)"
+      }
+    ],
+    "cites": []
+  },
+  {
+    "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3719428/",
+    "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3719428/",
+    "title": "Skin rash in meningitis and meningoencephalitis (Tsai, Nagel, Gilden; Neurology 2013;80(19):1808-1811)",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "An erythematous macular and petechial rash on the legs that quickly disseminates and becomes purpuric/necrotic indicates meningococcal infection (Neisseria meningitidis) with untreated meningococcemia.",
+        "byte_quote": "Meningococcal rash is similar, an erythematous macular and petechial rash on the legs that quickly disseminates, becoming purpuric and even necrotic if meningococcemia remains untreated"
+      },
+      {
+        "id": "c2",
+        "text": "Rocky Mountain spotted fever rash begins as erythematous macules on the wrists, hands, and feet.",
+        "byte_quote": "The classic rash of Rocky Mountain spotted fever usually begins as erythematous macules on the wrists, hands, and feet"
+      },
+      {
+        "id": "c3",
+        "text": "A maculopapular rash on the palms and soles that is scaly without much erythema indicates secondary or tertiary syphilis.",
+        "byte_quote": "The maculopapular rash of secondary or tertiary syphilis is seen mostly on the palms of the hands and soles of the feet and is scaly without much erythema"
+      },
+      {
+        "id": "c4",
+        "text": "HSV cutaneous lesions cluster in patches.",
+        "byte_quote": "HSV lesions cluster in patches"
+      },
+      {
+        "id": "c5",
+        "text": "VZV produces lesions in a dermatomal distribution.",
+        "byte_quote": "VZV produces lesions in a dermatomal distribution"
+      },
+      {
+        "id": "c6",
+        "text": "Lyme disease skin rash has a characteristic 'target' appearance.",
+        "byte_quote": "The skin rash in Lyme disease has a characteristic 'target' appearance"
+      }
+    ],
+    "cites": []
   }
 ]

@@ -1,0 +1,38 @@
+{
+  "hash": "d3a9642580584dfa",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5121369/",
+  "title": "The Brief Case: Neonatal Meningitis Caused by Listeria monocytogenes Diagnosed by Multiplex Molecular Panel",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5121369/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "GBS and Escherichia coli together cause more than 70% of neonatal bacterial meningitis cases.",
+      "byte_quote": "The most common organisms that cause neonatal bacterial meningitis are GBS and _Escherichia coli_, which together account for >70% of the cases in this age group"
+    },
+    {
+      "id": "c2",
+      "text": "Listeria monocytogenes is a rare but significant cause of meningitis, affecting 0.5 to 3 per 100,000 live births.",
+      "byte_quote": "_L. monocytogenes_ is a relatively rare yet clinically significant cause of meningitis, affecting 0.5 to 3 per 100,000 live births"
+    },
+    {
+      "id": "c3",
+      "text": "Host/risk factors for severe Listeria disease are pregnancy, infants under 2 months, the elderly, and immunodeficiency with impaired T-cell function (e.g. HIV/AIDS).",
+      "byte_quote": "Those most at risk for severe disease are pregnant women, infants <2 months of age, the elderly, and those with immunodeficiencies, particularly with impairment of T-cell function such as in HIV/AIDS"
+    },
+    {
+      "id": "c4",
+      "text": "Pregnancy lowers T-cell function, letting Listeria proliferate in the placenta — the proposed reason pregnant women have increased invasive disease risk.",
+      "byte_quote": "Pregnant women have a decline in T-cell function that allows them to accommodate a fetus, which allows the bacteria to proliferate in the placenta and may be the reason for the increased risk of invasive disease in this population"
+    },
+    {
+      "id": "c5",
+      "text": "On CSF Gram stain, Listeria monocytogenes is a Gram-positive, non-spore-forming rod or coccobacillus.",
+      "byte_quote": "In the laboratory setting, _L. monocytogenes_ is a Gram positive, non-spore-forming rod or coccobacillus"
+    }
+  ],
+  "cites": [
+    "Harrison GL, Kim KS. 2013. Bacterial meningitis beyond the neonatal period, p 425-461. In Cherry J, Demmler-Harrison GJ, Kaplan SL, Steinbach WJ, Hotez P (ed), Feigin and Cherry's textbook of pediatric infectious diseases, 7th edition. Elsevier Saunders, Philadelphia, PA. (ref 1)",
+    "Harrison GL, Kim KS. 2013. Approach to infections in the fetus and newborn, p 877-901. In Cherry J, Demmler-Harrison GJ, Kaplan SL, Steinbach WJ, Hotez P (ed), Feigin and Cherry's textbook of pediatric infectious diseases, 7th edition. Elsevier Saunders, Philadelphia, PA. (ref 2)",
+    "Lorber B. 2010. Listeria monocytogenes, p 2707-2714. In Mandell GL, Bennett JE, Dolin R (ed), Mandell, Douglas, and Bennett's principles and practice of infectious diseases, 7th edition. Churchill Livingstone Elsevier, Philadelphia, PA. (ref 6)"
+  ]
+}
