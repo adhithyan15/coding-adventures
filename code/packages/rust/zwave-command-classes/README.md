@@ -24,6 +24,7 @@ Included surfaces:
 - command-class projection summaries for D23 command and sensor surface checks
 - command-class projection readiness summaries for command-class inventory,
   projected capability, command, sensor, and observe-only surface gates
+- command-class projection signoff summaries for final D23 projection gates
 - D23 capability projection for common command classes
 - D23 `StateDelta` projection for common value reports
 
