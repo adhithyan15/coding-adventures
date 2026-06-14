@@ -40,6 +40,12 @@ Integer-only programs.  Floats truncate to i64; strings, GOSUB,
 arrays, READ/DATA, and DEF are deferred to V2.  See
 [CHANGELOG.md](CHANGELOG.md) for the full table.
 
+`LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, and `FOR`/`NEXT` lower to the shared
+IIR and RUN on native / LLVM / WASM / CLR / VM / JIT (LANG-FULL BA0 fixed the
+comparison operand-width hint that had broken control flow on LLVM/WASM).  BASIC
+control flow combined with `PRINT` does not yet run on the JVM — see BA-JVM-1 in
+`code/specs/LANG-FULL-IMPLEMENTATION.md`.
+
 ## Spec
 
 [`code/specs/PL05-dartmouth-basic-iir-compiler.md`](../../../specs/PL05-dartmouth-basic-iir-compiler.md).

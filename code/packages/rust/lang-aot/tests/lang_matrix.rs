@@ -328,6 +328,38 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
+    // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
+    // backends could not run correctly until this slice (LLVM compared at `i1` width;
+    // the BASIC compiler now emits the `i64` operand type — see its CHANGELOG). Until
+    // now BASIC loops executed only on the VM/JIT; this RUNS a real FOR loop on the
+    // code-gen backends.
+    //
+    // JVM is excluded pending a separate fix: a backward branch (loop) combined with a
+    // `print_i64` call after it trips the `iir-to-jvm-class-file` StackMapTable
+    // generation (a forward-branch print — the IF program below — and a loop *without*
+    // print — Nib's for-loops — both work on JVM; only the loop+print combination
+    // fails). Tracked as roadmap item BA-JVM-1.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
+        expect: Expect::Stdout("15"),
+        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+    },
+    // Dartmouth BASIC — `IF … THEN <line>` + `GOTO`-style jump (LANG-FULL BA0). `A > 5`
+    // lowers to `cmp_gt` (one of the comparisons LLVM compared at the wrong width until
+    // this slice's BASIC-compiler fix); the taken branch jumps to line 100 which prints
+    // A (7). Proves conditional control flow runs on the code-gen backends, not just the
+    // VM/JIT. (JVM excluded — same BA-JVM-1 StackMapTable follow-up as the FOR program:
+    // a branch combined with a `print_i64` call trips JVM stack-frame generation.)
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 LET A = 7\n20 IF A > 5 THEN 100\n30 PRINT 0\n40 END\n100 PRINT A\n110 END\n",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
