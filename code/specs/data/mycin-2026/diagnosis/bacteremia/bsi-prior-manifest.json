@@ -1,0 +1,86 @@
+{
+  "kind": "bsi-prior",
+  "clauses": {
+    "bsi_prior_saureus": {
+      "organism": "s_aureus",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.2,
+      "fallback": 0.22,
+      "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15306996/"
+    },
+    "bsi_prior_enteric_gnb": {
+      "organism": "enteric_gnb",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.291,
+      "fallback": 0.25,
+      "byte_quote": "Gram-positive organisms accounted for 29.5% (8244) of the species identified and Gram-negative organisms accounted for 70.5% (19,655). [...] Notably, E. coli increased 29.1% to 38.5% during the study period.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8785473/"
+    },
+    "bsi_prior_cons": {
+      "organism": "coag_neg_staph",
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
+      "value": 0.1,
+      "fallback": 0.1,
+      "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15306996/"
+    },
+    "bsi_prior_enterococcus": {
+      "organism": "enterococcus",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.09,
+      "fallback": 0.08,
+      "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15306996/"
+    },
+    "bsi_prior_spneumoniae": {
+      "organism": "s_pneumoniae",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.124,
+      "fallback": 0.07,
+      "byte_quote": "a total of 4467 episodes of community-onset BSI were identified for an overall annual incidence of 81·6/100 000 [...] Escherichia coli, Staphylococcus aureus, and Streptococcus pneumoniae were responsible for the majority of community-onset BSI; they occurred at annual rates of 25·8, 13·5, and 10·1/100 000, respectively.",
+      "url": "https://www.cambridge.org/core/journals/epidemiology-and-infection/article/burden-of-communityonset-bloodstream-infection-a-populationbased-assessment/4C3033D11C42B1D2B68B3580C283DB9A"
+    },
+    "bsi_prior_pseudomonas": {
+      "organism": "pseudomonas",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.043,
+      "fallback": 0.05,
+      "byte_quote": "P. aeruginosa as the third most common Gram-negative bacteria causing nosocomial BSI and accounted for 4.3% of all cases. In the ICUs, P. aeruginosa accounted for 4.7% of all cases and was reported as the fifth most common isolate implicated in BSI, and the seventh most common isolate in non-ICU wards, accounting for 3.8% of cases.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10699684/"
+    },
+    "bsi_prior_pyogenes": {
+      "organism": "strep_pyogenes",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.02,
+      "fallback": 0.04,
+      "byte_quote": "Altogether, 40 cases were encountered, representing 2% of all cases of bacteraemia.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/3284952/"
+    },
+    "bsi_prior_candida": {
+      "organism": "candida",
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "value": 0.09,
+      "fallback": 0.03,
+      "byte_quote": "The most-common organisms causing BSIs were coagulase-negative staphylococci (CoNS) (31% of isolates), Staphylococcus aureus (20%), enterococci (9%), and Candida species (9%).",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15306996/"
+    }
+  },
+  "hash": "ddb9deafb06a7729"
+}

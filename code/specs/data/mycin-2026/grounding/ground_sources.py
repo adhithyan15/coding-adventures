@@ -44,9 +44,12 @@ UTI_GROUNDING = HERE / "uti-id-grounding.json"                       # G4 — ne
 UTI_MANIFEST = MYCIN / "diagnosis" / "uti" / "uti-id-manifest.json"
 TC_GROUNDING = HERE / "treatment-constraints-grounding.json"         # CC-3 — contraindication rules
 TC_MANIFEST = MYCIN / "treatment" / "constraints" / "treatment-constraints.json"
+BSI_GROUNDING = HERE / "bsi-prior-grounding.json"                    # G5 — bacteremia priors
+BSI_MANIFEST = MYCIN / "diagnosis" / "bacteremia" / "bsi-prior-manifest.json"
 
 # Every grounding file whose records cite sources we decompose + verify against.
-GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING, DOSE_GROUNDING, UTI_GROUNDING, TC_GROUNDING]
+GROUNDING_FILES = [ORG_GROUNDING, HOST_GROUNDING, DOSE_GROUNDING, UTI_GROUNDING,
+                   TC_GROUNDING, BSI_GROUNDING]
 
 
 def _records(*files: Path) -> list[dict]:
@@ -201,6 +204,19 @@ def commit_and_verify() -> int:
             "flagged": sum(1 for x in tman.values() if x["verdict"] == "FLAG"),
             "authored_debt": sum(1 for x in tman.values() if x["verdict"] == "PENDING"),
             "rows": tc_rows})
+
+    # 2e. Bacteremia organism priors (G5 — MYCIN's primary domain). Sources pending decompose.
+    if BSI_GROUNDING.exists():
+        bsi_rows, c = _verify_rows(_records(BSI_GROUNDING), by_url)
+        for k in tot:
+            tot[k] += c[k]
+        bman = json.loads(BSI_MANIFEST.read_text()).get("clauses", {}) if BSI_MANIFEST.exists() else {}
+        artifacts.append({
+            "name": "bacteremia organism priors", "path": "diagnosis/bacteremia/source-id.adj",
+            "grounded": sum(1 for x in bman.values() if x["verdict"] == "ACCEPT"),
+            "flagged": sum(1 for x in bman.values() if x["verdict"] == "FLAG"),
+            "authored_debt": sum(1 for x in bman.values() if x["verdict"] == "PENDING"),
+            "rows": bsi_rows})
 
     # 3. Rebuild the system-wide provenance ledger.
     LEDGER.write_text(harness.build_ledger(artifacts) +
