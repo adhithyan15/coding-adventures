@@ -2,6 +2,58 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.133.0] - 2026-06-14
+
+### Added
+
+- **CLOC12.133 — correlation-vector emit-loop skip tombstones in
+  `whitespace_only_minify`.**
+
+  CLOC12.132 covered tokens dropped by gap *pre-passes* (tokens
+  removed from `kept` before the emit loop begins). This release
+  extends CV tracing to tokens that survive the pre-passes but are
+  **suppressed during emission** — the second class of observable
+  deletions in WHITESPACE_ONLY mode.
+
+  **Seven emit-loop skip sites now emit `DeletionRecord`s:**
+
+  | Site | Gap | Example |
+  |------|-----|---------|
+  | Empty `new X()` paren elision | `gap-050` | `new Foo()` → `new Foo` |
+  | Rule-A `;` before `}` | `gap-030-rule-a` | `{a;}` → `{a}` |
+  | Rule-C redundant `;` after synthetic `;` | `gap-030-rule-c` | `};` dedup |
+  | Trailing `,` in array literal | `gap-046` | `[1,2,]` → `[1,2]` |
+  | Trailing `,` in object literal | `gap-046b` | `{a:1,}` → `{a:1}` |
+  | Single-stmt block flatten `{` / `}` | `gap-032` | `if(x){a();}` → `if(x)a();` |
+  | Empty-block `{}` → `;` substitution | `gap-031` | `for(;;){}` → `for(;;);` |
+
+  All tombstones use:
+  - `source = "whitespace_only"`
+  - `reason = "emit_skip"`
+  - `meta.gap` — identifies the specific rule
+  - `meta.lexeme` — the original token value
+
+  **Implementation notes:**
+  - `whitespace_only_minify` now takes `mut cv` (was non-mut).
+  - A `ptr_to_cv_id: HashMap<*const Token, String>` is built once
+    before the emit loop — O(n) setup, O(1) lookup per skip site.
+  - The pre-pass sweep (CLOC12.132) now uses `cv.as_mut()` instead
+    of consuming the option, so `cv` remains available for the emit
+    loop.
+  - A `tombstone_emit_skip` closure captures `emit_cv` and
+    `ptr_to_cv_id`; each skip site calls it with the token and gap
+    name.
+
+  **Two new integration tests:**
+  - `correlation_vector_emit_skip_gap050_new_empty_args`:
+    `var x=new Foo();` — gap-050 drops the parens in the emit loop →
+    `emit_skip` tombstone with `gap="gap-050"`.
+  - `correlation_vector_emit_skip_gap030_rule_a_semi_before_brace`:
+    `(function(){var x=1;})();` — rule-A drops the `;` before `}` →
+    `emit_skip` tombstone with `gap="gap-030-rule-a"`.
+
+  **Total test count: 649** (up from 647 in v0.132.0).
+
 ## [0.132.0] - 2026-06-14
 
 ### Added

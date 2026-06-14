@@ -3655,6 +3655,105 @@ mod tests {
     }
 
     // ------------------------------------------------------------------
+    // CLOC12.133 — whitespace_only emit-loop skip tombstones
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn correlation_vector_emit_skip_gap050_new_empty_args() {
+        // gap-050 runs in the EMIT LOOP: `new Foo()` → `new Foo`.
+        // The `(` and `)` survive pre-passes (they are in `kept`) but
+        // are suppressed during emission. With CV enabled, they should
+        // appear as DeletionRecords with
+        //   reason="emit_skip", meta.gap="gap-050".
+        let dir = std::env::temp_dir().join("closurec_cloc12_133_gap050");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "var x=new Foo();").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"reason\":\"emit_skip\""),
+            "expected emit_skip tombstone for gap-050, got: {body}"
+        );
+        assert!(
+            body.contains("\"gap\":\"gap-050\""),
+            "expected meta.gap=gap-050 on emit_skip tombstone, got: {body}"
+        );
+        // Both `(` and `)` should be tombstoned.
+        assert!(
+            body.contains("\"lexeme\":\"(\"") || body.contains("\"lexeme\":\")\""),
+            "expected ( or ) lexeme in emit_skip tombstone meta, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn correlation_vector_emit_skip_gap030_rule_a_semi_before_brace() {
+        // gap-030 rule-A runs in the EMIT LOOP: a `;` immediately before
+        // `}` is dropped (the `}` itself acts as the statement terminator).
+        // `(function(){var x=1;})()` — the `;` before `}` should be
+        // tombstoned with reason="emit_skip", meta.gap="gap-030-rule-a".
+        let dir = std::env::temp_dir().join("closurec_cloc12_133_gap030");
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("create dir");
+        let in_path = dir.join("a.js");
+        fs::write(&in_path, "(function(){var x=1;})();").expect("write input");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"reason\":\"emit_skip\""),
+            "expected emit_skip tombstone for gap-030 rule-A, got: {body}"
+        );
+        assert!(
+            body.contains("\"gap\":\"gap-030-rule-a\""),
+            "expected meta.gap=gap-030-rule-a, got: {body}"
+        );
+        // The dropped `;` should appear as the lexeme.
+        assert!(
+            body.contains("\"lexeme\":\";\""),
+            "expected ';' lexeme in emit_skip tombstone meta, got: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
     // CLOC11.67 — --correlation_vector_output <path> flag
     // ------------------------------------------------------------------
 
