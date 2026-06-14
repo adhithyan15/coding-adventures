@@ -124,11 +124,13 @@ PLUS        = "+"
 MINUS       = "-"
 
 # Multiplication. Note: the Intel 4004 has NO multiply instruction in hardware.
-# Nib v1 does NOT include multiplication — see NIB00-nib-language.md section
-# "What is NOT in v1". The STAR token is reserved for future v2.
+# As of LANG-FULL N1, STAR is a multiplicative operator (mul_expr) that lowers to
+# the shared IIR `mul` op — every general backend implements it directly; a 4004
+# backend would synthesise it from repeated ADD.
 STAR        = "*"
 
-# Division. Likewise, the 4004 has no divide instruction. Reserved for v2.
+# Division. Likewise, the 4004 has no divide instruction; SLASH lowers to the
+# shared IIR `div` op (LANG-FULL N1).
 SLASH       = "/"
 
 # ---------------------------------------------------------------------------

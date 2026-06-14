@@ -82,6 +82,12 @@ transient `WHEN probe=target` cards report first or counted `RISE`, `FALL`, and
 cards report trigger-to-target crossing delays. The deck helpers route parsed
 transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those stable
 measurement rows.
+`resolveDeckAnalyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
+`.end`, keeps non-analysis active lines, and reports stable diagnostics for
+malformed arguments, unsupported AC sweep modes, invalid sweep intervals, and
+unresolved scalar expressions. `selectDeckAnalysisPlan` picks one explicit card
+by analysis alias, defaults decks without analysis cards to an implicit `.op`,
+and reports ambiguity before solver dispatch.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save` and scoped
 or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `formatDeckOpTable`,
@@ -144,3 +150,8 @@ unsupported analyses, modes, options, expressions, and invalid windows.
 `resolveDeckOutputs` extracts `.save` and `.probe` cards before `.end`,
 preserves non-output active lines, and reports stable diagnostics for missing
 probe lists or malformed `V(node)` / `I(source)` probes.
+`resolveDeckAnalyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
+`.end`, preserves non-analysis active lines, and reports stable diagnostics for
+malformed deck-level analysis controls.
+`selectDeckAnalysisPlan` returns one selected or implicit plan for downstream
+deck execution helpers.

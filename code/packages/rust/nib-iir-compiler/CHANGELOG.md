@@ -1,5 +1,137 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.13.0 — 2026-06-13 — module-scoped `const` declarations (LANG-FULL N5)
+
+Adds Nib's top-level `const NAME: type = literal;`. Previously `const_decl` (and
+`static_decl`) were silently dropped by `function_nodes`, so referencing a const
+produced a dangling variable.
+
+- New `collect_consts` gathers module-scoped consts (they are `top_decl`, like
+  `fn`) into a `name → i64` map before any function is compiled, folding each
+  value expression to an `i64`. `compile_program` populates `Compiler.consts`.
+- `compile_primary` resolves a const reference to a fresh `const` instruction
+  with the const's value — a compile-time fold, so consts need **no runtime
+  storage** and run on every backend with no per-backend work. A `let`/parameter
+  of the same name **shadows** the const (the fold only fires when the name isn't
+  a local in scope).
+- V1 folds **integer-literal** consts (`INT_LIT`/`HEX_LIT`); a non-literal value
+  (`const N = 6 * 7;`) is a clear error (`const-expression folding is deferred`)
+  rather than a silent miscompile.
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains
+`const N: u8 = 42; … return N;` → 42 and `const A = 30; const B = 12; … A + B`
+→ 42, across native/LLVM/WASM/JVM/CLR/VM/JIT. New unit tests
+`const_reference_folds_to_its_literal`, `multiple_consts_in_arithmetic`,
+`non_literal_const_is_rejected`.
+
+`static` declarations remain deferred (mutable module state is a larger,
+backend-touching item).
+
+## 0.12.0 — 2026-06-13 — short-circuit `&&` / `||` (LANG-FULL N4)
+
+Adds Nib's logical `&&` / `||`. Unlike the other operators these cannot go through
+`compile_binary_chain` (which evaluates both sides eagerly and has no `cir_op_for`
+mapping for `LAND`/`LOR`) — they must **short-circuit**: the right operand is
+evaluated only when the left does not already decide the result.
+
+New `compile_short_circuit` lowers an `and_expr`/`or_expr` to a result slot guarded
+by branches, using only `jmp_if_false` / `jmp` / `label` (the portable subset every
+backend lowers — the CLR textual `.il` path has no `jmp_if_true`):
+
+```text
+// a && b              // a || b
+mov r = a              mov r = a
+jmp_if_false r, end    jmp_if_false r, eval_b
+mov r = b              jmp end
+label end              label eval_b ; mov r = b ; label end
+```
+
+Chains fold left-to-right; `r` is the `dest` of 2+ `mov`s so every backend promotes
+it to a stack slot automatically.
+
+Verified by RUNNING on every backend — `lang-aot/tests/lang_matrix.rs` gains, across
+native/LLVM/WASM/JVM/CLR/VM/JIT:
+- a `&&` short-circuit **proof**: `1 == 2 && 84 / 0 == 0` returns 7 (not 9, not a
+  crash) — the divide-by-zero RHS is positive proof it was never evaluated;
+- a `||` short-circuit proof: `1 == 1 || 84 / 0 == 0` returns 7;
+- a `&&` true-path program → 1.
+
+New unit tests `logical_and_short_circuits`, `logical_or_short_circuits` (assert the
+right operand's compare is emitted *after* the short-circuit guard).
+
+## 0.11.0 — 2026-06-13 — bitwise `&` `|` `^` (LANG-FULL N3)
+
+Adds Nib's binary bitwise operators. The grammar's `bitwise_expr` level already
+produced `AMP`/`PIPE`/`CARET` nodes routed through `compile_binary_chain`, so this
+is a `cir_op_for`-only change: `&` → `and`, `|` → `or`, `^` → `xor` (the shared IIR
+ops every backend implements).
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains
+`12 & 10` → 8, `12 | 3` → 15, `6 ^ 5` → 3, executed across
+native/LLVM/WASM/JVM/CLR/VM/JIT. (The CLR textual `.il` path was missing these
+opcodes — fixed in `iir-to-cil-bytecode` 0.19.0, surfaced by the executed test.)
+New unit test `compiles_bitwise_and_or_xor`.
+
+Unary `~` (bitwise NOT) is still deferred: a correct result needs to mask to the
+declared width (`~x` on a `u8` flips 8 bits, not the full 64-bit register), which
+depends on the integer-wrap enabler **E2**.
+
+## 0.10.0 — 2026-06-13 — for loops (LANG-FULL N2)
+
+`compile_stmt` no longer returns `Unsupported("stmt: for_stmt")` — Nib's
+`for NAME: type in lo .. hi block` now compiles. The grammar and parser already
+produced `for_stmt` nodes; this adds the lowering.
+
+`compile_for` desugars to the same canonical loop shape `compile_while` uses,
+reusing the existing `mul_expr`/`add`/`cmp_lt`/label machinery:
+
+```text
+mov  i = lo            ; bounds evaluated once at loop entry
+<eval hi → h>
+label for_<n>_top
+cmp_lt c = i, h        ; range is EXCLUSIVE of hi (`1 .. 6` ⇒ i = 1,2,3,4,5)
+jmp_if_false c, for_<n>_end
+<body>
+add  t = i, 1 ; mov i = t
+jmp for_<n>_top
+label for_<n>_end
+```
+
+Everything flows through `i64` slots, so the loop-counter reassignment is the
+same shape every backend already lowers for Brainfuck's pointer increment.
+Nested loops get distinct labels via `fresh_label`.
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains a
+sum-loop (`for i in 1..6 { s += i }` → 15, using the loop variable) and a nested
+loop (3 × 2 → 6), executed across native/LLVM/WASM/JVM/CLR/VM/JIT. New unit
+tests: `compiles_for_loop`, `nested_for_loops_get_distinct_labels`.
+
+Known limitation (out of scope, a backend concern not a frontend one):
+reassigning a **function parameter** inside a loop produces invalid LLVM IR
+(the IIR-to-LLVM backend allocas locals but keeps params in SSA). The for-loop
+idiom uses a `let` local accumulator, which works everywhere.
+
+## 0.9.0 — 2026-06-13 — multiplication and division (LANG-FULL N1)
+
+Adds `*` and `/` to Nib. The Intel-4004 has no multiply/divide instruction, so
+these were reserved tokens in v1; they now lower to the shared IIR `mul` / `div`
+ops, which every general backend (VM / JIT / native / LLVM / WASM / JVM / CLR)
+implements directly.
+
+- New grammar level `mul_expr = bitwise_expr { ( STAR | SLASH ) bitwise_expr }`,
+  slotted between `add_expr` and `bitwise_expr` so `*`/`/` bind tighter than
+  `+`/`-` (`2 + 3 * 4` = `2 + (3*4)` = 14) and are left-associative. Parser
+  regenerated.
+- `cir_op_for`: `STAR` → `mul`, `SLASH` → `div` (typed CIR mnemonics, not
+  `call_builtin "*"`, so the IIR-to-* backends accept them).
+- `compile_expr` routes the new `mul_expr` node through the generic
+  `compile_binary_chain`; `is_expr_rule` recognises it.
+
+Verified by RUNNING on every backend: `lang-aot/tests/lang_matrix.rs` gains
+`6 * 7` → 42 and `84 / 2` → 42, executed across native/LLVM/WASM/JVM/CLR/VM/JIT.
+New unit tests: `compiles_multiplication`, `compiles_division`,
+`multiplication_binds_tighter_than_addition`.
+
 ## 0.8.0 — 2026-06-11 — finish the i64 materialization (const literals + call results) (LANG-MATRIX LM-W Nib)
 
 Completes the integer-type materialization started in 0.7.0. That release fixed

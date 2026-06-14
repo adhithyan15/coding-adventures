@@ -22,6 +22,8 @@ Included surfaces:
 - value-report encoding for fixture, simulator, and parser round-trip coverage
 - Z-Wave level/boolean/door-lock normalization helpers
 - command-class projection summaries for D23 command and sensor surface checks
+- command-class projection readiness summaries for command-class inventory,
+  projected capability, command, sensor, and observe-only surface gates
 - D23 capability projection for common command classes
 - D23 `StateDelta` projection for common value reports
 

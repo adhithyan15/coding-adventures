@@ -1,5 +1,18 @@
 # Changelog — image-codec-rw2
 
+## [Unreleased]
+
+### Changed
+
+- **`color.rs`** — `apply_color_pipeline` now delegates to
+  `image_raw_pipeline::apply_color_pipeline` (IMG07). RW2's signature already
+  matched the shared API exactly (single `u32` black_level, `[f64;3]` WB),
+  so no pre-processing is required. Removes the private `srgb_gamma` and
+  `clamp01` helpers. Test calls updated to use `image_raw_pipeline::srgb_gamma`
+  directly. All 38 unit tests + 2 doc-tests unchanged.
+
+---
+
 ## [0.1.0] — 2026-05-29
 
 ### Added

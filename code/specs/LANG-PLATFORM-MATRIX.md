@@ -20,8 +20,8 @@ Twig / Nib / Brainfuck / Dartmouth BASIC / Oct / ALGOL 60   (+ McCarthy)
         ▼
                  IIRModule  (the lingua franca)
         │
-        ├── mccarthy_lisp_vm::run            → VM        (generic IIR interpreter)
-        ├── jit-core::GenericCirJit          → JIT       (⚠ McCarthy-only today)
+        ├── vm-core::VMCore                  → VM        (generic IIR interpreter, all 6)
+        ├── jit-core::JITCore + GenericCirJit → JIT      (generic IIR JIT, all 6)
         ├── twig-aot + aarch64/x86_64-backend→ native AOT
         ├── iir-to-llvm                      → LLVM  → real clang
         ├── iir-to-wasm                      → WASM  → wasm-runtime
@@ -101,12 +101,12 @@ achievable code-gen columns land first).
 
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
-| Twig            | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Nib             | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Brainfuck       | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Dartmouth BASIC | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Oct             | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| ALGOL 60        | ✅ | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Twig            | ✅ | ✅  | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Nib             | ✅ | ✅  | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Brainfuck       | ✅ | ✅  | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Dartmouth BASIC | ✅ | ✅  | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Oct             | ✅ | ✅  | ✅        | ✅   | ✅   | ✅  | ✅  |
+| ALGOL 60        | ✅ | ✅  | ✅        | ✅   | ✅   | ✅  | ✅  |
 
 **native-AOT is uniformly ✅ as of LM0** — all six languages compile to a host
 executable and run with the expected result (`lang-aot/tests/lang_matrix.rs`:
@@ -344,15 +344,33 @@ it for years (`brainfuck-iir-compiler` uses `VMCore`). Phase V is therefore most
   `putchar`/`getchar` are registered too, for the next slice. Verified by RUNNING in-process:
   Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2, BASIC `10 PRINT 42`→stdout `42`. The VM column
   is now green for **5 / 6** languages — only Brainfuck is left.
-- ⏸ **LM-V Brainfuck (on the VM).** The one genuine op-gap: after `lower_brainfuck_for_aot`,
-  Brainfuck's IIR uses `alloc_bytes`/`load_byte`/`store_byte` (the lowered tape form), which
-  `VMCore`'s dispatch doesn't yet handle (it has `load_mem`/`store_mem`, the *raw* BF form).
-  Add those three byte-tape ops to `vm-core` generically (the same ops every code-gen backend
-  grew for LM-L/W/J/C) → Brainfuck on the VM. One `vm-core` slice.
-- ⏸ **Phase I — JIT.** Two parts: replace the McCarthy-only `run_mccarthy_on_jit` with a
-  generic `run_on_jit(language, source)` over `jit-core` (whose `GenericCirJit` is already
-  language-agnostic — a frontend registers its builtins as callbacks), then ensure the JIT's
-  `specialise`→CIR→backend path covers the scalar ops. Tackle after the VM column is complete.
+- ✅ **LM-V Brainfuck (on the VM).** The one genuine op-gap, closed generically. `vm-core`
+  0.4.0 grew the byte-tape ops `alloc_bytes`/`load_byte`/`store_byte` (the lowered tape form
+  `lower_brainfuck_for_aot` emits) in its dispatch — implemented over the **existing flat
+  `memory` address space** (the same `HashMap<i64, Value>` `load_mem`/`store_mem` use): a
+  cell is `memory[base + idx]` (default `0`), `store_byte` masks to a byte (the 8-bit wrap),
+  `load_byte` reads it back unsigned. No new value kind, no per-language code. Verified by
+  RUNNING `++++++++[>++++++++<-]>+.` on the VM → `A`. **The VM column is now complete — all
+  six languages run on the one `VMCore` interpreter via the shared IIR.**
+- ✅ **Phase I — generic JIT (the last column).** Added a `Backend::Jit` runner to
+  `lang_matrix.rs`: source → `compile_source_to_iir` (the *same* shared pipeline) →
+  `jit_core::JITCore` driving the language-agnostic `GenericCirJit` over the shared IIR.
+  `execute_with_jit` eagerly compiles every fully-typed function to JIT bytecode (installing
+  a native handler) and interprets the rest on `VMCore`, so each program runs *through the
+  JIT pipeline*. **No per-language code** — the I/O builtins are registered as callbacks on
+  both tiers, exactly the way a future Ruby/JS frontend would.
+
+  Closing the column surfaced one genuine generic-JIT gap: `GenericCirJit::run` ignored its
+  `args`, so a compiled function with parameters (Nib's `double(x) -> x + x`) read its
+  parameter as the zero-initialised register and returned `0`. Fixed at the **generic**
+  level (`jit-core` 0.4.0): `compile_fn` now calls `compile_function` (passing the
+  `FunctionContext` — name, params, return type), `GenericCirJit::compile_function`
+  pre-binds the parameters to registers `0..n` in declaration order, and `run` seeds those
+  registers from the call arguments. Any frontend whose functions take arguments now JITs
+  and runs correctly — the register-VM/JIT design the directive calls for. Verified by
+  RUNNING all six languages on the JIT in-process (Twig→42, Nib→42, Oct→0, ALGOL→2,
+  BASIC→`42`, Brainfuck→`A`), plus direct `jit-core` unit tests for the param binding.
+  **The JIT column is now complete — every language runs on the generic JIT.**
 
 ## End state
 
@@ -366,9 +384,10 @@ The campaign reaches that end state in two waves: first the **code-generator col
 (native ✅, **LLVM ✅**, **WASM ✅**, **JVM ✅**, **CLR ✅ — all six languages on all five**)
 — general over the shared IIR, so each cell was mostly a conformance test plus the
 occasional I/O/type fix; **the entire code-gen wave is complete.** The second wave is the
-**execution columns** — the generic register **VM** (`vm_core::VMCore`, which already
-consumes the shared IIR; now green for 5/6, only Brainfuck's byte-tape ops left) and the
-**JIT** (a generic `run_on_jit` over `jit-core`'s language-agnostic `GenericCirJit`). Both
-are deliberately **generic** so a future Ruby/JS frontend runs on them with zero rework —
-the same "shared primitive, no per-language hack" principle as the code-gen backends. The
-VM column is the only one in progress; the JIT column is the last ☐.
+**execution columns** — the generic register **VM** (`vm_core::VMCore`, which consumes the
+shared IIR) and the generic **JIT** (`jit_core::JITCore` + the language-agnostic
+`GenericCirJit`, also over the shared IIR). Both are deliberately **generic** so a future
+Ruby/JS frontend runs on them with zero rework — the same "shared primitive, no
+per-language hack" principle as the code-gen backends. **Both execution columns are now
+complete — all six languages run on both — so the entire platform matrix is green (every
+language on every backend except BEAM, verified by running).**

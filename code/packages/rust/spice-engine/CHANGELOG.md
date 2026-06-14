@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add `select_deck_analysis_plan` so callers can choose one explicit or
+  implicit deck analysis plan with stable ambiguity and invalid-card errors,
+  matching Python and TypeScript.
+- Add `resolve_deck_analyses` so `.op`, `.dc`, `.ac`, and `.tran` analysis
+  cards are extracted before `.end` into stable metadata with shared
+  diagnostics, matching Python and TypeScript.
 - Add `resolve_deck_fourier`, `fourier_transient_cards`, and
   `fourier_transient_deck` so parsed `.four` / `.FOUR` deck cards can route
   transient samples into SPICE-style Fourier harmonic results with optional

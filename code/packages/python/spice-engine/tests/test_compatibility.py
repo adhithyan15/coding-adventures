@@ -9,6 +9,7 @@ from spice_engine import (
     format_compatibility_corpus_table,
     format_release_readiness_report,
     release_readiness_gates,
+    resolve_deck_analyses,
     resolve_deck_fourier,
     resolve_deck_functions,
     resolve_deck_initial_conditions,
@@ -16,6 +17,7 @@ from spice_engine import (
     resolve_deck_outputs,
     resolve_deck_parameters,
     resolve_deck_sources,
+    select_deck_analysis_plan,
     select_deck_output_probes,
 )
 
@@ -565,6 +567,139 @@ V1 in 0 DC 1
 """,
         "transient",
     ) == ["V(out)", "I(V1)", "V(clk)"]
+
+
+def test_resolve_deck_analyses_extracts_supported_cards() -> None:
+    summary = resolve_deck_analyses(
+        """
+V1 in 0 DC 0
+R1 in out 1k
+.op
+.dc V1 0 5 1
+.ac dec 10 1k 1Meg
+.tran 1u 2m 0 10u uic
+.end
+.tran 1u 1m
+"""
+    )
+
+    assert summary.active_lines == ("V1 in 0 DC 0", "R1 in out 1k")
+    assert summary.terminated is True
+    assert summary.end_line_number == 8
+    assert summary.diagnostics == ()
+    assert [analysis.analysis for analysis in summary.analyses] == [
+        "op",
+        "dc",
+        "ac",
+        "tran",
+    ]
+
+    dc = summary.analyses[1]
+    assert dc.directive == ".dc"
+    assert dc.source_name == "V1"
+    assert dc.start_value == pytest.approx(0.0)
+    assert dc.stop_value == pytest.approx(5.0)
+    assert dc.step_value == pytest.approx(1.0)
+
+    ac = summary.analyses[2]
+    assert ac.directive == ".ac"
+    assert ac.sweep_kind == "dec"
+    assert ac.point_count == 10
+    assert ac.start_frequency == pytest.approx(1.0e3)
+    assert ac.stop_frequency == pytest.approx(1.0e6)
+
+    tran = summary.analyses[3]
+    assert tran.directive == ".tran"
+    assert tran.step_time == pytest.approx(1.0e-6)
+    assert tran.stop_time == pytest.approx(2.0e-3)
+    assert tran.start_time == pytest.approx(0.0)
+    assert tran.max_step == pytest.approx(1.0e-5)
+    assert tran.use_initial_conditions is True
+
+
+def test_resolve_deck_analyses_reports_invalid_cards() -> None:
+    summary = resolve_deck_analyses(
+        """
+.op extra
+.dc V1 0 1 0
+.dc V1 1 0 1
+.ac decade 10 1 10
+.ac lin 0 1 10
+.tran 0 1m
+.tran 1u 2m 0 1u extra
+.end
+"""
+    )
+
+    assert summary.analyses == ()
+    assert sorted(diagnostic.code for diagnostic in summary.diagnostics) == [
+        "SPICE_DECK_ANALYSIS_ARGUMENT",
+        "SPICE_DECK_ANALYSIS_ARGUMENT",
+        "SPICE_DECK_ANALYSIS_INTERVAL",
+        "SPICE_DECK_ANALYSIS_MODE",
+        "SPICE_DECK_ANALYSIS_SWEEP",
+        "SPICE_DECK_ANALYSIS_SWEEP",
+        "SPICE_DECK_ANALYSIS_SWEEP",
+    ]
+
+
+def test_select_deck_analysis_plan_defaults_and_selects() -> None:
+    implicit = select_deck_analysis_plan(
+        """
+V1 in 0 DC 1
+R1 in 0 1k
+.end
+"""
+    )
+    assert implicit.directive == ".op"
+    assert implicit.analysis == "op"
+    assert implicit.line_number == 0
+
+    selected = select_deck_analysis_plan(
+        """
+V1 in 0 DC 0
+.dc V1 0 5 1
+.tran 1u 2m
+.end
+""",
+        "transient",
+    )
+    assert selected.directive == ".tran"
+    assert selected.analysis == "tran"
+    assert selected.line_number == 4
+    assert selected.stop_time == pytest.approx(2.0e-3)
+
+
+def test_select_deck_analysis_plan_reports_ambiguous_or_invalid_selection() -> None:
+    with pytest.raises(ValueError, match="multiple analysis cards"):
+        select_deck_analysis_plan(
+            """
+.dc V1 0 5 1
+.tran 1u 2m
+.end
+"""
+        )
+
+    with pytest.raises(ValueError, match=r"multiple \.tran analysis cards"):
+        select_deck_analysis_plan(
+            """
+.tran 1u 2m
+.tran 2u 4m
+.end
+""",
+            ".tran",
+        )
+
+    with pytest.raises(ValueError, match="unsupported analysis"):
+        select_deck_analysis_plan(".op\n.end\n", "noise")
+
+    with pytest.raises(ValueError, match=r"line 2: \.dc step value must be non-zero"):
+        select_deck_analysis_plan(
+            """
+.dc V1 0 1 0
+.end
+"""
+        )
 
 
 def test_resolve_deck_outputs_reports_invalid_cards() -> None:

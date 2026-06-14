@@ -1,8 +1,8 @@
 [package]
 name = "vm-core"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "Generic register interpreter for InterpreterIR — the vm-core of the LANG pipeline"
+description = "Generic register interpreter for InterpreterIR — the vm-core of the LANG pipeline.  v0.4.0 (LANG-MATRIX Phase V): adds the byte-tape ops alloc_bytes/load_byte/store_byte over the flat memory address space (a cell is memory[base+idx], store_byte masks to a byte for Brainfuck's 8-bit wrap), so the generic VM runs Brainfuck — every matrix language now runs on this one register interpreter."
 
 [lib]
 name = "vm_core"

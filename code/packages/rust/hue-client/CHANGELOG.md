@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   action, and state-projection coverage over typed CLIP v2 snapshots, plus
   relationship, scene-state, projectable-surface, and partial-lighting
   predicates.
+- Hue snapshot readiness summaries for bridge identity, lighting, area
+  relationship, scene, sensor/input, and state projection handoff checks.
 - Hue event-stream summaries for compact retry-hint, record, resource-item, and
   resource-type coverage over parsed Server-Sent Events batches, plus typed-item
   and multi-type predicates.

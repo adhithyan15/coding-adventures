@@ -1,0 +1,128 @@
+{
+  "_doc": "Warm-path results. answer_time_model_calls_total MUST be 0 - the model only ran once per case in decompose.py; every diagnosis here is produced by the CPU engine over the imported CAS rulebook.",
+  "n_cases": 4,
+  "correct": 4,
+  "abstained": 0,
+  "wrong": 0,
+  "answer_time_model_calls_total": 0,
+  "results": [
+    {
+      "case_id": "case_bacterial_culture",
+      "answer_time_model_calls": 0,
+      "decision": {
+        "type": "determinate",
+        "leader": "bacterial_meningitis",
+        "posterior": 0.9999995386556623,
+        "margin_posterior": 0.03699953865566219,
+        "margin_logit": 11.329985175953148
+      },
+      "leader": "bacterial_meningitis",
+      "n_evidence_for_leader": 5,
+      "posteriors": {
+        "bacterial_meningitis": 0.9999995386556623,
+        "viral_meningitis": 0.9630000000000001
+      },
+      "gold": "bacterial_meningitis",
+      "kept": [
+        "csf_neutrophilic_pleocytosis(high)",
+        "csf_glucose(low)",
+        "csf_protein(high)",
+        "csf_gram_stain(positive)",
+        "csf_culture(positive)",
+        "fever(present)",
+        "meningismus(present)"
+      ],
+      "dropped": [
+        {
+          "term": "enteroviral_pcr(negative)",
+          "reason": "denied polarity"
+        },
+        {
+          "term": "seizure(absent)",
+          "reason": "denied polarity"
+        }
+      ],
+      "score": "correct"
+    },
+    {
+      "case_id": "case_preculture_ambiguous",
+      "answer_time_model_calls": 0,
+      "decision": {
+        "type": "determinate",
+        "leader": "bacterial_meningitis",
+        "posterior": 0.9894846753884896,
+        "margin_posterior": 0.02648467538848953,
+        "margin_logit": 1.28521509858313
+      },
+      "leader": "bacterial_meningitis",
+      "n_evidence_for_leader": 3,
+      "posteriors": {
+        "bacterial_meningitis": 0.9894846753884896,
+        "viral_meningitis": 0.9630000000000001
+      },
+      "gold": "bacterial_meningitis",
+      "kept": [
+        "csf_neutrophilic_pleocytosis(high)",
+        "csf_glucose(low)",
+        "csf_protein(high)",
+        "fever(present)"
+      ],
+      "dropped": [],
+      "score": "correct"
+    },
+    {
+      "case_id": "case_viral_chemistry",
+      "answer_time_model_calls": 0,
+      "decision": {
+        "type": "determinate",
+        "leader": "viral_meningitis",
+        "posterior": 0.99963937677859,
+        "margin_posterior": 0.96263937677859,
+        "margin_logit": 11.186451663571912
+      },
+      "leader": "viral_meningitis",
+      "n_evidence_for_leader": 3,
+      "posteriors": {
+        "viral_meningitis": 0.99963937677859,
+        "bacterial_meningitis": 0.037000000000000005
+      },
+      "gold": "viral_meningitis",
+      "kept": [
+        "csf_lymphocytic_pleocytosis(high)",
+        "csf_glucose(normal)",
+        "csf_lactate(normal)",
+        "csf_gram_stain(negative)",
+        "enteroviral_pcr(negative)"
+      ],
+      "dropped": [],
+      "score": "correct"
+    },
+    {
+      "case_id": "case_viral_entero",
+      "answer_time_model_calls": 0,
+      "decision": {
+        "type": "determinate",
+        "leader": "viral_meningitis",
+        "posterior": 0.9996483571162262,
+        "margin_posterior": 0.7357687047668328,
+        "margin_logit": 8.978443211658334
+      },
+      "leader": "viral_meningitis",
+      "n_evidence_for_leader": 3,
+      "posteriors": {
+        "viral_meningitis": 0.9996483571162262,
+        "bacterial_meningitis": 0.2638796523493935
+      },
+      "gold": "viral_meningitis",
+      "kept": [
+        "csf_lymphocytic_pleocytosis(high)",
+        "csf_glucose(normal)",
+        "csf_protein(high)",
+        "csf_gram_stain(negative)",
+        "enteroviral_pcr(positive)"
+      ],
+      "dropped": [],
+      "score": "correct"
+    }
+  ]
+}

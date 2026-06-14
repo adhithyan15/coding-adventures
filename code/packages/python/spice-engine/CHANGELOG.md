@@ -4,6 +4,16 @@
 
 ### Added
 
+- **Deck analysis-plan selector** —
+  `select_deck_analysis_plan()` now resolves one explicit or implicit deck
+  analysis plan with stable ambiguity and invalid-card errors, matching Rust
+  and TypeScript.
+
+- **Deck analysis-plan resolver** —
+  `resolve_deck_analyses()` now extracts `.op`, `.dc`, `.ac`, and `.tran`
+  analysis cards before `.end` into stable metadata with shared diagnostics,
+  matching Rust and TypeScript.
+
 - **Parsed save/probe output parity** —
   `resolve_deck_outputs()`, `select_deck_output_probes()`, and the
   `format_deck_*_table()` helpers now route parsed `.save` / `.probe` cards

@@ -1,0 +1,42 @@
+% ============================================================================
+% formulary — grounded antibiotic facts, as an importable CAS library.
+% ============================================================================
+% Every `observe` below is a fact the formulary-spider grounded in a primary
+% source and the adversarial gate ACCEPTED (re-extraction-stable + entailed).
+% Provenance (byte-quote + source URL) is in the sibling manifest; refuted
+% coverage facts were dropped by the gate; flagged facts kept at trust inferred.
+% A program `import`s this object to bring the grounded formulary into scope.
+
+observe covers(vancomycin, mrsa)   % [grounded] Clinical Practice Guidelines by the Infectious Dis
+observe csf_penetrant(vancomycin)   % [inferred — flagged by gate]
+observe covers(ceftriaxone, n_meningitidis)   % [grounded] Clinical Guidance for Meningococcal Disease | Meni
+observe covers(ceftriaxone, h_influenzae)   % [grounded] Practice Guidelines for the Management of Bacteria
+observe covers(ceftriaxone, s_pneumoniae_susceptible)   % [grounded] Penicillin-Susceptible Streptococcus pneumoniae Me
+observe csf_penetrant(ceftriaxone)
+observe contraindicated(ceftriaxone, betalactam_allergy_severe)
+observe covers(ampicillin, listeria)   % [grounded] Listeria monocytogenes Infective Endocarditis With
+observe csf_penetrant(ampicillin)
+observe contraindicated(ampicillin, betalactam_allergy_severe)
+observe covers(cefepime, n_meningitidis)   % [inferred — flagged by gate]
+observe covers(cefepime, pseudomonas)   % [grounded] Cephalosporins - StatPearls - NCBI Bookshelf
+observe covers(cefepime, gram_negative)   % [grounded] Cefepime - StatPearls - NCBI Bookshelf (NIH)
+observe covers(cefepime, s_pneumoniae_susceptible)   % [inferred — flagged by gate]
+observe csf_penetrant(cefepime)
+observe contraindicated(cefepime, betalactam_allergy_severe)
+observe covers(meropenem, n_meningitidis)   % [grounded] DailyMed — Meropenem for Injection, FDA Prescribin
+observe covers(meropenem, listeria)   % [grounded] Analysis of a case report of meningitis caused by 
+observe covers(meropenem, pseudomonas)   % [grounded] MEROPENEM for Injection, USP (I.V.) — FDA Prescrib
+observe covers(meropenem, gram_negative)   % [grounded] DailyMed — MEROPENEM injection, powder, for soluti
+observe covers(meropenem, s_pneumoniae_susceptible)   % [grounded] Management of Bacterial Meningitis: New Guidelines
+observe csf_penetrant(meropenem)   % [inferred — flagged by gate]
+observe contraindicated(meropenem, betalactam_allergy_severe)
+observe covers(moxifloxacin, n_meningitidis)   % [inferred — flagged by gate]
+observe csf_penetrant(moxifloxacin)
+observe covers(aztreonam, n_meningitidis)   % [inferred — flagged by gate]
+observe covers(aztreonam, gram_negative)   % [grounded] Aztreonam. A review of its antibacterial activity,
+observe covers(aztreonam, pseudomonas)   % [grounded] Aztreonam for Injection, USP — FDA Prescribing Inf
+observe csf_penetrant(aztreonam)
+observe covers(tmp_smx, listeria)   % [grounded] Listeria Monocytogenes — Johns Hopkins ABX Guide
+observe csf_penetrant(tmp_smx)
+observe combination_covers(vancomycin, ceftriaxone, s_pneumoniae_resistant)   % [IDSA Tunkel 2004 (via AAFP summary): for penicilli]
+observe combination_covers(vancomycin, cefepime, s_pneumoniae_resistant)   % [IDSA Tunkel 2004: vancomycin + a broad cephalospor]

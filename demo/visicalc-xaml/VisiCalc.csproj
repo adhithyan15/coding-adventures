@@ -36,6 +36,22 @@
     </Compile>
     <Compile Include="Generated\FormulaBar.Event.cs" />
 
+    <!-- Generated Grid triple + its view-model records and the
+         BoolToVisibilityConverter the inline-edit If/Else lowering
+         needs. All produced by the second mosaic-compile invocation
+         in scripts/build.sh. -->
+    <Page Include="Generated\Grid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Generated\Grid.xaml.cs">
+      <DependentUpon>Generated\Grid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Grid.Event.cs" />
+    <Compile Include="Generated\Grid_HVm.cs" />
+    <Compile Include="Generated\Grid_RowVm.cs" />
+    <Compile Include="Generated\Grid_VVm.cs" />
+    <Compile Include="Generated\BoolToVisibilityConverter.cs" />
+
     <!-- Hand-written shell pieces. -->
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -129,6 +129,9 @@ covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`
 and **comparison** (`cmp_*` → `ceq`/`clt`/`cgt`, negating the other three with `ldc.i4.0; ceq`)
 rows above — previously only the binary codegen path emitted them, which is why running
 the LANG-MATRIX expression languages (Nib/Oct/ALGOL) on the real CLR first surfaced the gap.
+As of 0.19.0 the textual path likewise covers the **bitwise/shift** row
+(`and`/`or`/`xor`/`shl`/`shr` → the identically named CIL opcodes) — the same kind of
+bytecode-path-only gap, surfaced by running Nib `& | ^` on the real CLR (LANG-FULL N3).
 
 As of 0.17.0 it also emits the **`print_i64`** I/O primitive (Dartmouth BASIC's `PRINT`)
 as `call void [System.Console]System.Console::WriteLine(int32)`; for a program that

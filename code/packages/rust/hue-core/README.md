@@ -51,6 +51,27 @@ packages a typed surface for:
   pairing flows
 - integration descriptor metadata and payload-free summaries for Chief of Staff
   discovery
+- integration package summaries that join descriptor, command-flow, and local
+  pairing readiness
+- Hue package release-readiness summaries for catalog publish checks across
+  worker, command-flow, local-pairing, event-stream, and physical-presence gates
+- Hue package spec summaries for catalog/spec handoff checks across canonical
+  identity, CLIP v2 endpoints, registration headers, and runtime model surface
+- Hue package spec gap summaries that route blocked package specs to release,
+  identity, CLIP v2 transport, or runtime model review
+- Hue catalog package readiness summaries that roll package/spec, release,
+  identity, transport, runtime model, and pairing-handoff gates into one
+  payload-free catalog handoff check
+- Hue catalog package gap summaries that route blocked catalog handoffs to
+  spec, release, identity, transport/runtime, or pairing-handoff review
+- Hue catalog/spec handoff summaries that count accepted catalog, spec,
+  release, and runtime/pairing review gates
+- Hue package publish-gate summaries that route blocked handoffs to catalog,
+  release, or runtime/pairing review queues
+- Hue package lifecycle summaries that count release, spec, catalog, handoff,
+  and publish stages as one ordered package readiness view
+- Hue package review-queue summaries that turn lifecycle stage blockers into
+  release, spec, catalog, handoff, and publish acceptance queues
 
 ## Dependencies
 

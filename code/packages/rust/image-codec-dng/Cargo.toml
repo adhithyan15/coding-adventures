@@ -9,3 +9,4 @@ license = "MIT"
 pixel-container = { path = "../pixel-container" }
 paint-instructions = { path = "../paint-instructions" }
 image-codec-tiff = { path = "../image-codec-tiff" }
+image-raw-pipeline = { path = "../image-raw-pipeline" }

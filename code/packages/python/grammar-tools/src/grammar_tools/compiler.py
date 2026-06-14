@@ -228,6 +228,8 @@ def compile_token_grammar(grammar: TokenGrammar, source_file: str = "") -> str:
         f"{i1}reserved_keywords={grammar.reserved_keywords!r},",
         f"{i1}error_definitions={err_src},",
         f"{i1}groups={groups_src},",
+        f"{i1}start_mode={grammar.start_mode!r},",
+        f"{i1}transitions={grammar.transitions!r},",
         f"{i1}layout_keywords={grammar.layout_keywords!r},",
         ")",
     ])
@@ -242,7 +244,7 @@ def compile_token_grammar(grammar: TokenGrammar, source_file: str = "") -> str:
         "# Downstream packages import TOKEN_GRAMMAR directly instead of\n"
         "# reading and parsing the .tokens file at runtime.\n"
         "\n"
-        "from grammar_tools.token_grammar import PatternGroup, TokenDefinition, TokenGrammar\n"  # noqa: E501
+        "from grammar_tools.token_grammar import ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction\n"  # noqa: E501
         "\n"
         "# fmt: off  # noqa: E501 — generated code may have long lines\n"
         "\n"

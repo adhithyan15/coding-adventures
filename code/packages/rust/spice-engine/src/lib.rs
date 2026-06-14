@@ -3351,6 +3351,45 @@ pub struct DeckOutputSummary {
     pub diagnostics: Vec<DeckOutputDiagnostic>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckAnalysisPlan {
+    pub directive: String,
+    pub analysis: String,
+    pub line_number: usize,
+    pub source_name: Option<String>,
+    pub start_value: Option<f64>,
+    pub stop_value: Option<f64>,
+    pub step_value: Option<f64>,
+    pub sweep_kind: Option<String>,
+    pub point_count: Option<usize>,
+    pub start_frequency_hz: Option<f64>,
+    pub stop_frequency_hz: Option<f64>,
+    pub step_time: Option<f64>,
+    pub stop_time: Option<f64>,
+    pub start_time: Option<f64>,
+    pub max_step: Option<f64>,
+    pub use_initial_conditions: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckAnalysisDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub token: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckAnalysisSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub analyses: Vec<DeckAnalysisPlan>,
+    pub diagnostics: Vec<DeckAnalysisDiagnostic>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
@@ -3786,6 +3825,95 @@ pub fn select_deck_output_probes(netlist: &str, analysis: &str) -> Result<Vec<St
     Ok(selected)
 }
 
+pub fn resolve_deck_analyses(netlist: &str) -> DeckAnalysisSummary {
+    let mut state = DeckAnalysisState::default();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if matches!(directive.as_deref(), Some(".op" | ".dc" | ".ac" | ".tran")) {
+            resolve_analysis_line(
+                stripped,
+                line_number,
+                directive.as_deref().unwrap(),
+                &mut state,
+            );
+            continue;
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckAnalysisSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        analyses: state.analyses,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn select_deck_analysis_plan(
+    netlist: &str,
+    analysis: Option<&str>,
+) -> Result<DeckAnalysisPlan, SpiceError> {
+    let summary = resolve_deck_analyses(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "select_deck_analysis_plan",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+
+    let requested_analysis = match analysis {
+        Some(value) => Some(normalize_deck_analysis_name(value).ok_or_else(|| {
+            table_error(
+                "select_deck_analysis_plan",
+                &format!("unsupported analysis {value:?}"),
+            )
+        })?),
+        None => None,
+    };
+
+    let mut plans = summary.analyses;
+    if let Some(requested_analysis) = requested_analysis {
+        plans.retain(|plan| plan.analysis == requested_analysis);
+        if plans.is_empty() {
+            return Err(table_error(
+                "select_deck_analysis_plan",
+                &format!("no .{requested_analysis} analysis card found"),
+            ));
+        }
+        if plans.len() > 1 {
+            return Err(table_error(
+                "select_deck_analysis_plan",
+                &format!("multiple .{requested_analysis} analysis cards found"),
+            ));
+        }
+        return Ok(plans.remove(0));
+    }
+
+    if plans.is_empty() {
+        return Ok(implicit_deck_op_analysis_plan());
+    }
+    if plans.len() > 1 {
+        return Err(table_error(
+            "select_deck_analysis_plan",
+            "multiple analysis cards found; pass analysis to select one",
+        ));
+    }
+    Ok(plans.remove(0))
+}
+
 pub fn release_readiness_gates(corpus: &[CompatibilityDeck]) -> ReleaseReadinessReport {
     let mut issues = Vec::new();
     let mut seen_ids = HashSet::new();
@@ -4133,6 +4261,12 @@ impl DeckFourierState {
 struct DeckOutputState {
     diagnostics: Vec<DeckOutputDiagnostic>,
     selections: Vec<DeckOutputSelection>,
+}
+
+#[derive(Default)]
+struct DeckAnalysisState {
+    diagnostics: Vec<DeckAnalysisDiagnostic>,
+    analyses: Vec<DeckAnalysisPlan>,
 }
 
 impl DeckOutputState {
@@ -5046,6 +5180,312 @@ fn resolve_fourier_line(line: &str, line_number: usize, state: &mut DeckFourierS
         line_number,
         harmonics,
         from_value,
+    });
+}
+
+fn resolve_analysis_line(
+    line: &str,
+    line_number: usize,
+    directive: &str,
+    state: &mut DeckAnalysisState,
+) {
+    let tokens = directive_tokens(line);
+    match directive {
+        ".op" => resolve_op_analysis(&tokens, line_number, state),
+        ".dc" => resolve_dc_analysis(&tokens, line_number, state),
+        ".ac" => resolve_ac_analysis(&tokens, line_number, state),
+        ".tran" => resolve_tran_analysis(&tokens, line_number, state),
+        _ => {}
+    }
+}
+
+fn resolve_op_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if tokens.len() != 1 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".op",
+            line_number,
+            ".op does not accept analysis arguments",
+            Some(tokens[1].to_string()),
+        );
+        return;
+    }
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".op".to_string(),
+        analysis: "op".to_string(),
+        line_number,
+        source_name: None,
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind: None,
+        point_count: None,
+        start_frequency_hz: None,
+        stop_frequency_hz: None,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
+    });
+}
+
+fn resolve_dc_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if tokens.len() != 5 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".dc",
+            line_number,
+            ".dc requires source, start, stop, and step tokens",
+            None,
+        );
+        return;
+    }
+    let source_name = unquote_token(tokens[1]).trim().to_string();
+    if source_name.is_empty() {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".dc",
+            line_number,
+            ".dc source name must not be empty",
+            Some(tokens[1].to_string()),
+        );
+        return;
+    }
+    let start_value = parse_deck_analysis_value(tokens[2], ".dc", line_number, state);
+    let stop_value = parse_deck_analysis_value(tokens[3], ".dc", line_number, state);
+    let step_value = parse_deck_analysis_value(tokens[4], ".dc", line_number, state);
+    let (Some(start_value), Some(stop_value), Some(step_value)) =
+        (start_value, stop_value, step_value)
+    else {
+        return;
+    };
+    if step_value == 0.0 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_SWEEP",
+            ".dc",
+            line_number,
+            ".dc step value must be non-zero",
+            Some(tokens[4].to_string()),
+        );
+        return;
+    }
+    if (start_value < stop_value && step_value < 0.0)
+        || (start_value > stop_value && step_value > 0.0)
+    {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_SWEEP",
+            ".dc",
+            line_number,
+            ".dc step direction must move from start toward stop",
+            Some(tokens[4].to_string()),
+        );
+        return;
+    }
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".dc".to_string(),
+        analysis: "dc".to_string(),
+        line_number,
+        source_name: Some(source_name),
+        start_value: Some(start_value),
+        stop_value: Some(stop_value),
+        step_value: Some(step_value),
+        sweep_kind: None,
+        point_count: None,
+        start_frequency_hz: None,
+        stop_frequency_hz: None,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
+    });
+}
+
+fn resolve_ac_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if tokens.len() != 5 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".ac",
+            line_number,
+            ".ac requires sweep kind, point count, start frequency, and stop frequency",
+            None,
+        );
+        return;
+    }
+    let Some(sweep_kind) = normalize_ac_sweep_kind(tokens[1]) else {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_MODE",
+            ".ac",
+            line_number,
+            &format!(
+                ".ac sweep kind must be LIN, DEC, or OCT, got {:?}",
+                tokens[1]
+            ),
+            Some(tokens[1].to_string()),
+        );
+        return;
+    };
+    let point_count = parse_deck_analysis_integer(tokens[2], ".ac", line_number, state);
+    let start_frequency_hz = parse_deck_analysis_value(tokens[3], ".ac", line_number, state);
+    let stop_frequency_hz = parse_deck_analysis_value(tokens[4], ".ac", line_number, state);
+    let (Some(point_count), Some(start_frequency_hz), Some(stop_frequency_hz)) =
+        (point_count, start_frequency_hz, stop_frequency_hz)
+    else {
+        return;
+    };
+    if point_count < 1 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_SWEEP",
+            ".ac",
+            line_number,
+            ".ac point count must be a positive integer",
+            Some(tokens[2].to_string()),
+        );
+        return;
+    }
+    if start_frequency_hz <= 0.0
+        || stop_frequency_hz <= 0.0
+        || stop_frequency_hz < start_frequency_hz
+    {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_SWEEP",
+            ".ac",
+            line_number,
+            ".ac frequencies must be positive and stop must be >= start",
+            None,
+        );
+        return;
+    }
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".ac".to_string(),
+        analysis: "ac".to_string(),
+        line_number,
+        source_name: None,
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind: Some(sweep_kind.to_string()),
+        point_count: Some(point_count),
+        start_frequency_hz: Some(start_frequency_hz),
+        stop_frequency_hz: Some(stop_frequency_hz),
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
+    });
+}
+
+fn resolve_tran_analysis(tokens: &[&str], line_number: usize, state: &mut DeckAnalysisState) {
+    if tokens.len() < 3 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".tran",
+            line_number,
+            ".tran requires step time and stop time",
+            None,
+        );
+        return;
+    }
+    let mut use_initial_conditions = false;
+    let mut numeric_tokens = Vec::new();
+    for token in tokens.iter().skip(3) {
+        if token.trim().eq_ignore_ascii_case("uic") {
+            use_initial_conditions = true;
+            continue;
+        }
+        numeric_tokens.push(*token);
+    }
+    if numeric_tokens.len() > 2 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            ".tran",
+            line_number,
+            ".tran supports optional start time, max step, and UIC only",
+            Some(numeric_tokens[2].to_string()),
+        );
+        return;
+    }
+    let step_time = parse_deck_analysis_value(tokens[1], ".tran", line_number, state);
+    let stop_time = parse_deck_analysis_value(tokens[2], ".tran", line_number, state);
+    let start_time = numeric_tokens
+        .first()
+        .and_then(|token| parse_deck_analysis_value(token, ".tran", line_number, state));
+    let max_step = numeric_tokens
+        .get(1)
+        .and_then(|token| parse_deck_analysis_value(token, ".tran", line_number, state));
+    let (Some(step_time), Some(stop_time)) = (step_time, stop_time) else {
+        return;
+    };
+    if (numeric_tokens.len() >= 1 && start_time.is_none())
+        || (numeric_tokens.len() >= 2 && max_step.is_none())
+    {
+        return;
+    }
+    if step_time <= 0.0 || stop_time <= 0.0 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_INTERVAL",
+            ".tran",
+            line_number,
+            ".tran step time and stop time must be positive",
+            None,
+        );
+        return;
+    }
+    if let Some(start_time) = start_time {
+        if start_time < 0.0 || start_time > stop_time {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_INTERVAL",
+                ".tran",
+                line_number,
+                ".tran start time must be non-negative and <= stop time",
+                None,
+            );
+            return;
+        }
+    }
+    if max_step.is_some_and(|value| value <= 0.0) {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_INTERVAL",
+            ".tran",
+            line_number,
+            ".tran max step must be positive",
+            None,
+        );
+        return;
+    }
+    state.analyses.push(DeckAnalysisPlan {
+        directive: ".tran".to_string(),
+        analysis: "tran".to_string(),
+        line_number,
+        source_name: None,
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind: None,
+        point_count: None,
+        start_frequency_hz: None,
+        stop_frequency_hz: None,
+        step_time: Some(step_time),
+        stop_time: Some(stop_time),
+        start_time,
+        max_step,
+        use_initial_conditions,
     });
 }
 
@@ -6009,6 +6449,24 @@ fn add_output_diagnostic(
     });
 }
 
+fn add_analysis_diagnostic(
+    state: &mut DeckAnalysisState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    token: Option<String>,
+) {
+    state.diagnostics.push(DeckAnalysisDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        token,
+    });
+}
+
 fn parse_node_condition_target(target: &str) -> Option<String> {
     if target.len() < 4 || !target.to_ascii_lowercase().starts_with("v(") || !target.ends_with(')')
     {
@@ -6080,6 +6538,43 @@ fn normalize_deck_output_analysis(analysis: &str) -> Option<&'static str> {
     }
 }
 
+fn normalize_deck_analysis_name(analysis: &str) -> Option<&'static str> {
+    match analysis
+        .trim()
+        .trim_start_matches('.')
+        .replace('_', "-")
+        .to_ascii_lowercase()
+        .as_str()
+    {
+        "op" | "dcop" | "operating-point" | "operatingpoint" => Some("op"),
+        "dc" | "dc-sweep" | "dcsweep" => Some("dc"),
+        "ac" | "ac-sweep" | "acsweep" => Some("ac"),
+        "tran" | "transient" => Some("tran"),
+        _ => None,
+    }
+}
+
+fn implicit_deck_op_analysis_plan() -> DeckAnalysisPlan {
+    DeckAnalysisPlan {
+        directive: ".op".to_string(),
+        analysis: "op".to_string(),
+        line_number: 0,
+        source_name: None,
+        start_value: None,
+        stop_value: None,
+        step_value: None,
+        sweep_kind: None,
+        point_count: None,
+        start_frequency_hz: None,
+        stop_frequency_hz: None,
+        step_time: None,
+        stop_time: None,
+        start_time: None,
+        max_step: None,
+        use_initial_conditions: false,
+    }
+}
+
 fn deck_output_analysis_matches(requested: &str, analysis: &str) -> bool {
     normalize_deck_output_analysis(requested) == normalize_deck_output_analysis(analysis)
 }
@@ -6111,6 +6606,62 @@ fn normalize_deck_output_probe(token: &str) -> Option<String> {
 
 fn deck_output_probe_key(probe: &str) -> String {
     probe.to_ascii_lowercase()
+}
+
+fn parse_deck_analysis_value(
+    token: &str,
+    directive: &str,
+    line_number: usize,
+    state: &mut DeckAnalysisState,
+) -> Option<f64> {
+    let empty_parameter_state = DeckParameterState::new();
+    match evaluate_parameter_expression(
+        &strip_expression_delimiters(unquote_token(token).trim()),
+        &empty_parameter_state,
+    ) {
+        Ok(value) => Some(value),
+        Err(message) => {
+            add_analysis_diagnostic(
+                state,
+                "SPICE_DECK_ANALYSIS_EXPRESSION",
+                directive,
+                line_number,
+                &message,
+                Some(token.to_string()),
+            );
+            None
+        }
+    }
+}
+
+fn parse_deck_analysis_integer(
+    token: &str,
+    directive: &str,
+    line_number: usize,
+    state: &mut DeckAnalysisState,
+) -> Option<usize> {
+    let value = parse_deck_analysis_value(token, directive, line_number, state)?;
+    if value < 0.0 || value.fract() != 0.0 || value > usize::MAX as f64 {
+        add_analysis_diagnostic(
+            state,
+            "SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} point count must be an integer"),
+            Some(token.to_string()),
+        );
+        return None;
+    }
+    Some(value as usize)
+}
+
+fn normalize_ac_sweep_kind(token: &str) -> Option<&'static str> {
+    match token.trim().to_ascii_lowercase().as_str() {
+        "lin" => Some("lin"),
+        "dec" => Some("dec"),
+        "oct" => Some("oct"),
+        _ => None,
+    }
 }
 
 fn strip_expression_delimiters(expression: &str) -> String {

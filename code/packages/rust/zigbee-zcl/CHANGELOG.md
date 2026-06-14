@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   Response foundation frames.
 - `ZclAttributeReportSummary` plus `attribute_report_summary()` for compact
   parsed-report shape and D23 state-delta coverage diagnostics.
+- `ZclAttributeReportReadinessSummary` for D23 delta coverage, typed value
+  coverage, and raw/unknown-type hygiene checks.
 - `encode_attribute_reports()` and `report_attributes_frame()` for generating
   typed ZCL Report Attributes payloads and foundation frames.
 

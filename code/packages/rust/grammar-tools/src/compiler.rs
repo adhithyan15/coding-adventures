@@ -54,7 +54,9 @@
 //! ```
 
 use crate::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};
-use crate::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+use crate::token_grammar::{
+    ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction,
+};
 
 // ===========================================================================
 // Public API
@@ -96,7 +98,7 @@ pub fn compile_token_grammar(grammar: &TokenGrammar, source_file: &str) -> Strin
 // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
 #[allow(unused_imports)]
-use grammar_tools::token_grammar::{{PatternGroup, TokenDefinition, TokenGrammar}};
+use grammar_tools::token_grammar::{{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction}};
 #[allow(unused_imports)]
 use std::collections::HashMap;
 
@@ -116,6 +118,8 @@ pub fn token_grammar() -> TokenGrammar {{
         context_keywords: {context_kw_src},
         soft_keywords: {soft_kw_src},
         layout_keywords: {layout_kw_src},
+        start_mode: {start_mode_src},
+        transitions: {transitions_src},
     }}
 }}
 ",
@@ -135,6 +139,8 @@ pub fn token_grammar() -> TokenGrammar {{
         context_kw_src = string_vec_src(&grammar.context_keywords),
         soft_kw_src = string_vec_src(&grammar.soft_keywords),
         layout_kw_src = string_vec_src(&grammar.layout_keywords),
+        start_mode_src = option_str_src(&grammar.start_mode),
+        transitions_src = transitions_src(&grammar.transitions, "        "),
     )
 }
 
@@ -310,6 +316,63 @@ fn groups_src(groups: &std::collections::HashMap<String, PatternGroup>, indent: 
         entries = entries.join("\n"),
         indent = indent,
     )
+}
+
+/// Render a `Vec<ModeTransition>` (F10) as a Rust `vec![...]` expression.
+///
+/// Emitted in source order — the slice is already ordered and order is
+/// semantically meaningful (first-matching-rule-wins), so no sort (unlike
+/// `groups_src`, which orders a HashMap for determinism).
+fn transitions_src(ts: &[ModeTransition], indent: &str) -> String {
+    if ts.is_empty() {
+        return "vec![]".to_string();
+    }
+    let inner = format!("{}    ", indent);
+    let items: Vec<String> = ts.iter().map(|t| transition_src(t, &inner)).collect();
+    format!("vec![\n{},\n{}]", items.join(",\n"), indent)
+}
+
+/// Render one `ModeTransition` as a Rust struct expression.
+fn transition_src(t: &ModeTransition, indent: &str) -> String {
+    let on_tokens = string_vec_src(&t.on_tokens);
+    let on_value = option_str_src(&t.on_value);
+    let in_mode = option_str_src(&t.in_mode);
+    let actions = if t.actions.is_empty() {
+        "vec![]".to_string()
+    } else {
+        let items: Vec<String> = t.actions.iter().map(action_src).collect();
+        format!("vec![{}]", items.join(", "))
+    };
+    format!(
+        "{indent}ModeTransition {{\n\
+         {indent}    on_tokens: {on_tokens},\n\
+         {indent}    on_value: {on_value},\n\
+         {indent}    in_mode: {in_mode},\n\
+         {indent}    actions: {actions},\n\
+         {indent}    line_number: {line_number},\n\
+         {indent}}}",
+        indent = indent,
+        on_tokens = on_tokens,
+        on_value = on_value,
+        in_mode = in_mode,
+        actions = actions,
+        line_number = t.line_number,
+    )
+}
+
+/// Render one `TransitionAction` as a Rust expression.
+fn action_src(a: &TransitionAction) -> String {
+    match a {
+        TransitionAction::SetMode(m) => {
+            format!("TransitionAction::SetMode({}.to_string())", rust_string_lit(m))
+        }
+        TransitionAction::Push(g) => {
+            format!("TransitionAction::Push({}.to_string())", rust_string_lit(g))
+        }
+        TransitionAction::Pop => "TransitionAction::Pop".to_string(),
+        TransitionAction::EnableSkip => "TransitionAction::EnableSkip".to_string(),
+        TransitionAction::DisableSkip => "TransitionAction::DisableSkip".to_string(),
+    }
 }
 
 // ===========================================================================
@@ -646,5 +709,39 @@ mod tests {
         let g = parse_parser_grammar("# @version 4\nvalue = NUMBER ;").unwrap();
         let code = compile_parser_grammar(&g, "");
         assert!(code.contains("version: 4"));
+    }
+
+    #[test]
+    fn token_grammar_no_transitions_emits_empty_defaults() {
+        // Backward compat: a grammar without F10 sections emits the two new
+        // fields as trivial defaults.
+        let g = crate::token_grammar::parse_token_grammar("NUMBER = /[0-9]+/").unwrap();
+        let code = compile_token_grammar(&g, "n.tokens");
+        assert!(code.contains("start_mode: None"));
+        assert!(code.contains("transitions: vec![]"));
+    }
+
+    #[test]
+    fn token_grammar_emits_transition_table() {
+        let source = "\
+NAME = /[a-z]+/
+start_mode: div
+group div:
+  SLASH = \"/\"
+transitions:
+  on (NAME | RPAREN) -> set-mode div
+  on KEYWORD=\"return\" -> set-mode default
+";
+        let g = crate::token_grammar::parse_token_grammar(source).unwrap();
+        let code = compile_token_grammar(&g, "js.tokens");
+        // start_mode threads through.
+        assert!(code.contains(r#"start_mode: Some(r#"div"#));
+        // The emitted table references the real types and variants.
+        assert!(code.contains("ModeTransition {"));
+        assert!(code.contains("TransitionAction::SetMode(r#\"div\"#.to_string())"));
+        // on_value guard for the keyword rule.
+        assert!(code.contains(r#"on_value: Some(r#"return"#));
+        // The emitted import line carries the new types.
+        assert!(code.contains("ModeTransition") && code.contains("TransitionAction"));
     }
 }

@@ -189,14 +189,14 @@
     grid.setAttribute("selected-col",   String(SAMPLE.selectedCol));
     grid.setAttribute("edit-content",   SAMPLE.editContent);
 
-    // Post-process: paint the selected-cell highlight.  The
-    // WebComponent emitter's static template lowering does not yet
-    // fold `state-when-*` predicates into the shadow-DOM render
-    // (sub-part state needs runtime evaluation in the shadow DOM,
-    // and that's a follow-up); we add the highlight via a style
-    // injection into the shadow root so the demo's selected cell
-    // carries the same VS Code-blue accent as the React / SwiftUI
-    // / HTML renders.
+    // Selected-cell highlight: the WebComponent emitter now folds
+    // the `cell:selected` / `cell:editing` state blocks directly
+    // into each `<td>`'s inline `style` via a runtime ternary on the
+    // `state-when-*` predicate (so the blue accent comes from the
+    // compiled Grid.js itself, matching the React / SwiftUI / HTML
+    // renders).  This belt-and-suspenders pass is kept only as a
+    // defensive fallback for browsers/situations where the ternary
+    // hasn't painted yet; it sets the same colours the emitter does.
     //
     // We retry briefly to handle the connectedCallback race — if
     // the bundle hasn't registered the element yet, shadowRoot is

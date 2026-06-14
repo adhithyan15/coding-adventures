@@ -362,4 +362,130 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 
 ## closurec number printer — emit over the f64 VALUE with shortest-round-trip, and don't globally round the integer (it corrupts the scientific form)
 
+When testing variable-length codecs, the round-trip test parameter set MUST include at least one value in each form whose low byte is < 128 (e.g. 256, 300, 515, 768) — otherwise a low-byte-first regression silently passes. Pure round-trip tests on a self-consistent broken codec are blind to byte-order bugs by construction. The integration test that catches it reliably is "≥ 200 KB of repetitive text → ≥ 128 sequences in a single block" — that input distribution naturally produces counts spanning both halves of the 2-byte range.
+
 - **JS `Number`s are IEEE-754 f64; Closure's number printer emits the shortest STRING (decimal / uppercase-`E` scientific / lowercase `0x` hex) that round-trips to the f64 VALUE, not to the exact source integer. When adding a new candidate form (gap-114: large int → hex), round to f64 ONLY for that candidate — do NOT round the shared integer `n` globally, because the existing `scientific_form_of(n)` depends on `n` being the exact `m×10^e`.** Surfaced closing gap-114 in `normalize_number_value` (`whitespace_only.rs`). The hex case is genuinely f64-sensitive: `123456789012345678` exceeds 2^53, so its runtime value is the nearest double `123456789012345680`, and upstream emits `0x1b69b4ba630f350` (hex of the double) — NOT `0x…34e` (hex of the exact u128). So the hex candidate MUST be `format!("0x{:x}", (n as f64) as u128)`. The trap: I first "fixed" this by rounding `n` globally (`let n = (n as f64) as u128;`) before computing decimal/scientific/hex — which made the gap-114 fixture pass but **regressed `minify_num_exp_23`**: `100000000000000000000000` (10^23) round-trips through f64 to `99999999999999991611392`, which is no longer a clean power of ten, so `scientific_form_of` returned `None`, the `1E23` candidate vanished, and hex (`0x152d02c7e14af6000000`, 22 chars) wrongly won over the correct `1E23` (4 chars). The unit suite stayed green (625 passed) — only the `diff_minify` golden fixture caught it. **Fix pattern**: keep decimal/scientific over the EXACT integer (upstream's shortest-round-trip decimal reproduces `1E23` for a clean power), and round to f64 for the hex candidate alone. **General rule**: the byte-exact match for `> 2^53` numbers requires shortest-round-trip (Grisu/Ryu) formatting over the double; that's deferred. Until then, only add narrowly-scoped f64-aware candidates and verify against the JAR across the 2^53 boundary AND clean powers of ten (`1E23`, `1E18`). And — as with gap-077 — a green unit suite is not enough for number/formatting changes; the JAR-captured `diff_minify` golden is the gate that catches the cross-form regression.
+
+---
+
+## Lesson 92 — CI runners are ~25× slower for LZSS/compute-heavy tests; always set an explicit timeout
+
+**Date:** 2026-04-26
+
+**What happened:** The TypeScript ZStd TC-8 regression test (200 KB repetitive text → ≥ 128 sequences) ran in ~450 ms locally but took 12–15 seconds on CI runners. Vitest's default per-test timeout is 5 seconds. The CI job failed with a timeout error even though the test was functionally correct and passing locally.
+
+**Rule:** Any test that triggers an LZSS/LZ77 pass over more than 50 KB should have an explicit timeout set to at least `30_000` ms (30 s) in vitest:
+
+```ts
+it("round-trips 200 KB ...", () => { ... }, 30_000);
+```
+
+CI runners (especially GitHub Actions free-tier) run at roughly 25× slower wall-clock for CPU-intensive loops. A test that takes < 1 s locally may take 25 s on CI. Default framework timeouts (5 s for vitest, 60 s for Go's `go test`) are often too tight for large compression round-trips. Always measure on CI before assuming the default is safe.
+
+---
+
+## Lesson 93 — `unpack('C*', ...)` in Perl amplifies memory before any size check
+
+**Date:** 2026-04-26
+
+**What happened:** The Perl ZStd `decompress` function called `my @data = unpack('C*', $input)` on the raw compressed bytes as its very first step, converting each byte into a full Perl scalar. A Perl scalar occupies ~56 bytes on 64-bit builds (SV header + IV/PV storage). A 64 MB compressed input therefore expands to ~3.5 GB of Perl scalars on the heap before any frame-header validation or size guard could fire — a classic unpack memory amplification attack.
+
+**Rule:** In Perl, never `unpack('C*', ...)` a caller-supplied buffer without first checking its length:
+
+```perl
+die "input too large" if length($data) > 64 * 1024 * 1024;
+my @bytes = unpack('C*', $data);
+```
+
+64 MB is a safe upper bound for all realistic ZStd frames (the compressor's MAX_BLOCK_SIZE is 128 KB). The same pattern applies to any language where unpacking bytes into an array of objects/scalars multiplies memory by a large constant factor. Always validate the *raw byte count* before the amplifying operation, not just the logical content-size field inside the frame.
+
+---
+
+## Lesson 94 — Trailing bytes after the last ZStd block must be rejected, not silently ignored
+
+**Date:** 2026-04-26
+
+**What happened:** The Lua ZStd decoder iterated blocks in a `while true` loop and broke on `last_block == 1`. Any bytes remaining in the input after the last block were silently ignored. A fuzz input consisting of a valid 5-byte frame followed by 1 MB of garbage would be accepted without complaint, masking corruption and making the decoder lenient about malformed or concatenated frames.
+
+**Rule:** After the block-decoding loop exits (when `last_block == 1`), assert that the read cursor equals `#data` (or `data.length`, or the frame boundary). If any bytes remain, raise an error:
+
+```lua
+if pos <= #data then
+  error("unexpected trailing data after last block")
+end
+```
+
+The same check belongs in every language port. A strict decoder is far safer — it surfaces truncation and concatenation bugs immediately rather than silently returning partial output or accepting garbage.
+
+---
+
+## WEB09 Java Conduit / JNI cross-thread callbacks — five gotchas
+
+**Date:** 2026-04-27
+
+Porting Conduit to Java over `web-core` via `jni-bridge` surfaced a cluster of JNI-specific traps. All five recur for any future JVM↔Rust callback port (Kotlin, etc.):
+
+1. **`JNIEnv*` is thread-local; the JavaVM is not.** web-core dispatches on Rust I/O threads the JVM never created. You cannot reuse the registration-call `env`. Capture the `JavaVM*` once via `GetJavaVM` (offset 219 on the JNIEnv table) on a JVM thread, then on each I/O thread call `AttachCurrentThreadAsDaemon` (offset 7 on the *JavaVM invocation* table — a different table, `JavaVM = *const *const c_void`). Daemon attach is idempotent, needs no `DetachCurrentThread`, and doesn't block JVM shutdown. Plain `AttachCurrentThread` requires a matching detach before the thread exits or the JVM aborts.
+
+2. **Local refs leak on a self-attached thread.** Local references are normally freed when a native method returns to Java — but an I/O thread that attached itself and loops forever never returns, so every `NewObjectA`/`NewStringUTF`/`CallObjectMethod` local ref accumulates = unbounded leak per request. Bracket each dispatch with `PushLocalFrame(env, n)` / `PopLocalFrame(env, null)` (offsets 19/20) and copy everything you need into owned Rust values before popping.
+
+3. **Handler objects must be promoted to global refs.** A Java lambda passed to `addRoute` is a local ref, dead after the native call returns. `NewGlobalRef` (offset 21) it at registration; `DeleteGlobalRef` (22) on dispose. `jclass` from `FindClass` is also local — pin the classes you cache as globals too, and resolve all method IDs on a JVM thread (FindClass from a native thread uses the system classloader, which can't see app classes).
+
+4. **Disjoint closure capture drops the Send+Sync wrapper.** web-core closures must be `Send + Sync`. Wrapping a raw `jobject` in a `struct Obj(jobject); unsafe impl Send/Sync` is not enough if the closure writes `obj.0` — Rust 2021 captures only the inner `*mut c_void` field (not Send). Add a `fn get(&self) -> jobject { self.0 }` and call `obj.get()` so the whole wrapper is captured. (Same lesson as the Node port's `ThreadSafePtr::get`.)
+
+5. **A Rust panic must never unwind across `extern "C"`.** A poisoned `Mutex` makes `.lock().unwrap()` panic; if that happens inside a JNI entrypoint called from a JVM thread, the unwind crosses the FFI boundary = UB (usually a JVM abort). Use `.lock().unwrap_or_else(|e| e.into_inner())` (poison-tolerant), and null-check every peer `jlong` before `Box::from_raw`/deref so a use-after-close lifecycle bug degrades to a safe no-op instead of dereferencing a dangling pointer. Route handler *errors* as data (an `Outcome` enum), never as panics.
+
+Also: the security sub-agent flagged a `pct_decode` "off-by-one" (`i + 2 < len`) as HIGH — it was a false positive (`i+2 < len` ⟺ `i+2` is a valid index; a trailing `%XX` decodes fine). Always settle a claimed boundary bug with a targeted unit test before "fixing" it; here the fix would have introduced the bug.
+
+---
+
+## WEB11 Perl Conduit — the crash was `newSVpv(ptr, 0)`, NOT a threading wall
+
+**Date:** 2026-06-14
+
+**What happened:** The Perl Conduit cdylib SIGSEGV'd on the first request dispatch. I initially (wrongly) blamed non-threaded Perl + web-core worker threads. The real cause was a one-line memory bug, and the threading model is actually fine.
+
+**Two corrected findings:**
+
+1. **`newSVpv(ptr, len)` treats `len == 0` as "call `strlen(ptr)`".** Perl's `newSVpv` uses the C string length when you pass 0. An empty Rust `&str` (`""`) has a non-NUL-terminated pointer, so `strlen` reads out of bounds → segfault. The very first empty field (an empty `QUERY_STRING`) crashed it. **Fix: use `newSVpvn` (explicit length, never strlens) for ALL Rust→Perl string conversions** where the value can be empty. The crash reproduced single-threaded, which is what unmasked the misdiagnosis.
+
+2. **The embeddable-http-server serve path is single-threaded inline — it does NOT spawn.** `HttpServer::bind` builds a single `TcpRuntime` (not the `ShardedTcpRuntime`); `TcpRuntime::serve()` → `StreamReactor::serve()` runs the event loop on the *calling* thread and dispatches handlers inline. So foreground `serve()` runs handlers on the calling thread — perfect for a single-interpreter language. (The `ShardedTcpRuntime` that DOES `thread::spawn` per worker is a separate, unused-by-this-path API.) The only spawn was in my own cdylib's `serve_background`; that one path is unsafe for non-threaded Perl, so the Perl port serves in the foreground and tests fork a client process.
+
+**Rule:** When a foreign-language port over web-core crashes on dispatch, reproduce it **single-threaded** (foreground serve in a standalone process + curl) before blaming threads. And from Rust always cross the boundary with the explicit-length string constructor (`newSVpvn`, not `newSVpv`); the strlen-on-zero footgun is silent until an empty value hits it. For a single-interpreter language, prefer foreground `serve()` (the inline reactor runs handlers on the calling thread) and fork a client for concurrent E2E tests.
+
+---
+
+## WEB12 Swift Conduit — three Swift/SPM gotchas + the reusable C ABI pattern
+
+**Date:** 2026-06-14
+
+Built `conduit-capi` (a reusable Rust C ABI for the whole Conduit framework, to be
+shared by WEB12–WEB18) and the Swift port on top of it. Three gotchas worth
+remembering:
+
+1. **`"\r\n"` is ONE extended grapheme cluster in Swift.** A CRLF check written as
+   `location.contains("\r")` (Character-based) returns FALSE for a string
+   containing `\r\n`, because Swift treats CRLF as a single `Character`. Scan
+   **unicode scalars** instead: `location.unicodeScalars.contains { $0 == "\r" || $0 == "\n" }`.
+   The response-splitting guard silently passed until a test caught it.
+
+2. **A library's relative `-L` linker path breaks for downstream packages.** SPM
+   runs the linker from the *root* package being built. So `Sources/CConduit` in
+   the Conduit library's `linkerSettings` resolves correctly for Conduit's own
+   tests but NOT when a demo/executable in another package links it — you get
+   `library 'conduit_capi' not found`. Fix: the downstream package re-adds its own
+   `-L <relative-path-to-the-staged-lib>` in its target's `linkerSettings`. (The
+   library's wrong path then just emits a harmless `search path not found` warning.)
+
+3. **Edition-2021 disjoint closure capture defeats a `Send + Sync` wrapper.** A
+   closure that touches `cb.ctx` (a raw pointer field) captures *that field*, not
+   the whole `Send + Sync` struct, so the closure isn't `Send`/`Sync`. Call a
+   `&self` method (`cb.call(...)`) instead — a method borrows the whole struct, so
+   the closure captures the wrapper and inherits its `Send + Sync`.
+
+**Reusable C ABI pattern:** the seven C-ABI-capable ports (Swift/C++/Go/C#/F#/Dart/
+Haskell) share ONE `conduit-capi` crate instead of re-wrapping the facade each
+time. The trust boundary (header_safe, status clamp, UTF-8 validation, panic
+isolation) is audited once. Handlers cross as a C function pointer + opaque `ctx`
++ a `ctx_free` destructor; the host boxes its closure. `crate-type = ["staticlib",
+"cdylib", "lib"]` serves compile-time linkers, FFI loaders, and `cargo test`.

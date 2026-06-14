@@ -2,6 +2,64 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.126.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-092, gap-115, gap-119** — regex-vs-division disambiguation,
+  via the new F10 declarative lexer mode transitions (no hand-written
+  per-language lexer callback). The `es2025.tokens` grammar now declares a
+  flat `div` mode entered after value-producing tokens; the shared
+  `GrammarLexer` interprets the transition table.
+  - **gap-115 (CORRECTNESS)** — `a/b/c` previously mis-lexed as `a` + regex
+    `/b/` + `c`, emitting the INVALID `a /b/ c`. It now lexes as three
+    divisions and round-trips byte-identically.
+  - **gap-092** — `var x=a/b/c;` byte-identical (was `a /b/ c`).
+  - **gap-119** — a regex after `return` no longer takes a spurious
+    separating space (`return/a/g`, not `return /a/g`). The lexer half is
+    F10; the emitter half is a `needs_separator` refinement: a `REGEX`
+    literal as the RIGHT token never needs a leading separator from a
+    word-like token (a regex starts with `/`, a punctuator), guarded
+    against the `//`-comment merge hazard. New `is_regex` helper; unit
+    tests `gap092_single_division_no_space`,
+    `gap115_division_chain_round_trips`,
+    `gap119_regex_after_return_no_space`,
+    `gap119_regex_after_assign_preserved`. The three byte-identity
+    fixtures `regex_div` / `div_chain` / `regex_after_return` are
+    un-ignored and ENFORCED.
+
+## [0.125.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-120** — a NON-INTEGER NUMBER property key is now emitted as
+  a QUOTED string of its canonical JS number form (`String(Number(key))`),
+  matching upstream Closure v20240317:
+
+      {.5:1}    ->  {"0.5":1}      {1.5:1}    ->  {"1.5":1}
+      {1.50:1}  ->  {"1.5":1}      {1e-3:1}   ->  {"0.001":1}
+      {1e-7:1}  ->  {"1e-7":1}     {2.5e-8:1} ->  {"2.5e-8":1}
+
+  Float-key counterpart of gap-116 (canonical INTEGER string key →
+  unquoted number); INTEGER numeric keys stay BARE (`{5:1}`, `{1e3:1}` →
+  `{1E3:1}`). The canonical key string is JS `String(Number(key))`, which
+  DIFFERS from closurec's value number printer (gap-040/082/113): it KEEPS
+  the leading `0` before the point (`0.5`, not `.5`), strips trailing
+  fractional zeros, and uses LOWERCASE-`e` exponential only for magnitudes
+  below `1e-6` (`1e-7`, `2.5e-8`) — verified against the JAR (`1e-6` →
+  `0.000001` stays decimal, `1e-7` goes exponential).
+
+  New `noninteger_numeric_key_string` helper in `whitespace_only.rs`,
+  wired into the number-emit branch. The coefficient and base-10 exponent
+  are computed EXACTLY from the source digits (no Grisu/Ryu); after
+  trailing-zero stripping, `E < 0` is exactly the non-integer case. The
+  property-key position guard (prev `{`/`,`, next `:`) reuses gap-116's —
+  it excludes the ternary `a?1.5:2` confound (the number is preceded by
+  `?`), array/call elements, bare values, and the value half of a
+  `{key:value}` pair (`{1.5:.5}` → `{"1.5":.5}` quotes only the key). An
+  f64-range magnitude guard (`-324..=308`) bounds the leading-zero run
+  (no DoS).
+
+  `minify_float_key_quoted` un-ignored; two `gap120_*` unit tests added.
+
 ## [0.124.0] - 2026-06-13
 
 ### Fixed

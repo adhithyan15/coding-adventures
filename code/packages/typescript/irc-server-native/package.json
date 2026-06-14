@@ -1,0 +1,40 @@
+{
+  "name": "coding-adventures-irc-server-native",
+  "version": "0.1.0",
+  "description": "High-performance IRC server for Node.js, backed by the all-Rust irc-net-reactor engine",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "irc_native_node.node"
+  ],
+  "scripts": {
+    "build:ts": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "irc",
+    "server",
+    "rust",
+    "native",
+    "napi",
+    "reactor",
+    "kqueue",
+    "epoll"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^4.1.0"
+  }
+}

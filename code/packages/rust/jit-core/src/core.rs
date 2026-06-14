@@ -80,7 +80,7 @@ use vm_core::core::VMCore;
 use vm_core::value::Value;
 use vm_core::errors::VMError;
 
-use crate::backend::Backend;
+use crate::backend::{Backend, FunctionContext};
 use crate::cache::{JITCache, JITCacheEntry};
 use crate::errors::{DeoptimizerError, JITError, UnspecializableError};
 use crate::optimizer::CIROptimizer;
@@ -425,7 +425,21 @@ impl JITCore {
         let opt_cir = self.optimizer.run(raw_cir);
 
         // Compile: Vec<CIRInstr> → backend binary.
-        let binary = match self.backend.compile(&opt_cir) {
+        //
+        // Use `compile_function` (not the bare `compile`) so the backend
+        // receives the function's shape — name, parameters in declaration
+        // order, and return type.  A backend that compiles a function with
+        // parameters needs this to bind the incoming call arguments to the
+        // right registers; `GenericCirJit` pre-seeds its register file with
+        // the params, and native backends lay out their ABI prologue from it.
+        // IR-only backends ignore the context (the trait's default forwards
+        // to `compile`), so this is a strict superset of the old call.
+        let ctx = FunctionContext {
+            name: &fn_.name,
+            params: &fn_.params,
+            return_type: &fn_.return_type,
+        };
+        let binary = match self.backend.compile_function(&ctx, &opt_cir) {
             Some(b) => b,
             None => return false,
         };

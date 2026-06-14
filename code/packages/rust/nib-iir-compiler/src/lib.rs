@@ -140,6 +140,12 @@ struct Compiler {
     /// `&self`-style call sites in expression compilation from
     /// requiring a borrow-checker dance.
     current_loc: std::cell::Cell<SourceLoc>,
+    /// Top-level `const NAME: type = literal;` values, keyed by name.
+    /// Collected once before any function is compiled (consts are
+    /// module-scoped — `top_decl`, like `fn`).  A reference to a const in a
+    /// function body resolves to its literal value (a compile-time fold), so
+    /// consts need no runtime storage and run on every backend.
+    consts: HashMap<String, i64>,
 }
 
 impl Default for Compiler {
@@ -149,6 +155,7 @@ impl Default for Compiler {
             label_counter: 0,
             source_map: Vec::new(),
             current_loc: std::cell::Cell::new(SourceLoc::SYNTHETIC),
+            consts: HashMap::new(),
         }
     }
 }
@@ -190,6 +197,9 @@ impl Compiler {
         types: &HashMap<usize, NibType>,
         module: &mut IIRModule,
     ) -> Result<(), CompileError> {
+        // Collect module-scoped `const`s first, so a function body that
+        // references one resolves to its literal (see `compile_primary`).
+        self.consts = collect_consts(root)?;
         for fn_decl in function_nodes(root) {
             let f = self.compile_function(fn_decl, types)?;
             module.add_or_replace(f);
@@ -362,6 +372,7 @@ impl Compiler {
             }
             "if_stmt" => self.compile_if(stmt, types, env, out),
             "while_stmt" => self.compile_while(stmt, types, env, out),
+            "for_stmt" => self.compile_for(stmt, types, env, out),
             other => Err(CompileError::Unsupported(format!("stmt: {other}"))),
         }
     }
@@ -417,6 +428,100 @@ impl Compiler {
         self.compile_block(body, types, env, out)?;
 
         // jmp while_<n>_top; label while_<n>_end
+        self.emit_to(out, IIRInstr::new("jmp", None,
+            vec![Operand::Var(top_lbl)], "void"));
+        self.emit_to(out, IIRInstr::new("label", None,
+            vec![Operand::Var(end_lbl)], "void"));
+        Ok(())
+    }
+
+    /// LANG-FULL N2 — compile `for NAME: type in lo .. hi block` by desugaring
+    /// to the same canonical loop shape `compile_while` uses.  The range is
+    /// **exclusive** of the upper bound (`for i in 1 .. 6` runs `i = 1,2,3,4,5`),
+    /// matching the Rust-style `..` the grammar borrows; the bounds are evaluated
+    /// **once** at loop entry.
+    ///
+    /// ```text
+    /// <eval lo → i>            ; mov  i = lo
+    /// <eval hi → h>           ; (evaluated once)
+    /// label for_<n>_top
+    /// cmp_lt c = i, h         ; loop while i < hi  (exclusive)
+    /// jmp_if_false c, for_<n>_end
+    /// <body>
+    /// add  t = i, 1 ; mov i = t   ; i += 1
+    /// jmp for_<n>_top
+    /// label for_<n>_end
+    /// ```
+    ///
+    /// At the IIR level every value flows through `i64` slots, exactly like
+    /// `compile_binary_chain` — so the loop counter's reassignment is the same
+    /// shape every backend already lowers for Brainfuck's pointer increment.
+    /// (The 4004's "bounds must be const" rule is a *backend* concern; the shared
+    /// IIR loop is fully general and runs on the VM/JIT/native/LLVM/WASM/JVM/CLR.)
+    fn compile_for(
+        &mut self,
+        stmt: &GrammarASTNode,
+        types: &HashMap<usize, NibType>,
+        env: &mut HashMap<String, String>,
+        out: &mut Vec<IIRInstr>,
+    ) -> Result<(), CompileError> {
+        let name = first_name(stmt)
+            .ok_or_else(|| CompileError::Unsupported("for_stmt missing loop variable".into()))?;
+        // Children (tokens filtered out): [type, lo_expr, hi_expr, block].
+        let kids = child_nodes(stmt);
+        let bounds: Vec<&GrammarASTNode> = kids
+            .iter()
+            .filter(|n| is_expr_rule(&n.rule_name))
+            .copied()
+            .collect();
+        let lo_node = bounds
+            .first()
+            .ok_or_else(|| CompileError::Unsupported("for_stmt missing lower bound".into()))?;
+        let hi_node = bounds
+            .get(1)
+            .ok_or_else(|| CompileError::Unsupported("for_stmt missing upper bound".into()))?;
+        let body = kids
+            .iter()
+            .find(|n| n.rule_name == "block")
+            .copied()
+            .ok_or_else(|| CompileError::Unsupported("for_stmt missing body block".into()))?;
+
+        // The loop variable is in scope for the body. Like every other Nib slot it
+        // materialises as an `i64` register (the narrow declared type stays on the
+        // source; the IIR is machine-word-uniform).
+        env.insert(name.clone(), "i64".to_string());
+
+        // i = lo
+        let lo_v = self.compile_expr(lo_node, types, env, out)?;
+        self.emit_to(out, IIRInstr::new("mov", Some(name.clone()),
+            vec![Operand::Var(lo_v)], "i64"));
+        // hi evaluated once into its own slot.
+        let hi_v = self.compile_expr(hi_node, types, env, out)?;
+
+        let top_lbl = self.fresh_label();
+        let end_lbl = self.fresh_label();
+
+        // label for_<n>_top
+        self.emit_to(out, IIRInstr::new("label", None,
+            vec![Operand::Var(top_lbl.clone())], "void"));
+        // c = i < hi ; jmp_if_false c, for_<n>_end
+        let cond = self.fresh_var();
+        self.emit_to(out, IIRInstr::new("cmp_lt", Some(cond.clone()),
+            vec![Operand::Var(name.clone()), Operand::Var(hi_v)], "i64"));
+        self.emit_to(out, IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var(cond), Operand::Var(end_lbl.clone())], "void"));
+        // body
+        self.compile_block(body, types, env, out)?;
+        // i = i + 1
+        let one = self.fresh_var();
+        self.emit_to(out, IIRInstr::new("const", Some(one.clone()),
+            vec![Operand::Int(1)], "i64"));
+        let next = self.fresh_var();
+        self.emit_to(out, IIRInstr::new("add", Some(next.clone()),
+            vec![Operand::Var(name.clone()), Operand::Var(one)], "i64"));
+        self.emit_to(out, IIRInstr::new("mov", Some(name),
+            vec![Operand::Var(next)], "i64"));
+        // jmp for_<n>_top ; label for_<n>_end
         self.emit_to(out, IIRInstr::new("jmp", None,
             vec![Operand::Var(top_lbl)], "void"));
         self.emit_to(out, IIRInstr::new("label", None,
@@ -525,9 +630,15 @@ impl Compiler {
 
         match node.rule_name.as_str() {
             "primary" => self.compile_primary(node, types, env, out),
-            "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "add_expr" | "bitwise_expr" => {
-                self.compile_binary_chain(node, types, env, out)
-            }
+            // `&&` / `||` must SHORT-CIRCUIT (LANG-FULL N4) — they cannot go through
+            // `compile_binary_chain` (which would eagerly evaluate both sides and has
+            // no `cir_op_for` mapping for LAND/LOR anyway). A multi-operand
+            // `and_expr`/`or_expr` reaching here always contains a real operator (the
+            // single-operand case is handled by the passthrough above).
+            "or_expr" => self.compile_short_circuit(node, false, types, env, out),
+            "and_expr" => self.compile_short_circuit(node, true, types, env, out),
+            "eq_expr" | "cmp_expr" | "add_expr" | "mul_expr"
+            | "bitwise_expr" => self.compile_binary_chain(node, types, env, out),
             "unary_expr" => self.compile_unary(node, types, env, out),
             // Default: single-child fallthrough already handled above; if
             // we get here with a multi-child unknown rule, walk first.
@@ -577,7 +688,23 @@ impl Compiler {
         }
 
         if let Some(name) = lookup_name(node) {
-            // Variable reference — return its IIR name directly.
+            // A reference to a module-scoped `const` folds to its literal value
+            // (LANG-FULL N5) — emit a fresh `const` instruction rather than a
+            // dangling variable reference, so it needs no runtime storage and
+            // runs on every backend.  A local `let`/parameter of the same name
+            // SHADOWS the const, so only fold when the name is not already a
+            // local in scope (`env`).
+            if !env.contains_key(&name) {
+                if let Some(&value) = self.consts.get(&name) {
+                    let v = self.fresh_var();
+                    self.emit_to(out, IIRInstr::new(
+                        "const", Some(v.clone()), vec![Operand::Int(value)], "i64",
+                    ));
+                    return Ok(v);
+                }
+            }
+            // Otherwise it's an ordinary variable reference — return its IIR
+            // name directly.
             return Ok(name);
         }
 
@@ -681,6 +808,87 @@ impl Compiler {
             &result_ty,
         ));
         Ok(dest)
+    }
+
+    /// Compile a short-circuiting `&&` (`is_and = true`) or `||` chain (LANG-FULL N4).
+    ///
+    /// `&&` / `||` are NOT ordinary binary ops: the right operand is evaluated only
+    /// when the left does not already decide the result. We lower to a result slot +
+    /// branches, using only `jmp_if_false` / `jmp` / `label` (the portable subset every
+    /// backend lowers — the CLR textual `.il` path has no `jmp_if_true`):
+    ///
+    /// ```text
+    /// // a && b              // a || b
+    /// mov r = a              mov r = a
+    /// jmp_if_false r, end    jmp_if_false r, eval_b   ; r false → must try b
+    /// mov r = b              jmp end                  ; r true  → keep r (short-circuit)
+    /// label end              label eval_b
+    ///                        mov r = b
+    ///                        label end
+    /// ```
+    ///
+    /// The result is the value of the deciding operand (C-style truthiness: any
+    /// non-zero is "true"); the operands here are boolean (comparisons), so `r` is the
+    /// `0`/`1` the rest of the pipeline expects. Chains fold left-to-right, so each later
+    /// operand sees the accumulated short-circuit. `r` is the `dest` of two-or-more `mov`s,
+    /// so every backend promotes it to a stack slot automatically.
+    fn compile_short_circuit(
+        &mut self,
+        node: &GrammarASTNode,
+        is_and: bool,
+        types: &HashMap<usize, NibType>,
+        env: &mut HashMap<String, String>,
+        out: &mut Vec<IIRInstr>,
+    ) -> Result<String, CompileError> {
+        let operands: Vec<&GrammarASTNode> = child_nodes(node)
+            .into_iter()
+            .filter(|n| is_expr_rule(&n.rule_name))
+            .collect();
+        // Defensive: a single operand is normally handled by compile_expr's
+        // passthrough, but if we ever land here with one, just compile it.
+        if operands.len() < 2 {
+            let only = operands.first().ok_or_else(|| {
+                CompileError::Unsupported(format!("empty {}", node.rule_name))
+            })?;
+            return self.compile_expr(only, types, env, out);
+        }
+
+        let result = self.fresh_var();
+        let end_lbl = self.fresh_label();
+
+        // result = first operand
+        let v0 = self.compile_expr(operands[0], types, env, out)?;
+        self.emit_to(out, IIRInstr::new("mov", Some(result.clone()),
+            vec![Operand::Var(v0)], "i64"));
+
+        for operand in &operands[1..] {
+            if is_and {
+                // If the accumulator is already false, short-circuit: it stays false.
+                self.emit_to(out, IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var(result.clone()), Operand::Var(end_lbl.clone())], "void"));
+                let v = self.compile_expr(operand, types, env, out)?;
+                self.emit_to(out, IIRInstr::new("mov", Some(result.clone()),
+                    vec![Operand::Var(v)], "i64"));
+            } else {
+                // `||`: if the accumulator is already true, short-circuit and keep it.
+                // With only `jmp_if_false` available: false → fall through to evaluate
+                // the next operand; true → jump over the evaluation to `end`.
+                let eval_lbl = self.fresh_label();
+                self.emit_to(out, IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var(result.clone()), Operand::Var(eval_lbl.clone())], "void"));
+                self.emit_to(out, IIRInstr::new("jmp", None,
+                    vec![Operand::Var(end_lbl.clone())], "void"));
+                self.emit_to(out, IIRInstr::new("label", None,
+                    vec![Operand::Var(eval_lbl)], "void"));
+                let v = self.compile_expr(operand, types, env, out)?;
+                self.emit_to(out, IIRInstr::new("mov", Some(result.clone()),
+                    vec![Operand::Var(v)], "i64"));
+            }
+        }
+
+        self.emit_to(out, IIRInstr::new("label", None,
+            vec![Operand::Var(end_lbl)], "void"));
+        Ok(result)
     }
 
     /// Compile a left-associative binary chain like `a + b + c` by walking
@@ -789,6 +997,60 @@ impl Compiler {
 // AST traversal helpers
 // ---------------------------------------------------------------------------
 
+/// Collect module-scoped `const NAME: type = literal;` declarations into a
+/// `name → value` map.  Consts appear at the top level (`top_decl`), like `fn`.
+///
+/// V1 supports **literal** const values (an integer or hex literal); the value
+/// expression is folded to an `i64` at compile time, so a const reference in a
+/// function body compiles to a plain `const` instruction and needs no runtime
+/// storage. A non-literal const value (e.g. `const N: u8 = 6 * 7;`) is rejected
+/// with a clear error rather than silently mis-lowered — const-expression
+/// folding is a follow-up.
+fn collect_consts(root: &GrammarASTNode) -> Result<HashMap<String, i64>, CompileError> {
+    let mut consts = HashMap::new();
+    for decl in child_nodes(root) {
+        // A `const_decl` may be wrapped in a generic `top_decl` node.
+        let cd = if decl.rule_name == "const_decl" {
+            decl
+        } else if decl.rule_name == "top_decl" {
+            match child_nodes(decl).into_iter().find(|c| c.rule_name == "const_decl") {
+                Some(c) => c,
+                None => continue,
+            }
+        } else {
+            continue;
+        };
+
+        let name = first_name(cd)
+            .ok_or_else(|| CompileError::Unsupported("const_decl missing name".into()))?;
+        let value_expr = child_nodes(cd)
+            .into_iter()
+            .find(|n| is_expr_rule(&n.rule_name))
+            .ok_or_else(|| CompileError::Unsupported(format!("const `{name}` missing value")))?;
+        let value = const_literal_value(value_expr).ok_or_else(|| {
+            CompileError::Unsupported(format!(
+                "const `{name}` must be an integer literal (const-expression folding is deferred)"
+            ))
+        })?;
+        consts.insert(name, value);
+    }
+    Ok(consts)
+}
+
+/// Fold a const's value expression to an `i64` when it is a single integer/hex
+/// literal.  Descends the single-child wrapper chain `expr → … → primary` that
+/// a bare literal produces, returning `None` for any non-literal expression.
+fn const_literal_value(expr: &GrammarASTNode) -> Option<i64> {
+    if let Some(v) = parse_literal(expr) {
+        return Some(v);
+    }
+    let kids = child_nodes(expr);
+    if kids.len() == 1 {
+        return const_literal_value(kids[0]);
+    }
+    None
+}
+
 fn function_nodes(root: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     child_nodes(root)
         .into_iter()
@@ -817,7 +1079,7 @@ fn expression_children(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
 fn is_expr_rule(name: &str) -> bool {
     matches!(name,
         "expr" | "or_expr" | "and_expr" | "eq_expr" | "cmp_expr"
-        | "add_expr" | "bitwise_expr" | "unary_expr" | "primary"
+        | "add_expr" | "mul_expr" | "bitwise_expr" | "unary_expr" | "primary"
         | "call_expr"
     )
 }
@@ -973,6 +1235,16 @@ fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
         // Arithmetic
         ("+", _) | (_, "PLUS")        => Some("add"),
         ("-", _) | (_, "MINUS")       => Some("sub"),
+        ("*", _) | (_, "STAR")        => Some("mul"),
+        ("/", _) | (_, "SLASH")       => Some("div"),
+        // Bitwise (LANG-FULL N3). The grammar's `bitwise_expr` level already
+        // produces these; they lower to the shared IIR `and`/`or`/`xor` ops, which
+        // every backend implements directly. (Unary `~` (TILDE) is deferred: a
+        // correct width-mask needs the integer-wrap enabler E2 — `~x` on a u8 must
+        // flip 8 bits, not the full 64-bit register.)
+        ("&", _) | (_, "AMP")         => Some("and"),
+        ("|", _) | (_, "PIPE")        => Some("or"),
+        ("^", _) | (_, "CARET")       => Some("xor"),
         // Comparisons
         ("==", _) | (_, "EQ_EQ")      => Some("cmp_eq"),
         ("!=", _) | (_, "NEQ")        => Some("cmp_ne"),
@@ -1027,6 +1299,162 @@ mod tests {
             }) == Some("+")),
             "regression: `call_builtin \"+\"` leaked into IIR (would break IIR-to-* backends)");
         assert!(body.iter().any(|i| i.op == "ret"));
+    }
+
+    #[test]
+    fn compiles_multiplication() {
+        // LANG-FULL N1: `*` lowers to the shared IIR `mul` op (not `call_builtin "*"`),
+        // so it runs on every IIR-to-* backend.
+        let src = "fn main() -> u8 { return 6 * 7; }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "mul"),
+            "expected typed `mul` op; got body: {body:?}");
+        assert!(!body.iter().any(|i| i.op == "call_builtin"),
+            "regression: `*` leaked a call_builtin; got body: {body:?}");
+    }
+
+    #[test]
+    fn compiles_division() {
+        // LANG-FULL N1: `/` lowers to the shared IIR `div` op.
+        let src = "fn main() -> u8 { return 84 / 2; }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(body.iter().any(|i| i.op == "div"),
+            "expected typed `div` op; got body: {body:?}");
+        assert!(!body.iter().any(|i| i.op == "call_builtin"),
+            "regression: `/` leaked a call_builtin; got body: {body:?}");
+    }
+
+    #[test]
+    fn compiles_bitwise_and_or_xor() {
+        // LANG-FULL N3: `&`/`|`/`^` lower to the shared IIR `and`/`or`/`xor` ops.
+        for (src, op) in [
+            ("fn main() -> u8 { return 12 & 10; }", "and"),
+            ("fn main() -> u8 { return 12 | 3; }", "or"),
+            ("fn main() -> u8 { return 6 ^ 5; }", "xor"),
+        ] {
+            let m = compile_source(src, "test").expect("ok");
+            let body = &m.functions[0].instructions;
+            assert!(body.iter().any(|i| i.op == op),
+                "expected typed `{op}` op for {src:?}; got body: {body:?}");
+            assert!(!body.iter().any(|i| i.op == "call_builtin"),
+                "regression: bitwise op leaked a call_builtin in {src:?}; got body: {body:?}");
+        }
+    }
+
+    #[test]
+    fn logical_and_short_circuits() {
+        // LANG-FULL N4: `a && b` must lower to a result slot + a `jmp_if_false` BEFORE the
+        // right operand is evaluated, so `b` is only reached when `a` is true. The two
+        // operands here are `1 == 2` and `3 == 4`, both `cmp_eq`; the second `cmp_eq` must
+        // appear AFTER the `jmp_if_false` that guards it.
+        let m = compile_source(
+            "fn main() -> u8 { if 1 == 2 && 3 == 4 { return 1; } return 0; }", "test",
+        ).expect("ok");
+        let ops: Vec<&str> = m.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        let first_guard = ops.iter().position(|o| *o == "jmp_if_false").expect("a jmp_if_false");
+        let cmp_positions: Vec<usize> =
+            ops.iter().enumerate().filter(|(_, o)| **o == "cmp_eq").map(|(i, _)| i).collect();
+        assert_eq!(cmp_positions.len(), 2, "both operands compiled; got {ops:?}");
+        // The second operand's compare is emitted after the short-circuit guard.
+        assert!(cmp_positions[1] > first_guard,
+            "right operand must be guarded by jmp_if_false (short-circuit); got {ops:?}");
+        assert!(!ops.contains(&"call_builtin"), "&& must not leak a call_builtin; got {ops:?}");
+    }
+
+    #[test]
+    fn logical_or_short_circuits() {
+        // `a || b`: the right operand is guarded so it is skipped when `a` is true. The
+        // lowering emits an extra `jmp` (the "left was true → keep result" arm) that the
+        // `&&` form does not.
+        let m = compile_source(
+            "fn main() -> u8 { if 1 == 1 || 3 == 4 { return 1; } return 0; }", "test",
+        ).expect("ok");
+        let ops: Vec<&str> = m.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"jmp_if_false"), "|| must emit a short-circuit guard; got {ops:?}");
+        assert!(ops.contains(&"jmp"), "|| must emit the short-circuit jump; got {ops:?}");
+        let cmp_count = ops.iter().filter(|o| **o == "cmp_eq").count();
+        assert_eq!(cmp_count, 2, "both operands compiled; got {ops:?}");
+        assert!(!ops.contains(&"call_builtin"), "|| must not leak a call_builtin; got {ops:?}");
+    }
+
+    #[test]
+    fn const_reference_folds_to_its_literal() {
+        // LANG-FULL N5: a module-scoped `const` reference compiles to a `const`
+        // instruction with the const's value — no dangling variable reference.
+        let m = compile_source(
+            "const N: u8 = 42; fn main() -> u8 { return N; }", "test",
+        ).expect("ok");
+        let main = m.functions.iter().find(|f| f.name == "main").expect("main");
+        let folded = main.instructions.iter().any(|i|
+            i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(42))));
+        assert!(folded, "const N must fold to `const 42`; got {:?}", main.instructions);
+        // The const is not a function of its own (it's module-scoped, folded away).
+        assert!(!m.functions.iter().any(|f| f.name == "N"),
+            "a const must not become a function");
+    }
+
+    #[test]
+    fn multiple_consts_in_arithmetic() {
+        // Two consts used in `A + B` both fold; the result still lowers to a real `add`.
+        let m = compile_source(
+            "const A: u8 = 30; const B: u8 = 12; fn main() -> u8 { return A + B; }", "test",
+        ).expect("ok");
+        let body = &m.functions[0].instructions;
+        let const_vals: Vec<i64> = body.iter()
+            .filter(|i| i.op == "const")
+            .filter_map(|i| match i.srcs.first() { Some(Operand::Int(n)) => Some(*n), _ => None })
+            .collect();
+        assert!(const_vals.contains(&30) && const_vals.contains(&12),
+            "both consts must fold to their literals; got {const_vals:?}");
+        assert!(body.iter().any(|i| i.op == "add"), "A + B must still emit an add");
+    }
+
+    #[test]
+    fn local_shadows_module_const() {
+        // A `let` of the same name as a module const wins — the body must read the
+        // local slot, NOT fold to the const's literal. (Both literals are > 15 so
+        // they infer `u8` and satisfy Nib's strict literal-width type checker.)
+        let m = compile_source(
+            "const N: u8 = 20; fn main() -> u8 { let N: u8 = 30; return N; }", "test",
+        ).expect("ok");
+        let body = &m.functions[0].instructions;
+        // The local's value 30 is materialised and bound via `mov N`...
+        assert!(body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(30)))),
+            "the local's value 30 must be materialised; got {body:?}");
+        assert!(body.iter().any(|i| i.op == "mov" && i.dest.as_deref() == Some("N")),
+            "the local `N` must be bound via mov; got {body:?}");
+        // ...and the const's value 20 is NEVER folded in (the local shadows it).
+        assert!(!body.iter().any(|i| i.op == "const"
+            && matches!(i.srcs.first(), Some(Operand::Int(20)))),
+            "the const value 20 must NOT appear — the local shadows it; got {body:?}");
+    }
+
+    #[test]
+    fn non_literal_const_is_rejected() {
+        // V1 only folds integer-literal consts; a const-expression is a clear error
+        // (not a silent miscompile). Folding `6 * 7` is a documented follow-up.
+        let err = compile_source(
+            "const N: u8 = 6 * 7; fn main() -> u8 { return N; }", "test",
+        ).unwrap_err();
+        let msg = format!("{err:?}");
+        assert!(msg.contains("integer literal"), "expected a clear const-literal error; got {msg}");
+    }
+
+    #[test]
+    fn multiplication_binds_tighter_than_addition() {
+        // `2 + 3 * 4` must parse as `2 + (3 * 4)`: the `add` consumes the result of the
+        // `mul`, so the mul is emitted before the add reads it. The VM-checked value
+        // (14, not 20) lives in lang-aot's lang_matrix battery; here we assert structure.
+        let src = "fn main() -> u8 { return 2 + 3 * 4; }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        let mul_idx = body.iter().position(|i| i.op == "mul").expect("a mul op");
+        let add_idx = body.iter().position(|i| i.op == "add").expect("an add op");
+        assert!(mul_idx < add_idx,
+            "mul must be emitted before add (mul binds tighter); got body: {body:?}");
     }
 
     #[test]
@@ -1167,6 +1595,45 @@ mod tests {
             .map(|i| i.op.as_str()).collect();
         assert!(ops.contains(&"call"), "missing `call` to `one`; got {ops:?}");
         assert!(ops.contains(&"jmp_if_false"), "missing jmp_if_false; got {ops:?}");
+    }
+
+    #[test]
+    fn compiles_for_loop() {
+        // LANG-FULL N2: `for i in lo .. hi` desugars to the canonical counter loop.
+        let src = "fn main() -> u4 { \
+                     let s: u4 = 0; \
+                     for i: u4 in 1 .. 6 { s = s + i; } \
+                     return s; \
+                   }";
+        let m = compile_source(src, "test").expect("for_stmt must compile (was Unsupported)");
+        let ops: Vec<&str> = m.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        // The loop: init mov, top label, cmp_lt guard, jmp_if_false exit, body,
+        // increment (const 1 + add), back-edge jmp, exit label.
+        assert!(ops.contains(&"cmp_lt"), "for loop must emit cmp_lt guard; got {ops:?}");
+        assert!(ops.contains(&"jmp_if_false"), "for loop must emit jmp_if_false; got {ops:?}");
+        assert!(ops.contains(&"jmp"), "for loop must emit a back-edge jmp; got {ops:?}");
+        assert!(ops.contains(&"add"), "for loop must emit the +1 increment; got {ops:?}");
+        assert!(ops.iter().filter(|o| **o == "label").count() >= 2,
+            "for loop must emit top + end labels; got {ops:?}");
+        assert!(!ops.contains(&"call_builtin"),
+            "for loop must not leak a call_builtin; got {ops:?}");
+    }
+
+    #[test]
+    fn nested_for_loops_get_distinct_labels() {
+        // Two nested for-loops must not collide on label names, else the inner
+        // back-edge would jump to the outer loop.
+        let src = "fn main() -> u4 { let s: u4 = 0; \
+                   for i: u4 in 0 .. 3 { for j: u4 in 0 .. 2 { s = s + 1; } } return s; }";
+        let m = compile_source(src, "test").expect("ok");
+        let labels: Vec<String> = m.functions[0].instructions.iter()
+            .filter(|i| i.op == "label")
+            .filter_map(|i| match i.srcs.first() { Some(Operand::Var(n)) => Some(n.clone()), _ => None })
+            .collect();
+        let unique: std::collections::HashSet<&String> = labels.iter().collect();
+        assert_eq!(labels.len(), unique.len(), "duplicate loop labels: {labels:?}");
+        // Two loops × (top + end) = 4 labels.
+        assert!(labels.len() >= 4, "expected >= 4 loop labels for nested fors; got {labels:?}");
     }
 
     // ── Source-map invariants (NIB05 — debugger prerequisite) ──────────

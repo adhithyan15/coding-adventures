@@ -9,12 +9,13 @@
 # declarations; main.qml imports it via the local QML module
 # (declared in qmldir).
 #
-# Today we only compile FormulaBar through the pipeline. The Grid
-# is hand-written in main.qml as inline QtQuick.Controls 2 widgets
-# (the mosaic-emit-qt pipeline doesn't yet support the `Grid`
-# built-in primitive — only the React emitter knows how to lower
-# it fully). When the Qt Grid emitter lands, this gains a second
-# `mosaic-compile --backend qt` invocation.
+# Both FormulaBar and Grid are now compiled through the pipeline
+# (see the two `mosaic-compile --backend qt` invocations below). The
+# Qt emitter inlines the shared Grid.dark.msl part styles, so the
+# generated Grid.qml renders as a real spreadsheet — bordered,
+# fixed-width, right-aligned cells with a selected-cell highlight —
+# rather than the hand-written QtQuick.Controls widgets the demo
+# used before the mosstyle-inlining work landed.
 #
 # Usage:
 #   cd demo/visicalc-qt

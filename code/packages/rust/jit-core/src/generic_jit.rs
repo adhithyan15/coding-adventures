@@ -83,7 +83,7 @@ use std::sync::{Arc, Mutex};
 
 use vm_core::value::Value;
 
-use crate::backend::Backend;
+use crate::backend::{Backend, FunctionContext};
 use crate::cir::{CIRInstr, CIROperand};
 
 // ---------------------------------------------------------------------------
@@ -271,11 +271,28 @@ impl Backend for GenericCirJit {
         // Resolve builtins used by this function to indices.  Only the
         // names that appear in `call_builtin` srcs get assigned indices,
         // keeping the prefix small.
+        //
+        // The bare `compile` has no parameter context, so it compiles the
+        // body with an empty param list (the function takes no arguments).
+        // Callers that have an `IIRFunction` in hand should use
+        // `compile_function` below so a function's parameters are bound.
         let snapshot = self.snapshot_builtins();
-        compile_to_bytecode(ir, &snapshot, self.tape_size > 0)
+        compile_to_bytecode(ir, &snapshot, self.tape_size > 0, &[])
     }
 
-    fn run(&self, binary: &[u8], _args: &[Value]) -> Value {
+    fn compile_function(&self, ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Option<Vec<u8>> {
+        // Same as `compile`, but the function's parameters are pre-bound to
+        // registers `0..params.len()` in declaration order.  At `run` time
+        // the incoming call arguments are seeded into exactly those
+        // registers (see `run`), so a compiled function with parameters —
+        // e.g. Nib's `double(x) -> x + x` — reads its arguments correctly.
+        // This is what makes the JIT *generic*: any frontend whose functions
+        // take arguments compiles and runs here with no per-language code.
+        let snapshot = self.snapshot_builtins();
+        compile_to_bytecode(ir, &snapshot, self.tape_size > 0, ctx.params)
+    }
+
+    fn run(&self, binary: &[u8], args: &[Value]) -> Value {
         // Decode the builtin name table.
         let mut pc = 0usize;
         if binary.len() < 2 {
@@ -328,6 +345,19 @@ impl Backend for GenericCirJit {
 
         // Per-call state.
         let mut regs: [i64; 256] = [0i64; 256];
+
+        // Seed the parameter registers from the incoming call arguments.
+        // `compile_function` pre-binds parameters to registers
+        // `0..params.len()` in declaration order, and `compile_fn` passes the
+        // arguments in that same order, so argument `i` lands in register `i`.
+        // Non-integer values collapse to their `i64` view (the register file
+        // is i64-only), and `.take(256)` keeps a long argument list from
+        // walking off the fixed-size file — a defensive bound, never reached
+        // in practice (a function cannot declare more than 256 registers).
+        for (i, a) in args.iter().enumerate().take(regs.len()) {
+            regs[i] = a.as_i64().unwrap_or(0);
+        }
+
         let mut tape: Vec<u8> = if self.tape_size > 0 {
             vec![0u8; self.tape_size]
         } else {
@@ -606,16 +636,35 @@ fn resolve_operand(
 /// `builtin_table` is a length-prefixed list of names used by this
 /// function (each `call_builtin` op's first src), and `code` is the
 /// linear bytecode.
+///
+/// `params` is the function's parameter list (`(name, type)` in declaration
+/// order).  Each parameter name is pre-allocated a register *before* the body
+/// is walked, so the parameters deterministically occupy registers
+/// `0..params.len()`.  `run` relies on this: it seeds those registers from the
+/// incoming call arguments.  Pass `&[]` for a function that takes no arguments.
 fn compile_to_bytecode(
     ir: &[CIRInstr],
     builtin_snapshot: &[(String, BuiltinFn)],
     has_linear_memory: bool,
+    params: &[(String, String)],
 ) -> Option<Vec<u8>> {
     let mut code: Vec<u8> = Vec::with_capacity(ir.len() * 4);
     let mut reg_map: HashMap<String, u8> = HashMap::new();
     let mut next_reg: u16 = 0;
     let mut label_pos: HashMap<String, usize> = HashMap::new();
     let mut fixups: Vec<(usize, String)> = Vec::new();
+
+    // Pre-bind the parameters to registers 0, 1, 2, … in declaration order.
+    // Doing this before the instruction walk guarantees `run` can map
+    // argument `i` to register `i`.  A duplicate parameter name (malformed
+    // IR) or a function with more than 256 parameters makes the whole
+    // function uncompilable — `run` would not be able to seed it consistently.
+    for (name, _ty) in params {
+        if reg_map.contains_key(name) {
+            return None;
+        }
+        lookup_or_alloc_var(name, &mut reg_map, &mut next_reg)?;
+    }
 
     // Track which builtin names this function actually uses; we'll emit
     // only those in the bytecode prefix.  Maps name → local index.
@@ -920,6 +969,65 @@ mod tests {
         let j = jit_no_builtins();
         let bin = j.compile(&cir).unwrap();
         assert_eq!(j.run(&bin, &[]).as_i64(), Some(42));
+    }
+
+    /// `double(x) -> x + x`, compiled via `compile_function` so its single
+    /// parameter is bound to register 0, then run with `x = 21`.  This is the
+    /// regression test for the param-seeding fix: before it, `run` ignored its
+    /// `args` and `x` read as the zero-initialised register, so the function
+    /// returned 0 instead of 42.  (Nib's `double(21)` on the JIT was the
+    /// real-world symptom.)
+    #[test]
+    fn compiled_function_reads_its_argument() {
+        let cir = vec![
+            CIRInstr::new("add_i64", Some("r"),
+                vec![CIROperand::Var("x".into()), CIROperand::Var("x".into())], "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vec![CIROperand::Var("r".into())], "i64"),
+        ];
+        let params = vec![("x".to_string(), "i64".to_string())];
+        let ctx = FunctionContext { name: "double", params: &params, return_type: "i64" };
+        let j = jit_no_builtins();
+        let bin = j.compile_function(&ctx, &cir).unwrap();
+        assert_eq!(j.run(&bin, &[Value::Int(21)]).as_i64(), Some(42));
+        // A bare `compile` (no param context) leaves `x` an unbound register,
+        // so the same body returns 0 — the contrast the fix turns on.
+        let bin0 = j.compile(&cir).unwrap();
+        assert_eq!(j.run(&bin0, &[Value::Int(21)]).as_i64(), Some(0));
+    }
+
+    /// Two parameters must land in declaration order — argument `i` → register
+    /// `i` — even when the body references the *second* parameter first.
+    /// `sub(a, b) -> a - b` referenced as `b`-first would scramble the result
+    /// if `run` keyed off first-appearance instead of the pre-bound param regs.
+    #[test]
+    fn two_params_map_to_args_in_declaration_order() {
+        let cir = vec![
+            // Reference `b` before `a` to prove ordering comes from the param
+            // pre-binding, not from first-use in the body.
+            CIRInstr::new("sub_i64", Some("r"),
+                vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())], "i64"),
+            CIRInstr::new("ret_i64", None::<&str>, vec![CIROperand::Var("r".into())], "i64"),
+        ];
+        let params = vec![("a".to_string(), "i64".to_string()),
+                          ("b".to_string(), "i64".to_string())];
+        let ctx = FunctionContext { name: "sub", params: &params, return_type: "i64" };
+        let j = jit_no_builtins();
+        let bin = j.compile_function(&ctx, &cir).unwrap();
+        // sub(50, 8) = 42, not 8 - 50.
+        assert_eq!(j.run(&bin, &[Value::Int(50), Value::Int(8)]).as_i64(), Some(42));
+    }
+
+    /// A duplicate parameter name is malformed IR — `compile_function` must
+    /// refuse it rather than silently alias two params to one register.
+    #[test]
+    fn duplicate_parameter_name_is_uncompilable() {
+        let cir = vec![
+            CIRInstr::new("ret_i64", None::<&str>, vec![CIROperand::Var("x".into())], "i64"),
+        ];
+        let params = vec![("x".to_string(), "i64".to_string()),
+                          ("x".to_string(), "i64".to_string())];
+        let ctx = FunctionContext { name: "bad", params: &params, return_type: "i64" };
+        assert!(jit_no_builtins().compile_function(&ctx, &cir).is_none());
     }
 
     #[test]

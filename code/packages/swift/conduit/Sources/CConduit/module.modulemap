@@ -1,0 +1,12 @@
+/*
+ * module.modulemap — Clang module map for CConduit.
+ *
+ * SPM's .systemLibrary target requires module.modulemap at the root of the
+ * target path (Sources/CConduit/), not in a subdirectory. The header lives in
+ * include/ and is referenced with a relative path. `export *` re-exports every
+ * C symbol so the Swift `Conduit` wrapper (and its tests) can reach the raw ABI.
+ */
+module CConduit {
+    header "include/conduit_capi.h"
+    export *
+}

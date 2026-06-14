@@ -1,5 +1,20 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.19.0] — 2026-06-13 — bitwise ops on the textual `.il` path (LANG-FULL N3)
+
+### Fixed — `and` / `or` / `xor` (and `shl` / `shr`) now emit on the textual path
+
+The bytecode emitter (`lower.rs`) already lowered the bitwise/shift ops, but the
+**textual `.il` emitter** (`il_text.rs`) — the path the LANG matrix exercises on
+real CoreCLR (textual `.il` → `ilasm` → `dotnet`) — only handled
+`add`/`sub`/`mul`/`div`/`mod`. An IIR `and`/`or`/`xor` reached the unhandled-op
+path, so a program using them failed to assemble. They map to the identically
+named CIL opcodes (`and`/`or`/`xor`/`shl`/`shr`); `il_text.rs` now emits them.
+
+Surfaced by LANG-FULL N3 (Nib `& | ^`): the executed cross-backend matrix test
+caught the CLR gap that the bytecode-path unit tests didn't. New test
+`bitwise_ops_emit_cil_opcodes`.
+
 ## [0.18.0] — 2026-06-12 — byte-tape ops on real CoreCLR (LANG-MATRIX LM-C Brainfuck)
 
 Adds the lowering Brainfuck needs to run on the CLR backend's **textual `.il` path**

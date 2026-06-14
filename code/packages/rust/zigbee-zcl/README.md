@@ -16,6 +16,8 @@ coordinator policy. It provides:
 - typed attribute report encoding and Report Attributes frame builders
 - compact attribute report summaries for parsed report shape and D23 delta
   coverage
+- attribute report readiness summaries for D23 delta coverage, typed value
+  coverage, and raw/unknown-type hygiene checks
 - D23 capability projection for common clusters
 - D23 `StateDelta` projection for on/off, level, color-temperature, occupancy,
   lock-state, temperature, humidity, and illuminance reports

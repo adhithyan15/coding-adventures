@@ -1,5 +1,38 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## 0.5.0 — 2026-06-13 — comparisons emit the operand width; control flow runs on the code-gen backends (LANG-FULL BA0)
+
+### Fixed — `IF`/`FOR` comparisons emitted a `bool` type hint, breaking LLVM (and WASM)
+
+`IF e1 relop e2` and `FOR`/`NEXT` emitted their `cmp_*` with `type_hint = "bool"`
+(the result type). But a comparison's IIR `type_hint` is the **operand** width,
+which the IIR-to-* backends use to size the machine compare: LLVM emitted
+`icmp <op> i1` — a 1-bit compare that truncates the i64 operands (`7 > 5` became
+`1 > 1` → false), so `IF A > 5` fell through and `FOR` mis-looped. The compiler now
+emits the operand type `i64` (matching Nib / Oct / ALGOL); the boolean *result* is
+implicit, exactly as those languages already do.
+
+This is why BASIC control flow previously ran only on the VM/JIT. With the fix,
+`lang-aot`'s `lang_matrix` battery RUNS a `FOR`/`NEXT` accumulator loop
+(`FOR I = 1 TO 5: S = S + I` → prints 15) and an `IF A > 5 THEN 100` jump
+(prints 7) across native / LLVM / WASM / CLR / VM / JIT.
+
+### Removed — two stale `#[ignore]`s in `tests/backend_encode.rs`
+
+`basic_control_flow_lowers_to_wasm_bytes` and `basic_for_loop_lowers_to_wasm_bytes`
+were ignored on the premise that `iir-to-wasm` couldn't lower `cmp_gt`/`cmp_le`;
+that gap has since been closed (the wasm lowering grew the full `cmp_*` table), so
+both tests pass and are re-enabled.
+
+### Known follow-up — BA-JVM-1
+
+BASIC programs combining a **branch** (`IF`/`FOR`) with a `print_i64` call do not yet
+run on the JVM (output is empty) — the `iir-to-jvm-class-file` StackMapTable
+generation trips on the frame at the branch target when several `long` locals are
+live across a host-method invoke. (A print with no branch — `10 PRINT 42` — and a
+loop with no print — Nib's for-loops — both run on JVM; only the combination fails.)
+The JVM cell is excluded for the two control-flow matrix programs pending that fix.
+
 ## 0.4.0 — 2026-05-30 (BASIC05 — source-location threading for debugger)
 
 ### Added — Real source positions in `IIRFunction.source_map`

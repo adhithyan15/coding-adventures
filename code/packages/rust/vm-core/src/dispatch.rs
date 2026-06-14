@@ -572,6 +572,78 @@ fn handle_store_mem(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     Ok(None)
 }
 
+// Byte-tape memory (the shared-IIR byte buffer) ----------------------------
+//
+// `alloc_bytes` / `load_byte` / `store_byte` are the lowered byte-tape ops that
+// `lang-aot::lower_brainfuck_for_aot` rewrites Brainfuck's tape into — the same
+// ops every code-gen backend grew (LLVM `@calloc`+`getelementptr`, wasm linear
+// memory, JVM `byte[]`, CLR `unsigned int8[]`). The VM implements them over its
+// existing flat `memory` address space (the same `HashMap<i64, Value>` that
+// `load_mem`/`store_mem` use): a tape cell is the entry at `base + idx`, default
+// `Int(0)` (Brainfuck's zero-cell convention). Byte width lives only at the tape
+// boundary — `store_byte` masks the value to 8 bits (the cell wrap-around
+// `255 + 1 == 0`), `load_byte` returns the masked cell — so the surrounding
+// arithmetic stays plain machine-word `Int`. Generic: any frontend that emits
+// these ops runs unchanged.
+
+/// `alloc_bytes dest <- size` — allocate a byte tape and bind `dest` to its base
+/// address. The base is `0`: each function allocates exactly one tape (the BF
+/// frontend emits a single `alloc_bytes`), and the cells live as sparse entries
+/// in `memory` keyed by `base + idx`, so nothing is pre-filled — an untouched
+/// cell reads `0`. `size` is advisory; the sparse map grows on demand, bounded by
+/// `max_memory_entries` (the `store_byte` cap below).
+fn handle_alloc_bytes(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let base = Value::Int(0);
+    if let Some(dest) = &instr.dest {
+        ctx.frames
+            .last_mut()
+            .ok_or_else(|| VMError::Custom("no frame".into()))?
+            .assign(dest, base.clone());
+    }
+    Ok(Some(base))
+}
+
+/// `load_byte dest <- base, idx` — read one tape cell, unsigned (0..=255). Reads
+/// `memory[base + idx]` (default `Int(0)`) and masks to a byte. The VM analog of
+/// wasm `i32.load8_u` / CLR `ldelem.u1` / JVM `baload`+mask / LLVM `load i8`+`zext`.
+fn handle_load_byte(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let addr = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let base = resolve_src(frame, &instr.srcs, 0)?.as_i64().unwrap_or(0);
+        let idx = resolve_src(frame, &instr.srcs, 1)?.as_i64().unwrap_or(0);
+        base.wrapping_add(idx)
+    };
+    let cell = ctx.memory.get(&addr).and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF;
+    let value = Value::Int(cell);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `store_byte base, idx, val` (no dest) — write the low byte of `val` into
+/// `memory[base + idx]`. The mask to 8 bits is Brainfuck's cell wrap-around. The
+/// VM analog of wasm `i32.store8` / CLR `stelem.i1` / JVM `bastore` / LLVM
+/// `trunc i8`+`store`. Reuses `store_mem`'s memory-entry cap.
+fn handle_store_byte(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (addr, value) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let base = resolve_src(frame, &instr.srcs, 0)?.as_i64().unwrap_or(0);
+        let idx = resolve_src(frame, &instr.srcs, 1)?.as_i64().unwrap_or(0);
+        let val = resolve_src(frame, &instr.srcs, 2)?.as_i64().unwrap_or(0) & 0xFF;
+        (base.wrapping_add(idx), Value::Int(val))
+    };
+    // Same cap as `store_mem`: a loop storing to distinct cells could otherwise
+    // grow the HashMap without bound and OOM the process.
+    if !ctx.memory.contains_key(&addr) && ctx.memory.len() >= ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "memory entry limit {} exceeded", ctx.max_memory_entries
+        )));
+    }
+    ctx.memory.insert(addr, value);
+    Ok(None)
+}
+
 // Function calls ------------------------------------------------------------
 
 /// Handle a `call fn_name arg1 arg2 …` instruction.
@@ -786,6 +858,9 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "store_reg"    => Some(handle_store_reg),
         "load_mem"     => Some(handle_load_mem),
         "store_mem"    => Some(handle_store_mem),
+        "alloc_bytes"  => Some(handle_alloc_bytes),
+        "load_byte"    => Some(handle_load_byte),
+        "store_byte"   => Some(handle_store_byte),
         "call_builtin" => Some(handle_call_builtin),
         "io_in"        => Some(handle_io_in),
         "io_out"       => Some(handle_io_out),

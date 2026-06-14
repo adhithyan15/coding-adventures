@@ -12,6 +12,26 @@ All notable changes to this package will be documented in this file.
 - Hue pairing Vault handoff summaries for no-secret pairing completion checks.
 - Hue integration descriptor summaries for capability, bridge-role, and runtime
   surface checks.
+- Hue integration package summaries that join descriptor, command-flow, and
+  local pairing readiness.
+- Hue package release-readiness summaries for catalog publish checks across
+  worker, command-flow, local-pairing, event-stream, and physical-presence gates.
+- Hue package spec summaries for catalog/spec handoff checks across canonical
+  identity, CLIP v2 endpoints, registration headers, and runtime model surface.
+- Hue package spec gap summaries that route blocked package specs to release,
+  identity, CLIP v2 transport, or runtime model review.
+- Hue catalog package readiness summaries that combine package/spec, release,
+  identity, CLIP v2 transport, runtime model, and pairing-handoff gates.
+- Hue catalog package gap summaries that route blocked catalog handoffs to spec,
+  release, identity, transport/runtime, or pairing-handoff review.
+- Hue catalog/spec handoff summaries that count accepted catalog, spec,
+  release, and runtime/pairing review gates.
+- Hue package publish-gate summaries that route blocked handoffs to catalog,
+  release, or runtime/pairing review queues.
+- Hue package lifecycle summaries that count release, spec, catalog, handoff,
+  and publish stages as one ordered package readiness view.
+- Hue package review-queue summaries that turn lifecycle stage blockers into
+  release, spec, catalog, handoff, and publish acceptance queues.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`

@@ -1382,6 +1382,7 @@ pub struct HueIntegrationDescriptorSummary {
     pub capability_count: usize,
     pub discovery_role_count: usize,
     pub pairing_role_count: usize,
+    pub integration_id_is_hue: bool,
     pub declares_read: bool,
     pub declares_light_command: bool,
     pub declares_pairing: bool,
@@ -1396,6 +1397,7 @@ impl HueIntegrationDescriptorSummary {
             capability_count: descriptor.capabilities.len(),
             discovery_role_count: descriptor.discovery_roles.len(),
             pairing_role_count: descriptor.pairing_roles.len(),
+            integration_id_is_hue: descriptor.integration_id.as_str() == HUE_INTEGRATION_ID,
             declares_read: descriptor_declares_capability(descriptor, HUE_READ_CAPABILITY_ID),
             declares_light_command: descriptor_declares_capability(
                 descriptor,
@@ -1417,6 +1419,10 @@ impl HueIntegrationDescriptorSummary {
         self.runtime_kind == RuntimeKind::RustWorkerProcess
     }
 
+    pub fn has_canonical_identity(&self) -> bool {
+        self.integration_id_is_hue
+    }
+
     pub fn has_agent_facing_capabilities(&self) -> bool {
         self.declares_read || self.declares_light_command || self.declares_pairing
     }
@@ -1436,6 +1442,767 @@ impl HueIntegrationDescriptorSummary {
 
 pub fn hue_integration_descriptor_summary() -> HueIntegrationDescriptorSummary {
     HueIntegrationDescriptorSummary::from_descriptor(&hue_integration_descriptor())
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueIntegrationPackageSummary {
+    pub descriptor_summary: HueIntegrationDescriptorSummary,
+    pub pairing_plan_summary: HueBridgePairingPlanSummary,
+    pub worker_process_ready: bool,
+    pub command_flow_declared: bool,
+    pub local_pairing_declared: bool,
+    pub local_pairing_ready: bool,
+    pub package_ready: bool,
+    pub requires_physical_presence: bool,
+}
+
+impl HueIntegrationPackageSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_summaries(hue_integration_descriptor_summary(), plan.summary())
+    }
+
+    pub fn from_summaries(
+        descriptor_summary: HueIntegrationDescriptorSummary,
+        pairing_plan_summary: HueBridgePairingPlanSummary,
+    ) -> Self {
+        let worker_process_ready = descriptor_summary.runs_as_worker_process();
+        let command_flow_declared = descriptor_summary.supports_light_command_flow();
+        let local_pairing_declared = descriptor_summary.supports_local_pairing_flow();
+        let local_pairing_ready =
+            local_pairing_declared && pairing_plan_summary.ready_for_local_registration();
+        let package_ready = worker_process_ready && command_flow_declared && local_pairing_ready;
+
+        Self {
+            descriptor_summary,
+            pairing_plan_summary,
+            worker_process_ready,
+            command_flow_declared,
+            local_pairing_declared,
+            local_pairing_ready,
+            package_ready,
+            requires_physical_presence: pairing_plan_summary.requires_user_presence,
+        }
+    }
+
+    pub fn has_agent_facing_capabilities(&self) -> bool {
+        self.descriptor_summary.has_agent_facing_capabilities()
+    }
+
+    pub fn has_bridge_roles(&self) -> bool {
+        self.descriptor_summary.has_bridge_roles()
+    }
+
+    pub fn uses_local_event_stream(&self) -> bool {
+        self.pairing_plan_summary.uses_event_stream_path
+    }
+}
+
+pub fn hue_integration_package_summary(
+    plan: &HueBridgePairingPlan,
+) -> HueIntegrationPackageSummary {
+    HueIntegrationPackageSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseReadinessSummary {
+    pub package_summary: HueIntegrationPackageSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub failed_check_count: usize,
+    pub worker_process_ready: bool,
+    pub command_flow_ready: bool,
+    pub pairing_flow_ready: bool,
+    pub event_stream_ready: bool,
+    pub physical_presence_required: bool,
+    pub release_ready: bool,
+}
+
+impl HuePackageReleaseReadinessSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_package_summary(hue_integration_package_summary(plan))
+    }
+
+    pub fn from_package_summary(package_summary: HueIntegrationPackageSummary) -> Self {
+        let checks = [
+            package_summary.worker_process_ready,
+            package_summary.command_flow_declared,
+            package_summary.local_pairing_ready,
+            package_summary.uses_local_event_stream(),
+            package_summary.requires_physical_presence,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let failed_check_count = required_check_count - passed_check_count;
+        let release_ready = failed_check_count == 0 && package_summary.package_ready;
+
+        Self {
+            package_summary,
+            required_check_count,
+            passed_check_count,
+            failed_check_count,
+            worker_process_ready: package_summary.worker_process_ready,
+            command_flow_ready: package_summary.command_flow_declared,
+            pairing_flow_ready: package_summary.local_pairing_ready,
+            event_stream_ready: package_summary.uses_local_event_stream(),
+            physical_presence_required: package_summary.requires_physical_presence,
+            release_ready,
+        }
+    }
+
+    pub fn is_release_ready(self) -> bool {
+        self.release_ready
+    }
+
+    pub fn has_failed_checks(self) -> bool {
+        self.failed_check_count > 0
+    }
+}
+
+pub fn hue_package_release_readiness_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseReadinessSummary {
+    HuePackageReleaseReadinessSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageSpecSummary {
+    pub release_readiness: HuePackageReleaseReadinessSummary,
+    pub required_spec_check_count: usize,
+    pub passed_spec_check_count: usize,
+    pub missing_spec_check_count: usize,
+    pub canonical_integration_id: bool,
+    pub clip_v2_resource_root: bool,
+    pub registration_endpoint_ready: bool,
+    pub application_key_header_ready: bool,
+    pub event_stream_path_ready: bool,
+    pub read_model_declared: bool,
+    pub command_model_declared: bool,
+    pub pairing_model_declared: bool,
+    pub spec_ready: bool,
+}
+
+impl HuePackageSpecSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_release_readiness(hue_package_release_readiness_summary(plan))
+    }
+
+    pub fn from_release_readiness(release_readiness: HuePackageReleaseReadinessSummary) -> Self {
+        let descriptor = release_readiness.package_summary.descriptor_summary;
+        let pairing = release_readiness.package_summary.pairing_plan_summary;
+        let canonical_integration_id = descriptor.has_canonical_identity();
+        let clip_v2_resource_root = CLIP_V2_RESOURCE_ROOT == "/clip/v2/resource";
+        let registration_endpoint_ready = pairing.registration_path_is_api;
+        let application_key_header_ready = pairing.uses_hue_application_key_header;
+        let event_stream_path_ready = pairing.uses_event_stream_path;
+        let read_model_declared = descriptor.declares_read;
+        let command_model_declared = descriptor.declares_light_command;
+        let pairing_model_declared = descriptor.declares_pairing;
+        let release_ready = release_readiness.is_release_ready();
+        let checks = [
+            canonical_integration_id,
+            clip_v2_resource_root,
+            registration_endpoint_ready,
+            application_key_header_ready,
+            event_stream_path_ready,
+            read_model_declared,
+            command_model_declared,
+            pairing_model_declared,
+            release_ready,
+        ];
+        let passed_spec_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_spec_check_count = checks.len();
+        let missing_spec_check_count = required_spec_check_count - passed_spec_check_count;
+        let spec_ready = missing_spec_check_count == 0 && release_ready;
+
+        Self {
+            release_readiness,
+            required_spec_check_count,
+            passed_spec_check_count,
+            missing_spec_check_count,
+            canonical_integration_id,
+            clip_v2_resource_root,
+            registration_endpoint_ready,
+            application_key_header_ready,
+            event_stream_path_ready,
+            read_model_declared,
+            command_model_declared,
+            pairing_model_declared,
+            spec_ready,
+        }
+    }
+
+    pub fn is_spec_ready(self) -> bool {
+        self.spec_ready
+    }
+
+    pub fn has_missing_spec_checks(self) -> bool {
+        self.missing_spec_check_count > 0
+    }
+
+    pub fn declares_runtime_model_surface(self) -> bool {
+        self.read_model_declared && self.command_model_declared && self.pairing_model_declared
+    }
+}
+
+pub fn hue_package_spec_summary(plan: &HueBridgePairingPlan) -> HuePackageSpecSummary {
+    HuePackageSpecSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageSpecGapSummary {
+    pub spec_summary: HuePackageSpecSummary,
+    pub blocking_spec_check_count: usize,
+    pub release_blocked: bool,
+    pub identity_blocked: bool,
+    pub clip_v2_root_blocked: bool,
+    pub registration_endpoint_blocked: bool,
+    pub application_key_header_blocked: bool,
+    pub event_stream_path_blocked: bool,
+    pub runtime_model_blocked: bool,
+    pub spec_ready: bool,
+}
+
+impl HuePackageSpecGapSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_spec_summary(hue_package_spec_summary(plan))
+    }
+
+    pub fn from_spec_summary(spec_summary: HuePackageSpecSummary) -> Self {
+        let release_blocked = !spec_summary.release_readiness.is_release_ready();
+        let identity_blocked = !spec_summary.canonical_integration_id;
+        let clip_v2_root_blocked = !spec_summary.clip_v2_resource_root;
+        let registration_endpoint_blocked = !spec_summary.registration_endpoint_ready;
+        let application_key_header_blocked = !spec_summary.application_key_header_ready;
+        let event_stream_path_blocked = !spec_summary.event_stream_path_ready;
+        let runtime_model_blocked = !spec_summary.declares_runtime_model_surface();
+        let blockers = [
+            release_blocked,
+            identity_blocked,
+            clip_v2_root_blocked,
+            registration_endpoint_blocked,
+            application_key_header_blocked,
+            event_stream_path_blocked,
+            runtime_model_blocked,
+        ];
+        let blocking_spec_check_count = blockers.iter().filter(|blocked| **blocked).count();
+        let spec_ready = spec_summary.is_spec_ready() && blocking_spec_check_count == 0;
+
+        Self {
+            spec_summary,
+            blocking_spec_check_count,
+            release_blocked,
+            identity_blocked,
+            clip_v2_root_blocked,
+            registration_endpoint_blocked,
+            application_key_header_blocked,
+            event_stream_path_blocked,
+            runtime_model_blocked,
+            spec_ready,
+        }
+    }
+
+    pub fn is_clear(self) -> bool {
+        self.spec_ready
+    }
+
+    pub fn has_blockers(self) -> bool {
+        self.blocking_spec_check_count > 0
+    }
+
+    pub fn needs_release_review(self) -> bool {
+        self.release_blocked
+    }
+
+    pub fn needs_transport_review(self) -> bool {
+        self.clip_v2_root_blocked
+            || self.registration_endpoint_blocked
+            || self.application_key_header_blocked
+            || self.event_stream_path_blocked
+    }
+
+    pub fn needs_runtime_model_review(self) -> bool {
+        self.runtime_model_blocked
+    }
+}
+
+pub fn hue_package_spec_gap_summary(plan: &HueBridgePairingPlan) -> HuePackageSpecGapSummary {
+    HuePackageSpecGapSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueCatalogPackageReadinessSummary {
+    pub spec_summary: HuePackageSpecSummary,
+    pub required_catalog_check_count: usize,
+    pub passed_catalog_check_count: usize,
+    pub missing_catalog_check_count: usize,
+    pub package_spec_ready: bool,
+    pub release_ready: bool,
+    pub catalog_identity_ready: bool,
+    pub clip_v2_transport_ready: bool,
+    pub runtime_model_ready: bool,
+    pub pairing_handoff_ready: bool,
+    pub catalog_ready: bool,
+}
+
+impl HueCatalogPackageReadinessSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_spec_summary(hue_package_spec_summary(plan))
+    }
+
+    pub fn from_spec_summary(spec_summary: HuePackageSpecSummary) -> Self {
+        let descriptor = spec_summary
+            .release_readiness
+            .package_summary
+            .descriptor_summary;
+        let pairing = spec_summary
+            .release_readiness
+            .package_summary
+            .pairing_plan_summary;
+        let package_spec_ready = spec_summary.is_spec_ready();
+        let release_ready = spec_summary.release_readiness.is_release_ready();
+        let catalog_identity_ready = spec_summary.canonical_integration_id
+            && descriptor.has_agent_facing_capabilities()
+            && descriptor.has_bridge_roles();
+        let clip_v2_transport_ready = spec_summary.clip_v2_resource_root
+            && spec_summary.registration_endpoint_ready
+            && spec_summary.application_key_header_ready
+            && spec_summary.event_stream_path_ready;
+        let runtime_model_ready = spec_summary.declares_runtime_model_surface();
+        let pairing_handoff_ready = pairing.ready_for_local_registration()
+            && spec_summary.release_readiness.physical_presence_required;
+        let checks = [
+            package_spec_ready,
+            release_ready,
+            catalog_identity_ready,
+            clip_v2_transport_ready,
+            runtime_model_ready,
+            pairing_handoff_ready,
+        ];
+        let passed_catalog_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_catalog_check_count = checks.len();
+        let missing_catalog_check_count = required_catalog_check_count - passed_catalog_check_count;
+        let catalog_ready = missing_catalog_check_count == 0;
+
+        Self {
+            spec_summary,
+            required_catalog_check_count,
+            passed_catalog_check_count,
+            missing_catalog_check_count,
+            package_spec_ready,
+            release_ready,
+            catalog_identity_ready,
+            clip_v2_transport_ready,
+            runtime_model_ready,
+            pairing_handoff_ready,
+            catalog_ready,
+        }
+    }
+
+    pub fn is_catalog_ready(self) -> bool {
+        self.catalog_ready
+    }
+
+    pub fn has_missing_catalog_checks(self) -> bool {
+        self.missing_catalog_check_count > 0
+    }
+
+    pub fn transport_or_runtime_blocked(self) -> bool {
+        !self.clip_v2_transport_ready || !self.runtime_model_ready
+    }
+}
+
+pub fn hue_catalog_package_readiness_summary(
+    plan: &HueBridgePairingPlan,
+) -> HueCatalogPackageReadinessSummary {
+    HueCatalogPackageReadinessSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueCatalogPackageGapSummary {
+    pub catalog_readiness: HueCatalogPackageReadinessSummary,
+    pub blocking_check_count: usize,
+    pub package_spec_blocked: bool,
+    pub release_blocked: bool,
+    pub identity_blocked: bool,
+    pub transport_or_runtime_blocked: bool,
+    pub pairing_handoff_blocked: bool,
+    pub catalog_ready: bool,
+}
+
+impl HueCatalogPackageGapSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_catalog_readiness(hue_catalog_package_readiness_summary(plan))
+    }
+
+    pub fn from_catalog_readiness(catalog_readiness: HueCatalogPackageReadinessSummary) -> Self {
+        let package_spec_blocked = !catalog_readiness.package_spec_ready;
+        let release_blocked = !catalog_readiness.release_ready;
+        let identity_blocked = !catalog_readiness.catalog_identity_ready;
+        let transport_or_runtime_blocked = catalog_readiness.transport_or_runtime_blocked();
+        let pairing_handoff_blocked = !catalog_readiness.pairing_handoff_ready;
+        let blockers = [
+            package_spec_blocked,
+            release_blocked,
+            identity_blocked,
+            transport_or_runtime_blocked,
+            pairing_handoff_blocked,
+        ];
+        let blocking_check_count = blockers.iter().filter(|blocked| **blocked).count();
+        let catalog_ready = catalog_readiness.is_catalog_ready() && blocking_check_count == 0;
+
+        Self {
+            catalog_readiness,
+            blocking_check_count,
+            package_spec_blocked,
+            release_blocked,
+            identity_blocked,
+            transport_or_runtime_blocked,
+            pairing_handoff_blocked,
+            catalog_ready,
+        }
+    }
+
+    pub fn is_clear(self) -> bool {
+        self.catalog_ready
+    }
+
+    pub fn has_blockers(self) -> bool {
+        self.blocking_check_count > 0
+    }
+
+    pub fn needs_spec_review(self) -> bool {
+        self.package_spec_blocked || self.identity_blocked
+    }
+
+    pub fn needs_runtime_handoff_review(self) -> bool {
+        self.transport_or_runtime_blocked || self.pairing_handoff_blocked
+    }
+}
+
+pub fn hue_catalog_package_gap_summary(plan: &HueBridgePairingPlan) -> HueCatalogPackageGapSummary {
+    HueCatalogPackageGapSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HueCatalogSpecHandoffSummary {
+    pub gap_summary: HueCatalogPackageGapSummary,
+    pub required_handoff_check_count: usize,
+    pub passed_handoff_check_count: usize,
+    pub missing_handoff_check_count: usize,
+    pub catalog_ready: bool,
+    pub spec_review_clear: bool,
+    pub release_review_clear: bool,
+    pub runtime_handoff_clear: bool,
+    pub handoff_accepted: bool,
+}
+
+impl HueCatalogSpecHandoffSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_gap_summary(hue_catalog_package_gap_summary(plan))
+    }
+
+    pub fn from_gap_summary(gap_summary: HueCatalogPackageGapSummary) -> Self {
+        let catalog_ready = gap_summary.is_clear();
+        let spec_review_clear = !gap_summary.needs_spec_review();
+        let release_review_clear = !gap_summary.release_blocked;
+        let runtime_handoff_clear = !gap_summary.needs_runtime_handoff_review();
+        let checks = [
+            catalog_ready,
+            spec_review_clear,
+            release_review_clear,
+            runtime_handoff_clear,
+        ];
+        let passed_handoff_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_handoff_check_count = checks.len();
+        let missing_handoff_check_count = required_handoff_check_count - passed_handoff_check_count;
+        let handoff_accepted = missing_handoff_check_count == 0;
+
+        Self {
+            gap_summary,
+            required_handoff_check_count,
+            passed_handoff_check_count,
+            missing_handoff_check_count,
+            catalog_ready,
+            spec_review_clear,
+            release_review_clear,
+            runtime_handoff_clear,
+            handoff_accepted,
+        }
+    }
+
+    pub fn is_handoff_accepted(self) -> bool {
+        self.handoff_accepted
+    }
+
+    pub fn has_missing_handoff_checks(self) -> bool {
+        self.missing_handoff_check_count > 0
+    }
+
+    pub fn needs_catalog_spec_review(self) -> bool {
+        !self.spec_review_clear
+    }
+
+    pub fn needs_release_review(self) -> bool {
+        !self.release_review_clear
+    }
+
+    pub fn needs_runtime_pairing_review(self) -> bool {
+        !self.runtime_handoff_clear
+    }
+}
+
+pub fn hue_catalog_spec_handoff_summary(
+    plan: &HueBridgePairingPlan,
+) -> HueCatalogSpecHandoffSummary {
+    HueCatalogSpecHandoffSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackagePublishGateSummary {
+    pub handoff_summary: HueCatalogSpecHandoffSummary,
+    pub required_publish_check_count: usize,
+    pub passed_publish_check_count: usize,
+    pub blocked_publish_check_count: usize,
+    pub handoff_accepted: bool,
+    pub catalog_spec_review_clear: bool,
+    pub release_review_clear: bool,
+    pub runtime_pairing_review_clear: bool,
+    pub publish_ready: bool,
+}
+
+impl HuePackagePublishGateSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_handoff_summary(hue_catalog_spec_handoff_summary(plan))
+    }
+
+    pub fn from_handoff_summary(handoff_summary: HueCatalogSpecHandoffSummary) -> Self {
+        let handoff_accepted = handoff_summary.is_handoff_accepted();
+        let catalog_spec_review_clear = !handoff_summary.needs_catalog_spec_review();
+        let release_review_clear = !handoff_summary.needs_release_review();
+        let runtime_pairing_review_clear = !handoff_summary.needs_runtime_pairing_review();
+        let checks = [
+            handoff_accepted,
+            catalog_spec_review_clear,
+            release_review_clear,
+            runtime_pairing_review_clear,
+        ];
+        let passed_publish_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_publish_check_count = checks.len();
+        let blocked_publish_check_count = required_publish_check_count - passed_publish_check_count;
+        let publish_ready = blocked_publish_check_count == 0;
+
+        Self {
+            handoff_summary,
+            required_publish_check_count,
+            passed_publish_check_count,
+            blocked_publish_check_count,
+            handoff_accepted,
+            catalog_spec_review_clear,
+            release_review_clear,
+            runtime_pairing_review_clear,
+            publish_ready,
+        }
+    }
+
+    pub fn is_publish_ready(self) -> bool {
+        self.publish_ready
+    }
+
+    pub fn has_publish_blockers(self) -> bool {
+        self.blocked_publish_check_count > 0
+    }
+
+    pub fn needs_catalog_spec_queue(self) -> bool {
+        !self.catalog_spec_review_clear
+    }
+
+    pub fn needs_release_queue(self) -> bool {
+        !self.release_review_clear
+    }
+
+    pub fn needs_runtime_pairing_queue(self) -> bool {
+        !self.runtime_pairing_review_clear
+    }
+}
+
+pub fn hue_package_publish_gate_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackagePublishGateSummary {
+    HuePackagePublishGateSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageLifecycleSummary {
+    pub publish_gate: HuePackagePublishGateSummary,
+    pub required_lifecycle_stage_count: usize,
+    pub passed_lifecycle_stage_count: usize,
+    pub blocked_lifecycle_stage_count: usize,
+    pub release_ready: bool,
+    pub spec_ready: bool,
+    pub catalog_ready: bool,
+    pub handoff_accepted: bool,
+    pub publish_ready: bool,
+    pub lifecycle_complete: bool,
+}
+
+impl HuePackageLifecycleSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_publish_gate(hue_package_publish_gate_summary(plan))
+    }
+
+    pub fn from_publish_gate(publish_gate: HuePackagePublishGateSummary) -> Self {
+        let catalog_readiness = publish_gate.handoff_summary.gap_summary.catalog_readiness;
+        let spec_summary = catalog_readiness.spec_summary;
+        let release_ready = spec_summary.release_readiness.is_release_ready();
+        let spec_ready = spec_summary.is_spec_ready();
+        let catalog_ready = catalog_readiness.is_catalog_ready();
+        let handoff_accepted = publish_gate.handoff_accepted;
+        let publish_ready = publish_gate.is_publish_ready();
+        let stages = [
+            release_ready,
+            spec_ready,
+            catalog_ready,
+            handoff_accepted,
+            publish_ready,
+        ];
+        let passed_lifecycle_stage_count = stages.iter().filter(|ready| **ready).count();
+        let required_lifecycle_stage_count = stages.len();
+        let blocked_lifecycle_stage_count =
+            required_lifecycle_stage_count - passed_lifecycle_stage_count;
+        let lifecycle_complete = blocked_lifecycle_stage_count == 0;
+
+        Self {
+            publish_gate,
+            required_lifecycle_stage_count,
+            passed_lifecycle_stage_count,
+            blocked_lifecycle_stage_count,
+            release_ready,
+            spec_ready,
+            catalog_ready,
+            handoff_accepted,
+            publish_ready,
+            lifecycle_complete,
+        }
+    }
+
+    pub fn is_lifecycle_complete(self) -> bool {
+        self.lifecycle_complete
+    }
+
+    pub fn has_blocked_lifecycle_stages(self) -> bool {
+        self.blocked_lifecycle_stage_count > 0
+    }
+
+    pub fn needs_release_stage(self) -> bool {
+        !self.release_ready
+    }
+
+    pub fn needs_spec_stage(self) -> bool {
+        !self.spec_ready
+    }
+
+    pub fn needs_catalog_stage(self) -> bool {
+        !self.catalog_ready
+    }
+
+    pub fn needs_handoff_stage(self) -> bool {
+        !self.handoff_accepted
+    }
+
+    pub fn needs_publish_stage(self) -> bool {
+        !self.publish_ready
+    }
+}
+
+pub fn hue_package_lifecycle_summary(plan: &HueBridgePairingPlan) -> HuePackageLifecycleSummary {
+    HuePackageLifecycleSummary::from_pairing_plan(plan)
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReviewQueueSummary {
+    pub lifecycle_summary: HuePackageLifecycleSummary,
+    pub total_review_queue_count: usize,
+    pub active_review_queue_count: usize,
+    pub clear_review_queue_count: usize,
+    pub release_queue_active: bool,
+    pub spec_queue_active: bool,
+    pub catalog_queue_active: bool,
+    pub handoff_queue_active: bool,
+    pub publish_queue_active: bool,
+    pub package_acceptance_ready: bool,
+}
+
+impl HuePackageReviewQueueSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_lifecycle_summary(hue_package_lifecycle_summary(plan))
+    }
+
+    pub fn from_lifecycle_summary(lifecycle_summary: HuePackageLifecycleSummary) -> Self {
+        let release_queue_active = lifecycle_summary.needs_release_stage();
+        let spec_queue_active = lifecycle_summary.needs_spec_stage();
+        let catalog_queue_active = lifecycle_summary.needs_catalog_stage();
+        let handoff_queue_active = lifecycle_summary.needs_handoff_stage();
+        let publish_queue_active = lifecycle_summary.needs_publish_stage();
+        let queues = [
+            release_queue_active,
+            spec_queue_active,
+            catalog_queue_active,
+            handoff_queue_active,
+            publish_queue_active,
+        ];
+        let active_review_queue_count = queues.iter().filter(|active| **active).count();
+        let total_review_queue_count = queues.len();
+        let clear_review_queue_count = total_review_queue_count - active_review_queue_count;
+        let package_acceptance_ready =
+            lifecycle_summary.is_lifecycle_complete() && active_review_queue_count == 0;
+
+        Self {
+            lifecycle_summary,
+            total_review_queue_count,
+            active_review_queue_count,
+            clear_review_queue_count,
+            release_queue_active,
+            spec_queue_active,
+            catalog_queue_active,
+            handoff_queue_active,
+            publish_queue_active,
+            package_acceptance_ready,
+        }
+    }
+
+    pub fn has_active_review_queues(self) -> bool {
+        self.active_review_queue_count > 0
+    }
+
+    pub fn is_package_acceptance_ready(self) -> bool {
+        self.package_acceptance_ready
+    }
+
+    pub fn needs_release_queue(self) -> bool {
+        self.release_queue_active
+    }
+
+    pub fn needs_spec_queue(self) -> bool {
+        self.spec_queue_active
+    }
+
+    pub fn needs_catalog_queue(self) -> bool {
+        self.catalog_queue_active
+    }
+
+    pub fn needs_handoff_queue(self) -> bool {
+        self.handoff_queue_active
+    }
+
+    pub fn needs_publish_queue(self) -> bool {
+        self.publish_queue_active
+    }
+}
+
+pub fn hue_package_review_queue_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReviewQueueSummary {
+    HuePackageReviewQueueSummary::from_pairing_plan(plan)
 }
 
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
@@ -4452,12 +5219,14 @@ mod tests {
         assert_eq!(summary.capability_count, 3);
         assert_eq!(summary.discovery_role_count, 1);
         assert_eq!(summary.pairing_role_count, 1);
+        assert!(summary.integration_id_is_hue);
         assert!(summary.declares_read);
         assert!(summary.declares_light_command);
         assert!(summary.declares_pairing);
         assert!(summary.declares_bridge_discovery);
         assert!(summary.declares_bridge_pairing);
         assert!(summary.runs_as_worker_process());
+        assert!(summary.has_canonical_identity());
         assert!(summary.has_agent_facing_capabilities());
         assert!(summary.has_bridge_roles());
         assert!(summary.supports_local_pairing_flow());
@@ -4470,5 +5239,676 @@ mod tests {
             hue_integration_descriptor_summary(),
             HueIntegrationDescriptorSummary::from_descriptor(&hue_integration_descriptor())
         );
+    }
+
+    #[test]
+    fn hue_integration_package_summary_joins_descriptor_and_pairing_readiness() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        let summary = hue_integration_package_summary(&plan);
+
+        assert_eq!(
+            summary.descriptor_summary,
+            hue_integration_descriptor_summary()
+        );
+        assert_eq!(summary.pairing_plan_summary, plan.summary());
+        assert!(summary.worker_process_ready);
+        assert!(summary.command_flow_declared);
+        assert!(summary.local_pairing_declared);
+        assert!(summary.local_pairing_ready);
+        assert!(summary.package_ready);
+        assert!(summary.requires_physical_presence);
+        assert!(summary.has_agent_facing_capabilities());
+        assert!(summary.has_bridge_roles());
+        assert!(summary.uses_local_event_stream());
+    }
+
+    #[test]
+    fn hue_integration_package_summary_flags_incomplete_pairing_package() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.body = None;
+        plan.requires_user_presence = false;
+
+        let summary = HueIntegrationPackageSummary::from_pairing_plan(&plan);
+
+        assert!(summary.worker_process_ready);
+        assert!(summary.command_flow_declared);
+        assert!(summary.local_pairing_declared);
+        assert!(!summary.local_pairing_ready);
+        assert!(!summary.package_ready);
+        assert!(!summary.requires_physical_presence);
+        assert!(!summary.pairing_plan_summary.ready_for_local_registration());
+        assert!(summary.has_agent_facing_capabilities());
+        assert!(summary.has_bridge_roles());
+    }
+
+    #[test]
+    fn hue_package_release_readiness_summary_marks_catalog_ready_package() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_readiness_summary(&plan);
+
+        assert_eq!(
+            summary.package_summary,
+            hue_integration_package_summary(&plan)
+        );
+        assert_eq!(summary.required_check_count, 5);
+        assert_eq!(summary.passed_check_count, 5);
+        assert_eq!(summary.failed_check_count, 0);
+        assert!(summary.worker_process_ready);
+        assert!(summary.command_flow_ready);
+        assert!(summary.pairing_flow_ready);
+        assert!(summary.event_stream_ready);
+        assert!(summary.physical_presence_required);
+        assert!(summary.release_ready);
+        assert!(summary.is_release_ready());
+        assert!(!summary.has_failed_checks());
+    }
+
+    #[test]
+    fn hue_package_release_readiness_summary_counts_missing_pairing_checks() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseReadinessSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_check_count, 5);
+        assert_eq!(summary.passed_check_count, 2);
+        assert_eq!(summary.failed_check_count, 3);
+        assert!(summary.worker_process_ready);
+        assert!(summary.command_flow_ready);
+        assert!(!summary.pairing_flow_ready);
+        assert!(!summary.event_stream_ready);
+        assert!(!summary.physical_presence_required);
+        assert!(!summary.release_ready);
+        assert!(!summary.is_release_ready());
+        assert!(summary.has_failed_checks());
+    }
+
+    #[test]
+    fn hue_package_spec_summary_marks_spec_ready_package() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_spec_summary(&plan);
+
+        assert_eq!(
+            summary.release_readiness,
+            hue_package_release_readiness_summary(&plan)
+        );
+        assert_eq!(summary.required_spec_check_count, 9);
+        assert_eq!(summary.passed_spec_check_count, 9);
+        assert_eq!(summary.missing_spec_check_count, 0);
+        assert!(summary.canonical_integration_id);
+        assert!(summary.clip_v2_resource_root);
+        assert!(summary.registration_endpoint_ready);
+        assert!(summary.application_key_header_ready);
+        assert!(summary.event_stream_path_ready);
+        assert!(summary.read_model_declared);
+        assert!(summary.command_model_declared);
+        assert!(summary.pairing_model_declared);
+        assert!(summary.spec_ready);
+        assert!(summary.is_spec_ready());
+        assert!(!summary.has_missing_spec_checks());
+        assert!(summary.declares_runtime_model_surface());
+    }
+
+    #[test]
+    fn hue_package_spec_summary_counts_broken_handoff_surface() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+
+        let summary = HuePackageSpecSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_spec_check_count, 9);
+        assert_eq!(summary.passed_spec_check_count, 5);
+        assert_eq!(summary.missing_spec_check_count, 4);
+        assert!(summary.canonical_integration_id);
+        assert!(summary.clip_v2_resource_root);
+        assert!(!summary.registration_endpoint_ready);
+        assert!(!summary.application_key_header_ready);
+        assert!(!summary.event_stream_path_ready);
+        assert!(summary.read_model_declared);
+        assert!(summary.command_model_declared);
+        assert!(summary.pairing_model_declared);
+        assert!(!summary.release_readiness.is_release_ready());
+        assert!(!summary.spec_ready);
+        assert!(!summary.is_spec_ready());
+        assert!(summary.has_missing_spec_checks());
+        assert!(summary.declares_runtime_model_surface());
+    }
+
+    #[test]
+    fn hue_package_spec_gap_summary_marks_clear_package_spec() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_spec_gap_summary(&plan);
+
+        assert_eq!(summary.spec_summary, hue_package_spec_summary(&plan));
+        assert_eq!(summary.blocking_spec_check_count, 0);
+        assert!(!summary.release_blocked);
+        assert!(!summary.identity_blocked);
+        assert!(!summary.clip_v2_root_blocked);
+        assert!(!summary.registration_endpoint_blocked);
+        assert!(!summary.application_key_header_blocked);
+        assert!(!summary.event_stream_path_blocked);
+        assert!(!summary.runtime_model_blocked);
+        assert!(summary.spec_ready);
+        assert!(summary.is_clear());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_release_review());
+        assert!(!summary.needs_transport_review());
+        assert!(!summary.needs_runtime_model_review());
+    }
+
+    #[test]
+    fn hue_package_spec_gap_summary_routes_transport_and_release_gaps() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+
+        let summary = HuePackageSpecGapSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.blocking_spec_check_count, 4);
+        assert!(summary.release_blocked);
+        assert!(!summary.identity_blocked);
+        assert!(!summary.clip_v2_root_blocked);
+        assert!(summary.registration_endpoint_blocked);
+        assert!(summary.application_key_header_blocked);
+        assert!(summary.event_stream_path_blocked);
+        assert!(!summary.runtime_model_blocked);
+        assert!(!summary.spec_ready);
+        assert!(!summary.is_clear());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_release_review());
+        assert!(summary.needs_transport_review());
+        assert!(!summary.needs_runtime_model_review());
+    }
+
+    #[test]
+    fn hue_catalog_package_readiness_summary_marks_catalog_ready_package() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_catalog_package_readiness_summary(&plan);
+
+        assert_eq!(summary.spec_summary, hue_package_spec_summary(&plan));
+        assert_eq!(summary.required_catalog_check_count, 6);
+        assert_eq!(summary.passed_catalog_check_count, 6);
+        assert_eq!(summary.missing_catalog_check_count, 0);
+        assert!(summary.package_spec_ready);
+        assert!(summary.release_ready);
+        assert!(summary.catalog_identity_ready);
+        assert!(summary.clip_v2_transport_ready);
+        assert!(summary.runtime_model_ready);
+        assert!(summary.pairing_handoff_ready);
+        assert!(summary.catalog_ready);
+        assert!(summary.is_catalog_ready());
+        assert!(!summary.has_missing_catalog_checks());
+        assert!(!summary.transport_or_runtime_blocked());
+    }
+
+    #[test]
+    fn hue_catalog_package_readiness_summary_counts_handoff_gaps() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HueCatalogPackageReadinessSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_catalog_check_count, 6);
+        assert_eq!(summary.passed_catalog_check_count, 2);
+        assert_eq!(summary.missing_catalog_check_count, 4);
+        assert!(!summary.package_spec_ready);
+        assert!(!summary.release_ready);
+        assert!(summary.catalog_identity_ready);
+        assert!(!summary.clip_v2_transport_ready);
+        assert!(summary.runtime_model_ready);
+        assert!(!summary.pairing_handoff_ready);
+        assert!(!summary.catalog_ready);
+        assert!(!summary.is_catalog_ready());
+        assert!(summary.has_missing_catalog_checks());
+        assert!(summary.transport_or_runtime_blocked());
+    }
+
+    #[test]
+    fn hue_catalog_package_gap_summary_marks_clear_catalog_handoff() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_catalog_package_gap_summary(&plan);
+
+        assert_eq!(
+            summary.catalog_readiness,
+            hue_catalog_package_readiness_summary(&plan)
+        );
+        assert_eq!(summary.blocking_check_count, 0);
+        assert!(!summary.package_spec_blocked);
+        assert!(!summary.release_blocked);
+        assert!(!summary.identity_blocked);
+        assert!(!summary.transport_or_runtime_blocked);
+        assert!(!summary.pairing_handoff_blocked);
+        assert!(summary.catalog_ready);
+        assert!(summary.is_clear());
+        assert!(!summary.has_blockers());
+        assert!(!summary.needs_spec_review());
+        assert!(!summary.needs_runtime_handoff_review());
+    }
+
+    #[test]
+    fn hue_catalog_package_gap_summary_routes_transport_and_pairing_gaps() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HueCatalogPackageGapSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.blocking_check_count, 4);
+        assert!(summary.package_spec_blocked);
+        assert!(summary.release_blocked);
+        assert!(!summary.identity_blocked);
+        assert!(summary.transport_or_runtime_blocked);
+        assert!(summary.pairing_handoff_blocked);
+        assert!(!summary.catalog_ready);
+        assert!(!summary.is_clear());
+        assert!(summary.has_blockers());
+        assert!(summary.needs_spec_review());
+        assert!(summary.needs_runtime_handoff_review());
+    }
+
+    #[test]
+    fn hue_catalog_spec_handoff_summary_accepts_clear_catalog_package() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_catalog_spec_handoff_summary(&plan);
+
+        assert_eq!(summary.gap_summary, hue_catalog_package_gap_summary(&plan));
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 4);
+        assert_eq!(summary.missing_handoff_check_count, 0);
+        assert!(summary.catalog_ready);
+        assert!(summary.spec_review_clear);
+        assert!(summary.release_review_clear);
+        assert!(summary.runtime_handoff_clear);
+        assert!(summary.handoff_accepted);
+        assert!(summary.is_handoff_accepted());
+        assert!(!summary.has_missing_handoff_checks());
+        assert!(!summary.needs_catalog_spec_review());
+        assert!(!summary.needs_release_review());
+        assert!(!summary.needs_runtime_pairing_review());
+    }
+
+    #[test]
+    fn hue_catalog_spec_handoff_summary_routes_blocked_runtime_handoff() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HueCatalogSpecHandoffSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_handoff_check_count, 4);
+        assert_eq!(summary.passed_handoff_check_count, 0);
+        assert_eq!(summary.missing_handoff_check_count, 4);
+        assert!(!summary.catalog_ready);
+        assert!(!summary.spec_review_clear);
+        assert!(!summary.release_review_clear);
+        assert!(!summary.runtime_handoff_clear);
+        assert!(!summary.handoff_accepted);
+        assert!(!summary.is_handoff_accepted());
+        assert!(summary.has_missing_handoff_checks());
+        assert!(summary.needs_catalog_spec_review());
+        assert!(summary.needs_release_review());
+        assert!(summary.needs_runtime_pairing_review());
+    }
+
+    #[test]
+    fn hue_package_publish_gate_summary_marks_clear_package_publishable() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_publish_gate_summary(&plan);
+
+        assert_eq!(
+            summary.handoff_summary,
+            hue_catalog_spec_handoff_summary(&plan)
+        );
+        assert_eq!(summary.required_publish_check_count, 4);
+        assert_eq!(summary.passed_publish_check_count, 4);
+        assert_eq!(summary.blocked_publish_check_count, 0);
+        assert!(summary.handoff_accepted);
+        assert!(summary.catalog_spec_review_clear);
+        assert!(summary.release_review_clear);
+        assert!(summary.runtime_pairing_review_clear);
+        assert!(summary.publish_ready);
+        assert!(summary.is_publish_ready());
+        assert!(!summary.has_publish_blockers());
+        assert!(!summary.needs_catalog_spec_queue());
+        assert!(!summary.needs_release_queue());
+        assert!(!summary.needs_runtime_pairing_queue());
+    }
+
+    #[test]
+    fn hue_package_publish_gate_summary_routes_blocked_review_queues() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackagePublishGateSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_publish_check_count, 4);
+        assert_eq!(summary.passed_publish_check_count, 0);
+        assert_eq!(summary.blocked_publish_check_count, 4);
+        assert!(!summary.handoff_accepted);
+        assert!(!summary.catalog_spec_review_clear);
+        assert!(!summary.release_review_clear);
+        assert!(!summary.runtime_pairing_review_clear);
+        assert!(!summary.publish_ready);
+        assert!(!summary.is_publish_ready());
+        assert!(summary.has_publish_blockers());
+        assert!(summary.needs_catalog_spec_queue());
+        assert!(summary.needs_release_queue());
+        assert!(summary.needs_runtime_pairing_queue());
+    }
+
+    #[test]
+    fn hue_package_lifecycle_summary_marks_complete_package_lifecycle() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_lifecycle_summary(&plan);
+
+        assert_eq!(
+            summary.publish_gate,
+            hue_package_publish_gate_summary(&plan)
+        );
+        assert_eq!(summary.required_lifecycle_stage_count, 5);
+        assert_eq!(summary.passed_lifecycle_stage_count, 5);
+        assert_eq!(summary.blocked_lifecycle_stage_count, 0);
+        assert!(summary.release_ready);
+        assert!(summary.spec_ready);
+        assert!(summary.catalog_ready);
+        assert!(summary.handoff_accepted);
+        assert!(summary.publish_ready);
+        assert!(summary.lifecycle_complete);
+        assert!(summary.is_lifecycle_complete());
+        assert!(!summary.has_blocked_lifecycle_stages());
+        assert!(!summary.needs_release_stage());
+        assert!(!summary.needs_spec_stage());
+        assert!(!summary.needs_catalog_stage());
+        assert!(!summary.needs_handoff_stage());
+        assert!(!summary.needs_publish_stage());
+    }
+
+    #[test]
+    fn hue_package_lifecycle_summary_counts_blocked_lifecycle_stages() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageLifecycleSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_lifecycle_stage_count, 5);
+        assert_eq!(summary.passed_lifecycle_stage_count, 0);
+        assert_eq!(summary.blocked_lifecycle_stage_count, 5);
+        assert!(!summary.release_ready);
+        assert!(!summary.spec_ready);
+        assert!(!summary.catalog_ready);
+        assert!(!summary.handoff_accepted);
+        assert!(!summary.publish_ready);
+        assert!(!summary.lifecycle_complete);
+        assert!(!summary.is_lifecycle_complete());
+        assert!(summary.has_blocked_lifecycle_stages());
+        assert!(summary.needs_release_stage());
+        assert!(summary.needs_spec_stage());
+        assert!(summary.needs_catalog_stage());
+        assert!(summary.needs_handoff_stage());
+        assert!(summary.needs_publish_stage());
+    }
+
+    #[test]
+    fn hue_package_review_queue_summary_marks_clear_package_acceptance() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_review_queue_summary(&plan);
+
+        assert_eq!(
+            summary.lifecycle_summary,
+            hue_package_lifecycle_summary(&plan)
+        );
+        assert_eq!(summary.total_review_queue_count, 5);
+        assert_eq!(summary.active_review_queue_count, 0);
+        assert_eq!(summary.clear_review_queue_count, 5);
+        assert!(!summary.release_queue_active);
+        assert!(!summary.spec_queue_active);
+        assert!(!summary.catalog_queue_active);
+        assert!(!summary.handoff_queue_active);
+        assert!(!summary.publish_queue_active);
+        assert!(summary.package_acceptance_ready);
+        assert!(!summary.has_active_review_queues());
+        assert!(summary.is_package_acceptance_ready());
+        assert!(!summary.needs_release_queue());
+        assert!(!summary.needs_spec_queue());
+        assert!(!summary.needs_catalog_queue());
+        assert!(!summary.needs_handoff_queue());
+        assert!(!summary.needs_publish_queue());
+    }
+
+    #[test]
+    fn hue_package_review_queue_summary_routes_blocked_lifecycle_queues() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.registration_request.path = "/wrong/api".to_string();
+        plan.application_key_header = "x-application-key".to_string();
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReviewQueueSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.total_review_queue_count, 5);
+        assert_eq!(summary.active_review_queue_count, 5);
+        assert_eq!(summary.clear_review_queue_count, 0);
+        assert!(summary.release_queue_active);
+        assert!(summary.spec_queue_active);
+        assert!(summary.catalog_queue_active);
+        assert!(summary.handoff_queue_active);
+        assert!(summary.publish_queue_active);
+        assert!(!summary.package_acceptance_ready);
+        assert!(summary.has_active_review_queues());
+        assert!(!summary.is_package_acceptance_ready());
+        assert!(summary.needs_release_queue());
+        assert!(summary.needs_spec_queue());
+        assert!(summary.needs_catalog_queue());
+        assert!(summary.needs_handoff_queue());
+        assert!(summary.needs_publish_queue());
     }
 }

@@ -4,15 +4,17 @@
 #
 # Per the VisiCalc cross-backend demo plan, this script runs the
 # Compose emitter (code/packages/rust/mosaic-emit-compose/) against
-# the canonical FormulaBar.{mil,desktop.mll,dark.msl} sources and
-# drops the resulting Kotlin file into src/main/kotlin/generated/.
+# the canonical FormulaBar.{mil,desktop.mll,dark.msl} AND
+# Grid.{mil,desktop.mll,dark.msl} sources and drops the resulting
+# Kotlin files into src/main/kotlin/generated/.
 #
-# Today we only compile FormulaBar through the pipeline.  The Grid
-# Kotlin composable in src/main/kotlin/Grid.kt is still hand-written
-# (the mosaic-emit-compose pipeline doesn't yet support the `Grid`
-# built-in primitive — only the React + SwiftUI emitters do).  When
-# the Compose Grid emitter lands (grid-emit-compose cycle), this
-# script gains a second mosaic-compile invocation for Grid.
+# BOTH the FormulaBar and the Grid are now fully generated through the
+# pipeline — there is no hand-written Grid composable anymore.  Grid is
+# emitted from the shared `mosaic-pkg-grid::Grid` package composition
+# (resolved via --package-search-path), and the Compose emitter inlines
+# the `.msl` part-styles (width / height / background / border / padding
+# / alignment / per-state highlight) onto each cell's `Modifier`, so the
+# generated Grid renders as a real styled spreadsheet.
 #
 # Usage:
 #   cd demo/visicalc-compose

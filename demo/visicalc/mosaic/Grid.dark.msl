@@ -43,6 +43,11 @@ style Grid {
     border-color: #3f3f46 ;
     padding:      2px ;
     height:       22px ;
+    // Right-align cell contents — the spreadsheet convention for
+    // numeric data.  Backends that understand text-align (HTML/React
+    // via CSS, SwiftUI via .frame(alignment:)) push the value to the
+    // trailing edge so columns of numbers line up on their ones digit.
+    text-align:   right ;
 
     // Active-cell highlight. Task #35 — `mosaic-emit-react` looks up
     // `cell:selected` in the part-style map and inlines these

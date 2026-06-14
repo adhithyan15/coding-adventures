@@ -17,6 +17,8 @@ All notable changes to this package will be documented in this file.
   tooling.
 - Descriptor-inventory summaries for payload-free node, endpoint, profile, and
   cluster coverage reads.
+- Descriptor-inventory readiness summaries for identity, endpoint, profile,
+  cluster, and lighting coverage handoff checks.
 - Unique cluster coverage and profile-family endpoint counts for ZDO interview
   read summaries.
 - Read-summary helper predicates for duplicate cluster references, lighting

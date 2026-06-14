@@ -154,7 +154,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // spaces (`a /b/ c`). Still valid JS (same grouping) but not byte-
     // identical. Regex-vs-division disambiguation is a lexer-level
     // gap (needs parser context to know `/` after a value is division).
-    ("regex_div", "gap-092: division mis-lexed as regex (spacing)"),
+    // gap-092 RESOLVED by F10 (declarative lexer mode transitions): the
+    // es2025 grammar now declares a `div` mode entered after value-producing
+    // tokens, so `/` after an identifier/number/`)`/`]` lexes as SLASH, not
+    // REGEX. `regex_div` is now ENFORCED (un-ignored below).
     // gap-044: JavaScript lexer does not yet support
     // template literal SUBSTITUTIONS (`${expr}` inside
     // a backtick-delimited string). Lexer-level gap.
@@ -314,7 +317,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // Affects `a/b/c`, `4/2/1`, `a/b+c/d`, `(a)/b/c`. A SINGLE division
     // (`a/b`) already lexes correctly. Lexer-level (sibling of gap-044).
     // HIGH PRIORITY — corrupts output to non-parseable JS.
-    ("div_chain", "gap-115: a/b/c mis-lexed as regex -> invalid `a /b/ c` (CORRECTNESS)"),
+    // gap-115 RESOLVED by F10: once in `div` mode, every subsequent `/` after a
+    // value-producing token stays a division, so `a/b/c` lexes as `a / b / c`
+    // (byte-identical `a/b/c`), not `a /b/ c`. `div_chain` un-ignored below.
     // gap-116 RESOLVED in CLOC12.116 — a STRING property key that is a
     // CANONICAL non-negative integer (< 2^53) is now unquoted to a numeric
     // key and printed in shortest numeric form: `{"123":1}` -> `{123:1}`,
@@ -519,19 +524,19 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // inserts a space between the word-like `return` and the `/`-led
     // regex token. Entangled with division disambiguation — deferred
     // until the regex/division lexing (gap-115) is settled.
-    ("regex_after_return", "gap-119: spurious space between return keyword and regex literal"),
-    // gap-120 (CLOC14.58): a NON-INTEGER numeric property key is emitted
-    // by upstream as a QUOTED canonical-number string, not a bare numeric
-    // key: `{.5:1}` -> `{"0.5":1}`, `{1.5:1}` -> `{"1.5":1}`,
-    // `{1e-3:1}` -> `{"0.001":1}`. Float-key counterpart of gap-116
-    // (canonical INTEGER string key -> unquoted number); upstream
-    // canonicalises every property key to `String(Number(key))` and
-    // quotes it iff that string is not a valid bare numeric/identifier
-    // key. INTEGER numeric keys already round-trip (`{5:1}`, `{0xff:1}`
-    // -> `{255:1}`). The general value canonicalisation (`1e-3` ->
-    // `0.001`) overlaps the gap-113 (Ryu) number-printer work; simple
-    // decimals (`.5` -> `0.5`) are tractable.
-    ("float_key_quoted", "gap-120: non-integer numeric property key -> quoted canonical-number string"),
+    // gap-119 RESOLVED by F10: `return` keeps the lexer in `default` (regex)
+    // mode, so `return/a/g` lexes the `/a/g` as a single REGEX token with no
+    // intervening value token — the separator logic no longer splits it.
+    // `regex_after_return` un-ignored below.
+    // gap-120 RESOLVED in CLOC12.120 — a NON-INTEGER numeric property key
+    // is now emitted as a QUOTED `String(Number(key))` string:
+    //   {.5:1} -> {"0.5":1}   {1.5:1} -> {"1.5":1}   {1e-3:1} -> {"0.001":1}
+    // Float-key counterpart of gap-116 (canonical INTEGER string key ->
+    // unquoted number); INTEGER numeric keys stay bare. The canonical key
+    // string is JS `String(Number(key))` (leading-`0`-KEPT decimal,
+    // lowercase-`e` sci below 1e-6), computed exactly from the source
+    // digits by `noninteger_numeric_key_string` in whitespace_only.rs.
+    // `minify_float_key_quoted` flipped IGNORED -> PASS.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

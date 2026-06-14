@@ -377,9 +377,40 @@ module CodingAdventures
           @group_patterns[group_name] = compiled
         end
 
-        # The group stack. Bottom is always "default". Top is the active
-        # group whose patterns are tried during token matching.
-        @group_stack = ["default"]
+        # --- F10: declarative lexer mode transitions ---
+        # A .tokens grammar may declare a transitions: table plus a start_mode:.
+        # The table is pure data (ModeTransition/TransitionAction from
+        # grammar_tools); the lexer interprets it after every token (see
+        # apply_transitions) to switch the active mode -- enabling
+        # context-sensitive lexing (JavaScript regex-vs-division, template
+        # substitutions) WITHOUT a hand-written on-token callback. An empty
+        # table behaves identically to F04 (every helper early-returns).
+        @transitions = (grammar.respond_to?(:transitions) ? grammar.transitions : nil) || []
+
+        # The mode the lexer starts in. Defaults to "default" (the base group).
+        # Falls back to "default" if a grammar names a mode with no group, so
+        # tokenization never crashes on a malformed compiled artifact.
+        sm = grammar.respond_to?(:start_mode) ? grammar.start_mode : nil
+        @start_mode = (sm && (@group_patterns.key?(sm) || sm == "default")) ? sm : "default"
+
+        # A group reached via set-mode is a FLAT MODE that inherits the default
+        # group's patterns (its own win on priority); a group reached only via
+        # push stays EXCLUSIVE (F04 nested-region semantics). push wins the
+        # classification when a group is both. Derived once from the table.
+        set_mode_targets = []
+        push_targets = []
+        @transitions.each do |rule|
+          rule.actions.each do |action|
+            set_mode_targets << action.target if action.kind == "set_mode" && action.target
+            push_targets << action.target if action.kind == "push" && action.target
+          end
+        end
+        @inheriting_modes = (set_mode_targets.uniq - push_targets - ["default"]).to_set.freeze
+
+        # The group stack. Bottom is the configured start mode (F10); "default"
+        # for grammars without a start_mode:. Top is the active group whose
+        # patterns are tried during token matching.
+        @group_stack = [@start_mode]
 
         # On-token callback -- nil means no callback (zero overhead).
         # When set, fires after each token match, before emission.
@@ -588,7 +619,15 @@ module CodingAdventures
 
               # Apply skip toggle if the callback changed it.
               @skip_enabled = ctx.skip_enabled unless ctx.skip_enabled.nil?
+
+              # F10: the declarative table is the default; a registered callback
+              # runs first (above) and the table refines, so the resulting mode
+              # governs the NEXT token match.
+              apply_transitions(token)
             else
+              # F10: consult the declarative table so the new mode governs the
+              # NEXT match. No-op when the grammar has no transitions.
+              apply_transitions(token)
               tokens << token
               @last_emitted_token = token
             end
@@ -608,10 +647,67 @@ module CodingAdventures
         )
 
         # Reset group stack for reuse (in case tokenize is called again).
-        @group_stack = ["default"]
+        # F10: reset to the configured start mode, not the bare "default".
+        @group_stack = [@start_mode]
         @skip_enabled = true
 
         tokens
+      end
+
+      # F10: the grammar token name used to match a token against transition
+      # rules. In this lexer every TokenType constant IS its UPPER_SNAKE string
+      # (TokenType::NAME == "NAME") and custom token types are already strings,
+      # so a token's type is the transition key directly.
+      #
+      # @param token [Token]
+      # @return [String]
+      def transition_key(token)
+        token.type.to_s
+      end
+
+      # F10: apply the declarative mode-transition table after +token+ is
+      # emitted. The first rule whose trigger token-name, optional +in MODE+
+      # guard, and optional keyword-value guard all match wins; its actions
+      # mutate the active-mode register (top of @group_stack) and/or skip flag:
+      #
+      #   set_mode -- replace the active mode in place (flat toggle)
+      #   push/pop -- F04 nested-region save/restore
+      #   enable_skip/disable_skip -- toggle skip processing
+      #
+      # No-op when the table is empty (behaviour identical to F04).
+      #
+      # @param token [Token]
+      def apply_transitions(token)
+        return if @transitions.empty?
+
+        key = transition_key(token)
+        active = @group_stack.last || "default"
+
+        matched_actions = nil
+        @transitions.each do |rule|
+          next unless rule.on_tokens.include?(key)
+          next if rule.in_mode && rule.in_mode != active
+          next if rule.on_value && rule.on_value != token.value
+
+          matched_actions = rule.actions
+          break
+        end
+        return if matched_actions.nil?
+
+        matched_actions.each do |action|
+          case action.kind
+          when "set_mode"
+            @group_stack[-1] = action.target if action.target
+          when "push"
+            @group_stack.push(action.target) if action.target
+          when "pop"
+            @group_stack.pop if @group_stack.length > 1
+          when "enable_skip"
+            @skip_enabled = true
+          when "disable_skip"
+            @skip_enabled = false
+          end
+        end
       end
 
       # Update bracket depth counters based on a token's value.
@@ -949,6 +1045,14 @@ module CodingAdventures
       def try_match_token_in_group(group_name)
         remaining = @source[@pos..]
         patterns = @group_patterns.fetch(group_name, @patterns)
+
+        # F10: a flat mode (a set-mode target) inherits the default group's
+        # patterns. Its own patterns take priority (tried first); the rest fall
+        # through by appending the default patterns. Nested push regions are NOT
+        # in @inheriting_modes and so stay exclusive (F04 / XML semantics).
+        if group_name != "default" && @inheriting_modes.include?(group_name)
+          patterns += @group_patterns["default"]
+        end
 
         patterns.each do |token_name, pattern, alias_name|
           m = pattern.match(remaining)

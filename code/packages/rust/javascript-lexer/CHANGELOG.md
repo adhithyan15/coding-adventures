@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-13
+
+### Added
+- **F10 regex-vs-division mode table (ES2025)** — `es2025.tokens` now
+  declares `start_mode: default`, a flat `div` mode (`group div:` whose
+  `SLASH`/`SLASH_EQUALS` patterns override `REGEX`), and a `transitions:`
+  table encoding Acorn's `exprAllowed`: value-producing tokens
+  (NAME/NUMBER/STRING/REGEX/`)`/`]`/`this`/`super`/`true`/`false`/`null`)
+  enter `div` mode (a following `/` is DIVISION); operators, openers and
+  expression-keywords (`return`/`typeof`/`in`/`new`/…) return to `default`
+  (a following `/` starts a REGEX). The shared `GrammarLexer` interprets
+  the table (no hand-written per-language callback). This makes `a/b/c`
+  lex as three divisions and `return/re/` lex `/re/` as one REGEX token —
+  closing closurec gap-092/gap-115/gap-119.
+- The compiled `_grammar.rs` was regenerated from the grammars. This run
+  also picks up the previously-deferred generic (`""`-version) lexer
+  module that the generator emits but the committed file had been stale
+  against (noted in CLOC12.99's gap-096 resolution).
+
 ## [0.5.1] - 2026-06-12
 
 ### Fixed

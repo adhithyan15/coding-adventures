@@ -603,8 +603,100 @@ impl ZclAttributeReportSummary {
         self.state_delta_count > 0
     }
 
+    pub fn has_reports(&self) -> bool {
+        self.report_count > 0
+    }
+
+    pub fn typed_report_count(&self) -> usize {
+        self.bool_reports + self.numeric_reports + self.text_reports
+    }
+
+    pub fn has_typed_reports(&self) -> bool {
+        self.typed_report_count() > 0
+    }
+
     pub fn has_raw_reports(&self) -> bool {
         self.raw_reports > 0
+    }
+
+    pub fn has_unknown_type_reports(&self) -> bool {
+        self.unknown_type_reports > 0
+    }
+
+    pub fn readiness(self) -> ZclAttributeReportReadinessSummary {
+        ZclAttributeReportReadinessSummary::from_summary(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclAttributeReportReadinessSummary {
+    pub report_summary: ZclAttributeReportSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub missing_check_count: usize,
+    pub reports_present: bool,
+    pub state_delta_coverage_ready: bool,
+    pub typed_value_coverage_ready: bool,
+    pub raw_reports_absent: bool,
+    pub unknown_types_absent: bool,
+    pub report_ready: bool,
+}
+
+impl ZclAttributeReportReadinessSummary {
+    pub fn from_summary(report_summary: ZclAttributeReportSummary) -> Self {
+        let reports_present = report_summary.has_reports();
+        let state_delta_coverage_ready = report_summary.has_state_deltas();
+        let typed_value_coverage_ready = report_summary.has_typed_reports();
+        let raw_reports_absent = !report_summary.has_raw_reports();
+        let unknown_types_absent = !report_summary.has_unknown_type_reports();
+        let checks = [
+            reports_present,
+            state_delta_coverage_ready,
+            typed_value_coverage_ready,
+            raw_reports_absent,
+            unknown_types_absent,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let missing_check_count = required_check_count - passed_check_count;
+        let report_ready = missing_check_count == 0;
+
+        Self {
+            report_summary,
+            required_check_count,
+            passed_check_count,
+            missing_check_count,
+            reports_present,
+            state_delta_coverage_ready,
+            typed_value_coverage_ready,
+            raw_reports_absent,
+            unknown_types_absent,
+            report_ready,
+        }
+    }
+
+    pub fn is_report_ready(self) -> bool {
+        self.report_ready
+    }
+
+    pub fn has_missing_checks(self) -> bool {
+        self.missing_check_count > 0
+    }
+
+    pub fn needs_report_discovery(self) -> bool {
+        !self.reports_present
+    }
+
+    pub fn needs_state_delta_mapping(self) -> bool {
+        !self.state_delta_coverage_ready
+    }
+
+    pub fn needs_typed_value_mapping(self) -> bool {
+        !self.typed_value_coverage_ready
+    }
+
+    pub fn has_raw_or_unknown_reports(self) -> bool {
+        !self.raw_reports_absent || !self.unknown_types_absent
     }
 }
 
@@ -1365,7 +1457,29 @@ mod tests {
         assert_eq!(summary.raw_reports, 0);
         assert_eq!(summary.unknown_type_reports, 0);
         assert!(summary.has_state_deltas());
+        assert!(summary.has_reports());
+        assert_eq!(summary.typed_report_count(), 3);
+        assert!(summary.has_typed_reports());
         assert!(!summary.has_raw_reports());
+        assert!(!summary.has_unknown_type_reports());
+
+        let readiness = summary.readiness();
+        assert_eq!(readiness.report_summary, summary);
+        assert_eq!(readiness.required_check_count, 5);
+        assert_eq!(readiness.passed_check_count, 5);
+        assert_eq!(readiness.missing_check_count, 0);
+        assert!(readiness.reports_present);
+        assert!(readiness.state_delta_coverage_ready);
+        assert!(readiness.typed_value_coverage_ready);
+        assert!(readiness.raw_reports_absent);
+        assert!(readiness.unknown_types_absent);
+        assert!(readiness.report_ready);
+        assert!(readiness.is_report_ready());
+        assert!(!readiness.has_missing_checks());
+        assert!(!readiness.needs_report_discovery());
+        assert!(!readiness.needs_state_delta_mapping());
+        assert!(!readiness.needs_typed_value_mapping());
+        assert!(!readiness.has_raw_or_unknown_reports());
     }
 
     #[test]
@@ -1380,7 +1494,28 @@ mod tests {
         assert_eq!(summary.raw_reports, 1);
         assert_eq!(summary.unknown_type_reports, 1);
         assert!(!summary.has_state_deltas());
+        assert!(summary.has_reports());
+        assert_eq!(summary.typed_report_count(), 0);
+        assert!(!summary.has_typed_reports());
         assert!(summary.has_raw_reports());
+        assert!(summary.has_unknown_type_reports());
+
+        let readiness = ZclAttributeReportReadinessSummary::from_summary(summary);
+        assert_eq!(readiness.required_check_count, 5);
+        assert_eq!(readiness.passed_check_count, 1);
+        assert_eq!(readiness.missing_check_count, 4);
+        assert!(readiness.reports_present);
+        assert!(!readiness.state_delta_coverage_ready);
+        assert!(!readiness.typed_value_coverage_ready);
+        assert!(!readiness.raw_reports_absent);
+        assert!(!readiness.unknown_types_absent);
+        assert!(!readiness.report_ready);
+        assert!(!readiness.is_report_ready());
+        assert!(readiness.has_missing_checks());
+        assert!(!readiness.needs_report_discovery());
+        assert!(readiness.needs_state_delta_mapping());
+        assert!(readiness.needs_typed_value_mapping());
+        assert!(readiness.has_raw_or_unknown_reports());
     }
 
     #[test]

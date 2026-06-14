@@ -533,8 +533,8 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             if close_now || state.read_paused || state.close_when_flushed || state.peer_closed {
                 break;
             }
-            match self.platform.read(stream, &mut buffer)? {
-                ReadOutcome::Read(n) => {
+            match self.platform.read(stream, &mut buffer) {
+                Ok(ReadOutcome::Read(n)) => {
                     let chunk = &buffer[..n];
                     match self.apply_read_chunk(&mut state, chunk) {
                         ReadChunkOutcome::Applied => {}
@@ -552,9 +552,18 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                         break;
                     }
                 }
-                ReadOutcome::WouldBlock => break,
-                ReadOutcome::Closed => {
+                Ok(ReadOutcome::WouldBlock) => break,
+                Ok(ReadOutcome::Closed) => {
                     state.peer_closed = true;
+                    break;
+                }
+                // A per-connection read error (e.g. ECONNRESET from a client that
+                // vanished) must close ONLY this connection and run its close
+                // callback — never propagate out of `serve` and tear down the
+                // whole event loop. Otherwise a single hostile or crashed client
+                // would take every other connection down with it.
+                Err(_) => {
+                    close_now = true;
                     break;
                 }
             }
@@ -596,12 +605,19 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
 
         let mut close_now = false;
         while !state.pending_write.is_empty() {
-            match self.platform.write(stream, &state.pending_write)? {
-                WriteOutcome::Wrote(n) => {
+            match self.platform.write(stream, &state.pending_write) {
+                Ok(WriteOutcome::Wrote(n)) => {
                     state.pending_write.drain(..n);
                 }
-                WriteOutcome::WouldBlock => break,
-                WriteOutcome::Closed => {
+                Ok(WriteOutcome::WouldBlock) => break,
+                Ok(WriteOutcome::Closed) => {
+                    close_now = true;
+                    break;
+                }
+                // A per-connection write error (e.g. broken pipe to a client that
+                // vanished) closes ONLY this connection — like the read path, it
+                // must never tear down the event loop for everyone else.
+                Err(_) => {
                     close_now = true;
                     break;
                 }

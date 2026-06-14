@@ -1061,4 +1061,104 @@ class TestPatternGroupTokenization < Minitest::Test
     tokens = lexer.tokenize
     assert tokens.any? { |t| token_type_name(t) == "TAG_NAME" }
   end
+
+  # =========================================================================
+  # F10 — declarative lexer mode transitions (regex-vs-division)
+  # =========================================================================
+
+  F10_REGEX_DIV_SOURCE = <<~TOKENS
+    NAME = /[a-z]+/
+    REGEX = /\\/[a-z]+\\//
+    SLASH_EQUALS = "/="
+    SLASH = "/"
+    EQUALS = "="
+    PLUS = "+"
+
+    group div:
+      SLASH_EQUALS = "/="
+      SLASH = "/"
+
+    start_mode: default
+    transitions:
+      on NAME -> set-mode div
+      on (EQUALS | PLUS | SLASH | SLASH_EQUALS | REGEX) -> set-mode default
+  TOKENS
+
+  def f10_names(tokens)
+    tokens.reject { |t| token_type_name(t) == "EOF" }.map { |t| token_type_name(t) }
+  end
+
+  def test_f10_division_chain_lexed_as_slashes
+    # `a/b/c` in operand position: each `/` is division, not a regex.
+    grammar = CodingAdventures::GrammarTools.parse_token_grammar(F10_REGEX_DIV_SOURCE)
+    tokens = CodingAdventures::Lexer::GrammarLexer.new("a/b/c", grammar).tokenize
+    assert_equal %w[NAME SLASH NAME SLASH NAME], f10_names(tokens)
+  end
+
+  def test_f10_regex_in_expression_position
+    # After `=`, a `/.../` is a regex literal.
+    grammar = CodingAdventures::GrammarTools.parse_token_grammar(F10_REGEX_DIV_SOURCE)
+    tokens = CodingAdventures::Lexer::GrammarLexer.new("x=/ab/", grammar).tokenize
+    assert_equal %w[NAME EQUALS REGEX], f10_names(tokens)
+  end
+
+  def test_f10_flat_mode_inherits_default_patterns
+    # In `div` mode a NAME has no override, so it must be matched via
+    # inheritance from the default group. If inheritance were off the second
+    # identifier would fail to lex.
+    grammar = CodingAdventures::GrammarTools.parse_token_grammar(F10_REGEX_DIV_SOURCE)
+    tokens = CodingAdventures::Lexer::GrammarLexer.new("ab cd", grammar).tokenize
+    assert_equal %w[NAME NAME], f10_names(tokens)
+  end
+
+  def test_f10_slash_equals_override_beats_inherited_regex
+    # `a/=b` — in div mode the `/=` override wins over inherited REGEX/SLASH.
+    grammar = CodingAdventures::GrammarTools.parse_token_grammar(F10_REGEX_DIV_SOURCE)
+    tokens = CodingAdventures::Lexer::GrammarLexer.new("a/=b", grammar).tokenize
+    assert_equal %w[NAME SLASH_EQUALS NAME], f10_names(tokens)
+  end
+
+  def test_f10_no_transitions_is_backward_compatible
+    # The SAME tokens without a transitions table: REGEX greedily wins, so
+    # `a/b/c` lexes as NAME REGEX NAME (the pre-F10 behaviour).
+    grammar = CodingAdventures::GrammarTools.parse_token_grammar(<<~TOKENS)
+      NAME = /[a-z]+/
+      REGEX = /\\/[a-z]+\\//
+      SLASH = "/"
+    TOKENS
+    tokens = CodingAdventures::Lexer::GrammarLexer.new("a/b/c", grammar).tokenize
+    assert_equal %w[NAME REGEX NAME], f10_names(tokens)
+  end
+
+  def test_f10_push_region_stays_exclusive
+    # A pushed region is NOT a flat mode: it does NOT inherit default,
+    # preserving F04 exclusivity. The `tag` region only knows WORD/CLOSE;
+    # the default BANG is invisible inside it.
+    grammar = CodingAdventures::GrammarTools.parse_token_grammar(<<~TOKENS)
+      OPEN = "<"
+      BANG = "!"
+      group tag:
+        WORD = /[a-z]+/
+        CLOSE = ">"
+      transitions:
+        on OPEN -> push tag
+        on CLOSE -> pop
+    TOKENS
+    # Inside the region, `!` (a default token) must NOT match.
+    assert_raises(CodingAdventures::Lexer::LexerError) do
+      CodingAdventures::Lexer::GrammarLexer.new("<a!>", grammar).tokenize
+    end
+    # A well-formed region tokenizes; after `>` we pop back to default
+    # where `!` is valid again.
+    tokens = CodingAdventures::Lexer::GrammarLexer.new("<ab>!", grammar).tokenize
+    assert_equal %w[OPEN WORD CLOSE BANG], f10_names(tokens)
+  end
+
+  def test_f10_start_mode_is_respected
+    # Starting directly in `div` means the first `/` is a division slash.
+    grammar = CodingAdventures::GrammarTools.parse_token_grammar(F10_REGEX_DIV_SOURCE)
+    grammar.start_mode = "div"
+    tokens = CodingAdventures::Lexer::GrammarLexer.new("a/b", grammar).tokenize
+    assert_equal %w[NAME SLASH NAME], f10_names(tokens)
+  end
 end

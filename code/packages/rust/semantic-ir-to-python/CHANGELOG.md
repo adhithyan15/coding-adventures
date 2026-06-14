@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.1.8 — SIR17 exceptions (native try/except + sir-runtime-exceptions)
+
+Accepts and emits the SIR17 `Exceptions` feature, per
+`code/specs/sir-runtime.md`. `begin/rescue/ensure` translates to a **native**
+`try: … except Exception as __exc: … finally: …`; the two pieces with no
+faithful native equivalent come from the new
+`coding-adventures-sir-runtime-exceptions` package, imported (aliased
+`_sir_exc_*`) **only** when a module throws or rescues.
+
+- `Stmt::TryCatch{body, rescues, ensure_body}` → `try:` block. Because Python's
+  `except` matches by Python class while Ruby has an ordered list of typed
+  `rescue` clauses, the handler catches broadly (`except Exception as __exc`)
+  and the body is an `if`/`elif` chain calling
+  `_sir_exc_rescue_matches(__exc, [class names])` per clause in source order; a
+  `rescue Foo => e` binds `e = __exc`; if no clause matches the original
+  exception is re-`raise`d (Ruby's "propagate when unrescued"). `ensure_body` →
+  a `finally:` block (omitted when absent). Empty bodies emit `pass`.
+- `BuiltinCall("raise", …)` → `_sir_exc_raise_error(…)`: a `Const` class operand
+  (`raise Foo` / `raise Foo, "m"`) is passed as its *name string* with the
+  optional message; a non-`Const` first arg (`raise "m"`) becomes an implicit
+  `RuntimeError` carrying that message; bare `raise` → a generic re-raise.
+- `block_has_loop` now also forces a `TryCatch`-bearing block to lift to a
+  nested `def` in expression position (a compound statement is not a walrus
+  expression); `collect_nonlocals` descends into try/rescue/ensure bodies.
+- `ACCEPTED_FEATURES += Exceptions`.
+
+New Ruby→Python and direct-SIR tests (begin/rescue/ensure shape, message-only
+`raise`, bare-rescue catch-all + re-raise, non-throwing module omits the
+import). Emitted output verified to execute on CPython against the real
+`coding-adventures-sir-runtime-exceptions` (ancestor-matched rescue with bound
+message, `ensure` runs, unmatched exception propagates). Mirrors the TypeScript
+backend's Q7a.
+
 ## 0.1.7 — SIR17 OOP & scopes (native + sir-runtime-oop)
 
 Accepts and emits the SIR17 object-orientation statements and scopes, per
