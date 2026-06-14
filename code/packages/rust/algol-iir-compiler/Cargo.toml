@@ -1,6 +1,6 @@
 [package]
 name = "algol-iir-compiler"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule."
 

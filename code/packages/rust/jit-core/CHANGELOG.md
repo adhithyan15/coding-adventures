@@ -5,6 +5,42 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.4.1] — 2026-06-14 (CIROptimizer constant-propagation soundness fix)
+
+### Fixed — stale constants no longer survive a reassignment or a block boundary
+
+`CIROptimizer::constant_fold` recorded a register → literal binding for every
+`const_<t>` and propagated it into later instructions, but it never *removed* a
+binding when the register was later **overwritten**.  A function that seeds a
+slot with a constant and then reassigns it — exactly how an ALGOL function
+procedure lowers its result variable —
+
+```text
+const_i64 sq = 0      ; known[sq] = 0
+mul_i64   t  = x, x
+mov       sq = t      ; sq reassigned, but known still says 0
+ret_i64   sq          ; ← the dead 0 is propagated; should return t
+```
+
+was silently miscompiled: `ret sq` had the stale `0` substituted, so the
+JIT-compiled `sq(7)` returned `0` instead of `49`.  This surfaced when an ALGOL
+typed procedure (`integer procedure sq(x); value x; integer x; sq := x*x`) was
+called on the JIT backend in `lang-aot`'s executed conformance matrix — every
+other backend agreed on `49`; only the JIT disagreed.
+
+The fix adds two soundness rules to the linear constant-propagation pass:
+
+1. **Reassignment kills.** Any instruction that writes a register without
+   re-establishing a constant for it now drops that register's known binding.
+2. **Block boundaries kill everything.** With no control-flow graph, a constant
+   is only valid within its basic block; the map is cleared at every `label`
+   (a join point a backward edge may reach) and at every jump/branch. This also
+   pre-empts a latent loop-miscompilation where a constant defined before a loop
+   would be propagated into iterations where the register had since changed.
+
+Regression tests cover the reassignment case, the across-a-label case, and a
+straight-line fold to confirm the rules do not over-clear.
+
 ## [0.4.0] — 2026-06-13 (LANG-MATRIX Phase I — compiled functions bind their parameters)
 
 ### Fixed — JIT-compiled functions with parameters now read their arguments
