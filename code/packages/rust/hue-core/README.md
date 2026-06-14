@@ -57,6 +57,9 @@ packages a typed surface for:
   worker, command-flow, local-pairing, event-stream, and physical-presence gates
 - Hue package spec summaries for catalog/spec handoff checks across canonical
   identity, CLIP v2 endpoints, registration headers, and runtime model surface
+- Hue catalog package readiness summaries that roll package/spec, release,
+  identity, transport, runtime model, and pairing-handoff gates into one
+  payload-free catalog handoff check
 
 ## Dependencies
 
