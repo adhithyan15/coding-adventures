@@ -1,0 +1,1 @@
+echo F# conduit-hello uses P/Invoke — skipping on Windows (requires libconduit_capi.dll cross-compile setup)
