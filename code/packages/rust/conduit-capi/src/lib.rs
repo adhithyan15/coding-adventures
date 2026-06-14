@@ -36,6 +36,7 @@
 
 use std::cell::RefCell;
 use std::ffi::{c_char, c_int, c_void, CStr, CString};
+use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::ptr;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
@@ -460,12 +461,19 @@ pub unsafe extern "C" fn conduit_server_serve(srv: *mut CapiServer) -> c_int {
         return -1;
     };
     s.running.store(true, Ordering::SeqCst);
-    let r = server.serve();
+    // Isolate panics at the ABI edge: a before/after hook running in a host
+    // language could panic (web-core only wraps the route handler in
+    // catch_unwind), and unwinding across `extern "C"` is UB. Catch it here.
+    let r = catch_unwind(AssertUnwindSafe(|| server.serve()));
     s.running.store(false, Ordering::SeqCst);
     match r {
-        Ok(()) => 0,
-        Err(e) => {
+        Ok(Ok(())) => 0,
+        Ok(Err(e)) => {
             set_last_error(&format!("conduit_server_serve: {e:?}"));
+            -1
+        }
+        Err(_) => {
+            set_last_error("conduit_server_serve: handler panicked");
             -1
         }
     }
@@ -486,7 +494,11 @@ pub unsafe extern "C" fn conduit_server_serve_background(srv: *mut CapiServer) -
     let moved = AssertSend(server);
     let handle = std::thread::spawn(move || {
         let AssertSend(mut server) = moved;
-        let _ = server.serve();
+        // Same ABI-edge panic isolation as the foreground path: a host hook must
+        // not unwind out of the thread that re-enters host code.
+        let _ = catch_unwind(AssertUnwindSafe(|| {
+            let _ = server.serve();
+        }));
         running.store(false, Ordering::SeqCst);
     });
     s.bg = Some(handle);
