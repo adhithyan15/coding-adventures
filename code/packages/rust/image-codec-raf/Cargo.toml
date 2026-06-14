@@ -7,3 +7,4 @@ description = "Fujifilm RAF (RAW image Format) encoder and decoder using PixelCo
 [dependencies]
 pixel-container = { path = "../pixel-container" }
 paint-instructions = { path = "../paint-instructions" }
+image-raw-pipeline = { path = "../image-raw-pipeline" }

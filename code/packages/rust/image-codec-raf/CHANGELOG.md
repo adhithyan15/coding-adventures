@@ -1,5 +1,17 @@
 # Changelog — image-codec-raf
 
+## [Unreleased]
+
+### Changed
+
+- **`color.rs`** — `apply_color_pipeline` now delegates to
+  `image_raw_pipeline::apply_color_pipeline` (IMG07). Pre-computes `black_avg`
+  (average of the four CFA-plane levels) and normalised WB multipliers before
+  calling the shared crate. Removes the private `linear_to_srgb_u8` helper —
+  now handled by `image_raw_pipeline::srgb_gamma`. All 19 tests unchanged.
+
+---
+
 ## [0.1.0] — 2026-05-29
 
 Initial release implementing the IC14 Fujifilm RAF image codec.
