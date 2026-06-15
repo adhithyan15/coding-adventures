@@ -1,0 +1,101 @@
+{
+  "hash": "02a564c064c60c6c",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3892635/",
+  "title": "Streptococcus pneumoniae bacteremia: clinical and microbiological epidemiology in a health area of Southern Spain",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3892635/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "S. pneumoniae is the most common cause of community-acquired pneumonia, meningitis and bacteremia in children and adults.",
+      "byte_quote": "Streptococcus pneumoniae is the most common cause of community-acquired pneumonia, meningitis and bacteremia in children and adults"
+    },
+    {
+      "id": "c2",
+      "text": "Pneumococcal bacteremia incidence is 15-35 cases per 100,000 inhabitants.",
+      "byte_quote": "The incidence of this kind of bacteremia is 15–35 cases per 100,000 inhabitants"
+    },
+    {
+      "id": "c3",
+      "text": "In this study the median annual incidence was 2.9 cases per 100,000 inhabitants.",
+      "byte_quote": "In our study the median annual incidence was 2.9 cases/100,000 inhabitants"
+    },
+    {
+      "id": "c4",
+      "text": "Serotype 19A was the most frequent, followed by serotypes 1, 7F and 14.",
+      "byte_quote": "Serotype 19A was the most frequent, followed by serotypes 1, 7F and 14."
+    },
+    {
+      "id": "c5",
+      "text": "Forty percent of bacteremias were caused by serotypes 19A, 1, 7F and 14.",
+      "byte_quote": "Forty percent of bacteremias were caused by serotypes 19A, 1, 7F and 14"
+    },
+    {
+      "id": "c6",
+      "text": "Main predisposing factors for pneumococcal bacteremia were smoking, antimicrobial/corticosteroid use, COPD, and HIV infection.",
+      "byte_quote": "The main predisposing factors observed were smoking, antimicrobial and/or corticosteroids administration, chronic pulmonary obstructive disease and HIV infection"
+    },
+    {
+      "id": "c7",
+      "text": "The leading predisposing factor for S. pneumoniae bacteremia was cigarette smoking (29.9%).",
+      "byte_quote": "The main predisposing factor for _S. pneumoniae_ bacteremia was cigarette smoking (29.9%)"
+    },
+    {
+      "id": "c8",
+      "text": "Seventy percent of patients had predisposing factors.",
+      "byte_quote": "Seventy percent of patients had predisposing factors"
+    },
+    {
+      "id": "c9",
+      "text": "Invasive pneumococcal disease most frequently infects children under 2 years, older adults (>65 years), and those with co-morbidities.",
+      "byte_quote": "Overall, invasive pneumococcal disease most frequently cause infection in children less than 2 years old, older adults (>65 years old) and individuals with co-morbidities"
+    },
+    {
+      "id": "c10",
+      "text": "Among isolates, 77.6% were penicillin-susceptible, 17.9% penicillin-intermediate, and 4.5% penicillin-resistant.",
+      "byte_quote": "77.6% of the isolates were penicillin-susceptible, while 17.9% were penicillin-intermediate and only 4.5% of these isolates were penicillin-resistant."
+    },
+    {
+      "id": "c11",
+      "text": "In Spain, invasive penicillin-nonsusceptible strains in the general population range from 19-45%.",
+      "byte_quote": "In our country, the percentage of invasive strains penicillin-nonsusceptible in the general population range from 19–45%"
+    },
+    {
+      "id": "c12",
+      "text": "The most common bacteremia source was the low respiratory tract (46 patients).",
+      "byte_quote": "The most common focus was the low respiratory tract recorded for 46 patients"
+    },
+    {
+      "id": "c13",
+      "text": "In one case the source of infection was the cerebrospinal fluid; the source was unknown in 20 episodes.",
+      "byte_quote": "The source of bacteremia was considered unknown in 20 episodes."
+    },
+    {
+      "id": "c14",
+      "text": "100% of bacteremia episodes were community-acquired.",
+      "byte_quote": "100% of episodes were from community-acquired origin."
+    },
+    {
+      "id": "c15",
+      "text": "Mortality associated with the bacteremia was 6%.",
+      "byte_quote": "In our study, the mortality associated to bacteremia was 6%."
+    },
+    {
+      "id": "c16",
+      "text": "Five variables were significantly associated with mortality: age >65, male sex, Caucasian race, critical/poor clinical condition, and septic shock.",
+      "byte_quote": "Five variables were significantly associated with mortality from _S. pneumoniae_ bacteremia: age >65 years, male sex, Caucasian race, clinical condition critical and poor and septic shock."
+    },
+    {
+      "id": "c17",
+      "text": "Antibiotics tested for susceptibility were Penicillin G, Amoxicillin, Erythromycin, Chloramphenicol, Vancomycin, Cefotaxime and Tetracycline.",
+      "byte_quote": "Penicillin G, Amoxicillin, Erythromycin, Chloramphenicol, Vancomycin, Cefotaxime and Tetracycline were tested"
+    }
+  ],
+  "cites": [
+    "Lynch & Zhanel 2009",
+    "McKensie et al. 2000",
+    "Hausdorff et al.",
+    "Metlay et al.",
+    "Fariñas-Álvarez et al. 2000",
+    "CDC (Centers for Disease Control and Prevention)"
+  ]
+}

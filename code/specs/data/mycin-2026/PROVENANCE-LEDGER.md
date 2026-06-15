@@ -63,16 +63,16 @@ grounded: **8** · flagged: **1** · authored-debt: **0**
 
 | clause | status | gate | source | source-verified |
 |---|---|---|---|---|
-| `uti_prior_ecoli` | grounded | — | International Clinical Practice Guid | no-source-obj |
-| `uti_prior_saprophyticus` | grounded | — | Staphylococcus saprophyticus Infecti | no-source-obj |
-| `uti_prior_klebsiella` | grounded | — | Local epidemiology and resistance pr | no-source-obj |
-| `uti_prior_proteus` | grounded | — | Diagnosis and Treatment of Acute Unc | no-source-obj |
-| `uti_prior_enterococcus` | grounded | — | Etiology and antimicrobial susceptib | no-source-obj |
-| `uti_prior_pseudomonas` | grounded | — | Bacterial species and antimicrobial  | no-source-obj |
-| `uti_prior_gbs` | grounded | — | Diversity of Group B Streptococcus S | no-source-obj |
-| `uti_finding_nitrite` | direction_only | — | Feasibility of serial measurement of | no-source-obj |
-| `uti_finding_leuk_esterase` | grounded | — | Measurement of urinary leukocyte est | no-source-obj |
-| `uti_finding_urease_proteus` | grounded | — | Pathogenesis of Proteus mirabilis In | no-source-obj |
+| `uti_prior_ecoli` | grounded | ACCEPT | src:2f0c1bfb012a2a37 | ✓ verified (1/1) |
+| `uti_prior_saprophyticus` | grounded | ACCEPT | src:a221aaa21abc0f44 | ✗ UNVERIFIED (1/2) |
+| `uti_prior_klebsiella` | grounded | ACCEPT | src:83a052af6bc47106 | ✓ verified (1/1) |
+| `uti_prior_proteus` | grounded | ACCEPT | src:fed9287ccd687d3a | ✓ verified (1/1) |
+| `uti_prior_enterococcus` | grounded | ACCEPT | src:1b4719e7d669a63f | ✓ verified (1/1) |
+| `uti_prior_pseudomonas` | grounded | ACCEPT | src:debf68ecb2c088e8 | ✗ UNVERIFIED (0/1) |
+| `uti_prior_gbs` | grounded | ACCEPT | src:1090fd8acb46f5e8 | ✗ UNVERIFIED (0/1) |
+| `uti_finding_nitrite` | direction_only | FLAG | src:b27c6544ee54ecec | ✗ UNVERIFIED (0/2) |
+| `uti_finding_leuk_esterase` | grounded | ACCEPT | src:05de3ced05f32c90 | ✓ verified (1/1) |
+| `uti_finding_urease_proteus` | grounded | ACCEPT | src:685ed626927622ae | ✗ UNVERIFIED (0/2) |
 
 ## treatment constraints  (`treatment/constraints/treatment-constraints.json`)
 
@@ -80,14 +80,14 @@ grounded: **4** · flagged: **4** · authored-debt: **0**
 
 | clause | status | gate | source | source-verified |
 |---|---|---|---|---|
-| `ci_penicillin_cephalosporin` | grounded | — | Penicillin Allergy — CDC STI Treatme | no-source-obj |
+| `ci_penicillin_cephalosporin` | grounded | ACCEPT | src:a36d52927de1e970 | ✓ verified (1/1) |
 | `ci_aztreonam_safe_penicillin` | direction_only | FLAG | src:8481259fa1454601 | ✗ UNVERIFIED (0/1) |
-| `ci_moxifloxacin_pregnancy` | direction_only | — | DailyMed — MOXIFLOXACIN HYDROCHLORID | no-source-obj |
-| `ci_tmpsmx_pregnancy` | grounded | — | DailyMed — SULFAMETHOXAZOLE AND TRIM | no-source-obj |
-| `ci_vancomycin_nephrotoxicity` | grounded | — | DailyMed — VANCOMYCIN HYDROCHLORIDE  | no-source-obj |
-| `ci_aminoglycoside_vancomycin` | direction_only | — | VANCOMYCIN HYDROCHLORIDE injection,  | no-source-obj |
-| `ci_fluoroquinolone_qt` | direction_only | — | MOXIFLOXACIN HYDROCHLORIDE tablet —  | no-source-obj |
-| `ci_vancomycin_renal_dose` | grounded | — | VANCOMYCIN injection, for intravenou | no-source-obj |
+| `ci_moxifloxacin_pregnancy` | direction_only | FLAG | src:3bc1d8571af85cc8 | ✗ UNVERIFIED (0/2) |
+| `ci_tmpsmx_pregnancy` | grounded | ACCEPT | src:ac722c855cec8fbe | ✗ UNVERIFIED (0/1) |
+| `ci_vancomycin_nephrotoxicity` | grounded | ACCEPT | src:04668cefe35908cd | ◑ core ✓ (1/2 spans; over-reach) |
+| `ci_aminoglycoside_vancomycin` | direction_only | FLAG | src:29c9c085cc9e0800 | ✓ verified (1/1) |
+| `ci_fluoroquinolone_qt` | direction_only | FLAG | src:3bc1d8571af85cc8 | ✗ UNVERIFIED (0/1) |
+| `ci_vancomycin_renal_dose` | grounded | ACCEPT | src:c6a1cb378499eaca | ✗ UNVERIFIED (0/4) |
 
 ## bacteremia organism priors  (`diagnosis/bacteremia/source-id.adj`)
 
@@ -95,14 +95,14 @@ grounded: **7** · flagged: **1** · authored-debt: **0**
 
 | clause | status | gate | source | source-verified |
 |---|---|---|---|---|
-| `bsi_prior_saureus` | grounded | — | Wisplinghoff et al., "Nosocomial blo | no-source-obj |
-| `bsi_prior_enteric_gnb` | grounded | — | Blood bacterial resistant investigat | no-source-obj |
-| `bsi_prior_cons` | direction_only | — | Nosocomial bloodstream infections in | no-source-obj |
-| `bsi_prior_enterococcus` | grounded | — | Nosocomial bloodstream infections in | no-source-obj |
-| `bsi_prior_spneumoniae` | grounded | — | Burden of community-onset bloodstrea | no-source-obj |
-| `bsi_prior_pseudomonas` | grounded | — | Pseudomonas aeruginosa: Infections a | no-source-obj |
-| `bsi_prior_pyogenes` | grounded | — | Streptococcus pyogenes bacteraemia:  | no-source-obj |
-| `bsi_prior_candida` | grounded | — | Nosocomial bloodstream infections in | no-source-obj |
+| `bsi_prior_saureus` | grounded | ACCEPT | src:9cd83cfe323d44d1 | ✓ verified (1/1) |
+| `bsi_prior_enteric_gnb` | grounded | ACCEPT | src:684cb26a970c6858 | ✓ verified (2/2) |
+| `bsi_prior_cons` | direction_only | FLAG | src:9cd83cfe323d44d1 | ✓ verified (1/1) |
+| `bsi_prior_enterococcus` | grounded | ACCEPT | src:9cd83cfe323d44d1 | ✓ verified (1/1) |
+| `bsi_prior_spneumoniae` | grounded | ACCEPT | src:e7d7522b70b9e38b | ✗ UNVERIFIED (0/2) |
+| `bsi_prior_pseudomonas` | grounded | ACCEPT | src:e3fc40eba191bb19 | ✗ UNVERIFIED (0/1) |
+| `bsi_prior_pyogenes` | grounded | ACCEPT | src:20ee76476443836b | ✓ verified (1/1) |
+| `bsi_prior_candida` | grounded | ACCEPT | src:9cd83cfe323d44d1 | ✓ verified (1/1) |
 
 ## bacteremia source→organism LRs  (`diagnosis/bacteremia/source-id.adj`)
 
@@ -110,16 +110,16 @@ grounded: **4** · flagged: **6** · authored-debt: **0**
 
 | clause | status | gate | source | source-verified |
 |---|---|---|---|---|
-| `src_urinary_enteric` | direction_only | — | Epidemiology of Gram-Negative Bloods | no-source-obj |
-| `src_line_cons` | grounded | — | Central Line–Associated Blood Stream | no-source-obj |
-| `src_line_saureus` | direction_only | — | Clinical Practice Guidelines for the | no-source-obj |
-| `src_intraabd_enteric` | direction_only | — | Epidemiology of Escherichia coli Bac | no-source-obj |
-| `src_intraabd_anaerobes` | direction_only | — | Clinical Emergence of Bacteroides-As | no-source-obj |
-| `src_skin_saureus` | grounded | — | Staphylococcus aureus Infections: Ep | no-source-obj |
-| `src_skin_pyogenes` | direction_only | — | Five-year review of epidemiology of  | no-source-obj |
-| `src_resp_pneumo` | direction_only | — | Streptococcus pneumoniae bacteremia: | no-source-obj |
-| `host_neutropenia_pseudomonas` | grounded | — | Cheong HS, et al. "Clinical signific | no-source-obj |
-| `host_idu_saureus` | grounded | — | Clinical manifestations and outcome  | no-source-obj |
+| `src_urinary_enteric` | direction_only | FLAG | src:5fe22e06d0ac823f | ◑ core ✓ (1/2 spans; over-reach) |
+| `src_line_cons` | grounded | ACCEPT | src:b18b8c9e3d73b0a9 | ✓ verified (1/1) |
+| `src_line_saureus` | direction_only | FLAG | src:ccf66a2721e88eb6 | ✓ verified (1/1) |
+| `src_intraabd_enteric` | direction_only | FLAG | src:b5e0dae026b80495 | ✗ UNVERIFIED (0/2) |
+| `src_intraabd_anaerobes` | direction_only | FLAG | src:38fddb4e21c26afd | ✗ UNVERIFIED (0/1) |
+| `src_skin_saureus` | grounded | ACCEPT | src:4b82b0b1ad4abad1 | ✗ UNVERIFIED (0/1) |
+| `src_skin_pyogenes` | direction_only | FLAG | src:e8b0ff528d21cbcf | ✓ verified (1/1) |
+| `src_resp_pneumo` | direction_only | FLAG | src:02a564c064c60c6c | ✗ UNVERIFIED (0/1) |
+| `host_neutropenia_pseudomonas` | grounded | ACCEPT | src:93a334a5c1776980 | ✓ verified (1/1) |
+| `host_idu_saureus` | grounded | ACCEPT | src:2c27a17c150df555 | ✓ verified (2/2) |
 
 
-_Citation verification against decomposed sources in the CAS: **18 fully verified**, 2 core-verified (over-reach), 16 unverified, 35 pending._
+_Citation verification against decomposed sources in the CAS: **36 fully verified**, 4 core-verified (over-reach), 31 unverified, 0 pending._

@@ -1,0 +1,47 @@
+{
+  "hash": "b27c6544ee54ecec",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12217021/",
+  "title": "Feasibility of serial measurement of nitrite for pharmacodynamic monitoring and precision prescribing in urinary tract infections",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12217021/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "E. coli uses nitrate as a secondary electron acceptor in anaerobic (low-oxygen) respiration, making urine nitrite a commonly used indicator/biomarker for UTI (urinalysis biochemistry).",
+      "byte_quote": "At low oxygen concentrations, _E. coli_ utilises nitrate as a secondary electron acceptor for anaerobic respiration[15](#CR15), making nitrite a commonly used indicator for UTIs."
+    },
+    {
+      "id": "c2",
+      "text": "Nitrite-based UTI detection fails when no dietary nitrate is present in urine or when the infecting organism is a non-nitrate-reducing strain (organism-dependent limitation of the nitrite test).",
+      "byte_quote": "This has limitations, such as no increase in nitrite if no dietary nitrate is present in urine, or infection with non-nitrate reducing strains."
+    },
+    {
+      "id": "c3",
+      "text": "Amoxicillin at 164 mg/mL was used in vitro (concentration chosen to inhibit growth of high-bacterial-count cultures), introduced after 15 h of growth.",
+      "byte_quote": "164 mg/mL sterilised amoxicillin, a concentration high enough to inhibit the growth of high bacterial count cultures, was introduced to samples after 15 h of growth."
+    },
+    {
+      "id": "c4",
+      "text": "In patient samples, bacterial count and generated nitrite (creatinine-corrected for renal clearance) show a significant positive Spearman correlation (rho 0.46, p 0.032).",
+      "byte_quote": "Spearman correlation between bacterial count and generated nitrite (corrected for renal clearance using detected creatinine levels) reveals a significant relationship (Spearman correlation: 0.46 and p-value 0.032)"
+    },
+    {
+      "id": "c5",
+      "text": "Study analyzed samples from 25 UTI patients and 25 non-UTI controls for bacterial growth, nitrite, and creatinine.",
+      "byte_quote": "Samples from 25 UTI patients and 25 non-UTI controls were analysed for bacterial growth, nitrite, and creatinine."
+    },
+    {
+      "id": "c6",
+      "text": "Both nitrite concentration and CFU count are significantly lower in a drug-susceptible strain after antimicrobial addition vs. without drug (pharmacodynamic response signal).",
+      "byte_quote": "The nitrite concentration and CFU count after addition of antimicrobial drug is significantly lower in the susceptible strain with drug compared to without drug"
+    },
+    {
+      "id": "c7",
+      "text": "Reported sensitivities for nitrite as a UTI biomarker are mixed and should be interpreted alongside other dipstick biomarkers (test-performance caveat).",
+      "byte_quote": "The reported sensitivities for nitrite as a biomarker for UTI infection are mixed and should be interpreted alongside other biomarkers on dipstick tests"
+    }
+  ],
+  "cites": [
+    "Foxman, B. The epidemiology of urinary tract infection. Nat. Rev. Urol. 7, 653-660 (2010)",
+    "Rawson, T. M. et al. Optimizing antimicrobial use: challenges, advances and opportunities. Nat. Rev. Microbiol 19, 747-758 (2021)"
+  ]
+}

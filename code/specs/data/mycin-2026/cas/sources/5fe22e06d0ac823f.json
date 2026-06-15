@@ -1,0 +1,74 @@
+{
+  "hash": "5fe22e06d0ac823f",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10350481/",
+  "title": "Epidemiology of Gram-Negative Bloodstream Infections in the United States: Results From a Cohort of 24 Hospitals",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10350481/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "E. coli is the most common Gram-negative organism in bloodstream infections, accounting for 51.0% of isolates.",
+      "byte_quote": "Escherichia coli (2471, 51.0%) was the most common Gram-negative organism recovered"
+    },
+    {
+      "id": "c2",
+      "text": "Klebsiella pneumoniae is the second most common Gram-negative bloodstream isolate at 17.3%.",
+      "byte_quote": "followed by K pneumoniae (n = 841, 17.3%)"
+    },
+    {
+      "id": "c3",
+      "text": "Pseudomonas aeruginosa is the third most common Gram-negative bloodstream isolate at 8.7%.",
+      "byte_quote": "Pseudomonas aeruginosa (n = 423, 8.7%)"
+    },
+    {
+      "id": "c4",
+      "text": "ESBL production occurred in 15.7% of eligible isolates.",
+      "byte_quote": "575 (15.7%) isolates...met criteria for ESBL production"
+    },
+    {
+      "id": "c5",
+      "text": "Western sites had the highest percentage of ESBL producers among eligible isolates (16%).",
+      "byte_quote": "Western sites had the highest percentage of ESBL producers of total eligible isolates (16%)"
+    },
+    {
+      "id": "c6",
+      "text": "The median patient age in the Gram-negative bacteremia cohort was 67 years (IQR 55-77).",
+      "byte_quote": "The median age was 67 years (IQR, 55–77)"
+    },
+    {
+      "id": "c7",
+      "text": "Patients aged 70 years or older comprised 42.73% of the cohort.",
+      "byte_quote": "≥70 [years] 2077 (42.73%)"
+    },
+    {
+      "id": "c8",
+      "text": "Moderate to severe immunocompromise was present in 34.52% of patients.",
+      "byte_quote": "Moderate to severe immunocompromise[a] 1678 (34.52%)"
+    },
+    {
+      "id": "c9",
+      "text": "32.34% of bacteremia patients were in the intensive care unit.",
+      "byte_quote": "Patients in intensive care unit 1572 (32.34%)"
+    },
+    {
+      "id": "c10",
+      "text": "ESBL-producing organisms were significantly more frequent in White than non-White patients (14.6% vs 9.5%, P<0.01).",
+      "byte_quote": "there was a statistically significant difference in the percentage of ESBL-producing organisms in White vs non-White patients (14.6 % and 9.5 %, respectively, P<0.01)"
+    },
+    {
+      "id": "c11",
+      "text": "The urinary tract was the most common source of Gram-negative bacteremia (47.9%).",
+      "byte_quote": "Most common source of infection was the urinary tract (47.9%)"
+    },
+    {
+      "id": "c12",
+      "text": "Common sources of Gram-negative bacteremia were urinary tract (47.9%), intra-abdominal (14.5%), and hepatobiliary (11.4%).",
+      "byte_quote": "Common sources of infection included urinary tract (47.9%), intra-abdominal (14.5%), and hepatobiliary (11.4%)"
+    },
+    {
+      "id": "c13",
+      "text": "Respiratory tract sources accounted for 5.60% of Gram-negative bacteremias.",
+      "byte_quote": "Respiratory [source] 272 (5.60%)"
+    }
+  ],
+  "cites": []
+}

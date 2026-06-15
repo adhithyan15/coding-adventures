@@ -1,0 +1,39 @@
+{
+  "hash": "685ed626927622ae",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5880328/",
+  "title": "Pathogenesis of Proteus mirabilis Infection",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5880328/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Proteus mirabilis is a Gram-negative rod-shaped bacterium notable for urease production and differentiation into elongated swarm cells with a bull's-eye motility pattern on agar.",
+      "byte_quote": "Proteus mirabilis, a Gram-negative rod-shaped bacterium, is well-known for its urease production and distinctive ability to differentiate into elongated swarm cells and characteristic bull's-eye pattern of motility on agar plates."
+    },
+    {
+      "id": "c2",
+      "text": "P. mirabilis is among the most common organisms in polymicrobial urine colonization and infection.",
+      "byte_quote": "P. mirabilis is one of the most common organisms present during polymicrobial urine colonization and infection"
+    },
+    {
+      "id": "c3",
+      "text": "P. mirabilis infections are common in long-term catheterized patients (nursing homes, chronic care facilities) and are especially dangerous to spinal cord injury patients — catheterization/long-term care is the dominant risk factor.",
+      "byte_quote": "These infections are common in long-term catheterized patients, such as those who reside in nursing homes and chronic care facilities, and may be of particular danger to spinal cord injury patients"
+    },
+    {
+      "id": "c4",
+      "text": "Bloodstream infection (bacteremia) with P. mirabilis most frequently arises from a UTI/CAUTI portal of entry rather than other sources — urinary source predicts the organism in bacteremia.",
+      "byte_quote": "bacteremia involving P. mirabilis most frequently occurs following UTI or CAUTI compared to other sources of infection"
+    },
+    {
+      "id": "c5",
+      "text": "P. mirabilis urease hydrolyzes urinary urea (present at ~400 mM) to CO2 and NH3, driving precipitation of struvite (MgNH4PO4·6H2O) and carbonate apatite stones.",
+      "byte_quote": "Urea, our means of eliminating excess nitrogen, is present in high concentrations in urine (∼400 mM), is the substrate of urease, and is hydrolyzed to CO2 and NH3"
+    },
+    {
+      "id": "c6",
+      "text": "About 50% of individuals with long-term catheterization (>28 days) experience catheter blockage from crystalline (struvite/apatite) deposits.",
+      "byte_quote": "Approximately 50% of individuals with long-term catheterization (>28 days) experience catheter blockage from crystalline deposits"
+    }
+  ],
+  "cites": []
+}

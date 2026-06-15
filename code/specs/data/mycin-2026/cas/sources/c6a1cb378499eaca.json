@@ -1,0 +1,119 @@
+{
+  "hash": "c6a1cb378499eaca",
+  "source_id": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=99e523d8-9bde-43cb-8434-497015e5dcbd",
+  "title": "Vancomycin Injection, USP (vancomycin hydrochloride) — FDA Label (DailyMed)",
+  "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=99e523d8-9bde-43cb-8434-497015e5dcbd",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Vancomycin is active against most isolates of gram-positive bacteria in vitro and in clinical infections.",
+      "byte_quote": "Vancomycin has been shown to be active against most isolates of the following bacteria, both in vitro and in clinical infections"
+    },
+    {
+      "id": "c2",
+      "text": "Vancomycin's gram-positive spectrum includes Corynebacterium spp., Enterococcus spp. (incl. E. faecalis), Staphylococcus aureus (MRSA and MSSA), coagulase-negative staphylococci (incl. S. epidermidis and MR isolates), Streptococcus gallolyticus (formerly S. bovis), and viridans group streptococci.",
+      "byte_quote": "Corynebacterium spp. Enterococcus spp. (including Enterococcus faecalis) Staphylococcus aureus (including methicillin-resistant and methicillin-susceptible isolates) Coagulase negative staphylococci (including S. epidermidis and methicillin-resistant isolates) Streptococcus gallolyticus (previously known as Streptococcus bovis) Viridans group streptococci"
+    },
+    {
+      "id": "c3",
+      "text": "Vancomycin is NOT active in vitro against gram-negative bacilli, mycobacteria, or fungi (gram-stain spectrum boundary).",
+      "byte_quote": "Vancomycin is not active in vitro against gram-negative bacilli, mycobacteria, or fungi."
+    },
+    {
+      "id": "c4",
+      "text": "Vancomycin is indicated for septicemia/bloodstream infection due to susceptible MRSA and coagulase-negative staphylococci.",
+      "byte_quote": "Susceptible isolates of methicillin-resistant Staphylococcus aureus (MRSA) and coagulase negative staphylococci."
+    },
+    {
+      "id": "c5",
+      "text": "Vancomycin is used for methicillin-susceptible staphylococci in penicillin-allergic patients or those who cannot receive/failed penicillins or cephalosporins (allergy cross-reactivity / drug-failure host factor).",
+      "byte_quote": "Methicillin-susceptible staphylococci in penicillin-allergic patients, or those patients who cannot receive or who have failed to respond to other drugs, including penicillins or cephalosporins."
+    },
+    {
+      "id": "c6",
+      "text": "For infective endocarditis, vancomycin covers susceptible MRSA, viridans group streptococci or S. gallolyticus (formerly S. bovis), Enterococcus species, and Corynebacterium species.",
+      "byte_quote": "Susceptible isolates of MRSA. Viridans group streptococci or Streptococcus gallolyticus (previously known as Streptococcus bovis) and Enterococcus species and Corynebacterium species."
+    },
+    {
+      "id": "c7",
+      "text": "Adult dosing with normal renal function: 2 g daily IV, divided as 500 mg every 6 hours or 1 g every 12 hours.",
+      "byte_quote": "The usual daily intravenous dosage of Vancomycin Injection is 2 grams (g) divided either as 500 mg every 6 hours or 1 g every 12 hours."
+    },
+    {
+      "id": "c8",
+      "text": "Pediatric dosing (>=1 month) with normal renal function: 10 mg/kg per dose every 6 hours.",
+      "byte_quote": "The usual intravenous dosage of vancomycin is 10 mg/kg per dose given every 6 hours."
+    },
+    {
+      "id": "c9",
+      "text": "Neonatal dosing: initial 15 mg/kg, then 10 mg/kg every 12 hours in the 1st week of life and every 8 hours thereafter up to 1 month of age.",
+      "byte_quote": "In neonates, an initial dose of 15 mg/kg is suggested, followed by 10 mg/kg every 12 hours for neonates in the 1st week of life and every 8 hours thereafter up to the age of 1 month."
+    },
+    {
+      "id": "c10",
+      "text": "In renal impairment the initial dose should be no less than 15 mg/kg regardless of degree of impairment; dose must be adjusted.",
+      "byte_quote": "The initial dose should be no less than 15 mg/kg in patients with any degree of renal impairment."
+    },
+    {
+      "id": "c11",
+      "text": "Infusion-related adverse reactions are fewer at an infusion rate of 10 mg/min or less; each dose given over >=60 minutes.",
+      "byte_quote": "An infusion rate of 10 mg/min or less is associated with fewer infusion-related adverse reactions."
+    },
+    {
+      "id": "c12",
+      "text": "Vancomycin is contraindicated in patients with known hypersensitivity to vancomycin.",
+      "byte_quote": "Vancomycin Injection is contraindicated in patients with known hypersensitivity to vancomycin."
+    },
+    {
+      "id": "c13",
+      "text": "Dextrose-containing vancomycin solutions may be contraindicated in patients with known corn/corn-product allergy.",
+      "byte_quote": "Solutions containing dextrose including Vancomycin Injection, may be contraindicated in patients with a known allergy to corn or corn products."
+    },
+    {
+      "id": "c14",
+      "text": "Vancomycin can cause acute kidney injury (AKI), including acute renal failure, mainly via interstitial nephritis or less commonly acute tubular necrosis (nephrotoxicity).",
+      "byte_quote": "Vancomycin Injection can result in acute kidney injury (AKI), including acute renal failure, mainly due to interstitial nephritis or less commonly acute tubular necrosis."
+    },
+    {
+      "id": "c15",
+      "text": "AKI risk rises with higher vancomycin serum levels, prolonged exposure, concomitant nephrotoxic drugs, concomitant piperacillin-tazobactam, volume depletion, pre-existing renal impairment, critical illness, and predisposing comorbidities.",
+      "byte_quote": "The risk of AKI increases with higher vancomycin serum levels, prolonged exposure, concomitant administration of other nephrotoxic drugs, concomitant administration of piperacillin-tazobactam, volume depletion, pre-existing renal impairment and in critically ill patients and patients with co-morbid conditions that predispose to renal impairment."
+    },
+    {
+      "id": "c16",
+      "text": "Concomitant piperacillin/tazobactam plus vancomycin increases incidence of AKI versus vancomycin alone (drug interaction).",
+      "byte_quote": "Studies have detected an increased incidence of acute kidney injury in patients administered concomitant piperacillin/tazobactam and vancomycin as compared to vancomycin alone."
+    },
+    {
+      "id": "c17",
+      "text": "Ototoxicity risk is higher in older patients, those on higher doses, with underlying hearing loss, on concomitant ototoxic agents such as aminoglycosides, or with renal impairment.",
+      "byte_quote": "The risk is higher in older patients, patients who are receiving higher doses, who have an underlying hearing loss, who are receiving concomitant therapy with another ototoxic agent, such as an aminoglycoside or who have underlying renal impairment."
+    },
+    {
+      "id": "c18",
+      "text": "Reversible neutropenia has been reported with vancomycin; monitor leukocyte count in prolonged therapy or with concomitant neutropenia-causing drugs.",
+      "byte_quote": "Reversible neutropenia has been reported in patients receiving vancomycin. Patients who will undergo prolonged therapy with vancomycin or those who are receiving concomitant drugs that may cause neutropenia should have periodic monitoring of the leukocyte count."
+    },
+    {
+      "id": "c19",
+      "text": "Concomitant vancomycin and anesthetic agents has been associated with erythema and histamine-like flushing (interaction).",
+      "byte_quote": "Concomitant administration of vancomycin and anesthetic agents has been associated with erythema and histamine-like flushing."
+    },
+    {
+      "id": "c20",
+      "text": "Available data over decades of vancomycin use in pregnant women have not identified a drug-associated risk of major birth defects, miscarriage, or adverse maternal/fetal outcomes (pregnancy).",
+      "byte_quote": "Available data over several decades of vancomycin use in pregnant women have not identified a drug-associated risk of major birth defects, miscarriage, or adverse maternal or fetal outcomes."
+    },
+    {
+      "id": "c21",
+      "text": "Elderly patients are more likely to have decreased renal function, increasing adverse-reaction risk; dose selection requires care.",
+      "byte_quote": "Because elderly patients are more likely to have decreased renal function, care should be taken in dose selection."
+    }
+  ],
+  "cites": [
+    "Byrd RA, Gries CL, Buening M. Developmental Toxicology Studies of Vancomycin Hydrochloride Administered Intravenously to Rats and Rabbits. Fundam Appl Toxicol 1994;23:590-597.",
+    "Rybak MJ. The pharmacokinetic and pharmacodynamic properties of vancomycin. Clinical Infectious Diseases. 2006;42(Suppl 1):S35-S39.",
+    "Rybak MJ, Le J, Lodise TP, et al. Therapeutic monitoring of vancomycin for serious methicillin-resistant Staphylococcus aureus infections: a revised consensus guideline and review by ASHP, IDSA, PIDS, and SIDP. Clinical Infectious Diseases. 2020;71(6):1361-1364.",
+    "FDA Susceptibility Test Interpretive Criteria (STIC)"
+  ]
+}

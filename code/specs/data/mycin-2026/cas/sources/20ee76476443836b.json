@@ -1,0 +1,44 @@
+{
+  "hash": "20ee76476443836b",
+  "source_id": "https://pubmed.ncbi.nlm.nih.gov/3284952/",
+  "title": "Streptococcus pyogenes bacteraemia: an old enemy subdued, but not defeated (Ispahani P, Donald FE, Aveline AJ. J Infect. 1988 Jan;16(1):37-46)",
+  "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/3284952/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Streptococcus pyogenes (Group A beta-haemolytic streptococci) bacteraemia accounted for 2% of all bacteraemia cases in a 7-year single-hospital review (40 cases).",
+      "byte_quote": "Altogether, 40 cases were encountered, representing 2% of all cases of bacteraemia."
+    },
+    {
+      "id": "c2",
+      "text": "Mortality from S. pyogenes bacteraemia was 35%.",
+      "byte_quote": "Mortality was 35%."
+    },
+    {
+      "id": "c3",
+      "text": "S. pyogenes bacteraemia was predominantly community-acquired, and 28% of patients were under 40 years of age (age/host risk factor).",
+      "byte_quote": "Most cases were community-acquired and 28% of patients were less than 40 years of age."
+    },
+    {
+      "id": "c4",
+      "text": "A third of patients with S. pyogenes bacteraemia were previously fit (i.e., not immunocompromised / no prior comorbidity), indicating it can affect previously healthy hosts.",
+      "byte_quote": "A third of the patients were previously fit."
+    },
+    {
+      "id": "c5",
+      "text": "Bloodstream-infection source-to-organism association: the most common portals of entry for S. pyogenes bacteraemia were skin and soft tissue (23 patients) and the respiratory tract (8 patients).",
+      "byte_quote": "The most common sources of bacteraemia were the skin and soft tissue (23 patients) and the respiratory tract (eight patients)."
+    },
+    {
+      "id": "c6",
+      "text": "Shock occurred in 40% of S. pyogenes bacteraemia cases and carried 60% mortality.",
+      "byte_quote": "Shock was recorded in 40% of cases and carried a 60% mortality."
+    },
+    {
+      "id": "c7",
+      "text": "S. pyogenes is uniquely/uniformly susceptible to penicillin (antibiotic susceptibility), yet still poses a clinical challenge.",
+      "byte_quote": "Despite its unique susceptibility to penicillin, S. pyogenes continues to pose a challenge to the physician."
+    }
+  ],
+  "cites": []
+}

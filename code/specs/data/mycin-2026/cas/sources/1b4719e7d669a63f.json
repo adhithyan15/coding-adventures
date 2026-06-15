@@ -1,0 +1,54 @@
+{
+  "hash": "1b4719e7d669a63f",
+  "source_id": "https://pubmed.ncbi.nlm.nih.gov/15701325/",
+  "title": "Etiology and antimicrobial susceptibility among uropathogens causing community-acquired lower urinary tract infections: a nationwide surveillance study (Enferm Infecc Microbiol Clin. 2005 Jan;23(1):4-9)",
+  "resolved_url": "https://pubmed.ncbi.nlm.nih.gov/15701325/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Among 2724 isolates from outpatients with lower UTIs, E. coli was the most frequent uropathogen at 73%.",
+      "byte_quote": "The most frequent pathogen found was Escherichia coli (73%)"
+    },
+    {
+      "id": "c2",
+      "text": "After E. coli, the next most frequent lower-UTI uropathogens were Proteus spp. (7.4%), Klebsiella spp. (6.6%), and Enterococcus spp. (4.8%).",
+      "byte_quote": "followed by Proteus spp. (7.4%), Klebsiella spp. (6.6%) and Enterococcus spp. (4.8%)"
+    },
+    {
+      "id": "c3",
+      "text": "The study analyzed 2724 isolates recovered from outpatients with lower urinary tract infections.",
+      "byte_quote": "A total of 2724 isolates were recovered from outpatients with lower urinary tract infections."
+    },
+    {
+      "id": "c4",
+      "text": "E. coli susceptibility rates were fosfomycin 97.9%, cefixime 95.8%, nitrofurantoin 94.3%, amoxicillin-clavulanic acid 90.8%, and ciprofloxacin 77.2%.",
+      "byte_quote": "The susceptibility rates of E. coli were 97.9% for fosfomycin, 95.8% for cefixime, 94.3% for nitrofurantoin, 90.8% for amoxicillin-clavulanic acid and 77.2% for ciprofloxacin."
+    },
+    {
+      "id": "c5",
+      "text": "E. coli fluoroquinolone resistance was significantly higher in men than women (28.9% vs. 19%; P<0.001).",
+      "byte_quote": "E. coli resistance to fluoroquinolones was significantly higher in men (28.9% vs. 19% in women; P < 0.001)"
+    },
+    {
+      "id": "c6",
+      "text": "E. coli fluoroquinolone resistance was significantly higher in elderly patients, 33.7% in those 80 years or older vs. 7.1% in those 40 years or younger (P<0.001).",
+      "byte_quote": "elderly patients (33.7% in 80 years or older vs. 7.1% in 40 years or younger; P < 0.001)"
+    },
+    {
+      "id": "c7",
+      "text": "E. coli fluoroquinolone resistance was significantly higher in complicated infections than non-complicated (24.8% vs. 13.7%; P<0.001).",
+      "byte_quote": "complicated infections (24.8% vs. 13.7% in non-complicated; P < 0.001)"
+    },
+    {
+      "id": "c8",
+      "text": "Overall E. coli fluoroquinolone resistance was near 23%, varying by sex, age, infection type, and geographic region.",
+      "byte_quote": "Overall fluoroquinolone resistance was near 23%, but this rate varied significantly according to sex, age, type of urinary infection, and geographic region."
+    },
+    {
+      "id": "c9",
+      "text": "Almost all E. coli isolates were susceptible to fosfomycin, cefixime, and nitrofurantoin.",
+      "byte_quote": "Almost all E. coli isolates were susceptible to fosfomycin, cefixime and nitrofurantoin."
+    }
+  ],
+  "cites": []
+}

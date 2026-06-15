@@ -1,0 +1,74 @@
+{
+  "hash": "2c27a17c150df555",
+  "source_id": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1584240/fullTextXML",
+  "title": "Clinical manifestations and outcome in Staphylococcus aureus endocarditis among injection drug users and nonaddicts: a prospective study of 74 patients",
+  "resolved_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1584240/fullTextXML",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Endocarditis complicates 11% to 35% of S. aureus bacteremias (SAB), the range depending on the diagnostic criteria used.",
+      "byte_quote": "Endocarditis has been observed in 11% to 35% of S. aureus bacteremias (SAB)"
+    },
+    {
+      "id": "c2",
+      "text": "Among SAB cases, endocarditis was far more common in injection drug abusers (46%) than in nonaddicts (14%).",
+      "byte_quote": "Endocarditis was more common in SAB among drug abusers (46%) than in nonaddicts (14%)"
+    },
+    {
+      "id": "c3",
+      "text": "Injection drug abuse is one driver of the increased incidence of S. aureus infective endocarditis (host/exposure risk factor raising S. aureus).",
+      "byte_quote": "One of the reasons for increased incidence of S. aureus in IE is injection drug abuse"
+    },
+    {
+      "id": "c4",
+      "text": "Host factors raising endocarditis risk include S. aureus colonization, HIV-related immunosuppression, female sex, higher injection-drug-use frequency, and prior endocarditis.",
+      "byte_quote": "Colonization with S. aureus , HIV-related immunosuppression, female sex, increasing injection drug use frequency, and a history of previous IE are associated with a higher risk for endocarditis"
+    },
+    {
+      "id": "c5",
+      "text": "Injection drug users with S. aureus endocarditis were significantly younger than nonaddicts (mean 27 vs 65 years).",
+      "byte_quote": "IDUs were significantly younger (27 ± 15 vs 65 ± 15 years, P < 0.001)"
+    },
+    {
+      "id": "c6",
+      "text": "SAB in injection drug users was much more often community-acquired than in nonaddicts (95% vs 39%).",
+      "byte_quote": "their SAB was more often community-acquired (95% vs 39%, P < 0.001)"
+    },
+    {
+      "id": "c7",
+      "text": "Emerging at-risk host groups for S. aureus endocarditis are injection drug users, elderly patients with degenerative valve disease, patients with intravascular catheters or prosthetic valves, and nosocomial acquisition (device/exposure risk factors).",
+      "byte_quote": "new groups, including injection drug users (IDUs), elderly patients with degenerative valve disease, patients with intravascular catheter or prosthetic valve, and nosocomial acquisition"
+    },
+    {
+      "id": "c8",
+      "text": "Injection drug use predicts right-sided (tricuspid) endocarditis (60% of IDUs), whereas nonaddicts overwhelmingly have left-sided involvement (93%) — a portal/host-to-site association.",
+      "byte_quote": "Right-sided endocarditis was observed in 60% of IDUs whereas 93% of nonaddicts had left-sided involvement"
+    },
+    {
+      "id": "c9",
+      "text": "First-line antibiotic dosing for S. aureus endocarditis: cloxacillin or dicloxacillin 2 g IV every 4 hours for 4 to 6 weeks.",
+      "byte_quote": "All patients with endocarditis were assigned to receive initially cloxacillin or dicloxacillin (2 g q4 h) for 4 to 6 weeks intravenously"
+    },
+    {
+      "id": "c10",
+      "text": "Contraindication/alternative regimen: if semisynthetic penicillins are contraindicated, give cefuroxime 1.5 g every 6 h or vancomycin 1 g twice daily.",
+      "byte_quote": "Alternatively, cefuroxime (1.5 g q6 h) or vancomycin (1 g bid) were allowed if a contraindication against the use of semisynthetic penicillins was noted"
+    },
+    {
+      "id": "c11",
+      "text": "Adjunctive aminoglycoside dosing: tobramycin or netilmicin 1 mg/kg every 8 h added for the first 7 days.",
+      "byte_quote": "Aminoglycoside (either tobramycin or netilmicin at 1 mg/kg of body weight q8h) was added to the drug therapy described above for the first 7 days"
+    },
+    {
+      "id": "c12",
+      "text": "Adjunctive rifampicin dosing: 450 mg once daily if under 50 kg, 600 mg once daily if over 50 kg, oral or IV, for at least 4 weeks when endocarditis or extracardiac deep infection is suspected/confirmed (weight-banded dosing).",
+      "byte_quote": "Rifampicin (450 mg once daily for patients under 50 kg and 600 mg once daily for patients over 50 kg in weight, orally or intravenously) was recommended for at least 4 weeks"
+    },
+    {
+      "id": "c13",
+      "text": "In the actual cohort, 88% (65 of 74 patients) were treated with cloxacillin or dicloxacillin.",
+      "byte_quote": "Sixty-five of 74 patients (88%) were treated with cloxacillin or dicloxacillin"
+    }
+  ],
+  "cites": []
+}

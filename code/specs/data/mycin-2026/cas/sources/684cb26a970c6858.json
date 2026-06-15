@@ -1,0 +1,59 @@
+{
+  "hash": "684cb26a970c6858",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8785473/",
+  "title": "Blood bacterial resistant investigation collaborative system (BRICS) report: a national surveillance in China from 2014 to 2019",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8785473/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "In Chinese bloodstream infections (2014-2019), Gram-negative organisms predominate at 70.5% (19,655 isolates) vs Gram-positive at 29.5% (8,244 isolates).",
+      "byte_quote": "Gram-positive organisms accounted for 29.5% (8244) of the species identified and Gram-negative organisms accounted for 70.5% (19,655)."
+    },
+    {
+      "id": "c2",
+      "text": "The most common bloodstream-infection organisms, in rank order, are E. coli, K. pneumoniae, S. aureus, coagulase-negative Staphylococci, and A. baumannii.",
+      "byte_quote": "The most-commonly isolated organisms in blood cultures were _Escherichia coli_, _Klebsiella pneumoniae_, _Staphylococcus aureus_, coagulase-negative _Staphylococci_, and _Acinetobacter baumannii_."
+    },
+    {
+      "id": "c3",
+      "text": "E. coli's share of bloodstream isolates rose from 29.1% to 38.5% across the study period.",
+      "byte_quote": "Notably, _E. coli_ increased 29.1% to 38.5% during the study period."
+    },
+    {
+      "id": "c4",
+      "text": "Methicillin-resistant S. aureus (MRSA) prevalence fell from 39.0% (73/187) in 2014 to 25.9% (230/889) in 2019.",
+      "byte_quote": "The prevalence of methicillin-resistant _S. aureus_ declined from 39.0% (73/187) in 2014 to 25.9% (230/889) in 2019 (_p_ < 0.05)."
+    },
+    {
+      "id": "c5",
+      "text": "ESBL-producing E. coli prevalence dropped from 61.2% (412/673) to 51.0% (1878/3,683) over the study period.",
+      "byte_quote": "The prevalence of ESBL-_E. coli_ dropped from 61.2% (412/673) to 51.0% (1878/3,683) over time (_p_ < 0.05)."
+    },
+    {
+      "id": "c6",
+      "text": "Carbapenem-resistant K. pneumoniae rose sharply from 7.0% (16/229) in 2014 to 19.6% (325/1,655) in 2019.",
+      "byte_quote": "carbapenem-resistant _K. pneumoniae_ increased markedly from 7.0% (16/229) in 2014 to 19.6% (325/1,655) in 2019 (_p_ < 0.05)."
+    },
+    {
+      "id": "c7",
+      "text": "Estimated bloodstream-infection (BSI) incidence is 113 to 204 per 100,000 population (attributed to reference 5).",
+      "byte_quote": "It was estimated that the BSI incidence ranged between 113 and 204 per 100,000 in the population [[5](#CR5)]."
+    },
+    {
+      "id": "c8",
+      "text": "Recommended blood culture sampling frequency is 100 to 200 blood culture sets per 1,000 patient days (attributed to reference 15).",
+      "byte_quote": "The frequency of blood cultures is recommended for 100 to 200 blood cultures sets per 1,000 patient days [[15](#CR15)]."
+    },
+    {
+      "id": "c9",
+      "text": "The surveillance collected 27,899 isolates total over the 6-year period.",
+      "byte_quote": "Over the 6-year period, 27,899 isolates were collected in total."
+    }
+  ],
+  "cites": [
+    "Reference [5] (cited for BSI incidence of 113-204 per 100,000 population)",
+    "Reference [15] (cited for blood culture frequency of 100-200 sets per 1,000 patient days)",
+    "Reference [16] — 2018 annual report of the European Antimicrobial Resistance Surveillance Network (EARS-Net)",
+    "Reference [1] — WHO recommendations"
+  ]
+}

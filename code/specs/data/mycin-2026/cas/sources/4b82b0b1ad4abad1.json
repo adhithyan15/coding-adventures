@@ -1,0 +1,139 @@
+{
+  "hash": "4b82b0b1ad4abad1",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451395/",
+  "title": "Staphylococcus aureus Infections: Epidemiology, Pathophysiology, Clinical Manifestations, and Management",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451395/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "In the industrialized world, Staphylococcus aureus bacteremia (SAB) incidence is 10 to 30 per 100,000 person-years.",
+      "byte_quote": "In the industrialized world, the population incidence of SAB ranges from 10 to 30 per 100,000 person-years"
+    },
+    {
+      "id": "c2",
+      "text": "MRSA bacteremia incidence in Quebec rose from 0 to 7.4 per 100,000 person-years between 1991 and 2005.",
+      "byte_quote": "in Quebec, Canada, the incidence of MRSA bacteremia increased from 0 per 100,000 person-years to 7.4 per 100,000 person-years from 1991to2005"
+    },
+    {
+      "id": "c3",
+      "text": "S. aureus is now the most common cause of infective endocarditis in the industrialized world.",
+      "byte_quote": "_S. aureus_ is now the most common cause of IE in the industrialized world"
+    },
+    {
+      "id": "c4",
+      "text": "The proportion of IE cases due to S. aureus rose from 24% to 32% between 1998 and 2009.",
+      "byte_quote": "the incidence of IE increased from 9.3 per 100,000 person-years in 1998 to 12.7 per 100,000 person-years in 2009. The proportion of IE cases coded as being due to _S. aureus_ increased from 24% to 32% between 1998 and 2009"
+    },
+    {
+      "id": "c5",
+      "text": "Age is a powerful determinant of SAB incidence, with highest rates at the extremes of life.",
+      "byte_quote": "Age is a powerful determinant of SAB incidence, with the highest rates of infection occurring at either extreme of life"
+    },
+    {
+      "id": "c6",
+      "text": "SAB incidence exceeds 100 per 100,000 person-years in those over 70 years of age.",
+      "byte_quote": "the incidence of SAB is >100 per 100,000 person-years among subjects >70 years of age"
+    },
+    {
+      "id": "c7",
+      "text": "Male gender is associated with increased SAB incidence (male-to-female ratio ~1.5).",
+      "byte_quote": "Male gender is consistently associated with increased SAB incidence...with male-to-female ratios of ∼1.5"
+    },
+    {
+      "id": "c8",
+      "text": "Invasive MRSA incidence in the US black population (66.5/100,000) is over twice that of the white population (27.7/100,000).",
+      "byte_quote": "In the United States, the incidence of invasive MRSA in the black population (66.5 per 100,000 person-years) is over twice that in the white population (27.7 per 100,000 person-years)"
+    },
+    {
+      "id": "c9",
+      "text": "SAB incidence in HIV-infected patients (494/100,000) is 24 times that of the non-HIV population.",
+      "byte_quote": "incidences of SAB in HIV-infected patients of 494 per 100,000 person-years...or 24 times that of the non-HIV-infected population"
+    },
+    {
+      "id": "c10",
+      "text": "Among HIV-infected individuals, low CD4 count is independently associated with SAB.",
+      "byte_quote": "Among HIV-infected individuals, a low CD4 count was independently associated with SAB"
+    },
+    {
+      "id": "c11",
+      "text": "Among injection drug users, SAB incidence is at least 610 per 100,000 person-years.",
+      "byte_quote": "the incidence of SAB was at least 610 per 100,000 person-years"
+    },
+    {
+      "id": "c12",
+      "text": "SAB incidence in hemodialysis-dependent patients ranges from ~3,000 to nearly 18,000 per 100,000 person-years across countries.",
+      "byte_quote": "The incidences of SAB in hemodialysis-dependent patients were 3,064 per 100,000 person-years in Taiwan, 17,900 per 100,000 person-years in Ireland, and 4,045 to 5,015 per 100,000 person-years in the United States"
+    },
+    {
+      "id": "c13",
+      "text": "The predominant risk factor for SAB in hemodialysis patients is the presence of an intravascular access device.",
+      "byte_quote": "The predominant risk factor for these patients is the presence of an intravascular access device"
+    },
+    {
+      "id": "c14",
+      "text": "In patients with a prosthetic cardiac valve who develop SAB, the risk of IE is ~51%.",
+      "byte_quote": "in one prospective cohort study of patients with a prosthetic cardiac valve who developed SAB, the risk of IE was ∼51%"
+    },
+    {
+      "id": "c15",
+      "text": "Recommended IV antibiotic duration for uncomplicated SAB is at least 2 weeks.",
+      "byte_quote": "The recommended duration of intravenous (i.v.) antibiotics for uncomplicated SAB is at least 2 weeks"
+    },
+    {
+      "id": "c16",
+      "text": "Daptomycin at 6 mg/kg IV once daily was noninferior to vancomycin for MRSA bacteremia.",
+      "byte_quote": "daptomycin at 6 mg/kg of body weight i.v. once daily was noninferior to vancomycin"
+    },
+    {
+      "id": "c17",
+      "text": "Higher daptomycin doses of 8 to 10 mg/kg are increasingly used and appear safe.",
+      "byte_quote": "higher doses (8 to 10 mg/kg) are increasingly being used and appear to be safe"
+    },
+    {
+      "id": "c18",
+      "text": "For complicated SAB, 4 to 6 weeks of IV therapy has been the standard practice.",
+      "byte_quote": "For complicated SAB, 4 to 6 weeks of i.v. therapy has been the standard practice"
+    },
+    {
+      "id": "c19",
+      "text": "Patients treated with vancomycin for right-sided IE should receive more than 2 weeks of therapy.",
+      "byte_quote": "patients being treated with vancomycin for right-sided IE should receive >2 weeks of therapy"
+    },
+    {
+      "id": "c20",
+      "text": "Tigecycline carries an FDA black box warning for increased risk of death versus other antibacterials.",
+      "byte_quote": "tigecycline has subsequently received an FDA black box warning for an increased risk of death compared to other antibacterial drugs"
+    },
+    {
+      "id": "c21",
+      "text": "Daptomycin nonsusceptibility developed in 5 of 45 MRSA bacteremia patients.",
+      "byte_quote": "Nonsusceptibility to daptomycin developed in 5 of 45 patients with MRSA bacteremia"
+    },
+    {
+      "id": "c22",
+      "text": "Common primary sources of SAB are vascular catheter-related infections, SSTIs, pleuropulmonary, osteoarticular infections, and IE.",
+      "byte_quote": "common primary clinical foci or sources of infection are vascular catheter-related infections, SSTIs, pleuropulmonary infections, osteoarticular infections, and IE"
+    },
+    {
+      "id": "c23",
+      "text": "No focus of infection is found in about 25% of SAB cases.",
+      "byte_quote": "a focus of infection is not found in ∼25% of cases"
+    },
+    {
+      "id": "c24",
+      "text": "Mortality varies by source: higher for bacteremia without a focus (22-48%), IE (25-60%), pulmonary (39-67%); lower for catheter-related (7-21%), SSTIs (15-17%), and UTIs (10%).",
+      "byte_quote": "higher mortality rates for bacteremia without a focus (22 to 48%), IE (25 to 60%), and pulmonary infections (39 to 67%), compared to lower rates for catheter-related bacteremia (7 to 21%), SSTIs (15 to 17%), and urinary tract infections (UTIs) (10%)"
+    },
+    {
+      "id": "c25",
+      "text": "Right-sided IE is usually secondary to injection drug use or the presence of a central catheter.",
+      "byte_quote": "Right-sided disease is usually secondary to either injection drug use or the presence of a central catheter"
+    }
+  ],
+  "cites": [
+    "Thwaites et al. (reference 77)",
+    "Benito et al. (reference 133)",
+    "Fang et al. (reference 154)",
+    "Grover et al. (reference 147)"
+  ]
+}
