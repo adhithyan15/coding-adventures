@@ -41,7 +41,7 @@
         "id": "host_neonate_gnb",
         "resolved_url": "https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis",
         "source_title": "Neonatal Bacterial Meningitis — Merck Manual Professional Edition (Pediatrics, Infections in Neonates)",
-        "byte_quote": "The most common causes of neonatal bacterial meningitis are group B streptococcus, E. coli, and L. monocytogenes.",
+        "byte_quote": "The **predominant pathogens** are the following: [Group B streptococcus](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections) (GBS) [_Escherichia coli_](/professional/infectious-diseases/gram-negative-bacilli/escherichia-coli-infections) (particularly those strains contain",
         "value_found": "Merck Manual lists E. coli (a gram-negative bacillus, particularly K1-capsule strains) among the three predominant pathogens of neonatal meningitis (no percentage given there). A corroborating peer-reviewed primary study (PMC8254664, Eastern China 2001–2020) gives a concrete proportion: E. coli = 69/182 culture-confirmed neonatal meningitis cases = 37.9%; StatPearls (NBK532264) states E. coli \"accounts for approximately 30% of all early-onset neonatal meningitis.\"",
         "direction_correct": true,
         "verdict": "grounded",

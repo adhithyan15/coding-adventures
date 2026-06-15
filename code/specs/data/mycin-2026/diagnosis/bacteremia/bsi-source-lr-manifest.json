@@ -55,9 +55,9 @@
       "evidence": "infection_source(skin_soft_tissue)",
       "organism": "s_aureus",
       "lr": 12,
-      "status": "grounded",
-      "verdict": "ACCEPT",
-      "trust": "consensus",
+      "status": "direction_only",
+      "verdict": "FLAG",
+      "trust": "inferred",
       "byte_quote": "It is the most common pathogen isolated from surgical site infections (SSIs), cutaneous abscesses, and purulent cellulitis. According to 2009-2010 U.S. National Healthcare Safety Network data, S. aureus was the most common cause of SSIs overall, accounting for 30% of infections.",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451395/"
     },
@@ -102,5 +102,5 @@
       "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1584240/fullTextXML"
     }
   },
-  "hash": "1bdb690480be50f5"
+  "hash": "56a32840e1840f41"
 }

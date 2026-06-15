@@ -122,7 +122,7 @@
         "refute_attempt": "Strongest refutation: The claim generalizes to \"bacterial meningitis,\" but the quote is narrower — it specifies \"Gram-negative meningitis,\" and the surrounding paragraph is specifically about Acinetobacter meningitis, where the article actually argues that 2 g q8h \"is likely to be inadequate.\" So one could argue the source is using this dose as a baseline it then criticizes, not endorsing it as sufficient for all bacterial meningitis. However, this does not refute the claim: the claim is about the *recommended IDSA dose*, not its adequacy, and the quote explicitly attributes \"2 g every 8 h\" to \"the IDSA guidelines for Gram-negative meningitis.\" A second angle: cefepime is not a first-line empiric agent for typical community bacterial meningitis (e.g., pneumococcal/meningococcal) — it is used for Gram-negative/nosocomial/post-neurosurgical CNS infection. But the claim's parenthetical and \"e.g.\" framing align with this, and 2 g q8h is indeed the IDSA-recommended maximal CNS dose for cefepime. Neither angle overturns the grounded fact that the IDSA-recommended cefepime meningitis dose is 2 g every 8 h. The quote is a secondary source citing the IDSA guideline rather than the primary IDSA document, but it states the dose and indication directly.",
         "final_verdict": "grounded"
       },
-      "spider_status": "grounded"
+      "spider_status": "direction_only"
     },
     {
       "id": "dose_meropenem",
@@ -153,7 +153,7 @@
         "refute_attempt": "Strongest refutation: the fetched page attributes meropenem's appearance to the empiric-therapy row for \"Cranial trauma, recent neurosurgery, or CSF shunt,\" which could suggest the quote is a healthcare-associated/post-neurosurgical context rather than community-acquired bacterial meningitis, or that 2 g q8h might be a generic max dose rather than the meningitis-specific dose. This refutation FAILS: the byte_quote \"meropenem 2 g q8h\" comes from Table 4, the single adult antimicrobial DOSING table for CNS/meningitis treatment, not from an indication-specific recommendation. 2 g q8h is specifically the meningitic CNS dose (double the standard 1 g q8h non-CNS dose), chosen for CSF penetration. An independent authoritative source (IDSA/CID Tunkel et al. practice guideline) corroborates that meropenem 2 g q8h is the recommended dose for adults and that meropenem is endorsed as an alternative for TREATMENT OF BACTERIAL MENINGITIS. The dose is therefore the correct meningitis dose, not a different indication.",
         "final_verdict": "grounded"
       },
-      "spider_status": "grounded"
+      "spider_status": "direction_only"
     },
     {
       "id": "dose_moxifloxacin",

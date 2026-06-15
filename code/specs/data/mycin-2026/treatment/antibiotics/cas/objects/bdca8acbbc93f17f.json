@@ -131,8 +131,8 @@
         }
       },
       "dose_grounding": {
-        "status": "grounded",
-        "note": "meningitis dose grounded to a primary source",
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
         "byte_quote": "As mentioned previously, the dose of cefepime recommended in the IDSA guidelines for Gram-negative meningitis is 2 g every 8 h.",
         "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/",
         "value_found": "2 g IV every 8 hours (adult bacterial/Gram-negative meningitis)",
@@ -170,8 +170,8 @@
         }
       },
       "dose_grounding": {
-        "status": "grounded",
-        "note": "meningitis dose grounded to a primary source",
+        "status": "direction_only",
+        "note": "indication/target grounded; exact figure not verbatim",
         "byte_quote": "meropenem 2 g q8h",
         "url": "https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines",
         "value_found": "2 g IV every 8 hours (q8h); total 6 g/day",
@@ -272,8 +272,8 @@
     }
   },
   "dose_grounding_summary": {
-    "grounded": 2,
-    "direction_only": 3,
+    "grounded": 0,
+    "direction_only": 5,
     "refuted": 3,
     "pending": 0
   },

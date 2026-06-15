@@ -118,7 +118,7 @@
       "verdict": "ACCEPT",
       "trust": "consensus",
       "value": 8,
-      "byte_quote": "The most common causes of neonatal bacterial meningitis are group B streptococcus, E. coli, and L. monocytogenes.",
+      "byte_quote": "The **predominant pathogens** are the following: [Group B streptococcus](/professional/infectious-diseases/gram-positive-cocci/streptococcal-infections) (GBS) [_Escherichia coli_](/professional/infectious-diseases/gram-negative-bacilli/escherichia-coli-infections) (particularly those strains contain",
       "url": "https://www.merckmanuals.com/professional/pediatrics/infections-in-neonates/neonatal-bacterial-meningitis"
     },
     "host_neonate_listeria": {
