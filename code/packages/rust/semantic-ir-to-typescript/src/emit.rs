@@ -61,6 +61,13 @@ fn uses_regex(m: &Module) -> bool {
     module_uses_builtin(m, "regex")
 }
 
+/// True if the module calls the `backtick` builtin (a Ruby `` `cmd` ``
+/// literal lowers to `BuiltinCall("backtick", [cmd])`).  Gates the
+/// `@coding-adventures/sir-runtime-shell` import.
+fn uses_shell(m: &Module) -> bool {
+    module_uses_builtin(m, "backtick")
+}
+
 /// Walk every function body for a `BuiltinCall` named `name` — gates
 /// per-concern imports for builtins that carry no `Feature` flag.  Exhaustive
 /// over `Stmt`/`Expr` so a new node can't silently hide a use.
@@ -203,6 +210,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only regex-using modules import the regex runtime.
     if uses_regex(m) {
         out.push_str(crate::runtime::RUNTIME_REGEX);
+    }
+    // Only backtick-using modules import the shell runtime.
+    if uses_shell(m) {
+        out.push_str(crate::runtime::RUNTIME_SHELL);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -941,6 +952,14 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // `uses_regex`.
     if name == "regex" {
         out.push_str("__SirRegex.compile(");
+        emit_args(out, args, indent);
+        out.push(')');
+        return;
+    }
+    // `backtick` (a Ruby `` `cmd` `` literal) → run via the shell runtime,
+    // returning the command's stdout.  Gated by `uses_shell`.
+    if name == "backtick" {
+        out.push_str("__SirShell.backtick(");
         emit_args(out, args, indent);
         out.push(')');
         return;

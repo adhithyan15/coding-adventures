@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/sir-runtime-shell",
+  "capabilities": [
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "* (author-supplied command from a compiled Ruby backtick expression)",
+      "justification": "Implements Ruby backtick, which runs a command via the system shell and returns its stdout. The command is author-supplied from the compiled program's source (a string literal), mirroring Ruby's own backtick semantics; this package interpolates no external/untrusted runtime input."
+    }
+  ],
+  "justification": "Shells out via subprocess to implement the SIR `backtick` builtin (Ruby `cmd`): the author-supplied command is run through the system shell and its stdout returned. No filesystem, network, or environment access beyond spawning the one command."
+}

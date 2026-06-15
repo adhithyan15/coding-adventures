@@ -48,6 +48,13 @@ pub const RUNTIME_PAIRS: &str = r##"import * as __SirPairs from "@coding-adventu
 pub const RUNTIME_REGEX: &str = r##"import * as __SirRegex from "@coding-adventures/sir-runtime-regex";
 "##;
 
+/// The shell-runtime import, emitted **only** when a module calls the
+/// `backtick` builtin (a Ruby `` `cmd` `` literal).  Bound as `__SirShell`;
+/// runs the command via the system shell and returns its stdout.  See
+/// `code/specs/sir-runtime.md`.
+pub const RUNTIME_SHELL: &str = r##"import * as __SirShell from "@coding-adventures/sir-runtime-shell";
+"##;
+
 #[cfg(test)]
 mod tests {
     use super::*;

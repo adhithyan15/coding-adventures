@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.10 — backtick builtin → sir-runtime-shell (gated import)
+
+The Ruby `` `cmd` `` backtick literal lowers to `BuiltinCall("backtick",
+[cmd])`, which previously hit the unknown-builtin dispatch and threw at runtime.
+It now emits a call into the new `@coding-adventures/sir-runtime-shell` package
+(thin `child_process.execSync` wrapper: run via the system shell, return stdout
+— Ruby backtick semantics), per `code/specs/sir-runtime.md`.
+
+- `BuiltinCall("backtick", …)` → `__SirShell.backtick(cmd)`.
+- New gated `RUNTIME_SHELL` import, emitted **only** when a module calls the
+  `backtick` builtin (gate `uses_shell`, reusing the `module_uses_builtin`
+  content walk).
+- New direct-SIR tests assert the gated import + `__SirShell.backtick("echo
+  hi")` and that a non-shell module omits the import. The runtime package's own
+  vitest suite covers execution. The shell command is **author-supplied** from
+  the compiled program's source — no new untrusted-input path; the package
+  declares a `proc`/`exec` capability.
+
 ## 0.1.9 — regex builtin → sir-runtime-regex (gated import)
 
 The Ruby `/pat/flags` literal lowers to `BuiltinCall("regex", [pattern,

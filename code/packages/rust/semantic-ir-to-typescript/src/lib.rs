@@ -873,4 +873,32 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(!a.source.contains("sir-runtime-regex"), "got:\n{}", a.source);
     }
+
+    // ─── SIR backtick builtin → sir-runtime-shell (Q8c) ─────────────────────
+
+    #[test]
+    fn backtick_builtin_emits_shell_runtime_ts() {
+        let bt = Expr::BuiltinCall {
+            name: "backtick".into(),
+            args: vec![Expr::StrLit { value: "echo hi".into(), span: s() }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let m = module_with_main_body(vec![], bt, &[Feature::Strings]);
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        assert!(
+            src.contains(r#"import * as __SirShell from "@coding-adventures/sir-runtime-shell";"#),
+            "got:\n{}",
+            src
+        );
+        assert!(src.contains(r#"__SirShell.backtick("echo hi")"#), "got:\n{}", src);
+    }
+
+    #[test]
+    fn non_shell_module_omits_shell_import_ts() {
+        let module = twig_to_semantic_ir::compile_source("(print (+ 1 2))", "demo").expect("lower");
+        let a = compile(&module).expect("compile");
+        assert!(!a.source.contains("sir-runtime-shell"), "got:\n{}", a.source);
+    }
 }

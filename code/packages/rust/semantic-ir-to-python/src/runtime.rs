@@ -64,6 +64,14 @@ from coding_adventures_sir_runtime_regex import (
 )
 "##;
 
+/// The shell-runtime import header, appended **only** when a module calls the
+/// `backtick` builtin (a Ruby `` `cmd` `` literal).  Provides a thin
+/// subprocess wrapper that runs the command via the system shell and returns
+/// its stdout; see `code/specs/sir-runtime.md`.
+pub const RUNTIME_SHELL: &str = r##"# ── SIR shell runtime (imported from coding-adventures-sir-runtime-shell) ──
+from coding_adventures_sir_runtime_shell import backtick as _sir_shell_backtick
+"##;
+
 pub const RUNTIME: &str = r##"# ── SIR runtime (imported from coding-adventures-sir-runtime-core) ──
 from coding_adventures_sir_runtime_core import (
     truthy as _sir_truthy,
