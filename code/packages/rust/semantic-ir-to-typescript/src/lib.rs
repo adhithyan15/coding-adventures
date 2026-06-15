@@ -901,4 +901,30 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(!a.source.contains("sir-runtime-shell"), "got:\n{}", a.source);
     }
+
+    // ─── boolean / unary operator builtins (Q8d audit) ──────────────────────
+
+    fn bc(name: &str, args: Vec<Expr>) -> Expr {
+        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+    }
+
+    #[test]
+    fn and_or_not_neg_builtins_lower_natively_ts() {
+        let and = bc("and", vec![Expr::BoolLit { value: true, span: s() }, Expr::IntLit { value: 1, span: s() }]);
+        let a = compile(&module_with_main_body(vec![], and, &[])).expect("compile");
+        assert!(a.source.contains("__Sir.truthy(__l) ? (1) : __l"), "and: got:\n{}", a.source);
+
+        let or = bc("or", vec![Expr::BoolLit { value: false, span: s() }, Expr::IntLit { value: 2, span: s() }]);
+        let a = compile(&module_with_main_body(vec![], or, &[])).expect("compile");
+        assert!(a.source.contains("__Sir.truthy(__l) ? __l : (2)"), "or: got:\n{}", a.source);
+
+        let not = bc("not", vec![Expr::BoolLit { value: true, span: s() }]);
+        let a = compile(&module_with_main_body(vec![], not, &[])).expect("compile");
+        assert!(a.source.contains("(!__Sir.truthy(true))"), "not: got:\n{}", a.source);
+
+        let neg = bc("neg", vec![Expr::IntLit { value: 5, span: s() }]);
+        let a = compile(&module_with_main_body(vec![], neg, &[])).expect("compile");
+        assert!(a.source.contains("(-(5))"), "neg: got:\n{}", a.source);
+        assert!(!a.source.contains("__Sir.callBuiltin(\"neg\""), "got:\n{}", a.source);
+    }
 }

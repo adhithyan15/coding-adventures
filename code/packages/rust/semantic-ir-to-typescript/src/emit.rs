@@ -964,6 +964,40 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push(')');
         return;
     }
+    // Ruby `&&`/`and` and `||`/`or` lower to `BuiltinCall("and"/"or", [lhs,
+    // rhs])`.  They must **short-circuit** and use SIR truthiness, so they
+    // emit the same truthy-guarded arrow IIFE as `Expr::LogicalAnd`/`LogicalOr`
+    // rather than routing through the eager `callBuiltin` dispatch.
+    if name == "and" && args.len() == 2 {
+        out.push_str("((__l: __Sir.Val) => __Sir.truthy(__l) ? (");
+        emit_expr(out, &args[1], indent);
+        out.push_str(") : __l)(");
+        emit_expr(out, &args[0], indent);
+        out.push(')');
+        return;
+    }
+    if name == "or" && args.len() == 2 {
+        out.push_str("((__l: __Sir.Val) => __Sir.truthy(__l) ? __l : (");
+        emit_expr(out, &args[1], indent);
+        out.push_str("))(");
+        emit_expr(out, &args[0], indent);
+        out.push(')');
+        return;
+    }
+    // `!`/`not` → SIR-truthiness negation (always boolean); `-x` (unary minus)
+    // → numeric negation.
+    if name == "not" && args.len() == 1 {
+        out.push_str("(!__Sir.truthy(");
+        emit_expr(out, &args[0], indent);
+        out.push_str("))");
+        return;
+    }
+    if name == "neg" && args.len() == 1 {
+        out.push_str("(-(");
+        emit_expr(out, &args[0], indent);
+        out.push_str("))");
+        return;
+    }
     let helper = match name {
         "+" => "__Sir.add",
         "-" => "__Sir.sub",

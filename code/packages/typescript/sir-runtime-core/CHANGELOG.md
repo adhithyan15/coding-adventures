@@ -2,6 +2,14 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.1.3] - 2026-06-15
+
+### Changed
+
+- `callBuiltin` now throws a descriptive error for an unregistered SIR builtin
+  — naming the builtin, listing the known ones, and explaining it indicates a
+  backend coverage gap — rather than a bare `unknown builtin: <name>`.
+
 ## [0.1.2] - 2026-06-15
 
 ### Changed

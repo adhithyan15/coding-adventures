@@ -106,10 +106,25 @@ _builtins: dict[str, Callable[..., Any]] = {
 
 
 def call_builtin(name: str, args: list[Any]) -> Any:
-    """Invoke a builtin by SIR name with a list of arguments."""
+    """Invoke a builtin by SIR name with a list of arguments.
+
+    The SIR backends translate most builtins to native code or route them to a
+    dedicated per-concern runtime package, so this generic dispatch only fires
+    for the small set the core registers (arithmetic / pairs / print / type
+    predicates).  An unregistered name means the emitting backend produced a
+    `call_builtin("<name>", …)` for a builtin it does not yet lower — a backend
+    coverage gap, not a user error — so the message names the builtin and points
+    there rather than reading like a missing Python name.
+    """
     fn = _builtins.get(name)
     if fn is None:
-        raise NameError(f"unknown builtin: {name}")
+        known = ", ".join(sorted(_builtins))
+        raise NameError(
+            f"SIR builtin {name!r} is not implemented in sir-runtime-core's "
+            f"dispatch table (known: {known}). The backend emitted a "
+            f"call_builtin for a builtin it does not lower natively or via a "
+            f"per-concern runtime package; this is a backend coverage gap."
+        )
     return fn(*args)
 
 
