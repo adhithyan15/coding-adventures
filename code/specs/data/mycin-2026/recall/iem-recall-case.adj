@@ -1,0 +1,30 @@
+% ============================================================================
+% iem-recall-case — relational recall, end-to-end through the adj-lang engine.
+% ============================================================================
+% MYCIN-2026 REL-3. The native counterpart of the REL-1 Python prototype: this
+% imports the grounded inborn-errors-of-metabolism knowledge graph and asks, as
+% a BINDING QUERY, "which enzyme is deficient in Tay-Sachs?".
+%
+%   adj_lang_cli iem-recall-case.adj
+%     → {"recall":[{"query":"deficient_in(tay_sachs, Enzyme)",
+%                   "answers":[{"bindings":{"Enzyme":"hexosaminidase_a"},
+%                               "citations":[{"source":"...","trust":"consensus"}]}],
+%                   "abstained":false}], ...}
+%
+% Fact recall as the single-hop special case of the differential — answered on
+% the CPU with 0 answer-time model calls, every answer carrying its citing edge
+% as a proof. Ask about an ungrounded disease and the engine abstains (empty
+% answers, "abstained": true) rather than fabricating an enzyme.
+% ============================================================================
+
+import "iem-edges.adj"
+
+% Forward recall — bind the deficient enzyme.
+? deficient_in(tay_sachs, $Enzyme)
+
+% The full edge star for one disease (enzyme / accumulated substrate / inheritance).
+? accumulates(tay_sachs, $Substrate)
+? inherited_as(tay_sachs, $Pattern)
+
+% Reverse lookup is free — which disease lacks this enzyme?
+? deficient_in($Disease, hexosaminidase_a)

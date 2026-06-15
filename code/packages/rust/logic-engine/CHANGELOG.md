@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.0] - 2026-06-14 — `KnowledgeBase::fact(id)` accessor (MYCIN-2026 REL-3)
+
+### Added
+
+- **`KnowledgeBase::fact(&self, id: FactId) -> Option<&Fact>`** — resolve a
+  proof's `via_facts` (or a `DerivationOrigin::FromFact`) back to the firing fact,
+  in particular its `provenance`, so a relational recall binding query's answer
+  can be returned WITH the citing edge's source.
+
 ## [0.15.0] - 2026-06-14 — mandatory `Fact::provenance` for relational edges (MYCIN-2026 REL-2)
 
 ### Added / Changed (breaking)

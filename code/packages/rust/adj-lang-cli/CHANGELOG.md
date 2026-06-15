@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.6.0] - 2026-06-14 — relational recall: binding-query `"recall"` output (MYCIN-2026 REL-3)
+
+### Added
+
+- **`"recall"` JSON section** for relational recall binding queries. A query goal
+  containing a `$variable` (`? deficient_in(tay_sachs, $Enzyme)`) is routed out of
+  the differential and resolved by SLD enumeration over the grounded knowledge
+  graph; each answer reports its variable **bindings** and the **citations** of
+  the edge(s) that prove it (source/locator/trust). An empty answer set is
+  explicit **abstention** (`"abstained": true`) — no grounded edge supports an
+  answer, so none is fabricated. 0 answer-time model calls.
+- Ground hypothesis queries are unaffected (still flow to the differential
+  `ranked`/`decision`); the `"queries"` echo lists every query (ground + binding).
+
 ## [0.5.0] - 2026-06-12 — `import`-aware compile + the filesystem trust boundary (MYCIN-2026 M3)
 
 ### Added

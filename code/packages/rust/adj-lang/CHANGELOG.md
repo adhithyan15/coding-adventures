@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.13.0] - 2026-06-14 — relational queries pass vocabulary enforcement (MYCIN-2026 REL-3)
+
+### Changed
+
+- **`enforce_vocabulary` accepts a binding query over a defined `relation`.** A
+  query whose functor is a `define`d relation (`? deficient_in(tay_sachs, $E)`) is
+  now valid under a `use`d vocabulary, alongside the existing hypothesis queries —
+  relational recall is the single-hop special case of the differential, so the
+  vocabulary check accepts either. Previously a relational query inside a `use`
+  scope was wrongly rejected as a non-hypothesis (`UndefinedTerm`).
+
 ## [0.12.0] - 2026-06-14 — relational recall: `relate` edges + binding queries (MYCIN-2026 REL-2)
 
 ### Added
