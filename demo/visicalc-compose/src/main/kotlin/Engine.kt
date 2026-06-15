@@ -40,6 +40,16 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     private val scGetRaw = handle("sc_get_raw", FunctionDescriptor.of(ptr, ptr, ptr))
     private val scStrFree = handle("sc_string_free", FunctionDescriptor.ofVoid(ptr))
 
+    // Viewport primitive: integer coords (JAVA_INT) and a u64 revision
+    // (JAVA_LONG); JSON char* results, except current_revision returns the long.
+    private val i32 = ValueLayout.JAVA_INT
+    private val i64 = ValueLayout.JAVA_LONG
+    private val scGetWindow = handle("sc_get_window", FunctionDescriptor.of(ptr, ptr, i32, i32, i32, i32))
+    private val scUsedRange = handle("sc_used_range", FunctionDescriptor.of(ptr, ptr))
+    private val scColumnLetters = handle("sc_column_letters", FunctionDescriptor.of(ptr, ptr, i32))
+    private val scCurrentRevision = handle("sc_current_revision", FunctionDescriptor.of(i64, ptr))
+    private val scChangedSince = handle("sc_changed_since", FunctionDescriptor.of(ptr, ptr, i64))
+
     private val session = scNew.invoke() as MemorySegment
 
     /// Read an engine-returned char* into a Kotlin String and free it with the
@@ -85,6 +95,53 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
             "error" -> Regex("\"code\":\"([^\"]+)\"").find(json)?.groupValues?.get(1) ?: "#ERR"
             else -> ""
         }
+    }
+
+    // ── Viewport primitive (virtualized infinite sheet) ──────────────
+    // These mirror the engine's get_window / used_range / changed_since reads
+    // (1-based inclusive coords) so a windowed Compose grid can render only the
+    // visible rectangle of an unbounded sheet — the Compose sibling of the
+    // web/SwiftUI/Qt/Flutter infinite views. The window JSON is nested, so these
+    // use the small JSON parser below rather than display()'s per-value regex.
+
+    /// Dense display strings for the inclusive 1-based rectangle, row-major
+    /// (empty cells become ""). Empty list on a bad/oversized request.
+    fun window(row0: Int, col0: Int, row1: Int, col1: Int): List<List<String>> {
+        val json = take(scGetWindow.invoke(session, row0, col0, row1, col1) as MemorySegment)
+        val obj = parseJson(json) as? Map<*, *> ?: return emptyList()
+        val values = obj["values"] as? List<*> ?: return emptyList()
+        return values.map { row ->
+            (row as List<*>).map { valueToDisplay(it as Map<*, *>) }
+        }
+    }
+
+    /// The data extent {minRow,minCol,maxRow,maxCol}, or null if the sheet is
+    /// empty (the engine returns the JSON literal `null`).
+    fun usedRange(): Map<String, Int>? {
+        val obj = parseJson(take(scUsedRange.invoke(session) as MemorySegment)) as? Map<*, *>
+            ?: return null
+        return mapOf(
+            "minRow" to (obj["minRow"] as Number).toInt(),
+            "minCol" to (obj["minCol"] as Number).toInt(),
+            "maxRow" to (obj["maxRow"] as Number).toInt(),
+            "maxCol" to (obj["maxCol"] as Number).toInt(),
+        )
+    }
+
+    /// Column letters for a 1-based index (1 -> "A", 27 -> "AA").
+    fun columnLetters(index: Int): String =
+        take(scColumnLetters.invoke(session, index) as MemorySegment)
+
+    /// The per-edit revision clock. Snapshot it, then pass to changedSince.
+    fun currentRevision(): Long = scCurrentRevision.invoke(session) as Long
+
+    /// Cells changed since `since`; the Boolean is `stale` (re-read everything).
+    fun changedSince(since: Long): Pair<List<String>, Boolean> {
+        val obj = parseJson(take(scChangedSince.invoke(session, since) as MemorySegment))
+            as? Map<*, *> ?: return Pair(emptyList(), false)
+        if (obj["stale"] == true) return Pair(emptyList(), true)
+        val changed = (obj["changed"] as? List<*>)?.map { it as String } ?: emptyList()
+        return Pair(changed, false)
     }
 
     override fun close() {
@@ -163,5 +220,108 @@ class SpreadsheetModel(
 
         /// A1 address for grid display row `r` (0-based) and column `c` (1..5).
         fun address(r: Int, c: Int): String = "${'A' + c - 1}${r + 1}"
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// A small JSON reader, just enough for the engine's output (objects,
+// arrays, strings, numbers, true/false/null). The window read is nested
+// (`{"values":[[{…},…],…]}`), which display()'s per-value regex can't
+// handle; rather than add a dependency, we parse it here. The engine emits
+// ASCII cell text and no \uXXXX escapes, so the minimal escape handling is
+// sufficient for this trusted input.
+// ─────────────────────────────────────────────────────────────────────
+
+/// Map one decoded value object (`{"kind":...}`) to the display string.
+private fun valueToDisplay(obj: Map<*, *>): String = when (obj["kind"]) {
+    "empty" -> ""
+    "number" -> {
+        val d = (obj["value"] as Number).toDouble()
+        if (d == Math.floor(d) && Math.abs(d) < 1e15) d.toLong().toString() else d.toString()
+    }
+    "text" -> obj["value"] as? String ?: ""
+    "boolean" -> if (obj["value"] == true) "TRUE" else "FALSE"
+    "error" -> obj["code"] as? String ?: "#ERR"
+    else -> ""
+}
+
+private fun parseJson(s: String): Any? = if (s.isEmpty()) null else JsonReader(s).readValue()
+
+private class JsonReader(private val s: String) {
+    private var i = 0
+    private fun ws() { while (i < s.length && s[i].isWhitespace()) i++ }
+
+    fun readValue(): Any? {
+        ws()
+        return when (s[i]) {
+            '{' -> readObject()
+            '[' -> readArray()
+            '"' -> readString()
+            't' -> { i += 4; true }
+            'f' -> { i += 5; false }
+            'n' -> { i += 4; null }
+            else -> readNumber()
+        }
+    }
+
+    private fun readObject(): Map<String, Any?> {
+        val m = LinkedHashMap<String, Any?>()
+        i++ // {
+        ws()
+        if (s[i] == '}') { i++; return m }
+        while (true) {
+            ws()
+            val k = readString()
+            ws(); i++ // :
+            m[k] = readValue()
+            ws()
+            if (s[i] == ',') { i++; continue }
+            i++ // }
+            break
+        }
+        return m
+    }
+
+    private fun readArray(): List<Any?> {
+        val l = ArrayList<Any?>()
+        i++ // [
+        ws()
+        if (s[i] == ']') { i++; return l }
+        while (true) {
+            l.add(readValue())
+            ws()
+            if (s[i] == ',') { i++; continue }
+            i++ // ]
+            break
+        }
+        return l
+    }
+
+    private fun readString(): String {
+        val sb = StringBuilder()
+        i++ // opening quote
+        while (s[i] != '"') {
+            if (s[i] == '\\') {
+                i++
+                sb.append(
+                    when (s[i]) {
+                        'n' -> '\n'; 't' -> '\t'; 'r' -> '\r'
+                        '"' -> '"'; '\\' -> '\\'; '/' -> '/'
+                        else -> s[i]
+                    }
+                )
+            } else {
+                sb.append(s[i])
+            }
+            i++
+        }
+        i++ // closing quote
+        return sb.toString()
+    }
+
+    private fun readNumber(): Double {
+        val start = i
+        while (i < s.length && (s[i].isDigit() || s[i] in "-+.eE")) i++
+        return s.substring(start, i).toDouble()
     }
 }

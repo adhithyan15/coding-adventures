@@ -53,8 +53,44 @@ fun main() {
     model.setCell(0, 2, "=A1+1")              // B1
     checkContains("B1 propagated", model.valueJson("B1"), "#DIV/0!")
     check("B1 display", model.viewportRows()[0][2], "#DIV/0!")
-
     model.close()
+
+    // ── Viewport primitive (virtualized infinite sheet) ──────────────
+    // A fresh session seeded with the cross-foot budget + a far-flung formula at
+    // Z1000 (row 1000, col 26), to exercise the windowed reads.
+    val s = SpreadsheetSession()
+    for ((a, v) in listOf(
+        "A1" to "15", "B1" to "3", "C1" to "12", "D1" to "8", "E1" to "=SUM(A1:D1)",
+        "A2" to "8", "B2" to "14", "C2" to "7", "D2" to "22", "E2" to "=SUM(A2:D2)",
+        "A3" to "12", "B3" to "9", "C3" to "18", "D3" to "6", "E3" to "=SUM(A3:D3)",
+        "A4" to "4", "B4" to "11", "C4" to "3", "D4" to "17", "E4" to "=SUM(A4:D4)",
+        "A5" to "=SUM(A1:A4)", "E5" to "=SUM(E1:E4)", "Z1000" to "=SUM(A1:A4)",
+    )) s.setCell(a, v)
+
+    // Window over A1:E5 — engine-computed and dense.
+    val w = s.window(1, 1, 5, 5)
+    check("window A1", w[0][0], "15")
+    check("window E1", w[0][4], "38")
+    check("window E5", w[4][4], "169")
+    // A window 1000 rows down reaches the far formula; the gap is empty.
+    check("window Z1000", s.window(998, 24, 1002, 28)[2][2], "39")
+    check("window gap empty", s.window(100, 1, 110, 10)[5][5], "")
+    // Extent + letters past Z.
+    val u = s.usedRange()!!
+    check("usedRange maxRow", u["maxRow"].toString(), "1000")
+    check("usedRange maxCol", u["maxCol"].toString(), "26")
+    check("columnLetters 27", s.columnLetters(27), "AA")
+    check("columnLetters 53", s.columnLetters(53), "BA")
+    // Editing A1 dirties the far dependent Z1000 via changedSince.
+    val rev = s.currentRevision()
+    s.setCell("A1", "115")
+    val (changed, stale) = s.changedSince(rev)
+    check("changedSince not stale", stale.toString(), "false")
+    checkContains("changedSince has A1", changed.joinToString(","), "A1")
+    checkContains("changedSince reaches Z1000", changed.joinToString(","), "Z1000")
+    check("window Z1000 after edit", s.window(1000, 26, 1000, 26)[0][0], "139")
+    s.close()
+
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")
     kotlin.system.exitProcess(if (failures == 0) 0 else 1)
 }
