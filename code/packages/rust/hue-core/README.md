@@ -107,6 +107,8 @@ packages a typed surface for:
   readiness into final supervised archive release checks
 - Hue package release archive completion summaries that turn archive supervisor
   readiness into final archive completion checks
+- Hue package release archive publication summaries that turn archive completion
+  readiness into final archive publication checks
 
 ## Dependencies
 
