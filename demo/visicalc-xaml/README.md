@@ -118,6 +118,22 @@ block in `MainWindow.xaml.cs` and the `<remarks>` on
 `Generated/Grid_VVm.cs`. The selected/editing cell-background
 highlight (state blocks) is also still React-only in the emitter.
 
+## Infinite virtualized sheet
+
+`SpreadsheetSession` (`Engine.cs`) also binds the engine's **viewport
+primitive** over P/Invoke — `Window(r0,c0,r1,c1)` (a dense
+`IReadOnlyList<IReadOnlyList<string>>` rectangle), `UsedRange()`,
+`ColumnLetters()`, `CurrentRevision()`, and `ChangedSince()` — so a windowed,
+virtualizing WinUI grid (an `ItemsRepeater` / `ListView`) can render only the
+visible rectangle of an unbounded sheet (the .NET sibling of the
+web/SwiftUI/Qt/Flutter/Compose infinite views), parsed with `System.Text.Json`.
+
+Headless proof (cross-platform, runs on macOS/Linux): `scripts/verify.sh` (the
+`test/` console harness) seeds far-flung sparse cells and asserts the window is
+engine-computed + dense (A1=15, E1=38, E5=169), a formula 1000 rows down
+(`Z1000` = 39) is reachable, the gaps are empty (sparse), column letters run
+AA/BA, and editing `A1` dirties the far dependent `Z1000` via `ChangedSince`.
+
 ## Where this fits in the cross-backend demo plan
 
 | Phase | Demo | Status |

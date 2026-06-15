@@ -49,6 +49,15 @@ internal static class ScNative
     internal static extern IntPtr sc_get_raw(IntPtr s,
         [MarshalAs(UnmanagedType.LPUTF8Str)] string a1);
 
+    // Viewport primitive: integer coords (uint32_t) and a u64 revision; JSON
+    // char* results, except sc_current_revision returns the u64 directly.
+    [DllImport("spreadsheet_capi")]
+    internal static extern IntPtr sc_get_window(IntPtr s, uint row0, uint col0, uint row1, uint col1);
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_used_range(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_column_letters(IntPtr s, uint index);
+    [DllImport("spreadsheet_capi")] internal static extern ulong sc_current_revision(IntPtr s);
+    [DllImport("spreadsheet_capi")] internal static extern IntPtr sc_changed_since(IntPtr s, ulong since);
+
     [DllImport("spreadsheet_capi")] internal static extern void sc_string_free(IntPtr p);
 
     /// Resolve the vendored engine library: an explicit CAPI_LIB env var, or
@@ -109,33 +118,111 @@ public sealed class SpreadsheetSession : IDisposable
         try
         {
             using var doc = JsonDocument.Parse(json);
-            var root = doc.RootElement;
-            if (!root.TryGetProperty("kind", out var kindEl)) return string.Empty;
-            switch (kindEl.GetString())
-            {
-                case "empty":
-                    return string.Empty;
-                case "number":
-                {
-                    double d = root.GetProperty("value").GetDouble();
-                    // Show integers without a trailing ".0".
-                    return (d == Math.Floor(d) && Math.Abs(d) < 1e15)
-                        ? ((long)d).ToString(System.Globalization.CultureInfo.InvariantCulture)
-                        : d.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                }
-                case "text":
-                    return root.GetProperty("value").GetString() ?? string.Empty;
-                case "boolean":
-                    return root.GetProperty("value").GetBoolean() ? "TRUE" : "FALSE";
-                case "error":
-                    return root.GetProperty("code").GetString() ?? "#ERR";
-                default:
-                    return string.Empty;
-            }
+            return DisplayValue(doc.RootElement);
         }
         catch (Exception ex) when (ex is JsonException or KeyNotFoundException or InvalidOperationException)
         {
             return "#ERR";
+        }
+    }
+
+    // ── Viewport primitive (virtualized infinite sheet) ──────────────
+    // These mirror the engine's get_window / used_range / changed_since reads
+    // (1-based inclusive coords) so a windowed XAML grid (a virtualizing
+    // ItemsRepeater / ListView) can render only the visible rectangle of an
+    // unbounded sheet — the .NET sibling of the web/SwiftUI/Qt/Flutter/Compose
+    // infinite views.
+
+    /// Map one decoded value object (`{"kind":...}`) to its display string.
+    /// Shared by `Display` (one cell) and `Window` (a whole rectangle).
+    private static string DisplayValue(JsonElement obj)
+    {
+        if (!obj.TryGetProperty("kind", out var kindEl)) return string.Empty;
+        switch (kindEl.GetString())
+        {
+            case "empty":
+                return string.Empty;
+            case "number":
+            {
+                double d = obj.GetProperty("value").GetDouble();
+                return (d == Math.Floor(d) && Math.Abs(d) < 1e15)
+                    ? ((long)d).ToString(System.Globalization.CultureInfo.InvariantCulture)
+                    : d.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+            case "text":
+                return obj.GetProperty("value").GetString() ?? string.Empty;
+            case "boolean":
+                return obj.GetProperty("value").GetBoolean() ? "TRUE" : "FALSE";
+            case "error":
+                return obj.GetProperty("code").GetString() ?? "#ERR";
+            default:
+                return string.Empty;
+        }
+    }
+
+    /// Dense display strings for the inclusive 1-based rectangle, row-major
+    /// (empty cells become ""). Empty list on a bad/oversized request.
+    public IReadOnlyList<IReadOnlyList<string>> Window(uint row0, uint col0, uint row1, uint col1)
+    {
+        string json = Take(ScNative.sc_get_window(_handle, row0, col0, row1, col1));
+        var rows = new List<IReadOnlyList<string>>();
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (!doc.RootElement.TryGetProperty("values", out var values)) return rows;
+            foreach (var rowEl in values.EnumerateArray())
+            {
+                var row = new List<string>();
+                foreach (var cell in rowEl.EnumerateArray()) row.Add(DisplayValue(cell));
+                rows.Add(row);
+            }
+        }
+        catch (Exception ex) when (ex is JsonException or KeyNotFoundException or InvalidOperationException) { /* bad/oversized request → empty */ }
+        return rows;
+    }
+
+    /// The data extent (1-based inclusive), or null if the sheet is empty.
+    public (uint minRow, uint minCol, uint maxRow, uint maxCol)? UsedRange()
+    {
+        string json = Take(ScNative.sc_used_range(_handle));
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            var r = doc.RootElement;
+            if (r.ValueKind != JsonValueKind.Object) return null; // "null" → empty sheet
+            return (r.GetProperty("minRow").GetUInt32(), r.GetProperty("minCol").GetUInt32(),
+                    r.GetProperty("maxRow").GetUInt32(), r.GetProperty("maxCol").GetUInt32());
+        }
+        catch (Exception ex) when (ex is JsonException or KeyNotFoundException or InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    /// Column letters for a 1-based index (`1` → `"A"`, `27` → `"AA"`).
+    public string ColumnLetters(uint index) => Take(ScNative.sc_column_letters(_handle, index));
+
+    /// The per-edit revision clock. Snapshot it, then pass to ChangedSince.
+    public ulong CurrentRevision() => ScNative.sc_current_revision(_handle);
+
+    /// Cells changed since `since`; `stale` means re-read the whole window.
+    public (IReadOnlyList<string> changed, bool stale) ChangedSince(ulong since)
+    {
+        string json = Take(ScNative.sc_changed_since(_handle, since));
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            var r = doc.RootElement;
+            if (r.TryGetProperty("stale", out var st) && st.GetBoolean())
+                return (Array.Empty<string>(), true);
+            var changed = new List<string>();
+            if (r.TryGetProperty("changed", out var arr))
+                foreach (var c in arr.EnumerateArray()) changed.Add(c.GetString() ?? string.Empty);
+            return (changed, false);
+        }
+        catch (Exception ex) when (ex is JsonException or KeyNotFoundException or InvalidOperationException)
+        {
+            return (Array.Empty<string>(), false);
         }
     }
 
