@@ -34,10 +34,10 @@ use adj_constraint_solver::{
     check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
 };
 use adj_lang::{compile_with_imports, decide, ImportLimits, ImportProvider};
-use logic_core::{atom, Term};
+use logic_core::{atom, LogicVar, Term};
 use logic_engine::{
-    DerivationOrigin, DifferentialDecision, Fact, KnowledgeBase, LRAggregateResult, Provenance,
-    TrustTier,
+    enumerate_all, DerivationOrigin, DifferentialDecision, Fact, KnowledgeBase, LRAggregateResult,
+    Provenance, TrustTier,
 };
 
 const SPEC: &str = r#"{
@@ -366,6 +366,25 @@ fn main() -> ExitCode {
         }
     };
 
+    // Partition the queries (MYCIN-2026 REL-3). A query containing a `$variable`
+    // is a RELATIONAL RECALL binding query — resolved by SLD enumeration to a
+    // `"recall"` section (bindings + the citing edge's provenance). A ground
+    // hypothesis query flows to the differential as before. We snapshot all query
+    // strings first (so the `"queries"` echo lists every query), then route the
+    // binding queries out of `lowered.queries` so `decide` only sees hypotheses.
+    let all_query_strs: Vec<String> = lowered
+        .queries
+        .iter()
+        .map(|q| format!("\"{}\"", esc(&format!("{}", q))))
+        .collect();
+    let binding_queries: Vec<Term> = lowered
+        .queries
+        .iter()
+        .filter(|q| contains_var(q))
+        .cloned()
+        .collect();
+    lowered.queries.retain(|q| !contains_var(q));
+
     // ---- Constraint engine FIRST, so its verdict can feed the differential
     // (ADJ constraints E2 — feed-a-verdict). The constraint outcomes are
     // computed up front; each maps to a STATUS atom (`feasible` / `infeasible`
@@ -429,11 +448,22 @@ fn main() -> ExitCode {
         ),
     };
 
-    let queries: Vec<String> = lowered
-        .queries
+    // The `"queries"` echo lists every query the program declared (ground +
+    // binding), captured before the partition above.
+    let queries: Vec<String> = all_query_strs;
+
+    // Relational recall: each binding query resolves to its bindings + the citing
+    // edge's provenance (or abstains with an empty answer set). 0 answer-time
+    // model calls — pure SLD over the grounded knowledge graph.
+    let recall: Vec<String> = binding_queries
         .iter()
-        .map(|q| format!("\"{}\"", esc(&format!("{}", q))))
+        .map(|q| recall_json(q, &lowered.kb))
         .collect();
+    let recall_section = if recall.is_empty() {
+        String::new()
+    } else {
+        format!(",\"recall\":[{}]", recall.join(","))
+    };
 
     // Render the constraint sections from the outcomes computed above (the
     // solvers are not re-run). Absent a constraint system / `check` / objective,
@@ -452,15 +482,87 @@ fn main() -> ExitCode {
     };
 
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
         solve_section,
         check_section,
-        optimize_section
+        optimize_section,
+        recall_section
     );
     ExitCode::SUCCESS
+}
+
+/// True if a query goal contains a logic variable — i.e. it is a relational
+/// recall *binding* query rather than a ground hypothesis query.
+fn contains_var(t: &Term) -> bool {
+    match t {
+        Term::Var(_) => true,
+        Term::Compound { args, .. } => args.iter().any(contains_var),
+        _ => false,
+    }
+}
+
+/// Collect the distinct logic variables of a goal, in first-appearance order, so
+/// each binding can be labelled by the variable's surface name.
+fn collect_vars(t: &Term, out: &mut Vec<LogicVar>) {
+    match t {
+        Term::Var(v) => {
+            if !out.iter().any(|x| x == v) {
+                out.push(v.clone());
+            }
+        }
+        Term::Compound { args, .. } => {
+            for a in args {
+                collect_vars(a, out);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Resolve a relational recall binding query against the grounded knowledge graph
+/// and render it as JSON: every answer (the variable bindings) plus the citing
+/// edge's provenance — the proof. An empty answer set is honest **abstention**
+/// (`"abstained": true`): no grounded edge supports an answer, so none is
+/// fabricated. 0 answer-time model calls — pure SLD over the CAS-grounded facts.
+fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
+    let dag = enumerate_all(query, kb);
+    let mut vars: Vec<LogicVar> = Vec::new();
+    collect_vars(query, &mut vars);
+    let mut answers: Vec<String> = Vec::new();
+    for proof in &dag.proofs {
+        let binds: Vec<String> = vars
+            .iter()
+            .map(|v| {
+                let name = v.display_name.clone().unwrap_or_default();
+                format!(
+                    "\"{}\":\"{}\"",
+                    esc(&name),
+                    esc(&format!("{}", proof.bindings.walk_var(v)))
+                )
+            })
+            .collect();
+        // The citing edge(s): each fact this proof relied on, with its provenance.
+        let cites: Vec<String> = proof
+            .via_facts
+            .iter()
+            .filter_map(|fid| kb.fact(*fid))
+            .map(|f| format!("{{{}}}", prov(&f.provenance)))
+            .collect();
+        answers.push(format!(
+            "{{\"bindings\":{{{}}},\"citations\":[{}]}}",
+            binds.join(","),
+            cites.join(",")
+        ));
+    }
+    format!(
+        "{{\"query\":\"{}\",\"answers\":[{}],\"abstained\":{}}}",
+        esc(&format!("{}", query)),
+        answers.join(","),
+        dag.proofs.is_empty()
+    )
 }
 
 /// Render a [`SolveOutcome`] as JSON. A solved system lists each unknown's

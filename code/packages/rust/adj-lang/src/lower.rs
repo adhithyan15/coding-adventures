@@ -507,10 +507,23 @@ fn enforce_vocabulary<'a>(
         }
     };
 
+    // A query is valid if it names a defined HYPOTHESIS (the differential query)
+    // OR a defined RELATION (a binding query, `? deficient_in(tay_sachs, $E)`).
+    // Relational recall is the single-hop special case of the differential, so the
+    // vocabulary check accepts either rather than forcing every query to be a
+    // hypothesis.
+    let check_query = |t: &AstTerm| -> Result<(), LowerError> {
+        let (functor, _) = term_functor_value(t);
+        match dict.get(functor) {
+            Some(DefineKind::Relation { .. }) => Ok(()),
+            _ => check_hypothesis(t),
+        }
+    };
+
     for stmt in statements {
         match stmt {
             Statement::Prior { conclusion, .. } => check_hypothesis(conclusion)?,
-            Statement::Query { conclusion } => check_hypothesis(conclusion)?,
+            Statement::Query { conclusion } => check_query(conclusion)?,
             Statement::Contributes {
                 evidence,
                 conclusion,

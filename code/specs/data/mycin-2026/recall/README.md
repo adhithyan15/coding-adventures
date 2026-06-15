@@ -27,9 +27,19 @@ python3 test_recall.py   # 7 tests, all deterministic
 
 ## Status & what's next
 
-REL-1 proves the **semantics** in Python before touching the Rust grammar/engine.
-Staged next: REL-2 (grammar: `entity`/`relation` dictionary kinds, the `relate` clause, the
-`$`-variable token, binding queries) → REL-3 (engine: SLD resolver + native CLI) → REL-4
-(spider-ground the IEM edges, retiring the authored-debt) → REL-5 (board-eval harness scoring
-recall + differential with an abstention metric). Every edge enters the CAS only through the
-grounding pipeline — nothing is human-authored in the end state.
+REL-1 proves the **semantics** in Python. **REL-2 + REL-3 make it native:** the adj-lang
+grammar now has the `relate` clause, `$`-variable binding queries, and `entity`/`relation`
+dictionary kinds; the `adj-lang-cli` resolves a binding query to a `"recall"` JSON section
+(bindings + the citing edge's provenance, or honest abstention). Run the native end-to-end with:
+
+```sh
+# from code/packages/rust:  the IEM graph + binding queries, answered with citations
+target/debug/adj-lang-cli ../../specs/data/mycin-2026/recall/iem-recall-case.adj
+```
+
+`iem-recall-case.adj` imports `iem-edges.adj` and asks `? deficient_in(tay_sachs, $Enzyme)` —
+the engine binds `hexosaminidase_a` with its citation, 0 answer-time model calls.
+
+Staged next: **REL-4** (spider-ground the IEM edges, retiring the authored-debt) → **REL-5**
+(board-eval harness scoring recall + differential with an abstention metric). Every edge enters
+the CAS only through the grounding pipeline — nothing is human-authored in the end state.

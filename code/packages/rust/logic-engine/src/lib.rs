@@ -347,6 +347,15 @@ impl KnowledgeBase {
         id
     }
 
+    /// Look up a Fact by its `FactId`. Used to resolve a proof's `via_facts` (or
+    /// a `DerivationOrigin::FromFact`) back to the firing fact — in particular its
+    /// [`Fact::provenance`], so a binding query's answer can be returned WITH the
+    /// citing edge's source. Facts are bucketed by clause index, so this scans the
+    /// (small) fact store; callers needing it in a hot loop should cache.
+    pub fn fact(&self, id: FactId) -> Option<&Fact> {
+        self.facts.values().flatten().find(|f| f.id == id)
+    }
+
     /// Insert a Rule, assigning it a fresh `RuleId`.
     pub fn add_rule(&mut self, mut rule: Rule) -> RuleId {
         let id = RuleId(self.next_rule_id);
