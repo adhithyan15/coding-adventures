@@ -14,6 +14,9 @@ All notable changes to this package will be documented in this file.
   pending function.
 - `RequestTrackerReadinessSummary` for request-loop readiness checks across
   idle tracker state, callback/response waits, mixed waits, and timeout queues.
+- `RequestTrackerDrainSummary` for controller dispatch handoff checks across
+  request-loop readiness, callback/response drains, timeout drains, and pending
+  function drains.
 
 ## [0.1.0] - 2026-05-06
 
