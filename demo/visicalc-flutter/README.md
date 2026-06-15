@@ -89,6 +89,21 @@ Volatile per-platform caches (`android/.gradle/`, `ios/Pods/`,
 `xcuserdata/`, etc.) are gitignored — `flutter build` regenerates
 them on first run.
 
+## Infinite virtualized sheet
+
+`SpreadsheetSession` (`lib/engine.dart`) also binds the engine's **viewport
+primitive** over dart:ffi — `window(r0,c0,r1,c1)` (a dense `List<List<String>>`
+rectangle), `usedRange()`, `columnLetters()`, `currentRevision()`, and
+`changedSince()` — so a windowed Flutter grid can render only the visible
+rectangle of an unbounded sheet (the Flutter sibling of the web/SwiftUI/Qt
+infinite views).
+
+Headless proof: `test/window_test.dart` seeds far-flung sparse cells and asserts
+the window is engine-computed + dense (A1=15, E1=38, E5=169), a formula 1000
+rows down (`Z1000` = 39) is reachable, the gaps are empty (sparse), column
+letters run AA/BA, and editing `A1` dirties the far dependent `Z1000` via
+`changedSince`. Run with `flutter test test/window_test.dart`.
+
 ## Where this fits in the cross-backend demo plan
 
 | Backend | Engine | Status |
