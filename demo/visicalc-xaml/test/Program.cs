@@ -50,6 +50,43 @@ Contains("A1 div-by-0", model.ValueJson("A1"), "#DIV/0!");
 model.SetCell(0, 2, "=A1+1");              // B1
 Contains("B1 propagated", model.ValueJson("B1"), "#DIV/0!");
 Check("B1 display", model.ViewportRows()[0][2], "#DIV/0!");
+model.Dispose();
+
+// ── Viewport primitive (virtualized infinite sheet) ──────────────
+// A fresh session seeded with the cross-foot budget + a far-flung formula at
+// Z1000 (row 1000, col 26), to exercise the windowed reads.
+using (var s = new SpreadsheetSession())
+{
+    foreach (var (a, v) in new[]
+    {
+        ("A1", "15"), ("B1", "3"), ("C1", "12"), ("D1", "8"), ("E1", "=SUM(A1:D1)"),
+        ("A2", "8"), ("B2", "14"), ("C2", "7"), ("D2", "22"), ("E2", "=SUM(A2:D2)"),
+        ("A3", "12"), ("B3", "9"), ("C3", "18"), ("D3", "6"), ("E3", "=SUM(A3:D3)"),
+        ("A4", "4"), ("B4", "11"), ("C4", "3"), ("D4", "17"), ("E4", "=SUM(A4:D4)"),
+        ("A5", "=SUM(A1:A4)"), ("E5", "=SUM(E1:E4)"), ("Z1000", "=SUM(A1:A4)"),
+    }) s.SetCell(a, v);
+
+    var w = s.Window(1, 1, 5, 5);
+    Check("window A1", w[0][0], "15");
+    Check("window E1", w[0][4], "38");
+    Check("window E5", w[4][4], "169");
+    Check("window Z1000", s.Window(998, 24, 1002, 28)[2][2], "39");
+    Check("window gap empty", s.Window(100, 1, 110, 10)[5][5], "");
+
+    var u = s.UsedRange()!.Value;
+    Check("usedRange maxRow", u.maxRow.ToString(), "1000");
+    Check("usedRange maxCol", u.maxCol.ToString(), "26");
+    Check("columnLetters 27", s.ColumnLetters(27), "AA");
+    Check("columnLetters 53", s.ColumnLetters(53), "BA");
+
+    ulong rev = s.CurrentRevision();
+    s.SetCell("A1", "115");
+    var (changed, stale) = s.ChangedSince(rev);
+    Check("changedSince not stale", stale.ToString(), "False");
+    Contains("changedSince has A1", string.Join(",", changed), "A1");
+    Contains("changedSince reaches Z1000", string.Join(",", changed), "Z1000");
+    Check("window Z1000 after edit", s.Window(1000, 26, 1000, 26)[0][0], "139");
+}
 
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;
