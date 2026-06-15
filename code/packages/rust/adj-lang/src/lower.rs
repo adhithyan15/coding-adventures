@@ -19,12 +19,16 @@
 //! - `source` may appear at most once per statement; multiple
 //!   `source` annotations are a [`LowerError::DuplicateAnnotation`].
 
-use logic_core::{atom as core_atom, compound, float as core_float, Term as CoreTerm};
+use logic_core::{
+    atom as core_atom, compound, float as core_float, var as core_var, LogicVar, Term as CoreTerm,
+};
 use logic_engine::{
     compute, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
     JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
     Provenance, TrustTier, UncertaintyMarker,
 };
+
+use std::collections::HashMap;
 
 use crate::ast::{
     AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, OptDir, Program,
@@ -246,8 +250,20 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             Statement::Observe { term } => {
                 kb.add_fact(Fact::certain(lower_term(term)));
             }
+            Statement::Relate { edge, annotations } => {
+                // A ground relational edge → a Certain Fact carrying its citation
+                // as provenance, so a binding query's answer can name the edge
+                // (and its source) as its proof. The edge term's functor is the
+                // relation; its arguments are the entities.
+                let prov = annotations_to_provenance(annotations)?;
+                kb.add_fact(Fact::certain(lower_term(edge)).with_provenance(prov));
+            }
             Statement::Query { conclusion } => {
-                queries.push(lower_term(conclusion));
+                // Lower with a per-query variable scope so repeated `$Var`s in one
+                // goal share identity (Prolog clause-scope semantics). A ground
+                // hypothesis query lowers identically to before (no variables).
+                let mut vars = HashMap::new();
+                queries.push(lower_term_scoped(conclusion, &mut vars));
             }
             Statement::Let { name, expr } => {
                 // Evaluate the formula against the facts (and any earlier
@@ -546,6 +562,10 @@ fn term_functor_value(t: &AstTerm) -> (&str, Option<&str>) {
             (functor.as_str(), value)
         }
         AstTerm::Num(_) => ("", None),
+        // A variable has no functor name; it never reaches vocabulary
+        // enforcement (relate edges and queries with variables are not checked
+        // against the finding/hypothesis dictionary).
+        AstTerm::Var(_) => ("", None),
     }
 }
 
@@ -564,9 +584,37 @@ fn lower_term(t: &AstTerm) -> CoreTerm {
     match t {
         AstTerm::Atom(name) => core_atom(name),
         AstTerm::Num(x) => core_float(*x),
+        // A bare `Var` outside a query goal (e.g. inside a `relate` ground edge)
+        // is unusual — ground edges have no variables — but lower it to a fresh
+        // logic variable rather than panicking, so the engine treats it as an
+        // unbound (anonymous) position.
+        AstTerm::Var(name) => CoreTerm::Var(core_var(name)),
         AstTerm::Compound { functor, args } => {
             compound(functor, args.iter().map(lower_term).collect())
         }
+    }
+}
+
+/// Lower a term that may contain logic variables, mapping equal variable *names*
+/// to the SAME [`LogicVar`] within one scope (a single query goal). This makes a
+/// repeated variable — `same($A, $A)` — unify consistently, the way Prolog
+/// variables behave within a clause. Used for query goals; `relate` edges and
+/// belief clauses use the var-free [`lower_term`].
+fn lower_term_scoped(t: &AstTerm, vars: &mut HashMap<String, LogicVar>) -> CoreTerm {
+    match t {
+        AstTerm::Atom(name) => core_atom(name),
+        AstTerm::Num(x) => core_float(*x),
+        AstTerm::Var(name) => {
+            let lv = vars
+                .entry(name.clone())
+                .or_insert_with(|| core_var(name))
+                .clone();
+            CoreTerm::Var(lv)
+        }
+        AstTerm::Compound { functor, args } => compound(
+            functor,
+            args.iter().map(|a| lower_term_scoped(a, vars)).collect(),
+        ),
     }
 }
 
@@ -674,7 +722,134 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
 mod tests {
     use super::*;
     use crate::compile;
-    use logic_engine::{search, SearchMode, SearchResult};
+    use logic_engine::{enumerate_all, search, SearchMode, SearchResult};
+
+    // ---- REL-2: relational recall (relate edges + binding queries) ----
+
+    /// Pull the single logic variable out of a lowered query goal, so a test can
+    /// read its binding from a proof's substitution.
+    fn query_var(q: &CoreTerm) -> LogicVar {
+        match q {
+            CoreTerm::Compound { args, .. } => args
+                .iter()
+                .find_map(|a| match a {
+                    CoreTerm::Var(v) => Some(v.clone()),
+                    _ => None,
+                })
+                .expect("query goal has a variable"),
+            _ => panic!("expected a compound query goal"),
+        }
+    }
+
+    #[test]
+    fn relate_edge_lowers_to_a_provenanced_fact() {
+        let src = r#"
+            relate deficient_in(tay_sachs, hexosaminidase_a)
+                source "Tay-Sachs results from deficient hexosaminidase A."
+                trust authoritative
+        "#;
+        let lowered = compile(src).unwrap();
+        // The edge became a Fact carrying its citation as provenance.
+        let dag = enumerate_all(
+            &compound(
+                "deficient_in",
+                vec![core_atom("tay_sachs"), core_atom("hexosaminidase_a")],
+            ),
+            &lowered.kb,
+        );
+        assert_eq!(dag.proofs.len(), 1, "the ground edge is a fact in the KB");
+    }
+
+    #[test]
+    fn forward_recall_binds_the_enzyme_with_a_proof() {
+        // "Which enzyme is deficient in Tay-Sachs?" — the single-hop binding query.
+        let src = r#"
+            relate deficient_in(tay_sachs, hexosaminidase_a) trust authoritative
+            relate deficient_in(gaucher, glucocerebrosidase) trust authoritative
+            ? deficient_in(tay_sachs, $Enzyme)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(
+            dag.proofs.len(),
+            1,
+            "exactly one enzyme is deficient in Tay-Sachs"
+        );
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            core_atom("hexosaminidase_a")
+        );
+    }
+
+    #[test]
+    fn reverse_lookup_is_free() {
+        // "Which disease lacks hexosaminidase A?" — variable on the other side.
+        let src = r#"
+            relate deficient_in(tay_sachs, hexosaminidase_a) trust authoritative
+            relate deficient_in(gaucher, glucocerebrosidase) trust authoritative
+            ? deficient_in($Disease, hexosaminidase_a)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1);
+        assert_eq!(dag.proofs[0].bindings.walk_var(&v), core_atom("tay_sachs"));
+    }
+
+    #[test]
+    fn recall_abstains_on_an_ungrounded_disease() {
+        // No grounded edge → no proofs → UNKNOWN (the honest failure mode).
+        let src = r#"
+            relate deficient_in(tay_sachs, hexosaminidase_a) trust authoritative
+            ? deficient_in(niemann_pick, $Enzyme)
+        "#;
+        let lowered = compile(src).unwrap();
+        let dag = enumerate_all(&lowered.queries[0], &lowered.kb);
+        assert!(
+            dag.proofs.is_empty(),
+            "must abstain, not fabricate an enzyme"
+        );
+    }
+
+    #[test]
+    fn entity_and_relation_define_kinds_parse_and_lower() {
+        let src = r#"
+            dictionary biochem {
+                define disease : entity
+                define enzyme : entity
+                define deficient_in : relation from disease to enzyme
+            }
+        "#;
+        let lowered = compile(src).unwrap();
+        let kinds: Vec<&DefineKind> = lowered.dictionary.iter().map(|d| &d.kind).collect();
+        assert!(kinds.iter().any(|k| matches!(k, DefineKind::Entity)));
+        assert!(kinds
+            .iter()
+            .any(|k| matches!(k, DefineKind::Relation { from, to } if from == "disease" && to == "enzyme")));
+    }
+
+    #[test]
+    fn repeated_query_variable_binds_consistently() {
+        // same($A, $A) only matches an edge whose two args agree.
+        let src = r#"
+            relate same(x, x) trust authoritative
+            relate same(x, y) trust authoritative
+            ? same($A, $A)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(
+            dag.proofs.len(),
+            1,
+            "only the (x, x) edge satisfies same($A, $A)"
+        );
+        assert_eq!(dag.proofs[0].bindings.walk_var(&v), core_atom("x"));
+    }
 
     #[test]
     fn lowers_full_acs_rulebook_and_reproduces_adj36_posterior() {

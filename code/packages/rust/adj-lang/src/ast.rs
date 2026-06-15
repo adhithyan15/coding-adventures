@@ -23,6 +23,13 @@ pub enum Term {
     /// converts it to `logic_core::Term::Num`. Valued facts are what
     /// predicate-gated contributions read on the CPU.
     Num(f64),
+    /// A logic VARIABLE — the `$Enzyme` surface form (MYCIN-2026 REL-2). Appears
+    /// only as a *compound argument* in a binding query goal
+    /// (`? deficient_in(tay_sachs, $Enzyme)`); the lowerer maps it to a
+    /// `logic_core::Term::Var`, and the engine's unification binds it to whatever
+    /// the matching ground edge holds. The carried name is the bare identifier
+    /// (without the `$`); equal names within one goal lower to the SAME variable.
+    Var(String),
     Compound {
         functor: String,
         args: Vec<Term>,
@@ -120,7 +127,19 @@ pub enum Statement {
     },
     /// `observe <term>` — assert a Certain Fact.
     Observe { term: Term },
-    /// `? <conclusion>` — query the engine for the posterior.
+    /// `relate <rel>(<args>)` — assert a ground RELATIONAL EDGE (MYCIN-2026
+    /// REL-2). The `edge` term's functor is the relation and its arguments are
+    /// the entities (e.g. `deficient_in(tay_sachs, hexosaminidase_a)`). Lowers
+    /// to a `logic_engine::Fact` carrying the annotations as its provenance, so a
+    /// binding query answer can be returned with the citing edge as its proof.
+    Relate {
+        edge: Term,
+        annotations: Vec<Annotation>,
+    },
+    /// `? <conclusion>` — query the engine. With a ground hypothesis term this
+    /// returns the posterior; with a relational goal containing a `$variable`
+    /// (`? deficient_in(tay_sachs, $E)`) it returns the binding(s) — fact recall
+    /// as the single-hop special case of the differential.
     Query { conclusion: Term },
     /// `let <name> = <expr>` — bind a **computed** value (ADJ expansion
     /// step 3). The model writes only the formula; the engine evaluates
@@ -203,7 +222,21 @@ pub struct Define {
 #[derive(Debug, Clone, PartialEq)]
 pub enum DefineKind {
     Hypothesis,
-    Finding { values: Vec<String> },
+    Finding {
+        values: Vec<String>,
+    },
+    /// `<name> : entity` — a NODE kind in the relational knowledge graph
+    /// (MYCIN-2026 REL-2), e.g. `disease`, `enzyme`. Entities are the arguments
+    /// relations connect.
+    Entity,
+    /// `<name> : relation from <domain> to <range>` — a typed EDGE kind, e.g.
+    /// `deficient_in : relation from disease to enzyme`. The domain/range name
+    /// the entity kinds the relation connects (typed-graph documentation; strict
+    /// argument-type enforcement is a later slice).
+    Relation {
+        from: String,
+        to: String,
+    },
 }
 
 /// The direction of an `optimize` (LP) objective.

@@ -108,6 +108,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "interacts_decl" => adapt_interacts(child),
         "uncertain_decl" => adapt_uncertain(child),
         "observe_decl" => adapt_observe(child),
+        "relate_decl" => adapt_relate(child),
         "query_decl" => adapt_query(child),
         "let_decl" => adapt_let(child),
         "symbol_decl" => adapt_symbol(child),
@@ -286,6 +287,14 @@ fn adapt_observe(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     // observe_decl = "observe" term
     let term = expect_term_child(node, "observe_decl")?;
     Ok(Statement::Observe { term })
+}
+
+fn adapt_relate(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // relate_decl = "relate" term { annotation }
+    // The edge is the single direct `term` child (its functor is the relation).
+    let edge = expect_term_child(node, "relate_decl")?;
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Relate { edge, annotations })
 }
 
 fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -486,36 +495,66 @@ fn adapt_define(node: &GrammarASTNode) -> Result<Define, AdapterError> {
 }
 
 fn adapt_define_kind(node: &GrammarASTNode) -> Result<DefineKind, AdapterError> {
-    // define_kind = "hypothesis" | "finding" [ "values" LBRACK IDENT {COMMA IDENT} RBRACK ]
-    // hypothesis/finding/values are IDENT-matched literals; the value names are
-    // the remaining Name tokens (brackets/commas are their own token kinds).
-    let mut is_hypothesis = false;
-    let mut is_finding = false;
-    let mut values = Vec::new();
-    for c in &node.children {
-        if let ASTNodeOrToken::Token(t) = c {
-            if t.type_ == TokenType::Name {
-                match t.value.as_str() {
-                    "hypothesis" => is_hypothesis = true,
-                    "finding" => is_finding = true,
-                    // `values` and the brackets/comma are structural; the lexer
-                    // types unknown punctuation (`[`/`]`) as a Name fallback, so
-                    // exclude them by value. The remainder are the value names.
-                    "values" | "[" | "]" | "," => {}
-                    v => values.push(v.to_string()),
-                }
-            }
-        }
-    }
-    if is_hypothesis {
-        Ok(DefineKind::Hypothesis)
-    } else if is_finding {
-        Ok(DefineKind::Finding { values })
-    } else {
-        Err(AdapterError::MissingChild {
-            rule: "define_kind".into(),
-            position: "`hypothesis` or `finding`",
+    // define_kind = "hypothesis"
+    //             | "finding" [ "values" LBRACK IDENT {COMMA IDENT} RBRACK ]
+    //             | "entity"
+    //             | "relation" "from" IDENT "to" IDENT
+    // hypothesis/finding/values/entity/relation are IDENT-matched literals, so
+    // they surface as Name tokens; `from`/`to` are lexer keywords (Keyword
+    // tokens), so they do NOT appear in this Name list. The first Name selects
+    // the kind; the rest are the value names (finding) or domain/range (relation).
+    let names: Vec<&str> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.as_str()),
+            _ => None,
         })
+        .collect();
+    match names.first().copied() {
+        Some("hypothesis") => Ok(DefineKind::Hypothesis),
+        Some("entity") => Ok(DefineKind::Entity),
+        Some("relation") => {
+            // "relation" "from" IDENT "to" IDENT. The `from`/`to` structural words
+            // surface as Name tokens too, so exclude them by value; the two
+            // remaining names are the domain and range entity kinds.
+            let entities: Vec<&str> = names
+                .iter()
+                .skip(1)
+                .filter(|v| !matches!(**v, "from" | "to"))
+                .copied()
+                .collect();
+            let from = entities
+                .first()
+                .ok_or(AdapterError::MissingChild {
+                    rule: "define_kind".into(),
+                    position: "relation domain (from)",
+                })?
+                .to_string();
+            let to = entities
+                .get(1)
+                .ok_or(AdapterError::MissingChild {
+                    rule: "define_kind".into(),
+                    position: "relation range (to)",
+                })?
+                .to_string();
+            Ok(DefineKind::Relation { from, to })
+        }
+        Some("finding") => {
+            // The remaining Name tokens are the value names. `values` and the
+            // brackets/comma are structural; exclude them by value.
+            let values = names
+                .iter()
+                .skip(1)
+                .filter(|v| !matches!(**v, "values" | "[" | "]" | ","))
+                .map(|v| v.to_string())
+                .collect();
+            Ok(DefineKind::Finding { values })
+        }
+        _ => Err(AdapterError::MissingChild {
+            rule: "define_kind".into(),
+            position: "`hypothesis` / `finding` / `entity` / `relation`",
+        }),
     }
 }
 
@@ -755,6 +794,14 @@ fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
             ASTNodeOrToken::Node(n) if n.rule_name == "term" => args.push(adapt_term(n)?),
             ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
                 args.push(Term::Num(parse_finite(&t.value, t.type_, "term")?));
+            }
+            // A `$Enzyme` VAR surfaces as a Name token whose value begins with
+            // `$` (unknown token names fall back to TokenType::Name). The functor
+            // IDENT never starts with `$`, so it is skipped by this guard and
+            // picked up by the functor `find_map` above. Strip the sigil — the
+            // AST carries the bare variable name.
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value.starts_with('$') => {
+                args.push(Term::Var(t.value[1..].to_string()));
             }
             _ => {}
         }

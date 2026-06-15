@@ -164,17 +164,28 @@ pub struct Fact {
     pub id: FactId,
     pub term: Term,
     pub probability: Probability,
+    /// The citation for this fact — **mandatory**: every fact is accountable.
+    /// Ground *relational edges* (the `relate deficient_in(tay_sachs,
+    /// hexosaminidase_a)` surface form) carry a real [`Provenance`] so a binding
+    /// query's answer can be returned WITH a proof — the byte-provenanced source
+    /// that justifies the edge. Ordinary `observe`d facts (whose justification
+    /// lives in the clauses that read them) carry [`Provenance::unattributed`],
+    /// the explicit "no source" value rather than a silent `None`.
+    pub provenance: Provenance,
 }
 
 impl Fact {
     /// Construct a `Certain` Fact. The `id` is set when the Fact is
     /// added to a KnowledgeBase; for construction-time use, a sentinel
     /// id of `FactId(u64::MAX)` is assigned and overwritten on insert.
+    /// Provenance defaults to [`Provenance::unattributed`] — attach a real
+    /// citation with [`Fact::with_provenance`].
     pub fn certain(term: Term) -> Self {
         Self {
             id: FactId(u64::MAX),
             term,
             probability: Probability::Certain,
+            provenance: Provenance::unattributed(),
         }
     }
 
@@ -185,7 +196,16 @@ impl Fact {
             id: FactId(u64::MAX),
             term,
             probability: Probability::Value(p),
+            provenance: Provenance::unattributed(),
         }
+    }
+
+    /// Attach a citation to this fact (builder). Used by the lowerer to carry a
+    /// `relate` edge's `source`/`locator`/`trust` annotations onto the Fact, so
+    /// the edge that answers a binding query can be cited.
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
     }
 }
 

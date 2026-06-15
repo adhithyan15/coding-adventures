@@ -77,6 +77,21 @@ STRING            = /"([^"\\]|\\.)*"/
 NUMBER            = /-?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][+-]?[0-9]+)?/
 
 # ----------------------------------------------------------------
+# Logic VARIABLE — a `$`-prefixed name (MYCIN-2026 REL-2). Used in a
+# binding query goal: `? deficient_in(tay_sachs, $Enzyme)` asks the engine
+# to BIND `$Enzyme` to whatever the grounded edge holds. The `$` sigil is
+# unambiguous against lowercase IDENT atoms and the `?` query lead, and the
+# name allows uppercase (the conventional `$Enzyme`/`$Disease` style).
+#
+# Listed BEFORE IDENT so the maximal-munch order is explicit, though the two
+# never overlap (IDENT cannot start with `$`). An unknown token name maps to
+# TokenType::Name, so to the adapter a VAR surfaces as a Name token whose
+# value begins with `$` — that is how a variable argument is recognised.
+# ----------------------------------------------------------------
+
+VAR               = /\$[A-Za-z_][A-Za-z0-9_]*/
+
+# ----------------------------------------------------------------
 # Identifiers — lowercase, snake_case, optionally with digits.
 #
 # Compound terms like `pmh(hypertension)` parse as IDENT followed by
