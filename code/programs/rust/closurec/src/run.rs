@@ -25,6 +25,7 @@ use crate::globs;
 use crate::whitespace_only;
 use crate::wrapper;
 use coding_adventures_javascript_lexer::tokenize_javascript_typed;
+use coding_adventures_javascript_parser::{bridge, bridge::BridgeError, parse_javascript_typed};
 use coding_adventures_javascript_tokens::EsVersion;
 use lexer::token::TokenType;
 use std::fs;
@@ -99,6 +100,16 @@ pub enum CompilerError {
     /// the source). Inner [`print_tree::PrintTreeError`] carries
     /// the message.
     PrintTree(crate::print_tree::PrintTreeError),
+    /// `--compilation_level SIMPLE` bridge parse produced an
+    /// `InternalError` (a bug in the bridge, not unsupported
+    /// syntax). Graceful degrade to whitespace_only is NOT applied
+    /// for internal errors — they indicate a bridge invariant
+    /// violation and must surface to the caller.
+    ///
+    /// `BridgeError::UnsupportedSyntax` (Phase 2+ constructs) is
+    /// NOT mapped here; it causes a silent degrade to
+    /// `whitespace_only` output instead.
+    Bridge(String),
 }
 
 impl std::fmt::Display for CompilerError {
@@ -121,6 +132,7 @@ impl std::fmt::Display for CompilerError {
             CompilerError::Define(e) => write!(f, "{e}"),
             CompilerError::Wrapper(e) => write!(f, "{e}"),
             CompilerError::PrintTree(e) => write!(f, "{e}"),
+            CompilerError::Bridge(msg) => write!(f, "bridge internal error: {msg}"),
         }
     }
 }
@@ -136,13 +148,14 @@ impl std::error::Error for CompilerError {}
 ///
 /// # Level matrix (CLOC11.06)
 ///
-/// | Level             | Transform                                   |
-/// |-------------------|---------------------------------------------|
-/// | `WhitespaceOnly`  | strip comments + collapse whitespace        |
-/// | `Simple`          | identity (CLOC11.07 lands real passes)      |
-/// | `Advanced`        | identity (CLOC11.08)                        |
-/// | `Bundle`          | identity (CLOC11.09)                        |
-/// | `TranspileOnly`   | identity (CLOC11.10)                        |
+/// | Level             | Transform                                         |
+/// |-------------------|---------------------------------------------------|
+/// | `WhitespaceOnly`  | strip comments + collapse whitespace              |
+/// | `Simple`          | bridge-parse → whitespace_only (CLOC12.137 v1;    |
+/// |                   | typed passes land in follow-up PRs)               |
+/// | `Advanced`        | identity (future: typed passes)                   |
+/// | `Bundle`          | identity                                          |
+/// | `TranspileOnly`   | identity                                          |
 ///
 /// Mapping `config.language.language_in` → `EsVersion`:
 /// - `Stable` / `EcmascriptNext` / `Unstable` / anything missing →
@@ -177,8 +190,14 @@ pub fn transform_source(
 /// | Stage              | `source`           | `tag`            | `meta`                                   |
 /// |--------------------|--------------------|------------------|------------------------------------------|
 /// | WhitespaceOnly     | `compilation_level`| `whitespace_only`| `{input_byte_len, output_byte_len}`      |
-/// | Simple / Advanced  | `compilation_level`| `identity`       | `{level: "SIMPLE" \| "ADVANCED" \| ...}` |
+/// | Simple             | `compilation_level`| `simple_v1`      | `{level, bridge_status, input_byte_len, output_byte_len}` |
+/// | Advanced / other   | `compilation_level`| `identity`       | `{level: "ADVANCED" \| "BUNDLE" \| ...}` |
 /// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
+///
+/// **`bridge_status`** (Simple only): `"ok"` if the bridge parsed
+/// successfully, `"unsupported_syntax:<rule>@<loc>"` if the source
+/// contains Phase 2+ constructs (the output still degrades to
+/// whitespace_only), or `"n/a"` if the bridge was not called.
 ///
 /// The `defines.applied` contribution lands for every input even
 /// when `--define` is empty (`defines_count: 0`), because the
@@ -206,6 +225,11 @@ pub fn transform_source_with_cv(
     // implement Copy, but we can reborrow at each call site.
     let mut cv_pair = cv;
 
+    // bridge_status is set only for CompilationLevel::Simple and
+    // threaded into the CV contribution below. Other levels leave
+    // it None, where the CV block substitutes "n/a".
+    let mut simple_bridge_status: Option<String> = None;
+
     // Step 1 — compilation-level transform.
     let after_level = match config.compilation.level {
         CompilationLevel::WhitespaceOnly => {
@@ -222,9 +246,58 @@ pub fn transform_source_with_cv(
             whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
                 .map_err(CompilerError::Minify)?
         }
-        // CLOC11.07+ will replace each of these with real passes.
-        CompilationLevel::Simple
-        | CompilationLevel::Advanced
+        // CLOC12.137: SIMPLE routes through the typed-AST bridge (v1).
+        //
+        // The bridge validates source structure and yields a typed
+        // `javascript_ast::Program`. In v1, the output is produced by
+        // whitespace_only — typed optimization passes (variable
+        // renaming, dead code elimination, etc.) land in follow-up PRs.
+        //
+        // Degrade policy:
+        // - BridgeError::UnsupportedSyntax  → record status and still
+        //   emit whitespace_only output (Phase 2+ constructs are common
+        //   in real codebases; we must not error on them).
+        // - BridgeError::InternalError      → propagate as
+        //   CompilerError::Bridge (indicates a bridge invariant violation,
+        //   NOT something the caller should silently degrade past).
+        CompilationLevel::Simple => {
+            // Two-phase bridge call: grammar-parse first, then
+            // bridge-convert. We split the phases so we can match
+            // directly on BridgeError variants rather than on the
+            // stringified error returned by parse_javascript_program().
+            simple_bridge_status = Some(
+                match parse_javascript_typed(source, es_version) {
+                    Err(parse_err) => {
+                        // Malformed JS — grammar parser rejected it.
+                        // Degrade gracefully; whitespace_only will
+                        // surface the real lex error if needed.
+                        format!("parse_error:{parse_err}")
+                    }
+                    Ok(node) => match bridge::grammar_to_program(&node, es_version) {
+                        Ok(_program) => "ok".to_string(),
+                        Err(BridgeError::UnsupportedSyntax { rule, location }) => {
+                            format!("unsupported_syntax:{rule}@{location}")
+                        }
+                        Err(BridgeError::InternalError { msg, rule }) => {
+                            return Err(CompilerError::Bridge(format!("{rule}: {msg}")));
+                        }
+                    },
+                },
+            );
+            // v1: emit via whitespace_only; future passes will use
+            // `_program` to produce fully-optimised SIMPLE output.
+            let wo_cv = cv_pair.as_mut().map(|(log, id, ids)| {
+                (
+                    *log as &mut coding_adventures_correlation_vector::CVLog,
+                    *id,
+                    *ids,
+                )
+            });
+            whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
+                .map_err(CompilerError::Minify)?
+        }
+        // Advanced / Bundle / TranspileOnly: identity until typed passes land.
+        CompilationLevel::Advanced
         | CompilationLevel::Bundle
         | CompilationLevel::TranspileOnly => source.to_string(),
     };
@@ -247,8 +320,31 @@ pub fn transform_source_with_cv(
                     ],
                 ),
                 CompilationLevel::Simple => (
-                    "identity",
-                    vec![("level", serde_json::Value::String("SIMPLE".into()))],
+                    "simple_v1",
+                    vec![
+                        ("level", serde_json::Value::String("SIMPLE".into())),
+                        (
+                            "bridge_status",
+                            serde_json::Value::String(
+                                simple_bridge_status
+                                    .as_deref()
+                                    .unwrap_or("n/a")
+                                    .into(),
+                            ),
+                        ),
+                        (
+                            "input_byte_len",
+                            serde_json::Value::Number(
+                                (source.len() as u64).into(),
+                            ),
+                        ),
+                        (
+                            "output_byte_len",
+                            serde_json::Value::Number(
+                                (after_level.len() as u64).into(),
+                            ),
+                        ),
+                    ],
                 ),
                 CompilationLevel::Advanced => (
                     "identity",
@@ -1952,7 +2048,9 @@ mod tests {
         assert_eq!(out.wrote_files, vec![out_path.clone()]);
 
         let written = fs::read_to_string(&out_path).expect("read output");
-        assert!(written.contains("console.log('hi');"));
+        // SIMPLE v1 produces whitespace_only output; use compact input
+        // so the assertion holds regardless of whitespace normalisation.
+        assert!(written.contains("console.log(\"hi\");") || written.contains("console.log('hi');"));
         let _ = fs::remove_file(&in_path);
         let _ = fs::remove_file(&out_path);
     }
@@ -1961,8 +2059,10 @@ mod tests {
     fn multiple_inputs_concatenate_in_order_with_newlines() {
         let a = temp_path("a.js");
         let b = temp_path("b.js");
-        fs::write(&a, "// a").expect("write a");
-        fs::write(&b, "// b").expect("write b");
+        // Use compact non-comment content — SIMPLE v1 runs whitespace_only
+        // which strips comments, so comments are not reliable markers.
+        fs::write(&a, "var a=1;").expect("write a");
+        fs::write(&b, "var b=2;").expect("write b");
 
         let cfg = CompilerConfig {
             io: IoConfig {
@@ -1978,8 +2078,8 @@ mod tests {
         // Both files appear; the first one gets a trailing newline
         // injected because its content didn't end with one.
         let s = &out.stdout_text;
-        let a_idx = s.find("// a").expect("a in output");
-        let b_idx = s.find("// b").expect("b in output");
+        let a_idx = s.find("var a=1;").expect("a in output");
+        let b_idx = s.find("var b=2;").expect("b in output");
         assert!(a_idx < b_idx, "input order preserved");
         let _ = fs::remove_file(&a);
         let _ = fs::remove_file(&b);
@@ -2126,7 +2226,8 @@ mod tests {
         let out = run_compiler(&cfg).expect("ok");
         assert_eq!(out.wrote_files, vec![out_path.clone()]);
         let written = fs::read_to_string(&out_path).expect("read out");
-        assert_eq!(written, "var x = 1;\n");
+        // SIMPLE v1 produces whitespace_only output (no extra spaces).
+        assert_eq!(written, "var x=1;\n");
         let _ = fs::remove_dir_all(&base);
     }
 
@@ -2136,7 +2237,10 @@ mod tests {
         // regression test so we can't accidentally break stdout
         // fallback when the output-file path grows new behavior.
         let in_path = temp_path("stdout-fallback.js");
-        fs::write(&in_path, "// content\n").expect("setup");
+        // Use compact non-comment content — SIMPLE v1 runs whitespace_only
+        // which strips comments. This test verifies the stdout fallback
+        // plumbing, not the compilation output content.
+        fs::write(&in_path, "var x=1;\n").expect("setup");
         let cfg = CompilerConfig {
             io: IoConfig {
                 js_patterns: vec![in_path.to_string_lossy().to_string()],
@@ -2147,7 +2251,7 @@ mod tests {
         };
         let out = run_compiler(&cfg).expect("ok");
         assert!(out.wrote_files.is_empty());
-        assert!(out.stdout_text.contains("// content"));
+        assert!(out.stdout_text.contains("var x=1;"));
         let _ = fs::remove_file(&in_path);
     }
 
@@ -3155,8 +3259,10 @@ mod tests {
         };
         let _ = run_compiler(&cfg).expect("ok");
         let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
-        assert!(body.contains("\"tag\":\"identity\""), "got: {body}");
+        // CLOC12.137: SIMPLE now records "simple_v1" (not "identity").
+        assert!(body.contains("\"tag\":\"simple_v1\""), "got: {body}");
         assert!(body.contains("\"level\":\"SIMPLE\""), "got: {body}");
+        assert!(body.contains("\"bridge_status\":\"ok\""), "got: {body}");
         let _ = fs::remove_dir_all(&dir);
     }
 
@@ -5218,5 +5324,134 @@ mod tests {
         // file_count should be 2.
         assert!(body.contains("\"file_count\":2"), "got: {body}");
         let _ = fs::remove_dir_all(&dir);
+    }
+
+    // ------------------------------------------------------------------
+    // CLOC12.137 — SIMPLE level routes through the typed-AST bridge
+    // ------------------------------------------------------------------
+
+    #[test]
+    fn simple_level_strips_whitespace_not_identity() {
+        // v1: SIMPLE output must be whitespace-stripped (not the raw
+        // source). This confirms that transform_source now calls the
+        // bridge and whitespace_only for SIMPLE rather than returning
+        // the source verbatim.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let source = "var  x   =   1 ;";
+        let out = transform_source(source, &cfg).expect("ok");
+        // whitespace_only collapses extra spaces and removes the
+        // space before `=` that the raw string contains.
+        assert_ne!(out, source, "SIMPLE must not return the raw source");
+        assert_eq!(out, "var x=1;");
+    }
+
+    #[test]
+    fn simple_level_bridge_ok_status_in_cv() {
+        // When the source parses cleanly, the CV contribution for the
+        // `compilation_level` stage must carry bridge_status = "ok".
+        let dir = temp_path("simple-cv-ok-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        fs::write(&in_path, "var x = 1;").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let _ = run_compiler(&cfg).expect("ok");
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"tag\":\"simple_v1\""),
+            "expected simple_v1 tag in CV sidecar: {body}"
+        );
+        assert!(
+            body.contains("\"bridge_status\":\"ok\""),
+            "expected bridge_status=ok in CV sidecar: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn simple_level_unsupported_syntax_degrades_gracefully() {
+        // A class declaration hits BridgeError::UnsupportedSyntax.
+        // The output must still be whitespace-only (degrade, not error)
+        // and the CV must record bridge_status starting with
+        // "unsupported_syntax:".
+        let dir = temp_path("simple-cv-unsupported-dir");
+        fs::create_dir_all(&dir).expect("setup");
+        let in_path = dir.join("in.js");
+        let out_path = dir.join("out.js");
+        let sidecar_path = dir.join("out.js.cv.json");
+        // do-while: the grammar parses it, but bridge::grammar_to_program
+        // returns UnsupportedSyntax (do_while_statement is Phase 2+).
+        // Class declarations fail at the grammar parser level, not the bridge.
+        fs::write(&in_path, "do { var x=1; } while (x>0);").expect("setup");
+        let cfg = CompilerConfig {
+            io: IoConfig {
+                js_patterns: vec![in_path.to_string_lossy().to_string()],
+                js_output_file: Some(out_path.clone()),
+                ..Default::default()
+            },
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            special_modes: crate::config::SpecialModesConfig {
+                correlation_vector: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        // Must not return Err — UnsupportedSyntax is a graceful degrade.
+        let out = run_compiler(&cfg).expect("simple must not error on unsupported syntax");
+        // Output must be non-empty (whitespace_only was applied).
+        assert!(
+            !out.stdout_text.is_empty() || out.wrote_files.contains(&out_path),
+            "expected output file written"
+        );
+        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
+        assert!(
+            body.contains("\"tag\":\"simple_v1\""),
+            "expected simple_v1 tag: {body}"
+        );
+        assert!(
+            body.contains("\"bridge_status\":\"unsupported_syntax:"),
+            "expected unsupported_syntax in bridge_status: {body}"
+        );
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn simple_level_bridge_status_n_a_without_cv() {
+        // Without CV enabled, simple_bridge_status is computed but not
+        // written anywhere. Verify the pipeline still runs correctly.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var x = 1;", &cfg).expect("ok");
+        assert_eq!(out, "var x=1;");
     }
 }

@@ -1,1 +1,1 @@
-// a.js — top-level included
+var a = 1;

@@ -1,2 +1,2 @@
-// © 2026 — café
+var copyright = "© 2026";
 var greeting = "日本語";
