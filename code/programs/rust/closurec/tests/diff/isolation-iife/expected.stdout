@@ -1,2 +1,2 @@
-(function(){var x = 1;
+(function(){var x=1;
 }).call(this);

@@ -1,1 +1,1 @@
-// lone.js — top-level included
+var lone = 1;

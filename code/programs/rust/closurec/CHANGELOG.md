@@ -2,6 +2,53 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.136.0] - 2026-06-14
+
+### Added
+
+- **CLOC12.137 — wire typed-AST bridge into SIMPLE compilation level (v1).**
+  `--compilation_level SIMPLE` now routes through the `javascript-parser`
+  typed-AST bridge instead of identity passthrough.
+
+  *Two-phase bridge call*: `parse_javascript_typed()` returns a
+  `GrammarASTNode`; `bridge::grammar_to_program()` converts it to a typed
+  `Program`. Phase separation is required to preserve `BridgeError` variant
+  matching: `BridgeError::UnsupportedSyntax` causes a silent degrade to
+  `whitespace_only` output (bridge status logged as
+  `"unsupported_syntax:<rule>@<loc>"`), while `BridgeError::InternalError`
+  propagates as the new `CompilerError::Bridge` variant.
+
+  *Bridge status field*: a `simple_bridge_status: Option<String>` tracks the
+  bridge result per compilation and is threaded into the correlation-vector
+  contribution tag `"simple_v1"` (replacing the old `"identity"` tag for
+  SIMPLE). Fields: `level`, `bridge_status`, `input_byte_len`,
+  `output_byte_len`.
+
+  *v1 output*: after bridge validation, the compiled output is still produced
+  by `whitespace_only_minify` on the original source — typed AST optimization
+  passes land in follow-up PRs (CLOC12.138+).
+
+  *New tests*:
+  - `simple_level_strips_whitespace_not_identity` — verifies SIMPLE no longer
+    identity-passes; `"var  x   =   1 ;"` → `"var x=1;"`
+  - `simple_level_bridge_ok_status_in_cv` — CV sidecar has `"tag":"simple_v1"`
+    and `"bridge_status":"ok"` for parseable source
+  - `simple_level_unsupported_syntax_degrades_gracefully` — `do-while`
+    triggers `BridgeError::UnsupportedSyntax`; no error returned, CV shows
+    `"unsupported_syntax:"` prefix
+  - `simple_level_bridge_status_n_a_without_cv` — pipeline runs without CV
+    enabled
+
+  *Fixture updates*: eight integration test fixtures that previously relied on
+  SIMPLE being identity passthrough are updated to match whitespace_only
+  output: `charset-utf8`, `charset-us-ascii`, `define`, `emit-use-strict`,
+  `isolation-iife`, `js-glob`, `js-output-file`, `output-wrapper`. Comment-
+  only fixture inputs are replaced with real JS variables so test assertions
+  remain meaningful after comment stripping.
+
+  Bumped `javascript-parser` dependency (now provides `parse_javascript_typed`,
+  `bridge`, and `bridge::BridgeError`).
+
 ## [0.135.0] - 2026-06-14
 
 ### Changed

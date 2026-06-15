@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closurec"
-version = "0.135.0"
+version = "0.136.0"
 edition = "2021"
 description = "closurec — CLI driver for the Closure Compiler clone. Mirrors the upstream Java Closure Compiler's command-line flag surface (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility. Per CLOC08."
 
@@ -16,6 +16,7 @@ cli-builder = { path = "../../../packages/rust/cli-builder" }
 coding-adventures-javascript-tokens = { path = "../../../packages/rust/javascript-tokens" }
 coding-adventures-javascript-lexer = { path = "../../../packages/rust/javascript-lexer" }
 coding-adventures-javascript-ast = { path = "../../../packages/rust/javascript-ast" }
+coding-adventures-javascript-parser = { path = "../../../packages/rust/javascript-parser" }
 lexer = { path = "../../../packages/rust/lexer" }
 
 # Type checker

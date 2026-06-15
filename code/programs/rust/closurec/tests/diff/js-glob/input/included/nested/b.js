@@ -1,1 +1,1 @@
-// b.js — nested included
+var b = 1;
