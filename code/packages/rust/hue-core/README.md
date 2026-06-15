@@ -101,6 +101,8 @@ packages a typed surface for:
   readiness into final package release archive handoff checks
 - Hue package release archive dispatch summaries that turn archive handoff
   readiness into final package release archive dispatch checks
+- Hue package release archive operator summaries that turn archive dispatch
+  readiness into final operator-facing archive release checks
 
 ## Dependencies
 

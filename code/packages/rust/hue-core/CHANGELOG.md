@@ -61,6 +61,8 @@ All notable changes to this package will be documented in this file.
   readiness into final package release archive handoff checks.
 - Hue package release archive dispatch summaries that turn archive handoff
   readiness into final package release archive dispatch checks.
+- Hue package release archive operator summaries that turn archive dispatch
+  readiness into final operator-facing archive release checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
