@@ -21,6 +21,8 @@
 #ifndef SPREADSHEET_CAPI_H
 #define SPREADSHEET_CAPI_H
 
+#include <stdint.h> /* uint32_t / uint64_t for the viewport calls */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,6 +39,18 @@ char *sc_set_cell(ScSession *s, const char *a1, const char *raw); /* -> {"ok":..
 char *sc_get_value(ScSession *s, const char *a1);                 /* -> value JSON  */
 char *sc_get_raw(ScSession *s, const char *a1);                   /* -> typed source */
 char *sc_get_values(ScSession *s);                                /* -> {a1: value} */
+
+/* Viewport primitive — read just the visible window of the unbounded sheet.
+   Coordinates are 1-based and inclusive. Each char* result must be freed with
+   sc_string_free(). */
+/* -> {"row0":..,"col0":..,"rows":R,"cols":C,"values":[[value,..],..]} | {"error":".."} */
+char *sc_get_window(ScSession *s, uint32_t row0, uint32_t col0,
+                    uint32_t row1, uint32_t col1);
+char *sc_used_range(ScSession *s);              /* -> {"minRow":..,..} | null            */
+char *sc_column_letters(ScSession *s, uint32_t index); /* 1-based index -> "A"/"AA"/...   */
+uint64_t sc_current_revision(ScSession *s);     /* per-edit revision clock (0 if s==NULL) */
+char *sc_changed_since(ScSession *s, uint64_t since);  /* -> {"revision":N,"changed":[..]} |
+                                                            {"revision":N,"stale":true}    */
 
 /* Free a string returned by any sc_* function. */
 void  sc_string_free(char *p);

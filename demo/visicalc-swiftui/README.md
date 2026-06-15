@@ -68,6 +68,21 @@ full width on iOS (vs the 720pt desktop window) so nothing scrolls off the
 narrow screen. (Grid.touch is identical to Grid.desktop, so the grid needs no
 variant.)
 
+## Infinite virtualized sheet
+
+A **"Infinite sheet ›"** toggle (top-right) switches the demo to a virtualized,
+effectively-infinite grid (`InfiniteGridView` + `WindowedSheetModel`), rendered
+on the same engine through its **viewport primitive** — the C ABI's
+`sc_get_window` / `sc_used_range` / `sc_changed_since` (the native sibling of the
+web demo's `infinite.html`). The sheet is u32 × u32 and sparse; a two-axis
+`ScrollView` sized from `used_range` drives the scrollbars, and only the visible
+window of cells is built into the view via `SpreadsheetSession.window(...)`.
+
+Headless proof: `Tests/VisiCalcTests/WindowedModelTests.swift` asserts the
+window is engine-computed and dense, a formula 1000 rows down (`Z1000` = 39) is
+reachable, the gaps are empty (sparse), column letters run AA/BA/BB, and editing
+`A1` dirties the far dependent `Z1000` via `changedSince`. Run with `swift test`.
+
 ## Notes
 
 - The grid and formula bar are now both pipeline-generated (the SwiftUI Grid
