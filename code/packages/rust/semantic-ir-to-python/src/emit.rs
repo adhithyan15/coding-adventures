@@ -835,6 +835,42 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push(')');
         return;
     }
+    // Ruby `&&`/`and` and `||`/`or` lower to `BuiltinCall("and"/"or", [lhs,
+    // rhs])`.  They must **short-circuit** (rhs not evaluated when lhs decides
+    // it) and use SIR truthiness, so they emit the same truthy-guarded
+    // immediately-invoked lambda as `Expr::LogicalAnd`/`LogicalOr` rather than
+    // routing through the eager `call_builtin` dispatch (which would evaluate
+    // both operands and lose Ruby semantics).
+    if name == "and" && args.len() == 2 {
+        out.push_str("(lambda __l: (");
+        emit_expr(out, &args[1], indent);
+        out.push_str(") if _sir_truthy(__l) else __l)(");
+        emit_expr(out, &args[0], indent);
+        out.push(')');
+        return;
+    }
+    if name == "or" && args.len() == 2 {
+        out.push_str("(lambda __l: __l if _sir_truthy(__l) else (");
+        emit_expr(out, &args[1], indent);
+        out.push_str("))(");
+        emit_expr(out, &args[0], indent);
+        out.push(')');
+        return;
+    }
+    // `!`/`not` → SIR-truthiness negation, always a bool (never Python's
+    // operand-returning `not`).  `-x` (unary minus) → numeric negation.
+    if name == "not" && args.len() == 1 {
+        out.push_str("(not _sir_truthy(");
+        emit_expr(out, &args[0], indent);
+        out.push_str("))");
+        return;
+    }
+    if name == "neg" && args.len() == 1 {
+        out.push_str("(-(");
+        emit_expr(out, &args[0], indent);
+        out.push_str("))");
+        return;
+    }
     let helper = match name {
         "+" => "_sir_plus",
         "-" => "_sir_minus",

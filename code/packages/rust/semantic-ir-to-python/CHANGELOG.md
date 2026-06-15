@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.1.12 — boolean/unary operator builtins (audit close-out)
+
+Builtin-coverage audit of what the Ruby frontend actually emits as a
+`BuiltinCall` reaching this backend.  Ruby `&&`/`and`, `||`/`or`, `!`/`not`,
+and unary minus lower to `BuiltinCall("and"/"or"/"not"/"neg", …)` — previously
+they fell through to the eager `call_builtin` dispatch and raised at runtime
+(so any program using a boolean operator emitted crashing code).  Now they
+lower **natively**:
+
+- `and`/`or` → the same truthy-guarded short-circuiting lambda as
+  `Expr::LogicalAnd`/`LogicalOr` (Ruby short-circuit + SIR truthiness; the rhs
+  is not evaluated when the lhs decides the result — eager dispatch could not
+  preserve this).
+- `not` → `(not _sir_truthy(x))` (always a bool); `neg` → `(-(x))`.
+- The remaining builtins the audit found reaching the backend — `range`,
+  `splat`, `double_splat`, `block_pass`, `yield`, `lambda`, `defined?` — are
+  call-ABI / control-flow shaped and tracked as a follow-up tranche; until then
+  they hit core's now-descriptive unknown-builtin error (names the builtin +
+  flags a backend coverage gap) instead of a cryptic failure.
+
+New direct-SIR tests for `and`/`or`/`not`/`neg` native lowering.
+
 ## 0.1.11 — backtick builtin → sir-runtime-shell (gated import)
 
 The Ruby `` `cmd` `` backtick literal lowers to `BuiltinCall("backtick",

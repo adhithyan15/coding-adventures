@@ -2,6 +2,16 @@
 
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
+## [0.1.2] - 2026-06-15
+
+### Changed
+
+- `call_builtin` now raises a descriptive error for an unregistered SIR builtin
+  — it names the builtin, lists the known ones, and explains it indicates a
+  backend coverage gap (the emitter produced a `call_builtin` for something it
+  does not lower natively or via a per-concern runtime package), rather than a
+  bare `unknown builtin: <name>`.
+
 ## [0.1.1] - 2026-06-15
 
 ### Changed

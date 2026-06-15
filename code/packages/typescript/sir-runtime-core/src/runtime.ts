@@ -101,7 +101,18 @@ const builtins: Record<string, (...args: Val[]) => Val> = {
 export function callBuiltin(name: string, args: Val[]): Val {
   const fn = builtins[name];
   if (fn === undefined) {
-    throw new Error(`unknown builtin: ${name}`);
+    // The SIR backends translate most builtins to native code or a dedicated
+    // per-concern runtime package, so this generic dispatch only fires for the
+    // small set core registers. An unregistered name means the backend emitted
+    // a `callBuiltin("<name>", …)` for a builtin it does not yet lower — a
+    // backend coverage gap, not a user error — so name it and point there.
+    const known = Object.keys(builtins).sort().join(", ");
+    throw new Error(
+      `SIR builtin "${name}" is not implemented in sir-runtime-core's dispatch ` +
+        `table (known: ${known}). The backend emitted a callBuiltin for a ` +
+        `builtin it does not lower natively or via a per-concern runtime ` +
+        `package; this is a backend coverage gap.`,
+    );
   }
   return fn(...args);
 }
