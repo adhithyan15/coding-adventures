@@ -48,16 +48,40 @@ const SCHEMA = {
   },
 }
 
-// The organism-id citation frontier (output of `ground_sources.py --list`).
-// The most recent grounding frontier (G3 dose sources). Pass args.sources to override;
-// earlier organism-id epidemiology/morphology/host-factor sources are already in the CAS.
+// The pending-citation frontier — every cited source not yet in the CAS (output of
+// `ground_sources.py --list`), decomposed to clear the ledger's pending column.
 const EMBEDDED = [
-  'https://academic.oup.com/cid/article/39/9/1267/402080',
-  'https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=8351aa37-552d-471d-b293-c564dcb6ec29',
-  'https://pmc.ncbi.nlm.nih.gov/articles/PMC2760093/',
-  'https://www.academia.edu/1171456/Initial_management_of_acute_bacterial_meningitis_in_adults_summary_of_IDSA_guidelines',
-  'https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=7d74dfa6-0468-43ad-ad7f-dd90d9ae7706',
-  'https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=9a105eaf-ee77-4016-beeb-d425a5565db2&type=display',
+  "https://academic.oup.com/cid/article/52/5/e103/388285",
+  "https://www.ncbi.nlm.nih.gov/books/NBK482367/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC5644167/",
+  "https://www.aafp.org/pubs/afp/issues/2011/1001/p771.html",
+  "https://pubmed.ncbi.nlm.nih.gov/15701325/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC10031580/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC2708523/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12217021/",
+  "https://pubmed.ncbi.nlm.nih.gov/6696301/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC5880328/",
+  "https://www.cdc.gov/std/treatment-guidelines/penicillin-allergy.htm",
+  "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687",
+  "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+  "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=65e5f2ee-934c-40d7-967c-00d085f84ffd",
+  "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=f604d399-fded-4f4f-8efe-af558ed07b9d",
+  "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=99e523d8-9bde-43cb-8434-497015e5dcbd",
+  "https://pubmed.ncbi.nlm.nih.gov/15306996/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC8785473/",
+  "https://www.cambridge.org/core/journals/epidemiology-and-infection/article/burden-of-communityonset-bloodstream-infection-a-populationbased-assessment/4C3033D11C42B1D2B68B3580C283DB9A",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC10699684/",
+  "https://pubmed.ncbi.nlm.nih.gov/3284952/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC10350481/",
+  "https://www.ncbi.nlm.nih.gov/books/NBK430891/",
+  "https://academic.oup.com/cid/article/49/1/1/369414",
+  "https://academic.oup.com/cid/article/72/7/1211/5836974",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12902366/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451395/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC12258469/",
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC3892635/",
+  "https://pubmed.ncbi.nlm.nih.gov/18691485/",
+  "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC1584240/fullTextXML",
 ]
 const sources = (args && args.sources) || EMBEDDED.map((u) => ({ source_id: u, resolved_url: u }))
 
@@ -65,7 +89,7 @@ const objs = await pipeline(
   sources,
   (s) => agent(
     `Fetch this source and DECOMPOSE it (nothing on blind trust). WebFetch the URL and read it. ` +
-    `Extract the KEY factual claims it makes about bacterial-meningitis ORGANISM EPIDEMIOLOGY (which pathogens, what proportions, in which populations), HOST / RISK FACTORS (age band, immune status, exposures, recent neurosurgery or CSF device, crowding, rash — which host factor RAISES which organism), CSF GRAM-STAIN MORPHOLOGY, and ANTIBIOTIC DOSING for bacterial meningitis (drug, dose, interval, and whether it is the adult vs pediatric / CNS vs general indication). ` +
+    `Extract the KEY factual claims it makes about bacterial-infection diagnosis + antibiotic treatment: ORGANISM EPIDEMIOLOGY (which pathogens, what proportions, in which populations — meningitis, UTI, or bloodstream/bacteremia), HOST / RISK FACTORS (age band, immune status, exposures, device/neurosurgery, crowding, rash, neutropenia, injection drug use — which factor RAISES which organism), GRAM-STAIN / URINALYSIS MORPHOLOGY, ANTIBIOTIC DOSING (drug, dose, interval, adult vs pediatric / CNS vs general indication), CONTRAINDICATIONS + INTERACTIONS (allergy cross-reactivity, pregnancy, nephrotoxicity, QT), and BLOODSTREAM-INFECTION SOURCE→ORGANISM associations (which portal of entry predicts which organism). ` +
     `For EACH claim give a short normalized \`text\` and a VERBATIM \`byte_quote\` copied exactly from the fetched page (never paraphrase or invent — if you cannot fetch the page, return an empty claims array). ` +
     `Also list in \`cites\` any source THIS page attributes a figure to (e.g. "As per Thigpen et al." → "Thigpen et al. NEJM 2011") — that is the recursion frontier. ` +
     `URL: ${s.resolved_url}`,
