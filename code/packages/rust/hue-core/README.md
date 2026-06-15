@@ -111,6 +111,8 @@ packages a typed surface for:
   readiness into final archive publication checks
 - Hue package release archive verification summaries that turn archive
   publication readiness into final archive verification checks
+- Hue package release archive validation summaries that turn archive
+  verification readiness into final archive validation checks
 
 ## Dependencies
 
