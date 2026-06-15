@@ -803,4 +803,43 @@ mod tests {
         // No ensure → no finally clause.
         assert!(!src.contains("finally {"), "got:\n{}", src);
     }
+
+    // ─── SIR cons pairs now ship in the dedicated package (Q8) ──────────────
+
+    #[test]
+    fn pairs_emit_from_dedicated_package_ts() {
+        // `car(cons(1, 2))` as a direct-SIR value, manifest declaring Pairs.
+        let car_of_cons = Expr::BuiltinCall {
+            name: "car".into(),
+            args: vec![Expr::BuiltinCall {
+                name: "cons".into(),
+                args: vec![
+                    Expr::IntLit { value: 1, span: s() },
+                    Expr::IntLit { value: 2, span: s() },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let m = module_with_main_body(vec![], car_of_cons, &[Feature::Pairs]);
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        assert!(
+            src.contains(r#"import * as __SirPairs from "@coding-adventures/sir-runtime-pairs";"#),
+            "got:\n{}",
+            src
+        );
+        assert!(src.contains("__SirPairs.car(__SirPairs.cons(1, 2))"), "got:\n{}", src);
+        // No longer routed through the core namespace.
+        assert!(!src.contains("__Sir.cons("), "got:\n{}", src);
+    }
+
+    #[test]
+    fn non_pairs_module_omits_pairs_import_ts() {
+        let module = twig_to_semantic_ir::compile_source("(print (+ 1 2))", "demo").expect("lower");
+        let a = compile(&module).expect("compile");
+        assert!(!a.source.contains("sir-runtime-pairs"), "got:\n{}", a.source);
+    }
 }

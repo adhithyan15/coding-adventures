@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.9 — pairs extracted to sir-runtime-pairs (gated import)
+
+Cons pairs (`cons`/`car`/`cdr`/`pair?`) now ship in the dedicated
+`coding-adventures-sir-runtime-pairs` package (core re-exports them for
+back-compat), per `code/specs/sir-runtime.md` (per-concern runtime modules).
+
+- New gated `RUNTIME_PAIRS` import header (`from
+  coding_adventures_sir_runtime_pairs import cons as _sir_cons, …`), appended
+  **only** when a module uses the `Pairs` feature (`uses_pairs`). The
+  `cons`/`car`/`cdr`/`is_pair` aliases are removed from the always-on core
+  import header, so pure non-pair modules no longer depend on the pairs package.
+- The emitter's `_sir_cons`/`_sir_car`/`_sir_cdr`/`_sir_is_pair` call names are
+  unchanged — only the *source* of the aliases moved — so `emit.rs` is
+  behaviour-preserving aside from the new gated import.
+- New direct-SIR tests assert the gated import + `_sir_car(_sir_cons(1, 2))` and
+  that a non-pair module omits the import. Cross-package display wiring (core
+  injects `to_display` into the pairs package) is covered by the core package's
+  own pytest list-display tests and an exec-proof on CPython.
+
 ## 0.1.8 — SIR17 exceptions (native try/except + sir-runtime-exceptions)
 
 Accepts and emits the SIR17 `Exceptions` feature, per

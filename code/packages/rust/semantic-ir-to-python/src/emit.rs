@@ -37,6 +37,13 @@ fn uses_exceptions(m: &Module) -> bool {
     m.manifest.contains(Feature::Exceptions)
 }
 
+/// True if the module uses cons pairs, in which case the emitted artifact
+/// imports `coding-adventures-sir-runtime-pairs` (the `cons`/`car`/`cdr`/
+/// `pair?` helpers, extracted from core).
+fn uses_pairs(m: &Module) -> bool {
+    m.manifest.contains(Feature::Pairs)
+}
+
 /// Emit a SIR module as Python 3 source.  Caller is responsible
 /// for prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
@@ -61,6 +68,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only throwing/rescuing modules import the exception runtime.
     if uses_exceptions(m) {
         out.push_str(crate::runtime::RUNTIME_EXC);
+    }
+    // Only pair-using modules import the pairs runtime.
+    if uses_pairs(m) {
+        out.push_str(crate::runtime::RUNTIME_PAIRS);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {

@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.8 — pairs extracted to sir-runtime-pairs (gated import)
+
+Cons pairs (`cons`/`car`/`cdr`/`pair?`) now ship in the dedicated
+`@coding-adventures/sir-runtime-pairs` package (core re-exports them for
+back-compat), per `code/specs/sir-runtime.md` (per-concern runtime modules).
+
+- New gated `RUNTIME_PAIRS` import header (`import * as __SirPairs from
+  "@coding-adventures/sir-runtime-pairs"`), emitted **only** when a module uses
+  the `Pairs` feature (`uses_pairs`). Pure non-pair modules no longer import the
+  pairs helpers at all (they previously rode along in the always-on core header).
+- `emit_builtin_call` now routes `cons`/`car`/`cdr` → `__SirPairs.cons/car/cdr`
+  and `pair?` → `__SirPairs.isPair`; `null?` stays `__Sir.isNull` (a nil test,
+  not a pair op).
+- New direct-SIR tests assert the gated import + `__SirPairs.*` call sites and
+  that a non-pair module omits the import. Cross-package display wiring (core
+  injects `toDisplay` into the pairs package) is covered by the core package's
+  own vitest list-display tests.
+
 ## 0.1.7 — SIR17 exceptions (native try/catch + sir-runtime-exceptions)
 
 Accepts and emits the SIR17 `Exceptions` feature, per

@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/sir-runtime-core",
-  "version": "0.1.2",
-  "description": "Core runtime for Semantic-IR-emitted TypeScript/JavaScript — SIR truthiness, symbols, pairs, equality, display, arithmetic, closures, globals",
+  "name": "@coding-adventures/sir-runtime-pairs",
+  "version": "0.1.0",
+  "description": "Cons-pair runtime for Semantic-IR-emitted TypeScript/JavaScript — the SIR Pair value type with cons/car/cdr and an injectable Lisp-list display hook",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -13,15 +13,14 @@
     "sir",
     "semantic-ir",
     "runtime",
+    "pairs",
+    "cons",
     "compiler",
     "cross-language",
     "education"
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
-  "dependencies": {
-    "@coding-adventures/sir-runtime-pairs": "file:../sir-runtime-pairs"
-  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^4.1.0",

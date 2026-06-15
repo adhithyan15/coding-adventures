@@ -33,3 +33,11 @@ export {
   callBuiltin,
   builtinClosure,
 } from "./runtime.js";
+
+// Inject core's richer `toDisplay` into the (dependency-free) pairs package so
+// a `Pair` renders as a Lisp list (`(1 2 3)`, `#t`/`nil`/symbols) rather than
+// via plain `String`. Runs once when this module is first evaluated; emitted
+// code imports core, so the hook is wired before any pair is displayed.
+import { setDisplay as _setPairsDisplay } from "./pairs.js";
+import { toDisplay as _toDisplayHook } from "./values.js";
+_setPairsDisplay(_toDisplayHook);

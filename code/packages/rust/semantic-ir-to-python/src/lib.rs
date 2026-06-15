@@ -913,4 +913,42 @@ mod tests {
         assert!(src.contains("raise\n"), "got:\n{}", src);
         assert!(!src.contains("finally:"), "got:\n{}", src);
     }
+
+    // ─── SIR cons pairs now ship in the dedicated package (Q8) ──────────────
+
+    #[test]
+    fn pairs_emit_from_dedicated_package_py() {
+        // `car(cons(1, 2))` as a direct-SIR value, manifest declaring Pairs.
+        let car_of_cons = Expr::BuiltinCall {
+            name: "car".into(),
+            args: vec![Expr::BuiltinCall {
+                name: "cons".into(),
+                args: vec![
+                    Expr::IntLit { value: 1, span: s() },
+                    Expr::IntLit { value: 2, span: s() },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            }],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let m = module_with_main_body(vec![], car_of_cons, &[Feature::Pairs]);
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        assert!(
+            src.contains("from coding_adventures_sir_runtime_pairs import"),
+            "got:\n{}",
+            src
+        );
+        assert!(src.contains("cons as _sir_cons"), "got:\n{}", src);
+        assert!(src.contains("_sir_car(_sir_cons(1, 2))"), "got:\n{}", src);
+    }
+
+    #[test]
+    fn non_pairs_module_omits_pairs_import_py() {
+        let module = twig_to_semantic_ir::compile_source("(print (+ 1 2))", "demo").expect("lower");
+        let a = compile(&module).expect("compile");
+        assert!(!a.source.contains("sir_runtime_pairs"), "got:\n{}", a.source);
+    }
 }

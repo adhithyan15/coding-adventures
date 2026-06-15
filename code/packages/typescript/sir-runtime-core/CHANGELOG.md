@@ -2,6 +2,21 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.1.2] - 2026-06-15
+
+### Changed
+
+- The cons-pair value type (`Pair` / `cons` / `car` / `cdr` / `isPair`) has been
+  **extracted** into the dedicated `@coding-adventures/sir-runtime-pairs`
+  package. `./pairs` is now a thin re-export shim, so every existing import and
+  the builtin dispatch table keep working unchanged, and a pair built via core
+  is the *same* class as one built via the dedicated package.
+- Core now **depends on** `@coding-adventures/sir-runtime-pairs` (a local
+  `file:` dependency) and, when first evaluated, injects its richer `toDisplay`
+  into the (dependency-free) pairs package's display hook (`setDisplay`) so a
+  `Pair` still renders as a Lisp list (`(1 2 3)`, `(1 . 2)`). This keeps the
+  package dependency graph acyclic.
+
 ## [0.1.1] - 2026-06-13
 
 ### Changed
