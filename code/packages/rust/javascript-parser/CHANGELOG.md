@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-14
+
+### Added
+- New dependency on `coding-adventures-javascript-ast` for the typed ESTree AST.
+- `pub mod bridge` — `GrammarASTNode → javascript_ast::Program` bridge module (CLOC12.136). Converts the generic grammar tree produced by `GrammarParser` into the fully typed AST consumed by all downstream optimization passes.
+- `pub fn parse_javascript_program(source, EsVersion) -> Result<Program, String>` — convenience entry point that parses AND bridges in one call.
+- `bridge::grammar_to_program(&GrammarASTNode, EsVersion) -> Result<Program, BridgeError>` — the core converter.
+- `bridge::BridgeError` — typed error with two variants:
+  - `UnsupportedSyntax { rule, location }` — Phase 2+ syntax not yet in the typed AST (async, generators, classes, for-in/of, try-catch, destructuring, template literals, optional chaining, `new` expressions, update expressions, sequence expressions, computed property keys, spread elements). Callers should degrade gracefully to WHITESPACE_ONLY / identity output.
+  - `InternalError { msg, rule }` — bug in the bridge (node shape mismatch). Should not occur on valid input.
+
+### Bridge coverage (Phase 1 subset)
+**Statements** (12 variants): `block`, `if/else`, `while`, `for`, `continue`, `break`, `return`, `throw`, `switch`/`case`/`default`, `labeled`, `empty`, `expression_statement`, `variable_statement` (`var`), `lexical_declaration` (`let`/`const`), `function_declaration`.
+
+**Expressions** (15 variants): `Identifier`, `NumericLiteral`, `StringLiteral`, `BooleanLiteral` (true/false), `NullLiteral`, `UndefinedLiteral`, `BigIntLiteral`, `BinaryExpression` (all 21 operators), `LogicalExpression` (`&&`/`||`/`??`), `UnaryExpression` (7 prefix operators), `AssignmentExpression` (13 operators), `ConditionalExpression` (ternary), `CallExpression`, `MemberExpression` (dot and computed), `ArrayExpression`, `ObjectExpression` (init properties, shorthand).
+
+**Grammar routing**: handles the `optional_chain_expression` intermediate rule (the grammar's general suffix-chain node for dot access, bracket access, and call expressions — not just `?.` chains), the `new_expression` pass-through, and binary expression left-fold for precedence chains (`additive`, `multiplicative`, `shift`, etc.).
+
+### Notes
+- v1: all produced nodes carry `cv: None`. Per-node CV threading (source-byte → IR → engine-clause provenance) is CLOC12.137.
+- Standalone assignment expressions (`x = y;`) are not yet parseable by the underlying grammar parser (ordered alternation matches `conditional_expression` first). This is a grammar-level gap, not a bridge limitation.
+- Phase 1 unsupported constructs return `Err(UnsupportedSyntax)` rather than panicking, allowing `closurec` to degrade to identity output for files containing them.
+
+### Tests
+30 tests total (20 bridge + 10 existing parser tests):
+- Literals: `empty_program`, `numeric_literal`, `string_literal`, `boolean_literal_true`, `null_literal`
+- Declarations: `var_declaration`, `let_declaration`, `const_declaration`
+- Expressions: `binary_add`, `logical_and`, `call_expression_roundtrip`
+- Statements: `if_statement_no_else`, `if_statement_with_else`, `while_statement_bridge`, `switch_statement_bridge`
+- Functions: `function_declaration`, `return_with_value`
+- Error paths: `do_while_is_unsupported`
+
 ## [0.5.0] - 2026-05-21
 
 ### Added

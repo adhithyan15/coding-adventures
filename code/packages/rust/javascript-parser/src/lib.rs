@@ -27,6 +27,25 @@ use std::collections::HashMap;
 pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;
 
 mod _grammar;
+pub mod bridge;
+
+/// Parse JavaScript source and return a fully typed [`Program`] AST
+/// (CLOC12.136 bridge).
+///
+/// Returns `Err` for:
+/// - Lexer / parser failures (malformed JavaScript).
+/// - Phase 2+ syntax not yet in the typed AST (async, generators, classes,
+///   for-in/of, try-catch, destructuring, template literals …).  Callers
+///   that handle this gracefully should match on
+///   [`bridge::BridgeError::UnsupportedSyntax`] and fall back to
+///   WHITESPACE_ONLY / identity output.
+pub fn parse_javascript_program(
+    source: &str,
+    version: EsVersion,
+) -> Result<coding_adventures_javascript_ast::Program, String> {
+    let node = parse_javascript_typed(source, version)?;
+    bridge::grammar_to_program(&node, version).map_err(|e| e.to_string())
+}
 
 fn validate_version(version: &str) -> Result<&str, String> {
     if _grammar::SUPPORTED_VERSIONS.contains(&version) {
