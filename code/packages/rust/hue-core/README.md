@@ -105,6 +105,8 @@ packages a typed surface for:
   readiness into final operator-facing archive release checks
 - Hue package release archive supervisor summaries that turn archive operator
   readiness into final supervised archive release checks
+- Hue package release archive completion summaries that turn archive supervisor
+  readiness into final archive completion checks
 
 ## Dependencies
 
