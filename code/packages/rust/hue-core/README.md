@@ -103,6 +103,8 @@ packages a typed surface for:
   readiness into final package release archive dispatch checks
 - Hue package release archive operator summaries that turn archive dispatch
   readiness into final operator-facing archive release checks
+- Hue package release archive supervisor summaries that turn archive operator
+  readiness into final supervised archive release checks
 
 ## Dependencies
 
