@@ -1,0 +1,31 @@
+{
+  "name": "@coding-adventures/sir-runtime-shell",
+  "version": "0.1.0",
+  "description": "Shell runtime for Semantic-IR-emitted TypeScript/JavaScript — the SIR `backtick` builtin runs a command via the system shell and returns its stdout (Ruby `cmd` semantics)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "sir",
+    "semantic-ir",
+    "runtime",
+    "shell",
+    "backtick",
+    "subprocess",
+    "compiler",
+    "cross-language",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}
