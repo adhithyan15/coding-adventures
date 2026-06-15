@@ -11,6 +11,7 @@
 
 #include "SpreadsheetModel.h"
 
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QByteArray>
@@ -32,6 +33,31 @@ QString takeString(char *p) {
     QString s = QString::fromUtf8(p);
     sc_string_free(p);
     return s;
+}
+
+// Map one decoded value object (`{"kind":...}`) to the string a spreadsheet cell
+// should show. Shared by `display` (one cell) and `window` (a whole rectangle).
+QString displayValue(const QJsonObject &obj) {
+    const QString kind = obj.value(QStringLiteral("kind")).toString();
+    if (kind == QLatin1String("empty")) return QString();
+    if (kind == QLatin1String("number")) {
+        const double n = obj.value(QStringLiteral("value")).toDouble();
+        if (n == std::floor(n) && std::abs(n) < 1e15) {
+            return QString::number(static_cast<long long>(n));
+        }
+        return QString::number(n);
+    }
+    if (kind == QLatin1String("text")) {
+        return obj.value(QStringLiteral("value")).toString();
+    }
+    if (kind == QLatin1String("boolean")) {
+        return obj.value(QStringLiteral("value")).toBool() ? QStringLiteral("TRUE")
+                                                           : QStringLiteral("FALSE");
+    }
+    if (kind == QLatin1String("error")) {
+        return obj.value(QStringLiteral("code")).toString(QStringLiteral("#ERR"));
+    }
+    return QString();
 }
 
 } // namespace
@@ -79,30 +105,7 @@ QString SpreadsheetModel::display(const QString &a1) const {
     QJsonParseError err{};
     const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8(), &err);
     if (err.error != QJsonParseError::NoError || !doc.isObject()) return QString();
-    const QJsonObject obj = doc.object();
-
-    const QString kind = obj.value(QStringLiteral("kind")).toString();
-    if (kind == QLatin1String("empty")) return QString();
-    if (kind == QLatin1String("number")) {
-        const double n = obj.value(QStringLiteral("value")).toDouble();
-        // Show integers without a trailing ".0", matching the other demos.
-        if (n == std::floor(n) && std::abs(n) < 1e15) {
-            return QString::number(static_cast<long long>(n));
-        }
-        return QString::number(n);
-    }
-    if (kind == QLatin1String("text")) {
-        return obj.value(QStringLiteral("value")).toString();
-    }
-    if (kind == QLatin1String("boolean")) {
-        return obj.value(QStringLiteral("value")).toBool()
-                   ? QStringLiteral("TRUE")
-                   : QStringLiteral("FALSE");
-    }
-    if (kind == QLatin1String("error")) {
-        return obj.value(QStringLiteral("code")).toString(QStringLiteral("#ERR"));
-    }
-    return QString();
+    return displayValue(doc.object());
 }
 
 QString SpreadsheetModel::valueJson(const QString &a1) const {
@@ -141,6 +144,61 @@ void SpreadsheetModel::select(int row, int col) {
     selectedRow_ = std::max(0, std::min(Rows - 1, row));
     selectedCol_ = std::max(1, std::min(Cols, col));
     emit selectionChanged();
+}
+
+// ── Viewport primitive (virtualized infinite sheet) ──────────────────
+// These mirror the engine's get_window / used_range / changed_since reads so a
+// windowed QML grid can render only the visible rectangle of an unbounded sheet
+// — the Qt sibling of the SwiftUI/web infinite views. 1-based inclusive coords.
+
+QVariantList SpreadsheetModel::window(int row0, int col0, int row1, int col1) const {
+    const QString json = takeString(sc_get_window(
+        session_, static_cast<quint32>(row0), static_cast<quint32>(col0),
+        static_cast<quint32>(row1), static_cast<quint32>(col1)));
+    QVariantList rows;
+    const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
+    if (!doc.isObject()) return rows; // bad/oversized request → empty
+    const QJsonArray values = doc.object().value(QStringLiteral("values")).toArray();
+    for (const QJsonValue &rowVal : values) {
+        QVariantList row;
+        for (const QJsonValue &cell : rowVal.toArray()) {
+            row.append(displayValue(cell.toObject()));
+        }
+        rows.append(QVariant(row));
+    }
+    return rows;
+}
+
+QVariantMap SpreadsheetModel::usedRange() const {
+    const QString json = takeString(sc_used_range(session_));
+    const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
+    QVariantMap out;
+    if (!doc.isObject()) return out; // "null" (empty sheet) → empty map
+    const QJsonObject obj = doc.object();
+    out.insert(QStringLiteral("minRow"), obj.value(QStringLiteral("minRow")).toInt());
+    out.insert(QStringLiteral("minCol"), obj.value(QStringLiteral("minCol")).toInt());
+    out.insert(QStringLiteral("maxRow"), obj.value(QStringLiteral("maxRow")).toInt());
+    out.insert(QStringLiteral("maxCol"), obj.value(QStringLiteral("maxCol")).toInt());
+    return out;
+}
+
+QString SpreadsheetModel::columnLetters(int index) const {
+    return takeString(sc_column_letters(session_, static_cast<quint32>(index)));
+}
+
+quint64 SpreadsheetModel::currentRevision() const {
+    return sc_current_revision(session_);
+}
+
+QStringList SpreadsheetModel::changedSince(quint64 since) const {
+    const QString json = takeString(sc_changed_since(session_, since));
+    QStringList out;
+    const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
+    if (!doc.isObject()) return out;
+    for (const QJsonValue &v : doc.object().value(QStringLiteral("changed")).toArray()) {
+        out.append(v.toString());
+    }
+    return out;
 }
 
 void SpreadsheetModel::setSelected(const QString &raw) {
