@@ -24,7 +24,12 @@ library
     hs-source-dirs:   src
     default-language: Haskell2010
     default-extensions: OverloadedStrings
+    -- -optc-Wno-error=int-conversion: GHC < 9.6 generates libffi adjustor C
+    -- stubs (for `foreign import ccall "wrapper"`) that assign a void* to an
+    -- ffi_arg (unsigned long).  Clang 15+ (macOS CI) promotes -Wint-conversion
+    -- to a hard error, breaking the build; this downgrades it back to a warning.
     ghc-options:      -Wall -Wno-unused-imports -threaded
+                      -optc-Wno-error=int-conversion
     build-depends:
         base       >= 4.7  && < 5
       , bytestring >= 0.10 && < 0.13

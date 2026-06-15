@@ -14,6 +14,13 @@ echo "==> Building conduit-capi (release cdylib)"
 
 LIB_DIR="$CAPI_DIR/../target/release"
 
+# --extra-lib-dirs only affects LINK time.  At RUN time the test binary loads
+# libconduit_capi.{so,dylib} via the OS dynamic loader, so we must also put the
+# directory on LD_LIBRARY_PATH (Linux) and DYLD_LIBRARY_PATH (macOS).  Include
+# the deps/ subdir too, since cargo sometimes resolves the dylib from there.
+export LD_LIBRARY_PATH="$LIB_DIR:$LIB_DIR/deps:${LD_LIBRARY_PATH:-}"
+export DYLD_LIBRARY_PATH="$LIB_DIR:$LIB_DIR/deps:${DYLD_LIBRARY_PATH:-}"
+
 echo "==> Running cabal test"
 cabal test \
   --extra-lib-dirs="$LIB_DIR" \
