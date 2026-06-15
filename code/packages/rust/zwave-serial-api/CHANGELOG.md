@@ -17,6 +17,8 @@ All notable changes to this package will be documented in this file.
 - `RequestTrackerDrainSummary` for controller dispatch handoff checks across
   request-loop readiness, callback/response drains, timeout drains, and pending
   function drains.
+- `RequestTrackerDispatchSummary` for payload-free controller dispatch
+  readiness over request-loop and drain completion checks.
 
 ## [0.1.0] - 2026-05-06
 
