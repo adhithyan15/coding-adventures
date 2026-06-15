@@ -28,6 +28,8 @@ control-plane layer:
   dominant pending-function checks
 - request tracker readiness summaries for idle request-loop, pending wait, and
   timeout-queue drain checks
+- request tracker drain summaries for controller dispatch handoff checks across
+  request-loop, callback, response, timeout, and pending-function drains
 
 It does not yet open a serial port, interview nodes, handle inclusion, or decode
 command-class payload semantics.

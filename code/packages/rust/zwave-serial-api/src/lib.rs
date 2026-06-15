@@ -777,6 +777,93 @@ pub fn summarize_request_tracker_readiness(
     RequestTrackerReadinessSummary::from_tracker(tracker)
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RequestTrackerDrainSummary {
+    pub readiness_summary: RequestTrackerReadinessSummary,
+    pub required_drain_check_count: usize,
+    pub passed_drain_check_count: usize,
+    pub blocked_drain_check_count: usize,
+    pub request_loop_ready: bool,
+    pub callback_drain_complete: bool,
+    pub response_drain_complete: bool,
+    pub timeout_drain_complete: bool,
+    pub pending_function_drain_complete: bool,
+    pub request_drain_ready: bool,
+}
+
+impl RequestTrackerDrainSummary {
+    pub fn from_tracker(tracker: &RequestTracker) -> Self {
+        Self::from_readiness_summary(summarize_request_tracker_readiness(tracker))
+    }
+
+    pub fn from_readiness_summary(readiness_summary: RequestTrackerReadinessSummary) -> Self {
+        let request_loop_ready = readiness_summary.is_request_loop_ready();
+        let callback_drain_complete = !readiness_summary.needs_callback_drain();
+        let response_drain_complete = !readiness_summary.needs_response_drain();
+        let timeout_drain_complete = !readiness_summary.waiting_on_timeout_queue();
+        let pending_function_drain_complete = readiness_summary
+            .request_summary
+            .most_pending_function()
+            .is_none();
+        let checks = [
+            request_loop_ready,
+            callback_drain_complete,
+            response_drain_complete,
+            timeout_drain_complete,
+            pending_function_drain_complete,
+        ];
+        let passed_drain_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_drain_check_count = checks.len();
+        let blocked_drain_check_count = required_drain_check_count - passed_drain_check_count;
+        let request_drain_ready = blocked_drain_check_count == 0;
+
+        Self {
+            readiness_summary,
+            required_drain_check_count,
+            passed_drain_check_count,
+            blocked_drain_check_count,
+            request_loop_ready,
+            callback_drain_complete,
+            response_drain_complete,
+            timeout_drain_complete,
+            pending_function_drain_complete,
+            request_drain_ready,
+        }
+    }
+
+    pub fn is_request_drain_ready(&self) -> bool {
+        self.request_drain_ready
+    }
+
+    pub fn has_blocked_drain_checks(&self) -> bool {
+        self.blocked_drain_check_count > 0
+    }
+
+    pub fn needs_request_loop_readiness(&self) -> bool {
+        !self.request_loop_ready
+    }
+
+    pub fn needs_callback_drain(&self) -> bool {
+        !self.callback_drain_complete
+    }
+
+    pub fn needs_response_drain(&self) -> bool {
+        !self.response_drain_complete
+    }
+
+    pub fn needs_timeout_drain(&self) -> bool {
+        !self.timeout_drain_complete
+    }
+
+    pub fn needs_pending_function_drain(&self) -> bool {
+        !self.pending_function_drain_complete
+    }
+}
+
+pub fn summarize_request_tracker_drain(tracker: &RequestTracker) -> RequestTrackerDrainSummary {
+    RequestTrackerDrainSummary::from_tracker(tracker)
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct RequestTracker {
     pending: BTreeMap<RequestKey, PendingRequest>,
@@ -1576,5 +1663,68 @@ mod tests {
         assert!(readiness.needs_response_drain());
         assert!(readiness.has_mixed_wait_gaps());
         assert!(readiness.waiting_on_timeout_queue());
+    }
+
+    #[test]
+    fn request_tracker_drain_summary_marks_idle_tracker_ready() {
+        let tracker = RequestTracker::new();
+
+        let summary = summarize_request_tracker_drain(&tracker);
+
+        assert_eq!(
+            summary.readiness_summary,
+            summarize_request_tracker_readiness(&tracker)
+        );
+        assert_eq!(summary.required_drain_check_count, 5);
+        assert_eq!(summary.passed_drain_check_count, 5);
+        assert_eq!(summary.blocked_drain_check_count, 0);
+        assert!(summary.request_loop_ready);
+        assert!(summary.callback_drain_complete);
+        assert!(summary.response_drain_complete);
+        assert!(summary.timeout_drain_complete);
+        assert!(summary.pending_function_drain_complete);
+        assert!(summary.request_drain_ready);
+        assert!(summary.is_request_drain_ready());
+        assert!(!summary.has_blocked_drain_checks());
+        assert!(!summary.needs_request_loop_readiness());
+        assert!(!summary.needs_callback_drain());
+        assert!(!summary.needs_response_drain());
+        assert!(!summary.needs_timeout_drain());
+        assert!(!summary.needs_pending_function_drain());
+    }
+
+    #[test]
+    fn request_tracker_drain_summary_routes_pending_waits() {
+        let version = SerialMessage::request(FunctionId::GET_VERSION, Vec::new());
+        let send_data = SendDataRequest::new(
+            NodeId::Classic(2),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x44,
+        )
+        .to_message()
+        .unwrap();
+        let mut tracker = RequestTracker::new();
+        tracker.track(&version, 100, 500).unwrap();
+        tracker.track(&send_data, 120, 200).unwrap();
+
+        let summary = RequestTrackerDrainSummary::from_tracker(&tracker);
+
+        assert_eq!(summary.required_drain_check_count, 5);
+        assert_eq!(summary.passed_drain_check_count, 0);
+        assert_eq!(summary.blocked_drain_check_count, 5);
+        assert!(!summary.request_loop_ready);
+        assert!(!summary.callback_drain_complete);
+        assert!(!summary.response_drain_complete);
+        assert!(!summary.timeout_drain_complete);
+        assert!(!summary.pending_function_drain_complete);
+        assert!(!summary.request_drain_ready);
+        assert!(!summary.is_request_drain_ready());
+        assert!(summary.has_blocked_drain_checks());
+        assert!(summary.needs_request_loop_readiness());
+        assert!(summary.needs_callback_drain());
+        assert!(summary.needs_response_drain());
+        assert!(summary.needs_timeout_drain());
+        assert!(summary.needs_pending_function_drain());
     }
 }
