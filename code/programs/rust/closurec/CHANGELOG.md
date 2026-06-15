@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.135.0] - 2026-06-14
+
+### Changed
+
+- **CLOC12.135 — reconcile gap-044 spec: first slice already resolved, gap-044b introduced.**
+  The spec had a stale OPEN entry for gap-044 (template literal substitutions)
+  even though the F10 declarative lexer mode work already resolved the first
+  slice: simple-identifier substitutions (`${name}`, `${x}`) are correctly
+  lexed and emitted via `TEMPLATE_HEAD`/`TEMPLATE_MIDDLE`/`TEMPLATE_TAIL` mode
+  transitions. Both `minify_template_subst` and `minify_tagged_subst` fixtures
+  pass. No code changes in this release — spec-only reconciliation.
+
+  - gap-044 entry updated to **RESOLVED (first slice)** with a precise
+    description of what works and what the residual limitation is.
+  - New **gap-044b** entry added for the open residual: expressions with
+    operators (`.`, `+`, `(`, …) or nested `{}` inside `${…}` trip the
+    div/default mode reset, losing template context. Root cause is that the
+    F10 mode table has no brace-depth tracking, so `}` inside `${a.b}` reads
+    as a plain RBRACE instead of a `TEMPLATE_TAIL`. The fix requires a mode
+    stack in `GrammarLexer` (push template mode on `${`, pop on matching `}`).
+
 ## [0.134.0] - 2026-06-14
 
 ### Added

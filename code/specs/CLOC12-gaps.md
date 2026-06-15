@@ -328,15 +328,15 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-044 — JavaScript lexer does not support template literal substitution `${...}`
 
-- **Status:** OPEN — newly discovered by CLOC14.9. **Lexer-level gap** (NOT a whitespace_only bug).
-- **Upstream byte-identity test:** `minify_template_subst` and `minify_tagged_subst` seed fixtures.
-- **Why it fails:** Our JavaScript lexer raises `LexerError: Unexpected sequence '` `` ` `` `'` when it encounters the closing backtick of a template like `` `hello ${name}` ``. The lexer currently treats template literals as a single atomic token (`` `…` ``), but substitution templates require multi-segment lexing per §12.8.6:
-  - `TEMPLATE_HEAD` — `` `…${ ``
-  - `TEMPLATE_MIDDLE` — `}…${`
-  - `TEMPLATE_TAIL` — `}…` ``
-  - And the embedded expression is regular tokens between the head and tail/middle.
-- **What it needs:** Extend the JavaScript lexer's template-literal handling to emit the head/middle/tail variants and re-enter expression-tokenisation mode between segments. Once the lexer emits these correctly, the whitespace_only pass needs minimal-or-no changes — the segments are emitted verbatim along with the substitution expression tokens.
-- **Cross-cutting:** Closing this gap also unblocks template-substitution support in other downstream passes (AST emitter, constant folding, etc.). The grammar file (`code/grammars/javascript.grammar`) and `javascript-lexer` crate are the implementation surface.
+- **Status:** **RESOLVED (first slice)** in F10 lexer mode work (merged). Simple-identifier substitutions (`${name}`, `${x}`) lex and emit correctly via the `TEMPLATE_HEAD`/`TEMPLATE_MIDDLE`/`TEMPLATE_TAIL` declarative mode transitions. `minify_template_subst` and `minify_tagged_subst` fixtures both pass. **Residual:** expressions with operators (`.`, `+`, `(`, …) or nested `{}` inside `${…}` trip the div/default mode reset, losing template context and raising a `LexerError`. See gap-044b for the follow-up.
+- **Upstream byte-identity test:** `minify_template_subst` (`\`hello ${name}\``) and `minify_tagged_subst` (`tag\`hi ${name}\``) — both PASS.
+
+### gap-044b — template substitution with non-identifier expressions (`${obj.name}`, `${a+b}`)
+
+- **Status:** OPEN. Discovered as the residual of gap-044 (see CLOC12.135).
+- **Input examples:** `` `${obj.name}` ``, `` `${a + b}` ``, `` `${f()}` ``, `` `${x ? y : z}` ``
+- **Why it fails:** The F10 declarative mode table transitions to `div` mode after a NAME token (to distinguish `/` from regex). When inside `${…}`, a `.` following the NAME causes the mode to reset to default, losing the `template` group override that makes `}` lex as `TEMPLATE_TAIL` rather than a plain `RBRACE`. The lexer then sees the closing backtick as an unexpected character.
+- **What it needs:** Brace-depth tracking across template substitution boundaries. The lexer needs to know it's inside `${…}` at depth 0 so that `}` closes the substitution rather than any nested block `{}`. This requires either (a) a stack of lexer modes in `GrammarLexer` that template-entry/exit pushes and pops, or (b) a separate post-pass that re-stitches TEMPLATE segments after regular tokenisation. Approach (a) is the correct architecture per §12.8.6; it requires `GrammarLexer` to maintain an explicit mode stack rather than a single active mode.
 
 ### gap-045 — single-argument arrow function should drop enclosing parens
 
@@ -964,3 +964,21 @@ historical context with status `RESOLVED` and a link to the fix PR.
     in the gap-045 arrow-paren elision arm (line was immediately overwritten
     by `prev_emitted_tok = Some(kept[idx + 3])`; only a compiler warning,
     no correctness impact).
+
+## CLOC12.135 — close gap-044 (first slice resolved, gap-044b follow-up documented)
+
+- **Status:** RESOLVED in CLOC12.135 (v0.135.0).
+- **What it was missing:** gap-044 was marked OPEN in the spec even though the
+  first slice (simple-identifier substitutions `${name}`, `${x}`) was already
+  resolved by the F10 declarative lexer mode work. Both `minify_template_subst`
+  and `minify_tagged_subst` fixtures pass. The spec had a stale OPEN entry and
+  no documentation of the residual limitation.
+- **Resolution:**
+  - gap-044 entry updated to RESOLVED (first slice).
+  - New gap-044b entry added documenting the open residual: expressions with
+    operators (`.`, `+`, `(`, …) or nested `{}` inside `${…}` trip the
+    div/default mode reset. Root cause: the F10 mode table lacks brace-depth
+    tracking, so `}` inside `${a.b}` reads as a plain RBRACE rather than a
+    `TEMPLATE_TAIL`, raising `LexerError: Unexpected sequence '` `` ` `` `'`.
+  - gap-044b states the correct fix: an explicit mode stack in `GrammarLexer`
+    (push template mode on `${`, pop on matching `}`).
