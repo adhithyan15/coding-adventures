@@ -109,6 +109,8 @@ packages a typed surface for:
   readiness into final archive completion checks
 - Hue package release archive publication summaries that turn archive completion
   readiness into final archive publication checks
+- Hue package release archive verification summaries that turn archive
+  publication readiness into final archive verification checks
 
 ## Dependencies
 
