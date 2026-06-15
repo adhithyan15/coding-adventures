@@ -45,5 +45,7 @@ All notable changes to this package will be documented in this file.
   final route signoff checks.
 - Thread attach route completion summaries that turn route-signoff readiness
   into final route completion checks.
+- Thread attach route publication summaries that turn route-completion readiness
+  into final route publication checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
