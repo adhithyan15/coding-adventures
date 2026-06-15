@@ -73,8 +73,8 @@ rulebook source_id {
         source "Enterococcus in complicated intra-abdominal infection"
         trust empirical   % [authored — pending grounding]
     contributes 12 from infection_source(skin_soft_tissue) to s_aureus
-        source "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451395/"
-        trust consensus
+        source "Skin/soft-tissue source → S. aureus (IDSA SSTI)"
+        trust empirical   % [FLAG: direction_only]
     contributes 6 from infection_source(skin_soft_tissue) to strep_pyogenes
         source "Skin/soft-tissue source → group A strep (IDSA SSTI)"
         trust empirical   % [FLAG: direction_only]
