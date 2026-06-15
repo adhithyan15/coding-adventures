@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/sir-runtime-regex",
+  "version": "0.1.0",
+  "description": "Regex runtime for Semantic-IR-emitted TypeScript/JavaScript — the SIR `regex` builtin with Ruby→JS flag translation and unanchored-search match semantics",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "sir",
+    "semantic-ir",
+    "runtime",
+    "regex",
+    "regexp",
+    "compiler",
+    "cross-language",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

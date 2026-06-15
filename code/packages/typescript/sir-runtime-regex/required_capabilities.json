@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/sir-runtime-regex",
+  "capabilities": [],
+  "justification": "Pure in-process regular-expression compilation using the built-in RegExp engine with Ruby→JavaScript flag translation. No filesystem, network, process, or environment access."
+}

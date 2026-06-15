@@ -53,6 +53,112 @@ fn uses_pairs(m: &Module) -> bool {
     m.manifest.contains(Feature::Pairs)
 }
 
+/// True if the module calls the `regex` builtin (a Ruby `/pat/flags` literal
+/// lowers to `BuiltinCall("regex", …)`).  Regex carries no SIR `Feature`, so we
+/// detect it by walking for the builtin name; a positive result gates the
+/// `@coding-adventures/sir-runtime-regex` import.
+fn uses_regex(m: &Module) -> bool {
+    module_uses_builtin(m, "regex")
+}
+
+/// Walk every function body for a `BuiltinCall` named `name` — gates
+/// per-concern imports for builtins that carry no `Feature` flag.  Exhaustive
+/// over `Stmt`/`Expr` so a new node can't silently hide a use.
+fn module_uses_builtin(m: &Module, name: &str) -> bool {
+    m.functions.iter().any(|f| block_uses_builtin(&f.body, name))
+}
+
+fn block_uses_builtin(b: &Block, name: &str) -> bool {
+    b.stmts.iter().any(|s| stmt_uses_builtin(s, name)) || expr_uses_builtin(&b.value, name)
+}
+
+fn stmts_use_builtin(stmts: &[Stmt], name: &str) -> bool {
+    stmts.iter().any(|s| stmt_uses_builtin(s, name))
+}
+
+fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
+    match s {
+        Stmt::LetBinding { value, .. }
+        | Stmt::LetStarBinding { value, .. }
+        | Stmt::Assign { value, .. } => expr_uses_builtin(value, name),
+        Stmt::ExprStmt { expr, .. } => expr_uses_builtin(expr, name),
+        Stmt::While { cond, body, .. } => {
+            expr_uses_builtin(cond, name) || block_uses_builtin(body, name)
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => {
+            expr_uses_builtin(start, name)
+                || expr_uses_builtin(stop, name)
+                || expr_uses_builtin(step, name)
+                || block_uses_builtin(body, name)
+        }
+        Stmt::ForEach { iter, body, .. } => {
+            expr_uses_builtin(iter, name) || block_uses_builtin(body, name)
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            expr_uses_builtin(seq, name)
+                || expr_uses_builtin(index, name)
+                || expr_uses_builtin(value, name)
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            expr_uses_builtin(map, name)
+                || expr_uses_builtin(key, name)
+                || expr_uses_builtin(value, name)
+        }
+        Stmt::ClassDef { body, .. }
+        | Stmt::ModuleDef { body, .. }
+        | Stmt::SingletonClassDef { body, .. } => stmts_use_builtin(body, name),
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            stmts_use_builtin(body, name)
+                || rescues.iter().any(|r| stmts_use_builtin(&r.body, name))
+                || ensure_body.as_deref().is_some_and(|e| stmts_use_builtin(e, name))
+        }
+    }
+}
+
+fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
+    match e {
+        Expr::BuiltinCall { name: n, args, .. } => {
+            n == name || args.iter().any(|a| expr_uses_builtin(a, name))
+        }
+        Expr::DirectCall { args, .. } => args.iter().any(|a| expr_uses_builtin(a, name)),
+        Expr::IndirectCall { target, args, .. } => {
+            expr_uses_builtin(target, name) || args.iter().any(|a| expr_uses_builtin(a, name))
+        }
+        Expr::If { cond, then_branch, else_branch, .. } => {
+            expr_uses_builtin(cond, name)
+                || block_uses_builtin(then_branch, name)
+                || block_uses_builtin(else_branch, name)
+        }
+        Expr::Block(b) => block_uses_builtin(b, name),
+        Expr::MakeClosure { captures, .. } => {
+            captures.iter().any(|c| expr_uses_builtin(&c.value, name))
+        }
+        Expr::SeqLit { items, .. } => items.iter().any(|i| expr_uses_builtin(i, name)),
+        Expr::SeqIndex { seq, index, .. } => {
+            expr_uses_builtin(seq, name) || expr_uses_builtin(index, name)
+        }
+        Expr::SeqLen { seq, .. } => expr_uses_builtin(seq, name),
+        Expr::MapLit { entries, .. } => entries
+            .iter()
+            .any(|en| expr_uses_builtin(&en.key, name) || expr_uses_builtin(&en.value, name)),
+        Expr::MapGet { map, key, .. } => {
+            expr_uses_builtin(map, name) || expr_uses_builtin(key, name)
+        }
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            expr_uses_builtin(lhs, name) || expr_uses_builtin(rhs, name)
+        }
+        Expr::StrConcat { parts, .. } => parts.iter().any(|p| expr_uses_builtin(p, name)),
+        Expr::Intrinsic { args, .. } => args.iter().any(|a| expr_uses_builtin(a, name)),
+        Expr::IntLit { .. }
+        | Expr::FloatLit { .. }
+        | Expr::BoolLit { .. }
+        | Expr::NilLit { .. }
+        | Expr::SymLit { .. }
+        | Expr::StrLit { .. }
+        | Expr::VarRef { .. } => false,
+    }
+}
+
 thread_local! {
     /// Monotonic counter for synthesised loop temporaries (the
     /// once-evaluated `__stop`/`__step` bounds of a `ForRange`).  Reset
@@ -93,6 +199,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only pair-using modules import the pairs runtime.
     if uses_pairs(m) {
         out.push_str(crate::runtime::RUNTIME_PAIRS);
+    }
+    // Only regex-using modules import the regex runtime.
+    if uses_regex(m) {
+        out.push_str(crate::runtime::RUNTIME_REGEX);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -823,6 +933,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                 emit_expr(out, other, indent);
             }
         }
+        out.push(')');
+        return;
+    }
+    // `regex` (a Ruby `/pat/flags` literal) → compile via the regex runtime.
+    // Args are `[pattern, flags]`; routes to `__SirRegex.compile`, gated by
+    // `uses_regex`.
+    if name == "regex" {
+        out.push_str("__SirRegex.compile(");
+        emit_args(out, args, indent);
         out.push(')');
         return;
     }

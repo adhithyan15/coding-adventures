@@ -41,6 +41,13 @@ pub const RUNTIME_EXC: &str = r##"import * as __SirExc from "@coding-adventures/
 pub const RUNTIME_PAIRS: &str = r##"import * as __SirPairs from "@coding-adventures/sir-runtime-pairs";
 "##;
 
+/// The regex-runtime import, emitted **only** when a module calls the `regex`
+/// builtin (a Ruby `/pat/flags` literal).  Bound as `__SirRegex`; provides a
+/// native `RegExp` compiler with Ruby→JS flag translation.  See
+/// `code/specs/sir-runtime.md`.
+pub const RUNTIME_REGEX: &str = r##"import * as __SirRegex from "@coding-adventures/sir-runtime-regex";
+"##;
+
 #[cfg(test)]
 mod tests {
     use super::*;
