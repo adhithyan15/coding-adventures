@@ -186,7 +186,7 @@
         "refute_attempt": "Strongest refutation: the 30%/49% figures are organism-share within surgical site infections generally (P(S. aureus | SSI)), not effect sizes for the claim's actual direction, which concerns a SKIN/SOFT-TISSUE SOURCE OF BACTEREMIA -> S. aureus. An SSI is not identical to \"the bacteremia portal of entry was skin,\" so the cited numbers do not by themselves quantify source->organism in the bacteremia setting; they could be invoked as a confounded proxy. Additionally, \"most common cause\" / \"30%\" means S. aureus is the modal but minority (30%) organism even within SSIs, so a skin source does not make S. aureus more-likely-than-not in absolute terms. However, the refutation does not overturn the association: the page DOES support both pieces directionally -- S. aureus is the predominant SSTI/SSI pathogen, and SSTIs are explicitly named a primary source/focus of S. aureus bacteremia (\"common primary clinical foci or sources of infection are...SSTIs\"; \"rates of SSTI-associated SAB are highest in communities with large numbers of cutaneous infections\"). The claimed value already honestly flags that these are organism-share, not a formal OR/RR.",
         "final_verdict": "grounded"
       },
-      "spider_status": "grounded"
+      "spider_status": "direction_only"
     },
     {
       "id": "src_skin_pyogenes",

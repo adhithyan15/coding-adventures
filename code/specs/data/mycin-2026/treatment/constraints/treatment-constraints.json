@@ -33,7 +33,7 @@
       "status": "grounded",
       "verdict": "ACCEPT",
       "trust": "authoritative",
-      "byte_quote": "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular abnormalities, urinary tract defects, oral clefts, and club foot. Sulfamethoxazole and trimethoprim should be used during pregnancy only if the potential benefit justifies the potential risk to the fetus.",
+      "byte_quote": "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot.",
       "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
       "source_title": "DailyMed — SULFAMETHOXAZOLE AND TRIMETHOPRIM injection (FDA prescribing information / drug"
     },
@@ -69,10 +69,10 @@
       "status": "grounded",
       "verdict": "ACCEPT",
       "trust": "authoritative",
-      "byte_quote": "Dosage adjustment of Vancomycin Injection must be made in patients with impaired renal function. ... Monitor serum vancomycin concentrations and renal function in all patients receiving Vancomycin Injection. ... In the first 24 hours, about 75% of an administered dose of vancomycin is excreted in urine by glomerular filtration. ... Renal dysfunction slows excretion of vancomycin.",
+      "byte_quote": "The initial dose should be no less than 15 mg/kg in patients with any degree of renal impairment.",
       "url": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=99e523d8-9bde-43cb-8434-497015e5dcbd",
       "source_title": "VANCOMYCIN injection, for intravenous use — FDA Prescribing Information (DailyMed, U.S. Na"
     }
   },
-  "hash": "7bb9a80b58c7ce40"
+  "hash": "cf01db085d4c2b7f"
 }

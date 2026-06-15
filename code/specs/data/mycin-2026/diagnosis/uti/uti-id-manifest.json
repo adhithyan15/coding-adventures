@@ -14,7 +14,7 @@
       "verdict": "ACCEPT",
       "trust": "authoritative",
       "value": 0.1,
-      "byte_quote": "Between 5% and 20% of non-hospitalized patients, the infection will be due to S. saprophyticus. ... In females ages 16 to 25, it causes up to 42% of all infections.",
+      "byte_quote": "In females ages 16 to 25, it causes up to 42% of all infections.",
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482367/"
     },
     "uti_prior_klebsiella": {
@@ -46,7 +46,7 @@
       "verdict": "ACCEPT",
       "trust": "authoritative",
       "value": 0.101,
-      "byte_quote": "Pseudomonas aeruginosa 535 (10.1%)",
+      "byte_quote": "Pseudomonas aeruginosa (10.1% CAUTI; 3.3% non-CAUTI)",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10031580/"
     },
     "uti_prior_gbs": {
@@ -54,7 +54,7 @@
       "verdict": "ACCEPT",
       "trust": "authoritative",
       "value": 0.01,
-      "byte_quote": "Several independent surveys have reported the recovery of GBS from between 1 and 2% of all UTI cases",
+      "byte_quote": "GBS was cultured from 387/34,367 consecutive urine samples (1.1%)",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2708523/"
     },
     "uti_finding_nitrite": {
@@ -70,7 +70,7 @@
       "verdict": "ACCEPT",
       "trust": "consensus",
       "value": 20,
-      "byte_quote": "The cytoplasmic enzyme urease catalyzes the hydrolysis of urea, the nitrogenous waste product of mammals, which is maintained normally at 400 to 500 mM in human urine. Ammonia, generated from the breakdown of urea, results in a dramatic elevation of the pH of urine [...] normally soluble polyvalent anions and cations precipitate at high pH to form struvite (MgNH4PO4\u00b76H2O) and carbonate apatite [Ca10(PO4)6\u00b7CO3]. Indeed, Proteus species have been isolated in 70% of cases of bacteria-induced stone formation.",
+      "byte_quote": "Proteus mirabilis, a Gram-negative rod-shaped bacterium, is well-known for its urease production and distinctive ability to differentiate into elongated swarm cells and characteristic bull's-eye pattern of motility on agar plates.",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5880328/"
     }
   },
