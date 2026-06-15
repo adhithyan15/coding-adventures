@@ -3237,7 +3237,6 @@ pub fn whitespace_only_minify(
                 }
             }
             out.push_str(&ident.value);
-            prev_emitted_tok = Some(ident);
             // Emit `=>` — never needs a separator with an
             // IDENT prefix (`=` is PUNCTUATION).
             out.push_str("=>");

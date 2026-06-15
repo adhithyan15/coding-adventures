@@ -371,20 +371,11 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-049 — flattened single-stmt for-body keeps trailing `;` before `}`
 
-- **Status:** OPEN — newly discovered by CLOC14.13.
-- **Upstream byte-identity test:** `minify_for_await_of` seed fixture (general repro: `function f(){for(var v of a){a;}}`).
-- **Input:** `function f(){for(var v of a){a;}}`
-- **Upstream:** `function f(){for(var v of a)a};`
-- **closurec:** `function f(){for(var v of a)a;};`
-- **Why it fails:** gap-032's single-stmt block-flatten unwraps `{a;}` → `a;`, but the resulting `;` between the for-body's last statement and the outer function-`}` is NOT dropped by Rule A. Rule A drops source `;` before `}`, but this `;` survives. Probable cause: gap-032's flatten happens after Rule A's pass (or in a different pipeline stage), so Rule A doesn't see this position again. Confirmed NOT specific to `for-await-of` — reproduces with plain `for-of`, `for-in`, and likely `if`/`while`/`do` flattened bodies.
-- **What it needs:** Either (1) re-run Rule A after gap-032 flatten, or (2) gap-032 itself peeks the next-after token; if it's `}`, drop the trailing `;` from the flattened content. Approach (2) is more local — the flatten knows exactly what it's emitting and what comes after.
-
-### gap-049 — flattened single-stmt for-body keeps trailing `;` before `}`
-
-- **Status:** **RESOLVED** in CLOC12.56 (PR pending). `minify_for_await_of` flipped IGNORED → PASS. Also tightened `gap032_nested_if_does_not_flatten` expectation (improvement: `if(x){if(y)a()}` instead of `if(x){if(y)a();}` — one byte shorter, still valid JS).
-- **Upstream byte-identity test:** `minify_for_await_of` seed fixture (general repro: `function f(){for(var v of a){a;}}`).
+- **Status:** **RESOLVED** in CLOC12.56 + pinned by `minify_for_body_inner_close` fixture in CLOC12.134.
+- **Upstream byte-identity test:** `minify_for_body_inner_close` (canonical gap-049 repro).
 - **Why it failed:** gap-032's flatten emitted content `(idx+1)..close_idx` verbatim, which always includes the trailing `;`. When the next token after the closing `}` was itself a `}`, that `;` became redundant — Rule A would have dropped a source `;` at that position, but Rule A doesn't re-scan pre-emitted content.
-- **Fix:** In gap-032's eligible branch, peek `kept.get(close_idx + 1)`. If it equals `}`, set emit_end to `close_idx - 1` (exclude the trailing `;` from the inline emission). The eligibility check already verified `last_before_close == ";"`, so this index is always the redundant `;`.
+- **Fix (CLOC12.56):** In gap-032's eligible branch, peek `kept.get(close_idx + 1)`. If it equals `}`, set `emit_end = close_idx - 1` (exclude the trailing `;`). The eligibility check already verified `last_before_close == ";"`, so this index is always the redundant `;`.
+- **Note:** The gap was discovered by CLOC14.13 and initially listed as OPEN; the fix already lived in the code from CLOC12.56 (`drop_trailing_semi` logic). CLOC12.134 adds the `minify_for_body_inner_close` fixture that pins this invariant and removes the duplicate OPEN entry.
 
 ### gap-050 — `new X()` with empty arg list drops parens
 
@@ -951,3 +942,25 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - All tombstones: `source="whitespace_only"`, `reason="emit_skip"`,
     `meta.gap=<rule>`, `meta.lexeme=<original value>`.
   - Two new integration tests in `run.rs` pin gap-050 and gap-030-rule-a.
+
+## CLOC12.134 — close gap-049 (pinning fixture + dead-assignment cleanup)
+
+- **Status:** RESOLVED in CLOC12.134 (v0.134.0).
+- **What it was missing:** gap-049 (trailing `;` suppression when gap-032
+  flattens a block whose `}` is immediately before an outer `}`) was
+  implemented implicitly in CLOC12.56 via `drop_trailing_semi`, but the
+  spec retained a stale OPEN entry and no dedicated byte-identity fixture
+  existed to pin the behaviour.
+- **Resolution:**
+  - Removed the duplicate OPEN gap-049 entry from the spec; merged into
+    a single RESOLVED entry with accurate attribution to CLOC12.56 +
+    CLOC12.134 pinning.
+  - Added `tests/diff/minify_for_body_inner_close/` fixture:
+    input `async function f(){for await(var v of a){a;}}`,
+    expected `async function f(){for await(var v of a)a};`.
+    This locks the `drop_trailing_semi` path so any regression in the
+    gap-032 next-after-close peek will be caught by CI.
+  - Removed dead intermediate assignment `prev_emitted_tok = Some(ident)`
+    in the gap-045 arrow-paren elision arm (line was immediately overwritten
+    by `prev_emitted_tok = Some(kept[idx + 3])`; only a compiler warning,
+    no correctness impact).

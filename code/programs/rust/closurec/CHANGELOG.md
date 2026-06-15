@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.134.0] - 2026-06-14
+
+### Added
+
+- **CLOC12.134 — close gap-049: `minify_for_body_inner_close` fixture.**
+  The gap-032 single-statement block-flatten already suppresses the inlined
+  trailing `;` when the closing `}` of the block is immediately followed by
+  an outer `}` (`drop_trailing_semi = true`, `emit_end = close_idx - 1`).
+  This was implemented implicitly alongside the gap-032 flatten, but gap-049
+  remained open in the spec with no pinning fixture. This release adds
+  `tests/diff/minify_for_body_inner_close/` which locks in the behaviour:
+  `async function f(){for await(var v of a){a;}}` →
+  `async function f(){for await(var v of a)a};` — byte-for-byte identical
+  to upstream Closure v20240317.
+
+### Fixed
+
+- **Dead assignment in `whitespace_only_minify` gap-045 arm.** The arrow-paren
+  elision path wrote `prev_emitted_tok = Some(ident)` immediately before
+  overwriting it with `prev_emitted_tok = Some(kept[idx + 3])` (the `=>`
+  token). Removed the dead intermediate assignment; no behaviour change.
+
 ## [0.133.0] - 2026-06-14
 
 ### Added
