@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from .arithmetic import add, div, gt, lt, mul, sub
 from .pairs import Pair, car, cdr, cons, is_pair
+from .pairs import set_display as _set_pairs_display
 from .runtime import (
     Closure,
     apply,
@@ -32,6 +33,11 @@ from .runtime import (
 )
 from .symbols import Symbol, intern
 from .values import eq, is_null, is_number, is_symbol, to_display, truthy
+
+# Inject core's richer ``to_display`` into the (dependency-free) pairs package
+# so a ``Pair`` renders as a Lisp list (``(1 2 3)``, ``#t``/``nil``/symbols)
+# rather than via plain ``str``.  Done once at import time; see ``pairs`` shim.
+_set_pairs_display(to_display)
 
 # ``print`` is exposed as an attribute alias so emitted code can call
 # ``_sir.print(v)`` (mirroring the old ``_sir_print`` name) without

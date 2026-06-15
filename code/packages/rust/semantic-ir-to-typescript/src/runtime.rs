@@ -32,6 +32,15 @@ pub const RUNTIME_OOP: &str = r##"import * as __SirOop from "@coding-adventures/
 pub const RUNTIME_EXC: &str = r##"import * as __SirExc from "@coding-adventures/sir-runtime-exceptions";
 "##;
 
+/// The pairs-runtime import, emitted **only** when a module uses the `Pairs`
+/// feature (a `cons`/`car`/`cdr`/`pair?` builtin).  The cons-pair value type
+/// now lives in its own `@coding-adventures/sir-runtime-pairs` package (core
+/// re-exports it for back-compat); pure non-pair modules never gain a
+/// dependency on it.  Bound as `__SirPairs` so the emitter's `__SirPairs.*`
+/// call sites resolve; see `code/specs/sir-runtime.md`.
+pub const RUNTIME_PAIRS: &str = r##"import * as __SirPairs from "@coding-adventures/sir-runtime-pairs";
+"##;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -62,5 +71,15 @@ mod tests {
         ));
         assert!(RUNTIME_OOP.ends_with('\n'));
         assert!(RUNTIME_EXC.ends_with('\n'));
+    }
+
+    #[test]
+    fn pairs_import_binds_its_namespace() {
+        assert!(RUNTIME_PAIRS.contains(
+            r#"import * as __SirPairs from "@coding-adventures/sir-runtime-pairs";"#
+        ));
+        assert!(RUNTIME_PAIRS.ends_with('\n'));
+        // cons/car/cdr no longer come from the core namespace import.
+        assert!(!RUNTIME.contains("cons"));
     }
 }

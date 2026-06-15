@@ -1,5 +1,4 @@
 uv venv --quiet --clear
-uv pip install -e ..\sir-runtime-pairs --quiet
 uv pip install -e .[dev] --quiet
 .venv\Scripts\python.exe -m ruff check src tests
 .venv\Scripts\python.exe -m mypy

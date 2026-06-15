@@ -1,73 +1,29 @@
-"""Cons pairs — the SIR ``Pair`` value type (``cons`` / ``car`` / ``cdr``).
+"""Cons pairs — re-exported from ``coding-adventures-sir-runtime-pairs``.
 
-A *pair* is the Lisp cons cell: an immutable two-field record holding a
-``car`` (first) and ``cdr`` (rest).  Linked pairs build lists.  Python has
-no native cons cell — a ``tuple`` is close but is variadic and has no list
-*display* — so pairs are an SIR quirk that lives here.
+The SIR ``Pair`` value type (``cons`` / ``car`` / ``cdr``) used to live here,
+but it is a self-contained per-concern quirk, so it has moved to its own
+publishable package.  This module is now a thin **re-export shim** kept for
+back-compatibility: every existing intra-core import (``from .pairs import
+Pair``) and external consumer keeps working unchanged, and a value built by
+``core.cons`` is the *same* class as one built by the dedicated package (no
+two-``Pair``-classes hazard).
 
-A proper list ``(1 2 3)`` is ``cons(1, cons(2, cons(3, nil)))`` where
-``nil`` is ``None``.  The display follows Lisp convention: space-separated
-inside parens, with a dotted tail when the final ``cdr`` is not ``nil``:
-
-    cons(1, cons(2, None))   ->  "(1 2)"
-    cons(1, 2)               ->  "(1 . 2)"     (improper / dotted pair)
+The pairs package deliberately depends on **nothing** — its Lisp-list display
+calls an injectable hook.  Core wires its richer :func:`to_display` into that
+hook in :mod:`coding_adventures_sir_runtime_core` (the package ``__init__``) via
+:func:`set_display`, so a pair still renders as ``(1 2 3)`` once core is
+imported.  See ``code/specs/sir-runtime.md``.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from coding_adventures_sir_runtime_pairs import (
+    Pair,
+    car,
+    cdr,
+    cons,
+    is_pair,
+    set_display,
+)
 
-if TYPE_CHECKING:  # pragma: no cover - import cycle guard for type-checkers
-    pass
-
-
-class Pair:
-    """An immutable cons cell with ``car`` and ``cdr`` fields."""
-
-    __slots__ = ("car", "cdr")
-
-    def __init__(self, car: Any, cdr: Any) -> None:
-        self.car = car
-        self.cdr = cdr
-
-    def __repr__(self) -> str:
-        # Lisp list display.  Deferred import of ``to_display`` avoids a
-        # module-load cycle (values -> pairs -> values).
-        from .values import to_display
-
-        parts = ["(", to_display(self.car)]
-        rest: Any = self.cdr
-        while isinstance(rest, Pair):
-            parts.append(" ")
-            parts.append(to_display(rest.car))
-            rest = rest.cdr
-        if rest is not None:
-            parts.append(" . ")
-            parts.append(to_display(rest))
-        parts.append(")")
-        return "".join(parts)
-
-
-def cons(a: Any, b: Any) -> Pair:
-    """Construct a pair ``(a . b)``."""
-    return Pair(a, b)
-
-
-def car(p: Any) -> Any:
-    """First field of a pair.  Errors on a non-pair (SIR has no silent nil
-    coercion here)."""
-    if not isinstance(p, Pair):
-        raise TypeError("car on non-pair")
-    return p.car
-
-
-def cdr(p: Any) -> Any:
-    """Rest field of a pair.  Errors on a non-pair."""
-    if not isinstance(p, Pair):
-        raise TypeError("cdr on non-pair")
-    return p.cdr
-
-
-def is_pair(v: Any) -> bool:
-    """True iff ``v`` is a pair."""
-    return isinstance(v, Pair)
+__all__ = ["Pair", "car", "cdr", "cons", "is_pair", "set_display"]

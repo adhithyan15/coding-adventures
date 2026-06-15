@@ -38,6 +38,21 @@ from coding_adventures_sir_runtime_exceptions import (
 )
 "##;
 
+/// The pairs-runtime import header, appended **only** when a module uses the
+/// `Pairs` feature (a `cons`/`car`/`cdr`/`pair?` builtin).  The cons-pair value
+/// type now lives in its own `coding-adventures-sir-runtime-pairs` package
+/// (core re-exports it for back-compat); pure non-pair modules never gain a
+/// dependency on it.  Each helper keeps the emitter's historical `_sir_*` name;
+/// see `code/specs/sir-runtime.md`.
+pub const RUNTIME_PAIRS: &str = r##"# ── SIR pairs runtime (imported from coding-adventures-sir-runtime-pairs) ──
+from coding_adventures_sir_runtime_pairs import (
+    cons as _sir_cons,
+    car as _sir_car,
+    cdr as _sir_cdr,
+    is_pair as _sir_is_pair,
+)
+"##;
+
 pub const RUNTIME: &str = r##"# ── SIR runtime (imported from coding-adventures-sir-runtime-core) ──
 from coding_adventures_sir_runtime_core import (
     truthy as _sir_truthy,
@@ -56,11 +71,7 @@ from coding_adventures_sir_runtime_core import (
     eq as _sir_eq,
     lt as _sir_lt,
     gt as _sir_gt,
-    cons as _sir_cons,
-    car as _sir_car,
-    cdr as _sir_cdr,
     is_null as _sir_is_null,
-    is_pair as _sir_is_pair,
     is_number as _sir_is_number,
     is_symbol as _sir_is_symbol,
     sir_print as _sir_print,
@@ -105,11 +116,7 @@ mod tests {
             "eq as _sir_eq",
             "lt as _sir_lt",
             "gt as _sir_gt",
-            "cons as _sir_cons",
-            "car as _sir_car",
-            "cdr as _sir_cdr",
             "is_null as _sir_is_null",
-            "is_pair as _sir_is_pair",
             "is_number as _sir_is_number",
             "is_symbol as _sir_is_symbol",
             "sir_print as _sir_print",
@@ -127,5 +134,21 @@ mod tests {
         assert!(RUNTIME_EXC.contains("rescue_matches as _sir_exc_rescue_matches"));
         assert!(RUNTIME_OOP.ends_with('\n'));
         assert!(RUNTIME_EXC.ends_with('\n'));
+    }
+
+    #[test]
+    fn pairs_moved_to_dedicated_package() {
+        // cons/car/cdr/pair? now ship in the pairs package, not core.
+        assert!(RUNTIME_PAIRS.contains("from coding_adventures_sir_runtime_pairs import"));
+        for alias in &[
+            "cons as _sir_cons",
+            "car as _sir_car",
+            "cdr as _sir_cdr",
+            "is_pair as _sir_is_pair",
+        ] {
+            assert!(RUNTIME_PAIRS.contains(alias), "pairs runtime missing `{}`", alias);
+            assert!(!RUNTIME.contains(alias), "core runtime should not still alias `{}`", alias);
+        }
+        assert!(RUNTIME_PAIRS.ends_with('\n'));
     }
 }

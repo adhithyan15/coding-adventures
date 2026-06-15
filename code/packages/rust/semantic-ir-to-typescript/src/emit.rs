@@ -46,6 +46,13 @@ fn uses_exceptions(m: &Module) -> bool {
     m.manifest.contains(Feature::Exceptions)
 }
 
+/// True if the module uses cons pairs, in which case the emitted artifact
+/// imports `@coding-adventures/sir-runtime-pairs` (the `cons`/`car`/`cdr`/
+/// `pair?` helpers, extracted from core).
+fn uses_pairs(m: &Module) -> bool {
+    m.manifest.contains(Feature::Pairs)
+}
+
 thread_local! {
     /// Monotonic counter for synthesised loop temporaries (the
     /// once-evaluated `__stop`/`__step` bounds of a `ForRange`).  Reset
@@ -82,6 +89,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only throwing/rescuing modules import the exception runtime.
     if uses_exceptions(m) {
         out.push_str(crate::runtime::RUNTIME_EXC);
+    }
+    // Only pair-using modules import the pairs runtime.
+    if uses_pairs(m) {
+        out.push_str(crate::runtime::RUNTIME_PAIRS);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -823,11 +834,13 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "=" => "__Sir.eq",
         "<" => "__Sir.lt",
         ">" => "__Sir.gt",
-        "cons" => "__Sir.cons",
-        "car" => "__Sir.car",
-        "cdr" => "__Sir.cdr",
+        // Pairs live in the dedicated `@coding-adventures/sir-runtime-pairs`
+        // package now (imported as `__SirPairs`, gated by `uses_pairs`).
+        "cons" => "__SirPairs.cons",
+        "car" => "__SirPairs.car",
+        "cdr" => "__SirPairs.cdr",
         "null?" => "__Sir.isNull",
-        "pair?" => "__Sir.isPair",
+        "pair?" => "__SirPairs.isPair",
         "number?" => "__Sir.isNumber",
         "symbol?" => "__Sir.isSymbol",
         "print" => "__Sir.print",
