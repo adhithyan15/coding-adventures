@@ -10,416 +10,960 @@ use grammar_tools::parser_grammar::{GrammarElement, GrammarRule, ParserGrammar};
 pub fn parser_grammar() -> ParserGrammar {
     ParserGrammar {
         rules: vec![
-        GrammarRule {
-            name: r#"program"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"statement"#.to_string() }) },
-                GrammarElement::TokenReference { name: r#"EOF"#.to_string() },
-            ] },
-            line_number: 20,
-        },
-        GrammarRule {
-            name: r#"statement"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::RuleReference { name: r#"prior_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"contributes_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"interacts_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"uncertain_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"observe_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"query_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"let_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"symbol_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"constrain_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"solve_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"check_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"optimize_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"dictionary_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"define_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"rulebook_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"use_decl"#.to_string() },
-                GrammarElement::RuleReference { name: r#"import_decl"#.to_string() },
-            ] },
-            line_number: 22,
-        },
-        GrammarRule {
-            name: r#"prior_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"prior"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                GrammarElement::Literal { value: r#"for"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
-            ] },
-            line_number: 46,
-        },
-        GrammarRule {
-            name: r#"contributes_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"contributes"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                GrammarElement::Literal { value: r#"from"#.to_string() },
-                GrammarElement::RuleReference { name: r#"evidence"#.to_string() },
-                GrammarElement::Literal { value: r#"to"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
-            ] },
-            line_number: 48,
-        },
-        GrammarRule {
-            name: r#"evidence"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::RuleReference { name: r#"predicate"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-            ] },
-            line_number: 58,
-        },
-        GrammarRule {
-            name: r#"predicate"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                        GrammarElement::TokenReference { name: r#"GE"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"LE"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"GT"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"LT"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"EQEQ"#.to_string() },
-                    ] }) },
-                GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-            ] },
-            line_number: 60,
-        },
-        GrammarRule {
-            name: r#"interacts_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"interacts"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                GrammarElement::Literal { value: r#"when"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                GrammarElement::Literal { value: r#"and"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Literal { value: r#"and"#.to_string() },
-                        GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                    ] }) },
-                GrammarElement::Literal { value: r#"for"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
-            ] },
-            line_number: 62,
-        },
-        GrammarRule {
-            name: r#"uncertain_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"uncertain"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
-                        GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                    ] }) },
-                GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
-                GrammarElement::Literal { value: r#"for"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
-            ] },
-            line_number: 64,
-        },
-        GrammarRule {
-            name: r#"observe_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"observe"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-            ] },
-            line_number: 66,
-        },
-        GrammarRule {
-            name: r#"query_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"QUESTION"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-            ] },
-            line_number: 68,
-        },
-        GrammarRule {
-            name: r#"let_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"let"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::TokenReference { name: r#"EQUALS"#.to_string() },
-                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
-            ] },
-            line_number: 82,
-        },
-        GrammarRule {
-            name: r#"expr"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::RuleReference { name: r#"term_expr"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                                GrammarElement::TokenReference { name: r#"PLUS"#.to_string() },
-                                GrammarElement::TokenReference { name: r#"MINUS"#.to_string() },
-                            ] }) },
-                        GrammarElement::RuleReference { name: r#"term_expr"#.to_string() },
-                    ] }) },
-            ] },
-            line_number: 84,
-        },
-        GrammarRule {
-            name: r#"term_expr"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::RuleReference { name: r#"factor"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                                GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
-                                GrammarElement::TokenReference { name: r#"SLASH"#.to_string() },
-                            ] }) },
-                        GrammarElement::RuleReference { name: r#"factor"#.to_string() },
-                    ] }) },
-            ] },
-            line_number: 86,
-        },
-        GrammarRule {
-            name: r#"factor"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::RuleReference { name: r#"agg"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::Sequence { elements: vec![
-                    GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
-                    GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
-                ] },
-            ] },
-            line_number: 88,
-        },
-        GrammarRule {
-            name: r#"agg"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                        GrammarElement::Literal { value: r#"sum"#.to_string() },
-                        GrammarElement::Literal { value: r#"count"#.to_string() },
-                        GrammarElement::Literal { value: r#"min"#.to_string() },
-                        GrammarElement::Literal { value: r#"max"#.to_string() },
-                        GrammarElement::Literal { value: r#"avg"#.to_string() },
-                    ] }) },
-                GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
-            ] },
-            line_number: 90,
-        },
-        GrammarRule {
-            name: r#"symbol_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"symbol"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
-                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-            ] },
-            line_number: 100,
-        },
-        GrammarRule {
-            name: r#"constrain_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"constrain"#.to_string() },
-                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
-                GrammarElement::RuleReference { name: r#"relop"#.to_string() },
-                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
-            ] },
-            line_number: 102,
-        },
-        GrammarRule {
-            name: r#"relop"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::TokenReference { name: r#"GE"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LE"#.to_string() },
-                GrammarElement::TokenReference { name: r#"GT"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LT"#.to_string() },
-                GrammarElement::TokenReference { name: r#"EQEQ"#.to_string() },
-                GrammarElement::TokenReference { name: r#"EQUALS"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NE"#.to_string() },
-            ] },
-            line_number: 104,
-        },
-        GrammarRule {
-            name: r#"solve_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"solve"#.to_string() },
-                GrammarElement::Literal { value: r#"for"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                    ] }) },
-                GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
-            ] },
-            line_number: 106,
-        },
-        GrammarRule {
-            name: r#"check_decl"#.to_string(),
-            body: GrammarElement::Literal { value: r#"check"#.to_string() },
-            line_number: 108,
-        },
-        GrammarRule {
-            name: r#"optimize_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                        GrammarElement::Literal { value: r#"minimize"#.to_string() },
-                        GrammarElement::Literal { value: r#"maximize"#.to_string() },
-                    ] }) },
-                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
-            ] },
-            line_number: 115,
-        },
-        GrammarRule {
-            name: r#"dictionary_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"dictionary"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"define_decl"#.to_string() }) },
-                GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
-            ] },
-            line_number: 127,
-        },
-        GrammarRule {
-            name: r#"define_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"define"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
-                GrammarElement::RuleReference { name: r#"define_kind"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"surface_clause"#.to_string() }) },
-            ] },
-            line_number: 129,
-        },
-        GrammarRule {
-            name: r#"define_kind"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::Literal { value: r#"hypothesis"#.to_string() },
-                GrammarElement::Sequence { elements: vec![
-                    GrammarElement::Literal { value: r#"finding"#.to_string() },
-                    GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                            GrammarElement::Literal { value: r#"values"#.to_string() },
-                            GrammarElement::TokenReference { name: r#"LBRACK"#.to_string() },
-                            GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                            GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                                    GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
-                                    GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                                ] }) },
-                            GrammarElement::TokenReference { name: r#"RBRACK"#.to_string() },
-                        ] }) },
-                ] },
-            ] },
-            line_number: 131,
-        },
-        GrammarRule {
-            name: r#"surface_clause"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"surface"#.to_string() },
-                GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
-                    ] }) },
-            ] },
-            line_number: 135,
-        },
-        GrammarRule {
-            name: r#"rulebook_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"rulebook"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LBRACE"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"statement"#.to_string() }) },
-                GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
-            ] },
-            line_number: 152,
-        },
-        GrammarRule {
-            name: r#"use_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"use"#.to_string() },
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-            ] },
-            line_number: 154,
-        },
-        GrammarRule {
-            name: r#"import_decl"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"import"#.to_string() },
-                GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
-            ] },
-            line_number: 170,
-        },
-        GrammarRule {
-            name: r#"annotation"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::RuleReference { name: r#"source_annotation"#.to_string() },
-                GrammarElement::RuleReference { name: r#"locator_annotation"#.to_string() },
-                GrammarElement::RuleReference { name: r#"trust_annotation"#.to_string() },
-            ] },
-            line_number: 178,
-        },
-        GrammarRule {
-            name: r#"source_annotation"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"source"#.to_string() },
-                GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
-            ] },
-            line_number: 183,
-        },
-        GrammarRule {
-            name: r#"locator_annotation"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"locator"#.to_string() },
-                GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
-            ] },
-            line_number: 184,
-        },
-        GrammarRule {
-            name: r#"trust_annotation"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"trust"#.to_string() },
-                GrammarElement::RuleReference { name: r#"trust_tier"#.to_string() },
-            ] },
-            line_number: 185,
-        },
-        GrammarRule {
-            name: r#"trust_tier"#.to_string(),
-            body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::Literal { value: r#"consensus"#.to_string() },
-                GrammarElement::Literal { value: r#"authoritative"#.to_string() },
-                GrammarElement::Literal { value: r#"empirical"#.to_string() },
-                GrammarElement::Literal { value: r#"inferred"#.to_string() },
-                GrammarElement::Literal { value: r#"unattributed"#.to_string() },
-            ] },
-            line_number: 187,
-        },
-        GrammarRule {
-            name: r#"term"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
-                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                                GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                                GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                            ] }) },
-                        GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                                GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
-                                GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
-                                        GrammarElement::RuleReference { name: r#"term"#.to_string() },
-                                        GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
-                                    ] }) },
-                            ] }) },
-                        GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
-                    ] }) },
-            ] },
-            line_number: 204,
-        },
-    ],
+            GrammarRule {
+                name: r#"program"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"statement"#.to_string(),
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"EOF"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 20,
+            },
+            GrammarRule {
+                name: r#"statement"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::RuleReference {
+                            name: r#"prior_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"contributes_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"interacts_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"uncertain_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"observe_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"relate_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"query_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"let_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"symbol_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"constrain_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"solve_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"check_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"optimize_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"dictionary_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"define_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"rulebook_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"use_decl"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"import_decl"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 22,
+            },
+            GrammarRule {
+                name: r#"prior_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"prior"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NUMBER"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"for"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"annotation"#.to_string(),
+                            }),
+                        },
+                    ],
+                },
+                line_number: 47,
+            },
+            GrammarRule {
+                name: r#"contributes_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"contributes"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NUMBER"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"from"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"evidence"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"to"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"annotation"#.to_string(),
+                            }),
+                        },
+                    ],
+                },
+                line_number: 49,
+            },
+            GrammarRule {
+                name: r#"evidence"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::RuleReference {
+                            name: r#"predicate"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 59,
+            },
+            GrammarRule {
+                name: r#"predicate"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::Group {
+                            element: Box::new(GrammarElement::Alternation {
+                                choices: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"GE"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"LE"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"GT"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"LT"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"EQEQ"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NUMBER"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 61,
+            },
+            GrammarRule {
+                name: r#"interacts_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"interacts"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NUMBER"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"when"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"and"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"and"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"term"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"for"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"annotation"#.to_string(),
+                            }),
+                        },
+                    ],
+                },
+                line_number: 63,
+            },
+            GrammarRule {
+                name: r#"uncertain_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"uncertain"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LBRACE"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"COMMA"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"term"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"RBRACE"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"for"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"annotation"#.to_string(),
+                            }),
+                        },
+                    ],
+                },
+                line_number: 65,
+            },
+            GrammarRule {
+                name: r#"observe_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"observe"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 67,
+            },
+            GrammarRule {
+                name: r#"relate_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"relate"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"annotation"#.to_string(),
+                            }),
+                        },
+                    ],
+                },
+                line_number: 80,
+            },
+            GrammarRule {
+                name: r#"query_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"QUESTION"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 82,
+            },
+            GrammarRule {
+                name: r#"let_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"let"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"EQUALS"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"expr"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 96,
+            },
+            GrammarRule {
+                name: r#"expr"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::RuleReference {
+                            name: r#"term_expr"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Group {
+                                        element: Box::new(GrammarElement::Alternation {
+                                            choices: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"PLUS"#.to_string(),
+                                                },
+                                                GrammarElement::TokenReference {
+                                                    name: r#"MINUS"#.to_string(),
+                                                },
+                                            ],
+                                        }),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"term_expr"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                    ],
+                },
+                line_number: 98,
+            },
+            GrammarRule {
+                name: r#"term_expr"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::RuleReference {
+                            name: r#"factor"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Group {
+                                        element: Box::new(GrammarElement::Alternation {
+                                            choices: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"STAR"#.to_string(),
+                                                },
+                                                GrammarElement::TokenReference {
+                                                    name: r#"SLASH"#.to_string(),
+                                                },
+                                            ],
+                                        }),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"factor"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                    ],
+                },
+                line_number: 100,
+            },
+            GrammarRule {
+                name: r#"factor"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::RuleReference {
+                            name: r#"agg"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NUMBER"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::Sequence {
+                            elements: vec![
+                                GrammarElement::TokenReference {
+                                    name: r#"LPAREN"#.to_string(),
+                                },
+                                GrammarElement::RuleReference {
+                                    name: r#"expr"#.to_string(),
+                                },
+                                GrammarElement::TokenReference {
+                                    name: r#"RPAREN"#.to_string(),
+                                },
+                            ],
+                        },
+                    ],
+                },
+                line_number: 102,
+            },
+            GrammarRule {
+                name: r#"agg"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Group {
+                            element: Box::new(GrammarElement::Alternation {
+                                choices: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"sum"#.to_string(),
+                                    },
+                                    GrammarElement::Literal {
+                                        value: r#"count"#.to_string(),
+                                    },
+                                    GrammarElement::Literal {
+                                        value: r#"min"#.to_string(),
+                                    },
+                                    GrammarElement::Literal {
+                                        value: r#"max"#.to_string(),
+                                    },
+                                    GrammarElement::Literal {
+                                        value: r#"avg"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LPAREN"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"RPAREN"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 104,
+            },
+            GrammarRule {
+                name: r#"symbol_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"symbol"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"COLON"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"term"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 114,
+            },
+            GrammarRule {
+                name: r#"constrain_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"constrain"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"expr"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"relop"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"expr"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 116,
+            },
+            GrammarRule {
+                name: r#"relop"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"GE"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LE"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"GT"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LT"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"EQEQ"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"EQUALS"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"NE"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 118,
+            },
+            GrammarRule {
+                name: r#"solve_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"solve"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"for"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LBRACE"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"COMMA"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"IDENT"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"RBRACE"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 120,
+            },
+            GrammarRule {
+                name: r#"check_decl"#.to_string(),
+                body: GrammarElement::Literal {
+                    value: r#"check"#.to_string(),
+                },
+                line_number: 122,
+            },
+            GrammarRule {
+                name: r#"optimize_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Group {
+                            element: Box::new(GrammarElement::Alternation {
+                                choices: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"minimize"#.to_string(),
+                                    },
+                                    GrammarElement::Literal {
+                                        value: r#"maximize"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"expr"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 129,
+            },
+            GrammarRule {
+                name: r#"dictionary_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"dictionary"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LBRACE"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"define_decl"#.to_string(),
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"RBRACE"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 141,
+            },
+            GrammarRule {
+                name: r#"define_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"define"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"COLON"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"define_kind"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"surface_clause"#.to_string(),
+                            }),
+                        },
+                    ],
+                },
+                line_number: 143,
+            },
+            GrammarRule {
+                name: r#"define_kind"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::Literal {
+                            value: r#"hypothesis"#.to_string(),
+                        },
+                        GrammarElement::Sequence {
+                            elements: vec![
+                                GrammarElement::Literal {
+                                    value: r#"finding"#.to_string(),
+                                },
+                                GrammarElement::Optional {
+                                    element: Box::new(GrammarElement::Sequence {
+                                        elements: vec![
+                                            GrammarElement::Literal {
+                                                value: r#"values"#.to_string(),
+                                            },
+                                            GrammarElement::TokenReference {
+                                                name: r#"LBRACK"#.to_string(),
+                                            },
+                                            GrammarElement::TokenReference {
+                                                name: r#"IDENT"#.to_string(),
+                                            },
+                                            GrammarElement::Repetition {
+                                                element: Box::new(GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
+                                                            name: r#"COMMA"#.to_string(),
+                                                        },
+                                                        GrammarElement::TokenReference {
+                                                            name: r#"IDENT"#.to_string(),
+                                                        },
+                                                    ],
+                                                }),
+                                            },
+                                            GrammarElement::TokenReference {
+                                                name: r#"RBRACK"#.to_string(),
+                                            },
+                                        ],
+                                    }),
+                                },
+                            ],
+                        },
+                        GrammarElement::Literal {
+                            value: r#"entity"#.to_string(),
+                        },
+                        GrammarElement::Sequence {
+                            elements: vec![
+                                GrammarElement::Literal {
+                                    value: r#"relation"#.to_string(),
+                                },
+                                GrammarElement::Literal {
+                                    value: r#"from"#.to_string(),
+                                },
+                                GrammarElement::TokenReference {
+                                    name: r#"IDENT"#.to_string(),
+                                },
+                                GrammarElement::Literal {
+                                    value: r#"to"#.to_string(),
+                                },
+                                GrammarElement::TokenReference {
+                                    name: r#"IDENT"#.to_string(),
+                                },
+                            ],
+                        },
+                    ],
+                },
+                line_number: 145,
+            },
+            GrammarRule {
+                name: r#"surface_clause"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"surface"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"STRING"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"COMMA"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STRING"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                    ],
+                },
+                line_number: 151,
+            },
+            GrammarRule {
+                name: r#"rulebook_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"rulebook"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"LBRACE"#.to_string(),
+                        },
+                        GrammarElement::Repetition {
+                            element: Box::new(GrammarElement::RuleReference {
+                                name: r#"statement"#.to_string(),
+                            }),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"RBRACE"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 168,
+            },
+            GrammarRule {
+                name: r#"use_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"use"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 170,
+            },
+            GrammarRule {
+                name: r#"import_decl"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"import"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"STRING"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 186,
+            },
+            GrammarRule {
+                name: r#"annotation"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::RuleReference {
+                            name: r#"source_annotation"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"locator_annotation"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"trust_annotation"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 194,
+            },
+            GrammarRule {
+                name: r#"source_annotation"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"source"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"STRING"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 199,
+            },
+            GrammarRule {
+                name: r#"locator_annotation"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"locator"#.to_string(),
+                        },
+                        GrammarElement::TokenReference {
+                            name: r#"STRING"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 200,
+            },
+            GrammarRule {
+                name: r#"trust_annotation"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::Literal {
+                            value: r#"trust"#.to_string(),
+                        },
+                        GrammarElement::RuleReference {
+                            name: r#"trust_tier"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 201,
+            },
+            GrammarRule {
+                name: r#"trust_tier"#.to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::Literal {
+                            value: r#"consensus"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"authoritative"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"empirical"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"inferred"#.to_string(),
+                        },
+                        GrammarElement::Literal {
+                            value: r#"unattributed"#.to_string(),
+                        },
+                    ],
+                },
+                line_number: 203,
+            },
+            GrammarRule {
+                name: r#"term"#.to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference {
+                            name: r#"IDENT"#.to_string(),
+                        },
+                        GrammarElement::Optional {
+                            element: Box::new(GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"LPAREN"#.to_string(),
+                                    },
+                                    GrammarElement::Group {
+                                        element: Box::new(GrammarElement::Alternation {
+                                            choices: vec![
+                                                GrammarElement::RuleReference {
+                                                    name: r#"term"#.to_string(),
+                                                },
+                                                GrammarElement::TokenReference {
+                                                    name: r#"NUMBER"#.to_string(),
+                                                },
+                                                GrammarElement::TokenReference {
+                                                    name: r#"VAR"#.to_string(),
+                                                },
+                                            ],
+                                        }),
+                                    },
+                                    GrammarElement::Repetition {
+                                        element: Box::new(GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"COMMA"#.to_string(),
+                                                },
+                                                GrammarElement::Group {
+                                                    element: Box::new(
+                                                        GrammarElement::Alternation {
+                                                            choices: vec![
+                                                                GrammarElement::RuleReference {
+                                                                    name: r#"term"#.to_string(),
+                                                                },
+                                                                GrammarElement::TokenReference {
+                                                                    name: r#"NUMBER"#.to_string(),
+                                                                },
+                                                                GrammarElement::TokenReference {
+                                                                    name: r#"VAR"#.to_string(),
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                },
+                                            ],
+                                        }),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"RPAREN"#.to_string(),
+                                    },
+                                ],
+                            }),
+                        },
+                    ],
+                },
+                line_number: 225,
+            },
+        ],
         version: 1,
     }
 }

@@ -24,6 +24,7 @@ statement   = prior_decl
             | interacts_decl
             | uncertain_decl
             | observe_decl
+            | relate_decl
             | query_decl
             | let_decl
             | symbol_decl
@@ -64,6 +65,19 @@ interacts_decl   = "interacts" NUMBER "when" term "and" term { "and" term } "for
 uncertain_decl   = "uncertain" LBRACE term { COMMA term } RBRACE "for" term { annotation } ;
 
 observe_decl     = "observe" term ;
+
+# ----------------------------------------------------------------
+# `relate <rel>(<a>, <b>)` — a ground RELATIONAL EDGE (MYCIN-2026 REL-2),
+# the first-class fact type behind relational recall. It asserts a typed edge
+# in a knowledge graph (`relate deficient_in(tay_sachs, hexosaminidase_a)`),
+# carrying the same source/locator/trust annotations every grounded clause
+# carries — so the edge is byte-provenanced and one CAS edit from correctable.
+# The edge is just a `term` whose functor is the relation; the lowerer turns it
+# into a logic-engine Fact, and a binding query (`? deficient_in(tay_sachs,
+# $E)`) resolves it via the existing SLD/unification machinery. `relate` is an
+# IDENT-matched literal (like `rulebook`/`define`) — no lexer keyword.
+# ----------------------------------------------------------------
+relate_decl      = "relate" term { annotation } ;
 
 query_decl       = QUESTION term ;
 
@@ -130,6 +144,8 @@ define_decl    = "define" IDENT COLON define_kind { surface_clause } ;
 
 define_kind    = "hypothesis"
                | "finding" [ "values" LBRACK IDENT { COMMA IDENT } RBRACK ]
+               | "entity"
+               | "relation" "from" IDENT "to" IDENT
                ;
 
 surface_clause = "surface" STRING { COMMA STRING } ;
@@ -199,6 +215,11 @@ trust_tier = "consensus"
 # Depth of recursion is bounded by the parser engine's input length
 # in practice; the parser crate provides a separate guard for
 # adversarial nesting.
+#
+# An argument may also be a VAR (`$Enzyme`) — a logic variable used in a
+# binding query goal (MYCIN-2026 REL-2). The functor itself is always an
+# IDENT; only arguments may be variables, which covers every recall shape
+# (`? deficient_in(tay_sachs, $E)`, reverse `? deficient_in($D, hexa)`).
 # ----------------------------------------------------------------
 
-term = IDENT [ LPAREN ( term | NUMBER ) { COMMA ( term | NUMBER ) } RPAREN ] ;
+term = IDENT [ LPAREN ( term | NUMBER | VAR ) { COMMA ( term | NUMBER | VAR ) } RPAREN ] ;

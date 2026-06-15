@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.15.0] - 2026-06-14 — `Fact::provenance` for relational edges (MYCIN-2026 REL-2)
+
+### Added
+
+- **`Fact::provenance: Option<Provenance>`** + the `Fact::with_provenance(p)`
+  builder. A ground relational edge (adj-lang's `relate` clause) lowers to a
+  `Fact` that carries its citation, so a binding query's answer
+  (`? deficient_in(tay_sachs, $E)` → `hexosaminidase_a`) can be returned WITH a
+  proof — the byte-provenanced source that justifies the edge. `None` for
+  ordinary `observe`d facts. The two `Fact` builders default it to `None`, so all
+  existing construction sites are unchanged; `add_fact` preserves it.
+
 ## [0.14.0] - 2026-06-11 — dimensional faithfulness gate (ADJ constraints track A4)
 
 ### Changed

@@ -6,7 +6,9 @@
 // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
 #[allow(unused_imports)]
-use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+use grammar_tools::token_grammar::{
+    ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction,
+};
 #[allow(unused_imports)]
 use std::collections::HashMap;
 
@@ -133,49 +135,75 @@ pub fn token_grammar() -> TokenGrammar {
                 alias: None,
             },
             TokenDefinition {
+                name: r#"VAR"#.to_string(),
+                pattern: r#"\$[A-Za-z_][A-Za-z0-9_]*"#.to_string(),
+                is_regex: true,
+                line_number: 92,
+                alias: None,
+            },
+            TokenDefinition {
                 name: r#"IDENT"#.to_string(),
                 pattern: r#"[a-z_][a-z0-9_]*"#.to_string(),
                 is_regex: true,
-                line_number: 87,
+                line_number: 102,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"PLUS"#.to_string(),
                 pattern: r#"+"#.to_string(),
                 is_regex: false,
-                line_number: 107,
+                line_number: 122,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"MINUS"#.to_string(),
                 pattern: r#"-"#.to_string(),
                 is_regex: false,
-                line_number: 108,
+                line_number: 123,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"STAR"#.to_string(),
                 pattern: r#"*"#.to_string(),
                 is_regex: false,
-                line_number: 109,
+                line_number: 124,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"SLASH"#.to_string(),
                 pattern: r#"/"#.to_string(),
                 is_regex: false,
-                line_number: 110,
+                line_number: 125,
                 alias: None,
             },
             TokenDefinition {
                 name: r#"EQUALS"#.to_string(),
                 pattern: r#"="#.to_string(),
                 is_regex: false,
-                line_number: 111,
+                line_number: 126,
                 alias: None,
             },
         ],
-        keywords: vec![r#"prior"#.to_string(), r#"for"#.to_string(), r#"contributes"#.to_string(), r#"from"#.to_string(), r#"to"#.to_string(), r#"interacts"#.to_string(), r#"when"#.to_string(), r#"and"#.to_string(), r#"observe"#.to_string(), r#"uncertain"#.to_string(), r#"source"#.to_string(), r#"trust"#.to_string(), r#"locator"#.to_string(), r#"consensus"#.to_string(), r#"authoritative"#.to_string(), r#"empirical"#.to_string(), r#"inferred"#.to_string(), r#"unattributed"#.to_string()],
+        keywords: vec![
+            r#"prior"#.to_string(),
+            r#"for"#.to_string(),
+            r#"contributes"#.to_string(),
+            r#"from"#.to_string(),
+            r#"to"#.to_string(),
+            r#"interacts"#.to_string(),
+            r#"when"#.to_string(),
+            r#"and"#.to_string(),
+            r#"observe"#.to_string(),
+            r#"uncertain"#.to_string(),
+            r#"source"#.to_string(),
+            r#"trust"#.to_string(),
+            r#"locator"#.to_string(),
+            r#"consensus"#.to_string(),
+            r#"authoritative"#.to_string(),
+            r#"empirical"#.to_string(),
+            r#"inferred"#.to_string(),
+            r#"unattributed"#.to_string(),
+        ],
         mode: None,
         skip_definitions: vec![
             TokenDefinition {

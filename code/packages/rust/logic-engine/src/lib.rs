@@ -164,6 +164,12 @@ pub struct Fact {
     pub id: FactId,
     pub term: Term,
     pub probability: Probability,
+    /// Optional citation for this fact. Ground *relational edges* (the
+    /// `relate deficient_in(tay_sachs, hexosaminidase_a)` surface form) carry a
+    /// [`Provenance`] so a binding query's answer can be returned WITH a proof —
+    /// the byte-provenanced source that justifies the edge. `None` for ordinary
+    /// `observe`d facts (whose justification lives in the clauses that read them).
+    pub provenance: Option<Provenance>,
 }
 
 impl Fact {
@@ -175,6 +181,7 @@ impl Fact {
             id: FactId(u64::MAX),
             term,
             probability: Probability::Certain,
+            provenance: None,
         }
     }
 
@@ -185,7 +192,16 @@ impl Fact {
             id: FactId(u64::MAX),
             term,
             probability: Probability::Value(p),
+            provenance: None,
         }
+    }
+
+    /// Attach a citation to this fact (builder). Used by the lowerer to carry a
+    /// `relate` edge's `source`/`locator`/`trust` annotations onto the Fact, so
+    /// the edge that answers a binding query can be cited.
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = Some(provenance);
+        self
     }
 }
 

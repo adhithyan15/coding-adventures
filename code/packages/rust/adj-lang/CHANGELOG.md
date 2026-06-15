@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.12.0] - 2026-06-14 — relational recall: `relate` edges + binding queries (MYCIN-2026 REL-2)
+
+### Added
+
+- **`relate <rel>(<args>)`** — a ground RELATIONAL EDGE, the first-class fact
+  type behind relational recall (the board-exam substrate). Asserts a typed edge
+  in a knowledge graph (`relate deficient_in(tay_sachs, hexosaminidase_a)`),
+  carrying the usual `source`/`locator`/`trust` annotations; the lowerer turns it
+  into a `logic_engine::Fact` whose `provenance` carries the citation, so a
+  binding query's answer can be returned WITH a proof. New `Statement::Relate`;
+  grammar `relate_decl`.
+- **Logic variables (`$Name`) + binding queries.** A `$`-prefixed `VAR` token
+  may appear as a term argument in a query goal: `? deficient_in(tay_sachs, $E)`
+  asks the engine to BIND `$E` to whatever the grounded edge holds (and the
+  reverse `? deficient_in($D, hexosaminidase_a)` is free). Resolved by the
+  existing SLD/unification machinery (`logic_engine::enumerate_all`). New
+  `Term::Var`; repeated variables within one goal share identity. A ground
+  hypothesis query (`? bacterial`) is unchanged — fact recall is the single-hop,
+  zero-uncertainty special case of the same engine.
+- **`entity` / `relation from <domain> to <range>` define kinds** — the
+  controlled vocabulary can now declare graph NODE kinds (`disease`, `enzyme`)
+  and typed EDGE kinds (`deficient_in : relation from disease to enzyme`). New
+  `DefineKind::Entity` and `DefineKind::Relation { from, to }`.
+
+### Notes
+
+- Grammar/lexer regenerated (`_lexer_grammar.rs`, `_parser_grammar.rs`) from the
+  updated `adj_lang.{tokens,grammar}`. Strict relation-argument type enforcement
+  is a later slice; REL-2 lands the surface + lowering + resolution. Pairs with
+  `logic-engine` 0.15.0 (`Fact::provenance`).
+
 ## [0.11.0] - 2026-06-12 — `import "path"` (MYCIN-2026 M3)
 
 ### Added
