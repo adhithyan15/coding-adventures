@@ -34,6 +34,8 @@ control-plane layer:
   payload-free controller dispatch readiness view
 - request tracker operator summaries that turn dispatch readiness into final
   host-controller operator checks
+- request tracker supervisor summaries that turn operator readiness into final
+  supervised host-controller checks
 
 It does not yet open a serial port, interview nodes, handle inclusion, or decode
 command-class payload semantics.
