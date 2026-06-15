@@ -1,0 +1,100 @@
+% ============================================================================
+% iem-edges — the inborn-errors-of-metabolism knowledge-graph SEED (REL-1 pilot).
+% ============================================================================
+% MYCIN-2026 REL-1. The first slice of relational recall: a typed graph of
+% DISEASE → ENZYME / SUBSTRATE / INHERITANCE edges, the densest, cleanest
+% fact-recall family in medicine. "Which enzyme is deficient in Tay-Sachs?"
+% becomes the binding query  ? deficient_in(tay_sachs, $Enzyme).
+%
+% Surface preview ONLY (the native `relate` clause + binding query lower in
+% REL-2/REL-3). REL-1 ships an executable Python prototype (recall.py) that
+% reads THESE `relate` lines and answers binding queries with a proof + citation.
+%
+% ⚠ AUTHORED-DEBT — these edges are illustrative, authored from standard
+% biochemistry, NOT yet spider-grounded. REL-4 re-grounds each edge against a
+% primary source (OMIM / a biochemistry reference) through the cold path
+% (spider → byte-provenance → adversarial gate → CAS), flipping trust from
+% `consensus` to `authoritative` and retiring the debt. The ledger tracks it so
+% the debt is visible and drives to zero. (See feedback_nothing_human_authored.)
+% ============================================================================
+
+dictionary biochem_iem {
+    define disease      : entity   surface "inborn error of metabolism", "metabolic disease"
+    define enzyme       : entity   surface "enzyme", "enzyme deficiency"
+    define substrate    : entity   surface "accumulated substrate", "stored material"
+    define inheritance  : entity   surface "inheritance pattern"
+
+    define deficient_in : relation from disease to enzyme
+    define accumulates  : relation from disease to substrate
+    define inherited_as : relation from disease to inheritance
+}
+
+rulebook iem_facts {
+    use biochem_iem
+
+    % --- Tay-Sachs (GM2 gangliosidosis) -----------------------------------
+    relate deficient_in(tay_sachs, hexosaminidase_a)
+        source "Tay-Sachs disease results from deficiency of the enzyme hexosaminidase A (HEXA)."
+        trust consensus
+    relate accumulates(tay_sachs, gm2_ganglioside)
+        source "GM2 ganglioside accumulates in neurons in Tay-Sachs disease."
+        trust consensus
+    relate inherited_as(tay_sachs, autosomal_recessive)
+        source "Tay-Sachs disease is inherited in an autosomal recessive manner."
+        trust consensus
+
+    % --- Gaucher disease --------------------------------------------------
+    relate deficient_in(gaucher, glucocerebrosidase)
+        source "Gaucher disease is caused by deficiency of glucocerebrosidase (acid beta-glucosidase)."
+        trust consensus
+    relate accumulates(gaucher, glucocerebroside)
+        source "Glucocerebroside accumulates in macrophages in Gaucher disease."
+        trust consensus
+    relate inherited_as(gaucher, autosomal_recessive)
+        source "Gaucher disease is inherited in an autosomal recessive manner."
+        trust consensus
+
+    % --- Phenylketonuria (PKU) -------------------------------------------
+    relate deficient_in(phenylketonuria, phenylalanine_hydroxylase)
+        source "Phenylketonuria results from deficiency of phenylalanine hydroxylase."
+        trust consensus
+    relate accumulates(phenylketonuria, phenylalanine)
+        source "Phenylalanine accumulates in phenylketonuria."
+        trust consensus
+    relate inherited_as(phenylketonuria, autosomal_recessive)
+        source "Phenylketonuria is inherited in an autosomal recessive manner."
+        trust consensus
+
+    % --- Pompe disease (GSD II) ------------------------------------------
+    relate deficient_in(pompe, acid_alpha_glucosidase)
+        source "Pompe disease is caused by deficiency of acid alpha-glucosidase (acid maltase)."
+        trust consensus
+    relate accumulates(pompe, lysosomal_glycogen)
+        source "Glycogen accumulates in lysosomes in Pompe disease."
+        trust consensus
+    relate inherited_as(pompe, autosomal_recessive)
+        source "Pompe disease is inherited in an autosomal recessive manner."
+        trust consensus
+
+    % --- Lesch-Nyhan syndrome --------------------------------------------
+    relate deficient_in(lesch_nyhan, hgprt)
+        source "Lesch-Nyhan syndrome results from deficiency of hypoxanthine-guanine phosphoribosyltransferase (HGPRT)."
+        trust consensus
+    relate accumulates(lesch_nyhan, uric_acid)
+        source "Uric acid accumulates in Lesch-Nyhan syndrome."
+        trust consensus
+    relate inherited_as(lesch_nyhan, x_linked_recessive)
+        source "Lesch-Nyhan syndrome is inherited in an X-linked recessive manner."
+        trust consensus
+
+    % --- von Gierke disease (GSD I) --------------------------------------
+    relate deficient_in(von_gierke, glucose_6_phosphatase)
+        source "Von Gierke disease (glycogen storage disease type I) results from deficiency of glucose-6-phosphatase."
+        trust consensus
+    relate accumulates(von_gierke, glycogen)
+        source "Glycogen accumulates in liver and kidney in von Gierke disease."
+        trust consensus
+    relate inherited_as(von_gierke, autosomal_recessive)
+        source "Von Gierke disease is inherited in an autosomal recessive manner."
+        trust consensus
+}
