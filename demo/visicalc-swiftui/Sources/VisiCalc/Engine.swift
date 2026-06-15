@@ -40,10 +40,16 @@ final class SpreadsheetSession {
         let json = getValueJSON(a1)
         guard
             let data = json.data(using: .utf8),
-            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-            let kind = obj["kind"] as? String
+            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
         else { return "" }
-        switch kind {
+        return Self.displayValue(obj)
+    }
+
+    /// Map one decoded value object (`{"kind":...}`) to the string a spreadsheet
+    /// cell should show. Shared by `display` (one cell) and `window` (a whole
+    /// rectangle) so both render values identically.
+    static func displayValue(_ obj: [String: Any]) -> String {
+        switch obj["kind"] as? String {
         case "empty": return ""
         case "number":
             guard let n = obj["value"] as? Double else { return "" }
@@ -54,6 +60,60 @@ final class SpreadsheetSession {
         case "error": return obj["code"] as? String ?? "#ERR"
         default: return ""
         }
+    }
+
+    // MARK: Viewport primitive (virtualized infinite sheet)
+    //
+    // These mirror the engine's `get_window` / `used_range` / `changed_since`
+    // reads (1-based inclusive coords) so a SwiftUI host can render only the
+    // visible window of an unbounded sheet, sized from the data extent and
+    // refreshed by the per-edit change diff — the same primitive the web demo's
+    // infinite.html uses through WASM.
+
+    /// Dense display strings for the inclusive 1-based rectangle, row-major
+    /// (empty cells become ""). Empty array on a bad/oversized request.
+    func window(_ row0: UInt32, _ col0: UInt32, _ row1: UInt32, _ col1: UInt32) -> [[String]] {
+        let json = take(sc_get_window(handle, row0, col0, row1, col1))
+        guard
+            let data = json.data(using: .utf8),
+            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let rows = obj["values"] as? [[[String: Any]]]
+        else { return [] }
+        return rows.map { row in row.map { Self.displayValue($0) } }
+    }
+
+    /// The data extent (1-based inclusive), or nil if the sheet is empty.
+    func usedRange() -> (minRow: UInt32, minCol: UInt32, maxRow: UInt32, maxCol: UInt32)? {
+        let json = take(sc_used_range(handle))
+        guard
+            let data = json.data(using: .utf8),
+            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let minR = obj["minRow"] as? Int, let minC = obj["minCol"] as? Int,
+            let maxR = obj["maxRow"] as? Int, let maxC = obj["maxCol"] as? Int,
+            // Defensive: `UInt32(_:)` traps on a negative Int. The engine's
+            // 1-based coords are always ≥1, but degrade to nil rather than crash
+            // if a future contract break ever returned something out of range.
+            let mnR = UInt32(exactly: minR), let mnC = UInt32(exactly: minC),
+            let mxR = UInt32(exactly: maxR), let mxC = UInt32(exactly: maxC)
+        else { return nil }
+        return (mnR, mnC, mxR, mxC)
+    }
+
+    /// Column letters for a 1-based index (`1` → `"A"`, `27` → `"AA"`).
+    func columnLetters(_ index: UInt32) -> String { take(sc_column_letters(handle, index)) }
+
+    /// The per-edit revision clock. Snapshot it, then pass to `changedSince`.
+    func currentRevision() -> UInt64 { sc_current_revision(handle) }
+
+    /// Cells changed since `since`; `stale` means re-read the whole window.
+    func changedSince(_ since: UInt64) -> (changed: [String], stale: Bool) {
+        let json = take(sc_changed_since(handle, since))
+        guard
+            let data = json.data(using: .utf8),
+            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return ([], false) }
+        if obj["stale"] as? Bool == true { return ([], true) }
+        return (obj["changed"] as? [String] ?? [], false)
     }
 }
 
