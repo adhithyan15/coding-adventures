@@ -32,6 +32,8 @@ control-plane layer:
   request-loop, callback, response, timeout, and pending-function drains
 - request tracker dispatch summaries that turn completed drain checks into a
   payload-free controller dispatch readiness view
+- request tracker operator summaries that turn dispatch readiness into final
+  host-controller operator checks
 
 It does not yet open a serial port, interview nodes, handle inclusion, or decode
 command-class payload semantics.
