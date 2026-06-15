@@ -21,6 +21,8 @@ All notable changes to this package will be documented in this file.
   readiness over request-loop and drain completion checks.
 - `RequestTrackerOperatorSummary` for final host-controller operator checks
   over request dispatch readiness and drain completion gates.
+- `RequestTrackerSupervisorSummary` for final supervised host-controller
+  checks over request operator readiness and drain completion gates.
 
 ## [0.1.0] - 2026-05-06
 
