@@ -397,7 +397,7 @@ impl IIRWasmConfig {
 /// ```
 pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
     match hint {
-        "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => Some(ValueType::I32),
+        "u4" | "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => Some(ValueType::I32),
         "i64" | "u64" => Some(ValueType::I64),
         "f32" => Some(ValueType::F32),
         "f64" => Some(ValueType::F64),
@@ -426,7 +426,27 @@ fn is_i64_hint(hint: &str) -> bool {
 /// opcodes for `i32` types.  For `i64` we always use signed in v1 (matching
 /// the IIR spec's signed-default model).
 fn is_unsigned_hint(hint: &str) -> bool {
-    matches!(hint, "u8" | "u16" | "u32" | "u64")
+    matches!(hint, "u4" | "u8" | "u16" | "u32" | "u64")
+}
+
+/// Mask an `i32` arithmetic result down to a sub-32-bit width (LANG-FULL E2).
+///
+/// WASM maps every narrow integer type to `i32`, and an `i32` op already wraps
+/// mod-2³² — so `u32` (and `i32`) arithmetic is correct with no extra work.
+/// The smaller widths need an explicit `i32.const <mask>; i32.and` after the op
+/// so `200u8 + 100u8` becomes `44` and `~x` on a `u8` flips only 8 bits.  This
+/// mirrors vm-core's `mask_result` / jit-core's `MASK_WIDTH`, and is the
+/// register-arithmetic analogue of the byte-tape `i32.store8`.  `i64`/`u64`/
+/// float hints emit nothing (their op carries the correct width already).
+fn emit_wasm_width_mask(code: &mut Vec<u8>, type_hint: &str) {
+    let mask: i32 = match type_hint {
+        "u4" => 0xF,
+        "u8" => 0xFF,
+        "u16" => 0xFFFF,
+        _ => return,
+    };
+    code.extend(encode_i32_const(mask));
+    code.push(I32_AND);
 }
 
 /// Return `true` if the type hint represents a floating-point type.
@@ -866,6 +886,9 @@ fn emit_instr(
                 _ => unreachable!("matched outer pattern"),
             };
             code.push(opcode);
+            // E2: wrap a narrow-width result (`u4`/`u8`/`u16`) to its bit width;
+            // `u32`/`i32` already wrapped via the i32 op, `i64` carries i64 ops.
+            emit_wasm_width_mask(code, ty);
             code.extend(encode_local_set(rd));
         }
 
@@ -898,6 +921,9 @@ fn emit_instr(
                 _ => unreachable!(),
             };
             code.push(opcode);
+            // E2: a narrow left-shift can push bits past the width (`1u8 << 8`),
+            // so mask the result; `and`/`or`/`xor`/`shr` stay canonical too.
+            emit_wasm_width_mask(code, ty);
             code.extend(encode_local_set(rd));
         }
 
@@ -1012,6 +1038,8 @@ fn emit_instr(
                 code.extend(encode_local_get(r));
                 code.push(I32_SUB);
             }
+            // E2: a narrow `neg` is `(0 - r)` mod-2ⁿ — mask it to the width.
+            emit_wasm_width_mask(code, ty);
             code.extend(encode_local_set(rd));
         }
 
@@ -1036,6 +1064,9 @@ fn emit_instr(
                 code.extend(encode_i32_const(-1));
                 code.push(I32_XOR);
             }
+            // E2: `~x` on a narrow width must flip only its low bits
+            // (`~0u8 == 255`, not `0xFFFF_FFFF`) — mask after the XOR.
+            emit_wasm_width_mask(code, ty);
             code.extend(encode_local_set(rd));
         }
 

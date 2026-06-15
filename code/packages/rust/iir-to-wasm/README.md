@@ -26,12 +26,15 @@ through a deprecated intermediate.
 
 ## Features
 
-- **Full numeric type support**: `i8/i16/i32/u8/u16/u32/bool → i32`,
+- **Full numeric type support**: `u4/i8/i16/i32/u8/u16/u32/bool → i32`,
   `i64/u64 → i64`, `f32 → f32`, `f64 → f64`.
 - **Float constants supported** (unlike the BEAM backend): `f64.const` is
   emitted for `Operand::Float` and `f32.const` for narrower floats.
 - **All arithmetic and bitwise ops**: add, sub, mul, div, rem, and, or, xor,
-  shl, shr, for all numeric types.
+  shl, shr, for all numeric types. **Narrow-width results wrap mod-2ⁿ**
+  (LANG-FULL E2): a `u4`/`u8`/`u16` arithmetic/bitwise/`neg`/`not` result is
+  masked with `i32.const <mask>; i32.and` after the i32 op, so `200u8+100u8=44`
+  and `~0u8=255`. `u32`/`i32` already wrap mod-2³² via the i32 op.
 - **All comparison ops**: eq, ne, lt, le, gt, ge (signed and unsigned variants
   where applicable).
 - **Function calls**: `call` instructions are lowered to WASM `call`

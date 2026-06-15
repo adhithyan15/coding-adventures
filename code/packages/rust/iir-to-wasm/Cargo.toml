@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-wasm"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2021"
-description = "IIR → WASM backend — lowers IIRModule to WasmModule.  v0.13.0 (LANG-MATRIX LM-W Brainfuck): adds the byte-tape ops alloc_bytes/load_byte/store_byte over linear memory (with i32.wrap_i64 / i64.extend_i32_u at the byte boundary), i64-aware putchar/getchar, and width-correct i64 branch conditions (i64.eqz) + i64-widened comparison results — so the i64-widened Brainfuck runs on wasm.  v0.7.0 (G1): accept cmp_*-prefixed comparison opcodes.  v0.8.0 (G2): whitelist call_builtin print_i64 and route it to the env.__print_i64 host import that io_out uses, so BASIC's PRINT reaches real wasm bytecode."
+description = "IIR → WASM backend — lowers IIRModule to WasmModule.  v0.14.0 (LANG-FULL E2 — register width & wrap, backend 3/6): masks a narrow-width (u4/u8/u16) arithmetic / bitwise / neg / not result with `i32.const <mask>; i32.and` after the i32 op, so `200u8+100u8=44` and `~0u8=255` on real wasm (u32/i32 already wrap mod-2³² via the i32 op; u4 newly mapped to i32).  v0.13.0 (LANG-MATRIX LM-W Brainfuck): adds the byte-tape ops alloc_bytes/load_byte/store_byte over linear memory (with i32.wrap_i64 / i64.extend_i32_u at the byte boundary), i64-aware putchar/getchar, and width-correct i64 branch conditions (i64.eqz) + i64-widened comparison results — so the i64-widened Brainfuck runs on wasm.  v0.7.0 (G1): accept cmp_*-prefixed comparison opcodes.  v0.8.0 (G2): whitelist call_builtin print_i64 and route it to the env.__print_i64 host import that io_out uses, so BASIC's PRINT reaches real wasm bytecode."
 
 [lib]
 name = "iir_to_wasm"
@@ -15,6 +15,14 @@ wasm-module-encoder = { path = "../wasm-module-encoder" }
 wasm-leb128         = { path = "../wasm-leb128" }
 codegen-core        = { path = "../codegen-core" }
 
+[dev-dependencies]
+# Executes the lowered wasm to prove the width-wrap end-to-end (E2).
+wasm-runtime = { path = "../wasm-runtime" }
+
 [[test]]
 name = "test_backend"
 path = "tests/test_backend.rs"
+
+[[test]]
+name = "width_wrap"
+path = "tests/width_wrap.rs"
