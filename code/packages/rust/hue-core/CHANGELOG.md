@@ -65,6 +65,8 @@ All notable changes to this package will be documented in this file.
   readiness into final operator-facing archive release checks.
 - Hue package release archive supervisor summaries that turn archive operator
   readiness into final supervised archive release checks.
+- Hue package release archive completion summaries that turn archive supervisor
+  readiness into final archive completion checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
