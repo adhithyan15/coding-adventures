@@ -53,6 +53,22 @@ grid is engine-computed (E1 = 38, A5 = 39, E5 = 169), that editing A1 15 → 115
 recomputes the totals (E5 → 269), and that a formula computes with binary-op
 error propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it → `#DIV/0!`).
 
+## Infinite virtualized sheet
+
+`SpreadsheetSession` (`Engine.kt`) also binds the engine's **viewport
+primitive** over Java FFM — `window(r0,c0,r1,c1)` (a dense `List<List<String>>`
+rectangle), `usedRange()`, `columnLetters()`, `currentRevision()`, and
+`changedSince()` — so a windowed Compose grid can render only the visible
+rectangle of an unbounded sheet (the Compose sibling of the web/SwiftUI/Qt/
+Flutter infinite views). The window JSON is nested, so it's parsed by a tiny
+in-file JSON reader rather than `display()`'s per-value regex.
+
+Headless proof: `scripts/verify.sh` (kotlinc + FFM) seeds far-flung sparse cells
+and asserts the window is engine-computed + dense (A1=15, E1=38, E5=169), a
+formula 1000 rows down (`Z1000` = 39) is reachable, the gaps are empty (sparse),
+column letters run AA/BA, and editing `A1` dirties the far dependent `Z1000` via
+`changedSince`.
+
 ## Why "Compose for Desktop" rather than Jetpack Compose for Android?
 
 Same `androidx.compose.*` packages, same composable functions, same
