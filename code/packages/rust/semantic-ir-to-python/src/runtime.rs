@@ -53,6 +53,17 @@ from coding_adventures_sir_runtime_pairs import (
 )
 "##;
 
+/// The regex-runtime import header, appended **only** when a module calls the
+/// `regex` builtin (a Ruby `/pat/flags` literal).  Provides a target-native
+/// compiler with Ruby→Python flag translation; see `code/specs/sir-runtime.md`.
+pub const RUNTIME_REGEX: &str = r##"# ── SIR regex runtime (imported from coding-adventures-sir-runtime-regex) ──
+from coding_adventures_sir_runtime_regex import (
+    compile as _sir_regex_compile,
+    is_match as _sir_regex_is_match,
+    match_data as _sir_regex_match_data,
+)
+"##;
+
 pub const RUNTIME: &str = r##"# ── SIR runtime (imported from coding-adventures-sir-runtime-core) ──
 from coding_adventures_sir_runtime_core import (
     truthy as _sir_truthy,

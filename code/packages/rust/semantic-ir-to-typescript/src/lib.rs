@@ -842,4 +842,35 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(!a.source.contains("sir-runtime-pairs"), "got:\n{}", a.source);
     }
+
+    // ─── SIR regex builtin → sir-runtime-regex (Q8b) ────────────────────────
+
+    #[test]
+    fn regex_builtin_emits_regex_runtime_ts() {
+        let rx = Expr::BuiltinCall {
+            name: "regex".into(),
+            args: vec![
+                Expr::StrLit { value: "ab+c".into(), span: s() },
+                Expr::StrLit { value: "i".into(), span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let m = module_with_main_body(vec![], rx, &[Feature::Strings]);
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        assert!(
+            src.contains(r#"import * as __SirRegex from "@coding-adventures/sir-runtime-regex";"#),
+            "got:\n{}",
+            src
+        );
+        assert!(src.contains(r#"__SirRegex.compile("ab+c", "i")"#), "got:\n{}", src);
+    }
+
+    #[test]
+    fn non_regex_module_omits_regex_import_ts() {
+        let module = twig_to_semantic_ir::compile_source("(print (+ 1 2))", "demo").expect("lower");
+        let a = compile(&module).expect("compile");
+        assert!(!a.source.contains("sir-runtime-regex"), "got:\n{}", a.source);
+    }
 }

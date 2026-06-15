@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.9 — regex builtin → sir-runtime-regex (gated import)
+
+The Ruby `/pat/flags` literal lowers to `BuiltinCall("regex", [pattern,
+flags])`, which previously hit the unknown-builtin dispatch and threw at
+runtime. It now emits a call into the new `@coding-adventures/sir-runtime-regex`
+package (native `RegExp` compile with Ruby→JS flag translation), per
+`code/specs/sir-runtime.md`.
+
+- `BuiltinCall("regex", …)` → `__SirRegex.compile(pattern, flags)`.
+- New gated `RUNTIME_REGEX` import, emitted **only** when a module calls the
+  `regex` builtin. Because regex carries no SIR `Feature`, the gate
+  (`uses_regex`) is a content walk — an exhaustive `Stmt`/`Expr` recursion that
+  finds a `BuiltinCall` by name.
+- New direct-SIR tests assert the gated import + `__SirRegex.compile("ab+c",
+  "i")` and that a non-regex module omits the import. The runtime package's own
+  vitest suite (100%) covers flag translation and unanchored matching.
+
 ## 0.1.8 — pairs extracted to sir-runtime-pairs (gated import)
 
 Cons pairs (`cons`/`car`/`cdr`/`pair?`) now ship in the dedicated
