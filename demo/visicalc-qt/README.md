@@ -70,6 +70,25 @@ with binary-op error propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it →
 > runner can't expose the C++ `model` or link the engine, so its grid is empty.
 > Build and run the binary to see the live spreadsheet.
 
+## Infinite virtualized sheet
+
+`SpreadsheetModel` also exposes the engine's **viewport primitive** —
+`window(r0,c0,r1,c1)` (a dense `QVariantList` rectangle of display strings),
+`usedRange()`, `columnLetters()`, `currentRevision()`, and `changedSince()` —
+over the C ABI's `sc_get_window` / `sc_used_range` / `sc_changed_since`. These
+are `Q_INVOKABLE`, so a windowed QML grid (rendering only the visible rectangle
+of an unbounded sheet, the Qt sibling of the web/SwiftUI infinite views) binds
+to them directly.
+
+Headless proof: `test/tst_window.cpp` (qmake) seeds far-flung sparse cells and
+asserts the window is engine-computed + dense, a formula 1000 rows down
+(`Z1000` = 39) is reachable, the gaps are empty (sparse), column letters run
+AA/BA, and editing `A1` dirties the far dependent `Z1000` via `changedSince`:
+
+```bash
+cd test && qmake tst_window.pro && make && ./tst_window
+```
+
 ## Where this fits in the cross-backend demo plan
 
 | Backend | Engine | Status |

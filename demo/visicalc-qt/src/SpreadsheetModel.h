@@ -22,7 +22,9 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 #include <QVariantList>
+#include <QVariantMap>
 
 // The opaque session handle is forward-declared so this header doesn't drag the
 // C ABI header into every translation unit; SpreadsheetModel.cpp includes it.
@@ -71,6 +73,20 @@ public:
     // The raw value JSON the engine returns for a cell. Used by tests to assert
     // the engine contract directly.
     Q_INVOKABLE QString valueJson(const QString &a1) const;
+
+    // ── Viewport primitive (virtualized infinite sheet) ──
+    // A dense window of display strings (a list of rows, each a list of
+    // QString), 1-based inclusive coords — what a windowed QML grid renders.
+    Q_INVOKABLE QVariantList window(int row0, int col0, int row1, int col1) const;
+    // Data extent {minRow,minCol,maxRow,maxCol}, or an empty map if the sheet
+    // is empty. A host sizes its scrollable area to this.
+    Q_INVOKABLE QVariantMap usedRange() const;
+    // Column letters for a 1-based index (1 → "A", 27 → "AA").
+    Q_INVOKABLE QString columnLetters(int index) const;
+    // The per-edit revision clock; snapshot it, then pass to changedSince.
+    Q_INVOKABLE quint64 currentRevision() const;
+    // A1 addresses changed since `since` (empty if none / stale).
+    Q_INVOKABLE QStringList changedSince(quint64 since) const;
 
 signals:
     // viewportRows changed (after a recompute) — QML rebinds the grid.
