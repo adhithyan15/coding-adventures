@@ -289,6 +289,53 @@ fn emit_store(builder: &mut CILBytecodeBuilder, info: &RegInfo, fn_name: &str) -
     Ok(())
 }
 
+/// The bit-mask for a narrow unsigned integer width, or `None` if the width
+/// needs no masking.
+///
+/// LANG-FULL **E2 — register width & wrap**.  A CIL arithmetic op (`add`,
+/// `mul`, `shl`, …) operates on a full 32-bit `int32` stack slot, so a narrow
+/// unsigned value can overflow its declared width: `200u8 + 100u8` evaluates
+/// to `300` on the stack, but the `u8` contract says it must wrap to
+/// `300 & 0xFF = 44`.  We restore the contract by AND-masking the result down
+/// to the width after the op:
+///
+/// ```text
+///   ldc.i4 <mask>     ; push 0xFF (u8) / 0xFFFF (u16) / 0xF (u4)
+///   and               ; result &= mask  → back inside the width
+/// ```
+///
+/// | type_hint | mask     | example                       |
+/// |-----------|----------|-------------------------------|
+/// | `u4`      | `0xF`    | `15u4 + 1u4` → `16 & 0xF = 0`  |
+/// | `u8`      | `0xFF`   | `200u8 + 100u8` → `44`        |
+/// | `u16`     | `0xFFFF` | `~0u16` → `65535`             |
+/// | `u32`,`i32`| —       | the i32 op already wraps mod-2³² |
+/// | `i64`,…   | —        | wider/signed: left unchanged  |
+///
+/// This mirrors the JVM (`iand`), wasm (`i32.and`), VM, and JIT backends — a
+/// positive mask + `and` (never `conv.u1`/`conv.i1`, which would sign-extend a
+/// signed narrow value) keeps the unsigned widths unsigned.  `u32`/`i32`
+/// already wrap mod-2³² because the underlying CIL op is 32-bit, so they need
+/// no mask.
+fn narrow_width_mask(type_hint: &str) -> Option<i32> {
+    match type_hint {
+        "u4" => Some(0xF),
+        "u8" => Some(0xFF),
+        "u16" => Some(0xFFFF),
+        _ => None,
+    }
+}
+
+/// Emit `ldc.i4 <mask>; and` to wrap a just-computed narrow-width result back
+/// into its declared width.  A no-op for `u32`/`i32`/`i64`/signed hints (see
+/// [`narrow_width_mask`]).
+fn emit_narrow_width_mask(builder: &mut CILBytecodeBuilder, type_hint: &str) {
+    if let Some(mask) = narrow_width_mask(type_hint) {
+        builder.emit_ldc_i4(mask);
+        builder.emit_and();
+    }
+}
+
 // ===========================================================================
 // lower_iir_to_cil — main entry point
 // ===========================================================================
@@ -708,6 +755,8 @@ pub fn lower_iir_to_cil(
                         _ => unreachable!(),
                     }
 
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ.
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -736,6 +785,8 @@ pub fn lower_iir_to_cil(
                     emit_load(&mut builder, &rhs, fn_name)?;
                     // `rem` opcode: 0x5D.  Not in CILOpcode enum, emitted raw.
                     builder.emit_raw(vec![0x5D]);
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ.
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -756,6 +807,9 @@ pub fn lower_iir_to_cil(
                     emit_load(&mut builder, &src, fn_name)?;
                     // `neg` opcode: 0x65.
                     builder.emit_raw(vec![0x65]);
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ
+                    // (`-1u8` → `0xFF` = 255, not the i32 `-1`).
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -787,6 +841,9 @@ pub fn lower_iir_to_cil(
                         _ => unreachable!(),
                     }
 
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ
+                    // (`1u8 << 8` → `0`).
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -812,6 +869,10 @@ pub fn lower_iir_to_cil(
                     emit_load(&mut builder, &src, fn_name)?;
                     // `not` opcode: 0x66.
                     builder.emit_raw(vec![0x66]);
+                    // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ — `not`
+                    // flips all 32 bits, so `~0u8` is `0xFFFFFFFF`; the mask
+                    // brings it back to `0xFF` = 255 (Nib's unary `~`).
+                    emit_narrow_width_mask(&mut builder, &instr.type_hint);
                     emit_store(&mut builder, &dest, fn_name)?;
                 }
 
@@ -2128,6 +2189,70 @@ mod tests {
         ]);
         let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
         assert!(artifact.methods[0].body.contains(&0x58), "add = 0x58");
+    }
+
+    /// `c = <op>(a, b); ret c` with the op (and ret) carrying width `hint`.
+    fn typed_binop(op: &str, hint: &str) -> IIRModule {
+        single_fn(vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i32"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i32"),
+            IIRInstr::new(op, Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], hint),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], hint),
+        ])
+    }
+
+    #[test]
+    fn e2_u8_add_masks_with_ldc_0xff_and() {
+        // LANG-FULL E2: a `u8` add must wrap mod-256. After `add` (0x58) the
+        // body carries `ldc.i4 0xFF` (full form: 0x20, FF, 00, 00, 00) then
+        // `and` (0x5F) — so `200u8+100u8` evaluates to 44 on real CoreCLR.
+        let artifact = lower_iir_to_cil(&typed_binop("add", "u8"), &default_cfg()).unwrap();
+        let body = &artifact.methods[0].body;
+        let mask = [0x20u8, 0xFF, 0x00, 0x00, 0x00, 0x5F];
+        assert!(body.windows(6).any(|w| w == mask),
+            "u8 add must emit `ldc.i4 0xFF; and` after `add`: {body:?}");
+    }
+
+    #[test]
+    fn e2_u16_and_u4_masks_match_width() {
+        // u16 → 0xFFFF (full ldc.i4); u4 → 0xF (short ldc.i4.s).
+        let body16 = lower_iir_to_cil(&typed_binop("mul", "u16"), &default_cfg())
+            .unwrap().methods[0].body.clone();
+        assert!(body16.windows(6).any(|w| w == [0x20, 0xFF, 0xFF, 0x00, 0x00, 0x5F]),
+            "u16 mul must mask with `ldc.i4 0xFFFF; and`: {body16:?}");
+        let body4 = lower_iir_to_cil(&typed_binop("mul", "u4"), &default_cfg())
+            .unwrap().methods[0].body.clone();
+        // ldc.i4.s 0x0F = [0x1F, 0x0F]; and = 0x5F.
+        assert!(body4.windows(3).any(|w| w == [0x1F, 0x0F, 0x5F]),
+            "u4 mul must mask with `ldc.i4.s 0xF; and`: {body4:?}");
+    }
+
+    #[test]
+    fn e2_wide_widths_emit_no_mask() {
+        // u32/i32 already wrap mod-2³² via the 32-bit op; no `and` is appended,
+        // so the body is byte-identical to the legacy (pre-E2) output.
+        for hint in ["i32", "u32", "i64"] {
+            let body = lower_iir_to_cil(&typed_binop("add", hint), &default_cfg())
+                .unwrap().methods[0].body.clone();
+            assert!(!body.contains(&0x5F),
+                "{hint} add must NOT emit an `and` (0x5F) mask: {body:?}");
+        }
+    }
+
+    #[test]
+    fn e2_not_masks_to_width() {
+        // Nib unary `~`: `~0u8` is 0xFFFFFFFF after the 32-bit `not` (0x66);
+        // the mask brings it back to 0xFF = 255.
+        let m = single_fn(vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("not", Some("c".into()), vec![Operand::Var("a".into())], "u8"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "u8"),
+        ]);
+        let body = &lower_iir_to_cil(&m, &default_cfg()).unwrap().methods[0].body;
+        // not (0x66) then ldc.i4 0xFF (0x20 FF 00 00 00) then and (0x5F).
+        assert!(body.windows(7).any(|w| w == [0x66, 0x20, 0xFF, 0x00, 0x00, 0x00, 0x5F]),
+            "u8 not must emit `not; ldc.i4 0xFF; and`: {body:?}");
     }
 
     #[test]

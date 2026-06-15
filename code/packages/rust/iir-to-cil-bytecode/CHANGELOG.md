@@ -1,5 +1,46 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.20.0] — 2026-06-14 — narrow-width arithmetic wraps mod-2ⁿ (LANG-FULL E2, backend 5/6)
+
+### Added — `u4`/`u8`/`u16` results are masked back into their width
+
+LANG-FULL **E2 — register width & wrap**. A CIL arithmetic/bitwise op runs on a
+full 32-bit `int32` stack slot, so a narrow unsigned value silently overflows
+its declared width: `200u8 + 100u8` lands as `300` on the stack, but the `u8`
+contract requires it to wrap to `300 & 0xFF = 44`. We restore the contract by
+AND-masking the result down to the width **after** the op:
+
+```text
+  add               ; 200 + 100 = 300  (int32)
+  ldc.i4 0xFF       ; push the u8 mask
+  and               ; 300 & 0xFF = 44  ✓
+```
+
+| type_hint   | mask     | example                          |
+|-------------|----------|----------------------------------|
+| `u4`        | `0xF`    | `15u4 + 1u4` → `16 & 0xF = 0`     |
+| `u8`        | `0xFF`   | `200u8 + 100u8` → `44`; `~0u8` → `255` |
+| `u16`       | `0xFFFF` | `~0u16` → `65535`                |
+| `u32`,`i32` | —        | the 32-bit op already wraps mod-2³² |
+| `i64`,…     | —        | wider/signed: left unchanged     |
+
+The mask fires after `add`/`sub`/`mul`/`div`/`mod`, `neg`, `and`/`or`/`xor`/
+`shl`/`shr`, and `not` in **both** emitters — the `lower.rs` bytecode builder
+(`emit_narrow_width_mask` → `emit_ldc_i4(mask); emit_and()`) and the textual
+`il_text.rs` path (`ldc.i4 0x..; and`) — so narrow-width programs wrap
+identically whether assembled from raw bytes or from `.il` via `ilasm`. A
+positive mask + `and` is used (never `conv.u1`/`conv.i1`, which would
+sign-extend a signed narrow value) to keep the unsigned widths unsigned —
+matching the JVM `iand`, wasm `i32.and`, VM, and JIT backends.
+
+This is **backend 5/6** of the E2 enabler (after vm-core, jit-core, iir-to-wasm,
+iir-to-jvm-class-file). The narrow `type_hint`s are wired into the Nib/Oct
+frontends in the E2 integration PR (6/6), which adds the executed cross-backend
+matrix proof. New unit tests: `e2_u8_add_masks_with_ldc_0xff_and`,
+`e2_u16_and_u4_masks_match_width`, `e2_wide_widths_emit_no_mask`,
+`e2_not_masks_to_width` (bytecode path); `e2_narrow_width_add_masks_result`,
+`e2_narrow_width_masks_match_hint`, `e2_wide_widths_are_not_masked` (textual path).
+
 ## [0.19.0] — 2026-06-13 — bitwise ops on the textual `.il` path (LANG-FULL N3)
 
 ### Fixed — `and` / `or` / `xor` (and `shl` / `shr`) now emit on the textual path
