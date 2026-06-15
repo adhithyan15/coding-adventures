@@ -30,6 +30,8 @@ control-plane layer:
   timeout-queue drain checks
 - request tracker drain summaries for controller dispatch handoff checks across
   request-loop, callback, response, timeout, and pending-function drains
+- request tracker dispatch summaries that turn completed drain checks into a
+  payload-free controller dispatch readiness view
 
 It does not yet open a serial port, interview nodes, handle inclusion, or decode
 command-class payload semantics.
