@@ -1,0 +1,71 @@
+{
+  "hash": "b18b8c9e3d73b0a9",
+  "source_id": "https://www.ncbi.nlm.nih.gov/books/NBK430891/",
+  "title": "Central Line-Associated Blood Stream Infections - StatPearls - NCBI Bookshelf",
+  "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK430891/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "In CLABSI, gram-positive organisms are most common: coagulase-negative staphylococci 34.1%, enterococci 16%, S. aureus 9.9%; gram-negatives include Klebsiella 5.8%, Enterobacter 3.9%, Pseudomonas 3.1%, E. coli 2.7%, Acinetobacter 2.2%; Candida species 11.8%; others 10.5%.",
+      "byte_quote": "Gram-positive organisms (coagulase-negative staphylococci, 34.1%; enterococci, 16%; and Staphylococcus aureus, 9.9%) are the most common, followed by gram-negatives (Klebsiella, 5.8%; Enterobacter, 3.9%; Pseudomonas, 3.1%; E. coli, 2.7%; Acinetobacter, 2.2%), Candida species (11.8%), and others (10.5%)."
+    },
+    {
+      "id": "c2",
+      "text": "About 40%-80% of catheter-related bloodstream infections (CRBSIs) are caused by gram-positive organisms.",
+      "byte_quote": "Approximately 40%–80% of CRBSIs are caused by gram-positive organisms."
+    },
+    {
+      "id": "c3",
+      "text": "Host factors raising CLABSI risk include hemodialysis, malignancy, GI disorders, pulmonary hypertension, immune-suppressed states (organ transplant, diabetes), malnutrition, TPN, extremes of age, loss of skin integrity (burns), and prolonged pre-insertion hospitalization.",
+      "byte_quote": "Chronic illnesses (hemodialysis, malignancy, gastrointestinal tract disorders, pulmonary hypertension), immune-suppressed states (organ transplant, diabetes mellitus), malnutrition, total parenteral nutrition, extremes of age, loss of skin integrity (burns), and prolonged hospitalization before line insertion are host factors that increase the risk of CLABSI."
+    },
+    {
+      "id": "c4",
+      "text": "Pseudomonas bloodstream infection is commonly associated with neutropenia, severe illness, or known prior colonization.",
+      "byte_quote": "Pseudomonas is commonly associated with neutropenia, severe illness, or known prior colonization."
+    },
+    {
+      "id": "c5",
+      "text": "Candida bloodstream infection is associated with femoral catheterization, TPN, prolonged broad-spectrum antibiotics, hematologic malignancy, or solid-organ or hematopoietic stem cell transplantation.",
+      "byte_quote": "Candida is associated with risk factors: femoral catheterization, TPN, prolonged administration of broad-spectrum antibiotics, hematologic malignancy, or solid organ or hematopoietic stem cell transplantation."
+    },
+    {
+      "id": "c6",
+      "text": "Femoral central venous catheters carry the highest CLABSI risk, followed by internal jugular then subclavian catheters.",
+      "byte_quote": "Femoral central venous catheters are associated with the highest risk of CLABSI, followed by internal jugular and subclavian catheters."
+    },
+    {
+      "id": "c7",
+      "text": "Within 7-10 days of catheter placement, skin-surface bacteria migrate along the external catheter surface from the skin exit site toward the intravascular space (extraluminal source).",
+      "byte_quote": "Within 7 to 10 days of central venous catheter placement, bacteria on the skin surface migrate along the external surface of the catheter from the skin exit site towards the intravascular space."
+    },
+    {
+      "id": "c8",
+      "text": "CLABSIs beyond 10 days are usually caused by intraluminal hub contamination, typically from a healthcare provider's contaminated hands.",
+      "byte_quote": "CLABSIs that occur beyond 10 days are usually caused by contamination of the hub (intraluminal), typically from a health care provider's contaminated hands but rarely from a host and often due to a breach of standard aseptic precautions to access the hub."
+    },
+    {
+      "id": "c9",
+      "text": "Empiric therapy: parenteral vancomycin where MRSA is prevalent; otherwise anti-staphylococcal penicillin or cephalosporins (nafcillin or cefazolin) suffice.",
+      "byte_quote": "Parenteral vancomycin if methicillin-resistant staphylococci (MRSA) is prevalent. Otherwise, parenteral anti-staphylococcal penicillin or cephalosporins such as nafcillin or cefazolin would suffice."
+    },
+    {
+      "id": "c10",
+      "text": "Daptomycin is the drug of choice when MRSA isolates have vancomycin MIC > 2 mg/mL or for vancomycin-resistant enterococci (VRE).",
+      "byte_quote": "If MRSA isolates exhibit a minimum inhibitory concentration of > 2 mg/mL for vancomycin or, in the case of vancomycin-resistant enterococci (VRE), daptomycin is the drug of choice."
+    },
+    {
+      "id": "c11",
+      "text": "Echinocandins (micafungin, caspofungin, anidulafungin) are preferred for suspected candidemia when azole resistance is suspected (prior azole use or prevalent non-albicans candida such as C. glabrata or C. krusei).",
+      "byte_quote": "Echinocandins (micafungin, caspofungin, anidulafungin) are preferred agents for suspected candidemia if azole resistance is suspected (prior azole use or prevalent nonalbicans candida such as C.glabrata or C.krusei)."
+    },
+    {
+      "id": "c12",
+      "text": "Non-tunneled catheters carry higher CLABSI risk than tunneled catheters because they lack a subcutaneous tract.",
+      "byte_quote": "The absence of a tunnel (a subcutaneous tract) places non-tunneled catheters at higher risk for CLABSIs."
+    }
+  ],
+  "cites": [
+    "National Healthcare Safety Network (NHSN) data from January 2006 to October 2007"
+  ]
+}

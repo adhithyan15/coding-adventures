@@ -1,0 +1,122 @@
+{
+  "hash": "e3fc40eba191bb19",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10699684/",
+  "title": "Pseudomonas aeruginosa: Infections and novel approaches to treatment \"Knowing the enemy\" the threat of Pseudomonas aeruginosa and exploring novel approaches to treatment (Infect Med (Beijing). 2023;2(3):178-194)",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10699684/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "P. aeruginosa is a Gram-negative, motile, nonfermenting, rod-shaped (bacillus) bacterium.",
+      "byte_quote": "Pseudomonas aeruginosa is a motile, nonfermenting, Gram-negative, rod-shaped"
+    },
+    {
+      "id": "c2",
+      "text": "P. aeruginosa colonizes healthy people: isolated from the throat of 5% and stools of 3% of nonhospitalized patients.",
+      "byte_quote": "has also been isolated from the throat (5%) and stools (3%) of nonhospitalized patients"
+    },
+    {
+      "id": "c3",
+      "text": "P. aeruginosa is the 4th leading cause of HAIs, accounts for 20% of all HAIs in Europe/US, and is responsible for 75% of deaths of severely burnt patients.",
+      "byte_quote": "It is the fourth leading cause of hospital-associated infections (HAIs) and accounts for 20% of all HAIs in Europe and United States [45] and is responsible for 75% of all deaths of severely burnt patients [46]."
+    },
+    {
+      "id": "c4",
+      "text": "P. aeruginosa is the 2nd most common cause of ventilator-associated pneumonia in the US and ranks 3rd among catheter-associated UTIs.",
+      "byte_quote": "P. aeruginosa is the second most common cause of ventilator-associated pneumonia in the United States [43], and ranks third among urinary tract infections associated with catheters [44]."
+    },
+    {
+      "id": "c5",
+      "text": "P. aeruginosa causes 3%-7% of bloodstream infection cases, with 27%-48% morbidity/mortality in critically ill patients.",
+      "byte_quote": "The bacterium is responsible for 3%–7% of blood stream infection cases with high morbidity and mortality rates (27%–48%) in critically ill patients [125,126]."
+    },
+    {
+      "id": "c6",
+      "text": "P. aeruginosa is the 3rd most common Gram-negative cause of nosocomial bloodstream infection, accounting for 4.3% of all nosocomial BSI cases.",
+      "byte_quote": "reported P. aeruginosa as the third most common Gram-negative bacteria causing nosocomial BSI and accounted for 4.3% of all cases."
+    },
+    {
+      "id": "c7",
+      "text": "Patients with burns and AIDS are more vulnerable to systemic (bloodstream) P. aeruginosa infection.",
+      "byte_quote": "Patients with burns and AIDs are more vulnerable to systemic infection by P. aeruginosa"
+    },
+    {
+      "id": "c8",
+      "text": "In adult neutropenic oncohematological patients (incl. HSCT recipients), P. aeruginosa BSI isolates were 25.4% MDR and 19.3% XDR.",
+      "byte_quote": "P. aeruginosa strains isolated from adult neutropenic oncohematological patients, including hematopoietic stem cell transplant recipients, were caused by multi drug resistant (25.4%) and extensively drug resistant bacteria (19.3%)."
+    },
+    {
+      "id": "c9",
+      "text": "P. aeruginosa is associated with 7%-12% of all nosocomial UTIs.",
+      "byte_quote": "associated with 7%–12% of all nosocomial urinary tract infections [44,127]."
+    },
+    {
+      "id": "c10",
+      "text": "P. aeruginosa UTIs usually follow catheterization or surgery (device/instrumentation risk factor).",
+      "byte_quote": "The bacterium usually causes UTIs following catheterization or surgery [75]."
+    },
+    {
+      "id": "c11",
+      "text": "P. aeruginosa UTI can progress to sepsis, fatal especially in older, immunocompromised, and diabetic patients.",
+      "byte_quote": "may cause complications such as sepsis that can be fatal in older patients, immunocompromised patients and individuals with diabetes [19]."
+    },
+    {
+      "id": "c12",
+      "text": "Burn wounds are first colonized by Gram-positive organisms (Staphylococcus aureus, Streptococcus pyogenes) before P. aeruginosa infection.",
+      "byte_quote": "Wounds first become colonized by Gram-positive organisms such as Staphylococcus aureus and Streptococcus pyogenes before infection by P. aeruginosa"
+    },
+    {
+      "id": "c13",
+      "text": "Source/portal associations: burn-wound infection arises from endogenous GI/upper-respiratory flora (causing septicaemia); bloodstream infections are nosocomial.",
+      "byte_quote": "Burn wound infectionEndogenous flora of the gastrointestinal and or upper respiratory tract [87,88]Septicaemia [46]Blood stream infectionsNosocomial [89]"
+    },
+    {
+      "id": "c14",
+      "text": "In India, carbapenem resistance among P. aeruginosa is high (40%-47%).",
+      "byte_quote": "A scoping report on antimicrobial resistance in India reported a high prevalence of carbapenem resistance among P. aeruginosa (40%–47%)"
+    },
+    {
+      "id": "c15",
+      "text": "DTR P. aeruginosa is non-susceptible to all of: piperacillin-tazobactam, ceftazidime, cefepime, aztreonam, meropenem, imipenem-cilastatin, ciprofloxacin, levofloxacin (the anti-pseudomonal drug list).",
+      "byte_quote": "DTR is described in this guidance as P. aeruginosa that does not display sensitivity to any of the following drugs: piperacillin-tazobactam, ceftazidime, cefepime, aztreonam, meropenem, imipenem-cilastatin, ciprofloxacin, and levofloxacin."
+    },
+    {
+      "id": "c16",
+      "text": "P. aeruginosa causes bacterial keratitis in 6%-39% of cases in the USA and 8%-21% in south India (contact-lens/ocular-surgery risk).",
+      "byte_quote": "P. aeruginosa is responsible for causing bacterial keratitis in 6% to 39% of the cases in the USA [116,117] and 8% to 21% in south India [116]."
+    },
+    {
+      "id": "c17",
+      "text": "P. aeruginosa accounted for 17.5% of ventilator-associated pneumonia cases and 9.26% of hospital-associated pneumonia cases.",
+      "byte_quote": "P. aeruginosa accounted for 17.5% of all cases in ventilator-associated pneumonia and 9.26% of all cases in hospital-associated pneumonia [91]."
+    },
+    {
+      "id": "c18",
+      "text": "P. aeruginosa is implicated in 0.3%-11% of community-acquired pneumonia and 2.2%-20% of healthcare-associated pneumonia.",
+      "byte_quote": "Reported percentages of P. aeruginosa implicated in community-acquired pneumonia vary from 0.3% to 11%, whereas it varies from 2.2% to 20% in healthcare associated pneumonia [150,151]."
+    },
+    {
+      "id": "c19",
+      "text": "Hospitalized P. aeruginosa UTI patients had 17.7% mortality at 30 days and 33.9% at 90 days.",
+      "byte_quote": "reported 17.7% mortalities at 30 days and 33.9% mortalities at 90 days [130]."
+    },
+    {
+      "id": "c20",
+      "text": "P. aeruginosa was the 3rd most common Gram-negative uropathogen, causing 7.1% of nosocomial UTIs in the Asia-Pacific region (2009-2010).",
+      "byte_quote": "P. aeruginosa was found to be the third most common Gram-negative pathogen causing 7.1% of all nosocomial urinary tract infections in surveillance studies from the Asia-Pacific region in 2009 to 2010 [128]."
+    }
+  ],
+  "cites": [
+    "Wisplinghoff et al. (nationwide nosocomial BSI surveillance, USA) — ref [89]",
+    "Gudiol et al. (retrospective P. aeruginosa BSI in neutropenic oncohematological patients, Jan 2006–May 2018) — ref [95]",
+    "Hidron et al. (NHSN/CDC HAI ranking report 2006–2007) — ref [66]",
+    "Weber et al. (ventilator- vs hospital-associated pneumonia proportions) — ref [91]",
+    "Prakash et al. (31.78% MDR P. aeruginosa in Indian hospitals) — ref [9]",
+    "Bitsori et al. (P. aeruginosa vs E. coli UTI in children) — ref [129]",
+    "Kwok et al. (non-CF bronchiectasis colonization cohort, 2018) — ref [154]",
+    "Shobha et al. (107 urine samples 2015–2016; UTI in males, age >60) — ref [131]",
+    "National REA-RAISIN surveillance 2004–2006 (P. aeruginosa most common pneumonia cause, 25%) — ref [133]",
+    "CDC Antibiotic Resistance Threats in the US 2019 (32,600 cases; 2,700 deaths; $767M) — ref [65]",
+    "IDSA guidance document on DTR P. aeruginosa, Sept 17, 2020 — ref [51]",
+    "WHO 2017 priority pathogens list (carbapenem-resistant P. aeruginosa, Critical) — ref [45/51]"
+  ]
+}

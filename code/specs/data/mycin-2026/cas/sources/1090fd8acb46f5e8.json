@@ -1,0 +1,74 @@
+{
+  "hash": "1090fd8acb46f5e8",
+  "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2708523/",
+  "title": "Diversity of Group B Streptococcus Serotypes Causing Urinary Tract Infection in Adults",
+  "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2708523/",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Group B Streptococcus (GBS) was cultured from 1.1% of consecutive adult urine samples (387/34,367).",
+      "byte_quote": "GBS was cultured from 387/34,367 consecutive urine samples (1.1%)"
+    },
+    {
+      "id": "c2",
+      "text": "Serotypes V, Ia, and III caused the most GBS UTIs.",
+      "byte_quote": "Serotypes V, Ia, and III caused the most UTIs"
+    },
+    {
+      "id": "c3",
+      "text": "Serotypes V, Ia, and III together account for 76% of the 62 GBS UTI cases.",
+      "byte_quote": "The most prevalent serotypes among the 62 cases of GBS UTI were serotypes V, Ia, and III (Table 2), which together account for 76% of cases."
+    },
+    {
+      "id": "c4",
+      "text": "Nontypeable GBS was not associated with UTI.",
+      "byte_quote": "Nontypeable GBS was not associated with UTI."
+    },
+    {
+      "id": "c5",
+      "text": "GBS UTI case patients were significantly older than controls (mean 53 vs 30 years).",
+      "byte_quote": "the mean age of case patients was significantly greater (53 ± 19 years versus 30 ± 12 years; P < 0.001)"
+    },
+    {
+      "id": "c6",
+      "text": "Prior history of UTI raised the odds of GBS UTI (OR 3.1).",
+      "byte_quote": "GBS UTI case patients were significantly more likely to have had a prior history of UTI than controls (OR, 3.1; 95% CI, 1.1 to 8.7)"
+    },
+    {
+      "id": "c7",
+      "text": "Female sex raised the odds of GBS UTI (OR 3.8).",
+      "byte_quote": "to be female (OR, 3.8; 95% CI, 1.6 to 8.7)"
+    },
+    {
+      "id": "c8",
+      "text": "Women of child-bearing age with GBS UTI were less likely to be pregnant than child-bearing-age controls (37.5% vs 81.4%).",
+      "byte_quote": "Significantly fewer women of child-bearing age (defined as <40 yrs) with GBS UTI were pregnant than women of child-bearing age who were controls (37.5% [6/16] versus 81.4% [35/43]; P = 0.003)"
+    },
+    {
+      "id": "c9",
+      "text": "Confirmed GBS UTI cases (31/62 with urinalysis) all had positive leukocyte esterase and pyuria.",
+      "byte_quote": "All 31 of the 62 patients who had UA performed had positive results based on positive urinary leukocyte esterase and pyuria"
+    },
+    {
+      "id": "c10",
+      "text": "GBS isolates were uniformly susceptible to amoxicillin-clavulanic acid, penicillin, linezolid, and chloramphenicol.",
+      "byte_quote": "they were uniformly susceptible to amoxicillin (amoxicilline) with clavulanic acid, penicillin, linezolid, and chloramphenicol"
+    },
+    {
+      "id": "c11",
+      "text": "A substantial proportion of GBS isolates were resistant to clindamycin (26.4%) and erythromycin (39.5%).",
+      "byte_quote": "A considerable proportion of isolates was resistant to clindamycin (102/387 [26.4%]) and erythromycin (153/387 [39.5%])"
+    },
+    {
+      "id": "c12",
+      "text": "Most GBS isolates were resistant to tetracycline (80.4%), cefoxitin (88.7%), and trimethoprim-sulfamethoxazole (98.3%).",
+      "byte_quote": "the majority was resistant to tetracycline (311/387 [80.4%]), cefoxitin (343/387 [88.7%]), and trimethoprim with sulfamethoxazole (380/387 [98.3%])"
+    },
+    {
+      "id": "c13",
+      "text": "Only one GBS UTI patient had concurrent GBS bloodstream isolation, indicating probable urosepsis.",
+      "byte_quote": "only one patient had GBS concurrently isolated from blood, representing probable urosepsis"
+    }
+  ],
+  "cites": []
+}

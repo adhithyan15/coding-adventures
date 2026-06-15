@@ -1,0 +1,74 @@
+{
+  "hash": "ac722c855cec8fbe",
+  "source_id": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+  "title": "Sulfamethoxazole and Trimethoprim Injection, USP — DailyMed Label (Mylan Institutional LLC)",
+  "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "ORGANISM EPIDEMIOLOGY (UTI): Sulfamethoxazole/trimethoprim injection treats severe or complicated UTIs in adults and pediatric patients >=2 months due to susceptible E. coli, Klebsiella spp., Enterobacter spp., Morganella morganii, Proteus mirabilis, and Proteus vulgaris.",
+      "byte_quote": "sulfamethoxazole and trimethoprim injection is indicated in the treatment of severe or complicated urinary tract infections in adults and pediatric patients two months of age and older due to susceptible strains of Escherichia coli, Klebsiella species, Enterobacter species, Morganella morganii, Proteus mirabilis and Proteus vulgaris when oral administration of sulfamethoxazole and trimethoprim injection is not feasible and when the organism is not susceptible to single-agent antibacterials effective in the urinary tract."
+    },
+    {
+      "id": "c2",
+      "text": "ORGANISM EPIDEMIOLOGY (enteritis): It treats enteritis caused by susceptible Shigella flexneri and Shigella sonnei in adults and pediatric patients >=2 months.",
+      "byte_quote": "Sulfamethoxazole and trimethoprim injection is indicated in the treatment of enteritis caused by susceptible strains of Shigella flexneri and Shigella sonnei in adults and pediatric patients two months of age and older."
+    },
+    {
+      "id": "c3",
+      "text": "ORGANISM EPIDEMIOLOGY (PCP): It treats Pneumocystis jirovecii pneumonia in adults and pediatric patients >=2 months.",
+      "byte_quote": "Sulfamethoxazole and trimethoprim injection is indicated in the treatment of Pneumocystis jirovecii pneumonia in adults and pediatric patients two months of age and older."
+    },
+    {
+      "id": "c4",
+      "text": "ANTIBIOTIC DOSING (PCP): 15 to 20 mg/kg/day in 3 or 4 equally divided doses, every 6 to 8 hours, for 14 days.",
+      "byte_quote": "15 to 20 mg/kg (in 3 or 4 equally divided doses)"
+    },
+    {
+      "id": "c5",
+      "text": "ANTIBIOTIC DOSING (severe UTI): 8 to 10 mg/kg/day in 2 to 4 equally divided doses, every 6, 8, or 12 hours, for 14 days.",
+      "byte_quote": "8 to 10 mg/kg (in 2 to 4 equally divided doses)"
+    },
+    {
+      "id": "c6",
+      "text": "ANTIBIOTIC DOSING (administration): Given by intravenous infusion over a period of 60 to 90 minutes.",
+      "byte_quote": "Administer the solution by intravenous infusion over a period of 60 to 90 minutes."
+    },
+    {
+      "id": "c7",
+      "text": "DOSING (renal impairment / nephrotoxicity-related): When renal function is impaired, a reduced dosage should be employed.",
+      "byte_quote": "When renal function is impaired, a reduced dosage should be employed"
+    },
+    {
+      "id": "c8",
+      "text": "CONTRAINDICATION (allergy): Known hypersensitivity to trimethoprim or sulfonamides.",
+      "byte_quote": "Known hypersensitivity to trimethoprim or sulfonamides"
+    },
+    {
+      "id": "c9",
+      "text": "INTERACTION/CONTRAINDICATION (QT): Concomitant administration with dofetilide is contraindicated.",
+      "byte_quote": "Concomitant administration with dofetilide"
+    },
+    {
+      "id": "c10",
+      "text": "HOST/RISK FACTOR (immune status): In AIDS patients treated for P. jirovecii pneumonia, the incidence of adverse reactions (rash, fever, leukopenia, elevated transaminases) is increased versus non-AIDS patients.",
+      "byte_quote": "The incidence of adverse reactions, particularly rash, fever, leukopenia, and elevated aminotransferase (transaminase) values, with sulfamethoxazole and trimethoprim therapy in AIDS patients who are being treated for P. jirovecii pneumonia has been reported to be increased compared with the incidence normally associated with the use of sulfamethoxazole and trimethoprim in non-AIDS patients."
+    },
+    {
+      "id": "c11",
+      "text": "CONTRAINDICATION/INTERACTION (pregnancy): Epidemiologic studies suggest exposure during pregnancy may increase risk of congenital malformations (neural tube defects, cardiovascular, urinary tract, oral clefts, club foot).",
+      "byte_quote": "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot."
+    },
+    {
+      "id": "c12",
+      "text": "INTERACTION (nephrotoxicity): Marked but reversible nephrotoxicity has been reported with coadministration of sulfamethoxazole/trimethoprim and cyclosporine in renal transplant recipients.",
+      "byte_quote": "There have been reports of marked but reversible nephrotoxicity with coadministration of sulfamethoxazole and trimethoprim and cyclosporine in renal transplant recipients."
+    },
+    {
+      "id": "c13",
+      "text": "ADVERSE EFFECT (QT): QT prolongation resulting in ventricular tachycardia and torsades de pointes has been reported.",
+      "byte_quote": "QT prolongation resulting in ventricular tachycardia and torsades de pointes"
+    }
+  ],
+  "cites": []
+}

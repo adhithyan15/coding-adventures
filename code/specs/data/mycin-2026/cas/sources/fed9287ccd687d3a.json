@@ -1,0 +1,131 @@
+{
+  "hash": "fed9287ccd687d3a",
+  "source_id": "https://www.aafp.org/pubs/afp/issues/2011/1001/p771.html",
+  "title": "Diagnosis and Management of Acute Uncomplicated Cystitis (AAFP, Am Fam Physician 2011)",
+  "resolved_url": "https://www.aafp.org/pubs/afp/issues/2011/1001/p771.html",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "UTIs are the most common bacterial infection in women; about half of all women have at least one UTI in their lifetime.",
+      "byte_quote": "Urinary tract infections (UTIs) are the most common bacterial infections in women, with one-half of all women experiencing at least one UTI in their lifetime."
+    },
+    {
+      "id": "c2",
+      "text": "Organism epidemiology: acute uncomplicated cystitis is caused by E. coli (86%), S. saprophyticus (4%), Klebsiella (3%), Proteus (3%), Enterobacter (1.4%), Citrobacter (0.8%), Enterococcus (0.5%).",
+      "byte_quote": "Most UTIs in women are acute uncomplicated cystitis caused by _Escherichia coli_ (86 percent), _Staphylococcus saprophyticus_ (4 percent), _Klebsiella_ species (3 percent), _Proteus_ species (3 percent), _Enterobacter_ species (1.4 percent), _Citrobacter_ species (0.8 percent), or _Enterococcus_ species (0.5 percent)."
+    },
+    {
+      "id": "c3",
+      "text": "Host definition / risk population: uncomplicated cystitis means a premenopausal, nonpregnant woman with no urologic abnormalities or comorbidities.",
+      "byte_quote": "By definition, the diagnosis of acute uncomplicated cystitis implies an uncomplicated UTI in a premenopausal, nonpregnant woman with no known urologic abnormalities or comorbidities."
+    },
+    {
+      "id": "c4",
+      "text": "Risk factors raising UTI likelihood: recent sexual intercourse, diaphragm-with-spermicide use, and recurrent UTIs.",
+      "byte_quote": "A prospective study of 796 sexually active young women identified risk factors to help diagnose UTI, including recent sexual intercourse, diaphragm use with spermicide, and recurrent UTIs."
+    },
+    {
+      "id": "c5",
+      "text": "Urinalysis: nitrites and leukocyte esterase are the most accurate dipstick indicators of cystitis in symptomatic women.",
+      "byte_quote": "Nitrites and leukocyte esterase are the most accurate indicators of acute uncomplicated cystitis in symptomatic women."
+    },
+    {
+      "id": "c6",
+      "text": "Classic lower urinary tract symptoms are dysuria, frequent small-volume voiding, and urinary urgency.",
+      "byte_quote": "Classic lower urinary tract symptoms include dysuria, frequent voiding of small volumes, and urinary urgency."
+    },
+    {
+      "id": "c7",
+      "text": "Urine culture diagnostic threshold: >= 10^3 CFU/mL of a uropathogen is diagnostic of acute uncomplicated cystitis.",
+      "byte_quote": "A colony count greater than or equal to 10³ colony-forming units per mL of a uropathogen is diagnostic of acute uncomplicated cystitis."
+    },
+    {
+      "id": "c8",
+      "text": "Lower culture threshold: >10^2 CFU/mL in women with typical UTI symptoms represents a positive culture.",
+      "byte_quote": "studies have shown that more than 10² colony-forming units per mL in women with typical symptoms of a UTI represent a positive culture."
+    },
+    {
+      "id": "c9",
+      "text": "Pretest probability of UTI in women is 5%, rising 10-fold to 50% with the acute onset of even one classic symptom.",
+      "byte_quote": "The pretest probability of UTI in women is 5 percent; however, when a woman presents with the acute onset of even one of the classic symptoms of acute uncomplicated cystitis, the probability of infection rises 10-fold to 50 percent."
+    },
+    {
+      "id": "c10",
+      "text": "New-onset frequency and dysuria without vaginal discharge/irritation has a 90% positive predictive value for UTI.",
+      "byte_quote": "The new onset of frequency and dysuria, with the absence of vaginal discharge or irritation, has a positive predictive value of 90 percent for UTI."
+    },
+    {
+      "id": "c11",
+      "text": "First-line dosing: nitrofurantoin 100 mg twice per day for five days.",
+      "byte_quote": "Nitrofurantoin at a dosage of 100 mg twice per day for five days"
+    },
+    {
+      "id": "c12",
+      "text": "First-line dosing: TMP-SMX one double-strength tablet (160/800 mg) twice per day for three days, only where community uropathogen resistance does not exceed 20%.",
+      "byte_quote": "trimethoprim/sulfamethoxazole (Bactrim, Septra) at a dosage of one double-strength tablet (160/800 mg) twice per day for three days in regions where the prevalence of resistance of community uropathogens does not exceed 20 percent"
+    },
+    {
+      "id": "c13",
+      "text": "First-line dosing: fosfomycin a single 3 g dose.",
+      "byte_quote": "Fosfomycin at a single dose of 3 g"
+    },
+    {
+      "id": "c14",
+      "text": "Fluoroquinolones (ofloxacin, ciprofloxacin, levofloxacin) are second-tier antimicrobials for cystitis.",
+      "byte_quote": "Fluoroquinolones (i.e., ofloxacin, ciprofloxacin [Cipro], and levofloxacin [Levaquin]) are considered second-tier antimicrobials"
+    },
+    {
+      "id": "c15",
+      "text": "Fluoroquinolone dosing: ciprofloxacin 250 mg twice daily x3 days; Cipro XR 500 mg/day x3; levofloxacin 250 mg/day x3; ofloxacin 200 mg/day x3 or 400 mg single dose.",
+      "byte_quote": "Ciprofloxacin (Cipro): 250 mg twice per day for three days"
+    },
+    {
+      "id": "c16",
+      "text": "Beta-lactam (third-tier) dosing: amoxicillin/clavulanate 500/125 mg twice daily x7 days; cefdinir 300 mg twice daily x10 days; cefpodoxime 100 mg twice daily x7 days.",
+      "byte_quote": "Amoxicillin/clavulanate (Augmentin): 500/125 mg twice per day for seven days"
+    },
+    {
+      "id": "c17",
+      "text": "Beta-lactams are not recommended first-line for cystitis due to E. coli resistance above 20%.",
+      "byte_quote": "Beta-lactam antibiotics are not recommended as first-line therapy for acute uncomplicated cystitis because of widespread _E. coli_ resistance rates above 20 percent."
+    },
+    {
+      "id": "c18",
+      "text": "Fluoroquinolones should be reserved (collateral-damage concern) for more serious infections than uncomplicated cystitis.",
+      "byte_quote": "Although fluoroquinolones are effective, they have the propensity for collateral damage, and should be considered for patients with more serious infections than acute uncomplicated cystitis."
+    },
+    {
+      "id": "c19",
+      "text": "To preserve effectiveness, fluoroquinolones are not recommended as a first-tier option.",
+      "byte_quote": "To preserve the effectiveness of fluoroquinolones, they are not recommended as a first-tier option."
+    },
+    {
+      "id": "c20",
+      "text": "Resistance risk factor: TMP-SMX use in the prior 3-6 months is an independent risk factor for resistance.",
+      "byte_quote": "Use of trimethoprim/sulfamethoxazole in the preceding three to six months has been found to be an independent risk factor for resistance."
+    },
+    {
+      "id": "c21",
+      "text": "Pregnancy categories (Table 2): fosfomycin B, nitrofurantoin B, TMP-SMX C, fluoroquinolones C.",
+      "byte_quote": "Fosfomycin: \"B\""
+    },
+    {
+      "id": "c22",
+      "text": "Pyelonephritis should be suspected if the patient is ill-appearing/uncomfortable, especially with fever, tachycardia, or costovertebral angle tenderness.",
+      "byte_quote": "Acute pyelonephritis should be suspected if the patient is ill-appearing and seems uncomfortable, particularly if she has concomitant fever, tachycardia, or costovertebral angle tenderness."
+    },
+    {
+      "id": "c23",
+      "text": "Urine cultures are recommended only for suspected pyelonephritis, non-resolving/recurrent symptoms within 2-4 weeks, or atypical presentation.",
+      "byte_quote": "Urine cultures are recommended only for patients with suspected acute pyelonephritis; patients with symptoms that do not resolve or that recur within two to four weeks after the completion of treatment; and patients who present with atypical symptoms."
+    },
+    {
+      "id": "c24",
+      "text": "Women with prior acute uncomplicated cystitis are usually accurate in self-diagnosing recurrence.",
+      "byte_quote": "Women who have had acute uncomplicated cystitis previously are usually accurate in determining when they are having another episode."
+    }
+  ],
+  "cites": [
+    "Gupta K, Hooton TM, Naber KG, et al. International clinical practice guidelines for the treatment of acute uncomplicated cystitis and pyelonephritis in women: a 2010 update by the Infectious Diseases Society of America and the European Society for Microbiology and Infectious Diseases. Clin Infect Dis. 2011;52(5):e103-e120."
+  ]
+}

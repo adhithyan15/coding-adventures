@@ -1,0 +1,89 @@
+{
+  "hash": "3bc1d8571af85cc8",
+  "source_id": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687",
+  "title": "Moxifloxacin Hydrochloride — DailyMed FDA Prescribing Label",
+  "resolved_url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c442cca-47f5-48e5-b718-c09413911687",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "Community-acquired pneumonia treated by moxifloxacin is caused by S. pneumoniae (including MDRSP), H. influenzae, M. catarrhalis, MSSA, K. pneumoniae, M. pneumoniae, or C. pneumoniae.",
+      "byte_quote": "Community Acquired Pneumonia caused by susceptible isolates of Streptococcus pneumoniae (including multi-drug resistant Streptococcus pneumoniae [MDRSP]), Haemophilus influenzae, Moraxella catarrhalis, methicillin-susceptible Staphylococcus aureus, Klebsiella pneumoniae, Mycoplasma pneumoniae, or Chlamydophila pneumoniae"
+    },
+    {
+      "id": "c2",
+      "text": "Complicated intra-abdominal infections (e.g. abscess) are polymicrobial, caused by E. coli, B. fragilis, S. anginosus, S. constellatus, E. faecalis, P. mirabilis, C. perfringens, B. thetaiotaomicron, or Peptostreptococcus.",
+      "byte_quote": "Complicated Intra-Abdominal Infections (cIAI) including polymicrobial infections such as abscess caused by susceptible isolates of Escherichia coli, Bacteroides fragilis, Streptococcus anginosus, Streptococcus constellatus, Enterococcus faecalis, Proteus mirabilis, Clostridium perfringens, Bacteroides thetaiotaomicron, or Peptostreptococcus species"
+    },
+    {
+      "id": "c3",
+      "text": "Plague (including pneumonic and septicemic plague) is due to Yersinia pestis; moxifloxacin is indicated for treatment and prophylaxis in adults.",
+      "byte_quote": "plague, including pneumonic and septicemic plague, due to susceptible isolates of Yersinia pestis and prophylaxis of plague in adult patients"
+    },
+    {
+      "id": "c4",
+      "text": "Uncomplicated skin/skin-structure infections are caused by MSSA or Streptococcus pyogenes.",
+      "byte_quote": "caused by susceptible isolates of methicillin-susceptible Staphylococcus aureus or Streptococcus pyogenes"
+    },
+    {
+      "id": "c5",
+      "text": "Complicated skin/skin-structure infections are caused by MSSA, E. coli, K. pneumoniae, or Enterobacter cloacae.",
+      "byte_quote": "caused by susceptible isolates of methicillin-susceptible Staphylococcus aureus, Escherichia coli, Klebsiella pneumoniae, or Enterobacter cloacae"
+    },
+    {
+      "id": "c6",
+      "text": "Acute bacterial sinusitis is caused by S. pneumoniae, H. influenzae, or M. catarrhalis.",
+      "byte_quote": "caused by susceptible isolates of Streptococcus pneumoniae, Haemophilus influenzae, or Moraxella catarrhalis"
+    },
+    {
+      "id": "c7",
+      "text": "Acute bacterial exacerbation of chronic bronchitis is caused by S. pneumoniae, H. influenzae, H. parainfluenzae, K. pneumoniae, MSSA, or M. catarrhalis.",
+      "byte_quote": "caused by susceptible isolates of Streptococcus pneumoniae, Haemophilus influenzae, Haemophilus parainfluenzae, Klebsiella pneumoniae, methicillin-susceptible Staphylococcus aureus, or Moraxella catarrhalis"
+    },
+    {
+      "id": "c8",
+      "text": "Standard adult dose of moxifloxacin is 400 mg orally or IV once every 24 hours.",
+      "byte_quote": "The dose of moxifloxacin hydrochloride is 400 mg (orally or as an intravenous infusion) once every 24 hours."
+    },
+    {
+      "id": "c9",
+      "text": "Moxifloxacin is contraindicated in persons with a history of hypersensitivity to moxifloxacin or any quinolone-class antibacterial.",
+      "byte_quote": "Moxifloxacin hydrochloride is contraindicated in persons with a history of hypersensitivity to moxifloxacin or any member of the quinolone class of antibacterials"
+    },
+    {
+      "id": "c10",
+      "text": "Effectiveness in pediatric patients and adolescents under 18 years has not been established.",
+      "byte_quote": "Effectiveness in pediatric patients and adolescents less than 18 years of age has not been established."
+    },
+    {
+      "id": "c11",
+      "text": "Geriatric patients are at increased risk of severe tendon disorders including tendon rupture on fluoroquinolones such as moxifloxacin.",
+      "byte_quote": "Geriatric patients are at increased risk for developing severe tendon disorders including tendon rupture when being treated with a fluoroquinolone such as moxifloxacin hydrochloride."
+    },
+    {
+      "id": "c12",
+      "text": "Moxifloxacin has been shown to prolong the QT interval of the electrocardiogram in some patients.",
+      "byte_quote": "Moxifloxacin hydrochloride has been shown to prolong the QT interval of the electrocardiogram in some patients."
+    },
+    {
+      "id": "c13",
+      "text": "QT-related risk factors to avoid include known QT prolongation, ventricular arrhythmias/torsade de pointes, and uncorrected hypokalemia or hypomagnesemia.",
+      "byte_quote": "Known prolongation of the QT interval; Ventricular arrhythmias including torsade de pointes because QT prolongation may lead to an increased risk for these conditions; Uncorrected hypokalemia or hypomagnesemia"
+    },
+    {
+      "id": "c14",
+      "text": "Based on animal data, moxifloxacin may cause fetal harm (pregnancy).",
+      "byte_quote": "Based on animal data may cause fetal harm."
+    },
+    {
+      "id": "c15",
+      "text": "Moxifloxacin tablets must be given at least 4 hours before or 8 hours after products containing magnesium, aluminum, iron, or zinc (antacids, sucralfate, multivitamins, didanosine buffered tablets).",
+      "byte_quote": "Administer moxifloxacin hydrochloride tablets at least 4 hours before or 8 hours after products containing magnesium, aluminum, iron or zinc, including antacids, sucralfate, multivitamins and didanosine buffered tablets"
+    },
+    {
+      "id": "c16",
+      "text": "Fluoroquinolones including moxifloxacin can enhance the anticoagulant effects of warfarin or its derivatives.",
+      "byte_quote": "fluoroquinolones, including moxifloxacin hydrochloride, have been reported to enhance the anticoagulant effects of warfarin or its derivatives in the patient population"
+    }
+  ],
+  "cites": []
+}

@@ -1,0 +1,64 @@
+{
+  "hash": "b5e0dae026b80495",
+  "source_id": "https://academic.oup.com/cid/article/72/7/1211/5836974",
+  "title": "Epidemiology of Escherichia coli Bacteremia: A Systematic Literature Review",
+  "resolved_url": "https://academic.oup.com/cid/article/72/7/1211/5836974",
+  "claims": [
+    {
+      "id": "c1",
+      "text": "E. coli is the most common cause of bacteremia in high-income countries, exceeding other leading bacteremia pathogens including Staphylococcus aureus and Streptococcus pneumoniae.",
+      "byte_quote": "Escherichia coli is the most common cause of bacteremia in high-income countries, exceeding other leading bacteremia-causing pathogens such as Staphylococcus aureus and Streptococcus pneumoniae"
+    },
+    {
+      "id": "c2",
+      "text": "E. coli accounted for 27.1% of all bacteremia episodes overall.",
+      "byte_quote": "The E. coli–specific proportion of all bacteremia episodes was 27.1% overall (95% CI, 24.5–29.8)"
+    },
+    {
+      "id": "c3",
+      "text": "E. coli proportion of bacteremia varied by acquisition setting: hospital-acquired 18.1%, community-onset healthcare-associated 31.5%, community-acquired 33.0%.",
+      "byte_quote": "18.1% (95% CI, 15.1–21.7%)"
+    },
+    {
+      "id": "c4",
+      "text": "Incidence of E. coli bacteremia rises steeply with age: >100 per 100,000 person-years in 55-to-75-year-olds and >300 in 75-to-85-year-olds.",
+      "byte_quote": "rates per 100 000 person-years were >100 in 55-to-75-year-olds and >300 in 75-to-85-year-olds"
+    },
+    {
+      "id": "c5",
+      "text": "Highest relative risks of E. coli bacteremia vs general population: renal dialysis (RR 26.9), solid-organ transplant (RR 20.3), neoplastic disease (RR 14.9).",
+      "byte_quote": "highest relative risks (RRs) of developing E. coli bacteremia compared with the general population were associated with renal dialysis (RR, 26.9), solid-organ transplantation (RR, 20.3), and neoplastic disease (RR, 14.9)"
+    },
+    {
+      "id": "c6",
+      "text": "Indwelling vascular and urinary catheters raise E. coli bacteremia risk: central venous 10-fold, peripheral venous 7.5-fold, suprapubic urinary 6-fold, urethral urinary 3-fold.",
+      "byte_quote": "indwelling vascular and urinary catheters increased the risk...by 10-fold and 7.5-fold for central and peripheral venous catheters, respectively, and by 6-fold and 3-fold for suprapubic and urethral urinary catheters"
+    },
+    {
+      "id": "c7",
+      "text": "Urinary tract infection was the primary source for 53% of E. coli bacteremia episodes.",
+      "byte_quote": "Urinary tract infection (UTI) was the primary source for 53% of episodes."
+    },
+    {
+      "id": "c8",
+      "text": "Urogenital infection accounted for more than half (pooled 52.6%) of all E. coli bacteremia episodes.",
+      "byte_quote": "Urogenital infection accounted for more than half of all E. coli bacteremia episodes (pooled estimate, 52.6%; 95% CI, 47.0–58.1%)"
+    },
+    {
+      "id": "c9",
+      "text": "Pooled case fatality rate for E. coli bacteremia was 12.4%.",
+      "byte_quote": "The pooled estimated CFR for E. coli bacteremia was 12.4% (95% CI, 10.7–14.3%; range, 2.8–28.5%)"
+    }
+  ],
+  "cites": [
+    "Skogberg et al. Epidemiology and Infection 2008",
+    "Skogberg et al. Clinical Microbiology and Infection 2012",
+    "Kennedy et al. Medical Journal of Australia 2008",
+    "Weiner et al. Infection Control & Hospital Epidemiology 2016",
+    "Søgaard et al. Clinical Infectious Diseases 2011",
+    "Poolman & Anderson. Expert Review of Vaccines 2018",
+    "Russo & Johnson. Microbes and Infection 2003",
+    "Laupland et al. Clinical Microbiology and Infection 2008",
+    "Laupland et al. Epidemiology and Infection 2007"
+  ]
+}
