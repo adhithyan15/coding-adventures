@@ -48,6 +48,20 @@ typedef _MallocD = Pointer<Uint8> Function(int);
 typedef _FreeC = Void Function(Pointer<Uint8>);
 typedef _FreeD = void Function(Pointer<Uint8>);
 
+// Viewport primitive: integer coords in, JSON char* out (current_revision
+// returns a u64 directly). Uint32/Uint64 in the native signature; plain `int`
+// in the Dart signature.
+typedef _WindowC = Pointer<Uint8> Function(Pointer<Void>, Uint32, Uint32, Uint32, Uint32);
+typedef _WindowD = Pointer<Uint8> Function(Pointer<Void>, int, int, int, int);
+typedef _NoArgC = Pointer<Uint8> Function(Pointer<Void>);
+typedef _NoArgD = Pointer<Uint8> Function(Pointer<Void>);
+typedef _ColLettersC = Pointer<Uint8> Function(Pointer<Void>, Uint32);
+typedef _ColLettersD = Pointer<Uint8> Function(Pointer<Void>, int);
+typedef _CurrentRevC = Uint64 Function(Pointer<Void>);
+typedef _CurrentRevD = int Function(Pointer<Void>);
+typedef _ChangedSinceC = Pointer<Uint8> Function(Pointer<Void>, Uint64);
+typedef _ChangedSinceD = Pointer<Uint8> Function(Pointer<Void>, int);
+
 /// A single spreadsheet session, owning the opaque C handle.
 class SpreadsheetSession {
   final DynamicLibrary _lib;
@@ -58,6 +72,11 @@ class SpreadsheetSession {
   late final _GetD _getValue;
   late final _GetD _getRaw;
   late final _StringFreeD _stringFree;
+  late final _WindowD _getWindow;
+  late final _NoArgD _usedRangeFn;
+  late final _ColLettersD _columnLettersFn;
+  late final _CurrentRevD _currentRevisionFn;
+  late final _ChangedSinceD _changedSinceFn;
 
   static final DynamicLibrary _proc = DynamicLibrary.process();
   static final _MallocD _malloc =
@@ -71,6 +90,11 @@ class SpreadsheetSession {
     _getValue = _lib.lookupFunction<_GetC, _GetD>('sc_get_value');
     _getRaw = _lib.lookupFunction<_GetC, _GetD>('sc_get_raw');
     _stringFree = _lib.lookupFunction<_StringFreeC, _StringFreeD>('sc_string_free');
+    _getWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_window');
+    _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
+    _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
+    _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
+    _changedSinceFn = _lib.lookupFunction<_ChangedSinceC, _ChangedSinceD>('sc_changed_since');
     _handle = sessionNew();
   }
 
@@ -163,13 +187,9 @@ class SpreadsheetSession {
     }
   }
 
-  /// The display string for a cell — what a spreadsheet should show. Parses the
-  /// engine's JSON (the same shape the TS/WASM/Swift/Qt engines emit).
-  String display(String a1) {
-    final json = getValueJson(a1);
-    if (json.isEmpty) return '';
-    final Object? obj = jsonDecode(json);
-    if (obj is! Map) return '';
+  /// Map one decoded value object (`{"kind":...}`) to the string a spreadsheet
+  /// cell should show. Shared by `display` (one cell) and `window` (a rectangle).
+  static String _displayValue(Map obj) {
     switch (obj['kind']) {
       case 'empty':
         return '';
@@ -189,6 +209,63 @@ class SpreadsheetSession {
       default:
         return '';
     }
+  }
+
+  /// The display string for a cell — what a spreadsheet should show. Parses the
+  /// engine's JSON (the same shape the TS/WASM/Swift/Qt engines emit).
+  String display(String a1) {
+    final json = getValueJson(a1);
+    if (json.isEmpty) return '';
+    final Object? obj = jsonDecode(json);
+    return (obj is Map) ? _displayValue(obj) : '';
+  }
+
+  // ── Viewport primitive (virtualized infinite sheet) ──────────────────
+  // These mirror the engine's get_window / used_range / changed_since reads (the
+  // C ABI's sc_get_window etc.), 1-based inclusive coords, so a windowed Flutter
+  // grid can render only the visible rectangle of an unbounded sheet.
+
+  /// Dense display strings for the inclusive 1-based rectangle, row-major
+  /// (empty cells become ''). Empty list on a bad/oversized request.
+  List<List<String>> window(int row0, int col0, int row1, int col1) {
+    final json = _takeString(_getWindow(_handle, row0, col0, row1, col1));
+    final Object? obj = jsonDecode(json);
+    if (obj is! Map || obj['values'] is! List) return const [];
+    return (obj['values'] as List)
+        .map<List<String>>((row) => (row as List)
+            .map<String>((c) => (c is Map) ? _displayValue(c) : '')
+            .toList())
+        .toList();
+  }
+
+  /// The data extent `{minRow,minCol,maxRow,maxCol}`, or null if the sheet is
+  /// empty (the engine returns the JSON literal `null`).
+  Map<String, int>? usedRange() {
+    final json = _takeString(_usedRangeFn(_handle));
+    final Object? obj = jsonDecode(json);
+    if (obj is! Map) return null;
+    return {
+      'minRow': obj['minRow'] as int,
+      'minCol': obj['minCol'] as int,
+      'maxRow': obj['maxRow'] as int,
+      'maxCol': obj['maxCol'] as int,
+    };
+  }
+
+  /// Column letters for a 1-based index (`1` → `"A"`, `27` → `"AA"`).
+  String columnLetters(int index) => _takeString(_columnLettersFn(_handle, index));
+
+  /// The per-edit revision clock. Snapshot it, then pass to [changedSince].
+  int currentRevision() => _currentRevisionFn(_handle);
+
+  /// Cells changed since [since]. `stale` means re-read the whole window.
+  ({List<String> changed, bool stale}) changedSince(int since) {
+    final json = _takeString(_changedSinceFn(_handle, since));
+    final Object? obj = jsonDecode(json);
+    if (obj is! Map) return (changed: const [], stale: false);
+    if (obj['stale'] == true) return (changed: const [], stale: true);
+    final list = (obj['changed'] as List?)?.cast<String>() ?? const [];
+    return (changed: list, stale: false);
   }
 }
 
