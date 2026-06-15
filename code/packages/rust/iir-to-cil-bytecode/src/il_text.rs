@@ -232,6 +232,36 @@ fn load_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrErro
     Ok(())
 }
 
+/// Emit `ldc.i4 <mask>; and` to wrap a just-computed narrow-width result back
+/// into its declared width — the textual-`.il` twin of the bytecode path's
+/// [`crate::lower::emit_narrow_width_mask`].
+///
+/// LANG-FULL **E2 — register width & wrap**.  A CIL `add`/`mul`/`shl`/… runs on
+/// a full 32-bit slot, so `200u8 + 100u8` lands as `300` on the stack; the
+/// `u8` contract requires it to wrap to `300 & 0xFF = 44`.  After the op we
+/// AND-mask the result down to the width:
+///
+/// | type_hint | emits                | wraps                         |
+/// |-----------|----------------------|-------------------------------|
+/// | `u4`      | `ldc.i4 0xF; and`    | `15u4 + 1u4` → `0`            |
+/// | `u8`      | `ldc.i4 0xFF; and`   | `200u8 + 100u8` → `44`        |
+/// | `u16`     | `ldc.i4 0xFFFF; and` | `~0u16` → `65535`            |
+/// | `u32`,`i32`,`i64`,… | *(nothing)* | the 32-bit op already wraps   |
+///
+/// A positive mask + `and` (not `conv.u1`, which would sign-extend) keeps the
+/// unsigned widths unsigned — identical semantics to the JVM `iand` and wasm
+/// `i32.and` masks.
+fn emit_narrow_width_mask(il: &mut String, type_hint: &str) {
+    let mask: i64 = match type_hint {
+        "u4" => 0xF,
+        "u8" => 0xFF,
+        "u16" => 0xFFFF,
+        _ => return, // u32/i32 wrap via the 32-bit op; wider/signed unchanged
+    };
+    let _ = writeln!(il, "    ldc.i4 0x{mask:X}");
+    let _ = writeln!(il, "    and");
+}
+
 /// Emit a store (`starg`/`stloc`) popping the top of the CIL stack into `name`.
 fn store_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrError> {
     let h = regs.home(name)?;
@@ -798,6 +828,9 @@ fn emit_method(
                     _ => unreachable!(),
                 };
                 let _ = writeln!(il, "    {cil}");
+                // E2: wrap a narrow `u4`/`u8`/`u16` result mod-2ⁿ
+                // (`200u8+100u8=44`); a no-op for u32/i32/i64.
+                emit_narrow_width_mask(il, &instr.type_hint);
                 store_var(il, &regs, dest)?;
             }
             // ── Integer comparisons → a 0/1 `int32` result ────────────────────
@@ -934,6 +967,65 @@ mod tests {
                 il.lines().any(|l| l.trim() == cil),
                 "op {op:?} must emit a bare `{cil}` instruction; got:\n{il}"
             );
+        }
+    }
+
+    /// Build `c = <op>(a, b); ret c` with a chosen result-`type_hint` width,
+    /// so the E2 narrow-width mask fires on the binary op (the operand `const`s
+    /// stay `i32`; only the op's `type_hint` selects the width).
+    fn binop_module_typed(op: &str, hint: &str) -> IIRModule {
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i32"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i32"),
+            IIRInstr::new(
+                op,
+                Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                hint,
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], hint),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], hint, instrs));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    #[test]
+    fn e2_narrow_width_add_masks_result() {
+        // LANG-FULL E2: a `u8` add wraps mod-256 — the textual `.il` must emit
+        // `add` immediately followed by `ldc.i4 0xFF; and` so `200u8+100u8=44`.
+        let il = emit_il(&binop_module_typed("add", "u8"), &IIRClrConfig::new("Main")).unwrap();
+        let lines: Vec<&str> = il.lines().map(|l| l.trim()).collect();
+        let add_at = lines.iter().position(|l| *l == "add").expect("emits add");
+        assert_eq!(lines[add_at + 1], "ldc.i4 0xFF", "u8 add → push 0xFF mask; got:\n{il}");
+        assert_eq!(lines[add_at + 2], "and", "u8 add → `and` the mask; got:\n{il}");
+    }
+
+    #[test]
+    fn e2_narrow_width_masks_match_hint() {
+        // u4 → 0xF, u8 → 0xFF, u16 → 0xFFFF.
+        for (hint, mask) in [("u4", "0xF"), ("u8", "0xFF"), ("u16", "0xFFFF")] {
+            let il = emit_il(&binop_module_typed("mul", hint), &IIRClrConfig::new("Main")).unwrap();
+            assert!(
+                il.lines().any(|l| l.trim() == format!("ldc.i4 {mask}")),
+                "{hint} mul must mask with `ldc.i4 {mask}`; got:\n{il}"
+            );
+            assert!(il.lines().any(|l| l.trim() == "and"), "{hint} mul must `and`; got:\n{il}");
+        }
+    }
+
+    #[test]
+    fn e2_wide_widths_are_not_masked() {
+        // u32/i32 already wrap mod-2³² via the 32-bit op; i64 is wider — none of
+        // them gets a mask, so the IL is byte-for-byte the legacy output.
+        for hint in ["i32", "u32", "i64"] {
+            let il = emit_il(&binop_module_typed("add", hint), &IIRClrConfig::new("Main")).unwrap();
+            let masked = il.lines().any(|l| {
+                let t = l.trim();
+                t == "ldc.i4 0xFF" || t == "ldc.i4 0xFFFF" || t == "ldc.i4 0xF"
+            });
+            assert!(!masked, "{hint} add must NOT emit a width mask; got:\n{il}");
         }
     }
 

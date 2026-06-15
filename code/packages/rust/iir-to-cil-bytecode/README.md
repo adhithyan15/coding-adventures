@@ -147,6 +147,21 @@ Brainfuck program's launcher discards the entry result rather than re-printing i
 `brfalse`/`brtrue` test any integer width against zero, so the loop guard needs no
 special i64 handling (unlike the JVM's `lcmp` / wasm's `i64.eqz`).
 
+**Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2, backend 5/6, v0.20.0).
+A CIL arithmetic/bitwise op runs on a full 32-bit `int32` slot, so a narrow unsigned
+value overflows its width unless masked. After a `u4`/`u8`/`u16` `add`/`sub`/`mul`/
+`div`/`mod`/`neg`/`and`/`or`/`xor`/`shl`/`shr`/`not`, **both** emitters append a
+`ldc.i4 <mask>; and` (`0xF`/`0xFF`/`0xFFFF`) so `200u8+100u8=44` and `~0u8=255`:
+
+```text
+  add ; ldc.i4 0xFF ; and      ←  (200 + 100) & 0xFF = 44
+```
+
+`u32`/`i32` already wrap mod-2³² via the 32-bit op (no mask). A positive mask + `and`
+is used — not `conv.u1`/`conv.i1`, which sign-extend — to keep the unsigned widths
+unsigned, exactly like the JVM `iand` and wasm `i32.and` masks. The narrow `type_hint`s
+that trigger the mask are wired into the Nib/Oct frontends in the E2 integration PR (6/6).
+
 ## How CIL synthesis works for derived operations
 
 CIL lacks native opcodes for some logical operations, so we synthesize them

@@ -83,7 +83,12 @@ multiple languages; close an enabler before the features that depend on it.
     mask + `iand`, not `i2b`, to keep unsigned widths unsigned; `0xFFFF` via the constant
     pool). u32/i32 already wrap via the int op. Structural tests; executed JVM proof in the
     integration PR via the matrix's real-`java` run_jvm.
-  - ☐ **iir-to-cil-bytecode** (mirror the per-backend byte-tape mask onto register arithmetic).
+  - ✅ **iir-to-cil-bytecode** (5/6) — masks a narrow `u4`/`u8`/`u16` arith/bitwise/neg/not/shl
+    result with `ldc.i4 <mask>; and` after the 32-bit CIL op, in **both** emitters (the `lower`
+    bytecode builder via `emit_ldc_i4(mask); emit_and()`, and the textual `il_text` `.il` path)
+    — so `200u8+100u8=44` and `~0u8=255`. u32/i32 already wrap mod-2³² via the 32-bit op; a
+    positive mask + `and` (not `conv.u1`) keeps the unsigned widths unsigned. Structural tests
+    on both emitters; executed CLR proof in the integration PR via the matrix's real-`dotnet`.
   - ☐ **Integration** — wire Nib (then Oct) to emit narrow `type_hint`s for narrow-declared
     values + an executed matrix proof (`200u8+100u8=44`, Nib unary `~`) across all backends;
     flip N3-`~`, Nib N6/N7, Oct.
