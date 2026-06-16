@@ -155,6 +155,7 @@ members = [
     "intel4004-simulator",
     "intel8080-gatelevel",
     "z80-gatelevel",
+    "intel8086-gatelevel",
     "interrupt-handler",
     "interpreter-ir",
     "iir-type-checker",
