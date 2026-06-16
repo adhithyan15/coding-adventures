@@ -149,6 +149,8 @@ packages a typed surface for:
   settlement readiness into final archive finalization checks
 - Hue package release archive confirmation summaries that turn archive
   finalization readiness into final archive confirmation checks
+- Hue package release archive attestation summaries that turn archive
+  confirmation readiness into final archive attestation checks
 
 ## Dependencies
 
