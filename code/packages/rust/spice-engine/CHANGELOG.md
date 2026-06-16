@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `run` execution markers as no-op control
+  commands in `analyze_deck_controls` and `resolve_deck_sources`, matching
+  Python and TypeScript.
 - Add selected `.control` block `four` and `fourier` command routing to
   `analyze_deck_controls` and `resolve_deck_sources`; the commands are
   normalized into `.four` deck cards, matching Python and TypeScript.

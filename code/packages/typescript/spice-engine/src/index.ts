@@ -2854,6 +2854,7 @@ const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
   "plot",
   ".plot",
 ]);
+const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run"]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2881,6 +2882,9 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
       const controlLine = controlBlockCommandAsDeckLine(stripped);
       if (controlLine !== undefined) {
         activeLines.push(controlLine);
+        continue;
+      }
+      if (isNoopControlBlockCommand(stripped)) {
         continue;
       }
       diagnostics.push({
@@ -3441,6 +3445,9 @@ function resolveDeckLines(
       const controlLine = controlBlockCommandAsDeckLine(stripped);
       if (controlLine !== undefined) {
         activeLines.push(controlLine);
+        continue;
+      }
+      if (isNoopControlBlockCommand(stripped)) {
         continue;
       }
       state.diagnostics.push({
@@ -5702,6 +5709,11 @@ function controlBlockCommandAsDeckLine(line: string): string | undefined {
         : `.${command}`;
   const rest = line.slice(parts[0].length).trimStart();
   return rest.length === 0 ? directive : `${directive} ${rest}`;
+}
+
+function isNoopControlBlockCommand(line: string): boolean {
+  const command = line.split(/\s+/, 1)[0]?.toLowerCase();
+  return command !== undefined && NOOP_CONTROL_BLOCK_COMMANDS.has(command);
 }
 
 export function subcircuitDefinition(

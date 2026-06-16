@@ -515,6 +515,7 @@ _SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
         ".plot",
     }
 )
+_NOOP_CONTROL_BLOCK_COMMANDS = frozenset({"run", ".run"})
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,
@@ -549,6 +550,8 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
             control_line = _control_block_command_as_deck_line(stripped)
             if control_line is not None:
                 active_lines.append(control_line)
+                continue
+            if _is_noop_control_block_command(stripped):
                 continue
             diagnostics.append(
                 DeckControlDiagnostic(
@@ -3032,6 +3035,8 @@ def _resolve_deck_lines(
             if control_line is not None:
                 active_lines.append(control_line)
                 continue
+            if _is_noop_control_block_command(stripped):
+                continue
             state.diagnostics.append(
                 DeckResolutionDiagnostic(
                     code="SPICE_DECK_CONTROL_COMMAND",
@@ -3334,3 +3339,8 @@ def _control_block_command_as_deck_line(line: str) -> str | None:
     if len(parts) == 1:
         return directive
     return f"{directive} {parts[1]}"
+
+
+def _is_noop_control_block_command(line: str) -> bool:
+    command = line.split(maxsplit=1)[0].lower()
+    return command in _NOOP_CONTROL_BLOCK_COMMANDS
