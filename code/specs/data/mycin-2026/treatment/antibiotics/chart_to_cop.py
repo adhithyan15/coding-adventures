@@ -41,6 +41,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent.parent / "warm"))
+import contraindications as ci  # noqa: E402  (ADJ-native: derive_contraindications via the engine)
 import decide as decide_mod  # noqa: E402  (find_cli)
 import derive_regimen as reg  # noqa: E402  (grounded formulary: SCENARIOS, DRUGS, candidates)
 import native_setcover as nsc  # noqa: E402  (the COP emitter/solver)
@@ -69,7 +70,8 @@ class Cop:
     defeated: set[tuple[str, str]] = field(default_factory=set)
     risks: set[str] = field(default_factory=set)             # CC-2 dose-ceiling risks
     weight: float = 70.0                                      # kg; for the mg dose window
-    contraindicated: set[str] = field(default_factory=set)   # CC-3 drugs excluded by a contraindication
+    active_contexts: set[str] = field(default_factory=set)   # CC-3 patient's active clinical contexts (pregnancy, …)
+    contraindicated: set[str] = field(default_factory=set)   # CC-3 drugs the ENGINE derives as contraindicated
     weights: tuple[int, int] = reg.DEFAULT_WEIGHTS            # CC-4 objective blend (w_cost, w_tox)
     culture_status: str = ""                                 # CC-5 pending | resulted (timing decision)
     clinical_status: str = ""                                # CC-5 critical | unstable | stable
@@ -87,10 +89,22 @@ _ALLERGY_EXCLUSION = {
     "cephalosporin": "betalactam_allergy_severe",
 }
 
-# Drugs a chart contraindication removes by name (CC-3 — grounded in
-# grounding/treatment-constraints-grounding.json). Fluoroquinolones (moxifloxacin) and
-# TMP-SMX are contraindicated in pregnancy; the grounded byte-quotes justify each exclusion.
-_PREGNANCY_CONTRAINDICATED = {"moxifloxacin", "tmp_smx"}
+# CC-3 — the contraindication knowledge is NO LONGER a Python set. It lives in the ADJ
+# rulebook `contraindications.adj` (generated from grounding/treatment-constraints-grounding.json
+# by contraindications_build.py) as grounded `relate` facts + two generic, context-scoped
+# `rule { head: … when: … }` clauses. This compiler's only job is to translate chart facts
+# into the patient's active CONTEXTS (e.g. pregnancy=present → active_context "pregnancy");
+# `derive()` then asks the ENGINE which drugs that makes contraindicated. The reasoning moved
+# out of Python and into the language (project_adj_native_no_python_middle).
+#
+# A chart-fact `kind` → the clinical CONTEXT it activates. Adding a new context (QT
+# prolongation, G6PD deficiency, …) is a data edit here + a grounded fact in the rulebook —
+# no new Python branch, because the generic rule already joins any active context.
+_CONTEXT_FROM_FACT = {
+    ("pregnancy", "present"): "pregnancy",
+    ("pregnancy", "pregnant"): "pregnancy",
+    ("pregnancy", "true"): "pregnancy",
+}
 
 # CC-4: a chart `objective_priority` fact → the (w_cost, w_tox) objective blend the
 # set-cover minimizes. "cost" is the historical default (toxicity ignored); raising w_tox
@@ -186,17 +200,19 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
                 cop.discards.append({"fact": f"culture_resistance={f.value}",
                                      "reason": "malformed culture_resistance value (want drug:organism)"})
         elif f.kind == "pregnancy":
-            # CC-3: pregnancy contraindicates specific drugs (grounded rules) — exclude them
-            # by name from the cover, each with its own provenance constraint.
-            if f.value in ("present", "pregnant", "true"):
-                cop.contraindicated |= _PREGNANCY_CONTRAINDICATED
-                for d in sorted(_PREGNANCY_CONTRAINDICATED):
-                    cop.constraints.append({"type": "contraindication", "from": "pregnancy=present",
-                                            "rule": f"{d} is contraindicated in pregnancy (grounded)",
-                                            "detail": d, "span": f.span})
+            # CC-3: a pregnancy fact activates the "pregnancy" clinical CONTEXT. It does NOT
+            # decide which drugs are contraindicated — the engine does that in derive(), by
+            # running the grounded contraindication rulebook under this active context.
+            context = _CONTEXT_FROM_FACT.get((f.kind, f.value))
+            if context:
+                cop.active_contexts.add(context)
+                cop.constraints.append({"type": "context", "from": f"pregnancy={f.value}",
+                                        "rule": f"pregnancy → active clinical context '{context}' "
+                                                "(gates the contraindication rules)",
+                                        "detail": context, "span": f.span})
             else:
                 cop.discards.append({"fact": f"pregnancy={f.value}",
-                                     "reason": "pregnancy value not 'present' → no contraindication applied"})
+                                     "reason": "pregnancy value not 'present' → no context activated"})
         elif f.kind == "culture_status":
             # CC-5: whether the culture is back drives the wait-vs-treat-now decision.
             if f.value in ("pending", "resulted"):
@@ -336,6 +352,18 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
             "type": "dose_infeasible", "from": f"risks={sorted(cop.risks)}", "detail": d,
             "rule": f"no safe+effective dose: floor {w['floor_per_kg']} > ceiling "
                     f"{w['ceiling_per_kg']} mg/kg"})
+    # CC-3: ask the ENGINE which drugs the patient's active contexts make contraindicated, by
+    # running the grounded contraindication rulebook (? contraindicated($D, $C)). The set is
+    # derived, not looked up in Python; each derivation carries its grounded byte-quote.
+    derived_ci = ci.derive_contraindications(cli, cop.active_contexts)
+    cop.contraindicated = set(derived_ci)
+    for drug, info in sorted(derived_ci.items()):
+        cop.constraints.append({"type": "contraindication",
+                                "from": f"active_context({info['context']})",
+                                "rule": f"{drug} is contraindicated in {info['context']} "
+                                        "(engine-derived from the grounded rulebook)",
+                                "detail": drug, "source": info.get("source"),
+                                "locator": info.get("locator"), "trust": info.get("trust")})
     # Every exclusion is an EXPLICIT engine constraint (`x_d <= 0`), keyed by its reason, so
     # the emitted program is self-documenting: a drug with no safe dose (CC-2) or one that is
     # contraindicated (CC-3) is pinned out by the solver, not pre-removed in Python.

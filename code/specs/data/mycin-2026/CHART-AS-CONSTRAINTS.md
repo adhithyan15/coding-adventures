@@ -156,6 +156,27 @@ risks Y") — decision support, not a hidden choice.
 - **CC-3 — contraindication / interaction grounding.** `contraindication-grounding.json` +
   `interaction-grounding.json` via the harness (pregnancy, QT, G6PD, allergy classes,
   drug–drug); gate → CAS; new "treatment constraints" ledger artifact.
+- **CC-3 REFACTOR (ADJ-native): contraindications are now DERIVED BY THE ENGINE, not a
+  Python set. ✅ DONE.** The exclusion knowledge no longer lives in a `chart_to_cop.py` dict
+  (`_PREGNANCY_CONTRAINDICATED = {"moxifloxacin", "tmp_smx"}`) — that was exactly the
+  "Python rule layer in the middle" we are removing. It is now an ADJ rulebook,
+  `treatment/antibiotics/contraindications.adj`, **generated** by `contraindications_build.py`
+  from `grounding/treatment-constraints-grounding.json`: grounded `relate` facts
+  (`class_contraindicated_in(fluoroquinolone, pregnancy)` etc., each carrying its FDA
+  byte-quote + DailyMed locator at `trust authoritative`) plus **two generic, context-scoped
+  `rule { head: contraindicated($D,$C) when: active_context($C), … }` clauses** (the rulebook
+  keystone). `chart_to_cop` now only translates a chart fact into the patient's active
+  *context* (`pregnancy=present → active_context "pregnancy"`); `derive()` asks the engine
+  `? contraindicated($D,$C)` (`contraindications.derive_contraindications`, 0 model calls)
+  and folds the derived drugs into `forced_zero`. **The reasoning moved out of Python and into
+  the language.** A contraindication is McCarthy's `ist(c, φ)` — "drug excluded IN context C"
+  — so the *same* generic shape encodes any context-scoped rule corpus (e.g. "a term MEANS m
+  in jurisdiction J"); we deliberately use the domain-neutral word **context**. Demonstrated
+  by the QT-prolongation fact: the identical class rule excludes the fluoroquinolone in a
+  different context, with no new Python branch. Adding a new contraindication is now a
+  grounded fact in the rulebook + (if a new context) one row in `_CONTEXT_FROM_FACT` — no
+  drug-name logic in the compiler. Remaining CC-3 follow-ups (allergy drug-class exclusion,
+  drug–drug interactions) move into the same rulebook next.
 - **CC-4 — cost + side-effect objective. ✅ DONE.** The set-cover objective is now the
   weighted blend `minimize Σ (w_cost·tier + w_tox·side_effects)·x_d`, emitted to the engine's
   integer optimizer (coefficients stay integer). A chart `objective_priority` fact selects the

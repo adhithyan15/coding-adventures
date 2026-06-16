@@ -81,16 +81,18 @@ def test_dose_infeasibility_folds_into_the_cover():
     assert any(c["type"] == "dose_infeasible" for c in risky["constraints"])
 
 
-def test_pregnancy_contraindicates_drugs():
-    # CC-3: a pregnancy fact excludes the pregnancy-contraindicated drugs by name, each with
-    # its own provenance constraint (the rules are grounded in treatment-constraints).
+def test_pregnancy_activates_a_clinical_context():
+    # CC-3 (ADJ-native): compile_cop no longer decides WHICH drugs are contraindicated —
+    # that is the engine's job (see test_pregnancy_engine_behaviour). A pregnancy fact only
+    # activates the "pregnancy" clinical CONTEXT, recorded as a provenance constraint.
     cop = cc.compile_cop([cc.ChartFact("pregnancy", "present", "28wk")])
-    assert cop.contraindicated == {"moxifloxacin", "tmp_smx"}
-    ci = [c for c in cop.constraints if c["type"] == "contraindication"]
-    assert len(ci) == 2 and all(c["from"] == "pregnancy=present" for c in ci)
-    # A non-'present' pregnancy value applies nothing and is discarded (no silent effect).
+    assert cop.active_contexts == {"pregnancy"}
+    assert not cop.contraindicated  # populated by the engine in derive(), not here
+    ctx = [c for c in cop.constraints if c["type"] == "context"]
+    assert len(ctx) == 1 and ctx[0]["from"] == "pregnancy=present" and ctx[0]["detail"] == "pregnancy"
+    # A non-'present' pregnancy value activates no context and is discarded (no silent effect).
     cop2 = cc.compile_cop([cc.ChartFact("pregnancy", "unknown")])
-    assert not cop2.contraindicated and any("pregnancy" in d["fact"] for d in cop2.discards)
+    assert not cop2.active_contexts and any("pregnancy" in d["fact"] for d in cop2.discards)
 
 
 def test_pregnancy_engine_behaviour():
@@ -268,7 +270,7 @@ def main() -> int:
     test_dual_clinical_vs_reimbursement_regimen()
     test_step_therapy_can_be_reimbursement_infeasible_distinct_from_clinical()
     test_dose_infeasibility_folds_into_the_cover()
-    test_pregnancy_contraindicates_drugs()
+    test_pregnancy_activates_a_clinical_context()
     test_pregnancy_engine_behaviour()
     test_unmapped_fact_is_discarded_not_ignored()
     test_engine_reproduces_existing_regimens()
