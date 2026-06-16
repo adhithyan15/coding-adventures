@@ -194,6 +194,23 @@ mod tests {
     }
 
     #[test]
+    fn string_builtins_through_r_syntax() {
+        assert_eq!(show("nchar(\"hello\")\n"), "[1] 5");
+        assert_eq!(show("toupper(\"abc\")\n"), "[1] \"ABC\"");
+        assert_eq!(show("tolower(\"ABC\")\n"), "[1] \"abc\"");
+        assert_eq!(show("substr(\"hello\", 2, 4)\n"), "[1] \"ell\"");
+        assert_eq!(
+            show("sprintf(\"%s has %d\", \"x\", 3L)\n"),
+            "[1] \"x has 3\""
+        );
+        // Composes with R's other builtins and `_`-names.
+        assert_eq!(
+            show("word <- \"data_frame\"\ntoupper(substr(word, 1, 4))\n"),
+            "[1] \"DATA\""
+        );
+    }
+
+    #[test]
     fn complex_literal_is_reported_unsupported() {
         // `1i` lexes and parses, but complex is not in this subset — the runtime
         // says so clearly rather than producing a wrong value.

@@ -57,13 +57,20 @@ unchanged.
   value model, S3 dispatch, factors, data frames, and built-ins). `=` / `->>`
   assignment and the typed-`NA` constants are handled in the shared evaluator.
   `r-repl` + the `R` binary mirror `s-repl`.
-- **R-4 — typed numeric literals** *(this PR)*. `r.tokens` gains `HEX_LIT`
+- **R-4 — typed numeric literals** ✅ *merged*. `r.tokens` gains `HEX_LIT`
   (`0x1F`, `0x1FL`), `INT_LIT` (`10L`, `1e3L`), and `COMPLEX_LIT` (`1i`), listed
   before `NUMBER`; the shared `eval_primary` maps `L`/`0x` to double (this subset
   has no distinct integer type) and reports `1i` as unsupported (no complex type
   yet) rather than producing a wrong value.
-- **R-5+** — R-specific built-ins, more string/regex helpers, then the `d/p/q/r`
-  distribution family wired to `statistics-core`.
+- **R-5 — string built-ins** *(this PR)*. `nchar`, `toupper`, `tolower`,
+  `substr` (1-based inclusive, char-boundary safe), and a minimal `sprintf`
+  (`%d`/`%i`/`%s`/`%f`/`%e`/`%g`/`%%`, with width/`.precision`/`-`/`0`,
+  vectorized). Added to the shared `s-runtime` built-ins (S benefits too).
+  `paste`/`paste0`/`rev`/`sort`/`order`/`unique`/`which`/`any`/`all` already
+  exist from S v2. *Deferred:* `strsplit` (needs a list type — R-6), and regex
+  (`gsub`/`grepl`).
+- **R-6+** — a list type (unlocking `strsplit`/`lapply`), regex helpers, then the
+  `d/p/q/r` distribution family wired to `statistics-core`.
 
 ## §4 Reuse strategy
 

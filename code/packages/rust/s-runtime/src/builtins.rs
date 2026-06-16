@@ -84,6 +84,13 @@ pub fn install(env: &Env) {
     define(env, "paste", builtin("paste", b_paste));
     define(env, "paste0", builtin("paste0", b_paste0));
 
+    // String manipulation (vectorized over a character vector).
+    define(env, "nchar", builtin("nchar", b_nchar));
+    define(env, "toupper", builtin("toupper", b_toupper));
+    define(env, "tolower", builtin("tolower", b_tolower));
+    define(env, "substr", builtin("substr", b_substr));
+    define(env, "sprintf", builtin("sprintf", b_sprintf));
+
     // v2 — apply family.
     define(env, "sapply", builtin("sapply", b_sapply));
 
@@ -624,6 +631,258 @@ fn paste_impl(args: &[Arg], default_sep: &str) -> SResult<SValue> {
         })
         .collect();
     Ok(SValue::Character(out))
+}
+
+// ===========================================================================
+// String manipulation
+// ===========================================================================
+
+/// The `n`-th positional (unnamed) argument's value, if present.
+fn nth_positional(args: &[Arg], n: usize) -> Option<&SValue> {
+    args.iter()
+        .filter(|a| a.name.is_none())
+        .map(|a| &a.value)
+        .nth(n)
+}
+
+/// Read a scalar integer (the first element, truncated toward zero) from an
+/// optional value; missing/empty/NA becomes `default`.
+fn scalar_int(value: Option<&SValue>, default: i64) -> i64 {
+    value
+        .and_then(|v| v.as_double().ok())
+        .and_then(|d| d.get_value(0))
+        .filter(|x| !is_na_real(*x))
+        .map(|x| x as i64)
+        .unwrap_or(default)
+}
+
+/// `nchar(x)` — the character count of each element. `NA` elements yield `NA`.
+fn b_nchar(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let chars = first_positional(args)?.as_character();
+    Ok(SValue::doubles(
+        chars
+            .iter()
+            .map(|o| match o {
+                Some(s) => s.chars().count() as f64,
+                None => na_real(),
+            })
+            .collect(),
+    ))
+}
+
+/// Map a character vector element-wise through `f`, preserving `NA`.
+fn map_chars(args: &[Arg], f: impl Fn(&str) -> String) -> SResult<SValue> {
+    let chars = first_positional(args)?.as_character();
+    Ok(SValue::Character(
+        chars.into_iter().map(|o| o.map(|s| f(&s))).collect(),
+    ))
+}
+
+/// `toupper(x)` — upper-case each element.
+fn b_toupper(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    map_chars(args, |s| s.to_uppercase())
+}
+
+/// `tolower(x)` — lower-case each element.
+fn b_tolower(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    map_chars(args, |s| s.to_lowercase())
+}
+
+/// `substr(x, start, stop)` — the 1-based inclusive character substring of each
+/// element. `start`/`stop` are taken as scalars and clamped to the string; an
+/// out-of-order or out-of-range range yields the empty string. Operates on
+/// `char`s, so it is always UTF-8 boundary safe.
+fn b_substr(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = nth_positional(args, 0)
+        .ok_or_else(|| SError::BadArgs("substr: argument \"x\" is missing".into()))?
+        .as_character();
+    let start = scalar_int(nth_positional(args, 1), 1);
+    let stop = scalar_int(nth_positional(args, 2), i64::MAX);
+    let out = x
+        .into_iter()
+        .map(|o| o.map(|s| substring(&s, start, stop)))
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// The 1-based inclusive `[start, stop]` character slice of `s`.
+fn substring(s: &str, start: i64, stop: i64) -> String {
+    if stop < start || stop < 1 {
+        return String::new();
+    }
+    let from = (start - 1).max(0) as usize;
+    let count = (stop - start.max(1) + 1).max(0) as usize;
+    s.chars().skip(from).take(count).collect()
+}
+
+/// `sprintf(fmt, ...)` — a minimal C-style formatter supporting `%d`/`%i`,
+/// `%s`, `%f`/`%e`/`%g`, and `%%`, with optional width, `.precision`, and the
+/// `-` (left-justify) and `0` (zero-pad) flags. Vectorized: the result has the
+/// length of the longest argument, with shorter arguments recycled.
+fn b_sprintf(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let fmt = first_positional(args)?
+        .as_character()
+        .into_iter()
+        .next()
+        .flatten()
+        .ok_or_else(|| SError::BadArgs("sprintf: 'fmt' is missing".into()))?;
+
+    // The substitution arguments are every positional after the format string.
+    let rest: Vec<&SValue> = args
+        .iter()
+        .filter(|a| a.name.is_none())
+        .skip(1)
+        .map(|a| &a.value)
+        .collect();
+    let n = rest.iter().map(|v| v.length().max(1)).max().unwrap_or(1);
+
+    let mut out = Vec::with_capacity(n);
+    for i in 0..n {
+        out.push(Some(format_one(&fmt, &rest, i)?));
+    }
+    Ok(SValue::Character(out))
+}
+
+/// Render the format string once, pulling argument index `row` from each
+/// consumed conversion's value (recycled).
+fn format_one(fmt: &str, args: &[&SValue], row: usize) -> SResult<String> {
+    let mut out = String::new();
+    let mut chars = fmt.chars().peekable();
+    let mut arg_idx = 0usize;
+
+    while let Some(c) = chars.next() {
+        if c != '%' {
+            out.push(c);
+            continue;
+        }
+        // `%%` is a literal percent.
+        if chars.peek() == Some(&'%') {
+            chars.next();
+            out.push('%');
+            continue;
+        }
+        // flags
+        let mut left = false;
+        let mut zero = false;
+        while let Some(&f) = chars.peek() {
+            match f {
+                '-' => left = true,
+                '0' => zero = true,
+                '+' | ' ' | '#' => {}
+                _ => break,
+            }
+            chars.next();
+        }
+        // width
+        let mut width = 0usize;
+        while let Some(&d) = chars.peek() {
+            if d.is_ascii_digit() {
+                width = width
+                    .saturating_mul(10)
+                    .saturating_add((d as u8 - b'0') as usize);
+                chars.next();
+            } else {
+                break;
+            }
+        }
+        // precision
+        let mut precision: Option<usize> = None;
+        if chars.peek() == Some(&'.') {
+            chars.next();
+            let mut p = 0usize;
+            while let Some(&d) = chars.peek() {
+                if d.is_ascii_digit() {
+                    p = p
+                        .saturating_mul(10)
+                        .saturating_add((d as u8 - b'0') as usize);
+                    chars.next();
+                } else {
+                    break;
+                }
+            }
+            precision = Some(p);
+        }
+        // Cap the field width and precision so a crafted format like
+        // `%999999999999d` can't trigger an unbounded allocation in `pad`.
+        const MAX_FIELD: usize = 1 << 20; // 1 MiB per field
+        if width > MAX_FIELD || precision.is_some_and(|p| p > MAX_FIELD) {
+            return Err(SError::BadArgs(
+                "sprintf: field width or precision is too large".into(),
+            ));
+        }
+        let conv = chars
+            .next()
+            .ok_or_else(|| SError::BadArgs("sprintf: truncated format".into()))?;
+
+        let value = args.get(arg_idx).copied();
+        arg_idx += 1;
+        let body = render_conversion(conv, value, row, precision)?;
+        out.push_str(&pad(&body, width, left, zero && !left));
+    }
+    Ok(out)
+}
+
+/// Format one conversion's value (recycling row index) into its unpadded body.
+fn render_conversion(
+    conv: char,
+    value: Option<&SValue>,
+    row: usize,
+    precision: Option<usize>,
+) -> SResult<String> {
+    let nth_string = |v: &SValue| {
+        let c = v.as_character();
+        c.get(row % c.len().max(1))
+            .cloned()
+            .flatten()
+            .unwrap_or_else(|| "NA".to_string())
+    };
+    let nth_double = |v: &SValue| -> f64 {
+        v.as_double()
+            .ok()
+            .and_then(|d| d.get_value(row % d.len().max(1)))
+            .unwrap_or(f64::NAN)
+    };
+    Ok(match conv {
+        's' => value.map(nth_string).unwrap_or_default(),
+        'd' | 'i' => {
+            let x = value.map(nth_double).unwrap_or(0.0);
+            format!("{}", x as i64)
+        }
+        'f' => {
+            let x = value.map(nth_double).unwrap_or(0.0);
+            format!("{:.*}", precision.unwrap_or(6), x)
+        }
+        'e' => {
+            let x = value.map(nth_double).unwrap_or(0.0);
+            format!("{:.*e}", precision.unwrap_or(6), x)
+        }
+        'g' => {
+            let x = value.map(nth_double).unwrap_or(0.0);
+            // %g: trim trailing zeros from a fixed rendering.
+            let s = format!("{:.*}", precision.unwrap_or(6), x);
+            if s.contains('.') {
+                s.trim_end_matches('0').trim_end_matches('.').to_string()
+            } else {
+                s
+            }
+        }
+        other => return Err(SError::BadArgs(format!("sprintf: unsupported %{other}"))),
+    })
+}
+
+/// Pad `body` to `width` columns. `left` left-justifies; otherwise right-justify,
+/// using zeros when `zero` is set (only meaningful for right-justified numbers).
+fn pad(body: &str, width: usize, left: bool, zero: bool) -> String {
+    let len = body.chars().count();
+    if len >= width {
+        return body.to_string();
+    }
+    let fill = if zero { "0" } else { " " }.repeat(width - len);
+    if left {
+        format!("{body}{fill}")
+    } else {
+        format!("{fill}{body}")
+    }
 }
 
 /// Combine the logical coercions of all positional arguments into one vector.
