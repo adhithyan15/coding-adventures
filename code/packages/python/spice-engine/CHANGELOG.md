@@ -4,11 +4,16 @@
 
 ### Added
 
+- **Deck control save/probe routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `save` and `probe` output commands into `.save` and
+  `.probe` deck cards, matching Rust and TypeScript.
+
 - **Deck control-command routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
   selected `.control` block analysis/output commands (`op`, `dc`, `ac`,
-  `tran`, `print`, and `plot`) into dotted deck cards, matching Rust and
-  TypeScript.
+  `tran`, `save`, `probe`, `print`, and `plot`) into dotted deck cards,
+  matching Rust and TypeScript.
 
 - **Deck control-block exclusion diagnostics** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now exclude

@@ -34,8 +34,8 @@ downstream tools to compare.
      results; unsupported `.control` / `.endc` blocks are now excluded from
      active deck and source-resolved solver input while body commands emit
      stable non-executed diagnostics, and selected `.control` block
-     analysis/output commands (`op`, `dc`, `ac`, `tran`, `print`, and `plot`)
-     now normalize into dotted deck cards; parsed
+     analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
+     `print`, and `plot`) now normalize into dotted deck cards; parsed
      `.measure dc` / `.meas dc` cards now route DC
      sweep probe samples into the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -514,6 +514,14 @@ downstream tools to compare.
     - Unrecognized non-comment commands inside `.control` blocks remain
       diagnostic-only so unsupported control flow is still explicit.
 
+45. Selected `.control` save/probe routing.
+    - Status: completed in this selected control save/probe routing slice.
+    - Python, Rust, and TypeScript now normalize selected `.control` block
+      output-selection commands (`save` and `probe`) into the same `.save` and
+      `.probe` deck cards consumed by existing output resolvers.
+    - Unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
 ## Backlog
 
 1. Deck execution layer.
@@ -522,8 +530,8 @@ downstream tools to compare.
      selected measurement artifacts, selected Fourier artifacts, and selected
      run summaries, plus output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
-     routing and scoped `.print` / `.plot` selection toward full SPICE
-     compatibility.
+     routing and scoped `.save`, `.probe`, `.print`, and `.plot` selection
+     toward full SPICE compatibility.
    - Expand the deliberate `.control` subset beyond simple analysis/output
      command routing, including control flow, variables, and script execution
      policy.

@@ -159,9 +159,10 @@ provide stable tab-separated summaries for package checks.
 `analyze_deck_controls()` provides the shared deck-control boundary foothold:
 it returns active lines before `.end` and stable diagnostics for unsupported
 `.include`, `.lib`, and `.control` directives. Inside `.control` blocks,
-selected analysis/output commands (`op`, `dc`, `ac`, `tran`, `print`, and
-`plot`) are normalized into dotted deck cards, while unrecognized non-comment
-commands emit diagnostics until a broader executed control subset is in scope.
+selected analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
+`print`, and `plot`) are normalized into dotted deck cards, while unrecognized
+non-comment commands emit diagnostics until a broader executed control subset is
+in scope.
 `resolve_deck_sources()` is the first include/library resolution layer: callers
 provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
