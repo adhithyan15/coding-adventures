@@ -22,17 +22,17 @@ cite an `authoritative` (spider-grounded) edge vs a `consensus` (authored-debt)
 edge. That is the number every grounding/expansion PR moves:
 
 ```
-correct 18 · abstained 2 · wrong 0  (of 20)
-defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 50%
+correct 19 · abstained 3 · wrong 0  (of 22)
+by tactic — differential: 1✓/1·/0✗  ·  recall: 18✓/2·/0✗
+defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 100%
 ✓ never fabricated — every answer is correct-with-proof or an honest abstention.
 ```
 
-The number tracks **both levers**, honestly. The REL-4b spider grounded 9 of the
-original answers (`consensus → authoritative`). REL-6 then expanded the bank from 6 to
-**12 diseases** — the 6 new disease sets enter as authored-debt, so grounded-coverage
-**dipped 90% → 50%**. Re-running `recall/ground-iem-edges.workflow.js` →
-`iem_edge_ground.py` on the new edges climbs it back. **Expansion adds debt; grounding
-retires it; the scoreboard shows both** — with no change to this harness.
+The number tracked the whole arc, honestly: REL-4b grounded 9 answers (→90%); REL-6
+expanded to **12 diseases**, adding authored-debt (→50%); **REL-8 re-ran the spider
+over every disease — now all 18 recall answers cite a spider-grounded (authoritative)
+edge: 100%.** Expansion adds debt; grounding retires it; the scoreboard shows both —
+with no change to this harness.
 
 ## Files
 

@@ -65,17 +65,18 @@ def test_defensibility_is_full() -> None:
 def test_grounded_coverage_is_the_live_grounding_number() -> None:
     card, _ = _card()
     s = card.summary()
-    # The live number tracks BOTH levers. REL-4b spider-grounded 9 of the original
-    # board answers (authoritative). REL-6 then added 6 new diseases (8 new correct
-    # answers) as authored-debt (consensus) — so grounded-coverage DIPPED 90% → 50%
-    # (9 grounded / 18 correct). Re-running the spider on the new edges will climb it
-    # back up. Expansion adds debt; grounding retires it; the scoreboard shows both.
-    assert s["grounded_coverage"] == 0.5
-    assert s["grounded_correct"] == 9
+    # The live number tracked the whole arc: REL-4b grounded 9 (→90%), REL-6
+    # expansion added authored-debt (→50%), and REL-8 re-ran the spider over every
+    # disease — now ALL 18 recall board answers cite a spider-grounded (authoritative)
+    # edge. grounded-coverage = 100%. Expansion added debt; grounding retired it.
+    assert s["grounded_coverage"] == 1.0
+    assert s["grounded_correct"] == 18
     by_id = {r.item_id: r for r in card.results}
-    assert by_id["lesch_nyhan_enzyme"].trust == "consensus"   # direction_only holdout
-    assert by_id["tay_sachs_enzyme"].trust == "authoritative"  # spider-grounded
-    assert by_id["fabry_enzyme"].trust == "consensus"          # REL-6, not yet grounded
+    # Every recall answer is now spider-grounded — including the REL-6 diseases and
+    # the former lesch_nyhan direction_only holdout.
+    assert by_id["tay_sachs_enzyme"].trust == "authoritative"
+    assert by_id["lesch_nyhan_enzyme"].trust == "authoritative"
+    assert by_id["fabry_enzyme"].trust == "authoritative"
 
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:
