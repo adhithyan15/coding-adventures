@@ -216,19 +216,27 @@ pub fn transform_source(
 /// The list is in execution order. Ordering is enforced two ways: every
 /// pass that needs a predecessor declares it via `Pass::depends_on`, and
 /// where two passes are mutually independent the pipeline falls back to
-/// *registration order* as the tie-breaker. Both `fold-control-flow` and
-/// `dce` declare `depends_on = ["constant-fold"]` (so constant-fold always
-/// runs first), but neither depends on the other — so we register, and
-/// thus run, `fold-control-flow` before `dce` on purpose:
+/// *registration order* as the tie-breaker.
 ///
 /// - constant-fold turns `2 > 3` into the literal `false`;
 /// - fold-control-flow then prunes `if (false) {A}` to an empty `;`;
 /// - dce then sweeps that empty statement (and any code after a `return`)
-///   away.
-///
-/// Running dce last means it cleans up the `;` debris the control-flow
-/// folder leaves behind.
-const SIMPLE_PASS_NAMES: &[&str] = &["constant-fold", "fold-control-flow", "dce"];
+///   away;
+/// - inline is in the chain because `remove-unused-vars` declares
+///   `depends_on = ["dce", "inline"]` — the scheduler will not run
+///   remove-unused-vars unless `inline` is registered. (inline is
+///   currently an identity pass; it earns its slot once function
+///   inlining lands, and registering it now pins the canonical order.)
+/// - remove-unused-vars runs last and deletes top-level `var/let/const`
+///   bindings that nothing references, when their initializer is
+///   side-effect-free.
+const SIMPLE_PASS_NAMES: &[&str] = &[
+    "constant-fold",
+    "fold-control-flow",
+    "dce",
+    "inline",
+    "remove-unused-vars",
+];
 
 /// Run the SIMPLE optimization pipeline over a bridged `Program` and
 /// emit the result as JavaScript text.
@@ -259,7 +267,9 @@ fn run_simple_pipeline(
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
     use coding_adventures_closure_pass_dce::DcePass;
     use coding_adventures_closure_pass_fold_control_flow::FoldControlFlowPass;
+    use coding_adventures_closure_pass_inline::InlinePass;
     use coding_adventures_closure_pass_pipeline::PassPipeline;
+    use coding_adventures_closure_pass_remove_unused_vars::RemoveUnusedVarsPass;
     use coding_adventures_correlation_vector::CVLog;
     use coding_adventures_type_sidecar::Sidecar;
 
@@ -271,14 +281,16 @@ fn run_simple_pipeline(
 
     // The pipeline topo-sorts on each pass's `depends_on`, with
     // registration order as the tie-breaker between independent passes.
-    // `fold-control-flow` and `dce` both depend on `constant-fold` (so it
-    // runs first) but not on each other, so registration order is what
-    // puts `fold-control-flow` before `dce` — letting dce sweep the empty
-    // `;` statements the control-flow folder leaves behind.
+    // `remove-unused-vars` declares `depends_on = ["dce", "inline"]`, so
+    // `inline` MUST be registered or the scheduler refuses to run
+    // remove-unused-vars. `inline` is an identity pass today; it holds
+    // the canonical slot until real function inlining lands.
     let mut pipeline = PassPipeline::new();
     pipeline.add(Box::new(ConstantFoldPass::new()));
     pipeline.add(Box::new(FoldControlFlowPass::new()));
     pipeline.add(Box::new(DcePass::new()));
+    pipeline.add(Box::new(InlinePass::new()));
+    pipeline.add(Box::new(RemoveUnusedVarsPass::new()));
 
     let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
         Ok(out) => out.program,
@@ -2202,6 +2214,13 @@ mod tests {
                 ],
                 ..Default::default()
             },
+            // Pinned to WHITESPACE_ONLY: this test is about input
+            // concatenation order, not optimization (at SIMPLE the
+            // unreferenced `var a`/`var b` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let out = run_compiler(&cfg).expect("ok");
@@ -2247,6 +2266,13 @@ mod tests {
         let cfg = CompilerConfig {
             io: IoConfig {
                 js_patterns: vec![in_path.to_string_lossy().to_string()],
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: this test is about newline
+            // handling, not optimization. At the default level (SIMPLE)
+            // remove-unused-vars would delete the unreferenced `var x`.
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -2351,12 +2377,18 @@ mod tests {
                 js_output_file: Some(out_path.clone()),
                 ..Default::default()
             },
+            // Pinned to WHITESPACE_ONLY: this test is about parent-dir
+            // auto-creation, not optimization (at SIMPLE the unreferenced
+            // `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let out = run_compiler(&cfg).expect("ok");
         assert_eq!(out.wrote_files, vec![out_path.clone()]);
         let written = fs::read_to_string(&out_path).expect("read out");
-        // SIMPLE v1 produces whitespace_only output (no extra spaces).
         assert_eq!(written, "var x=1;\n");
         let _ = fs::remove_dir_all(&base);
     }
@@ -2375,6 +2407,13 @@ mod tests {
             io: IoConfig {
                 js_patterns: vec![in_path.to_string_lossy().to_string()],
                 js_output_file: None,
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: this test is about the stdout
+            // fallback plumbing, not optimization (at SIMPLE the
+            // unreferenced `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -2400,6 +2439,13 @@ mod tests {
             },
             language: crate::config::LanguageConfig {
                 emit_use_strict: true,
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: this test is about the
+            // use-strict directive, not optimization (at SIMPLE the
+            // unreferenced `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -2453,6 +2499,12 @@ mod tests {
                 isolation_mode: crate::config::IsolationMode::Iife,
                 ..Default::default()
             },
+            // Pinned to WHITESPACE_ONLY: tests directive placement
+            // inside the IIFE, not optimization.
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let out = run_compiler(&cfg).expect("ok");
@@ -2485,6 +2537,12 @@ mod tests {
             },
             formatting: crate::config::FormattingConfig {
                 output_wrapper: "PRE %output% POST".to_string(),
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: tests directive placement
+            // inside the output wrapper, not optimization.
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -2918,6 +2976,13 @@ mod tests {
                 externs: vec![ext_path.to_string_lossy().to_string()],
                 ..Default::default()
             },
+            // Pinned to WHITESPACE_ONLY: this test is about externs
+            // resolution, not optimization (at SIMPLE the unreferenced
+            // `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
             ..Default::default()
         };
         let out = run_compiler(&cfg).expect("ok");
@@ -3000,6 +3065,13 @@ mod tests {
             },
             source_map: crate::config::SourceMapConfig {
                 path_template: map_path.to_string_lossy().to_string(),
+                ..Default::default()
+            },
+            // Pinned to WHITESPACE_ONLY: this test is about source-map
+            // emission, not optimization (at SIMPLE the unreferenced
+            // `var x` would be removed).
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
                 ..Default::default()
             },
             ..Default::default()
@@ -5472,11 +5544,13 @@ mod tests {
             },
             ..Default::default()
         };
-        let source = "var  x   =   1 ;";
+        // `x` is referenced so remove-unused-vars keeps it; the point
+        // here is the whitespace normalisation, not removal.
+        let source = "var  x   =   1 ; use(x);";
         let out = transform_source(source, &cfg).expect("ok");
-        // The typed emitter produces the compact `var x=1;`.
+        // The typed emitter produces the compact `var x=1;use(x);`.
         assert_ne!(out, source, "SIMPLE must not return the raw source");
-        assert_eq!(out, "var x=1;");
+        assert_eq!(out, "var x=1;use(x);");
     }
 
     #[test]
@@ -5486,6 +5560,10 @@ mod tests {
         // This is the load-bearing difference from whitespace_only —
         // `1 + 2` becomes `3`, not `1+2`. If the bridge/pipeline/emit
         // chain ever silently degraded, this would regress to `1+2`.
+        //
+        // `x` is referenced (`use(x)`) so remove-unused-vars — now last
+        // in the SIMPLE pipeline — keeps the declaration; otherwise the
+        // whole `var x` would be removed and the fold wouldn't be visible.
         let cfg = CompilerConfig {
             compilation: crate::config::CompilationConfig {
                 level: crate::config::CompilationLevel::Simple,
@@ -5493,8 +5571,8 @@ mod tests {
             },
             ..Default::default()
         };
-        let out = transform_source("var x = 1 + 2;", &cfg).expect("ok");
-        assert_eq!(out, "var x=3;", "constant-fold must evaluate 1 + 2");
+        let out = transform_source("var x = 1 + 2; use(x);", &cfg).expect("ok");
+        assert_eq!(out, "var x=3;use(x);", "constant-fold must evaluate 1 + 2");
     }
 
     #[test]
@@ -5614,6 +5692,72 @@ mod tests {
     }
 
     #[test]
+    fn simple_remove_unused_drops_dead_top_level_var() {
+        // CLOC12.158: the SIMPLE pipeline now ends with
+        // remove-unused-vars. An unreferenced top-level `var` with a
+        // pure (literal) initializer is deleted entirely.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var unused = 1; used();", &cfg).expect("ok");
+        assert_eq!(out, "used();", "the unused var must be removed");
+    }
+
+    #[test]
+    fn simple_remove_unused_composes_with_constant_fold() {
+        // `var x = 1 + 2; sideEffect();` — constant-fold turns the
+        // initializer into the literal `3`, and only then does
+        // remove-unused-vars see a pure init it can drop. Proves the
+        // two passes compose end to end.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var x = 1 + 2; sideEffect();", &cfg).expect("ok");
+        assert_eq!(out, "sideEffect();", "folded-then-dead var must be removed");
+    }
+
+    #[test]
+    fn simple_remove_unused_keeps_impure_initializer() {
+        // `var impure = run();` — unreferenced, but the call initializer
+        // may have a side effect, so the purity gate keeps it.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var impure = run();", &cfg).expect("ok");
+        assert_eq!(
+            out, "var impure=run();",
+            "a dead var with a side-effecting initializer must be kept"
+        );
+    }
+
+    #[test]
+    fn simple_remove_unused_whitespace_only_keeps_var() {
+        // Companion — the SAME unused var under WHITESPACE_ONLY survives,
+        // proving the removal is the SIMPLE pipeline's doing.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("var unused = 1; used();", &cfg).expect("ok");
+        assert_eq!(out, "var unused=1;used();", "whitespace_only must NOT remove");
+    }
+
+    #[test]
     fn simple_level_bridge_ok_status_in_cv() {
         // When the source parses cleanly, the CV contribution for the
         // `compilation_level` stage must carry bridge_status = "ok".
@@ -5651,7 +5795,9 @@ mod tests {
         );
         // The pass pipeline must be recorded in the trace, in order.
         assert!(
-            body.contains("\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\"]"),
+            body.contains(
+                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"remove-unused-vars\"]"
+            ),
             "expected passes list in CV sidecar: {body}"
         );
         let _ = fs::remove_dir_all(&dir);
@@ -5720,7 +5866,8 @@ mod tests {
             },
             ..Default::default()
         };
-        let out = transform_source("var x = 1;", &cfg).expect("ok");
-        assert_eq!(out, "var x=1;");
+        // `x` is referenced so remove-unused-vars keeps it.
+        let out = transform_source("var x = 1; use(x);", &cfg).expect("ok");
+        assert_eq!(out, "var x=1;use(x);");
     }
 }

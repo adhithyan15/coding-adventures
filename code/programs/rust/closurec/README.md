@@ -124,7 +124,7 @@ body fills in.**
 | Level | What it does |
 |-------|--------------|
 | `WHITESPACE_ONLY` | Strips comments and inter-token whitespace only. Token-level; never parses to a typed AST. |
-| `SIMPLE` | Runs the typed-AST optimization pipeline — parse → bridge → passes → emit. Today the pipeline is `constant-fold → fold-control-flow → dce` (e.g. `1 + 2` ⇒ `3`; `if (2 > 3) {a} else {b}` ⇒ `{b}`; code after a `return` is dropped); more passes land one PR at a time. Falls back to `WHITESPACE_ONLY` if the source uses a not-yet-supported construct, so it never errors on valid input. |
+| `SIMPLE` | Runs the typed-AST optimization pipeline — parse → bridge → passes → emit. Today the pipeline is `constant-fold → fold-control-flow → dce → inline → remove-unused-vars` (e.g. `1 + 2` ⇒ `3`; `if (2 > 3) {a} else {b}` ⇒ `{b}`; code after a `return` is dropped; unused top-level `var`s with pure initializers are deleted); more passes land one PR at a time. Falls back to `WHITESPACE_ONLY` if the source uses a not-yet-supported construct, so it never errors on valid input. |
 | `ADVANCED` / `BUNDLE` / `TRANSPILE_ONLY` | Identity passthrough for now — the typed passes specific to these levels (tree-shaking, property renaming, etc.) land in follow-up work. |
 
 The SIMPLE pipeline:

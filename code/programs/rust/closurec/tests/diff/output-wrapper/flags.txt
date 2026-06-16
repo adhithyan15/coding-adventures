@@ -2,3 +2,5 @@
 (function(){%output%})();
 --js
 tests/diff/output-wrapper/input/a.js
+--compilation_level
+WHITESPACE_ONLY
