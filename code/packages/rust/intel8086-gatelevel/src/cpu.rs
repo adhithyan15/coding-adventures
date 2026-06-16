@@ -101,8 +101,12 @@ impl Cpu8086 {
     }
 
     /// Write program bytes into memory at a physical address.
+    ///
+    /// Bytes that would exceed the 1 MB address space are silently dropped.
+    /// If `origin >= 1_048_576`, the load is a no-op.
     pub fn load(&mut self, program: &[u8], origin: usize) {
-        let end = (origin + program.len()).min(MEM_SIZE);
+        if origin >= MEM_SIZE { return; }
+        let end = origin.saturating_add(program.len()).min(MEM_SIZE);
         self.mem[origin..end].copy_from_slice(&program[..end - origin]);
     }
 
@@ -567,17 +571,25 @@ impl Cpu8086 {
         let mut rep_prefix: Option<u8> = None;
 
         // Prefix loop — consume all prefix bytes before dispatching.
-        let op = loop {
-            let b = self.fetch8();
-            match b {
-                0x26 => seg_override = Some(0), // ES:
-                0x2E => seg_override = Some(1), // CS:
-                0x36 => seg_override = Some(2), // SS:
-                0x3E => seg_override = Some(3), // DS:
-                0xF2 | 0xF3 => rep_prefix = Some(b),
-                0xF0 => {} // LOCK — ignored in this educational simulator
-                _ => break b,
+        // Capped at 16 iterations: an infinite stream of prefix bytes would spin
+        // forever within a single step() call, bypassing the max_steps guard in
+        // execute(). The real 8086 has undefined behaviour for excessive prefixes;
+        // we treat it as #UD (halt).
+        let op = 'prefix: {
+            for _ in 0..16 {
+                let b = self.fetch8();
+                match b {
+                    0x26 => seg_override = Some(0), // ES:
+                    0x2E => seg_override = Some(1), // CS:
+                    0x36 => seg_override = Some(2), // SS:
+                    0x3E => seg_override = Some(3), // DS:
+                    0xF2 | 0xF3 => rep_prefix = Some(b),
+                    0xF0 => {} // LOCK — ignored in this educational simulator
+                    _ => break 'prefix b,
+                }
             }
+            self.halted = true; // too many prefix bytes — undefined behaviour
+            return;
         };
 
         self.exec_op(op, seg_override, rep_prefix);
