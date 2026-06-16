@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.139.0] - 2026-06-16
+
+### Added (CLOC12.156 — SIMPLE pipeline gains `fold-control-flow`)
+
+The `--compilation_level SIMPLE` pass pipeline is now
+`constant-fold → fold-control-flow` (was just `constant-fold`). With the
+control-flow folder, an `if` whose condition is statically decidable has its
+dead branch pruned:
+
+| Source | SIMPLE output |
+|--------|---------------|
+| `if (2 > 3) { keepElse(); } else { takeThis(); }` | `{takeThis()}` |
+| `if (true) { alsoKept(); } else { dropped(); }` | `{alsoKept()}` |
+| `if (4 > 5) { vanishes(); }` | `;` (empty statement) |
+
+The `if (2 > 3)` case is the load-bearing one: `constant-fold` first turns the
+comparison `2 > 3` into the literal `false`, and only then can
+`fold-control-flow` decide the branch — so the two passes must compose. The
+pass registers a `depends_on = ["constant-fold"]`, so the pipeline's
+dependency topo-sort guarantees that order regardless of registration order.
+
+- `SIMPLE_PASS_NAMES` is now `["constant-fold", "fold-control-flow"]`; the
+  `passes` field in the `simple_v2` correlation-vector trace lists both.
+- `run_simple_pipeline` registers `FoldControlFlowPass` alongside
+  `ConstantFoldPass`.
+
+### Verified
+- New `tests/diff/simple-fold-control-flow/` end-to-end fixture +
+  `tests/diff_simple_fold_control_flow.rs`: three decidable `if`s ⇒
+  `{takeThis()}{alsoKept()};`.
+- New unit tests `simple_fold_control_flow_prunes_dead_branch`
+  (`if (2 > 3) {a()} else {b()}` ⇒ `{b()}`) and
+  `simple_fold_control_flow_whitespace_only_keeps_if` (same input under
+  WHITESPACE_ONLY keeps the whole `if`).
+- Existing `simple_v2` CV test updated to expect both pass names in `passes`.
+- `tests/diff/define/` re-pinned to `--compilation_level WHITESPACE_ONLY`.
+  `--define` is level-independent, and the compilation level runs *before*
+  the define pass, so at SIMPLE the now-present fold-control-flow rewrites
+  `if (DEBUG) {…}` → `DEBUG && …` (while `DEBUG` is still a variable) before
+  the substitution — a correct but surprising interaction that would churn
+  this fixture on every SIMPLE PR. Pinning WHITESPACE_ONLY isolates the
+  define-substitution oracle; SIMPLE behavior lives in the `simple-*` fixtures.
+
 ## [0.138.0] - 2026-06-15
 
 ### Added (CLOC12.155 — SIMPLE runs the typed-AST optimization pipeline, v2)
