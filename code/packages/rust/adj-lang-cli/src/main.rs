@@ -35,9 +35,10 @@ use adj_constraint_solver::{
 };
 use adj_lang::{compile_with_imports, decide, ImportLimits, ImportProvider};
 use logic_core::{atom, LogicVar, Term};
+use logic_engine::govern::Standing;
 use logic_engine::{
-    enumerate_all, DerivationOrigin, DifferentialDecision, Fact, KnowledgeBase, LRAggregateResult,
-    Provenance, TrustTier,
+    enumerate_all, enumerate_governing, DerivationOrigin, DifferentialDecision, Fact, GovernStatus,
+    KnowledgeBase, LRAggregateResult, Provenance, TrustTier,
 };
 
 const SPEC: &str = r#"{
@@ -465,6 +466,20 @@ fn main() -> ExitCode {
         format!(",\"recall\":[{}]", recall.join(","))
     };
 
+    // ADJ73 governance: the precedence-resolved view of each binding query — every answer
+    // tagged governing / defeated(by) / conflict_peer. For non-functional predicates this
+    // mirrors `recall` (all governing); for a functional predicate with `priority:` tiers it
+    // shows the override chain. 0 answer-time model calls.
+    let governing: Vec<String> = binding_queries
+        .iter()
+        .map(|q| governing_json(q, &lowered.kb))
+        .collect();
+    let governing_section = if governing.is_empty() {
+        String::new()
+    } else {
+        format!(",\"governing\":[{}]", governing.join(","))
+    };
+
     // Render the constraint sections from the outcomes computed above (the
     // solvers are not re-run). Absent a constraint system / `check` / objective,
     // the respective key is omitted entirely.
@@ -482,14 +497,15 @@ fn main() -> ExitCode {
     };
 
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
         solve_section,
         check_section,
         optimize_section,
-        recall_section
+        recall_section,
+        governing_section
     );
     ExitCode::SUCCESS
 }
@@ -562,6 +578,67 @@ fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
         esc(&format!("{}", query)),
         answers.join(","),
         dag.proofs.is_empty()
+    )
+}
+
+/// Render the ADJ73 *governance* of a binding query (defeasible precedence): every distinct
+/// answer tagged `governing` / `defeated` (by which term) / `conflict_peer`, plus its precedence
+/// standing. For a predicate that is NOT declared `functional`, every answer is `governing`
+/// (no conflict) — so this section is the precedence-resolved view, alongside the raw `recall`.
+/// 0 answer-time model calls (pure SLD + a resolution post-pass over the grounded graph).
+fn governing_json(query: &Term, kb: &KnowledgeBase) -> String {
+    let res = enumerate_governing(query, kb);
+    let mut vars: Vec<LogicVar> = Vec::new();
+    collect_vars(query, &mut vars);
+    let answers: Vec<String> = res
+        .answers
+        .iter()
+        .map(|a| {
+            // Bindings come from one representative proof of this answer (all proofs of a
+            // distinct answer share the same variable bindings by construction).
+            let binds: Vec<String> = a
+                .proof_indices
+                .first()
+                .map(|&i| {
+                    let proof = &res.dag.proofs[i];
+                    vars.iter()
+                        .map(|v| {
+                            format!(
+                                "\"{}\":\"{}\"",
+                                esc(&v.display_name.clone().unwrap_or_default()),
+                                esc(&format!("{}", proof.bindings.walk_var(v)))
+                            )
+                        })
+                        .collect()
+                })
+                .unwrap_or_default();
+            let (status, defeated_by) = match &a.status {
+                GovernStatus::Governing => ("governing", String::new()),
+                GovernStatus::ConflictPeer => ("conflict_peer", String::new()),
+                GovernStatus::Defeated { by } => (
+                    "defeated",
+                    format!(",\"defeated_by\":\"{}\"", esc(&format!("{}", by))),
+                ),
+            };
+            let standing = match a.priority {
+                Standing::Asserted => "asserted".to_string(),
+                Standing::Rule(p) => format!("{p:?}").to_lowercase(),
+            };
+            format!(
+                "{{\"term\":\"{}\",\"bindings\":{{{}}},\"status\":\"{}\",\"standing\":\"{}\"{}}}",
+                esc(&format!("{}", a.term)),
+                binds.join(","),
+                status,
+                standing,
+                defeated_by
+            )
+        })
+        .collect();
+    format!(
+        "{{\"query\":\"{}\",\"answers\":[{}],\"has_conflict\":{}}}",
+        esc(&format!("{}", query)),
+        answers.join(","),
+        res.has_conflict()
     )
 }
 
