@@ -659,6 +659,8 @@ export interface DeckAnalysisExecution {
   readonly result: DeckAnalysisExecutionResult;
   readonly table: string;
   readonly outputProbes: readonly string[];
+  readonly measurements: readonly ProbeMeasurement[];
+  readonly measurementTable: string;
 }
 
 export interface ReleaseReadinessIssue {
@@ -7251,6 +7253,24 @@ export function formatDeckTransientTable(
   return probes.length === 0 ? formatTransientTable(points) : formatTransientTable(points, probes);
 }
 
+function selectDeckMeasurementCardsForAnalysis(
+  netlist: string,
+  analysis: DeckAnalysisPlan["analysis"],
+): DeckMeasurementCard[] {
+  const summary = resolveDeckMeasurements(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      "runDeckAnalysis",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return summary.measurements.filter((measurement) =>
+    measurement.analysis === analysis ||
+    (analysis === "tran" && measurement.analysis === "transient")
+  );
+}
+
 export function runDeckAnalysis(
   circuit: Circuit,
   netlist: string,
@@ -7259,11 +7279,15 @@ export function runDeckAnalysis(
   const plan = selectDeckAnalysisPlan(netlist, analysis);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
+    selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    const measurements: ProbeMeasurement[] = [];
     return {
       plan,
       result,
       table: formatDeckOpTable(result, netlist),
       outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
     };
   }
   if (plan.analysis === "dc") {
@@ -7272,11 +7296,17 @@ export function runDeckAnalysis(
     const stop = requireDeckPlanNumber(plan.stopValue, plan, "stopValue");
     const step = requireDeckPlanNumber(plan.stepValue, plan, "stepValue");
     const result = dcSweep(circuit, sourceName, start, stop, step);
+    const measurements = measureDcSweepCards(
+      result,
+      selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
+    );
     return {
       plan,
       result,
       table: formatDeckDcSweepTable(sourceName, result, netlist),
       outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
     };
   }
   if (plan.analysis === "ac") {
@@ -7296,11 +7326,17 @@ export function runDeckAnalysis(
       startFrequencyHz,
       stopFrequencyHz,
     );
+    const measurements = measureAcSweepCards(
+      result,
+      selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
+    );
     return {
       plan,
       result,
       table: formatDeckAcTable(result, netlist),
       outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
     };
   }
   if (plan.analysis === "tran") {
@@ -7313,11 +7349,17 @@ export function runDeckAnalysis(
       plan.startTime,
       stopTime,
     );
+    const measurements = measureTransientCards(
+      result,
+      selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
+    );
     return {
       plan,
       result,
       table: formatDeckTransientTable(result, netlist),
       outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
+      measurements,
+      measurementTable: formatMeasurementTable(measurements),
     };
   }
   throw invalidElement("runDeckAnalysis", `unsupported analysis ${JSON.stringify(plan.analysis)}`);

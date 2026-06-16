@@ -6768,17 +6768,27 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 .dc V1 0 1 1
 .ac dec 1 1k 1k
 .tran 1m 1m
+.measure dc mid_avg avg V(mid)
+.measure ac mid_peak max V(mid)
+.measure tran mid_final final V(mid)
 .end
 """
 
     op_execution = run_deck_analysis(circuit, netlist, "op")
     assert op_execution.plan.analysis == "op"
     assert op_execution.output_probes == ["V(mid)"]
+    assert op_execution.measurements == []
+    assert op_execution.measurement_table == "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
 
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
     assert dc_execution.plan.source_name == "V1"
     assert dc_execution.output_probes == ["V(mid)", "I(V1)"]
+    assert [measurement.name for measurement in dc_execution.measurements] == ["mid_avg"]
+    assert dc_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n"
+    )
     assert isinstance(dc_execution.result, DcSweepResult)
     assert len(dc_execution.result.points) == 2
     assert dc_execution.table == (
@@ -6789,6 +6799,11 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
     assert ac_execution.output_probes == ["V(mid)"]
+    assert [measurement.name for measurement in ac_execution.measurements] == ["mid_peak"]
+    assert ac_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_peak\tac\tV(mid)\tmax\t\t\t5.000000e-01\n"
+    )
     assert isinstance(ac_execution.result, AcResult)
     assert len(ac_execution.result.points) == 1
     assert ac_execution.table == (
@@ -6798,6 +6813,13 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
     assert tran_execution.output_probes == ["V(mid)"]
+    assert [measurement.name for measurement in tran_execution.measurements] == [
+        "mid_final"
+    ]
+    assert tran_execution.measurement_table == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "mid_final\ttran\tV(mid)\tlast\t\t\t5.000000e-01\n"
+    )
     assert isinstance(tran_execution.result, TransientResult)
     assert tran_execution.table == (
         "Index\tTime\tV(mid)\n"
