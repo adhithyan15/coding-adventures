@@ -82,6 +82,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   into final route settlement checks
 - attach route finalization summaries that turn route-settlement readiness into
   final route finalization checks
+- attach route confirmation summaries that turn route-finalization readiness
+  into final route confirmation checks
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection

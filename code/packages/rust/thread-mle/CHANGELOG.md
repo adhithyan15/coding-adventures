@@ -85,5 +85,7 @@ All notable changes to this package will be documented in this file.
   readiness into final route settlement checks.
 - Thread attach route finalization summaries that turn route-settlement
   readiness into final route finalization checks.
+- Thread attach route confirmation summaries that turn route-finalization
+  readiness into final route confirmation checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
