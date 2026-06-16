@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.60.0 — 2026-06-16
+
+### Fixed
+
+- **RANGE mode peer-group expansion** — cumulative window functions
+  (``SUM``, ``COUNT``, ``AVG``, etc.) with ``ORDER BY`` now correctly
+  expand ``CURRENT ROW`` to the full *peer group* when the frame mode
+  is ``RANGE`` (the SQL standard default).
+
+  Previously ``_frame_slice`` applied ``ROWS`` physical-position
+  semantics even for the default ``RANGE BETWEEN UNBOUNDED PRECEDING
+  AND CURRENT ROW`` frame, so tied ``ORDER BY`` values produced wrong
+  cumulative totals::
+
+      -- data: (1,2,2,3)
+      SELECT a, COUNT(*) OVER (ORDER BY a) …
+      -- was: (1,1),(2,2),(2,3),(3,4)   ← wrong for a=2 first row
+      -- now: (1,1),(2,3),(2,3),(3,4)   ← correct (both a=2 rows in frame)
+
+  Fix: ``_frame_slice`` now computes ``_peer_group_start`` /
+  ``_peer_group_end`` helpers that scan backward/forward from position
+  ``i`` to find all rows sharing the same ``ORDER BY`` key.  The
+  helpers are used:
+
+  * In the default-frame path (``frame is None``, ``order_cols``
+    present): ``partition[:_peer_group_end()]`` replaces the old
+    ``partition[:i+1]``.
+  * In explicit ``RANGE`` frames (``frame.unit == "RANGE"``): the
+    ``CURRENT_ROW`` bound in ``_start`` and ``_end`` delegates to the
+    peer-group helpers instead of using the physical index ``i``.
+
+  ``ROWS`` frames are completely unaffected — the ``is_range`` flag
+  guards all peer-group expansions.
+
 ## 1.59.0 — 2026-05-24
 
 ### Fixed
