@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-06-15
+
+### Changed
+
+- Auto-print now happens in the runtime through the S3 `print` generic, so
+  factors, data frames, and user-classed values render via their own methods.
+  `SRepl::feed` is simplified to surface the runtime's output directly.
+
 ## [0.1.0] - 2026-06-15
 
 ### Added

@@ -36,12 +36,32 @@ pub fn install(env: &Env) {
 
     // v2 — vectorized math.
     define(env, "abs", builtin("abs", |_, a| unary_math(a, f64::abs)));
-    define(env, "sqrt", builtin("sqrt", |_, a| unary_math(a, f64::sqrt)));
+    define(
+        env,
+        "sqrt",
+        builtin("sqrt", |_, a| unary_math(a, f64::sqrt)),
+    );
     define(env, "exp", builtin("exp", |_, a| unary_math(a, f64::exp)));
-    define(env, "log10", builtin("log10", |_, a| unary_math(a, f64::log10)));
-    define(env, "floor", builtin("floor", |_, a| unary_math(a, f64::floor)));
-    define(env, "ceiling", builtin("ceiling", |_, a| unary_math(a, f64::ceil)));
-    define(env, "round", builtin("round", |_, a| unary_math(a, f64::round)));
+    define(
+        env,
+        "log10",
+        builtin("log10", |_, a| unary_math(a, f64::log10)),
+    );
+    define(
+        env,
+        "floor",
+        builtin("floor", |_, a| unary_math(a, f64::floor)),
+    );
+    define(
+        env,
+        "ceiling",
+        builtin("ceiling", |_, a| unary_math(a, f64::ceil)),
+    );
+    define(
+        env,
+        "round",
+        builtin("round", |_, a| unary_math(a, f64::round)),
+    );
     define(env, "sin", builtin("sin", |_, a| unary_math(a, f64::sin)));
     define(env, "cos", builtin("cos", |_, a| unary_math(a, f64::cos)));
     define(env, "tan", builtin("tan", |_, a| unary_math(a, f64::tan)));
@@ -137,9 +157,9 @@ fn b_data_frame(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// `nrow(df)` — the row count (the common column length).
 fn b_nrow(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     match first_positional(args)? {
-        SValue::DataFrame { columns, .. } => {
-            Ok(SValue::scalar(columns.first().map(|c| c.length()).unwrap_or(0) as f64))
-        }
+        SValue::DataFrame { columns, .. } => Ok(SValue::scalar(
+            columns.first().map(|c| c.length()).unwrap_or(0) as f64,
+        )),
         _ => Ok(SValue::Null),
     }
 }
@@ -175,7 +195,11 @@ fn b_dim(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 
 /// `head(x, n = 6)` — the first `n` elements of a vector, or rows of a data frame.
 fn b_head(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let positional: Vec<&SValue> = args
+        .iter()
+        .filter(|a| a.name.is_none())
+        .map(|a| &a.value)
+        .collect();
     let x = *positional
         .first()
         .ok_or_else(|| SError::BadArgs("head: missing x".into()))?;
@@ -262,9 +286,9 @@ fn b_factor(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// `levels(f)` — the level labels of a factor (`NULL` otherwise).
 fn b_levels(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     match first_positional(args)? {
-        SValue::Factor { levels, .. } => {
-            Ok(SValue::Character(levels.iter().cloned().map(Some).collect()))
-        }
+        SValue::Factor { levels, .. } => Ok(SValue::Character(
+            levels.iter().cloned().map(Some).collect(),
+        )),
         _ => Ok(SValue::Null),
     }
 }
@@ -319,12 +343,7 @@ fn b_structure(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let inner = first_positional(args)?.clone();
     match args.iter().find(|a| a.name.as_deref() == Some("class")) {
         Some(arg) => {
-            let class: Vec<String> = arg
-                .value
-                .as_character()
-                .into_iter()
-                .flatten()
-                .collect();
+            let class: Vec<String> = arg.value.as_character().into_iter().flatten().collect();
             Ok(SValue::Classed {
                 inner: Box::new(inner),
                 class,
@@ -336,7 +355,11 @@ fn b_structure(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 
 /// `inherits(x, what)` — whether any class of `x` matches `what`.
 fn b_inherits(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let positional: Vec<&SValue> = args
+        .iter()
+        .filter(|a| a.name.is_none())
+        .map(|a| &a.value)
+        .collect();
     let classes: HashSet<String> = class_of(
         positional
             .first()
@@ -348,10 +371,7 @@ fn b_inherits(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .get(1)
         .map(|v| v.as_character())
         .unwrap_or_default();
-    let hit = what
-        .into_iter()
-        .flatten()
-        .any(|w| classes.contains(&w));
+    let hit = what.into_iter().flatten().any(|w| classes.contains(&w));
     Ok(SValue::Logical(vec![Some(hit)]))
 }
 
@@ -381,7 +401,11 @@ fn unary_math(args: &[Arg], f: impl Fn(f64) -> f64) -> SResult<SValue> {
 /// `log(x)` is the natural log; `log(x, base)` (positional or `base =`) uses the
 /// given base.
 fn b_log(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let positional: Vec<&SValue> = args
+        .iter()
+        .filter(|a| a.name.is_none())
+        .map(|a| &a.value)
+        .collect();
     let x = positional
         .first()
         .ok_or_else(|| SError::BadArgs("log: missing argument".into()))?
@@ -439,8 +463,14 @@ fn b_order(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let d = first_positional(args)?.as_double()?;
     let data = d.data();
     let mut idx: Vec<usize> = (0..data.len()).collect();
-    idx.sort_by(|&a, &b| data[a].partial_cmp(&data[b]).unwrap_or(std::cmp::Ordering::Equal));
-    Ok(SValue::doubles(idx.iter().map(|i| (i + 1) as f64).collect()))
+    idx.sort_by(|&a, &b| {
+        data[a]
+            .partial_cmp(&data[b])
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    Ok(SValue::doubles(
+        idx.iter().map(|i| (i + 1) as f64).collect(),
+    ))
 }
 
 /// `rep(x, times)` — concatenate `times` copies of `x`.
@@ -450,13 +480,21 @@ fn b_rep(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .iter()
         .find(|a| a.name.as_deref() == Some("times"))
         .map(|a| &a.value)
-        .or_else(|| args.iter().filter(|a| a.name.is_none()).nth(1).map(|a| &a.value))
+        .or_else(|| {
+            args.iter()
+                .filter(|a| a.name.is_none())
+                .nth(1)
+                .map(|a| &a.value)
+        })
         .and_then(|v| v.as_double().ok())
         .and_then(|d| d.get_value(0))
         .map(|n| n.max(0.0) as usize)
         .unwrap_or(1);
     let copies: Vec<Arg> = (0..times)
-        .map(|_| Arg { name: None, value: x.clone() })
+        .map(|_| Arg {
+            name: None,
+            value: x.clone(),
+        })
         .collect();
     Ok(combine(&copies))
 }
@@ -488,7 +526,7 @@ fn b_which(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// `any(...)` — `TRUE` if any element is `TRUE`, tri-valued with `NA`.
 fn b_any(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let bits = combined_logical(args)?;
-    let result = if bits.iter().any(|b| *b == Some(true)) {
+    let result = if bits.contains(&Some(true)) {
         Some(true)
     } else if bits.iter().any(|b| b.is_none()) {
         None
@@ -501,7 +539,7 @@ fn b_any(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 /// `all(...)` — `TRUE` if every element is `TRUE`, tri-valued with `NA`.
 fn b_all(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let bits = combined_logical(args)?;
-    let result = if bits.iter().any(|b| *b == Some(false)) {
+    let result = if bits.contains(&Some(false)) {
         Some(false)
     } else if bits.iter().any(|b| b.is_none()) {
         None
@@ -519,7 +557,11 @@ fn b_is_na(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         SValue::Logical(l) => l.iter().map(|o| Some(o.is_none())).collect(),
         SValue::Character(c) => c.iter().map(|o| Some(o.is_none())).collect(),
         SValue::Factor { codes, .. } => codes.iter().map(|c| Some(c.is_none())).collect(),
-        other => other.as_character().iter().map(|o| Some(o.is_none())).collect(),
+        other => other
+            .as_character()
+            .iter()
+            .map(|o| Some(o.is_none()))
+            .collect(),
     };
     Ok(SValue::Logical(flags))
 }
@@ -612,8 +654,17 @@ fn b_sapply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let mut results: Vec<Arg> = Vec::with_capacity(x.length());
     for i in 0..x.length() {
         let elem = nth_element(&x, i);
-        let r = interp.call_value(f.clone(), &[Arg { name: None, value: elem }])?;
-        results.push(Arg { name: None, value: r });
+        let r = interp.call_value(
+            f.clone(),
+            &[Arg {
+                name: None,
+                value: elem,
+            }],
+        )?;
+        results.push(Arg {
+            name: None,
+            value: r,
+        });
     }
     Ok(combine(&results))
 }

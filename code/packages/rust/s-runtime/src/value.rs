@@ -639,7 +639,10 @@ pub fn format_value(value: &SValue) -> Vec<String> {
         }
         SValue::Factor { codes, levels } => {
             if codes.is_empty() {
-                return vec!["factor(0)".to_string(), format!("Levels: {}", levels.join(" "))];
+                return vec![
+                    "factor(0)".to_string(),
+                    format!("Levels: {}", levels.join(" ")),
+                ];
             }
             let labels: Vec<String> = factor_labels(codes, levels)
                 .into_iter()
@@ -665,13 +668,19 @@ fn factor_labels(codes: &[Option<u32>], levels: &[String]) -> Vec<Option<String>
 /// table rendering). Out-of-range or unsupported cells render as `NA`.
 pub fn element_string(value: &SValue, i: usize) -> String {
     match value {
-        SValue::Double(d) => d.get_value(i).map(format_number).unwrap_or_else(|| "NA".into()),
+        SValue::Double(d) => d
+            .get_value(i)
+            .map(format_number)
+            .unwrap_or_else(|| "NA".into()),
         SValue::Logical(v) => match v.get(i) {
             Some(Some(true)) => "TRUE".into(),
             Some(Some(false)) => "FALSE".into(),
             _ => "NA".into(),
         },
-        SValue::Character(v) => v.get(i).and_then(|o| o.clone()).unwrap_or_else(|| "NA".into()),
+        SValue::Character(v) => v
+            .get(i)
+            .and_then(|o| o.clone())
+            .unwrap_or_else(|| "NA".into()),
         SValue::Factor { codes, levels } => codes
             .get(i)
             .and_then(|c| *c)

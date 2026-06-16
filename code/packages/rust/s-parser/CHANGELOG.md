@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-06-15
+
+### Added
+
+- `special` rule for `%op%` infix operators (left-associative, between `* /`
+  and `:`).
+- `dollar_suffix` (`df$name`) and `dindex_suffix` (`x[[k]]`) postfixes; 2-D
+  `index_suffix` (`df[i, j]`) is now accepted.
+
+### Changed
+
+- Corrected the operator-precedence cascade so `:` binds tighter than `+ - * /`
+  (matching R). Regenerated the embedded `_grammar.rs`.
+
 ## [0.1.0] - 2026-06-15
 
 ### Added

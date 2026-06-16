@@ -218,14 +218,20 @@ mod tests {
     fn rev_sort_order_unique() {
         assert_eq!(nums("rev(1:4)\n"), vec![4.0, 3.0, 2.0, 1.0]);
         assert_eq!(nums("sort(c(3, 1, 2, NA))\n"), vec![1.0, 2.0, 3.0]);
-        assert_eq!(show("sort(c(\"b\", \"a\", \"c\"))\n"), "[1] \"a\" \"b\" \"c\"");
+        assert_eq!(
+            show("sort(c(\"b\", \"a\", \"c\"))\n"),
+            "[1] \"a\" \"b\" \"c\""
+        );
         assert_eq!(nums("order(c(3, 1, 2))\n"), vec![2.0, 3.0, 1.0]);
         assert_eq!(nums("unique(c(1, 2, 2, 3, 1))\n"), vec![1.0, 2.0, 3.0]);
     }
 
     #[test]
     fn rep_which_any_all_isna() {
-        assert_eq!(nums("rep(c(1, 2), 3)\n"), vec![1.0, 2.0, 1.0, 2.0, 1.0, 2.0]);
+        assert_eq!(
+            nums("rep(c(1, 2), 3)\n"),
+            vec![1.0, 2.0, 1.0, 2.0, 1.0, 2.0]
+        );
         assert_eq!(nums("which(c(1, 2, 3) > 1)\n"), vec![2.0, 3.0]);
         assert_eq!(show("any(c(FALSE, TRUE))\n"), "[1] TRUE");
         assert_eq!(show("all(c(TRUE, FALSE))\n"), "[1] FALSE");
@@ -241,7 +247,10 @@ mod tests {
 
     #[test]
     fn sapply_maps_a_function() {
-        assert_eq!(nums("sapply(1:3, function(n) n * n)\n"), vec![1.0, 4.0, 9.0]);
+        assert_eq!(
+            nums("sapply(1:3, function(n) n * n)\n"),
+            vec![1.0, 4.0, 9.0]
+        );
     }
 
     // --- v2: S3 dispatch ------------------------------------------------
@@ -278,7 +287,9 @@ mod tests {
 
     #[test]
     fn cat_writes_raw_output() {
-        let o = Interpreter::new().eval_str("cat(\"hello\", \"world\")\n").unwrap();
+        let o = Interpreter::new()
+            .eval_str("cat(\"hello\", \"world\")\n")
+            .unwrap();
         assert_eq!(o.printed, "hello world");
         assert!(!o.visible);
     }
@@ -287,7 +298,9 @@ mod tests {
     fn s3_print_dispatch_explicit_and_auto() {
         // Explicit print() dispatches to print.<class>.
         let explicit = Interpreter::new()
-            .eval_str("print.myc <- function(x) cat(\"custom\")\nprint(structure(1, class = \"myc\"))\n")
+            .eval_str(
+                "print.myc <- function(x) cat(\"custom\")\nprint(structure(1, class = \"myc\"))\n",
+            )
             .unwrap();
         assert_eq!(explicit.printed, "custom");
         // Auto-print at the prompt also dispatches through the generic.
@@ -301,10 +314,16 @@ mod tests {
 
     #[test]
     fn factor_levels_and_codes() {
-        assert_eq!(show("levels(factor(c(\"b\", \"a\", \"b\")))\n"), "[1] \"a\" \"b\"");
+        assert_eq!(
+            show("levels(factor(c(\"b\", \"a\", \"b\")))\n"),
+            "[1] \"a\" \"b\""
+        );
         assert_eq!(nums("nlevels(factor(c(\"b\", \"a\", \"b\")))\n"), vec![2.0]);
         // Codes are 1-based into the sorted levels: a=1, b=2.
-        assert_eq!(nums("as.integer(factor(c(\"b\", \"a\", \"b\")))\n"), vec![2.0, 1.0, 2.0]);
+        assert_eq!(
+            nums("as.integer(factor(c(\"b\", \"a\", \"b\")))\n"),
+            vec![2.0, 1.0, 2.0]
+        );
         assert_eq!(
             show("as.character(factor(c(\"b\", \"a\", \"b\")))\n"),
             "[1] \"b\" \"a\" \"b\""
@@ -326,7 +345,10 @@ mod tests {
 
     #[test]
     fn as_integer_truncates_numerics() {
-        assert_eq!(nums("as.integer(c(1.7, 2.2, -1.9))\n"), vec![1.0, 2.0, -1.0]);
+        assert_eq!(
+            nums("as.integer(c(1.7, 2.2, -1.9))\n"),
+            vec![1.0, 2.0, -1.0]
+        );
     }
 
     // --- v2: data frames ------------------------------------------------

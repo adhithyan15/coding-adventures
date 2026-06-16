@@ -117,7 +117,10 @@ impl Interpreter {
         for cls in candidates {
             if let Some(method) = lookup(&self.global, &format!("print.{cls}")) {
                 if method.is_callable() {
-                    let args = [Arg { name: None, value: value.clone() }];
+                    let args = [Arg {
+                        name: None,
+                        value: value.clone(),
+                    }];
                     self.call_value(method, &args)?;
                     return Ok(value.clone());
                 }
@@ -328,8 +331,14 @@ impl Interpreter {
             _ => {
                 let func = lookup(env, op).ok_or_else(|| SError::Undefined(op.to_string()))?;
                 let args = [
-                    Arg { name: None, value: lhs.clone() },
-                    Arg { name: None, value: rhs.clone() },
+                    Arg {
+                        name: None,
+                        value: lhs.clone(),
+                    },
+                    Arg {
+                        name: None,
+                        value: rhs.clone(),
+                    },
                 ];
                 self.call_value(func, &args)
             }
