@@ -16,6 +16,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io' show Directory, File, Platform;
+import 'dart:math' show max;
 
 // ---------------------------------------------------------------------------
 // C ABI function signatures (see spreadsheet-capi/include/spreadsheet.h).
@@ -334,5 +335,97 @@ class SpreadsheetModel {
     if (c < 1) return;
     _session.setCell(address(r, c), raw);
     recompute();
+  }
+}
+
+/// Engine-backed model for the VIRTUALIZED infinite sheet — the Dart sibling of
+/// the SwiftUI `WindowedSheetModel`, the Qt `SpreadsheetModel` infinite-view
+/// state, and the web demo's infinite.html. It seeds a deliberately far-flung,
+/// sparse dataset and exposes one-row windowed reads plus the data extent, so a
+/// `ListView.builder`-virtualized grid can render only the visible rectangle of
+/// an effectively-unbounded (u32 × u32) sheet.
+///
+/// Plain Dart (no ChangeNotifier): the host `StatefulWidget` mutates it inside
+/// `setState`, exactly as `main.dart` drives [SpreadsheetModel]. All coordinates
+/// here are 1-based (row/col ≥ 1, col 1 = "A"), matching the engine.
+class InfiniteSheetModel {
+  final SpreadsheetSession _session;
+
+  /// The virtual grid size, derived from the data extent plus a margin so you
+  /// can scroll past the data into blank space.
+  int totalRows = 1000;
+  int totalCols = 60;
+
+  /// The selected cell (1-based) and the formula-bar text (its raw source).
+  int selRow = 1;
+  int selCol = 1;
+  String formula = '';
+
+  InfiniteSheetModel({SpreadsheetSession? session})
+      : _session = session ?? SpreadsheetSession() {
+    _seed();
+    computeExtent();
+    selectInf(1, 1); // prime the selection + formula bar at A1
+  }
+
+  void dispose() => _session.dispose();
+
+  /// The classic cross-footing budget PLUS far-flung cells (a formula at
+  /// `Z1000`, a couple near `BA50`/`BB50`) to prove the sheet is sparse and
+  /// unbounded — identical seed to the SwiftUI/Qt infinite views.
+  void _seed() {
+    const cells = <List<String>>[
+      ['A1', '15'], ['B1', '3'], ['C1', '12'], ['D1', '8'], ['E1', '=SUM(A1:D1)'],
+      ['A2', '8'], ['B2', '14'], ['C2', '7'], ['D2', '22'], ['E2', '=SUM(A2:D2)'],
+      ['A3', '12'], ['B3', '9'], ['C3', '18'], ['D3', '6'], ['E3', '=SUM(A3:D3)'],
+      ['A4', '4'], ['B4', '11'], ['C4', '3'], ['D4', '17'], ['E4', '=SUM(A4:D4)'],
+      ['A5', '=SUM(A1:A4)'], ['B5', '=SUM(B1:B4)'], ['C5', '=SUM(C1:C4)'],
+      ['D5', '=SUM(D1:D4)'], ['E5', '=SUM(E1:E4)'],
+      ['Z1000', '=SUM(A1:A4)'], // 1000 rows down: 39
+      ['BA50', 'far cell'], ['BB50', '=Z1000*2'], // col 53/54, row 50: 78
+    ];
+    for (final cell in cells) {
+      _session.setCell(cell[0], cell[1]);
+    }
+  }
+
+  /// Re-derive the virtual grid size from the engine's data extent plus a
+  /// comfortable margin. Mirrors `WindowedSheetModel.resize()`.
+  void computeExtent() {
+    final u = _session.usedRange();
+    totalRows = max((u?['maxRow'] ?? 1) + 200, 1000);
+    totalCols = max((u?['maxCol'] ?? 1) + 30, 60);
+  }
+
+  /// Column letters for a 1-based index (`1` → `"A"`, `27` → `"AA"`).
+  String columnLetters(int index) => _session.columnLetters(index);
+
+  /// The A1 address of the selected cell (e.g. `"Z1000"`).
+  String get infAddress => '${_session.columnLetters(selCol)}$selRow';
+
+  /// One row's display strings (columns 1..totalCols) — what a virtualized
+  /// `ListView` delegate renders. A single engine `get_window` over a 1×N strip;
+  /// returns an empty list if the request was rejected/oversized.
+  List<String> rowCells(int row) {
+    if (row < 1) return const [];
+    final w = _session.window(row, 1, row, totalCols);
+    return w.isEmpty ? const [] : w[0];
+  }
+
+  /// Move the selection (clamped to the virtual grid; row/col ≥ 1) and pull the
+  /// selected cell's raw source into the formula bar.
+  void selectInf(int row, int col) {
+    selRow = row.clamp(1, totalRows);
+    selCol = col.clamp(1, totalCols);
+    formula = _session.getRaw(infAddress);
+  }
+
+  /// Commit the formula bar into the selected cell: write through to the engine
+  /// (which recomputes every dependent), grow the extent if the edit reached new
+  /// ground, and re-read the canonicalised source back into the bar.
+  void commitInf(String raw) {
+    _session.setCell(infAddress, raw);
+    computeExtent();
+    formula = _session.getRaw(infAddress);
   }
 }

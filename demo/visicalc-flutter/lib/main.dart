@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'engine.dart';
 import 'generated/formula_bar.dart';
 import 'generated/grid.dart';
+import 'infinite_grid.dart';
 
 void main() {
   runApp(const VisiCalcApp());
@@ -91,6 +92,11 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
   double _editCol = -1;
   String _editContent = '';
 
+  // Which view is showing: the classic 5×5 cross-foot budget (the auto-
+  // generated Grid), or the virtualized infinite sheet (InfiniteGrid, rendered
+  // on the same engine via the viewport primitive).
+  bool _infinite = false;
+
   String get _cellAddress {
     // Column 0 is the row-label gutter; data columns A–E start at
     // index 1, so the letter is offset by one (`65 + col - 1`).
@@ -144,43 +150,62 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: Text(
-                  'VISICALC · MOSAIC FLUTTER DEMO',
-                  style: TextStyle(
-                    color: Color(0xFF9D9D9D),
-                    fontSize: 11,
-                    letterSpacing: 1.0,
-                  ),
+              // Title bar + view toggle.
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _infinite
+                            ? 'VISICALC · INFINITE SHEET · RUST ENGINE'
+                            : 'VISICALC · MOSAIC FLUTTER DEMO',
+                        style: const TextStyle(
+                          color: Color(0xFF9D9D9D),
+                          fontSize: 11,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => setState(() => _infinite = !_infinite),
+                      child: Text(_infinite ? 'Classic grid' : 'Infinite sheet'),
+                    ),
+                  ],
                 ),
               ),
-              FormulaBar(
-                cellAddress: _cellAddress,
-                formula: _formula,
-                readOnly: false,
-                dispatch: _onFormulaBarEvent,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Grid(
-                    // Leading '' is the row-label gutter header (above
-                    // the '1'..'5' column); A–E label the data columns.
-                    columnHeaders: const ['', 'A', 'B', 'C', 'D', 'E'],
-                    viewportRows: _model.viewportRows,
-                    // Narrow gutter (48) + five data columns (96 each).
-                    columnWidths: const [48, 96, 96, 96, 96, 96],
-                    totalHeight: 400,
-                    selectedRow: _selectedRow,
-                    selectedCol: _selectedCol,
-                    editRow: _editRow,
-                    editCol: _editCol,
-                    editContent: _editContent,
-                    dispatch: _onGridEvent,
+              // The infinite view owns its own model + chrome, so it replaces
+              // the whole classic stack (formula bar + grid) when toggled on.
+              if (_infinite)
+                const Expanded(child: InfiniteGrid())
+              else ...[
+                FormulaBar(
+                  cellAddress: _cellAddress,
+                  formula: _formula,
+                  readOnly: false,
+                  dispatch: _onFormulaBarEvent,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Grid(
+                      // Leading '' is the row-label gutter header (above
+                      // the '1'..'5' column); A–E label the data columns.
+                      columnHeaders: const ['', 'A', 'B', 'C', 'D', 'E'],
+                      viewportRows: _model.viewportRows,
+                      // Narrow gutter (48) + five data columns (96 each).
+                      columnWidths: const [48, 96, 96, 96, 96, 96],
+                      totalHeight: 400,
+                      selectedRow: _selectedRow,
+                      selectedCol: _selectedCol,
+                      editRow: _editRow,
+                      editCol: _editCol,
+                      editContent: _editContent,
+                      dispatch: _onGridEvent,
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
