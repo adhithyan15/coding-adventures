@@ -2035,7 +2035,7 @@ def _lex_cmp(lhs: list[Expr], rhs: list[Expr], strict_op: BinaryOp, final_op: Bi
     Built right-to-left to avoid Python recursion limits on wide row values.
     """
     result: Expr = BinaryExpr(op=final_op, left=lhs[-1], right=rhs[-1])
-    for lv, rv in zip(reversed(lhs[:-1]), reversed(rhs[:-1])):
+    for lv, rv in zip(reversed(lhs[:-1]), reversed(rhs[:-1]), strict=True):
         result = BinaryExpr(
             op=BinaryOp.OR,
             left=BinaryExpr(op=strict_op, left=lv, right=rv),
