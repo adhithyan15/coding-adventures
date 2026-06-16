@@ -64,31 +64,35 @@ let answer = find_first(&query, &kb).expect("there is at least one answer");
 assert_eq!(answer.walk_var(&x), atom("bart"));  // first matching clause
 ```
 
-### Defeasible precedence (v0.17, ADJ73)
+### Defeasible precedence (v0.18, ADJ73)
 
 Most real rulebooks are **defaults with exceptions**: two rules derive conclusions that
 cannot both hold, and a priority decides which one *governs*. Declare the predicate
-**functional** (at most one value per key) and give the rules a `priority`; then
+**functional** (at most one value per key) and give the rules a `Priority` **tier**; then
 `enumerate_governing` resolves the conflict as a post-pass over `enumerate_all`:
 
 ```rust
-use logic_engine::{enumerate_governing, GovernStatus, KnowledgeBase, Rule};
+use logic_engine::{enumerate_governing, GovernStatus, KnowledgeBase, Priority, Rule};
 
 let mut kb = KnowledgeBase::new();
 kb.declare_functional("timing", 1);                       // one timing decision may hold
 kb.add_fact(/* stable_routine_pending */);
-kb.add_rule(Rule::certain(/* timing(await) when stable_routine_pending */).with_priority(10));
-kb.add_rule(Rule::certain(/* timing(treat_now) — default */));            // priority 0
+kb.add_rule(Rule::certain(/* timing(await) when stable_routine_pending */)
+    .with_priority(Priority::Specific));                  // beats the default
+kb.add_rule(Rule::certain(/* timing(treat_now) — default */));            // Priority::Default
 
 let res = enumerate_governing(&/* timing($D) */, &kb);
 // timing(await) governs; timing(treat_now) is Defeated { by: timing(await) }.
-// A tie at the top priority yields ConflictPeer (never silently resolved) — abstain/ask.
+// A tie at the top tier yields ConflictPeer (never silently resolved) — abstain/ask.
 ```
 
-A predicate that is **not** declared functional never conflicts, so every answer governs and
-`enumerate_all` semantics are unchanged — precedence is opt-in per predicate. The general
-partial-order form (`context_order`, for jurisdiction/specialist precedence) and the adj-lang
-surface syntax are staged in `code/specs/ADJ73-defeasible-rule-precedence.md`.
+Priority is a **named enum tier** (`Default < Specific < Authoritative < Mandatory`), not a raw
+integer; a ground fact (`Standing::Asserted`) outranks every rule tier. A predicate that is
+**not** declared functional never conflicts, so every answer governs and `enumerate_all`
+semantics are unchanged — precedence is opt-in per predicate. The richer, byte-provenanced
+mechanism — a grounded `context-precedence` rulebook (lex-superior / recency / appeal-status,
+for jurisdiction/specialist precedence) — and the adj-lang surface syntax are staged in
+`code/specs/ADJ73-defeasible-rule-precedence.md` (§2.3, §7).
 
 ## Why Probability From Day One
 

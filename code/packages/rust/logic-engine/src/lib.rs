@@ -234,14 +234,41 @@ pub struct Rule {
     /// no citation. Mirrors [`Fact::provenance`], so a derived consequence can (in
     /// future) cite the rule that produced it alongside the facts it fired on.
     pub provenance: Provenance,
-    /// ADJ73 defeasible precedence: the rule's priority among *conflicting*
-    /// derivations. Higher defeats lower when two rules derive heads that cannot
-    /// both hold (a predicate declared functional via
-    /// [`KnowledgeBase::declare_functional`]). Defaults to `0`; a plain rulebook
-    /// with no priorities and no functional predicates behaves exactly as before
-    /// (every conclusion governs). Only [`crate::govern::enumerate_governing`] reads
-    /// this field — `enumerate_all` ignores it, so monotonic queries are unchanged.
-    pub priority: i64,
+    /// ADJ73 defeasible precedence: the rule's priority TIER among *conflicting*
+    /// derivations. A higher tier defeats a lower one when two rules derive heads that
+    /// cannot both hold (a predicate declared functional via
+    /// [`KnowledgeBase::declare_functional`]). Defaults to [`Priority::Default`]; a plain
+    /// rulebook with no priorities and no functional predicates behaves exactly as before
+    /// (every conclusion governs). Only [`crate::govern::enumerate_governing`] reads this
+    /// field — `enumerate_all` ignores it, so monotonic queries are unchanged.
+    ///
+    /// Named TIERS, not raw integers (ADJ73 decision 1): the explicit tier is the simplest
+    /// grounded precedence principle ("a higher tier wins"), used for local default-vs-
+    /// exception ladders. Richer, byte-provenanced precedence (lex-superior / recency /
+    /// appeal-status over a grounded `context-precedence` rulebook) is ADJ73 PR-B.
+    pub priority: Priority,
+}
+
+/// ADJ73 defeasible-precedence TIER (decision 1: named enum, not raw integers). Totally
+/// ordered lowest→highest by declaration order, so `derive(Ord)` gives `Default < Specific
+/// < Authoritative < Mandatory`. A ground **fact** sits above every tier (asserted truth);
+/// that "above all" standing is represented by [`crate::govern::Standing`], not here.
+///
+/// - `Default` — the implicit fallback rule (what a rule has when no tier is written).
+/// - `Specific` — a more specific rule than the general default.
+/// - `Authoritative` — a rule from a governing/authoritative source.
+/// - `Mandatory` — a hard override (the highest rule tier).
+///
+/// These are domain-neutral: a clinical "specialist guideline over general" and a legal
+/// "controlling authority over persuasive" both map onto the same ladder. The names are
+/// open to revision (ADJ73 §2.2).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
+pub enum Priority {
+    #[default]
+    Default,
+    Specific,
+    Authoritative,
+    Mandatory,
 }
 
 impl Rule {
@@ -252,7 +279,7 @@ impl Rule {
             body,
             probability: Probability::Certain,
             provenance: Provenance::unattributed(),
-            priority: 0,
+            priority: Priority::Default,
         }
     }
 
@@ -266,7 +293,7 @@ impl Rule {
             body,
             probability: Probability::Value(p),
             provenance: Provenance::unattributed(),
-            priority: 0,
+            priority: Priority::Default,
         }
     }
 
@@ -279,7 +306,7 @@ impl Rule {
 
     /// ADJ73: set the rule's defeasible-precedence priority (higher defeats lower
     /// among conflicting derivations). Builder-style, mirrors [`Self::with_provenance`].
-    pub fn with_priority(mut self, priority: i64) -> Self {
+    pub fn with_priority(mut self, priority: Priority) -> Self {
         self.priority = priority;
         self
     }

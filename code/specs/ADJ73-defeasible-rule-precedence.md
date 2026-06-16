@@ -82,33 +82,92 @@ backwards-compatibility guarantee: precedence is opt-in per predicate.**
 
 ### 2.2 Priority — which competitor wins?
 
-Attach an ordering to rules. Two layers, used together:
+> **Design decisions (2026-06-16, user).** (1) Explicit priority uses **named enum tiers**, not
+> raw integers. (2) Context precedence is **itself grounded** — its own rulebook, each edge
+> byte-provenanced (§2.3). (3) The principle that *resolves a precedence conflict* (lex-specialis
+> vs lex-superior vs recency vs appeal-status) is **also a grounded rule** — precedence is
+> recursive, and every layer carries byte-provenance. (4) Cycles are rejected at load.
 
-- **Explicit rule priority** — a non-negative integer (or named tier) on a rule; higher
-  defeats lower among *conflicting* heads:
+Attach an ordering to rules. Three layers, weakest-to-strongest in generality:
+
+- **Explicit rule priority — a NAMED ENUM tier** (not a magic integer) on a rule; a higher tier
+  defeats a lower one among *conflicting* heads. The tiers are domain-neutral and totally
+  ordered:
   ```
-  rule { head: timing(targeted)        when: culture_status(resulted)            priority: 30 }
-  rule { head: timing(treat_now)       when: disease_acuity(time_critical)       priority: 20 }
-  rule { head: timing(await_culture)   when: stable, routine, culture_pending     priority: 10 }
-  rule { head: timing(treat_now)       when: true                                priority: 0  }  % default
+  rule { head: timing(targeted)        when: culture_status(resulted)         priority: mandatory  }
+  rule { head: timing(treat_now)       when: disease_acuity(time_critical)    priority: authoritative }
+  rule { head: timing(await_culture)   when: stable, routine, culture_pending priority: specific }
+  rule { head: timing(treat_now)       when: any_case                         priority: default }  % fallback
   ```
+  Proposed tier ladder (lowest→highest), open to your edit:
+  `default < specific < authoritative < mandatory`. `default` is the implicit tier when none is
+  written (so existing rules are unchanged). A bare ground **fact** sits above all tiers
+  (asserted truth). Integers are *not* exposed in the surface; internally the enum has a total
+  order so the resolver can compare.
 - **Context specificity (the generic precedence)** — when rules fire under different
-  *contexts* (the `active_context` convention from the contraindication rulebook), a partial
-  order over contexts induces rule priority *without* hand-numbering. Declared once:
-  ```
-  context_order { federal > state }            % law
-  context_order { specialist > general }       % medicine
-  context_order { idsa_2024 > idsa_2004 }      % newer guideline > older
-  ```
-  A conclusion grounded in a context that is **greater** in the order defeats a conflicting
-  conclusion grounded in a lesser context. Numeric `priority` is the degenerate
-  total-order case; `context_order` is the general partial order and is what the legal vision
-  needs. The two combine: explicit `priority` breaks ties the context order leaves unordered.
+  *contexts* (the `active_context` convention from the contraindication rulebook), an order
+  over contexts induces rule priority *without* hand-numbering. But — **decision (2)** — that
+  order is **not config**. It is a grounded relation in its own rulebook (§2.3).
 
-**Why both:** numeric priority is ergonomic for a small local ladder (timing); context order
-is the scalable, *declared-once* mechanism for thousands of cross-referencing rules where
-hand-numbering is infeasible (the US Code). Numeric priority lowers to a trivial total
-`context_order` internally, so the engine has one mechanism.
+- **Grounded conflict-resolution principles (the recursive layer, §2.3)** — when an explicit
+  tier and a context order *disagree* (a `specific` lower-court rule vs an `authoritative`
+  higher-court rule), which wins is itself decided by **grounded meta-rules**, not a hardcoded
+  precedence-of-precedence. Recency, appeal status, court level, and lex-specialis are each a
+  byte-provenanced rule (§2.3).
+
+### 2.3 Precedence is grounded and recursive (decisions 2 + 3)
+
+> The headline architectural commitment. "Everything in this work is recursive and each has its
+> own byte provenance." Precedence is not a hardcoded `max(priority)`; it is **derived** by a
+> grounded **precedence rulebook**, the same way every clinical/legal fact is derived.
+
+1. **Context order edges are grounded facts.** `federal > state` is not config — it is
+   `outranks_context(federal, state)` **with a source**: the Supremacy Clause (US Const. Art.
+   VI, cl. 2), a byte-quote, a locator, a trust tier. It enters the CAS through the *same*
+   spider → provenance → adversarial-gate pipeline as any other fact
+   (`feedback_nothing_human_authored`). Its own rulebook: `context-precedence.adj`.
+
+2. **Rules carry typed attributes, not a baked-in rank.** A rule (esp. a grounded legal/clinical
+   one) records *why it might out- or under-rank another*: its **authority level** (court /
+   guideline-body), **decision/effective date**, **appeal status** (good-law / reversed /
+   vacated / superseded), and **specificity**. These are typed (dates via datetime-core, etc.)
+   and themselves provenanced.
+
+3. **The conflict-resolution PRINCIPLES are grounded meta-rules.** "Which rule governs" is a
+   derived relation `outranks($R1, $R2)`, produced by rules like — each byte-provenanced:
+   - *lex superior*: a higher authority outranks a lower (`outranks_context` grounded in the
+     hierarchy's charter).
+   - *stare decisis / recency*: a later **controlling** opinion supersedes an earlier one (cite
+     the doctrine).
+   - *good-law gate*: a rule **reversed/vacated on appeal** is defeated outright (cite the
+     reversing decision — recursive: the defeater is itself a grounded rule).
+   - *lex specialis*: the more specific provision governs the general — **and when lex specialis
+     and lex superior point opposite ways, a further grounded meta-rule decides** (e.g. "a
+     specific statute controls over a general one unless the general is constitutional"), cited
+     to the governing canon. There is no built-in tiebreaker the engine invents; if no grounded
+     meta-rule resolves it, the result is `CONFLICT` (abstain), surfaced honestly.
+
+   So the resolver does not compare integers — it **queries the precedence rulebook**:
+   `? outranks($winner, $loser)` over the conflicting rules' attributes. The named-enum tier
+   (§2.2) is just the simplest grounded meta-rule ("a higher explicit tier outranks a lower"),
+   used for local ladders where no richer principle applies.
+
+4. **Cycles are rejected at load (decision 4).** `outranks_context` (and any derived `outranks`
+   that is asserted as ground) must be acyclic; the loader runs a cycle check and refuses a
+   rulebook that asserts `a > b, b > a`. Derived `outranks` from meta-rules is checked for
+   contradiction (both `outranks(A,B)` and `outranks(B,A)` derivable ⇒ `CONFLICT`, not a pick).
+
+**Why this is the right shape:** it makes the legal-corpus vision tractable *and honest* — the
+reason one authority beats another is auditable down to the clause, the system never invents a
+hierarchy, and "the law changed / was overruled" is a CAS edit to a grounded rule that
+re-propagates. It is the McCarthy context-lifting relation, but *every lift is justified by
+cited bytes*. Medicine uses the identical machinery (specialist guideline > general; a
+retracted study defeats its claims; a newer IDSA edition supersedes an older).
+
+**Why explicit tiers still exist:** a named-enum tier is ergonomic for a small local ladder
+(timing) where authoring a full grounded meta-rule would be overkill; it is the degenerate
+grounded principle "higher tier wins". The scalable mechanism for thousands of cross-referencing
+rules (the US Code) is the grounded `outranks` rulebook.
 
 ---
 
@@ -243,22 +302,42 @@ Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`
 
 ---
 
-## 7. Open design questions (for review before PR-1)
+## 7. Resolved design decisions (2026-06-16, user)
 
-1. **Priority scope.** Per-rule integer vs named tiers (`priority: authoritative` mapped to a
-   number)? Named tiers read better in grounded rulebooks and align with the `trust` ladder —
-   lean named, with integers as the escape hatch.
-2. **Context order source.** Should `context_order` be *grounded* (a precedence itself has a
-   source — e.g. the Supremacy Clause for federal > state) rather than authored? Likely yes,
-   long-term: precedence edges are facts in the CAS with provenance, same as any other.
-3. **Transitivity / cycles.** `context_order` is a strict partial order; the loader must
-   reject cycles (`a > b, b > a`) at compile time. Lex-specialis vs lex-superior can conflict
-   (a specific *lower* rule vs a general *higher* one) — do we need rule-level priority to
-   adjudicate *between ordering principles*? Defer to PR-5 once real cases exist; PR-1 ships
-   single-dimension orders.
-4. **Defeat vs probability discount.** Hard defeat (loser contributes nothing) vs soft
-   (loser's probability is discounted)? Start hard (matches statutes/clinical contraindication);
-   soft defeat is a later `ADJ` extension if a domain needs graded override.
+1. **Priority = named enum tiers**, not raw integers (§2.2). Proposed ladder
+   `default < specific < authoritative < mandatory` (open to edit); `default` implicit; a ground
+   fact sits above all tiers. Integers are not exposed in the surface.
+2. **Context precedence is grounded, in its own rulebook, with provenance on WHY** (§2.3). Each
+   `outranks_context` edge cites its charter (Supremacy Clause for federal > state, etc.) and
+   enters via the standard spider → gate → CAS pipeline. New artifact: `context-precedence.adj`.
+3. **Conflict-resolution principles are themselves grounded, recursive meta-rules** (§2.3) —
+   lex-superior, recency/stare-decisis, appeal-status (reversed ⇒ defeated), lex-specialis, and
+   the meta-meta-rule for when specialis and superior disagree. The resolver *queries* the
+   precedence rulebook (`? outranks($w,$l)`); it never invents a hierarchy. Unresolved ⇒
+   `CONFLICT` (abstain). Rules carry typed, provenanced attributes (authority level, decision
+   date, appeal status, specificity) that the meta-rules read.
+4. **Cycles rejected at load**; contradictory derived `outranks` ⇒ `CONFLICT`, not a silent pick.
+5. **Defeat is hard** for now (a defeated rule contributes nothing). Soft probability-discount is
+   deferred unless a domain needs graded override. *(This was the one question with no strong
+   user signal; hard defeat is the conservative default and matches statutes/contraindications.)*
+
+### Revised PR staging (supersedes §6's PR-1b/PR-2/PR-5 framing)
+
+- **PR-A — named-enum priority (engine).** Replace `Rule.priority: i64` with `Priority` enum
+  (`Default < Specific < Authoritative < Mandatory`, `Ord`; fact = above all). Update
+  `with_priority`, `enumerate_governing` comparison, the 2 adjudication-connector sites, tests.
+- **PR-B — grounded `context-precedence` rulebook + `outranks` resolver.** A grounded rulebook
+  of `outranks_context` edges (each byte-provenanced) + the meta-rules (lex-superior / recency /
+  appeal-status / lex-specialis). Engine resolution queries `outranks` instead of comparing enum
+  tiers when rule attributes are present; cycle/contradiction → CONFLICT. Rule attributes
+  (authority/date/appeal/specificity) added as typed, provenanced metadata.
+- **PR-C — adj-lang surface** (`priority: <tier>`, `functional`/`decision`, the attribute
+  annotations) + regen grammar.
+- **PR-D — MYCIN `decide_timing` → `timing.adj`** on the named-enum ladder (was PR-4).
+- **PR-E — legal `context-precedence` worked example** (federal>state grounded to the Supremacy
+  Clause; a reversed-on-appeal defeat) proving the recursive grounded mechanism end-to-end.
+
+Each PR: spec-sync note, tests incl. a CONFLICT/abstain case, `/security-review`, babysit.
 
 ---
 

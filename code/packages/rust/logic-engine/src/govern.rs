@@ -16,12 +16,13 @@
 //!    hypothetical `means(term, reading, ctx)` declared functional, two answers conflict only
 //!    when they share `(term, ctx)` but differ on `reading`. A predicate that is NOT declared
 //!    functional never conflicts → every answer governs (back-compat).
-//! 2. **Priority** — which competitor wins? Each answer's priority is the **maximum**
-//!    [`Rule::priority`](crate::Rule) over the proofs that derive it (a fact-derived answer is
-//!    [`i64::MAX`] — an asserted truth is never defeated by a rule). Among a conflict group,
-//!    the unique maximum **governs**; the rest are **defeated**. A tie at the maximum is a
-//!    genuine **conflict** — both are surfaced as [`GovernStatus::ConflictPeer`], never
-//!    silently resolved (mirrors the engine's `INDETERMINATE/CONFLICT` stance).
+//! 2. **Priority** — which competitor wins? Each answer's [`Standing`] is the **maximum** over
+//!    the proofs that derive it: the rule [`Priority`] tier, or [`Standing::Asserted`] for a
+//!    fact-derived answer (asserted truth outranks any rule tier). Among a conflict group, the
+//!    unique maximum **governs**; the rest are **defeated**. A tie at the maximum is a genuine
+//!    **conflict** — both are surfaced as [`GovernStatus::ConflictPeer`], never silently
+//!    resolved (mirrors the engine's `INDETERMINATE/CONFLICT` stance). Named tiers, not raw
+//!    integers (ADJ73 decision 1); richer grounded precedence is PR-B.
 //!
 //! Defeated/peer answers are *kept and tagged*, not discarded — the audit trail shows exactly
 //! what was overridden and by what (`feedback_nothing_human_authored` / provenance-first).
@@ -30,7 +31,20 @@ use logic_core::{Substitution, Term};
 
 use crate::enumerate::enumerate_all;
 use crate::proof_dag::{DerivationOrigin, ProofDAG};
-use crate::KnowledgeBase;
+use crate::{KnowledgeBase, Priority};
+
+/// The precedence STANDING of a derived answer (ADJ73 decision 1: named tiers, not integers).
+/// Either the priority tier of the rule that derived it, or [`Standing::Asserted`] when it
+/// rests on a ground fact — an asserted truth that outranks every rule tier. Totally ordered
+/// by `derive(Ord)`: `Rule` is declared first so `Asserted` is the greatest, and `Rule(p)`
+/// compares by its [`Priority`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Standing {
+    /// Derived by a rule carrying this priority tier.
+    Rule(Priority),
+    /// Derived from a ground fact — outranks every rule tier (asserted truth).
+    Asserted,
+}
 
 /// The governance verdict for one distinct answer term.
 #[derive(Debug, Clone, PartialEq)]
@@ -50,9 +64,9 @@ pub enum GovernStatus {
 pub struct GovernedAnswer {
     /// The ground answer term (the query with this proof's bindings applied).
     pub term: Term,
-    /// Max [`Rule::priority`](crate::Rule) over the proofs deriving this answer
-    /// (`i64::MAX` if any derivation is a bare fact).
-    pub priority: i64,
+    /// The highest [`Standing`] over the proofs deriving this answer ([`Standing::Asserted`]
+    /// if any derivation rests on a ground fact, else the max rule [`Priority`] tier).
+    pub priority: Standing,
     /// Indices into [`GovernedResult::dag`]`.proofs` that derive this answer.
     pub proof_indices: Vec<usize>,
     /// Whether this answer governs, was defeated, or is an unresolved conflict peer.
@@ -113,16 +127,19 @@ fn conflict_key(term: &Term, kb: &KnowledgeBase) -> Option<(String, Vec<Term>)> 
     }
 }
 
-/// The priority a single proof confers on its answer: the priority of the rule that derived the
-/// query head (the proof's first step). A fact-derived head is `i64::MAX` — an asserted truth
-/// outranks any rule. An empty/odd proof falls back to `0` (the default rule priority).
-fn proof_priority(dag: &ProofDAG, proof_index: usize, kb: &KnowledgeBase) -> i64 {
+/// The [`Standing`] a single proof confers on its answer: the priority tier of the rule that
+/// derived the query head (the proof's first step), or [`Standing::Asserted`] when the head is
+/// a ground fact (asserted truth outranks any rule). An empty/odd proof falls back to the
+/// `Default` tier.
+fn proof_priority(dag: &ProofDAG, proof_index: usize, kb: &KnowledgeBase) -> Standing {
     match dag.proofs[proof_index].steps.first().map(|s| &s.origin) {
-        Some(DerivationOrigin::FromRule(id)) => {
-            kb.find_rule_by_id(*id).map(|r| r.priority).unwrap_or(0)
-        }
-        Some(DerivationOrigin::FromFact(_)) => i64::MAX,
-        _ => 0,
+        Some(DerivationOrigin::FromRule(id)) => Standing::Rule(
+            kb.find_rule_by_id(*id)
+                .map(|r| r.priority)
+                .unwrap_or(Priority::Default),
+        ),
+        Some(DerivationOrigin::FromFact(_)) => Standing::Asserted,
+        _ => Standing::Rule(Priority::Default),
     }
 }
 
@@ -198,7 +215,7 @@ pub fn enumerate_governing(query: &Term, kb: &KnowledgeBase) -> GovernedResult {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{BodyLiteral, Fact, KnowledgeBase, Rule};
+    use crate::{BodyLiteral, Fact, KnowledgeBase, Priority, Rule};
     use logic_core::Term;
 
     fn atom(s: &str) -> Term {
@@ -227,7 +244,7 @@ mod tests {
                 comp("timing", vec![atom("await")]),
                 vec![BodyLiteral::Pos(atom("stable_routine_pending"))],
             )
-            .with_priority(10),
+            .with_priority(Priority::Specific),
         );
         // default: timing(treat_now) unconditionally — priority 0
         kb.add_rule(Rule::certain(
@@ -258,9 +275,13 @@ mod tests {
     fn equal_priority_conflict_yields_peers_not_a_silent_pick() {
         let mut kb = KnowledgeBase::new();
         kb.declare_functional("timing", 1);
-        kb.add_rule(Rule::certain(comp("timing", vec![atom("await")]), vec![]).with_priority(5));
         kb.add_rule(
-            Rule::certain(comp("timing", vec![atom("treat_now")]), vec![]).with_priority(5),
+            Rule::certain(comp("timing", vec![atom("await")]), vec![])
+                .with_priority(Priority::Specific),
+        );
+        kb.add_rule(
+            Rule::certain(comp("timing", vec![atom("treat_now")]), vec![])
+                .with_priority(Priority::Specific),
         );
 
         let res = enumerate_governing(&comp("timing", vec![var("D")]), &kb);
@@ -279,10 +300,11 @@ mod tests {
         // contraindicated/2 is NOT declared functional — many may hold.
         kb.add_rule(
             Rule::certain(comp("contra", vec![atom("moxi"), atom("preg")]), vec![])
-                .with_priority(1),
+                .with_priority(Priority::Specific),
         );
         kb.add_rule(
-            Rule::certain(comp("contra", vec![atom("tmp"), atom("preg")]), vec![]).with_priority(9),
+            Rule::certain(comp("contra", vec![atom("tmp"), atom("preg")]), vec![])
+                .with_priority(Priority::Authoritative),
         );
 
         let res = enumerate_governing(&comp("contra", vec![var("D"), var("C")]), &kb);
@@ -297,7 +319,8 @@ mod tests {
         kb.declare_functional("timing", 1);
         kb.add_fact(Fact::certain(comp("timing", vec![atom("targeted")])));
         kb.add_rule(
-            Rule::certain(comp("timing", vec![atom("treat_now")]), vec![]).with_priority(50),
+            Rule::certain(comp("timing", vec![atom("treat_now")]), vec![])
+                .with_priority(Priority::Authoritative),
         );
 
         let res = enumerate_governing(&comp("timing", vec![var("D")]), &kb);
@@ -313,16 +336,16 @@ mod tests {
         kb.declare_functional("means", 2); // means(term, reading) functional on reading per term
         kb.add_rule(
             Rule::certain(comp("means", vec![atom("waters"), atom("broad")]), vec![])
-                .with_priority(2),
+                .with_priority(Priority::Authoritative),
         );
         kb.add_rule(
             Rule::certain(comp("means", vec![atom("waters"), atom("narrow")]), vec![])
-                .with_priority(1),
+                .with_priority(Priority::Specific),
         );
         // a different key (term=person) — independent, should govern on its own.
         kb.add_rule(
             Rule::certain(comp("means", vec![atom("person"), atom("natural")]), vec![])
-                .with_priority(1),
+                .with_priority(Priority::Specific),
         );
 
         let res = enumerate_governing(&comp("means", vec![var("T"), var("R")]), &kb);
