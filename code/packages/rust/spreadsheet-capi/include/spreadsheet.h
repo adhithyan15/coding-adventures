@@ -40,6 +40,13 @@ char *sc_get_value(ScSession *s, const char *a1);                 /* -> value JS
 char *sc_get_raw(ScSession *s, const char *a1);                   /* -> typed source */
 char *sc_get_values(ScSession *s);                                /* -> {a1: value} */
 
+/* Cell display formats — an Excel-style code per cell (e.g. "#,##0.00",
+   "yyyy-mm-dd") decides how its value reads. set with an empty code to clear.
+   char* results must be freed with sc_string_free(). */
+void  sc_set_format(ScSession *s, const char *a1, const char *code);
+char *sc_get_format(ScSession *s, const char *a1);                /* -> code | ""   */
+char *sc_get_display(ScSession *s, const char *a1);               /* -> display str */
+
 /* Structural edits — insert/delete rows & columns. 1-based `at`, `count` lines.
    The engine relocates cells and rewrites formula references (a reference to a
    deleted line becomes #REF!); the formula echo stays in step. No return — the

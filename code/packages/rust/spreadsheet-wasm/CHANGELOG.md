@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0
+
+**Cell display formats over the WASM ABI.** New `set_format(a1, code)` (void),
+`get_format(a1)`, and `get_display(a1)` exports (pointer/length string
+marshalling via `read_input`/`pack`), delegating to the thread-local
+`SpreadsheetSession`. `get_display` returns the value rendered through its format
+code. 1 new ABI round-trip test.
+
 ## 0.3.0
 
 **Insert/delete rows & columns over the WASM ABI.** New `void`-returning exports

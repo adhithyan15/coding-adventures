@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+**Cell display formats over the C ABI.** New `sc_set_format(s, a1, code)` (void),
+`sc_get_format(s, a1)` (→ code | `""`), and `sc_get_display(s, a1)` (→ the value
+rendered through its format), declared in `include/spreadsheet.h`. Delegate to
+`SpreadsheetSession`'s format API; null-session safe.
+
 ## 0.3.0
 
 **Insert/delete rows & columns over the C ABI.** New `void`-returning exports

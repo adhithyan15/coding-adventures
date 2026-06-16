@@ -157,6 +157,50 @@ pub unsafe extern "C" fn sc_get_values(s: *mut ScSession) -> *mut c_char {
     into_cstr((*s).inner.get_values())
 }
 
+// ── Cell display formats ─────────────────────────────────────────────
+// An Excel-style format code per cell decides how its value reads.
+
+/// `set_format(a1, code)` — set a cell's display format (empty `code` clears it).
+/// See [`SpreadsheetSession::set_format`].
+///
+/// # Safety
+/// `s` must be a valid session; `a1`/`code` must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn sc_set_format(s: *mut ScSession, a1: *const c_char, code: *const c_char) {
+    if s.is_null() {
+        return;
+    }
+    let a1 = read_cstr(a1);
+    let code = read_cstr(code);
+    (*s).inner.set_format(&a1, &code);
+}
+
+/// `get_format(a1)` → the cell's format code, or `""`. See
+/// [`SpreadsheetSession::get_format`].
+///
+/// # Safety
+/// `s` must be a valid session; `a1` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_get_format(s: *mut ScSession, a1: *const c_char) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.get_format(&read_cstr(a1)))
+}
+
+/// `get_display(a1)` → the cell's value rendered through its format (the display
+/// string). See [`SpreadsheetSession::get_display`].
+///
+/// # Safety
+/// `s` must be a valid session; `a1` must be null or a valid C string.
+#[no_mangle]
+pub unsafe extern "C" fn sc_get_display(s: *mut ScSession, a1: *const c_char) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.get_display(&read_cstr(a1)))
+}
+
 // ── Structural edits: insert / delete rows & columns ─────────────────
 // 1-based `at`, `count` lines. The engine relocates cells and rewrites every
 // formula's references; the facade keeps its raw echo map in step. No return —
