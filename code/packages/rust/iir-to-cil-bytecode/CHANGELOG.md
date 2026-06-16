@@ -1,5 +1,22 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.21.0] — 2026-06-16 — unary `not` op in the textual `.il` emitter (LANG-FULL N3)
+
+The bytecode `lower` path already lowered the unary IIR `not` op, but the textual
+`il_text` `.il` emitter had **no arm for it** — only binary `and`/`or`/`xor` and the
+lispy `call_builtin "not"` (a boolean negate, `ldc.i4.1; xor`). So a real bitwise-NOT
+program (Nib `~0u8`) failed to assemble on CoreCLR through `compile_source_to_cil_text`,
+which is the matrix's CLR path. (The v0.20.0 note's `~0u8=255` claim therefore held only
+for the bytecode emitter — the textual path was never exercised for `not` until now.)
+
+### Added
+
+- **Unary `not` arm in `il_text`** — emits the CIL `not` opcode (one's complement)
+  followed by the existing E2 narrow mask (`ldc.i4 <mask>; and`), so `~0u8 = 255`
+  (`-1 & 0xFF`) and `~15u4 = 0` run on real `dotnet`. This is the unary IIR `not` op
+  (one source operand), distinct from the `call_builtin "not"` boolean negate. New test
+  `unary_not_emits_cil_not_then_masks`. With this, Nib `~` runs on all 7 backends.
+
 ## [0.20.1] — 2026-06-16 — E2 verified for the i64 frontend value model (no rework needed)
 
 ### Added — regression test for a narrow op over i64 operands

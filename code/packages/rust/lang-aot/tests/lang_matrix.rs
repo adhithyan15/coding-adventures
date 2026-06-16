@@ -365,6 +365,29 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — bitwise NOT (`~`), u8 (LANG-FULL N3). `~0` flips all bits; masked to the
+    // u8 width (the E2 value-mask) it is `255` (`-1 & 0xFF`), NOT the i64 all-ones.
+    // `compile_unary` lowers `~` to the shared IIR `not` op with a `u8` type_hint;
+    // `iir-to-llvm` 0.12.0 grew the `not` op (the last backend that lacked it), so this
+    // now runs on every backend. The `if x == 255` guard distinguishes the masked
+    // complement from an unmasked `not 0` (`-1`, which would NOT equal 255 → exit 0).
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = ~0; if x == 255 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — bitwise NOT (`~`), u4 (LANG-FULL N3). `~15` on a nibble: 15 = 0b1111, so
+    // its complement masked to 4 bits is `0`. Proves the `not` mask is width-correct
+    // (a u8 or i64 mask would leave 0xF0/-16, not 0), distinct from the u8 case above.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u4 { let x: u4 = ~15; if x == 0 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,

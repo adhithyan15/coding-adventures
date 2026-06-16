@@ -4,6 +4,13 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
+> **LANG-FULL N3 — Nib bitwise `~` runs on all 7 backends (v0.91.0):**
+> `tests/lang_matrix.rs` adds two executed `~` programs — `~0u8 == 255` and `~15u4 == 0`.
+> `nib-iir-compiler` 0.16.0 lowers unary `~` to the IIR `not` op (it had been silently
+> dropped) with the narrow width so every backend masks it mod-2ⁿ; `iir-to-cil-bytecode`
+> 0.21.0 adds the unary `not` arm to its textual `.il` emitter — the last backend that
+> couldn't assemble `~` on CoreCLR. Completes Nib N3 (`& | ^ ~`).
+
 > **LANG-FULL B1-stdin — Brainfuck reads real input on all 7 backends (v0.90.0):**
 > `tests/lang_matrix.rs` adds two executed stdin programs — `,+.` (read a byte, `+`,
 > print: `"A"` → `"B"`) and `,.,.` (echo two bytes: `"Hi"` → `"Hi"`). The four
