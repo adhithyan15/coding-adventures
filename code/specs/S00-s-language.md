@@ -224,6 +224,71 @@ Mirrors the Dartmouth BASIC / Macsyma frontends and `LANG00`:
 `src/_grammar.rs` (regenerated with `scripts/generate-compiled-grammars.sh`),
 never re-parsing the `.tokens` / `.grammar` files at runtime.
 
+## §V2 — Language v2 additions
+
+v2 deepens the language toward R-class expressiveness. Everything in §1–§8
+still holds; this section layers on top.
+
+### V2.1 Corrected operator precedence
+
+v1 placed the `:` sequence operator *looser* than `+ - * /`, so `1:3+1` parsed
+as `1:(3+1)`. R binds `:` tighter than arithmetic. The cascade is corrected to
+(loosest → tightest):
+
+```
+assignment  <- _ <<- ->        (right-assoc)
+comparison  == != < > <= >=
+additive    + -
+multiplicative  * /
+special     %op%               (NEW — user and built-in infix)
+range       :                  (now tighter than * /, matching R)
+unary       - (prefix)
+power       ^                  (right-assoc)
+postfix     f(...) x[...] x[[...]] x$name   (NEW: [[ ]] and $)
+```
+
+So `1:3+1` is now `c(2,3,4)`, and `2 %in% 1:3` parses as `2 %in% (1:3)`.
+
+### V2.2 Infix operators (`%op%`)
+
+The lexer emits one `PERCENT_OP` token for a whole `%…%` block. Built-in:
+`%%` (modulo, result takes the divisor's sign), `%/%` (floor division), `%in%`
+(membership → logical), `%o%` (outer product). A **user-defined** `%foo%` is any
+function bound to the name `"%foo%"`; `a %foo% b` calls it `(a, b)`. Defining one
+needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <= r[2]`.
+
+### V2.3 Expanded built-in library
+
+- **Vectorized math:** `abs sqrt exp log log10 floor ceiling round sin cos tan`.
+- **Utilities:** `seq_len seq_along rev sort order rep unique which any all is.na
+  cumsum cumprod paste paste0`.
+- **Apply family:** `sapply(x, f)` / `lapply(x, f)` map a function over elements
+  (`sapply` simplifies length-1 atomic results to a vector).
+
+### V2.4 S3 method dispatch
+
+Single-dispatch on an object's class. `class(x)` returns the explicit class (set
+by `structure(x, class=…)` or ``class<-``) or the implicit one (`"numeric"`,
+`"character"`, `"factor"`, `"data.frame"`, `"function"`, …). `print` is a
+**generic**: it dispatches on the first class to `print.<class>`, falling back to
+`print.default`. Users define methods as ordinary functions: `print.myc <-
+function(x) …`. The REPL's auto-print routes visible values through this generic.
+`inherits(x, "cls")` and `unclass(x)` are provided. (S4/R5 remain out of scope.)
+
+### V2.5 Factors
+
+`factor(x, levels=, labels=)` stores integer codes + a `levels` character vector
+(class `"factor"`). `levels`, `nlevels`, `as.character`, `as.integer`, and
+`table` are provided; `print.factor` shows the labels and a `Levels:` line.
+Arithmetic on a factor is an error, faithful to S.
+
+### V2.6 Data frames
+
+`data.frame(name = column, …)` builds a list of equal-length columns (length-1
+columns recycle). Access: `df$name`, `df[["name"]]` / `df[[i]]`, and 2-subscript
+`df[rows, cols]` (`df[, "c"]`, `df[r, ]`). `nrow`, `ncol`, `names`, `dim`,
+`colnames`, and `head` are provided; `print.data.frame` renders an aligned table.
+
 ## §9 Divergences from ST00 (spec-sync)
 
 1. **S before R.** ST00 specs R first; we implement historical S first. The two
@@ -235,6 +300,10 @@ never re-parsing the `.tokens` / `.grammar` files at runtime.
 3. **Substrate, not CAS.** S evaluation uses `r-vector` + `statistics-core`,
    **not** the symbolic-algebra stack (`symbolic-ir`/`symbolic-vm`/`cas-*`),
    which serves Macsyma. Only the *pluggable tree-walk pattern* is shared.
+4. **v1 → v2 precedence correction.** v1 bound `:` looser than `+ - * /`; v2
+   corrects the cascade to match R (`:` tighter than arithmetic) — see §V2.1.
+   This changes the parse of expressions mixing `:` with arithmetic
+   (e.g. `1:3+1` was `1:4`, is now `c(2,3,4)`).
 
 ## §10 References
 
