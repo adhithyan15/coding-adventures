@@ -149,9 +149,17 @@ risks Y") — decision support, not a hidden choice.
 - **CC-3 — contraindication / interaction grounding.** `contraindication-grounding.json` +
   `interaction-grounding.json` via the harness (pregnancy, QT, G6PD, allergy classes,
   drug–drug); gate → CAS; new "treatment constraints" ledger artifact.
-- **CC-4 — cost + side-effect objective.** Add the weighted objective (simplex `minimize`);
-  ground drug costs (CMS ASP / GoodRx-class public data) + side-effect weights. Output the
-  objective breakdown.
+- **CC-4 — cost + side-effect objective. ✅ DONE.** The set-cover objective is now the
+  weighted blend `minimize Σ (w_cost·tier + w_tox·side_effects)·x_d`, emitted to the engine's
+  integer optimizer (coefficients stay integer). A chart `objective_priority` fact selects the
+  `(w_cost, w_tox)` weights (`cost`=(1,0), `balanced`=(1,1), `low_toxicity`=(1,3)); the default
+  (1,0) reproduces the historical tier-only set-cover exactly, so every prior consumer is
+  unchanged. `derive()` surfaces the per-component objective breakdown (cost / side_effects /
+  total), and the engine agrees with the Python weighted set-cover under every blend (verified
+  in `test_native_setcover`: the regimen flips cefepime→aztreonam for pseudomonas as w_tox
+  rises). Drug **cost** uses the grounded preference `tier`; the **side-effect** weights are an
+  authored-debt layer (`formulary.json` `side_effects` map, flagged) pending **CC-4b** spider
+  grounding (FDA-label adverse-event / monitoring burden) — the standard domain→ground flywheel.
 - **CC-5 — wait-vs-treat-now decision (§4)** with the grounded time-criticality threshold.
 - **CC-6 — insurance / step-therapy (§5):** precedence constraints + the dual
   clinical-vs-reimbursement regimen output; ground a sample payer step-therapy policy.

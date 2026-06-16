@@ -38,6 +38,11 @@ def load_formulary() -> tuple[dict, dict, list, str]:
     fall back to the authored draft if the CAS hasn't been built yet. Returns
     (drugs, organisms_by_scenario, combinations, provenance)."""
     authored = json.loads((HERE / "formulary.json").read_text())
+    # CC-4 side-effect / toxicity weights live in a separate authored-debt layer
+    # (formulary.json "side_effects" map; "_doc" excluded). Until CC-4b grounds them
+    # they are merged onto every drug as `side_effects` (default 0 if unlisted), so the
+    # cost+side-effect objective has a weight for each candidate.
+    se = {k: v for k, v in authored.get("side_effects", {}).items() if k != "_doc"}
     reg = HERE / "cas" / "registry.json"
     if reg.exists():
         root = json.loads(reg.read_text())["root"]
@@ -45,12 +50,27 @@ def load_formulary() -> tuple[dict, dict, list, str]:
         drugs = {d: {"covers": v["covers_accepted"], "csf_penetrant": v["csf_penetrant"],
                      "contraindications": v["contraindications"], "betalactam": v["betalactam"],
                      "tier": v["tier"], "dose": v["dose"],
+                     "side_effects": v.get("side_effects", se.get(d, 0)),
                      "source": f"grounded (formulary CAS {root})"}
                  for d, v in man["drugs"].items()}
         return (drugs, authored["organisms_by_scenario"], man.get("combinations", []),
                 f"CAS object {root} (spider-grounded + gated)")
-    return (authored["drugs"], authored["organisms_by_scenario"], authored.get("combinations", []),
+    drugs = {d: {**v, "side_effects": se.get(d, 0)} for d, v in authored["drugs"].items()}
+    return (drugs, authored["organisms_by_scenario"], authored.get("combinations", []),
             "authored draft (formulary.json; CAS not built)")
+
+
+# CC-4: the regimen objective is a weighted blend of preference COST (tier) and
+# SIDE-EFFECT burden. `weights = (w_cost, w_tox)`; the per-drug objective coefficient is
+# `w_cost·tier + w_tox·side_effects` (a non-negative integer, so the engine's INTEGER
+# optimizer still applies). The default (1, 0) is exactly the historical tier-only
+# set-cover — so every existing consumer is unchanged until a policy raises w_tox.
+DEFAULT_WEIGHTS = (1, 0)
+
+
+def drug_weight(drug: str, weights: tuple[int, int] = DEFAULT_WEIGHTS) -> int:
+    w_cost, w_tox = weights
+    return w_cost * DRUGS[drug]["tier"] + w_tox * DRUGS[drug].get("side_effects", 0)
 
 
 DRUGS, SCENARIOS, COMBINATIONS, FORMULARY_SOURCE = load_formulary()
@@ -73,18 +93,20 @@ def candidates(exclusions: set[str]) -> list[str]:
             if f["csf_penetrant"] and not (set(f["contraindications"]) & exclusions)]
 
 
-def min_cost_cover(cands: list[str], organisms: list[str]) -> list[str] | None:
-    """Minimum preference-cost (then fewest drugs) set of `cands` covering every
-    organism. Tiny formulary -> exhaustive is instant. Returns None if impossible."""
+def min_cost_cover(cands: list[str], organisms: list[str],
+                   weights: tuple[int, int] = DEFAULT_WEIGHTS) -> list[str] | None:
+    """Minimum-objective (then fewest drugs) set of `cands` covering every organism.
+    Tiny formulary -> exhaustive is instant. Returns None if impossible. The objective is
+    the CC-4 weighted blend `Σ (w_cost·tier + w_tox·side_effects)` (default (1,0) = the
+    historical tier-only preference cost). This is the reference the native engine program
+    must agree with. coverage_of() folds in grounded COMBINATION rules."""
     need = set(organisms)
     best, best_key = None, None
-    # Minimize total PREFERENCE cost (first-line over reserve), then fewest drugs.
-    # A 2-drug first-line regimen (tier 1+1) beats a 1-drug reserve agent (tier 4).
-    # coverage_of() folds in grounded COMBINATION rules.
+    # A 2-drug first-line regimen (objective 1+1) beats a 1-drug reserve agent (objective 4).
     for k in range(1, len(cands) + 1):
         for combo in combinations(cands, k):
             if need <= coverage_of(combo):
-                key = (sum(DRUGS[d]["tier"] for d in combo), len(combo))
+                key = (sum(drug_weight(d, weights) for d in combo), len(combo))
                 if best_key is None or key < best_key:
                     best, best_key = list(combo), key
     return best

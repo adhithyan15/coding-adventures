@@ -55,7 +55,8 @@ def _sym(prefix: str, *parts: str) -> str:
 
 def emit_program(organisms: list[str], exclusions: set[str],
                  defeated: set[tuple[str, str]] = frozenset(),
-                 dose_excluded: set[str] = frozenset()) -> tuple[str, dict, bool]:
+                 dose_excluded: set[str] = frozenset(),
+                 weights: tuple[int, int] = reg.DEFAULT_WEIGHTS) -> tuple[str, dict, bool]:
     """Emit the adj-lang integer program for this cover. Returns (program text,
     {x_var → drug}, feasible?) — feasible is False if some organism has no coverer
     (the program is then trivially infeasible and the engine will say so).
@@ -114,23 +115,35 @@ def emit_program(organisms: list[str], exclusions: set[str],
             feasible = False  # no drug or combination covers this organism
             lines.append(f"constrain 0 >= 1   % UNCOVERABLE: {org}")
 
+    # CC-4 objective: minimize Σ (w_cost·tier + w_tox·side_effects)·x_d. The coefficient
+    # is a non-negative integer (validated below), so this stays in the engine's INTEGER
+    # optimizer. weights=(1,0) reproduces the historical tier-only objective exactly.
+    w_cost, w_tox = weights
+    for w in (w_cost, w_tox):
+        if not isinstance(w, int) or isinstance(w, bool) or w < 0:
+            raise ValueError(f"unsafe objective weight {w!r} (must be a non-negative int)")
     obj_terms = []
     for d in cands:
         tier = reg.DRUGS[d]["tier"]
-        if not isinstance(tier, int) or isinstance(tier, bool) or tier < 0:
-            raise ValueError(f"unsafe tier {tier!r} for {d} (must be a non-negative int)")
-        obj_terms.append(f"{tier} * {xvar[d]}")
+        tox = reg.DRUGS[d].get("side_effects", 0)
+        for fld, val in (("tier", tier), ("side_effects", tox)):
+            if not isinstance(val, int) or isinstance(val, bool) or val < 0:
+                raise ValueError(f"unsafe {fld} {val!r} for {d} (must be a non-negative int)")
+        coeff = w_cost * tier + w_tox * tox
+        obj_terms.append(f"{coeff} * {xvar[d]}")
     lines.append(f"minimize {' + '.join(obj_terms)}")
     return "\n".join(lines) + "\n", var_to_drug, feasible
 
 
 def solve(cli: Path, organisms: list[str], exclusions: set[str],
           defeated: set[tuple[str, str]] = frozenset(),
-          dose_excluded: set[str] = frozenset()) -> dict:
+          dose_excluded: set[str] = frozenset(),
+          weights: tuple[int, int] = reg.DEFAULT_WEIGHTS) -> dict:
     """Run the emitted program through the engine; return the engine's regimen.
     `defeated` carries culture-sensitivity results (resistant drug→organism edges);
-    `dose_excluded` carries drugs with no safe-and-effective dose for this patient (CC-2)."""
-    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, dose_excluded)
+    `dose_excluded` carries drugs with no safe-and-effective dose for this patient (CC-2);
+    `weights`=(w_cost, w_tox) is the CC-4 cost+side-effect objective blend (default (1,0))."""
+    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, dose_excluded, weights)
     fd, name = tempfile.mkstemp(suffix=".adj", prefix="_tmp_native_", dir=HERE)
     p = Path(name)
     try:
@@ -153,8 +166,18 @@ def solve(cli: Path, organisms: list[str], exclusions: set[str],
         for a in opt.get("assignments", [])
         if a["name"] in var_to_drug and abs(a["value"] - 1) < 1e-9
     )
+    # CC-4 objective breakdown — recovered from the chosen drugs for provenance: the
+    # cost (Σ tier) and side-effect (Σ side_effects) components that sum (under `weights`)
+    # to the engine's reported objective value. `cost` stays the engine's optimal value
+    # (back-compatible: under default weights it is exactly Σ tier, as before).
+    w_cost, w_tox = weights
+    cost_component = sum(reg.DRUGS[d]["tier"] for d in chosen)
+    tox_component = sum(reg.DRUGS[d].get("side_effects", 0) for d in chosen)
     return {"regimen": chosen, "outcome": "optimal", "cost": opt.get("value"),
-            "binding": opt.get("binding")}
+            "binding": opt.get("binding"),
+            "objective": {"weights": {"w_cost": w_cost, "w_tox": w_tox},
+                          "cost": cost_component, "side_effects": tox_component,
+                          "total": w_cost * cost_component + w_tox * tox_component}}
 
 
 def main() -> int:

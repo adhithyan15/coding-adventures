@@ -70,6 +70,7 @@ class Cop:
     risks: set[str] = field(default_factory=set)             # CC-2 dose-ceiling risks
     weight: float = 70.0                                      # kg; for the mg dose window
     contraindicated: set[str] = field(default_factory=set)   # CC-3 drugs excluded by a contraindication
+    weights: tuple[int, int] = reg.DEFAULT_WEIGHTS            # CC-4 objective blend (w_cost, w_tox)
     constraints: list[dict] = field(default_factory=list)   # provenance per constraint
     discards: list[dict] = field(default_factory=list)       # facts not mapped + reason
 
@@ -86,6 +87,11 @@ _ALLERGY_EXCLUSION = {
 # grounding/treatment-constraints-grounding.json). Fluoroquinolones (moxifloxacin) and
 # TMP-SMX are contraindicated in pregnancy; the grounded byte-quotes justify each exclusion.
 _PREGNANCY_CONTRAINDICATED = {"moxifloxacin", "tmp_smx"}
+
+# CC-4: a chart `objective_priority` fact → the (w_cost, w_tox) objective blend the
+# set-cover minimizes. "cost" is the historical default (toxicity ignored); raising w_tox
+# lets a pricier-but-safer regimen win for a patient where side-effect burden matters.
+_OBJECTIVE_WEIGHTS = {"cost": (1, 0), "balanced": (1, 1), "low_toxicity": (1, 3)}
 
 
 def compile_cop(facts: list[ChartFact]) -> Cop:
@@ -170,6 +176,19 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
             else:
                 cop.discards.append({"fact": f"pregnancy={f.value}",
                                      "reason": "pregnancy value not 'present' → no contraindication applied"})
+        elif f.kind == "objective_priority":
+            # CC-4: the chart's treatment priority selects the cost/side-effect objective
+            # blend. "cost" (default) = cheapest acceptable regimen; "low_toxicity" weights
+            # side effects heavily (e.g. frail/renal patient, polypharmacy); "balanced" splits.
+            w = _OBJECTIVE_WEIGHTS.get(f.value)
+            if w is not None:
+                cop.weights = w
+                cop.constraints.append({"type": "objective", "from": f"objective_priority={f.value}",
+                                        "rule": f"minimize w_cost·tier + w_tox·side_effects, weights {w}",
+                                        "span": f.span})
+            else:
+                cop.discards.append({"fact": f"objective_priority={f.value}",
+                                     "reason": "unknown priority (want cost/balanced/low_toxicity)"})
         else:
             cop.discards.append({"fact": f"{f.kind}={f.value}",
                                  "reason": f"no constraint rule for chart-fact kind '{f.kind}' yet"})
@@ -216,10 +235,12 @@ def derive(cli: Path, facts: list[ChartFact]) -> dict:
                     f"{w['ceiling_per_kg']} mg/kg"})
     # A drug leaves the cover if it has no safe dose (CC-2) OR is contraindicated (CC-3).
     excluded_drugs = set(undosable) | cop.contraindicated
-    res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, excluded_drugs)
+    # CC-4: solve under the chart's cost/side-effect objective blend (default tier-only).
+    res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, excluded_drugs, cop.weights)
     return {
         "regimen": res["regimen"], "outcome": res["outcome"],
         "cost": res.get("cost"), "conflict": res.get("iis"),
+        "objective": res.get("objective"),
         "organisms": cop.organisms, "exclusions": sorted(cop.exclusions),
         "defeated": sorted(map(list, cop.defeated)),
         "risks": sorted(cop.risks), "dose_infeasible": sorted(undosable),
