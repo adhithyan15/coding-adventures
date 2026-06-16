@@ -73,6 +73,105 @@ pub fn install(env: &Env) {
     define(env, "structure", builtin("structure", b_structure));
     define(env, "inherits", builtin("inherits", b_inherits));
     define(env, "unclass", builtin("unclass", b_unclass));
+
+    // v2 — factors.
+    define(env, "factor", builtin("factor", b_factor));
+    define(env, "levels", builtin("levels", b_levels));
+    define(env, "nlevels", builtin("nlevels", b_nlevels));
+    define(env, "as.character", builtin("as.character", b_as_character));
+    define(env, "as.integer", builtin("as.integer", b_as_integer));
+}
+
+// ===========================================================================
+// v2 — factors
+// ===========================================================================
+
+/// `factor(x, levels =, labels =)` — encode `x` as a factor. Levels default to
+/// the sorted unique non-`NA` values of `x`; `labels` (if given) rename them.
+fn b_factor(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let values = first_positional(args)?.as_character();
+
+    // Levels: explicit, else the sorted distinct non-NA values.
+    let levels: Vec<String> = match args.iter().find(|a| a.name.as_deref() == Some("levels")) {
+        Some(arg) => arg.value.as_character().into_iter().flatten().collect(),
+        None => {
+            let mut seen: HashSet<String> = HashSet::new();
+            let mut uniq: Vec<String> = values
+                .iter()
+                .flatten()
+                .filter(|s| seen.insert((*s).clone()))
+                .cloned()
+                .collect();
+            uniq.sort();
+            uniq
+        }
+    };
+
+    // Encode each element as a 1-based code into `levels` (None = NA / unmatched).
+    let position: std::collections::HashMap<&str, u32> = levels
+        .iter()
+        .enumerate()
+        .map(|(i, s)| (s.as_str(), (i + 1) as u32))
+        .collect();
+    let codes: Vec<Option<u32>> = values
+        .iter()
+        .map(|o| o.as_ref().and_then(|s| position.get(s.as_str()).copied()))
+        .collect();
+
+    // `labels` rename the displayed levels (must match the level count).
+    let display = match args.iter().find(|a| a.name.as_deref() == Some("labels")) {
+        Some(arg) => arg.value.as_character().into_iter().flatten().collect(),
+        None => levels,
+    };
+
+    Ok(SValue::Factor {
+        codes,
+        levels: display,
+    })
+}
+
+/// `levels(f)` — the level labels of a factor (`NULL` otherwise).
+fn b_levels(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::Factor { levels, .. } => {
+            Ok(SValue::Character(levels.iter().cloned().map(Some).collect()))
+        }
+        _ => Ok(SValue::Null),
+    }
+}
+
+/// `nlevels(f)` — the number of levels.
+fn b_nlevels(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let n = match first_positional(args)? {
+        SValue::Factor { levels, .. } => levels.len(),
+        _ => 0,
+    };
+    Ok(SValue::scalar(n as f64))
+}
+
+/// `as.character(x)` — the character form (factor → its labels).
+fn b_as_character(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    Ok(SValue::Character(first_positional(args)?.as_character()))
+}
+
+/// `as.integer(x)` — factor codes, or numerics truncated toward zero.
+fn b_as_integer(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::Factor { codes, .. } => Ok(SValue::doubles(
+            codes
+                .iter()
+                .map(|c| c.map(|k| k as f64).unwrap_or_else(na_real))
+                .collect(),
+        )),
+        other => {
+            let d = other.as_double()?;
+            Ok(SValue::doubles(
+                d.iter()
+                    .map(|x| if is_na_real(x) { na_real() } else { x.trunc() })
+                    .collect(),
+            ))
+        }
+    }
 }
 
 // ===========================================================================

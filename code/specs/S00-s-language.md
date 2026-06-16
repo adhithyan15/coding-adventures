@@ -280,9 +280,10 @@ function(x) …`. The REPL's auto-print routes visible values through this gener
 ### V2.5 Factors
 
 `factor(x, levels=, labels=)` stores integer codes + a `levels` character vector
-(class `"factor"`). `levels`, `nlevels`, `as.character`, `as.integer`, and
-`table` are provided; `print.factor` shows the labels and a `Levels:` line.
-Arithmetic on a factor is an error, faithful to S.
+(class `"factor"`). `levels`, `nlevels`, `as.character`, and `as.integer` are
+provided; factors print as their labels followed by a `Levels:` line.
+Arithmetic on a factor is an error, faithful to S. (`table` is deferred until
+vectors carry a `names` attribute, which v2 does not yet add.)
 
 ### V2.6 Data frames
 

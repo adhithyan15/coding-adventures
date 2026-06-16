@@ -296,6 +296,38 @@ mod tests {
         assert_eq!(auto.printed, "auto");
     }
 
+    // --- v2: factors ----------------------------------------------------
+
+    #[test]
+    fn factor_levels_and_codes() {
+        assert_eq!(show("levels(factor(c(\"b\", \"a\", \"b\")))\n"), "[1] \"a\" \"b\"");
+        assert_eq!(nums("nlevels(factor(c(\"b\", \"a\", \"b\")))\n"), vec![2.0]);
+        // Codes are 1-based into the sorted levels: a=1, b=2.
+        assert_eq!(nums("as.integer(factor(c(\"b\", \"a\", \"b\")))\n"), vec![2.0, 1.0, 2.0]);
+        assert_eq!(
+            show("as.character(factor(c(\"b\", \"a\", \"b\")))\n"),
+            "[1] \"b\" \"a\" \"b\""
+        );
+    }
+
+    #[test]
+    fn factor_prints_labels_and_levels() {
+        assert_eq!(
+            show("factor(c(\"b\", \"a\", \"b\"))\n"),
+            "[1] b a b\nLevels: a b"
+        );
+    }
+
+    #[test]
+    fn factor_arithmetic_is_an_error() {
+        assert!(eval_s("factor(c(\"a\", \"b\")) + 1\n").is_err());
+    }
+
+    #[test]
+    fn as_integer_truncates_numerics() {
+        assert_eq!(nums("as.integer(c(1.7, 2.2, -1.9))\n"), vec![1.0, 2.0, -1.0]);
+    }
+
     // --- Comparison -----------------------------------------------------
 
     #[test]
