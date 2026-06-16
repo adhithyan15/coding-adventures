@@ -515,7 +515,7 @@ _SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
         ".plot",
     }
 )
-_NOOP_CONTROL_BLOCK_COMMANDS = frozenset({"run", ".run"})
+_NOOP_CONTROL_BLOCK_COMMANDS = frozenset({"run", ".run", "quit", ".quit"})
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,

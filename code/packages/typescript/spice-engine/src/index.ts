@@ -2854,7 +2854,7 @@ const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
   "plot",
   ".plot",
 ]);
-const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run"]);
+const NOOP_CONTROL_BLOCK_COMMANDS = new Set(["run", ".run", "quit", ".quit"]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;

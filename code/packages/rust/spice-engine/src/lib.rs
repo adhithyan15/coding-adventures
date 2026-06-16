@@ -6907,7 +6907,7 @@ fn is_noop_control_block_command(line: &str) -> bool {
         line.split_whitespace()
             .next()
             .map(|command| command.to_ascii_lowercase()),
-        Some(command) if command == "run" || command == ".run"
+        Some(command) if command == "run" || command == ".run" || command == "quit" || command == ".quit"
     )
 }
 
