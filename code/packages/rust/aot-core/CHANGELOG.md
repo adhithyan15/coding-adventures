@@ -1,5 +1,24 @@
 # Changelog — aot-core
 
+## 0.2.2 — 2026-06-15 — `u4` in the AOT type pipeline (LANG-FULL E2)
+
+Added `"u4"` (Nib's 4-bit nibble type) to the two ALLOWED_TYPES whitelists so
+the native CIR pipeline accepts `u4`-typed IIR instructions without refusing them.
+
+- **`infer.rs`**: `ALLOWED_TYPES` now includes `"u4"`. `numeric_rank` assigns
+  `u4` rank 1 (between `bool` = 0 and `u8` = 2), making the promotion table
+  correct: `u4 + u8` promotes to `u8`, and `u4 + bool` promotes to `u4`.
+  Previously `"u4"` was absent from both tables, so a `u4` type_hint emitted by
+  `nib-iir-compiler` 0.14.0 was treated as an unknown type and fell back to the
+  unspecialised path.
+- **`specialise.rs`**: `ALLOWED_TYPES` now includes `"u4"` so
+  `specialise::translate` emits typed CIR mnemonics (`add_u4`, `not_u4`, …)
+  for u4-typed ops. Without this, a `u4` op silently collapsed to the generic
+  `any` path and the aarch64/x86_64 backends rejected it with `UnsupportedOp`.
+
+Also aligns the Cargo.toml version with the CHANGELOG (was accidentally frozen at
+0.1.0 while the CHANGELOG had advanced to 0.2.1).
+
 ## 0.2.1 — 2026-05-13
 
 ### Added
