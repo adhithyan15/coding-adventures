@@ -73,8 +73,12 @@ variant.)
 A **"Infinite sheet ›"** toggle (top-right) switches the demo to a virtualized,
 effectively-infinite grid (`InfiniteGridView` + `WindowedSheetModel`), rendered
 on the same engine through its **viewport primitive** — the C ABI's
-`sc_get_window` / `sc_used_range` / `sc_changed_since` (the native sibling of the
-web demo's `infinite.html`). The sheet is u32 × u32 and sparse; a two-axis
+`sc_get_display_window` / `sc_used_range` / `sc_changed_since` (the native
+sibling of the web demo's `infinite.html`). `sc_get_display_window` returns each
+cell already rendered through its Excel-style format code (the seed formats the
+cross-foot totals as `#,##0.00` and the far-flung `Z1000` total as a percent),
+so the host paints the display strings directly and never re-derives number
+formatting. The sheet is u32 × u32 and sparse; a two-axis
 `ScrollView` sized from `used_range` drives the scrollbars, and only the visible
 window of cells is built into the view via `SpreadsheetSession.window(...)`.
 

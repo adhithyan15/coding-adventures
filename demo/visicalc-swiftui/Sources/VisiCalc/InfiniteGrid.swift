@@ -1,6 +1,6 @@
 // InfiniteGrid.swift — a virtualized, effectively-infinite, EDITABLE sheet for
 // the SwiftUI demo, rendered on the shared Rust engine through the viewport
-// primitive (the same `get_window` / `used_range` / `changed_since` the web
+// primitive (the same `get_display_window` / `used_range` / `changed_since` the web
 // demo's infinite.html uses through WASM).
 //
 // The sheet is u32 × u32 and sparse. Virtualization is delegated to SwiftUI's
@@ -57,6 +57,19 @@ final class WindowedSheetModel: ObservableObject {
             ("BA50", "far cell"), ("BB50", "=Z1000*2"), // col 53/54, row 50: 78
         ]
         for (a, v) in cells { session.setCell(a, v) }
+
+        // Attach Excel-style format codes so the engine's display path is visible
+        // in the windowed view (which renders via sc_get_display_window): the
+        // cross-foot totals read with thousands grouping + two decimals, and the
+        // far-flung Z1000 total as a percent. Values are unchanged — only how the
+        // display strings render. Identical to the web/Qt/Flutter/Compose/XAML demos.
+        let formats: [(String, String)] = [
+            ("E1", "#,##0.00"), ("E2", "#,##0.00"), ("E3", "#,##0.00"),
+            ("E4", "#,##0.00"), ("E5", "#,##0.00"),
+            ("A5", "#,##0.00"), ("B5", "#,##0.00"), ("C5", "#,##0.00"), ("D5", "#,##0.00"),
+            ("Z1000", "0.0%"), // 39 → "3900.0%": proves the format applies far off-origin
+        ]
+        for (a, code) in formats { session.setFormat(a, code) }
     }
 
     /// Size the virtual grid to the data extent plus a comfortable margin, and
@@ -77,7 +90,8 @@ final class WindowedSheetModel: ObservableObject {
     }
 
     /// The display strings for one full row (all columns) — what a visible row
-    /// renders. One engine `get_window` call per on-screen row.
+    /// renders (display strings, already rendered through each cell.s format code).
+    /// One engine `get_display_window` call per on-screen row.
     func rowCells(_ row: Int) -> [String] {
         let w = session.window(UInt32(row), 1, UInt32(row), totalCols)
         return w.first ?? Array(repeating: "", count: Int(totalCols))

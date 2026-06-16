@@ -33,6 +33,11 @@ final class SpreadsheetSession {
     func getValueJSON(_ a1: String) -> String { take(sc_get_value(handle, a1)) }
     func getRaw(_ a1: String) -> String { take(sc_get_raw(handle, a1)) }
 
+    /// Set a cell's display format code (an Excel-style code like `"#,##0.00"` or
+    /// `"0%"`); an empty code clears it. Drives the engine's display path that
+    /// `window` reads through `sc_get_display_window`.
+    func setFormat(_ a1: String, _ code: String) { sc_set_format(handle, a1, code) }
+
     /// The computed value of a cell as the string a spreadsheet should show.
     /// Parses the engine's JSON (`{"kind":...}`) — the same shape the TS and
     /// WASM engines emit.
@@ -72,14 +77,19 @@ final class SpreadsheetSession {
 
     /// Dense display strings for the inclusive 1-based rectangle, row-major
     /// (empty cells become ""). Empty array on a bad/oversized request.
+    ///
+    /// Reads `sc_get_display_window`: each cell arrives already rendered through
+    /// its format code as a display string, so the host paints it directly and
+    /// never re-derives number formatting. The format-aware sibling of
+    /// `sc_get_window`; the JSON is `{...,"cells":[["1,234.50",…],…]}`.
     func window(_ row0: UInt32, _ col0: UInt32, _ row1: UInt32, _ col1: UInt32) -> [[String]] {
-        let json = take(sc_get_window(handle, row0, col0, row1, col1))
+        let json = take(sc_get_display_window(handle, row0, col0, row1, col1))
         guard
             let data = json.data(using: .utf8),
             let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-            let rows = obj["values"] as? [[[String: Any]]]
+            let rows = obj["cells"] as? [[String]]
         else { return [] }
-        return rows.map { row in row.map { Self.displayValue($0) } }
+        return rows
     }
 
     /// The data extent (1-based inclusive), or nil if the sheet is empty.
