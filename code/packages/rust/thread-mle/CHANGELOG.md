@@ -75,5 +75,7 @@ All notable changes to this package will be documented in this file.
   final route load checks.
 - Thread attach route restore summaries that turn route-load readiness into
   final route restore checks.
+- Thread attach route recovery summaries that turn route-restore readiness into
+  final route recovery checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
