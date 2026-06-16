@@ -579,6 +579,35 @@ mod tests {
     }
 
     #[test]
+    fn string_builtins() {
+        assert_eq!(show("nchar(\"hello\")\n"), "[1] 5");
+        assert_eq!(show("toupper(\"abc\")\n"), "[1] \"ABC\"");
+        assert_eq!(show("tolower(\"ABC\")\n"), "[1] \"abc\"");
+        assert_eq!(show("substr(\"hello\", 2, 4)\n"), "[1] \"ell\"");
+        // Vectorized over a character vector; NA preserved by nchar.
+        assert_eq!(show("toupper(c(\"a\", \"b\"))\n"), "[1] \"A\" \"B\"");
+        assert_eq!(
+            nums("nchar(c(\"a\", \"bb\", \"ccc\"))\n"),
+            vec![1.0, 2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn sprintf_formatting() {
+        assert_eq!(show("sprintf(\"%d apples\", 3)\n"), "[1] \"3 apples\"");
+        assert_eq!(show("sprintf(\"%.2f\", 3.14159)\n"), "[1] \"3.14\"");
+        assert_eq!(show("sprintf(\"%5d\", 42)\n"), "[1] \"   42\"");
+        assert_eq!(show("sprintf(\"%-5d|\", 42)\n"), "[1] \"42   |\"");
+        assert_eq!(show("sprintf(\"%s=%d\", \"x\", 7)\n"), "[1] \"x=7\"");
+        assert_eq!(show("sprintf(\"100%%\")\n"), "[1] \"100%\"");
+        // Vectorized: recycles to the longest argument.
+        assert_eq!(
+            show("sprintf(\"#%d\", c(1, 2, 3))\n"),
+            "[1] \"#1\" \"#2\" \"#3\""
+        );
+    }
+
+    #[test]
     fn print_returns_its_argument_invisibly() {
         let outcome = Interpreter::new().eval_str("print(42)\n").unwrap();
         assert_eq!(outcome.printed, "[1] 42\n");
