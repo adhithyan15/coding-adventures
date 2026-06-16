@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Parsed plot output routing** —
+  `resolve_deck_outputs()`, `select_deck_output_probes()`, and
+  `format_deck_*_table()` now route scoped `.plot <analysis> ...` output
+  cards alongside `.save`, `.probe`, and `.print`, matching Rust and
+  TypeScript.
+
 - **Parsed print output routing** —
   `resolve_deck_outputs()`, `select_deck_output_probes()`, and
   `format_deck_*_table()` now route scoped `.print <analysis> ...` output

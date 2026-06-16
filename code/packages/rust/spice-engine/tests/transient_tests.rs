@@ -1838,6 +1838,7 @@ fn transient_deck_output_cards_select_table_probes() {
 .save V(out) I(V1)
 .probe tran V(clk) V(out)
 .print tran V(ignored)
+.plot tran I(V1)
 .probe ac V(ignored)
 .end
 ",

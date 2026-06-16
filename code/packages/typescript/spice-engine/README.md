@@ -20,8 +20,9 @@ to thresholded transient probe outputs with stable schedule tables and VCD
 correlation output,
 stable text tables for selected node voltages, branch currents, AC phasors,
 Fourier harmonics, transfer-function results, pole-zero entries, and
-distortion harmonics, parsed `.save` / `.probe` / `.print` deck-selected
-output tables, and backward-Euler reactive-element companion models.
+distortion harmonics, parsed `.save` / `.probe` / `.print` / `.plot`
+deck-selected output tables, and backward-Euler reactive-element companion
+models.
 
 ```ts
 import {
@@ -100,8 +101,9 @@ results and a stable Fourier table. Executions also include selected-run
 artifact summaries plus `formatDeckRunArtifactTable` output for stable
 result-row, output-probe, measurement, and Fourier counts.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save`, scoped or
-global `.probe`, and scoped `.print <analysis> ...` cards before `.end`,
-normalize and deduplicate output probes in deck order, and feed
+global `.probe`, scoped `.print <analysis> ...`, and scoped
+`.plot <analysis> ...` cards before `.end`, normalize and deduplicate output
+probes in deck order, and feed
 `formatDeckOpTable`,
 `formatDeckDcSweepTable`, `formatDeckAcTable`, and
 `formatDeckTransientTable` for stable deck-selected text output.
@@ -159,10 +161,10 @@ cards before `.end`, keeps non-measure active lines, evaluates optional
 `FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
 `RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
 unsupported analyses, modes, options, expressions, and invalid windows.
-`resolveDeckOutputs` extracts `.save`, `.probe`, and `.print` cards before
-`.end`, preserves non-output active lines, and reports stable diagnostics for
-missing probe lists, unsupported `.print` analyses, or malformed `V(node)` /
-`I(source)` probes.
+`resolveDeckOutputs` extracts `.save`, `.probe`, `.print`, and `.plot` cards
+before `.end`, preserves non-output active lines, and reports stable
+diagnostics for missing probe lists, unsupported scoped output analyses, or
+malformed `V(node)` / `I(source)` probes.
 `resolveDeckAnalyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
 `.end`, preserves non-analysis active lines, and reports stable diagnostics for
 malformed deck-level analysis controls.

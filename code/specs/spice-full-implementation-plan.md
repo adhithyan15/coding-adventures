@@ -28,9 +28,10 @@ downstream tools to compare.
      diagnostic and solver footholds; transient scalar `.measure`-style output
      helpers now cover shared peak-to-peak and final-value measurement output,
      and parsed transient `.measure` / `.meas` cards can now feed those
-     measurement helpers from deck text; parsed `.save`, `.probe`, and
-     `.print <analysis> ...` cards now drive stable table output for
-     operating-point, DC sweep, AC sweep, and transient results; parsed
+     measurement helpers from deck text; parsed `.save`, `.probe`,
+     `.print <analysis> ...`, and `.plot <analysis> ...` cards now drive
+     stable table output for operating-point, DC sweep, AC sweep, and transient
+     results; parsed
      `.measure dc` / `.meas dc` cards now route DC
      sweep probe samples into the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -481,6 +482,15 @@ downstream tools to compare.
       diagnostics distinguish missing `.print` probes, unsupported `.print`
       analyses, and malformed output probes.
 
+42. Parsed `.plot` output routing.
+    - Status: completed in this parsed plot output-routing slice.
+    - Python, Rust, and TypeScript now treat scoped
+      `.plot <analysis> V(node) I(source)` cards as deck output selections
+      alongside `.save`, `.probe`, and `.print`.
+    - Selected probes are normalized and deduplicated in deck order, while
+      diagnostics distinguish missing `.plot` probes, unsupported `.plot`
+      analyses, and malformed output probes.
+
 ## Backlog
 
 1. Deck execution layer.
@@ -489,7 +499,8 @@ downstream tools to compare.
      selected measurement artifacts, selected Fourier artifacts, and selected
      run summaries, plus output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
-     routing and scoped `.print` selection toward full SPICE compatibility.
+     routing and scoped `.print` / `.plot` selection toward full SPICE
+     compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

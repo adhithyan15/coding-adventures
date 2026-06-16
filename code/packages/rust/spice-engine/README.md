@@ -192,11 +192,12 @@ signatures, arguments, or empty expressions.
 `FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
 `RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
 unsupported analyses, modes, options, expressions, and invalid windows.
-`resolve_deck_outputs` extracts `.save`, scoped or global `.probe`, and scoped
-`.print <analysis> ...` cards before `.end`, keeps non-output active lines,
-and reports stable diagnostics for missing probe lists, unsupported `.print`
-analyses, or malformed output probes. `select_deck_output_probes` deduplicates
-the selected probes for a requested analysis, while `format_deck_op_table`,
+`resolve_deck_outputs` extracts `.save`, scoped or global `.probe`, scoped
+`.print <analysis> ...`, and scoped `.plot <analysis> ...` cards before
+`.end`, keeps non-output active lines, and reports stable diagnostics for
+missing probe lists, unsupported scoped output analyses, or malformed output
+probes. `select_deck_output_probes` deduplicates the selected probes for a
+requested analysis, while `format_deck_op_table`,
 `format_deck_dc_sweep_table`, `format_deck_ac_table`, and
 `format_deck_transient_table` feed those deck-card selections into the stable
 text table formatters.

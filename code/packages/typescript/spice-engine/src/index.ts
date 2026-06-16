@@ -589,7 +589,7 @@ export interface DeckFourierSummary {
 }
 
 export interface DeckOutputSelection {
-  readonly directive: ".save" | ".probe" | ".print";
+  readonly directive: ".save" | ".probe" | ".print" | ".plot";
   readonly analysis?: "op" | "dc" | "ac" | "tran";
   readonly probes: readonly string[];
   readonly lineNumber: number;
@@ -597,7 +597,7 @@ export interface DeckOutputSelection {
 
 export interface DeckOutputDiagnostic {
   readonly code: string;
-  readonly directive: ".save" | ".probe" | ".print";
+  readonly directive: ".save" | ".probe" | ".print" | ".plot";
   readonly lineNumber: number;
   readonly message: string;
   readonly severity: "error" | "warning";
@@ -3088,7 +3088,7 @@ export function resolveDeckOutputs(netlist: string): DeckOutputSummary {
       endLineNumber = lineNumber;
       break;
     }
-    if (directive === ".save" || directive === ".probe" || directive === ".print") {
+    if (directive === ".save" || directive === ".probe" || directive === ".print" || directive === ".plot") {
       resolveOutputLine(stripped, lineNumber, directive, state);
       continue;
     }
@@ -4235,13 +4235,13 @@ function resolveFourierLine(
 function resolveOutputLine(
   line: string,
   lineNumber: number,
-  directive: ".save" | ".probe" | ".print",
+  directive: ".save" | ".probe" | ".print" | ".plot",
   state: DeckOutputState,
 ): void {
   const tokens = directiveTokens(line);
   if (tokens.length < 2) {
-    const message = directive === ".print"
-      ? ".print requires an analysis token and at least one probe token"
+    const message = directive === ".print" || directive === ".plot"
+      ? `${directive} requires an analysis token and at least one probe token`
       : `${directive} requires at least one probe token`;
     addOutputDiagnostic(state, {
       code: "SPICE_DECK_OUTPUT_ARGUMENT",
@@ -4254,13 +4254,13 @@ function resolveOutputLine(
 
   let analysis: DeckOutputSelection["analysis"];
   let probeTokens = tokens.slice(1);
-  if (directive === ".print") {
+  if (directive === ".print" || directive === ".plot") {
     if (tokens.length < 3) {
       addOutputDiagnostic(state, {
         code: "SPICE_DECK_OUTPUT_ARGUMENT",
         directive,
         lineNumber,
-        message: ".print requires an analysis token and at least one probe token",
+        message: `${directive} requires an analysis token and at least one probe token`,
       });
       return;
     }
@@ -4270,7 +4270,7 @@ function resolveOutputLine(
         code: "SPICE_DECK_OUTPUT_ANALYSIS",
         directive,
         lineNumber,
-        message: `.print analysis must be op, dc, ac, or tran, got ${JSON.stringify(tokens[1])}`,
+        message: `${directive} analysis must be op, dc, ac, or tran, got ${JSON.stringify(tokens[1])}`,
         token: tokens[1],
       });
       return;

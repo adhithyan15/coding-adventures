@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add parsed `.plot <analysis> ...` output routing to `resolveDeckOutputs`,
+  `selectDeckOutputProbes`, and deck table formatters, matching Python and
+  Rust.
 - Add parsed `.print <analysis> ...` output routing to `resolveDeckOutputs`,
   `selectDeckOutputProbes`, and deck table formatters, matching Python and
   Rust.
