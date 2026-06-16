@@ -123,6 +123,8 @@ packages a typed surface for:
   readiness into final archive rollout checks
 - Hue package release archive adoption summaries that turn archive rollout
   readiness into final archive adoption checks
+- Hue package release archive acceptance summaries that turn archive adoption
+  readiness into final archive acceptance checks
 
 ## Dependencies
 
