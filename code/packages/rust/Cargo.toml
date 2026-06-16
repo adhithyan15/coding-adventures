@@ -159,6 +159,7 @@ members = [
     "motorola68k-gatelevel",
     "intel8051-gatelevel",
     "mips-r2000-gatelevel",
+    "sparc-v8-gatelevel",
     "interrupt-handler",
     "interpreter-ir",
     "iir-type-checker",

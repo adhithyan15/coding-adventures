@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-sparc-v8-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "SPARC V8 gate-level simulator — every operation routes through real logic gates"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }
