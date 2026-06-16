@@ -1,5 +1,29 @@
 # Changelog — web-core
 
+## 0.3.0 (2026-06-16)
+
+### Added
+
+- **`MailboxWebServer` (WEB01b-2)** — a per-request-parallel counterpart to
+  `WebServer`, wrapping `embeddable-http-server`'s `MailboxHttpServer`. Where
+  `ShardedWebServer` parallelises *by connection* (N reactors, inline dispatch),
+  `MailboxWebServer` parallelises *by request*: a single reactor frames each
+  request and submits it to a `worker_count`-thread pool; a worker runs
+  `WebApp::handle` off the reactor thread and the pool's response router writes
+  the reply back. The `Arc<WebApp>` is shared across pool threads unchanged
+  (`handle` is `&self` + `Send + Sync`). `on_server_start` / `on_server_stop`
+  fire once, like `WebServer`.
+- Single cross-platform `bind(host, port, options, worker_count, app)` (the
+  underlying `EmbeddableTcpServer` selects kqueue/epoll/IOCP internally — no
+  per-OS constructors), returning `std::io::Result` (the mailbox stack is
+  `io::Error`-based). Plus `local_addr` / `is_running` / `stop` / `serve`; the
+  type is `Clone` so a clone can serve on a worker thread while another stops it.
+- **Opt-in**, like `ShardedWebServer`: the default `WebServer` is untouched.
+  Correct and in order for one-request-and-close and *sequential* keep-alive;
+  pipelined-connection gating/reordering is WEB01b-1b. Exercised via conduit's
+  `mailbox_server_dispatches_handlers_concurrently` (deterministic ≥ 2 in-flight
+  proof). See `code/specs/WEB01b-mailbox-parallelism.md`.
+
 ## 0.2.0 (2026-06-16)
 
 ### Added

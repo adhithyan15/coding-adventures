@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-06-16
+
+### Added
+
+- **`MailboxServer` (WEB01b-2)** — an opt-in, per-request-parallel server, the
+  mailbox counterpart of `ShardedServer`. Where `ShardedServer` parallelises *by
+  connection* (N reactor shards), `MailboxServer::bind(host, port, worker_count,
+  app)` parallelises *by request*: a single reactor frames each request and
+  submits it to a `worker_count`-thread pool (via `web_core::MailboxWebServer`),
+  so a worker runs the Conduit dispatch off the reactor thread. Routing, hooks,
+  and `halt` behave exactly as with `Server`; the application is shared (`Arc`)
+  across pool threads unchanged. Surface: `bind` / `bind_with_options` /
+  `local_addr` / `is_running` / `stop` / `serve` (and `Clone`). Binding is a
+  single cross-platform call returning `std::io::Result` (the mailbox stack is
+  `io::Error`-based), unlike the per-platform `Server` / `ShardedServer` binds.
+  Correct and in order for one-request-and-close and *sequential* keep-alive;
+  pipelined-connection gating/reordering is WEB01b-1b. `Server` (single reactor)
+  remains the default. See `code/specs/WEB01b-mailbox-parallelism.md`.
+- Test `mailbox_server_dispatches_handlers_concurrently` deterministically proves
+  pool parallelism on a single reactor through the full facade (observed max
+  in-flight handlers >= 2 — inline dispatch never exceeds 1).
+
 ## [0.2.0] - 2026-06-16
 
 ### Added
