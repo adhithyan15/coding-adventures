@@ -638,14 +638,23 @@ def _select_list(node: ASTNode, state: _PlaceholderCounter) -> tuple[SelectItem,
 
 
 def _select_item(node: ASTNode, state: _PlaceholderCounter) -> SelectItem:
-    # select_item = expr [ "AS" NAME ]
+    # select_item = expr [ [ "AS" ] NAME ]
+    # SQLite allows bare alias without AS: SELECT 1 x  ≡  SELECT 1 AS x.
+    # The grammar makes AS optional; the adapter handles both forms.
+    # NAME never matches keywords (FROM, WHERE, …) so there is no ambiguity.
     expr = _expr(_child_node(node, "expr"), state)
     alias = None
     for i, c in enumerate(node.children):
-        if _is_keyword(c, "AS") and i + 1 < len(node.children):
-            nxt = node.children[i + 1]
-            if isinstance(nxt, Token):
-                alias = nxt.value
+        if _is_keyword(c, "AS"):
+            # Full form: AS NAME
+            if i + 1 < len(node.children):
+                nxt = node.children[i + 1]
+                if isinstance(nxt, Token):
+                    alias = nxt.value
+            break
+        if isinstance(c, Token) and _token_type(c) == "NAME":
+            # Bare alias without AS — direct NAME child of select_item
+            alias = c.value
             break
     return SelectItem(expr=expr, alias=alias)
 

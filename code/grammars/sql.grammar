@@ -76,7 +76,7 @@ select_stmt       = "SELECT" [ "DISTINCT" | "ALL" ] select_list
                     [ window_clause ] [ order_clause ] [ limit_clause ] ;
 
 select_list       = STAR | select_item { "," select_item } ;
-select_item       = expr [ "AS" NAME ] ;
+select_item       = expr [ [ "AS" ] NAME ] ;
 
 # table_ref: try derived-table form first (starts with "(") then plain name.
 # PEG backtracking ensures "(SELECT ...)" matches the first branch and
