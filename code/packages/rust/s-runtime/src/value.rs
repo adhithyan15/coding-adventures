@@ -560,3 +560,297 @@ fn format_vector(elems: &[String]) -> Vec<String> {
     }
     lines
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn arg(value: SValue) -> Arg {
+        Arg { name: None, value }
+    }
+
+    fn dbl(v: &SValue) -> Vec<f64> {
+        match v {
+            SValue::Double(d) => d.data().to_vec(),
+            other => panic!("not a double: {:?}", other),
+        }
+    }
+
+    // --- scalars, lengths, type names -----------------------------------
+
+    #[test]
+    fn scalars_and_lengths() {
+        assert_eq!(SValue::scalar(3.0).length(), 1);
+        assert_eq!(SValue::doubles(vec![1.0, 2.0]).type_name(), "double");
+        assert_eq!(SValue::Logical(vec![Some(true)]).type_name(), "logical");
+        assert_eq!(
+            SValue::Character(vec![Some("a".into())]).type_name(),
+            "character"
+        );
+        assert_eq!(SValue::Null.type_name(), "NULL");
+        assert_eq!(SValue::Null.length(), 0);
+        assert!(!SValue::scalar(1.0).is_callable());
+    }
+
+    // --- coercion -------------------------------------------------------
+
+    #[test]
+    fn logical_coerces_to_double() {
+        let d = SValue::Logical(vec![Some(true), Some(false), None])
+            .as_double()
+            .unwrap();
+        assert_eq!(d.get_value(0), Some(1.0));
+        assert_eq!(d.get_value(1), Some(0.0));
+        assert!(is_na_real(d.get_value(2).unwrap()));
+    }
+
+    #[test]
+    fn null_coerces_to_empty_and_character_is_non_numeric() {
+        assert_eq!(SValue::Null.as_double().unwrap().len(), 0);
+        assert!(SValue::Character(vec![Some("a".into())])
+            .as_double()
+            .is_err());
+    }
+
+    #[test]
+    fn as_character_renders_each_type() {
+        assert_eq!(
+            SValue::doubles(vec![1.0, 2.5]).as_character(),
+            vec![Some("1".to_string()), Some("2.5".to_string())]
+        );
+        assert_eq!(
+            SValue::Logical(vec![Some(true), None]).as_character(),
+            vec![Some("TRUE".to_string()), None]
+        );
+        assert!(SValue::Null.as_character().is_empty());
+    }
+
+    // --- truthiness -----------------------------------------------------
+
+    #[test]
+    fn truthiness_rules() {
+        assert!(SValue::Logical(vec![Some(true)]).truthy().unwrap());
+        assert!(!SValue::scalar(0.0).truthy().unwrap());
+        assert!(SValue::scalar(2.0).truthy().unwrap());
+        assert!(SValue::Logical(vec![None]).truthy().is_err());
+        assert!(SValue::doubles(vec![]).truthy().is_err());
+        assert!(SValue::Character(vec![Some("x".into())]).truthy().is_err());
+    }
+
+    // --- combine and the coercion lattice -------------------------------
+
+    #[test]
+    fn combine_drops_null_and_picks_highest_type() {
+        // logical + double -> double
+        let v = combine(&[
+            arg(SValue::Logical(vec![Some(true)])),
+            arg(SValue::scalar(2.0)),
+        ]);
+        assert_eq!(dbl(&v), vec![1.0, 2.0]);
+        // anything + character -> character
+        let v = combine(&[
+            arg(SValue::scalar(1.0)),
+            arg(SValue::Character(vec![Some("a".into())])),
+        ]);
+        assert!(matches!(v, SValue::Character(_)));
+        // all-logical stays logical
+        let v = combine(&[
+            arg(SValue::Logical(vec![Some(true)])),
+            arg(SValue::Logical(vec![None])),
+        ]);
+        assert!(matches!(v, SValue::Logical(_)));
+        // NULL contributes nothing; all-null -> NULL
+        assert!(matches!(combine(&[arg(SValue::Null)]), SValue::Null));
+        let v = combine(&[
+            arg(SValue::scalar(1.0)),
+            arg(SValue::Null),
+            arg(SValue::scalar(2.0)),
+        ]);
+        assert_eq!(dbl(&v), vec![1.0, 2.0]);
+    }
+
+    // --- arithmetic, recycling, NA --------------------------------------
+
+    #[test]
+    fn arithmetic_operators_and_recycling() {
+        let a = SValue::doubles(vec![1.0, 2.0, 3.0, 4.0]);
+        let b = SValue::doubles(vec![10.0, 20.0]);
+        assert_eq!(
+            dbl(&arithmetic("+", &a, &b).unwrap()),
+            vec![11.0, 22.0, 13.0, 24.0]
+        );
+        assert_eq!(
+            dbl(&arithmetic("-", &SValue::scalar(5.0), &SValue::scalar(2.0)).unwrap()),
+            vec![3.0]
+        );
+        assert_eq!(
+            dbl(&arithmetic("*", &SValue::scalar(3.0), &SValue::scalar(4.0)).unwrap()),
+            vec![12.0]
+        );
+        assert_eq!(
+            dbl(&arithmetic("/", &SValue::scalar(8.0), &SValue::scalar(2.0)).unwrap()),
+            vec![4.0]
+        );
+        assert_eq!(
+            dbl(&arithmetic("^", &SValue::scalar(2.0), &SValue::scalar(10.0)).unwrap()),
+            vec![1024.0]
+        );
+        assert!(arithmetic("?", &a, &b).is_err());
+    }
+
+    #[test]
+    fn empty_operand_yields_empty_and_na_propagates() {
+        let empty = arithmetic("+", &SValue::doubles(vec![]), &SValue::scalar(1.0)).unwrap();
+        assert_eq!(dbl(&empty).len(), 0);
+        let na = SValue::Logical(vec![None]); // NA
+        let r = arithmetic("+", &na, &SValue::scalar(1.0)).unwrap();
+        assert!(is_na_real(dbl(&r)[0]));
+    }
+
+    #[test]
+    fn negate_handles_na() {
+        let r = negate(&SValue::doubles(vec![1.0, -2.0])).unwrap();
+        assert_eq!(dbl(&r), vec![-1.0, 2.0]);
+    }
+
+    // --- comparison -----------------------------------------------------
+
+    #[test]
+    fn numeric_and_character_comparison() {
+        let r = compare(
+            ">",
+            &SValue::doubles(vec![1.0, 2.0, 3.0]),
+            &SValue::scalar(2.0),
+        )
+        .unwrap();
+        assert!(
+            matches!(&r, SValue::Logical(v) if *v == vec![Some(false), Some(false), Some(true)])
+        );
+        let r = compare(
+            "==",
+            &SValue::Character(vec![Some("a".into())]),
+            &SValue::Character(vec![Some("a".into())]),
+        )
+        .unwrap();
+        assert!(matches!(&r, SValue::Logical(v) if v[0] == Some(true)));
+        let r = compare(
+            "<",
+            &SValue::Character(vec![Some("a".into())]),
+            &SValue::Character(vec![Some("b".into())]),
+        )
+        .unwrap();
+        assert!(matches!(&r, SValue::Logical(v) if v[0] == Some(true)));
+        // empty operand -> empty logical
+        let r = compare("<", &SValue::doubles(vec![]), &SValue::scalar(1.0)).unwrap();
+        assert!(matches!(&r, SValue::Logical(v) if v.is_empty()));
+        // NA in comparison -> NA
+        let r = compare("==", &SValue::Logical(vec![None]), &SValue::scalar(1.0)).unwrap();
+        assert!(matches!(&r, SValue::Logical(v) if v[0].is_none()));
+    }
+
+    // --- indexing -------------------------------------------------------
+
+    #[test]
+    fn indexing_variants() {
+        let base = SValue::doubles(vec![10.0, 20.0, 30.0]);
+        assert_eq!(
+            dbl(&index(&base, &SValue::scalar(2.0)).unwrap()),
+            vec![20.0]
+        );
+        // 0 selects nothing; out-of-range -> NA
+        assert_eq!(
+            dbl(&index(&base, &SValue::doubles(vec![0.0, 1.0])).unwrap()),
+            vec![10.0]
+        );
+        let oob = index(&base, &SValue::scalar(9.0)).unwrap();
+        assert!(is_na_real(dbl(&oob)[0]));
+        // negative subscript is rejected in v1
+        assert!(index(&base, &SValue::scalar(-1.0)).is_err());
+        // logical and character vectors are subsettable too
+        let lg = index(
+            &SValue::Logical(vec![Some(true), Some(false)]),
+            &SValue::scalar(2.0),
+        )
+        .unwrap();
+        assert!(matches!(&lg, SValue::Logical(v) if v[0] == Some(false)));
+        let ch = index(
+            &SValue::Character(vec![Some("a".into()), Some("b".into())]),
+            &SValue::scalar(1.0),
+        )
+        .unwrap();
+        assert!(matches!(&ch, SValue::Character(v) if v[0].as_deref() == Some("a")));
+        // a function is not subsettable
+        assert!(index(
+            &SValue::Builtin {
+                name: "c".into(),
+                func: |_| Ok(SValue::Null)
+            },
+            &SValue::scalar(1.0)
+        )
+        .is_err());
+    }
+
+    // --- number and value formatting ------------------------------------
+
+    #[test]
+    fn format_number_specials() {
+        assert_eq!(format_number(2.0), "2");
+        assert_eq!(format_number(2.5), "2.5");
+        assert_eq!(format_number(na_real()), "NA");
+        assert_eq!(format_number(f64::NAN), "NaN");
+        assert_eq!(format_number(f64::INFINITY), "Inf");
+        assert_eq!(format_number(f64::NEG_INFINITY), "-Inf");
+    }
+
+    #[test]
+    fn format_value_atomic_and_empty() {
+        assert_eq!(format_value(&SValue::Null), vec!["NULL"]);
+        assert_eq!(format_value(&SValue::doubles(vec![])), vec!["numeric(0)"]);
+        assert_eq!(format_value(&SValue::Logical(vec![])), vec!["logical(0)"]);
+        assert_eq!(
+            format_value(&SValue::Character(vec![])),
+            vec!["character(0)"]
+        );
+        assert_eq!(
+            format_value(&SValue::Logical(vec![Some(true), None, Some(false)])),
+            vec!["[1]  TRUE    NA FALSE"]
+        );
+        assert_eq!(
+            format_value(&SValue::Character(vec![Some("hi".into()), None])),
+            vec!["[1] \"hi\"   NA"]
+        );
+    }
+
+    #[test]
+    fn format_value_wraps_long_vectors() {
+        let v = SValue::doubles((1..=40).map(|n| n as f64).collect());
+        let lines = format_value(&v);
+        assert!(lines.len() > 1, "long vector should wrap across lines");
+        // Index labels are right-aligned to a common width (as in R), so the
+        // first line's label may carry leading padding.
+        assert!(lines[0].trim_start().starts_with("[1]"));
+        assert!(lines[1].trim_start().starts_with('['));
+    }
+
+    #[test]
+    fn format_value_for_callables() {
+        let b = SValue::Builtin {
+            name: "c".into(),
+            func: |_| Ok(SValue::Null),
+        };
+        assert_eq!(format_value(&b), vec!["function (c) .Primitive"]);
+    }
+
+    // --- bounded sequence ------------------------------------------------
+
+    #[test]
+    fn bounded_sequence_ok_and_limits() {
+        assert_eq!(
+            bounded_sequence(1.0, 5.0).unwrap(),
+            vec![1.0, 2.0, 3.0, 4.0, 5.0]
+        );
+        assert_eq!(bounded_sequence(3.0, 1.0).unwrap(), vec![3.0, 2.0, 1.0]);
+        assert!(bounded_sequence(1.0, f64::INFINITY).is_err());
+        assert!(bounded_sequence(1.0, 1e18).is_err());
+    }
+}

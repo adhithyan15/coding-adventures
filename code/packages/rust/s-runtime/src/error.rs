@@ -59,3 +59,41 @@ impl std::error::Error for SError {}
 
 /// Convenience alias for results produced by the evaluator.
 pub type SResult<T> = Result<T, SError>;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn display_messages_match_s_style() {
+        assert_eq!(SError::Parse("oops".into()).to_string(), "oops");
+        assert_eq!(
+            SError::Undefined("x".into()).to_string(),
+            "object 'x' not found"
+        );
+        assert_eq!(
+            SError::NotCallable("double".into()).to_string(),
+            "attempt to apply non-function: double"
+        );
+        assert_eq!(
+            SError::BadArgs("bad".into()).to_string(),
+            "invalid arguments: bad"
+        );
+        assert_eq!(SError::TypeError("te".into()).to_string(), "te");
+        assert_eq!(
+            SError::Index("oob".into()).to_string(),
+            "invalid subscript: oob"
+        );
+        assert_eq!(SError::Missing("m".into()).to_string(), "m");
+        assert_eq!(SError::Domain("d".into()).to_string(), "d");
+        assert_eq!(SError::Control("c".into()).to_string(), "c");
+        assert!(SError::Break.to_string().contains("no loop"));
+        assert!(SError::Next.to_string().contains("no loop"));
+    }
+
+    #[test]
+    fn is_a_std_error() {
+        let e: &dyn std::error::Error = &SError::Undefined("z".into());
+        assert_eq!(e.to_string(), "object 'z' not found");
+    }
+}

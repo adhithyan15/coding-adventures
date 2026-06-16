@@ -21,6 +21,7 @@
 //! so a direct single-threaded driver is the right fit.
 
 use coding_adventures_s_runtime::{format_value, Interpreter};
+use std::io::{BufRead, Write};
 
 /// What the REPL should do after being fed one physical line.
 #[derive(Debug, PartialEq, Eq)]
@@ -140,6 +141,40 @@ fn is_incomplete(src: &str) -> bool {
     depth > 0 || in_string.is_some()
 }
 
+/// Drive a full interactive session over the given reader and writer: show
+/// prompts, read lines (with continuation), evaluate, and print results. The
+/// loop ends on a quit word or EOF. Generic over the I/O streams so it can be
+/// driven by stdin/stdout in the `s` binary and by in-memory buffers in tests.
+pub fn run<R: BufRead, W: Write>(mut reader: R, mut writer: W) -> std::io::Result<()> {
+    let mut repl = SRepl::new();
+    writeln!(writer, "S — historical Bell Labs S (v1). Type q() to quit.")?;
+
+    loop {
+        write!(writer, "{}", repl.prompt())?;
+        writer.flush()?;
+
+        let mut line = String::new();
+        if reader.read_line(&mut line)? == 0 {
+            // EOF (Ctrl-D).
+            writeln!(writer)?;
+            break;
+        }
+        // Strip the trailing newline (and a Windows carriage return).
+        let line = line.strip_suffix('\n').unwrap_or(&line);
+        let line = line.strip_suffix('\r').unwrap_or(line);
+
+        match repl.feed(line) {
+            ReplResponse::Output(text) => {
+                write!(writer, "{text}")?;
+                writer.flush()?;
+            }
+            ReplResponse::NeedMore => {}
+            ReplResponse::Quit => break,
+        }
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -230,5 +265,48 @@ mod tests {
     #[test]
     fn state_persists_between_lines() {
         assert_eq!(run(&["a <- 10", "b <- 20", "a + b"]), "[1] 30\n");
+    }
+
+    #[test]
+    fn is_continuing_reflects_buffer_state() {
+        let mut repl = SRepl::new();
+        assert!(!repl.is_continuing());
+        repl.feed("c(1,");
+        assert!(repl.is_continuing());
+    }
+
+    // --- The run() driver (the binary's logic) --------------------------
+
+    #[test]
+    fn run_drives_a_scripted_session_until_quit() {
+        let input = b"x <- c(1, 2, 3)\nmean(x)\nq()\n";
+        let mut output = Vec::new();
+        super::run(std::io::Cursor::new(&input[..]), &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(text.contains("[1] 2"), "missing result in: {text:?}");
+        assert!(text.contains("> "), "missing prompt in: {text:?}");
+    }
+
+    #[test]
+    fn run_ends_cleanly_at_eof() {
+        // No quit word — input simply ends; run() must return Ok.
+        let input = b"1 + 1\n";
+        let mut output = Vec::new();
+        super::run(std::io::Cursor::new(&input[..]), &mut output).unwrap();
+        assert!(String::from_utf8(output).unwrap().contains("[1] 2"));
+    }
+
+    #[test]
+    fn run_continues_across_multiple_lines() {
+        let input = b"sum(c(1,\n2,\n3))\nq()\n";
+        let mut output = Vec::new();
+        super::run(std::io::Cursor::new(&input[..]), &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(text.contains("[1] 6"), "missing result in: {text:?}");
+        // The continuation prompt should have appeared.
+        assert!(
+            text.contains("+ "),
+            "missing continuation prompt in: {text:?}"
+        );
     }
 }

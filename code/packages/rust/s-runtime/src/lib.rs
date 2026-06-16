@@ -275,6 +275,45 @@ mod tests {
         ));
     }
 
+    // --- Built-ins ------------------------------------------------------
+
+    #[test]
+    fn statistical_reductions() {
+        assert_eq!(nums("median(c(1, 2, 3, 4))\n"), vec![2.5]);
+        assert_eq!(nums("var(c(2, 4, 6))\n"), vec![4.0]);
+        assert_eq!(nums("min(c(3, 1, 2))\n"), vec![1.0]);
+        assert_eq!(nums("max(c(3, 1, 2))\n"), vec![3.0]);
+        assert_eq!(nums("prod(c(2, 3, 4))\n"), vec![24.0]);
+        // sum/prod/min/max are variadic: all positional args combine.
+        assert_eq!(nums("sum(1, 2, 3)\n"), vec![6.0]);
+    }
+
+    #[test]
+    fn length_and_seq() {
+        assert_eq!(nums("length(c(1, 2, 3, 4, 5))\n"), vec![5.0]);
+        assert_eq!(nums("seq(4)\n"), vec![1.0, 2.0, 3.0, 4.0]);
+        assert_eq!(nums("seq(2, 5)\n"), vec![2.0, 3.0, 4.0, 5.0]);
+    }
+
+    #[test]
+    fn print_returns_its_argument_invisibly() {
+        let outcome = Interpreter::new().eval_str("print(42)\n").unwrap();
+        assert_eq!(outcome.printed, "[1] 42\n");
+        assert!(!outcome.visible);
+    }
+
+    #[test]
+    fn missing_argument_errors() {
+        assert!(matches!(eval_s("mean()\n"), Err(SError::BadArgs(_))));
+    }
+
+    #[test]
+    fn statistics_domain_error_surfaces() {
+        // mean of an empty vector (na.rm = FALSE) is a domain error in
+        // statistics-core, surfaced here as SError::Domain.
+        assert!(matches!(eval_s("mean(c())\n"), Err(SError::Domain(_))));
+    }
+
     // --- Resource bounds (crafted-input safety) -------------------------
 
     #[test]
