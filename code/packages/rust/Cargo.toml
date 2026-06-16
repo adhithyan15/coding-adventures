@@ -158,6 +158,7 @@ members = [
     "intel8086-gatelevel",
     "motorola68k-gatelevel",
     "intel8051-gatelevel",
+    "mips-r2000-gatelevel",
     "interrupt-handler",
     "interpreter-ir",
     "iir-type-checker",
