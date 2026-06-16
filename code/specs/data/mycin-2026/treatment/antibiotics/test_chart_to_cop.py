@@ -195,9 +195,8 @@ def test_step_therapy_facts_compile_and_reimbursement_blocked_logic():
     assert any(c["type"] == "prior_treatment" for c in cop.constraints)
     bad = cc.compile_cop([cc.ChartFact("step_therapy", "no_colon_here")])
     assert not bad.step_therapy and any("step_therapy" in d["fact"] for d in bad.discards)
-    # The precedence x_Y ≤ tried_X: Y blocked iff its prerequisite X is not in `tried`.
-    assert cc.reimbursement_blocked({("cefepime", "meropenem")}, set()) == {"cefepime"}
-    assert cc.reimbursement_blocked({("cefepime", "meropenem")}, {"meropenem"}) == set()
+    # The precedence x_Y ≤ tried_X is now DERIVED BY THE ENGINE (step_therapy.adj, NAF) —
+    # covered by test_step_therapy.py and the engine-gated test_dual_* path below.
 
 
 def test_dual_clinical_vs_reimbursement_regimen():

@@ -45,6 +45,7 @@ import contraindications as ci  # noqa: E402  (ADJ-native: derive_contraindicati
 import decide as decide_mod  # noqa: E402  (find_cli)
 import derive_regimen as reg  # noqa: E402  (grounded formulary: SCENARIOS, DRUGS, candidates)
 import native_setcover as nsc  # noqa: E402  (the COP emitter/solver)
+import step_therapy as st  # noqa: E402  (ADJ-native: derive_blocked via the engine, NAF)
 
 
 # --------------------------------------------------------------------------
@@ -341,13 +342,6 @@ def dose_infeasible(cli: Path, drugs: list[str], risks: set[str], weight: float)
     return out
 
 
-def reimbursement_blocked(step_therapy: set[tuple[str, str]], tried: set[str]) -> set[str]:
-    """CC-6: the drugs a payer won't reimburse because their step-therapy prerequisite
-    hasn't been tried — the precedence `x_Y ≤ tried_X` realized as a reimbursement-only
-    exclusion. A restricted drug Y is blocked iff its prerequisite X is not in `tried`."""
-    return {restricted for restricted, prereq in step_therapy if prereq not in tried}
-
-
 def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> dict:
     """Compile the chart → COP, solve it, and return the regimen with provenance.
     Dose feasibility (CC-2) is folded into the cover: a drug with no safe-and-effective
@@ -392,7 +386,10 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
     # explicit. Reimbursement infeasibility is distinct from clinical infeasibility.
     reimbursement = None
     if cop.step_therapy:
-        blocked = reimbursement_blocked(cop.step_therapy, cop.tried)
+        # CC-6: the ENGINE derives which drugs the payer blocks, via the step-therapy
+        # precedence rule (negation-as-failure over the per-case requires/tried facts) —
+        # not a Python set-difference. The precedence reasoning lives in the language.
+        blocked = st.derive_blocked(cli, cop.step_therapy, cop.tried)
         # The precedence is enforced BY THE ENGINE: payer-blocked drugs join forced_zero
         # (reason "step-therapy") → an explicit `constrain x_Y <= 0` clause in the
         # reimbursement program. Clinical exclusions (dose/contraindication) carry over, so

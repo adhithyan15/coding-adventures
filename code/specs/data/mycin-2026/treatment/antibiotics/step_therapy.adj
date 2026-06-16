@@ -1,0 +1,48 @@
+% ============================================================================
+% step-therapy — payer reimbursement precedence as an ADJ derivation rule (ADJ-native).
+% ============================================================================
+% MYCIN-2026 (therapy layer, insurance).  "Step therapy" is a payer policy: a
+% restricted drug Y will not be reimbursed until a cheaper prerequisite X has been
+% tried (and failed).  That is a PRECEDENCE rule — exactly what a Horn clause with
+% negation-as-failure expresses:
+%
+%     a drug is reimbursement-blocked  IF  it requires a prerequisite
+%                                      AND  that prerequisite has NOT been tried.
+%
+% This replaces the Python set-difference `reimbursement_blocked()` in chart_to_cop:
+% the precedence reasoning now lives in the language, and the engine derives the
+% blocked drugs (`? reimbursement_blocked($Y)`, 0 model calls).  The per-case facts
+% (which drug requires which prerequisite, what has been tried) are asserted from the
+% chart at query time; the RULE here is durable and domain-neutral.
+%
+% NOT a clinical claim — step therapy is a definitional payer MECHANISM, so this
+% rulebook is structural (no spider grounding needed), like the generic derivation
+% rules in contraindications.adj.  The same `requires_… ∧ not done_…` precedence shape
+% recurs across rule corpora (a legal filing blocked until a precondition is met, a
+% benefit gated on a prior step), which is the point: a domain-neutral substrate
+% (project_adj_universal_rule_substrate).
+% ============================================================================
+
+dictionary step_therapy_vocab {
+    define drug : entity   surface "drug", "agent", "antibiotic"
+
+    % payer precedence: Y is reimbursable only after prerequisite X has been tried.
+    define requires_prerequisite : relation from drug to drug
+    % a drug already tried (and failed) for this patient — satisfies a prerequisite.
+    define already_tried         : relation from drug to drug
+    % DERIVED: Y is not reimbursable because its prerequisite is unmet (the query target).
+    define reimbursement_blocked : relation from drug to drug
+}
+
+rulebook step_therapy {
+    use step_therapy_vocab
+
+    % --- the GENERIC precedence rule (negation-as-failure) -------------------
+    % Y is reimbursement-blocked if it requires a prerequisite X that has NOT been
+    % tried.  `not already_tried($X)` is negation-as-failure: absence of a tried-fact
+    % means the step has not been satisfied, so the payer blocks Y.
+    rule {
+        head: reimbursement_blocked($Y)
+        when: requires_prerequisite($Y, $X), not already_tried($X)
+    }
+}
