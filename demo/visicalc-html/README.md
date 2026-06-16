@@ -15,12 +15,19 @@ it through a C ABI.)
 > each way) and sparse, and only the **visible window** of cells is ever in the
 > DOM. Scroll thousands of rows / dozens of columns and the on-page "DOM cells
 > materialized" counter stays small. It's driven entirely by the engine's
-> `getWindow` (visible rectangle), `usedRange` (scrollbar sizing),
-> `columnLetters` (A…Z, AA…), and `changedSince` (re-fetch only what an edit
-> dirtied). Headless proof: `node scripts/verify-infinite.mjs` replays the exact
-> windowing math against the committed WASM bundle and asserts the render stays
-> bounded, a formula 1000 rows down is reachable, the gaps are empty (sparse),
-> and an edit's diff reaches the far cell that depends on it.
+> `getDisplayWindow` (the visible rectangle as ready-to-paint **display
+> strings** — each cell already rendered through its Excel-style format code by
+> the engine, e.g. `1234.5` with `"#,##0.00"` → `"1,234.50"`, so the page never
+> re-derives number formatting), `setFormat` (attach a format code),
+> `usedRange` (scrollbar sizing), `columnLetters` (A…Z, AA…), and `changedSince`
+> (re-fetch only what an edit dirtied). The seeded sheet formats its cross-foot
+> totals with thousands grouping + two decimals and renders the far-flung
+> `Z1000` total as a percent, so the formatting is visible while scrolling.
+> Headless proof: `node scripts/verify-infinite.mjs` replays the exact windowing
+> math against the committed WASM bundle and asserts the render stays bounded,
+> the formatted display strings are correct, a formula 1000 rows down is
+> reachable, the gaps are empty (sparse), and an edit's diff reaches the far
+> cell that depends on it.
 
 ## What it shows
 

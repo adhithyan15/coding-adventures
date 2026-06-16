@@ -15,8 +15,12 @@
 
     How it works (all engine-driven; no data is hard-coded into the renderer):
       - workbook.usedRange()        sizes the scrollable area to the data.
-      - workbook.getWindow(r0,c0,r1,c1) returns ONLY the visible rectangle's
-        computed values; we paint just those, repositioning on every scroll.
+      - workbook.getDisplayWindow(r0,c0,r1,c1) returns ONLY the visible
+        rectangle's cells as ready-to-paint DISPLAY STRINGS — each value already
+        rendered through its format code by the engine (e.g. 1234.5 with
+        "#,##0.00" -> "1,234.50") — so the renderer paints text directly and
+        never re-derives number formatting. We reposition just those on scroll.
+      - workbook.setFormat(a1,code) attaches an Excel-style format code to a cell.
       - workbook.columnLetters(i)   labels the frozen header (A..Z, AA, AB, ...).
       - workbook.changedSince(rev)  tells us which cells an edit dirtied.
 
@@ -122,21 +126,6 @@
         .replace(/"/g, "&quot;");
     }
 
-    // Engine CellValue -> the string a spreadsheet cell shows.
-    function display(v) {
-      if (!v) return "";
-      switch (v.kind) {
-        case "number": {
-          var n = v.value;
-          return (n === Math.trunc(n) && Math.abs(n) < 1e15) ? String(n) : String(n);
-        }
-        case "text": return v.value;
-        case "boolean": return v.value ? "TRUE" : "FALSE";
-        case "error": return v.code;
-        default: return ""; // empty
-      }
-    }
-
     function a1(r, c) { return workbook.columnLetters(c) + r; }
 
     // Size the virtual canvas to the data extent plus a comfortable margin, so
@@ -162,19 +151,21 @@
       var firstCol = Math.max(1, Math.floor(sl / COL_W) + 1 - OVERSCAN);
       var lastCol = Math.min(TOTAL_COLS, Math.ceil((sl + vw) / COL_W) + OVERSCAN);
 
-      var win = workbook.getWindow(firstRow, firstCol, lastRow, lastCol);
+      // Display strings: each cell is already rendered through its format code
+      // by the engine, so we paint row[...] directly (no client-side formatting).
+      var win = workbook.getDisplayWindow(firstRow, firstCol, lastRow, lastCol);
       if (win.error) { statusEl.textContent = "window error: " + win.error; return; }
 
       var cellHtml = "";
       for (var r = firstRow; r <= lastRow; r++) {
-        var row = win.values[r - firstRow];
+        var row = win.cells[r - firstRow];
         var top = HEAD_H + (r - 1) * ROW_H;
         for (var c = firstCol; c <= lastCol; c++) {
           var left = GUTTER_W + (c - 1) * COL_W;
           var sel = (r === selRow && c === selCol) ? " sel" : "";
           cellHtml += '<div class="cell' + sel + '" data-r="' + r + '" data-c="' + c +
             '" style="top:' + top + 'px;left:' + left + 'px">' +
-            esc(display(row[c - firstCol])) + "</div>";
+            esc(row[c - firstCol]) + "</div>";
         }
       }
       cellsEl.innerHTML = cellHtml;
@@ -245,10 +236,21 @@
       BA50: "far cell", BB50: "=Z1000*2" // col 53/54, row 50: 78
     };
 
+    // Attach Excel-style format codes to a few cells so the engine's display
+    // path is visible: the cross-foot totals read with thousands grouping and
+    // two decimals, and the far-flung Z1000 total as a percent. The values are
+    // unchanged — only how getDisplayWindow renders them.
+    var FORMATS = {
+      E1: "#,##0.00", E2: "#,##0.00", E3: "#,##0.00", E4: "#,##0.00", E5: "#,##0.00",
+      A5: "#,##0.00", B5: "#,##0.00", C5: "#,##0.00", D5: "#,##0.00",
+      Z1000: "0.0%", // 39 -> "3900.0%": proves the format applies far off-origin
+    };
+
     function boot() {
       var Engine = window.SpreadsheetEngine;
       workbook = Engine.createSpreadsheet();
       workbook.setCells(SEED);
+      for (var key in FORMATS) workbook.setFormat(key, FORMATS[key]);
       resize();
       selectCell(1, 1);
       sheet.addEventListener("scroll", onScroll, { passive: true });

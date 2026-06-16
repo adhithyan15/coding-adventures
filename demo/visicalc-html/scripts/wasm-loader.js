@@ -94,10 +94,28 @@
           getRaw: (a1) => call1("get_raw", String(a1)),
           getValues: () => JSON.parse(call0("get_values")),
 
+          // Cell display formats — an Excel-style code per cell (e.g.
+          // "#,##0.00", "0%", "yyyy-mm-dd") decides how its value reads.
+          // setFormat with an empty code clears it.
+          setFormat: (a1, code) => {
+            const [ap, al] = writeStr(String(a1));
+            const [cp, cl] = writeStr(String(code));
+            ex.set_format(ap, al, cp, cl);
+            freeInput(ap, al);
+            freeInput(cp, cl);
+          },
+          getFormat: (a1) => call1("get_format", String(a1)),
+          getDisplay: (a1) => call1("get_display", String(a1)),
+
           // Viewport primitive — render only the visible window of an unbounded
           // sheet. 1-based inclusive coords.
           getWindow: (row0, col0, row1, col1) =>
             JSON.parse(callInts("get_window", row0, col0, row1, col1)),
+          // Like getWindow, but each cell is its display string (value rendered
+          // through its format code; empty cells ""). The one read a virtualized
+          // grid needs per frame — the host paints the strings directly.
+          getDisplayWindow: (row0, col0, row1, col1) =>
+            JSON.parse(callInts("get_display_window", row0, col0, row1, col1)),
           usedRange: () => JSON.parse(call0("used_range")),
           columnLetters: (index) => callInts("column_letters", index),
           currentRevision: () => Number(ex.current_revision()),
