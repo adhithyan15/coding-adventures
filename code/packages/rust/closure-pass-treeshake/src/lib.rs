@@ -49,23 +49,33 @@
 //! which can in turn make *more* modules' exports unreferenced.
 //! Bounded by module count in practice; we don't pre-cap it.
 //!
-//! # Scope (v1)
+//! # Scope
 //!
-//! `javascript-ast` ships only `Program` / `SourceType` today
-//! (CLOC02 Phase 1). With no `ImportDeclaration` /
-//! `ExportDeclaration` / `Identifier` nodes there is nothing to
-//! shake; [`TreeshakePass::run`] is identity in v1. Per CLOC03
-//! §"When a pass keeps a node unchanged" no contributions are
-//! emitted.
+//! `TreeshakePass::run` is a real transform: it uses
+//! `closure-scope-analyzer` to find top-level (`ScopeId::GLOBAL`)
+//! `function`/`class` bindings that no [`Reference`] resolves to, and
+//! deletes their declarations. This is the function/class-shaped
+//! complement to `remove-unused-vars` (which handles `var`/`let`/`const`
+//! and skips functions). Removing an unused function/class declaration is
+//! unconditionally safe — declaring one has no side effect — so unlike
+//! `remove-unused-vars` there is no initializer-purity gate.
 //!
-//! What this PR locks down:
+//! Current slice: top-level bindings only, removed by name against the
+//! `Declaration::FunctionDeclaration` items in `program.body`. The full
+//! cross-module import/export reachability walk lands once
+//! `javascript-ast` grows `ImportDeclaration` / `ExportDeclaration`
+//! variants and a host root-set; until then a function is "reachable" iff
+//! some in-module reference resolves to it.
+//!
+//! What this pass locks down:
 //!
 //! 1. Pass metadata (`name`, `iteration_policy`, `cost`,
 //!    `depends_on`) — what the scheduler keys on and what the
-//!    future `closurec` CLI surfaces as `--disable=treeshake`.
+//!    `closurec` CLI surfaces as `--disable=treeshake`.
 //! 2. The `depends_on("dce")` edge so the scheduler forces
-//!    intra-module DCE before cross-module shaking.
-//! 3. The two-pass integration test that proves the ordering.
+//!    intra-module DCE before shaking.
+//! 3. Removal of dead top-level function declarations, plus the
+//!    DCE-ordering integration test.
 
 use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
@@ -80,13 +90,12 @@ use coding_adventures_javascript_ast::{Declaration, ProgramItem};
 /// crates can reference the dependency name without retyping.
 const DEPS: &[&str] = &["dce"];
 
-/// Tree-shaking pass. v1 is identity — see crate-level docs.
+/// Tree-shaking pass — deletes top-level `function`/`class`
+/// declarations nothing references. See crate-level docs.
 ///
-/// Zero-sized type: no per-instance state. Pass-internal state
-/// (cross-module import graph, root-set seeded from entry points
-/// and `export` markers that the host declared reachable, the
-/// per-module set of reached identifiers) lives in pass-local
-/// maps constructed inside [`Pass::run`] per CLOC06
+/// Zero-sized type: no per-instance state. Pass-internal state (the
+/// binding → reference-count map and the dead-name set) lives in
+/// pass-local maps constructed inside [`Pass::run`] per CLOC06
 /// §"Pass-internal state."
 #[derive(Debug, Default, Clone, Copy)]
 pub struct TreeshakePass;
@@ -135,49 +144,28 @@ impl Pass for TreeshakePass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
-        // CLOC13.C wiring: consume the shared `ScopeAnalysis` from
-        // `closure-scope-analyzer` to identify *module-shape
-        // candidates* — bindings whose kind (`Function` / `Class`)
-        // is the shape that becomes a module export once
-        // `javascript-ast` grows `ImportDeclaration` /
-        // `ExportDeclaration` variants.
+        // Consume the shared `ScopeAnalysis` from
+        // `closure-scope-analyzer` and delete top-level `Function`/
+        // `Class` declarations that nothing references. The algorithm:
         //
-        // The algorithm (mark phase; sweep deferred):
+        //   1. Use-count per binding (scan `analysis.references`).
+        //   2. Dead-shape scan: a binding is removable when its
+        //      use-count is 0, its scope is `ScopeId::GLOBAL`, and its
+        //      kind is `Function` or `Class`. (`Var`/`Let`/`Const` are
+        //      remove-unused-vars' / collapse-properties' job — the
+        //      split is kind-based.)
+        //   3. Apply: walk `program.body` and drop the matching
+        //      `Declaration::FunctionDeclaration`s.
         //
-        //   1. Walk `analysis.bindings`. A binding is a
-        //      *module-shape candidate* when:
-        //        a. kind == Function OR kind == Class  (these are
-        //           the only binding shapes ESM allows to be
-        //           exported as a named export from the top
-        //           level. `Var`/`Let`/`Const` *can* be exported
-        //           but cross over to remove-unused-vars and
-        //           collapse-properties; the cleanest split is
-        //           kind-based.)
-        //   2. Track candidates in a Vec<BindingId> for the
-        //      observability path.
-        //   3. Sweep — deferred to CLOC13.C.1 because *removing* a
-        //      function/class binding cleanly requires the AST to
-        //      have ImportDeclaration / ExportDeclaration nodes
-        //      (otherwise treeshake can't tell an exported
-        //      function from an internal one).
+        // `changed` is `true` iff at least one declaration was dropped.
+        // Under `IterationPolicy::FixedPoint` this is sound because each
+        // iteration strictly shrinks the binding set (a removed function
+        // mints no new bindings), so it converges — see the apply-step
+        // comment below.
         //
-        // **Critical (lesson from CLOC13.E security review):**
-        // `changed` is hard-pinned to `false` until step 3 lands.
-        // Reporting `changed = true` while returning an unchanged
-        // program would cause the scheduler under
-        // `IterationPolicy::FixedPoint` to re-run forever — each
-        // iteration would find the same candidates, claim a
-        // change, return the same program, repeat. Documented in
-        // both the code and the CHANGELOG so the next contributor
-        // doesn't reintroduce the bug.
-        //
-        // **Why this is safe with the v0.1.0 analyzer body.** The
-        // current `analyze` returns empty bindings + references,
-        // so the candidate scan finds zero shapes, the candidates
-        // vec is empty, `nodes_touched` is small, and the program
-        // passes through unchanged. The wiring becomes *effective*
-        // (real shape-finding) the moment CLOC13.0 lands the
-        // analyzer body — no churn here.
+        // Note: a `Function`/`Class` declaration has no evaluation side
+        // effect, so removing an unreferenced one is unconditionally
+        // safe — no initializer-purity gate (unlike remove-unused-vars).
 
         let analysis = analyze(ctx.program);
 
@@ -292,10 +280,11 @@ impl Pass for TreeshakePass {
 
 #[cfg(test)]
 mod tests {
-    //! Tests pin the public contract and lock the DCE ordering
-    //! integration with `PassPipeline`. v1's `run` is identity,
-    //! but the metadata drives the scheduler and outlives the
-    //! v1 body.
+    //! Tests pin the public contract: pass metadata, the DCE-ordering
+    //! integration with `PassPipeline`, and the removal behavior itself
+    //! — actual deletion of unreferenced top-level function
+    //! declarations, with referenced functions and `var`/statements
+    //! passed through.
     use super::*;
     use coding_adventures_closure_pass_dce::DcePass;
     use coding_adventures_closure_pass_pipeline::{PassPipeline, PipelineOutput};

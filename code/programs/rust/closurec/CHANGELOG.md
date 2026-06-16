@@ -2,6 +2,50 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.142.0] - 2026-06-16
+
+### Added (CLOC12.159 — SIMPLE pipeline gains `treeshake`)
+
+The `--compilation_level SIMPLE` pass pipeline is now
+`constant-fold → fold-control-flow → dce → inline → remove-unused-vars →
+treeshake`. The final pass deletes top-level `function`/`class` declarations
+that nothing references — the function-shaped complement to
+`remove-unused-vars` (which deliberately skips functions):
+
+| Source | SIMPLE output |
+|--------|---------------|
+| `function dead() { return 1; }` | *(removed — never called)* |
+| `function live() { return 2; } log(live());` | `function live(){return 2};log(live());` |
+
+Removing an unused function declaration is unconditionally safe — declaring a
+function has no side effect, so (unlike a `var` initializer) `treeshake` needs
+no purity gate. It runs after `remove-unused-vars` so a function that only a
+now-removed `var` referenced is itself swept in the same pipeline.
+
+`treeshake`'s apply step was already implemented (it drops dead
+`ProgramItem::Declaration(FunctionDeclaration)`s); functions bridge as bare
+declarations, so — unlike `remove-unused-vars` — it had no Statement-wrapping
+bug and works end-to-end as-is. Verified empirically before wiring.
+
+- `SIMPLE_PASS_NAMES` is now
+  `[constant-fold, fold-control-flow, dce, inline, remove-unused-vars, treeshake]`;
+  the `simple_v2` correlation-vector trace lists all six.
+
+### Verified
+- New `tests/diff/simple-treeshake/` end-to-end fixture +
+  `tests/diff_simple_treeshake.rs`:
+  `function dead(){…} function live(){…} log(live());` ⇒
+  `function live(){return 2};log(live());`.
+- New unit tests `simple_treeshake_drops_unused_function`,
+  `simple_treeshake_keeps_called_function`,
+  `simple_treeshake_whitespace_only_keeps_function`.
+- `simple_v2` CV test updated to expect all six pass names.
+
+### Fixture/test churn
+- The two `simple_dce_*` unit tests used an uncalled top-level `function f` as
+  the carrier for the dce behavior under test; `treeshake` now removes it, so
+  they call `f()` to keep it alive (the dce-inside-the-body effect is unchanged).
+
 ## [0.141.0] - 2026-06-16
 
 ### Added (CLOC12.158 — SIMPLE pipeline gains `remove-unused-vars`)
