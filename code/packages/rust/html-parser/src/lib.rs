@@ -860,6 +860,7 @@ pub struct BrowserDocument {
     pub heading_descriptors: Vec<BrowserHeadingDescriptor>,
     pub text_semantics: Vec<BrowserTextSemantic>,
     pub text_semantic_descriptors: Vec<BrowserTextSemanticDescriptor>,
+    pub text_flow_descriptors: Vec<BrowserTextFlowDescriptor>,
     pub navigation_target_descriptors: Vec<BrowserNavigationTargetDescriptor>,
     pub navigation_groups: Vec<BrowserNavigationGroup>,
     pub navigation_group_descriptors: Vec<BrowserNavigationGroupDescriptor>,
@@ -2405,6 +2406,31 @@ pub struct BrowserTextSemanticDescriptor {
     pub phrase_kind: Option<String>,
     pub semantic_blocked: bool,
     pub semantic_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTextFlowDescriptor {
+    pub flow_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub flow_kind: String,
+    pub text_flow: Option<String>,
+    pub list_kind: Option<String>,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub list_item_value: Option<String>,
+    pub list_item_count: usize,
+    pub description_list_kind: Option<String>,
+    pub term_kind: Option<String>,
+    pub term_count: usize,
+    pub description_count: usize,
+    pub quote_cite: Option<String>,
+    pub resolved_quote_cite: Option<String>,
+    pub flow_blocked: bool,
+    pub flow_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -11170,6 +11196,13 @@ fn collect_browser_facts(
         {
             summary.text_semantics.push(text_semantic);
         }
+        if let Some(descriptor) = browser_text_flow_descriptor(
+            summary.text_flow_descriptors.len() + 1,
+            element,
+            summary.base_href.as_deref(),
+        ) {
+            summary.text_flow_descriptors.push(descriptor);
+        }
         if let Some(navigation_group) = browser_navigation_group_element(element, id_texts) {
             summary.navigation_groups.push(navigation_group);
         }
@@ -13287,6 +13320,159 @@ fn browser_text_semantic_block_reasons(semantic: &BrowserTextSemantic) -> Vec<St
         reasons.push("bidi-missing-dir".to_string());
     }
     reasons
+}
+
+fn browser_text_flow_descriptor(
+    flow_index: usize,
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserTextFlowDescriptor> {
+    if !is_browser_text_flow_descriptor_element(element) {
+        return None;
+    }
+
+    let quote_cite = browser_quote_cite(element);
+    let resolved_quote_cite = quote_cite
+        .as_deref()
+        .and_then(|cite| resolve_browser_url(cite, base_href));
+    let list_kind = browser_list_kind(element);
+    let description_list_kind = browser_description_list_kind(element);
+    let term_kind = browser_term_kind(element);
+    let text_flow = if browser_preserves_text_whitespace(&element.name) {
+        Some("preformatted".to_string())
+    } else {
+        None
+    };
+    let list_item_count = if list_kind.is_some() {
+        browser_direct_list_item_count(element)
+    } else {
+        0
+    };
+    let term_count = if description_list_kind.is_some() {
+        browser_direct_description_term_count(element)
+    } else {
+        0
+    };
+    let description_count = if description_list_kind.is_some() {
+        browser_direct_description_details_count(element)
+    } else {
+        0
+    };
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let mut descriptor = BrowserTextFlowDescriptor {
+        flow_index,
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: browser_content_role(&element.name)
+            .unwrap_or(element.name.as_str())
+            .to_string(),
+        text,
+        flow_kind: "flow".to_string(),
+        text_flow,
+        list_kind,
+        list_start: browser_list_start(element),
+        list_marker_type: browser_list_marker_type(element),
+        list_reversed: element.name == "ol" && element.attribute("reversed").is_some(),
+        list_item_value: browser_list_item_value(element),
+        list_item_count,
+        description_list_kind,
+        term_kind,
+        term_count,
+        description_count,
+        quote_cite,
+        resolved_quote_cite,
+        flow_blocked: false,
+        flow_block_reasons: Vec::new(),
+    };
+    descriptor.flow_kind = browser_text_flow_descriptor_kind(&descriptor).to_string();
+    descriptor.flow_block_reasons = browser_text_flow_block_reasons(&descriptor);
+    descriptor.flow_blocked = !descriptor.flow_block_reasons.is_empty();
+    Some(descriptor)
+}
+
+fn is_browser_text_flow_descriptor_element(element: &Element) -> bool {
+    matches!(
+        element.name.as_str(),
+        "ul" | "ol"
+            | "menu"
+            | "dir"
+            | "li"
+            | "dl"
+            | "dt"
+            | "dd"
+            | "blockquote"
+            | "q"
+            | "pre"
+            | "plaintext"
+            | "xmp"
+            | "listing"
+    )
+}
+
+fn browser_text_flow_descriptor_kind(descriptor: &BrowserTextFlowDescriptor) -> &'static str {
+    if descriptor.list_kind.is_some() {
+        "list"
+    } else if descriptor.element == "li" {
+        "list-item"
+    } else if descriptor.description_list_kind.is_some() {
+        "description-list"
+    } else if descriptor.term_kind.as_deref() == Some("term") {
+        "description-term"
+    } else if descriptor.term_kind.as_deref() == Some("description") {
+        "description-details"
+    } else if descriptor.quote_cite.is_some()
+        || matches!(descriptor.element.as_str(), "blockquote" | "q")
+    {
+        "quote"
+    } else if descriptor.text_flow.as_deref() == Some("preformatted") {
+        "preformatted"
+    } else {
+        "flow"
+    }
+}
+
+fn browser_text_flow_block_reasons(descriptor: &BrowserTextFlowDescriptor) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if descriptor.list_kind.is_some() && descriptor.list_item_count == 0 {
+        reasons.push("empty-list".to_string());
+    }
+    if descriptor.element == "li" && descriptor.text.is_empty() {
+        reasons.push("empty-list-item".to_string());
+    }
+    if descriptor.description_list_kind.is_some() {
+        if descriptor.term_count == 0 {
+            reasons.push("missing-description-terms".to_string());
+        }
+        if descriptor.description_count == 0 {
+            reasons.push("missing-description-details".to_string());
+        }
+    }
+    if descriptor.term_kind.is_some() && descriptor.text.is_empty() {
+        reasons.push("empty-description-item".to_string());
+    }
+    if descriptor.quote_cite.is_some() && descriptor.resolved_quote_cite.is_none() {
+        reasons.push("unresolved-quote-cite".to_string());
+    }
+    if descriptor.text_flow.as_deref() == Some("preformatted") && descriptor.text.is_empty() {
+        reasons.push("empty-preformatted".to_string());
+    }
+    reasons
+}
+
+fn browser_direct_description_term_count(element: &Element) -> usize {
+    browser_direct_child_count(element, "dt")
+}
+
+fn browser_direct_description_details_count(element: &Element) -> usize {
+    browser_direct_child_count(element, "dd")
+}
+
+fn browser_direct_child_count(element: &Element, child_name: &str) -> usize {
+    element
+        .children
+        .iter()
+        .filter(|node| matches!(node, Node::Element(child) if child.name == child_name))
+        .count()
 }
 
 fn browser_anchor_descriptors(anchors: &[BrowserAnchor]) -> Vec<BrowserAnchorDescriptor> {
