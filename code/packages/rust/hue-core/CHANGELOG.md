@@ -81,6 +81,8 @@ All notable changes to this package will be documented in this file.
   readiness into final archive activation checks.
 - Hue package release archive rollout summaries that turn archive activation
   readiness into final archive rollout checks.
+- Hue package release archive adoption summaries that turn archive rollout
+  readiness into final archive adoption checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
