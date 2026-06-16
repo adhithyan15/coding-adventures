@@ -1,0 +1,126 @@
+{
+  "kind": "endocrine-edge",
+  "clauses": {
+    "secreted_by__insulin": {
+      "relation": "secreted_by",
+      "subject": "insulin",
+      "object": "pancreatic_beta_cells",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Insulin is secreted by the beta cells of the pancreatic islets of Langerhans.",
+      "url": null
+    },
+    "deficiency_syndrome__insulin": {
+      "relation": "deficiency_syndrome",
+      "subject": "insulin",
+      "object": "diabetes_mellitus",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Insulin deficiency (or resistance) causes diabetes mellitus.",
+      "url": null
+    },
+    "secreted_by__cortisol": {
+      "relation": "secreted_by",
+      "subject": "cortisol",
+      "object": "adrenal_cortex",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Cortisol is secreted by the adrenal cortex (zona fasciculata).",
+      "url": null
+    },
+    "deficiency_syndrome__cortisol": {
+      "relation": "deficiency_syndrome",
+      "subject": "cortisol",
+      "object": "addison_disease",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Cortisol deficiency (primary adrenal insufficiency) causes Addison disease.",
+      "url": null
+    },
+    "secreted_by__thyroxine": {
+      "relation": "secreted_by",
+      "subject": "thyroxine",
+      "object": "thyroid_gland",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Thyroxine (T4) is secreted by the thyroid gland.",
+      "url": null
+    },
+    "deficiency_syndrome__thyroxine": {
+      "relation": "deficiency_syndrome",
+      "subject": "thyroxine",
+      "object": "hypothyroidism",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Thyroid hormone deficiency causes hypothyroidism.",
+      "url": null
+    },
+    "secreted_by__adh": {
+      "relation": "secreted_by",
+      "subject": "adh",
+      "object": "posterior_pituitary",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Antidiuretic hormone (ADH/vasopressin) is released from the posterior pituitary.",
+      "url": null
+    },
+    "deficiency_syndrome__adh": {
+      "relation": "deficiency_syndrome",
+      "subject": "adh",
+      "object": "central_diabetes_insipidus",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "ADH deficiency causes central diabetes insipidus.",
+      "url": null
+    },
+    "secreted_by__pth": {
+      "relation": "secreted_by",
+      "subject": "pth",
+      "object": "parathyroid_gland",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Parathyroid hormone is secreted by the parathyroid glands.",
+      "url": null
+    },
+    "deficiency_syndrome__pth": {
+      "relation": "deficiency_syndrome",
+      "subject": "pth",
+      "object": "hypoparathyroidism",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "PTH deficiency causes hypoparathyroidism (hypocalcemia).",
+      "url": null
+    },
+    "secreted_by__growth_hormone": {
+      "relation": "secreted_by",
+      "subject": "growth_hormone",
+      "object": "anterior_pituitary",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Growth hormone is secreted by the anterior pituitary (somatotrophs).",
+      "url": null
+    },
+    "deficiency_syndrome__growth_hormone": {
+      "relation": "deficiency_syndrome",
+      "subject": "growth_hormone",
+      "object": "pituitary_dwarfism",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Childhood growth hormone deficiency causes pituitary dwarfism (short stature).",
+      "url": null
+    }
+  },
+  "hash": "9d371bb08666590c"
+}
