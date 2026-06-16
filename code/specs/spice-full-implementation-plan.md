@@ -31,7 +31,9 @@ downstream tools to compare.
      measurement helpers from deck text; parsed `.save`, `.probe`,
      `.print <analysis> ...`, and `.plot <analysis> ...` cards now drive
      stable table output for operating-point, DC sweep, AC sweep, and transient
-     results; parsed
+     results; unsupported `.control` / `.endc` blocks are now excluded from
+     active deck and source-resolved solver input while body commands emit
+     stable non-executed diagnostics; parsed
      `.measure dc` / `.meas dc` cards now route DC
      sweep probe samples into the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -194,10 +196,11 @@ downstream tools to compare.
       active deck lines before `.end`.
     - The helpers emit stable unsupported-feature diagnostics for `.include`,
       `.lib`, and `.control` directives that appear before `.end`, while
-      ignoring lines after the deck boundary.
+      ignoring lines after the deck boundary. Unsupported `.control` blocks
+      are also excluded from active lines, with per-command diagnostics for
+      non-comment lines inside the block.
     - Package README, changelog, and tests document and lock this shared
-      parser/planner foothold before include/library resolution and control
-      block execution are implemented.
+      parser/planner foothold before control block execution is implemented.
 
 15. Include/library source resolution.
     - Status: completed in this include/library resolution slice.
@@ -208,7 +211,8 @@ downstream tools to compare.
       named `.lib` / `.endl` library sections.
     - Stable diagnostics cover missing include files, missing library files,
       absent or unterminated sections, include/library cycles, and
-      still-unsupported `.control` directives.
+      still-unsupported `.control` directives whose body commands are excluded
+      from active source-resolved solver input.
 
 16. Parameter/expression resolution foothold.
     - Status: completed in this parameter/expression resolution slice.
@@ -491,6 +495,14 @@ downstream tools to compare.
       diagnostics distinguish missing `.plot` probes, unsupported `.plot`
       analyses, and malformed output probes.
 
+43. Deck `.control` block exclusion.
+    - Status: completed in this control-block exclusion slice.
+    - Python, Rust, and TypeScript now exclude unsupported `.control` / `.endc`
+      blocks from active deck-control lines and source-resolved solver input.
+    - The existing unsupported `.control` directive diagnostic is preserved,
+      while non-comment commands inside the block emit stable
+      `SPICE_DECK_CONTROL_COMMAND` diagnostics.
+
 ## Backlog
 
 1. Deck execution layer.
@@ -501,8 +513,8 @@ downstream tools to compare.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.print` / `.plot` selection toward full SPICE
      compatibility.
-   - Define a deliberate `.control` subset; explicit unsupported-feature
-     diagnostics are now present for the current non-executed state.
+   - Expand a deliberate `.control` subset beyond the current excluded,
+     non-executed block diagnostics.
 
 2. Production solver core.
    - Finish sparse real and complex matrix paths.

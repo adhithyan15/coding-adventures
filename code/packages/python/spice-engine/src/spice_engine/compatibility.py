@@ -507,12 +507,30 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
     active_lines: list[str] = []
     diagnostics: list[DeckControlDiagnostic] = []
     end_line_number: int | None = None
+    in_control_block = False
 
     for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
         stripped = raw_line.strip()
         if not stripped or stripped.startswith(("*", ";")):
             continue
         directive = _deck_directive(stripped)
+        if in_control_block:
+            if directive == ".endc":
+                in_control_block = False
+                continue
+            diagnostics.append(
+                DeckControlDiagnostic(
+                    code="SPICE_DECK_CONTROL_COMMAND",
+                    directive=".control",
+                    line_number=line_number,
+                    message=(
+                        f"{stripped!r} inside .control is not executed by "
+                        "the deck execution foothold yet"
+                    ),
+                    severity="error",
+                )
+            )
+            continue
         if directive == ".end":
             end_line_number = line_number
             break
@@ -529,6 +547,9 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
                     severity="error",
                 )
             )
+            if directive == ".control":
+                in_control_block = True
+                continue
         active_lines.append(stripped)
 
     return DeckControlSummary(
@@ -2964,12 +2985,31 @@ def _resolve_deck_lines(
 ) -> tuple[list[str], bool, int | None]:
     active_lines: list[str] = []
     end_line_number: int | None = None
+    in_control_block = False
 
     for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
         stripped = raw_line.strip()
         if not stripped or stripped.startswith(("*", ";")):
             continue
         directive = _deck_directive(stripped)
+        if in_control_block:
+            if directive == ".endc":
+                in_control_block = False
+                continue
+            state.diagnostics.append(
+                DeckResolutionDiagnostic(
+                    code="SPICE_DECK_CONTROL_COMMAND",
+                    directive=".control",
+                    source=source,
+                    line_number=line_number,
+                    message=(
+                        f"{stripped!r} inside .control is not executed by "
+                        "the deck source resolver yet"
+                    ),
+                    severity="error",
+                )
+            )
+            continue
         if directive == ".end":
             end_line_number = line_number
             break
@@ -3011,6 +3051,9 @@ def _resolve_deck_lines(
                     severity="error",
                 )
             )
+            if directive == ".control":
+                in_control_block = True
+                continue
         active_lines.append(stripped)
 
     return active_lines, end_line_number is not None, end_line_number

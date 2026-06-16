@@ -118,17 +118,22 @@ run
     )
 
     assert summary.terminated is True
-    assert summary.active_lines[:3] == (
+    assert summary.active_lines == (
         ".include models.inc",
         ".LIB vendor.lib TT",
-        ".control",
     )
     assert [(diag.directive, diag.line_number, diag.severity) for diag in summary.diagnostics] == [
         (".include", 2, "error"),
         (".lib", 3, "error"),
         (".control", 4, "error"),
+        (".control", 5, "error"),
     ]
-    assert all(diag.code == "SPICE_DECK_UNSUPPORTED_DIRECTIVE" for diag in summary.diagnostics)
+    assert [diag.code for diag in summary.diagnostics] == [
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_CONTROL_COMMAND",
+    ]
 
 
 def test_resolve_deck_sources_expands_include_and_library_section() -> None:
@@ -181,6 +186,8 @@ def test_resolve_deck_sources_reports_missing_sources_and_cycles() -> None:
 .include a.inc
 .lib vendor.lib SS
 .control
+run
+.endc
 .end
 """,
         {
@@ -190,12 +197,14 @@ def test_resolve_deck_sources_reports_missing_sources_and_cycles() -> None:
         },
     )
 
-    assert summary.active_lines == ("R2 b 0 2", "R1 a b 1", ".control")
+    assert summary.terminated is True
+    assert summary.active_lines == ("R2 b 0 2", "R1 a b 1")
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_INCLUDE_NOT_FOUND",
         "SPICE_DECK_INCLUDE_CYCLE",
         "SPICE_DECK_LIB_SECTION_NOT_FOUND",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_CONTROL_COMMAND",
     ]
     assert [(diag.source, diag.line_number, diag.target) for diag in summary.diagnostics[:3]] == [
         ("<deck>", 2, "missing.inc"),

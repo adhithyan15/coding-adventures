@@ -136,11 +136,10 @@ run
 
     assert!(summary.terminated);
     assert_eq!(
-        &summary.active_lines[..3],
+        summary.active_lines,
         &[
             ".include models.inc".to_string(),
             ".LIB vendor.lib TT".to_string(),
-            ".control".to_string()
         ]
     );
     let diagnostics = summary
@@ -159,13 +158,23 @@ run
         vec![
             (".include", 2, "error"),
             (".lib", 3, "error"),
-            (".control", 4, "error")
+            (".control", 4, "error"),
+            (".control", 5, "error")
         ]
     );
-    assert!(summary
-        .diagnostics
-        .iter()
-        .all(|diagnostic| diagnostic.code == "SPICE_DECK_UNSUPPORTED_DIRECTIVE"));
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_CONTROL_COMMAND"
+        ]
+    );
 }
 
 #[test]
@@ -246,15 +255,15 @@ fn resolve_deck_sources_reports_missing_sources_and_cycles() {
 .include a.inc
 .lib vendor.lib SS
 .control
+run
+.endc
 .end
 ",
         &sources,
     );
 
-    assert_eq!(
-        summary.active_lines,
-        vec!["R2 b 0 2", "R1 a b 1", ".control"]
-    );
+    assert!(summary.terminated);
+    assert_eq!(summary.active_lines, vec!["R2 b 0 2", "R1 a b 1"]);
     assert_eq!(
         summary
             .diagnostics
@@ -265,7 +274,8 @@ fn resolve_deck_sources_reports_missing_sources_and_cycles() {
             "SPICE_DECK_INCLUDE_NOT_FOUND",
             "SPICE_DECK_INCLUDE_CYCLE",
             "SPICE_DECK_LIB_SECTION_NOT_FOUND",
-            "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_CONTROL_COMMAND"
         ]
     );
     assert_eq!(

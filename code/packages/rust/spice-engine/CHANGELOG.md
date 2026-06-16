@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add control-block exclusion diagnostics to `analyze_deck_controls` and
+  `resolve_deck_sources`; unsupported `.control` / `.endc` blocks are no
+  longer forwarded as active deck lines, and non-comment commands inside the
+  block emit stable diagnostics, matching Python and TypeScript.
 - Add parsed `.plot <analysis> ...` output routing to `resolve_deck_outputs`,
   `select_deck_output_probes`, and deck table formatters, matching Python and
   TypeScript.
