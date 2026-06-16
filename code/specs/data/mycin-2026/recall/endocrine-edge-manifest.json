@@ -5,37 +5,37 @@
       "relation": "secreted_by",
       "subject": "insulin",
       "object": "pancreatic_beta_cells",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Insulin is secreted by the beta cells of the pancreatic islets of Langerhans.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "The beta cells release insulin, a peptide hormone that decreases glucose concentration in the blood by stimulating glucose uptake by the liver, skeletal muscle, and adipose tissue via specialized receptors.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK542302/"
     },
     "deficiency_syndrome__insulin": {
       "relation": "deficiency_syndrome",
       "subject": "insulin",
       "object": "diabetes_mellitus",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Insulin deficiency (or resistance) causes diabetes mellitus.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "The main subtypes of DM are Type 1 diabetes mellitus (T1DM) and Type 2 diabetes mellitus (T2DM), which classically result from defective insulin secretion (T1DM) and/or action (T2DM). In the case of DM, insulin is either absent and/or has impaired action (insulin resistance), and thus leads to hyperglycemia.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK551501/"
     },
     "secreted_by__cortisol": {
       "relation": "secreted_by",
       "subject": "cortisol",
       "object": "adrenal_cortex",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Cortisol is secreted by the adrenal cortex (zona fasciculata).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "This hormone functions as the primary glucocorticoid synthesized and released by the zona fasciculata of the adrenal cortex.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK538239/"
     },
     "deficiency_syndrome__cortisol": {
       "relation": "deficiency_syndrome",
       "subject": "cortisol",
       "object": "addison_disease",
-      "status": "pending",
+      "status": "direction_only",
       "verdict": "FLAG",
       "trust": "consensus",
       "source": "Cortisol deficiency (primary adrenal insufficiency) causes Addison disease.",
@@ -45,82 +45,82 @@
       "relation": "secreted_by",
       "subject": "thyroxine",
       "object": "thyroid_gland",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Thyroxine (T4) is secreted by the thyroid gland.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "The main hormones produced by the thyroid gland are thyroxine or tetraiodothyronine (T4) and triiodothyronine (T3).",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK500006/"
     },
     "deficiency_syndrome__thyroxine": {
       "relation": "deficiency_syndrome",
       "subject": "thyroxine",
       "object": "hypothyroidism",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Thyroid hormone deficiency causes hypothyroidism.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Hypothyroidism results from low levels of thyroid hormone with varied etiology and manifestations.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK519536/"
     },
     "secreted_by__adh": {
       "relation": "secreted_by",
       "subject": "adh",
       "object": "posterior_pituitary",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Antidiuretic hormone (ADH/vasopressin) is released from the posterior pituitary.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "The posterior pituitary gland secretes ADH and oxytocin, hormones synthesized in the hypothalamus, which are released into the neurohypophyseal capillaries that surround the gland.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK526130/"
     },
     "deficiency_syndrome__adh": {
       "relation": "deficiency_syndrome",
       "subject": "adh",
       "object": "central_diabetes_insipidus",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "ADH deficiency causes central diabetes insipidus.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "A failure of ADH secretion causes central diabetes insipidus.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK526069/"
     },
     "secreted_by__pth": {
       "relation": "secreted_by",
       "subject": "pth",
       "object": "parathyroid_gland",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Parathyroid hormone is secreted by the parathyroid glands.",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "The parathyroid gland secretes parathyroid hormone (PTH), a polypeptide, in response to low calcium levels detected in the blood.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK499940/"
     },
     "deficiency_syndrome__pth": {
       "relation": "deficiency_syndrome",
       "subject": "pth",
       "object": "hypoparathyroidism",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "PTH deficiency causes hypoparathyroidism (hypocalcemia).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Hypoparathyroidism is an uncommon endocrine abnormality in which parathyroid gland dysfunction causes parathyroid hormone deficiency. [...] Consequently, PTH deficiency results in hypocalcemia and hyperphosphatemia, while alkaline phosphatase, a marker of bone formation, is normal.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK441899/"
     },
     "secreted_by__growth_hormone": {
       "relation": "secreted_by",
       "subject": "growth_hormone",
       "object": "anterior_pituitary",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Growth hormone is secreted by the anterior pituitary (somatotrophs).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "Human growth hormone is produced by the anterior pituitary gland in acidophilic somatotrophic cells.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK482141/"
     },
     "deficiency_syndrome__growth_hormone": {
       "relation": "deficiency_syndrome",
       "subject": "growth_hormone",
       "object": "pituitary_dwarfism",
-      "status": "pending",
-      "verdict": "FLAG",
-      "trust": "consensus",
-      "source": "Childhood growth hormone deficiency causes pituitary dwarfism (short stature).",
-      "url": null
+      "status": "grounded",
+      "verdict": "ACCEPT",
+      "trust": "authoritative",
+      "source": "A type of reduced stature with normal proportions related to dysfunction of the pituitary gland related to either an isolated defect in the secretion of growth hormone or to panhypopituitarism, i.e., a deficit of all the anterior pituitary hormones.",
+      "url": "https://www.ncbi.nlm.nih.gov/medgen/8506"
     }
   },
-  "hash": "9d371bb08666590c"
+  "hash": "be4069dd18eddbea"
 }

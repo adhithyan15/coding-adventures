@@ -24,20 +24,21 @@ edge. That is the number every grounding/expansion PR moves:
 ```
 correct 43 · abstained 6 · wrong 0  (of 49)
 by tactic — differential: 1✓/1·/0✗  ·  recall: 42✓/5·/0✗
-defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 81%
+defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 98%
 ✓ never fabricated — every answer is correct-with-proof or an honest abstention.
 ```
 
 The bank spans **four recall domains** — 12 inborn-errors-of-metabolism diseases
 (`recall/iem-edges.adj`), 8 vitamin deficiencies (`recall/vitamin-edges.adj`), 8 anemia
 classifications (`recall/anemia-edges.adj`), and 8 endocrine hormones
-(`recall/endocrine-edges.adj`, REL-12) — merged into one store. The first three are fully
-spider-grounded (REL-8 / REL-10b / REL-11b); REL-12 added the endocrine domain as
-authored-debt, dipping grounded-coverage 100% → 81%, and its spider run climbs it back.
-Each new domain entered as debt and each spider run retired it — expansion adds debt,
-grounding retires it, one watchable number. **A new domain = drop in its `*-edges.adj`
-file + its board items + the filename in `EDGE_FILES`; the harness merges and scores it
-unchanged.**
+(`recall/endocrine-edges.adj`) — merged into one store, **all spider-grounded** (REL-8 /
+REL-10b / REL-11b / REL-12b). grounded-coverage is **98%**: 41 of 42 recall answers cite
+an `authoritative` edge; the lone holdout (`cortisol_def`) stays `consensus` + FLAG
+because the adversarial verify could not pin it verbatim — the framework declines to
+claim grounding it cannot defend, by design. Each new domain entered as authored-debt
+(dipping the number) and its spider run retired it — expansion adds debt, grounding
+retires it, one watchable number. **A new domain = drop in its `*-edges.adj` file + its
+board items + the filename in `EDGE_FILES`; the harness merges and scores it unchanged.**
 
 ## Files
 
