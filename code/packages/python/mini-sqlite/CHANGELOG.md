@@ -1,5 +1,37 @@
 # Changelog
 
+## [2.25.0] - 2026-06-16
+
+### Fixed
+
+- **`SELECT expr alias` (bare alias without `AS`) now accepted** — SQLite
+  allows column aliases in `SELECT` items without the `AS` keyword:
+  `SELECT 1 x` is equivalent to `SELECT 1 AS x`.  Previously mini-sqlite
+  required `AS` and raised a parse error on the bare-alias form:
+  ```
+  Parse error: Expected STAR or "/" or "%" or "+" or "-", got 'x'
+  ```
+  Two-part fix:
+  1. `sql.grammar` line `select_item`: `[ "AS" NAME ]` → `[ [ "AS" ] NAME ]`
+  2. `adapter._select_item`: extended to recognise a direct `NAME` child
+     that is not preceded by `AS` as the alias.
+
+  `NAME` never matches SQL keywords (`FROM`, `WHERE`, `GROUP`, …) so there
+  is no ambiguity — the grammar's PEG tokeniser emits those as `KEYWORD`
+  tokens which cannot satisfy the `NAME` alternative.
+
+  Several previously failing constructs now work correctly:
+
+  | SQL form                                        | Before      | After |
+  |-------------------------------------------------|-------------|-------|
+  | `SELECT 1 x`                                    | Parse error | `1`   |
+  | `SELECT a + b total FROM t`                     | Parse error | OK    |
+  | `SELECT group_concat(x, \|) FROM (SELECT 1 x …)`| Parse error | OK    |
+  | `SELECT expr AS alias` (with AS)                | OK          | OK    |
+
+- **14 new oracle tests** in ``test_tier3_select_bare_alias.py`` verify
+  the bare-alias form against the real sqlite3 reference engine.
+
 ## [2.24.0] - 2026-06-16
 
 ### Fixed
