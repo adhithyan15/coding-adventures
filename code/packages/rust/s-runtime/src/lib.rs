@@ -660,6 +660,48 @@ mod tests {
         assert!(outcome.printed.contains("[[2]]"), "{:?}", outcome.printed);
     }
 
+    // --- Regular expressions (R-7) --------------------------------------
+
+    #[test]
+    fn grepl_and_grep() {
+        assert_eq!(
+            show("grepl(\"^a\", c(\"apple\", \"banana\", \"avocado\"))\n"),
+            "[1]  TRUE FALSE  TRUE"
+        );
+        assert_eq!(nums("grep(\"an\", c(\"apple\", \"banana\"))\n"), vec![2.0]);
+        assert_eq!(
+            show("grep(\"an\", c(\"apple\", \"banana\"), value = TRUE)\n"),
+            "[1] \"banana\""
+        );
+        // A regex metacharacter is honored by default but literal with fixed=TRUE.
+        assert_eq!(show("grepl(\".\", \"abc\")\n"), "[1] TRUE");
+        assert_eq!(show("grepl(\".\", \"abc\", fixed = TRUE)\n"), "[1] FALSE");
+    }
+
+    #[test]
+    fn gsub_and_sub() {
+        assert_eq!(show("gsub(\"a\", \"X\", \"banana\")\n"), "[1] \"bXnXnX\"");
+        assert_eq!(show("sub(\"a\", \"X\", \"banana\")\n"), "[1] \"bXnana\"");
+        // Back-reference: R's \\1 -> the regex crate's ${1}.
+        assert_eq!(
+            show("gsub(\"(a)(b)\", \"\\\\2\\\\1\", \"ababab\")\n"),
+            "[1] \"bababa\""
+        );
+        // fixed = TRUE makes the pattern literal.
+        assert_eq!(
+            show("gsub(\".\", \"_\", \"a.b\", fixed = TRUE)\n"),
+            "[1] \"a_b\""
+        );
+    }
+
+    #[test]
+    fn invalid_regex_is_a_clean_error() {
+        assert!(matches!(
+            eval_s("grepl(\"(\", \"x\")\n"),
+            Err(SError::BadArgs(_))
+        ));
+    }
+
     #[test]
     fn print_returns_its_argument_invisibly() {
         let outcome = Interpreter::new().eval_str("print(42)\n").unwrap();

@@ -89,6 +89,12 @@ pub fn install(env: &Env) {
     define(env, "lapply", builtin("lapply", b_lapply));
     define(env, "strsplit", builtin("strsplit", b_strsplit));
 
+    // Regular expressions (R-7).
+    define(env, "grepl", builtin("grepl", b_grepl));
+    define(env, "grep", builtin("grep", b_grep));
+    define(env, "gsub", builtin("gsub", b_gsub));
+    define(env, "sub", builtin("sub", b_sub));
+
     // String manipulation (vectorized over a character vector).
     define(env, "nchar", builtin("nchar", b_nchar));
     define(env, "toupper", builtin("toupper", b_toupper));
@@ -636,6 +642,139 @@ fn paste_impl(args: &[Arg], default_sep: &str) -> SResult<SValue> {
         })
         .collect();
     Ok(SValue::Character(out))
+}
+
+// ===========================================================================
+// Regular expressions
+// ===========================================================================
+
+/// Read a boolean named argument (e.g. `fixed = TRUE`), defaulting to `false`.
+fn flag(args: &[Arg], name: &str) -> bool {
+    args.iter()
+        .find(|a| a.name.as_deref() == Some(name))
+        .and_then(|a| a.value.truthy().ok())
+        .unwrap_or(false)
+}
+
+/// Compile a pattern into a `regex::Regex`. With `fixed`, the pattern is matched
+/// literally (escaped). An invalid pattern returns a clean error, never a panic.
+fn compile(pattern: &str, fixed: bool) -> SResult<regex::Regex> {
+    let source = if fixed {
+        regex::escape(pattern)
+    } else {
+        pattern.to_string()
+    };
+    regex::Regex::new(&source)
+        .map_err(|e| SError::BadArgs(format!("invalid regular expression '{pattern}': {e}")))
+}
+
+/// Translate an R replacement string to the `regex` crate's syntax: R back-
+/// references `\1` become `${1}`, `\\` becomes a literal backslash, and a literal
+/// `$` is escaped to `$$` (the regex crate's literal-dollar). With `fixed`, the
+/// replacement is taken literally (only `$` needs escaping).
+fn translate_replacement(repl: &str, fixed: bool) -> String {
+    let mut out = String::with_capacity(repl.len());
+    let mut chars = repl.chars().peekable();
+    while let Some(c) = chars.next() {
+        match c {
+            '$' => out.push_str("$$"),
+            '\\' if !fixed => match chars.next() {
+                Some(d) if d.is_ascii_digit() => {
+                    out.push_str("${");
+                    out.push(d);
+                    out.push('}');
+                }
+                Some(other) => out.push(other), // `\\` -> `\`, `\x` -> `x`
+                None => {}
+            },
+            other => out.push(other),
+        }
+    }
+    out
+}
+
+/// The `(pattern, x, fixed)` of a `grepl`/`grep` call (pattern + first vector).
+fn regex_unary(args: &[Arg]) -> SResult<(regex::Regex, Vec<Option<String>>)> {
+    let pattern = nth_positional(args, 0)
+        .map(|v| v.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .ok_or_else(|| SError::BadArgs("missing 'pattern'".into()))?;
+    let x = nth_positional(args, 1)
+        .ok_or_else(|| SError::BadArgs("missing 'x'".into()))?
+        .as_character();
+    Ok((compile(&pattern, flag(args, "fixed"))?, x))
+}
+
+/// `grepl(pattern, x)` — a logical vector: does each element match? `NA` → `NA`.
+fn b_grepl(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (re, x) = regex_unary(args)?;
+    Ok(SValue::Logical(
+        x.iter()
+            .map(|o| o.as_ref().map(|s| re.is_match(s)))
+            .collect(),
+    ))
+}
+
+/// `grep(pattern, x, value = FALSE)` — the indices (1-based) of matching
+/// elements, or the matching strings themselves when `value = TRUE`.
+fn b_grep(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (re, x) = regex_unary(args)?;
+    let hits: Vec<(usize, &Option<String>)> = x
+        .iter()
+        .enumerate()
+        .filter(|(_, o)| o.as_ref().is_some_and(|s| re.is_match(s)))
+        .collect();
+    if flag(args, "value") {
+        Ok(SValue::Character(
+            hits.iter().map(|(_, o)| (*o).clone()).collect(),
+        ))
+    } else {
+        Ok(SValue::doubles(
+            hits.iter().map(|(i, _)| (i + 1) as f64).collect(),
+        ))
+    }
+}
+
+/// Shared `gsub`/`sub` body. `all` replaces every match; otherwise the first.
+fn replace_impl(args: &[Arg], all: bool) -> SResult<SValue> {
+    let fixed = flag(args, "fixed");
+    let pattern = nth_positional(args, 0)
+        .map(|v| v.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .ok_or_else(|| SError::BadArgs("missing 'pattern'".into()))?;
+    let replacement = nth_positional(args, 1)
+        .map(|v| v.as_character())
+        .and_then(|c| c.into_iter().next().flatten())
+        .ok_or_else(|| SError::BadArgs("missing 'replacement'".into()))?;
+    let x = nth_positional(args, 2)
+        .ok_or_else(|| SError::BadArgs("missing 'x'".into()))?
+        .as_character();
+
+    let re = compile(&pattern, fixed)?;
+    let rep = translate_replacement(&replacement, fixed);
+    let out = x
+        .into_iter()
+        .map(|o| {
+            o.map(|s| {
+                if all {
+                    re.replace_all(&s, rep.as_str()).into_owned()
+                } else {
+                    re.replace(&s, rep.as_str()).into_owned()
+                }
+            })
+        })
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// `gsub(pattern, replacement, x)` — replace every match in each element.
+fn b_gsub(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    replace_impl(args, true)
+}
+
+/// `sub(pattern, replacement, x)` — replace only the first match in each element.
+fn b_sub(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    replace_impl(args, false)
 }
 
 // ===========================================================================

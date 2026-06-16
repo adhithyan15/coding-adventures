@@ -73,9 +73,15 @@ unchanged.
   and R-style `$name`/`[[i]]` block printing. Built-ins `list(...)`,
   `lapply(x, f)` (returns a list), and `strsplit(x, split)` (fixed-string split
   → a list of character vectors). `nth_element` now iterates list elements, so
-  `sapply`/`lapply` work over lists. *Deferred:* `table`, regex (`gsub`/`grepl`).
-- **R-7+** — regex helpers, then the `d/p/q/r` distribution family wired to
-  `statistics-core`.
+  `sapply`/`lapply` work over lists.
+- **R-7 — regular expressions** *(this PR)*. `grepl(pattern, x)` → logical,
+  `grep(pattern, x, value=)` → indices or matches, `gsub`/`sub(pattern, repl, x)`
+  → replace all / first. Built on the `regex` crate (linear-time, no
+  catastrophic backtracking), with a `fixed = TRUE` literal-match option and R
+  back-reference translation (`\\1` → the crate's `${1}`). Invalid patterns
+  return a clean error. *Deferred:* `regmatches`/`gregexpr`, `table`.
+- **R-8+** — the `d/p/q/r` distribution family (`rnorm`/`dnorm`/`pnorm`/`qnorm`,
+  `runif`, …) wired to `statistics-core`.
 
 ## §4 Reuse strategy
 
