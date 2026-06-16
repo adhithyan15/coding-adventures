@@ -410,4 +410,109 @@ mod tests {
     fn non_conformable_product_is_an_error() {
         assert!(eval_r("matrix(1:6, 2, 3) %*% matrix(1:6, 2, 3)\n").is_err());
     }
+
+    // --- R-12: matrix linear algebra ------------------------------------
+
+    fn approx(src: &str, expected: &[f64]) {
+        let got = nums(src);
+        assert_eq!(got.len(), expected.len(), "length for {src:?}: {got:?}");
+        for (g, e) in got.iter().zip(expected) {
+            assert!((g - e).abs() < 1e-9, "for {src:?}: {got:?} != {expected:?}");
+        }
+    }
+
+    #[test]
+    fn diag_extracts_builds_and_makes_identity() {
+        // Extract: the diagonal of a matrix.
+        assert_eq!(nums("diag(matrix(1:9, 3, 3))\n"), vec![1.0, 5.0, 9.0]);
+        // Build: a diagonal matrix from a vector (column-major).
+        assert_eq!(
+            nums("c(diag(c(1, 2, 3)))\n"),
+            vec![1.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 3.0]
+        );
+        // Identity: a single number → its identity matrix.
+        assert_eq!(nums("c(diag(2))\n"), vec![1.0, 0.0, 0.0, 1.0]);
+        assert_eq!(nums("dim(diag(3))\n"), vec![3.0, 3.0]);
+    }
+
+    #[test]
+    fn margin_sums_and_means() {
+        assert_eq!(nums("rowSums(matrix(1:6, 2, 3))\n"), vec![9.0, 12.0]);
+        assert_eq!(nums("colSums(matrix(1:6, 2, 3))\n"), vec![3.0, 7.0, 11.0]);
+        assert_eq!(nums("rowMeans(matrix(1:6, 2, 3))\n"), vec![3.0, 4.0]);
+        assert_eq!(nums("colMeans(matrix(1:6, 2, 3))\n"), vec![1.5, 3.5, 5.5]);
+    }
+
+    #[test]
+    fn margin_reductions_handle_na() {
+        // NA in a row propagates by default, is dropped with na.rm = TRUE.
+        assert_eq!(show("rowSums(matrix(c(1, NA, 3, 4), 2, 2))\n"), "[1]  4 NA");
+        assert_eq!(
+            nums("rowSums(matrix(c(1, NA, 3, 4), 2, 2), na.rm = TRUE)\n"),
+            vec![4.0, 4.0]
+        );
+    }
+
+    #[test]
+    fn rowsums_rejects_a_non_matrix() {
+        assert!(eval_r("rowSums(c(1, 2, 3))\n").is_err());
+    }
+
+    #[test]
+    fn cbind_and_rbind_vectors() {
+        // cbind: each vector a column (column-major flatten recovers them).
+        assert_eq!(
+            nums("c(cbind(c(1, 2), c(3, 4)))\n"),
+            vec![1.0, 2.0, 3.0, 4.0]
+        );
+        assert_eq!(nums("dim(cbind(c(1, 2, 3), c(4, 5, 6)))\n"), vec![3.0, 2.0]);
+        // rbind: each vector a row.
+        assert_eq!(
+            nums("c(rbind(c(1, 2), c(3, 4)))\n"),
+            vec![1.0, 3.0, 2.0, 4.0]
+        );
+        // A length-1 column is recycled to the common height.
+        assert_eq!(nums("c(cbind(1, c(2, 3)))\n"), vec![1.0, 1.0, 2.0, 3.0]);
+    }
+
+    #[test]
+    fn cbind_binds_a_matrix_and_a_vector() {
+        assert_eq!(
+            nums("dim(cbind(matrix(1:4, 2, 2), c(5, 6)))\n"),
+            vec![2.0, 3.0]
+        );
+        // A matrix whose row count doesn't match is an error.
+        assert!(eval_r("cbind(matrix(1:4, 2, 2), c(5, 6, 7))\n").is_err());
+    }
+
+    #[test]
+    fn determinant_of_a_matrix() {
+        // [[1,3],[2,4]] (column-major c(1,2,3,4)) has det 1*4 - 3*2 = -2.
+        assert_eq!(nums("det(matrix(c(1, 2, 3, 4), 2, 2))\n"), vec![-2.0]);
+        // A singular matrix has determinant 0.
+        assert_eq!(nums("det(matrix(c(1, 2, 2, 4), 2, 2))\n"), vec![0.0]);
+        // NA anywhere → NA.
+        assert_eq!(show("det(matrix(c(1, NA, 3, 4), 2, 2))\n"), "[1] NA");
+    }
+
+    #[test]
+    fn solve_inverts_and_solves() {
+        // The inverse of 2*I is 0.5*I.
+        approx(
+            "c(solve(matrix(c(2, 0, 0, 2), 2, 2)))\n",
+            &[0.5, 0.0, 0.0, 0.5],
+        );
+        // solve(a, b): 2I x = (4, 6) → x = (2, 3).
+        approx("solve(matrix(c(2, 0, 0, 2), 2, 2), c(4, 6))\n", &[2.0, 3.0]);
+        // A non-trivial round-trip: solve(a) %*% a == I.
+        approx(
+            "c(solve(matrix(c(4, 2, 7, 6), 2, 2)) %*% matrix(c(4, 2, 7, 6), 2, 2))\n",
+            &[1.0, 0.0, 0.0, 1.0],
+        );
+    }
+
+    #[test]
+    fn solve_of_a_singular_matrix_is_an_error() {
+        assert!(eval_r("solve(matrix(c(1, 2, 2, 4), 2, 2))\n").is_err());
+    }
 }

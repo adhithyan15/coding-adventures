@@ -170,6 +170,17 @@ pub fn install(env: &Env) {
     define(env, "matrix", builtin("matrix", b_matrix));
     define(env, "t", builtin("t", b_t));
     define(env, "apply", builtin("apply", b_apply));
+
+    // Matrix linear algebra (R-12).
+    define(env, "diag", builtin("diag", b_diag));
+    define(env, "rowSums", builtin("rowSums", b_row_sums));
+    define(env, "colSums", builtin("colSums", b_col_sums));
+    define(env, "rowMeans", builtin("rowMeans", b_row_means));
+    define(env, "colMeans", builtin("colMeans", b_col_means));
+    define(env, "cbind", builtin("cbind", b_cbind));
+    define(env, "rbind", builtin("rbind", b_rbind));
+    define(env, "solve", builtin("solve", b_solve));
+    define(env, "det", builtin("det", b_det));
 }
 
 // ===========================================================================
@@ -478,6 +489,489 @@ fn b_apply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             items: results,
         })
     }
+}
+
+// ===========================================================================
+// Matrix linear algebra (R-12)
+// ===========================================================================
+
+/// Largest square dimension `solve`/`det` will factor. Their Gaussian
+/// elimination is `O(n³)`, so without a cap a (still `MAX_SEQ_LEN`-legal)
+/// 4000×4000 matrix would be ~10¹¹ flops — a denial-of-service. 1000 keeps the
+/// work near a billion flops (sub-second) while covering any realistic teaching
+/// or interactive use.
+const MAX_SOLVE_DIM: usize = 1000;
+
+/// Pull the `(data, nrow, ncol)` out of a `SValue::Matrix`, or `None` for any
+/// other value. Borrows, so callers clone only when they must.
+fn matrix_parts(value: &SValue) -> Option<(&Double, usize, usize)> {
+    match value {
+        SValue::Matrix { data, nrow, ncol } => Some((data, *nrow, *ncol)),
+        _ => None,
+    }
+}
+
+/// `diag(x)` — R's three-way overload:
+/// * `x` a **matrix** → its diagonal, as a vector of length `min(nrow, ncol)`.
+/// * `x` a length-`> 1` **vector** → the square matrix with `x` on the diagonal.
+/// * `x` a single **number** `n` → the `n × n` identity matrix.
+///
+/// For the vector / identity forms, `nrow`/`ncol` (by name or position) override
+/// the derived shape, with the diagonal value(s) recycled.
+fn b_diag(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?;
+
+    // Matrix → extract the diagonal.
+    if let Some((data, nrow, ncol)) = matrix_parts(x) {
+        let k = nrow.min(ncol);
+        let mut out = Vec::with_capacity(k);
+        for i in 0..k {
+            out.push(data.get_value(i * nrow + i).unwrap_or_else(na_real));
+        }
+        return Ok(SValue::doubles(out));
+    }
+
+    let d = x.as_double()?;
+    let nrow_a = dim_arg(args, "nrow", 1);
+    let ncol_a = dim_arg(args, "ncol", 2);
+
+    // A single number with no explicit shape → identity of that order.
+    if d.len() == 1 && nrow_a.is_none() && ncol_a.is_none() {
+        let v = d.get_value(0).unwrap_or_else(na_real);
+        if !v.is_finite() || v < 0.0 {
+            return Err(SError::BadArgs(
+                "diag: the dimension must be a finite, non-negative number".into(),
+            ));
+        }
+        let n = v as usize;
+        return identity_matrix(n);
+    }
+
+    // A vector → a diagonal matrix. The shape is `nrow × ncol`, defaulting to a
+    // square of the vector's length; diagonal entries are recycled from `d`.
+    let len = d.len();
+    let nrow = nrow_a.unwrap_or(len);
+    let ncol = ncol_a.unwrap_or(nrow);
+    let total = nrow
+        .checked_mul(ncol)
+        .filter(|&t| t <= MAX_SEQ_LEN)
+        .ok_or_else(|| SError::Index(format!("diag: matrix too large (limit {MAX_SEQ_LEN})")))?;
+    let src = d.data();
+    let mut out = vec![0.0; total];
+    let k = nrow.min(ncol);
+    for i in 0..k {
+        // Recycle the diagonal values; an empty `d` leaves zeros (R uses NA, but
+        // `diag(numeric(0))` is a degenerate case — keep it simple and safe).
+        out[i * nrow + i] = if len == 0 { na_real() } else { src[i % len] };
+    }
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow,
+        ncol,
+    })
+}
+
+/// Build the `n × n` identity matrix, bounded by `MAX_SEQ_LEN`.
+fn identity_matrix(n: usize) -> SResult<SValue> {
+    let total = n
+        .checked_mul(n)
+        .filter(|&t| t <= MAX_SEQ_LEN)
+        .ok_or_else(|| SError::Index(format!("diag: matrix too large (limit {MAX_SEQ_LEN})")))?;
+    let mut out = vec![0.0; total];
+    for i in 0..n {
+        out[i * n + i] = 1.0;
+    }
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow: n,
+        ncol: n,
+    })
+}
+
+/// Shared engine for the four margin reductions. `by_row` selects rows vs
+/// columns; `mean` divides by the (non-`NA`, when `na.rm`) count. Reads an
+/// `na.rm` named argument (default `FALSE`).
+fn margin_reduce(args: &[Arg], by_row: bool, mean: bool) -> SResult<SValue> {
+    let x = first_positional(args)?;
+    let (data, nrow, ncol) = matrix_parts(x).ok_or_else(|| {
+        SError::TypeError(format!("'x' must be a matrix (got {})", x.type_name()))
+    })?;
+    let na_rm = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("na.rm"))
+        .map(|a| a.value.truthy().unwrap_or(false))
+        .unwrap_or(false);
+
+    let s = data.data();
+    let count = if by_row { nrow } else { ncol };
+    let span = if by_row { ncol } else { nrow };
+    let mut out = vec![0.0; count];
+    for (k, slot) in out.iter_mut().enumerate() {
+        let mut acc = 0.0;
+        let mut n_used = 0usize;
+        let mut saw_na = false;
+        for j in 0..span {
+            // Row k: element (k, j) at j*nrow + k. Column k: (j, k) at k*nrow + j.
+            let v = if by_row {
+                s[j * nrow + k]
+            } else {
+                s[k * nrow + j]
+            };
+            if is_na_real(v) {
+                if na_rm {
+                    continue;
+                }
+                saw_na = true;
+                break;
+            }
+            acc += v;
+            n_used += 1;
+        }
+        *slot = if saw_na {
+            na_real()
+        } else if mean {
+            if n_used == 0 {
+                f64::NAN // mean of nothing — matches R's NaN
+            } else {
+                acc / n_used as f64
+            }
+        } else {
+            acc
+        };
+    }
+    Ok(SValue::doubles(out))
+}
+
+/// `rowSums(x)` — the sum of each row of matrix `x` (with `na.rm`).
+fn b_row_sums(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    margin_reduce(args, true, false)
+}
+
+/// `colSums(x)` — the sum of each column.
+fn b_col_sums(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    margin_reduce(args, false, false)
+}
+
+/// `rowMeans(x)` — the mean of each row.
+fn b_row_means(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    margin_reduce(args, true, true)
+}
+
+/// `colMeans(x)` — the mean of each column.
+fn b_col_means(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    margin_reduce(args, false, true)
+}
+
+/// One column-bind/row-bind source: its column-major data and shape. A bare
+/// vector is carried as an `n × 1` (cbind) or `1 × n` (rbind) block by the
+/// caller's interpretation of `is_matrix`.
+struct BindSource {
+    data: Double,
+    nrow: usize,
+    ncol: usize,
+    is_matrix: bool,
+}
+
+/// Collect the positional arguments of `cbind`/`rbind` as bind sources: each is
+/// either a real matrix or a vector (carried as length × 1, flagged
+/// `is_matrix = false` so the binder knows it may be recycled).
+fn bind_sources(args: &[Arg]) -> SResult<Vec<BindSource>> {
+    let mut sources = Vec::new();
+    for arg in args.iter().filter(|a| a.name.is_none()) {
+        if let Some((data, nrow, ncol)) = matrix_parts(&arg.value) {
+            sources.push(BindSource {
+                data: data.clone(),
+                nrow,
+                ncol,
+                is_matrix: true,
+            });
+        } else if matches!(arg.value, SValue::Null) {
+            continue; // NULL contributes nothing, as in R
+        } else {
+            let d = arg.value.as_double()?;
+            let n = d.len();
+            sources.push(BindSource {
+                data: d,
+                nrow: n,
+                ncol: 1,
+                is_matrix: false,
+            });
+        }
+    }
+    Ok(sources)
+}
+
+/// `cbind(…)` — bind vectors and matrices as columns. The common row count is
+/// the largest source height; shorter **vectors** are recycled, but a **matrix**
+/// whose row count differs is an error. The all-empty call is `NULL`.
+fn b_cbind(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let sources = bind_sources(args)?;
+    if sources.is_empty() {
+        return Ok(SValue::Null);
+    }
+    let nrow = sources.iter().map(|s| s.nrow).max().unwrap_or(0);
+    let ncol: usize = sources.iter().map(|s| s.ncol).sum();
+    let total = nrow
+        .checked_mul(ncol)
+        .filter(|&t| t <= MAX_SEQ_LEN)
+        .ok_or_else(|| SError::Index(format!("cbind: result too large (limit {MAX_SEQ_LEN})")))?;
+    let mut out = vec![0.0; total];
+    let mut col = 0usize;
+    for src in &sources {
+        if src.is_matrix && src.nrow != nrow {
+            return Err(SError::BadArgs(format!(
+                "cbind: number of rows of matrices must match ({} != {nrow})",
+                src.nrow
+            )));
+        }
+        let s = src.data.data();
+        let src_rows = src.nrow.max(1); // guard a 0-length vector (recycle base)
+        for c in 0..src.ncol {
+            for r in 0..nrow {
+                // Recycle short vectors down their rows; matrices index directly.
+                let value = if src.nrow == 0 {
+                    na_real()
+                } else {
+                    s[c * src.nrow + (r % src_rows)]
+                };
+                out[col * nrow + r] = value;
+            }
+            col += 1;
+        }
+    }
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow,
+        ncol,
+    })
+}
+
+/// `rbind(…)` — bind vectors and matrices as rows. The common column count is the
+/// largest source width; shorter **vectors** are recycled across columns, but a
+/// **matrix** whose column count differs is an error. The all-empty call is
+/// `NULL`.
+fn b_rbind(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let mut sources = bind_sources(args)?;
+    if sources.is_empty() {
+        return Ok(SValue::Null);
+    }
+    // A bare vector is one ROW here, so reinterpret its `n × 1` as `1 × n`.
+    for src in &mut sources {
+        if !src.is_matrix {
+            src.ncol = src.nrow;
+            src.nrow = 1;
+        }
+    }
+    let ncol = sources.iter().map(|s| s.ncol).max().unwrap_or(0);
+    let nrow: usize = sources.iter().map(|s| s.nrow).sum();
+    let total = nrow
+        .checked_mul(ncol)
+        .filter(|&t| t <= MAX_SEQ_LEN)
+        .ok_or_else(|| SError::Index(format!("rbind: result too large (limit {MAX_SEQ_LEN})")))?;
+    let mut out = vec![0.0; total];
+    let mut row = 0usize;
+    for src in &sources {
+        if src.is_matrix && src.ncol != ncol {
+            return Err(SError::BadArgs(format!(
+                "rbind: number of columns of matrices must match ({} != {ncol})",
+                src.ncol
+            )));
+        }
+        let s = src.data.data();
+        let src_cols = src.ncol.max(1);
+        for r in 0..src.nrow {
+            for c in 0..ncol {
+                // Matrix element (r, c) at c*src.nrow + r; a recycled vector row
+                // reads column c modulo its length.
+                let value = if src.ncol == 0 {
+                    na_real()
+                } else if src.is_matrix {
+                    s[c * src.nrow + r]
+                } else {
+                    s[c % src_cols]
+                };
+                out[c * nrow + (row + r)] = value;
+            }
+        }
+        row += src.nrow;
+    }
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow,
+        ncol,
+    })
+}
+
+/// Read a square matrix argument, rejecting NA, non-square, and over-`MAX_SOLVE_DIM`
+/// cases up front. Returns the column-major data and the order `n`.
+fn square_matrix(value: &SValue, who: &str) -> SResult<(Vec<f64>, usize)> {
+    let (data, nrow, ncol) = matrix_parts(value)
+        .ok_or_else(|| SError::TypeError(format!("{who}: 'a' must be a matrix")))?;
+    if nrow != ncol {
+        return Err(SError::BadArgs(format!(
+            "{who}: 'a' must be square ({nrow}x{ncol})"
+        )));
+    }
+    if nrow > MAX_SOLVE_DIM {
+        return Err(SError::Index(format!(
+            "{who}: matrix too large ({nrow}x{ncol}; limit {MAX_SOLVE_DIM})"
+        )));
+    }
+    Ok((data.data().to_vec(), nrow))
+}
+
+/// `det(a)` — the determinant of a square matrix, via LU (Gaussian elimination
+/// with partial pivoting). `NA` anywhere makes the result `NA`; a singular matrix
+/// has determinant `0`.
+fn b_det(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (mut a, n) = square_matrix(first_positional(args)?, "det")?;
+    if a.iter().any(|x| is_na_real(*x)) {
+        return Ok(SValue::scalar(na_real()));
+    }
+    if n == 0 {
+        return Ok(SValue::scalar(1.0)); // det of the 0×0 matrix is 1, as in R
+    }
+    let mut det = 1.0;
+    for k in 0..n {
+        // Partial pivot: the largest-magnitude entry in column k, rows k..n.
+        let mut pivot = k;
+        let mut best = a[k * n + k].abs();
+        for i in (k + 1)..n {
+            let v = a[k * n + i].abs();
+            if v > best {
+                best = v;
+                pivot = i;
+            }
+        }
+        if a[k * n + pivot] == 0.0 {
+            return Ok(SValue::scalar(0.0)); // singular
+        }
+        if pivot != k {
+            for c in 0..n {
+                a.swap(c * n + k, c * n + pivot);
+            }
+            det = -det;
+        }
+        let diag = a[k * n + k];
+        det *= diag;
+        for i in (k + 1)..n {
+            let f = a[k * n + i] / diag;
+            if f != 0.0 {
+                for c in k..n {
+                    a[c * n + i] -= f * a[c * n + k];
+                }
+            }
+        }
+    }
+    Ok(SValue::scalar(det))
+}
+
+/// `solve(a)` → the inverse of `a`; `solve(a, b)` → the `x` solving `a %*% x = b`
+/// (`b` a vector → an `n`-vector result, or a matrix → an `n × m` result), via
+/// Gauss–Jordan elimination with partial pivoting. A singular `a` is an error.
+fn b_solve(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let (a, n) = square_matrix(first_positional(args)?, "solve")?;
+    if a.iter().any(|x| is_na_real(*x)) {
+        return Err(SError::BadArgs("solve: NA in 'a'".into()));
+    }
+
+    // The right-hand side: the second positional `b`, else the identity (inverse).
+    // `b_is_vector` decides whether to return a vector or a matrix.
+    let (b, m, b_is_vector) = match nth_positional(args, 1) {
+        Some(b_val) => {
+            if let Some((bd, bnr, bnc)) = matrix_parts(b_val) {
+                if bnr != n {
+                    return Err(SError::BadArgs(format!(
+                        "solve: 'b' must have {n} rows (got {bnr})"
+                    )));
+                }
+                (bd.data().to_vec(), bnc, false)
+            } else {
+                let bd = b_val.as_double()?;
+                if bd.len() != n {
+                    return Err(SError::BadArgs(format!(
+                        "solve: 'b' must have length {n} (got {})",
+                        bd.len()
+                    )));
+                }
+                (bd.data().to_vec(), 1, true)
+            }
+        }
+        None => {
+            let mut id = vec![0.0; n * n];
+            for i in 0..n {
+                id[i * n + i] = 1.0;
+            }
+            (id, n, false)
+        }
+    };
+    if b.iter().any(|x| is_na_real(*x)) {
+        return Err(SError::BadArgs("solve: NA in 'b'".into()));
+    }
+
+    let x = gauss_jordan(a, n, b, m)?;
+    if b_is_vector {
+        Ok(SValue::doubles(x))
+    } else {
+        Ok(SValue::Matrix {
+            data: Double::from_values(x),
+            nrow: n,
+            ncol: m,
+        })
+    }
+}
+
+/// Solve `a x = b` for `x` by Gauss–Jordan elimination with partial pivoting.
+/// `a` is `n × n` and `b` is `n × m`, both column-major; the returned `x` is
+/// `n × m` column-major. A singular `a` is a clean error, never a panic.
+fn gauss_jordan(mut a: Vec<f64>, n: usize, mut b: Vec<f64>, m: usize) -> SResult<Vec<f64>> {
+    for k in 0..n {
+        // Partial pivot for numerical stability.
+        let mut pivot = k;
+        let mut best = a[k * n + k].abs();
+        for i in (k + 1)..n {
+            let v = a[k * n + i].abs();
+            if v > best {
+                best = v;
+                pivot = i;
+            }
+        }
+        if best == 0.0 {
+            return Err(SError::BadArgs("solve: matrix is exactly singular".into()));
+        }
+        if pivot != k {
+            for c in 0..n {
+                a.swap(c * n + k, c * n + pivot);
+            }
+            for c in 0..m {
+                b.swap(c * n + k, c * n + pivot);
+            }
+        }
+        // Eliminate column k from every other row.
+        let diag = a[k * n + k];
+        for i in 0..n {
+            if i == k {
+                continue;
+            }
+            let f = a[k * n + i] / diag;
+            if f != 0.0 {
+                for c in k..n {
+                    a[c * n + i] -= f * a[c * n + k];
+                }
+                for c in 0..m {
+                    b[c * n + i] -= f * b[c * n + k];
+                }
+            }
+        }
+    }
+    // Normalize each pivot row to 1.
+    for k in 0..n {
+        let diag = a[k * n + k];
+        for c in 0..m {
+            b[c * n + k] /= diag;
+        }
+    }
+    Ok(b)
 }
 
 // ===========================================================================

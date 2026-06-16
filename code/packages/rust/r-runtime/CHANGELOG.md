@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-06-16
+
+### Added (via the shared `s-runtime`)
+
+- **R-12 — matrix linear algebra**: `diag()`, `rowSums`/`colSums`/`rowMeans`/
+  `colMeans` (with `na.rm`), `cbind()`/`rbind()`, and `solve()`/`det()`. See
+  `s-runtime` 0.8.0.
+
 ## [0.6.0] - 2026-06-16
 
 ### Added (via the shared `s-runtime`)
