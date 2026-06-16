@@ -17,6 +17,7 @@ members = [
     "audio-device-sink",
     "actor",
     "arithmetic",
+    "array-runtime",
     "arm-simulator",
     "array-core",
     "assembler",
