@@ -119,6 +119,8 @@ measure tran vmax MAX V(out)
 meas dc imax MAX I(V1)
 fourier 1k V(out)
 four 2k V(in)
+set noaskquit
+set filetype=ascii
 run
 quit
 .endc
@@ -143,11 +145,13 @@ quit
         (".include", 2, "error"),
         (".lib", 3, "error"),
         (".control", 4, "error"),
+        (".control", 14, "error"),
     ]
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_CONTROL_COMMAND",
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
     assert [
@@ -225,6 +229,7 @@ measure tran vmax MAX V(a)
 meas dc imax MAX I(V1)
 fourier 1k V(a)
 four 2k V(b)
+.set noaskquit
 run
 .quit
 .endc

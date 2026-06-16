@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `set noaskquit` UI options as no-op control
+  commands in `analyzeDeckControls` and `resolveDeckSources`, matching Python
+  and Rust.
 - Accept selected `.control` block `quit` interpreter-exit markers as no-op
   control commands in `analyzeDeckControls` and `resolveDeckSources`, matching
   Python and Rust.

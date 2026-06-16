@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck control noaskquit option routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `set noaskquit` UI options as no-op control commands instead
+  of reporting unsupported-command diagnostics, matching Rust and TypeScript.
+
 - **Deck control quit marker routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
   `.control` block `quit` interpreter-exit markers as no-op control commands
