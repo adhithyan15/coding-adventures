@@ -112,6 +112,16 @@ unchanged.
   in the shared evaluator (`eval_pipe`) — it inserts the left value as the first
   argument of the right-hand call, left-associatively, so `x |> f() |> g()` is
   `g(f(x))`. A bare `x |> f` (RHS not a call) is an error, as in R.
+- **R-10 — higher-order functionals** *(this PR)*. The functional-programming
+  toolkit that pairs with the R-9 `\(x)` lambdas, in the shared `s-runtime`:
+  `Map(f, …)` (zip several sequences element-wise → a list, recycling to the
+  longest), `mapply(f, …)` (same, simplified to a vector), `Reduce(f, x[, init])`
+  (left fold), `Filter(f, x)` (keep elements where `f` is true), and
+  `vapply(x, f, template)` (`sapply` with a result-shape check). Like
+  `sapply`/`lapply` they invoke the function through `Interpreter::call_value`.
+  The function is taken by name (`f =`/`FUN =`) or as the first callable
+  positional, and the data are the other positionals — so they compose with the
+  pipe: `1:5 |> Filter(f = \(x) x %% 2 == 0) |> Reduce(f = \(a, b) a + b)`.
 
 ## §4 Reuse strategy
 

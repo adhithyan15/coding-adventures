@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-06-16
+
+### Added
+
+- **Higher-order functionals (R-10)** — `Map`, `mapply`, `Reduce`, `Filter`,
+  `vapply`, pairing with the R-9 `\(x)` lambdas. `Map(f, …)`/`mapply(f, …)` zip
+  several sequences element-wise (recycling to the longest; Map → list, mapply →
+  vector); `Reduce(f, x[, init])` left-folds; `Filter(f, x)` keeps elements where
+  `f` is true (preserving list-vs-vector); `vapply(x, f, template)` is `sapply`
+  with a per-element result-shape check. They invoke the function via
+  `Interpreter::call_value`, taking it by name (`f =`/`FUN =`) or as the first
+  callable positional, so they compose with the `|>` pipe.
+
 ## [0.5.0] - 2026-06-16
 
 ### Added
