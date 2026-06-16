@@ -18,26 +18,33 @@
 //!    graph and is handed to `matrix-runtime`'s cost-based planner, which places
 //!    each op on the cheapest available backend (CPU/CUDA/Metal) from a FLOP +
 //!    transfer cost model. The placement is observable via
-//!    [`accel::plan_backend`], so the dispatch decision is tested today — even
-//!    though *executing* the placed graph through a real GPU executor is a later
-//!    MA item. Until then the reference path guarantees correct results and the
-//!    planner integration guarantees the dispatch decision is right. When the
-//!    execution layer lands, compute switches from the reference path to the
-//!    planned graph with **no public API change**.
+//!    [`accel::plan_backend`], so the dispatch decision is tested.
+//!
+//! 3. **[`exec`]** — end-to-end execution (MA-2). [`execute`] plans the lowered
+//!    graph and **runs it** through `matrix-cpu`'s executor, returning real
+//!    results from the same pipeline a GPU would use. The reference path in
+//!    [`ops`] remains the exact-`f64` answer (`matrix-ir` has no `f64` dtype
+//!    yet); executed results match it to `f32` precision.
 //!
 //! ```
-//! use coding_adventures_array_runtime::{Array, ops};
+//! use coding_adventures_array_runtime::{Array, ops, execute, Kernel, BinOp};
 //!
 //! let a = Array::from_rows(vec![vec![1.0, 2.0], vec![3.0, 4.0]]).unwrap();
 //! let b = Array::eye(2);
-//! let c = ops::matmul(&a, &b).unwrap(); // a · I == a
+//! let c = ops::matmul(&a, &b).unwrap(); // reference path: a · I == a
 //! assert_eq!(c.data(), a.data());
+//!
+//! // The same op, executed end-to-end on the CPU executor.
+//! let runtime = execute(Kernel::MatMul, &a, &b).unwrap();
+//! assert_eq!(runtime.shape(), a.shape());
 //! ```
 
 pub mod accel;
+pub mod exec;
 pub mod ops;
 pub mod value;
 
 pub use accel::{plan_backend, Kernel};
+pub use exec::execute;
 pub use ops::BinOp;
 pub use value::Array;

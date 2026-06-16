@@ -3,6 +3,38 @@
 All notable changes to `array-runtime` are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] — 2026-06-16
+
+**MA-2 — end-to-end execution.** MA-1 planned the lowered graph and produced
+values from the CPU reference path; MA-2 closes the loop by **running** the
+planned graph through `matrix-cpu`'s `CpuExecutor`.
+
+### Added — the `exec` module
+
+- `execute(kernel, &a, &b) -> Result<Array, String>`: plans the lowered
+  `matrix-ir` graph and executes the placed `ComputeGraph` on the CPU executor,
+  returning real numeric results — the same pipeline a GPU would use. Covers
+  elementwise `add`/`sub`/`mul`/`div` (equal shapes) and `matmul` (`[m,k]·[k,n]`).
+- Internal `run_graph_on_cpu` orchestrator (allocate one buffer per planner
+  buffer-id → rewrite residencies → upload constants/inputs → `Dispatch` →
+  download outputs), adapted from the established Rust/Python binding loop.
+- Two boundary conversions: **precision** (`f64` ↔ `f32` little-endian bytes,
+  since `matrix-ir` has no `f64` dtype) and **memory order** (column-major ↔
+  row-major; elementwise passes through, `matmul` transposes operands in and the
+  result out). `MAX_TOTAL_BUFFER_BYTES` (4 GiB) caps a crafted graph's footprint
+  before any allocation.
+- `execute` re-exported at the crate root.
+
+Every executed result is cross-checked against the `ops` reference path in tests,
+so the two can't silently diverge. `transpose`, the reductions, scalar-broadcast
+execution, and real GPU executor crates remain for follow-ups.
+
+### Tests
+
+38 tests (37 unit + 1 doctest); the `exec` suite proves elementwise + `matmul`
+execute and agree with the reference path (incl. a `matmul` layout round-trip
+`a · I == a` and non-square shapes), plus orchestrator validation paths.
+
 ## [0.1.0] — 2026-06-16
 
 Initial release — **MA-1**, Wave 0 of the historical math-languages roadmap
