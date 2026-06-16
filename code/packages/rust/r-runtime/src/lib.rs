@@ -266,4 +266,41 @@ mod tests {
         // A pathological size is a clean error through R, not a hang.
         assert!(eval_r("rbinom(1000000, 1000000, 0.5)\n").is_err());
     }
+
+    // --- R-9: native pipe |> and backslash lambda -----------------------
+
+    #[test]
+    fn native_pipe_desugars_to_a_call() {
+        // `x |> f()` is `f(x)`.
+        assert_eq!(nums("c(3, 1, 2) |> sort()\n"), vec![1.0, 2.0, 3.0]);
+        assert_eq!(nums("16 |> sqrt()\n"), vec![4.0]);
+        // The piped value is the FIRST argument; later args follow.
+        assert_eq!(nums("3 |> rep(times = 2)\n"), vec![3.0, 3.0]);
+    }
+
+    #[test]
+    fn pipes_chain_left_to_right() {
+        // `1:3 |> rev() |> sum()` is `sum(rev(1:3))` = 6.
+        assert_eq!(nums("1:4 |> rev() |> head(2)\n"), vec![4.0, 3.0]);
+        assert_eq!(show("c(1, 2, 3) |> sum()\n"), "[1] 6");
+    }
+
+    #[test]
+    fn pipe_rhs_must_be_a_call() {
+        // A bare name on the right of `|>` is an error, as in R.
+        assert!(eval_r("5 |> sqrt\n").is_err());
+    }
+
+    #[test]
+    fn backslash_lambda_is_a_function() {
+        // `\(x) body` is shorthand for `function(x) body`.
+        assert_eq!(nums("(\\(x) x + 1)(5)\n"), vec![6.0]);
+        assert_eq!(nums("sq <- \\(x) x ^ 2\nsq(4)\n"), vec![16.0]);
+        // It composes with the apply family and the pipe.
+        assert_eq!(nums("sapply(1:3, \\(n) n * n)\n"), vec![1.0, 4.0, 9.0]);
+        assert_eq!(
+            nums("1:3 |> sapply(\\(n) n + 10)\n"),
+            vec![11.0, 12.0, 13.0]
+        );
+    }
 }

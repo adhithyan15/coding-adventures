@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-06-16
+
+### Added
+
+- **R-9 tokens**: `PIPE_OP` (`|>`, the native pipe) and `BACKSLASH` (`\`, the
+  lambda introducer `\(x) …`). `|>` is the only `|`-introduced operator in this
+  subset.
+
 ## [0.1.0] - 2026-06-16
 
 ### Added

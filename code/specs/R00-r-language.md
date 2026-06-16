@@ -103,6 +103,15 @@ unchanged.
   total-iteration budget (`MAX_DISCRETE_WORK` ≈ 134M) over `len·driver` /
   `n·per-sample`. `rbinom(1e6, 1e6, …)` and `ppois(1e18, …)` are clean errors,
   never hangs.
+- **R-9 — modern R 4.1+ syntax** *(this PR)*. The **native pipe** `|>`
+  (`x |> f(a)` is `f(x, a)`) and the **backslash lambda** `\(x) x + 1` (shorthand
+  for `function(x) x + 1`). New `PIPE_OP`/`BACKSLASH` tokens in `r.tokens`; a
+  `pipe` rule at the special-operator precedence level and a `\(…)` alternative
+  added to `func_def` in `r.grammar`. The lambda *reuses the existing `func_def`
+  evaluation unchanged* (same `param_list`/body children); the pipe is desugared
+  in the shared evaluator (`eval_pipe`) — it inserts the left value as the first
+  argument of the right-hand call, left-associatively, so `x |> f() |> g()` is
+  `g(f(x))`. A bare `x |> f` (RHS not a call) is an error, as in R.
 
 ## §4 Reuse strategy
 

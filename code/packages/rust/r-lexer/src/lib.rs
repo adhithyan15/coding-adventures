@@ -234,4 +234,18 @@ mod tests {
                                               // `0x1FL` is one token, not split.
         assert_eq!(lex_nl("0x1FL\n").len(), 1);
     }
+
+    // --- R-9: the native pipe and the backslash lambda ------------------
+
+    #[test]
+    fn pipe_operator_and_backslash_lambda() {
+        // `|>` is one token, not `|` + `>`.
+        let p = lex_nl("x |> f()\n");
+        pair(&p, 0, "NAME", "x");
+        pair(&p, 1, "PIPE_OP", "|>");
+        // `\` is the lambda introducer.
+        let l = lex_nl("\\(x) x\n");
+        pair(&l, 0, "BACKSLASH", "\\");
+        pair(&l, 1, "LPAREN", "(");
+    }
 }
