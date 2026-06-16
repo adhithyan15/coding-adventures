@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.0
+
+**Date/time format codes.** A code whose first section uses date/time field
+letters (`y`/`m`/`d`/`h`/`s` outside quotes) is now parsed as a date/time format
+and applied to the value as an Excel-1900 serial date (integer = days, fraction
+= time of day). Numeric formats are unchanged.
+
+- Tokens: `yyyy`/`yy`, `mmmm`/`mmm`/`mm`/`m` (month), `dddd`/`ddd`/`dd`/`d` (day &
+  weekday name), `hh`/`h`, `mm`/`m` (minute), `ss`/`s`, `AM/PM`, `A/P`, plus
+  separators and `\`/`"…"` literals.
+- The `m`-overload is resolved by context: minutes when next to an hours or
+  seconds token (`hh:mm`, `mm:ss`), month otherwise (`yyyy-mm`).
+- 12-hour clock auto-selected when `AM/PM` or `A/P` is present.
+- Serial decomposition (serial → Y/M/D, time components, weekday) delegates to
+  `datetime-core` (new path dependency). A serial outside the representable
+  range renders `######`, as a spreadsheet does.
+- Internals: `NumberFormat` now holds a `FormatKind` (General / Numeric /
+  DateTime); the numeric path is unchanged (all 16 numeric tests still green).
+- 5 new tests (date fields, 24h/12h time, the `m` month-vs-minute rule, the
+  out-of-range `######`, and a quoted-letter-stays-numeric case).
+
 ## 0.1.0
 
 Initial release — a pure-Rust Layer-1 core that formats numbers per Excel /
