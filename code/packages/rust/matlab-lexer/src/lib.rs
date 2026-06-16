@@ -24,11 +24,14 @@
 //! [pre-tokenize hook](GrammarLexer::add_pre_tokenize) resolves it *before* the
 //! grammar runs ([`protect_quotes`]): transpose quotes are left as bare `'`
 //! (lexed as `TRANSPOSE`), and each char-array literal is rewritten to a
-//! `` `N` `` backtick placeholder (lexed as `CHARARRAY` → `STRING`). Backtick is
-//! not a MATLAB token, so it only ever appears as that placeholder. A
-//! post-tokenize hook ([`restore_quotes`]) swaps the placeholder back for the
-//! original source text. The same pre-pass splices `...` line continuations and
-//! a sibling pre-pass ([`strip_block_comments`]) removes `%{ %}` blocks.
+//! `` `N` `` backtick placeholder (lexed as the distinct token `CHARARRAY`).
+//! Backtick is not a MATLAB token, so it only ever appears as that placeholder.
+//! A post-tokenize hook ([`restore_quotes`]) replaces each `CHARARRAY` token
+//! with the decoded char-array content and re-labels it `STRING` — keying off
+//! the *type*, not the value, so a double-quoted string whose content looks like
+//! a placeholder is never mistaken for one. The same pre-pass splices `...` line
+//! continuations and a sibling pre-pass ([`strip_block_comments`]) removes
+//! `%{ %}` blocks.
 //!
 //! ## The inverted newline rule
 //!
@@ -211,20 +214,30 @@ fn decode_char_array(raw: &str) -> String {
     inner.replace("''", "'")
 }
 
-/// Swap each `` `N` `` placeholder STRING token back for the decoded content of
-/// the original char-array lexeme recorded in `table`.
+/// Replace each `CHARARRAY` placeholder token with the decoded content of the
+/// original char-array lexeme recorded in `table`, then re-label it `STRING` so
+/// downstream sees char arrays and double-quoted strings uniformly. Restoration
+/// keys off the distinct `CHARARRAY` *type*, never the value — so a crafted
+/// double-quoted string whose content happens to look like `` `N` `` is never
+/// mistaken for a placeholder.
 fn restore_quotes(mut tokens: Vec<Token>, table: &LiteralTable) -> Vec<Token> {
     let lits = table.borrow();
     for tok in &mut tokens {
-        if tok.effective_type_name() == "STRING" {
-            let v = &tok.value;
-            if let Some(inner) = v.strip_prefix('`').and_then(|s| s.strip_suffix('`')) {
+        if tok.effective_type_name() == "CHARARRAY" {
+            if let Some(inner) = tok
+                .value
+                .strip_prefix('`')
+                .and_then(|s| s.strip_suffix('`'))
+            {
                 if let Ok(idx) = inner.parse::<usize>() {
                     if let Some(orig) = lits.get(idx) {
                         tok.value = decode_char_array(orig);
                     }
                 }
             }
+            // Present a char array as a STRING, like the double-quoted form.
+            tok.type_ = TokenType::String;
+            tok.type_name = Some("STRING".to_string());
         }
     }
     tokens
@@ -364,6 +377,19 @@ mod tests {
         pair(&lex("\"hello\"\n"), 0, "STRING", "hello");
         // A `'` inside a double-quoted string is just text, not a transpose.
         pair(&lex("\"it's\"\n"), 0, "STRING", "it's");
+    }
+
+    #[test]
+    fn double_quoted_string_resembling_a_placeholder_is_not_restored() {
+        // Regression: a crafted double-quoted string whose content looks like the
+        // internal `` `N` `` placeholder must survive verbatim — restoration keys
+        // off the distinct CHARARRAY type, not the value. (Earlier some real
+        // char arrays are present so index 0 exists in the table.)
+        let p = lex("a = 'x'; b = \"`0`\"\n");
+        // The last STRING token is the double-quoted one; it must stay `0`,
+        // NOT be replaced by the char array 'x'.
+        let last_string = p.iter().rev().find(|(t, _)| t == "STRING").unwrap();
+        assert_eq!(last_string.1, "`0`");
     }
 
     // --- Element-wise vs matrix operators -------------------------------

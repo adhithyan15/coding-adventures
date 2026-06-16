@@ -46,12 +46,15 @@ OR_OR   = "||"
 # SECTION 2: String-like literals
 #
 # CHARARRAY is the backtick placeholder the pre-tokenize hook emits for a
-# single-quoted char array (`'abc'`, `'it''s'`); its value is restored to the
-# original text by the post-tokenize hook. DQ_STRING is the modern double-quoted
-# string with the `""` escape. Both alias to STRING.
+# single-quoted char array (`'abc'`, `'it''s'`). It is deliberately NOT aliased
+# to STRING: the post-tokenize hook restores it (decoding the literal and then
+# re-labelling the token to STRING). Keeping it a distinct type means a crafted
+# double-quoted string whose *content* looks like a placeholder (e.g. "`5`")
+# can never be mistaken for one. DQ_STRING is the modern double-quoted string
+# with the `""` escape; it aliases to STRING directly.
 # ============================================================================
 
-CHARARRAY = /`[0-9]+`/ -> STRING
+CHARARRAY = /`[0-9]+`/
 DQ_STRING = /"([^"]|"")*"/ -> STRING
 
 # ============================================================================
