@@ -71,11 +71,20 @@ ORGANISM_ID = [
 ]
 
 
-def teacher_vignette(teacher: str, findings: list[dict], surfaces: dict) -> str:
+def teacher_vignette(teacher: str, findings: list[dict], surfaces: dict,
+                     distractors: list[tuple[str, str]] | None = None) -> str:
+    distractors = distractors or []
+    distractor_ask = ""
+    if distractors:
+        # Ask the teacher to weave in the incidental detail(s) verbatim-ish, so the
+        # gold `discard` span can be located in the prose (teaches set-aside w/ reason).
+        ds = "; ".join(f'"{p}"' for p, _ in distractors)
+        distractor_ask = (f" Also include, verbatim or nearly so, this incidental "
+                          f"non-diagnostic detail: {ds}.")
     if not findings:
         ask = ("Write a realistic 1-2 sentence clinical vignette of a patient being "
                "evaluated for headache/meningitis that states NO specific CSF lab "
-               "findings (e.g. only chief complaint / demographics, labs pending).")
+               "findings (e.g. only chief complaint / demographics, labs pending)." + distractor_ask)
     else:
         lines = []
         for f in findings:
@@ -88,7 +97,8 @@ def teacher_vignette(teacher: str, findings: list[dict], surfaces: dict) -> str:
         ask = ("Write a realistic 2-4 sentence clinical vignette for a meningitis workup "
                "that states EXACTLY these findings and no other CSF lab findings. Vary the "
                "wording naturally; you may add ONE non-diagnostic sentence (age, chief "
-               "complaint). Do NOT name a diagnosis.\n\nFINDINGS:\n" + "\n".join(lines))
+               "complaint). Do NOT name a diagnosis." + distractor_ask
+               + "\n\nFINDINGS:\n" + "\n".join(lines))
     body = json.dumps({"model": teacher, "prompt": ask, "stream": False,
                        "options": {"temperature": 0.7, "num_predict": 220}}).encode()
     req = urllib.request.Request(OLLAMA, data=body, headers={"Content-Type": "application/json"})
@@ -134,6 +144,91 @@ def sample_findings(rng: random.Random) -> list[dict]:
     return findings
 
 
+# Non-diagnostic DISTRACTORS — incidental details a vignette may carry that look
+# informative but map to NO controlled-vocabulary finding. We ask the teacher to
+# include one, then record it in the gold `discard` (span + reason) so the model learns
+# to set it aside with a justification rather than hallucinate a finding from it.
+DISTRACTORS = [
+    ("blood pressure 128/82 mmHg", "vital sign, not a meningitis CSF/host finding"),
+    ("works as a high-school teacher", "social history, not a controlled-vocabulary finding"),
+    ("took acetaminophen for the headache", "symptomatic medication, not a diagnostic finding"),
+    ("no known drug allergies", "negative allergy history, not a meningitis finding"),
+    ("drove himself to the emergency department", "logistical detail, not a clinical finding"),
+    ("last ate breakfast around 8 a.m.", "incidental history, not a diagnostic finding"),
+]
+
+
+def _norm(s: str) -> str:
+    """Lowercase + collapse whitespace — for substring matching prose against a phrase
+    (mirrors the framework's verify_citation normalization)."""
+    return " ".join(s.lower().split())
+
+
+def find_span(vignette: str, phrases: list[str]) -> str:
+    """Return the VERBATIM substring of `vignette` (original case) that supports a
+    finding — the first of `phrases` (surface forms / hint / its `/`-split or word
+    fragments) that appears in the vignette, normalized. "" if none does. This is the
+    byte-provenance: a finding's span must be an actual slice of the source prose."""
+    nv = _norm(vignette)
+    cands: list[str] = []
+    for p in phrases:
+        if not p:
+            continue
+        cands.append(p)
+        cands.extend(part.strip() for part in p.split("/"))           # "a / b" alternatives
+    vl = vignette.lower()
+    # longest first — prefer the most specific phrase that still matches.
+    for cand in sorted({c for c in cands if len(c) >= 4}, key=len, reverse=True):
+        nc = _norm(cand)
+        if nc not in nv:
+            continue
+        # Map the normalized hit back to a TIGHT original-case slice: anchor on the
+        # first word, then extend to the end of the last word (handles whitespace that
+        # normalization collapsed, without swallowing trailing punctuation/text).
+        words = nc.split()
+        lo = vl.find(words[0])
+        if lo == -1:
+            continue
+        end = vl.find(words[-1], lo) + len(words[-1])
+        if end <= lo:
+            continue
+        return vignette[lo:end]
+    return ""
+
+
+def build_gold_ir(vignette: str, findings: list[dict], distractors: list[tuple[str, str]],
+                  surfaces: dict) -> dict:
+    """Construct the gold IR with BYTE PROVENANCE + DISCARD + INFERENCE justification.
+
+    For each sampled finding, locate its supporting span in the prose: a verbatim span
+    → `type:"stated"` + an ENTAILED inference justification; no verbatim span (teacher
+    paraphrased past recognition) → `type:"inferred"` + a LEAP justification (which
+    ir_to_adj then drops — the safe behavior). Each distractor that appears in the prose
+    becomes a `discard` {span, reason}. The gold finding keeps functor/value/polarity
+    (what the rulebook consumes) AND adds term/span/type (the provenance the prompt asks
+    for) — additive, so downstream ir_to_adj is unaffected."""
+    gold_findings, inferences = [], []
+    for f in findings:
+        functor, value = f["functor"], f["value"]
+        phrases = [f.get("hint")] + list(surfaces.get(functor, [])) + [value.replace("_", " ")]
+        span = find_span(vignette, phrases)
+        denied = f.get("polarity") == "denied"
+        ftype = "stated" if span else "inferred"
+        term = f"{functor}({value})"
+        gold_findings.append({"functor": functor, "value": value, "term": term,
+                              "span": span, "type": ftype,
+                              "polarity": "denied" if denied else "affirmed"})
+        inferences.append({"term": term, "basis_span": span,
+                           "verdict": "ENTAILED" if span else "LEAP"})
+    discard = []
+    for phrase, reason in distractors:
+        dspan = find_span(vignette, [phrase])
+        if dspan:
+            discard.append({"span": dspan, "reason": reason})
+    return {"findings": gold_findings, "discard": discard,
+            "inference_justifications": inferences}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=300)
@@ -148,19 +243,22 @@ def main() -> int:
     records = []
     for i in range(args.n):
         findings = sample_findings(rng)
+        # Inject 0-2 non-diagnostic distractors so a third of vignettes carry a red
+        # herring the gold must DISCARD (with a reason) rather than turn into a finding.
+        distractors = rng.sample(DISTRACTORS, rng.choice([0, 0, 1, 1, 2]))
         try:
-            vignette = teacher_vignette(args.teacher, findings, surfaces)
+            vignette = teacher_vignette(args.teacher, findings, surfaces, distractors)
         except Exception as e:  # noqa: BLE001
             print(f"  [{i}] teacher error: {e}", file=sys.stderr)
             continue
         if not vignette or len(vignette) < 20:
             continue
         user = decompose_mod.prompt_for(vignette, d)
-        # The gold IR carries only the typed fields — the generation-time `hint` (used to
-        # steer the teacher's phrasing) must NOT leak into the label the model learns.
-        gold_findings = [{"functor": f["functor"], "value": f["value"], "polarity": f["polarity"]}
-                         for f in findings]
-        gold = {"findings": gold_findings, "discard": [], "inference_justifications": []}
+        # The gold IR is derived from the prose with BYTE PROVENANCE: build_gold_ir locates
+        # each finding's supporting span (ENTAILED) or marks it inferred/LEAP, and records
+        # any distractor that landed in the prose as a justified discard. The generation-time
+        # `hint` steers the teacher's phrasing but never leaks into the label.
+        gold = build_gold_ir(vignette, findings, distractors, surfaces)
         records.append({"messages": [{"role": "user", "content": user},
                                      {"role": "assistant", "content": json.dumps(gold)}]})
         if (i + 1) % 25 == 0:
