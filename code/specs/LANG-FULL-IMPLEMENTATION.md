@@ -143,9 +143,11 @@ multiple languages; close an enabler before the features that depend on it.
       `u8`, not magnitude-`u4`); `compile_binary_chain` emits the narrow `type_hint` on arith/
       bitwise ops (`i64` for cmp). **Executed cross-backend matrix proof**: `200u8+100u8` →
       `if x==44 {1} else {0}` returns **1**, and `6*7` returns **42**, on all 7 backends
-      (native/LLVM/WASM/JVM/CLR/VM/JIT). N6 ✅. **N3-`~` still deferred** (lowers to IIR `not`,
-      which LLVM lacks); **N7** (`+%`/`+?`) ✅ (nib-iir-compiler 0.15.0); **Oct O2** remains.
-      **E2 integration complete.**
+      (native/LLVM/WASM/JVM/CLR/VM/JIT). N6 ✅. **N7** (`+%`/`+?`) ✅ (nib-iir-compiler 0.15.0).
+      **`iir-to-llvm` 0.12.0 now lowers the IIR `not` op** (synthesised as `xor x, -1`,
+      narrow-masked) — the last backend that lacked it — so **N3-`~` and Oct O2-`~` are
+      unblocked** (flip pending in a follow-up: `compile_unary` → IIR `not`). **E2 integration
+      complete.**
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
   literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
   already emit f64 ops; extend the rest.)*
@@ -185,8 +187,9 @@ backend immediately) come before the enabler-dependent items.
   → 42 across every backend.
 - ◑ **N3** — bitwise `&` `|` `^` ✅ (lower to existing IIR `and`/`or`/`xor`; verified by RUNNING
   `12 & 10`→8, `12 | 3`→15, `6 ^ 5`→3 across native/LLVM/WASM/JVM/CLR/VM/JIT — also fixed a CLR
-  textual-`.il` gap in `iir-to-cil-bytecode` 0.19.0). Unary `~` ☐ — still deferred; a correct
-  width-mask needs enabler **E2** (`~x` on a u8 flips 8 bits, not 64).
+  textual-`.il` gap in `iir-to-cil-bytecode` 0.19.0). Unary `~` ☐ — **unblocked**: E2 width-masks
+  are done and `iir-to-llvm` 0.12.0 now lowers the IIR `not` op (the last backend that lacked it,
+  `xor x, -1` then mask, so `~0u8 = 255`). Flip pending: route `compile_unary` `~` → IIR `not`.
 - ✅ **N4** — `&&` / `||` short-circuit. `compile_short_circuit` lowers to a result slot
   guarded by `jmp_if_false`/`jmp`/`label` (portable subset — CLR textual path has no
   `jmp_if_true`); verified by RUNNING divide-by-zero short-circuit proofs (`1==2 && 84/0==0`

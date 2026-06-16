@@ -90,6 +90,7 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.9.0  | Byte-tape ops `alloc_bytes`→`@calloc`, `load_byte`/`store_byte` (zext/trunc at the byte boundary), `putchar`/`getchar` libc builtins, + slot-dest SSA rename. **Brainfuck runs on LLVM** (LANG-MATRIX LM-L Brainfuck). |
 | v0.10.0 | Reassigned **parameters** are promoted to i64 stack slots (initialised from the incoming argument, narrow args zext'd) — a parameter accumulated across a loop back-edge is no longer silently dropped (LANG-FULL — LLVM first-class). |
 | v0.11.0 | **Narrow unsigned arithmetic wraps mod-2ⁿ** (LANG-FULL E2). A `u4`/`u8`/`u16`/`u32` op computes at i64 then `and i64 …, <mask>` (see below). Adds `u4` to the supported types. |
+| v0.12.0 | **Bitwise `not`** — synthesised as `xor x, -1` (LLVM has no `not`); a narrow width masks the result (`~0u8 = 255`). Unblocks Nib N3-`~` / Oct O2-`~`. |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Byte-tape memory (v0.9.0)
