@@ -243,6 +243,7 @@ members = [
     "pipeline",
     "progress-bar",
     "r-lexer",
+    "r-parser",
     "r-vector",
     "riscv-simulator",
     "rom-bios",

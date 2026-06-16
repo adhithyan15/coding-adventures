@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-r-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser for the R language (an implementation of the S language)"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-r-lexer = { path = "../r-lexer" }
