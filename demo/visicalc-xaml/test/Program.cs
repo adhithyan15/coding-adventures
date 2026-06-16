@@ -88,5 +88,43 @@ using (var s = new SpreadsheetSession())
     Check("window Z1000 after edit", s.Window(1000, 26, 1000, 26)[0][0], "139");
 }
 
+// ── Infinite-view binding layer (InfiniteSheetModel) ─────────────
+// The model the WinUI InfiniteSheet view drives: one engine read per visible
+// row via RowCells, tap-to-select via SelectInf (loading the cell's source into
+// the formula bar), and write-through via CommitInf (recompute + regrow extent).
+using (var inf = new InfiniteSheetModel())
+{
+    // The constructor seeds the budget PLUS far-flung cells (Z1000, BA50/BB50)
+    // and computes the extent: at least 1000×60, grown to reach the far cells.
+    Check("inf totalRows >= 1000", (inf.TotalRows >= 1000).ToString(), "True");
+    Check("inf totalCols >= 60", (inf.TotalCols >= 60).ToString(), "True");
+
+    // RowCells returns one row's display strings (columns 1..TotalCols).
+    var row1 = inf.RowCells(1);
+    Check("inf rowCells width", (row1.Count == inf.TotalCols).ToString(), "True");
+    Check("inf rowCells A1", row1[0], "15");
+    Check("inf rowCells E1", row1[4], "38");  // SUM(A1:D1)
+    Check("inf rowCells J1 empty", row1[9], ""); // sparse
+    bool gapBlank = true;
+    foreach (var c in inf.RowCells(200)) if (c.Length != 0) gapBlank = false;
+    Check("inf gap row blank", gapBlank.ToString(), "True");
+
+    // SelectInf loads the cell SOURCE (A5 is a formula) and clamps to the grid.
+    inf.SelectInf(5, 1);
+    Check("inf select A5 addr", inf.InfAddress, "A5");
+    Check("inf select A5 formula", inf.Formula, "=SUM(A1:A4)");
+    inf.SelectInf(-3, 0); // clamps to (1,1)
+    Check("inf clamp row", inf.SelRow.ToString(), "1");
+    Check("inf clamp col", inf.SelCol.ToString(), "1");
+
+    // CommitInf writes through and recomputes every dependent.
+    inf.SelectInf(2, 1);          // A2
+    inf.CommitInf("108");         // 8 -> 108
+    Check("inf commit A2", inf.RowCells(2)[0], "108");
+    Check("inf commit E2", inf.RowCells(2)[4], "151"); // 108+14+7+22
+    Check("inf commit A5", inf.RowCells(5)[0], "139"); // 15+108+12+4
+    Check("inf commit E5", inf.RowCells(5)[4], "269"); // grand total
+}
+
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");
 return failures == 0 ? 0 : 1;

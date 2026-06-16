@@ -60,6 +60,26 @@ public partial class MainWindow : Window
         WireGrid();
     }
 
+    // ── View toggle ───────────────────────────────────────────────
+    // Swap between the classic 5×5 cross-foot budget (the generated FormulaBar +
+    // Grid) and the virtualized infinite sheet (InfiniteSheet, rendered on the
+    // same engine via the viewport primitive). The infinite view owns its own
+    // model + chrome, so we just flip visibilities.
+    private bool _infinite;
+
+    private void ToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+        _infinite = !_infinite;
+        var classic = _infinite ? Visibility.Collapsed : Visibility.Visible;
+        FormulaBarControl.Visibility = classic;
+        SheetGrid.Visibility = classic;
+        InfiniteView.Visibility = _infinite ? Visibility.Visible : Visibility.Collapsed;
+        TitleText.Text = _infinite
+            ? "VISICALC · INFINITE SHEET · RUST ENGINE"
+            : "VISICALC · MOSAIC XAML DEMO";
+        ToggleButton.Content = _infinite ? "Classic grid" : "Infinite sheet";
+    }
+
     // ── FormulaBar ────────────────────────────────────────────────
 
     private void WireFormulaBar()
