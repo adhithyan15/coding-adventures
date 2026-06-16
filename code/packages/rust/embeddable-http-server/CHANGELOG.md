@@ -10,11 +10,17 @@
   decouples handler concurrency from the I/O thread (unlike `ShardedHttpServer`,
   which is parallel *by connection*). The platform (kqueue/epoll/IOCP) is selected
   internally, so it is cross-platform with no per-OS binds. Scope (WEB01b-1a):
-  **one in-flight request per connection** — after submitting, the connection
-  `defer_read`s and the response router resumes reads once the response is
-  written, which sidesteps HTTP/1.1 pipelined-response **ordering** (no reorder
-  buffer; that is WEB01b-1b). Pool-queue-full sheds load with a 503 (backpressure).
-  New test `mailbox_http_server_handles_requests_concurrently` deterministically
+  each framed request is submitted to the pool as it arrives and the router
+  writes responses back as workers finish — correct and in order for
+  one-request-and-close and *sequential* keep-alive (at most one request in
+  flight, so the unordered pool cannot reorder). Gating a *pipelined* connection
+  to one in-flight request and reordering the pool's responses into HTTP/1.1 wire
+  order needs a per-connection reorder buffer and is WEB01b-1b. (We deliberately
+  do **not** use `stream-reactor`'s `defer_read`: it *replays* the deferred chunk
+  on resume, which corrupts framing for bytes the handler already consumed —
+  re-feeding a TCP-fragmented tail caused a spurious `400` before the real
+  response under load.) Pool-queue-full sheds load with a 503 (backpressure). New
+  test `mailbox_http_server_handles_requests_concurrently` deterministically
   proves single-reactor pool parallelism (observed max in-flight handlers >= 2 —
   inline dispatch never exceeds 1). See `code/specs/WEB01b-mailbox-parallelism.md`.
 - **WEB01a-1: `ShardedHttpServer`** — a parallel counterpart to `HttpServer`.

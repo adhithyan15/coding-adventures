@@ -541,14 +541,19 @@ impl ShardedHttpServer<transport_platform::windows::WindowsTransportPlatform> {
 /// serialized response back to the originating connection. Handler concurrency is
 /// thereby decoupled from the I/O thread — parallel *by request*.
 ///
-/// **WEB01b-1a scope: one in-flight request per connection.** After submitting,
-/// the connection `defer_read`s (the framework pauses its reads); the pool's
-/// response-router resumes reads once the response is written. This sidesteps
-/// HTTP/1.1 pipelined-response **ordering** entirely — no reorder buffer (that is
-/// WEB01b-1b). Parallelism is across connections, bounded by `worker_count`;
-/// pipelined requests on one connection are served one-per-read-cycle. The
-/// platform (kqueue / epoll / IOCP) is selected internally by
-/// `EmbeddableTcpServer`, so this type is cross-platform with no per-OS binds.
+/// **WEB01b-1a scope.** Each framed request is submitted to the pool as it
+/// arrives, and the router writes responses back as workers finish. This serves
+/// one-request-and-close and *sequential* keep-alive correctly and in order
+/// (a sequential client has at most one request in flight at a time, so the
+/// unordered pool cannot reorder its responses). Gating a *pipelined* connection
+/// to one in-flight request — and reordering the pool's out-of-order responses
+/// into HTTP/1.1 wire order — needs a per-connection reorder buffer and is
+/// **WEB01b-1b**. (We intentionally do not use `stream-reactor`'s `defer_read`
+/// here: it replays the deferred chunk on resume, which would corrupt framing
+/// for bytes the handler already consumed — see the handler comment in `bind`.)
+/// Parallelism is across requests, bounded by `worker_count`. The platform
+/// (kqueue / epoll / IOCP) is selected internally by `EmbeddableTcpServer`, so
+/// this type is cross-platform with no per-OS binds.
 #[derive(Clone)]
 pub struct MailboxHttpServer {
     inner: EmbeddableTcpServer<HttpConnectionState>,
@@ -577,25 +582,55 @@ impl MailboxHttpServer {
             },
             // init — one HTTP connection state (buffer + limits) per connection.
             move |_info: TcpConnectionInfo| HttpConnectionState::new(&state_options),
-            // handler — frame ONE complete request, submit it as a job, and
-            // `defer_read` so no further request on this connection is processed
-            // until the response is written back (one in-flight per connection).
+            // handler — frame each complete request as it arrives and submit it as
+            // a job to the pool. The worker runs the handler off the reactor thread
+            // and the response router writes the reply back.
+            //
+            // Once the buffer holds no further complete request we return
+            // `default()` (keep reading) — deliberately NOT `defer_read()`. In
+            // `stream-reactor`, `defer_read` does not mean "pause output"; it means
+            // "I did NOT consume these bytes — replay this chunk when reads resume."
+            // Since we DID consume the bytes here (drained the buffer and submitted
+            // the jobs), returning `defer_read` would have the reactor replay the
+            // already-consumed chunk on the next `resume_all_reads()` (which fires
+            // for ANY connection's response), re-feeding a possibly TCP-fragmented
+            // tail into the buffer — corrupting framing (a duplicate submit, or a
+            // malformed-head 400 emitted before the real response). So we keep
+            // reading instead. This serves one-request-and-close and sequential
+            // keep-alive correctly and in order; gating a PIPELINED connection to
+            // one in-flight request (and reordering the unordered pool's responses)
+            // is WEB01b-1b's job — it needs a per-connection reorder buffer regardless.
             |info: TcpConnectionInfo, state: &mut HttpConnectionState, bytes: &[u8], submitter| {
                 state.buffer.extend_from_slice(bytes);
-                match state.pop_request(info) {
-                    Ok(Some(request)) => match submitter.submit(info.id, request) {
-                        Ok(_) => TcpHandlerResult::defer_read(),
-                        // Pool queue full → shed load with 503 (backpressure),
-                        // rather than buffering unboundedly.
-                        Err(_) => TcpHandlerResult::write_and_close(serialize_response(
-                            &HttpResponse::new(503, "Service Unavailable")
-                                .with_header("Content-Type", "text/plain")
-                                .close(),
-                        )),
-                    },
-                    Ok(None) => TcpHandlerResult::default(),
-                    Err(error) => {
-                        TcpHandlerResult::write_and_close(serialize_response(&error_response(error)))
+                // Drain EVERY complete request the read delivered — a single TCP
+                // read can carry more than one (coalesced segments, or a pipelined
+                // client). Calling `pop_request` only once would strand the extras
+                // in the buffer until the next read, hanging a client that sent them
+                // together and then waited. Each iteration submits one framed
+                // request; `pop_request` returns `Ok(None)` when only a partial
+                // request remains (keep reading) and `Err` on a malformed/oversize
+                // one (close with an error response).
+                loop {
+                    match state.pop_request(info) {
+                        Ok(Some(request)) => match submitter.submit(info.id, request) {
+                            // Keep draining any further buffered requests.
+                            Ok(_) => continue,
+                            // Pool queue full → shed load with 503 (backpressure),
+                            // rather than buffering unboundedly.
+                            Err(_) => {
+                                return TcpHandlerResult::write_and_close(serialize_response(
+                                    &HttpResponse::new(503, "Service Unavailable")
+                                        .with_header("Content-Type", "text/plain")
+                                        .close(),
+                                ))
+                            }
+                        },
+                        Ok(None) => return TcpHandlerResult::default(),
+                        Err(error) => {
+                            return TcpHandlerResult::write_and_close(serialize_response(
+                                &error_response(error),
+                            ))
+                        }
                     }
                 }
             },
@@ -1105,8 +1140,8 @@ mod tests {
     /// and records the max simultaneous handlers. A single reactor calling the
     /// handler inline could never exceed 1; observing >= 2 proves the pool runs
     /// handlers in parallel while the lone reactor keeps accepting connections.
-    /// One request per connection (`Connection: close`) respects 1a's
-    /// one-in-flight-per-connection model (no pipelining).
+    /// One request per connection (`Connection: close`) — 1a's supported case;
+    /// pipelined-response gating/ordering is WEB01b-1b.
     #[cfg(not(target_os = "windows"))]
     #[test]
     fn mailbox_http_server_handles_requests_concurrently() {
