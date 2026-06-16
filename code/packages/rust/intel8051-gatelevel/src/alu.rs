@@ -519,14 +519,19 @@ pub fn div8(a: u8, b: u8) -> (u8, u8, u8) {
     let mut quotient = 0u8;
     let mut remainder = a;
 
-    // Repeated subtraction: subtract B from remainder as long as remainder >= B
-    for _ in 0..256 {
+    // Maximum subtractions = 255 (0xFF / 0x01, the worst case for an 8-bit
+    // dividend divided by the smallest non-zero divisor).  The loop cap of
+    // 256 is therefore sufficient; the CY break fires on or before iteration
+    // 255, so iteration 256 is never reached in correct operation.
+    for _ in 0..256u32 {
         // Compare: remainder < b ?  Use subb8: if CY=1, remainder < b
         let cmp = subb8(remainder, b, 0);
         if cmp.cy != 0 {
             break; // remainder < b, done
         }
         remainder = cmp.result;
+        // quotient is bounded by 0xFF/1 = 255 — it cannot overflow here
+        debug_assert!(quotient < 255, "div8: quotient overflow; loop bound violated");
         let q_res = inc8(quotient);
         quotient = q_res.result;
     }

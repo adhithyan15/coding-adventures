@@ -114,9 +114,19 @@ impl Cpu8051 {
     }
 
     /// Load a program into code memory at `origin` and reset CPU state.
+    ///
+    /// Bytes that fall past address 0xFFFF are silently dropped.  In debug
+    /// builds an assertion fires if the program does not fit entirely within
+    /// the code space, making oversized loads visible during development.
     pub fn load(&mut self, program: &[u8], origin: u16) {
         self.reset();
         let start = origin as usize;
+        let available = 65536usize.saturating_sub(start);
+        debug_assert!(
+            program.len() <= available,
+            "load: program length {} exceeds available code space {} at origin {:#06x}",
+            program.len(), available, origin
+        );
         let end = (start + program.len()).min(65536);
         self.code[start..end].copy_from_slice(&program[..end - start]);
         self.rf.write_pc(origin);
@@ -300,8 +310,14 @@ impl Cpu8051 {
     // ── Stack helpers ─────────────────────────────────────────────────────────
 
     /// Push one byte: SP++; IRAM[SP] = val.
+    ///
+    /// On the real 8051 the SP wraps from 0xFF back to 0x00 silently,
+    /// corrupting the register banks (0x00-0x1F).  In debug builds this
+    /// assertion makes stack overflow visible instead of silently corrupting
+    /// state.
     fn push8(&mut self, val: u8) {
         let sp = self.rf.read_iram8(SFR_SP);
+        debug_assert!(sp != 0xFF, "push8: stack pointer overflow (SP wrapped 0xFF → 0x00)");
         let new_sp = inc8(sp).result; // gate-level increment
         self.rf.write_iram8(SFR_SP, new_sp);
         self.rf.write_iram8(new_sp, val);
