@@ -2655,3 +2655,35 @@ fn e2_concretized_u8_shape_is_all_int() {
     assert!(!code.contains(&LADD), "must be an int `iadd`, not a long `ladd`");
     assert!(!code.contains(&LRETURN), "must `ireturn` (int method), not `lreturn`");
 }
+
+/// BA-JVM-1 regression: a comparison over **`i64`** operands (BASIC keeps the
+/// long value model — it prints, so it skips the scalar `concretize`-to-i32
+/// pass) feeding a `jmp_if_false`. The comparison result is a 0/1 bool stored
+/// with `istore`, so its slot must be `int`; a later `jmp_if_false` must read it
+/// with `iload; ifeq`, NOT the long guard `lload; lconst_0; lcmp; ifeq`. Before
+/// the fix, `build_type_map` typed the cmp dest `Long` (from its `i64`
+/// *operand*-width hint), so it was `istore`d as int but `lload`ed as long → the
+/// JVM verifier rejected "Accessing value from uninitialized register pair".
+#[test]
+fn ba_jvm_1_i64_cmp_into_jmp_if_uses_int_guard() {
+    const LCONST_0: u8 = 0x09;
+    const LCMP: u8 = 0x94;
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("b".into()), vec![Operand::Int(5)], "i64"),
+        // i64-operand comparison → 0/1 bool result
+        IIRInstr::new("cmp_lt", Some("cond".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+        IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var("cond".into()), Operand::Var("done".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("done".into())], "void"),
+        IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+    ]);
+    let code = code_bytes(&lower(&module_with(f)));
+    // The buggy guard loads the bool as a long and compares to 0L
+    // (`lconst_0; lcmp`). The fixed guard is `iload; ifeq` (no lconst_0/lcmp on
+    // the cond). The cmp_lt over i64 operands DOES use `lcmp` to compare a and b,
+    // but never preceded by `lconst_0` — that pairing is unique to the bad guard.
+    assert!(!has_seq(&code, &[LCONST_0, LCMP]),
+        "the bool cond must be read with the int guard (iload; ifeq), not `lload; lconst_0; lcmp`");
+}

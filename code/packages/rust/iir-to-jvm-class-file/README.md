@@ -210,6 +210,14 @@ for non-closure paths (unlike the BEAM backend).
 | `f64`                                 | `D` (double)   | 2          |
 | `void`                                | `V` (void)     | 0          |
 
+A **comparison op** (`cmp_eq`/…/`cmp_ge`) is special-cased to an `int` dest slot
+regardless of its `type_hint`: the hint is the *operand* width, but a comparison
+always produces a 0/1 `int` (stored with `istore`). Without this, a comparison
+over `i64` operands got a `Long` slot, so a later `jmp_if_false` read it with the
+long guard (`lload; lconst_0; lcmp`) while it was `istore`d as int → the verifier
+rejected an "uninitialized register pair" (LANG-FULL BA-JVM-1, the BASIC `IF`/
+`FOR` programs over their i64 value model).
+
 ## Register allocation
 
 Variables are allocated to JVM local variable slots via a deterministic
