@@ -50,8 +50,9 @@ attribute and AST export markers to build the do-not-rename set.
     itself.
   - `cost = 3` — two-pass walk (collect bindings, then
     substitute) plus the name allocator.
-- `Pass::run` renames the **parameters of leaf functions** (function
-  declarations with no nested function in their body) to short names:
+- `Pass::run` renames the **uniquely-bound names of leaf functions** (parameters and
+  function-body var/let/const, in functions with no nested function) to short
+  names:
 
   ```js
   function f(longName) { return longName + 1; }
