@@ -175,10 +175,13 @@ is registered in `code/packages/rust/Cargo.toml` members.
   ranges (`a:b:c`), the operator-precedence cascade (element-wise vs matrix,
   transpose postfix, unary), indexing `A(i,j)`/`A(:,k)`/`A(end)`, and control
   flow.
-- **MA-3d — `matlab-runtime` + `matlab-repl` + the `matlab` binary.** A working
-  REPL: evaluate matrix expressions over `array-runtime`, with `*`→`execute`
-  (MatMul) and element-wise ops lowering to the substrate, 1-based indexing,
-  `ans =`/`x =` echo, and the core built-ins.
+- **MA-3d — `matlab-runtime` + `matlab-repl` + the `matlab` binary** *(done)*. A
+  working REPL: a tree-walking evaluator over `array-runtime` with `*`→`execute`
+  (MatMul) and element-wise ops on the `ops` reference path, 1-based column-major
+  indexing (`A(i)`, `A(i,j)`, `A(:,k)`, `A(end)`), matrix/range literals,
+  `if`/`for`/`while`, the `ans =`/`x =` echo, and the core built-ins. *Deferred:*
+  user `function` definitions, anonymous `@(x)`, cells, `switch`/`try` execution,
+  matrix solve/power, indexed and multi-assignment.
 - **MA-3e+ — Octave** (§5), then the wider built-in library, then APL/Maxima/
   Wolfram per [`HML00`](HML00-historical-math-languages-roadmap.md).
 
