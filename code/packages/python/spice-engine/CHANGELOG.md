@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck control run marker routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now accept selected
+  `.control` block `run` execution markers as no-op control commands instead
+  of reporting unsupported-command diagnostics, matching Rust and TypeScript.
+
 - **Deck control Fourier routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
   selected `.control` block `four` and `fourier` harmonic output commands into

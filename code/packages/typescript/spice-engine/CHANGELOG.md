@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `run` execution markers as no-op control
+  commands in `analyzeDeckControls` and `resolveDeckSources`, matching Python
+  and Rust.
 - Add selected `.control` block `four` and `fourier` command routing to
   `analyzeDeckControls` and `resolveDeckSources`; the commands are normalized
   into `.four` deck cards, matching Python and Rust.

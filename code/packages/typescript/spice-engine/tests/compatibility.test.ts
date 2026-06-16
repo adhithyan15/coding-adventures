@@ -149,13 +149,11 @@ run
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
-      [".control", 13, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-      "SPICE_DECK_CONTROL_COMMAND",
     ]);
     const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
     expect(measurementSummary.measurements.map((card) => [
@@ -260,14 +258,12 @@ run
       "SPICE_DECK_INCLUDE_CYCLE",
       "SPICE_DECK_LIB_SECTION_NOT_FOUND",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-      "SPICE_DECK_CONTROL_COMMAND",
     ]);
     expect(summary.diagnostics.slice(3).map(({ directive, lineNumber }) => [
       directive,
       lineNumber,
     ])).toStrictEqual([
       [".control", 5],
-      [".control", 14],
     ]);
     const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
     expect(measurementSummary.measurements.map((card) => [

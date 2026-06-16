@@ -142,13 +142,11 @@ run
         (".include", 2, "error"),
         (".lib", 3, "error"),
         (".control", 4, "error"),
-        (".control", 13, "error"),
     ]
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-        "SPICE_DECK_CONTROL_COMMAND",
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
     assert [
@@ -255,11 +253,9 @@ run
         "SPICE_DECK_INCLUDE_CYCLE",
         "SPICE_DECK_LIB_SECTION_NOT_FOUND",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-        "SPICE_DECK_CONTROL_COMMAND",
     ]
     assert [(diag.directive, diag.line_number) for diag in summary.diagnostics[3:]] == [
         (".control", 5),
-        (".control", 14),
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
     assert [

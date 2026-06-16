@@ -174,8 +174,7 @@ run
         vec![
             (".include", 2, "error"),
             (".lib", 3, "error"),
-            (".control", 4, "error"),
-            (".control", 13, "error")
+            (".control", 4, "error")
         ]
     );
     assert_eq!(
@@ -187,8 +186,7 @@ run
         vec![
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-            "SPICE_DECK_CONTROL_COMMAND"
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
         ]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
@@ -351,8 +349,7 @@ run
             "SPICE_DECK_INCLUDE_NOT_FOUND",
             "SPICE_DECK_INCLUDE_CYCLE",
             "SPICE_DECK_LIB_SECTION_NOT_FOUND",
-            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
-            "SPICE_DECK_CONTROL_COMMAND"
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
         ]
     );
     assert_eq!(
@@ -362,7 +359,7 @@ run
             .skip(3)
             .map(|diagnostic| (diagnostic.directive.as_str(), diagnostic.line_number))
             .collect::<Vec<_>>(),
-        vec![(".control", 5), (".control", 14)]
+        vec![(".control", 5)]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
     let measurement_summary = resolve_deck_measurements(&measurement_deck);

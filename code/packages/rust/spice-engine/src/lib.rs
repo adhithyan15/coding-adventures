@@ -3568,6 +3568,9 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
                 active_lines.push(control_line);
                 continue;
             }
+            if is_noop_control_block_command(stripped) {
+                continue;
+            }
             diagnostics.push(DeckControlDiagnostic {
                 code: "SPICE_DECK_CONTROL_COMMAND".to_string(),
                 directive: ".control".to_string(),
@@ -4364,6 +4367,9 @@ fn resolve_deck_lines(
             }
             if let Some(control_line) = control_block_command_as_deck_line(stripped) {
                 active_lines.push(control_line);
+                continue;
+            }
+            if is_noop_control_block_command(stripped) {
                 continue;
             }
             state.diagnostics.push(DeckResolutionDiagnostic {
@@ -6894,6 +6900,15 @@ fn control_block_command_as_deck_line(line: &str) -> Option<String> {
     } else {
         Some(format!("{directive} {rest}"))
     }
+}
+
+fn is_noop_control_block_command(line: &str) -> bool {
+    matches!(
+        line.split_whitespace()
+            .next()
+            .map(|command| command.to_ascii_lowercase()),
+        Some(command) if command == "run" || command == ".run"
+    )
 }
 
 fn is_unsupported_deck_control_directive(directive: &str) -> bool {
