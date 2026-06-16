@@ -80,8 +80,19 @@ unchanged.
   catastrophic backtracking), with a `fixed = TRUE` literal-match option and R
   back-reference translation (`\\1` → the crate's `${1}`). Invalid patterns
   return a clean error. *Deferred:* `regmatches`/`gregexpr`, `table`.
-- **R-8+** — the `d/p/q/r` distribution family (`rnorm`/`dnorm`/`pnorm`/`qnorm`,
-  `runif`, …) wired to `statistics-core`.
+- **R-8 — the `d/p/q/r` distribution family** *(this PR)*. The four-prefix
+  probability functions wired to `statistics-core`: density `d*`, cumulative
+  `p*` (CDF), quantile `q*` (inverse CDF), and random sampling `r*`, for the
+  closed-form continuous families **normal** (`dnorm`/`pnorm`/`qnorm`/`rnorm`,
+  defaults `mean = 0`, `sd = 1`), **uniform** (`dunif`/…/`runif`, `min = 0`,
+  `max = 1`), and **exponential** (`dexp`/…/`rexp`, `rate = 1`), plus
+  `set.seed(n)`. `d*`/`p*`/`q*` are vectorized over their first argument with
+  NA-propagation; parameters are read by name or position. `r*` draws from a
+  per-session RNG (R-compatible MT19937) held on the `Interpreter`, so
+  `set.seed(s); rnorm(n)` is reproducible; the sample count is capped at
+  `MAX_SEQ_LEN` so `rnorm(1e18)` errors instead of aborting. *Deferred (R-8b):*
+  the discrete families (`dbinom`/`dpois`/…), whose CDF/sampling loop over a
+  user-supplied count and need their own bounds.
 
 ## §4 Reuse strategy
 
