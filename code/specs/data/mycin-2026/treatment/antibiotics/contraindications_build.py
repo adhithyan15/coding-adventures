@@ -80,9 +80,19 @@ def _esc(s: str) -> str:
 # (moxifloxacin IS a fluoroquinolone) — not a clinical claim — so it needs no grounding.
 # ---------------------------------------------------------------------------
 
-# (drug token, class token) — definitional class membership.
+# (drug token, class token) — definitional class membership. A drug may hold MORE than one
+# class (e.g. a β-lactam subclass: ampicillin IS a penicillin AND a β-lactam) — list each.
 DRUG_CLASSES: list[tuple[str, str]] = [
     ("moxifloxacin", "fluoroquinolone"),
+    # β-lactam subclasses (CC-3b) — the formulary's β-lactam drugs by pharmacologic subclass.
+    # The subclass is what an allergy context keys on: a *penicillin* allergy excludes
+    # penicillins, NOT cephalosporins/carbapenems/monobactams (literature: cross-reactivity is
+    # R1-side-chain-driven, <1–2%, record ci_betalactam_sidechain_mechanism).
+    ("ampicillin", "penicillin"),
+    ("ceftriaxone", "cephalosporin"),
+    ("cefepime", "cephalosporin"),
+    ("meropenem", "carbapenem"),
+    ("aztreonam", "monobactam"),
 ]
 
 # Class-level contraindications: (grounding_id, class, context, authored_fallback_quote).
@@ -104,6 +114,26 @@ DRUG_CONTRA: list[tuple[str, str, str, str]] = [
     ("ci_tmpsmx_pregnancy", "tmp_smx", "pregnancy",
      "Trimethoprim-sulfamethoxazole is avoided in pregnancy (folate antagonism / risk of "
      "neural tube defects)."),
+]
+
+# DEFINITIONAL class-contraindications (CC-3b): (class, context). These are tautological —
+# "an allergy to a drug CLASS contraindicates that class" — so they carry no byte-quote
+# (rendered bare, like `has_class`). The clinically-INTERESTING, grounded claims are the
+# ABSENCES below: a `penicillin_allergy` does NOT exclude cephalosporins / carbapenems /
+# monobactams (record ci_betalactam_sidechain_mechanism: cross-reactivity is R1-side-chain-
+# driven, <1–2%; ci_aztreonam_safe_penicillin: monobactam negligible), so no rule is emitted
+# for those — the engine therefore leaves ceftriaxone/cefepime/meropenem/aztreonam AVAILABLE.
+#   penicillin_allergy   → excludes penicillins only.
+#   cephalosporin_allergy→ excludes cephalosporins only.
+#   betalactam_allergy   → an UNSPECIFIED/severe whole-class β-lactam allergy: conservatively
+#                          excludes penicillins + cephalosporins + carbapenems, but NOT
+#                          monobactams (aztreonam is the grounded safe choice in β-lactam allergy).
+DEFINITIONAL_CONTRA: list[tuple[str, str]] = [
+    ("penicillin", "penicillin_allergy"),
+    ("cephalosporin", "cephalosporin_allergy"),
+    ("penicillin", "betalactam_allergy"),
+    ("cephalosporin", "betalactam_allergy"),
+    ("carbapenem", "betalactam_allergy"),
 ]
 
 
@@ -236,6 +266,18 @@ def build(check: bool = False) -> int:
         block, entry = _contra_block("drug_contraindicated_in", drug, ctx, gid, authored, recs.get(gid))
         body.append(block)
         clauses[f"drug_contraindicated_in__{drug}__{ctx}"] = entry
+
+    body.append("")
+    body.append("    % --- DEFINITIONAL allergy class-contraindications (CC-3b) " + "-" * 15)
+    body.append("    % Tautological (allergy to a class excludes that class) → bare, like has_class.")
+    body.append("    % The grounded literature (ci_betalactam_sidechain_mechanism) justifies the")
+    body.append("    % ABSENCES: penicillin_allergy emits NO rule for cephalosporins/carbapenems/")
+    body.append("    % monobactams, so the engine leaves them AVAILABLE (cross-reactivity <1-2%).")
+    for klass, ctx in DEFINITIONAL_CONTRA:
+        body.append(f"    relate class_contraindicated_in({klass}, {ctx})")
+        clauses[f"class_contraindicated_in__{klass}__{ctx}"] = {
+            "relation": "class_contraindicated_in", "subject": klass, "context": ctx,
+            "verdict": "DEFINITIONAL", "trust": "definitional", "grounding_id": None}
 
     body.append(RULES.rstrip("\n"))
     body.append("}")
