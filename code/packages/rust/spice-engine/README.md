@@ -162,7 +162,9 @@ table for `.dc`, `.ac`, and `.tran` executions. Selected `.tran` plans route
 `START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
 an internal fixed-step cap, and `UIC` initial-condition intent through that
 stable transient table surface. They also return selected `.four` harmonic
-results and a stable Fourier table.
+results and a stable Fourier table. Executions also include selected-run
+artifact summaries plus `format_deck_run_artifact_table` output for stable
+result-row, output-probe, measurement, and Fourier counts.
 `resolve_deck_fourier`, `fourier_transient_cards`,
 `fourier_transient_deck`, and `format_deck_fourier_table` extract parsed
 `.four` / `.FOUR` cards before `.end` and route transient samples into the
@@ -204,5 +206,6 @@ malformed deck-level analysis controls.
 downstream deck execution helpers.
 `run_deck_analysis` routes that selected plan into the matching solver and
 stable deck-selected table output with normalized output-probe artifacts,
-selected measurement artifacts, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency
+selected measurement artifacts, selected transient Fourier artifacts,
+selected-run artifact summaries, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency
 grids, and `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.

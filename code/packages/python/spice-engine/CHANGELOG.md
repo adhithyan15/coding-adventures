@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck run artifact metadata** —
+  `run_deck_analysis()` now returns selected-run artifact summaries and a
+  stable run-artifact table with result-row, output-probe, measurement, and
+  Fourier counts, matching Rust and TypeScript.
+
 - **Deck Fourier artifact routing** —
   `run_deck_analysis()` now returns selected transient `.four` harmonic
   results and a stable Fourier table alongside the selected plan, solver
