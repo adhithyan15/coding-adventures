@@ -65,12 +65,14 @@ from typing import Literal
 from mosfet_models import MOSFET, Level1Model, Level1Params
 
 from spice_engine.compatibility import (
+    DeckAnalysisPlan,
     DeckFourierCard,
     DeckInitialConditionSummary,
     DeckMeasurementCard,
     DeckNodeCondition,
     resolve_deck_fourier,
     resolve_deck_measurements,
+    select_deck_analysis_plan,
     select_deck_output_probes,
 )
 from spice_engine.elements import (
@@ -2288,6 +2290,105 @@ def format_deck_transient_table(
     return format_transient_table(
         transient_result,
         select_deck_output_probes(netlist, "tran"),
+    )
+
+
+@dataclass(frozen=True)
+class DeckAnalysisExecution:
+    """A selected deck analysis plan plus its executed solver output."""
+
+    plan: DeckAnalysisPlan
+    result: DcResult | DcSweepResult | AcResult | TransientResult
+    table: str
+
+
+def run_deck_analysis(
+    circuit: Circuit,
+    netlist: str,
+    analysis: str | None = None,
+) -> DeckAnalysisExecution:
+    """Select one deck analysis card, execute it, and format deck-selected output."""
+
+    plan = select_deck_analysis_plan(netlist, analysis)
+    if plan.analysis == "op":
+        result = dc_op(circuit)
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=format_deck_op_table(result, netlist),
+        )
+    if plan.analysis == "dc":
+        source_name = _require_deck_plan_string(plan, "source_name")
+        start = _require_deck_plan_number(plan, "start_value")
+        stop = _require_deck_plan_number(plan, "stop_value")
+        step = _require_deck_plan_number(plan, "step_value")
+        result = dc_sweep(circuit, source_name, start, stop, step)
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=format_deck_dc_sweep_table(result, netlist),
+        )
+    if plan.analysis == "ac":
+        sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
+        if sweep_kind != "dec":
+            raise ValueError(
+                f"run_deck_analysis: line {plan.line_number}: "
+                f".ac {sweep_kind.upper()} execution is not supported yet"
+            )
+        point_count = _require_deck_plan_int(plan, "point_count")
+        start_frequency = _require_deck_plan_number(plan, "start_frequency")
+        stop_frequency = _require_deck_plan_number(plan, "stop_frequency")
+        result = ac_sweep(
+            circuit,
+            f_start=start_frequency,
+            f_stop=stop_frequency,
+            n_points=point_count,
+            sweep="log",
+        )
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=format_deck_ac_table(result, netlist),
+        )
+    if plan.analysis == "tran":
+        step_time = _require_deck_plan_number(plan, "step_time")
+        stop_time = _require_deck_plan_number(plan, "stop_time")
+        result = transient(circuit, t_step=step_time, t_stop=stop_time, method="euler")
+        return DeckAnalysisExecution(
+            plan=plan,
+            result=result,
+            table=format_deck_transient_table(result, netlist),
+        )
+    raise ValueError(f"run_deck_analysis: unsupported analysis {plan.analysis!r}")
+
+
+def _require_deck_plan_string(plan: DeckAnalysisPlan, field_name: str) -> str:
+    value = getattr(plan, field_name)
+    if isinstance(value, str) and value:
+        return value
+    raise ValueError(
+        f"run_deck_analysis: line {plan.line_number}: "
+        f"{plan.directive} analysis missing {field_name}"
+    )
+
+
+def _require_deck_plan_number(plan: DeckAnalysisPlan, field_name: str) -> float:
+    value = getattr(plan, field_name)
+    if isinstance(value, (float, int)):
+        return float(value)
+    raise ValueError(
+        f"run_deck_analysis: line {plan.line_number}: "
+        f"{plan.directive} analysis missing {field_name}"
+    )
+
+
+def _require_deck_plan_int(plan: DeckAnalysisPlan, field_name: str) -> int:
+    value = getattr(plan, field_name)
+    if isinstance(value, int):
+        return value
+    raise ValueError(
+        f"run_deck_analysis: line {plan.line_number}: "
+        f"{plan.directive} analysis missing {field_name}"
     )
 
 

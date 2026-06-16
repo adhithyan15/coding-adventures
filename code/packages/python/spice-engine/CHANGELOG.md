@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck analysis execution routing** —
+  `run_deck_analysis()` now selects one deck `.op`, `.dc`, `.ac DEC`, or
+  `.tran` plan, dispatches it into the matching solver, and returns the
+  selected plan, solver result, and deck-selected output table, matching Rust
+  and TypeScript.
+
 - **Deck analysis-plan selector** —
   `select_deck_analysis_plan()` now resolves one explicit or implicit deck
   analysis plan with stable ambiguity and invalid-card errors, matching Rust

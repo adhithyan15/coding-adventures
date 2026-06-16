@@ -19,21 +19,21 @@ use spice_engine::{
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, sample_transient_probe_as_digital_events,
+    pss_with_tolerance, run_deck_analysis, sample_transient_probe_as_digital_events,
     sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
     transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
     transient_with_digital_event_streams, transient_with_digital_event_streams_corners,
     transient_with_method, AdaptiveTransientOptions, AdaptiveTransientResult, Capacitor, Cccs,
     Ccvs, Circuit, CornerDistortionPoint, CornerDistortionResult, CornerOverride, CornerSpec,
-    CurrentSource, DigitalBridgeSchedule, DigitalEvent, DigitalEventStream, DigitalLogicLevels,
-    DigitalState, DigitalThresholds, DistortionHarmonic, DistortionPoint, DistortionResult,
-    Element, ExpWaveform, FourierHarmonic, FourierProbeResult, FourierResult, Inductor, Jfet,
-    JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind, PoleZeroResult,
-    PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult, PssNewtonSolveResult,
-    PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult, PssResult, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
-    TransmissionLine, VoltageSource, Waveform,
+    CurrentSource, DeckAnalysisExecutionResult, DigitalBridgeSchedule, DigitalEvent,
+    DigitalEventStream, DigitalLogicLevels, DigitalState, DigitalThresholds, DistortionHarmonic,
+    DistortionPoint, DistortionResult, Element, ExpWaveform, FourierHarmonic, FourierProbeResult,
+    FourierResult, Inductor, Jfet, JfetPolarity, MutualInductor, PoleZeroEntry, PoleZeroEntryKind,
+    PoleZeroResult, PoleZeroTopology, PssNewtonCandidateResult, PssNewtonIterationResult,
+    PssNewtonSolveResult, PssNewtonUpdateResult, PssResidualJacobianResult, PssResidualResult,
+    PssResult, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
+    TransientPoint, TransmissionLine, VoltageSource, Waveform,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -1847,6 +1847,69 @@ fn transient_deck_output_cards_select_table_probes() {
         table,
         "Index\tTime\tV(out)\tI(V1)\tV(clk)\n0\t0.000000e+00\t0.000000e+00\t-1.000000e-03\t0.000000e+00\n1\t1.000000e-03\t1.000000e+00\t-2.000000e-03\t5.000000e+00\n"
     );
+}
+
+#[test]
+fn run_deck_analysis_routes_selected_plan_and_output_table() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+    let netlist = "
+.save V(mid)
+.probe dc I(V1)
+.op
+.dc V1 0 1 1
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+";
+
+    let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
+    assert_eq!(op_execution.plan.analysis, "op");
+    assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
+
+    let dc_execution = run_deck_analysis(&circuit, netlist, Some("dc")).unwrap();
+    assert_eq!(dc_execution.plan.source_name.as_deref(), Some("V1"));
+    match dc_execution.result {
+        DeckAnalysisExecutionResult::DcSweep(points) => assert_eq!(points.len(), 2),
+        other => panic!("expected DC sweep result, got {other:?}"),
+    }
+    assert_eq!(
+        dc_execution.table,
+        "Index\tSource\tValue\tV(mid)\tI(V1)\n0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    );
+
+    let ac_execution = run_deck_analysis(&circuit, netlist, Some("ac")).unwrap();
+    match ac_execution.result {
+        DeckAnalysisExecutionResult::Ac(points) => assert_eq!(points.len(), 1),
+        other => panic!("expected AC result, got {other:?}"),
+    }
+    assert_eq!(
+        ac_execution.table,
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    );
+
+    let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
+    match tran_execution.result {
+        DeckAnalysisExecutionResult::Tran(points) => assert_eq!(points.len(), 1),
+        other => panic!("expected transient result, got {other:?}"),
+    }
+    assert_eq!(
+        tran_execution.table,
+        "Index\tTime\tV(mid)\n0\t1.000000e-03\t5.000000e-01\n"
+    );
+
+    let error = run_deck_analysis(&circuit, netlist, None).unwrap_err();
+    assert!(error.to_string().contains("multiple analysis cards"));
+    let error = run_deck_analysis(&circuit, ".ac lin 2 1 10\n.end\n", None).unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("LIN execution is not supported yet"));
 }
 
 #[test]

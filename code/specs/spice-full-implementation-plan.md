@@ -47,7 +47,9 @@ downstream tools to compare.
      analyses over transient outputs with optional `HARMONICS=` and `FROM=`
      controls; parsed `.op`, `.dc`, `.ac`, and `.tran` cards now resolve into
      shared cross-language analysis-plan metadata before execution, and callers
-     can select one explicit or implicit plan with stable ambiguity errors.
+     can select one explicit or implicit plan with stable ambiguity errors and
+     route `.op`, `.dc`, `.ac DEC`, or `.tran` into the matching solver plus
+     deck-selected table output.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -387,10 +389,22 @@ downstream tools to compare.
     - This gives deck execution helpers a deterministic single-plan bridge
       while leaving full selected-plan-to-solver dispatch in backlog.
 
+33. Selected deck analysis execution routing.
+    - Status: completed in this selected-plan execution routing slice.
+    - Python, Rust, and TypeScript now expose matching helpers that select one
+      deck analysis plan, execute `.op`, `.dc`, `.ac DEC`, or `.tran` against an
+      existing `Circuit`, and return the selected plan, solver result, and
+      deck-selected output table.
+    - The bridge preserves stable ambiguity and invalid-card diagnostics and
+      explicitly reports unsupported `.ac LIN` / `.ac OCT` execution modes for
+      future solver-grid expansion.
+
 ## Backlog
 
 1. Deck execution layer.
-   - Wire selected analysis-plan metadata into runnable solver executions.
+   - Expand selected-plan execution beyond `.ac DEC` and fixed-step transient
+     basics, including `.ac LIN` / `.ac OCT`, transient `START` / `MAXSTEP` /
+     `UIC` execution semantics, and richer deck-owned run artifacts.
    - Expand deck-controlled output-plan integration beyond stable table
      routing toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature

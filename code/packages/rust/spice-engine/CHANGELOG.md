@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `run_deck_analysis` so callers can select one deck `.op`, `.dc`,
+  `.ac DEC`, or `.tran` plan, execute the matching solver, and receive the
+  selected plan, solver result, and deck-selected output table, matching Python
+  and TypeScript.
 - Add `select_deck_analysis_plan` so callers can choose one explicit or
   implicit deck analysis plan with stable ambiguity and invalid-card errors,
   matching Python and TypeScript.

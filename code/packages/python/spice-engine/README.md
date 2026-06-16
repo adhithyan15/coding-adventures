@@ -100,6 +100,9 @@ for malformed arguments, unsupported AC sweep modes, invalid sweep intervals,
 and unresolved scalar expressions. `select_deck_analysis_plan()` picks one
 explicit card by analysis alias, defaults decks without analysis cards to an
 implicit `.op`, and reports ambiguity before solver dispatch.
+`run_deck_analysis()` executes one selected `.op`, `.dc`, `.ac DEC`, or
+`.tran` plan against an existing `Circuit` and returns the plan, solver result,
+and deck-selected output table.
 `resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save` and
 scoped or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `format_deck_op_table()`,
@@ -179,6 +182,8 @@ before `.end`, preserves non-analysis active lines, and reports stable
 diagnostics for malformed deck-level analysis controls.
 `select_deck_analysis_plan()` returns one selected or implicit plan for
 downstream deck execution helpers.
+`run_deck_analysis()` routes that selected plan into the matching solver and
+stable deck-selected table output.
 
 ## Controlled source examples
 

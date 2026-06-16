@@ -648,6 +648,18 @@ export interface DeckAnalysisSummary {
   readonly diagnostics: readonly DeckAnalysisDiagnostic[];
 }
 
+export type DeckAnalysisExecutionResult =
+  | DcResult
+  | readonly DcSweepPoint[]
+  | readonly AcPoint[]
+  | readonly TransientPoint[];
+
+export interface DeckAnalysisExecution {
+  readonly plan: DeckAnalysisPlan;
+  readonly result: DeckAnalysisExecutionResult;
+  readonly table: string;
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -7236,6 +7248,93 @@ export function formatDeckTransientTable(
 ): string {
   const probes = selectDeckOutputProbes(netlist, "tran");
   return probes.length === 0 ? formatTransientTable(points) : formatTransientTable(points, probes);
+}
+
+export function runDeckAnalysis(
+  circuit: Circuit,
+  netlist: string,
+  analysis?: string,
+): DeckAnalysisExecution {
+  const plan = selectDeckAnalysisPlan(netlist, analysis);
+  if (plan.analysis === "op") {
+    const result = dcOp(circuit);
+    return { plan, result, table: formatDeckOpTable(result, netlist) };
+  }
+  if (plan.analysis === "dc") {
+    const sourceName = requireDeckPlanString(plan.sourceName, plan, "sourceName");
+    const start = requireDeckPlanNumber(plan.startValue, plan, "startValue");
+    const stop = requireDeckPlanNumber(plan.stopValue, plan, "stopValue");
+    const step = requireDeckPlanNumber(plan.stepValue, plan, "stepValue");
+    const result = dcSweep(circuit, sourceName, start, stop, step);
+    return { plan, result, table: formatDeckDcSweepTable(sourceName, result, netlist) };
+  }
+  if (plan.analysis === "ac") {
+    const sweepKind = requireDeckPlanString(plan.sweepKind, plan, "sweepKind");
+    if (sweepKind !== "dec") {
+      throw invalidElement(
+        "runDeckAnalysis",
+        `line ${plan.lineNumber}: .ac ${sweepKind.toUpperCase()} execution is not supported yet`,
+      );
+    }
+    const pointCount = requireDeckPlanInteger(plan.pointCount, plan, "pointCount");
+    const startFrequencyHz = requireDeckPlanNumber(
+      plan.startFrequencyHz,
+      plan,
+      "startFrequencyHz",
+    );
+    const stopFrequencyHz = requireDeckPlanNumber(plan.stopFrequencyHz, plan, "stopFrequencyHz");
+    const result = acSweep(circuit, startFrequencyHz, stopFrequencyHz, pointCount);
+    return { plan, result, table: formatDeckAcTable(result, netlist) };
+  }
+  if (plan.analysis === "tran") {
+    const stepTime = requireDeckPlanNumber(plan.stepTime, plan, "stepTime");
+    const stopTime = requireDeckPlanNumber(plan.stopTime, plan, "stopTime");
+    const result = transient(circuit, stepTime, stopTime);
+    return { plan, result, table: formatDeckTransientTable(result, netlist) };
+  }
+  throw invalidElement("runDeckAnalysis", `unsupported analysis ${JSON.stringify(plan.analysis)}`);
+}
+
+function requireDeckPlanString(
+  value: string | undefined,
+  plan: DeckAnalysisPlan,
+  fieldName: string,
+): string {
+  if (value !== undefined && value.length > 0) {
+    return value;
+  }
+  throw invalidElement(
+    "runDeckAnalysis",
+    `line ${plan.lineNumber}: ${plan.directive} analysis missing ${fieldName}`,
+  );
+}
+
+function requireDeckPlanNumber(
+  value: number | undefined,
+  plan: DeckAnalysisPlan,
+  fieldName: string,
+): number {
+  if (value !== undefined && Number.isFinite(value)) {
+    return value;
+  }
+  throw invalidElement(
+    "runDeckAnalysis",
+    `line ${plan.lineNumber}: ${plan.directive} analysis missing ${fieldName}`,
+  );
+}
+
+function requireDeckPlanInteger(
+  value: number | undefined,
+  plan: DeckAnalysisPlan,
+  fieldName: string,
+): number {
+  if (value !== undefined && Number.isInteger(value)) {
+    return value;
+  }
+  throw invalidElement(
+    "runDeckAnalysis",
+    `line ${plan.lineNumber}: ${plan.directive} analysis missing ${fieldName}`,
+  );
 }
 
 export function formatCornerAcTable(

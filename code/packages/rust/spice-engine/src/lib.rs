@@ -3390,6 +3390,21 @@ pub struct DeckAnalysisSummary {
     pub diagnostics: Vec<DeckAnalysisDiagnostic>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub enum DeckAnalysisExecutionResult {
+    Op(DcResult),
+    DcSweep(Vec<DcSweepPoint>),
+    Ac(Vec<AcPoint>),
+    Tran(Vec<TransientPoint>),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckAnalysisExecution {
+    pub plan: DeckAnalysisPlan,
+    pub result: DeckAnalysisExecutionResult,
+    pub table: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
@@ -9395,6 +9410,130 @@ pub fn format_deck_transient_table(
     let probes = select_deck_output_probes(netlist, "tran")?;
     let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
     format_transient_table(points, &probe_refs)
+}
+
+pub fn run_deck_analysis(
+    circuit: &Circuit,
+    netlist: &str,
+    analysis: Option<&str>,
+) -> Result<DeckAnalysisExecution, SpiceError> {
+    let plan = select_deck_analysis_plan(netlist, analysis)?;
+    match plan.analysis.as_str() {
+        "op" => {
+            let result = dc_op(circuit)?;
+            let table = format_deck_op_table(&result, netlist)?;
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Op(result),
+                table,
+            })
+        }
+        "dc" => {
+            let source_name =
+                require_deck_plan_string(plan.source_name.as_deref(), &plan, "source_name")?
+                    .to_string();
+            let start = require_deck_plan_number(plan.start_value, &plan, "start_value")?;
+            let stop = require_deck_plan_number(plan.stop_value, &plan, "stop_value")?;
+            let step = require_deck_plan_number(plan.step_value, &plan, "step_value")?;
+            let result = dc_sweep(circuit, &source_name, start, stop, step)?;
+            let table = format_deck_dc_sweep_table(&source_name, &result, netlist)?;
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::DcSweep(result),
+                table,
+            })
+        }
+        "ac" => {
+            let sweep_kind =
+                require_deck_plan_string(plan.sweep_kind.as_deref(), &plan, "sweep_kind")?;
+            if sweep_kind != "dec" {
+                return Err(deck_plan_error(
+                    &plan,
+                    format!(
+                        ".ac {} execution is not supported yet",
+                        sweep_kind.to_ascii_uppercase()
+                    ),
+                ));
+            }
+            let point_count = require_deck_plan_usize(plan.point_count, &plan, "point_count")?;
+            let start =
+                require_deck_plan_number(plan.start_frequency_hz, &plan, "start_frequency_hz")?;
+            let stop =
+                require_deck_plan_number(plan.stop_frequency_hz, &plan, "stop_frequency_hz")?;
+            let result = ac_sweep(circuit, start, stop, point_count)?;
+            let table = format_deck_ac_table(&result, netlist)?;
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Ac(result),
+                table,
+            })
+        }
+        "tran" => {
+            let step_time = require_deck_plan_number(plan.step_time, &plan, "step_time")?;
+            let stop_time = require_deck_plan_number(plan.stop_time, &plan, "stop_time")?;
+            let result = transient(circuit, step_time, stop_time)?;
+            let table = format_deck_transient_table(&result, netlist)?;
+            Ok(DeckAnalysisExecution {
+                plan,
+                result: DeckAnalysisExecutionResult::Tran(result),
+                table,
+            })
+        }
+        _ => Err(SpiceError::InvalidElement {
+            name: "run_deck_analysis".to_string(),
+            reason: format!("unsupported analysis {:?}", plan.analysis),
+        }),
+    }
+}
+
+fn require_deck_plan_string<'a>(
+    value: Option<&'a str>,
+    plan: &DeckAnalysisPlan,
+    field_name: &str,
+) -> Result<&'a str, SpiceError> {
+    if let Some(value) = value {
+        if !value.is_empty() {
+            return Ok(value);
+        }
+    }
+    Err(deck_plan_error(
+        plan,
+        format!("{} analysis missing {field_name}", plan.directive),
+    ))
+}
+
+fn require_deck_plan_number(
+    value: Option<f64>,
+    plan: &DeckAnalysisPlan,
+    field_name: &str,
+) -> Result<f64, SpiceError> {
+    match value {
+        Some(value) if value.is_finite() => Ok(value),
+        _ => Err(deck_plan_error(
+            plan,
+            format!("{} analysis missing {field_name}", plan.directive),
+        )),
+    }
+}
+
+fn require_deck_plan_usize(
+    value: Option<usize>,
+    plan: &DeckAnalysisPlan,
+    field_name: &str,
+) -> Result<usize, SpiceError> {
+    value.ok_or_else(|| {
+        deck_plan_error(
+            plan,
+            format!("{} analysis missing {field_name}", plan.directive),
+        )
+    })
+}
+
+fn deck_plan_error(plan: &DeckAnalysisPlan, reason: String) -> SpiceError {
+    SpiceError::InvalidElement {
+        name: "run_deck_analysis".to_string(),
+        reason: format!("line {}: {reason}", plan.line_number),
+    }
 }
 
 pub fn format_corner_ac_table(
