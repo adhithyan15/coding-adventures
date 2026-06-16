@@ -141,6 +141,8 @@ packages a typed surface for:
   readiness into final archive recovery checks
 - Hue package release archive replay summaries that turn archive recovery
   readiness into final archive replay checks
+- Hue package release archive reconciliation summaries that turn archive replay
+  readiness into final archive reconciliation checks
 
 ## Dependencies
 

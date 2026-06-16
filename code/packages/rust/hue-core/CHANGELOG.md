@@ -101,6 +101,8 @@ All notable changes to this package will be documented in this file.
   readiness into final archive recovery checks.
 - Hue package release archive replay summaries that turn archive recovery
   readiness into final archive replay checks.
+- Hue package release archive reconciliation summaries that turn archive replay
+  readiness into final archive reconciliation checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
