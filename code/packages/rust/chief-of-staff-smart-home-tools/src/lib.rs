@@ -450,6 +450,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_RETENTION_TOOL_ID: &str 
     "smart_home.list_integration_activation_waiver_retention";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RETENTION_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_waiver_retention_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_EXPIRATIONS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_waiver_expirations";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_EXPIRATION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_waiver_expiration_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -1111,6 +1115,18 @@ impl SmartHomeToolBridge {
                     let query = integration_activation_waiver_retention_query(&arguments)?;
                     Ok(
                         get_integration_activation_waiver_retention_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_EXPIRATIONS_TOOL_ID => {
+                    let query = integration_activation_waiver_expiration_query(&arguments)?;
+                    Ok(list_integration_activation_waiver_expirations_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_EXPIRATION_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_waiver_expiration_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_waiver_expiration_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -3568,6 +3584,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation waiver retention summary",
             "Return compact D23A activation waiver retention counts by retention status, retention lane, source linkage, blocker, archive readiness, and retention readiness.",
             integration_activation_waiver_retention_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_EXPIRATIONS_TOOL_ID,
+            "List smart-home integration activation waiver expirations",
+            "List Chief-facing D23A activation waiver expiration rows derived from waiver retention records with expiration status, expiration lane, source-lineage posture, and expiration action.",
+            integration_activation_waiver_expiration_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_waiver_expirations", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_waiver_expirations",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_EXPIRATION_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation waiver expiration summary",
+            "Return compact D23A activation waiver expiration counts by expiration status, expiration lane, source linkage, blocker, retention readiness, and expired posture.",
+            integration_activation_waiver_expiration_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -10898,6 +10948,433 @@ struct IntegrationActivationWaiverRetentionQuery {
     retention_limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum IntegrationActivationWaiverExpirationStatus {
+    Blocked,
+    EvidenceRequired,
+    ReadyForExpiration,
+    Expired,
+}
+
+impl IntegrationActivationWaiverExpirationStatus {
+    fn from_retention_record(record: &IntegrationActivationWaiverRetentionRecord) -> Self {
+        if record.blocked || record.retention_status.is_blocked() {
+            Self::Blocked
+        } else if !record.has_source_lineage() || !record.retention_ready || !record.evidence_ready
+        {
+            Self::EvidenceRequired
+        } else if matches!(
+            record.retention_status,
+            IntegrationActivationWaiverRetentionStatus::ReadyForRetention
+        ) {
+            Self::ReadyForExpiration
+        } else {
+            Self::Expired
+        }
+    }
+
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocked => "blocked",
+            Self::EvidenceRequired => "evidence_required",
+            Self::ReadyForExpiration => "ready_for_expiration",
+            Self::Expired => "expired",
+        }
+    }
+
+    fn is_blocked(self) -> bool {
+        matches!(self, Self::Blocked)
+    }
+
+    fn requires_attention(self) -> bool {
+        matches!(self, Self::Blocked | Self::EvidenceRequired)
+    }
+
+    fn expiration_ready(self) -> bool {
+        matches!(self, Self::ReadyForExpiration | Self::Expired)
+    }
+
+    fn expired(self) -> bool {
+        matches!(self, Self::Expired)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationWaiverExpirationRecord {
+    sequence: usize,
+    expiration_id: String,
+    source_retention_id: String,
+    source_archive_id: String,
+    source_closure_id: String,
+    source_remediation_id: String,
+    source_disposition_id: String,
+    source_review_id: String,
+    source_waiver_id: String,
+    source_exception_id: String,
+    source_ledger_id: String,
+    source_attestation_id: String,
+    source_compliance_id: String,
+    source_governance_id: String,
+    source_assurance_id: String,
+    source_guardrail_id: String,
+    expiration_status: IntegrationActivationWaiverExpirationStatus,
+    retention_status: IntegrationActivationWaiverRetentionStatus,
+    archive_status: IntegrationActivationWaiverArchiveStatus,
+    closure_status: IntegrationActivationWaiverClosureStatus,
+    remediation_status: IntegrationActivationWaiverRemediationStatus,
+    disposition_status: IntegrationActivationWaiverDispositionStatus,
+    review_status: IntegrationActivationWaiverReviewStatus,
+    waiver_status: IntegrationActivationWaiverStatus,
+    exception_status: IntegrationActivationExceptionLedgerStatus,
+    expiration_lane: IntegrationActivationResponseOwnerLane,
+    retention_lane: IntegrationActivationResponseOwnerLane,
+    archive_lane: IntegrationActivationResponseOwnerLane,
+    closure_lane: IntegrationActivationResponseOwnerLane,
+    owner_lane: IntegrationActivationResponseOwnerLane,
+    approval_lane: IntegrationActivationResponseOwnerLane,
+    expiration_reason: String,
+    expiration_action: String,
+    retention_reason: String,
+    retention_action: String,
+    archive_reason: String,
+    archive_action: String,
+    closure_reason: String,
+    closure_action: String,
+    remediation_kind: String,
+    remediation_action: String,
+    disposition_reason: String,
+    disposition_action: String,
+    waiver_scope: String,
+    evidence_kind: String,
+    focus: IntegrationActivationGuardrailKind,
+    recommended_view: IntegrationActivationPlaybookView,
+    title: String,
+    summary: String,
+    priority: u8,
+    integration_ids: Vec<IntegrationId>,
+    required_tier: PrivilegeTier,
+    policy_surface: Option<IntegrationPolicySurface>,
+    reviewer_required: bool,
+    exception_required: bool,
+    signoff_required: bool,
+    evidence_ready: bool,
+    waiver_ready: bool,
+    review_ready: bool,
+    disposition_ready: bool,
+    closure_ready: bool,
+    archive_ready: bool,
+    retention_ready: bool,
+    expiration_ready: bool,
+    retained: bool,
+    expired: bool,
+    archived: bool,
+    blocked: bool,
+    requires_attention: bool,
+}
+
+impl IntegrationActivationWaiverExpirationRecord {
+    fn from_retention_record(
+        sequence: usize,
+        record: &IntegrationActivationWaiverRetentionRecord,
+    ) -> Self {
+        let expiration_status =
+            IntegrationActivationWaiverExpirationStatus::from_retention_record(record);
+        let expiration_lane = activation_waiver_expiration_lane(record, expiration_status);
+
+        Self {
+            sequence,
+            expiration_id: format!("activation-waiver-expiration-{sequence}"),
+            source_retention_id: record.retention_id.clone(),
+            source_archive_id: record.source_archive_id.clone(),
+            source_closure_id: record.source_closure_id.clone(),
+            source_remediation_id: record.source_remediation_id.clone(),
+            source_disposition_id: record.source_disposition_id.clone(),
+            source_review_id: record.source_review_id.clone(),
+            source_waiver_id: record.source_waiver_id.clone(),
+            source_exception_id: record.source_exception_id.clone(),
+            source_ledger_id: record.source_ledger_id.clone(),
+            source_attestation_id: record.source_attestation_id.clone(),
+            source_compliance_id: record.source_compliance_id.clone(),
+            source_governance_id: record.source_governance_id.clone(),
+            source_assurance_id: record.source_assurance_id.clone(),
+            source_guardrail_id: record.source_guardrail_id.clone(),
+            expiration_status,
+            retention_status: record.retention_status,
+            archive_status: record.archive_status,
+            closure_status: record.closure_status,
+            remediation_status: record.remediation_status,
+            disposition_status: record.disposition_status,
+            review_status: record.review_status,
+            waiver_status: record.waiver_status,
+            exception_status: record.exception_status,
+            expiration_lane,
+            retention_lane: record.retention_lane,
+            archive_lane: record.archive_lane,
+            closure_lane: record.closure_lane,
+            owner_lane: record.owner_lane,
+            approval_lane: record.approval_lane,
+            expiration_reason: activation_waiver_expiration_reason(record, expiration_status)
+                .to_string(),
+            expiration_action: activation_waiver_expiration_action(expiration_status).to_string(),
+            retention_reason: record.retention_reason.clone(),
+            retention_action: record.retention_action.clone(),
+            archive_reason: record.archive_reason.clone(),
+            archive_action: record.archive_action.clone(),
+            closure_reason: record.closure_reason.clone(),
+            closure_action: record.closure_action.clone(),
+            remediation_kind: record.remediation_kind.clone(),
+            remediation_action: record.remediation_action.clone(),
+            disposition_reason: record.disposition_reason.clone(),
+            disposition_action: record.disposition_action.clone(),
+            waiver_scope: record.waiver_scope.clone(),
+            evidence_kind: record.evidence_kind.clone(),
+            focus: record.focus,
+            recommended_view: record.recommended_view,
+            title: record.title.clone(),
+            summary: record.summary.clone(),
+            priority: record.priority,
+            integration_ids: record.integration_ids.clone(),
+            required_tier: record.required_tier,
+            policy_surface: record.policy_surface,
+            reviewer_required: record.reviewer_required,
+            exception_required: record.exception_required,
+            signoff_required: record.signoff_required,
+            evidence_ready: record.evidence_ready,
+            waiver_ready: record.waiver_ready,
+            review_ready: record.review_ready,
+            disposition_ready: record.disposition_ready,
+            closure_ready: record.closure_ready,
+            archive_ready: record.archive_ready,
+            retention_ready: record.retention_ready,
+            expiration_ready: expiration_status.expiration_ready(),
+            retained: record.retained,
+            expired: expiration_status.expired(),
+            archived: record.archived,
+            blocked: expiration_status.is_blocked(),
+            requires_attention: record.requires_attention || expiration_status.requires_attention(),
+        }
+    }
+
+    fn has_source_lineage(&self) -> bool {
+        !self.source_retention_id.is_empty()
+            && !self.source_archive_id.is_empty()
+            && !self.source_closure_id.is_empty()
+            && !self.source_remediation_id.is_empty()
+            && !self.source_disposition_id.is_empty()
+            && !self.source_review_id.is_empty()
+            && !self.source_waiver_id.is_empty()
+            && !self.source_exception_id.is_empty()
+            && !self.source_ledger_id.is_empty()
+            && !self.source_attestation_id.is_empty()
+            && !self.source_compliance_id.is_empty()
+            && !self.source_governance_id.is_empty()
+            && !self.source_assurance_id.is_empty()
+            && !self.source_guardrail_id.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationWaiverExpirationSummary {
+    total_records: usize,
+    unique_integrations: usize,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+    evidence_required_records: usize,
+    ready_for_expiration_records: usize,
+    expired_records: usize,
+    expiration_ready_records: usize,
+    retained_records: usize,
+    retention_ready_records: usize,
+    archived_records: usize,
+    evidence_ready_records: usize,
+    source_linked_records: usize,
+    reviewer_required_records: usize,
+    exception_required_records: usize,
+    signoff_required_records: usize,
+    platform_expiration_records: usize,
+    integration_expiration_records: usize,
+    security_expiration_records: usize,
+    reviewer_expiration_records: usize,
+    verification_expiration_records: usize,
+    audit_expiration_records: usize,
+    first_attention_priority: Option<u8>,
+    first_blocked_priority: Option<u8>,
+    first_ready_priority: Option<u8>,
+    next_expiration_status: Option<IntegrationActivationWaiverExpirationStatus>,
+    next_expiration_lane: Option<IntegrationActivationResponseOwnerLane>,
+    next_expiration_action: Option<String>,
+    highest_policy_tier: PrivilegeTier,
+    overall_status: IntegrationActivationHealthStatus,
+}
+
+impl IntegrationActivationWaiverExpirationSummary {
+    fn from_records<'a>(
+        records: impl IntoIterator<Item = &'a IntegrationActivationWaiverExpirationRecord>,
+    ) -> Self {
+        let mut summary = Self {
+            total_records: 0,
+            unique_integrations: 0,
+            records_requiring_attention: 0,
+            blocked_records: 0,
+            evidence_required_records: 0,
+            ready_for_expiration_records: 0,
+            expired_records: 0,
+            expiration_ready_records: 0,
+            retained_records: 0,
+            retention_ready_records: 0,
+            archived_records: 0,
+            evidence_ready_records: 0,
+            source_linked_records: 0,
+            reviewer_required_records: 0,
+            exception_required_records: 0,
+            signoff_required_records: 0,
+            platform_expiration_records: 0,
+            integration_expiration_records: 0,
+            security_expiration_records: 0,
+            reviewer_expiration_records: 0,
+            verification_expiration_records: 0,
+            audit_expiration_records: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_ready_priority: None,
+            next_expiration_status: None,
+            next_expiration_lane: None,
+            next_expiration_action: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for record in records {
+            summary.total_records += 1;
+            if summary.next_expiration_status.is_none() {
+                summary.next_expiration_status = Some(record.expiration_status);
+                summary.next_expiration_lane = Some(record.expiration_lane);
+                summary.next_expiration_action = Some(record.expiration_action.clone());
+            }
+            for integration_id in &record.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            if record.requires_attention {
+                summary.records_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, record.priority);
+            }
+            if record.blocked {
+                summary.blocked_records += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, record.priority);
+            }
+            if record.expiration_ready {
+                summary.expiration_ready_records += 1;
+                summary.first_ready_priority =
+                    min_optional_priority(summary.first_ready_priority, record.priority);
+            }
+            if record.retained {
+                summary.retained_records += 1;
+            }
+            if record.retention_ready {
+                summary.retention_ready_records += 1;
+            }
+            if record.archived {
+                summary.archived_records += 1;
+            }
+            if record.evidence_ready {
+                summary.evidence_ready_records += 1;
+            }
+            if record.has_source_lineage() {
+                summary.source_linked_records += 1;
+            }
+            if record.reviewer_required {
+                summary.reviewer_required_records += 1;
+            }
+            if record.exception_required {
+                summary.exception_required_records += 1;
+            }
+            if record.signoff_required {
+                summary.signoff_required_records += 1;
+            }
+            match record.expiration_status {
+                IntegrationActivationWaiverExpirationStatus::Blocked => {}
+                IntegrationActivationWaiverExpirationStatus::EvidenceRequired => {
+                    summary.evidence_required_records += 1
+                }
+                IntegrationActivationWaiverExpirationStatus::ReadyForExpiration => {
+                    summary.ready_for_expiration_records += 1
+                }
+                IntegrationActivationWaiverExpirationStatus::Expired => {
+                    summary.expired_records += 1
+                }
+            }
+            match record.expiration_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_expiration_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_expiration_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_expiration_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_expiration_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_expiration_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Audit => {
+                    summary.audit_expiration_records += 1
+                }
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(record.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.total_records == 0 {
+            IntegrationActivationHealthStatus::Empty
+        } else if summary.blocked_records > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.evidence_required_records > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else {
+            IntegrationActivationHealthStatus::Ready
+        };
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_records > 0
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.records_requiring_attention > 0 || self.evidence_required_records > 0
+    }
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationWaiverExpirationQuery {
+    waiver_retention: IntegrationActivationWaiverRetentionQuery,
+    expiration_status: Option<IntegrationActivationWaiverExpirationStatus>,
+    expiration_lane: Option<IntegrationActivationResponseOwnerLane>,
+    retention_lane: Option<IntegrationActivationResponseOwnerLane>,
+    archive_lane: Option<IntegrationActivationResponseOwnerLane>,
+    closure_lane: Option<IntegrationActivationResponseOwnerLane>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    approval_lane: Option<IntegrationActivationResponseOwnerLane>,
+    evidence_kind: Option<String>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    expiration_ready: Option<bool>,
+    expired: Option<bool>,
+    retained: Option<bool>,
+    retention_ready: Option<bool>,
+    archived: Option<bool>,
+    evidence_ready: Option<bool>,
+    reviewer_required: Option<bool>,
+    signoff_required: Option<bool>,
+    expiration_limit: Option<usize>,
+}
+
 fn activation_exception_reason(focus: IntegrationActivationGuardrailKind) -> &'static str {
     match focus {
         IntegrationActivationGuardrailKind::Incident => "incident evidence closure required",
@@ -11216,6 +11693,61 @@ fn activation_waiver_retention_action(
         }
         IntegrationActivationWaiverRetentionStatus::ReadyForRetention => "retain_waiver_archive",
         IntegrationActivationWaiverRetentionStatus::Retained => "monitor_waiver_retention",
+    }
+}
+
+fn activation_waiver_expiration_lane(
+    record: &IntegrationActivationWaiverRetentionRecord,
+    status: IntegrationActivationWaiverExpirationStatus,
+) -> IntegrationActivationResponseOwnerLane {
+    match status {
+        IntegrationActivationWaiverExpirationStatus::Blocked => record.retention_lane,
+        IntegrationActivationWaiverExpirationStatus::EvidenceRequired => record.retention_lane,
+        IntegrationActivationWaiverExpirationStatus::ReadyForExpiration => record.approval_lane,
+        IntegrationActivationWaiverExpirationStatus::Expired => {
+            IntegrationActivationResponseOwnerLane::Audit
+        }
+    }
+}
+
+fn activation_waiver_expiration_reason(
+    record: &IntegrationActivationWaiverRetentionRecord,
+    status: IntegrationActivationWaiverExpirationStatus,
+) -> &'static str {
+    match status {
+        IntegrationActivationWaiverExpirationStatus::Blocked => {
+            "blocking waiver retention must clear before expiration"
+        }
+        IntegrationActivationWaiverExpirationStatus::EvidenceRequired => {
+            if !record.has_source_lineage() {
+                "waiver expiration is missing retention source lineage"
+            } else if !record.evidence_ready {
+                "waiver expiration evidence is not ready"
+            } else {
+                "waiver retention must be ready before expiration"
+            }
+        }
+        IntegrationActivationWaiverExpirationStatus::ReadyForExpiration => {
+            "waiver retention record is ready for expiration disposition"
+        }
+        IntegrationActivationWaiverExpirationStatus::Expired => {
+            "waiver retention has expired into audit-only posture"
+        }
+    }
+}
+
+fn activation_waiver_expiration_action(
+    status: IntegrationActivationWaiverExpirationStatus,
+) -> &'static str {
+    match status {
+        IntegrationActivationWaiverExpirationStatus::Blocked => "clear_waiver_retention_blocker",
+        IntegrationActivationWaiverExpirationStatus::EvidenceRequired => {
+            "attach_waiver_expiration_evidence"
+        }
+        IntegrationActivationWaiverExpirationStatus::ReadyForExpiration => {
+            "expire_waiver_retention"
+        }
+        IntegrationActivationWaiverExpirationStatus::Expired => "monitor_waiver_expiration",
     }
 }
 
@@ -12852,6 +13384,90 @@ fn integration_activation_waiver_retention_query(
         signoff_required: optional_bool(arguments, "signoff_required")?,
         retention_limit: optional_u64(arguments, "waiver_retention_limit")?
             .or(optional_u64(arguments, "retention_limit")?)
+            .or(optional_u64(arguments, "record_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_waiver_expiration_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationWaiverExpirationQuery, ToolCallError> {
+    let expiration_status = optional_string(arguments, "waiver_expiration_status")?
+        .or(optional_string(arguments, "expiration_status")?)
+        .map(|label| parse_activation_waiver_expiration_status(&label))
+        .transpose()?;
+    let expiration_lane = optional_string(arguments, "waiver_expiration_lane")?
+        .or(optional_string(arguments, "expiration_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let retention_lane = optional_string(arguments, "waiver_expiration_retention_lane")?
+        .or(optional_string(arguments, "waiver_retention_lane")?)
+        .or(optional_string(arguments, "retention_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let archive_lane = optional_string(arguments, "waiver_expiration_archive_lane")?
+        .or(optional_string(arguments, "waiver_archive_lane")?)
+        .or(optional_string(arguments, "archive_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let closure_lane = optional_string(arguments, "waiver_expiration_closure_lane")?
+        .or(optional_string(arguments, "waiver_closure_lane")?)
+        .or(optional_string(arguments, "closure_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "waiver_expiration_owner_lane")?
+        .or(optional_string(arguments, "waiver_retention_owner_lane")?)
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let approval_lane = optional_string(arguments, "waiver_expiration_approval_lane")?
+        .or(optional_string(
+            arguments,
+            "waiver_retention_approval_lane",
+        )?)
+        .or(optional_string(arguments, "approval_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationWaiverExpirationQuery {
+        waiver_retention: integration_activation_waiver_retention_query(arguments)?,
+        expiration_status,
+        expiration_lane,
+        retention_lane,
+        archive_lane,
+        closure_lane,
+        owner_lane,
+        approval_lane,
+        evidence_kind: optional_string(arguments, "waiver_expiration_evidence_kind")?
+            .or(optional_string(
+                arguments,
+                "waiver_retention_evidence_kind",
+            )?)
+            .or(optional_string(arguments, "evidence_kind")?),
+        requires_attention: optional_bool(arguments, "waiver_expiration_requires_attention")?
+            .or(optional_bool(
+                arguments,
+                "waiver_retention_requires_attention",
+            )?)
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "waiver_expiration_blocked")?
+            .or(optional_bool(arguments, "waiver_retention_blocked")?)
+            .or(optional_bool(arguments, "blocked")?),
+        expiration_ready: optional_bool(arguments, "waiver_expiration_ready")?
+            .or(optional_bool(arguments, "expiration_ready")?),
+        expired: optional_bool(arguments, "waiver_expired")?
+            .or(optional_bool(arguments, "expired")?),
+        retained: optional_bool(arguments, "waiver_retained")?
+            .or(optional_bool(arguments, "retained")?),
+        retention_ready: optional_bool(arguments, "waiver_retention_ready")?
+            .or(optional_bool(arguments, "retention_ready")?),
+        archived: optional_bool(arguments, "waiver_archived")?
+            .or(optional_bool(arguments, "archived")?),
+        evidence_ready: optional_bool(arguments, "evidence_ready")?,
+        reviewer_required: optional_bool(arguments, "reviewer_required")?,
+        signoff_required: optional_bool(arguments, "signoff_required")?,
+        expiration_limit: optional_u64(arguments, "waiver_expiration_limit")?
+            .or(optional_u64(arguments, "expiration_limit")?)
             .or(optional_u64(arguments, "record_limit")?)
             .map(|value| value as usize),
     })
@@ -14967,6 +15583,80 @@ fn integration_activation_waiver_retention_for_query(
         records.retain(|record| record.signoff_required == signoff_required);
     }
     if let Some(limit) = query.retention_limit {
+        records.truncate(limit);
+    }
+
+    (records, catalog_count)
+}
+
+fn integration_activation_waiver_expirations_for_query(
+    query: &IntegrationActivationWaiverExpirationQuery,
+) -> (Vec<IntegrationActivationWaiverExpirationRecord>, usize) {
+    let (retention_records, catalog_count) =
+        integration_activation_waiver_retention_for_query(&query.waiver_retention);
+    let mut records: Vec<_> = retention_records
+        .iter()
+        .enumerate()
+        .map(|(index, record)| {
+            IntegrationActivationWaiverExpirationRecord::from_retention_record(index + 1, record)
+        })
+        .collect();
+
+    if let Some(status) = query.expiration_status {
+        records.retain(|record| record.expiration_status == status);
+    }
+    if let Some(expiration_lane) = query.expiration_lane {
+        records.retain(|record| record.expiration_lane == expiration_lane);
+    }
+    if let Some(retention_lane) = query.retention_lane {
+        records.retain(|record| record.retention_lane == retention_lane);
+    }
+    if let Some(archive_lane) = query.archive_lane {
+        records.retain(|record| record.archive_lane == archive_lane);
+    }
+    if let Some(closure_lane) = query.closure_lane {
+        records.retain(|record| record.closure_lane == closure_lane);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        records.retain(|record| record.owner_lane == owner_lane);
+    }
+    if let Some(approval_lane) = query.approval_lane {
+        records.retain(|record| record.approval_lane == approval_lane);
+    }
+    if let Some(evidence_kind) = &query.evidence_kind {
+        records.retain(|record| record.evidence_kind == *evidence_kind);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        records.retain(|record| record.requires_attention == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        records.retain(|record| record.blocked == blocked);
+    }
+    if let Some(expiration_ready) = query.expiration_ready {
+        records.retain(|record| record.expiration_ready == expiration_ready);
+    }
+    if let Some(expired) = query.expired {
+        records.retain(|record| record.expired == expired);
+    }
+    if let Some(retained) = query.retained {
+        records.retain(|record| record.retained == retained);
+    }
+    if let Some(retention_ready) = query.retention_ready {
+        records.retain(|record| record.retention_ready == retention_ready);
+    }
+    if let Some(archived) = query.archived {
+        records.retain(|record| record.archived == archived);
+    }
+    if let Some(evidence_ready) = query.evidence_ready {
+        records.retain(|record| record.evidence_ready == evidence_ready);
+    }
+    if let Some(reviewer_required) = query.reviewer_required {
+        records.retain(|record| record.reviewer_required == reviewer_required);
+    }
+    if let Some(signoff_required) = query.signoff_required {
+        records.retain(|record| record.signoff_required == signoff_required);
+    }
+    if let Some(limit) = query.expiration_limit {
         records.truncate(limit);
     }
 
@@ -19426,6 +20116,84 @@ fn get_integration_activation_waiver_retention_summary_output_handler_output(
             (
                 "retention_ready_records",
                 integer(summary.retention_ready_records as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn list_integration_activation_waiver_expirations_output_handler_output(
+    query: IntegrationActivationWaiverExpirationQuery,
+) -> ToolHandlerOutput {
+    let (records, catalog_count) = integration_activation_waiver_expirations_for_query(&query);
+    let summary = IntegrationActivationWaiverExpirationSummary::from_records(records.iter());
+    let count = records.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_waiver_expirations",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(activation_waiver_expiration_record_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_waiver_expiration_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_waiver_expirations"),
+            ),
+            ("records", integer(count as i64)),
+            (
+                "records_requiring_attention",
+                integer(summary.records_requiring_attention as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            (
+                "expiration_ready_records",
+                integer(summary.expiration_ready_records as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_waiver_expiration_summary_output_handler_output(
+    query: IntegrationActivationWaiverExpirationQuery,
+) -> ToolHandlerOutput {
+    let (records, _) = integration_activation_waiver_expirations_for_query(&query);
+    let summary = IntegrationActivationWaiverExpirationSummary::from_records(records.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_waiver_expiration_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_waiver_expiration_summary"),
+            ),
+            ("total_records", integer(summary.total_records as i64)),
+            (
+                "records_requiring_attention",
+                integer(summary.records_requiring_attention as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            (
+                "expiration_ready_records",
+                integer(summary.expiration_ready_records as i64),
             ),
             ("overall_status", string(summary.overall_status.as_str())),
         ]),
@@ -33985,6 +34753,272 @@ fn integration_activation_waiver_retention_summary_json(
     ])
 }
 
+fn activation_waiver_expiration_record_json(
+    record: &IntegrationActivationWaiverExpirationRecord,
+) -> JsonValue {
+    object([
+        ("sequence", integer(record.sequence as i64)),
+        ("expiration_id", string(&record.expiration_id)),
+        ("source_retention_id", string(&record.source_retention_id)),
+        ("source_archive_id", string(&record.source_archive_id)),
+        ("source_closure_id", string(&record.source_closure_id)),
+        (
+            "source_remediation_id",
+            string(&record.source_remediation_id),
+        ),
+        (
+            "source_disposition_id",
+            string(&record.source_disposition_id),
+        ),
+        ("source_review_id", string(&record.source_review_id)),
+        ("source_waiver_id", string(&record.source_waiver_id)),
+        ("source_exception_id", string(&record.source_exception_id)),
+        ("source_ledger_id", string(&record.source_ledger_id)),
+        (
+            "source_attestation_id",
+            string(&record.source_attestation_id),
+        ),
+        ("source_compliance_id", string(&record.source_compliance_id)),
+        ("source_governance_id", string(&record.source_governance_id)),
+        ("source_assurance_id", string(&record.source_assurance_id)),
+        ("source_guardrail_id", string(&record.source_guardrail_id)),
+        (
+            "expiration_status",
+            string(record.expiration_status.as_str()),
+        ),
+        ("retention_status", string(record.retention_status.as_str())),
+        ("archive_status", string(record.archive_status.as_str())),
+        ("closure_status", string(record.closure_status.as_str())),
+        (
+            "remediation_status",
+            string(record.remediation_status.as_str()),
+        ),
+        (
+            "disposition_status",
+            string(record.disposition_status.as_str()),
+        ),
+        ("review_status", string(record.review_status.as_str())),
+        ("waiver_status", string(record.waiver_status.as_str())),
+        ("exception_status", string(record.exception_status.as_str())),
+        ("expiration_lane", string(record.expiration_lane.as_str())),
+        ("retention_lane", string(record.retention_lane.as_str())),
+        ("archive_lane", string(record.archive_lane.as_str())),
+        ("closure_lane", string(record.closure_lane.as_str())),
+        ("owner_lane", string(record.owner_lane.as_str())),
+        ("approval_lane", string(record.approval_lane.as_str())),
+        ("expiration_reason", string(&record.expiration_reason)),
+        ("expiration_action", string(&record.expiration_action)),
+        ("retention_reason", string(&record.retention_reason)),
+        ("retention_action", string(&record.retention_action)),
+        ("archive_reason", string(&record.archive_reason)),
+        ("archive_action", string(&record.archive_action)),
+        ("closure_reason", string(&record.closure_reason)),
+        ("closure_action", string(&record.closure_action)),
+        ("remediation_kind", string(&record.remediation_kind)),
+        ("remediation_action", string(&record.remediation_action)),
+        ("disposition_reason", string(&record.disposition_reason)),
+        ("disposition_action", string(&record.disposition_action)),
+        ("waiver_scope", string(&record.waiver_scope)),
+        ("evidence_kind", string(&record.evidence_kind)),
+        ("focus", string(record.focus.as_str())),
+        ("recommended_view", string(record.recommended_view.as_str())),
+        ("title", string(&record.title)),
+        ("summary", string(&record.summary)),
+        ("priority", integer(record.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                record
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(record.integration_ids.len() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(record.required_tier)),
+        ),
+        (
+            "policy_surface",
+            record
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "reviewer_required",
+            JsonValue::Bool(record.reviewer_required),
+        ),
+        (
+            "exception_required",
+            JsonValue::Bool(record.exception_required),
+        ),
+        ("signoff_required", JsonValue::Bool(record.signoff_required)),
+        ("evidence_ready", JsonValue::Bool(record.evidence_ready)),
+        ("waiver_ready", JsonValue::Bool(record.waiver_ready)),
+        ("review_ready", JsonValue::Bool(record.review_ready)),
+        (
+            "disposition_ready",
+            JsonValue::Bool(record.disposition_ready),
+        ),
+        ("closure_ready", JsonValue::Bool(record.closure_ready)),
+        ("archive_ready", JsonValue::Bool(record.archive_ready)),
+        ("retention_ready", JsonValue::Bool(record.retention_ready)),
+        ("expiration_ready", JsonValue::Bool(record.expiration_ready)),
+        ("retained", JsonValue::Bool(record.retained)),
+        ("expired", JsonValue::Bool(record.expired)),
+        ("archived", JsonValue::Bool(record.archived)),
+        ("blocked", JsonValue::Bool(record.blocked)),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention),
+        ),
+        (
+            "has_source_lineage",
+            JsonValue::Bool(record.has_source_lineage()),
+        ),
+    ])
+}
+
+fn integration_activation_waiver_expiration_summary_json(
+    summary: &IntegrationActivationWaiverExpirationSummary,
+) -> JsonValue {
+    object([
+        ("total_records", integer(summary.total_records as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "records_requiring_attention",
+            integer(summary.records_requiring_attention as i64),
+        ),
+        ("blocked_records", integer(summary.blocked_records as i64)),
+        (
+            "evidence_required_records",
+            integer(summary.evidence_required_records as i64),
+        ),
+        (
+            "ready_for_expiration_records",
+            integer(summary.ready_for_expiration_records as i64),
+        ),
+        ("expired_records", integer(summary.expired_records as i64)),
+        (
+            "expiration_ready_records",
+            integer(summary.expiration_ready_records as i64),
+        ),
+        ("retained_records", integer(summary.retained_records as i64)),
+        (
+            "retention_ready_records",
+            integer(summary.retention_ready_records as i64),
+        ),
+        ("archived_records", integer(summary.archived_records as i64)),
+        (
+            "evidence_ready_records",
+            integer(summary.evidence_ready_records as i64),
+        ),
+        (
+            "source_linked_records",
+            integer(summary.source_linked_records as i64),
+        ),
+        (
+            "reviewer_required_records",
+            integer(summary.reviewer_required_records as i64),
+        ),
+        (
+            "exception_required_records",
+            integer(summary.exception_required_records as i64),
+        ),
+        (
+            "signoff_required_records",
+            integer(summary.signoff_required_records as i64),
+        ),
+        (
+            "platform_expiration_records",
+            integer(summary.platform_expiration_records as i64),
+        ),
+        (
+            "integration_expiration_records",
+            integer(summary.integration_expiration_records as i64),
+        ),
+        (
+            "security_expiration_records",
+            integer(summary.security_expiration_records as i64),
+        ),
+        (
+            "reviewer_expiration_records",
+            integer(summary.reviewer_expiration_records as i64),
+        ),
+        (
+            "verification_expiration_records",
+            integer(summary.verification_expiration_records as i64),
+        ),
+        (
+            "audit_expiration_records",
+            integer(summary.audit_expiration_records as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_priority",
+            summary
+                .first_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_expiration_status",
+            summary
+                .next_expiration_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_expiration_lane",
+            summary
+                .next_expiration_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_expiration_action",
+            summary
+                .next_expiration_action
+                .as_ref()
+                .map(|action| string(action))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.total_records == 0)),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -37515,6 +38549,27 @@ fn parse_activation_waiver_retention_status(
     }
 }
 
+fn parse_activation_waiver_expiration_status(
+    label: &str,
+) -> Result<IntegrationActivationWaiverExpirationStatus, ToolCallError> {
+    match label {
+        "blocked" | "blocker" | "hold" | "held" => {
+            Ok(IntegrationActivationWaiverExpirationStatus::Blocked)
+        }
+        "evidence_required" | "needs_evidence" | "evidence" | "source_required"
+        | "source_linkage" => Ok(IntegrationActivationWaiverExpirationStatus::EvidenceRequired),
+        "ready_for_expiration" | "ready" | "expiration_ready" | "ready_to_expire" => {
+            Ok(IntegrationActivationWaiverExpirationStatus::ReadyForExpiration)
+        }
+        "expired" | "expire" | "retired" | "complete" | "completed" => {
+            Ok(IntegrationActivationWaiverExpirationStatus::Expired)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation waiver expiration status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -40206,6 +41261,81 @@ fn integration_activation_waiver_retention_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_waiver_expiration_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_waiver_retention_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_status",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("expiration_status", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("expiration_lane", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_retention_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_archive_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_closure_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_owner_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_approval_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_evidence_kind",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_ready",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new("expiration_ready", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new("waiver_expired", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new("expired", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new(
+            "waiver_expiration_limit",
+            JsonSchema::Integer,
+        ));
+        push_if_absent(SchemaProperty::new("expiration_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("record_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -40350,7 +41480,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 167);
+        assert_eq!(definitions.len(), 169);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -40829,9 +41959,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RETENTION_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_EXPIRATIONS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_EXPIRATION_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            159
+            161
         );
         assert_eq!(
             export
@@ -40928,6 +42064,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_RETENTION_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_EXPIRATIONS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_EXPIRATION_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
@@ -41439,11 +42583,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(167))
+            Some(&integer(169))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(159))
+            Some(&integer(161))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -51439,6 +52583,193 @@ mod tests {
         traces.push((
             activation_waiver_retention_summary_request,
             activation_waiver_retention_summary_trace,
+        ));
+
+        traces
+    }
+
+    #[test]
+    fn activation_waiver_expiration_tools_project_retention_lineage_end_to_end() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let traces = exercise_activation_waiver_expiration_tools(&tool_runtime);
+        let mut journal = ToolExecutionJournal::new();
+        for (request, trace) in traces {
+            journal.record_trace(request, trace);
+        }
+
+        let summary = journal.summary();
+        assert_eq!(summary.invocation_count, 2);
+        assert_eq!(summary.completed_count, 2);
+        assert_eq!(journal.audit_records().len(), 2);
+    }
+
+    fn exercise_activation_waiver_expiration_tools(
+        tool_runtime: &InMemoryToolRuntime,
+    ) -> Vec<(ToolInvocationRequest, ToolExecutionTrace)> {
+        let mut traces = Vec::with_capacity(2);
+
+        let list_activation_waiver_expirations_request = request(
+            "call-list-integration-activation-waiver-expirations",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_EXPIRATIONS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("waiver_expiration_blocked", JsonValue::Bool(true)),
+                (
+                    "waiver_expiration_requires_attention",
+                    JsonValue::Bool(true),
+                ),
+                ("waiver_expiration_limit", integer(3)),
+            ]),
+            5_101,
+        );
+        let list_activation_waiver_expirations_trace =
+            tool_runtime.invoke_with_events(&list_activation_waiver_expirations_request);
+        assert!(list_activation_waiver_expirations_trace.result.ok);
+        assert_eq!(
+            list_activation_waiver_expirations_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_waiver_expirations_output = list_activation_waiver_expirations_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_waiver_expiration_count =
+            integer_value(field(list_activation_waiver_expirations_output, "count").unwrap())
+                .unwrap();
+        assert!((1..=3).contains(&activation_waiver_expiration_count));
+        let activation_waiver_expiration_summary =
+            field(list_activation_waiver_expirations_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_waiver_expiration_summary, "total_records"),
+            Some(&integer(activation_waiver_expiration_count))
+        );
+        assert!(
+            integer_value(field(activation_waiver_expiration_summary, "blocked_records").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_waiver_expiration_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_waiver_expiration_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_waiver_expiration = array_item(
+            field(
+                list_activation_waiver_expirations_output,
+                "activation_waiver_expirations",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_waiver_expiration, "expiration_id").is_some());
+        assert!(field(activation_waiver_expiration, "source_retention_id").is_some());
+        assert!(field(activation_waiver_expiration, "source_archive_id").is_some());
+        assert!(field(activation_waiver_expiration, "source_waiver_id").is_some());
+        assert!(field(activation_waiver_expiration, "source_exception_id").is_some());
+        assert!(field(activation_waiver_expiration, "expiration_lane").is_some());
+        assert!(field(activation_waiver_expiration, "expiration_action").is_some());
+        assert_eq!(
+            field(activation_waiver_expiration, "blocked"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_waiver_expiration, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_waiver_expiration, "has_source_lineage"),
+            Some(&JsonValue::Bool(true))
+        );
+        traces.push((
+            list_activation_waiver_expirations_request,
+            list_activation_waiver_expirations_trace,
+        ));
+
+        let activation_waiver_expiration_summary_request = request(
+            "call-integration-activation-waiver-expiration-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_EXPIRATION_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("waiver_expiration_blocked", JsonValue::Bool(true)),
+            ]),
+            5_102,
+        );
+        let activation_waiver_expiration_summary_trace =
+            tool_runtime.invoke_with_events(&activation_waiver_expiration_summary_request);
+        assert!(activation_waiver_expiration_summary_trace.result.ok);
+        assert_eq!(
+            activation_waiver_expiration_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_waiver_expiration_summary_output =
+            activation_waiver_expiration_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_waiver_expiration_rollup =
+            field(activation_waiver_expiration_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_waiver_expiration_rollup, "blocked_records").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_waiver_expiration_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        traces.push((
+            activation_waiver_expiration_summary_request,
+            activation_waiver_expiration_summary_trace,
         ));
 
         traces
