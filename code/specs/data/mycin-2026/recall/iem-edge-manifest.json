@@ -1,0 +1,186 @@
+{
+  "kind": "iem-edge",
+  "clauses": {
+    "deficient_in__tay_sachs": {
+      "relation": "deficient_in",
+      "subject": "tay_sachs",
+      "object": "hexosaminidase_a",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Tay-Sachs disease results from deficiency of the enzyme hexosaminidase A (HEXA).",
+      "url": null
+    },
+    "accumulates__tay_sachs": {
+      "relation": "accumulates",
+      "subject": "tay_sachs",
+      "object": "gm2_ganglioside",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "GM2 ganglioside accumulates in neurons in Tay-Sachs disease.",
+      "url": null
+    },
+    "inherited_as__tay_sachs": {
+      "relation": "inherited_as",
+      "subject": "tay_sachs",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Tay-Sachs disease is inherited in an autosomal recessive manner.",
+      "url": null
+    },
+    "deficient_in__gaucher": {
+      "relation": "deficient_in",
+      "subject": "gaucher",
+      "object": "glucocerebrosidase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Gaucher disease is caused by deficiency of glucocerebrosidase (acid beta-glucosidase).",
+      "url": null
+    },
+    "accumulates__gaucher": {
+      "relation": "accumulates",
+      "subject": "gaucher",
+      "object": "glucocerebroside",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Glucocerebroside accumulates in macrophages in Gaucher disease.",
+      "url": null
+    },
+    "inherited_as__gaucher": {
+      "relation": "inherited_as",
+      "subject": "gaucher",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Gaucher disease is inherited in an autosomal recessive manner.",
+      "url": null
+    },
+    "deficient_in__phenylketonuria": {
+      "relation": "deficient_in",
+      "subject": "phenylketonuria",
+      "object": "phenylalanine_hydroxylase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Phenylketonuria results from deficiency of phenylalanine hydroxylase.",
+      "url": null
+    },
+    "accumulates__phenylketonuria": {
+      "relation": "accumulates",
+      "subject": "phenylketonuria",
+      "object": "phenylalanine",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Phenylalanine accumulates in phenylketonuria.",
+      "url": null
+    },
+    "inherited_as__phenylketonuria": {
+      "relation": "inherited_as",
+      "subject": "phenylketonuria",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Phenylketonuria is inherited in an autosomal recessive manner.",
+      "url": null
+    },
+    "deficient_in__pompe": {
+      "relation": "deficient_in",
+      "subject": "pompe",
+      "object": "acid_alpha_glucosidase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Pompe disease is caused by deficiency of acid alpha-glucosidase (acid maltase).",
+      "url": null
+    },
+    "accumulates__pompe": {
+      "relation": "accumulates",
+      "subject": "pompe",
+      "object": "lysosomal_glycogen",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Glycogen accumulates in lysosomes in Pompe disease.",
+      "url": null
+    },
+    "inherited_as__pompe": {
+      "relation": "inherited_as",
+      "subject": "pompe",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Pompe disease is inherited in an autosomal recessive manner.",
+      "url": null
+    },
+    "deficient_in__lesch_nyhan": {
+      "relation": "deficient_in",
+      "subject": "lesch_nyhan",
+      "object": "hgprt",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Lesch-Nyhan syndrome results from deficiency of hypoxanthine-guanine phosphoribosyltransferase (HGPRT).",
+      "url": null
+    },
+    "accumulates__lesch_nyhan": {
+      "relation": "accumulates",
+      "subject": "lesch_nyhan",
+      "object": "uric_acid",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Uric acid accumulates in Lesch-Nyhan syndrome.",
+      "url": null
+    },
+    "inherited_as__lesch_nyhan": {
+      "relation": "inherited_as",
+      "subject": "lesch_nyhan",
+      "object": "x_linked_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Lesch-Nyhan syndrome is inherited in an X-linked recessive manner.",
+      "url": null
+    },
+    "deficient_in__von_gierke": {
+      "relation": "deficient_in",
+      "subject": "von_gierke",
+      "object": "glucose_6_phosphatase",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Von Gierke disease (glycogen storage disease type I) results from deficiency of glucose-6-phosphatase.",
+      "url": null
+    },
+    "accumulates__von_gierke": {
+      "relation": "accumulates",
+      "subject": "von_gierke",
+      "object": "glycogen",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Glycogen accumulates in liver and kidney in von Gierke disease.",
+      "url": null
+    },
+    "inherited_as__von_gierke": {
+      "relation": "inherited_as",
+      "subject": "von_gierke",
+      "object": "autosomal_recessive",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Von Gierke disease is inherited in an autosomal recessive manner.",
+      "url": null
+    }
+  },
+  "hash": "853b225cb385393f"
+}
