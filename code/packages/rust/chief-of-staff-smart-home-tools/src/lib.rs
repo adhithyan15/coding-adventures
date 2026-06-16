@@ -418,6 +418,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_LEDGER_TOOL_ID: &str =
     "smart_home.list_integration_activation_evidence_ledger";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LEDGER_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_evidence_ledger_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_TOOL_ID: &str =
+    "smart_home.list_integration_activation_exception_ledger";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_exception_ledger_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -975,6 +979,18 @@ impl SmartHomeToolBridge {
                     let query = integration_activation_evidence_ledger_query(&arguments)?;
                     Ok(
                         get_integration_activation_evidence_ledger_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_TOOL_ID => {
+                    let query = integration_activation_exception_ledger_query(&arguments)?;
+                    Ok(list_integration_activation_exception_ledger_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_exception_ledger_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_exception_ledger_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -3160,6 +3176,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation evidence ledger summary",
             "Return compact D23A activation evidence ledger counts by status, evidence kind, source coverage, signer lane, blocker, and evidence readiness.",
             integration_activation_evidence_ledger_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_TOOL_ID,
+            "List smart-home integration activation exception ledger",
+            "List Chief-facing D23A activation exception ledger rows that narrow evidence ledger records to exception, signoff, reviewer, and blocker cases requiring activation clearance.",
+            integration_activation_exception_ledger_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_exception_ledger", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_exception_ledger",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation exception ledger summary",
+            "Return compact D23A activation exception ledger counts by status, owner lane, signer lane, evidence kind, blocker, reviewer, signoff, and source linkage.",
+            integration_activation_exception_ledger_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -7654,6 +7704,322 @@ struct IntegrationActivationEvidenceLedgerQuery {
     ledger_limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum IntegrationActivationExceptionLedgerStatus {
+    ExceptionRequired,
+    SignoffPending,
+    Blocked,
+    Attention,
+}
+
+impl IntegrationActivationExceptionLedgerStatus {
+    fn from_evidence_record(record: &IntegrationActivationEvidenceLedgerRecord) -> Self {
+        if record.blocks_activation {
+            Self::Blocked
+        } else if record.exception_required {
+            Self::ExceptionRequired
+        } else if record.signoff_required || record.reviewer_required {
+            Self::SignoffPending
+        } else {
+            Self::Attention
+        }
+    }
+
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::ExceptionRequired => "exception_required",
+            Self::SignoffPending => "signoff_pending",
+            Self::Blocked => "blocked",
+            Self::Attention => "attention",
+        }
+    }
+
+    fn is_blocked(self) -> bool {
+        matches!(self, Self::Blocked)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationExceptionLedgerRecord {
+    sequence: usize,
+    exception_id: String,
+    source_ledger_id: String,
+    source_attestation_id: String,
+    source_compliance_id: String,
+    source_governance_id: String,
+    source_assurance_id: String,
+    source_guardrail_id: String,
+    exception_status: IntegrationActivationExceptionLedgerStatus,
+    ledger_status: IntegrationActivationEvidenceLedgerStatus,
+    evidence_kind: String,
+    exception_reason: String,
+    control_objective: String,
+    evidence_label: String,
+    focus: IntegrationActivationGuardrailKind,
+    signer_lane: IntegrationActivationResponseOwnerLane,
+    owner_lane: IntegrationActivationResponseOwnerLane,
+    recommended_view: IntegrationActivationPlaybookView,
+    title: String,
+    summary: String,
+    priority: u8,
+    integration_ids: Vec<IntegrationId>,
+    required_tier: PrivilegeTier,
+    policy_surface: Option<IntegrationPolicySurface>,
+    reviewer_required: bool,
+    exception_required: bool,
+    signoff_required: bool,
+    evidence_ready: bool,
+    blocks_activation: bool,
+    requires_attention: bool,
+}
+
+impl IntegrationActivationExceptionLedgerRecord {
+    fn from_evidence_record(
+        sequence: usize,
+        record: &IntegrationActivationEvidenceLedgerRecord,
+    ) -> Self {
+        let exception_status =
+            IntegrationActivationExceptionLedgerStatus::from_evidence_record(record);
+
+        Self {
+            sequence,
+            exception_id: format!("activation-exception-{sequence}"),
+            source_ledger_id: record.ledger_id.clone(),
+            source_attestation_id: record.source_attestation_id.clone(),
+            source_compliance_id: record.source_compliance_id.clone(),
+            source_governance_id: record.source_governance_id.clone(),
+            source_assurance_id: record.source_assurance_id.clone(),
+            source_guardrail_id: record.source_guardrail_id.clone(),
+            exception_status,
+            ledger_status: record.ledger_status,
+            evidence_kind: record.evidence_kind.clone(),
+            exception_reason: activation_exception_reason(record.focus).to_string(),
+            control_objective: record.control_objective.clone(),
+            evidence_label: record.evidence_label.clone(),
+            focus: record.focus,
+            signer_lane: record.signer_lane,
+            owner_lane: record.owner_lane,
+            recommended_view: record.recommended_view,
+            title: record.title.clone(),
+            summary: record.summary.clone(),
+            priority: record.priority,
+            integration_ids: record.integration_ids.clone(),
+            required_tier: record.required_tier,
+            policy_surface: record.policy_surface,
+            reviewer_required: record.reviewer_required,
+            exception_required: record.exception_required,
+            signoff_required: record.signoff_required,
+            evidence_ready: record.evidence_ready,
+            blocks_activation: record.blocks_activation || exception_status.is_blocked(),
+            requires_attention: record.requires_attention,
+        }
+    }
+
+    fn has_source_lineage(&self) -> bool {
+        !self.source_ledger_id.is_empty()
+            && !self.source_attestation_id.is_empty()
+            && !self.source_compliance_id.is_empty()
+            && !self.source_governance_id.is_empty()
+            && !self.source_assurance_id.is_empty()
+            && !self.source_guardrail_id.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationExceptionLedgerSummary {
+    total_records: usize,
+    unique_integrations: usize,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+    exception_required_records: usize,
+    signoff_pending_records: usize,
+    attention_records: usize,
+    reviewer_required_records: usize,
+    signoff_required_records: usize,
+    evidence_ready_records: usize,
+    source_linked_records: usize,
+    incident_exception_records: usize,
+    policy_exception_records: usize,
+    dependency_exception_records: usize,
+    readiness_gap_exception_records: usize,
+    platform_owner_records: usize,
+    integration_owner_records: usize,
+    security_owner_records: usize,
+    reviewer_owner_records: usize,
+    verification_owner_records: usize,
+    audit_owner_records: usize,
+    first_attention_priority: Option<u8>,
+    first_blocked_priority: Option<u8>,
+    first_exception_priority: Option<u8>,
+    highest_policy_tier: PrivilegeTier,
+    overall_status: IntegrationActivationHealthStatus,
+}
+
+impl IntegrationActivationExceptionLedgerSummary {
+    fn from_records<'a>(
+        records: impl IntoIterator<Item = &'a IntegrationActivationExceptionLedgerRecord>,
+    ) -> Self {
+        let mut summary = Self {
+            total_records: 0,
+            unique_integrations: 0,
+            records_requiring_attention: 0,
+            blocked_records: 0,
+            exception_required_records: 0,
+            signoff_pending_records: 0,
+            attention_records: 0,
+            reviewer_required_records: 0,
+            signoff_required_records: 0,
+            evidence_ready_records: 0,
+            source_linked_records: 0,
+            incident_exception_records: 0,
+            policy_exception_records: 0,
+            dependency_exception_records: 0,
+            readiness_gap_exception_records: 0,
+            platform_owner_records: 0,
+            integration_owner_records: 0,
+            security_owner_records: 0,
+            reviewer_owner_records: 0,
+            verification_owner_records: 0,
+            audit_owner_records: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_exception_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for record in records {
+            summary.total_records += 1;
+            for integration_id in &record.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            if record.requires_attention {
+                summary.records_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, record.priority);
+            }
+            if record.blocks_activation {
+                summary.blocked_records += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, record.priority);
+            }
+            if record.exception_required {
+                summary.exception_required_records += 1;
+                summary.first_exception_priority =
+                    min_optional_priority(summary.first_exception_priority, record.priority);
+            }
+            if record.reviewer_required {
+                summary.reviewer_required_records += 1;
+            }
+            if record.signoff_required {
+                summary.signoff_required_records += 1;
+            }
+            if record.evidence_ready {
+                summary.evidence_ready_records += 1;
+            }
+            if record.has_source_lineage() {
+                summary.source_linked_records += 1;
+            }
+            match record.exception_status {
+                IntegrationActivationExceptionLedgerStatus::ExceptionRequired => {}
+                IntegrationActivationExceptionLedgerStatus::SignoffPending => {
+                    summary.signoff_pending_records += 1
+                }
+                IntegrationActivationExceptionLedgerStatus::Blocked => {}
+                IntegrationActivationExceptionLedgerStatus::Attention => {
+                    summary.attention_records += 1
+                }
+            }
+            match record.focus {
+                IntegrationActivationGuardrailKind::Incident => {
+                    summary.incident_exception_records += 1
+                }
+                IntegrationActivationGuardrailKind::PolicyRisk => {
+                    summary.policy_exception_records += 1
+                }
+                IntegrationActivationGuardrailKind::Dependency => {
+                    summary.dependency_exception_records += 1
+                }
+                IntegrationActivationGuardrailKind::ReadinessGap => {
+                    summary.readiness_gap_exception_records += 1
+                }
+            }
+            match record.owner_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Audit => summary.audit_owner_records += 1,
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(record.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.total_records == 0 {
+            IntegrationActivationHealthStatus::Empty
+        } else if summary.blocked_records > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.exception_required_records > 0
+            || summary.signoff_pending_records > 0
+            || summary.signoff_required_records > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else {
+            IntegrationActivationHealthStatus::Ready
+        };
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_records > 0
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.records_requiring_attention > 0
+            || self.exception_required_records > 0
+            || self.signoff_required_records > 0
+    }
+
+    fn is_empty(&self) -> bool {
+        self.total_records == 0
+    }
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationExceptionLedgerQuery {
+    evidence_ledger: IntegrationActivationEvidenceLedgerQuery,
+    exception_status: Option<IntegrationActivationExceptionLedgerStatus>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    signer_lane: Option<IntegrationActivationResponseOwnerLane>,
+    evidence_kind: Option<String>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    exception_required: Option<bool>,
+    signoff_required: Option<bool>,
+    exception_limit: Option<usize>,
+}
+
+fn activation_exception_reason(focus: IntegrationActivationGuardrailKind) -> &'static str {
+    match focus {
+        IntegrationActivationGuardrailKind::Incident => "incident evidence closure required",
+        IntegrationActivationGuardrailKind::PolicyRisk => "policy privilege exception required",
+        IntegrationActivationGuardrailKind::Dependency => "dependency exception required",
+        IntegrationActivationGuardrailKind::ReadinessGap => "readiness exception required",
+    }
+}
+
 fn min_optional_priority(current: Option<u8>, priority: u8) -> Option<u8> {
     Some(current.map_or(priority, |existing| existing.min(priority)))
 }
@@ -8855,6 +9221,41 @@ fn integration_activation_evidence_ledger_query(
             .or(optional_bool(arguments, "blocked")?),
         evidence_ready: optional_bool(arguments, "evidence_ready")?,
         ledger_limit: optional_u64(arguments, "ledger_limit")?
+            .or(optional_u64(arguments, "record_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_exception_ledger_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationExceptionLedgerQuery, ToolCallError> {
+    let exception_status = optional_string(arguments, "exception_status")?
+        .or(optional_string(arguments, "exception_ledger_status")?)
+        .map(|label| parse_activation_exception_ledger_status(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "exception_owner_lane")?
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let signer_lane = optional_string(arguments, "exception_signer_lane")?
+        .or(optional_string(arguments, "signer_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationExceptionLedgerQuery {
+        evidence_ledger: integration_activation_evidence_ledger_query(arguments)?,
+        exception_status,
+        owner_lane,
+        signer_lane,
+        evidence_kind: optional_string(arguments, "exception_evidence_kind")?
+            .or(optional_string(arguments, "evidence_kind")?),
+        requires_attention: optional_bool(arguments, "exception_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "exception_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        exception_required: optional_bool(arguments, "exception_required")?,
+        signoff_required: optional_bool(arguments, "signoff_required")?,
+        exception_limit: optional_u64(arguments, "exception_limit")?
             .or(optional_u64(arguments, "record_limit")?)
             .map(|value| value as usize),
     })
@@ -10515,6 +10916,57 @@ fn integration_activation_evidence_ledger_for_query(
         records.retain(|record| record.evidence_ready == evidence_ready);
     }
     if let Some(limit) = query.ledger_limit {
+        records.truncate(limit);
+    }
+
+    (records, catalog_count)
+}
+
+fn integration_activation_exception_ledger_for_query(
+    query: &IntegrationActivationExceptionLedgerQuery,
+) -> (Vec<IntegrationActivationExceptionLedgerRecord>, usize) {
+    let (ledger_records, catalog_count) =
+        integration_activation_evidence_ledger_for_query(&query.evidence_ledger);
+    let mut records: Vec<_> = ledger_records
+        .iter()
+        .filter(|record| {
+            record.exception_required
+                || record.signoff_required
+                || record.reviewer_required
+                || record.blocks_activation
+                || record.requires_attention
+        })
+        .enumerate()
+        .map(|(index, record)| {
+            IntegrationActivationExceptionLedgerRecord::from_evidence_record(index + 1, record)
+        })
+        .collect();
+
+    if let Some(status) = query.exception_status {
+        records.retain(|record| record.exception_status == status);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        records.retain(|record| record.owner_lane == owner_lane);
+    }
+    if let Some(signer_lane) = query.signer_lane {
+        records.retain(|record| record.signer_lane == signer_lane);
+    }
+    if let Some(evidence_kind) = &query.evidence_kind {
+        records.retain(|record| record.evidence_kind == *evidence_kind);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        records.retain(|record| record.requires_attention == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        records.retain(|record| record.blocks_activation == blocked);
+    }
+    if let Some(exception_required) = query.exception_required {
+        records.retain(|record| record.exception_required == exception_required);
+    }
+    if let Some(signoff_required) = query.signoff_required {
+        records.retain(|record| record.signoff_required == signoff_required);
+    }
+    if let Some(limit) = query.exception_limit {
         records.truncate(limit);
     }
 
@@ -14345,6 +14797,84 @@ fn get_integration_activation_evidence_ledger_summary_output_handler_output(
             (
                 "source_linked_records",
                 integer(summary.source_linked_records as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn list_integration_activation_exception_ledger_output_handler_output(
+    query: IntegrationActivationExceptionLedgerQuery,
+) -> ToolHandlerOutput {
+    let (records, catalog_count) = integration_activation_exception_ledger_for_query(&query);
+    let summary = IntegrationActivationExceptionLedgerSummary::from_records(records.iter());
+    let count = records.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_exception_ledger",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(activation_exception_ledger_record_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_exception_ledger_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_exception_ledger"),
+            ),
+            ("records", integer(count as i64)),
+            (
+                "exception_required_records",
+                integer(summary.exception_required_records as i64),
+            ),
+            (
+                "signoff_required_records",
+                integer(summary.signoff_required_records as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_exception_ledger_summary_output_handler_output(
+    query: IntegrationActivationExceptionLedgerQuery,
+) -> ToolHandlerOutput {
+    let (records, _) = integration_activation_exception_ledger_for_query(&query);
+    let summary = IntegrationActivationExceptionLedgerSummary::from_records(records.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_exception_ledger_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_exception_ledger_summary"),
+            ),
+            ("total_records", integer(summary.total_records as i64)),
+            (
+                "exception_required_records",
+                integer(summary.exception_required_records as i64),
+            ),
+            (
+                "signoff_required_records",
+                integer(summary.signoff_required_records as i64),
             ),
             ("blocked_records", integer(summary.blocked_records as i64)),
             ("overall_status", string(summary.overall_status.as_str())),
@@ -27078,6 +27608,201 @@ fn integration_activation_evidence_ledger_summary_json(
     ])
 }
 
+fn activation_exception_ledger_record_json(
+    record: &IntegrationActivationExceptionLedgerRecord,
+) -> JsonValue {
+    object([
+        ("sequence", integer(record.sequence as i64)),
+        ("exception_id", string(&record.exception_id)),
+        ("source_ledger_id", string(&record.source_ledger_id)),
+        (
+            "source_attestation_id",
+            string(&record.source_attestation_id),
+        ),
+        ("source_compliance_id", string(&record.source_compliance_id)),
+        ("source_governance_id", string(&record.source_governance_id)),
+        ("source_assurance_id", string(&record.source_assurance_id)),
+        ("source_guardrail_id", string(&record.source_guardrail_id)),
+        ("exception_status", string(record.exception_status.as_str())),
+        ("ledger_status", string(record.ledger_status.as_str())),
+        ("evidence_kind", string(&record.evidence_kind)),
+        ("exception_reason", string(&record.exception_reason)),
+        ("control_objective", string(&record.control_objective)),
+        ("evidence_label", string(&record.evidence_label)),
+        ("focus", string(record.focus.as_str())),
+        ("signer_lane", string(record.signer_lane.as_str())),
+        ("owner_lane", string(record.owner_lane.as_str())),
+        ("recommended_view", string(record.recommended_view.as_str())),
+        ("title", string(&record.title)),
+        ("summary", string(&record.summary)),
+        ("priority", integer(record.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                record
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(record.integration_ids.len() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(record.required_tier)),
+        ),
+        (
+            "policy_surface",
+            record
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "reviewer_required",
+            JsonValue::Bool(record.reviewer_required),
+        ),
+        (
+            "exception_required",
+            JsonValue::Bool(record.exception_required),
+        ),
+        ("signoff_required", JsonValue::Bool(record.signoff_required)),
+        ("evidence_ready", JsonValue::Bool(record.evidence_ready)),
+        (
+            "blocks_activation",
+            JsonValue::Bool(record.blocks_activation),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention),
+        ),
+        (
+            "has_source_lineage",
+            JsonValue::Bool(record.has_source_lineage()),
+        ),
+    ])
+}
+
+fn integration_activation_exception_ledger_summary_json(
+    summary: &IntegrationActivationExceptionLedgerSummary,
+) -> JsonValue {
+    object([
+        ("total_records", integer(summary.total_records as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "records_requiring_attention",
+            integer(summary.records_requiring_attention as i64),
+        ),
+        ("blocked_records", integer(summary.blocked_records as i64)),
+        (
+            "exception_required_records",
+            integer(summary.exception_required_records as i64),
+        ),
+        (
+            "signoff_pending_records",
+            integer(summary.signoff_pending_records as i64),
+        ),
+        (
+            "attention_records",
+            integer(summary.attention_records as i64),
+        ),
+        (
+            "reviewer_required_records",
+            integer(summary.reviewer_required_records as i64),
+        ),
+        (
+            "signoff_required_records",
+            integer(summary.signoff_required_records as i64),
+        ),
+        (
+            "evidence_ready_records",
+            integer(summary.evidence_ready_records as i64),
+        ),
+        (
+            "source_linked_records",
+            integer(summary.source_linked_records as i64),
+        ),
+        (
+            "incident_exception_records",
+            integer(summary.incident_exception_records as i64),
+        ),
+        (
+            "policy_exception_records",
+            integer(summary.policy_exception_records as i64),
+        ),
+        (
+            "dependency_exception_records",
+            integer(summary.dependency_exception_records as i64),
+        ),
+        (
+            "readiness_gap_exception_records",
+            integer(summary.readiness_gap_exception_records as i64),
+        ),
+        (
+            "platform_owner_records",
+            integer(summary.platform_owner_records as i64),
+        ),
+        (
+            "integration_owner_records",
+            integer(summary.integration_owner_records as i64),
+        ),
+        (
+            "security_owner_records",
+            integer(summary.security_owner_records as i64),
+        ),
+        (
+            "reviewer_owner_records",
+            integer(summary.reviewer_owner_records as i64),
+        ),
+        (
+            "verification_owner_records",
+            integer(summary.verification_owner_records as i64),
+        ),
+        (
+            "audit_owner_records",
+            integer(summary.audit_owner_records as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_exception_priority",
+            summary
+                .first_exception_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -30438,6 +31163,28 @@ fn parse_activation_evidence_ledger_status(
     }
 }
 
+fn parse_activation_exception_ledger_status(
+    label: &str,
+) -> Result<IntegrationActivationExceptionLedgerStatus, ToolCallError> {
+    match label {
+        "exception_required" | "exception" | "required" | "needs_exception" => {
+            Ok(IntegrationActivationExceptionLedgerStatus::ExceptionRequired)
+        }
+        "signoff_pending" | "signoff" | "reviewer" | "review" | "pending_signoff" => {
+            Ok(IntegrationActivationExceptionLedgerStatus::SignoffPending)
+        }
+        "blocked" | "blocker" | "hold" | "rejected" | "reject" => {
+            Ok(IntegrationActivationExceptionLedgerStatus::Blocked)
+        }
+        "attention" | "needs_attention" | "follow_up" | "followup" => {
+            Ok(IntegrationActivationExceptionLedgerStatus::Attention)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation exception ledger status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -32634,6 +33381,58 @@ fn integration_activation_evidence_ledger_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_exception_ledger_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_evidence_ledger_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new("exception_status", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "exception_ledger_status",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "exception_owner_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "exception_signer_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "exception_evidence_kind",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "exception_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "exception_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "exception_required",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new("signoff_required", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new("exception_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("record_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -32778,7 +33577,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 151);
+        assert_eq!(definitions.len(), 153);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -32916,6 +33715,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_LEDGER_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID));
@@ -33211,7 +34016,7 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_GOVERNANCE_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            143
+            145
         );
         assert_eq!(
             export
@@ -33753,11 +34558,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(151))
+            Some(&integer(153))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(143))
+            Some(&integer(145))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -40205,6 +41010,145 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_exception_ledger_request = request(
+            "call-list-integration-activation-exception-ledger",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("exception_requires_attention", JsonValue::Bool(true)),
+                ("exception_limit", integer(3)),
+            ]),
+            5_077,
+        );
+        let list_activation_exception_ledger_trace =
+            tool_runtime.invoke_with_events(&list_activation_exception_ledger_request);
+        assert!(list_activation_exception_ledger_trace.result.ok);
+        assert_eq!(
+            list_activation_exception_ledger_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_exception_ledger_output = list_activation_exception_ledger_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_exception_ledger_count =
+            integer_value(field(list_activation_exception_ledger_output, "count").unwrap())
+                .unwrap();
+        assert!((1..=3).contains(&activation_exception_ledger_count));
+        let activation_exception_ledger_summary =
+            field(list_activation_exception_ledger_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_exception_ledger_summary, "total_records"),
+            Some(&integer(activation_exception_ledger_count))
+        );
+        assert!(
+            integer_value(
+                field(
+                    activation_exception_ledger_summary,
+                    "records_requiring_attention",
+                )
+                .unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_exception_ledger_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_exception_ledger = array_item(
+            field(
+                list_activation_exception_ledger_output,
+                "activation_exception_ledger",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_exception_ledger, "exception_id").is_some());
+        assert!(field(activation_exception_ledger, "source_ledger_id").is_some());
+        assert!(field(activation_exception_ledger, "source_attestation_id").is_some());
+        assert!(field(activation_exception_ledger, "source_compliance_id").is_some());
+        assert!(field(activation_exception_ledger, "exception_reason").is_some());
+        assert_eq!(
+            field(activation_exception_ledger, "has_source_lineage"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_exception_ledger_summary_request = request(
+            "call-integration-activation-exception-ledger-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EXCEPTION_LEDGER_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("exception_blocked", JsonValue::Bool(true)),
+            ]),
+            5_078,
+        );
+        let activation_exception_ledger_summary_trace =
+            tool_runtime.invoke_with_events(&activation_exception_ledger_summary_request);
+        assert!(activation_exception_ledger_summary_trace.result.ok);
+        assert_eq!(
+            activation_exception_ledger_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_exception_ledger_summary_output = activation_exception_ledger_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_exception_ledger_rollup =
+            field(activation_exception_ledger_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_exception_ledger_rollup, "blocked_records").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_exception_ledger_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -42181,6 +43125,14 @@ mod tests {
             activation_evidence_ledger_summary_request,
             activation_evidence_ledger_summary_trace,
         );
+        journal.record_trace(
+            list_activation_exception_ledger_request,
+            list_activation_exception_ledger_trace,
+        );
+        journal.record_trace(
+            activation_exception_ledger_summary_request,
+            activation_exception_ledger_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -42254,9 +43206,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 151);
-        assert_eq!(journal_summary.completed_count, 151);
-        assert_eq!(journal.audit_records().len(), 151);
+        assert_eq!(journal_summary.invocation_count, 153);
+        assert_eq!(journal_summary.completed_count, 153);
+        assert_eq!(journal.audit_records().len(), 153);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
