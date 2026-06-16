@@ -9462,7 +9462,13 @@ pub fn run_deck_analysis(
         "tran" => {
             let step_time = require_deck_plan_number(plan.step_time, &plan, "step_time")?;
             let stop_time = require_deck_plan_number(plan.stop_time, &plan, "stop_time")?;
-            let result = transient(circuit, step_time, stop_time)?;
+            let run_step = plan
+                .max_step
+                .map_or(step_time, |max_step| step_time.min(max_step));
+            let result = filter_transient_points_start(
+                transient(circuit, run_step, stop_time)?,
+                plan.start_time,
+            );
             let table = format_deck_transient_table(&result, netlist)?;
             Ok(DeckAnalysisExecution {
                 plan,
@@ -9518,6 +9524,23 @@ fn require_deck_plan_usize(
             format!("{} analysis missing {field_name}", plan.directive),
         )
     })
+}
+
+fn filter_transient_points_start(
+    points: Vec<TransientPoint>,
+    start_time: Option<f64>,
+) -> Vec<TransientPoint> {
+    let Some(start_time) = start_time else {
+        return points;
+    };
+    if start_time <= 0.0 {
+        return points;
+    }
+    let epsilon = start_time.abs().max(1.0) * 1.0e-12;
+    points
+        .into_iter()
+        .filter(|point| point.time + epsilon >= start_time)
+        .collect()
 }
 
 fn deck_plan_error(plan: &DeckAnalysisPlan, reason: String) -> SpiceError {

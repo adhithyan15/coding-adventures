@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck transient START/MAXSTEP/UIC routing** —
+  `run_deck_analysis()` now routes selected `.tran` `START` output filtering,
+  `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable
+  deck-selected transient tables, matching Rust and TypeScript.
+
 - **Deck AC LIN/OCT execution routing** —
   `run_deck_analysis()` now executes selected `.ac LIN`, `.ac DEC`, and
   `.ac OCT` plans with SPICE-style linear, points-per-decade, and

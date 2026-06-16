@@ -1904,6 +1904,30 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         "Index\tTime\tV(mid)\n0\t1.000000e-03\t5.000000e-01\n"
     );
 
+    let tran_window_execution = run_deck_analysis(
+        &circuit,
+        ".save V(mid)\n.tran 2m 6m 2m 1m uic\n.end\n",
+        None,
+    )
+    .unwrap();
+    assert!((tran_window_execution.plan.start_time.unwrap() - 2.0e-3).abs() < 1.0e-12);
+    assert!((tran_window_execution.plan.max_step.unwrap() - 1.0e-3).abs() < 1.0e-12);
+    assert!(tran_window_execution.plan.use_initial_conditions);
+    match &tran_window_execution.result {
+        DeckAnalysisExecutionResult::Tran(points) => {
+            let expected_times = [2.0e-3, 3.0e-3, 4.0e-3, 5.0e-3, 6.0e-3];
+            assert_eq!(points.len(), expected_times.len());
+            for (point, expected_time) in points.iter().zip(expected_times) {
+                assert!((point.time - expected_time).abs() < 1.0e-12);
+            }
+        }
+        other => panic!("expected transient result, got {other:?}"),
+    }
+    assert_eq!(
+        tran_window_execution.table,
+        "Index\tTime\tV(mid)\n0\t2.000000e-03\t5.000000e-01\n1\t3.000000e-03\t5.000000e-01\n2\t4.000000e-03\t5.000000e-01\n3\t5.000000e-03\t5.000000e-01\n4\t6.000000e-03\t5.000000e-01\n"
+    );
+
     let error = run_deck_analysis(&circuit, netlist, None).unwrap_err();
     assert!(error.to_string().contains("multiple analysis cards"));
 

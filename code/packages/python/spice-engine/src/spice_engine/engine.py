@@ -2344,7 +2344,13 @@ def run_deck_analysis(
     if plan.analysis == "tran":
         step_time = _require_deck_plan_number(plan, "step_time")
         stop_time = _require_deck_plan_number(plan, "stop_time")
-        result = transient(circuit, t_step=step_time, t_stop=stop_time, method="euler")
+        start_time = _optional_deck_plan_number(plan, "start_time")
+        max_step = _optional_deck_plan_number(plan, "max_step")
+        run_step = min(step_time, max_step) if max_step is not None else step_time
+        result = _filter_transient_result_start(
+            transient(circuit, t_step=run_step, t_stop=stop_time, method="euler"),
+            start_time,
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2373,6 +2379,18 @@ def _require_deck_plan_number(plan: DeckAnalysisPlan, field_name: str) -> float:
     )
 
 
+def _optional_deck_plan_number(plan: DeckAnalysisPlan, field_name: str) -> float | None:
+    value = getattr(plan, field_name)
+    if value is None:
+        return None
+    if isinstance(value, (float, int)):
+        return float(value)
+    raise ValueError(
+        f"run_deck_analysis: line {plan.line_number}: "
+        f"{plan.directive} analysis has invalid {field_name}"
+    )
+
+
 def _require_deck_plan_int(plan: DeckAnalysisPlan, field_name: str) -> int:
     value = getattr(plan, field_name)
     if isinstance(value, int):
@@ -2380,6 +2398,21 @@ def _require_deck_plan_int(plan: DeckAnalysisPlan, field_name: str) -> int:
     raise ValueError(
         f"run_deck_analysis: line {plan.line_number}: "
         f"{plan.directive} analysis missing {field_name}"
+    )
+
+
+def _filter_transient_result_start(
+    result: TransientResult,
+    start_time: float | None,
+) -> TransientResult:
+    if start_time is None or start_time <= 0.0:
+        return result
+    epsilon = max(abs(start_time), 1.0) * 1.0e-12
+    return TransientResult(
+        points=[point for point in result.points if point.time + epsilon >= start_time],
+        converged=result.converged,
+        method=result.method,
+        steps_rejected=result.steps_rejected,
     )
 
 

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `.tran START/MAXSTEP/UIC` selected-plan execution routing to
+  `run_deck_analysis`; deck transient plans now apply `START` output filtering,
+  `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable
+  deck-selected transient tables, matching Python and TypeScript.
 - Add `.ac LIN` and `.ac OCT` selected-plan execution routing to
   `run_deck_analysis`; deck AC plans now execute SPICE-style linear,
   points-per-decade, and points-per-octave grids, matching Python and

@@ -7290,7 +7290,11 @@ export function runDeckAnalysis(
   if (plan.analysis === "tran") {
     const stepTime = requireDeckPlanNumber(plan.stepTime, plan, "stepTime");
     const stopTime = requireDeckPlanNumber(plan.stopTime, plan, "stopTime");
-    const result = transient(circuit, stepTime, stopTime);
+    const runStep = plan.maxStep !== undefined ? Math.min(stepTime, plan.maxStep) : stepTime;
+    const result = filterTransientPointsStart(
+      transient(circuit, runStep, stopTime),
+      plan.startTime,
+    );
     return { plan, result, table: formatDeckTransientTable(result, netlist) };
   }
   throw invalidElement("runDeckAnalysis", `unsupported analysis ${JSON.stringify(plan.analysis)}`);
@@ -7336,6 +7340,17 @@ function requireDeckPlanInteger(
     "runDeckAnalysis",
     `line ${plan.lineNumber}: ${plan.directive} analysis missing ${fieldName}`,
   );
+}
+
+function filterTransientPointsStart(
+  points: readonly TransientPoint[],
+  startTime: number | undefined,
+): TransientPoint[] {
+  if (startTime === undefined || startTime <= 0.0) {
+    return [...points];
+  }
+  const epsilon = Math.max(Math.abs(startTime), 1.0) * 1.0e-12;
+  return points.filter((point) => point.time + epsilon >= startTime);
 }
 
 function runDeckAcSweep(

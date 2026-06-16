@@ -1476,6 +1476,32 @@ describe("transient", () => {
         "0\t1.000000e-03\t5.000000e-01\n",
     );
 
+    const tranWindowExecution = runDeckAnalysis(
+      circuit,
+      ".save V(mid)\n.tran 2m 6m 2m 1m uic\n.end\n",
+    );
+    expect(tranWindowExecution.plan.startTime).toBeCloseTo(2.0e-3, 12);
+    expect(tranWindowExecution.plan.maxStep).toBeCloseTo(1.0e-3, 12);
+    expect(tranWindowExecution.plan.useInitialConditions).toBe(true);
+    const tranWindowPoints = tranWindowExecution.result as { time: number }[];
+    [
+      2.0e-3,
+      3.0e-3,
+      4.0e-3,
+      5.0e-3,
+      6.0e-3,
+    ].forEach((expectedTime, index) => {
+      expect(tranWindowPoints[index]?.time).toBeCloseTo(expectedTime, 12);
+    });
+    expect(tranWindowExecution.table).toBe(
+      "Index\tTime\tV(mid)\n" +
+        "0\t2.000000e-03\t5.000000e-01\n" +
+        "1\t3.000000e-03\t5.000000e-01\n" +
+        "2\t4.000000e-03\t5.000000e-01\n" +
+        "3\t5.000000e-03\t5.000000e-01\n" +
+        "4\t6.000000e-03\t5.000000e-01\n",
+    );
+
     expect(() => runDeckAnalysis(circuit, netlist)).toThrow(/multiple analysis cards/);
 
     const linExecution = runDeckAnalysis(circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n");
