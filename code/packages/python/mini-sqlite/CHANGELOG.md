@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.24.0] - 2026-06-16
+
+### Fixed
+
+- **`CREATE TRIGGER` without `FOR EACH ROW` now accepted** — SQLite makes
+  the `FOR EACH ROW` clause optional (SQLite has never supported
+  statement-level triggers, so the clause is redundant and permitted-but-not-
+  required).  Previously mini-sqlite required `FOR EACH ROW` and raised a
+  parse error when it was omitted:
+  ```
+  Parse error at 1:1: Expected program, got 'CREATE'
+  ```
+  The fix is a one-character grammar change: `"FOR" "EACH" "ROW"` →
+  `[ "FOR" "EACH" "ROW" ]`.  The adapter ignores the clause either way
+  because it scans by keyword type, and FOR/EACH/ROW are not emitted as
+  KEYWORD tokens.
+
+  | Trigger syntax                   | Before            | After     |
+  |----------------------------------|-------------------|-----------|
+  | `… FOR EACH ROW BEGIN … END`     | OK (correct)      | OK        |
+  | `… BEGIN … END` (no FOR EACH ROW)| Parse error       | OK        |
+
+- **12 new oracle tests** in ``test_tier3_trigger_for_each_row_optional.py``
+  verify that triggers fire correctly with and without `FOR EACH ROW`, and
+  that both forms match the real sqlite3 reference engine output.
+
 ## [2.23.0] - 2026-06-16
 
 ### Fixed

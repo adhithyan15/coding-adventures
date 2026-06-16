@@ -559,7 +559,7 @@ frame_bound   = "UNBOUNDED" "PRECEDING"
 
 create_trigger_stmt = "CREATE" "TRIGGER" NAME
                       ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
-                      "FOR" "EACH" "ROW"
+                      [ "FOR" "EACH" "ROW" ]
                       "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
 
 trigger_body_stmt   = insert_stmt | replace_stmt | update_stmt | delete_stmt | query_stmt ;

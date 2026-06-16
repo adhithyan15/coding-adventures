@@ -1891,8 +1891,14 @@ def _create_trigger(node: ASTNode) -> CreateTriggerStmt:
         create_trigger_stmt =
             "CREATE" "TRIGGER" NAME
             ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
-            "FOR" "EACH" "ROW"
+            [ "FOR" "EACH" "ROW" ]
             "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
+
+    SQLite makes ``FOR EACH ROW`` optional (it has been the only granularity
+    since SQLite has no statement-level triggers, so the clause is redundant).
+    The grammar now accepts it as an optional clause; the adapter ignores it
+    either way because it uses keyword scanning — FOR/EACH/ROW are not
+    surfaced as KEYWORD tokens by the lexer.
 
     NAME tokens appear in order: trigger_name, table_name.
     KEYWORD tokens carry BEFORE/AFTER and INSERT/UPDATE/DELETE.
