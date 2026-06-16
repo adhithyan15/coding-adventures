@@ -580,7 +580,10 @@ fn emit_i32_div_s_opcode() {
     assert!(wm.code[0].code.contains(&0x6D));
 }
 
-// Test 4.10 — i32.div_u emitted for unsigned i32
+// Test 4.10 — unsigned narrow div emits the UNSIGNED i64 div (LANG-FULL E2).
+// Narrow unsigned types ride the i64 register model, so a `u32` divide is
+// `i64.div_u` (0x80, not the old `i32.div_u` 0x6E) followed by the u32 wrap
+// mask — keeping it unsigned and operand-width-agnostic over i64 slots.
 #[test]
 fn emit_i32_div_u_opcode() {
     let m = module_one("divu", vec![("a", "u32"), ("b", "u32")], "u32", vec![
@@ -589,8 +592,8 @@ fn emit_i32_div_u_opcode() {
         IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "u32"),
     ]);
     let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
-    // 0x6E = i32.div_u
-    assert!(wm.code[0].code.contains(&0x6E));
+    // 0x80 = i64.div_u
+    assert!(wm.code[0].code.contains(&0x80), "u32 div → i64.div_u");
 }
 
 // Test 4.11 — i32.eq emitted
@@ -922,18 +925,21 @@ fn bool_param_maps_to_i32() {
     assert_eq!(wm.types[0].results, vec![ValueType::I32]);
 }
 
-// Test 9.2 — u8/u16/u32 map to I32
+// Test 9.2 — u4/u8/u16/u32 map to I64 (LANG-FULL E2). Narrow unsigned types ride
+// the i64 register model so their arithmetic never meets a width-mismatched
+// i64-slot operand (e.g. a const/let); the value is masked to width after each
+// op instead. (Was I32 before E2's compute-wide-and-mask rework.)
 #[test]
 fn unsigned_8_16_32_map_to_i32() {
-    for ty in &["u8", "u16", "u32"] {
+    for ty in &["u4", "u8", "u16", "u32"] {
         let m = module_one("f", vec![("x", ty)], ty, vec![
             IIRInstr::new("ret", None, vec![Operand::Var("x".into())], *ty),
         ]);
         let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
         assert_eq!(
             wm.types[0].params[0],
-            ValueType::I32,
-            "type {} should map to I32",
+            ValueType::I64,
+            "type {} should map to I64 (i64 register model)",
             ty
         );
     }

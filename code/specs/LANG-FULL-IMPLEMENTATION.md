@@ -108,9 +108,26 @@ multiple languages; close an enabler before the features that depend on it.
       narrow + full-width untouched). **Executed proof on aarch64** — the generated ARM64 is
       installed via `jit-loader-macos` and *called*: `200u8+100u8=44`, `~0u8=255`, `1u8<<8=0`,
       `u32` mul wrap; x86_64 has structural mask tests + the lang-aot matrix on a Linux x86 runner.
-    - ☐ **Nib frontend + matrix proof** — emit narrow `type_hint`s; executed cross-backend
-      proof; flip N3-`~`, Nib N6/N7. Then Oct (O2). **All backend legs are now ✅**
-      (vm/jit/wasm/jvm/cil/native-AOT + LLVM) — this is a pure frontend-wiring item.
+    - ◑ **Stack-backend rework (compute-wide + mask).** Wiring Nib to emit narrow `type_hint`s
+      surfaced that the 3 *stack* backends typed the masking op at the narrow width (wasm→i32,
+      jvm→int, cil→i32), which **requires narrow-width operands**. Real frontends carry every
+      `const`/`let` as `i64` (module uniformity) and put the narrow width only on the op, so a
+      Nib `u8` add was an `i32.add` over `i64` operands → trap (`expected i32, got I64`). Their
+      E2 unit tests never caught it (self-consistent narrow-width modules). Fix: narrow unsigned
+      types ride the **i64 register model** (i64 op + i64-width AND mask), operand-agnostic like
+      vm/jit/llvm/native.
+      - ✅ **iir-to-wasm** (v0.15.0) — `uses_i64_register` selects `i64.*` ops; mask is
+        `i64.const <mask>; i64.and` (now incl. `u32`). **Executed proof** on real `wasm-runtime`:
+        `200i64 + 100i64 : u8 == 44`. Full matrix + wasm consumers green (no-op for i64 programs).
+      - ☐ **iir-to-jvm-class-file** — long ops + `land` mask.
+      - ☐ **iir-to-cil-bytecode** — i64 ops + `and` mask.
+    - ☐ **aot-core u4** — the native CIR pipeline (`infer`/`specialise`) didn't list `u4`, so a
+      Nib `u4` op was refused before #5887's backend mask could fire; add `u4` to ALLOWED_TYPES +
+      numeric_rank + the mnemonic set. *(Bundled with the Nib frontend PR.)*
+    - ☐ **Nib frontend + matrix proof** — emit narrow `type_hint`s (bidirectional/context-directed
+      typing so `6*7` in a `u8` context is `u8`, not magnitude-`u4`); executed cross-backend proof
+      (`200u8+100u8=44`); flip N3-`~` (needs LLVM `not`), Nib N6/N7. Then Oct (O2). Unblocked once
+      the 3 stack reworks land.
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
   literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
   already emit f64 ops; extend the rest.)*
