@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck control Fourier routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `four` and `fourier` harmonic output commands into
+  `.four` deck cards, matching Rust and TypeScript.
+
 - **Deck control measurement routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
   selected `.control` block `measure` and `meas` measurement commands into

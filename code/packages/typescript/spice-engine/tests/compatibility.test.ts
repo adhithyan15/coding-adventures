@@ -121,6 +121,8 @@ probe V(out)
 print op V(in)
 measure tran vmax MAX V(out)
 meas dc imax MAX I(V1)
+fourier 1k V(out)
+four 2k V(in)
 run
 .endc
 .end
@@ -136,6 +138,8 @@ run
       ".print op V(in)",
       ".measure tran vmax MAX V(out)",
       ".meas dc imax MAX I(V1)",
+      ".four 1k V(out)",
+      ".four 2k V(in)",
     ]);
     expect(summary.diagnostics.map(({ directive, lineNumber, severity }) => [
       directive,
@@ -145,7 +149,7 @@ run
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
-      [".control", 11, "error"],
+      [".control", 13, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -163,6 +167,15 @@ run
     ])).toStrictEqual([
       [".measure", "tran", "vmax", "max", "V(out)"],
       [".meas", "dc", "imax", "max", "I(V1)"],
+    ]);
+    const fourierSummary = resolveDeckFourier(`${summary.activeLines.join("\n")}\n.end`);
+    expect(fourierSummary.fourier.map((card) => [
+      card.directive,
+      card.fundamentalFrequencyHz,
+      card.probes,
+    ])).toStrictEqual([
+      [".four", 1000, ["V(out)"]],
+      [".four", 2000, ["V(in)"]],
     ]);
   });
 
@@ -218,6 +231,8 @@ probe V(b)
 print op V(a)
 measure tran vmax MAX V(a)
 meas dc imax MAX I(V1)
+fourier 1k V(a)
+four 2k V(b)
 run
 .endc
 .end
@@ -237,6 +252,8 @@ run
       ".print op V(a)",
       ".measure tran vmax MAX V(a)",
       ".meas dc imax MAX I(V1)",
+      ".four 1k V(a)",
+      ".four 2k V(b)",
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_INCLUDE_NOT_FOUND",
@@ -250,7 +267,7 @@ run
       lineNumber,
     ])).toStrictEqual([
       [".control", 5],
-      [".control", 12],
+      [".control", 14],
     ]);
     const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
     expect(measurementSummary.measurements.map((card) => [
@@ -262,6 +279,15 @@ run
     ])).toStrictEqual([
       [".measure", "tran", "vmax", "max", "V(a)"],
       [".meas", "dc", "imax", "max", "I(V1)"],
+    ]);
+    const fourierSummary = resolveDeckFourier(`${summary.activeLines.join("\n")}\n.end`);
+    expect(fourierSummary.fourier.map((card) => [
+      card.directive,
+      card.fundamentalFrequencyHz,
+      card.probes,
+    ])).toStrictEqual([
+      [".four", 1000, ["V(a)"]],
+      [".four", 2000, ["V(b)"]],
     ]);
     expect(summary.diagnostics.slice(0, 3).map(({ source, lineNumber, target }) => [
       source,

@@ -134,6 +134,8 @@ probe V(out)
 print op V(in)
 measure tran vmax MAX V(out)
 meas dc imax MAX I(V1)
+fourier 1k V(out)
+four 2k V(in)
 run
 .endc
 .end
@@ -152,6 +154,8 @@ run
             ".print op V(in)".to_string(),
             ".measure tran vmax MAX V(out)".to_string(),
             ".meas dc imax MAX I(V1)".to_string(),
+            ".four 1k V(out)".to_string(),
+            ".four 2k V(in)".to_string(),
         ]
     );
     let diagnostics = summary
@@ -171,7 +175,7 @@ run
             (".include", 2, "error"),
             (".lib", 3, "error"),
             (".control", 4, "error"),
-            (".control", 11, "error")
+            (".control", 13, "error")
         ]
     );
     assert_eq!(
@@ -204,6 +208,26 @@ run
         vec![
             (".measure", "tran", "vmax", "max", "V(out)"),
             (".meas", "dc", "imax", "max", "I(V1)")
+        ]
+    );
+    let fourier_deck = format!("{}\n.end", summary.active_lines.join("\n"));
+    let fourier_summary = resolve_deck_fourier(&fourier_deck);
+    assert_eq!(
+        fourier_summary
+            .fourier
+            .iter()
+            .map(|card| (
+                card.directive.as_str(),
+                card.fundamental_frequency_hz,
+                card.probes
+                    .iter()
+                    .map(|probe| probe.as_str())
+                    .collect::<Vec<_>>()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (".four", 1000.0, vec!["V(out)"]),
+            (".four", 2000.0, vec!["V(in)"])
         ]
     );
 }
@@ -292,6 +316,8 @@ probe V(b)
 print op V(a)
 measure tran vmax MAX V(a)
 meas dc imax MAX I(V1)
+fourier 1k V(a)
+four 2k V(b)
 run
 .endc
 .end
@@ -310,7 +336,9 @@ run
             ".probe V(b)",
             ".print op V(a)",
             ".measure tran vmax MAX V(a)",
-            ".meas dc imax MAX I(V1)"
+            ".meas dc imax MAX I(V1)",
+            ".four 1k V(a)",
+            ".four 2k V(b)"
         ]
     );
     assert_eq!(
@@ -334,7 +362,7 @@ run
             .skip(3)
             .map(|diagnostic| (diagnostic.directive.as_str(), diagnostic.line_number))
             .collect::<Vec<_>>(),
-        vec![(".control", 5), (".control", 12)]
+        vec![(".control", 5), (".control", 14)]
     );
     let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
     let measurement_summary = resolve_deck_measurements(&measurement_deck);
@@ -353,6 +381,26 @@ run
         vec![
             (".measure", "tran", "vmax", "max", "V(a)"),
             (".meas", "dc", "imax", "max", "I(V1)")
+        ]
+    );
+    let fourier_deck = format!("{}\n.end", summary.active_lines.join("\n"));
+    let fourier_summary = resolve_deck_fourier(&fourier_deck);
+    assert_eq!(
+        fourier_summary
+            .fourier
+            .iter()
+            .map(|card| (
+                card.directive.as_str(),
+                card.fundamental_frequency_hz,
+                card.probes
+                    .iter()
+                    .map(|probe| probe.as_str())
+                    .collect::<Vec<_>>()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (".four", 1000.0, vec!["V(a)"]),
+            (".four", 2000.0, vec!["V(b)"])
         ]
     );
     assert_eq!(

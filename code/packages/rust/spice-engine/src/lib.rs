@@ -6883,6 +6883,7 @@ fn control_block_command_as_deck_line(line: &str) -> Option<String> {
         "probe" | ".probe" => ".probe",
         "measure" | ".measure" => ".measure",
         "meas" | ".meas" => ".meas",
+        "four" | ".four" | "fourier" | ".fourier" => ".four",
         "print" | ".print" => ".print",
         "plot" | ".plot" => ".plot",
         _ => return None,

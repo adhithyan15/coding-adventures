@@ -505,6 +505,10 @@ _SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
         ".measure",
         "meas",
         ".meas",
+        "four",
+        ".four",
+        "fourier",
+        ".fourier",
         "print",
         ".print",
         "plot",
@@ -3323,7 +3327,10 @@ def _control_block_command_as_deck_line(line: str) -> str | None:
     command = parts[0].lower()
     if command not in _SUPPORTED_CONTROL_BLOCK_COMMANDS:
         return None
-    directive = command if command.startswith(".") else f".{command}"
+    if command in {"four", ".four", "fourier", ".fourier"}:
+        directive = ".four"
+    else:
+        directive = command if command.startswith(".") else f".{command}"
     if len(parts) == 1:
         return directive
     return f"{directive} {parts[1]}"
