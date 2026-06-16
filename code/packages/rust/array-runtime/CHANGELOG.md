@@ -56,9 +56,27 @@ executors. `matrix-runtime` currently plans placement but does not yet
 orchestrate execution end-to-end; when it does, compute switches from the CPU
 reference path to the planned graph with no public API change.
 
+### Hardened (pre-merge security review)
+
+Defensive overflow handling so crafted dimensions can't wrap to an
+under-sized buffer or a mis-costed dispatch decision:
+
+- `Array::from_shape` computes the element count with checked multiplication
+  and rejects shapes whose product overflows `usize` (previously an unchecked
+  `product()` could wrap to a small count that passed the length check).
+- `Array::filled` (and `zeros`/`ones`/`eye` through it) and `Array::from_rows`
+  size their backing buffer with `checked_mul` — a deterministic error/panic on
+  overflow instead of a release-mode wrap that would under-allocate.
+- `ops::matmul` checks the `m * n` output size; `ops::transpose` allocates from
+  the input's element count (which already fit in memory).
+- `accel::shape_of` converts `usize` dims to `matrix-ir`'s `u32` with a
+  *checked* cast, rejecting dims past `u32::MAX` rather than silently truncating
+  (which would make the planner cost the wrong op and return a wrong backend).
+
 ### Tests
 
-24 tests (23 unit + 1 doctest): the value model (shapes, column-major storage,
-constructors, bounds, `Display`), every reference op (including broadcasting,
-NaN/Inf, dimension-mismatch errors, transpose involution), and the dispatch
-decision (CPU-only fallback, small op stays on CPU, large matmul moves to GPU).
+28 tests (27 unit + 1 doctest): the value model (shapes, column-major storage,
+constructors, bounds, `Display`, overflow rejection), every reference op
+(including broadcasting, NaN/Inf, dimension-mismatch errors, transpose
+involution), and the dispatch decision (CPU-only fallback, small op stays on
+CPU, large matmul moves to GPU, oversized dim rejected).

@@ -20,17 +20,25 @@ pub enum Kernel {
     MatMul,
 }
 
-fn shape_of(dims: &[usize]) -> Shape {
-    Shape {
-        dims: dims.iter().map(|&d| d as u32).collect(),
-    }
+/// `matrix-ir` shapes use `u32` dims. Convert with a *checked* cast: a dim that
+/// doesn't fit `u32` is rejected rather than silently truncated, because a
+/// truncated dim would make the planner cost a different (smaller) op than the
+/// caller asked for and hand back a wrong backend placement.
+fn shape_of(dims: &[usize]) -> Result<Shape, String> {
+    let dims = dims
+        .iter()
+        .map(|&d| {
+            u32::try_from(d).map_err(|_| format!("dim {d} exceeds u32::MAX (matrix-ir limit)"))
+        })
+        .collect::<Result<Vec<u32>, String>>()?;
+    Ok(Shape { dims })
 }
 
 /// Build the `matrix-ir` graph for `kernel` over operands of the given shapes.
 fn build_graph(kernel: Kernel, a: &[usize], b: &[usize]) -> Result<Graph, String> {
     let mut g = GraphBuilder::new();
-    let ta = g.input(DType::F32, shape_of(a));
-    let tb = g.input(DType::F32, shape_of(b));
+    let ta = g.input(DType::F32, shape_of(a)?);
+    let tb = g.input(DType::F32, shape_of(b)?);
     let out = match kernel {
         Kernel::Elementwise(BinOp::Add) => g.add(&ta, &tb),
         Kernel::Elementwise(BinOp::Sub) => g.sub(&ta, &tb),
@@ -132,6 +140,14 @@ mod tests {
                 "cpu"
             );
         }
+    }
+
+    #[test]
+    fn oversized_dim_is_rejected_not_truncated() {
+        // A dim past u32::MAX must be an error, not a silent truncation that
+        // would make the planner cost the wrong (smaller) op.
+        let big = (u32::MAX as usize) + 1;
+        assert!(plan_backend(Kernel::Elementwise(BinOp::Add), &[big], &[big], false).is_err());
     }
 
     #[test]

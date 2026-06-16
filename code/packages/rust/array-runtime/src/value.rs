@@ -48,7 +48,10 @@ impl Array {
         if rows.iter().any(|r| r.len() != ncols) {
             return Err("from_rows: ragged rows".into());
         }
-        let mut data = vec![0.0; nrows * ncols];
+        let n = nrows
+            .checked_mul(ncols)
+            .ok_or_else(|| "from_rows: nrows * ncols overflows usize".to_string())?;
+        let mut data = vec![0.0; n];
         for (r, row) in rows.iter().enumerate() {
             for (c, &v) in row.iter().enumerate() {
                 data[c * nrows + r] = v; // column-major store
@@ -63,10 +66,23 @@ impl Array {
     /// Wrap raw column-major data with an explicit shape (the product of the
     /// dims must equal the data length).
     pub fn from_shape(data: Vec<f64>, shape: Vec<usize>) -> Result<Array, String> {
-        let n: usize = shape
-            .iter()
-            .product::<usize>()
-            .max(if shape.is_empty() { 1 } else { 0 });
+        // Element count = product of the dims (an empty shape `[]` is a scalar →
+        // exactly one element). Use *checked* multiplication: a crafted shape
+        // whose product overflows `usize` must not wrap to a small count that
+        // spuriously passes the length check below and leaves `shape`
+        // disagreeing with `data.len()` — an invariant the indexing and
+        // `Display` code rely on (they compute offsets from `nrows()/ncols()`,
+        // not from `data.len()`).
+        let n: usize = if shape.is_empty() {
+            1
+        } else {
+            shape
+                .iter()
+                .try_fold(1usize, |acc, &d| acc.checked_mul(d))
+                .ok_or_else(|| {
+                    format!("from_shape: shape {shape:?} element count overflows usize")
+                })?
+        };
         if n != data.len() {
             return Err(format!(
                 "from_shape: shape {shape:?} implies {n} elements, got {}",
@@ -78,8 +94,14 @@ impl Array {
 
     /// An `[rows, cols]` array of zeros / ones / a constant.
     pub fn filled(rows: usize, cols: usize, value: f64) -> Array {
+        // `checked_mul` turns an absurd `rows * cols` into a clean panic rather
+        // than a release-mode wrap that would under-allocate `data` and let
+        // `eye` (and later index math) write out of bounds.
+        let n = rows
+            .checked_mul(cols)
+            .expect("Array::filled: rows * cols overflows usize");
         Array {
-            data: vec![value; rows * cols],
+            data: vec![value; n],
             shape: vec![rows, cols],
         }
     }
@@ -230,6 +252,23 @@ mod tests {
         // A scalar shape [] implies exactly one element.
         assert!(Array::from_shape(vec![7.0], vec![]).is_ok());
         assert!(Array::from_shape(vec![7.0, 8.0], vec![]).is_err());
+    }
+
+    #[test]
+    fn from_shape_rejects_overflowing_product() {
+        // A shape whose element count overflows usize must be an error, not a
+        // wrapped-small count that spuriously matches a short data vector.
+        let huge = vec![1.0]; // pretend a 1-element buffer
+        let shape = vec![usize::MAX, 2]; // product wraps
+        assert!(Array::from_shape(huge, shape).is_err());
+    }
+
+    #[test]
+    #[should_panic(expected = "overflows usize")]
+    fn filled_panics_on_overflowing_dims() {
+        // Deterministic panic (not a silent release-mode wrap that would
+        // under-allocate and corrupt later index math).
+        let _ = Array::filled(usize::MAX, 2, 0.0);
     }
 
     #[test]

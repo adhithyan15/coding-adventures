@@ -75,7 +75,12 @@ pub fn matmul(a: &Array, b: &Array) -> Result<Array, String> {
         ));
     }
     let (ad, bd) = (a.data(), b.data());
-    let mut out = vec![0.0; m * n];
+    // The output `[m, n]` can be far larger than either operand (e.g. an outer
+    // product), so size it with checked arithmetic rather than risking a wrap.
+    let out_len = m
+        .checked_mul(n)
+        .ok_or_else(|| format!("matmul: output {m}x{n} overflows usize"))?;
+    let mut out = vec![0.0; out_len];
     for j in 0..n {
         for i in 0..m {
             let mut acc = 0.0;
@@ -92,7 +97,10 @@ pub fn matmul(a: &Array, b: &Array) -> Result<Array, String> {
 pub fn transpose(a: &Array) -> Array {
     let (m, n) = (a.nrows(), a.ncols());
     let ad = a.data();
-    let mut out = vec![0.0; m * n];
+    // The transpose has exactly as many elements as the input, so allocate from
+    // `ad.len()` — that count already fit in memory, so it can't overflow even
+    // if a malformed `Array` had `m * n != ad.len()`.
+    let mut out = vec![0.0; ad.len()];
     for j in 0..n {
         for i in 0..m {
             out[i * n + j] = ad[j * m + i];
