@@ -2,6 +2,61 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.138.0] - 2026-06-15
+
+### Added (CLOC12.155 — SIMPLE runs the typed-AST optimization pipeline, v2)
+
+`--compilation_level SIMPLE` no longer degrades to whitespace-only output.
+It now runs the real typed-AST optimization pipeline:
+
+```text
+source ──parse──▶ grammar AST ──bridge──▶ typed Program
+       ──passes──▶ optimized Program ──emit──▶ JS text
+```
+
+In this first slice (PR-1) the pass pipeline holds a single pass —
+`constant-fold` — so constant expressions are evaluated at compile time
+(`1 + 2` ⇒ `3`, `3 * 4` ⇒ `12`, `2 + 3 * 4` ⇒ `14`). Follow-up PRs append
+the remaining SIMPLE-appropriate passes (fold-control-flow, dce,
+remove-unused-vars, local inline/rename), one pass per PR.
+
+- **New `run_simple_pipeline` helper** in `run.rs`: takes the bridged
+  `Program`, runs a `closure-pass-pipeline::PassPipeline` holding
+  `ConstantFoldPass`, then serialises the optimized tree back to JS with
+  `closure-emitter::emit` (minified, no source map). All four
+  previously-wired-but-unused crates (`closure-pass-pipeline`,
+  `closure-pass-constant-fold`, `closure-emitter`, `type-sidecar`) are now
+  actually invoked.
+- **`SIMPLE_PASS_NAMES` constant** — the ordered pass list the SIMPLE level
+  runs (`["constant-fold"]` today). Each follow-up PR appends one entry.
+- **Degrade-safe**: the typed path is best-effort. A grammar-parse
+  rejection, a Phase-2+ bridge `UnsupportedSyntax`, a pass error, or an
+  emitter error all fall back to `whitespace_only` so the compiler never
+  errors on valid-but-not-yet-supported input. Only
+  `BridgeError::InternalError` (a broken invariant) still propagates as
+  `CompilerError::Bridge`.
+- **Correlation-vector trace**: the `compilation_level` contribution tag
+  moves from `simple_v1` to `simple_v2` and gains a `passes` field listing
+  the pipeline. `bridge_status` now distinguishes `"ok"` (true optimized
+  emit) from the degrade reasons `"parse_error:…"`,
+  `"unsupported_syntax:…"`, `"pass_error:…"`, and `"emit_error:…"`.
+
+### Verified
+- New `tests/diff/simple-constant-fold/` end-to-end fixture +
+  `tests/diff_simple.rs`: `var sum = 1 + 2; …` ⇒
+  `var sum=3;var product=12;var nested=14;`.
+- New unit tests `simple_level_constant_folds_arithmetic` (SIMPLE folds
+  `1 + 2` ⇒ `3`) and `simple_level_whitespace_only_leaves_arithmetic_unfolded`
+  (the same input under WHITESPACE_ONLY keeps `1+2`, proving the fold is the
+  pipeline's doing).
+- Existing SIMPLE unit tests updated for the `simple_v2` tag and `passes`
+  field; degrade-on-unsupported-syntax behavior unchanged.
+- `tests/diff/define/expected.stdout` regenerated: it runs at the default
+  level (now SIMPLE), so its output is the emitter's form — the `if` keeps
+  its block braces (`if(false){…}`) where the older whitespace-only path
+  stripped them. The `--define` substitution meaning (`DEBUG` → `false`) is
+  unchanged and identical across levels (define is a token-level pre-pass).
+
 ## [0.137.0] - 2026-06-15
 
 ### Fixed
