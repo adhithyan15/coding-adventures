@@ -135,12 +135,23 @@ const VERIFY_SCHEMA = {
   },
 }
 
-// INCREMENTAL grounding (REL-8): the caller passes `args` = an array of edge ids
-// already grounded (the Workflow sandbox has no filesystem, so the skip-list is
-// injected, not read from iem-edge-grounding.json). Those edges are skipped so a
-// re-run only grounds the new / not-yet-grounded edges — no wasted re-fetching of
-// the 16 already-authoritative ones. With no args, every edge is grounded.
-const skip = new Set(Array.isArray(args) ? args : [])
+// INCREMENTAL grounding (REL-8, fixed REL-9): the caller passes `args` = an array
+// of edge ids already grounded (the Workflow sandbox has no filesystem, so the
+// skip-list is injected, not read from iem-edge-grounding.json). Those edges are
+// skipped so a re-run only grounds the new / not-yet-grounded edges — no wasted
+// re-fetching of already-authoritative ones. With no args, every edge is grounded.
+//
+// The runtime may deliver `args` either as a parsed array OR as a JSON-ENCODED
+// STRING (REL-8 saw the string form, so `Array.isArray` was false and nothing was
+// skipped). Normalise: parse a string, accept an array, else empty.
+function _skipList(a) {
+  if (Array.isArray(a)) return a
+  if (typeof a === 'string') {
+    try { const p = JSON.parse(a); return Array.isArray(p) ? p : [] } catch { return [] }
+  }
+  return []
+}
+const skip = new Set(_skipList(args))
 const todo = EDGES.filter((e) => !skip.has(e.id))
 log(`grounding ${todo.length} edge(s); skipping ${skip.size} already grounded`)
 
