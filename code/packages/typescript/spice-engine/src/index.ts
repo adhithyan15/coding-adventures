@@ -589,7 +589,7 @@ export interface DeckFourierSummary {
 }
 
 export interface DeckOutputSelection {
-  readonly directive: ".save" | ".probe";
+  readonly directive: ".save" | ".probe" | ".print";
   readonly analysis?: "op" | "dc" | "ac" | "tran";
   readonly probes: readonly string[];
   readonly lineNumber: number;
@@ -597,7 +597,7 @@ export interface DeckOutputSelection {
 
 export interface DeckOutputDiagnostic {
   readonly code: string;
-  readonly directive: ".save" | ".probe";
+  readonly directive: ".save" | ".probe" | ".print";
   readonly lineNumber: number;
   readonly message: string;
   readonly severity: "error" | "warning";
@@ -3088,7 +3088,7 @@ export function resolveDeckOutputs(netlist: string): DeckOutputSummary {
       endLineNumber = lineNumber;
       break;
     }
-    if (directive === ".save" || directive === ".probe") {
+    if (directive === ".save" || directive === ".probe" || directive === ".print") {
       resolveOutputLine(stripped, lineNumber, directive, state);
       continue;
     }
@@ -4235,23 +4235,49 @@ function resolveFourierLine(
 function resolveOutputLine(
   line: string,
   lineNumber: number,
-  directive: ".save" | ".probe",
+  directive: ".save" | ".probe" | ".print",
   state: DeckOutputState,
 ): void {
   const tokens = directiveTokens(line);
   if (tokens.length < 2) {
+    const message = directive === ".print"
+      ? ".print requires an analysis token and at least one probe token"
+      : `${directive} requires at least one probe token`;
     addOutputDiagnostic(state, {
       code: "SPICE_DECK_OUTPUT_ARGUMENT",
       directive,
       lineNumber,
-      message: `${directive} requires at least one probe token`,
+      message,
     });
     return;
   }
 
   let analysis: DeckOutputSelection["analysis"];
   let probeTokens = tokens.slice(1);
-  if (directive === ".probe") {
+  if (directive === ".print") {
+    if (tokens.length < 3) {
+      addOutputDiagnostic(state, {
+        code: "SPICE_DECK_OUTPUT_ARGUMENT",
+        directive,
+        lineNumber,
+        message: ".print requires an analysis token and at least one probe token",
+      });
+      return;
+    }
+    const normalizedAnalysis = normalizeDeckOutputAnalysis(tokens[1]);
+    if (normalizedAnalysis === undefined) {
+      addOutputDiagnostic(state, {
+        code: "SPICE_DECK_OUTPUT_ANALYSIS",
+        directive,
+        lineNumber,
+        message: `.print analysis must be op, dc, ac, or tran, got ${JSON.stringify(tokens[1])}`,
+        token: tokens[1],
+      });
+      return;
+    }
+    analysis = normalizedAnalysis;
+    probeTokens = tokens.slice(2);
+  } else if (directive === ".probe") {
     const normalizedAnalysis = normalizeDeckOutputAnalysis(tokens[1]);
     if (normalizedAnalysis !== undefined) {
       analysis = normalizedAnalysis;

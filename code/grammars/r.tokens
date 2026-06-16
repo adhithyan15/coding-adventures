@@ -43,11 +43,23 @@ PERCENT_OP         = /%[^%]*%/
 # ============================================================================
 # SECTION 2: Numeric literals
 #
-# Double-precision forms, identical to S: `42`, `3.14`, `.5`, `1e3`, `1.5e-3`.
-# (R's `L` integer / `i` complex / `0x` hex suffixes are a later item.)
+# R's typed numeric literals (item R-4). The suffixed/prefixed forms are listed
+# BEFORE plain NUMBER so first-match-wins claims the whole token:
+#   HEX_LIT      0x1F, 0XFF, 0x1FL   hexadecimal (optional integer `L`)
+#   COMPLEX_LIT  1i, 2.5i, 1e3i      imaginary literal
+#   INT_LIT      10L, 1e3L           integer literal (the `L` suffix)
+#   NUMBER       42, 3.14, .5, 1e3   plain double (identical to S)
+#
+# (Without this ordering, `10L` would lex as NUMBER(`10`) + NAME(`L`), and
+# `0x1F` as NUMBER(`0`) + NAME(`x1F`).) The runtime maps HEX_LIT/INT_LIT to
+# double (this subset has no distinct integer type); COMPLEX_LIT lexes and
+# parses but the runtime reports complex numbers as unsupported for now.
 # ============================================================================
 
-NUMBER = /[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/
+HEX_LIT     = /0[xX][0-9a-fA-F]+L?/
+COMPLEX_LIT = /[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?i/
+INT_LIT     = /[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?L/
+NUMBER      = /[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/
 
 # ============================================================================
 # SECTION 3: String literals (double- and single-quoted; aliased to STRING)

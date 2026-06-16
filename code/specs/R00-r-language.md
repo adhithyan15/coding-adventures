@@ -46,17 +46,24 @@ unchanged.
   token grammar with `_` moved into `NAME`, no `UNDERSCORE`, plus `->>` and the
   `NA_*` constants) and the `r-lexer` crate (a sibling of `s-lexer`, reusing the
   identical bracket-interior newline hook).
-- **R-2 — `r-parser`** *(this PR)*. `code/grammars/r.grammar`, mirroring
+- **R-2 — `r-parser`** ✅ *merged*. `code/grammars/r.grammar`, mirroring
   `s.grammar`'s rule names exactly (so the shared `s-runtime` evaluator can
   consume the tree unchanged) and adding `=` and `->>` as assignment operators
   plus the typed-`NA` atoms. The `r-parser` crate is a sibling of `s-parser`.
-- **R-3 — `r-runtime` + `r-repl` + the `R` binary**. A vertical slice to a
-  working R REPL. The S runtime is refactored to expose evaluation of an
-  externally-parsed tree; `r-runtime` parses with `r-parser` and evaluates with
-  the shared `s-runtime`. `r-repl` mirrors `s-repl`.
-- **R-4+** — R literal types (`L`/`i`/`0x`), the `NA_*` constants in the
-  runtime, then R-specific built-ins and the `d/p/q/r` distribution family wired
-  to `statistics-core`.
+- **R-3 — `r-runtime` + `r-repl` + the `R` binary** ✅ *merged*. A working R
+  REPL. `s-runtime`'s `Interpreter::eval_str` was factored into a public,
+  parser-agnostic `eval_program(&GrammarASTNode)`; `r-runtime` parses with
+  `r-parser` and evaluates with the shared `s-runtime` (so R reuses the entire
+  value model, S3 dispatch, factors, data frames, and built-ins). `=` / `->>`
+  assignment and the typed-`NA` constants are handled in the shared evaluator.
+  `r-repl` + the `R` binary mirror `s-repl`.
+- **R-4 — typed numeric literals** *(this PR)*. `r.tokens` gains `HEX_LIT`
+  (`0x1F`, `0x1FL`), `INT_LIT` (`10L`, `1e3L`), and `COMPLEX_LIT` (`1i`), listed
+  before `NUMBER`; the shared `eval_primary` maps `L`/`0x` to double (this subset
+  has no distinct integer type) and reports `1i` as unsupported (no complex type
+  yet) rather than producing a wrong value.
+- **R-5+** — R-specific built-ins, more string/regex helpers, then the `d/p/q/r`
+  distribution family wired to `statistics-core`.
 
 ## §4 Reuse strategy
 

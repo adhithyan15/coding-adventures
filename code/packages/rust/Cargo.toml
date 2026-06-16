@@ -246,6 +246,8 @@ members = [
     "progress-bar",
     "r-lexer",
     "r-parser",
+    "r-repl",
+    "r-runtime",
     "r-vector",
     "riscv-simulator",
     "rom-bios",

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add parsed `.print <analysis> ...` output routing to `resolveDeckOutputs`,
+  `selectDeckOutputProbes`, and deck table formatters, matching Python and
+  Rust.
 - Add selected-run artifact summaries to `runDeckAnalysis`; executions now
   return stable result-row, output-probe, measurement, and Fourier counts plus
   a run-artifact table, matching Python and Rust.

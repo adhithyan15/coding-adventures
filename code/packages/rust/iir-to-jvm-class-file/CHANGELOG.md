@@ -3,6 +3,76 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.2] — 2026-06-16 (LANG-FULL BA-JVM-1 — BASIC `IF`/`FOR` run on the JVM)
+
+### Fixed — a comparison's dest slot is `int`, so an i64-operand guard verifies
+
+Dartmouth BASIC's `IF`/`FOR` control-flow programs were excluded from the JVM
+matrix column: real `java` rejected the class with `VerifyError: Accessing value
+from uninitialized register pair`. (A print with no branch, and a loop with no
+print — Nib's `for` — each worked; only the *combination* in BASIC failed.)
+
+Root cause: `build_type_map` typed a comparison's dest slot from its `type_hint`,
+which carries the **operand** width, not the result width. A comparison ALWAYS
+produces a 0/1 **`int`** (it is stored with a bare `istore`), but a comparison
+over `i64` operands had `type_hint = "i64"`, so the dest slot was typed `Long`.
+The later `jmp_if_false` then read that slot with the long guard
+(`lload; lconst_0; lcmp; ifeq`) — reading the uninitialized second half of a
+"long" the comparison only `istore`d → the verifier's "uninitialized register
+pair". Nib's loops are unaffected because scalar Nib is concretized to `i32`
+(`lang_aot::concretize_scalar_any_for_jvm`); BASIC **prints**, so it keeps the
+wide i64 value model and exposed the mismatch.
+
+Fix: `build_type_map` now types any comparison op (`cmp_eq`/`ne`/`lt`/`le`/`gt`/
+`ge`, via the new `is_comparison_op`) dest as `JvmType::Int`, regardless of the
+operand-width hint. The slot is then `int`, the `istore` is consistent, and
+`jmp_if_false` reads it with `iload; ifeq`. **Verified on real `java`**: the
+BASIC `FOR` sum (`1..5 → 15`) and `IF` branch (`A>5 → 7`) now run on the JVM;
+both are added to the `lang-aot` matrix JVM column. New regression test
+`ba_jvm_1_i64_cmp_into_jmp_if_uses_int_guard`. No other backend or program
+affected (full matrix + jvm consumers green).
+
+## [0.13.1] — 2026-06-16 (LANG-FULL E2 — revert the long model back to the int model)
+
+### Fixed — narrow types use the JVM `int` model, not the v0.13.0 `long` model
+
+v0.13.0 moved narrow unsigned types (`u4`/`u8`/`u16`/`u32`) to a `long` register
+model, reasoning (as for wasm) that a real frontend's `i64` operands would
+otherwise meet an `int` op. **That is wrong on the JVM.** A scalar program
+reaches this backend through `lang_aot::concretize_scalar_any_for_jvm`, which
+narrows the module's `i64`→`i32` *before* lowering (the in-repo `jvm-simulator`
+is a 32-bit machine and a scalar entry must `ireturn`). It leaves the
+narrow-unsigned op alone. So the long model produced a module where the consts
+and return were `int` but the narrow op was `long` — **unverifiable bytecode**:
+`istore` int consts feeding an `lmul`, and `lreturn` from an `int`-returning
+method. A real `java` rejected it, so the Nib `u8` integration proof returned
+`None` on the JVM column (surfaced only when the Nib frontend actually emitted
+narrow `type_hint`s — the v0.13.0 tests built self-consistent narrow modules
+that bypass `concretize`).
+
+This release reverts to the **int model**:
+
+- `iir_type_to_jvm`: `u4`/`u8`/`u16`/`u32` → `JvmType::Int` (`u4` stays
+  recognised). `i64`/`u64` remain `Long`.
+- `type_to_jvm_descriptor`: those → `I`.
+- `emit_jvm_width_mask`: `sipush/iconst/ldc <mask>; iand` (int), for `u4`/`u8`/
+  `u16` (`u32` self-wraps via the 32-bit `int` op).
+- Shifts drop the `l2i` count narrowing (the count is an `int` again).
+
+Because `concretize` narrows the consts/return to `i32`, the whole scalar module
+is now consistently `int`: `sipush 200; sipush 100; iadd; sipush 255; iand;
+ireturn` → `44`. **Verified on real `java`**: a launcher invoking the lowered
+`main()` prints `44` for `200u8 + 100u8`. Tests reverted to the int-mask shape;
+new regression test `e2_concretized_u8_shape_is_all_int` builds the
+post-`concretize` shape (`const i32; add u8; ret i32`) and asserts the bytecode
+has the `iand` mask and **no** `ladd`/`lreturn`. Full matrix + jvm consumers
+green.
+
+(wasm genuinely keeps `i64` operands — no `concretize`-to-i32 there — so its i64
+register model, v0.15.0, stands. The CIL backend is uniformly int32 and also
+needs no long model. The JVM is the odd one out only because of the
+32-bit-simulator concretization.)
+
 ## [0.13.0] — 2026-06-16 (LANG-FULL E2 integration — compute-wide + mask)
 
 ### Changed — narrow unsigned types ride the JVM `long` register model

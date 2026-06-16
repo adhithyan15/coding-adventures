@@ -89,13 +89,12 @@ multiple languages; close an enabler before the features that depend on it.
     — so `200u8+100u8=44` and `~0u8=255`. u32/i32 already wrap mod-2³² via the 32-bit op; a
     positive mask + `and` (not `conv.u1`) keeps the unsigned widths unsigned. Structural tests
     on both emitters; executed CLR proof in the integration PR via the matrix's real-`dotnet`.
-  - ◑ **Integration** — wire Nib (then Oct) to emit narrow `type_hint`s for narrow-declared
-    values + an executed matrix proof (`200u8+100u8=44`, Nib unary `~`) across all backends;
-    flip N3-`~`, Nib N6/N7, Oct. The two code-gen backends that type the *op* (rather than
-    masking the *value*) needed real wrap work first — surfaced when the integration was
-    started (the roadmap's earlier "LLVM already wraps natively (u8→i8)" assumption was
-    never executed and is false: every IIR value rides an i64 slot, so an `add i8 %a,%b`
-    over i64 operands is invalid IR):
+  - ✅ **Integration (N6)** — Nib emits narrow `type_hint`s for narrow-declared values + an
+    **executed matrix proof** (`200u8+100u8=44`, `6*7=42`) across all 7 backends. (Nib `~`/N7
+    and Oct O2 remain — separate language items below.) Wiring this up disproved the roadmap's
+    earlier "LLVM already wraps natively (u8→i8)" assumption (never executed; false — every IIR
+    value rides an i64 slot) AND surfaced that the three *op-typing* backends couldn't consume a
+    narrow op over the operands a real frontend emits. Each was fixed before the frontend wiring:
     - ✅ **iir-to-llvm** (v0.11.0) — a narrow unsigned op computes at i64 then `and i64 …,
       <mask>` (u4/u8/u16/u32). Adds `u4` to the supported types. **Executed proof** on real
       `clang`: `200u8+100u8` → exit `44`. Matches the value-mask of the 5 register backends.
@@ -119,11 +118,15 @@ multiple languages; close an enabler before the features that depend on it.
       - ✅ **iir-to-wasm** (v0.15.0) — `uses_i64_register` selects `i64.*` ops; mask is
         `i64.const <mask>; i64.and` (now incl. `u32`). **Executed proof** on real `wasm-runtime`:
         `200i64 + 100i64 : u8 == 44`. Full matrix + wasm consumers green (no-op for i64 programs).
-      - ✅ **iir-to-jvm-class-file** (v0.13.0) — narrow unsigned → `JvmType::Long` (`J`
-        descriptor); long opcodes (`ladd`/`land`/…) over the long operands; mask is
-        `ldc2_w <mask>; land` (now incl. `u32`); long shift counts narrowed via `l2i`; `u4`
-        newly recognised. Structural proof `e2_u8_op_over_i64_operands_is_long`; full matrix
-        (real `java`) + jvm consumers green (no-op for i64 programs).
+      - ✅ **iir-to-jvm-class-file** (v0.13.1) — narrow unsigned use the **int model**
+        (`JvmType::Int`, `I` descriptor, `iadd`/`iand`, `sipush <mask>; iand`); `u4` newly
+        recognised. *(v0.13.0 tried a long model like wasm; reverted — the JVM runs
+        `lang_aot::concretize_scalar_any_for_jvm` which narrows scalar `i64`→`i32` before
+        lowering, so the long model left the narrow op `long` while consts/return were `int`
+        → unverifiable bytecode; the Nib u8 proof returned `None`.)* **Verified on real
+        `java`**: the lowered `200u8+100u8` returns `44`. Regression test
+        `e2_concretized_u8_shape_is_all_int` (post-concretize `const i32; add u8; ret i32` →
+        `iand` mask, no `ladd`/`lreturn`). Full matrix + jvm consumers green.
       - ✅ **iir-to-cil-bytecode** (v0.20.1) — **no rework needed**: the CIL backend is
         *uniformly int32* (`cil_local_type` maps every scalar incl. `i64` to `int32`; `const`
         emits `ldc.i4`), so a frontend's i64 consts collapse to int32 and the existing
@@ -131,13 +134,17 @@ multiple languages; close an enabler before the features that depend on it.
         that wraps to `44`. Regression test `e2_u8_op_over_i64_operands_stays_int32` asserts
         no `int64`/`ldc.i8` leaks in. (Unlike wasm/jvm, which type the op and so needed the
         i64/long register model.)
-    - ☐ **aot-core u4** — the native CIR pipeline (`infer`/`specialise`) didn't list `u4`, so a
-      Nib `u4` op was refused before #5887's backend mask could fire; add `u4` to ALLOWED_TYPES +
-      numeric_rank + the mnemonic set. *(Bundled with the Nib frontend PR.)*
-    - ☐ **Nib frontend + matrix proof** — emit narrow `type_hint`s (bidirectional/context-directed
-      typing so `6*7` in a `u8` context is `u8`, not magnitude-`u4`); executed cross-backend proof
-      (`200u8+100u8=44`); flip N3-`~` (needs LLVM `not`), Nib N6/N7. Then Oct (O2). Unblocked once
-      the 3 stack reworks land.
+    - ✅ **aot-core u4** (v0.2.2) — the native CIR pipeline (`infer`/`specialise`) didn't list
+      `u4`, so a Nib `u4` op was refused before the aarch64/x86_64 backend mask could fire; added
+      `u4` to both `ALLOWED_TYPES` sets + `numeric_rank`. *(Bundled with the Nib frontend PR.)*
+    - ✅ **Nib frontend + matrix proof** (nib-type-checker 0.3.0, nib-iir-compiler 0.14.0,
+      lang-aot 0.86.0) — `nib-type-checker` now does **bidirectional/context-directed** typing
+      (let/assign/return/for/if thread the expected width, so `6*7` in a `u8` return context is
+      `u8`, not magnitude-`u4`); `compile_binary_chain` emits the narrow `type_hint` on arith/
+      bitwise ops (`i64` for cmp). **Executed cross-backend matrix proof**: `200u8+100u8` →
+      `if x==44 {1} else {0}` returns **1**, and `6*7` returns **42**, on all 7 backends
+      (native/LLVM/WASM/JVM/CLR/VM/JIT). N6 ✅. **N3-`~` still deferred** (lowers to IIR `not`,
+      which LLVM lacks); **N7** (`+%`/`+?`) and **Oct O2** remain. **E2 integration complete.**
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
   literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
   already emit f64 ops; extend the rest.)*
@@ -226,11 +233,16 @@ backend immediately) come before the enabler-dependent items.
   at 1-bit `i1` width (`7 > 5` → `1 > 1` → false). Fixed to emit the `i64` operand width
   (like Nib/Oct/ALGOL). Verified by RUNNING `FOR I = 1 TO 5: S = S + I`→`15` and
   `IF A > 5 THEN 100`→`7` across native/LLVM/WASM/CLR/VM/JIT.
-- ☐ **BA-JVM-1** — BASIC branch (`IF`/`FOR`) **+ `print_i64`** on the JVM. The two BA0
-  control-flow programs are excluded from the JVM cell: `iir-to-jvm-class-file`'s
-  StackMapTable generation trips on the frame at a branch target when several `long`
-  locals are live across a host-method invoke. (A print with no branch and a loop with no
-  print both work on JVM; only the combination fails.) A self-contained `iir-to-jvm` fix.
+- ✅ **BA-JVM-1** — BASIC branch (`IF`/`FOR`) **+ `print_i64`** on the JVM (iir-to-jvm-class-file
+  0.13.2). The diagnosis wasn't a StackMapTable issue (the backend emits class version 49 to
+  skip StackMapTables) but a slot-typing bug: `build_type_map` typed a comparison's dest by its
+  `type_hint` (the *operand* width), so a comparison over BASIC's i64 operands got a `Long` slot
+  — yet a comparison always produces a 0/1 `int` stored with `istore`, and the later
+  `jmp_if_false` read it with the long guard (`lload; lconst_0; lcmp`) → `VerifyError:
+  uninitialized register pair`. (Nib's loops escape it because scalar Nib is concretized to i32;
+  BASIC prints, so it keeps the i64 model.) Fix: comparison dests are typed `int`. **Verified on
+  real `java`** — the BASIC `FOR` sum (`15`) and `IF` branch (`7`) now run on the JVM; both added
+  to the matrix JVM column.
 - ☐ **BA1** — `GOSUB` / `RETURN` (needs **E7**).
 - ☐ **BA2** — multi-item `PRINT`, `;`/`,` separators, more relops.
 - ☐ **BA3** — arrays / `DIM` (needs **E5**).

@@ -28,14 +28,15 @@ use coding_adventures_html_parser::{
     BrowserMediaPlaybackDescriptor, BrowserMediaResourceDescriptor, BrowserMediaSource,
     BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
     BrowserNavigationGroupDescriptor, BrowserNavigationTargetDescriptor,
-    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
-    BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSectionLandmarkDescriptor,
-    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor,
-    BrowserStructuredDataDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverDescriptor,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
+    BrowserScriptModuleGraphDescriptor, BrowserScriptStorageAccessDescriptor,
+    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
+    BrowserSectionLandmark, BrowserSectionLandmarkDescriptor, BrowserSelectOption,
+    BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor, BrowserStructuredDataDescriptor,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
     BrowserTableStructureDescriptor, BrowserTemplate, BrowserTemplateDescriptor,
     BrowserTextFlowDescriptor, BrowserTextSemantic, BrowserTextSemanticDescriptor,
     BrowserThemeColor,
@@ -160,6 +161,8 @@ struct ExpectedBrowserDocument {
     activation_descriptors: Option<Vec<ExpectedActivationDescriptor>>,
     #[serde(default)]
     popovers: Vec<ExpectedPopover>,
+    #[serde(default)]
+    popover_descriptors: Option<Vec<ExpectedPopoverDescriptor>>,
     #[serde(default)]
     aria_collections: Vec<ExpectedAriaCollection>,
     #[serde(default)]
@@ -2556,6 +2559,35 @@ struct ExpectedPopoverInvoker {
 }
 
 #[derive(Debug, Deserialize)]
+struct ExpectedPopoverDescriptor {
+    popover_index: usize,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    popover_mode: String,
+    #[serde(default)]
+    invoker_count: usize,
+    #[serde(default)]
+    invoker_ids: Vec<String>,
+    #[serde(default)]
+    invoker_actions: Vec<String>,
+    #[serde(default)]
+    invoker_aria_expanded: Vec<String>,
+    #[serde(default)]
+    focusable_invoker_count: usize,
+    #[serde(default)]
+    popover_blocked: bool,
+    #[serde(default)]
+    popover_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
 struct ExpectedAriaCollection {
     element: String,
     #[serde(default)]
@@ -4730,6 +4762,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_heading_descriptors = case.expected.heading_descriptors.is_some();
         let tracks_text_semantic_descriptors = case.expected.text_semantic_descriptors.is_some();
         let tracks_text_flow_descriptors = case.expected.text_flow_descriptors.is_some();
+        let tracks_popover_descriptors = case.expected.popover_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4782,6 +4815,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_text_flow_descriptors {
             expected.text_flow_descriptors = actual.text_flow_descriptors.clone();
+        }
+        if !tracks_popover_descriptors {
+            expected.popover_descriptors = actual.popover_descriptors.clone();
         }
 
         assert_eq!(
@@ -5723,6 +5759,66 @@ fn browser_popover_descriptor_metadata_tracks_hosts_and_invokers() {
     assert_eq!(
         actual.popovers, expected.popovers,
         "popover descriptors should preserve host metadata and popovertarget/commandfor invoker relationships",
+    );
+}
+
+#[test]
+fn browser_popover_descriptors_track_hosts_invokers_and_actions() {
+    let actual = parse_browser_document(
+        r#"<button id=open popovertarget=panel popovertargetaction=show aria-expanded=false>Open</button>
+           <button id=cmd command=toggle-popover commandfor=panel aria-expanded=true>Toggle</button>
+           <div id=panel popover=manual aria-label="Panel">Panel copy</div>"#,
+    )
+    .expect("popover descriptor fixture should parse");
+
+    assert_eq!(actual.popover_descriptors.len(), 1);
+    let descriptor = &actual.popover_descriptors[0];
+    assert_eq!(descriptor.popover_index, 1);
+    assert_eq!(descriptor.element, "div");
+    assert_eq!(descriptor.id.as_deref(), Some("panel"));
+    assert_eq!(descriptor.role, "block");
+    assert_eq!(descriptor.accessible_name.as_deref(), Some("Panel"));
+    assert_eq!(descriptor.popover_mode, "manual");
+    assert_eq!(descriptor.invoker_count, 2);
+    assert_eq!(descriptor.invoker_ids, vec!["open", "cmd"]);
+    assert_eq!(
+        descriptor.invoker_actions,
+        vec!["popover-show", "toggle-popover"]
+    );
+    assert_eq!(descriptor.invoker_aria_expanded, vec!["false", "true"]);
+    assert_eq!(descriptor.focusable_invoker_count, 2);
+    assert!(!descriptor.popover_blocked);
+}
+
+#[test]
+fn browser_popover_descriptors_track_missing_and_invalid_blockers() {
+    let actual = parse_browser_document(
+        r#"<div id=bad popover=maybe>Bad</div>
+           <div popover=manual>No id</div>
+           <button id=bad-action popovertarget=bad popovertargetaction=launch tabindex=-1>Bad action</button>"#,
+    )
+    .expect("blocked popover descriptor fixture should parse");
+
+    assert_eq!(actual.popover_descriptors.len(), 2);
+
+    let bad = &actual.popover_descriptors[0];
+    assert_eq!(bad.id.as_deref(), Some("bad"));
+    assert_eq!(bad.popover_mode, "maybe");
+    assert_eq!(bad.invoker_count, 1);
+    assert_eq!(
+        bad.popover_block_reasons,
+        vec![
+            "invalid-popover-mode",
+            "non-focusable-invoker",
+            "invalid-popover-target-action"
+        ],
+    );
+
+    let missing_id = &actual.popover_descriptors[1];
+    assert_eq!(missing_id.id, None);
+    assert_eq!(
+        missing_id.popover_block_reasons,
+        vec!["missing-id", "missing-invokers"],
     );
 }
 
@@ -8523,6 +8619,12 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedPopover::into_browser_popover)
             .collect();
+        let popover_descriptors = self
+            .popover_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedPopoverDescriptor::into_browser_popover_descriptor)
+            .collect();
         let aria_ranges: Vec<_> = self
             .aria_ranges
             .into_iter()
@@ -8865,6 +8967,7 @@ impl ExpectedBrowserDocument {
             command_elements,
             activation_descriptors,
             popovers,
+            popover_descriptors,
             aria_collections: self
                 .aria_collections
                 .into_iter()
@@ -16056,6 +16159,28 @@ impl ExpectedPopoverInvoker {
             aria_controls: self.aria_controls,
             aria_expanded: self.aria_expanded,
             focusable: self.focusable,
+        }
+    }
+}
+
+impl ExpectedPopoverDescriptor {
+    fn into_browser_popover_descriptor(self) -> BrowserPopoverDescriptor {
+        BrowserPopoverDescriptor {
+            popover_index: self.popover_index,
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            popover_mode: self.popover_mode,
+            invoker_count: self.invoker_count,
+            invoker_ids: self.invoker_ids,
+            invoker_actions: self.invoker_actions,
+            invoker_aria_expanded: self.invoker_aria_expanded,
+            focusable_invoker_count: self.focusable_invoker_count,
+            popover_blocked: self.popover_blocked,
+            popover_block_reasons: self.popover_block_reasons,
         }
     }
 }

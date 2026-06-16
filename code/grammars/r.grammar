@@ -106,6 +106,9 @@ arg = NAME EQ expr
 # =============================================================================
 
 primary = NUMBER
+        | HEX_LIT
+        | INT_LIT
+        | COMPLEX_LIT
         | STRING
         | "TRUE"
         | "FALSE"

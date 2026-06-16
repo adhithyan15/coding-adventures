@@ -1,5 +1,29 @@
 # Changelog — web-core
 
+## 0.2.0 (2026-06-16)
+
+### Added
+
+- **`ShardedWebServer` (WEB01a-2)** — a parallel counterpart to `WebServer`. It
+  runs `WebApp::handle` across `worker_count` reactor shards (via
+  `embeddable-http-server`'s `ShardedHttpServer`), so requests on different
+  connections are dispatched concurrently. The same `Arc<WebApp>` is shared
+  across all shards (immutable after construction — no locking; `handle` is
+  `&self` + `Send + Sync`). Platform constructors `bind_kqueue_sharded` /
+  `bind_epoll_sharded` / `bind_windows_sharded`, plus `serve` / `local_addr` /
+  `worker_count` / `stop_handle`; `on_server_start` / `on_server_stop` fire once,
+  exactly like `WebServer`.
+- This is **opt-in**: the single-reactor `WebServer` is unchanged and remains the
+  default. Hook/routing/`halt` semantics are identical (they run inside
+  `app.handle` on the owning shard); HTTP/1.1 per-connection response ordering is
+  preserved because each connection stays on one shard.
+- Tests: `sharded_web_server_handles_requests_concurrently` deterministically
+  proves cross-shard parallelism (observed max in-flight handlers ≥ 2 — serial
+  dispatch can never exceed 1), and an `#[ignore]`d CPU-bound benchmark
+  `sharded_web_server_cpu_bound_throughput_scales` demonstrates wall-clock
+  scaling (~5.3× on 14 cores for a busy-loop handler). See
+  `code/specs/WEB01-async-web-core.md`.
+
 ## 0.1.0 (2026-04-23)
 
 Initial release.

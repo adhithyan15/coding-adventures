@@ -130,17 +130,20 @@ index it (masking the sign-extended load back to an unsigned cell), and `.`/`,` 
 `env.BFRuntime` host class — the JVM sibling of the LLVM libc / wasm `env.putchar` I/O.
 
 **Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): narrow **unsigned**
-integers (`u4`/`u8`/`u16`/`u32`) ride the JVM **`long` register model** — `long` locals,
-`J` descriptors, and the long opcodes (`ladd`/`land`/…) over their long operands — and the
-result is masked with `ldc2_w <mask>; land`, so `200u8+100u8=44` and `~0u8=255`. Computing
-wide and masking the *value* (not typing the op narrow) is operand-width-agnostic: it works
-whatever width the operands arrive at — crucial because real frontends (Nib, …) carry every
-`const`/`let` as `i64`/`long` and put the narrow width only on the op. Typing the op `int`
-(`iadd`) over `long` operands would fail JVM verification. A positive mask + `land` is used
-(not `i2b`/`i2s`, which sign-extend) to keep the unsigned widths unsigned; JVM shift counts
-stay `int`, so a `long` narrow shift count is narrowed with `l2i` first. This matches the
-vm-core/jit-core/LLVM/native/wasm backends. *(v0.13.0 replaced the earlier `int`-op-plus-
-`iand` approach, which only worked for self-consistent narrow-width modules.)*
+integers (`u4`/`u8`/`u16`/`u32`) use the JVM **`int` model** — `int` locals, `I` descriptors,
+the int opcodes (`iadd`/`iand`/…), and the result masked with `iconst/sipush/ldc <mask>;
+iand` — so `200u8+100u8=44` and `~0u8=255`. JVM `int` ops already wrap mod-2³², so `u32`/`i32`
+need no mask. A positive mask + `iand` is used (not `i2b`/`i2s`, which sign-extend) to keep
+the unsigned widths unsigned.
+
+A scalar program reaches this backend through `lang_aot::concretize_scalar_any_for_jvm`,
+which narrows the module's `i64`→`i32` *before* lowering (the in-repo `jvm-simulator` is
+32-bit and a scalar entry must `ireturn`). So a narrow op already meets `i32` operands — the
+int op + int mask are operand-consistent. *(v0.13.0 briefly used a `long` register model,
+like wasm; that was reverted in v0.13.1 because it conflicts with `concretize` — it left the
+narrow op `long` while the consts/return were `int`, producing unverifiable bytecode. wasm
+keeps genuine `i64` operands with no concretize-to-i32, so its i64 model stands; the JVM is
+the odd one out because of the 32-bit-simulator concretization.)*
 
 ## Closures (LANG36)
 
@@ -206,6 +209,14 @@ for non-closure paths (unlike the BEAM backend).
 | `f32`                                 | `F` (float)    | 1          |
 | `f64`                                 | `D` (double)   | 2          |
 | `void`                                | `V` (void)     | 0          |
+
+A **comparison op** (`cmp_eq`/…/`cmp_ge`) is special-cased to an `int` dest slot
+regardless of its `type_hint`: the hint is the *operand* width, but a comparison
+always produces a 0/1 `int` (stored with `istore`). Without this, a comparison
+over `i64` operands got a `Long` slot, so a later `jmp_if_false` read it with the
+long guard (`lload; lconst_0; lcmp`) while it was `istore`d as int → the verifier
+rejected an "uninitialized register pair" (LANG-FULL BA-JVM-1, the BASIC `IF`/
+`FOR` programs over their i64 value model).
 
 ## Register allocation
 

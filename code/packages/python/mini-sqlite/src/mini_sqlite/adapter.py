@@ -33,7 +33,7 @@ the binding layer substitutes them with real values before planning.
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import cast
 
 from lang_parser import ASTNode
@@ -522,12 +522,57 @@ def _values_stmt(node: ASTNode) -> Statement:
 # --------------------------------------------------------------------------
 
 
+def _extract_window_clause(node: ASTNode | None, state: _PlaceholderCounter) -> None:
+    """Populate state.window_defs from a window_clause node (may be None).
+
+    Grammar::
+
+        window_clause = "WINDOW" NAME "AS" "(" window_spec ")"
+                        { "," NAME "AS" "(" window_spec ")" } ;
+
+    Each NAME → window_spec pair is stored in state.window_defs so that
+    _window_func_call() can resolve OVER <name> references.
+    """
+    if node is None:
+        return
+    # Walk children collecting NAME / window_spec pairs.
+    # Layout: WINDOW NAME AS ( window_spec ) [, NAME AS ( window_spec ) ...]
+    children = node.children
+    i = 0
+    while i < len(children):
+        c = children[i]
+        # Skip WINDOW keyword and commas.
+        if isinstance(c, Token) and _token_type(c) in ("KEYWORD", "COMMA"):
+            i += 1
+            continue
+        # A NAME token starts a window definition.
+        if isinstance(c, Token) and _token_type(c) == "NAME":
+            win_name = c.value.upper()
+            # Skip AS and LPAREN; find the window_spec node.
+            j = i + 1
+            while j < len(children):
+                inner = children[j]
+                if isinstance(inner, ASTNode) and inner.rule_name == "window_spec":
+                    state.window_defs[win_name] = inner
+                    i = j + 1
+                    break
+                j += 1
+            else:
+                i += 1
+            continue
+        i += 1
+
+
 def _select(
     node: ASTNode,
     ctes: dict[str, _CTEBody] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> SelectStmt:
     state = _PlaceholderCounter()
+
+    # WINDOW clause must be populated before the select_list so that any
+    # OVER <name> reference in the column expressions can resolve.
+    _extract_window_clause(_maybe_child(node, "window_clause"), state)
 
     distinct = _has_keyword_child(node, "DISTINCT")
     items = _select_list(_child_node(node, "select_list"), state)
@@ -1936,6 +1981,7 @@ class _PlaceholderCounter:
     """Monotonic counter for placeholder positions. Left-to-right discovery order."""
 
     count: int = 0
+    window_defs: dict = field(default_factory=dict)  # name → window_spec ASTNode
 
     def next(self) -> int:
         n = self.count
@@ -2813,8 +2859,22 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
                 extra_args_tuple = tuple(_expr(e, state) for e in exprs[1:])
     # Arg-free ranking functions keep func_name as-is (row_number, rank, dense_rank).
 
-    # Extract the window_spec node.
+    # Extract the window_spec node — either inline (OVER (...)) or a named
+    # reference (OVER name) that resolves via state.window_defs.
     ws = _maybe_child(node, "window_spec")
+    if ws is None:
+        win_name_ref = _maybe_child(node, "window_name_ref")
+        if win_name_ref is not None:
+            tok = next(
+                (c for c in win_name_ref.children if isinstance(c, Token)),
+                None,
+            )
+            if tok is not None:
+                ws = state.window_defs.get(tok.value.upper())
+                if ws is None:
+                    raise OperationalError(
+                        f"no such window definition: {tok.value!r}"
+                    )
 
     # PARTITION BY clause.
     partition_exprs: list[Expr] = []

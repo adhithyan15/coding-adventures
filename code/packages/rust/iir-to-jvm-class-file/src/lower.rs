@@ -599,15 +599,18 @@ impl JvmType {
 /// | anything else         | `None`   | Caller raises an error |
 fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
     match hint {
-        // Signed narrow widths and `bool` use the JVM `int` model.
-        "i8" | "i16" | "i32" | "bool" => Some(JvmType::Int),
-        // Narrow **unsigned** types ride the `long` register model (LANG-FULL
-        // E2): every LANG frontend carries integer values in 64-bit slots, so a
-        // `u8` register is a `long` whose arithmetic is masked to 8 bits after
-        // each op. Typing it `int` would fail JVM verification the moment a
-        // `u8` op met a `long` operand (a const/let) — exactly Nib's value
-        // model. (`u4` is new here — before E2 Nib widened it to i64 first.)
-        "u4" | "u8" | "u16" | "u32" => Some(JvmType::Long),
+        // Narrow integer widths and `bool` use the JVM `int` model (LANG-FULL
+        // E2). A scalar program reaches this backend through
+        // `lang_aot::concretize_scalar_any_for_jvm`, which narrows `i64`→`i32`
+        // (the in-repo jvm-simulator is 32-bit and the entry must `ireturn`), so
+        // a narrow-unsigned op already meets `i32` operands — no `long` register
+        // model is needed. (The long model was tried in v0.13.0 and reverted: it
+        // left narrow ops `long` while concretize made the consts/return `int`,
+        // producing unverifiable bytecode — `istore` consts feeding an `lmul`,
+        // `lreturn` from an `int`-returning method.) The narrow-width WRAP is
+        // restored by masking the int result (see `emit_jvm_width_mask`). `u4`
+        // (Nib's nibble) is recognised so it gets an int slot.
+        "u4" | "u8" | "u16" | "u32" | "i8" | "i16" | "i32" | "bool" => Some(JvmType::Int),
         "i64" | "u64" => Some(JvmType::Long),
         "f32" => Some(JvmType::Float),
         "f64" => Some(JvmType::Double),
@@ -657,10 +660,9 @@ fn make_descriptor(params: &[(String, String)], return_type: &str) -> String {
 /// return-type descriptors.  Unknown types default to `"I"` (int).
 fn type_to_jvm_descriptor(hint: &str) -> &str {
     match hint {
-        "i8" | "i16" | "i32" | "bool" => "I",
-        // Narrow unsigned types ride the `long` register model (E2) — see
-        // `iir_type_to_jvm` — so their descriptor is `J`, not `I`.
-        "u4" | "u8" | "u16" | "u32" => "J",
+        // Narrow integer widths and `bool` use the JVM `int` model (E2) — see
+        // `iir_type_to_jvm` — so their descriptor is `I`.
+        "u4" | "u8" | "u16" | "u32" | "i8" | "i16" | "i32" | "bool" => "I",
         "i64" | "u64" => "J",
         "f32" => "F",
         "f64" => "D",
@@ -929,31 +931,31 @@ fn emit_iconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i32) 
     }
 }
 
-/// Mask the narrow-width `long` on top of the operand stack to its bit width
+/// Mask the narrow-width `int` on top of the operand stack to its bit width
 /// (LANG-FULL E2).
 ///
-/// Narrow **unsigned** integers ride the `long` register model (see
-/// [`iir_type_to_jvm`]), so the result is masked with `ldc2_w <mask>; land`
-/// after the long op, so `200u8 + 100u8` becomes `44` and `~0u8` is `255`.
-/// This mirrors vm-core's `mask_result`, jit-core's `MASK_WIDTH`, the wasm
-/// `i64.and`, the LLVM `and i64`, and the native `and #mask`, and generalises
-/// the byte-tape `baload`+mask precedent to register arithmetic.  A positive
-/// mask + `land` (not `i2b`/`i2s`, which sign-extend) keeps the unsigned widths
-/// unsigned.  The mask is pushed from the constant pool as a `Long` so the wide
-/// values (`0xFFFF`, `0xFFFF_FFFF`) work — `emit_lconst` only covers i16-range.
-/// `i64`/`u64`/floats emit nothing (the long/native op carries their width).
+/// JVM `int` arithmetic (`iadd`/`imul`/…) wraps mod-2³², so `u32`/`i32` are
+/// already correct.  The smaller widths (`u4`/`u8`/`u16`) need an explicit
+/// `iconst/sipush/ldc <mask>; iand` after the op so `200u8 + 100u8` becomes
+/// `44` and `~0u8` is `255` — mirroring vm-core's `mask_result`, jit-core's
+/// `MASK_WIDTH`, the wasm `i64.and`, and the byte-tape `baload`+mask precedent.
+/// We deliberately use a positive mask + `iand` rather than `i2b`/`i2s` (which
+/// sign-extend, giving a *signed* byte — wrong for the unsigned narrow types the
+/// LANG-FULL frontends use).  `i64`/`u64`/floats emit nothing.
+///
+/// (Narrow types use the `int` model on the JVM — see [`iir_type_to_jvm`] — so
+/// the mask is an `int` `iand`, NOT the `long` `land` tried in v0.13.0 and
+/// reverted: a scalar program is concretized to `i32` before reaching here, so
+/// the int op and int mask are operand-consistent.)
 fn emit_jvm_width_mask(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, type_hint: &str) {
-    let mask: i64 = match type_hint {
+    let mask: i32 = match type_hint {
         "u4" => 0xF,
         "u8" => 0xFF,
         "u16" => 0xFFFF,
-        "u32" => 0xFFFF_FFFF,
         _ => return,
     };
-    let idx = cp.add_long(mask);
-    code.push(LDC2_W);
-    code.extend_from_slice(&idx.to_be_bytes());
-    code.push(LAND);
+    emit_iconst_cp(code, cp, mask);
+    code.push(IAND);
 }
 
 /// Emit a long constant push.
@@ -1281,6 +1283,15 @@ fn allocate_slots(
 /// `__callClosure(long[], long[])` dispatch method always returns `long`,
 /// so the receiving slot must be two-slot-wide even when the type_hint is
 /// the generic `"any"` string.
+/// A comparison op produces a 0/1 boolean `int`, whatever its operand width.
+/// Its dest slot must therefore be `int` on the JVM (see [`build_type_map`]).
+fn is_comparison_op(op: &str) -> bool {
+    matches!(
+        op,
+        "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge"
+    )
+}
+
 fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
     let mut map: HashMap<String, JvmType> = HashMap::new();
 
@@ -1299,6 +1310,18 @@ fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
             } else if instr.op == "call_closure" {
                 // __callClosure always returns long
                 JvmType::Long
+            } else if is_comparison_op(&instr.op) {
+                // A comparison ALWAYS produces a 0/1 `int` result (it is stored
+                // with a bare `istore`), regardless of its `type_hint` — which
+                // carries the *operand* width, not the result width. Typing the
+                // dest by the hint (e.g. `i64` → `Long`) for a comparison over
+                // `long` operands gives the slot a `Long` type, so a later
+                // `jmp_if_false` reads it with `lload` while the comparison wrote
+                // it with `istore` → the verifier rejects "uninitialized register
+                // pair" (BA-JVM-1: BASIC's `IF`/`FOR` over its i64 value model,
+                // which — unlike the concretized-to-i32 scalar path — keeps the
+                // operands `long`). Force the bool result to `Int`.
+                JvmType::Int
             } else {
                 iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int)
             };
@@ -1874,15 +1897,8 @@ fn lower_function(
             // the shift count as an int regardless of the value type.
             "shl" | "shr" => {
                 let (src0, src1) = two_srcs(func, instr, &slots)?;
-                emit_typed_load(&mut code, src0.0, src0.1); // value (long for narrow)
-                // The JVM shift count is ALWAYS an int (even for `lshl`/`lshr`).
-                // Load the count at its declared width and narrow a `long` count
-                // to int with `l2i` — under E2 a narrow-unsigned count rides a
-                // long slot, so a bare `iload` of it would be a verify error.
-                emit_typed_load(&mut code, src1.0, src1.1);
-                if src1.1 == JvmType::Long {
-                    code.push(L2I);
-                }
+                emit_typed_load(&mut code, src0.0, src0.1); // value
+                emit_iload(&mut code, src1.0);               // shift count (always int)
                 let opcode = match (instr.op.as_str(), instr_jtype) {
                     ("shl", JvmType::Long) => LSHL,
                     ("shl", _) => ISHL,

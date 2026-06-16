@@ -28,9 +28,10 @@ downstream tools to compare.
      diagnostic and solver footholds; transient scalar `.measure`-style output
      helpers now cover shared peak-to-peak and final-value measurement output,
      and parsed transient `.measure` / `.meas` cards can now feed those
-     measurement helpers from deck text; parsed `.save` and `.probe` cards now
-     drive stable Rust table output for operating-point, DC sweep, AC sweep, and
-     transient results; parsed `.measure dc` / `.meas dc` cards now route DC
+     measurement helpers from deck text; parsed `.save`, `.probe`, and
+     `.print <analysis> ...` cards now drive stable table output for
+     operating-point, DC sweep, AC sweep, and transient results; parsed
+     `.measure dc` / `.meas dc` cards now route DC
      sweep probe samples into the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
      optional frequency windows into the same measurement table surface; parsed
@@ -471,6 +472,15 @@ downstream tools to compare.
     - The summary is list-shaped so future nested sweeps can append more
       deck-owned run artifacts without changing the public field shape.
 
+41. Parsed `.print` output routing.
+    - Status: completed in this parsed print output-routing slice.
+    - Python, Rust, and TypeScript now treat scoped
+      `.print <analysis> V(node) I(source)` cards as deck output selections
+      alongside `.save` and `.probe`.
+    - Selected probes are normalized and deduplicated in deck order, while
+      diagnostics distinguish missing `.print` probes, unsupported `.print`
+      analyses, and malformed output probes.
+
 ## Backlog
 
 1. Deck execution layer.
@@ -479,7 +489,7 @@ downstream tools to compare.
      selected measurement artifacts, selected Fourier artifacts, and selected
      run summaries, plus output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
-     routing toward full SPICE compatibility.
+     routing and scoped `.print` selection toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

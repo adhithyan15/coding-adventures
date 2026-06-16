@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Parsed print output routing** —
+  `resolve_deck_outputs()`, `select_deck_output_probes()`, and
+  `format_deck_*_table()` now route scoped `.print <analysis> ...` output
+  cards alongside `.save` and `.probe`, matching Rust and TypeScript.
+
 - **Deck run artifact metadata** —
   `run_deck_analysis()` now returns selected-run artifact summaries and a
   stable run-artifact table with result-row, output-probe, measurement, and

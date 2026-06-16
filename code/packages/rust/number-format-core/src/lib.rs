@@ -107,95 +107,109 @@ struct Section {
     has_digits: bool,
 }
 
-/// A parsed numeric format code, ready to [`apply`](NumberFormat::apply) to any
-/// number. Parse once, format many cells.
+/// What a parsed format code formats: the shortest-representation default, a
+/// numeric pattern (1–3 sections), or a date/time pattern.
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum FormatKind {
+    /// `General` / empty — shortest round-trip representation.
+    General,
+    /// A numeric pattern: 1–3 sections (positive, optional negative, optional zero).
+    Numeric(Vec<Section>),
+    /// A date/time pattern: a token stream over the value-as-Excel-serial.
+    DateTime(Vec<DateToken>),
+}
+
+/// A parsed format code, ready to [`apply`](NumberFormat::apply) to any number.
+/// Parse once, format many cells.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NumberFormat {
-    /// 1–3 sections: positive, then optional negative, then optional zero.
-    sections: Vec<Section>,
-    /// `true` for the `General` (or empty) code — the shortest round-trip
-    /// representation, ignoring sections.
-    general: bool,
+    kind: FormatKind,
 }
 
 impl NumberFormat {
     /// Parse a format code. `"General"` (case-insensitive) or an empty string is
-    /// the shortest-representation default.
+    /// the shortest-representation default. A code whose first section uses
+    /// date/time field letters (`y`/`m`/`d`/`h`/`s` outside quotes) is a
+    /// date/time format; otherwise it's numeric.
     pub fn parse(code: &str) -> Result<NumberFormat, FormatError> {
         if code.is_empty() || code.eq_ignore_ascii_case("General") {
             return Ok(NumberFormat {
-                sections: Vec::new(),
-                general: true,
+                kind: FormatKind::General,
             });
         }
         let raw_sections = split_sections(code);
         if raw_sections.len() > 3 {
             return Err(FormatError::TooManySections);
         }
+        // Numeric formats never use the date/time field letters, so their
+        // presence (unquoted) in the first section cleanly selects a date code.
+        if is_datetime_section(&raw_sections[0]) {
+            return Ok(NumberFormat {
+                kind: FormatKind::DateTime(parse_datetime(&raw_sections[0])),
+            });
+        }
         let mut sections = Vec::with_capacity(raw_sections.len());
         for s in &raw_sections {
             sections.push(parse_section(s)?);
         }
         Ok(NumberFormat {
-            sections,
-            general: false,
+            kind: FormatKind::Numeric(sections),
         })
     }
 
     /// Format `value` to the display string this code prescribes.
     pub fn apply(&self, value: f64) -> String {
-        if self.general {
-            return general(value);
-        }
-        // Non-finite values have no sensible numeric rendering; mirror what a
-        // spreadsheet shows for an out-of-band float.
-        if value.is_nan() {
-            return "NaN".to_string();
-        }
-        if value.is_infinite() {
-            return if value < 0.0 { "-∞" } else { "∞" }.to_string();
-        }
-
-        // Defensive: `parse` always yields ≥1 section, but never index an empty
-        // vec if a `NumberFormat` is ever constructed another way.
-        if self.sections.is_empty() {
-            return general(value);
-        }
-
-        let (section, force_minus) = self.select_section(value);
-        if !section.has_digits {
-            // A pure-literal section (e.g. a "-" negative section) shows its
-            // text only; there are no digits to render.
-            return format!("{}{}", section.prefix, section.suffix);
-        }
-        render(section, value, force_minus)
-    }
-
-    /// Pick the section for `value`'s sign, and whether the positive section
-    /// must be prefixed with `-` (only when there is no dedicated negative
-    /// section). Returns the section plus that flag.
-    fn select_section(&self, value: f64) -> (&Section, bool) {
-        let is_neg = value < 0.0;
-        // Zero compares as neither positive nor negative here (`0.0 < 0.0` is
-        // false), so it naturally routes to the positive/zero section.
-        match self.sections.len() {
-            0 => (&self.sections[0], false), // unreachable (parse yields ≥1), kept total
-            1 => (&self.sections[0], is_neg),
-            2 => {
-                if is_neg {
-                    (&self.sections[1], false) // dedicated negative section, abs value
-                } else {
-                    (&self.sections[0], false)
+        match &self.kind {
+            FormatKind::General => general(value),
+            FormatKind::DateTime(tokens) => apply_datetime(tokens, value),
+            FormatKind::Numeric(sections) => {
+                // Non-finite values have no sensible numeric rendering; mirror
+                // what a spreadsheet shows for an out-of-band float.
+                if value.is_nan() {
+                    return "NaN".to_string();
                 }
+                if value.is_infinite() {
+                    return if value < 0.0 { "-∞" } else { "∞" }.to_string();
+                }
+                // Defensive: `parse` always yields ≥1 section, but never index an
+                // empty vec if a `NumberFormat` is constructed another way.
+                if sections.is_empty() {
+                    return general(value);
+                }
+                let (section, force_minus) = select_section(sections, value);
+                if !section.has_digits {
+                    // A pure-literal section (e.g. a "-" negative section) shows
+                    // its text only; there are no digits to render.
+                    return format!("{}{}", section.prefix, section.suffix);
+                }
+                render(section, value, force_minus)
             }
-            _ => {
-                if value > 0.0 {
-                    (&self.sections[0], false)
-                } else if value < 0.0 {
-                    (&self.sections[1], false)
-                } else {
-                    (&self.sections[2], false) // zero section
-                }
+        }
+    }
+}
+
+/// Pick the numeric section for `value`'s sign, and whether the positive section
+/// must be prefixed with `-` (only when there's no dedicated negative section).
+fn select_section(sections: &[Section], value: f64) -> (&Section, bool) {
+    let is_neg = value < 0.0;
+    // Zero compares as neither positive nor negative here (`0.0 < 0.0` is false),
+    // so it naturally routes to the positive/zero section.
+    match sections.len() {
+        1 => (&sections[0], is_neg),
+        2 => {
+            if is_neg {
+                (&sections[1], false) // dedicated negative section, abs value
+            } else {
+                (&sections[0], false)
+            }
+        }
+        _ => {
+            if value > 0.0 {
+                (&sections[0], false)
+            } else if value < 0.0 {
+                (&sections[1], false)
+            } else {
+                (&sections[2], false) // zero section
             }
         }
     }
@@ -457,12 +471,339 @@ fn group_thousands(digits: &str) -> String {
     out
 }
 
+// ===========================================================================
+// Date/time formats
+// ===========================================================================
+//
+// A spreadsheet stores a date as a number — the "serial" count of days since an
+// epoch (Excel's 1900 system), with the fractional part being the time of day
+// (0.5 = noon). A date *format* like `yyyy-mm-dd hh:mm` decodes that serial back
+// into calendar fields and lays them out. We lean on `datetime-core` for the
+// serial → (year, month, day) and time-component math; this module is just the
+// token grammar and the rendering.
+//
+// The one genuinely tricky rule is that **`m` is overloaded**: it means *month*
+// normally, but *minutes* when it sits next to an hour or seconds token
+// (`hh:mm` → minutes, `mm:ss` → minutes, `yyyy-mm` → month). We tokenise first,
+// then resolve each `m` run by looking at its neighbouring field tokens.
+
+/// One field or literal in a parsed date/time format.
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum DateToken {
+    Year4,
+    Year2,
+    MonthNum1,
+    MonthNum2,
+    MonthAbbr,
+    MonthFull,
+    Day1,
+    Day2,
+    WeekdayAbbr,
+    WeekdayFull,
+    Hour1,
+    Hour2,
+    Minute1,
+    Minute2,
+    Second1,
+    Second2,
+    /// `AM/PM` — renders `AM` or `PM` and switches the hours to 12-hour.
+    AmPm,
+    /// `A/P` — renders `A` or `P` and switches the hours to 12-hour.
+    ApLetter,
+    Literal(String),
+}
+
+const MONTH_ABBR: [&str; 12] = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+const MONTH_FULL: [&str; 12] = [
+    "January", "February", "March", "April", "May", "June", "July", "August", "September",
+    "October", "November", "December",
+];
+const WEEKDAY_ABBR: [&str; 7] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const WEEKDAY_FULL: [&str; 7] = [
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
+];
+
+/// Whether a format section is a date/time pattern: it uses a date/time field
+/// letter (`y`/`m`/`d`/`h`/`s`, case-insensitive) *outside* quotes/escapes.
+/// Numeric formats never use those letters, so this disambiguates cleanly.
+fn is_datetime_section(code: &str) -> bool {
+    let mut chars = code.chars();
+    while let Some(c) = chars.next() {
+        match c {
+            '\\' => {
+                chars.next(); // the escaped char is a literal — skip it
+            }
+            '"' => {
+                for q in chars.by_ref() {
+                    if q == '"' {
+                        break;
+                    }
+                }
+            }
+            'y' | 'Y' | 'm' | 'M' | 'd' | 'D' | 'h' | 'H' | 's' | 'S' => return true,
+            _ => {}
+        }
+    }
+    false
+}
+
+/// Case-insensitively check whether `chars[i..]` starts with the lowercase `pat`.
+fn ci_starts_with(chars: &[char], i: usize, pat: &str) -> bool {
+    let pat: Vec<char> = pat.chars().collect();
+    if i + pat.len() > chars.len() {
+        return false;
+    }
+    chars[i..i + pat.len()]
+        .iter()
+        .zip(&pat)
+        .all(|(c, p)| c.to_ascii_lowercase() == *p)
+}
+
+/// Parse a date/time section into a token stream. Resolves the `m`-as-month vs
+/// `m`-as-minute ambiguity by neighbouring field tokens.
+fn parse_datetime(code: &str) -> Vec<DateToken> {
+    // Intermediate token: field runs keep their letter + length until `m` is
+    // resolved; AM/PM and literals are already final.
+    enum Pre {
+        Field(char, usize),
+        AmPm,
+        ApLetter,
+        Literal(String),
+    }
+
+    let chars: Vec<char> = code.chars().collect();
+    let mut pre: Vec<Pre> = Vec::new();
+    let mut i = 0;
+    while i < chars.len() {
+        let c = chars[i];
+        if ci_starts_with(&chars, i, "am/pm") {
+            pre.push(Pre::AmPm);
+            i += 5;
+            continue;
+        }
+        if ci_starts_with(&chars, i, "a/p") {
+            pre.push(Pre::ApLetter);
+            i += 3;
+            continue;
+        }
+        let cl = c.to_ascii_lowercase();
+        match cl {
+            'y' | 'm' | 'd' | 'h' | 's' => {
+                let mut n = 1;
+                while i + n < chars.len() && chars[i + n].to_ascii_lowercase() == cl {
+                    n += 1;
+                }
+                pre.push(Pre::Field(cl, n));
+                i += n;
+            }
+            '\\' => {
+                if i + 1 < chars.len() {
+                    pre.push(Pre::Literal(chars[i + 1].to_string()));
+                    i += 2;
+                } else {
+                    i += 1;
+                }
+            }
+            '"' => {
+                i += 1;
+                let mut s = String::new();
+                while i < chars.len() && chars[i] != '"' {
+                    s.push(chars[i]);
+                    i += 1;
+                }
+                if i < chars.len() {
+                    i += 1; // closing quote
+                }
+                pre.push(Pre::Literal(s));
+            }
+            _ => {
+                pre.push(Pre::Literal(c.to_string()));
+                i += 1;
+            }
+        }
+    }
+
+    // Resolve each `m` run: minutes if the nearest preceding field is `h`, or the
+    // nearest following field is `s`; otherwise month. (Field neighbours skip
+    // literals and AM/PM markers.)
+    let field_letter = |p: &Pre| match p {
+        Pre::Field(l, _) => Some(*l),
+        _ => None,
+    };
+    let mut out = Vec::with_capacity(pre.len());
+    for idx in 0..pre.len() {
+        match &pre[idx] {
+            Pre::Field('m', n) => {
+                let prev = pre[..idx].iter().rev().find_map(&field_letter);
+                let next = pre[idx + 1..].iter().find_map(&field_letter);
+                let minutes = prev == Some('h') || next == Some('s');
+                out.push(if minutes {
+                    if *n >= 2 {
+                        DateToken::Minute2
+                    } else {
+                        DateToken::Minute1
+                    }
+                } else if *n >= 4 {
+                    DateToken::MonthFull
+                } else if *n == 3 {
+                    DateToken::MonthAbbr
+                } else if *n == 2 {
+                    DateToken::MonthNum2
+                } else {
+                    DateToken::MonthNum1
+                });
+            }
+            Pre::Field('y', n) => out.push(if *n >= 3 {
+                DateToken::Year4
+            } else {
+                DateToken::Year2
+            }),
+            Pre::Field('d', n) => out.push(if *n >= 4 {
+                DateToken::WeekdayFull
+            } else if *n == 3 {
+                DateToken::WeekdayAbbr
+            } else if *n == 2 {
+                DateToken::Day2
+            } else {
+                DateToken::Day1
+            }),
+            Pre::Field('h', n) => out.push(if *n >= 2 {
+                DateToken::Hour2
+            } else {
+                DateToken::Hour1
+            }),
+            Pre::Field('s', n) => out.push(if *n >= 2 {
+                DateToken::Second2
+            } else {
+                DateToken::Second1
+            }),
+            Pre::Field(_, _) => {} // unreachable: only y/m/d/h/s produced
+            Pre::AmPm => out.push(DateToken::AmPm),
+            Pre::ApLetter => out.push(DateToken::ApLetter),
+            Pre::Literal(s) => out.push(DateToken::Literal(s.clone())),
+        }
+    }
+    out
+}
+
+/// Render a value (an Excel 1900 serial date/time) per a date/time token stream.
+/// A serial outside the representable range shows `######`, as a spreadsheet
+/// does for a date it can't lay out.
+fn apply_datetime(tokens: &[DateToken], value: f64) -> String {
+    let date = match datetime_core::from_excel_serial_1900(value) {
+        Ok(d) => d,
+        Err(_) => return "######".to_string(),
+    };
+    let (year, month, day) = date.to_ymd();
+    let weekday = date.iso_weekday(); // 1 = Mon … 7 = Sun
+    let frac = value - value.trunc();
+    let hour24 = datetime_core::hour_of(frac);
+    let minute = datetime_core::minute_of(frac);
+    let second = datetime_core::second_of(frac);
+
+    let uses_12h = tokens
+        .iter()
+        .any(|t| matches!(t, DateToken::AmPm | DateToken::ApLetter));
+    let hour_display = if uses_12h {
+        let h = hour24 % 12;
+        if h == 0 {
+            12
+        } else {
+            h
+        }
+    } else {
+        hour24
+    };
+    let is_am = hour24 < 12;
+
+    let mi = (month.max(1) as usize - 1).min(11); // 1-based month → 0-based index
+    let wi = (weekday.max(1) as usize - 1).min(6); // 1-based weekday → 0-based index
+
+    let mut s = String::new();
+    for t in tokens {
+        match t {
+            DateToken::Year4 => s.push_str(&format!("{year:04}")),
+            DateToken::Year2 => s.push_str(&format!("{:02}", year.rem_euclid(100))),
+            DateToken::MonthNum1 => s.push_str(&month.to_string()),
+            DateToken::MonthNum2 => s.push_str(&format!("{month:02}")),
+            DateToken::MonthAbbr => s.push_str(MONTH_ABBR[mi]),
+            DateToken::MonthFull => s.push_str(MONTH_FULL[mi]),
+            DateToken::Day1 => s.push_str(&day.to_string()),
+            DateToken::Day2 => s.push_str(&format!("{day:02}")),
+            DateToken::WeekdayAbbr => s.push_str(WEEKDAY_ABBR[wi]),
+            DateToken::WeekdayFull => s.push_str(WEEKDAY_FULL[wi]),
+            DateToken::Hour1 => s.push_str(&hour_display.to_string()),
+            DateToken::Hour2 => s.push_str(&format!("{hour_display:02}")),
+            DateToken::Minute1 => s.push_str(&minute.to_string()),
+            DateToken::Minute2 => s.push_str(&format!("{minute:02}")),
+            DateToken::Second1 => s.push_str(&second.to_string()),
+            DateToken::Second2 => s.push_str(&format!("{second:02}")),
+            DateToken::AmPm => s.push_str(if is_am { "AM" } else { "PM" }),
+            DateToken::ApLetter => s.push_str(if is_am { "A" } else { "P" }),
+            DateToken::Literal(text) => s.push_str(text),
+        }
+    }
+    s
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     fn f(v: f64, code: &str) -> String {
         format_number(v, code)
+    }
+
+    /// The Excel-1900 serial number for a calendar date, via datetime-core.
+    fn serial(y: i32, m: u32, d: u32) -> f64 {
+        datetime_core::to_excel_serial_1900(datetime_core::Date::from_ymd(y, m, d).unwrap()).unwrap()
+    }
+
+    // ── Date/time formats ───────────────────────────────────────────
+    #[test]
+    fn date_codes_render_fields() {
+        let d = serial(2024, 1, 1); // a Monday
+        assert_eq!(f(d, "yyyy-mm-dd"), "2024-01-01");
+        assert_eq!(f(d, "m/d/yyyy"), "1/1/2024");
+        assert_eq!(f(d, "d-mmm-yyyy"), "1-Jan-2024");
+        assert_eq!(f(d, "mmmm d, yyyy"), "January 1, 2024");
+        assert_eq!(f(d, "ddd"), "Mon");
+        assert_eq!(f(d, "dddd"), "Monday");
+        assert_eq!(f(d, "yy"), "24");
+    }
+
+    #[test]
+    fn time_codes_24h_and_12h() {
+        let afternoon = serial(2024, 1, 1) + datetime_core::time(13, 5, 9).unwrap();
+        assert_eq!(f(afternoon, "hh:mm:ss"), "13:05:09");
+        assert_eq!(f(afternoon, "h:mm AM/PM"), "1:05 PM");
+        let morning = serial(2024, 1, 1) + datetime_core::time(6, 30, 0).unwrap();
+        assert_eq!(f(morning, "h:mm AM/PM"), "6:30 AM");
+        assert_eq!(f(morning, "hh:mm"), "06:30");
+        assert_eq!(f(morning, "h:mm A/P"), "6:30 A");
+    }
+
+    #[test]
+    fn m_is_month_or_minute_by_context() {
+        // Same value, three formats: `m` means month, minute, minute.
+        let v = serial(2024, 3, 1) + datetime_core::time(0, 45, 0).unwrap();
+        assert_eq!(f(v, "yyyy-mm"), "2024-03"); // month (after a year field)
+        assert_eq!(f(v, "hh:mm"), "00:45"); // minute (after an hour field)
+        assert_eq!(f(v, "mm:ss"), "45:00"); // minute (before a seconds field)
+    }
+
+    #[test]
+    fn datetime_out_of_range_shows_hashes() {
+        // A negative serial isn't a representable date — Excel shows ######.
+        assert_eq!(f(-5.0, "yyyy-mm-dd"), "######");
+    }
+
+    #[test]
+    fn quoted_date_letters_stay_numeric() {
+        // The "m" is quoted, so this is a numeric format, not a date one.
+        assert_eq!(f(5.0, "0\" mph\""), "5 mph");
     }
 
     // ── General / defaults ──────────────────────────────────────────

@@ -1837,6 +1837,7 @@ fn transient_deck_output_cards_select_table_probes() {
         "
 .save V(out) I(V1)
 .probe tran V(clk) V(out)
+.print tran V(ignored)
 .probe ac V(ignored)
 .end
 ",
@@ -1845,7 +1846,7 @@ fn transient_deck_output_cards_select_table_probes() {
 
     assert_eq!(
         table,
-        "Index\tTime\tV(out)\tI(V1)\tV(clk)\n0\t0.000000e+00\t0.000000e+00\t-1.000000e-03\t0.000000e+00\n1\t1.000000e-03\t1.000000e+00\t-2.000000e-03\t5.000000e+00\n"
+        "Index\tTime\tV(out)\tI(V1)\tV(clk)\tV(ignored)\n0\t0.000000e+00\t0.000000e+00\t-1.000000e-03\t0.000000e+00\t1.000000e+00\n1\t1.000000e-03\t1.000000e+00\t-2.000000e-03\t5.000000e+00\t2.000000e+00\n"
     );
 }
 

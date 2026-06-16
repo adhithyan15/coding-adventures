@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-remove-unused-vars"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Unreferenced-variable cleanup pass for the Closure Compiler clone. Per CLOC06's canonical pass set. The final sweep: deletes variable bindings that have zero post-DCE / post-inline references and whose initializers are pure."
 

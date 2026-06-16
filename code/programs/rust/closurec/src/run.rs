@@ -213,13 +213,22 @@ pub fn transform_source(
 /// names are the passes' own canonical `Pass::name()` values; they also
 /// become the `passes` field in the correlation-vector trace.
 ///
-/// The list is in execution order, but ordering is ultimately enforced
-/// by the pipeline's dependency graph: `fold-control-flow` declares
-/// `depends_on = ["constant-fold"]`, so the topo-sort runs constant-fold
-/// first regardless. That ordering matters — constant-fold turns a
-/// comparison like `2 > 3` into the literal `false`, which is what lets
-/// fold-control-flow then prune `if (2 > 3) {A} else {B}` down to `B`.
-const SIMPLE_PASS_NAMES: &[&str] = &["constant-fold", "fold-control-flow"];
+/// The list is in execution order. Ordering is enforced two ways: every
+/// pass that needs a predecessor declares it via `Pass::depends_on`, and
+/// where two passes are mutually independent the pipeline falls back to
+/// *registration order* as the tie-breaker. Both `fold-control-flow` and
+/// `dce` declare `depends_on = ["constant-fold"]` (so constant-fold always
+/// runs first), but neither depends on the other — so we register, and
+/// thus run, `fold-control-flow` before `dce` on purpose:
+///
+/// - constant-fold turns `2 > 3` into the literal `false`;
+/// - fold-control-flow then prunes `if (false) {A}` to an empty `;`;
+/// - dce then sweeps that empty statement (and any code after a `return`)
+///   away.
+///
+/// Running dce last means it cleans up the `;` debris the control-flow
+/// folder leaves behind.
+const SIMPLE_PASS_NAMES: &[&str] = &["constant-fold", "fold-control-flow", "dce"];
 
 /// Run the SIMPLE optimization pipeline over a bridged `Program` and
 /// emit the result as JavaScript text.
@@ -248,6 +257,7 @@ fn run_simple_pipeline(
 ) -> Option<String> {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
+    use coding_adventures_closure_pass_dce::DcePass;
     use coding_adventures_closure_pass_fold_control_flow::FoldControlFlowPass;
     use coding_adventures_closure_pass_pipeline::PassPipeline;
     use coding_adventures_correlation_vector::CVLog;
@@ -259,12 +269,16 @@ fn run_simple_pipeline(
     // log accepts contributions and drops them — zero overhead.
     let mut pass_cv = CVLog::new(false);
 
-    // Registration order is not significant — the pipeline topo-sorts
-    // on each pass's `depends_on`, so `fold-control-flow` (which depends
-    // on `constant-fold`) always runs after it.
+    // The pipeline topo-sorts on each pass's `depends_on`, with
+    // registration order as the tie-breaker between independent passes.
+    // `fold-control-flow` and `dce` both depend on `constant-fold` (so it
+    // runs first) but not on each other, so registration order is what
+    // puts `fold-control-flow` before `dce` — letting dce sweep the empty
+    // `;` statements the control-flow folder leaves behind.
     let mut pipeline = PassPipeline::new();
     pipeline.add(Box::new(ConstantFoldPass::new()));
     pipeline.add(Box::new(FoldControlFlowPass::new()));
+    pipeline.add(Box::new(DcePass::new()));
 
     let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
         Ok(out) => out.program,
@@ -5538,6 +5552,68 @@ mod tests {
     }
 
     #[test]
+    fn simple_dce_drops_dead_after_return() {
+        // CLOC12.157: the SIMPLE pipeline now runs dce after
+        // fold-control-flow. Code after a `return` in a block is
+        // unreachable, so dce removes it.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f() { g(); return 1; dead(); }", &cfg)
+            .expect("ok");
+        assert_eq!(
+            out, "function f(){g();return 1};",
+            "dce must drop the statement after the return"
+        );
+    }
+
+    #[test]
+    fn simple_dce_sweeps_folded_if_empty_statement() {
+        // All three passes compose: constant-fold turns `4 > 5` into
+        // `false`, fold-control-flow turns `if (false) {…}` into an
+        // empty `;`, and dce sweeps that empty statement out of the
+        // block — leaving just the `return`.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out =
+            transform_source("function f() { if (4 > 5) { x(); } return 2; }", &cfg)
+                .expect("ok");
+        assert_eq!(
+            out, "function f(){return 2};",
+            "dce must sweep the empty statement left by fold-control-flow"
+        );
+    }
+
+    #[test]
+    fn simple_dce_whitespace_only_keeps_dead_code() {
+        // Companion — the SAME input under WHITESPACE_ONLY keeps the
+        // dead statement, proving the elimination is the SIMPLE
+        // pipeline's doing.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f() { g(); return 1; dead(); }", &cfg)
+            .expect("ok");
+        assert_eq!(
+            out, "function f(){g();return 1;dead()};",
+            "whitespace_only must NOT drop dead code"
+        );
+    }
+
+    #[test]
     fn simple_level_bridge_ok_status_in_cv() {
         // When the source parses cleanly, the CV contribution for the
         // `compilation_level` stage must carry bridge_status = "ok".
@@ -5575,7 +5651,7 @@ mod tests {
         );
         // The pass pipeline must be recorded in the trace, in order.
         assert!(
-            body.contains("\"passes\":[\"constant-fold\",\"fold-control-flow\"]"),
+            body.contains("\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\"]"),
             "expected passes list in CV sidecar: {body}"
         );
         let _ = fs::remove_dir_all(&dir);

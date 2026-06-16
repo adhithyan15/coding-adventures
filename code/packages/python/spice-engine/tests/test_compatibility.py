@@ -533,13 +533,14 @@ def test_resolve_deck_fourier_reports_unsupported_subset() -> None:
     }
 
 
-def test_resolve_deck_outputs_extracts_save_and_probe_cards() -> None:
+def test_resolve_deck_outputs_extracts_save_probe_and_print_cards() -> None:
     summary = resolve_deck_outputs(
         """
 V1 in 0 DC 1
 .save V(out) i(V1)
 .probe tran V(clk)
 .probe AC V(out)
+.print dc V(load) I(V2)
 .end
 .save V(ignored)
 """
@@ -547,7 +548,7 @@ V1 in 0 DC 1
 
     assert summary.active_lines == ("V1 in 0 DC 1",)
     assert summary.terminated is True
-    assert summary.end_line_number == 6
+    assert summary.end_line_number == 7
     assert summary.diagnostics == ()
     assert [
         (selection.directive, selection.analysis, selection.probes)
@@ -556,17 +557,19 @@ V1 in 0 DC 1
         (".save", None, ("V(out)", "I(V1)")),
         (".probe", "tran", ("V(clk)",)),
         (".probe", "ac", ("V(out)",)),
+        (".print", "dc", ("V(load)", "I(V2)")),
     ]
 
     assert select_deck_output_probes(
         """
 .save V(out) I(V1)
 .probe tran V(out) V(clk)
+.print tran I(V2)
 .probe ac V(freq)
 .end
 """,
         "transient",
-    ) == ["V(out)", "I(V1)", "V(clk)"]
+    ) == ["V(out)", "I(V1)", "V(clk)", "I(V2)"]
 
 
 def test_resolve_deck_analyses_extracts_supported_cards() -> None:
@@ -707,15 +710,21 @@ def test_resolve_deck_outputs_reports_invalid_cards() -> None:
         """
 .save
 .probe tran
+.print tran
+.print foo V(out)
 .save P(out)
 .probe dc V(out) bad-token
+.print dc bad-token
 .end
 """
     )
 
     assert sorted(diagnostic.code for diagnostic in summary.diagnostics) == [
+        "SPICE_DECK_OUTPUT_ANALYSIS",
         "SPICE_DECK_OUTPUT_ARGUMENT",
         "SPICE_DECK_OUTPUT_ARGUMENT",
+        "SPICE_DECK_OUTPUT_ARGUMENT",
+        "SPICE_DECK_OUTPUT_PROBE",
         "SPICE_DECK_OUTPUT_PROBE",
         "SPICE_DECK_OUTPUT_PROBE",
     ]

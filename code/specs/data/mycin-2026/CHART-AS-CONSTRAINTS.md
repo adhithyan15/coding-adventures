@@ -160,9 +160,27 @@ risks Y") — decision support, not a hidden choice.
   rises). Drug **cost** uses the grounded preference `tier`; the **side-effect** weights are an
   authored-debt layer (`formulary.json` `side_effects` map, flagged) pending **CC-4b** spider
   grounding (FDA-label adverse-event / monitoring burden) — the standard domain→ground flywheel.
-- **CC-5 — wait-vs-treat-now decision (§4)** with the grounded time-criticality threshold.
-- **CC-6 — insurance / step-therapy (§5):** precedence constraints + the dual
-  clinical-vs-reimbursement regimen output; ground a sample payer step-therapy policy.
+- **CC-5 — wait-vs-treat-now decision (§4). ✅ DONE.** `decide_timing(disease, culture_status,
+  clinical_status)` models the empiric-now vs await-culture choice as a function of the disease's
+  TIME-CRITICALITY (grounded threshold) and the patient's culture/clinical status: a time-critical
+  disease (meningitis, door-to-antibiotic ≤60 min) or an unstable patient → `treat_now_empiric`
+  (delay_risk high); stable + routine-acuity + culture pending → `await_culture` (delay_risk low,
+  cheaper/narrower); culture resulted → `targeted_culture_directed`. New chart facts
+  `culture_status` (pending/resulted) and `clinical_status` (critical/unstable/stable) feed it;
+  `derive()` surfaces the decision + delay_risk + rationale + threshold. The decision is reusable
+  (not meningitis-specific). The ≤60-min meningitis threshold is authored-debt (IDSA), flagged for
+  **CC-5b** spider grounding.
+- **CC-6 — insurance / step-therapy (§5). ✅ DONE.** A payer step-therapy rule ("won't
+  approve Y until X tried") enters as a `step_therapy` chart fact (`restricted:prerequisite`)
+  + `prior_failed` facts (drugs already tried); the precedence `x_Y ≤ tried_X` is emitted as an
+  EXPLICIT engine constraint `constrain x_Y <= 0` in the reimbursement program (the known-untried
+  `tried_X = 0` folded in) — enforced by the constraint solver and auditable in the program, NOT
+  pre-filtered in Python. `derive()` solves TWICE: `regimen`
+  is the clinically optimal one; `reimbursement` carries the payer-covered regimen, the
+  `blocked` drugs, whether it `differs_from_clinical`, and a note. Reimbursement infeasibility
+  (a rule blocking a clinically-forced drug → covered = INFEASIBLE) is surfaced **distinctly**
+  from clinical infeasibility → physician override / appeal on medical necessity. Grounding a
+  real published payer policy is the **CC-6b** follow-up.
 - **CC-7 — full chart drive-through:** wire CH (chart→IR + de-identification) into the COP so
   a whole de-identified FHIR chart produces a regimen with the full audit trail.
 
