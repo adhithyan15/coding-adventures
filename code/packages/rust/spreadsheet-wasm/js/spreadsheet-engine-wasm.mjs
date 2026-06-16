@@ -107,6 +107,36 @@ export function createEngine(wasmBytes) {
         /** Every set cell's computed value, keyed by A1. */
         getValues: () => JSON.parse(call0("get_values")),
 
+        // ── Cell display formats ─────────────────────────────────────
+        // An Excel-style code per cell (e.g. "#,##0.00", "0%", "yyyy-mm-dd")
+        // decides how its value reads. setFormat with an empty code clears it.
+
+        /** Set a cell's display format code (empty string clears it). */
+        setFormat: (a1, code) => {
+          const [ap, al] = writeStr(String(a1));
+          const [cp, cl] = writeStr(String(code));
+          ex.set_format(ap, al, cp, cl);
+          freeInput(ap, al);
+          freeInput(cp, cl);
+        },
+        /** A cell's format code, or `""` if it uses the default (General). */
+        getFormat: (a1) => call1("get_format", String(a1)),
+        /** A cell's value rendered through its format — the display string. */
+        getDisplay: (a1) => call1("get_display", String(a1)),
+
+        // ── Structural edits: insert / delete rows & columns ─────────
+        // 1-based `at`, `count`. The engine relocates cells and rewrites every
+        // formula's references; re-read via getWindow / getRaw afterwards.
+
+        /** Insert `count` blank rows before row `at`; rows at/after slide down. */
+        insertRows: (at, count) => ex.insert_rows(at >>> 0, count >>> 0),
+        /** Delete `count` rows from `at`; refs to deleted rows become #REF!. */
+        deleteRows: (at, count) => ex.delete_rows(at >>> 0, count >>> 0),
+        /** Insert `count` blank columns before column `at`. */
+        insertCols: (at, count) => ex.insert_cols(at >>> 0, count >>> 0),
+        /** Delete `count` columns from `at`; refs to deleted cols become #REF!. */
+        deleteCols: (at, count) => ex.delete_cols(at >>> 0, count >>> 0),
+
         // ── Viewport primitive (virtualized infinite sheet) ──────────
         // A scrolling host renders only the visible window of an unbounded
         // sheet: getWindow for the visible rectangle, usedRange for scrollbar
@@ -121,6 +151,15 @@ export function createEngine(wasmBytes) {
          */
         getWindow: (row0, col0, row1, col1) =>
           JSON.parse(callInts("get_window", row0, col0, row1, col1)),
+        /**
+         * Dense display **strings** for the inclusive 1-based rectangle, as
+         * `{ row0, col0, rows, cols, cells: string[][] }` (row-major; each cell
+         * rendered through its format code, blanks as `""`), or `{ error }` on a
+         * bad/oversized request. The format-aware sibling of getWindow — the one
+         * read a virtualized grid needs per frame.
+         */
+        getDisplayWindow: (row0, col0, row1, col1) =>
+          JSON.parse(callInts("get_display_window", row0, col0, row1, col1)),
         /** Data extent `{ minRow, minCol, maxRow, maxCol }`, or `null`. */
         usedRange: () => JSON.parse(call0("used_range")),
         /** Column letters for a 1-based index: `1 → "A"`, `27 → "AA"`. */

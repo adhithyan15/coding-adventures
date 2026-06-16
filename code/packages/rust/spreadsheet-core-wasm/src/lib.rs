@@ -302,6 +302,36 @@ impl SpreadsheetSession {
         }
     }
 
+    /// Display **strings** for the inclusive 1-based rectangle, as JSON:
+    /// `{"row0":1,"col0":1,"rows":R,"cols":C,"cells":[["1,234.50",…],…]}` where
+    /// `cells` is a row-major `R×C` array of the per-cell display strings (each
+    /// value already rendered through its format code; empty cells are `""`).
+    /// This is the format-aware sibling of [`get_window`](Self::get_window) — the
+    /// one read a virtualized grid needs per frame, since the host paints the
+    /// strings directly without re-deriving number formatting. On a bad request
+    /// (inverted/oversized/0-coord) returns `{"error":"#REF!"}`.
+    pub fn get_display_window(&self, row0: u32, col0: u32, row1: u32, col1: u32) -> String {
+        match self.wb.get_display_window(self.sheet, row0, col0, row1, col1) {
+            Ok(w) => {
+                let mut rows = Vec::with_capacity(w.rows as usize);
+                for r in 0..w.rows {
+                    let mut row = Vec::with_capacity(w.cols as usize);
+                    for c in 0..w.cols {
+                        row.push(Value::String(w.cells[(r * w.cols + c) as usize].clone()));
+                    }
+                    rows.push(Value::Array(row));
+                }
+                json!({
+                    "row0": w.row0, "col0": w.col0,
+                    "rows": w.rows, "cols": w.cols,
+                    "cells": rows,
+                })
+                .to_string()
+            }
+            Err(e) => json!({ "error": e.display() }).to_string(),
+        }
+    }
+
     /// The data extent as JSON `{"minRow":…,"minCol":…,"maxRow":…,"maxCol":…}`,
     /// or the JSON literal `null` if the sheet has no non-empty cells. A host
     /// sizes its scrollable area to this.
@@ -625,6 +655,35 @@ mod tests {
         // 0-coord / oversized → an error object, never a panic.
         assert_eq!(s.get_window(0, 0, 10, 10), r##"{"error":"#REF!"}"##);
         assert_eq!(s.get_window(1, 1, 1000, 1000), r##"{"error":"#REF!"}"##);
+    }
+
+    #[test]
+    fn get_display_window_returns_formatted_strings_row_major() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "1234.5");
+        s.set_format("A1", "#,##0.00"); // → "1,234.50"
+        s.set_cell("B1", "0.25");
+        s.set_format("B1", "0%"); // → "25%"
+        s.set_cell("C1", "hi"); // text, General
+        // Window A1:C1 — one row, three columns, display strings, dense.
+        let out = s.get_display_window(1, 1, 1, 3);
+        assert_eq!(
+            out,
+            r#"{"cells":[["1,234.50","25%","hi"]],"col0":1,"cols":3,"row0":1,"rows":1}"#
+        );
+        // A blank region comes back as "" cells (included, not omitted): row 2,
+        // columns A:B → one row, two empty strings.
+        let out2 = s.get_display_window(2, 1, 2, 2);
+        assert_eq!(
+            out2,
+            r#"{"cells":[["",""]],"col0":1,"cols":2,"row0":2,"rows":1}"#
+        );
+        // 0-coord / oversized → an error object, never a panic.
+        assert_eq!(s.get_display_window(0, 0, 10, 10), r##"{"error":"#REF!"}"##);
+        assert_eq!(
+            s.get_display_window(1, 1, 1000, 1000),
+            r##"{"error":"#REF!"}"##
+        );
     }
 
     #[test]
