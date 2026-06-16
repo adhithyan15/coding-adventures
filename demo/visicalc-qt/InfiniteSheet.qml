@@ -1,6 +1,6 @@
 // InfiniteSheet.qml — a virtualized, effectively-infinite spreadsheet view for
 // the Qt demo, rendered on the shared Rust engine through the viewport
-// primitive (the same get_window / used_range / changed_since the SwiftUI
+// primitive (the same get_display_window / used_range / changed_since the SwiftUI
 // InfiniteGridView and the web infinite.html drive).
 //
 // The sheet is u32 × u32 and sparse; only the cells in the VISIBLE rows are ever
@@ -24,8 +24,9 @@
 //   • gutter.contentY  ← body ListView.contentY               (gutter tracks ↕)
 //
 // Each visible row delegate calls `doc.rowCells(rowNum)` ONCE — a single engine
-// `get_window` over that row's 1×totalCols strip — so the per-frame engine work
-// is proportional to visible rows, never to the sheet's height.
+// `get_display_window` over that row's 1×totalCols strip (display strings,
+// already rendered through each cell's format code) — so the per-frame engine
+// work is proportional to visible rows, never to the sheet's height.
 
 import QtQuick 2.15
 import QtQuick.Controls 2.15
