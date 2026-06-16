@@ -125,6 +125,8 @@ packages a typed surface for:
   readiness into final archive adoption checks
 - Hue package release archive acceptance summaries that turn archive adoption
   readiness into final archive acceptance checks
+- Hue package release archive distribution summaries that turn archive
+  acceptance readiness into final archive distribution checks
 
 ## Dependencies
 
