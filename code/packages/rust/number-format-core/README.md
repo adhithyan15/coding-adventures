@@ -56,12 +56,30 @@ assert_eq!(fmt.apply(-1234.5), "-1,234.50");
 A malformed code makes `format_number` fall back to the shortest representation
 (it never panics); `NumberFormat::parse` surfaces the error if you want it.
 
-## Scope (v1)
+## Date/time codes
 
-Numeric formats only. **Documented follow-ups:** date/time codes
-(`yyyy-mm-dd`, `hh:mm`), scientific notation (`0.00E+00`), fractions (`# ?/?`),
-`[Color]` prefixes, `[>100]`-style conditional sections, and the text (4th)
-section.
+A code that uses date/time field letters (`y`/`m`/`d`/`h`/`s`, outside quotes)
+is applied to the value as an **Excel-1900 serial date** — the integer part is
+the day count, the fraction is the time of day. Serial decomposition is
+delegated to `datetime-core`.
+
+```rust
+// `45292.0` is 2024-01-01; `+ 0.5` is noon.
+assert_eq!(format_number(45292.0,  "yyyy-mm-dd"),  "2024-01-01");
+assert_eq!(format_number(45292.0,  "d-mmm-yyyy"),  "1-Jan-2024");
+assert_eq!(format_number(45292.5,  "h:mm AM/PM"),  "12:00 PM");
+```
+
+Tokens: `yyyy`/`yy`, `mmmm`/`mmm`/`mm`/`m` (month), `dddd`/`ddd`/`dd`/`d` (day &
+weekday name), `hh`/`h`, `mm`/`m` (minute), `ss`/`s`, `AM/PM`, `A/P`. The `m`
+overload resolves by context — minutes next to an hours/seconds token, month
+otherwise. A serial outside the representable range renders `######`.
+
+## Scope
+
+Numeric and date/time formats. **Documented follow-ups:** scientific notation
+(`0.00E+00`), fractions (`# ?/?`), `[Color]` prefixes, `[>100]`-style
+conditional sections, and the text (4th) section.
 
 Rounding uses the standard library's correctly-rounded decimal formatting
 (ties-to-even); this differs from Excel's ties-away-from-zero only on exact

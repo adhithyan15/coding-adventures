@@ -1,7 +1,8 @@
 [package]
 name = "number-format-core"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Pure-Rust Excel/Lotus-style numeric format codes (0.00, #,##0, 0%, $#,##0.00;(#,##0.00)) → display strings, for any spreadsheet frontend."
+description = "Pure-Rust Excel/Lotus-style number & date/time format codes (0.00, #,##0, 0%, yyyy-mm-dd, h:mm AM/PM) → display strings, for any spreadsheet frontend."
 
 [dependencies]
+datetime-core = { path = "../datetime-core" }
