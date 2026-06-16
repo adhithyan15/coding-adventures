@@ -14,7 +14,9 @@ use std::time::Duration;
 use embeddable_http_server::{HttpRequest, HttpServerOptions};
 use http_core::{Header, HttpVersion, RequestHead};
 use tcp_runtime::{ConnectionId, TcpConnectionInfo};
-use web_core::{LogLevel, RouteLookupResult, Router, WebApp, WebResponse, WebServer};
+use web_core::{
+    LogLevel, MailboxWebServer, RouteLookupResult, Router, WebApp, WebResponse, WebServer,
+};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -701,6 +703,143 @@ fn sharded_web_server_cpu_bound_throughput_scales() {
             parallel < serial,
             "expected the sharded server to finish CPU-bound load faster than a \
              single reactor on {cores} cores (1 shard: {serial:?}, parallel: {parallel:?})",
+        );
+    }
+}
+
+// ---------------------------------------------------------------------------
+// WEB01b-3 — comparative benchmark: single-reactor vs sharded vs mailbox
+// ---------------------------------------------------------------------------
+
+/// Bind and start a `MailboxWebServer` on port 0 with a `worker_count`-thread
+/// pool, returning the port and the (cloneable) server so the caller can `stop`
+/// it. Mirrors `start_server` / `start_sharded_server`, but the mailbox stack is
+/// cross-platform (one `bind`) and `serve` takes `&self`, so we serve a clone.
+fn start_mailbox_server(app: WebApp, worker_count: usize) -> (u16, MailboxWebServer) {
+    let app = Arc::new(app);
+    let server = MailboxWebServer::bind(
+        "127.0.0.1",
+        0,
+        HttpServerOptions::default(),
+        worker_count,
+        Arc::clone(&app),
+    )
+    .expect("bind mailbox");
+    let port = server.local_addr().port();
+    let serve = server.clone();
+    thread::spawn(move || {
+        let _ = serve.serve();
+    });
+    thread::sleep(Duration::from_millis(20));
+    (port, server)
+}
+
+/// Comparative CPU-bound throughput across the three WEB01 serving modes
+/// (WEB01b-3): single-reactor [`WebServer`], `ShardedWebServer` (parallel *by
+/// connection*), and `MailboxWebServer` (parallel *by request*).
+///
+/// `#[ignore]`d for the same reason as the sharded benchmark above: wall-clock
+/// scaling depends on the host's core count and load, so this is a runnable
+/// *measurement* that documents **when to pick which mode**, not a CI pass/fail
+/// gate (the deterministic concurrency tests are the CI proofs). Run manually on
+/// a multi-core machine:
+///
+/// ```sh
+/// cargo test -p web-core --test web_core_test -- --ignored --nocapture \
+///     web_serving_modes_cpu_bound_comparison
+/// ```
+///
+/// Each request burns a fixed CPU budget (a busy hash loop — NOT an echo, which
+/// is latency-bound and would not scale). All three modes serve the same
+/// concurrent load; the table shows that both parallel modes beat the single
+/// reactor on real cores. Sharded and mailbox scale comparably for one-shot
+/// (`Connection: close`) clients — the spread shows where their dispatch models
+/// differ (sharded parallelises across connections; mailbox across requests, so
+/// it also overlaps sequential keep-alive on one connection — see WEB01b-1a/2).
+#[cfg(not(target_os = "windows"))]
+#[test]
+#[ignore]
+fn web_serving_modes_cpu_bound_comparison() {
+    use std::time::Instant;
+
+    // A deterministic, optimiser-resistant CPU burn (~a few ms per request) —
+    // identical to the sharded benchmark's, so the numbers are comparable.
+    fn cpu_burn() -> u64 {
+        let mut acc: u64 = 0xcbf2_9ce4_8422_2325; // FNV offset basis
+        for i in 0..2_000_000u64 {
+            acc = (acc ^ i).wrapping_mul(0x0000_0100_0000_01b3); // FNV prime
+        }
+        acc
+    }
+
+    fn build_app() -> WebApp {
+        let mut app = WebApp::new();
+        app.get("/compute", move |_| WebResponse::text(format!("{}", cpu_burn())));
+        app
+    }
+
+    // Fire `client_count` concurrent one-shot clients at `port`, all released
+    // together via the barrier, and return the wall-clock to drain them all.
+    fn drive_load(port: u16, client_count: usize) -> std::time::Duration {
+        let barrier = Arc::new(std::sync::Barrier::new(client_count));
+        let start = Instant::now();
+        let clients: Vec<_> = (0..client_count)
+            .map(|_| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait();
+                    let (status, _) = http_get(port, "/compute");
+                    assert_eq!(status, 200);
+                })
+            })
+            .collect();
+        for c in clients {
+            c.join().expect("compute client");
+        }
+        start.elapsed()
+    }
+
+    let cores = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(1);
+    let workers = cores.max(2);
+    let client_count = 16;
+
+    // 1) Single reactor (WebServer) — the baseline.
+    let (port, stop) = start_server(build_app());
+    let single = drive_load(port, client_count);
+    stop.stop();
+    thread::sleep(Duration::from_millis(50));
+
+    // 2) ShardedWebServer — parallel by connection.
+    let (port, _shards, stop) = start_sharded_server(build_app(), workers);
+    let sharded = drive_load(port, client_count);
+    stop.stop();
+    thread::sleep(Duration::from_millis(50));
+
+    // 3) MailboxWebServer — parallel by request.
+    let (port, server) = start_mailbox_server(build_app(), workers);
+    let mailbox = drive_load(port, client_count);
+    server.stop();
+    thread::sleep(Duration::from_millis(50));
+
+    println!(
+        "WEB01 serving modes — {client_count} CPU-bound requests on {cores} cores ({workers} workers):\n  \
+         single-reactor : {single:?}\n  \
+         sharded ({workers}x)   : {sharded:?}  (speedup {:.2}x)\n  \
+         mailbox ({workers}x)   : {mailbox:?}  (speedup {:.2}x)",
+        single.as_secs_f64() / sharded.as_secs_f64(),
+        single.as_secs_f64() / mailbox.as_secs_f64(),
+    );
+
+    if cores >= 2 {
+        assert!(
+            sharded < single,
+            "expected sharded to beat single-reactor on {cores} cores \
+             (single: {single:?}, sharded: {sharded:?})",
+        );
+        assert!(
+            mailbox < single,
+            "expected mailbox to beat single-reactor on {cores} cores \
+             (single: {single:?}, mailbox: {mailbox:?})",
         );
     }
 }

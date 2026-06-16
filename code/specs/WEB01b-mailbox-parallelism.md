@@ -169,7 +169,11 @@ connection" un-gates. Read the mailbox write-back path / connection bookkeeping 
    false`). Still open.
 5. **WEB01b-3 — comparative benchmark** (`#[ignore]`): single-reactor vs sharded
    (WEB01a) vs mailbox (WEB01b) on a CPU-bound load; document when to pick which.
-   Still open.
+   ✅ done — `web_serving_modes_cpu_bound_comparison` in
+   `code/packages/rust/web-core/tests/web_core_test.rs` (web-core 0.3.1). Prints a
+   wall-clock + speedup table for all three modes; asserts both parallel modes
+   beat the single reactor on ≥ 2 cores. Sample (14 cores): single 180ms, sharded
+   5.5×, mailbox 6.6×.
 
 ## Open questions (for sign-off before WEB01b-1)
 
