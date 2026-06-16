@@ -1,15 +1,16 @@
 // infinite_grid.dart — a virtualized, effectively-infinite spreadsheet view for
 // the Flutter demo, rendered on the shared Rust engine through the viewport
-// primitive (the same get_window / used_range / changed_since the SwiftUI
-// InfiniteGridView, the Qt InfiniteSheet.qml, and the web infinite.html drive).
+// primitive (the same get_display_window / used_range / changed_since the
+// SwiftUI InfiniteGridView, the Qt InfiniteSheet.qml, and web infinite.html drive).
 //
 // The sheet is u32 × u32 and sparse; only the cells in the VISIBLE rows are ever
 // built. The body is a `ListView.builder`, which natively virtualizes — it calls
 // its `itemBuilder` only for rows near the viewport and recycles them as they
 // scroll off. So a 1000-row-tall sheet costs the handful of rows you can see,
-// and each built row makes ONE engine `get_window` over its 1×totalCols strip
-// (InfiniteSheetModel.rowCells). Per-frame engine work is proportional to
-// *visible* rows, never to the sheet's height.
+// and each built row makes ONE engine `get_display_window` over its 1×totalCols
+// strip (InfiniteSheetModel.rowCells) — display strings, already rendered through
+// each cell's format code. Per-frame engine work is proportional to *visible*
+// rows, never to the sheet's height.
 //
 // Two-axis scroll with frozen chrome, all kept in sync by one-way controller
 // links (the chrome is non-interactive and slaved to the body's scroll):

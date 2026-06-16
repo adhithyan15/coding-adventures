@@ -63,6 +63,10 @@ typedef _CurrentRevD = int Function(Pointer<Void>);
 typedef _ChangedSinceC = Pointer<Uint8> Function(Pointer<Void>, Uint64);
 typedef _ChangedSinceD = Pointer<Uint8> Function(Pointer<Void>, int);
 
+// sc_set_format(session, a1, code) → void. An empty code clears the format.
+typedef _SetFormatC = Void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
+typedef _SetFormatD = void Function(Pointer<Void>, Pointer<Uint8>, Pointer<Uint8>);
+
 /// A single spreadsheet session, owning the opaque C handle.
 class SpreadsheetSession {
   final DynamicLibrary _lib;
@@ -74,6 +78,8 @@ class SpreadsheetSession {
   late final _GetD _getRaw;
   late final _StringFreeD _stringFree;
   late final _WindowD _getWindow;
+  late final _WindowD _getDisplayWindow;
+  late final _SetFormatD _setFormatFn;
   late final _NoArgD _usedRangeFn;
   late final _ColLettersD _columnLettersFn;
   late final _CurrentRevD _currentRevisionFn;
@@ -92,6 +98,8 @@ class SpreadsheetSession {
     _getRaw = _lib.lookupFunction<_GetC, _GetD>('sc_get_raw');
     _stringFree = _lib.lookupFunction<_StringFreeC, _StringFreeD>('sc_string_free');
     _getWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_window');
+    _getDisplayWindow = _lib.lookupFunction<_WindowC, _WindowD>('sc_get_display_window');
+    _setFormatFn = _lib.lookupFunction<_SetFormatC, _SetFormatD>('sc_set_format');
     _usedRangeFn = _lib.lookupFunction<_NoArgC, _NoArgD>('sc_used_range');
     _columnLettersFn = _lib.lookupFunction<_ColLettersC, _ColLettersD>('sc_column_letters');
     _currentRevisionFn = _lib.lookupFunction<_CurrentRevC, _CurrentRevD>('sc_current_revision');
@@ -226,16 +234,34 @@ class SpreadsheetSession {
   // C ABI's sc_get_window etc.), 1-based inclusive coords, so a windowed Flutter
   // grid can render only the visible rectangle of an unbounded sheet.
 
+  /// Set a cell's display format code (an Excel-style code like `"#,##0.00"` or
+  /// `"0%"`); an empty code clears it. Drives the engine's display path that
+  /// [window] reads through `sc_get_display_window`.
+  void setFormat(String a1, String code) {
+    final a1Ptr = _toCString(a1);
+    final codePtr = _toCString(code);
+    try {
+      _setFormatFn(_handle, a1Ptr, codePtr);
+    } finally {
+      _freeCString(a1Ptr);
+      _freeCString(codePtr);
+    }
+  }
+
   /// Dense display strings for the inclusive 1-based rectangle, row-major
   /// (empty cells become ''). Empty list on a bad/oversized request.
+  ///
+  /// Reads `sc_get_display_window`: each cell arrives already rendered through
+  /// its format code as a display string, so the host paints it directly and
+  /// never re-derives number formatting. The format-aware sibling of
+  /// `sc_get_window`; the JSON is `{...,"cells":[["1,234.50",...],...]}`.
   List<List<String>> window(int row0, int col0, int row1, int col1) {
-    final json = _takeString(_getWindow(_handle, row0, col0, row1, col1));
+    final json = _takeString(_getDisplayWindow(_handle, row0, col0, row1, col1));
     final Object? obj = jsonDecode(json);
-    if (obj is! Map || obj['values'] is! List) return const [];
-    return (obj['values'] as List)
-        .map<List<String>>((row) => (row as List)
-            .map<String>((c) => (c is Map) ? _displayValue(c) : '')
-            .toList())
+    if (obj is! Map || obj['cells'] is! List) return const [];
+    return (obj['cells'] as List)
+        .map<List<String>>((row) =>
+            (row as List).map<String>((c) => (c as String?) ?? '').toList())
         .toList();
   }
 
@@ -386,6 +412,21 @@ class InfiniteSheetModel {
     ];
     for (final cell in cells) {
       _session.setCell(cell[0], cell[1]);
+    }
+
+    // Attach Excel-style format codes so the engine's display path is visible in
+    // the windowed view (which renders via sc_get_display_window): the cross-foot
+    // totals read with thousands grouping + two decimals, and the far-flung Z1000
+    // total as a percent. Values are unchanged — only how the display strings
+    // render. Identical to the web/Qt demos' seeded formats.
+    const formats = <List<String>>[
+      ['E1', '#,##0.00'], ['E2', '#,##0.00'], ['E3', '#,##0.00'],
+      ['E4', '#,##0.00'], ['E5', '#,##0.00'],
+      ['A5', '#,##0.00'], ['B5', '#,##0.00'], ['C5', '#,##0.00'], ['D5', '#,##0.00'],
+      ['Z1000', '0.0%'], // 39 → "3900.0%": proves the format applies far off-origin
+    ];
+    for (final f in formats) {
+      _session.setFormat(f[0], f[1]);
     }
   }
 

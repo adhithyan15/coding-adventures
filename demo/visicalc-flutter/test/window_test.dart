@@ -87,8 +87,10 @@ void main() {
       addTearDown(m.dispose);
       final row1 = m.rowCells(1);
       expect(row1.length, m.totalCols);
-      expect(row1[0], '15'); // A1
-      expect(row1[4], '38'); // E1 = SUM(A1:D1)
+      expect(row1[0], '15'); // A1 (unformatted)
+      // E1 carries the "#,##0.00" seed format → engine renders the formatted
+      // display string (rowCells now reads sc_get_display_window).
+      expect(row1[4], '38.00'); // E1 = SUM(A1:D1), formatted
       expect(row1[9], ''); // J1 empty (sparse)
       // A row in the gap between the data islands is entirely blank.
       expect(m.rowCells(200).every((c) => c.isEmpty), isTrue);
@@ -110,10 +112,10 @@ void main() {
       addTearDown(m.dispose);
       m.selectInf(2, 1); // A2
       m.commitInf('108'); // 8 -> 108
-      expect(m.rowCells(2)[0], '108'); // A2
-      expect(m.rowCells(2)[4], '151'); // E2 = 108+14+7+22
-      expect(m.rowCells(5)[0], '139'); // A5 = 15+108+12+4
-      expect(m.rowCells(5)[4], '269'); // E5 grand total
+      expect(m.rowCells(2)[0], '108'); // A2 (unformatted)
+      expect(m.rowCells(2)[4], '151.00'); // E2 = 108+14+7+22, formatted
+      expect(m.rowCells(5)[0], '139.00'); // A5 = 15+108+12+4, formatted
+      expect(m.rowCells(5)[4], '269.00'); // E5 grand total, formatted
     });
   });
 }
