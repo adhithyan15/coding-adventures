@@ -165,6 +165,11 @@ pub fn install(env: &Env) {
     define(env, "colnames", builtin("colnames", b_names));
     define(env, "dim", builtin("dim", b_dim));
     define(env, "head", builtin("head", b_head));
+
+    // Matrices (R-11). `%*%` lives in the evaluator's infix dispatch.
+    define(env, "matrix", builtin("matrix", b_matrix));
+    define(env, "t", builtin("t", b_t));
+    define(env, "apply", builtin("apply", b_apply));
 }
 
 // ===========================================================================
@@ -216,6 +221,7 @@ fn b_nrow(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         SValue::DataFrame { columns, .. } => Ok(SValue::scalar(
             columns.first().map(|c| c.length()).unwrap_or(0) as f64,
         )),
+        SValue::Matrix { nrow, .. } => Ok(SValue::scalar(*nrow as f64)),
         _ => Ok(SValue::Null),
     }
 }
@@ -224,6 +230,7 @@ fn b_nrow(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
 fn b_ncol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     match first_positional(args)? {
         SValue::DataFrame { columns, .. } => Ok(SValue::scalar(columns.len() as f64)),
+        SValue::Matrix { ncol, .. } => Ok(SValue::scalar(*ncol as f64)),
         _ => Ok(SValue::Null),
     }
 }
@@ -245,6 +252,7 @@ fn b_dim(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             let nrow = columns.first().map(|c| c.length()).unwrap_or(0) as f64;
             Ok(SValue::doubles(vec![nrow, columns.len() as f64]))
         }
+        SValue::Matrix { nrow, ncol, .. } => Ok(SValue::doubles(vec![*nrow as f64, *ncol as f64])),
         _ => Ok(SValue::Null),
     }
 }
@@ -288,6 +296,187 @@ fn b_head(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
             let idx = SValue::doubles((1..=take).map(|k| k as f64).collect());
             index(other, &idx)
         }
+    }
+}
+
+// ===========================================================================
+// Matrices (R-11)
+// ===========================================================================
+
+/// Read a positive-integer `matrix`/`apply` dimension argument, by name or
+/// position.
+fn dim_arg(args: &[Arg], name: &str, pos: usize) -> Option<usize> {
+    args.iter()
+        .find(|a| a.name.as_deref() == Some(name))
+        .map(|a| &a.value)
+        .or_else(|| nth_positional(args, pos))
+        .and_then(|v| v.as_double().ok())
+        .and_then(|d| d.get_value(0))
+        .filter(|x| x.is_finite() && *x >= 1.0)
+        .map(|x| x as usize)
+}
+
+/// `matrix(data, nrow =, ncol =, byrow = FALSE)` — lay `data` (recycled) into a
+/// matrix. Column-major by default; `byrow = TRUE` fills row by row. With only
+/// one of `nrow`/`ncol`, the other is derived from the data length.
+fn b_matrix(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let data = first_positional(args)?.as_double()?;
+    let n = data.len();
+    let nrow_a = dim_arg(args, "nrow", 1);
+    let ncol_a = dim_arg(args, "ncol", 2);
+    let byrow = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("byrow"))
+        .map(|a| a.value.truthy().unwrap_or(false))
+        .unwrap_or(false);
+
+    let ceil_div = |a: usize, b: usize| a.div_ceil(b.max(1));
+    let (nrow, ncol) = match (nrow_a, ncol_a) {
+        (Some(r), Some(c)) => (r, c),
+        (Some(r), None) => (r, ceil_div(n, r).max(1)),
+        (None, Some(c)) => (ceil_div(n, c).max(1), c),
+        (None, None) => (n.max(1), 1), // a bare column
+    };
+    let total = nrow
+        .checked_mul(ncol)
+        .filter(|&t| t <= MAX_SEQ_LEN)
+        .ok_or_else(|| SError::Index(format!("matrix too large (limit {MAX_SEQ_LEN} elements)")))?;
+
+    let src = data.data();
+    let at = |i: usize| if n == 0 { na_real() } else { src[i % n] };
+    let mut out = vec![0.0; total];
+    if byrow {
+        for r in 0..nrow {
+            for c in 0..ncol {
+                out[c * nrow + r] = at(r * ncol + c); // read row-major, store column-major
+            }
+        }
+    } else {
+        for (i, slot) in out.iter_mut().enumerate() {
+            *slot = at(i);
+        }
+    }
+    Ok(SValue::Matrix {
+        data: Double::from_values(out),
+        nrow,
+        ncol,
+    })
+}
+
+/// `t(x)` — the transpose of a matrix; a bare vector becomes a `1×n` row.
+fn b_t(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::Matrix { data, nrow, ncol } => {
+            let (nr, nc) = (*nrow, *ncol);
+            let s = data.data();
+            let mut out = vec![0.0; nr * nc];
+            for r in 0..nr {
+                for c in 0..nc {
+                    out[r * nc + c] = s[c * nr + r]; // result (c, r) ← original (r, c)
+                }
+            }
+            Ok(SValue::Matrix {
+                data: Double::from_values(out),
+                nrow: nc,
+                ncol: nr,
+            })
+        }
+        other => {
+            let d = other.as_double()?;
+            let n = d.len();
+            Ok(SValue::Matrix {
+                data: d,
+                nrow: 1,
+                ncol: n,
+            })
+        }
+    }
+}
+
+/// `apply(X, MARGIN, FUN, …)` — apply `FUN` to each row (`MARGIN = 1`) or column
+/// (`MARGIN = 2`) of a matrix `X`. Simplifies to a vector when every result is a
+/// scalar, to a matrix (one column per margin) when they share a length, else a
+/// list. Trailing arguments are passed to `FUN`.
+fn b_apply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&Arg> = args.iter().filter(|a| a.name.is_none()).collect();
+    let x = positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("apply: missing X".into()))?
+        .value
+        .clone();
+    let margin = positional
+        .get(1)
+        .and_then(|a| a.value.as_double().ok())
+        .and_then(|d| d.get_value(0))
+        .map(|m| m as i64)
+        .filter(|&m| m == 1 || m == 2)
+        .ok_or_else(|| SError::BadArgs("apply: MARGIN must be 1 (rows) or 2 (columns)".into()))?;
+    let f = positional
+        .get(2)
+        .ok_or_else(|| SError::BadArgs("apply: missing FUN".into()))?
+        .value
+        .clone();
+    if !f.is_callable() {
+        return Err(SError::NotCallable(f.type_name().to_string()));
+    }
+    let extra: Vec<Arg> = positional
+        .iter()
+        .skip(3)
+        .map(|a| Arg {
+            name: None,
+            value: a.value.clone(),
+        })
+        .collect();
+
+    let (data, nrow, ncol) = match &x {
+        SValue::Matrix { data, nrow, ncol } => (data.clone(), *nrow, *ncol),
+        other => {
+            return Err(SError::BadArgs(format!(
+                "apply: X must be a matrix (got {})",
+                other.type_name()
+            )))
+        }
+    };
+    let s = data.data();
+    let count = if margin == 1 { nrow } else { ncol };
+    let mut results = Vec::with_capacity(count);
+    for k in 0..count {
+        let slice: Vec<f64> = if margin == 1 {
+            (0..ncol).map(|c| s[c * nrow + k]).collect() // row k
+        } else {
+            (0..nrow).map(|r| s[k * nrow + r]).collect() // column k
+        };
+        let mut call_args = Vec::with_capacity(1 + extra.len());
+        call_args.push(Arg {
+            name: None,
+            value: SValue::doubles(slice),
+        });
+        call_args.extend(extra.iter().cloned());
+        results.push(interp.call_value(f.clone(), &call_args)?);
+    }
+
+    if results.iter().all(|r| r.length() == 1) {
+        let wrapped: Vec<Arg> = results
+            .into_iter()
+            .map(|value| Arg { name: None, value })
+            .collect();
+        Ok(combine(&wrapped))
+    } else if !results.is_empty() && results.iter().all(|r| r.length() == results[0].length()) {
+        let rlen = results[0].length();
+        let mut out = Vec::with_capacity(rlen * count);
+        for r in &results {
+            out.extend_from_slice(r.as_double()?.data());
+        }
+        Ok(SValue::Matrix {
+            data: Double::from_values(out),
+            nrow: rlen,
+            ncol: count,
+        })
+    } else {
+        Ok(SValue::List {
+            names: vec![None; results.len()],
+            items: results,
+        })
     }
 }
 

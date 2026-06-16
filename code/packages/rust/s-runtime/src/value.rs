@@ -90,6 +90,16 @@ pub enum SValue {
         names: Vec<Option<String>>,
         items: Vec<SValue>,
     },
+
+    /// A numeric matrix: an `nrow × ncol` rectangle of doubles stored
+    /// **column-major** (R/Fortran order — element `(r, c)` is at `c*nrow + r`).
+    /// Implicit class `"matrix"`; `length()` is `nrow*ncol`, `dim()` is
+    /// `c(nrow, ncol)`.
+    Matrix {
+        data: Double,
+        nrow: usize,
+        ncol: usize,
+    },
 }
 
 impl SValue {
@@ -113,6 +123,7 @@ pub fn class_of(value: &SValue) -> Vec<String> {
         SValue::Character(_) => vec!["character".to_string()],
         SValue::Null => vec!["NULL".to_string()],
         SValue::Closure { .. } | SValue::Builtin { .. } => vec!["function".to_string()],
+        SValue::Matrix { .. } => vec!["matrix".to_string(), "array".to_string()],
     }
 }
 
@@ -137,6 +148,7 @@ impl std::fmt::Debug for SValue {
             }
             SValue::Classed { inner, class } => write!(f, "Classed({class:?}, {inner:?})"),
             SValue::List { items, .. } => write!(f, "List({} items)", items.len()),
+            SValue::Matrix { nrow, ncol, .. } => write!(f, "Matrix({nrow}x{ncol})"),
         }
     }
 }
@@ -174,6 +186,7 @@ impl SValue {
             SValue::DataFrame { .. } => "data.frame",
             SValue::Classed { inner, .. } => inner.type_name(),
             SValue::List { .. } => "list",
+            SValue::Matrix { .. } => "double",
         }
     }
 
@@ -190,6 +203,7 @@ impl SValue {
             SValue::DataFrame { columns, .. } => columns.len(),
             SValue::Classed { inner, .. } => inner.length(),
             SValue::List { items, .. } => items.len(),
+            SValue::Matrix { data, .. } => data.len(),
         }
     }
 
@@ -213,6 +227,7 @@ impl SValue {
             )),
             SValue::Null => Ok(Double::from_values(vec![])),
             SValue::Classed { inner, .. } => inner.as_double(),
+            SValue::Matrix { data, .. } => Ok(data.clone()),
             other => Err(SError::TypeError(format!(
                 "non-numeric argument (got {})",
                 other.type_name()
@@ -231,6 +246,10 @@ impl SValue {
                 .collect()),
             SValue::Null => Ok(vec![]),
             SValue::Classed { inner, .. } => inner.as_logical(),
+            SValue::Matrix { data, .. } => Ok(data
+                .iter()
+                .map(|x| if is_na_real(x) { None } else { Some(x != 0.0) })
+                .collect()),
             other => Err(SError::TypeError(format!(
                 "argument is not logical (got {})",
                 other.type_name()
@@ -268,6 +287,16 @@ impl SValue {
             SValue::Null => vec![],
             SValue::Factor { codes, levels } => SValue::factor_labels(codes, levels),
             SValue::Classed { inner, .. } => inner.as_character(),
+            SValue::Matrix { data, .. } => data
+                .iter()
+                .map(|x| {
+                    if is_na_real(x) {
+                        None
+                    } else {
+                        Some(format_number(x))
+                    }
+                })
+                .collect(),
             other => vec![Some(other.type_name().to_string())],
         }
     }
@@ -291,6 +320,7 @@ impl SValue {
                 None => Err(SError::Missing("argument is of length zero".into())),
             },
             SValue::Classed { inner, .. } => inner.truthy(),
+            SValue::Matrix { data, .. } => SValue::Double(data.clone()).truthy(),
             other => Err(SError::TypeError(format!(
                 "argument is not interpretable as logical (got {})",
                 other.type_name()
@@ -697,9 +727,53 @@ pub fn format_value(value: &SValue) -> Vec<String> {
         SValue::DataFrame { names, columns } => return format_data_frame(names, columns),
         SValue::Classed { inner, .. } => return format_value(inner),
         SValue::List { names, items } => return format_list(names, items),
+        SValue::Matrix { data, nrow, ncol } => return format_matrix(data, *nrow, *ncol),
     };
 
     format_vector(&elems)
+}
+
+/// Render a matrix the way R's console does: a `[,j]` column-header row, then
+/// `[i,]`-labelled data rows, every cell right-aligned to a common width.
+fn format_matrix(data: &Double, nrow: usize, ncol: usize) -> Vec<String> {
+    if nrow == 0 || ncol == 0 {
+        return vec![format!("<{nrow} x {ncol} matrix>")];
+    }
+    // Column-major access: element (r, c) is at c*nrow + r.
+    let cell = |r: usize, c: usize| {
+        data.get_value(c * nrow + r)
+            .map(format_number)
+            .unwrap_or_else(|| "NA".to_string())
+    };
+    let row_label_w = format!("[{nrow},]").len();
+    // Each column is as wide as the widest of its header and its cells.
+    let col_w: Vec<usize> = (0..ncol)
+        .map(|c| {
+            let header = format!("[,{}]", c + 1).len();
+            (0..nrow)
+                .map(|r| cell(r, c).len())
+                .max()
+                .unwrap_or(1)
+                .max(header)
+        })
+        .collect();
+
+    let mut lines = Vec::with_capacity(nrow + 1);
+    let mut header = format!("{:>row_label_w$}", "");
+    for (c, &w) in col_w.iter().enumerate() {
+        header.push(' ');
+        header.push_str(&format!("{:>w$}", format!("[,{}]", c + 1)));
+    }
+    lines.push(header);
+    for r in 0..nrow {
+        let mut line = format!("{:>row_label_w$}", format!("[{},]", r + 1));
+        for (c, &w) in col_w.iter().enumerate() {
+            line.push(' ');
+            line.push_str(&format!("{:>w$}", cell(r, c)));
+        }
+        lines.push(line);
+    }
+    lines
 }
 
 /// Free-function form of [`SValue::factor_labels`] for use inside formatting.

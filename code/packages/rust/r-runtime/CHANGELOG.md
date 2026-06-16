@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-06-16
+
+### Added (via the shared `s-runtime`)
+
+- **R-11 — the matrix type**: `matrix()`, `%*%`, `t()`, `dim`/`nrow`/`ncol`, and
+  `apply()`. See `s-runtime` 0.7.0.
+
 ## [0.5.0] - 2026-06-16
 
 ### Added (via the shared `s-runtime`)

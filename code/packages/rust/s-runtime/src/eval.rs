@@ -363,6 +363,7 @@ impl Interpreter {
             "%/%" => arithmetic("%/%", lhs, rhs),
             "%in%" => Ok(membership(lhs, rhs)),
             "%o%" => self.outer_product(lhs, rhs),
+            "%*%" => self.matrix_multiply(lhs, rhs),
             _ => {
                 let func = lookup(env, op).ok_or_else(|| SError::Undefined(op.to_string()))?;
                 let args = [
@@ -407,6 +408,63 @@ impl Interpreter {
             }
         }
         Ok(SValue::doubles(out))
+    }
+
+    /// `a %*% b` — the matrix product (column-major). A bare vector on the left
+    /// is taken as a `1×n` row; on the right as an `n×1` column (so `v %*% w` is
+    /// the dot product), matching R's conformability rules. NA propagates.
+    fn matrix_multiply(&self, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
+        let (ad, am, ak) = match lhs {
+            SValue::Matrix { data, nrow, ncol } => (data.clone(), *nrow, *ncol),
+            other => {
+                let d = other.as_double()?;
+                let n = d.len();
+                (d, 1, n) // a left vector is a row
+            }
+        };
+        let (bd, bk, bn) = match rhs {
+            SValue::Matrix { data, nrow, ncol } => (data.clone(), *nrow, *ncol),
+            other => {
+                let d = other.as_double()?;
+                let n = d.len();
+                (d, n, 1) // a right vector is a column
+            }
+        };
+        if ak != bk {
+            return Err(SError::TypeError(format!(
+                "non-conformable arguments: {am}x{ak} %*% {bk}x{bn}"
+            )));
+        }
+        let total = am
+            .checked_mul(bn)
+            .filter(|&n| n <= MAX_SEQ_LEN)
+            .ok_or_else(|| {
+                SError::Index(format!(
+                    "matrix product result too large (limit {MAX_SEQ_LEN} elements)"
+                ))
+            })?;
+        let (a, b) = (ad.data(), bd.data());
+        let mut out = vec![0.0; total];
+        for c in 0..bn {
+            for r in 0..am {
+                let mut acc = 0.0;
+                let mut na = false;
+                for p in 0..ak {
+                    let (x, y) = (a[p * am + r], b[c * bk + p]); // column-major
+                    if is_na_real(x) || is_na_real(y) {
+                        na = true;
+                        break;
+                    }
+                    acc += x * y;
+                }
+                out[c * am + r] = if na { na_real() } else { acc };
+            }
+        }
+        Ok(SValue::Matrix {
+            data: Double::from_values(out),
+            nrow: am,
+            ncol: bn,
+        })
     }
 
     /// The native pipe `|>`. `x |> f(a)` desugars to `f(x, a)`: the left value
