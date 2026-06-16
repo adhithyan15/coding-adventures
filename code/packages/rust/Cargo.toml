@@ -156,6 +156,7 @@ members = [
     "intel8080-gatelevel",
     "z80-gatelevel",
     "intel8086-gatelevel",
+    "motorola68k-gatelevel",
     "interrupt-handler",
     "interpreter-ir",
     "iir-type-checker",
