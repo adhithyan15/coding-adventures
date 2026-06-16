@@ -892,6 +892,7 @@ pub(crate) fn nth_element(value: &SValue, i: usize) -> SValue {
             levels: levels.clone(),
         },
         SValue::Classed { inner, .. } => nth_element(inner, i),
+        SValue::List { items, .. } => items.get(i).cloned().unwrap_or(SValue::Null),
         _ => SValue::Null,
     }
 }

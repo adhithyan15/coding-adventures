@@ -211,6 +211,20 @@ mod tests {
     }
 
     #[test]
+    fn lists_through_r_syntax() {
+        // list() with $ access; lapply -> list; strsplit -> list of char vectors.
+        assert_eq!(
+            nums("rec <- list(x = 1, y = 2)\nrec$x + rec$y\n"),
+            vec![3.0]
+        );
+        assert_eq!(nums("lapply(1:3, function(n) n + 1)[[2]]\n"), vec![3.0]);
+        assert_eq!(
+            show("strsplit(\"a-b-c\", \"-\")[[1]]\n"),
+            "[1] \"a\" \"b\" \"c\""
+        );
+    }
+
+    #[test]
     fn complex_literal_is_reported_unsupported() {
         // `1i` lexes and parses, but complex is not in this subset — the runtime
         // says so clearly rather than producing a wrong value.
