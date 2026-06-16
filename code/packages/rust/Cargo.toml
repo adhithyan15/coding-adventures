@@ -242,6 +242,7 @@ members = [
     "rom-bios",
     "ruby-lexer",
     "ruby-parser",
+    "s-lexer",
     "sql-lexer",
     "sql-parser",
     "smt-lib-format",
