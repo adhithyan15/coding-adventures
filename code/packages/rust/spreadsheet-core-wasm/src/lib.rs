@@ -53,9 +53,10 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use serde_json::{json, Value};
 use spreadsheet_core::parser::parse;
+use spreadsheet_core::address::MAX_RANGE_CELLS;
 use spreadsheet_core::{
-    column_index_to_letters, CellAddress, CellValue, ChangeSet, SheetId, SpreadsheetError,
-    StructuralEdit, Workbook,
+    column_index_to_letters, CellAddress, CellRange, CellValue, ChangeSet, SheetId,
+    SpreadsheetError, StructuralEdit, Workbook,
 };
 
 /// A single-sheet spreadsheet session with a JSON boundary.
@@ -194,6 +195,60 @@ impl SpreadsheetSession {
         for (addr, raw) in old {
             if let Some(new_addr) = addr.adjust(edit) {
                 self.raw.insert(new_addr, rewrite_raw_for_edit(&raw, edit));
+            }
+        }
+    }
+
+    /// Replicate the cell at `src_a1` across the inclusive rectangle
+    /// `dst_start_a1`..`dst_end_a1` — drag-fill. Each target gets a copy with its
+    /// formula's relative references shifted by its offset from the source
+    /// (`=A1` filled down → `=A2`), absolute (`$`) references pinned, and the
+    /// source's format carried along; an off-grid reference becomes `#REF!`. A
+    /// literal source is copied unchanged; an empty source clears each target.
+    /// Malformed addresses are a no-op (the engine and the echo map stay in
+    /// step). Mirrors [`SpreadsheetSession::insert_rows`] in keeping the `raw`
+    /// echo map honest — each target's stored source is the source's source with
+    /// its references shifted (so the formula bar shows the filled formula).
+    pub fn fill(&mut self, src_a1: &str, dst_start_a1: &str, dst_end_a1: &str) {
+        let (Ok(src), Ok(ds), Ok(de)) = (
+            CellAddress::parse(src_a1),
+            CellAddress::parse(dst_start_a1),
+            CellAddress::parse(dst_end_a1),
+        ) else {
+            return;
+        };
+        let dst = CellRange::new(ds, de);
+        // Mirror the engine's DoS guard so the raw-map loop below also stays
+        // bounded — without it a hostile `dst` could make the facade iterate
+        // billions of cells even though the engine itself rejected the fill.
+        if dst.cell_count() > MAX_RANGE_CELLS {
+            return;
+        }
+
+        // The engine replicates cell content + formats (shifting formula refs).
+        self.wb.fill(self.sheet, src, dst);
+
+        // Keep the `raw` echo map in step: each target's source is the source
+        // cell's raw text with its references shifted by the target's offset
+        // (formulas rewritten via parse→shift→serialize; literals copied; an
+        // empty source clears the target). Offsets in i64 then clamped, matching
+        // the engine — a high-coordinate anchor can't overflow the i32 delta.
+        let src_raw = self.raw.get(&src).cloned();
+        for row in dst.start.row..=dst.end.row {
+            for col in dst.start.col..=dst.end.col {
+                let target = CellAddress::new(row, col);
+                let d_row =
+                    (row as i64 - src.row as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+                let d_col =
+                    (col as i64 - src.col as i64).clamp(i32::MIN as i64, i32::MAX as i64) as i32;
+                match &src_raw {
+                    Some(raw) => {
+                        self.raw.insert(target, rewrite_raw_for_fill(raw, d_row, d_col));
+                    }
+                    None => {
+                        self.raw.remove(&target);
+                    }
+                }
             }
         }
     }
@@ -417,6 +472,24 @@ fn rewrite_raw_for_edit(raw: &str, edit: StructuralEdit) -> String {
     }
 }
 
+/// Rewrite a raw cell source for a fill of `(d_row, d_col)`, so the formula bar
+/// echoes the *shifted* references the engine stored — the copy/paste sibling of
+/// [`rewrite_raw_for_edit`]. A literal is copied verbatim (no references); a
+/// formula is re-parsed, its references shifted via the shared `shift` arithmetic
+/// (relative tracks, absolute pinned, off-grid → `#REF!`), and re-serialized. An
+/// unparseable formula is kept as-is — there's nothing to rewrite.
+fn rewrite_raw_for_fill(raw: &str, d_row: i32, d_col: i32) -> String {
+    let trimmed = raw.trim();
+    if trimmed.starts_with('=') {
+        match parse(trimmed) {
+            Ok(ast) => format!("={}", ast.shift(d_row, d_col).to_formula_string()),
+            Err(_) => raw.to_string(),
+        }
+    } else {
+        raw.to_string()
+    }
+}
+
 /// Encode a [`CellValue`] as the JSON the JS host expects. The shape matches
 /// the TypeScript engine's `CellValue` discriminated union exactly, so the
 /// demo glue is identical whichever engine backs it:
@@ -546,6 +619,43 @@ mod tests {
         s.set_format("A1", "");
         assert_eq!(s.get_format("A1"), "");
         assert_eq!(s.get_display("A1"), "1234.5");
+    }
+
+    #[test]
+    fn fill_replicates_formula_shifting_refs_and_echoes_source() {
+        let mut s = SpreadsheetSession::new();
+        for (a, v) in [("A1", "10"), ("A2", "20"), ("A3", "30")] {
+            s.set_cell(a, v);
+        }
+        s.set_cell("B1", "=A1*2"); // 20
+        // Fill B1 down into B2:B3 — each tracks its row.
+        s.fill("B1", "B2", "B3");
+        assert_eq!(s.get_value("B2"), r#"{"kind":"number","value":40.0}"#); // A2*2
+        assert_eq!(s.get_value("B3"), r#"{"kind":"number","value":60.0}"#); // A3*2
+        // The formula bar echoes the shifted source (binary ops parenthesised).
+        assert_eq!(s.get_raw("B3"), "=(A3*2)");
+    }
+
+    #[test]
+    fn fill_carries_literal_and_clears_from_empty() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "7");
+        s.fill("A1", "B1", "C1"); // copy literal right
+        assert_eq!(s.get_value("C1"), r#"{"kind":"number","value":7.0}"#);
+        assert_eq!(s.get_raw("B1"), "7");
+        // Filling from an empty source clears the targets (raw echo too).
+        s.set_cell("D1", "99");
+        s.fill("Z9", "D1", "D1"); // Z9 is empty
+        assert_eq!(s.get_raw("D1"), "");
+        assert_eq!(s.get_value("D1"), r#"{"kind":"empty"}"#);
+    }
+
+    #[test]
+    fn fill_bad_address_is_noop() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "1");
+        s.fill("not-an-addr", "B1", "B2"); // no panic, nothing filled
+        assert_eq!(s.get_value("B1"), r#"{"kind":"empty"}"#);
     }
 
     #[test]

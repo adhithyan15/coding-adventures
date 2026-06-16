@@ -266,6 +266,31 @@ pub extern "C" fn delete_cols(at: u32, count: u32) {
     SESSION.with(|s| s.borrow_mut().delete_cols(at, count));
 }
 
+/// `fill(src, dst_start, dst_end)` — drag-fill: replicate the `src` cell across
+/// the inclusive A1 rectangle `dst_start`..`dst_end`, shifting each copy's
+/// relative references (absolute `$` refs pin), carrying the source's format,
+/// clearing from an empty source. Malformed addresses are a no-op. The JS host
+/// re-reads via `get_window` / `get_display_window` / `get_raw` afterwards. See
+/// [`SpreadsheetSession::fill`].
+///
+/// # Safety
+/// The three `(ptr, len)` pairs must describe readable byte ranges (see
+/// [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn fill(
+    src_ptr: *const u8,
+    src_len: usize,
+    dst_start_ptr: *const u8,
+    dst_start_len: usize,
+    dst_end_ptr: *const u8,
+    dst_end_len: usize,
+) {
+    let src = read_input(src_ptr, src_len);
+    let dst_start = read_input(dst_start_ptr, dst_start_len);
+    let dst_end = read_input(dst_end_ptr, dst_end_len);
+    SESSION.with(|s| s.borrow_mut().fill(&src, &dst_start, &dst_end));
+}
+
 // ── Viewport primitive (virtualized infinite sheet) ──────────────────
 // These take integer coordinates directly (no pointer marshalling), so a
 // scrolling JS host can fetch just the visible window of an unbounded sheet.
@@ -441,6 +466,26 @@ mod tests {
         assert_eq!(value("A1"), r#"{"kind":"number","value":10.0}"#);
         assert_eq!(value("A3"), r#"{"kind":"number","value":30.0}"#);
         assert_eq!(raw("A3"), "=SUM(A1:A2)");
+    }
+
+    #[test]
+    fn abi_fill_replicates_and_shifts() {
+        reset();
+        set("A1", "10");
+        set("A2", "20");
+        set("B1", "=A1*2"); // 20
+        let (sp, sl) = put("B1");
+        let (asp, asl) = put("B2");
+        let (aep, ael) = put("B2");
+        // SAFETY: all three pairs come from `put`/`alloc`.
+        unsafe { fill(sp, sl, asp, asl, aep, ael) };
+        unsafe {
+            dealloc(sp, sl);
+            dealloc(asp, asl);
+            dealloc(aep, ael);
+        }
+        assert_eq!(value("B2"), r#"{"kind":"number","value":40.0}"#); // A2*2
+        assert_eq!(raw("B2"), "=(A2*2)"); // echoed shifted source
     }
 
     #[test]

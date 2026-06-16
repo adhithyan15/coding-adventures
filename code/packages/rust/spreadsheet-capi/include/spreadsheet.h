@@ -56,6 +56,13 @@ void  sc_delete_rows(ScSession *s, uint32_t at, uint32_t count);
 void  sc_insert_cols(ScSession *s, uint32_t at, uint32_t count);
 void  sc_delete_cols(ScSession *s, uint32_t at, uint32_t count);
 
+/* Fill / replicate (drag-fill): copy the `src` cell across the inclusive
+   rectangle `dst_start`..`dst_end`. Relative references shift per target,
+   absolute ($) refs pin, the source's format carries along, an empty source
+   clears each target; a malformed address is a no-op. No return — the host
+   re-reads via sc_get_window / sc_get_display_window / sc_get_raw afterwards. */
+void  sc_fill(ScSession *s, const char *src, const char *dst_start, const char *dst_end);
+
 /* Viewport primitive — read just the visible window of the unbounded sheet.
    Coordinates are 1-based and inclusive. Each char* result must be freed with
    sc_string_free(). */

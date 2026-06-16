@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.6.0
+
+**`fill` (drag-fill) over the JSON facade.** New
+`fill(src_a1, dst_start_a1, dst_end_a1)` replicates the source cell across the
+inclusive A1 rectangle, wrapping the engine's `Workbook::fill` (spreadsheet-core
+0.7.0): relative references shift per target, absolute (`$`) refs pin, the
+source's format carries along, an empty source clears each target, and a
+malformed address is a no-op.
+
+- Keeps the `raw` echo map honest: each target's stored source is the source's
+  source with its references shifted (`parse → shift → serialize`, the
+  copy/paste sibling of `rewrite_raw_for_edit`), so the formula bar shows the
+  filled formula. Offsets computed in i64 then clamped (matching the engine, so
+  a high-coordinate anchor can't overflow), and the facade mirrors the engine's
+  `MAX_RANGE_CELLS` guard so the raw-map loop also stays bounded.
+- 3 new tests (formula shift + echo, literal copy / clear-from-empty, bad-address
+  no-op).
+
 ## 0.5.0
 
 **`get_display_window`** — a windowed read returning each cell's **formatted
