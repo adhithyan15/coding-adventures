@@ -220,4 +220,13 @@ mod tests {
             "data_frame <- c(1, 2, 3)\nmean(data_frame)\ndata_frame * 10 + c(1, 2)\n"
         ));
     }
+
+    #[test]
+    fn pipe_and_lambda_parse() {
+        // The pipe produces a `pipe` node; the backslash lambda a `func_def`.
+        assert!(contains_rule(&parse_r("x |> f()\n"), "pipe"));
+        assert!(parses("c(3, 1, 2) |> sort() |> rev()\n"));
+        assert!(contains_rule(&parse_r("sq <- \\(x) x ^ 2\n"), "func_def"));
+        assert!(parses("sapply(1:3, \\(n) n * n)\n"));
+    }
 }

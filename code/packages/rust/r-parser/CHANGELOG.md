@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-06-16
+
+### Added
+
+- **R-9 grammar**: a `pipe` rule (`x |> f()`) at the special-operator precedence
+  level, and a `\(params) body` alternative on `func_def` so the backslash
+  lambda produces the same node the evaluator already handles.
+
 ## [0.1.0] - 2026-06-16
 
 ### Added

@@ -226,6 +226,7 @@ impl Interpreter {
             "range" => self.eval_range(node, env),
             "additive" | "multiplicative" => self.eval_arith_chain(node, env),
             "special" => self.eval_special(node, env),
+            "pipe" => self.eval_pipe(node, env),
             "unary" => self.eval_unary(node, env),
             "power" => self.eval_power(node, env),
             "postfix" => self.eval_postfix(node, env),
@@ -406,6 +407,47 @@ impl Interpreter {
             }
         }
         Ok(SValue::doubles(out))
+    }
+
+    /// The native pipe `|>`. `x |> f(a)` desugars to `f(x, a)`: the left value
+    /// is inserted as the first positional argument of the right-hand call. The
+    /// repetition is left-associative and flat, so `x |> f() |> g()` evaluates as
+    /// `g(f(x))`. The right-hand side of each `|>` must be a function call — a
+    /// bare `x |> f` is an error, exactly as in R.
+    fn eval_pipe(&self, node: &GrammarASTNode, env: &Env) -> SResult<SValue> {
+        let stages = node_children(node);
+        // No `|>` present: a plain pass-through to the single operand.
+        if stages.len() == 1 {
+            return self.eval_node(stages[0], env);
+        }
+        let mut acc = self.eval_node(stages[0], env)?;
+        for rhs in &stages[1..] {
+            // Descend the right operand to its postfix call and split it into the
+            // callee and the existing arguments.
+            let call = descend_to_postfix(rhs).ok_or_else(pipe_needs_call)?;
+            let callee_node = first_node(call).ok_or_else(pipe_needs_call)?;
+            let call_suffix = call
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Node(n) if n.rule_name == "call_suffix" => Some(n),
+                    _ => None,
+                })
+                .ok_or_else(pipe_needs_call)?;
+
+            let callee = self.eval_node(callee_node, env)?;
+            let mut args = self.eval_args(call_suffix, env)?;
+            // Insert the piped value as the first positional argument.
+            args.insert(
+                0,
+                Arg {
+                    name: None,
+                    value: acc,
+                },
+            );
+            acc = self.call_value(callee, &args)?;
+        }
+        self.as_visible(acc)
     }
 
     fn eval_unary(&self, node: &GrammarASTNode, env: &Env) -> SResult<SValue> {
@@ -800,6 +842,29 @@ impl Interpreter {
 // ===========================================================================
 // Free helpers for navigating the generic parse tree
 // ===========================================================================
+
+/// The standard error when the right-hand side of `|>` is not a function call.
+fn pipe_needs_call() -> SError {
+    SError::Parse("the right-hand side of |> must be a function call".into())
+}
+
+/// Descend a single-operand expression chain (`range → unary → power → …`) to
+/// the `postfix` node at its core, returning `None` if any level along the way
+/// applies an operator (more than one child node) — i.e. the operand is not a
+/// plain call. Used to find the call on the right of a `|>`.
+fn descend_to_postfix(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    let mut cur = node;
+    loop {
+        if cur.rule_name == "postfix" {
+            return Some(cur);
+        }
+        let kids = node_children(cur);
+        match kids.as_slice() {
+            [only] => cur = only,
+            _ => return None,
+        }
+    }
+}
 
 /// All child nodes (ignoring raw tokens), in order.
 fn node_children(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {

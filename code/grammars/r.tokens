@@ -36,6 +36,10 @@ NE                 = "!="
 RIGHT_SUPER_ASSIGN = "->>"
 RIGHT_ASSIGN       = "->"
 
+# The native pipe (R 4.1+): `x |> f()` is `f(x)`. This subset has no bare `|`
+# (logical-or) token, so `|>` is the only `|`-introduced operator.
+PIPE_OP            = "|>"
+
 # Special infix operators: the whole `%…%` block is one token. Matches `%%`
 # (modulo), `%/%` (integer division), `%in%`, `%o%`, and user-defined `%name%`.
 PERCENT_OP         = /%[^%]*%/
@@ -121,6 +125,8 @@ STAR      = "*"
 SLASH     = "/"
 CARET     = "^"
 COLON     = ":"
+# Backslash introduces the shorthand lambda `\(x) x + 1` (R 4.1+).
+BACKSLASH = /\\/
 LPAREN    = "("
 RPAREN    = ")"
 LBRACE    = "{"

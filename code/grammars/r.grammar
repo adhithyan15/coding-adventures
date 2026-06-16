@@ -70,7 +70,12 @@ additive = multiplicative { ( PLUS | MINUS ) multiplicative } ;
 multiplicative = special { ( STAR | SLASH ) special } ;
 
 # `%op%` infix: tighter than `* /`, looser than `:`, matching R.
-special = range { PERCENT_OP range } ;
+special = pipe { PERCENT_OP pipe } ;
+
+# The native pipe `|>` shares the special-operator precedence level in R.
+# Left-associative: `x |> f() |> g()` is `g(f(x))`. The right operand must be a
+# call; the evaluator desugars `lhs |> f(a)` to `f(lhs, a)`.
+pipe = range { PIPE_OP range } ;
 
 # `:` binds tighter than arithmetic, so `1:3+1` is c(2,3,4).
 range = unary [ COLON unary ] ;
@@ -136,7 +141,11 @@ group = LPAREN expr RPAREN ;
 
 block = LBRACE { statement_line } RBRACE ;
 
-func_def = "function" LPAREN [ param_list ] RPAREN expr ;
+# A function definition, in either the classic `function(x) …` form or the
+# R 4.1+ backslash shorthand `\(x) …`. Both produce a `func_def` node with the
+# same `param_list` and body children, so the evaluator handles them identically.
+func_def = "function" LPAREN [ param_list ] RPAREN expr
+         | BACKSLASH LPAREN [ param_list ] RPAREN expr ;
 
 param_list = param { COMMA param } ;
 

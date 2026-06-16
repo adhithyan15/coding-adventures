@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-06-16
+
+### Added (R-9)
+
+- The **native pipe `|>`** (`x |> f()` is `f(x)`, left-associative chains) and
+  the **backslash lambda `\(x) x + 1`** (shorthand for `function(x) x + 1`),
+  reaching R via the new r-lexer tokens, r-parser rules, and the shared
+  evaluator's `eval_pipe`. See `s-runtime` 0.5.0.
+
 ## [0.3.0] - 2026-06-16
 
 ### Added (via the shared `s-runtime`)

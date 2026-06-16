@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-06-16
+
+### Added
+
+- **The native pipe `|>` (R-9)** — `eval_pipe` desugars `lhs |> f(a)` to
+  `f(lhs, a)`, inserting the piped value as the first positional argument of the
+  right-hand call, left-associatively (`x |> f() |> g()` is `g(f(x))`). The
+  right-hand side must be a function call; a bare `x |> f` is an error. (The
+  `|>`/`pipe` syntax is R-only; `s.grammar` is unchanged, so S never produces a
+  `pipe` node.) The backslash lambda `\(x) …` reuses the existing `func_def`
+  evaluation unchanged.
+
 ## [0.4.0] - 2026-06-16
 
 ### Added
