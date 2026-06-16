@@ -99,8 +99,11 @@ multiple languages; close an enabler before the features that depend on it.
     - ✅ **iir-to-llvm** (v0.11.0) — a narrow unsigned op computes at i64 then `and i64 …,
       <mask>` (u4/u8/u16/u32). Adds `u4` to the supported types. **Executed proof** on real
       `clang`: `200u8+100u8` → exit `44`. Matches the value-mask of the 5 register backends.
-    - ☐ **lang-aot native codegen** (NativeAot) — narrow-width wrap in the host machine-code
-      path (investigate next).
+    - ✅ **lang-aot native codegen** (NativeAot, twig-aot v0.15.0) — the IIR prep pass
+      `mask_narrow_width_arith` appends `const <mask>; and dest,tmp,mask` after each narrow
+      op (before u64 normalisation), so the aarch64/x86_64 backends wrap with **no
+      machine-backend change**. **Executed proof**: `200u8+100u8` compiled to real ARM64
+      and run in-process → `44`. No-op for i64/u64 programs.
     - ☐ **Nib frontend + matrix proof** — emit narrow `type_hint`s; executed cross-backend
       proof; flip N3-`~`, Nib N6/N7. Then Oct (O2).
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and

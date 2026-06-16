@@ -61,6 +61,24 @@ through fully **tagged** values — the representation the `pair?`/`ATOM`/`EQ`
 predicates build on. It keys on use-sites, so non-lisp programs are
 untouched.
 
+As of 0.15.0 it runs `mask_narrow_width_arith` (LANG-FULL **E2 — register
+width & wrap**). The aarch64 / x86_64 backends compute in full 64-bit registers
+and the IIR→CIR prep normalises widths to `u64`, so a narrow unsigned result
+(`u4`/`u8`/`u16`/`u32`) would not wrap. Instead of teaching two machine backends
+about narrow widths, this IIR pass appends an `and` mask after each narrow
+arithmetic/bitwise op:
+
+```text
+  add  __nw0, a, b     : u8         ; compute wide (300)
+  const __nwmask0 = 255 : i64
+  and  dest, __nw0, __nwmask0 : i64 ; 300 & 0xFF = 44   (u8 wrap)
+```
+
+So `200u8 + 100u8` compiles to a native binary that returns `44` — verified by
+an in-process ARM64 execution test. A no-op for every i64/u64 program (Twig,
+McCarthy, Brainfuck, BASIC); it keys on the narrow `type_hint`, which only the
+Nib/Oct frontends emit.
+
 ## Requirements
 
 - Apple Silicon Mac running macOS 15+ (Sequoia / Tahoe)

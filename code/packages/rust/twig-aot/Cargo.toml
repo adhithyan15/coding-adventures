@@ -1,8 +1,8 @@
 [package]
 name = "twig-aot"
-version = "0.14.0"
+version = "0.15.0"
 edition = "2021"
-description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source."
+description = "Twig AOT compiler — produces native Mach-O / ELF executables from Twig source.  v0.15.0 (LANG-FULL E2 — register width & wrap): a new IIR prep pass `mask_narrow_width_arith` wraps narrow unsigned arithmetic (u4/u8/u16/u32) by appending `const <mask>; and dest, tmp, mask` after each narrow op, so the native aarch64/x86_64 backends compute `200u8+100u8=44` without any machine-backend change.  No-op for i64/u64 programs (Twig/McCarthy/Brainfuck/BASIC)."
 
 [dependencies]
 twig-ir-compiler     = { path = "../twig-ir-compiler" }

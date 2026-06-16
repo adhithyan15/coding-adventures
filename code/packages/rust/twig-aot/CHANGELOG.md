@@ -1,5 +1,45 @@
 # Changelog — `twig-aot`
 
+## 0.15.0 — 2026-06-15 — narrow-width register arithmetic wraps mod-2ⁿ (LANG-FULL E2)
+
+### Added — `mask_narrow_width_arith` IIR prep pass (the native column of E2)
+
+LANG-FULL **E2 — register width & wrap**. The aarch64 / x86_64 backends compute
+every operation in a full 64-bit register, and the IIR→CIR prep normalises
+widths to `u64` — so a narrow unsigned result (`u4`/`u8`/`u16`/`u32`) would
+**not** wrap: `200u8 + 100u8` would stay `300` in the register instead of
+wrapping to `300 & 0xFF = 44`.
+
+Rather than thread the narrow width through CIR and teach **two** machine
+backends to emit a mask, the wrap is restored at the **IIR level** — once,
+frontend- and backend-agnostically — by a new pass in `prepare_module_for_aot`
+(run after `pre_lower_aot_builtins`, before u64 normalisation, while the narrow
+`type_hint`s are still visible). It rewrites each narrow arithmetic / bitwise
+instruction to AND its result down to the width using the ordinary `and` op
+every backend already lowers:
+
+```text
+  add  dest, a, b      : u8
+becomes
+  add  __nw0, a, b     : u8         ; compute wide (300 in the register)
+  const __nwmask0 = 255 : i64       ; the u8 mask
+  and  dest, __nw0, __nwmask0 : i64 ; 300 & 0xFF = 44  ✓ wrapped
+```
+
+`dest` keeps its name (downstream uses untouched) and is single-assigned by the
+`and`; the wide result lives in the fresh `__nw0`. Masks: `u4`→`0xF`,
+`u8`→`0xFF`, `u16`→`0xFFFF`, `u32`→`0xFFFFFFFF`; `u64` / signed / float hints are
+left untouched. This is the same "compute wide, mask the value" shape as the VM,
+JIT, wasm, JVM, CLR, and LLVM backends, and generalises the native byte-tape's
+8-bit `store_byte` wrap to register arithmetic. **No machine-backend change.**
+
+A **no-op for every i64/u64-only program** (Twig, McCarthy Lisp, Brainfuck,
+BASIC) — confirmed by the full `lang-aot` matrix and the macOS/ARM64 smoke tests
+staying green. Verified by RUNNING: a new `#[cfg(macos+aarch64)]` test compiles
+`200u8 + 100u8` to real ARM64 machine code and runs it **in-process** — it
+returns `44`. New unit tests: `mask_pass_wraps_narrow_u8_add`,
+`mask_pass_widths_and_skips`, `native_u8_add_wraps_to_44_in_process`.
+
 ## 0.14.0 — 2026-06-10 — `lispy_runtime.c`: universal exit coercion (LANG77 / McCarthy W13b)
 
 Adds `__twig_lispy_to_exit_code(uint64_t)` to the shared tagged-word C runtime: it

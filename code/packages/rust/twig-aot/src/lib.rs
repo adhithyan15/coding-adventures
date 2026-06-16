@@ -1469,6 +1469,116 @@ fn default_any_to_i64(func: &mut IIRFunction) {
     }
 }
 
+/// The bit-mask for a narrow **unsigned** integer width, or `None` for the full
+/// machine word / a signed / non-integer hint. (LANG-FULL E2 — see
+/// [`mask_narrow_width_arith`].)
+fn narrow_unsigned_width_mask(type_hint: &str) -> Option<i64> {
+    match type_hint {
+        "u4" => Some(0xF),
+        "u8" => Some(0xFF),
+        "u16" => Some(0xFFFF),
+        "u32" => Some(0xFFFF_FFFF),
+        _ => None,
+    }
+}
+
+/// LANG-FULL **E2 — register width & wrap**, the *native* column.
+///
+/// The aarch64 / x86_64 backends compute every operation in a full 64-bit
+/// register, and the IIR→CIR prep normalises widths to `u64` — so a narrow
+/// unsigned result (`u4`/`u8`/`u16`/`u32`) would **not** wrap: `200u8 + 100u8`
+/// would stay `300` in the register instead of wrapping to `300 & 0xFF = 44`.
+///
+/// Rather than thread the narrow width through CIR and teach **two** machine
+/// backends to emit a mask, we restore the wrap at the **IIR level** — once,
+/// frontend- and backend-agnostically — by rewriting each narrow arithmetic /
+/// bitwise instruction to AND its result down to the width using the ordinary
+/// `and` op that every backend already lowers:
+///
+/// ```text
+///   add  dest, a, b      : u8
+/// becomes
+///   add  __nwK, a, b     : u8        ; compute wide (still 300 in the register)
+///   const __nwmaskK = 255 : i64      ; the u8 mask
+///   and  dest, __nwK, __nwmaskK : i64 ; 300 & 0xFF = 44  ✓ wrapped
+/// ```
+///
+/// `dest` keeps its original name (downstream uses are untouched) and is now
+/// single-assigned by the `and`; the wide result lives in the fresh `__nwK`.
+/// This is the same "compute wide, mask the value" shape as the VM, JIT, wasm,
+/// JVM, CLR, and LLVM backends, and it generalises the native byte-tape's 8-bit
+/// `store_byte` wrap to register arithmetic. `u32` wraps mod-2³²; `u64` / signed
+/// / float hints are left untouched. Runs **before** the u64 normalisation pass
+/// (so the narrow `type_hint`s are still visible) and is a no-op for every
+/// program whose arithmetic is `i64`/`u64` (Twig, McCarthy, Brainfuck, BASIC).
+fn mask_narrow_width_arith(func: &mut IIRFunction) {
+    // The ops whose narrow result must be re-masked. `add`/`sub`/`mul`/`neg`/
+    // `not`/`shl` can exceed the width; `div`/`mod`/`and`/`or`/`xor`/`shr` of
+    // in-range operands cannot, but masking them is a harmless idempotent and
+    // keeps the rule uniform with the other backends' mask sets.
+    const NARROW_OPS: &[&str] = &[
+        "add", "sub", "mul", "div", "mod", "neg", "not", "and", "or", "xor", "shl", "shr",
+    ];
+    // Collect every name already used in this function (dests + `Var` srcs) so
+    // the synthesized `__nwK`/`__nwmaskK` temps are guaranteed fresh — even if a
+    // (developer-authored) program happens to use a `__nw`-prefixed name.
+    let mut used: std::collections::HashSet<String> = std::collections::HashSet::new();
+    for instr in &func.instructions {
+        if let Some(d) = &instr.dest {
+            used.insert(d.clone());
+        }
+        for s in &instr.srcs {
+            if let Operand::Var(v) = s {
+                used.insert(v.clone());
+            }
+        }
+    }
+    let mut out = Vec::with_capacity(func.instructions.len() + 4);
+    let mut k = 0usize;
+    for instr in std::mem::take(&mut func.instructions) {
+        let mask = if NARROW_OPS.contains(&instr.op.as_str()) {
+            narrow_unsigned_width_mask(&instr.type_hint)
+        } else {
+            None
+        };
+        match (mask, instr.dest.clone()) {
+            (Some(m), Some(dest)) => {
+                // Find a free counter value: both temps must be unused.
+                let (tmp, maskvar) = loop {
+                    let tmp = format!("__nw{k}");
+                    let maskvar = format!("__nwmask{k}");
+                    k += 1;
+                    if !used.contains(&tmp) && !used.contains(&maskvar) {
+                        used.insert(tmp.clone());
+                        used.insert(maskvar.clone());
+                        break (tmp, maskvar);
+                    }
+                };
+                // Compute the op wide into a fresh temp (keep its op/srcs/hint).
+                let mut wide = instr;
+                wide.dest = Some(tmp.clone());
+                out.push(wide);
+                // const __nwmaskK = <mask> : i64
+                out.push(IIRInstr::new(
+                    "const",
+                    Some(maskvar.clone()),
+                    vec![Operand::Int(m)],
+                    "i64",
+                ));
+                // and dest, __nwK, __nwmaskK : i64   (wraps the value to width)
+                out.push(IIRInstr::new(
+                    "and",
+                    Some(dest),
+                    vec![Operand::Var(tmp), Operand::Var(maskvar)],
+                    "i64",
+                ));
+            }
+            _ => out.push(instr),
+        }
+    }
+    func.instructions = out;
+}
+
 /// Apply all preparation steps to every function in `module`.
 ///
 /// Steps:
@@ -1523,6 +1633,10 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
         // These become `const_str` in CIR which the ARM64 backend rejects.
         strip_dead_string_consts(func);
         pre_lower_aot_builtins(func);
+        // E2 — register width & wrap. Insert width masks while the narrow
+        // `type_hint`s are still visible (before u64 normalisation). A no-op
+        // for i64/u64-only programs.
+        mask_narrow_width_arith(func);
         normalize_params_to_i64(func);
         propagate_aot_types(func);
         default_any_to_i64(func);
@@ -1800,6 +1914,94 @@ mod tests {
             compile_module_macos_arm64_object(&m),
             Err(AotError::NoEntryPoint)
         ));
+    }
+
+    // ── E2 — register width & wrap (native column) ──────────────────────────
+
+    /// The mask pass rewrites a narrow `u8` add into `add __nw0; const
+    /// __nwmask0 = 255; and dest, __nw0, __nwmask0` — wrapping the value via the
+    /// existing `and` op (which lowers to a native AND on every backend).
+    #[test]
+    fn mask_pass_wraps_narrow_u8_add() {
+        let mut f = IIRFunction::new("f", vec![], "i64", vec![
+            IIRInstr::new("add", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "u8"),
+        ]);
+        mask_narrow_width_arith(&mut f);
+        let ops: Vec<&str> = f.instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops, ["add", "const", "and"], "u8 add → add(temp); const mask; and");
+        // The wide add now writes the temp, not the final dest.
+        assert_eq!(f.instructions[0].dest.as_deref(), Some("__nw0"));
+        // The mask constant is 0xFF.
+        assert_eq!(f.instructions[1].srcs, vec![Operand::Int(0xFF)]);
+        // The `and` writes the original dest from the temp + the mask.
+        assert_eq!(f.instructions[2].dest.as_deref(), Some("v"));
+        assert_eq!(f.instructions[2].srcs,
+            vec![Operand::Var("__nw0".into()), Operand::Var("__nwmask0".into())]);
+    }
+
+    #[test]
+    fn mask_pass_widths_and_skips() {
+        for (hint, mask) in [("u4", 0xF), ("u16", 0xFFFF), ("u32", 0xFFFF_FFFF_i64)] {
+            let mut f = IIRFunction::new("f", vec![], "i64", vec![
+                IIRInstr::new("mul", Some("v".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], hint),
+            ]);
+            mask_narrow_width_arith(&mut f);
+            assert_eq!(f.instructions[1].srcs, vec![Operand::Int(mask)],
+                "{hint} mask must be {mask:#x}");
+        }
+        // i64 / u64 and a non-arith op are left untouched (no mask inserted).
+        for hint in ["i64", "u64"] {
+            let mut f = IIRFunction::new("f", vec![], "i64", vec![
+                IIRInstr::new("add", Some("v".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], hint),
+            ]);
+            mask_narrow_width_arith(&mut f);
+            assert_eq!(f.instructions.len(), 1, "{hint} add must NOT be masked");
+        }
+    }
+
+    #[test]
+    fn mask_pass_temps_avoid_collision_with_existing_names() {
+        // A (contrived) program that already uses `__nw0` AND does a narrow add
+        // must not have the synthesized temp clobber the user's `__nw0`.
+        let mut f = IIRFunction::new("f", vec![], "i64", vec![
+            IIRInstr::new("const", Some("__nw0".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new("add", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("__nw0".into())], "u8"),
+        ]);
+        mask_narrow_width_arith(&mut f);
+        // The user's `const __nw0 = 7` is untouched and still the first instr.
+        assert_eq!(f.instructions[0].dest.as_deref(), Some("__nw0"));
+        assert_eq!(f.instructions[0].srcs, vec![Operand::Int(7)]);
+        // The synthesized wide-temp picked a fresh name (not `__nw0`), and the
+        // add still reads the user's `__nw0` as an operand.
+        let wide = &f.instructions[1];
+        assert_eq!(wide.op, "add");
+        assert_ne!(wide.dest.as_deref(), Some("__nw0"), "must not reuse user's __nw0");
+        assert!(wide.srcs.contains(&Operand::Var("__nw0".into())),
+            "the add still reads the user's __nw0");
+    }
+
+    /// **Executed proof** (macOS/ARM64): compile `200u8 + 100u8` to real ARM64
+    /// machine code through the full native pipeline and run it in-process — it
+    /// must return `44` (wrap mod-256), not `300`.
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn native_u8_add_wraps_to_44_in_process() {
+        let main = IIRFunction::new("main", vec![], "u8", vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "u8"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "u8"),
+            IIRInstr::new("add", Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "u8"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u8"),
+        ]);
+        let mut module = IIRModule::new("e2", "nib");
+        module.add_or_replace(main);
+        let (code, offsets) = compile_module_to_arm64_bytes(&module).expect("compile");
+        let got = call_arm64_function_in_process(&code, &offsets, "main", 0).expect("run");
+        assert_eq!(got, 44, "200u8 + 100u8 must wrap to 44 on native ARM64; got {got}");
     }
 
     #[test]
