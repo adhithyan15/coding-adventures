@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.7.0
+
+**Fill / replicate (drag-fill)** — `Workbook::fill` plus the `FormulaAst::shift`
+copy/paste reference arithmetic it rides on. Replicating a cell across a target
+range now shifts each copy's **relative** references by its offset while leaving
+**absolute** (`$`) references pinned — the classic spreadsheet fill.
+
+- `FormulaAst::shift(d_row, d_col) -> FormulaAst` (`ast.rs`): pure recursive
+  copy/paste rewrite of every `Ref`/`Range`, the sibling of `adjust`
+  (structural edits). The two differ on absolutes: `adjust` moves both relative
+  and absolute refs (a cell physically relocates); `shift` tracks relatives and
+  pins absolutes (`=A1`→`=A2` on fill-down, `$A$1` stays). A reference shifted
+  off the top/left edge collapses to `#REF!`. 6 new tests.
+- `Workbook::fill(sheet, src, dst)` (`workbook.rs`): replicate the `src` cell
+  across every cell of the `dst` range — formulas shifted per-target, literals
+  copied unchanged, an empty source clears each target, and the source's display
+  **format rides along**. One recalc transaction; unknown sheet is a no-op; a
+  `dst` over `MAX_RANGE_CELLS` is rejected wholesale (the same DoS guard formula
+  ranges use, so a hostile caller can't ask the engine to write billions of
+  cells). 7 new tests.
+- **Fix: absolute references now resolve.** A cell is keyed by *position* only,
+  but the evaluator (and `collect_refs`) used a reference's full address —
+  including its `$` flags — as the cell-store / dependency-graph key, so `=$A$1`
+  missed the relatively-stored `A1` cell and read as **0**, and editing `A1`
+  did not recompute a dependent that referenced it absolutely. New
+  `CellAddress::without_absolute()` normalises the address at those two
+  boundaries. (Pre-existing latent bug — no test had ever evaluated an absolute
+  reference; surfaced by the fill work, which depends on correct `$` handling.)
+  New regression test.
+
 ## 0.6.0
 
 **`get_display_window`** — a windowed read returning each cell's **formatted
