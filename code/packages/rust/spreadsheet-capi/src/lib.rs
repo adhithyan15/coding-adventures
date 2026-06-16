@@ -277,6 +277,30 @@ pub unsafe extern "C" fn sc_get_window(
     into_cstr((*s).inner.get_window(row0, col0, row1, col1))
 }
 
+/// `fill(src, dst_start, dst_end)` — replicate the `src` cell across the
+/// inclusive rectangle `dst_start`..`dst_end` (drag-fill): relative references
+/// shift per target, absolute (`$`) refs pin, the source's format carries along,
+/// an empty source clears each target. Malformed addresses are a no-op. See
+/// [`SpreadsheetSession::fill`].
+///
+/// # Safety
+/// `s` must be a valid session; the A1 args must be null or valid C strings.
+#[no_mangle]
+pub unsafe extern "C" fn sc_fill(
+    s: *mut ScSession,
+    src: *const c_char,
+    dst_start: *const c_char,
+    dst_end: *const c_char,
+) {
+    if s.is_null() {
+        return;
+    }
+    let src = read_cstr(src);
+    let dst_start = read_cstr(dst_start);
+    let dst_end = read_cstr(dst_end);
+    (*s).inner.fill(&src, &dst_start, &dst_end);
+}
+
 /// `get_display_window(row0, col0, row1, col1)` → display-window JSON (each cell
 /// is its value rendered through its format code). See
 /// [`SpreadsheetSession::get_display_window`]. Returns null only on a null `s`.
@@ -405,6 +429,24 @@ mod tests {
             let raw = sc_get_raw(s, ca.as_ptr());
             assert_eq!(CStr::from_ptr(raw).to_string_lossy(), "=1/0");
             sc_string_free(raw);
+            sc_session_free(s);
+        }
+    }
+
+    #[test]
+    fn c_abi_fill_replicates_and_shifts() {
+        unsafe {
+            let s = sc_session_new();
+            set(s, "A1", "10");
+            set(s, "A2", "20");
+            set(s, "B1", "=A1*2"); // 20
+            let src = CString::new("B1").unwrap();
+            let ds = CString::new("B2").unwrap();
+            let de = CString::new("B2").unwrap();
+            sc_fill(s, src.as_ptr(), ds.as_ptr(), de.as_ptr());
+            assert_eq!(value(s, "B2"), r#"{"kind":"number","value":40.0}"#); // A2*2
+            // Null session is a safe no-op (no return value to check).
+            sc_fill(ptr::null_mut(), src.as_ptr(), ds.as_ptr(), de.as_ptr());
             sc_session_free(s);
         }
     }

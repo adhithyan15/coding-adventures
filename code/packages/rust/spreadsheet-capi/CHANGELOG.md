@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0
+
+**`sc_fill` over the C ABI.** New
+`sc_fill(s, src, dst_start, dst_end)` (three A1 C strings, void return),
+declared in `include/spreadsheet.h` — drag-fill: replicate the `src` cell across
+the inclusive rectangle, relative refs shifting per target, absolute (`$`) refs
+pinned, the source's format carried along, an empty source clearing each target;
+a malformed address is a no-op. Delegates to `SpreadsheetSession::fill`;
+null-session safe. New C ABI round-trip test (formula shift + null-session
+no-op).
+
 ## 0.5.0
 
 **`sc_get_display_window` over the C ABI.** New

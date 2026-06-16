@@ -137,6 +137,23 @@ export function createEngine(wasmBytes) {
         /** Delete `count` columns from `at`; refs to deleted cols become #REF!. */
         deleteCols: (at, count) => ex.delete_cols(at >>> 0, count >>> 0),
 
+        /**
+         * Drag-fill: replicate the `src` cell across the inclusive A1 rectangle
+         * `dstStart`..`dstEnd`. Relative references shift per target (`=A1`
+         * filled down → `=A2`), absolute (`$`) refs pin, the source's format
+         * carries along, an empty source clears each target. A malformed address
+         * is a no-op. Re-read via getWindow / getDisplayWindow / getRaw after.
+         */
+        fill: (src, dstStart, dstEnd) => {
+          const [sp, sl] = writeStr(String(src));
+          const [ap, al] = writeStr(String(dstStart));
+          const [ep, el] = writeStr(String(dstEnd));
+          ex.fill(sp, sl, ap, al, ep, el);
+          freeInput(sp, sl);
+          freeInput(ap, al);
+          freeInput(ep, el);
+        },
+
         // ── Viewport primitive (virtualized infinite sheet) ──────────
         // A scrolling host renders only the visible window of an unbounded
         // sheet: getWindow for the visible rectangle, usedRange for scrollbar

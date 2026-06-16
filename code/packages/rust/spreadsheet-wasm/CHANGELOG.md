@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0
+
+**`fill` (drag-fill) over the WASM ABI.** New
+`fill(src, src_len, dst_start, dst_start_len, dst_end, dst_end_len)` export
+(three `(ptr, len)` A1 strings, void return), delegating to the thread-local
+`SpreadsheetSession`. Replicates the `src` cell across the inclusive rectangle —
+relative refs shift per target, absolute (`$`) refs pin, the source's format
+carries along, an empty source clears each target; a malformed address is a
+no-op. The JS loader gains a `fill(src, dstStart, dstEnd)` method, the committed
+`pkg/spreadsheet_engine.wasm` is rebuilt, and `js/smoke.mjs` drives it against
+the real module (filled value + echoed shifted source). 1 new ABI round-trip
+test.
+
 ## 0.5.0
 
 **`get_display_window` over the WASM ABI.** New
