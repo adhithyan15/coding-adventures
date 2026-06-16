@@ -6872,6 +6872,33 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
 
 
+def test_run_deck_analysis_exposes_selected_fourier_artifacts() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "vin", "0", 1.0))
+    circuit.add(Resistor("R1", "vin", "mid", 1000.0))
+    circuit.add(Resistor("R2", "mid", "0", 1000.0))
+
+    netlist = """
+.save V(mid)
+.op
+.tran 0.5m 1m
+.four 2k V(mid) harmonics=1
+.end
+"""
+
+    op_execution = run_deck_analysis(circuit, netlist, "op")
+    assert op_execution.fourier == []
+    assert op_execution.fourier_table == ""
+
+    tran_execution = run_deck_analysis(circuit, netlist, "tran")
+    assert len(tran_execution.fourier) == 1
+    result = tran_execution.fourier[0]
+    assert result.fundamental_frequency == pytest.approx(2000.0)
+    assert result.probes[0].probe == "V(mid)"
+    assert len(result.probes[0].harmonics) == 1
+    assert tran_execution.fourier_table == format_fourier_table(result)
+
+
 def test_transient_probe_measurements_are_stable() -> None:
     transient_points = [
         TransientPoint(0.0, {"in": 0.0, "out": 0.0}, {}),

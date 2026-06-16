@@ -2303,6 +2303,8 @@ class DeckAnalysisExecution:
     output_probes: list[str]
     measurements: list[ProbeMeasurement]
     measurement_table: str
+    fourier: list[FourierResult]
+    fourier_table: str
 
 
 def _select_deck_measurement_cards_for_analysis(
@@ -2323,6 +2325,19 @@ def _select_deck_measurement_cards_for_analysis(
     ]
 
 
+def _select_deck_fourier_cards_for_analysis(
+    netlist: str,
+    analysis: str,
+) -> list[DeckFourierCard]:
+    summary = resolve_deck_fourier(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"run_deck_analysis: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return list(summary.fourier) if analysis == "tran" else []
+
+
 def run_deck_analysis(
     circuit: Circuit,
     netlist: str,
@@ -2334,6 +2349,8 @@ def run_deck_analysis(
     if plan.analysis == "op":
         result = dc_op(circuit)
         _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
+        fourier: list[FourierResult] = []
+        _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         measurements: list[ProbeMeasurement] = []
         return DeckAnalysisExecution(
             plan=plan,
@@ -2342,6 +2359,8 @@ def run_deck_analysis(
             output_probes=select_deck_output_probes(netlist, plan.analysis),
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
         )
     if plan.analysis == "dc":
         source_name = _require_deck_plan_string(plan, "source_name")
@@ -2353,6 +2372,8 @@ def run_deck_analysis(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
         )
+        fourier = []
+        _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2360,6 +2381,8 @@ def run_deck_analysis(
             output_probes=select_deck_output_probes(netlist, plan.analysis),
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
         )
     if plan.analysis == "ac":
         sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
@@ -2373,6 +2396,8 @@ def run_deck_analysis(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
         )
+        fourier = []
+        _select_deck_fourier_cards_for_analysis(netlist, plan.analysis)
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2380,6 +2405,8 @@ def run_deck_analysis(
             output_probes=select_deck_output_probes(netlist, plan.analysis),
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
         )
     if plan.analysis == "tran":
         step_time = _require_deck_plan_number(plan, "step_time")
@@ -2397,6 +2424,10 @@ def run_deck_analysis(
             result,
             _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
         )
+        fourier = fourier_transient_cards(
+            result,
+            _select_deck_fourier_cards_for_analysis(netlist, plan.analysis),
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
@@ -2404,6 +2435,8 @@ def run_deck_analysis(
             output_probes=select_deck_output_probes(netlist, plan.analysis),
             measurements=measurements,
             measurement_table=format_measurement_table(measurements),
+            fourier=fourier,
+            fourier_table=format_deck_fourier_table(fourier),
         )
     raise ValueError(f"run_deck_analysis: unsupported analysis {plan.analysis!r}")
 
@@ -3030,6 +3063,12 @@ def format_fourier_table(result: FourierResult) -> str:
             )
     rows.append("")
     return "\n".join(rows)
+
+
+def format_deck_fourier_table(results: Iterable[FourierResult]) -> str:
+    """Format selected deck ``.four`` artifacts as stable text tables."""
+
+    return "\n".join(format_fourier_table(result) for result in results)
 
 
 def format_corner_fourier_table(result: CornerFourierResult) -> str:

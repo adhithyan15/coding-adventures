@@ -93,18 +93,19 @@ and reports ambiguity before solver dispatch.
 solver result, deck-selected output table, and normalized output probes that
 produced the table, plus selected `.measure` results and a stable measurement
 table for `.dc`, `.ac`, and `.tran` executions. Selected `.tran` plans route
-`START` output filtering, use `.tran TSTEP` as the output print grid, apply
-`MAXSTEP` as an internal fixed-step cap, and carry `UIC` initial-condition
-intent through that stable transient table surface.
+`START` output filtering, `.tran TSTEP` as the output print grid, `MAXSTEP` as
+an internal fixed-step cap, and `UIC` initial-condition intent through that
+stable transient table surface. They also return selected `.four` harmonic
+results and a stable Fourier table.
 `resolveDeckOutputs` and `selectDeckOutputProbes` extract `.save` and scoped
 or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `formatDeckOpTable`,
 `formatDeckDcSweepTable`, `formatDeckAcTable`, and
 `formatDeckTransientTable` for stable deck-selected text output.
-`resolveDeckFourier`, `fourierTransientCards`, and `fourierTransientDeck`
-extract parsed `.four` / `.FOUR` cards before `.end` and route transient
-samples into the existing SPICE-style Fourier result shape with optional
-`HARMONICS=` and `FROM=` controls.
+`resolveDeckFourier`, `fourierTransientCards`, `fourierTransientDeck`, and
+`formatDeckFourierTable` extract parsed `.four` / `.FOUR` cards before `.end`
+and route transient samples into the existing SPICE-style Fourier result shape
+with optional `HARMONICS=` and `FROM=` controls.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
@@ -165,5 +166,6 @@ malformed deck-level analysis controls.
 deck execution helpers.
 `runDeckAnalysis` routes that selected plan into the matching solver and stable
 deck-selected table output with normalized output-probe artifacts, selected
-measurement artifacts, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and
-`.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
+measurement artifacts, selected transient Fourier artifacts, `.ac LIN`,
+`.ac DEC`, `.ac OCT` frequency grids, and `.tran` `START` / print-step
+`TSTEP` / `MAXSTEP` / `UIC` controls.

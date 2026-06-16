@@ -56,7 +56,9 @@ downstream tools to compare.
      stepping; deck executions now expose normalized selected output probes as
      an inspectable artifact alongside the stable table; selected `.measure`
      outputs now travel with deck execution results as structured measurements
-     plus stable measurement tables.
+     plus stable measurement tables; selected transient `.four` outputs now
+     travel with deck execution results as structured Fourier artifacts plus
+     stable Fourier tables.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -449,13 +451,22 @@ downstream tools to compare.
       decks can expose the chosen analysis artifact without reparsing output
       tables.
 
+39. Deck selected Fourier artifact routing.
+    - Status: completed in this deck Fourier artifact slice.
+    - Python, Rust, and TypeScript `run_deck_analysis` / `runDeckAnalysis`
+      results now include selected transient `.four` outputs and a stable
+      Fourier table for `.tran` executions.
+    - Fourier cards are exposed only for the selected transient analysis, so
+      mixed-analysis decks can inspect harmonic artifacts without reparsing
+      output tables.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts beyond selected output probes
-     and selected measurement artifacts, plus output-plan integration beyond
-     stable table routing.
+     including richer deck-owned run artifacts beyond selected output probes,
+     selected measurement artifacts, and selected Fourier artifacts, plus
+     output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature

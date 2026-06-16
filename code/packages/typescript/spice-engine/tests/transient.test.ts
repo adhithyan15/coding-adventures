@@ -1549,6 +1549,32 @@ describe("transient", () => {
     );
   });
 
+  it("exposes selected Fourier artifacts from deck transient execution", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 1.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+    const netlist = `
+.save V(mid)
+.op
+.tran 0.5m 1m
+.four 2k V(mid) harmonics=1
+.end
+`;
+
+    const opExecution = runDeckAnalysis(circuit, netlist, "op");
+    expect(opExecution.fourier).toEqual([]);
+    expect(opExecution.fourierTable).toBe("");
+
+    const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
+    expect(tranExecution.fourier).toHaveLength(1);
+    const result = tranExecution.fourier[0]!;
+    expect(result.fundamentalFrequencyHz).toBeCloseTo(2_000.0, 12);
+    expect(result.probes[0]?.probe).toBe("V(mid)");
+    expect(result.probes[0]?.harmonics).toHaveLength(1);
+    expect(tranExecution.fourierTable).toBe(formatFourierTable(result));
+  });
+
   it("formats stable transient probe measurements", () => {
     const points = [
       transientPoint(0.0, { in: 0.0, out: 0.0 }),
