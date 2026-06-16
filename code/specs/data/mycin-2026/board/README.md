@@ -24,17 +24,18 @@ edge. That is the number every grounding/expansion PR moves:
 ```
 correct 35 · abstained 5 · wrong 0  (of 40)
 by tactic — differential: 1✓/1·/0✗  ·  recall: 34✓/4·/0✗
-defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 76%
+defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 100%
 ✓ never fabricated — every answer is correct-with-proof or an honest abstention.
 ```
 
 The bank spans **three recall domains** — 12 inborn-errors-of-metabolism diseases
 (`recall/iem-edges.adj`), 8 vitamin deficiencies (`recall/vitamin-edges.adj`), and 8 anemia
-classifications (`recall/anemia-edges.adj`, REL-11) — merged into one store. grounded-coverage
-tracks the whole arc: the IEM + vitamin domains are fully spider-grounded (REL-8/REL-10b),
-and REL-11 added the anemia domain as authored-debt, dipping it 100% → 76%. Grounding the
-anemia edges climbs it back. **A new domain = drop in its `*-edges.adj` file + its board
-items + the filename in `EDGE_FILES`; the harness merges and scores it unchanged.**
+classifications (`recall/anemia-edges.adj`) — merged into one store, **all three fully
+spider-grounded** (REL-8 / REL-10b / REL-11b). grounded-coverage tracked the whole
+campaign: each new domain entered as authored-debt (dipping the number) and its spider
+run retired it (climbing back to 100%) — expansion adds debt, grounding retires it, one
+watchable number. **A new domain = drop in its `*-edges.adj` file + its board items + the
+filename in `EDGE_FILES`; the harness merges and scores it unchanged.**
 
 ## Files
 
