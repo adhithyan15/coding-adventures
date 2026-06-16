@@ -153,16 +153,22 @@ impl Cpu68K {
     }
 
     fn mem_read_word(&self, addr: u32) -> u16 {
-        let a = (addr & ADDR_MASK) as usize;
-        ((self.mem[a] as u16) << 8) | (self.mem[a + 1] as u16)
+        // Mask each byte address individually so a word fetch at 0xFFFFFF wraps
+        // to 0x000000 rather than indexing one past the end of the 16 MB Vec.
+        let a0 = (addr.wrapping_add(0) & ADDR_MASK) as usize;
+        let a1 = (addr.wrapping_add(1) & ADDR_MASK) as usize;
+        ((self.mem[a0] as u16) << 8) | (self.mem[a1] as u16)
     }
 
     fn mem_read_long(&self, addr: u32) -> u32 {
-        let a = (addr & ADDR_MASK) as usize;
-        ((self.mem[a] as u32) << 24)
-            | ((self.mem[a + 1] as u32) << 16)
-            | ((self.mem[a + 2] as u32) << 8)
-            | (self.mem[a + 3] as u32)
+        let a0 = (addr.wrapping_add(0) & ADDR_MASK) as usize;
+        let a1 = (addr.wrapping_add(1) & ADDR_MASK) as usize;
+        let a2 = (addr.wrapping_add(2) & ADDR_MASK) as usize;
+        let a3 = (addr.wrapping_add(3) & ADDR_MASK) as usize;
+        ((self.mem[a0] as u32) << 24)
+            | ((self.mem[a1] as u32) << 16)
+            | ((self.mem[a2] as u32) << 8)
+            | (self.mem[a3] as u32)
     }
 
     fn mem_read(&self, addr: u32, sz: usize) -> u32 {
@@ -178,17 +184,21 @@ impl Cpu68K {
     }
 
     fn mem_write_word(&mut self, addr: u32, val: u32) {
-        let a = (addr & ADDR_MASK) as usize;
-        self.mem[a]     = ((val >> 8) & 0xFF) as u8;
-        self.mem[a + 1] = (val & 0xFF) as u8;
+        let a0 = (addr.wrapping_add(0) & ADDR_MASK) as usize;
+        let a1 = (addr.wrapping_add(1) & ADDR_MASK) as usize;
+        self.mem[a0] = ((val >> 8) & 0xFF) as u8;
+        self.mem[a1] = (val & 0xFF) as u8;
     }
 
     fn mem_write_long(&mut self, addr: u32, val: u32) {
-        let a = (addr & ADDR_MASK) as usize;
-        self.mem[a]     = ((val >> 24) & 0xFF) as u8;
-        self.mem[a + 1] = ((val >> 16) & 0xFF) as u8;
-        self.mem[a + 2] = ((val >>  8) & 0xFF) as u8;
-        self.mem[a + 3] = (val & 0xFF) as u8;
+        let a0 = (addr.wrapping_add(0) & ADDR_MASK) as usize;
+        let a1 = (addr.wrapping_add(1) & ADDR_MASK) as usize;
+        let a2 = (addr.wrapping_add(2) & ADDR_MASK) as usize;
+        let a3 = (addr.wrapping_add(3) & ADDR_MASK) as usize;
+        self.mem[a0] = ((val >> 24) & 0xFF) as u8;
+        self.mem[a1] = ((val >> 16) & 0xFF) as u8;
+        self.mem[a2] = ((val >>  8) & 0xFF) as u8;
+        self.mem[a3] = (val & 0xFF) as u8;
     }
 
     fn mem_write(&mut self, addr: u32, sz: usize, val: u32) {
