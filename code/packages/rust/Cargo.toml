@@ -154,6 +154,7 @@ members = [
     "mos6502-gatelevel",
     "intel4004-simulator",
     "intel8080-gatelevel",
+    "z80-gatelevel",
     "interrupt-handler",
     "interpreter-ir",
     "iir-type-checker",
