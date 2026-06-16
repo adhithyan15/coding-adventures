@@ -104,8 +104,8 @@ fun main() {
     // rowCells returns one row's display strings (columns 1..totalCols).
     val row1 = inf.rowCells(1)
     check("inf rowCells width", (row1.size == inf.totalCols).toString(), "true")
-    check("inf rowCells A1", row1[0], "15")
-    check("inf rowCells E1", row1[4], "38")  // SUM(A1:D1)
+    check("inf rowCells A1", row1[0], "15") // unformatted
+    check("inf rowCells E1", row1[4], "38.00")  // SUM(A1:D1), "#,##0.00" formatted
     check("inf rowCells J1 empty", row1[9], "") // sparse
     check("inf gap row blank", inf.rowCells(200).all { it.isEmpty() }.toString(), "true")
 
@@ -120,10 +120,10 @@ fun main() {
     // commitInf writes through and recomputes every dependent.
     inf.selectInf(2, 1)          // A2
     inf.commitInf("108")         // 8 -> 108
-    check("inf commit A2", inf.rowCells(2)[0], "108")
-    check("inf commit E2", inf.rowCells(2)[4], "151") // 108+14+7+22
-    check("inf commit A5", inf.rowCells(5)[0], "139") // 15+108+12+4
-    check("inf commit E5", inf.rowCells(5)[4], "269") // grand total
+    check("inf commit A2", inf.rowCells(2)[0], "108") // unformatted
+    check("inf commit E2", inf.rowCells(2)[4], "151.00") // 108+14+7+22, formatted
+    check("inf commit A5", inf.rowCells(5)[0], "139.00") // 15+108+12+4, formatted
+    check("inf commit E5", inf.rowCells(5)[4], "269.00") // grand total, formatted
     inf.close()
 
     println(if (failures == 0) "\nALL PASS" else "\n$failures FAILURE(S)")

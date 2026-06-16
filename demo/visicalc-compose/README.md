@@ -70,9 +70,12 @@ grid to `InfiniteSheet` — a virtualized, effectively-infinite (u32 × u32,
 sparse) sheet rendered on the same engine. The body is a `LazyColumn`, which
 natively virtualizes: it composes a row item only while it's near the viewport
 and recycles it on scroll, so a 1000-row sheet costs the handful of rows you can
-see. Each composed row makes **one** engine `get_window` over its `1×totalCols`
-strip (`InfiniteSheetModel.rowCells`) — per-frame engine work is proportional to
-*visible* rows, never the sheet's height.
+see. Each composed row makes **one** engine `get_display_window` over its
+`1×totalCols` strip (`InfiniteSheetModel.rowCells`) — display strings, each
+already rendered through its Excel-style format code (the seed formats the
+cross-foot totals as `#,##0.00` and the far-flung `Z1000` total as a percent),
+so the Compose host paints them directly. Per-frame engine work is proportional
+to *visible* rows, never the sheet's height.
 
 Frozen chrome without a second scroller: the row-number gutter rides as each
 `LazyColumn` row's first child, *outside* the horizontal scroll, so it stays

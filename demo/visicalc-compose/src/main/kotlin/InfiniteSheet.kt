@@ -1,16 +1,17 @@
 // InfiniteSheet.kt — a virtualized, effectively-infinite spreadsheet view for
 // the Compose Desktop demo, rendered on the shared Rust engine through the
-// viewport primitive (the same get_window / used_range / changed_since the
-// SwiftUI InfiniteGridView, the Qt InfiniteSheet.qml, and the Flutter
+// viewport primitive (the same get_display_window / used_range / changed_since
+// the SwiftUI InfiniteGridView, the Qt InfiniteSheet.qml, and the Flutter
 // InfiniteGrid drive).
 //
 // The sheet is u32 × u32 and sparse; only the cells in the VISIBLE rows are ever
 // composed. The body is a `LazyColumn`, which natively virtualizes — it composes
 // a row item only while it's near the viewport and recycles it as it scrolls
 // off. So a 1000-row-tall sheet costs the handful of rows you can see, and each
-// composed row makes ONE engine `get_window` over its 1×totalCols strip
-// (InfiniteSheetModel.rowCells). Per-frame engine work is proportional to
-// *visible* rows, never to the sheet's height.
+// composed row makes ONE engine `get_display_window` over its 1×totalCols strip
+// (InfiniteSheetModel.rowCells) — display strings, already rendered through each
+// cell's format code. Per-frame engine work is proportional to *visible* rows,
+// never to the sheet's height.
 //
 // Frozen chrome without a second scroller: the row-number gutter rides as each
 // LazyColumn row's first child, OUTSIDE the horizontal scroll, so it stays

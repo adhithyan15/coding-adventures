@@ -45,6 +45,9 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     private val i32 = ValueLayout.JAVA_INT
     private val i64 = ValueLayout.JAVA_LONG
     private val scGetWindow = handle("sc_get_window", FunctionDescriptor.of(ptr, ptr, i32, i32, i32, i32))
+    private val scGetDisplayWindow = handle("sc_get_display_window", FunctionDescriptor.of(ptr, ptr, i32, i32, i32, i32))
+    // sc_set_format(session, a1, code) -> void (empty code clears the format).
+    private val scSetFormat = handle("sc_set_format", FunctionDescriptor.ofVoid(ptr, ptr, ptr))
     private val scUsedRange = handle("sc_used_range", FunctionDescriptor.of(ptr, ptr))
     private val scColumnLetters = handle("sc_column_letters", FunctionDescriptor.of(ptr, ptr, i32))
     private val scCurrentRevision = handle("sc_current_revision", FunctionDescriptor.of(i64, ptr))
@@ -104,14 +107,26 @@ class SpreadsheetSession(libraryPath: String = resolveLibraryPath()) : AutoClose
     // web/SwiftUI/Qt/Flutter infinite views. The window JSON is nested, so these
     // use the small JSON parser below rather than display()'s per-value regex.
 
+    /// Set a cell's display format code (an Excel-style code like "#,##0.00" or
+    /// "0%"); an empty code clears it. Drives the engine's display path that
+    /// [window] reads through sc_get_display_window.
+    fun setFormat(a1: String, code: String): Unit = Arena.ofConfined().use { a ->
+        scSetFormat.invoke(session, a.allocateUtf8String(a1), a.allocateUtf8String(code))
+    }
+
     /// Dense display strings for the inclusive 1-based rectangle, row-major
     /// (empty cells become ""). Empty list on a bad/oversized request.
+    ///
+    /// Reads sc_get_display_window: each cell arrives already rendered through its
+    /// format code as a display string, so the host paints it directly and never
+    /// re-derives number formatting. The format-aware sibling of sc_get_window;
+    /// the JSON is {...,"cells":[["1,234.50",…],…]}.
     fun window(row0: Int, col0: Int, row1: Int, col1: Int): List<List<String>> {
-        val json = take(scGetWindow.invoke(session, row0, col0, row1, col1) as MemorySegment)
+        val json = take(scGetDisplayWindow.invoke(session, row0, col0, row1, col1) as MemorySegment)
         val obj = parseJson(json) as? Map<*, *> ?: return emptyList()
-        val values = obj["values"] as? List<*> ?: return emptyList()
-        return values.map { row ->
-            (row as List<*>).map { valueToDisplay(it as Map<*, *>) }
+        val cells = obj["cells"] as? List<*> ?: return emptyList()
+        return cells.map { row ->
+            (row as List<*>).map { it as? String ?: "" }
         }
     }
 
@@ -273,6 +288,19 @@ class InfiniteSheetModel(
             "BA50" to "far cell", "BB50" to "=Z1000*2", // col 53/54, row 50: 78
         )
         for ((a1, raw) in cells) session.setCell(a1, raw)
+
+        // Attach Excel-style format codes so the engine's display path is visible
+        // in the windowed view (which renders via sc_get_display_window): the
+        // cross-foot totals read with thousands grouping + two decimals, and the
+        // far-flung Z1000 total as a percent. Values are unchanged — only how the
+        // display strings render. Identical to the web/Qt/Flutter demos' formats.
+        val formats = listOf(
+            "E1" to "#,##0.00", "E2" to "#,##0.00", "E3" to "#,##0.00",
+            "E4" to "#,##0.00", "E5" to "#,##0.00",
+            "A5" to "#,##0.00", "B5" to "#,##0.00", "C5" to "#,##0.00", "D5" to "#,##0.00",
+            "Z1000" to "0.0%", // 39 -> "3900.0%": proves the format applies far off-origin
+        )
+        for ((a1, code) in formats) session.setFormat(a1, code)
     }
 
     /// Re-derive the virtual grid size from the engine's data extent plus a
@@ -339,19 +367,6 @@ class InfiniteSheetModel(
 // ASCII cell text and no \uXXXX escapes, so the minimal escape handling is
 // sufficient for this trusted input.
 // ─────────────────────────────────────────────────────────────────────
-
-/// Map one decoded value object (`{"kind":...}`) to the display string.
-private fun valueToDisplay(obj: Map<*, *>): String = when (obj["kind"]) {
-    "empty" -> ""
-    "number" -> {
-        val d = (obj["value"] as Number).toDouble()
-        if (d == Math.floor(d) && Math.abs(d) < 1e15) d.toLong().toString() else d.toString()
-    }
-    "text" -> obj["value"] as? String ?: ""
-    "boolean" -> if (obj["value"] == true) "TRUE" else "FALSE"
-    "error" -> obj["code"] as? String ?: "#ERR"
-    else -> ""
-}
 
 private fun parseJson(s: String): Any? = if (s.isEmpty()) null else JsonReader(s).readValue()
 
