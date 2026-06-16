@@ -150,14 +150,26 @@ connection" un-gates. Read the mailbox write-back path / connection bookkeeping 
 
 ## Phased PR plan
 
-1. **WEB01b spec** (this file).
-2. **WEB01b-1 — `embeddable-http-server` mailbox serve** + ordering + backpressure;
-   the deterministic ordering and parallelism tests. The riskiest PR.
+1. **WEB01b spec** (this file). ✅ merged.
+2. **WEB01b-1a — `embeddable-http-server` `MailboxHttpServer`** (the approved
+   bounded slice): per-request submit-to-pool + backpressure (503) + the
+   deterministic in-flight-gauge parallelism test. ✅ merged (PR #6047). Scope is
+   one-request-and-close + *sequential* keep-alive; the original `defer_read`
+   read-gating was removed (it *replays* the consumed chunk — see the CI-fix note
+   in that PR and `lessons.md`). Pipelined gating/ordering is deferred to 1b.
 3. **WEB01b-2 — `web-core` `MailboxWebServer`** (`worker_fn = app.handle`) +
    `conduit` `MailboxServer` (opt-in), with the in-flight-gauge parallelism test
-   through the facade.
-4. **WEB01b-3 — comparative benchmark** (`#[ignore]`): single-reactor vs sharded
+   through the facade. ✅ done (this PR). Single cross-platform `bind`,
+   `std::io::Result` (the mailbox stack is `io::Error`-based), `Clone`; mirrors the
+   `ShardedWebServer`/`ShardedServer` surface. web-core 0.2.0→0.3.0, conduit
+   0.2.0→0.3.0.
+4. **WEB01b-1b — per-connection reorder buffer** for the *pipelined* path: gate a
+   connection to one in-flight request and reassemble the unordered pool's
+   responses into HTTP/1.1 wire order (the pool is `supports_ordered_responses =
+   false`). Still open.
+5. **WEB01b-3 — comparative benchmark** (`#[ignore]`): single-reactor vs sharded
    (WEB01a) vs mailbox (WEB01b) on a CPU-bound load; document when to pick which.
+   Still open.
 
 ## Open questions (for sign-off before WEB01b-1)
 
