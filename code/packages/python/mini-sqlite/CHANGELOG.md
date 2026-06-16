@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.17.0] - 2026-05-24
+
+### Fixed
+
+- ``DETACH DATABASE <name>`` now raises SQLite-compatible
+  ``OperationalError`` messages instead of silently succeeding:
+
+  * ``DETACH DATABASE main`` → ``"cannot detach database main"``
+  * ``DETACH DATABASE <any-other>`` → ``"no such database: <name>"``
+    (mini-sqlite has no concept of attached databases, so any name
+    that is not "main" is, by definition, not attached)
+
+  The ``DATABASE`` keyword is optional (``DETACH aux`` and
+  ``DETACH DATABASE aux`` are both handled).  Quoted schema names
+  (double-quoted, single-quoted, backtick-quoted, or
+  bracket-quoted) are stripped before the comparison so
+  ``DETACH "aux"`` produces the same message as ``DETACH aux``.
+
+  Previously mini-sqlite returned an empty success result for all
+  DETACH statements; callers that inspect the error to detect
+  mis-typed or missing schema names would silently succeed and miss
+  the problem.
+
+  ``ATTACH DATABASE`` remains a no-op (returns success) because
+  mini-sqlite does not implement multi-database schema routing and
+  there is no appropriate error to produce for a fresh attach.
+
 ## [2.16.0] - 2026-05-24
 
 ### Added
