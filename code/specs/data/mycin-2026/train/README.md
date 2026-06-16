@@ -26,6 +26,29 @@ language, never the ground truth. The mix deliberately includes bacterial / vira
 / mixed profiles, negations, and **ABSTAIN** cases (prose with no dictionary
 findings → empty IR) so the model learns to decline rather than hallucinate.
 
+### The gold IR carries byte-provenance, discard, and inference justification
+
+The label is not a bare finding list — it is the full typed IR the warm pipeline's
+prompt asks for, derived **deterministically from the teacher's prose** by
+`build_gold_ir()` (pure, no model — so it is unit-tested without Ollama):
+
+- **byte-provenance** — each finding records the verbatim `span` of prose that
+  supports it (located by matching the finding's dictionary surface forms against
+  the vignette). A finding stated verbatim → `type: stated`; one the teacher
+  paraphrased past recognition → `type: inferred` with an empty span.
+- **inference justification** — each finding gets an `ENTAILED` verdict when its
+  span was found verbatim, or `LEAP` when it was not (which `ir_to_adj` then drops —
+  the safe behavior: the model is taught to mark, not fabricate, unstated findings).
+- **discard** — a third of vignettes carry an injected non-diagnostic **distractor**
+  (a vital sign, social-history detail, symptomatic med). When it lands in the
+  prose, the gold records it as a `discard` `{span, reason}`, teaching the model to
+  set a red herring aside *with a justification* rather than coin a finding from it.
+
+So the model learns the discipline the framework demands of itself: extract only
+what the bytes support, cite the span, and justify both what it keeps and what it
+discards. The gold finding still keeps `functor`/`value`/`polarity` (what the
+rulebook consumes), so the addition is non-breaking downstream.
+
 ## Workflow
 
 ```sh

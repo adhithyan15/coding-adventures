@@ -61,11 +61,87 @@ def test_sampled_findings_stay_in_vocab_and_hints_do_not_leak():
     assert saw_organism_id, "organism-id findings never sampled across 60 seeds"
 
 
+# ---- F3: byte-provenance + discard + inference justification in the gold IR ----
+
+def test_find_span_returns_a_verbatim_slice_or_empty():
+    v = "A 19-year-old presents with neutrophil-predominant pleocytosis and a low CSF glucose."
+    # A surface form that appears (case-insensitively) → a real substring of the prose.
+    span = gd.find_span(v, ["neutrophil-predominant pleocytosis"])
+    assert span and span.lower() in v.lower(), span
+    # A `/`-alternative phrase: either side may match.
+    assert gd.find_span(v, ["PMN predominance / neutrophil-predominant pleocytosis"])
+    # Nothing matches → empty string (no fabricated span).
+    assert gd.find_span(v, ["enteroviral pcr positive"]) == ""
+    assert gd.find_span(v, [None, ""]) == ""
+
+
+def test_build_gold_ir_grounds_stated_findings_with_an_entailed_span():
+    surfaces = {"csf_glucose": ["low CSF glucose", "hypoglycorrhachia"],
+                "csf_neutrophilic_pleocytosis": ["neutrophil-predominant pleocytosis"]}
+    vignette = ("A 19-year-old with neutrophil-predominant pleocytosis and a low CSF "
+                "glucose; he works as a high-school teacher.")
+    findings = [{"functor": "csf_neutrophilic_pleocytosis", "value": "high", "polarity": "stated"},
+                {"functor": "csf_glucose", "value": "low", "polarity": "stated"}]
+    distractors = [("works as a high-school teacher", "social history, not a finding")]
+    gold = gd.build_gold_ir(vignette, findings, distractors, surfaces)
+    # Every finding keeps functor/value/polarity AND gains term/span/type (additive).
+    for f in gold["findings"]:
+        for k in ("functor", "value", "polarity", "term", "span", "type"):
+            assert k in f, f"missing {k} in {f}"
+    # Both findings are stated verbatim → spans are real substrings, type stated, ENTAILED.
+    assert all(f["span"] and f["span"].lower() in vignette.lower() for f in gold["findings"])
+    assert all(f["type"] == "stated" for f in gold["findings"])
+    assert {f["functor"]: f["polarity"] for f in gold["findings"]} == {
+        "csf_neutrophilic_pleocytosis": "affirmed", "csf_glucose": "affirmed"}
+    verdicts = {ij["term"]: ij["verdict"] for ij in gold["inference_justifications"]}
+    assert all(v == "ENTAILED" for v in verdicts.values()), verdicts
+    assert all(ij["basis_span"] for ij in gold["inference_justifications"])
+    # The distractor that appears in the prose is recorded as a justified discard.
+    assert len(gold["discard"]) == 1
+    assert gold["discard"][0]["span"].lower() in vignette.lower()
+    assert gold["discard"][0]["reason"]
+
+
+def test_build_gold_ir_marks_unstated_findings_inferred_and_leap():
+    # The teacher's prose does NOT mention the gram stain → the finding can only be a LEAP.
+    surfaces = {"csf_gram_stain": ["positive Gram stain"], "fever": ["fever"]}
+    vignette = "The patient has a fever and headache; labs are otherwise pending."
+    findings = [{"functor": "fever", "value": "present", "polarity": "stated"},
+                {"functor": "csf_gram_stain", "value": "positive", "polarity": "stated"}]
+    gold = gd.build_gold_ir(vignette, findings, [], surfaces)
+    by_f = {f["functor"]: f for f in gold["findings"]}
+    assert by_f["fever"]["span"] and by_f["fever"]["type"] == "stated"
+    assert by_f["csf_gram_stain"]["span"] == "" and by_f["csf_gram_stain"]["type"] == "inferred"
+    verdicts = {ij["term"]: ij["verdict"] for ij in gold["inference_justifications"]}
+    assert verdicts["fever(present)"] == "ENTAILED"
+    assert verdicts["csf_gram_stain(positive)"] == "LEAP"  # ir_to_adj will drop this — safe
+
+
+def test_build_gold_ir_records_negation_polarity():
+    surfaces = {"csf_gram_stain": ["Gram stain was negative"]}
+    vignette = "The CSF Gram stain was negative."
+    findings = [{"functor": "csf_gram_stain", "value": "negative", "polarity": "denied"}]
+    gold = gd.build_gold_ir(vignette, findings, [], surfaces)
+    assert gold["findings"][0]["polarity"] == "denied"
+
+
+def test_distractors_pool_is_well_formed():
+    assert gd.DISTRACTORS, "need a distractor pool to teach justified discard"
+    for phrase, reason in gd.DISTRACTORS:
+        assert isinstance(phrase, str) and len(phrase) >= 4
+        assert isinstance(reason, str) and reason
+
+
 def main() -> int:
     test_every_profile_value_is_in_the_dictionary()
     test_sampled_findings_stay_in_vocab_and_hints_do_not_leak()
-    print("test_gen_data: PASS (every profile value in the closed vocabulary; sampled "
-          "findings stay in-vocab incl. the organism-id findings; hints don't leak to gold)")
+    test_find_span_returns_a_verbatim_slice_or_empty()
+    test_build_gold_ir_grounds_stated_findings_with_an_entailed_span()
+    test_build_gold_ir_marks_unstated_findings_inferred_and_leap()
+    test_build_gold_ir_records_negation_polarity()
+    test_distractors_pool_is_well_formed()
+    print("test_gen_data: PASS (closed-vocab adherence; hints don't leak; gold IR carries "
+          "byte-provenance spans, ENTAILED/LEAP inference verdicts, and justified discards)")
     return 0
 
 
