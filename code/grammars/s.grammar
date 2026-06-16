@@ -1,0 +1,183 @@
+# @version 1
+
+# =============================================================================
+# s.grammar — Parser grammar for the historical S language (Bell Labs S)
+# =============================================================================
+#
+# This grammar drives the generic grammar-driven parser engine
+# (parser::GrammarParser) over the token stream produced by the s-lexer. See
+# code/specs/S00-s-language.md for the language design and history.
+#
+# Token names (UPPERCASE) are produced by the S lexer (code/grammars/s.tokens):
+#   NUMBER STRING NAME                  literals and identifiers
+#   ASSIGN (<-)  UNDERSCORE (_)  SUPER_ASSIGN (<<-)  RIGHT_ASSIGN (->)
+#   EQ (=)  EQEQ (==)  NE (!=)  LT (<)  GT (>)  LE (<=)  GE (>=)
+#   PLUS MINUS STAR SLASH CARET  COLON (:)
+#   LPAREN RPAREN  LBRACE RBRACE  LBRACKET RBRACKET  COMMA SEMICOLON  NEWLINE
+# KEYWORD tokens (matched here by exact value, case-sensitively):
+#   "if" "else" "for" "while" "repeat" "function" "break" "next" "in"
+#   "TRUE" "FALSE" "T" "F" "NULL" "NA" "Inf" "NaN"
+#
+# Newline significance
+# --------------------
+# Because this grammar references NEWLINE, the engine runs in
+# "newlines significant" mode. The s-lexer has already dropped newlines that
+# sit inside ( ) or [ ] (so calls/indices may span lines), but KEPT newlines
+# inside { } (where they separate a block's statements) and at top level
+# (where they terminate statements).
+#
+# Precedence cascade (lowest binds loosest -> highest binds tightest)
+# -------------------------------------------------------------------
+#   assignment      <-  _  <<-  ->        (right-associative)
+#   comparison      == != < > <= >=        (non-associative, single)
+#   range           :                      (a:b)
+#   additive        + -                     (left-associative)
+#   multiplicative  * /                     (left-associative)
+#   unary           - (prefix)
+#   power           ^                       (right-associative)
+#   postfix         f(...)   x[...]         (call / index, left-associative)
+#   primary         atoms, function, if/for/while, blocks, groups
+# =============================================================================
+
+# =============================================================================
+# program — a sequence of statement lines.
+#
+# A statement line is a statement optionally followed by a terminator, a bare
+# statement (the final line of REPL input often lacks a trailing newline), or a
+# lone terminator (blank lines and leading newlines). Statements are separated
+# by NEWLINE or SEMICOLON.
+# =============================================================================
+
+program = { statement_line } ;
+
+statement_line = statement ( NEWLINE | SEMICOLON )
+               | statement
+               | NEWLINE
+               | SEMICOLON ;
+
+# Everything in S is an expression — there are no statement-only forms in v1.
+statement = expr ;
+
+expr = assignment ;
+
+# =============================================================================
+# assignment — the loosest-binding operator, right-associative.
+#
+# `<-`, the historical `_`, and `<<-` all assign left-to-right. `->` assigns
+# right-to-left (value on the left, target on the right); the runtime reverses
+# the direction. Right-associativity comes from the optional self-recursion.
+#
+#   a <- b <- 3      parses as   a <- (b <- 3)
+#   3 -> x           assigns 3 to x
+# =============================================================================
+
+assignment = comparison [ ( ASSIGN | UNDERSCORE | SUPER_ASSIGN | RIGHT_ASSIGN ) assignment ] ;
+
+# =============================================================================
+# comparison — non-associative relational operators returning logical vectors.
+# A single optional comparison; chaining like `a < b < c` is not S syntax.
+# =============================================================================
+
+comparison = range [ ( EQEQ | NE | LE | GE | LT | GT ) range ] ;
+
+# =============================================================================
+# range — the colon sequence operator: `1:5` is c(1,2,3,4,5).
+# =============================================================================
+
+range = additive [ COLON additive ] ;
+
+# =============================================================================
+# additive / multiplicative — left-associative arithmetic via repetition.
+# =============================================================================
+
+additive = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+
+multiplicative = unary { ( STAR | SLASH ) unary } ;
+
+# =============================================================================
+# unary — prefix minus. Looser than `^`, so `-2^2` is -(2^2) = -4, matching S.
+# =============================================================================
+
+unary = MINUS unary
+      | power ;
+
+# =============================================================================
+# power — exponentiation, right-associative: `2^3^2` is 2^(3^2). The right
+# operand is `unary`, so `2^-3` parses (the minus is handled there).
+# =============================================================================
+
+power = postfix [ CARET unary ] ;
+
+# =============================================================================
+# postfix — function calls and indexing, applied left-to-right and tightest:
+#   f(1, k = 2)      call with positional and named arguments
+#   x[i]             index
+#   m(1)(2)          chained application
+# =============================================================================
+
+postfix = primary { call_suffix | index_suffix } ;
+
+call_suffix  = LPAREN [ arg_list ] RPAREN ;
+index_suffix = LBRACKET [ arg_list ] RBRACKET ;
+
+arg_list = arg { COMMA arg } ;
+
+# A named argument (NAME = expr) is tried before a positional expression.
+# `==` is the EQEQ token, distinct from EQ, so `f(x == 1)` is positional.
+arg = NAME EQ expr
+    | expr ;
+
+# =============================================================================
+# primary — atoms and the bracketed/keyword-introduced forms.
+#
+# Keyword-introduced forms (function/if/for/while/repeat) and constant keywords
+# (TRUE/NA/...) are KEYWORD tokens, distinct from NAME, so a bare NAME never
+# collides with them.
+# =============================================================================
+
+primary = NUMBER
+        | STRING
+        | "TRUE"
+        | "FALSE"
+        | "T"
+        | "F"
+        | "NULL"
+        | "NA"
+        | "Inf"
+        | "NaN"
+        | func_def
+        | if_expr
+        | for_expr
+        | while_expr
+        | repeat_expr
+        | "break"
+        | "next"
+        | block
+        | group
+        | NAME ;
+
+group = LPAREN expr RPAREN ;
+
+block = LBRACE { statement_line } RBRACE ;
+
+# =============================================================================
+# function definitions and the control-flow expressions.
+#
+# In S, if/for/while are expressions: `if` yields its taken branch's value,
+# loops yield NULL. Default argument values are unevaluated expressions.
+# =============================================================================
+
+func_def = "function" LPAREN [ param_list ] RPAREN expr ;
+
+param_list = param { COMMA param } ;
+
+param = NAME EQ expr
+      | NAME ;
+
+if_expr = "if" LPAREN expr RPAREN expr [ "else" expr ] ;
+
+for_expr = "for" LPAREN NAME "in" expr RPAREN expr ;
+
+while_expr = "while" LPAREN expr RPAREN expr ;
+
+repeat_expr = "repeat" expr ;
