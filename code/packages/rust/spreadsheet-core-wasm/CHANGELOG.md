@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0
+
+**Cell display formats.** `set_format(a1, code)` / `get_format(a1)` /
+`get_display(a1)` expose the engine's cell-format API: set an Excel-style code
+(empty clears it), read it back, and get the value rendered through it (e.g.
+`1234.5` with `"#,##0.00"` → `"1,234.50"`). `get_display` is the display string a
+cell paints — distinct from `get_value` (typed JSON) and `get_raw` (source). 1
+new test.
+
 ## 0.3.0
 
 **Insert/delete rows & columns.** `insert_rows` / `delete_rows` / `insert_cols`

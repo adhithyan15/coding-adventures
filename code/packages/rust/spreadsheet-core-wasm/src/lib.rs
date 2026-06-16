@@ -221,6 +221,41 @@ impl SpreadsheetSession {
             .unwrap_or_default()
     }
 
+    // ── Cell display formats ────────────────────────────────────────
+    //
+    // A format is an Excel-style code (`"#,##0.00"`, `"0%"`, `"yyyy-mm-dd"`) that
+    // decides how a cell's computed value reads. The engine stores the code and
+    // applies it (via number-format-core); these thin wrappers expose that to a
+    // JS / native host.
+
+    /// Set a cell's display format code. An empty code clears it (the cell falls
+    /// back to `General`). A malformed address is a no-op.
+    pub fn set_format(&mut self, a1: &str, code: &str) {
+        if let Ok(addr) = CellAddress::parse(a1) {
+            self.wb.set_format(self.sheet, addr, code);
+        }
+    }
+
+    /// A cell's display format code, or `""` if it uses the default (`General`).
+    pub fn get_format(&self, a1: &str) -> String {
+        CellAddress::parse(a1)
+            .ok()
+            .and_then(|addr| self.wb.get_format(self.sheet, addr))
+            .map(str::to_string)
+            .unwrap_or_default()
+    }
+
+    /// A cell's computed value rendered through its format — the **display
+    /// string** to show (e.g. `1234.5` with `"#,##0.00"` → `"1,234.50"`). What a
+    /// cell paints, as opposed to [`get_value`](Self::get_value) (typed JSON) or
+    /// [`get_raw`](Self::get_raw) (the source). Empty string for a bad address.
+    pub fn get_display(&self, a1: &str) -> String {
+        match CellAddress::parse(a1) {
+            Ok(addr) => self.wb.get_display(self.sheet, addr),
+            Err(_) => String::new(),
+        }
+    }
+
     /// Get every set cell's computed value as a JSON object keyed by A1
     /// address, e.g. `{"B1":{"kind":"number","value":15.0},...}`. Only cells
     /// that were explicitly set appear; everything else is implicitly empty.
@@ -462,6 +497,25 @@ mod tests {
         assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":20.0}"#); // was A2
         assert_eq!(s.get_value("A2"), r#"{"kind":"number","value":40.0}"#); // =A1*2
         assert_eq!(s.get_raw("A2"), "=(A1*2)");
+    }
+
+    #[test]
+    fn set_get_and_apply_display_format() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "1234.5");
+        // No format → General display.
+        assert_eq!(s.get_display("A1"), "1234.5");
+        assert_eq!(s.get_format("A1"), "");
+        // Set a format → get_display applies it; get_format echoes the code.
+        s.set_format("A1", "#,##0.00");
+        assert_eq!(s.get_format("A1"), "#,##0.00");
+        assert_eq!(s.get_display("A1"), "1,234.50");
+        // get_value (typed) is unaffected by the format.
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":1234.5}"#);
+        // Clearing the format reverts to General.
+        s.set_format("A1", "");
+        assert_eq!(s.get_format("A1"), "");
+        assert_eq!(s.get_display("A1"), "1234.5");
     }
 
     #[test]

@@ -195,6 +195,48 @@ pub extern "C" fn get_values() -> *mut u8 {
     pack(SESSION.with(|s| s.borrow().get_values()))
 }
 
+// ── Cell display formats ─────────────────────────────────────────────
+// An Excel-style format code per cell decides how its value reads.
+
+/// `set_format(a1, code)` — set a cell's display format (empty `code` clears).
+/// See [`SpreadsheetSession::set_format`].
+///
+/// # Safety
+/// The `(ptr, len)` pairs must describe readable byte ranges (see [`read_input`]).
+#[no_mangle]
+pub unsafe extern "C" fn set_format(
+    a1_ptr: *const u8,
+    a1_len: usize,
+    code_ptr: *const u8,
+    code_len: usize,
+) {
+    let a1 = read_input(a1_ptr, a1_len);
+    let code = read_input(code_ptr, code_len);
+    SESSION.with(|s| s.borrow_mut().set_format(&a1, &code));
+}
+
+/// `get_format(a1)` → the cell's format code, or `""`. See
+/// [`SpreadsheetSession::get_format`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range.
+#[no_mangle]
+pub unsafe extern "C" fn get_format(a1_ptr: *const u8, a1_len: usize) -> *mut u8 {
+    let a1 = read_input(a1_ptr, a1_len);
+    pack(SESSION.with(|s| s.borrow().get_format(&a1)))
+}
+
+/// `get_display(a1)` → the cell's value rendered through its format (the display
+/// string). See [`SpreadsheetSession::get_display`].
+///
+/// # Safety
+/// `(ptr, len)` must describe a readable byte range.
+#[no_mangle]
+pub unsafe extern "C" fn get_display(a1_ptr: *const u8, a1_len: usize) -> *mut u8 {
+    let a1 = read_input(a1_ptr, a1_len);
+    pack(SESSION.with(|s| s.borrow().get_display(&a1)))
+}
+
 // ── Structural edits: insert / delete rows & columns ─────────────────
 // 1-based `at`, `count` lines. The engine relocates cells and rewrites formula
 // references; the formula echo stays in step. No return — the JS host re-reads
@@ -320,6 +362,43 @@ mod tests {
         let out = unsafe { get_raw(ap, al) };
         unsafe { dealloc(ap, al) };
         take(out)
+    }
+
+    fn set_fmt(a1: &str, code: &str) {
+        let (ap, al) = put(a1);
+        let (cp, cl) = put(code);
+        unsafe { set_format(ap, al, cp, cl) };
+        unsafe {
+            dealloc(ap, al);
+            dealloc(cp, cl);
+        }
+    }
+
+    fn display(a1: &str) -> String {
+        let (ap, al) = put(a1);
+        let out = unsafe { get_display(ap, al) };
+        unsafe { dealloc(ap, al) };
+        take(out)
+    }
+
+    fn format(a1: &str) -> String {
+        let (ap, al) = put(a1);
+        let out = unsafe { get_format(ap, al) };
+        unsafe { dealloc(ap, al) };
+        take(out)
+    }
+
+    #[test]
+    fn abi_cell_format_round_trip() {
+        reset();
+        set("A1", "1234.5");
+        assert_eq!(display("A1"), "1234.5"); // General before any format
+        set_fmt("A1", "#,##0.00");
+        assert_eq!(format("A1"), "#,##0.00");
+        assert_eq!(display("A1"), "1,234.50");
+        set_fmt("A1", ""); // clear → back to General
+        assert_eq!(format("A1"), "");
+        assert_eq!(display("A1"), "1234.5");
     }
 
     #[test]
