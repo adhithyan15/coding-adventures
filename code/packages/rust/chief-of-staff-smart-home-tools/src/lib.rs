@@ -430,6 +430,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_REVIEWS_TOOL_ID: &str =
     "smart_home.list_integration_activation_waiver_reviews";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_REVIEW_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_waiver_review_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_DISPOSITIONS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_waiver_dispositions";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_DISPOSITION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_waiver_disposition_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -1023,6 +1027,22 @@ impl SmartHomeToolBridge {
                     let query = integration_activation_waiver_review_query(&arguments)?;
                     Ok(
                         get_integration_activation_waiver_review_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_DISPOSITIONS_TOOL_ID => {
+                    let query = integration_activation_waiver_disposition_query(&arguments)?;
+                    Ok(
+                        list_integration_activation_waiver_dispositions_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_DISPOSITION_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_waiver_disposition_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_waiver_disposition_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -3310,6 +3330,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation waiver review summary",
             "Return compact D23A activation waiver review counts by status, review lane, approval lane, evidence kind, source linkage, blocker, and review readiness.",
             integration_activation_waiver_review_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_DISPOSITIONS_TOOL_ID,
+            "List smart-home integration activation waiver dispositions",
+            "List Chief-facing D23A activation waiver disposition rows that turn waiver review records into disposition lane, decision action, readiness, blocker, and source-lineage posture.",
+            integration_activation_waiver_disposition_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_waiver_dispositions", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_waiver_dispositions",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_DISPOSITION_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation waiver disposition summary",
+            "Return compact D23A activation waiver disposition counts by status, disposition lane, approval lane, evidence kind, source linkage, blocker, and disposition readiness.",
+            integration_activation_waiver_disposition_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -8784,6 +8838,359 @@ struct IntegrationActivationWaiverReviewQuery {
     review_limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum IntegrationActivationWaiverDispositionStatus {
+    ReviewPending,
+    ApprovalReady,
+    Held,
+}
+
+impl IntegrationActivationWaiverDispositionStatus {
+    fn from_review_record(record: &IntegrationActivationWaiverReviewRecord) -> Self {
+        if record.blocks_activation || record.review_status.is_blocked() {
+            Self::Held
+        } else if record.review_ready && record.review_status.is_ready() {
+            Self::ApprovalReady
+        } else {
+            Self::ReviewPending
+        }
+    }
+
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::ReviewPending => "review_pending",
+            Self::ApprovalReady => "approval_ready",
+            Self::Held => "held",
+        }
+    }
+
+    fn is_ready(self) -> bool {
+        matches!(self, Self::ApprovalReady)
+    }
+
+    fn is_blocked(self) -> bool {
+        matches!(self, Self::Held)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationWaiverDispositionRecord {
+    sequence: usize,
+    disposition_id: String,
+    source_review_id: String,
+    source_waiver_id: String,
+    source_exception_id: String,
+    source_ledger_id: String,
+    source_attestation_id: String,
+    source_compliance_id: String,
+    source_governance_id: String,
+    source_assurance_id: String,
+    source_guardrail_id: String,
+    disposition_status: IntegrationActivationWaiverDispositionStatus,
+    review_status: IntegrationActivationWaiverReviewStatus,
+    waiver_status: IntegrationActivationWaiverStatus,
+    exception_status: IntegrationActivationExceptionLedgerStatus,
+    disposition_lane: IntegrationActivationResponseOwnerLane,
+    review_lane: IntegrationActivationResponseOwnerLane,
+    approval_lane: IntegrationActivationResponseOwnerLane,
+    owner_lane: IntegrationActivationResponseOwnerLane,
+    disposition_reason: String,
+    disposition_action: String,
+    waiver_scope: String,
+    evidence_kind: String,
+    focus: IntegrationActivationGuardrailKind,
+    recommended_view: IntegrationActivationPlaybookView,
+    title: String,
+    summary: String,
+    priority: u8,
+    integration_ids: Vec<IntegrationId>,
+    required_tier: PrivilegeTier,
+    policy_surface: Option<IntegrationPolicySurface>,
+    reviewer_required: bool,
+    exception_required: bool,
+    signoff_required: bool,
+    evidence_ready: bool,
+    waiver_ready: bool,
+    review_ready: bool,
+    disposition_ready: bool,
+    blocks_activation: bool,
+    requires_attention: bool,
+}
+
+impl IntegrationActivationWaiverDispositionRecord {
+    fn from_review_record(
+        sequence: usize,
+        record: &IntegrationActivationWaiverReviewRecord,
+    ) -> Self {
+        let disposition_status =
+            IntegrationActivationWaiverDispositionStatus::from_review_record(record);
+        let disposition_ready = disposition_status.is_ready() && record.review_ready;
+        let disposition_lane = activation_waiver_disposition_lane(record, disposition_status);
+
+        Self {
+            sequence,
+            disposition_id: format!("activation-waiver-disposition-{sequence}"),
+            source_review_id: record.review_id.clone(),
+            source_waiver_id: record.source_waiver_id.clone(),
+            source_exception_id: record.source_exception_id.clone(),
+            source_ledger_id: record.source_ledger_id.clone(),
+            source_attestation_id: record.source_attestation_id.clone(),
+            source_compliance_id: record.source_compliance_id.clone(),
+            source_governance_id: record.source_governance_id.clone(),
+            source_assurance_id: record.source_assurance_id.clone(),
+            source_guardrail_id: record.source_guardrail_id.clone(),
+            disposition_status,
+            review_status: record.review_status,
+            waiver_status: record.waiver_status,
+            exception_status: record.exception_status,
+            disposition_lane,
+            review_lane: record.review_lane,
+            approval_lane: record.approval_lane,
+            owner_lane: record.owner_lane,
+            disposition_reason: activation_waiver_disposition_reason(record, disposition_status)
+                .to_string(),
+            disposition_action: activation_waiver_disposition_action(disposition_status)
+                .to_string(),
+            waiver_scope: record.waiver_scope.clone(),
+            evidence_kind: record.evidence_kind.clone(),
+            focus: record.focus,
+            recommended_view: record.recommended_view,
+            title: record.title.clone(),
+            summary: record.summary.clone(),
+            priority: record.priority,
+            integration_ids: record.integration_ids.clone(),
+            required_tier: record.required_tier,
+            policy_surface: record.policy_surface,
+            reviewer_required: record.reviewer_required,
+            exception_required: record.exception_required,
+            signoff_required: record.signoff_required,
+            evidence_ready: record.evidence_ready,
+            waiver_ready: record.waiver_ready,
+            review_ready: record.review_ready,
+            disposition_ready,
+            blocks_activation: record.blocks_activation || disposition_status.is_blocked(),
+            requires_attention: record.requires_attention || !disposition_ready,
+        }
+    }
+
+    fn has_source_lineage(&self) -> bool {
+        !self.source_review_id.is_empty()
+            && !self.source_waiver_id.is_empty()
+            && !self.source_exception_id.is_empty()
+            && !self.source_ledger_id.is_empty()
+            && !self.source_attestation_id.is_empty()
+            && !self.source_compliance_id.is_empty()
+            && !self.source_governance_id.is_empty()
+            && !self.source_assurance_id.is_empty()
+            && !self.source_guardrail_id.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationWaiverDispositionSummary {
+    total_records: usize,
+    unique_integrations: usize,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+    review_pending_records: usize,
+    approval_ready_records: usize,
+    disposition_ready_records: usize,
+    review_ready_records: usize,
+    waiver_ready_records: usize,
+    evidence_ready_records: usize,
+    source_linked_records: usize,
+    reviewer_required_records: usize,
+    exception_required_records: usize,
+    signoff_required_records: usize,
+    incident_disposition_records: usize,
+    policy_disposition_records: usize,
+    dependency_disposition_records: usize,
+    readiness_gap_disposition_records: usize,
+    platform_disposition_records: usize,
+    integration_disposition_records: usize,
+    security_disposition_records: usize,
+    reviewer_disposition_records: usize,
+    verification_disposition_records: usize,
+    audit_disposition_records: usize,
+    first_attention_priority: Option<u8>,
+    first_blocked_priority: Option<u8>,
+    first_review_priority: Option<u8>,
+    first_ready_priority: Option<u8>,
+    highest_policy_tier: PrivilegeTier,
+    overall_status: IntegrationActivationHealthStatus,
+}
+
+impl IntegrationActivationWaiverDispositionSummary {
+    fn from_records<'a>(
+        records: impl IntoIterator<Item = &'a IntegrationActivationWaiverDispositionRecord>,
+    ) -> Self {
+        let mut summary = Self {
+            total_records: 0,
+            unique_integrations: 0,
+            records_requiring_attention: 0,
+            blocked_records: 0,
+            review_pending_records: 0,
+            approval_ready_records: 0,
+            disposition_ready_records: 0,
+            review_ready_records: 0,
+            waiver_ready_records: 0,
+            evidence_ready_records: 0,
+            source_linked_records: 0,
+            reviewer_required_records: 0,
+            exception_required_records: 0,
+            signoff_required_records: 0,
+            incident_disposition_records: 0,
+            policy_disposition_records: 0,
+            dependency_disposition_records: 0,
+            readiness_gap_disposition_records: 0,
+            platform_disposition_records: 0,
+            integration_disposition_records: 0,
+            security_disposition_records: 0,
+            reviewer_disposition_records: 0,
+            verification_disposition_records: 0,
+            audit_disposition_records: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_review_priority: None,
+            first_ready_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for record in records {
+            summary.total_records += 1;
+            for integration_id in &record.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            if record.requires_attention {
+                summary.records_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, record.priority);
+            }
+            if record.blocks_activation {
+                summary.blocked_records += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, record.priority);
+            }
+            if record.disposition_ready {
+                summary.disposition_ready_records += 1;
+                summary.first_ready_priority =
+                    min_optional_priority(summary.first_ready_priority, record.priority);
+            }
+            if record.review_ready {
+                summary.review_ready_records += 1;
+            }
+            if record.waiver_ready {
+                summary.waiver_ready_records += 1;
+            }
+            if record.evidence_ready {
+                summary.evidence_ready_records += 1;
+            }
+            if record.has_source_lineage() {
+                summary.source_linked_records += 1;
+            }
+            if record.reviewer_required {
+                summary.reviewer_required_records += 1;
+            }
+            if record.exception_required {
+                summary.exception_required_records += 1;
+            }
+            if record.signoff_required {
+                summary.signoff_required_records += 1;
+            }
+            match record.disposition_status {
+                IntegrationActivationWaiverDispositionStatus::ReviewPending => {
+                    summary.review_pending_records += 1;
+                    summary.first_review_priority =
+                        min_optional_priority(summary.first_review_priority, record.priority);
+                }
+                IntegrationActivationWaiverDispositionStatus::ApprovalReady => {
+                    summary.approval_ready_records += 1
+                }
+                IntegrationActivationWaiverDispositionStatus::Held => {}
+            }
+            match record.focus {
+                IntegrationActivationGuardrailKind::Incident => {
+                    summary.incident_disposition_records += 1
+                }
+                IntegrationActivationGuardrailKind::PolicyRisk => {
+                    summary.policy_disposition_records += 1
+                }
+                IntegrationActivationGuardrailKind::Dependency => {
+                    summary.dependency_disposition_records += 1
+                }
+                IntegrationActivationGuardrailKind::ReadinessGap => {
+                    summary.readiness_gap_disposition_records += 1
+                }
+            }
+            match record.disposition_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_disposition_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_disposition_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_disposition_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_disposition_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_disposition_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Audit => {
+                    summary.audit_disposition_records += 1
+                }
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(record.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.total_records == 0 {
+            IntegrationActivationHealthStatus::Empty
+        } else if summary.blocked_records > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.review_pending_records > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else {
+            IntegrationActivationHealthStatus::Ready
+        };
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_records > 0
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.records_requiring_attention > 0 || self.review_pending_records > 0
+    }
+
+    fn is_empty(&self) -> bool {
+        self.total_records == 0
+    }
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationWaiverDispositionQuery {
+    waiver_review: IntegrationActivationWaiverReviewQuery,
+    disposition_status: Option<IntegrationActivationWaiverDispositionStatus>,
+    disposition_lane: Option<IntegrationActivationResponseOwnerLane>,
+    approval_lane: Option<IntegrationActivationResponseOwnerLane>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    evidence_kind: Option<String>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    reviewer_required: Option<bool>,
+    signoff_required: Option<bool>,
+    disposition_ready: Option<bool>,
+    review_ready: Option<bool>,
+    waiver_ready: Option<bool>,
+    disposition_limit: Option<usize>,
+}
+
 fn activation_exception_reason(focus: IntegrationActivationGuardrailKind) -> &'static str {
     match focus {
         IntegrationActivationGuardrailKind::Incident => "incident evidence closure required",
@@ -8844,6 +9251,48 @@ fn activation_waiver_review_decision(
         IntegrationActivationWaiverReviewStatus::ReviewerRequired => "collect_reviewer_signoff",
         IntegrationActivationWaiverReviewStatus::ApprovalReady => "approve_waiver",
         IntegrationActivationWaiverReviewStatus::Blocked => "hold_activation",
+    }
+}
+
+fn activation_waiver_disposition_lane(
+    record: &IntegrationActivationWaiverReviewRecord,
+    status: IntegrationActivationWaiverDispositionStatus,
+) -> IntegrationActivationResponseOwnerLane {
+    match status {
+        IntegrationActivationWaiverDispositionStatus::ReviewPending => record.review_lane,
+        IntegrationActivationWaiverDispositionStatus::ApprovalReady => record.approval_lane,
+        IntegrationActivationWaiverDispositionStatus::Held => record.owner_lane,
+    }
+}
+
+fn activation_waiver_disposition_reason(
+    record: &IntegrationActivationWaiverReviewRecord,
+    status: IntegrationActivationWaiverDispositionStatus,
+) -> &'static str {
+    match status {
+        IntegrationActivationWaiverDispositionStatus::ReviewPending => {
+            "waiver review must complete before disposition"
+        }
+        IntegrationActivationWaiverDispositionStatus::ApprovalReady => {
+            "waiver is ready for approval disposition"
+        }
+        IntegrationActivationWaiverDispositionStatus::Held => {
+            if record.blocks_activation {
+                "activation blocker holds waiver disposition"
+            } else {
+                "waiver disposition is held"
+            }
+        }
+    }
+}
+
+fn activation_waiver_disposition_action(
+    status: IntegrationActivationWaiverDispositionStatus,
+) -> &'static str {
+    match status {
+        IntegrationActivationWaiverDispositionStatus::ReviewPending => "complete_waiver_review",
+        IntegrationActivationWaiverDispositionStatus::ApprovalReady => "approve_waiver",
+        IntegrationActivationWaiverDispositionStatus::Held => "hold_activation",
     }
 }
 
@@ -10168,6 +10617,64 @@ fn integration_activation_waiver_review_query(
         waiver_ready: optional_bool(arguments, "waiver_ready")?,
         review_limit: optional_u64(arguments, "waiver_review_limit")?
             .or(optional_u64(arguments, "review_limit")?)
+            .or(optional_u64(arguments, "record_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_waiver_disposition_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationWaiverDispositionQuery, ToolCallError> {
+    let disposition_status = optional_string(arguments, "waiver_disposition_status")?
+        .or(optional_string(arguments, "disposition_status")?)
+        .map(|label| parse_activation_waiver_disposition_status(&label))
+        .transpose()?;
+    let disposition_lane = optional_string(arguments, "waiver_disposition_lane")?
+        .or(optional_string(arguments, "disposition_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let approval_lane = optional_string(arguments, "waiver_disposition_approval_lane")?
+        .or(optional_string(arguments, "waiver_review_approval_lane")?)
+        .or(optional_string(arguments, "waiver_approval_lane")?)
+        .or(optional_string(arguments, "approval_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "waiver_disposition_owner_lane")?
+        .or(optional_string(arguments, "waiver_review_owner_lane")?)
+        .or(optional_string(arguments, "waiver_owner_lane")?)
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationWaiverDispositionQuery {
+        waiver_review: integration_activation_waiver_review_query(arguments)?,
+        disposition_status,
+        disposition_lane,
+        approval_lane,
+        owner_lane,
+        evidence_kind: optional_string(arguments, "waiver_disposition_evidence_kind")?
+            .or(optional_string(arguments, "waiver_review_evidence_kind")?)
+            .or(optional_string(arguments, "waiver_evidence_kind")?)
+            .or(optional_string(arguments, "evidence_kind")?),
+        requires_attention: optional_bool(arguments, "waiver_disposition_requires_attention")?
+            .or(optional_bool(
+                arguments,
+                "waiver_review_requires_attention",
+            )?)
+            .or(optional_bool(arguments, "waiver_requires_attention")?)
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "waiver_disposition_blocked")?
+            .or(optional_bool(arguments, "waiver_review_blocked")?)
+            .or(optional_bool(arguments, "waiver_blocked")?)
+            .or(optional_bool(arguments, "blocked")?),
+        reviewer_required: optional_bool(arguments, "reviewer_required")?,
+        signoff_required: optional_bool(arguments, "signoff_required")?,
+        disposition_ready: optional_bool(arguments, "waiver_disposition_ready")?
+            .or(optional_bool(arguments, "disposition_ready")?),
+        review_ready: optional_bool(arguments, "review_ready")?,
+        waiver_ready: optional_bool(arguments, "waiver_ready")?,
+        disposition_limit: optional_u64(arguments, "waiver_disposition_limit")?
+            .or(optional_u64(arguments, "disposition_limit")?)
             .or(optional_u64(arguments, "record_limit")?)
             .map(|value| value as usize),
     })
@@ -11979,6 +12486,62 @@ fn integration_activation_waiver_reviews_for_query(
         records.retain(|record| record.waiver_ready == waiver_ready);
     }
     if let Some(limit) = query.review_limit {
+        records.truncate(limit);
+    }
+
+    (records, catalog_count)
+}
+
+fn integration_activation_waiver_dispositions_for_query(
+    query: &IntegrationActivationWaiverDispositionQuery,
+) -> (Vec<IntegrationActivationWaiverDispositionRecord>, usize) {
+    let (review_records, catalog_count) =
+        integration_activation_waiver_reviews_for_query(&query.waiver_review);
+    let mut records: Vec<_> = review_records
+        .iter()
+        .enumerate()
+        .map(|(index, record)| {
+            IntegrationActivationWaiverDispositionRecord::from_review_record(index + 1, record)
+        })
+        .collect();
+
+    if let Some(status) = query.disposition_status {
+        records.retain(|record| record.disposition_status == status);
+    }
+    if let Some(disposition_lane) = query.disposition_lane {
+        records.retain(|record| record.disposition_lane == disposition_lane);
+    }
+    if let Some(approval_lane) = query.approval_lane {
+        records.retain(|record| record.approval_lane == approval_lane);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        records.retain(|record| record.owner_lane == owner_lane);
+    }
+    if let Some(evidence_kind) = &query.evidence_kind {
+        records.retain(|record| record.evidence_kind == *evidence_kind);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        records.retain(|record| record.requires_attention == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        records.retain(|record| record.blocks_activation == blocked);
+    }
+    if let Some(reviewer_required) = query.reviewer_required {
+        records.retain(|record| record.reviewer_required == reviewer_required);
+    }
+    if let Some(signoff_required) = query.signoff_required {
+        records.retain(|record| record.signoff_required == signoff_required);
+    }
+    if let Some(disposition_ready) = query.disposition_ready {
+        records.retain(|record| record.disposition_ready == disposition_ready);
+    }
+    if let Some(review_ready) = query.review_ready {
+        records.retain(|record| record.review_ready == review_ready);
+    }
+    if let Some(waiver_ready) = query.waiver_ready {
+        records.retain(|record| record.waiver_ready == waiver_ready);
+    }
+    if let Some(limit) = query.disposition_limit {
         records.truncate(limit);
     }
 
@@ -16055,6 +16618,84 @@ fn get_integration_activation_waiver_review_summary_output_handler_output(
                 integer(summary.review_ready_records as i64),
             ),
             ("blocked_records", integer(summary.blocked_records as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn list_integration_activation_waiver_dispositions_output_handler_output(
+    query: IntegrationActivationWaiverDispositionQuery,
+) -> ToolHandlerOutput {
+    let (records, catalog_count) = integration_activation_waiver_dispositions_for_query(&query);
+    let summary = IntegrationActivationWaiverDispositionSummary::from_records(records.iter());
+    let count = records.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_waiver_dispositions",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(activation_waiver_disposition_record_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_waiver_disposition_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_waiver_dispositions"),
+            ),
+            ("records", integer(count as i64)),
+            (
+                "review_pending_records",
+                integer(summary.review_pending_records as i64),
+            ),
+            (
+                "disposition_ready_records",
+                integer(summary.disposition_ready_records as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_waiver_disposition_summary_output_handler_output(
+    query: IntegrationActivationWaiverDispositionQuery,
+) -> ToolHandlerOutput {
+    let (records, _) = integration_activation_waiver_dispositions_for_query(&query);
+    let summary = IntegrationActivationWaiverDispositionSummary::from_records(records.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_waiver_disposition_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_waiver_disposition_summary"),
+            ),
+            ("total_records", integer(summary.total_records as i64)),
+            (
+                "records_requiring_attention",
+                integer(summary.records_requiring_attention as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            (
+                "disposition_ready_records",
+                integer(summary.disposition_ready_records as i64),
+            ),
             ("overall_status", string(summary.overall_status.as_str())),
         ]),
     )
@@ -29405,6 +30046,236 @@ fn integration_activation_waiver_review_summary_json(
     ])
 }
 
+fn activation_waiver_disposition_record_json(
+    record: &IntegrationActivationWaiverDispositionRecord,
+) -> JsonValue {
+    object([
+        ("sequence", integer(record.sequence as i64)),
+        ("disposition_id", string(&record.disposition_id)),
+        ("source_review_id", string(&record.source_review_id)),
+        ("source_waiver_id", string(&record.source_waiver_id)),
+        ("source_exception_id", string(&record.source_exception_id)),
+        ("source_ledger_id", string(&record.source_ledger_id)),
+        (
+            "source_attestation_id",
+            string(&record.source_attestation_id),
+        ),
+        ("source_compliance_id", string(&record.source_compliance_id)),
+        ("source_governance_id", string(&record.source_governance_id)),
+        ("source_assurance_id", string(&record.source_assurance_id)),
+        ("source_guardrail_id", string(&record.source_guardrail_id)),
+        (
+            "disposition_status",
+            string(record.disposition_status.as_str()),
+        ),
+        ("review_status", string(record.review_status.as_str())),
+        ("waiver_status", string(record.waiver_status.as_str())),
+        ("exception_status", string(record.exception_status.as_str())),
+        ("disposition_lane", string(record.disposition_lane.as_str())),
+        ("review_lane", string(record.review_lane.as_str())),
+        ("approval_lane", string(record.approval_lane.as_str())),
+        ("owner_lane", string(record.owner_lane.as_str())),
+        ("disposition_reason", string(&record.disposition_reason)),
+        ("disposition_action", string(&record.disposition_action)),
+        ("waiver_scope", string(&record.waiver_scope)),
+        ("evidence_kind", string(&record.evidence_kind)),
+        ("focus", string(record.focus.as_str())),
+        ("recommended_view", string(record.recommended_view.as_str())),
+        ("title", string(&record.title)),
+        ("summary", string(&record.summary)),
+        ("priority", integer(record.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                record
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(record.integration_ids.len() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(record.required_tier)),
+        ),
+        (
+            "policy_surface",
+            record
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "reviewer_required",
+            JsonValue::Bool(record.reviewer_required),
+        ),
+        (
+            "exception_required",
+            JsonValue::Bool(record.exception_required),
+        ),
+        ("signoff_required", JsonValue::Bool(record.signoff_required)),
+        ("evidence_ready", JsonValue::Bool(record.evidence_ready)),
+        ("waiver_ready", JsonValue::Bool(record.waiver_ready)),
+        ("review_ready", JsonValue::Bool(record.review_ready)),
+        (
+            "disposition_ready",
+            JsonValue::Bool(record.disposition_ready),
+        ),
+        (
+            "blocks_activation",
+            JsonValue::Bool(record.blocks_activation),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention),
+        ),
+        (
+            "has_source_lineage",
+            JsonValue::Bool(record.has_source_lineage()),
+        ),
+    ])
+}
+
+fn integration_activation_waiver_disposition_summary_json(
+    summary: &IntegrationActivationWaiverDispositionSummary,
+) -> JsonValue {
+    object([
+        ("total_records", integer(summary.total_records as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "records_requiring_attention",
+            integer(summary.records_requiring_attention as i64),
+        ),
+        ("blocked_records", integer(summary.blocked_records as i64)),
+        (
+            "review_pending_records",
+            integer(summary.review_pending_records as i64),
+        ),
+        (
+            "approval_ready_records",
+            integer(summary.approval_ready_records as i64),
+        ),
+        (
+            "disposition_ready_records",
+            integer(summary.disposition_ready_records as i64),
+        ),
+        (
+            "review_ready_records",
+            integer(summary.review_ready_records as i64),
+        ),
+        (
+            "waiver_ready_records",
+            integer(summary.waiver_ready_records as i64),
+        ),
+        (
+            "evidence_ready_records",
+            integer(summary.evidence_ready_records as i64),
+        ),
+        (
+            "source_linked_records",
+            integer(summary.source_linked_records as i64),
+        ),
+        (
+            "reviewer_required_records",
+            integer(summary.reviewer_required_records as i64),
+        ),
+        (
+            "exception_required_records",
+            integer(summary.exception_required_records as i64),
+        ),
+        (
+            "signoff_required_records",
+            integer(summary.signoff_required_records as i64),
+        ),
+        (
+            "incident_disposition_records",
+            integer(summary.incident_disposition_records as i64),
+        ),
+        (
+            "policy_disposition_records",
+            integer(summary.policy_disposition_records as i64),
+        ),
+        (
+            "dependency_disposition_records",
+            integer(summary.dependency_disposition_records as i64),
+        ),
+        (
+            "readiness_gap_disposition_records",
+            integer(summary.readiness_gap_disposition_records as i64),
+        ),
+        (
+            "platform_disposition_records",
+            integer(summary.platform_disposition_records as i64),
+        ),
+        (
+            "integration_disposition_records",
+            integer(summary.integration_disposition_records as i64),
+        ),
+        (
+            "security_disposition_records",
+            integer(summary.security_disposition_records as i64),
+        ),
+        (
+            "reviewer_disposition_records",
+            integer(summary.reviewer_disposition_records as i64),
+        ),
+        (
+            "verification_disposition_records",
+            integer(summary.verification_disposition_records as i64),
+        ),
+        (
+            "audit_disposition_records",
+            integer(summary.audit_disposition_records as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_priority",
+            summary
+                .first_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -32832,6 +33703,25 @@ fn parse_activation_waiver_review_status(
     }
 }
 
+fn parse_activation_waiver_disposition_status(
+    label: &str,
+) -> Result<IntegrationActivationWaiverDispositionStatus, ToolCallError> {
+    match label {
+        "review_pending" | "pending_review" | "review" | "reviewer_required" | "needs_review" => {
+            Ok(IntegrationActivationWaiverDispositionStatus::ReviewPending)
+        }
+        "approval_ready" | "ready" | "ready_to_approve" | "approved_ready" | "approve" => {
+            Ok(IntegrationActivationWaiverDispositionStatus::ApprovalReady)
+        }
+        "held" | "hold" | "blocked" | "blocker" | "rejected" | "reject" => {
+            Ok(IntegrationActivationWaiverDispositionStatus::Held)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation waiver disposition status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -35184,6 +36074,76 @@ fn integration_activation_waiver_review_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_waiver_disposition_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_waiver_review_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_status",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "disposition_status",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("disposition_lane", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_approval_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_owner_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_evidence_kind",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_ready",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "disposition_ready",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "waiver_disposition_limit",
+            JsonSchema::Integer,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "disposition_limit",
+            JsonSchema::Integer,
+        ));
+        push_if_absent(SchemaProperty::new("record_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -35328,7 +36288,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 157);
+        assert_eq!(definitions.len(), 159);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -35777,9 +36737,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_REVIEW_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_DISPOSITIONS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_DISPOSITION_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            149
+            151
         );
         assert_eq!(
             export
@@ -35987,6 +36953,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_REVIEW_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_DISPOSITIONS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_DISPOSITION_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(
@@ -36337,11 +37311,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(157))
+            Some(&integer(159))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(149))
+            Some(&integer(151))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -43206,6 +44180,151 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_waiver_dispositions_request = request(
+            "call-list-integration-activation-waiver-dispositions",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WAIVER_DISPOSITIONS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                (
+                    "waiver_disposition_requires_attention",
+                    JsonValue::Bool(true),
+                ),
+                ("waiver_disposition_limit", integer(3)),
+            ]),
+            5_083,
+        );
+        let list_activation_waiver_dispositions_trace =
+            tool_runtime.invoke_with_events(&list_activation_waiver_dispositions_request);
+        assert!(list_activation_waiver_dispositions_trace.result.ok);
+        assert_eq!(
+            list_activation_waiver_dispositions_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_waiver_dispositions_output = list_activation_waiver_dispositions_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_waiver_disposition_count =
+            integer_value(field(list_activation_waiver_dispositions_output, "count").unwrap())
+                .unwrap();
+        assert!((1..=3).contains(&activation_waiver_disposition_count));
+        let activation_waiver_disposition_summary =
+            field(list_activation_waiver_dispositions_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_waiver_disposition_summary, "total_records"),
+            Some(&integer(activation_waiver_disposition_count))
+        );
+        assert!(
+            integer_value(
+                field(
+                    activation_waiver_disposition_summary,
+                    "records_requiring_attention",
+                )
+                .unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_waiver_disposition_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_waiver_disposition = array_item(
+            field(
+                list_activation_waiver_dispositions_output,
+                "activation_waiver_dispositions",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_waiver_disposition, "disposition_id").is_some());
+        assert!(field(activation_waiver_disposition, "source_review_id").is_some());
+        assert!(field(activation_waiver_disposition, "source_waiver_id").is_some());
+        assert!(field(activation_waiver_disposition, "source_exception_id").is_some());
+        assert!(field(activation_waiver_disposition, "disposition_lane").is_some());
+        assert!(field(activation_waiver_disposition, "disposition_reason").is_some());
+        assert!(field(activation_waiver_disposition, "disposition_action").is_some());
+        assert_eq!(
+            field(activation_waiver_disposition, "has_source_lineage"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_waiver_disposition_summary_request = request(
+            "call-integration-activation-waiver-disposition-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WAIVER_DISPOSITION_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("waiver_disposition_blocked", JsonValue::Bool(true)),
+            ]),
+            5_084,
+        );
+        let activation_waiver_disposition_summary_trace =
+            tool_runtime.invoke_with_events(&activation_waiver_disposition_summary_request);
+        assert!(activation_waiver_disposition_summary_trace.result.ok);
+        assert_eq!(
+            activation_waiver_disposition_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_waiver_disposition_summary_output =
+            activation_waiver_disposition_summary_trace
+                .result
+                .output
+                .as_ref()
+                .unwrap();
+        let activation_waiver_disposition_rollup =
+            field(activation_waiver_disposition_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_waiver_disposition_rollup, "blocked_records").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_waiver_disposition_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -45206,6 +46325,14 @@ mod tests {
             activation_waiver_review_summary_request,
             activation_waiver_review_summary_trace,
         );
+        journal.record_trace(
+            list_activation_waiver_dispositions_request,
+            list_activation_waiver_dispositions_trace,
+        );
+        journal.record_trace(
+            activation_waiver_disposition_summary_request,
+            activation_waiver_disposition_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -45279,9 +46406,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 157);
-        assert_eq!(journal_summary.completed_count, 157);
-        assert_eq!(journal.audit_records().len(), 157);
+        assert_eq!(journal_summary.invocation_count, 159);
+        assert_eq!(journal_summary.completed_count, 159);
+        assert_eq!(journal.audit_records().len(), 159);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
