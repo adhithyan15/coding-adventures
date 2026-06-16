@@ -2845,6 +2845,10 @@ const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
   ".measure",
   "meas",
   ".meas",
+  "four",
+  ".four",
+  "fourier",
+  ".fourier",
   "print",
   ".print",
   "plot",
@@ -5690,7 +5694,12 @@ function controlBlockCommandAsDeckLine(line: string): string | undefined {
   if (command === undefined || !SUPPORTED_CONTROL_BLOCK_COMMANDS.has(command)) {
     return undefined;
   }
-  const directive = command.startsWith(".") ? command : `.${command}`;
+  const directive =
+    command === "four" || command === ".four" || command === "fourier" || command === ".fourier"
+      ? ".four"
+      : command.startsWith(".")
+        ? command
+        : `.${command}`;
   const rest = line.slice(parts[0].length).trimStart();
   return rest.length === 0 ? directive : `${directive} ${rest}`;
 }

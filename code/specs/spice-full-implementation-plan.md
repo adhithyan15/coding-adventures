@@ -35,8 +35,8 @@ downstream tools to compare.
      active deck and source-resolved solver input while body commands emit
      stable non-executed diagnostics, and selected `.control` block
      analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
-     `measure`, `meas`, `print`, and `plot`) now normalize into dotted deck
-     cards; parsed `.measure dc` / `.meas dc` cards now route DC
+     `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) now normalize
+     into dotted deck cards; parsed `.measure dc` / `.meas dc` cards now route DC
      sweep probe samples into the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
      optional frequency windows into the same measurement table surface; parsed
@@ -530,6 +530,14 @@ downstream tools to compare.
     - Unrecognized non-comment commands inside `.control` blocks remain
       diagnostic-only so unsupported control flow is still explicit.
 
+47. Selected `.control` Fourier routing.
+    - Status: completed in this selected control Fourier-routing slice.
+    - Python, Rust, and TypeScript now normalize selected `.control` block
+      harmonic output commands (`four` and `fourier`) into the same `.four`
+      deck cards consumed by existing Fourier resolvers.
+    - Unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
 ## Backlog
 
 1. Deck execution layer.
@@ -538,8 +546,8 @@ downstream tools to compare.
      selected measurement artifacts, selected Fourier artifacts, and selected
      run summaries, plus output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
-     routing and scoped `.save`, `.probe`, `.print`, and `.plot` selection
-     toward full SPICE compatibility.
+     routing and scoped `.save`, `.probe`, `.print`, `.plot`, and `.four`
+     selection toward full SPICE compatibility.
    - Expand the deliberate `.control` subset beyond simple analysis/output
      command routing, including control flow, variables, and script execution
      policy.

@@ -117,6 +117,8 @@ probe V(out)
 print op V(in)
 measure tran vmax MAX V(out)
 meas dc imax MAX I(V1)
+fourier 1k V(out)
+four 2k V(in)
 run
 .endc
 .end
@@ -133,12 +135,14 @@ run
         ".print op V(in)",
         ".measure tran vmax MAX V(out)",
         ".meas dc imax MAX I(V1)",
+        ".four 1k V(out)",
+        ".four 2k V(in)",
     )
     assert [(diag.directive, diag.line_number, diag.severity) for diag in summary.diagnostics] == [
         (".include", 2, "error"),
         (".lib", 3, "error"),
         (".control", 4, "error"),
-        (".control", 11, "error"),
+        (".control", 13, "error"),
     ]
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -153,6 +157,14 @@ run
     ] == [
         (".measure", "tran", "vmax", "max", "V(out)"),
         (".meas", "dc", "imax", "max", "I(V1)"),
+    ]
+    fourier_summary = resolve_deck_fourier("\n".join(summary.active_lines) + "\n.end")
+    assert [
+        (card.directive, card.fundamental_frequency, card.probes)
+        for card in fourier_summary.fourier
+    ] == [
+        (".four", 1000.0, ("V(out)",)),
+        (".four", 2000.0, ("V(in)",)),
     ]
 
 
@@ -212,6 +224,8 @@ probe V(b)
 print op V(a)
 measure tran vmax MAX V(a)
 meas dc imax MAX I(V1)
+fourier 1k V(a)
+four 2k V(b)
 run
 .endc
 .end
@@ -233,6 +247,8 @@ run
         ".print op V(a)",
         ".measure tran vmax MAX V(a)",
         ".meas dc imax MAX I(V1)",
+        ".four 1k V(a)",
+        ".four 2k V(b)",
     )
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_INCLUDE_NOT_FOUND",
@@ -243,7 +259,7 @@ run
     ]
     assert [(diag.directive, diag.line_number) for diag in summary.diagnostics[3:]] == [
         (".control", 5),
-        (".control", 12),
+        (".control", 14),
     ]
     measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
     assert [
@@ -252,6 +268,14 @@ run
     ] == [
         (".measure", "tran", "vmax", "max", "V(a)"),
         (".meas", "dc", "imax", "max", "I(V1)"),
+    ]
+    fourier_summary = resolve_deck_fourier("\n".join(summary.active_lines) + "\n.end")
+    assert [
+        (card.directive, card.fundamental_frequency, card.probes)
+        for card in fourier_summary.fourier
+    ] == [
+        (".four", 1000.0, ("V(a)",)),
+        (".four", 2000.0, ("V(b)",)),
     ]
     assert [(diag.source, diag.line_number, diag.target) for diag in summary.diagnostics[:3]] == [
         ("<deck>", 2, "missing.inc"),
