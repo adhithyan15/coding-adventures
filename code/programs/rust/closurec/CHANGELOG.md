@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.143.0] - 2026-06-16
+
+### Added (CLOC12.160 — SIMPLE pipeline gains `rename`)
+
+The `--compilation_level SIMPLE` pass pipeline is now
+`constant-fold → fold-control-flow → dce → inline → remove-unused-vars →
+treeshake → rename`. The final pass shortens the parameters of **leaf
+functions** (functions with no nested function) to short names, while keeping
+the potentially-externally-visible function name:
+
+```js
+function distance(horizontal, vertical) { return horizontal*horizontal + vertical*vertical; }
+distance(3, 4);
+//  ⇒  function distance(a,b){return a * a + b * b};distance(3,4);
+```
+
+`rename` runs last (it has no dependencies; registration order places it at the
+end) so it shortens names after every structural pass has finished. It relies
+on `closure-pass-rename` 0.3.0's conservative α-rename — property names, free
+globals, redeclared parameters, and non-leaf functions are all left untouched.
+
+- `SIMPLE_PASS_NAMES` is now
+  `[constant-fold, fold-control-flow, dce, inline, remove-unused-vars, treeshake, rename]`;
+  the `simple_v2` correlation-vector trace lists all seven.
+
+### Verified
+- New `tests/diff/simple-rename/` fixture + `tests/diff_simple_rename.rs`:
+  `function distance(horizontal, vertical) {…} distance(3, 4);` ⇒
+  `function distance(a,b){return a * a + b * b};distance(3,4);`.
+- New unit tests `simple_rename_shortens_leaf_function_params`,
+  `simple_rename_keeps_property_names` (property names preserved),
+  `simple_rename_whitespace_only_keeps_param_names`.
+- `simple_v2` CV test updated to expect all seven pass names.
+
 ## [0.142.0] - 2026-06-16
 
 ### Added (CLOC12.159 — SIMPLE pipeline gains `treeshake`)
