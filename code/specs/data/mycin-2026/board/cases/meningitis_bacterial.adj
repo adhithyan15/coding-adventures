@@ -1,0 +1,11 @@
+% Illustrative differential (board-eval REL-7): classic bacterial-meningitis CSF.
+% A neutrophil-predominant pleocytosis with low glucose points to bacterial over viral.
+prior 0.5 for bacterial_meningitis
+prior 0.5 for viral_meningitis
+contributes 9 from csf_neutrophils(high) to bacterial_meningitis
+contributes 7 from csf_glucose(low) to bacterial_meningitis
+contributes 6 from csf_lymphocytes(high) to viral_meningitis
+observe csf_neutrophils(high)
+observe csf_glucose(low)
+? bacterial_meningitis
+? viral_meningitis

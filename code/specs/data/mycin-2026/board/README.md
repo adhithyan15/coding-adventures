@@ -38,9 +38,14 @@ retires it; the scoreboard shows both** — with no change to this harness.
 
 | file | what it is |
 |---|---|
-| `items.json` | the board-style item bank — fact-recall questions as relational binding queries, each with a gold answer (or `ABSTAIN` for a deliberately-uncovered disease). |
-| `board_eval.py` | the harness — runs each item over the grounded graph (REL-1 `RelationStore`, pure Python, 0 model calls), scores correct/abstained/wrong, emits `board-scorecard.json`, exits non-zero on any fabrication. |
-| `test_board_eval.py` | pins the defensibility contract (never fabricate, covered→correct-with-proof, uncovered→abstain, grounded-coverage tracks trust). |
+| `items.json` | the board-style item bank. **recall** items (fact recall as a relational binding query, gold answer or `ABSTAIN`) + **differential** items (a diagnostic case, gold leader or `ABSTAIN`). |
+| `cases/*.adj` | differential case rulebooks — `prior`/`contributes` + observations + `? hypothesis` queries the native engine ranks. |
+| `board_eval.py` | the harness. **recall** is scored over the grounded graph (REL-1 `RelationStore`, pure Python, 0 model calls). **differential** runs the native `adj-lang-cli` on a case and reads its ranked decision — determinate→commit, kickback/empty→abstain. Scores correct/abstained/wrong, emits `board-scorecard.json`, exits non-zero on any fabrication. If the CLI binary is absent, differential items abstain and the run logs how many were skipped (no silent caps). |
+| `test_board_eval.py` | pins the defensibility contract for both tactics (never fabricate, covered→correct-with-proof, uncovered→abstain, differential commits only on decisive evidence, grounded-coverage tracks recall trust). |
+
+Two query tactics, one defensibility metric — boards test both fact recall and
+diagnostic reasoning, and both reduce to "answer-with-proof or abstain" over the
+same engine.
 
 ## Run
 

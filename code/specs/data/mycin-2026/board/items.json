@@ -22,6 +22,9 @@
     {"id": "msud_inherit",        "domain": "iem", "tactic": "recall", "relation": "inherited_as", "subject": "msud",            "var": "Pattern",   "gold": "autosomal_recessive"},
 
     {"id": "wilson_disease_enzyme", "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "wilson_disease", "var": "Enzyme", "gold": "ABSTAIN"},
-    {"id": "menkes_enzyme",         "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "menkes",         "var": "Enzyme", "gold": "ABSTAIN"}
+    {"id": "menkes_enzyme",         "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "menkes",         "var": "Enzyme", "gold": "ABSTAIN"},
+
+    {"id": "meningitis_bacterial_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_bacterial.adj", "gold": "bacterial_meningitis"},
+    {"id": "meningitis_equivocal_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_equivocal.adj", "gold": "ABSTAIN"}
   ]
 }

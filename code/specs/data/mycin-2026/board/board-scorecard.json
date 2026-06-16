@@ -1,9 +1,21 @@
 {
   "summary": {
-    "total": 20,
-    "correct": 18,
-    "abstained": 2,
+    "total": 22,
+    "correct": 19,
+    "abstained": 3,
     "wrong": 0,
+    "by_tactic": {
+      "differential": {
+        "correct": 1,
+        "abstained": 1,
+        "wrong": 0
+      },
+      "recall": {
+        "correct": 18,
+        "abstained": 2,
+        "wrong": 0
+      }
+    },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
     "grounded_coverage": 0.5,
@@ -165,6 +177,22 @@
     {
       "id": "menkes_enzyme",
       "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "meningitis_bacterial_dx",
+      "tactic": "differential",
+      "gold": "bacterial_meningitis",
+      "answer": "bacterial_meningitis",
+      "outcome": "correct",
+      "trust": null
+    },
+    {
+      "id": "meningitis_equivocal_dx",
+      "tactic": "differential",
       "gold": "ABSTAIN",
       "answer": null,
       "outcome": "abstained",
