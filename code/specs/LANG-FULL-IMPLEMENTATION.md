@@ -119,11 +119,15 @@ multiple languages; close an enabler before the features that depend on it.
       - ✅ **iir-to-wasm** (v0.15.0) — `uses_i64_register` selects `i64.*` ops; mask is
         `i64.const <mask>; i64.and` (now incl. `u32`). **Executed proof** on real `wasm-runtime`:
         `200i64 + 100i64 : u8 == 44`. Full matrix + wasm consumers green (no-op for i64 programs).
-      - ✅ **iir-to-jvm-class-file** (v0.13.0) — narrow unsigned → `JvmType::Long` (`J`
-        descriptor); long opcodes (`ladd`/`land`/…) over the long operands; mask is
-        `ldc2_w <mask>; land` (now incl. `u32`); long shift counts narrowed via `l2i`; `u4`
-        newly recognised. Structural proof `e2_u8_op_over_i64_operands_is_long`; full matrix
-        (real `java`) + jvm consumers green (no-op for i64 programs).
+      - ✅ **iir-to-jvm-class-file** (v0.13.1) — narrow unsigned use the **int model**
+        (`JvmType::Int`, `I` descriptor, `iadd`/`iand`, `sipush <mask>; iand`); `u4` newly
+        recognised. *(v0.13.0 tried a long model like wasm; reverted — the JVM runs
+        `lang_aot::concretize_scalar_any_for_jvm` which narrows scalar `i64`→`i32` before
+        lowering, so the long model left the narrow op `long` while consts/return were `int`
+        → unverifiable bytecode; the Nib u8 proof returned `None`.)* **Verified on real
+        `java`**: the lowered `200u8+100u8` returns `44`. Regression test
+        `e2_concretized_u8_shape_is_all_int` (post-concretize `const i32; add u8; ret i32` →
+        `iand` mask, no `ladd`/`lreturn`). Full matrix + jvm consumers green.
       - ✅ **iir-to-cil-bytecode** (v0.20.1) — **no rework needed**: the CIL backend is
         *uniformly int32* (`cil_local_type` maps every scalar incl. `i64` to `int32`; `const`
         emits `ldc.i4`), so a frontend's i64 consts collapse to int32 and the existing

@@ -2588,76 +2588,70 @@ fn has_seq(code: &[u8], seq: &[u8]) -> bool {
     code.windows(seq.len()).any(|w| w == seq)
 }
 
-// LANG-FULL E2: narrow unsigned types ride the `long` register model, so the
-// width mask is `ldc2_w <cp-idx>; land` — `LDC2_W` (0x14) + a 2-byte constant-
-// pool index + `LAND` (0x7F). The index is dynamic, so we match the shape.
-const LDC2_W: u8 = 0x14;
-const LAND: u8 = 0x7F;
+// LANG-FULL E2: narrow unsigned types use the JVM `int` model, so the width mask
+// is `sipush 0x00FF; iand` → bytes [0x11, 0x00, 0xFF, 0x7E]. (`SIPUSH` 0x11,
+// then the 2-byte short, then `IAND` 0x7E.) `LADD`/`LRETURN` (the long opcodes)
+// must NOT appear for a narrow op.
+const U8_MASK_SEQ: [u8; 4] = [0x11, 0x00, 0xFF, 0x7E];
 const LADD: u8 = 0x61;
-
-fn has_long_mask(code: &[u8]) -> bool {
-    code.windows(4).any(|w| w[0] == LDC2_W && w[3] == LAND)
-}
+const LRETURN: u8 = 0xAD;
 
 #[test]
 fn e2_u8_add_emits_iand_width_mask() {
     let class = lower(&module_with(e2_binop_fn("add", "u8")));
     let code = code_bytes(&class);
-    // The u8 add is a LONG add (LADD) followed by the long width mask.
-    assert!(code.contains(&LADD), "u8 `add` is a long op (LADD) in the i64 register model");
-    assert!(has_long_mask(&code), "u8 `add` must emit `ldc2_w 255; land` to wrap mod-256");
+    assert!(has_seq(&code, &U8_MASK_SEQ),
+        "u8 `add` must emit `sipush 255; iand` (int model) to wrap mod-256");
+    assert!(!code.contains(&LADD), "u8 `add` is an int op, not a long `ladd`");
 }
 
 #[test]
 fn e2_u8_not_and_shl_emit_width_mask() {
-    // `not` (synthesised as long XOR -1) and a left shift both need the mask.
+    // `not` (synthesised as int XOR -1) and a left shift both need the byte mask.
     let not_fn = IIRFunction::new("main", vec![], "u8", vec![
         IIRInstr::new("const", Some("a".into()), vec![Operand::Int(0)], "u8"),
         IIRInstr::new("not", Some("c".into()), vec![Operand::Var("a".into())], "u8"),
         IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "u8"),
     ]);
     let class = lower(&module_with(not_fn));
-    assert!(has_long_mask(&code_bytes(&class)), "u8 `not` must mask to a byte");
+    assert!(has_seq(&code_bytes(&class), &U8_MASK_SEQ), "u8 `not` must mask to a byte");
 
     let shl_class = lower(&module_with(e2_binop_fn("shl", "u8")));
-    assert!(has_long_mask(&code_bytes(&shl_class)), "u8 `shl` must mask to a byte");
+    assert!(has_seq(&code_bytes(&shl_class), &U8_MASK_SEQ), "u8 `shl` must mask to a byte");
 }
 
 #[test]
 fn e2_i64_and_u32_add_have_no_byte_mask() {
-    // i64/u64 carry their full width via the long op — no mask. (u32 now DOES
-    // mask: within a 64-bit register a 32-bit op no longer self-wraps, so it
-    // gets `ldc2_w 0xFFFFFFFF; land` — see `e2_u32_add_masks` below.)
-    for ty in ["i64", "u64"] {
+    // i64 uses the long opcodes; u32 wraps natively via the 32-bit int op — so
+    // neither emits the `sipush 255; iand` byte mask.
+    for ty in ["i64", "u32"] {
         let class = lower(&module_with(e2_binop_fn("add", ty)));
-        assert!(!has_long_mask(&code_bytes(&class)),
-            "{ty} `add` must not emit a width mask");
+        assert!(!has_seq(&code_bytes(&class), &U8_MASK_SEQ),
+            "{ty} `add` must not emit a byte-width mask");
     }
 }
 
+/// LANG-FULL E2 regression: the shape a real frontend emits AFTER
+/// `lang_aot::concretize_scalar_any_for_jvm` runs — it narrows a scalar
+/// module's `i64`→`i32` (the jvm-simulator is 32-bit and the entry must
+/// `ireturn`), leaving the narrow-unsigned op alone. So the JVM backend sees
+/// `const i32; const i32; add u8; ret i32`. The narrow op must use the **int**
+/// model (`iadd` + `iand`, NOT `ladd`/`land`) so it is operand-consistent with
+/// the concretized i32 consts, and the method must `ireturn` (not `lreturn`).
+/// A v0.13.0 attempt to type the narrow op `long` produced unverifiable
+/// bytecode here (`istore` consts feeding an `lmul`, `lreturn` from an `int`
+/// method) — this test guards against that regression. (`200u8+100u8` → `44`.)
 #[test]
-fn e2_u32_add_masks() {
-    // Under the i64 register model a u32 add is a long add that must be masked
-    // back to 32 bits (it no longer self-wraps as a native i32 op would).
-    let class = lower(&module_with(e2_binop_fn("add", "u32")));
-    assert!(has_long_mask(&code_bytes(&class)), "u32 `add` must mask to 32 bits");
-}
-
-/// LANG-FULL E2 regression: a narrow `u8` op whose **operands are `i64`** — the
-/// shape a real frontend emits (Nib materialises every const/let as i64 and
-/// carries the narrow width only on the op). Before the long-model rework this
-/// produced an `iadd` over `long` operands → JVM verify error. Now the u8 add is
-/// a `ladd` over the long operands, then `ldc2_w 0xFF; land`.
-#[test]
-fn e2_u8_op_over_i64_operands_is_long() {
-    let f = IIRFunction::new("main", vec![], "i64", vec![
-        IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i64"),
-        IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i64"),
+fn e2_concretized_u8_shape_is_all_int() {
+    let f = IIRFunction::new("main", vec![], "i32", vec![
+        IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i32"),
+        IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i32"),
         IIRInstr::new("add", Some("c".into()),
             vec![Operand::Var("a".into()), Operand::Var("b".into())], "u8"),
-        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i32"),
     ]);
     let code = code_bytes(&lower(&module_with(f)));
-    assert!(code.contains(&LADD), "u8 add over i64 operands must be a long add (LADD)");
-    assert!(has_long_mask(&code), "and then masked to a byte (ldc2_w 0xFF; land)");
+    assert!(has_seq(&code, &U8_MASK_SEQ), "u8 add over i32 operands masks with `sipush 255; iand`");
+    assert!(!code.contains(&LADD), "must be an int `iadd`, not a long `ladd`");
+    assert!(!code.contains(&LRETURN), "must `ireturn` (int method), not `lreturn`");
 }
