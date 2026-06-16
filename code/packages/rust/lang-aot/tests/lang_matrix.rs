@@ -366,7 +366,7 @@ const PROGRAMS: &[Prog] = &[
         src: "fn side() -> u8 { out(1, 5); return 1; } \
                fn main() { if 1 == 2 && side() == 1 { out(1, 1); } else { out(1, 9); } }",
         expect: Expect::Stdout("9"),
-        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Oct — `||` SHORT-CIRCUIT, PROVEN observably. `1 == 1` is true, so `side()` (in the
     // right operand) must be skipped → output `7`. Eager would print `5` then `7`.
@@ -376,7 +376,7 @@ const PROGRAMS: &[Prog] = &[
         src: "fn side() -> u8 { out(1, 5); return 1; } \
                fn main() { if 1 == 1 || side() == 1 { out(1, 7); } else { out(1, 9); } }",
         expect: Expect::Stdout("7"),
-        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {

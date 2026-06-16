@@ -3,6 +3,28 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.3] — 2026-06-16 (Oct `&&`/`||` run on the JVM — BA-JVM-1 follow-through)
+
+### Fixed — a `mov` bridges int↔long when the dest slot width differs
+
+With BA-JVM-1 (0.13.2) typing comparison dests `int`, Oct's short-circuit `&&`/
+`||` exposed the next link in the same chain: it `mov`s an `int` (bool) comparison
+result into a `long`-typed accumulator (Oct keeps the i64 value model — it
+`out`-prints, so it skips the scalar concretize-to-i32 pass). The `mov` handler
+stored using the SOURCE type, so it `istore`d an int into the `long` accumulator
+slot, leaving the slot's second half uninitialized — a later `lload` of the
+accumulator (the `jmp_if_false` guard) tripped `VerifyError: uninitialized
+register pair 5/6`.
+
+Fix: the `mov` handler now stores with the DEST slot's type, inserting `i2l`
+(int→long) or `l2i` (long→int) when the source and dest widths differ. The
+Int/Bool-constant `mov` cases widen with `i2l` into a long dest too. **Verified
+on real `java`**: Oct's `&&` short-circuit (`1==2 && side()` → `9`, side NOT
+called) and `||` (`1==1 || side()` → `7`) now run on the JVM; both added to the
+matrix JVM column. With this, EVERY `lang_matrix.rs` program runs on all 7
+backends. New test `mov_int_bool_into_long_accumulator_widens_with_i2l`; full
+matrix + jvm consumers green.
+
 ## [0.13.2] — 2026-06-16 (LANG-FULL BA-JVM-1 — BASIC `IF`/`FOR` run on the JVM)
 
 ### Fixed — a comparison's dest slot is `int`, so an i64-operand guard verifies

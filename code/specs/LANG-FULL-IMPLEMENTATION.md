@@ -209,9 +209,14 @@ backend immediately) come before the enabler-dependent items.
 - ✅ **O1** — `&&` / `||` short-circuit (was eager bitwise). `compile_short_circuit` (result
   slot + jmp_if_false/jmp/label). **Proven by running** via a side-effecting function call in
   the RHS: `if 1 == 2 && side() == 1 { … } else { out(1, 9) }` where `side()` prints 5 →
-  stdout `9` (old eager printed `5`,`9`); `||` analogue → `7`. Across native/LLVM/WASM/CLR/VM/JIT
-  (JVM = BA-JVM-1). Also fixed Oct non-void function returns to materialise as `i64` (the
-  `side() -> u8` helper exposed `define i8 @side()` mismatching its i64 body on LLVM).
+  stdout `9` (old eager printed `5`,`9`); `||` analogue → `7`. Across **all 7 backends** —
+  the JVM column was unblocked as a BA-JVM-1 follow-through (iir-to-jvm-class-file 0.13.3): a
+  `mov` now bridges int↔long when the dest slot width differs, so Oct's bool comparison result
+  mov'd into a `long` short-circuit accumulator (Oct keeps the i64 value model) widens with
+  `i2l` instead of leaving the long slot's second half uninitialized. With this, **every
+  `lang_matrix.rs` program runs on all 7 backends**. Also fixed Oct non-void function returns
+  to materialise as `i64` (the `side() -> u8` helper exposed `define i8 @side()` mismatching its
+  i64 body on LLVM).
 - ☐ **O2** — proper `~` 8-bit mask + u8 wrap (needs **E2**).
 - ☐ **O3** — `static` globals (currently silently dropped) — now verifiable via `out`.
 - ☐ **O4** — ⚠ Intel-8008 intrinsics (`in`/`out`/`adc`/`sbb`/`rlc`/`rrc`/`ral`/`rar`/`carry`/`parity`).

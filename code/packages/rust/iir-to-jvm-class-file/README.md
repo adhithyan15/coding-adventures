@@ -230,6 +230,12 @@ two-pass scan:
 The same variable name always maps to the same slot within one function.
 This is a simple linear scan — no liveness analysis, no spilling.
 
+A `mov` whose source and destination slots differ in width **bridges** them with
+`i2l`/`l2i`: e.g. a bool/int comparison result moved into a `long` accumulator
+(Oct's `&&`/`||` short-circuit over its i64 value model) widens with `i2l` before
+`lstore`, so the long slot's second half is initialised — otherwise a later
+`lload` of it fails JVM verification ("uninitialized register pair").
+
 ## Label/jump backpatching
 
 The lowering pass emits `goto` and `if*` instructions with a two-byte placeholder
