@@ -248,6 +248,37 @@ pub fn combine(args: &[Arg]) -> SValue {
 }
 
 // ===========================================================================
+// Bounded sequence construction (the `:` operator and seq())
+// ===========================================================================
+
+/// The largest number of elements a `:` sequence or `seq()` may materialize.
+/// This caps memory use against crafted input — without it, a one-liner like
+/// `1:1e18` would try to allocate an exabyte-scale vector and abort the
+/// process. ~16.7M elements is far beyond any realistic interactive use.
+pub const MAX_SEQ_LEN: usize = 1 << 24;
+
+/// Build the inclusive numeric sequence from `from` to `to` stepping by ±1,
+/// refusing non-finite bounds and any span that would exceed [`MAX_SEQ_LEN`].
+/// Shared by the `:` operator and the `seq()` built-in so the bound cannot
+/// drift between them.
+pub fn bounded_sequence(from: f64, to: f64) -> SResult<Vec<f64>> {
+    if !from.is_finite() || !to.is_finite() {
+        return Err(SError::BadArgs("sequence bounds must be finite".into()));
+    }
+    let span = (to - from).abs();
+    if span >= MAX_SEQ_LEN as f64 {
+        return Err(SError::BadArgs(format!(
+            "sequence of length {} exceeds the limit of {}",
+            span.floor() as u64 + 1,
+            MAX_SEQ_LEN
+        )));
+    }
+    let n = span.floor() as usize + 1;
+    let step = if to >= from { 1.0 } else { -1.0 };
+    Ok((0..n).map(|k| from + step * k as f64).collect())
+}
+
+// ===========================================================================
 // Element-wise arithmetic and comparison (recycling + NA propagation)
 // ===========================================================================
 

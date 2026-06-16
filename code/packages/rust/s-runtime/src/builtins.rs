@@ -8,7 +8,7 @@
 
 use crate::env::{define, Env};
 use crate::error::{SError, SResult};
-use crate::value::{combine, Arg, SValue};
+use crate::value::{bounded_sequence, combine, Arg, SValue};
 use r_vector::Double;
 use statistics_core::{descriptive, Number, StatsError};
 
@@ -82,11 +82,7 @@ fn b_seq(args: &[Arg]) -> SResult<SValue> {
         [from, to, ..] => (*from, *to),
         [] => return Err(SError::BadArgs("seq requires at least one argument".into())),
     };
-    let n = (to - from).abs().floor() as usize + 1;
-    let step = if to >= from { 1.0 } else { -1.0 };
-    Ok(SValue::doubles(
-        (0..n).map(|k| from + step * k as f64).collect(),
-    ))
+    Ok(SValue::doubles(bounded_sequence(from, to)?))
 }
 
 // ===========================================================================

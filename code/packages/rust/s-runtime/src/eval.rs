@@ -19,7 +19,9 @@
 use crate::builtins;
 use crate::env::{define, lookup, Env, Scope};
 use crate::error::{SError, SResult};
-use crate::value::{arithmetic, compare, format_value, index, negate, Arg, Param, SValue};
+use crate::value::{
+    arithmetic, bounded_sequence, compare, format_value, index, negate, Arg, Param, SValue,
+};
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use r_vector::{is_na_real, na_real, Double};
@@ -42,6 +44,27 @@ pub struct Interpreter {
     global: Env,
     out: RefCell<String>,
     visible: Cell<bool>,
+    /// Current `eval_node` recursion depth, bounded by [`MAX_EVAL_DEPTH`] so
+    /// that pathologically nested input (e.g. thousands of nested parens, or a
+    /// runaway recursive S function) returns a clean error instead of
+    /// overflowing the native stack and aborting the process.
+    depth: Cell<usize>,
+}
+
+/// Maximum `eval_node` recursion depth. The precedence cascade adds roughly a
+/// dozen frames per source nesting level, so this allows comfortably deep
+/// real programs (including ordinary recursion) while staying well under the
+/// native stack limit.
+const MAX_EVAL_DEPTH: usize = 3000;
+
+/// RAII guard that decrements the interpreter's depth counter on scope exit,
+/// so every early `return`/`?` in `eval_node` is accounted for.
+struct DepthGuard<'a>(&'a Cell<usize>);
+
+impl Drop for DepthGuard<'_> {
+    fn drop(&mut self) {
+        self.0.set(self.0.get().saturating_sub(1));
+    }
 }
 
 impl Default for Interpreter {
@@ -59,6 +82,7 @@ impl Interpreter {
             global,
             out: RefCell::new(String::new()),
             visible: Cell::new(false),
+            depth: Cell::new(0),
         }
     }
 
@@ -106,6 +130,15 @@ impl Interpreter {
     // -----------------------------------------------------------------------
 
     fn eval_node(&self, node: &GrammarASTNode, env: &Env) -> SResult<SValue> {
+        // Bound recursion so deeply nested input cannot overflow the stack.
+        self.depth.set(self.depth.get() + 1);
+        let _guard = DepthGuard(&self.depth);
+        if self.depth.get() > MAX_EVAL_DEPTH {
+            return Err(SError::Parse(
+                "evaluation nested too deeply (possible infinite recursion)".into(),
+            ));
+        }
+
         match node.rule_name.as_str() {
             // Pure pass-through wrappers: delegate to the single child node and
             // preserve its visibility.
@@ -185,9 +218,7 @@ impl Interpreter {
         }
         let from = scalar_f64(&self.eval_node(nodes[0], env)?)?;
         let to = scalar_f64(&self.eval_node(nodes[1], env)?)?;
-        let n = (to - from).abs().floor() as usize + 1;
-        let step = if to >= from { 1.0 } else { -1.0 };
-        let vals: Vec<f64> = (0..n).map(|k| from + step * k as f64).collect();
+        let vals = bounded_sequence(from, to)?;
         self.as_visible(SValue::doubles(vals))
     }
 

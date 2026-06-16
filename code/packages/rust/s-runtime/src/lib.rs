@@ -275,6 +275,33 @@ mod tests {
         ));
     }
 
+    // --- Resource bounds (crafted-input safety) -------------------------
+
+    #[test]
+    fn overlong_sequence_is_rejected_not_allocated() {
+        // `1:1e18` must not try to allocate an exabyte-scale vector.
+        assert!(matches!(eval_s("1:1e18\n"), Err(SError::BadArgs(_))));
+        assert!(matches!(eval_s("seq(1e18)\n"), Err(SError::BadArgs(_))));
+    }
+
+    #[test]
+    fn infinite_sequence_bounds_are_rejected() {
+        assert!(matches!(eval_s("1:Inf\n"), Err(SError::BadArgs(_))));
+    }
+
+    #[test]
+    fn runaway_recursion_errors_instead_of_overflowing() {
+        // A non-terminating recursive function must hit the depth guard and
+        // return an error rather than overflowing the native stack. Run on a
+        // generously sized stack so the guard (not the OS) is what stops it.
+        // Reduce to a Send-able bool inside the thread (SValue/SError hold Rc).
+        let handle = std::thread::Builder::new()
+            .stack_size(64 * 1024 * 1024)
+            .spawn(|| matches!(eval_s("f <- function() f()\nf()\n"), Err(SError::Parse(_))))
+            .unwrap();
+        assert!(handle.join().unwrap(), "runaway recursion should be caught");
+    }
+
     #[test]
     fn session_state_persists_across_calls() {
         let interp = Interpreter::new();
