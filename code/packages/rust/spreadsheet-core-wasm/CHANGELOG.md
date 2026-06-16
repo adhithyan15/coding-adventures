@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0
+
+**`get_display_window`** — a windowed read returning each cell's **formatted
+display string**, the format-aware sibling of `get_window`. Wraps the engine's
+`Workbook::get_display_window` (added in `spreadsheet-core` 0.6.0) at the JSON
+boundary so a virtualized host fetches a dense, ready-to-paint rectangle per
+frame instead of re-deriving number formatting in JS.
+
+- `get_display_window(row0, col0, row1, col1) -> String` →
+  `{"row0":1,"col0":1,"rows":R,"cols":C,"cells":[["1,234.50",…],…]}`, a row-major
+  `R×C` array of display strings (empty cells `""`). A bad request
+  (inverted / oversized / 0-coord) returns `{"error":"#REF!"}`, mirroring
+  `get_window`.
+- 1 new test (formatted/percent/text/empty cells row-major + the bounds guards).
+
 ## 0.4.0
 
 **Cell display formats.** `set_format(a1, code)` / `get_format(a1)` /

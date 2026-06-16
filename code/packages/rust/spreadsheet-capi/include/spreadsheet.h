@@ -62,6 +62,11 @@ void  sc_delete_cols(ScSession *s, uint32_t at, uint32_t count);
 /* -> {"row0":..,"col0":..,"rows":R,"cols":C,"values":[[value,..],..]} | {"error":".."} */
 char *sc_get_window(ScSession *s, uint32_t row0, uint32_t col0,
                     uint32_t row1, uint32_t col1);
+/* Like sc_get_window, but each cell is its display string (value rendered through
+   its format code); empty cells are "". The one read a virtualized grid needs. */
+/* -> {"row0":..,"col0":..,"rows":R,"cols":C,"cells":[["1,234.50",..],..]} | {"error":".."} */
+char *sc_get_display_window(ScSession *s, uint32_t row0, uint32_t col0,
+                            uint32_t row1, uint32_t col1);
 char *sc_used_range(ScSession *s);              /* -> {"minRow":..,..} | null            */
 char *sc_column_letters(ScSession *s, uint32_t index); /* 1-based index -> "A"/"AA"/...   */
 uint64_t sc_current_revision(ScSession *s);     /* per-edit revision clock (0 if s==NULL) */

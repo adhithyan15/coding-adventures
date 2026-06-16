@@ -277,6 +277,26 @@ pub unsafe extern "C" fn sc_get_window(
     into_cstr((*s).inner.get_window(row0, col0, row1, col1))
 }
 
+/// `get_display_window(row0, col0, row1, col1)` → display-window JSON (each cell
+/// is its value rendered through its format code). See
+/// [`SpreadsheetSession::get_display_window`]. Returns null only on a null `s`.
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_get_display_window(
+    s: *mut ScSession,
+    row0: u32,
+    col0: u32,
+    row1: u32,
+    col1: u32,
+) -> *mut c_char {
+    if s.is_null() {
+        return ptr::null_mut();
+    }
+    into_cstr((*s).inner.get_display_window(row0, col0, row1, col1))
+}
+
 /// `used_range()` → data-extent JSON, or the literal `null`. See
 /// [`SpreadsheetSession::used_range`].
 ///
@@ -418,6 +438,18 @@ mod tests {
             let w = take(sc_get_window(s, 1, 1, 1, 3));
             assert!(w.contains(r#""rows":1"#) && w.contains(r#""cols":3"#), "{w}");
             assert!(w.contains(r#"{"kind":"number","value":18.0}"#), "{w}");
+
+            // Display window: a formatted cell paints its rendered string.
+            let cf = CString::new("A1").unwrap();
+            let cc = CString::new("#,##0.00").unwrap();
+            sc_set_format(s, cf.as_ptr(), cc.as_ptr());
+            let dw = take(sc_get_display_window(s, 1, 1, 1, 3));
+            assert!(dw.contains(r#""cells""#) && dw.contains("15.00"), "{dw}");
+            assert_eq!(
+                take(sc_get_display_window(s, 0, 0, 5, 5)),
+                r##"{"error":"#REF!"}"##
+            );
+            assert!(sc_get_display_window(ptr::null_mut(), 1, 1, 1, 1).is_null());
 
             assert!(take(sc_used_range(s)).contains(r#""maxCol":3"#));
             assert_eq!(take(sc_column_letters(s, 27)), "AA");

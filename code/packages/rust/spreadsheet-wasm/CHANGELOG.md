@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.5.0
+
+**`get_display_window` over the WASM ABI.** New
+`get_display_window(row0, col0, row1, col1) -> *mut u8` export (integer coords
+passed directly, packed JSON result), delegating to the thread-local
+`SpreadsheetSession`. Like `get_window` but each cell is its display string
+(value rendered through its format code; empty cells `""`) — the per-frame read
+for a virtualized grid. The ABI round-trip test now also drives it (formatted
+cell + bad-window guard).
+
+Also rounds out the JS loader (`js/spreadsheet-engine-wasm.mjs`) to mirror the
+full ABI: it now surfaces `getDisplayWindow` plus the format trio (`setFormat` /
+`getFormat` / `getDisplay`, ABI exports since 0.4.0) and the structural edits
+(`insertRows` / `deleteRows` / `insertCols` / `deleteCols`, since 0.3.0) — which
+were compiled into the `.wasm` but not yet exposed in the loader. The committed
+`pkg/spreadsheet_engine.wasm` is rebuilt, and `js/smoke.mjs` now drives
+`getDisplayWindow` against the real module (formatted display strings +
+bad-window guard).
+
 ## 0.4.0
 
 **Cell display formats over the WASM ABI.** New `set_format(a1, code)` (void),

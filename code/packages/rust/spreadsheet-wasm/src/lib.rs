@@ -277,6 +277,14 @@ pub extern "C" fn get_window(row0: u32, col0: u32, row1: u32, col1: u32) -> *mut
     pack(SESSION.with(|s| s.borrow().get_window(row0, col0, row1, col1)))
 }
 
+/// `get_display_window(row0, col0, row1, col1)` → display-window JSON (each cell
+/// rendered through its format code; 1-based, inclusive). See
+/// [`SpreadsheetSession::get_display_window`].
+#[no_mangle]
+pub extern "C" fn get_display_window(row0: u32, col0: u32, row1: u32, col1: u32) -> *mut u8 {
+    pack(SESSION.with(|s| s.borrow().get_display_window(row0, col0, row1, col1)))
+}
+
 /// `used_range()` → data-extent JSON, or the literal `null`. See
 /// [`SpreadsheetSession::used_range`].
 #[no_mangle]
@@ -477,6 +485,12 @@ mod tests {
         let w = take(get_window(1, 1, 1, 3));
         assert!(w.contains(r#""rows":1"#) && w.contains(r#""cols":3"#), "{w}");
         assert!(w.contains(r#"{"kind":"number","value":18.0}"#), "{w}");
+
+        // Display window: a formatted cell paints its rendered string.
+        set_fmt("A1", "#,##0.00");
+        let dw = take(get_display_window(1, 1, 1, 3));
+        assert!(dw.contains(r#""cells""#) && dw.contains("15.00"), "{dw}");
+        assert_eq!(take(get_display_window(0, 0, 5, 5)), r##"{"error":"#REF!"}"##);
 
         // used_range covers A1..C1.
         let u = take(used_range());

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0
+
+**`sc_get_display_window` over the C ABI.** New
+`sc_get_display_window(s, row0, col0, row1, col1)` (→ display-window JSON, freed
+with `sc_string_free`), declared in `include/spreadsheet.h`. Like `sc_get_window`
+but each cell is its display string (value rendered through its format code;
+empty cells `""`) — the one read a native virtualized grid needs per frame.
+Delegates to `SpreadsheetSession::get_display_window`; null-session safe. The C
+ABI round-trip test now also exercises it (formatted cell + bad-window/null
+guards).
+
 ## 0.4.0
 
 **Cell display formats over the C ABI.** New `sc_set_format(s, a1, code)` (void),
