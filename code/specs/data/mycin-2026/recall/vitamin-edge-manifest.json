@@ -1,0 +1,166 @@
+{
+  "kind": "vitamin-edge",
+  "clauses": {
+    "deficiency_causes__thiamine": {
+      "relation": "deficiency_causes",
+      "subject": "thiamine",
+      "object": "beriberi",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Thiamine (vitamin B1) deficiency causes beriberi.",
+      "url": null
+    },
+    "classic_finding__thiamine": {
+      "relation": "classic_finding",
+      "subject": "thiamine",
+      "object": "wernicke_encephalopathy",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Thiamine deficiency causes Wernicke encephalopathy (confusion, ophthalmoplegia, ataxia).",
+      "url": null
+    },
+    "deficiency_causes__niacin": {
+      "relation": "deficiency_causes",
+      "subject": "niacin",
+      "object": "pellagra",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Niacin (vitamin B3) deficiency causes pellagra.",
+      "url": null
+    },
+    "classic_finding__niacin": {
+      "relation": "classic_finding",
+      "subject": "niacin",
+      "object": "dermatitis_diarrhea_dementia",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Pellagra (niacin deficiency) classically presents with the triad of dermatitis, diarrhea, and dementia.",
+      "url": null
+    },
+    "deficiency_causes__cobalamin": {
+      "relation": "deficiency_causes",
+      "subject": "cobalamin",
+      "object": "megaloblastic_anemia",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Cobalamin (vitamin B12) deficiency causes megaloblastic anemia.",
+      "url": null
+    },
+    "classic_finding__cobalamin": {
+      "relation": "classic_finding",
+      "subject": "cobalamin",
+      "object": "subacute_combined_degeneration",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin B12 deficiency causes subacute combined degeneration of the spinal cord.",
+      "url": null
+    },
+    "deficiency_causes__folate": {
+      "relation": "deficiency_causes",
+      "subject": "folate",
+      "object": "megaloblastic_anemia",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Folate (vitamin B9) deficiency causes megaloblastic anemia (without neurologic deficits).",
+      "url": null
+    },
+    "classic_finding__folate": {
+      "relation": "classic_finding",
+      "subject": "folate",
+      "object": "neural_tube_defects",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Periconceptional folate deficiency is associated with fetal neural tube defects.",
+      "url": null
+    },
+    "deficiency_causes__vitamin_c": {
+      "relation": "deficiency_causes",
+      "subject": "vitamin_c",
+      "object": "scurvy",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin C (ascorbic acid) deficiency causes scurvy.",
+      "url": null
+    },
+    "classic_finding__vitamin_c": {
+      "relation": "classic_finding",
+      "subject": "vitamin_c",
+      "object": "impaired_collagen_synthesis",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin C is a cofactor for collagen hydroxylation; its deficiency impairs collagen synthesis.",
+      "url": null
+    },
+    "deficiency_causes__vitamin_d": {
+      "relation": "deficiency_causes",
+      "subject": "vitamin_d",
+      "object": "rickets",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin D deficiency causes rickets in children.",
+      "url": null
+    },
+    "classic_finding__vitamin_d": {
+      "relation": "classic_finding",
+      "subject": "vitamin_d",
+      "object": "osteomalacia",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin D deficiency causes osteomalacia in adults.",
+      "url": null
+    },
+    "deficiency_causes__vitamin_a": {
+      "relation": "deficiency_causes",
+      "subject": "vitamin_a",
+      "object": "night_blindness",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin A deficiency causes night blindness (nyctalopia).",
+      "url": null
+    },
+    "classic_finding__vitamin_a": {
+      "relation": "classic_finding",
+      "subject": "vitamin_a",
+      "object": "xerophthalmia",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin A deficiency causes xerophthalmia and corneal damage.",
+      "url": null
+    },
+    "deficiency_causes__vitamin_k": {
+      "relation": "deficiency_causes",
+      "subject": "vitamin_k",
+      "object": "coagulopathy",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin K deficiency causes a bleeding diathesis (coagulopathy).",
+      "url": null
+    },
+    "classic_finding__vitamin_k": {
+      "relation": "classic_finding",
+      "subject": "vitamin_k",
+      "object": "prolonged_prothrombin_time",
+      "status": "pending",
+      "verdict": "FLAG",
+      "trust": "consensus",
+      "source": "Vitamin K deficiency prolongs the prothrombin time (PT/INR).",
+      "url": null
+    }
+  },
+  "hash": "3669d51c58fd4456"
+}

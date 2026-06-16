@@ -24,6 +24,16 @@
     {"id": "wilson_disease_enzyme", "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "wilson_disease", "var": "Enzyme", "gold": "ABSTAIN"},
     {"id": "menkes_enzyme",         "domain": "iem", "tactic": "recall", "relation": "deficient_in", "subject": "menkes",         "var": "Enzyme", "gold": "ABSTAIN"},
 
+    {"id": "thiamine_disease", "domain": "vitamin", "tactic": "recall", "relation": "deficiency_causes", "subject": "thiamine",   "var": "Disease", "gold": "beriberi"},
+    {"id": "niacin_disease",   "domain": "vitamin", "tactic": "recall", "relation": "deficiency_causes", "subject": "niacin",     "var": "Disease", "gold": "pellagra"},
+    {"id": "b12_disease",      "domain": "vitamin", "tactic": "recall", "relation": "deficiency_causes", "subject": "cobalamin",  "var": "Disease", "gold": "megaloblastic_anemia"},
+    {"id": "vitc_disease",     "domain": "vitamin", "tactic": "recall", "relation": "deficiency_causes", "subject": "vitamin_c",  "var": "Disease", "gold": "scurvy"},
+    {"id": "vitd_disease",     "domain": "vitamin", "tactic": "recall", "relation": "deficiency_causes", "subject": "vitamin_d",  "var": "Disease", "gold": "rickets"},
+    {"id": "vita_disease",     "domain": "vitamin", "tactic": "recall", "relation": "deficiency_causes", "subject": "vitamin_a",  "var": "Disease", "gold": "night_blindness"},
+    {"id": "b12_finding",      "domain": "vitamin", "tactic": "recall", "relation": "classic_finding",   "subject": "cobalamin",  "var": "Finding", "gold": "subacute_combined_degeneration"},
+    {"id": "thiamine_finding", "domain": "vitamin", "tactic": "recall", "relation": "classic_finding",   "subject": "thiamine",   "var": "Finding", "gold": "wernicke_encephalopathy"},
+    {"id": "biotin_disease",   "domain": "vitamin", "tactic": "recall", "relation": "deficiency_causes", "subject": "biotin",     "var": "Disease", "gold": "ABSTAIN"},
+
     {"id": "meningitis_bacterial_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_bacterial.adj", "gold": "bacterial_meningitis"},
     {"id": "meningitis_equivocal_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_equivocal.adj", "gold": "ABSTAIN"}
   ]

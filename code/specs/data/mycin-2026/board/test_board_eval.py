@@ -22,7 +22,7 @@ import board_eval as be  # noqa: E402
 
 def _card():
     items = json.loads((HERE / "items.json").read_text())["items"]
-    store = be.recall.parse_edges(be.RECALL / "iem-edges.adj")
+    store = be.load_store()
     return be.score(items, store), items
 
 
@@ -38,12 +38,16 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["tay_sachs_enzyme"].answer == "hexosaminidase_a"
     # A correct recall answer carries the citing edge's trust tier (its proof).
     assert by_id["tay_sachs_enzyme"].trust is not None
-    # REL-6 expanded the bank to 18 covered recall items across 12 diseases.
+    # The bank spans two domains: 18 IEM disease items + 8 vitamin-deficiency items
+    # (REL-10) = 26 covered recall items.
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 18
-    # A REL-6 disease answers correctly too (its edge is in the graph, consensus-tier).
+    assert len(recall_correct) == 26
+    # A REL-6 disease answers correctly too (its edge is in the graph).
     assert by_id["fabry_enzyme"].outcome == "correct"
     assert by_id["fabry_enzyme"].answer == "alpha_galactosidase_a"
+    # The REL-10 vitamin domain resolves over the same merged store.
+    assert by_id["thiamine_disease"].outcome == "correct"
+    assert by_id["thiamine_disease"].answer == "beriberi"
 
 
 def test_uncovered_items_abstain_not_fabricate() -> None:
@@ -65,18 +69,17 @@ def test_defensibility_is_full() -> None:
 def test_grounded_coverage_is_the_live_grounding_number() -> None:
     card, _ = _card()
     s = card.summary()
-    # The live number tracked the whole arc: REL-4b grounded 9 (→90%), REL-6
-    # expansion added authored-debt (→50%), and REL-8 re-ran the spider over every
-    # disease — now ALL 18 recall board answers cite a spider-grounded (authoritative)
-    # edge. grounded-coverage = 100%. Expansion added debt; grounding retired it.
-    assert s["grounded_coverage"] == 1.0
+    # The live number tracks expansion + grounding across domains. The 18 IEM answers
+    # are fully spider-grounded (REL-8). REL-10 then added a 2nd domain — 8 vitamin
+    # answers as authored-debt (consensus) — so grounded-coverage dipped 100% → 69%
+    # (18 grounded / 26 recall correct). Grounding the vitamin edges climbs it back.
+    assert s["grounded_coverage"] == round(18 / 26, 4)   # 0.6923
     assert s["grounded_correct"] == 18
     by_id = {r.item_id: r for r in card.results}
-    # Every recall answer is now spider-grounded — including the REL-6 diseases and
-    # the former lesch_nyhan direction_only holdout.
+    # IEM answers are spider-grounded; the new vitamin answers are consensus (debt).
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"
     assert by_id["lesch_nyhan_enzyme"].trust == "authoritative"
-    assert by_id["fabry_enzyme"].trust == "authoritative"
+    assert by_id["thiamine_disease"].trust == "consensus"
 
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:
@@ -123,7 +126,7 @@ def test_differential_runs_natively_when_cli_present() -> None:
 def _card_with_diff():
     import json
     items = json.loads((HERE / "items.json").read_text())["items"]
-    store = be.recall.parse_edges(be.RECALL / "iem-edges.adj")
+    store = be.load_store()
     return be.score(items, store), items
 
 
