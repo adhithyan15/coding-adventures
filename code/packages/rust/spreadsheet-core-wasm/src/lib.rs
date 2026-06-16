@@ -52,8 +52,10 @@ use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 use serde_json::{json, Value};
+use spreadsheet_core::parser::parse;
 use spreadsheet_core::{
-    column_index_to_letters, CellAddress, CellValue, ChangeSet, SheetId, SpreadsheetError, Workbook,
+    column_index_to_letters, CellAddress, CellValue, ChangeSet, SheetId, SpreadsheetError,
+    StructuralEdit, Workbook,
 };
 
 /// A single-sheet spreadsheet session with a JSON boundary.
@@ -128,6 +130,72 @@ impl SpreadsheetSession {
             self.wb.set_value(self.sheet, addr, coerce_literal(trimmed));
         }
         Ok(())
+    }
+
+    // ── Structural edits: insert / delete rows & columns ────────────
+    //
+    // These call through to the engine (which relocates cells and rewrites every
+    // formula's references) AND keep this facade's `raw` echo map in step: each
+    // raw entry's address is relocated the same way, and a formula's *source* is
+    // rewritten via the shared `parse → adjust → to_formula_string` so the
+    // formula bar echoes the post-edit references. Coordinates are 1-based.
+
+    /// Insert `count` blank rows before row `at`; rows at/after slide down.
+    pub fn insert_rows(&mut self, at: u32, count: u32) {
+        self.structural_edit(StructuralEdit::InsertRows { at, count });
+    }
+
+    /// Delete `count` rows starting at row `at`; rows after slide up. Cells on
+    /// deleted rows are removed; references to them become `#REF!`.
+    pub fn delete_rows(&mut self, at: u32, count: u32) {
+        self.structural_edit(StructuralEdit::DeleteRows { at, count });
+    }
+
+    /// Insert `count` blank columns before column `at`; columns at/after slide right.
+    pub fn insert_cols(&mut self, at: u32, count: u32) {
+        self.structural_edit(StructuralEdit::InsertCols { at, count });
+    }
+
+    /// Delete `count` columns starting at column `at`; columns after slide left.
+    pub fn delete_cols(&mut self, at: u32, count: u32) {
+        self.structural_edit(StructuralEdit::DeleteCols { at, count });
+    }
+
+    fn structural_edit(&mut self, edit: StructuralEdit) {
+        // Mirror the engine's guard: an insert that would push a non-empty cell
+        // off the u32 grid edge is rejected wholesale (the saturating shift would
+        // otherwise collide raw entries onto the same address). Both sides apply
+        // the same condition, so the facade and engine stay consistent.
+        let would_overflow = match edit {
+            StructuralEdit::InsertRows { at, count } => self
+                .raw
+                .keys()
+                .any(|a| a.row >= at && a.row.checked_add(count).is_none()),
+            StructuralEdit::InsertCols { at, count } => self
+                .raw
+                .keys()
+                .any(|a| a.col >= at && a.col.checked_add(count).is_none()),
+            StructuralEdit::DeleteRows { .. } | StructuralEdit::DeleteCols { .. } => false,
+        };
+        if would_overflow {
+            return;
+        }
+
+        match edit {
+            StructuralEdit::InsertRows { at, count } => self.wb.insert_rows(self.sheet, at, count),
+            StructuralEdit::DeleteRows { at, count } => self.wb.delete_rows(self.sheet, at, count),
+            StructuralEdit::InsertCols { at, count } => self.wb.insert_cols(self.sheet, at, count),
+            StructuralEdit::DeleteCols { at, count } => self.wb.delete_cols(self.sheet, at, count),
+        }
+
+        // Relocate the raw echo map to match: move each entry's address, drop
+        // entries on deleted lines, and rewrite formula sources.
+        let old = std::mem::take(&mut self.raw);
+        for (addr, raw) in old {
+            if let Some(new_addr) = addr.adjust(edit) {
+                self.raw.insert(new_addr, rewrite_raw_for_edit(&raw, edit));
+            }
+        }
     }
 
     /// Get a cell's *computed* value as a JSON object (see [`value_to_json`] for
@@ -267,6 +335,23 @@ fn coerce_literal(s: &str) -> CellValue {
     CellValue::Text(s.to_string())
 }
 
+/// Rewrite a raw cell source for a [`StructuralEdit`], so the formula bar echoes
+/// the post-edit references. A literal is unchanged (it has no references); a
+/// formula is re-parsed, its references adjusted via the shared `edit` arithmetic,
+/// and re-serialized. An unparseable formula is kept verbatim — there's nothing
+/// to rewrite, and the source must survive for the user to fix.
+fn rewrite_raw_for_edit(raw: &str, edit: StructuralEdit) -> String {
+    let trimmed = raw.trim();
+    if trimmed.starts_with('=') {
+        match parse(trimmed) {
+            Ok(ast) => format!("={}", ast.adjust(edit).to_formula_string()),
+            Err(_) => raw.to_string(),
+        }
+    } else {
+        raw.to_string()
+    }
+}
+
 /// Encode a [`CellValue`] as the JSON the JS host expects. The shape matches
 /// the TypeScript engine's `CellValue` discriminated union exactly, so the
 /// demo glue is identical whichever engine backs it:
@@ -330,6 +415,53 @@ mod tests {
         // Change a precedent → the total recomputes.
         s.set_cell("B1", "115");
         assert_eq!(s.get_value("B6"), r#"{"kind":"number","value":146.0}"#);
+    }
+
+    // ── Structural edits: insert / delete rows & columns ────────────
+
+    #[test]
+    fn insert_rows_shifts_values_raw_and_formula_refs() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "10");
+        s.set_cell("A2", "20");
+        s.set_cell("A3", "=SUM(A1:A2)");
+        assert_eq!(s.get_value("A3"), r#"{"kind":"number","value":30.0}"#);
+
+        s.insert_rows(1, 1); // a blank row at the top; everything slides down
+
+        assert_eq!(s.get_value("A1"), r#"{"kind":"empty"}"#); // now blank
+        assert_eq!(s.get_value("A2"), r#"{"kind":"number","value":10.0}"#); // was A1
+        assert_eq!(s.get_value("A4"), r#"{"kind":"number","value":30.0}"#); // SUM moved
+        // Echo: the SUM moved to A4 and its range rewrote A1:A2 → A2:A3.
+        assert_eq!(s.get_raw("A4"), "=SUM(A2:A3)");
+        assert_eq!(s.get_raw("A1"), ""); // nothing there now
+    }
+
+    #[test]
+    fn delete_cols_makes_dangling_reference_ref_error() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "10");
+        s.set_cell("B1", "=A1+1");
+        s.delete_cols(1, 1); // delete column A
+
+        // B1 → A1, and its reference A1 (now deleted) → #REF!.
+        assert_eq!(s.get_value("A1"), r##"{"code":"#REF!","kind":"error"}"##);
+        // The echoed source shows the dangling reference (binary ops are fully
+        // parenthesised by the serializer).
+        assert_eq!(s.get_raw("A1"), "=(#REF!+1)");
+    }
+
+    #[test]
+    fn delete_rows_shifts_survivors_up() {
+        let mut s = SpreadsheetSession::new();
+        s.set_cell("A1", "10");
+        s.set_cell("A2", "20");
+        s.set_cell("A3", "=A2*2");
+        s.delete_rows(1, 1); // delete row 1
+
+        assert_eq!(s.get_value("A1"), r#"{"kind":"number","value":20.0}"#); // was A2
+        assert_eq!(s.get_value("A2"), r#"{"kind":"number","value":40.0}"#); // =A1*2
+        assert_eq!(s.get_raw("A2"), "=(A1*2)");
     }
 
     #[test]

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+**Insert/delete rows & columns over the C ABI.** New `void`-returning exports
+`sc_insert_rows` / `sc_delete_rows` / `sc_insert_cols` / `sc_delete_cols(s, at,
+count)` (1-based), declared in `include/spreadsheet.h`. They delegate to
+`SpreadsheetSession`'s new structural-edit methods; the host re-reads via
+`sc_get_window` / `sc_get_raw` afterwards. Null-session safe (no-op).
+
 ## 0.2.0
 
 Viewport C ABI for the virtualized infinite sheet, mirroring

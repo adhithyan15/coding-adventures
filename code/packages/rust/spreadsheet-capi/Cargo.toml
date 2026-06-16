@@ -1,6 +1,6 @@
 [package]
 name = "spreadsheet-capi"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Stable C ABI over the spreadsheet engine, for the native VisiCalc demos (Swift/Kotlin-JNI/Dart-FFI/.NET/C++)"
 license = "MIT"

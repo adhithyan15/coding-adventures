@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+**Insert/delete rows & columns.** `insert_rows` / `delete_rows` / `insert_cols`
+/ `delete_cols(at, count)` (1-based) call through to the engine — which relocates
+cells and rewrites every formula's references (a reference to a deleted line →
+`#REF!`) — and keep this facade's `raw` echo map in step: each raw entry's
+address is relocated the same way, and a formula's *source* is rewritten via the
+shared `parse → FormulaAst::adjust → to_formula_string`, so the formula bar
+echoes the post-edit references. An insert that would push a non-empty cell off
+the u32 grid edge is rejected wholesale (mirrors the engine's guard). 3 new tests.
+
 ## 0.2.0
 
 Viewport primitive (for the virtualized infinite sheet), wrapping

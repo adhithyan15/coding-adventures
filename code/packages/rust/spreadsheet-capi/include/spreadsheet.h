@@ -40,6 +40,15 @@ char *sc_get_value(ScSession *s, const char *a1);                 /* -> value JS
 char *sc_get_raw(ScSession *s, const char *a1);                   /* -> typed source */
 char *sc_get_values(ScSession *s);                                /* -> {a1: value} */
 
+/* Structural edits — insert/delete rows & columns. 1-based `at`, `count` lines.
+   The engine relocates cells and rewrites formula references (a reference to a
+   deleted line becomes #REF!); the formula echo stays in step. No return — the
+   host re-reads via sc_get_window / sc_get_raw afterwards. */
+void  sc_insert_rows(ScSession *s, uint32_t at, uint32_t count);
+void  sc_delete_rows(ScSession *s, uint32_t at, uint32_t count);
+void  sc_insert_cols(ScSession *s, uint32_t at, uint32_t count);
+void  sc_delete_cols(ScSession *s, uint32_t at, uint32_t count);
+
 /* Viewport primitive — read just the visible window of the unbounded sheet.
    Coordinates are 1-based and inclusive. Each char* result must be freed with
    sc_string_free(). */

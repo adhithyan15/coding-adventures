@@ -157,6 +157,59 @@ pub unsafe extern "C" fn sc_get_values(s: *mut ScSession) -> *mut c_char {
     into_cstr((*s).inner.get_values())
 }
 
+// ── Structural edits: insert / delete rows & columns ─────────────────
+// 1-based `at`, `count` lines. The engine relocates cells and rewrites every
+// formula's references; the facade keeps its raw echo map in step. No return —
+// the host re-reads via get_window / get_raw after the edit.
+
+/// `insert_rows(at, count)`. See [`SpreadsheetSession::insert_rows`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_insert_rows(s: *mut ScSession, at: u32, count: u32) {
+    if s.is_null() {
+        return;
+    }
+    (*s).inner.insert_rows(at, count);
+}
+
+/// `delete_rows(at, count)`. See [`SpreadsheetSession::delete_rows`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_delete_rows(s: *mut ScSession, at: u32, count: u32) {
+    if s.is_null() {
+        return;
+    }
+    (*s).inner.delete_rows(at, count);
+}
+
+/// `insert_cols(at, count)`. See [`SpreadsheetSession::insert_cols`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_insert_cols(s: *mut ScSession, at: u32, count: u32) {
+    if s.is_null() {
+        return;
+    }
+    (*s).inner.insert_cols(at, count);
+}
+
+/// `delete_cols(at, count)`. See [`SpreadsheetSession::delete_cols`].
+///
+/// # Safety
+/// `s` must be a valid session.
+#[no_mangle]
+pub unsafe extern "C" fn sc_delete_cols(s: *mut ScSession, at: u32, count: u32) {
+    if s.is_null() {
+        return;
+    }
+    (*s).inner.delete_cols(at, count);
+}
+
 // ── Viewport primitive (virtualized infinite sheet) ──────────────────
 // Integer coordinates (1-based, inclusive) so a native scrolling host can fetch
 // just the visible window of an unbounded sheet.
