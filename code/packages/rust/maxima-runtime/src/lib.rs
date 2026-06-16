@@ -43,23 +43,76 @@
 //! `Display` text as `Err(String)` so a REPL can show it without leaking a Rust
 //! backtrace.
 //!
-//! ## Panic-safety at the trust boundary
+//! ## Robustness at the trust boundary
 //!
-//! The underlying `macsyma-lexer` **panics** (rather than returning an error)
-//! when it meets a character it cannot tokenize — e.g. a stray `@`. Since
-//! `feed` is a trust boundary that takes arbitrary user text, a single bad
-//! keystroke must not abort an interactive session. So `feed` runs the
-//! evaluation inside [`std::panic::catch_unwind`] and turns any unwinding panic
-//! into a clean `Err(String)`. The tokenizer panics *before* it mutates session
-//! state, so the wrapped [`MacsymaSession`] stays consistent and usable
-//! afterwards; the [`AssertUnwindSafe`](std::panic::AssertUnwindSafe) wrapper is
-//! sound here because all the code involved is panic-safe ordinary Rust (no
-//! `unsafe`, no half-updated invariants that could be observed). This is a
-//! defensive shim in the façade; the proper upstream fix is for the lexer to
-//! return a `Result` instead of panicking.
+//! `feed` takes arbitrary user text, so it is the trust boundary for the whole
+//! reused Macsyma stack. Three failure modes of that stack are contained here so
+//! a single bad input can never crash or wedge an interactive session:
+//!
+//! 1. **Unwinding panics.** The `macsyma-lexer` *panics* (rather than returning
+//!    an error) on a character it cannot tokenize — e.g. a stray `@`. `feed`
+//!    runs evaluation inside [`std::panic::catch_unwind`] and converts any
+//!    unwinding panic into a clean `Err(String)`.
+//!
+//! 2. **Stack overflow from unbounded recursion.** The Macsyma parser and the
+//!    `symbolic-vm` recurse on expression nesting with no depth limit, so deeply
+//!    nested input — thousands of `(`, a long run of prefix `-`, or a long
+//!    `1+1+1+…` chain — builds a correspondingly deep tree. That overflows the
+//!    stack while *parsing/evaluating* it, and again later when the tree is
+//!    *dropped* (the wrapped session retains it in its `%o` history). A stack
+//!    overflow is **not** a catchable panic; it aborts the whole process, and
+//!    `catch_unwind` cannot stop it. Three layered guards close this:
+//!    `feed` rejects input longer than [`MAX_INPUT_LEN`]; it rejects any single
+//!    statement whose structural-symbol count exceeds [`MAX_STATEMENT_SYMBOLS`]
+//!    (an upper bound on the resulting tree depth, since a tree of *n* internal
+//!    operator/bracket nodes is at most *n* deep), so a pathologically deep tree
+//!    is never built in the first place; and it runs evaluation on a dedicated
+//!    worker thread with a large, bounded stack ([`EVAL_STACK_SIZE`]) and builds
+//!    the echo string there, so even the bounded trees are created *and dropped*
+//!    on the big stack rather than the caller's.
+//!
+//! 3. **A poisoned session after a caught panic.** Some Macsyma handlers hold an
+//!    internal `Mutex` while running; a panic there would poison it and make
+//!    *every* later call fail. So whenever `feed` catches a panic it **rebuilds
+//!    the wrapped session from scratch**, trading the lost `%o` history and
+//!    bindings for a guaranteed-usable session on the next call. (On the common
+//!    lexer-panic path nothing was mutated, so this is cheap and lossless in
+//!    practice.)
+//!
+//! The [`AssertUnwindSafe`](std::panic::AssertUnwindSafe) wrapper is sound here
+//! because the code involved is ordinary safe Rust (no `unsafe`, no observable
+//! half-updated invariant — and any logical inconsistency is erased by the
+//! rebuild in (3)). These are defensive shims in the façade; the proper upstream
+//! fixes are for the lexer to return a `Result` and for the parser/VM to carry a
+//! recursion-depth limit.
 
 use macsyma_runtime::MacsymaSession;
 use std::panic::{catch_unwind, AssertUnwindSafe};
+
+/// Maximum length, in bytes, of a single source chunk handed to [`feed`].
+///
+/// A cheap first gate that bounds total memory/time per call. 64 KiB is far
+/// beyond any realistic interactive submission.
+pub const MAX_INPUT_LEN: usize = 64 * 1024;
+
+/// Maximum number of structural (operator/bracket/punctuation) symbols allowed
+/// in any single top-level statement.
+///
+/// The depth of the IRNode tree a statement parses to is bounded above by the
+/// number of operator/bracket *tokens* it contains, which is in turn bounded by
+/// the count of non-identifier symbol characters. Capping that per statement
+/// therefore caps the tree depth, so the parser/VM (and the later `Drop` of the
+/// tree) cannot be driven into a stack-overflowing recursion. 2000 operators in
+/// one statement is already absurd for human-written Maxima, so the cap never
+/// bites legitimate input.
+pub const MAX_STATEMENT_SYMBOLS: usize = 2000;
+
+/// Stack size of the worker thread that runs evaluation.
+///
+/// With the per-statement complexity cap bounding tree depth, this is generous
+/// headroom: it lets the bounded-but-still-deep trees be built and dropped well
+/// clear of any overflow, regardless of the caller's own (possibly small) stack.
+const EVAL_STACK_SIZE: usize = 512 * 1024 * 1024;
 
 /// A persistent Maxima session.
 ///
@@ -93,30 +146,117 @@ impl MaximaSession {
     /// empty string. A parse/surface error is returned as `Err` with the
     /// evaluator's own message.
     pub fn feed(&mut self, src: &str) -> Result<String, String> {
-        // The macsyma tokenizer panics on characters it cannot lex, so guard
-        // the whole evaluation against an unwinding panic and surface it as an
-        // ordinary error (see the module-level "Panic-safety" note). On the
-        // happy path this is a no-op; on a bad-input panic the session is left
-        // untouched (the panic fires before any mutation) and remains usable.
+        // Guard 1: bound total input size (cheap memory/time gate).
+        if src.len() > MAX_INPUT_LEN {
+            return Err(format!(
+                "input too large: {} bytes exceeds the {}-byte limit",
+                src.len(),
+                MAX_INPUT_LEN
+            ));
+        }
+        // Guard 2: reject any over-complex statement so no stack-overflowing tree
+        // is ever built (see the module "Robustness" note and the const docs).
+        check_statement_complexity(src)?;
+
+        // Guard 3: run evaluation — and the echo formatting that walks the result
+        // trees — on a worker thread with a large, bounded stack, so the bounded
+        // trees are built and dropped clear of the caller's (possibly small)
+        // stack; and Guard 4 (unwinding panics): catch the macsyma lexer's
+        // panic-on-bad-input and turn it into an ordinary error. Only the small
+        // `String` echo (or an error message) crosses back to the caller.
         let inner = &mut self.inner;
-        let evaluated = catch_unwind(AssertUnwindSafe(|| inner.eval_source(src)));
-        let results = match evaluated {
-            Ok(Ok(results)) => results,
-            Ok(Err(e)) => return Err(format!("{e}")),
-            Err(payload) => return Err(panic_message(payload)),
-        };
-        let mut out = String::new();
-        for r in results {
-            if r.display {
-                // Maxima echoes a displayed result as `(%o«n») «value»`. The
-                // output_index is Macsyma's 1-based %o counter, carried through
-                // verbatim; output_text is whatever the macsyma pretty-printer
-                // selected (single-line, or a 2-D box when display2d is on).
-                out.push_str(&format!("(%o{}) {}\n", r.output_index, r.output_text));
+        let outcome = std::thread::scope(|scope| {
+            std::thread::Builder::new()
+                .stack_size(EVAL_STACK_SIZE)
+                .spawn_scoped(scope, || {
+                    catch_unwind(AssertUnwindSafe(|| match inner.eval_source(src) {
+                        Ok(results) => {
+                            let mut out = String::new();
+                            for r in results {
+                                if r.display {
+                                    // Maxima echoes a displayed result as
+                                    // `(%o«n») «value»`: output_index is the
+                                    // 1-based %o counter, output_text is whatever
+                                    // the macsyma pretty-printer selected.
+                                    out.push_str(&format!(
+                                        "(%o{}) {}\n",
+                                        r.output_index, r.output_text
+                                    ));
+                                }
+                            }
+                            // The (possibly deep) result trees drop here, on the
+                            // big worker stack.
+                            Ok(out)
+                        }
+                        Err(e) => Err(format!("{e}")),
+                    }))
+                })
+                .expect("failed to spawn maxima evaluation thread")
+                .join()
+        });
+
+        match outcome {
+            // Normal path: the worker produced the echo (or a surface error).
+            Ok(Ok(Ok(out))) => Ok(out),
+            Ok(Ok(Err(message))) => Err(message),
+            // A panic the worker caught (e.g. the lexer's bad-input panic), or a
+            // panic that escaped the catch and unwound the join. Either way the
+            // session may be inconsistent / mutex-poisoned, so rebuild it before
+            // returning, so the *next* call is guaranteed usable rather than
+            // failing forever on a poisoned lock.
+            Ok(Err(payload)) | Err(payload) => {
+                self.inner = MacsymaSession::new();
+                Err(panic_message(payload))
             }
         }
-        Ok(out)
     }
+}
+
+/// Reject input whose per-statement structural complexity could drive the
+/// parser/VM — or the later `Drop` of the resulting tree — into a deep,
+/// stack-overflowing recursion.
+///
+/// A statement's IRNode tree is at most as deep as the number of operator /
+/// bracket tokens it contains, which is bounded by the count of non-identifier
+/// "structural" symbol characters. We count those per top-level statement
+/// (resetting at each `;`/`$` that lies outside a `"`-string) and refuse the
+/// whole chunk if any statement exceeds [`MAX_STATEMENT_SYMBOLS`]. The scan is a
+/// single linear pass and treats string contents as opaque so an operator-heavy
+/// string literal is not mistaken for deep structure.
+fn check_statement_complexity(src: &str) -> Result<(), String> {
+    let mut symbols: usize = 0;
+    let mut in_string = false;
+    let mut escaped = false;
+    for ch in src.chars() {
+        if in_string {
+            if escaped {
+                escaped = false;
+            } else if ch == '\\' {
+                escaped = true;
+            } else if ch == '"' {
+                in_string = false;
+            }
+            continue;
+        }
+        match ch {
+            '"' => in_string = true,
+            // End of a statement — the next statement starts fresh.
+            ';' | '$' => symbols = 0,
+            // Identifiers, numbers, and whitespace are leaves / separators: they
+            // do not deepen the tree.
+            c if c.is_alphanumeric() || c == '_' || c.is_whitespace() => {}
+            // Anything else is a structural symbol (operator, bracket, comma, …).
+            _ => {
+                symbols += 1;
+                if symbols > MAX_STATEMENT_SYMBOLS {
+                    return Err(format!(
+                        "statement too complex: more than {MAX_STATEMENT_SYMBOLS} operators/brackets in one statement"
+                    ));
+                }
+            }
+        }
+    }
+    Ok(())
 }
 
 /// Evaluate `src` once on a fresh [`MaximaSession`] and return its echo.
@@ -230,5 +370,71 @@ mod tests {
         let mut s = MaximaSession::new();
         let two = s.feed("1 + 1;").unwrap();
         assert_eq!(one, two);
+    }
+
+    #[test]
+    fn oversized_input_is_rejected_before_evaluation() {
+        // A chunk past the length cap is refused outright (Guard 1), bounding the
+        // worst-case recursion the parser/VM can be driven to.
+        let huge = format!("{}1;", "1+".repeat(MAX_INPUT_LEN));
+        assert!(huge.len() > MAX_INPUT_LEN);
+        let err = eval(&huge).unwrap_err();
+        assert!(
+            err.contains("too large"),
+            "expected a size error, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn deeply_nested_brackets_are_rejected_not_aborted() {
+        // Thousands of nested parens used to abort the process via stack
+        // overflow (on creation and again on drop). The complexity cap now
+        // rejects them with a clean error before any deep tree is built.
+        let depth = 20_000;
+        let src = format!("{}1{};", "(".repeat(depth), ")".repeat(depth));
+        assert!(src.len() <= MAX_INPUT_LEN, "stays under the length cap");
+        let err = eval(&src).unwrap_err(); // must not abort the process
+        assert!(
+            err.contains("too complex"),
+            "expected a complexity error: {err:?}"
+        );
+    }
+
+    #[test]
+    fn long_chain_of_prefix_operators_is_rejected() {
+        // The non-bracketed recursion vector: a long run of unary minus, also a
+        // former abort. Rejected by the complexity cap, never parsed.
+        let src = format!("{}x;", "-".repeat(5_000));
+        assert!(src.len() <= MAX_INPUT_LEN);
+        assert!(eval(&src).unwrap_err().contains("too complex"));
+    }
+
+    #[test]
+    fn long_binary_chain_is_rejected() {
+        // `1+1+1+…` builds a left-deep tree as deep as the number of `+`; the
+        // cap rejects it before that tree (or its drop) can overflow.
+        let src = format!("{}1;", "1+".repeat(5_000));
+        assert!(src.len() <= MAX_INPUT_LEN);
+        assert!(eval(&src).unwrap_err().contains("too complex"));
+    }
+
+    #[test]
+    fn moderate_nesting_still_evaluates() {
+        // The cap is far above realistic input: a modestly nested expression
+        // well under the limit still evaluates normally.
+        let depth = 40;
+        let src = format!("{}1 + 2{};", "(".repeat(depth), ")".repeat(depth));
+        let out = eval(&src).unwrap();
+        assert!(out.contains('3'), "((…1 + 2…)) should fold to 3: {out:?}");
+    }
+
+    #[test]
+    fn the_session_survives_and_recovers_after_a_panic() {
+        // A bad-input panic is caught and the session is rebuilt, so the very
+        // next statement works (rather than failing forever on a poisoned lock).
+        let mut s = MaximaSession::new();
+        assert!(s.feed("@@@;").is_err());
+        let out = s.feed("3 + 4;").unwrap();
+        assert!(out.contains('7'), "session should recover: {out:?}");
     }
 }
