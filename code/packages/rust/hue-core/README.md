@@ -121,6 +121,8 @@ packages a typed surface for:
   readiness into final archive activation checks
 - Hue package release archive rollout summaries that turn archive activation
   readiness into final archive rollout checks
+- Hue package release archive adoption summaries that turn archive rollout
+  readiness into final archive adoption checks
 
 ## Dependencies
 
