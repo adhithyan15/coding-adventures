@@ -38,10 +38,14 @@ def test_scenario_selection_and_provenance():
     assert "pseudomonas" in neuro.organisms
 
 
-def test_allergy_becomes_exclusion():
-    cop = cc.compile_cop([cc.ChartFact("allergy", "penicillin", "anaphylaxis")])
-    assert "betalactam_allergy_severe" in cop.exclusions
-    assert any(c["type"] == "exclusion" for c in cop.constraints)
+def test_allergy_activates_a_context():
+    # CC-3b: a penicillin allergy activates the "penicillin_allergy" CONTEXT (the engine then
+    # derives the side-chain-scoped exclusions in derive()) — it no longer adds a blanket token.
+    cop = cc.compile_cop([cc.ChartFact("allergy", "penicillin", "rash")])
+    assert cop.active_contexts == {"penicillin_allergy"}
+    assert not cop.exclusions
+    ctx = [c for c in cop.constraints if c["type"] == "context" and c["detail"] == "penicillin_allergy"]
+    assert len(ctx) == 1 and ctx[0]["from"] == "allergy=penicillin"
 
 
 def test_culture_resistance_becomes_defeated_edge():
@@ -103,10 +107,18 @@ def test_pregnancy_engine_behaviour():
     # pregnancy-contraindicated); moxifloxacin/tmp_smx are flagged contraindicated.
     ok = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("pregnancy", "present")])
     assert ok["regimen"] and {"moxifloxacin", "tmp_smx"} <= set(ok["contraindicated"])
-    # Pregnant + penicillin allergy → β-lactams AND the fluoroquinolone/TMP-SMX alternatives
-    # all excluded → honest abstention with the conflict named.
+    # CC-3b: pregnant + PENICILLIN allergy is now FEASIBLE — a penicillin allergy excludes only
+    # penicillins (ampicillin), NOT 3rd-gen cephalosporins, so vancomycin + ceftriaxone stands
+    # (ceftriaxone cross-reactivity <1%). ampicillin + the pregnancy drugs are contraindicated.
+    pcn = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("pregnancy", "present"),
+                          cc.ChartFact("allergy", "penicillin")])
+    assert pcn["regimen"] and "ceftriaxone" in pcn["regimen"], pcn
+    assert {"ampicillin", "moxifloxacin", "tmp_smx"} <= set(pcn["contraindicated"])
+    # Pregnant + an UNSPECIFIED whole-class β-lactam allergy → penicillins/cephalosporins/
+    # carbapenems all out (only aztreonam survives, which can't cover S. pneumoniae) AND the
+    # fluoroquinolone/TMP-SMX alternatives are pregnancy-contraindicated → honest abstention.
     none = cc.derive(cli, [cc.ChartFact("age_band", "adult"), cc.ChartFact("pregnancy", "present"),
-                           cc.ChartFact("allergy", "penicillin")])
+                           cc.ChartFact("allergy", "betalactam")])
     assert none["regimen"] is None and none["outcome"] == "infeasible" and none["conflict"] is not None
 
 
@@ -231,9 +243,9 @@ def test_unmapped_fact_is_discarded_not_ignored():
     cop = cc.compile_cop([cc.ChartFact("age_band", "adult"),
                           cc.ChartFact("favorite_color", "blue")])
     assert any("favorite_color" in d["fact"] and d["reason"] for d in cop.discards)
-    # An allergen with no grounded exclusion rule yet is also discarded (not excluded).
+    # An allergen with no grounded allergy context yet is also discarded (no context activated).
     cop2 = cc.compile_cop([cc.ChartFact("allergy", "sulfa")])
-    assert not cop2.exclusions and any("sulfa" in d["fact"] for d in cop2.discards)
+    assert not cop2.active_contexts and any("sulfa" in d["fact"] for d in cop2.discards)
 
 
 def test_engine_reproduces_existing_regimens():
@@ -245,11 +257,15 @@ def test_engine_reproduces_existing_regimens():
         "adult_community": {"ceftriaxone", "vancomycin"},
         "over_50_or_immunocompromised": {"ampicillin", "ceftriaxone", "vancomycin"},
         "post_neurosurgical_or_shunt": {"cefepime", "vancomycin"},
+        # CC-3b: a penicillin allergy keeps the 3rd-gen cephalosporin (cross-reactivity <1%),
+        # so the regimen is unchanged from adult_community — vancomycin + ceftriaxone.
+        "penicillin_allergic_adult": {"ceftriaxone", "vancomycin"},
     }
     for name, regimen in want.items():
         r = cc.derive(cli, cc.CHARTS[name])
         assert r["regimen"] is not None and set(r["regimen"]) == regimen, (name, r["regimen"])
-    # Severe β-lactam allergy → honest abstention (INFEASIBLE), never a fabricated regimen.
+    # An UNSPECIFIED whole-class β-lactam allergy → honest abstention (INFEASIBLE), never a
+    # fabricated regimen (only aztreonam survives, which can't cover S. pneumoniae).
     alg = cc.derive(cli, cc.CHARTS["betalactam_allergic_adult"])
     assert alg["regimen"] is None and alg["outcome"] == "infeasible", alg
     assert alg["conflict"] is not None, "infeasible must name the conflicting constraint"
@@ -259,7 +275,7 @@ def test_engine_reproduces_existing_regimens():
 
 def main() -> int:
     test_scenario_selection_and_provenance()
-    test_allergy_becomes_exclusion()
+    test_allergy_activates_a_context()
     test_culture_resistance_becomes_defeated_edge()
     test_dose_risk_facts_become_dose_constraints()
     test_objective_priority_sets_the_cost_side_effect_weights()

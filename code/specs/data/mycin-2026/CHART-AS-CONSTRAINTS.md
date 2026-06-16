@@ -192,20 +192,29 @@ risks Y") — decision support, not a hidden choice.
     structurally-dissimilar β-lactams. The cross-reactivity figures are **typed quantities**
     (`percentage`, via the typed-value pipeline), grounded, and used directly (e.g. "<1%" is a
     `percentage` literal in the ADJ program, not prose).
-  - **Implementation plan (separate PR, for clinical review BEFORE it lands):**
-    1. Add per-drug **R1 side-chain** data to the grounded formulary (e.g. `ampicillin`,
-       `amoxicillin` share an aminopenicillin side chain; `ceftriaxone`/`cefepime` are
-       dissimilar; `aztreonam` is a monobactam with a side chain shared with `ceftazidime`).
-    2. Extend the chart IR with the allergy **culprit** + **severity** (mild rash vs anaphylaxis).
-    3. Contraindication rulebook gains a grounded rule: `contraindicated($D, penicillin_allergy)
-       when: active_context(penicillin_allergy), shares_side_chain($D, $Culprit)` (+ a
-       conservative severe/anaphylaxis path that also excludes same-ring penicillins). The
-       blanket `betalactam_allergy_severe` token + the Python `_ALLERGY_EXCLUSION` map are
-       retired — the exclusion is engine-derived from the grounded side-chain facts.
-    4. Tests proving ceftriaxone/cefepime/meropenem/aztreonam remain available for a typical
-       penicillin allergy (low cross-reactivity), a same-side-chain agent is excluded, and the
-       severe path stays conservative. The behaviour change is surfaced loudly for the
-       physician-auditor (the system audits, the human signs off).
+  - **✅ DONE (implemented; ⚠️ this CHANGED clinical behaviour — physician-auditor please verify).**
+    The Python `_ALLERGY_EXCLUSION` map + the blanket `betalactam_allergy_severe` token are
+    **retired**. An allergy now activates a CONTEXT and the engine derives the exclusions from
+    the grounded contraindication rulebook, scoped by pharmacologic **subclass**:
+    - `contraindications.adj` gains `has_class` facts for the β-lactam subclasses (ampicillin
+      ∈ penicillin; ceftriaxone, cefepime ∈ cephalosporin; meropenem ∈ carbapenem; aztreonam ∈
+      monobactam) + DEFINITIONAL `class_contraindicated_in` edges: `penicillin_allergy` →
+      penicillins; `cephalosporin_allergy` → cephalosporins; `betalactam_allergy` (unspecified
+      whole-class) → penicillins + cephalosporins + carbapenems (**not** monobactams). The
+      grounded literature justifies the **absences** (no rule emitted for cephalosporins under
+      `penicillin_allergy`, so they stay available).
+    - `chart_to_cop._CONTEXT_FROM_FACT` maps `allergy=penicillin → penicillin_allergy`, etc.;
+      `derive()` folds the engine-derived exclusions into `forced_zero`.
+    - **Resulting behaviour change (verified by tests):** a penicillin allergy (even
+      anaphylactic) is now **FEASIBLE** — `vancomycin + ceftriaxone` (3rd-gen, <1% cross-
+      reactivity) instead of the old blanket abstention. An **unspecified** whole-class
+      β-lactam allergy still abstains (only aztreonam survives, which can't cover *S.
+      pneumoniae*) — honest INFEASIBLE preserved.
+    - **Still authored-debt / follow-up:** true R1-side-chain *identity* per drug (so a
+      specific aminopenicillin allergy can flag the few same-side-chain cephalosporins, and a
+      severity dimension can gate anaphylaxis caution). The current cut is subclass-level,
+      which is correct for the formulary's drugs (no formulary cephalosporin shares a penicillin
+      side chain) but should refine to side-chain identity as the formulary grows.
 - **CC-4 — cost + side-effect objective. ✅ DONE.** The set-cover objective is now the
   weighted blend `minimize Σ (w_cost·tier + w_tox·side_effects)·x_d`, emitted to the engine's
   integer optimizer (coefficients stay integer). A chart `objective_priority` fact selects the

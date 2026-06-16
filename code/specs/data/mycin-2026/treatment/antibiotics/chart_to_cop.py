@@ -81,13 +81,13 @@ class Cop:
     discards: list[dict] = field(default_factory=list)       # facts not mapped + reason
 
 
-# Drug classes whose members an allergy excludes. β-lactam allergy → the formulary's
-# `betalactam_allergy_severe` exclusion token (reg.candidates() drops β-lactam drugs).
-_ALLERGY_EXCLUSION = {
-    "penicillin": "betalactam_allergy_severe",
-    "betalactam": "betalactam_allergy_severe",
-    "cephalosporin": "betalactam_allergy_severe",
-}
+# CC-3b — allergy no longer maps to a blanket "betalactam_allergy_severe" exclusion token.
+# An allergy activates a CONTEXT (penicillin_allergy / cephalosporin_allergy / betalactam_allergy);
+# the engine then derives which drugs that context contraindicates from the grounded
+# contraindication rulebook, which is SIDE-CHAIN-scoped (a penicillin allergy excludes only
+# penicillins — cephalosporins/carbapenems/aztreonam stay available, cross-reactivity <1-2%,
+# record ci_betalactam_sidechain_mechanism). The allergen → context map lives in
+# `_CONTEXT_FROM_FACT` below alongside the other contexts.
 
 # CC-3 — the contraindication knowledge is NO LONGER a Python set. It lives in the ADJ
 # rulebook `contraindications.adj` (generated from grounding/treatment-constraints-grounding.json
@@ -104,6 +104,13 @@ _CONTEXT_FROM_FACT = {
     ("pregnancy", "present"): "pregnancy",
     ("pregnancy", "pregnant"): "pregnancy",
     ("pregnancy", "true"): "pregnancy",
+    # CC-3b allergy contexts. "penicillin" → exclude penicillins only (the literature-correct
+    # narrow exclusion); "cephalosporin" → exclude cephalosporins; "betalactam" is an
+    # UNSPECIFIED/severe whole-class allergy → exclude penicillins+cephalosporins+carbapenems
+    # (aztreonam, a monobactam, stays available — the grounded safe choice in β-lactam allergy).
+    ("allergy", "penicillin"): "penicillin_allergy",
+    ("allergy", "cephalosporin"): "cephalosporin_allergy",
+    ("allergy", "betalactam"): "betalactam_allergy",
 }
 
 # CC-4: a chart `objective_priority` fact → the (w_cost, w_tox) objective blend the
@@ -149,15 +156,19 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
             cop.constraints.append({"type": "scenario_input", "from": f"setting={f.value}",
                                     "rule": "care setting selects the empiric organism set", "span": f.span})
         elif f.kind == "allergy":
-            tok = _ALLERGY_EXCLUSION.get(f.value)
-            if tok:
-                cop.exclusions.add(tok)
-                cop.constraints.append({"type": "exclusion", "from": f"allergy={f.value}",
-                                        "rule": f"{f.value} allergy excludes the β-lactam drug class",
-                                        "detail": tok, "span": f.span})
+            # CC-3b: a drug allergy activates an allergy CONTEXT. It does NOT decide which drugs
+            # are out — the engine derives that from the side-chain-scoped contraindication
+            # rulebook (a penicillin allergy excludes penicillins, NOT all β-lactams).
+            context = _CONTEXT_FROM_FACT.get((f.kind, f.value))
+            if context:
+                cop.active_contexts.add(context)
+                cop.constraints.append({"type": "context", "from": f"allergy={f.value}",
+                                        "rule": f"{f.value} allergy → active clinical context "
+                                                f"'{context}' (gates the contraindication rules)",
+                                        "detail": context, "span": f.span})
             else:
                 cop.discards.append({"fact": f"allergy={f.value}",
-                                     "reason": "no grounded drug-class exclusion rule for this allergen yet (CC-3)"})
+                                     "reason": "no grounded allergy context for this allergen yet (CC-3b)"})
         elif f.kind == "renal_status":
             # renal impairment shrinks the safe dose ceiling (CC-2 dose feasibility).
             if f.value in ("renal_severe", "renal_moderate"):
@@ -424,8 +435,14 @@ CHARTS = {
     "adult_community": [ChartFact("age_band", "adult", "45-year-old")],
     "over_50_or_immunocompromised": [ChartFact("age_band", "older_adult", "aged 68")],
     "post_neurosurgical_or_shunt": [ChartFact("setting", "post_neurosurgical", "POD#3 craniotomy")],
-    "betalactam_allergic_adult": [ChartFact("age_band", "adult", "adult"),
+    # CC-3b: a PENICILLIN allergy (even anaphylactic) is FEASIBLE — a 3rd-gen cephalosporin
+    # (ceftriaxone) has <1% cross-reactivity, so vancomycin + ceftriaxone stands.
+    "penicillin_allergic_adult": [ChartFact("age_band", "adult", "adult"),
                                   ChartFact("allergy", "penicillin", "anaphylaxis to penicillin")],
+    # An UNSPECIFIED whole-class β-lactam allergy excludes penicillins/cephalosporins/
+    # carbapenems (only aztreonam survives, which can't cover S. pneumoniae) → honest abstention.
+    "betalactam_allergic_adult": [ChartFact("age_band", "adult", "adult"),
+                                  ChartFact("allergy", "betalactam", "severe reaction to all beta-lactams")],
 }
 
 

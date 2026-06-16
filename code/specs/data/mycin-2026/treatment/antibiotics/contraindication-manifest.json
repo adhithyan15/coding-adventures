@@ -9,6 +9,46 @@
       "trust": "definitional",
       "grounding_id": null
     },
+    "has_class__ampicillin": {
+      "relation": "has_class",
+      "subject": "ampicillin",
+      "context": "penicillin",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__ceftriaxone": {
+      "relation": "has_class",
+      "subject": "ceftriaxone",
+      "context": "cephalosporin",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__cefepime": {
+      "relation": "has_class",
+      "subject": "cefepime",
+      "context": "cephalosporin",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__meropenem": {
+      "relation": "has_class",
+      "subject": "meropenem",
+      "context": "carbapenem",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "has_class__aztreonam": {
+      "relation": "has_class",
+      "subject": "aztreonam",
+      "context": "monobactam",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
     "class_contraindicated_in__fluoroquinolone__pregnancy": {
       "relation": "class_contraindicated_in",
       "subject": "fluoroquinolone",
@@ -38,7 +78,47 @@
       "trust": "authoritative",
       "source": "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot.",
       "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7"
+    },
+    "class_contraindicated_in__penicillin__penicillin_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "penicillin",
+      "context": "penicillin_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__cephalosporin__cephalosporin_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "cephalosporin",
+      "context": "cephalosporin_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__penicillin__betalactam_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "penicillin",
+      "context": "betalactam_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__cephalosporin__betalactam_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "cephalosporin",
+      "context": "betalactam_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
+    },
+    "class_contraindicated_in__carbapenem__betalactam_allergy": {
+      "relation": "class_contraindicated_in",
+      "subject": "carbapenem",
+      "context": "betalactam_allergy",
+      "verdict": "DEFINITIONAL",
+      "trust": "definitional",
+      "grounding_id": null
     }
   },
-  "hash": "9f8299448ad58dd4"
+  "hash": "feeebda9736e326b"
 }

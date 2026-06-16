@@ -43,6 +43,11 @@ rulebook contraindications {
 
     % --- drug → class membership (definitional) ----------------------------
     relate has_class(moxifloxacin, fluoroquinolone)
+    relate has_class(ampicillin, penicillin)
+    relate has_class(ceftriaxone, cephalosporin)
+    relate has_class(cefepime, cephalosporin)
+    relate has_class(meropenem, carbapenem)
+    relate has_class(aztreonam, monobactam)
 
     % --- grounded CLASS-level contraindications -----------------------------
     relate class_contraindicated_in(fluoroquinolone, pregnancy)
@@ -59,6 +64,17 @@ rulebook contraindications {
         source "Some epidemiologic studies suggest that exposure to sulfamethoxazole and trimethoprim during pregnancy may be associated with an increased risk of congenital malformations, particularly neural tube defects, cardiovascular malformations, urinary tract defects, oral clefts, and club foot."
         locator "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=793c75eb-dd65-4b6d-ac46-6e57ce1334f7"
         trust authoritative
+
+    % --- DEFINITIONAL allergy class-contraindications (CC-3b) ---------------
+    % Tautological (allergy to a class excludes that class) → bare, like has_class.
+    % The grounded literature (ci_betalactam_sidechain_mechanism) justifies the
+    % ABSENCES: penicillin_allergy emits NO rule for cephalosporins/carbapenems/
+    % monobactams, so the engine leaves them AVAILABLE (cross-reactivity <1-2%).
+    relate class_contraindicated_in(penicillin, penicillin_allergy)
+    relate class_contraindicated_in(cephalosporin, cephalosporin_allergy)
+    relate class_contraindicated_in(penicillin, betalactam_allergy)
+    relate class_contraindicated_in(cephalosporin, betalactam_allergy)
+    relate class_contraindicated_in(carbapenem, betalactam_allergy)
 
     % --- the GENERIC, context-scoped derivation rules ------------------------
     % class route: D is contraindicated in C if D's class is contraindicated in C

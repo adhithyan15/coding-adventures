@@ -100,5 +100,31 @@ def test_generic_rule_also_fires_for_qt_prolongation():
     assert set(out) == {"moxifloxacin"} and out["moxifloxacin"]["context"] == "qt_prolongation"
 
 
+# --------------------------------------------------------------------------
+# CC-3b — β-lactam allergy is SIDE-CHAIN-scoped, not class-wide.
+# --------------------------------------------------------------------------
+def test_penicillin_allergy_excludes_only_penicillins():
+    cli = _cli_or_skip()
+    # The literature-correct narrow exclusion: a penicillin allergy excludes penicillins
+    # (ampicillin) but NOT 3rd-gen cephalosporins / carbapenems / monobactams (<1-2% cross-
+    # reactivity). ceftriaxone/cefepime/meropenem/aztreonam stay AVAILABLE.
+    out = ci.derive_contraindications(cli, {"penicillin_allergy"})
+    assert set(out) == {"ampicillin"}, out
+
+
+def test_cephalosporin_allergy_excludes_cephalosporins():
+    cli = _cli_or_skip()
+    assert set(ci.derive_contraindications(cli, {"cephalosporin_allergy"})) == {"ceftriaxone", "cefepime"}
+
+
+def test_unspecified_betalactam_allergy_spares_only_the_monobactam():
+    cli = _cli_or_skip()
+    # An unspecified whole-class β-lactam allergy excludes penicillins + cephalosporins +
+    # carbapenems, but NOT aztreonam (a monobactam — the grounded safe choice in β-lactam allergy).
+    out = ci.derive_contraindications(cli, {"betalactam_allergy"})
+    assert set(out) == {"ampicillin", "ceftriaxone", "cefepime", "meropenem"}, out
+    assert "aztreonam" not in out
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
