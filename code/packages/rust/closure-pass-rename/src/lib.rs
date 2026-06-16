@@ -54,23 +54,29 @@
 //!
 //! # Scope (current slice)
 //!
-//! `RenamePass::run` is a real transform. v1 renames the
-//! **parameters of leaf functions** — `function` declarations whose
-//! body declares no nested function — to short names (`a`, `b`, …),
-//! at the declaration and every use site. It conservatively never
-//! touches:
+//! `RenamePass::run` is a real transform. It renames the **uniquely-bound
+//! names of leaf functions** — their parameters and their function-body
+//! `var`/`let`/`const` declarations — to short names (`a`, `b`, …), at the
+//! declaration and every use site. A *leaf function* is a `function`
+//! declaration whose body declares no nested function. It conservatively
+//! never touches:
 //!
 //! - module/global top-level names (they may be externally visible);
 //! - free globals (`console`, `window`, …);
 //! - property names (the `.x` of a non-computed member, a non-computed
 //!   object-literal key);
-//! - a parameter that is also declared `var`/`let`/`const` in the body
-//!   (re-declared / block-shadowed — skipped rather than mis-renamed).
+//! - any name declared **more than once** in the function (a parameter
+//!   also `var`'d, two block-scoped `let x`, …) — its uses could belong to
+//!   distinct bindings we can't disambiguate without full scope
+//!   resolution, so it is skipped rather than mis-renamed.
 //!
-//! Within that subset the rename is a provably-sound α-conversion (see
-//! the `rename_leaf_params` safety argument). Broader renaming — locals,
-//! nested non-leaf scopes, module-private top-level names once an
-//! `external` marker exists — is future work built on the same walker.
+//! The "declared exactly once" rule is the safety boundary: with a single
+//! declaration there is exactly one binding for the name, so every in-body
+//! use resolves to it and rewriting the declaration plus all uses is a
+//! provably-sound α-conversion (see the `rename_leaf_bindings` argument).
+//! Broader renaming — nested non-leaf scopes, module-private top-level
+//! names once an `external` marker exists — is future work on the same
+//! walker.
 //!
 //! The implementation is self-contained (its own scope-aware walk over
 //! the Phase-1 AST); it does not yet consume `closure-scope-analyzer`,
@@ -84,7 +90,7 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     AssignmentTarget, BindingTarget, BlockStatement, Declaration, Expression, ForInit,
-    FunctionDeclaration, FunctionParam, Program, ProgramItem, PropertyKey, Statement,
+    FunctionDeclaration, FunctionParam, Program, ProgramItem, PropertyKey, Statement, VarKind,
     VariableDeclaration,
 };
 
@@ -93,8 +99,9 @@ use coding_adventures_javascript_ast::{
 /// it by reference rather than retyping.
 const DEPS: &[&str] = &[];
 
-/// Variable renaming pass — renames leaf-function parameters to short
-/// names. See crate-level docs for the exact (conservative) scope.
+/// Variable renaming pass — renames the uniquely-bound names (parameters
+/// and local var/let/const) of leaf functions to short names. See
+/// crate-level docs for the exact (conservative) scope.
 ///
 /// Zero-sized type: no per-instance state. Pass-internal state
 /// (the binding → short-name map, the next-id counter, the
@@ -144,12 +151,14 @@ impl Pass for RenamePass {
     }
 
     fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
-        // v1 scope: rename the parameters of *leaf functions* (function
-        // declarations whose body contains no nested function
-        // declarations) to short names, conservatively. See
-        // [`rename_program`] and the crate-level docs for the full
-        // safety argument. Top-level / module-scope names are never
-        // touched (they may be externally visible).
+        // Scope: rename the uniquely-bound names of *leaf functions*
+        // (function declarations whose body contains no nested function
+        // declaration) — their parameters and their body's
+        // `var`/`let`/`const` declarations — to short names,
+        // conservatively. See [`rename_program`] / [`rename_leaf_bindings`]
+        // and the crate-level docs for the full safety argument. Top-level
+        // / module-scope names are never touched (they may be externally
+        // visible).
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1; // the program root
         let changed = rename_program(&mut program, &mut nodes_touched);
@@ -165,39 +174,47 @@ impl Pass for RenamePass {
 }
 
 // =========================================================================
-// Local-rename implementation (v1: leaf-function parameters)
+// Local-rename implementation (leaf-function parameters + locals)
 // =========================================================================
 //
 // # What gets renamed, and why it is safe
 //
-// We rename the *parameters* of a **leaf function** — a
+// We rename the *uniquely-bound names* of a **leaf function** — a
 // `FunctionDeclaration` whose body declares no nested function — to short
-// names (`a`, `b`, `c`, …). We never touch:
+// names (`a`, `b`, `c`, …). A uniquely-bound name is one declared exactly
+// once in the function: a parameter, or a body `var`/`let`/`const`. We
+// never touch:
 //
 //   - module/global top-level names (they may be referenced by other
 //     scripts / be the program's public surface);
 //   - free globals (`console`, `window`, …);
 //   - the `.name` side of a non-computed member access or the key of a
 //     non-computed object literal (those are property names, not
-//     bindings).
+//     bindings);
+//   - any name declared MORE THAN ONCE in the function.
 //
 // **The safety argument** for a leaf function `f`:
-//   1. `f` has no nested functions, so nothing inside `f` can capture or
-//      re-scope `f`'s parameters under a different name.
-//   2. We rename a parameter `p` only when `p` is NOT also declared as a
-//      `var`/`let`/`const` anywhere in the body. With that excluded,
-//      `p`'s *only* binding in the function is the parameter, so EVERY
-//      identifier use of `p` in the body (other than property names)
-//      resolves to that parameter. Rewriting all of them plus the
-//      parameter declaration is therefore a sound α-rename.
+//   1. `f` has no nested functions, so the only scope-introducers inside
+//      it are `{}` blocks (which scope `let`/`const`). Nothing inside `f`
+//      can capture or re-scope a name under a different binding except a
+//      second declaration of that same name.
+//   2. We rename a name only when it is declared EXACTLY ONCE in the
+//      function (params + every var/let/const declarator are counted). A
+//      single declaration means a single binding, so EVERY identifier use
+//      of the name in the body (other than property names) resolves to it.
+//      Rewriting all of them plus the declaration is a sound α-rename. A
+//      name declared twice (a param also `var`'d, two block-scoped
+//      `let x`) could have distinct bindings we cannot tell apart without
+//      full scope resolution, so it is skipped.
 //   3. The fresh name we pick avoids *every* identifier that appears
 //      anywhere in the function, so it can neither collide with another
 //      local nor accidentally capture a free global.
 //
 // Anything outside this provably-safe subset (non-leaf functions,
-// shadowed/redeclared parameters, module-scope bindings) is left
-// untouched — `changed` stays `false` for it. Broader renaming (locals,
-// nested scopes) is future work built on the same walker.
+// multiply-declared names, module-scope bindings) is left untouched —
+// `changed` stays `false` for it. Broader renaming (nested non-leaf
+// scopes, module-private top-level names) is future work on the same
+// walker.
 
 /// Reserved words we must never emit as a fresh short name. Single
 /// letters are all safe; only some two-letter combinations collide.
@@ -289,12 +306,30 @@ fn process_function(fd: &mut FunctionDeclaration, nodes_touched: &mut u32) -> bo
     // A leaf function (no nested function declarations) is eligible for
     // parameter renaming.
     if !block_has_function(&fd.body) {
-        changed |= rename_leaf_params(fd);
+        changed |= rename_leaf_bindings(fd);
     }
     changed
 }
 
 /// True if `block` contains a function declaration anywhere (recursively).
+///
+/// This is the leaf-function test, and the whole rename soundness argument
+/// rests on it: a "leaf" function has no nested function, so the only
+/// scope-introducers inside it are `{}` blocks (which scope `let`/`const`).
+///
+/// **Phase-1 AST assumption — IMPORTANT.** This walks *statements* only. It
+/// is sufficient TODAY because the Phase-1 AST has no function expressions,
+/// arrow functions, `class` bodies, or `try`/`catch` — the only way to
+/// introduce a nested function (and hence a closure scope) is a
+/// `FunctionDeclaration` statement. If the AST ever grows a
+/// function/arrow *expression* (which can appear anywhere an expression
+/// can, e.g. a `var f = () => …`), this check would wrongly classify the
+/// enclosing function as a leaf and the eligibility rule in
+/// `rename_leaf_bindings` would become unsound (an inner closure could
+/// capture/re-scope a name we rename). At that point this must also walk
+/// expressions for nested functions. The exhaustive `match` in
+/// `stmt_has_function` guards new *statement* kinds; new *expression*
+/// kinds need this explicit reminder.
 fn block_has_function(block: &BlockStatement) -> bool {
     block.body.iter().any(stmt_has_function)
 }
@@ -334,22 +369,56 @@ fn stmt_has_function(stmt: &Statement) -> bool {
     }
 }
 
-/// Rename the parameters of a leaf function. Returns whether anything
-/// changed.
-fn rename_leaf_params(fd: &mut FunctionDeclaration) -> bool {
-    if fd.params.is_empty() {
-        return false;
+/// Rename the *uniquely-bound* names of a leaf function — its parameters
+/// and its function-body `var`/`let`/`const` declarations — to short
+/// names. Returns whether anything changed.
+///
+/// # Why "uniquely bound" is the safety boundary
+///
+/// A leaf function has no nested function, so the only scope-introducers
+/// inside it are `{}` blocks (which scope `let`/`const`). We rename a name
+/// only when it is *declared exactly once* in the whole function (counting
+/// the parameter list and every `var`/`let`/`const` declarator). With a
+/// single declaration there is exactly one binding for that name, so every
+/// identifier use of it in the body (other than property names) resolves
+/// to that binding — rewriting the declaration and all uses is a sound
+/// α-rename. A name declared two or more times (a parameter also `var`'d,
+/// two block-scoped `let x` in sibling blocks, …) could have *distinct*
+/// bindings whose uses we cannot tell apart without full scope resolution,
+/// so we conservatively skip it entirely.
+fn rename_leaf_bindings(fd: &mut FunctionDeclaration) -> bool {
+    // The declared names, in deterministic source order (params first,
+    // then body declarators), WITH duplicates — each tagged with whether
+    // its *scope* makes it safe to rename:
+    //
+    //   - a parameter or a `var` is function-scoped, so all in-body uses
+    //     of its (uniquely-declared) name resolve to it → eligible;
+    //   - a `let`/`const` is block-scoped. It is eligible ONLY when
+    //     declared at the function-body top level (its block is then the
+    //     whole body, so every in-body use resolves to it). A `let`/`const`
+    //     nested inside an inner `{}`/`if`/loop/`switch`/`for`-init binds
+    //     only within that inner block, while the same identifier used
+    //     OUTSIDE the block resolves to an outer/global binding — renaming
+    //     "every use" would corrupt that outer use, so it is NOT eligible.
+    //
+    // We still record duplicates so a name declared more than once (any
+    // kind) is detected and skipped.
+    let mut decl_order: Vec<(String, bool)> = Vec::new();
+    for p in &fd.params {
+        let FunctionParam::Identifier(id) = p;
+        decl_order.push((id.name.clone(), true)); // params: function-scoped
+    }
+    collect_decl_occurrences(&fd.body, &mut decl_order, false);
+
+    // Occurrence counts: a name declared exactly once is uniquely bound.
+    let mut counts: HashMap<&str, usize> = HashMap::new();
+    for (name, _) in &decl_order {
+        *counts.entry(name.as_str()).or_insert(0) += 1;
     }
 
-    // Names declared as var/let/const anywhere in the body. A parameter
-    // sharing such a name is either the same binding (`var p`) or
-    // block-shadowed (`let p`); either way we conservatively skip it.
-    let mut decl_names: HashSet<String> = HashSet::new();
-    collect_decl_names(&fd.body, &mut decl_names);
-
-    // Every identifier that appears anywhere in the function (params +
-    // body, including property names). A fresh name avoiding all of
-    // these cannot collide with a local or capture a free global.
+    // Fresh names must avoid every identifier in the function (declarations,
+    // uses, and property names), so a rename can neither collide with a
+    // local nor capture a free global.
     let mut avoid: HashSet<String> = HashSet::new();
     for p in &fd.params {
         let FunctionParam::Identifier(id) = p;
@@ -357,20 +426,26 @@ fn rename_leaf_params(fd: &mut FunctionDeclaration) -> bool {
     }
     collect_all_idents_block(&fd.body, &mut avoid);
 
-    // Decide the renames.
+    // Decide the renames, in declaration order for deterministic output.
     let mut map: HashMap<String, String> = HashMap::new();
     let mut gen = FreshNames::new();
-    for p in &fd.params {
-        let FunctionParam::Identifier(id) = p;
-        if decl_names.contains(&id.name) {
-            continue; // redeclared / shadowed — skip
+    for (name, eligible) in &decl_order {
+        if !eligible {
+            continue; // block-scoped (nested let/const) — uses outside its
+                      // block bind elsewhere; not safe to rename "all uses"
         }
-        if id.name.len() <= 1 {
-            continue; // already minimal; renaming can't help
+        if map.contains_key(name) {
+            continue; // already decided
+        }
+        if counts.get(name.as_str()).copied().unwrap_or(0) != 1 {
+            continue; // declared more than once → ambiguous binding, skip
+        }
+        if name.len() <= 1 {
+            continue; // already minimal
         }
         let fresh = gen.next(&avoid);
         avoid.insert(fresh.clone());
-        map.insert(id.name.clone(), fresh);
+        map.insert(name.clone(), fresh);
     }
 
     if map.is_empty() {
@@ -384,7 +459,7 @@ fn rename_leaf_params(fd: &mut FunctionDeclaration) -> bool {
             id.name = new.clone();
         }
     }
-    // … and every use inside the body.
+    // … and every declaration + use inside the body.
     rewrite_uses_block(&mut fd.body, &map);
     true
 }
@@ -428,53 +503,71 @@ fn encode(mut n: usize) -> String {
 
 // ---- name collection -----------------------------------------------------
 
-/// Collect `var`/`let`/`const` and nested function-declaration names
-/// declared anywhere in `block` (recursing through nested blocks/control
-/// flow but NOT into nested function bodies — those are separate scopes).
-fn collect_decl_names(block: &BlockStatement, out: &mut HashSet<String>) {
+/// Collect every `var`/`let`/`const` (and nested function-declaration)
+/// name declared anywhere in `block`, IN SOURCE ORDER and WITH duplicates,
+/// each tagged `(name, eligible)`. `eligible` is true when the declaration
+/// is function-scoped (`var`, or any param at the call site) or a
+/// top-level `let`/`const`; it is false for a `let`/`const` nested inside
+/// an inner block, `if`, loop, `switch`, or `for`-init (block-scoped, so
+/// uses outside that block bind elsewhere). `nested` is true once we have
+/// descended below the function-body top level. We do NOT recurse into
+/// nested function bodies (separate scopes). Duplicates let the caller
+/// count occurrences (a name declared twice is ambiguous → skipped).
+fn collect_decl_occurrences(block: &BlockStatement, out: &mut Vec<(String, bool)>, nested: bool) {
     for s in &block.body {
-        collect_decl_names_stmt(s, out);
+        collect_decl_occurrences_stmt(s, out, nested);
     }
 }
 
-fn collect_decl_names_stmt(stmt: &Statement, out: &mut HashSet<String>) {
+fn collect_decl_occurrences_stmt(stmt: &Statement, out: &mut Vec<(String, bool)>, nested: bool) {
     match stmt {
         Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
-            insert_var_names(vd, out);
+            push_var_occurrences(vd, out, nested);
         }
         Statement::Declaration(Declaration::FunctionDeclaration(fd)) => {
-            out.insert(fd.id.name.clone());
+            // A nested function name (a leaf function has none, so this is
+            // defensive). Mark ineligible — renaming a function name needs
+            // its own care.
+            out.push((fd.id.name.clone(), false));
             // Do NOT recurse into fd.body — separate scope.
         }
         Statement::Tagged(t) => match t {
-            TaggedStatement::BlockStatement(b) => collect_decl_names(b, out),
+            // Anything below this point is inside an inner block → nested.
+            TaggedStatement::BlockStatement(b) => collect_decl_occurrences(b, out, true),
             TaggedStatement::IfStatement(is) => {
-                collect_decl_names_stmt(&is.consequent, out);
+                collect_decl_occurrences_stmt(&is.consequent, out, true);
                 if let Some(alt) = &is.alternate {
-                    collect_decl_names_stmt(alt, out);
+                    collect_decl_occurrences_stmt(alt, out, true);
                 }
             }
-            TaggedStatement::WhileStatement(ws) => collect_decl_names_stmt(&ws.body, out),
+            TaggedStatement::WhileStatement(ws) => {
+                collect_decl_occurrences_stmt(&ws.body, out, true)
+            }
             TaggedStatement::ForStatement(fs) => {
+                // A `for`-init `let`/`const` is scoped to the loop (never the
+                // whole body), so it is block-scoped → pass `nested = true`.
                 if let Some(ForInit::VariableDeclaration(vd)) = &fs.init {
-                    insert_var_names(vd, out);
+                    push_var_occurrences(vd, out, true);
                 }
-                collect_decl_names_stmt(&fs.body, out);
+                collect_decl_occurrences_stmt(&fs.body, out, true);
             }
-            TaggedStatement::LabeledStatement(ls) => collect_decl_names_stmt(&ls.body, out),
+            // A label does not introduce a variable scope; keep `nested`.
+            TaggedStatement::LabeledStatement(ls) => {
+                collect_decl_occurrences_stmt(&ls.body, out, nested)
+            }
             TaggedStatement::SwitchStatement(ss) => {
                 for c in &ss.cases {
                     for s in &c.consequent {
-                        collect_decl_names_stmt(s, out);
+                        collect_decl_occurrences_stmt(s, out, true);
                     }
                 }
             }
             // Statements that introduce no binding in the Phase-1 AST.
             // Exhaustive on purpose: a future binding-introducing
             // statement (a `try`/`catch`, a `class` declaration) must be
-            // handled here, otherwise its name could shadow a parameter
-            // without our noticing and we'd rename the parameter
-            // unsoundly. The compiler will flag the omission.
+            // handled here, otherwise its name could shadow a local
+            // without our noticing and we'd rename unsoundly. The compiler
+            // will flag the omission.
             TaggedStatement::ExpressionStatement(_)
             | TaggedStatement::ReturnStatement(_)
             | TaggedStatement::ThrowStatement(_)
@@ -485,10 +578,14 @@ fn collect_decl_names_stmt(stmt: &Statement, out: &mut HashSet<String>) {
     }
 }
 
-fn insert_var_names(vd: &VariableDeclaration, out: &mut HashSet<String>) {
+fn push_var_occurrences(vd: &VariableDeclaration, out: &mut Vec<(String, bool)>, nested: bool) {
+    // `var` is function-scoped (eligible regardless of nesting); `let`/
+    // `const` is block-scoped (eligible only at the function-body top
+    // level, i.e. when not nested).
+    let eligible = matches!(vd.kind, VarKind::Var) || !nested;
     for d in &vd.declarations {
         let BindingTarget::Identifier(id) = &d.id;
-        out.insert(id.name.clone());
+        out.push((id.name.clone(), eligible));
     }
 }
 
@@ -690,10 +787,14 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
     match stmt {
         Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
             for d in &mut vd.declarations {
-                // A declarator id with a name in `map` cannot happen here:
-                // we only map parameter names that are NOT redeclared as
-                // var/let/const (see rename_leaf_params). So we rewrite
-                // only the initializer (a use position).
+                // Rewrite the declared name itself (a `var`/`let`/`const`
+                // declarator is a rename target now that locals are
+                // renamed, not only parameters) …
+                let BindingTarget::Identifier(id) = &mut d.id;
+                if let Some(new) = map.get(&id.name) {
+                    id.name = new.clone();
+                }
+                // … and its initializer (a use position).
                 if let Some(init) = &mut d.init {
                     rewrite_uses_expr(init, map);
                 }
@@ -726,6 +827,12 @@ fn rewrite_uses_tagged(t: &mut TaggedStatement, map: &HashMap<String, String>) {
                 match init {
                     ForInit::VariableDeclaration(vd) => {
                         for d in &mut vd.declarations {
+                            // Rewrite the declared name (a `for (var x …)`
+                            // binding is a rename target) and its init.
+                            let BindingTarget::Identifier(id) = &mut d.id;
+                            if let Some(new) = map.get(&id.name) {
+                                id.name = new.clone();
+                            }
                             if let Some(i) = &mut d.init {
                                 rewrite_uses_expr(i, map);
                             }
@@ -1129,5 +1236,114 @@ mod tests {
             rename_source("function f(x) { return x + 1; }"),
             "function f(x){return x + 1};"
         );
+    }
+
+    // ----- local variable renaming (var/let/const) -----
+
+    #[test]
+    fn renames_local_var() {
+        // A function-body `var` declared once is uniquely bound — its
+        // declaration and its use are both rewritten.
+        assert_eq!(
+            rename_source("function f() { var counter = 0; return counter + 1; }"),
+            "function f(){var a=0;return a + 1};"
+        );
+    }
+
+    #[test]
+    fn renames_local_const_and_let() {
+        assert_eq!(
+            rename_source("function f() { const total = 1; let partial = 2; return total + partial; }"),
+            "function f(){const a=1;let b=2;return a + b};"
+        );
+    }
+
+    #[test]
+    fn renames_param_and_local_together() {
+        // Parameter and local are both uniquely bound; both shortened, in
+        // declaration order (param first).
+        assert_eq!(
+            rename_source("function f(input) { var doubled = input * 2; return doubled; }"),
+            "function f(a){var b=a * 2;return b};"
+        );
+    }
+
+    #[test]
+    fn skips_name_declared_twice() {
+        // `total` is declared as BOTH a function-scope `var` and a
+        // block-scope `let` — two distinct bindings. Renaming "every use
+        // of total" would conflate them, so we skip the name entirely
+        // (the safety boundary of the uniquely-bound rule). `keep` is
+        // declared once, so it IS renamed.
+        assert_eq!(
+            rename_source(
+                "function f() { var total = 1; { let total = 2; sink(total); } var keep = total; return keep; }"
+            ),
+            "function f(){var total=1;{let total=2;sink(total)}var a=total;return a};"
+        );
+    }
+
+    #[test]
+    fn renames_for_loop_var() {
+        // A `for (var i …)` binding is uniquely bound; the declaration,
+        // the test, and body uses are all rewritten. (Single-char `i`
+        // would be skipped, so use a longer name. The update slot is
+        // omitted — the Phase-1 grammar doesn't parse a bare assignment
+        // expression there.)
+        assert_eq!(
+            rename_source(
+                "function f() { for (var index = 0; index < 3; ) { sink(index); } }"
+            ),
+            "function f(){for(var a=0;a < 3;){sink(a)}};"
+        );
+    }
+
+    #[test]
+    fn skips_nested_block_scoped_let_used_outside_its_block() {
+        // SOUNDNESS regression (caught in security review): `shadowed` is
+        // a single `let` inside an `if` block, but it is ALSO used at the
+        // function-body top level (`use(shadowed)`) where it resolves to
+        // an OUTER/global `shadowed`. The block-scoped `let` is declared
+        // exactly once, but renaming "every use" would corrupt the outer
+        // use — so a nested `let`/`const` is NOT eligible. The parameter
+        // `cond` (function-scoped) is still renamed.
+        assert_eq!(
+            rename_source(
+                "function f(cond) { use(shadowed); if (cond) { let shadowed = 1; sink(shadowed); } }"
+            ),
+            "function f(a){use(shadowed);if(a){let shadowed=1;sink(shadowed)}};"
+        );
+    }
+
+    #[test]
+    fn renames_nested_var_because_function_scoped() {
+        // A `var` is function-scoped even when written inside a block, so
+        // a use outside the block (`return hoisted`) resolves to it — it
+        // IS eligible (contrast the `let` case above). `cond` → a,
+        // `hoisted` → b.
+        assert_eq!(
+            rename_source(
+                "function f(cond) { if (cond) { var hoisted = 1; } return hoisted; }"
+            ),
+            "function f(a){if(a){var b=1;}return b};"
+        );
+    }
+
+    #[test]
+    fn whitespace_only_keeps_local_names() {
+        // Companion — under WHITESPACE_ONLY the local keeps its full name.
+        let es = EsVersion::Es2025;
+        let src = "function f() { var counter = 0; return counter + 1; }";
+        let node = parse_javascript_typed(src, es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        // (Emit the BRIDGED program directly without the rename pass to
+        // mirror the WHITESPACE_ONLY contrast.)
+        let mut cv = CVLog::new(false);
+        let opts = EmitOptions {
+            source_map: false,
+            ..Default::default()
+        };
+        let out = emit(&prog, &Sidecar::new(), &mut cv, &opts).expect("emit").code;
+        assert_eq!(out, "function f(){var counter=0;return counter + 1};");
     }
 }
