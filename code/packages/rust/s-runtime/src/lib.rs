@@ -608,6 +608,15 @@ mod tests {
     }
 
     #[test]
+    fn sprintf_rejects_huge_field_width() {
+        // A crafted width must not trigger an unbounded allocation.
+        assert!(matches!(
+            eval_s("sprintf(\"%999999999999d\", 1)\n"),
+            Err(SError::BadArgs(_))
+        ));
+    }
+
+    #[test]
     fn print_returns_its_argument_invisibly() {
         let outcome = Interpreter::new().eval_str("print(42)\n").unwrap();
         assert_eq!(outcome.printed, "[1] 42\n");

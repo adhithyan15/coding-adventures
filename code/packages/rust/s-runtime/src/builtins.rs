@@ -802,6 +802,14 @@ fn format_one(fmt: &str, args: &[&SValue], row: usize) -> SResult<String> {
             }
             precision = Some(p);
         }
+        // Cap the field width and precision so a crafted format like
+        // `%999999999999d` can't trigger an unbounded allocation in `pad`.
+        const MAX_FIELD: usize = 1 << 20; // 1 MiB per field
+        if width > MAX_FIELD || precision.is_some_and(|p| p > MAX_FIELD) {
+            return Err(SError::BadArgs(
+                "sprintf: field width or precision is too large".into(),
+            ));
+        }
         let conv = chars
             .next()
             .ok_or_else(|| SError::BadArgs("sprintf: truncated format".into()))?;
