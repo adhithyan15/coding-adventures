@@ -135,8 +135,17 @@ const VERIFY_SCHEMA = {
   },
 }
 
+// INCREMENTAL grounding (REL-8): the caller passes `args` = an array of edge ids
+// already grounded (the Workflow sandbox has no filesystem, so the skip-list is
+// injected, not read from iem-edge-grounding.json). Those edges are skipped so a
+// re-run only grounds the new / not-yet-grounded edges — no wasted re-fetching of
+// the 16 already-authoritative ones. With no args, every edge is grounded.
+const skip = new Set(Array.isArray(args) ? args : [])
+const todo = EDGES.filter((e) => !skip.has(e.id))
+log(`grounding ${todo.length} edge(s); skipping ${skip.size} already grounded`)
+
 const records = await pipeline(
-  EDGES,
+  todo,
   (e) => agent(
     `Ground this inborn-error-of-metabolism FACT against a PRIMARY source. Use WebSearch then WebFetch to actually READ a primary/authoritative source — OMIM (omim.org), a peer-reviewed reference, or an authoritative clinical-biochemistry text — NOT a secondary blog or a question bank. ` +
     `FACT [${e.id}]: ${e.claim} Confirm the source states this exact relation (${e.subj} → ${e.obj}). ` +

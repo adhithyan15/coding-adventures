@@ -29,12 +29,12 @@ rulebook iem_facts {
 
     % --- Tay-Sachs (GM2 gangliosidosis) ----------------------------------
     relate deficient_in(tay_sachs, hexosaminidase_a)
-        source "Biallelic pathogenic variants in HEXA lead to absent or reduced activity in β-hexosaminidase A, a lysosomal hydrolytic enzyme required for the breakdown of ganglioside GM2 in neurons. ... The alpha chain is encoded by HEXA; the beta chain is encoded by HEXB. Deficiency of HEX A can therefore be the result of pathogenic variants in HEXA or HEXB."
+        source "Biallelic pathogenic variants in HEXA lead to absent or reduced activity in β-hexosaminidase A, a lysosomal hydrolytic enzyme required for the breakdown of ganglioside GM2 in neurons."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK1218/"
         trust authoritative
     relate accumulates(tay_sachs, gm2_ganglioside)
-        source "Tay-Sachs disease is a progressive, lethal neurodegenerative disorder caused by a deficiency of the enzyme hexosaminidase-A that results in the accumulation of GM2 gangliosides. [...] deficiency of Hex A causes an accumulation of the gangliosides up to toxic levels, especially in the neurons."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK564432/"
+        source "TSD is a severe neurodegenerative disorder characterized by the progressive lysosomal accumulation of GM2 in neurons due to a deficiency of the HexA enzyme."
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC12113087/"
         trust authoritative
     relate inherited_as(tay_sachs, autosomal_recessive)
         source "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have variants."
@@ -43,12 +43,12 @@ rulebook iem_facts {
 
     % --- Gaucher disease -------------------------------------------------
     relate deficient_in(gaucher, glucocerebrosidase)
-        source "Gaucher disease (GD) is caused by deficient glucocerebrosidase activity and the resultant accumulation of its undegraded substrate, GL1, and other glycolipids. ... GBA1 encodes glucocerebrosidase (also known as glucosylceramidase)"
+        source "Gaucher disease (GD) is caused by deficient glucocerebrosidase activity and the resultant accumulation of its undegraded substrate, GL1, and other glycolipids. ... The diagnosis of GD relies on demonstration of deficient glucocerebrosidase (glucosylceramidase) enzyme activity in peripheral blood leukocytes or other nucleated cells, or by the identification of biallelic pathogenic variants in GBA1 on molecular genetic testing."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK1269/"
         trust authoritative
     relate accumulates(gaucher, glucocerebroside)
-        source "The lysosomes in the macrophages of patients with Gaucher disease become progressively enlarged and filled with undigested glucocerebroside."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK448080/"
+        source "The storage and deposition of glucocerebroside within these cells, prominently macrophages, results in the appearance of Gaucher cells"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC4451492/"
         trust authoritative
     relate inherited_as(gaucher, autosomal_recessive)
         source "Gaucher disease (GD) is inherited in an autosomal recessive manner."
@@ -57,12 +57,13 @@ rulebook iem_facts {
 
     % --- Phenylketonuria (PKU) -------------------------------------------
     relate deficient_in(phenylketonuria, phenylalanine_hydroxylase)
-        source "PAH deficiency is an inborn error of Phe metabolism caused by biallelic PAH pathogenic variants resulting in reduced activity of the enzyme PAH."
+        source "PAH deficiency is an inborn error of Phe metabolism caused by biallelic PAH pathogenic variants resulting in reduced activity of the enzyme PAH. ... \"Phenylketonuria (PKU)\" refers specifically to severe PAH deficiency"
         locator "https://www.ncbi.nlm.nih.gov/books/NBK1504/"
         trust authoritative
     relate accumulates(phenylketonuria, phenylalanine)
-        source "Phenylalanine accumulates in phenylketonuria."
-        trust consensus   % [FLAG: direction_only]
+        source "Loss of PAH activity due to biallelic pathogenic variants impairs phenylalanine metabolism, leading to the accumulation of phenylalanine and its toxic metabolites."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK535378/"
+        trust authoritative
     relate inherited_as(phenylketonuria, autosomal_recessive)
         source "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell must have a variant to cause the disorder."
         locator "https://medlineplus.gov/genetics/condition/phenylketonuria/"
@@ -70,11 +71,11 @@ rulebook iem_facts {
 
     % --- Pompe disease (GSD II) ------------------------------------------
     relate deficient_in(pompe, acid_alpha_glucosidase)
-        source "PD is caused by a partial or total deficiency of acid alpha-glucosidase (GAA), which induces glycogen storage."
+        source "Pompe disease (OMIM # 232300) or glycogenosis type II or acid maltase deficiency is a rare, chronic and muscle-weakening, often fatal neuromuscular disease. ... PD is caused by a partial or total deficiency of acid alpha-glucosidase (GAA), which induces glycogen storage."
         locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC7467391/"
         trust authoritative
     relate accumulates(pompe, lysosomal_glycogen)
-        source "Pompe disease (OMIM: no. 232300) is a rare metabolic myopathy characterized by acid alpha‐glucosidase deficiency caused by disease‐associated variants in the acid alpha‐glucosidase (GAA; EC 3.2.1.20) gene. ... As a consequence, glycogen cannot be degraded and accumulates in the lysosomes."
+        source "As a consequence, glycogen cannot be degraded and accumulates in the lysosomes."
         locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC10092494/"
         trust authoritative
     relate inherited_as(pompe, autosomal_recessive)
@@ -84,94 +85,111 @@ rulebook iem_facts {
 
     % --- Lesch-Nyhan syndrome --------------------------------------------
     relate deficient_in(lesch_nyhan, hgprt)
-        source "Lesch-Nyhan syndrome results from deficiency of hypoxanthine-guanine phosphoribosyltransferase (HGPRT)."
-        trust consensus   % [FLAG: direction_only]
-    relate accumulates(lesch_nyhan, uric_acid)
-        source "Lack of the enzyme causes an increase in guanine and hypoxanthine, which eventually gets converted into uric acid. ... Although hyperuricemia is typically present at birth, the only clinical presentation in the early days of life could be orange-colored crystals in the diapers."
+        source "Lesch Nyhan syndrome is an inborn disorder caused by a deficiency of hypoxanthine-guanine phosphoribosyltransferase (HPRT) enzyme"
         locator "https://www.ncbi.nlm.nih.gov/books/NBK556079/"
         trust authoritative
+    relate accumulates(lesch_nyhan, uric_acid)
+        source "Pathogenic variants in HPRT1 are almost always associated with clinical evidence for overproduction of uric acid (hyperuricemia, nephrolithiasis, and/or gouty arthritis). ... The loss of HGprt-mediated purine recycling leads to secondary changes in purine synthesis, resulting in overproduction of uric acid as a purine waste product. Uric acid is not very soluble in body fluids, so its accumulation results in precipitation in the urinary system (nephrolithiasis) and joints (gouty arthritis)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1149/"
+        trust authoritative
     relate inherited_as(lesch_nyhan, x_linked_recessive)
-        source "This condition is inherited in an X-linked recessive pattern. The gene associated with this condition is located on the X chromosome, which is one of the two sex chromosomes."
-        locator "https://medlineplus.gov/genetics/condition/lesch-nyhan-syndrome/"
+        source "Lesch Nyhan syndrome is an X-linked recessive disorder resulting from mutation of the HPRT1 gene, located at a q26-27 position on the long arm of the X chromosome."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK556079/"
         trust authoritative
 
     % --- von Gierke disease (GSD I) --------------------------------------
     relate deficient_in(von_gierke, glucose_6_phosphatase)
-        source "Historically, GSD I is also referred to as von Gierke disease after Dr Edgar von Gierke, who first described the disease in 1929. ... GSD type Ia, caused by the deficiency of glucose-6-phosphatase (G6Pase) catalytic activity"
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK1312/"
+        source "Glycogen storage disease type I (GSD-I), also known as von Gierke disease, consists of two major subtypes, GSD-Ia (MIM232200), caused by a deficiency in glucose-6-phosphatase-α (G6Pase-α or G6PC)..."
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC5859325/"
         trust authoritative
     relate accumulates(von_gierke, glycogen)
-        source "The deficiency of G6Pase (in GSD 1a) or G6PT (in GSD 1b) leads to an accumulation of glycogen in tissues, including the liver, kidneys, and intestines."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK534196/"
-        trust authoritative
+        source "Glycogen accumulates in liver and kidney in von Gierke disease."
+        trust consensus   % [FLAG: direction_only]
     relate inherited_as(von_gierke, autosomal_recessive)
-        source "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell must have a variant to cause the disorder."
-        locator "https://medlineplus.gov/genetics/condition/glycogen-storage-disease-type-i/"
+        source "Glycogen storage disease type I (GSD I) is inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1312/"
         trust authoritative
 
     % --- Fabry disease ---------------------------------------------------
     relate deficient_in(fabry, alpha_galactosidase_a)
-        source "Fabry disease results from deficiency of the enzyme alpha-galactosidase A."
-        trust consensus   % [FLAG: pending]
+        source "Fabry disease is the most common of the lysosomal storage disorders and results from deficient activity of the enzyme alpha-galactosidase A (α-Gal A), leading to progressive lysosomal deposition of globotriaosylceramide and its derivatives in cells throughout the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1292/"
+        trust authoritative
     relate accumulates(fabry, globotriaosylceramide)
-        source "Globotriaosylceramide (Gb3) accumulates in Fabry disease."
-        trust consensus   % [FLAG: pending]
+        source "Fabry disease is the most common of the lysosomal storage disorders and results from deficient activity of the enzyme alpha-galactosidase A (α-Gal A), leading to progressive lysosomal deposition of globotriaosylceramide and its derivatives in cells throughout the body."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1292/"
+        trust authoritative
     relate inherited_as(fabry, x_linked_recessive)
         source "Fabry disease is inherited in an X-linked recessive manner."
-        trust consensus   % [FLAG: pending]
+        trust consensus   % [FLAG: direction_only]
 
     % --- Niemann-Pick disease (type A/B) ---------------------------------
     relate deficient_in(niemann_pick, acid_sphingomyelinase)
-        source "Niemann-Pick disease types A and B result from deficiency of acid sphingomyelinase."
-        trust consensus   % [FLAG: pending]
+        source "NPD types A and B are due to a deficiency of the enzyme sphingomyelinase ... patients with NPA and NPB can be diagnosed with the measurement of acid sphingomyelinase (ASM) ... mutations in the SMPD1 gene encoding sphingomyelin phosphodiesterase-1"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC10009935/"
+        trust authoritative
     relate accumulates(niemann_pick, sphingomyelin)
-        source "Sphingomyelin accumulates in Niemann-Pick disease."
-        trust consensus   % [FLAG: pending]
+        source "Acid sphingomyelinase deficiency (ASMD) is an inborn error of metabolism that results in the accumulation of sphingomyelin in cells and tissues."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1370/"
+        trust authoritative
     relate inherited_as(niemann_pick, autosomal_recessive)
-        source "Niemann-Pick disease is inherited in an autosomal recessive manner."
-        trust consensus   % [FLAG: pending]
+        source "This condition is inherited in an autosomal recessive pattern, which means both copies of the gene in each cell have mutations."
+        locator "https://medlineplus.gov/genetics/condition/niemann-pick-disease/"
+        trust authoritative
 
     % --- Krabbe disease --------------------------------------------------
     relate deficient_in(krabbe, galactocerebrosidase)
-        source "Krabbe disease results from deficiency of galactocerebrosidase (galactosylceramidase)."
-        trust consensus   % [FLAG: pending]
+        source "Globoid cell leukodystrophy or Krabbe disease (KD) (OMIM 245200) is an inherited demyelinating disorder caused by a deficiency of galactosylceramidase (GALC; EC 3.2.1.46)..."
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC10474820/"
+        trust authoritative
     relate accumulates(krabbe, psychosine)
-        source "Psychosine (galactosylsphingosine) accumulates in Krabbe disease."
-        trust consensus   % [FLAG: pending]
+        source "In Krabbe tissues, especially within the brain, psychosine accumulates to high levels, triggering membrane destabilization and cell death."
+        locator "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3001661"
+        trust authoritative
     relate inherited_as(krabbe, autosomal_recessive)
         source "Krabbe disease is inherited in an autosomal recessive manner."
-        trust consensus   % [FLAG: pending]
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1238/"
+        trust authoritative
 
     % --- Hurler syndrome (MPS I) -----------------------------------------
     relate deficient_in(hurler, alpha_l_iduronidase)
-        source "Hurler syndrome (mucopolysaccharidosis type I) results from deficiency of alpha-L-iduronidase."
-        trust consensus   % [FLAG: pending]
+        source "Hurler syndrome, also known as mucopolysaccharidosis type I (MPH I), is one of the eleven mucopolysaccharidoses (MPS) disorders. ... It is an inherited lysosomal disorder caused by the absence of alpha-L-iduronidase, an enzyme responsible for the degradation of glycosaminoglycans (GAGs or mucopolysaccharides). ... Hurler syndrome is an autosomal recessive disorder due to a defective gene which encodes for the enzyme alpha-L-iduronidase (IUDA) that is located on chromosome 4."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532261/"
+        trust authoritative
     relate accumulates(hurler, glycosaminoglycans)
-        source "Glycosaminoglycans (dermatan and heparan sulfate) accumulate in Hurler syndrome."
-        trust consensus   % [FLAG: pending]
+        source "In the absence of the lysosomal hydrolase alfa-l-iduronidase (IDUA), two major subclasses of GAGs (dermatan sulfate, DS; and heparan sulfate, HS) are accumulated inside the lysosomes of a wide range of tissues"
+        locator "https://pmc.ncbi.nlm.nih.gov/articles/PMC7151028/"
+        trust authoritative
     relate inherited_as(hurler, autosomal_recessive)
-        source "Hurler syndrome is inherited in an autosomal recessive manner."
-        trust consensus   % [FLAG: pending]
+        source "Hurler syndrome is an autosomal recessive disorder due to a defective gene which encodes for the enzyme alpha-L-iduronidase (IUDA) that is located on chromosome 4."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK532261/"
+        trust authoritative
 
     % --- Maple syrup urine disease (MSUD) --------------------------------
     relate deficient_in(msud, branched_chain_ketoacid_dehydrogenase)
-        source "Maple syrup urine disease results from deficiency of branched-chain alpha-ketoacid dehydrogenase."
-        trust consensus   % [FLAG: pending]
+        source "Maple syrup urine disease (MSUD) is caused by decreased activity of the branched-chain alpha-ketoacid dehydrogenase complex (BCKD), the second enzymatic step in the degradative pathway of the branched-chain amino acids (BCAAs), which includes leucine, isoleucine, and valine."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1319/"
+        trust authoritative
     relate accumulates(msud, branched_chain_amino_acids)
-        source "Branched-chain amino acids (leucine, isoleucine, valine) accumulate in maple syrup urine disease."
-        trust consensus   % [FLAG: pending]
+        source "Maple syrup urine disease (MSUD) is caused by decreased activity of the branched-chain alpha-ketoacid dehydrogenase complex (BCKD), the second enzymatic step in the degradative pathway of the branched-chain amino acids (BCAAs), which includes leucine, isoleucine, and valine. ... Biallelic pathogenic variants in one of the four unlinked genes encoding any subunit can result in decreased activity of the enzyme complex and the accumulation of BCAAs and corresponding branched-chain alpha-ketoacids (BCKAs) in tissues and plasma."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1319/"
+        trust authoritative
     relate inherited_as(msud, autosomal_recessive)
-        source "Maple syrup urine disease is inherited in an autosomal recessive manner."
-        trust consensus   % [FLAG: pending]
+        source "Maple syrup urine disease (MSUD) is inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1319/"
+        trust authoritative
 
     % --- Classic galactosemia --------------------------------------------
     relate deficient_in(galactosemia, galactose_1_phosphate_uridyltransferase)
-        source "Classic galactosemia results from deficiency of galactose-1-phosphate uridyltransferase (GALT)."
-        trust consensus   % [FLAG: pending]
+        source "Galactosemia caused by deficiency of the enzyme galactose-1-phosphate uridylyltransferase (GALT)"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1518/"
+        trust authoritative
     relate accumulates(galactosemia, galactose_1_phosphate)
-        source "Galactose-1-phosphate accumulates in classic galactosemia."
-        trust consensus   % [FLAG: pending]
+        source "When GALT enzyme activity is deficient, galactose-1-phosphate, galactose, and galactitol accumulate"
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1518/"
+        trust authoritative
     relate inherited_as(galactosemia, autosomal_recessive)
-        source "Classic galactosemia is inherited in an autosomal recessive manner."
-        trust consensus   % [FLAG: pending]
+        source "Classic galactosemia and clinical variant galactosemia are inherited in an autosomal recessive manner."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK1518/"
+        trust authoritative
 }
