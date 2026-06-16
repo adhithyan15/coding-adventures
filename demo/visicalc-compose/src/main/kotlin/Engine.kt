@@ -223,6 +223,114 @@ class SpreadsheetModel(
     }
 }
 
+/// Engine-backed model for the VIRTUALIZED infinite sheet — the Kotlin sibling
+/// of the SwiftUI `WindowedSheetModel`, the Qt `SpreadsheetModel` infinite-view
+/// state, and the Flutter `InfiniteSheetModel`. It seeds a deliberately
+/// far-flung, sparse dataset and exposes one-row windowed reads plus the data
+/// extent, so a `LazyColumn`-virtualized Compose grid can render only the
+/// visible rectangle of an effectively-unbounded (u32 × u32) sheet.
+///
+/// Plain Kotlin (no Compose types): the host `@Composable` mutates it and bumps
+/// a `revision` state to recompose, exactly as `Main.kt` drives [SpreadsheetModel].
+/// All coordinates here are 1-based (row/col ≥ 1, col 1 = "A"), matching the engine.
+class InfiniteSheetModel(
+    private val session: SpreadsheetSession = SpreadsheetSession(),
+) : AutoCloseable {
+
+    /// The virtual grid size, derived from the data extent plus a margin so you
+    /// can scroll past the data into blank space.
+    var totalRows: Int = 1000
+        private set
+    var totalCols: Int = 60
+        private set
+
+    /// The selected cell (1-based) and the formula-bar text (its raw source).
+    var selRow: Int = 1
+        private set
+    var selCol: Int = 1
+        private set
+    var formula: String = ""
+        private set
+
+    init {
+        seed()
+        computeExtent()
+        selectInf(1, 1) // prime the selection + formula bar at A1
+    }
+
+    /// The classic cross-footing budget PLUS far-flung cells (a formula at
+    /// `Z1000`, a couple near `BA50`/`BB50`) to prove the sheet is sparse and
+    /// unbounded — identical seed to the SwiftUI/Qt/Flutter infinite views.
+    private fun seed() {
+        val cells = listOf(
+            "A1" to "15", "B1" to "3", "C1" to "12", "D1" to "8", "E1" to "=SUM(A1:D1)",
+            "A2" to "8", "B2" to "14", "C2" to "7", "D2" to "22", "E2" to "=SUM(A2:D2)",
+            "A3" to "12", "B3" to "9", "C3" to "18", "D3" to "6", "E3" to "=SUM(A3:D3)",
+            "A4" to "4", "B4" to "11", "C4" to "3", "D4" to "17", "E4" to "=SUM(A4:D4)",
+            "A5" to "=SUM(A1:A4)", "B5" to "=SUM(B1:B4)", "C5" to "=SUM(C1:C4)",
+            "D5" to "=SUM(D1:D4)", "E5" to "=SUM(E1:E4)",
+            "Z1000" to "=SUM(A1:A4)", // 1000 rows down: 39
+            "BA50" to "far cell", "BB50" to "=Z1000*2", // col 53/54, row 50: 78
+        )
+        for ((a1, raw) in cells) session.setCell(a1, raw)
+    }
+
+    /// Re-derive the virtual grid size from the engine's data extent plus a
+    /// comfortable margin. Mirrors `WindowedSheetModel.resize()`.
+    ///
+    /// The `+ margin` is done in `Long` and saturated back into `Int` before use:
+    /// the engine is u32-backed, so a `maxRow`/`maxCol` near `Int.MAX_VALUE`
+    /// would otherwise overflow the 32-bit add to a negative size — which would
+    /// feed `LazyColumn(items(...))` a negative count and invert the `coerceIn`
+    /// range. Not reachable in this demo (the only far cell is the fixed Z1000),
+    /// but the saturation makes the model safe against any sheet, per the
+    /// recorded "u32-overflow-defeats-cap" lesson.
+    fun computeExtent() {
+        val u = session.usedRange()
+        totalRows = saturate((u?.get("maxRow") ?: 1).toLong() + 200, floor = 1000)
+        totalCols = saturate((u?.get("maxCol") ?: 1).toLong() + 30, floor = 60)
+    }
+
+    /// Clamp a widened (`Long`) extent into a sane positive `Int`: at least
+    /// [floor], at most [Int.MAX_VALUE].
+    private fun saturate(value: Long, floor: Int): Int =
+        value.coerceIn(floor.toLong(), Int.MAX_VALUE.toLong()).toInt()
+
+    /// Column letters for a 1-based index (1 -> "A", 27 -> "AA").
+    fun columnLetters(index: Int): String = session.columnLetters(index)
+
+    /// The A1 address of the selected cell (e.g. "Z1000").
+    fun infAddress(): String = "${session.columnLetters(selCol)}$selRow"
+
+    /// One row's display strings (columns 1..totalCols) — what a virtualized
+    /// `LazyColumn` item renders. A single engine `get_window` over a 1×N strip;
+    /// returns an empty list if the request was rejected/oversized.
+    fun rowCells(row: Int): List<String> {
+        if (row < 1) return emptyList()
+        val w = session.window(row, 1, row, totalCols)
+        return if (w.isEmpty()) emptyList() else w[0]
+    }
+
+    /// Move the selection (clamped to the virtual grid; row/col ≥ 1) and pull the
+    /// selected cell's raw source into the formula bar.
+    fun selectInf(row: Int, col: Int) {
+        selRow = row.coerceIn(1, totalRows)
+        selCol = col.coerceIn(1, totalCols)
+        formula = session.getRaw(infAddress())
+    }
+
+    /// Commit the formula bar into the selected cell: write through to the engine
+    /// (which recomputes every dependent), grow the extent if the edit reached new
+    /// ground, and re-read the canonicalised source back into the bar.
+    fun commitInf(raw: String) {
+        session.setCell(infAddress(), raw)
+        computeExtent()
+        formula = session.getRaw(infAddress())
+    }
+
+    override fun close() = session.close()
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // A small JSON reader, just enough for the engine's output (objects,
 // arrays, strings, numbers, true/false/null). The window read is nested

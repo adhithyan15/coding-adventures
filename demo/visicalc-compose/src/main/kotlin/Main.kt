@@ -28,10 +28,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
+import androidx.compose.ui.Alignment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -98,15 +101,36 @@ private fun VisiCalcApp() {
     // Start showing the selected cell's source (A1 → "15") in the bar.
     var formulaText by remember { mutableStateOf(model.rawAt(0, 1)) }
 
+    // Which view is showing: the classic 5×5 cross-foot budget (the generated
+    // Grid), or the virtualized infinite sheet (InfiniteSheet, rendered on the
+    // same engine via the viewport primitive).
+    var infinite by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        // Title row — kebab-cased label up top, matching the
-        // sibling demos' "VISICALC · MOSAIC <BACKEND> DEMO" style.
-        Text(
-            text = "VISICALC · MOSAIC COMPOSE DEMO",
-            color = Color(0xFF9D9D9D),
-            fontSize = 11.sp,
-            fontFamily = FontFamily.Monospace,
-        )
+        // Title row + view toggle — kebab-cased label, matching the sibling
+        // demos' "VISICALC · MOSAIC <BACKEND> DEMO" style.
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = if (infinite)
+                    "VISICALC · INFINITE SHEET · RUST ENGINE"
+                else
+                    "VISICALC · MOSAIC COMPOSE DEMO",
+                color = Color(0xFF9D9D9D),
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.weight(1f),
+            )
+            Button(onClick = { infinite = !infinite }) {
+                Text(if (infinite) "Classic grid" else "Infinite sheet")
+            }
+        }
+
+        // The infinite view owns its own model + chrome, so it replaces the
+        // whole classic stack (formula bar + grid) when toggled on.
+        if (infinite) {
+            InfiniteSheet()
+            return@Column
+        }
 
         Box(modifier = Modifier.padding(top = 8.dp)) {
             FormulaBar(
