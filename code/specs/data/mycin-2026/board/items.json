@@ -44,6 +44,16 @@
     {"id": "sideroblastic_finding","domain": "anemia", "tactic": "recall", "relation": "classic_finding", "subject": "sideroblastic_anemia",     "var": "Finding", "gold": "ringed_sideroblasts"},
     {"id": "aplastic_mcv",        "domain": "anemia", "tactic": "recall", "relation": "has_mcv",         "subject": "aplastic_anemia",           "var": "Class",   "gold": "ABSTAIN"},
 
+    {"id": "insulin_gland",  "domain": "endocrine", "tactic": "recall", "relation": "secreted_by",         "subject": "insulin",        "var": "Gland",    "gold": "pancreatic_beta_cells"},
+    {"id": "cortisol_gland", "domain": "endocrine", "tactic": "recall", "relation": "secreted_by",         "subject": "cortisol",       "var": "Gland",    "gold": "adrenal_cortex"},
+    {"id": "thyroxine_gland","domain": "endocrine", "tactic": "recall", "relation": "secreted_by",         "subject": "thyroxine",      "var": "Gland",    "gold": "thyroid_gland"},
+    {"id": "adh_gland",      "domain": "endocrine", "tactic": "recall", "relation": "secreted_by",         "subject": "adh",            "var": "Gland",    "gold": "posterior_pituitary"},
+    {"id": "insulin_def",    "domain": "endocrine", "tactic": "recall", "relation": "deficiency_syndrome", "subject": "insulin",        "var": "Syndrome", "gold": "diabetes_mellitus"},
+    {"id": "cortisol_def",   "domain": "endocrine", "tactic": "recall", "relation": "deficiency_syndrome", "subject": "cortisol",       "var": "Syndrome", "gold": "addison_disease"},
+    {"id": "thyroxine_def",  "domain": "endocrine", "tactic": "recall", "relation": "deficiency_syndrome", "subject": "thyroxine",      "var": "Syndrome", "gold": "hypothyroidism"},
+    {"id": "adh_def",        "domain": "endocrine", "tactic": "recall", "relation": "deficiency_syndrome", "subject": "adh",            "var": "Syndrome", "gold": "central_diabetes_insipidus"},
+    {"id": "glucagon_gland", "domain": "endocrine", "tactic": "recall", "relation": "secreted_by",         "subject": "glucagon",       "var": "Gland",    "gold": "ABSTAIN"},
+
     {"id": "meningitis_bacterial_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_bacterial.adj", "gold": "bacterial_meningitis"},
     {"id": "meningitis_equivocal_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_equivocal.adj", "gold": "ABSTAIN"}
   ]
