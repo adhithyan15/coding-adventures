@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-s-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for the historical Bell Labs S statistical language"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

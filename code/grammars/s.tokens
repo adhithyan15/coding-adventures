@@ -1,0 +1,166 @@
+# S Language Token Grammar (Bell Labs S, "New S" / Blue Book era)
+# ============================================================================
+#
+# Tokenizes the historical S statistical language created at Bell Labs by
+# John Chambers, Rick Becker, and Allan Wilks (1976; "New S" 1988). S is the
+# direct ancestor of R. See code/specs/S00-s-language.md for the full design.
+#
+# Unlike Dartmouth BASIC, S is CASE-SENSITIVE: `TRUE` and `true` differ, and so
+# do `T` and `t`. We therefore leave case_sensitive at its default (true) — the
+# source is matched verbatim and keyword promotion uses exact-case lookup.
+#
+# THE ICONIC HISTORICAL DETAIL — `_` IS ASSIGNMENT
+# ------------------------------------------------------------
+# In historical S the underscore is the assignment operator, identical to `<-`:
+#
+#     x _ c(1, 2, 3)     # assign c(1,2,3) to x
+#
+# This is *why* R programmers are told never to put `_` inside a name: in S an
+# underscore was never part of an identifier — it meant "assign." We honour
+# that faithfully: `_` is the UNDERSCORE token and the NAME pattern below
+# EXCLUDES `_`. The `=` sign is NOT general assignment in S — it only binds
+# named call arguments.
+
+case_sensitive: true
+
+# ============================================================================
+# SECTION 1: Multi-character operators (MUST precede their single-char prefixes)
+#
+# First-match-wins over anchored patterns: each longer operator is listed
+# before the shorter operator it begins with, so `<-` never lexes as `<`
+# followed by `-`, and `<<-` never lexes as `<-` followed by `-`.
+#
+#   <<-  super-assignment (lexed and reserved; v1 treats it as <-)
+#   <-   assignment            ->   right-assignment
+#   <=   less-or-equal         >=   greater-or-equal
+#   ==   equality              !=   inequality
+# ============================================================================
+
+SUPER_ASSIGN = "<<-"
+ASSIGN       = "<-"
+LE           = "<="
+GE           = ">="
+EQEQ         = "=="
+NE           = "!="
+RIGHT_ASSIGN = "->"
+
+# ============================================================================
+# SECTION 2: Numeric literals
+#
+# All S numbers are stored as double precision. Supported forms:
+#   42      integer-looking (stored as 42.0)    .5     leading-dot decimal
+#   3.14    decimal                              1e3    scientific (= 1000.0)
+#   1.5e-3  negative exponent
+#
+# NUMBER is listed before NAME so `.5` lexes as a number while `.name`
+# (a legal S identifier such as `.GlobalEnv`) falls through to NAME — the
+# NUMBER pattern requires at least one digit after the optional dot.
+# ============================================================================
+
+NUMBER = /[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/
+
+# ============================================================================
+# SECTION 3: String literals
+#
+# S accepts both double- and single-quoted strings. v1 has no escape handling
+# (a quote cannot appear inside its own delimiter). Both forms alias to STRING
+# so the parser sees one token type. The value includes the surrounding quotes;
+# the runtime strips them.
+# ============================================================================
+
+DQ_STRING = /"[^"]*"/ -> STRING
+SQ_STRING = /'[^']*'/ -> STRING
+
+# ============================================================================
+# SECTION 4: Identifiers (no underscore — see header) and keyword promotion
+#
+# An S name starts with a letter or a dot and continues with letters, digits,
+# and dots: `x`, `data.frame`, `.GlobalEnv`. The underscore is deliberately
+# absent because it is the assignment operator.
+#
+# NAME tokens whose exact value appears in the keywords: list below are
+# promoted to KEYWORD tokens (with the value preserved verbatim, since the
+# grammar is case-sensitive). Promotion — rather than separate literal
+# patterns — is what lets `TRUE` win over a hypothetical `T` literal: the
+# longest identifier is matched first as a NAME, then classified.
+# ============================================================================
+
+NAME = /[A-Za-z.][A-Za-z0-9.]*/
+
+keywords:
+  if
+  else
+  for
+  while
+  repeat
+  function
+  break
+  next
+  in
+  TRUE
+  FALSE
+  T
+  F
+  NULL
+  NA
+  Inf
+  NaN
+
+# ============================================================================
+# SECTION 5: Single-character operators and punctuation
+#
+#   <  >  =   comparison / named-arg binding (the `=` of f(x = 1))
+#   + - * /   arithmetic       ^   exponentiation (right-associative)
+#   :         sequence (1:5)   _   HISTORICAL ASSIGNMENT
+#   ( ) { } [ ]   grouping, blocks, indexing       , ;   separators
+# ============================================================================
+
+LT        = "<"
+GT        = ">"
+EQ        = "="
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+SLASH     = "/"
+CARET     = "^"
+COLON     = ":"
+UNDERSCORE = "_"
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+COMMA     = ","
+SEMICOLON = ";"
+
+# ============================================================================
+# SECTION 6: Newlines (significant — statement terminators)
+#
+# S is expression-per-line: a newline ends a statement. The exception — a
+# newline inside open ( ), [ ], or { } — is handled by a post-tokenize hook in
+# the s-lexer crate (it drops bracket-interior newlines), not here.
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+# ============================================================================
+# SECTION 7: Skip patterns (silently consumed)
+#
+# Horizontal whitespace and `#` line comments are discarded. Newlines are NOT
+# skipped — see section 6.
+# ============================================================================
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /#[^\n]*/
+
+# ============================================================================
+# SECTION 8: Error recovery
+#
+# Any otherwise-unrecognized character becomes UNKNOWN so the lexer never
+# loops; the parser reports it with position information.
+# ============================================================================
+
+errors:
+  UNKNOWN = /./
