@@ -377,6 +377,10 @@ pub fn arithmetic(op: &str, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
         "*" => |x, y| x * y,
         "/" => |x, y| x / y,
         "^" => |x, y| x.powf(y),
+        // `%%` is R's modulo (result takes the divisor's sign); `%/%` is floor
+        // division. Both reuse the same recycling/NA machinery.
+        "%%" => |x, y| x - (x / y).floor() * y,
+        "%/%" => |x, y| (x / y).floor(),
         other => {
             return Err(SError::TypeError(format!("unknown operator '{other}'")));
         }
@@ -396,6 +400,22 @@ pub fn negate(value: &SValue) -> SResult<SValue> {
             .map(|x| if is_na_real(x) { na_real() } else { -x })
             .collect(),
     )))
+}
+
+/// `x %in% table` — for each element of `x`, whether it appears in `table`.
+/// Returns a logical vector the length of `x`. Membership is tested on the
+/// coerced character form, so it works uniformly for numeric, logical, and
+/// character values. Unlike comparison, `%in%` never yields `NA` (an `NA` in
+/// `x` is `TRUE` iff `table` also contains `NA`, matching R).
+pub fn membership(lhs: &SValue, rhs: &SValue) -> SValue {
+    let haystack: std::collections::HashSet<Option<String>> =
+        rhs.as_character().into_iter().collect();
+    SValue::Logical(
+        lhs.as_character()
+            .into_iter()
+            .map(|n| Some(haystack.contains(&n)))
+            .collect(),
+    )
 }
 
 /// Apply a comparison operator, producing a logical vector. Numeric operands

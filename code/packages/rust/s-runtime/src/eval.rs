@@ -20,7 +20,8 @@ use crate::builtins;
 use crate::env::{define, lookup, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
-    arithmetic, bounded_sequence, compare, format_value, index, negate, Arg, Param, SValue,
+    arithmetic, bounded_sequence, compare, format_value, index, membership, negate, Arg, Param,
+    SValue,
 };
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -153,6 +154,7 @@ impl Interpreter {
             "comparison" => self.eval_comparison(node, env),
             "range" => self.eval_range(node, env),
             "additive" | "multiplicative" => self.eval_arith_chain(node, env),
+            "special" => self.eval_special(node, env),
             "unary" => self.eval_unary(node, env),
             "power" => self.eval_power(node, env),
             "postfix" => self.eval_postfix(node, env),
@@ -249,6 +251,73 @@ impl Interpreter {
         } else {
             Ok(value)
         }
+    }
+
+    /// Left-associative fold over the `%op%` infix operators.
+    fn eval_special(&self, node: &GrammarASTNode, env: &Env) -> SResult<SValue> {
+        let mut acc: Option<SValue> = None;
+        let mut pending: Option<String> = None;
+        let mut applied = false;
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => {
+                    let v = self.eval_node(n, env)?;
+                    acc = Some(match (acc.take(), pending.take()) {
+                        (None, _) => v,
+                        (Some(a), Some(op)) => {
+                            applied = true;
+                            self.eval_infix(&op, &a, &v, env)?
+                        }
+                        (Some(a), None) => a,
+                    });
+                }
+                ASTNodeOrToken::Token(t) => pending = Some(t.value.clone()),
+            }
+        }
+        let value = acc.ok_or_else(|| SError::Parse("empty %op% chain".into()))?;
+        if applied {
+            self.as_visible(value)
+        } else {
+            Ok(value)
+        }
+    }
+
+    /// Evaluate one `%op%` application. `%%`, `%/%`, `%in%`, and `%o%` are
+    /// built in; any other `%name%` is looked up as a user-defined function
+    /// (defined via `"%name%" <- function(a, b) …`) and called `(lhs, rhs)`.
+    fn eval_infix(&self, op: &str, lhs: &SValue, rhs: &SValue, env: &Env) -> SResult<SValue> {
+        match op {
+            "%%" => arithmetic("%%", lhs, rhs),
+            "%/%" => arithmetic("%/%", lhs, rhs),
+            "%in%" => Ok(membership(lhs, rhs)),
+            "%o%" => self.outer_product(lhs, rhs),
+            _ => {
+                let func = lookup(env, op).ok_or_else(|| SError::Undefined(op.to_string()))?;
+                let args = [
+                    Arg { name: None, value: lhs.clone() },
+                    Arg { name: None, value: rhs.clone() },
+                ];
+                self.call_value(func, &args)
+            }
+        }
+    }
+
+    /// `a %o% b` — the outer product: every product `a[i] * b[j]`, laid out in
+    /// row-major order (`length(a) * length(b)` elements).
+    fn outer_product(&self, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
+        let a = lhs.as_double()?;
+        let b = rhs.as_double()?;
+        let mut out = Vec::with_capacity(a.len() * b.len());
+        for x in a.iter() {
+            for y in b.iter() {
+                out.push(if is_na_real(x) || is_na_real(y) {
+                    na_real()
+                } else {
+                    x * y
+                });
+            }
+        }
+        Ok(SValue::doubles(out))
     }
 
     fn eval_unary(&self, node: &GrammarASTNode, env: &Env) -> SResult<SValue> {
@@ -646,29 +715,28 @@ fn name_token(node: &GrammarASTNode) -> Option<String> {
 /// only bare names (`x <- ...`); complex targets like `x[1] <- ...` are not yet
 /// handled and produce an error.
 fn lvalue_name(node: &GrammarASTNode) -> SResult<String> {
-    let mut names = Vec::new();
-    let mut total_tokens = 0;
-    collect_tokens(node, &mut names, &mut total_tokens);
-    if names.len() == 1 && total_tokens == 1 {
-        Ok(names.remove(0))
-    } else {
-        Err(SError::TypeError(
-            "invalid (non-name) assignment target".into(),
-        ))
+    // The target subtree must reduce to a single token: a bare NAME, or a
+    // STRING (which names a function operator, e.g. `"%between%" <- ...`).
+    let mut tokens: Vec<(&str, &str)> = Vec::new();
+    collect_tokens(node, &mut tokens);
+    if let [(ty, val)] = tokens.as_slice() {
+        match *ty {
+            "NAME" => return Ok((*val).to_string()),
+            "STRING" => return Ok(strip_quotes(val)),
+            _ => {}
+        }
     }
+    Err(SError::TypeError(
+        "invalid (non-name) assignment target".into(),
+    ))
 }
 
-/// Collect every `NAME` token value and a count of all tokens in a subtree.
-fn collect_tokens(node: &GrammarASTNode, names: &mut Vec<String>, total: &mut usize) {
+/// Collect every token (effective type name, value) in a subtree, in order.
+fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<(&'a str, &'a str)>) {
     for child in &node.children {
         match child {
-            ASTNodeOrToken::Token(t) => {
-                *total += 1;
-                if t.effective_type_name() == "NAME" {
-                    names.push(t.value.clone());
-                }
-            }
-            ASTNodeOrToken::Node(n) => collect_tokens(n, names, total),
+            ASTNodeOrToken::Token(t) => out.push((t.effective_type_name(), t.value.as_str())),
+            ASTNodeOrToken::Node(n) => collect_tokens(n, out),
         }
     }
 }

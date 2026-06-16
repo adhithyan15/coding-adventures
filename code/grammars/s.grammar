@@ -78,13 +78,7 @@ assignment = comparison [ ( ASSIGN | UNDERSCORE | SUPER_ASSIGN | RIGHT_ASSIGN ) 
 # A single optional comparison; chaining like `a < b < c` is not S syntax.
 # =============================================================================
 
-comparison = range [ ( EQEQ | NE | LE | GE | LT | GT ) range ] ;
-
-# =============================================================================
-# range — the colon sequence operator: `1:5` is c(1,2,3,4,5).
-# =============================================================================
-
-range = additive [ COLON additive ] ;
+comparison = additive [ ( EQEQ | NE | LE | GE | LT | GT ) additive ] ;
 
 # =============================================================================
 # additive / multiplicative — left-associative arithmetic via repetition.
@@ -92,7 +86,21 @@ range = additive [ COLON additive ] ;
 
 additive = multiplicative { ( PLUS | MINUS ) multiplicative } ;
 
-multiplicative = unary { ( STAR | SLASH ) unary } ;
+multiplicative = special { ( STAR | SLASH ) special } ;
+
+# =============================================================================
+# special — user and built-in `%op%` infix operators (v2). Left-associative;
+# binds tighter than `* /` and looser than `:`, matching R.
+# =============================================================================
+
+special = range { PERCENT_OP range } ;
+
+# =============================================================================
+# range — the colon sequence operator: `1:5` is c(1,2,3,4,5). v2 fix: `:` now
+# binds tighter than arithmetic (it wraps `unary`), so `1:3+1` is c(2,3,4).
+# =============================================================================
+
+range = unary [ COLON unary ] ;
 
 # =============================================================================
 # unary — prefix minus. Looser than `^`, so `-2^2` is -(2^2) = -4, matching S.

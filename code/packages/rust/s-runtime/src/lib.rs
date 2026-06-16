@@ -159,6 +159,48 @@ mod tests {
         assert_eq!(nums("3:1\n"), vec![3.0, 2.0, 1.0]);
     }
 
+    // --- v2: precedence fix + infix operators ---------------------------
+
+    #[test]
+    fn colon_now_binds_tighter_than_arithmetic() {
+        // v2 fix: `1:3+1` is (1:3)+1, not 1:(3+1).
+        assert_eq!(nums("1:3+1\n"), vec![2.0, 3.0, 4.0]);
+    }
+
+    #[test]
+    fn modulo_and_integer_division() {
+        assert_eq!(nums("c(2, 5, 8) %% 3\n"), vec![2.0, 2.0, 2.0]);
+        assert_eq!(nums("7 %/% 2\n"), vec![3.0]);
+        // R modulo takes the divisor's sign.
+        assert_eq!(nums("-7 %% 3\n"), vec![2.0]);
+    }
+
+    #[test]
+    fn membership_operator() {
+        assert_eq!(show("3 %in% c(1, 2, 3)\n"), "[1] TRUE");
+        assert_eq!(show("c(1, 5) %in% c(1, 2, 3)\n"), "[1]  TRUE FALSE");
+        // %in% binds looser than `:` — `2 %in% 1:3` is `2 %in% (1:3)`.
+        assert_eq!(show("2 %in% 1:3\n"), "[1] TRUE");
+    }
+
+    #[test]
+    fn outer_product_operator() {
+        assert_eq!(nums("1:2 %o% 1:3\n"), vec![1.0, 2.0, 3.0, 2.0, 4.0, 6.0]);
+    }
+
+    #[test]
+    fn user_defined_infix_operator() {
+        // Defining one needs a string assignment target.
+        let src = "\"%plus%\" <- function(a, b) a + b\n5 %plus% 7\n";
+        assert_eq!(nums(src), vec![12.0]);
+    }
+
+    #[test]
+    fn special_binds_tighter_than_times() {
+        // `2 * 3 %% 4` is `2 * (3 %% 4)` = 2 * 3 = 6 (special tighter than *).
+        assert_eq!(nums("2 * 3 %% 4\n"), vec![6.0]);
+    }
+
     // --- Comparison -----------------------------------------------------
 
     #[test]
