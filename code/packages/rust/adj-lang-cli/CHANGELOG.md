@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.7.0] - 2026-06-16 — `governing` section: defeasible precedence output (ADJ73 PR-3)
+
+### Added
+
+- **`"governing"`** output section, emitted for each `$variable` binding query alongside
+  `"recall"`. Runs `logic_engine::enumerate_governing` and renders every distinct answer with
+  its precedence verdict: `status` ∈ `governing` | `defeated` (+ `defeated_by`) | `conflict_peer`,
+  plus its `standing` (`asserted` for a fact, else the rule's tier) and `bindings` + ground
+  `term`. A top-level `has_conflict` flags an unresolved tie. 0 answer-time model calls.
+- For a predicate **not** declared `functional`, every answer is `governing` (mirrors `recall`)
+  — the precedence-resolved view is back-compatible. For a functional predicate with
+  `priority:` tiers it shows the override chain (the Python runtime reads this to get the
+  governing decision — the enabler for the MYCIN `decide_timing` → ADJ refactor).
+
+### Tests
+
+- `tests/governing_e2e.rs`: the section tags every binding answer (non-functional baseline);
+  it is absent for a ground hypothesis query. The functional-override path is covered at the
+  engine (`logic-engine::govern`) + adj-lang lowering levels (the `functional`/`priority:`
+  surface lands in adj-lang PR-C).
+
 ## [0.6.0] - 2026-06-14 — relational recall: binding-query `"recall"` output (MYCIN-2026 REL-3)
 
 ### Added
