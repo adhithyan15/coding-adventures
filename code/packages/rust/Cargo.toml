@@ -243,6 +243,7 @@ members = [
     "ruby-lexer",
     "ruby-parser",
     "s-lexer",
+    "s-parser",
     "sql-lexer",
     "sql-parser",
     "smt-lib-format",

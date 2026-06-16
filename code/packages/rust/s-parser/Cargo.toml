@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-s-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser for the historical Bell Labs S statistical language"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-s-lexer = { path = "../s-lexer" }
