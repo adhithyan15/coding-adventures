@@ -49,13 +49,24 @@ result (a statement terminated by `;`; a `$`-terminated statement runs and
 advances the `%o` counter but prints nothing). A surface/parse error comes back
 as `Err(String)`.
 
-### Panic-safety
+### Robustness at the trust boundary
 
-The underlying `macsyma-lexer` *panics* on characters it cannot tokenize. Because
-`feed` is a trust boundary over arbitrary user text, it runs the evaluation inside
-`catch_unwind` and converts any panic into a clean `Err` — a stray `@` returns an
-error instead of aborting the session. (The proper upstream fix is for the lexer
-to return a `Result`; this façade is defensive in the meantime.)
+`feed` takes arbitrary user text, so it defends against three failure modes of
+the reused Macsyma stack:
+
+- **Unwinding panics** — the `macsyma-lexer` *panics* on a character it cannot
+  tokenize, so `feed` runs evaluation inside `catch_unwind` and returns a clean
+  `Err` (a stray `@` errors instead of aborting).
+- **Stack overflow** — the parser/VM recurse on nesting with no depth limit, so
+  deeply nested input would overflow the stack and *abort the process
+  uncatchably*. `feed` caps total size (`MAX_INPUT_LEN`) and per-statement token
+  count (`MAX_STATEMENT_TOKENS`, counted from the **real** lexer so comment/string
+  skip rules can't bypass it), and evaluates on a large-stack worker thread.
+- **Mutex poisoning** — after any caught panic the wrapped session is rebuilt, so
+  a panic in a lock-holding handler can't permanently brick it.
+
+The proper upstream fixes are a `Result`-returning lexer and a parser/VM
+recursion-depth limit; these are defensive shims in the façade meanwhile.
 
 ## What evaluates
 

@@ -7,8 +7,10 @@
 //!   index; the continuation prompt is shown while a statement spans lines.
 //! * **Line continuation** — Maxima statements end with a terminator: `;` to
 //!   display the result or `$` to suppress it. The REPL keeps reading physical
-//!   lines until it sees a terminator *outside a string* with all brackets
-//!   balanced, then evaluates the whole buffer at once.
+//!   lines until it sees a terminator *outside a string or `/* */` comment* with
+//!   all brackets balanced, then evaluates the whole buffer at once. The
+//!   accumulation buffer is size-capped so an input that never terminates cannot
+//!   grow memory without bound.
 //! * **Quit / EOF** — `quit;`, `quit()`, `exit`, or Ctrl-D end the session.
 //! * **Non-fatal errors** — a surface error prints and the session continues.
 //!
@@ -17,7 +19,7 @@
 //! block rule), because Maxima is statement-terminated, not block-structured at
 //! the REPL surface.
 
-use coding_adventures_maxima_runtime::MaximaSession;
+use coding_adventures_maxima_runtime::{MaximaSession, MAX_INPUT_LEN};
 use std::io::{BufRead, Write};
 
 /// What the REPL should do after being fed one physical line.
@@ -81,7 +83,13 @@ impl MaximaRepl {
         self.buffer.push_str(line);
         self.buffer.push('\n');
 
-        if is_incomplete(&self.buffer) {
+        // Bound the accumulation buffer: a stream that never satisfies the
+        // continuation rule (an unterminated string/comment, or endless open
+        // brackets) must not grow memory without limit. Once we are over the
+        // size the session itself would reject anyway, stop waiting and submit
+        // it so `feed` returns the clean "input too large" error and the buffer
+        // is reset — rather than buffering unbounded input.
+        if self.buffer.len() <= MAX_INPUT_LEN && is_incomplete(&self.buffer) {
             return ReplResponse::NeedMore;
         }
 
@@ -109,18 +117,35 @@ impl MaximaRepl {
 /// returns `true` while either:
 ///
 /// * brackets are still open (`depth > 0`), or
-/// * a `"`-string is unterminated, or
-/// * no `;`/`$` terminator has yet been seen outside a string.
+/// * a `"`-string or a `/* */` comment is unterminated, or
+/// * no `;`/`$` terminator has yet been seen outside a string/comment.
 ///
-/// `"`-delimited strings are tracked (with `\"` escapes) so a `;` *inside* a
-/// string — `s : "a;b";` — is not mistaken for a terminator.
+/// Strings (`"…"`, with `\"` escapes) and C-style `/* … */` comments are tracked
+/// exactly as the macsyma lexer treats them — non-nesting comments, and a `"`
+/// only opens a string outside a comment — so a `;` *inside* either (`s :
+/// "a;b";`, or `/* end; */ x;`) is not mistaken for a terminator, and a stray
+/// `"` inside a comment does not wedge the prompt into a phantom string. This is
+/// only a continuation heuristic: whatever is finally submitted still passes
+/// through `MaximaSession::feed`, which re-lexes with the real lexer and applies
+/// the size/complexity guards, so a mismatch here can never crash — at worst it
+/// submits early or asks for one more line.
 fn is_incomplete(src: &str) -> bool {
     let mut depth: i32 = 0;
     let mut in_string = false;
+    let mut in_comment = false;
     let mut escaped = false;
     let mut saw_terminator = false;
 
-    for ch in src.chars() {
+    let mut chars = src.chars().peekable();
+    while let Some(ch) = chars.next() {
+        if in_comment {
+            // A non-nesting `/* … */` comment closes at the first `*/`.
+            if ch == '*' && chars.peek() == Some(&'/') {
+                chars.next();
+                in_comment = false;
+            }
+            continue;
+        }
         if in_string {
             if escaped {
                 escaped = false;
@@ -132,6 +157,11 @@ fn is_incomplete(src: &str) -> bool {
             continue;
         }
         match ch {
+            // `/*` opens a comment (only outside a string — handled above).
+            '/' if chars.peek() == Some(&'*') => {
+                chars.next();
+                in_comment = true;
+            }
             '"' => in_string = true,
             '(' | '[' | '{' => depth += 1,
             ')' | ']' | '}' => depth -= 1,
@@ -140,7 +170,7 @@ fn is_incomplete(src: &str) -> bool {
         }
     }
 
-    in_string || depth > 0 || !saw_terminator
+    in_string || in_comment || depth > 0 || !saw_terminator
 }
 
 /// Drive a full interactive Maxima session over the given reader and writer.
@@ -203,6 +233,40 @@ mod tests {
         // closing quote and the real terminator.
         assert_eq!(r.feed("s : \"a;b\""), ReplResponse::NeedMore);
         assert!(matches!(r.feed(";"), ReplResponse::Output(_)));
+    }
+
+    #[test]
+    fn a_terminator_inside_a_comment_is_not_a_terminator() {
+        // `/* … ; … */` — the `;` is inside a block comment, so the statement is
+        // still open until the real terminator after the comment closes.
+        let mut r = MaximaRepl::new();
+        assert_eq!(r.feed("x : 1 /* end; here */"), ReplResponse::NeedMore);
+        assert!(matches!(r.feed("+ 2;"), ReplResponse::Output(t) if t.contains('3')));
+    }
+
+    #[test]
+    fn a_quote_inside_a_comment_does_not_wedge_the_prompt() {
+        // A lone `"` inside a comment must not flip the continuation logic into a
+        // never-ending "string" — the statement completes at its real `;`.
+        let mut r = MaximaRepl::new();
+        assert!(
+            matches!(r.feed("/* a \" quote */ 2 + 2;"), ReplResponse::Output(t) if t.contains('4'))
+        );
+    }
+
+    #[test]
+    fn an_unterminated_buffer_is_submitted_once_it_passes_the_size_cap() {
+        // A never-closing bracket run must not buffer unbounded memory: once the
+        // accumulation exceeds the size cap it is submitted and the session
+        // returns the clean "too large" error instead of asking for more forever.
+        let mut r = MaximaRepl::new();
+        let big = "(".repeat(MAX_INPUT_LEN + 16);
+        match r.feed(&big) {
+            ReplResponse::Output(t) => assert!(t.contains("too large"), "got {t:?}"),
+            other => panic!("expected an over-size submission, got {other:?}"),
+        }
+        // The buffer was reset, so the prompt is back to a fresh input prompt.
+        assert_eq!(r.prompt(), "(%i2) ");
     }
 
     #[test]

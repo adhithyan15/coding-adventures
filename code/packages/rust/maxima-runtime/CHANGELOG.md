@@ -15,10 +15,19 @@ Semantic Versioning.
   suppresses but still advances the `%o` history counter). A surface/parse error
   is returned as `Err(String)` via the macsyma evaluator's `Display`.
 - One-shot `eval(src)` convenience on a fresh session.
-- **Panic-safety at the trust boundary:** `feed` runs evaluation inside
-  `catch_unwind`, converting the underlying `macsyma-lexer`'s panic-on-bad-input
-  into a clean `Err` so a single stray character cannot abort an interactive
-  session. Documented as a defensive shim pending an upstream lexer fix.
+- **Robustness at the trust boundary** (`feed` takes arbitrary user text):
+  - *Unwinding panics* — evaluation runs inside `catch_unwind`, converting the
+    underlying `macsyma-lexer`'s panic-on-bad-input into a clean `Err` so a stray
+    character cannot abort the session.
+  - *Stack-overflow from unbounded parser/VM recursion* — deeply nested input
+    (nested `(`, prefix `-` runs, long `1+1+…` chains) would overflow the stack
+    and **abort the process uncatchably**. Guarded by a total-size cap
+    (`MAX_INPUT_LEN`), a per-statement token cap (`MAX_STATEMENT_TOKENS`) counted
+    from the **real macsyma lexer** (so comment/string skip rules can't be used
+    to bypass it), and a large-stack worker thread that also builds the echo, so
+    bounded trees are created and dropped clear of the caller's stack.
+  - *Mutex poisoning* — after any caught panic the wrapped session is rebuilt, so
+    a panic inside a lock-holding macsyma handler can't permanently brick it.
 
 ### Notes
 

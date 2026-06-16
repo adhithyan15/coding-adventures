@@ -12,10 +12,15 @@ Semantic Versioning.
   `coding_adventures_maxima_repl::run` driver.
 - `MaximaRepl` over a persistent `MaximaSession`: `(%i«n») ` / `... ` prompts,
   line continuation until a `;`/`$` statement terminator (tracked outside `"`
-  strings, with `\"` escapes, and only at bracket depth 0 so a `;` inside a
-  string or a paren group does not terminate early), `quit;`/`quit()`/`exit`/EOF
-  handling, and non-fatal error reporting (a surface error prints and the session
-  continues).
+  strings — with `\"` escapes — and outside `/* */` comments, and only at bracket
+  depth 0, so a `;` inside a string, comment, or paren group does not terminate
+  early, and a stray `"` in a comment does not wedge the prompt),
+  `quit;`/`quit()`/`exit`/EOF handling, and non-fatal error reporting (a surface
+  error prints and the session continues).
+- The accumulation buffer is size-capped (at the runtime's `MAX_INPUT_LEN`): an
+  input that never satisfies the continuation rule is submitted once it exceeds
+  the cap (yielding a clean "too large" error) instead of buffering unbounded
+  memory.
 
 ### Notes
 

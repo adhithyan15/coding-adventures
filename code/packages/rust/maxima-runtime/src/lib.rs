@@ -63,13 +63,17 @@
 //!    overflow is **not** a catchable panic; it aborts the whole process, and
 //!    `catch_unwind` cannot stop it. Three layered guards close this:
 //!    `feed` rejects input longer than [`MAX_INPUT_LEN`]; it rejects any single
-//!    statement whose structural-symbol count exceeds [`MAX_STATEMENT_SYMBOLS`]
-//!    (an upper bound on the resulting tree depth, since a tree of *n* internal
-//!    operator/bracket nodes is at most *n* deep), so a pathologically deep tree
-//!    is never built in the first place; and it runs evaluation on a dedicated
-//!    worker thread with a large, bounded stack ([`EVAL_STACK_SIZE`]) and builds
-//!    the echo string there, so even the bounded trees are created *and dropped*
-//!    on the big stack rather than the caller's.
+//!    statement that lexes to more than [`MAX_STATEMENT_TOKENS`] tokens (an upper
+//!    bound on the resulting tree depth, since every node of the parse tree
+//!    consumes at least one token), so a pathologically deep tree is never built
+//!    in the first place; and it runs evaluation on a dedicated worker thread
+//!    with a large, bounded stack ([`EVAL_STACK_SIZE`]) and builds the echo
+//!    string there, so even the bounded trees are created *and dropped* on the
+//!    big stack rather than the caller's. Crucially the token count comes from
+//!    the **real macsyma lexer** (which is iterative and so cannot itself
+//!    overflow), not a re-implemented surface scan — a façade scan that doesn't
+//!    perfectly mirror the lexer's comment/string skip rules is bypassable, so
+//!    we reuse the genuine tokenizer the parser will consume.
 //!
 //! 3. **A poisoned session after a caught panic.** Some Macsyma handlers hold an
 //!    internal `Mutex` while running; a panic there would poison it and make
@@ -86,6 +90,7 @@
 //! fixes are for the lexer to return a `Result` and for the parser/VM to carry a
 //! recursion-depth limit.
 
+use macsyma_lexer::tokenize_macsyma;
 use macsyma_runtime::MacsymaSession;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
@@ -95,17 +100,18 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 /// beyond any realistic interactive submission.
 pub const MAX_INPUT_LEN: usize = 64 * 1024;
 
-/// Maximum number of structural (operator/bracket/punctuation) symbols allowed
-/// in any single top-level statement.
+/// Maximum number of lexer tokens allowed in any single top-level statement.
 ///
-/// The depth of the IRNode tree a statement parses to is bounded above by the
-/// number of operator/bracket *tokens* it contains, which is in turn bounded by
-/// the count of non-identifier symbol characters. Capping that per statement
-/// therefore caps the tree depth, so the parser/VM (and the later `Drop` of the
-/// tree) cannot be driven into a stack-overflowing recursion. 2000 operators in
-/// one statement is already absurd for human-written Maxima, so the cap never
-/// bites legitimate input.
-pub const MAX_STATEMENT_SYMBOLS: usize = 2000;
+/// The depth of the parse tree a statement produces is bounded above by the
+/// number of tokens it contains, because every node of the tree consumes at
+/// least one token. Capping the per-statement token count therefore caps the
+/// tree depth, so the parser/VM (and the later `Drop` of the tree) cannot be
+/// driven into a stack-overflowing recursion. The count is taken from the real
+/// macsyma lexer (see [`MaximaSession::feed`]), so comments and whitespace are
+/// already skipped and strings are single tokens — there is no surface-scan
+/// model to diverge from and bypass. 2000 tokens in one statement is already
+/// absurd for human-written Maxima, so the cap never bites legitimate input.
+pub const MAX_STATEMENT_TOKENS: usize = 2000;
 
 /// Stack size of the worker thread that runs evaluation.
 ///
@@ -156,7 +162,7 @@ impl MaximaSession {
         }
         // Guard 2: reject any over-complex statement so no stack-overflowing tree
         // is ever built (see the module "Robustness" note and the const docs).
-        check_statement_complexity(src)?;
+        check_statement_token_counts(src)?;
 
         // Guard 3: run evaluation — and the echo formatting that walks the result
         // trees — on a worker thread with a large, bounded stack, so the bounded
@@ -212,48 +218,44 @@ impl MaximaSession {
     }
 }
 
-/// Reject input whose per-statement structural complexity could drive the
-/// parser/VM — or the later `Drop` of the resulting tree — into a deep,
-/// stack-overflowing recursion.
+/// Reject input where any single statement lexes to too many tokens, which
+/// would let the parser/VM — or the later `Drop` of the resulting tree — recurse
+/// deeply enough to overflow the stack.
 ///
-/// A statement's IRNode tree is at most as deep as the number of operator /
-/// bracket tokens it contains, which is bounded by the count of non-identifier
-/// "structural" symbol characters. We count those per top-level statement
-/// (resetting at each `;`/`$` that lies outside a `"`-string) and refuse the
-/// whole chunk if any statement exceeds [`MAX_STATEMENT_SYMBOLS`]. The scan is a
-/// single linear pass and treats string contents as opaque so an operator-heavy
-/// string literal is not mistaken for deep structure.
-fn check_statement_complexity(src: &str) -> Result<(), String> {
-    let mut symbols: usize = 0;
-    let mut in_string = false;
-    let mut escaped = false;
-    for ch in src.chars() {
-        if in_string {
-            if escaped {
-                escaped = false;
-            } else if ch == '\\' {
-                escaped = true;
-            } else if ch == '"' {
-                in_string = false;
-            }
+/// The count is taken from the **real** macsyma lexer, the very one the parser
+/// consumes, so there is no separately-maintained lexical model to diverge from:
+/// comments and whitespace are skip patterns (absent from the token stream),
+/// strings are single tokens, and an unterminated comment or quote is lexed
+/// exactly as the parser would see it. A statement's parse-tree depth is at most
+/// its token count (every node consumes ≥1 token), so capping tokens per
+/// statement caps the depth.
+///
+/// The lexer is iterative and so cannot itself overflow on deep nesting. It does,
+/// however, *panic* on a character it cannot tokenize; we catch that and return
+/// `Ok(())` so the bad input flows on to the worker-thread evaluation, where it
+/// is reported uniformly (and the session is rebuilt) — we never reject solely
+/// because the *checker* could not lex something.
+fn check_statement_token_counts(src: &str) -> Result<(), String> {
+    let src_owned = src.to_string();
+    let tokens = match catch_unwind(AssertUnwindSafe(|| tokenize_macsyma(&src_owned))) {
+        Ok(tokens) => tokens,
+        Err(_) => return Ok(()), // unlexable — let the evaluator surface it
+    };
+
+    let mut count: usize = 0;
+    for token in &tokens {
+        // `;` and `$` are the statement terminators; the next statement starts
+        // its own budget. (Matched on the lexeme, which is robust regardless of
+        // how the token is classified.)
+        if token.value == ";" || token.value == "$" {
+            count = 0;
             continue;
         }
-        match ch {
-            '"' => in_string = true,
-            // End of a statement — the next statement starts fresh.
-            ';' | '$' => symbols = 0,
-            // Identifiers, numbers, and whitespace are leaves / separators: they
-            // do not deepen the tree.
-            c if c.is_alphanumeric() || c == '_' || c.is_whitespace() => {}
-            // Anything else is a structural symbol (operator, bracket, comma, …).
-            _ => {
-                symbols += 1;
-                if symbols > MAX_STATEMENT_SYMBOLS {
-                    return Err(format!(
-                        "statement too complex: more than {MAX_STATEMENT_SYMBOLS} operators/brackets in one statement"
-                    ));
-                }
-            }
+        count += 1;
+        if count > MAX_STATEMENT_TOKENS {
+            return Err(format!(
+                "statement too complex: more than {MAX_STATEMENT_TOKENS} tokens in one statement"
+            ));
         }
     }
     Ok(())
@@ -426,6 +428,56 @@ mod tests {
         let src = format!("{}1 + 2{};", "(".repeat(depth), ")".repeat(depth));
         let out = eval(&src).unwrap();
         assert!(out.contains('3'), "((…1 + 2…)) should fold to 3: {out:?}");
+    }
+
+    #[test]
+    fn comment_hidden_terminator_does_not_bypass_the_cap() {
+        // A `;` inside a `/* */` comment is skipped by the real lexer (it stays
+        // ONE statement), but a naive surface scan would treat it as a statement
+        // boundary and reset its counter, letting deep nesting through. Because
+        // we count REAL lexer tokens — where comments are already skipped — the
+        // hidden terminator changes nothing and the deep nest is still rejected.
+        let depth = 20_000;
+        let src = format!("/*;*/{}1{};", "(".repeat(depth), ")".repeat(depth));
+        assert!(src.len() <= MAX_INPUT_LEN);
+        let err = eval(&src).unwrap_err(); // must NOT abort
+        assert!(
+            err.contains("too complex"),
+            "comment bypass not closed: {err:?}"
+        );
+    }
+
+    #[test]
+    fn comment_hidden_quote_does_not_bypass_the_cap() {
+        // A `"` inside a comment would flip a surface scanner into a phantom
+        // "string" mode and make it count zero structural symbols thereafter.
+        // The real lexer skips the comment, so the following nest is fully
+        // tokenized and rejected.
+        let depth = 20_000;
+        let src = format!("/*\"*/{}1{};", "(".repeat(depth), ")".repeat(depth));
+        assert!(src.len() <= MAX_INPUT_LEN);
+        let err = eval(&src).unwrap_err(); // must NOT abort
+        assert!(
+            err.contains("too complex"),
+            "quote-in-comment bypass not closed: {err:?}"
+        );
+    }
+
+    #[test]
+    fn an_operator_heavy_string_literal_is_not_deep_structure() {
+        // The flip side: a string full of `(`/`+` is a SINGLE token, so it must
+        // not trip the cap — the token count reflects structure, not characters.
+        let s = format!("\"{}\";", "(".repeat(5_000));
+        assert!(s.len() <= MAX_INPUT_LEN);
+        // One STRING token + terminator — well under the cap, so this evaluates
+        // (or returns a surface error) but is never rejected as "too complex".
+        let result = eval(&s);
+        if let Err(e) = &result {
+            assert!(
+                !e.contains("too complex"),
+                "a string literal is not deep: {e:?}"
+            );
+        }
     }
 
     #[test]
