@@ -22,6 +22,7 @@ is reached.
 
 from __future__ import annotations
 
+import contextlib
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import replace
@@ -54,6 +55,7 @@ from sql_planner import (
     UpdateStmt,
     plan,
 )
+from sql_planner.expr import Wildcard as _Wildcard
 from sql_planner.plan import (
     Aggregate,
     DerivedTable,
@@ -74,7 +76,6 @@ from sql_planner.plan import (
 from sql_planner.plan import (
     children as _plan_children,
 )
-from sql_planner.expr import Wildcard as _Wildcard
 from sql_vm import QueryEvent, QueryResult, execute  # noqa: F401 — QueryEvent re-exported
 
 from .adapter import to_statement
@@ -166,10 +167,8 @@ def _ctas_infer_columns(
     for _item in _opt.items:
         if isinstance(_item.expr, _Wildcard):
             for _tbl in _collect_scan_tables(_opt.input):
-                try:
+                with contextlib.suppress(Exception):
                     cols.extend(c.name for c in backend.columns(_tbl))
-                except Exception:
-                    pass
         elif _item.alias is not None:
             cols.append(_item.alias)
         else:

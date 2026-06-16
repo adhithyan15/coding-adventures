@@ -37,8 +37,7 @@ from __future__ import annotations
 import sqlite3
 
 import mini_sqlite
-from mini_sqlite.errors import OperationalError
-
+from mini_sqlite.errors import OperationalError  # noqa: F401 — re-exported for tests
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -249,7 +248,7 @@ def test_ctas_without_if_not_exists_raises_on_duplicate():
     ])
     try:
         m.execute("CREATE TABLE dst AS SELECT * FROM src")
-        assert False, "expected OperationalError"
+        raise AssertionError("expected OperationalError")
     except OperationalError:
         pass
 
@@ -261,7 +260,7 @@ def test_ctas_if_not_exists_from_empty_source_noop():
         "CREATE TABLE dst (x INTEGER)",
         "INSERT INTO dst VALUES (7)",
     ])
-    result = m.execute("CREATE TABLE IF NOT EXISTS dst AS SELECT * FROM src")
+    m.execute("CREATE TABLE IF NOT EXISTS dst AS SELECT * FROM src")
     # dst unchanged
     rows = m.execute("SELECT * FROM dst").fetchall()
     assert rows == [(7,)]
@@ -349,7 +348,7 @@ def test_ctas_blocked_by_query_only():
     m.execute("PRAGMA query_only = 1")
     try:
         m.execute("CREATE TABLE dst AS SELECT * FROM src")
-        assert False, "expected OperationalError"
+        raise AssertionError("expected OperationalError")
     except OperationalError as e:
         assert "readonly" in str(e).lower()
 
