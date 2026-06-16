@@ -57,6 +57,12 @@ class OperationalError(DatabaseError):
     """Errors related to the database's operation — runtime failures."""
 
 
+# Reused as the exact wording is constant across SQLite versions and is
+# what callers (and our oracle tests) match on.  Centralised so a future
+# message-text drift surfaces in exactly one place.
+READONLY_ERROR_MESSAGE = "attempt to write a readonly database"
+
+
 class IntegrityError(DatabaseError):
     """Constraint violations (unique, not-null, foreign key)."""
 
