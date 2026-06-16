@@ -54,7 +54,9 @@ downstream tools to compare.
      initial-condition intent; selected `.tran` execution now keeps `.tran
      TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
      stepping; deck executions now expose normalized selected output probes as
-     an inspectable artifact alongside the stable table.
+     an inspectable artifact alongside the stable table; selected `.measure`
+     outputs now travel with deck execution results as structured measurements
+     plus stable measurement tables.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -438,12 +440,22 @@ downstream tools to compare.
     - This gives callers a structured deck-owned output artifact without
       reparsing table text.
 
+38. Deck selected measurement artifact routing.
+    - Status: completed in this deck measurement artifact slice.
+    - Python, Rust, and TypeScript `run_deck_analysis` / `runDeckAnalysis`
+      results now include selected `.measure` / `.meas` outputs and a stable
+      measurement table for `.dc`, `.ac`, and `.tran` executions.
+    - Measurement cards are selected by the executed analysis, so mixed-analysis
+      decks can expose the chosen analysis artifact without reparsing output
+      tables.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
      including richer deck-owned run artifacts beyond selected output probes
-     and output-plan integration beyond stable table routing.
+     and selected measurement artifacts, plus output-plan integration beyond
+     stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature

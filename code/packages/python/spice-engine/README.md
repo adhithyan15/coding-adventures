@@ -103,7 +103,8 @@ implicit `.op`, and reports ambiguity before solver dispatch.
 `run_deck_analysis()` executes one selected `.op`, `.dc`, `.ac LIN`,
 `.ac DEC`, `.ac OCT`, or `.tran` plan against an existing `Circuit` and
 returns the plan, solver result, deck-selected output table, and normalized
-output probes that produced the table. Selected
+output probes that produced the table, plus selected `.measure` results and a
+stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
 `.tran` plans route `START` output filtering, use `.tran TSTEP` as the output
 print grid, apply `MAXSTEP` as an internal fixed-step cap, and carry `UIC`
 initial-condition intent through that stable transient table surface.
@@ -188,8 +189,8 @@ diagnostics for malformed deck-level analysis controls.
 downstream deck execution helpers.
 `run_deck_analysis()` routes that selected plan into the matching solver and
 stable deck-selected table output with normalized output-probe artifacts,
-including `.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran`
-`START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
+selected measurement artifacts, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency
+grids, and `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
 
 ## Controlled source examples
 

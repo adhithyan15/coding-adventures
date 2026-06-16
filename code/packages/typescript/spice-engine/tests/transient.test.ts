@@ -1446,17 +1446,27 @@ describe("transient", () => {
 .dc V1 0 1 1
 .ac dec 1 1k 1k
 .tran 1m 1m
+.measure dc mid_avg avg V(mid)
+.measure ac mid_peak max V(mid)
+.measure tran mid_final final V(mid)
 .end
 `;
 
     const opExecution = runDeckAnalysis(circuit, netlist, "op");
     expect(opExecution.plan.analysis).toBe("op");
     expect(opExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(opExecution.measurements).toEqual([]);
+    expect(opExecution.measurementTable).toBe("Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n");
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
 
     const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
     expect(dcExecution.plan.sourceName).toBe("V1");
     expect(dcExecution.outputProbes).toEqual(["V(mid)", "I(V1)"]);
+    expect(dcExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_avg"]);
+    expect(dcExecution.measurementTable).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "mid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n",
+    );
     expect(Array.isArray(dcExecution.result)).toBe(true);
     expect(dcExecution.table).toBe(
       "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
@@ -1466,6 +1476,11 @@ describe("transient", () => {
 
     const acExecution = runDeckAnalysis(circuit, netlist, "ac");
     expect(acExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(acExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_peak"]);
+    expect(acExecution.measurementTable).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "mid_peak\tac\tV(mid)\tmax\t\t\t5.000000e-01\n",
+    );
     expect(Array.isArray(acExecution.result)).toBe(true);
     expect(acExecution.table).toBe(
       "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
@@ -1474,6 +1489,11 @@ describe("transient", () => {
 
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
     expect(tranExecution.outputProbes).toEqual(["V(mid)"]);
+    expect(tranExecution.measurements.map((measurement) => measurement.name)).toEqual(["mid_final"]);
+    expect(tranExecution.measurementTable).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "mid_final\ttran\tV(mid)\tlast\t\t\t5.000000e-01\n",
+    );
     expect(Array.isArray(tranExecution.result)).toBe(true);
     expect(tranExecution.table).toBe(
       "Index\tTime\tV(mid)\n" +

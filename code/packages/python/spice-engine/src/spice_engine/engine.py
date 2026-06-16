@@ -2301,6 +2301,26 @@ class DeckAnalysisExecution:
     result: DcResult | DcSweepResult | AcResult | TransientResult
     table: str
     output_probes: list[str]
+    measurements: list[ProbeMeasurement]
+    measurement_table: str
+
+
+def _select_deck_measurement_cards_for_analysis(
+    netlist: str,
+    analysis: str,
+) -> list[DeckMeasurementCard]:
+    summary = resolve_deck_measurements(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"run_deck_analysis: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return [
+        measurement
+        for measurement in summary.measurements
+        if measurement.analysis == analysis
+        or (analysis == "tran" and measurement.analysis == "transient")
+    ]
 
 
 def run_deck_analysis(
@@ -2313,11 +2333,15 @@ def run_deck_analysis(
     plan = select_deck_analysis_plan(netlist, analysis)
     if plan.analysis == "op":
         result = dc_op(circuit)
+        _select_deck_measurement_cards_for_analysis(netlist, plan.analysis)
+        measurements: list[ProbeMeasurement] = []
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
             table=format_deck_op_table(result, netlist),
             output_probes=select_deck_output_probes(netlist, plan.analysis),
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
         )
     if plan.analysis == "dc":
         source_name = _require_deck_plan_string(plan, "source_name")
@@ -2325,11 +2349,17 @@ def run_deck_analysis(
         stop = _require_deck_plan_number(plan, "stop_value")
         step = _require_deck_plan_number(plan, "step_value")
         result = dc_sweep(circuit, source_name, start, stop, step)
+        measurements = measure_dc_sweep_cards(
+            result,
+            _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
             table=format_deck_dc_sweep_table(result, netlist),
             output_probes=select_deck_output_probes(netlist, plan.analysis),
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
         )
     if plan.analysis == "ac":
         sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
@@ -2339,11 +2369,17 @@ def run_deck_analysis(
         result = _run_deck_ac_sweep(
             circuit, plan, sweep_kind, point_count, start_frequency, stop_frequency
         )
+        measurements = measure_ac_sweep_cards(
+            result,
+            _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
             table=format_deck_ac_table(result, netlist),
             output_probes=select_deck_output_probes(netlist, plan.analysis),
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
         )
     if plan.analysis == "tran":
         step_time = _require_deck_plan_number(plan, "step_time")
@@ -2357,11 +2393,17 @@ def run_deck_analysis(
             start_time=start_time,
             stop_time=stop_time,
         )
+        measurements = measure_transient_cards(
+            result,
+            _select_deck_measurement_cards_for_analysis(netlist, plan.analysis),
+        )
         return DeckAnalysisExecution(
             plan=plan,
             result=result,
             table=format_deck_transient_table(result, netlist),
             output_probes=select_deck_output_probes(netlist, plan.analysis),
+            measurements=measurements,
+            measurement_table=format_measurement_table(measurements),
         )
     raise ValueError(f"run_deck_analysis: unsupported analysis {plan.analysis!r}")
 

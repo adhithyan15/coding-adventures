@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add selected measurement artifacts to `runDeckAnalysis`; selected `.dc`,
+  `.ac`, and `.tran` executions now return parsed `.measure` / `.meas` results
+  and a stable measurement table alongside the selected plan, solver result,
+  output probes, and output table, matching Python and Rust.
 - Add selected-output probe artifacts to `runDeckAnalysis`; callers now receive
   the normalized deck-selected output probes alongside each selected plan,
   solver result, and stable table, matching Python and Rust.

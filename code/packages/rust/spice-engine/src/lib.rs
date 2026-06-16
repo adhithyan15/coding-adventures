@@ -3404,6 +3404,8 @@ pub struct DeckAnalysisExecution {
     pub result: DeckAnalysisExecutionResult,
     pub table: String,
     pub output_probes: Vec<String>,
+    pub measurements: Vec<ProbeMeasurement>,
+    pub measurement_table: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9413,6 +9415,27 @@ pub fn format_deck_transient_table(
     format_transient_table(points, &probe_refs)
 }
 
+fn select_deck_measurement_cards_for_analysis(
+    netlist: &str,
+    analysis: &str,
+) -> Result<Vec<DeckMeasurementCard>, SpiceError> {
+    let summary = resolve_deck_measurements(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "run_deck_analysis",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    Ok(summary
+        .measurements
+        .into_iter()
+        .filter(|measurement| {
+            measurement.analysis == analysis
+                || (analysis == "tran" && measurement.analysis == "transient")
+        })
+        .collect())
+}
+
 pub fn run_deck_analysis(
     circuit: &Circuit,
     netlist: &str,
@@ -9423,11 +9446,16 @@ pub fn run_deck_analysis(
         "op" => {
             let result = dc_op(circuit)?;
             let table = format_deck_op_table(&result, netlist)?;
+            select_deck_measurement_cards_for_analysis(netlist, "op")?;
+            let measurements = Vec::new();
+            let measurement_table = format_measurement_table(&measurements);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Op(result),
                 table,
                 output_probes: select_deck_output_probes(netlist, "op")?,
+                measurements,
+                measurement_table,
             })
         }
         "dc" => {
@@ -9439,11 +9467,16 @@ pub fn run_deck_analysis(
             let step = require_deck_plan_number(plan.step_value, &plan, "step_value")?;
             let result = dc_sweep(circuit, &source_name, start, stop, step)?;
             let table = format_deck_dc_sweep_table(&source_name, &result, netlist)?;
+            let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "dc")?;
+            let measurements = measure_dc_sweep_cards(&result, &measurement_cards)?;
+            let measurement_table = format_measurement_table(&measurements);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::DcSweep(result),
                 table,
                 output_probes: select_deck_output_probes(netlist, "dc")?,
+                measurements,
+                measurement_table,
             })
         }
         "ac" => {
@@ -9456,11 +9489,16 @@ pub fn run_deck_analysis(
                 require_deck_plan_number(plan.stop_frequency_hz, &plan, "stop_frequency_hz")?;
             let result = run_deck_ac_sweep(circuit, &plan, sweep_kind, point_count, start, stop)?;
             let table = format_deck_ac_table(&result, netlist)?;
+            let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "ac")?;
+            let measurements = measure_ac_sweep_cards(&result, &measurement_cards)?;
+            let measurement_table = format_measurement_table(&measurements);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Ac(result),
                 table,
                 output_probes: select_deck_output_probes(netlist, "ac")?,
+                measurements,
+                measurement_table,
             })
         }
         "tran" => {
@@ -9476,11 +9514,16 @@ pub fn run_deck_analysis(
                 stop_time,
             )?;
             let table = format_deck_transient_table(&result, netlist)?;
+            let measurement_cards = select_deck_measurement_cards_for_analysis(netlist, "tran")?;
+            let measurements = measure_transient_cards(&result, &measurement_cards)?;
+            let measurement_table = format_measurement_table(&measurements);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tran(result),
                 table,
                 output_probes: select_deck_output_probes(netlist, "tran")?,
+                measurements,
+                measurement_table,
             })
         }
         _ => Err(SpiceError::InvalidElement {

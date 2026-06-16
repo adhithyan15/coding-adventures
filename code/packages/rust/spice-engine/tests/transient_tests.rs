@@ -1866,12 +1866,20 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 .dc V1 0 1 1
 .ac dec 1 1k 1k
 .tran 1m 1m
+.measure dc mid_avg avg V(mid)
+.measure ac mid_peak max V(mid)
+.measure tran mid_final final V(mid)
 .end
 ";
 
     let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
     assert_eq!(op_execution.plan.analysis, "op");
     assert_eq!(op_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert!(op_execution.measurements.is_empty());
+    assert_eq!(
+        op_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+    );
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
 
     let dc_execution = run_deck_analysis(&circuit, netlist, Some("dc")).unwrap();
@@ -1879,6 +1887,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         dc_execution.output_probes,
         vec!["V(mid)".to_string(), "I(V1)".to_string()]
+    );
+    assert_eq!(dc_execution.measurements[0].name, "mid_avg");
+    assert_eq!(
+        dc_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_avg\tdc\tV(mid)\tavg\t\t\t2.500000e-01\n"
     );
     match dc_execution.result {
         DeckAnalysisExecutionResult::DcSweep(points) => assert_eq!(points.len(), 2),
@@ -1891,6 +1904,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 
     let ac_execution = run_deck_analysis(&circuit, netlist, Some("ac")).unwrap();
     assert_eq!(ac_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert_eq!(ac_execution.measurements[0].name, "mid_peak");
+    assert_eq!(
+        ac_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_peak\tac\tV(mid)\tmax\t\t\t5.000000e-01\n"
+    );
     match ac_execution.result {
         DeckAnalysisExecutionResult::Ac(points) => assert_eq!(points.len(), 1),
         other => panic!("expected AC result, got {other:?}"),
@@ -1902,6 +1920,11 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 
     let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
     assert_eq!(tran_execution.output_probes, vec!["V(mid)".to_string()]);
+    assert_eq!(tran_execution.measurements[0].name, "mid_final");
+    assert_eq!(
+        tran_execution.measurement_table,
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_final\ttran\tV(mid)\tlast\t\t\t5.000000e-01\n"
+    );
     match tran_execution.result {
         DeckAnalysisExecutionResult::Tran(points) => assert_eq!(points.len(), 1),
         other => panic!("expected transient result, got {other:?}"),

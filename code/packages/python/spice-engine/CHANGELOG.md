@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck measurement artifact routing** —
+  `run_deck_analysis()` now returns selected `.measure` / `.meas` results and
+  a stable measurement table for selected `.dc`, `.ac`, and `.tran` executions,
+  matching Rust and TypeScript.
+
 - **Deck selected-output artifact metadata** —
   `run_deck_analysis()` now returns the normalized deck-selected output probes
   alongside each selected plan, solver result, and stable table, matching Rust
