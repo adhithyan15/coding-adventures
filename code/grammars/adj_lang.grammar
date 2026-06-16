@@ -25,6 +25,7 @@ statement   = prior_decl
             | uncertain_decl
             | observe_decl
             | relate_decl
+            | rule_decl
             | query_decl
             | let_decl
             | symbol_decl
@@ -78,6 +79,30 @@ observe_decl     = "observe" term ;
 # IDENT-matched literal (like `rulebook`/`define`) — no lexer keyword.
 # ----------------------------------------------------------------
 relate_decl      = "relate" term { annotation } ;
+
+# ----------------------------------------------------------------
+# `rule { head: <term>  when: <lit> , <lit> … }` — a DERIVATION RULE
+# with a body (a Horn clause / Datalog rule). Where `relate` asserts a
+# GROUND edge, a `rule` lets the ENGINE DERIVE a head when its body
+# literals hold under the current substitution: e.g.
+#
+#   rule { head: contraindicated(D)  when: pregnancy(present), pregnancy_excludes(D) }
+#
+# binds `D` across head and body and lets `? contraindicated($X)` enumerate
+# every derivable answer via the logic-engine's existing rule machinery
+# (`Rule { head, body }` + `enumerate_all`, with negation-as-failure for
+# `not <lit>`). This is the keystone for moving DOMAIN RULES out of host-code
+# and into ADJ: durable rules (contraindications, step-therapy, …) are authored
+# once as `rule { … }` clauses, byte-provenanced + gated into the CAS, and the
+# engine derives the consequences from per-case facts. The block form mirrors
+# `rulebook { … }`; `head`/`when`/`not` are IDENT-matched literals (no lexer
+# keywords), and the clause carries the same source/locator/trust annotations
+# every grounded clause carries. A body literal prefixed with `not` is
+# negation-as-failure.
+# ----------------------------------------------------------------
+rule_decl        = "rule" LBRACE "head" COLON term "when" COLON body_literal { COMMA body_literal } { annotation } RBRACE ;
+
+body_literal     = [ "not" ] term ;
 
 query_decl       = QUESTION term ;
 

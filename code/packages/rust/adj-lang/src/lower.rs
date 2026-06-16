@@ -23,9 +23,9 @@ use logic_core::{
     atom as core_atom, compound, float as core_float, var as core_var, LogicVar, Term as CoreTerm,
 };
 use logic_engine::{
-    compute, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
+    compute, BodyLiteral, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
     JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
-    Provenance, TrustTier, UncertaintyMarker,
+    Provenance, Rule, TrustTier, UncertaintyMarker,
 };
 
 use std::collections::HashMap;
@@ -257,6 +257,32 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // relation; its arguments are the entities.
                 let prov = annotations_to_provenance(annotations)?;
                 kb.add_fact(Fact::certain(lower_term(edge)).with_provenance(prov));
+            }
+            Statement::Rule {
+                head,
+                body,
+                annotations,
+            } => {
+                // A derivation rule → `logic_engine::Rule { head, body }`. Head and body
+                // share ONE variable scope so a `$Var` in the head unifies with the same
+                // `$Var` in a body literal (clause-scope, like a binding query). `not <lit>`
+                // lowers to negation-as-failure. The citation (if grounded) rides on the
+                // rule as provenance — a CAS rule stays byte-traceable.
+                let mut vars = HashMap::new();
+                let head_term = lower_term_scoped(head, &mut vars);
+                let body_lits: Vec<BodyLiteral> = body
+                    .iter()
+                    .map(|lit| {
+                        let t = lower_term_scoped(&lit.term, &mut vars);
+                        if lit.negated {
+                            BodyLiteral::Neg(t)
+                        } else {
+                            BodyLiteral::Pos(t)
+                        }
+                    })
+                    .collect();
+                let prov = annotations_to_provenance(annotations)?;
+                kb.add_rule(Rule::certain(head_term, body_lits).with_provenance(prov));
             }
             Statement::Query { conclusion } => {
                 // Lower with a per-query variable scope so repeated `$Var`s in one
@@ -825,6 +851,82 @@ mod tests {
             dag.proofs.is_empty(),
             "must abstain, not fabricate an enzyme"
         );
+    }
+
+    #[test]
+    fn rule_derives_a_head_from_body_facts() {
+        // The keystone: a `rule { head: … when: … }` lets the ENGINE DERIVE the head
+        // when its body holds — so domain rulebooks (contraindications, step-therapy)
+        // live in ADJ and the engine derives consequences from per-case facts, no host
+        // code. Here: every pregnancy-excluded drug is derived contraindicated.
+        let src = r#"
+            relate pregnant(present)
+            relate pregnancy_excludes(moxifloxacin)
+            relate pregnancy_excludes(tmp_smx)
+            rule { head: contraindicated($D) when: pregnant(present), pregnancy_excludes($D) }
+            ? contraindicated($X)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(
+            dag.proofs.len(),
+            2,
+            "both pregnancy-excluded drugs are derived"
+        );
+        assert!(dag
+            .proofs
+            .iter()
+            .any(|p| p.bindings.walk_var(&v) == core_atom("moxifloxacin")));
+        assert!(dag
+            .proofs
+            .iter()
+            .any(|p| p.bindings.walk_var(&v) == core_atom("tmp_smx")));
+    }
+
+    #[test]
+    fn rule_negation_as_failure_excludes_when_the_negated_goal_holds() {
+        // `not <lit>` is negation-as-failure: `safe(D)` holds only for a β-lactam that
+        // is NOT (derivably) contraindicated. ampicillin is contraindicated → not-safe;
+        // ceftriaxone is the only safe drug.
+        let src = r#"
+            relate betalactam(ceftriaxone)
+            relate betalactam(ampicillin)
+            relate contraindicated(ampicillin)
+            rule { head: safe($D) when: betalactam($D), not contraindicated($D) }
+            ? safe($X)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(
+            dag.proofs.len(),
+            1,
+            "only the non-contraindicated β-lactam is safe"
+        );
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            core_atom("ceftriaxone")
+        );
+    }
+
+    #[test]
+    fn rule_carries_its_grounding_provenance() {
+        // A grounded rule keeps its citation (byte-quote + trust), so a CAS rulebook is
+        // byte-traceable — the same provenance contract `relate` edges carry.
+        let src = r#"
+            rule { head: contraindicated($D) when: pregnant(present), excludes($D)
+                   source "Pregnancy contraindicates fluoroquinolones (FDA label)."
+                   trust authoritative }
+            relate pregnant(present)
+            relate excludes(moxifloxacin)
+            ? contraindicated($X)
+        "#;
+        let lowered = compile(src).unwrap();
+        let dag = enumerate_all(&lowered.queries[0], &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1);
     }
 
     #[test]

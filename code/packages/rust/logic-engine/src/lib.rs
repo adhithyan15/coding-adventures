@@ -35,8 +35,8 @@
 pub mod compute;
 pub mod conversion;
 pub mod datetime;
-pub mod dimension;
 pub mod differential;
+pub mod dimension;
 pub mod enumerate;
 pub mod lr_aggregate;
 pub mod proof_dag;
@@ -48,14 +48,12 @@ use std::collections::HashMap;
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
 pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
-pub use conversion::{
-    add_or_sub, convert_value, ConvError, Conversion, ConversionTable,
-};
+pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
 pub use datetime::{
     after, before, date_add, date_ordinal, days_between, read_date, read_duration_days,
 };
-pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
+pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
 pub use enumerate::enumerate_all;
 pub use lr_aggregate::{
     counterfactual, lr_aggregate, sigmoid, source_disagreements,
@@ -228,6 +226,12 @@ pub struct Rule {
     pub head: Term,
     pub body: Vec<BodyLiteral>,
     pub probability: Probability,
+    /// Where this rule came from — a byte-quoted citation when the rule was
+    /// grounded from source text (a payer policy, an FDA label, a guideline) and
+    /// gated into the CAS. Defaults to [`Provenance::unattributed`] for rules with
+    /// no citation. Mirrors [`Fact::provenance`], so a derived consequence can (in
+    /// future) cite the rule that produced it alongside the facts it fired on.
+    pub provenance: Provenance,
 }
 
 impl Rule {
@@ -237,6 +241,7 @@ impl Rule {
             head,
             body,
             probability: Probability::Certain,
+            provenance: Provenance::unattributed(),
         }
     }
 
@@ -249,7 +254,15 @@ impl Rule {
             head,
             body,
             probability: Probability::Value(p),
+            provenance: Provenance::unattributed(),
         }
+    }
+
+    /// Attach a citation (mirrors [`Fact::with_provenance`]) — used when a rule is
+    /// grounded from source text and gated into the CAS.
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
     }
 }
 

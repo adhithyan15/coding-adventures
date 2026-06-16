@@ -32,7 +32,7 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
     AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, OptDir, Program,
-    RelOp, Statement, Term, TrustTierName,
+    RelOp, RuleLiteral, Statement, Term, TrustTierName,
 };
 
 /// Errors raised while adapting a generic AST to the typed AST.
@@ -109,6 +109,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "uncertain_decl" => adapt_uncertain(child),
         "observe_decl" => adapt_observe(child),
         "relate_decl" => adapt_relate(child),
+        "rule_decl" => adapt_rule(child),
         "query_decl" => adapt_query(child),
         "let_decl" => adapt_let(child),
         "symbol_decl" => adapt_symbol(child),
@@ -295,6 +296,39 @@ fn adapt_relate(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     let edge = expect_term_child(node, "relate_decl")?;
     let annotations = collect_annotations(node)?;
     Ok(Statement::Relate { edge, annotations })
+}
+
+fn adapt_rule(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // rule_decl = "rule" "{" "head" ":" term "when" ":" body_literal {"," body_literal}
+    //             { annotation } "}"
+    // The HEAD is the single direct `term` child (body terms nest under body_literal).
+    let head = expect_term_child(node, "rule_decl")?;
+    let mut body = Vec::new();
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(n) = child {
+            if n.rule_name == "body_literal" {
+                // body_literal = [ "not" ] term — negation-as-failure when `not` present.
+                let negated = n.children.iter().any(|c| {
+                    matches!(c, ASTNodeOrToken::Token(t)
+                        if t.type_ == TokenType::Name && t.value == "not")
+                });
+                let term = expect_term_child(n, "body_literal")?;
+                body.push(RuleLiteral { negated, term });
+            }
+        }
+    }
+    if body.is_empty() {
+        return Err(AdapterError::MissingChild {
+            rule: "rule_decl".into(),
+            position: "when: body literal",
+        });
+    }
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Rule {
+        head,
+        body,
+        annotations,
+    })
 }
 
 fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {

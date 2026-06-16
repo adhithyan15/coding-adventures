@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.14.0] - 2026-06-16 — `rule { head: … when: … }` derivation rules (Datalog clauses)
+
+### Added
+
+- **`rule { head: <term>  when: <lit>, <lit> … }`** — a DERIVATION RULE with a body
+  (a Horn clause / Datalog rule), the missing primitive that lets a `rulebook`
+  express CONDITIONAL knowledge, not just ground `relate` edges + LR clauses. Where
+  `relate` asserts a ground fact, a `rule` lets the engine DERIVE its head whenever
+  the body holds under the current substitution — variables (`$D`) bind across head
+  and body, and a literal prefixed `not` is negation-as-failure. Lowers to the
+  existing `logic_engine::Rule { head, body }`, so `? head($X)` enumerates every
+  derivable answer via the same SLD/unification machinery `relate` resolves through.
+  This is the keystone for moving DOMAIN RULES (contraindications, step-therapy,
+  formulary policy) out of host-code and into ADJ: each domain is authored once as a
+  `rule`-bearing `rulebook`, byte-provenanced + gated into the CAS, and the engine
+  derives consequences from per-case facts. Rules carry the same `source`/`locator`/
+  `trust` annotations every grounded clause carries (new `Rule.provenance` field).
+  Block form mirrors `rulebook { … }`; `head`/`when`/`not` are IDENT-matched literals.
+
 ## [0.13.0] - 2026-06-14 — relational queries pass vocabulary enforcement (MYCIN-2026 REL-3)
 
 ### Changed
