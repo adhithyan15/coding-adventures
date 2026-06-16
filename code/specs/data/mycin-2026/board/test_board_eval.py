@@ -39,7 +39,8 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     # A correct recall answer carries the citing edge's trust tier (its proof).
     assert by_id["tay_sachs_enzyme"].trust is not None
     # REL-6 expanded the bank to 18 covered recall items across 12 diseases.
-    assert sum(1 for r in card.results if r.outcome == "correct") == 18
+    recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
+    assert len(recall_correct) == 18
     # A REL-6 disease answers correctly too (its edge is in the graph, consensus-tier).
     assert by_id["fabry_enzyme"].outcome == "correct"
     assert by_id["fabry_enzyme"].answer == "alpha_galactosidase_a"
@@ -79,6 +80,50 @@ def test_grounded_coverage_is_the_live_grounding_number() -> None:
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:
     assert be.main(["--quiet"]) == 0
+
+
+# ---- REL-7: differential tactic ----
+
+def test_score_differential_logic() -> None:
+    # determinate → commits to the leader: correct iff it matches gold.
+    det = {"type": "determinate", "leader": "bacterial_meningitis"}
+    assert be.score_differential(det, "bacterial_meningitis") == ("correct", "bacterial_meningitis")
+    assert be.score_differential(det, "viral_meningitis") == ("wrong", "bacterial_meningitis")
+    # committing a leader when the gold is ABSTAIN is a fabrication (wrong).
+    assert be.score_differential(det, "ABSTAIN")[0] == "wrong"
+    # kickback / empty → the engine declined to commit: abstain (correct vs ABSTAIN).
+    kick = {"type": "kickback", "leader": "bacterial_meningitis", "runner_up": "viral_meningitis"}
+    assert be.score_differential(kick, "ABSTAIN") == ("abstained", None)
+    assert be.score_differential({"type": "empty"}, "bacterial_meningitis") == ("abstained", None)
+    # No decision (CLI unavailable) → abstain, never fabricate.
+    assert be.score_differential(None, "bacterial_meningitis") == ("abstained", None)
+
+
+def test_differential_items_never_fabricate() -> None:
+    # Regardless of whether the CLI is built, differential items are correct or
+    # abstained — never wrong. (When the binary is absent they abstain.)
+    card, _ = _card_with_diff()
+    diff = [r for r in card.results if r.tactic == "differential"]
+    assert diff, "the bank has differential items"
+    assert all(r.outcome in ("correct", "abstained") for r in diff)
+
+
+def test_differential_runs_natively_when_cli_present() -> None:
+    if not be.cli_available():
+        return  # skip: Python-only environment without the built Rust CLI
+    card, _ = _card_with_diff()
+    by_id = {r.item_id: r for r in card.results}
+    # Strong CSF → the engine commits to bacterial; equivocal CSF → it abstains.
+    assert by_id["meningitis_bacterial_dx"].outcome == "correct"
+    assert by_id["meningitis_bacterial_dx"].answer == "bacterial_meningitis"
+    assert by_id["meningitis_equivocal_dx"].outcome == "abstained"
+
+
+def _card_with_diff():
+    import json
+    items = json.loads((HERE / "items.json").read_text())["items"]
+    store = be.recall.parse_edges(be.RECALL / "iem-edges.adj")
+    return be.score(items, store), items
 
 
 def _run() -> int:
