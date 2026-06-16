@@ -1,5 +1,22 @@
 # Changelog — `x86_64-backend`
 
+## 0.12.0 — 2026-06-15 — narrow-width unsigned masking (LANG-FULL E2, native-AOT leg)
+
+Mirrors the `aarch64-backend` 0.10.0 change so narrow-width wrap is uniform across
+both native host arches. A 64-bit register holds the full result of `add_u8
+200, 100` (= 300); to make `uⁿ` types wrap mod-2ⁿ like the other backends, every
+narrow **unsigned** op now appends `movabs rcx, <mask>; and <dst>, rcx`:
+
+- `add_u8 200, 100` → `44`, `sub_u8 0, 1` → `255`, `mul_u8 16, 16` → `0`
+- `not_u8 0` → `255`, `shl_u8 1, 8` → `0`; `u16`/`u32` wrap at their widths
+
+Masking covers `add`/`sub`/`mul`/`div`/`mod`/`and`/`or`/`xor`/`shl`/`shr`/`neg`/`not`
+for `u4`/`u8`/`u16`/`u32`; full-width and signed types are unchanged. See
+`mask_narrow`. New structural tests prove the mask bytes are emitted (and that
+`i64` is never masked); the **executed** value proof for x86_64 is the `lang-aot`
+matrix on a Linux x86_64 CI runner (no in-repo x86 JIT loader — the `aarch64-backend`
+provides the directly-executed value proof). Unblocks Nib **N6** / Oct **O2**.
+
 ## 0.11.0 — 2026-06-10 — McCarthy lambda (F7): `lispy_to_exit_code` builtin (LANG77 / W14b)
 
 Adds `lispy_to_exit_code` to `V1_BUILTINS` (→ `call __twig_lispy_to_exit_code`), the

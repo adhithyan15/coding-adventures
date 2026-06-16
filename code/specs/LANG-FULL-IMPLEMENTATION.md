@@ -99,10 +99,18 @@ multiple languages; close an enabler before the features that depend on it.
     - ✅ **iir-to-llvm** (v0.11.0) — a narrow unsigned op computes at i64 then `and i64 …,
       <mask>` (u4/u8/u16/u32). Adds `u4` to the supported types. **Executed proof** on real
       `clang`: `200u8+100u8` → exit `44`. Matches the value-mask of the 5 register backends.
-    - ☐ **lang-aot native codegen** (NativeAot) — narrow-width wrap in the host machine-code
-      path (investigate next).
+    - ✅ **lang-aot native codegen** (NativeAot — aarch64-backend 0.10.0 + x86_64-backend 0.12.0).
+      The two *direct* native backends were never in E2's leg list and did **not** mask (their
+      docs said so: "`add_u8 0xFF, 1` produces `0x100` … a future PR can add `and #mask`"), so
+      `200u8+100u8` returned 300 on the `NativeAot` column. Now every narrow-unsigned op masks
+      its result — aarch64 appends `mov X2,#mask; and X0,X0,X2`, x86_64 appends `movabs rcx,<mask>;
+      and <dst>,rcx` (add/sub/mul/div/mod/and/or/xor/shl/shr/neg/not, for u4/u8/u16/u32; signed
+      narrow + full-width untouched). **Executed proof on aarch64** — the generated ARM64 is
+      installed via `jit-loader-macos` and *called*: `200u8+100u8=44`, `~0u8=255`, `1u8<<8=0`,
+      `u32` mul wrap; x86_64 has structural mask tests + the lang-aot matrix on a Linux x86 runner.
     - ☐ **Nib frontend + matrix proof** — emit narrow `type_hint`s; executed cross-backend
-      proof; flip N3-`~`, Nib N6/N7. Then Oct (O2).
+      proof; flip N3-`~`, Nib N6/N7. Then Oct (O2). **All backend legs are now ✅**
+      (vm/jit/wasm/jvm/cil/native-AOT + LLVM) — this is a pure frontend-wiring item.
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
   literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
   already emit f64 ops; extend the rest.)*

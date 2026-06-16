@@ -59,12 +59,14 @@
 //!
 //! ## Type widths
 //!
-//! For V1 every typed integer mnemonic uses 64-bit ARM operations.  The
-//! result is **not** masked to the declared width — `add_u8 0xFF, 1`
-//! produces `0x100`, not `0x00`.  This is correct for any consumer that
-//! treats the result as 64-bit; programs that depend on width-truncation
-//! semantics are outside V1 scope.  A future PR can add `and #mask`
-//! emission for tighter semantics.
+//! Every typed integer mnemonic computes on 64-bit ARM registers, then — for a
+//! narrow **unsigned** type (`u4`/`u8`/`u16`/`u32`) — masks the result back to
+//! its declared width with a follow-up `AND` (LANG-FULL E2, the native-AOT leg).
+//! So `add_u8 200, 100` yields `44` (300 mod 256), `not_u8 0` yields `255`, and
+//! `shl_u8 1, 8` yields `0`, matching the wrap semantics the other backends
+//! (vm-core, jit-core, wasm, jvm, cil) already provide.  See [`mask_narrow_x0`].
+//! Signed narrow types (`i8`/`i16`/`i32`) would need sign-extension rather than
+//! a plain mask and are not emitted by any current frontend — left unmasked.
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
@@ -540,8 +542,8 @@ fn emit_instr(
 
     // ---- add/sub/mul (typed) --------------------------------------------
     for (prefix, kind) in &[("add_", BinKind::Add), ("sub_", BinKind::Sub), ("mul_", BinKind::Mul)] {
-        if op.starts_with(*prefix) {
-            return emit_binop(asm, alloc, instr, *kind);
+        if let Some(ty) = op.strip_prefix(*prefix) {
+            return emit_binop(asm, alloc, instr, *kind, ty);
         }
     }
 
@@ -665,8 +667,8 @@ fn emit_instr(
     // Logical binary operations — type suffix is informational only; the
     // operation is always 64-bit word-level (same as add/sub/mul).
     for (prefix, kind) in &[("and_", BitwiseKind::And), ("or_", BitwiseKind::Or), ("xor_", BitwiseKind::Xor)] {
-        if op.starts_with(*prefix) {
-            return emit_bitwise(asm, alloc, instr, *kind);
+        if let Some(ty) = op.strip_prefix(*prefix) {
+            return emit_bitwise(asm, alloc, instr, *kind, ty);
         }
     }
 
@@ -684,24 +686,26 @@ fn emit_instr(
     }
 
     // ---- neg_<ty> dest = -src  (two's-complement negate) -----------------
-    if let Some(_ty) = op.strip_prefix("neg_") {
+    if let Some(ty) = op.strip_prefix("neg_") {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_operand(asm, alloc, Reg::X0, src)?;
         asm.neg_(Reg::X0, Reg::X0);
+        mask_narrow_x0(asm, ty); // E2: -x mod 2ⁿ for narrow widths
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
         return Ok(());
     }
 
     // ---- not_<ty> dest = ~src  (bitwise NOT) -----------------------------
-    if let Some(_ty) = op.strip_prefix("not_") {
+    if let Some(ty) = op.strip_prefix("not_") {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_operand(asm, alloc, Reg::X0, src)?;
         asm.mvn(Reg::X0, Reg::X0);
+        mask_narrow_x0(asm, ty); // E2: ~x flips only the low n bits for a uⁿ
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
         return Ok(());
@@ -1088,11 +1092,47 @@ fn field_offset(instr: &CIRInstr, i: usize) -> Result<u32, BackendError> {
 #[derive(Debug, Clone, Copy)]
 enum BinKind { Add, Sub, Mul }
 
+/// LANG-FULL E2 (native-AOT leg): the bit-width of a narrow **unsigned** type,
+/// or `None` for full-width / signed / non-integer types.
+///
+/// Native registers are 64-bit, so a `u8` add of `200 + 100` computes `300` in
+/// the register — the high bits are *not* dropped the way a real 8-bit machine
+/// would.  To make narrow-width arithmetic *wrap* (mod 2ⁿ) like the other
+/// backends already do (vm-core, jit-core, wasm, jvm, cil), we mask the result
+/// down to its declared width with a follow-up `AND`.  Only unsigned widths are
+/// masked here; signed narrow types (`i8`/`i16`/`i32`) need sign-extension, not
+/// a plain mask, and no current frontend emits them — left out of scope.
+fn narrow_unsigned_bits(ty: &str) -> Option<u32> {
+    match ty {
+        "u4"  => Some(4),
+        "u8"  => Some(8),
+        "u16" => Some(16),
+        "u32" => Some(32),
+        _ => None, // u64 / i* / f* / bool / void — no masking
+    }
+}
+
+/// Mask the value in `X0` down to `ty`'s width, in place, when `ty` is a narrow
+/// unsigned type.  Uses `X2` as a scratch register for the mask constant; with
+/// the stack-spill allocator every live value lives in a fixed stack slot, so
+/// `X2` is never live between instructions and is free to borrow.  A no-op for
+/// full-width / signed / non-integer types.
+fn mask_narrow_x0(asm: &mut Assembler, ty: &str) {
+    if let Some(bits) = narrow_unsigned_bits(ty) {
+        // bits is 4/8/16/32, so `1 << bits` never overflows u64 and the mask is
+        // a valid positive constant (0xF / 0xFF / 0xFFFF / 0xFFFF_FFFF).
+        let mask = (1u64 << bits) - 1;
+        asm.mov_imm64(Reg::X2, mask);
+        asm.and_(Reg::X0, Reg::X0, Reg::X2);
+    }
+}
+
 fn emit_binop(
     asm: &mut Assembler,
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     kind: BinKind,
+    ty: &str,
 ) -> Result<(), BackendError> {
     let dest = require_dest(instr)?;
     if instr.srcs.len() < 2 {
@@ -1105,6 +1145,7 @@ fn emit_binop(
         BinKind::Sub => asm.sub(Reg::X0, Reg::X0, Reg::X1),
         BinKind::Mul => asm.mul(Reg::X0, Reg::X0, Reg::X1),
     }
+    mask_narrow_x0(asm, ty); // E2: wrap u8/u16/u32 results mod 2ⁿ
     let slot = alloc.slot_of(dest);
     asm.str_(Reg::X0, Reg::Sp, slot)?;
     Ok(())
@@ -1201,6 +1242,9 @@ fn emit_div(
         else       { asm.udiv(Reg::X0, Reg::X0, Reg::X1); }
     }
 
+    // E2: div/mod of in-range uⁿ operands already fits, so this mask is a no-op;
+    // kept uniform with the other narrow ops.
+    mask_narrow_x0(asm, ty);
     let slot = alloc.slot_of(dest);
     asm.str_(Reg::X0, Reg::Sp, slot)?;
     Ok(())
@@ -1216,6 +1260,7 @@ fn emit_bitwise(
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     kind: BitwiseKind,
+    ty: &str,
 ) -> Result<(), BackendError> {
     let dest = require_dest(instr)?;
     if instr.srcs.len() < 2 {
@@ -1228,6 +1273,10 @@ fn emit_bitwise(
         BitwiseKind::Or  => asm.orr(Reg::X0, Reg::X0, Reg::X1),
         BitwiseKind::Xor => asm.eor(Reg::X0, Reg::X0, Reg::X1),
     }
+    // E2: AND/OR/XOR of two already-masked uⁿ operands stays in range, so this
+    // mask is provably redundant — but keeping it uniform with the other narrow
+    // ops costs two instructions and guards against an unmasked operand.
+    mask_narrow_x0(asm, ty);
     let slot = alloc.slot_of(dest);
     asm.str_(Reg::X0, Reg::Sp, slot)?;
     Ok(())
@@ -1243,7 +1292,7 @@ fn emit_shift(
     alloc: &mut RegAlloc,
     instr: &CIRInstr,
     kind: ShiftKind,
-    _ty: &str,
+    ty: &str,
 ) -> Result<(), BackendError> {
     let dest = require_dest(instr)?;
     if instr.srcs.len() < 2 {
@@ -1257,6 +1306,10 @@ fn emit_shift(
         ShiftKind::Lsr => asm.lsr_reg(Reg::X0, Reg::X0, Reg::X1),
         ShiftKind::Asr => asm.asr_reg(Reg::X0, Reg::X0, Reg::X1),
     }
+    // E2: a left shift can push bits above the declared width (`1u8 << 8` must
+    // be 0, not 256), so mask the result.  Right shifts only ever shrink the
+    // value, so the mask is a no-op there — applied uniformly for simplicity.
+    mask_narrow_x0(asm, ty);
     let slot = alloc.slot_of(dest);
     asm.str_(Reg::X0, Reg::Sp, slot)?;
     Ok(())
@@ -2160,5 +2213,119 @@ mod tests {
             &ctx("p", &[], "void"), &cir, &HashMap::new()
         ).expect("call_builtin should compile");
         assert_eq!(ext_relocs.iter().filter(|r| r.symbol == "__twig_print_i64").count(), 1);
+    }
+
+    // =======================================================================
+    // LANG-FULL E2 (native-AOT leg): narrow-width unsigned masking
+    // =======================================================================
+    //
+    // A native 64-bit register holds the full result of `add_u8 200, 100`
+    // (= 300); to make a `uⁿ` type *wrap* mod-2ⁿ like the other backends, the
+    // codegen appends a `mov X2, #mask; and X0, X0, X2` after each narrow op.
+    // The structural tests below prove the mask bytes are emitted (every host);
+    // the executed tests prove the *value* wraps (Apple-Silicon macOS only,
+    // where we can install and call the generated code via `jit-loader-macos`).
+
+    /// Build `const_<ty> a; const_<ty> b; <op>_<ty> v0 = a,b; ret_u64 v0`.
+    fn narrow_binop_module(op: &str, ty: &str, a: i64, b: i64) -> Vec<u8> {
+        let mk_const = |dest: &str, n: i64| CIRInstr {
+            op: format!("const_{ty}"), dest: Some(dest.into()),
+            srcs: vec![CIROperand::Int(n)], ty: ty.into(), deopt_to: None,
+        };
+        let cir = vec![
+            mk_const("a", a),
+            mk_const("b", b),
+            make_binop_cir(&format!("{op}_{ty}"), "v0", "a", "b", ty),
+            ret_u64("v0"),
+        ];
+        compile(&ctx("f", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("{op}_{ty} compile failed: {e}"))
+    }
+
+    /// Build `const_<ty> a; <op>_<ty> v0 = a; ret_u64 v0`.
+    fn narrow_unop_module(op: &str, ty: &str, a: i64) -> Vec<u8> {
+        let cir = vec![
+            CIRInstr { op: format!("const_{ty}"), dest: Some("a".into()),
+                       srcs: vec![CIROperand::Int(a)], ty: ty.into(), deopt_to: None },
+            make_unop_cir(&format!("{op}_{ty}"), "v0", "a", ty),
+            ret_u64("v0"),
+        ];
+        compile(&ctx("f", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("{op}_{ty} compile failed: {e}"))
+    }
+
+    #[test]
+    fn narrow_add_emits_two_extra_mask_instructions() {
+        // add_u64 (no mask) vs add_u8 (mask) differ ONLY by `mov X2,#mask`
+        // + `and X0,X0,X2` = two 4-byte ARM64 instructions = 8 bytes.
+        let wide = narrow_binop_module("add", "u64", 200, 100);
+        let narrow = narrow_binop_module("add", "u8", 200, 100);
+        assert_eq!(narrow.len(), wide.len() + 8,
+            "u8 add must emit a 2-instruction width mask the u64 add does not");
+    }
+
+    #[test]
+    fn narrow_not_emits_mask() {
+        let wide = narrow_unop_module("not", "u64", 0);
+        let narrow = narrow_unop_module("not", "u8", 0);
+        assert_eq!(narrow.len(), wide.len() + 8);
+    }
+
+    #[test]
+    fn i64_ops_are_never_masked() {
+        // i64 is full-width — no mask, identical length to u64.
+        assert_eq!(
+            narrow_binop_module("add", "i64", 1, 2).len(),
+            narrow_binop_module("add", "u64", 1, 2).len(),
+        );
+    }
+
+    // ---- Executed proofs: install the bytes and call them. ----
+    // Gated to Apple-Silicon macOS, the only host where `jit-loader-macos`
+    // installs MAP_JIT pages.  Linux-aarch64 / x86 hosts run the structural
+    // tests above; the lang-aot matrix provides the end-to-end executed proof
+    // once a frontend emits narrow `type_hint`s (LANG-FULL N6).
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    fn run_narrow_binop(op: &str, ty: &str, a: i64, b: i64) -> u64 {
+        let bytes = narrow_binop_module(op, ty, a, b);
+        let page = jit_loader_macos::CodePage::new(&bytes).expect("install code page");
+        let f: extern "C" fn() -> u64 = unsafe { page.as_function() };
+        f()
+    }
+
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    fn run_narrow_unop(op: &str, ty: &str, a: i64) -> u64 {
+        let bytes = narrow_unop_module(op, ty, a);
+        let page = jit_loader_macos::CodePage::new(&bytes).expect("install code page");
+        let f: extern "C" fn() -> u64 = unsafe { page.as_function() };
+        f()
+    }
+
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    #[test]
+    fn u8_arithmetic_wraps_when_executed() {
+        assert_eq!(run_narrow_binop("add", "u8", 200, 100), 44);  // 300 & 0xFF
+        assert_eq!(run_narrow_binop("mul", "u8", 16, 16), 0);     // 256 & 0xFF
+        assert_eq!(run_narrow_binop("sub", "u8", 0, 1), 255);     // -1 & 0xFF
+        assert_eq!(run_narrow_binop("add", "u8", 255, 1), 0);     // cell wrap
+        // i64 at full width does NOT wrap.
+        assert_eq!(run_narrow_binop("add", "i64", 200, 100), 300);
+    }
+
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    #[test]
+    fn u8_not_and_shift_wrap_when_executed() {
+        assert_eq!(run_narrow_unop("not", "u8", 0), 255);   // ~0 over a byte
+        assert_eq!(run_narrow_binop("shl", "u8", 1, 7), 128);
+        assert_eq!(run_narrow_binop("shl", "u8", 1, 8), 0); // shifted past the byte
+    }
+
+    #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
+    #[test]
+    fn u16_u32_widths_wrap_when_executed() {
+        assert_eq!(run_narrow_binop("add", "u16", 60000, 10000), 70000 & 0xFFFF);
+        // u32: a 64-bit register does NOT wrap a u32 add for free, so the mask
+        // is what makes this correct (unlike wasm, where the i32 op wraps).
+        assert_eq!(run_narrow_binop("mul", "u32", 0x1_0000, 0x1_0000), 0);
     }
 }

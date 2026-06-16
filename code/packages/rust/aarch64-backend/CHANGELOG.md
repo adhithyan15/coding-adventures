@@ -1,5 +1,31 @@
 # Changelog — `aarch64-backend`
 
+## 0.10.0 — 2026-06-15 — narrow-width unsigned masking (LANG-FULL E2, native-AOT leg)
+
+Native registers are 64-bit, so a `u8` add of `200 + 100` previously computed
+`300` — the result was **not** truncated to the declared width, unlike the other
+backends (vm-core, jit-core, wasm, jvm, cil) which already wrap. This release
+closes the native-AOT leg of enabler **E2**: every narrow **unsigned** op
+(`u4`/`u8`/`u16`/`u32`) now masks its result with a follow-up
+`mov X2, #mask; and X0, X0, X2`, so:
+
+- `add_u8 200, 100` → `44` (300 mod 256)
+- `sub_u8 0, 1` → `255`, `mul_u8 16, 16` → `0`
+- `not_u8 0` → `255`, `shl_u8 1, 8` → `0`
+- `u16`/`u32` wrap at their widths (a 64-bit register does **not** wrap a `u32`
+  add for free, so the mask is what makes `u32` correct here — unlike wasm)
+
+Masking covers `add`/`sub`/`mul`/`div`/`mod`/`and`/`or`/`xor`/`shl`/`shr`/`neg`/`not`;
+for the ops whose result is already in range (bitwise of masked operands, div/mod,
+right shifts) the mask is a provably-redundant no-op kept for uniformity. Full-width
+(`u64`/`i64`) and signed narrow types are unchanged (signed narrow would need
+sign-extension, not a plain mask, and no frontend emits it). See `mask_narrow_x0`.
+
+New tests: structural (the mask instructions are emitted; `i64` is never masked)
+plus an **executed** proof — the generated ARM64 is installed via `jit-loader-macos`
+and called, asserting the wrapped values directly (Apple-Silicon macOS). Unblocks the
+Nib **N6** / Oct **O2** wrap-semantics frontend items.
+
 ## 0.9.0 — 2026-06-10 — McCarthy lambda (F7): `lispy_to_exit_code` builtin (LANG77 / W14b)
 
 Adds `lispy_to_exit_code` to `V1_BUILTINS` (→ `BL __twig_lispy_to_exit_code`), the
