@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add parsed `.print <analysis> ...` output routing to `resolve_deck_outputs`,
+  `select_deck_output_probes`, and deck table formatters, matching Python and
+  TypeScript.
 - Add selected-run artifact summaries to `run_deck_analysis`; executions now
   return stable result-row, output-probe, measurement, and Fourier counts plus
   a run-artifact table, matching Python and TypeScript.

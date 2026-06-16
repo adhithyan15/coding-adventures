@@ -172,8 +172,10 @@ risks Y") — decision support, not a hidden choice.
   **CC-5b** spider grounding.
 - **CC-6 — insurance / step-therapy (§5). ✅ DONE.** A payer step-therapy rule ("won't
   approve Y until X tried") enters as a `step_therapy` chart fact (`restricted:prerequisite`)
-  + `prior_failed` facts (drugs already tried); the precedence `x_Y ≤ tried_X` is realized as
-  a reimbursement-only exclusion (`reimbursement_blocked`). `derive()` solves TWICE: `regimen`
+  + `prior_failed` facts (drugs already tried); the precedence `x_Y ≤ tried_X` is emitted as an
+  EXPLICIT engine constraint `constrain x_Y <= 0` in the reimbursement program (the known-untried
+  `tried_X = 0` folded in) — enforced by the constraint solver and auditable in the program, NOT
+  pre-filtered in Python. `derive()` solves TWICE: `regimen`
   is the clinically optimal one; `reimbursement` carries the payer-covered regimen, the
   `blocked` drugs, whether it `differs_from_clinical`, and a note. Reimbursement infeasibility
   (a rule blocking a clinically-forced drug → covered = INFEASIBLE) is surfaced **distinctly**

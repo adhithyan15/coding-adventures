@@ -351,8 +351,12 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
     reimbursement = None
     if cop.step_therapy:
         blocked = reimbursement_blocked(cop.step_therapy, cop.tried)
+        # The precedence is enforced BY THE ENGINE: blocked drugs are pinned to 0 via an
+        # explicit `constrain x_Y <= 0` clause in the reimbursement program (step_blocked),
+        # not removed from candidates in Python — so the payer constraint is auditable in
+        # the emitted program and the covered-infeasibility verdict is the solver's.
         cov = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated,
-                        excluded_drugs | blocked, cop.weights)
+                        excluded_drugs, cop.weights, step_blocked=blocked)
         differs = cov["regimen"] != res["regimen"]
         if cov["regimen"] is None:
             note = ("reimbursement-INFEASIBLE under step therapy: the only regimens covering "

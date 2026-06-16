@@ -3811,7 +3811,7 @@ pub fn resolve_deck_outputs(netlist: &str) -> DeckOutputSummary {
             end_line_number = Some(line_number);
             break;
         }
-        if matches!(directive.as_deref(), Some(".save" | ".probe")) {
+        if matches!(directive.as_deref(), Some(".save" | ".probe" | ".print")) {
             resolve_output_line(
                 stripped,
                 line_number,
@@ -5854,18 +5854,50 @@ fn resolve_output_line(
 ) {
     let tokens = directive_tokens(line);
     if tokens.len() < 2 {
+        let message = if directive == ".print" {
+            ".print requires an analysis token and at least one probe token".to_string()
+        } else {
+            format!("{directive} requires at least one probe token")
+        };
         add_output_diagnostic(
             state,
             "SPICE_DECK_OUTPUT_ARGUMENT",
             directive,
             line_number,
-            &format!("{directive} requires at least one probe token"),
+            &message,
             None,
         );
         return;
     }
 
-    let (analysis, probe_tokens) = if directive == ".probe"
+    let (analysis, probe_tokens) = if directive == ".print" {
+        if tokens.len() < 3 {
+            add_output_diagnostic(
+                state,
+                "SPICE_DECK_OUTPUT_ARGUMENT",
+                directive,
+                line_number,
+                ".print requires an analysis token and at least one probe token",
+                None,
+            );
+            return;
+        }
+        let Some(analysis) = normalize_deck_output_analysis(tokens[1]) else {
+            add_output_diagnostic(
+                state,
+                "SPICE_DECK_OUTPUT_ANALYSIS",
+                directive,
+                line_number,
+                &format!(
+                    ".print analysis must be op, dc, ac, or tran, got {:?}",
+                    tokens[1]
+                ),
+                Some(tokens[1].to_string()),
+            );
+            return;
+        };
+        (Some(analysis.to_string()), &tokens[2..])
+    } else if directive == ".probe"
         && tokens
             .get(1)
             .and_then(|token| normalize_deck_output_analysis(token))

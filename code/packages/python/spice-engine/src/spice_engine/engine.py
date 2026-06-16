@@ -2264,19 +2264,19 @@ def format_ac_table(result: AcResult | list[AcPoint], probes: list[str] | None =
 
 
 def format_deck_op_table(result: DcResult, netlist: str) -> str:
-    """Format a DC operating point using parsed ``.save`` / ``.probe`` cards."""
+    """Format a DC operating point using parsed deck output cards."""
 
     return format_dc_table(result, select_deck_output_probes(netlist, "op"))
 
 
 def format_deck_dc_sweep_table(result: DcSweepResult, netlist: str) -> str:
-    """Format a DC sweep using parsed ``.save`` / ``.probe`` cards."""
+    """Format a DC sweep using parsed deck output cards."""
 
     return format_dc_sweep_table(result, select_deck_output_probes(netlist, "dc"))
 
 
 def format_deck_ac_table(result: AcResult | list[AcPoint], netlist: str) -> str:
-    """Format AC phasors using parsed ``.save`` / ``.probe`` cards."""
+    """Format AC phasors using parsed deck output cards."""
 
     return format_ac_table(result, select_deck_output_probes(netlist, "ac"))
 
@@ -2285,7 +2285,7 @@ def format_deck_transient_table(
     transient_result: TransientResult | list[TransientPoint],
     netlist: str,
 ) -> str:
-    """Format transient samples using parsed ``.save`` / ``.probe`` cards."""
+    """Format transient samples using parsed deck output cards."""
 
     return format_transient_table(
         transient_result,
