@@ -244,6 +244,7 @@ members = [
     "ruby-parser",
     "s-lexer",
     "s-parser",
+    "s-repl",
     "s-runtime",
     "sql-lexer",
     "sql-parser",
