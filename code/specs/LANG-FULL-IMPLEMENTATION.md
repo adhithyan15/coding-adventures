@@ -144,7 +144,8 @@ multiple languages; close an enabler before the features that depend on it.
       bitwise ops (`i64` for cmp). **Executed cross-backend matrix proof**: `200u8+100u8` →
       `if x==44 {1} else {0}` returns **1**, and `6*7` returns **42**, on all 7 backends
       (native/LLVM/WASM/JVM/CLR/VM/JIT). N6 ✅. **N3-`~` still deferred** (lowers to IIR `not`,
-      which LLVM lacks); **N7** (`+%`/`+?`) and **Oct O2** remain. **E2 integration complete.**
+      which LLVM lacks); **N7** (`+%`/`+?`) ✅ (nib-iir-compiler 0.15.0); **Oct O2** remains.
+      **E2 integration complete.**
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
   literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
   already emit f64 ops; extend the rest.)*
@@ -195,7 +196,12 @@ backend immediately) come before the enabler-dependent items.
   RUNNING `const N: u8 = 42; … return N`→42 and `const A=30; const B=12; … A + B`→42 across
   all backends. (Const-*expression* folding and mutable `static` deferred.)
 - ☐ **N6** — u4/u8 wrap semantics (needs **E2**).
-- ☐ **N7** — `+%` (wrap add) / `+?` (saturating add) (needs **E2**).
+- ✅ **N7** — `+%` (wrap add) / `+?` (saturating add) (nib-iir-compiler 0.15.0). `+%` lowers to
+  the narrow-typed `add` (E2 wraps it: `15u4 +% 1 = 0`, `200u8 +% 100 = 44`); `+?` lowers to a
+  *wide* add + a clamp branch `min(sum, MAX)` (`15u4 +? 1 = 15`, `200u8 +? 100 = 255`,
+  `3 +? 4 = 7`). Verified by RUNNING on all 7 backends (comparison-based matrix proofs) + a
+  vm-core unit test. The grammar already had the `WRAP_ADD`/`SAT_ADD` tokens; no type-checker
+  change (additive operators are type-inferred from operands).
 
 ### Oct  (sister to Nib)
 > **Oct had no observable output** (void `main` → always exits 0), which made its value-level

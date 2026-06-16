@@ -1,6 +1,6 @@
 [package]
 name = "nib-iir-compiler"
-version = "0.14.0"
+version = "0.15.0"
 edition = "2021"
 description = "Compile Nib source to InterpreterIR (IIRModule), feeding the LANG-runtime AOT/JIT pipeline.  v0.5.0: marks main function FullyTyped so the JITCore + GenericCirJit chain can run Nib programs JIT-compiled.  v0.6.0: threads real source positions through IIRFunction::source_map for line-based debugger breakpoints."
 

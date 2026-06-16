@@ -933,6 +933,45 @@ impl Compiler {
             };
 
             let rhs = self.compile_expr(rhs_node, types, env, out)?;
+
+            // LANG-FULL N7 — saturating add (`+?`): `dest = min(acc + b, MAX)`,
+            // where MAX is the type's maximum (u4 → 15, u8 → 255). Unlike `+%`/
+            // `+` (which WRAP via the E2 mask), `+?` CLAMPS: `15u4 +? 1 = 15`,
+            // `200u8 +? 100 = 255`. It needs the *wide* sum (an i64 add, NOT
+            // masked) to see the true total, then a branch to clamp it at MAX.
+            // (It is not a single CIR op, so it is lowered here, before
+            // `cir_op_for`.)
+            if op_tok.effective_type_name() == "SAT_ADD" || op_tok.value == "+?" {
+                let max: i64 = match lookup_node_type(node, types) {
+                    Some(NibType::U4) => 0xF,
+                    Some(NibType::U8) => 0xFF,
+                    // Saturating needs a width; default to the u8 max when the
+                    // context is unconstrained.
+                    _ => 0xFF,
+                };
+                let sum = self.fresh_var();
+                self.emit_to(out, IIRInstr::new("add", Some(sum.clone()),
+                    vec![Operand::Var(acc), Operand::Var(rhs)], "i64")); // wide, unmasked
+                let maxc = self.fresh_var();
+                self.emit_to(out, IIRInstr::new("const", Some(maxc.clone()),
+                    vec![Operand::Int(max)], "i64"));
+                let over = self.fresh_var();
+                self.emit_to(out, IIRInstr::new("cmp_gt", Some(over.clone()),
+                    vec![Operand::Var(sum.clone()), Operand::Var(maxc.clone())], "i64"));
+                let dest = self.fresh_var();
+                self.emit_to(out, IIRInstr::new("mov", Some(dest.clone()),
+                    vec![Operand::Var(sum)], "i64")); // dest = sum
+                let skip = self.fresh_label();
+                self.emit_to(out, IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var(over), Operand::Var(skip.clone())], "void")); // !over → skip
+                self.emit_to(out, IIRInstr::new("mov", Some(dest.clone()),
+                    vec![Operand::Var(maxc)], "i64")); // dest = MAX (saturate)
+                self.emit_to(out, IIRInstr::new("label", None,
+                    vec![Operand::Var(skip)], "void"));
+                acc = dest;
+                continue;
+            }
+
             // Map operator token to a typed CIR mnemonic the IIR-to-*
             // backends (wasm/jvm/clr/beam) recognise.  Mirrors the
             // pattern oct-iir-compiler uses — emit `add` / `cmp_eq` etc.
@@ -1248,6 +1287,13 @@ fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
     match (text, type_name) {
         // Arithmetic
         ("+", _) | (_, "PLUS")        => Some("add"),
+        // LANG-FULL N7 — wrapping add (`+%`). Lowers to the same `add` as `+`,
+        // and carries the narrow `type_hint` so the E2 backend mask wraps it:
+        // `15u4 +% 1` → `16 & 0xF = 0`, `200u8 +% 100` → `44`. (Under E2 a plain
+        // `+` on a narrow type already wraps; `+%` makes that intent explicit.)
+        // `+?` (SAT_ADD, saturating) is NOT a single op — it lowers to a wide
+        // add + clamp in `compile_binary_chain` and never reaches here.
+        ("+%", _) | (_, "WRAP_ADD")   => Some("add"),
         ("-", _) | (_, "MINUS")       => Some("sub"),
         ("*", _) | (_, "STAR")        => Some("mul"),
         ("/", _) | (_, "SLASH")       => Some("div"),
