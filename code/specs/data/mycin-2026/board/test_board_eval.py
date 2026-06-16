@@ -59,11 +59,16 @@ def test_defensibility_is_full() -> None:
 def test_grounded_coverage_is_the_live_grounding_number() -> None:
     card, _ = _card()
     s = card.summary()
-    # The IEM edges are still authored-debt (consensus), so 0 correct answers rest
-    # on a spider-grounded (authoritative) edge. This climbs after the REL-4 spider.
-    assert s["grounded_coverage"] == 0.0
-    assert s["grounded_correct"] == 0
-    assert all(r.trust == "consensus" for r in card.results if r.outcome == "correct")
+    # After the REL-4b spider, 16/18 IEM edges are spider-grounded (authoritative);
+    # 2 stayed direction_only → consensus (the adversarial verify could not confirm
+    # byte-stability). Of the 10 correct board items, 9 cite an authoritative edge —
+    # the lone holdout is lesch_nyhan_enzyme (deficient_in__lesch_nyhan, direction_only).
+    # This number IS the grounding progress: it moved 0% → 90% with no harness change.
+    assert s["grounded_coverage"] == 0.9
+    assert s["grounded_correct"] == 9
+    by_id = {r.item_id: r for r in card.results}
+    assert by_id["lesch_nyhan_enzyme"].trust == "consensus"
+    assert by_id["tay_sachs_enzyme"].trust == "authoritative"
 
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:

@@ -6,8 +6,8 @@
     "wrong": 0,
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.0,
-    "grounded_correct": 0
+    "grounded_coverage": 0.9,
+    "grounded_correct": 9
   },
   "results": [
     {
@@ -16,7 +16,7 @@
       "gold": "hexosaminidase_a",
       "answer": "hexosaminidase_a",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "gaucher_enzyme",
@@ -24,7 +24,7 @@
       "gold": "glucocerebrosidase",
       "answer": "glucocerebrosidase",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "pku_enzyme",
@@ -32,7 +32,7 @@
       "gold": "phenylalanine_hydroxylase",
       "answer": "phenylalanine_hydroxylase",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "pompe_enzyme",
@@ -40,7 +40,7 @@
       "gold": "acid_alpha_glucosidase",
       "answer": "acid_alpha_glucosidase",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "lesch_nyhan_enzyme",
@@ -56,7 +56,7 @@
       "gold": "glucose_6_phosphatase",
       "answer": "glucose_6_phosphatase",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "tay_sachs_substrate",
@@ -64,7 +64,7 @@
       "gold": "gm2_ganglioside",
       "answer": "gm2_ganglioside",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "gaucher_substrate",
@@ -72,7 +72,7 @@
       "gold": "glucocerebroside",
       "answer": "glucocerebroside",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "lesch_nyhan_inherit",
@@ -80,7 +80,7 @@
       "gold": "x_linked_recessive",
       "answer": "x_linked_recessive",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "von_gierke_inherit",
@@ -88,7 +88,7 @@
       "gold": "autosomal_recessive",
       "answer": "autosomal_recessive",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "niemann_pick_enzyme",
