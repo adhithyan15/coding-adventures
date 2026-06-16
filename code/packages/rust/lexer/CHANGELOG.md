@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.0] — 2026-06-15 — gap-044b: template literal depth tracking
+
+### Fixed
+- `GrammarLexer` now correctly lexes template literal substitutions containing
+  non-identifier expressions such as `${obj.name}`, `${a + b}`, `${f()}`,
+  `${{a:1}}`, and `${x ? y : z}`.  Previously, any F10 flat-mode transition
+  firing inside the substitution (e.g. `on NAME -> set-mode div`) silently
+  overwrote the active group to "div" or "default", losing the template context.
+  A subsequent `}` was then consumed as RBRACE instead of TEMPLATE_TAIL,
+  producing a spurious `LexerError: Unexpected sequence '}'`.
+
+### Implementation
+- Added `template_entry_depths: Vec<usize>` field to `GrammarLexer`.  Each
+  `TEMPLATE_HEAD` or `TEMPLATE_MIDDLE` token pushes the current brace depth;
+  `TEMPLATE_TAIL` pops it.  Across the main loop, whenever a `}` is about to
+  be matched at a depth that equals the recorded template-entry depth, the
+  active group is temporarily overridden: "div" → "template_div", "default" →
+  "template".  This ensures TEMPLATE_TAIL / TEMPLATE_MIDDLE patterns take
+  priority over RBRACE for the closing `}` of each substitution, regardless of
+  any flat-mode transitions that fired inside the expression.
+- Nested templates are handled correctly: each `${` adds one entry; the
+  innermost closes first.  Nested braces inside the expression (object
+  literals, arrow function bodies) are not misidentified because the depth
+  guard fires only at the exact entry depth.
+
 ## [Unreleased] — F10 declarative lexer mode transitions
 
 ### Added

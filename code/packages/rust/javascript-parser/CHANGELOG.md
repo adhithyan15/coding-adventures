@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-15
+
+### Changed
+- Transitive upgrade: `coding-adventures-javascript-lexer` 0.8.0 (via `lexer`
+  0.5.0) fixes gap-044b — template literal substitutions with non-identifier
+  expressions no longer produce a LexerError.  No API changes in this crate.
+
 ## [0.6.0] - 2026-06-14
 
 ### Added

@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.137.0] - 2026-06-15
+
+### Fixed
+- **gap-044b — template literals with non-identifier expressions no longer crash.**
+  `${obj.name}`, `${a + b}`, `${f()}`, `${{a:1}}`, `${x ? y : z}`, and multiple
+  substitutions all lex cleanly under ES2025.  The fix is in the `lexer` crate
+  (GrammarLexer brace-depth tracking); closurec picks it up transitively.
+
 ## [0.136.0] - 2026-06-14
 
 ### Added
