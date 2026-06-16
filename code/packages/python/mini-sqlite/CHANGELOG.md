@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.19.0] - 2026-06-15
+
+### Added
+
+- **Row-value comparisons** — multi-column predicates are now supported in
+  ``WHERE``, ``ON``, and expression contexts, matching SQLite's behaviour:
+
+  - ``(a, b) = (1, 2)`` — pairwise equality (expands to ``a=1 AND b=2``)
+  - ``(a, b) != (1, 2)`` — pairwise inequality (expands to ``a!=1 OR b!=2``)
+  - ``(a, b) < (1, 2)`` — lexicographic less-than
+  - ``(a, b) <= / > / >= (x, y)`` — other ordered comparisons
+  - ``(a, b) IN ((1,2),(3,4))`` — multi-column IN membership
+  - ``(a, b) NOT IN ((1,2),(3,4))`` — negated IN
+
+  Works for any number of columns; 3-column and wider row values expand
+  recursively using the same lexicographic rule as SQLite.
+
+  **Implementation:** the grammar's ``comparison`` rule gained three new
+  PEG alternatives (``row_value cmp_op row_value``,
+  ``row_value NOT IN (row_value_list)``, ``row_value IN (row_value_list)``)
+  that fire before the existing scalar ``collated`` form.  The adapter
+  expands each row-value comparison into an equivalent scalar
+  ``BinaryExpr`` tree, so the planner, optimizer, codegen, and VM require
+  no changes.  Scalar regressions are not affected — non-parenthesised
+  expressions do not match ``row_value``.
+
 ## [2.18.0] - 2026-06-15
 
 ### Added

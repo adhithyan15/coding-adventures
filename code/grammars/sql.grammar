@@ -211,6 +211,8 @@ insert_body       = "VALUES" row_value { "," row_value }
 # value — useful when the table has an INTEGER PRIMARY KEY plus all
 # other columns have DEFAULT clauses (or are NULLable).
 row_value         = "(" expr { "," expr } ")" ;
+# row_value_list is used by row-value comparisons: (a,b) IN ((x,y),(p,q))
+row_value_list    = row_value { "," row_value } ;
 
 update_stmt       = "UPDATE" NAME "SET" assignment { "," assignment }
                     [ where_clause ] [ returning_clause ] ;
@@ -356,7 +358,14 @@ not_expr          = "NOT" not_expr | comparison ;
 # of any comparison.  The COLLATE clause is also accepted in ORDER
 # BY items separately (see ``order_item``).
 collated          = bitwise [ "COLLATE" NAME ] ;
-comparison        = collated [ cmp_op collated
+# Row-value comparisons: (a,b) = (c,d), (a,b) IN ((x,y),...).
+# These three alternatives must precede the scalar ``collated [...]`` form
+# so the PEG parser tries row_value first when it sees "(".  The NOT IN
+# alternative comes before IN so "NOT" is not left unconsumed.
+comparison        = row_value cmp_op row_value
+                  | row_value "NOT" "IN" "(" row_value_list ")"
+                  | row_value "IN" "(" row_value_list ")"
+                  | collated [ cmp_op collated
                   | "BETWEEN" collated "AND" collated
                   | "NOT" "BETWEEN" collated "AND" collated
                   | "IN" "(" [ in_expr ] ")"
