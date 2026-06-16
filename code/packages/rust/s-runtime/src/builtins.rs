@@ -8,6 +8,7 @@
 
 use crate::env::{define, Env};
 use crate::error::{SError, SResult};
+use crate::eval::Interpreter;
 use crate::value::{bounded_sequence, combine, Arg, SValue};
 use r_vector::Double;
 use statistics_core::{descriptive, Number, StatsError};
@@ -33,7 +34,7 @@ pub fn install(env: &Env) {
     define(env, "max", builtin("max", b_max));
 }
 
-fn builtin(name: &str, func: fn(&[Arg]) -> SResult<SValue>) -> SValue {
+fn builtin(name: &str, func: fn(&Interpreter, &[Arg]) -> SResult<SValue>) -> SValue {
     SValue::Builtin {
         name: name.to_string(),
         func,
@@ -45,19 +46,19 @@ fn builtin(name: &str, func: fn(&[Arg]) -> SResult<SValue>) -> SValue {
 // ===========================================================================
 
 /// `c(...)` — combine arguments into one vector (coercing to the highest type).
-fn b_c(args: &[Arg]) -> SResult<SValue> {
+fn b_c(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(combine(args))
 }
 
 /// `length(x)` — the element count, as a length-1 numeric vector.
-fn b_length(args: &[Arg]) -> SResult<SValue> {
+fn b_length(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let v = first_positional(args)?;
     Ok(SValue::scalar(v.length() as f64))
 }
 
 /// `print(x)` — the side effect (writing output) is handled by the evaluator,
 /// which formats whatever this returns. Here we simply pass the value through.
-fn b_print(args: &[Arg]) -> SResult<SValue> {
+fn b_print(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(args
         .iter()
         .find(|a| a.name.is_none())
@@ -67,7 +68,7 @@ fn b_print(args: &[Arg]) -> SResult<SValue> {
 
 /// `seq(to)` is `1:to`; `seq(from, to)` is `from:to` (step 1). A minimal subset
 /// of R's `seq` sufficient for v1.
-fn b_seq(args: &[Arg]) -> SResult<SValue> {
+fn b_seq(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     let positionals: Vec<f64> = args
         .iter()
         .filter(|a| a.name.is_none())
@@ -91,28 +92,28 @@ fn b_seq(args: &[Arg]) -> SResult<SValue> {
 
 type Reducer = fn(&Double, bool) -> Result<Number, StatsError>;
 
-fn b_mean(args: &[Arg]) -> SResult<SValue> {
+fn b_mean(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     reduce_single(args, "mean", descriptive::mean)
 }
-fn b_median(args: &[Arg]) -> SResult<SValue> {
+fn b_median(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     reduce_single(args, "median", descriptive::median)
 }
-fn b_var(args: &[Arg]) -> SResult<SValue> {
+fn b_var(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     reduce_single(args, "var", descriptive::var)
 }
-fn b_sd(args: &[Arg]) -> SResult<SValue> {
+fn b_sd(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     reduce_single(args, "sd", descriptive::sd)
 }
-fn b_sum(args: &[Arg]) -> SResult<SValue> {
+fn b_sum(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     reduce_variadic(args, "sum", descriptive::sum)
 }
-fn b_prod(args: &[Arg]) -> SResult<SValue> {
+fn b_prod(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     reduce_variadic(args, "prod", descriptive::prod)
 }
-fn b_min(args: &[Arg]) -> SResult<SValue> {
+fn b_min(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     reduce_variadic(args, "min", descriptive::min)
 }
-fn b_max(args: &[Arg]) -> SResult<SValue> {
+fn b_max(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     reduce_variadic(args, "max", descriptive::max)
 }
 

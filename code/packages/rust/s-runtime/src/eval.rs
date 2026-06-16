@@ -357,11 +357,13 @@ impl Interpreter {
         Ok(Arg { name, value })
     }
 
-    /// Apply a callable value to evaluated arguments.
+    /// Apply a callable value at a top-level call site, applying S's result
+    /// visibility rules (`print` is invisible and emits output; other calls are
+    /// visible; a closure's body decides its own visibility).
     fn apply(&self, callee: SValue, args: &[Arg], _env: &Env) -> SResult<SValue> {
         match callee {
             SValue::Builtin { name, func } => {
-                let result = func(args)?;
+                let result = func(self, args)?;
                 if name == "print" {
                     self.emit(&format_value(&result));
                     self.as_invisible(result)
@@ -369,6 +371,17 @@ impl Interpreter {
                     self.as_visible(result)
                 }
             }
+            SValue::Closure { params, body, env } => self.call_closure(&params, &body, &env, args),
+            other => Err(SError::NotCallable(other.type_name().to_string())),
+        }
+    }
+
+    /// Call a callable value and return its result, *without* the top-level
+    /// visibility/printing side effects. This is the entry point built-ins use
+    /// to invoke a user function (`sapply`, `lapply`) or an S3 method.
+    pub(crate) fn call_value(&self, callee: SValue, args: &[Arg]) -> SResult<SValue> {
+        match callee {
+            SValue::Builtin { func, .. } => func(self, args),
             SValue::Closure { params, body, env } => self.call_closure(&params, &body, &env, args),
             other => Err(SError::NotCallable(other.type_name().to_string())),
         }

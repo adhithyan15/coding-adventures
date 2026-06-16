@@ -14,9 +14,10 @@ use parser::grammar_parser::GrammarASTNode;
 use r_vector::{is_na_real, na_real, Double};
 use std::rc::Rc;
 
-/// A built-in function: it receives already-evaluated arguments (v1 is eager —
-/// there are no lazy promises yet) and returns an [`SValue`].
-pub type Builtin = fn(&[Arg]) -> SResult<SValue>;
+/// A built-in function: it receives the interpreter (so it can call back into
+/// user functions — e.g. `sapply`, or S3 method dispatch) and the already-
+/// evaluated arguments (v1 is eager — there are no lazy promises yet).
+pub type Builtin = fn(&crate::eval::Interpreter, &[Arg]) -> SResult<SValue>;
 
 /// A formal parameter of a user-defined function, with an optional default
 /// expression (stored unevaluated, as in S).
@@ -783,7 +784,7 @@ mod tests {
         assert!(index(
             &SValue::Builtin {
                 name: "c".into(),
-                func: |_| Ok(SValue::Null)
+                func: |_, _| Ok(SValue::Null)
             },
             &SValue::scalar(1.0)
         )
@@ -836,7 +837,7 @@ mod tests {
     fn format_value_for_callables() {
         let b = SValue::Builtin {
             name: "c".into(),
-            func: |_| Ok(SValue::Null),
+            func: |_, _| Ok(SValue::Null),
         };
         assert_eq!(format_value(&b), vec!["function (c) .Primitive"]);
     }
