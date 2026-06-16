@@ -60,6 +60,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   final route adoption checks
 - attach route acceptance summaries that turn route-adoption readiness into
   final route acceptance checks
+- attach route distribution summaries that turn route-acceptance readiness into
+  final route distribution checks
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection
