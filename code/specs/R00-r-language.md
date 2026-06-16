@@ -134,6 +134,26 @@ unchanged.
   product; the result-size and all loops are capped at `MAX_SEQ_LEN`. Matrices
   coerce to their flat vector (`c(m)`, `sum(m)`) and print with R's `[,j]`/`[i,]`
   console layout.
+- **R-12 — matrix linear algebra** *(this PR)*. The builtins that turn the R-11
+  matrix type into a usable linear-algebra object, all in the shared `s-runtime`:
+  - `diag(x)` — the R triple-meaning overload: `diag(M)` extracts a matrix's
+    diagonal as a vector; `diag(v)` for a length-`> 1` vector builds the square
+    matrix with `v` on the diagonal; `diag(n)` for a single number builds the
+    `n × n` identity. The vector/identity forms also accept `nrow`/`ncol`.
+  - `rowSums`/`colSums`/`rowMeans`/`colMeans(x)` — the margin reductions, with an
+    `na.rm = FALSE` option (NA in a margin propagates unless removed; an all-`NA`
+    mean is `NaN`). Each returns a plain vector.
+  - `cbind(…)` / `rbind(…)` — bind vectors and matrices by column / by row.
+    Vectors are recycled to the common row (resp. column) length; a matrix whose
+    rows (resp. columns) don't match is an error. The empty call is `NULL`.
+  - `solve(a)` / `solve(a, b)` — the matrix inverse, and the solution `x` of
+    `a %*% x = b` (`b` a vector or matrix). `det(a)` — the determinant. Both use
+    **Gaussian elimination with partial pivoting** (no LU primitive exists in the
+    substrate, so it is implemented directly); a singular `a` is a clean error
+    (`det` of a singular matrix is `0`), an `NA` in `a` makes `det` return `NA`
+    and `solve` an error, and the dimension is capped (`MAX_SOLVE_DIM`) so the
+    `O(n³)` work cannot be turned into a denial-of-service. All construction is
+    bounded by `MAX_SEQ_LEN`.
 
 ## §4 Reuse strategy
 

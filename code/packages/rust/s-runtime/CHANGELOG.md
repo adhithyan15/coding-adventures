@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-06-16
+
+### Added
+
+- **Matrix linear algebra (R-12)** — builtins operating on the R-11
+  `SValue::Matrix`: `diag()` (R's extract-diagonal / build-diagonal /
+  make-identity overload, with `nrow`/`ncol`); the margin reductions
+  `rowSums`/`colSums`/`rowMeans`/`colMeans` (with an `na.rm` option; an all-`NA`
+  mean is `NaN`); `cbind()`/`rbind()` (bind vectors and matrices by column/row,
+  recycling vectors, erroring on a mismatched matrix dimension, `NULL` for the
+  empty call); and `solve()`/`det()` (matrix inverse, linear solve `a %*% x = b`,
+  and determinant) via Gaussian elimination with partial pivoting — no LU
+  primitive exists in the substrate, so it is implemented directly. A singular
+  matrix is a clean error (`det` returns `0`); `NA` makes `det` return `NA` and
+  `solve` an error; the `solve`/`det` order is capped at `MAX_SOLVE_DIM` (1000)
+  so the `O(n³)` work cannot become a denial-of-service, and all construction is
+  bounded by `MAX_SEQ_LEN`.
+
 ## [0.7.0] - 2026-06-16
 
 ### Added
