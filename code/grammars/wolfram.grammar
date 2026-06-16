@@ -1,0 +1,99 @@
+# @version 1
+
+# =============================================================================
+# wolfram.grammar — Parser grammar for the Wolfram Language (subset)
+# =============================================================================
+#
+# Drives the generic grammar-driven parser engine (parser::GrammarParser) over
+# the token stream from the wolfram-lexer. Everything in Wolfram is an expression
+# `head[args]`; this grammar parses the surface operators, and the W-4 runtime
+# desugars each rule into the canonical symbolic-ir head (Plus, Times, Power,
+# List, Rule, ReplaceAll, Set, …). See code/specs/MA04-wolfram-language.md.
+#
+# Token names (UPPERCASE) come from the Wolfram lexer (code/grammars/wolfram.tokens):
+#   NUMBER STRING NAME                literals and symbols
+#   SET (=)  SETDELAYED (:=)          assignment
+#   RULE (->)  RULEDELAYED (:>)  REPLACEALL (/.)
+#   AND (&&)  OR (||)  NOT (!)
+#   EQUAL (==)  UNEQUAL (!=)  LESS (<)  GREATER (>)  LE (<=)  GE (>=)
+#   PLUS MINUS TIMES SLASH POWER       arithmetic
+#   BLANK (_)                          pattern blank
+#   LBRACKET RBRACKET   (f[...] application)
+#   LBRACE RBRACE       ({...} list)
+#   LPAREN RPAREN       (grouping)
+#   COMMA SEMI NEWLINE
+#
+# Precedence cascade (loosest binds first -> tightest binds last)
+# ---------------------------------------------------------------
+#   assignment      =  :=                 (right-associative)
+#   replaceall      /.                    (left-associative)
+#   rule            ->  :>                (right-associative)
+#   logical_or      ||
+#   logical_and     &&
+#   logical_not     !  (prefix)
+#   comparison      == != < > <= >=
+#   additive        + -
+#   multiplicative  * /
+#   unary           - +  (prefix)
+#   power           ^                     (right-associative)
+#   application     f[...]                (postfix)
+#   atom            literals, symbols, patterns, {...}, ( ... )
+# =============================================================================
+
+program = { statement_line } ;
+
+# A line is one statement followed by a NEWLINE or `;` (which suppresses its
+# result's display), or a blank/terminator-only line.
+statement_line = statement ( NEWLINE | SEMI )
+               | statement
+               | NEWLINE
+               | SEMI ;
+
+statement = expr ;
+
+expr = assignment ;
+
+# Set / SetDelayed — right-associative, the loosest binding.
+assignment = replaceall [ ( SET | SETDELAYED ) assignment ] ;
+
+# ReplaceAll — left-associative: `e /. a /. b` is ReplaceAll[ReplaceAll[e,a],b].
+replaceall = rule { REPLACEALL rule } ;
+
+# Rule / RuleDelayed — right-associative: `a -> b -> c` is Rule[a, Rule[b, c]].
+rule = logical_or [ ( RULE | RULEDELAYED ) rule ] ;
+
+logical_or  = logical_and { OR logical_and } ;
+logical_and = logical_not { AND logical_not } ;
+logical_not = NOT logical_not | comparison ;
+
+# A single (non-chained) comparison for the subset.
+comparison = additive [ ( EQUAL | UNEQUAL | LESS | GREATER | LE | GE ) additive ] ;
+
+additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+multiplicative = unary { ( TIMES | SLASH ) unary } ;
+
+# Prefix minus/plus. Binds looser than Power, so `-x^2` is -(x^2).
+unary = ( MINUS | PLUS ) unary | power ;
+
+# Power — right-associative: `a^b^c` is Power[a, Power[b, c]].
+power = postfix [ POWER unary ] ;
+
+# Function application in square brackets, left-associative and chainable:
+# `f[x][y]` is `(f[x])[y]`. The arg list may be empty (`f[]`).
+postfix = atom { LBRACKET [ arglist ] RBRACKET } ;
+
+arglist = expr { COMMA expr } ;
+
+# Atoms, including the pattern blank forms:
+#   NAME                a symbol
+#   NAME BLANK [NAME]   x_  or  x_h   (Pattern[x, Blank[]] / Pattern[x, Blank[h]])
+#   BLANK [NAME]        _   or  _h    (Blank[] / Blank[h])
+atom = NUMBER
+     | STRING
+     | NAME [ BLANK [ NAME ] ]
+     | BLANK [ NAME ]
+     | list
+     | group ;
+
+list  = LBRACE [ arglist ] RBRACE ;
+group = LPAREN expr RPAREN ;
