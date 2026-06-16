@@ -48,7 +48,8 @@ import recall  # noqa: E402  (the REL-1 RelationStore + parse_edges)
 # vitamin deficiencies, …). They share the relational substrate, so the board
 # merges them into one store — a recall item resolves against whichever domain
 # holds its relation. Adding a domain = drop in its edge file + its board items.
-EDGE_FILES = ["iem-edges.adj", "vitamin-edges.adj", "anemia-edges.adj", "endocrine-edges.adj"]
+EDGE_FILES = ["iem-edges.adj", "vitamin-edges.adj", "anemia-edges.adj", "endocrine-edges.adj",
+              "coag-edges.adj"]
 
 
 def load_store() -> "recall.RelationStore":

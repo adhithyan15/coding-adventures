@@ -54,6 +54,19 @@
     {"id": "adh_def",        "domain": "endocrine", "tactic": "recall", "relation": "deficiency_syndrome", "subject": "adh",            "var": "Syndrome", "gold": "central_diabetes_insipidus"},
     {"id": "glucagon_gland", "domain": "endocrine", "tactic": "recall", "relation": "secreted_by",         "subject": "glucagon",       "var": "Gland",    "gold": "ABSTAIN"},
 
+    {"id": "hemophilia_a_factor", "domain": "coag", "tactic": "recall", "relation": "factor_deficiency", "subject": "hemophilia_a",            "var": "Factor",  "gold": "factor_viii"},
+    {"id": "hemophilia_b_factor", "domain": "coag", "tactic": "recall", "relation": "factor_deficiency", "subject": "hemophilia_b",            "var": "Factor",  "gold": "factor_ix"},
+    {"id": "vwd_factor",          "domain": "coag", "tactic": "recall", "relation": "factor_deficiency", "subject": "von_willebrand_disease",  "var": "Factor",  "gold": "von_willebrand_factor"},
+    {"id": "hemophilia_c_factor", "domain": "coag", "tactic": "recall", "relation": "factor_deficiency", "subject": "hemophilia_c",            "var": "Factor",  "gold": "factor_xi"},
+    {"id": "factor7_def_factor",  "domain": "coag", "tactic": "recall", "relation": "factor_deficiency", "subject": "factor_vii_deficiency",   "var": "Factor",  "gold": "factor_vii"},
+    {"id": "hemophilia_a_inherit","domain": "coag", "tactic": "recall", "relation": "coag_inheritance",  "subject": "hemophilia_a",            "var": "Pattern", "gold": "x_linked_recessive"},
+    {"id": "vwd_inherit",         "domain": "coag", "tactic": "recall", "relation": "coag_inheritance",  "subject": "von_willebrand_disease",  "var": "Pattern", "gold": "autosomal_dominant"},
+    {"id": "factor7_def_inherit", "domain": "coag", "tactic": "recall", "relation": "coag_inheritance",  "subject": "factor_vii_deficiency",   "var": "Pattern", "gold": "autosomal_recessive"},
+    {"id": "hemophilia_a_test",   "domain": "coag", "tactic": "recall", "relation": "prolonged_test",    "subject": "hemophilia_a",            "var": "Test",    "gold": "aptt"},
+    {"id": "factor7_def_test",    "domain": "coag", "tactic": "recall", "relation": "prolonged_test",    "subject": "factor_vii_deficiency",   "var": "Test",    "gold": "pt"},
+    {"id": "vwd_test",            "domain": "coag", "tactic": "recall", "relation": "prolonged_test",    "subject": "von_willebrand_disease",  "var": "Test",    "gold": "bleeding_time"},
+    {"id": "bernard_soulier_factor", "domain": "coag", "tactic": "recall", "relation": "factor_deficiency", "subject": "bernard_soulier",     "var": "Factor",  "gold": "ABSTAIN"},
+
     {"id": "meningitis_bacterial_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_bacterial.adj", "gold": "bacterial_meningitis"},
     {"id": "meningitis_equivocal_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_equivocal.adj", "gold": "ABSTAIN"},
 
