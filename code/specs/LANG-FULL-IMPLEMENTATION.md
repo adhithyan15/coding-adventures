@@ -230,12 +230,20 @@ backend immediately) come before the enabler-dependent items.
   defined semantics. **Decision point — surface to the user before implementing.**
 
 ### Brainfuck  (semantics complete; gap is cross-backend *execution* of real programs)
-- ◑ **B1** — **execute real (non-input) programs cross-backend**, output-checked. ✅ A
-  nested-loop multiply program → stdout `"HA"` and a two-sequential-loop program → `"OK"`
-  now run on native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`), proving nested loops +
-  multi-cell pointer movement + multiple `putchar`s lower everywhere — not just the trivial
-  1-loop "A". ☐ Remaining: `,`/stdin programs (cat `,[.,]`) need per-backend stdin wiring —
-  a separate follow-up (B1-stdin); the no-input gap is the higher-signal one and is closed.
+- ✅ **B1** — **execute real programs cross-backend**, output-checked. A nested-loop
+  multiply program → stdout `"HA"` and a two-sequential-loop program → `"OK"` run on
+  native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`), proving nested loops + multi-cell
+  pointer movement + multiple `putchar`s lower everywhere — not just the trivial 1-loop "A".
+- ✅ **B1-stdin** — **read real input (`,`) cross-backend**, output-checked. Two programs:
+  `,+.` (read a byte, `+`, print: input `"A"` → `"B"` — output depends on input *and* a
+  computation on it) and `,.,.` (echo two bytes: `"Hi"` → `"Hi"` — repeated reads advance
+  the stream) run on all 7 backends. Harness-only (every backend already compiled
+  `,`→`getchar`): the four subprocess columns pipe real process stdin (`output_with_stdin`),
+  WASM/VM/JIT drain a `program_stdin` byte buffer. lang-aot 0.90.0. **Known divergence,
+  deferred:** the `getchar`-EOF convention differs (JVM/VM/JIT → 0; libc/`Console.Read`/wasm
+  → -1 → cell wraps to 255), so the classic cat `,[.,]` would loop forever on the -1
+  backends; both new programs read exactly the supplied bytes (no EOF-gated loop) and so
+  sidestep it. Normalising EOF across backends is a separate item (B1-eof).
 
 ### Dartmouth BASIC
 - ✅ **BA0** — BASIC control flow on the code-gen backends. The real bug wasn't wasm
