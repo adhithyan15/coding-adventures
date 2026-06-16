@@ -24,17 +24,17 @@ edge. That is the number every grounding/expansion PR moves:
 ```
 correct 27 · abstained 4 · wrong 0  (of 31)
 by tactic — differential: 1✓/1·/0✗  ·  recall: 26✓/3·/0✗
-defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 69%
+defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 100%
 ✓ never fabricated — every answer is correct-with-proof or an honest abstention.
 ```
 
-The bank now spans **two recall domains** — 12 inborn-errors-of-metabolism diseases
-(`recall/iem-edges.adj`) and 8 vitamin deficiencies (`recall/vitamin-edges.adj`, REL-10)
-— merged into one store. grounded-coverage tracked the whole arc: REL-4b grounded the
-IEM answers (→90%), REL-8 finished them (→100%), and REL-10 added the vitamin domain as
-authored-debt (→69%). Running `ground-vitamin-edges.workflow.js` → `vitamin_edge_ground.py`
-grounds the vitamins and climbs it back. **A new domain = drop in its `*-edges.adj` file
-+ its board items; the harness merges and scores it unchanged.**
+The bank spans **two recall domains** — 12 inborn-errors-of-metabolism diseases
+(`recall/iem-edges.adj`) and 8 vitamin deficiencies (`recall/vitamin-edges.adj`) — merged
+into one store. grounded-coverage tracked the whole arc: REL-4b/REL-8 grounded the IEM
+answers (→100%), REL-10 added the vitamin domain as authored-debt (→69%), and REL-10b
+spider-grounded the vitamins (→**100%, both domains**). **A new domain = drop in its
+`*-edges.adj` file + its board items; the harness merges and scores it unchanged**, and
+its grounding climbs the same live number.
 
 ## Files
 

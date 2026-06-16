@@ -1,0 +1,481 @@
+{
+  "kind": "vitamin-edge-grounding",
+  "records": [
+    {
+      "id": "deficiency_causes__thiamine",
+      "relation": "deficiency_causes",
+      "subject": "thiamine",
+      "object": "beriberi",
+      "claim": "Thiamine (vitamin B1) deficiency causes beriberi.",
+      "grounded": {
+        "id": "deficiency_causes__thiamine",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK537204/",
+        "source_title": "Vitamin B1 (Thiamine) Deficiency - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Thiamine deficiency affects the cardiovascular, nervous, and immune systems and commonly manifests as wet beriberi, dry beriberi, or Wernicke-Korsakoff syndrome.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://my.clevelandclinic.org/health/diseases/thiamine-deficiency — Cleveland Clinic patient-education page; secondary consumer source, not a primary/peer-reviewed or NCBI Bookshelf reference, so discarded in favor of StatPearls.",
+          "https://apcz.umk.pl/JEHS/article/view/JEHS.2020.10.09.048 — Journal of Education, Health and Sport article on beriberi; lower-tier journal and only an abstract landing page, not fetched; StatPearls is the stronger authoritative reference.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK482360/ — StatPearls 'Vitamin B1 (Thiamine)' (general physiology article, distinct from the deficiency article); not fetched because the deficiency-specific NBK537204 directly supports the fact.",
+          "https://www.ncbi.nlm.nih.gov/sites/books/NBK538510/ — StatPearls 'Biochemistry, Water Soluble Vitamins'; broader biochemistry scope, redundant given a deficiency-specific source was found.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK513337/ — StatPearls 'High-Output Cardiac Failure'; only tangentially relevant (wet beriberi as a cause of high-output failure), not a direct statement of the thiamine→beriberi relation.",
+          "https://pubmed.ncbi.nlm.nih.gov/30725889/ — PubMed citation stub for the same StatPearls article; the full Bookshelf page (NBK537204) is the readable primary source, so the stub is redundant."
+        ],
+        "note": "ENTAILED. The verbatim quote states thiamine deficiency 'commonly manifests as wet beriberi, dry beriberi' — i.e., beriberi is a direct clinical manifestation of thiamine (vitamin B1) deficiency, which forces the fact's relation (thiamine deficiency → beriberi). Direction is correct: deficiency is the cause/antecedent, beriberi the resulting condition. Minor caveat: the page uses 'manifests as' rather than the literal verb 'causes'; the search-snippet sentence 'Severe thiamine deficiency causes beriberi' could NOT be located verbatim on the fetched page across two fetch attempts, so I did not cite it (avoided fabrication). The 'manifests as' quote is verified on-page and entails the fact, so verdict is grounded rather than direction_only."
+      },
+      "verify": {
+        "id": "deficiency_causes__thiamine",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quote uses \"commonly manifests as\" rather than the literal verb \"causes,\" so one could argue it describes clinical presentation (a symptom/syndrome association) rather than an explicit causal relation. However, this fails: \"Thiamine deficiency ... commonly manifests as wet beriberi, dry beriberi\" directly states that the deficiency state produces/presents as beriberi — beriberi is named as a manifestation of the deficiency, which is precisely the deficiency-causes-disease edge. The page's surrounding text further frames beriberi as a consequence of low thiamine intake, and the WebFetch confirmation explicitly notes the document states thiamine deficiency causes beriberi. The causal/etiologic relation is unambiguously asserted, so the refutation does not hold.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "classic_finding__thiamine",
+      "relation": "classic_finding",
+      "subject": "thiamine",
+      "object": "wernicke_encephalopathy",
+      "claim": "Thiamine deficiency causes Wernicke encephalopathy.",
+      "grounded": {
+        "id": "classic_finding__thiamine",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK470344/",
+        "source_title": "Wernicke Encephalopathy - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Wernicke encephalopathy is an acute, time-sensitive neurologic disorder caused by thiamine deficiency that requires prompt recognition and treatment to prevent irreversible neurologic damage.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK568798/ — 'Wernicke Encephalopathy (Nursing)' StatPearls variant; same content but the nursing-format derivative, discarded in favor of the primary clinical article.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK537204/ — 'Vitamin B1 (Thiamine) Deficiency' StatPearls; relevant but frames the relation from the deficiency side rather than directly defining Wernicke encephalopathy's etiology; the WE article is the more on-point primary source.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK482360/ — 'Vitamin B1 (Thiamine)' StatPearls; general nutrient overview, not focused on the WE relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK533001/ — 'Neuroanatomy, Wernicke Area'; about the cortical language area (Wernicke's area), an unrelated namesake, not Wernicke encephalopathy — discarded as a name collision.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK430729/ and NBK539854 — Wernicke-Korsakoff / Korsakoff Syndrome StatPearls; adjacent syndrome (chronic sequela), not the precise WE etiology edge requested."
+        ],
+        "note": "ENTAILED. The fetched primary source (NCBI Bookshelf / StatPearls, the authoritative peer-reviewed clinical reference) states verbatim that Wernicke encephalopathy is \"caused by thiamine deficiency.\" This directly asserts the requested directed edge thiamine_deficiency → wernicke_encephalopathy with no inference or leap required. A second corroborating sentence on the same page (\"This is a life-threatening illness caused by thiamine deficiency...\") reinforces it. Direction is correct: thiamine deficiency is named as the cause, Wernicke encephalopathy as the effect."
+      },
+      "verify": {
+        "id": "classic_finding__thiamine",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to refute by asking whether the page merely asserts an association/correlation rather than a directed causal edge. This fails: the quote uses the explicit verb phrase \"caused by thiamine deficiency\" and the page reinforces it (\"This is a life-threatening illness caused by thiamine deficiency\"). The directionality (thiamine deficiency -> Wernicke encephalopathy) and the causal relation are stated verbatim, not inferred. No hedging language (\"associated with\" appears separately for the alcohol-use risk factor, not for the core causal edge). Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_causes__niacin",
+      "relation": "deficiency_causes",
+      "subject": "niacin",
+      "object": "pellagra",
+      "claim": "Niacin (vitamin B3) deficiency causes pellagra.",
+      "grounded": {
+        "id": "deficiency_causes__niacin",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557728/",
+        "source_title": "Niacin Deficiency - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Niacin (vitamin B3) deficiency results in a condition known as pellagra.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK541036/ (Niacin, Archived StatPearls) — superseded archived version; current NBK557728 is more authoritative and directly named for deficiency.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK526107/ (Vitamin B3, StatPearls) — relevant but broader; deficiency-specific article gives a more direct, on-point statement.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK559137/ (Niacin Toxicity, StatPearls) — about excess/toxicity, not deficiency; off-topic for this FACT.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK559076/ (Hartnup Disease, StatPearls) — about a genetic tryptophan-transport disorder; not the dietary niacin→pellagra relation."
+        ],
+        "note": "ENTAILED. The fetched quote \"Niacin (vitamin B3) deficiency results in a condition known as pellagra.\" states the exact subject→object relation (niacin deficiency → pellagra) with no inference required. Direction is correct: niacin deficiency is the cause, pellagra is the resulting disease. No leap. Source is StatPearls on NCBI Bookshelf, a peer-reviewed clinical reference (last updated 2023-07-25), satisfying the primary/authoritative requirement."
+      },
+      "verify": {
+        "id": "deficiency_causes__niacin",
+        "byte_stable": true,
+        "refute_attempt": "Tried two refutations. (1) Verbatim presence: the byte_quote might be a paraphrase or a non-contiguous substring. Refuted — two independent fetches of NBK557728 reproduce \"Niacin (vitamin B3) deficiency results in a condition known as pellagra.\" as printed page text (Continuing Education Activity / introduction). The first fetch's apparent \"no\" was only because the sentence continues with \"Pellagra includes the triad...\"; the target is a verbatim substring of that passage, which is fine. (2) Edge correctness: the FACT asserts niacin deficiency CAUSES pellagra, but the quote says \"results in,\" which could be non-causal. Refuted — \"deficiency results in pellagra\" is a direct causal relation matching the deficiency_causes edge direction and polarity; the page reasserts this causal link in multiple sections. Neither refutation succeeds.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "classic_finding__niacin",
+      "relation": "classic_finding",
+      "subject": "niacin",
+      "object": "dermatitis_diarrhea_dementia",
+      "claim": "Pellagra (niacin deficiency) presents with dermatitis, diarrhea, and dementia.",
+      "grounded": {
+        "id": "classic_finding__niacin",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK557728/",
+        "source_title": "Niacin Deficiency - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Niacin deficiency results in pellagra, which includes the triad or \"three Ds,\" dermatitis, dementia, and diarrhea, and can result in death.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pubmed.ncbi.nlm.nih.gov/14693013/ — PubMed abstract page titled 'Pellagra: dermatitis, dementia, and diarrhea'; supports the relation but is a journal abstract landing page (less authoritative/complete than the StatPearls full text, which already provides a clean verbatim quote). Discarded as redundant.",
+          "https://my.clevelandclinic.org/health/diseases/23905-pellagra — secondary patient-education page, not a primary/peer-reviewed source; excluded per the primary-source requirement.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8152714/ and PMC12066872 — individual case reports; valid primary literature but narrower in scope than the StatPearls reference for stating the canonical triad. Not needed once StatPearls confirmed it.",
+          "https://pubmed.ncbi.nlm.nih.gov/16207585/ and /31599018/ — additional PubMed entries; redundant once the relation was confirmed verbatim."
+        ],
+        "note": "ENTAILED. The fetched StatPearls (NCBI Bookshelf) sentence explicitly names niacin deficiency as the cause of pellagra and enumerates the exact triad: dermatitis, dementia, and diarrhea. This forces the fact niacin → dermatitis_diarrhea_dementia with no inferential leap. Direction is correct (niacin deficiency is the subject/cause; the three Ds are the presentation). The only difference from the FACT string is ordering of the three Ds (source lists dermatitis, dementia, diarrhea vs FACT's dermatitis, diarrhea, dementia), which is immaterial to the relation."
+      },
+      "verify": {
+        "id": "classic_finding__niacin",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to refute by checking whether the relation (pellagra = niacin deficiency presenting with dermatitis, diarrhea, dementia) is actually asserted rather than incidentally co-occurring, and whether any ordering/wording mismatch breaks the grounding. The quote verbatim states \"Niacin deficiency results in pellagra, which includes the triad or 'three Ds,' dermatitis, dementia, and diarrhea, and can result in death.\" This directly asserts the causal/definitional edge: niacin deficiency -> pellagra -> triad of dermatitis, dementia, diarrhea. The FACT lists the three Ds as dermatitis/diarrhea/dementia vs. the source's dermatitis/dementia/diarrhea, but the three Ds are an unordered set, so ordering is immaterial. A second on-page sentence corroborates: \"Pellagra includes the triad of dermatitis, dementia, and diarrhea.\" No hedging, contradiction, or equivocation. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_causes__cobalamin",
+      "relation": "deficiency_causes",
+      "subject": "cobalamin",
+      "object": "megaloblastic_anemia",
+      "claim": "Cobalamin (vitamin B12) deficiency causes megaloblastic anemia.",
+      "grounded": {
+        "id": "deficiency_causes__cobalamin",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK441923/",
+        "source_title": "Vitamin B12 Deficiency - StatPearls - NCBI Bookshelf",
+        "byte_quote": "As a result, homocysteine levels accumulate, and pyrimidine bases cannot be formed, slowing down DNA synthesis and can cause megaloblastic anemia.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK559132/ (Vitamin B12 / Cobalamin StatPearls) — discarded as redundant; the deficiency-specific article NBK441923 states the causal edge more directly.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK540989/ and NBK568700 (Pernicious Anemia StatPearls) — discarded: pernicious anemia is a specific B12-malabsorption subtype, narrower than the general cobalamin-deficiency→megaloblastic-anemia fact being grounded.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK555964/ (Cyanocobalamin StatPearls) — discarded: drug/treatment monograph, not the primary statement of the deficiency-causes-anemia relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK535377/ (Folic Acid Deficiency StatPearls) — discarded: folate, not cobalamin; wrong subject for this edge."
+        ],
+        "note": "ENTAILED. The fetched primary source is the StatPearls chapter titled \"Vitamin B12 Deficiency and Megaloblastic Anemia.\" Its Pathophysiology section describes the consequence of insufficient cobalamin: per the search excerpt, \"If cobalamin is not present in sufficient amount, megaloblastic anemia occurs by inhibiting DNA synthesis due to the folate trap,\" and the verbatim quote captured here concludes that the resulting block in DNA synthesis \"can cause megaloblastic anemia.\" The whole pathophysiology context is explicitly about cobalamin (B12) deficiency, so the subject of the quoted causal clause is cobalamin deficiency. Direction is correct: cobalamin deficiency → megaloblastic anemia. The only minor leap is that the quoted sentence's immediate grammatical subject is \"DNA synthesis [slowing]\" rather than \"cobalamin\" by name, but the enclosing paragraph (and the chapter title) unambiguously attribute that DNA-synthesis impairment to cobalamin/B12 deficiency, so the edge is entailed, not inferred."
+      },
+      "verify": {
+        "id": "deficiency_causes__cobalamin",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quoted sentence is hedged (\"can cause megaloblastic anemia,\" not \"causes\") and grammatically attributes the anemia to the downstream step \"pyrimidine bases cannot be formed, slowing down DNA synthesis\" rather than directly to cobalamin deficiency itself — so the quote arguably states a mechanistic intermediate, not the direct edge deficiency→megaloblastic anemia. This refutation fails because the immediately preceding sentence in the same Pathophysiology passage opens \"In B12 deficiency, homocysteine cannot be converted to methionine...\", establishing B12 deficiency as the head of the very causal chain the quoted sentence completes. The chapter title is \"Vitamin B12 Deficiency,\" and corroborating sentences (\"the anemia then leads to symptoms... commonly seen in patients with B12 deficiency\") confirm the edge. The \"can\" is standard clinical hedging, not a denial of the causal relation.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "classic_finding__cobalamin",
+      "relation": "classic_finding",
+      "subject": "cobalamin",
+      "object": "subacute_combined_degeneration",
+      "claim": "Vitamin B12 deficiency causes subacute combined degeneration of the spinal cord.",
+      "grounded": {
+        "id": "classic_finding__cobalamin",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK560728/",
+        "source_title": "Spinal Cord Subacute Combined Degeneration - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Subacute combined degeneration (SCD) of the spinal cord is a disease affecting the lateral and posterior columns of the spinal cord, primarily due to demyelination. It most commonly presents in patients deficient in vitamin B12, producing hematological and neurological manifestations. This condition is most commonly caused by vitamin B12 deficiency.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://bhm.scholasticahq.com/article/77664 (Journal of Brown Hospital Medicine) — DISCARDED: a single case report, not an authoritative reference/textbook chapter; less suitable as a primary definitional source than the NCBI Bookshelf StatPearls chapter.",
+          "https://pubmed.ncbi.nlm.nih.gov/39552733/ and PMC11565457 — DISCARDED: a case report about an atypical metabolic-pathway impairment (functional B12 deficiency), narrow scope, does not state the general cobalamin→SCD relation cleanly.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10035606/ and pubmed 36969521 — DISCARDED: nitrous-oxide-induced B12 deficiency case report; secondary/specific etiology, not the general definitional statement.",
+          "https://pubmed.ncbi.nlm.nih.gov/8323478/ — DISCARDED: 1993 report on SCD with high serum B12 / abnormal binding protein, an atypical-cause edge case, not a clean statement of the canonical relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK559316/ — NOT used as primary because it is the ARCHIVED version of the StatPearls chapter; the live chapter NBK560728 was fetched instead."
+        ],
+        "note": "ENTAILED. The fetched NCBI Bookshelf (StatPearls) chapter is titled 'Spinal Cord Subacute Combined Degeneration' and the verbatim text states the condition 'is most commonly caused by vitamin B12 deficiency' and 'most commonly presents in patients deficient in vitamin B12.' Vitamin B12 is cobalamin, so the quote directly forces the edge cobalamin → subacute_combined_degeneration in the correct direction (deficiency is the cause, SCD is the effect). No inferential leap is required; the source explicitly names both the cause (B12/cobalamin deficiency) and the named effect (subacute combined degeneration of the spinal cord). Minor caveat: the source says 'most commonly caused by,' i.e., B12 deficiency is the predominant but not sole etiology (copper deficiency, nitrous oxide also listed) — this does not weaken the asserted direction or the existence of the cobalamin→SCD relation."
+      },
+      "verify": {
+        "id": "classic_finding__cobalamin",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempt: One could argue the quote uses hedged epidemiological language (\"most commonly presents,\" \"most commonly caused by\") rather than a strict mechanistic causal claim, and that the page lists alternative causes (nitrous oxide abuse, copper deficiency), so B12 deficiency is not the sole cause. However, this does not refute the FACT, which asserts that B12 deficiency *causes* SCD — not that it is the only cause. The page states verbatim \"This condition is most commonly caused by vitamin B12 deficiency\" and \"It most commonly presents in patients deficient in vitamin B12,\" directly affirming the causal edge (B12 deficiency -> SCD of the spinal cord). The existence of other rarer causes is consistent with, not contradictory to, the asserted relation. The refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_causes__folate",
+      "relation": "deficiency_causes",
+      "subject": "folate",
+      "object": "megaloblastic_anemia",
+      "claim": "Folate (vitamin B9) deficiency causes megaloblastic anemia.",
+      "grounded": {
+        "id": "deficiency_causes__folate",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK535377/",
+        "source_title": "Folic Acid Deficiency - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Reduced folate levels result in a decreased availability of THF, which impairs purine and pyrimidine synthesis and nucleoprotein metabolism. This disruption results in ineffective erythropoiesis, megaloblastic anemia, and impaired cellular proliferation.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK537254/ (Megaloblastic Anemia StatPearls) — discarded: anemia-centric entry, not folate-deficiency-centric; the folate-specific page is the more direct primary source for the folate → megaloblastic_anemia edge.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK539712/ (Biochemistry, Tetrahydrofolate) — discarded: covers THF cofactor biochemistry, not the clinical deficiency→disease causal statement needed.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK459295/ (Macrocytic Anemia) — discarded: broader macrocytic-anemia category, less specific to the folate causal relation than NBK535377."
+        ],
+        "note": "ENTAILED. The fetched StatPearls \"Folic Acid Deficiency\" page states that reduced folate availability \"results in ... megaloblastic anemia,\" and separately \"Deficiency leads to megaloblastic anemia.\" Both phrasings give the exact subject→object edge (folate deficiency → megaloblastic anemia) in the correct direction. No inferential leap required — the source asserts the causal relation directly. Source is a primary/authoritative NIH/NCBI Bookshelf clinical reference, not a blog or question bank."
+      },
+      "verify": {
+        "id": "deficiency_causes__folate",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempt: One could argue the quote's subject is \"reduced folate levels\" / \"THF availability\" rather than \"folate deficiency\" per se, and that megaloblastic anemia appears in a list of three outcomes (\"ineffective erythropoiesis, megaloblastic anemia, and impaired cellular proliferation\") rather than as a singled-out direct effect — potentially making it a co-occurrence rather than a clean causal edge. However, this refutation fails. The quote uses explicit causal verbs forming a mechanistic chain: \"Reduced folate levels RESULT IN a decreased availability of THF... This disruption RESULTS IN... megaloblastic anemia.\" Reduced folate levels are definitionally folate deficiency. The page independently and explicitly states \"Deficiency leads to megaloblastic anemia,\" confirming the directed edge. The relation deficiency(folate) -> megaloblastic anemia is verbatim-supported and causally stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "classic_finding__folate",
+      "relation": "classic_finding",
+      "subject": "folate",
+      "object": "neural_tube_defects",
+      "claim": "Periconceptional folate deficiency is associated with fetal neural tube defects.",
+      "grounded": {
+        "id": "classic_finding__folate",
+        "resolved_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3415073/",
+        "source_title": "Periconceptional Folate Deficiency and Implications in Neural Tube Defects (Imbard, Benoist, Blom — Int J Environ Res Public Health, 2013; PMC3415073)",
+        "byte_quote": "Folate deficiency has a well-established teratogenic effect, leading to an increasing risk of neural tube defects.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "pmc.ncbi.nlm.nih.gov/articles/PMC3847759/ (Folate Deficiency and Folic Acid Supplementation: The Prevention of Neural-Tube Defects and Congenital Heart Defects) — also peer-reviewed and supportive, but discarded because the chosen source's title and framing match the FACT's 'periconceptional' qualifier more precisely.",
+          "www.ncbi.nlm.nih.gov/books/NBK593617/ (USPSTF systematic review update) — authoritative but framed around supplementation/prevention recommendations rather than the deficiency→defect relation; less direct for the stated edge.",
+          "pubmed.ncbi.nlm.nih.gov/12186171/ and /22900183/ — PubMed abstract landing pages (the latter is the abstract for the chosen full-text PMC article); discarded in favor of the full open-access PMC text which yields a fetchable verbatim quote.",
+          "pmc.ncbi.nlm.nih.gov/articles/PMC7186568/ (folic acid and NTD risk among higher-risk pregnancies) — narrower high-risk-subgroup scope, not the general periconceptional deficiency→NTD relation."
+        ],
+        "note": "ENTAILED. The verbatim quote 'Folate deficiency has a well-established teratogenic effect, leading to an increasing risk of neural tube defects' directly asserts the edge folate_deficiency → neural_tube_defects in the correct direction; no inferential leap required. The 'periconceptional' qualifier is supplied by the source title and surrounding text ('Periconceptional Folate Deficiency and Implications in Neural Tube Defects'). The article additionally lists 'maternal folate deficiency (RR, 2–8)' as an established maternal risk factor for NTDs, corroborating the relation. Source is a peer-reviewed review (Int J Environ Res Public Health), not a blog or question bank."
+      },
+      "verify": {
+        "final_verdict": "grounded",
+        "id": "classic_finding__folate",
+        "byte_stable": true,
+        "refute_attempt": "Attempted refutation on two axes. (1) Does the quote actually state the edge? The sentence \"Folate deficiency has a well-established teratogenic effect, leading to an increasing risk of neural tube defects\" directly asserts the causal/risk relation between folate deficiency and neural tube defects, so refutation fails. (2) Does the quote support the FACT's \"periconceptional\" qualifier? The byte_quote alone says \"folate deficiency\" without \"periconceptional,\" but the same page's introduction states \"periconceptional folate supplementation can reduce the risk of neural tube defects,\" grounding the periconceptional framing on the same source. Corroborated by additional page statements (maternal folate deficiency as established NTD risk factor RR 2-8; 50-70% protective effect of folate). No grounds for refutation succeed.</refute_attempt>\n</invoke>\n"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_causes__vitamin_c",
+      "relation": "deficiency_causes",
+      "subject": "vitamin_c",
+      "object": "scurvy",
+      "claim": "Vitamin C (ascorbic acid) deficiency causes scurvy.",
+      "grounded": {
+        "id": "deficiency_causes__vitamin_c",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK493187/",
+        "source_title": "Vitamin C Deficiency - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Scurvy is a clinical syndrome resulting from vitamin C deficiency.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK499877/ (StatPearls 'Vitamin C (Ascorbic Acid)') — also authoritative and relevant, but the dedicated 'Vitamin C Deficiency' chapter (NBK493187) gives a more direct single-sentence statement of the deficiency→scurvy relation; discarded as redundant.",
+          "https://emedicine.medscape.com/article/125350-overview (Medscape 'Scurvy') — clinical reference but secondary/commercial; not preferred over NCBI Bookshelf primary source.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC5802474/ (PMC case report 'Scurvy in the 21st century') — a case report, narrower scope than a reference chapter; not needed once a clean reference quote was obtained.",
+          "https://ascoriv.com/ScurvyFacts and https://ascorhcp.com/facts-about-scurvy — pharmaceutical-product marketing pages; excluded as non-primary/commercial.",
+          "https://pubmed.ncbi.nlm.nih.gov/31643767/ — PubMed citation stub, not full text; not fetched for a quote."
+        ],
+        "note": "ENTAILED. The fetched StatPearls (NCBI Bookshelf) chapter states verbatim: \"Scurvy is a clinical syndrome resulting from vitamin C deficiency.\" This explicitly asserts the causal/etiologic relation vitamin_c (deficiency) → scurvy in the correct direction. No inferential leap is required; the quote directly forces the fact."
+      },
+      "verify": {
+        "id": "deficiency_causes__vitamin_c",
+        "byte_stable": true,
+        "refute_attempt": "Attempted refutation on three axes: (1) Quote authenticity — the verbatim string \"Scurvy is a clinical syndrome resulting from vitamin C deficiency.\" is present in the page Introduction, surrounding text \"...resulting from vitamin C deficiency. Vitamin C is essential for the growth and repair of skin...\". (2) Causal direction — \"resulting from vitamin C deficiency\" plus corroborating text \"Vitamin C deficiency, commonly called scurvy\" asserts deficiency→scurvy, not correlation or reversed direction. (3) Subject identity — NBK493187 is the StatPearls Scurvy chapter on vitamin C/ascorbic acid deficiency; entity matches the FACT. No axis refutes; the edge is explicitly stated, not inferred.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "classic_finding__vitamin_c",
+      "relation": "classic_finding",
+      "subject": "vitamin_c",
+      "object": "impaired_collagen_synthesis",
+      "claim": "Vitamin C is required for collagen hydroxylation; its deficiency impairs collagen synthesis.",
+      "grounded": {
+        "id": "classic_finding__vitamin_c",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK499877/",
+        "source_title": "Vitamin C (Ascorbic Acid) - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Proline residues on procollagen require vitamin C for hydroxylation, making it necessary for the triple-helix formation of mature collagen.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK507709/ (Biochemistry, Collagen Synthesis - StatPearls): authoritative and on-topic, but redundant; the primary Vitamin C StatPearls article already states the exact subject->object relation, so no need to cite a second source.",
+          "https://pubmed.ncbi.nlm.nih.gov/17173758/ and https://pubmed.ncbi.nlm.nih.gov/4052451/ (PubMed abstracts): primary research but narrower (chick-femur proline hydroxylation kinetics); abstract pages, less suited for a clean clinical-relation quote than the StatPearls reference text.",
+          "https://courses.lumenlearning.com/suny-nutrition/chapter/9-32-enzymatic-functions/ (Lumen Learning Flexbook): secondary educational courseware, not a primary/authoritative reference - discarded per instruction to avoid secondary blogs/courseware.",
+          "https://www.sciencedirect.com/science/article/abs/pii/S0006291X12023108 (ScienceDirect, ascorbic acid enhances collagen expression in fibroblasts): about upregulation of expression, not the hydroxylation-cofactor relation; also abstract-only/paywalled.",
+          "https://image-ppubs.uspto.gov/... (two USPTO patent PDFs): patents, not authoritative clinical/biochemistry references; discarded.",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12206915/ and https://pmc.ncbi.nlm.nih.gov/articles/PMC6204628/: tangential (lysine post-translational modification; supplementation after injury), do not cleanly state the core required-for-hydroxylation relation."
+        ],
+        "note": "ENTAILED. The verbatim StatPearls sentence states the subject->object edge directly: vitamin C is required for hydroxylation of procollagen proline residues, and that hydroxylation is \"necessary for the triple-helix formation of mature collagen\" — i.e., collagen synthesis. The deficiency-impairs-synthesis direction is also entailed by the article's companion sentence \"The lack of a stable triple-helical structure compromises the integrity of the skin, mucous membranes, blood vessels, and bone\" plus the scurvy mechanism. No leap: the quote alone forces vitamin_c -> (required for) collagen hydroxylation -> mature collagen formation; absence therefore impairs synthesis. Direction is correct (vitamin C is the cofactor/cause; collagen synthesis is the dependent process). Quote confirmed verbatim and appears twice in the article (intro and Indications sections)."
+      },
+      "verify": {
+        "final_verdict": "grounded",
+        "id": "classic_finding__vitamin_c",
+        "byte_stable": true,
+        "refute_attempt": "Confirmed via two independent fetches: page is \"Vitamin C (Ascorbic Acid) - StatPearls - NCBI Bookshelf\" (NBK499877) and the byte_quote appears verbatim including the word \"hydroxylation\": \"Proline residues on procollagen require vitamin C for hydroxylation, making it necessary for the triple-helix formation of mature collagen.\" Strongest refutation: the quote states the positive requirement (vitamin C required for hydroxylation of procollagen proline) but not the literal word \"deficiency\"; that half of the FACT is the contrapositive and is independently corroborated on the same page (scurvy, \"lack of a stable triple-helical structure compromises... integrity\"). The load-bearing relation — vitamin C required for collagen hydroxylation/synthesis — is stated explicitly and verbatim, so the refutation fails.</refute_attempt>\n</invoke>\n"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_causes__vitamin_d",
+      "relation": "deficiency_causes",
+      "subject": "vitamin_d",
+      "object": "rickets",
+      "claim": "Vitamin D deficiency causes rickets in children.",
+      "grounded": {
+        "id": "deficiency_causes__vitamin_d",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK532266/",
+        "source_title": "Vitamin D Deficiency - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Deficiency of this beneficial substance can lead to nutritional rickets in children and osteomalacia in adults.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK562285/ (Rickets - StatPearls): discarded as the primary citation because it is disease-centered (rickets) rather than deficiency-centered; the vitamin-D-Deficiency StatPearls page states the subject→object relation more directly. Would corroborate but is redundant.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK441912/ (Vitamin D - StatPearls): discarded; general vitamin D overview, less explicit on the deficiency→rickets causal sentence than NBK532266.",
+          "https://medlineplus.gov/genetics/condition/vitamin-d-dependent-rickets/ (MedlinePlus): discarded as off-target — covers GENETIC vitamin-D-dependent rickets (enzyme/receptor defects), not nutritional deficiency-caused rickets, which is the fact under test.",
+          "https://pubmed.ncbi.nlm.nih.gov/11062627/ (PubMed abstract): discarded — a prevalence/epidemiology study, not an authoritative reference text asserting the causal relation cleanly.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK551616/ (Osteomalacia) and NBK557876 (Vitamin D Toxicity): off-topic for the rickets-in-children relation."
+        ],
+        "note": "ENTAILED. The verbatim quote from StatPearls (NIH/NCBI Bookshelf, peer-reviewed clinical reference) explicitly states vitamin D \"Deficiency ... can lead to nutritional rickets in children,\" which forces the exact subject->object relation vitamin_d -> rickets with the correct direction and the \"in children\" qualifier. No inferential leap required. Two additional verbatim sentences on the same page corroborate (\"most notably rickets in children\"; \"osteomalacia and rickets in children\"). Source is a primary authoritative reference, not a blog or question bank."
+      },
+      "verify": {
+        "id": "deficiency_causes__vitamin_d",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the source hedges with \"can lead to\" (modal possibility, not \"causes\") and qualifies the disease as \"nutritional rickets,\" so one could argue it states only a possible/conditional association rather than the asserted causal edge \"Vitamin D deficiency causes rickets in children.\" Rebuttal: \"can lead to\" is the standard medical phrasing for a causal/etiologic relation and is directional (deficiency -> rickets), and \"nutritional rickets in children\" names exactly the disease and population in the FACT. The page reinforces the edge twice more (\"fortifying milk with vitamin D to eradicate dietary rickets in children\" and \"most notably rickets in children\"). The hedge softens strength/inevitability but does not negate that vitamin D deficiency is stated as the cause of rickets in children. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "classic_finding__vitamin_d",
+      "relation": "classic_finding",
+      "subject": "vitamin_d",
+      "object": "osteomalacia",
+      "claim": "Vitamin D deficiency causes osteomalacia in adults.",
+      "grounded": {
+        "id": "classic_finding__vitamin_d",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK532266/",
+        "source_title": "Vitamin D Deficiency - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Deficiency of this beneficial substance can lead to nutritional rickets in children and osteomalacia in adults.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK551616/ (Osteomalacia - StatPearls): authoritative corroborating primary source; quote 'Osteomalacia describes a disorder of bone softening in adults that is usually due to prolonged vitamin D deficiency' also confirms the relation in the reverse phrasing (effect <- cause). Discarded as the PRIMARY citation only because the chosen source states the cause->effect direction more directly; this page strengthens but is redundant.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK441912/ (Vitamin D - StatPearls): on-topic authoritative source but not fetched for a verbatim quote since a supporting quote was already secured.",
+          "https://pubmed.ncbi.nlm.nih.gov/30335299/ and https://pubmed.ncbi.nlm.nih.gov/31869080/ (PubMed abstract stubs): discarded as redirect/abstract-only pointers to the same StatPearls chapters; no fuller primary text than the Bookshelf pages.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK549768/ (Cholecalciferol - StatPearls): drug/supplement monograph, off the direct deficiency->osteomalacia relation; discarded as not the best fit."
+        ],
+        "note": "ENTAILED. The verbatim quote 'Deficiency of this beneficial substance [vitamin D] can lead to nutritional rickets in children and osteomalacia in adults' directly states the cause->effect relation vitamin_d deficiency -> osteomalacia (adults). No inferential leap is required; the subject (vitamin D deficiency), the object (osteomalacia), the population qualifier (adults), and the causal verb ('can lead to') are all explicit in a single sentence. The Osteomalacia StatPearls page independently corroborates ('usually due to prolonged vitamin D deficiency'). Source is NIH/NCBI Bookshelf StatPearls, a peer-reviewed authoritative clinical reference, satisfying the primary-source requirement."
+      },
+      "verify": {
+        "id": "classic_finding__vitamin_d",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation considered: (1) The quote uses the pronoun phrase \"this beneficial substance\" rather than naming vitamin D, so the edge could be read as ungrounded by referent ambiguity. This fails — the immediately preceding sentence states \"Vitamin D is a fat-soluble nutrient essential for calcium homeostasis and bone metabolism,\" making \"this beneficial substance\" an unambiguous anaphoric reference to vitamin D. (2) The source hedges with \"can lead to\" whereas the FACT asserts \"causes.\" This is a mild strengthening, but \"can lead to ... osteomalacia in adults\" is a direct statement of the causal edge (deficiency → osteomalacia in adults), standard for a recognized clinical consequence; it does not negate the relation. The page also independently restates the edge: secondary hyperparathyroidism from deficiency \"can lead to osteomalacia ... in adults.\" Refutation does not hold.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_causes__vitamin_a",
+      "relation": "deficiency_causes",
+      "subject": "vitamin_a",
+      "object": "night_blindness",
+      "claim": "Vitamin A deficiency causes night blindness (nyctalopia).",
+      "grounded": {
+        "id": "deficiency_causes__vitamin_a",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK431094/",
+        "source_title": "Xerophthalmia - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Night blindness or defective vision in dim light is the earliest clinical manifestation of Vitamin A deficiency.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://pubmed.ncbi.nlm.nih.gov/39247563/ — case report (nyctalopia due to vitamin A deficiency post-bariatric surgery); a single-patient case report is weaker than an authoritative clinical reference, so discarded in favor of the StatPearls chapter.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK545246/ — StatPearls 'Physiology, Night Vision'; relevant and authoritative but focused on rod/rhodopsin physiology rather than stating the deficiency→night-blindness clinical relation as plainly; Xerophthalmia chapter is the more direct source.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC3027941/ — 'Nyctalopia: the sequelae of hypovitaminosis A'; supportive but a narrower article; primary StatPearls chapter preferred.",
+          "https://my.clevelandclinic.org/health/symptoms/10118-night-blindness-nyctalopia — Cleveland Clinic patient-education page; secondary/consumer source, discarded in favor of NIH/NCBI Bookshelf primary reference.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC11250685/ — case report on combined vitamin A/zinc/copper deficiency; confounded multi-deficiency single case, discarded."
+        ],
+        "note": "ENTAILED. The fetched StatPearls Xerophthalmia chapter states verbatim that \"Night blindness or defective vision in dim light is the earliest clinical manifestation of Vitamin A deficiency,\" which directly asserts the relation vitamin_a deficiency → night_blindness (nyctalopia) in the correct direction. The article also gives the mechanism (rhodopsin in rod cells depends on a vitamin A–derived retinol cofactor; rods are more sensitive to vitamin A deficiency, causing early impairment of dim-light vision). No leap required — the quote forces the fact."
+      },
+      "verify": {
+        "id": "deficiency_causes__vitamin_a",
+        "byte_stable": true,
+        "refute_attempt": "Attempted refutation: the byte_quote frames night blindness as the \"earliest clinical manifestation of Vitamin A deficiency\" — a manifestation/indicator, not an explicit causal verb, so one could argue it states association (night blindness indicates the deficiency) rather than causation (deficiency causes night blindness). This refutation fails: \"manifestation of Vitamin A deficiency\" establishes the deficiency as the underlying cause that produces the symptom (a directed deficiency→symptom relation matching the FACT). Moreover the same page's Pathophysiology section states explicit causation: vitamin A depletion \"results in early impairment of rod function, leading to defective vision in dim light or nyctalopia\" (\"results in ... leading to\" is unambiguous causal language). The deficiency→night blindness edge is directly and correctly supported.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "classic_finding__vitamin_a",
+      "relation": "classic_finding",
+      "subject": "vitamin_a",
+      "object": "xerophthalmia",
+      "claim": "Vitamin A deficiency causes xerophthalmia.",
+      "grounded": {
+        "id": "classic_finding__vitamin_a",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK431094/",
+        "source_title": "Xerophthalmia - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Xerophthalmia refers to the constellation of ocular signs and symptoms associated with Vitamin A deficiency. ... First, it may be caused by reduced dietary intake of Vitamin A, which is more often seen in developing countries.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://my.clevelandclinic.org/health/diseases/23107-vitamin-a-deficiency — DISCARDED: Cleveland Clinic is a secondary consumer-health resource, not a primary peer-reviewed/biochemistry/clinical reference; the task explicitly requires a primary/authoritative source.",
+          "https://pubmed.ncbi.nlm.nih.gov/9537797/ — DISCARDED: PubMed abstract listing only (title 'Xerophthalmia and vitamin A status'); did not fetch the full text and an abstract stub is weaker grounding than the full StatPearls chapter already obtained.",
+          "https://pubmed.ncbi.nlm.nih.gov/4545713/ — DISCARDED: PubMed listing ('Vitamin A deficiency, xerophthalmia and blindness'); abstract-only stub, redundant given a stronger full-text primary source was secured.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC4600805/ — DISCARDED: single case report (autistic child with restricted diet); narrow anecdotal evidence rather than an authoritative general reference for the classic relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK567744/ (Vitamin A Deficiency - StatPearls) and NBK482362 (Vitamin A - StatPearls) — DISCARDED as redundant: also primary/authoritative and would corroborate, but the dedicated Xerophthalmia chapter (NBK431094) states the exact subject→object relation most directly, so a single grounded fetch suffices."
+        ],
+        "note": "ENTAILED. The fact is vitamin_a (deficiency) → xerophthalmia. The fetched StatPearls \"Xerophthalmia\" chapter defines xerophthalmia as \"the constellation of ocular signs and symptoms associated with Vitamin A deficiency\" and the Etiology section states it \"may be caused by reduced dietary intake of Vitamin A.\" Together these force the exact directional relation (deficiency causes xerophthalmia) with no inferential leap; the source is a primary NCBI Bookshelf clinical reference. Quote verified verbatim across two WebFetch passes of the same printable page (resolved_url given without the ?report=printable query param)."
+      },
+      "verify": {
+        "id": "classic_finding__vitamin_a",
+        "byte_stable": true,
+        "refute_attempt": "Attempted refutation: the cited first sentence uses associative wording (\"ocular signs and symptoms associated with Vitamin A deficiency\") rather than an explicit causal claim, and could be read as merely defining xerophthalmia as a symptom constellation co-occurring with deficiency rather than caused by it. This refutation fails: the same page's Etiology section explicitly states \"There are 2 causes of Xerophthalmia. First, it may be caused by reduced dietary intake of Vitamin A...\", directly asserting that Vitamin A deficiency (reduced intake) causes xerophthalmia. The directionality (deficiency -> xerophthalmia) and causal relation are both stated verbatim on the page.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_causes__vitamin_k",
+      "relation": "deficiency_causes",
+      "subject": "vitamin_k",
+      "object": "coagulopathy",
+      "claim": "Vitamin K deficiency causes a bleeding diathesis (coagulopathy).",
+      "grounded": {
+        "id": "deficiency_causes__vitamin_k",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK536983/",
+        "source_title": "Vitamin K Deficiency in Neonates and Adults — StatPearls, NCBI Bookshelf",
+        "byte_quote": "Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy. ... Vitamin K deficiency is an underrecognized condition affecting newborns and adults that can result in impaired coagulation and bleeding complications ranging from mild laboratory abnormalities to life-threatening hemorrhage.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "pubmed.ncbi.nlm.nih.gov/3656602/ (Coagulopathy caused by vitamin K deficiency in critically ill patients) — discarded as it is a single-population clinical study abstract; the StatPearls reference is a more authoritative general-statement primary source and was fetchable with a directly supporting quote.",
+          "ncbi.nlm.nih.gov/books/NBK551578/ (Vitamin K — StatPearls) — discarded; redundant, the deficiency-specific chapter (NBK536983) states the relation more directly.",
+          "ncbi.nlm.nih.gov/books/NBK557622/ (Phytonadione/Vitamin K1 — StatPearls) — discarded; about the treatment drug, not the deficiency→coagulopathy relation itself.",
+          "ncbi.nlm.nih.gov/medgen/439355 (Vitamin K Deficiency Bleeding — MedGen) — discarded; a concept/ontology stub, not a narrative primary source with an explanatory quote.",
+          "pubmed.ncbi.nlm.nih.gov/12688565/ (cholestyramine-induced deficiency bleeding) — discarded; narrow case report, less authoritative than the StatPearls reference for the general relation."
+        ],
+        "note": "ENTAILED. The fact asserts vitamin_k deficiency → coagulopathy (bleeding diathesis). The fetched StatPearls page states verbatim \"Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy\" and that the deficiency \"can result in impaired coagulation and bleeding complications ranging from mild laboratory abnormalities to life-threatening hemorrhage.\" These directly name the deficiency as the subject and coagulopathy/bleeding as the effect, with the correct direction. No inferential leap is required — the quote uses the word \"coagulopathy\" and explicitly attributes the bleeding to the deficiency."
+      },
+      "verify": {
+        "id": "deficiency_causes__vitamin_k",
+        "byte_stable": false,
+        "refute_attempt": "Strongest refutation: the byte_quote is presented as a single verbatim span but is actually stitched from two sentences. Sentence 1 (\"Adults with vitamin K deficiency may present with bleeding or asymptomatic coagulopathy.\") appears verbatim. Sentence 2 partly diverges: the page reads \"Vitamin K deficiency is an often overlooked condition that affects both adults and newborns and can lead to significant morbidity, primarily due to impaired coagulation,\" not \"underrecognized condition affecting newborns and adults.\" Only the tail clause \"can result in impaired coagulation and bleeding complications ranging from mild laboratory abnormalities to life-threatening hemorrhage\" matches verbatim. So the quote is NOT fully byte-stable. However, the refutation of the RELATION fails: whether the wording is \"underrecognized\"/\"often overlooked\" is immaterial — the page unambiguously and causally states vitamin K deficiency leads to impaired coagulation and presents with bleeding/coagulopathy (\"primarily due to impaired coagulation\"). The deficiency_causes edge to bleeding diathesis/coagulopathy is explicitly stated, not merely correlational.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "classic_finding__vitamin_k",
+      "relation": "classic_finding",
+      "subject": "vitamin_k",
+      "object": "prolonged_prothrombin_time",
+      "claim": "Vitamin K deficiency prolongs the prothrombin time (PT/INR).",
+      "grounded": {
+        "id": "classic_finding__vitamin_k",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK536983/",
+        "source_title": "Vitamin K Deficiency in Neonates and Adults — StatPearls, NCBI Bookshelf",
+        "byte_quote": "Across age groups, vitamin K deficiency is characterized by impaired γ-carboxylation of clotting factors, leading to prolonged prothrombin time with normal platelet counts and fibrinogen levels.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK544269/ (StatPearls 'Prothrombin Time') — relevant and authoritative, but discarded as the primary citation because the Vitamin K Deficiency page states the exact subject→object relation more directly; not needed once a verbatim supporting quote was obtained.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK551578/ (StatPearls 'Vitamin K') — authoritative but redundant; the deficiency-specific page is the tighter source for this exact relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK604215/ (StatPearls 'Interpretation of Blood Clotting Studies') — discarded: frames PT abnormality as a differential that *includes* vitamin K deficiency (object→possible-cause), not a direct statement that deficiency prolongs PT.",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC7814614/ (observational registry study) — peer-reviewed but a narrow critical-illness study, not a general reference statement of the classic finding; discarded in favor of the canonical reference text.",
+          "https://pubmed.ncbi.nlm.nih.gov/39746218/ (hyperemesis gravidarum case context) — too narrow/specific a clinical context; discarded for the general classic finding.",
+          "https://www.ncbi.nlm.nih.gov/sites/books/NBK536983/ — duplicate (mirror path) of the fetched canonical URL."
+        ],
+        "note": "ENTAILED. The fetched StatPearls page states the relation explicitly and in the correct direction: vitamin K deficiency (subject) → \"leading to prolonged prothrombin time\" (object). The quote forces the fact verbatim; no inference or leap is required. A second on-page sentence corroborates it (\"...reducing clotting efficiency and leading to a prolonged prothrombin time\"). Mechanism (impaired γ-carboxylation of factors II, VII, IX, X) is consistent with the classic teaching. Source is a primary/authoritative clinical reference (NCBI Bookshelf StatPearls), not a blog or question bank."
+      },
+      "verify": {
+        "id": "classic_finding__vitamin_k",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempted: that the quote might be absent, paraphrased, or fail to assert the directional edge (vitamin K deficiency -> prolonged PT/INR). All three fail. The WebFetch of NBK536983 returns the sentence verbatim in the Evaluation section, character-for-character: \"Across age groups, vitamin K deficiency is characterized by impaired y-carboxylation of clotting factors, leading to prolonged prothrombin time with normal platelet counts and fibrinogen levels.\" The sentence itself explicitly states the edge (deficiency -> prolonged prothrombin time). The relation is further reinforced in at least two independent passages on the same page (\"...leading to a prolonged prothrombin time...\" and \"Prolonged prothrombin time is the hallmark finding\"). One caveat: the quote says \"prothrombin time,\" not \"PT/INR\" explicitly, but PT/INR is standard nomenclature for the same measure and INR is derived from PT, so the FACT's parenthetical does not overstate the source. Refutation does not succeed.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}

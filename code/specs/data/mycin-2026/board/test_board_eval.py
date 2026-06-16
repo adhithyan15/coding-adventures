@@ -69,17 +69,16 @@ def test_defensibility_is_full() -> None:
 def test_grounded_coverage_is_the_live_grounding_number() -> None:
     card, _ = _card()
     s = card.summary()
-    # The live number tracks expansion + grounding across domains. The 18 IEM answers
-    # are fully spider-grounded (REL-8). REL-10 then added a 2nd domain — 8 vitamin
-    # answers as authored-debt (consensus) — so grounded-coverage dipped 100% → 69%
-    # (18 grounded / 26 recall correct). Grounding the vitamin edges climbs it back.
-    assert s["grounded_coverage"] == round(18 / 26, 4)   # 0.6923
-    assert s["grounded_correct"] == 18
+    # Across the whole arc: REL-8 grounded the 18 IEM answers (→100%), REL-10 added the
+    # vitamin domain as debt (→69%), and REL-10b spider-grounded the vitamins — so all
+    # 26 recall answers across BOTH domains now cite an authoritative edge: 100%.
+    assert s["grounded_coverage"] == 1.0
+    assert s["grounded_correct"] == 26
     by_id = {r.item_id: r for r in card.results}
-    # IEM answers are spider-grounded; the new vitamin answers are consensus (debt).
-    assert by_id["tay_sachs_enzyme"].trust == "authoritative"
-    assert by_id["lesch_nyhan_enzyme"].trust == "authoritative"
-    assert by_id["thiamine_disease"].trust == "consensus"
+    # Both domains are now spider-grounded.
+    assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
+    assert by_id["thiamine_disease"].trust == "authoritative"      # vitamin (REL-10b)
+    assert by_id["b12_disease"].trust == "authoritative"
 
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:
