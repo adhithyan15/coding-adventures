@@ -124,7 +124,13 @@ multiple languages; close an enabler before the features that depend on it.
         `ldc2_w <mask>; land` (now incl. `u32`); long shift counts narrowed via `l2i`; `u4`
         newly recognised. Structural proof `e2_u8_op_over_i64_operands_is_long`; full matrix
         (real `java`) + jvm consumers green (no-op for i64 programs).
-      - ☐ **iir-to-cil-bytecode** — i64 ops + `and` mask.
+      - ✅ **iir-to-cil-bytecode** (v0.20.1) — **no rework needed**: the CIL backend is
+        *uniformly int32* (`cil_local_type` maps every scalar incl. `i64` to `int32`; `const`
+        emits `ldc.i4`), so a frontend's i64 consts collapse to int32 and the existing
+        `ldc.i4 <mask>; and` mask is already consistent — `200u8+100u8` lowers to all-int32 IL
+        that wraps to `44`. Regression test `e2_u8_op_over_i64_operands_stays_int32` asserts
+        no `int64`/`ldc.i8` leaks in. (Unlike wasm/jvm, which type the op and so needed the
+        i64/long register model.)
     - ☐ **aot-core u4** — the native CIR pipeline (`infer`/`specialise`) didn't list `u4`, so a
       Nib `u4` op was refused before #5887's backend mask could fire; add `u4` to ALLOWED_TYPES +
       numeric_rank + the mnemonic set. *(Bundled with the Nib frontend PR.)*

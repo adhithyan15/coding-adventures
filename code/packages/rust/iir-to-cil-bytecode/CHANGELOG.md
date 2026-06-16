@@ -1,5 +1,32 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.20.1] — 2026-06-16 — E2 verified for the i64 frontend value model (no rework needed)
+
+### Added — regression test for a narrow op over i64 operands
+
+The E2 Nib integration surfaced that the wasm and jvm backends typed the masking
+op at the narrow width (i32/int) and so **trapped** when a narrow op met an
+`i64` operand — which is exactly what a real frontend emits (Nib materialises
+every `const`/`let` as `i64` and carries the narrow width only on the op). They
+were reworked to an i64/long register model.
+
+The **CIL backend needs no such rework** because it is **uniformly int32**:
+`cil_local_type` maps every scalar — including `i64` — to `int32`, and `const`
+emits `ldc.i4` (`i32::try_from`). So a frontend's `i64` consts collapse to
+`int32`, the arithmetic is `int32`, and the existing `ldc.i4 <mask>; and` mask
+is int32-consistent. A Nib `u8` add of `200 + 100` lowers to
+`ldc.i4 200; ldc.i4 100; add; ldc.i4 0xFF; and` → `44`, valid IL on real dotnet.
+
+This release adds a regression test, `e2_u8_op_over_i64_operands_stays_int32`,
+that builds the exact Nib shape (i64-hinted consts feeding a `u8` add) and
+asserts the emitted IL has **no** `int64`/`ldc.i8` and still carries the byte
+mask — locking in that a future change to the value model can't silently break
+narrow-width frontends on the CLR. No production code change.
+
+This completes the 3 stack-backend reworks the E2 Nib integration needed:
+**wasm** (i64 register model), **jvm** (long register model), and **cil**
+(verified int32-uniform — no change).
+
 ## [0.20.0] — 2026-06-14 — narrow-width arithmetic wraps mod-2ⁿ (LANG-FULL E2, backend 5/6)
 
 ### Added — `u4`/`u8`/`u16` results are masked back into their width
