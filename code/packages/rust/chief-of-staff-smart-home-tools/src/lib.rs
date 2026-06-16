@@ -40148,6 +40148,16 @@ mod tests {
 
     #[test]
     fn chief_of_staff_runtime_drives_smart_home_light_end_to_end() {
+        std::thread::Builder::new()
+            .name("chief-smart-home-e2e".to_string())
+            .stack_size(16 * 1024 * 1024)
+            .spawn(chief_of_staff_runtime_drives_smart_home_light_end_to_end_inner)
+            .unwrap()
+            .join()
+            .unwrap();
+    }
+
+    fn chief_of_staff_runtime_drives_smart_home_light_end_to_end_inner() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime
             .borrow_mut()
