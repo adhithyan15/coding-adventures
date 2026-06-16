@@ -554,20 +554,21 @@ V1 in 0 SIN(0 1 1k)
     ]);
   });
 
-  it("extracts .save, .probe, and .print output cards", () => {
+  it("extracts .save, .probe, .print, and .plot output cards", () => {
     const summary = resolveDeckOutputs(`
 V1 in 0 DC 1
 .save V(out) i(V1)
 .probe tran V(clk)
 .probe AC V(out)
 .print dc V(load) I(V2)
+.plot ac I(V3)
 .end
 .save V(ignored)
 `);
 
     expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 1"]);
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(7);
+    expect(summary.endLineNumber).toBe(8);
     expect(summary.diagnostics).toStrictEqual([]);
     expect(
       summary.selections.map((selection) => [
@@ -580,6 +581,7 @@ V1 in 0 DC 1
       [".probe", "tran", ["V(clk)"]],
       [".probe", "ac", ["V(out)"]],
       [".print", "dc", ["V(load)", "I(V2)"]],
+      [".plot", "ac", ["I(V3)"]],
     ]);
 
     expect(
@@ -588,31 +590,38 @@ V1 in 0 DC 1
 .save V(out) I(V1)
 .probe tran V(out) V(clk)
 .print tran I(V2)
+.plot tran V(extra)
 .probe ac V(freq)
 .end
 `,
         "transient",
       ),
-    ).toStrictEqual(["V(out)", "I(V1)", "V(clk)", "I(V2)"]);
+    ).toStrictEqual(["V(out)", "I(V1)", "V(clk)", "I(V2)", "V(extra)"]);
   });
 
-  it("reports invalid .save, .probe, and .print output cards", () => {
+  it("reports invalid .save, .probe, .print, and .plot output cards", () => {
     const summary = resolveDeckOutputs(`
 .save
 .probe tran
 .print tran
 .print foo V(out)
+.plot tran
+.plot foo V(out)
 .save P(out)
 .probe dc V(out) bad-token
 .print dc bad-token
+.plot dc bad-token
 .end
 `);
 
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code).sort()).toStrictEqual([
       "SPICE_DECK_OUTPUT_ANALYSIS",
+      "SPICE_DECK_OUTPUT_ANALYSIS",
       "SPICE_DECK_OUTPUT_ARGUMENT",
       "SPICE_DECK_OUTPUT_ARGUMENT",
       "SPICE_DECK_OUTPUT_ARGUMENT",
+      "SPICE_DECK_OUTPUT_ARGUMENT",
+      "SPICE_DECK_OUTPUT_PROBE",
       "SPICE_DECK_OUTPUT_PROBE",
       "SPICE_DECK_OUTPUT_PROBE",
       "SPICE_DECK_OUTPUT_PROBE",

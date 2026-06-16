@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add parsed `.plot <analysis> ...` output routing to `resolve_deck_outputs`,
+  `select_deck_output_probes`, and deck table formatters, matching Python and
+  TypeScript.
 - Add parsed `.print <analysis> ...` output routing to `resolve_deck_outputs`,
   `select_deck_output_probes`, and deck table formatters, matching Python and
   TypeScript.

@@ -3811,7 +3811,10 @@ pub fn resolve_deck_outputs(netlist: &str) -> DeckOutputSummary {
             end_line_number = Some(line_number);
             break;
         }
-        if matches!(directive.as_deref(), Some(".save" | ".probe" | ".print")) {
+        if matches!(
+            directive.as_deref(),
+            Some(".save" | ".probe" | ".print" | ".plot")
+        ) {
             resolve_output_line(
                 stripped,
                 line_number,
@@ -5854,8 +5857,8 @@ fn resolve_output_line(
 ) {
     let tokens = directive_tokens(line);
     if tokens.len() < 2 {
-        let message = if directive == ".print" {
-            ".print requires an analysis token and at least one probe token".to_string()
+        let message = if matches!(directive, ".print" | ".plot") {
+            format!("{directive} requires an analysis token and at least one probe token")
         } else {
             format!("{directive} requires at least one probe token")
         };
@@ -5870,14 +5873,14 @@ fn resolve_output_line(
         return;
     }
 
-    let (analysis, probe_tokens) = if directive == ".print" {
+    let (analysis, probe_tokens) = if matches!(directive, ".print" | ".plot") {
         if tokens.len() < 3 {
             add_output_diagnostic(
                 state,
                 "SPICE_DECK_OUTPUT_ARGUMENT",
                 directive,
                 line_number,
-                ".print requires an analysis token and at least one probe token",
+                &format!("{directive} requires an analysis token and at least one probe token"),
                 None,
             );
             return;
@@ -5889,8 +5892,8 @@ fn resolve_output_line(
                 directive,
                 line_number,
                 &format!(
-                    ".print analysis must be op, dc, ac, or tran, got {:?}",
-                    tokens[1]
+                    "{directive} analysis must be op, dc, ac, or tran, got {:?}",
+                    tokens[1],
                 ),
                 Some(tokens[1].to_string()),
             );

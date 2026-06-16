@@ -6695,12 +6695,13 @@ def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
     )
 
 
-def test_deck_output_tables_route_save_probe_print_cards() -> None:
+def test_deck_output_tables_route_save_probe_print_plot_cards() -> None:
     netlist = """
 .save V(out)
 .probe dc I(V1)
 .probe tran V(clk)
 .print tran V(ignored)
+.plot tran I(V1)
 .probe ac I(V1)
 .end
 """
@@ -6749,9 +6750,9 @@ def test_deck_output_tables_route_save_probe_print_cards() -> None:
         "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
     )
     assert format_deck_transient_table(transient_points, netlist) == (
-        "Index\tTime\tV(out)\tV(clk)\tV(ignored)\n"
-        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t1.000000e+00\n"
-        "1\t1.000000e-03\t5.000000e-01\t1.000000e+00\t2.000000e+00\n"
+        "Index\tTime\tV(out)\tV(clk)\tV(ignored)\tI(V1)\n"
+        "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t1.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t5.000000e-01\t1.000000e+00\t2.000000e+00\t-5.000000e-04\n"
     )
     assert format_deck_ac_table(ac_result, netlist) == (
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"

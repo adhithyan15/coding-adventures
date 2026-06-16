@@ -1430,7 +1430,7 @@ describe("transient", () => {
     expect(
       formatDeckTransientTable(
         points,
-        ".save V(mid)\n.probe tran V(vin)\n.print tran I(V1)\n.end\n",
+        ".save V(mid)\n.probe tran V(vin)\n.print tran I(V1)\n.plot tran V(vin)\n.end\n",
       ),
     ).toBe(
       "Index\tTime\tV(mid)\tV(vin)\tI(V1)\n" +

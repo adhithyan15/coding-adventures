@@ -766,7 +766,7 @@ fn resolve_deck_fourier_reports_unsupported_subset() {
 }
 
 #[test]
-fn resolve_deck_outputs_extracts_save_probe_and_print_cards() {
+fn resolve_deck_outputs_extracts_save_probe_print_and_plot_cards() {
     let summary = resolve_deck_outputs(
         "
 V1 in 0 DC 1
@@ -774,6 +774,7 @@ V1 in 0 DC 1
 .probe tran V(clk)
 .probe AC V(out)
 .print dc V(load) I(V2)
+.plot ac I(V3)
 .end
 .save V(ignored)
 ",
@@ -781,7 +782,7 @@ V1 in 0 DC 1
 
     assert_eq!(summary.active_lines, vec!["V1 in 0 DC 1"]);
     assert!(summary.terminated);
-    assert_eq!(summary.end_line_number, Some(7));
+    assert_eq!(summary.end_line_number, Some(8));
     assert!(summary.diagnostics.is_empty());
     assert_eq!(
         summary
@@ -806,6 +807,7 @@ V1 in 0 DC 1
                 Some("dc"),
                 &["V(load)".to_string(), "I(V2)".to_string()][..]
             ),
+            (".plot", Some("ac"), &["I(V3)".to_string()][..]),
         ]
     );
 
@@ -815,13 +817,14 @@ V1 in 0 DC 1
 .save V(out) I(V1)
 .probe tran V(out) V(clk)
 .print tran I(V2)
+.plot tran V(extra)
 .probe ac V(freq)
 .end
 ",
             "transient",
         )
         .unwrap(),
-        vec!["V(out)", "I(V1)", "V(clk)", "I(V2)"]
+        vec!["V(out)", "I(V1)", "V(clk)", "I(V2)", "V(extra)"]
     );
 }
 
@@ -997,9 +1000,12 @@ fn resolve_deck_outputs_reports_invalid_cards() {
 .probe tran
 .print tran
 .print foo V(out)
+.plot tran
+.plot foo V(out)
 .save P(out)
 .probe dc V(out) bad-token
 .print dc bad-token
+.plot dc bad-token
 .end
 ",
     );
@@ -1014,9 +1020,12 @@ fn resolve_deck_outputs_reports_invalid_cards() {
         codes,
         vec![
             "SPICE_DECK_OUTPUT_ANALYSIS",
+            "SPICE_DECK_OUTPUT_ANALYSIS",
             "SPICE_DECK_OUTPUT_ARGUMENT",
             "SPICE_DECK_OUTPUT_ARGUMENT",
             "SPICE_DECK_OUTPUT_ARGUMENT",
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            "SPICE_DECK_OUTPUT_PROBE",
             "SPICE_DECK_OUTPUT_PROBE",
             "SPICE_DECK_OUTPUT_PROBE",
             "SPICE_DECK_OUTPUT_PROBE",

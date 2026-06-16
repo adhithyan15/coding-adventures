@@ -64,7 +64,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
-| `resolve_deck_outputs`, `format_deck_*_table` | `.SAVE` / `.PROBE` output | Parsed deck-selected OP, DC sweep, AC, and transient tables |
+| `resolve_deck_outputs`, `format_deck_*_table` | `.SAVE` / `.PROBE` / `.PRINT` / `.PLOT` output | Parsed deck-selected OP, DC sweep, AC, and transient tables |
 | `format_deck_run_artifact_table` | Deck execution artifact | Stable selected-run row, output-probe, measurement, and Fourier counts |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
@@ -114,8 +114,9 @@ filtering, use `.tran TSTEP` as the output print grid, apply `MAXSTEP` as an
 internal fixed-step cap, and carry `UIC` initial-condition intent through that
 stable transient table surface.
 `resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save`,
-scoped or global `.probe`, and scoped `.print <analysis> ...` cards before
-`.end`, normalize and deduplicate output probes in deck order, and feed
+scoped or global `.probe`, scoped `.print <analysis> ...`, and scoped
+`.plot <analysis> ...` cards before `.end`, normalize and deduplicate output
+probes in deck order, and feed
 `format_deck_op_table()`,
 `format_deck_dc_sweep_table()`, `format_deck_ac_table()`, and
 `format_deck_transient_table()` for stable deck-selected text output.
@@ -186,10 +187,10 @@ signatures, arguments, or empty expressions.
 `FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
 `RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
 unsupported analyses, modes, options, expressions, and invalid windows.
-`resolve_deck_outputs()` extracts `.save`, `.probe`, and `.print` cards before
-`.end`, preserves non-output active lines, and reports stable diagnostics for
-missing probe lists, unsupported `.print` analyses, or malformed `V(node)` /
-`I(source)` probes.
+`resolve_deck_outputs()` extracts `.save`, `.probe`, `.print`, and `.plot`
+cards before `.end`, preserves non-output active lines, and reports stable
+diagnostics for missing probe lists, unsupported scoped output analyses, or
+malformed `V(node)` / `I(source)` probes.
 `resolve_deck_analyses()` extracts `.op`, `.dc`, `.ac`, and `.tran` cards
 before `.end`, preserves non-analysis active lines, and reports stable
 diagnostics for malformed deck-level analysis controls.
