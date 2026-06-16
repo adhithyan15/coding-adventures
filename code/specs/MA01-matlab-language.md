@@ -143,13 +143,19 @@ Other lexer specifics (MA-3b):
   `array-runtime::{ops, execute}`. The value model is shared, not reinvented.
 - **REPL & binary:** `matlab-repl` + a `matlab` binary, mirroring `s-repl`/`R`.
 
-## §5 Octave
+## §5 Octave *(MA-3e — done)*
 
 GNU Octave is to MATLAB roughly what R is to S — a compatible reimplementation
-with small additions (`#` comments, `++`/`--`, `endif`/`endfor`, `!=`). Once the
-MATLAB frontend exists, Octave is a thin sibling: the same `array-runtime`
-runtime with an `octave.tokens`/`octave.grammar` that adds those forms (the S→R
-playbook). Tracked for after MA-3.
+with small additions (`#` comments, `endif`/`endfor`/… terminators, `!`/`!=` for
+`~`/`~=`). Because those departures are a small, *local* set of surface forms
+(unlike R's pervasive `_`/`->>`, which forced a separate lexer/parser), Octave
+reuses the **entire** MATLAB frontend behind a thin **source-compatibility
+shim** rather than a new grammar: `octave-runtime`'s `octavify` rewrites the
+Octave-only forms to MATLAB (string/comment-aware, so literals are untouched)
+and delegates to `matlab-runtime`. The matrix engine, the `*`→`execute` GPU
+lowering, indexing, and control flow are inherited unchanged. The `octave-repl`
+crate adds the `octave` binary (continuation recognises the `endX` terminators).
+*Deferred:* `++`/`--` and `do…until` (no MATLAB equivalent).
 
 ## §6 Crate layout
 
@@ -182,8 +188,10 @@ is registered in `code/packages/rust/Cargo.toml` members.
   `if`/`for`/`while`, the `ans =`/`x =` echo, and the core built-ins. *Deferred:*
   user `function` definitions, anonymous `@(x)`, cells, `switch`/`try` execution,
   matrix solve/power, indexed and multi-assignment.
-- **MA-3e+ — Octave** (§5), then the wider built-in library, then APL/Maxima/
-  Wolfram per [`HML00`](HML00-historical-math-languages-roadmap.md).
+- **MA-3e — Octave** *(done, §5)* — `octave-runtime` (the `octavify` shim) +
+  `octave-repl` (the `octave` binary), reusing the whole MATLAB frontend.
+- **Next:** the wider built-in library, then APL/Maxima/Wolfram per
+  [`HML00`](HML00-historical-math-languages-roadmap.md).
 
 ## §8 References
 
