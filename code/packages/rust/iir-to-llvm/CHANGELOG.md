@@ -3,6 +3,51 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.0] — 2026-06-15 — narrow unsigned arithmetic wraps mod-2ⁿ (LANG-FULL E2)
+
+### Added — `u4`/`u8`/`u16`/`u32` results are masked back into their width
+
+LANG-FULL **E2 — register width & wrap**, the LLVM column. A narrow unsigned
+binary op (`add`/`sub`/`mul`/`div`/`mod` and `and`/`or`/`xor`) now computes at
+`i64` and AND-masks the result into its declared width, so `200u8 + 100u8`
+wraps to `44`:
+
+```llvm
+  %__nw1 = add i64 200, 100     ; compute wide (operands are i64 slots)
+  %v     = and i64 %__nw1, 255  ; 300 & 0xFF = 44  ✓ wrapped to u8
+```
+
+**Why a value-mask, not a narrow-typed op.** Every IIR value rides a 64-bit
+slot in this backend — arithmetic operands are `i64` SSA values (consts emit
+`i64`; reassigned params become i64 stack slots). Typing the op at its narrow
+LLVM width — `add i8 %a, %b` over two `i64` SSA values — is **invalid IR that
+`clang` rejects** (the same shape as the AL5 `cmp`-truncation bug). So, exactly
+like the VM, JIT, wasm, JVM, and CLR backends (and like this backend's own
+byte-tape `store_byte` at the memory boundary), we compute wide and mask the
+*value*:
+
+| type_hint | mask         | example                |
+|-----------|--------------|------------------------|
+| `u4`      | `0xF`        | `15u4 + 1u4` → `0`     |
+| `u8`      | `0xFF`       | `200u8 + 100u8` → `44` |
+| `u16`     | `0xFFFF`     | `~0u16` → `65535`     |
+| `u32`     | `0xFFFFFFFF` | wraps mod-2³²          |
+| `u64`/`i*`/`f*` | —      | full word / signed / float: unchanged |
+
+Signed narrow widths (`i8`/`i16`/`i32`) are left alone — E2 models unsigned
+wrap; a signed wrap needs `trunc`+`sext`, out of scope.
+
+Also adds `u4` (Nib's 4-bit nibble) to the supported type set — it has no
+native LLVM width, so it rides an `i8` and the `& 0xF` mask enforces the range.
+
+This corrects the earlier roadmap assumption that "LLVM already wraps natively
+(u8→i8)": that was never executed (no frontend emitted narrow hints), and the
+i64-slot value model means it does **not** hold. Verified by RUNNING the
+emitted `.ll` through real `clang`: `200u8 + 100u8` returns exit `44`. New unit
+tests: `e2_u8_add_computes_at_i64_then_masks`, `e2_u16_and_u4_masks_match_width`,
+`e2_bitwise_u8_xor_masks`, `e2_wide_widths_emit_no_mask` (and the existing
+`arith_div_unsigned_emits_udiv` updated to the i64-slot value model).
+
 ## [0.10.0] — 2026-06-13 — reassigned parameters become stack slots (LANG-FULL — LLVM first-class)
 
 ### Fixed — a reassigned function parameter is no longer silently dropped

@@ -70,7 +70,7 @@ multiple languages; close an enabler before the features that depend on it.
   the u8-tape pattern; this generalises it to register values.)
   - ✅ **vm-core** (1/6) — `mask_result(v, type_hint, u8_wrap)` masks every arithmetic /
     bitwise / shift result to the hint width; unit-tested (`200u8+100u8=44`, `~0u8=255`,
-    `1u8<<8=0`, u4/u16/u32). LLVM already wraps natively (`u8`→`i8`).
+    `1u8<<8=0`, u4/u16/u32).
   - ✅ **jit-core** (2/6) — compiled tier emits a `MASK_WIDTH <reg> <bits>` opcode after a
     narrow `_u8`/`_u16`/`_u32` add/sub/mul/div/neg (`u4`/signed handled by the interpreter
     fallback); unit-tested. Matches vm-core's interpreter-tier mask.
@@ -89,9 +89,20 @@ multiple languages; close an enabler before the features that depend on it.
     — so `200u8+100u8=44` and `~0u8=255`. u32/i32 already wrap mod-2³² via the 32-bit op; a
     positive mask + `and` (not `conv.u1`) keeps the unsigned widths unsigned. Structural tests
     on both emitters; executed CLR proof in the integration PR via the matrix's real-`dotnet`.
-  - ☐ **Integration** — wire Nib (then Oct) to emit narrow `type_hint`s for narrow-declared
+  - ◑ **Integration** — wire Nib (then Oct) to emit narrow `type_hint`s for narrow-declared
     values + an executed matrix proof (`200u8+100u8=44`, Nib unary `~`) across all backends;
-    flip N3-`~`, Nib N6/N7, Oct.
+    flip N3-`~`, Nib N6/N7, Oct. The two code-gen backends that type the *op* (rather than
+    masking the *value*) needed real wrap work first — surfaced when the integration was
+    started (the roadmap's earlier "LLVM already wraps natively (u8→i8)" assumption was
+    never executed and is false: every IIR value rides an i64 slot, so an `add i8 %a,%b`
+    over i64 operands is invalid IR):
+    - ✅ **iir-to-llvm** (v0.11.0) — a narrow unsigned op computes at i64 then `and i64 …,
+      <mask>` (u4/u8/u16/u32). Adds `u4` to the supported types. **Executed proof** on real
+      `clang`: `200u8+100u8` → exit `44`. Matches the value-mask of the 5 register backends.
+    - ☐ **lang-aot native codegen** (NativeAot) — narrow-width wrap in the host machine-code
+      path (investigate next).
+    - ☐ **Nib frontend + matrix proof** — emit narrow `type_hint`s; executed cross-backend
+      proof; flip N3-`~`, Nib N6/N7. Then Oct (O2).
 - **E3 — Real / floating-point (`f64`).** End-to-end f64 arithmetic, comparison, and
   literals on every backend. Unlocks ALGOL reals and BASIC floats. *(Audit which backends
   already emit f64 ops; extend the rest.)*

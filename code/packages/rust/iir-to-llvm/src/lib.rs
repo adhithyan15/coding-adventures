@@ -188,6 +188,9 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         // i1 is LLVM's boolean — added in LLVM03 so comparison results can
         // be requested at i1 width without a redundant zext+trunc round-trip.
         "i1"  | "bool" => Ok("i1"),
+        // u4 (Nib's 4-bit nibble) has no native LLVM width; it rides in an i8
+        // and the E2 wrap mask (`and i64 …, 0xF`) enforces the 4-bit range.
+        "u4"  => Ok("i8"),
         "i8"  | "u8"  => Ok("i8"),
         "i16" | "u16" => Ok("i16"),
         "i32" | "u32" => Ok("i32"),
@@ -689,7 +692,7 @@ fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
 fn param_slot_compatible(pty: &str) -> bool {
     matches!(
         pty,
-        "bool" | "i1" | "i8" | "u8" | "i16" | "u16" | "i32" | "u32" | "i64" | "u64"
+        "bool" | "i1" | "u4" | "i8" | "u8" | "i16" | "u16" | "i32" | "u32" | "i64" | "u64"
             | "any" | "symbol"
     ) || pty.starts_with("ref<Lispy")
 }
@@ -1074,6 +1077,63 @@ fn llvm_arith_op(iir_op: &str, type_hint: &str) -> &'static str {
     }
 }
 
+/// The bit-mask for a narrow **unsigned** integer width, or `None` if the
+/// width is the full machine word (`i64`/`u64`) or a signed/float/ref type.
+///
+/// LANG-FULL **E2 — register width & wrap**, LLVM column. Every IIR value flows
+/// through a 64-bit slot in this backend (see the module header — arithmetic
+/// operands are `i64` SSA values, never the narrow type), so a `u8`/`u16`/… op
+/// must NOT be typed at its narrow LLVM width: `add i8 %a, %b` over two `i64`
+/// SSA values is invalid IR that `clang` rejects. Instead we compute the op at
+/// `i64` and AND-mask the result back into the declared width — the exact
+/// "compute wide, mask the value" shape the VM, JIT, wasm, JVM, and CLR
+/// backends already use (and the LLVM byte-tape `store_byte` already does at the
+/// memory boundary; this generalises it to register arithmetic):
+///
+/// ```llvm
+///   %nwN = add i64 %a, %b        ; 200 + 100 = 300  (wide)
+///   %dst = and i64 %nwN, 255     ; 300 & 0xFF = 44  ✓ wrapped to u8
+/// ```
+///
+/// | type_hint | mask         | example                       |
+/// |-----------|--------------|-------------------------------|
+/// | `u4`      | `0xF`        | `15u4 + 1u4` → `0`            |
+/// | `u8`      | `0xFF`       | `200u8 + 100u8` → `44`        |
+/// | `u16`     | `0xFFFF`     | `~0u16` → `65535`            |
+/// | `u32`     | `0xFFFFFFFF` | wraps mod-2³²                 |
+/// | `u64`,`i*`,`f*` | —      | full word / signed / float: unchanged |
+///
+/// Signed narrow widths (`i8`/`i16`/`i32`) are intentionally left alone — E2
+/// models unsigned wrap; a signed wrap needs `trunc`+`sext`, out of scope here.
+fn narrow_unsigned_width_mask(type_hint: &str) -> Option<i64> {
+    match type_hint {
+        "u4" => Some(0xF),
+        "u8" => Some(0xFF),
+        "u16" => Some(0xFFFF),
+        "u32" => Some(0xFFFF_FFFF),
+        _ => None,
+    }
+}
+
+/// Emit a narrow-unsigned binary op as an `i64` computation followed by an
+/// `and i64 %tmp, <mask>` that wraps the result into its declared width, then
+/// bind `dest` to the masked value. Shared by [`lower_arith`] and
+/// [`lower_bitwise`]; see [`narrow_unsigned_width_mask`] for the rationale.
+fn emit_narrow_wrapped(
+    llvm_op: &str,
+    a: &str,
+    b: &str,
+    dest: &str,
+    mask: i64,
+    state: &mut FnState,
+    out: &mut String,
+) {
+    let tmp = state.fresh("nw");
+    out.push_str(&format!("  {tmp} = {llvm_op} i64 {a}, {b}\n"));
+    out.push_str(&format!("  %{dest} = and i64 {tmp}, {mask}\n"));
+    state.env.insert(dest.to_string(), format!("%{dest}"));
+}
+
 fn lower_arith(
     iir_op: &str,
     instr: &IIRInstr,
@@ -1085,6 +1145,12 @@ fn lower_arith(
     let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
     let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
     let llvm_op = llvm_arith_op(iir_op, &instr.type_hint);
+    // E2: a narrow unsigned op (u4/u8/u16/u32) flows through i64 slots, so
+    // compute at i64 then mask the result into its width (200u8+100u8=44).
+    if let Some(mask) = narrow_unsigned_width_mask(&instr.type_hint) {
+        emit_narrow_wrapped(llvm_op, &a, &b, &dest, mask, state, out);
+        return Ok(());
+    }
     out.push_str(&format!("  %{dest} = {llvm_op} {ty} {a}, {b}\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
@@ -1160,6 +1226,15 @@ fn lower_bitwise(
     let ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
     let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
     let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
+
+    // E2: a narrow unsigned bitwise op (u4/u8/u16/u32) flows through i64 slots —
+    // compute at i64 and mask the result into its width (matches lower_arith and
+    // the register backends). `and`/`or`/`xor` of in-range operands is unchanged
+    // by the mask; the mask matters once `not`/`shl` widen the result.
+    if let Some(mask) = narrow_unsigned_width_mask(&instr.type_hint) {
+        emit_narrow_wrapped(iir_op, &a, &b, &dest, mask, state, out);
+        return Ok(());
+    }
 
     out.push_str(&format!("  %{dest} = {iir_op} {ty} {a}, {b}\n"));
     let value = format!("%{dest}");
