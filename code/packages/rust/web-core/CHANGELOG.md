@@ -1,5 +1,21 @@
 # Changelog — web-core
 
+## 0.3.1 (2026-06-16)
+
+### Added
+
+- **WEB01b-3 — comparative serving-mode benchmark** (`#[ignore]`d, in
+  `tests/web_core_test.rs`): `web_serving_modes_cpu_bound_comparison` runs the
+  same CPU-bound load across all three WEB01 serving modes — single-reactor
+  `WebServer`, `ShardedWebServer` (parallel by connection), and
+  `MailboxWebServer` (parallel by request) — and prints a wall-clock + speedup
+  table so the tradeoffs are documented with data ("when to pick which mode").
+  Like the sharded benchmark it is a runnable *measurement*, not a CI gate
+  (the deterministic concurrency tests remain the CI proofs); it asserts only
+  that both parallel modes beat the single reactor when ≥ 2 cores are present.
+  Sample (14 cores): single 180ms, sharded 5.5×, mailbox 6.6×. See
+  `code/specs/WEB01b-mailbox-parallelism.md`.
+
 ## 0.3.0 (2026-06-16)
 
 ### Added
