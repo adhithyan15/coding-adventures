@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.17.0] - 2026-06-16 — defeasible rule precedence (ADJ73 PR-1)
+
+### Added
+
+- **`Rule::priority: i64`** (default `0`, builder `Rule::with_priority(p)`) — a rule's
+  precedence among *conflicting* derivations. Higher defeats lower.
+- **`KnowledgeBase::declare_functional(functor, arity)`** — mark a predicate FUNCTIONAL on
+  its last argument (at most one value per key = the preceding args). Two derivations that
+  share the key but differ on the last argument *conflict*.
+- **`govern::enumerate_governing(query, kb) -> GovernedResult`** — runs `enumerate_all`, then
+  resolves conflicting answers by precedence as a post-pass: the unique maximum-priority answer
+  in a conflict group **governs**; the rest are **`Defeated { by }`**; a tie at the maximum is
+  surfaced as **`ConflictPeer`** (never silently resolved). A fact-derived answer has priority
+  `i64::MAX` (asserted truth outranks any rule). `GovernedResult::governing()` /
+  `has_conflict()` helpers.
+
+### Unchanged (back-compat)
+
+- `enumerate_all` and SLD search are **untouched**: a query over predicates none of which are
+  declared functional returns every answer as `Governing` (today's semantics exactly).
+  Precedence is opt-in per predicate. The new `Rule.priority` field defaults to `0`; the two
+  `adjudication-connector` `Rule{}` literal sites set it explicitly.
+
+### Scope
+
+- PR-1 ships the **functional-predicate conflict relation + total integer priority**. Explicit
+  `conflict {}` sets and the `context_order` partial order (ADJ73 §2, the legal-context
+  precedence) are PR-1b — they reuse this same resolution post-pass. Surface syntax in adj-lang
+  is PR-2. See `code/specs/ADJ73-defeasible-rule-precedence.md`.
+
 ## [0.16.0] - 2026-06-14 — `KnowledgeBase::fact(id)` accessor (MYCIN-2026 REL-3)
 
 ### Added

@@ -38,12 +38,13 @@ pub mod datetime;
 pub mod differential;
 pub mod dimension;
 pub mod enumerate;
+pub mod govern;
 pub mod lr_aggregate;
 pub mod proof_dag;
 pub mod provenance;
 pub mod wmc;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
@@ -55,6 +56,7 @@ pub use datetime::{
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
 pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
 pub use enumerate::enumerate_all;
+pub use govern::{enumerate_governing, GovernStatus, GovernedAnswer, GovernedResult};
 pub use lr_aggregate::{
     counterfactual, lr_aggregate, sigmoid, source_disagreements,
     source_disagreements_with_threshold, CmpOp, ContributionClause, JointContributionClause,
@@ -232,6 +234,14 @@ pub struct Rule {
     /// no citation. Mirrors [`Fact::provenance`], so a derived consequence can (in
     /// future) cite the rule that produced it alongside the facts it fired on.
     pub provenance: Provenance,
+    /// ADJ73 defeasible precedence: the rule's priority among *conflicting*
+    /// derivations. Higher defeats lower when two rules derive heads that cannot
+    /// both hold (a predicate declared functional via
+    /// [`KnowledgeBase::declare_functional`]). Defaults to `0`; a plain rulebook
+    /// with no priorities and no functional predicates behaves exactly as before
+    /// (every conclusion governs). Only [`crate::govern::enumerate_governing`] reads
+    /// this field — `enumerate_all` ignores it, so monotonic queries are unchanged.
+    pub priority: i64,
 }
 
 impl Rule {
@@ -242,6 +252,7 @@ impl Rule {
             body,
             probability: Probability::Certain,
             provenance: Provenance::unattributed(),
+            priority: 0,
         }
     }
 
@@ -255,6 +266,7 @@ impl Rule {
             body,
             probability: Probability::Value(p),
             provenance: Provenance::unattributed(),
+            priority: 0,
         }
     }
 
@@ -262,6 +274,13 @@ impl Rule {
     /// grounded from source text and gated into the CAS.
     pub fn with_provenance(mut self, provenance: Provenance) -> Self {
         self.provenance = provenance;
+        self
+    }
+
+    /// ADJ73: set the rule's defeasible-precedence priority (higher defeats lower
+    /// among conflicting derivations). Builder-style, mirrors [`Self::with_provenance`].
+    pub fn with_priority(mut self, priority: i64) -> Self {
+        self.priority = priority;
         self
     }
 }
@@ -335,6 +354,13 @@ pub struct KnowledgeBase {
     /// [`UncertaintyReport`] in the result so the audit reader sees
     /// what's missing.
     uncertainty_markers: Vec<UncertaintyMarker>,
+    /// ADJ73 defeasible precedence: the set of predicates (by functor/arity) that are
+    /// FUNCTIONAL on their last argument — at most one value may hold per key (the
+    /// preceding args). Two derivations that agree on the key but differ on the last
+    /// argument *conflict*, and [`crate::govern::enumerate_governing`] keeps only the
+    /// highest-priority one. A predicate not listed here is monotonic (every derivation
+    /// governs) — this is what makes precedence opt-in and `enumerate_all` unchanged.
+    functional_predicates: HashSet<ClauseIndex>,
     next_fact_id: u64,
     next_rule_id: u64,
     next_prior_id: u64,
@@ -404,6 +430,25 @@ impl KnowledgeBase {
     /// Look up a Rule by its `RuleId`. O(N) over all rules.
     pub fn find_rule_by_id(&self, id: RuleId) -> Option<&Rule> {
         self.rules.values().flatten().find(|r| r.id == id)
+    }
+
+    /// ADJ73: declare a predicate FUNCTIONAL on its last argument — at most one value
+    /// may hold per key (the preceding arguments). E.g. `declare_functional("timing", 1)`
+    /// makes every `timing(_)` derivation conflict (key is empty), so precedence picks one.
+    /// Idempotent. A predicate that is never declared functional stays monotonic.
+    pub fn declare_functional(&mut self, functor: &str, arity: usize) {
+        self.functional_predicates.insert(ClauseIndex {
+            functor: functor.to_string(),
+            arity,
+        });
+    }
+
+    /// ADJ73: is this term's predicate functional on its last argument? (Used by
+    /// [`crate::govern::enumerate_governing`] to decide which answers can conflict.)
+    pub(crate) fn is_functional(&self, term: &Term) -> bool {
+        ClauseIndex::from_term(term)
+            .map(|idx| self.functional_predicates.contains(&idx))
+            .unwrap_or(false)
     }
 
     /// Walk every Fact and every Rule once; return `true` iff every
