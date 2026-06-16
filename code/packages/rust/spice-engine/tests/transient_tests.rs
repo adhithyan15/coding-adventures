@@ -1881,6 +1881,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
     );
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
+    assert_eq!(op_execution.run_artifacts[0].result_rows, 1);
+    assert_eq!(
+        op_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\nop\t.op\t{}\t1\t1\t0\t0\n",
+            op_execution.plan.line_number
+        )
+    );
 
     let dc_execution = run_deck_analysis(&circuit, netlist, Some("dc")).unwrap();
     assert_eq!(dc_execution.plan.source_name.as_deref(), Some("V1"));
@@ -1901,6 +1909,14 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         dc_execution.table,
         "Index\tSource\tValue\tV(mid)\tI(V1)\n0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
     );
+    assert_eq!(dc_execution.run_artifacts[0].analysis, "dc");
+    assert_eq!(
+        dc_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ndc\t.dc\t{}\t2\t2\t1\t0\n",
+            dc_execution.plan.line_number
+        )
+    );
 
     let ac_execution = run_deck_analysis(&circuit, netlist, Some("ac")).unwrap();
     assert_eq!(ac_execution.output_probes, vec!["V(mid)".to_string()]);
@@ -1917,6 +1933,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
         ac_execution.table,
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
     );
+    assert_eq!(
+        ac_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\nac\t.ac\t{}\t1\t1\t1\t0\n",
+            ac_execution.plan.line_number
+        )
+    );
 
     let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
     assert_eq!(tran_execution.output_probes, vec!["V(mid)".to_string()]);
@@ -1932,6 +1955,13 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert_eq!(
         tran_execution.table,
         "Index\tTime\tV(mid)\n0\t1.000000e-03\t5.000000e-01\n"
+    );
+    assert_eq!(
+        tran_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ntran\t.tran\t{}\t1\t1\t1\t0\n",
+            tran_execution.plan.line_number
+        )
     );
 
     let tran_window_execution = run_deck_analysis(
@@ -2031,6 +2061,14 @@ fn run_deck_analysis_exposes_selected_fourier_artifacts() {
     assert_eq!(result.probes[0].probe, "V(mid)");
     assert_eq!(result.probes[0].harmonics.len(), 1);
     assert_eq!(tran_execution.fourier_table, format_fourier_table(result));
+    assert_eq!(tran_execution.run_artifacts[0].fourier_count, 1);
+    assert_eq!(
+        tran_execution.run_artifact_table,
+        format!(
+            "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier\ntran\t.tran\t{}\t2\t1\t0\t1\n",
+            tran_execution.plan.line_number
+        )
+    );
 }
 
 #[test]

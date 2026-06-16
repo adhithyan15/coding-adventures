@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected-run artifact summaries to `run_deck_analysis`; executions now
+  return stable result-row, output-probe, measurement, and Fourier counts plus
+  a run-artifact table, matching Python and TypeScript.
 - Add selected Fourier artifacts to `run_deck_analysis`; selected `.tran`
   executions now return parsed `.four` harmonic results and a stable Fourier
   table alongside the selected plan, solver result, output probes, and

@@ -3399,6 +3399,17 @@ pub enum DeckAnalysisExecutionResult {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DeckRunArtifact {
+    pub analysis: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub result_rows: usize,
+    pub output_probe_count: usize,
+    pub measurement_count: usize,
+    pub fourier_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct DeckAnalysisExecution {
     pub plan: DeckAnalysisPlan,
     pub result: DeckAnalysisExecutionResult,
@@ -3408,6 +3419,8 @@ pub struct DeckAnalysisExecution {
     pub measurement_table: String,
     pub fourier: Vec<FourierResult>,
     pub fourier_table: String,
+    pub run_artifacts: Vec<DeckRunArtifact>,
+    pub run_artifact_table: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9417,6 +9430,43 @@ pub fn format_deck_transient_table(
     format_transient_table(points, &probe_refs)
 }
 
+fn deck_run_artifacts(
+    plan: &DeckAnalysisPlan,
+    result_rows: usize,
+    output_probes: &[String],
+    measurements: &[ProbeMeasurement],
+    fourier: &[FourierResult],
+) -> Vec<DeckRunArtifact> {
+    vec![DeckRunArtifact {
+        analysis: plan.analysis.clone(),
+        directive: plan.directive.clone(),
+        line_number: plan.line_number,
+        result_rows,
+        output_probe_count: output_probes.len(),
+        measurement_count: measurements.len(),
+        fourier_count: fourier.len(),
+    }]
+}
+
+pub fn format_deck_run_artifact_table(artifacts: &[DeckRunArtifact]) -> String {
+    let mut rows = vec![
+        "Analysis\tDirective\tLine\tResultRows\tOutputProbes\tMeasurements\tFourier".to_string(),
+    ];
+    for artifact in artifacts {
+        rows.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            artifact.analysis,
+            artifact.directive,
+            artifact.line_number,
+            artifact.result_rows,
+            artifact.output_probe_count,
+            artifact.measurement_count,
+            artifact.fourier_count
+        ));
+    }
+    format!("{}\n", rows.join("\n"))
+}
+
 fn select_deck_measurement_cards_for_analysis(
     netlist: &str,
     analysis: &str,
@@ -9472,15 +9522,21 @@ pub fn run_deck_analysis(
             select_deck_fourier_cards_for_analysis(netlist, "op")?;
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = select_deck_output_probes(netlist, "op")?;
+            let run_artifacts =
+                deck_run_artifacts(&plan, 1, &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Op(result),
                 table,
-                output_probes: select_deck_output_probes(netlist, "op")?,
+                output_probes,
                 measurements,
                 measurement_table,
                 fourier,
                 fourier_table,
+                run_artifacts,
+                run_artifact_table,
             })
         }
         "dc" => {
@@ -9498,15 +9554,21 @@ pub fn run_deck_analysis(
             select_deck_fourier_cards_for_analysis(netlist, "dc")?;
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = select_deck_output_probes(netlist, "dc")?;
+            let run_artifacts =
+                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::DcSweep(result),
                 table,
-                output_probes: select_deck_output_probes(netlist, "dc")?,
+                output_probes,
                 measurements,
                 measurement_table,
                 fourier,
                 fourier_table,
+                run_artifacts,
+                run_artifact_table,
             })
         }
         "ac" => {
@@ -9525,15 +9587,21 @@ pub fn run_deck_analysis(
             select_deck_fourier_cards_for_analysis(netlist, "ac")?;
             let fourier = Vec::new();
             let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = select_deck_output_probes(netlist, "ac")?;
+            let run_artifacts =
+                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Ac(result),
                 table,
-                output_probes: select_deck_output_probes(netlist, "ac")?,
+                output_probes,
                 measurements,
                 measurement_table,
                 fourier,
                 fourier_table,
+                run_artifacts,
+                run_artifact_table,
             })
         }
         "tran" => {
@@ -9555,15 +9623,21 @@ pub fn run_deck_analysis(
             let fourier_cards = select_deck_fourier_cards_for_analysis(netlist, "tran")?;
             let fourier = fourier_transient_cards(&result, &fourier_cards)?;
             let fourier_table = format_deck_fourier_table(&fourier);
+            let output_probes = select_deck_output_probes(netlist, "tran")?;
+            let run_artifacts =
+                deck_run_artifacts(&plan, result.len(), &output_probes, &measurements, &fourier);
+            let run_artifact_table = format_deck_run_artifact_table(&run_artifacts);
             Ok(DeckAnalysisExecution {
                 plan,
                 result: DeckAnalysisExecutionResult::Tran(result),
                 table,
-                output_probes: select_deck_output_probes(netlist, "tran")?,
+                output_probes,
                 measurements,
                 measurement_table,
                 fourier,
                 fourier_table,
+                run_artifacts,
+                run_artifact_table,
             })
         }
         _ => Err(SpiceError::InvalidElement {

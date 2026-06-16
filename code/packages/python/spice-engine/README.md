@@ -65,6 +65,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
 | `resolve_deck_outputs`, `format_deck_*_table` | `.SAVE` / `.PROBE` output | Parsed deck-selected OP, DC sweep, AC, and transient tables |
+| `format_deck_run_artifact_table` | Deck execution artifact | Stable selected-run row, output-probe, measurement, and Fourier counts |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
@@ -106,9 +107,12 @@ returns the plan, solver result, deck-selected output table, and normalized
 output probes that produced the table, plus selected `.measure` results and a
 stable measurement table for `.dc`, `.ac`, and `.tran` executions. Selected
 `.tran` plans also return selected `.four` harmonic results and a stable
-Fourier table. They route `START` output filtering, use `.tran TSTEP` as the
-output print grid, apply `MAXSTEP` as an internal fixed-step cap, and carry
-`UIC` initial-condition intent through that stable transient table surface.
+Fourier table. Executions also include a selected-run artifact summary plus
+`format_deck_run_artifact_table()` output for stable result-row,
+output-probe, measurement, and Fourier counts. They route `START` output
+filtering, use `.tran TSTEP` as the output print grid, apply `MAXSTEP` as an
+internal fixed-step cap, and carry `UIC` initial-condition intent through that
+stable transient table surface.
 `resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save` and
 scoped or global `.probe` cards before `.end`, normalize and deduplicate output
 probes in deck order, and feed `format_deck_op_table()`,
@@ -191,7 +195,8 @@ diagnostics for malformed deck-level analysis controls.
 downstream deck execution helpers.
 `run_deck_analysis()` routes that selected plan into the matching solver and
 stable deck-selected table output with normalized output-probe artifacts,
-selected measurement artifacts, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency
+selected measurement artifacts, selected transient Fourier artifacts,
+selected-run artifact summaries, `.ac LIN`, `.ac DEC`, `.ac OCT` frequency
 grids, and `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC` controls.
 
 ## Controlled source examples
