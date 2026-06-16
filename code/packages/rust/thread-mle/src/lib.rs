@@ -4987,6 +4987,249 @@ pub fn summarize_thread_attach_route_replay(
     ThreadAttachRouteReplaySummary::from_recovery_summary(recovery_summary)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadAttachRouteReconciliationSummary {
+    pub replay_summary: ThreadAttachRouteReplaySummary,
+    pub required_route_reconciliation_check_count: usize,
+    pub passed_route_reconciliation_check_count: usize,
+    pub missing_route_reconciliation_check_count: usize,
+    pub route_replay_ready: bool,
+    pub route_recovery_ready: bool,
+    pub route_restore_ready: bool,
+    pub route_load_ready: bool,
+    pub route_ingest_ready: bool,
+    pub route_import_ready: bool,
+    pub route_export_ready: bool,
+    pub route_distribution_ready: bool,
+    pub route_acceptance_ready: bool,
+    pub route_adoption_ready: bool,
+    pub route_rollout_ready: bool,
+    pub route_activation_ready: bool,
+    pub route_approval_ready: bool,
+    pub route_certification_ready: bool,
+    pub route_validation_ready: bool,
+    pub route_verification_ready: bool,
+    pub route_publication_ready: bool,
+    pub route_completion_ready: bool,
+    pub route_signoff_ready: bool,
+    pub route_audit_ready: bool,
+    pub route_handoff_ready: bool,
+    pub attach_complete: bool,
+    pub network_data_ready: bool,
+    pub routing_surface_ready: bool,
+    pub parent_or_route_anchor_ready: bool,
+    pub route_reconciliation_ready: bool,
+}
+
+impl ThreadAttachRouteReconciliationSummary {
+    pub fn from_replay_summary(replay_summary: ThreadAttachRouteReplaySummary) -> Self {
+        let route_replay_ready = replay_summary.is_route_replay_ready();
+        let route_recovery_ready = !replay_summary.needs_route_recovery();
+        let route_restore_ready = !replay_summary.needs_route_restore();
+        let route_load_ready = !replay_summary.needs_route_load();
+        let route_ingest_ready = !replay_summary.needs_route_ingest();
+        let route_import_ready = !replay_summary.needs_route_import();
+        let route_export_ready = !replay_summary.needs_route_export();
+        let route_distribution_ready = !replay_summary.needs_route_distribution();
+        let route_acceptance_ready = !replay_summary.needs_route_acceptance();
+        let route_adoption_ready = !replay_summary.needs_route_adoption();
+        let route_rollout_ready = !replay_summary.needs_route_rollout();
+        let route_activation_ready = !replay_summary.needs_route_activation();
+        let route_approval_ready = !replay_summary.needs_route_approval();
+        let route_certification_ready = !replay_summary.needs_route_certification();
+        let route_validation_ready = !replay_summary.needs_route_validation();
+        let route_verification_ready = !replay_summary.needs_route_verification();
+        let route_publication_ready = !replay_summary.needs_route_publication();
+        let route_completion_ready = !replay_summary.needs_route_completion();
+        let route_signoff_ready = !replay_summary.needs_route_signoff();
+        let route_audit_ready = !replay_summary.needs_route_audit();
+        let route_handoff_ready = !replay_summary.needs_route_handoff();
+        let attach_complete = !replay_summary.needs_attach_completion();
+        let network_data_ready = !replay_summary.needs_network_data();
+        let routing_surface_ready = !replay_summary.needs_routing_surface();
+        let parent_or_route_anchor_ready = !replay_summary.needs_parent_or_route_anchor();
+        let checks = [
+            route_replay_ready,
+            route_recovery_ready,
+            route_restore_ready,
+            route_load_ready,
+            route_ingest_ready,
+            route_import_ready,
+            route_export_ready,
+            route_distribution_ready,
+            route_acceptance_ready,
+            route_adoption_ready,
+            route_rollout_ready,
+            route_activation_ready,
+            route_approval_ready,
+            route_certification_ready,
+            route_validation_ready,
+            route_verification_ready,
+            route_publication_ready,
+            route_completion_ready,
+            route_signoff_ready,
+            route_audit_ready,
+            route_handoff_ready,
+            attach_complete,
+            network_data_ready,
+            routing_surface_ready,
+            parent_or_route_anchor_ready,
+        ];
+        let passed_route_reconciliation_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_route_reconciliation_check_count = checks.len();
+        let missing_route_reconciliation_check_count =
+            required_route_reconciliation_check_count - passed_route_reconciliation_check_count;
+        let route_reconciliation_ready = missing_route_reconciliation_check_count == 0;
+
+        Self {
+            replay_summary,
+            required_route_reconciliation_check_count,
+            passed_route_reconciliation_check_count,
+            missing_route_reconciliation_check_count,
+            route_replay_ready,
+            route_recovery_ready,
+            route_restore_ready,
+            route_load_ready,
+            route_ingest_ready,
+            route_import_ready,
+            route_export_ready,
+            route_distribution_ready,
+            route_acceptance_ready,
+            route_adoption_ready,
+            route_rollout_ready,
+            route_activation_ready,
+            route_approval_ready,
+            route_certification_ready,
+            route_validation_ready,
+            route_verification_ready,
+            route_publication_ready,
+            route_completion_ready,
+            route_signoff_ready,
+            route_audit_ready,
+            route_handoff_ready,
+            attach_complete,
+            network_data_ready,
+            routing_surface_ready,
+            parent_or_route_anchor_ready,
+            route_reconciliation_ready,
+        }
+    }
+
+    pub fn is_route_reconciliation_ready(self) -> bool {
+        self.route_reconciliation_ready
+    }
+
+    pub fn has_reconciliation_gaps(self) -> bool {
+        self.missing_route_reconciliation_check_count > 0
+    }
+
+    pub fn needs_route_replay(self) -> bool {
+        !self.route_replay_ready
+    }
+
+    pub fn needs_route_recovery(self) -> bool {
+        !self.route_recovery_ready
+    }
+
+    pub fn needs_route_restore(self) -> bool {
+        !self.route_restore_ready
+    }
+
+    pub fn needs_route_load(self) -> bool {
+        !self.route_load_ready
+    }
+
+    pub fn needs_route_ingest(self) -> bool {
+        !self.route_ingest_ready
+    }
+
+    pub fn needs_route_import(self) -> bool {
+        !self.route_import_ready
+    }
+
+    pub fn needs_route_export(self) -> bool {
+        !self.route_export_ready
+    }
+
+    pub fn needs_route_distribution(self) -> bool {
+        !self.route_distribution_ready
+    }
+
+    pub fn needs_route_acceptance(self) -> bool {
+        !self.route_acceptance_ready
+    }
+
+    pub fn needs_route_adoption(self) -> bool {
+        !self.route_adoption_ready
+    }
+
+    pub fn needs_route_rollout(self) -> bool {
+        !self.route_rollout_ready
+    }
+
+    pub fn needs_route_activation(self) -> bool {
+        !self.route_activation_ready
+    }
+
+    pub fn needs_route_approval(self) -> bool {
+        !self.route_approval_ready
+    }
+
+    pub fn needs_route_certification(self) -> bool {
+        !self.route_certification_ready
+    }
+
+    pub fn needs_route_validation(self) -> bool {
+        !self.route_validation_ready
+    }
+
+    pub fn needs_route_verification(self) -> bool {
+        !self.route_verification_ready
+    }
+
+    pub fn needs_route_publication(self) -> bool {
+        !self.route_publication_ready
+    }
+
+    pub fn needs_route_completion(self) -> bool {
+        !self.route_completion_ready
+    }
+
+    pub fn needs_route_signoff(self) -> bool {
+        !self.route_signoff_ready
+    }
+
+    pub fn needs_route_audit(self) -> bool {
+        !self.route_audit_ready
+    }
+
+    pub fn needs_route_handoff(self) -> bool {
+        !self.route_handoff_ready
+    }
+
+    pub fn needs_attach_completion(self) -> bool {
+        !self.attach_complete
+    }
+
+    pub fn needs_network_data(self) -> bool {
+        !self.network_data_ready
+    }
+
+    pub fn needs_routing_surface(self) -> bool {
+        !self.routing_surface_ready
+    }
+
+    pub fn needs_parent_or_route_anchor(self) -> bool {
+        !self.parent_or_route_anchor_ready
+    }
+}
+
+pub fn summarize_thread_attach_route_reconciliation(
+    replay_summary: ThreadAttachRouteReplaySummary,
+) -> ThreadAttachRouteReconciliationSummary {
+    ThreadAttachRouteReconciliationSummary::from_replay_summary(replay_summary)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ThreadDiagnosticSnapshot {
     pub captured_at_ms: u64,
@@ -9862,6 +10105,241 @@ mod tests {
         assert!(!summary.route_replay_ready);
         assert!(!summary.is_route_replay_ready());
         assert!(summary.has_replay_gaps());
+        assert!(summary.needs_route_recovery());
+        assert!(summary.needs_route_restore());
+        assert!(summary.needs_route_load());
+        assert!(summary.needs_route_ingest());
+        assert!(summary.needs_route_import());
+        assert!(summary.needs_route_export());
+        assert!(summary.needs_route_distribution());
+        assert!(summary.needs_route_acceptance());
+        assert!(summary.needs_route_adoption());
+        assert!(summary.needs_route_rollout());
+        assert!(summary.needs_route_activation());
+        assert!(summary.needs_route_approval());
+        assert!(summary.needs_route_certification());
+        assert!(summary.needs_route_validation());
+        assert!(summary.needs_route_verification());
+        assert!(summary.needs_route_publication());
+        assert!(summary.needs_route_completion());
+        assert!(summary.needs_route_signoff());
+        assert!(summary.needs_route_audit());
+        assert!(summary.needs_route_handoff());
+        assert!(summary.needs_attach_completion());
+        assert!(summary.needs_network_data());
+        assert!(summary.needs_routing_surface());
+        assert!(summary.needs_parent_or_route_anchor());
+    }
+
+    #[test]
+    fn attach_route_reconciliation_summary_marks_ready_route_reconciliation() {
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_200,
+            10_000,
+        ));
+        let action_summary = ThreadAttachActionSummary::from_summaries(
+            MleMessageBatchSummary::empty(),
+            table.summary_at(1_250),
+        );
+        let completion_summary = summarize_thread_attach_completion(
+            action_summary,
+            table
+                .diagnostic_snapshot(None, 1_250)
+                .unwrap()
+                .supervision_plan(),
+        );
+        let border_router =
+            NetworkDataTlv::new(NetworkDataTlvType::BorderRouter, true, vec![0xaa]).unwrap();
+        let context = NetworkDataTlv::new(NetworkDataTlvType::Context, true, vec![0x01]).unwrap();
+        let prefix = ThreadPrefixData::new(
+            true,
+            3,
+            64,
+            vec![0xfd, 0x00, 0xab, 0xcd, 0, 0, 0, 0],
+            vec![border_router, context],
+        )
+        .unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap()]).unwrap();
+        let network_data_readiness =
+            summarize_thread_network_data_readiness(&network_data).unwrap();
+        let handoff_summary =
+            summarize_thread_attach_route_handoff(completion_summary, network_data_readiness);
+        let audit_summary = summarize_thread_attach_route_audit(handoff_summary);
+        let signoff_summary = summarize_thread_attach_route_signoff(audit_summary);
+        let completion_summary = summarize_thread_attach_route_completion(signoff_summary);
+        let publication_summary = summarize_thread_attach_route_publication(completion_summary);
+        let verification_summary = summarize_thread_attach_route_verification(publication_summary);
+        let validation_summary = summarize_thread_attach_route_validation(verification_summary);
+        let certification_summary = summarize_thread_attach_route_certification(validation_summary);
+        let approval_summary = summarize_thread_attach_route_approval(certification_summary);
+        let activation_summary = summarize_thread_attach_route_activation(approval_summary);
+        let rollout_summary = summarize_thread_attach_route_rollout(activation_summary);
+        let adoption_summary = summarize_thread_attach_route_adoption(rollout_summary);
+        let acceptance_summary = summarize_thread_attach_route_acceptance(adoption_summary);
+        let distribution_summary = summarize_thread_attach_route_distribution(acceptance_summary);
+        let export_summary = summarize_thread_attach_route_export(distribution_summary);
+        let import_summary = summarize_thread_attach_route_import(export_summary);
+        let ingest_summary = summarize_thread_attach_route_ingest(import_summary);
+        let load_summary = summarize_thread_attach_route_load(ingest_summary);
+        let restore_summary = summarize_thread_attach_route_restore(load_summary);
+        let recovery_summary = summarize_thread_attach_route_recovery(restore_summary);
+        let replay_summary = summarize_thread_attach_route_replay(recovery_summary);
+
+        let summary = summarize_thread_attach_route_reconciliation(replay_summary);
+
+        assert_eq!(summary.replay_summary, replay_summary);
+        assert_eq!(summary.required_route_reconciliation_check_count, 25);
+        assert_eq!(summary.passed_route_reconciliation_check_count, 25);
+        assert_eq!(summary.missing_route_reconciliation_check_count, 0);
+        assert!(summary.route_replay_ready);
+        assert!(summary.route_recovery_ready);
+        assert!(summary.route_restore_ready);
+        assert!(summary.route_load_ready);
+        assert!(summary.route_ingest_ready);
+        assert!(summary.route_import_ready);
+        assert!(summary.route_export_ready);
+        assert!(summary.route_distribution_ready);
+        assert!(summary.route_acceptance_ready);
+        assert!(summary.route_adoption_ready);
+        assert!(summary.route_rollout_ready);
+        assert!(summary.route_activation_ready);
+        assert!(summary.route_approval_ready);
+        assert!(summary.route_certification_ready);
+        assert!(summary.route_validation_ready);
+        assert!(summary.route_verification_ready);
+        assert!(summary.route_publication_ready);
+        assert!(summary.route_completion_ready);
+        assert!(summary.route_signoff_ready);
+        assert!(summary.route_audit_ready);
+        assert!(summary.route_handoff_ready);
+        assert!(summary.attach_complete);
+        assert!(summary.network_data_ready);
+        assert!(summary.routing_surface_ready);
+        assert!(summary.parent_or_route_anchor_ready);
+        assert!(summary.route_reconciliation_ready);
+        assert!(summary.is_route_reconciliation_ready());
+        assert!(!summary.has_reconciliation_gaps());
+        assert!(!summary.needs_route_replay());
+        assert!(!summary.needs_route_recovery());
+        assert!(!summary.needs_route_restore());
+        assert!(!summary.needs_route_load());
+        assert!(!summary.needs_route_ingest());
+        assert!(!summary.needs_route_import());
+        assert!(!summary.needs_route_export());
+        assert!(!summary.needs_route_distribution());
+        assert!(!summary.needs_route_acceptance());
+        assert!(!summary.needs_route_adoption());
+        assert!(!summary.needs_route_rollout());
+        assert!(!summary.needs_route_activation());
+        assert!(!summary.needs_route_approval());
+        assert!(!summary.needs_route_certification());
+        assert!(!summary.needs_route_validation());
+        assert!(!summary.needs_route_verification());
+        assert!(!summary.needs_route_publication());
+        assert!(!summary.needs_route_completion());
+        assert!(!summary.needs_route_signoff());
+        assert!(!summary.needs_route_audit());
+        assert!(!summary.needs_route_handoff());
+        assert!(!summary.needs_attach_completion());
+        assert!(!summary.needs_network_data());
+        assert!(!summary.needs_routing_surface());
+        assert!(!summary.needs_parent_or_route_anchor());
+    }
+
+    #[test]
+    fn attach_route_reconciliation_summary_routes_blocked_reconciliation() {
+        let table = NeighborTable::new(DeviceRole::Child);
+        let action_summary = ThreadAttachActionSummary::from_summaries(
+            MleMessageBatchSummary::empty(),
+            table.summary_at(1_250),
+        );
+        let completion_summary = summarize_thread_attach_completion(
+            action_summary,
+            table
+                .diagnostic_snapshot(None, 1_250)
+                .unwrap()
+                .supervision_plan(),
+        );
+        let unknown = NetworkDataTlv::new(NetworkDataTlvType::Unknown(42), false, vec![3]).unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![unknown]).unwrap();
+        let network_data_readiness = network_data.summary().unwrap().readiness();
+        let handoff_summary = ThreadAttachRouteHandoffSummary::from_completion_and_network_data(
+            completion_summary,
+            network_data_readiness,
+        );
+        let audit_summary = ThreadAttachRouteAuditSummary::from_handoff_summary(handoff_summary);
+        let signoff_summary = ThreadAttachRouteSignoffSummary::from_audit_summary(audit_summary);
+        let completion_summary =
+            ThreadAttachRouteCompletionSummary::from_signoff_summary(signoff_summary);
+        let publication_summary =
+            ThreadAttachRoutePublicationSummary::from_completion_summary(completion_summary);
+        let verification_summary =
+            ThreadAttachRouteVerificationSummary::from_publication_summary(publication_summary);
+        let validation_summary =
+            ThreadAttachRouteValidationSummary::from_verification_summary(verification_summary);
+        let certification_summary =
+            ThreadAttachRouteCertificationSummary::from_validation_summary(validation_summary);
+        let approval_summary =
+            ThreadAttachRouteApprovalSummary::from_certification_summary(certification_summary);
+        let activation_summary =
+            ThreadAttachRouteActivationSummary::from_approval_summary(approval_summary);
+        let rollout_summary =
+            ThreadAttachRouteRolloutSummary::from_activation_summary(activation_summary);
+        let adoption_summary =
+            ThreadAttachRouteAdoptionSummary::from_rollout_summary(rollout_summary);
+        let acceptance_summary =
+            ThreadAttachRouteAcceptanceSummary::from_adoption_summary(adoption_summary);
+        let distribution_summary =
+            ThreadAttachRouteDistributionSummary::from_acceptance_summary(acceptance_summary);
+        let export_summary =
+            ThreadAttachRouteExportSummary::from_distribution_summary(distribution_summary);
+        let import_summary = ThreadAttachRouteImportSummary::from_export_summary(export_summary);
+        let ingest_summary = ThreadAttachRouteIngestSummary::from_import_summary(import_summary);
+        let load_summary = ThreadAttachRouteLoadSummary::from_ingest_summary(ingest_summary);
+        let restore_summary = ThreadAttachRouteRestoreSummary::from_load_summary(load_summary);
+        let recovery_summary =
+            ThreadAttachRouteRecoverySummary::from_restore_summary(restore_summary);
+        let replay_summary =
+            ThreadAttachRouteReplaySummary::from_recovery_summary(recovery_summary);
+
+        let summary = ThreadAttachRouteReconciliationSummary::from_replay_summary(replay_summary);
+
+        assert_eq!(summary.required_route_reconciliation_check_count, 25);
+        assert_eq!(summary.passed_route_reconciliation_check_count, 0);
+        assert_eq!(summary.missing_route_reconciliation_check_count, 25);
+        assert!(!summary.route_replay_ready);
+        assert!(!summary.route_recovery_ready);
+        assert!(!summary.route_restore_ready);
+        assert!(!summary.route_load_ready);
+        assert!(!summary.route_ingest_ready);
+        assert!(!summary.route_import_ready);
+        assert!(!summary.route_export_ready);
+        assert!(!summary.route_distribution_ready);
+        assert!(!summary.route_acceptance_ready);
+        assert!(!summary.route_adoption_ready);
+        assert!(!summary.route_rollout_ready);
+        assert!(!summary.route_activation_ready);
+        assert!(!summary.route_approval_ready);
+        assert!(!summary.route_certification_ready);
+        assert!(!summary.route_validation_ready);
+        assert!(!summary.route_verification_ready);
+        assert!(!summary.route_publication_ready);
+        assert!(!summary.route_completion_ready);
+        assert!(!summary.route_signoff_ready);
+        assert!(!summary.route_audit_ready);
+        assert!(!summary.route_handoff_ready);
+        assert!(!summary.attach_complete);
+        assert!(!summary.network_data_ready);
+        assert!(!summary.routing_surface_ready);
+        assert!(!summary.parent_or_route_anchor_ready);
+        assert!(!summary.route_reconciliation_ready);
+        assert!(!summary.is_route_reconciliation_ready());
+        assert!(summary.has_reconciliation_gaps());
+        assert!(summary.needs_route_replay());
         assert!(summary.needs_route_recovery());
         assert!(summary.needs_route_restore());
         assert!(summary.needs_route_load());
