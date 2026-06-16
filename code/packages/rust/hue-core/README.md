@@ -151,6 +151,8 @@ packages a typed surface for:
   finalization readiness into final archive confirmation checks
 - Hue package release archive attestation summaries that turn archive
   confirmation readiness into final archive attestation checks
+- Hue package release archive notarization summaries that turn archive
+  attestation readiness into final archive notarization checks
 
 ## Dependencies
 

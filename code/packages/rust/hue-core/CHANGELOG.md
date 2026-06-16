@@ -111,6 +111,8 @@ All notable changes to this package will be documented in this file.
   finalization readiness into final archive confirmation checks.
 - Hue package release archive attestation summaries that turn archive
   confirmation readiness into final archive attestation checks.
+- Hue package release archive notarization summaries that turn archive
+  attestation readiness into final archive notarization checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
