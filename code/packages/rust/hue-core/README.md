@@ -117,6 +117,8 @@ packages a typed surface for:
   validation readiness into final archive certification checks
 - Hue package release archive approval summaries that turn archive
   certification readiness into final archive approval checks
+- Hue package release archive activation summaries that turn archive approval
+  readiness into final archive activation checks
 
 ## Dependencies
 
