@@ -2687,3 +2687,38 @@ fn ba_jvm_1_i64_cmp_into_jmp_if_uses_int_guard() {
     assert!(!has_seq(&code, &[LCONST_0, LCMP]),
         "the bool cond must be read with the int guard (iload; ifeq), not `lload; lconst_0; lcmp`");
 }
+
+/// Oct `&&`/`||` on the JVM (BA-JVM-1 follow-through): a `mov` from an `int`
+/// (bool) comparison result into a `long`-typed accumulator must widen with
+/// `i2l` before `lstore`, else the long slot's second half is left
+/// uninitialized and a later `lload` trips the verifier ("uninitialized register
+/// pair"). Oct's short-circuit keeps the i64 value model (it `out`-prints, so it
+/// skips the scalar concretize-to-i32 pass), so its accumulator is `long` while
+/// the comparison results are `int`.
+#[test]
+fn mov_int_bool_into_long_accumulator_widens_with_i2l() {
+    const I2L: u8 = 0x85;
+    const ISTORE: u8 = 0x36;
+    // `acc` is read as a long (jmp_if_false guard over an i64-typed var), so its
+    // slot is Long; it is assigned the int bool result of a comparison.
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("b".into()), vec![Operand::Int(2)], "i64"),
+        IIRInstr::new("cmp_eq", Some("cond".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+        // accumulator typed i64 (Long slot), assigned the int bool result
+        IIRInstr::new("mov", Some("acc".into()), vec![Operand::Var("cond".into())], "i64"),
+        // read `acc` as a long guard — forces its slot to Long
+        IIRInstr::new("jmp_if_false", None,
+            vec![Operand::Var("acc".into()), Operand::Var("end".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+        IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+    ]);
+    let code = code_bytes(&lower(&module_with(f)));
+    // The mov must widen the int bool to long (`i2l`) — not `istore` it into the
+    // long `acc` slot (which would leave slot+1 uninitialized).
+    assert!(code.contains(&I2L), "mov of int bool into a long accumulator must `i2l`-widen");
+    // And the cond (int) is `istore`d while acc (long) is `lstore`d — confirm the
+    // int store of the comparison result is still present (it is the i2l source).
+    assert!(code.contains(&ISTORE), "the int comparison result is istore'd before the widening mov");
+}

@@ -1986,22 +1986,43 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "mov must have a dest".to_string(),
                 })?;
-                let (dest_slot, _dest_type) = lookup_var(dest_name)?;
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
 
                 match instr.srcs.first() {
                     Some(Operand::Var(src_name)) => {
                         let (src_slot, src_type) = lookup_var(src_name)?;
                         emit_typed_load(&mut code, src_slot, src_type);
-                        emit_typed_store(&mut code, dest_slot, src_type);
+                        // The source and dest slots can differ in width — e.g. a
+                        // bool/int comparison result mov'd into a `long`
+                        // accumulator (Oct's short-circuit `&&`/`||` over its i64
+                        // value model, which — unlike the concretized-to-i32
+                        // scalar path — keeps values `long`). Storing with the
+                        // *source* type into a wider dest slot leaves the slot's
+                        // second half uninitialized, which a later `lload` trips
+                        // (`VerifyError: uninitialized register pair`). Bridge
+                        // int↔long so the store matches the dest slot's width.
+                        match (src_type, dest_type) {
+                            (JvmType::Int, JvmType::Long) => code.push(I2L),
+                            (JvmType::Long, JvmType::Int) => code.push(L2I),
+                            _ => {}
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     Some(Operand::Int(v)) => {
-                        // Constant mov — unusual but valid; emit iconst.
+                        // Constant mov — unusual but valid; emit iconst, widening
+                        // to long if the dest slot is `long` (same width rule).
                         emit_iconst_cp(&mut code, cp, *v as i32);
-                        emit_istore(&mut code, dest_slot);
+                        if dest_type == JvmType::Long {
+                            code.push(I2L);
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     Some(Operand::Bool(b)) => {
                         emit_iconst(&mut code, if *b { 1 } else { 0 });
-                        emit_istore(&mut code, dest_slot);
+                        if dest_type == JvmType::Long {
+                            code.push(I2L);
+                        }
+                        emit_typed_store(&mut code, dest_slot, dest_type);
                     }
                     _ => {
                         return Err(IIRJvmError::InvalidOperand {
