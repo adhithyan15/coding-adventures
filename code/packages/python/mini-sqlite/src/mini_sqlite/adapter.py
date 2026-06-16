@@ -2016,15 +2016,138 @@ def _collated(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, str | No
     return expr, None
 
 
+def _lex_cmp(lhs: list[Expr], rhs: list[Expr], strict_op: BinaryOp, final_op: BinaryOp) -> Expr:
+    """Build a lexicographic comparison for row values (iterative, right-to-left).
+
+    Truth table for ``(a, b) < (x, y)`` (strict_op=LT, final_op=LT):
+
+    +-------+-------+-------+--------+
+    | a < x | a = x | b < y | result |
+    +-------+-------+-------+--------+
+    | TRUE  |   -   |   -   | TRUE   |
+    | FALSE | TRUE  | TRUE  | TRUE   |
+    | FALSE | TRUE  | FALSE | FALSE  |
+    | FALSE | FALSE |   -   | FALSE  |
+    +-------+-------+-------+--------+
+
+    Expands to ``a < x OR (a = x AND b < y)``.
+
+    Built right-to-left to avoid Python recursion limits on wide row values.
+    """
+    result: Expr = BinaryExpr(op=final_op, left=lhs[-1], right=rhs[-1])
+    for lv, rv in zip(reversed(lhs[:-1]), reversed(rhs[:-1]), strict=True):
+        result = BinaryExpr(
+            op=BinaryOp.OR,
+            left=BinaryExpr(op=strict_op, left=lv, right=rv),
+            right=BinaryExpr(
+                op=BinaryOp.AND,
+                left=BinaryExpr(op=BinaryOp.EQ, left=lv, right=rv),
+                right=result,
+            ),
+        )
+    return result
+
+
+def _expand_row_value_cmp(lhs: list[Expr], op: BinaryOp, rhs: list[Expr]) -> Expr:
+    """Expand a row-value comparison ``(a, b, …) op (x, y, …)`` to scalars.
+
+    Semantics mirror SQLite's row-value specification:
+
+    * ``=``  → ``a=x AND b=y AND …``
+    * ``!=`` → ``a!=x OR b!=y OR …``  (any differing column → unequal)
+    * ``<``  → lexicographic: ``a<x OR (a=x AND b<y) OR …``
+    * ``<=`` → ``a<x OR (a=x AND b<=y) OR …``
+    * ``>``  → symmetric to ``<``
+    * ``>=`` → symmetric to ``<=``
+    """
+    n = len(lhs)
+    if n == 0:
+        return Literal(value=1 if op == BinaryOp.EQ else 0)
+    if n != len(rhs):
+        raise ProgrammingError(
+            f"row value misuse: left side has {n} column(s), right side has {len(rhs)}"
+        )
+    if op == BinaryOp.EQ:
+        result: Expr = BinaryExpr(op=BinaryOp.EQ, left=lhs[0], right=rhs[0])
+        for lv, rv in zip(lhs[1:], rhs[1:], strict=True):
+            result = BinaryExpr(
+                op=BinaryOp.AND, left=result,
+                right=BinaryExpr(op=BinaryOp.EQ, left=lv, right=rv),
+            )
+        return result
+    if op == BinaryOp.NOT_EQ:
+        result = BinaryExpr(op=BinaryOp.NOT_EQ, left=lhs[0], right=rhs[0])
+        for lv, rv in zip(lhs[1:], rhs[1:], strict=True):
+            result = BinaryExpr(
+                op=BinaryOp.OR, left=result,
+                right=BinaryExpr(op=BinaryOp.NOT_EQ, left=lv, right=rv),
+            )
+        return result
+    if op in (BinaryOp.LT, BinaryOp.LTE):
+        return _lex_cmp(lhs, rhs, BinaryOp.LT, op)
+    if op in (BinaryOp.GT, BinaryOp.GTE):
+        return _lex_cmp(lhs, rhs, BinaryOp.GT, op)
+    raise ProgrammingError(f"unsupported row-value comparison operator: {op}")
+
+
+def _expand_row_value_in(
+    lhs: list[Expr],
+    candidates: list[list[Expr]],
+    negated: bool,
+) -> Expr:
+    """Expand ``(a, b) IN ((x, y), (p, q))`` to ``(a=x AND b=y) OR (a=p AND b=q)``.
+
+    The empty-list case ``(a, b) IN ()`` expands to the constant FALSE (0),
+    and ``(a, b) NOT IN ()`` expands to TRUE (1), matching SQLite's semantics.
+    """
+    if not candidates:
+        always_false: Expr = Literal(value=0)
+        return UnaryExpr(op=UnaryOp.NOT, operand=always_false) if negated else always_false
+    clauses: list[Expr] = [_expand_row_value_cmp(lhs, BinaryOp.EQ, cand) for cand in candidates]
+    result: Expr = clauses[0]
+    for clause in clauses[1:]:
+        result = BinaryExpr(op=BinaryOp.OR, left=result, right=clause)
+    return UnaryExpr(op=UnaryOp.NOT, operand=result) if negated else result
+
+
 def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     """Comparison covers: bare collated, cmp_op, BETWEEN, IN, LIKE, IS NULL.
 
-    Grammar: ``comparison = collated [cmp_op collated | "BETWEEN" ... | ...]``.
-    If the only child is a ``collated``, we pass through (after applying any
-    COLLATE transform).  Otherwise we inspect the following children to pick
-    the right expression shape, and propagate any COLLATE clause across the
-    operands.
+    Grammar (after row-value extension):
+    ``comparison = row_value cmp_op row_value
+                 | row_value [NOT] IN ( row_value_list )
+                 | collated [cmp_op collated | "BETWEEN" ... | ...]``.
+
+    Row-value forms are expanded to equivalent scalar BinaryExpr trees so
+    the planner and VM require no changes.  Scalar forms are unchanged.
     """
+    # Row-value comparison: first ASTNode child is a row_value, not a collated.
+    first_rv = next(
+        (c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "row_value"),
+        None,
+    )
+    if first_rv is not None:
+        row_value_nodes = [
+            c for c in node.children
+            if isinstance(c, ASTNode) and c.rule_name == "row_value"
+        ]
+        lhs_exprs = list(_row_value(row_value_nodes[0], state))
+        cmp = _maybe_child(node, "cmp_op")
+        if cmp is not None:
+            op = _cmp_op_to_binop(cmp)
+            rhs_exprs = list(_row_value(row_value_nodes[1], state))
+            return _expand_row_value_cmp(lhs_exprs, op, rhs_exprs)
+        negated = _has_keyword_child(node, "NOT")
+        rv_list_node = _maybe_child(node, "row_value_list")
+        if rv_list_node is not None:
+            cand_nodes = [
+                c for c in rv_list_node.children
+                if isinstance(c, ASTNode) and c.rule_name == "row_value"
+            ]
+            candidates = [list(_row_value(rv, state)) for rv in cand_nodes]
+            return _expand_row_value_in(lhs_exprs, candidates, negated)
+        raise ProgrammingError("malformed row-value comparison")
+
     collateds = [c for c in node.children if isinstance(c, ASTNode) and c.rule_name == "collated"]
     left, left_coll = _collated(collateds[0], state)
 
