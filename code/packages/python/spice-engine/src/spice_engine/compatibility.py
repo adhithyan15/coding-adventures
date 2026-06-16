@@ -268,7 +268,7 @@ class DeckFourierSummary:
 
 @dataclass(frozen=True, slots=True)
 class DeckOutputSelection:
-    """A parsed ``.save`` or ``.probe`` output selection card."""
+    """A parsed ``.save``, ``.probe``, or ``.print`` output selection card."""
 
     directive: str
     analysis: str | None
@@ -290,7 +290,7 @@ class DeckOutputDiagnostic:
 
 @dataclass(frozen=True, slots=True)
 class DeckOutputSummary:
-    """Resolved active deck lines plus parsed ``.save`` / ``.probe`` cards."""
+    """Resolved active deck lines plus parsed deck output selection cards."""
 
     active_lines: tuple[str, ...]
     terminated: bool
@@ -723,7 +723,7 @@ def resolve_deck_fourier(netlist: str) -> DeckFourierSummary:
 
 
 def resolve_deck_outputs(netlist: str) -> DeckOutputSummary:
-    """Extract supported ``.save`` and ``.probe`` cards before ``.end``."""
+    """Extract supported ``.save``, ``.probe``, and ``.print`` cards."""
 
     state = _DeckOutputState()
     active_lines: list[str] = []
@@ -737,7 +737,7 @@ def resolve_deck_outputs(netlist: str) -> DeckOutputSummary:
         if directive == ".end":
             end_line_number = line_number
             break
-        if directive in {".save", ".probe"}:
+        if directive in {".save", ".probe", ".print"}:
             _resolve_output_line(stripped, line_number, directive, state)
             continue
         active_lines.append(stripped)
@@ -2173,18 +2173,45 @@ def _resolve_output_line(
 ) -> None:
     tokens = _directive_tokens(line)
     if len(tokens) < 2:
+        message = (
+            ".print requires an analysis token and at least one probe token"
+            if directive == ".print"
+            else f"{directive} requires at least one probe token"
+        )
         _add_output_diagnostic(
             state,
             code="SPICE_DECK_OUTPUT_ARGUMENT",
             directive=directive,
             line_number=line_number,
-            message=f"{directive} requires at least one probe token",
+            message=message,
         )
         return
 
     analysis: str | None = None
     probe_tokens = tokens[1:]
-    if directive == ".probe" and _normalize_deck_output_analysis(tokens[1]) is not None:
+    if directive == ".print":
+        if len(tokens) < 3:
+            _add_output_diagnostic(
+                state,
+                code="SPICE_DECK_OUTPUT_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=".print requires an analysis token and at least one probe token",
+            )
+            return
+        analysis = _normalize_deck_output_analysis(tokens[1])
+        if analysis is None:
+            _add_output_diagnostic(
+                state,
+                code="SPICE_DECK_OUTPUT_ANALYSIS",
+                directive=directive,
+                line_number=line_number,
+                message=f".print analysis must be op, dc, ac, or tran, got {tokens[1]!r}",
+                token=tokens[1],
+            )
+            return
+        probe_tokens = tokens[2:]
+    elif directive == ".probe" and _normalize_deck_output_analysis(tokens[1]) is not None:
         analysis = _normalize_deck_output_analysis(tokens[1])
         probe_tokens = tokens[2:]
     if not probe_tokens:
