@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.16.0] - 2026-05-24
+
+### Added
+
+- ``PRAGMA query_only = 1`` now enforces read-only mode.  Any DML
+  (INSERT / UPDATE / DELETE) or DDL (CREATE TABLE / DROP TABLE /
+  CREATE INDEX / DROP INDEX / ALTER TABLE / CREATE VIEW / DROP VIEW /
+  CREATE TRIGGER / DROP TRIGGER) executed while ``query_only = 1``
+  is active on the connection raises::
+
+      OperationalError: attempt to write a readonly database
+
+  — matching SQLite's ``SQLITE_READONLY`` (code 8) behaviour.
+  ``PRAGMA query_only = 0`` always lifts the gate, even while it is
+  engaged.  SELECT, BEGIN/COMMIT/ROLLBACK, SAVEPOINT/RELEASE, and
+  PRAGMA statements are never affected.
+
+  Lifts the "Scope limit" noted in the 2.13.0 entry.  Previously
+  the PRAGMA value round-tripped correctly but had no semantic
+  effect — writes silently executed regardless of the setting.
+
+### Fixed
+
+- ``Connection.close()`` now evicts per-connection PRAGMA state from
+  the engine's ``_PRAGMA_STATE`` dict.  Previously, if the underlying
+  backend object was garbage-collected and its memory address reused
+  by a new connection, the new connection could silently inherit the
+  closed connection's PRAGMA settings (e.g. ``query_only=1`` from a
+  previous test or caller).  A ``__del__`` hook ensures cleanup
+  even when ``close()`` is not called explicitly.
+
 ## [2.15.0] - 2026-05-24
 
 ### Fixed

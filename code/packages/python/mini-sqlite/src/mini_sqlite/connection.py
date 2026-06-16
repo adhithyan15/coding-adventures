@@ -35,6 +35,7 @@ from storage_sqlite import SqliteFileBackend
 
 from .advisor import IndexAdvisor
 from .cursor import Cursor
+from .engine import _pragma_clear
 from .errors import OperationalError, ProgrammingError, translate
 from .policy import IndexPolicy
 
@@ -284,7 +285,21 @@ class Connection:
             with contextlib.suppress(Exception):
                 self._backend.rollback(self._txn)
             self._txn = None
+        # Evict per-connection PRAGMA state so that a future connection
+        # whose backend is allocated at the same memory address does not
+        # inherit this connection's PRAGMA settings (e.g. query_only=1).
+        _pragma_clear(self._backend)
         self._closed = True
+
+    def __del__(self) -> None:
+        # Best-effort cleanup so that PRAGMA state is evicted even when the
+        # caller drops the connection without calling close() explicitly.
+        # __del__ is called by CPython's reference-counting GC immediately
+        # when the last reference is dropped; the explicit close() call is
+        # still the safe path because GC order is not guaranteed in all
+        # implementations or across cycle-collected objects.
+        with contextlib.suppress(Exception):
+            self.close()
 
     def __enter__(self) -> Connection:
         self._assert_open()

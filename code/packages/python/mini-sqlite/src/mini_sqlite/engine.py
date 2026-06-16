@@ -34,15 +34,24 @@ from sql_optimizer import optimize
 from sql_parser import parse_sql
 from sql_planner import (
     AggregateExpr,
+    AlterTableStmt,
     CreateIndexStmt,
+    CreateTableStmt,
+    CreateTriggerStmt,
     CreateViewStmt,
+    DeleteStmt,
+    DropIndexStmt,
+    DropTableStmt,
+    DropTriggerStmt,
     DropViewStmt,
     IndexScan,
+    InsertSelectStmt,
     InsertValuesStmt,
     ReleaseSavepointStmt,
     RollbackToStmt,
     SavepointStmt,
     Scan,
+    UpdateStmt,
     plan,
 )
 from sql_planner.plan import (
@@ -69,7 +78,44 @@ from sql_vm import QueryEvent, QueryResult, execute  # noqa: F401 — QueryEvent
 
 from .adapter import to_statement
 from .binding import substitute
-from .errors import ProgrammingError, translate
+from .errors import (
+    READONLY_ERROR_MESSAGE,
+    OperationalError,
+    ProgrammingError,
+    translate,
+)
+
+# Statement types that SQLite considers "writes" — anything that mutates
+# the database file (rows OR schema).  When ``PRAGMA query_only = 1`` is
+# active on a connection, attempting any of these raises
+# ``OperationalError: attempt to write a readonly database`` (SQLITE_READONLY,
+# code 8) — matching the reference engine's stance.
+#
+# NOT included (these are deliberately allowed under query_only):
+#   * SelectStmt / UnionStmt / IntersectStmt / ExceptStmt — pure reads
+#   * BeginStmt / CommitStmt / RollbackStmt — transaction control
+#   * SavepointStmt / ReleaseSavepointStmt / RollbackToStmt — savepoint
+#     control (SQLite lets these through; the savepoint just brackets
+#     no writes)
+#   * PRAGMA, VACUUM/ANALYZE/REINDEX/EXPLAIN, ATTACH/DETACH — intercepted
+#     *before* parsing, so they never reach this gate at all.  This is
+#     important: ``PRAGMA query_only = 0`` must still work to lift the
+#     gate, and SQLite permits it.
+_WRITE_STMT_TYPES = (
+    InsertValuesStmt,
+    InsertSelectStmt,
+    UpdateStmt,
+    DeleteStmt,
+    CreateTableStmt,
+    DropTableStmt,
+    CreateIndexStmt,
+    DropIndexStmt,
+    CreateViewStmt,
+    DropViewStmt,
+    CreateTriggerStmt,
+    DropTriggerStmt,
+    AlterTableStmt,
+)
 
 if TYPE_CHECKING:
     from .advisor import IndexAdvisor
@@ -174,6 +220,26 @@ def run(
         )
         ast = parse_sql(bound)
         stmt = to_statement(ast, view_defs=view_defs)
+
+        # ``PRAGMA query_only = 1`` puts the connection into read-only mode.
+        # SQLite rejects any write (DML or DDL) with
+        # ``OperationalError: attempt to write a readonly database``
+        # (SQLITE_READONLY).  The gate must fire BEFORE the CREATE VIEW /
+        # DROP VIEW intercept below (CREATE VIEW is a write under SQLite's
+        # rules) and before planning so we never spin up a write program
+        # only to discard it.
+        #
+        # PRAGMAs, ATTACH/DETACH, VACUUM/ANALYZE/REINDEX/EXPLAIN, and
+        # BEGIN/COMMIT/ROLLBACK/SAVEPOINT are not subject to this gate —
+        # the first four are intercepted before parsing, and the
+        # transaction-control statements are intentionally not in
+        # ``_WRITE_STMT_TYPES`` (SQLite permits them under query_only).
+        # In particular, ``PRAGMA query_only = 0`` must still succeed so
+        # callers can lift the gate without re-opening the connection.
+        if isinstance(stmt, _WRITE_STMT_TYPES) and bool(
+            _pragma_get(backend, "query_only")
+        ):
+            raise OperationalError(READONLY_ERROR_MESSAGE)
 
         # CREATE VIEW / DROP VIEW are intercepted here — the planner and VM
         # never see them.  We update the connection's view registry and return
@@ -833,18 +899,24 @@ _PRAGMA_DEFAULTS: dict[str, tuple[object, str]] = {
     # it defensively before deciding whether to issue an explicit
     # ``PRAGMA read_uncommitted = 0`` for a clean baseline.
     "read_uncommitted": (0,                "integer"),  # bool; off by default
-    # query_only — when ON, SQLite rejects writes ("attempt to write a
-    # readonly database").  Mini-sqlite doesn't enforce the read-only
-    # semantics yet — the PRAGMA value just round-trips per connection,
-    # so callers that read it back to confirm settings see the value
-    # they wrote.  Enforcement is a future increment.
+    # query_only — when ON, SQLite rejects writes with
+    # ``OperationalError: attempt to write a readonly database``
+    # (SQLITE_READONLY).  Mini-sqlite honours this as of 2.16.0:
+    # any DML (INSERT/UPDATE/DELETE) or DDL (CREATE/DROP/ALTER)
+    # statement is rejected at the run-loop gate (see
+    # ``_WRITE_STMT_TYPES`` and the check in ``run()`` above).
+    # SELECTs, PRAGMAs, and transaction control still flow normally,
+    # so ``PRAGMA query_only = 0`` can always lift the gate.
     "query_only":       (0,                "integer"),  # bool; off by default
 }
 
 # Per-connection PRAGMA state.  Keyed by the backend object's id() so each
 # connection has its own values.  WeakValueDictionary would be ideal but
-# Backend isn't hashable in all implementations; we settle for id-keyed dict
-# and accept that values leak until the process exits.
+# Backend isn't hashable in all implementations; we settle for id-keyed dict.
+# Entries must be explicitly evicted when a connection closes (see
+# ``_pragma_clear``) to prevent id-reuse pollution: CPython can allocate a
+# new backend at the same address as a just-freed one, causing the new
+# connection to inherit the old connection's PRAGMA state.
 _PRAGMA_STATE: dict[int, dict[str, object]] = {}
 
 
@@ -861,6 +933,16 @@ def _pragma_set(backend: Backend, name: str, value: object) -> None:
     """Store *value* for *name* on this backend."""
     state = _PRAGMA_STATE.setdefault(id(backend), {})
     state[name] = value
+
+
+def _pragma_clear(backend: Backend) -> None:
+    """Remove all per-connection PRAGMA state for *backend*.
+
+    Called by :meth:`~mini_sqlite.connection.Connection.close` to prevent
+    stale state from leaking into a later connection whose backend object
+    happens to be allocated at the same memory address.
+    """
+    _PRAGMA_STATE.pop(id(backend), None)
 
 
 def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> QueryResult:
@@ -1282,10 +1364,12 @@ def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> 
         # level.  Mini-sqlite has no shared cache, so this is purely a
         # round-tripped value with no semantic effect.
         "read_uncommitted",
-        # ``query_only`` is meant to reject writes when ON.  Mini-sqlite
-        # round-trips the value but does NOT yet enforce the read-only
-        # gate — INSERT/UPDATE/DELETE will still execute even when
-        # ``query_only = 1``.  Enforcement is a future increment.
+        # ``query_only`` is enforced as of mini-sqlite 2.16.0 — when ON
+        # the run-loop gate in ``run()`` rejects any DML or DDL with
+        # ``OperationalError: attempt to write a readonly database``
+        # (SQLITE_READONLY).  The PRAGMA's value still round-trips here
+        # so callers can read it back and so ``PRAGMA query_only = 0``
+        # always lifts the gate.
         "query_only",
     }
     _INT_PRAGMAS = {
