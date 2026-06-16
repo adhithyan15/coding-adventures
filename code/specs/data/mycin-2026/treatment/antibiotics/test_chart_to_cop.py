@@ -108,6 +108,33 @@ def test_pregnancy_engine_behaviour():
     assert none["regimen"] is None and none["outcome"] == "infeasible" and none["conflict"] is not None
 
 
+def test_objective_priority_sets_the_cost_side_effect_weights():
+    # CC-4: an objective_priority chart fact selects the (w_cost, w_tox) blend the
+    # set-cover minimizes, with provenance. Default (no such fact) stays tier-only (1,0).
+    default = cc.compile_cop([cc.ChartFact("age_band", "adult")])
+    assert default.weights == (1, 0)
+    low_tox = cc.compile_cop([cc.ChartFact("age_band", "adult"),
+                              cc.ChartFact("objective_priority", "low_toxicity", "frail, polypharmacy")])
+    assert low_tox.weights == (1, 3)
+    assert any(c["type"] == "objective" for c in low_tox.constraints)
+    # An unknown priority applies nothing and is discarded (no silent default change).
+    bad = cc.compile_cop([cc.ChartFact("objective_priority", "cheapest_please")])
+    assert bad.weights == (1, 0) and any("objective_priority" in d["fact"] for d in bad.discards)
+
+
+def test_objective_breakdown_surfaced_with_chart_weights():
+    cli = decide_mod.find_cli()
+    if cli is None:
+        return
+    # derive() surfaces the CC-4 objective breakdown, carrying the chart's weights; the
+    # total is internally consistent (w_cost·cost + w_tox·side_effects) for any priority.
+    r = cc.derive(cli, [cc.ChartFact("setting", "post_neurosurgical"),
+                        cc.ChartFact("objective_priority", "low_toxicity")])
+    ob = r["objective"]
+    assert ob is not None and ob["weights"] == {"w_cost": 1, "w_tox": 3}, ob
+    assert ob["total"] == 1 * ob["cost"] + 3 * ob["side_effects"], ob
+
+
 def test_unmapped_fact_is_discarded_not_ignored():
     # No silent drops: a fact with no rule lands in discards WITH a reason.
     cop = cc.compile_cop([cc.ChartFact("age_band", "adult"),
@@ -144,6 +171,8 @@ def main() -> int:
     test_allergy_becomes_exclusion()
     test_culture_resistance_becomes_defeated_edge()
     test_dose_risk_facts_become_dose_constraints()
+    test_objective_priority_sets_the_cost_side_effect_weights()
+    test_objective_breakdown_surfaced_with_chart_weights()
     test_dose_infeasibility_folds_into_the_cover()
     test_pregnancy_contraindicates_drugs()
     test_pregnancy_engine_behaviour()
