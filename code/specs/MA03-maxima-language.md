@@ -40,15 +40,26 @@ second historical language for the cost of a façade plus a REPL.
 
 ## §2 What is supported
 
-Everything `macsyma-runtime` supports, presented under the Maxima name. That
-includes (non-exhaustively): arithmetic over exact rationals and floats; symbolic
-algebra (`expand`, `factor`, `ratsimp`); calculus (`diff`, `integrate`, `limit`,
-`taylor`); trigonometric simplification (`trigsimp`, `trigexpand`, `trigreduce`);
-equation solving (`solve`, linear systems); substitution (`subst`, `ev`); lists
-and their operations; the `orthopoly` package (Legendre, Chebyshev, Hermite,
-Bessel) behind the same allow-listed `load("orthopoly")` gate; and the
-`%i«n»`/`%o«n»` history convention. Display follows Macsyma's flags: `;`
-displays, `$` suppresses.
+**Exactly what `macsyma-runtime` evaluates — no more, no less.** Maxima inherits
+the wrapped evaluator's power verbatim, so this section is honest about where
+that evaluator currently stops (convention 9). The whole Macsyma function
+*surface* parses and is accepted; what actually *reduces* today is:
+
+- **Arithmetic** over exact rationals and floats (`2/4` → `1/2`, `1 + 2*3` → `7`).
+- **Differentiation** — `diff(x^3, x)` → `3*x^2`, `diff(sin(x), x)` → `cos(x)`.
+- **Integration** — `integrate(x^2, x)` → `x^3/3`.
+- **Factoring** — `factor(x^2 - 1)` → `(x - 1)*(x + 1)`.
+- **Substitution** — `subst(3, x, x^2 + 1)`.
+- **Bindings & history** — `x : 5$` then `x + 1;` → `6`; the `%i«n»`/`%o«n»`
+  counters; `;` displays and `$` suppresses.
+
+Other CAS verbs — `expand`, `ratsimp`, `solve`, `limit`, `taylor`, the `trig*`
+family, list operations, and the allow-listed `load("orthopoly")` package — are
+**parsed and accepted** but, in the current `macsyma-runtime`, echo back
+symbolically rather than reducing. They are not errors; they simply pass through
+unevaluated. As `macsyma-runtime`'s evaluator grows to reduce them, **Maxima
+inherits that for free**, because this crate adds no evaluation logic of its own —
+it is a pure presentation façade.
 
 ## §3 The `feed` contract
 

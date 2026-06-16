@@ -209,6 +209,8 @@ members = [
     "matlab-repl",
     "octave-runtime",
     "octave-repl",
+    "maxima-runtime",
+    "maxima-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",
