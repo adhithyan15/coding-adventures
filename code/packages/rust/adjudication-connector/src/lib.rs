@@ -546,7 +546,7 @@ fn lower_rule_tracked(
                 body,
                 probability: Probability::Value(p),
                 provenance: logic_engine::Provenance::unattributed(),
-                priority: 0,
+                priority: logic_engine::Priority::Default,
             })));
         }
         "constraint" => {
@@ -738,7 +738,7 @@ fn lower_rule(
                 body,
                 probability: Probability::Value(p),
                 provenance: logic_engine::Provenance::unattributed(),
-                priority: 0,
+                priority: logic_engine::Priority::Default,
             });
         }
         "constraint" => {

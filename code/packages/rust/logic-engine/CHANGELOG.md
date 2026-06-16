@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.18.0] - 2026-06-16 — precedence priority is a named ENUM, not an integer (ADJ73 PR-A)
+
+### Changed (breaking — nothing released; per user decision 1)
+
+- **`Rule::priority` is now `Priority`** (a named enum) instead of `i64`. Tiers, totally
+  ordered lowest→highest: `Default < Specific < Authoritative < Mandatory`. `Default` is the
+  implicit tier (existing rules unchanged). `Rule::with_priority` now takes a `Priority`.
+- **`GovernedAnswer::priority` is now `Standing`** (new enum): `Standing::Rule(Priority)` or
+  `Standing::Asserted` (a ground fact — outranks every rule tier, replacing the old `i64::MAX`
+  sentinel). `Standing` derives `Ord` (Asserted greatest), so the resolver compares tiers
+  without magic numbers.
+- The two `adjudication-connector` `Rule{}` literal sites set `priority: Priority::Default`.
+
+### Rationale
+
+Raw integers were magic-numbery; named tiers read correctly in grounded rulebooks and are the
+simplest *grounded precedence principle* ("a higher tier wins"). Richer, byte-provenanced
+precedence (a grounded `context-precedence` rulebook with lex-superior / recency / appeal-status
+meta-rules) is ADJ73 PR-B; the recursive grounded design is now spec'd in
+`code/specs/ADJ73-defeasible-rule-precedence.md` §2.3 + §7.
+
+### Unchanged
+
+- Resolution semantics, opt-in-per-predicate `declare_functional`, and back-compat of
+  `enumerate_all` are exactly as in 0.17.0. All 101 + 5 (govern) + 4 (precedence integration)
+  tests pass.
+
 ## [0.17.0] - 2026-06-16 — defeasible rule precedence (ADJ73 PR-1)
 
 ### Added

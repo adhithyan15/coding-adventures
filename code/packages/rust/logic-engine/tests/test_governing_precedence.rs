@@ -8,7 +8,9 @@
 //! legal "higher court overrides lower" precedence, resolved by the identical machinery.
 
 use logic_core::{LogicVar, Term};
-use logic_engine::{enumerate_governing, BodyLiteral, Fact, GovernStatus, KnowledgeBase, Rule};
+use logic_engine::{
+    enumerate_governing, BodyLiteral, Fact, GovernStatus, KnowledgeBase, Priority, Rule,
+};
 
 fn atom(s: &str) -> Term {
     Term::Atom(s.to_string())
@@ -47,7 +49,7 @@ fn medical_timing_ladder_picks_the_exception_over_the_default() {
                 BodyLiteral::Pos(atom("culture_pending")),
             ],
         )
-        .with_priority(10),
+        .with_priority(Priority::Specific),
     );
     // conservative default: treat now (priority 0).
     kb.add_rule(Rule::certain(
@@ -88,7 +90,7 @@ fn medical_timing_falls_back_to_the_default_when_the_exception_does_not_fire() {
                 BodyLiteral::Pos(atom("culture_pending")),
             ],
         )
-        .with_priority(10),
+        .with_priority(Priority::Specific),
     );
     kb.add_rule(Rule::certain(
         comp("timing", vec![atom("treat_now_empiric")]),
@@ -118,7 +120,7 @@ fn legal_higher_court_reading_governs_the_lower_court() {
             comp("means", vec![atom("navigable_waters"), atom("broad")]),
             vec![],
         )
-        .with_priority(20),
+        .with_priority(Priority::Authoritative),
     );
     // a district court reads it narrowly (lower court → priority 10).
     kb.add_rule(
@@ -126,7 +128,7 @@ fn legal_higher_court_reading_governs_the_lower_court() {
             comp("means", vec![atom("navigable_waters"), atom("narrow")]),
             vec![],
         )
-        .with_priority(10),
+        .with_priority(Priority::Specific),
     );
 
     let res = enumerate_governing(
@@ -165,11 +167,11 @@ fn co_equal_authorities_yield_an_unresolved_conflict() {
     kb.declare_functional("means", 2);
     kb.add_rule(
         Rule::certain(comp("means", vec![atom("term"), atom("reading_a")]), vec![])
-            .with_priority(15),
+            .with_priority(Priority::Authoritative),
     );
     kb.add_rule(
         Rule::certain(comp("means", vec![atom("term"), atom("reading_b")]), vec![])
-            .with_priority(15),
+            .with_priority(Priority::Authoritative),
     );
 
     let res = enumerate_governing(&comp("means", vec![atom("term"), var("R")]), &kb);
