@@ -76,6 +76,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
   route recovery checks
 - attach route replay summaries that turn route-recovery readiness into final
   route replay checks
+- attach route reconciliation summaries that turn route-replay readiness into
+  final route reconciliation checks
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection

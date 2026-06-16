@@ -79,5 +79,7 @@ All notable changes to this package will be documented in this file.
   final route recovery checks.
 - Thread attach route replay summaries that turn route-recovery readiness into
   final route replay checks.
+- Thread attach route reconciliation summaries that turn route-replay readiness
+  into final route reconciliation checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
