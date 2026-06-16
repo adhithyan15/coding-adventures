@@ -56,6 +56,28 @@ pub struct Window {
     pub values: Vec<CellValue>,
 }
 
+/// A dense rectangle of **display strings**, as returned by
+/// [`Workbook::get_display_window`] — like [`Window`], but each cell is already
+/// rendered through its format code (what to paint), so a host draws the strings
+/// directly without converting typed values itself. Empty cells are `""`, stored
+/// **row-major**.
+///
+/// [`Workbook::get_display_window`]: crate::Workbook::get_display_window
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DisplayWindow {
+    /// 1-based row of the top-left corner (echoes the request).
+    pub row0: u32,
+    /// 1-based column of the top-left corner (echoes the request).
+    pub col0: u32,
+    /// Number of rows in the window.
+    pub rows: u32,
+    /// Number of columns in the window.
+    pub cols: u32,
+    /// `rows * cols` display strings in row-major order: index `(r * cols + c)`
+    /// is the cell at absolute address `(row0 + r, col0 + c)`.
+    pub cells: Vec<String>,
+}
+
 impl Window {
     /// The value at an absolute 1-based `(row, col)`, if it falls inside this
     /// window. Convenience for tests and hosts that hold an address rather than

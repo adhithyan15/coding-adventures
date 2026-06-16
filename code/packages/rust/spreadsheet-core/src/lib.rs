@@ -50,5 +50,5 @@ pub use ast::{BinaryOp, FormulaAst, UnaryOp};
 pub use cell::{Cell, CellContent, CellValue};
 pub use edit::StructuralEdit;
 pub use errors::SpreadsheetError;
-pub use viewport::{ChangeSet, UsedRange, Window, CHANGELOG_RETAIN, MAX_WINDOW_CELLS};
+pub use viewport::{ChangeSet, DisplayWindow, UsedRange, Window, CHANGELOG_RETAIN, MAX_WINDOW_CELLS};
 pub use workbook::Workbook;
