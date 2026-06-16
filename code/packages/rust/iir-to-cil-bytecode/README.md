@@ -162,6 +162,15 @@ is used — not `conv.u1`/`conv.i1`, which sign-extend — to keep the unsigned 
 unsigned, exactly like the JVM `iand` and wasm `i32.and` masks. The narrow `type_hint`s
 that trigger the mask are wired into the Nib/Oct frontends in the E2 integration PR (6/6).
 
+As of v0.20.1 this is **verified to work for the i64 frontend value model**. A real
+frontend (Nib) materialises every `const`/`let` as `i64` and carries the narrow width
+only on the op. The wasm and jvm backends had to grow an i64/long register model so a
+narrow op wouldn't trap over those `i64` operands — but the CIL backend needs no such
+rework, because it is **uniformly int32**: `cil_local_type` maps every scalar (incl.
+`i64`) to `int32`, and `const` emits `ldc.i4`. So the `i64` consts collapse to `int32`
+and the mask stays int32-consistent. The `e2_u8_op_over_i64_operands_stays_int32`
+regression test asserts the emitted IL has no `int64`/`ldc.i8` and still masks.
+
 ## How CIL synthesis works for derived operations
 
 CIL lacks native opcodes for some logical operations, so we synthesize them

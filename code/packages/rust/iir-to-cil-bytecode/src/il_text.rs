@@ -991,6 +991,37 @@ mod tests {
         m
     }
 
+    /// LANG-FULL E2 integration regression: a narrow `u8` op whose **operands
+    /// are `i64`** — the shape a real frontend emits (Nib materialises every
+    /// const/let as i64 and carries the narrow width only on the op). Unlike the
+    /// wasm/jvm backends (which had to grow an i64 register model so a narrow op
+    /// wouldn't trap over i64 operands), the CIL backend is **uniformly int32**
+    /// (`cil_local_type` maps every scalar — incl. `i64` — to `int32`, and
+    /// `const` emits `ldc.i4`). So the i64 consts collapse to int32, the add is
+    /// int32, and the `ldc.i4 0xFF; and` mask is int32-consistent — no rework
+    /// needed. This test locks that in: the IL has NO `int64`/`ldc.i8`, and the
+    /// u8 add still wraps via the mask. (`200u8 + 100u8` → `44` on real dotnet.)
+    #[test]
+    fn e2_u8_op_over_i64_operands_stays_int32() {
+        let f = IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i64"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i64"),
+            IIRInstr::new("add", Some("x".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "u8"),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
+        ]);
+        let mut m = IIRModule::new("Main", "nib");
+        m.functions.push(f);
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(!il.contains("int64") && !il.contains("ldc.i8"),
+            "CIL is uniformly int32 — no int64 from an i64-hinted operand; got:\n{il}");
+        let lines: Vec<&str> = il.lines().map(|l| l.trim()).collect();
+        let add_at = lines.iter().position(|l| *l == "add").expect("emits add");
+        assert_eq!(lines[add_at + 1], "ldc.i4 0xFF", "u8 add still masks over i64-collapsed operands");
+        assert_eq!(lines[add_at + 2], "and");
+    }
+
     #[test]
     fn e2_narrow_width_add_masks_result() {
         // LANG-FULL E2: a `u8` add wraps mod-256 — the textual `.il` must emit
