@@ -1,5 +1,48 @@
 # Changelog
 
+## [2.26.0] - 2026-06-16
+
+### Fixed
+
+- **Table-level `PRIMARY KEY` and `UNIQUE` constraints now accepted in
+  `CREATE TABLE`** — SQLite allows constraints to appear after the column
+  list instead of (or in addition to) column-level constraint keywords:
+
+  ```sql
+  CREATE TABLE t (x INT, y INT, PRIMARY KEY(x))
+  CREATE TABLE t (x INT, y INT, UNIQUE(x, y))
+  CREATE TABLE t (x INT, y INT, PRIMARY KEY(x, y))
+  CREATE TABLE t (x INT, y INT, CHECK(x > 0))
+  CREATE TABLE orders (id INT, cid INT, FOREIGN KEY(cid) REFERENCES c(id))
+  ```
+
+  Previously these raised a parse error because the grammar did not define
+  `table_constraint` at all.  Three-part fix:
+
+  1. `sql.grammar`: Added `table_constraint` rule after `col_def` in
+     `create_table_stmt` (`{ "," table_constraint }`) covering `PRIMARY KEY`,
+     `UNIQUE`, `CHECK`, and `FOREIGN KEY` variants.
+  2. `adapter._create_table`: After building the `cols` tuple, iterates
+     `table_constraint` child nodes; `PRIMARY KEY(col)` and `UNIQUE(col)` for
+     a single named column promote `primary_key=True` / `unique=True` on the
+     matching `ColumnDef` via `dataclasses.replace`.  Composite (multi-column)
+     constraints and `CHECK`/`FOREIGN KEY` are parsed and silently accepted —
+     mini-sqlite has no multi-column constraint representation in `ColumnDef`.
+  3. `dataclasses.replace` added to the `from dataclasses import …` line.
+
+  | SQL form                                          | Before      | After |
+  |---------------------------------------------------|-------------|-------|
+  | `CREATE TABLE t (x INT, y INT, PRIMARY KEY(x))`  | Parse error | OK    |
+  | `CREATE TABLE t (x INT, y INT, UNIQUE(x, y))`    | Parse error | OK    |
+  | `CREATE TABLE t (x INT, y INT, PRIMARY KEY(x,y))`| Parse error | OK    |
+  | `CREATE TABLE t (x INT, y INT, CHECK(x > 0))`    | Parse error | OK    |
+  | `… WITHOUT ROWID` with table-level PK            | Parse error | OK    |
+  | `… STRICT` with table-level PK                   | Parse error | OK    |
+
+- **21 new oracle tests** in ``test_tier3_table_constraints.py`` cover
+  single/multi-column PKs, single-column UNIQUE, CHECK, FOREIGN KEY,
+  mixed column-level and table-level constraints, WITH ROWID, and STRICT.
+
 ## [2.25.0] - 2026-06-16
 
 ### Fixed

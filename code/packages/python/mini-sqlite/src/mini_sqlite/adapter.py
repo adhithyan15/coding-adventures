@@ -33,7 +33,7 @@ the binding layer substitutes them with real values before planning.
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import cast
 
 from lang_parser import ASTNode
@@ -1548,8 +1548,14 @@ def _alter_table(node: ASTNode) -> AlterTableStmt:
 def _create_table(node: ASTNode) -> CreateTableStmt:
     # create_table_stmt =
     #   "CREATE" "TABLE" ["IF" "NOT" "EXISTS"] NAME
-    #   "(" col_def { "," col_def } ")"
+    #   "(" col_def { "," col_def } { "," table_constraint } ")"
     #   [ table_options ]
+    #
+    # Table-level constraints (PRIMARY KEY, UNIQUE) promote the matching
+    # flag onto the corresponding column definitions.  CHECK and FOREIGN
+    # KEY table constraints are parsed and accepted but not enforced —
+    # they live only in the grammar; the planner has no representation for
+    # multi-column or deferred constraints.
     #
     # ``table_options = table_option {"," table_option}`` and
     # ``table_option = "STRICT" | "WITHOUT" NAME``.  We currently honour
@@ -1560,6 +1566,40 @@ def _create_table(node: ASTNode) -> CreateTableStmt:
     assert table_tok is not None
     state = _PlaceholderCounter()
     cols = tuple(_col_def(c, state) for c in _child_nodes(node, "col_def"))
+
+    # Apply table-level PRIMARY KEY and UNIQUE constraints.
+    col_index = {c.name: i for i, c in enumerate(cols)}
+    cols_list = list(cols)
+    for tc in _child_nodes(node, "table_constraint"):
+        # The first KEYWORD child identifies the constraint type.
+        first_kw = next(
+            (c.value.upper() for c in tc.children
+             if isinstance(c, Token) and _token_type(c) == "KEYWORD"),
+            None,
+        )
+        if first_kw in ("CHECK", "FOREIGN"):
+            continue  # not enforced at this layer
+        # Collect direct NAME children — the constrained column names.
+        names = [
+            c.value for c in tc.children if isinstance(c, Token) and _token_type(c) == "NAME"
+        ]
+        if first_kw == "PRIMARY" and len(names) == 1:
+            # Single-column table-level PRIMARY KEY — promote the flag.
+            # Multi-column composite PKs cannot be expressed per-column,
+            # so they are parsed and accepted but not enforced.
+            col_name = names[0]
+            if col_name in col_index:
+                idx = col_index[col_name]
+                cols_list[idx] = replace(cols_list[idx], primary_key=True)
+        elif first_kw == "UNIQUE" and len(names) == 1:
+            # Same reasoning: single-column UNIQUE is promotable; composite
+            # UNIQUE is silently accepted.
+            col_name = names[0]
+            if col_name in col_index:
+                idx = col_index[col_name]
+                cols_list[idx] = replace(cols_list[idx], unique=True)
+    cols = tuple(cols_list)
+
     strict = False
     opts_node = _maybe_child(node, "table_options")
     if opts_node is not None:
