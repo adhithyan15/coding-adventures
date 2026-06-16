@@ -61,5 +61,7 @@ All notable changes to this package will be documented in this file.
   into final route rollout checks.
 - Thread attach route adoption summaries that turn route-rollout readiness
   into final route adoption checks.
+- Thread attach route acceptance summaries that turn route-adoption readiness
+  into final route acceptance checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
