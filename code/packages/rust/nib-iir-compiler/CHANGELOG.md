@@ -1,5 +1,50 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.14.0 — 2026-06-16 — narrow `type_hint`s on arithmetic (LANG-FULL E2 / N6)
+
+Activates the LANG-FULL E2 integer-width-and-wrap semantics in the Nib frontend:
+the final, frontend-wiring step of the E2 integration. (Wiring this up surfaced
+that three of the seven backends couldn't yet consume a narrow op the way a real
+frontend emits it; those were fixed first — iir-to-wasm grew an i64 register
+model, iir-to-jvm uses the int model atop its `concretize`-to-i32 pass, and
+iir-to-cil was verified int32-uniform. The other four already masked.)
+
+### Changes
+
+**Narrow `type_hint`s on arithmetic / bitwise ops (`compile_binary_chain`)**
+
+Previously every IIR `add`/`sub`/`mul`/`div`/`and`/`or`/`xor` instruction was
+emitted with `type_hint = "i64"`, so backends could not distinguish a 64-bit add
+from a u8 add and never masked the result. Now:
+
+- Each arithmetic/bitwise binary op looks up the `nib-type-checker` 0.3.0
+  annotation on the chain node via `lookup_node_type(node, types)`.
+- `U8` → `"u8"`, `U4` → `"u4"`, anything else (or unannotated) → `"i64"`.
+- **Comparison ops** (`cmp_eq`, `cmp_ne`, `cmp_lt`, etc.) are deliberately
+  excluded from narrowing: they operate on wide operands and emit a `bool`
+  result; the `i64` hint keeps the LLVM backend from emitting invalid `icmp` on
+  narrowed operands.
+
+Consts/`let`s/`ret`/calls stay `i64` (`nib_ty_str`); the narrow width lives only
+on the arithmetic op, which every backend masks to width. **Unary `~` (N3) is
+deferred** — it lowers to an IIR `not` op, which the LLVM backend does not yet
+support; `compile_unary` still passes the inner expression through.
+
+### Verified
+
+`lang-aot/tests/lang_matrix.rs` gains two new N6 executed programs:
+
+1. **Wrap proof**: `fn main() -> u8 { let x: u8 = 200 + 100; if x == 44 { return 1; } return 0; }` → exit **1**
+   on native/LLVM/WASM/JVM/CLR/VM/JIT.  The comparison (`x == 44`) proves the
+   add wrapped *before* the comparison, not just that the exit-code low byte
+   happens to match.
+
+2. **Magnitude regression guard**: `fn main() -> u8 { return 6 * 7; }` → exit **42**
+   on all backends.  Without bidirectional typing (`nib-type-checker` 0.3.0), `6`
+   and `7` infer as `u4` (magnitude ≤ 15), mask `6 * 7 = 42` to `42 & 0xF = 10`,
+   and the test would fail.  Passing proves `6` and `7` adopt the `u8` return
+   context and the product is left intact.
+
 ## 0.13.0 — 2026-06-13 — module-scoped `const` declarations (LANG-FULL N5)
 
 Adds Nib's top-level `const NAME: type = literal;`. Previously `const_decl` (and
