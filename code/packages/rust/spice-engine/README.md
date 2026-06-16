@@ -157,8 +157,9 @@ card by analysis alias, defaults decks without analysis cards to an implicit
 `run_deck_analysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
 `.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
 solver result, and deck-selected output table. Selected `.tran` plans route
-`START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
-initial-condition intent through that stable transient table surface.
+`START` output filtering, use `.tran TSTEP` as the output print grid, apply
+`MAXSTEP` as an internal fixed-step cap, and carry `UIC` initial-condition
+intent through that stable transient table surface.
 `resolve_deck_fourier`, `fourier_transient_cards`, and
 `fourier_transient_deck` extract parsed `.four` / `.FOUR` cards before `.end`
 and route transient samples into the existing SPICE-style Fourier result shape
@@ -199,4 +200,5 @@ malformed deck-level analysis controls.
 downstream deck execution helpers.
 `run_deck_analysis` routes that selected plan into the matching solver and
 stable deck-selected table output, including `.ac LIN`, `.ac DEC`, `.ac OCT`
-frequency grids, and `.tran` `START` / `MAXSTEP` / `UIC` controls.
+frequency grids, and `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC`
+controls.

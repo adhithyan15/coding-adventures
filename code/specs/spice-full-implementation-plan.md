@@ -51,7 +51,9 @@ downstream tools to compare.
      route `.op`, `.dc`, `.ac LIN`, `.ac DEC`, `.ac OCT`, or `.tran` into the
      matching solver plus deck-selected table output, including `.tran`
      `START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
-     initial-condition intent.
+     initial-condition intent; selected `.tran` execution now keeps `.tran
+     TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
+     stepping.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -419,12 +421,20 @@ downstream tools to compare.
       while leaving richer run artifacts and output-plan integration in
       backlog.
 
+36. Deck transient print-step output routing.
+    - Status: completed in this transient print-step routing slice.
+    - Python, Rust, and TypeScript now keep `.tran TSTEP` as the stable deck
+      output print grid while using `MAXSTEP` only as an internal fixed-step
+      cap.
+    - This separates deck-visible transient output rows from internal solver
+      stepping and preserves stable selected-plan transient tables.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts, print-step vs internal-step
-     separation, and output-plan integration beyond stable table routing.
+     including richer deck-owned run artifacts and output-plan integration
+     beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature

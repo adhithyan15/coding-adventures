@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `.tran` print-step output routing to `runDeckAnalysis`; deck transient
+  plans now keep `.tran TSTEP` as the stable output print grid while `MAXSTEP`
+  caps internal solver stepping, matching Python and Rust.
 - Add `.tran START/MAXSTEP/UIC` selected-plan execution routing to
   `runDeckAnalysis`; deck transient plans now apply `START` output filtering,
   `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable

@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck transient print-step output routing** —
+  `run_deck_analysis()` now keeps `.tran TSTEP` as the stable deck output
+  print grid while `MAXSTEP` caps internal solver stepping, matching Rust and
+  TypeScript.
+
 - **Deck transient START/MAXSTEP/UIC routing** —
   `run_deck_analysis()` now routes selected `.tran` `START` output filtering,
   `MAXSTEP` fixed-step caps, and `UIC` initial-condition intent through stable

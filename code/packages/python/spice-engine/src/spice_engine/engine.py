@@ -2347,9 +2347,11 @@ def run_deck_analysis(
         start_time = _optional_deck_plan_number(plan, "start_time")
         max_step = _optional_deck_plan_number(plan, "max_step")
         run_step = min(step_time, max_step) if max_step is not None else step_time
-        result = _filter_transient_result_start(
+        result = _sample_transient_result_print_step(
             transient(circuit, t_step=run_step, t_stop=stop_time, method="euler"),
-            start_time,
+            step_time,
+            start_time=start_time,
+            stop_time=stop_time,
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2401,19 +2403,85 @@ def _require_deck_plan_int(plan: DeckAnalysisPlan, field_name: str) -> int:
     )
 
 
-def _filter_transient_result_start(
+def _sample_transient_result_print_step(
     result: TransientResult,
+    print_step: float,
+    *,
     start_time: float | None,
+    stop_time: float,
 ) -> TransientResult:
-    if start_time is None or start_time <= 0.0:
+    if not result.points:
         return result
-    epsilon = max(abs(start_time), 1.0) * 1.0e-12
+    epsilon = max(abs(stop_time), abs(print_step), 1.0) * 1.0e-12
+    if start_time is not None and start_time > 0.0:
+        report_start = start_time
+    elif abs(result.points[0].time) <= epsilon:
+        report_start = 0.0
+    else:
+        report_start = print_step
+
+    sampled_points: list[TransientPoint] = []
+    index = 0
+    while True:
+        sample_time = report_start + index * print_step
+        if sample_time > stop_time + epsilon:
+            break
+        sampled_points.append(_interpolate_transient_point(result.points, sample_time))
+        index += 1
+
     return TransientResult(
-        points=[point for point in result.points if point.time + epsilon >= start_time],
+        points=sampled_points,
         converged=result.converged,
         method=result.method,
         steps_rejected=result.steps_rejected,
     )
+
+
+def _interpolate_transient_point(
+    points: list[TransientPoint],
+    time: float,
+) -> TransientPoint:
+    epsilon = max(abs(time), 1.0) * 1.0e-12
+    for point in points:
+        if abs(point.time - time) <= epsilon:
+            return TransientPoint(
+                time=time,
+                node_voltages=dict(point.node_voltages),
+                branch_currents=dict(point.branch_currents),
+            )
+    for left, right in zip(points, points[1:], strict=False):
+        if left.time - epsilon <= time <= right.time + epsilon:
+            span = right.time - left.time
+            if span <= 0.0:
+                return TransientPoint(
+                    time=time,
+                    node_voltages=dict(left.node_voltages),
+                    branch_currents=dict(left.branch_currents),
+                )
+            alpha = (time - left.time) / span
+            return TransientPoint(
+                time=time,
+                node_voltages=_interpolate_value_map(
+                    left.node_voltages, right.node_voltages, alpha
+                ),
+                branch_currents=_interpolate_value_map(
+                    left.branch_currents, right.branch_currents, alpha
+                ),
+            )
+    raise ValueError("run_deck_analysis: transient print point is outside output")
+
+
+def _interpolate_value_map(
+    left: dict[str, float],
+    right: dict[str, float],
+    alpha: float,
+) -> dict[str, float]:
+    values: dict[str, float] = {}
+    for key in set(left) | set(right):
+        left_value = left.get(key, right.get(key, 0.0))
+        right_value = right.get(key, left_value)
+        values[key] = (1.0 - alpha) * left_value + alpha * right_value
+    return values
 
 
 def _run_deck_ac_sweep(

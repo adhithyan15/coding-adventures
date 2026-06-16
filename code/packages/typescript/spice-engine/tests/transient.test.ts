@@ -1484,11 +1484,10 @@ describe("transient", () => {
     expect(tranWindowExecution.plan.maxStep).toBeCloseTo(1.0e-3, 12);
     expect(tranWindowExecution.plan.useInitialConditions).toBe(true);
     const tranWindowPoints = tranWindowExecution.result as { time: number }[];
+    expect(tranWindowPoints).toHaveLength(3);
     [
       2.0e-3,
-      3.0e-3,
       4.0e-3,
-      5.0e-3,
       6.0e-3,
     ].forEach((expectedTime, index) => {
       expect(tranWindowPoints[index]?.time).toBeCloseTo(expectedTime, 12);
@@ -1496,10 +1495,8 @@ describe("transient", () => {
     expect(tranWindowExecution.table).toBe(
       "Index\tTime\tV(mid)\n" +
         "0\t2.000000e-03\t5.000000e-01\n" +
-        "1\t3.000000e-03\t5.000000e-01\n" +
-        "2\t4.000000e-03\t5.000000e-01\n" +
-        "3\t5.000000e-03\t5.000000e-01\n" +
-        "4\t6.000000e-03\t5.000000e-01\n",
+        "1\t4.000000e-03\t5.000000e-01\n" +
+        "2\t6.000000e-03\t5.000000e-01\n",
     );
 
     expect(() => runDeckAnalysis(circuit, netlist)).toThrow(/multiple analysis cards/);

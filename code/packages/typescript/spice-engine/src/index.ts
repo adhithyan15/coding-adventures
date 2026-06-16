@@ -7291,9 +7291,11 @@ export function runDeckAnalysis(
     const stepTime = requireDeckPlanNumber(plan.stepTime, plan, "stepTime");
     const stopTime = requireDeckPlanNumber(plan.stopTime, plan, "stopTime");
     const runStep = plan.maxStep !== undefined ? Math.min(stepTime, plan.maxStep) : stepTime;
-    const result = filterTransientPointsStart(
+    const result = sampleTransientPointsPrintStep(
       transient(circuit, runStep, stopTime),
+      stepTime,
       plan.startTime,
+      stopTime,
     );
     return { plan, result, table: formatDeckTransientTable(result, netlist) };
   }
@@ -7342,15 +7344,77 @@ function requireDeckPlanInteger(
   );
 }
 
-function filterTransientPointsStart(
+function sampleTransientPointsPrintStep(
   points: readonly TransientPoint[],
+  printStep: number,
   startTime: number | undefined,
+  stopTime: number,
 ): TransientPoint[] {
-  if (startTime === undefined || startTime <= 0.0) {
+  if (points.length === 0) {
     return [...points];
   }
-  const epsilon = Math.max(Math.abs(startTime), 1.0) * 1.0e-12;
-  return points.filter((point) => point.time + epsilon >= startTime);
+  const epsilon = Math.max(Math.abs(stopTime), Math.abs(printStep), 1.0) * 1.0e-12;
+  const reportStart = startTime !== undefined && startTime > 0.0
+    ? startTime
+    : Math.abs(points[0]?.time ?? 0.0) <= epsilon
+      ? 0.0
+      : printStep;
+  const sampled: TransientPoint[] = [];
+  for (let index = 0; ; index += 1) {
+    const sampleTime = reportStart + index * printStep;
+    if (sampleTime > stopTime + epsilon) {
+      break;
+    }
+    sampled.push(interpolateTransientPoint(points, sampleTime));
+  }
+  return sampled;
+}
+
+function interpolateTransientPoint(
+  points: readonly TransientPoint[],
+  time: number,
+): TransientPoint {
+  const epsilon = Math.max(Math.abs(time), 1.0) * 1.0e-12;
+  for (const point of points) {
+    if (Math.abs(point.time - time) <= epsilon) {
+      return makeTransientPoint(time, new Map(point.nodeVoltages), new Map(point.branchCurrents));
+    }
+  }
+  for (let index = 0; index + 1 < points.length; index += 1) {
+    const left = points[index]!;
+    const right = points[index + 1]!;
+    if (left.time - epsilon <= time && time <= right.time + epsilon) {
+      const span = right.time - left.time;
+      if (span <= 0.0) {
+        return makeTransientPoint(time, new Map(left.nodeVoltages), new Map(left.branchCurrents));
+      }
+      const alpha = (time - left.time) / span;
+      return makeTransientPoint(
+        time,
+        interpolateValueMap(left.nodeVoltages, right.nodeVoltages, alpha),
+        interpolateValueMap(left.branchCurrents, right.branchCurrents, alpha),
+      );
+    }
+  }
+  throw invalidElement("runDeckAnalysis", "transient print point is outside output");
+}
+
+function interpolateValueMap(
+  left: ReadonlyMap<string, number>,
+  right: ReadonlyMap<string, number>,
+  alpha: number,
+): Map<string, number> {
+  const values = new Map<string, number>();
+  for (const [key, leftValue] of left) {
+    const rightValue = right.get(key) ?? leftValue;
+    values.set(key, (1.0 - alpha) * leftValue + alpha * rightValue);
+  }
+  for (const [key, rightValue] of right) {
+    if (!values.has(key)) {
+      values.set(key, rightValue);
+    }
+  }
+  return values;
 }
 
 function runDeckAcSweep(

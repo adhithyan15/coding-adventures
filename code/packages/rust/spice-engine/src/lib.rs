@@ -9465,10 +9465,12 @@ pub fn run_deck_analysis(
             let run_step = plan
                 .max_step
                 .map_or(step_time, |max_step| step_time.min(max_step));
-            let result = filter_transient_points_start(
+            let result = sample_transient_points_print_step(
                 transient(circuit, run_step, stop_time)?,
+                step_time,
                 plan.start_time,
-            );
+                stop_time,
+            )?;
             let table = format_deck_transient_table(&result, netlist)?;
             Ok(DeckAnalysisExecution {
                 plan,
@@ -9526,21 +9528,105 @@ fn require_deck_plan_usize(
     })
 }
 
-fn filter_transient_points_start(
+fn sample_transient_points_print_step(
     points: Vec<TransientPoint>,
+    print_step: f64,
     start_time: Option<f64>,
-) -> Vec<TransientPoint> {
-    let Some(start_time) = start_time else {
-        return points;
-    };
-    if start_time <= 0.0 {
-        return points;
+    stop_time: f64,
+) -> Result<Vec<TransientPoint>, SpiceError> {
+    if points.is_empty() {
+        return Ok(points);
     }
-    let epsilon = start_time.abs().max(1.0) * 1.0e-12;
-    points
-        .into_iter()
-        .filter(|point| point.time + epsilon >= start_time)
-        .collect()
+    let epsilon = stop_time.abs().max(print_step.abs()).max(1.0) * 1.0e-12;
+    let report_start = if let Some(start_time) = start_time.filter(|value| *value > 0.0) {
+        start_time
+    } else if points[0].time.abs() <= epsilon {
+        0.0
+    } else {
+        print_step
+    };
+    let mut sampled = Vec::new();
+    let mut index = 0usize;
+    loop {
+        let sample_time = report_start + index as f64 * print_step;
+        if sample_time > stop_time + epsilon {
+            break;
+        }
+        sampled.push(interpolate_transient_point(&points, sample_time)?);
+        index += 1;
+    }
+    Ok(sampled)
+}
+
+fn interpolate_transient_point(
+    points: &[TransientPoint],
+    time: f64,
+) -> Result<TransientPoint, SpiceError> {
+    let epsilon = time.abs().max(1.0) * 1.0e-12;
+    for point in points {
+        if (point.time - time).abs() <= epsilon {
+            return Ok(TransientPoint {
+                time,
+                node_voltages: point.node_voltages.clone(),
+                branch_currents: point.branch_currents.clone(),
+            });
+        }
+    }
+    for pair in points.windows(2) {
+        let left = &pair[0];
+        let right = &pair[1];
+        if left.time - epsilon <= time && time <= right.time + epsilon {
+            let span = right.time - left.time;
+            if span <= 0.0 {
+                return Ok(TransientPoint {
+                    time,
+                    node_voltages: left.node_voltages.clone(),
+                    branch_currents: left.branch_currents.clone(),
+                });
+            }
+            let alpha = (time - left.time) / span;
+            return Ok(TransientPoint {
+                time,
+                node_voltages: interpolate_value_map(
+                    &left.node_voltages,
+                    &right.node_voltages,
+                    alpha,
+                ),
+                branch_currents: interpolate_value_map(
+                    &left.branch_currents,
+                    &right.branch_currents,
+                    alpha,
+                ),
+            });
+        }
+    }
+    Err(SpiceError::InvalidElement {
+        name: "run_deck_analysis".to_string(),
+        reason: "transient print point is outside output".to_string(),
+    })
+}
+
+fn interpolate_value_map(
+    left: &BTreeMap<String, f64>,
+    right: &BTreeMap<String, f64>,
+    alpha: f64,
+) -> BTreeMap<String, f64> {
+    let mut values = BTreeMap::new();
+    for key in left
+        .keys()
+        .chain(right.keys())
+        .cloned()
+        .collect::<BTreeSet<_>>()
+    {
+        let left_value = left
+            .get(&key)
+            .copied()
+            .or_else(|| right.get(&key).copied())
+            .unwrap_or(0.0);
+        let right_value = right.get(&key).copied().unwrap_or(left_value);
+        values.insert(key, (1.0 - alpha) * left_value + alpha * right_value);
+    }
+    values
 }
 
 fn deck_plan_error(plan: &DeckAnalysisPlan, reason: String) -> SpiceError {
