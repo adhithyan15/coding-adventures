@@ -74,6 +74,8 @@ Chief of Staff job/session/agent
   -> activation-release list and summary reads for go/no-go release packets
   -> activation-delivery list and summary reads for delivery-channel manifests
   -> activation-deployment list and summary reads for deployment-ring records
+  -> activation waiver archive list and summary reads for source-linked waiver
+     closeout retention
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
@@ -175,6 +177,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_deployment_summary`
 - `smart_home.list_integration_activation_waiver_closures`
 - `smart_home.get_integration_activation_waiver_closure_summary`
+- `smart_home.list_integration_activation_waiver_archives`
+- `smart_home.get_integration_activation_waiver_archive_summary`
 - `smart_home.list_integration_activation_risk`
 - `smart_home.get_integration_activation_risk_summary`
 - `smart_home.list_integration_activation_dependencies`
