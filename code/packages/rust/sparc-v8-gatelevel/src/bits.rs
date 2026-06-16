@@ -28,14 +28,25 @@ pub fn u64_to_bits(n: u64) -> Vec<u8> {
 }
 
 /// Reconstruct a `u32` from a 32-element LSB-first slice.
+///
+/// # Panics
+///
+/// Panics if `bits.len() > 32`; a longer slice would shift by ≥ 32, which
+/// overflows `u32` and panics in debug or produces garbage in release.
 pub fn bits_to_u32(bits: &[u8]) -> u32 {
+    assert!(bits.len() <= 32, "bits_to_u32: slice length {} exceeds 32", bits.len());
     bits.iter()
         .enumerate()
         .fold(0u32, |acc, (i, &b)| acc | ((b as u32) << i))
 }
 
 /// Reconstruct a `u64` from a 64-element LSB-first slice.
+///
+/// # Panics
+///
+/// Panics if `bits.len() > 64`.
 pub fn bits_to_u64(bits: &[u8]) -> u64 {
+    assert!(bits.len() <= 64, "bits_to_u64: slice length {} exceeds 64", bits.len());
     bits.iter()
         .enumerate()
         .fold(0u64, |acc, (i, &b)| acc | ((b as u64) << i))
