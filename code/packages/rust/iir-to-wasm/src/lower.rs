@@ -151,7 +151,7 @@ use crate::codegen::{
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
     I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GT_S, I64_LE_S, I64_LT_S, I64_MUL,
-    I64_NE, I64_OR, I64_REM_S, I64_REM_U, I64_SHL, I64_SHR_S, I64_SUB, I64_XOR,
+    I64_NE, I64_OR, I64_REM_S, I64_REM_U, I64_SHL, I64_SHR_S, I64_SHR_U, I64_SUB, I64_XOR,
     LOOP, RETURN,
 };
 use crate::validate::validate_for_wasm;
@@ -397,7 +397,16 @@ impl IIRWasmConfig {
 /// ```
 pub fn hint_to_value_type(hint: &str) -> Option<ValueType> {
     match hint {
-        "u4" | "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => Some(ValueType::I32),
+        // Narrow **unsigned** integers ride the i64 register model (LANG-FULL
+        // E2): every backend's frontends carry integer values in 64-bit slots,
+        // so a `u8` register is an `i64` whose arithmetic is masked to 8 bits
+        // after each op (see `emit_wasm_width_mask`). Typing the local `i32`
+        // would trap the moment a `u8` op met an `i64` operand (a const/let),
+        // which is exactly Nib's value model.
+        "u4" | "u8" | "u16" | "u32" => Some(ValueType::I64),
+        // Signed narrow widths and `bool` keep the i32 model (booleans are i32
+        // 0/1; no frontend emits i8/i16/i32 register arithmetic).
+        "i8" | "i16" | "i32" | "bool" => Some(ValueType::I32),
         "i64" | "u64" => Some(ValueType::I64),
         "f32" => Some(ValueType::F32),
         "f64" => Some(ValueType::F64),
@@ -420,6 +429,16 @@ fn is_i64_hint(hint: &str) -> bool {
     matches!(hint, "i64" | "u64")
 }
 
+/// Return `true` if the hint is computed in the **i64 register model** — the
+/// true 64-bit ints (`i64`/`u64`) *and* the narrow **unsigned** types
+/// (`u4`/`u8`/`u16`/`u32`), which LANG-FULL E2 computes wide (`i64.*` ops over
+/// i64-slot operands) and then masks to width. Selects `i64.*` opcodes so the
+/// op never meets a width-mismatched operand; the post-op
+/// [`emit_wasm_width_mask`] restores the narrow wrap.
+fn uses_i64_register(hint: &str) -> bool {
+    is_i64_hint(hint) || matches!(hint, "u4" | "u8" | "u16" | "u32")
+}
+
 /// Return `true` if the type hint represents an unsigned integer type.
 ///
 /// Used to select `_u` (unsigned) vs `_s` (signed) comparison and division
@@ -429,24 +448,27 @@ fn is_unsigned_hint(hint: &str) -> bool {
     matches!(hint, "u4" | "u8" | "u16" | "u32" | "u64")
 }
 
-/// Mask an `i32` arithmetic result down to a sub-32-bit width (LANG-FULL E2).
+/// Mask a narrow-width arithmetic result down to its bit width (LANG-FULL E2).
 ///
-/// WASM maps every narrow integer type to `i32`, and an `i32` op already wraps
-/// mod-2³² — so `u32` (and `i32`) arithmetic is correct with no extra work.
-/// The smaller widths need an explicit `i32.const <mask>; i32.and` after the op
-/// so `200u8 + 100u8` becomes `44` and `~x` on a `u8` flips only 8 bits.  This
-/// mirrors vm-core's `mask_result` / jit-core's `MASK_WIDTH`, and is the
-/// register-arithmetic analogue of the byte-tape `i32.store8`.  `i64`/`u64`/
-/// float hints emit nothing (their op carries the correct width already).
+/// Narrow **unsigned** integers are computed in the **i64 register model**
+/// (`i64.*` ops over i64-slot operands — see [`uses_i64_register`]), so the
+/// result is masked with `i64.const <mask>; i64.and` so `200u8 + 100u8` becomes
+/// `44` and `~x` on a `u8` flips only 8 bits.  This mirrors vm-core's
+/// `mask_result` / jit-core's `MASK_WIDTH` / the LLVM `and i64` / the native
+/// `and #mask`, and is the register-arithmetic analogue of the byte-tape
+/// `i32.store8`.  `i64`/`u64`/`u32`/float hints emit nothing — `u32` already
+/// wraps mod-2³² within the i64 op only up to 2³², so it too gets a mask;
+/// `i64`/`u64`/float carry their full width.
 fn emit_wasm_width_mask(code: &mut Vec<u8>, type_hint: &str) {
-    let mask: i32 = match type_hint {
+    let mask: i64 = match type_hint {
         "u4" => 0xF,
         "u8" => 0xFF,
         "u16" => 0xFFFF,
+        "u32" => 0xFFFF_FFFF,
         _ => return,
     };
-    code.extend(encode_i32_const(mask));
-    code.push(I32_AND);
+    code.extend(encode_i64_const(mask));
+    code.push(I64_AND);
 }
 
 /// Return `true` if the type hint represents a floating-point type.
@@ -808,7 +830,9 @@ fn emit_instr(
 
             match src {
                 Operand::Int(v) => {
-                    if is_i64_hint(ty) {
+                    // Narrow unsigned consts ride the i64 register model (E2),
+                    // so they materialise as `i64.const` into their i64 local.
+                    if uses_i64_register(ty) {
                         code.extend(encode_i64_const(*v));
                     } else {
                         code.extend(encode_i32_const(*v as i32));
@@ -860,27 +884,30 @@ fn emit_instr(
             code.extend(encode_local_get(r1));
             code.extend(encode_local_get(r2));
 
+            // E2: narrow unsigned types use the i64 register model
+            // (`uses_i64_register`), so they select `i64.*` ops over their
+            // i64-slot operands; the post-op mask restores the narrow width.
             let opcode: u8 = match (instr.op.as_str(), ty) {
-                ("add", t) if is_i64_hint(t) => I64_ADD,
+                ("add", t) if uses_i64_register(t) => I64_ADD,
                 ("add", t) if is_float_hint(t) && t == "f32" => F32_ADD,
                 ("add", t) if is_float_hint(t) => F64_ADD,
                 ("add", _) => I32_ADD,
-                ("sub", t) if is_i64_hint(t) => I64_SUB,
+                ("sub", t) if uses_i64_register(t) => I64_SUB,
                 ("sub", t) if is_float_hint(t) && t == "f32" => F32_SUB,
                 ("sub", t) if is_float_hint(t) => F64_SUB,
                 ("sub", _) => I32_SUB,
-                ("mul", t) if is_i64_hint(t) => I64_MUL,
+                ("mul", t) if uses_i64_register(t) => I64_MUL,
                 ("mul", t) if is_float_hint(t) && t == "f32" => F32_MUL,
                 ("mul", t) if is_float_hint(t) => F64_MUL,
                 ("mul", _) => I32_MUL,
-                ("div", t) if is_i64_hint(t) && is_unsigned_hint(t) => I64_DIV_U,
-                ("div", t) if is_i64_hint(t) => I64_DIV_S,
+                ("div", t) if uses_i64_register(t) && is_unsigned_hint(t) => I64_DIV_U,
+                ("div", t) if uses_i64_register(t) => I64_DIV_S,
                 ("div", t) if is_float_hint(t) && t == "f32" => F32_DIV,
                 ("div", t) if is_float_hint(t) => F64_DIV,
                 ("div", t) if is_unsigned_hint(t) => I32_DIV_U,
                 ("div", _) => I32_DIV_S,
-                ("mod" | "rem", t) if is_i64_hint(t) && is_unsigned_hint(t) => I64_REM_U,
-                ("mod" | "rem", t) if is_i64_hint(t) => I64_REM_S,
+                ("mod" | "rem", t) if uses_i64_register(t) && is_unsigned_hint(t) => I64_REM_U,
+                ("mod" | "rem", t) if uses_i64_register(t) => I64_REM_S,
                 ("mod" | "rem", t) if is_unsigned_hint(t) => I32_REM_U,
                 ("mod" | "rem", _) => I32_REM_S,
                 _ => unreachable!("matched outer pattern"),
@@ -905,17 +932,18 @@ fn emit_instr(
             code.extend(encode_local_get(r1));
             code.extend(encode_local_get(r2));
 
+            // E2: narrow unsigned types use the i64 register model (see above).
             let opcode: u8 = match (instr.op.as_str(), ty) {
-                ("and", t) if is_i64_hint(t) => I64_AND,
+                ("and", t) if uses_i64_register(t) => I64_AND,
                 ("and", _) => I32_AND,
-                ("or", t) if is_i64_hint(t) => I64_OR,
+                ("or", t) if uses_i64_register(t) => I64_OR,
                 ("or", _) => I32_OR,
-                ("xor", t) if is_i64_hint(t) => I64_XOR,
+                ("xor", t) if uses_i64_register(t) => I64_XOR,
                 ("xor", _) => I32_XOR,
-                ("shl", t) if is_i64_hint(t) => I64_SHL,
+                ("shl", t) if uses_i64_register(t) => I64_SHL,
                 ("shl", _) => I32_SHL,
-                ("shr", t) if is_i64_hint(t) && is_unsigned_hint(t) => I64_SHR_S, // i64 has no _u for hint-based default in v1
-                ("shr", t) if is_i64_hint(t) => I64_SHR_S,
+                ("shr", t) if uses_i64_register(t) && is_unsigned_hint(t) => I64_SHR_U,
+                ("shr", t) if uses_i64_register(t) => I64_SHR_S,
                 ("shr", t) if is_unsigned_hint(t) => I32_SHR_U,
                 ("shr", _) => I32_SHR_S,
                 _ => unreachable!(),
@@ -957,13 +985,16 @@ fn emit_instr(
             let cmp_ty = local_type_hints.get(&r1).map(String::as_str).unwrap_or(ty);
 
             let opcode: u8 = match (bare, cmp_ty) {
-                // i64
-                ("eq", t) if is_i64_hint(t) => I64_EQ,
-                ("ne", t) if is_i64_hint(t) => I64_NE,
-                ("lt", t) if is_i64_hint(t) => I64_LT_S,
-                ("le", t) if is_i64_hint(t) => I64_LE_S,
-                ("gt", t) if is_i64_hint(t) => I64_GT_S,
-                ("ge", t) if is_i64_hint(t) => I64_GE_S,
+                // i64 register model — true 64-bit ints AND narrow unsigned
+                // types (whose locals are i64 under E2). A masked narrow value
+                // is always in [0, 2ⁿ) — positive in i64 — so the signed i64
+                // relational ops give the correct unsigned result.
+                ("eq", t) if uses_i64_register(t) => I64_EQ,
+                ("ne", t) if uses_i64_register(t) => I64_NE,
+                ("lt", t) if uses_i64_register(t) => I64_LT_S,
+                ("le", t) if uses_i64_register(t) => I64_LE_S,
+                ("gt", t) if uses_i64_register(t) => I64_GT_S,
+                ("ge", t) if uses_i64_register(t) => I64_GE_S,
                 // f32
                 ("eq", "f32") => F32_EQ,
                 ("ne", "f32") => F32_NE,
@@ -1029,7 +1060,8 @@ fn emit_instr(
             } else if is_float_hint(ty) {
                 code.extend(encode_local_get(r));
                 code.push(F64_NEG);
-            } else if is_i64_hint(ty) {
+            } else if uses_i64_register(ty) {
+                // Narrow unsigned types use the i64 register model (E2).
                 code.extend(encode_i64_const(0));
                 code.extend(encode_local_get(r));
                 code.push(I64_SUB);
@@ -1057,7 +1089,8 @@ fn emit_instr(
             let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
 
             code.extend(encode_local_get(r));
-            if is_i64_hint(ty) {
+            if uses_i64_register(ty) {
+                // Narrow unsigned types use the i64 register model (E2).
                 code.extend(encode_i64_const(-1));
                 code.push(I64_XOR);
             } else {

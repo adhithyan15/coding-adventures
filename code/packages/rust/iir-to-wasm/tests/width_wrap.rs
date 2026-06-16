@@ -57,6 +57,36 @@ fn run_unop(op: &str, a: i64, ty: &str) -> i64 {
         .expect("main returns a value")
 }
 
+/// LANG-FULL E2 regression: a narrow `u8` op whose **operands are `i64`** — the
+/// exact shape a real frontend emits (Nib materialises every const/let as `i64`
+/// for module uniformity, carrying the narrow width only on the arithmetic op).
+/// Before the compute-wide rework this trapped with `type mismatch: expected
+/// i32, got I64`, because the narrow op was typed `i32` over `i64` operands.
+/// Now narrow ops use the i64 register model, so `200i64 + 100i64 : u8` runs and
+/// wraps to 44. To distinguish a wrapped 44 from an unwrapped 300 (the return is
+/// `& 0xFF` on the host side, hiding it) we compare in-register: `== 44 → 1`.
+#[test]
+fn u8_op_over_i64_operands_wraps_on_real_wasm() {
+    // a=200:i64, b=100:i64, sum = (a + b):u8  → 44 (wrapped) ; eq = (sum == 44)
+    let bytes = module("i64", vec![
+        IIRInstr::new("const", Some("a".into()), vec![Operand::Int(200)], "i64"),
+        IIRInstr::new("const", Some("b".into()), vec![Operand::Int(100)], "i64"),
+        IIRInstr::new("add", Some("sum".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "u8"),
+        IIRInstr::new("const", Some("k".into()), vec![Operand::Int(44)], "i64"),
+        IIRInstr::new("cmp_eq", Some("eq".into()),
+            vec![Operand::Var("sum".into()), Operand::Var("k".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("eq".into())], "i64"),
+    ]);
+    let got = WasmRuntime::new()
+        .load_and_run(&bytes, "main", &[])
+        .expect("wasm run failed (narrow op over i64 operands must not trap)")
+        .first()
+        .copied()
+        .expect("main returns a value");
+    assert_eq!(got, 1, "200i64 + 100i64 : u8 must wrap to 44 (eq 44 → 1)");
+}
+
 #[test]
 fn u8_arithmetic_wraps_on_real_wasm() {
     assert_eq!(run_binop("add", 200, 100, "u8"), 44); // 300 & 0xFF
