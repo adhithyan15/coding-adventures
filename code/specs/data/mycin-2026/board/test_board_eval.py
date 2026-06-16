@@ -68,16 +68,18 @@ def test_defensibility_is_full() -> None:
 def test_grounded_coverage_is_the_live_grounding_number() -> None:
     card, _ = _card()
     s = card.summary()
-    # IEM + vitamin + anemia are fully grounded (34 authoritative answers). REL-12 added
-    # the endocrine domain as authored-debt, so grounded-coverage dipped 100% → 81%
-    # (34 grounded / 42 recall correct). Grounding the endocrine edges climbs it back —
-    # the same expansion-then-grounding dynamic, now across four domains.
-    assert s["grounded_coverage"] == round(34 / 42, 4)   # 0.8095
-    assert s["grounded_correct"] == 34
+    # REL-12b spider-grounded the endocrine domain (11/12 edges). 41 of the 42 recall
+    # answers across all four domains now cite an authoritative edge: grounded-coverage
+    # 98%. The lone holdout is cortisol_def (deficiency_syndrome__cortisol) — the
+    # adversarial verify could not pin it verbatim, so it stays consensus + FLAG: the
+    # framework declines to claim grounding it cannot defend, by design.
+    assert s["grounded_coverage"] == round(41 / 42, 4)   # 0.9762
+    assert s["grounded_correct"] == 41
     by_id = {r.item_id: r for r in card.results}
-    assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM, grounded
-    assert by_id["ida_mcv"].trust == "authoritative"               # anemia, grounded
-    assert by_id["cortisol_gland"].trust == "consensus"            # endocrine, not yet grounded
+    assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
+    assert by_id["ida_mcv"].trust == "authoritative"               # anemia
+    assert by_id["cortisol_gland"].trust == "authoritative"        # endocrine, grounded (REL-12b)
+    assert by_id["cortisol_def"].trust == "consensus"              # direction_only holdout
 
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:

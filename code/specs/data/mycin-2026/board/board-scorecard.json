@@ -18,8 +18,8 @@
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.8095,
-    "grounded_correct": 34
+    "grounded_coverage": 0.9762,
+    "grounded_correct": 41
   },
   "results": [
     {
@@ -332,7 +332,7 @@
       "gold": "pancreatic_beta_cells",
       "answer": "pancreatic_beta_cells",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "cortisol_gland",
@@ -340,7 +340,7 @@
       "gold": "adrenal_cortex",
       "answer": "adrenal_cortex",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "thyroxine_gland",
@@ -348,7 +348,7 @@
       "gold": "thyroid_gland",
       "answer": "thyroid_gland",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "adh_gland",
@@ -356,7 +356,7 @@
       "gold": "posterior_pituitary",
       "answer": "posterior_pituitary",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "insulin_def",
@@ -364,7 +364,7 @@
       "gold": "diabetes_mellitus",
       "answer": "diabetes_mellitus",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "cortisol_def",
@@ -380,7 +380,7 @@
       "gold": "hypothyroidism",
       "answer": "hypothyroidism",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "adh_def",
@@ -388,7 +388,7 @@
       "gold": "central_diabetes_insipidus",
       "answer": "central_diabetes_insipidus",
       "outcome": "correct",
-      "trust": "consensus"
+      "trust": "authoritative"
     },
     {
       "id": "glucagon_gland",

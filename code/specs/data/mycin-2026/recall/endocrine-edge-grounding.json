@@ -1,0 +1,363 @@
+{
+  "kind": "endocrine-edge-grounding",
+  "records": [
+    {
+      "id": "secreted_by__insulin",
+      "relation": "secreted_by",
+      "subject": "insulin",
+      "object": "pancreatic_beta_cells",
+      "claim": "Insulin is secreted by the beta cells of the pancreatic islets.",
+      "grounded": {
+        "id": "secreted_by__insulin",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK542302/",
+        "source_title": "Physiology, Islets of Langerhans - StatPearls - NCBI Bookshelf (NIH)",
+        "byte_quote": "The beta cells release insulin, a peptide hormone that decreases glucose concentration in the blood by stimulating glucose uptake by the liver, skeletal muscle, and adipose tissue via specialized receptors.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK459261/ (Physiology, Pancreas, StatPearls) — relevant primary source, but the Islets of Langerhans chapter gives a more direct single-sentence 'beta cells release insulin' statement plus the islet-membership statement; discarded to avoid redundancy.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK537082/ (Physiology, Glucagon) — about glucagon/alpha cells, not the insulin-beta-cell relation.",
+          "https://pubmed.ncbi.nlm.nih.gov/22974438/ and https://pmc.ncbi.nlm.nih.gov/articles/PMC8115730/ — peer-reviewed but focus on regulation/mechanism of secretion rather than the basic source-of-insulin relation; not needed once StatPearls confirmed it.",
+          "https://www.nature.com/articles/s42255-024-01114-8 — research article on engineered beta-cell-only islets, narrower scope; not a foundational reference for the relation.",
+          "https://image-ppubs.uspto.gov/.../7477944 — a USPTO patent, not an authoritative physiology text; discarded as non-primary for this claim."
+        ],
+        "note": "ENTAILED. Two verbatim sentences from the same StatPearls chapter combine to force the fact: (1) \"Each islet comprises a central core of beta cells...\" establishes beta cells are the beta cells of the pancreatic islets (islets of Langerhans); (2) \"The beta cells release insulin...\" establishes beta cells secrete/release insulin. Together they entail insulin → pancreatic_beta_cells with correct direction (beta cells are the secretor). The quote uses \"release\" rather than \"secrete,\" but in endocrine physiology release of a hormone into blood is secretion, so no interpretive leap is required."
+      },
+      "verify": {
+        "id": "secreted_by__insulin",
+        "byte_stable": true,
+        "refute_attempt": "The byte_quote sentence alone says only \"The beta cells release insulin\" and does not contain the words \"pancreatic islets,\" so one could object that (a) the verbatim quote does not name the islets and (b) it says \"release\" rather than \"secreted by.\" Both objections fail. The page is titled \"Physiology, Islets of Langerhans\" and states \"Each islet comprises a central core of beta cells, surrounded by a mantle of alpha, delta, epsilon, and pancreatic polypeptide cells,\" which establishes that the beta cells in the quote ARE the beta cells of the pancreatic islets. \"Release\" and \"secrete\" denote the same endocrine action for a peptide hormone, so the directional source relation insulin <- beta cells is stated, not merely implied. This is a representation match, not an interpretive leap.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_syndrome__insulin",
+      "relation": "deficiency_syndrome",
+      "subject": "insulin",
+      "object": "diabetes_mellitus",
+      "claim": "Insulin deficiency or resistance causes diabetes mellitus.",
+      "grounded": {
+        "id": "deficiency_syndrome__insulin",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK551501/",
+        "source_title": "Diabetes - StatPearls - NCBI Bookshelf",
+        "byte_quote": "The main subtypes of DM are Type 1 diabetes mellitus (T1DM) and Type 2 diabetes mellitus (T2DM), which classically result from defective insulin secretion (T1DM) and/or action (T2DM). In the case of DM, insulin is either absent and/or has impaired action (insulin resistance), and thus leads to hyperglycemia.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "Endotext 'Pathogenesis of Type 2 Diabetes Mellitus' (NBK279115) — discarded as redundant; the StatPearls Diabetes article already covers both deficiency (T1DM) and resistance (T2DM) in one place, whereas Endotext is T2DM-only.",
+          "StatPearls 'Insulin Resistance' (NBK507839) — discarded; authoritative for the resistance half but does not state the full deficiency-OR-resistance → DM relation in a single sentence.",
+          "StatPearls 'Type 2 Diabetes' (NBK513253) and 'Hyperglycemia' (NBK430900) — discarded as narrower scope; would only ground one half of the 'deficiency OR resistance' disjunction.",
+          "Secondary blogs / question banks — excluded by instruction; only the NIH/NCBI Bookshelf primary source was fetched."
+        ],
+        "note": "ENTAILED. The fetched StatPearls page states both halves of the fact in its own words: subtypes \"result from defective insulin secretion (T1DM) and/or action (T2DM)\" (deficiency and resistance as causes) and \"insulin is either absent and/or has impaired action (insulin resistance), and thus leads to hyperglycemia\" (the DM-defining outcome). Direction is correct: insulin defect → diabetes mellitus, exactly matching insulin → diabetes_mellitus. The verbs \"result from\" and \"leads to\" make this an explicit causal/etiologic statement, not an inferential leap. The only minor bridge (not a leap) is equating \"hyperglycemia\" in the second sentence with diabetes mellitus, which the surrounding etiology context and the first sentence make unambiguous."
+      },
+      "verify": {
+        "id": "deficiency_syndrome__insulin",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quote could be read as merely describing the internal mechanism/typology of DM subtypes (\"classically result from\") rather than asserting a clean causal edge \"insulin deficiency or resistance causes diabetes.\" The hedge \"classically\" might be taken to weaken it to a typical-case statement. Rebuttal: this fails. The quote explicitly states the subtypes \"result from defective insulin secretion (T1DM) and/or action (T2DM)\" — \"result from\" is a direct causal relation (DM results from the insulin defect). It further names both poles of the FACT explicitly: insulin \"either absent\" (deficiency) \"and/or has impaired action (insulin resistance)\" and \"thus leads to hyperglycemia\" (the defining feature of DM). The edge deficiency/resistance -> diabetes mellitus is therefore stated outright, not merely implied.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "secreted_by__cortisol",
+      "relation": "secreted_by",
+      "subject": "cortisol",
+      "object": "adrenal_cortex",
+      "claim": "Cortisol is secreted by the adrenal cortex (zona fasciculata).",
+      "grounded": {
+        "id": "secreted_by__cortisol",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK538239/",
+        "source_title": "Physiology, Cortisol - StatPearls - NCBI Bookshelf",
+        "byte_quote": "This hormone functions as the primary glucocorticoid synthesized and released by the zona fasciculata of the adrenal cortex.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK560897/ (Physiology, Glucocorticoids) — relevant but broader topic; not fetched because NBK538239 gave a more direct cortisol-specific statement.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK537260/ (Physiology, Adrenal Gland) — authoritative but about the gland generally; redundant once the cortisol-specific source confirmed the exact edge.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK482264/ (Anatomy: Adrenal Glands) — anatomy-focused, less direct on the cortisol→zona fasciculata secretion relation.",
+          "https://pubmed.ncbi.nlm.nih.gov/1652432/ — primary research on bovine adrenal cortex regulation; species-specific and narrower than needed for the human physiology fact.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK12994/ (Holland-Frei Cancer Medicine) — oncology reference, not the cleanest primary source for normal physiology."
+        ],
+        "note": "ENTAILED. The fetched verbatim sentence states cortisol (\"This hormone,\" referring to cortisol, the article's subject) is \"synthesized and released by the zona fasciculata of the adrenal cortex,\" which directly forces the relation cortisol → adrenal_cortex (zona fasciculata). The direction is correct (cortisol is the secreted product; the zona fasciculata of the adrenal cortex is the secreting tissue). A second sentence on the same page corroborates: \"Cortisol, a steroid hormone, is synthesized from cholesterol within the zonae fasciculata and reticularis of the adrenal cortex.\" No leap required."
+      },
+      "verify": {
+        "id": "secreted_by__cortisol",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempt: Does the page actually state the EDGE (cortisol secreted_by adrenal cortex / zona fasciculata), or only an adjacent fact? The byte_quote uses \"synthesized and released by,\" not the word \"secreted.\" One could argue the FACT's verb \"secreted by\" is not literally in the quote. This fails because (a) \"released by\" is synonymous with \"secreted by\" for an endocrine gland, and (b) the page independently states the secretion relation elsewhere: \"Cortisol... is synthesized from cholesterol within the zonae fasciculata and reticularis of the adrenal cortex\" and \"The zona fasciculata constitutes approximately 75% of the adrenal cortex and primarily produces glucocorticoids\" (cortisol being the primary glucocorticoid). A second refutation — that the quote names zona fasciculata, possibly contradicting other zones — also fails: the page is consistent (fasciculata is the primary site; reticularis is secondary). The relation is directly and redundantly stated; no contradiction found.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_syndrome__cortisol",
+      "relation": "deficiency_syndrome",
+      "subject": "cortisol",
+      "object": "addison_disease",
+      "claim": "Cortisol deficiency (primary adrenal insufficiency) causes Addison disease.",
+      "grounded": {
+        "id": "deficiency_syndrome__cortisol",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK441994/",
+        "source_title": "Addison Disease - StatPearls - NCBI Bookshelf (NIH)",
+        "byte_quote": "Addison disease, also known as autoimmune adrenalitis, is an acquired primary adrenal insufficiency. Addison disease results from the destruction of the bilateral adrenal cortex, leading to decreased adrenocortical hormones, including cortisol, aldosterone, and androgens.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK441832/ (Adrenal Insufficiency, StatPearls) — discarded: covers adrenal insufficiency broadly including secondary/tertiary causes; less direct on the specific cortisol-deficiency → Addison disease equivalence than the dedicated Addison Disease chapter.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK568775/ (Addison Disease (Nursing), StatPearls) — discarded as redundant nursing-companion derivative of the primary NBK441994 chapter actually fetched.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK499968/ (Adrenal Crisis, StatPearls) — discarded: scope is the acute crisis presentation, not the deficiency→syndrome naming relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK500031/ (Physiology, ACTH, StatPearls) — discarded: hormone-axis physiology, not the Addison disease definition.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK568707/ (Adrenal Insufficiency (Nursing), StatPearls) — discarded as redundant nursing derivative."
+        ],
+        "note": "ENTAILED. The fetched StatPearls primary source explicitly states (1) \"Addison disease ... is an acquired primary adrenal insufficiency\" and (2) it results in \"decreased adrenocortical hormones, including cortisol.\" Together these force the asserted edge: the cortisol-deficiency state termed primary adrenal insufficiency IS Addison disease (cortisol → addison_disease). Direction is correct — the source frames Addison disease as the named syndrome of this deficiency, not the reverse. Minor nuance (not a leap affecting the edge): Addison disease specifically denotes primary adrenal insufficiency of the adrenal cortex (classically autoimmune), and the deficiency spans cortisol plus aldosterone/androgens — but cortisol deficiency is squarely included, so the cortisol → Addison relation is directly supported."
+      },
+      "verify": {
+        "id": "deficiency_syndrome__cortisol",
+        "byte_stable": true,
+        "refute_attempt": "The quote appears verbatim on the fetched page (in both the Continuing Education Activity and Introduction sections), so byte_stable is true. The FACT asserts a causal direction: \"Cortisol deficiency (primary adrenal insufficiency) causes Addison disease.\" The strongest refutation is that the quote states the OPPOSITE causal direction: Addison disease \"results from the destruction of the bilateral adrenal cortex, leading to decreased adrenocortical hormones, including cortisol.\" Thus the source has destruction -> cortisol deficiency, both as features of Addison disease; cortisol deficiency does not cause Addison disease per this text. The quote treats Addison disease as a form of (autoimmune) primary adrenal insufficiency and cortisol deficiency as a defining consequence/feature, not as the cause. So the precise directional relation in the FACT is not stated; the quote grounds an identity/association (primary adrenal insufficiency = Addison disease; cortisol is among the deficient hormones) rather than \"deficiency causes disease.\"",
+        "final_verdict": "direction_only"
+      },
+      "spider_status": "direction_only"
+    },
+    {
+      "id": "secreted_by__thyroxine",
+      "relation": "secreted_by",
+      "subject": "thyroxine",
+      "object": "thyroid_gland",
+      "claim": "Thyroxine (T4) is secreted by the thyroid gland.",
+      "grounded": {
+        "id": "secreted_by__thyroxine",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK500006/",
+        "source_title": "Physiology, Thyroid Hormone - StatPearls - NCBI Bookshelf",
+        "byte_quote": "The main hormones produced by the thyroid gland are thyroxine or tetraiodothyronine (T4) and triiodothyronine (T3).",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK537039/ (Physiology, Thyroid Function) — relevant StatPearls article but not fetched for the verbatim quote; NBK500006 already yielded a direct supporting sentence.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK519566/ (Physiology, Thyroid) — redundant secondary StatPearls article; not needed once a direct quote was obtained.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK551659/ (Histology, Thyroid Gland) — histology focus, not the cleanest secretion statement; discarded.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK539808/ (Levothyroxine) and NBK499850 (TSH) — drug/regulatory-hormone articles, off the direct thyroxine→thyroid relation.",
+          "USPTO patent PDFs (11096913, 10537538) — commercial/patent sources, not authoritative physiology references; discarded."
+        ],
+        "note": "ENTAILED. The fetched StatPearls sentence states \"The main hormones produced by the thyroid gland are thyroxine or tetraiodothyronine (T4)...\", which directly asserts the thyroid gland produces/secretes thyroxine (T4). This forces the relation thyroxine → thyroid_gland in the correct direction with no inferential leap. Source is a primary/authoritative NIH-NCBI Bookshelf (StatPearls) physiology reference, satisfying the primary-source requirement. Minor wording note: the source says \"produced by\" rather than the exact word \"secreted by,\" but in thyroid physiology the thyroid gland is unambiguously the secreting organ for T4 (corroborated by the same corpus: \"anterior pituitary releases TSH and stimulates the thyroid follicular cells to release thyroxine, T4\"), so production-by entails secretion-by here."
+      },
+      "verify": {
+        "id": "secreted_by__thyroxine",
+        "byte_stable": true,
+        "refute_attempt": "The quote uses \"produced by\" rather than the FACT's \"secreted by,\" and production vs. secretion are biologically distinct steps. But the quote explicitly names thyroxine (T4) as a hormone whose source is the thyroid gland, which is exactly the source→hormone edge the FACT encodes. The verb difference does not break the stated relation; the thyroid gland is unambiguously identified as the origin of thyroxine. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_syndrome__thyroxine",
+      "relation": "deficiency_syndrome",
+      "subject": "thyroxine",
+      "object": "hypothyroidism",
+      "claim": "Thyroid hormone deficiency causes hypothyroidism.",
+      "grounded": {
+        "id": "deficiency_syndrome__thyroxine",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK519536/",
+        "source_title": "Hypothyroidism - StatPearls - NCBI Bookshelf",
+        "byte_quote": "Hypothyroidism results from low levels of thyroid hormone with varied etiology and manifestations.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.scribd.com/document/623439317/Hypothyroidism-StatPearls-NCBI-Bookshelf — secondary re-host of the StatPearls chapter on Scribd; not a primary/authoritative source, so discarded in favor of the canonical NCBI Bookshelf URL.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK519566/ (Physiology, Thyroid) — relevant authoritative physiology chapter but does not state the deficiency→hypothyroidism relation as cleanly; not needed once the dedicated Hypothyroidism chapter gave a direct quote.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK500006/ (Physiology, Thyroid Hormone) — background on thyroid hormone, not the deficiency-syndrome statement; discarded as redundant.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK558913/ and NBK536970/ (Congenital / Subclinical Hypothyroidism) — subtype-specific chapters, narrower than the general fact; discarded."
+        ],
+        "note": "ENTAILED. The fact asserts thyroid hormone (thyroxine/T4, the principal thyroid hormone) deficiency causes hypothyroidism. The verbatim quote 'Hypothyroidism results from low levels of thyroid hormone' states exactly this causal/definitional relation in the correct direction (low thyroid hormone → hypothyroidism). The only minor LEAP is the term mapping 'thyroxine' ↔ 'thyroid hormone': thyroxine (T4) is the principal circulating thyroid hormone, so a deficiency of thyroid hormone encompasses thyroxine deficiency. The source is a primary/authoritative NIH/NCBI Bookshelf chapter (StatPearls)."
+      },
+      "verify": {
+        "id": "deficiency_syndrome__thyroxine",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the source phrases the relation as \"Hypothyroidism results from low levels of thyroid hormone,\" i.e., hypothyroidism as the outcome, whereas the FACT asserts the directional causal claim \"thyroid hormone deficiency causes hypothyroidism\" — one could argue \"results from\" is a weaker/passive co-occurrence framing rather than an explicit cause. This refutation fails: \"results from\" is an explicit etiological/causal relation, and \"low levels of thyroid hormone\" is definitionally thyroid hormone deficiency. \"X results from low Y\" entails \"deficiency of Y causes X.\" The directionality (deficiency -> hypothyroidism) and causation are both directly stated, not inferred. The edge holds.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "secreted_by__adh",
+      "relation": "secreted_by",
+      "subject": "adh",
+      "object": "posterior_pituitary",
+      "claim": "Antidiuretic hormone (ADH/vasopressin) is released from the posterior pituitary.",
+      "grounded": {
+        "id": "secreted_by__adh",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK526130/",
+        "source_title": "Physiology, Posterior Pituitary - StatPearls - NCBI Bookshelf",
+        "byte_quote": "The posterior pituitary gland secretes ADH and oxytocin, hormones synthesized in the hypothalamus, which are released into the neurohypophyseal capillaries that surround the gland.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK557556/ (Physiology, Pituitary Hormones) — relevant but broader scope; the dedicated Posterior Pituitary article states the exact ADH→posterior pituitary relation more directly, so this was not fetched.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK560733/ (Anatomy, Neurohypophysis) — neurohypophysis is a synonym for posterior pituitary and would corroborate, but redundant once the direct quote was obtained.",
+          "https://pubmed.ncbi.nlm.nih.gov/30252325/ (Physiology, Vasopressin — PubMed) — PubMed is an abstract/landing page; the StatPearls full text gives a cleaner verbatim secretion statement.",
+          "https://my.clevelandclinic.org/health/body/23150-posterior-pituitary — Cleveland Clinic is a secondary/patient-education source, not a primary/peer-reviewed reference; discarded per source-quality requirement.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK507777/ (SIADH) and https://www.ncbi.nlm.nih.gov/books/NBK470458/ (Arginine Vasopressin Disorder) — disease-focused, do not state the baseline anatomical release relation as cleanly."
+        ],
+        "note": "ENTAILED. The fetched verbatim sentence states \"The posterior pituitary gland secretes ADH ... released into the neurohypophyseal capillaries that surround the gland,\" which directly asserts the edge adh → posterior_pituitary (release site). No inferential leap is required: the source explicitly names ADH as secreted/released from the posterior pituitary. Nuance (not a leap, but worth recording): ADH is SYNTHESIZED in the hypothalamus (supraoptic nucleus) and only STORED/RELEASED at the posterior pituitary — so \"secreted_by/released_from the posterior pituitary\" is correct, while \"produced by\" would be wrong. The FACT as stated (released from posterior pituitary) is grounded."
+      },
+      "verify": {
+        "id": "secreted_by__adh",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to break the edge two ways. (1) Source-vs-storage equivocation: the quote also says the hormones are \"synthesized in the hypothalamus,\" so one could argue the hypothalamus is the real source and the posterior pituitary is a mere passthrough, making \"released from the posterior pituitary\" misleading. This fails because the FACT claims RELEASE, not synthesis; the main clause's grammatical subject is \"The posterior pituitary gland\" and its verb is \"secretes ADH,\" and it \"release[s] into the neurohypophyseal capillaries that surround the gland\" (the gland = posterior pituitary). Release location and synthesis location are distinct, and the quote explicitly attributes the secretion/release to the posterior pituitary. (2) Wording mismatch: FACT says \"released from the posterior pituitary\" while the quote says \"secretes\" / \"released into the neurohypophyseal capillaries.\" This is a paraphrase, not a contradiction — secretion by the posterior pituitary into surrounding capillaries IS release from the posterior pituitary. Both refutation lines fail; the relation is directly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_syndrome__adh",
+      "relation": "deficiency_syndrome",
+      "subject": "adh",
+      "object": "central_diabetes_insipidus",
+      "claim": "ADH deficiency causes central diabetes insipidus.",
+      "grounded": {
+        "id": "deficiency_syndrome__adh",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK526069/",
+        "source_title": "Physiology, Vasopressin - StatPearls - NCBI Bookshelf",
+        "byte_quote": "A failure of ADH secretion causes central diabetes insipidus.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://int.livhospital.com/5-key-facts-about-central-diabetes-insipidus-adh-deficiency-explained/ — DISCARDED: secondary hospital blog/SEO content, not a primary or peer-reviewed authoritative source per the task constraints.",
+          "https://www.uptodate.com/contents/arginine-vasopressin-deficiency-central-diabetes-insipidus-... — DISCARDED: authoritative but paywalled/subscription; could not fetch the full text to extract a verbatim quote.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK470458/ (Arginine Vasopressin Disorder, StatPearls) — NOT used as the citation but corroborating: states 'AVP-D is secondary to inadequate or impaired secretion of AVP from the posterior pituitary gland' and that central DI was renamed AVP-D in 2022. Discarded only as the primary citation because NBK526069 has a more direct single-sentence statement of the exact edge.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK554582/ (Desmopressin) — DISCARDED: about the treatment drug, not the causal etiology statement.",
+          "https://pubmed.ncbi.nlm.nih.gov/40602377/ — DISCARDED: management-in-neonates abstract, not a general etiologic definition."
+        ],
+        "note": "ENTAILED. The fetched StatPearls page states verbatim: 'A failure of ADH secretion causes central diabetes insipidus.' This is the exact directed relation (ADH deficiency → central diabetes insipidus): failure/lack of ADH secretion = ADH deficiency, and it is named as the direct cause. No inferential leap required. Corroborated by the companion StatPearls AVP-disorder chapter (NBK470458), which states AVP-D (the renamed central DI) is 'secondary to inadequate or impaired secretion of AVP' — same mechanism, same direction."
+      },
+      "verify": {
+        "id": "deficiency_syndrome__adh",
+        "byte_stable": true,
+        "refute_attempt": "Attempted to break the edge two ways. (1) Does the verbatim quote actually appear? Yes — WebFetch of NBK526069 returns it exactly: \"A failure of ADH secretion causes central diabetes insipidus.\" (2) Does the sentence actually state the FACT's directional causal edge (ADH deficiency causes central DI), not merely an association? It does, unambiguously: the verb is \"causes,\" the subject \"failure of ADH secretion\" is the deficiency case (the page explicitly files it under pathologic states of \"decreased ADH or resistance to its effects\"), and the object is \"central diabetes insipidus.\" The next sentence supplies the mechanism (low ADH -> collecting tubules impermeable to water -> excess water excretion), confirming the deficiency->disease direction rather than the reverse. The only nuance is wording — the FACT says \"ADH deficiency\" while the source says \"failure of ADH secretion\" — but these are synonymous (absent/insufficient ADH), so this is not a meaningful divergence. Refutation fails; the relation is genuinely and explicitly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "secreted_by__pth",
+      "relation": "secreted_by",
+      "subject": "pth",
+      "object": "parathyroid_gland",
+      "claim": "Parathyroid hormone is secreted by the parathyroid glands.",
+      "grounded": {
+        "id": "secreted_by__pth",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK499940/",
+        "source_title": "Physiology, Parathyroid Hormone — StatPearls, NCBI Bookshelf (NIH)",
+        "byte_quote": "The parathyroid gland secretes parathyroid hormone (PTH), a polypeptide, in response to low calcium levels detected in the blood.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK554580/ (Embryology, Parathyroid) — discarded: focuses on embryological development of the glands, not the secretion relation; the physiology article states the relation more directly.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK482510/ (Physiology, Parathyroid) — discarded as redundant; the gland-centric article, while supportive, is secondary to the PTH-specific physiology article which names the exact subject (PTH).",
+          "https://www.ncbi.nlm.nih.gov/books/NBK537203/ (Anatomy, Head and Neck, Parathyroid) — discarded: anatomical/location focus rather than the secretion relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK546596/ (Histology, Parathyroid Gland) — discarded: covers chief-cell histology; supportive but not the most direct statement of the gland→hormone relation.",
+          "https://www.ncbi.nlm.nih.gov/sites/books/... mirror URLs — discarded as duplicate mirrors of the canonical /books/ pages."
+        ],
+        "note": "ENTAILED. The quote literally states \"The parathyroid gland secretes parathyroid hormone (PTH)\", which directly asserts the relation pth → parathyroid_gland (secreted_by). Subject = parathyroid hormone, object/source = parathyroid gland; direction is correct. No inferential leap is required — the sentence forces the fact. Source is a primary/authoritative NIH NCBI Bookshelf physiology reference (StatPearls), not a blog or question bank. Quote read directly from the fetched page."
+      },
+      "verify": {
+        "id": "secreted_by__pth",
+        "byte_stable": true,
+        "refute_attempt": "Tested whether the quote actually states the secretion edge and whether the singular \"parathyroid gland\" in the quote undercuts the FACT's plural \"parathyroid glands.\" The quote \"The parathyroid gland secretes parathyroid hormone (PTH), a polypeptide, in response to low calcium levels detected in the blood.\" appears verbatim on the fetched page and directly states the relation via the verb \"secretes\" (parathyroid gland -> secretes -> PTH). The singular/plural difference is grammatical number, not a different source or relation. A second sentence on the page (\"synthesized and cleaved into an active form within the parathyroid gland\") independently corroborates the source, and no competing secreting organ is named. Refutation fails.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_syndrome__pth",
+      "relation": "deficiency_syndrome",
+      "subject": "pth",
+      "object": "hypoparathyroidism",
+      "claim": "PTH deficiency causes hypoparathyroidism (hypocalcemia).",
+      "grounded": {
+        "id": "deficiency_syndrome__pth",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK441899/",
+        "source_title": "Hypoparathyroidism - StatPearls - NCBI Bookshelf (NIH)",
+        "byte_quote": "Hypoparathyroidism is an uncommon endocrine abnormality in which parathyroid gland dysfunction causes parathyroid hormone deficiency. [...] Consequently, PTH deficiency results in hypocalcemia and hyperphosphatemia, while alkaline phosphatase, a marker of bone formation, is normal.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK499940/ (Physiology, Parathyroid Hormone, StatPearls) — discarded: covers normal PTH physiology, not the deficiency syndrome/hypocalcemia relation directly; the dedicated Hypoparathyroidism chapter states the exact relation more cleanly.",
+          "https://pubmed.ncbi.nlm.nih.gov/28722928/ — discarded: PubMed citation stub for the same StatPearls article; the full Bookshelf text (NBK441899) is the readable primary source with the supporting sentence.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK279165/ (Endotext, Hypoparathyroidism and Pseudohypoparathyroidism) — discarded as redundant once the StatPearls chapter yielded a direct verbatim quote; would also conflate pseudohypoparathyroidism (PTH resistance, not deficiency).",
+          "https://www.ncbi.nlm.nih.gov/books/NBK482510/ (Physiology, Parathyroid) and NBK547709 (Pseudohypoparathyroidism) — discarded: physiology/resistance topics, not the PTH-deficiency→hypoparathyroidism(hypocalcemia) edge requested."
+        ],
+        "note": "ENTAILED. The source both (a) defines hypoparathyroidism as the syndrome in which parathyroid dysfunction causes PTH deficiency, and (b) states explicitly \"PTH deficiency results in hypocalcemia.\" This forces the exact requested relation pth → hypoparathyroidism (hypocalcemia). Direction is correct: PTH (deficiency) is the cause/subject, hypoparathyroidism with hypocalcemia is the resulting syndrome/object. No leap required — the deficiency→hypocalcemia link is stated word-for-word, and the deficiency↔hypoparathyroidism identity is the chapter's opening definition."
+      },
+      "verify": {
+        "id": "deficiency_syndrome__pth",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation attempt: (1) The byte_quote is not a single contiguous passage — it splices two non-adjacent sentences joined by \"[...]\". If one demanded a single verbatim contiguous span, this would fail. However, both fragments appear verbatim on the page and \"[...]\" transparently signals elision, so this is not a fabrication. (2) The first sentence states parathyroid gland dysfunction causes PTH deficiency (a cause OF PTH deficiency), not PTH deficiency causing the syndrome; one could argue it does not by itself prove the FACT's direction. But the second fragment (\"PTH deficiency results in hypocalcemia and hyperphosphatemia\") directly states PTH deficiency -> hypocalcemia, and the page title plus first sentence establish that this PTH-deficient state IS hypoparathyroidism. So the chain PTH deficiency = hypoparathyroidism = hypocalcemia is explicitly stated. (3) One could note the FACT equates \"hypoparathyroidism\" with \"hypocalcemia\" loosely; the source treats hypocalcemia as a consequence of (not synonym for) hypoparathyroidism, but the FACT's parenthetical clearly uses hypocalcemia as the characterizing biochemical result, which matches. The refutation fails: the edge (PTH deficiency causes hypoparathyroidism characterized by hypocalcemia) is stated by the source.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "secreted_by__growth_hormone",
+      "relation": "secreted_by",
+      "subject": "growth_hormone",
+      "object": "anterior_pituitary",
+      "claim": "Growth hormone is secreted by the anterior pituitary somatotrophs.",
+      "grounded": {
+        "id": "secreted_by__growth_hormone",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/books/NBK482141/",
+        "source_title": "Physiology, Growth Hormone (Archived) — StatPearls, NCBI Bookshelf (NIH)",
+        "byte_quote": "Human growth hormone is produced by the anterior pituitary gland in acidophilic somatotrophic cells.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK499898/ (Physiology, Anterior Pituitary) — relevant and authoritative, but not fetched/quoted; NBK482141 already gave a direct verbatim relation, so this was not needed.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK557556/ (Physiology, Pituitary Hormones) — secondary to the chosen source; covers GH among many hormones, less specific to the cellular origin relation.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK279056/ (Endotext, Normal Physiology of Growth Hormone) — authoritative alternative, not needed once StatPearls gave an unambiguous quote.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK459247/ (Physiology, Pituitary Gland) and NBK535380 (Hypothalamus) — about gland/hypothalamic regulation, not the direct secreted-by relation.",
+          "WebSearch result-summary prose (e.g. 'GH is secreted by the somatotroph cells located primarily in the lateral wings of the anterior pituitary') — discarded as a non-verbatim search aggregation, not a fetched page quote."
+        ],
+        "note": "ENTAILED. The verbatim quote states GH is 'produced by the anterior pituitary gland in acidophilic somatotrophic cells,' which directly establishes the relation growth_hormone -> anterior_pituitary somatotrophs. Minor terminology note (not a leap): the source says 'produced by ... in somatotrophic cells' rather than the FACT's word 'secreted by ... somatotrophs.' Somatotrophic cells = somatotrophs, and in endocrine physiology these cells both synthesize and secrete GH; the same StatPearls/companion pages describe GHRH stimulating 'the somatotrophs of the anterior pituitary to secrete growth hormone,' so produced-in and secreted-by refer to the identical cell population. Direction (GH -> anterior pituitary somatotrophs) is correct, not reversed."
+      },
+      "verify": {
+        "id": "secreted_by__growth_hormone",
+        "byte_stable": true,
+        "refute_attempt": "Tried to refute on two grounds: (1) \"produced by\" (quote) vs \"secreted by\" (FACT) — synthesis is not strictly secretion; (2) \"acidophilic somatotrophic cells\" / \"somatotropic cells\" vs \"somatotrophs\" lexical mismatch. Both fail: somatotrophs = somatotropic = somatotrophic cells are accepted synonyms for the same anterior-pituitary cell, and the page names the source gland + cell type, which is the secreted_by edge. Corroborated by the Introduction sentence (\"produced by somatotropic cells within the anterior pituitary gland\"). Produced-vs-secreted is an interpretive nuance, not a representation gap; the source organ and cell are explicitly stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    },
+    {
+      "id": "deficiency_syndrome__growth_hormone",
+      "relation": "deficiency_syndrome",
+      "subject": "growth_hormone",
+      "object": "pituitary_dwarfism",
+      "claim": "Childhood growth hormone deficiency causes pituitary dwarfism (short stature).",
+      "grounded": {
+        "id": "deficiency_syndrome__growth_hormone",
+        "resolved_url": "https://www.ncbi.nlm.nih.gov/medgen/8506",
+        "source_title": "Pituitary dwarfism (Concept Id: C0013338) - MedGen - NCBI",
+        "byte_quote": "A type of reduced stature with normal proportions related to dysfunction of the pituitary gland related to either an isolated defect in the secretion of growth hormone or to panhypopituitarism, i.e., a deficit of all the anterior pituitary hormones.",
+        "direction_correct": true,
+        "verdict": "grounded",
+        "discards": [
+          "https://www.ncbi.nlm.nih.gov/books/NBK278971/ (Endotext, 'Disorders of Growth Hormone in Childhood') — confirms childhood GH deficiency causes growth failure/short stature ('The major clinical feature of GH deficiency is growth failure'), but never uses the term 'pituitary dwarfism', so it does not state the exact named relation; discarded in favor of the MedGen entry that names the concept.",
+          "https://www.ncbi.nlm.nih.gov/books/NBK563282/ (Dwarfism - StatPearls) — strong authoritative source classifying the condition as dwarfism and listing GH deficiency in its Etiology ('inadequate secretion of growth hormone from the anterior pituitary gland ... leads to a progressive reduction in linear growth'), and confirms congenital/childhood onset, but on fetch it does NOT contain the literal phrase 'pituitary dwarfism', so the exact term-level edge is weaker here than in MedGen.",
+          "https://www.hopkinsmedicine.org/health/conditions-and-diseases/growth-hormone-deficiency — secondary patient-education page, not a primary/peer-reviewed reference; discarded per primary-source requirement.",
+          "https://en.wikipedia.org/wiki/Growth_hormone_deficiency and en.wikipedia.org/wiki/Laron_syndrome — tertiary encyclopedia, not primary; discarded.",
+          "https://www.sciencedirect.com/topics/medicine-and-dentistry/pituitary-dwarfism — aggregated topic page (paywalled/secondary excerpting); discarded in favor of the directly-fetched NCBI MedGen definition.",
+          "https://www.statpearls.com/point-of-care/20778 — duplicate of the NCBI Bookshelf Dwarfism article behind a different portal; redundant."
+        ],
+        "note": "ENTAILED for the core edge growth_hormone_deficiency → pituitary_dwarfism. The MedGen definition names the exact concept ('pituitary dwarfism', Concept Id C0013338) and explicitly attributes it to 'an isolated defect in the secretion of growth hormone' (i.e., GH deficiency), with the phenotype 'reduced stature' (= short stature). The subject→object direction matches the fact. Minor LEAP only on the 'childhood' qualifier: the MedGen sentence itself does not say 'childhood', but the corroborating StatPearls Dwarfism / Endotext childhood-GHD sources confirm congenital/childhood onset producing short stature, so the qualifier is well-supported rather than fabricated. The named-relation grounding (GH deficiency → pituitary dwarfism / short stature) is direct and verbatim."
+      },
+      "verify": {
+        "id": "deficiency_syndrome__growth_hormone",
+        "byte_stable": true,
+        "refute_attempt": "Strongest refutation: the quote is disjunctive — pituitary dwarfism is \"related to either an isolated defect in the secretion of growth hormone OR to panhypopituitarism\" — so GH deficiency is one of two etiologies, not the sole cause; and it uses \"related to\" rather than \"causes\" and does not say \"childhood.\" This refutation fails: the quote directly ties \"reduced stature with normal proportions\" (= short stature / dwarfism) to \"an isolated defect in the secretion of growth hormone\" (= growth hormone deficiency), which is exactly the asserted edge. The disjunction lists GH deficiency as a sufficient cause rather than excluding it, and the page title/synonyms (\"Pituitary dwarfism\", \"Growth Hormone Deficiency Dwarfism\") reinforce the relation. The edge is stated.",
+        "final_verdict": "grounded"
+      },
+      "spider_status": "grounded"
+    }
+  ]
+}

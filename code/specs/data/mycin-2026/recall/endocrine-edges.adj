@@ -25,49 +25,60 @@ rulebook endocrine_facts {
 
     % --- Insulin ---------------------------------------------------------
     relate secreted_by(insulin, pancreatic_beta_cells)
-        source "Insulin is secreted by the beta cells of the pancreatic islets of Langerhans."
-        trust consensus   % [FLAG: pending]
+        source "The beta cells release insulin, a peptide hormone that decreases glucose concentration in the blood by stimulating glucose uptake by the liver, skeletal muscle, and adipose tissue via specialized receptors."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK542302/"
+        trust authoritative
     relate deficiency_syndrome(insulin, diabetes_mellitus)
-        source "Insulin deficiency (or resistance) causes diabetes mellitus."
-        trust consensus   % [FLAG: pending]
+        source "The main subtypes of DM are Type 1 diabetes mellitus (T1DM) and Type 2 diabetes mellitus (T2DM), which classically result from defective insulin secretion (T1DM) and/or action (T2DM). In the case of DM, insulin is either absent and/or has impaired action (insulin resistance), and thus leads to hyperglycemia."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551501/"
+        trust authoritative
 
     % --- Cortisol --------------------------------------------------------
     relate secreted_by(cortisol, adrenal_cortex)
-        source "Cortisol is secreted by the adrenal cortex (zona fasciculata)."
-        trust consensus   % [FLAG: pending]
+        source "This hormone functions as the primary glucocorticoid synthesized and released by the zona fasciculata of the adrenal cortex."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538239/"
+        trust authoritative
     relate deficiency_syndrome(cortisol, addison_disease)
         source "Cortisol deficiency (primary adrenal insufficiency) causes Addison disease."
-        trust consensus   % [FLAG: pending]
+        trust consensus   % [FLAG: direction_only]
 
     % --- Thyroxine (T4) --------------------------------------------------
     relate secreted_by(thyroxine, thyroid_gland)
-        source "Thyroxine (T4) is secreted by the thyroid gland."
-        trust consensus   % [FLAG: pending]
+        source "The main hormones produced by the thyroid gland are thyroxine or tetraiodothyronine (T4) and triiodothyronine (T3)."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK500006/"
+        trust authoritative
     relate deficiency_syndrome(thyroxine, hypothyroidism)
-        source "Thyroid hormone deficiency causes hypothyroidism."
-        trust consensus   % [FLAG: pending]
+        source "Hypothyroidism results from low levels of thyroid hormone with varied etiology and manifestations."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK519536/"
+        trust authoritative
 
     % --- Antidiuretic hormone (ADH) --------------------------------------
     relate secreted_by(adh, posterior_pituitary)
-        source "Antidiuretic hormone (ADH/vasopressin) is released from the posterior pituitary."
-        trust consensus   % [FLAG: pending]
+        source "The posterior pituitary gland secretes ADH and oxytocin, hormones synthesized in the hypothalamus, which are released into the neurohypophyseal capillaries that surround the gland."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526130/"
+        trust authoritative
     relate deficiency_syndrome(adh, central_diabetes_insipidus)
-        source "ADH deficiency causes central diabetes insipidus."
-        trust consensus   % [FLAG: pending]
+        source "A failure of ADH secretion causes central diabetes insipidus."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK526069/"
+        trust authoritative
 
     % --- Parathyroid hormone (PTH) ---------------------------------------
     relate secreted_by(pth, parathyroid_gland)
-        source "Parathyroid hormone is secreted by the parathyroid glands."
-        trust consensus   % [FLAG: pending]
+        source "The parathyroid gland secretes parathyroid hormone (PTH), a polypeptide, in response to low calcium levels detected in the blood."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK499940/"
+        trust authoritative
     relate deficiency_syndrome(pth, hypoparathyroidism)
-        source "PTH deficiency causes hypoparathyroidism (hypocalcemia)."
-        trust consensus   % [FLAG: pending]
+        source "Hypoparathyroidism is an uncommon endocrine abnormality in which parathyroid gland dysfunction causes parathyroid hormone deficiency. [...] Consequently, PTH deficiency results in hypocalcemia and hyperphosphatemia, while alkaline phosphatase, a marker of bone formation, is normal."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK441899/"
+        trust authoritative
 
     % --- Growth hormone (GH) ---------------------------------------------
     relate secreted_by(growth_hormone, anterior_pituitary)
-        source "Growth hormone is secreted by the anterior pituitary (somatotrophs)."
-        trust consensus   % [FLAG: pending]
+        source "Human growth hormone is produced by the anterior pituitary gland in acidophilic somatotrophic cells."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482141/"
+        trust authoritative
     relate deficiency_syndrome(growth_hormone, pituitary_dwarfism)
-        source "Childhood growth hormone deficiency causes pituitary dwarfism (short stature)."
-        trust consensus   % [FLAG: pending]
+        source "A type of reduced stature with normal proportions related to dysfunction of the pituitary gland related to either an isolated defect in the secretion of growth hormone or to panhypopituitarism, i.e., a deficit of all the anterior pituitary hormones."
+        locator "https://www.ncbi.nlm.nih.gov/medgen/8506"
+        trust authoritative
 }
