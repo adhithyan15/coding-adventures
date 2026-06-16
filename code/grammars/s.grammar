@@ -78,13 +78,7 @@ assignment = comparison [ ( ASSIGN | UNDERSCORE | SUPER_ASSIGN | RIGHT_ASSIGN ) 
 # A single optional comparison; chaining like `a < b < c` is not S syntax.
 # =============================================================================
 
-comparison = range [ ( EQEQ | NE | LE | GE | LT | GT ) range ] ;
-
-# =============================================================================
-# range — the colon sequence operator: `1:5` is c(1,2,3,4,5).
-# =============================================================================
-
-range = additive [ COLON additive ] ;
+comparison = additive [ ( EQEQ | NE | LE | GE | LT | GT ) additive ] ;
 
 # =============================================================================
 # additive / multiplicative — left-associative arithmetic via repetition.
@@ -92,7 +86,21 @@ range = additive [ COLON additive ] ;
 
 additive = multiplicative { ( PLUS | MINUS ) multiplicative } ;
 
-multiplicative = unary { ( STAR | SLASH ) unary } ;
+multiplicative = special { ( STAR | SLASH ) special } ;
+
+# =============================================================================
+# special — user and built-in `%op%` infix operators (v2). Left-associative;
+# binds tighter than `* /` and looser than `:`, matching R.
+# =============================================================================
+
+special = range { PERCENT_OP range } ;
+
+# =============================================================================
+# range — the colon sequence operator: `1:5` is c(1,2,3,4,5). v2 fix: `:` now
+# binds tighter than arithmetic (it wraps `unary`), so `1:3+1` is c(2,3,4).
+# =============================================================================
+
+range = unary [ COLON unary ] ;
 
 # =============================================================================
 # unary — prefix minus. Looser than `^`, so `-2^2` is -(2^2) = -4, matching S.
@@ -109,16 +117,24 @@ unary = MINUS unary
 power = postfix [ CARET unary ] ;
 
 # =============================================================================
-# postfix — function calls and indexing, applied left-to-right and tightest:
+# postfix — function calls, indexing, double-index, and `$` (v2), applied
+# left-to-right and tightest:
 #   f(1, k = 2)      call with positional and named arguments
-#   x[i]             index
+#   x[i]   x[i, j]   single-bracket index (1-D, or 2-D for data frames)
+#   x[[k]]           double-bracket extraction (one column / one element)
+#   df$name          column by name
 #   m(1)(2)          chained application
+#
+# `dindex_suffix` is listed before `index_suffix` so that `[[` is matched as a
+# double bracket rather than a single bracket followed by a failed inner index.
 # =============================================================================
 
-postfix = primary { call_suffix | index_suffix } ;
+postfix = primary { call_suffix | dindex_suffix | index_suffix | dollar_suffix } ;
 
-call_suffix  = LPAREN [ arg_list ] RPAREN ;
-index_suffix = LBRACKET [ arg_list ] RBRACKET ;
+call_suffix   = LPAREN [ arg_list ] RPAREN ;
+dindex_suffix = LBRACKET LBRACKET expr RBRACKET RBRACKET ;
+index_suffix  = LBRACKET [ arg_list ] RBRACKET ;
+dollar_suffix = DOLLAR NAME ;
 
 arg_list = arg { COMMA arg } ;
 

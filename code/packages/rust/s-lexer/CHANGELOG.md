@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-06-15
+
+### Added
+
+- `PERCENT_OP` token: one token per `%…%` block (`%%`, `%/%`, `%in%`, `%o%`,
+  user-defined `%name%`).
+- `DOLLAR` token (`$`) for data-frame column access.
+- Regenerated the embedded `_grammar.rs` accordingly.
+
 ## [0.1.0] - 2026-06-15
 
 ### Added

@@ -14,9 +14,10 @@ use parser::grammar_parser::GrammarASTNode;
 use r_vector::{is_na_real, na_real, Double};
 use std::rc::Rc;
 
-/// A built-in function: it receives already-evaluated arguments (v1 is eager —
-/// there are no lazy promises yet) and returns an [`SValue`].
-pub type Builtin = fn(&[Arg]) -> SResult<SValue>;
+/// A built-in function: it receives the interpreter (so it can call back into
+/// user functions — e.g. `sapply`, or S3 method dispatch) and the already-
+/// evaluated arguments (v1 is eager — there are no lazy promises yet).
+pub type Builtin = fn(&crate::eval::Interpreter, &[Arg]) -> SResult<SValue>;
 
 /// A formal parameter of a user-defined function, with an optional default
 /// expression (stored unevaluated, as in S).
@@ -58,6 +59,43 @@ pub enum SValue {
     },
     /// A built-in function (`c`, `mean`, …).
     Builtin { name: String, func: Builtin },
+
+    /// A factor: integer `codes` (1-based into `levels`, `None` = `NA`) plus the
+    /// ordered `levels`. Implicit class `"factor"`.
+    Factor {
+        codes: Vec<Option<u32>>,
+        levels: Vec<String>,
+    },
+
+    /// A data frame: equal-length `columns` with their `names`. Implicit class
+    /// `"data.frame"`.
+    DataFrame {
+        names: Vec<String>,
+        columns: Vec<SValue>,
+    },
+
+    /// A value carrying an explicit S3 `class` attribute. Transparent to most
+    /// operations (they see through to `inner`); only `class()` and method
+    /// dispatch observe the class.
+    Classed {
+        inner: Box<SValue>,
+        class: Vec<String>,
+    },
+}
+
+/// The S3 class vector of a value: the explicit class if one was set, otherwise
+/// the implicit class derived from the value's type.
+pub fn class_of(value: &SValue) -> Vec<String> {
+    match value {
+        SValue::Classed { class, .. } => class.clone(),
+        SValue::Factor { .. } => vec!["factor".to_string()],
+        SValue::DataFrame { .. } => vec!["data.frame".to_string()],
+        SValue::Double(_) => vec!["numeric".to_string()],
+        SValue::Logical(_) => vec!["logical".to_string()],
+        SValue::Character(_) => vec!["character".to_string()],
+        SValue::Null => vec!["NULL".to_string()],
+        SValue::Closure { .. } | SValue::Builtin { .. } => vec!["function".to_string()],
+    }
 }
 
 impl std::fmt::Debug for SValue {
@@ -73,6 +111,13 @@ impl std::fmt::Debug for SValue {
                 write!(f, "Closure(/{} params/)", params.len())
             }
             SValue::Builtin { name, .. } => write!(f, "Builtin({name})"),
+            SValue::Factor { codes, levels } => {
+                write!(f, "Factor({} codes, {} levels)", codes.len(), levels.len())
+            }
+            SValue::DataFrame { names, columns } => {
+                write!(f, "DataFrame({} cols: {:?})", columns.len(), names)
+            }
+            SValue::Classed { inner, class } => write!(f, "Classed({class:?}, {inner:?})"),
         }
     }
 }
@@ -106,10 +151,14 @@ impl SValue {
             SValue::Character(_) => "character",
             SValue::Null => "NULL",
             SValue::Closure { .. } | SValue::Builtin { .. } => "closure",
+            SValue::Factor { .. } => "factor",
+            SValue::DataFrame { .. } => "data.frame",
+            SValue::Classed { inner, .. } => inner.type_name(),
         }
     }
 
-    /// `length(x)` — the element count.
+    /// `length(x)` — the element count. A factor's length is its code count; a
+    /// data frame's length is its column count (matching R's `length(df)`).
     pub fn length(&self) -> usize {
         match self {
             SValue::Double(d) => d.len(),
@@ -117,6 +166,9 @@ impl SValue {
             SValue::Character(v) => v.len(),
             SValue::Null => 0,
             SValue::Closure { .. } | SValue::Builtin { .. } => 1,
+            SValue::Factor { codes, .. } => codes.len(),
+            SValue::DataFrame { columns, .. } => columns.len(),
+            SValue::Classed { inner, .. } => inner.length(),
         }
     }
 
@@ -139,11 +191,39 @@ impl SValue {
                     .collect(),
             )),
             SValue::Null => Ok(Double::from_values(vec![])),
+            SValue::Classed { inner, .. } => inner.as_double(),
             other => Err(SError::TypeError(format!(
                 "non-numeric argument (got {})",
                 other.type_name()
             ))),
         }
+    }
+
+    /// Coerce to a logical vector (`None` = `NA`). A numeric coerces by `x != 0`;
+    /// a logical is taken as-is; `NULL` is empty. Used by `any`/`all`/`which`.
+    pub fn as_logical(&self) -> SResult<Vec<Option<bool>>> {
+        match self {
+            SValue::Logical(v) => Ok(v.clone()),
+            SValue::Double(d) => Ok(d
+                .iter()
+                .map(|x| if is_na_real(x) { None } else { Some(x != 0.0) })
+                .collect()),
+            SValue::Null => Ok(vec![]),
+            SValue::Classed { inner, .. } => inner.as_logical(),
+            other => Err(SError::TypeError(format!(
+                "argument is not logical (got {})",
+                other.type_name()
+            ))),
+        }
+    }
+
+    /// The character labels of a factor (`None` = `NA`), used by `as.character`
+    /// and when a factor is combined into a character vector.
+    pub fn factor_labels(codes: &[Option<u32>], levels: &[String]) -> Vec<Option<String>> {
+        codes
+            .iter()
+            .map(|c| c.and_then(|k| levels.get((k as usize).wrapping_sub(1)).cloned()))
+            .collect()
     }
 
     /// Coerce to a character vector (for `c()` mixing strings with other types).
@@ -165,6 +245,8 @@ impl SValue {
                 .map(|o| o.map(|b| if b { "TRUE".into() } else { "FALSE".into() }))
                 .collect(),
             SValue::Null => vec![],
+            SValue::Factor { codes, levels } => SValue::factor_labels(codes, levels),
+            SValue::Classed { inner, .. } => inner.as_character(),
             other => vec![Some(other.type_name().to_string())],
         }
     }
@@ -187,6 +269,7 @@ impl SValue {
                 Some(x) => Ok(x != 0.0),
                 None => Err(SError::Missing("argument is of length zero".into())),
             },
+            SValue::Classed { inner, .. } => inner.truthy(),
             other => Err(SError::TypeError(format!(
                 "argument is not interpretable as logical (got {})",
                 other.type_name()
@@ -312,6 +395,10 @@ pub fn arithmetic(op: &str, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
         "*" => |x, y| x * y,
         "/" => |x, y| x / y,
         "^" => |x, y| x.powf(y),
+        // `%%` is R's modulo (result takes the divisor's sign); `%/%` is floor
+        // division. Both reuse the same recycling/NA machinery.
+        "%%" => |x, y| x - (x / y).floor() * y,
+        "%/%" => |x, y| (x / y).floor(),
         other => {
             return Err(SError::TypeError(format!("unknown operator '{other}'")));
         }
@@ -331,6 +418,22 @@ pub fn negate(value: &SValue) -> SResult<SValue> {
             .map(|x| if is_na_real(x) { na_real() } else { -x })
             .collect(),
     )))
+}
+
+/// `x %in% table` — for each element of `x`, whether it appears in `table`.
+/// Returns a logical vector the length of `x`. Membership is tested on the
+/// coerced character form, so it works uniformly for numeric, logical, and
+/// character values. Unlike comparison, `%in%` never yields `NA` (an `NA` in
+/// `x` is `TRUE` iff `table` also contains `NA`, matching R).
+pub fn membership(lhs: &SValue, rhs: &SValue) -> SValue {
+    let haystack: std::collections::HashSet<Option<String>> =
+        rhs.as_character().into_iter().collect();
+    SValue::Logical(
+        lhs.as_character()
+            .into_iter()
+            .map(|n| Some(haystack.contains(&n)))
+            .collect(),
+    )
 }
 
 /// Apply a comparison operator, producing a logical vector. Numeric operands
@@ -451,6 +554,11 @@ pub fn index(base: &SValue, idx: &SValue) -> SResult<SValue> {
             SValue::Character(picks.iter().map(|p| p.and_then(|i| v[i].clone())).collect())
         }
         SValue::Null => SValue::Null,
+        SValue::Factor { codes, levels } => SValue::Factor {
+            codes: picks.iter().map(|p| p.and_then(|i| codes[i])).collect(),
+            levels: levels.clone(),
+        },
+        SValue::Classed { inner, .. } => index(inner, idx)?,
         other => {
             return Err(SError::Index(format!(
                 "object of type '{}' is not subsettable",
@@ -529,9 +637,97 @@ pub fn format_value(value: &SValue) -> Vec<String> {
         SValue::Builtin { name, .. } => {
             return vec![format!("function ({}) .Primitive", name)];
         }
+        SValue::Factor { codes, levels } => {
+            if codes.is_empty() {
+                return vec![
+                    "factor(0)".to_string(),
+                    format!("Levels: {}", levels.join(" ")),
+                ];
+            }
+            let labels: Vec<String> = factor_labels(codes, levels)
+                .into_iter()
+                .map(|o| o.unwrap_or_else(|| "<NA>".to_string()))
+                .collect();
+            let mut lines = format_vector(&labels);
+            lines.push(format!("Levels: {}", levels.join(" ")));
+            return lines;
+        }
+        SValue::DataFrame { names, columns } => return format_data_frame(names, columns),
+        SValue::Classed { inner, .. } => return format_value(inner),
     };
 
     format_vector(&elems)
+}
+
+/// Free-function form of [`SValue::factor_labels`] for use inside formatting.
+fn factor_labels(codes: &[Option<u32>], levels: &[String]) -> Vec<Option<String>> {
+    SValue::factor_labels(codes, levels)
+}
+
+/// The unquoted printed form of element `i` of a value (used by data-frame
+/// table rendering). Out-of-range or unsupported cells render as `NA`.
+pub fn element_string(value: &SValue, i: usize) -> String {
+    match value {
+        SValue::Double(d) => d
+            .get_value(i)
+            .map(format_number)
+            .unwrap_or_else(|| "NA".into()),
+        SValue::Logical(v) => match v.get(i) {
+            Some(Some(true)) => "TRUE".into(),
+            Some(Some(false)) => "FALSE".into(),
+            _ => "NA".into(),
+        },
+        SValue::Character(v) => v
+            .get(i)
+            .and_then(|o| o.clone())
+            .unwrap_or_else(|| "NA".into()),
+        SValue::Factor { codes, levels } => codes
+            .get(i)
+            .and_then(|c| *c)
+            .and_then(|k| levels.get((k as usize).wrapping_sub(1)).cloned())
+            .unwrap_or_else(|| "NA".into()),
+        SValue::Classed { inner, .. } => element_string(inner, i),
+        _ => "NA".into(),
+    }
+}
+
+/// Render a data frame as a simple left-aligned table with a leading row-number
+/// column, the way R's `print.data.frame` does (without the fancier formatting).
+fn format_data_frame(names: &[String], columns: &[SValue]) -> Vec<String> {
+    let nrow = columns.first().map(|c| c.length()).unwrap_or(0);
+    if columns.is_empty() {
+        return vec!["data frame with 0 columns and 0 rows".to_string()];
+    }
+
+    // Build the grid of cell strings: header row + one row per observation. The
+    // first column is the 1-based row number.
+    let mut header: Vec<String> = vec![String::new()];
+    header.extend(names.iter().cloned());
+    let mut rows: Vec<Vec<String>> = vec![header];
+    for r in 0..nrow {
+        let mut row = vec![(r + 1).to_string()];
+        for col in columns {
+            row.push(element_string(col, r));
+        }
+        rows.push(row);
+    }
+
+    // Column widths, then left-align each cell.
+    let ncol = columns.len() + 1;
+    let widths: Vec<usize> = (0..ncol)
+        .map(|c| rows.iter().map(|row| row[c].len()).max().unwrap_or(0))
+        .collect();
+    rows.iter()
+        .map(|row| {
+            row.iter()
+                .enumerate()
+                .map(|(c, cell)| format!("{cell:<width$}", width = widths[c]))
+                .collect::<Vec<_>>()
+                .join(" ")
+                .trim_end()
+                .to_string()
+        })
+        .collect()
 }
 
 /// Lay out element strings into `[i]`-prefixed lines, wrapping near 80 columns,
@@ -783,7 +979,7 @@ mod tests {
         assert!(index(
             &SValue::Builtin {
                 name: "c".into(),
-                func: |_| Ok(SValue::Null)
+                func: |_, _| Ok(SValue::Null)
             },
             &SValue::scalar(1.0)
         )
@@ -836,7 +1032,7 @@ mod tests {
     fn format_value_for_callables() {
         let b = SValue::Builtin {
             name: "c".into(),
-            func: |_| Ok(SValue::Null),
+            func: |_, _| Ok(SValue::Null),
         };
         assert_eq!(format_value(&b), vec!["function (c) .Primitive"]);
     }
@@ -852,5 +1048,76 @@ mod tests {
         assert_eq!(bounded_sequence(3.0, 1.0).unwrap(), vec![3.0, 2.0, 1.0]);
         assert!(bounded_sequence(1.0, f64::INFINITY).is_err());
         assert!(bounded_sequence(1.0, 1e18).is_err());
+    }
+
+    // --- v2: membership, logical coercion, class, new formatting --------
+
+    #[test]
+    fn membership_returns_logical() {
+        let r = membership(
+            &SValue::doubles(vec![1.0, 5.0]),
+            &SValue::doubles(vec![1.0, 2.0, 3.0]),
+        );
+        assert!(matches!(&r, SValue::Logical(v) if *v == vec![Some(true), Some(false)]));
+    }
+
+    #[test]
+    fn as_logical_coercion() {
+        assert_eq!(SValue::scalar(0.0).as_logical().unwrap(), vec![Some(false)]);
+        assert_eq!(SValue::scalar(2.0).as_logical().unwrap(), vec![Some(true)]);
+        assert!(SValue::Character(vec![Some("x".into())])
+            .as_logical()
+            .is_err());
+    }
+
+    #[test]
+    fn class_of_implicit_and_explicit() {
+        assert_eq!(class_of(&SValue::scalar(1.0)), vec!["numeric"]);
+        assert_eq!(class_of(&SValue::Character(vec![])), vec!["character"]);
+        assert_eq!(class_of(&SValue::Null), vec!["NULL"]);
+        let f = SValue::Factor {
+            codes: vec![],
+            levels: vec![],
+        };
+        assert_eq!(class_of(&f), vec!["factor"]);
+        let c = SValue::Classed {
+            inner: Box::new(SValue::scalar(1.0)),
+            class: vec!["myc".into()],
+        };
+        assert_eq!(class_of(&c), vec!["myc"]);
+    }
+
+    #[test]
+    fn format_factor_and_classed_and_data_frame() {
+        let f = SValue::Factor {
+            codes: vec![Some(2), Some(1)],
+            levels: vec!["a".into(), "b".into()],
+        };
+        assert_eq!(format_value(&f), vec!["[1] b a", "Levels: a b"]);
+
+        // Classed delegates to its inner value's formatting.
+        let c = SValue::Classed {
+            inner: Box::new(SValue::scalar(5.0)),
+            class: vec!["myc".into()],
+        };
+        assert_eq!(format_value(&c), vec!["[1] 5"]);
+
+        let df = SValue::DataFrame {
+            names: vec!["x".into()],
+            columns: vec![SValue::doubles(vec![1.0, 2.0])],
+        };
+        assert!(format_value(&df).len() >= 3); // header + two rows
+    }
+
+    #[test]
+    fn factor_labels_and_element_string() {
+        let codes = vec![Some(2u32), None, Some(1u32)];
+        let levels = vec!["a".to_string(), "b".to_string()];
+        assert_eq!(
+            SValue::factor_labels(&codes, &levels),
+            vec![Some("b".to_string()), None, Some("a".to_string())]
+        );
+        let d = SValue::doubles(vec![1.0, 2.5]);
+        assert_eq!(element_string(&d, 1), "2.5");
     }
 }

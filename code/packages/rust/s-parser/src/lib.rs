@@ -226,4 +226,28 @@ mod tests {
             "x <- c(1, 2, 3)\nmean(x)\nx * 10 + c(1, 2)\nsd(x)\n"
         ));
     }
+
+    // --- v2 grammar additions -------------------------------------------
+
+    #[test]
+    fn infix_operators_parse() {
+        assert!(contains_rule(&parse_s("x %% 3\n"), "special"));
+        assert!(parses("a %in% b\n"));
+        assert!(parses("\"%plus%\" <- function(a, b) a + b\n"));
+    }
+
+    #[test]
+    fn dollar_and_double_bracket_parse() {
+        assert!(contains_rule(&parse_s("df$x\n"), "dollar_suffix"));
+        assert!(contains_rule(&parse_s("df[[\"x\"]]\n"), "dindex_suffix"));
+        assert!(contains_rule(&parse_s("df[1, 2]\n"), "index_suffix"));
+    }
+
+    #[test]
+    fn precedence_fix_keeps_colon_inside_arithmetic() {
+        // `1:3+1` must parse (range nested under additive).
+        let ast = parse_s("1:3+1\n");
+        assert!(contains_rule(&ast, "additive"));
+        assert!(contains_rule(&ast, "range"));
+    }
 }

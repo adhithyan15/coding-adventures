@@ -20,7 +20,8 @@ use crate::builtins;
 use crate::env::{define, lookup, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
-    arithmetic, bounded_sequence, compare, format_value, index, negate, Arg, Param, SValue,
+    arithmetic, bounded_sequence, class_of, compare, format_value, index, membership, negate, Arg,
+    Param, SValue, MAX_SEQ_LEN,
 };
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -91,13 +92,42 @@ impl Interpreter {
         &self.global
     }
 
-    /// Append a block of `print()` output (used by the print built-in path).
+    /// Append a block of output, one newline-terminated line each.
     fn emit(&self, lines: &[String]) {
         let mut out = self.out.borrow_mut();
         for line in lines {
             out.push_str(line);
             out.push('\n');
         }
+    }
+
+    /// Append raw text to the output buffer (used by `cat`, which controls its
+    /// own newlines).
+    pub(crate) fn emit_raw(&self, text: &str) {
+        self.out.borrow_mut().push_str(text);
+    }
+
+    /// The S3 `print` generic: dispatch on the value's class to a user or
+    /// built-in `print.<class>` method (then `print.default`), falling back to
+    /// the standard formatting. The method does its own output (via `cat`,
+    /// `print`, …); the default path emits `format_value`.
+    pub(crate) fn dispatch_print(&self, value: &SValue) -> SResult<SValue> {
+        let mut candidates = class_of(value);
+        candidates.push("default".to_string());
+        for cls in candidates {
+            if let Some(method) = lookup(&self.global, &format!("print.{cls}")) {
+                if method.is_callable() {
+                    let args = [Arg {
+                        name: None,
+                        value: value.clone(),
+                    }];
+                    self.call_value(method, &args)?;
+                    return Ok(value.clone());
+                }
+            }
+        }
+        self.emit(&format_value(value));
+        Ok(value.clone())
     }
 
     /// Parse and evaluate `src`, returning the value of the last statement.
@@ -118,9 +148,17 @@ impl Interpreter {
             }
         }
 
+        // Auto-print a visible top-level result through the S3 `print` generic,
+        // so factors, data frames, and user-classed values render via their own
+        // methods (R does the same at the prompt).
+        let visible = self.visible.get();
+        if visible {
+            self.dispatch_print(&last)?;
+        }
+
         Ok(Outcome {
             value: last,
-            visible: self.visible.get(),
+            visible,
             printed: self.out.borrow().clone(),
         })
     }
@@ -153,6 +191,7 @@ impl Interpreter {
             "comparison" => self.eval_comparison(node, env),
             "range" => self.eval_range(node, env),
             "additive" | "multiplicative" => self.eval_arith_chain(node, env),
+            "special" => self.eval_special(node, env),
             "unary" => self.eval_unary(node, env),
             "power" => self.eval_power(node, env),
             "postfix" => self.eval_postfix(node, env),
@@ -251,6 +290,90 @@ impl Interpreter {
         }
     }
 
+    /// Left-associative fold over the `%op%` infix operators.
+    fn eval_special(&self, node: &GrammarASTNode, env: &Env) -> SResult<SValue> {
+        let mut acc: Option<SValue> = None;
+        let mut pending: Option<String> = None;
+        let mut applied = false;
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => {
+                    let v = self.eval_node(n, env)?;
+                    acc = Some(match (acc.take(), pending.take()) {
+                        (None, _) => v,
+                        (Some(a), Some(op)) => {
+                            applied = true;
+                            self.eval_infix(&op, &a, &v, env)?
+                        }
+                        (Some(a), None) => a,
+                    });
+                }
+                ASTNodeOrToken::Token(t) => pending = Some(t.value.clone()),
+            }
+        }
+        let value = acc.ok_or_else(|| SError::Parse("empty %op% chain".into()))?;
+        if applied {
+            self.as_visible(value)
+        } else {
+            Ok(value)
+        }
+    }
+
+    /// Evaluate one `%op%` application. `%%`, `%/%`, `%in%`, and `%o%` are
+    /// built in; any other `%name%` is looked up as a user-defined function
+    /// (defined via `"%name%" <- function(a, b) …`) and called `(lhs, rhs)`.
+    fn eval_infix(&self, op: &str, lhs: &SValue, rhs: &SValue, env: &Env) -> SResult<SValue> {
+        match op {
+            "%%" => arithmetic("%%", lhs, rhs),
+            "%/%" => arithmetic("%/%", lhs, rhs),
+            "%in%" => Ok(membership(lhs, rhs)),
+            "%o%" => self.outer_product(lhs, rhs),
+            _ => {
+                let func = lookup(env, op).ok_or_else(|| SError::Undefined(op.to_string()))?;
+                let args = [
+                    Arg {
+                        name: None,
+                        value: lhs.clone(),
+                    },
+                    Arg {
+                        name: None,
+                        value: rhs.clone(),
+                    },
+                ];
+                self.call_value(func, &args)
+            }
+        }
+    }
+
+    /// `a %o% b` — the outer product: every product `a[i] * b[j]`, laid out in
+    /// row-major order (`length(a) * length(b)` elements).
+    fn outer_product(&self, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
+        let a = lhs.as_double()?;
+        let b = rhs.as_double()?;
+        // Each length is individually capped, but the product is not — bound it
+        // so `1:1e6 %o% 1:1e6` can't request a petabyte-scale allocation.
+        let total = a
+            .len()
+            .checked_mul(b.len())
+            .filter(|&n| n <= MAX_SEQ_LEN)
+            .ok_or_else(|| {
+                SError::Index(format!(
+                    "outer product result too large (limit {MAX_SEQ_LEN} elements)"
+                ))
+            })?;
+        let mut out = Vec::with_capacity(total);
+        for x in a.iter() {
+            for y in b.iter() {
+                out.push(if is_na_real(x) || is_na_real(y) {
+                    na_real()
+                } else {
+                    x * y
+                });
+            }
+        }
+        Ok(SValue::doubles(out))
+    }
+
     fn eval_unary(&self, node: &GrammarASTNode, env: &Env) -> SResult<SValue> {
         // Either `MINUS unary` or a pass-through to `power`.
         if op_token(node).as_deref() == Some("-") {
@@ -299,12 +422,25 @@ impl Interpreter {
                 }
                 "index_suffix" => {
                     let args = self.eval_args(suffix, env)?;
-                    if args.len() != 1 {
-                        return Err(SError::Index(
-                            "v1 supports single-bracket indexing with one subscript".into(),
-                        ));
-                    }
-                    value = index(&value, &args[0].value)?;
+                    value = match args.len() {
+                        1 => index(&value, &args[0].value)?,
+                        // `df[rows, cols]` — 2-D subsetting (data frames).
+                        2 => crate::dataframe::index2d(&value, &args[0].value, &args[1].value)?,
+                        _ => return Err(SError::Index("too many subscripts".into())),
+                    };
+                    self.visible.set(true);
+                }
+                "dindex_suffix" => {
+                    // `x[[ key ]]` — single-column / single-element extraction.
+                    let key = self.eval_node(only_node(suffix)?, env)?;
+                    value = crate::dataframe::extract(&value, &key)?;
+                    self.visible.set(true);
+                }
+                "dollar_suffix" => {
+                    // `df$name` — column by name.
+                    let name = name_token(suffix)
+                        .ok_or_else(|| SError::Parse("malformed $ access".into()))?;
+                    value = crate::dataframe::column_by_name(&value, &name)?;
                     self.visible.set(true);
                 }
                 other => return Err(SError::Parse(format!("unexpected suffix '{other}'"))),
@@ -357,18 +493,32 @@ impl Interpreter {
         Ok(Arg { name, value })
     }
 
-    /// Apply a callable value to evaluated arguments.
+    /// Apply a callable value at a top-level call site, applying S's result
+    /// visibility rules (`print` is invisible and emits output; other calls are
+    /// visible; a closure's body decides its own visibility).
     fn apply(&self, callee: SValue, args: &[Arg], _env: &Env) -> SResult<SValue> {
         match callee {
             SValue::Builtin { name, func } => {
-                let result = func(args)?;
-                if name == "print" {
-                    self.emit(&format_value(&result));
+                let result = func(self, args)?;
+                // `print` and `cat` produce their own output and return
+                // invisibly; every other built-in yields a visible value.
+                if name == "print" || name == "cat" {
                     self.as_invisible(result)
                 } else {
                     self.as_visible(result)
                 }
             }
+            SValue::Closure { params, body, env } => self.call_closure(&params, &body, &env, args),
+            other => Err(SError::NotCallable(other.type_name().to_string())),
+        }
+    }
+
+    /// Call a callable value and return its result, *without* the top-level
+    /// visibility/printing side effects. This is the entry point built-ins use
+    /// to invoke a user function (`sapply`, `lapply`) or an S3 method.
+    pub(crate) fn call_value(&self, callee: SValue, args: &[Arg]) -> SResult<SValue> {
+        match callee {
+            SValue::Builtin { func, .. } => func(self, args),
             SValue::Closure { params, body, env } => self.call_closure(&params, &body, &env, args),
             other => Err(SError::NotCallable(other.type_name().to_string())),
         }
@@ -633,29 +783,28 @@ fn name_token(node: &GrammarASTNode) -> Option<String> {
 /// only bare names (`x <- ...`); complex targets like `x[1] <- ...` are not yet
 /// handled and produce an error.
 fn lvalue_name(node: &GrammarASTNode) -> SResult<String> {
-    let mut names = Vec::new();
-    let mut total_tokens = 0;
-    collect_tokens(node, &mut names, &mut total_tokens);
-    if names.len() == 1 && total_tokens == 1 {
-        Ok(names.remove(0))
-    } else {
-        Err(SError::TypeError(
-            "invalid (non-name) assignment target".into(),
-        ))
+    // The target subtree must reduce to a single token: a bare NAME, or a
+    // STRING (which names a function operator, e.g. `"%between%" <- ...`).
+    let mut tokens: Vec<(&str, &str)> = Vec::new();
+    collect_tokens(node, &mut tokens);
+    if let [(ty, val)] = tokens.as_slice() {
+        match *ty {
+            "NAME" => return Ok((*val).to_string()),
+            "STRING" => return Ok(strip_quotes(val)),
+            _ => {}
+        }
     }
+    Err(SError::TypeError(
+        "invalid (non-name) assignment target".into(),
+    ))
 }
 
-/// Collect every `NAME` token value and a count of all tokens in a subtree.
-fn collect_tokens(node: &GrammarASTNode, names: &mut Vec<String>, total: &mut usize) {
+/// Collect every token (effective type name, value) in a subtree, in order.
+fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<(&'a str, &'a str)>) {
     for child in &node.children {
         match child {
-            ASTNodeOrToken::Token(t) => {
-                *total += 1;
-                if t.effective_type_name() == "NAME" {
-                    names.push(t.value.clone());
-                }
-            }
-            ASTNodeOrToken::Node(n) => collect_tokens(n, names, total),
+            ASTNodeOrToken::Token(t) => out.push((t.effective_type_name(), t.value.as_str())),
+            ASTNodeOrToken::Node(n) => collect_tokens(n, out),
         }
     }
 }
@@ -695,13 +844,18 @@ fn scalar_f64(value: &SValue) -> SResult<f64> {
 }
 
 /// Extract element `i` of a vector as a fresh length-1 value.
-fn nth_element(value: &SValue, i: usize) -> SValue {
+pub(crate) fn nth_element(value: &SValue, i: usize) -> SValue {
     match value {
         SValue::Double(d) => SValue::Double(Double::from_values(vec![d
             .get_value(i)
             .unwrap_or_else(na_real)])),
         SValue::Logical(v) => SValue::Logical(vec![v.get(i).copied().flatten()]),
         SValue::Character(v) => SValue::Character(vec![v.get(i).cloned().flatten()]),
+        SValue::Factor { codes, levels } => SValue::Factor {
+            codes: vec![codes.get(i).copied().flatten()],
+            levels: levels.clone(),
+        },
+        SValue::Classed { inner, .. } => nth_element(inner, i),
         _ => SValue::Null,
     }
 }

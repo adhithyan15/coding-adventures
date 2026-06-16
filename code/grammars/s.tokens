@@ -44,6 +44,11 @@ EQEQ         = "=="
 NE           = "!="
 RIGHT_ASSIGN = "->"
 
+# Special infix operators: the whole `%…%` block is one token (v2). This matches
+# `%%` (modulo), `%/%` (integer division), `%in%`, `%o%`, and user-defined
+# `%name%`. Listed here (before the single-char section) as a regex token.
+PERCENT_OP   = /%[^%]*%/
+
 # ============================================================================
 # SECTION 2: Numeric literals
 #
@@ -133,6 +138,7 @@ LBRACKET  = "["
 RBRACKET  = "]"
 COMMA     = ","
 SEMICOLON = ";"
+DOLLAR    = "$"
 
 # ============================================================================
 # SECTION 6: Newlines (significant — statement terminators)

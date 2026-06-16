@@ -20,7 +20,7 @@
 //! is inherently sequential anyway (each line mutates the global environment),
 //! so a direct single-threaded driver is the right fit.
 
-use coding_adventures_s_runtime::{format_value, Interpreter};
+use coding_adventures_s_runtime::Interpreter;
 use std::io::{BufRead, Write};
 
 /// What the REPL should do after being fed one physical line.
@@ -90,14 +90,9 @@ impl SRepl {
         }
 
         match self.interp.eval_str(&src) {
-            Ok(outcome) => {
-                let mut out = outcome.printed;
-                if outcome.visible {
-                    out.push_str(&format_value(&outcome.value).join("\n"));
-                    out.push('\n');
-                }
-                ReplResponse::Output(out)
-            }
+            // The runtime already auto-prints a visible top-level result (through
+            // the S3 `print` generic) into `printed`, so we just surface that.
+            Ok(outcome) => ReplResponse::Output(outcome.printed),
             Err(e) => ReplResponse::Output(format!("Error: {e}\n")),
         }
     }
