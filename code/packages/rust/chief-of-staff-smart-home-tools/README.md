@@ -173,6 +173,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_delivery_summary`
 - `smart_home.list_integration_activation_deployment`
 - `smart_home.get_integration_activation_deployment_summary`
+- `smart_home.list_integration_activation_waiver_closures`
+- `smart_home.get_integration_activation_waiver_closure_summary`
 - `smart_home.list_integration_activation_risk`
 - `smart_home.get_integration_activation_risk_summary`
 - `smart_home.list_integration_activation_dependencies`
