@@ -132,8 +132,17 @@ impl Interpreter {
 
     /// Parse and evaluate `src`, returning the value of the last statement.
     pub fn eval_str(&self, src: &str) -> SResult<Outcome> {
-        self.out.borrow_mut().clear();
         let program = try_parse_s(src).map_err(SError::Parse)?;
+        self.eval_program(&program)
+    }
+
+    /// Evaluate an already-parsed `program` tree. This is the language-neutral
+    /// entry point: it walks a [`GrammarASTNode`] by rule name and is agnostic
+    /// to *which* front end produced it. The R runtime parses with `r-parser`
+    /// (whose grammar uses the same rule names as `s.grammar`) and calls this
+    /// directly, reusing the entire evaluator.
+    pub fn eval_program(&self, program: &GrammarASTNode) -> SResult<Outcome> {
+        self.out.borrow_mut().clear();
 
         let mut last = SValue::Null;
         self.visible.set(false);
@@ -602,6 +611,10 @@ impl Interpreter {
                         "FALSE" | "F" => SValue::Logical(vec![Some(false)]),
                         "NULL" => SValue::Null,
                         "NA" => SValue::Logical(vec![None]),
+                        // R's typed-NA constants. We have no distinct integer
+                        // type, so the numeric ones share the double NA.
+                        "NA_integer_" | "NA_real_" => SValue::Double(Double::na(1)),
+                        "NA_character_" => SValue::Character(vec![None]),
                         "Inf" => SValue::scalar(f64::INFINITY),
                         "NaN" => SValue::scalar(f64::NAN),
                         "break" => return Err(SError::Break),

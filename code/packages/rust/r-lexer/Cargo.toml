@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-r-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for the R language (an implementation of the S language)"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

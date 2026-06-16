@@ -2,6 +2,137 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.140.0] - 2026-06-16
+
+### Added (CLOC12.157 — SIMPLE pipeline gains `dce`)
+
+The `--compilation_level SIMPLE` pass pipeline is now
+`constant-fold → fold-control-flow → dce` (was `constant-fold → fold-control-flow`).
+The dead-code-elimination pass does two things, both scoped to block bodies:
+
+1. **Dead-after-terminator** — drops every statement after a `return` in a
+   block (`function f(){g();return 1;dead()}` ⇒ `function f(){g();return 1}`).
+2. **Empty-statement removal** — sweeps `;` no-ops out of a block. This is what
+   cleans up the empty statement `fold-control-flow` leaves behind when it folds
+   away an `if (false) {…}` with no `else`.
+
+dce runs **last**: both it and `fold-control-flow` declare
+`depends_on = ["constant-fold"]` (so constant-fold runs first), but neither
+depends on the other, so registration order is the tie-breaker — and we register
+dce after fold-control-flow so it can sweep that pass's `;` debris.
+
+- `SIMPLE_PASS_NAMES` is now `["constant-fold", "fold-control-flow", "dce"]`;
+  the `passes` field in the `simple_v2` correlation-vector trace lists all three.
+- `run_simple_pipeline` registers `DcePass` after `FoldControlFlowPass`.
+
+### Verified
+- New `tests/diff/simple-dce/` end-to-end fixture +
+  `tests/diff_simple_dce.rs`: a function body exercising all three passes ⇒
+  `function f(){keep();return 1};` (the dead `if (4 > 5) {…}` folds and is swept,
+  the post-`return` `alsoDead()` is dropped).
+- New unit tests `simple_dce_drops_dead_after_return`,
+  `simple_dce_sweeps_folded_if_empty_statement` (all three passes composing), and
+  `simple_dce_whitespace_only_keeps_dead_code`.
+- Existing `simple_v2` CV test updated to expect all three pass names in `passes`.
+
+## [0.139.0] - 2026-06-16
+
+### Added (CLOC12.156 — SIMPLE pipeline gains `fold-control-flow`)
+
+The `--compilation_level SIMPLE` pass pipeline is now
+`constant-fold → fold-control-flow` (was just `constant-fold`). With the
+control-flow folder, an `if` whose condition is statically decidable has its
+dead branch pruned:
+
+| Source | SIMPLE output |
+|--------|---------------|
+| `if (2 > 3) { keepElse(); } else { takeThis(); }` | `{takeThis()}` |
+| `if (true) { alsoKept(); } else { dropped(); }` | `{alsoKept()}` |
+| `if (4 > 5) { vanishes(); }` | `;` (empty statement) |
+
+The `if (2 > 3)` case is the load-bearing one: `constant-fold` first turns the
+comparison `2 > 3` into the literal `false`, and only then can
+`fold-control-flow` decide the branch — so the two passes must compose. The
+pass registers a `depends_on = ["constant-fold"]`, so the pipeline's
+dependency topo-sort guarantees that order regardless of registration order.
+
+- `SIMPLE_PASS_NAMES` is now `["constant-fold", "fold-control-flow"]`; the
+  `passes` field in the `simple_v2` correlation-vector trace lists both.
+- `run_simple_pipeline` registers `FoldControlFlowPass` alongside
+  `ConstantFoldPass`.
+
+### Verified
+- New `tests/diff/simple-fold-control-flow/` end-to-end fixture +
+  `tests/diff_simple_fold_control_flow.rs`: three decidable `if`s ⇒
+  `{takeThis()}{alsoKept()};`.
+- New unit tests `simple_fold_control_flow_prunes_dead_branch`
+  (`if (2 > 3) {a()} else {b()}` ⇒ `{b()}`) and
+  `simple_fold_control_flow_whitespace_only_keeps_if` (same input under
+  WHITESPACE_ONLY keeps the whole `if`).
+- Existing `simple_v2` CV test updated to expect both pass names in `passes`.
+- `tests/diff/define/` re-pinned to `--compilation_level WHITESPACE_ONLY`.
+  `--define` is level-independent, and the compilation level runs *before*
+  the define pass, so at SIMPLE the now-present fold-control-flow rewrites
+  `if (DEBUG) {…}` → `DEBUG && …` (while `DEBUG` is still a variable) before
+  the substitution — a correct but surprising interaction that would churn
+  this fixture on every SIMPLE PR. Pinning WHITESPACE_ONLY isolates the
+  define-substitution oracle; SIMPLE behavior lives in the `simple-*` fixtures.
+
+## [0.138.0] - 2026-06-15
+
+### Added (CLOC12.155 — SIMPLE runs the typed-AST optimization pipeline, v2)
+
+`--compilation_level SIMPLE` no longer degrades to whitespace-only output.
+It now runs the real typed-AST optimization pipeline:
+
+```text
+source ──parse──▶ grammar AST ──bridge──▶ typed Program
+       ──passes──▶ optimized Program ──emit──▶ JS text
+```
+
+In this first slice (PR-1) the pass pipeline holds a single pass —
+`constant-fold` — so constant expressions are evaluated at compile time
+(`1 + 2` ⇒ `3`, `3 * 4` ⇒ `12`, `2 + 3 * 4` ⇒ `14`). Follow-up PRs append
+the remaining SIMPLE-appropriate passes (fold-control-flow, dce,
+remove-unused-vars, local inline/rename), one pass per PR.
+
+- **New `run_simple_pipeline` helper** in `run.rs`: takes the bridged
+  `Program`, runs a `closure-pass-pipeline::PassPipeline` holding
+  `ConstantFoldPass`, then serialises the optimized tree back to JS with
+  `closure-emitter::emit` (minified, no source map). All four
+  previously-wired-but-unused crates (`closure-pass-pipeline`,
+  `closure-pass-constant-fold`, `closure-emitter`, `type-sidecar`) are now
+  actually invoked.
+- **`SIMPLE_PASS_NAMES` constant** — the ordered pass list the SIMPLE level
+  runs (`["constant-fold"]` today). Each follow-up PR appends one entry.
+- **Degrade-safe**: the typed path is best-effort. A grammar-parse
+  rejection, a Phase-2+ bridge `UnsupportedSyntax`, a pass error, or an
+  emitter error all fall back to `whitespace_only` so the compiler never
+  errors on valid-but-not-yet-supported input. Only
+  `BridgeError::InternalError` (a broken invariant) still propagates as
+  `CompilerError::Bridge`.
+- **Correlation-vector trace**: the `compilation_level` contribution tag
+  moves from `simple_v1` to `simple_v2` and gains a `passes` field listing
+  the pipeline. `bridge_status` now distinguishes `"ok"` (true optimized
+  emit) from the degrade reasons `"parse_error:…"`,
+  `"unsupported_syntax:…"`, `"pass_error:…"`, and `"emit_error:…"`.
+
+### Verified
+- New `tests/diff/simple-constant-fold/` end-to-end fixture +
+  `tests/diff_simple.rs`: `var sum = 1 + 2; …` ⇒
+  `var sum=3;var product=12;var nested=14;`.
+- New unit tests `simple_level_constant_folds_arithmetic` (SIMPLE folds
+  `1 + 2` ⇒ `3`) and `simple_level_whitespace_only_leaves_arithmetic_unfolded`
+  (the same input under WHITESPACE_ONLY keeps `1+2`, proving the fold is the
+  pipeline's doing).
+- Existing SIMPLE unit tests updated for the `simple_v2` tag and `passes`
+  field; degrade-on-unsupported-syntax behavior unchanged.
+- `tests/diff/define/expected.stdout` regenerated: it runs at the default
+  level (now SIMPLE), so its output is the emitter's form — the `if` keeps
+  its block braces (`if(false){…}`) where the older whitespace-only path
+  stripped them. The `--define` substitution meaning (`DEBUG` → `false`) is
+  unchanged and identical across levels (define is a token-level pre-pass).
+
 ## [0.137.0] - 2026-06-15
 
 ### Fixed

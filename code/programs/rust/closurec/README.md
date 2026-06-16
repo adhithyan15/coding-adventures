@@ -117,6 +117,29 @@ surface now means scripts and CI configs that invoke the Java
 tool today can target `closurec` with no flag changes when the
 body fills in.**
 
+## Compilation levels
+
+`--compilation_level` (`-O`) selects how hard the compiler works:
+
+| Level | What it does |
+|-------|--------------|
+| `WHITESPACE_ONLY` | Strips comments and inter-token whitespace only. Token-level; never parses to a typed AST. |
+| `SIMPLE` | Runs the typed-AST optimization pipeline — parse → bridge → passes → emit. Today the pipeline is `constant-fold → fold-control-flow → dce` (e.g. `1 + 2` ⇒ `3`; `if (2 > 3) {a} else {b}` ⇒ `{b}`; code after a `return` is dropped); more passes land one PR at a time. Falls back to `WHITESPACE_ONLY` if the source uses a not-yet-supported construct, so it never errors on valid input. |
+| `ADVANCED` / `BUNDLE` / `TRANSPILE_ONLY` | Identity passthrough for now — the typed passes specific to these levels (tree-shaking, property renaming, etc.) land in follow-up work. |
+
+The SIMPLE pipeline:
+
+```text
+source ──parse──▶ grammar AST ──bridge──▶ typed Program
+       ──passes──▶ optimized Program ──emit──▶ JS text
+```
+
+```sh
+# SIMPLE evaluates constant expressions at compile time:
+closurec --compilation_level SIMPLE --js in.js
+#   var x = 1 + 2;   ⇒   var x=3;
+```
+
 ## Architecture
 
 ```text

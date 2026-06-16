@@ -12,7 +12,8 @@ use std::sync::Arc;
 use http1::{parse_request_head, Http1ParseError};
 use http_core::{BodyKind, Header, RequestHead};
 use tcp_runtime::{
-    PlatformError, TcpConnectionInfo, TcpHandlerResult, TcpRuntime, TcpRuntimeOptions,
+    PlatformError, ShardedStopHandle, ShardedTcpRuntime, TcpConnectionInfo, TcpHandlerResult,
+    TcpRuntime, TcpRuntimeOptions,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -370,6 +371,163 @@ impl HttpServer<transport_platform::windows::WindowsTransportPlatform> {
     }
 }
 
+/// A parallel HTTP/1 server: the **sharded** counterpart of [`HttpServer`]
+/// (LANG-FULL / WEB01a-1).
+///
+/// `HttpServer` drives every connection on a single reactor thread, so handlers
+/// never overlap — one slow request stalls all others. `ShardedHttpServer` runs
+/// the **same** per-connection [`HttpConnectionState`] machine across
+/// `worker_count` reactor threads (a [`ShardedTcpRuntime`]). Connections are
+/// distributed across the shards (with an explicit accept fan-out on macOS/BSD,
+/// since `SO_REUSEPORT` does not load-balance accepts there), so requests on
+/// *different* connections handled by different shards run **concurrently**.
+///
+/// The request handler contract is unchanged: it is still a synchronous
+/// `Fn(HttpRequest) -> HttpResponse` invoked inline on the owning shard, so the
+/// response is produced and written on the same thread and HTTP/1.1 response
+/// ordering on a single connection is preserved automatically. The handler is
+/// shared (`Arc`) across all shards and must therefore be `Send + Sync`.
+///
+/// Two pipelined requests on the *same* connection still serialise — that is
+/// correct for HTTP/1.1 (responses must be written in request order). Parallelism
+/// is across connections, bounded by `worker_count`.
+pub struct ShardedHttpServer<P> {
+    runtime: ShardedTcpRuntime<P, HttpConnectionState>,
+}
+
+impl<P> ShardedHttpServer<P> {
+    /// The local socket address the server is bound to.
+    pub fn local_addr(&self) -> SocketAddr {
+        self.runtime.local_addr()
+    }
+
+    /// The number of reactor shards (handler-parallelism degree).
+    pub fn worker_count(&self) -> usize {
+        self.runtime.worker_count()
+    }
+
+    /// A handle that can stop every shard from another thread.
+    pub fn stop_handle(&self) -> ShardedStopHandle {
+        self.runtime.stop_handle()
+    }
+}
+
+impl<P> ShardedHttpServer<P>
+where
+    P: transport_platform::TransportPlatform + Send + 'static,
+{
+    /// Run all shard reactors until stopped. Blocks the calling thread.
+    pub fn serve(&mut self) -> Result<(), PlatformError> {
+        self.runtime.serve()
+    }
+}
+
+/// Build the `(init, receive)` closures shared by every platform's sharded bind.
+/// The `on_close` is a no-op (mirrors [`HttpServer::bind`]). Factored out so the
+/// per-platform constructors below stay one line of real logic each.
+///
+/// Returns the handler wrapped in an `Arc` plus a clone of the options for the
+/// per-connection state factory — both captured by the returned closures.
+macro_rules! sharded_http_closures {
+    ($handler:expr, $options:expr) => {{
+        let handler: HttpHandler = Arc::new($handler);
+        let state_options = $options.clone();
+        (
+            move |_info: TcpConnectionInfo| HttpConnectionState::new(&state_options),
+            move |info: TcpConnectionInfo, state: &mut HttpConnectionState, bytes: &[u8]| {
+                state.receive(info, bytes, &handler)
+            },
+        )
+    }};
+}
+
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+impl ShardedHttpServer<transport_platform::bsd::KqueueTransportPlatform> {
+    /// Bind a kqueue-backed sharded server (macOS / BSD) with `worker_count`
+    /// reactor shards.
+    pub fn bind_kqueue_sharded<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        let (init, receive) = sharded_http_closures!(handler, options);
+        let runtime = TcpRuntime::bind_kqueue_sharded_with_state(
+            addr,
+            options.tcp,
+            worker_count,
+            init,
+            receive,
+            |_, _| {},
+        )?;
+        Ok(Self { runtime })
+    }
+}
+
+#[cfg(target_os = "linux")]
+impl ShardedHttpServer<transport_platform::linux::EpollTransportPlatform> {
+    /// Bind an epoll-backed sharded server (Linux) with `worker_count` reactor
+    /// shards.
+    pub fn bind_epoll_sharded<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        let (init, receive) = sharded_http_closures!(handler, options);
+        let runtime = TcpRuntime::bind_epoll_sharded_with_state(
+            addr,
+            options.tcp,
+            worker_count,
+            init,
+            receive,
+            |_, _| {},
+        )?;
+        Ok(Self { runtime })
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl ShardedHttpServer<transport_platform::windows::WindowsTransportPlatform> {
+    /// Bind an IOCP-backed sharded server (Windows) with `worker_count` reactor
+    /// shards.
+    pub fn bind_windows_sharded<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        let (init, receive) = sharded_http_closures!(handler, options);
+        let runtime = TcpRuntime::bind_windows_sharded_with_state(
+            addr,
+            options.tcp,
+            worker_count,
+            init,
+            receive,
+            |_, _| {},
+        )?;
+        Ok(Self { runtime })
+    }
+}
+
 fn serialize_response(response: &HttpResponse) -> Vec<u8> {
     let mut output = Vec::new();
     let reason = if response.reason.is_empty() {
@@ -709,5 +867,119 @@ mod tests {
         F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
     {
         HttpServer::bind_windows(addr, options, handler)
+    }
+
+    // ── WEB01a-1: sharded server bind + concurrency test ──────────────────────
+
+    #[cfg(any(
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    ))]
+    fn bind_native_sharded_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<ShardedHttpServer<transport_platform::bsd::KqueueTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        ShardedHttpServer::bind_kqueue_sharded(addr, options, worker_count, handler)
+    }
+
+    #[cfg(target_os = "linux")]
+    fn bind_native_sharded_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<ShardedHttpServer<transport_platform::linux::EpollTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        ShardedHttpServer::bind_epoll_sharded(addr, options, worker_count, handler)
+    }
+
+    #[cfg(target_os = "windows")]
+    fn bind_native_sharded_http_server<A, F>(
+        addr: A,
+        options: HttpServerOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<ShardedHttpServer<transport_platform::windows::WindowsTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
+    {
+        ShardedHttpServer::bind_windows_sharded(addr, options, worker_count, handler)
+    }
+
+    /// A `ShardedHttpServer` with several reactor shards serves many concurrent
+    /// clients correctly: every request gets its matching response and the
+    /// handler is invoked exactly once per request, regardless of which shard a
+    /// connection lands on. This proves the sharded wiring (WEB01a-1) preserves
+    /// the single-server request/response contract under cross-connection
+    /// parallelism. (Throughput *scaling* is measured separately on a CPU-bound
+    /// benchmark — see WEB01a-2; an echo handler is latency-bound and would not
+    /// show speedup here.)
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn sharded_http_server_serves_concurrent_clients_across_shards() {
+        let worker_count = 4;
+        let client_count = 16;
+        let requests_per_client = 4;
+        let seen_requests = Arc::new(AtomicUsize::new(0));
+        let handler_seen = Arc::clone(&seen_requests);
+
+        let mut server = bind_native_sharded_http_server(
+            ("127.0.0.1", 0),
+            HttpServerOptions::default(),
+            worker_count,
+            move |request| {
+                handler_seen.fetch_add(1, Ordering::SeqCst);
+                HttpResponse::ok(format!("ok:{}:{}", request.method(), request.target()))
+                    .with_header("Content-Type", "text/plain")
+            },
+        )
+        .expect("bind sharded HTTP server");
+        assert_eq!(server.worker_count(), worker_count, "all requested shards spawned");
+
+        let addr = server.local_addr();
+        let stop = server.stop_handle();
+        let server_thread = thread::spawn(move || server.serve());
+        let barrier = Arc::new(Barrier::new(client_count));
+
+        let clients = (0..client_count)
+            .map(|client_index| {
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    barrier.wait(); // release all clients at once → spread across shards
+                    exercise_http_client(addr, client_index, requests_per_client)
+                })
+            })
+            .collect::<Vec<_>>();
+
+        for client in clients {
+            client
+                .join()
+                .expect("sharded client thread")
+                .expect("sharded client");
+        }
+
+        stop.stop();
+        server_thread
+            .join()
+            .expect("sharded server thread")
+            .expect("sharded server result");
+        assert_eq!(
+            seen_requests.load(Ordering::SeqCst),
+            client_count * requests_per_client,
+            "every request handled exactly once across all shards",
+        );
     }
 }

@@ -10,6 +10,7 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use crate::address::{CellAddress, SheetId};
 use crate::cell::{Cell, CellContent, CellValue};
 use crate::dag::DependencyGraph;
+use crate::edit::StructuralEdit;
 use crate::errors::SpreadsheetError;
 use crate::parser::{parse, ParseError};
 use crate::recalc::{collect_refs, evaluate};
@@ -315,6 +316,138 @@ impl Workbook {
     }
 
     // ----------------------------------------------------------------
+    // Structural edits — insert / delete rows & columns
+    // ----------------------------------------------------------------
+    //
+    // These relabel the grid: cells at or past the edit point slide over, and
+    // every formula's references are rewritten (via [`FormulaAst::adjust`]) so it
+    // keeps naming the same logical cells — a reference to a deleted line becomes
+    // `#REF!`. The pure address/AST arithmetic lives in `edit.rs`; this layer
+    // applies it to the live cell store, rebuilds the dependency graph (every
+    // address moved, so the old edges are stale), and recalculates.
+    //
+    // v1 scope: single-sheet (the engine's formula references are sheet-local),
+    // and the rebuild + recalc is a full sweep — correct and simple. Cross-sheet
+    // reference adjustment and an incremental recalc are future optimisations.
+
+    /// Insert `count` blank rows before 1-based row `at`; rows at/after `at`
+    /// slide down. Formulas are rewritten and the sheet recalculated.
+    pub fn insert_rows(&mut self, sheet: SheetId, at: u32, count: u32) {
+        self.apply_structural_edit(sheet, StructuralEdit::InsertRows { at, count });
+    }
+
+    /// Delete `count` rows starting at 1-based row `at`; rows after slide up.
+    /// Cells on deleted rows are removed; references to them become `#REF!`.
+    pub fn delete_rows(&mut self, sheet: SheetId, at: u32, count: u32) {
+        self.apply_structural_edit(sheet, StructuralEdit::DeleteRows { at, count });
+    }
+
+    /// Insert `count` blank columns before 1-based column `at`; columns at/after
+    /// slide right. Formulas are rewritten and the sheet recalculated.
+    pub fn insert_cols(&mut self, sheet: SheetId, at: u32, count: u32) {
+        self.apply_structural_edit(sheet, StructuralEdit::InsertCols { at, count });
+    }
+
+    /// Delete `count` columns starting at 1-based column `at`; columns after
+    /// slide left. Cells on deleted columns are removed; references → `#REF!`.
+    pub fn delete_cols(&mut self, sheet: SheetId, at: u32, count: u32) {
+        self.apply_structural_edit(sheet, StructuralEdit::DeleteCols { at, count });
+    }
+
+    /// Apply a [`StructuralEdit`] to one sheet: relocate every cell, rewrite each
+    /// formula's references and echo text, drop cells on deleted lines, rebuild
+    /// the dependency graph, and recalculate. A no-op if `sheet` is unknown.
+    fn apply_structural_edit(&mut self, sheet: SheetId, edit: StructuralEdit) {
+        let Some(s) = self.sheets.get_mut(sheet.0 as usize) else {
+            return;
+        };
+
+        // 0. Refuse an insert that would push a non-empty cell off the u32 grid
+        //    edge. There the per-coordinate shift saturates at `u32::MAX`, so two
+        //    distinct cells would collapse onto the same relocated address and the
+        //    second would silently overwrite the first in the map below — data
+        //    loss. Excel likewise refuses to shift non-empty cells off the sheet.
+        //    (Deletes only drop a band and shift survivors inward — never a
+        //    collision — so they need no such guard.)
+        let would_overflow_grid = match edit {
+            StructuralEdit::InsertRows { at, count } => s
+                .cells
+                .keys()
+                .any(|a| a.row >= at && a.row.checked_add(count).is_none()),
+            StructuralEdit::InsertCols { at, count } => s
+                .cells
+                .keys()
+                .any(|a| a.col >= at && a.col.checked_add(count).is_none()),
+            StructuralEdit::DeleteRows { .. } | StructuralEdit::DeleteCols { .. } => false,
+        };
+        if would_overflow_grid {
+            return; // reject the whole edit rather than lose cells
+        }
+
+        // 1. Relocate cells + rewrite formula references. A cell's *position*
+        //    and its formula's *references* both follow the same edit. Build a
+        //    fresh map: a cell on a deleted line has no new address → dropped.
+        let old = std::mem::take(&mut s.cells);
+        let mut moved: HashMap<CellAddress, Cell> = HashMap::with_capacity(old.len());
+        for (addr, mut cell) in old {
+            if let CellContent::Formula { ast, text, cached } = &mut cell.content {
+                *ast = ast.adjust(edit);
+                *text = ast.to_formula_string(); // keep the echo text honest
+                *cached = None; // recomputed below
+            }
+            if let Some(new_addr) = addr.adjust(edit) {
+                moved.insert(new_addr, cell);
+            }
+        }
+        self.sheets[sheet.0 as usize].cells = moved;
+
+        // 2. Every address moved, so the old dependency edges are stale. Rebuild
+        //    the graph from the rewritten ASTs, then recalc the whole workbook.
+        //    `recalc_all` bumps the revision (one transaction for the edit).
+        self.rebuild_dependency_graph();
+        self.recalc_all();
+
+        // 3. `recalc_all` logged the formula cells it recomputed; also log the
+        //    surviving literal cells so a viewport `changed_since` snapshot taken
+        //    before the edit sees the relocation. (Deleted cells can't be logged
+        //    — a host re-fetches its window, where they read back as empty.)
+        let addrs: Vec<CellAddress> = self.sheets[sheet.0 as usize]
+            .cells
+            .keys()
+            .copied()
+            .collect();
+        for a in addrs {
+            self.log_change(sheet, a);
+        }
+    }
+
+    /// Rebuild the entire cross-sheet dependency graph from the current formula
+    /// ASTs. Used after a structural edit relocates addresses en masse, which
+    /// invalidates every existing edge.
+    fn rebuild_dependency_graph(&mut self) {
+        // Collect first (can't borrow `self.sheets` and mutate `self.graph` at
+        // once), then repopulate a fresh graph.
+        // A graph node is a (sheet, address) pair; an entry is a node plus its
+        // dependency nodes.
+        type Node = (SheetId, CellAddress);
+        let mut deps: Vec<(Node, Vec<Node>)> = Vec::new();
+        for (i, s) in self.sheets.iter().enumerate() {
+            let sheet = SheetId(i as u32);
+            for (addr, cell) in &s.cells {
+                if let CellContent::Formula { ast, .. } = &cell.content {
+                    let mut refs = Vec::new();
+                    collect_refs(ast, sheet, &mut refs);
+                    deps.push(((sheet, *addr), refs));
+                }
+            }
+        }
+        self.graph = DependencyGraph::new();
+        for (node, refs) in deps {
+            self.graph.set_dependencies(node, refs);
+        }
+    }
+
+    // ----------------------------------------------------------------
     // Internal helpers
     // ----------------------------------------------------------------
 
@@ -473,6 +606,106 @@ mod tests {
         // Change the input.
         wb.set_value(s, cell(1, 1), CellValue::Number(7.0));
         assert_eq!(wb.get_value(s, cell(1, 2)), Some(CellValue::Number(70.0)));
+    }
+
+    // ── Structural edits: insert / delete rows & columns ────────────
+
+    #[test]
+    fn insert_rows_relocates_cells_and_rewrites_formulas() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0)); // A1
+        wb.set_value(s, cell(2, 1), CellValue::Number(20.0)); // A2
+        wb.set_formula(s, cell(3, 1), "=SUM(A1:A2)").unwrap(); // A3 = 30
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(30.0)));
+
+        // Insert one row at the top: everything slides down a row.
+        wb.insert_rows(s, 1, 1);
+        assert_eq!(wb.get_value(s, cell(1, 1)), None); // A1 now blank
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(10.0))); // was A1
+        assert_eq!(wb.get_value(s, cell(3, 1)), Some(CellValue::Number(20.0))); // was A2
+        // The SUM moved to A4 and its range was rewritten A1:A2 → A2:A3; still 30.
+        assert_eq!(wb.get_value(s, cell(4, 1)), Some(CellValue::Number(30.0)));
+        // And editing a now-relocated input still ripples through.
+        wb.set_value(s, cell(2, 1), CellValue::Number(110.0));
+        assert_eq!(wb.get_value(s, cell(4, 1)), Some(CellValue::Number(130.0)));
+    }
+
+    #[test]
+    fn delete_rows_shifts_survivors_and_rewrites_refs() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0)); // A1
+        wb.set_value(s, cell(2, 1), CellValue::Number(20.0)); // A2
+        wb.set_formula(s, cell(3, 1), "=A2*2").unwrap(); // A3 = 40
+
+        wb.delete_rows(s, 1, 1); // delete row 1
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(20.0))); // was A2
+        // The formula moved A3 → A2 and its ref A2 → A1; 20*2 = 40.
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(40.0)));
+    }
+
+    #[test]
+    fn deleting_a_referenced_line_yields_ref_error() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0)); // A1
+        wb.set_formula(s, cell(1, 2), "=A1+1").unwrap(); // B1 = 11
+
+        wb.delete_cols(s, 1, 1); // delete column A — A1 is gone
+        // B1 → A1, and its reference A1 (now deleted) → #REF!.
+        assert_eq!(
+            wb.get_value(s, cell(1, 1)),
+            Some(CellValue::Error(SpreadsheetError::Ref))
+        );
+    }
+
+    #[test]
+    fn insert_cols_shifts_columns_right() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(5.0)); // A1
+        wb.set_formula(s, cell(1, 2), "=A1*3").unwrap(); // B1 = 15
+
+        wb.insert_cols(s, 1, 2); // two blank columns at the left
+        assert_eq!(wb.get_value(s, cell(1, 1)), None); // A1 blank
+        assert_eq!(wb.get_value(s, cell(1, 3)), Some(CellValue::Number(5.0))); // was A1
+        // B1 → D1, ref A1 → C1; still 15.
+        assert_eq!(wb.get_value(s, cell(1, 4)), Some(CellValue::Number(15.0)));
+    }
+
+    #[test]
+    fn structural_edit_advances_revision() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        let before = wb.current_revision();
+        wb.insert_rows(s, 1, 1);
+        assert!(wb.current_revision() > before);
+    }
+
+    #[test]
+    fn insert_that_would_overflow_the_grid_is_rejected_not_lossy() {
+        // An insert whose shift saturates u32 would collapse distinct cells onto
+        // u32::MAX in the relocation map, silently dropping one. The guard must
+        // reject the whole edit so no cell is lost.
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(10.0)); // A1
+        wb.set_value(s, cell(2, 1), CellValue::Number(20.0)); // A2
+        wb.insert_rows(s, 1, u32::MAX); // both rows would saturate to u32::MAX
+        // No-op: both cells survive, unmoved.
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(10.0)));
+        assert_eq!(wb.get_value(s, cell(2, 1)), Some(CellValue::Number(20.0)));
+    }
+
+    #[test]
+    fn structural_edit_on_unknown_sheet_is_a_noop() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
+        wb.insert_rows(SheetId(99), 1, 1); // no such sheet
+        assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
     }
 
     #[test]

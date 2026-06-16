@@ -149,12 +149,36 @@ risks Y") — decision support, not a hidden choice.
 - **CC-3 — contraindication / interaction grounding.** `contraindication-grounding.json` +
   `interaction-grounding.json` via the harness (pregnancy, QT, G6PD, allergy classes,
   drug–drug); gate → CAS; new "treatment constraints" ledger artifact.
-- **CC-4 — cost + side-effect objective.** Add the weighted objective (simplex `minimize`);
-  ground drug costs (CMS ASP / GoodRx-class public data) + side-effect weights. Output the
-  objective breakdown.
-- **CC-5 — wait-vs-treat-now decision (§4)** with the grounded time-criticality threshold.
-- **CC-6 — insurance / step-therapy (§5):** precedence constraints + the dual
-  clinical-vs-reimbursement regimen output; ground a sample payer step-therapy policy.
+- **CC-4 — cost + side-effect objective. ✅ DONE.** The set-cover objective is now the
+  weighted blend `minimize Σ (w_cost·tier + w_tox·side_effects)·x_d`, emitted to the engine's
+  integer optimizer (coefficients stay integer). A chart `objective_priority` fact selects the
+  `(w_cost, w_tox)` weights (`cost`=(1,0), `balanced`=(1,1), `low_toxicity`=(1,3)); the default
+  (1,0) reproduces the historical tier-only set-cover exactly, so every prior consumer is
+  unchanged. `derive()` surfaces the per-component objective breakdown (cost / side_effects /
+  total), and the engine agrees with the Python weighted set-cover under every blend (verified
+  in `test_native_setcover`: the regimen flips cefepime→aztreonam for pseudomonas as w_tox
+  rises). Drug **cost** uses the grounded preference `tier`; the **side-effect** weights are an
+  authored-debt layer (`formulary.json` `side_effects` map, flagged) pending **CC-4b** spider
+  grounding (FDA-label adverse-event / monitoring burden) — the standard domain→ground flywheel.
+- **CC-5 — wait-vs-treat-now decision (§4). ✅ DONE.** `decide_timing(disease, culture_status,
+  clinical_status)` models the empiric-now vs await-culture choice as a function of the disease's
+  TIME-CRITICALITY (grounded threshold) and the patient's culture/clinical status: a time-critical
+  disease (meningitis, door-to-antibiotic ≤60 min) or an unstable patient → `treat_now_empiric`
+  (delay_risk high); stable + routine-acuity + culture pending → `await_culture` (delay_risk low,
+  cheaper/narrower); culture resulted → `targeted_culture_directed`. New chart facts
+  `culture_status` (pending/resulted) and `clinical_status` (critical/unstable/stable) feed it;
+  `derive()` surfaces the decision + delay_risk + rationale + threshold. The decision is reusable
+  (not meningitis-specific). The ≤60-min meningitis threshold is authored-debt (IDSA), flagged for
+  **CC-5b** spider grounding.
+- **CC-6 — insurance / step-therapy (§5). ✅ DONE.** A payer step-therapy rule ("won't
+  approve Y until X tried") enters as a `step_therapy` chart fact (`restricted:prerequisite`)
+  + `prior_failed` facts (drugs already tried); the precedence `x_Y ≤ tried_X` is realized as
+  a reimbursement-only exclusion (`reimbursement_blocked`). `derive()` solves TWICE: `regimen`
+  is the clinically optimal one; `reimbursement` carries the payer-covered regimen, the
+  `blocked` drugs, whether it `differs_from_clinical`, and a note. Reimbursement infeasibility
+  (a rule blocking a clinically-forced drug → covered = INFEASIBLE) is surfaced **distinctly**
+  from clinical infeasibility → physician override / appeal on medical necessity. Grounding a
+  real published payer policy is the **CC-6b** follow-up.
 - **CC-7 — full chart drive-through:** wire CH (chart→IR + de-identification) into the COP so
   a whole de-identified FHIR chart produces a regimen with the full audit trail.
 

@@ -297,6 +297,34 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — u8 WRAP (LANG-FULL E2 / N6). `200u8 + 100u8` overflows the byte and must
+    // wrap mod-256 to `44`. The exit code is itself `& 0xFF`, so a bare `return 200+100`
+    // could NOT distinguish a wrapped 44 from an unwrapped 300 (both exit 44) — instead we
+    // compare the in-register value: with wrap `x == 44` is true (→1), without wrap
+    // `300 == 44` is false (→0). Returning 1 on every backend proves the add wrapped
+    // BEFORE the comparison. This exercises the whole E2 stack: the Nib frontend emits a
+    // `u8` type_hint on the add (bidirectional typing), and each backend masks the result
+    // — vm-core/jit-core/wasm/jvm/cil by value-mask, LLVM by `and i64`, native-AOT by the
+    // aarch64/x86_64 `and #mask`.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = 200 + 100; if x == 44 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — u8 wrap is width-correct, not "any mask": `6 * 7 = 42` must stay 42 (it fits a
+    // byte), proving the mask is mod-256 not a blanket truncation. `6` and `7` are typed
+    // `u8` from the `-> u8` return context (bidirectional typing), so the product is masked
+    // at 0xFF and 42 < 256 is unchanged. (Guards the regression where magnitude-based
+    // literal typing made `6*7` a `u4` and wrapped it to `42 & 0xF = 10`.)
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { return 6 * 7; }",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,

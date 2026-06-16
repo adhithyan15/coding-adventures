@@ -943,18 +943,30 @@ impl Compiler {
                 .ok_or_else(|| CompileError::Unsupported(format!("op {:?}", op_tok.value)))?;
 
             let dest = self.fresh_var();
-            // At the IIR level Nib's narrow types (u4/u8/bool) all flow
-            // through 64-bit slots — match the pattern in oct-iir-compiler
-            // which uses `"i64"` uniformly.  The function's declared
-            // Nib return type ("u8" / "bool" / "void") stays the source
-            // of truth on the IIRFunction; instruction type_hints are
-            // a separate IIR-level concept and concrete-typing them as
-            // `i64` lets every IIR-to-* validator accept the module.
+            // LANG-FULL E2 — register width & wrap. An **arithmetic / bitwise**
+            // op carries the narrow width (`u8`/`u4`) of its result so every
+            // backend masks the value mod-2ⁿ (e.g. `200u8 + 100u8 = 44`). A
+            // **comparison** (`cmp_*`) yields a 0/1 bool that is never masked,
+            // and its operands ride i64 slots — so it stays `i64` (the operand
+            // width; emitting `bool`/`u8` here would mis-type the LLVM `icmp`).
+            // Falls back to `i64` when the result width is unknown (an
+            // unconstrained expression) — preserving the legacy "collapse to
+            // i64, no wrap" behaviour. Consts/lets/ret/calls remain `i64` (see
+            // `nib_ty_str`); the narrow hint lives only on the arithmetic op.
+            let hint = if cir_op.starts_with("cmp_") {
+                "i64"
+            } else {
+                match lookup_node_type(node, types) {
+                    Some(NibType::U8) => "u8",
+                    Some(NibType::U4) => "u4",
+                    _ => "i64",
+                }
+            };
             self.emit_to(out, IIRInstr::new(
                 cir_op,
                 Some(dest.clone()),
                 vec![Operand::Var(acc), Operand::Var(rhs)],
-                "i64",
+                hint,
             ));
             acc = dest;
         }
@@ -972,6 +984,8 @@ impl Compiler {
         // unary_expr = (BANG|TILDE) unary_expr | primary | …
         // For V1 we just pass the inner expression through (drop the
         // operator); proper logical-NOT / bitwise-NOT lowering is deferred.
+        // (LANG-FULL N3-`~` → IIR `not` is a follow-up: it needs the LLVM
+        // backend to grow the `not` op, which it currently lacks.)
         if let Some(inner) = child_nodes(node).into_iter().find(|c| is_expr_rule(&c.rule_name)) {
             return self.compile_expr(inner, types, env, out);
         }
