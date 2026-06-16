@@ -69,5 +69,7 @@ All notable changes to this package will be documented in this file.
   into final route export checks.
 - Thread attach route import summaries that turn route-export readiness into
   final route import checks.
+- Thread attach route ingest summaries that turn route-import readiness into
+  final route ingest checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
