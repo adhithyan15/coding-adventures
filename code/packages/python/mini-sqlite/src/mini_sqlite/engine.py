@@ -191,25 +191,36 @@ def run(
             re.IGNORECASE,
         ):
             return QueryResult(rows_affected=0)
-        # ATTACH DATABASE — accepted but no-op.
+        # ATTACH DATABASE — accepted as a no-op but schema alias is tracked.
         #
         # Real SQLite multi-database support requires per-statement schema
         # routing (e.g. ``SELECT * FROM aux.t``) which mini-sqlite does not
         # currently implement.  We accept ATTACH so ORM/migration code
-        # that opens, then re-attaches, the same logical database doesn't
-        # crash on the ATTACH call.  Queries that reference attached
-        # databases (e.g. ``aux.users``) will still fail because the planner
-        # cannot resolve the schema prefix.
-        if re.match(r"\s*ATTACH\b", bound, re.IGNORECASE):
+        # that opens, attaches, queries, then detaches doesn't crash.
+        # Queries that reference attached databases (e.g. ``aux.users``) will
+        # still fail because the planner cannot resolve the schema prefix.
+        #
+        # We record the alias name so that a subsequent DETACH of the same
+        # alias succeeds (as SQLite would after a real attach).
+        _attach_m = re.match(
+            r"\s*ATTACH\b.*\bAS\s+([^\s;]+)",
+            bound,
+            re.IGNORECASE | re.DOTALL,
+        )
+        if _attach_m:
+            _alias = _attach_m.group(1).strip("\"'`[]").lower()
+            _schemas = _ATTACHED_SCHEMAS.setdefault(id(backend), set())
+            if len(_schemas) >= 10:  # mirrors SQLite's SQLITE_MAX_ATTACHED default
+                raise OperationalError("too many attached databases - max 10")
+            _schemas.add(_alias)
             return QueryResult(rows_affected=0)
         # DETACH DATABASE — raise SQLite-compatible errors.
         #
         # SQLite raises specific OperationalError messages depending on the
         # schema name:
-        #   DETACH main         → "cannot detach database main"
-        #   DETACH <anything>   → "no such database: <name>"   (not attached)
-        # Mini-sqlite has no concept of attached databases, so all DETACH
-        # attempts except "main" produce "no such database".
+        #   DETACH main           → "cannot detach database main"
+        #   DETACH <not attached> → "no such database: <name>"
+        #   DETACH <attached>     → success (no-op in mini-sqlite)
         _detach_m = re.match(
             r"\s*DETACH\s+(?:DATABASE\s+)?(\S+)",
             bound,
@@ -219,6 +230,9 @@ def run(
             _schema = _detach_m.group(1).strip("\"'`[]").lower()
             if _schema == "main":
                 raise OperationalError("cannot detach database main")
+            if _schema in _ATTACHED_SCHEMAS.get(id(backend), set()):
+                _ATTACHED_SCHEMAS[id(backend)].discard(_schema)
+                return QueryResult(rows_affected=0)
             raise OperationalError(f"no such database: {_detach_m.group(1).strip('\"\'`[]')}")
         # Normalise TEMP/TEMPORARY before parsing.
         #
@@ -937,6 +951,12 @@ _PRAGMA_DEFAULTS: dict[str, tuple[object, str]] = {
 # connection to inherit the old connection's PRAGMA state.
 _PRAGMA_STATE: dict[int, dict[str, object]] = {}
 
+# Per-connection set of virtually-attached schema aliases.  Populated when
+# ATTACH succeeds (no-op) so that a subsequent DETACH of the same alias also
+# succeeds (instead of raising "no such database").  Same id-reuse caveat as
+# _PRAGMA_STATE — must be cleared in ``_pragma_clear``.
+_ATTACHED_SCHEMAS: dict[int, set[str]] = {}
+
 
 def _pragma_get(backend: Backend, name: str) -> object:
     """Return the current value of *name* for this backend, defaulting to the
@@ -954,13 +974,14 @@ def _pragma_set(backend: Backend, name: str, value: object) -> None:
 
 
 def _pragma_clear(backend: Backend) -> None:
-    """Remove all per-connection PRAGMA state for *backend*.
+    """Remove all per-connection PRAGMA and attached-schema state for *backend*.
 
     Called by :meth:`~mini_sqlite.connection.Connection.close` to prevent
     stale state from leaking into a later connection whose backend object
     happens to be allocated at the same memory address.
     """
     _PRAGMA_STATE.pop(id(backend), None)
+    _ATTACHED_SCHEMAS.pop(id(backend), None)
 
 
 def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> QueryResult:
