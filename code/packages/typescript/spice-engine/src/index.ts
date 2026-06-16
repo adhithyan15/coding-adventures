@@ -2828,6 +2828,20 @@ const REQUIRED_COMPATIBILITY_ANALYSES = ["op", "dc", "ac", "tran"];
 const UNSUPPORTED_DECK_CONTROL_DIRECTIVES = new Set([".include", ".lib", ".control"]);
 const UNSUPPORTED_RESOLVED_DIRECTIVES = new Set([".control"]);
 const UNSUPPORTED_PARAMETER_DIRECTIVES = new Set<string>();
+const SUPPORTED_CONTROL_BLOCK_COMMANDS = new Set([
+  "op",
+  ".op",
+  "dc",
+  ".dc",
+  "ac",
+  ".ac",
+  "tran",
+  ".tran",
+  "print",
+  ".print",
+  "plot",
+  ".plot",
+]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2850,6 +2864,11 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
     if (inControlBlock) {
       if (directive === ".endc") {
         inControlBlock = false;
+        continue;
+      }
+      const controlLine = controlBlockCommandAsDeckLine(stripped);
+      if (controlLine !== undefined) {
+        activeLines.push(controlLine);
         continue;
       }
       diagnostics.push({
@@ -3405,6 +3424,11 @@ function resolveDeckLines(
     if (inControlBlock) {
       if (directive === ".endc") {
         inControlBlock = false;
+        continue;
+      }
+      const controlLine = controlBlockCommandAsDeckLine(stripped);
+      if (controlLine !== undefined) {
+        activeLines.push(controlLine);
         continue;
       }
       state.diagnostics.push({
@@ -5650,6 +5674,17 @@ function deckDirective(line: string): string | undefined {
     return undefined;
   }
   return line.split(/\s+/, 1)[0].toLowerCase();
+}
+
+function controlBlockCommandAsDeckLine(line: string): string | undefined {
+  const parts = line.split(/\s+/, 1);
+  const command = parts[0]?.toLowerCase();
+  if (command === undefined || !SUPPORTED_CONTROL_BLOCK_COMMANDS.has(command)) {
+    return undefined;
+  }
+  const directive = command.startsWith(".") ? command : `.${command}`;
+  const rest = line.slice(parts[0].length).trimStart();
+  return rest.length === 0 ? directive : `${directive} ${rest}`;
 }
 
 export function subcircuitDefinition(

@@ -115,6 +115,8 @@ V1 in 0 DC 1
 .include models.inc
 .LIB vendor.lib TT
 .control
+op
+print op V(in)
 run
 .endc
 .end
@@ -124,6 +126,8 @@ run
     expect(summary.activeLines).toStrictEqual([
       ".include models.inc",
       ".LIB vendor.lib TT",
+      ".op",
+      ".print op V(in)",
     ]);
     expect(summary.diagnostics.map(({ directive, lineNumber, severity }) => [
       directive,
@@ -133,7 +137,7 @@ run
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
-      [".control", 5, "error"],
+      [".control", 7, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -189,6 +193,8 @@ Ctyp out 0 1u
 .include a.inc
 .lib vendor.lib SS
 .control
+op
+print op V(a)
 run
 .endc
 .end
@@ -199,13 +205,20 @@ run
     });
 
     expect(summary.terminated).toBe(true);
-    expect(summary.activeLines).toStrictEqual(["R2 b 0 2", "R1 a b 1"]);
+    expect(summary.activeLines).toStrictEqual(["R2 b 0 2", "R1 a b 1", ".op", ".print op V(a)"]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_INCLUDE_NOT_FOUND",
       "SPICE_DECK_INCLUDE_CYCLE",
       "SPICE_DECK_LIB_SECTION_NOT_FOUND",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_CONTROL_COMMAND",
+    ]);
+    expect(summary.diagnostics.slice(3).map(({ directive, lineNumber }) => [
+      directive,
+      lineNumber,
+    ])).toStrictEqual([
+      [".control", 5],
+      [".control", 8],
     ]);
     expect(summary.diagnostics.slice(0, 3).map(({ source, lineNumber, target }) => [
       source,

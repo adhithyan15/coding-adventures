@@ -4,10 +4,16 @@
 
 ### Added
 
+- **Deck control-command routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block analysis/output commands (`op`, `dc`, `ac`,
+  `tran`, `print`, and `plot`) into dotted deck cards, matching Rust and
+  TypeScript.
+
 - **Deck control-block exclusion diagnostics** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now exclude
-  unsupported `.control` / `.endc` blocks from active deck lines while
-  reporting stable command diagnostics for non-comment lines inside the block,
+  unsupported `.control` / `.endc` block markers and unrecognized body
+  commands from active deck lines while reporting stable command diagnostics,
   matching Rust and TypeScript.
 
 - **Parsed plot output routing** —

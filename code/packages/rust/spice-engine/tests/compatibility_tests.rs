@@ -128,6 +128,8 @@ fn analyze_deck_controls_reports_unsupported_directives() {
 .include models.inc
 .LIB vendor.lib TT
 .control
+op
+print op V(in)
 run
 .endc
 .end
@@ -140,6 +142,8 @@ run
         &[
             ".include models.inc".to_string(),
             ".LIB vendor.lib TT".to_string(),
+            ".op".to_string(),
+            ".print op V(in)".to_string(),
         ]
     );
     let diagnostics = summary
@@ -159,7 +163,7 @@ run
             (".include", 2, "error"),
             (".lib", 3, "error"),
             (".control", 4, "error"),
-            (".control", 5, "error")
+            (".control", 7, "error")
         ]
     );
     assert_eq!(
@@ -255,6 +259,8 @@ fn resolve_deck_sources_reports_missing_sources_and_cycles() {
 .include a.inc
 .lib vendor.lib SS
 .control
+op
+print op V(a)
 run
 .endc
 .end
@@ -263,7 +269,10 @@ run
     );
 
     assert!(summary.terminated);
-    assert_eq!(summary.active_lines, vec!["R2 b 0 2", "R1 a b 1"]);
+    assert_eq!(
+        summary.active_lines,
+        vec!["R2 b 0 2", "R1 a b 1", ".op", ".print op V(a)"]
+    );
     assert_eq!(
         summary
             .diagnostics
@@ -277,6 +286,15 @@ run
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_CONTROL_COMMAND"
         ]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .skip(3)
+            .map(|diagnostic| (diagnostic.directive.as_str(), diagnostic.line_number))
+            .collect::<Vec<_>>(),
+        vec![(".control", 5), (".control", 8)]
     );
     assert_eq!(
         summary
