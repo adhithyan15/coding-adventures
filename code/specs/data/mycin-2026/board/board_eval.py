@@ -44,6 +44,19 @@ SCORECARD = HERE / "board-scorecard.json"
 sys.path.insert(0, str(RECALL))
 import recall  # noqa: E402  (the REL-1 RelationStore + parse_edges)
 
+# The recall knowledge graph spans one *-edges.adj file per domain (IEM diseases,
+# vitamin deficiencies, …). They share the relational substrate, so the board
+# merges them into one store — a recall item resolves against whichever domain
+# holds its relation. Adding a domain = drop in its edge file + its board items.
+EDGE_FILES = ["iem-edges.adj", "vitamin-edges.adj"]
+
+
+def load_store() -> "recall.RelationStore":
+    store = recall.RelationStore()
+    for name in EDGE_FILES:
+        store.edges.extend(recall.parse_edges(RECALL / name).edges)
+    return store
+
 # The native adj-lang CLI binary — for the DIFFERENTIAL tactic, the board runs a
 # case .adj (rulebook + observations + ? hypotheses) and reads the ranked
 # differential decision. Recall stays pure-Python; only differential needs the
@@ -190,7 +203,7 @@ def score(items: list[dict], store: "recall.RelationStore") -> Scorecard:
 def main(argv: list[str]) -> int:
     quiet = "--quiet" in argv
     items = json.loads(ITEMS.read_text())["items"]
-    store = recall.parse_edges(RECALL / "iem-edges.adj")
+    store = load_store()
     card = score(items, store)
     summary = card.summary()
 

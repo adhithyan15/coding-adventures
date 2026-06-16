@@ -22,17 +22,19 @@ cite an `authoritative` (spider-grounded) edge vs a `consensus` (authored-debt)
 edge. That is the number every grounding/expansion PR moves:
 
 ```
-correct 19 · abstained 3 · wrong 0  (of 22)
-by tactic — differential: 1✓/1·/0✗  ·  recall: 18✓/2·/0✗
-defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 100%
+correct 27 · abstained 4 · wrong 0  (of 31)
+by tactic — differential: 1✓/1·/0✗  ·  recall: 26✓/3·/0✗
+defensibility 100%  ·  accuracy-on-attempted 100%  ·  grounded-coverage 69%
 ✓ never fabricated — every answer is correct-with-proof or an honest abstention.
 ```
 
-The number tracked the whole arc, honestly: REL-4b grounded 9 answers (→90%); REL-6
-expanded to **12 diseases**, adding authored-debt (→50%); **REL-8 re-ran the spider
-over every disease — now all 18 recall answers cite a spider-grounded (authoritative)
-edge: 100%.** Expansion adds debt; grounding retires it; the scoreboard shows both —
-with no change to this harness.
+The bank now spans **two recall domains** — 12 inborn-errors-of-metabolism diseases
+(`recall/iem-edges.adj`) and 8 vitamin deficiencies (`recall/vitamin-edges.adj`, REL-10)
+— merged into one store. grounded-coverage tracked the whole arc: REL-4b grounded the
+IEM answers (→90%), REL-8 finished them (→100%), and REL-10 added the vitamin domain as
+authored-debt (→69%). Running `ground-vitamin-edges.workflow.js` → `vitamin_edge_ground.py`
+grounds the vitamins and climbs it back. **A new domain = drop in its `*-edges.adj` file
++ its board items; the harness merges and scores it unchanged.**
 
 ## Files
 

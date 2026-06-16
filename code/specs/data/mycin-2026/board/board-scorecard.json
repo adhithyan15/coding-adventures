@@ -1,8 +1,8 @@
 {
   "summary": {
-    "total": 22,
-    "correct": 19,
-    "abstained": 3,
+    "total": 31,
+    "correct": 27,
+    "abstained": 4,
     "wrong": 0,
     "by_tactic": {
       "differential": {
@@ -11,14 +11,14 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 18,
-        "abstained": 2,
+        "correct": 26,
+        "abstained": 3,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 1.0,
+    "grounded_coverage": 0.6923,
     "grounded_correct": 18
   },
   "results": [
@@ -176,6 +176,78 @@
     },
     {
       "id": "menkes_enzyme",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "thiamine_disease",
+      "tactic": "recall",
+      "gold": "beriberi",
+      "answer": "beriberi",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "niacin_disease",
+      "tactic": "recall",
+      "gold": "pellagra",
+      "answer": "pellagra",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "b12_disease",
+      "tactic": "recall",
+      "gold": "megaloblastic_anemia",
+      "answer": "megaloblastic_anemia",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "vitc_disease",
+      "tactic": "recall",
+      "gold": "scurvy",
+      "answer": "scurvy",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "vitd_disease",
+      "tactic": "recall",
+      "gold": "rickets",
+      "answer": "rickets",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "vita_disease",
+      "tactic": "recall",
+      "gold": "night_blindness",
+      "answer": "night_blindness",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "b12_finding",
+      "tactic": "recall",
+      "gold": "subacute_combined_degeneration",
+      "answer": "subacute_combined_degeneration",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "thiamine_finding",
+      "tactic": "recall",
+      "gold": "wernicke_encephalopathy",
+      "answer": "wernicke_encephalopathy",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "biotin_disease",
       "tactic": "recall",
       "gold": "ABSTAIN",
       "answer": null,
