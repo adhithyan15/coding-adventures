@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.21.0] - 2026-06-16
+
+### Fixed
+
+- **`PARTITION BY` + external `ORDER BY` column no longer crashes** —
+  queries like ``SELECT grp, SUM(val) OVER (PARTITION BY grp) FROM t
+  ORDER BY grp, val`` previously raised ``InternalError: ValueError:
+  tuple.index(x): x not in tuple`` because ``val`` was projected away
+  by ``ComputeWindowFunctions`` before ``SortResult`` could look it up.
+  Fixed by extending hidden-column injection in sql-codegen to cover
+  ``PlanWindowAgg`` inner nodes (was only ``Project``).  (sql-codegen
+  v1.42.0)
+
+- **RANGE mode peer-group expansion for cumulative window functions** —
+  ``COUNT(*)``, ``SUM``, ``AVG``, and other aggregate window functions
+  with a default ``ORDER BY`` frame now correctly include all tied rows
+  in the current row's frame.  Under ``RANGE BETWEEN UNBOUNDED
+  PRECEDING AND CURRENT ROW`` (the SQL default when ``ORDER BY`` is
+  present), ``CURRENT ROW`` means the *end of the peer group*, not just
+  the physical row position.  Fixes wrong counts/sums when ``ORDER BY``
+  values repeat.  (sql-vm v1.60.0)
+
+- 15 new oracle tests in ``test_tier3_window_correctness.py`` cover
+  both fixes with byte-for-byte comparison against stdlib ``sqlite3``.
+
 ## [2.20.0] - 2026-06-16
 
 ### Added

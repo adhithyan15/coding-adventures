@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.42.0] - 2026-06-16
+
+### Fixed
+
+- **Hidden-column injection now covers `PlanWindowAgg`** — ``ORDER BY``
+  expressions referencing columns absent from ``output_cols`` no longer
+  crash with ``ValueError: tuple.index(x): x not in tuple`` when the
+  inner plan is a window aggregation node.
+
+  Previously the hidden-column injection pass in ``_compile_read``
+  only activated for ``Project`` inner nodes.  When the inner node was
+  a ``PlanWindowAgg`` (e.g. ``SELECT grp, SUM(val) OVER (PARTITION BY
+  grp) … ORDER BY grp, val``), ``ComputeWindowFunctions`` had already
+  projected away ``val`` before ``SortResult`` tried to look it up.
+
+  Fix: a new ``elif isinstance(cur, PlanWindowAgg)`` branch extends
+  ``output_cols`` with the missing sort-key columns as hidden trailing
+  entries.  ``ComputeWindowFunctions`` passes them through; a
+  ``StripTrailingColumns`` instruction inserted right after
+  ``SortResult`` removes them so callers see only the original SELECT
+  columns.  No ``extended_schema`` override is needed — the window
+  codegen path manages its own ``SetResultSchema`` lifecycle.
+
 ## [1.41.0] - 2026-05-24
 
 ### Added
