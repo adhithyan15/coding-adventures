@@ -129,11 +129,18 @@ the JVM (LANG-MATRIX LM-J): the tape is a host-provided static `byte[]`, `baload
 index it (masking the sign-extended load back to an unsigned cell), and `.`/`,` call the
 `env.BFRuntime` host class — the JVM sibling of the LLVM libc / wasm `env.putchar` I/O.
 
-**Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): a `u4`/`u8`/`u16`
-arithmetic/bitwise/`neg`/`not`/`shl` result is masked with `iconst/sipush/ldc <mask>;
-iand` after the `int` op, so `200u8+100u8=44` and `~0u8=255`. JVM `int` ops already wrap
-mod-2³², so `u32`/`i32` need no mask. A positive mask + `iand` is used (not `i2b`/`i2s`,
-which sign-extend) to keep the unsigned widths unsigned.
+**Narrow-width register arithmetic wraps mod-2ⁿ** (LANG-FULL E2): narrow **unsigned**
+integers (`u4`/`u8`/`u16`/`u32`) ride the JVM **`long` register model** — `long` locals,
+`J` descriptors, and the long opcodes (`ladd`/`land`/…) over their long operands — and the
+result is masked with `ldc2_w <mask>; land`, so `200u8+100u8=44` and `~0u8=255`. Computing
+wide and masking the *value* (not typing the op narrow) is operand-width-agnostic: it works
+whatever width the operands arrive at — crucial because real frontends (Nib, …) carry every
+`const`/`let` as `i64`/`long` and put the narrow width only on the op. Typing the op `int`
+(`iadd`) over `long` operands would fail JVM verification. A positive mask + `land` is used
+(not `i2b`/`i2s`, which sign-extend) to keep the unsigned widths unsigned; JVM shift counts
+stay `int`, so a `long` narrow shift count is narrowed with `l2i` first. This matches the
+vm-core/jit-core/LLVM/native/wasm backends. *(v0.13.0 replaced the earlier `int`-op-plus-
+`iand` approach, which only worked for self-consistent narrow-width modules.)*
 
 ## Closures (LANG36)
 
