@@ -253,4 +253,17 @@ mod tests {
         assert_eq!(a, b);
         assert_eq!(a.len(), 3);
     }
+
+    #[test]
+    fn discrete_distributions_work_through_r() {
+        // R-8b: the binomial/Poisson families reach R too.
+        assert!((nums("dbinom(2, 4, 0.5)\n")[0] - 0.375).abs() < 1e-9);
+        assert!((nums("dpois(0, 1)\n")[0] - (-1.0_f64).exp()).abs() < 1e-9);
+        // Sampling is reproducible and within range.
+        let draws = nums("set.seed(5)\nrbinom(10, size = 8, prob = 0.5)\n");
+        assert_eq!(draws.len(), 10);
+        assert!(draws.iter().all(|&k| (0.0..=8.0).contains(&k)));
+        // A pathological size is a clean error through R, not a hang.
+        assert!(eval_r("rbinom(1000000, 1000000, 0.5)\n").is_err());
+    }
 }
