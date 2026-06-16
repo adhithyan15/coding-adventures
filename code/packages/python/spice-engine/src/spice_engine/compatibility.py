@@ -487,6 +487,9 @@ _REQUIRED_ANALYSES = frozenset({"op", "dc", "ac", "tran"})
 _UNSUPPORTED_DECK_CONTROL_DIRECTIVES = frozenset({".include", ".lib", ".control"})
 _UNSUPPORTED_RESOLVED_DIRECTIVES = frozenset({".control"})
 _UNSUPPORTED_PARAMETER_DIRECTIVES = frozenset()
+_SUPPORTED_CONTROL_BLOCK_COMMANDS = frozenset(
+    {"op", ".op", "dc", ".dc", "ac", ".ac", "tran", ".tran", "print", ".print", "plot", ".plot"}
+)
 _SPICE_SUFFIX_FACTORS = {
     "t": 1.0e12,
     "g": 1.0e9,
@@ -517,6 +520,10 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
         if in_control_block:
             if directive == ".endc":
                 in_control_block = False
+                continue
+            control_line = _control_block_command_as_deck_line(stripped)
+            if control_line is not None:
+                active_lines.append(control_line)
                 continue
             diagnostics.append(
                 DeckControlDiagnostic(
@@ -2996,6 +3003,10 @@ def _resolve_deck_lines(
             if directive == ".endc":
                 in_control_block = False
                 continue
+            control_line = _control_block_command_as_deck_line(stripped)
+            if control_line is not None:
+                active_lines.append(control_line)
+                continue
             state.diagnostics.append(
                 DeckResolutionDiagnostic(
                     code="SPICE_DECK_CONTROL_COMMAND",
@@ -3282,3 +3293,16 @@ def _deck_directive(line: str) -> str | None:
     if not line.startswith("."):
         return None
     return line.split(None, 1)[0].lower()
+
+
+def _control_block_command_as_deck_line(line: str) -> str | None:
+    parts = line.split(maxsplit=1)
+    if not parts:
+        return None
+    command = parts[0].lower()
+    if command not in _SUPPORTED_CONTROL_BLOCK_COMMANDS:
+        return None
+    directive = command if command.startswith(".") else f".{command}"
+    if len(parts) == 1:
+        return directive
+    return f"{directive} {parts[1]}"

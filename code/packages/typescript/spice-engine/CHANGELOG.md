@@ -2,9 +2,13 @@
 
 ## Unreleased
 
+- Add selected `.control` block command routing to `analyzeDeckControls` and
+  `resolveDeckSources`; analysis/output commands (`op`, `dc`, `ac`, `tran`,
+  `print`, and `plot`) are normalized into dotted deck cards, matching Python
+  and Rust.
 - Add control-block exclusion diagnostics to `analyzeDeckControls` and
-  `resolveDeckSources`; unsupported `.control` / `.endc` blocks are no longer
-  forwarded as active deck lines, and non-comment commands inside the block
+  `resolveDeckSources`; unsupported `.control` / `.endc` block markers and
+  unrecognized body commands are no longer forwarded as active deck lines and
   emit stable diagnostics, matching Python and Rust.
 - Add parsed `.plot <analysis> ...` output routing to `resolveDeckOutputs`,
   `selectDeckOutputProbes`, and deck table formatters, matching Python and

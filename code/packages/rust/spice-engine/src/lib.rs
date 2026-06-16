@@ -3564,6 +3564,10 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
                 in_control_block = false;
                 continue;
             }
+            if let Some(control_line) = control_block_command_as_deck_line(stripped) {
+                active_lines.push(control_line);
+                continue;
+            }
             diagnostics.push(DeckControlDiagnostic {
                 code: "SPICE_DECK_CONTROL_COMMAND".to_string(),
                 directive: ".control".to_string(),
@@ -4356,6 +4360,10 @@ fn resolve_deck_lines(
         if in_control_block {
             if directive.as_deref() == Some(".endc") {
                 in_control_block = false;
+                continue;
+            }
+            if let Some(control_line) = control_block_command_as_deck_line(stripped) {
+                active_lines.push(control_line);
                 continue;
             }
             state.diagnostics.push(DeckResolutionDiagnostic {
@@ -6861,6 +6869,26 @@ fn deck_directive(line: &str) -> Option<String> {
             .unwrap_or(line)
             .to_ascii_lowercase(),
     )
+}
+
+fn control_block_command_as_deck_line(line: &str) -> Option<String> {
+    let command_token = line.split_whitespace().next()?;
+    let command = command_token.to_ascii_lowercase();
+    let directive = match command.as_str() {
+        "op" | ".op" => ".op",
+        "dc" | ".dc" => ".dc",
+        "ac" | ".ac" => ".ac",
+        "tran" | ".tran" => ".tran",
+        "print" | ".print" => ".print",
+        "plot" | ".plot" => ".plot",
+        _ => return None,
+    };
+    let rest = line[command_token.len()..].trim_start();
+    if rest.is_empty() {
+        Some(directive.to_string())
+    } else {
+        Some(format!("{directive} {rest}"))
+    }
 }
 
 fn is_unsupported_deck_control_directive(directive: &str) -> bool {

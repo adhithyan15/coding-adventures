@@ -125,16 +125,16 @@ notes. `release_readiness_gates` validates the corpus metadata, while
 provide stable tab-separated summaries for package checks.
 `analyze_deck_controls` provides the shared deck-control boundary foothold: it
 returns active lines before `.end` and stable diagnostics for unsupported
-`.include`, `.lib`, and `.control` directives. Unsupported `.control` blocks
-are excluded from active deck lines, and non-comment commands inside the block
-emit command diagnostics until a deliberate executed control subset is in
-scope.
+`.include`, `.lib`, and `.control` directives. Inside `.control` blocks,
+selected analysis/output commands (`op`, `dc`, `ac`, `tran`, `print`, and
+`plot`) are normalized into dotted deck cards, while unrecognized non-comment
+commands emit diagnostics until a broader executed control subset is in scope.
 `resolve_deck_sources` is the first include/library resolution layer: callers
 provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
 diagnostics for missing files, missing sections, unterminated sections, cycles,
-and still-unsupported `.control` blocks whose body commands are not forwarded
-as active solver input.
+and still-unsupported `.control` block commands that are not part of the
+selected analysis/output subset.
 `measure_transient_probe`, `measure_transient_deck`,
 `measure_dc_sweep_probe`, `measure_dc_sweep_deck`,
 `measure_ac_sweep_probe`, `measure_ac_sweep_deck`, and

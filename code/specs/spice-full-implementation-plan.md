@@ -33,7 +33,9 @@ downstream tools to compare.
      stable table output for operating-point, DC sweep, AC sweep, and transient
      results; unsupported `.control` / `.endc` blocks are now excluded from
      active deck and source-resolved solver input while body commands emit
-     stable non-executed diagnostics; parsed
+     stable non-executed diagnostics, and selected `.control` block
+     analysis/output commands (`op`, `dc`, `ac`, `tran`, `print`, and `plot`)
+     now normalize into dotted deck cards; parsed
      `.measure dc` / `.meas dc` cards now route DC
      sweep probe samples into the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -500,8 +502,17 @@ downstream tools to compare.
     - Python, Rust, and TypeScript now exclude unsupported `.control` / `.endc`
       blocks from active deck-control lines and source-resolved solver input.
     - The existing unsupported `.control` directive diagnostic is preserved,
-      while non-comment commands inside the block emit stable
+      while unrecognized non-comment commands inside the block emit stable
       `SPICE_DECK_CONTROL_COMMAND` diagnostics.
+
+44. Selected `.control` command routing.
+    - Status: completed in this selected control-command routing slice.
+    - Python, Rust, and TypeScript now normalize selected `.control` block
+      analysis/output commands (`op`, `dc`, `ac`, `tran`, `print`, and `plot`)
+      into the same dotted deck cards consumed by the existing analysis and
+      output resolvers.
+    - Unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
 
 ## Backlog
 
@@ -513,8 +524,9 @@ downstream tools to compare.
    - Expand deck-controlled output-plan integration beyond stable table
      routing and scoped `.print` / `.plot` selection toward full SPICE
      compatibility.
-   - Expand a deliberate `.control` subset beyond the current excluded,
-     non-executed block diagnostics.
+   - Expand the deliberate `.control` subset beyond simple analysis/output
+     command routing, including control flow, variables, and script execution
+     policy.
 
 2. Production solver core.
    - Finish sparse real and complex matrix paths.
