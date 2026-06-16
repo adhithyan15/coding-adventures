@@ -130,8 +130,10 @@ selected analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
 `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) are normalized into
 dotted deck cards, while `run`, `reset`, `quit`, and the UI-only
 `set noaskquit` option plus the ASCII rawfile-format `set filetype=ascii`
-option are accepted as no-op control markers. Other unrecognized non-comment
-commands emit diagnostics until a broader executed control subset is in scope.
+option and vector-name/single-scale rawfile output toggles (`set wr_vecnames`,
+`set wr_singlescale`) are accepted as no-op control markers. Other
+unrecognized non-comment commands emit diagnostics until a broader executed
+control subset is in scope.
 `resolve_deck_sources` is the first include/library resolution layer: callers
 provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable

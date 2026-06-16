@@ -126,6 +126,8 @@ four 2k V(in)
 reset
 set noaskquit
 set filetype=ascii
+set wr_vecnames
+set wr_singlescale
 set filetype=binary
 run
 quit
@@ -154,7 +156,7 @@ quit
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
-      [".control", 16, "error"],
+      [".control", 18, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
@@ -241,6 +243,8 @@ four 2k V(b)
 .reset
 .set noaskquit
 .set filetype=ascii
+.set wr_vecnames
+.set wr_singlescale
 run
 .quit
 .endc

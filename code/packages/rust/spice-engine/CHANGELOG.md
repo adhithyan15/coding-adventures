@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Accept selected `.control` block `set wr_vecnames` and `set wr_singlescale`
+  rawfile output toggles as no-op control commands in `analyze_deck_controls`
+  and `resolve_deck_sources`, matching Python and TypeScript.
 - Accept selected `.control` block `set filetype=ascii` output-format options
   as no-op control commands in `analyze_deck_controls` and
   `resolve_deck_sources`, matching Python and TypeScript.
