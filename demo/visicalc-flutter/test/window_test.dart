@@ -68,4 +68,52 @@ void main() {
       expect(s.window(1000, 26, 1000, 26)[0][0], '139'); // 115+8+12+4
     });
   });
+
+  // The infinite-view binding layer (InfiniteGrid drives these): one engine read
+  // per visible row via rowCells, tap-to-select via selectInf (loading the
+  // cell's source into the formula bar), and write-through via commitInf.
+  group('InfiniteSheetModel', () {
+    test('extent grows to reach the far seeded cells', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      // The seed plants Z1000 (row 1000) and BB50 (col 54), so the extent spans
+      // both far islands plus the default margins.
+      expect(m.totalRows, greaterThanOrEqualTo(1000));
+      expect(m.totalCols, greaterThanOrEqualTo(60));
+    });
+
+    test('rowCells is one engine-read row, dense then sparse', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      final row1 = m.rowCells(1);
+      expect(row1.length, m.totalCols);
+      expect(row1[0], '15'); // A1
+      expect(row1[4], '38'); // E1 = SUM(A1:D1)
+      expect(row1[9], ''); // J1 empty (sparse)
+      // A row in the gap between the data islands is entirely blank.
+      expect(m.rowCells(200).every((c) => c.isEmpty), isTrue);
+    });
+
+    test('selectInf loads the source and clamps to the grid', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      m.selectInf(5, 1); // A5 is a formula — the bar shows the formula, not 39
+      expect(m.infAddress, 'A5');
+      expect(m.formula, '=SUM(A1:A4)');
+      m.selectInf(-3, 0); // clamps to (1, 1)
+      expect(m.selRow, 1);
+      expect(m.selCol, 1);
+    });
+
+    test('commitInf writes through and recomputes dependents', () {
+      final m = InfiniteSheetModel();
+      addTearDown(m.dispose);
+      m.selectInf(2, 1); // A2
+      m.commitInf('108'); // 8 -> 108
+      expect(m.rowCells(2)[0], '108'); // A2
+      expect(m.rowCells(2)[4], '151'); // E2 = 108+14+7+22
+      expect(m.rowCells(5)[0], '139'); // A5 = 15+108+12+4
+      expect(m.rowCells(5)[4], '269'); // E5 grand total
+    });
+  });
 }

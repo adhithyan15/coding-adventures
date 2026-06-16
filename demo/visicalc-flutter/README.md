@@ -98,11 +98,44 @@ rectangle), `usedRange()`, `columnLetters()`, `currentRevision()`, and
 rectangle of an unbounded sheet (the Flutter sibling of the web/SwiftUI/Qt
 infinite views).
 
-Headless proof: `test/window_test.dart` seeds far-flung sparse cells and asserts
-the window is engine-computed + dense (A1=15, E1=38, E5=169), a formula 1000
-rows down (`Z1000` = 39) is reachable, the gaps are empty (sparse), column
-letters run AA/BA, and editing `A1` dirties the far dependent `Z1000` via
-`changedSince`. Run with `flutter test test/window_test.dart`.
+### The scrollable infinite GUI (`lib/infinite_grid.dart`)
+
+The **Infinite sheet** button in the running app toggles from the classic 5×5
+grid to `InfiniteGrid` — a virtualized, effectively-infinite (u32 × u32, sparse)
+sheet rendered on the same engine. The body is a `ListView.builder`, which
+natively virtualizes: it calls its `itemBuilder` only for rows near the viewport
+and recycles them as they scroll off, so a 1000-row sheet costs the handful of
+rows you can see. Each built row makes **one** engine `get_window` over its
+`1×totalCols` strip (`InfiniteSheetModel.rowCells`) — per-frame engine work is
+proportional to *visible* rows, never the sheet's height.
+
+Two-axis scroll with frozen chrome, kept in sync by one-way controller links
+(the chrome is non-interactive and slaved to the body): the column-letter header
+follows the body's horizontal pan and the row-number gutter (its own virtualized
+`ListView`) follows the body's vertical scroll. Tap a cell → `selectInf(row,col)`
+(clamps, loads the source into the formula bar); press Enter → `commitInf(text)`
+(writes through, recomputes dependents, regrows the extent). `InfiniteSheetModel`
+(in `lib/engine.dart`) seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) so
+there's something to scroll to, and derives the extent from `usedRange()` + a
+margin.
+
+### Headless proof
+
+`test/window_test.dart` seeds far-flung sparse cells and asserts the window is
+engine-computed + dense (A1=15, E1=38, E5=169), a formula 1000 rows down
+(`Z1000` = 39) is reachable, the gaps are empty (sparse), column letters run
+AA/BA, and editing `A1` dirties the far dependent `Z1000` via `changedSince`. It
+also covers `InfiniteSheetModel` directly (`rowCells` one-read rows, `selectInf`
+clamping + source load, `commitInf` recompute).
+
+`test/infinite_grid_test.dart` is a **widget test** that pumps the real
+`InfiniteGrid` tree on the live engine, taps the A1 cell, edits `15`→`115` in the
+formula bar, and asserts every dependent recomputes *on screen* (E1 → 138, A5 →
+139, E5 → 269) — the Flutter analog of running the GUI by hand.
+
+```bash
+flutter test          # the whole suite (engine + window + infinite_grid)
+```
 
 ## Where this fits in the cross-backend demo plan
 
@@ -110,8 +143,8 @@ letters run AA/BA, and editing `A1` dirties the far dependent `Z1000` via
 |---|---|---|
 | HTML (web) | WASM | ✅ live |
 | WebComponent (web) | WASM | ✅ live |
-| SwiftUI (macOS / iOS) | C ABI | ✅ live |
-| Qt / C++ | C ABI | ✅ live |
-| Flutter (this one) | C ABI (dart:ffi) | ✅ live (grid; formula-bar emitter gap tracked) |
-| Compose / Android (Kotlin) | C ABI (FFM / JNI) | in progress |
-| XAML (.NET, Windows) | C ABI (P/Invoke) | in progress |
+| SwiftUI (macOS / iOS) | C ABI | ✅ live (+ infinite sheet) |
+| Qt / C++ | C ABI | ✅ live (+ infinite sheet) |
+| Flutter (this one) | C ABI (dart:ffi) | ✅ live (+ infinite sheet) |
+| Compose / Android (Kotlin) | C ABI (FFM / JNI) | infinite sheet next |
+| XAML (.NET, Windows) | C ABI (P/Invoke) | infinite sheet next |
