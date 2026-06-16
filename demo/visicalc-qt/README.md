@@ -80,10 +80,39 @@ are `Q_INVOKABLE`, so a windowed QML grid (rendering only the visible rectangle
 of an unbounded sheet, the Qt sibling of the web/SwiftUI infinite views) binds
 to them directly.
 
-Headless proof: `test/tst_window.cpp` (qmake) seeds far-flung sparse cells and
-asserts the window is engine-computed + dense, a formula 1000 rows down
-(`Z1000` = 39) is reachable, the gaps are empty (sparse), column letters run
-AA/BA, and editing `A1` dirties the far dependent `Z1000` via `changedSince`:
+### The scrollable infinite GUI (`InfiniteSheet.qml`)
+
+The **Infinite sheet** button in the running app toggles from the classic 5×5
+grid to `InfiniteSheet.qml` — a virtualized, effectively-infinite (u32 × u32,
+sparse) sheet rendered on the same engine. The body is a QtQuick `ListView`,
+which natively virtualizes: it instantiates a row delegate only while that row
+is on screen, so a 1000-row-tall sheet costs the handful of rows you can
+actually see. Each visible row calls `model.rowCells(row)` **once** — a single
+`get_window` over that row's `1×totalCols` strip — so per-frame engine work is
+proportional to *visible* rows, never to the sheet's height.
+
+Two-axis scroll with frozen chrome, kept in sync by binding offsets: the
+column-letter header tracks the body's horizontal pan (`header.contentX ←
+bodyFlick.contentX`) and the row-number gutter (its own non-interactive
+`ListView`) tracks the body's vertical scroll (`gutter.contentY ←
+body.contentY`). Tapping a cell calls `model.selectInf(row, col)` (pulling its
+source into the formula bar); pressing Enter calls `model.commitInf(text)`,
+which writes through to the engine, recomputes every dependent, regrows the
+extent, and bumps `model.revision` so the visible rows re-fetch.
+
+The model seeds far-flung sparse cells (`Z1000`, `BA50`, `BB50`) on top of the
+budget so there's something to scroll to; the extent (`totalRows`/`totalCols`)
+is derived from `usedRange()` plus a margin.
+
+### Headless proof
+
+`test/tst_window.cpp` (qmake) seeds far-flung sparse cells and asserts the
+window is engine-computed + dense, a formula 1000 rows down (`Z1000` = 39) is
+reachable, the gaps are empty (sparse), column letters run AA/BA, and editing
+`A1` dirties the far dependent `Z1000` via `changedSince`. A fourth case drives
+the infinite-view binding layer directly: `rowCells` returns one engine-read
+row, `selectInf` selects + clamps and loads the source, and `commitInf` edits
+`A2` 8 → 108 with every dependent recomputing (E2 → 151, A5 → 139, E5 → 269):
 
 ```bash
 cd test && qmake tst_window.pro && make && ./tst_window
