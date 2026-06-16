@@ -1427,10 +1427,15 @@ describe("transient", () => {
         "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
         "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
     );
-    expect(formatDeckTransientTable(points, ".save V(mid)\n.probe tran V(vin)\n.end\n")).toBe(
-      "Index\tTime\tV(mid)\tV(vin)\n" +
-        "0\t1.000000e-03\t5.000000e+00\t1.000000e+01\n" +
-        "1\t2.000000e-03\t5.000000e+00\t1.000000e+01\n",
+    expect(
+      formatDeckTransientTable(
+        points,
+        ".save V(mid)\n.probe tran V(vin)\n.print tran I(V1)\n.end\n",
+      ),
+    ).toBe(
+      "Index\tTime\tV(mid)\tV(vin)\tI(V1)\n" +
+        "0\t1.000000e-03\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n" +
+        "1\t2.000000e-03\t5.000000e+00\t1.000000e+01\t-5.000000e-03\n",
     );
   });
 
