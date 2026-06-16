@@ -402,12 +402,25 @@ impl Interpreter {
                 }
                 "index_suffix" => {
                     let args = self.eval_args(suffix, env)?;
-                    if args.len() != 1 {
-                        return Err(SError::Index(
-                            "v1 supports single-bracket indexing with one subscript".into(),
-                        ));
-                    }
-                    value = index(&value, &args[0].value)?;
+                    value = match args.len() {
+                        1 => index(&value, &args[0].value)?,
+                        // `df[rows, cols]` — 2-D subsetting (data frames).
+                        2 => crate::dataframe::index2d(&value, &args[0].value, &args[1].value)?,
+                        _ => return Err(SError::Index("too many subscripts".into())),
+                    };
+                    self.visible.set(true);
+                }
+                "dindex_suffix" => {
+                    // `x[[ key ]]` — single-column / single-element extraction.
+                    let key = self.eval_node(only_node(suffix)?, env)?;
+                    value = crate::dataframe::extract(&value, &key)?;
+                    self.visible.set(true);
+                }
+                "dollar_suffix" => {
+                    // `df$name` — column by name.
+                    let name = name_token(suffix)
+                        .ok_or_else(|| SError::Parse("malformed $ access".into()))?;
+                    value = crate::dataframe::column_by_name(&value, &name)?;
                     self.visible.set(true);
                 }
                 other => return Err(SError::Parse(format!("unexpected suffix '{other}'"))),

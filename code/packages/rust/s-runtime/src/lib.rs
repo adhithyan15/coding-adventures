@@ -29,6 +29,7 @@
 //! [`Interpreter::eval_str`] repeatedly — bindings persist between calls.
 
 mod builtins;
+mod dataframe;
 mod env;
 mod error;
 mod eval;
@@ -326,6 +327,54 @@ mod tests {
     #[test]
     fn as_integer_truncates_numerics() {
         assert_eq!(nums("as.integer(c(1.7, 2.2, -1.9))\n"), vec![1.0, 2.0, -1.0]);
+    }
+
+    // --- v2: data frames ------------------------------------------------
+
+    #[test]
+    fn data_frame_dollar_and_double_bracket() {
+        let setup = "d <- data.frame(x = 1:3, y = c(\"a\", \"b\", \"c\"))\n";
+        assert_eq!(nums(&format!("{setup}d$x\n")), vec![1.0, 2.0, 3.0]);
+        assert_eq!(show(&format!("{setup}d$y\n")), "[1] \"a\" \"b\" \"c\"");
+        assert_eq!(nums(&format!("{setup}d[[\"x\"]]\n")), vec![1.0, 2.0, 3.0]);
+        assert_eq!(nums(&format!("{setup}d[[1]]\n")), vec![1.0, 2.0, 3.0]);
+    }
+
+    #[test]
+    fn data_frame_dimensions_and_names() {
+        let setup = "d <- data.frame(x = 1:3, y = c(\"a\", \"b\", \"c\"))\n";
+        assert_eq!(nums(&format!("{setup}nrow(d)\n")), vec![3.0]);
+        assert_eq!(nums(&format!("{setup}ncol(d)\n")), vec![2.0]);
+        assert_eq!(nums(&format!("{setup}dim(d)\n")), vec![3.0, 2.0]);
+        assert_eq!(show(&format!("{setup}names(d)\n")), "[1] \"x\" \"y\"");
+    }
+
+    #[test]
+    fn data_frame_two_dimensional_index() {
+        let setup = "d <- data.frame(x = 1:3, y = c(10, 20, 30))\n";
+        // A single selected column drops to a vector.
+        assert_eq!(nums(&format!("{setup}d[1:2, \"y\"]\n")), vec![10.0, 20.0]);
+        assert_eq!(nums(&format!("{setup}d[2, 1]\n")), vec![2.0]);
+    }
+
+    #[test]
+    fn data_frame_recycles_length_one_columns() {
+        let setup = "d <- data.frame(a = 1, b = 1:3)\n";
+        assert_eq!(nums(&format!("{setup}d$a\n")), vec![1.0, 1.0, 1.0]);
+        assert_eq!(nums(&format!("{setup}nrow(d)\n")), vec![3.0]);
+    }
+
+    #[test]
+    fn data_frame_prints_as_a_table() {
+        assert_eq!(
+            show("data.frame(x = 1:2, y = c(\"a\", \"b\"))\n"),
+            "  x y\n1 1 a\n2 2 b"
+        );
+    }
+
+    #[test]
+    fn head_takes_first_n() {
+        assert_eq!(nums("head(1:10, 3)\n"), vec![1.0, 2.0, 3.0]);
     }
 
     // --- Comparison -----------------------------------------------------

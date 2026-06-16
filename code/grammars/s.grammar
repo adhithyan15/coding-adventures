@@ -117,16 +117,24 @@ unary = MINUS unary
 power = postfix [ CARET unary ] ;
 
 # =============================================================================
-# postfix — function calls and indexing, applied left-to-right and tightest:
+# postfix — function calls, indexing, double-index, and `$` (v2), applied
+# left-to-right and tightest:
 #   f(1, k = 2)      call with positional and named arguments
-#   x[i]             index
+#   x[i]   x[i, j]   single-bracket index (1-D, or 2-D for data frames)
+#   x[[k]]           double-bracket extraction (one column / one element)
+#   df$name          column by name
 #   m(1)(2)          chained application
+#
+# `dindex_suffix` is listed before `index_suffix` so that `[[` is matched as a
+# double bracket rather than a single bracket followed by a failed inner index.
 # =============================================================================
 
-postfix = primary { call_suffix | index_suffix } ;
+postfix = primary { call_suffix | dindex_suffix | index_suffix | dollar_suffix } ;
 
-call_suffix  = LPAREN [ arg_list ] RPAREN ;
-index_suffix = LBRACKET [ arg_list ] RBRACKET ;
+call_suffix   = LPAREN [ arg_list ] RPAREN ;
+dindex_suffix = LBRACKET LBRACKET expr RBRACKET RBRACKET ;
+index_suffix  = LBRACKET [ arg_list ] RBRACKET ;
+dollar_suffix = DOLLAR NAME ;
 
 arg_list = arg { COMMA arg } ;
 

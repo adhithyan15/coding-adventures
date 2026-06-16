@@ -138,6 +138,7 @@ LBRACKET  = "["
 RBRACKET  = "]"
 COMMA     = ","
 SEMICOLON = ";"
+DOLLAR    = "$"
 
 # ============================================================================
 # SECTION 6: Newlines (significant — statement terminators)

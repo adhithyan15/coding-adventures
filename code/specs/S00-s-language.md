@@ -288,9 +288,13 @@ vectors carry a `names` attribute, which v2 does not yet add.)
 ### V2.6 Data frames
 
 `data.frame(name = column, …)` builds a list of equal-length columns (length-1
-columns recycle). Access: `df$name`, `df[["name"]]` / `df[[i]]`, and 2-subscript
-`df[rows, cols]` (`df[, "c"]`, `df[r, ]`). `nrow`, `ncol`, `names`, `dim`,
-`colnames`, and `head` are provided; `print.data.frame` renders an aligned table.
+columns recycle; positional columns are auto-named `V1`, `V2`, …). Access:
+`df$name`, `df[["name"]]` / `df[[i]]`, and 2-subscript `df[rows, cols]` (a single
+selected column drops to a vector, otherwise a narrower data frame). `nrow`,
+`ncol`, `names`, `dim`, `colnames`, and `head` are provided; data frames print as
+an aligned table. (Empty-subscript forms `df[, c]` / `df[r, ]` are deferred —
+they need an empty grammar argument, which v2 does not yet add; pass an explicit
+row/column vector instead.)
 
 ## §9 Divergences from ST00 (spec-sync)
 

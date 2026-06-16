@@ -80,6 +80,135 @@ pub fn install(env: &Env) {
     define(env, "nlevels", builtin("nlevels", b_nlevels));
     define(env, "as.character", builtin("as.character", b_as_character));
     define(env, "as.integer", builtin("as.integer", b_as_integer));
+
+    // v2 — data frames.
+    define(env, "data.frame", builtin("data.frame", b_data_frame));
+    define(env, "nrow", builtin("nrow", b_nrow));
+    define(env, "ncol", builtin("ncol", b_ncol));
+    define(env, "names", builtin("names", b_names));
+    define(env, "colnames", builtin("colnames", b_names));
+    define(env, "dim", builtin("dim", b_dim));
+    define(env, "head", builtin("head", b_head));
+}
+
+// ===========================================================================
+// v2 — data frames
+// ===========================================================================
+
+/// `data.frame(name = column, …)` — build a data frame from named columns.
+/// Positional columns are auto-named `V1`, `V2`, …; length-1 columns recycle to
+/// the common row count, and any other length mismatch is an error.
+fn b_data_frame(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let mut names = Vec::new();
+    let mut columns = Vec::new();
+    let mut auto = 1;
+    for a in args {
+        // `stringsAsFactors`-style options aren't modeled; skip non-column named
+        // args that are scalars used as flags would be ambiguous, so we keep all.
+        let name = a.name.clone().unwrap_or_else(|| {
+            let n = format!("V{auto}");
+            auto += 1;
+            n
+        });
+        names.push(name);
+        columns.push(a.value.clone());
+    }
+
+    let nrow = columns.iter().map(|c| c.length()).max().unwrap_or(0);
+    for col in &mut columns {
+        let len = col.length();
+        if len == nrow {
+            continue;
+        }
+        if len == 1 {
+            // Recycle the single value to every row via repeated indexing.
+            let idx = SValue::doubles(vec![1.0; nrow]);
+            *col = index(col, &idx)?;
+        } else {
+            return Err(SError::BadArgs(format!(
+                "arguments imply differing number of rows: {nrow}, {len}"
+            )));
+        }
+    }
+
+    Ok(SValue::DataFrame { names, columns })
+}
+
+/// `nrow(df)` — the row count (the common column length).
+fn b_nrow(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::DataFrame { columns, .. } => {
+            Ok(SValue::scalar(columns.first().map(|c| c.length()).unwrap_or(0) as f64))
+        }
+        _ => Ok(SValue::Null),
+    }
+}
+
+/// `ncol(df)` — the column count.
+fn b_ncol(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::DataFrame { columns, .. } => Ok(SValue::scalar(columns.len() as f64)),
+        _ => Ok(SValue::Null),
+    }
+}
+
+/// `names(df)` / `colnames(df)` — the column names.
+fn b_names(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::DataFrame { names, .. } => {
+            Ok(SValue::Character(names.iter().cloned().map(Some).collect()))
+        }
+        _ => Ok(SValue::Null),
+    }
+}
+
+/// `dim(df)` — `c(nrow, ncol)`.
+fn b_dim(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::DataFrame { columns, .. } => {
+            let nrow = columns.first().map(|c| c.length()).unwrap_or(0) as f64;
+            Ok(SValue::doubles(vec![nrow, columns.len() as f64]))
+        }
+        _ => Ok(SValue::Null),
+    }
+}
+
+/// `head(x, n = 6)` — the first `n` elements of a vector, or rows of a data frame.
+fn b_head(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let x = *positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("head: missing x".into()))?;
+    let n = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("n"))
+        .map(|a| &a.value)
+        .or_else(|| positional.get(1).copied())
+        .and_then(|v| v.as_double().ok())
+        .and_then(|d| d.get_value(0))
+        .map(|v| v.max(0.0) as usize)
+        .unwrap_or(6);
+
+    match x {
+        SValue::DataFrame { names, columns } => {
+            let nrow = columns.first().map(|c| c.length()).unwrap_or(0);
+            let take = n.min(nrow);
+            let rows = SValue::doubles((1..=take).map(|k| k as f64).collect());
+            let new_cols: Vec<SValue> = columns
+                .iter()
+                .map(|c| index(c, &rows))
+                .collect::<SResult<_>>()?;
+            Ok(SValue::DataFrame {
+                names: names.clone(),
+                columns: new_cols,
+            })
+        }
+        other => {
+            let take = n.min(other.length());
+            let idx = SValue::doubles((1..=take).map(|k| k as f64).collect());
+            index(other, &idx)
+        }
+    }
 }
 
 // ===========================================================================
