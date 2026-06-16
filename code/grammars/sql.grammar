@@ -69,7 +69,7 @@ set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ]
 select_stmt       = "SELECT" [ "DISTINCT" | "ALL" ] select_list
                     [ "FROM" table_ref { join_clause } ]
                     [ where_clause ] [ group_clause ] [ having_clause ]
-                    [ order_clause ] [ limit_clause ] ;
+                    [ window_clause ] [ order_clause ] [ limit_clause ] ;
 
 select_list       = STAR | select_item { "," select_item } ;
 select_item       = expr [ "AS" NAME ] ;
@@ -497,8 +497,10 @@ cast_expr         = "CAST" "(" expr "AS" NAME ")" ;
 # PEG backtracking ensures NAME "(" without a following OVER falls through to
 # function_call.
 
-window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" "(" window_spec ")" ;
+window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" ( "(" window_spec ")" | window_name_ref ) ;
+window_name_ref   = NAME ;
 window_spec       = [ partition_clause ] [ order_clause ] [ frame_clause ] ;
+window_clause     = "WINDOW" NAME "AS" "(" window_spec ")" { "," NAME "AS" "(" window_spec ")" } ;
 partition_clause  = "PARTITION" "BY" expr { "," expr } ;
 value_list        = expr { "," expr } ;
 

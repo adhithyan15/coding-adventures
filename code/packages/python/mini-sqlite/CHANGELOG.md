@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.20.0] - 2026-06-16
+
+### Added
+
+- **Named WINDOW clause** — ``SELECT`` statements may now define window
+  specifications by name in a trailing ``WINDOW`` clause and reference
+  them with ``OVER <name>`` instead of an inline ``OVER (...)`` spec:
+
+  ```sql
+  SELECT a, ROW_NUMBER() OVER w
+  FROM   t
+  WINDOW w AS (PARTITION BY grp ORDER BY a)
+  ORDER  BY a;
+  ```
+
+  - Multiple named windows in one query are supported
+    (``WINDOW w1 AS (...), w2 AS (...)``).
+  - Named and inline ``OVER (...)`` references may be mixed freely in the
+    same query.
+  - All existing window functions work via a named window: ``ROW_NUMBER``,
+    ``RANK``, ``DENSE_RANK``, ``SUM``, ``COUNT(*)``, ``AVG``, ``MIN``,
+    ``MAX``, ``LAG``, ``LEAD``, ``NTILE``, ``FIRST_VALUE``,
+    ``LAST_VALUE``.
+  - Referencing an undefined window name raises ``OperationalError``.
+
+  **Implementation:** ``WINDOW`` was added to ``sql.tokens`` so the lexer
+  recognises it as a keyword.  ``sql.grammar`` gained a ``window_clause``
+  rule and a ``window_name_ref`` alternative in ``window_func_call``.
+  The adapter's ``_PlaceholderCounter`` gained a ``window_defs`` dict;
+  ``_extract_window_clause()`` populates it before the select list is
+  processed, and ``_window_func_call()`` resolves name references against
+  it.  The planner, optimizer, codegen, and VM are unchanged.
+
+  18 oracle tests added in ``tests/test_tier3_named_window.py``.
+
 ## [2.19.0] - 2026-06-15
 
 ### Added
