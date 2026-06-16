@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck control measurement routing** —
+  `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
+  selected `.control` block `measure` and `meas` measurement commands into
+  `.measure` and `.meas` deck cards, matching Rust and TypeScript.
+
 - **Deck control save/probe routing** —
   `analyze_deck_controls()` and `resolve_deck_sources()` now normalize
   selected `.control` block `save` and `probe` output commands into `.save` and

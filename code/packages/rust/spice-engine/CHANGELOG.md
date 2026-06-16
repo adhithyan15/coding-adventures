@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add selected `.control` block `measure` and `meas` command routing to
+  `analyze_deck_controls` and `resolve_deck_sources`; the commands are
+  normalized into `.measure` and `.meas` deck cards, matching Python and
+  TypeScript.
 - Add selected `.control` block `save` and `probe` command routing to
   `analyze_deck_controls` and `resolve_deck_sources`; the commands are
   normalized into `.save` and `.probe` deck cards, matching Python and

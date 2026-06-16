@@ -132,6 +132,8 @@ op
 save V(in)
 probe V(out)
 print op V(in)
+measure tran vmax MAX V(out)
+meas dc imax MAX I(V1)
 run
 .endc
 .end
@@ -148,6 +150,8 @@ run
             ".save V(in)".to_string(),
             ".probe V(out)".to_string(),
             ".print op V(in)".to_string(),
+            ".measure tran vmax MAX V(out)".to_string(),
+            ".meas dc imax MAX I(V1)".to_string(),
         ]
     );
     let diagnostics = summary
@@ -167,7 +171,7 @@ run
             (".include", 2, "error"),
             (".lib", 3, "error"),
             (".control", 4, "error"),
-            (".control", 9, "error")
+            (".control", 11, "error")
         ]
     );
     assert_eq!(
@@ -181,6 +185,25 @@ run
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_CONTROL_COMMAND"
+        ]
+    );
+    let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
+    let measurement_summary = resolve_deck_measurements(&measurement_deck);
+    assert_eq!(
+        measurement_summary
+            .measurements
+            .iter()
+            .map(|card| (
+                card.directive.as_str(),
+                card.analysis.as_str(),
+                card.name.as_str(),
+                card.mode.as_str(),
+                card.probe.as_str()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (".measure", "tran", "vmax", "max", "V(out)"),
+            (".meas", "dc", "imax", "max", "I(V1)")
         ]
     );
 }
@@ -267,6 +290,8 @@ op
 save V(a)
 probe V(b)
 print op V(a)
+measure tran vmax MAX V(a)
+meas dc imax MAX I(V1)
 run
 .endc
 .end
@@ -283,7 +308,9 @@ run
             ".op",
             ".save V(a)",
             ".probe V(b)",
-            ".print op V(a)"
+            ".print op V(a)",
+            ".measure tran vmax MAX V(a)",
+            ".meas dc imax MAX I(V1)"
         ]
     );
     assert_eq!(
@@ -307,7 +334,26 @@ run
             .skip(3)
             .map(|diagnostic| (diagnostic.directive.as_str(), diagnostic.line_number))
             .collect::<Vec<_>>(),
-        vec![(".control", 5), (".control", 10)]
+        vec![(".control", 5), (".control", 12)]
+    );
+    let measurement_deck = format!("{}\n.end", summary.active_lines.join("\n"));
+    let measurement_summary = resolve_deck_measurements(&measurement_deck);
+    assert_eq!(
+        measurement_summary
+            .measurements
+            .iter()
+            .map(|card| (
+                card.directive.as_str(),
+                card.analysis.as_str(),
+                card.name.as_str(),
+                card.mode.as_str(),
+                card.probe.as_str()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            (".measure", "tran", "vmax", "max", "V(a)"),
+            (".meas", "dc", "imax", "max", "I(V1)")
+        ]
     );
     assert_eq!(
         summary

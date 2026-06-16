@@ -35,8 +35,8 @@ downstream tools to compare.
      active deck and source-resolved solver input while body commands emit
      stable non-executed diagnostics, and selected `.control` block
      analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
-     `print`, and `plot`) now normalize into dotted deck cards; parsed
-     `.measure dc` / `.meas dc` cards now route DC
+     `measure`, `meas`, `print`, and `plot`) now normalize into dotted deck
+     cards; parsed `.measure dc` / `.meas dc` cards now route DC
      sweep probe samples into the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
      optional frequency windows into the same measurement table surface; parsed
@@ -519,6 +519,14 @@ downstream tools to compare.
     - Python, Rust, and TypeScript now normalize selected `.control` block
       output-selection commands (`save` and `probe`) into the same `.save` and
       `.probe` deck cards consumed by existing output resolvers.
+    - Unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported control flow is still explicit.
+
+46. Selected `.control` measurement routing.
+    - Status: completed in this selected control measurement-routing slice.
+    - Python, Rust, and TypeScript now normalize selected `.control` block
+      measurement commands (`measure` and `meas`) into the same `.measure` and
+      `.meas` deck cards consumed by existing measurement resolvers.
     - Unrecognized non-comment commands inside `.control` blocks remain
       diagnostic-only so unsupported control flow is still explicit.
 

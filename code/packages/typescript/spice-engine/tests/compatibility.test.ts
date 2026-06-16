@@ -119,6 +119,8 @@ op
 save V(in)
 probe V(out)
 print op V(in)
+measure tran vmax MAX V(out)
+meas dc imax MAX I(V1)
 run
 .endc
 .end
@@ -132,6 +134,8 @@ run
       ".save V(in)",
       ".probe V(out)",
       ".print op V(in)",
+      ".measure tran vmax MAX V(out)",
+      ".meas dc imax MAX I(V1)",
     ]);
     expect(summary.diagnostics.map(({ directive, lineNumber, severity }) => [
       directive,
@@ -141,13 +145,24 @@ run
       [".include", 2, "error"],
       [".lib", 3, "error"],
       [".control", 4, "error"],
-      [".control", 9, "error"],
+      [".control", 11, "error"],
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
       "SPICE_DECK_CONTROL_COMMAND",
+    ]);
+    const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
+    expect(measurementSummary.measurements.map((card) => [
+      card.directive,
+      card.analysis,
+      card.name,
+      card.mode,
+      card.probe,
+    ])).toStrictEqual([
+      [".measure", "tran", "vmax", "max", "V(out)"],
+      [".meas", "dc", "imax", "max", "I(V1)"],
     ]);
   });
 
@@ -201,6 +216,8 @@ op
 save V(a)
 probe V(b)
 print op V(a)
+measure tran vmax MAX V(a)
+meas dc imax MAX I(V1)
 run
 .endc
 .end
@@ -218,6 +235,8 @@ run
       ".save V(a)",
       ".probe V(b)",
       ".print op V(a)",
+      ".measure tran vmax MAX V(a)",
+      ".meas dc imax MAX I(V1)",
     ]);
     expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
       "SPICE_DECK_INCLUDE_NOT_FOUND",
@@ -231,7 +250,18 @@ run
       lineNumber,
     ])).toStrictEqual([
       [".control", 5],
-      [".control", 10],
+      [".control", 12],
+    ]);
+    const measurementSummary = resolveDeckMeasurements(`${summary.activeLines.join("\n")}\n.end`);
+    expect(measurementSummary.measurements.map((card) => [
+      card.directive,
+      card.analysis,
+      card.name,
+      card.mode,
+      card.probe,
+    ])).toStrictEqual([
+      [".measure", "tran", "vmax", "max", "V(a)"],
+      [".meas", "dc", "imax", "max", "I(V1)"],
     ]);
     expect(summary.diagnostics.slice(0, 3).map(({ source, lineNumber, target }) => [
       source,
