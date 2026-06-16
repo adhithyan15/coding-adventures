@@ -4,6 +4,16 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
+> **LANG-FULL B1-stdin — Brainfuck reads real input on all 7 backends (v0.90.0):**
+> `tests/lang_matrix.rs` adds two executed stdin programs — `,+.` (read a byte, `+`,
+> print: `"A"` → `"B"`) and `,.,.` (echo two bytes: `"Hi"` → `"Hi"`). The four
+> subprocess columns (native/LLVM/JVM/CLR) read real process stdin via the new
+> `output_with_stdin` helper; WASM/VM/JIT `getchar` drains a per-program `program_stdin`
+> buffer. Harness-only — every backend already compiled `,`→`getchar`. Both programs
+> read exactly the supplied bytes (no EOF-gated loop), so they terminate identically
+> despite the backends' divergent `getchar`-EOF convention (0 vs -1); normalising EOF
+> (so `,[.,]` cat works) is a separate item.
+
 > **LANG-MATRIX Brainfuck — CODE-GEN MATRIX COMPLETE (v0.65.0–v0.68.0):** Brainfuck now
 > runs on **every code-gen backend** — LLVM, WASM, JVM, **and CLR** (plus native).
 > `lower_brainfuck_for_aot` widens the frontend's narrow cell (`u8`) and pointer (`u32`)

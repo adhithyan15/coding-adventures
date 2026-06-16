@@ -517,6 +517,38 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Brainfuck — STDIN (LANG-FULL B1-stdin). The matrix proved every backend can *write*
+    // output (`.`); these two prove every backend can *read* input (`,`). `,+.` reads one
+    // byte from real stdin, `+` increments it, and `.` prints the result — so the output
+    // depends on BOTH the input and a computation on it (not a constant, not a bare echo):
+    // input "A" (65) → output "B" (66). The harness feeds "A" to the process stdin on the
+    // four subprocess backends (libc `getchar` / `System.in` / `Console.Read`) and to the
+    // in-process `getchar` buffer on WASM/VM/JIT — see `program_stdin` + `output_with_stdin`.
+    //
+    // It reads EXACTLY as many bytes as supplied and never reads past EOF, so it terminates
+    // identically on every backend *regardless* of the EOF convention — which still differs
+    // (JVM's BFRuntime and the VM/JIT return 0; libc `getchar`, `Console.Read` and the wasm
+    // host return -1 → the cell wraps to 255). The classic cat `,[.,]` would loop forever on
+    // the -1 backends, so normalising EOF across backends is a separate item; these programs
+    // sidestep it by construction.
+    Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: ",+.",
+        expect: Expect::Stdout("B"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Brainfuck — multi-byte STDIN echo (LANG-FULL B1-stdin). `,.,.` reads a byte and prints
+    // it, twice; with input "Hi" it echoes "Hi". Proves *repeated* reads advance through the
+    // input stream on every backend (the second `,` must see 'i', not 'H' again). Like `,+.`
+    // it reads exactly the supplied bytes — no EOF-gated loop — so it terminates everywhere.
+    Prog {
+        lang: Language::Brainfuck,
+        ext: "bf",
+        src: ",.,.",
+        expect: Expect::Stdout("Hi"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
     // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to
@@ -622,6 +654,42 @@ fn compile_native(src_path: &std::path::Path, exe: &std::path::Path, lang: Langu
     }
 }
 
+/// The stdin bytes a Brainfuck `,` program reads. The matrix is otherwise stdin-free —
+/// every program above supplies none, so `getchar` sees EOF (the prior behaviour) — so
+/// only the explicit stdin programs name their input here, keyed on `(lang, src)`.
+/// Keeping the input in a small side table rather than a new `Prog` field avoids
+/// editing every one of the ~30 existing `Prog` literals (and the churn/merge conflicts
+/// that would cause in a fast-moving array); the Brainfuck sources are unique, so the
+/// match is unambiguous.
+fn program_stdin(p: &Prog) -> &'static [u8] {
+    match (p.lang, p.src) {
+        (Language::Brainfuck, ",+.") => b"A",   // read 'A' (65), `+` → 66, print 'B'
+        (Language::Brainfuck, ",.,.") => b"Hi", // read a byte and echo it, twice → "Hi"
+        _ => b"",
+    }
+}
+
+/// Run `cmd` feeding `input` to its stdin, returning the finished output. The four
+/// subprocess backends (native / LLVM / JVM / CLR) read a Brainfuck `,` from their
+/// real process stdin — libc `getchar` (native/LLVM), `System.in` (JVM's BFRuntime),
+/// `Console.Read` (CLR) — so this writes the program's input and closes the pipe (→
+/// EOF). `input` is empty for every non-stdin program, so `write_all(b"")` is a no-op
+/// and behaviour is unchanged. A write error is deliberately ignored: a program that
+/// exits before reading closes the read end, and a resulting broken pipe must not fail
+/// an otherwise-correct run. The captured stdout/stderr are piped so they don't leak to
+/// the test's own console.
+fn output_with_stdin(mut cmd: Command, input: &[u8]) -> Option<std::process::Output> {
+    use std::io::Write as _;
+    cmd.stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped());
+    let mut child = cmd.spawn().ok()?;
+    if let Some(mut si) = child.stdin.take() {
+        let _ = si.write_all(input); // `si` dropped at block end → stdin closes → EOF
+    }
+    child.wait_with_output().ok()
+}
+
 /// Native-AOT runner: write the source, compile to a host executable, run it, and
 /// return `(exit_code, trimmed_stdout)`. `None` when native AOT is unavailable here.
 ///
@@ -641,7 +709,9 @@ fn run_native(p: &Prog) -> Option<(Option<i32>, String)> {
     std::fs::write(&src_path, p.src).ok()?;
     let exe = dir.path().join("prog");
     compile_native(&src_path, &exe, p.lang)?;
-    let out = Command::new(&exe).output().ok()?;
+    // Feed the program's stdin (a Brainfuck `,` reads it via libc `getchar`); empty for
+    // every other program, so the prior no-stdin behaviour is unchanged.
+    let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     Some((out.status.code(), stdout))
 }
@@ -703,7 +773,9 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     if !built.status.success() {
         return None;
     }
-    let out = Command::new(&exe).output().ok()?;
+    // Same stdin wiring as `run_native`: a Brainfuck `,` reads libc `getchar` from the
+    // process stdin; empty for every other program.
+    let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     Some((out.status.code(), stdout))
 }
@@ -791,11 +863,15 @@ impl wasm_execution::HostFunction for PutcharFunc {
 }
 
 /// Brainfuck's `,` lowers to `call $getchar`, imported as `env.getchar : () -> i32`
-/// (the wasm sibling of libc `@getchar`). This matrix has no stdin, so the host returns
-/// `-1` (EOF) — the conventional Brainfuck "leave 255 on EOF" after the cell store
-/// truncates it. Resolving it keeps the host complete for any BF program that reads
-/// input; the proven cell (`++++++++[>++++++++<-]>+.`) emits no `,`, so it is unused there.
-struct GetcharFunc;
+/// (the wasm sibling of libc `@getchar`). Each call pops the next byte from the program's
+/// stdin buffer (seeded by `run_wasm` from `program_stdin`); when the buffer is drained it
+/// returns `-1` (EOF) — the conventional Brainfuck "leave 255 on EOF" after the cell store
+/// truncates it, matching the libc `getchar` column. A program with no stdin (every cell
+/// but the B1-stdin ones) gets an empty buffer, so the first read is EOF, exactly the
+/// previous behaviour.
+struct GetcharFunc {
+    input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
+}
 
 impl wasm_execution::HostFunction for GetcharFunc {
     fn func_type(&self) -> &wasm_types::FuncType {
@@ -812,7 +888,13 @@ impl wasm_execution::HostFunction for GetcharFunc {
         _args: &[wasm_execution::WasmValue],
         _memory: Option<&mut wasm_execution::LinearMemory>,
     ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
-        Ok(vec![wasm_execution::WasmValue::I32(-1)])
+        let byte = self
+            .input
+            .lock()
+            .expect("lang-matrix wasm stdin buffer poisoned")
+            .pop_front();
+        let code = byte.map(i32::from).unwrap_or(-1); // EOF → -1
+        Ok(vec![wasm_execution::WasmValue::I32(code)])
     }
 }
 
@@ -825,6 +907,7 @@ impl wasm_execution::HostFunction for GetcharFunc {
 struct PrintHost {
     captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
     bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+    input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
 }
 
 impl wasm_execution::HostInterface for PrintHost {
@@ -840,7 +923,9 @@ impl wasm_execution::HostInterface for PrintHost {
             ("env", "putchar") => Some(Box::new(PutcharFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),
             })),
-            ("env", "getchar") => Some(Box::new(GetcharFunc)),
+            ("env", "getchar") => Some(Box::new(GetcharFunc {
+                input: std::sync::Arc::clone(&self.input),
+            })),
             _ => None,
         }
     }
@@ -877,9 +962,14 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
     let wasm = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
     let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    // The program's stdin, drained by `env.getchar` (Brainfuck `,`); empty otherwise.
+    let input = std::sync::Arc::new(std::sync::Mutex::new(
+        program_stdin(p).iter().copied().collect::<std::collections::VecDeque<u8>>(),
+    ));
     let host = PrintHost {
         captured: std::sync::Arc::clone(&captured),
         bytes: std::sync::Arc::clone(&byte_buf),
+        input: std::sync::Arc::clone(&input),
     };
     let rt = wasm_runtime::WasmRuntime::with_host(Box::new(host));
     let result = rt.load_and_run(&wasm, "main", &[]).ok()?;
@@ -1108,7 +1198,11 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
             return None;
         }
     }
-    let out = Command::new("java").arg("-cp").arg(dir.path()).arg("Main").output().ok()?;
+    // A Brainfuck `,` reads `env.BFRuntime.getchar()` → `System.in`, so pipe the
+    // program's stdin to the `java` process; empty for every other program.
+    let mut java = Command::new("java");
+    java.arg("-cp").arg(dir.path()).arg("Main");
+    let out = output_with_stdin(java, program_stdin(p))?;
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     if prints {
         // The program wrote its result to stdout via `env.BasicRuntime.println`.
@@ -1171,7 +1265,11 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
         r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#,
     )
     .ok()?;
-    let out = Command::new("dotnet").arg(&dll).output().ok()?;
+    // A Brainfuck `,` reads `Console.Read()` from the process stdin, so pipe the
+    // program's stdin to the `dotnet` process; empty for every other program.
+    let mut dn = Command::new("dotnet");
+    dn.arg(&dll);
+    let out = output_with_stdin(dn, program_stdin(p))?;
     if !out.status.success() {
         return None;
     }
@@ -1234,9 +1332,15 @@ fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
         bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
         Ok(Value::Null)
     });
+    // The program's stdin, drained one byte per `getchar` (Brainfuck `,`); empty for
+    // every other program, so the first read is EOF → 0 (the prior behaviour).
+    let stdin_buf: Arc<Mutex<std::collections::VecDeque<u8>>> =
+        Arc::new(Mutex::new(program_stdin(p).iter().copied().collect()));
+    let input = Arc::clone(&stdin_buf);
     vm.builtins_mut().register("getchar", move |_args: &[Value]| {
-        // No stdin in the matrix; EOF → 0 (BF convention).
-        Ok(Value::Int(0))
+        // Pop the next stdin byte; EOF → 0 (BF convention) once the buffer is drained.
+        let byte = input.lock().expect("lang-matrix VM stdin buffer poisoned").pop_front();
+        Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
     });
 
     let result = vm.execute(&mut module, &entry, &[]).ok()?;
@@ -1303,7 +1407,16 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
         Ok(Value::Null)
     });
-    vm.builtins_mut().register("getchar", move |_args: &[Value]| Ok(Value::Int(0)));
+    // The program's stdin, shared by BOTH tiers' `getchar` (a function runs on one tier,
+    // but sharing one buffer keeps the byte stream consistent whichever tier it lands
+    // on); empty for every non-stdin program, so the first read is EOF → 0.
+    let stdin_buf: Arc<Mutex<std::collections::VecDeque<u8>>> =
+        Arc::new(Mutex::new(program_stdin(p).iter().copied().collect()));
+    let input = Arc::clone(&stdin_buf);
+    vm.builtins_mut().register("getchar", move |_args: &[Value]| {
+        let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
+        Ok(Value::Int(byte.map(i64::from).unwrap_or(0)))
+    });
 
     // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
     let backend = GenericCirJit::new();
@@ -1319,7 +1432,11 @@ fn run_jit(p: &Prog) -> Option<(Option<i32>, String)> {
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
         Value::Null
     });
-    backend.register_builtin("getchar", move |_args: &[Value]| Value::Int(0));
+    let input = Arc::clone(&stdin_buf);
+    backend.register_builtin("getchar", move |_args: &[Value]| {
+        let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
+        Value::Int(byte.map(i64::from).unwrap_or(0))
+    });
 
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the
     // borrow, so `execute_with_jit` can re-borrow `vm` for the interpreter tier.
