@@ -77,11 +77,35 @@ expert decomposer by data the framework wrote itself, with no human labels. See
 `../bench/BENCH_FINDINGS.md` for how small the *base* models can go with a tolerant
 framework (down to ~1 GB), and `../LOCAL-MODEL-FINDINGS.md` for the privacy thesis.
 
+## Second IR shape: the chart-fact decomposer (`gen_chart_data.py`)
+
+The decomposer's job is to turn *any* messy clinical input into a typed IR. `gen_data.py`
+teaches the **findings** shape (CSF labs / organism-id → diagnosis). `gen_chart_data.py`
+teaches the **chart-fact** shape: a free-text patient chart note → the typed
+`ChartFact{kind, value, span}` list the **chart-as-constraints COP** consumes
+(`../treatment/antibiotics/chart_to_cop.py`). The structured path already exists
+(`../fhir/fhir_to_chartfacts.py` maps a FHIR bundle → ChartFacts); this is its **prose
+counterpart** — the messy-input front door to the constraint solver (the CC-7 enabler).
+
+Same backward-generation + byte-provenance discipline: sample a chart-fact set from the
+**closed** vocabulary (exactly what `compile_cop` maps), a teacher writes a chart note
+stating them (+ a non-charting distractor), and the gold IR is derived from the note with
+verbatim spans + a justified `discard` list. The headline guarantee
+(`test_gen_chart_data.py`) is the **F3→F2 consumability contract**: every `(kind, value)`
+the generator can sample is fed through `compile_cop` and asserted *not discarded* — so the
+decomposer's gold can never contain a chart fact the COP would silently drop (closed-vocab
+adherence proven against the actual downstream consumer, not just a schema).
+
+```sh
+python3 gen_chart_data.py --n 200 --teacher llama3.1:8b   # → data/chart_{train,valid}.jsonl
+python3 test_gen_chart_data.py                            # 6 pure tests (no Ollama/MLX)
+```
+
 ## What is and isn't committed
 
-Source only: `gen_data.py`, `eval_specialist.py`, this README. The `.gitignore`
-excludes `.venv/`, `data/` (generated pairs), `adapters/` (trained weights), and
-`*.log` — those are reproducible from the scripts + a base model, and the weights
+Source only: `gen_data.py`, `gen_chart_data.py`, `eval_specialist.py`, this README. The
+`.gitignore` excludes `.venv/`, `data/` (generated pairs), `adapters/` (trained weights),
+and `*.log` — those are reproducible from the scripts + a base model, and the weights
 are large/environment-specific. Regenerate with the workflow above.
 
 ## Honest limits
