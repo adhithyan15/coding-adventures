@@ -1,0 +1,158 @@
+# MATLAB Language Token Grammar
+# ============================================================================
+#
+# Tokenizes MATLAB (Cleve Moler, ~1979) — the matrix-laboratory language whose
+# only data type is the array. This grammar is the lexical layer of the MATLAB
+# frontend on `array-runtime`; see code/specs/MA01-matlab-language.md.
+#
+# CASE-SENSITIVE (`end` ≠ `End`), like MATLAB.
+#
+# THE CONTEXT-SENSITIVE QUOTE — handled OUTSIDE this grammar
+# ----------------------------------------------------------------------------
+# MATLAB's `'` is BOTH the (conjugate) transpose operator AND the char-array
+# delimiter, told apart only by the *preceding* token (MA01 §3). A regex token
+# grammar cannot express that, so `matlab-lexer`'s PRE-TOKENIZE hook resolves it
+# before this grammar runs: it leaves transpose quotes as bare `'` (lexed here
+# as TRANSPOSE) and rewrites char-array literals into ` `N` ` backtick
+# placeholders (lexed here as CHARARRAY → STRING and restored by a post-hook).
+# Backtick is not a MATLAB token, so it appears only as that placeholder. The
+# same hook splices `...` line continuations. So this file only ever sees
+# unambiguous quotes.
+
+case_sensitive: true
+
+# ============================================================================
+# SECTION 1: Multi-character operators (longest-match-first)
+#
+# The element-wise `.`-prefixed operators MUST precede bare `.` and the plain
+# operator they contain, so `.*` never lexes as `.`+`*`. `.'` (non-conjugate
+# transpose) likewise precedes `.`.
+# ============================================================================
+
+ELEM_POW       = ".^"
+ELEM_MUL       = ".*"
+ELEM_RDIV      = "./"
+ELEM_LDIV      = /\.\\/
+ELEM_TRANSPOSE = ".'"
+
+EQ_EQ   = "=="
+NE      = "~="
+LE      = "<="
+GE      = ">="
+AND_AND = "&&"
+OR_OR   = "||"
+
+# ============================================================================
+# SECTION 2: String-like literals
+#
+# CHARARRAY is the backtick placeholder the pre-tokenize hook emits for a
+# single-quoted char array (`'abc'`, `'it''s'`); its value is restored to the
+# original text by the post-tokenize hook. DQ_STRING is the modern double-quoted
+# string with the `""` escape. Both alias to STRING.
+# ============================================================================
+
+CHARARRAY = /`[0-9]+`/ -> STRING
+DQ_STRING = /"([^"]|"")*"/ -> STRING
+
+# ============================================================================
+# SECTION 3: Numbers
+#
+# Decimal and scientific. A digit is REQUIRED after the dot (`3.5`, `.5`) so a
+# trailing dot is never absorbed — `3.*4` lexes as `3` `.*` `4` (element-wise),
+# not `3.` `*` `4`.
+# ============================================================================
+
+NUMBER = /([0-9]+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?/
+
+# ============================================================================
+# SECTION 4: Identifiers and keywords
+#
+# A MATLAB name is letter/underscore then letters/digits/underscores — NO dots
+# (the dot is field access / element-wise prefix, not a name character — unlike
+# R). `end` is a keyword for both block-end and the last-index sentinel; the
+# parser disambiguates by context.
+# ============================================================================
+
+NAME = /[A-Za-z_][A-Za-z0-9_]*/
+
+keywords:
+  if
+  elseif
+  else
+  end
+  for
+  while
+  break
+  continue
+  switch
+  case
+  otherwise
+  function
+  return
+  global
+  persistent
+  try
+  catch
+
+# ============================================================================
+# SECTION 5: Single-character operators and punctuation
+#
+#   '   transpose (the pre-hook guarantees string quotes never reach here)
+#   + - * / \ ^   arithmetic / matrix divide / power
+#   < > =   comparison / assignment       ~ & |   logical
+#   :   colon (ranges, whole-dimension)    .   field access / decimal
+#   @   function handle
+#   ( ) [ ] { }   grouping / indexing / matrix / cell    , ;   separators
+# ============================================================================
+
+TRANSPOSE = "'"
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+SLASH     = "/"
+BACKSLASH = /\\/
+CARET     = "^"
+LT        = "<"
+GT        = ">"
+EQ        = "="
+TILDE     = "~"
+AMP       = "&"
+PIPE      = "|"
+COLON     = ":"
+DOT       = "."
+AT        = "@"
+LPAREN    = "("
+RPAREN    = ")"
+LBRACKET  = "["
+RBRACKET  = "]"
+LBRACE    = "{"
+RBRACE    = "}"
+COMMA     = ","
+SEMICOLON = ";"
+
+# ============================================================================
+# SECTION 6: Newlines (significant — statement / matrix-row terminators)
+#
+# A newline ends a statement, and inside `[ ]`/`{ }` it ALSO separates matrix
+# rows — so, unlike S/R, matlab-lexer's post-hook keeps bracket-interior
+# newlines and only drops them inside `( )` (call/grouping). `...` continuations
+# were already spliced away by the pre-hook.
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+# ============================================================================
+# SECTION 7: Skip — horizontal whitespace and `%` line comments
+# (`%{ %}` block comments are stripped by the pre-hook.)
+# ============================================================================
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /%[^\n]*/
+
+# ============================================================================
+# SECTION 8: Error recovery
+# ============================================================================
+
+errors:
+  UNKNOWN = /./
