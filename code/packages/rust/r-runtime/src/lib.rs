@@ -515,4 +515,13 @@ mod tests {
     fn solve_of_a_singular_matrix_is_an_error() {
         assert!(eval_r("solve(matrix(c(1, 2, 2, 4), 2, 2))\n").is_err());
     }
+
+    #[test]
+    fn solve_rejects_an_over_large_or_over_wide_problem() {
+        // The order is capped (O(n^3) DoS guard)…
+        assert!(eval_r("solve(matrix(0, 1001, 1001))\n").is_err());
+        // …and so is the right-hand-side width (O(n^2 * m) guard): a 2x2 system
+        // with a 2 x 2002 RHS exceeds the column cap.
+        assert!(eval_r("solve(diag(2), matrix(1, 2, 2002))\n").is_err());
+    }
 }

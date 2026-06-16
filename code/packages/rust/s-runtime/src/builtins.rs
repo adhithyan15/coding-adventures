@@ -908,6 +908,14 @@ fn b_solve(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     if b.iter().any(|x| is_na_real(*x)) {
         return Err(SError::BadArgs("solve: NA in 'b'".into()));
     }
+    // The RHS elimination is O(n²·m), so a wide `b` (legal up to MAX_SEQ_LEN
+    // elements ≈ 16k columns at n = 1000) would blow past the MAX_SOLVE_DIM work
+    // budget the order cap alone enforces. Cap the column count too.
+    if m > MAX_SOLVE_DIM {
+        return Err(SError::Index(format!(
+            "solve: too many right-hand sides ({m}; limit {MAX_SOLVE_DIM})"
+        )));
+    }
 
     let x = gauss_jordan(a, n, b, m)?;
     if b_is_vector {
