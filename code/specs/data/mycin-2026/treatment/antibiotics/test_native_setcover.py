@@ -52,10 +52,23 @@ def test_side_effect_weights_loaded() -> None:
         assert isinstance(se, int) and not isinstance(se, bool) and se >= 0, (d, se)
 
 
+def test_step_therapy_emits_a_native_precedence_constraint() -> None:
+    """CC-6: a step-blocked drug is pinned out by an EXPLICIT `constrain x_Y <= 0` clause
+    in the emitted program (engine-enforced precedence) — not removed in Python. The drug
+    still gets its selector variable; only the constraint forces it to 0."""
+    prog, _, _ = ns.emit_program(
+        reg.SCENARIOS["post_neurosurgical_or_shunt"], set(), step_blocked={"cefepime"})
+    assert "symbol x_cefepime : bool" in prog           # still a first-class variable
+    assert "constrain x_cefepime <= 0" in prog, prog     # ...pinned out by a real constraint
+    plain, _, _ = ns.emit_program(reg.SCENARIOS["post_neurosurgical_or_shunt"], set())
+    assert "constrain x_cefepime <= 0" not in plain      # absent without a step block
+
+
 def main() -> int:
     test_emit_is_well_formed()
     test_default_weights_reproduce_tier_only_objective()
     test_side_effect_weights_loaded()
+    test_step_therapy_emits_a_native_precedence_constraint()
     cli = decide_mod.find_cli()
     if cli is None:
         print("test_native_setcover: PASS (emit + CC-4 weight checks); "

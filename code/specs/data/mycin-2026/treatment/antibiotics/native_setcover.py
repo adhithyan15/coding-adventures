@@ -56,7 +56,8 @@ def _sym(prefix: str, *parts: str) -> str:
 def emit_program(organisms: list[str], exclusions: set[str],
                  defeated: set[tuple[str, str]] = frozenset(),
                  dose_excluded: set[str] = frozenset(),
-                 weights: tuple[int, int] = reg.DEFAULT_WEIGHTS) -> tuple[str, dict, bool]:
+                 weights: tuple[int, int] = reg.DEFAULT_WEIGHTS,
+                 step_blocked: set[str] = frozenset()) -> tuple[str, dict, bool]:
     """Emit the adj-lang integer program for this cover. Returns (program text,
     {x_var → drug}, feasible?) — feasible is False if some organism has no coverer
     (the program is then trivially infeasible and the engine will say so).
@@ -73,7 +74,15 @@ def emit_program(organisms: list[str], exclusions: set[str],
     renal/interaction risks shrink it (dose_window UNSAT). Such a drug is dropped from the
     candidate set before the cover is built, so the optimizer re-derives around it (or
     abstains if it was load-bearing) — dose feasibility folded INTO the cover, not a
-    post-hoc warning."""
+    post-hoc warning.
+
+    `step_blocked` (CC-6) is the set of drugs a payer step-therapy rule blocks because
+    their prerequisite hasn't been tried. Unlike dose_excluded (which removes a drug from
+    the cover entirely on clinical grounds), a step-blocked drug stays a first-class
+    variable but is pinned to 0 by an EXPLICIT precedence constraint `x_Y <= 0` — the
+    `x_Y ≤ tried_X` precedence with the known-untried `tried_X = 0` folded in. The
+    reimbursement constraint is thus enforced BY THE ENGINE and visible in the program
+    (auditable / appealable), not pre-filtered away in Python."""
     cands = [d for d in reg.candidates(exclusions) if d not in dose_excluded]
     lines: list[str] = []
     xvar = {d: _sym("x", d) for d in cands}
@@ -115,6 +124,14 @@ def emit_program(organisms: list[str], exclusions: set[str],
             feasible = False  # no drug or combination covers this organism
             lines.append(f"constrain 0 >= 1   % UNCOVERABLE: {org}")
 
+    # CC-6 step-therapy precedence: `x_Y ≤ tried_Y`. The prerequisite is known-untried at
+    # compile time (tried_Y = 0), so the precedence folds to `x_Y <= 0` — an explicit,
+    # engine-enforced constraint that pins the payer-blocked drug out of the reimbursement
+    # solve. (Clinical solve passes step_blocked=∅, so it is unconstrained there.)
+    for d in cands:
+        if d in step_blocked:
+            lines.append(f"constrain {xvar[d]} <= 0   % step-therapy: reimbursement requires prerequisite tried")
+
     # CC-4 objective: minimize Σ (w_cost·tier + w_tox·side_effects)·x_d. The coefficient
     # is a non-negative integer (validated below), so this stays in the engine's INTEGER
     # optimizer. weights=(1,0) reproduces the historical tier-only objective exactly.
@@ -138,12 +155,15 @@ def emit_program(organisms: list[str], exclusions: set[str],
 def solve(cli: Path, organisms: list[str], exclusions: set[str],
           defeated: set[tuple[str, str]] = frozenset(),
           dose_excluded: set[str] = frozenset(),
-          weights: tuple[int, int] = reg.DEFAULT_WEIGHTS) -> dict:
+          weights: tuple[int, int] = reg.DEFAULT_WEIGHTS,
+          step_blocked: set[str] = frozenset()) -> dict:
     """Run the emitted program through the engine; return the engine's regimen.
     `defeated` carries culture-sensitivity results (resistant drug→organism edges);
     `dose_excluded` carries drugs with no safe-and-effective dose for this patient (CC-2);
-    `weights`=(w_cost, w_tox) is the CC-4 cost+side-effect objective blend (default (1,0))."""
-    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, dose_excluded, weights)
+    `weights`=(w_cost, w_tox) is the CC-4 cost+side-effect objective blend (default (1,0));
+    `step_blocked` (CC-6) pins payer-blocked drugs to 0 via an explicit precedence constraint."""
+    program, var_to_drug, _ = emit_program(organisms, exclusions, defeated, dose_excluded,
+                                            weights, step_blocked)
     fd, name = tempfile.mkstemp(suffix=".adj", prefix="_tmp_native_", dir=HERE)
     p = Path(name)
     try:
