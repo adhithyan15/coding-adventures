@@ -2300,6 +2300,7 @@ class DeckAnalysisExecution:
     plan: DeckAnalysisPlan
     result: DcResult | DcSweepResult | AcResult | TransientResult
     table: str
+    output_probes: list[str]
 
 
 def run_deck_analysis(
@@ -2316,6 +2317,7 @@ def run_deck_analysis(
             plan=plan,
             result=result,
             table=format_deck_op_table(result, netlist),
+            output_probes=select_deck_output_probes(netlist, plan.analysis),
         )
     if plan.analysis == "dc":
         source_name = _require_deck_plan_string(plan, "source_name")
@@ -2327,6 +2329,7 @@ def run_deck_analysis(
             plan=plan,
             result=result,
             table=format_deck_dc_sweep_table(result, netlist),
+            output_probes=select_deck_output_probes(netlist, plan.analysis),
         )
     if plan.analysis == "ac":
         sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
@@ -2340,6 +2343,7 @@ def run_deck_analysis(
             plan=plan,
             result=result,
             table=format_deck_ac_table(result, netlist),
+            output_probes=select_deck_output_probes(netlist, plan.analysis),
         )
     if plan.analysis == "tran":
         step_time = _require_deck_plan_number(plan, "step_time")
@@ -2357,6 +2361,7 @@ def run_deck_analysis(
             plan=plan,
             result=result,
             table=format_deck_transient_table(result, netlist),
+            output_probes=select_deck_output_probes(netlist, plan.analysis),
         )
     raise ValueError(f"run_deck_analysis: unsupported analysis {plan.analysis!r}")
 

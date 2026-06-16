@@ -6773,10 +6773,12 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 
     op_execution = run_deck_analysis(circuit, netlist, "op")
     assert op_execution.plan.analysis == "op"
+    assert op_execution.output_probes == ["V(mid)"]
     assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
 
     dc_execution = run_deck_analysis(circuit, netlist, "dc")
     assert dc_execution.plan.source_name == "V1"
+    assert dc_execution.output_probes == ["V(mid)", "I(V1)"]
     assert isinstance(dc_execution.result, DcSweepResult)
     assert len(dc_execution.result.points) == 2
     assert dc_execution.table == (
@@ -6786,6 +6788,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
 
     ac_execution = run_deck_analysis(circuit, netlist, "ac")
+    assert ac_execution.output_probes == ["V(mid)"]
     assert isinstance(ac_execution.result, AcResult)
     assert len(ac_execution.result.points) == 1
     assert ac_execution.table == (
@@ -6794,6 +6797,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
 
     tran_execution = run_deck_analysis(circuit, netlist, "tran")
+    assert tran_execution.output_probes == ["V(mid)"]
     assert isinstance(tran_execution.result, TransientResult)
     assert tran_execution.table == (
         "Index\tTime\tV(mid)\n"
@@ -6808,6 +6812,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     assert tran_window_execution.plan.start_time == pytest.approx(2.0e-3)
     assert tran_window_execution.plan.max_step == pytest.approx(1.0e-3)
     assert tran_window_execution.plan.use_initial_conditions is True
+    assert tran_window_execution.output_probes == ["V(mid)"]
     assert isinstance(tran_window_execution.result, TransientResult)
     assert [point.time for point in tran_window_execution.result.points] == pytest.approx(
         [2.0e-3, 4.0e-3, 6.0e-3],
@@ -6823,6 +6828,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
         run_deck_analysis(circuit, netlist)
 
     lin_execution = run_deck_analysis(circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n")
+    assert lin_execution.output_probes == ["V(mid)"]
     assert isinstance(lin_execution.result, AcResult)
     assert [point.freq for point in lin_execution.result.points] == [1.0, 2.0, 3.0]
     assert lin_execution.table == (
@@ -6833,6 +6839,7 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
     )
 
     oct_execution = run_deck_analysis(circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n")
+    assert oct_execution.output_probes == ["V(mid)"]
     assert isinstance(oct_execution.result, AcResult)
     assert [point.freq for point in oct_execution.result.points] == [1.0, 2.0, 4.0]
     assert oct_execution.table == (

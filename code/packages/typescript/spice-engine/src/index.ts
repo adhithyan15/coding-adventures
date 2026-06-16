@@ -658,6 +658,7 @@ export interface DeckAnalysisExecution {
   readonly plan: DeckAnalysisPlan;
   readonly result: DeckAnalysisExecutionResult;
   readonly table: string;
+  readonly outputProbes: readonly string[];
 }
 
 export interface ReleaseReadinessIssue {
@@ -7258,7 +7259,12 @@ export function runDeckAnalysis(
   const plan = selectDeckAnalysisPlan(netlist, analysis);
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
-    return { plan, result, table: formatDeckOpTable(result, netlist) };
+    return {
+      plan,
+      result,
+      table: formatDeckOpTable(result, netlist),
+      outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
+    };
   }
   if (plan.analysis === "dc") {
     const sourceName = requireDeckPlanString(plan.sourceName, plan, "sourceName");
@@ -7266,7 +7272,12 @@ export function runDeckAnalysis(
     const stop = requireDeckPlanNumber(plan.stopValue, plan, "stopValue");
     const step = requireDeckPlanNumber(plan.stepValue, plan, "stepValue");
     const result = dcSweep(circuit, sourceName, start, stop, step);
-    return { plan, result, table: formatDeckDcSweepTable(sourceName, result, netlist) };
+    return {
+      plan,
+      result,
+      table: formatDeckDcSweepTable(sourceName, result, netlist),
+      outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
+    };
   }
   if (plan.analysis === "ac") {
     const sweepKind = requireDeckPlanString(plan.sweepKind, plan, "sweepKind");
@@ -7285,7 +7296,12 @@ export function runDeckAnalysis(
       startFrequencyHz,
       stopFrequencyHz,
     );
-    return { plan, result, table: formatDeckAcTable(result, netlist) };
+    return {
+      plan,
+      result,
+      table: formatDeckAcTable(result, netlist),
+      outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
+    };
   }
   if (plan.analysis === "tran") {
     const stepTime = requireDeckPlanNumber(plan.stepTime, plan, "stepTime");
@@ -7297,7 +7313,12 @@ export function runDeckAnalysis(
       plan.startTime,
       stopTime,
     );
-    return { plan, result, table: formatDeckTransientTable(result, netlist) };
+    return {
+      plan,
+      result,
+      table: formatDeckTransientTable(result, netlist),
+      outputProbes: selectDeckOutputProbes(netlist, plan.analysis),
+    };
   }
   throw invalidElement("runDeckAnalysis", `unsupported analysis ${JSON.stringify(plan.analysis)}`);
 }

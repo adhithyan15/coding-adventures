@@ -3403,6 +3403,7 @@ pub struct DeckAnalysisExecution {
     pub plan: DeckAnalysisPlan,
     pub result: DeckAnalysisExecutionResult,
     pub table: String,
+    pub output_probes: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9426,6 +9427,7 @@ pub fn run_deck_analysis(
                 plan,
                 result: DeckAnalysisExecutionResult::Op(result),
                 table,
+                output_probes: select_deck_output_probes(netlist, "op")?,
             })
         }
         "dc" => {
@@ -9441,6 +9443,7 @@ pub fn run_deck_analysis(
                 plan,
                 result: DeckAnalysisExecutionResult::DcSweep(result),
                 table,
+                output_probes: select_deck_output_probes(netlist, "dc")?,
             })
         }
         "ac" => {
@@ -9457,6 +9460,7 @@ pub fn run_deck_analysis(
                 plan,
                 result: DeckAnalysisExecutionResult::Ac(result),
                 table,
+                output_probes: select_deck_output_probes(netlist, "ac")?,
             })
         }
         "tran" => {
@@ -9476,6 +9480,7 @@ pub fn run_deck_analysis(
                 plan,
                 result: DeckAnalysisExecutionResult::Tran(result),
                 table,
+                output_probes: select_deck_output_probes(netlist, "tran")?,
             })
         }
         _ => Err(SpiceError::InvalidElement {

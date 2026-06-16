@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck selected-output artifact metadata** —
+  `run_deck_analysis()` now returns the normalized deck-selected output probes
+  alongside each selected plan, solver result, and stable table, matching Rust
+  and TypeScript.
+
 - **Deck transient print-step output routing** —
   `run_deck_analysis()` now keeps `.tran TSTEP` as the stable deck output
   print grid while `MAXSTEP` caps internal solver stepping, matching Rust and

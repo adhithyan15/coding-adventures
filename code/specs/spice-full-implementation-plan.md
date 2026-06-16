@@ -53,7 +53,8 @@ downstream tools to compare.
      `START` output filtering, `MAXSTEP` fixed-step caps, and `UIC`
      initial-condition intent; selected `.tran` execution now keeps `.tran
      TSTEP` as the deck output print grid while `MAXSTEP` caps internal solver
-     stepping.
+     stepping; deck executions now expose normalized selected output probes as
+     an inspectable artifact alongside the stable table.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -429,12 +430,20 @@ downstream tools to compare.
     - This separates deck-visible transient output rows from internal solver
       stepping and preserves stable selected-plan transient tables.
 
+37. Deck selected-output artifact metadata.
+    - Status: completed in this output-probe artifact slice.
+    - Python, Rust, and TypeScript `run_deck_analysis` / `runDeckAnalysis`
+      results now include the normalized deck-selected output probes alongside
+      the selected plan, solver result, and stable table.
+    - This gives callers a structured deck-owned output artifact without
+      reparsing table text.
+
 ## Backlog
 
 1. Deck execution layer.
    - Expand selected-plan execution beyond fixed-step transient basics,
-     including richer deck-owned run artifacts and output-plan integration
-     beyond stable table routing.
+     including richer deck-owned run artifacts beyond selected output probes
+     and output-plan integration beyond stable table routing.
    - Expand deck-controlled output-plan integration beyond stable table
      routing toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
