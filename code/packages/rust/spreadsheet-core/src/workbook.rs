@@ -44,6 +44,13 @@ pub struct Workbook {
 struct Sheet {
     name: String,
     cells: HashMap<CellAddress, Cell>,
+    /// Per-cell display format codes (Excel-style, e.g. `"#,##0.00"`,
+    /// `"yyyy-mm-dd"`). Stored separately from cell content because a cell can
+    /// be formatted while empty, and the format outlives content edits — exactly
+    /// as in a real spreadsheet. Applied to the computed value by [`get_display`].
+    ///
+    /// [`get_display`]: Workbook::get_display
+    formats: HashMap<CellAddress, String>,
 }
 
 impl Workbook {
@@ -67,6 +74,7 @@ impl Workbook {
         self.sheets.push(Sheet {
             name: name.clone(),
             cells: HashMap::new(),
+            formats: HashMap::new(),
         });
         self.sheet_by_name.insert(name, id);
         id
@@ -289,6 +297,56 @@ impl Workbook {
         self.get_value(sheet, addr).unwrap_or(CellValue::Empty)
     }
 
+    // ----------------------------------------------------------------
+    // Cell formats (display)
+    // ----------------------------------------------------------------
+    //
+    // A format is an Excel-style code (`"#,##0.00"`, `"0%"`, `"yyyy-mm-dd"`,
+    // `"h:mm AM/PM"`) that decides how a cell's *computed value* reads — never
+    // what it is. The number/date formatting itself lives in `number-format-core`
+    // (a Layer-1 core, like the math cores the formula engine dispatches to); the
+    // engine just stores the per-cell code and applies it on display.
+
+    /// Set a cell's display format code. An empty code clears the format (the
+    /// cell falls back to `General`). Logs a change so a viewport sees the
+    /// re-display, but does not touch the value or trigger recalc.
+    pub fn set_format(&mut self, sheet: SheetId, addr: CellAddress, code: &str) {
+        let Some(s) = self.sheets.get_mut(sheet.0 as usize) else {
+            return;
+        };
+        self.revision = self.revision.wrapping_add(1);
+        if code.is_empty() {
+            s.formats.remove(&addr);
+        } else {
+            s.formats.insert(addr, code.to_string());
+        }
+        self.log_change(sheet, addr);
+    }
+
+    /// Clear a cell's display format (it falls back to `General`).
+    pub fn clear_format(&mut self, sheet: SheetId, addr: CellAddress) {
+        self.set_format(sheet, addr, "");
+    }
+
+    /// A cell's display format code, or `None` if it uses the default (`General`).
+    pub fn get_format(&self, sheet: SheetId, addr: CellAddress) -> Option<&str> {
+        self.sheets
+            .get(sheet.0 as usize)?
+            .formats
+            .get(&addr)
+            .map(String::as_str)
+    }
+
+    /// The cell's computed value as the **display string** it should show —
+    /// its value run through its format code (or `General`). Numbers are
+    /// formatted per the code (grouping, decimals, percent, dates…); text,
+    /// booleans, and errors render naturally; an empty cell is `""`. This is the
+    /// one call a renderer needs per visible cell.
+    pub fn get_display(&self, sheet: SheetId, addr: CellAddress) -> String {
+        let value = self.get_value(sheet, addr).unwrap_or(CellValue::Empty);
+        display_value(&value, self.get_format(sheet, addr))
+    }
+
     /// Recalculate every formula cell. Bumps the epoch on success.
     pub fn recalc_all(&mut self) {
         // A full sweep is one revision-transaction too, so the cells it rewrites
@@ -369,14 +427,18 @@ impl Workbook {
         //    loss. Excel likewise refuses to shift non-empty cells off the sheet.
         //    (Deletes only drop a band and shift survivors inward — never a
         //    collision — so they need no such guard.)
+        // Check both the cell store and the format store: a format can sit on an
+        // empty (content-less) cell, so a format-only entry could collide too.
         let would_overflow_grid = match edit {
             StructuralEdit::InsertRows { at, count } => s
                 .cells
                 .keys()
+                .chain(s.formats.keys())
                 .any(|a| a.row >= at && a.row.checked_add(count).is_none()),
             StructuralEdit::InsertCols { at, count } => s
                 .cells
                 .keys()
+                .chain(s.formats.keys())
                 .any(|a| a.col >= at && a.col.checked_add(count).is_none()),
             StructuralEdit::DeleteRows { .. } | StructuralEdit::DeleteCols { .. } => false,
         };
@@ -400,6 +462,18 @@ impl Workbook {
             }
         }
         self.sheets[sheet.0 as usize].cells = moved;
+
+        // 1b. Relocate the format store the same way (formats ride with the cell
+        //     they decorate; a format on a deleted line is dropped).
+        let old_formats = std::mem::take(&mut self.sheets[sheet.0 as usize].formats);
+        let mut moved_formats: HashMap<CellAddress, String> =
+            HashMap::with_capacity(old_formats.len());
+        for (addr, code) in old_formats {
+            if let Some(new_addr) = addr.adjust(edit) {
+                moved_formats.insert(new_addr, code);
+            }
+        }
+        self.sheets[sheet.0 as usize].formats = moved_formats;
 
         // 2. Every address moved, so the old dependency edges are stale. Rebuild
         //    the graph from the rewritten ASTs, then recalc the whole workbook.
@@ -534,6 +608,21 @@ impl Workbook {
 impl Default for Workbook {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+/// Render a computed value as the display string a cell should show, under an
+/// optional format code. Numbers go through `number-format-core` (the code, or
+/// `General` when there's none); text / booleans / errors render naturally; an
+/// empty cell is the empty string. Number formats apply only to numbers — a
+/// format on a text or boolean cell is ignored, as in a spreadsheet.
+fn display_value(value: &CellValue, format: Option<&str>) -> String {
+    match value {
+        CellValue::Number(n) => number_format_core::format_number(*n, format.unwrap_or("General")),
+        CellValue::Empty => String::new(),
+        CellValue::Boolean(b) => if *b { "TRUE" } else { "FALSE" }.to_string(),
+        CellValue::Text(s) => s.clone(),
+        CellValue::Error(e) => e.display().to_string(),
     }
 }
 
@@ -682,6 +771,76 @@ mod tests {
         let before = wb.current_revision();
         wb.insert_rows(s, 1, 1);
         assert!(wb.current_revision() > before);
+    }
+
+    // ── Cell formats / display ──────────────────────────────────────
+
+    #[test]
+    fn get_display_applies_format_or_defaults_to_general() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1234.5));
+        // No format → General (shortest representation).
+        assert_eq!(wb.get_display(s, cell(1, 1)), "1234.5");
+        // With a format code.
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        assert_eq!(wb.get_display(s, cell(1, 1)), "1,234.50");
+        assert_eq!(wb.get_format(s, cell(1, 1)), Some("#,##0.00"));
+        // A percent format on a fraction.
+        wb.set_value(s, cell(2, 1), CellValue::Number(0.5));
+        wb.set_format(s, cell(2, 1), "0%");
+        assert_eq!(wb.get_display(s, cell(2, 1)), "50%");
+    }
+
+    #[test]
+    fn clear_format_reverts_to_general() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(0.5));
+        wb.set_format(s, cell(1, 1), "0%");
+        assert_eq!(wb.get_display(s, cell(1, 1)), "50%");
+        wb.clear_format(s, cell(1, 1));
+        assert_eq!(wb.get_format(s, cell(1, 1)), None);
+        assert_eq!(wb.get_display(s, cell(1, 1)), "0.5"); // General
+    }
+
+    #[test]
+    fn format_ignored_on_non_numbers() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Text("hi".into()));
+        wb.set_format(s, cell(1, 1), "#,##0.00"); // numeric format on text
+        assert_eq!(wb.get_display(s, cell(1, 1)), "hi"); // text renders naturally
+        wb.set_formula(s, cell(1, 2), "=1/0").unwrap();
+        wb.set_format(s, cell(1, 2), "0.00");
+        assert_eq!(wb.get_display(s, cell(1, 2)), "#DIV/0!"); // error shows through
+    }
+
+    #[test]
+    fn formatted_cells_compute_display_through_a_formula() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1500.0));
+        wb.set_value(s, cell(2, 1), CellValue::Number(2500.0));
+        wb.set_formula(s, cell(3, 1), "=A1+A2").unwrap(); // 4000
+        wb.set_format(s, cell(3, 1), "#,##0");
+        assert_eq!(wb.get_display(s, cell(3, 1)), "4,000");
+    }
+
+    #[test]
+    fn format_relocates_with_its_cell_on_insert_and_drops_on_delete() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1234.5));
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+
+        wb.insert_rows(s, 1, 1); // A1 → A2; the format must ride along
+        assert_eq!(wb.get_format(s, cell(2, 1)), Some("#,##0.00"));
+        assert_eq!(wb.get_display(s, cell(2, 1)), "1,234.50");
+        assert_eq!(wb.get_format(s, cell(1, 1)), None); // nothing at A1 now
+
+        wb.delete_rows(s, 2, 1); // delete the row holding the formatted cell
+        assert_eq!(wb.get_format(s, cell(1, 1)), None); // format dropped with the cell
     }
 
     #[test]
