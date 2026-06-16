@@ -1,4 +1,6 @@
 --define
 DEBUG=false
+--compilation_level
+WHITESPACE_ONLY
 --js
 tests/diff/define/input/app.js

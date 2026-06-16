@@ -208,12 +208,18 @@ pub fn transform_source(
 /// don't have to special-case zero-defines runs.
 /// The ordered list of optimization passes the SIMPLE level runs.
 ///
-/// v2 holds a single pass. Each follow-up PR appends one more
-/// SIMPLE-appropriate pass here (and to the pipeline below) so the
-/// growth is auditable one pass at a time. The names are the passes'
-/// own canonical `Pass::name()` values; they also become the `passes`
-/// field in the correlation-vector trace.
-const SIMPLE_PASS_NAMES: &[&str] = &["constant-fold"];
+/// Each PR appends one more SIMPLE-appropriate pass here (and to the
+/// pipeline below) so the growth is auditable one pass at a time. The
+/// names are the passes' own canonical `Pass::name()` values; they also
+/// become the `passes` field in the correlation-vector trace.
+///
+/// The list is in execution order, but ordering is ultimately enforced
+/// by the pipeline's dependency graph: `fold-control-flow` declares
+/// `depends_on = ["constant-fold"]`, so the topo-sort runs constant-fold
+/// first regardless. That ordering matters — constant-fold turns a
+/// comparison like `2 > 3` into the literal `false`, which is what lets
+/// fold-control-flow then prune `if (2 > 3) {A} else {B}` down to `B`.
+const SIMPLE_PASS_NAMES: &[&str] = &["constant-fold", "fold-control-flow"];
 
 /// Run the SIMPLE optimization pipeline over a bridged `Program` and
 /// emit the result as JavaScript text.
@@ -242,6 +248,7 @@ fn run_simple_pipeline(
 ) -> Option<String> {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
+    use coding_adventures_closure_pass_fold_control_flow::FoldControlFlowPass;
     use coding_adventures_closure_pass_pipeline::PassPipeline;
     use coding_adventures_correlation_vector::CVLog;
     use coding_adventures_type_sidecar::Sidecar;
@@ -252,8 +259,12 @@ fn run_simple_pipeline(
     // log accepts contributions and drops them — zero overhead.
     let mut pass_cv = CVLog::new(false);
 
+    // Registration order is not significant — the pipeline topo-sorts
+    // on each pass's `depends_on`, so `fold-control-flow` (which depends
+    // on `constant-fold`) always runs after it.
     let mut pipeline = PassPipeline::new();
     pipeline.add(Box::new(ConstantFoldPass::new()));
+    pipeline.add(Box::new(FoldControlFlowPass::new()));
 
     let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
         Ok(out) => out.program,
@@ -5489,6 +5500,44 @@ mod tests {
     }
 
     #[test]
+    fn simple_fold_control_flow_prunes_dead_branch() {
+        // CLOC12.156: the SIMPLE pipeline now runs fold-control-flow
+        // after constant-fold, so an `if` with a statically-false
+        // condition keeps only its `else` branch. The `2 > 3` form is
+        // the load-bearing case: constant-fold turns `2 > 3` into
+        // `false`, and only then can fold-control-flow decide the
+        // branch — so this exercises the two passes composing.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("if (2 > 3) { a(); } else { b(); }", &cfg).expect("ok");
+        assert_eq!(out, "{b()}", "fold-control-flow must keep only the else branch");
+    }
+
+    #[test]
+    fn simple_fold_control_flow_whitespace_only_keeps_if() {
+        // Companion — the SAME input under WHITESPACE_ONLY keeps the
+        // whole `if`/`else`, proving the pruning is the SIMPLE
+        // pipeline's doing and not the lexer/emitter.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("if (2 > 3) { a(); } else { b(); }", &cfg).expect("ok");
+        assert_eq!(
+            out, "if(2>3)a();else b();",
+            "whitespace_only must NOT prune the branch"
+        );
+    }
+
+    #[test]
     fn simple_level_bridge_ok_status_in_cv() {
         // When the source parses cleanly, the CV contribution for the
         // `compilation_level` stage must carry bridge_status = "ok".
@@ -5524,9 +5573,9 @@ mod tests {
             body.contains("\"bridge_status\":\"ok\""),
             "expected bridge_status=ok in CV sidecar: {body}"
         );
-        // The pass pipeline must be recorded in the trace.
+        // The pass pipeline must be recorded in the trace, in order.
         assert!(
-            body.contains("\"passes\":[\"constant-fold\"]"),
+            body.contains("\"passes\":[\"constant-fold\",\"fold-control-flow\"]"),
             "expected passes list in CV sidecar: {body}"
         );
         let _ = fs::remove_dir_all(&dir);

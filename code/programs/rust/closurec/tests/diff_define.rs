@@ -5,18 +5,25 @@
 //! `--define DEBUG=false` against a small input that references
 //! `DEBUG` in two places (initializer + `if` condition).
 //!
-//! Note this test does NOT pass `--compilation_level` explicitly,
-//! so it runs at the default level (SIMPLE). As of closurec 0.138.0
-//! SIMPLE routes through the typed-AST pipeline (bridge → passes →
-//! emit), so the output is the emitter's form — e.g. the `if`
-//! keeps its block braces (`if(false){…}`) where the older
-//! whitespace-only path stripped them. `--define` runs as a
-//! token-level pre-pass *before* the compilation level, so the
-//! substitution's meaning (`DEBUG` → `false` in both the
-//! initializer and the `if` condition) is identical across levels.
-//! Per CLOC11 §3 this is "behavioral equality" not byte-equal to
-//! CC; the expected file is checked in from our own output and the
-//! diff target is the *meaning* of the substitution.
+//! This test pins `--compilation_level WHITESPACE_ONLY` on purpose.
+//! `--define` is level-independent (a token-level pass), so running it
+//! at WHITESPACE_ONLY isolates the substitution from the SIMPLE
+//! optimizer — which now keeps growing passes (constant-fold,
+//! fold-control-flow, …) that would otherwise churn this expected file
+//! on every SIMPLE PR. The SIMPLE level's own behavior is covered by
+//! the dedicated `simple-*` fixtures.
+//!
+//! A subtlety worth recording: the compilation level runs *before* the
+//! `--define` substitution (pass order: lex → compilation_level →
+//! defines). Under SIMPLE that means `if (DEBUG) {…}` would be rewritten
+//! to `DEBUG && …` while `DEBUG` is still a variable, and only then
+//! substituted — a correct but surprising interaction. WHITESPACE_ONLY
+//! does no such rewrite, so the fixture stays a clean substitution oracle.
+//!
+//! Per CLOC11 §3 this is "behavioral equality" not byte-equal to CC; the
+//! expected file is checked in from our own output and the diff target
+//! is the *meaning* of the substitution (`DEBUG` → `false` in both the
+//! initializer and the `if` condition).
 
 use std::process::Command;
 
