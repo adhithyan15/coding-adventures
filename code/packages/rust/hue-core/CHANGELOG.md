@@ -75,6 +75,8 @@ All notable changes to this package will be documented in this file.
   verification readiness into final archive validation checks.
 - Hue package release archive certification summaries that turn archive
   validation readiness into final archive certification checks.
+- Hue package release archive approval summaries that turn archive
+  certification readiness into final archive approval checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
