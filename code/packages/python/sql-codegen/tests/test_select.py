@@ -12,7 +12,9 @@ from sql_planner import (
     Literal,
     Project,
     ProjectionItem,
+    RowIdRef,
     Scan,
+    SingleRow,
     Sort,
     Wildcard,
 )
@@ -266,3 +268,104 @@ class TestSchema:
         assert prog.result_schema == ("renamed", "y")
         schemas = [i for i in prog.instructions if isinstance(i, SetResultSchema)]
         assert schemas[0].columns == ("renamed", "y")
+
+    # ------------------------------------------------------------------
+    # Literal column display names
+    # ------------------------------------------------------------------
+    # SQLite names an unnamed literal column by its surface representation:
+    #   SELECT 1     → column "1"   (not "?")
+    #   SELECT 'hi'  → column "'hi'"
+    #   SELECT NULL  → column "NULL"
+    # Without this, two integer literals in the same SELECT both get "?"
+    # and dict(zip(cols, row)) in the VM loses all but the last value.
+    # ------------------------------------------------------------------
+
+    def test_integer_literal_schema_name(self) -> None:
+        plan = Project(
+            input=SingleRow(),
+            items=(ProjectionItem(expr=Literal(1), alias=None),),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("1",)
+
+    def test_two_integer_literals_get_distinct_names(self) -> None:
+        plan = Project(
+            input=SingleRow(),
+            items=(
+                ProjectionItem(expr=Literal(1), alias=None),
+                ProjectionItem(expr=Literal(2), alias=None),
+            ),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("1", "2")
+
+    def test_three_integer_literals_schema_names(self) -> None:
+        plan = Project(
+            input=SingleRow(),
+            items=(
+                ProjectionItem(expr=Literal(1), alias=None),
+                ProjectionItem(expr=Literal(2), alias=None),
+                ProjectionItem(expr=Literal(3), alias=None),
+            ),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("1", "2", "3")
+
+    def test_null_literal_schema_name(self) -> None:
+        plan = Project(
+            input=SingleRow(),
+            items=(ProjectionItem(expr=Literal(None), alias=None),),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("NULL",)
+
+    def test_string_literal_schema_name(self) -> None:
+        plan = Project(
+            input=SingleRow(),
+            items=(ProjectionItem(expr=Literal("hello"), alias=None),),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("'hello'",)
+
+    def test_float_literal_schema_name(self) -> None:
+        plan = Project(
+            input=SingleRow(),
+            items=(ProjectionItem(expr=Literal(3.14), alias=None),),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("3.14",)
+
+    def test_bytes_literal_schema_name(self) -> None:
+        plan = Project(
+            input=SingleRow(),
+            items=(ProjectionItem(expr=Literal(b"\xde\xad"), alias=None),),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("X'DEAD'",)
+
+    def test_rowid_ref_schema_name(self) -> None:
+        plan = Project(
+            input=Scan(table="t", alias="t"),
+            items=(ProjectionItem(expr=RowIdRef(table="t"), alias=None),),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("rowid",)
+
+    def test_alias_overrides_literal_name(self) -> None:
+        plan = Project(
+            input=SingleRow(),
+            items=(ProjectionItem(expr=Literal(42), alias="answer"),),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("answer",)
+
+    def test_mixed_literal_and_column(self) -> None:
+        plan = Project(
+            input=Scan(table="t", alias="t"),
+            items=(
+                ProjectionItem(expr=Literal(99), alias=None),
+                ProjectionItem(expr=Column("t", "name"), alias=None),
+            ),
+        )
+        prog = compile(plan)
+        assert prog.result_schema == ("99", "name")

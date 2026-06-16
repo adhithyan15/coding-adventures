@@ -477,6 +477,22 @@ def _column_display_name(expr: Expr) -> str | None:
         # display name.  This makes ``ORDER BY rowid`` find the column
         # emitted by ``SELECT rowid, ...`` via its alias.
         return "rowid"
+    if isinstance(expr, Literal):
+        # SQLite names unnamed literal columns by their surface representation:
+        #   SELECT 1      → column "1"
+        #   SELECT 'hi'   → column "'hi'"
+        #   SELECT NULL   → column "NULL"
+        # Without this, every Literal falls back to "?" and duplicate-column
+        # dicts in _do_run_subquery lose all but the last value — causing
+        # SELECT * FROM (SELECT 1, 2) to return (2,) instead of (1, 2).
+        v = expr.value
+        if v is None:
+            return "NULL"
+        if isinstance(v, str):
+            return f"'{v}'"
+        if isinstance(v, bytes):
+            return "X'" + v.hex().upper() + "'"
+        return str(v)  # int, float, bool
     return None
 
 
