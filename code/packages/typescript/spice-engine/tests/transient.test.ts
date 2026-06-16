@@ -1477,8 +1477,25 @@ describe("transient", () => {
     );
 
     expect(() => runDeckAnalysis(circuit, netlist)).toThrow(/multiple analysis cards/);
-    expect(() => runDeckAnalysis(circuit, ".ac lin 2 1 10\n.end\n")).toThrow(
-      /LIN execution is not supported yet/,
+
+    const linExecution = runDeckAnalysis(circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n");
+    const linPoints = linExecution.result as { frequencyHz: number }[];
+    expect(linPoints.map((point) => point.frequencyHz)).toEqual([1.0, 2.0, 3.0]);
+    expect(linExecution.table).toBe(
+      "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "2\t3.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
+    );
+
+    const octExecution = runDeckAnalysis(circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n");
+    const octPoints = octExecution.result as { frequencyHz: number }[];
+    expect(octPoints.map((point) => point.frequencyHz)).toEqual([1.0, 2.0, 4.0]);
+    expect(octExecution.table).toBe(
+      "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
     );
   });
 

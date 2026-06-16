@@ -2330,20 +2330,11 @@ def run_deck_analysis(
         )
     if plan.analysis == "ac":
         sweep_kind = _require_deck_plan_string(plan, "sweep_kind")
-        if sweep_kind != "dec":
-            raise ValueError(
-                f"run_deck_analysis: line {plan.line_number}: "
-                f".ac {sweep_kind.upper()} execution is not supported yet"
-            )
         point_count = _require_deck_plan_int(plan, "point_count")
         start_frequency = _require_deck_plan_number(plan, "start_frequency")
         stop_frequency = _require_deck_plan_number(plan, "stop_frequency")
-        result = ac_sweep(
-            circuit,
-            f_start=start_frequency,
-            f_stop=stop_frequency,
-            n_points=point_count,
-            sweep="log",
+        result = _run_deck_ac_sweep(
+            circuit, plan, sweep_kind, point_count, start_frequency, stop_frequency
         )
         return DeckAnalysisExecution(
             plan=plan,
@@ -2389,6 +2380,64 @@ def _require_deck_plan_int(plan: DeckAnalysisPlan, field_name: str) -> int:
     raise ValueError(
         f"run_deck_analysis: line {plan.line_number}: "
         f"{plan.directive} analysis missing {field_name}"
+    )
+
+
+def _run_deck_ac_sweep(
+    circuit: Circuit,
+    plan: DeckAnalysisPlan,
+    sweep_kind: str,
+    point_count: int,
+    start_frequency: float,
+    stop_frequency: float,
+) -> AcResult:
+    frequencies = _deck_ac_frequencies(
+        plan, sweep_kind, point_count, start_frequency, stop_frequency
+    )
+    points: list[AcPoint] = []
+    for frequency in frequencies:
+        points.extend(
+            ac_sweep(
+                circuit,
+                f_start=frequency,
+                f_stop=frequency,
+                n_points=1,
+                sweep="lin",
+            ).points
+        )
+    return AcResult(points=points)
+
+
+def _deck_ac_frequencies(
+    plan: DeckAnalysisPlan,
+    sweep_kind: str,
+    point_count: int,
+    start_frequency: float,
+    stop_frequency: float,
+) -> list[float]:
+    if point_count <= 0:
+        raise ValueError(
+            f"run_deck_analysis: line {plan.line_number}: "
+            ".ac point_count must be positive"
+        )
+    if sweep_kind == "lin":
+        if point_count == 1:
+            return [start_frequency]
+        step = (stop_frequency - start_frequency) / (point_count - 1)
+        return [start_frequency + index * step for index in range(point_count)]
+    if sweep_kind in {"dec", "oct"}:
+        base = 10.0 if sweep_kind == "dec" else 2.0
+        ratio = base ** (1.0 / point_count)
+        epsilon = stop_frequency * 1.0e-12
+        frequencies: list[float] = []
+        frequency = start_frequency
+        while frequency <= stop_frequency + epsilon:
+            frequencies.append(frequency)
+            frequency *= ratio
+        return frequencies
+    raise ValueError(
+        f"run_deck_analysis: line {plan.line_number}: "
+        f".ac {sweep_kind.upper()} execution is not supported yet"
     )
 
 

@@ -1906,10 +1906,40 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 
     let error = run_deck_analysis(&circuit, netlist, None).unwrap_err();
     assert!(error.to_string().contains("multiple analysis cards"));
-    let error = run_deck_analysis(&circuit, ".ac lin 2 1 10\n.end\n", None).unwrap_err();
-    assert!(error
-        .to_string()
-        .contains("LIN execution is not supported yet"));
+
+    let lin_execution =
+        run_deck_analysis(&circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n", None).unwrap();
+    match &lin_execution.result {
+        DeckAnalysisExecutionResult::Ac(points) => assert_eq!(
+            points
+                .iter()
+                .map(|point| point.frequency_hz)
+                .collect::<Vec<_>>(),
+            vec![1.0, 2.0, 3.0]
+        ),
+        other => panic!("expected AC result, got {other:?}"),
+    }
+    assert_eq!(
+        lin_execution.table,
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n2\t3.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    );
+
+    let oct_execution =
+        run_deck_analysis(&circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n", None).unwrap();
+    match &oct_execution.result {
+        DeckAnalysisExecutionResult::Ac(points) => assert_eq!(
+            points
+                .iter()
+                .map(|point| point.frequency_hz)
+                .collect::<Vec<_>>(),
+            vec![1.0, 2.0, 4.0]
+        ),
+        other => panic!("expected AC result, got {other:?}"),
+    }
+    assert_eq!(
+        oct_execution.table,
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    );
 }
 
 #[test]

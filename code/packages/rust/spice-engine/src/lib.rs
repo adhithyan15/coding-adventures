@@ -9446,21 +9446,12 @@ pub fn run_deck_analysis(
         "ac" => {
             let sweep_kind =
                 require_deck_plan_string(plan.sweep_kind.as_deref(), &plan, "sweep_kind")?;
-            if sweep_kind != "dec" {
-                return Err(deck_plan_error(
-                    &plan,
-                    format!(
-                        ".ac {} execution is not supported yet",
-                        sweep_kind.to_ascii_uppercase()
-                    ),
-                ));
-            }
             let point_count = require_deck_plan_usize(plan.point_count, &plan, "point_count")?;
             let start =
                 require_deck_plan_number(plan.start_frequency_hz, &plan, "start_frequency_hz")?;
             let stop =
                 require_deck_plan_number(plan.stop_frequency_hz, &plan, "stop_frequency_hz")?;
-            let result = ac_sweep(circuit, start, stop, point_count)?;
+            let result = run_deck_ac_sweep(circuit, &plan, sweep_kind, point_count, start, stop)?;
             let table = format_deck_ac_table(&result, netlist)?;
             Ok(DeckAnalysisExecution {
                 plan,
@@ -9533,6 +9524,74 @@ fn deck_plan_error(plan: &DeckAnalysisPlan, reason: String) -> SpiceError {
     SpiceError::InvalidElement {
         name: "run_deck_analysis".to_string(),
         reason: format!("line {}: {reason}", plan.line_number),
+    }
+}
+
+fn run_deck_ac_sweep(
+    circuit: &Circuit,
+    plan: &DeckAnalysisPlan,
+    sweep_kind: &str,
+    point_count: usize,
+    start_hz: f64,
+    stop_hz: f64,
+) -> Result<Vec<AcPoint>, SpiceError> {
+    let mut points = Vec::new();
+    for frequency_hz in deck_ac_frequencies(plan, sweep_kind, point_count, start_hz, stop_hz)? {
+        let point = ac_sweep(circuit, frequency_hz, frequency_hz, 1)?
+            .into_iter()
+            .next()
+            .ok_or(SpiceError::SingularMatrix)?;
+        points.push(point);
+    }
+    Ok(points)
+}
+
+fn deck_ac_frequencies(
+    plan: &DeckAnalysisPlan,
+    sweep_kind: &str,
+    point_count: usize,
+    start_hz: f64,
+    stop_hz: f64,
+) -> Result<Vec<f64>, SpiceError> {
+    if point_count == 0 {
+        return Err(deck_plan_error(
+            plan,
+            ".ac point_count must be positive".to_string(),
+        ));
+    }
+    match sweep_kind {
+        "lin" => {
+            if point_count == 1 {
+                return Ok(vec![start_hz]);
+            }
+            let step = (stop_hz - start_hz) / (point_count - 1) as f64;
+            Ok((0..point_count)
+                .map(|index| start_hz + index as f64 * step)
+                .collect())
+        }
+        "dec" | "oct" => {
+            let base = if sweep_kind == "dec" {
+                10.0_f64
+            } else {
+                2.0_f64
+            };
+            let ratio = base.powf(1.0 / point_count as f64);
+            let epsilon = stop_hz * 1.0e-12;
+            let mut frequencies = Vec::new();
+            let mut frequency_hz = start_hz;
+            while frequency_hz <= stop_hz + epsilon {
+                frequencies.push(frequency_hz);
+                frequency_hz *= ratio;
+            }
+            Ok(frequencies)
+        }
+        _ => Err(deck_plan_error(
+            plan,
+            format!(
+                ".ac {} execution is not supported yet",
+                sweep_kind.to_ascii_uppercase()
+            ),
+        )),
     }
 }
 

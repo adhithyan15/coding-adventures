@@ -7270,12 +7270,6 @@ export function runDeckAnalysis(
   }
   if (plan.analysis === "ac") {
     const sweepKind = requireDeckPlanString(plan.sweepKind, plan, "sweepKind");
-    if (sweepKind !== "dec") {
-      throw invalidElement(
-        "runDeckAnalysis",
-        `line ${plan.lineNumber}: .ac ${sweepKind.toUpperCase()} execution is not supported yet`,
-      );
-    }
     const pointCount = requireDeckPlanInteger(plan.pointCount, plan, "pointCount");
     const startFrequencyHz = requireDeckPlanNumber(
       plan.startFrequencyHz,
@@ -7283,7 +7277,14 @@ export function runDeckAnalysis(
       "startFrequencyHz",
     );
     const stopFrequencyHz = requireDeckPlanNumber(plan.stopFrequencyHz, plan, "stopFrequencyHz");
-    const result = acSweep(circuit, startFrequencyHz, stopFrequencyHz, pointCount);
+    const result = runDeckAcSweep(
+      circuit,
+      plan,
+      sweepKind,
+      pointCount,
+      startFrequencyHz,
+      stopFrequencyHz,
+    );
     return { plan, result, table: formatDeckAcTable(result, netlist) };
   }
   if (plan.analysis === "tran") {
@@ -7334,6 +7335,68 @@ function requireDeckPlanInteger(
   throw invalidElement(
     "runDeckAnalysis",
     `line ${plan.lineNumber}: ${plan.directive} analysis missing ${fieldName}`,
+  );
+}
+
+function runDeckAcSweep(
+  circuit: Circuit,
+  plan: DeckAnalysisPlan,
+  sweepKind: string,
+  pointCount: number,
+  startFrequencyHz: number,
+  stopFrequencyHz: number,
+): AcPoint[] {
+  return deckAcFrequencies(plan, sweepKind, pointCount, startFrequencyHz, stopFrequencyHz).map(
+    (frequencyHz) => {
+      const point = acSweep(circuit, frequencyHz, frequencyHz, 1)[0];
+      if (point === undefined) {
+        throw invalidElement(
+          "runDeckAnalysis",
+          `line ${plan.lineNumber}: .ac ${sweepKind.toUpperCase()} produced no samples`,
+        );
+      }
+      return point;
+    },
+  );
+}
+
+function deckAcFrequencies(
+  plan: DeckAnalysisPlan,
+  sweepKind: string,
+  pointCount: number,
+  startFrequencyHz: number,
+  stopFrequencyHz: number,
+): number[] {
+  if (pointCount <= 0) {
+    throw invalidElement(
+      "runDeckAnalysis",
+      `line ${plan.lineNumber}: .ac pointCount must be positive`,
+    );
+  }
+  if (sweepKind === "lin") {
+    if (pointCount === 1) {
+      return [startFrequencyHz];
+    }
+    const step = (stopFrequencyHz - startFrequencyHz) / (pointCount - 1);
+    return Array.from({ length: pointCount }, (_value, index) => startFrequencyHz + index * step);
+  }
+  if (sweepKind === "dec" || sweepKind === "oct") {
+    const base = sweepKind === "dec" ? 10.0 : 2.0;
+    const ratio = base ** (1.0 / pointCount);
+    const epsilon = stopFrequencyHz * 1.0e-12;
+    const frequencies: number[] = [];
+    for (
+      let frequencyHz = startFrequencyHz;
+      frequencyHz <= stopFrequencyHz + epsilon;
+      frequencyHz *= ratio
+    ) {
+      frequencies.push(frequencyHz);
+    }
+    return frequencies;
+  }
+  throw invalidElement(
+    "runDeckAnalysis",
+    `line ${plan.lineNumber}: .ac ${sweepKind.toUpperCase()} execution is not supported yet`,
   );
 }
 

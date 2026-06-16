@@ -154,9 +154,9 @@ malformed arguments, unsupported AC sweep modes, invalid sweep intervals, and
 unresolved scalar expressions. `select_deck_analysis_plan` picks one explicit
 card by analysis alias, defaults decks without analysis cards to an implicit
 `.op`, and reports ambiguity before solver dispatch.
-`run_deck_analysis` executes one selected `.op`, `.dc`, `.ac DEC`, or `.tran`
-plan against an existing `Circuit` and returns the plan, solver result, and
-deck-selected output table.
+`run_deck_analysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
+`.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
+solver result, and deck-selected output table.
 `resolve_deck_fourier`, `fourier_transient_cards`, and
 `fourier_transient_deck` extract parsed `.four` / `.FOUR` cards before `.end`
 and route transient samples into the existing SPICE-style Fourier result shape
@@ -196,4 +196,5 @@ malformed deck-level analysis controls.
 `select_deck_analysis_plan` returns one selected or implicit plan for
 downstream deck execution helpers.
 `run_deck_analysis` routes that selected plan into the matching solver and
-stable deck-selected table output.
+stable deck-selected table output, including `.ac LIN`, `.ac DEC`, and
+`.ac OCT` frequency grids.
