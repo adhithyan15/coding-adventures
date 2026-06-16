@@ -170,8 +170,15 @@ risks Y") — decision support, not a hidden choice.
   `derive()` surfaces the decision + delay_risk + rationale + threshold. The decision is reusable
   (not meningitis-specific). The ≤60-min meningitis threshold is authored-debt (IDSA), flagged for
   **CC-5b** spider grounding.
-- **CC-6 — insurance / step-therapy (§5):** precedence constraints + the dual
-  clinical-vs-reimbursement regimen output; ground a sample payer step-therapy policy.
+- **CC-6 — insurance / step-therapy (§5). ✅ DONE.** A payer step-therapy rule ("won't
+  approve Y until X tried") enters as a `step_therapy` chart fact (`restricted:prerequisite`)
+  + `prior_failed` facts (drugs already tried); the precedence `x_Y ≤ tried_X` is realized as
+  a reimbursement-only exclusion (`reimbursement_blocked`). `derive()` solves TWICE: `regimen`
+  is the clinically optimal one; `reimbursement` carries the payer-covered regimen, the
+  `blocked` drugs, whether it `differs_from_clinical`, and a note. Reimbursement infeasibility
+  (a rule blocking a clinically-forced drug → covered = INFEASIBLE) is surfaced **distinctly**
+  from clinical infeasibility → physician override / appeal on medical necessity. Grounding a
+  real published payer policy is the **CC-6b** follow-up.
 - **CC-7 — full chart drive-through:** wire CH (chart→IR + de-identification) into the COP so
   a whole de-identified FHIR chart produces a regimen with the full audit trail.
 
