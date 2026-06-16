@@ -135,6 +135,8 @@ packages a typed surface for:
   readiness into final archive ingest checks
 - Hue package release archive load summaries that turn archive ingest
   readiness into final archive load checks
+- Hue package release archive restore summaries that turn archive load
+  readiness into final archive restore checks
 
 ## Dependencies
 

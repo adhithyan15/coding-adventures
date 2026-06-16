@@ -95,6 +95,8 @@ All notable changes to this package will be documented in this file.
   readiness into final archive ingest checks.
 - Hue package release archive load summaries that turn archive ingest readiness
   into final archive load checks.
+- Hue package release archive restore summaries that turn archive load readiness
+  into final archive restore checks.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
