@@ -81,5 +81,7 @@ All notable changes to this package will be documented in this file.
   final route replay checks.
 - Thread attach route reconciliation summaries that turn route-replay readiness
   into final route reconciliation checks.
+- Thread attach route settlement summaries that turn route-reconciliation
+  readiness into final route settlement checks.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.
