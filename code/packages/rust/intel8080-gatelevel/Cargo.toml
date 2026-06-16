@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-intel8080-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8080 gate-level simulator — every operation routes through real logic gates"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }

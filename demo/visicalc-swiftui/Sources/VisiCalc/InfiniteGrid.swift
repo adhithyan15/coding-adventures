@@ -1,35 +1,45 @@
-// InfiniteGrid.swift — a virtualized, effectively-infinite sheet for the SwiftUI
-// demo, rendered on the shared Rust engine through the viewport primitive (the
-// same `get_window` / `used_range` / `changed_since` the web demo's
-// infinite.html uses through WASM).
+// InfiniteGrid.swift — a virtualized, effectively-infinite, EDITABLE sheet for
+// the SwiftUI demo, rendered on the shared Rust engine through the viewport
+// primitive (the same `get_window` / `used_range` / `changed_since` the web
+// demo's infinite.html uses through WASM).
 //
-// The sheet is u32 × u32 and sparse; only the VISIBLE window of cells is ever
-// built into the view. A two-axis ScrollView holds a clear spacer sized to the
-// data extent (so the scrollbars get the right range); a scroll-offset
-// preference tells us which rectangle is on screen, and the view asks the engine
-// for just that window via `WindowedSheetModel.window(...)`.
+// The sheet is u32 × u32 and sparse. Virtualization is delegated to SwiftUI's
+// `LazyVStack`: it instantiates only the rows currently on screen, so scrolling
+// thousands of rows builds only a screen's worth of cells at a time — and each
+// visible row fetches just its own values from the engine
+// (`WindowedSheetModel.rowCells`). The column-letter header is pinned to the top
+// (`pinnedViews: [.sectionHeaders]`), the row-number gutter is the first cell of
+// every row, and tapping a cell selects it for editing in the formula bar.
 
 import SwiftUI
 
 /// Engine-backed model for the virtualized sheet: seeds a deliberately far-flung,
-/// sparse dataset and exposes windowed reads + the data extent.
+/// sparse dataset, exposes windowed reads + the data extent, and tracks the
+/// selection + formula-bar text so the grid is editable.
 final class WindowedSheetModel: ObservableObject {
     private let session = SpreadsheetSession()
-
-    /// Cell geometry (points). `InfiniteGridView` uses the same values.
-    static let rowH: CGFloat = 22
-    static let colW: CGFloat = 80
-    static let gutterW: CGFloat = 56
-    static let headH: CGFloat = 24
 
     /// The virtual grid size, derived from the data extent plus a margin so you
     /// can scroll past the data into blank space.
     @Published private(set) var totalRows: UInt32 = 1000
     @Published private(set) var totalCols: UInt32 = 60
+    /// Bumped on every edit so the visible rows re-fetch from the engine.
+    @Published private(set) var revision: Int = 0
+    /// Selection in 1-based grid coordinates (row ≥ 1, col ≥ 1 = column A).
+    @Published private(set) var selectedRow: Int = 1
+    @Published private(set) var selectedCol: Int = 1
+    /// The formula bar's text — the selected cell's source, edited in place.
+    @Published var formulaText: String = ""
+
+    /// Column letters cached once per resize (`columnLetters` is a pure engine
+    /// call, but the header would otherwise re-issue it for every column on
+    /// every recompose).
+    private var letterCache: [String] = []
 
     init() {
         seed()
         resize()
+        select(row: 1, col: 1)
     }
 
     /// The classic cross-footing budget PLUS far-flung cells (a formula at
@@ -43,148 +53,173 @@ final class WindowedSheetModel: ObservableObject {
             ("A4", "4"), ("B4", "11"), ("C4", "3"), ("D4", "17"), ("E4", "=SUM(A4:D4)"),
             ("A5", "=SUM(A1:A4)"), ("B5", "=SUM(B1:B4)"), ("C5", "=SUM(C1:C4)"),
             ("D5", "=SUM(D1:D4)"), ("E5", "=SUM(E1:E4)"),
-            ("Z1000", "=SUM(A1:A4)"),                  // 1000 rows down: 39
+            ("Z1000", "=SUM(A1:A4)"),                   // 1000 rows down: 39
             ("BA50", "far cell"), ("BB50", "=Z1000*2"), // col 53/54, row 50: 78
         ]
         for (a, v) in cells { session.setCell(a, v) }
     }
 
-    /// Size the virtual grid to the data extent plus a comfortable margin.
+    /// Size the virtual grid to the data extent plus a comfortable margin, and
+    /// refresh the column-letter cache.
     func resize() {
         let u = session.usedRange()
         totalRows = max((u?.maxRow ?? 1) + 200, 1000)
         totalCols = max((u?.maxCol ?? 1) + 30, 60)
+        letterCache = (1...Int(totalCols)).map { session.columnLetters(UInt32($0)) }
     }
 
-    /// Display strings for the inclusive 1-based window. The host clamps these
-    /// to the visible area before calling.
+    // ── Reads ────────────────────────────────────────────────────────
+
+    /// Display strings for the inclusive 1-based window. (Kept for the headless
+    /// `WindowedModelTests`; the view uses `rowCells`.)
     func window(rows: ClosedRange<UInt32>, cols: ClosedRange<UInt32>) -> [[String]] {
         session.window(rows.lowerBound, cols.lowerBound, rows.upperBound, cols.upperBound)
     }
 
-    func columnLetters(_ index: UInt32) -> String { session.columnLetters(index) }
-    func raw(_ a1: String) -> String { session.getRaw(a1) }
+    /// The display strings for one full row (all columns) — what a visible row
+    /// renders. One engine `get_window` call per on-screen row.
+    func rowCells(_ row: Int) -> [String] {
+        let w = session.window(UInt32(row), 1, UInt32(row), totalCols)
+        return w.first ?? Array(repeating: "", count: Int(totalCols))
+    }
 
-    /// Write a cell, recompute, resize the extent, and return the cells the edit
-    /// dirtied (for an incremental refresh; the view re-reads its window anyway).
+    /// Column letters for a 1-based index (`1` → `"A"`, `27` → `"AA"`).
+    func columnLetters(_ index: UInt32) -> String {
+        let i = Int(index)
+        return (i >= 1 && i <= letterCache.count) ? letterCache[i - 1]
+            : session.columnLetters(index)
+    }
+
+    /// The A1 address for 1-based grid `(row, col)`.
+    func address(_ row: Int, _ col: Int) -> String { "\(columnLetters(UInt32(col)))\(row)" }
+
+    // ── Selection + editing ──────────────────────────────────────────
+
+    func select(row: Int, col: Int) {
+        selectedRow = max(1, min(Int(totalRows), row))
+        selectedCol = max(1, min(Int(totalCols), col))
+        formulaText = session.getRaw(address(selectedRow, selectedCol))
+    }
+
+    /// Commit the formula bar into the selected cell: write through to the
+    /// engine, resize the extent, and bump `revision` so the visible rows
+    /// re-fetch (every dependent cell, however far away, recomputes).
+    func commitFormula() {
+        session.setCell(address(selectedRow, selectedCol), formulaText)
+        resize()
+        formulaText = session.getRaw(address(selectedRow, selectedCol))
+        revision += 1
+    }
+
+    /// Write `raw` into an explicit A1 cell and return the cells it dirtied.
+    /// (Kept for the headless `WindowedModelTests`.)
     @discardableResult
     func setCell(_ a1: String, _ raw: String) -> (changed: [String], stale: Bool) {
         let rev = session.currentRevision()
         session.setCell(a1, raw)
         resize()
+        revision += 1
         return session.changedSince(rev)
     }
 }
 
-/// The virtualized grid view. Renders only the cells in the current scroll
-/// window; frozen column-letter headers + a row-number gutter ride the scroll.
+/// The virtualized, editable grid view.
 struct InfiniteGridView: View {
     @ObservedObject var model: WindowedSheetModel
-    @State private var offset = CGPoint.zero
 
-    private static let rowH = WindowedSheetModel.rowH
-    private static let colW = WindowedSheetModel.colW
-    private static let gutterW = WindowedSheetModel.gutterW
-    private static let headH = WindowedSheetModel.headH
-    private static func x(forCol c: UInt32) -> CGFloat { gutterW + (CGFloat(c) - 1) * colW }
-    private static func y(forRow r: UInt32) -> CGFloat { headH + (CGFloat(r) - 1) * rowH }
+    static let rowH: CGFloat = 22
+    static let colW: CGFloat = 80
+    static let gutterW: CGFloat = 56
+    static let headH: CGFloat = 24
 
-    private let space = "infiniteSheet"
+    private let line = Color(hex: 0x3F3F46)
+    private let headBg = Color(hex: 0x2D2D30)
 
     var body: some View {
-        GeometryReader { geo in
-            let vis = visible(geo.size)
-            let win = model.window(rows: vis.rows, cols: vis.cols)
-            ZStack(alignment: .topLeading) {
-                ScrollView([.horizontal, .vertical]) {
-                    Color.clear
-                        .frame(
-                            width: Self.x(forCol: model.totalCols + 1),
-                            height: Self.y(forRow: model.totalRows + 1)
-                        )
-                        .background(
-                            GeometryReader { inner in
-                                Color.clear.preference(
-                                    key: OffsetKey.self,
-                                    value: inner.frame(in: .named(space)).origin
-                                )
-                            }
-                        )
-                        .overlay(alignment: .topLeading) { dataCells(vis: vis, win: win) }
-                }
-                .coordinateSpace(name: space)
-                .onPreferenceChange(OffsetKey.self) { offset = $0 }
-
-                frozenChrome(vis: vis)
-            }
-        }
-        .background(Color(hex: 0x1E1E1E))
-    }
-
-    /// The visible window in 1-based cell coordinates, with a small overscan.
-    private func visible(_ vp: CGSize) -> (rows: ClosedRange<UInt32>, cols: ClosedRange<UInt32>) {
-        let st = -offset.y, sl = -offset.x
-        let over = 3
-        let fr = clampRow(Int((st / Self.rowH).rounded(.down)) + 1 - over)
-        let lr = clampRow(Int(((st + vp.height) / Self.rowH).rounded(.up)) + over)
-        let fc = clampCol(Int((sl / Self.colW).rounded(.down)) + 1 - over)
-        let lc = clampCol(Int(((sl + vp.width) / Self.colW).rounded(.up)) + over)
-        return (fr...max(fr, lr), fc...max(fc, lc))
-    }
-
-    private func clampRow(_ v: Int) -> UInt32 { UInt32(min(max(1, v), Int(model.totalRows))) }
-    private func clampCol(_ v: Int) -> UInt32 { UInt32(min(max(1, v), Int(model.totalCols))) }
-
-    /// The data cells of the visible window, absolutely positioned in grid space.
-    private func dataCells(
-        vis: (rows: ClosedRange<UInt32>, cols: ClosedRange<UInt32>), win: [[String]]
-    ) -> some View {
-        ZStack(alignment: .topLeading) {
-            ForEach(Array(vis.rows), id: \.self) { r in
-                ForEach(Array(vis.cols), id: \.self) { c in
-                    let ri = Int(r - vis.rows.lowerBound)
-                    let ci = Int(c - vis.cols.lowerBound)
-                    let text = (ri < win.count && ci < win[ri].count) ? win[ri][ci] : ""
-                    Text(text)
-                        .font(.system(size: 12, design: .monospaced))
-                        .foregroundColor(Color(hex: 0xCCCCCC))
-                        .frame(width: Self.colW - 1, height: Self.rowH - 1, alignment: .trailing)
-                        .padding(.trailing, 4)
-                        .border(Color(hex: 0x3F3F46), width: 0.5)
-                        .offset(x: Self.x(forCol: c), y: Self.y(forRow: r))
+        VStack(spacing: 0) {
+            formulaBar
+            ScrollView([.vertical, .horizontal]) {
+                LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+                    Section {
+                        // LazyVStack realises only the rows on screen, so this
+                        // 1...totalRows loop never builds the whole sheet.
+                        ForEach(1...Int(model.totalRows), id: \.self) { r in
+                            rowView(r)
+                        }
+                    } header: {
+                        headerRow
+                    }
                 }
             }
+            .background(Color(hex: 0x1E1E1E))
         }
     }
 
-    /// Frozen column-letter header row + row-number gutter; each follows the
-    /// scroll on its cross axis only (offset added back so it tracks the data).
-    private func frozenChrome(vis: (rows: ClosedRange<UInt32>, cols: ClosedRange<UInt32>)) -> some View {
-        ZStack(alignment: .topLeading) {
-            ForEach(Array(vis.cols), id: \.self) { c in
-                Text(model.columnLetters(c))
-                    .font(.system(size: 12, design: .monospaced))
-                    .foregroundColor(Color(hex: 0x9D9D9D))
-                    .frame(width: Self.colW - 1, height: Self.headH, alignment: .center)
-                    .background(Color(hex: 0x2D2D30))
-                    .offset(x: Self.x(forCol: c) + offset.x, y: 0)
+    // The editable formula bar for the selected cell.
+    private var formulaBar: some View {
+        HStack(spacing: 8) {
+            Text(model.address(model.selectedRow, model.selectedCol))
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundColor(Color(hex: 0x9D9D9D))
+                .frame(width: 56, alignment: .leading)
+            TextField("value or =SUM(A1:A4)", text: $model.formulaText)
+                .textFieldStyle(.plain)
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundColor(Color(hex: 0xCCCCCC))
+                .padding(6)
+                .background(Color(hex: 0x121212))
+                .cornerRadius(3)
+                .onSubmit { model.commitFormula() }
+        }
+        .padding(.bottom, 8)
+    }
+
+    // Frozen column-letter header (pinned to the top of the scroll view).
+    private var headerRow: some View {
+        HStack(spacing: 0) {
+            headerCell("", width: Self.gutterW)
+            ForEach(1...Int(model.totalCols), id: \.self) { c in
+                headerCell(model.columnLetters(UInt32(c)), width: Self.colW)
             }
-            ForEach(Array(vis.rows), id: \.self) { r in
-                Text("\(r)")
-                    .font(.system(size: 12, design: .monospaced))
-                    .foregroundColor(Color(hex: 0x9D9D9D))
-                    .frame(width: Self.gutterW, height: Self.rowH - 1, alignment: .center)
-                    .background(Color(hex: 0x2D2D30))
-                    .offset(x: 0, y: Self.y(forRow: r) + offset.y)
-            }
-            Rectangle().fill(Color(hex: 0x2D2D30))
-                .frame(width: Self.gutterW, height: Self.headH)
         }
     }
-}
 
-/// Carries the scrolled content's origin up to the view via a preference.
-private struct OffsetKey: PreferenceKey {
-    static var defaultValue: CGPoint = .zero
-    static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) { value = nextValue() }
+    private func headerCell(_ text: String, width: CGFloat) -> some View {
+        Text(text)
+            .font(.system(size: 12, design: .monospaced))
+            .foregroundColor(Color(hex: 0x9D9D9D))
+            .frame(width: width, height: Self.headH)
+            .background(headBg)
+            .border(line, width: 0.5)
+    }
+
+    private func rowView(_ r: Int) -> some View {
+        // One engine read for the whole row; re-fetched when `revision` changes
+        // (this view observes the model, so an edit re-runs it).
+        let cells = model.rowCells(r)
+        return HStack(spacing: 0) {
+            Text("\(r)")
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundColor(Color(hex: 0x9D9D9D))
+                .frame(width: Self.gutterW, height: Self.rowH)
+                .background(headBg)
+                .border(line, width: 0.5)
+            ForEach(1...Int(model.totalCols), id: \.self) { c in
+                dataCell(text: c - 1 < cells.count ? cells[c - 1] : "", r: r, c: c)
+            }
+        }
+    }
+
+    private func dataCell(text: String, r: Int, c: Int) -> some View {
+        let selected = r == model.selectedRow && c == model.selectedCol
+        return Text(text)
+            .font(.system(size: 12, design: .monospaced))
+            .foregroundColor(selected ? .white : Color(hex: 0xCCCCCC))
+            .frame(width: Self.colW, height: Self.rowH, alignment: .trailing)
+            .padding(.trailing, 4)
+            .background(selected ? Color(hex: 0x264F78) : Color(hex: 0x1E1E1E))
+            .border(selected ? Color(hex: 0x007ACC) : line, width: selected ? 1 : 0.5)
+            .contentShape(Rectangle())
+            .onTapGesture { model.select(row: r, col: c) }
+    }
 }

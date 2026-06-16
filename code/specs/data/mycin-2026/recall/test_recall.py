@@ -25,8 +25,8 @@ def _store() -> recall.RelationStore:
 
 def test_parse_loads_all_edges() -> None:
     store = _store()
-    # 6 diseases x 3 relations = 18 seed edges.
-    assert len(store.edges) == 18, f"expected 18 edges, got {len(store.edges)}"
+    # 12 diseases x 3 relations = 36 edges (REL-1 seed of 6 + REL-6 expansion of 6).
+    assert len(store.edges) == 36, f"expected 36 edges, got {len(store.edges)}"
     # Every edge carries a citation (source) and a trust tier.
     assert all(e.source for e in store.edges), "every edge must carry a source citation"
     assert all(e.trust for e in store.edges), "every edge must carry a trust tier"
@@ -64,9 +64,10 @@ def test_reverse_lookup_is_free() -> None:
 
 def test_abstains_on_ungrounded_disease() -> None:
     store = _store()
-    # Niemann-Pick is NOT in the seed — the store must abstain, not fabricate.
-    assert store.query("deficient_in", ["niemann_pick", "$Enzyme"]) == []
-    out = store.ask("deficient_in", ["niemann_pick", "$Enzyme"])
+    # Wilson disease is NOT in the graph — the store must abstain, not fabricate.
+    # (Niemann-Pick was the original example but is now a covered REL-6 disease.)
+    assert store.query("deficient_in", ["wilson_disease", "$Enzyme"]) == []
+    out = store.ask("deficient_in", ["wilson_disease", "$Enzyme"])
     assert "UNKNOWN" in out and "abstaining" in out
 
 
