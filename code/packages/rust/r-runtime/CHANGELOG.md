@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-06-16
+
+### Added (via the shared `s-runtime`)
+
+- **R-8 — the `d`/`p`/`q`/`r` distribution family**: `dnorm`/`pnorm`/`qnorm`/
+  `rnorm`, `dunif`/`punif`/`qunif`/`runif`, `dexp`/`pexp`/`qexp`/`rexp`, and
+  `set.seed`. R picks these up unchanged from the shared evaluator. See
+  `s-runtime` 0.3.0 for the full notes.
+
 ## [0.1.0] - 2026-06-16
 
 ### Added

@@ -26,6 +26,7 @@ use crate::value::{
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use r_vector::{is_na_real, na_real, Double};
+use statistics_core::rng::RngState;
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
@@ -50,7 +51,18 @@ pub struct Interpreter {
     /// runaway recursive S function) returns a clean error instead of
     /// overflowing the native stack and aborting the process.
     depth: Cell<usize>,
+    /// The session's random-number generator, shared across `r*` sampling calls
+    /// (`rnorm`, `runif`, …) and reseeded by `set.seed()`. Held behind a
+    /// `RefCell` because builtins receive `&Interpreter` but the generator must
+    /// advance its state on every draw.
+    rng: RefCell<RngState>,
 }
+
+/// The fixed seed a fresh session starts from. Real R seeds from the clock and
+/// process state; we use a constant so a brand-new interpreter is reproducible
+/// until the program calls `set.seed()`. (Macsyma-style determinism beats
+/// surprise here — anyone wanting a fresh stream calls `set.seed`.)
+const DEFAULT_SEED: u64 = 4357;
 
 /// Maximum `eval_node` recursion depth. The precedence cascade adds roughly a
 /// dozen frames per source nesting level, so this allows comfortably deep
@@ -84,12 +96,25 @@ impl Interpreter {
             out: RefCell::new(String::new()),
             visible: Cell::new(false),
             depth: Cell::new(0),
+            rng: RefCell::new(RngState::new(DEFAULT_SEED)),
         }
     }
 
     /// The global environment (for tests and the REPL).
     pub fn global(&self) -> &Env {
         &self.global
+    }
+
+    /// Reseed the session generator — the engine behind `set.seed(n)`.
+    pub(crate) fn reseed(&self, seed: u64) {
+        self.rng.borrow_mut().seed(seed);
+    }
+
+    /// Draw from the session generator. The closure gets exclusive access to the
+    /// `RngState` for the duration of one sampling builtin, so a single `rnorm`
+    /// call advances the stream exactly as far as the values it produced.
+    pub(crate) fn sample_with<T>(&self, f: impl FnOnce(&mut RngState) -> T) -> T {
+        f(&mut self.rng.borrow_mut())
     }
 
     /// Append a block of output, one newline-terminated line each.
@@ -509,9 +534,10 @@ impl Interpreter {
         match callee {
             SValue::Builtin { name, func } => {
                 let result = func(self, args)?;
-                // `print` and `cat` produce their own output and return
-                // invisibly; every other built-in yields a visible value.
-                if name == "print" || name == "cat" {
+                // `print`/`cat` produce their own output, and `set.seed` mutates
+                // RNG state — all three return invisibly (R's `invisible(NULL)`);
+                // every other built-in yields a visible value.
+                if name == "print" || name == "cat" || name == "set.seed" {
                     self.as_invisible(result)
                 } else {
                     self.as_visible(result)

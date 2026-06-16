@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-06-16
+
+### Added
+
+- **Distribution family (R-8)** — the `d`/`p`/`q`/`r` probability functions
+  wired to `statistics-core`, for the closed-form continuous distributions:
+  - **Normal**: `dnorm`, `pnorm`, `qnorm`, `rnorm` (defaults `mean = 0`,
+    `sd = 1`).
+  - **Uniform**: `dunif`, `punif`, `qunif`, `runif` (`min = 0`, `max = 1`).
+  - **Exponential**: `dexp`, `pexp`, `qexp`, `rexp` (`rate = 1`).
+  - `set.seed(n)` to make the `r*` sampling stream reproducible.
+
+  `d*`/`p*`/`q*` vectorize over their first argument with NA-propagation;
+  distribution parameters are read by name (`sd =`) or position. `r*` draws from
+  a per-session R-compatible MT19937 generator; the sample count is capped at
+  `MAX_SEQ_LEN`, so `rnorm(1e18)` is a clean error rather than an OOM abort.
+
+### Changed
+
+- The `Interpreter` now carries a `RefCell<RngState>` (the session RNG) that
+  `set.seed` reseeds and the `r*` builtins draw from. `set.seed` returns
+  invisibly, alongside `print`/`cat`.
+
 ## [0.2.0] - 2026-06-15
 
 ### Added
