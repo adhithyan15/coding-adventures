@@ -37,7 +37,8 @@ downstream tools to compare.
      analysis/output commands (`op`, `dc`, `ac`, `tran`, `save`, `probe`,
      `measure`, `meas`, `four`, `fourier`, `print`, and `plot`) now normalize
      into dotted deck cards while `run`, `reset`, `quit`, and UI-only
-     `set noaskquit` options are accepted as no-op control markers; parsed
+     `set noaskquit` options plus ASCII rawfile-format `set filetype=ascii`
+     options are accepted as no-op control markers; parsed
      `.measure dc` / `.meas dc` cards now route DC sweep probe samples into
      the shared scalar measurement table surface;
      parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
@@ -572,6 +573,15 @@ downstream tools to compare.
     - Other unrecognized non-comment commands inside `.control` blocks remain
       diagnostic-only so unsupported stateful script execution is still
       explicit.
+
+52. Selected `.control` ASCII filetype option routing.
+    - Status: completed in this selected control filetype-ascii option routing
+      slice.
+    - Python, Rust, and TypeScript now accept exact selected `.control` block
+      `set filetype=ascii` output-format options as no-op control commands.
+    - Other `set` variables, binary rawfile options, file-writing commands, and
+      unrecognized non-comment commands inside `.control` blocks remain
+      diagnostic-only so unsupported file I/O and script state are explicit.
 
 ## Backlog
 

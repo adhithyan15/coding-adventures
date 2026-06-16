@@ -6916,7 +6916,7 @@ fn is_noop_control_block_command(line: &str) -> bool {
     if !matches!(command.as_str(), "set" | ".set") {
         return false;
     }
-    matches!(parts.next().map(|option| option.to_ascii_lowercase()), Some(option) if option == "noaskquit")
+    matches!(parts.next().map(|option| option.to_ascii_lowercase()), Some(option) if option == "noaskquit" || option == "filetype=ascii")
         && parts.next().is_none()
 }
 
