@@ -325,6 +325,46 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Nib — `+%` WRAPPING add (LANG-FULL N7). `200u8 +% 100` discards the carry →
+    // `44`. The comparison (`x == 44`) distinguishes a wrapped 44 from an unwrapped
+    // 300 (whose exit-code low byte would also be 44). `+%` lowers to the same
+    // narrow-typed `add` as `+`, which the E2 backend mask wraps.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = 200 +% 100; if x == 44 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `+?` SATURATING add (LANG-FULL N7). `200u8 +? 100` clamps at the u8 max
+    // → `255` (NOT 44, the wrapping result). `+?` lowers to a *wide* add + a clamp
+    // branch (`min(sum, 255)`), exercising add/const/cmp_gt/jmp_if_false/mov/label
+    // together on every code-gen backend.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = 200 +? 100; if x == 255 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `+?` saturating at the u4 max: `15u4 +? 1` clamps to `15` (the nibble
+    // max), not the wrapping `0`.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u4 { let a: u4 = 15 +? 1; if a == 15 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // Nib — `+?` that does NOT overflow returns the plain sum (`3 +? 4 = 7`),
+    // proving the clamp branch only fires on overflow.
+    Prog {
+        lang: Language::Nib,
+        ext: "nib",
+        src: "fn main() -> u8 { let x: u8 = 3 +? 4; if x == 7 { return 1; } return 0; }",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
         lang: Language::Oct,

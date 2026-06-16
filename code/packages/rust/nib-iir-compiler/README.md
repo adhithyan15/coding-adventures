@@ -35,6 +35,10 @@ bitwise (`&` `|` `^`, N3), short-circuit logical `&&`/`||` (N4), comparisons,
 integer-literal `const`s (N5), and cross-function calls. `*`/`/` lower to
 `mul`/`div` (N1); `&`/`|`/`^` to `and`/`or`/`xor` (N3); `&&`/`||` short-circuit
 via `jmp_if_false` branches (N4); a `const` reference folds to its literal (N5).
-All run on every backend. Wrap/sat arithmetic, unary `~` (needs the integer-wrap
-enabler E2), const-expression folding, mutable `static`, and BCD are deferred —
-see CHANGELOG and `code/specs/LANG-FULL-IMPLEMENTATION.md`.
+Narrow `u4`/`u8` arithmetic wraps mod-2ⁿ (N6, via the E2 backend masks), and the
+explicit-overflow operators **`+%` (wrapping)** and **`+?` (saturating)** are
+supported (N7): `+%` is the narrow-typed `add` (`15u4 +% 1 = 0`), `+?` is a wide
+add + a `min(sum, MAX)` clamp branch (`15u4 +? 1 = 15`, `200u8 +? 100 = 255`).
+All run on every backend. Unary `~` (needs an LLVM `not` op), const-expression
+folding, mutable `static`, and BCD are deferred — see CHANGELOG and
+`code/specs/LANG-FULL-IMPLEMENTATION.md`.

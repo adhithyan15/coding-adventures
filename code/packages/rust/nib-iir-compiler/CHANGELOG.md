@@ -1,5 +1,29 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.15.0 — 2026-06-16 — wrapping (`+%`) and saturating (`+?`) add (LANG-FULL N7)
+
+Lowers Nib's two explicit-overflow additive operators (the grammar already
+parsed them; the compiler now compiles them). Both are E2-unblocked — they
+depend on the narrow-width register-wrap masking shipped in N6.
+
+- **`+%` — wrapping add.** Maps to the same IIR `add` as `+`, carrying the
+  narrow `type_hint` so the E2 backend mask wraps it: `15u4 +% 1` → `16 & 0xF =
+  0`, `200u8 +% 100` → `44`. (`cir_op_for` gains `WRAP_ADD → "add"`.) Under E2 a
+  plain `+` on a narrow type already wraps; `+%` makes the intent explicit.
+
+- **`+?` — saturating add.** NOT a single op: `compile_binary_chain` lowers it to
+  a **wide** `add` (i64, *unmasked* — so the true total is visible) followed by a
+  clamp branch: `const MAX` (15 for u4, 255 for u8 from the node's inferred type),
+  `cmp_gt sum, MAX`, then `mov dest, sum` / `jmp_if_false` / `mov dest, MAX` /
+  `label` — i.e. `dest = min(sum, MAX)`. So `15u4 +? 1` → `15`, `200u8 +? 100` →
+  `255`, and a non-overflowing `3 +? 4` → `7`.
+
+Verified by RUNNING on vm-core (`tests/n7_check.rs`) and across **all 7 backends**
+(native/LLVM/WASM/JVM/CLR/VM/JIT) via new `lang-aot` matrix programs (comparison-
+based, so they distinguish a saturated `255` / wrapped `44` from the unwrapped
+`300`). No grammar or `nib-type-checker` change (the additive operators are
+type-inferred from their operands).
+
 ## 0.14.0 — 2026-06-16 — narrow `type_hint`s on arithmetic (LANG-FULL E2 / N6)
 
 Activates the LANG-FULL E2 integer-width-and-wrap semantics in the Nib frontend:
