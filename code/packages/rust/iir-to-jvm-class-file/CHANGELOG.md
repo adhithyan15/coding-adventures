@@ -3,6 +3,47 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.1] — 2026-06-16 (LANG-FULL E2 — revert the long model back to the int model)
+
+### Fixed — narrow types use the JVM `int` model, not the v0.13.0 `long` model
+
+v0.13.0 moved narrow unsigned types (`u4`/`u8`/`u16`/`u32`) to a `long` register
+model, reasoning (as for wasm) that a real frontend's `i64` operands would
+otherwise meet an `int` op. **That is wrong on the JVM.** A scalar program
+reaches this backend through `lang_aot::concretize_scalar_any_for_jvm`, which
+narrows the module's `i64`→`i32` *before* lowering (the in-repo `jvm-simulator`
+is a 32-bit machine and a scalar entry must `ireturn`). It leaves the
+narrow-unsigned op alone. So the long model produced a module where the consts
+and return were `int` but the narrow op was `long` — **unverifiable bytecode**:
+`istore` int consts feeding an `lmul`, and `lreturn` from an `int`-returning
+method. A real `java` rejected it, so the Nib `u8` integration proof returned
+`None` on the JVM column (surfaced only when the Nib frontend actually emitted
+narrow `type_hint`s — the v0.13.0 tests built self-consistent narrow modules
+that bypass `concretize`).
+
+This release reverts to the **int model**:
+
+- `iir_type_to_jvm`: `u4`/`u8`/`u16`/`u32` → `JvmType::Int` (`u4` stays
+  recognised). `i64`/`u64` remain `Long`.
+- `type_to_jvm_descriptor`: those → `I`.
+- `emit_jvm_width_mask`: `sipush/iconst/ldc <mask>; iand` (int), for `u4`/`u8`/
+  `u16` (`u32` self-wraps via the 32-bit `int` op).
+- Shifts drop the `l2i` count narrowing (the count is an `int` again).
+
+Because `concretize` narrows the consts/return to `i32`, the whole scalar module
+is now consistently `int`: `sipush 200; sipush 100; iadd; sipush 255; iand;
+ireturn` → `44`. **Verified on real `java`**: a launcher invoking the lowered
+`main()` prints `44` for `200u8 + 100u8`. Tests reverted to the int-mask shape;
+new regression test `e2_concretized_u8_shape_is_all_int` builds the
+post-`concretize` shape (`const i32; add u8; ret i32`) and asserts the bytecode
+has the `iand` mask and **no** `ladd`/`lreturn`. Full matrix + jvm consumers
+green.
+
+(wasm genuinely keeps `i64` operands — no `concretize`-to-i32 there — so its i64
+register model, v0.15.0, stands. The CIL backend is uniformly int32 and also
+needs no long model. The JVM is the odd one out only because of the
+32-bit-simulator concretization.)
+
 ## [0.13.0] — 2026-06-16 (LANG-FULL E2 integration — compute-wide + mask)
 
 ### Changed — narrow unsigned types ride the JVM `long` register model
