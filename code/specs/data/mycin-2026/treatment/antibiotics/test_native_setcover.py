@@ -52,23 +52,33 @@ def test_side_effect_weights_loaded() -> None:
         assert isinstance(se, int) and not isinstance(se, bool) and se >= 0, (d, se)
 
 
-def test_step_therapy_emits_a_native_precedence_constraint() -> None:
-    """CC-6: a step-blocked drug is pinned out by an EXPLICIT `constrain x_Y <= 0` clause
-    in the emitted program (engine-enforced precedence) — not removed in Python. The drug
-    still gets its selector variable; only the constraint forces it to 0."""
+def test_forced_zero_exclusions_emit_explicit_constraints() -> None:
+    """Every exclusion (dose-infeasible / contraindicated / step-therapy) is pinned out by
+    an EXPLICIT `constrain x_d <= 0` clause carrying its reason — not removed in Python. The
+    drug keeps its selector variable; only the constraint forces it to 0."""
     prog, _, _ = ns.emit_program(
-        reg.SCENARIOS["post_neurosurgical_or_shunt"], set(), step_blocked={"cefepime"})
-    assert "symbol x_cefepime : bool" in prog           # still a first-class variable
-    assert "constrain x_cefepime <= 0" in prog, prog     # ...pinned out by a real constraint
+        reg.SCENARIOS["post_neurosurgical_or_shunt"], set(),
+        forced_zero={"cefepime": "step-therapy", "meropenem": "contraindicated"})
+    assert "symbol x_cefepime : bool" in prog                       # still a first-class variable
+    assert "constrain x_cefepime <= 0   % excluded (step-therapy)" in prog, prog
+    assert "constrain x_meropenem <= 0   % excluded (contraindicated)" in prog, prog
     plain, _, _ = ns.emit_program(reg.SCENARIOS["post_neurosurgical_or_shunt"], set())
-    assert "constrain x_cefepime <= 0" not in plain      # absent without a step block
+    assert "<= 0   % excluded" not in plain                          # absent without exclusions
+    # the reason is sanitized — a newline can't escape the `%` comment into a fake clause:
+    # the injected text collapses onto the single comment line, and the only `minimize` line
+    # remains the real objective (no rogue `minimize 999` clause on its own line).
+    nasty, _, _ = ns.emit_program(["n_meningitidis"], set(),
+                                  forced_zero={"ceftriaxone": "evil\nminimize 999"})
+    minimize_lines = [ln for ln in nasty.splitlines() if ln.startswith("minimize")]
+    assert len(minimize_lines) == 1 and "999" not in minimize_lines[0]  # no rogue objective
+    assert "evilminimize 999" in nasty                              # collapsed into the comment
 
 
 def main() -> int:
     test_emit_is_well_formed()
     test_default_weights_reproduce_tier_only_objective()
     test_side_effect_weights_loaded()
-    test_step_therapy_emits_a_native_precedence_constraint()
+    test_forced_zero_exclusions_emit_explicit_constraints()
     cli = decide_mod.find_cli()
     if cli is None:
         print("test_native_setcover: PASS (emit + CC-4 weight checks); "

@@ -336,12 +336,15 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
             "type": "dose_infeasible", "from": f"risks={sorted(cop.risks)}", "detail": d,
             "rule": f"no safe+effective dose: floor {w['floor_per_kg']} > ceiling "
                     f"{w['ceiling_per_kg']} mg/kg"})
-    # A drug leaves the cover if it has no safe dose (CC-2) OR is contraindicated (CC-3).
-    excluded_drugs = set(undosable) | cop.contraindicated
+    # Every exclusion is an EXPLICIT engine constraint (`x_d <= 0`), keyed by its reason, so
+    # the emitted program is self-documenting: a drug with no safe dose (CC-2) or one that is
+    # contraindicated (CC-3) is pinned out by the solver, not pre-removed in Python.
+    forced_zero = {d: "dose-infeasible" for d in undosable}
+    forced_zero.update({d: "contraindicated" for d in cop.contraindicated})
     # CC-4: solve under the chart's cost/side-effect objective blend (default tier-only).
     # `regimen` is the CLINICALLY optimal one — what the physician should give, ignoring
     # the payer. (CC-4 objective blend applies.)
-    res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, excluded_drugs, cop.weights)
+    res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, cop.weights, forced_zero=forced_zero)
     # CC-5: the empiric-now vs await-culture decision, from the chart's timing inputs.
     timing = decide_timing(disease, cop.culture_status, cop.clinical_status)
     # CC-6: when the chart carries payer step-therapy rules, ALSO solve the reimbursement-
@@ -351,12 +354,13 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
     reimbursement = None
     if cop.step_therapy:
         blocked = reimbursement_blocked(cop.step_therapy, cop.tried)
-        # The precedence is enforced BY THE ENGINE: blocked drugs are pinned to 0 via an
-        # explicit `constrain x_Y <= 0` clause in the reimbursement program (step_blocked),
-        # not removed from candidates in Python — so the payer constraint is auditable in
-        # the emitted program and the covered-infeasibility verdict is the solver's.
+        # The precedence is enforced BY THE ENGINE: payer-blocked drugs join forced_zero
+        # (reason "step-therapy") → an explicit `constrain x_Y <= 0` clause in the
+        # reimbursement program. Clinical exclusions (dose/contraindication) carry over, so
+        # the covered solve layers the payer constraint on top of the clinical one.
+        cov_forced = {**forced_zero, **{d: "step-therapy" for d in blocked}}
         cov = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated,
-                        excluded_drugs, cop.weights, step_blocked=blocked)
+                        cop.weights, forced_zero=cov_forced)
         differs = cov["regimen"] != res["regimen"]
         if cov["regimen"] is None:
             note = ("reimbursement-INFEASIBLE under step therapy: the only regimens covering "

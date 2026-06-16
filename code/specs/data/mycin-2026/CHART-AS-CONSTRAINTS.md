@@ -146,6 +146,13 @@ risks Y") — decision support, not a hidden choice.
 - **CC-2 — dose feasibility + renal/interaction caps as constraints.** Fold the dose-window
   solve into the COP (`floor ≤ dose ≤ ceiling(renal, interactions)`); UNSAT path returns the
   conflict. Ground the renal-adjustment + additive-nephrotoxicity rules (spider).
+- **REFACTOR (ADJ-first): every exclusion is now an EXPLICIT engine constraint.** Dose-infeasible
+  (CC-2), contraindicated (CC-3), and step-therapy (CC-6) drugs are unified into one
+  `forced_zero: {drug → reason}` and emitted as `constrain x_d <= 0   % excluded (reason)` in the
+  adj-lang program — not pre-removed from the candidate list in Python. So the emitted program is
+  self-documenting about *why* each drug is out, the infeasibility verdict is the engine's, and
+  the exclusion reasoning lives in ADJ, not the compiler. (Reasons are sanitized before reaching
+  the `%` comment.)
 - **CC-3 — contraindication / interaction grounding.** `contraindication-grounding.json` +
   `interaction-grounding.json` via the harness (pregnancy, QT, G6PD, allergy classes,
   drug–drug); gate → CAS; new "treatment constraints" ledger artifact.
