@@ -73,6 +73,8 @@ class Cop:
     weights: tuple[int, int] = reg.DEFAULT_WEIGHTS            # CC-4 objective blend (w_cost, w_tox)
     culture_status: str = ""                                 # CC-5 pending | resulted (timing decision)
     clinical_status: str = ""                                # CC-5 critical | unstable | stable
+    step_therapy: set[tuple[str, str]] = field(default_factory=set)  # CC-6 (restricted, prerequisite)
+    tried: set[str] = field(default_factory=set)             # CC-6 drugs already tried/failed
     constraints: list[dict] = field(default_factory=list)   # provenance per constraint
     discards: list[dict] = field(default_factory=list)       # facts not mapped + reason
 
@@ -215,6 +217,25 @@ def compile_cop(facts: list[ChartFact]) -> Cop:
             else:
                 cop.discards.append({"fact": f"clinical_status={f.value}",
                                      "reason": "unrecognized clinical status (want critical/unstable/stable)"})
+        elif f.kind == "step_therapy":
+            # CC-6: a payer step-therapy rule "won't approve Y until X tried", value
+            # "restricted:prerequisite" (e.g. "cefepime:meropenem" — wait, no: the
+            # restricted drug is the one needing a prior trial). Format "Y:X" = Y requires X.
+            restricted, _, prereq = f.value.partition(":")
+            if restricted and prereq:
+                cop.step_therapy.add((restricted, prereq))
+                cop.constraints.append({"type": "step_therapy", "from": f"step_therapy={f.value}",
+                                        "rule": f"payer won't reimburse {restricted} until {prereq} is tried",
+                                        "detail": [restricted, prereq], "span": f.span})
+            else:
+                cop.discards.append({"fact": f"step_therapy={f.value}",
+                                     "reason": "malformed step_therapy value (want restricted:prerequisite)"})
+        elif f.kind == "prior_failed":
+            # CC-6: a drug already tried (and failed) — satisfies a step-therapy prerequisite.
+            cop.tried.add(f.value)
+            cop.constraints.append({"type": "prior_treatment", "from": f"prior_failed={f.value}",
+                                    "rule": f"{f.value} already tried/failed → satisfies its step-therapy prerequisite",
+                                    "span": f.span})
         elif f.kind == "objective_priority":
             # CC-4: the chart's treatment priority selects the cost/side-effect objective
             # blend. "cost" (default) = cheapest acceptable regimen; "low_toxicity" weights
@@ -293,6 +314,13 @@ def dose_infeasible(cli: Path, drugs: list[str], risks: set[str], weight: float)
     return out
 
 
+def reimbursement_blocked(step_therapy: set[tuple[str, str]], tried: set[str]) -> set[str]:
+    """CC-6: the drugs a payer won't reimburse because their step-therapy prerequisite
+    hasn't been tried — the precedence `x_Y ≤ tried_X` realized as a reimbursement-only
+    exclusion. A restricted drug Y is blocked iff its prerequisite X is not in `tried`."""
+    return {restricted for restricted, prereq in step_therapy if prereq not in tried}
+
+
 def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> dict:
     """Compile the chart → COP, solve it, and return the regimen with provenance.
     Dose feasibility (CC-2) is folded into the cover: a drug with no safe-and-effective
@@ -311,13 +339,42 @@ def derive(cli: Path, facts: list[ChartFact], disease: str = "meningitis") -> di
     # A drug leaves the cover if it has no safe dose (CC-2) OR is contraindicated (CC-3).
     excluded_drugs = set(undosable) | cop.contraindicated
     # CC-4: solve under the chart's cost/side-effect objective blend (default tier-only).
+    # `regimen` is the CLINICALLY optimal one — what the physician should give, ignoring
+    # the payer. (CC-4 objective blend applies.)
     res = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated, excluded_drugs, cop.weights)
     # CC-5: the empiric-now vs await-culture decision, from the chart's timing inputs.
     timing = decide_timing(disease, cop.culture_status, cop.clinical_status)
+    # CC-6: when the chart carries payer step-therapy rules, ALSO solve the reimbursement-
+    # feasible regimen (the clinically-best drugs whose step-therapy prerequisite is unmet
+    # are excluded) and surface BOTH so the tradeoff — and any medical-necessity appeal — is
+    # explicit. Reimbursement infeasibility is distinct from clinical infeasibility.
+    reimbursement = None
+    if cop.step_therapy:
+        blocked = reimbursement_blocked(cop.step_therapy, cop.tried)
+        cov = nsc.solve(cli, cop.organisms, cop.exclusions, cop.defeated,
+                        excluded_drugs | blocked, cop.weights)
+        differs = cov["regimen"] != res["regimen"]
+        if cov["regimen"] is None:
+            note = ("reimbursement-INFEASIBLE under step therapy: the only regimens covering "
+                    "these organisms need a drug the payer blocks until its prerequisite is "
+                    "tried → physician override / appeal on medical necessity")
+        elif differs:
+            note = ("the payer-covered regimen differs from the clinical optimum because step "
+                    "therapy blocks a clinically-preferred drug — give the clinical one on "
+                    "medical necessity, or step through the prerequisite")
+        else:
+            note = "step therapy does not change the regimen (prerequisites already satisfied)"
+        reimbursement = {
+            "step_therapy": sorted(map(list, cop.step_therapy)), "tried": sorted(cop.tried),
+            "blocked": sorted(blocked), "covered_regimen": cov["regimen"],
+            "covered_outcome": cov["outcome"], "covered_conflict": cov.get("iis"),
+            "differs_from_clinical": differs, "note": note,
+        }
     return {
         "regimen": res["regimen"], "outcome": res["outcome"],
         "cost": res.get("cost"), "conflict": res.get("iis"),
         "objective": res.get("objective"), "timing": timing,
+        "reimbursement": reimbursement,
         "organisms": cop.organisms, "exclusions": sorted(cop.exclusions),
         "defeated": sorted(map(list, cop.defeated)),
         "risks": sorted(cop.risks), "dose_infeasible": sorted(undosable),
