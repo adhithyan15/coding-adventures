@@ -1,6 +1,6 @@
 <!-- InfiniteSheet.xaml — a virtualized, effectively-infinite spreadsheet view for
      the WinUI 3 / XAML demo, rendered on the shared Rust engine through the
-     viewport primitive (the same get_window / used_range / changed_since the
+     viewport primitive (the same get_display_window / used_range / changed_since the
      SwiftUI InfiniteGridView, the Qt InfiniteSheet.qml, the Flutter InfiniteGrid,
      and the Compose InfiniteSheet drive).
 
@@ -8,7 +8,7 @@
      ever realized. The body is a ListView, which natively virtualizes (its
      ItemsStackPanel realizes a row container only while it's near the viewport
      and recycles it on scroll). Each realized row's cells are filled on demand in
-     the code-behind's ContainerContentChanging handler from one engine get_window
+     the code-behind's ContainerContentChanging handler from one engine get_display_window
      over its 1×TotalCols strip (InfiniteSheetModel.RowCells) — so per-frame engine
      work is proportional to *visible* rows, never the sheet's height.
 
