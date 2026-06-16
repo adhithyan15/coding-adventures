@@ -414,6 +414,33 @@ fn narrow_binop_fn(op: &str, hint: &str) -> IIRFunction {
     )
 }
 
+/// Bitwise NOT — LLVM has no `not` instruction, so it is `xor x, -1`. For a
+/// narrow unsigned width the E2 mask brings it into range (`~0u8 = 255`).
+/// Unlocks Nib N3-`~` / Oct O2-`~`. (Verified end-to-end on real `clang`:
+/// `not 0 : u8` returns exit `255`.)
+#[test]
+fn not_u8_is_xor_minus1_then_masked() {
+    let f = IIRFunction::new("f", vec![("a".into(), "i64".into())], "i64", vec![
+        IIRInstr::new("not", Some("v".into()), vec![Operand::Var("a".into())], "u8"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("xor i64 %a, -1"), "u8 not is `xor i64 a, -1`; got:\n{ll}");
+    assert!(ll.contains(", 255"), "u8 not masks with 0xFF (so ~0u8 = 255); got:\n{ll}");
+}
+
+#[test]
+fn not_i64_is_plain_xor_no_mask() {
+    let f = IIRFunction::new("f", vec![("a".into(), "i64".into())], "i64", vec![
+        IIRInstr::new("not", Some("v".into()), vec![Operand::Var("a".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("xor i64 %a, -1"), "i64 not is `xor i64 a, -1`; got:\n{ll}");
+    assert!(!ll.contains(", 255") && !ll.contains(", 4294967295"),
+        "full-width i64 not gets no mask; got:\n{ll}");
+}
+
 #[test]
 fn e2_u8_add_computes_at_i64_then_masks() {
     // `200u8 + 100u8 = 44`: add at i64 (operands are i64 slots), then `and` to

@@ -3,6 +3,23 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.0] — 2026-06-16 — bitwise NOT (`not`) op
+
+### Added — `not` (synthesised as `xor x, -1`)
+
+LLVM has no `not` instruction, so the IIR `not` op was absent from this backend's
+whitelist — the one backend of seven that lacked it. It now lowers to `xor x, -1`
+(flip every bit). For a narrow unsigned width (`u4`/`u8`/`u16`/`u32`) it reuses the
+E2 compute-wide+mask path — `xor i64 x, -1` then `and i64 …, <mask>` — so `~0u8` is
+`255` (`-1 & 0xFF`), not the i64 all-ones. A full-width `i64`/`u64` `not` is a plain
+`xor`. Added to `SUPPORTED_OPS`.
+
+This **unblocks Nib N3-`~` and Oct O2-`~`** (their `compile_unary` lowers `~` to an
+IIR `not`, which previously could not run on LLVM). **Verified on real `clang`**:
+`not 0 : u8` returns exit `255`. New structural tests `not_u8_is_xor_minus1_then_masked`
+and `not_i64_is_plain_xor_no_mask`; iir-to-llvm consumers (algol-iir-compiler, lang-aot)
+green.
+
 ## [0.11.0] — 2026-06-15 — narrow unsigned arithmetic wraps mod-2ⁿ (LANG-FULL E2)
 
 ### Added — `u4`/`u8`/`u16`/`u32` results are masked back into their width

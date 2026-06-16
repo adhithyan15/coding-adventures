@@ -234,6 +234,9 @@ const SUPPORTED_OPS: &[&str] = &[
     // LLVM03 — arithmetic and bitwise/logical scalar ops
     "add", "sub", "mul", "div", "mod", "rem",
     "and", "or", "xor",
+    // bitwise NOT — synthesised as `xor x, -1` (LLVM has no `not`); unlocks
+    // Nib N3-`~` and Oct O2-`~`.
+    "not",
     // LLVM03 — comparison (both naked and cmp_-prefixed; see G1)
     "eq", "ne", "lt", "le", "gt", "ge",
     "cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge",
@@ -840,6 +843,13 @@ fn lower_instr(
         // by WASM/JVM/CLR/BEAM, so LLVM accepts them too.
         "and" | "or" | "xor" => lower_bitwise(instr.op.as_str(), instr, state, out),
 
+        // ── bitwise NOT ─────────────────────────────────────────────────
+        //
+        // LLVM has no `not` instruction; bitwise complement is `xor x, -1`
+        // (flip every bit). For a narrow unsigned width the E2 mask brings it
+        // back into range (`~0u8 = 255`). Used by Nib/Oct unary `~`.
+        "not" => lower_not(instr, state, out),
+
         // ── comparison ──────────────────────────────────────────────────
         //
         // LLVM `icmp` and `fcmp` always return i1.  IIR's type_hint on a
@@ -1242,6 +1252,32 @@ fn lower_bitwise(
     if ty == "i1" {
         state.env_i1.insert(dest, value);
     }
+    Ok(())
+}
+
+/// Lower a bitwise NOT (`not dest, src`).
+///
+/// LLVM has no `not` instruction — bitwise complement is `xor x, -1` (every bit
+/// flipped). For a narrow unsigned width (`u4`/`u8`/`u16`/`u32`) we reuse the E2
+/// "compute wide, mask the value" path: `xor i64 src, -1` then `and i64 …, <mask>`,
+/// so `~0u8` is `255` (`-1 & 0xFF`), not the i64 all-ones. Unlocks Nib N3-`~` and
+/// Oct O2-`~` (whose `compile_unary` lowers `~` to this op).
+fn lower_not(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "not", state.fn_name)?.to_string();
+    let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
+    if let Some(mask) = narrow_unsigned_width_mask(&instr.type_hint) {
+        // `xor i64 a, -1` then mask to width — reuses the E2 binary helper with
+        // `-1` as the second operand.
+        emit_narrow_wrapped("xor", &a, "-1", &dest, mask, state, out);
+        return Ok(());
+    }
+    let ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
+    out.push_str(&format!("  %{dest} = xor {ty} {a}, -1\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
 
