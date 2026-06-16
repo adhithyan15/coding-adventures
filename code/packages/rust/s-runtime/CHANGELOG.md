@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-06-16
+
+### Added
+
+- **Matrix type (R-11)** — a new `SValue::Matrix { data, nrow, ncol }` (numeric,
+  column-major, implicit class `"matrix"`), the `%*%` matrix-multiply operator
+  (a new arm in the `%op%` infix dispatch — a bare vector is a row on the left,
+  a column on the right, so `v %*% w` is the dot product; NA propagates), and the
+  builtins `matrix(data, nrow =, ncol =, byrow =)`, `t()`, and
+  `apply(X, MARGIN, FUN, …)` (over rows/columns, simplifying to a vector or
+  matrix). `dim()`/`nrow()`/`ncol()` extended for matrices. Matrices coerce to
+  their flat vector and print with R's `[,j]`/`[i,]` console layout. The product
+  size and all loops are capped at `MAX_SEQ_LEN`.
+
 ## [0.6.0] - 2026-06-16
 
 ### Added

@@ -352,4 +352,62 @@ mod tests {
             vec![6.0]
         );
     }
+
+    // --- R-11: the matrix type ------------------------------------------
+
+    #[test]
+    fn matrix_construction_and_dims() {
+        assert_eq!(nums("dim(matrix(1:6, nrow = 2))\n"), vec![2.0, 3.0]);
+        assert_eq!(nums("nrow(matrix(1:6, 2, 3))\n"), vec![2.0]);
+        assert_eq!(nums("ncol(matrix(1:6, 2, 3))\n"), vec![3.0]);
+        // Column-major fill: flattening recovers the original order.
+        assert_eq!(
+            nums("c(matrix(1:6, 2, 3))\n"),
+            vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+        );
+        // byrow = TRUE fills row by row.
+        assert_eq!(
+            nums("c(matrix(1:6, nrow = 2, byrow = TRUE))\n"),
+            vec![1.0, 4.0, 2.0, 5.0, 3.0, 6.0]
+        );
+    }
+
+    #[test]
+    fn transpose_and_matrix_product() {
+        assert_eq!(
+            nums("c(t(matrix(1:6, 2, 3)))\n"),
+            vec![1.0, 3.0, 5.0, 2.0, 4.0, 6.0]
+        );
+        // [[1,3,5],[2,4,6]] %*% its transpose.
+        assert_eq!(
+            nums("c(matrix(1:6, 2, 3) %*% t(matrix(1:6, 2, 3)))\n"),
+            vec![35.0, 44.0, 44.0, 56.0]
+        );
+        // vector %*% vector is the dot product.
+        assert_eq!(nums("c(c(1, 2, 3) %*% c(4, 5, 6))\n"), vec![32.0]);
+        // M %*% I == M.
+        assert_eq!(
+            nums("c(matrix(1:4, 2, 2) %*% matrix(c(1, 0, 0, 1), 2, 2))\n"),
+            vec![1.0, 2.0, 3.0, 4.0]
+        );
+    }
+
+    #[test]
+    fn apply_over_rows_and_columns() {
+        assert_eq!(nums("apply(matrix(1:6, 2, 3), 1, sum)\n"), vec![9.0, 12.0]);
+        assert_eq!(
+            nums("apply(matrix(1:6, 2, 3), 2, sum)\n"),
+            vec![3.0, 7.0, 11.0]
+        );
+        // A non-scalar apply result (with an R-9 lambda) builds a matrix.
+        assert_eq!(
+            nums("dim(apply(matrix(1:6, 2, 3), 2, \\(col) col * 2))\n"),
+            vec![2.0, 3.0]
+        );
+    }
+
+    #[test]
+    fn non_conformable_product_is_an_error() {
+        assert!(eval_r("matrix(1:6, 2, 3) %*% matrix(1:6, 2, 3)\n").is_err());
+    }
 }

@@ -122,6 +122,18 @@ unchanged.
   The function is taken by name (`f =`/`FUN =`) or as the first callable
   positional, and the data are the other positionals — so they compose with the
   pipe: `1:5 |> Filter(f = \(x) x %% 2 == 0) |> Reduce(f = \(a, b) a + b)`.
+- **R-11 — the matrix type** *(this PR)*. A new `SValue::Matrix { data, nrow,
+  ncol }` (numeric, **column-major** — R/Fortran order, `length` is `nrow*ncol`,
+  implicit class `"matrix"`). `matrix(data, nrow =, ncol =, byrow = FALSE)`
+  builds one (recycling, deriving the missing dimension); `t()` transposes;
+  `dim()`/`nrow()`/`ncol()` report the shape; `%*%` is the matrix product (a new
+  arm in the evaluator's `%op%` infix dispatch — a bare vector becomes a row on
+  the left, a column on the right, so `v %*% w` is the dot product); and
+  `apply(X, MARGIN, FUN, …)` maps `FUN` over rows (`MARGIN = 1`) or columns
+  (`MARGIN = 2`), simplifying to a vector or matrix. NA propagates through the
+  product; the result-size and all loops are capped at `MAX_SEQ_LEN`. Matrices
+  coerce to their flat vector (`c(m)`, `sum(m)`) and print with R's `[,j]`/`[i,]`
+  console layout.
 
 ## §4 Reuse strategy
 
