@@ -247,6 +247,18 @@ risks Y") — decision support, not a hidden choice.
   (a rule blocking a clinically-forced drug → covered = INFEASIBLE) is surfaced **distinctly**
   from clinical infeasibility → physician override / appeal on medical necessity. Grounding a
   real published payer policy is the **CC-6b** follow-up.
+- **CC-6 REFACTOR (ADJ-native): the step-therapy precedence is now an ENGINE RULE, not a
+  Python set-difference. ✅ DONE.** The blocked-drug derivation left `chart_to_cop.py`
+  (`reimbursement_blocked()` is deleted) and became `step_therapy.adj` — a durable,
+  domain-neutral **negation-as-failure** rule: `reimbursement_blocked($Y) when:
+  requires_prerequisite($Y,$X), not already_tried($X)`. The per-case payer facts
+  (`requires_prerequisite` / `already_tried`) are asserted from the chart at query time;
+  `derive()` calls `step_therapy.derive_blocked(cli, …)` which runs the engine
+  (`? reimbursement_blocked($Y)`, 0 model calls) and folds the blocked drugs into the
+  reimbursement program's `forced_zero`. NAF is the natural encoding of "blocked unless the
+  step is satisfied"; the precedence reasoning lives in the language. The same `requires… ∧
+  not done…` shape is reusable across any rule corpus (a filing gated on a precondition, a
+  benefit gated on a prior step).
 - **CC-7 — full chart drive-through:** wire CH (chart→IR + de-identification) into the COP so
   a whole de-identified FHIR chart produces a regimen with the full audit trail.
 
