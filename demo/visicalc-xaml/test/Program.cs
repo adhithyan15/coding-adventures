@@ -102,8 +102,8 @@ using (var inf = new InfiniteSheetModel())
     // RowCells returns one row's display strings (columns 1..TotalCols).
     var row1 = inf.RowCells(1);
     Check("inf rowCells width", (row1.Count == inf.TotalCols).ToString(), "True");
-    Check("inf rowCells A1", row1[0], "15");
-    Check("inf rowCells E1", row1[4], "38");  // SUM(A1:D1)
+    Check("inf rowCells A1", row1[0], "15"); // unformatted
+    Check("inf rowCells E1", row1[4], "38.00");  // SUM(A1:D1), "#,##0.00" formatted
     Check("inf rowCells J1 empty", row1[9], ""); // sparse
     bool gapBlank = true;
     foreach (var c in inf.RowCells(200)) if (c.Length != 0) gapBlank = false;
@@ -120,10 +120,10 @@ using (var inf = new InfiniteSheetModel())
     // CommitInf writes through and recomputes every dependent.
     inf.SelectInf(2, 1);          // A2
     inf.CommitInf("108");         // 8 -> 108
-    Check("inf commit A2", inf.RowCells(2)[0], "108");
-    Check("inf commit E2", inf.RowCells(2)[4], "151"); // 108+14+7+22
-    Check("inf commit A5", inf.RowCells(5)[0], "139"); // 15+108+12+4
-    Check("inf commit E5", inf.RowCells(5)[4], "269"); // grand total
+    Check("inf commit A2", inf.RowCells(2)[0], "108"); // unformatted
+    Check("inf commit E2", inf.RowCells(2)[4], "151.00"); // 108+14+7+22, formatted
+    Check("inf commit A5", inf.RowCells(5)[0], "139.00"); // 15+108+12+4, formatted
+    Check("inf commit E5", inf.RowCells(5)[4], "269.00"); // grand total, formatted
 }
 
 Console.WriteLine(failures == 0 ? "\nALL PASS" : $"\n{failures} FAILURE(S)");

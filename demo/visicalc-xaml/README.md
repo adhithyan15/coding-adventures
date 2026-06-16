@@ -135,9 +135,12 @@ to `InfiniteSheet` — a virtualized, effectively-infinite (u32 × u32, sparse)
 view rendered on the same engine. The body is a `ListView` whose `ItemsSource`
 is just the row numbers (`1..TotalRows`); its `ItemsStackPanel` realizes a
 container only for on-screen rows, and `ContainerContentChanging` fills each
-realized row's cells from **one** engine `get_window` over its `1×TotalCols`
-strip (`InfiniteSheetModel.RowCells`) — so building the UI costs only the visible
-rows, never the whole (millions-tall) sheet. Frozen chrome by scroll-sync: the
+realized row's cells from **one** engine `get_display_window` over its
+`1×TotalCols` strip (`InfiniteSheetModel.RowCells`) — display strings, each
+already rendered through its Excel-style format code (the seed formats the
+cross-foot totals as `#,##0.00` and the far-flung `Z1000` total as a percent),
+so the host paints them directly. Building the UI costs only the visible rows,
+never the whole (millions-tall) sheet. Frozen chrome by scroll-sync: the
 row-number gutter is a second virtualized `ListView` slaved to the body's
 vertical scroll, and the column-letter header follows the body's horizontal pan.
 Tap a cell → `SelectInf` (clamps, loads the source into the formula bar); press

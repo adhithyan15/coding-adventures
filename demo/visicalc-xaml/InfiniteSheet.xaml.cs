@@ -8,8 +8,9 @@
 // Virtualization: BodyList is a ListView whose ItemsSource is just the row
 // numbers (1..TotalRows) — a lightweight int list. The ListView's ItemsStackPanel
 // realizes a container only for on-screen rows; ContainerContentChanging fills
-// each realized row's cells from one engine get_window over its 1×TotalCols strip
-// (model.RowCells). So building the UI costs only the visible rows, never the
+// each realized row's cells from one engine get_display_window over its
+// 1×TotalCols strip (model.RowCells) — display strings, already rendered through
+// each cell's format code. So building the UI costs only the visible rows, never the
 // whole (possibly millions-tall) sheet. The gutter is a second virtualized
 // ListView over the same row numbers, and the header is a one-time StackPanel of
 // column letters; both are kept in sync with the body's scroll offsets.
