@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.4.0
+
+**Insert/delete rows & columns** (`workbook.rs`) — wires the structural-edit
+reference arithmetic from 0.3.0's `edit.rs` into the live `Workbook`, plus a
+formula serializer to keep echo text honest.
+
+- `Workbook::insert_rows` / `delete_rows` / `insert_cols` / `delete_cols(sheet,
+  at, count)`: relocate every cell (a cell on a deleted line is removed),
+  rewrite each formula's references via `FormulaAst::adjust` (a reference to a
+  deleted line becomes `#REF!`), rebuild the dependency graph (every address
+  moved, so the old edges are stale), and recalculate. One revision transaction;
+  surviving cells are logged so a viewport `changed_since` snapshot sees the
+  relocation. Unknown `sheet` → no-op.
+- `FormulaAst::to_formula_string()`: render an AST back to a formula string,
+  fully parenthesising binary operators so it always re-parses to an equivalent
+  tree. Used to refresh a cell's stored source after a structural edit rewrites
+  its references; independently useful for echo-back / save-load / copy-paste.
+  Plus `BinaryOp::symbol()` (the source token for an operator).
+- v1 scope: single-sheet (the engine's formula references are sheet-local) and a
+  full rebuild + recalc sweep (correct and simple). Cross-sheet reference
+  adjustment and incremental recalc are future optimisations.
+- 8 new tests (6 `Workbook` edits — relocate + rewrite, survivor shift, deleted
+  reference → `#REF!`, column shift, revision bump, unknown-sheet no-op; 2
+  serializer round-trip/literal tests).
+
 ## 0.3.0
 
 **Structural-edit reference arithmetic** (`edit.rs`) — the pure substrate of the
