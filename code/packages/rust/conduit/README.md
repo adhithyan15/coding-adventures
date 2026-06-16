@@ -37,7 +37,11 @@ server.serve()?;
 
 - `Application` — route registration, settings, before/after hooks, custom 404,
   custom 405, and panic recovery hooks
-- `Server` — platform-native server binding over `web-core::WebServer`
+- `Server` — platform-native single-reactor server binding over `web-core::WebServer`
+- `ShardedServer` — opt-in **parallel** server (WEB01) over `web-core::ShardedWebServer`:
+  `ShardedServer::bind(host, port, worker_count, app)` dispatches handlers across
+  `worker_count` reactor shards so requests on different connections run
+  concurrently. Same surface and semantics as `Server`; `Server` stays the default.
 - `RequestExt` — convenience accessors for route params, query params, and body text
 - response helpers — `text`, `html`, `json`, `redirect`, `halt`, and explicit-status
   variants
