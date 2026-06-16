@@ -521,13 +521,18 @@ pub fn shift_op(
                 last_out = 0;
             } else if left {
                 let count_mod = (count % bits) as u32;
-                result = ((result << count_mod) | (result >> (bits - count_mod))) & mask;
-                // C = LSB of result (last bit rotated into LSB = new LSB)
+                // count_mod == 0 means a full-width rotation → identity; avoid shift-by-width panic.
+                if count_mod != 0 {
+                    result = ((result << count_mod) | (result >> (bits - count_mod))) & mask;
+                }
+                // C = last bit rotated into bit 0 (the new LSB)
                 last_out = (result & 1) as u8;
             } else {
                 let count_mod = (count % bits) as u32;
-                result = ((result >> count_mod) | (result << (bits - count_mod))) & mask;
-                // C = MSB of result (last bit rotated into MSB = new MSB)
+                if count_mod != 0 {
+                    result = ((result >> count_mod) | (result << (bits - count_mod))) & mask;
+                }
+                // C = last bit rotated into the MSB (the new MSB)
                 last_out = ((result & msb_mask) != 0) as u8;
             }
         }
