@@ -1401,42 +1401,109 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
         });
     }
 
-    if nodes.len() == 1 {
+    // A bare primary has a SINGLE child overall (just the
+    // primary_expression Node, no suffix tokens). We check the full
+    // children list, NOT just the Node children: `a.b` has one Node
+    // child (`a`) but two suffix tokens (`.` and `b`), so counting
+    // Nodes alone would wrongly treat `a.b` as a bare primary and
+    // drop the `.b`. (That was the bug this guard previously had.)
+    if node.children.len() == 1 {
         return convert_expression(nodes[0]); // primary_expression pass-through
     }
 
-    // Dot access: object DOT NAME
-    if has_token(node, ".") {
-        let object = convert_expression(nodes[0])?;
-        let prop_name = node.children.iter().rev().find_map(|c| match c {
-            ASTNodeOrToken::Token(t) if t.value != "." => Some(t.value.clone()),
-            _ => None,
-        });
-        let prop_name = prop_name.ok_or_else(|| internal(node, "member_expression.dot: missing property name"))?;
-        return Ok(Expression::MemberExpression(MemberExpression {
-            cv: None,
-            object: Box::new(object),
-            property: Box::new(Expression::Identifier(Identifier { cv: None, name: prop_name })),
-            computed: false,
-        }));
+    // Suffix chain: `primary { DOT NAME | LBRACKET expr RBRACKET }`.
+    //
+    // The grammar's `member_expression = primary_expression { … }`
+    // repetition produces a FLAT child list — the primary Node
+    // followed by an arbitrary number of `.NAME` and `[expr]`
+    // suffixes (e.g. `a.b.c`, `a[0].b`, `a.b[c].d`). We walk the raw
+    // children left-to-right, folding each suffix onto the growing
+    // `base`, exactly as `convert_optional_chain_expression` does for
+    // its base member_expression. The previous single-suffix
+    // implementation handled only one `.NAME` and silently dropped
+    // the rest of the chain.
+    let children = &node.children;
+
+    // The base is the first child — always the primary_expression Node.
+    let mut base = match children.first() {
+        Some(ASTNodeOrToken::Node(n)) => convert_expression(n)?,
+        _ => return Err(internal(node, "member_expression: expected primary base")),
+    };
+
+    let mut i = 1;
+    while i < children.len() {
+        match &children[i] {
+            // `.NAME` — non-computed (dot) property access.
+            ASTNodeOrToken::Token(t) if t.value == "." => {
+                let prop_name = match children.get(i + 1) {
+                    Some(ASTNodeOrToken::Token(name)) => name.value.clone(),
+                    _ => {
+                        return Err(internal(
+                            node,
+                            "member_expression.dot: missing property name",
+                        ))
+                    }
+                };
+                base = Expression::MemberExpression(MemberExpression {
+                    cv: None,
+                    object: Box::new(base),
+                    property: Box::new(Expression::Identifier(Identifier {
+                        cv: None,
+                        name: prop_name,
+                    })),
+                    computed: false,
+                });
+                i += 2; // consume DOT + NAME
+            }
+            // `[expr]` — computed property access.
+            ASTNodeOrToken::Token(t) if t.value == "[" => {
+                // The key is the next Node child; skip to it.
+                let key_node = children[i + 1..].iter().find_map(|c| match c {
+                    ASTNodeOrToken::Node(n) => Some(n),
+                    _ => None,
+                });
+                let key = match key_node {
+                    Some(n) => convert_expression(n)?,
+                    None => {
+                        return Err(internal(
+                            node,
+                            "member_expression.computed: missing key",
+                        ))
+                    }
+                };
+                base = Expression::MemberExpression(MemberExpression {
+                    cv: None,
+                    object: Box::new(base),
+                    property: Box::new(key),
+                    computed: true,
+                });
+                // Advance past `[ … ]`: find the matching RBRACKET.
+                i += 1;
+                while i < children.len() {
+                    let is_rbracket = matches!(
+                        &children[i],
+                        ASTNodeOrToken::Token(t) if t.value == "]"
+                    );
+                    i += 1;
+                    if is_rbracket {
+                        break;
+                    }
+                }
+            }
+            // A tagged-template suffix on a member base is Phase 2.
+            ASTNodeOrToken::Node(n) if n.rule_name == "template_literal" => {
+                return Err(BridgeError::UnsupportedSyntax {
+                    rule: "TaggedTemplateExpression".to_string(),
+                    location: loc(n),
+                });
+            }
+            // RBRACKET / NAME already consumed by their openers, and
+            // any stray token is skipped defensively.
+            _ => i += 1,
+        }
     }
 
-    // Computed access: object LBRACKET expression RBRACKET
-    if has_token(node, "[") {
-        let object = convert_expression(nodes[0])?;
-        let prop = nodes
-            .get(1)
-            .ok_or_else(|| internal(node, "member_expression.computed: missing key"))?;
-        let property = convert_expression(prop)?;
-        return Ok(Expression::MemberExpression(MemberExpression {
-            cv: None,
-            object: Box::new(object),
-            property: Box::new(property),
-            computed: true,
-        }));
-    }
-
-    Err(internal(node, "member_expression: unrecognised shape"))
+    Ok(base)
 }
 
 // -------------------------------------------------------------------------
@@ -2062,5 +2129,122 @@ mod tests {
                 coding_adventures_javascript_ast::statement::TaggedStatement::SwitchStatement(_)
             ))
         ));
+    }
+
+    // -----------------------------------------------------------------------
+    // member_expression — dot and computed property chains
+    //
+    // Regression coverage for the bug where `convert_member_expression`
+    // early-returned on `nodes.len() == 1` (Node children only), counting
+    // the single primary Node and ignoring the `.NAME` suffix tokens — so
+    // `a.b` collapsed to `a` and `a.b.c` collapsed to `a.c`. The grammar's
+    // `member_expression = primary_expression { DOT NAME | LBRACKET … }`
+    // repetition is a flat suffix list that must be walked in full.
+    // -----------------------------------------------------------------------
+
+    /// Pull the expression out of a single-statement program whose body is
+    /// `<expr>;`.
+    fn first_expr(p: &Program) -> &Expression {
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es),
+            )) => &es.expression,
+            _ => panic!("expected an expression statement"),
+        }
+    }
+
+    #[test]
+    fn member_dot_single() {
+        // `a.b` — the property `b` must survive (the original bug dropped it).
+        let p = bridge_ok("a.b;");
+        match first_expr(&p) {
+            Expression::MemberExpression(m) => {
+                assert!(!m.computed, "dot access is not computed");
+                assert!(matches!(&*m.object, Expression::Identifier(i) if i.name == "a"));
+                assert!(matches!(&*m.property, Expression::Identifier(i) if i.name == "b"));
+            }
+            other => panic!("expected MemberExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn member_dot_chain() {
+        // `a.b.c` — left-associative: ((a.b).c). Both suffixes must survive.
+        let p = bridge_ok("a.b.c;");
+        match first_expr(&p) {
+            Expression::MemberExpression(outer) => {
+                assert!(matches!(&*outer.property, Expression::Identifier(i) if i.name == "c"));
+                match &*outer.object {
+                    Expression::MemberExpression(inner) => {
+                        assert!(matches!(&*inner.object, Expression::Identifier(i) if i.name == "a"));
+                        assert!(matches!(&*inner.property, Expression::Identifier(i) if i.name == "b"));
+                    }
+                    other => panic!("expected inner MemberExpression a.b, got {other:?}"),
+                }
+            }
+            other => panic!("expected MemberExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn member_computed_then_dot() {
+        // `a[0].b` — a computed access followed by a dot access.
+        let p = bridge_ok("a[0].b;");
+        match first_expr(&p) {
+            Expression::MemberExpression(outer) => {
+                assert!(!outer.computed);
+                assert!(matches!(&*outer.property, Expression::Identifier(i) if i.name == "b"));
+                match &*outer.object {
+                    Expression::MemberExpression(inner) => {
+                        assert!(inner.computed, "[0] is computed");
+                        assert!(matches!(&*inner.object, Expression::Identifier(i) if i.name == "a"));
+                        assert!(matches!(&*inner.property, Expression::NumericLiteral(n) if n.value == 0.0));
+                    }
+                    other => panic!("expected inner computed member a[0], got {other:?}"),
+                }
+            }
+            other => panic!("expected MemberExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn member_dot_then_computed() {
+        // `a.b[c]` — a dot access followed by a computed access.
+        let p = bridge_ok("a.b[c];");
+        match first_expr(&p) {
+            Expression::MemberExpression(outer) => {
+                assert!(outer.computed, "[c] is computed");
+                assert!(matches!(&*outer.property, Expression::Identifier(i) if i.name == "c"));
+                match &*outer.object {
+                    Expression::MemberExpression(inner) => {
+                        assert!(!inner.computed);
+                        assert!(matches!(&*inner.object, Expression::Identifier(i) if i.name == "a"));
+                        assert!(matches!(&*inner.property, Expression::Identifier(i) if i.name == "b"));
+                    }
+                    other => panic!("expected inner dot member a.b, got {other:?}"),
+                }
+            }
+            other => panic!("expected MemberExpression, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn member_method_call_keeps_property() {
+        // `a.b(c)` — the callee must be the member `a.b`, not bare `a`
+        // (the bug surfaced as `console.log(x)` emitting `console(x)`).
+        let p = bridge_ok("a.b(c);");
+        match first_expr(&p) {
+            Expression::CallExpression(call) => {
+                assert_eq!(call.arguments.len(), 1);
+                match &*call.callee {
+                    Expression::MemberExpression(m) => {
+                        assert!(matches!(&*m.object, Expression::Identifier(i) if i.name == "a"));
+                        assert!(matches!(&*m.property, Expression::Identifier(i) if i.name == "b"));
+                    }
+                    other => panic!("expected member callee a.b, got {other:?}"),
+                }
+            }
+            other => panic!("expected CallExpression, got {other:?}"),
+        }
     }
 }
