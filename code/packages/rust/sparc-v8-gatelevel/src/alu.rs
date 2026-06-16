@@ -320,8 +320,13 @@ pub fn sdiv64(y: u32, rs1: u32, src2: u32) -> u32 {
     if src2 == 0 {
         return 0x7FFF_FFFF;
     }
-    let dividend = (((y as i32) as i64) << 32) | (rs1 as i64 as u64 as i64);
+    let dividend = (((y as i32) as i64) << 32) | (rs1 as u64 as i64);
     let divisor = (src2 as i32) as i64;
+    // i64::MIN / -1 would panic in debug (overflow) and give wrong result in
+    // release.  Per SPARC V8 §5.2.9 this saturates to the positive maximum.
+    if dividend == i64::MIN && divisor == -1 {
+        return 0x7FFF_FFFF;
+    }
     let q = dividend / divisor;
     if q > i32::MAX as i64 {
         0x7FFF_FFFF

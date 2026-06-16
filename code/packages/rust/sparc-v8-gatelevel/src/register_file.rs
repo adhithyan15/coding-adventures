@@ -42,6 +42,7 @@ pub const MEM_SIZE: usize = 0x10000;
 
 /// Map a logical register number (0–31) and CWP to a physical register index.
 pub fn virt_to_phys(virt: u32, cwp: u32) -> usize {
+    assert!(virt < 32, "virt_to_phys: logical register {virt} out of range 0..31");
     let cwp = cwp % NWINDOWS;
     if virt < 8 {
         virt as usize
