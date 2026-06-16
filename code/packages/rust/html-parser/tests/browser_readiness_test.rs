@@ -37,7 +37,8 @@ use coding_adventures_html_parser::{
     BrowserStructuredDataDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
     BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
     BrowserTableStructureDescriptor, BrowserTemplate, BrowserTemplateDescriptor,
-    BrowserTextSemantic, BrowserTextSemanticDescriptor, BrowserThemeColor,
+    BrowserTextFlowDescriptor, BrowserTextSemantic, BrowserTextSemanticDescriptor,
+    BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -141,6 +142,8 @@ struct ExpectedBrowserDocument {
     text_semantics: Vec<ExpectedTextSemantic>,
     #[serde(default)]
     text_semantic_descriptors: Option<Vec<ExpectedTextSemanticDescriptor>>,
+    #[serde(default)]
+    text_flow_descriptors: Option<Vec<ExpectedTextFlowDescriptor>>,
     #[serde(default)]
     navigation_target_descriptors: Vec<ExpectedNavigationTargetDescriptor>,
     #[serde(default)]
@@ -2207,6 +2210,47 @@ struct ExpectedTextSemanticDescriptor {
     semantic_blocked: bool,
     #[serde(default)]
     semantic_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedTextFlowDescriptor {
+    flow_index: usize,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    flow_kind: String,
+    #[serde(default)]
+    text_flow: Option<String>,
+    #[serde(default)]
+    list_kind: Option<String>,
+    #[serde(default)]
+    list_start: Option<String>,
+    #[serde(default)]
+    list_marker_type: Option<String>,
+    #[serde(default)]
+    list_reversed: bool,
+    #[serde(default)]
+    list_item_value: Option<String>,
+    #[serde(default)]
+    list_item_count: usize,
+    #[serde(default)]
+    description_list_kind: Option<String>,
+    #[serde(default)]
+    term_kind: Option<String>,
+    #[serde(default)]
+    term_count: usize,
+    #[serde(default)]
+    description_count: usize,
+    #[serde(default)]
+    quote_cite: Option<String>,
+    #[serde(default)]
+    resolved_quote_cite: Option<String>,
+    #[serde(default)]
+    flow_blocked: bool,
+    #[serde(default)]
+    flow_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4685,6 +4729,7 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_anchor_descriptors = case.expected.anchor_descriptors.is_some();
         let tracks_heading_descriptors = case.expected.heading_descriptors.is_some();
         let tracks_text_semantic_descriptors = case.expected.text_semantic_descriptors.is_some();
+        let tracks_text_flow_descriptors = case.expected.text_flow_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4734,6 +4779,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_text_semantic_descriptors {
             expected.text_semantic_descriptors = actual.text_semantic_descriptors.clone();
+        }
+        if !tracks_text_flow_descriptors {
+            expected.text_flow_descriptors = actual.text_flow_descriptors.clone();
         }
 
         assert_eq!(
@@ -5320,6 +5368,115 @@ fn browser_text_semantic_descriptors_track_missing_and_unresolved_annotations() 
     assert_eq!(
         actual.text_semantic_descriptors[4].semantic_block_reasons,
         vec!["bidi-missing-dir"],
+    );
+}
+
+#[test]
+fn browser_text_flow_descriptors_track_lists_quotes_and_preformatted_blocks() {
+    let actual = parse_browser_document(
+        r#"<base href="https://example.test/docs/">
+           <ol id=steps start=3 type=A reversed>
+             <li value=7>Install</li>
+             <li>Run</li>
+           </ol>
+           <dl id=terms>
+             <dt>API</dt>
+             <dd>Application interface</dd>
+           </dl>
+           <blockquote id=quote cite=notes/ref.html>Quoted <q cite=#inline>inline</q></blockquote>
+           <pre id=sample>  code
+  block</pre>"#,
+    )
+    .expect("text flow descriptor fixture should parse");
+
+    assert_eq!(actual.text_flow_descriptors.len(), 9);
+
+    let ordered = &actual.text_flow_descriptors[0];
+    assert_eq!(ordered.flow_index, 1);
+    assert_eq!(ordered.element, "ol");
+    assert_eq!(ordered.id.as_deref(), Some("steps"));
+    assert_eq!(ordered.flow_kind, "list");
+    assert_eq!(ordered.list_kind.as_deref(), Some("ordered"));
+    assert_eq!(ordered.list_start.as_deref(), Some("3"));
+    assert_eq!(ordered.list_marker_type.as_deref(), Some("A"));
+    assert!(ordered.list_reversed);
+    assert_eq!(ordered.list_item_count, 2);
+    assert!(!ordered.flow_blocked);
+
+    let valued_item = &actual.text_flow_descriptors[1];
+    assert_eq!(valued_item.element, "li");
+    assert_eq!(valued_item.flow_kind, "list-item");
+    assert_eq!(valued_item.list_item_value.as_deref(), Some("7"));
+
+    let description_list = &actual.text_flow_descriptors[3];
+    assert_eq!(description_list.element, "dl");
+    assert_eq!(description_list.flow_kind, "description-list");
+    assert_eq!(
+        description_list.description_list_kind.as_deref(),
+        Some("description")
+    );
+    assert_eq!(description_list.term_count, 1);
+    assert_eq!(description_list.description_count, 1);
+
+    let quote = &actual.text_flow_descriptors[6];
+    assert_eq!(quote.element, "blockquote");
+    assert_eq!(quote.flow_kind, "quote");
+    assert_eq!(quote.quote_cite.as_deref(), Some("notes/ref.html"));
+    assert_eq!(
+        quote.resolved_quote_cite.as_deref(),
+        Some("https://example.test/docs/notes/ref.html")
+    );
+
+    let inline_quote = &actual.text_flow_descriptors[7];
+    assert_eq!(inline_quote.element, "q");
+    assert_eq!(inline_quote.flow_kind, "quote");
+    assert_eq!(
+        inline_quote.resolved_quote_cite.as_deref(),
+        Some("https://example.test/docs/#inline")
+    );
+
+    let preformatted = &actual.text_flow_descriptors[8];
+    assert_eq!(preformatted.element, "pre");
+    assert_eq!(preformatted.flow_kind, "preformatted");
+    assert_eq!(preformatted.text_flow.as_deref(), Some("preformatted"));
+    assert_eq!(preformatted.text, "code block");
+}
+
+#[test]
+fn browser_text_flow_descriptors_track_empty_and_unresolved_blockers() {
+    let actual = parse_browser_document(
+        r#"<ul id=empty></ul>
+           <li id=orphan></li>
+           <dl id=missing><dt></dt></dl>
+           <blockquote cite=notes/ref.html>Quote</blockquote>
+           <pre></pre>"#,
+    )
+    .expect("blocked text flow descriptor fixture should parse");
+
+    assert_eq!(actual.text_flow_descriptors.len(), 6);
+    assert_eq!(
+        actual.text_flow_descriptors[0].flow_block_reasons,
+        vec!["empty-list"],
+    );
+    assert_eq!(
+        actual.text_flow_descriptors[1].flow_block_reasons,
+        vec!["empty-list-item"],
+    );
+    assert_eq!(
+        actual.text_flow_descriptors[2].flow_block_reasons,
+        vec!["missing-description-details"],
+    );
+    assert_eq!(
+        actual.text_flow_descriptors[3].flow_block_reasons,
+        vec!["empty-description-item"],
+    );
+    assert_eq!(
+        actual.text_flow_descriptors[4].flow_block_reasons,
+        vec!["unresolved-quote-cite"],
+    );
+    assert_eq!(
+        actual.text_flow_descriptors[5].flow_block_reasons,
+        vec!["empty-preformatted"],
     );
 }
 
@@ -8152,6 +8309,12 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedTextSemanticDescriptor::into_browser_text_semantic_descriptor)
             .collect();
+        let text_flow_descriptors = self
+            .text_flow_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedTextFlowDescriptor::into_browser_text_flow_descriptor)
+            .collect();
         let navigation_group_descriptors = self
             .navigation_group_descriptors
             .unwrap_or_default()
@@ -8681,6 +8844,7 @@ impl ExpectedBrowserDocument {
             heading_descriptors,
             text_semantics,
             text_semantic_descriptors,
+            text_flow_descriptors,
             navigation_target_descriptors: self
                 .navigation_target_descriptors
                 .into_iter()
@@ -15652,6 +15816,34 @@ impl ExpectedTextSemanticDescriptor {
             phrase_kind: self.phrase_kind,
             semantic_blocked: self.semantic_blocked,
             semantic_block_reasons: self.semantic_block_reasons,
+        }
+    }
+}
+
+impl ExpectedTextFlowDescriptor {
+    fn into_browser_text_flow_descriptor(self) -> BrowserTextFlowDescriptor {
+        BrowserTextFlowDescriptor {
+            flow_index: self.flow_index,
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            flow_kind: self.flow_kind,
+            text_flow: self.text_flow,
+            list_kind: self.list_kind,
+            list_start: self.list_start,
+            list_marker_type: self.list_marker_type,
+            list_reversed: self.list_reversed,
+            list_item_value: self.list_item_value,
+            list_item_count: self.list_item_count,
+            description_list_kind: self.description_list_kind,
+            term_kind: self.term_kind,
+            term_count: self.term_count,
+            description_count: self.description_count,
+            quote_cite: self.quote_cite,
+            resolved_quote_cite: self.resolved_quote_cite,
+            flow_blocked: self.flow_blocked,
+            flow_block_reasons: self.flow_block_reasons,
         }
     }
 }
