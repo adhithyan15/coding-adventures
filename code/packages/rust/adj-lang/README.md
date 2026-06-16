@@ -162,6 +162,35 @@ observe csf_glucose(low)
   `use` of an undeclared dictionary is `LowerError::UndefinedDictionary`. With no
   `use` anywhere, the M1 whole-program rule above is unchanged.
 
+### Rule — `rule { head: … when: … }` (v0.14, derivation rules)
+
+Where `relate` asserts a **ground** edge, a **rule** lets the engine **derive** a
+head whenever its body holds — a Horn clause / Datalog rule. This is what lets a
+`rulebook` carry *conditional* domain knowledge (a contraindication, a step-therapy
+policy) instead of only facts + likelihood ratios:
+
+```adj
+relate pregnant(present)
+relate pregnancy_excludes(moxifloxacin)
+relate pregnancy_excludes(tmp_smx)
+
+rule { head: contraindicated($D)  when: pregnant(present), pregnancy_excludes($D)
+       source "Pregnancy contraindicates fluoroquinolones (FDA label)." trust authoritative }
+
+? contraindicated($X)        % derives moxifloxacin AND tmp_smx
+```
+
+- A `$Var` binds across head and body (clause scope, like a binding query); a body
+  literal prefixed `not` is **negation-as-failure** (`not contraindicated($D)`).
+- Lowers to `logic_engine::Rule { head, body }` and resolves through the same
+  SLD/unification machinery `relate` facts do — `? head($X)` enumerates every
+  derivable answer, each with its proof.
+- Rules carry `source`/`locator`/`trust` like every grounded clause, so a rule
+  extracted once from source text and gated into the CAS stays byte-traceable.
+- **Why it matters:** every domain (insurance, formulary, contraindications, …) is a
+  `rulebook` of `rule`s — authored once, grounded into the CAS, and the engine
+  derives the consequences from per-case facts. No domain-specific host code.
+
 ### Import — `import "path"` (v0.11, MYCIN-2026)
 
 `import "<relative path>"` composes a program across files, so a dictionary, the
