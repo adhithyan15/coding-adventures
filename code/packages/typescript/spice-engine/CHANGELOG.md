@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected `.control` block `measure` and `meas` command routing to
+  `analyzeDeckControls` and `resolveDeckSources`; the commands are normalized
+  into `.measure` and `.meas` deck cards, matching Python and Rust.
 - Add selected `.control` block `save` and `probe` command routing to
   `analyzeDeckControls` and `resolveDeckSources`; the commands are normalized
   into `.save` and `.probe` deck cards, matching Python and Rust.

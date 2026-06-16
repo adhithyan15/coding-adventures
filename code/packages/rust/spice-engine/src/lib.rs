@@ -6881,6 +6881,8 @@ fn control_block_command_as_deck_line(line: &str) -> Option<String> {
         "tran" | ".tran" => ".tran",
         "save" | ".save" => ".save",
         "probe" | ".probe" => ".probe",
+        "measure" | ".measure" => ".measure",
+        "meas" | ".meas" => ".meas",
         "print" | ".print" => ".print",
         "plot" | ".plot" => ".plot",
         _ => return None,

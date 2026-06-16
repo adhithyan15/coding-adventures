@@ -115,6 +115,8 @@ op
 save V(in)
 probe V(out)
 print op V(in)
+measure tran vmax MAX V(out)
+meas dc imax MAX I(V1)
 run
 .endc
 .end
@@ -129,18 +131,28 @@ run
         ".save V(in)",
         ".probe V(out)",
         ".print op V(in)",
+        ".measure tran vmax MAX V(out)",
+        ".meas dc imax MAX I(V1)",
     )
     assert [(diag.directive, diag.line_number, diag.severity) for diag in summary.diagnostics] == [
         (".include", 2, "error"),
         (".lib", 3, "error"),
         (".control", 4, "error"),
-        (".control", 9, "error"),
+        (".control", 11, "error"),
     ]
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
         "SPICE_DECK_CONTROL_COMMAND",
+    ]
+    measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
+    assert [
+        (card.directive, card.analysis, card.name, card.mode, card.probe)
+        for card in measurement_summary.measurements
+    ] == [
+        (".measure", "tran", "vmax", "max", "V(out)"),
+        (".meas", "dc", "imax", "max", "I(V1)"),
     ]
 
 
@@ -198,6 +210,8 @@ op
 save V(a)
 probe V(b)
 print op V(a)
+measure tran vmax MAX V(a)
+meas dc imax MAX I(V1)
 run
 .endc
 .end
@@ -217,6 +231,8 @@ run
         ".save V(a)",
         ".probe V(b)",
         ".print op V(a)",
+        ".measure tran vmax MAX V(a)",
+        ".meas dc imax MAX I(V1)",
     )
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_INCLUDE_NOT_FOUND",
@@ -227,7 +243,15 @@ run
     ]
     assert [(diag.directive, diag.line_number) for diag in summary.diagnostics[3:]] == [
         (".control", 5),
-        (".control", 10),
+        (".control", 12),
+    ]
+    measurement_summary = resolve_deck_measurements("\n".join(summary.active_lines) + "\n.end")
+    assert [
+        (card.directive, card.analysis, card.name, card.mode, card.probe)
+        for card in measurement_summary.measurements
+    ] == [
+        (".measure", "tran", "vmax", "max", "V(a)"),
+        (".meas", "dc", "imax", "max", "I(V1)"),
     ]
     assert [(diag.source, diag.line_number, diag.target) for diag in summary.diagnostics[:3]] == [
         ("<deck>", 2, "missing.inc"),
