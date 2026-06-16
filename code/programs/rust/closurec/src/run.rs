@@ -244,6 +244,7 @@ const SIMPLE_PASS_NAMES: &[&str] = &[
     "inline",
     "remove-unused-vars",
     "treeshake",
+    "rename",
 ];
 
 /// Run the SIMPLE optimization pipeline over a bridged `Program` and
@@ -278,6 +279,7 @@ fn run_simple_pipeline(
     use coding_adventures_closure_pass_inline::InlinePass;
     use coding_adventures_closure_pass_pipeline::PassPipeline;
     use coding_adventures_closure_pass_remove_unused_vars::RemoveUnusedVarsPass;
+    use coding_adventures_closure_pass_rename::RenamePass;
     use coding_adventures_closure_pass_treeshake::TreeshakePass;
     use coding_adventures_correlation_vector::CVLog;
     use coding_adventures_type_sidecar::Sidecar;
@@ -301,6 +303,11 @@ fn run_simple_pipeline(
     pipeline.add(Box::new(InlinePass::new()));
     pipeline.add(Box::new(RemoveUnusedVarsPass::new()));
     pipeline.add(Box::new(TreeshakePass::new()));
+    // rename runs last: it shortens leaf-function parameter names after
+    // every structural pass has finished removing/rewriting code. It has
+    // no dependencies (correct standalone), so registration order places
+    // it at the end.
+    pipeline.add(Box::new(RenamePass::new()));
 
     let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
         Ok(out) => out.program,
@@ -5827,6 +5834,56 @@ mod tests {
     }
 
     #[test]
+    fn simple_rename_shortens_leaf_function_params() {
+        // CLOC12.160: the SIMPLE pipeline now ends with rename, which
+        // shortens a leaf function's parameter names. The function is
+        // called so treeshake keeps it; the top-level name `f` is kept,
+        // its parameter `longName` becomes `a`.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f(longName) { return longName + 1; } f(5);", &cfg)
+            .expect("ok");
+        assert_eq!(out, "function f(a){return a + 1};f(5);");
+    }
+
+    #[test]
+    fn simple_rename_keeps_property_names() {
+        // Rename must not touch property names: `obj.longName` keeps its
+        // `.longName`; only the parameter `obj` is shortened.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out =
+            transform_source("function f(obj) { return obj.longName; } f(x);", &cfg).expect("ok");
+        assert_eq!(out, "function f(a){return a.longName};f(x);");
+    }
+
+    #[test]
+    fn simple_rename_whitespace_only_keeps_param_names() {
+        // Companion — the SAME input under WHITESPACE_ONLY keeps the full
+        // parameter name, proving the renaming is the SIMPLE pipeline's.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f(longName) { return longName + 1; } f(5);", &cfg)
+            .expect("ok");
+        assert_eq!(out, "function f(longName){return longName+1};f(5);");
+    }
+
+    #[test]
     fn simple_level_bridge_ok_status_in_cv() {
         // When the source parses cleanly, the CV contribution for the
         // `compilation_level` stage must carry bridge_status = "ok".
@@ -5865,7 +5922,7 @@ mod tests {
         // The pass pipeline must be recorded in the trace, in order.
         assert!(
             body.contains(
-                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"remove-unused-vars\",\"treeshake\"]"
+                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"remove-unused-vars\",\"treeshake\",\"rename\"]"
             ),
             "expected passes list in CV sidecar: {body}"
         );
