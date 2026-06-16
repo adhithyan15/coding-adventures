@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `runDeckAnalysis` so callers can select one deck `.op`, `.dc`,
+  `.ac DEC`, or `.tran` plan, execute the matching solver, and receive the
+  selected plan, solver result, and deck-selected output table, matching
+  Python and Rust.
 - Add `selectDeckAnalysisPlan` so callers can choose one explicit or implicit
   deck analysis plan with stable ambiguity and invalid-card errors, matching
   Python and Rust.

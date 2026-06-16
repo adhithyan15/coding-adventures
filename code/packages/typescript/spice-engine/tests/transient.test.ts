@@ -73,6 +73,7 @@ import {
   pssResidualJacobian,
   pssResidual,
   resistor,
+  runDeckAnalysis,
   sampleTransientProbeAsDigitalEvents,
   sampleTransientProbesAsDigitalEventStreams,
   measureTransientDeck,
@@ -1430,6 +1431,54 @@ describe("transient", () => {
       "Index\tTime\tV(mid)\tV(vin)\n" +
         "0\t1.000000e-03\t5.000000e+00\t1.000000e+01\n" +
         "1\t2.000000e-03\t5.000000e+00\t1.000000e+01\n",
+    );
+  });
+
+  it("routes selected deck analysis plans into solver executions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 1.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+    const netlist = `
+.save V(mid)
+.probe dc I(V1)
+.op
+.dc V1 0 1 1
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+`;
+
+    const opExecution = runDeckAnalysis(circuit, netlist, "op");
+    expect(opExecution.plan.analysis).toBe("op");
+    expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
+
+    const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
+    expect(dcExecution.plan.sourceName).toBe("V1");
+    expect(Array.isArray(dcExecution.result)).toBe(true);
+    expect(dcExecution.table).toBe(
+      "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
+        "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+        "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n",
+    );
+
+    const acExecution = runDeckAnalysis(circuit, netlist, "ac");
+    expect(Array.isArray(acExecution.result)).toBe(true);
+    expect(acExecution.table).toBe(
+      "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
+    );
+
+    const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
+    expect(Array.isArray(tranExecution.result)).toBe(true);
+    expect(tranExecution.table).toBe(
+      "Index\tTime\tV(mid)\n" +
+        "0\t1.000000e-03\t5.000000e-01\n",
+    );
+
+    expect(() => runDeckAnalysis(circuit, netlist)).toThrow(/multiple analysis cards/);
+    expect(() => runDeckAnalysis(circuit, ".ac lin 2 1 10\n.end\n")).toThrow(
+      /LIN execution is not supported yet/,
     );
   });
 

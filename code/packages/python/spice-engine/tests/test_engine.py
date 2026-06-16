@@ -156,6 +156,7 @@ from spice_engine import (
     TemperatureDcResult,
     TfResult,
     TransientPoint,
+    TransientResult,
     TransmissionLine,
     VoltageSource,
     XInstance,
@@ -262,6 +263,7 @@ from spice_engine import (
     pss_residual,
     pss_residual_jacobian,
     resolve_deck_initial_conditions,
+    run_deck_analysis,
     s_parameters,
     s_parameters_corners,
     sample_transient_probe_as_digital_events,
@@ -6751,6 +6753,58 @@ def test_deck_output_tables_route_save_probe_cards() -> None:
         transient_points,
         ".probe ac V(freq)\n.end\n",
     ) == format_transient_table(transient_points)
+
+
+def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "vin", "0", 1.0))
+    circuit.add(Resistor("R1", "vin", "mid", 1000.0))
+    circuit.add(Resistor("R2", "mid", "0", 1000.0))
+
+    netlist = """
+.save V(mid)
+.probe dc I(V1)
+.op
+.dc V1 0 1 1
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+"""
+
+    op_execution = run_deck_analysis(circuit, netlist, "op")
+    assert op_execution.plan.analysis == "op"
+    assert op_execution.table == "Index\tV(mid)\n0\t5.000000e-01\n"
+
+    dc_execution = run_deck_analysis(circuit, netlist, "dc")
+    assert dc_execution.plan.source_name == "V1"
+    assert isinstance(dc_execution.result, DcSweepResult)
+    assert len(dc_execution.result.points) == 2
+    assert dc_execution.table == (
+        "Index\tSource\tValue\tV(mid)\tI(V1)\n"
+        "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+
+    ac_execution = run_deck_analysis(circuit, netlist, "ac")
+    assert isinstance(ac_execution.result, AcResult)
+    assert len(ac_execution.result.points) == 1
+    assert ac_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+03\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+
+    tran_execution = run_deck_analysis(circuit, netlist, "tran")
+    assert isinstance(tran_execution.result, TransientResult)
+    assert tran_execution.table == (
+        "Index\tTime\tV(mid)\n"
+        "0\t0.000000e+00\t5.000000e-01\n"
+        "1\t1.000000e-03\t5.000000e-01\n"
+    )
+
+    with pytest.raises(ValueError, match="multiple analysis cards"):
+        run_deck_analysis(circuit, netlist)
+    with pytest.raises(ValueError, match="LIN execution is not supported yet"):
+        run_deck_analysis(circuit, ".ac lin 2 1 10\n.end\n")
 
 
 def test_transient_probe_measurements_are_stable() -> None:
