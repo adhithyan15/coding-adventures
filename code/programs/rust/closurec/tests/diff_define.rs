@@ -5,15 +5,18 @@
 //! `--define DEBUG=false` against a small input that references
 //! `DEBUG` in two places (initializer + `if` condition).
 //!
-//! Note this test does NOT pass `--compilation_level
-//! WHITESPACE_ONLY` explicitly. Because the define-substitution
-//! path re-tokenizes and re-emits with the same conservative
-//! spacing rule, the output is naturally minified. CC's behavior
-//! is similar — `--define` runs alongside whatever
-//! compilation-level passes are active. Per CLOC11 §3 this is
-//! "behavioral equality" not byte-equal to CC; the expected
-//! file is checked in from our own output and the diff target
-//! is the *meaning* of the substitution.
+//! Note this test does NOT pass `--compilation_level` explicitly,
+//! so it runs at the default level (SIMPLE). As of closurec 0.138.0
+//! SIMPLE routes through the typed-AST pipeline (bridge → passes →
+//! emit), so the output is the emitter's form — e.g. the `if`
+//! keeps its block braces (`if(false){…}`) where the older
+//! whitespace-only path stripped them. `--define` runs as a
+//! token-level pre-pass *before* the compilation level, so the
+//! substitution's meaning (`DEBUG` → `false` in both the
+//! initializer and the `if` condition) is identical across levels.
+//! Per CLOC11 §3 this is "behavioral equality" not byte-equal to
+//! CC; the expected file is checked in from our own output and the
+//! diff target is the *meaning* of the substitution.
 
 use std::process::Command;
 
