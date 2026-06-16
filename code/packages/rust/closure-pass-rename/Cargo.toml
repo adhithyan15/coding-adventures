@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-rename"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Variable renaming pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Replaces non-exported binding names with shorter identifiers to reduce output size while preserving externally-visible names and semantics."
 
@@ -14,3 +14,7 @@ serde_json = "1"
 
 [dev-dependencies]
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+# Test the real source -> bridge -> rename -> emit roundtrip against the
+# actual AST shape the parser produces (not hand-built ASTs).
+coding-adventures-javascript-parser = { path = "../javascript-parser" }
+coding-adventures-closure-emitter = { path = "../closure-emitter" }

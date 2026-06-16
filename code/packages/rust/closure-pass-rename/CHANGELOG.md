@@ -2,6 +2,44 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-16
+
+### Added — real renaming (leaf-function parameters)
+
+`RenamePass::run` is no longer identity. It now renames the **parameters of
+leaf functions** (function declarations whose body declares no nested function)
+to short names (`a`, `b`, …), rewriting the declaration and every use site:
+
+```js
+function f(longName) { return longName + 1; }   ⇒   function f(a){return a + 1}
+```
+
+It is a self-contained scope-aware α-rename over the Phase-1 AST. It
+conservatively never renames:
+
+- module/global top-level names (potentially externally visible);
+- free globals (`console`, `window`, …);
+- property names — the `.x` of a non-computed member access, a non-computed
+  object-literal key;
+- a parameter also declared `var`/`let`/`const` in the body (re-declared or
+  block-shadowed) — skipped rather than mis-renamed;
+- single-character parameters (already minimal).
+
+Fresh names avoid every identifier that appears anywhere in the function, so a
+rename can neither collide with another local nor capture a free global. Within
+this subset the transform is provably sound; anything outside it is left
+untouched (`changed` stays `false`).
+
+This is the v1 slice. Broader renaming — non-leaf scopes, locals, module-private
+top-level names — is future work on the same walker, and will consume
+`closure-scope-analyzer` for cross-scope resolution (v1 does not yet use it).
+
+- **11 new behavior tests** driving the real `source → bridge → rename → emit`
+  roundtrip (added `javascript-parser` + `closure-emitter` dev-deps): renaming,
+  property-name preservation, global avoidance, redeclared/non-leaf/single-char
+  skips, computed-member rewriting, nested-block uses.
+- De-staled the module/struct/test docs (they claimed "v1 is identity").
+
 ## [0.2.0] - 2026-06-01
 
 ### Added (CLOC13.A — consume `closure-scope-analyzer`)
