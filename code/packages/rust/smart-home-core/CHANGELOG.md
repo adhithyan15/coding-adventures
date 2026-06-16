@@ -156,6 +156,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_activation_waiver_closure_summary` tool
   descriptors for read-only waiver closure records derived from waiver
   remediation posture.
+- `smart_home.list_integration_activation_waiver_archives` and
+  `smart_home.get_integration_activation_waiver_archive_summary` tool
+  descriptors for read-only waiver archive records derived from waiver closure
+  posture.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.

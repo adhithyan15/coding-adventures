@@ -129,6 +129,8 @@ Current scope:
   records derived from activation delivery manifests
 - D18D integration activation-waiver closure descriptors for read-only waiver
   closeout records derived from waiver remediation posture
+- D18D integration activation-waiver archive descriptors for read-only waiver
+  retention records derived from waiver closure posture
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and
