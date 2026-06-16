@@ -143,6 +143,8 @@ packages a typed surface for:
   readiness into final archive replay checks
 - Hue package release archive reconciliation summaries that turn archive replay
   readiness into final archive reconciliation checks
+- Hue package release archive settlement summaries that turn archive
+  reconciliation readiness into final archive settlement checks
 
 ## Dependencies
 
