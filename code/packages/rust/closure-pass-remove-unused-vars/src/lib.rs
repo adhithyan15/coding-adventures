@@ -76,24 +76,30 @@
 //!
 //! # Scope (v1)
 //!
-//! `javascript-ast` ships only `Program` / `SourceType` today
-//! (CLOC02 Phase 1). With no `VariableDeclaration` /
-//! `Identifier` nodes there is nothing to remove;
-//! [`RemoveUnusedVarsPass::run`] is identity in v1. Per CLOC03
-//! §"When a pass keeps a node unchanged" no contributions are
-//! emitted.
+//! `RemoveUnusedVarsPass::run` is a real transform: it uses
+//! `closure-scope-analyzer` to find top-level (`ScopeId::GLOBAL`)
+//! `var`/`let`/`const` bindings that no [`Reference`] resolves to, and
+//! deletes them — provided the initializer is side-effect-free (see
+//! [`is_removable_init`]).
 //!
-//! What this PR locks down:
+//! What this pass locks down:
 //!
 //! 1. Pass metadata (`name`, `iteration_policy`, `cost`,
 //!    `depends_on`) — what the scheduler keys on and what the
-//!    future `closurec` CLI surfaces as
-//!    `--disable=remove-unused-vars`.
+//!    `closurec` CLI surfaces as `--disable=remove-unused-vars`.
 //! 2. The `depends_on(["dce", "inline"])` edges so the scheduler
-//!    forces DCE-before, inline-before-this as soon as all
-//!    three are in one pipeline.
-//! 3. Two- and three-pass integration tests that prove the
-//!    ordering.
+//!    forces DCE-before, inline-before-this when all three share a
+//!    pipeline.
+//! 3. Removal in **both** item shapes the program body can hold — the
+//!    bare `ProgramItem::Declaration` and the
+//!    `ProgramItem::Statement(Statement::Declaration(...))` form the
+//!    `javascript-parser` bridge actually emits — gated by a
+//!    conservative initializer-purity check.
+//!
+//! Scope of the current slice: only `GLOBAL`-scope bindings with a
+//! literal / identifier / absent initializer. Function-local removal
+//! and sidecar-driven purity (to reach `const x = pureCall()`) are
+//! follow-ups; "keep" is always the safe answer in the meantime.
 
 use std::collections::HashSet;
 
@@ -104,22 +110,98 @@ use coding_adventures_closure_scope_analyzer::{
     analyze, BindingId, BindingKind, ScopeId,
 };
 use coding_adventures_javascript_ast::{
-    BindingTarget, Declaration, ProgramItem,
+    BindingTarget, Declaration, Expression, ProgramItem, Statement, VariableDeclaration,
 };
+
+/// Is a variable initializer safe to delete along with its binding?
+///
+/// `remove-unused-vars` deletes the *whole* declarator — `id` **and**
+/// `init` — when the binding is unreferenced. That is only sound when
+/// evaluating `init` has no observable side effect, because the
+/// initializer would otherwise still need to run for its effect even
+/// though nobody reads the result.
+///
+/// We answer conservatively. A declarator is removable when its
+/// initializer is:
+///
+/// - **absent** (`var x;`) — nothing to evaluate;
+/// - a **literal** (number, string, boolean, null, bigint, undefined) —
+///   evaluating a literal is pure;
+/// - a bare **identifier** (`var x = y;`) — reading a variable binding
+///   has no side effect (there are no value-level getters in JS).
+///
+/// Everything else stays: a call (`f()`), `new`, a member access
+/// (`o.p` may trigger a getter), an assignment (`y = 1`), an array /
+/// object literal (its elements may not be pure), etc. Those *might*
+/// have side effects, so we keep the declarator and let the
+/// (unreferenced but harmless) binding remain. A later, sidecar-driven
+/// purity analysis can widen this set; until then "keep" is always the
+/// safe answer.
+fn is_removable_init(init: &Option<Expression>) -> bool {
+    match init {
+        None => true,
+        Some(expr) => matches!(
+            expr,
+            Expression::NumericLiteral(_)
+                | Expression::StringLiteral(_)
+                | Expression::BooleanLiteral(_)
+                | Expression::NullLiteral(_)
+                | Expression::BigIntLiteral(_)
+                | Expression::UndefinedLiteral(_)
+                | Expression::Identifier(_)
+        ),
+    }
+}
+
+/// Prune the dead declarators out of one `VariableDeclaration`.
+///
+/// Returns `(pruned, removed)`:
+/// - `removed` is how many declarators were dropped;
+/// - `pruned` is `None` when *every* declarator was dropped (the whole
+///   declaration disappears), or `Some(decl)` with the survivors
+///   otherwise. When nothing was dropped, `pruned` is `Some(clone)` and
+///   `removed == 0` — callers can keep the original item verbatim.
+///
+/// A declarator is dropped only when its name is in `dead` **and** its
+/// initializer is [`is_removable_init`] — so a dead binding with a
+/// side-effecting initializer is preserved.
+fn prune_var_decl(
+    var_decl: &VariableDeclaration,
+    dead: &HashSet<String>,
+) -> (Option<VariableDeclaration>, usize) {
+    let mut kept = Vec::with_capacity(var_decl.declarations.len());
+    let mut removed = 0usize;
+    for declarator in &var_decl.declarations {
+        let BindingTarget::Identifier(id) = &declarator.id;
+        if dead.contains(&id.name) && is_removable_init(&declarator.init) {
+            removed += 1;
+        } else {
+            kept.push(declarator.clone());
+        }
+    }
+    if removed == 0 {
+        (Some(var_decl.clone()), 0)
+    } else if kept.is_empty() {
+        (None, removed)
+    } else {
+        let mut split = var_decl.clone();
+        split.declarations = kept;
+        (Some(split), removed)
+    }
+}
 
 /// `Pass::depends_on` value — both DCE and inline must run first
 /// per CLOC06 canonical order. Kept as a `const` so future tests
 /// and sibling crates can reference these names without retyping.
 const DEPS: &[&str] = &["dce", "inline"];
 
-/// Unreferenced-variable cleanup pass. v1 is identity — see
-/// crate-level docs.
+/// Unreferenced-variable cleanup pass — deletes top-level bindings
+/// nothing references, when their initializer is side-effect-free.
+/// See crate-level docs.
 ///
 /// Zero-sized type: no per-instance state. Pass-internal state
-/// (the per-scope binding → reference-count map, the
-/// pure-initializer set seeded from sidecar attributes, the
-/// "do-not-remove" set seeded from `export`s) lives in pass-local
-/// maps constructed inside [`Pass::run`] per CLOC06
+/// (the binding → reference-count map, the dead-name set) lives in
+/// pass-local maps constructed inside [`Pass::run`] per CLOC06
 /// §"Pass-internal state."
 #[derive(Debug, Default, Clone, Copy)]
 pub struct RemoveUnusedVarsPass;
@@ -181,26 +263,19 @@ impl Pass for RemoveUnusedVarsPass {
         //        b. kind ∈ { Var, Let, Const } (skipping Function
         //           bodies / Param / Class — those need extra
         //           analysis the analyzer doesn't yet expose).
-        //   3. Apply the removal: walk the Program and drop the
-        //      matching `VariableDeclarator`s.
+        //   3. Apply the removal: walk `program.body` and drop the
+        //      matching `VariableDeclarator`s whose initializer is
+        //      side-effect-free (`is_removable_init`).
         //
-        // **v0.2.0 status.** Steps 1+2 are wired here.  Step 3
-        // is **deferred to CLOC13.E.1** because applying the
-        // removal cleanly requires a binding → declarator
-        // backreference that the analyzer doesn't yet ship.
-        // Until that lands, we report `removed_count` so the
-        // pass is *observable* (the scheduler sees a real
-        // `changed` signal as soon as the analyzer's `analyze`
-        // body lands and starts populating bindings) but the
-        // program itself is unchanged.
+        // All three steps are live. `changed` is `true` iff at least
+        // one declarator was actually dropped; when no binding is dead
+        // (or every dead binding has a side-effecting initializer) the
+        // program passes through unchanged with `changed = false`.
         //
-        // **Why this is safe with the v0.1.0 analyzer body.**
-        // The current `analyze` returns an empty bindings list
-        // and an empty references list, so the eligibility scan
-        // finds zero dead bindings. `removed_count` is always
-        // 0, `changed` is always false, and the program passes
-        // through unchanged. The wiring becomes effective the
-        // moment the analyzer's body lands — no churn here.
+        // The removal is restricted to `ScopeId::GLOBAL` bindings,
+        // matched by name against the top-level items in `program.body`
+        // — see the dead-name set built below. Function-local removal
+        // needs nested-scope name handling and is a follow-up.
 
         let analysis = analyze(ctx.program);
 
@@ -313,50 +388,51 @@ impl Pass for RemoveUnusedVarsPass {
         let mut new_body: Vec<ProgramItem> = Vec::with_capacity(ctx.program.body.len());
         let mut removed_count: usize = 0;
         for item in &ctx.program.body {
-            let decl = match item {
-                ProgramItem::Statement(_) => {
-                    new_body.push(item.clone());
-                    continue;
-                }
-                ProgramItem::Declaration(d) => d,
-            };
-            match decl {
-                Declaration::VariableDeclaration(var_decl) => {
-                    // Partition declarators into kept vs. dropped.
-                    let mut kept = Vec::with_capacity(var_decl.declarations.len());
-                    for declarator in &var_decl.declarations {
-                        let BindingTarget::Identifier(id) = &declarator.id;
-                        if dead_names.contains(&id.name) {
-                            removed_count += 1;
-                        } else {
-                            kept.push(declarator.clone());
-                        }
-                    }
-                    if kept.is_empty() {
-                        // Entire declaration is dead — drop it.
-                        continue;
-                    }
-                    if kept.len() == var_decl.declarations.len() {
-                        // No declarators dropped — keep the
-                        // original item verbatim.
+            // A top-level `var/let/const` can reach us in TWO shapes:
+            //
+            //   - `ProgramItem::Declaration(VariableDeclaration)` — the
+            //     "bare" form.
+            //   - `ProgramItem::Statement(Statement::Declaration(
+            //     VariableDeclaration))` — the wrapped form. This is what
+            //     the `javascript-parser` bridge actually emits for a
+            //     top-level `var x = 1;` (it routes `variable_statement`
+            //     through `Statement::Declaration`). Earlier revisions
+            //     only matched the bare form, so the pass was a silent
+            //     no-op on every real (bridged) program — there was no
+            //     test exercising removal to catch it.
+            //
+            // We prune both shapes with the same `prune_var_decl` helper
+            // and re-wrap the survivors in whichever shape they arrived.
+            match item {
+                ProgramItem::Declaration(Declaration::VariableDeclaration(var_decl)) => {
+                    let (pruned, n) = prune_var_decl(var_decl, &dead_names);
+                    removed_count += n;
+                    if n == 0 {
                         new_body.push(item.clone());
-                    } else {
-                        // Split: emit a new VariableDeclaration
-                        // with only the surviving declarators,
-                        // preserving the original's `kind` and
-                        // `cv`.
-                        let mut split = var_decl.clone();
-                        split.declarations = kept;
+                    } else if let Some(survivors) = pruned {
                         new_body.push(ProgramItem::Declaration(
-                            Declaration::VariableDeclaration(split),
+                            Declaration::VariableDeclaration(survivors),
                         ));
                     }
+                    // pruned == None → whole declaration dropped.
                 }
-                Declaration::FunctionDeclaration(_) => {
-                    // Function-kind bindings were filtered out at
-                    // step 2; nothing to do here.  Passthrough.
-                    new_body.push(item.clone());
+                ProgramItem::Statement(Statement::Declaration(
+                    Declaration::VariableDeclaration(var_decl),
+                )) => {
+                    let (pruned, n) = prune_var_decl(var_decl, &dead_names);
+                    removed_count += n;
+                    if n == 0 {
+                        new_body.push(item.clone());
+                    } else if let Some(survivors) = pruned {
+                        new_body.push(ProgramItem::Statement(Statement::Declaration(
+                            Declaration::VariableDeclaration(survivors),
+                        )));
+                    }
                 }
+                // Function declarations (Function-kind bindings are
+                // filtered out at step 2 — treeshake's job) and every
+                // other statement pass through untouched.
+                _ => new_body.push(item.clone()),
             }
         }
 
@@ -385,10 +461,11 @@ impl Pass for RemoveUnusedVarsPass {
 
 #[cfg(test)]
 mod tests {
-    //! Tests pin the public contract and lock the two- and
-    //! three-pass ordering integrations with `PassPipeline`.
-    //! v1's `run` is identity, but the metadata drives the
-    //! scheduler and outlives the v1 body.
+    //! Tests pin the public contract: pass metadata, the two- and
+    //! three-pass ordering integrations with `PassPipeline`, and the
+    //! removal behavior itself — actual deletion of dead bindings in
+    //! both item shapes, the multi-declarator split, and the
+    //! initializer-purity gate.
     use super::*;
     use coding_adventures_closure_pass_dce::DcePass;
     use coding_adventures_closure_pass_inline::InlinePass;
@@ -622,7 +699,7 @@ mod tests {
     // -----------------------------------------------------------------
 
     use coding_adventures_javascript_ast::{
-        BindingTarget, BlockStatement, Declaration, Expression, ExpressionStatement,
+        BindingTarget, BlockStatement, CallExpression, Declaration, Expression, ExpressionStatement,
         FunctionDeclaration, Identifier, NumericLiteral, ProgramItem, Statement, VarKind,
         VariableDeclaration, VariableDeclarator,
     };
@@ -632,6 +709,48 @@ mod tests {
             cv: None,
             name: name.to_string(),
         }
+    }
+
+    /// A top-level `var/let/const` in the **Statement-wrapped** shape
+    /// the `javascript-parser` bridge actually emits for a real program
+    /// (`ProgramItem::Statement(Statement::Declaration(...))`). Mirrors
+    /// `var_decl` (which builds the bare `ProgramItem::Declaration`
+    /// form), so the two helpers let a test pin both shapes.
+    fn var_stmt(kind: VarKind, names_with_init: &[(&str, Option<f64>)]) -> ProgramItem {
+        let ProgramItem::Declaration(decl) = var_decl(kind, names_with_init) else {
+            unreachable!("var_decl always returns a Declaration")
+        };
+        ProgramItem::Statement(Statement::Declaration(decl))
+    }
+
+    /// A bare expression statement that *reads* `name` — i.e. a
+    /// reference that keeps the binding alive (`name;`).
+    fn use_stmt(name: &str) -> ProgramItem {
+        ProgramItem::Statement(Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: Expression::Identifier(ident(name)),
+        }))
+    }
+
+    /// A Statement-wrapped `let <name> = <callee>();` — an unused
+    /// binding whose initializer is a **call** (impure), so the purity
+    /// gate must keep it.
+    fn var_stmt_call_init(name: &str, callee: &str) -> ProgramItem {
+        ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(
+            VariableDeclaration {
+                cv: None,
+                kind: VarKind::Let,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(ident(name)),
+                    init: Some(Expression::CallExpression(CallExpression {
+                        cv: None,
+                        callee: Box::new(Expression::Identifier(ident(callee))),
+                        arguments: Vec::new(),
+                    })),
+                }],
+            },
+        )))
     }
 
     fn var_decl(kind: VarKind, names_with_init: &[(&str, Option<f64>)]) -> ProgramItem {
@@ -833,5 +952,115 @@ mod tests {
         let out = run_pass(prog.clone());
         assert!(!out.changed);
         assert_eq!(out.program.body, prog.body);
+    }
+
+    // ===================================================================
+    // Removal — the apply step actually deletes dead bindings.
+    //
+    // Until CLOC13.E.2 these paths had ZERO coverage: every prior test
+    // asserted `!out.changed`, and the lone removal path only matched
+    // the bare `ProgramItem::Declaration` form — which the bridge never
+    // emits — so the pass was a silent no-op on real programs. These
+    // tests pin actual removal in BOTH item shapes plus the purity gate.
+    // ===================================================================
+
+    #[test]
+    fn removes_unused_top_level_var_statement_form() {
+        // `var unused = 1;` with no references, in the Statement-wrapped
+        // shape the bridge emits. The whole declaration must disappear.
+        let prog = program_with(vec![var_stmt(VarKind::Var, &[("unused", Some(1.0))])]);
+        let out = run_pass(prog);
+        assert!(out.changed, "an unused top-level var must be removed");
+        assert!(
+            out.program.body.is_empty(),
+            "the dead declaration should be gone, got: {:?}",
+            out.program.body
+        );
+    }
+
+    #[test]
+    fn removes_unused_top_level_var_bare_declaration_form() {
+        // Same, but the bare `ProgramItem::Declaration` shape. Both
+        // shapes route through `prune_var_decl`.
+        let prog = program_with(vec![var_decl(VarKind::Const, &[("dead", Some(2.0))])]);
+        let out = run_pass(prog);
+        assert!(out.changed);
+        assert!(out.program.body.is_empty());
+    }
+
+    #[test]
+    fn keeps_used_var_statement_form() {
+        // `var keep = 1; keep;` — referenced, so nothing is removed.
+        let prog = program_with(vec![
+            var_stmt(VarKind::Var, &[("keep", Some(1.0))]),
+            use_stmt("keep"),
+        ]);
+        let out = run_pass(prog.clone());
+        assert!(!out.changed, "a referenced var must be kept");
+        assert_eq!(out.program.body, prog.body);
+    }
+
+    #[test]
+    fn splits_multi_declarator_dropping_only_dead() {
+        // `var a = 1, unused = 2; a;` — `a` is referenced, `unused` is
+        // not. The surviving declaration keeps only `a`.
+        let prog = program_with(vec![
+            var_stmt(VarKind::Var, &[("a", Some(1.0)), ("unused", Some(2.0))]),
+            use_stmt("a"),
+        ]);
+        let out = run_pass(prog);
+        assert!(out.changed, "the dead declarator must be dropped");
+        // First item is the pruned declaration with one survivor.
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) =
+            &out.program.body[0]
+        else {
+            panic!("expected a surviving var statement, got: {:?}", out.program.body[0])
+        };
+        assert_eq!(vd.declarations.len(), 1, "only `a` should survive");
+        let BindingTarget::Identifier(id) = &vd.declarations[0].id;
+        assert_eq!(id.name, "a");
+    }
+
+    #[test]
+    fn keeps_unused_var_with_impure_initializer() {
+        // `let unused = sideEffect();` — unreferenced, BUT the
+        // initializer is a call, which may have side effects. The
+        // purity gate must keep the declarator so the call still runs.
+        // (`sideEffect` itself is a free global — an unresolved
+        // reference, never our binding — so it doesn't keep `unused`
+        // alive; only the purity gate does.)
+        let prog = program_with(vec![var_stmt_call_init("unused", "sideEffect")]);
+        let out = run_pass(prog.clone());
+        assert!(
+            !out.changed,
+            "a dead binding with a side-effecting initializer must be kept"
+        );
+        assert_eq!(out.program.body, prog.body);
+    }
+
+    #[test]
+    fn is_removable_init_classifies_purity() {
+        // Direct unit coverage of the purity gate.
+        assert!(is_removable_init(&None), "absent init is removable");
+        assert!(
+            is_removable_init(&Some(Expression::NumericLiteral(NumericLiteral {
+                cv: None,
+                value: 1.0,
+                raw: "1".to_string(),
+            }))),
+            "literal init is removable"
+        );
+        assert!(
+            is_removable_init(&Some(Expression::Identifier(ident("y")))),
+            "bare identifier init is removable (pure read)"
+        );
+        assert!(
+            !is_removable_init(&Some(Expression::CallExpression(CallExpression {
+                cv: None,
+                callee: Box::new(Expression::Identifier(ident("f"))),
+                arguments: Vec::new(),
+            }))),
+            "call init is NOT removable (may have side effects)"
+        );
     }
 }

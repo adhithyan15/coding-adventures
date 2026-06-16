@@ -303,12 +303,12 @@ impl ScopeAnalysis {
 ///    `var` declarations, emit them against the function scope,
 ///    then walk normally.
 /// 4. **`References`**.  Identifier use sites — every
-///    [`Expression::Identifier`] node — should produce a
-///    [`Reference`].  Today we emit zero references.  This is the
-///    biggest remaining gap for the consumer passes;
-///    `remove-unused-vars` and `inline` both gate on `uses == 0`
-///    or `uses == 1`, and zero references means every binding
-///    reads as "unused".
+///    [`Expression::Identifier`] node, plus assignment targets and
+///    computed member keys — produce a [`Reference`], resolved to a
+///    binding via the parent-chain walk (or `None` for free globals).
+///    This is what lets `remove-unused-vars` / `inline` gate on
+///    `uses == 0` or `uses == 1`.  (Implemented since CLOC13.0.1; the
+///    earlier "emits zero references" gap is closed.)
 /// 5. **Catch-clause scope** (not in Phase 1 AST yet).
 /// 6. **Strict-mode binding semantics** (function-in-block scope).
 ///
