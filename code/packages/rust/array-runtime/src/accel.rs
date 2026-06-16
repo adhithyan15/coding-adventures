@@ -35,7 +35,8 @@ fn shape_of(dims: &[usize]) -> Result<Shape, String> {
 }
 
 /// Build the `matrix-ir` graph for `kernel` over operands of the given shapes.
-fn build_graph(kernel: Kernel, a: &[usize], b: &[usize]) -> Result<Graph, String> {
+/// Shared with [`crate::exec`], which plans *and executes* the same graph.
+pub(crate) fn build_graph(kernel: Kernel, a: &[usize], b: &[usize]) -> Result<Graph, String> {
     let mut g = GraphBuilder::new();
     let ta = g.input(DType::F32, shape_of(a)?);
     let tb = g.input(DType::F32, shape_of(b)?);

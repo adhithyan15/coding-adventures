@@ -71,17 +71,36 @@ assert_eq!(plan_backend(Kernel::MatMul, &[256, 256], &[256, 256], true).unwrap()
 assert_eq!(plan_backend(Kernel::Elementwise(BinOp::Add), &[2, 2], &[2, 2], true).unwrap(), "cpu");
 ```
 
-## Status — what MA-1 delivers vs. defers
+### 4. End-to-end execution (`exec.rs`, MA-2)
 
-- **Delivered now:** the value model, the CPU reference ops (exact results
-  today), and the full `matrix-ir` lowering + cost-planner integration — the
-  backend choice is observable and tested.
-- **Deferred (MA-2):** routing actual *execution* of the planned `ComputeGraph`
-  through the registered executors. `matrix-runtime` currently *plans* placement
-  but does not yet orchestrate execution end-to-end. When that lands,
-  `array-runtime` switches its compute from the reference path to the planned
-  graph with **no public API change** — the lowering and dispatch decision are
-  already wired here.
+`execute()` doesn't just *plan* the graph — it **runs** it through
+[`matrix-cpu`](../matrix-cpu)'s executor, returning real numeric results from the
+same pipeline a GPU would use. It bridges two boundaries: precision (`f64` ↔
+`f32`, since `matrix-ir` has no `f64` dtype yet) and memory order (column-major ↔
+the executor's row-major — elementwise passes through, `matmul` transposes at the
+edges).
+
+```rust
+use coding_adventures_array_runtime::{Array, Kernel, BinOp, execute};
+
+let a = Array::from_rows(vec![vec![1.0, 2.0], vec![3.0, 4.0]]).unwrap();
+let b = Array::from_rows(vec![vec![5.0, 6.0], vec![7.0, 8.0]]).unwrap();
+
+// Planned and executed on the CPU executor — [[19,22],[43,50]].
+let c = execute(Kernel::MatMul, &a, &b).unwrap();
+assert_eq!(c.get(0, 0), Some(19.0));
+```
+
+## Status
+
+- **MA-1 (merged):** the value model, the CPU reference ops (exact `f64` results),
+  and the full `matrix-ir` lowering + cost-planner integration — the backend
+  choice is observable and tested.
+- **MA-2 (this release):** `execute()` plans **and runs** the lowered graph on the
+  CPU executor for elementwise + `matmul`, cross-checked against the reference
+  path. The same path runs on a GPU executor the moment one is registered.
+- **Next:** executing `transpose`/reductions, scalar-broadcast execution, and
+  registering real CUDA/Metal executor crates.
 
 ## Where it sits in the stack
 
