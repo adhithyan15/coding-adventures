@@ -55,6 +55,12 @@
     {"id": "glucagon_gland", "domain": "endocrine", "tactic": "recall", "relation": "secreted_by",         "subject": "glucagon",       "var": "Gland",    "gold": "ABSTAIN"},
 
     {"id": "meningitis_bacterial_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_bacterial.adj", "gold": "bacterial_meningitis"},
-    {"id": "meningitis_equivocal_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_equivocal.adj", "gold": "ABSTAIN"}
+    {"id": "meningitis_equivocal_dx", "domain": "meningitis", "tactic": "differential", "program": "cases/meningitis_equivocal.adj", "gold": "ABSTAIN"},
+
+    {"id": "mgmt_adult_community",   "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "45-year-old"]],                                                          "gold": ["ceftriaxone", "vancomycin"]},
+    {"id": "mgmt_older_adult",       "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "older_adult", "aged 72"]],                                                        "gold": ["ampicillin", "ceftriaxone", "vancomycin"]},
+    {"id": "mgmt_neurosurgical",     "domain": "meningitis_tx", "tactic": "management", "chart": [["setting", "post_neurosurgical", "POD#3 craniotomy"]],                                         "gold": ["cefepime", "vancomycin"]},
+    {"id": "mgmt_pregnant_adult",    "domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "28-year-old"], ["pregnancy", "present", "G2P1 at 24 weeks"]],            "gold": ["ceftriaxone", "vancomycin"]},
+    {"id": "mgmt_betalactam_allergic","domain": "meningitis_tx", "tactic": "management", "chart": [["age_band", "adult", "adult"], ["allergy", "penicillin", "anaphylaxis to penicillin"]],       "gold": "INFEASIBLE"}
   ]
 }

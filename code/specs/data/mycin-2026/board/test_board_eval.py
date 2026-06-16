@@ -123,6 +123,45 @@ def test_differential_runs_natively_when_cli_present() -> None:
     assert by_id["meningitis_equivocal_dx"].outcome == "abstained"
 
 
+# ---- F2: management tactic (chart-as-constraints) ----
+
+def test_score_management_logic() -> None:
+    # A regimen matching gold is correct.
+    res = {"regimen": ["ceftriaxone", "vancomycin"], "outcome": "optimal"}
+    assert be.score_management(res, ["vancomycin", "ceftriaxone"])[0] == "correct"  # order-insensitive
+    # A different regimen than gold is wrong.
+    assert be.score_management(res, ["ampicillin"])[0] == "wrong"
+    # INFEASIBLE when the chart's constraints conflict and gold is "INFEASIBLE" → correct.
+    inf = {"regimen": None, "outcome": "infeasible", "conflict": [0]}
+    assert be.score_management(inf, "INFEASIBLE") == ("correct", "INFEASIBLE")
+    # Fabricating a regimen when the chart should be INFEASIBLE → wrong.
+    assert be.score_management(res, "INFEASIBLE")[0] == "wrong"
+    # INFEASIBLE when a regimen was expected → honest abstention (declined, not wrong).
+    assert be.score_management(inf, ["ceftriaxone"]) == ("abstained", "INFEASIBLE")
+    # No result (CLI unavailable) → abstain, never fabricate.
+    assert be.score_management(None, ["ceftriaxone"]) == ("abstained", None)
+
+
+def test_management_items_never_fabricate() -> None:
+    card, _ = _card_with_diff()
+    mgmt = [r for r in card.results if r.tactic == "management"]
+    assert mgmt, "the bank has management items"
+    assert all(r.outcome in ("correct", "abstained") for r in mgmt)
+
+
+def test_management_runs_the_constraint_engine_when_cli_present() -> None:
+    if not be.cli_available():
+        return  # skip: Python-only environment without the built Rust CLI
+    card, _ = _card_with_diff()
+    by_id = {r.item_id: r for r in card.results}
+    # The chart-as-constraints engine solves a regimen, and proves INFEASIBLE when a
+    # β-lactam allergy conflicts with the only covering drugs (constraints made unsat).
+    assert by_id["mgmt_adult_community"].outcome == "correct"
+    assert by_id["mgmt_adult_community"].answer == "ceftriaxone+vancomycin"
+    assert by_id["mgmt_betalactam_allergic"].outcome == "correct"
+    assert by_id["mgmt_betalactam_allergic"].answer == "INFEASIBLE"
+
+
 def _card_with_diff():
     import json
     items = json.loads((HERE / "items.json").read_text())["items"]
