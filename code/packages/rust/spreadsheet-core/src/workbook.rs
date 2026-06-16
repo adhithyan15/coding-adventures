@@ -14,7 +14,7 @@ use crate::edit::StructuralEdit;
 use crate::errors::SpreadsheetError;
 use crate::parser::{parse, ParseError};
 use crate::recalc::{collect_refs, evaluate};
-use crate::viewport::{ChangeSet, UsedRange, Window, CHANGELOG_RETAIN, MAX_WINDOW_CELLS};
+use crate::viewport::{ChangeSet, DisplayWindow, UsedRange, Window, CHANGELOG_RETAIN, MAX_WINDOW_CELLS};
 
 /// Top-level container — one or more sheets plus the dependency
 /// graph that spans them.
@@ -129,26 +129,7 @@ impl Workbook {
         row1: u32,
         col1: u32,
     ) -> Result<Window, SpreadsheetError> {
-        // Coordinates are 1-based (A1 = row 1, col 1), so a 0 is out of contract
-        // — and rejecting it also rules out the `row0 = 0` case that would let
-        // the span computation below span the full u32 range.
-        if row0 == 0 || col0 == 0 || row1 < row0 || col1 < col0 {
-            return Err(SpreadsheetError::Ref);
-        }
-        // Compute the span in u64. The operands MUST be widened to u64 *before*
-        // the `+ 1`: doing `(row1 - row0 + 1)` in u32 first overflows when
-        // `row1 - row0 == u32::MAX` (e.g. row0=1, row1=u32::MAX), wrapping to a
-        // bogus small count that would slip past the MAX_WINDOW_CELLS cap and
-        // send the loop over the entire u32 range — an OOM DoS. Widening first
-        // keeps the true count, so checked_mul + the cap reject it.
-        let rows = (row1 as u64 - row0 as u64) + 1;
-        let cols = (col1 as u64 - col0 as u64) + 1;
-        // `rows * cols` can still overflow u64 for a full-sheet request, so use
-        // checked_mul: an overflow is by definition past the cap.
-        match rows.checked_mul(cols) {
-            Some(n) if n <= MAX_WINDOW_CELLS => {}
-            _ => return Err(SpreadsheetError::Ref),
-        }
+        let (rows, cols) = window_dims(row0, col0, row1, col1)?;
         let s = self.sheets.get(sheet.0 as usize).ok_or(SpreadsheetError::Ref)?;
         let mut values = Vec::with_capacity((rows * cols) as usize);
         for r in row0..=row1 {
@@ -167,6 +148,41 @@ impl Workbook {
             rows: rows as u32,
             cols: cols as u32,
             values,
+        })
+    }
+
+    /// Like [`get_window`](Self::get_window), but each cell is the **display
+    /// string** it should paint — its value rendered through its format code
+    /// (see [`get_display`](Self::get_display)) — rather than a typed value. This
+    /// is the one read a virtualized grid needs per frame: a dense rectangle of
+    /// ready-to-draw, format-applied strings. Same 1-based coords and
+    /// [`MAX_WINDOW_CELLS`](crate::viewport::MAX_WINDOW_CELLS) cap as `get_window`.
+    pub fn get_display_window(
+        &self,
+        sheet: SheetId,
+        row0: u32,
+        col0: u32,
+        row1: u32,
+        col1: u32,
+    ) -> Result<DisplayWindow, SpreadsheetError> {
+        let (rows, cols) = window_dims(row0, col0, row1, col1)?;
+        // Validate the sheet exists up front (get_display would silently yield
+        // "" for an unknown sheet, but the windowed read promises a Ref error).
+        if self.sheets.get(sheet.0 as usize).is_none() {
+            return Err(SpreadsheetError::Ref);
+        }
+        let mut cells = Vec::with_capacity((rows * cols) as usize);
+        for r in row0..=row1 {
+            for c in col0..=col1 {
+                cells.push(self.get_display(sheet, CellAddress::new(r, c)));
+            }
+        }
+        Ok(DisplayWindow {
+            row0,
+            col0,
+            rows: rows as u32,
+            cols: cols as u32,
+            cells,
         })
     }
 
@@ -611,6 +627,30 @@ impl Default for Workbook {
     }
 }
 
+/// Validate a 1-based inclusive window request and return its `(rows, cols)`
+/// dimensions in `u64`. Shared by [`Workbook::get_window`] and
+/// [`Workbook::get_display_window`] so the bounds + overflow + cap checks can't
+/// drift apart.
+///
+/// Rejects (`#REF!`) a 0 coordinate (out of the 1-based contract — and a `row0`/
+/// `col0` of 0 would let the span computation cover the full u32 range), an
+/// inverted rectangle, and a window over [`MAX_WINDOW_CELLS`]. The span operands
+/// are widened to `u64` **before** the `+ 1` — `(row1 - row0 + 1)` in `u32` would
+/// overflow when `row1 - row0 == u32::MAX`, wrapping to a bogus small count that
+/// slips past the cap and sends the caller's loop over the entire u32 range (an
+/// OOM DoS). `checked_mul` then rejects any product that still overflows `u64`.
+fn window_dims(row0: u32, col0: u32, row1: u32, col1: u32) -> Result<(u64, u64), SpreadsheetError> {
+    if row0 == 0 || col0 == 0 || row1 < row0 || col1 < col0 {
+        return Err(SpreadsheetError::Ref);
+    }
+    let rows = (row1 as u64 - row0 as u64) + 1;
+    let cols = (col1 as u64 - col0 as u64) + 1;
+    match rows.checked_mul(cols) {
+        Some(n) if n <= MAX_WINDOW_CELLS => Ok((rows, cols)),
+        _ => Err(SpreadsheetError::Ref),
+    }
+}
+
 /// Render a computed value as the display string a cell should show, under an
 /// optional format code. Numbers go through `number-format-core` (the code, or
 /// `General` when there's none); text / booleans / errors render naturally; an
@@ -1024,6 +1064,34 @@ mod tests {
         wb.set_value(s, cell(1_000_000, 1_000), CellValue::Number(42.0));
         let w = wb.get_window(s, 1_000_000, 1_000, 1_000_000, 1_000).unwrap();
         assert_eq!(w.values, vec![CellValue::Number(42.0)]);
+    }
+
+    #[test]
+    fn get_display_window_renders_formatted_strings() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        wb.set_value(s, cell(1, 1), CellValue::Number(1234.5));
+        wb.set_format(s, cell(1, 1), "#,##0.00");
+        wb.set_value(s, cell(1, 2), CellValue::Number(0.5));
+        wb.set_format(s, cell(1, 2), "0%");
+        wb.set_value(s, cell(2, 1), CellValue::Text("hi".into())); // unformatted
+        // A1=formatted, B1=percent, A2=text, B2=empty — row-major.
+        let dw = wb.get_display_window(s, 1, 1, 2, 2).unwrap();
+        assert_eq!((dw.rows, dw.cols), (2, 2));
+        assert_eq!(
+            dw.cells,
+            vec![
+                "1,234.50".to_string(),
+                "50%".to_string(),
+                "hi".to_string(),
+                String::new(),
+            ]
+        );
+        // Same guards as get_window.
+        assert!(wb.get_display_window(s, 0, 1, 1, 1).is_err()); // 0 coord
+        assert!(wb.get_display_window(s, 2, 1, 1, 1).is_err()); // inverted
+        assert!(wb.get_display_window(s, 1, 1, 400, 400).is_err()); // oversized
+        assert!(wb.get_display_window(SheetId(9), 1, 1, 1, 1).is_err()); // bad sheet
     }
 
     #[test]

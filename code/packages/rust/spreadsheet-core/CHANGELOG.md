@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.6.0
+
+**`get_display_window`** — a windowed read returning each cell's **formatted
+display string** (its value rendered through its format code), the format-aware
+sibling of `get_window`. This is the one read a virtualized grid needs per
+frame: a dense, ready-to-draw rectangle, so a host renders engine-formatted text
+directly instead of re-deriving number formatting itself.
+
+- `Workbook::get_display_window(sheet, row0, col0, row1, col1) -> Result<DisplayWindow, _>`;
+  new `DisplayWindow` type (row-major `cells: Vec<String>`, empty cells `""`).
+- The 1-based-coords / inverted / `MAX_WINDOW_CELLS` / u64-span-overflow guards
+  are now a shared `window_dims` helper used by both `get_window` and
+  `get_display_window`, so the (security-critical) bounds checks can't drift
+  apart. `get_window`'s behavior is unchanged (its tests still pass).
+- 1 new test (formatted/percent/text/empty cells row-major + the bounds guards).
+
 ## 0.5.0
 
 **Cell display formats.** Cells can now carry an Excel-style format code, and a
