@@ -129,9 +129,13 @@ covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`
 and **comparison** (`cmp_*` → `ceq`/`clt`/`cgt`, negating the other three with `ldc.i4.0; ceq`)
 rows above — previously only the binary codegen path emitted them, which is why running
 the LANG-MATRIX expression languages (Nib/Oct/ALGOL) on the real CLR first surfaced the gap.
-As of 0.19.0 the textual path likewise covers the **bitwise/shift** row
+As of 0.19.0 the textual path likewise covers the **binary bitwise/shift** row
 (`and`/`or`/`xor`/`shl`/`shr` → the identically named CIL opcodes) — the same kind of
 bytecode-path-only gap, surfaced by running Nib `& | ^` on the real CLR (LANG-FULL N3).
+As of **0.21.0** it also covers the **unary `not`** op (Nib `~`) → the CIL `not` opcode
+(one's complement) + the E2 narrow mask, so `~0u8 = 255` / `~15u4 = 0` assemble on real
+CoreCLR — the last `not`-shaped gap (the bytecode path had it since the E2 work; the
+textual `.il` path had no `not` arm at all, only the lispy `call_builtin "not"`).
 
 As of 0.17.0 it also emits the **`print_i64`** I/O primitive (Dartmouth BASIC's `PRINT`)
 as `call void [System.Console]System.Console::WriteLine(int32)`; for a program that

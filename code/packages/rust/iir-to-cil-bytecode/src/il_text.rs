@@ -802,6 +802,22 @@ fn emit_method(
             //
             // (CoreCLR's `div`/`rem` raise on divide-by-zero, matching the other
             // backends' trap-on-zero behaviour — no guard needed here.)
+            // Unary bitwise NOT (`~`, LANG-FULL N3) → the CIL `not` opcode (one's
+            // complement), then the E2 narrow mask so a `u4`/`u8`/`u16` result is the
+            // width's complement, not the full register's: `~0u8 = 255` (`-1 & 0xFF`),
+            // `~15u4 = 0`. This is the unary IIR `not` op (one source operand) — distinct
+            // from the lispy `call_builtin "not"` (boolean negate) handled above.
+            "not" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "not must have a dest".into(),
+                })?;
+                let a = var_src(f, instr, 0, "not")?;
+                load_var(il, &regs, a)?;
+                let _ = writeln!(il, "    not");
+                emit_narrow_width_mask(il, &instr.type_hint);
+                store_var(il, &regs, dest)?;
+            }
             // Bitwise `and`/`or`/`xor` map to the identically-named CIL opcodes
             // (LANG-FULL N3). `shl`/`shr` are the CIL shift ops; included here so
             // the textual path matches the bytecode path's binary-op coverage.
@@ -968,6 +984,30 @@ mod tests {
                 "op {op:?} must emit a bare `{cil}` instruction; got:\n{il}"
             );
         }
+    }
+
+    #[test]
+    fn unary_not_emits_cil_not_then_masks() {
+        // LANG-FULL N3: the textual `.il` path must lower the unary `not` op (Nib `~`)
+        // to the CIL `not` opcode (the bytecode path already did), followed by the E2
+        // narrow mask for a `u8` width — so `~0u8 = 255` on real CoreCLR, not the
+        // register's all-ones. (The lispy `call_builtin "not"` is a different path.)
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("not", Some("c".into()), vec![Operand::Var("a".into())], "u8"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "u8"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "u8", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        let lines: Vec<&str> = il.lines().map(|l| l.trim()).collect();
+        let not_at = lines.iter().position(|l| *l == "not").expect("emits a bare `not`");
+        // The mask is `ldc.i4 0xFF` (or `ldc.i4 255`) then `and` immediately after.
+        assert!(
+            lines[not_at + 1..].iter().take(2).any(|l| *l == "and"),
+            "u8 not must be followed by the `and` mask; got:\n{il}"
+        );
     }
 
     /// Build `c = <op>(a, b); ret c` with a chosen result-`type_hint` width,

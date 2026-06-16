@@ -620,10 +620,20 @@ impl Compiler {
         out: &mut Vec<IIRInstr>,
     ) -> Result<String, CompileError> {
         // Single-child wrapper rules pass through to the inner expression.
+        //
+        // `child_nodes` filters out tokens, so a `unary_expr` that applies an operator
+        // (`~x` → children `[TILDE, operand]`) has exactly ONE child *node* and would be
+        // mistaken for a transparent wrapper — silently dropping the `~`. Guard against
+        // that: a `unary_expr` carrying a leading operator token must reach
+        // `compile_unary`, not be unwrapped. (Other expr levels with operators have ≥2
+        // child nodes, so they never hit this passthrough.)
         let kids = child_nodes(node);
+        let unary_with_op = node.rule_name == "unary_expr"
+            && node.children.iter().any(|c| matches!(c, ASTNodeOrToken::Token(_)));
         if kids.len() == 1
             && node.rule_name != "primary"
             && !is_terminal_expr(node)
+            && !unary_with_op
         {
             return self.compile_expr(kids[0], types, env, out);
         }
@@ -1021,14 +1031,50 @@ impl Compiler {
         out: &mut Vec<IIRInstr>,
     ) -> Result<String, CompileError> {
         // unary_expr = (BANG|TILDE) unary_expr | primary | …
-        // For V1 we just pass the inner expression through (drop the
-        // operator); proper logical-NOT / bitwise-NOT lowering is deferred.
-        // (LANG-FULL N3-`~` → IIR `not` is a follow-up: it needs the LLVM
-        // backend to grow the `not` op, which it currently lacks.)
-        if let Some(inner) = child_nodes(node).into_iter().find(|c| is_expr_rule(&c.rule_name)) {
-            return self.compile_expr(inner, types, env, out);
+        //
+        // The first child is the operator token when one is present (`~x` → the
+        // children are `[TILDE, unary_expr]`); a bare operand has no leading token
+        // (just `[primary]`). `child_nodes` filters tokens out, so it always returns
+        // the operand sub-node.
+        let inner = child_nodes(node)
+            .into_iter()
+            .find(|c| is_expr_rule(&c.rule_name))
+            .ok_or_else(|| CompileError::Unsupported("empty unary_expr".into()))?;
+        let val = self.compile_expr(inner, types, env, out)?;
+
+        // The leading operator token, if any (`~`/TILDE or `!`/BANG).
+        let op = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t),
+            ASTNodeOrToken::Node(_) => None,
+        });
+
+        match op.map(|t| (t.value.as_str(), t.effective_type_name())) {
+            // LANG-FULL N3 — bitwise NOT (`~`) → IIR `not` (flip every bit). The
+            // result carries the narrow width (`u8`/`u4`) of the unary node so every
+            // backend masks it mod-2ⁿ (the E2 value-mask): `~0u8 = 255` (`-1 & 0xFF`),
+            // `~15u4 = 0`. Without the mask a `not` would yield the i64 all-ones
+            // (`-1`), not the type's bitwise complement. `iir-to-llvm` 0.12.0 grew the
+            // `not` op (synthesised as `xor x, -1` + mask) — the last backend that
+            // lacked it — so this now runs on every backend. Falls back to `i64`
+            // (legacy "collapse, no mask") only when the width is unconstrained.
+            Some(("~", _)) | Some((_, "TILDE")) => {
+                let hint = match lookup_node_type(node, types) {
+                    Some(NibType::U8) => "u8",
+                    Some(NibType::U4) => "u4",
+                    _ => "i64",
+                };
+                let dest = self.fresh_var();
+                self.emit_to(
+                    out,
+                    IIRInstr::new("not", Some(dest.clone()), vec![Operand::Var(val)], hint),
+                );
+                Ok(dest)
+            }
+            // Logical NOT (`!`) needs boolean lowering (compare-to-zero) — a separate
+            // item; for now the inner value passes through unchanged (the prior V1
+            // behaviour). A bare operand (no operator) also passes through.
+            _ => Ok(val),
         }
-        Err(CompileError::Unsupported("empty unary_expr".into()))
     }
 
     // ---- Helpers --------------------------------------------------------
@@ -1299,9 +1345,9 @@ fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
         ("/", _) | (_, "SLASH")       => Some("div"),
         // Bitwise (LANG-FULL N3). The grammar's `bitwise_expr` level already
         // produces these; they lower to the shared IIR `and`/`or`/`xor` ops, which
-        // every backend implements directly. (Unary `~` (TILDE) is deferred: a
-        // correct width-mask needs the integer-wrap enabler E2 — `~x` on a u8 must
-        // flip 8 bits, not the full 64-bit register.)
+        // every backend implements directly. (Unary `~` (TILDE) lowers to the IIR
+        // `not` op in `compile_unary`, narrow-masked per the E2 width so `~0u8 = 255`
+        // — see there; it never reaches this binary-operator map.)
         ("&", _) | (_, "AMP")         => Some("and"),
         ("|", _) | (_, "PIPE")        => Some("or"),
         ("^", _) | (_, "CARET")       => Some("xor"),
@@ -1401,6 +1447,41 @@ mod tests {
             assert!(!body.iter().any(|i| i.op == "call_builtin"),
                 "regression: bitwise op leaked a call_builtin in {src:?}; got body: {body:?}");
         }
+    }
+
+    #[test]
+    fn compiles_bitwise_not_with_narrow_hint() {
+        // LANG-FULL N3: unary `~` lowers to the shared IIR `not` op, carrying the
+        // narrow result width so every backend masks it mod-2ⁿ (`~0u8 = 255`). The
+        // hint MUST be the type's width, not `i64` — an unmasked `not 0` is the i64
+        // all-ones (`-1`), not the u8/u4 complement.
+        for (src, hint) in [
+            ("fn main() -> u8 { return ~0; }", "u8"),
+            ("fn main() -> u4 { return ~15; }", "u4"),
+        ] {
+            let m = compile_source(src, "test").expect("ok");
+            let body = &m.functions[0].instructions;
+            let not = body
+                .iter()
+                .find(|i| i.op == "not")
+                .unwrap_or_else(|| panic!("expected a `not` op for {src:?}; got body: {body:?}"));
+            assert_eq!(
+                not.type_hint, hint,
+                "`~` must carry the narrow width {hint:?} for {src:?}; got {:?}",
+                not.type_hint
+            );
+            assert!(!body.iter().any(|i| i.op == "call_builtin"),
+                "regression: `~` leaked a call_builtin in {src:?}; got body: {body:?}");
+        }
+    }
+
+    #[test]
+    fn double_bitwise_not_is_identity() {
+        // `~~x` nests two unary_exprs → `not(not(x))`. Two `not` ops must be emitted
+        // (the operator is no longer silently dropped).
+        let m = compile_source("fn main() -> u8 { return ~~5; }", "test").expect("ok");
+        let nots = m.functions[0].instructions.iter().filter(|i| i.op == "not").count();
+        assert_eq!(nots, 2, "expected two `not` ops for `~~5`; got {nots}");
     }
 
     #[test]

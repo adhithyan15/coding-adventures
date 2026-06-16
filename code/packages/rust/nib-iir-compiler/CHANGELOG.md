@@ -1,5 +1,29 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.16.0 — 2026-06-16 — bitwise NOT (`~`) lowers to the IIR `not` op (LANG-FULL N3)
+
+Unary `~` now lowers to the shared IIR `not` op (bitwise complement). Two fixes
+were needed:
+
+1. **`compile_unary` lowers `~` (was a silent no-op).** It previously *dropped* the
+   operator and passed the operand through, so `~0` compiled to `0`. It now emits a
+   `not` op carrying the **narrow result width** (`u8`/`u4`) of the unary node, so every
+   backend masks it mod-2ⁿ: `~0u8 = 255` (`-1 & 0xFF`), `~15u4 = 0`. Without the width
+   the `not` would yield the i64 all-ones (`-1`), not the type's complement. Logical `!`
+   stays a passthrough (boolean lowering is a separate item).
+
+2. **`compile_expr` no longer unwraps a `~x` as a transparent wrapper.** The
+   single-child-wrapper passthrough counts only child *nodes* (tokens filtered), so a
+   `unary_expr` of shape `[TILDE, operand]` looked like a one-child wrapper and was
+   unwrapped — discarding the `~` before `compile_unary` ran. It now keeps a `unary_expr`
+   that carries a leading operator token.
+
+Runs on **all 7 backends** (native/LLVM/WASM/JVM/CLR/VM/JIT), proven by executed
+`lang_matrix.rs` programs (`~0u8 == 255`, `~15u4 == 0`). This was the last deferred Nib
+N3 piece — it had waited on `iir-to-llvm` 0.12.0 (which grew the `not` op) and surfaced a
+matching gap in `iir-to-cil-bytecode`'s textual emitter (0.21.0). New unit tests
+`compiles_bitwise_not_with_narrow_hint` and `double_bitwise_not_is_identity`.
+
 ## 0.15.0 — 2026-06-16 — wrapping (`+%`) and saturating (`+?`) add (LANG-FULL N7)
 
 Lowers Nib's two explicit-overflow additive operators (the grammar already
