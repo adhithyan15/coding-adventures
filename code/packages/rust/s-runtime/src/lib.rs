@@ -201,6 +201,48 @@ mod tests {
         assert_eq!(nums("2 * 3 %% 4\n"), vec![6.0]);
     }
 
+    // --- v2: builtin library --------------------------------------------
+
+    #[test]
+    fn vectorized_math() {
+        assert_eq!(nums("sqrt(c(4, 9, 16))\n"), vec![2.0, 3.0, 4.0]);
+        assert_eq!(nums("abs(c(-1, 2, -3))\n"), vec![1.0, 2.0, 3.0]);
+        assert_eq!(nums("floor(c(1.7, 2.2))\n"), vec![1.0, 2.0]);
+        assert_eq!(nums("round(c(1.4, 1.6))\n"), vec![1.0, 2.0]);
+        assert_eq!(nums("log(exp(1))\n"), vec![1.0]);
+        assert_eq!(nums("log(8, 2)\n"), vec![3.0]);
+    }
+
+    #[test]
+    fn rev_sort_order_unique() {
+        assert_eq!(nums("rev(1:4)\n"), vec![4.0, 3.0, 2.0, 1.0]);
+        assert_eq!(nums("sort(c(3, 1, 2, NA))\n"), vec![1.0, 2.0, 3.0]);
+        assert_eq!(show("sort(c(\"b\", \"a\", \"c\"))\n"), "[1] \"a\" \"b\" \"c\"");
+        assert_eq!(nums("order(c(3, 1, 2))\n"), vec![2.0, 3.0, 1.0]);
+        assert_eq!(nums("unique(c(1, 2, 2, 3, 1))\n"), vec![1.0, 2.0, 3.0]);
+    }
+
+    #[test]
+    fn rep_which_any_all_isna() {
+        assert_eq!(nums("rep(c(1, 2), 3)\n"), vec![1.0, 2.0, 1.0, 2.0, 1.0, 2.0]);
+        assert_eq!(nums("which(c(1, 2, 3) > 1)\n"), vec![2.0, 3.0]);
+        assert_eq!(show("any(c(FALSE, TRUE))\n"), "[1] TRUE");
+        assert_eq!(show("all(c(TRUE, FALSE))\n"), "[1] FALSE");
+        assert_eq!(show("is.na(c(1, NA, 3))\n"), "[1] FALSE  TRUE FALSE");
+    }
+
+    #[test]
+    fn cumulative_and_paste() {
+        assert_eq!(nums("cumsum(1:4)\n"), vec![1.0, 3.0, 6.0, 10.0]);
+        assert_eq!(show("paste(c(\"a\", \"b\"), 1:2)\n"), "[1] \"a 1\" \"b 2\"");
+        assert_eq!(show("paste0(\"x\", 1:2)\n"), "[1] \"x1\" \"x2\"");
+    }
+
+    #[test]
+    fn sapply_maps_a_function() {
+        assert_eq!(nums("sapply(1:3, function(n) n * n)\n"), vec![1.0, 4.0, 9.0]);
+    }
+
     // --- Comparison -----------------------------------------------------
 
     #[test]

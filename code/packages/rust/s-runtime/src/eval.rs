@@ -776,13 +776,18 @@ fn scalar_f64(value: &SValue) -> SResult<f64> {
 }
 
 /// Extract element `i` of a vector as a fresh length-1 value.
-fn nth_element(value: &SValue, i: usize) -> SValue {
+pub(crate) fn nth_element(value: &SValue, i: usize) -> SValue {
     match value {
         SValue::Double(d) => SValue::Double(Double::from_values(vec![d
             .get_value(i)
             .unwrap_or_else(na_real)])),
         SValue::Logical(v) => SValue::Logical(vec![v.get(i).copied().flatten()]),
         SValue::Character(v) => SValue::Character(vec![v.get(i).cloned().flatten()]),
+        SValue::Factor { codes, levels } => SValue::Factor {
+            codes: vec![codes.get(i).copied().flatten()],
+            levels: levels.clone(),
+        },
+        SValue::Classed { inner, .. } => nth_element(inner, i),
         _ => SValue::Null,
     }
 }

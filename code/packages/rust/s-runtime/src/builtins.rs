@@ -8,10 +8,11 @@
 
 use crate::env::{define, Env};
 use crate::error::{SError, SResult};
-use crate::eval::Interpreter;
-use crate::value::{bounded_sequence, combine, Arg, SValue};
-use r_vector::Double;
+use crate::eval::{nth_element, Interpreter};
+use crate::value::{bounded_sequence, combine, index, Arg, SValue};
+use r_vector::{is_na_real, na_real, Double};
 use statistics_core::{descriptive, Number, StatsError};
+use std::collections::HashSet;
 
 /// Install every built-in into `env` (the global scope).
 pub fn install(env: &Env) {
@@ -32,6 +33,294 @@ pub fn install(env: &Env) {
     define(env, "prod", builtin("prod", b_prod));
     define(env, "min", builtin("min", b_min));
     define(env, "max", builtin("max", b_max));
+
+    // v2 — vectorized math.
+    define(env, "abs", builtin("abs", |_, a| unary_math(a, f64::abs)));
+    define(env, "sqrt", builtin("sqrt", |_, a| unary_math(a, f64::sqrt)));
+    define(env, "exp", builtin("exp", |_, a| unary_math(a, f64::exp)));
+    define(env, "log10", builtin("log10", |_, a| unary_math(a, f64::log10)));
+    define(env, "floor", builtin("floor", |_, a| unary_math(a, f64::floor)));
+    define(env, "ceiling", builtin("ceiling", |_, a| unary_math(a, f64::ceil)));
+    define(env, "round", builtin("round", |_, a| unary_math(a, f64::round)));
+    define(env, "sin", builtin("sin", |_, a| unary_math(a, f64::sin)));
+    define(env, "cos", builtin("cos", |_, a| unary_math(a, f64::cos)));
+    define(env, "tan", builtin("tan", |_, a| unary_math(a, f64::tan)));
+    define(env, "log", builtin("log", b_log));
+
+    // v2 — utilities. (No underscore-named helpers like R's seq_len/seq_along:
+    // in historical S `_` is assignment, so such names are not expressible —
+    // `seq()` and `1:n` cover the need.)
+    define(env, "rev", builtin("rev", b_rev));
+    define(env, "sort", builtin("sort", b_sort));
+    define(env, "order", builtin("order", b_order));
+    define(env, "rep", builtin("rep", b_rep));
+    define(env, "unique", builtin("unique", b_unique));
+    define(env, "which", builtin("which", b_which));
+    define(env, "any", builtin("any", b_any));
+    define(env, "all", builtin("all", b_all));
+    define(env, "is.na", builtin("is.na", b_is_na));
+    define(env, "cumsum", builtin("cumsum", b_cumsum));
+    define(env, "cumprod", builtin("cumprod", b_cumprod));
+    define(env, "paste", builtin("paste", b_paste));
+    define(env, "paste0", builtin("paste0", b_paste0));
+
+    // v2 — apply family.
+    define(env, "sapply", builtin("sapply", b_sapply));
+}
+
+// ===========================================================================
+// v2 — vectorized math
+// ===========================================================================
+
+/// Map a scalar function elementwise over the first positional argument,
+/// preserving `NA`.
+fn unary_math(args: &[Arg], f: impl Fn(f64) -> f64) -> SResult<SValue> {
+    let d = first_positional(args)?.as_double()?;
+    Ok(SValue::doubles(
+        d.iter()
+            .map(|x| if is_na_real(x) { na_real() } else { f(x) })
+            .collect(),
+    ))
+}
+
+/// `log(x)` is the natural log; `log(x, base)` (positional or `base =`) uses the
+/// given base.
+fn b_log(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let x = positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("log: missing argument".into()))?
+        .as_double()?;
+    let base = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("base"))
+        .map(|a| &a.value)
+        .or_else(|| positional.get(1).copied());
+    let mapper: Box<dyn Fn(f64) -> f64> = match base {
+        Some(b) => {
+            let bv = b.as_double()?.get_value(0).unwrap_or(std::f64::consts::E);
+            Box::new(move |x: f64| x.log(bv))
+        }
+        None => Box::new(|x: f64| x.ln()),
+    };
+    Ok(SValue::doubles(
+        x.iter()
+            .map(|v| if is_na_real(v) { na_real() } else { mapper(v) })
+            .collect(),
+    ))
+}
+
+// ===========================================================================
+// v2 — utilities
+// ===========================================================================
+
+/// `rev(x)` reverses any vector (reuses indexing, so the element type survives).
+fn b_rev(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let v = first_positional(args)?;
+    let n = v.length();
+    let idx = SValue::doubles((0..n).rev().map(|k| (k + 1) as f64).collect());
+    index(v, &idx)
+}
+
+/// `sort(x)` — ascending order, dropping `NA`. Numeric and character supported.
+fn b_sort(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::Character(v) => {
+            let mut items: Vec<String> = v.iter().flatten().cloned().collect();
+            items.sort();
+            Ok(SValue::Character(items.into_iter().map(Some).collect()))
+        }
+        other => {
+            let d = other.as_double()?;
+            let mut items: Vec<f64> = d.iter().filter(|x| !is_na_real(*x)).collect();
+            items.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+            Ok(SValue::doubles(items))
+        }
+    }
+}
+
+/// `order(x)` — the 1-based permutation that sorts `x` ascending.
+fn b_order(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let d = first_positional(args)?.as_double()?;
+    let data = d.data();
+    let mut idx: Vec<usize> = (0..data.len()).collect();
+    idx.sort_by(|&a, &b| data[a].partial_cmp(&data[b]).unwrap_or(std::cmp::Ordering::Equal));
+    Ok(SValue::doubles(idx.iter().map(|i| (i + 1) as f64).collect()))
+}
+
+/// `rep(x, times)` — concatenate `times` copies of `x`.
+fn b_rep(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let x = first_positional(args)?.clone();
+    let times = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("times"))
+        .map(|a| &a.value)
+        .or_else(|| args.iter().filter(|a| a.name.is_none()).nth(1).map(|a| &a.value))
+        .and_then(|v| v.as_double().ok())
+        .and_then(|d| d.get_value(0))
+        .map(|n| n.max(0.0) as usize)
+        .unwrap_or(1);
+    let copies: Vec<Arg> = (0..times)
+        .map(|_| Arg { name: None, value: x.clone() })
+        .collect();
+    Ok(combine(&copies))
+}
+
+/// `unique(x)` — distinct elements, first occurrence order preserved.
+fn b_unique(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let v = first_positional(args)?;
+    let keys = v.as_character();
+    let mut seen: HashSet<Option<String>> = HashSet::new();
+    let keep: Vec<f64> = keys
+        .iter()
+        .enumerate()
+        .filter_map(|(i, k)| seen.insert(k.clone()).then_some((i + 1) as f64))
+        .collect();
+    index(v, &SValue::doubles(keep))
+}
+
+/// `which(x)` — the 1-based indices where logical `x` is `TRUE`.
+fn b_which(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let bits = first_positional(args)?.as_logical()?;
+    Ok(SValue::doubles(
+        bits.iter()
+            .enumerate()
+            .filter_map(|(i, b)| (*b == Some(true)).then_some((i + 1) as f64))
+            .collect(),
+    ))
+}
+
+/// `any(...)` — `TRUE` if any element is `TRUE`, tri-valued with `NA`.
+fn b_any(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let bits = combined_logical(args)?;
+    let result = if bits.iter().any(|b| *b == Some(true)) {
+        Some(true)
+    } else if bits.iter().any(|b| b.is_none()) {
+        None
+    } else {
+        Some(false)
+    };
+    Ok(SValue::Logical(vec![result]))
+}
+
+/// `all(...)` — `TRUE` if every element is `TRUE`, tri-valued with `NA`.
+fn b_all(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let bits = combined_logical(args)?;
+    let result = if bits.iter().any(|b| *b == Some(false)) {
+        Some(false)
+    } else if bits.iter().any(|b| b.is_none()) {
+        None
+    } else {
+        Some(true)
+    };
+    Ok(SValue::Logical(vec![result]))
+}
+
+/// `is.na(x)` — a logical vector, `TRUE` where `x` is `NA`.
+fn b_is_na(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let v = first_positional(args)?;
+    let flags: Vec<Option<bool>> = match v {
+        SValue::Double(d) => d.iter().map(|x| Some(is_na_real(x))).collect(),
+        SValue::Logical(l) => l.iter().map(|o| Some(o.is_none())).collect(),
+        SValue::Character(c) => c.iter().map(|o| Some(o.is_none())).collect(),
+        SValue::Factor { codes, .. } => codes.iter().map(|c| Some(c.is_none())).collect(),
+        other => other.as_character().iter().map(|o| Some(o.is_none())).collect(),
+    };
+    Ok(SValue::Logical(flags))
+}
+
+/// `cumsum(x)` — running totals (delegates to statistics-core).
+fn b_cumsum(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    Ok(SValue::Double(descriptive::cumsum(
+        &first_positional(args)?.as_double()?,
+    )))
+}
+
+/// `cumprod(x)` — running products.
+fn b_cumprod(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    Ok(SValue::Double(descriptive::cumprod(
+        &first_positional(args)?.as_double()?,
+    )))
+}
+
+/// `paste(..., sep = " ")` — element-wise string join across arguments, with
+/// recycling. `paste0` is `paste` with no separator.
+fn b_paste(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    paste_impl(args, " ")
+}
+fn b_paste0(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    paste_impl(args, "")
+}
+
+fn paste_impl(args: &[Arg], default_sep: &str) -> SResult<SValue> {
+    let sep = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("sep"))
+        .and_then(|a| a.value.as_character().into_iter().next().flatten())
+        .unwrap_or_else(|| default_sep.to_string());
+
+    // Each positional argument becomes a character column; empty ones are
+    // ignored (matching R).
+    let cols: Vec<Vec<Option<String>>> = args
+        .iter()
+        .filter(|a| a.name.is_none())
+        .map(|a| a.value.as_character())
+        .filter(|c| !c.is_empty())
+        .collect();
+    if cols.is_empty() {
+        return Ok(SValue::Character(vec![]));
+    }
+    let n = cols.iter().map(|c| c.len()).max().unwrap_or(0);
+    let out: Vec<Option<String>> = (0..n)
+        .map(|i| {
+            let parts: Vec<String> = cols
+                .iter()
+                .map(|c| c[i % c.len()].clone().unwrap_or_else(|| "NA".to_string()))
+                .collect();
+            Some(parts.join(&sep))
+        })
+        .collect();
+    Ok(SValue::Character(out))
+}
+
+/// Combine the logical coercions of all positional arguments into one vector.
+fn combined_logical(args: &[Arg]) -> SResult<Vec<Option<bool>>> {
+    let mut bits = Vec::new();
+    for a in args.iter().filter(|a| a.name.is_none()) {
+        bits.extend(a.value.as_logical()?);
+    }
+    Ok(bits)
+}
+
+// ===========================================================================
+// v2 — apply family
+// ===========================================================================
+
+/// `sapply(x, f)` — apply `f` to each element of `x` and simplify the results
+/// into a vector (length-1 atomic results combine into one vector). `lapply`
+/// (which must return a list) is deferred until S grows a list type.
+fn b_sapply(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&Arg> = args.iter().filter(|a| a.name.is_none()).collect();
+    let x = positional
+        .first()
+        .ok_or_else(|| SError::BadArgs("sapply: missing X".into()))?
+        .value
+        .clone();
+    let f = positional
+        .get(1)
+        .ok_or_else(|| SError::BadArgs("sapply: missing FUN".into()))?
+        .value
+        .clone();
+    if !f.is_callable() {
+        return Err(SError::NotCallable(f.type_name().to_string()));
+    }
+    let mut results: Vec<Arg> = Vec::with_capacity(x.length());
+    for i in 0..x.length() {
+        let elem = nth_element(&x, i);
+        let r = interp.call_value(f.clone(), &[Arg { name: None, value: elem }])?;
+        results.push(Arg { name: None, value: r });
+    }
+    Ok(combine(&results))
 }
 
 fn builtin(name: &str, func: fn(&Interpreter, &[Arg]) -> SResult<SValue>) -> SValue {

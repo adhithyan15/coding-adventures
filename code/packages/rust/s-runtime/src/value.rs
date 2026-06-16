@@ -199,6 +199,24 @@ impl SValue {
         }
     }
 
+    /// Coerce to a logical vector (`None` = `NA`). A numeric coerces by `x != 0`;
+    /// a logical is taken as-is; `NULL` is empty. Used by `any`/`all`/`which`.
+    pub fn as_logical(&self) -> SResult<Vec<Option<bool>>> {
+        match self {
+            SValue::Logical(v) => Ok(v.clone()),
+            SValue::Double(d) => Ok(d
+                .iter()
+                .map(|x| if is_na_real(x) { None } else { Some(x != 0.0) })
+                .collect()),
+            SValue::Null => Ok(vec![]),
+            SValue::Classed { inner, .. } => inner.as_logical(),
+            other => Err(SError::TypeError(format!(
+                "argument is not logical (got {})",
+                other.type_name()
+            ))),
+        }
+    }
+
     /// The character labels of a factor (`None` = `NA`), used by `as.character`
     /// and when a factor is combined into a character vector.
     pub fn factor_labels(codes: &[Option<u32>], levels: &[String]) -> Vec<Option<String>> {

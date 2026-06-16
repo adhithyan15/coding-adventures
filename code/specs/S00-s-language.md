@@ -260,8 +260,10 @@ needs a string assignment target: `"%between%" <- function(x, r) x >= r[1] & x <
 ### V2.3 Expanded built-in library
 
 - **Vectorized math:** `abs sqrt exp log log10 floor ceiling round sin cos tan`.
-- **Utilities:** `seq_len seq_along rev sort order rep unique which any all is.na
-  cumsum cumprod paste paste0`.
+- **Utilities:** `rev sort order rep unique which any all is.na cumsum cumprod
+  paste paste0`. (No underscore-named helpers like R's `seq_len`/`seq_along`:
+  in historical S `_` is assignment, so such names cannot be written — `seq()`
+  and `1:n` cover the need.)
 - **Apply family:** `sapply(x, f)` / `lapply(x, f)` map a function over elements
   (`sapply` simplifies length-1 atomic results to a vector).
 
