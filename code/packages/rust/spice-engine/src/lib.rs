@@ -6907,7 +6907,10 @@ fn is_noop_control_block_command(line: &str) -> bool {
     let Some(command) = parts.next().map(|command| command.to_ascii_lowercase()) else {
         return false;
     };
-    if matches!(command.as_str(), "run" | ".run" | "quit" | ".quit") {
+    if matches!(
+        command.as_str(),
+        "run" | ".run" | "reset" | ".reset" | "quit" | ".quit"
+    ) {
         return true;
     }
     if !matches!(command.as_str(), "set" | ".set") {

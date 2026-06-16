@@ -136,6 +136,7 @@ measure tran vmax MAX V(out)
 meas dc imax MAX I(V1)
 fourier 1k V(out)
 four 2k V(in)
+reset
 set noaskquit
 set filetype=ascii
 run
@@ -178,7 +179,7 @@ quit
             (".include", 2, "error"),
             (".lib", 3, "error"),
             (".control", 4, "error"),
-            (".control", 14, "error")
+            (".control", 15, "error")
         ]
     );
     assert_eq!(
@@ -321,6 +322,7 @@ measure tran vmax MAX V(a)
 meas dc imax MAX I(V1)
 fourier 1k V(a)
 four 2k V(b)
+.reset
 .set noaskquit
 run
 .quit
