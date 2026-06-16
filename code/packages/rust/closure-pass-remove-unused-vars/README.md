@@ -41,7 +41,7 @@ Three reasons to split:
 Closure Compiler itself ships a `removeUnusedVars` pass for
 this reason.
 
-## What's here (v1)
+## What's here
 
 - `RemoveUnusedVarsPass` implementing the `Pass` trait from
   [`closure-pass-pipeline`](../closure-pass-pipeline).
@@ -53,26 +53,44 @@ this reason.
     unreference another.
   - `cost = 3` — per-scope binding-table build + delete; same
     shape as DCE.
-- `Pass::run` is **identity** in v1: `javascript-ast` ships
-  only `Program` / `SourceType` today, so there are no
-  `VariableDeclaration` / `Identifier` nodes to remove. The
-  real per-scope walk + deletion slots into `Pass::run` once
-  the AST grows variants.
+- A real `Pass::run`: it runs `closure-scope-analyzer`, builds a
+  per-binding use-count from the resolved references, and deletes
+  top-level (`ScopeId::GLOBAL`) `var`/`let`/`const` bindings that
+  nothing references — **as long as the initializer is
+  side-effect-free**.
 
-## What this PR locks down even as identity
+## What it removes (and what it deliberately keeps)
+
+```js
+var dead = 1;            // removed — no references, literal init
+var a = 1, unused = 2;   // → var a = 1;   (only the dead declarator dropped)
+a;                       //   (a is referenced, so it survives)
+
+let x = sideEffect();    // KEPT — unreferenced, but the call may have a
+                         //        side effect that must still run
+```
+
+A declarator is dropped only when its name has zero resolved references
+**and** its initializer is removable — absent, a literal, or a bare
+identifier (a pure read). Calls, `new`, member access, assignments, etc.
+are treated as potentially side-effecting and keep the declarator. Both
+the bare `ProgramItem::Declaration` and the
+`ProgramItem::Statement(Statement::Declaration(...))` shapes (the latter
+is what the `javascript-parser` bridge emits) are handled.
+
+Current scope: top-level bindings only. Function-local removal and
+sidecar-driven purity (to reach `const x = pureCall()`) are follow-ups.
+
+## Scheduler integration
 
 1. The `depends_on(["dce", "inline"])` edges are in the
    scheduler graph — both predecessors must finish first.
-2. Two-pass integration test
-   (`pipeline_orders_dce_before_remove_unused_vars`) registers
-   RemoveUnusedVarsPass first and verifies the scheduler
-   reorders.
-3. Three-pass integration test
-   (`pipeline_orders_three_passes_canonically`) registers all
-   three out of order and verifies the canonical
+2. `pipeline_orders_dce_before_remove_unused_vars` registers
+   RemoveUnusedVarsPass first and verifies the scheduler reorders.
+3. `pipeline_orders_three_passes_canonically` registers all three
+   out of order and verifies the canonical
    `dce / inline → remove-unused-vars` topo-sort.
-4. Pass metadata drives the future
-   `closurec --disable=remove-unused-vars`.
+4. Pass metadata drives `closurec --disable=remove-unused-vars`.
 
 ## Where this pass sits
 

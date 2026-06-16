@@ -2,6 +2,53 @@
 
 All notable changes to the `coding-adventures-closure-pass-remove-unused-vars` crate will be documented in this file.
 
+## [0.4.0] - 2026-06-16
+
+### Fixed — the pass was a silent no-op on real programs
+
+The CLOC13.E.1 apply step removed dead declarators only from the **bare**
+`ProgramItem::Declaration(VariableDeclaration)` form. But the
+`javascript-parser` bridge emits a top-level `var x = 1;` as
+`ProgramItem::Statement(Statement::Declaration(VariableDeclaration))` (it routes
+`variable_statement` through `Statement::Declaration`). So on every real
+(bridged) program the pass matched nothing and removed nothing — and there was
+no test covering actual removal to catch it (every prior test asserted
+`!changed`).
+
+This was found by wiring the pass into `closurec`'s SIMPLE pipeline and
+observing `var unused = 1; used();` come out unchanged.
+
+### Added — real removal, in both shapes, with a purity gate
+
+- The apply step now prunes dead declarators from **both** the bare
+  `ProgramItem::Declaration` form **and** the
+  `ProgramItem::Statement(Statement::Declaration(...))` form, re-wrapping
+  survivors in whichever shape they arrived. Shared `prune_var_decl` helper.
+- **Initializer-purity gate** (`is_removable_init`): a dead declarator is
+  dropped only when its initializer is side-effect-free — absent (`var x;`), a
+  literal, or a bare identifier (a pure variable read). A dead binding with a
+  call / member / assignment / etc. initializer is **kept**, so its side effect
+  still runs. Previously the apply step deleted the whole declarator
+  unconditionally, which would have silently dropped `var x = sideEffect();`.
+- Removal stays restricted to `ScopeId::GLOBAL` bindings (top-level), matched by
+  name against `program.body`. Function-local removal and sidecar-driven purity
+  (to reach `const x = pureCall()`) remain follow-ups.
+
+### Tests
+
+- **Six new tests** exercising actual removal for the first time:
+  `removes_unused_top_level_var_statement_form` (the bridge's shape),
+  `removes_unused_top_level_var_bare_declaration_form`,
+  `keeps_used_var_statement_form`, `splits_multi_declarator_dropping_only_dead`,
+  `keeps_unused_var_with_impure_initializer` (purity gate), and
+  `is_removable_init_classifies_purity`.
+
+### Docs
+
+- De-staled the module header, struct doc, `run` comments, and test-module doc,
+  which all still claimed "v1 is identity" / "step 3 deferred" / "analyzer
+  returns empty bindings" — none of which has been true since CLOC13.0.1.
+
 ## [0.3.0] - 2026-06-02
 
 ### Added (CLOC13.E.1 — the apply step, `changed` unpinned)
