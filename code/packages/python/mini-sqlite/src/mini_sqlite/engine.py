@@ -22,6 +22,7 @@ is reached.
 
 from __future__ import annotations
 
+import contextlib
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import replace
@@ -54,6 +55,7 @@ from sql_planner import (
     UpdateStmt,
     plan,
 )
+from sql_planner.expr import Wildcard as _Wildcard
 from sql_planner.plan import (
     Aggregate,
     DerivedTable,
@@ -119,6 +121,59 @@ _WRITE_STMT_TYPES = (
 
 if TYPE_CHECKING:
     from .advisor import IndexAdvisor
+
+
+def _collect_scan_tables(node: LogicalPlan) -> list[str]:
+    """Walk a plan tree and return table names from Scan nodes in document order.
+
+    Used by the CTAS empty-source fallback to expand ``SELECT *`` wildcards
+    into concrete column names when the source table holds no rows (so the VM
+    never emits any and ``QueryResult.columns`` stays empty).
+    """
+    if isinstance(node, Scan):
+        return [node.table]
+    result: list[str] = []
+    for child in _plan_children(node):
+        result.extend(_collect_scan_tables(child))
+    return result
+
+
+def _ctas_infer_columns(
+    backend: Backend,
+    sel_sql: str,
+    view_defs: dict[str, Any] | None,
+) -> tuple[str, ...]:
+    """Derive CTAS output column names by planning *sel_sql* without executing it.
+
+    Called only when the source SELECT returned no rows (empty table), meaning
+    ``QueryResult.columns`` is ``()``.  The plan's ``Project`` node carries
+    alias information that lets us recover the correct column names.
+
+    Column-name rules (matching VM behaviour for non-empty tables):
+
+    * Explicit ``AS alias`` → use the alias.
+    * ``SELECT *`` wildcard → expand to the backend's column names for each
+      scanned table, in scan order.
+    * Any other unnamed expression (``x * 2``, ``1``, …) → ``'?'``, matching
+      the ``'?'`` sentinel the VM emits for computed columns without an alias.
+    """
+    _ast = parse_sql(sel_sql)
+    _stmt = to_statement(_ast, view_defs=view_defs or {})
+    _lp = plan(_stmt, backend_as_schema_provider(backend))
+    _opt = optimize(_lp)
+    if not isinstance(_opt, Project):
+        return ()
+    cols: list[str] = []
+    for _item in _opt.items:
+        if isinstance(_item.expr, _Wildcard):
+            for _tbl in _collect_scan_tables(_opt.input):
+                with contextlib.suppress(Exception):
+                    cols.extend(c.name for c in backend.columns(_tbl))
+        elif _item.alias is not None:
+            cols.append(_item.alias)
+        else:
+            cols.append("?")
+    return tuple(cols)
 
 
 def run(
@@ -250,6 +305,93 @@ def run(
             r"\1 \2",
             bound,
         )
+        # CREATE TABLE … AS SELECT … (CTAS)
+        #
+        # SQLite's CTAS creates a new table whose column names come from the
+        # SELECT's output.  Declared types are copied from source-column
+        # declarations for bare column references; expression columns get an
+        # empty declared type (BLOB affinity — the permissive SQLite default).
+        #
+        # Mini-sqlite handles CTAS as a pre-parse interception because the SQL
+        # grammar only accepts CREATE TABLE with an explicit column list.  The
+        # steps mirror what SQLite does internally:
+        #
+        #   1. Execute the source SELECT to obtain column names and rows.
+        #   2. CREATE TABLE dst (col1, col2, …) — names only, no declared types.
+        #   3. Bulk-INSERT every source row.
+        #
+        # ``IF NOT EXISTS`` is honoured: if the table already exists the whole
+        # statement is a no-op (rows are NOT inserted into the existing table).
+        #
+        # Column type inheritance from source declarations is a known
+        # limitation: all destination columns get BLOB affinity regardless of
+        # the source schema.  Dynamic typing means query results are still
+        # correct; only ``PRAGMA table_info`` shows empty types.
+        _ctas_m = re.match(
+            r"\s*CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)?(\S+)\s+AS\s+(.+)",
+            bound,
+            re.IGNORECASE | re.DOTALL,
+        )
+        if _ctas_m:
+            if bool(_pragma_get(backend, "query_only")):
+                raise OperationalError(READONLY_ERROR_MESSAGE)
+            _ctas_ine = bool(_ctas_m.group(1))
+            _ctas_tbl = _ctas_m.group(2).strip("\"'`[]")
+            _ctas_sel = _ctas_m.group(3).strip()
+            _ctas_kw: dict[str, Any] = dict(
+                advisor=advisor,
+                view_defs=view_defs,
+                check_registry=check_registry,
+                fk_child=fk_child,
+                fk_parent=fk_parent,
+                savepoints=savepoints,
+                trigger_executor=trigger_executor,
+                trigger_depth=trigger_depth,
+                user_functions=user_functions,
+            )
+            # Step 1 — execute the source SELECT.
+            _ctas_src = run(backend, _ctas_sel, **_ctas_kw)
+            # Step 2 — create the destination table.
+            # Every column gets BLOB affinity — the permissive SQLite default
+            # for expression columns.  Type propagation from source column
+            # declarations is a known limitation (PRAGMA table_info shows
+            # BLOB rather than the source column's declared type).
+            #
+            # When the source table is empty the VM emits no rows, leaving
+            # QueryResult.columns as ().  In that case we plan the SELECT to
+            # recover the output column names without executing it.
+            _ctas_col_names = _ctas_src.columns or _ctas_infer_columns(
+                backend, _ctas_sel, view_defs
+            )
+            # Sanitise column names: the VM uses '?' for unnamed computed
+            # columns, but '?' is a qmark placeholder in SQL; replace it with
+            # a positional synthetic name.  Double-quote identifiers so the
+            # grammar strips the delimiters and stores the bare name — backtick
+            # quoting stores names WITH the backtick characters.
+            _safe_col_names = [
+                c
+                if re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", c)
+                else f"col_{i}"
+                for i, c in enumerate(_ctas_col_names)
+            ]
+            _ctas_cols = ", ".join(f'"{n}" BLOB' for n in _safe_col_names)
+            try:
+                run(backend, f'CREATE TABLE "{_ctas_tbl}" ({_ctas_cols})', **_ctas_kw)
+            except OperationalError as _ctas_e:
+                if _ctas_ine and "already exists" in str(_ctas_e).lower():
+                    return QueryResult(rows_affected=0)
+                raise
+            # Step 3 — bulk-insert source rows.
+            if _ctas_src.rows:
+                _ctas_ph = ", ".join("?" * len(_safe_col_names))
+                for _ctas_row in _ctas_src.rows:
+                    run(
+                        backend,
+                        f'INSERT INTO "{_ctas_tbl}" VALUES ({_ctas_ph})',
+                        _ctas_row,
+                        **_ctas_kw,
+                    )
+            return QueryResult(rows_affected=len(_ctas_src.rows))
         ast = parse_sql(bound)
         stmt = to_statement(ast, view_defs=view_defs)
 

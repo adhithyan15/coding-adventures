@@ -1,5 +1,43 @@
 # Changelog
 
+## [2.18.0] - 2026-06-15
+
+### Added
+
+- ``CREATE TABLE dst AS SELECT … FROM src`` (CTAS — *Create Table As
+  Select*) is now supported.  The statement:
+
+  1. Executes the source SELECT.
+  2. Creates the destination table with one column per SELECT output,
+     named after the output alias (or the source column name for bare
+     column references).
+  3. Bulk-inserts all rows from the SELECT result into the new table.
+
+  ``IF NOT EXISTS`` is honoured: if the destination table already exists
+  the entire statement becomes a no-op (no rows are inserted into the
+  existing table).
+
+  The destination is created even when the source SELECT returns zero
+  rows — column names are inferred by planning the SELECT statement
+  against the source schema without executing it.
+
+  CTAS respects all standard SELECT modifiers: ``WHERE``, ``ORDER BY``,
+  ``LIMIT``, ``GROUP BY``, ``HAVING``, aggregates, CTEs, ``TEMP`` /
+  ``TEMPORARY``, and so on.
+
+  CTAS is blocked under ``PRAGMA query_only = 1`` (it is a DDL write).
+
+  Known limitations versus real SQLite:
+
+  * Column types in the destination are always ``BLOB`` affinity
+    regardless of the source column's declared type.  Queries return
+    correct values because SQLite / mini-sqlite use dynamic typing;
+    only ``PRAGMA table_info`` shows ``BLOB`` rather than the original
+    type.
+  * Unnamed computed expression columns (e.g. ``SELECT x * 2 FROM t``)
+    are assigned a positional name (``col_0``, ``col_1``, …).  Real
+    SQLite uses the expression text (``x * 2``) as the column name.
+
 ## [2.17.0] - 2026-05-24
 
 ### Fixed
