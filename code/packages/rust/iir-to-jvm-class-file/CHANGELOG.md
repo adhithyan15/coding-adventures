@@ -3,6 +3,35 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.2] — 2026-06-16 (LANG-FULL BA-JVM-1 — BASIC `IF`/`FOR` run on the JVM)
+
+### Fixed — a comparison's dest slot is `int`, so an i64-operand guard verifies
+
+Dartmouth BASIC's `IF`/`FOR` control-flow programs were excluded from the JVM
+matrix column: real `java` rejected the class with `VerifyError: Accessing value
+from uninitialized register pair`. (A print with no branch, and a loop with no
+print — Nib's `for` — each worked; only the *combination* in BASIC failed.)
+
+Root cause: `build_type_map` typed a comparison's dest slot from its `type_hint`,
+which carries the **operand** width, not the result width. A comparison ALWAYS
+produces a 0/1 **`int`** (it is stored with a bare `istore`), but a comparison
+over `i64` operands had `type_hint = "i64"`, so the dest slot was typed `Long`.
+The later `jmp_if_false` then read that slot with the long guard
+(`lload; lconst_0; lcmp; ifeq`) — reading the uninitialized second half of a
+"long" the comparison only `istore`d → the verifier's "uninitialized register
+pair". Nib's loops are unaffected because scalar Nib is concretized to `i32`
+(`lang_aot::concretize_scalar_any_for_jvm`); BASIC **prints**, so it keeps the
+wide i64 value model and exposed the mismatch.
+
+Fix: `build_type_map` now types any comparison op (`cmp_eq`/`ne`/`lt`/`le`/`gt`/
+`ge`, via the new `is_comparison_op`) dest as `JvmType::Int`, regardless of the
+operand-width hint. The slot is then `int`, the `istore` is consistent, and
+`jmp_if_false` reads it with `iload; ifeq`. **Verified on real `java`**: the
+BASIC `FOR` sum (`1..5 → 15`) and `IF` branch (`A>5 → 7`) now run on the JVM;
+both are added to the `lang-aot` matrix JVM column. New regression test
+`ba_jvm_1_i64_cmp_into_jmp_if_uses_int_guard`. No other backend or program
+affected (full matrix + jvm consumers green).
+
 ## [0.13.1] — 2026-06-16 (LANG-FULL E2 — revert the long model back to the int model)
 
 ### Fixed — narrow types use the JVM `int` model, not the v0.13.0 `long` model

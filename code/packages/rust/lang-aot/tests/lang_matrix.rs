@@ -512,7 +512,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
         expect: Expect::Stdout("15"),
-        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Dartmouth BASIC — `IF … THEN <line>` + `GOTO`-style jump (LANG-FULL BA0). `A > 5`
     // lowers to `cmp_gt` (one of the comparisons LLVM compared at the wrong width until
@@ -525,7 +525,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A = 7\n20 IF A > 5 THEN 100\n30 PRINT 0\n40 END\n100 PRINT A\n110 END\n",
         expect: Expect::Stdout("7"),
-        backends: &[NativeAot, Llvm, Wasm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
 ];
 

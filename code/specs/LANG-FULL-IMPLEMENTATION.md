@@ -233,11 +233,16 @@ backend immediately) come before the enabler-dependent items.
   at 1-bit `i1` width (`7 > 5` → `1 > 1` → false). Fixed to emit the `i64` operand width
   (like Nib/Oct/ALGOL). Verified by RUNNING `FOR I = 1 TO 5: S = S + I`→`15` and
   `IF A > 5 THEN 100`→`7` across native/LLVM/WASM/CLR/VM/JIT.
-- ☐ **BA-JVM-1** — BASIC branch (`IF`/`FOR`) **+ `print_i64`** on the JVM. The two BA0
-  control-flow programs are excluded from the JVM cell: `iir-to-jvm-class-file`'s
-  StackMapTable generation trips on the frame at a branch target when several `long`
-  locals are live across a host-method invoke. (A print with no branch and a loop with no
-  print both work on JVM; only the combination fails.) A self-contained `iir-to-jvm` fix.
+- ✅ **BA-JVM-1** — BASIC branch (`IF`/`FOR`) **+ `print_i64`** on the JVM (iir-to-jvm-class-file
+  0.13.2). The diagnosis wasn't a StackMapTable issue (the backend emits class version 49 to
+  skip StackMapTables) but a slot-typing bug: `build_type_map` typed a comparison's dest by its
+  `type_hint` (the *operand* width), so a comparison over BASIC's i64 operands got a `Long` slot
+  — yet a comparison always produces a 0/1 `int` stored with `istore`, and the later
+  `jmp_if_false` read it with the long guard (`lload; lconst_0; lcmp`) → `VerifyError:
+  uninitialized register pair`. (Nib's loops escape it because scalar Nib is concretized to i32;
+  BASIC prints, so it keeps the i64 model.) Fix: comparison dests are typed `int`. **Verified on
+  real `java`** — the BASIC `FOR` sum (`15`) and `IF` branch (`7`) now run on the JVM; both added
+  to the matrix JVM column.
 - ☐ **BA1** — `GOSUB` / `RETURN` (needs **E7**).
 - ☐ **BA2** — multi-item `PRINT`, `;`/`,` separators, more relops.
 - ☐ **BA3** — arrays / `DIM` (needs **E5**).

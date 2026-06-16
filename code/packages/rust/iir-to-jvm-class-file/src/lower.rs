@@ -1283,6 +1283,15 @@ fn allocate_slots(
 /// `__callClosure(long[], long[])` dispatch method always returns `long`,
 /// so the receiving slot must be two-slot-wide even when the type_hint is
 /// the generic `"any"` string.
+/// A comparison op produces a 0/1 boolean `int`, whatever its operand width.
+/// Its dest slot must therefore be `int` on the JVM (see [`build_type_map`]).
+fn is_comparison_op(op: &str) -> bool {
+    matches!(
+        op,
+        "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge"
+    )
+}
+
 fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
     let mut map: HashMap<String, JvmType> = HashMap::new();
 
@@ -1301,6 +1310,18 @@ fn build_type_map(func: &IIRFunction) -> HashMap<String, JvmType> {
             } else if instr.op == "call_closure" {
                 // __callClosure always returns long
                 JvmType::Long
+            } else if is_comparison_op(&instr.op) {
+                // A comparison ALWAYS produces a 0/1 `int` result (it is stored
+                // with a bare `istore`), regardless of its `type_hint` — which
+                // carries the *operand* width, not the result width. Typing the
+                // dest by the hint (e.g. `i64` → `Long`) for a comparison over
+                // `long` operands gives the slot a `Long` type, so a later
+                // `jmp_if_false` reads it with `lload` while the comparison wrote
+                // it with `istore` → the verifier rejects "uninitialized register
+                // pair" (BA-JVM-1: BASIC's `IF`/`FOR` over its i64 value model,
+                // which — unlike the concretized-to-i32 scalar path — keeps the
+                // operands `long`). Force the bool result to `Int`.
+                JvmType::Int
             } else {
                 iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int)
             };
