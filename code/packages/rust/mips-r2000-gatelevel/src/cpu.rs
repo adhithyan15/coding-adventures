@@ -74,6 +74,8 @@ pub enum MipsError {
     Break(u32),
     /// Unknown opcode or funct.
     UnknownOpcode(u32, u32),
+    /// Program does not fit in memory at the given origin.
+    InvalidLoad(String),
 }
 
 /// The MIPS R2000 gate-level CPU.
@@ -105,23 +107,33 @@ impl CpuMipsR2000 {
 
     /// Load `program` bytes into memory at `origin`, then reset.
     ///
-    /// # Panics
-    ///
-    /// Panics if the program doesn't fit within 64 KB.
-    pub fn load(&mut self, program: &[u8], origin: u32) {
-        self.reset();
+    /// Validates that the program fits before touching any CPU state; on
+    /// failure the CPU is left unchanged and `Err(MipsError::InvalidLoad)`
+    /// is returned so the caller can handle the error without a process abort.
+    pub fn load(&mut self, program: &[u8], origin: u32) -> Result<(), MipsError> {
         let start = origin as usize;
-        let available = MEM_SIZE.saturating_sub(start);
-        assert!(
-            program.len() <= available,
-            "load: program length {} exceeds available memory {} at origin {:#06x}",
-            program.len(),
-            available,
-            origin
-        );
-        let end = start + program.len().min(available);
-        self.mem[start..end].copy_from_slice(&program[..end - start]);
+        if start >= MEM_SIZE {
+            return Err(MipsError::InvalidLoad(format!(
+                "origin {:#010x} is outside the 64 KB memory range",
+                origin
+            )));
+        }
+        let available = MEM_SIZE - start;
+        if program.len() > available {
+            return Err(MipsError::InvalidLoad(format!(
+                "program length {} exceeds available {} bytes at origin {:#06x}",
+                program.len(),
+                available,
+                origin
+            )));
+        }
+        // Validate first, mutate after: reset only on success so that a bad
+        // origin/length call leaves the CPU in its previous state.
+        self.reset();
+        let end = start + program.len();
+        self.mem[start..end].copy_from_slice(program);
         self.rf.write_pc(origin);
+        Ok(())
     }
 
     /// Run the program for up to `max_steps` instructions.
@@ -133,7 +145,7 @@ impl CpuMipsR2000 {
         origin: u32,
         max_steps: u32,
     ) -> Result<u32, MipsError> {
-        self.load(program, origin);
+        self.load(program, origin)?;
         let mut steps = 0u32;
         while !self.halted && steps < max_steps {
             self.step()?;
@@ -648,6 +660,9 @@ impl CpuMipsR2000 {
                 let result = if shift == 0 {
                     mem_word
                 } else {
+                    // byte_offset in 1..=3 here (shift==0 branch handles 0),
+                    // so shift in {8,16,24} and low_bits in {24,16,8} — never 0 or 32,
+                    // so 1u32 << low_bits is always in-range (no shift-amount panic).
                     let low_bits = 32 - shift;
                     let rt_mask = 0xFFFF_FFFFu32 ^ ((1u32 << low_bits) - 1);
                     let mem_mask = (1u32 << low_bits) - 1;
@@ -711,6 +726,7 @@ impl CpuMipsR2000 {
                 let result = if shift == 0 {
                     rt_val
                 } else {
+                    // byte_offset in 1..=3 here, so low_bits in {24,16,8} — no shift-amount panic.
                     let low_bits = 32 - shift;
                     let rt_mask = (1u32 << low_bits) - 1;
                     let mem_mask = 0xFFFF_FFFFu32 ^ rt_mask;
