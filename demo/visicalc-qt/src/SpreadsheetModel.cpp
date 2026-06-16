@@ -102,6 +102,24 @@ void SpreadsheetModel::seed() {
     for (const auto &cell : cells) {
         takeString(sc_set_cell(session_, cell.a1, cell.raw));
     }
+
+    // Attach Excel-style format codes so the engine's display path is visible in
+    // the infinite view (which now renders via sc_get_display_window): the
+    // cross-foot totals read with thousands grouping + two decimals, and the
+    // far-flung Z1000 total as a percent. Values are unchanged — only how the
+    // display strings render. Identical to the web demo's seeded formats.
+    static const struct {
+        const char *a1;
+        const char *code;
+    } formats[] = {
+        {"E1", "#,##0.00"}, {"E2", "#,##0.00"}, {"E3", "#,##0.00"},
+        {"E4", "#,##0.00"}, {"E5", "#,##0.00"},
+        {"A5", "#,##0.00"}, {"B5", "#,##0.00"}, {"C5", "#,##0.00"}, {"D5", "#,##0.00"},
+        {"Z1000", "0.0%"}, // 39 → "3900.0%": proves the format applies far off-origin
+    };
+    for (const auto &f : formats) {
+        sc_set_format(session_, f.a1, f.code);
+    }
 }
 
 QString SpreadsheetModel::display(const QString &a1) const {
@@ -158,17 +176,22 @@ void SpreadsheetModel::select(int row, int col) {
 // — the Qt sibling of the SwiftUI/web infinite views. 1-based inclusive coords.
 
 QVariantList SpreadsheetModel::window(int row0, int col0, int row1, int col1) const {
-    const QString json = takeString(sc_get_window(
+    // sc_get_display_window returns each cell already rendered through its format
+    // code as a display STRING (the format-aware sibling of sc_get_window), so the
+    // QML grid paints the strings directly and never re-derives number formatting.
+    // The JSON is {"row0":..,"cols":..,"cells":[["1,234.50",..],..]} (empty cells
+    // ""), or {"error":".."} on a bad/oversized request.
+    const QString json = takeString(sc_get_display_window(
         session_, static_cast<quint32>(row0), static_cast<quint32>(col0),
         static_cast<quint32>(row1), static_cast<quint32>(col1)));
     QVariantList rows;
     const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
     if (!doc.isObject()) return rows; // bad/oversized request → empty
-    const QJsonArray values = doc.object().value(QStringLiteral("values")).toArray();
-    for (const QJsonValue &rowVal : values) {
+    const QJsonArray cells = doc.object().value(QStringLiteral("cells")).toArray();
+    for (const QJsonValue &rowVal : cells) {
         QVariantList row;
         for (const QJsonValue &cell : rowVal.toArray()) {
-            row.append(displayValue(cell.toObject()));
+            row.append(cell.toString());
         }
         rows.append(QVariant(row));
     }

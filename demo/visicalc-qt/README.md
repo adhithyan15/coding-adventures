@@ -75,7 +75,11 @@ with binary-op error propagation (`=1/0` → `#DIV/0!`, and `=A1+1` over it →
 `SpreadsheetModel` also exposes the engine's **viewport primitive** —
 `window(r0,c0,r1,c1)` (a dense `QVariantList` rectangle of display strings),
 `usedRange()`, `columnLetters()`, `currentRevision()`, and `changedSince()` —
-over the C ABI's `sc_get_window` / `sc_used_range` / `sc_changed_since`. These
+over the C ABI's `sc_get_display_window` / `sc_used_range` / `sc_changed_since`.
+`window()` reads `sc_get_display_window`, so each cell arrives already rendered
+through its Excel-style format code (the seed formats the cross-foot totals as
+`#,##0.00` and the far-flung `Z1000` total as a percent) — the Qt host paints
+the strings directly and never re-derives number formatting. These
 are `Q_INVOKABLE`, so a windowed QML grid (rendering only the visible rectangle
 of an unbounded sheet, the Qt sibling of the web/SwiftUI infinite views) binds
 to them directly.
@@ -88,8 +92,8 @@ sparse) sheet rendered on the same engine. The body is a QtQuick `ListView`,
 which natively virtualizes: it instantiates a row delegate only while that row
 is on screen, so a 1000-row-tall sheet costs the handful of rows you can
 actually see. Each visible row calls `model.rowCells(row)` **once** — a single
-`get_window` over that row's `1×totalCols` strip — so per-frame engine work is
-proportional to *visible* rows, never to the sheet's height.
+`get_display_window` over that row's `1×totalCols` strip — so per-frame engine
+work is proportional to *visible* rows, never to the sheet's height.
 
 Two-axis scroll with frozen chrome, kept in sync by binding offsets: the
 column-letter header tracks the body's horizontal pan (`header.contentX ←
