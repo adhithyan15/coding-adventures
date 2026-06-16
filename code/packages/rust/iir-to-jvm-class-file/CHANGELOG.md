@@ -3,6 +3,49 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.0] — 2026-06-16 (LANG-FULL E2 integration — compute-wide + mask)
+
+### Changed — narrow unsigned types ride the JVM `long` register model
+
+The v0.12.0 E2 masking typed a narrow op at the JVM `int` width (`u8` → `iadd`)
+and masked with `iand`. That is only valid when the **operands** are also `int`.
+A real frontend's value model isn't: Nib (and the other LANG languages)
+materialise every `const`/`let`/`ret` as `i64` (= JVM `long`) for module
+uniformity, carrying the narrow width *only on the arithmetic op*. So a Nib `u8`
+add emitted `iadd` over two `long` locals → **JVM bytecode verification error**
+(type mismatch on the operand stack). The v0.12.0 structural tests never caught
+it — they built self-consistent narrow-width modules (every operand `u8` too).
+
+The fix makes narrow **unsigned** integers (`u4`/`u8`/`u16`/`u32`) use the
+`long` register model, exactly like the vm-core/jit-core/LLVM/native/wasm
+backends:
+
+- `iir_type_to_jvm`: `u4`/`u8`/`u16`/`u32` → `JvmType::Long` (were `Int`). Signed
+  narrow (`i8`/`i16`/`i32`) and `bool` keep `Int`. **`u4` is newly recognised**
+  (before E2, Nib widened it to i64 first, so it never reached this backend).
+- `type_to_jvm_descriptor`: those types → `J` (were `I`), so a method that
+  takes/returns one has the right descriptor.
+- Op selection (`instr_jtype` now `Long`) emits the long opcodes — `ladd`/`lsub`/
+  `lmul`/`ldiv`/`lrem`/`land`/`lor`/`lxor`/`lshl`/`lshr`/`lneg`, long `not` as
+  `ldc2_w -1; lxor`, and the load/store as `lload`/`lstore` — over the long
+  operands.
+- `emit_jvm_width_mask`: `ldc2_w <mask>; land` (was `…; iand`), pushing the mask
+  from the constant pool as a `Long` so the wide values (`0xFFFF`, `0xFFFFFFFF`)
+  work — and it now covers `u32` (within a 64-bit register a 32-bit op no longer
+  self-wraps).
+- Shifts: the JVM shift count is always an `int`, so a now-`long` narrow shift
+  count is narrowed with `l2i` before `lshl`/`lshr` (a bare `iload` of a long
+  slot would be a verify error).
+
+So `200u8 + 100u8` wraps to `44` **with long operands** — the shape a frontend
+actually emits. The full `lang-aot` matrix (real `java`) and all jvm consumers
+stay green — the change is a no-op for every i64/u64 program. New structural
+test `e2_u8_op_over_i64_operands_is_long` covers the regression; the v0.12.0 E2
+tests were updated to the long-mask shape and `e2_u32_add_masks` added.
+
+This is the second of the 3 stack-backend reworks (wasm ✅, jvm, then cil) the E2
+Nib integration needs.
+
 ## [0.12.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 4 of 6)
 
 ### Added — narrow-width arithmetic wraps mod-2ⁿ on the JVM

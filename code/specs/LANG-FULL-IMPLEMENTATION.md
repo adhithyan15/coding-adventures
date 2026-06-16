@@ -119,7 +119,11 @@ multiple languages; close an enabler before the features that depend on it.
       - ✅ **iir-to-wasm** (v0.15.0) — `uses_i64_register` selects `i64.*` ops; mask is
         `i64.const <mask>; i64.and` (now incl. `u32`). **Executed proof** on real `wasm-runtime`:
         `200i64 + 100i64 : u8 == 44`. Full matrix + wasm consumers green (no-op for i64 programs).
-      - ☐ **iir-to-jvm-class-file** — long ops + `land` mask.
+      - ✅ **iir-to-jvm-class-file** (v0.13.0) — narrow unsigned → `JvmType::Long` (`J`
+        descriptor); long opcodes (`ladd`/`land`/…) over the long operands; mask is
+        `ldc2_w <mask>; land` (now incl. `u32`); long shift counts narrowed via `l2i`; `u4`
+        newly recognised. Structural proof `e2_u8_op_over_i64_operands_is_long`; full matrix
+        (real `java`) + jvm consumers green (no-op for i64 programs).
       - ☐ **iir-to-cil-bytecode** — i64 ops + `and` mask.
     - ☐ **aot-core u4** — the native CIR pipeline (`infer`/`specialise`) didn't list `u4`, so a
       Nib `u4` op was refused before #5887's backend mask could fire; add `u4` to ALLOWED_TYPES +

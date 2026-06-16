@@ -599,7 +599,15 @@ impl JvmType {
 /// | anything else         | `None`   | Caller raises an error |
 fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
     match hint {
-        "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => Some(JvmType::Int),
+        // Signed narrow widths and `bool` use the JVM `int` model.
+        "i8" | "i16" | "i32" | "bool" => Some(JvmType::Int),
+        // Narrow **unsigned** types ride the `long` register model (LANG-FULL
+        // E2): every LANG frontend carries integer values in 64-bit slots, so a
+        // `u8` register is a `long` whose arithmetic is masked to 8 bits after
+        // each op. Typing it `int` would fail JVM verification the moment a
+        // `u8` op met a `long` operand (a const/let) — exactly Nib's value
+        // model. (`u4` is new here — before E2 Nib widened it to i64 first.)
+        "u4" | "u8" | "u16" | "u32" => Some(JvmType::Long),
         "i64" | "u64" => Some(JvmType::Long),
         "f32" => Some(JvmType::Float),
         "f64" => Some(JvmType::Double),
@@ -649,7 +657,10 @@ fn make_descriptor(params: &[(String, String)], return_type: &str) -> String {
 /// return-type descriptors.  Unknown types default to `"I"` (int).
 fn type_to_jvm_descriptor(hint: &str) -> &str {
     match hint {
-        "i8" | "i16" | "i32" | "u8" | "u16" | "u32" | "bool" => "I",
+        "i8" | "i16" | "i32" | "bool" => "I",
+        // Narrow unsigned types ride the `long` register model (E2) — see
+        // `iir_type_to_jvm` — so their descriptor is `J`, not `I`.
+        "u4" | "u8" | "u16" | "u32" => "J",
         "i64" | "u64" => "J",
         "f32" => "F",
         "f64" => "D",
@@ -918,25 +929,31 @@ fn emit_iconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i32) 
     }
 }
 
-/// Mask the `int` on top of the operand stack to a narrow width (LANG-FULL E2).
+/// Mask the narrow-width `long` on top of the operand stack to its bit width
+/// (LANG-FULL E2).
 ///
-/// JVM `int` arithmetic (`iadd`/`imul`/…) wraps mod-2³², so `u32`/`i32` are
-/// already correct.  The smaller widths (`u4`/`u8`/`u16`) need an explicit
-/// `iconst/sipush/ldc <mask>; iand` after the op so `200u8 + 100u8` becomes
-/// `44` and `~0u8` is `255` — mirroring vm-core's `mask_result`, jit-core's
-/// `MASK_WIDTH`, and the wasm `i32.and`, and the byte-tape `baload`+mask
-/// precedent.  We deliberately use a positive mask + `iand` rather than `i2b`/
-/// `i2s` (which sign-extend, giving a *signed* byte — wrong for the unsigned
-/// narrow types the LANG-FULL frontends use).  `i64`/`u64`/floats emit nothing.
+/// Narrow **unsigned** integers ride the `long` register model (see
+/// [`iir_type_to_jvm`]), so the result is masked with `ldc2_w <mask>; land`
+/// after the long op, so `200u8 + 100u8` becomes `44` and `~0u8` is `255`.
+/// This mirrors vm-core's `mask_result`, jit-core's `MASK_WIDTH`, the wasm
+/// `i64.and`, the LLVM `and i64`, and the native `and #mask`, and generalises
+/// the byte-tape `baload`+mask precedent to register arithmetic.  A positive
+/// mask + `land` (not `i2b`/`i2s`, which sign-extend) keeps the unsigned widths
+/// unsigned.  The mask is pushed from the constant pool as a `Long` so the wide
+/// values (`0xFFFF`, `0xFFFF_FFFF`) work — `emit_lconst` only covers i16-range.
+/// `i64`/`u64`/floats emit nothing (the long/native op carries their width).
 fn emit_jvm_width_mask(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, type_hint: &str) {
-    let mask: i32 = match type_hint {
+    let mask: i64 = match type_hint {
         "u4" => 0xF,
         "u8" => 0xFF,
         "u16" => 0xFFFF,
+        "u32" => 0xFFFF_FFFF,
         _ => return,
     };
-    emit_iconst_cp(code, cp, mask);
-    code.push(IAND);
+    let idx = cp.add_long(mask);
+    code.push(LDC2_W);
+    code.extend_from_slice(&idx.to_be_bytes());
+    code.push(LAND);
 }
 
 /// Emit a long constant push.
@@ -1857,8 +1874,15 @@ fn lower_function(
             // the shift count as an int regardless of the value type.
             "shl" | "shr" => {
                 let (src0, src1) = two_srcs(func, instr, &slots)?;
-                emit_typed_load(&mut code, src0.0, src0.1); // value
-                emit_iload(&mut code, src1.0);               // shift count (always int)
+                emit_typed_load(&mut code, src0.0, src0.1); // value (long for narrow)
+                // The JVM shift count is ALWAYS an int (even for `lshl`/`lshr`).
+                // Load the count at its declared width and narrow a `long` count
+                // to int with `l2i` — under E2 a narrow-unsigned count rides a
+                // long slot, so a bare `iload` of it would be a verify error.
+                emit_typed_load(&mut code, src1.0, src1.1);
+                if src1.1 == JvmType::Long {
+                    code.push(L2I);
+                }
                 let opcode = match (instr.op.as_str(), instr_jtype) {
                     ("shl", JvmType::Long) => LSHL,
                     ("shl", _) => ISHL,
