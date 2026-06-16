@@ -7,7 +7,7 @@ End-to-end oracle for the `dce` (dead-code elimination) pass in
 |------|------|
 | `flags.txt` | `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | A function whose body has dead branches and post-`return` code |
-| `expected.stdout` | `function f(){keep();return 1};` |
+| `expected.stdout` | `function f(){keep();return 1};f();` |
 
 The SIMPLE pipeline is now `constant-fold → fold-control-flow → dce`. This
 fixture shows all three composing inside one function body:

@@ -227,15 +227,23 @@ pub fn transform_source(
 ///   remove-unused-vars unless `inline` is registered. (inline is
 ///   currently an identity pass; it earns its slot once function
 ///   inlining lands, and registering it now pins the canonical order.)
-/// - remove-unused-vars runs last and deletes top-level `var/let/const`
-///   bindings that nothing references, when their initializer is
-///   side-effect-free.
+/// - remove-unused-vars deletes top-level `var/let/const` bindings that
+///   nothing references, when their initializer is side-effect-free;
+/// - treeshake runs last and deletes top-level `function`/`class`
+///   declarations that nothing references. It is the function-shaped
+///   complement to remove-unused-vars (which deliberately skips
+///   functions). Running it after remove-unused-vars means a function
+///   that only a now-removed var referenced is itself swept this pass.
+///   Removing an unused function declaration is unconditionally safe —
+///   declaring a function has no side effect, so no purity gate is
+///   needed (unlike a `var` initializer).
 const SIMPLE_PASS_NAMES: &[&str] = &[
     "constant-fold",
     "fold-control-flow",
     "dce",
     "inline",
     "remove-unused-vars",
+    "treeshake",
 ];
 
 /// Run the SIMPLE optimization pipeline over a bridged `Program` and
@@ -270,6 +278,7 @@ fn run_simple_pipeline(
     use coding_adventures_closure_pass_inline::InlinePass;
     use coding_adventures_closure_pass_pipeline::PassPipeline;
     use coding_adventures_closure_pass_remove_unused_vars::RemoveUnusedVarsPass;
+    use coding_adventures_closure_pass_treeshake::TreeshakePass;
     use coding_adventures_correlation_vector::CVLog;
     use coding_adventures_type_sidecar::Sidecar;
 
@@ -291,6 +300,7 @@ fn run_simple_pipeline(
     pipeline.add(Box::new(DcePass::new()));
     pipeline.add(Box::new(InlinePass::new()));
     pipeline.add(Box::new(RemoveUnusedVarsPass::new()));
+    pipeline.add(Box::new(TreeshakePass::new()));
 
     let optimized = match pipeline.run(program, &sidecar, &mut pass_cv) {
         Ok(out) => out.program,
@@ -5641,10 +5651,14 @@ mod tests {
             },
             ..Default::default()
         };
-        let out = transform_source("function f() { g(); return 1; dead(); }", &cfg)
+        // `f` is called so treeshake (now last in the SIMPLE pipeline)
+        // keeps the declaration; otherwise the unused function would be
+        // removed wholesale and the dce-inside-the-body effect wouldn't
+        // be observable.
+        let out = transform_source("function f() { g(); return 1; dead(); } f();", &cfg)
             .expect("ok");
         assert_eq!(
-            out, "function f(){g();return 1};",
+            out, "function f(){g();return 1};f();",
             "dce must drop the statement after the return"
         );
     }
@@ -5662,11 +5676,13 @@ mod tests {
             },
             ..Default::default()
         };
+        // `f` is called so treeshake keeps the declaration (see the
+        // companion dead-after-return test).
         let out =
-            transform_source("function f() { if (4 > 5) { x(); } return 2; }", &cfg)
+            transform_source("function f() { if (4 > 5) { x(); } return 2; } f();", &cfg)
                 .expect("ok");
         assert_eq!(
-            out, "function f(){return 2};",
+            out, "function f(){return 2};f();",
             "dce must sweep the empty statement left by fold-control-flow"
         );
     }
@@ -5758,6 +5774,59 @@ mod tests {
     }
 
     #[test]
+    fn simple_treeshake_drops_unused_function() {
+        // CLOC12.159: the SIMPLE pipeline now ends with treeshake, which
+        // deletes a top-level function declaration nothing references.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out =
+            transform_source("function dead() { return 1; } used();", &cfg).expect("ok");
+        assert_eq!(out, "used();", "the unused function must be removed");
+    }
+
+    #[test]
+    fn simple_treeshake_keeps_called_function() {
+        // A function that IS referenced (called) survives.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::Simple,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out = transform_source("function f() { return 2; } log(f());", &cfg)
+            .expect("ok");
+        assert_eq!(
+            out, "function f(){return 2};log(f());",
+            "a called function must be kept"
+        );
+    }
+
+    #[test]
+    fn simple_treeshake_whitespace_only_keeps_function() {
+        // Companion — the SAME unused function under WHITESPACE_ONLY
+        // survives, proving the removal is the SIMPLE pipeline's doing.
+        let cfg = CompilerConfig {
+            compilation: crate::config::CompilationConfig {
+                level: crate::config::CompilationLevel::WhitespaceOnly,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        let out =
+            transform_source("function dead() { return 1; } used();", &cfg).expect("ok");
+        assert_eq!(
+            out, "function dead(){return 1};used();",
+            "whitespace_only must NOT remove the function"
+        );
+    }
+
+    #[test]
     fn simple_level_bridge_ok_status_in_cv() {
         // When the source parses cleanly, the CV contribution for the
         // `compilation_level` stage must carry bridge_status = "ok".
@@ -5796,7 +5865,7 @@ mod tests {
         // The pass pipeline must be recorded in the trace, in order.
         assert!(
             body.contains(
-                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"remove-unused-vars\"]"
+                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"remove-unused-vars\",\"treeshake\"]"
             ),
             "expected passes list in CV sidecar: {body}"
         );
