@@ -869,6 +869,7 @@ pub struct BrowserDocument {
     pub command_elements: Vec<BrowserCommandElement>,
     pub activation_descriptors: Vec<BrowserActivationDescriptor>,
     pub popovers: Vec<BrowserPopover>,
+    pub popover_descriptors: Vec<BrowserPopoverDescriptor>,
     pub aria_collections: Vec<BrowserAriaCollection>,
     pub aria_ranges: Vec<BrowserAriaRange>,
     pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
@@ -3376,6 +3377,25 @@ pub struct BrowserPopoverInvoker {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserPopoverDescriptor {
+    pub popover_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub popover_mode: String,
+    pub invoker_count: usize,
+    pub invoker_ids: Vec<String>,
+    pub invoker_actions: Vec<String>,
+    pub invoker_aria_expanded: Vec<String>,
+    pub focusable_invoker_count: usize,
+    pub popover_blocked: bool,
+    pub popover_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserDisclosure {
     pub element: String,
     pub id: Option<String>,
@@ -3977,6 +3997,7 @@ impl BrowserDocument {
             &summary.popovers,
             &summary.disclosures,
         );
+        summary.popover_descriptors = browser_popover_descriptors(&summary.popovers);
         summary.focus_navigation_descriptors =
             browser_focus_navigation_descriptors(&summary.interactive_elements);
         summary.keyboard_interaction_descriptors =
@@ -18385,6 +18406,106 @@ fn browser_popover_invoker(
         aria_expanded: browser_aria_state(element, "aria-expanded"),
         focusable: browser_command_focusable(element),
     }
+}
+
+fn browser_popover_descriptors(popovers: &[BrowserPopover]) -> Vec<BrowserPopoverDescriptor> {
+    popovers
+        .iter()
+        .enumerate()
+        .map(|(index, popover)| browser_popover_descriptor(index + 1, popover))
+        .collect()
+}
+
+fn browser_popover_descriptor(
+    popover_index: usize,
+    popover: &BrowserPopover,
+) -> BrowserPopoverDescriptor {
+    let invoker_actions = popover
+        .invokers
+        .iter()
+        .map(browser_popover_invoker_action)
+        .collect();
+    let invoker_aria_expanded = popover
+        .invokers
+        .iter()
+        .filter_map(|invoker| invoker.aria_expanded.clone())
+        .collect();
+    let focusable_invoker_count = popover
+        .invokers
+        .iter()
+        .filter(|invoker| invoker.focusable)
+        .count();
+    let mut descriptor = BrowserPopoverDescriptor {
+        popover_index,
+        element: popover.element.clone(),
+        id: popover.id.clone(),
+        role: popover.role.clone(),
+        text: popover.text.clone(),
+        accessible_name: popover.accessible_name.clone(),
+        accessible_description: popover.accessible_description.clone(),
+        popover_mode: browser_popover_mode(&popover.popover),
+        invoker_count: popover.invokers.len(),
+        invoker_ids: popover
+            .invokers
+            .iter()
+            .filter_map(|invoker| invoker.id.clone())
+            .collect(),
+        invoker_actions,
+        invoker_aria_expanded,
+        focusable_invoker_count,
+        popover_blocked: false,
+        popover_block_reasons: Vec::new(),
+    };
+    descriptor.popover_block_reasons = browser_popover_block_reasons(popover, &descriptor);
+    descriptor.popover_blocked = !descriptor.popover_block_reasons.is_empty();
+    descriptor
+}
+
+fn browser_popover_mode(popover: &str) -> String {
+    if popover.is_empty() {
+        "auto".to_string()
+    } else {
+        popover.to_string()
+    }
+}
+
+fn browser_popover_invoker_action(invoker: &BrowserPopoverInvoker) -> String {
+    if invoker.popover_target.is_some() {
+        let action = invoker.popover_target_action.as_deref().unwrap_or("toggle");
+        return format!("popover-{action}");
+    }
+    if let Some(command) = invoker.command.as_deref() {
+        return command.to_string();
+    }
+    invoker.command_kind.clone()
+}
+
+fn browser_popover_block_reasons(
+    popover: &BrowserPopover,
+    descriptor: &BrowserPopoverDescriptor,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if popover.id.is_none() {
+        reasons.push("missing-id".to_string());
+    }
+    if !matches!(descriptor.popover_mode.as_str(), "auto" | "manual") {
+        reasons.push("invalid-popover-mode".to_string());
+    }
+    if descriptor.invoker_count == 0 {
+        reasons.push("missing-invokers".to_string());
+    }
+    if descriptor.invoker_count > descriptor.focusable_invoker_count {
+        reasons.push("non-focusable-invoker".to_string());
+    }
+    if popover.invokers.iter().any(|invoker| {
+        invoker
+            .popover_target_action
+            .as_deref()
+            .is_some_and(|action| !matches!(action, "toggle" | "show" | "hide"))
+    }) {
+        reasons.push("invalid-popover-target-action".to_string());
+    }
+    reasons
 }
 
 fn browser_aria_collection_element(
