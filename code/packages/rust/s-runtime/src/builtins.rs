@@ -9,7 +9,7 @@
 use crate::env::{define, Env};
 use crate::error::{SError, SResult};
 use crate::eval::{nth_element, Interpreter};
-use crate::value::{bounded_sequence, combine, index, Arg, SValue};
+use crate::value::{bounded_sequence, class_of, combine, index, Arg, SValue};
 use r_vector::{is_na_real, na_real, Double};
 use statistics_core::{descriptive, Number, StatsError};
 use std::collections::HashSet;
@@ -66,6 +66,73 @@ pub fn install(env: &Env) {
 
     // v2 — apply family.
     define(env, "sapply", builtin("sapply", b_sapply));
+
+    // v2 — S3 dispatch and output.
+    define(env, "cat", builtin("cat", b_cat));
+    define(env, "class", builtin("class", b_class));
+    define(env, "structure", builtin("structure", b_structure));
+    define(env, "inherits", builtin("inherits", b_inherits));
+    define(env, "unclass", builtin("unclass", b_unclass));
+}
+
+// ===========================================================================
+// v2 — S3 dispatch helpers
+// ===========================================================================
+
+/// `class(x)` — the class vector (explicit if set, else the implicit type).
+fn b_class(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let classes = class_of(first_positional(args)?);
+    Ok(SValue::Character(classes.into_iter().map(Some).collect()))
+}
+
+/// `structure(x, class = …)` — attach an explicit S3 class to a value. v2
+/// supports the `class` attribute; other attributes are accepted but ignored.
+fn b_structure(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let inner = first_positional(args)?.clone();
+    match args.iter().find(|a| a.name.as_deref() == Some("class")) {
+        Some(arg) => {
+            let class: Vec<String> = arg
+                .value
+                .as_character()
+                .into_iter()
+                .flatten()
+                .collect();
+            Ok(SValue::Classed {
+                inner: Box::new(inner),
+                class,
+            })
+        }
+        None => Ok(inner),
+    }
+}
+
+/// `inherits(x, what)` — whether any class of `x` matches `what`.
+fn b_inherits(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let positional: Vec<&SValue> = args.iter().filter(|a| a.name.is_none()).map(|a| &a.value).collect();
+    let classes: HashSet<String> = class_of(
+        positional
+            .first()
+            .ok_or_else(|| SError::BadArgs("inherits: missing x".into()))?,
+    )
+    .into_iter()
+    .collect();
+    let what: Vec<Option<String>> = positional
+        .get(1)
+        .map(|v| v.as_character())
+        .unwrap_or_default();
+    let hit = what
+        .into_iter()
+        .flatten()
+        .any(|w| classes.contains(&w));
+    Ok(SValue::Logical(vec![Some(hit)]))
+}
+
+/// `unclass(x)` — drop an explicit S3 class, returning the underlying value.
+fn b_unclass(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    match first_positional(args)? {
+        SValue::Classed { inner, .. } => Ok((**inner).clone()),
+        other => Ok(other.clone()),
+    }
 }
 
 // ===========================================================================
@@ -345,14 +412,34 @@ fn b_length(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
     Ok(SValue::scalar(v.length() as f64))
 }
 
-/// `print(x)` — the side effect (writing output) is handled by the evaluator,
-/// which formats whatever this returns. Here we simply pass the value through.
-fn b_print(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
-    Ok(args
+/// `print(x)` — the S3 generic. Dispatch (to a `print.<class>` method, else the
+/// default formatting) is handled by the evaluator; this just forwards the
+/// argument to it.
+fn b_print(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let value = args
         .iter()
         .find(|a| a.name.is_none())
         .map(|a| a.value.clone())
-        .unwrap_or(SValue::Null))
+        .unwrap_or(SValue::Null);
+    interp.dispatch_print(&value)
+}
+
+/// `cat(..., sep = " ")` — write the arguments to the console with no quoting
+/// and no trailing newline (the caller includes `\n`). Returns `NULL`.
+fn b_cat(interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
+    let sep = args
+        .iter()
+        .find(|a| a.name.as_deref() == Some("sep"))
+        .and_then(|a| a.value.as_character().into_iter().next().flatten())
+        .unwrap_or_else(|| " ".to_string());
+    let parts: Vec<String> = args
+        .iter()
+        .filter(|a| a.name.is_none())
+        .flat_map(|a| a.value.as_character())
+        .map(|o| o.unwrap_or_else(|| "NA".to_string()))
+        .collect();
+    interp.emit_raw(&parts.join(&sep));
+    Ok(SValue::Null)
 }
 
 /// `seq(to)` is `1:to`; `seq(from, to)` is `from:to` (step 1). A minimal subset

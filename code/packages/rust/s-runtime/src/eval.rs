@@ -20,8 +20,8 @@ use crate::builtins;
 use crate::env::{define, lookup, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
-    arithmetic, bounded_sequence, compare, format_value, index, membership, negate, Arg, Param,
-    SValue,
+    arithmetic, bounded_sequence, class_of, compare, format_value, index, membership, negate, Arg,
+    Param, SValue,
 };
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -92,13 +92,39 @@ impl Interpreter {
         &self.global
     }
 
-    /// Append a block of `print()` output (used by the print built-in path).
+    /// Append a block of output, one newline-terminated line each.
     fn emit(&self, lines: &[String]) {
         let mut out = self.out.borrow_mut();
         for line in lines {
             out.push_str(line);
             out.push('\n');
         }
+    }
+
+    /// Append raw text to the output buffer (used by `cat`, which controls its
+    /// own newlines).
+    pub(crate) fn emit_raw(&self, text: &str) {
+        self.out.borrow_mut().push_str(text);
+    }
+
+    /// The S3 `print` generic: dispatch on the value's class to a user or
+    /// built-in `print.<class>` method (then `print.default`), falling back to
+    /// the standard formatting. The method does its own output (via `cat`,
+    /// `print`, …); the default path emits `format_value`.
+    pub(crate) fn dispatch_print(&self, value: &SValue) -> SResult<SValue> {
+        let mut candidates = class_of(value);
+        candidates.push("default".to_string());
+        for cls in candidates {
+            if let Some(method) = lookup(&self.global, &format!("print.{cls}")) {
+                if method.is_callable() {
+                    let args = [Arg { name: None, value: value.clone() }];
+                    self.call_value(method, &args)?;
+                    return Ok(value.clone());
+                }
+            }
+        }
+        self.emit(&format_value(value));
+        Ok(value.clone())
     }
 
     /// Parse and evaluate `src`, returning the value of the last statement.
@@ -119,9 +145,17 @@ impl Interpreter {
             }
         }
 
+        // Auto-print a visible top-level result through the S3 `print` generic,
+        // so factors, data frames, and user-classed values render via their own
+        // methods (R does the same at the prompt).
+        let visible = self.visible.get();
+        if visible {
+            self.dispatch_print(&last)?;
+        }
+
         Ok(Outcome {
             value: last,
-            visible: self.visible.get(),
+            visible,
             printed: self.out.borrow().clone(),
         })
     }
@@ -433,8 +467,9 @@ impl Interpreter {
         match callee {
             SValue::Builtin { name, func } => {
                 let result = func(self, args)?;
-                if name == "print" {
-                    self.emit(&format_value(&result));
+                // `print` and `cat` produce their own output and return
+                // invisibly; every other built-in yields a visible value.
+                if name == "print" || name == "cat" {
                     self.as_invisible(result)
                 } else {
                     self.as_visible(result)

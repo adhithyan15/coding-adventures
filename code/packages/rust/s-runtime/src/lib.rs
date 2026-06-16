@@ -243,6 +243,59 @@ mod tests {
         assert_eq!(nums("sapply(1:3, function(n) n * n)\n"), vec![1.0, 4.0, 9.0]);
     }
 
+    // --- v2: S3 dispatch ------------------------------------------------
+
+    #[test]
+    fn class_returns_implicit_and_explicit() {
+        assert_eq!(show("class(c(1, 2))\n"), "[1] \"numeric\"");
+        assert_eq!(show("class(\"a\")\n"), "[1] \"character\"");
+        assert_eq!(show("class(TRUE)\n"), "[1] \"logical\"");
+        assert_eq!(
+            show("x <- structure(1, class = \"myc\")\nclass(x)\n"),
+            "[1] \"myc\""
+        );
+    }
+
+    #[test]
+    fn inherits_and_unclass() {
+        assert_eq!(
+            show("inherits(structure(1, class = \"myc\"), \"myc\")\n"),
+            "[1] TRUE"
+        );
+        assert_eq!(show("inherits(1, \"myc\")\n"), "[1] FALSE");
+        assert_eq!(
+            show("class(unclass(structure(1, class = \"myc\")))\n"),
+            "[1] \"numeric\""
+        );
+    }
+
+    #[test]
+    fn classed_value_is_transparent_to_arithmetic() {
+        // A classed numeric still does arithmetic (Ops see through the class).
+        assert_eq!(nums("structure(3, class = \"myc\") + 4\n"), vec![7.0]);
+    }
+
+    #[test]
+    fn cat_writes_raw_output() {
+        let o = Interpreter::new().eval_str("cat(\"hello\", \"world\")\n").unwrap();
+        assert_eq!(o.printed, "hello world");
+        assert!(!o.visible);
+    }
+
+    #[test]
+    fn s3_print_dispatch_explicit_and_auto() {
+        // Explicit print() dispatches to print.<class>.
+        let explicit = Interpreter::new()
+            .eval_str("print.myc <- function(x) cat(\"custom\")\nprint(structure(1, class = \"myc\"))\n")
+            .unwrap();
+        assert_eq!(explicit.printed, "custom");
+        // Auto-print at the prompt also dispatches through the generic.
+        let auto = Interpreter::new()
+            .eval_str("print.myc <- function(x) cat(\"auto\")\nstructure(1, class = \"myc\")\n")
+            .unwrap();
+        assert_eq!(auto.printed, "auto");
+    }
+
     // --- Comparison -----------------------------------------------------
 
     #[test]
