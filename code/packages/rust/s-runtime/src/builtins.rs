@@ -9,7 +9,7 @@
 use crate::env::{define, Env};
 use crate::error::{SError, SResult};
 use crate::eval::{nth_element, Interpreter};
-use crate::value::{bounded_sequence, class_of, combine, index, Arg, SValue};
+use crate::value::{bounded_sequence, class_of, combine, index, Arg, SValue, MAX_SEQ_LEN};
 use r_vector::{is_na_real, na_real, Double};
 use statistics_core::{descriptive, Number, StatsError};
 use std::collections::HashSet;
@@ -490,6 +490,12 @@ fn b_rep(_interp: &Interpreter, args: &[Arg]) -> SResult<SValue> {
         .and_then(|d| d.get_value(0))
         .map(|n| n.max(0.0) as usize)
         .unwrap_or(1);
+    // Bound the result so `rep(x, 1e12)` can't force a huge allocation.
+    if x.length().saturating_mul(times) > MAX_SEQ_LEN {
+        return Err(SError::BadArgs(format!(
+            "rep result too large (limit {MAX_SEQ_LEN} elements)"
+        )));
+    }
     let copies: Vec<Arg> = (0..times)
         .map(|_| Arg {
             name: None,

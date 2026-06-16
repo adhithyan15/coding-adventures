@@ -400,6 +400,15 @@ mod tests {
     }
 
     #[test]
+    fn outsized_allocations_are_rejected() {
+        // %o% product and rep count are bounded against crafted input.
+        assert!(eval_s("1:100000 %o% 1:100000\n").is_err());
+        assert!(eval_s("rep(1:1000, 1000000000)\n").is_err());
+        // Normal-sized uses still work.
+        assert_eq!(nums("rep(c(1, 2), 2)\n"), vec![1.0, 2.0, 1.0, 2.0]);
+    }
+
+    #[test]
     fn double_bracket_on_vector_extracts_one_element() {
         assert_eq!(nums("c(10, 20, 30)[[2]]\n"), vec![20.0]);
     }

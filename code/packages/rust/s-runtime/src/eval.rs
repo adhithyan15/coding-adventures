@@ -21,7 +21,7 @@ use crate::env::{define, lookup, Env, Scope};
 use crate::error::{SError, SResult};
 use crate::value::{
     arithmetic, bounded_sequence, class_of, compare, format_value, index, membership, negate, Arg,
-    Param, SValue,
+    Param, SValue, MAX_SEQ_LEN,
 };
 use coding_adventures_s_parser::try_parse_s;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -350,7 +350,18 @@ impl Interpreter {
     fn outer_product(&self, lhs: &SValue, rhs: &SValue) -> SResult<SValue> {
         let a = lhs.as_double()?;
         let b = rhs.as_double()?;
-        let mut out = Vec::with_capacity(a.len() * b.len());
+        // Each length is individually capped, but the product is not — bound it
+        // so `1:1e6 %o% 1:1e6` can't request a petabyte-scale allocation.
+        let total = a
+            .len()
+            .checked_mul(b.len())
+            .filter(|&n| n <= MAX_SEQ_LEN)
+            .ok_or_else(|| {
+                SError::Index(format!(
+                    "outer product result too large (limit {MAX_SEQ_LEN} elements)"
+                ))
+            })?;
+        let mut out = Vec::with_capacity(total);
         for x in a.iter() {
             for y in b.iter() {
                 out.push(if is_na_real(x) || is_na_real(y) {
