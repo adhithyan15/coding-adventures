@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected-output probe artifacts to `runDeckAnalysis`; callers now receive
+  the normalized deck-selected output probes alongside each selected plan,
+  solver result, and stable table, matching Python and Rust.
 - Add `.tran` print-step output routing to `runDeckAnalysis`; deck transient
   plans now keep `.tran TSTEP` as the stable output print grid while `MAXSTEP`
   caps internal solver stepping, matching Python and Rust.

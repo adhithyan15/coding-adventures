@@ -90,7 +90,8 @@ by analysis alias, defaults decks without analysis cards to an implicit `.op`,
 and reports ambiguity before solver dispatch.
 `runDeckAnalysis` executes one selected `.op`, `.dc`, `.ac LIN`, `.ac DEC`,
 `.ac OCT`, or `.tran` plan against an existing `Circuit` and returns the plan,
-solver result, and deck-selected output table. Selected `.tran` plans route
+solver result, deck-selected output table, and normalized output probes that
+produced the table. Selected `.tran` plans route
 `START` output filtering, use `.tran TSTEP` as the output print grid, apply
 `MAXSTEP` as an internal fixed-step cap, and carry `UIC` initial-condition
 intent through that stable transient table surface.
@@ -162,6 +163,6 @@ malformed deck-level analysis controls.
 `selectDeckAnalysisPlan` returns one selected or implicit plan for downstream
 deck execution helpers.
 `runDeckAnalysis` routes that selected plan into the matching solver and stable
-deck-selected table output, including `.ac LIN`, `.ac DEC`, `.ac OCT`
-frequency grids, and `.tran` `START` / print-step `TSTEP` / `MAXSTEP` / `UIC`
-controls.
+deck-selected table output with normalized output-probe artifacts, including
+`.ac LIN`, `.ac DEC`, `.ac OCT` frequency grids, and `.tran` `START` /
+print-step `TSTEP` / `MAXSTEP` / `UIC` controls.

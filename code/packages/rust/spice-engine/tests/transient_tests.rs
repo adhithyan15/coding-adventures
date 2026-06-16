@@ -1871,10 +1871,15 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 
     let op_execution = run_deck_analysis(&circuit, netlist, Some("op")).unwrap();
     assert_eq!(op_execution.plan.analysis, "op");
+    assert_eq!(op_execution.output_probes, vec!["V(mid)".to_string()]);
     assert_eq!(op_execution.table, "Index\tV(mid)\n0\t5.000000e-01\n");
 
     let dc_execution = run_deck_analysis(&circuit, netlist, Some("dc")).unwrap();
     assert_eq!(dc_execution.plan.source_name.as_deref(), Some("V1"));
+    assert_eq!(
+        dc_execution.output_probes,
+        vec!["V(mid)".to_string(), "I(V1)".to_string()]
+    );
     match dc_execution.result {
         DeckAnalysisExecutionResult::DcSweep(points) => assert_eq!(points.len(), 2),
         other => panic!("expected DC sweep result, got {other:?}"),
@@ -1885,6 +1890,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
 
     let ac_execution = run_deck_analysis(&circuit, netlist, Some("ac")).unwrap();
+    assert_eq!(ac_execution.output_probes, vec!["V(mid)".to_string()]);
     match ac_execution.result {
         DeckAnalysisExecutionResult::Ac(points) => assert_eq!(points.len(), 1),
         other => panic!("expected AC result, got {other:?}"),
@@ -1895,6 +1901,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     );
 
     let tran_execution = run_deck_analysis(&circuit, netlist, Some("tran")).unwrap();
+    assert_eq!(tran_execution.output_probes, vec!["V(mid)".to_string()]);
     match tran_execution.result {
         DeckAnalysisExecutionResult::Tran(points) => assert_eq!(points.len(), 1),
         other => panic!("expected transient result, got {other:?}"),
@@ -1913,6 +1920,10 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
     assert!((tran_window_execution.plan.start_time.unwrap() - 2.0e-3).abs() < 1.0e-12);
     assert!((tran_window_execution.plan.max_step.unwrap() - 1.0e-3).abs() < 1.0e-12);
     assert!(tran_window_execution.plan.use_initial_conditions);
+    assert_eq!(
+        tran_window_execution.output_probes,
+        vec!["V(mid)".to_string()]
+    );
     match &tran_window_execution.result {
         DeckAnalysisExecutionResult::Tran(points) => {
             let expected_times = [2.0e-3, 4.0e-3, 6.0e-3];
@@ -1933,6 +1944,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 
     let lin_execution =
         run_deck_analysis(&circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n", None).unwrap();
+    assert_eq!(lin_execution.output_probes, vec!["V(mid)".to_string()]);
     match &lin_execution.result {
         DeckAnalysisExecutionResult::Ac(points) => assert_eq!(
             points
@@ -1950,6 +1962,7 @@ fn run_deck_analysis_routes_selected_plan_and_output_table() {
 
     let oct_execution =
         run_deck_analysis(&circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n", None).unwrap();
+    assert_eq!(oct_execution.output_probes, vec!["V(mid)".to_string()]);
     match &oct_execution.result {
         DeckAnalysisExecutionResult::Ac(points) => assert_eq!(
             points

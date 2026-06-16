@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add selected-output probe artifacts to `run_deck_analysis`; callers now
+  receive the normalized deck-selected output probes alongside each selected
+  plan, solver result, and stable table, matching Python and TypeScript.
 - Add `.tran` print-step output routing to `run_deck_analysis`; deck transient
   plans now keep `.tran TSTEP` as the stable output print grid while `MAXSTEP`
   caps internal solver stepping, matching Python and TypeScript.

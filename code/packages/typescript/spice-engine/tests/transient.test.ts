@@ -1451,10 +1451,12 @@ describe("transient", () => {
 
     const opExecution = runDeckAnalysis(circuit, netlist, "op");
     expect(opExecution.plan.analysis).toBe("op");
+    expect(opExecution.outputProbes).toEqual(["V(mid)"]);
     expect(opExecution.table).toBe("Index\tV(mid)\n0\t5.000000e-01\n");
 
     const dcExecution = runDeckAnalysis(circuit, netlist, "dc");
     expect(dcExecution.plan.sourceName).toBe("V1");
+    expect(dcExecution.outputProbes).toEqual(["V(mid)", "I(V1)"]);
     expect(Array.isArray(dcExecution.result)).toBe(true);
     expect(dcExecution.table).toBe(
       "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
@@ -1463,6 +1465,7 @@ describe("transient", () => {
     );
 
     const acExecution = runDeckAnalysis(circuit, netlist, "ac");
+    expect(acExecution.outputProbes).toEqual(["V(mid)"]);
     expect(Array.isArray(acExecution.result)).toBe(true);
     expect(acExecution.table).toBe(
       "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
@@ -1470,6 +1473,7 @@ describe("transient", () => {
     );
 
     const tranExecution = runDeckAnalysis(circuit, netlist, "tran");
+    expect(tranExecution.outputProbes).toEqual(["V(mid)"]);
     expect(Array.isArray(tranExecution.result)).toBe(true);
     expect(tranExecution.table).toBe(
       "Index\tTime\tV(mid)\n" +
@@ -1483,6 +1487,7 @@ describe("transient", () => {
     expect(tranWindowExecution.plan.startTime).toBeCloseTo(2.0e-3, 12);
     expect(tranWindowExecution.plan.maxStep).toBeCloseTo(1.0e-3, 12);
     expect(tranWindowExecution.plan.useInitialConditions).toBe(true);
+    expect(tranWindowExecution.outputProbes).toEqual(["V(mid)"]);
     const tranWindowPoints = tranWindowExecution.result as { time: number }[];
     expect(tranWindowPoints).toHaveLength(3);
     [
@@ -1502,6 +1507,7 @@ describe("transient", () => {
     expect(() => runDeckAnalysis(circuit, netlist)).toThrow(/multiple analysis cards/);
 
     const linExecution = runDeckAnalysis(circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n");
+    expect(linExecution.outputProbes).toEqual(["V(mid)"]);
     const linPoints = linExecution.result as { frequencyHz: number }[];
     expect(linPoints.map((point) => point.frequencyHz)).toEqual([1.0, 2.0, 3.0]);
     expect(linExecution.table).toBe(
@@ -1512,6 +1518,7 @@ describe("transient", () => {
     );
 
     const octExecution = runDeckAnalysis(circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n");
+    expect(octExecution.outputProbes).toEqual(["V(mid)"]);
     const octPoints = octExecution.result as { frequencyHz: number }[];
     expect(octPoints.map((point) => point.frequencyHz)).toEqual([1.0, 2.0, 4.0]);
     expect(octExecution.table).toBe(
