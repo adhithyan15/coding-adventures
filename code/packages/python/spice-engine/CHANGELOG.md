@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck AC LIN/OCT execution routing** —
+  `run_deck_analysis()` now executes selected `.ac LIN`, `.ac DEC`, and
+  `.ac OCT` plans with SPICE-style linear, points-per-decade, and
+  points-per-octave frequency grids, matching Rust and TypeScript.
+
 - **Deck analysis execution routing** —
   `run_deck_analysis()` now selects one deck `.op`, `.dc`, `.ac DEC`, or
   `.tran` plan, dispatches it into the matching solver, and returns the

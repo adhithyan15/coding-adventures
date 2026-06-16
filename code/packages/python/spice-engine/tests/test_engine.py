@@ -6803,8 +6803,26 @@ def test_run_deck_analysis_routes_selected_plan_and_output_table() -> None:
 
     with pytest.raises(ValueError, match="multiple analysis cards"):
         run_deck_analysis(circuit, netlist)
-    with pytest.raises(ValueError, match="LIN execution is not supported yet"):
-        run_deck_analysis(circuit, ".ac lin 2 1 10\n.end\n")
+
+    lin_execution = run_deck_analysis(circuit, ".save V(mid)\n.ac lin 3 1 3\n.end\n")
+    assert isinstance(lin_execution.result, AcResult)
+    assert [point.freq for point in lin_execution.result.points] == [1.0, 2.0, 3.0]
+    assert lin_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "2\t3.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
+
+    oct_execution = run_deck_analysis(circuit, ".save V(mid)\n.ac oct 1 1 4\n.end\n")
+    assert isinstance(oct_execution.result, AcResult)
+    assert [point.freq for point in oct_execution.result.points] == [1.0, 2.0, 4.0]
+    assert oct_execution.table == (
+        "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "1\t2.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+        "2\t4.000000e+00\tV(mid)\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n"
+    )
 
 
 def test_transient_probe_measurements_are_stable() -> None:

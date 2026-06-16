@@ -48,8 +48,8 @@ downstream tools to compare.
      controls; parsed `.op`, `.dc`, `.ac`, and `.tran` cards now resolve into
      shared cross-language analysis-plan metadata before execution, and callers
      can select one explicit or implicit plan with stable ambiguity errors and
-     route `.op`, `.dc`, `.ac DEC`, or `.tran` into the matching solver plus
-     deck-selected table output.
+     route `.op`, `.dc`, `.ac LIN`, `.ac DEC`, `.ac OCT`, or `.tran` into the
+     matching solver plus deck-selected table output.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -399,12 +399,21 @@ downstream tools to compare.
       explicitly reports unsupported `.ac LIN` / `.ac OCT` execution modes for
       future solver-grid expansion.
 
+34. Deck AC LIN/OCT execution routing.
+    - Status: completed in this deck AC grid routing slice.
+    - Python, Rust, and TypeScript now route selected `.ac LIN`, `.ac DEC`, and
+      `.ac OCT` plans through matching solver executions and deck-selected AC
+      table output.
+    - The execution bridge uses SPICE-style linear total-point grids,
+      points-per-decade grids, and points-per-octave grids while preserving
+      selected-plan ambiguity and invalid-card diagnostics.
+
 ## Backlog
 
 1. Deck execution layer.
-   - Expand selected-plan execution beyond `.ac DEC` and fixed-step transient
-     basics, including `.ac LIN` / `.ac OCT`, transient `START` / `MAXSTEP` /
-     `UIC` execution semantics, and richer deck-owned run artifacts.
+   - Expand selected-plan execution beyond fixed-step transient basics,
+     including transient `START` / `MAXSTEP` / `UIC` execution semantics and
+     richer deck-owned run artifacts.
    - Expand deck-controlled output-plan integration beyond stable table
      routing toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature

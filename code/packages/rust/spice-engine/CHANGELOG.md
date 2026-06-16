@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `.ac LIN` and `.ac OCT` selected-plan execution routing to
+  `run_deck_analysis`; deck AC plans now execute SPICE-style linear,
+  points-per-decade, and points-per-octave grids, matching Python and
+  TypeScript.
 - Add `run_deck_analysis` so callers can select one deck `.op`, `.dc`,
   `.ac DEC`, or `.tran` plan, execute the matching solver, and receive the
   selected plan, solver result, and deck-selected output table, matching Python
