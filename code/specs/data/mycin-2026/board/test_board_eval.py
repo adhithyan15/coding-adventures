@@ -38,15 +38,17 @@ def test_covered_items_answer_correctly_with_a_proof() -> None:
     assert by_id["tay_sachs_enzyme"].answer == "hexosaminidase_a"
     # A correct recall answer carries the citing edge's trust tier (its proof).
     assert by_id["tay_sachs_enzyme"].trust is not None
-    # The bank spans FOUR recall domains: 18 IEM + 8 vitamin + 8 anemia + 8 endocrine
-    # (REL-12) = 42 covered recall items, all over one merged store.
+    # The bank spans FIVE recall domains: 18 IEM + 8 vitamin + 8 anemia + 8 endocrine
+    # + 11 coagulation (REL-13) = 53 covered recall items, all over one merged store.
     recall_correct = [r for r in card.results if r.outcome == "correct" and r.tactic == "recall"]
-    assert len(recall_correct) == 42
+    assert len(recall_correct) == 53
     assert by_id["fabry_enzyme"].outcome == "correct"               # IEM
     assert by_id["thiamine_disease"].answer == "beriberi"           # vitamin
     assert by_id["ida_mcv"].answer == "microcytic"                  # anemia
     assert by_id["cortisol_gland"].answer == "adrenal_cortex"       # endocrine (REL-12)
     assert by_id["adh_def"].answer == "central_diabetes_insipidus"
+    assert by_id["hemophilia_a_factor"].answer == "factor_viii"     # coagulation (REL-13)
+    assert by_id["vwd_test"].answer == "bleeding_time"              # coag — prolonged_test relation
 
 
 def test_uncovered_items_abstain_not_fabricate() -> None:
@@ -56,6 +58,8 @@ def test_uncovered_items_abstain_not_fabricate() -> None:
     assert by_id["wilson_disease_enzyme"].outcome == "abstained"
     assert by_id["wilson_disease_enzyme"].answer is None
     assert by_id["menkes_enzyme"].outcome == "abstained"
+    # A platelet disorder isn't in the coagulation-FACTOR graph → abstain, never fabricate.
+    assert by_id["bernard_soulier_factor"].outcome == "abstained"
 
 
 def test_defensibility_is_full() -> None:
@@ -68,18 +72,21 @@ def test_defensibility_is_full() -> None:
 def test_grounded_coverage_is_the_live_grounding_number() -> None:
     card, _ = _card()
     s = card.summary()
-    # REL-12b spider-grounded the endocrine domain (11/12 edges). 41 of the 42 recall
-    # answers across all four domains now cite an authoritative edge: grounded-coverage
-    # 98%. The lone holdout is cortisol_def (deficiency_syndrome__cortisol) — the
-    # adversarial verify could not pin it verbatim, so it stays consensus + FLAG: the
-    # framework declines to claim grounding it cannot defend, by design.
-    assert s["grounded_coverage"] == round(41 / 42, 4)   # 0.9762
-    assert s["grounded_correct"] == 41
+    # REL-13b spider-grounded the coagulation domain (14/15 edges). 51 of the 53 recall
+    # answers across all FIVE domains now cite an authoritative edge: grounded-coverage
+    # 96%. Two holdouts stay consensus + FLAG (direction_only) — the adversarial verify
+    # could not pin them verbatim, so the framework declines to claim grounding it cannot
+    # defend, by design: cortisol_def (endocrine) and factor7_def_factor (coagulation,
+    # factor_deficiency__factor_vii_deficiency).
+    assert s["grounded_coverage"] == round(51 / 53, 4)   # 0.9623
+    assert s["grounded_correct"] == 51
     by_id = {r.item_id: r for r in card.results}
     assert by_id["tay_sachs_enzyme"].trust == "authoritative"      # IEM
     assert by_id["ida_mcv"].trust == "authoritative"               # anemia
     assert by_id["cortisol_gland"].trust == "authoritative"        # endocrine, grounded (REL-12b)
-    assert by_id["cortisol_def"].trust == "consensus"              # direction_only holdout
+    assert by_id["hemophilia_a_factor"].trust == "authoritative"   # coagulation, grounded (REL-13b)
+    assert by_id["cortisol_def"].trust == "consensus"              # endocrine direction_only holdout
+    assert by_id["factor7_def_factor"].trust == "consensus"        # coagulation direction_only holdout
 
 
 def test_gate_exit_code_zero_when_no_fabrication() -> None:

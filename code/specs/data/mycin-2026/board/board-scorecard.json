@@ -1,8 +1,8 @@
 {
   "summary": {
-    "total": 54,
-    "correct": 48,
-    "abstained": 6,
+    "total": 66,
+    "correct": 59,
+    "abstained": 7,
     "wrong": 0,
     "by_tactic": {
       "differential": {
@@ -16,15 +16,15 @@
         "wrong": 0
       },
       "recall": {
-        "correct": 42,
-        "abstained": 5,
+        "correct": 53,
+        "abstained": 6,
         "wrong": 0
       }
     },
     "defensibility": 1.0,
     "accuracy_on_attempted": 1.0,
-    "grounded_coverage": 0.9762,
-    "grounded_correct": 41
+    "grounded_coverage": 0.9623,
+    "grounded_correct": 51
   },
   "results": [
     {
@@ -397,6 +397,102 @@
     },
     {
       "id": "glucagon_gland",
+      "tactic": "recall",
+      "gold": "ABSTAIN",
+      "answer": null,
+      "outcome": "abstained",
+      "trust": null
+    },
+    {
+      "id": "hemophilia_a_factor",
+      "tactic": "recall",
+      "gold": "factor_viii",
+      "answer": "factor_viii",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hemophilia_b_factor",
+      "tactic": "recall",
+      "gold": "factor_ix",
+      "answer": "factor_ix",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vwd_factor",
+      "tactic": "recall",
+      "gold": "von_willebrand_factor",
+      "answer": "von_willebrand_factor",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hemophilia_c_factor",
+      "tactic": "recall",
+      "gold": "factor_xi",
+      "answer": "factor_xi",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "factor7_def_factor",
+      "tactic": "recall",
+      "gold": "factor_vii",
+      "answer": "factor_vii",
+      "outcome": "correct",
+      "trust": "consensus"
+    },
+    {
+      "id": "hemophilia_a_inherit",
+      "tactic": "recall",
+      "gold": "x_linked_recessive",
+      "answer": "x_linked_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vwd_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_dominant",
+      "answer": "autosomal_dominant",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "factor7_def_inherit",
+      "tactic": "recall",
+      "gold": "autosomal_recessive",
+      "answer": "autosomal_recessive",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "hemophilia_a_test",
+      "tactic": "recall",
+      "gold": "aptt",
+      "answer": "aptt",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "factor7_def_test",
+      "tactic": "recall",
+      "gold": "pt",
+      "answer": "pt",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "vwd_test",
+      "tactic": "recall",
+      "gold": "bleeding_time",
+      "answer": "bleeding_time",
+      "outcome": "correct",
+      "trust": "authoritative"
+    },
+    {
+      "id": "bernard_soulier_factor",
       "tactic": "recall",
       "gold": "ABSTAIN",
       "answer": null,
